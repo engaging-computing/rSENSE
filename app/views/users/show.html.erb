@@ -20,10 +20,7 @@
   <%= @user.email %>
 </p>
 
-<p>
-  <b>Content:</b>
-  <%= @user.content %>
-</p>
+<%= render 'content'%>
 
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>

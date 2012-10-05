@@ -1,0 +1,14 @@
+<div class="user_content">
+
+    <%if @user.id == @cur_user.id%>
+      <span style="float:right;">
+        <a class="redactor_content_edit_link">edit</a>
+        <a href="/users/<%=@user.id%>" class="redactor_content_save_link">save</a>
+      </span><br>
+    <%end%>
+        
+    <div class="redactor_content">
+        <%= raw @user.content %>
+    </div>
+
+</div>
