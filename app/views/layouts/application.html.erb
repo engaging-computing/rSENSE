@@ -11,22 +11,30 @@
   <div id="header">
     
     <div id="home">
-      <img src="http://isense.cs.uml.edu/html/img/logo.png" />
+      <a href="/">
+        <img src="http://isense.cs.uml.edu/html/img/logo.png" />
+      </a>
     </div>
     
     <div id="nav">
       <ul>
         <li>
-          <img style="width:30px;height:30px;" src="http://isense.cs.uml.edu/html/img/drawer.svg" alt="Browse experiments and their sessions">
-          Experiments
+          <a href="/experiments">
+            <img src="http://isense.cs.uml.edu/html/img/drawer.svg" alt="Browse experiments and their sessions">
+            <span class="header_links">Experiments</span>
+          </a>
         </li>
         <li>
-          <img style="width:30px;height:30px;" src="http://isense.cs.uml.edu/html/img/group.svg" alt="Browse experiments and their sessions">
-          People
+          <a href="/users">
+            <img src="http://isense.cs.uml.edu/html/img/group.svg" alt="Browse experiments and their sessions">
+            <span class="header_links">People</span>
+          </a>
         </li>
         <li>
-          <img style="width:30px;height:30px" src="http://isense.cs.uml.edu/html/img/chart_bar.svg" alt="Browse experiments and their sessions">
-          Visualisations
+          <a href="/vises">
+            <img src="http://isense.cs.uml.edu/html/img/chart_bar.svg" alt="Browse experiments and their sessions">
+            <span class="header_links">Visualisations</span>
+          </a>
         </li>
       </ul>
     </div>
@@ -34,7 +42,7 @@
     <div id="user">
       <%= link_to "Register", new_user_path %>
       <a>or</a>
-      <%= link_to "Login"%>
+      <%= link_to 'login', login_path() %>
     </div>
 
     
