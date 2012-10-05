@@ -11,46 +11,52 @@
   <div id="header">
     
     <div id="home">
-      <img src="http://isense.cs.uml.edu/html/img/logo.png" />
+      <a href="/">
+        <img src="http://isense.cs.uml.edu/html/img/logo.png" />
+      </a>
     </div>
     
     <div id="nav">
       <ul>
         <li>
-          <img style="width:30px;height:30px;" src="http://isense.cs.uml.edu/html/img/drawer.svg" alt="Browse experiments and their sessions">
-          Experiments
+          <a href="/experiments">
+            <img src="http://isense.cs.uml.edu/html/img/drawer.svg" alt="Browse experiments and their sessions">
+            <span class="header_links">Experiments</span>
+          </a>
         </li>
         <li>
-          <img style="width:30px;height:30px;" src="http://isense.cs.uml.edu/html/img/group.svg" alt="Browse experiments and their sessions">
-          People
+          <a href="/users">
+            <img src="http://isense.cs.uml.edu/html/img/group.svg" alt="Browse experiments and their sessions">
+            <span class="header_links">People</span>
+          </a>
         </li>
         <li>
-          <img style="width:30px;height:30px" src="http://isense.cs.uml.edu/html/img/chart_bar.svg" alt="Browse experiments and their sessions">
-          Visualisations
+          <a href="/vises">
+            <img src="http://isense.cs.uml.edu/html/img/chart_bar.svg" alt="Browse experiments and their sessions">
+            <span class="header_links">Visualisations</span>
+          </a>
         </li>
       </ul>
     </div>
     
     <div id="user">
-      <%= link_to "Register", new_user_path %>
-      <a>or</a>
-      <%= link_to "Login"%>
+
+      <% if @cur_user != nil %>
+        <%= "Logged in as #{@cur_user.firstname.capitalize} #{@cur_user.lastname[0].capitalize}." %>
+        <%= link_to 'logout', login_path(), method: :delete %>
+      <% else %>
+        <%= link_to "Register", new_user_path %>
+        <a>or</a>
+        <%= link_to 'login', login_path() %>
+      <% end %>
+    
+
     </div>
 
     
   </div>
 
   <div id="content">
-
-    <p>
-      <% if @cur_user != nil %>
-          <%= "Logged in as #{@cur_user.firstname.capitalize} #{@cur_user.lastname[0].capitalize}." %>
-          <%= link_to 'logout', login_path(), method: :delete %>
-      <% else %>
-          <%= "Not logged in, "%>
-          <%= link_to 'login', login_path() %>
-      <% end %>
-    </p>
 
     <%= yield %>
   
