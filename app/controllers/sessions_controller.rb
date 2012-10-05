@@ -5,9 +5,10 @@ class SessionsController < ApplicationController
   end
 
   def create
-      user = User.find_by_email(params[:username_or_email])
+    login_name = params[:username_or_email]
+      user = User.find_by_email(login_name.downcase)
       if !user
-        user = User.find_by_username(params[:username_or_email])
+        user = User.find_by_username(login_name)
       end
       
       if user and user.authenticate(params[:password])
