@@ -157,3 +157,32 @@ table {
           border-bottom: 3px solid #CCC;
 }
 
+.edit_info
+{
+    padding: 5px 6px;
+}
+
+.info_edit_link
+{
+    vertical-align: super;
+    font-size: 0.75em;
+}
+
+.info_label
+{
+    font-size:1.5em;
+    font-weight:bold;
+    padding-right:5px;
+}
+
+.info_save_link
+{
+    vertical-align: super;
+    font-size: 0.75em;
+    display: none;
+}
+
+.info_edit_box
+{
+    resize:none;
+}

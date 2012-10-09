@@ -82,4 +82,5 @@ class UsersController < ApplicationController
       format.json { head :no_content }
     end
   end
+ 
 end
