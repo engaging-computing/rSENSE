@@ -1,26 +1,19 @@
 <p id="notice"><%= notice %></p>
+<br>
 
-<p>
-  <b>Firstname:</b>
-  <%= @user.firstname %>
-</p>
+<%= render 'edit_info', {type: 'user', value: 'firstname', label: 'Firstname'}%>
+<%= render 'edit_info', {type: 'user', value: 'lastname', label: 'Lastname'}%>
 
-<p>
-  <b>Lastname:</b>
-  <%= @user.lastname %>
-</p>
+<div class="user_info">
+    <div class="user_info_label">Username:</div>
+    <%= @user.username %>
+</div>
 
-<p>
-  <b>Username:</b>
-  <%= @user.username %>
-</p>
-
-<p>
-  <b>Email:</b>
-  <%= @user.email %>
-</p>
+<div class="user_info">
+    <div class="user_info_label">Email:</div>
+    <%= @user.email %>
+</div>
 
 <%= render 'content'%>
 
-<%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>
