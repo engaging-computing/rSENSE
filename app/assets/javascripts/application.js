@@ -15,4 +15,4 @@
 //= require_tree .
 //= require redactor.min.js
 //= require redactor_edit_pane.js.coffee
-//= require user_info_edit.js.coffee
+//= require info_edit.js.coffee
