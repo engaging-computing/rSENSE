@@ -1,0 +1,8 @@
+<div class="user_info" field='<%=value%>'>
+    <div class="user_info_label"><%=label%></div>
+    <div class="user_info_text"><%= @user[value] %></div>
+    <%if @user.id == @cur_user.id%>
+        <a class="user_info_edit_link">edit</a>
+        <a href="/users/<%=@user.id%>" class="user_info_save_link">save</a>
+    <%end%>
+</div>

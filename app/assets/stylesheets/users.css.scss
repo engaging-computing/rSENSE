@@ -13,12 +13,38 @@ table
 
 .user_content
 {
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
     border: 1px solid grey;
     padding: 5px;
     width:60%;
 }
 
+.user_info_label
+{
+    float:left;
+    font-size:1.5em;
+    font-weight:bold;
+    padding-right:5px;
+}
+
+.user_info
+{
+    margin-bottom:8px;
+}
+
+.user_info_save_link
+{
+    display: none;
+}
+
 .redactor_content_save_link
 {
     display: none;
+}
+
+.user_info_edit_box
+{
+    resize:none;
 }

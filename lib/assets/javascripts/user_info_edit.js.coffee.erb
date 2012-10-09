@@ -1,0 +1,29 @@
+$(document).ready ->
+    
+    $('.user_info_edit_link').click ->
+        $(@).siblings('.user_info_text').wrapInner('<textarea class="user_info_edit_box">')
+        $(@).siblings('.user_info_text').children('.user_info_edit_box').focus()
+        $(@).hide()
+        $(@).siblings('.user_info_save_link').show()
+
+
+    $('.user_info_save_link').click ->
+        info_box = $(@).siblings('.user_info_text')
+        field_name = $(@).parent().attr('field')
+        value = info_box.children('.user_info_edit_box').val()
+        data={}
+        data['user'] = {}
+        data['user'][field_name] = value
+        
+        $.ajax
+            url: $(@).attr('href')
+            type: "PUT"
+            dataType: "json"
+            data:
+                data
+            success: =>        
+                $(@).siblings('.user_info_edit_link').show()
+                $(@).hide()
+                info_box.html(value)
+        false
+    
