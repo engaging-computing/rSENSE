@@ -1,0 +1,18 @@
+<p id="notice"><%= notice %></p>
+
+ <span class="info_label">Title:</span> 
+ <%= experiment_edit_helper 'title', (@experiment.user_id == @cur_user.try(:id)) %><br>
+
+<p>
+  <b>Owner:</b>
+  <%= link_to @owner_name, user_path(@experiment.user_id) %>
+</p>
+
+<p>
+  <b>Content:</b>
+  <%= experiment_redactor_helper (@experiment.user_id == @cur_user.try(:id)) %>
+</p>
+
+
+<%= link_to 'Edit', edit_experiment_path(@experiment) %> |
+<%= link_to 'Back', experiments_path %>
