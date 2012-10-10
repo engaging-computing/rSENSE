@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  skip_before_filter :authorize, only: [:new, :create]
+  skip_before_filter :authorize, only: [:new, :create, :validate]
  
   # GET /users
   # GET /users.json
@@ -80,6 +80,21 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.html { redirect_to users_url }
       format.json { head :no_content }
+    end
+  end
+
+  # GET /users/validate/:key
+  def validate
+    @user = User.find_by_validation_key(params[:key])
+
+    if @user == nil or params[:key].blank?
+      render "public/404.html"
+    else
+
+      @user.validated = true
+      @user.save
+
+      render action: "validate"
     end
   end
 end

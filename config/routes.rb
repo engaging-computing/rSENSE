@@ -15,6 +15,7 @@ Rsense::Application.routes.draw do
   end
   
   resources :users
+  match "/users/validate/:key" => "users#validate"
 
   
   
