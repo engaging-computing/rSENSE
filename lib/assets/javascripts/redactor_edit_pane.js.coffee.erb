@@ -7,15 +7,25 @@ $(document).ready ->
         $(@).hide();
     
     $('.redactor_content_save_link').click ->
+        type = $(@).parent().parent().attr('type')
         $(@).siblings('.redactor_content_edit_link').show()
         $(@).hide()
+        
+        field_name = $(@).parent().parent().attr('field')
+        value = $(@).parent().parent().find('.redactor_content').getCode()
+        data={}
+        data[type] = {}
+        data[type][field_name] = value
+        console.log data
+       
+     
+        
         $.ajax
             url: $(@).attr('href')
             type: "PUT"
             dataType: "json"
             data:
-                user:
-                    content: $(@).parent().parent().find('.redactor_content').getCode()
+                data
             success: =>
                 $(@).parent().parent().find('.redactor_content').destroyEditor()
         false
