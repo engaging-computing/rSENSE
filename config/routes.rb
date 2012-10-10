@@ -1,4 +1,6 @@
 Rsense::Application.routes.draw do
+  resources :experiments
+
   get "home/index"
   root :to => "home#index"
   

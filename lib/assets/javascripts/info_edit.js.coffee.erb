@@ -1,0 +1,30 @@
+$(document).ready ->
+    
+    $('.info_edit_link').click ->
+        $(@).siblings('.info_text').wrapInner('<input type="text" class="info_edit_box" value="'+$(@).siblings('.info_text').text()+'">')
+        $(@).siblings('.info_text').children('.info_edit_box').focus()
+        $(@).hide()
+        $(@).siblings('.info_save_link').show()
+
+
+    $('.info_save_link').click ->
+        type = $(@).parent().attr('type')
+        info_box = $(@).siblings('.info_text')
+        field_name = $(@).parent().attr('field')
+        value = info_box.children('.info_edit_box').val()
+        data={}
+        data[type] = {}
+        data[type][field_name] = value
+        
+        $.ajax
+            url: $(@).attr('href')
+            type: "PUT"
+            dataType: "json"
+            data:
+                data
+            success: =>        
+                $(@).siblings('.info_edit_link').show()
+                $(@).hide()
+                info_box.html(value)
+        false
+    
