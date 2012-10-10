@@ -157,3 +157,49 @@ table {
           border-bottom: 3px solid #CCC;
 }
 
+.edit_info
+{
+    padding: 5px 6px;
+}
+
+.info_edit_link
+{
+    vertical-align: super;
+    font-size: 0.75em;
+}
+
+.info_label
+{
+    font-size:1.5em;
+    font-weight:bold;
+    padding-right:5px;
+}
+
+.info_save_link
+{
+    vertical-align: super;
+    font-size: 0.75em;
+    display: none;
+}
+
+.info_edit_box
+{
+    resize:none;
+}
+
+
+.type_content
+{
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    border: 1px solid grey;
+    padding: 5px;
+    margin: 20px 0px;
+    width: 60%;
+}
+
+.redactor_content_save_link
+{
+    display: none;
+}
