@@ -8,12 +8,13 @@ $(document).ready ->
 
 
     $('.info_save_link').click ->
+        type = $(@).parent().attr('type')
         info_box = $(@).siblings('.info_text')
         field_name = $(@).parent().attr('field')
         value = info_box.children('.info_edit_box').val()
         data={}
-        data['user'] = {}
-        data['user'][field_name] = value
+        data[type] = {}
+        data[type][field_name] = value
         
         $.ajax
             url: $(@).attr('href')
