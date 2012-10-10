@@ -12,22 +12,25 @@
 
     <div style="float:left;">
         <span class="info_label">First Name:</span> 
-        <%= edit_helper 'firstname', (@user.id == @cur_user.id) %><br>
+        <%= user_edit_helper 'firstname', (@user.id == @cur_user.id) %><br>
         
         <span class="info_label">Last Name:</span>
-        <%= edit_helper 'lastname', (@user.id == @cur_user.id) %><br>
+        <%= user_edit_helper 'lastname', (@user.id == @cur_user.id) %><br>
         
         <span class="info_label">Username:</span>
-        <%= edit_helper 'username' %><br>
+        <%= user_edit_helper 'username' %><br>
         
         <span class="info_label">Email:</span>
-        <%= edit_helper 'email' %>
+        <%= user_edit_helper 'email' %>
     </div>
 
     <div style="clear:both;" />
 
 </div>
 
-<%= render 'content'%>
+<%= user_redactor_helper (@user.id == @cur_user.try(:id))%>
 
-<%= link_to 'Back', users_path %>
+    <h2>Experiments:</h2>
+    <% @user.experiments.all.each do |e|%>
+        <%= link_to e.title, experiment_path(e.id)%>
+    <%end%><br>
