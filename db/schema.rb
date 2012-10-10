@@ -28,10 +28,11 @@ ActiveRecord::Schema.define(:version => 20121010161413) do
     t.string   "email"
     t.text     "content"
     t.integer  "group_id"
-    t.boolean  "validated"
+    t.boolean  "validated",       :default => false
     t.string   "password_digest"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
+    t.string   "validation_key"
   end
 
 end
