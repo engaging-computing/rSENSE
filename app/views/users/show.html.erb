@@ -1,26 +1,33 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <b>Firstname:</b>
-  <%= @user.firstname %>
-</p>
+<br>
 
-<p>
-  <b>Lastname:</b>
-  <%= @user.lastname %>
-</p>
+<div>
 
-<p>
-  <b>Username:</b>
-  <%= @user.username %>
-</p>
+    <%if @user.email?%>
+        <div style="float:left;">
+            <%= gravatar_image_tag(@user.email, alt: @user.firstname) %>
+        </div>
+    <%end%>
 
-<p>
-  <b>Email:</b>
-  <%= @user.email %>
-</p>
+    <div style="float:left;">
+        <span class="info_label">First Name:</span> 
+        <%= edit_helper 'firstname', (@user.id == @cur_user.id) %><br>
+        
+        <span class="info_label">Last Name:</span>
+        <%= edit_helper 'lastname', (@user.id == @cur_user.id) %><br>
+        
+        <span class="info_label">Username:</span>
+        <%= edit_helper 'username', false %><br>
+        
+        <span class="info_label">Email:</span>
+        <%= edit_helper 'email', false %>
+    </div>
+
+    <div style="clear:both;" />
+
+</div>
 
 <%= render 'content'%>
 
-<%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>
