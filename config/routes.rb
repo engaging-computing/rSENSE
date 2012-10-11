@@ -1,4 +1,6 @@
 Rsense::Application.routes.draw do
+  resources :fields
+
   resources :experiments
 
   get "home/index"
