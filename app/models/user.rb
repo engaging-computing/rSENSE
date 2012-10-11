@@ -10,6 +10,8 @@ class User < ActiveRecord::Base
   before_create :check_validation
   after_create :check_and_send_validation
 
+  has_many :experiments
+  
   private
   def check_validation
     if (not validated) and (not email.blank?)
