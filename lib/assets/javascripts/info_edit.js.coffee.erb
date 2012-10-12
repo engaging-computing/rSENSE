@@ -22,7 +22,7 @@ $(document).ready ->
             dataType: "json"
             data:
                 data
-            success: =>        
+            success: =>
                 $(@).siblings('.info_edit_link').show()
                 $(@).hide()
                 info_box.html(value)
