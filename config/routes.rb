@@ -11,7 +11,6 @@ Rsense::Application.routes.draw do
   
   
   controller :sessions do
-    get 'login' => :new
     post 'login' => :create
     delete 'login' => :destroy
   end
