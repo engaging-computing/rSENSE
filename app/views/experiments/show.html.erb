@@ -1,24 +1,30 @@
 <p id="notice"><%= notice %></p>
-
- <span class="info_label">Title:</span> 
+<br>
+ <span class="info_label" style="font-size:2em">Title:</span> 
  <%= experiment_edit_helper 'title', (@experiment.user_id == @cur_user.try(:id)) %><br>
 
 <p>
-  <b>Owner:</b>
+  <span class="info_label" style="font-size:1.2em">Owner:</span> 
   <%= link_to @owner_name, user_path(@experiment.user_id) %>
 </p>
 
-<p>
-  <b>Content:</b>
-  <%= experiment_redactor_helper (@experiment.user_id == @cur_user.try(:id)) %>
-</p>
+<%= experiment_redactor_helper (@experiment.user_id == @cur_user.try(:id)) %>
 
-<p>
-  <h2>Fields:</h2>
+
+
+<h2>Fields:</h2>
+<table style="width:60%">
+  <th>Name</th>
+  <th>Units</th>
+  <th>Type</th>
   <% @experiment.fields.all.each do |f| %>
-    <%=link_to f.name, field_path(f)%>
-  <%end%>
-</p>
+    
+    <%= render 'field_edit', field: f, type: "field",row_id: f.id,can_edit: (@experiment.user_id == @cur_user.try(:id))%>
+   
+  <%end%> 
+</table>
 
-<%= link_to 'Edit', edit_experiment_path(@experiment) %> |
+
+<br>
+
 <%= link_to 'Back', experiments_path %>
