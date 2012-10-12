@@ -1,0 +1,25 @@
+<h1>Listing memberships</h1>
+
+<table>
+  <tr>
+    <th>User</th>
+    <th>Group</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @memberships.each do |membership| %>
+  <tr>
+    <td><%= membership.user_id %></td>
+    <td><%= membership.group_id %></td>
+    <td><%= link_to 'Show', membership %></td>
+    <td><%= link_to 'Edit', edit_membership_path(membership) %></td>
+    <td><%= link_to 'Destroy', membership, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Membership', new_membership_path %>
