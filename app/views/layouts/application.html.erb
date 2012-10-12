@@ -8,6 +8,12 @@
 </head>
 <body>
 
+  <div id="login_box">
+    <div>User: <input id="login_user" class="login_field" type="text"></input><div class="clear"></div></div>
+    <div>Password: <input id="login_password" class="login_field" type="password"></input><div class="clear"></div></div>
+    <button class="login_button">Login</button>
+  </div>
+
   <div id="header">
     
     <div id="home">
@@ -46,10 +52,9 @@
         <%= link_to 'logout', login_path(), method: :delete %>
       <% else %>
         <%= link_to "Register", new_user_path %>
-        <a>or</a>
-        <%= link_to 'login', login_path() %>
+        or
+        <a href="" class="login">login</a>
       <% end %>
-    
 
     </div>
 
@@ -61,7 +66,7 @@
     <%= yield %>
   
   </div>
-
+  <!--
   <div id="footer">
 
     <p>The iSENSE project is a collaborative effort of the University of Massachusetts Lowell and Machine Science Inc. <br />
@@ -85,5 +90,6 @@
     v0.7
 
   </div>
+  -->
 </body>
 </html>
