@@ -1,0 +1,37 @@
+$(document).ready ->
+
+    $('.field_edit_link').click ->
+        name = $(@).parent().parent().find('.field_name')
+        unit = $(@).parent().parent().find('.field_unit')
+
+        name.wrapInner("<input type='text' class='name_edit_box' value='#{name.text()}'>")
+        unit.wrapInner("<input type='text' class='unit_edit_box' value='#{unit.text()}'>")
+        
+        $(@).hide()
+        $(@).siblings('.field_save_link').show()
+
+    $('.field_save_link').click ->
+        name = $(@).parent().parent().find('.field_name')
+        unit = $(@).parent().parent().find('.field_unit')
+
+        name_text = name.find('.name_edit_box').val()
+        unit_text = unit.find('.unit_edit_box').val()
+
+        data={}
+        data['field'] = {}
+        data['field']['name'] = name_text
+        data['field']['unit'] = unit_text
+        
+        $.ajax
+            url: $(@).attr('href')
+            type: "PUT"
+            dataType: "json"
+            data:
+                data
+            success: =>        
+                $(@).siblings('.field_edit_link').show()
+                $(@).hide()
+                name.html(name_text)
+                unit.html(unit_text)
+                
+        false
