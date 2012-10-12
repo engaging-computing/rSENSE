@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  field_type: 1
+  unit: MyString
+  experiment_id: 1
+
+two:
+  name: MyString
+  field_type: 1
+  unit: MyString
+  experiment_id: 1
