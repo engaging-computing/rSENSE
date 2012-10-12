@@ -1,4 +1,8 @@
 Rsense::Application.routes.draw do
+  resources :memberships
+
+  resources :groups
+
   resources :fields
 
   resources :experiments
