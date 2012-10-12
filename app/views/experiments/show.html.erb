@@ -13,7 +13,7 @@
 
 
 <h2>Fields:</h2>
-<table style="width:60%">
+<table style="width:60%" class="fields_table" experiment="<%=@experiment.id%>">
   <th>Name</th>
   <th>Units</th>
   <th>Type</th>
@@ -22,6 +22,10 @@
     <%= render 'field_edit', field: f, type: "field",row_id: f.id,can_edit: (@experiment.user_id == @cur_user.try(:id))%>
    
   <%end%> 
+
+  <tr><td colspan="4"><a class="field_add_link">+</a></td></tr>
+
+
 </table>
 
 
