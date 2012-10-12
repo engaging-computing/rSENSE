@@ -1,26 +1,16 @@
-<h1>Listing experiments</h1>
+<br>
+<h1>Experiments</h1>
+<br>
 
-<table>
-  <tr>
-    <th>Title</th>
-    <th>User</th>
-    <th>Content</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @experiments.each do |experiment| %>
-  <tr>
-    <td><%= experiment.title %></td>
-    <td><%= experiment.user_id %></td>
-    <td><%= experiment.content %></td>
-    <td><%= link_to 'Show', experiment %></td>
-    <td><%= link_to 'Edit', edit_experiment_path(experiment) %></td>
-    <td><%= link_to 'Destroy', experiment, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
+<ul style="width:60%;">
+    <% @experiments.each do |experiment| %>
+        <li class="<%= cycle('oddrow', 'evenrow') %>">
+            <h2><%= link_to experiment.title, experiment_path(experiment) %></h2>
+            Owner: <%= link_to "#{experiment.owner.firstname} #{experiment.owner.lastname[0]}", user_path(experiment.owner) %><br>
+            Created: <%= time_ago_in_words(experiment.created_at)%> ago
+        <li>
+    <% end %>
+</ul>
 
 <br />
 

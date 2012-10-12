@@ -14,14 +14,14 @@
         <span class="info_label">First Name:</span> 
         <%= user_edit_helper 'firstname', (@user.id == @cur_user.id) %><br>
         
-        <span class="info_label">Last Name:</span>
-        <%= user_edit_helper 'lastname', (@user.id == @cur_user.id) %><br>
-        
+        <%if @user.id == @cur_user.try(:id)%>
+            <span class="info_label">Last Name:</span>
+            <%= user_edit_helper 'lastname', (@user.id == @cur_user.id) %><br>
+        <%end%>
+
         <span class="info_label">Username:</span>
         <%= user_edit_helper 'username' %><br>
         
-        <span class="info_label">Email:</span>
-        <%= user_edit_helper 'email' %>
     </div>
 
     <div style="clear:both;" />
@@ -32,5 +32,5 @@
 
     <h2>Experiments:</h2>
     <% @user.experiments.all.each do |e|%>
-        <%= link_to e.title, experiment_path(e.id)%>
+        <%= link_to e.title, experiment_path(e.id)%><br>
     <%end%><br>

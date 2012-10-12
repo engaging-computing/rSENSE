@@ -18,3 +18,4 @@
 //= require redactor_edit_pane.js.coffee
 //= require info_edit.js.coffee
 //= require login.js.coffee.erb
+//= require field_edit.js.coffee
