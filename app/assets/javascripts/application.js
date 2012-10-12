@@ -12,8 +12,10 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery.ui.all
 //= require_tree .
 //= require redactor.min.js
 //= require redactor_edit_pane.js.coffee
 //= require info_edit.js.coffee
+//= require login.js.coffee.erb
 //= require field_edit.js.coffee
