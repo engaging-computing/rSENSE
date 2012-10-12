@@ -6,6 +6,10 @@ class ExperimentsController < ApplicationController
   def index
     @experiments = Experiment.all
 
+    @experiments.each do |e|
+       e['owner'] = User.find(e.user_id) 
+    end
+    
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @experiments }
@@ -44,8 +48,9 @@ class ExperimentsController < ApplicationController
   # POST /experiments
   # POST /experiments.json
   def create
+    content = "<h1>Problem:</h1><p>Description of problem</p><br><br><h1>Procedure:</h1><p>How you want people to collect your data</p>"
     @experiment = Experiment.new(params[:experiment])
-
+    @experiment = Experiment.new({user_id: @cur_user.id, title:"#{@cur_user.firstname} #{@cur_user.lastname[0].pluralize} Experiment"})
     respond_to do |format|
       if @experiment.save
         format.html { redirect_to @experiment, notice: 'Experiment was successfully created.' }

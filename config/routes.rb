@@ -1,4 +1,10 @@
 Rsense::Application.routes.draw do
+  resources :memberships
+
+  resources :groups
+
+  resources :fields
+
   resources :experiments
 
   get "home/index"
@@ -16,6 +22,7 @@ Rsense::Application.routes.draw do
   end
   
   resources :users
+  match "/users/validate/:key" => "users#validate"
 
   
   
