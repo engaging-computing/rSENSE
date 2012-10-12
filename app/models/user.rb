@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  attr_accessible :content, :email, :firstname, :group_id, :lastname, :password, :password_confirmation, :username, :validated
+  attr_accessible :content, :email, :firstname, :lastname, :password, :password_confirmation, :username, :validated
   
   validates_uniqueness_of :email, case_sensitive: false, if: :email?
   validates_uniqueness_of :username, case_sensitive: false
@@ -11,6 +11,9 @@ class User < ActiveRecord::Base
   after_create :check_and_send_validation
 
   has_many :experiments
+  has_many :memberships
+  has_many :groups, :through => :memberships
+  
   
   private
   def check_validation
