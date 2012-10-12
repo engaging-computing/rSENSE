@@ -6,6 +6,10 @@ class ExperimentsController < ApplicationController
   def index
     @experiments = Experiment.all
 
+    @experiments.each do |e|
+       e['owner'] = User.find(e.user_id) 
+    end
+    
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @experiments }
