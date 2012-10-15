@@ -1,0 +1,21 @@
+<p id="notice"><%= notice %></p>
+
+
+<span class="info_label" style="font-size:2em">Title:</span> 
+<%= group_edit_helper 'name', (@group.owner_id == @cur_user.try(:id)) %><br>
+
+<p>
+  <span class="info_label" style="font-size:1.2em">Owner:</span> 
+  <%= link_to "#{@owner.firstname} #{@owner.lastname[0]}", user_path(@group.owner_id) %>
+</p>
+
+<%= group_redactor_helper true %>
+
+  <span class="info_label" style="font-size:1.2em">Members:</span> 
+  <% @group.users.all.each do |u| %>
+    <%= link_to u.firstname, user_path(u) %>
+  <%end%>
+
+<br><br>
+
+<%= link_to 'Back', groups_path %>
