@@ -1,8 +1,5 @@
 class SessionsController < ApplicationController
   skip_before_filter :authorize, only: ['create','new'] 
-    
-  def new
-  end
 
   def create
     login_name = params[:username_or_email]
@@ -12,12 +9,18 @@ class SessionsController < ApplicationController
       end
       
       if user and user.authenticate(params[:password])
-          session[:user_id] = user.id
+        session[:user_id] = user.id
+        
+        response = { status: 'success' }
           
-          
-          redirect_to(request.env["HTTP_REFERER"] || users_url)
       else
-        redirect_to login_url, alert: "Invalid username/password combination"
+
+        response = { status: 'fail' }
+
+      end
+      
+      respond_to do |format|
+        format.json { render json: response }
       end
       
       
@@ -25,6 +28,6 @@ class SessionsController < ApplicationController
 
   def destroy
     session[:user_id] = nil
-    redirect_to login_url, notice: "Logged out"
+    redirect_to '', notice: "Logged out"
   end
 end

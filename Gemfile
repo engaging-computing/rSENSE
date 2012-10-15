@@ -28,6 +28,9 @@ gem 'bcrypt-ruby', '~> 3.0.0'
 # For using the Gravatar
 gem 'gravatar_image_tag'
 
+# Include JQuery UI
+gem 'jquery-ui-rails'
+
 # To use Jbuilder templates for JSON
 # gem 'jbuilder'
 

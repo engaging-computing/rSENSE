@@ -1,0 +1,33 @@
+$(document).ready ->
+  
+  login_ajax_submit = ->
+    
+    $.ajax
+        url: '/login'
+        type: 'POST'
+        dataType: 'json'
+        data:
+          username_or_email: $('#login_user').val()
+          password: $('#login_password').val()
+        success: (data) ->
+          switch data.status
+            when "success"
+              $('#login_box').dialog('close')
+              location.reload();
+  
+  $('a.login').click ->
+    $loginbox = $('#login_box')
+  
+    $loginbox.dialog
+      draggable: false
+      resizable: false
+      modal: true
+      3
+  
+    false;
+      
+  $('button.login_button').click login_ajax_submit
+                
+  $('.login_field').keydown (e) ->
+    
+    if e.which is 13 then login_ajax_submit()

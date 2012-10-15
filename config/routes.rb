@@ -1,4 +1,10 @@
 Rsense::Application.routes.draw do
+  resources :memberships
+
+  resources :groups
+
+  resources :fields
+
   resources :experiments
 
   get "home/index"
@@ -11,12 +17,12 @@ Rsense::Application.routes.draw do
   
   
   controller :sessions do
-    get 'login' => :new
     post 'login' => :create
     delete 'login' => :destroy
   end
   
   resources :users
+  match "/users/validate/:key" => "users#validate"
 
   
   
