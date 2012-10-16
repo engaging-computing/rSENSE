@@ -12,65 +12,10 @@
  *= require_tree .
  *= require redactor.css
  *= require jquery.ui.all
+ *= require bootstrap_and_overrides
+ *= require bootstrap_custom
  */
-
-html, body, div, span, applet, object, iframe,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center, p, blockquote, pre,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
-    vertical-align: top;
-}
-
-h1, h2, h3, h4, h5, h6 {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    vertical-align: top;
-}
-
-/* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, 
-footer, header, hgroup, menu, nav, section
-{
-    display: block;
-}
-
-body {
-    line-height: 1;
-}
-
-ol, ul {
-    list-style: none;
-}
-
-blockquote, q {
-    quotes: none;
-}
-
-blockquote:before, blockquote:after, q:before, q:after
-{
-    content: '';
-    content: none;
-}
-
-table
-{
-    border-collapse: collapse;
-    border-spacing: 0;
-}
-
+ 
 #header
 {
     background-color : #fff;
@@ -106,39 +51,6 @@ div.clear
 #home img
 {
     height: 5em;
-}
-
-#nav
-{
-    display: inline-block;
-    width  : 50%;
-}
-
-#nav ul
-{
-    padding-top : 1.6em;
-}
-
-#nav ul li
-{
-    display: inline-block;
-    color: #0376C6;
-    font-size: 1.2em;
-    font-weight: bold;
-    padding-left: 10% ;
-}
-
-#nav ul li a
-{
-    height: 30px;
-    text-align: center;
-    vertical-align: center;
-    text-decoration: none;
-}
-
-#nav ul li a img
-{
-    height: 30px; width: 30px;
 }
 
 .header_links
@@ -184,12 +96,6 @@ div.clear
     width: 100px;
 }
 
-#content
-{
-    margin: 0px;
-    padding: 20px 50px;
-}
-
 #page_title
 {
     padding-top: 20px;
@@ -197,25 +103,10 @@ div.clear
     border-bottom: 1px solid black;
 }
 
-#featured_six
-{
-    padding-top: 30px;
-}
-
 #content table
 {
     width: 100%;
     text-align: center;
-}
-
-#footer
-{
-    background-color: #DDD;
-    text-align: center;
-    padding-top: 40px;
-    padding-bottom: 40px;
-    border-top: 3px solid #CCC;
-    border-bottom: 3px solid #CCC;
 }
 
 .edit_info
