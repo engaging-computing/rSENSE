@@ -1,36 +1,47 @@
 <p id="notice"><%= notice %></p>
 
-<br>
+<div class="row">
 
-<div>
+  <div class="span4">
 
-    <%if @user.email?%>
+    <div class="row">
+
+      <div class="span2">
+        <%if @user.email?%>
         <div style="float:left;">
-            <%= gravatar_image_tag(@user.email, alt: @user.firstname) %>
+          <%= gravatar_image_tag(@user.email, alt: @user.firstname) %>
         </div>
-    <%end%>
+        <%end%>
+      </div>
 
-    <div style="float:left;">
+      <div class="span2">
         <span class="info_label">First Name:</span> 
-        <%= user_edit_helper 'firstname', (@user.id == @cur_user.id) %><br>
-        
+        <%= user_edit_helper 'firstname', (@user.id == @cur_user.id) %><br><br>
+
         <%if @user.id == @cur_user.try(:id)%>
-            <span class="info_label">Last Name:</span>
-            <%= user_edit_helper 'lastname', (@user.id == @cur_user.id) %><br>
+        <span class="info_label">Last Name:</span>
+        <%= user_edit_helper 'lastname', (@user.id == @cur_user.id) %><br><br>
         <%end%>
 
         <span class="info_label">Username:</span>
         <%= user_edit_helper 'username' %><br>
-        
-    </div>
+      </div>
 
-    <div style="clear:both;" />
+    </div>
+  
+    <div class="row">
+      <div class="span4">
+        <h2>Experiments:</h2>
+        <% @user.experiments.all.each do |e|%>
+            <%= link_to e.title, experiment_path(e.id)%><br>
+        <%end%>
+      </div>
+    </div>
+  
+  </div>
+
+  <div class="span8">
+    <%= user_redactor_helper (@user.id == @cur_user.try(:id))%>
+  </div>
 
 </div>
-
-<%= user_redactor_helper (@user.id == @cur_user.try(:id))%>
-
-    <h2>Experiments:</h2>
-    <% @user.experiments.all.each do |e|%>
-        <%= link_to e.title, experiment_path(e.id)%><br>
-    <%end%><br>
