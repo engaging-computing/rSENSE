@@ -1,7 +1,11 @@
 <tr>
   <td class="field_name"><%=field.name%></td>
-  <td class="field_unit"><%=field.unit%></td>
-  <td class="field_type"><%=field.field_type%></td>
+  <td class="field_unit">
+    <%if !(field.field_type == TEXT_TYPE)%>
+      <%=field.unit%>
+    <% end %>
+  </td>
+  <td class="field_type"><%=get_field_name(field.field_type)%></td>
   <%if can_edit%>
     <td><a class="field_edit_link">[edit]</a>
         <a href="/<%=type.pluralize%>/<%=row_id%>" class="field_save_link">[save]</a>
