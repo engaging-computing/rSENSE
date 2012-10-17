@@ -1,5 +1,29 @@
 // A stylesheet for overriding bootstrap defaults
 
+.navbar a:link
+{
+  color: #ddd;
+  text-decoration: none;
+}
+
+.navbar a:visited
+{
+  color: #ddd;
+  text-decoration: none;
+}
+
+.navbar a:hover
+{
+  color: #fff;
+  text-decoration: none;
+}
+
+.navbar a:active
+{
+  color: #ddd;
+  text-decoration: none;
+}
+
 div.navbar
 {
   padding-top: 5px;
@@ -17,6 +41,12 @@ div.navbar
   text-shadow: 0 1px 0 #444444;
 }
 
+.navbar p
+{
+  color: #ddd;
+  text-shadow: 0 1px 0 #444444;
+}
+
 .navbar .nav > li > a:hover
 {
   color: #fff;
@@ -26,6 +56,13 @@ div.navbar
 {
   color: transparent;
   text-shadow: none;
+}
+
+.navbar .divider-vertical {
+  height: 40px;
+  margin: 0 9px;
+  border-right: 1px solid #303060;
+  border-left: 2px solid #181830;
 }
 
 div.navbar-inner

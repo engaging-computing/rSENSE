@@ -64,12 +64,30 @@
     
     <div class="navbar">
       <div class="navbar-inner">
-        <a class="brand" href="#">iSENSE</a>
-            <ul class="nav">
-              <li><a href="#"><i class="icon-folder-open icon-white"> </i> Experiments</a></li>
-              <li><a href="#"><i class="icon-user icon-white"> </i> People</a></li>
-              <li><a href="#"><i class="icon-eye-open icon-white"> </i> Visualizations</a></li>
-            </ul>
+        <a class="brand" href="/">iSENSE</a>
+        <ul class="nav">
+          <li class="divider-vertical"></li>
+          <li><a href="/experiments"><i class="icon-folder-open icon-white"> </i> Experiments</a></li>
+          <li><a href="/users"><i class="icon-user icon-white"> </i> People</a></li>
+          <li><a href="/vises"><i class="icon-eye-open icon-white"> </i> Visualizations</a></li>
+        </ul>
+        <ul class="nav pull-right">
+          <% if @cur_user != nil %>
+            <li>
+              <p class="navbar-text">
+                <a href="/users/<%= @cur_user.id %>">
+                  <%= "Logged in as #{@cur_user.firstname.capitalize} #{@cur_user.lastname[0].capitalize}." %>
+                </a>
+              </p>
+            </li>
+            <li class="divider-vertical"></li>
+            <li><%= link_to 'logout', login_path(), method: :delete %></li>
+          <% else %>
+            <li><%= link_to "Register", new_user_path %></li>
+            <li class="divider-vertical"></li>
+            <li><a href="" class="login">Login</a></li>
+          <% end %>
+        </p>
       </div>
     </div>
 
