@@ -1,6 +1,7 @@
 <p id="notice"><%= notice %></p>
 
 <div class="row">
+<<<<<<< HEAD
 
   <div class="span12">
 
@@ -59,3 +60,39 @@
 </div>
 
 <%= link_to 'Back', experiments_path %>
+=======
+    <div class="span4">
+        <div  class="row">
+            <div class="span4">
+                <span style="font-size:2em"><%= experiment_edit_helper 'title', (@experiment.user_id == @cur_user.try(:id)) %></span><br>
+                <span class="info_label" style="font-size:1.1em">Owner:</span> 
+                <%= link_to @owner_name, user_path(@experiment.user_id) %><br>
+                <span class="info_label" style="font-size:1.1em">Created:</span><%=time_ago_in_words(@experiment.created_at)%> ago
+            </div>
+        </div>
+     </div>
+</div>
+ <br>
+<div class="row">
+    <div class="span8">
+        <%= experiment_redactor_helper (@experiment.user_id == @cur_user.try(:id)) %>
+    </div>
+    <div class="span4">
+        <div style="background-color:#EEE">
+            <span style="font-size:1.5em">Fields</span>
+            <table style="width:60%" class="fields_table" experiment="<%=@experiment.id%>">
+                <th>Name</th>
+                <th>Units</th>
+                <th>Type</th>
+                <% @experiment.fields.all.each do |f| %>
+                    <%= render 'field_edit', field: f, type: "field",row_id: f.id,can_edit: (@experiment.user_id == @cur_user.try(:id))%>
+                <%end%> 
+                <tr><td colspan="4"><a class="field_add_link">+</a></td></tr>
+            </table>
+        </div>
+    </div>
+</div>
+ 
+
+
+>>>>>>> f1603089505c53a8ea11d3962e3b3b2f1545b994
