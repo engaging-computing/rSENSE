@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Title:</b>
+  <%= @experiment_session.title %>
+</p>
+
+<p>
+  <b>Content:</b>
+  <%= @experiment_session.content %>
+</p>
+
+<p>
+  <b>User:</b>
+  <%= @experiment_session.user_id %>
+</p>
+
+<p>
+  <b>Experiment:</b>
+  <%= @experiment_session.experiment_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_experiment_session_path(@experiment_session) %> |
+<%= link_to 'Back', experiment_sessions_path %>
