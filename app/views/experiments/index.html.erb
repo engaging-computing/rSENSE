@@ -1,14 +1,12 @@
-<br>
 <h1>Experiments</h1>
-<br>
-
+<br />
 <ul style="width:60%;">
     <% @experiments.each do |experiment| %>
         <li class="<%= cycle('oddrow', 'evenrow') %>">
-            <h2><%= link_to experiment.title, experiment_path(experiment) %></h2>
+            <h4><%= link_to experiment.title, experiment_path(experiment) %></h4>
             Owner: <%= link_to "#{experiment.owner.firstname} #{experiment.owner.lastname[0]}", user_path(experiment.owner) %><br>
             Created: <%= time_ago_in_words(experiment.created_at)%> ago
-        <li>
+        </li>
     <% end %>
 </ul>
 

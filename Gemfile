@@ -31,6 +31,9 @@ gem 'gravatar_image_tag'
 # Include JQuery UI
 gem 'jquery-ui-rails'
 
+# Include Twitter bootstrap
+gem 'twitter-bootstrap-rails'
+
 # To use Jbuilder templates for JSON
 # gem 'jbuilder'
 
