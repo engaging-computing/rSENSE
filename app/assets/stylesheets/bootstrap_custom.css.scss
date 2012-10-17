@@ -17,8 +17,15 @@ div.navbar
   text-shadow: 0 1px 0 #444444;
 }
 
-.navbar .nav > li > a:hover {
+.navbar .nav > li > a:hover
+{
   color: #fff;
+}
+
+.navbar .nav > li > a > i
+{
+  color: transparent;
+  text-shadow: none;
 }
 
 div.navbar-inner
