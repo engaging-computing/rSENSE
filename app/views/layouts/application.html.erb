@@ -14,52 +14,6 @@
     <button class="login_button">Login</button>
   </div>
 
-  <!--
-  <div id="header">
-    
-    <div id="home">
-      <a href="/">
-        <img src="http://isense.cs.uml.edu/html/img/logo.png" />
-      </a>
-    </div>
-    
-    <div id="nav">
-      <ul>
-        <li>
-          <a href="/experiments">
-            <img src="http://isense.cs.uml.edu/html/img/drawer.svg" alt="Browse experiments and their sessions">
-            <span class="header_links">Experiments</span>
-          </a>
-        </li>
-        <li>
-          <a href="/users">
-            <img src="http://isense.cs.uml.edu/html/img/group.svg" alt="Browse experiments and their sessions">
-            <span class="header_links">People</span>
-          </a>
-        </li>
-        <li>
-          <a href="/vises">
-            <img src="http://isense.cs.uml.edu/html/img/chart_bar.svg" alt="Browse experiments and their sessions">
-            <span class="header_links">Visualisations</span>
-          </a>
-        </li>
-      </ul>
-    </div>
-    
-    <div id="user">
-
-      <% if @cur_user != nil %>
-        <%= "Logged in as #{@cur_user.firstname.capitalize} #{@cur_user.lastname[0].capitalize}." %>
-        <%= link_to 'logout', login_path(), method: :delete %>
-      <% else %>
-        <%= link_to "Register", new_user_path %>
-        or
-        <a href="" class="login">login</a>
-      <% end %>
-
-    </div>
-  </div>
-  -->
   <div class="container">
     
     <div class="navbar">
@@ -96,13 +50,9 @@
     <div class="row">
       <div class="span12">
         <div class="hero-unit footer">
-          <h2>
-            Maybe here is a footer or some shit. Ain't that great?
-          </h2>
-          <p>
-            It sure does look ugly when there's not much content on the page, though. Like your mom.
-          </p>
-        </div>
+            <p  style="font-size:0.8em">The iSENSE project is a collaborative effort of the University of Massachusetts Lowell and Machine Science Inc. </p>
+            <p  style="font-size:0.8em">Our work is supported by grants <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0735597">DRL-0735597</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0735592">DRL-0735592</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0546513">DRL-0546513</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=1123998">IIS-1123998</a>, and <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=1123972">IIS-1123972</a> from the National Science Foundation, and a gift from Google Inc.</p>
+       </div>
       </div>
     </div>
     
