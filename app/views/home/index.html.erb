@@ -1,35 +1,35 @@
 <div class="hero-unit">
   <h1>Welcome to iSENSE!</h1>
-  <p>This is where dreams are made. And then crushed. And then incinerated.</p>
+  <p>Collect - Explore - Share</p>
 </div>
 
 <div class="row">
   
   <div class="span3">
     <div class="hero-unit sub-hero">
-      <h3>Step 1: What Is Stuff?</h3>
-      <p>What is all this stuff, really? And why are we doing it?</p>
+      <h3>Step 1: Create an Experiment</h3>
+      <p> What is an experiment?</p>
     </div>
   </div>
   
   <div class="span3">
     <div class="hero-unit sub-hero">
-      <h3>Step 2: Do Stuff</h3>
-      <p>Some text about doing whatever stuff.</p>
+      <h3>Step 2: Collect Data</h3>
+      <p>What is data?</p>
     </div>
   </div>
   
   <div class="span3">
     <div class="hero-unit sub-hero">
-      <h3>Step 3: Do More Stuff</h3>
-      <p>Some text about doing more stuff.</p>
+      <h3>Step 3: Explore</h3>
+      <p>Look at the crazy vises we build.</p>
     </div>
   </div>
   
   <div class="span3">
     <div class="hero-unit sub-hero">
-      <h3>Step 4: Do Even More Stuff</h3>
-      <p>Some text about doing even more stuff. Or something.</p>
+      <h3>Step 4: Save a Vis</h3>
+      <p>Save one of those crazy vis things!</p>
     </div>
   </div>
   
@@ -70,65 +70,16 @@
   <div class="span4">
     
     <div class="feed-top">
-      <h3>This Is Your Feed:</h3>
+      <h3>Recent Activity:</h3>
     </div>
     
-    <div class="feed-even">
-      <h5>Something Happened</h5>
-      Some text goes here.
-    </div>
-    <div class="feed-odd">
-      <h5>Something Happened</h5>
-      Some text goes here.
-    </div>
-    <div class="feed-even">
-      <h5>Something Happened</h5>
-      Some text goes here.
-    </div>
-    <div class="feed-odd">
-      <h5>Something Happened</h5>
-      Some text goes here.
-    </div>
-    <div class="feed-even">
-      <h5>Something Happened</h5>
-      Some text goes here.
-    </div>
-    <div class="feed-odd">
-      <h5>Something Happened</h5>
-      Some text goes here.
-    </div>
-    <div class="feed-even">
-      <h5>Something Happened</h5>
-      Some text goes here.
-    </div>
-    <div class="feed-odd">
-      <h5>Something Happened</h5>
-      Some text goes here.
-    </div>
-    <div class="feed-even">
-      <h5>Something Happened</h5>
-      Some text goes here.
-    </div>
-    <div class="feed-odd">
-      <h5>Something Happened</h5>
-      Some text goes here.
-    </div>
-    <div class="feed-even">
-      <h5>Something Happened</h5>
-      Some text goes here.
-    </div>
-    <div class="feed-odd">
-      <h5>Something Happened</h5>
-      Some text goes here.
-    </div>
-    <div class="feed-even">
-      <h5>Something Happened</h5>
-      Some text goes here.
-    </div>
-    <div class="feed-odd">
-      <h5>Something Happened</h5>
-      Some text goes here.
-    </div>
+    <% @experiments.each do |e| %>
+        <div class="<%= cycle('feed-even', 'feed-odd') %>">
+            <h5><%= link_to e.title, experiment_path(e)%></h5>
+            Owner: <%= link_to "#{e.owner.firstname} #{e.owner.lastname[0]}", user_path(e.owner) %><br>
+            Created: <%=time_ago_in_words(e.created_at)%> ago
+        </div>
+    <% end %>
     
   </div>
   
