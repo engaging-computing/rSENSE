@@ -1,7 +1,7 @@
 <span class="edit_info" field='<%=field%>' type='<%=type%>'>
     <span class="info_text"><%=value%></span>
     <%if can_edit %>
-        <a class="info_edit_link">[edit]</a>
-        <a href="/<%=type.pluralize%>/<%=row_id%>" class="info_save_link">[save]</a>
+        <a class="info_edit_link"><i class="icon-edit"></i></a>
+        <a href="/<%=type.pluralize%>/<%=row_id%>" class="info_save_link"><i class="icon-ok"></i></a>
     <%end%>
 </span>
