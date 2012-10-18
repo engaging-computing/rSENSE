@@ -4,8 +4,8 @@ $(document).ready ->
         name = $(@).parent().parent().find('.field_name')
         unit = $(@).parent().parent().find('.field_unit')
 
-        name.wrapInner("<input type='text' class='name_edit_box' value='#{name.text()}'>")
-        unit.wrapInner("<input type='text' class='unit_edit_box' value='#{unit.text()}'>")
+        name.wrapInner("<input type='text' class='name_edit_box' value='#{name.text().trim()}'>")
+        unit.wrapInner("<input type='text' class='unit_edit_box' value='#{unit.text().trim()}'>")
         name.find('.name_edit_box').focus()
 
         $(@).hide()
@@ -16,8 +16,8 @@ $(document).ready ->
         name = $(@).parent().parent().find('.field_name')
         unit = $(@).parent().parent().find('.field_unit')
 
-        name_text = name.find('.name_edit_box').val()
-        unit_text = unit.find('.unit_edit_box').val()
+        name_text = name.find('.name_edit_box').val().trim()
+        unit_text = unit.find('.unit_edit_box').val().trim()
 
         data={}
         data['field'] = {}
@@ -71,14 +71,14 @@ $(document).ready ->
                         field_type: type
                 success: (msg) =>
                     $('.field_add_link').parent().parent().remove()
-                    $('.fields_table').append('<tr><td colspan="4"><a class="field_add_link">+</a></td></tr>')
+                    $('.fields_table').append('<tr><td colspan="4"><a class="field_add_link"><i class="icon-plus-sign"></i></a></td></tr>')
                     $(@).parent().parent().find('.field_name').html( $(@).parent().parent().find('.name_add_box').val() )
                     $(@).parent().parent().find('.field_type').html( $(@).parent().parent().find('.type_add_box').val() )
                     $(@).parent().parent().find('.field_unit').html( $(@).parent().parent().find('.unit_add_box').val() )
-                    $(@).parent().parent().find('.field_commit_link').parent().empty().append('<a class="field_edit_link">[edit]</a><a href="/fields/' + msg.id + '" class="field_save_link">[save]</a>')
+                    $(@).parent().parent().find('.field_commit_link').parent().empty().append('<a class="field_edit_link"><i class="icon-edit"></i></a><a href="/fields/' + msg.id + '" class="field_save_link"><i class="icon-ok"></i></a>')
                     $('.field_edit_link').click edit
                     $('.field_save_link').click save
-                    $('.field_add_link').click add    
+                    $('.field_add_link').click add
                 fail: =>
 
     $('.field_edit_link').click edit
