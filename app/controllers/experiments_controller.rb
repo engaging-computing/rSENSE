@@ -20,8 +20,6 @@ class ExperimentsController < ApplicationController
   # GET /experiments/1.json
   def show
     @experiment = Experiment.find(params[:id])
-    @owner = User.find(@experiment.user_id)
-    @owner_name = @owner.firstname + " " + @owner.lastname[0] + "."
     
     respond_to do |format|
       format.html # show.html.erb
