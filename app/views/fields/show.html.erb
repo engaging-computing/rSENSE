@@ -1,0 +1,12 @@
+<p id="notice"><%= notice %></p>
+
+<span class="info_label">Name:</span> 
+<%= field_edit_helper 'name', @owner == @cur_user.try(:id)%><br>
+
+<span class="info_label">Units:</span> 
+<%= field_edit_helper 'unit', @owner == @cur_user.try(:id)%><br>
+
+<span class="info_label">Type:</span> 
+<%= field_edit_helper 'field_type', false%><br>
+
+<%= link_to 'Back', fields_path %>

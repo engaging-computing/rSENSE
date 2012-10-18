@@ -1,6 +1,8 @@
 // Place all the styles related to the Users controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+/*
 table
 {
     th, td
@@ -10,24 +12,10 @@ table
     }    
     border-collapse:collapse;
 }
-
-.user_content
-{
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    border-radius: 10px;
-    border: 1px solid grey;
-    padding: 5px;
-    margin: 20px 0px;
-    width: 60%;
-}
+*/
 
 .user_info
 {
     padding: 5px 6px;
 }
 
-.redactor_content_save_link
-{
-    display: none;
-}
