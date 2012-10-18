@@ -13,11 +13,7 @@
 
 <div class="row">
     <div class="span8"> 
-        <% if !(@experiment.content.blank?) %>
-            <%= experiment_redactor_helper (@experiment.user_id == @cur_user.try(:id)) %>
-        <% elsif %>
-            <div class="well" style="text-align:center"><img src="/assets/add_content.png" class="img-rounded"></div>
-        <%end%>
+        <%= experiment_redactor_helper (@experiment.user_id == @cur_user.try(:id)) %>
     </div>
 
     <div class="row">
