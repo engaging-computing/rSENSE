@@ -1,14 +1,30 @@
 <div class="type_content" field='<%=field%>' type='<%=type%>'>
 
-    <%if can_edit %>
-      <span style="float:right;">
-        <i class="icon-edit"></i>
-        <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_save_link"><i class="icon-ok"></i></a>
-      </span><br>
+    <%if has_content %>
+        <%if can_edit%>
+            <span style="float:right;">
+                <a class="redactor_content_edit_link"><i class="icon-edit"></i></a>
+                <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_save_link"><i class="icon-edit"></i></a>
+            </span><br>
+        <%end%>
+
+        <div class="redactor_content">
+            <%= raw content %>
+        </div>
+        
+    <% else %>
+        <div class="well" style="text-align:center">
+            <div class="add_content">
+                <a class="add_content_link"><img src="/assets/add_content.png" class="img-rounded"></a>
+            </div>
+        </div>
+            <span style="float:right;display:none" class="edit_tools">
+                <a class="redactor_content_edit_link" style="display:none"><i class="icon-edit"></i></a>
+                <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_save_link" style="display:inline"><i class="icon-ok"></i></a>
+            </span><br>
+        <div class="redactor_content" style="display:none">
+            <%= raw content %>
+        </div>
     <%end%>
     
-    <div class="redactor_content">
-        <%= raw content %>
-    </div>
-
 </div>
