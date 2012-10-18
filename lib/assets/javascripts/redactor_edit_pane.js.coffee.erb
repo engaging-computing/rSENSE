@@ -30,5 +30,5 @@ $(document).ready ->
     $('.add_content_link').click ->
         $(@).parent().parent().siblings('.redactor_content').show()
         $(@).parent().parent().siblings('.redactor_content').redactor()
-        $(@).parent().parent().siblings('.edit_tools').show()
+        $(@).parent().parent().parent().parent().find('.redactor_content_save_link').show()
         $(@).parent().parent().hide()
