@@ -1,58 +1,53 @@
 <p id="notice"><%= notice %></p>
 
 <div class="row">
-  <div class="span8">
-    <div class="row">
-
-      <div class="span8">
+    <div class="span6">
         <span style="font-size:2em"><%= experiment_edit_helper 'title', (@experiment.user_id == @cur_user.try(:id)) %></span><br>
         <span class="info_label" style="font-size:1.1em">Owner:</span> 
         <%= link_to @owner_name, user_path(@experiment.user_id) %><br>
         <span class="info_label" style="font-size:1.1em">Created:</span><%=time_ago_in_words(@experiment.created_at)%> ago
-      </div>
+    </div>       
+</div>
 
-      <div class="span8"> 
-        <% if !(@experiment.content.blank?) %>
+ <br>
+
+<div class="row">
+    <div class="span8"> 
         <%= experiment_redactor_helper (@experiment.user_id == @cur_user.try(:id)) %>
-        <% elsif %>
-        <div class="well" style="text-align:center"><img src="/assets/add_content.png" class="img-rounded"></div>
-        <%end%>
-      </div>
+    </div>
 
-      <div class="span8">
-        <div class="grey_content">
-          <h3>Sessions</h3>
-          <table style="width:100%" class="table">
-            <% @experiment.experiment_sessions.all.each do |s| %>
-            <tr>
-              <td style="width:32px;height:32px;"><%= gravatar_image_tag(s.user.email, alt: s.user.firstname) %></td>
-              <td><%= link_to "#{s.user.firstname} #{s.user.lastname[0]}", user_path(s.user) %></td>
-              <td><%= link_to s.title, experiment_session_path(s) %></td>
-              <% if (s.user.id == @cur_user.id) %>
-              <td></td>
-              <%end%>
-            </tr>
-            <%end%>
-          </table>
+    <div class="row">
+        <div class="span4">
+            <div style="background-color:#EEE">
+                <span style="font-size:1.5em">Fields</span>
+                <table style="width:60%" class="fields_table" experiment="<%=@experiment.id%>">
+                    <th>Name</th>
+                    <th>Units</th>
+                    <th>Type</th>
+                    <% @experiment.fields.all.each do |f| %>
+                        <%= render 'field_edit', field: f, type: "field",row_id: f.id,can_edit: (@experiment.user_id == @cur_user.try(:id))%>
+                    <%end%> 
+                    <tr><td colspan="3"><a class="field_add_link"><i class="icon-plus-sign"></i></a></td></tr>
+                </table>
+            </div>
         </div>
-      </div>
-      
-    </div>
-  </div>
 
-  <div class="span4">
-    <div class="grey_content center">
-      <h4>Fields</h4>
-      <table class="table" experiment="<%=@experiment.id%>">
-        <th>Name</th>
-        <th>Units</th>
-        <th>Type</th>
-        <% @experiment.fields.all.each do |f| %>
-        <%= render 'field_edit', field: f, type: "field",row_id: f.id,can_edit: (@experiment.user_id == @cur_user.try(:id))%>
-        <%end%> 
-        <tr><td colspan="4" style="text-align: center;"><a class="field_add_link"><i class="icon-plus-sign"></i></a></td></tr>
-      </table>
-    </div>
-  </div>
-
+        <div class="span4">
+            <div style="background-color:#EEE">
+                <span style="font-size:1.5em">Sessions</span>
+                <table style="width:100%" class="table">
+                    <% @experiment.experiment_sessions.all.each do |s| %>
+                        <tr>
+                            <td style="width:32px;height:32px;"><%= gravatar_image_tag(s.user.email, alt: s.user.firstname) %></td>
+                            <td><%= link_to "#{s.user.firstname} #{s.user.lastname[0]}", user_path(s.user) %></td>
+                            <td><%= link_to s.title, experiment_session_path(s) %></td>
+                            <% if (s.user.id == @cur_user.id) %>
+                                <td></td>
+                            <%end%>
+                        </tr>
+                    <%end%>
+                </table>
+            </div>
+        </div>
+    </div>     
 </div>
