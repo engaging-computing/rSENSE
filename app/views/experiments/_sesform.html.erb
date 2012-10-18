@@ -1,0 +1,5 @@
+<%= form_for @experiment_session, :url => experiment_path(@experiment), :method => :post do |f| %>
+  <div class="actions">
+    <%= f.submit "Create Session" %>
+  </div>
+<% end %>

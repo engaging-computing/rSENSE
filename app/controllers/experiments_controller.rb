@@ -22,6 +22,13 @@ class ExperimentsController < ApplicationController
     @experiment = Experiment.find(params[:id])
     @owner = User.find(@experiment.user_id)
     @owner_name = @owner.firstname + " " + @owner.lastname[0] + "."
+
+    if params[:commit] != "Create Session"
+      @experiment_session = ExperimentSession.new
+    else
+      @experiment_session = ExperimentSession.new({user_id: @cur_user.id, experiment_id: @experiment.id, title:"#{@cur_user.firstname} #{@cur_user.lastname[0]}'s Experiment"})
+      @experiment_session.save
+    end
     
     respond_to do |format|
       format.html # show.html.erb
@@ -49,8 +56,10 @@ class ExperimentsController < ApplicationController
   # POST /experiments.json
   def create
     content = "<h1>Problem:</h1><p>Description of problem</p><br><br><h1>Procedure:</h1><p>How you want people to collect your data</p>"
-    @experiment = Experiment.new(params[:experiment])
-    @experiment = Experiment.new({user_id: @cur_user.id, title:"#{@cur_user.firstname} #{@cur_user.lastname[0].pluralize} Experiment"})
+
+    #@experiment = Experiment.new(params[:experiment])
+    
+    @experiment = Experiment.new({user_id: @cur_user.id, title:"#{@cur_user.firstname} #{@cur_user.lastname[0]}'s Experiment"})
     respond_to do |format|
       if @experiment.save
         format.html { redirect_to @experiment, notice: 'Experiment was successfully created.' }

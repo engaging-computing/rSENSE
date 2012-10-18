@@ -8,7 +8,9 @@ Rsense::Application.routes.draw do
   resources :fields
 
   resources :experiments
-
+  
+  post 'experiments/:id' => 'experiments#show'
+  
   get "home/index"
   root :to => "home#index"
   
