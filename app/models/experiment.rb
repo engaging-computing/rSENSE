@@ -6,5 +6,7 @@ class Experiment < ActiveRecord::Base
   
   has_many :fields
   has_many :experiment_sessions
+
+  belongs_to :owner, class_name: "User", foreign_key: "user_id"
   
 end
