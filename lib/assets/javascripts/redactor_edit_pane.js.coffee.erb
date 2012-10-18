@@ -16,9 +16,6 @@ $(document).ready ->
         data={}
         data[type] = {}
         data[type][field_name] = value
-        console.log data
-       
-     
         
         $.ajax
             url: $(@).attr('href')
@@ -29,3 +26,9 @@ $(document).ready ->
             success: =>
                 $(@).parent().parent().find('.redactor_content').destroyEditor()
         false
+        
+    $('.add_content_link').click ->
+        $(@).parent().parent().siblings('.redactor_content').show()
+        $(@).parent().parent().siblings('.redactor_content').redactor()
+        $(@).parent().parent().siblings('.edit_tools').show()
+        $(@).parent().parent().hide()

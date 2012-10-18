@@ -5,7 +5,7 @@ module UsersHelper
   end
     
   def user_redactor_helper(can_edit = false)
-      render 'shared/content', {type: 'user', field: "content", content: @user.content, row_id: @user.id, can_edit: can_edit}
+      render 'shared/content', {type: 'user', field: "content", content: @user.content, row_id: @user.id,has_content: !@user.content.blank? , can_edit: can_edit}
   end
   
 end
