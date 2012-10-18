@@ -8,12 +8,12 @@
  * You're free to add application-wide styles to this file and they'll appear at the top of the
  * compiled file, but it's generally better to create a new file per style scope.
  *
- *= require_self
  *= require_tree .
  *= require redactor.css
  *= require jquery.ui.all
  *= require bootstrap_and_overrides
  *= require bootstrap_custom
+ *= require_self
  */
  
 #header
@@ -136,16 +136,39 @@ div.clear
 
 .type_content
 {
-    -webkit-border-radius: 10px 10px 0px 0px;
-    -moz-border-radius: 10px 10px 0px 0px;
-    border-radius: 10px 10px 0px 0px;
-    border: 1px solid #eee;
-    background-color: #eee;
+    -webkit-border-radius: 10px 10px 10px 10px;
+    -moz-border-radius: 10px 10px 10px 10px;
+    border-radius: 10px 10px 10px 10px;
+    border: 1px solid #555;
+    background-color: #555;
     padding: -1px;
     margin: 0px 0px;
 }
 
-.redactor_content_save_link
+.redactor_content
 {
-    display: none;
+  background-color: #fff;
+  padding: 10px;
+  margin: 1px 1px 15px 1px;
+}
+
+.icon_content
+{
+  margin-right: 5px;
+}
+
+.content_icontainer
+{
+  min-height: 19px;
+  text-align: right;
+}
+
+.content_well
+{
+  margin-bottom: 20px;
+}
+
+.redactor_box
+{
+  margin-bottom: 15px;
 }
