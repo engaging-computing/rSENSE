@@ -1,17 +1,47 @@
-<br>
-<h1>Experiments</h1>
-<br>
+<div class="row">
+    <div class="span12">
+        <h1>Experiments</h1>
+    </div>
+</div>
 
-<ul style="width:60%;">
-    <% @experiments.each do |experiment| %>
-        <li class="<%= cycle('oddrow', 'evenrow') %>">
-            <h2><%= link_to experiment.title, experiment_path(experiment) %></h2>
-            Owner: <%= link_to "#{experiment.owner.firstname} #{experiment.owner.lastname[0]}", user_path(experiment.owner) %><br>
-            Created: <%= time_ago_in_words(experiment.created_at)%> ago
-        <li>
-    <% end %>
-</ul>
+<div class="row">
+    <div class="span8" style="background-color: #ccc;">
+        <% @experiments.each do |experiment| %>
+            <div class="<%= cycle('feed-even', 'feed-odd')%>">
+                <h4><%= link_to experiment.title, experiment_path(experiment) %></h4>
+                Owner: <%= link_to "#{experiment.owner.firstname} #{experiment.owner.lastname[0]}", user_path(experiment.owner) %><br>
+                Created: <%= time_ago_in_words(experiment.created_at)%> ago
+            </div>
+        <% end %>
+    </div>
 
-<br />
+    <div class="span3 offset1">
+        <div class="row">
+            <h4 style="text-align:center">Featured Experiments</h4>
+        </div>
+        <div class="row">
+            <div class="hero-unit">
+                <h5>Experiment 1</h5>
+                Some featured experiment 
+            </div>
+        </div>
+        <div class="row">
+            <div class="hero-unit">
+                <h5>Experiment 2</h5>
+                Some other featured experiment 
+            </div>
+        </div>
+        <div class="row">
+            <div class="hero-unit">
+                <h5>Experiment 3</h5>
+                Some third featured experiment 
+            </div>
+        </div>
+    </div>
+</div>
 
-<%= link_to 'New Experiment', new_experiment_path %>
+<div class="row">
+    <div class="span12">
+        <%= link_to 'New Experiment', new_experiment_path %>
+    </div>
+</div>
