@@ -15,4 +15,4 @@
 /tmp
 db/schema.rb
 *~
-*.orig
+*.origconfig/aws_config.yml
