@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Media type:</b>
+  <%= @media_object.media_type %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%= @media_object.name %>
+</p>
+
+<p>
+  <b>Src:</b>
+  <%= @media_object.src %>
+</p>
+
+<p>
+  <b>User:</b>
+  <%= @media_object.user_id %>
+</p>
+
+<p>
+  <b>Experiment:</b>
+  <%= @media_object.experiment_id %>
+</p>
+
+<p>
+  <b>Session:</b>
+  <%= @media_object.session_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_media_object_path(@media_object) %> |
+<%= link_to 'Back', media_objects_path %>
