@@ -83,6 +83,7 @@ class MediaObjectsController < ApplicationController
     end
   end
   
+  #POST /media_object/saveimage
   def saveimage
     
     #Figure out where we are uploading data to
