@@ -7,8 +7,8 @@
   </td>
   <td class="field_type"><%=get_field_name(field.field_type)%></td>
   <%if can_edit%>
-    <td><a class="field_edit_link">[edit]</a>
-        <a href="/<%=type.pluralize%>/<%=row_id%>" class="field_save_link">[save]</a>
+    <td><a class="field_edit_link"><i class="icon-edit"></i></a>
+        <a href="/<%=type.pluralize%>/<%=row_id%>" class="field_save_link"><i class="icon-ok"></i></a>
     </td>
   <%end%>
 </tr>

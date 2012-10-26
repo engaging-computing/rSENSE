@@ -1,30 +1,40 @@
+<script type='text/javascript'>
+  var type = '<%=type%>';
+  var row_id = '<%=row_id%>';
+</script>
+
 <div class="type_content" field='<%=field%>' type='<%=type%>'>
 
-    <%if has_content %>
-        <%if can_edit%>
-            <span style="float:right;">
-                <a class="redactor_content_edit_link"><i class="icon-edit"></i></a>
-                <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_save_link"><i class="icon-edit"></i></a>
-            </span><br>
-        <%end%>
+  <%if has_content %>
 
-        <div class="redactor_content">
-            <%= raw content %>
-        </div>
-        
-    <% else %>
-        <div class="well" style="text-align:center">
-            <div class="add_content">
-                <a class="add_content_link"><img src="/assets/add_content.png" class="img-rounded"></a>
-            </div>
-        </div>
-            <span style="float:right;display:none" class="edit_tools">
-                <a class="redactor_content_edit_link" style="display:none"><i class="icon-edit"></i></a>
-                <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_save_link" style="display:inline"><i class="icon-ok"></i></a>
-            </span><br>
-        <div class="redactor_content" style="display:none">
-            <%= raw content %>
-        </div>
+  <div class="content_icontainer">
+    <%if can_edit%>
+    <a class="redactor_content_edit_link"><i class="icon-edit icon-white icon_content"></i></a>
+    <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_save_link" style="display:none"><i class="icon-ok icon-white icon_content"></i></a>
     <%end%>
-    
+  </div>
+
+  <div class="redactor_content">
+    <%= raw content %>
+  </div>
+
+  <% else %>
+  
+  <div class="content_icontainer">
+    <a class="redactor_content_edit_link" style="display:none"><i class="icon-edit icon-white icon_content"></i></a>
+    <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_save_link" style="display:none"><i class="icon-ok icon-white icon_content"></i></a>
+  </div>
+  
+  <div class="redactor_content" style="display:none">
+    <%= raw content %>
+  </div>
+  
+  <div class="well content_well" style="text-align:center">
+    <div class="add_content">
+      <a class="add_content_link"><img src="/assets/add_content.png" class="img-rounded"></a>
+    </div>
+  </div>
+  
+  <%end%>
+
 </div>

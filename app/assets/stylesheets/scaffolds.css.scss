@@ -18,7 +18,6 @@ pre {
   font-size: 11px;
 }
 
-/* This was conflicting with lots of stuff
 a {
   color: #000;
   &:visited {
@@ -29,7 +28,6 @@ a {
     background-color: #000;
   }
 }
-*/
 
 div {
   &.field, &.actions {
