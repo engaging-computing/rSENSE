@@ -34,6 +34,12 @@ gem 'jquery-ui-rails'
 # Include Twitter bootstrap
 gem 'twitter-bootstrap-rails'
 
+# Include that sweet, sweet Redactor
+gem 'redactor-rails'
+
+# Install Amazon AWS gem
+gem 'aws-sdk'
+
 # To use Jbuilder templates for JSON
 # gem 'jbuilder'
 

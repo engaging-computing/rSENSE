@@ -1,4 +1,9 @@
 Rsense::Application.routes.draw do
+  
+  match "/media_objects/saveimage/*keys" => "media_objects#saveimage"
+
+  resources :experiments
+
   resources :experiment_sessions
 
   resources :memberships
@@ -7,16 +12,12 @@ Rsense::Application.routes.draw do
 
   resources :fields
 
-  resources :experiments
-
   get "home/index"
   root :to => "home#index"
   
   get "admin/index"
 
   get 'admin' => 'admin#index'
-
-  
   
   controller :sessions do
     post 'login' => :create

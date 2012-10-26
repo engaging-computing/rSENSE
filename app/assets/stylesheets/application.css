@@ -9,8 +9,8 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_tree .
- *= require redactor.css
  *= require jquery.ui.all
+ *= require redactor-rails
  *= require bootstrap_and_overrides
  *= require bootstrap_custom
  *= require_self

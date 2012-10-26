@@ -6,7 +6,7 @@
         <div class="experiment_info_box">
           <span style="font-size:2em"><%= experiment_edit_helper 'title', (@experiment.user_id == @cur_user.try(:id)) %></span><br>
           <span class="info_label" style="font-size:1.1em">Owner:</span> 
-          <%= link_to @owner_name, user_path(@experiment.user_id) %><br>
+          <%= link_to @experiment.owner.name, user_path(@experiment.owner.username) %><br>
           <span class="info_label" style="font-size:1.1em">Created:</span><%=time_ago_in_words(@experiment.created_at)%> ago
         </div>
       </div>
@@ -29,7 +29,7 @@
             <% @experiment.fields.all.each do |f| %>
             <%= render 'field_edit', field: f, type: "field",row_id: f.id,can_edit: (@experiment.user_id == @cur_user.try(:id))%>
             <% end %> 
-            <%if @experiment.user_id == @cur_user.try(:id)%>
+            <%if @experiment.owner.id == @cur_user.try(:id)%>
             <tr><td colspan="3"><a class="field_add_link"><i class="icon-plus-sign"></i></a></td></tr>
             <%end%>
           </table>
@@ -42,10 +42,10 @@
           <table class="table">
             <% @experiment.experiment_sessions.all.each do |s| %>
             <tr>
-              <td style="width:32px;height:32px;"><%= gravatar_image_tag(s.user.email, alt: s.user.firstname) %></td>
-              <td><%= link_to "#{s.user.firstname} #{s.user.lastname[0]}", user_path(s.user) %></td>
+              <td style="width:32px;height:32px;"><%= gravatar_image_tag(s.owner.email, alt: s.owner.firstname) %></td>
+              <td><%= link_to s.owner.name, user_path(s.owner) %></td>
               <td><%= link_to s.title, experiment_session_path(s) %></td>
-              <% if (s.user.id == @cur_user.try(:id)) %>
+              <% if (s.owner.id == @cur_user.try(:id)) %>
               <td></td>
               <% end %>
             </tr>

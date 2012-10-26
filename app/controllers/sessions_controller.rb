@@ -30,4 +30,5 @@ class SessionsController < ApplicationController
     session[:user_id] = nil
     redirect_to '', notice: "Logged out"
   end
+  
 end

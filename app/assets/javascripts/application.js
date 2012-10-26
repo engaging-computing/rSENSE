@@ -16,7 +16,7 @@
 //= require jquery.ui.all
 //= require bootstrap
 //= require_tree .
-//= require redactor.min.js
+//= require redactor-rails
 //= require redactor_edit_pane.js.coffee
 //= require info_edit.js.coffee
 //= require login.js.coffee.erb
