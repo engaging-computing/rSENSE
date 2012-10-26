@@ -16,7 +16,7 @@ Rsense::Application.routes.draw do
 
   get 'admin' => 'admin#index'
 
-  
+  match "/media_objects/saveimage/*keys" => "media_objects#saveimage"
   
   controller :sessions do
     post 'login' => :create

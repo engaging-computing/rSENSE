@@ -16,3 +16,4 @@
 db/schema.rb
 *~
 *.orig
+aws_config.yml
