@@ -1,47 +1,93 @@
-<p id="notice"><%= notice %></p>
+<p id="notice">
+    <%= notice %>
+</p>
 
 <div class="row">
 
-  <div class="span4">
+    <div class="span6">
+        <div class="row">
+            <div class="span2">
+                <%if @user.email?%>
+                    <div style="float:left;">
+                        <%= gravatar_image_tag(@user.email, alt: @user.firstname) %>
+                    </div>
+                <%end%>
+            </div>
 
-    <div class="row">
+            <div class="span4">
+                <span class="info_label">First Name:</span> 
+                <%= user_edit_helper 'firstname', (@user.id == @cur_user.id) %>
+                <br>
+                <br>
 
-      <div class="span2">
-        <%if @user.email?%>
-        <div style="float:left;">
-          <%= gravatar_image_tag(@user.email, alt: @user.firstname) %>
+                <%if @user.id == @cur_user.try(:id)%>
+                    <span class="info_label">Last Name:</span>
+                    <%= user_edit_helper 'lastname', (@user.id == @cur_user.id) %>
+                    <br>
+                    <br>
+                <%end%>
+
+                <span class="info_label">Username:</span>
+                <%= user_edit_helper 'username' %>
+                <br>
+            </div>
+            
+            <div class="span6">
+                <div style="margin-top:24px">
+                    <%= user_redactor_helper (@user.id == @cur_user.try(:id))%>
+                </div>
+            </div>
         </div>
-        <%end%>
-      </div>
-
-      <div class="span2">
-        <span class="info_label">First Name:</span> 
-        <%= user_edit_helper 'firstname', (@user.id == @cur_user.id) %><br><br>
-
-        <%if @user.id == @cur_user.try(:id)%>
-        <span class="info_label">Last Name:</span>
-        <%= user_edit_helper 'lastname', (@user.id == @cur_user.id) %><br><br>
-        <%end%>
-
-        <span class="info_label">Username:</span>
-        <%= user_edit_helper 'username' %><br>
-      </div>
-
     </div>
-  
-    <div class="row">
-      <div class="span4">
-        <h2>Experiments:</h2>
-        <% @user.experiments.all.each do |e|%>
-            <%= link_to e.title, experiment_path(e.id)%><br>
-        <%end%>
-      </div>
-    </div>
-  
-  </div>
 
-  <div class="span8">
-    <%= user_redactor_helper (@user.id == @cur_user.try(:id))%>
-  </div>
+    <div class="span6">
+    
+        <div class="row">
+        
+            <div class="span3">
+                <div class="sidebar_box grey_content">
+                    <h4 class="center">Experiments</h2>
+                    <table class="table">
+                        <% @user.experiments.all.each do |e|%>
+                            <tr>
+                                <td>
+                                <%= link_to e.title, experiment_path(e.id)%>
+                                </td>
+                            </tr>
+                        <%end%>
+                    </table>
+                </div>
+            </div>
+
+
+            <div class="span3">
+                <div class="sidebar_box grey_content">
+                <h4 class="center">Media</h4>
+                    <table class="table">
+                        <% @user.media_objects.all.each do |mo| %>
+                            <tr>
+                                <td>
+                                    <img src='<%=mo.src%>'width="100px" height="100px"/>
+                                </td>
+                                <td>
+                                    <%= link_to mo.name, media_object_path(mo.id)%>
+                                </td>
+                            </tr>
+                        <%end%>
+                    </table>
+                </div>
+            </div>
+        
+        </div>
+    
+    </div>
 
 </div>
+
+<div class="row">  
+
+
+    
+</div>
+
+
