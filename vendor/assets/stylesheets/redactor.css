@@ -559,3 +559,7 @@ body .redactor_toolbar li a.redactor_btn_horizontalrule 	{ background-position: 
     background: #f4f4ee;
     border-color: #e0e5d6;
 }
+
+body .redactor_toolbar li a.redactor_btn_button1{
+    background: url('/assets/photo.png') no-repeat; 
+}
