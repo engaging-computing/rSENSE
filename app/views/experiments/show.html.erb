@@ -1,13 +1,7 @@
 <p id="notice"><%= notice %></p>
 
 <% if (@cur_user.try(:id) != @experiment.user_id) and (@experiment.content.blank?) %>
-
   <%= render 'show_no_content' %>
-
 <% else %>
-
   <%= render 'show_default' %>
-  <%=render 'shared/collapse_media'%>
-
-
 <% end %>
