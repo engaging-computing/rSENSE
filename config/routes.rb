@@ -26,7 +26,7 @@ Rsense::Application.routes.draw do
   resources :users
   match "/users/validate/:key" => "users#validate"
 
-  
+  resources :media_objects
   
   # The priority is based upon order of creation:
   # first created -> highest priority.
