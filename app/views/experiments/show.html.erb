@@ -7,22 +7,7 @@
 <% else %>
 
   <%= render 'show_default' %>
-
-
-<div class="span4">
-    <div class="sidebar_box grey_content">
-        <h4 class="center">Media</h4>
-        <table class="table">
-            <% @experiment.media_objects.all.each do |mo| %>
-                <tr>
-                    <td><%= link_to mo.owner.name, user_path(mo.owner)%></td>
-                    <td><%= link_to mo.name, media_object_path(mo.id)%></td>
-                    <td><img src='<%=mo.src%>'width="100px" heigh="100px"/></td>
-                </tr>
-            <%end%>
-        </table>
-    </div>
-</div>
+  <%=render 'shared/collapse_media'%>
 
 
 <% end %>
