@@ -1,35 +1,29 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <b>Media type:</b>
-  <%= @media_object.media_type %>
-</p>
+
+<span style="font-size:2em"><%= media_object_edit_helper 'name', (@media_object.user_id == @cur_user.try(:id)) %></span><br>
+
 
 <p>
-  <b>Name:</b>
-  <%= @media_object.name %>
+  <b>Owner:</b>
+  <%= link_to @media_object.owner.name, user_path(@media_object.owner) %>
 </p>
 
-<p>
-  <b>Src:</b>
-  <%= @media_object.src %>
-</p>
+<% if !(@media_object.try(:experiment).try(:id) == nil)%>
+    <p>
+        <b>Experiment:</b>
+        <%= link_to @media_object.experiment.title, experiment_path(@media_object.experiment) %>
+    </p>
+<% end %>
 
-<p>
-  <b>User:</b>
-  <%= @media_object.user_id %>
-</p>
+<% if !(@media_object.try(:session).try(:id) == nil)%>
+    <p>
+        <b>Session:</b>
+        <%= @media_object.session.id %>
+    </p>
+<% end %>
 
-<p>
-  <b>Experiment:</b>
-  <%= @media_object.experiment_id %>
-</p>
-
-<p>
-  <b>Session:</b>
-  <%= @media_object.session_id %>
-</p>
-
+<img src='<%=@media_object.src%>'/>
 
 <%= link_to 'Edit', edit_media_object_path(@media_object) %> |
 <%= link_to 'Back', media_objects_path %>

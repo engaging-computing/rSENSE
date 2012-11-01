@@ -1,0 +1,28 @@
+<div class="span4">
+    <div class="sidebar_box grey_content">
+        <div class="accordion" id="accordion1">
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
+                        <h4 class="center">Fields <i class="icon-chevron-down"></i></h4>
+                    </a>
+                </div>
+                <div id="collapseOne" class="accordion-body collapse in">
+                    <div class="accordion-inner">
+                        <table class="table fields_table" experiment="<%=@experiment.id%>">
+                            <th>Name</th>
+                            <th>Units</th>
+                            <th>Type</th>
+                            <% @experiment.fields.all.each do |f| %>
+                                <%= render 'field_edit', field: f, type: "field",row_id: f.id,can_edit: (@experiment.user_id == @cur_user.try(:id))%>
+                            <% end %> 
+                            <%if @experiment.user_id == @cur_user.try(:id)%>
+                                <tr><td colspan="3"><a class="field_add_link"><i class="icon-plus-sign"></i></a></td></tr>
+                            <%end%>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
