@@ -4,16 +4,12 @@ class ExperimentsController < ApplicationController
   skip_before_filter :authorize, only: [:show,:index]  
     
   def index
-    @experiments = Experiment.all
+    @experiments = Experiment.paginate(page: params[:page], per_page: 8).order("created_at #{params[:sort]}")
 
     @experiments.each do |e|
        e['owner'] = User.find(e.user_id) 
     end
     
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @experiments }
-    end
   end
 
   # GET /experiments/1
