@@ -1,8 +1,9 @@
 
 $(document).ready ->
-    
     $('.redactor_content_edit_link').click ->
-        $(@).parent().parent().find('.redactor_content').redactor()
+        path =  type + '/' + row_id 
+        $(@).parent().parent().find('.redactor_content').redactor
+          imageUpload: '/media_objects/saveimage/' + path
         $(@).siblings('.redactor_content_save_link').show();
         $(@).hide();
     
@@ -16,9 +17,6 @@ $(document).ready ->
         data={}
         data[type] = {}
         data[type][field_name] = value
-        console.log data
-       
-     
         
         $.ajax
             url: $(@).attr('href')
@@ -29,3 +27,9 @@ $(document).ready ->
             success: =>
                 $(@).parent().parent().find('.redactor_content').destroyEditor()
         false
+        
+    $('.add_content_link').click ->
+        $(@).parent().parent().siblings('.redactor_content').show()
+        $(@).parent().parent().siblings('.redactor_content').redactor()
+        $(@).parent().parent().parent().parent().find('.redactor_content_save_link').show()
+        $(@).parent().parent().hide()

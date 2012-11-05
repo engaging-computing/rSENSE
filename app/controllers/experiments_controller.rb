@@ -20,15 +20,6 @@ class ExperimentsController < ApplicationController
   # GET /experiments/1.json
   def show
     @experiment = Experiment.find(params[:id])
-    @owner = User.find(@experiment.user_id)
-    @owner_name = @owner.firstname + " " + @owner.lastname[0] + "."
-
-    if params[:commit] != "Create Session"
-      @experiment_session = ExperimentSession.new
-    else
-      @experiment_session = ExperimentSession.new({user_id: @cur_user.id, experiment_id: @experiment.id, title:"#{@cur_user.firstname} #{@cur_user.lastname[0]}'s Experiment"})
-      @experiment_session.save
-    end
     
     respond_to do |format|
       format.html # show.html.erb

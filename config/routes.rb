@@ -18,7 +18,7 @@ Rsense::Application.routes.draw do
 
   get 'admin' => 'admin#index'
 
-  
+  match "/media_objects/saveimage/*keys" => "media_objects#saveimage"
   
   controller :sessions do
     post 'login' => :create
@@ -28,7 +28,7 @@ Rsense::Application.routes.draw do
   resources :users
   match "/users/validate/:key" => "users#validate"
 
-  
+  resources :media_objects
   
   # The priority is based upon order of creation:
   # first created -> highest priority.

@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+
+<span style="font-size:2em"><%= media_object_edit_helper 'name', (@media_object.user_id == @cur_user.try(:id)) %></span><br>
+
+
+<p>
+  <b>Owner:</b>
+  <%= link_to @media_object.owner.name, user_path(@media_object.owner) %>
+</p>
+
+<% if !(@media_object.try(:experiment).try(:id) == nil)%>
+    <p>
+        <b>Experiment:</b>
+        <%= link_to @media_object.experiment.title, experiment_path(@media_object.experiment) %>
+    </p>
+<% end %>
+
+<% if !(@media_object.try(:session).try(:id) == nil)%>
+    <p>
+        <b>Session:</b>
+        <%= @media_object.session.id %>
+    </p>
+<% end %>
+
+<img src='<%=@media_object.src%>'/>
+
+<%= link_to 'Edit', edit_media_object_path(@media_object) %> |
+<%= link_to 'Back', media_objects_path %>

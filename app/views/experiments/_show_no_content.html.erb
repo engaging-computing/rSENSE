@@ -1,0 +1,18 @@
+<div class="row">
+  
+  <div class="span12">
+    <div class="experiment_info_box">
+      <span style="font-size:2em"><%= experiment_edit_helper 'title', (@experiment.user_id == @cur_user.try(:id)) %></span><br>
+      <span class="info_label" style="font-size:1.1em">Owner:</span> 
+      <%= link_to @experiment.owner.name, user_path(@experiment.owner) %><br>
+      <span class="info_label" style="font-size:1.1em">Created:</span><%=time_ago_in_words(@experiment.created_at)%> ago
+    </div>
+  </div>
+
+    <%=render "shared/collapse_fields"%>
+
+    <%=render "shared/collapse_sessions"%>
+
+    <%=render "shared/collapse_media"%>
+
+</div>

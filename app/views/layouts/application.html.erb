@@ -29,9 +29,7 @@
           <% if @cur_user != nil %>
             <li>
               <p class="navbar-text">
-                <a href="/users/<%= @cur_user.id %>">
-                  <%= "Logged in as #{@cur_user.firstname.capitalize} #{@cur_user.lastname[0].capitalize}." %>
-                </a>
+                <%= link_to "Logged in as #{@cur_user.name}", user_path(@cur_user) %>
               </p>
             </li>
             <li class="divider-vertical"></li>
