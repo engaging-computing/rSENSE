@@ -37,6 +37,10 @@ gem 'twitter-bootstrap-rails'
 # Include AWS
 gem 'aws-sdk'
 
+# Include MongoMapper
+gem 'mongo_mapper'
+gem 'bson_ext'
+
 # To use Jbuilder templates for JSON
 # gem 'jbuilder'
 
