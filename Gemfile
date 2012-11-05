@@ -37,6 +37,9 @@ gem 'twitter-bootstrap-rails'
 # Include AWS
 gem 'aws-sdk'
 
+# Include Will Paginate
+gem 'will_paginate'
+
 # To use Jbuilder templates for JSON
 # gem 'jbuilder'
 
