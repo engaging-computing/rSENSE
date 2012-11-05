@@ -1,18 +1,24 @@
 <div class="row">
     <div class="span12">
         <h1>Experiments</h1>
+        <div class="dropdown">
+        <a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" data-target="#">
+            Sort Order
+            <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <li class="dropdown-item"><%= link_to "Newest First", sort: "DESC"%></li>
+            <li class="dropdown-item"><%= link_to "Oldest First", sort: "ASC"%></li>
+        </ul>
+        </div>
     </div>
 </div>
 
 <div class="row">
     <div class="span8" style="background-color: #ccc;">
-        <% @experiments.each do |experiment| %>
-            <div class="<%= cycle('feed-even', 'feed-odd')%>">
-                <h4><%= link_to experiment.title, experiment_path(experiment) %></h4>
-                Owner: <%= link_to "#{experiment.owner.firstname} #{experiment.owner.lastname[0]}", user_path(experiment.owner) %><br>
-                Created: <%= time_ago_in_words(experiment.created_at)%> ago
-            </div>
-        <% end %>
+        <div id="experiments">
+            <%=render 'display_experiments'%>
+        </div>
     </div>
 
     <div class="span3 offset1">

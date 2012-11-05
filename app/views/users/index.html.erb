@@ -1,21 +1,42 @@
-<h1>iSENSE Users</h1>
+<div class="row">
+    <div class="span12">
+        <h1>Users</h1>
+    </div>
+</div>
 
-<table class="table"> 
-  <tr>
-    <th>Name</th>
-    <th>Username</th>
-  </tr>
+<div class="row">
+    <div class="span8">
+        <% @users.each do |user| %>
+            <div class="<%= cycle('feed-even', 'feed-odd')%>">
+                <h4><%= link_to user.name, user_path(user) %></h4>
+                Member since: <%=user.created_at%> (<%=time_ago_in_words(user.created_at)%> ago)<br>
+                Experiments: <%=user.experiments.count%> | Sessions: <%=user.experiment_sessions.count%> | Media: <%=user.media_objects.count%>
+            </div>
+        <% end %>
+    </div>
 
-<br>
+    <div class="span4">
+       <div class="sidebar_box grey_content">
+            <h4 class=center>Statistics</h4>
+            <table class="table">
+                <tr>
+                    <td>Users</td>
+                    <td><%=User.count%></td>
+                </tr>
+                <tr>
+                    <td>Experiments</td>
+                    <td><%=Experiment.count%></td>
+                </tr>
+                <tr>
+                    <td>Sessions</td>
+                    <td><%=ExperimentSession.count%></td>
+                </tr>
+                <tr>
+                    <td>Media</td>
+                    <td><%=MediaObject.count%></td>
+                </tr>
+            </table>
+       </div>
+    </div>
+</div>
 
-<% @users.each do |user| %>
-  <tr>
-    <td><%= link_to (user.name), user_path(user) %></td>
-    <td><%= user.username %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New User', new_user_path %>
