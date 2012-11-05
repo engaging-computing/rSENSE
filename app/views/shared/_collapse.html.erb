@@ -1,0 +1,18 @@
+<div class="span<%=width%>">
+    <div class="sidebar_box grey_content">
+        <div class="accordion" id="accordion<%=title%>">
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion<%=title%>" href='#collapse<%=title%>'>
+                    <h4 class="center"><%=title%> <i class="icon-chevron-down"></i></h4>
+                </a>
+                </div>
+                <div id="collapse<%=title%>" class="accordion-body collapse in">
+                    <div class="accordion-inner">
+                        <%= yield %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
