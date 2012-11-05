@@ -16,6 +16,7 @@ class ExperimentSessionsController < ApplicationController
   # GET /experiment_sessions/1.json
   def show
     @experiment_session = ExperimentSession.find(params[:id])
+    @DataPoint = DataPoint.find(:session_id => @experiment_session.id)
 
     respond_to do |format|
       format.html # show.html.erb

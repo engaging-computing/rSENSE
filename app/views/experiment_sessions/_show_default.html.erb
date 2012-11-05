@@ -1,0 +1,30 @@
+<div class="row">
+
+  <div class="span8">
+    <div class="row">
+      <div class="span8">
+        <div class="experiment_info_box">
+          <span style="font-size:2em"><%= experiment_session_edit_helper 'title', (@experiment_session.user_id == @cur_user.try(:id)) %></span><br>
+          <span class="info_label" style="font-size:1.1em">Owner:</span> 
+          <%= link_to @experiment_session.user.name, user_path(@experiment_session.user) %><br>
+          <span class="info_label" style="font-size:1.1em">Created:</span><%=time_ago_in_words(@experiment_session.created_at)%> ago
+        </div>
+      </div>
+      <div class="span8">
+        <%= experiment_session_redactor_helper (@experiment_session.user_id == @cur_user.try(:id)) %>
+      </div>
+    </div>
+  </div>
+  
+  <div class="span4">
+    <div class="row">
+      <table id="Session_Data" class="span4">
+        <% @DataPoint.all.each do |dp| %>
+          <tr><td>taco</td></tr>
+        <% end %>
+      </table>
+    </div>
+  </div>
+  
+</div>
+

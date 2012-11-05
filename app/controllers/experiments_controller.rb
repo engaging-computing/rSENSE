@@ -89,4 +89,16 @@ class ExperimentsController < ApplicationController
       format.json { head :no_content }
     end
   end
+  
+  # GET /experiments/1/addSes
+  def addSes
+    @experiment = Experiment.find(params[:id])
+    @experiment_session = ExperimentSession.create(:user_id => @cur_user.id, :experiment_id => @experiment.id, :title => "#{@cur_user.name}'s Session")
+    
+    respond_to do |format|
+      format.html # show.html.erb
+      format.json { render json: @experiment }
+    end
+  end
+  
 end
