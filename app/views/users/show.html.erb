@@ -45,39 +45,33 @@
     
         <div class="row">
         
-            <div class="span3">
-                <div class="sidebar_box grey_content">
-                    <h4 class="center">Experiments</h2>
-                    <table class="table">
-                        <% @user.experiments.all.each do |e|%>
-                            <tr>
-                                <td>
-                                <%= link_to e.title, experiment_path(e.id)%>
-                                </td>
-                            </tr>
-                        <%end%>
-                    </table>
-                </div>
-            </div>
+            <%= render layout: 'shared/collapse', locals: {title: 'Experiments', width: '3'} do%>
+                <table class="table">
+                    <% @user.experiments.all.each do |e|%>
+                        <tr>
+                            <td>
+                            <%= link_to e.title, experiment_path(e.id)%>
+                            </td>
+                        </tr>
+                    <%end%>
+                </table>
+            <%end%>
 
 
-            <div class="span3">
-                <div class="sidebar_box grey_content">
-                <h4 class="center">Media</h4>
-                    <table class="table">
-                        <% @user.media_objects.all.each do |mo| %>
-                            <tr>
-                                <td>
-                                    <img src='<%=mo.src%>'width="100px" height="100px"/>
-                                </td>
-                                <td>
-                                    <%= link_to mo.name, media_object_path(mo.id)%>
-                                </td>
-                            </tr>
-                        <%end%>
-                    </table>
-                </div>
-            </div>
+            <%= render layout: 'shared/collapse', locals: {title: 'Media', width: '3'} do%>
+                <table class="table">
+                    <% @user.media_objects.all.each do |mo| %>
+                        <tr>
+                            <td>
+                                <img src='<%=mo.src%>'width="100px" height="100px"/>
+                            </td>
+                            <td>
+                                <%= link_to mo.name, media_object_path(mo.id)%>
+                            </td>
+                        </tr>
+                    <%end%>
+                </table>
+            <%end%>
         
         </div>
     
