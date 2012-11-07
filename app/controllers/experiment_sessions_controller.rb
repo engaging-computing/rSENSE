@@ -76,10 +76,18 @@ class ExperimentSessionsController < ApplicationController
         end
       end
     end
+
+    old_data = DataSet.all({:experiment_session_id => @experiment_session.id})
+
+    unless old_data.nil?
+      old_data.each do |od|
+        od.destroy
+      end
+    end
     
     data_to_add = DataSet.new(:experiment_session_id => @experiment_session.id, :data => data)    
     
-    if data_to_add.save
+    if data_to_add.save!
       response = { status: 'success', message: data }
     else
       response = { status: 'fail' }
