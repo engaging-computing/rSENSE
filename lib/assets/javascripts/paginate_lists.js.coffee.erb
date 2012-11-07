@@ -1,0 +1,8 @@
+$(document).ready ->
+    $("#experiments .pagination a").live("click", ->
+        $.getScript(this.href)
+        return false)
+
+    $(".dropdown-item a").live("click", ->
+        $.getScript(this.href)
+        return false)

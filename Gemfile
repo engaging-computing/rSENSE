@@ -37,9 +37,8 @@ gem 'twitter-bootstrap-rails'
 # Include AWS
 gem 'aws-sdk'
 
-# Include MongoMapper
-gem 'mongo_mapper'
-gem 'bson_ext'
+# Include Will Paginate
+gem 'will_paginate'
 
 # To use Jbuilder templates for JSON
 # gem 'jbuilder'
@@ -52,3 +51,7 @@ gem 'bson_ext'
 
 # To use debugger
 # gem 'debugger'
+
+# Gem for Mongo Mapper
+gem 'mongo_mapper'
+gem 'bson_ext'
