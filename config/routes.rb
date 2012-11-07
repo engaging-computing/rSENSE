@@ -29,7 +29,9 @@ Rsense::Application.routes.draw do
   match "/users/validate/:key" => "users#validate"
 
   match "/experiments/:id/addSes" => "experiments#addSes"
-
+  post "/experiment_sessions/:id/manualUpload" => "experiment_sessions#manualUpload"
+  
+  
   resources :media_objects
   
   # The priority is based upon order of creation:

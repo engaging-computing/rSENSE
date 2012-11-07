@@ -11,18 +11,31 @@
         </div>
       </div>
       <div class="span8">
-        <%= experiment_session_redactor_helper (@experiment_session.user_id == @cur_user.try(:id)) %>
+        <table id="session_data" class="span8 data_table">
+          <thead>
+            <tr>
+            <% @experiment_session.experiment.fields.each do |f| %>
+              <td><%= f.name %></td>
+            <% end %>
+            </tr>
+          </thead>
+          <tbody>
+          <% unless @DataSet.nil? %>
+            <% @DataSet.each do |dp| %>
+              <tr><td>taco</td></tr>
+            <% end %>
+          <% end %>
+          </tbody>
+        </table>
+        <div class="center span8"><img id="add_data_trigger" src="/assets/add_content.png"></div>
+      
       </div>
     </div>
   </div>
   
   <div class="span4">
     <div class="row">
-      <table id="Session_Data" class="span4">
-        <% @DataPoint.all.each do |dp| %>
-          <tr><td>taco</td></tr>
-        <% end %>
-      </table>
+      <%= experiment_session_redactor_helper (@experiment_session.user_id == @cur_user.try(:id)) %>
     </div>
   </div>
   
