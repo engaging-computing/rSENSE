@@ -1,15 +1,18 @@
 class ExperimentsController < ApplicationController
   # GET /experiments
   # GET /experiments.json
-  skip_before_filter :authorize, only: [:show,:index]
-  
+  skip_before_filter :authorize, only: [:show,:index]  
+    
   def index
-    if params[:sort] == "ASC"
-       sort = "ASC"
-    else
-       sort = "DESC"
-    end
 
+    if params[:sort] == "ASC"
+        sort = "ASC"
+    else
+        sort = "DESC"
+    end
+    
+    @featured_3 = Experiment.where(featured: true).order("updated_at DESC").limit(3);
+    
     @experiments = Experiment.search(params[:search]).paginate(page: params[:page], per_page: 8).order("created_at #{sort}")
 
     @experiments.each do |e|
