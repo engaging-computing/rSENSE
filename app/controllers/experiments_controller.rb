@@ -1,10 +1,16 @@
 class ExperimentsController < ApplicationController
   # GET /experiments
   # GET /experiments.json
-  skip_before_filter :authorize, only: [:show,:index]  
-    
+  skip_before_filter :authorize, only: [:show,:index]
+  
   def index
-    @experiments = Experiment.paginate(page: params[:page], per_page: 8).order("created_at #{params[:sort]}")
+    if params[:sort] == "ASC"
+       sort = "ASC"
+    else
+       sort = "DESC"
+    end
+
+    @experiments = Experiment.search(params[:search]).paginate(page: params[:page], per_page: 8).order("created_at #{sort}")
 
     @experiments.each do |e|
        e['owner'] = User.find(e.user_id) 
