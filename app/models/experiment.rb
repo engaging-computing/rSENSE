@@ -10,4 +10,12 @@ class Experiment < ActiveRecord::Base
 
   belongs_to :owner, class_name: "User", foreign_key: "user_id"
   
+  def self.search(search)
+    if search
+      where('title LIKE ?', "%#{search}%")
+    else
+      scoped
+    end
+  end
+  
 end
