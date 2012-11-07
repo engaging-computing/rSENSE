@@ -1,9 +1,10 @@
 
 <% @experiments.each do |experiment| %>
     <div class="<%= cycle('feed-even', 'feed-odd')%>">
-        <h4><%= link_to experiment.title, experiment_path(experiment) %></h4>
+        <h4><%= link_to experiment.title, experiment_path(experiment) %><%if experiment.featured%><span style="color:#57C142"> (featured)</span><%end%></h4>
         Owner: <%= link_to "#{experiment.owner.firstname} #{experiment.owner.lastname[0]}", user_path(experiment.owner) %><br>
-        Created: <%= time_ago_in_words(experiment.created_at)%> ago
+        Created: <%= time_ago_in_words(experiment.created_at)%> ago <br>
+        
     </div>
 <% end %>
 

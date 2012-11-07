@@ -4,7 +4,16 @@ class ExperimentsController < ApplicationController
   skip_before_filter :authorize, only: [:show,:index]  
     
   def index
-    @experiments = Experiment.paginate(page: params[:page], per_page: 8).order("created_at #{params[:sort]}")
+
+    if params[:sort] == "ASC"
+        sort = "ASC"
+    else
+        sort = "DESC"
+    end
+    
+    @featured_3 = Experiment.where(featured: true).order("updated_at DESC").limit(3);
+    
+    @experiments = Experiment.search(params[:search]).paginate(page: params[:page], per_page: 8).order("created_at #{sort}")
 
     @experiments.each do |e|
        e['owner'] = User.find(e.user_id) 
