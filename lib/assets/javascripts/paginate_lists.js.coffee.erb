@@ -1,8 +1,9 @@
 $(document).ready ->
-    $("#experiments .pagination a").live("click", ->
+    $("#experiments .pagination a, .dropdown-item a").live("click", ->
         $.getScript(this.href)
         return false)
 
-    $(".dropdown-item a").live("click", ->
-        $.getScript(this.href)
-        return false)
+    $("#experiments_search").submit ->
+        sort = $("#experiment_sort").val()
+        $.get(this.action, $(this).serialize(), null, "script")
+        return false
