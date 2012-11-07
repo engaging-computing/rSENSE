@@ -12,10 +12,9 @@ class Experiment < ActiveRecord::Base
   
   def self.search(search)
     if search
-      where('title LIKE ?', "%#{search}%")
+        where('title LIKE ?', "%#{search}%")
     else
-      scoped
+        scoped
     end
   end
-  
 end
