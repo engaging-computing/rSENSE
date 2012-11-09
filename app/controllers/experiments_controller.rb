@@ -5,15 +5,15 @@ class ExperimentsController < ApplicationController
     
   def index
 
-    if params[:sort] == "ASC"
-        sort = "ASC"
+    if !params[:sort].nil?
+        sort = params[:sort]
     else
         sort = "DESC"
     end
     
     @featured_3 = Experiment.where(featured: true).order("updated_at DESC").limit(3);
     
-    @experiments = Experiment.search(params[:search]).paginate(page: params[:page], per_page: 8).order("created_at #{sort}")
+    @experiments = Experiment.filter(params[:filters]).search(params[:search]).paginate(page: params[:page], per_page: 8).order("created_at #{sort}")
 
     @experiments.each do |e|
        e['owner'] = User.find(e.user_id) 

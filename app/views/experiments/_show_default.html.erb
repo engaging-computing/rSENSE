@@ -12,6 +12,7 @@
       </div>
       <div class="span8">
         <%= experiment_redactor_helper (@experiment.user_id == @cur_user.try(:id)) %>
+        <br /><b>Tags:</b> <%= @experiment.filter %>
       </div>
     </div>
   </div>
