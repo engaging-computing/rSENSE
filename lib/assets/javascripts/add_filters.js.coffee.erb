@@ -1,0 +1,24 @@
+$(document).ready ->
+    $(".experiment_filters").submit ->
+    
+        x = $(@).children("input:checked").map ->
+            return this.name
+        
+        filters = ""
+        filters += x[j] + " " for i,j in x
+
+        data={}
+        data["experiment"] = {}
+        data["experiment"]["filter"] = filters
+
+        $.ajax
+            url: $(@).attr('id')
+            type: "PUT"
+            dataType: "json"
+            data:
+                data
+                
+        false
+
+    $(".experiments_add_filter_checkbox").click ->
+        $(@).parent().submit()
