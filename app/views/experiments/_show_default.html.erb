@@ -12,7 +12,6 @@
       </div>
       <div class="span8">
         <%= experiment_redactor_helper (@experiment.user_id == @cur_user.try(:id)) %>
-        <br /><b>Tags:</b> <%= @experiment.filter %>
       </div>
     </div>
   </div>
@@ -58,6 +57,17 @@
                 <%end%>
             </table>
         <%end%>
+
+        <%=render layout: "shared/collapse", locals: {title: 'Tools',width: '4'} do %>
+            <%=form_tag experiments_path, method: 'get', id: @experiment.id, class:'experiment_filters' do%>
+                Math: <%= check_box_tag "math", "math", (@experiment.filter.include? "math"), class: 'experiments_add_filter_checkbox' %><br>
+                Physics: <%= check_box_tag "physics", "physics", (@experiment.filter.include? "physics"), class: 'experiments_add_filter_checkbox' %><br>
+                Chemistry: <%= check_box_tag "chemistry", "chemistry", (@experiment.filter.include? "chemistry"), class: 'experiments_add_filter_checkbox' %><br>
+                Earth: <%= check_box_tag "earth", "earth", (@experiment.filter.include? "earth"), class: 'experiments_add_filter_checkbox' %><br>
+                Biology: <%= check_box_tag "biology", "biology", (@experiment.filter.include? "biology"), class: 'experiments_add_filter_checkbox' %>
+            <%end%>
+        <%end%>
+
     </div>
   </div>
 
