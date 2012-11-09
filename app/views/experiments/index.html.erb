@@ -1,25 +1,19 @@
 <div class="row">
     <div class="span12">
         <h1>Experiments</h1>
-        <div class="span2">
-            <div class="dropdown">
-            <a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" data-target="#">
-                Sort Order
-                <b class="caret"></b>
-            </a>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" id="fuckyfuck">
-                <li class="dropdown-item"><%= link_to "Newest First", params.merge(sort: "DESC", page: nil)%></li>
-                <li class="dropdown-item"><%= link_to "Oldest First", params.merge(sort: "ASC", page: nil)%></li>
-            </ul>
-            </div>
-        </div>
+
         <div class="span4">
             <%=form_tag experiments_path, method: 'get', id: 'experiments_search', class:'navbar-search' do%>
-                <%= hidden_field_tag :sort, params[:sort]%>
-                <p>
-                    <%=text_field_tag :search, params[:search], class:'search-query'%>
-                    <%= submit_tag "Search", name: nil, class:'btn'%>
-                </p>
+                <select name="sort" class="experiments_sort_select">
+                  <option value="DESC">Newest First</option>
+                  <option value="ASC">Oldest First</option>
+                </select>
+                <%=text_field_tag :search, params[:search], class:'search-query'%>
+                <%= submit_tag "Search", name: nil, class:'btn'%>
+                Math: <%= check_box_tag "filters[]", "%math%", false, class: 'experiments_filter_checkbox'%>
+                Science: <%= check_box_tag "filters[]", "%science%", false, class: 'experiments_filter_checkbox' %>
+                Friendship: <%= check_box_tag "filters[]", "%friendship%", false, class: 'experiments_filter_checkbox' %>
+                Magic: <%= check_box_tag "filters[]", "%magic%", false, class: 'experiments_filter_checkbox' %>
             <%end%>
         </div>
     </div>
@@ -42,7 +36,6 @@
             </div>
         </div>
     </div>
-
     <%=render 'featured_experiments'%>
 </div>
 
