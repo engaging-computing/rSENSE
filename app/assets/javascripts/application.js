@@ -22,4 +22,4 @@
 //= require login.js.coffee.erb
 //= require field_edit.js.coffee
 //= require collapse_link_flipper.js.coffee
-//= require paginate_lists.js.coffee
+//= require list_functions.js.coffee

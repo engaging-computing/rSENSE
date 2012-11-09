@@ -127,7 +127,7 @@ div.navbar-inner
 .feed-top
 {
   padding: 2px 20px 2px 20px;
-  background-color: #202020;
+  background-color: #667;
   color: #f0f0f0;
 
   -webkit-border-radius: 6px 6px 0px 0px;
@@ -135,14 +135,29 @@ div.navbar-inner
           border-radius: 6px 6px 0px 0px;
 }
 
+.feed-bottom
+{
+  padding: 0px;
+  magrin: 0px;
+  background-color: #667;
+  color: #f0f0f0;
+  text-align: center;
+
+  -webkit-border-radius: 0px 0px 6px 6px;
+     -moz-border-radius: 0px 0px 6px 6px;
+          border-radius: 0px 0px 6px 6px;
+}
+
 .feed-odd
 {
   padding: 2px 20px 15px 20px;
+  margin: 0px;
   background-color: #f8f8f8;
 }
 
 .feed-even
 {
   padding: 2px 20px 15px 20px;
+  margin: 0px;
   background-color: #e8e8e8;
 }
