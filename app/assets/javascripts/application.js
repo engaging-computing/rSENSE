@@ -23,3 +23,4 @@
 //= require field_edit.js.coffee
 //= require collapse_link_flipper.js.coffee
 //= require list_functions.js.coffee
+//= require add_filters.js.coffee
