@@ -1,12 +1,15 @@
 <div class="feed-top">
-    <h3>Recent Activity:</h3>
+  <h3>Recent Activity:</h3>
 </div>
 
 <% @experiments.each do |e| %>
-    <div class="<%= cycle('feed-even', 'feed-odd') %>">
-        <h5><%= link_to e.title, experiment_path(e)%></h5>
-        Owner: <%= link_to "#{e.owner.name}", user_path(e.owner) %><br>
-        Created: <%=time_ago_in_words(e.created_at)%> ago
-    </div>
+  <div class="<%= cycle('feed-even', 'feed-odd') %>">
+    <h5><%= link_to e.title, experiment_path(e)%></h5>
+    Owner: <%= link_to "#{e.owner.name}", user_path(e.owner) %><br>
+    Created: <%=time_ago_in_words(e.created_at)%> ago
+  </div>
 <% end %>
-<%= will_paginate @experiments %>
+
+<div class="feed-bottom pagination">
+  <%= will_paginate @experiments %>
+</div>
