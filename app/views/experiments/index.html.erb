@@ -1,42 +1,51 @@
 <div class="row">
-    <div class="span12">
-        <h1>Experiments</h1>
-        <div class="row">
-            <div class="span4">
-                <%=form_tag experiments_path, method: 'get', id: 'experiments_search', class:'navbar-search' do%>
-                    <select name="sort" class="experiments_sort_select">
-                      <option value="DESC">Newest First</option>
-                      <option value="ASC">Oldest First</option>
-                    </select>
-                    <%=text_field_tag :search, params[:search], class:'search-query'%>
-                    <%= submit_tag "Search", name: nil, class:'btn'%>
-                    Math: <%= check_box_tag "filters[]", "%math%", false, class: 'experiments_filter_checkbox'%>
-                    Science: <%= check_box_tag "filters[]", "%science%", false, class: 'experiments_filter_checkbox' %>
-                    Friendship: <%= check_box_tag "filters[]", "%friendship%", false, class: 'experiments_filter_checkbox' %>
-                    Magic: <%= check_box_tag "filters[]", "%magic%", false, class: 'experiments_filter_checkbox' %>
-                <%end%>
-            </div>
-        </div>
+  <div class="span12">
+    <h1>Experiments</h1>
+    <div class="row">
+      <%=form_tag experiments_path, method: 'get', id: 'experiments_search', class:'navbar-search' do%>
+      <div class="span3">
+        <select name="sort" class="experiments_sort_select">
+          <option value="DESC">Newest First</option>
+          <option value="ASC">Oldest First</option>
+        </select>
+      </div>
+      <div class="span3">
+        <%=text_field_tag :search, params[:search], class:'search-query'%>
+      </div>
+      <div class="span3">
+        <%= submit_tag "Search", name: nil, class:'btn'%>
+      </div>
     </div>
+    <div class="row">
+      <div class="span6 offset0">
+        Math: <%= check_box_tag "filters[]", "%math%", false, class: 'experiments_filter_checkbox'%>
+        Science: <%= check_box_tag "filters[]", "%science%", false, class: 'experiments_filter_checkbox' %>
+        Friendship: <%= check_box_tag "filters[]", "%friendship%", false, class: 'experiments_filter_checkbox' %>
+        Magic: <%= check_box_tag "filters[]", "%magic%", false, class: 'experiments_filter_checkbox' %>
+      </div>
+    </div>
+    <br />
+    <%end%>
+  </div>
 </div>
 
 <div class="row">
-    <div class="span8" style="background-color: #ccc;">
-        <div id="experiments">
-            <%=render 'display_experiments'%>
-        </div>
+  <div class="span8" style="background-color: #ccc;">
+    <div id="experiments">
+      <%=render 'display_experiments'%>
     </div>
+  </div>
 
-    <div class="span3 offset1">
-        <div class="row">
-           <h5 class="center">Create Experiment</h5>
-            <div class="well center">
-                <%if @cur_user.try(:id)%>
-                    <a class="add_session_link" href="/experiments/new"><img src="/assets/add_content.png" class="img-rounded"></a>
-                <%end%>
-            </div>
-        </div>
+  <div class="span3 offset1">
+    <div class="row">
+      <h5 class="center">Create Experiment</h5>
+      <div class="well center">
+        <%if @cur_user.try(:id)%>
+        <a class="add_session_link" href="/experiments/new"><img src="/assets/add_content.png" class="img-rounded"></a>
+        <%end%>
+      </div>
     </div>
-    <%=render 'featured_experiments'%>
+  </div>
+  <%=render 'featured_experiments'%>
 </div>
 

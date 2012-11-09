@@ -10,7 +10,7 @@ $(document).ready ->
         return false
         
     $(".experiments_filter_checkbox").click ->
-      $(@).parent().submit()
+      $("#experiments_search").submit()
       
     $(".experiments_sort_select").change ->
-      $(@).parent().submit()
+      $("#experiments_search").submit()
