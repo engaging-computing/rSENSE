@@ -51,3 +51,7 @@ gem 'will_paginate'
 
 # To use debugger
 # gem 'debugger'
+
+# Gem for Mongo Mapper
+gem 'mongo_mapper'
+gem 'bson_ext'

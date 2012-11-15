@@ -52,8 +52,10 @@ class ExperimentsController < ApplicationController
   # POST /experiments.json
   def create
     content = "<h1>Problem:</h1><p>Description of problem</p><br><br><h1>Procedure:</h1><p>How you want people to collect your data</p>"
-    @experiment = Experiment.new(params[:experiment])
-    @experiment = Experiment.new({user_id: @cur_user.id, title:"#{@cur_user.firstname} #{@cur_user.lastname[0].pluralize} Experiment"})
+
+    #@experiment = Experiment.new(params[:experiment])
+    
+    @experiment = Experiment.new({user_id: @cur_user.id, title:"#{@cur_user.firstname} #{@cur_user.lastname[0]}'s Experiment"})
     respond_to do |format|
       if @experiment.save
         format.html { redirect_to @experiment, notice: 'Experiment was successfully created.' }
@@ -92,4 +94,16 @@ class ExperimentsController < ApplicationController
       format.json { head :no_content }
     end
   end
+  
+  # GET /experiments/1/addSes
+  def addSes
+    @experiment = Experiment.find(params[:id])
+    @experiment_session = ExperimentSession.create(:user_id => @cur_user.id, :experiment_id => @experiment.id, :title => "#{@cur_user.name}'s Session")
+    
+    respond_to do |format|
+      format.html # show.html.erb
+      format.json { render json: @experiment }
+    end
+  end
+  
 end

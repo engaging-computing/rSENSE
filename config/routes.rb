@@ -8,7 +8,9 @@ Rsense::Application.routes.draw do
   resources :fields
 
   resources :experiments
-
+  
+  post 'experiments/:id' => 'experiments#show'
+  
   get "home/index"
   root :to => "home#index"
   
@@ -26,6 +28,10 @@ Rsense::Application.routes.draw do
   resources :users
   match "/users/validate/:key" => "users#validate"
 
+  match "/experiments/:id/addSes" => "experiments#addSes"
+  post "/experiment_sessions/:id/manualUpload" => "experiment_sessions#manualUpload"
+  
+  
   resources :media_objects
   
   # The priority is based upon order of creation:
