@@ -1,5 +1,5 @@
 Rsense::Application.routes.draw do
-  resources :experiment_sessions
+  #resources :experiment_sessions
 
   resources :memberships
 
@@ -16,6 +16,11 @@ Rsense::Application.routes.draw do
 
   get 'admin' => 'admin#index'
 
+  resources :experiment_sessions do
+    get 'getData' => :getData
+  end
+  
+  match "/experiment_sessions/1/postCSV" => "experiment_sessions#postCSV"
   match "/media_objects/saveimage/*keys" => "media_objects#saveimage"
   
   controller :sessions do

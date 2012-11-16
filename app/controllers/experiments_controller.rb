@@ -14,10 +14,6 @@ class ExperimentsController < ApplicationController
     @featured_3 = Experiment.where(featured: true).order("updated_at DESC").limit(3);
     
     @experiments = Experiment.filter(params[:filters]).search(params[:search]).paginate(page: params[:page], per_page: 8).order("created_at #{sort}")
-
-    @experiments.each do |e|
-       e['owner'] = User.find(e.user_id) 
-    end
     
   end
 
