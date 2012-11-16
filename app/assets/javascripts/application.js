@@ -24,3 +24,4 @@
 //= require collapse_link_flipper.js.coffee
 //= require list_functions.js.coffee
 //= require add_filters.js.coffee
+//= require editablegrid-2.0.1.js
