@@ -13,6 +13,7 @@
  *= require redactor.css
  *= require jquery.ui.all
  *= require_self
+ *= require editablegrid-2.0.1.css
  */
  
 #header
