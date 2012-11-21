@@ -20,7 +20,7 @@ Rsense::Application.routes.draw do
     get 'getData' => :getData
   end
   
-  match "/experiment_sessions/1/postCSV" => "experiment_sessions#postCSV"
+  match "/experiment_sessions/:id/postCSV" => "experiment_sessions#postCSV"
   match "/media_objects/saveimage/*keys" => "media_objects#saveimage"
   
   controller :sessions do

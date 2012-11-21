@@ -12,6 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery.remotipart
 //= require twitter/bootstrap
 //= require jquery.ui.all
 //= require bootstrap
@@ -25,3 +26,6 @@
 //= require list_functions.js.coffee
 //= require add_filters.js.coffee
 //= require editablegrid-2.0.1.js
+//= require editablegrid_utils.js
+//= require editablegrid_renderers.js
+//= require editablegrid_editors.js

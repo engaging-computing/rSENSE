@@ -14,20 +14,28 @@
   <div class="span8">
 
   </div>
+ 
   <div class="span12">
-
     <%= render 'grid' %>
-    
   </div>
+  
   
   <div class="span12">
 
-    <h1>File Upload</h1>
-    <form class="file_upload">
-      <%= file_field 'upload', 'datafile' %><br />
-      <%= submit_tag "Upload" %>
-    </form>
+    <%= form_for @experiment_session, :url => { :action => "postCSV" }, :html => { :multipart => true, :class => "file_upload", :'data-type' => 'json' }, :remote => true do |f| %>
+      <div class="field">
+        <%= f.label :file %>
+        <%= f.file_field :file %>
+      </div>
+      <div class="actions">
+        <%= f.submit %>
+      </div>
+    <% end %>
     
   </div>
-  
+
+
+  <div class="span12">
+    <%=render "manual_entry"%>
+  </div>
 </div>
