@@ -40,6 +40,8 @@ gem 'aws-sdk'
 # Include Will Paginate
 gem 'will_paginate'
 
+gem "remotipart", "~> 1.0.2"
+
 # To use Jbuilder templates for JSON
 # gem 'jbuilder'
 
