@@ -3,9 +3,8 @@
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
 $(document).ready ->
-  
-  $(".file_upload").submit ->
-    
-    $.post('postCSV', $(this).serialize(), null, 'script')
-    
-    false
+  ($ ".file_upload").bind "ajax:success", (x, d, e) ->
+    console.log d
+    editableGrid = new EditableGrid("DataGrid")
+    editableGrid.load(d)
+    editableGrid.renderGrid("tablecontent", "table")

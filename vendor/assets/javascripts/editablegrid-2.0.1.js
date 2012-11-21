@@ -1,12 +1,2078 @@
-/*
- * editablegrid-2.0.1.js
- * 
- * This file is part of EditableGrid.
- * http://editablegrid.net
- *
- * Copyright (c) 2011 Webismymind SPRL
- * Dual licensed under the MIT or GPL Version 2 licenses.
- * http://editablegrid.net/license
+if (typeof _$ == 'undefined') {
+	function _$(elementId) { return document.getElementById(elementId); }
+}
+
+/**
+ * Creates a new column
+ * @constructor
+ * @class Represents a column in the editable grid
+ * @param {Object} config
+ */
+function Column(config)
+{
+	// default properties
+	var props = {
+			name: "",
+			label: "",
+			editable: true,
+			renderable: true,
+			datatype: "string",
+			unit: null,
+			precision: -1, // means that all decimals are displayed
+			nansymbol: '',
+			decimal_point: ',',
+			thousands_separator: '.',
+			unit_before_number: false,
+			bar: true, // is the column to be displayed in a bar chart ? relevant only for numerical columns 
+			headerRenderer: null,
+			headerEditor: null,
+			cellRenderer: null,
+			cellEditor: null,
+			cellValidators: [],
+			enumProvider: null,
+			optionValues: null,
+			columnIndex: -1
+	};
+
+	// override default properties with the ones given
+	for (var p in props) this[p] = (typeof config == 'undefined' || typeof config[p] == 'undefined') ? props[p] : config[p];
+}
+
+Column.prototype.getOptionValuesForRender = function(rowIndex) { 
+	var values = this.enumProvider.getOptionValuesForRender(this.editablegrid, this, rowIndex);
+	return values ? values : this.optionValues;
+};
+
+Column.prototype.getOptionValuesForEdit = function(rowIndex) { 
+	var values = this.enumProvider.getOptionValuesForEdit(this.editablegrid, this, rowIndex);
+	return values ? values : this.optionValues;
+};
+
+Column.prototype.isValid = function(value) {
+	for (var i = 0; i < this.cellValidators.length; i++) if (!this.cellValidators[i].isValid(value)) return false;
+	return true;
+};
+
+Column.prototype.isNumerical = function() {
+	return this.datatype =='double' || this.datatype =='integer';
+};
+
+/**
+ * Creates a new enumeration provider 
+ * @constructor
+ * @class Base class for all enumeration providers
+ * @param {Object} config
+ */
+function EnumProvider(config)
+{
+	// default properties
+	this.getOptionValuesForRender = function(grid, column, rowIndex) { return null; };
+	this.getOptionValuesForEdit = function(grid, column, rowIndex) { return null; };
+
+	// override default properties with the ones given
+	for (var p in config) this[p] = config[p];
+}
+
+/**
+ * Creates a new EditableGrid.
+ * <p>You can specify here some configuration options (optional).
+ * <br/>You can also set these same configuration options afterwards.
+ * <p>These options are:
+ * <ul>
+ * <li>enableSort: enable sorting when clicking on column headers (default=true)</li>
+ * <li>doubleclick: use double click to edit cells (default=false)</li>
+ * <li>editmode: can be one of
+ * <ul>
+ * 		<li>absolute: cell editor comes over the cell (default)</li>
+ * 		<li>static: cell editor comes inside the cell</li>
+ * 		<li>fixed: cell editor comes in an external div</li>
+ * </ul>
+ * </li>
+ * <li>editorzoneid: used only when editmode is set to fixed, it is the id of the div to use for cell editors</li>
+ * <li>allowSimultaneousEdition: tells if several cells can be edited at the same time (default=false)<br/>
+ * Warning: on some Linux browsers (eg. Epiphany), a blur event is sent when the user clicks on a 'select' input to expand it.
+ * So practically, in these browsers you should set allowSimultaneousEdition to true if you want to use columns with option values and/or enum providers.
+ * This also used to happen in older versions of Google Chrome Linux but it has been fixed, so upgrade if needed.</li>
+ * <li>saveOnBlur: should be cells saved when clicking elsewhere ? (default=true)</li>
+ * <li>invalidClassName: CSS class to apply to text fields when the entered value is invalid (default="invalid")</li>
+ * <li>ignoreLastRow: ignore last row when sorting and charting the data (typically for a 'total' row)</li>
+ * <li>caption: text to use as the grid's caption</li>
+ * <li>dateFormat: EU or US (default="EU")</li>
+ * <li>shortMonthNames: list of month names (default=["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"])</li>
+ * <li>smartColorsBar: colors used for rendering (stacked) bar charts</li>
+ * <li>smartColorsPie: colors used for rendering pie charts</li>
+ * <li>pageSize: maximum number of rows displayed (0 means we don't want any pagination, which is the default)</li>
+ * </ul>
+ * @constructor
+ * @class EditableGrid
+ */
+function EditableGrid(name, config) { if (name) this.init(name, config); }
+
+/**
+ * Default properties
+ */ 
+EditableGrid.prototype.enableSort = true;
+EditableGrid.prototype.enableStore = true;
+EditableGrid.prototype.doubleclick = false;
+EditableGrid.prototype.editmode = "absolute";
+EditableGrid.prototype.editorzoneid = "";
+EditableGrid.prototype.allowSimultaneousEdition = false;
+EditableGrid.prototype.saveOnBlur = true;
+EditableGrid.prototype.invalidClassName = "invalid";
+EditableGrid.prototype.ignoreLastRow = false;
+EditableGrid.prototype.caption = null;
+EditableGrid.prototype.dateFormat = "EU";
+EditableGrid.prototype.shortMonthNames = null;
+EditableGrid.prototype.smartColorsBar = ["#dc243c","#4040f6","#00f629","#efe100","#f93fb1","#6f8183","#111111"];
+EditableGrid.prototype.smartColorsPie = ["#FF0000","#00FF00","#0000FF","#FFD700","#FF00FF","#00FFFF","#800080"];
+EditableGrid.prototype.pageSize = 0; // client-side pagination
+
+// server-side pagination, sorting and filtering
+EditableGrid.prototype.serverSide = false;
+EditableGrid.prototype.pageCount = 0;
+EditableGrid.prototype.totalRowCount = 0;
+EditableGrid.prototype.unfilteredRowCount = 0;
+EditableGrid.prototype.lastURL = null;
+
+EditableGrid.prototype.init = function (name, config)
+{
+	if (typeof name != "string" || (typeof config != "object" && typeof config != "undefined")) {
+		alert("The EditableGrid constructor takes two arguments:\n- name (string)\n- config (object)\n\nGot instead " + (typeof name) + " and " + (typeof config) + ".");
+	};
+
+	// override default properties with the ones given
+	if (typeof config != 'undefined') for (var p in config) this[p] = config[p];
+
+	this.Browser = {
+			IE:  !!(window.attachEvent && navigator.userAgent.indexOf('Opera') === -1),
+			Opera: navigator.userAgent.indexOf('Opera') > -1,
+			WebKit: navigator.userAgent.indexOf('AppleWebKit/') > -1,
+			Gecko: navigator.userAgent.indexOf('Gecko') > -1 && navigator.userAgent.indexOf('KHTML') === -1,
+			MobileSafari: !!navigator.userAgent.match(/Apple.*Mobile.*Safari/)
+	};
+
+	// private data
+	this.name = name;
+	this.columns = [];
+	this.data = [];
+	this.dataUnfiltered = null; // non null means that data is filtered
+	this.xmlDoc = null;
+	this.sortedColumnName = -1;
+	this.sortDescending = false;
+	this.baseUrl = this.detectDir();
+	this.nbHeaderRows = 1;
+	this.lastSelectedRowIndex = -1;
+	this.currentPageIndex = 0;
+	this.currentFilter = null;
+	this.currentContainerid = null; 
+	this.currentClassName = null; 
+	this.currentTableid = null;
+
+	if (this.enableSort) {
+		this.sortUpImage = new Image();
+		this.sortUpImage.src = this.baseUrl + "bullet_arrow_up.png";
+		this.sortDownImage = new Image();
+		this.sortDownImage.src = this.baseUrl + "bullet_arrow_down.png";
+	}
+};
+
+/**
+ * Callback functions
  */
 
-eval(function(p,a,c,k,e,d){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--){d[e(c)]=k[c]||e(c)}k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--){if(k[c]){p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c])}}return p}('x(P 1o$=="T"){y 1o$(a){D 1d.a9(a)}}y 2Y(a){u b={1c:"",1e:"",3i:O,9d:O,Q:"2r",1v:F,1z:-1,2S:"",20:",",2g:".",2T:N,1i:O,1P:F,2E:F,1u:F,2I:F,2G:[],2Q:F,2p:F,X:-1};G(u c 1h b){t[c]=(P a=="T"||P a[c]=="T")?b[c]:a[c]}}2Y.C.4Y=y(b){u a=t.2Q.4Y(t.J,t,b);D a?a:t.2p};2Y.C.4U=y(b){u a=t.2Q.4U(t.J,t,b);D a?a:t.2p};2Y.C.2x=y(b){G(u a=0;a<t.2G.H;a++){x(!t.2G[a].2x(b)){D N}}D O};2Y.C.5d=y(){D t.Q=="2W"||t.Q=="2w"};y 88(a){t.4Y=y(c,d,e){D F};t.4U=y(c,d,e){D F};G(u b 1h a){t[b]=a[b]}}y E(b,a){x(b){t.1K(b,a)}}E.C.3m=O;E.C.6a=O;E.C.79=N;E.C.4n="6t";E.C.6r="";E.C.8R=N;E.C.8K=O;E.C.6Y="6P";E.C.3C=N;E.C.5E=F;E.C.4J="7d";E.C.9D=F;E.C.3x=["#a8","#a2","#al","#9Q","#bw","#b6","#bq"];E.C.8s=["#bk","#bl","#aE","#ax","#aI","#aF","#bu"];E.C.1O=0;E.C.1K=y(b,a){x(P b!="2r"||(P a!="2A"&&P a!="T")){19("bs E bi b5 a0 am:\\n- 1c (2r)\\n- aj (2A)\\n\\ao 9T "+(P b)+" be "+(P a)+".")}x(P a!="T"){G(u c 1h a){t[c]=a[c]}}t.bm={aT:!!(2v.bj&&3p.3l.1G("7k")===-1),7k:3p.3l.1G("7k")>-1,9U:3p.3l.1G("9Z/")>-1,8i:3p.3l.1G("8i")>-1&&3p.3l.1G("ad")===-1,b9:!!3p.3l.2l(/ac.*ae.*af/)};t.1c=b;t.I=[];t.M=[];t.U=F;t.1m=F;t.2m=-1;t.23=N;t.7w=t.9o();t.7s=1;t.4V=-1;t.3a=0;t.3Q=F;t.3t=F;t.67=F;t.66=F;x(t.3m){t.6b=L 8r();t.6b.2Z=t.7w+"/8p/ag.8t";t.65=L 8r();t.65.2Z=t.7w+"/8p/a4.8t"}};E.C.4c=y(){};E.C.8P=y(){};E.C.9b=y(c,b,a){};E.C.52=y(a,b){};E.C.6S=y(){};E.C.7N=y(e,b,a,c,d){};E.C.90=y(b,a){};E.C.8X=y(b,a){D N};E.C.5W=y(b,a){D O};E.C.8W=y(){};E.C.8j=y(1q){u 7f=1q;u 5g=1q.1G("?")>=0?"&":"?";1q+=5g+1k.8E(1k.8G()*8F);1r(t){x(2v.7e){1m=L 7e("8h.8l");1m.7B=y(){x(1m.7p==4){4b();4c()}};1m.2F(1q)}K{x(2v.4R){1m=L 4R();1m.7B=y(){x(t.7p==4){1m=t.a6;x(!1m){D N}4b();4c()}};1m.4k("7K",1q,O);1m.7G("")}K{x(1d.7z&&1d.7z.8v){1m=1d.7z.8v("","",F);1m.ah=y(){4b();4c()};1m.2F(1q)}K{19("8U 2F a ai 1q 1r t 7L!");D N}}}D O}};E.C.ar=y(a){x(2v.8n){u b=L 8n();t.1m=b.aq(a,"at/au")}K{t.1m=L 7e("8h.8l");t.1m.an="N";t.1m.8j(a)}t.4b()};E.C.4b=y(){1r(t){t.M=[];t.U=F;t.14=F;u 2U=1m.2k("2U");x(2U&&2U.H>=1){t.I=[];u 7l=2U[0].2k("R");G(u i=0;i<7l.H;i++){u 2c=7l[i];u Q=2c.1l("Q");u 2p=F;u 1Y=2c.2k("1X");x(1Y.H>0){2p={};u 4a=1Y[0].2k("9Y");x(4a.H>0){G(u g=0;g<4a.H;g++){u 7g={};1Y=4a[g].2k("S");G(u v=0;v<1Y.H;v++){7g[1Y[v].1l("S")]=1Y[v].1s?1Y[v].1s.5R:""}2p[4a[g].1l("1e")]=7g}}K{1Y=1Y[0].2k("S");G(u v=0;v<1Y.H;v++){2p[1Y[v].1l("S")]=1Y[v].1s?1Y[v].1s.5R:""}}}I.17(L 2Y({1c:2c.1l("1c"),1e:(P 2c.1l("1e")=="2r"?2c.1l("1e"):2c.1l("1c")),Q:(2c.1l("Q")?2c.1l("Q"):"2r"),3i:2c.1l("3i")=="O",1i:(2c.1l("1i")?2c.1l("1i")=="O":O),2p:2p}))}5e()}u V=1m.2k("1M");G(u i=0;i<V.H;i++){u 2X={};u 21=V[i].2k("R");G(u j=0;j<21.H;j++){u 5H=21[j].1l("1c");x(!5H){x(j>=I.H){19("ap 6J bc ba I G 1M "+(i+1))}K{5H=I[j].1c}}2X[5H]=21[j].1s?21[j].1s.5R:""}u 2j={2s:O,2b:i,1b:V[i].1l("1b")?V[i].1l("1b"):""};G(u 5J=0;5J<V[i].8S.H;5J++){u 5I=V[i].8S.bg(5J);x(5I.8C!="1b"){2j[5I.8C]=5I.5R}}2j.I=[];G(u c=0;c<I.H;c++){u 58=I[c].1c 1h 2X?2X[I[c].1c]:"";2j.I.17(3v(c,58))}M.17(2j)}}D O};E.C.b3=y(1q){u 7f=1q;u 5g=1q.1G("?")>=0?"&":"?";1q+=5g+1k.8E(1k.8G()*8F);x(!2v.4R){19("8U 2F a 3f 1q 1r t 7L!");D N}1r(t){u 4B=L 4R();4B.7B=y(){x(t.7p==4){x(!t.7J){D N}x(!4C(t.7J)){19("1D 3f M bv bp 1q \'"+7f+"\'");D N}4c()}};4B.4k("7K",1q,O);4B.7G("")}D O};E.C.bo=y(a){D t.4C(a)};E.C.2F=y(a){D t.4C(a)};E.C.4C=y(2n){x(P 2n=="2r"){2n=b0("("+2n+")")}x(!2n){D N}t.M=[];t.U=F;t.14=F;x(2n.2U){t.I=[];G(u c=0;c<2n.2U.H;c++){u 2i=2n.2U[c];t.I.17(L 2Y({1c:2i.1c,1e:(2i.1e?2i.1e:2i.1c),Q:(2i.Q?2i.Q:"2r"),3i:(2i.3i?O:N),1i:(P 2i.1i=="T"?O:(2i.1i?O:N)),2p:2i.1X?2i.1X:F}))}t.5e()}x(2n.M){G(u i=0;i<2n.M.H;i++){u 1M=2n.M[i];x(!1M.1X){3W}x(aG.C.4i.6U(1M.1X)!=="[2A 5T]"){2X=1M.1X}K{G(u j=0;j<1M.1X.H&&j<t.I.H;j++){2X[t.I[j].1c]=1M.1X[j]}}u 2j={2s:O,2b:i,1b:1M.1b?1M.1b:""};G(u 4T 1h 1M){x(4T!="1b"){2j[4T]=1M[4T]}}2j.I=[];G(u c=0;c<t.I.H;c++){u 58=t.I[c].1c 1h 2X?2X[t.I[c].1c]:"";2j.I.17(t.3v(c,58))}t.M.17(2j)}}D O};E.C.5e=y(){G(u b=0;b<t.I.H;b++){u a=t.I[b];a.X=b;a.J=t;t.8V(a);x(!a.2Q){a.2Q=a.2p?L 88():F}x(!a.1u){t.7b(a)}x(!a.1P){t.7Y(a)}x(!a.2I){t.7a(a)}x(!a.2E){t.7W(a)}t.7u(a)}};E.C.8V=y(a){x(a.Q.2l(/(.*)\\((.*),(.*),(.*),(.*),(.*),(.*)\\)$/)){a.Q=1j.$1;a.1v=1j.$2;a.1z=Y(1j.$3);a.20=1j.$4;a.2g=1j.$5;a.2T=1j.$6;a.2S=1j.$7;a.1v=a.1v.1w();a.20=a.20.1w();a.2g=a.2g.1w();a.2T=a.2T.1w()=="1";a.2S=a.2S.1w()}K{x(a.Q.2l(/(.*)\\((.*),(.*),(.*),(.*),(.*)\\)$/)){a.Q=1j.$1;a.1v=1j.$2;a.1z=Y(1j.$3);a.20=1j.$4;a.2g=1j.$5;a.2T=1j.$6;a.1v=a.1v.1w();a.20=a.20.1w();a.2g=a.2g.1w();a.2T=a.2T.1w()=="1"}K{x(a.Q.2l(/(.*)\\((.*),(.*),(.*)\\)$/)){a.Q=1j.$1;a.1v=1j.$2.1w();a.1z=Y(1j.$3);a.2S=1j.$4.1w()}K{x(a.Q.2l(/(.*)\\((.*),(.*)\\)$/)){a.Q=1j.$1.1w();a.1v=1j.$2.1w();a.1z=Y(1j.$3)}K{x(a.Q.2l(/(.*)\\((.*)\\)$/)){a.Q=1j.$1.1w();u b=1j.$2.1w();x(b.2l(/^[0-9]*$/)){a.1z=Y(b)}K{a.1v=b}}}}}}x(a.20=="80"){a.20=","}x(a.20=="7Z"){a.20="."}x(a.2g=="80"){a.2g=","}x(a.2g=="7Z"){a.2g="."}x(W(a.1z)){a.1z=-1}x(a.1v==""){a.1v=F}x(a.2S==""){a.2S=F}};E.C.3v=y(a,c){u b=t.5x(a);x(b=="3j"){c=(c&&c!=0&&c!="N")?O:N}x(b=="2w"){c=Y(c,10)}x(b=="2W"){c=3b(c)}x(b=="2r"){c=""+c}D c};E.C.aW=y(a,c){t.M=[];t.U=F;t.14=F;x(c){t.I=c;t.5e()}t.14=P a=="2r"?1o$(a):a;x(!t.14){19("1D 14 aX: "+a)}t.1H=t.14.1H;t.1Q=t.14.aY[0];x(!t.1Q){t.1Q=1d.1F("6c");t.14.7U(t.1Q,t.14.1s)}x(!t.1H){t.1H=1d.1F("6d");t.14.7U(t.1H,t.1Q)}x(t.1H.V.H==0&&t.1Q.V.H>0){t.1H.1J(t.1Q.V[0])}t.7s=t.1H.V.H;u k=t.1H.V;G(u f=0;f<k.H;f++){u h=k[f].3X;u g=0;G(u e=0;e<h.H&&g<t.I.H;e++){x(!t.I[g].1e||t.I[g].1e==t.I[g].1c){t.I[g].1e=h[e].2o}u b=Y(h[e].1l("4e"));g+=b>1?b:1}}u k=t.1Q.V;G(u f=0;f<k.H;f++){u d=[];u h=k[f].3X;G(u e=0;e<h.H&&e<t.I.H;e++){d.17(t.3v(e,h[e].2o))}t.M.17({2s:O,2b:f,1b:k[f].1b,I:d});k[f].4O=k[f].1b;k[f].1b=t.3o(k[f].1b)}};E.C.7b=y(a){a.1u=a.2Q?L 3F():a.Q=="2w"||a.Q=="2W"?L 4W():a.Q=="3j"?L 4r():a.Q=="7r"?L 4X():a.Q=="7y"||a.Q=="1q"?L 56():a.Q=="2t"?L 5f():L 1R();x(a.1u){a.1u.J=t;a.1u.R=a}};E.C.7Y=y(a){a.1P=(t.3m&&a.Q!="55")?L 4g(a.1c):L 1R();x(a.1P){a.1P.J=t;a.1P.R=a}};E.C.7a=y(a){a.2I=a.2Q?L 4G():a.Q=="2w"||a.Q=="2W"?L 3H(a.Q):a.Q=="3j"?F:a.Q=="7r"?L 1t(a.1z):a.Q=="7y"||a.Q=="1q"?L 1t(a.1z):a.Q=="2t"?(P $=="T"||P $.6M=="T"?L 1t(a.1z,10):L 57({4t:a.1z,4o:10})):L 1t(a.1z);x(a.2I){a.2I.J=t;a.2I.R=a}};E.C.7W=y(a){a.2E=L 1t();x(a.2E){a.2E.J=t;a.2E.R=a}};E.C.2B=y(){D t.M.H};E.C.3M=y(){D t.I.H};E.C.98=y(a){D t.1E(a)>=0};E.C.2H=y(b){u a=t.1E(b);x(a<0){19("[2H] 2Y 7q aQ 1r 2L 6T 1c "+b);D F}D t.I[a]};E.C.94=y(a){D t.2H(a).1c};E.C.3L=y(a){D t.2H(a).1e};E.C.5x=y(a){D t.2H(a).Q};E.C.aS=y(a){D t.2H(a).1v};E.C.aR=y(a){D t.2H(a).1z};E.C.5L=y(b){u a=t.2H(b);D(a.1i&&a.5d())};E.C.b8=y(b){u a=t.2H(b);D a.5d()};E.C.1p=y(d,b){x(b<0||b>=t.I.H){19("[1p] 1D R 2L "+b);D F}u a=t.I[b];x(d<0){D a.1e}x(P t.M[d]=="T"){19("[1p] 1D 1M 2L "+d);D F}u c=t.M[d]["I"];D c?c[b]:F};E.C.54=y(d,a){u c=t.1p(d,a);x(c!==F){u b=d<0?t.I[a].1P:t.I[a].1u;c=b.6K(d,c)}D c};E.C.6H=y(h,d,g,c){x(P c=="T"){c=O}u a=F;x(d<0||d>=t.I.H){19("[6H] 1D R 2L "+d);D F}u b=t.I[d];x(h<0){a=b.1e;b.1e=g}K{u f=t.M[h]["I"];a=f[d];x(f){f[d]=t.3v(d,g)}}x(c){u e=h<0?b.1P:b.1u;e.2V(h,d,t.5Y(h,d),g)}D a};E.C.1E=y(a){x(P a=="T"||a===""){D-1}x(!W(a)&&a>=0&&a<t.I.H){D a}G(u b=0;b<t.I.H;b++){x(t.I[b].1c==a){D b}}D-1};E.C.4Q=y(a){x(a<0){D t.1H.V[a+t.7s]}x(P t.M[a]=="T"){19("[4Q] 1D 1M 2L "+a);D F}D 1o$(t.3o(t.M[a].1b))};E.C.aU=y(a){D(a<0||a>=t.M.H)?F:t.M[a]["1b"]};E.C.4Z=y(a){a=P a=="2A"?a.4O:a;G(u b=0;b<t.M.H;b++){x(t.M[b].1b==a){D b}}D-1};E.C.5m=y(b,a){D t.M[b][a]};E.C.aZ=y(c,a,b){t.M[c][a]=b};E.C.3o=y(a){D t.3t!=F?t.1c+"1o"+a:a};E.C.aA=y(a){D t.9I(t.4Z(a))};E.C.9I=y(f){u e=t.M[f].1b;u d=t.M[f].2b;u a=t.U==F?t.M:t.U;u c=1o$(t.3o(e));x(c!=F){t.1Q.3g(c)}G(u b=0;b<a.H;b++){x(a[b].2b>=d){a[b].2b--}}t.M.49(f,1);x(t.U!=F){G(u b=0;b<t.U.H;b++){x(t.U[b].1b==e){t.U.49(b,1);4j}}}t.3O()};E.C.aD=y(c){u b={};G(u a=0;a<t.3M();a++){b[t.94(a)]=t.1p(c,a)}D b};E.C.8Z=y(d,b,a,c){D t.7c(t.M.H-1,d,b,a,c)};E.C.aH=y(d,b,a,c){D t.8Z(d,b,a,c)};E.C.7i=y(p,g,d,j,o,n){u e=F;u h=0;u b=t.U==F?t.M:t.U;x(P t.M[p]!="T"){e=t.M[p].1b;h=t.M[p].2b+g}x(t.3t==F){u m=t.1Q.5V(p+g);m.4O=d;m.1b=t.3o(d);G(u l=0;l<t.I.H;l++){m.9G(l)}}u f={2s:O,2b:h,1b:d};x(o){G(u k 1h o){f[k]=o[bn]}}f.I=[];G(u l=0;l<t.I.H;l++){u q=t.I[l].1c 1h j?j[t.I[l].1c]:"";f.I.17(t.3v(l,q))}G(u a=0;a<b.H;a++){x(b[a].2b>=h){b[a].2b++}}t.M.49(p+g,0,f);x(t.U!=F){x(e===F){t.U.49(p+g,0,f)}K{G(u a=0;a<t.U.H;a++){x(t.U[a].1b==e){t.U.49(a+g,0,f);4j}}}}t.3O();x(!n){t.3S()}t.3Y()};E.C.91=y(e,d,b,a,c){x(e<0){e=0}x(e>=t.M.H){D t.7c(t.M.H-1,d,b,a,c)}D t.7i(e,0,d,b,a,c)};E.C.7c=y(e,d,b,a,c){x(e<0){D t.91(0,d,b,a,c)}x(e>=t.M.H){e=t.M.H-1}D t.7i(e,1,d,b,a,c)};E.C.9z=y(c,d){u b=t.1E(c);x(b<0){19("[9z] 1D R: "+c)}K{u a=t.I[b];a.1P=(t.3m&&a.Q!="55")?L 4g(a.1c,d):d;x(d){x(t.3m&&a.Q!="55"){a.1P.J=t;a.1P.R=a}d.J=t;d.R=a}}};E.C.97=y(c,d){u b=t.1E(c);x(b<0){19("[97] 1D R: "+c)}K{u a=t.I[b];a.1u=d;x(d){d.J=t;d.R=a}}};E.C.9H=y(d,c){u b=t.1E(d);x(b<0){19("[9H] 1D R: "+d)}K{u a=t.I[b];a.2I=c;x(c){c.J=t;c.R=a}}};E.C.9J=y(d,c){u b=t.1E(d);x(b<0){19("[9J] 1D R: "+d)}K{u a=t.I[b];a.2E=c;x(c){c.J=t;c.R=a}}};E.C.9L=y(c,a){u b=t.1E(c);x(b<0){19("[9L] 1D R: "+c)}K{t.I[b].2Q=a}t.7b(t.I[b]);t.7a(t.I[b])};E.C.9h=y(b){u a=t.1E(b);x(a<0){19("[9h] 1D R: "+b)}K{t.I[a].2G=[]}};E.C.93=y(b){u a=t.1E(b);x(a<0){19("[93] 1D R: "+b)}D t.7u(t.I[a])};E.C.7u=y(a){x(a.Q=="2w"||a.Q=="2W"){a.2G.17(L 5u(a.Q))}K{x(a.Q=="7r"){a.2G.17(L 5v())}K{x(a.Q=="7y"||a.Q=="1q"){a.2G.17(L 4F())}K{x(a.Q=="2t"){a.2G.17(L 5Q(t))}}}}};E.C.9u=y(c,a){u b=t.1E(c);x(b<0){19("[9u] 1D R: "+c)}K{t.I[b].2G.17(a)}};E.C.ab=y(a){t.5E=a};E.C.5Y=y(c,a){u b=t.4Q(c);x(b==F){19("[5Y] 1D 1M 2L "+c);D F}D b.3X[a]};E.C.6s=y(b){u a=0;1W(b!=F&&t.5X(b)){4w{a+=b.a3;b=b.9N}48(c){b=F}}D a};E.C.8D=y(b){u a=0;1W(b!=F&&t.5X(b)){4w{a+=b.a5;b=b.9N}48(c){b=F}}D a};E.C.69=y(2e,25,46){1r(t){x(P 14!="T"&&14!=F){u 50=U==F?M:U;9P();u V=1Q.V;u 5U=0;u 6h=0;u 18=0;G(u i=0;i<V.H;i++){x(!50[i].2s||(1O>0&&6h>=1O)){x(V[i].1a.44!="5t"){V[i].1a.44="5t";V[i].43=O}}K{x(5U<1O*3a){5U++;x(V[i].1a.44!="5t"){V[i].1a.44="5t";V[i].43=O}}K{6h++;u 2j=[];u 21=V[i].3X;x(P V[i].43!="T"&&V[i].43){V[i].1a.44="";V[i].43=N}G(u j=0;j<21.H&&j<I.H;j++){x(I[j].9d){I[j].1u.2V(18,j,21[j],1p(18,j))}}}18++}}14.J=t;x(79){14.9k=y(e){t.J.4v(e)}}K{14.5b=y(e){t.J.4v(e)}}}K{x(!1o$(2e)){D 19("av a1 8N 16 ["+2e+"]")}3t=2e;67=25;66=46;u 4M=0;u 5Z=2B();x(1O>0){4M=3a*1O;5Z=1k.76(2B(),4M+1O)}t.14=1d.1F("14");14.25=25||"J";x(P 46!="T"){14.1b=46}1W(1o$(2e).3Z()){1o$(2e).3g(1o$(2e).1s)}1o$(2e).1J(14);x(5E){u 6e=1d.1F("9W");6e.2o=t.5E;14.1J(6e)}t.1H=1d.1F("6d");14.1J(1H);u 9y=1H.5V(0);u 2y=3M();G(u c=0;c<2y;c++){u 9w=1d.1F("9M");u 4x=9y.1J(9w);I[c].1P.2V(-1,c,4x,I[c].1e)}t.1Q=1d.1F("6c");14.1J(1Q);u 9s=0;G(u i=4M;i<5Z;i++){u 4A=1Q.5V(9s++);4A.4O=M[i]["1b"];4A.1b=t.3o(M[i]["1b"]);G(j=0;j<2y;j++){u 4x=4A.9G(j);I[j].1u.2V(i,j,4x,1p(i,j))}}1o$(2e).J=t;x(79){1o$(2e).9k=y(e){t.J.4v(e)}}K{1o$(2e).5b=y(e){t.J.4v(e)}}}9b(2e,25,46)}};E.C.b7=y(d,c,b){u a=t.3r("6L")?Y(t.36("6L")):0;t.2m=t.3r("4p")&&t.98(t.36("4p"))?t.36("4p"):-1;t.23=t.3r("4p")&&t.3r("23")?t.36("23")=="O":N;t.3Q=t.3r("3Y")?t.36("3Y"):F;t.3a=0;t.69(d,c,b);t.3S();t.3Y();t.2J(a)};E.C.3O=y(){x(t.3t!=F){t.14=F}t.69(t.3t,t.67,t.66)};E.C.9P=y(){1r(t){u V=1H.V;G(u i=0;i<1;i++){u 2j=[];u 21=V[i].3X;u 3w=0;G(u j=0;j<21.H&&3w<I.H;j++){I[3w].1P.2V(-1,3w,21[j],I[3w].1e);u 4e=Y(21[j].1l("4e"));3w+=4e>1?4e:1}}}};E.C.4v=y(e){e=e||2v.8T;1r(t){u 1n=e.1n||e.br;1W(1n){x(1n.3s=="A"||1n.3s=="bt"||1n.3s=="9M"){4j}K{1n=1n.1U}}x(!1n||!1n.1U||!1n.1U.1U||(1n.1U.1U.3s!="6c"&&1n.1U.1U.3s!="6d")||1n.3z){D}x(1n.3s=="A"){D}u 18=4Z(1n.1U);u X=1n.b1;u R=I[X];x(R){x(18>-1&&18!=4V){90(4V,18);4V=18}x(!R.3i){8W(R)}K{x(18<0){x(R.2E&&8X(18,X)){R.2E.6k(18,X,1n,R.1e)}}K{x(R.2I&&5W(18,X)){R.2I.6k(18,X,1n,1p(18,X))}}}}}};E.C.3S=y(2O,35,3R){1r(t){x(P 2O=="T"&&2m===-1){52(-1,23);D O}x(P 2O=="T"){2O=2m}x(P 35=="T"){35=23}45("4p",2O);45("23",35);u X=2O;x(Y(X,10)!==-1){X=t.1E(2O);x(X<0){19("[3S] 1D R: "+2O);D N}}x(!3m){52(X,35);D}u 78=U!=F;x(78){M=U}u 1L=X<0?"":5x(X);u 2K=[];u 1f=2B();G(u i=0;i<1f-(3C?1:0);i++){2K.17([X<0?F:54(i,X),i,M[i].2b])}2K.3S(X<0?9i:1L=="2w"||1L=="2W"?99:1L=="3j"?92:1L=="2t"?9O:95);x(35){2K=2K.aJ()}x(3C){2K.17([X<0?F:54(1f-1,X),1f-1,M[1f-1].2b])}u 50=M;M=[];G(u i=0;i<2K.H;i++){M.17(50[2K[i][1]])}7x 2K;x(78){U=M;M=[];G(u r=0;r<1f;r++){x(U[r].2s){M.17(U[r])}}}x(3R){2J(0)}K{3O()}52(X,35);D O}};E.C.3Y=y(53){1r(t){x(P 53!="T"){t.3Q=53;t.45("3Y",53)}x(3Q==F||3Q==""){x(U!=F){M=U;U=F;G(u r=0;r<2B();r++){M[r].2s=O}2J(0);6S()}D}u 6R=3Q.2N().40(" ");x(U!=F){M=U}u 1f=2B();u 2y=3M();G(u r=0;r<1f;r++){M[r].2s=O;u 6Q="";G(u c=0;c<2y;c++){6Q+=54(r,c)+" "}G(u i=0;i<6R.H;i++){x(6Q.2N().1G(6R[i])<0){M[r].2s=N;4j}}}U=M;M=[];G(u r=0;r<1f;r++){x(U[r].2s){M.17(U[r])}}2J(0);6S()}};E.C.aO=y(a){t.1O=Y(a);x(W(t.1O)){t.1O=0}t.3a=0;t.3O()};E.C.4s=y(){x(t.1O<=0){19("4s: 8A 6T 6P 7X 2f 6J ("+t.1O+")");D-1}D 1k.aN(t.2B()/t.1O)};E.C.33=y(){x(t.1O<=0){19("aP: 8A 6T 6P 7X 2f 6J ("+t.1O+")");D-1}D t.3a};E.C.2J=y(a){t.3a=a;t.45("6L",a);t.3O()};E.C.aL=y(){x(t.6V()){t.2J(t.33()-1)}};E.C.aB=y(){x(t.6V()){t.2J(0)}};E.C.aC=y(){x(t.73()){t.2J(t.33()+1)}};E.C.az=y(){x(t.73()){t.2J(t.4s()-1)}};E.C.6V=y(){D t.33()>0};E.C.73=y(){D t.33()<t.4s()-1};E.C.ay=y(b){u a=t.4s();x(a<=1){D F}u f=t.33();u c=1k.1T(0,f-(b/2));u d=1k.76(a,f+(b/2));x(d-c<b){u e=b-(d-c);c=1k.1T(0,c-e);d=1k.76(a,d+e)}D{7P:c,81:d}};E.C.aK=y(b,d){u a=[];G(u c=b.7P;c<b.81;c++){a.17(P d=="y"?d(c,c==t.33()):c)}D a};u 5p={};u 4m=O;y 71(a){u b=5D(a);x(b&&P b.2F=="y"){b.2F(3f.5q(5p[a]))}K{7M("71(\'"+a+"\');",3u)}}y 8M(a){7M("71(\'"+a+"\');",3u);D 3f.5q(5p[a])}E.C.5B=y(){4m=N;x(P 3f.5q=="T"){19("4H 4I 4P 4S 3f 4N 4K");D N}K{x(P 5D=="T"){19("4H 4I 4P 4S 4k 6n Z 4N 4K (5D)");D N}K{x(P 4l=="T"){19("4H 4I 4P 4S 4k 6n Z 4N 4K (4l)");D N}K{x(P 6m=="T"){19("4H 4I 4P 4S 6m 4N 4K");D N}K{D O}}}}};E.C.bh=y(2h,2C,1B,24){1r(t){x(4m&&!5B()){D N}t.5l=F;t.3K="#6E";t.2M=0.9;t.26=0;t.8I=O;t.5S=0;x(24){G(u p 1h 24){t[p]=24[p]}}1B=1B||0;u 3D=1E(1B);u Z=L 4l();Z.6C=3K;Z.6z({1y:2C||"",1a:"{1Z-2f: 6A; 3h:#6y; 1Z-5F: 6w; 1y-5w: 6x;}"});u 2y=3M();u 1f=2B()-(3C?1:0);x(26>0&&1f>26){1f=26}u 2z=0;G(u c=0;c<2y;c++){x(!5L(c)){3W}u 1i=L 6G(8I?"b4":"1i");1i.2M=2M;1i.2D=3x[Z.b2.H%3x.H];1i.6F="8Q";1i.1y=3L(c);G(u r=0;r<1f;r++){x(5m(r,"8z")=="1"){3W}u S=1p(r,c);x(S>2z){2z=S}1i.1X.17(S)}Z.6u(1i)}u 1A=10;1W(1A<2z){1A*=10}u 3V=1A/10;1W(1A-3V>2z){1A-=3V}u 3T=[];G(u r=0;r<1f;r++){x(5m(r,"8z")=="1"){3W}u 1e=5m(r,"aw");3T.17(1e?1e:1p(r,3D))}Z.8O={5n:1,8y:10,2D:"#3U","41-2D":"#3U",5P:{8x:5S,5P:3T},"3d":5};Z.8k={5n:4,8g:3,2D:"#8c","41-2D":"#3U",8d:0,8e:1A/10,1T:1A};Z.8m={1y:5l||3L(1B),1a:"{1Z-2f: 5s; 3h: #5z}"};Z.8u={1y:"",1a:"{1Z-2f: 5s; 3h: #5z}"};5j(2h,Z)}};E.C.bf=y(2h,2C,1B,24){1r(t){x(4m&&!5B()){D N}t.5l=F;t.3K="#6E";t.2M=0.8;t.26=0;t.5S=0;x(24){G(u p 1h 24){t[p]=24[p]}}1B=1B||0;u 3D=1E(1B);u Z=L 4l();Z.6C=3K;Z.6z({1y:2C||"",1a:"{1Z-2f: 6A; 3h:#6y; 1Z-5F: 6w; 1y-5w: 6x;}"});u 2y=3M();u 1f=2B()-(3C?1:0);x(26>0&&1f>26){1f=26}u 2z=0;u 1i=L 6G("bd");1i.2M=2M;1i.8o=3x;1i.6F="8Q";1i.6j=[];G(u c=0;c<2y;c++){x(!5L(c)){3W}1i.6j.17({2D:3x[1i.6j.H%3x.H],1y:3L(c),"1Z-2f":"13"})}G(u r=0;r<1f;r++){u 6l=[];u 5O=0;G(u c=0;c<2y;c++){x(!5L(c)){3W}u S=1p(r,c);S=W(S)?0:S;5O+=S;6l.17(S)}x(5O>2z){2z=5O}1i.1X.17(6l)}Z.6u(1i);u 1A=10;1W(1A<2z){1A*=10}u 3V=1A/10;1W(1A-3V>2z){1A-=3V}u 3T=[];G(u r=0;r<1f;r++){3T.17(1p(r,3D))}Z.8O={5n:1,8y:10,2D:"#3U","41-2D":"#3U",5P:{8x:5S,5P:3T},"3d":5};Z.8k={5n:4,8g:3,2D:"#8c","41-2D":"#3U",8d:0,8e:1A/10,1T:1A};Z.8m={1y:5l||3L(1B),1a:"{1Z-2f: 5s; 3h: #5z}"};Z.8u={1y:"",1a:"{1Z-2f: 5s; 3h: #5z}"};5j(2h,Z)}};E.C.a7=y(2h,2C,3B,1B,24){1r(t){x(4m&&!5B()){D N}t.5A=0;t.3K="#6E";t.2M=0.5;t.26=0;t.8w=O;x(24){G(u p 1h 24){t[p]=24[p]}}u 1L=5x(3B);x(1L!="2W"&&1L!="2w"&&3B!=1B){D}1B=1B||0;2C=(P 2C=="T"||2C===F)?3L(3B):2C;u 5r=1E(3B);u 3D=1E(1B);u Z=L 4l();Z.6C=3K;Z.6z({1y:2C,1a:"{1Z-2f: 6A; 3h:#6y; 1Z-5F: 6w; 1y-5w: 6x;}"});u 1f=2B()-(3C?1:0);x(26>0&&1f>26){1f=26}u 2q=L 6G("2q");2q.8o=8s;2q.2M=2M;2q["eN-6F"]=8w;x(P 5A!="T"&&5A!==F){2q["eO-eQ"]=5A}x(3B==1B){u 3A={};G(u r=0;r<1f;r++){u 3c=1p(r,5r);x(3c 1h 3A){3A[3c]++}K{3A[3c]=1}}G(u S 1h 3A){u 6D=3A[S];2q.1X.17({S:6D,1e:S+" ("+(3u*(6D/1f)).8f(1)+"%)"})}}K{u 6v=0;G(u r=0;r<1f;r++){u 3c=1p(r,5r);6v+=W(3c)?0:3c}G(u r=0;r<1f;r++){u S=1p(r,5r);u 1e=1p(r,3D);x(!W(S)){2q.1X.17({S:S,1e:1e+" ("+(3u*(S/6v)).8f(1)+"%)"})}}}Z.6u(2q);x(2q.1X.H>0){5j(2h,Z)}D 2q.1X.H}};E.C.5j=y(2h,Z){x(P t.3E=="T"||!t.3E){t.3E="4k-6n-Z.3J";u e=1d.2k("9l");G(u i=0;i<e.H;i++){u 2L=e[i].2Z.1G("eG");x(2L!=-1){t.3E=e[i].2Z.1N(0,2L+15)+t.3E;4j}}}1r(t){u 3J=5D(2h);x(3J&&P 3J.2F=="y"){3J.2F(3f.5q(Z))}K{u 4h=1o$(2h);5p[2h]=Z;u w=Y(1I(4h,"37"));u h=Y(1I(4h,"77"));w=1k.1T(W(w)?0:w,4h.5i);h=1k.1T(W(h)?0:h,4h.5K);6m.f3(t.3E,2h,""+(w||f5),""+(h||7I),"9.0.0","f6.3J",{"8N-M":"8M",1b:2h},F,{eV:"eU",eT:"l",eW:"eX"})}8P()}};E.C.eZ=y(a){};y 1V(a){t.1K(a)}1V.C.1K=y(a){x(a){G(u b 1h a){t[b]=a[b]}}};1V.C.6k=y(e,b,a,d){a.3z=O;a.18=e;a.X=b;u c=t.4E(a,d);x(!c){D N}c.16=a;c.2u=t;c.bx=y(f){f=f||2v.8T;x(f.6o==13||f.6o==9){t.2P=F;t.2u.3y(t.16,t.2u.4u(t));D N}x(f.6o==27){t.2P=F;t.2u.6q(t.16);D N}};x(!t.J.8R){c.2P=t.J.8K?y(f){t.2P=F;t.2u.3y(t.16,t.2u.4u(t))}:y(f){t.2P=F;t.2u.6q(t.16)}}t.3G(a,c);c.ez()};1V.C.4E=y(a,b){D F};1V.C.4u=y(a){D a.S};1V.C.72=y(a){D a};1V.C.3G=y(h,l,g,f){l.1a.8J=t.J.1I(h,"8J","1Z-5F");l.1a.8B=t.J.1I(h,"8B","1Z-2f");x(t.J.4n=="9t"){1W(h.3Z()){h.3g(h.1s)}h.1J(l)}x(t.J.4n=="6t"){h.1J(l);l.1a.9p="6t";u b=t.J.5C(h);u k=t.J.5M(h);u e=t.J.14.1U?Y(t.J.14.1U.ea):0;u c=t.J.14.1U?Y(t.J.14.1U.e8):0;u a=t.J.63(h)=="eb"?(h.5K-l.5K)/2-k:0;l.1a.3q=(t.J.6s(h)-e+b+(g?g:0))+"3k";l.1a.7t=(t.J.8D(h)-c+k+a+(f?f:0))+"3k";x(t.R.Q=="2w"||t.R.Q=="2W"){u d=t.J.6s(h)-e+h.5i-(Y(l.1a.3q)+l.5i);l.1a.3q=(Y(l.1a.3q)+d)+"3k";l.1a.ee="7A"}}x(t.J.4n=="8H"){u j=1o$(t.J.6r);1W(j.3Z()){j.3g(j.1s)}j.1J(l)}};1V.C.6Z=y(a){a.3z=N;x(t.J.4n=="8H"){u b=1o$(t.J.6r);1W(b.3Z()){b.3g(b.1s)}}};1V.C.6q=y(16){1r(t){x(16&&16.3z){u 6g=t==R.2E?R.1P:R.1u;6g.2V(16.18,16.X,16,J.1p(16.18,16.X));6Z(16)}}};1V.C.3y=y(16,3I){1r(t){x(16&&16.3z){x(!R.2x(3I)){D N}u 7O=72(3I);u 6I=J.6H(16.18,16.X,7O);u 3I=J.1p(16.18,16.X);x(!t.J.9C(3I,6I)){J.7N(16.18,16.X,6I,3I,J.4Q(16.18))}6Z(16)}}};y 1t(b,c,a){x(b){t.4t=b}x(c){t.4o=c}x(a){t.1K(a)}}1t.C=L 1V();1t.C.4t=-1;1t.C.4o=-1;1t.C.47=O;1t.C.6W=y(a){D a};1t.C.6X=y(a){x(t.R.2x(t.4u(a))){t.J.9f(a,t.J.6Y)}K{t.J.5c(a,t.J.6Y)}};1t.C.4E=y(b,c){u d=1d.1F("9E");d.51("1L","1y");x(t.4o>0){d.51("dZ",t.4o)}x(t.4t>0){d.51("2f",t.4t)}K{d.1a.37=t.J.7n(b)+"3k"}u a=t.J.47(b);x(t.47){d.1a.77=a+"3k"}d.S=t.6W(c);d.e1=y(e){t.2u.6X(t)};D d};1t.C.3G=y(a,b){1V.C.3G.6U(t,a,b,-1*t.J.5G(b),-1*(t.J.4L(b)+1));t.6X(b);b.7E()};y 3H(a){t.1L=a}3H.C=L 1t(-1,32);3H.C.6W=y(a){D W(a)?"":(a+"").1C(".",t.R.20)};3H.C.4u=y(a){D a.S.1C(",",".")};3H.C.72=y(a){D t.1L=="2w"?Y(a):3b(a)};y 4G(a){t.8a=75;t.82=22;t.84=O;t.7D=O;t.1K(a)}4G.C=L 1V();4G.C.4E=y(f,m){u a=1d.1F("7E");x(t.7D){a.1a.37=1k.1T(t.8a,t.J.7n(f))+"3k"}x(t.84){a.1a.77=1k.1T(t.82,t.J.47(f))+"3k"}u l=t.R.4U(f.18);u h=0,c=N;G(u k 1h l){x(P l[k]=="2A"){u b=1d.1F("e4");b.1e=k;a.1J(b);u d=l[k];G(u k 1h d){u g=1d.1F("6i");g.1y=d[k];g.S=k;b.1J(g);x(k==m){a.74=h;c=O}h++}}K{u g=1d.1F("6i");g.1y=l[k];g.S=k;4w{a.59(g,F)}48(j){a.59(g)}x(k==m){a.74=h;c=O}h++}}x(!c){u g=1d.1F("6i");g.1y=m?m:"";g.S=m?m:"";4w{a.59(g,a.24[0])}48(j){a.59(g)}a.74=0}a.et=y(e){t.2P=F;t.2u.3y(t.16,t.S)};D a};y 57(a){t.1K(a)}57.C=L 1t();57.C.3G=y(a,b){1t.C.3G.6U(t,a,b);$(b).6M({4J:t.J.4J=="7d"?"dd/7T/7S":"7T/dd/7S",eu:y(){t.6N=t.2P;t.2P=F},ex:y(c){x(c!=""){t.2u.3y(b.16,c)}K{x(t.6N!=F){t.6N()}}}}).6M("eq")};y 1R(a){t.1K(a)}1R.C.1K=y(a){G(u b 1h a){t[b]=a[b]}};1R.C.2V=y(d,b,a,c){a.18=d;a.X=b;1W(a.3Z()){a.3g(a.1s)}x(t.R.5d()){E.C.5c(a,"3n")}x(t.R.Q=="3j"){E.C.5c(a,"3j")}D t.2a(a,P c=="2r"&&t.R.Q!="55"?8L(c,"6B").1C(/\\s\\s/g,"&8b; "):c)};1R.C.2a=y(a,b){a.2o=b?b:""};1R.C.6K=y(b,a){D a};y 3F(a){t.1K(a)}3F.C=L 1R();3F.C.6O=y(f,d){u c="";x(P d!="T"){u a=t.R.4Y(f);x(d 1h a){c=a[d]}G(u e 1h a){x(P a[e]=="2A"&&d 1h a[e]){c=a[e][d]}}x(c==""){u b=P d=="3n"&&W(d);c=b?"":d}}D c};3F.C.2a=y(a,b){a.2o=t.6O(a.18,b)};3F.C.6K=y(b,a){D t.6O(b,a)};y 4W(a){t.1K(a)}4W.C=L 1R();4W.C.2a=y(c,e){u d=t.R||{};u a=P e=="3n"&&W(e);u b=a?(d.2S||""):e;x(P b=="3n"){x(d.1z!==F){b=7F(b,d.1z,d.20,d.2g)}x(d.1v!==F){x(d.2T){b=d.1v+" "+b}K{b=b+" "+d.1v}}}c.2o=b;c.1a.f9=a?"fN":""};y 4r(a){t.1K(a)}4r.C=L 1R();4r.C.2V=y(d,b,a,c){x(a.1s&&(P a.1s.1l!="y"||a.1s.1l("1L")!="9F")){1W(a.3Z()){a.3g(a.1s)}}a.18=d;a.X=b;D t.2a(a,c)};4r.C.2a=y(a,c){c=(c&&c!=0&&c!="N")?O:N;x(a.1s){a.1s.61=c;D}u d=1d.1F("9E");d.51("1L","9F");d.16=a;d.9n=t;u b=L 1V();b.J=t.J;b.R=t.R;d.5b=y(e){a.18=t.9n.J.4Z(a.1U);a.3z=O;b.3y(a,d.61?O:N)};a.1J(d);d.61=c;d.fn=(!t.R.3i||!t.J.5W(a.18,a.X));a.25="3j"};y 4X(a){t.1K(a)}4X.C=L 1R();4X.C.2a=y(a,b){a.2o=b?"<a 4f=\'fi:"+b+"\'>"+b+"</a>":""};y 56(a){t.1K(a)}56.C=L 1R();56.C.2a=y(a,b){a.2o=b?"<a 4f=\'"+(b.1G("//")==-1?"fd://"+b:b)+"\'>"+b+"</a>":""};y 5f(a){t.1K(a)}5f.C=L 1R;5f.C.2a=y(a,c){u b=t.J.4q(c);x(P b=="2A"){a.2o=b.89}K{a.2o=c}};y 4g(a,b){t.3N=a;t.1u=b}4g.C=L 1R();4g.C.2a=y(3P,S){x(!S){x(t.1u){t.1u.2a(3P,S)}}K{u 2R=1d.1F("a");3P.1J(2R);2R.3N=t.3N;2R.1a.ff="fh";2R.2o=S;2R.J=t.J;2R.6g=t;2R.5b=y(){1r(t.J){u 21=1H.V[0].3X;u 6f=-1;u 3R=N;x(2m!=t.3N){6f=2m;2m=t.3N;23=N;3R=O}K{x(!23){23=O}K{6f=2m;2m=-1;23=N;3R=O}}3S(2m,23,3R)}};x(t.J.2m==t.3N){3P.1J(1d.fv("\\fu"));3P.1J(t.J.23?t.J.65:t.J.6b)}x(t.1u){t.1u.2a(3P,S)}}};E.C.9v=y(a,d,b){u e=L 85();e.dW(e.cm()+b);u c=cl(d)+((b==F)?"":"; ck="+e.cn());1d.9m=a+"="+c};E.C.9c=y(c){u b=1d.9m.40(";");G(u d=0;d<b.H;d++){u a=b[d].1N(0,b[d].1G("="));u e=b[d].1N(b[d].1G("=")+1);a=a.1C(/^\\s+|\\s+$/g,"");x(a==c){D co(e)}}D F};E.C.68=y(){4w{D"5k"1h 2v&&2v.5k!==F}48(a){D N}};E.C.9e=y(a,b){x(t.68()){5k.cq(a,b)}K{t.9v(a,b,F)}};E.C.64=y(a){x(t.68()){D 5k.cp(a)}D t.9c(a)};E.C.cj=y(a,b){D t.64(a,b)!==F};E.C.45=y(a,b){x(t.6a){D t.9e(t.1c+"1o"+a,b)}};E.C.36=y(a){D t.6a?t.64(t.1c+"1o"+a):F};E.C.3r=y(a,b){D t.36(a,b)!==F};E.C.9i=y(d,c){aa=W(d[2])?0:3b(d[2]);bb=W(c[2])?0:3b(c[2]);D aa-bb};E.C.99=y(d,c){aa=W(d[0])?0:3b(d[0]);bb=W(c[0])?0:3b(c[0]);D aa-bb};E.C.92=y(d,c){aa=!d[0]||d[0]=="N"?0:1;bb=!c[0]||c[0]=="N"?0:1;D aa-bb};E.C.95=y(d,c){x(d[0].2N()==c[0].2N()){D 0}D d[0].2N().dX(c[0].2N())};E.C.9O=y(d,c){2t=E.C.4q(d[0]);aa=P 2t=="2A"?2t.7h:0;2t=E.C.4q(c[0]);bb=P 2t=="2A"?2t.7h:0;D aa-bb};E.C.1I=y(c,a,b){b=b||a;x(c.9r){D c.9r[a]}K{x(2v.9q){D 1d.ch.9q(c,F).cg(b)}}D c.1a[a]};E.C.5X=y(b){u a=t.1I(b,"9p");D(!a||a=="9t")};E.C.63=y(a){D t.1I(a,"63","cr-5w")};E.C.5C=y(a){u b=Y(t.1I(a,"5C","5a-3q"));D W(b)?0:1k.1T(0,b)};E.C.7o=y(a){u b=Y(t.1I(a,"7o","5a-7A"));D W(b)?0:1k.1T(0,b)};E.C.5M=y(a){u b=Y(t.1I(a,"5M","5a-7t"));D W(b)?0:1k.1T(0,b)};E.C.7j=y(a){u b=Y(t.1I(a,"7j","5a-9j"));D W(b)?0:1k.1T(0,b)};E.C.5G=y(b){u c=Y(t.1I(b,"cs","5y-7A-37"));u a=Y(t.1I(b,"cE","5y-3q-37"));c=W(c)?0:c;a=W(a)?0:a;D 1k.1T(c,a)};E.C.9K=y(a){D t.5G(a)};E.C.4L=y(b){u a=Y(t.1I(b,"cC","5y-7t-37"));u c=Y(t.1I(b,"cG","5y-9j-37"));a=W(a)?0:a;c=W(c)?0:c;D 1k.1T(a,c)};E.C.9x=y(a){D t.4L(a)};E.C.7n=y(a){D a.5i-t.5C(a)-t.7o(a)-t.5G(a)-t.9K(a)};E.C.47=y(a){D a.5K-t.5M(a)-t.7j(a)-t.4L(a)-t.9x(a)};E.C.9o=y(){u c=cB.4f;u d=1d.2k("cA");G(u a=0;a<d.H;a++){x(d[a].4f){c=d[a].4f}}u d=1d.2k("9l");G(u a=0;a<d.H;a++){x(d[a].2Z&&/(^|\\/)J[^\\/]*\\.cw([?#].*)?$/i.7m(d[a].2Z)){u f=L 4z(d[a].2Z);u b=f.7H(c);b.1g=b.1g.1C(/[^\\/]+$/,"");b.1g=b.1g.1C(/\\/$/,"");7x b.1x;7x b.3e;D b.4i()}}D N};E.C.9C=y(b,a){x(b===a){D O}x(P b=="3n"&&W(b)&&P a=="3n"&&W(a)){D O}D N};E.C.9g=y(a){D a.1C(/^\\s+/,"").1C(/\\s+$/,"")};E.C.9a=y(a,b){D(a.25.H>0&&(a.25==b||L 1j("(^|\\\\s)"+b+"(\\\\s|$)").7m(a.25)))};E.C.5c=y(a,b){x(!t.9a(a,b)){a.25+=(a.25?" ":"")+b}};E.C.9f=y(a,b){a.25=t.9g(a.25.1C(L 1j("(^|\\\\s+)"+b+"(\\\\s+|$)")," "))};5o.C.1w=y(){D(t.1C(/^[\\s\\8Y]+/,"").1C(/[\\s\\8Y]+$/,""))};5o.C.bK=y(a){D(t.2l("^"+a)==a)};5o.C.bJ=y(a){D(t.2l(a+"$")==a)};E.C.4q=y(m,g){g=g||t.4J;g=g||"7d";u m;u l;u c;u k;u d;u a;u n;u j;u f=N;u h=L 5T("-"," ","/",".");u b;u e=0;u o=t.9D;o=o||["bL","bM","bO","bN","bH","bG","bA","bz","by","bB","bC","bF"];x(!m||m.H<1){D 0}G(b=0;b<h.H;b++){x(m.1G(h[b])!=-1){l=m.40(h[b]);x(l.H!=3){D 1}K{c=l[0];k=l[1];d=l[2]}f=O}}x(f==N){x(m.H<=5){D 1}c=m.1N(0,2);k=m.1N(2,2);d=m.1N(4)}x(g=="86"){7V=c;c=k;k=7V}a=Y(c,10);x(W(a)){D 2}n=Y(k,10);x(W(n)){G(i=0;i<12;i++){x(k.5h()==o[i].5h()){n=i+1;k=o[i];i=12}}x(W(n)){D 3}}x(n>12||n<1){D 5}j=Y(d,10);x(W(j)){D 4}x(j<70){j=bE+j;d=""+j}x(j<3u){j=7R+j;d=""+j}x(j<7R||j>bD){D 11}x((n==1||n==3||n==5||n==7||n==8||n==10||n==12)&&(a>31||a<1)){D 6}x((n==4||n==6||n==9||n==11)&&(a>30||a<1)){D 7}x(n==2){x(a<1){D 8}x(83(j)==O){x(a>29){D 9}}K{x(a>28){D 10}}}D{89:(g=="86"?o[n-1]+" "+a+" "+d:a+" "+o[n-1]+" "+d),7h:85.7v(n+"/"+a+"/"+j),bP:j+"-"+n+"-"+a}};y 83(a){x(a%3u==0){x(a%c3==0){D O}}K{x((a%4)==0){D O}}D N}4z=y(a){t.1S=F;t.2d=F;t.1g="";t.1x=F;t.3e=F;t.7v=y(d){u c=d.2l(/^(([A-4d-z][0-9A-4d-z+.-]*)(:))?((\\/\\/)([^\\/?#]*))?([^?#]*)((\\?)([^#]*))?((#)(.*))?/);t.1S=c[3]?c[2]:F;t.2d=c[5]?c[6]:F;t.1g=c[7];t.1x=c[9]?c[10]:F;t.3e=c[12]?c[13]:F;D t};t.4i=y(){u c="";x(t.1S!=F){c=c+t.1S+":"}x(t.2d!=F){c=c+"//"+t.2d}x(t.1g!=F){c=c+t.1g}x(t.1x!=F){c=c+"?"+t.1x}x(t.3e!=F){c=c+"#"+t.3e}D c};t.7H=y(e){u e=L 4z(e);u d=t;u c=L 4z;x(e.1S==F){D N}x(d.1S!=F&&d.1S.2N()==e.1S.2N()){d.1S=F}x(d.1S!=F){c.1S=d.1S;c.2d=d.2d;c.1g=b(d.1g);c.1x=d.1x}K{x(d.2d!=F){c.2d=d.2d;c.1g=b(d.1g);c.1x=d.1x}K{x(d.1g==""){c.1g=e.1g;x(d.1x!=F){c.1x=d.1x}K{c.1x=e.1x}}K{x(d.1g.1N(0,1)=="/"){c.1g=b(d.1g)}K{x(e.2d!=F&&e.1g==""){c.1g="/"+d.1g}K{c.1g=e.1g.1C(/[^\\/]+$/,"")+d.1g}c.1g=b(c.1g)}c.1x=d.1x}c.2d=e.2d}c.1S=e.1S}c.3e=d.3e;D c};y b(e){u c="";1W(e){x(e.1N(0,3)=="../"||e.1N(0,2)=="./"){e=e.1C(/^\\.+/,"").1N(1)}K{x(e.1N(0,3)=="/./"||e=="/."){e="/"+e.1N(3)}K{x(e.1N(0,4)=="/../"||e=="/.."){e="/"+e.1N(4);c=c.1C(/\\/?[^\\/]*$/,"")}K{x(e=="."||e==".."){e=""}K{u d=e.2l(/^\\/?[^\\/]*/)[0];e=e.1N(d.H);c=c+d}}}}}D c}x(a){t.7v(a)}};y 6p(j,g){u d={},f={},c=0,a="";u e={},b={};u k={},h={};e[0]="4y";e[1]="5N";b[0]="6B";b[2]="7C";b[3]="8q";k=!W(j)?e[j]:j?j.5h():"4y";h=!W(g)?b[g]:g?g.5h():"7C";x(k!=="4y"&&k!=="5N"){bS L bR("bU: "+k+" 7q bV")}d["38"]="&bY;";x(k==="5N"){d["bX"]="&8b;";d["bW"]="&cJ;";d["cK"]="&dz;";d["dy"]="&dx;";d["dA"]="&dB;";d["dD"]="&dC;";d["dw"]="&dv;";d["dp"]="&do;";d["dn"]="&dq;";d["dr"]="&du;";d["dt"]="&ds;";d["dE"]="&dF;";d["dR"]="&7q;";d["dQ"]="&dP;";d["dS"]="&dT;";d["dV"]="&dU;";d["dO"]="&dN;";d["dI"]="&dH;";d["dG"]="&dJ;";d["dK"]="&dM;";d["dL"]="&dm;";d["dl"]="&cX;";d["cW"]="&cV;";d["cY"]="&cZ;";d["d1"]="&d0;";d["cU"]="&cT;";d["cN"]="&cM;";d["cL"]="&cO;";d["cP"]="&cS;";d["cR"]="&cQ;";d["d2"]="&d3;";d["dg"]="&df;";d["de"]="&dh;";d["di"]="&dk;";d["dj"]="&dc;";d["db"]="&d6;";d["d5"]="&d4;";d["d7"]="&d8;";d["da"]="&d9;";d["eY"]="&bT;";d["7I"]="&bZ;";d["c0"]="&c6;";d["c7"]="&c5;";d["c4"]="&c1;";d["c2"]="&bQ;";d["bI"]="&c8;";d["c9"]="&cy;";d["cz"]="&cx;";d["ct"]="&cu;";d["cv"]="&cH;";d["cI"]="&cF;";d["cD"]="&cf;";d["ce"]="&cd;";d["ca"]="&cb;";d["cc"]="&ci;";d["el"]="&fy;";d["fz"]="&fx;";d["fw"]="&ft;";d["fA"]="&fB;";d["fG"]="&fH;";d["fF"]="&fE;";d["fC"]="&fD;";d["fs"]="&fr;";d["fg"]="&fe;";d["fb"]="&fc;";d["fj"]="&fp;";d["fq"]="&fo;";d["fJ"]="&fk;";d["fl"]="&fm;";d["fI"]="&fL;";d["fQ"]="&fO;";d["fP"]="&fK;";d["fM"]="&em;";d["en"]="&eo;";d["fa"]="&ek;";d["eh"]="&ei;";d["ej"]="&ep;";d["ew"]="&ev;";d["er"]="&es;";d["eg"]="&ef;";d["e3"]="&e5;";d["e2"]="&dY;";d["e0"]="&e6;";d["e7"]="&ed;";d["ec"]="&e9;";d["ey"]="&f0;";d["f1"]="&f7;";d["f8"]="&f2;";d["f4"]="&eS;";d["eR"]="&eF;";d["eH"]="&eE;";d["eD"]="&eA;";d["eB"]="&eC;";d["eI"]="&eJ;";d["eP"]="&eK;";d["eL"]="&eM;"}x(h!=="6B"){d["34"]="&9X;"}x(h==="8q"){d["39"]="&#39;"}d["60"]="&as;";d["62"]="&ak;";G(c 1h d){a=5o.9R(c);f[a]=d[c]}D f}y 9S(b,e){u d={},c="",a="";a=b.4i();x(N===(d=t.6p("5N",e))){D N}d["\'"]="&#9V;";G(c 1h d){a=a.40(c).4D(d[c])}D a}y 8L(b,e){u d={},c="",a="";a=b.4i();x(N===(d=t.6p("4y",e))){D N}G(c 1h d){a=a.40(c).4D(d[c])}D a}y 7F(f,c,h,e){f=(f+"").1C(/[^0-9+\\-aM.]/g,"");u b=!7Q(+f)?0:+f,a=!7Q(+c)?0:c,k=(P e==="T")?",":e,d=(P h==="T")?".":h,j="",g=y(o,m){u l=1k.aV(10,m);D""+1k.96(o*l)/l};j=(a<0?(""+b):(a?g(b,a):""+1k.96(b))).40(".");x(j[0].H>3){j[0]=j[0].1C(/\\B(?=(?:\\d{3})+(?!\\d))/g,k)}x((j[1]||"").H<a){j[1]=j[1]||"";j[1]+=L 5T(a-j[1].H+1).4D("0")}D j.4D(d)}y 42(a){u b={2x:F};G(u c 1h b){x(P a!="T"&&P a[c]!="T"){t[c]=a[c]}}}42.C.2x=y(a){D O};y 5u(a){t.1L=a}5u.C=L 42;5u.C.2x=y(a){x(W(a)){D N}x(t.1L=="2w"&&a!=""&&Y(a)!=3b(a)){D N}D O};y 5v(){}5v.C=L 42;5v.C.2x=y(a){D a==""||/^([A-4d-87-9B\\-\\.])+\\@([A-4d-87-9B\\-\\.])+\\.([A-4d-z]{2,4})$/.7m(a)};y 4F(){}4F.C=L 42;4F.C.2x=y(a){D a==""||(a.1G(".")>0&&a.1G(".")<(a.H-2))};y 5Q(a){t.41=a}5Q.C=L 42;5Q.C.2x=y(a){D a==""||P t.41.4q(a)=="2A"};',62,983,'|||||||||||||||||||||||||||||this|var|||if|function||||prototype|return|EditableGrid|null|for|length|columns|editablegrid|else|new|data|false|true|typeof|datatype|column|value|undefined|dataUnfiltered|rows|isNaN|columnIndex|parseInt|chart|||||table||element|push|rowIndex|alert|style|id|name|document|label|rowCount|path|in|bar|RegExp|Math|getAttribute|xmlDoc|target|_|getValueAt|url|with|firstChild|TextCellEditor|cellRenderer|unit|trim|query|text|precision|ymax|labelColumnIndexOrName|replace|Invalid|getColumnIndex|createElement|indexOf|tHead|getStyle|appendChild|init|type|row|substr|pageSize|headerRenderer|tBody|CellRenderer|scheme|max|parentNode|CellEditor|while|values|enumValues|font|decimal_point|cols||sortDescending|options|className|limit||||render|originalIndex|col|authority|containerid|size|thousands_separator|divId|columndata|rowData|getElementsByTagName|match|sortedColumnName|jsonData|innerHTML|optionValues|pie|string|visible|date|celleditor|window|integer|isValid|columnCount|maxvalue|object|getRowCount|title|colour|headerEditor|load|cellValidators|getColumn|cellEditor|setPageIndex|row_array|index|alpha|toLowerCase|columnIndexOrName|onblur|enumProvider|link|nansymbol|unit_before_number|metadata|_render|double|cellValues|Column|src||||getCurrentPageIndex||descending|localget|width|||currentPageIndex|parseFloat|rowValue||fragment|JSON|removeChild|color|editable|boolean|px|userAgent|enableSort|number|_getRowDOMId|navigator|left|localisset|tagName|currentContainerid|100|getTypedValue|columnIndexInModel|smartColorsBar|applyEditing|isEditing|distinctValues|valueColumnIndexOrName|ignoreLastRow|cLabel|ofcSwf|EnumCellRenderer|displayEditor|NumberCellEditor|newValue|swf|bgColor|getColumnLabel|getColumnCount|columnName|refreshGrid|cell|currentFilter|backOnFirstPage|sort|xLabels|E2E2E2|dec_step|continue|cells|filter|hasChildNodes|split|grid|CellValidator|hidden_by_editablegrid|display|localset|tableid|autoHeight|catch|splice|enumGroups|processXML|tableLoaded|Za|colspan|href|SortHeaderRenderer|div|toString|break|open|ofc_chart|EditableGrid_check_lib|editmode|maxLength|sortColumnIndexOrName|checkDate|CheckboxCellRenderer|getPageCount|fieldSize|getEditorValue|mouseClicked|try|td|HTML_SPECIALCHARS|URI|tr|ajaxRequest|processJSON|join|getEditor|WebsiteCellValidator|SelectCellEditor|This|method|dateFormat|library|borderTop|startRowIndex|javascript|rowId|needs|getRow|XMLHttpRequest|the|attributeName|getOptionValuesForEdit|lastSelectedRowIndex|NumberCellRenderer|EmailCellRenderer|getOptionValuesForRender|getRowIndex|_data|setAttribute|tableSorted|filterString|getDisplayValueAt|html|WebsiteCellRenderer|DateCellEditor|cellValue|add|padding|onclick|addClassName|isNumerical|processColumns|DateCellRenderer|sep|toUpperCase|offsetWidth|updateChart|localStorage|legend|getRowAttribute|stroke|String|EditableGrid_pending_charts|stringify|cValue|11px|none|NumberCellValidator|EmailCellValidator|align|getColumnType|border|000033|startAngle|checkChartLib|paddingLeft|findSWF|caption|family|borderLeft|colname|node|attrIndex|offsetHeight|isColumnBar|paddingTop|HTML_ENTITIES|valueStack|labels|DateCellValidator|nodeValue|rotateXLabels|Array|skipped|insertRow|isEditable|isStatic|getCell|endRowIndex||checked||verticalAlign|_localget|sortDownImage|currentTableid|currentClassName|has_local_storage|_rendergrid|enableStore|sortUpImage|TBODY|THEAD|captionElement|clearPrevious|renderer|displayed|option|keys|edit|valueRow|swfobject|flash|keyCode|get_html_translation_table|cancelEditing|editorzoneid|getCellX|absolute|add_element|total|Verdana|center|0000ff|set_title|20px|ENT_NOQUOTES|bg_colour|occurences|ffffff|fill|ofc_element|setValueAt|previousValue|defined|getDisplayValue|pageIndex|datepicker|onblur_backup|getLabel|invalid|rowContent|words|tableFiltered|or|call|canGoBack|editorValue|updateStyle|invalidClassName|_clearEditor||EditableGrid_loadChart|formatValue|canGoForward|selectedIndex||min|height|filterActive|doubleclick|_createCellEditor|_createCellRenderer|insertAfter|EU|ActiveXObject|orig_url|groupOptionValues|sortDate|_insert|paddingBottom|Opera|columnDeclarations|test|autoWidth|paddingRight|readyState|not|email|nbHeaderRows|top|_addDefaultCellValidators|parse|baseUrl|delete|website|implementation|right|onreadystatechange|ENT_COMPAT|adaptWidth|select|number_format|send|toAbsolute|200|responseText|GET|browser|setTimeout|modelChanged|formattedValue|startPageIndex|isFinite|1900|yy|mm|insertBefore|strTemp|_createHeaderEditor|page|_createHeaderRenderer|dot|comma|endPageIndex|minHeight|LeapYear|adaptHeight|Date|US|z0|EnumProvider|formattedDate|minWidth|nbsp|428BC7|offset|steps|toFixed|tick_length|Microsoft|Gecko|loadXML|y_axis|XMLDOM|x_legend|DOMParser|colours|images|ENT_QUOTES|Image|smartColorsPie|png|y_legend|createDocument|gradientFill|rotate|tick_height|skip|no|fontSize|nodeName|getCellY|floor|100000|random|fixed|bar3d|fontFamily|saveOnBlur|htmlspecialchars|EditableGrid_get_chart_data|get|x_axis|chartRendered|transparent|allowSimultaneousEdition|attributes|event|Cannot|parseColumnType|readonlyWarning|isHeaderEditable|xA0|append|rowSelected|insert|sort_boolean|addDefaultCellValidators|getColumnName|sort_alpha|round|setCellRenderer|hasColumn|sort_numeric|hasClassName|tableRendered|getCookie|renderable|_localset|removeClassName|strip|clearCellValidators|unsort|bottom|ondblclick|script|cookie|cellrenderer|detectDir|position|getComputedStyle|currentStyle|insertRowIndex|static|addCellValidator|setCookie|headerCell|borderBottom|trHeader|setHeaderRenderer||9_|isSame|shortMonthNames|input|checkbox|insertCell|setCellEditor|remove|setHeaderEditor|borderRight|setEnumProvider|TH|offsetParent|sort_date|_renderHeaders|efe100|fromCharCode|htmlentities|instead|WebKit|039|CAPTION|quot|group|AppleWebKit|two|to|4040f6|offsetLeft|bullet_arrow_down|offsetTop|responseXML|renderPieChart|dc243c|getElementById||setCaption|Apple|KHTML|Mobile|Safari|bullet_arrow_up|onload|XML|config|gt|00f629|arguments|async|nGot|You|parseFromString|loadXMLFromString|lt|application|xml|Unable|barlabel|FFD700|getSlidingPageInterval|lastPage|removeRow|firstPage|nextPage|getRowValues|0000FF|00FFFF|Object|addRow|FF00FF|reverse|getPagesInInterval|prevPage|Ee|ceil|setPageSize|getCurrentPage|found|getColumnPrecision|getColumnUnit|IE|getRowId|pow|attachToHTMLTable|given|tBodies|setRowAttribute|eval|cellIndex|elements|loadJSON|bar_3d|takes|6f8183|renderGrid|isColumnNumerical|MobileSafari|many||too|bar_stack|and|renderStackedBarChart|item|renderBarChart|constructor|attachEvent|FF0000|00FF00|Browser|attrName|loadJSONFromString|from|111111|srcElement|The|TD|800080|obtained|f93fb1|onkeydown|Sep|Aug|Jul|Oct|Nov|2100|2000|Dec|Jun|May|205|endsWith|startsWith|Jan|Feb|Apr|Mar|dbDate|Igrave|Error|throw|Ccedil|Table|supported|161|160|amp|Egrave|201|Euml|204|400|203|Ecirc|Eacute|202|Iacute|206|213|Otilde|214|Ocirc|212|Oacute|getPropertyValue|defaultView|Ouml|_localisset|expires|escape|getDate|toUTCString|unescape|getItem|setItem|vertical|borderRightWidth|208|ETH|209|js|Iuml|Icirc|207|base|location|borderTopWidth|211|borderLeftWidth|Ograve|borderBottomWidth|Ntilde|210|iexcl|162|187|ordm|186|raquo|188|frac12|189|frac14|sup1|185|para|182|micro|183|middot|cedil|184|190|frac34|Auml|196|Atilde|197|Aring|AElig|198|195|Acirc||192|iquest|191|Agrave|193|194|Aacute|181|acute|168|sect|167|uml|169|ordf|170|copy|brvbar|166|pound|163|cent|164|curren|yen|165|171|laquo|178|plusmn|177|sup2|179|180|sup3|deg|176|shy|173|172|174|reg|macr|175|setDate|localeCompare|ntilde|maxlength|242|onkeyup|241|240|optgroup|eth|ograve|243|scrollTop|ocirc|scrollLeft|middle|244|oacute|textAlign|iuml|239|235|euml|236|ecirc|215|egrave|233|eacute|igrave|show|238|icirc|onchange|beforeShow|iacute|237|onClose|245|focus|ucirc|252|uuml|251|uacute|ugrave|openflashchart|250|253|yacute|thorn|255|yuml|gradient|start|254|angle|249|oslash|salign|Opaque|wmode|AllowScriptAccess|always|199|clearChart|otilde|246|divide|embedSWF|248|500|expressInstall|ouml|247|fontWeight|234|224|agrave|http|szlig|cursor|223|pointer|mailto|225|atilde|228|auml|disabled|acirc|aacute|226|THORN|222|Ugrave|u00a0|createTextNode|217|Oslash|times|216|218|Uacute|221|Yacute|Uuml|220|219|Ucirc|229|227|ccedil|aring|232|normal|aelig|231|230'.split('|'),0,{}))
+EditableGrid.prototype.tableLoaded = function() {};
+EditableGrid.prototype.chartRendered = function() {};
+EditableGrid.prototype.tableRendered = function(containerid, className, tableid) {};
+EditableGrid.prototype.tableSorted = function(columnIndex, descending) {};
+EditableGrid.prototype.tableFiltered = function() {};
+EditableGrid.prototype.modelChanged = function(rowIndex, columnIndex, oldValue, newValue, row) {};
+EditableGrid.prototype.rowSelected = function(oldRowIndex, newRowIndex) {};
+EditableGrid.prototype.isHeaderEditable = function(rowIndex, columnIndex) { return false; };
+EditableGrid.prototype.isEditable =function(rowIndex, columnIndex) { return true; };
+EditableGrid.prototype.readonlyWarning = function() {};
+
+/**
+ * Load metadata and/or data from an XML url
+ * The callback "tableLoaded" is called when loading is complete.
+ */
+EditableGrid.prototype.loadXML = function(url, callback)
+{
+	// we use a trick to avoid getting an old version from the browser's cache
+	var orig_url = url;
+	var sep = url.indexOf('?') >= 0 ? '&' : '?'; 
+	url += sep + Math.floor(Math.random() * 100000);
+
+	var self = this;
+	with (this) {
+
+		// IE
+		if (window.ActiveXObject) 
+		{
+			xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+			xmlDoc.onreadystatechange = function() {
+				if (xmlDoc.readyState == 4) {
+					processXML();
+					_callback('xml', orig_url, callback);
+				}
+			};
+			xmlDoc.load(url);
+		}
+
+		// Safari
+		else if (/*Browser.WebKit && */ window.XMLHttpRequest) 
+		{
+			xmlDoc = new XMLHttpRequest();
+			xmlDoc.onreadystatechange = function () {
+				if (this.readyState == 4) {
+					xmlDoc = this.responseXML;
+					if (!xmlDoc) { /* alert("Could not load XML from url '" + orig_url + "'"); */ return false; }
+					processXML();
+					_callback('xml', orig_url, callback);
+				}
+			};
+			xmlDoc.open("GET", url, true);
+			xmlDoc.send("");
+		}
+
+		// Firefox (and other browsers) 
+		else if (document.implementation && document.implementation.createDocument) 
+		{
+			xmlDoc = document.implementation.createDocument("", "", null);
+			xmlDoc.onload = function() {
+				processXML();
+				_callback('xml', orig_url, callback);
+			};
+			xmlDoc.load(url);
+		}
+
+		// should never happen
+		else { 
+			alert("Cannot load a XML url with this browser!"); 
+			return false;
+		}
+
+		return true;
+	}
+};
+
+/**
+ * Load metadata and/or data from an XML string
+ * No callback "tableLoaded" is called since this is a synchronous operation.
+ * 
+ * Contributed by Tim Consolazio of Tcoz Tech Services, tcoz@tcoz.com
+ * http://tcoztechwire.blogspot.com/2012/04/setxmlfromstring-extension-for.html
+ */
+EditableGrid.prototype.loadXMLFromString = function(xml)
+{
+	if (window.DOMParser) {
+		var parser = new DOMParser();
+		this.xmlDoc = parser.parseFromString(xml, "application/xml");
+	}
+	else {
+		this.xmlDoc = new ActiveXObject("Microsoft.XMLDOM"); // IE
+		this.xmlDoc.async = "false";
+		this.xmlDoc.loadXML(xml);
+	}
+
+	this.processXML();
+};
+
+/**
+ * Process the XML content
+ * @private
+ */
+EditableGrid.prototype.processXML = function()
+{
+	with (this) {
+
+		// clear model and pointer to current table
+		this.data = [];
+		this.dataUnfiltered = null;
+		this.table = null;
+
+		// load metadata (only one tag <metadata> --> metadata[0])
+		var metadata = xmlDoc.getElementsByTagName("metadata");
+		if (metadata && metadata.length >= 1) {
+
+			this.columns = [];
+			var columnDeclarations = metadata[0].getElementsByTagName("column");
+			for (var i = 0; i < columnDeclarations.length; i++) {
+
+				// get column type
+				var col = columnDeclarations[i];
+				var datatype = col.getAttribute("datatype");
+
+				// get enumerated values if any
+				var optionValues = null;
+				var enumValues = col.getElementsByTagName("values");
+				if (enumValues.length > 0) {
+					optionValues = {};
+
+					var enumGroups = enumValues[0].getElementsByTagName("group");
+					if (enumGroups.length > 0) {
+						for (var g = 0; g < enumGroups.length; g++) {
+							var groupOptionValues = {};
+							enumValues = enumGroups[g].getElementsByTagName("value");
+							for (var v = 0; v < enumValues.length; v++) {
+								groupOptionValues[enumValues[v].getAttribute("value")] = enumValues[v].firstChild ? enumValues[v].firstChild.nodeValue : "";
+							}
+							optionValues[enumGroups[g].getAttribute("label")] = groupOptionValues;
+						}
+					}
+					else {
+						enumValues = enumValues[0].getElementsByTagName("value");
+						for (var v = 0; v < enumValues.length; v++) {
+							optionValues[enumValues[v].getAttribute("value")] = enumValues[v].firstChild ? enumValues[v].firstChild.nodeValue : "";
+						}
+					}
+				}
+
+				// create new column           
+				columns.push(new Column({
+					name: col.getAttribute("name"),
+					label: (typeof col.getAttribute("label") == 'string' ? col.getAttribute("label") : col.getAttribute("name")),
+					datatype: (col.getAttribute("datatype") ? col.getAttribute("datatype") : "string"),
+					editable: col.getAttribute("editable") == "true",
+					bar: (col.getAttribute("bar") ? col.getAttribute("bar") == "true" : true),
+					optionValues: optionValues
+				}));
+			}
+
+			// process columns
+			processColumns();
+		}
+	
+		// load server-side pagination data
+		var paginator = xmlDoc.getElementsByTagName("paginator");
+		if (paginator && paginator.length >= 1) {
+			this.pageCount = paginator[0].getAttribute('pagecount');
+			this.totalRowCount = paginator[0].getAttribute('totalrowcount');
+			this.unfilteredRowCount = paginator[0].getAttribute('unfilteredrowcount');
+		}
+
+		// if no row id is provided, we create one since we need one
+		var defaultRowId = 1;
+		
+		// load content
+		var rows = xmlDoc.getElementsByTagName("row");
+		for (var i = 0; i < rows.length; i++) 
+		{
+			// get all defined cell values
+			var cellValues = {};
+			var cols = rows[i].getElementsByTagName("column");
+			for (var j = 0; j < cols.length; j++) {
+				var colname = cols[j].getAttribute("name");
+				if (!colname) {
+					if (j >= columns.length) alert("You defined too many columns for row " + (i+1));
+					else colname = columns[j].name; 
+				}
+				cellValues[colname] = cols[j].firstChild ? cols[j].firstChild.nodeValue : "";
+			}
+
+			// for each row we keep the orginal index, the id and all other attributes that may have been set in the XML
+			var rowData = { visible: true, originalIndex: i, id: rows[i].getAttribute("id") ? rows[i].getAttribute("id") : defaultRowId++ };  
+			for (var attrIndex = 0; attrIndex < rows[i].attributes.length; attrIndex++) {
+				var node = rows[i].attributes.item(attrIndex);
+				if (node.nodeName != "id") rowData[node.nodeName] = node.nodeValue; 
+			}
+
+			// get column values for this rows
+			rowData.columns = [];
+			for (var c = 0; c < columns.length; c++) {
+				var cellValue = columns[c].name in cellValues ? cellValues[columns[c].name] : "";
+				rowData.columns.push(getTypedValue(c, cellValue));
+			}
+
+			// add row data in our model
+			data.push(rowData);
+		}
+	}
+
+	return true;
+};
+
+/**
+ * Load metadata and/or data from a JSON url
+ * The callback "tableLoaded" is called when loading is complete.
+ */
+EditableGrid.prototype.loadJSON = function(url, callback)
+{
+	// we use a trick to avoid getting an old version from the browser's cache
+	var orig_url = url;
+	var sep = url.indexOf('?') >= 0 ? '&' : '?'; 
+	url += sep + Math.floor(Math.random() * 100000);
+
+	// should never happen
+	if (!window.XMLHttpRequest) {
+		alert("Cannot load a JSON url with this browser!"); 
+		return false;
+	}
+
+	var self = this;
+	with (this) {
+
+		var ajaxRequest = new XMLHttpRequest();
+		ajaxRequest.onreadystatechange = function () {
+			if (this.readyState == 4) {
+				if (!this.responseText) { /* alert("Could not load JSON from url '" + orig_url + "'"); */ return false; }
+				if (!processJSON(this.responseText))  { alert("Invalid JSON data obtained from url '" + orig_url + "'"); return false; }
+				_callback('json', orig_url, callback);
+			}
+		};
+
+		ajaxRequest.open("GET", url, true);
+		ajaxRequest.send("");
+	}
+
+	return true;
+};
+
+EditableGrid.prototype._callback = function(type, url, callback)
+{
+	if (callback) callback.call(this); 
+	else {
+
+		// replace refreshGrid to enable server-side pagination, sorting and filtering
+		if (this.serverSide) {
+			this.refreshGrid = function() {
+
+				// add pagination, filtering and sorting parameters to the last used url
+				var url = this.lastURL + (this.lastURL.indexOf('?') >= 0 ? '&' : '?')
+				+ "page=" + (this.currentPageIndex + 1)
+				+ "&filter=" + (this.currentFilter ? encodeURIComponent(this.currentFilter) : "")
+				+ "&sort=" + (this.sortedColumnName && this.sortedColumnName != -1 ? encodeURIComponent(this.sortedColumnName) : "")
+				+ "&asc=" + (this.sortDescending ? 0 : 1);
+
+				// the original refreshGrid will be called after ajax request is done (ie. after updated data have been loaded)
+				var callback = function() { EditableGrid.prototype.refreshGrid.call(this); };
+
+				// load data using the parameterized url
+				if (type == 'xml') this.loadXML(url, callback);
+				else this.loadJSON(url, callback);
+			};
+		}
+
+		this.lastURL = url; 
+		this.tableLoaded();
+	}
+};
+
+/**
+ * Load metadata and/or data from a JSON string
+ * No callback "tableLoaded" is called since this is a synchronous operation.
+ */
+EditableGrid.prototype.loadJSONFromString = function(json)
+{
+	return this.processJSON(json);
+};
+
+/**
+ * Load metadata and/or data from a Javascript object
+ * No callback "tableLoaded" is called since this is a synchronous operation.
+ */
+EditableGrid.prototype.load = function(object)
+{
+	return this.processJSON(object);
+};
+
+/**
+ * Process the JSON content
+ * @private
+ */
+EditableGrid.prototype.processJSON = function(jsonData)
+{	
+	if (typeof jsonData == "string") jsonData = eval("(" + jsonData + ")");
+	if (!jsonData) return false;
+
+	// clear model and pointer to current table
+	this.data = [];
+	this.dataUnfiltered = null;
+	this.table = null;
+
+	// load metadata
+	if (jsonData.metadata) {
+
+		// create columns 
+		this.columns = [];
+		for (var c = 0; c < jsonData.metadata.length; c++) {
+			var columndata = jsonData.metadata[c];
+			this.columns.push(new Column({
+				name: columndata.name,
+				label: (columndata.label ? columndata.label : columndata.name),
+				datatype: (columndata.datatype ? columndata.datatype : "string"),
+				editable: (columndata.editable ? true : false),
+				bar: (typeof columndata.bar == 'undefined' ? true : (columndata.bar ? true : false)),
+				optionValues: columndata.values ? columndata.values : null
+			}));
+		}
+		
+		// process columns
+		this.processColumns();
+	}
+
+	// load server-side pagination data
+	if (jsonData.paginator) {
+		this.pageCount = jsonData.paginator.pagecount;
+		this.totalRowCount = jsonData.paginator.totalrowcount;
+		this.unfilteredRowCount = jsonData.paginator.unfilteredrowcount;
+	}
+	
+	// if no row id is provided, we create one since we need one
+	var defaultRowId = 1;
+
+	// load content
+	if (jsonData.data) for (var i = 0; i < jsonData.data.length; i++) 
+	{
+		var row = jsonData.data[i];
+		if (!row.values) continue;
+
+		// row values can be given as an array (same order as columns) or as an object (associative array)
+		if (Object.prototype.toString.call(row.values) !== '[object Array]' ) cellValues = row.values;
+		else {
+			cellValues = {};
+			for (var j = 0; j < row.values.length && j < this.columns.length; j++) cellValues[this.columns[j].name] = row.values[j];
+		}
+
+		// for each row we keep the orginal index, the id and all other attributes that may have been set in the JSON
+		var rowData = { visible: true, originalIndex: i, id: row.id ? row.id : defaultRowId++ };  
+		for (var attributeName in row) if (attributeName != "id" && attributeName != "values") rowData[attributeName] = row[attributeName];
+
+		// get column values for this rows
+		rowData.columns = [];
+		for (var c = 0; c < this.columns.length; c++) {
+			var cellValue = this.columns[c].name in cellValues ? cellValues[this.columns[c].name] : "";
+			rowData.columns.push(this.getTypedValue(c, cellValue));
+		}
+
+		// add row data in our model
+		this.data.push(rowData);
+	}
+
+	return true;
+};
+
+/**
+ * Process columns
+ * @private
+ */
+EditableGrid.prototype.processColumns = function()
+{
+	for (var columnIndex = 0; columnIndex < this.columns.length; columnIndex++) {
+
+		var column = this.columns[columnIndex];
+
+		// set column index and back pointer
+		column.columnIndex = columnIndex;
+		column.editablegrid = this;
+
+		// parse column type
+		this.parseColumnType(column);
+
+		// create suited enum provider if none given
+		if (!column.enumProvider) column.enumProvider = column.optionValues ? new EnumProvider() : null;
+
+		// create suited cell renderer if none given
+		if (!column.cellRenderer) this._createCellRenderer(column);
+		if (!column.headerRenderer) this._createHeaderRenderer(column);
+
+		// create suited cell editor if none given
+		if (!column.cellEditor) this._createCellEditor(column);  
+		if (!column.headerEditor) this._createHeaderEditor(column);
+
+		// add default cell validators based on the column type
+		this._addDefaultCellValidators(column);
+	}
+};
+
+/**
+ * Parse column type
+ * @private
+ */
+
+EditableGrid.prototype.parseColumnType = function(column)
+{
+	// reset
+	column.unit = null;
+	column.precision = -1;
+	column.decimal_point = ',';
+	column.thousands_separator = '.';
+	column.unit_before_number = false;
+	column.nansymbol = '';
+
+	// extract precision, unit and number format from type if 6 given
+	if (column.datatype.match(/(.*)\((.*),(.*),(.*),(.*),(.*),(.*)\)$/)) {
+		column.datatype = RegExp.$1;
+		column.unit = RegExp.$2;
+		column.precision = parseInt(RegExp.$3);
+		column.decimal_point = RegExp.$4;
+		column.thousands_separator = RegExp.$5;
+		column.unit_before_number = RegExp.$6;
+		column.nansymbol = RegExp.$7;
+
+		// trim should be done after fetching RegExp matches beacuse it itself uses a RegExp and causes interferences!
+		column.unit = column.unit.trim();
+		column.decimal_point = column.decimal_point.trim();
+		column.thousands_separator = column.thousands_separator.trim();
+		column.unit_before_number = column.unit_before_number.trim() == '1';
+		column.nansymbol = column.nansymbol.trim();
+	}
+
+	// extract precision, unit and number format from type if 5 given
+	else if (column.datatype.match(/(.*)\((.*),(.*),(.*),(.*),(.*)\)$/)) {
+		column.datatype = RegExp.$1;
+		column.unit = RegExp.$2;
+		column.precision = parseInt(RegExp.$3);
+		column.decimal_point = RegExp.$4;
+		column.thousands_separator = RegExp.$5;
+		column.unit_before_number = RegExp.$6;
+
+		// trim should be done after fetching RegExp matches beacuse it itself uses a RegExp and causes interferences!
+		column.unit = column.unit.trim();
+		column.decimal_point = column.decimal_point.trim();
+		column.thousands_separator = column.thousands_separator.trim();
+		column.unit_before_number = column.unit_before_number.trim() == '1';
+	}
+
+	// extract precision, unit and nansymbol from type if 3 given
+	else if (column.datatype.match(/(.*)\((.*),(.*),(.*)\)$/)) {
+		column.datatype = RegExp.$1;
+		column.unit = RegExp.$2.trim();
+		column.precision = parseInt(RegExp.$3);
+		column.nansymbol = RegExp.$4.trim();
+	}
+
+	// extract precision and unit from type if two given
+	else if (column.datatype.match(/(.*)\((.*),(.*)\)$/)) {
+		column.datatype = RegExp.$1.trim();
+		column.unit = RegExp.$2.trim();
+		column.precision = parseInt(RegExp.$3);
+	}
+
+	// extract precision or unit from type if any given
+	else if (column.datatype.match(/(.*)\((.*)\)$/)) {
+		column.datatype = RegExp.$1.trim();
+		var unit_or_precision = RegExp.$2.trim();
+		if (unit_or_precision.match(/^[0-9]*$/)) column.precision = parseInt(unit_or_precision);
+		else column.unit = unit_or_precision;
+	}
+
+	if (column.decimal_point == 'comma') column.decimal_point = ',';
+	if (column.decimal_point == 'dot') column.decimal_point = '.';
+	if (column.thousands_separator == 'comma') column.thousands_separator = ',';
+	if (column.thousands_separator == 'dot') column.thousands_separator = '.';
+
+	if (isNaN(column.precision)) column.precision = -1;
+	if (column.unit == '') column.unit = null;
+	if (column.nansymbol == '') column.nansymbol = null;
+};
+
+/**
+ * Get typed value
+ * @private
+ */
+
+EditableGrid.prototype.getTypedValue = function(columnIndex, cellValue) 
+{
+	var colType = this.getColumnType(columnIndex);
+	if (colType == 'boolean') cellValue = (cellValue && cellValue != 0 && cellValue != "false") ? true : false;
+	if (colType == 'integer') { cellValue = parseInt(cellValue, 10); } 
+	if (colType == 'double') { cellValue = parseFloat(cellValue); }
+	if (colType == 'string') { cellValue = "" + cellValue; }
+	return cellValue;
+};
+
+/**
+ * Attach to an existing HTML table.
+ * The second parameter can be used to give the column definitions.
+ * This parameter is left for compatibility, but is deprecated: you should now use "load" to setup the metadata.
+ */
+EditableGrid.prototype.attachToHTMLTable = function(_table, _columns)
+{
+	// clear model and pointer to current table
+	this.data = [];
+	this.dataUnfiltered = null;
+	this.table = null;
+
+	// process columns if given
+	if (_columns) {
+		this.columns = _columns;
+		this.processColumns();
+	}
+
+	// get pointers to table components
+	this.table = typeof _table == 'string' ? _$(_table) : _table ;
+	if (!this.table) alert("Invalid table given: " + _table);
+	this.tHead = this.table.tHead;
+	this.tBody = this.table.tBodies[0];
+
+	// create table body if needed
+	if (!this.tBody) {
+		this.tBody = document.createElement("TBODY");
+		this.table.insertBefore(this.tBody, this.table.firstChild);
+	}
+
+	// create table header if needed
+	if (!this.tHead) {
+		this.tHead = document.createElement("THEAD");
+		this.table.insertBefore(this.tHead, this.tBody);
+	}
+
+	// if header is empty use first body row as header
+	if (this.tHead.rows.length == 0 && this.tBody.rows.length > 0) 
+		this.tHead.appendChild(this.tBody.rows[0]);
+
+	// get number of rows in header
+	this.nbHeaderRows = this.tHead.rows.length;
+
+	// load header labels
+	var rows = this.tHead.rows;
+	for (var i = 0; i < rows.length; i++) {
+		var cols = rows[i].cells;
+		var columnIndexInModel = 0;
+		for (var j = 0; j < cols.length && columnIndexInModel < this.columns.length; j++) {
+			if (!this.columns[columnIndexInModel].label || this.columns[columnIndexInModel].label == this.columns[columnIndexInModel].name) this.columns[columnIndexInModel].label = cols[j].innerHTML;
+			var colspan = parseInt(cols[j].getAttribute("colspan"));
+			columnIndexInModel += colspan > 1 ? colspan : 1;
+		}
+	}
+
+	// load content
+	var rows = this.tBody.rows;
+	for (var i = 0; i < rows.length; i++) {
+		var rowData = [];
+		var cols = rows[i].cells;
+		for (var j = 0; j < cols.length && j < this.columns.length; j++) rowData.push(this.getTypedValue(j, cols[j].innerHTML));
+		this.data.push({ visible: true, originalIndex: i, id: rows[i].id, columns: rowData });
+		rows[i].rowId = rows[i].id;
+		rows[i].id = this._getRowDOMId(rows[i].id);
+	}
+};
+
+/**
+ * Creates a suitable cell renderer for the column
+ * @private
+ */
+EditableGrid.prototype._createCellRenderer = function(column)
+{
+	column.cellRenderer = 
+		column.enumProvider ? new EnumCellRenderer() :
+			column.datatype == "integer" || column.datatype == "double" ? new NumberCellRenderer() :
+				column.datatype == "boolean" ? new CheckboxCellRenderer() : 
+					column.datatype == "email" ? new EmailCellRenderer() : 
+						column.datatype == "website" || column.datatype == "url" ? new WebsiteCellRenderer() : 
+							column.datatype == "date" ? new DateCellRenderer() : 
+								new CellRenderer();
+
+							// give access to the column from the cell renderer
+							if (column.cellRenderer) {
+								column.cellRenderer.editablegrid = this;
+								column.cellRenderer.column = column;
+							}
+};
+
+/**
+ * Creates a suitable header cell renderer for the column
+ * @private
+ */
+EditableGrid.prototype._createHeaderRenderer = function(column)
+{
+	column.headerRenderer = (this.enableSort && column.datatype != "html") ? new SortHeaderRenderer(column.name) : new CellRenderer();
+
+	// give access to the column from the header cell renderer
+	if (column.headerRenderer) {
+		column.headerRenderer.editablegrid = this;
+		column.headerRenderer.column = column;
+	}		
+};
+
+/**
+ * Creates a suitable cell editor for the column
+ * @private
+ */
+EditableGrid.prototype._createCellEditor = function(column)
+{
+	column.cellEditor = 
+		column.enumProvider ? new SelectCellEditor() :
+			column.datatype == "integer" || column.datatype == "double" ? new NumberCellEditor(column.datatype) :
+				column.datatype == "boolean" ? null :
+					column.datatype == "email" ? new TextCellEditor(column.precision) :
+						column.datatype == "website" || column.datatype == "url" ? new TextCellEditor(column.precision) :
+							column.datatype == "date" ? (typeof $ == 'undefined' || typeof $.datepicker == 'undefined' ? new TextCellEditor(column.precision, 10) : new DateCellEditor({ fieldSize: column.precision, maxLength: 10 })) :
+								new TextCellEditor(column.precision);  
+
+							// give access to the column from the cell editor
+							if (column.cellEditor) {
+								column.cellEditor.editablegrid = this;
+								column.cellEditor.column = column;
+							}
+};
+
+/**
+ * Creates a suitable header cell editor for the column
+ * @private
+ */
+EditableGrid.prototype._createHeaderEditor = function(column)
+{
+	column.headerEditor =  new TextCellEditor();  
+
+	// give access to the column from the cell editor
+	if (column.headerEditor) {
+		column.headerEditor.editablegrid = this;
+		column.headerEditor.column = column;
+	}
+};
+
+/**
+ * Returns the number of rows
+ */
+EditableGrid.prototype.getRowCount = function()
+{
+	return this.data.length;
+};
+
+/**
+ * Returns the number of rows, not taking the filter into account if any
+ */
+EditableGrid.prototype.getUnfilteredRowCount = function()
+{
+	// given if server-side filtering is involved
+	if (this.unfilteredRowCount > 0) return this.unfilteredRowCount;
+	
+	var _data = this.dataUnfiltered == null ? this.data : this.dataUnfiltered; 
+	return _data.length;
+};
+
+/**
+ * Returns the number of rows in all pages
+ */
+EditableGrid.prototype.getTotalRowCount = function()
+{
+	// different from getRowCount only is server-side pagination is involved
+	if (this.totalRowCount > 0) return this.totalRowCount;
+	
+	return this.getRowCount();
+};
+
+/**
+ * Returns the number of columns
+ */
+EditableGrid.prototype.getColumnCount = function()
+{
+	return this.columns.length;
+};
+
+/**
+ * Returns true if the column exists
+ * @param {Object} columnIndexOrName index or name of the column
+ */
+EditableGrid.prototype.hasColumn = function(columnIndexOrName)
+{
+	return this.getColumnIndex(columnIndexOrName) >= 0;
+};
+
+/**
+ * Returns the column
+ * @param {Object} columnIndexOrName index or name of the column
+ */
+EditableGrid.prototype.getColumn = function(columnIndexOrName)
+{
+	var colIndex = this.getColumnIndex(columnIndexOrName);
+	if (colIndex < 0) { alert("[getColumn] Column not found with index or name " + columnIndexOrName); return null; }
+	return this.columns[colIndex];
+};
+
+/**
+ * Returns the name of a column
+ * @param {Object} columnIndexOrName index or name of the column
+ */
+EditableGrid.prototype.getColumnName = function(columnIndexOrName)
+{
+	return this.getColumn(columnIndexOrName).name;
+};
+
+/**
+ * Returns the label of a column
+ * @param {Object} columnIndexOrName index or name of the column
+ */
+EditableGrid.prototype.getColumnLabel = function(columnIndexOrName)
+{
+	return this.getColumn(columnIndexOrName).label;
+};
+
+/**
+ * Returns the type of a column
+ * @param {Object} columnIndexOrName index or name of the column
+ */
+EditableGrid.prototype.getColumnType = function(columnIndexOrName)
+{
+	return this.getColumn(columnIndexOrName).datatype;
+};
+
+/**
+ * Returns the unit of a column
+ * @param {Object} columnIndexOrName index or name of the column
+ */
+EditableGrid.prototype.getColumnUnit = function(columnIndexOrName)
+{
+	return this.getColumn(columnIndexOrName).unit;
+};
+
+/**
+ * Returns the precision of a column
+ * @param {Object} columnIndexOrName index or name of the column
+ */
+EditableGrid.prototype.getColumnPrecision = function(columnIndexOrName)
+{
+	return this.getColumn(columnIndexOrName).precision;
+};
+
+/**
+ * Returns true if the column is to be displayed in a bar chart
+ * @param {Object} columnIndexOrName index or name of the column
+ */
+EditableGrid.prototype.isColumnBar = function(columnIndexOrName)
+{
+	var column = this.getColumn(columnIndexOrName);
+	return (column.bar && column.isNumerical());
+};
+
+/**
+ * Returns true if the column is numerical (double or integer)
+ * @param {Object} columnIndexOrName index or name of the column
+ */
+EditableGrid.prototype.isColumnNumerical = function(columnIndexOrName)
+{
+	var column = this.getColumn(columnIndexOrName);
+	return column.isNumerical();;
+};
+
+/**
+ * Returns the value at the specified index
+ * @param {Integer} rowIndex
+ * @param {Integer} columnIndex
+ */
+EditableGrid.prototype.getValueAt = function(rowIndex, columnIndex)
+{
+	// check and get column
+	if (columnIndex < 0 || columnIndex >= this.columns.length) { alert("[getValueAt] Invalid column index " + columnIndex); return null; }
+	var column = this.columns[columnIndex];
+
+	// get value in model
+	if (rowIndex < 0) return column.label;
+
+	if (typeof this.data[rowIndex] == 'undefined') { alert("[getValueAt] Invalid row index " + rowIndex); return null; }
+	var rowData = this.data[rowIndex]['columns'];
+	return rowData ? rowData[columnIndex] : null;
+};
+
+/**
+ * Returns the display value (used for sorting and filtering) at the specified index
+ * @param {Integer} rowIndex
+ * @param {Integer} columnIndex
+ */
+EditableGrid.prototype.getDisplayValueAt = function(rowIndex, columnIndex)
+{
+	var value = this.getValueAt(rowIndex, columnIndex);
+	if (value !== null) {
+		// use renderer to get the value that must be used for sorting
+		var renderer = rowIndex < 0 ? this.columns[columnIndex].headerRenderer : this.columns[columnIndex].cellRenderer;  
+		value = renderer.getDisplayValue(rowIndex, value);
+	}	
+	return value;
+};
+
+
+/**
+ * Sets the value at the specified index
+ * @param {Integer} rowIndex
+ * @param {Integer} columnIndex
+ * @param {Object} value
+ * @param {Boolean} render
+ */
+EditableGrid.prototype.setValueAt = function(rowIndex, columnIndex, value, render)
+{
+	if (typeof render == "undefined") render = true;
+	var previousValue = null;;
+
+	// check and get column
+	if (columnIndex < 0 || columnIndex >= this.columns.length) { alert("[setValueAt] Invalid column index " + columnIndex); return null; }
+	var column = this.columns[columnIndex];
+
+	// set new value in model
+	if (rowIndex < 0) {
+		previousValue = column.label;
+		column.label = value;
+	}
+	else {
+		var rowData = this.data[rowIndex]['columns'];
+		previousValue = rowData[columnIndex];
+		if (rowData) rowData[columnIndex] = this.getTypedValue(columnIndex, value);
+	}
+
+	// render new value
+	if (render) {
+		var renderer = rowIndex < 0 ? column.headerRenderer : column.cellRenderer;  
+		renderer._render(rowIndex, columnIndex, this.getCell(rowIndex, columnIndex), value);
+	}
+
+	return previousValue;
+};
+
+/**
+ * Find column index from its name
+ * @param {Object} columnIndexOrName index or name of the column
+ */
+EditableGrid.prototype.getColumnIndex = function(columnIndexOrName)
+{
+	if (typeof columnIndexOrName == "undefined" || columnIndexOrName === "") return -1;
+
+	// TODO: problem because the name of a column could be a valid index, and we cannot make the distinction here!
+
+	// if columnIndexOrName is a number which is a valid index return it
+	if (!isNaN(columnIndexOrName) && columnIndexOrName >= 0 && columnIndexOrName < this.columns.length) return columnIndexOrName;
+
+	// otherwise search for the name
+	for (var c = 0; c < this.columns.length; c++) if (this.columns[c].name == columnIndexOrName) return c;
+
+	return -1;
+};
+
+/**
+ * Get HTML row object at given index
+ * @param {Integer} index of the row
+ */
+EditableGrid.prototype.getRow = function(rowIndex)
+{
+	if (rowIndex < 0) return this.tHead.rows[rowIndex + this.nbHeaderRows];
+	if (typeof this.data[rowIndex] == 'undefined') { alert("[getRow] Invalid row index " + rowIndex); return null; }
+	return _$(this._getRowDOMId(this.data[rowIndex].id));
+};
+
+/**
+ * Get row id for given row index
+ * @param {Integer} index of the row
+ */
+EditableGrid.prototype.getRowId = function(rowIndex)
+{
+	return (rowIndex < 0 || rowIndex >= this.data.length) ? null : this.data[rowIndex]['id'];
+};
+
+/**
+ * Get index of row (in filtered data) with given id
+ * @param {Integer} rowId or HTML row object
+ */
+EditableGrid.prototype.getRowIndex = function(rowId) 
+{
+	rowId = typeof rowId == 'object' ? rowId.rowId : rowId;
+	for (var rowIndex = 0; rowIndex < this.data.length; rowIndex++) if (this.data[rowIndex].id == rowId) return rowIndex;
+	return -1; 
+};
+
+/**
+ * Get custom row attribute specified in XML
+ * @param {Integer} index of the row
+ * @param {String} name of the attribute
+ */
+EditableGrid.prototype.getRowAttribute = function(rowIndex, attributeName)
+{
+	return this.data[rowIndex][attributeName];
+};
+
+/**
+ * Set custom row attribute
+ * @param {Integer} index of the row
+ * @param {String} name of the attribute
+ * @param value of the attribute
+ */
+EditableGrid.prototype.setRowAttribute = function(rowIndex, attributeName, attributeValue)
+{
+	this.data[rowIndex][attributeName] = attributeValue;
+};
+
+/**
+ * Get Id of row in HTML DOM
+ * @private
+ */
+EditableGrid.prototype._getRowDOMId = function(rowId)
+{
+	return this.currentContainerid != null ? this.name + "_" + rowId : rowId;
+};
+
+/**
+ * Remove row with given id
+ * Deprecated: use remove(rowIndex) instead
+ * @param {Integer} rowId
+ */
+EditableGrid.prototype.removeRow = function(rowId)
+{
+	return this.remove(this.getRowIndex(rowId));
+};
+
+/**
+ * Remove row at given index
+ * @param {Integer} rowIndex
+ */
+EditableGrid.prototype.remove = function(rowIndex)
+{
+	var rowId = this.data[rowIndex].id;
+	var originalIndex = this.data[rowIndex].originalIndex;
+	var _data = this.dataUnfiltered == null ? this.data : this.dataUnfiltered; 
+
+	// delete row from DOM (needed for attach mode)
+	var tr = _$(this._getRowDOMId(rowId));
+	if (tr != null) this.tBody.removeChild(tr);
+
+	// update originalRowIndex
+	for (var r = 0; r < _data.length; r++) if (_data[r].originalIndex >= originalIndex) _data[r].originalIndex--;
+
+	// delete row from data
+	this.data.splice(rowIndex, 1);
+	if (this.dataUnfiltered != null) for (var r = 0; r < this.dataUnfiltered.length; r++) if (this.dataUnfiltered[r].id == rowId) { this.dataUnfiltered.splice(r, 1); break; }
+
+	// refresh grid
+	this.refreshGrid();
+};
+
+/**
+ * Return an associative array (column name => value) of values in row with given index 
+ * @param {Integer} rowIndex
+ */
+EditableGrid.prototype.getRowValues = function(rowIndex) 
+{
+	var rowValues = {};
+	for (var columnIndex = 0; columnIndex < this.getColumnCount(); columnIndex++) { 
+		rowValues[this.getColumnName(columnIndex)] = this.getValueAt(rowIndex, columnIndex);
+	}
+	return rowValues;
+};
+
+/**
+ * Append row with given id and data
+ * @param {Integer} rowId id of new row
+ * @param {Integer} columns
+ * @param {Boolean} dontSort
+ */
+EditableGrid.prototype.append = function(rowId, cellValues, rowAttributes, dontSort)
+{
+	return this.insertAfter(this.data.length - 1, rowId, cellValues, rowAttributes, dontSort);
+};
+
+/**
+ * Append row with given id and data
+ * Deprecated: use appendRow instead
+ * @param {Integer} rowId id of new row
+ * @param {Integer} columns
+ * @param {Boolean} dontSort
+ */
+EditableGrid.prototype.addRow = function(rowId, cellValues, rowAttributes, dontSort)
+{
+	return this.append(rowId, cellValues, rowAttributes, dontSort);
+};
+
+/**
+ * Insert row with given id and data at given location
+ * We know rowIndex is valid, unless the table is empty
+ * @private
+ */
+EditableGrid.prototype._insert = function(rowIndex, offset, rowId, cellValues, rowAttributes, dontSort)
+{
+	var originalRowId = null;
+	var originalIndex = 0;
+	var _data = this.dataUnfiltered == null ? this.data : this.dataUnfiltered;
+
+	if (typeof this.data[rowIndex] != "undefined") {
+		originalRowId = this.data[rowIndex].id;
+		originalIndex = this.data[rowIndex].originalIndex + offset;
+	}
+
+	// append row in DOM (needed for attach mode)
+	if (this.currentContainerid == null) {
+		var tr = this.tBody.insertRow(rowIndex + offset);
+		tr.rowId = rowId;
+		tr.id = this._getRowDOMId(rowId);
+		for (var c = 0; c < this.columns.length; c++) tr.insertCell(c);
+	}
+
+	// build data for new row
+	var rowData = { visible: true, originalIndex: originalIndex, id: rowId };
+	if (rowAttributes) for (var attributeName in rowAttributes) rowData[attributeName] = rowAttributes[attributeName]; 
+	rowData.columns = [];
+	for (var c = 0; c < this.columns.length; c++) {
+		var cellValue = this.columns[c].name in cellValues ? cellValues[this.columns[c].name] : "";
+		rowData.columns.push(this.getTypedValue(c, cellValue));
+	}
+
+	// update originalRowIndex
+	for (var r = 0; r < _data.length; r++) if (_data[r].originalIndex >= originalIndex) _data[r].originalIndex++;
+
+	// append row in data
+	this.data.splice(rowIndex + offset, 0, rowData);
+	if (this.dataUnfiltered != null) {
+		if (originalRowId === null) this.dataUnfiltered.splice(rowIndex + offset, 0, rowData);
+		else for (var r = 0; r < this.dataUnfiltered.length; r++) if (this.dataUnfiltered[r].id == originalRowId) { this.dataUnfiltered.splice(r + offset, 0, rowData); break; }
+	}
+
+	// refresh grid
+	this.refreshGrid();
+
+	// sort and filter table
+	if (!dontSort) this.sort();
+	this.filter();
+};
+
+/**
+ * Insert row with given id and data before given row index
+ * @param {Integer} rowIndex index of row before which to insert new row
+ * @param {Integer} rowId id of new row
+ * @param {Integer} columns
+ * @param {Boolean} dontSort
+ */
+EditableGrid.prototype.insert = function(rowIndex, rowId, cellValues, rowAttributes, dontSort)
+{
+	if (rowIndex < 0) rowIndex = 0;
+	if (rowIndex >= this.data.length && this.data.length > 0) return this.insertAfter(this.data.length - 1, rowId, cellValues, rowAttributes, dontSort);
+	return this._insert(rowIndex, 0, rowId, cellValues, rowAttributes, dontSort);
+};
+
+/**
+ * Insert row with given id and data after given row index
+ * @param {Integer} rowIndex index of row after which to insert new row
+ * @param {Integer} rowId id of new row
+ * @param {Integer} columns
+ * @param {Boolean} dontSort
+ */
+EditableGrid.prototype.insertAfter = function(rowIndex, rowId, cellValues, rowAttributes, dontSort)
+{
+	if (rowIndex < 0) return this.insert(0, rowId, cellValues, rowAttributes, dontSort);
+	if (rowIndex >= this.data.length) rowIndex = this.data.length - 1; 
+	return this._insert(rowIndex, 1, rowId, cellValues, rowAttributes, dontSort);
+};
+
+/**
+ * Sets the column header cell renderer for the specified column index
+ * @param {Object} columnIndexOrName index or name of the column
+ * @param {CellRenderer} cellRenderer
+ */
+EditableGrid.prototype.setHeaderRenderer = function(columnIndexOrName, cellRenderer)
+{
+	var columnIndex = this.getColumnIndex(columnIndexOrName);
+	if (columnIndex < 0) alert("[setHeaderRenderer] Invalid column: " + columnIndexOrName);
+	else {
+		var column = this.columns[columnIndex];
+		column.headerRenderer = (this.enableSort && column.datatype != "html") ? new SortHeaderRenderer(column.name, cellRenderer) : cellRenderer;
+
+		// give access to the column from the cell renderer
+		if (cellRenderer) {
+			if (this.enableSort && column.datatype != "html") {
+				column.headerRenderer.editablegrid = this;
+				column.headerRenderer.column = column;
+			}
+			cellRenderer.editablegrid = this;
+			cellRenderer.column = column;
+		}
+	}
+};
+
+/**
+ * Sets the cell renderer for the specified column index
+ * @param {Object} columnIndexOrName index or name of the column
+ * @param {CellRenderer} cellRenderer
+ */
+EditableGrid.prototype.setCellRenderer = function(columnIndexOrName, cellRenderer)
+{
+	var columnIndex = this.getColumnIndex(columnIndexOrName);
+	if (columnIndex < 0) alert("[setCellRenderer] Invalid column: " + columnIndexOrName);
+	else {
+		var column = this.columns[columnIndex];
+		column.cellRenderer = cellRenderer;
+
+		// give access to the column from the cell renderer
+		if (cellRenderer) {
+			cellRenderer.editablegrid = this;
+			cellRenderer.column = column;
+		}
+	}
+};
+
+/**
+ * Sets the cell editor for the specified column index
+ * @param {Object} columnIndexOrName index or name of the column
+ * @param {CellEditor} cellEditor
+ */
+EditableGrid.prototype.setCellEditor = function(columnIndexOrName, cellEditor)
+{
+	var columnIndex = this.getColumnIndex(columnIndexOrName);
+	if (columnIndex < 0) alert("[setCellEditor] Invalid column: " + columnIndexOrName);
+	else {
+		var column = this.columns[columnIndex];
+		column.cellEditor = cellEditor;
+
+		// give access to the column from the cell editor
+		if (cellEditor) {
+			cellEditor.editablegrid = this;
+			cellEditor.column = column;
+		}
+	}
+};
+
+/**
+ * Sets the header cell editor for the specified column index
+ * @param {Object} columnIndexOrName index or name of the column
+ * @param {CellEditor} cellEditor
+ */
+EditableGrid.prototype.setHeaderEditor = function(columnIndexOrName, cellEditor)
+{
+	var columnIndex = this.getColumnIndex(columnIndexOrName);
+	if (columnIndex < 0) alert("[setHeaderEditor] Invalid column: " + columnIndexOrName);
+	else {
+		var column = this.columns[columnIndex];
+		column.headerEditor = cellEditor;
+
+		// give access to the column from the cell editor
+		if (cellEditor) {
+			cellEditor.editablegrid = this;
+			cellEditor.column = column;
+		}
+	}
+};
+
+/**
+ * Sets the enum provider for the specified column index
+ * @param {Object} columnIndexOrName index or name of the column
+ * @param {EnumProvider} enumProvider
+ */
+EditableGrid.prototype.setEnumProvider = function(columnIndexOrName, enumProvider)
+{
+	var columnIndex = this.getColumnIndex(columnIndexOrName);
+	if (columnIndex < 0) alert("[setEnumProvider] Invalid column: " + columnIndexOrName);
+	else {
+		var hadProviderAlready = this.columns[columnIndex].enumProvider != null;
+		this.columns[columnIndex].enumProvider = enumProvider;
+
+		// if needed, we recreate the cell renderer and editor for this column
+		// if the column had an enum provider already, the render/editor previously created by default is ok already
+		// ... and we don't want to erase a custom renderer/editor that may have been set before calling setEnumProvider
+		if (!hadProviderAlready) {
+			this._createCellRenderer(this.columns[columnIndex]);
+			this._createCellEditor(this.columns[columnIndex]);
+		}
+	}
+};
+
+/**
+ * Clear all cell validators for the specified column index
+ * @param {Object} columnIndexOrName index or name of the column
+ */
+EditableGrid.prototype.clearCellValidators = function(columnIndexOrName)
+{
+	var columnIndex = this.getColumnIndex(columnIndexOrName);
+	if (columnIndex < 0) alert("[clearCellValidators] Invalid column: " + columnIndexOrName);
+	else this.columns[columnIndex].cellValidators = [];
+};
+
+/**
+ * Adds default cell validators for the specified column index (according to the column type)
+ * @param {Object} columnIndexOrName index or name of the column
+ */
+EditableGrid.prototype.addDefaultCellValidators = function(columnIndexOrName)
+{
+	var columnIndex = this.getColumnIndex(columnIndexOrName);
+	if (columnIndex < 0) alert("[addDefaultCellValidators] Invalid column: " + columnIndexOrName);
+	return this._addDefaultCellValidators(this.columns[columnIndex]);
+};
+
+/**
+ * Adds default cell validators for the specified column
+ * @private
+ */
+EditableGrid.prototype._addDefaultCellValidators = function(column)
+{
+	if (column.datatype == "integer" || column.datatype == "double") column.cellValidators.push(new NumberCellValidator(column.datatype));
+	else if (column.datatype == "email") column.cellValidators.push(new EmailCellValidator());
+	else if (column.datatype == "website" || column.datatype == "url") column.cellValidators.push(new WebsiteCellValidator());
+	else if (column.datatype == "date") column.cellValidators.push(new DateCellValidator(this));
+};
+
+/**
+ * Adds a cell validator for the specified column index
+ * @param {Object} columnIndexOrName index or name of the column
+ * @param {CellValidator} cellValidator
+ */
+EditableGrid.prototype.addCellValidator = function(columnIndexOrName, cellValidator)
+{
+	var columnIndex = this.getColumnIndex(columnIndexOrName);
+	if (columnIndex < 0) alert("[addCellValidator] Invalid column: " + columnIndexOrName);
+	else this.columns[columnIndex].cellValidators.push(cellValidator);
+};
+
+/**
+ * Sets the table caption: set as null to remove
+ * @param columnIndexOrName
+ * @param caption
+ * @return
+ */
+EditableGrid.prototype.setCaption = function(caption)
+{
+	this.caption = caption;
+};
+
+/**
+ * Get cell element at given row and column
+ */
+EditableGrid.prototype.getCell = function(rowIndex, columnIndex)
+{
+	var row = this.getRow(rowIndex);
+	if (row == null) { alert("[getCell] Invalid row index " + rowIndex); return null; }
+	return row.cells[columnIndex];
+};
+
+/**
+ * Get cell X position relative to the first non static offset parent
+ * @private
+ */
+EditableGrid.prototype.getCellX = function(oElement)
+{
+	var iReturnValue = 0;
+	while (oElement != null && this.isStatic(oElement)) try {
+		iReturnValue += oElement.offsetLeft;
+		oElement = oElement.offsetParent;
+	} catch(err) { oElement = null; }
+	return iReturnValue;
+};
+
+/**
+ * Get cell Y position relative to the first non static offset parent
+ * @private
+ */
+EditableGrid.prototype.getCellY = function(oElement)
+{
+	var iReturnValue = 0;
+	while (oElement != null && this.isStatic(oElement)) try {
+		iReturnValue += oElement.offsetTop;
+		oElement = oElement.offsetParent;
+	} catch(err) { oElement = null; }
+	return iReturnValue;
+};
+
+/**
+ * Get X scroll offset relative to the first non static offset parent
+ * @private
+ */
+EditableGrid.prototype.getScrollXOffset = function(oElement)
+{
+	var iReturnValue = 0;
+	while (oElement != null && typeof oElement.scrollLeft != 'undefined' && this.isStatic(oElement) && oElement != document.body) try {
+		iReturnValue += parseInt(oElement.scrollLeft);
+		oElement = oElement.parentNode;
+	} catch(err) { oElement = null; }
+	return iReturnValue;
+};
+
+/**
+ * Get Y scroll offset relative to the first non static offset parent
+ * @private
+ */
+EditableGrid.prototype.getScrollYOffset = function(oElement)
+{
+	var iReturnValue = 0;
+	while (oElement != null && typeof oElement.scrollTop != 'undefined' && this.isStatic(oElement) && oElement != document.body) try {
+		iReturnValue += parseInt(oElement.scrollTop);
+		oElement = oElement.parentNode;
+	} catch(err) { oElement = null; }
+	return iReturnValue;
+};
+
+/**
+ * Private
+ * @param containerid
+ * @param className
+ * @param tableid
+ * @return
+ */
+EditableGrid.prototype._rendergrid = function(containerid, className, tableid)
+{
+	with (this) {
+
+		lastSelectedRowIndex = -1;
+		_currentPageIndex = getCurrentPageIndex();
+					
+		// if we are already attached to an existing table, just update the cell contents
+		if (typeof table != "undefined" && table != null) {
+
+			var _data = dataUnfiltered == null ? data : dataUnfiltered; 
+
+			// render headers
+			_renderHeaders();
+
+			// render content
+			var rows = tBody.rows;
+			var skipped = 0;
+			var displayed = 0;
+			var rowIndex = 0;
+
+			for (var i = 0; i < rows.length; i++) {
+
+				// filtering and pagination in attach mode means hiding rows
+				if (!_data[i].visible || (pageSize > 0 && displayed >= pageSize)) {
+					if (rows[i].style.display != 'none') {
+						rows[i].style.display = 'none';
+						rows[i].hidden_by_editablegrid = true;
+					}
+				}
+				else {
+					if (skipped < pageSize * _currentPageIndex) {
+						skipped++; 
+						if (rows[i].style.display != 'none') {
+							rows[i].style.display = 'none';
+							rows[i].hidden_by_editablegrid = true;
+						}
+					}
+					else {
+						displayed++;
+						var cols = rows[i].cells;
+						if (typeof rows[i].hidden_by_editablegrid != 'undefined' && rows[i].hidden_by_editablegrid) {
+							rows[i].style.display = '';
+							rows[i].hidden_by_editablegrid = false;
+						}
+						rows[i].rowId = getRowId(rowIndex);
+						rows[i].id = _getRowDOMId(rows[i].rowId);
+						for (var j = 0; j < cols.length && j < columns.length; j++) 
+							if (columns[j].renderable) columns[j].cellRenderer._render(rowIndex, j, cols[j], getValueAt(rowIndex,j));
+					}
+					rowIndex++;
+				}
+			}
+
+			// attach handler on click or double click 
+			table.editablegrid = this;
+			if (doubleclick) table.ondblclick = function(e) { this.editablegrid.mouseClicked(e); };
+			else table.onclick = function(e) { this.editablegrid.mouseClicked(e); }; 
+		}
+
+		// we must render a whole new table
+		else {
+
+			if (!_$(containerid)) return alert("Unable to get element [" + containerid + "]");
+
+			currentContainerid = containerid;
+			currentClassName = className;
+			currentTableid = tableid;
+
+			var startRowIndex = 0;
+			var endRowIndex = getRowCount();
+
+			// paginate if required
+			if (pageSize > 0) {
+				startRowIndex = _currentPageIndex * pageSize;
+				endRowIndex = Math.min(getRowCount(), startRowIndex + pageSize); 
+			}
+
+			// create editablegrid table and add it to our container 
+			this.table = document.createElement("table");
+			table.className = className || "editablegrid";          
+			if (typeof tableid != "undefined") table.id = tableid;
+			while (_$(containerid).hasChildNodes()) _$(containerid).removeChild(_$(containerid).firstChild);
+			_$(containerid).appendChild(table);
+
+			// create header
+			if (caption) {
+				var captionElement = document.createElement("CAPTION");
+				captionElement.innerHTML = this.caption;
+				table.appendChild(captionElement);
+			}
+
+			this.tHead = document.createElement("THEAD");
+			table.appendChild(tHead);
+			var trHeader = tHead.insertRow(0);
+			var columnCount = getColumnCount();
+			for (var c = 0; c < columnCount; c++) {
+				var headerCell = document.createElement("TH");
+				var td = trHeader.appendChild(headerCell);
+				columns[c].headerRenderer._render(-1, c, td, columns[c].label);
+			}
+
+			// create body and rows
+			this.tBody = document.createElement("TBODY");
+			table.appendChild(tBody);
+			var insertRowIndex = 0;
+			for (var i = startRowIndex; i < endRowIndex; i++) {
+				var tr = tBody.insertRow(insertRowIndex++);
+				tr.rowId = data[i]['id'];
+				tr.id = this._getRowDOMId(data[i]['id']);
+				for (j = 0; j < columnCount; j++) {
+
+					// create cell and render its content
+					var td = tr.insertCell(j);
+					columns[j].cellRenderer._render(i, j, td, getValueAt(i,j));
+				}
+			}
+
+			// attach handler on click or double click 
+			_$(containerid).editablegrid = this;
+			if (doubleclick) _$(containerid).ondblclick = function(e) { this.editablegrid.mouseClicked(e); };
+			else _$(containerid).onclick = function(e) { this.editablegrid.mouseClicked(e); }; 
+		}
+
+		// callback
+		tableRendered(containerid, className, tableid);
+	}
+};
+
+
+/**
+ * Renders the grid as an HTML table in the document
+ * @param {String} containerid 
+ * id of the div in which you wish to render the HTML table (this parameter is ignored if you used attachToHTMLTable)
+ * @param {String} className 
+ * CSS class name to be applied to the table (this parameter is ignored if you used attachToHTMLTable)
+ * @param {String} tableid
+ * ID to give to the table (this parameter is ignored if you used attachToHTMLTable)
+ * @see EditableGrid#attachToHTMLTable
+ * @see EditableGrid#loadXML
+ */
+EditableGrid.prototype.renderGrid = function(containerid, className, tableid)
+{
+	// restore stored parameters, or use default values if nothing stored
+	var pageIndex = this.localisset('pageIndex') ? parseInt(this.localget('pageIndex')) : 0;
+	this.sortedColumnName = this.localisset('sortColumnIndexOrName') && this.hasColumn(this.localget('sortColumnIndexOrName')) ? this.localget('sortColumnIndexOrName') : -1;
+	this.sortDescending = this.localisset('sortColumnIndexOrName') && this.localisset('sortDescending') ? this.localget('sortDescending') == 'true' : false;
+	this.currentFilter = this.localisset('filter') ? this.localget('filter') : null;
+	
+	// actually render grid
+	this.currentPageIndex = 0;
+	this._rendergrid(containerid, className, tableid);
+
+	// sort and filter table
+	if (!this.serverSide) {
+		this.sort() ;
+		this.filter();
+	}
+	
+	// go to stored page (or first if nothing stored)
+	this.setPageIndex(pageIndex < 0 ? 0 : pageIndex);
+};
+
+/**
+ * Refreshes the grid
+ * @return
+ */
+EditableGrid.prototype.refreshGrid = function()
+{
+	if (this.currentContainerid != null) this.table = null; // if we are not in "attach mode", clear table to force a full re-render
+	this._rendergrid(this.currentContainerid, this.currentClassName, this.currentTableid);
+};
+
+/**
+ * Render all column headers 
+ * @private
+ */
+EditableGrid.prototype._renderHeaders = function() 
+{
+	with (this) {
+		var rows = tHead.rows;
+		for (var i = 0; i < 1 /*rows.length*/; i++) {
+			var rowData = [];
+			var cols = rows[i].cells;
+			var columnIndexInModel = 0;
+			for (var j = 0; j < cols.length && columnIndexInModel < columns.length; j++) {
+				columns[columnIndexInModel].headerRenderer._render(-1, columnIndexInModel, cols[j], columns[columnIndexInModel].label);
+				var colspan = parseInt(cols[j].getAttribute("colspan"));
+				columnIndexInModel += colspan > 1 ? colspan : 1;
+			}
+		}
+	}
+};
+
+/**
+ * Mouse click handler
+ * @param {Object} e
+ * @private
+ */
+EditableGrid.prototype.mouseClicked = function(e) 
+{
+	e = e || window.event;
+	with (this) {
+
+		// get row and column index from the clicked cell
+		var target = e.target || e.srcElement;
+
+		// go up parents to find a cell or a link under the clicked position
+		while (target) if (target.tagName == "A" || target.tagName == "TD" || target.tagName == "TH") break; else target = target.parentNode;
+		if (!target || !target.parentNode || !target.parentNode.parentNode || (target.parentNode.parentNode.tagName != "TBODY" && target.parentNode.parentNode.tagName != "THEAD") || target.isEditing) return;
+
+		// don't handle clicks on links
+		if (target.tagName == "A") return;
+
+		// get cell position in table
+		var rowIndex = getRowIndex(target.parentNode);
+		var columnIndex = target.cellIndex;
+
+		var column = columns[columnIndex];
+		if (column) {
+
+			// if another row has been selected: callback
+			if (rowIndex > -1 && rowIndex != lastSelectedRowIndex) {
+				rowSelected(lastSelectedRowIndex, rowIndex);				
+				lastSelectedRowIndex = rowIndex;
+			}
+
+			// edit current cell value
+			if (!column.editable) { readonlyWarning(column); }
+			else {
+				if (rowIndex < 0) { 
+					if (column.headerEditor && isHeaderEditable(rowIndex, columnIndex)) 
+						column.headerEditor.edit(rowIndex, columnIndex, target, column.label);
+				}
+				else if (column.cellEditor && isEditable(rowIndex, columnIndex))
+					column.cellEditor.edit(rowIndex, columnIndex, target, getValueAt(rowIndex, columnIndex));
+			}
+		}
+	}
+};
+
+/**
+ * Sort on a column
+ * @param {Object} columnIndexOrName index or name of the column
+ * @param {Boolean} descending
+ */
+EditableGrid.prototype.sort = function(columnIndexOrName, descending, backOnFirstPage)
+{
+	with (this) {
+
+		if (typeof columnIndexOrName  == 'undefined' && sortedColumnName === -1) {
+
+			// avoid a double render, but still send the expected callback
+			tableSorted(-1, sortDescending);
+			return true;
+		}
+
+		if (typeof columnIndexOrName  == 'undefined') columnIndexOrName = sortedColumnName;
+		if (typeof descending  == 'undefined') descending = sortDescending;
+
+		localset('sortColumnIndexOrName', columnIndexOrName);
+		localset('sortDescending', descending);
+
+		// if filtering is done on server-side, we are done here
+		if (serverSide) return backOnFirstPage ? setPageIndex(0) : refreshGrid();
+
+		var columnIndex = columnIndexOrName;
+		if (parseInt(columnIndex, 10) !== -1) {
+			columnIndex = this.getColumnIndex(columnIndexOrName);
+			if (columnIndex < 0) {
+				alert("[sort] Invalid column: " + columnIndexOrName);
+				return false;
+			}
+		}
+
+		if (!enableSort) {
+			tableSorted(columnIndex, descending);
+			return;
+		}
+
+		// work on unfiltered data
+		var filterActive = dataUnfiltered != null; 
+		if (filterActive) data = dataUnfiltered;
+
+		var type = columnIndex < 0 ? "" : getColumnType(columnIndex);
+		var row_array = [];
+		var rowCount = getRowCount();
+		for (var i = 0; i < rowCount - (ignoreLastRow ? 1 : 0); i++) row_array.push([columnIndex < 0 ? null : getDisplayValueAt(i, columnIndex), i, data[i].originalIndex]);
+		row_array.sort(columnIndex < 0 ? unsort :
+			type == "integer" || type == "double" ? sort_numeric :
+				type == "boolean" ? sort_boolean :
+					type == "date" ? sort_date :
+						sort_alpha);
+
+		if (descending) row_array = row_array.reverse();
+		if (ignoreLastRow) row_array.push([columnIndex < 0 ? null : getDisplayValueAt(rowCount - 1, columnIndex), rowCount - 1, data[rowCount - 1].originalIndex]);
+
+		// rebuild data using the new order
+		var _data = data;
+		data = [];
+		for (var i = 0; i < row_array.length; i++) data.push(_data[row_array[i][1]]);
+		delete row_array;
+
+		if (filterActive) {
+
+			// keep only visible rows in data
+			dataUnfiltered = data;
+			data = [];
+			for (var r = 0; r < rowCount; r++) if (dataUnfiltered[r].visible) data.push(dataUnfiltered[r]);
+		}
+
+		// refresh grid (back on first page if sort column has changed) and callback
+		if (backOnFirstPage) setPageIndex(0); else refreshGrid();
+		tableSorted(columnIndex, descending);
+		return true;
+	}
+};
+
+
+/**
+ * Filter the content of the table
+ * @param {String} filterString String string used to filter: all words must be found in the row
+ */
+EditableGrid.prototype.filter = function(filterString)
+{
+	with (this) {
+
+		if (typeof filterString != 'undefined') {
+			this.currentFilter = filterString;
+			this.localset('filter', filterString);
+		}
+
+		// if filtering is done on server-side, we are done here
+		if (serverSide) return setPageIndex(0);
+		
+		// un-filter if no or empty filter set
+		if (currentFilter == null || currentFilter == "") {
+			if (dataUnfiltered != null) {
+				data = dataUnfiltered;
+				dataUnfiltered = null;
+				for (var r = 0; r < getRowCount(); r++) data[r].visible = true;
+				setPageIndex(0);
+				tableFiltered();
+			}
+			return;
+		}		
+
+		var words = currentFilter.toLowerCase().split(" ");
+
+		// work on unfiltered data
+		if (dataUnfiltered != null) data = dataUnfiltered;
+
+		var rowCount = getRowCount();
+		var columnCount = getColumnCount();
+		for (var r = 0; r < rowCount; r++) {
+			var row = data[r];
+			row.visible = true;
+			var rowContent = ""; 
+			
+			// add column values
+			for (var c = 0; c < columnCount; c++) {
+				if (getColumnType(c) == 'boolean') continue;
+				var displayValue = getDisplayValueAt(r, c);
+				var value = getValueAt(r, c);
+				rowContent += displayValue + " " + (displayValue == value ? "" : value + " ");
+			}
+			
+			// add attribute values
+			for (var attributeName in row) {
+				if (attributeName != "visible" && attributeName != "originalIndex" && attributeName != "columns") rowContent += row[attributeName];
+			}
+			
+			// if row contents do not match one word in the filter, hide the row
+			for (var i = 0; i < words.length; i++) {
+				var word = words[i];
+				var match = false;
+
+				// a word starting with "!" means that we want a NON match
+				var invertMatch = word.startsWith("!");
+				if (invertMatch) word = word.substr(1);
+				
+				// if word is of the form "colname/attributename=value" or "colname/attributename!=value", only this column/attribute is used
+				var colindex = -1;
+				var attributeName = null;
+				if (word.contains("!=")) {
+					var parts = word.split("!=");
+					colindex = getColumnIndex(parts[0]);
+					if (colindex >= 0) {
+						word = parts[1];
+						invertMatch = !invertMatch;
+					}
+					else if (typeof row[parts[0]] != 'undefined') {
+						attributeName = parts[0];
+						word = parts[1];
+						invertMatch = !invertMatch;
+					}
+				}
+				else if (word.contains("=")) {
+					var parts = word.split("=");
+					colindex = getColumnIndex(parts[0]);
+					if (colindex >= 0) word = parts[1];
+					else if (typeof row[parts[0]] != 'undefined') {
+						attributeName = parts[0];
+						word = parts[1];
+					}
+				}
+
+				// a word ending with "!" means that a column must match this word exactly
+				if (!word.endsWith("!")) {
+					if (colindex >= 0) match = (getValueAt(r, colindex) + ' ' + getDisplayValueAt(r, colindex)).trim().toLowerCase().indexOf(word) >= 0;
+					else if (attributeName !== null) match = (''+getRowAttribute(r, attributeName)).trim().toLowerCase().indexOf(word) >= 0;
+					else match = rowContent.toLowerCase().indexOf(word) >= 0; 
+				}
+				else {
+					word = word.substr(0, word.length - 1);
+					if (colindex >= 0) match = (''+getDisplayValueAt(r, colindex)).trim().toLowerCase() == word || (''+getValueAt(r, colindex)).trim().toLowerCase() == word;
+					else if (attributeName !== null) match = (''+getRowAttribute(r, attributeName)).trim().toLowerCase() == word;
+					else for (var c = 0; c < columnCount; c++) {
+						if (getColumnType(c) == 'boolean') continue;
+						if ((''+getDisplayValueAt(r, c)).trim().toLowerCase() == word || (''+getValueAt(r, c)).trim().toLowerCase() == word) match = true;
+					}
+				}
+
+				if (invertMatch ? match : !match) {
+					data[r].visible = false;
+					break;
+				}
+			}
+		}
+
+		// keep only visible rows in data
+		dataUnfiltered = data;
+		data = [];
+		for (var r = 0; r < rowCount; r++) if (dataUnfiltered[r].visible) data.push(dataUnfiltered[r]);
+
+		// refresh grid (back on first page) and callback
+		setPageIndex(0);
+		tableFiltered();
+	}
+};
+
+/**
+ * Sets the page size(pageSize of 0 means no pagination)
+ * @param {Integer} pageSize Integer page size
+ */
+EditableGrid.prototype.setPageSize = function(pageSize)
+{
+	this.pageSize = parseInt(pageSize);
+	if (isNaN(this.pageSize)) this.pageSize = 0;
+	this.currentPageIndex = 0;
+	this.refreshGrid();
+};
+
+/**
+ * Returns the number of pages according to the current page size
+ */
+EditableGrid.prototype.getPageCount = function()
+{
+	if (this.getRowCount() == 0) return 0;
+	if (this.pageCount > 0) return this.pageCount; // server side pagination
+	else if (this.pageSize <= 0) { alert("getPageCount: no or invalid page size defined (" + this.pageSize + ")"); return -1; }
+	return Math.ceil(this.getRowCount() / this.pageSize);
+};
+
+/**
+ * Returns the number of pages according to the current page size
+ */
+EditableGrid.prototype.getCurrentPageIndex = function()
+{
+	if (this.pageSize <= 0 && !this.serverSide) return 0;
+		
+	// if page index does not exist anymore, go to last page (without losing the information of the current page)
+	return Math.max(0, this.currentPageIndex >= this.getPageCount() ? this.getPageCount() - 1 : this.currentPageIndex);
+};
+
+/**
+ * Sets the current page (no effect if pageSize is 0)
+ * @param {Integer} pageIndex Integer page index
+ */
+EditableGrid.prototype.setPageIndex = function(pageIndex)
+{
+	this.currentPageIndex = pageIndex;
+	this.localset('pageIndex', pageIndex);
+	this.refreshGrid();
+};
+
+/**
+ * Go the previous page if we are not already on the first page
+ * @return
+ */
+EditableGrid.prototype.prevPage = function()
+{
+	if (this.canGoBack()) this.setPageIndex(this.getCurrentPageIndex() - 1);
+};
+
+/**
+ * Go the first page if we are not already on the first page
+ * @return
+ */
+EditableGrid.prototype.firstPage = function()
+{
+	if (this.canGoBack()) this.setPageIndex(0);
+};
+
+/**
+ * Go the next page if we are not already on the last page
+ * @return
+ */
+EditableGrid.prototype.nextPage = function()
+{
+	if (this.canGoForward()) this.setPageIndex(this.getCurrentPageIndex() + 1);
+};
+
+/**
+ * Go the last page if we are not already on the last page
+ * @return
+ */
+EditableGrid.prototype.lastPage = function()
+{
+	if (this.canGoForward()) this.setPageIndex(this.getPageCount() - 1);
+};
+
+/**
+ * Returns true if we are not already on the first page
+ * @return
+ */
+EditableGrid.prototype.canGoBack = function()
+{
+	return this.getCurrentPageIndex() > 0;
+};
+
+/**
+ * Returns true if we are not already on the last page
+ * @return
+ */
+EditableGrid.prototype.canGoForward = function()
+{
+	return this.getCurrentPageIndex() < this.getPageCount() - 1;
+};
+
+/**
+ * Returns an interval { startPageIndex: ..., endPageIndex: ... } so that a window of the given size is visible around the current page (hence the 'sliding').
+ * If pagination is not enabled this method displays an alert and returns null.
+ * If pagination is enabled but there is only one page this function returns null (wihtout error).
+ * @param slidingWindowSize size of the visible window
+ * @return
+ */
+EditableGrid.prototype.getSlidingPageInterval = function(slidingWindowSize)
+{
+	var nbPages = this.getPageCount();
+	if (nbPages <= 1) return null;
+
+	var curPageIndex = this.getCurrentPageIndex();
+	var startPageIndex = Math.max(0, curPageIndex - Math.floor(slidingWindowSize/2));
+	var endPageIndex = Math.min(nbPages - 1, curPageIndex + Math.floor(slidingWindowSize/2));
+
+	if (endPageIndex - startPageIndex < slidingWindowSize) {
+		var diff = slidingWindowSize - (endPageIndex - startPageIndex + 1);
+		startPageIndex = Math.max(0, startPageIndex - diff);
+		endPageIndex = Math.min(nbPages - 1, endPageIndex + diff);
+	}
+
+	return { startPageIndex: startPageIndex, endPageIndex: endPageIndex };
+};
+
+/**
+ * Returns an array of page indices in the given interval.
+ * 
+ * @param interval
+ * The given interval must be an object with properties 'startPageIndex' and 'endPageIndex'.
+ * This interval may for example have been obtained with getCurrentPageInterval.
+ * 
+ * @param callback
+ * The given callback is applied to each page index before adding it to the result array.
+ * This callback is optional: if none given, the page index will be added as is to the array.
+ * If given , the callback will be called with two parameters: pageIndex (integer) and isCurrent (boolean).
+ * 
+ * @return
+ */
+EditableGrid.prototype.getPagesInInterval = function(interval, callback)
+{
+	var pages = [];
+	for (var p = interval.startPageIndex; p <= interval.endPageIndex; p++) {
+		pages.push(typeof callback == 'function' ? callback(p, p == this.getCurrentPageIndex()) : p);
+	}
+	return pages;
+};
