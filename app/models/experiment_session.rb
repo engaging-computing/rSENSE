@@ -1,5 +1,5 @@
 class ExperimentSession < ActiveRecord::Base
-  attr_accessible :content, :experiment_id, :title, :user_id
+  attr_accessible :content, :experiment_id, :title, :user_id, :file
   
   validates_presence_of :experiment_id, :user_id
   

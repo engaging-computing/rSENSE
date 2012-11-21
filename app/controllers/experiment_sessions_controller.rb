@@ -81,72 +81,168 @@ class ExperimentSessionsController < ApplicationController
     end
   end
   
+  ## POST /experiment_sessions/1
   def postCSV
+    #Grab the experiment so we can get field names
+    @experiment = ExperimentSession.find(params[:id]).experiment
     
-    logger.info "WIGGLESWIGGLESWIGGLESWIGGLESWIGGLESWIGGLESWIGGLESWIGGLESWIGGLESWIGGLESWIGGLESWIGGLESWIGGLESWIGGLESWIGGLESWIGGLES"
     
-    logger.info params
-    logger.info file
-    respond_to do |format|
+    #Get a link to the temp file uploaded to the server
+    @file = params[:experiment_session][:file]
     
-      format.json render json: {data: "Derp"}
-    
-    end
-    
-  end
-  
-  def getData
-    
-=begin
-    testObject = {metadata:[
-    	{name: "name", label: "NAME", datatype: "string", editable: true}
-    ],
-
-    data:[
-    	{id:1, values: {name: "Duke"}}
-    ]}
-=end
-
+    #Read the CSV
     require "CSV"
+    data = CSV.read(@file.tempfile)
     
-    data = CSV.read(Rails.application.assets['testdata.csv'].pathname)
+    data = sortColumns(data, doColumnsMatch(@experiment, data[0]))
     
+    #Parse out the headers and the data
     headers = data[0]
     data = data[1..(data.size-1)]
     
-    testObject = {}
     
-    testObject["metadata"] = []
-    testObject["data"] = []
+    #Build the object that will be displayed in the table
+    @dataObject = {}
+    @dataObject["metadata"] = []
+    @dataObject["data"] = []
 
     headers.count.times do |i|
-      testObject["metadata"].push({name: headers[i], label: headers[i], datatype: "string", editable: true})
+      @dataObject["metadata"].push({name: headers[i], label: headers[i], datatype: "string", editable: true})
     end
 
     data.count.times do |i|
-      
       values = {}
-      
       data[i].count.times do |j|
-        
         values[headers[j]] = 
           if(data[i][j] != nil)
              data[i][j]
           else
              ""
           end
-        
       end
-      
-      testObject["data"].push({id: i, values: values})
-
+      @dataObject["data"].push({id: i, values: values})
     end
 
-
+    #Send the object as json
     respond_to do |format|
-      format.json { render json: testObject }
+      format.json { render json: @dataObject }
     end
     
+  end
+
+private
+  #determine whether or not the headers match the file. 
+  def doColumnsMatch(experiment, headers)
+    fields = experiment.fields
+    
+    matches = []
+    fields.size.times do |i|
+      matches[i] = -1
+    end
+    
+    fields.each do |field|
+      headers.each do |header|
+        if(field.name.size() > header.size())
+          smallest = header.size()
+        else
+          smallest = field.name.size()
+        end
+        
+        size_of_subsequence = lcs(field.name,header).size()
+        
+        if(size_of_subsequence/smallest > 0.65)
+          matches[fields.index(field)] = headers.index(header);
+        end
+      end
+    end
+
+    matches
+    
+  end
+  
+  def rotateMatrix(matrix)
+    
+    newMatrix = []
+    
+    for i in 0...matrix[0].size()
+      newMatrix[i] = []
+    end
+      
+    for i in 0...matrix.size()
+      
+      for j in 0...matrix[i].size()
+        newMatrix[j][i] = matrix[i][j]
+      end
+    end
+    
+    newMatrix
+    
+  end
+  
+  def swapColumns(rowColMatrix, columnAindex, columnBindex)
+
+    rotatedMatrix = rotateMatrix(rowColMatrix)
+
+    columnA = rotatedMatrix[columnAindex]
+    columnB = rotatedMatrix[columnBindex]
+    
+    rotatedMatrix[columnAindex] = columnB
+    rotatedMatrix[columnBindex] = columnA
+    
+    rotatedMatrix = rotateMatrix(rotatedMatrix)
+   
+    
+    rotatedMatrix
+    
+  end
+  
+  def sortColumns(rowColMatrix, indexArray)
+    
+    indexArray.size.times do |i|
+      logger.info indexArray
+      if indexArray[i] != i
+        a = indexArray[i]
+        b = indexArray[indexArray.index(i)]
+        c = indexArray.index(i)
+        rowColMatrix = swapColumns(rowColMatrix, i, c)
+        indexArray[i] = b
+        indexArray[c] = a
+
+      end
+    end
+    rowColMatrix
+    
+  end
+  
+  def lcs(a, b)
+      lengths = Array.new(a.size+1) { Array.new(b.size+1) { 0 } }
+      # row 0 and column 0 are initialized to 0 already
+      a.split('').each_with_index { |x, i|
+          b.split('').each_with_index { |y, j|
+              if x == y
+                  lengths[i+1][j+1] = lengths[i][j] + 1
+              else
+                  lengths[i+1][j+1] = \
+                      [lengths[i+1][j], lengths[i][j+1]].max
+              end
+          }
+      }
+      # read the substring out from the matrix
+      result = ""
+      x, y = a.size, b.size
+      while x != 0 and y != 0
+          if lengths[x][y] == lengths[x-1][y]
+              x -= 1
+          elsif lengths[x][y] == lengths[x][y-1]
+              y -= 1
+          else
+              # assert a[x-1] == b[y-1]
+              result << a[x-1]
+              x -= 1
+              y -= 1
+          end
+      end
+      result.reverse
   end
   
 end
