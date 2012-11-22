@@ -30,6 +30,8 @@ Rsense::Application.routes.draw do
   
   resources :users
   match "/users/validate/:key" => "users#validate"
+  
+  match "/experiments/:id/addExperimentSession" => "experiments#addExperimentSession"
 
   resources :media_objects
   

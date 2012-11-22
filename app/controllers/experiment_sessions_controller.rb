@@ -81,6 +81,53 @@ class ExperimentSessionsController < ApplicationController
     end
   end
   
+  # POST /experiment_session/1/manualUpload
+  def manualUpload
+    
+    @experiment_session = ExperimentSession.find(params[:id])
+    
+    #pulls fields from post
+    header = params[:header]
+    #pulls data as array from post
+    rows = params[:data]
+    data = Array.new
+    
+    #data = associative array of header and rows
+    rows.each_with_index do |datapoints, r|
+      data[r] = Hash.new
+      datapoints.each_with_index do |dp, i|
+        if i > 0 #ignore numbered row at top of ajax
+          data[r] = Hash.new
+          dp.each_with_index do |d, j|
+            data[r][header[j]] = d
+          end
+        end
+      end
+    end
+    
+    #remove old data
+    old_data = DataSet.all({:experiment_session_id => @experiment_session.id})
+    
+    unless old_data.nil?
+      old_data.each do |od|
+        od.destroy
+      end
+    end
+    
+    data_to_add = DataSet.new(:experiment_session_id => @experiment_session.id, :data => data)    
+    
+    if data_to_add.save!
+      response = { status: 'success', message: data }
+    else
+      response = { status: 'fail' }
+    end
+    
+    respond_to do |format|
+      format.json { render json: response }
+    end
+    
+  end
+  
   ## POST /experiment_sessions/1
   def postCSV
     #Grab the experiment so we can get field names

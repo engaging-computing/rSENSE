@@ -45,6 +45,9 @@
                     </tr>
                 <% end %>
             </table>
+            <div id="add_session" class="center">
+              <%= button_to "Create Session", {:controller => :experiments, :action => :addExperimentSession} %>
+            </div>
         <%end%>
 
         <%=render layout: "shared/collapse", locals: {title: 'Media',width: '4'} do %>
