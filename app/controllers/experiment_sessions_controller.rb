@@ -250,39 +250,19 @@ private
     
   end
   
-  def swapColumns(rowColMatrix, columnAindex, columnBindex)
-
-    rotatedMatrix = rotateMatrix(rowColMatrix)
-
-    columnA = rotatedMatrix[columnAindex]
-    columnB = rotatedMatrix[columnBindex]
-    
-    rotatedMatrix[columnAindex] = columnB
-    rotatedMatrix[columnBindex] = columnA
-    
-    rotatedMatrix = rotateMatrix(rotatedMatrix)
-   
-    
-    rotatedMatrix
-    
-  end
-  
   def sortColumns(rowColMatrix, indexArray)
-    
+    rotatedMatrix = rotateMatrix(rowColMatrix)
     indexArray.size.times do |i|
-      logger.info indexArray
       if indexArray[i] != i
-        a = indexArray[i]
-        b = indexArray[indexArray.index(i)]
-        c = indexArray.index(i)
-        rowColMatrix = swapColumns(rowColMatrix, i, c)
-        indexArray[i] = b
-        indexArray[c] = a
-
+        if(indexArray.index(i) != nil)
+          #rowColMatrix = swapColumns(rowColMatrix, i, indexArray.index(i))
+          rotatedMatrix[i],rotatedMatrix[indexArray.index(i)] = rotatedMatrix[indexArray.index(i)],rotatedMatrix[i]
+          indexArray[indexArray.index(i)],indexArray[i] = indexArray[i],indexArray[indexArray.index(i)]
+        end
       end
     end
-    rowColMatrix
-    
+    rotatedMatrix = rotateMatrix(rotatedMatrix)
+    rotatedMatrix  
   end
   
   def lcs(a, b)
