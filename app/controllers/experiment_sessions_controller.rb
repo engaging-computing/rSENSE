@@ -14,7 +14,8 @@ class ExperimentSessionsController < ApplicationController
   # GET /experiment_sessions/1.json
   def show
     @experiment_session = ExperimentSession.find(params[:id])
-
+    @data_set = DataSet.find_by_experiment_session_id(@experiment_session.id)
+    
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @experiment_session }
@@ -81,17 +82,73 @@ class ExperimentSessionsController < ApplicationController
     end
   end
   
+  # POST /experiment_session/1/manualUpload
+  def manualUpload
+    
+    @experiment_session = ExperimentSession.find(params[:id])
+    
+    #pulls fields from post
+    header = params[:header]
+    #pulls data as array from post
+    rows = params[:data]
+    data = Array.new
+    
+    #data = associative array of header and rows
+    rows.each_with_index do |datapoints, r|
+      data[r] = Hash.new
+      datapoints.each_with_index do |dp, i|
+        if i > 0 #ignore numbered row at top of ajax
+          data[r] = Hash.new
+          dp.each_with_index do |d, j|
+            data[r][header[j]] = d
+          end
+        end
+      end
+    end
+    
+    #remove old data
+    old_data = DataSet.all({:experiment_session_id => @experiment_session.id})
+    
+    unless old_data.nil?
+      old_data.each do |od|
+        od.destroy
+      end
+    end
+    
+    data_to_add = DataSet.new(:experiment_session_id => @experiment_session.id, :data => data)    
+    
+    if data_to_add.save!
+      response = { status: 'success', message: data }
+    else
+      response = { status: 'fail' }
+    end
+    
+    respond_to do |format|
+      format.json { render json: response }
+    end
+    
+  end
+  
   ## POST /experiment_sessions/1
   def postCSV
     #Grab the experiment so we can get field names
-    @experiment = ExperimentSession.find(params[:id]).experiment
+    @experiment_session = ExperimentSession.find(params[:id])
+    @experiment = @experiment_session.experiment
+    @data_set = DataSet.all({:experiment_session_id => @experiment_session.id})
+    
+    unless @data_set.nil?
+      @data_set.each do |old_data|
+        old_data.destroy
+      end
+    end
     
     
     #Get a link to the temp file uploaded to the server
     @file = params[:experiment_session][:file]
     
     #Read the CSV
-    require "CSV"
+    require "csv"
+    
     data = CSV.read(@file.tempfile)
     
     data = sortColumns(data, doColumnsMatch(@experiment, data[0]))
@@ -100,6 +157,8 @@ class ExperimentSessionsController < ApplicationController
     headers = data[0]
     data = data[1..(data.size-1)]
     
+    #Data that will be stuffed into mongo
+    mongo_data = Array.new
     
     #Build the object that will be displayed in the table
     @dataObject = {}
@@ -122,10 +181,22 @@ class ExperimentSessionsController < ApplicationController
       end
       @dataObject["data"].push({id: i, values: values})
     end
-
+    
+    @dataObject["data"].each do |d|
+      mongo_data.push d.values
+    end
+      
+    data_to_add = DataSet.new(:experiment_session_id => @experiment_session.id, :data => mongo_data)    
+    
+    if data_to_add.save!
+      response = { status: 'success', message: @dataObject }
+    else
+      response = { status: 'fail' }
+    end  
+      
     #Send the object as json
     respond_to do |format|
-      format.json { render json: @dataObject }
+      format.json { render json: response }
     end
     
   end
