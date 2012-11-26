@@ -1,3 +1,5 @@
+<%=render 'grid'%>
+
 <div class="row">
   <div class="span8">
     <div class="experiment_session_info_box">
@@ -8,34 +10,28 @@
       <br /><br />
     </div>
   </div>
-  <div class="span8">
-    <%= experiment_session_redactor_helper (@experiment_session.user_id == @cur_user.try(:id)) %>
+  <div class="row">
+    <div class="span8">
+      <%= render 'manual_entry' %>
+    </div>
+    <div class="span4">
+      <%= experiment_session_redactor_helper (@experiment_session.user_id == @cur_user.try(:id)) %>
+    </div>
   </div>
-  <div class="span8">
-
+  <div class="row">
+    <div class="span8 center">
+      <input type="button" id="add_data" value="Add Data" />
+    </div>
   </div>
- 
-  <div class="span12">
-    <%= render 'grid' %>
-  </div>
-  
-  
-  <div class="span12">
-
-    <%= form_for @experiment_session, :url => { :action => "postCSV" }, :html => { :multipart => true, :class => "file_upload", :'data-type' => 'json' }, :remote => true do |f| %>
-      <div class="field">
-        <%= f.label :file %>
-        <%= f.file_field :file %>
-      </div>
-      <div class="actions">
-        <%= f.submit %>
-      </div>
-    <% end %>
-    
-  </div>
-
-
-  <div class="span12">
-    <%=render "manual_entry"%>
+  <div id="add_data">
+      <%= form_for @experiment_session, :url => { :action => "postCSV" }, :html => { :multipart => true, :class => "file_upload", :'data-type' => 'json' }, :remote => true do |f| %>
+        <div class="field">
+          <%= f.label :file %>
+          <%= f.file_field :file %>
+        </div>
+        <div class="actions">
+          <%= f.submit %>
+        </div>
+      <% end %>
   </div>
 </div>

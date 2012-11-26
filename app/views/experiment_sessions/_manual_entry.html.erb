@@ -1,27 +1,7 @@
-<script>
-      var fields = <%=raw @experiment_session.experiment.fields.to_json%>;
-      
-			window.onload = function() {
-			  var metadata = [];
-			  for (var i = 0; i < fields.length; i++){
-          metadata.push({name: fields[i]['name'], label: fields[i]['name'], dataType: "string", editable:  true});
-        }
-        var data = [];
-        for(var i = 0; i < 5; i++){
-          data.push({id: i, values: {"light": "-", "temp": "-", "sound": "-"}});
-        }
-        console.log(data);
-				editableGrid = new EditableGrid("DemoGridAttach"); 
-				editableGrid.load({"metadata": metadata, "data": data});
-			
-				editableGrid.renderGrid("tablecontent", "testgrid table");
-			} 
-</script>
-		
-
-<div id="manual_entry">
-  <table id="htmlgrid" class="testgrid table">
-    <% @experiment_session.experiment.fields.each do |f| %>
+<div id="tablecontent">
+  <table id="htmlgrid" class="testgrid">
+    <% @experiment_session.experiment.fields.each do |f| %><%end%>
+    <% 0.times do |f|%>
       <th><%=f.name%></th>
     <%end%>
   </table>
