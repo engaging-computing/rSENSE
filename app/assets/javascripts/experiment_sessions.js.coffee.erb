@@ -3,8 +3,17 @@
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
 $(document).ready ->
+
+  data_dialog = {}
+
+  ($ '.file_upload').hide()
+
   ($ ".file_upload").bind "ajax:success", (x, d, e) ->
     console.log d
-    editableGrid = new EditableGrid("DataGrid")
-    editableGrid.load(d)
-    editableGrid.renderGrid("tablecontent", "table")
+    editableGrid = new EditableGrid "DataGrid"
+    editableGrid.load d.message
+    editableGrid.renderGrid "tablecontent", "table"
+    data_dialog.dialog 'close'
+    
+  ($ '#add_data').click ->
+    data_dialog = ($ '.file_upload').show().parent().dialog()
