@@ -5,3 +5,8 @@
 <% else %>
   <%= render 'show_default' %>
 <% end %>
+
+<%=form_tag('/experiments', :method => "post" ) do %>
+ <input type="hidden" name="experiment_id" value="<%=@experiment.id%>"/>
+	<%= submit_tag "Clone Experiment" %>
+<%end%>
