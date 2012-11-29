@@ -47,11 +47,22 @@ class ExperimentsController < ApplicationController
   # POST /experiments
   # POST /experiments.json
   def create
-    content = "<h1>Problem:</h1><p>Description of problem</p><br><br><h1>Procedure:</h1><p>How you want people to collect your data</p>"
-    @experiment = Experiment.new(params[:experiment])
-    @experiment = Experiment.new({user_id: @cur_user.id, title:"#{@cur_user.firstname} #{@cur_user.lastname[0].pluralize} Experiment"})
-    respond_to do |format|
-      if @experiment.save
+    #@experiment = Experiment.new(params[:experiment])
+		
+		if(params[:experiment_id])
+			@tmp_exp = Experiment.find(params[:experiment_id])
+			@experiment = Experiment.new({user_id: @cur_user.id, title:"#{@tmp_exp.title} (clone)", content: @tmp_exp.content, filter: @tmp_exp.filter})
+			success = @experiment.save
+			@tmp_exp.fields.all.each do |f|
+				Field.create({experiment_id:@experiment.id, field_type: f.field_type, name: f.name, unit: f.unit})
+			end
+		else
+			@experiment = Experiment.new({user_id: @cur_user.id, title:"#{@cur_user.firstname} #{@cur_user.lastname[0].pluralize} Experiment"})
+			success = @experiment.save
+		end
+
+		respond_to do |format|
+      if success
         format.html { redirect_to @experiment, notice: 'Experiment was successfully created.' }
         format.json { render json: @experiment, status: :created, location: @experiment }
       else
@@ -61,7 +72,7 @@ class ExperimentsController < ApplicationController
     end
   end
 
-  # PUT /experiments/1
+  # PUT /experiments/1s
   # PUT /experiments/1.json
   def update
     @experiment = Experiment.find(params[:id])
