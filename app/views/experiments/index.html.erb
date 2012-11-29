@@ -1,4 +1,3 @@
-
 <div class="row">
   <div class="span8">
     <div class="feed-top">
@@ -40,16 +39,18 @@
     </div>
   </div>
 
-  <div class="span3 offset1">
-    <div class="row">
-      <h5 class="center">Create Experiment</h5>
-      <div class="well center">
-        <%if @cur_user.try(:id)%>
-        <a class="add_session_link" href="/experiments/new"><img src="/assets/add_content.png" class="img-rounded"></a>
-        <%end%>
-      </div>
-    </div>
-  </div>
+	<%if @cur_user.try(:id)%>
+		<div class="span3 offset1">
+			<div class="row">
+				<h5 class="center">Create Experiment</h5>
+				<div class="well center">
+					<%=form_tag('/experiments', :method => "post") do %>
+						<input type="image" src="/assets/add_content.png" class="img-rounded"/>
+					<%end%>
+				</div>
+			</div>
+		</div>
+	<%end%>
   <%=render 'featured_experiments'%>
 </div>
 
