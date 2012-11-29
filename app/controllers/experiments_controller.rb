@@ -21,8 +21,11 @@ class ExperimentsController < ApplicationController
   # GET /experiments/1.json
   def show
     @experiment = Experiment.find(params[:id])
-    
-    respond_to do |format|
+		@cloned_experiment = nil
+    if(!@experiment.cloned_from.nil?)
+			@cloned_experiment = Experiment.find(@experiment.cloned_from)
+		end
+		respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @experiment }
     end
@@ -51,7 +54,7 @@ class ExperimentsController < ApplicationController
 		
 		if(params[:experiment_id])
 			@tmp_exp = Experiment.find(params[:experiment_id])
-			@experiment = Experiment.new({user_id: @cur_user.id, title:"#{@tmp_exp.title} (clone)", content: @tmp_exp.content, filter: @tmp_exp.filter})
+			@experiment = Experiment.new({user_id: @cur_user.id, title:"#{@tmp_exp.title} (clone)", content: @tmp_exp.content, filter: @tmp_exp.filter, cloned_from:@tmp_exp.id})
 			success = @experiment.save
 			@tmp_exp.fields.all.each do |f|
 				Field.create({experiment_id:@experiment.id, field_type: f.field_type, name: f.name, unit: f.unit})
