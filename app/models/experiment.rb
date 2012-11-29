@@ -1,5 +1,5 @@
 class Experiment < ActiveRecord::Base
-  attr_accessible :content, :title, :user_id, :filter
+  attr_accessible :content, :title, :user_id, :filter, :cloned_from
 
   validates_presence_of :title
   validates_presence_of :user_id

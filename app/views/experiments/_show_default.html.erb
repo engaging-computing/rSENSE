@@ -7,6 +7,10 @@
           <span style="font-size:2em"><%= experiment_edit_helper 'title', (@experiment.owner.id == @cur_user.try(:id)) %></span><br>
           <span class="info_label" style="font-size:1.1em">Owner:</span> 
           <%= link_to @experiment.owner.name, user_path(@experiment.owner) %><br>
+					<%if !@cloned_experiment.nil? %>
+						<span class="info_label" style="font-size:1.1em">Cloned From:</span>
+						<%=link_to @cloned_experiment.title, experiment_path(@cloned_experiment.id)%><br>
+					<%end%>
           <span class="info_label" style="font-size:1.1em">Created:</span><%=time_ago_in_words(@experiment.created_at)%> ago
         </div>
       </div>
