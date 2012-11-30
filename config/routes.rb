@@ -35,6 +35,8 @@ Rsense::Application.routes.draw do
 
   resources :media_objects
   
+	match "/experiments/:id/updateLikedStatus" => "experiments#updateLikedStatus"
+	
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
