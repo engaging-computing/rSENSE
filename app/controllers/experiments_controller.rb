@@ -21,10 +21,22 @@ class ExperimentsController < ApplicationController
   # GET /experiments/1.json
   def show
     @experiment = Experiment.find(params[:id])
+		
+		#Determine if the experiment is cloned
 		@cloned_experiment = nil
     if(!@experiment.cloned_from.nil?)
 			@cloned_experiment = Experiment.find(@experiment.cloned_from)
 		end
+		
+		#Get number of likes
+		@likes = @experiment.likes.count
+		
+		@liked_by_cur_user = false
+		if(Like.find_by_user_id_and_experiment_id(@cur_user,@experiment.id)) 
+			@liked_by_cur_user = true
+		end
+	
+		
 		respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @experiment }
@@ -112,5 +124,28 @@ class ExperimentsController < ApplicationController
       format.json { render json: @experiment }
     end
   end
+	
+	def updateLikedStatus
+		
+		like = Like.find_by_user_id_and_experiment_id(@cur_user,params[:id])
+	
+		if(like)
+			Like.destroy(like.id)
+		else
+			Like.create({user_id:@cur_user.id,experiment_id:params[:id]})
+		end
+    
+		count = Experiment.find(params[:id]).likes.count
+		
+		if(count == 0 || count > 1)
+			@response = count.to_s + " people liked this"
+		else
+			@response = count.to_s + " person liked this"
+		end
+		
+		respond_to do |format|
+      format.json { render json: {update: @response} }
+    end
+	end
   
 end
