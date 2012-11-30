@@ -11,7 +11,8 @@
 						<span class="info_label" style="font-size:1.1em">Cloned From:</span>
 						<%=link_to @cloned_experiment.title, experiment_path(@cloned_experiment.id)%><br>
 					<%end%>
-          <span class="info_label" style="font-size:1.1em">Created:</span><%=time_ago_in_words(@experiment.created_at)%> ago
+          <span class="info_label" style="font-size:1.1em">Created:</span><%=time_ago_in_words(@experiment.created_at)%> ago <br>
+					<%=render "likes"%>
         </div>
       </div>
       <div class="span8">
