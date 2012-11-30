@@ -15,5 +15,4 @@ $(document).ready ->
 			url: "/experiments/"+$(this).attr("exp_id")+"/updateLikedStatus"
 			dataType: "json"
 			success: (resp) =>
-				console.log resp
-				console.log $(@).siblings(".like_display").html resp['update']
+				$(@).siblings(".like_display").html resp['update']
