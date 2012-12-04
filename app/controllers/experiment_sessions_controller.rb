@@ -130,7 +130,7 @@ class ExperimentSessionsController < ApplicationController
   end
   
   ## POST /experiment_sessions/1
-  def postCSV
+  def uploadCSV
     #Grab the experiment so we can get field names
     @experiment_session = ExperimentSession.find(params[:id])
     @experiment = @experiment_session.experiment
