@@ -5,7 +5,6 @@
 $(document).ready ->
 	
 	$(".liked_status").click ->
-		console.log $(@).children('i')
 		icon = $(@).children('i')
 		if icon.attr('class').indexOf('icon-star-empty') != -1
 				icon.replaceWith('<i class="icon-star"></i>')
