@@ -42,6 +42,14 @@ class ExperimentsController < ApplicationController
       format.json { render json: @experiment }
     end
   end
+  
+  def createSession
+    
+    @experiment = Experiment.find(params[:id])
+    
+    logger.info "RAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWR"
+    
+  end
 
   # GET /experiments/new
   # GET /experiments/new.json
@@ -147,5 +155,72 @@ class ExperimentsController < ApplicationController
       format.json { render json: {update: @response} }
     end
 	end
+	
+  ## POST /experiment_sessions/1
+  def postCSV
+
+=begin
+    #Grab the experiment so we can get field names
+    @experiment = Experiment.find(params[:id])
+    
+    #Get a link to the temp file uploaded to the server
+    @file = params[:csv]
+    
+    #Read the CSV
+    require "csv"
+    
+    data = CSV.read(@file.tempfile)
+    
+    data = sortColumns(data, doColumnsMatch(@experiment, data[0]))
+    
+    #Parse out the headers and the data
+    headers = data[0]
+    data = data[1..(data.size-1)]
+    
+    #Data that will be stuffed into mongo
+    mongo_data = Array.new
+    
+    #Build the object that will be displayed in the table
+    @dataObject = {}
+    @dataObject["metadata"] = []
+    @dataObject["data"] = []
+
+    headers.count.times do |i|
+      @dataObject["metadata"].push({name: headers[i], label: headers[i], datatype: "string", editable: true})
+    end
+
+    data.count.times do |i|
+      values = {}
+      data[i].count.times do |j|
+        values[headers[j]] = 
+          if(data[i][j] != nil)
+             data[i][j]
+          else
+             ""
+          end
+      end
+      @dataObject["data"].push({id: i, values: values})
+    end
+  
+    @dataObject["data"].each do |d|
+      mongo_data.push d.values
+    end
+      
+    data_to_add = DataSet.new(:experiment_session_id => @experiment_session.id, :data => mongo_data)    
+    
+    if data_to_add.save!
+      response = { status: 'success', message: @dataObject }
+    else
+      response = { status: 'fail' }
+    end  
+      
+    #Send the object as json
+    respond_to do |format|
+      format.json { render json: response }
+    end
+    
+=end
+    
+  end
   
 end
