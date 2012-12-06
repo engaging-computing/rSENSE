@@ -12,7 +12,6 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require jquery.remotipart
 //= require twitter/bootstrap
 //= require jquery.ui.all
 //= require bootstrap
@@ -29,3 +28,4 @@
 //= require editablegrid_utils.js
 //= require editablegrid_renderers.js
 //= require editablegrid_editors.js
+//= require editablegrid_validators.js
