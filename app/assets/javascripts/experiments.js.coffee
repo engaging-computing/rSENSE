@@ -15,3 +15,7 @@ $(document).ready ->
 			dataType: "json"
 			success: (resp) =>
 				$(@).siblings(".like_display").html resp['update']
+				
+	$(".add_row_button").click ->
+		editableGrid.addRow(editableGrid.getRowCount()+1,{})
+		console.log window.fields
