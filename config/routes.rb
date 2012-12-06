@@ -20,9 +20,11 @@ Rsense::Application.routes.draw do
     get 'getData' => :getData
   end
 
+	#Routes for uploading data
   match "/experiments/:id/createSession" => "experiments#createSession"
   match "/experiments/:id/uploadCSV" => "experiments#uploadCSV"
-  
+  match "/experiments/:id/manualEntry" => "experiments#manualEntry"
+	
   match "/experiment_sessions/:id/postCSV" => "experiment_sessions#postCSV"
   match "/media_objects/saveimage/*keys" => "media_objects#saveimage"
   

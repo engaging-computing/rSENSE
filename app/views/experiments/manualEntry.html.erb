@@ -1,0 +1,32 @@
+<script type="text/javascript">
+	$(document).ready(function(){
+		window.fields = JSON.parse('<%= raw @experiment.fields.to_json%>');
+		
+		var metadata = [];
+		for(var i = 0; i < window.fields.length; i++){
+			metadata.push({name: window.fields[i].name, label: window.fields[i].name, datatype:"string", editable: true});
+		}
+
+		var data = [];
+		var row = {};
+		for(var i = 0; i < window.fields.length; i++){
+			
+		}
+		data.push({id: 1, values: row});
+
+		editableGrid = new EditableGrid("DemoGridJsData");
+		editableGrid.load({"metadata": metadata, "data": data});
+		editableGrid.renderGrid("manual_entry", "testgrid table");
+	});
+
+</script>
+
+<div class="row">
+	<div style="margin-bottom:20px" class="span12">			
+		<div id="manual_entry"></div>
+	</div>
+	<div style="margin-bottom:20px" class="span12">
+		<button class="add_row_button">Add Row</button>
+		<button class="submit_manual_data">Submit</button>
+	</div>
+</div>
