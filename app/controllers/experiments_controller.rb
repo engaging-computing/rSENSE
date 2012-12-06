@@ -46,9 +46,7 @@ class ExperimentsController < ApplicationController
   def createSession
     
     @experiment = Experiment.find(params[:id])
-    
-    logger.info "RAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWRRAWR"
-    
+   
   end
 
   # GET /experiments/new
@@ -154,6 +152,12 @@ class ExperimentsController < ApplicationController
 		respond_to do |format|
       format.json { render json: {update: @response} }
     end
+	end
+	
+	
+	def manualEntry
+		@experiment = Experiment.find(params[:id])
+		logger.info "============================================================================="
 	end
 	
   ## POST /experiment_sessions/1
