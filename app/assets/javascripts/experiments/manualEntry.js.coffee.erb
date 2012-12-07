@@ -1,14 +1,14 @@
 $ ->
   editableGrid = {}
   metadata = []
-  fields = JSON.parse '<%= raw @experiment.fields.to_json%>'
+  fields = window.fields
   data = []
   row = {}
   
-  eg = new EditableGrid "Session_Data"
-  
   console.log window.fields
   
+  eg = new EditableGrid "Session_Data"
+    
   data.push { id: 1, values: row }
 
   try
