@@ -22,8 +22,9 @@
 
 <div class="row">
   <div class="span4 center">
-    <a id="manual_entry" href="manualEntry"><img style="height: 200px;" src="/assets/manual.svg" /><br />
-    Manual Entry</a>
+    <%= link_to :controller => :experiments, :action => :manualEntry, :id => @experiment do %>
+      <img style="height: 200px;" src="/assets/manual.svg" /><br />Manual Entry
+    <% end %>
   </div>
   <div class="span4 center">
     <a id="upload_csv" href=""><img style="height: 200px;" src="/assets/upload.svg" /><br />

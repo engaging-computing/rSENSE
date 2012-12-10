@@ -1,0 +1,22 @@
+$ ->
+  editableGrid = {}
+  metadata = []
+  fields = JSON.parse '<%= raw @experiment.fields.to_json%>'
+  data = []
+  row = {}
+  
+  eg = new EditableGrid "Session_Data"
+  
+  console.log window.fields
+  
+  data.push { id: 1, values: row }
+
+  try
+    eg.load { metadata: metadata, data: data }
+    eg.renderGrid "manual_upload_table", "testgrid table"
+  catch error
+    console.log error
+    
+  ($ ".add_row_button").click ->
+    eg.addRow(eg.getRowCount()+1,{})
+    console.log window.fields
