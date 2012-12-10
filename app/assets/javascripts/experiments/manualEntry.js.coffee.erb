@@ -5,7 +5,7 @@ $ ->
   data = []
   row = {}
   
-  eg = new EditableGrid "Session_Data"
+  editableGrid = new EditableGrid "Session_Data"
   
   metadata.push {name: field.name, label: field.name, datatype: "string", editable: true} for field in fields
     
@@ -13,12 +13,8 @@ $ ->
     
   data.push { id: 1, values: row }
 
-  try
-    eg.load { metadata: metadata, data: data }
-    eg.renderGrid "manual_upload_table", "testgrid table"
-  catch error
-    console.log error
+  editableGrid.load { metadata: metadata, data: data }
+  editableGrid.renderGrid "manual_upload_table", "testgrid table"
     
   ($ ".add_row_button").click ->
-    eg.addRow(eg.getRowCount()+1,{})
-    console.log window.fields
+    editableGrid.addRow(editableGrid.getRowCount()+1,{})
