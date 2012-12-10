@@ -4,13 +4,14 @@ $ ->
   fields = window.fields
   data = []
   row = {}
+  url = ""
+  
+  url = window.postURL
   
   editableGrid = new EditableGrid "Session_Data"
   
   metadata.push {name: field.name, label: field.name, datatype: "string", editable: true} for field in fields
-    
-  row[field] = "replace me" for field in fields
-    
+        
   data.push { id: 1, values: row }
 
   editableGrid.load { metadata: metadata, data: data }
@@ -18,3 +19,19 @@ $ ->
     
   ($ ".add_row_button").click ->
     editableGrid.addRow(editableGrid.getRowCount()+1,{})
+    
+  ($ ".submit_manual_data").click ->
+    data_for_upload = {}
+    get_data_for_upload = editableGrid.data
+    
+    data_for_upload.header = fields
+    data_for_upload.data = get_data_for_upload
+        
+    $.ajax url,
+      type: 'POST',
+      data: { ses_info: data_for_upload },
+      success: (data, textStatus, jqXHR) ->
+        console.log JSON.parse(data)
+      error: (jqXHR, textStatus, errorThrown) ->
+        console.log textStatus
+        console.log errorThrown
