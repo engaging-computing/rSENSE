@@ -1,4 +1,4 @@
-class ExperimentsController < ApplicationController
+class ExperimentsController < ApplicationController  
   # GET /experiments
   # GET /experiments.json
   skip_before_filter :authorize, only: [:show,:index]  
@@ -123,12 +123,33 @@ class ExperimentsController < ApplicationController
   
   def addExperimentSession
     @experiment = Experiment.find(params[:id])
-    @experiment_session = ExperimentSession.create(:user_id => @cur_user.id, :experiment_id => @experiment.id, :title => "#{@cur_user.name}'s Session")
-    
-    respond_to do |format|
-      format.html { redirect_to @experiment_session }# show.html.erb
-      format.json { render json: @experiment }
+    #@experiment_session = ExperimentSession.new(:user_id => @cur_user.id, :experiment_id => @experiment.id, :title => "#{@cur_user.name}'s Session")
+
+    header = params[:ses_info][:header]
+    data = params[:ses_info][:data]
+
+    if !data.nil?
+
+      mongo_data = []
+      row = []
+      
+      data.each do |dp|
+        header.each do |h|
+          id = h[1]["id"]
+          row << { id => dp }
+        end
+        mongo_data << row
+      end
+      
+      response = data
+    else
+      response = ["No data"]
     end
+
+    respond_to do |format|
+      format.html { render json: response }
+      format.json { render json: response }
+    end    
   end
 	
 	def updateLikedStatus
