@@ -5,7 +5,7 @@ $ ->
   data = []
   row = {}
   url = ""
-  
+    
   url = window.postURL
   
   editableGrid = new EditableGrid "Session_Data"
@@ -21,17 +21,21 @@ $ ->
     editableGrid.addRow(editableGrid.getRowCount()+1,{})
     
   ($ ".submit_manual_data").click ->
-    data_for_upload = {}
+    data_for_upload = 
+      header: []
+      data: []
+      
     get_data_for_upload = editableGrid.data
     
-    data_for_upload.header = fields
-    data_for_upload.data = get_data_for_upload
+    data_for_upload.header.push { id: field.id, type:field.field_type } for field in fields
+    data_for_upload.data.push row.columns for row in get_data_for_upload
         
     $.ajax url,
       type: 'POST',
       data: { ses_info: data_for_upload },
       success: (data, textStatus, jqXHR) ->
-        console.log JSON.parse(data)
+        data = JSON.parse data
+        window.location.replace data.follow
       error: (jqXHR, textStatus, errorThrown) ->
         console.log textStatus
         console.log errorThrown
