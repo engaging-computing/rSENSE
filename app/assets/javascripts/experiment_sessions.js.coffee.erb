@@ -5,9 +5,6 @@
 $ ->
 
   data_dialog = {}
-  metadata = []
-  data = []
-  sort = {}
 
   ($ '.file_upload').hide()
 
@@ -21,24 +18,3 @@ $ ->
   ($ '#add_data').click ->
     data_dialog = ($ '.file_upload').show().parent().dialog()
   
-  fields = window.fields
-  mongo_data = window.mongo_data
-
-  sort[field.id] = [] for field in fields
-  
-  metadata.push {name: field['name'], label: field['name'], dataType:'string', id: field['id'], editable:'true'} for field in fields
-  
-  for row in mongo_data
-    do (row) ->
-      for data_point in row
-        do (data_point) ->
-          tmp = Object.keys data_point
-          key = tmp[0]
-          sort[key].push data_point[key]
-          
-  keys = Object.keys sort
-  data.push {id: key, values: sort[key] } for key in keys
-
-  editableGrid = new EditableGrid "DemoGridAttach"
-  editableGrid.load {metadata: metadata, data: data}
-  editableGrid.renderGrid "tablecontent", "testgrid table"
