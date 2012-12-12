@@ -22,6 +22,8 @@ Rsense::Application.routes.draw do
 
 	#Routes for uploading data
   match "/experiments/:id/createSession" => "experiments#createSession"
+  match "/experiments/:id/addExperimentSession" => "experiments#addExperimentSession"
+  
   match "/experiments/:id/uploadCSV" => "experiments#uploadCSV"
   match "/experiments/:id/manualEntry" => "experiments#manualEntry"
 	
