@@ -109,7 +109,7 @@ div.clear
     text-align: center;
 }
 
-table.table > tbody > tr > td
+table.editablegrid > tbody > tr > td
 {
   height: 20px;
   -webkit-border-radius: 15px 15px 15px 15px;
