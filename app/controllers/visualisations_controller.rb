@@ -91,6 +91,7 @@ class VisualisationsController < ApplicationController
     format_fields = []
     format_data = []
     metadata = {}
+    rel_viz = []
     
     if( !params[:sessions].nil? )
       seses = params[:sessions].split(",")
@@ -128,6 +129,12 @@ class VisualisationsController < ApplicationController
           arr.push dp[key[0]]
         end
         format_data.push arr
+      end
+    end
+    
+    @experiment.fields.each do |field|
+      if field.field_type.is get_field_type "Location"
+        rel_vis.push "Map"
       end
     end
        

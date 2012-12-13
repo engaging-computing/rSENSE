@@ -15,5 +15,18 @@ module FieldsHelper
           "Text"
       end
   end
+  
+  def get_field_type (field)
+    if field.is "Time"
+      1
+    elsif field.is "Number"
+      2
+    elsif field.is "Location"
+      3
+    elsif field.is "Text"
+      4
+    else
+      4
+    end
 
 end
