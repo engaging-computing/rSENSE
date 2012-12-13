@@ -120,7 +120,7 @@ class VisualisationsController < ApplicationController
     
     @sessions.each do |session|
       session.data.each do |rows|
-        metadata["#{session.title}(#{session.id})"] = { name: session.title, owner_id: session.owner_id, session_id: session.id, timecreated: session.created_at, timemodified: session.updated_at }
+        metadata["#{session.title}(#{session.id})"] = { name: session.title, user_id: session.user_id, session_id: session.id, timecreated: session.created_at, timemodified: session.updated_at }
         arr = []
         arr.push "#{session.title}(#{session.id})"
         rows.each do |dp|
