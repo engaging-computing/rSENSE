@@ -12,7 +12,7 @@ $ ->
     console.log d
     editableGrid = new EditableGrid "DataGrid"
     editableGrid.load d.message
-    editableGrid.renderGrid "tablecontent", "table"
+    editableGrid.renderGrid "tablecontent", "table editablegrid"
     data_dialog.dialog 'close'
     
   ($ '#add_data').click ->
