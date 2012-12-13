@@ -92,6 +92,8 @@ class VisualisationsController < ApplicationController
     format_data = []
     metadata = {}
     rel_viz = []
+    total = 0
+    field_count = []
     
     if( !params[:sessions].nil? )
       seses = params[:sessions].split(",")
@@ -105,8 +107,6 @@ class VisualisationsController < ApplicationController
     else
       @sessions = ExperimentSession.find_all_by_experiment_id params[:id]
     end
-    
-    #Get MONGO DATAZ
     
     @sessions.each do |session|
       d = DataSet.find_by_experiment_session_id(session.id)
@@ -133,13 +133,37 @@ class VisualisationsController < ApplicationController
     end
     
     @experiment.fields.each do |field|
-      if field.field_type.is get_field_type "Location"
-        rel_vis.push "Map"
-      end
+      field_count[field.field_type] = 0 
     end
-       
+    
+    @experiment.fields.each do |field|
+      field_count[field.field_type]++ 
+    end
 
-    @Data = { experimentName: @experiment.title, experimentID: @experiment.id, hasPics: false, fields: format_fields, dataPoints: format_data, metadata: metadata }
+    if field_count[get_field_type("Location")] > 0 
+      rel_vis.push "Map"
+    end
+    
+    if field_count[get_field_type("Time")] > 0 and field_count[get_field_type("Number")] > 0 and format_data.count > 1
+      rel_vis.push "Timeline"
+    end
+    
+    if field_count[get_field_type("Number")] > 1 and format_data.count > 1
+      rel_vis.push "Scatter"
+    end
+    
+    if field_count[get_field_type("Number")] > 0 and format_data.count > 1
+      rel_vis.push "Histogram"
+      rel_vis.push "Bar"
+    end
+    
+    rel_vis.push "Table"
+    
+    if field_count[get_field_type("Time")] > 0 and field_count[get_field_type("Number")] > 0 and format_data.count > 1
+      rel_vis.push "Motion"
+    end
+
+    @Data = { experimentName: @experiment.title, experimentID: @experiment.id, hasPics: false, fields: format_fields, dataPoints: format_data, metadata: metadata, relVis: rel_vis }
     
     
     respond_to do |format|

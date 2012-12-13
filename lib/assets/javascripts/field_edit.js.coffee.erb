@@ -1,89 +1,94 @@
 $(document).ready ->
     
-    edit = ->
-        name = $(@).parent().parent().find('.field_name')
-        unit = $(@).parent().parent().find('.field_unit')
+  #This is where we edit 
+  edit = ->
+    name = $(@).parent().parent().find('.field_name')
+    unit = $(@).parent().parent().find('.field_unit')
 
-        name.wrapInner("<input type='text' class='name_edit_box' value='#{name.text().trim()}'>")
-        unit.wrapInner("<input type='text' class='unit_edit_box' value='#{unit.text().trim()}'>")
-        name.find('.name_edit_box').focus()
+    name.wrapInner("<input type='text' class='name_edit_box' value='#{name.text().trim()}'>")
+    unit.wrapInner("<input type='text' class='unit_edit_box' value='#{unit.text().trim()}'>")
+    name.find('.name_edit_box').focus()
 
-        $(@).hide()
-        $(@).siblings('.field_save_link').show()
+    $(@).hide()
+    $(@).siblings('.field_save_link').show()
 
 
-    save = ->
-        name = $(@).parent().parent().find('.field_name')
-        unit = $(@).parent().parent().find('.field_unit')
+  #This is where we save after editing    
+  save = ->
+    name = $(@).parent().parent().find('.field_name')
+    unit = $(@).parent().parent().find('.field_unit')
 
-        name_text = name.find('.name_edit_box').val().trim()
-        unit_text = unit.find('.unit_edit_box').val().trim()
+    name_text = name.find('.name_edit_box').val().trim()
+    unit_text = unit.find('.unit_edit_box').val().trim()
 
-        data={}
-        data['field'] = {}
-        data['field']['name'] = name_text
-        data['field']['unit'] = unit_text
-        
-        $.ajax
-            url: $(@).attr('href')
-            type: "PUT"
-            dataType: "json"
-            data:
-                data
-            success: =>        
-                $(@).siblings('.field_edit_link').show()
-                $(@).hide()
-                name.html(name_text)
-                unit.html(unit_text)
-                
-        false
+    data={}
+    data['field'] = {}
+    data['field']['name'] = name_text
+    data['field']['unit'] = unit_text
+    
+    $.ajax
+        url: $(@).attr('href')
+        type: "PUT"
+        dataType: "json"
+        data:
+            data
+        success: =>        
+            $(@).siblings('.field_edit_link').show()
+            $(@).hide()
+            name.html(name_text)
+            unit.html(unit_text)
+            
+    false
 
-    add = ->
-        $(@).parent().parent().parent().append('
-                <tr>
-                    <td class="field_name"><input type="text" class="name_add_box"></input></td>
-                    <td class="field_unit"><input type="text" class="unit_add_box"></input></td>
-                    <td class="field_type">
-                        <select class="type_add_box">
-                            <option value="1">Text</option>
-                            <option value="2">Number</option>
-                            <option value="3">Location</option>
-                            <option value="4">Timet</option>
-                        </select></input></td>
-                    <td><a class="field_commit_link">[commit]</a></td>
-                </tr>') 
+  #This is where we add a field    
+  add = ->
+    $('.field_add_link').unbind()
+    $(@).parent().parent().parent().append('
+      <tr>
+        <td class="field_name"><input type="text" class="name_add_box"></input></td>
+        <td class="field_unit"><input type="text" class="unit_add_box"></input></td>
+        <td class="field_type">
+          <select class="type_add_box">
+            <option value="1">Time</option>
+            <option value="2">Number</option>
+            <option value="3">Location</option>
+            <option value="4">Text</option>
+          </select></input></td>
+        <td><a class="field_commit_link">[commit]</a></td>
+      </tr>') 
 
-        $(@).parent().parent().siblings().find('.name_add_box').focus()
+    $(@).parent().parent().siblings().find('.name_add_box').focus()
 
-        $('.field_commit_link').click ->
-            name = $(@).parent().parent().find('.name_add_box').val()
-            unit = $(@).parent().parent().find('.unit_add_box').val()
-            type = $(@).parent().parent().find('.type_add_box').val()
-            $.ajax
-                url: '/fields/'
-                type: 'POST'
-                dataType: 'json'
-                data:
-                    field:
-                        experiment_id: $('.fields_table').attr("experiment")
-                        name: name
-                        unit: unit
-                        field_type: type
-                success: (msg) =>
-                    $('.field_add_link').parent().parent().remove()
-                    $('.fields_table').append('<tr><td colspan="4"><a class="field_add_link"><i class="icon-plus-sign"></i></a></td></tr>')
-                    $(@).parent().parent().find('.field_name').html( $(@).parent().parent().find('.name_add_box').val() )
-                    $(@).parent().parent().find('.field_type').html( $(@).parent().parent().find('.type_add_box').val() )
-                    $(@).parent().parent().find('.field_unit').html( $(@).parent().parent().find('.unit_add_box').val() )
-                    $(@).parent().parent().find('.field_commit_link').parent().empty().append('<a class="field_edit_link"><i class="icon-edit"></i></a><a href="/fields/' + msg.id + '" class="field_save_link"><i class="icon-ok"></i></a>')
-                    $('.field_edit_link').click edit
-                    $('.field_save_link').click save
-                    $('.field_add_link').click add
-                fail: =>
+    #This is where we save the field.
+    $('.field_commit_link').click ->       
+      name = $(@).parent().parent().find('.name_add_box').val()
+      unit = $(@).parent().parent().find('.unit_add_box').val()
+      type = $(@).parent().parent().find('.type_add_box').val()
+      $.ajax
+        url: '/fields/'
+        type: 'POST'
+        dataType: 'json'
+        data:
+          field:
+            experiment_id: $('.fields_table').attr("experiment")
+            name: name
+            unit: unit
+            field_type: type
+        success: (msg) =>
+          $('.field_add_link').parent().parent().remove()
+          $('.fields_table').append('<tr><td colspan="4"><a class="field_add_link"><i class="icon-plus-sign"></i></a></td></tr>')
+          $(@).parent().parent().find('.field_name').html( $(@).parent().parent().find('.name_add_box').val() )
+          $(@).parent().parent().find('.field_type').html( $(@).parent().parent().find('.type_add_box option:selected').text() )
+          $(@).parent().parent().find('.field_unit').html( $(@).parent().parent().find('.unit_add_box').val() )
+          $(@).parent().parent().find('.field_commit_link').parent().empty().append('<a class="field_edit_link"><i class="icon-edit"></i></a><a href="/fields/' + msg.id + '" class="field_save_link"><i class="icon-ok"></i></a>')
+          $('.field_edit_link').click edit
+          $('.field_save_link').click save
+          $('.field_add_link').click add
+        fail: =>
 
-    $('.field_edit_link').click edit
-    $('.field_save_link').click save
-    $('.field_add_link').click add
+  $('.field_edit_link').click edit
+  $('.field_save_link').click save
+  $('.field_add_link').click add
         
                     
 
