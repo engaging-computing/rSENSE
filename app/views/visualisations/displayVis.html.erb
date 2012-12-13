@@ -1,7 +1,23 @@
+<script>
+  window.sessions = <%= raw @sessions.to_json %>
+  window.fields = <%= raw @experiment.fields.to_json %>
+  window.Data = <%= raw @Data.to_json %>
+</script>
+
 <div class="row">
   <div class="span12">
     <% @sessions.each do |s| %>
-      <%=s.title%><br>
+      <table id="ses_<%=s.id%>">
+        <% s.data.each do |row| %>
+          <tr>
+            <% row.each do |dp| %>
+              <% @experiment.fields.each do |f| %>
+                <td><%= dp["#{f.id}"] %></td>
+              <% end %>
+            <% end %>
+          </tr>
+        <% end %>
+      </table>
     <% end %>
   </div>
 </div>

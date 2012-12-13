@@ -85,7 +85,12 @@ class VisualisationsController < ApplicationController
   
   def displayVis
     
+    @experiment = Experiment.find_by_id params[:id]
+    
     @sessions = []
+    format_fields = []
+    format_data = []
+    metadata = {}
     
     if( !params[:sessions].nil? )
       seses = params[:sessions].split(",")
@@ -99,10 +104,36 @@ class VisualisationsController < ApplicationController
     else
       @sessions = ExperimentSession.find_all_by_experiment_id params[:id]
     end
-     
-    logger.info "====================================="
-    logger.info @sessions
-    logger.info "====================================="
+    
+    #Get MONGO DATAZ
+    
+    @sessions.each do |session|
+      d = DataSet.find_by_experiment_session_id(session.id)
+      session[:data] = d.data
+    end
+
+    format_fields.push({ typeID: -1, unitName: "String", fieldID: -1, fieldName: "Session Name (id)" })
+    
+    @experiment.fields.each do |field|
+      format_fields.push({ typeID: field.field_type, unitName: field.unit, fieldID: field.id, fieldName: field.name })
+    end
+    
+    @sessions.each do |session|
+      session.data.each do |rows|
+        metadata["#{session.title}(#{session.id})"] = { name: session.title, owner_id: session.owner_id, session_id: session.id, timecreated: session.created_at, timemodified: session.updated_at }
+        arr = []
+        arr.push "#{session.title}(#{session.id})"
+        rows.each do |dp|
+          key = dp.keys
+          arr.push dp[key[0]]
+        end
+        format_data.push arr
+      end
+    end
+       
+
+    @Data = { experimentName: @experiment.title, experimentID: @experiment.id, hasPics: false, fields: format_fields, dataPoints: format_data, metadata: metadata }
+    
     
     respond_to do |format|
       format.html
