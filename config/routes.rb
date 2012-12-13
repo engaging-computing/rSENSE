@@ -1,4 +1,6 @@
 Rsense::Application.routes.draw do
+  resources :visualisations
+
   #resources :experiment_sessions
 
   resources :memberships
@@ -26,6 +28,10 @@ Rsense::Application.routes.draw do
   
   match "/experiments/:id/uploadCSV" => "experiments#uploadCSV"
   match "/experiments/:id/manualEntry" => "experiments#manualEntry"
+	
+	#Routes for displaying data
+	match "/experiments/:id/sessions/*sessions" => "visualisations#displayVis"
+	match "/experiments/:id/sessions/" => "visualisations#displayVis"
 	
   match "/experiment_sessions/:id/postCSV" => "experiment_sessions#postCSV"
   match "/media_objects/saveimage/*keys" => "media_objects#saveimage"
