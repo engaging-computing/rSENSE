@@ -15,5 +15,4 @@ module FieldsHelper
           "Text"
       end
   end
-
 end
