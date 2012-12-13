@@ -1,0 +1,33 @@
+<h1>Listing visualisations</h1>
+
+<table>
+  <tr>
+    <th>Title</th>
+    <th>User</th>
+    <th>Experiment</th>
+    <th>Content</th>
+    <th>Data</th>
+    <th>Globals</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @visualisations.each do |visualisation| %>
+  <tr>
+    <td><%= visualisation.title %></td>
+    <td><%= visualisation.user_id %></td>
+    <td><%= visualisation.experiment_id %></td>
+    <td><%= visualisation.content %></td>
+    <td><%= visualisation.data %></td>
+    <td><%= visualisation.globals %></td>
+    <td><%= link_to 'Show', visualisation %></td>
+    <td><%= link_to 'Edit', edit_visualisation_path(visualisation) %></td>
+    <td><%= link_to 'Destroy', visualisation, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Visualisation', new_visualisation_path %>
