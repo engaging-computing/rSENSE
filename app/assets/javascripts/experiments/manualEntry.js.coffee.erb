@@ -15,7 +15,7 @@ $ ->
   data.push { id: 1, values: row }
 
   editableGrid.load { metadata: metadata, data: data }
-  editableGrid.renderGrid "manual_upload_table", "testgrid table"
+  editableGrid.renderGrid "manual_upload_table", "testgrid table editablegrid"
     
   ($ ".add_row_button").click ->
     editableGrid.addRow(editableGrid.getRowCount()+1,{})
