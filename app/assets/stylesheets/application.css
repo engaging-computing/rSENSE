@@ -109,6 +109,16 @@ div.clear
     text-align: center;
 }
 
+table.table > tbody > tr > td
+{
+  height: 20px;
+  -webkit-border-radius: 15px 15px 15px 15px;
+  -moz-border-radius: 15px 15px 15px 15px;
+  border-radius: 15px 15px 15px 15px;
+  border: solid 5px white;
+  background-color: #dce0e8;
+}
+
 .info_edit_link
 {
     vertical-align: super;

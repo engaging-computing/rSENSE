@@ -1,24 +1,4 @@
 <script>
-      var fields = <%=raw @experiment_session.experiment.try(:fields).to_json%>;
-      var mongo_data = <%=raw @data_set.try(:data).to_json%>
-      
-      window.onload = function() {
-        var metadata = [];
-        for (var i = 0; i < fields.length; i++){
-          metadata.push({name: fields[i]['name'], label: fields[i]['name'], dataType: "string", editable:  true});
-        }
-        var data = [];
-        for(var i = 0; i < mongo_data.length; i++){
-          var d = {};
-          for(var key in mongo_data[i][1]) {
-            d[""+key+""] = Number(mongo_data[i][1][key]);
-          }
-          data.push({id: mongo_data[i][0], values: d });
-        }
-        console.log(data);
-        editableGrid = new EditableGrid("DemoGridAttach"); 
-        editableGrid.load({"metadata": metadata, "data": data});
-        
-        editableGrid.renderGrid("tablecontent", "testgrid table");
-      } 
+      window.fields = <%=raw @experiment_session.experiment.try(:fields).to_json%>;
+      window.mongo_data = <%=raw @data_set.try(:data).to_json%>
 </script>
