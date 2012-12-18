@@ -5,9 +5,10 @@
 </script>
 
 <div class="row">
+
   <div class="span12">
     <% @sessions.each do |s| %>
-      <table id="ses_<%=s.id%>">
+      <table class="table" id="ses_<%=s.id%>">
         <% s.data.each do |row| %>
           <tr>
             <% row.each do |dp| %>
@@ -19,5 +20,31 @@
         <% end %>
       </table>
     <% end %>
+  </div>
+  
+  <div class="span12">
+    <ul class="nav nav-tabs" id="myTab">
+      <% i = 0 %>
+      <% @sessions.each do |s| %>
+        <% if i == 0 %>
+          <li class="active"><a href="#<%=s.id%>" data-toggle="tab"><%=s.title%></a></li>
+        <% else %>
+          <li><a href="#<%=s.id%>" data-toggle="tab"><%=s.title%></a></li>
+        <% end %>
+        <% i=i+1 %>
+      <% end %>
+    </ul>
+ 
+    <div class="tab-content">
+      <% i = 0 %>
+      <% @sessions.each do |s| %>
+        <% if i == 0 %>
+          <div class="tab-pane active" id="<%=s.id%>"><%= experiment_session_redactor_helper s, (@experiment.owner.id == @cur_user.try(:id)) %></div>
+        <% else %>
+          <div class="tab-pane" id="<%=s.id%>"><%= experiment_session_redactor_helper s, (@experiment.owner.id == @cur_user.try(:id)) %></div>
+        <% end %>
+        <% i=i+1 %>
+      <% end %>
+    </div>
   </div>
 </div>
