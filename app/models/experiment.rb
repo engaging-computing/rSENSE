@@ -1,5 +1,5 @@
 class Experiment < ActiveRecord::Base
-  attr_accessible :content, :title, :user_id, :filter, :cloned_from
+  attr_accessible :content, :title, :user_id, :filter, :cloned_from, :like_count
 
   validates_presence_of :title
   validates_presence_of :user_id
@@ -7,7 +7,7 @@ class Experiment < ActiveRecord::Base
   has_many :fields
   has_many :experiment_sessions
   has_many :media_objects
-	has_many :likes
+  has_many :likes
 
   belongs_to :owner, class_name: "User", foreign_key: "user_id"
   
