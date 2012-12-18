@@ -8,6 +8,7 @@
           <select name="sort" class="experiments_sort_select">
             <option value="DESC">Newest First</option>
             <option value="ASC">Oldest First</option>
+            <option value="RATING">Rating</option>
           </select>
         </div>
         <div class="span3">
@@ -38,19 +39,18 @@
       <%=render 'display_experiments'%>
     </div>
   </div>
-
-	<%if @cur_user.try(:id)%>
-		<div class="span3 offset1">
-			<div class="row">
-				<h5 class="center">Create Experiment</h5>
-				<div class="well center">
-					<%=form_tag('/experiments', :method => "post") do %>
-						<input type="image" src="/assets/add_content.png" class="img-rounded"/>
-					<%end%>
-				</div>
-			</div>
-		</div>
-	<%end%>
+    <%if @cur_user.try(:id)%>
+      <div class="span3 offset1">
+        <div class="row">
+          <h5 class="center">Create Experiment</h5>
+          <div class="well center">
+            <%=form_tag('/experiments', :method => "post") do %>
+              <input type="image" src="/assets/add_content.png" class="img-rounded"/>
+            <%end%>
+          </div>
+        </div>
+      </div>
+    <%end%>
   <%=render 'featured_experiments'%>
 </div>
 
