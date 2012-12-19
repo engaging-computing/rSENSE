@@ -1,0 +1,12 @@
+<% @users.each do |user| %>
+  <div class="<%= cycle('feed-even', 'feed-odd')%>">
+    <h4><%= link_to user.name, users_path(user) %></h4>
+    <b>Joined: </b><%= time_ago_in_words(user.created_at)%> ago <br>
+  </div>
+<% end %>
+
+<div class="feed-bottom">
+
+<%= will_paginate @users %>
+
+</div>
