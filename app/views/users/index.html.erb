@@ -1,19 +1,35 @@
 <div class="row">
-    <div class="span12">
-        <h1>Users</h1>
+  <div class="span8">
+    <div class="feed-top">
+      <h1>Users</h1>
+      <div class="row">
+        <%=form_tag users_path, method: 'get', id: 'users_search', class:'navbar-search' do%>
+          <div class="span2">
+            <select name="sort" class="users_sort_select">
+              <option value="DESC">Newest First</option>
+              <option value="ASC">Oldest First</option>
+            </select>
+          </div>
+          <div class="span3">
+            <%=text_field_tag :search, params[:search], class:'search-query'%>
+          </div>
+          <div class="span1 offset1">
+            <%= submit_tag "Search", name: nil, class:'btn'%>
+          </div>
+        <%end%>
+      </div>
     </div>
+  </div>
 </div>
-
 <div class="row">
-    <div class="span8">
-        <% @users.each do |user| %>
-            <div class="<%= cycle('feed-even', 'feed-odd')%>">
-                <h4><%= link_to user.name, user_path(user) %></h4>
-                Member since: <%=user.created_at%> (<%=time_ago_in_words(user.created_at)%> ago)<br>
-                Experiments: <%=user.experiments.count%> | Sessions: <%=user.experiment_sessions.count%> | Media: <%=user.media_objects.count%>
-            </div>
-        <% end %>
+  <div class="span8">
+    <div id="users">
+      <%=render 'display_users'%>
     </div>
+  </div>
+
+
+
 
     <div class="span4">
        <div class="sidebar_box grey_content">

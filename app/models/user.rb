@@ -24,6 +24,14 @@ class User < ActiveRecord::Base
     firstname + " " + lastname[0] + "."
   end
   
+  def self.search(search)
+    if search
+      where('firstname LIKE ?', "%#{search}%")
+    else
+      scoped
+    end
+  end
+  
   private
   def check_validation
     if (not validated) and (not email.blank?)
