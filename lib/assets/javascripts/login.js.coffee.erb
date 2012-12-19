@@ -10,7 +10,6 @@ $ ->
           username_or_email: $('#login_user').val()
           password: $('#login_password').val()
         success: (data) ->
-          console.log data
           switch data.status
             when "success"
               $('#login_box').dialog('close')
