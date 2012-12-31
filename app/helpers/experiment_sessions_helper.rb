@@ -8,4 +8,28 @@ module ExperimentSessionsHelper
       render 'shared/content', {type: 'experiment_session', field: "content", content: session.content, row_id: session.id, has_content: !session.content.blank?, can_edit: can_edit}
   end
   
+  def get_field_id(type)
+    if type == "Time"
+      1
+    elsif type == "Number"
+      2
+    elsif type == "Location"
+      3
+    elsif type == "Text"
+      4
+    end
+  end
+  
+  def get_field_type(id)
+    if id == 1
+      "Time"
+    elsif id == 2
+      "Number"
+    elsif id == 3
+      "Location"
+    elsif id == 4
+      "Text"
+    end
+  end
+  
 end

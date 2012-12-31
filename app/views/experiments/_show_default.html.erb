@@ -43,7 +43,7 @@
                     <tr>
                         <td style="width:32px;height:32px;"><%= gravatar_image_tag(s.owner.email, alt: s.owner.firstname) %></td>
                         <td><%= link_to "#{s.owner.name}", user_path(s.owner) %></td>
-                        <td><%= link_to s.title, experiment_session_path(s) %></td>
+                        <td><%= link_to s.title, "#{params[:id]}/sessions/#{s.id}" %></td>
                         <% if (s.owner.id == @cur_user.try(:id)) %>
                             <td></td>
                         <% end %>
