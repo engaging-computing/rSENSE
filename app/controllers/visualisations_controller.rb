@@ -1,4 +1,5 @@
 class VisualisationsController < ApplicationController
+  include ApplicationHelper
   skip_before_filter :authorize, only: [:show, :displayVis, :index]
   
   # GET /visualisations
@@ -88,13 +89,14 @@ class VisualisationsController < ApplicationController
     @experiment = Experiment.find_by_id params[:id]
     
     @sessions = []
-    format_fields = []
+    data_fields = []
     format_data = []
     metadata = {}
     rel_viz = []
     total = 0
     field_count = []
     
+    # build list of sessions
     if( !params[:sessions].nil? )
       seses = params[:sessions].split(",")
       seses.each do |s|
@@ -102,23 +104,28 @@ class VisualisationsController < ApplicationController
           @sessions.push ExperimentSession.find_by_id_and_experiment_id s, params[:id]
         rescue
           logger.info "Either experiment id or session does not exist in the DB"
-        end   
+        end
       end
     else
       @sessions = ExperimentSession.find_all_by_experiment_id params[:id]
     end
     
+    # get data for each session    
     @sessions.each do |session|
       d = DataSet.find_by_experiment_session_id(session.id)
       session[:data] = d.data
     end
 
-    format_fields.push({ typeID: -1, unitName: "String", fieldID: -1, fieldName: "Session Name (id)" })
+    # create special session grouping field
+    data_fields.push({ typeID: 4, unitName: "String", fieldID: -1, fieldName: "Session Name (id)" })
     
+    # push real fields to temp variable
     @experiment.fields.each do |field|
-      format_fields.push({ typeID: field.field_type, unitName: field.unit, fieldID: field.id, fieldName: field.name })
+      data_fields.push({ typeID: field.field_type, unitName: field.unit, fieldID: field.id, fieldName: field.name })
     end
     
+    
+    # create/push metadata for sessions
     @sessions.each do |session|
       session.data.each do |rows|
         metadata["#{session.title}(#{session.id})"] = { name: session.title, user_id: session.user_id, session_id: session.id, timecreated: session.created_at, timemodified: session.updated_at }
@@ -132,38 +139,43 @@ class VisualisationsController < ApplicationController
       end
     end
     
-    @experiment.fields.each do |field|
-      field_count[field.field_type] = 0 
-    end
+    field_count = [0,0,0,0,0]
     
     @experiment.fields.each do |field|
-      field_count[field.field_type]++ 
+      field_count[field.field_type] += 1 
     end
 
-    if field_count[get_field_type("Location")] > 0 
+    rel_vis = []
+
+    # Determine which visualizations are relevant
+    if field_count[LOCATION] > 0 
       rel_vis.push "Map"
     end
-    
-    if field_count[get_field_type("Time")] > 0 and field_count[get_field_type("Number")] > 0 and format_data.count > 1
+
+    if field_count[TIME] > 0 and field_count[NUMBER] > 0 and format_data.count > 1
       rel_vis.push "Timeline"
     end
     
-    if field_count[get_field_type("Number")] > 1 and format_data.count > 1
+    if field_count[NUMBER] > 1 and format_data.count > 1
       rel_vis.push "Scatter"
     end
     
-    if field_count[get_field_type("Number")] > 0 and format_data.count > 1
+    if field_count[NUMBER] > 0 and format_data.count > 1
       rel_vis.push "Histogram"
       rel_vis.push "Bar"
     end
     
     rel_vis.push "Table"
     
-    if field_count[get_field_type("Time")] > 0 and field_count[get_field_type("Number")] > 0 and format_data.count > 1
+    if field_count[TIME] > 0 and field_count[NUMBER] > 0 and format_data.count > 1
       rel_vis.push "Motion"
     end
 
-    @Data = { experimentName: @experiment.title, experimentID: @experiment.id, hasPics: false, fields: format_fields, dataPoints: format_data, metadata: metadata, relVis: rel_vis }
+    # A list of all current visualizations
+    allVis =  ['Map','Timeline','Scatter','Bar','Histogram','Table','Motion','Photos']
+
+    # The finalized data object
+    @Data = { experimentName: @experiment.title, experimentID: @experiment.id, hasPics: false, fields: data_fields, dataPoints: format_data, metadata: metadata, relVis: rel_vis, allVis: allVis }
     
     
     respond_to do |format|
