@@ -15,7 +15,7 @@
       <%= render 'manual_entry' %>
     </div>
     <div class="span4">
-      <%= experiment_session_redactor_helper (@experiment_session.user_id == @cur_user.try(:id)) %>
+      <%= experiment_session_redactor_helper Experiment.find(@experiment_session.experiment_id), (@experiment_session.user_id == @cur_user.try(:id)) %>
     </div>
   </div>
   <div class="row">
