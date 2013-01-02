@@ -46,6 +46,12 @@ class window.Map extends BaseVis
     start: ->
         ($ '#' + @canvas).show()
 
+        # Remove old handlers if they exist
+        if @markers?
+            for group in @markers
+                for marker in group
+                    google.maps.event.clearInstanceListeners marker
+        
         @markers = []
         for group in data.groups
             @markers.push []
@@ -96,7 +102,7 @@ class window.Map extends BaseVis
 
                 for field, fieldIndex in data.fields when dataPoint[fieldIndex] isnt null
                     dat = if (Number field.typeID) is data.types.TIME
-                        (globals.dateFormatter Date(dataPoint[fieldIndex]))
+                        (globals.dateFormatter dataPoint[fieldIndex])
                     else
                         dataPoint[fieldIndex]
 
@@ -108,21 +114,18 @@ class window.Map extends BaseVis
                 # make infowindow
                 info = new google.maps.InfoWindow
                     content: label
-
-                iconOptions =
-                    color: color
-
-                newMarker = new StyledMarker
-                    position: latlng
-                    map: @gmap
-                    styleIcon: new StyledIcon StyledIconTypes.MARKER, iconOptions
-
+                    
                 if groupIndex in globals.groupSelection
                     latlngbounds.extend latlng
 
+                newMarker = new StyledMarker
+                  styleIcon: (new StyledIcon StyledIconTypes.MARKER, {color: color})
+                  position: latlng
+                  map: @gmap
+
                 google.maps.event.addListener newMarker, 'click', =>
                     info.open @gmap, newMarker
-
+                
                 @markers[groupIndex].push newMarker
 
                 for index in data.normalFields when dataPoint[index] isnt null
@@ -134,6 +137,12 @@ class window.Map extends BaseVis
 
         @gmap.fitBounds(latlngbounds)
 
+        # Hack to fix most occurances of bad default zooms
+        fixZoom = =>
+            if @gmap.getZoom() > 18
+                @gmap.setZoom(18)
+        
+        setTimeout fixZoom, 300
         
         super()
        
@@ -170,7 +179,7 @@ class window.Map extends BaseVis
         
     drawControls: ->
         super()
-        @drawGroupControls()
+        @drawGroupControls(true)
         @drawToolControls()
         @drawSaveControls()
 

@@ -43,6 +43,8 @@ class window.Timeline extends Scatter
     buildOptions: ->
         super()
 
+        self = this
+
         $.extend true, @chartOptions,
             title:
                 text: ''
@@ -54,7 +56,7 @@ class window.Timeline extends Scatter
 
                         for field, fieldIndex in data.fields when @point.datapoint[fieldIndex] isnt null
                             dat = if (Number field.typeID) is data.types.TIME
-                                (globals.dateFormatter Date(@point.datapoint[fieldIndex]))
+                                (globals.dateFormatter @point.datapoint[fieldIndex])
                             else
                                 @point.datapoint[fieldIndex]
 
@@ -78,6 +80,9 @@ class window.Timeline extends Scatter
     ###
     drawXAxisControls: ->
         super (fieldIndex) -> fieldIndex in data.timeFields
+
+    drawToolControls: ->
+        super(false)
 
 if "Timeline" in data.relVis
     globals.timeline = new Timeline 'timeline_canvas'
