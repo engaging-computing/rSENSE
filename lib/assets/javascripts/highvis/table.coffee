@@ -37,7 +37,6 @@ class window.Table extends BaseVis
         ($ "##{@canvas}").css 'padding-top'    , (globals.VIS_MARGIN / 2)
         ($ "##{@canvas}").css 'padding-left'   , (globals.VIS_MARGIN / 2)
         ($ "##{@canvas}").height ($ "##{@canvas}").height() - globals.VIS_MARGIN
-        #($ "##{@canvas}").height 100
         
         #Calls update
         super()
@@ -62,11 +61,9 @@ class window.Table extends BaseVis
             group
         
         rows = for dataPoint in data.dataPoints when (String dataPoint[data.groupingFieldIndex]).toLowerCase() in visibleGroups
-            line = for dat, fieldIndex in dataPoint 
-                if((Number data.fields[fieldIndex].typeID) is data.types.TIME)
-                    "<td>#{new Date((Number dat)).toUTCString()}</td>"
-                else 
-                    "<td>#{dat}</td>"
+            line = for dat, fieldIndex in dataPoint
+                "<td>#{dat}</td>"
+                
             "<tr>#{line.reduce (a,b)-> a+b}</tr>"
         
         ($ '#data_table').append '<tbody id="table_body"></tbody>'
@@ -96,7 +93,7 @@ class window.Table extends BaseVis
                 aTargets: data.timeFields
                 fnRender: (obj) ->
                     globals.dateFormatter obj.aData[obj.iDataColumn]}]
-            
+                    
         atable = ($ '#data_table').dataTable(dt)
 
         super()

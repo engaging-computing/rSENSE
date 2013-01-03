@@ -50,7 +50,7 @@ class window.Histogram extends BaseHighVis
             chart:
                 type: "column"
             legend:
-                symbolWidth: 0
+                enabled: false
             title:
                 text: ""
             tooltip:
@@ -70,13 +70,8 @@ class window.Histogram extends BaseHighVis
                     pointPadding: 0
                 series:
                     events:
-                        legendItemClick: do => (event) ->
-
-                           self.displayField = this.options.legendIndex
-                           self.binSize = self.defaultBinSize()
-                           ($ "#binSizeInput").attr('value', self.binSize)
-
-                           self.delayedUpdate()
+                        legendItemClick: (event) ->
+                            false
             
     ###
     Returns a rough default 'human-like' bin size selection
@@ -308,6 +303,7 @@ class window.Histogram extends BaseHighVis
     drawControls: ->
         super()
         @drawGroupControls()
+        @drawYAxisControls(true)
         @drawToolControls()
         @drawSaveControls()
     
