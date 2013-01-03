@@ -51,7 +51,6 @@ $(document).ready ->
           <select class="type_add_box">
             <option value="1">Time</option>
             <option value="2">Number</option>
-            <option value="3">Location</option>
             <option value="4">Text</option>
           </select></input></td>
         <td><a class="field_commit_link">[commit]</a></td>
@@ -85,12 +84,42 @@ $(document).ready ->
           $('.field_save_link').click save
           $('.field_add_link').click add
         fail: =>
+    
+  useLocation = ->
+    if confirm("Once fields are added to the experiment, they cannot be removed. Use location fields?")
+      $('#useLocationDiv').empty().remove()
+      $.ajax
+        url: '/fields/'
+        type: 'POST'
+        dataType: 'json'
+        data:
+          field:
+            experiment_id: $('.fields_table').attr("experiment")
+            name: 'Latitude'
+            unit: 'deg'
+            field_type: 3
+        success: (msg) =>
+          $('.field_add_link').parent().parent().remove()
+          $('.fields_table').append('<tr><td>Latitude</td><td>deg</td><td>Location</td><td></td></tr>')
+          $('.fields_table').append('<tr><td colspan="4"><a class="field_add_link"><i class="icon-plus-sign"></i></a></td></tr>')
+          
+      $.ajax
+        url: '/fields/'
+        type: 'POST'
+        dataType: 'json'
+        data:
+          field:
+            experiment_id: $('.fields_table').attr("experiment")
+            name: 'Longitude'
+            unit: 'deg'
+            field_type: 3
+        success: (msg) =>
+          $('.field_add_link').parent().parent().remove()
+          $('.fields_table').append('<tr><td>Longitude</td><td>deg</td><td>Location</td><td></td></tr>')
+          $('.fields_table').append('<tr><td colspan="4"><a class="field_add_link"><i class="icon-plus-sign"></i></a></td></tr>')
 
   $('.field_edit_link').click edit
   $('.field_save_link').click save
   $('.field_add_link').click add
-        
-                    
-
-    
-        
+  $('#useLocation').click useLocation
+  
