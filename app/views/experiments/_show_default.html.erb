@@ -24,12 +24,20 @@
   <div class="span4">
     <div class="row">
         <%=render layout: "shared/collapse", locals: {title: 'Fields',width: '4'} do %>
+      
+            <% if (@experiment.fields.any? {|field| field.field_type == LOCATION_TYPE}) %>
+            <% else %>
+            <div id="useLocationDiv" style="margin-bottom: 30px;">
+              <button id="useLocation">Use Location</button>
+            </div>      
+            <% end %>
+            
             <table class="table fields_table" experiment="<%=@experiment.id%>">
                 <th>Name</th>
                 <th>Units</th>
                 <th>Type</th>
                 <% @experiment.fields.all.each do |f| %>
-                    <%= render 'field_edit', field: f, type: "field",row_id: f.id,can_edit: (@experiment.owner.id == @cur_user.try(:id))%>
+                    <%= render 'field_edit', field: f, type: "field",row_id: f.id,can_edit: (@experiment.owner.id == @cur_user.try(:id) && (f.field_type != LOCATION_TYPE))%>
                 <% end %> 
                 <%if @experiment.owner.id == @cur_user.try(:id)%>
                     <tr><td colspan="3"><a class="field_add_link"><i class="icon-plus-sign"></i></a></td></tr>
