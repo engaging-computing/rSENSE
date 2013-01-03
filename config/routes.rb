@@ -1,4 +1,6 @@
 Rsense::Application.routes.draw do
+  get "experiment_templates/index"
+
   resources :visualisations
 
   #resources :experiment_sessions
@@ -21,6 +23,9 @@ Rsense::Application.routes.draw do
   resources :experiment_sessions do
     get 'getData' => :getData
   end
+
+  #Routes for experiment templates
+  match "/experiment_templates" => "experiment_templates#index"
 
 	#Routes for uploading data
   match "/experiments/:id/createSession" => "experiments#createSession"
