@@ -35,7 +35,10 @@ globals.logY ?= 0
 if not data.savedGlobals?
     globals.groupSelection ?= for vals, keys in data.groups
         Number keys
-    globals.fieldSelection ?= data.normalFields[0..0]
+    if data.normalFields.length > 1
+        globals.fieldSelection ?= data.normalFields[1..1]
+    else
+        globals.fieldSelection ?= data.normalFields[0..0]
 
 class window.BaseVis
     constructor: (@canvas) ->
@@ -139,7 +142,12 @@ class window.BaseVis
             data.setGroupIndex (Number element.value)
             globals.groupSelection = for vals, keys in data.groups
                 Number keys
-            @delayedUpdate()
+
+            if startOnGroup
+                @start()
+            else
+                @delayedUpdate()
+                
             @drawControls()
 
         # Make group checkbox handler
@@ -151,10 +159,7 @@ class window.BaseVis
                 else
             globals.groupSelection = selection
             
-            if startOnGroup
-                @start()
-            else
-                @delayedUpdate()
+            @delayedUpdate()
 
         #Set up accordion
         globals.groupOpen ?= 0
@@ -181,10 +186,11 @@ class window.BaseVis
         controls += "</div>"
 
         if @chart?
+            ###
             controls += "<div class='inner_control_div'>"
             controls += "<button id='downloadVisButton' class='save_button'> Download Visualization </button>"
             controls += "</div>"
-
+            ###
             controls += "<div class='inner_control_div'>"
             controls += "<button id='printVisButton' class='save_button'> Print Visualization </button>"
             controls += "</div>"
@@ -199,9 +205,11 @@ class window.BaseVis
         ($ "#saveVisButton").click ->
             globals.verifyUser (-> globals.savedVisDialog()), (-> alert 'You must be logged in to save a visualization.')
 
+        ###
         ($ '#downloadVisButton').click =>
             @chart.exportChart
                 type: "image/svg+xml"
+        ###
 
         ($ '#printVisButton').click =>
             @chart.print()
@@ -268,26 +276,21 @@ class window.BaseHighVis extends BaseVis
                     printButton:
                         enabled:false
             legend:
+                itemHoverStyle: ''
+                backgroundColor: 'white'
                 symbolWidth:60
                 itemWidth: 200
             #loading: {}
             plotOptions:
                 series:
+                    stickyTracking:false
                     turboThreshold: Number.MAX_VALUE
                     marker:
-                        lineWidth:1
+                        lineWidth:0
                         radius:5
                     events:
-                        legendItemClick: do => (event) ->
-                            
-                            index = this.options.legendIndex
-
-                            if index in globals.fieldSelection
-                                arrayRemove(globals.fieldSelection, index)
-                            else
-                                globals.fieldSelection.push(index)
-
-                            self.delayedUpdate()
+                        legendItemClick: (event) ->
+                            false
             #point: {}
             series: []
             #subtitle: {}
@@ -377,6 +380,64 @@ class window.BaseHighVis extends BaseVis
 
         @chart.hideLoading()
 
+    ###
+    Draws y axis controls
+        This includes a series of checkboxes or radio buttons for selecting
+        the active y axis field(s).
+    ###
+    drawYAxisControls: (radio = false) ->
+
+        controls = '<div id="yAxisControl" class="vis_controls">'
+
+        controls += "<h3 class='clean_shrink'><a href='#'>Y Axis:</a></h3>"
+
+        controls += "<div class='outer_control_div'>"
+
+        # Populate choices
+        for fIndex in data.normalFields
+            controls += "<div class='inner_control_div' >"
+
+            if radio
+                controls += "<input class='y_axis_input' name='y_axis_group' type='radio' value='#{fIndex}' #{if (Number fIndex) is @displayField then "checked" else ""}/>&nbsp"
+            else
+                controls += "<input class='y_axis_input' type='checkbox' value='#{fIndex}' #{if (Number fIndex) in globals.fieldSelection then "checked" else ""}/>&nbsp"
+                
+            controls += "#{data.fields[fIndex].fieldName}"
+            controls += "</div>"
+            
+        controls += '</div></div>'
+
+        # Write HTML
+        ($ '#controldiv').append controls
+
+        # Make y axis checkbox/radio handler
+        if radio
+            # Currently specific to histogram - TODO: decouple
+            ($ '.y_axis_input').click (e) =>
+                @displayField = Number e.target.value
+                @binSize = @defaultBinSize()
+                ($ "#binSizeInput").attr('value', @binSize)
+                @delayedUpdate()
+        else
+            ($ '.y_axis_input').click (e) =>
+                index = Number e.target.value
+                
+                if index in globals.fieldSelection
+                    arrayRemove(globals.fieldSelection, index)
+                else
+                    globals.fieldSelection.push(index)
+                @delayedUpdate()
+
+        #Set up accordion
+        globals.yAxisOpen ?= 0
+
+        ($ '#yAxisControl').accordion
+            collapsible:true
+            active:globals.yAxisOpen
+
+        ($ '#yAxisControl > h3').click ->
+            globals.yAxisOpen = (globals.yAxisOpen + 1) % 2
+        
     ###
     Method called when vis resize has begun
         Resize highcharts to match
