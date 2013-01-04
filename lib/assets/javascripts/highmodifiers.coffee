@@ -209,7 +209,7 @@ data.timeFields = for field, index in data.fields when (Number field.typeID) is 
 ###
 Gets a list of non-text, non-time field indicies
 ###
-data.normalFields = for field, index in data.fields when (Number field.typeID) not in [data.types.TEXT, data.types.TIME, data.types.LOCATION]
+data.normalFields = for field, index in data.fields when (Number field.typeID) not in [data.types.TEXT, data.types.TIME].concat data.types.LOCATION
     Number index
 
 ###
