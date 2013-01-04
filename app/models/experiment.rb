@@ -37,6 +37,10 @@ class Experiment < ActiveRecord::Base
     end
   end
   
+  def self.is_template
+    where(:is_template => true)
+  end
+  
 end
 
 # where filter like filters[0] AND filter like filters[1]
