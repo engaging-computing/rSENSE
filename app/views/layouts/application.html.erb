@@ -4,6 +4,7 @@
   <title>Rsense</title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
+  <%= raw include_page_spesific_js %>
   <%= csrf_meta_tags %>
 </head>
 <body>
@@ -14,47 +15,44 @@
     <button class="login_button">Login</button>
   </div>
 
-  <div class="container">
-    
-    <div class="navbar">
-      <div class="navbar-inner">
-        <a class="brand" href="/">iSENSE</a>
-        <ul class="nav">
+  <div class="navbar navbar-static-top" style="margin-bottom:15px;">
+    <div class="navbar-inner">
+      <a class="brand" href="/">iSENSE</a>
+      <ul class="nav">
+        <li class="divider-vertical"></li>
+        <li><a href="/experiments"><i class="icon-folder-open icon-white"> </i> Experiments</a></li>
+        <li><a href="/users"><i class="icon-user icon-white"> </i> People</a></li>
+        <li><a href="/visualisations"><i class="icon-eye-open icon-white"> </i> Visualizations</a></li>
+        <li><a href="/experiment_templates"><i class="icon-th icon-white"> </i> Experiment Templates</a></li>
+      </ul>
+      <ul class="nav pull-right">
+        <% if @cur_user != nil %>
+          <li>
+            <p class="navbar-text">
+              <%= link_to "Logged in as #{@cur_user.name}", user_path(@cur_user) %>
+            </p>
+          </li>
           <li class="divider-vertical"></li>
-          <li><a href="/experiments"><i class="icon-folder-open icon-white"> </i> Experiments</a></li>
-          <li><a href="/users"><i class="icon-user icon-white"> </i> People</a></li>
-          <li><a href="/vises"><i class="icon-eye-open icon-white"> </i> Visualizations</a></li>
-        </ul>
-        <ul class="nav pull-right">
-          <% if @cur_user != nil %>
-            <li>
-              <p class="navbar-text">
-                <%= link_to "Logged in as #{@cur_user.name}", user_path(@cur_user) %>
-              </p>
-            </li>
-            <li class="divider-vertical"></li>
-            <li><%= link_to 'logout', login_path(), method: :delete %></li>
-          <% else %>
-            <li><%= link_to "Register", new_user_path %></li>
-            <li class="divider-vertical"></li>
-            <li><a href="" class="login">Login</a></li>
-          <% end %>
-        </p>
-      </div>
+          <li><%= link_to 'logout', login_path(), method: :delete %></li>
+        <% else %>
+          <li><%= link_to "Register", new_user_path %></li>
+          <li class="divider-vertical"></li>
+          <li><a href="" class="login">Login</a></li>
+        <% end %>
+      </p>
     </div>
+  </div>
 
+  <div class="container">
     <%= yield %>
-    
-    <div class="row">
-      <div class="span12">
-        <div class="hero-unit footer">
-            <p  style="font-size:0.8em">The iSENSE project is a collaborative effort of the University of Massachusetts Lowell and Machine Science Inc. </p>
-            <p  style="font-size:0.8em">Our work is supported by grants <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0735597">DRL-0735597</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0735592">DRL-0735592</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0546513">DRL-0546513</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=1123998">IIS-1123998</a>, and <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=1123972">IIS-1123972</a> from the National Science Foundation, and a gift from Google Inc.</p>
-       </div>
-      </div>
-    </div>
-    
   </div>
   
+  <div style="width:100%;">
+    <div class="hero-unit footer" style="margin-bottom:0px;">
+        <p style="font-size:1.0em;margin-bottom:0px;">The iSENSE project is a collaborative effort of the University of Massachusetts Lowell and Machine Science Inc. </p>
+        <p style="font-size:0.8em;margin-bottom:0px;">Our work is supported by grants <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0735597">DRL-0735597</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0735592">DRL-0735592</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0546513">DRL-0546513</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=1123998">IIS-1123998</a>, and <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=1123972">IIS-1123972</a> from the National Science Foundation, and a gift from Google Inc.</p>
+   </div>
+  </div>
+
 </body>
 </html>

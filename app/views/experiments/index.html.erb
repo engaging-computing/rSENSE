@@ -1,47 +1,56 @@
 <div class="row">
-    <div class="span12">
-        <h1>Experiments</h1>
+  <div class="span8">
+    <div class="feed-top">
+      <h1>Experiments</h1>
+      <div class="row">
+        <%=form_tag experiments_path, method: 'get', id: 'experiments_search', class:'navbar-search' do%>
+        <div class="span2">
+          <select name="sort" class="experiments_sort_select">
+            <option value="DESC">Newest First</option>
+            <option value="ASC">Oldest First</option>
+            <option value="RATING">Rating</option>
+          </select>
+        </div>
+        <div class="span3">
+          <%=text_field_tag :search, params[:search], class:'search-query'%>
+        </div>
+        <div class="span1 offset1">
+          <%= submit_tag "Search", name: nil, class:'btn'%>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span6 offset0">
+          Math: <%= check_box_tag "filters[]", "%math%", false, class: 'experiments_filter_checkbox'%>
+          Physics: <%= check_box_tag "filters[]", "%physics%", false, class: 'experiments_filter_checkbox' %>
+          Chemistry: <%= check_box_tag "filters[]", "%chemistry%", false, class: 'experiments_filter_checkbox' %>
+          Earth: <%= check_box_tag "filters[]", "%earth%", false, class: 'experiments_filter_checkbox' %>
+          Biology: <%= check_box_tag "filters[]", "%biology%", false, class: 'experiments_filter_checkbox' %>
+        </div>
+      </div>
+      <br />
+      <%end%>
     </div>
+  </div>
 </div>
 
 <div class="row">
-    <div class="span8" style="background-color: #ccc;">
-        <% @experiments.each do |experiment| %>
-            <div class="<%= cycle('feed-even', 'feed-odd')%>">
-                <h4><%= link_to experiment.title, experiment_path(experiment) %></h4>
-                Owner: <%= link_to "#{experiment.owner.firstname} #{experiment.owner.lastname[0]}", user_path(experiment.owner) %><br>
-                Created: <%= time_ago_in_words(experiment.created_at)%> ago
-            </div>
-        <% end %>
+  <div class="span8" >
+    <div id="experiments">
+      <%=render 'display_experiments'%>
     </div>
-
-    <div class="span3 offset1">
+  </div>
+    <%if @cur_user.try(:id)%>
+      <div class="span3 offset1">
         <div class="row">
-            <h4 style="text-align:center">Featured Experiments</h4>
+          <h5 class="center">Create Experiment</h5>
+          <div class="well center">
+            <%=form_tag('/experiments', :method => "post") do %>
+              <input type="image" src="/assets/add_content.png" class="img-rounded"/>
+            <%end%>
+          </div>
         </div>
-        <div class="row">
-            <div class="hero-unit">
-                <h5>Experiment 1</h5>
-                Some featured experiment 
-            </div>
-        </div>
-        <div class="row">
-            <div class="hero-unit">
-                <h5>Experiment 2</h5>
-                Some other featured experiment 
-            </div>
-        </div>
-        <div class="row">
-            <div class="hero-unit">
-                <h5>Experiment 3</h5>
-                Some third featured experiment 
-            </div>
-        </div>
-    </div>
+      </div>
+    <%end%>
+  <%=render 'featured_experiments'%>
 </div>
 
-<div class="row">
-    <div class="span12">
-        <%= link_to 'New Experiment', new_experiment_path %>
-    </div>
-</div>

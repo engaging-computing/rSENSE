@@ -1,0 +1,80 @@
+<script>
+  window.sessions = <%= raw @sessions.to_json %>
+  window.data = <%= raw @Data.to_json %>
+</script>
+
+<script src="/assets/highvis/highcharts/highcharts.js"></script>
+<script src="/assets/Hydrate.js"></script>
+
+<script src="/assets/highvis/savedVis.coffee"></script>
+<script src="/assets/highvis/visUtils.coffee"></script>
+<script src="/assets/highvis/dataReduction.coffee"></script>
+<script src="/assets/highmodifiers.coffee"></script>
+
+<script src="/assets/highvis/baseVis.coffee"></script>
+
+<script src="/assets/highvis/disabledVis.coffee"></script>
+
+<script src="/assets/highvis/scatter.coffee"></script>
+<script src="/assets/highvis/timeline.coffee"></script>
+<script src="/assets/highvis/histogram.coffee"></script>
+<script src="/assets/highvis/bar.coffee"></script>
+<script src="/assets/highvis/table.coffee"></script>
+
+<script src="/assets/highvis/runtime.coffee"></script>
+
+<script src="/assets/highvis/jquery.dataTables.js"></script>
+
+<div class="row">
+
+  <div class="span12">
+  
+    <div id="viscontainer">
+
+        <ul id='visTabList'>
+        </ul>
+
+
+        <div id="map_canvas" class="vis_canvas"></div>
+        <div id="table_canvas" class="vis_canvas"></div>
+        <div id="timeline_canvas" class="vis_canvas"></div>
+        <div id="scatter_canvas" class="vis_canvas"></div>
+        <div id="bar_canvas" class="vis_canvas"></div>
+        <div id="histogram_canvas" class="vis_canvas"></div>
+        <div id="motion_canvas" class="vis_canvas"></div>
+        <div id="photos_canvas" class="vis_canvas"></div>
+
+        <div id='controlhider'>
+            <button id="control_hide_button" type="button" style="margin:5px;"> > </button>
+        </div>
+        <div id="controldiv"></div>
+    </div>
+  
+  </div>
+  
+  <div class="span12">
+    <ul class="nav nav-tabs" id="myTab" style="margin-top: 10px;">
+      <% i = 0 %>
+      <% @sessions.each do |s| %>
+        <% if i == 0 %>
+          <li class="active"><a href="#<%=s.id%>" data-toggle="tab"><%=s.title%></a></li>
+        <% else %>
+          <li><a href="#<%=s.id%>" data-toggle="tab"><%=s.title%></a></li>
+        <% end %>
+        <% i=i+1 %>
+      <% end %>
+    </ul>
+    
+    <div class="tab-content">
+      <% i = 0 %>
+      <% @sessions.each do |s| %>
+        <% if i == 0 %>
+          <div class="tab-pane active" id="<%=s.id%>"><%= experiment_session_redactor_helper s, (@experiment.owner.id == @cur_user.try(:id)) %></div>
+        <% else %>
+          <div class="tab-pane" id="<%=s.id%>"><%= experiment_session_redactor_helper s, (@experiment.owner.id == @cur_user.try(:id)) %></div>
+        <% end %>
+        <% i=i+1 %>
+      <% end %>
+    </div>
+  </div>
+</div>
