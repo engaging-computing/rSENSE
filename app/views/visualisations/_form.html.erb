@@ -1,0 +1,41 @@
+<%= form_for(@visualisation) do |f| %>
+  <% if @visualisation.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@visualisation.errors.count, "error") %> prohibited this visualisation from being saved:</h2>
+
+      <ul>
+      <% @visualisation.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :title %><br />
+    <%= f.text_field :title %>
+  </div>
+  <div class="field">
+    <%= f.label :user_id %><br />
+    <%= f.number_field :user_id %>
+  </div>
+  <div class="field">
+    <%= f.label :experiment_id %><br />
+    <%= f.number_field :experiment_id %>
+  </div>
+  <div class="field">
+    <%= f.label :content %><br />
+    <%= f.text_area :content %>
+  </div>
+  <div class="field">
+    <%= f.label :data %><br />
+    <%= f.text_area :data %>
+  </div>
+  <div class="field">
+    <%= f.label :globals %><br />
+    <%= f.text_area :globals %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -15,9 +15,16 @@
 //= require twitter/bootstrap
 //= require jquery.ui.all
 //= require bootstrap
-//= require_tree .
 //= require redactor.min.js
 //= require redactor_edit_pane.js.coffee
 //= require info_edit.js.coffee
 //= require login.js.coffee.erb
 //= require field_edit.js.coffee
+//= require collapse_link_flipper.js.coffee
+//= require add_filters.js.coffee
+//= require editablegrid-2.0.1.js
+//= require editablegrid_utils.js
+//= require editablegrid_renderers.js
+//= require editablegrid_editors.js
+//= require editablegrid_validators.js
+//= require_directory .

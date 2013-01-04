@@ -14,13 +14,22 @@ class User < ActiveRecord::Base
   has_many :memberships
   has_many :groups, :through => :memberships
   has_many :experiment_sessions
-
+  has_many :media_objects
+  
   def to_param
     self.username
   end
 
   def name
     firstname + " " + lastname[0] + "."
+  end
+  
+  def self.search(search)
+    if search
+      where('firstname LIKE ?', "%#{search}%")
+    else
+      scoped
+    end
   end
   
   private

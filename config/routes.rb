@@ -1,5 +1,9 @@
 Rsense::Application.routes.draw do
-  resources :experiment_sessions
+  get "experiment_templates/index"
+
+  resources :visualisations
+
+  #resources :experiment_sessions
 
   resources :memberships
 
@@ -16,6 +20,25 @@ Rsense::Application.routes.draw do
 
   get 'admin' => 'admin#index'
 
+  resources :experiment_sessions do
+    get 'getData' => :getData
+  end
+
+  #Routes for experiment templates
+  match "/experiment_templates" => "experiment_templates#index"
+
+	#Routes for uploading data
+  match "/experiments/:id/createSession" => "experiments#createSession"
+  match "/experiments/:id/addExperimentSession" => "experiments#addExperimentSession"
+  
+  match "/experiments/:id/uploadCSV" => "experiments#uploadCSV"
+  match "/experiments/:id/manualEntry" => "experiments#manualEntry"
+	
+	#Routes for displaying data
+	match "/experiments/:id/sessions/*sessions" => "visualisations#displayVis"
+	match "/experiments/:id/sessions/" => "visualisations#displayVis"
+	
+  match "/experiment_sessions/:id/postCSV" => "experiment_sessions#postCSV"
   match "/media_objects/saveimage/*keys" => "media_objects#saveimage"
   
   controller :sessions do
@@ -25,9 +48,13 @@ Rsense::Application.routes.draw do
   
   resources :users
   match "/users/validate/:key" => "users#validate"
+  
+  match "/experiments/:id/addExperimentSession" => "experiments#addExperimentSession"
 
+  resources :media_objects
   
-  
+	match "/experiments/:id/updateLikedStatus" => "experiments#updateLikedStatus"
+	
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
