@@ -239,37 +239,79 @@ Check various type-related issues
 ###
 data.preprocessData = ->
 
-    dateFormats = ["YYYY MM DD hh:mm:ss.SSS A Z",
-                   "YYYY MMM DD hh:mm:ss.SSS A Z",
-                   "MM DD YYYY hh:mm:ss.SSS A Z",
-                   "MMM DD YYYY hh:mm:ss.SSS A Z",
-                   
-                   "YYYY MM DD hh:mm:ss.SSS Z",
-                   "YYYY MMM DD hh:mm:ss.SSS Z",
-                   "MM DD YYYY hh:mm:ss.SSS Z",
-                   "MMM DD YYYY hh:mm:ss.SSS Z"]
-
     for dp in data.dataPoints
         for field, fIndex in data.fields
             if (typeof dp[fIndex] == "string")
                 # Strip all quote characters
                 dp[fIndex] = dp[fIndex].replace /"/g, ""
                 dp[fIndex] = dp[fIndex].replace /'/g, ""
-                dp[fIndex] = dp[fIndex].replace /-/g, " "
 
             switch Number field.typeID
                 when data.types.TIME
-                
+
                     if isNaN Number dp[fIndex]
-                        dp[fIndex] = (moment dp[fIndex], dateFormats).valueOf()
+                        dp[fIndex] = data.parseDate dp[fIndex]
                     else
-                        dp[fIndex] = (moment (Number dp[fIndex])).valueOf()
+                        dp[fIndex] = (new Date (Number dp[fIndex])).valueOf()
                 when data.types.TEXT
                     NaN
                 else
                     dp[fIndex] = Number dp[fIndex]
     1
 
+data.parseDate = (str) ->
+    year = month = day = minutes = seconds = milliseconds = 0
+    hours = 12
+    hourAdj = 0
+
+    # Find and extract AM/PM information
+    if (str.match /pm/gi) isnt null
+        hourAdj = 12
+    str = str.replace /[ap]m/gi, ""
+
+    # Find and extract timezone information
+    tz = str.match /\ [\+\-]\d\d\d\d/g
+    if tz isnt null
+        hourAdj += -((Number tz[0]) / 100)
+        str = str.replace /\ [\+\-]\d\d\d\d/g, " "
+
+    # Replace spacing characters with whitespace
+    str = str.replace /[\\\/\-,_]/g, " "
+
+    terms = str.split " "
+
+    terms = terms.filter (item) ->
+        item isnt ""
+
+    try
+        # Detect date format
+        if ((Number terms[0]) > 12) or (isNaN Number terms[0])
+            year  = Number terms[0]
+            month = (new Date terms[1] + " 20 1970").getMonth()
+            day   = Number terms[2]
+        else
+            month = (new Date terms[0] + " 20 1970").getMonth()
+            day   = Number terms[1]
+            year  = Number terms[2]
+
+        # Parse hh:mm:ss.sss
+        clock = terms[3].split ":"
+        hours = (Number clock[0]) + hourAdj
+        minutes = Number clock[1]
+        seconds = Math.floor (Number clock[2])
+        milliseconds = ((Number clock[2]) - seconds) * 1000
+
+    # Ignore any missed clock values
+    hours = 12 if isNaN hours
+    minutes = 0 if isNaN minutes
+    seconds = 0 if isNaN seconds
+    milliseconds = 0 if isNaN milliseconds
+
+    Date.UTC year, month, day, hours, minutes, seconds, milliseconds
+
+
+
+#preprocess
 data.preprocessData()
 #Field index of grouping field
 data.groupingFieldIndex ?= 0
