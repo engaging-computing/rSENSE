@@ -117,7 +117,7 @@ class VisualisationsController < ApplicationController
     end
 
     # create special session grouping field
-    data_fields.push({ typeID: 4, unitName: "String", fieldID: -1, fieldName: "Session Name (id)" })
+    data_fields.push({ typeID: TEXT_TYPE, unitName: "String", fieldID: -1, fieldName: "Session Name (id)" })
     
     # push real fields to temp variable
     @experiment.fields.each do |field|
