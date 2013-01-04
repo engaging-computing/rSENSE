@@ -5,8 +5,3 @@ require File.expand_path('../application', __FILE__)
 Rsense::Application.initialize!
 
 require 'will_paginate'
-
-TIME = 1
-NUMBER = 2
-LOCATION = 3
-TEXT = 4
