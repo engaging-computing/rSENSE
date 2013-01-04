@@ -148,7 +148,7 @@ class ExperimentsController < ApplicationController
             
       data_to_add = DataSet.new(:experiment_session_id => @experiment_session.id, :data => mongo_data)    
       
-      followURL = url_for :controller => :experiment_sessions, :action => :show, :id => @experiment_session
+      followURL = url_for :controller => :visualisations, :action => :displayVis, :id => @experiment.id, :sessions => "#{@experiment_session.id}"
       
       if data_to_add.save!
         response = { status: 'success', follow: followURL }
