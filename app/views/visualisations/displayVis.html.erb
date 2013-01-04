@@ -2,11 +2,14 @@
   window.sessions = <%= raw @sessions.to_json %>
   window.data = <%= raw @Data.to_json %>
 </script>
-
+<script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBxtPK1_mxwVdl1NRu7ZEiSNvmCekFSZAw&sensor=false">
+</script>
 <script src="/assets/highvis/highcharts/highcharts.js"></script>
 <script src="/assets/Hydrate.js"></script>
 
 <script src="/assets/highvis/savedVis.coffee"></script>
+<script src="/assets/highvis/StyledMarker.js"></script>
 <script src="/assets/highvis/visUtils.coffee"></script>
 <script src="/assets/highvis/dataReduction.coffee"></script>
 <script src="/assets/highmodifiers.coffee"></script>
@@ -20,6 +23,8 @@
 <script src="/assets/highvis/histogram.coffee"></script>
 <script src="/assets/highvis/bar.coffee"></script>
 <script src="/assets/highvis/table.coffee"></script>
+<script src="/assets/highvis/map.coffee"></script>
+
 
 <script src="/assets/highvis/runtime.coffee"></script>
 
