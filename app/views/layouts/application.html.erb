@@ -9,13 +9,15 @@
 </head>
 <body>
 
+  <!-- login lightbox -->
   <div id="login_box">
     <div>User: <input id="login_user" class="login_field" type="text"></input><div class="clear"></div></div>
     <div>Password: <input id="login_password" class="login_field" type="password"></input><div class="clear"></div></div>
     <button class="login_button">Login</button>
   </div>
 
-  <div class="navbar navbar-static-top" style="margin-bottom:15px;">
+  <!-- Large letterbox navbar -->
+  <div class="navbar navbar-static-top visible-desktop" style="margin-bottom:35px;">
     <div class="navbar-inner">
       <a class="brand" href="/">iSENSE</a>
       <ul class="nav">
@@ -27,6 +29,42 @@
       </ul>
       <ul class="nav pull-right">
         <% if @cur_user != nil %>
+        <li>
+          <p class="navbar-text">
+            <%= link_to "Logged in as #{@cur_user.name}", user_path(@cur_user) %>
+          </p>
+        </li>
+        <li class="divider-vertical"></li>
+        <li><%= link_to 'logout', login_path(), method: :delete %></li>
+        <% else %>
+        <li><%= link_to "Register", new_user_path %></li>
+        <li class="divider-vertical"></li>
+        <li><a href="" class="login">Login</a></li>
+        <% end %>
+      </p>
+    </div>
+  </div>
+
+  <!-- Medium display navbar -->
+  <div class="navbar navbar-fixed-top visible-tablet" style="margin-bottom:35px;">
+    <div class="navbar-inner">
+
+      <!-- iSENSE Logo/Brand -->
+      <a class="brand" href="/">iSENSE</a>
+
+      <ul class="nav">
+        <li class="divider-vertical"></li>
+        <li><a href="/experiments"><i class="icon-folder-open icon-white"> </i> </a></li>
+        <li><a href="/users"><i class="icon-user icon-white"> </i> </a></li>
+        <li><a href="/visualisations"><i class="icon-eye-open icon-white"> </i> </a></li>
+        <li><a href="/experiment_template"><i class="icon-th icon-white"> </i> </a></li>
+      </ul>
+
+      <!-- Container for login info and navbar -->
+      <div class="pull-right">
+        <!-- login/user info -->
+        <ul class="nav">
+          <% if @cur_user != nil %>
           <li>
             <p class="navbar-text">
               <%= link_to "Logged in as #{@cur_user.name}", user_path(@cur_user) %>
@@ -34,24 +72,90 @@
           </li>
           <li class="divider-vertical"></li>
           <li><%= link_to 'logout', login_path(), method: :delete %></li>
-        <% else %>
+          <% else %>
           <li><%= link_to "Register", new_user_path %></li>
           <li class="divider-vertical"></li>
           <li><a href="" class="login">Login</a></li>
-        <% end %>
-      </p>
+          <% end %>
+        </ul>
+        <!-- collapse/expand navbar -->
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </a>      
+      </div>
+
+      <!-- collapsible navbar -->
+      <div class="nav-collapse collapse">
+        <ul class="nav">
+          <li><a href="/experiments"><i class="icon-folder-open icon-white"> </i> Experiments</a></li>
+          <li><a href="/users"><i class="icon-user icon-white"> </i> People</a></li>
+          <li><a href="/visualisations"><i class="icon-eye-open icon-white"> </i> Visualizations</a></li>
+          <li><a href="/experiment_template"><i class="icon-th icon-white"> </i> Experiment Templates</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+  
+  <!-- Small display navbar -->
+  <div class="navbar navbar-fixed-top visible-phone" style="margin-bottom:35px;">
+    <div class="navbar-inner">
+
+      <!-- iSENSE Logo/Brand -->
+      <a class="brand" href="/">iSENSE</a>
+
+      <!-- Container for login info and navbar -->
+      <div class="pull-right">
+        <!-- login/user info -->
+        <ul class="nav">
+          <% if @cur_user != nil %>
+          <li>
+            <p class="navbar-text">
+              <%= link_to "Logged in as #{@cur_user.name}", user_path(@cur_user) %>
+            </p>
+          </li>
+          <li class="divider-vertical"></li>
+          <li><%= link_to 'logout', login_path(), method: :delete %></li>
+          <% else %>
+          <li><%= link_to "Register", new_user_path %></li>
+          <li class="divider-vertical"></li>
+          <li><a href="" class="login">Login</a></li>
+          <% end %>
+        </ul>
+        <!-- collapse/expand navbar -->
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </a>      
+      </div>
+
+      <!-- collapsible navbar -->
+      <div class="nav-collapse collapse">
+        <ul class="nav">
+          <li><a href="/experiments"><i class="icon-folder-open icon-white"> </i> Experiments</a></li>
+          <li><a href="/users"><i class="icon-user icon-white"> </i> People</a></li>
+          <li><a href="/visualisations"><i class="icon-eye-open icon-white"> </i> Visualizations</a></li>
+          <li><a href="/experiment_template"><i class="icon-th icon-white"> </i> Experiment Templates</a></li>
+        </ul>
+      </div>
+
     </div>
   </div>
 
+  <!-- content -->
   <div class="container">
     <%= yield %>
   </div>
-  
+
+  <!-- letterbox footer -->
   <div style="width:100%;">
     <div class="hero-unit footer" style="margin-bottom:0px;">
-        <p style="font-size:1.0em;margin-bottom:0px;">The iSENSE project is a collaborative effort of the University of Massachusetts Lowell and Machine Science Inc. </p>
-        <p style="font-size:0.8em;margin-bottom:0px;">Our work is supported by grants <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0735597">DRL-0735597</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0735592">DRL-0735592</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0546513">DRL-0546513</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=1123998">IIS-1123998</a>, and <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=1123972">IIS-1123972</a> from the National Science Foundation, and a gift from Google Inc.</p>
-   </div>
+      <p style="font-size:1.0em;margin-bottom:0px;">The iSENSE project is a collaborative effort of the University of Massachusetts Lowell and Machine Science Inc. </p>
+      <p style="font-size:0.8em;margin-bottom:0px;">Our work is supported by grants <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0735597">DRL-0735597</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0735592">DRL-0735592</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0546513">DRL-0546513</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=1123998">IIS-1123998</a>, and <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=1123972">IIS-1123972</a> from the National Science Foundation, and a gift from Google Inc.</p>
+    </div>
   </div>
 
 </body>
