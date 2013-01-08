@@ -27,4 +27,13 @@
 //= require editablegrid_renderers.js
 //= require editablegrid_editors.js
 //= require editablegrid_validators.js
+//
+// Visualization stuff follows
+//
+//= require googleMaps
+//= require highcharts/highcharts
+//= require Hydrate
+//= require jquery.dataTables
+//= require jquery.prettyPhoto
+//= require StyledMarker
 //= require_directory .
