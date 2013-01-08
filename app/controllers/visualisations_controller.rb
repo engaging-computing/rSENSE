@@ -117,7 +117,7 @@ class VisualisationsController < ApplicationController
     end
 
     # create special session grouping field
-    data_fields.push({ typeID: 4, unitName: "String", fieldID: -1, fieldName: "Session Name (id)" })
+    data_fields.push({ typeID: TEXT_TYPE, unitName: "String", fieldID: -1, fieldName: "Session Name (id)" })
     
     # push real fields to temp variable
     @experiment.fields.each do |field|
@@ -139,7 +139,7 @@ class VisualisationsController < ApplicationController
       end
     end
     
-    field_count = [0,0,0,0,0]
+    field_count = [0,0,0,0,0,0]
     
     @experiment.fields.each do |field|
       field_count[field.field_type] += 1 
@@ -148,26 +148,26 @@ class VisualisationsController < ApplicationController
     rel_vis = []
 
     # Determine which visualizations are relevant
-    if field_count[LOCATION] > 0 
+    if field_count[LONGITUDE_TYPE] > 0 and field_count[LATITUDE_TYPE] > 0
       rel_vis.push "Map"
     end
 
-    if field_count[TIME] > 0 and field_count[NUMBER] > 0 and format_data.count > 1
+    if field_count[TIME_TYPE] > 0 and field_count[NUMBER_TYPE] > 0 and format_data.count > 1
       rel_vis.push "Timeline"
     end
     
-    if field_count[NUMBER] > 1 and format_data.count > 1
+    if field_count[NUMBER_TYPE] > 1 and format_data.count > 1
       rel_vis.push "Scatter"
     end
     
-    if field_count[NUMBER] > 0 and format_data.count > 1
+    if field_count[NUMBER_TYPE] > 0 and format_data.count > 1
       rel_vis.push "Histogram"
       rel_vis.push "Bar"
     end
     
     rel_vis.push "Table"
     
-    if field_count[TIME] > 0 and field_count[NUMBER] > 0 and format_data.count > 1
+    if field_count[TIME_TYPE] > 0 and field_count[NUMBER_TYPE] > 0 and format_data.count > 1
       rel_vis.push "Motion"
     end
 

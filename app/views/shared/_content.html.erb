@@ -5,36 +5,56 @@
 
 <div class="type_content" field='<%=field%>' type='<%=type%>'>
 
+  <!-- If there is content show the content -->
   <%if has_content %>
 
-  <div class="content_icontainer">
-    <%if can_edit%>
-    <a class="redactor_content_edit_link"><i class="icon-edit icon_content"></i></a>
-    <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_save_link" style="display:none"><i class="icon-ok icon_content"></i></a>
-    <%end%>
-  </div>
-
-  <div class="redactor_content">
-    <%= raw content %>
-  </div>
-
-  <% else %>
-  
-  <div class="content_icontainer">
-    <a class="redactor_content_edit_link" style="display:none"><i class="icon-edit icon_content"></i></a>
-    <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_save_link" style="display:none"><i class="icon-ok icon_content"></i></a>
-  </div>
-  
-  <div class="redactor_content" style="display:none">
-    <%= raw content %>
-  </div>
-  
-  <div class="well content_well" style="text-align:center">
-    <div class="add_content">
-      <a class="add_content_link"><img src="/assets/add_content.png" class="img-rounded"></a>
+    <div class="content_icontainer">
+      <%if can_edit%>
+      <a class="redactor_content_edit_link"><i class="icon-edit icon-white icon_content"></i></a>
+      <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_save_link" style="display:none"><i class="icon-ok icon-white icon_content"></i></a>
+      <%end%>
     </div>
-  </div>
+
+    <div class="redactor_content">
+      <%= raw content %>
+    </div>
+    
+  <!-- If there is no content and you are the owner-->
+  <% elsif !has_content && can_edit %>
   
+    <div class="content_icontainer">
+      <a class="redactor_content_edit_link" style="display:none"><i class="icon-edit icon-white icon_content"></i></a>
+      <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_save_link" style="display:none"><i class="icon-ok icon-white icon_content"></i></a>
+    </div>
+    
+    <div class="redactor_content" style="display:none">
+      <%= raw content %>
+    </div>
+    
+    <div class="well content_well" style="text-align:center">
+      <div class="add_content">
+        <a class="add_content_link"><img src="/assets/add_content.png" class="img-rounded"></a>
+      </div>
+    </div>
+    
+  <!-- If there is no content and you are NOT the owner or not logged in-->  
+  <% else %>
+    <div class="content_icontainer">
+     
+    </div>
+    
+    <div class="redactor_content" style="display:none">
+    </div>
+    
+    <div class="well content_well" style="text-align:center">
+      <div class="add_content">
+        <div class="no_content">
+          <!-- This needs to be a nice image of something -->
+          Content has not yet been added by the page's owner. 
+          <!--<a class="add_content_link"><img src="/assets/add_content.png" class="img-rounded"></a>-->
+        </div>
+      </div>
+    </div>
   <%end%>
 
 </div>
