@@ -28,12 +28,7 @@
 <script src="/assets/highvis/jquery.dataTables.js"></script>
 
 <div class="row">  
- <% if @sessions.size == 1 %>
-	<span style="font-size:2em"><%= experiment_session_edit_helper 'title', @sessions.first.owner.id == @cur_user.try(:id), @sessions.first %></span><br>
- <% elsif @sessions.size > 1 %>
     <span style="font-size:2em"><%= experiment_edit_helper 'title', @experiment.owner.id == @cur_user.try(:id) %></span><br>
- <%end%>
-
 </div>
 
 <div class="row">
@@ -63,29 +58,21 @@
   
   </div>
   
-  <div class="span12">
-    <ul class="nav nav-tabs" id="myTab" style="margin-top: 10px;">
+  <div class="span12" id="tabcontainer" style="margin-top: 10px;">
+    <ul class="nav nav-tabs" id="myTab">
       <% i = 0 %>
       <% @sessions.each do |s| %>
-        <% if i == 0 %>
-          <li class="active"><a href="#<%=s.id%>" data-toggle="tab"><%=s.title%></a></li>
-        <% else %>
-          <li><a href="#<%=s.id%>" data-toggle="tab"><%=s.title%></a></li>
-        <% end %>
+          <li class="vis_tab"><a href="#<%=s.id%>">
+            <%= experiment_session_edit_helper 'title', @sessions[i].owner.id == @cur_user.try(:id), @sessions[i] %>
+          </a></li>
         <% i=i+1 %>
       <% end %>
     </ul>
     
-    <div class="tab-content">
-      <% i = 0 %>
-      <% @sessions.each do |s| %>
-        <% if i == 0 %>
-          <div class="tab-pane active" id="<%=s.id%>"><%= experiment_session_redactor_helper s, (@experiment.owner.id == @cur_user.try(:id)) %></div>
-        <% else %>
-          <div class="tab-pane" id="<%=s.id%>"><%= experiment_session_redactor_helper s, (@experiment.owner.id == @cur_user.try(:id)) %></div>
-        <% end %>
-        <% i=i+1 %>
-      <% end %>
-    </div>
+    <% i = 0 %>
+     <% @sessions.each do |s| %>
+         <div class="tab-pane" id="<%=s.id%>"><%= experiment_session_redactor_helper s, (@experiment.owner.id == @cur_user.try(:id)) %></div>
+       <% i=i+1 %>
+    <% end %>
   </div>
 </div>
