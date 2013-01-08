@@ -1,4 +1,8 @@
 <div class="row">
+
+</div>
+
+<div class="row">
   <div class="span8">
     <div class="feed-top">
       <h1>Experiments</h1>
@@ -12,7 +16,7 @@
           </select>
         </div>
         <div class="span3">
-          <%=text_field_tag :search, params[:search], class:'search-query'%>
+          <%= text_field_tag :search, params[:search], class:'search-query'%>
         </div>
         <div class="span1 offset1">
           <%= submit_tag "Search", name: nil, class:'btn'%>
@@ -30,27 +34,22 @@
       <br />
       <%end%>
     </div>
-  </div>
-</div>
-
-<div class="row">
-  <div class="span8" >
     <div id="experiments">
       <%=render 'display_experiments'%>
     </div>
   </div>
+  <div class="span4">
     <%if @cur_user.try(:id)%>
-      <div class="span3 offset1">
-        <div class="row">
-          <h5 class="center">Create Experiment</h5>
-          <div class="well center">
-            <%=form_tag('/experiments', :method => "post") do %>
-              <input type="image" src="/assets/add_content.png" class="img-rounded"/>
-            <%end%>
-          </div>
-        </div>
+      <div class="sidebar_box grey_content center" style="margin:0px;">
+        <%=form_tag('/experiments', :method => "post") do %>
+          <input type="image" style="width:75px;" src="/assets/green_plus_icon.svg" class="img-rounded"/>
+        <%end%>
+        <h4 class="center" style="color:#279112;">Create Experiment</h4>
       </div>
     <%end%>
-  <%=render 'featured_experiments'%>
+
+    <%=render 'featured_experiments'%>
+   
+  </div>
 </div>
 

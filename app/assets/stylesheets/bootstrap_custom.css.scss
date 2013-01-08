@@ -16,6 +16,9 @@ i
   margin-top: 20px;
   text-align: center;
   padding: 20px 40px;
+  border-style: groove;
+  border-color: #ffffff;
+  border-width: 3px;
 }
 
 .footer
@@ -34,17 +37,23 @@ i
   padding: 10px 20px;
   margin-bottom: 30px;
   background-color: #f8f8f8;
-
-  -webkit-border-radius: 3px;
-     -moz-border-radius: 3px;
-          border-radius: 3px;
+  border-style: groove;
+  border-color: #ffffff;
+  border-width: 2px;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
 }
 
 .feed-top
 {
   padding: 2px 20px 2px 20px;
-  background-color: #667;
-  color: #f0f0f0;
+  background-color: #e8e8e8;
+  color: #000000;
+  
+  border-style: groove;
+  border-color: #ffffff;
+  border-width: 2px 2px 0px 2px;
 
   -webkit-border-radius: 6px 6px 0px 0px;
      -moz-border-radius: 6px 6px 0px 0px;
@@ -55,10 +64,16 @@ i
 {
   padding: 0px;
   magrin: 0px;
-  background-color: #667;
-  color: #f0f0f0;
+  background-color: #e8e8e8;
+  border-top: 2px groove #ffffff;
+  
+  border-style: groove;
+  border-color: #ffffff;
+  border-width: 2px 2px 2px 2px;
+  
+  color: #000;
   text-align: center;
-
+  height: 35px;
   -webkit-border-radius: 0px 0px 6px 6px;
      -moz-border-radius: 0px 0px 6px 6px;
           border-radius: 0px 0px 6px 6px;
@@ -68,12 +83,20 @@ i
 {
   padding: 2px 20px 15px 20px;
   margin: 0px;
-  background-color: #f8f8f8;
+  background-color: #e8e8e8;
+  
+  border-style: groove;
+  border-color: #ffffff;
+  border-width: 2px 2px 0px 2px;
 }
 
 .feed-even
 {
   padding: 2px 20px 15px 20px;
   margin: 0px;
-  background-color: #e8e8e8;
+  background-color: #f8f8f8;
+  
+  border-style: groove;
+  border-color: #ffffff;
+  border-width: 2px 2px 0px 2px;
 }

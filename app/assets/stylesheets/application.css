@@ -150,8 +150,10 @@ table.editablegrid > tbody > tr > td
     -webkit-border-radius: 10px 10px 10px 10px;
     -moz-border-radius: 10px 10px 10px 10px;
     border-radius: 10px 10px 10px 10px;
-    border: 1px solid #555;
-    background-color: #555;
+    border-style: groove;
+	  border-color: #ffffff;
+	  border-width: 3px;
+    background-color: #eee;
     padding: -1px;
     margin: 0px 0px;
 }

@@ -19,40 +19,31 @@
         <%end%>
       </div>
     </div>
-  </div>
-</div>
-<div class="row">
-  <div class="span8">
     <div id="users">
       <%=render 'display_users'%>
     </div>
   </div>
-
-
-
-
-    <div class="span4">
-       <div class="sidebar_box grey_content">
-            <h4 class=center>Statistics</h4>
-            <table class="table">
-                <tr>
-                    <td>Users</td>
-                    <td><%=User.count%></td>
-                </tr>
-                <tr>
-                    <td>Experiments</td>
-                    <td><%=Experiment.count%></td>
-                </tr>
-                <tr>
-                    <td>Sessions</td>
-                    <td><%=ExperimentSession.count%></td>
-                </tr>
-                <tr>
-                    <td>Media</td>
-                    <td><%=MediaObject.count%></td>
-                </tr>
-            </table>
-       </div>
-    </div>
+  <div class="span4">
+    <div class="sidebar_box grey_content" style="margin-top:0px;">
+      <h4 class=center>Statistics</h4>
+      <table class="table">
+        <tr>
+          <td>Users</td>
+          <td><%=User.count%></td>
+        </tr>
+        <tr>
+          <td>Experiments</td>
+          <td><%=Experiment.count%></td>
+        </tr>
+        <tr>
+          <td>Sessions</td>
+          <td><%=ExperimentSession.count%></td>
+        </tr>
+        <tr>
+          <td>Media</td>
+          <td><%=MediaObject.count%></td>
+        </tr>
+      </table>
+   </div>
+  </div>
 </div>
-
