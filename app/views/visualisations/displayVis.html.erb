@@ -25,6 +25,17 @@
 
 <script src="/assets/highvis/runtime.coffee"></script>
 
+<script src="/assets/highvis/jquery.dataTables.js"></script>
+
+<div class="row">  
+ <% if @sessions.size == 1 %>
+	<span style="font-size:2em"><%= experiment_session_edit_helper 'title', @sessions.first.owner.id == @cur_user.try(:id), @sessions.first %></span><br>
+ <% elsif @sessions.size > 1 %>
+    <span style="font-size:2em"><%= experiment_edit_helper 'title', @experiment.owner.id == @cur_user.try(:id) %></span><br>
+ <%end%>
+
+</div>
+
 <div class="row">
 
   <div class="span12">
