@@ -81,11 +81,12 @@ class window.Map extends BaseVis
             do =>
                 # Grab geospatial
                 for field, fieldIndex in data.fields
-                    if (Number field.typeID) is data.types.GEOSPATIAL
-                        if (Number field.unitID) is data.units.GEOSPATIAL.LATITUDE
-                            lat = dataPoint[fieldIndex]
-                        else if (Number field.unitID) is data.units.GEOSPATIAL.LONGITUDE
-                            lon = dataPoint[fieldIndex]
+                    
+                    if (Number field.typeID) in data.types.LOCATION
+                      if (Number field.typeID) is data.units.LOCATION.LATITUDE
+                          lat = dataPoint[fieldIndex]
+                      else if (Number field.typeID) is data.units.LOCATION.LONGITUDE
+                          lon = dataPoint[fieldIndex]
 
                 if (lat is null) or (lon is null)
                     return

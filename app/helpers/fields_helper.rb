@@ -10,9 +10,11 @@ module FieldsHelper
     elsif field == 2
       "Number"
     elsif field == 3
-      "Location"
-    else
       "Text"
+    elsif field == 4
+      "Longitude"
+    elsif field == 5
+      "Latitude"
     end
   end
   
@@ -21,12 +23,12 @@ module FieldsHelper
       1
     elsif field == "Number"
       2
-    elsif field == "Location"
-      3
     elsif field == "Text"
+      3
+    elsif field == "Longitude"
       4
-    else
-      4
+    elsif field == "Latitude"
+      5
     end
   end
 
