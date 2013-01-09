@@ -1,0 +1,14 @@
+<script type="text/javascript">
+  window.fields = JSON.parse('<%= raw @experiment.fields.to_json%>');
+  window.postURL = '<%= url_for :controller => :experiments, :action => :addExperimentSession, :id => @experiment %>';
+</script>
+
+<div class="row">
+	<div style="margin-bottom:20px" class="span12">			
+		<div id="manual_upload_table"></div>
+	</div>
+	<div style="margin-bottom:20px" class="span12">
+		<button class="add_row_button">Add Row</button>
+		<button class="submit_manual_data">Submit</button>
+	</div>
+</div>

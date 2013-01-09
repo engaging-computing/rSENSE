@@ -1,0 +1,20 @@
+# Place all the behaviors and hooks related to the matching controller here.
+# All this logic will automatically be available in application.js.
+# You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
+
+$ ->
+
+  data_dialog = {}
+
+  ($ '.file_upload').hide()
+
+  ($ ".file_upload").bind "ajax:success", (x, d, e) ->
+    console.log d
+    editableGrid = new EditableGrid "DataGrid"
+    editableGrid.load d.message
+    editableGrid.renderGrid "tablecontent", "table editablegrid"
+    data_dialog.dialog 'close'
+    
+  ($ '#add_data').click ->
+    data_dialog = ($ '.file_upload').show().parent().dialog()
+  

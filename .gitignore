@@ -16,3 +16,5 @@
 db/schema.rb
 *~
 *.orig
+aws_config.yml
+*.DS_Store
