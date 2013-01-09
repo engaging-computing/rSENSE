@@ -197,7 +197,7 @@ table.editablegrid > tbody > tr > td
   .pagination a, .pagination span {
     padding: 0.2em 0.3em; }
   .pagination .disabled {
-    color: #aaaaaa; }
+    color: black; }
   .pagination .current {
     color: black;
     font-style: normal;
@@ -213,6 +213,6 @@ table.editablegrid > tbody > tr > td
     text-shadow: rgba(255, 255, 255, 0.8) 1px 1px 1px; }
   .pagination a {
     text-decoration: none;
-    color: #cccccc; }
+    color: black; }
     .pagination a:hover, .pagination a:focus {
       text-decoration: none; }
