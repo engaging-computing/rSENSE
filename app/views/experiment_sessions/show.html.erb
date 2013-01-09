@@ -1,25 +1,37 @@
-<p id="notice"><%= notice %></p>
+<%=render 'grid'%>
 
-<p>
-  <b>Title:</b>
-  <%= @experiment_session.title %>
-</p>
-
-<p>
-  <b>Content:</b>
-  <%= @experiment_session.content %>
-</p>
-
-<p>
-  <b>User:</b>
-  <%= @experiment_session.user_id %>
-</p>
-
-<p>
-  <b>Experiment:</b>
-  <%= @experiment_session.experiment_id %>
-</p>
-
-
-<%= link_to 'Edit', edit_experiment_session_path(@experiment_session) %> |
-<%= link_to 'Back', experiment_sessions_path %>
+<div class="row">
+  <div class="span8">
+    <div class="experiment_session_info_box">
+      <span style="font-size:2em"><%= experiment_session_edit_helper 'title', (@experiment_session.user_id == @cur_user.try(:id)) %></span><br>
+      <span class="info_label" style="font-size:1.1em">Owner:</span> 
+      <%= link_to @experiment_session.owner.name, user_path(@experiment_session.owner) %><br>
+      <span class="info_label" style="font-size:1.1em">Created:</span><%=time_ago_in_words(@experiment_session.created_at)%> ago
+      <br /><br />
+    </div>
+  </div>
+  <div class="row">
+    <div class="span8">
+      <%= render 'manual_entry' %>
+    </div>
+    <div class="span4">
+      <%= experiment_session_redactor_helper Experiment.find(@experiment_session.experiment_id), (@experiment_session.user_id == @cur_user.try(:id)) %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="span8 center">
+      <input type="button" id="add_data" value="Add Data" />
+    </div>
+  </div>
+  <div id="add_data">
+      <%= form_for @experiment_session, :url => { :action => "postCSV" }, :html => { :multipart => true, :class => "file_upload", :'data-type' => 'json' }, :remote => true do |f| %>
+        <div class="field">
+          <%= f.label :file %>
+          <%= f.file_field :file %>
+        </div>
+        <div class="actions">
+          <%= f.submit %>
+        </div>
+      <% end %>
+  </div>
+</div>

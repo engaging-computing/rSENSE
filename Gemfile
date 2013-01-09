@@ -34,6 +34,19 @@ gem 'jquery-ui-rails'
 # Include Twitter bootstrap
 gem 'twitter-bootstrap-rails'
 
+# Include AWS
+gem 'aws-sdk'
+
+# Include Will Paginate
+gem 'will_paginate'
+
+# Include Remotipart
+gem "remotipart", "~> 1.0.2"
+
+# Gem for Mongo Mapper
+gem 'mongo_mapper'
+gem 'bson_ext'
+
 # To use Jbuilder templates for JSON
 # gem 'jbuilder'
 

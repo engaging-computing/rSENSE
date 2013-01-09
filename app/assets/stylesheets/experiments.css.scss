@@ -4,13 +4,61 @@
 
 .field_edit_link
 {
-    vertical-align: super;
-    font-size: 0.75em;
+  vertical-align: super;
+  font-size: 0.75em;
 }
 
 .field_save_link
 {
-    vertical-align: super;
-    font-size: 0.75em;
-    display: none;
+  vertical-align: super;
+  font-size: 0.75em;
+  display: none;
+}
+
+.add_content
+{
+  margin: 100px 0px 100px 0px;
+}
+
+.grey_content
+{
+  background-color:#EEE;
+}
+
+.sidebar_box
+{
+  margin: 10px 0px;
+  padding: 10px 10px;
+  border-style: groove;
+  border-color: #ffffff;
+  border-width: 2px;
+  -webkit-border-radius: 10px 10px 10px 10px;
+  -moz-border-radius: 10px 10px 10px 10px;
+  border-radius: 10px 10px 10px 10px;
+}
+
+.center
+{
+  text-align: center;
+}
+
+.experiment_info_box
+{
+  padding: 5px;
+  margin: 0px 0px 10px 0px;
+}
+
+.name_edit_box, .unit_edit_box, .name_add_box, .unit_add_box, .type_add_box
+{
+  width: 100%;
+}
+
+.center
+{
+  text-align: center;
+}
+
+.search-query, .experiments_sort_select
+{
+  width: 100%;
 }

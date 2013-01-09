@@ -1,5 +1,5 @@
-$(document).ready ->
-  
+$ ->
+
   login_ajax_submit = ->
     
     $.ajax
@@ -14,10 +14,15 @@ $(document).ready ->
             when "success"
               $('#login_box').dialog('close')
               location.reload();
+            when "fail"
+             $('#login_user').css("border-color","red")
+             $('#login_password').css("border-color","red")
+            
   
   $('a.login').click ->
     $loginbox = $('#login_box')
-  
+    $('#login_user').css("border-color","black")
+    $('#login_password').css("border-color","black")
     $loginbox.dialog
       draggable: false
       resizable: false

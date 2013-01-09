@@ -1,3 +1,5 @@
+
+/*
 body {
   background-color: #fff;
   color: #333;
@@ -18,7 +20,6 @@ pre {
   font-size: 11px;
 }
 
-/* This was conflicting with lots of stuff
 a {
   color: #000;
   &:visited {
@@ -29,13 +30,13 @@ a {
     background-color: #000;
   }
 }
-*/
 
 div {
   &.field, &.actions {
     margin-bottom: 10px;
   }
 }
+*/
 
 #notice {
   color: green;
