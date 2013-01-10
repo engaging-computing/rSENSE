@@ -9,6 +9,16 @@
 </head>
 <body>
   
+  <% if flash[:notice] %>
+    <% if flash[:notice] == "LOGIN_ERROR" %>
+      <script type="text/javascript">
+        $(document).ready( function(e){
+          $('#login_box').modal()
+          return false;
+        });
+      </script>
+    <% end %>
+  <% end %>
   
   <!-- login lightbox -->
   <div id="login_box" class="modal hide fade well container" style="width:400px">
