@@ -10,12 +10,14 @@
 <body>
   
   <% if flash[:notice] %>
-    <script type="text/javascript">
-      $(document).ready( function(e){
-        $('#login_box').modal()
-        return false;
-      });
-    </script>
+    <% if flash[:notice] == "LOGIN_ERROR" %>
+      <script type="text/javascript">
+        $(document).ready( function(e){
+          $('#login_box').modal()
+          return false;
+        });
+      </script>
+    <% end %>
   <% end %>
   
   <!-- login lightbox -->
