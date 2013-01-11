@@ -2,12 +2,11 @@
 
 <table>
   <tr>
+    <th>Experiment</th>
     <th>Media type</th>
     <th>Name</th>
-    <th>Src</th>
-    <th>User</th>
-    <th>Experiment</th>
     <th>Session</th>
+    <th>User</th>
     <th></th>
     <th></th>
     <th></th>
@@ -15,12 +14,11 @@
 
 <% @media_objects.each do |media_object| %>
   <tr>
+    <td><%= media_object.experiment_id %></td>
     <td><%= media_object.media_type %></td>
     <td><%= media_object.name %></td>
-    <td><%= media_object.src %></td>
-    <td><%= media_object.user_id %></td>
-    <td><%= media_object.experiment_id %></td>
     <td><%= media_object.session_id %></td>
+    <td><%= media_object.user_id %></td>
     <td><%= link_to 'Show', media_object %></td>
     <td><%= link_to 'Edit', edit_media_object_path(media_object) %></td>
     <td><%= link_to 'Destroy', media_object, method: :delete, data: { confirm: 'Are you sure?' } %></td>
