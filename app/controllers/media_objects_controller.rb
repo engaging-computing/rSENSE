@@ -83,7 +83,6 @@ class MediaObjectsController < ApplicationController
   
   #POST /media_object/saveimage
   def saveimage
-    logger.info"askljdfalksdjf;lkasdjf;lkasjdf;lasjdf;lfajsddf;lkasjdf;lkajsd;flkkjas;ldkfja;lksdjf;lkas"
     #Figure out where we are uploading data to
     data = params[:keys].split('/')
     type = data[0]
@@ -111,17 +110,17 @@ class MediaObjectsController < ApplicationController
     when 'experiment'
       @experiment = Experiment.find_by_id(id)
       if(@experiment.owner == @cur_user)
-        @mo = {user_id: @experiment.owner.id, experiment_id: id, src: o.public_url.to_s, name: @experiment.title + " image"}
+        @mo = {user_id: @experiment.owner.id, experiment_id: id, src: o.public_url.to_s, name: @experiment.title + " image", media_type:"image"}
       end
     when 'experiment_session'
       @experiment_session = ExperimentSession.find_by_id(id)
       if(@experiment_session.owner == @cur_user)
-        @mo = {user_id: @experiment_session.owner.id, experiment_id: @experiment_session.experiment_id, session_id: @experiment_session.id, src: o.public_url.to_s, name: @experiment_session.title + " image"}
+        @mo = {user_id: @experiment_session.owner.id, experiment_id: @experiment_session.experiment_id, session_id: @experiment_session.id, src: o.public_url.to_s, name: @experiment_session.title + " image", media_type:"image"}
       end
     when 'user'
       @user = User.find_by_username(id)
       if(@user==@cur_user)
-        @mo = {user_id: @user.id, src: o.public_url.to_s, name: @user.name.pluralize + " image"}
+        @mo = {user_id: @user.id, src: o.public_url.to_s, name: @user.name.pluralize + " image", media_type:"image"}
       end
     end
 
