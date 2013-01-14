@@ -132,15 +132,9 @@ class ExperimentSessionsController < ApplicationController
   ## POST /experiment_sessions/1
   def uploadCSV
     #Grab the experiment so we can get field names
-    @experiment_session = ExperimentSession.find(params[:id])
+    @experiment_session = ExperimentSession.new({:experiment_id => params[:id]})
     @experiment = @experiment_session.experiment
     @data_set = DataSet.all({:experiment_session_id => @experiment_session.id})
-    
-    unless @data_set.nil?
-      @data_set.each do |old_data|
-        old_data.destroy
-      end
-    end
     
     
     #Get a link to the temp file uploaded to the server
@@ -189,6 +183,7 @@ class ExperimentSessionsController < ApplicationController
     data_to_add = DataSet.new(:experiment_session_id => @experiment_session.id, :data => mongo_data)    
     
     if data_to_add.save!
+      @experiment_session.save()
       response = { status: 'success', message: @dataObject }
     else
       response = { status: 'fail' }
