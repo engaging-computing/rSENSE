@@ -18,7 +18,7 @@ class MediaObjectsControllerTest < ActionController::TestCase
 
   test "should create media_object" do
     assert_difference('MediaObject.count') do
-      post :create, media_object: { experiment_id: @media_object.experiment_id, media_type: @media_object.media_type, name: @media_object.name, session_id: @media_object.session_id, src: @media_object.src, user_id: @media_object.user_id }
+      post :create, media_object: { experiment_id: @media_object.experiment_id, media_type: @media_object.media_type, name: @media_object.name, session_id: @media_object.session_id, user_id: @media_object.user_id }
     end
 
     assert_redirected_to media_object_path(assigns(:media_object))
@@ -35,7 +35,7 @@ class MediaObjectsControllerTest < ActionController::TestCase
   end
 
   test "should update media_object" do
-    put :update, id: @media_object, media_object: { experiment_id: @media_object.experiment_id, media_type: @media_object.media_type, name: @media_object.name, session_id: @media_object.session_id, src: @media_object.src, user_id: @media_object.user_id }
+    put :update, id: @media_object, media_object: { experiment_id: @media_object.experiment_id, media_type: @media_object.media_type, name: @media_object.name, session_id: @media_object.session_id, user_id: @media_object.user_id }
     assert_redirected_to media_object_path(assigns(:media_object))
   end
 
