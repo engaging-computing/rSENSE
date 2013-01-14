@@ -1,4 +1,6 @@
 Rsense::Application.routes.draw do
+  resources :media_objects
+
   get "experiment_templates/index"
 
   resources :visualisations
@@ -50,8 +52,6 @@ Rsense::Application.routes.draw do
   match "/users/validate/:key" => "users#validate"
   
   match "/experiments/:id/addExperimentSession" => "experiments#addExperimentSession"
-
-  resources :media_objects
   
 	match "/experiments/:id/updateLikedStatus" => "experiments#updateLikedStatus"
 	
