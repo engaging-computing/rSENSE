@@ -22,6 +22,7 @@
 //= require field_edit.js.coffee
 //= require collapse_link_flipper.js.coffee
 //= require add_filters.js.coffee
+//= require validator
 //= require editablegrid-2.0.1.js
 //= require editablegrid_utils.js
 //= require editablegrid_renderers.js
