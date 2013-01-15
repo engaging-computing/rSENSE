@@ -132,13 +132,13 @@ class ExperimentSessionsController < ApplicationController
   ## POST /experiment_sessions/1
   def uploadCSV
     #Grab the experiment so we can get field names
-    @experiment_session = ExperimentSession.new({:experiment_id => params[:id]})
+    @experiment_session = ExperimentSession.new(:experiment_id => params[:id], :title => "#{@cur_user.name}'s Session", :user_id => @cur_user.try(:id))
     @experiment = @experiment_session.experiment
     @data_set = DataSet.all({:experiment_session_id => @experiment_session.id})
     
     
     #Get a link to the temp file uploaded to the server
-    @file = params[:experiment_session][:file]
+    @file = params[:csv]
     
     #Read the CSV
     require "csv"
@@ -179,12 +179,15 @@ class ExperimentSessionsController < ApplicationController
     @dataObject["data"].each do |d|
       mongo_data.push d.values
     end
-      
-    data_to_add = DataSet.new(:experiment_session_id => @experiment_session.id, :data => mongo_data)    
     
-    if data_to_add.save!
-      @experiment_session.save()
-      response = { status: 'success', message: @dataObject }
+    if @experiment_session.save!
+      data_to_add = DataSet.new(:experiment_session_id => @experiment_session.id, :data => mongo_data)    
+    
+      if data_to_add.save!
+        response = { status: 'success', message: @dataObject }
+      else
+        response = { status: 'fail' }
+      end
     else
       response = { status: 'fail' }
     end  
@@ -192,6 +195,7 @@ class ExperimentSessionsController < ApplicationController
     #Send the object as json
     respond_to do |format|
       format.json { render json: response }
+      format.html { redirect_to :controller => :visualisations, :action => :displayVis, :id => @experiment.id, :sessions => "#{@experiment_session.id}" }
     end
     
   end
