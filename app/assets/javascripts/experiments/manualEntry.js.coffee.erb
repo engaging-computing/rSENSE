@@ -1,35 +1,52 @@
 $ ->
-  editableGrid = {}
-  metadata = []
   fields = window.fields
-  data = []
-  row = {}
   url = ""
     
   url = window.postURL
-  
-  editableGrid = new EditableGrid "Session_Data"
-  
-  metadata.push {name: field.name, label: field.name, datatype: "string", editable: true} for field in fields
-        
-  data.push { id: 1, values: row }
 
-  editableGrid.load { metadata: metadata, data: data }
-  editableGrid.renderGrid "manual_upload_table", "testgrid table editablegrid"
-    
-  ($ ".add_row_button").click ->
-    editableGrid.addRow(editableGrid.getRowCount()+1,{})
+  rows = 1
+  columns = fields.length
+
+  # Sets the apropriate validator class for each column
+  setValidators = ->
+    for i in [0...columns]
+      if fields[i].field_type is <%= NUMBER_TYPE %>
+        ($ "input.col#{i}").addClass 'validate_number'
+      if fields[i].field_type is <%= LATITUDE_TYPE %>
+        ($ "input.col#{i}").addClass 'validate_latitude'
+      if fields[i].field_type is <%= LONGITUDE_TYPE %>
+        ($ "input.col#{i}").addClass 'validate_longitude'
+
+  setValidators()
+  
+  ($ ".add_row_button").click =>
+    ($ '#manualTable').append "<tr id=row#{rows}>"
+    for i in [0...columns]
+      ($ "#row#{rows}").append "<td><input class='col#{i}' style='width:100%' /></td>"
+
+    setValidators()
+
+    rows += 1
     
   ($ ".submit_manual_data").click ->
-    data_for_upload = 
+
+    # Don't submit unvalidated data
+    if ($ 'input').hasClass 'invalid'
+      return
+
+    data_for_upload =
       header: []
       data: []
-      
-    get_data_for_upload = editableGrid.data
-    
+
+    # Pack up header data
     data_for_upload.header.push { id: field.id, type:field.field_type } for field in fields
-    data_for_upload.data.push row.columns for row in get_data_for_upload
-        
+
+    # Extract data from table
+    for row in [0...rows]
+      data_for_upload.data[row] = []
+      for col in [0...columns]
+        data_for_upload.data[row][col] = ($ "#row#{row} td input.col#{col}").val()
+    
     $.ajax url,
       type: 'POST',
       data: { ses_info: data_for_upload },
