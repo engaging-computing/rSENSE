@@ -5,7 +5,19 @@
 
 <div class="row">
 	<div style="margin-bottom:20px" class="span12">			
-		<div id="manual_upload_table"></div>
+          <table class="table editablegrid">
+            <thead><tr>
+              <% for field in @experiment.fields %>
+                <th><%= field.name %></th>
+              <% end %>
+            </tr></thead>
+
+            <tbody id="manualTable"><tr id="row0">
+              <% for i in 0...@experiment.fields.length %>
+                <td><input class='<%= "col" + i.to_s %>' style='width:100%' /></td>
+              <% end %>
+            </tr></tbody>
+          </table>
 	</div>
 	<div style="margin-bottom:20px" class="span12">
 		<button class="add_row_button">Add Row</button>
