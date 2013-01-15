@@ -82,10 +82,14 @@ class ExperimentSessionsController < ApplicationController
     end
   end
   
+  def manualEntry
+      @experiment = Experiment.find(params[:eid])
+  end
+  
   # POST /experiment_session/1/manualUpload
   def manualUpload
     
-    @experiment_session = ExperimentSession.find(params[:id])
+    @experiment_session = ExperimentSession.find(params[:eid])
     
     #pulls fields from post
     header = params[:header]
@@ -114,6 +118,13 @@ class ExperimentSessionsController < ApplicationController
         od.destroy
       end
     end
+    
+    
+    logger.info "---------------------------------------------------------"
+    logger.info "---------------------------------------------------------"
+    logger.info data
+    logger.info "---------------------------------------------------------"
+    logger.info "---------------------------------------------------------"
     
     data_to_add = DataSet.new(:experiment_session_id => @experiment_session.id, :data => data)    
     
@@ -155,12 +166,12 @@ class ExperimentSessionsController < ApplicationController
     mongo_data = Array.new
     
     #Build the object that will be displayed in the table
-    @dataObject = {}
-    @dataObject["metadata"] = []
-    @dataObject["data"] = []
+    format_data = {}
+    format_data["metadata"] = []
+    format_data["data"] = []
 
     headers.count.times do |i|
-      @dataObject["metadata"].push({name: headers[i], label: headers[i], datatype: "string", editable: true})
+      format_data["metadata"].push({name: headers[i], label: headers[i], datatype: "string", editable: true})
     end
 
     data.count.times do |i|
@@ -173,18 +184,18 @@ class ExperimentSessionsController < ApplicationController
              ""
           end
       end
-      @dataObject["data"].push({id: i, values: values})
+      format_data["data"].push({id: i, values: values})
     end
-    
-    @dataObject["data"].each do |d|
+        
+    format_data["data"].each do |d|
       mongo_data.push d.values
     end
     
-    if @experiment_session.save!
+    if false #@experiment_session.save!
       data_to_add = DataSet.new(:experiment_session_id => @experiment_session.id, :data => mongo_data)    
     
       if data_to_add.save!
-        response = { status: 'success', message: @dataObject }
+        response = { status: 'success', message: format_data }
       else
         response = { status: 'fail' }
       end

@@ -191,8 +191,4 @@ class ExperimentsController < ApplicationController
     end
   end
   
-  def manualEntry
-      @experiment = Experiment.find(params[:id])
-  end
-  
 end
