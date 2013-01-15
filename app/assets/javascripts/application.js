@@ -31,10 +31,8 @@
 //
 // Visualization stuff follows
 //
-//= require googleMaps
 //= require highcharts/highcharts
 //= require Hydrate
 //= require jquery.dataTables
 //= require jquery.prettyPhoto
-//= require StyledMarker
 //= require_directory .
