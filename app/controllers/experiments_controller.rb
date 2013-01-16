@@ -126,46 +126,7 @@ class ExperimentsController < ApplicationController
     end
   end
   
-  def addExperimentSession
-    @experiment = Experiment.find(params[:id])
-
-    header = params[:ses_info][:header]
-    data = params[:ses_info][:data]
-
-    if !data.nil?
-     
-      @experiment_session = ExperimentSession.create(:user_id => @cur_user.id, :experiment_id => @experiment.id, :title => "#{@cur_user.name}'s Session")
-
-      mongo_data = []
-      
-      data.each do |dp|
-        row = []
-        header.each_with_index do |field, col_index|
-          row << { field[1][:id] => dp[1][col_index] }
-        end
-        mongo_data << row
-      end
-            
-      data_to_add = DataSet.new(:experiment_session_id => @experiment_session.id, :data => mongo_data)    
-      
-      followURL = url_for :controller => :visualisations, :action => :displayVis, :id => @experiment.id, :sessions => "#{@experiment_session.id}"
-      
-      if data_to_add.save!
-        response = { status: 'success', follow: followURL }
-      else
-        response = { status: 'fail' }
-      end 
-      
-    else
-      response = ["No data"]
-    end
-
-    respond_to do |format|
-      format.html { render json: response }
-      format.json { render json: response }
-    end    
-  end
-
+  
   def updateLikedStatus
     
     like = Like.find_by_user_id_and_experiment_id(@cur_user,params[:id])

@@ -89,52 +89,41 @@ class ExperimentSessionsController < ApplicationController
   # POST /experiment_session/1/manualUpload
   def manualUpload
     
-    @experiment_session = ExperimentSession.find(params[:eid])
-    
-    #pulls fields from post
-    header = params[:header]
-    #pulls data as array from post
-    rows = params[:data]
-    data = Array.new
-    
-    #data = associative array of header and rows
-    rows.each_with_index do |datapoints, r|
-      data[r] = Hash.new
-      datapoints.each_with_index do |dp, i|
-        if i > 0 #ignore numbered row at top of ajax
-          data[r] = Hash.new
-          dp.each_with_index do |d, j|
-            data[r][header[j]] = d
-          end
+    @experiment = Experiment.find(params[:eid])
+
+    header = params[:ses_info][:header]
+    data = params[:ses_info][:data]
+
+    if !data.nil?
+     
+      @experiment_session = ExperimentSession.create(:user_id => @cur_user.id, :experiment_id => @experiment.id, :title => "#{@cur_user.name}'s Session")
+
+      mongo_data = []
+      
+      data.each do |dp|
+        row = []
+        header.each_with_index do |field, col_index|
+          row << { field[1][:id] => dp[1][col_index] }
         end
+        mongo_data << row
       end
-    end
-    
-    #remove old data
-    old_data = DataSet.all({:experiment_session_id => @experiment_session.id})
-    
-    unless old_data.nil?
-      old_data.each do |od|
-        od.destroy
-      end
-    end
-    
-    
-    logger.info "---------------------------------------------------------"
-    logger.info "---------------------------------------------------------"
-    logger.info data
-    logger.info "---------------------------------------------------------"
-    logger.info "---------------------------------------------------------"
-    
-    data_to_add = DataSet.new(:experiment_session_id => @experiment_session.id, :data => data)    
-    
-    if data_to_add.save!
-      response = { status: 'success', message: data }
+                
+      data_to_add = DataSet.new(:experiment_session_id => @experiment_session.id, :data => mongo_data)    
+      
+      followURL = url_for :controller => :visualisations, :action => :displayVis, :id => @experiment.id, :sessions => "#{@experiment_session.id}"
+      
+      if data_to_add.save!
+        response = { status: 'success', follow: followURL }
+      else
+        response = { status: 'fail' }
+      end 
+      
     else
-      response = { status: 'fail' }
+      response = ["No data"]
     end
-    
+
     respond_to do |format|
+      format.html { render json: response }
       format.json { render json: response }
     end
     
@@ -147,6 +136,7 @@ class ExperimentSessionsController < ApplicationController
     @experiment = @experiment_session.experiment
     @data_set = DataSet.all({:experiment_session_id => @experiment_session.id})
     
+    header = []
     
     #Get a link to the temp file uploaded to the server
     @file = params[:csv]
@@ -159,7 +149,7 @@ class ExperimentSessionsController < ApplicationController
     data = sortColumns(data, doColumnsMatch(@experiment, data[0]))
     
     #Parse out the headers and the data
-    headers = data[0]
+    fields = data[0]
     data = data[1..(data.size-1)]
     
     #Data that will be stuffed into mongo
@@ -170,28 +160,21 @@ class ExperimentSessionsController < ApplicationController
     format_data["metadata"] = []
     format_data["data"] = []
 
-    headers.count.times do |i|
+    fields.count.times do |i|
       format_data["metadata"].push({name: headers[i], label: headers[i], datatype: "string", editable: true})
     end
-
-    data.count.times do |i|
-      values = {}
-      data[i].count.times do |j|
-        values[headers[j]] = 
-          if(data[i][j] != nil)
-             data[i][j]
-          else
-             ""
-          end
-      end
-      format_data["data"].push({id: i, values: values})
-    end
-        
-    format_data["data"].each do |d|
-      mongo_data.push d.values
-    end
     
-    if false #@experiment_session.save!
+    header = Field.find_all_by_experiment_id(@experiment.id)
+    
+    data.each do |dp|
+      row = []
+      header.each_with_index do |field, col_index|
+        row << { "#{field[:id]}" => dp[col_index] }
+      end
+      mongo_data << row
+    end
+
+    if @experiment_session.save!
       data_to_add = DataSet.new(:experiment_session_id => @experiment_session.id, :data => mongo_data)    
     
       if data_to_add.save!
