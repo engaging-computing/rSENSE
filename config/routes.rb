@@ -34,7 +34,9 @@ Rsense::Application.routes.draw do
   match "/experiments/:id/addExperimentSession" => "experiments#addExperimentSession"
   
   match "/experiments/:id/uploadCSV" => "experiment_sessions#uploadCSV"
-  match "/experiments/:id/manualEntry" => "experiments#manualEntry"
+  match "/experiment_sessions/:eid/manualEntry" => "experiment_sessions#manualEntry"
+	match "/experiment_sessions/:eid/manualUpload" => "experiment_sessions#manualUpload"
+  
 	
 	#Routes for displaying data
 	match "/experiments/:id/sessions/*sessions" => "visualisations#displayVis"
