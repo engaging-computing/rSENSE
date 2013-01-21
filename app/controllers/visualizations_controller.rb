@@ -1,85 +1,85 @@
-class VisualisationsController < ApplicationController
+class VisualizationsController < ApplicationController
   include ApplicationHelper
   skip_before_filter :authorize, only: [:show, :displayVis, :index]
   
-  # GET /visualisations
-  # GET /visualisations.json
+  # GET /visualizations
+  # GET /visualizations.json
   def index
-    @visualisations = Visualisation.all
+    @visualizations = Visualization.all
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @visualisations }
+      format.json { render json: @visualizations }
     end
   end
 
-  # GET /visualisations/1
-  # GET /visualisations/1.json
+  # GET /visualizations/1
+  # GET /visualizations/1.json
   def show
-    @visualisation = Visualisation.find(params[:id])
+    @visualization = Visualization.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @visualisation }
+      format.json { render json: @visualization }
     end
   end
 
-  # GET /visualisations/new
-  # GET /visualisations/new.json
+  # GET /visualizations/new
+  # GET /visualizations/new.json
   def new
-    @visualisation = Visualisation.new
+    @visualization = Visualization.new
 
     respond_to do |format|
       format.html # new.html.erb
-      format.json { render json: @visualisation }
+      format.json { render json: @visualization }
     end
   end
 
-  # GET /visualisations/1/edit
+  # GET /visualizations/1/edit
   def edit
-    @visualisation = Visualisation.find(params[:id])
+    @visualization = Visualization.find(params[:id])
   end
 
-  # POST /visualisations
-  # POST /visualisations.json
+  # POST /visualizations
+  # POST /visualizations.json
   def create
-    @visualisation = Visualisation.new(params[:visualisation])
+    @visualization = Visualization.new(params[:visualization])
 
     respond_to do |format|
-      if @visualisation.save
-        format.html { redirect_to @visualisation, notice: 'Visualisation was successfully created.' }
-        format.json { render json: @visualisation, status: :created, location: @visualisation }
+      if @visualization.save
+        format.html { redirect_to @visualization, notice: 'Visualization was successfully created.' }
+        format.json { render json: @visualization, status: :created, location: @visualization }
       else
         format.html { render action: "new" }
-        format.json { render json: @visualisation.errors, status: :unprocessable_entity }
+        format.json { render json: @visualization.errors, status: :unprocessable_entity }
       end
     end
   end
 
-  # PUT /visualisations/1
-  # PUT /visualisations/1.json
+  # PUT /visualizations/1
+  # PUT /visualizations/1.json
   def update
-    @visualisation = Visualisation.find(params[:id])
+    @visualization = Visualization.find(params[:id])
 
     respond_to do |format|
-      if @visualisation.update_attributes(params[:visualisation])
-        format.html { redirect_to @visualisation, notice: 'Visualisation was successfully updated.' }
+      if @visualization.update_attributes(params[:visualization])
+        format.html { redirect_to @visualization, notice: 'Visualization was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
-        format.json { render json: @visualisation.errors, status: :unprocessable_entity }
+        format.json { render json: @visualization.errors, status: :unprocessable_entity }
       end
     end
   end
 
-  # DELETE /visualisations/1
-  # DELETE /visualisations/1.json
+  # DELETE /visualizations/1
+  # DELETE /visualizations/1.json
   def destroy
-    @visualisation = Visualisation.find(params[:id])
-    @visualisation.destroy
+    @visualization = Visualization.find(params[:id])
+    @visualization.destroy
 
     respond_to do |format|
-      format.html { redirect_to visualisations_url }
+      format.html { redirect_to visualizations_url }
       format.json { head :no_content }
     end
   end
