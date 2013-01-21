@@ -3,7 +3,7 @@ Rsense::Application.routes.draw do
 
   get "experiment_templates/index"
 
-  resources :visualisations
+  resources :visualizations
 
   #resources :experiment_sessions
 
@@ -39,8 +39,8 @@ Rsense::Application.routes.draw do
   
 	
 	#Routes for displaying data
-	match "/experiments/:id/sessions/*sessions" => "visualisations#displayVis"
-	match "/experiments/:id/sessions/" => "visualisations#displayVis"
+	match "/experiments/:id/sessions/*sessions" => "visualizations#displayVis"
+	match "/experiments/:id/sessions/" => "visualizations#displayVis"
 	
   match "/experiment_sessions/:id/postCSV" => "experiment_sessions#postCSV"
   match "/media_objects/saveimage/*keys" => "media_objects#saveimage"
