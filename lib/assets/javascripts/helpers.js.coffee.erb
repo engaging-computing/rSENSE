@@ -1,0 +1,27 @@
+$ ->
+
+  window.helpers ?= {}
+
+  helpers.get_field_name = (type) ->
+    switch type
+      when 1 then "Timestamp"
+      when 2 then "Number"
+      when 3 then "Text"
+      when 4 then "Latitude"
+      when 5 then "Longitude"
+
+  helpers.get_field_type = (name) ->
+    switch type
+      when "Timestamp" then 1
+      when "Number"    then 2
+      when "Text"      then 3
+      when "Latitude"  then 4
+      when "Longitude" then 5
+
+  helpers.get_default_unit = (type) ->
+    switch type
+      when 1 then ""
+      when 2 then ""
+      when 3 then ""
+      when 4 then "deg"
+      when 5 then "deg"
