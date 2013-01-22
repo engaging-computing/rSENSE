@@ -4,9 +4,10 @@ $(document).ready ->
   edit = ->
     name = $(@).parent().parent().find('.field_name')
     unit = $(@).parent().parent().find('.field_unit')
+    field = helpers.get_field_type ($(@).parent().parent().find('.field_type').text())
 
     name.wrapInner("<input type='text' class='name_edit_box' value='#{name.text().trim()}'>")
-    unit.wrapInner("<input type='text' class='unit_edit_box' value='#{unit.text().trim()}'>")
+    unit.wrapInner("<input type='text' class='unit_edit_box' value='#{unit.text().trim()}'>") if field is (helpers.get_field_type "Number")
     name.find('.name_edit_box').focus()
 
     $(@).hide()
@@ -17,9 +18,13 @@ $(document).ready ->
   save = ->
     name = $(@).parent().parent().find('.field_name')
     unit = $(@).parent().parent().find('.field_unit')
+    field = helpers.get_field_type ($(@).parent().parent().find('.field_type').text())
 
     name_text = name.find('.name_edit_box').val().trim()
-    unit_text = unit.find('.unit_edit_box').val().trim()
+    unit_text = if field is (helpers.get_field_type "Number")
+      unit.find('.unit_edit_box').val().trim()
+    else
+      ""
 
     data={}
     data['field'] = {}
@@ -40,87 +45,57 @@ $(document).ready ->
             
     false
 
-  #This is where we add a field    
-  add = ->
-    $('.field_add_link').unbind()
-    $(@).parent().parent().parent().append('
-      <tr>
-        <td class="field_name"><input type="text" class="name_add_box"></input></td>
-        <td class="field_unit"><input type="text" class="unit_add_box"></input></td>
-        <td class="field_type">
-          <select class="type_add_box">
-            <option value="1">Timestamp</option>
-            <option value="2">Number</option>
-            <option value="3">Text</option>
-          </select></input></td>
-        <td><a class="field_commit_link">[commit]</a></td>
-      </tr>') 
-
-    $(@).parent().parent().siblings().find('.name_add_box').focus()
-
-    #This is where we save the field.
-    $('.field_commit_link').click ->       
-      name = $(@).parent().parent().find('.name_add_box').val()
-      unit = $(@).parent().parent().find('.unit_add_box').val()
-      type = $(@).parent().parent().find('.type_add_box').val()
-      $.ajax
-        url: '/fields/'
-        type: 'POST'
-        dataType: 'json'
-        data:
-          field:
-            experiment_id: $('.fields_table').attr("experiment")
-            name: name
-            unit: unit
-            field_type: type
-        success: (msg) =>
-          $('.field_add_link').parent().parent().remove()
-          $('.fields_table').append('<tr><td colspan="4"><a class="field_add_link"><i class="icon-plus-sign"></i></a></td></tr>')
-          $(@).parent().parent().find('.field_name').html( $(@).parent().parent().find('.name_add_box').val() )
-          $(@).parent().parent().find('.field_type').html( $(@).parent().parent().find('.type_add_box option:selected').text() )
-          $(@).parent().parent().find('.field_unit').html( $(@).parent().parent().find('.unit_add_box').val() )
-          $(@).parent().parent().find('.field_commit_link').parent().empty().append('<a class="field_edit_link"><i class="icon-edit"></i></a><a href="/fields/' + msg.id + '" class="field_save_link"><i class="icon-ok"></i></a>')
-          $('.field_edit_link').click edit
-          $('.field_save_link').click save
-          $('.field_add_link').click add
-        fail: =>
+  addField = (type) ->
+  
+    typeName = helpers.get_field_name type
+    unit = helpers.get_default_unit type
     
-  useLocation = ->
-    if confirm("Once fields are added to the experiment, they cannot be removed. Use location fields?")
-      $('#useLocationDiv').empty().remove()
-      $.ajax
-        url: '/fields/'
-        type: 'POST'
-        dataType: 'json'
-        data:
-          field:
-            experiment_id: $('.fields_table').attr("experiment")
-            name: 'Latitude'
-            unit: 'deg'
-            field_type: 5
-        success: (msg) =>
-          $('.field_add_link').parent().parent().remove()
-          $('.fields_table').append('<tr><td>Latitude</td><td>deg</td><td>Latitude</td><td></td></tr>')
-          $('.fields_table').append('<tr><td colspan="4"><a class="field_add_link"><i class="icon-plus-sign"></i></a></td></tr>')
-          
-      $.ajax
-        url: '/fields/'
-        type: 'POST'
-        dataType: 'json'
-        data:
-          field:
-            experiment_id: $('.fields_table').attr("experiment")
-            name: 'Longitude'
-            unit: 'deg'
-            field_type: 4
-        success: (msg) =>
-          $('.field_add_link').parent().parent().remove()
-          $('.fields_table').append('<tr><td>Longitude</td><td>deg</td><td>Longitude</td><td></td></tr>')
-          $('.fields_table').append('<tr><td colspan="4"><a class="field_add_link"><i class="icon-plus-sign"></i></a></td></tr>')
+    $.ajax
+      url: '/fields/'
+      type: 'POST'
+      dataType: 'json'
+      data:
+        field:
+          experiment_id: ($ '.fields_table').attr 'experiment'
+          name: typeName
+          unit: unit
+          field_type: type
+      success: (msg) =>
+        htmlStr  = "<tr>"
+        htmlStr += "<td class='field_name'>#{typeName}</td>"
+        htmlStr += "<td class='field_unit'>#{unit}</td>"
+        htmlStr += "<td class='field_type'>#{typeName}</td>"
+        
+        if not (type in [(helpers.get_field_type "Latitude"), (helpers.get_field_type "Longitude")])
+          htmlStr += "<td><a class='field_edit_link'><i class='icon-edit'></i></a><a href='/fields/#{msg.id}' class='field_save_link'><i class='icon-ok'></i></a></td>"
+        else
+          htmlStr += "<td></td>"
+        
+        htmlStr += "</tr>"
+        ($ '.fields_table').append htmlStr
 
+        ($ '.field_edit_link').click edit
+        ($ '.field_save_link').click save
 
-  $('.field_edit_link').click edit
-  $('.field_save_link').click save
-  $('.field_add_link').click add
-  $('#useLocation').click useLocation
+        if not (type in [(helpers.get_field_type "Latitude"), (helpers.get_field_type "Longitude")])
+          ($ '.field_edit_link').last().trigger 'click'
+        
+  ($ '.field_edit_link').click edit
+  ($ '.field_save_link').click save
+
+  ($ '.add_timestamp_field').click ->
+    addField helpers.get_field_type 'Timestamp'
+
+  ($ '.add_number_field').click ->
+    addField helpers.get_field_type 'Number'
+
+  ($ '.add_text_field').click ->
+    addField helpers.get_field_type 'Text'
+
+  ($ '.add_location_field').click ->
+    addField helpers.get_field_type 'Latitude'
+    addField helpers.get_field_type 'Longitude'
+    ($ '#add-field-dropdown ul li a.add_location_field').remove()
+
+    
   
