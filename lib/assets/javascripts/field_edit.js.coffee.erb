@@ -4,9 +4,10 @@ $(document).ready ->
   edit = ->
     name = $(@).parent().parent().find('.field_name')
     unit = $(@).parent().parent().find('.field_unit')
+    field = get_field_type ($(@).parent().parent().find('.field_type').text())
 
     name.wrapInner("<input type='text' class='name_edit_box' value='#{name.text().trim()}'>")
-    unit.wrapInner("<input type='text' class='unit_edit_box' value='#{unit.text().trim()}'>")
+    unit.wrapInner("<input type='text' class='unit_edit_box' value='#{unit.text().trim()}'>") if field is (get_field_type "Number")
     name.find('.name_edit_box').focus()
 
     $(@).hide()
@@ -17,9 +18,13 @@ $(document).ready ->
   save = ->
     name = $(@).parent().parent().find('.field_name')
     unit = $(@).parent().parent().find('.field_unit')
+    field = get_field_type ($(@).parent().parent().find('.field_type').text())
 
     name_text = name.find('.name_edit_box').val().trim()
-    unit_text = unit.find('.unit_edit_box').val().trim()
+    unit_text = if field is (get_field_type "Number")
+      unit.find('.unit_edit_box').val().trim()
+    else
+      ""
 
     data={}
     data['field'] = {}
@@ -117,6 +122,34 @@ $(document).ready ->
           $('.field_add_link').parent().parent().remove()
           $('.fields_table').append('<tr><td>Longitude</td><td>deg</td><td>Longitude</td><td></td></tr>')
           $('.fields_table').append('<tr><td colspan="4"><a class="field_add_link"><i class="icon-plus-sign"></i></a></td></tr>')
+
+  addField = (type) ->
+
+    typeName = helpers.get_field_name type
+    unit = helpers.get_default_unit type
+  
+    $.ajax
+      url: '/fields/'
+      type: 'POST'
+      dataType: 'json'
+      data:
+        field:
+          experiment_id: ($ '.fields_table').attr 'experiment'
+          name: typeName
+          unit: ''
+          field_type: type
+      success: (msg) =>
+        htmlStr  = "<tr>"
+        htmlStr += "<td class='field_name'>#{typeName}</td>"
+        htmlStr += "<td class='field_unit>#{unit}</td>"
+        htmlStr += "<td>#{typeName}</td><td></td>"
+
+        if not type in [get_field_type "Latitude", get_field_type "Longitude"]
+          htmlStr += "<a class='field_edit_link'><i class='icon-edit'></i></a><a href='/fields/#{msg.id}' class='field_save_link'><i class='icon-ok'></i></a>"
+          $('.field_edit_link').click edit
+          $('.field_save_link').click save
+        
+        htmlStr += "</tr>"
 
 
   $('.field_edit_link').click edit
