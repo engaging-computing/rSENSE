@@ -36,7 +36,6 @@ class window.Table extends BaseVis
 
         ($ "##{@canvas}").css 'padding-top'    , (globals.VIS_MARGIN / 2)
         ($ "##{@canvas}").css 'padding-left'   , (globals.VIS_MARGIN / 2)
-        ($ "##{@canvas}").height ($ "##{@canvas}").height() - globals.VIS_MARGIN
         
         #Calls update
         super()
@@ -69,9 +68,9 @@ class window.Table extends BaseVis
         ($ '#data_table').append '<tbody id="table_body"></tbody>'
         
         ($ '#table_body').append row for row in rows 
-        
+
         dt = 
-            sScrollY: "#{($ '#' + @canvas).height() - (110 + (globals.VIS_MARGIN / 2))}px"
+            sScrollY: "#{($ '#' + @canvas).height() - (122 + (globals.VIS_MARGIN / 2))}px"
             sScrollX: "100%"
             iDisplayLength: -1
             bDeferRender: true

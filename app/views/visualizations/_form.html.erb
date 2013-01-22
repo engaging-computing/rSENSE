@@ -1,10 +1,10 @@
-<%= form_for(@visualisation) do |f| %>
-  <% if @visualisation.errors.any? %>
+<%= form_for(@visualization) do |f| %>
+  <% if @visualization.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@visualisation.errors.count, "error") %> prohibited this visualisation from being saved:</h2>
+      <h2><%= pluralize(@visualization.errors.count, "error") %> prohibited this visualization from being saved:</h2>
 
       <ul>
-      <% @visualisation.errors.full_messages.each do |msg| %>
+      <% @visualization.errors.full_messages.each do |msg| %>
         <li><%= msg %></li>
       <% end %>
       </ul>

@@ -3,7 +3,7 @@ Rsense::Application.routes.draw do
 
   get "experiment_templates/index"
 
-  resources :visualisations
+  resources :visualizations
 
   #resources :experiment_sessions
 
@@ -33,12 +33,14 @@ Rsense::Application.routes.draw do
   match "/experiments/:id/createSession" => "experiments#createSession"
   match "/experiments/:id/addExperimentSession" => "experiments#addExperimentSession"
   
-  match "/experiments/:id/uploadCSV" => "experiments#uploadCSV"
-  match "/experiments/:id/manualEntry" => "experiments#manualEntry"
+  match "/experiments/:id/uploadCSV" => "experiment_sessions#uploadCSV"
+  match "/experiment_sessions/:eid/manualEntry" => "experiment_sessions#manualEntry"
+	match "/experiment_sessions/:eid/manualUpload" => "experiment_sessions#manualUpload"
+  
 	
 	#Routes for displaying data
-	match "/experiments/:id/sessions/*sessions" => "visualisations#displayVis"
-	match "/experiments/:id/sessions/" => "visualisations#displayVis"
+	match "/experiments/:id/sessions/*sessions" => "visualizations#displayVis"
+	match "/experiments/:id/sessions/" => "visualizations#displayVis"
 	
   match "/experiment_sessions/:id/postCSV" => "experiment_sessions#postCSV"
   match "/media_objects/saveimage/*keys" => "media_objects#saveimage"

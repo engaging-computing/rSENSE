@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Title:</b>
+  <%= @visualization.title %>
+</p>
+
+<p>
+  <b>User:</b>
+  <%= @visualization.user_id %>
+</p>
+
+<p>
+  <b>Experiment:</b>
+  <%= @visualization.experiment_id %>
+</p>
+
+<p>
+  <b>Content:</b>
+  <%= @visualization.content %>
+</p>
+
+<p>
+  <b>Data:</b>
+  <%= @visualization.data %>
+</p>
+
+<p>
+  <b>Globals:</b>
+  <%= @visualization.globals %>
+</p>
+
+
+<%= link_to 'Edit', edit_visualization_path(@visualization) %> |
+<%= link_to 'Back', visualizations_path %>
