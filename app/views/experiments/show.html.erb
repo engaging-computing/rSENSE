@@ -73,10 +73,7 @@
                 </th>
                 <% @experiment.fields.all.each do |f| %>
                     <%= render 'field_edit', field: f, type: "field",row_id: f.id,can_edit: (@experiment.owner.id == @cur_user.try(:id) and (f.field_type != LATITUDE_TYPE and f.field_type != LONGITUDE_TYPE ))%>
-                <% end %> 
-                <%if @experiment.owner.id == @cur_user.try(:id)%>
-                    <tr><td colspan="3"><a class="field_add_link"><i class="icon-plus-sign"></i></a></td></tr>
-                <%end%>
+                <% end %>
             </table>
         <%end%>
 
@@ -94,6 +91,8 @@
             <div class="span1 center">
                 <a id="google_doc" href=""><img style="height: 75px;" src="/assets/google.svg" /><br />
                 Google Doc</a>
+            </div>
+            <div class="clear">
             </div>
        
         <% end %>
