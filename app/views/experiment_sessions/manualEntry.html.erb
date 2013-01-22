@@ -1,6 +1,6 @@
 <script type="text/javascript">
   window.fields = JSON.parse('<%= raw @experiment.fields.to_json%>');
-  window.postURL = '<%= url_for :controller => :experiments, :action => :addExperimentSession, :id => @experiment %>';
+  window.postURL = '<%= url_for :controller => :experiment_sessions, :action => :manualUpload, :eid => @experiment.id %>';
 </script>
 
 <div class="row">

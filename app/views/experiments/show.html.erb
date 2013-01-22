@@ -83,7 +83,7 @@
         <%=render layout: "shared/collapse", locals: {title: 'Create Session', width:'4'} do %>
        
             <div class="span1 center">
-                <%= link_to :controller => :experiments, :action => :manualEntry, :id => @experiment do %>
+                <%= link_to :controller => :experiment_sessions, :action => :manualEntry, :eid => @experiment.id do %>
                 <img style="height: 75px;" src="/assets/manual.svg" /><br />Manual Entry
                 <% end %>
             </div>
