@@ -6,7 +6,7 @@ module FieldsHelper
   
   def get_field_name (field)
     if field == 1
-      "Time"
+      "Timestamp"
     elsif field == 2
       "Number"
     elsif field == 3
@@ -19,7 +19,7 @@ module FieldsHelper
   end
   
   def get_field_type (field)
-    if field == "Time"
+    if field == "Timestamp"
       1
     elsif field == "Number"
       2

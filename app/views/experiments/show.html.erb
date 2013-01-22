@@ -1,3 +1,24 @@
+<script type="text/javascript">
+
+  $(document).ready(function(){
+    
+    $('#upload_csv').click(function(){
+    
+      $('#csv_file_input').click();
+      
+      return false;
+    
+    });
+    
+      $('#csv_file_input').change(function(){
+      
+        $('#csv_file_form').submit();
+      
+      });
+  
+  });
+
+</script>
 <p id="notice"><%= notice %></p>
 
 <div class="row">
@@ -49,7 +70,7 @@
         <%=render layout: "shared/collapse", locals: {title: 'Create Session', width:'4'} do %>
        
             <div class="span1 center">
-                <%= link_to :controller => :experiments, :action => :manualEntry, :id => @experiment do %>
+                <%= link_to :controller => :experiment_sessions, :action => :manualEntry, :eid => @experiment.id do %>
                 <img style="height: 75px;" src="/assets/manual.svg" /><br />Manual Entry
                 <% end %>
             </div>
@@ -77,9 +98,6 @@
                     </tr>
                 <% end %>
             </table>
-            <div id="add_session" class="center">
-              <%= button_to "Create Session", {:controller => :experiments, :action => :createSession} %>
-            </div>
         <%end%>
 
         <%=render layout: "shared/collapse", locals: {title: 'Media',width: '4'} do %>
@@ -114,3 +132,11 @@
  <input type="hidden" name="experiment_id" value="<%=@experiment.id%>"/>
 	<%= submit_tag "Clone Experiment" %>
 <%end%>
+
+<div id="hidden_form_div" style="display:none;">
+  
+  <%= form_tag "./#{@experiment.id}/uploadCSV", multipart: true, id: 'csv_file_form' do %>
+    <%= file_field_tag 'csv', id: 'csv_file_input' %>
+  <% end %>
+  
+</div>
