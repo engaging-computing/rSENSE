@@ -47,23 +47,33 @@
     <div class="row">
         <%=render layout: "shared/collapse", locals: {title: 'Fields',width: '4'} do %>
       
-            <% if (@experiment.fields.any? {|field| field.field_type == LONGITUDE_TYPE or field.field_type == LATITUDE_TYPE}) %>
-            <% else %>
-            <div id="useLocationDiv" style="margin-bottom: 30px;">
-              <button id="useLocation">Use Location</button>
-            </div>      
-            <% end %>
-            
             <table class="table fields_table" experiment="<%=@experiment.id%>">
                 <th>Name</th>
                 <th>Units</th>
                 <th>Type</th>
+                <th>
+                  <!-- Add field dropdown -->
+                  <%if @experiment.owner.id == @cur_user.try(:id)%>
+                    <div class='btn-group' id='add-field-dropdown'>
+                      <a class='btn-mini btn-success dropdown-toggle' data-toggle='dropdown' href='#'>
+                        Add Field
+                        <span class='caret'/>
+                      </a>
+                      <ul class='dropdown-menu'>
+                        <li><a href='#' class=add_timestamp_field> Timestamp </a></li>
+                        <li><a href='#' class=add_number_field> Number </a></li>
+                        <li><a href='#' class=add_text_field> Text </a></li>
+                        <% if (@experiment.fields.any? {|field| field.field_type == LONGITUDE_TYPE or field.field_type == LATITUDE_TYPE}) %>
+                        <% else %>
+                          <li><a href='#' class=add_location_field> Location </a></li>
+                        <% end %>
+                      </ul>
+                    </div>
+                  <%end%>
+                </th>
                 <% @experiment.fields.all.each do |f| %>
                     <%= render 'field_edit', field: f, type: "field",row_id: f.id,can_edit: (@experiment.owner.id == @cur_user.try(:id) and (f.field_type != LATITUDE_TYPE and f.field_type != LONGITUDE_TYPE ))%>
-                <% end %> 
-                <%if @experiment.owner.id == @cur_user.try(:id)%>
-                    <tr><td colspan="3"><a class="field_add_link"><i class="icon-plus-sign"></i></a></td></tr>
-                <%end%>
+                <% end %>
             </table>
         <%end%>
 
@@ -81,6 +91,8 @@
             <div class="span1 center">
                 <a id="google_doc" href=""><img style="height: 75px;" src="/assets/google.svg" /><br />
                 Google Doc</a>
+            </div>
+            <div class="clear">
             </div>
        
         <% end %>
