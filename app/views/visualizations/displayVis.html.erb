@@ -62,9 +62,10 @@
       <% i = 0 %>
       <% @sessions.each do |s| %>
           <li class="vis_tab"><a href="#<%=s.id%>">
-            <%= experiment_session_edit_helper 'title', @sessions[i].owner.id == @cur_user.try(:id), @sessions[i] %>
+            <%= experiment_session_edit_helper 'title', @sessions[i].owner.id == @cur_user.try(:id), @sessions[i], make_link = false %>
           </a></li>
         <% i=i+1 %>
+
       <% end %>
     </ul>
     
@@ -74,4 +75,6 @@
        <% i=i+1 %>
     <% end %>
   </div>
+
+
 </div>
