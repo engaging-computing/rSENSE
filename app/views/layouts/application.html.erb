@@ -62,7 +62,7 @@
         <% else %>
         
           <div class="btn-group">
-            <button class="btn btn-small btn-info"><a href="<%= user_path(@cur_user) %>" style="color:white;">Eric Fairbanks</a></button>
+            <button class="btn btn-small btn-info"><a href="<%= user_path(@cur_user) %>" style="color:white;"><%= @cur_user.name %></a></button>
             <button class="btn btn-small dropdown-toggle btn-info" data-toggle="dropdown">
               <span class="caret"></span>
             </button>
