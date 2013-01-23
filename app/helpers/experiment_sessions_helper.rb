@@ -1,7 +1,7 @@
 module ExperimentSessionsHelper
   
-  def experiment_session_edit_helper(field,can_edit = false,experiment_session = @experiment_session)
-     render 'shared/edit_info', {type: 'experiment_session', field: field, value: experiment_session[field], row_id: experiment_session.id, can_edit: can_edit}
+  def experiment_session_edit_helper(field,can_edit = false,experiment_session = @experiment_session,make_link = true)
+     render 'shared/edit_info', {type: 'experiment_session', field: field, value: experiment_session[field], row_id: experiment_session.id, can_edit: can_edit, make_link: make_link}
   end
     
   def experiment_session_redactor_helper(session, can_edit = false)
