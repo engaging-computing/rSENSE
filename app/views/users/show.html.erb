@@ -35,30 +35,27 @@
   </div>
  </div>
  
- <div class="span7">
-  <%= form_tag users_path, method: 'get', id:'users_search', class:'navbar-search' do%>
-    <div class="feed-top">
-      <h2>My Stuff</h2>
-      <select name="sort" class="experiments_sort_select">
-        <option value="DESC">Newest First</option>
-        <option value="ASC">Oldest First</option>
-      </select>
-      <div style="width:40%;float:left;margin-left:20px;">
-        <%= text_field_tag :search, params[:search], class:'search-query'%>
+  <div class="span7">
+    <%= form_tag users_path, method: 'get', id:'mystuff_search', class:'navbar-search' do%>
+      <div class="feed-top">
+        <h2>My Stuff</h2>
+        <div style="width:20%;float:left;">
+          <select name="sort" class="mystuff_sort_select">
+            <option value="DESC">Newest First</option>
+            <option value="ASC">Oldest First</option>
+          </select>
+        </div>
+        <div style="width:40%;float:left;margin-left:20px;">
+              <%= text_field_tag :search, params[:search], class:'search-query'%>
+        </div>
       </div>
-      <div style="width:20%;float:left;margin-left:40px;">
-        <%= submit_tag "Search", name: nil, class:'btn'%>
-      </div>
+    <%end%>
+    
+    <div id="mystuff">
+      <%= render 'display_mystuff'%>
     </div>
-  <%end%>
-  <% @stuff.each do |thing| %>
-    <div class="<%= cycle('feed-even', 'feed-odd')%>">
-      <h5><%= thing.title%></h5>  
-      <p><%= time_ago_in_words(thing.created_at)%></p>
+    <div class="feed-bottom">
     </div>
-   <% end%> 
-  <div class="feed-bottom"></div>
- </div>
 </div> 
 
 

@@ -12,3 +12,11 @@ $ ->
 
     $(".users_sort_select").change ->
       $("#users_search").submit()
+      
+      
+    $(".mystuff_sort_select").change ->
+      $("#mystuff_search").submit()
+    
+    $("#mystuff_search").submit ->
+      $.get("/users/jim", $(this).serialize(), null, "script")
+      return false

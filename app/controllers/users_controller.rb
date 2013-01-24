@@ -18,10 +18,14 @@ class UsersController < ApplicationController
 
   # GET /users/1
   # GET /users/1.json
-  def show
+  def show    
     @user = User.find_by_username(params[:id])
-   
-    @stuff = @user.experiments + @user.experiment_sessions + @user.media_objects
+ 
+    experiments = @user.experiments.search(params[:search])
+    sessions = @user.experiment_sessions.search(params[:search])
+    media_objects = @user.media_objects.search(params[:search])
+    
+    @contributions = experiments + sessions + media_objects
     
     #Main List
     if !params[:sort].nil?
@@ -29,20 +33,13 @@ class UsersController < ApplicationController
     else
       sort = "DESC"
     end
-    
-    if sort=="ASC" or sort=="DESC"
-      @stuff.sort! {|a,b| b.created_at <=> a.created_at}
 
-      #@experiments = Experiment.filter(params[:filters]).search(params[:search]).paginate(page: params[:page], per_page: 8).order("created_at #{sort}")
+    if sort=="ASC"
+      @contributions.sort! {|a,b| a.created_at <=> b.created_at} 
     else
-      @stuff.sort! {|a,b| a.created_at <=> b.created_at} 
-      #@experiments = Experiment.filter(params[:filters]).search(params[:search]).paginate(page: params[:page], per_page: 8).order("like_count DESC")
+      @contributions.sort! {|a,b| b.created_at <=> a.created_at}
     end
     
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @user }
-    end
   end
 
   # GET /users/new
