@@ -19,11 +19,46 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
+    
+    #Grab the User
     @user = User.find_by_username(params[:id])
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @user }
+    
+    #See if we are only looking for specific contributions
+    filters = params[:filters] || []
+    @contributions = []
+    
+    #Only grab the contributions we are currently interested in
+    if !filters.empty?
+      if filters.include? "experiments"
+        @contributions += @user.experiments.search(params[:search])
+      end
+      
+      if filters.include? "sessions"
+         @contributions += @user.experiment_sessions.search(params[:search]) || []
+      end
+      
+      if filters.include? "media"
+         @contributions += @user.media_objects.search(params[:search]) || []
+      end
+    else
+      @contributions += @user.experiments.search(params[:search])
+      @contributions += @user.experiment_sessions.search(params[:search])
+      @contributions += @user.media_objects.search(params[:search])
     end
+
+    #Set up the sort order
+    if !params[:sort].nil?
+      sort = params[:sort]
+    else
+      sort = "DESC"
+    end
+    
+    if sort=="ASC"
+      @contributions.sort! {|a,b| a.created_at <=> b.created_at} 
+    else
+      @contributions.sort! {|a,b| b.created_at <=> a.created_at}
+    end
+    
   end
 
   # GET /users/new
