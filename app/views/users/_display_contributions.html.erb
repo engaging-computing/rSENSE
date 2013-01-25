@@ -1,0 +1,9 @@
+<% @contributions.each do |x| %>
+  <div class="<%= cycle('feed-even', 'feed-odd')%>">
+    <div style="display:block">
+      <%=raw user_contributions_helper(x.class)%>
+      <%= x.title%>
+    </div> 
+    <p><%= time_ago_in_words(x.created_at)%></p>
+  </div>
+<% end%> 
