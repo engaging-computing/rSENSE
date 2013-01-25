@@ -8,4 +8,10 @@ module UsersHelper
       render 'shared/content', {type: 'user', field: "content", content: @user.content, row_id: @user.username,has_content: !@user.content.blank? , can_edit: can_edit}
   end
   
+  def user_contributions_helper(stuff_type)
+      if stuff_type.to_s == "Experiment"
+        "<i class='icon-folder-open'></i>&nbsp;&nbsp;"
+      end
+  end
+  
 end
