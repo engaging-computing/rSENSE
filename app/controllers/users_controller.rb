@@ -19,25 +19,26 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
-    
+    logger.info "---------"
+    logger.info params
     #Grab the User
     @user = User.find_by_username(params[:id])
     
     #See if we are only looking for specific contributions
-    filters = params[:filters] || []
+    @filters = params[:filters] || []
     @contributions = []
     
     #Only grab the contributions we are currently interested in
-    if !filters.empty?
-      if filters.include? "experiments"
+    if !@filters.empty?
+      if @filters.include? "experiments"
         @contributions += @user.experiments.search(params[:search])
       end
       
-      if filters.include? "sessions"
+      if @filters.include? "sessions"
          @contributions += @user.experiment_sessions.search(params[:search]) || []
       end
       
-      if filters.include? "media"
+      if @filters.include? "media"
          @contributions += @user.media_objects.search(params[:search]) || []
       end
     else
