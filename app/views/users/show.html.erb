@@ -36,11 +36,11 @@
  </div>
  
   <div class="span7">
-    <%= form_tag users_path, method: 'get', id:'mystuff_search', class:'navbar-search' do%>
+    <%= form_tag users_path, method: 'get', id:'contribution_search', class:'navbar-search' do%>
       <div class="feed-top">
         <h2>My Stuff</h2>
         <div style="width:20%;float:left;">
-          <select name="sort" class="mystuff_sort_select">
+          <select name="sort" class="contribution_sort_select">
             <option value="DESC">Newest First</option>
             <option value="ASC">Oldest First</option>
           </select>
@@ -48,11 +48,18 @@
         <div style="width:40%;float:left;margin-left:20px;">
               <%= text_field_tag :search, params[:search], class:'search-query'%>
         </div>
+        <div class="clear"></div>
+        <div style="margin-bottom:10px;">
+          Experiments: <%= check_box_tag "filters[]", "experiments", false, class: 'contribution_type_checkbox'%>&nbsp;&nbsp;&nbsp;
+          Sessions: <%= check_box_tag "filters[]", "sessions", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
+          Visualizations: <%= check_box_tag "filters[]", "visualizations", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
+          Media: <%= check_box_tag "filters[]", "media", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
+        </div>
       </div>
     <%end%>
     
-    <div id="mystuff">
-      <%= render 'display_mystuff'%>
+    <div id="contributions">
+      <%= render 'display_contributions'%>
     </div>
     <div class="feed-bottom">
     </div>

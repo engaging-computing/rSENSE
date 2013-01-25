@@ -18,14 +18,34 @@ class UsersController < ApplicationController
 
   # GET /users/1
   # GET /users/1.json
-  def show    
-    @user = User.find_by_username(params[:id])
- 
-    experiments = @user.experiments.search(params[:search])
-    sessions = @user.experiment_sessions.search(params[:search])
-    media_objects = @user.media_objects.search(params[:search])
+  def show
     
-    @contributions = experiments + sessions + media_objects
+    @user = User.find_by_username(params[:id])
+    
+    filters = params[:filters] || []
+    @contributions = []
+    
+    if !filters.empty?
+      if filters.include? "experiments"
+        @contributions += @user.experiments.search(params[:search])
+      end
+      
+      if filters.include? "sessions"
+         @contributions += @user.experiment_sessions.search(params[:search]) || []
+      end
+      
+      if filters.include? "media"
+         @contributions += @user.media_objects.search(params[:search]) || []
+      end
+      
+    else
+      @contributions += @user.experiments.search(params[:search])
+      @contributions += @user.experiment_sessions.search(params[:search])
+      @contributions += @user.media_objects.search(params[:search])
+    end
+
+    
+   
     
     #Main List
     if !params[:sort].nil?
