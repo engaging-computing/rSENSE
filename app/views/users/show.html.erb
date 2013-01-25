@@ -36,7 +36,7 @@
  </div>
  
   <div class="span7">
-    <%= form_tag users_path, method: 'get', id:'contribution_search', class:'navbar-search' do%>
+    <%= form_tag users_path, method: 'get', id:'contribution_search', class:'navbar-search', name: @user.username do%>
       <div class="feed-top">
         <h2>My Stuff</h2>
         <div style="width:20%;float:left;">
