@@ -1,67 +1,68 @@
 <p id="notice">
     <%= notice %>
 </p>
-
 <div class="row">
-    <div class="span3">
-        <div class="row">
-          <div class="span3">
-            <%if @user.email?%>
-              <div style="float:left;">
-                  <%= gravatar_image_tag(@user.email, alt: @user.firstname) %>
-              </div>
-            <%end%>
-            <span class="info_label">First Name:</span> 
-            <%= user_edit_helper 'firstname', (@user.id == @cur_user.id) %>
-            <br />
-            <br />
-            <%if @user.id == @cur_user.try(:id)%>
-              <span class="info_label">Last Name:</span>
-              <%= user_edit_helper 'lastname', (@user.id == @cur_user.id) %>
-              <br />
-              <br />
-            <%end%>
-            <span class="info_label">Username:</span>
-            <%= user_edit_helper 'username' %>
-            <br />
+  <div class="span5">
+  <div class="row">
+    <div class="span5">
+      <%if @user.email?%>
+        <div style="float:left;">
+            <%= gravatar_image_tag(@user.email, alt: @user.firstname) %>
+        </div>
+      <%end%>
+      <span class="info_label">First Name:</span> 
+      <%= user_edit_helper 'firstname', (@user.id == @cur_user.id) %>
+      <br />
+      <br />
+      <%if @user.id == @cur_user.try(:id)%>
+        <span class="info_label">Last Name:</span>
+        <%= user_edit_helper 'lastname', (@user.id == @cur_user.id) %>
+        <br />
+        <br />
+      <%end%>
+      <span class="info_label">Username:</span>
+      <%= user_edit_helper 'username' %>
+      <br />
+    </div>
+  </div>
+
+  <div class="row">
+        <div class="span5">
+          <div>
+              <%= user_redactor_helper (@user.id == @cur_user.try(:id))%>
           </div>
+      </div>
+  </div>
+ </div>
+ 
+  <div class="span7">
+    <%= form_tag users_path, method: 'get', id:'contribution_search', class:'navbar-search' do%>
+      <div class="feed-top">
+        <h2>My Stuff</h2>
+        <div style="width:20%;float:left;">
+          <select name="sort" class="contribution_sort_select">
+            <option value="DESC">Newest First</option>
+            <option value="ASC">Oldest First</option>
+          </select>
         </div>
-        <div class="row">
-            <%= render layout: 'shared/collapse', locals: {title: 'Experiments', width: '3'} do%>
-                <table class="table">
-                    <% @user.experiments.all.each do |e|%>
-                        <tr>
-                            <td>
-                            <%= link_to e.title, experiment_path(e.id)%>
-                            </td>
-                        </tr>
-                    <%end%>
-                </table>
-            <%end%>
+        <div style="width:40%;float:left;margin-left:20px;">
+              <%= text_field_tag :search, params[:search], class:'search-query'%>
         </div>
-        <div class="row">
-          <%= render layout: 'shared/collapse', locals: {title: 'Media', width: '3'} do%>
-              <table class="table">
-                  <% @user.media_objects.all.each do |mo| %>
-                      <tr>
-                          <td>
-                              <img src='<%=mo.src%>'width="100px" height="100px"/>
-                          </td>
-                          <td>
-                              <%= link_to mo.name, media_object_path(mo.id)%>
-                          </td>
-                      </tr>
-                  <%end%>
-              </table>
-          <%end%>
+        <div class="clear"></div>
+        <div style="margin-bottom:10px;">
+          Experiments: <%= check_box_tag "filters[]", "experiments", false, class: 'contribution_type_checkbox'%>&nbsp;&nbsp;&nbsp;
+          Sessions: <%= check_box_tag "filters[]", "sessions", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
+          Visualizations: <%= check_box_tag "filters[]", "visualizations", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
+          Media: <%= check_box_tag "filters[]", "media", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
         </div>
-    </div>
+      </div>
+    <%end%>
     
-    <div class="span9">
-        <div>
-            <%= user_redactor_helper (@user.id == @cur_user.try(:id))%>
-        </div>
+    <div id="contributions">
+      <%= render 'display_contributions'%>
     </div>
-</div>
+    <div class="feed-bottom">
+    </div>
+</div> 
 
 
