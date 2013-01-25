@@ -18,7 +18,7 @@ $ ->
       $("#contribution_search").submit()
     
     $("#contribution_search").submit ->
-      $.get("/users/jim", $(this).serialize(), null, "script")
+      $.get("/users/#{$(this).attr('name')}", $(this).serialize(), null, "script")
       return false
       
     $(".contribution_type_checkbox").click ->
