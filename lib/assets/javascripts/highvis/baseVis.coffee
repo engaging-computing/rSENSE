@@ -203,7 +203,7 @@ class window.BaseVis
         ($ "#saveControl button").button()
         
         ($ "#saveVisButton").click ->
-            globals.verifyUser (-> globals.savedVisDialog()), (-> alert 'You must be logged in to save a visualization.')
+            globals.verifyUser (-> globals.saveVis()), (-> alert 'You must be logged in to save a visualization.')
 
         ###
         ($ '#downloadVisButton').click =>
