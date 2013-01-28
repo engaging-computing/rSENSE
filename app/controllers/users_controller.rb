@@ -100,4 +100,15 @@ class UsersController < ApplicationController
       render action: "validate"
     end
   end
+
+  # GET /users/verify
+  def verify
+    respond_to do |format|
+      if @cur_user == nil
+        format.json {render json: "", status: :unauthorized}
+      else
+        format.json {render json: "", status: :ok}
+      end
+    end
+  end
 end
