@@ -45,7 +45,7 @@
 
   <div class="span4">
     <div class="row">
-        <%=render layout: "shared/collapse", locals: {title: 'Fields',width: '4'} do %>
+        <%=render layout: "shared/collapse", locals: {title: 'Fields',width: '4', unique_id: 'fields', should_hide: false} do %>
       
             <table class="table fields_table" experiment="<%=@experiment.id%>">
                 <th>Name</th>
@@ -77,7 +77,9 @@
             </table>
         <%end%>
 
-        <%=render layout: "shared/collapse", locals: {title: 'Create Session', width:'4'} do %>
+
+
+        <%=render layout: "shared/collapse", locals: {title: 'Create Session', width:'4', unique_id: 'create_session', should_hide: !@has_fields} do %>
        
             <div class="span1 center">
                 <%= link_to :controller => :experiment_sessions, :action => :manualEntry, :eid => @experiment.id do %>
@@ -96,8 +98,11 @@
             </div>
        
         <% end %>
-        
-        <%=render layout: "shared/collapse", locals: {title: 'Sessions',width: '4'} do %>
+
+
+
+
+        <%=render layout: "shared/collapse", locals: {title: 'Sessions', width: '4', unique_id: 'sessions', should_hide: false} do %>
             <table class="table">
                 <% @experiment.experiment_sessions.all.each do |s| %>
                     <tr>
@@ -112,7 +117,7 @@
             </table>
         <%end%>
 
-        <%=render layout: "shared/collapse", locals: {title: 'Media',width: '4'} do %>
+        <%=render layout: "shared/collapse", locals: {title: 'Media', width: '4', unique_id: 'media', should_hide: false} do %>
             <table class="table">
                 <% @experiment.media_objects.all.each do |mo| %>
                     <tr>
@@ -124,7 +129,7 @@
         <%end%>
 
         <% if @experiment.owner.id == @cur_user.try(:id) %>
-          <%=render layout: "shared/collapse", locals: {title: 'Tools',width: '4'} do %>
+          <%=render layout: "shared/collapse", locals: {title: 'Tools', width: '4', unique_id: 'tools', should_hide: false} do %>
               <%=form_tag experiments_path, method: 'get', id: @experiment.id, class:'experiment_filters' do%>
                   Math: <%= check_box_tag "math", "math", (filter_exists "math"), class: 'experiments_add_filter_checkbox' %><br>
                   Physics: <%= check_box_tag "physics", "physics", (filter_exists "physics"), class: 'experiments_add_filter_checkbox' %><br>
