@@ -1,5 +1,5 @@
 <span class="edit_info" field='<%=field%>' type='<%=type%>'>
-    <span class="info_text"><%= link_to value, "/#{type.pluralize}/#{row_id}" %></span>
+	<%if make_link %><span class="info_text"><%= link_to value, "/#{type.pluralize}/#{row_id}" %></span><%else%><span class="info_text"><%=value%></span><%end%>
     <%if can_edit %>
         <span class="info_edit_link"><i class="icon-edit"></i></span>
         <span href="/<%=type.pluralize%>/<%=row_id%>" class="info_save_link"><i class="icon-ok"></i></span>

@@ -146,6 +146,11 @@ table.editablegrid > tbody > tr > td
     resize:none;
 }
 
+.info_text
+{
+	font-weight: bold;
+}
+
 .type_content
 {
     -webkit-border-radius: 10px 10px 10px 10px;
