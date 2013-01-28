@@ -38,21 +38,32 @@ a string with the new VID.
 globals.saveVis = (title, desc, succCallback, failCallback) ->
     savedData = globals.serializeVis()
 
+    ## construct default name
+    sessionNames = for index, ses of data.metadata
+      ses.name
+
+    sessionNames = sessionNames.join ', '
+
+    if sessionNames.length >= 30
+      sessionNames = (sessionNames.slice 0, 27) + '...'
+
+    name = 'Saved Vis - ' + data.experimentName + "(#{sessionNames})"
+
     req = $.ajax
         type: 'POST'
-        url: "/actions/highvis.php"
+        url: "/visualizations"
+        dataType: 'json'
         data:
-            action: "save"
+          visualization:
             experiment_id: Number data.experimentID
-            title: title
-            description: desc
+            title: name
             data: savedData.data
             globals: savedData.globals
         success: (msg) ->
-            if not isNaN Number msg
-                succCallback(msg)
-            else
-                failCallback(msg)
+          id = Number msg
+          window.location = "/visualizations/#{id}"
+        error: (msg) ->
+          alert "Somthing went horribly wrong: " + msg
 
 ###
 Ajax call to check if the user is logged in. Calls the appropriate
@@ -62,76 +73,13 @@ globals.verifyUser = (succCallback, failCallback)->
 
     req = $.ajax
         type: 'GET'
-        url: "/actions/users.php"
-        data:
-            action: "verify"
-        success: (data) ->
-            if (Number data) is 1
-                succCallback(data)
-            else
-                failCallback(data)
-
-###
-Creates a saved vis dialog form. If the user finishes creating the new saved vis, the dialog will close
-and the page will be re-directed to the new saved vis.
-###
-globals.savedVisDialog = ->
-
-    formText = """
-    <div id="dialog-form" title="Save Visualization">
-
-        <form>
-        <fieldset>
-            <label for="title">Title:</label>
-            <input type="text" size="45 maxlength="64" name="title" id="savedVisTitle" class="text ui-widget-content ui-corner-all" /> <br> <span id="titleHint" class="hint"> </span> <br>
-            
-            <label for="desc">Description:</label> <br>
-            <textarea type="text" name="desc" maxlength="512" rows="10" cols="50" id="savedVisDesc" class="text ui-widget-content ui-corner-all" />
-            <br>
-        </fieldset>
-        </form>
-    </div>
-    """
-    
-    ($ "#container").append(formText)
-
-    
-    
-    ($ "#dialog-form" ).dialog
-        resizable: false
-        draggable: false
-        autoOpen: true
-        height: 'auto'
-        width: 'auto'
-        modal: true
-        open: ->
-            ($ "#dialog-form form").submit (evt) ->
-                ($ "#dialog-form").parent().find('button').trigger "click"
-                false
-        buttons :
-            Save: ->
-                valid = true
-                ($ '#dialog-form input').removeClass 'ui-state-error'
-                ($ '#dialog-form .hint').text('')
-            
-                if not (0 < ($ '#savedVisTitle').val().length <= 64)
-                    ($ '#savedVisTitle').addClass 'ui-state-error'
-                    ($ '#titleHint').text 'Title cannot be ommitted.'
-                    ($ '#titleHint').addClass 'ui-state-highlight'
-                    setTimeout (-> ($ '#titleHint').removeClass 'ui-state-highlight', 1500), 500
-                    valid = false
-
-                if valid
-                    (globals.saveVis (
-                        ($ '#savedVisTitle').val()  ),(
-                        ($ '#savedVisDesc').val()   ),(
-                        (v) ->
-                            window.location = "../highvis.php?vid=#{v}"
-                            ($ "#dialog-form").dialog 'close' ),(
-                        (v) ->
-                            alert 'Error:' + v  ))
-        close: ->
-            ($ '#dialog-form').remove()
+        url: "/users/verify"
+        dataType: 'json'
+        data: {}
+        success: (msg, status, details) ->
+          succCallback()
+        error: (msg, status, details) ->
+          failCallback()
 
 ###
 Serializes all vis data. Strips functions from the objects bfire serializing
