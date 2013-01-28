@@ -29,19 +29,19 @@ Rsense::Application.routes.draw do
   #Routes for experiment templates
   match "/experiment_templates" => "experiment_templates#index"
 
-	#Routes for uploading data
+  #Routes for uploading data
   match "/experiments/:id/createSession" => "experiments#createSession"
   match "/experiments/:id/addExperimentSession" => "experiments#addExperimentSession"
   
   match "/experiments/:id/uploadCSV" => "experiment_sessions#uploadCSV"
   match "/experiment_sessions/:eid/manualEntry" => "experiment_sessions#manualEntry"
-	match "/experiment_sessions/:eid/manualUpload" => "experiment_sessions#manualUpload"
+  match "/experiment_sessions/:eid/manualUpload" => "experiment_sessions#manualUpload"
   
-	
-	#Routes for displaying data
-	match "/experiments/:id/sessions/*sessions" => "visualizations#displayVis"
-	match "/experiments/:id/sessions/" => "visualizations#displayVis"
-	
+
+  #Routes for displaying data
+  match "/experiments/:id/sessions/*sessions" => "visualizations#displayVis"
+  match "/experiments/:id/sessions/" => "visualizations#displayVis"
+
   match "/experiment_sessions/:id/postCSV" => "experiment_sessions#postCSV"
   match "/media_objects/saveimage/*keys" => "media_objects#saveimage"
   
@@ -49,14 +49,16 @@ Rsense::Application.routes.draw do
     post 'login' => :create
     delete 'login' => :destroy
   end
-  
+
+  match "/users/verify" => "users#verify"
   resources :users
   match "/users/validate/:key" => "users#validate"
   
+  
   match "/experiments/:id/addExperimentSession" => "experiments#addExperimentSession"
   
-	match "/experiments/:id/updateLikedStatus" => "experiments#updateLikedStatus"
-	
+  match "/experiments/:id/updateLikedStatus" => "experiments#updateLikedStatus"
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
