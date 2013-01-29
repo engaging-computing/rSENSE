@@ -1,25 +1,20 @@
-<h1>Listing tutorials</h1>
-
-<table>
-  <tr>
-    <th>Content</th>
-    <th>Title</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @tutorials.each do |tutorial| %>
-  <tr>
-    <td><%= tutorial.content %></td>
-    <td><%= tutorial.title %></td>
-    <td><%= link_to 'Show', tutorial %></td>
-    <td><%= link_to 'Edit', edit_tutorial_path(tutorial) %></td>
-    <td><%= link_to 'Destroy', tutorial, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
+<div class="row">
+  <div class="span12">
+    <div class="row">
+      <div class="span12">
+        <%= form_tag tutorials_path, method: 'get', id: 'tutorials_search', class: 'navbar-search' do%>
+          <div class="feed-top">
+            <h1>Tutorials</h1>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div class="row">
+      <div id="tutorials" class="span12">
+        <%=render 'display_tutorials'%>
+      </div>
+    </div>
+  </div>
+</div>
 
 <%= link_to 'New Tutorial', new_tutorial_path %>
