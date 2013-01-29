@@ -1,16 +1,61 @@
+<script type="text/javascript">
+
+  $(document).ready(function(e){
+    
+    var numCols = 1;
+    
+    while($('#experiments').width()/numCols>200) numCols++;
+    
+    $('#experiments').imagesLoaded( function(){
+      $('.item').width(($('#experiments').width()/numCols)-35);
+      $('#experiments').isotope({
+        // options
+        itemSelector : '.item',
+        layoutMode : 'masonry',
+        masonry: { columnWidth: $('#experiments').width() / numCols },
+      });
+    });
+    
+  });
+  
+  $(window).resize(function(){
+    
+    var numCols = 1;
+    
+    while($('#experiments').width()/numCols>300) numCols++;
+    
+    console.log($('#experiments').width());
+    console.log(numCols);
+    
+    $('.item').width(($('#experiments').width()/numCols)-35);
+    
+    $('#experiments').isotope( 'option', { masonry: { columnWidth: ($('#experiments').width() / numCols) } } );
+    
+    $('#experiments').isotope('reLayout');
+    
+  });
+</script>
+
 <% @experiments.each do |experiment| %>
-<div class="<%= cycle('feed-even', 'feed-odd')%>">
-  <h4><%= link_to experiment.title, experiment_path(experiment) %><%if experiment.featured%><span style="color:#57C142"> (featured)</span><%end%></h4>
-  <b>Owner: </b><%= link_to "#{experiment.owner.firstname} #{experiment.owner.lastname[0]}", user_path(experiment.owner) %><br>
-  <b>Created: </b><%= time_ago_in_words(experiment.created_at)%> ago (on <%=experiment.created_at.strftime("%B %d, %Y")%>)<br>
-  <%if !experiment.filter.nil?%>
-  <b>Filters: </b><%=experiment.filter%>
-  <%end%>
-</div>
+    <% if !experiment.media_objects.empty? %>
+      <div class="item" style="">
+        <!--<div class="innerItem">-->
+      <% experiment.media_objects.each do |mo| %>
+        <% if mo.media_type == "image" %>
+            <img src="<%= mo.src %>"></img>
+        <% end %>
+      <% end %>
+    <% else %>
+      <div class="item" style="">
+        <!--<div class="innerItem">-->
+    <% end %>
+    <h4 style="margin-top:0px;"><%= link_to experiment.title, experiment_path(experiment) %><%if experiment.featured%><span style="color:#57C142"> (featured)</span><%end%></h4>
+    <b>Owner: </b><%= link_to "#{experiment.owner.firstname} #{experiment.owner.lastname[0]}", user_path(experiment.owner) %><br>
+    <b>Created: </b><%= time_ago_in_words(experiment.created_at)%> ago (on <%=experiment.created_at.strftime("%B %d, %Y")%>)<br>
+    <%if !experiment.filter.nil?%>
+      <b>Filters: </b><%=experiment.filter%>
+      <%end%>
+    <!--</div>-->
+  </div>
 <% end %>
 
-<div class="feed-bottom">
-
-<%= will_paginate @experiments %>
-
-</div>
