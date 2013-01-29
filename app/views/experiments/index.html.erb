@@ -1,11 +1,11 @@
 
 <div class="row">
 
-  <div class="span8">
+  <div class="span12">
     <div class="row">
-      <div class="span8">
+      <div class="span12">
         <%=form_tag experiments_path, method: 'get', id: 'experiments_search', class:'navbar-search' do%>
-          <div class="feed-top">
+          <div class="experiments-top">
             <h1>Experiments</h1>
             <div style="width:20%;float:left;">
               <select name="sort" class="experiments_sort_select">
@@ -33,12 +33,14 @@
       </div>
     </div>
     <div class="row">
-      <div id="experiments" class="span8">
-        <%=render 'display_experiments'%>
+      <div id="experiments" class="span12" style="overflow:visible;z-index:0;">
+        <div style="width:100%;height:100%;border:0px solid grey;overflow:visible;padding:10px;">
+          <%=render 'display_experiments'%>
+        </div>
       </div>
     </div>
   </div>
-  
+  <!--
   <div class="span4">
     <%if @cur_user.try(:id)%>
       <div class="sidebar_box grey_content center" style="margin:0px;">
@@ -47,9 +49,8 @@
         <%end%>
         <h4 class="center" style="color:#279112;">Create Experiment</h4>
       </div>
-    <%end%>
-    <%=render 'featured_experiments'%>   
+    <%end%> 
   </div>
-  
+  -->
 </div>
 
