@@ -1,6 +1,6 @@
 class Experiment < ActiveRecord::Base
-  attr_accessible :content, :title, :user_id, :filter, :cloned_from, :like_count, :has_fields
-
+  attr_accessible :content, :title, :user_id, :filter, :cloned_from, :like_count, :has_fields, :featured
+  
   validates_presence_of :title
   validates_presence_of :user_id
   

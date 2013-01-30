@@ -1,13 +1,13 @@
 <div class="row">
 
-  <%= form_for(@tutorial) do |f| %>
+  <%= form_for(@user) do |f| %>
     <div class="span12">
-      <% if @tutorial.errors.any? %>
+      <% if @user.errors.any? %>
         <div id="error_explanation">
-          <h2><%= pluralize(@tutorial.errors.count, "error") %> prohibited this tutorial from being saved:</h2>
+          <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
 
           <ul>
-          <% @tutorial.errors.full_messages.each do |msg| %>
+          <% @user.errors.full_messages.each do |msg| %>
             <li><%= msg %></li>
           <% end %>
           </ul>
@@ -16,7 +16,7 @@
     </div>
     <div class="span12">
       <div class="field">
-        Title: <%= f.text_field :title %>
+        Is Admin: <%= f.check_box :admin %>
       </div>
       <div class="clear"></div>
       <div class="actions">

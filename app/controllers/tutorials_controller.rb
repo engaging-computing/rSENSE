@@ -1,6 +1,8 @@
 class TutorialsController < ApplicationController
   # GET /tutorials
   # GET /tutorials.json
+  skip_before_filter :authorize, only: [:show, :index]
+  
   def index
     @tutorials = Tutorial.all
 
