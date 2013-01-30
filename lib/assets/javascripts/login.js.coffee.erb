@@ -1,23 +1,23 @@
 $ ->
-  $("#login_box").on "show", ->    
-    $('.login_button').click login_ajax_submit        
-    $('.login_field').keydown (e) ->
+  ($ '#login_box').on 'show', ->    
+    ($ '.login_button').click login_ajax_submit        
+    ($ '.login_field').keydown (e) ->
       if e.which is 13 then login_ajax_submit()  
-    $("#login_box").modal('hide')   
+    ($ '#login_box').modal 'hide'
      
-  $("#login_box").on "hide", ->  
-    $("#login_box a.btn").off("click")
+  ($ '#login_box').on 'hide', ->  
+    ($ '#login_box a.btn').off 'click'
   
-  $('.cancel_login_button').click ->
-    $("#login_box").modal('hide') 
-    $('#login_user').css("border-color","black")
-    $('#login_password').css("border-color","black")
+  ($ '.cancel_login_button').click ->
+    ($ '#login_box').modal 'hide'
+    ($ '#login_user').css 'border-color', 'black'
+    ($ '#login_password').css 'border-color', 'black'
   
-  $("#login_box").on "hidden", ->
-      $("#login_box").hide()
+  ($ '#login_box').on 'hidden', ->
+      ($ '#login_box').hide()
 
-  $("#login_box").modal                 
-    backdrop: "static"
+  ($ '#login_box').modal                 
+    backdrop: 'static'
     keyboard: true
     show: false
 
@@ -27,20 +27,20 @@ $ ->
         type: 'POST'
         dataType: 'json'
         data:
-          username_or_email: $('#login_user').val()
-          password: $('#login_password').val()
+          username_or_email: ($ '#login_user').val()
+          password: ($ '#login_password').val()
         success: (data) ->
           switch data.status
-            when "success"
-              $('#login_box').dialog('close')
+            when 'success'
+              ($ '#login_box').dialog 'close'
               location.reload();
-            when "fail"
-             $('#login_user').css("background","red")
-             $('#login_password').css("background","red")
+            when 'fail'
+             ($ '#login_user').css 'background','red'
+             ($ '#login_password').css 'background','red'
             
   
-  $('a.login').click ->
-    $('#login_box').modal()
+  ($ 'a.login').click ->
+    ($ '#login_box').modal()
     false
   
     
