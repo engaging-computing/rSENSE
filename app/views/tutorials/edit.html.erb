@@ -1,6 +1,14 @@
-<h1>Editing tutorial</h1>
+<% if @cur_user.admin%>
+    <h1>Editing tutorial</h1>
+    <%= render 'form' %>
+    <%= link_to 'Show', @tutorial %> |
+    <%= link_to 'Back', tutorials_path %>
+<%else%>
+  You are not authorized to view this page.
+<%end%> 
 
-<%= render 'form' %>
 
-<%= link_to 'Show', @tutorial %> |
-<%= link_to 'Back', tutorials_path %>
+
+
+
+
