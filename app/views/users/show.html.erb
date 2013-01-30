@@ -5,7 +5,7 @@
   <div class="span5">
   <div class="row">
     <div class="span5">
-      <%if @user.email?%>
+      <%if !@user.try(:email).nil?%>
         <div style="float:left;">
             <%= gravatar_image_tag(@user.email, alt: @user.firstname) %>
         </div>
