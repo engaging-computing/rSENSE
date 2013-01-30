@@ -1,6 +1,10 @@
-<h1>Editing visualization</h1>
+<% if @cur_user.admin%>  
+  <h1>Editing visualization</h1>
 
-<%= render 'form' %>
+  <%= render 'form' %>
 
-<%= link_to 'Show', @visualization %> |
-<%= link_to 'Back', visualizations_path %>
+  <%= link_to 'Show', @visualization %> |
+  <%= link_to 'Back', visualizations_path %>
+<%else%>
+  You are not authorized to view this page.
+<%end%> 

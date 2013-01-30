@@ -1,6 +1,10 @@
-<h1>Editing field</h1>
+<% if @cur_user.admin%>  
+  <h1>Editing field</h1>
 
-<%= render 'form' %>
+  <%= render 'form' %>
 
-<%= link_to 'Show', @field %> |
-<%= link_to 'Back', fields_path %>
+  <%= link_to 'Show', @field %> |
+  <%= link_to 'Back', fields_path %>
+<%else%>
+  You are not authorized to view this page.
+<%end%> 
