@@ -15,6 +15,8 @@ Rsense::Application.routes.draw do
 
   resources :experiments
 
+  resources :tutorials
+  
   get "home/index"
   root :to => "home#index"
   
