@@ -40,7 +40,12 @@ class ExperimentsController < ApplicationController
     if(Like.find_by_user_id_and_experiment_id(@cur_user,@experiment.id)) 
       @liked_by_cur_user = true
     end
-
+    
+    #checks for fields
+    @has_fields = false
+    if( @experiment.fields.count > 0)
+      @has_fields = true
+    end
     
     respond_to do |format|
       format.html # show.html.erb
