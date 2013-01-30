@@ -42,11 +42,9 @@
       </div>
     </div>
   </div>
-
   <div class="span4">
     <div class="row">
         <%=render layout: "shared/collapse", locals: {title: 'Fields',width: '4', unique_id: 'fields', should_hide: false} do %>
-      
             <table class="table fields_table" experiment="<%=@experiment.id%>">
                 <th>Name</th>
                 <th>Units</th>
@@ -76,9 +74,6 @@
                 <% end %>
             </table>
         <%end%>
-
-
-
         <%=render layout: "shared/collapse", locals: {title: 'Create Session', width:'4', unique_id: 'create_session', should_hide: !@has_fields} do %>
        
             <div class="span1 center">
@@ -98,10 +93,6 @@
             </div>
        
         <% end %>
-
-
-
-
         <%=render layout: "shared/collapse", locals: {title: 'Sessions', width: '4', unique_id: 'sessions', should_hide: false} do %>
             <table class="table">
                 <% @experiment.experiment_sessions.all.each do |s| %>
@@ -116,7 +107,6 @@
                 <% end %>
             </table>
         <%end%>
-
         <%=render layout: "shared/collapse", locals: {title: 'Media', width: '4', unique_id: 'media', should_hide: false} do %>
             <table class="table">
                 <% @experiment.media_objects.all.each do |mo| %>
@@ -139,10 +129,8 @@
               <%end%>
           <%end%>
         <% end %>
-
     </div>
   </div>
-
 </div>
 
 <%=form_tag('/experiments', :method => "post" ) do %>
