@@ -42,7 +42,7 @@ Rsense::Application.routes.draw do
   match "/experiments/:id/sessions/*sessions" => "visualizations#displayVis"
   match "/experiments/:id/sessions/" => "visualizations#displayVis"
 
-  match "/experiment_sessions/:id/postCSV" => "experiment_sessions#postCSV"
+  match "/experiment_sessions/:id/postCSV" => "experiment_sessions#uploadCSV"
   match "/media_objects/saveimage/*keys" => "media_objects#saveimage"
   
   controller :sessions do
