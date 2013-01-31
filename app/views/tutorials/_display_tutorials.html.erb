@@ -1,0 +1,9 @@
+<% @tutorials.each do |t| %>
+  <div class="<%= cycle('feed-even', 'feed-odd')%>">
+      <h4><%= link_to t.title, tutorial_path(t) %></h4>
+      <b>Created: </b><%= time_ago_in_words(t.created_at)%> ago (on <%=t.created_at.strftime("%B %d, %Y")%>)<br>
+  </div>
+<% end %>
+
+<div class="feed-bottom">
+</div>

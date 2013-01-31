@@ -256,7 +256,7 @@ data.preprocessData = ->
                 when data.types.TEXT
                     NaN
                 else
-                    dp[fIndex] = Number dp[fIndex]
+                    dp[fIndex] = if isNaN (Number dp[fIndex]) then null else (Number dp[fIndex])
     1
 
 data.parseDate = (str) ->
