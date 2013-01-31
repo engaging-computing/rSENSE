@@ -61,6 +61,6 @@ $ ->
       url = "/experiment_sessions/#{eid}/postCSV"
       $.ajax( { url: url, data: { key: key} } ).done (data, textStatus, error) ->
         if data.status is 'success'
-          window.location = window.location      
+          window.location = data.redirrect     
     else
       ($ '#doc_url').css 'background-color', 'red'
