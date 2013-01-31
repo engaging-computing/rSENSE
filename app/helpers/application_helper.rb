@@ -29,4 +29,9 @@ module ApplicationHelper
       "Text"
     end
   end
+  
+  def can_edit? (obj)
+    obj.owner == @cur_user.try(:id) || @cur_user.try(:admin)
+  end
+  
 end
