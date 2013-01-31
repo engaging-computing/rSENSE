@@ -198,8 +198,10 @@ class ExperimentSessionsController < ApplicationController
     if @experiment_session.save!
       data_to_add = DataSet.new(:experiment_session_id => @experiment_session.id, :data => mongo_data)    
     
+      redirrect = url_for :controller => :visualizations, :action => :displayVis, :id => @experiment.id, :sessions => "#{@experiment_session.id}"
+    
       if data_to_add.save!
-        response = { status: 'success', message: format_data }
+        response = { status: 'success', redirrect: redirrect }
       else
         response = { status: 'fail' }
       end
