@@ -19,8 +19,6 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
-    logger.info "---------"
-    logger.info params
     #Grab the User
     @user = User.find_by_username(params[:id])
     
@@ -42,9 +40,15 @@ class UsersController < ApplicationController
          @contributions += @user.media_objects.search(params[:search]) || []
       end
     else
-      @contributions += @user.experiments.search(params[:search])
-      @contributions += @user.experiment_sessions.search(params[:search])
-      @contributions += @user.media_objects.search(params[:search])
+      if !@user.try(:experiments).nil?
+        @contributions += @user.try(:experiments).search(params[:search])
+      end
+      if !@user.try(:experiment_sessions).nil?
+        @contributions += @user.try(:experiment_sessions).search(params[:search])
+      end
+      if !@user.try(:media_objects).nil?
+        @contributions += @user.try(:media_objects).search(params[:search])
+      end
     end
 
     #Set up the sort order
