@@ -17,10 +17,13 @@ class VisualizationsController < ApplicationController
   # GET /visualizations/1.json
   def show
     @visualization = Visualization.find(params[:id])
+    @experiment = Experiment.find_by_id(@visualization.experiment_id)
+
+    # The finalized data object
+    @Data = { savedData: @visualization.data, savedGlobals: @visualization.globals }
 
     respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @visualization }
+      format.html
     end
   end
 
@@ -43,6 +46,7 @@ class VisualizationsController < ApplicationController
   # POST /visualizations
   # POST /visualizations.json
   def create
+    params[:visualization][:user_id] = @cur_user.id
     @visualization = Visualization.new(params[:visualization])
 
     respond_to do |format|
@@ -83,7 +87,8 @@ class VisualizationsController < ApplicationController
       format.json { head :no_content }
     end
   end
-  
+
+  # GET 
   def displayVis
     
     @experiment = Experiment.find_by_id params[:id]
