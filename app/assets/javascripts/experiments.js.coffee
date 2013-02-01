@@ -59,8 +59,8 @@ $ ->
       tmp = window.location.pathname.split 'experiments/'
       eid = tmp[1]
       url = "/experiment_sessions/#{eid}/postCSV"
-      $.ajax( { url: url, data: { key: key} } ).done (data, textStatus, error) ->
+      $.ajax( { url: url, data: { key: key, id: eid } } ).done (data, textStatus, error) ->
         if data.status is 'success'
-          window.location = window.location      
+          window.location = data.redirrect     
     else
       ($ '#doc_url').css 'background-color', 'red'
