@@ -1,45 +1,38 @@
-<div class="row">
-  <div class="span8">
-    <div class="feed-top">
-      <h1>Experiment Store</h1>
-	  <p> Find an experiment template to use for your own experiment! <p>
-      <div class="row">
-        <%=form_tag experiment_templates_path, method: 'get', id: 'experiments_search', class:'navbar-search' do%>
-        <div class="span2">
-          <select name="sort" class="experiments_sort_select">
-            <option value="DESC">Newest First</option>
-            <option value="ASC">Oldest First</option>
-            <option value="RATING">Rating</option>
-          </select>
+<div class="span8">
+  <div class="row">
+    <div class="span8">
+      <%=form_tag experiments_path, method: 'get', id: 'experiments_search', class:'navbar-search' do%>
+        <div class="feed-top">
+          <h1>Experiment Store</h1>
+		  <p> Search through the Experiment Templates to clone your own copy!</p>
+          <div style="width:20%;float:left;">
+            <select name="sort" class="experiments_sort_select">
+              <option value="DESC">Newest First</option>
+              <option value="ASC">Oldest First</option>
+              <option value="RATING">Rating</option>
+            </select>
+          </div>
+          <div style="width:40%;float:left;margin-left:20px;">
+            <%= text_field_tag :search, params[:search], class:'search-query'%>
+          </div>
+          <div style="width:20%;float:left;margin-left:40px;">
+            <%= submit_tag "Search", name: nil, class:'btn'%>
+          </div>
+          <div class="clear"></div>
+          <div style="margin-bottom:10px;">
+            Math: <%= check_box_tag "filters[]", "%math%", false, class: 'experiments_filter_checkbox'%>&nbsp;&nbsp;&nbsp;
+            Physics: <%= check_box_tag "filters[]", "%physics%", false, class: 'experiments_filter_checkbox' %>&nbsp;&nbsp;&nbsp;
+            Chemistry: <%= check_box_tag "filters[]", "%chemistry%", false, class: 'experiments_filter_checkbox' %>&nbsp;&nbsp;&nbsp;
+            Earth: <%= check_box_tag "filters[]", "%earth%", false, class: 'experiments_filter_checkbox' %>&nbsp;&nbsp;&nbsp;
+            Biology: <%= check_box_tag "filters[]", "%biology%", false, class: 'experiments_filter_checkbox' %>
+          </div>
         </div>
-        <div class="span3">
-          <%=text_field_tag :search, params[:search], class:'search-query'%>
-        </div>
-        <div class="span1 offset1">
-          <%= submit_tag "Search", name: nil, class:'btn'%>
-        </div>
-      </div>
-      <div class="row">
-        <div class="span6 offset0">
-          Math: <%= check_box_tag "filters[]", "%math%", false, class: 'experiments_filter_checkbox'%>
-          Physics: <%= check_box_tag "filters[]", "%physics%", false, class: 'experiments_filter_checkbox' %>
-          Chemistry: <%= check_box_tag "filters[]", "%chemistry%", false, class: 'experiments_filter_checkbox' %>
-          Earth: <%= check_box_tag "filters[]", "%earth%", false, class: 'experiments_filter_checkbox' %>
-          Biology: <%= check_box_tag "filters[]", "%biology%", false, class: 'experiments_filter_checkbox' %>
-        </div>
-      </div>
-      <br />
       <%end%>
     </div>
   </div>
-</div>
-
-
-<div class="row">
-  <div class="span8" >
-    <div id="experiments">
+  <div class="row">
+    <div id="experiments" class="span8">
       <%=render 'display_experiment_templates'%>
     </div>
   </div>
 </div>
-
