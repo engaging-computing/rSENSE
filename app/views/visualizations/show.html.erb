@@ -1,35 +1,73 @@
-<p id="notice"><%= notice %></p>
+<script>
+  window.data = <%= raw @Data.to_json %>
+</script>
+<script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBxtPK1_mxwVdl1NRu7ZEiSNvmCekFSZAw&sensor=false&libraries=visualization&v=3.9">
+</script>
+<script src="/assets/StyledMarker.js"></script>
 
-<p>
-  <b>Title:</b>
-  <%= @visualization.title %>
-</p>
+<script src="/assets/highvis/savedVis.coffee"></script>
+<script src="/assets/highvis/visUtils.coffee"></script>
+<script src="/assets/highvis/dataReduction.coffee"></script>
+<script src="/assets/highvis/highmodifiers.coffee"></script>
 
-<p>
-  <b>User:</b>
-  <%= @visualization.user_id %>
-</p>
+<script src="/assets/highvis/baseVis.coffee"></script>
 
-<p>
-  <b>Experiment:</b>
-  <%= @visualization.experiment_id %>
-</p>
+<script src="/assets/highvis/disabledVis.coffee"></script>
 
-<p>
-  <b>Content:</b>
-  <%= @visualization.content %>
-</p>
-
-<p>
-  <b>Data:</b>
-  <%= @visualization.data %>
-</p>
-
-<p>
-  <b>Globals:</b>
-  <%= @visualization.globals %>
-</p>
+<script src="/assets/highvis/scatter.coffee"></script>
+<script src="/assets/highvis/timeline.coffee"></script>
+<script src="/assets/highvis/histogram.coffee"></script>
+<script src="/assets/highvis/bar.coffee"></script>
+<script src="/assets/highvis/table.coffee"></script>
+<script src="/assets/highvis/map.coffee"></script>
+<script src="/assets/highvis/motion.coffee"></script>
+<script src="/assets/highvis/photos.coffee"></script>
 
 
-<%= link_to 'Edit', edit_visualization_path(@visualization) %> |
-<%= link_to 'Back', visualizations_path %>
+<script src="/assets/highvis/runtime.coffee"></script>
+
+<div class="row">
+    <span class="span12" style="font-size:2em"><%= experiment_edit_helper 'title', @experiment.owner.id == @cur_user.try(:id) %></span><br><br>
+</div>
+
+<div class="row">
+
+  <div class="span12">
+
+    <div id="viscontainer">
+
+        <ul id='visTabList'>
+        </ul>
+
+
+        <div id="map_canvas" class="vis_canvas"></div>
+        <div id="table_canvas" class="vis_canvas"></div>
+        <div id="timeline_canvas" class="vis_canvas"></div>
+        <div id="scatter_canvas" class="vis_canvas"></div>
+        <div id="bar_canvas" class="vis_canvas"></div>
+        <div id="histogram_canvas" class="vis_canvas"></div>
+        <div id="motion_canvas" class="vis_canvas"></div>
+        <div id="photos_canvas" class="vis_canvas"></div>
+
+        <div id='controlhider'>
+            <button id="control_hide_button" type="button" style="margin:5px;"> > </button>
+        </div>
+        <div id="controldiv"></div>
+    </div>
+
+  </div>
+
+  <div class="span12" id="tabcontainer" style="margin-top: 10px;">
+    <ul class="nav nav-tabs" id="myTab">
+      <li class="vis_tab"><a href="#<%=@visualization.id%>">
+        <%= visualization_edit_helper 'title', @visualization.owner.id == @cur_user.try(:id), make_link = false %>
+      </a></li>
+    </ul>
+    <div class="tab-pane" id="<%=@visualization.id%>">
+      <%= visualization_redactor_helper (@visualization.owner.id == @cur_user.try(:id)) %>
+    </div>
+  </div>
+
+
+</div>
