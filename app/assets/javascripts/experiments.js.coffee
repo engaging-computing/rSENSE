@@ -3,7 +3,7 @@
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
 $ ->
-  ($ '#doc_box').modal                 
+  ($ '#doc_box').modal
     backdrop: 'static'
     keyboard: true
     show: false
