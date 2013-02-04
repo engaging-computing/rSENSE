@@ -80,9 +80,11 @@
                         <td style="width:32px;height:32px;"><%= gravatar_image_tag(s.owner.email, alt: s.owner.firstname) %></td>
                         <td><%= link_to "#{s.owner.name}", user_path(s.owner) %></td>
                         <td><%= link_to s.title, "#{params[:id]}/sessions/#{s.id}" %></td>
+                        <td><input type="checkbox" id="experiment_<%=params[:id]%>_session_<%=s.id%>"/></td>
                     </tr>
                 <% end %>
             </table>
+            <center><input type="button" value="Visualize" id="vis_button" /></center>
         <%end%>
         <%=render layout: "shared/collapse", locals: {title: 'Media', width: '4', unique_id: 'media', should_hide: false} do %>
             <table class="table">

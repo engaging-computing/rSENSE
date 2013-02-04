@@ -64,3 +64,18 @@ $ ->
           window.location = data.redirrect     
     else
       ($ '#doc_url').css 'background-color', 'red'
+      
+  ($ '#vis_button').click (e) ->
+    targets = ($ @).parent().parent().find('table tbody tr input:checked')
+    ses = ($ targets[0]).attr 'id'
+    ses = ses.split '_'
+    eid = ses[1]
+    ses_list = (grab_ses t for t in targets )
+    url = '/experiments/' + eid + '/sessions/' + ses_list.join ','
+    window.location = url
+    
+  grab_ses = (t) ->
+    ses = ($ t).attr 'id'
+    ses = ses.split '_'
+    ses[3]
+    
