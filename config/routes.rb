@@ -15,6 +15,7 @@ Rsense::Application.routes.draw do
 
   resources :experiments
 
+  match "/tutorials/switch/" => "tutorials#switch"
   resources :tutorials
   
   get "home/index"
@@ -61,6 +62,8 @@ Rsense::Application.routes.draw do
   
   match "/experiments/:id/updateLikedStatus" => "experiments#updateLikedStatus"
 
+
+  
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
