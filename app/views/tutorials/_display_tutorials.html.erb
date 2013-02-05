@@ -1,9 +1,20 @@
-<% @tutorials.each do |t| %>
-  <div class="<%= cycle('feed-even', 'feed-odd')%>">
-      <h4><%= link_to t.title, tutorial_path(t) %></h4>
-      <b>Created: </b><%= time_ago_in_words(t.created_at)%> ago (on <%=t.created_at.strftime("%B %d, %Y")%>)<br>
-  </div>
-<% end %>
+<div class="span3" id=<%=id%>> 
+  <div class="hero-unit sub-hero">
+    <span class="tutorial">
 
-<div class="feed-bottom">
+        <%if @tutorials[id.to_i] != nil %>
+          <h3><%= @tutorials[id.to_i].title %></h3>
+        <% end %>
+
+      
+      <%if @cur_user.try(:admin) %>
+        <select class="set_tutorial" id=<%=id%> style="width:100%"> 
+            <option value="" selected="selected">SELECT ONE</option>
+          <% @all_tutorials.each do |t| %>
+            <option value=<%=t.id%>><%=t.title%></option>
+          <% end %>
+        </select>
+      <% end %>    
+    </span>
+  </div>
 </div>
