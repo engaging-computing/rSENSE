@@ -15,8 +15,6 @@ class User < ActiveRecord::Base
   has_many :groups, :through => :memberships
   has_many :experiment_sessions
   has_many :media_objects
-
-  belongs_to :owner, class_name: "User", foreign_key: "user_id"
   
   def to_param
     self.username
