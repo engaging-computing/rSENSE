@@ -1,23 +1,24 @@
-$(document).ready ->
+$ ->
     
   #This is where we edit 
   edit = ->
-    name = $(@).parent().parent().find('.field_name')
-    unit = $(@).parent().parent().find('.field_unit')
-    field = helpers.get_field_type ($(@).parent().parent().find('.field_type').text())
+    name = ($ @).parent().parent().find '.field_name'
+    unit = ($ @).parent().parent().find '.field_unit'
+    field = helpers.get_field_type $(@).parent().parent().find('.field_type').text()
 
-    name.wrapInner("<input type='text' class='name_edit_box' value='#{name.text().trim()}'>")
-    unit.wrapInner("<input type='text' class='unit_edit_box' value='#{unit.text().trim()}'>") if field is (helpers.get_field_type "Number")
+    name.wrapInner "<input type='text' class='name_edit_box' value='#{name.text().trim()}'>"
+    unit.wrapInner "<input type='text' class='unit_edit_box' value='#{unit.text().trim()}'>" if field is (helpers.get_field_type "Number")
     name.find('.name_edit_box').focus()
 
-    $(@).hide()
-    $(@).siblings('.field_save_link').show()
+    ($ @).hide()
+    ($ @).siblings('.field_save_link').show()
+    ($ @).siblings('.field_delete_link').show()
 
 
   #This is where we save after editing    
   save = ->
-    name = $(@).parent().parent().find('.field_name')
-    unit = $(@).parent().parent().find('.field_unit')
+    name = ($ @).parent().parent().find '.field_name'
+    unit = ($ @).parent().parent().find '.field_unit'
     field = helpers.get_field_type ($(@).parent().parent().find('.field_type').text())
 
     name_text = name.find('.name_edit_box').val().trim()
