@@ -91,7 +91,10 @@
                 <% @experiment.media_objects.all.each do |mo| %>
                     <tr>
                         <td><img src='<%=mo.src%>'width="100px" heigh="100px"/></td>
-                        <td><%= link_to mo.name, media_object_path(mo.id)%></td>  
+                        <td><%= link_to mo.name, media_object_path(mo.id)%></td> 
+                        <% if ((mo.media_type == "image") && (can_edit? mo))%>
+                          <td><input type="checkbox" class="featured_image_selector" exp_id="<%=@experiment.id%>" <%if @experiment.featured_media_id == mo.id%>checked="true"<%end%> mo_id="<%=mo.id%>"></input></td>
+                        <% end %>
                     </tr>
                 <%end%>
             </table>
