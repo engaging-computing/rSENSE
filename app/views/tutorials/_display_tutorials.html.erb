@@ -1,5 +1,5 @@
 <div class="span3" id=<%=id%>> 
-  <div class="hero-unit sub-hero">
+  <div class="hero-unit sub-hero"  style="height:100px;">
     <span class="tutorial">
         <%if @tutorials[id.to_i] != nil %>
           <h3><%= link_to @tutorials[id.to_i].title, tutorial_path(@tutorials[id.to_i]) %></h3>
