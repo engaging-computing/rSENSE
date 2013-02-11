@@ -3,8 +3,9 @@
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
 $ ->
+  
   #selection of featured image
-  ($ '.featured_image_selector').click ->
+  ($ '.img_selector').click ->
     mo = ($ @).attr("mo_id")
     exp = ($ @).attr("exp_id")
     
@@ -12,9 +13,6 @@ $ ->
     data["experiment"] = {}
     data["experiment"]["featured_media_id"] = mo
     
-    ($ @).parent().parent().parent().find('.featured_image_selector').each ->
-          if ($ this).attr("mo_id") != mo
-            ($ this).attr("checked", false)
     $.ajax
       url: "/experiments/#{exp}"
       type: "PUT"
@@ -22,8 +20,6 @@ $ ->
       data:
          data
 
-        
-  
   
   # Needs commenting
   ($ '#doc_box').modal                 
