@@ -11,7 +11,9 @@ module UsersHelper
   def user_contributions_helper(stuff_type)
       if stuff_type.to_s == "Experiment"
         "<i class='icon-folder-open'></i>&nbsp;&nbsp;"
-      end
+      elsif stuff_type.to_s == "ExperimentSession"
+        "<i class='icon-tasks'></i>&nbsp;&nbsp;"  
+      end 
   end
   
 end
