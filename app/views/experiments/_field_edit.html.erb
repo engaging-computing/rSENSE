@@ -9,7 +9,7 @@
   <%if can_edit%>
     <td><a class="field_edit_link"><i class="icon-edit"></i></a>
         <a href="/<%=type.pluralize%>/<%=row_id%>" class="field_save_link"><i class="icon-ok"></i></a>
-        <a style="visibility:hidden" class="field_delete_link"><i class="icon-remove-circle"></i></a>
+        <a href="/experiments/<%=@experiment.id%>/" field="<%=row_id%>" class="field_delete_link"><i class="icon-remove-circle"></i></a>
     </td>
   <%end%>
 </tr>

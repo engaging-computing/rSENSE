@@ -47,9 +47,11 @@ class ExperimentsController < ApplicationController
       @has_fields = true
     end
     
+    
+        
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @experiment }
+      format.json { render json: {exp: @experiment, ses: @experiment.experiment_sessions} }
     end
   end
   
@@ -155,6 +157,33 @@ class ExperimentsController < ApplicationController
     respond_to do |format|
       format.json { render json: {update: @response} }
     end
+  end
+  
+  def removeField
+    
+    @experiment = Experiment.find(params[:id])
+    
+    msg = ""
+    
+    if @experiment.experiment_sessions.count == 0
+      
+      field_list = []
+      
+      @experiment.fields.each do |f|
+        if f.id != params[:field_id].to_i
+          field_list.push(f)
+        end
+      end
+      
+    @experiment.fields = field_list
+    @experiment.save!
+    
+    end
+    
+    respond_to do |format|
+      format.json { render json: {experiment: @experiment, fields: field_list} }
+    end
+    
   end
   
 end
