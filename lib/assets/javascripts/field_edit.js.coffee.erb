@@ -12,7 +12,14 @@ $ ->
 
     ($ @).hide()
     ($ @).siblings('.field_save_link').show()
-    ($ @).siblings('.field_delete_link').show()
+    
+    $.ajax
+      url: ($ @).siblings('.field_delete_link').attr 'href'
+      type: "GET"
+      dataType: "json"
+      success: (msg) =>
+        if msg.ses.length is 0
+          ($ @).siblings('.field_delete_link').show()
 
 
   #This is where we save after editing    
@@ -44,6 +51,20 @@ $ ->
             name.html(name_text)
             unit.html(unit_text)
             
+    false
+
+  remove_field = ->
+    $.ajax
+      url: (($ @).attr 'href') + "removeField"
+      type: "POST"
+      dataType: "json"
+      data: {field_id: ($ @).attr 'field'}
+      success: (msg) =>
+        console.log msg
+        ($ @).parent().parent().remove()
+      error: (msg) =>
+        console.log msg
+    
     false
 
   addField = (type) ->
@@ -84,6 +105,7 @@ $ ->
         
   ($ '.field_edit_link').click edit
   ($ '.field_save_link').click save
+  ($ '.field_delete_link').click remove_field
 
   ($ '.add_timestamp_field').click ->
     addField helpers.get_field_type 'Timestamp'
