@@ -1,40 +1,4 @@
-<script type="text/javascript">
 
-  $(document).ready(function(e){
-    
-    var numCols = 1;
-    
-    while($('#experiments').width()/numCols>200) numCols++;
-    
-    $('#experiments').imagesLoaded( function(){
-      $('.item').width(($('#experiments').width()/numCols)-35);
-      $('#experiments').isotope({
-        // options
-        itemSelector : '.item',
-        layoutMode : 'masonry',
-        masonry: { columnWidth: $('#experiments').width() / numCols },
-      });
-    });
-    
-  });
-  
-  $(window).resize(function(){
-    
-    var numCols = 1;
-    
-    while($('#experiments').width()/numCols>300) numCols++;
-    
-    console.log($('#experiments').width());
-    console.log(numCols);
-    
-    $('.item').width(($('#experiments').width()/numCols)-35);
-    
-    $('#experiments').isotope( 'option', { masonry: { columnWidth: ($('#experiments').width() / numCols) } } );
-    
-    $('#experiments').isotope('reLayout');
-    
-  });
-</script>
 
 <% @experiments.each do |experiment| %>
     <% if !experiment.media_objects.empty? %>

@@ -1,7 +1,9 @@
 class ExperimentsController < ApplicationController  
   # GET /experiments
   # GET /experiments.json
-  skip_before_filter :authorize, only: [:show,:index]  
+  skip_before_filter :authorize, only: [:show,:index]
+  
+  include ActionView::Helpers::DateHelper
 
   def index
     
@@ -20,6 +22,34 @@ class ExperimentsController < ApplicationController
     
     #Featured list
     @featured_3 = Experiment.where(featured: true).order("updated_at DESC").limit(3);
+    
+    jsonExperiments = []
+    
+    @experiments.each do |exp|
+      
+      newJsonExperiment = {}
+      
+      newJsonExperiment["title"]          = exp.title
+      newJsonExperiment["timeAgoInWords"] = time_ago_in_words(exp.created_at)
+      newJsonExperiment["createdAt"]      = exp.created_at.strftime("%B %d, %Y")
+      newJsonExperiment["featured"]       = exp.featured
+      newJsonExperiment["ownerName"]      = "#{exp.owner.firstname} #{exp.owner.lastname}"
+      newJsonExperiment["experimentPath"] = experiment_path(exp)
+      newJsonExperiment["ownerPath"]      = user_path(exp.owner)
+      newJsonExperiment["filters"]        = exp.filter
+      
+      newJsonExperiment["mediaType"]      = nil
+      newJsonExperiment["mediaPath"]      = nil
+      
+      jsonExperiments = jsonExperiments << newJsonExperiment
+      
+    end
+    
+    respond_to do |format|
+      format.html
+      format.json { render json: jsonExperiments }
+    end
+    
   end
 
   # GET /experiments/1
