@@ -43,10 +43,6 @@ $ ->
       $.getScript this.href
       false
 
-  testtt = (data,textStatus) ->
-    console.log data
-    console.log "PARP"
-
   $("#experiments_search").submit ->
       $.ajax
         url: this.action
@@ -58,11 +54,11 @@ $ ->
           for object in data
             do (object) ->
               newItem =   "<div class='item'>"
-              
+
               if(object.mediaPath)
                 newItem += "<img src='#{object.mediaPath}'></img>"
                 
-              newItem +=  "<h4>#{object.title}"
+              newItem +=  "<h4 style='margin-top:0px;'><a href='#{object.experimentPath}'>#{object.title}</a>"
               
               if(object.featured)
                 newItem += "<span style='color:#57C142'> (featured)</span>"
@@ -83,9 +79,7 @@ $ ->
           
           $(window).resize()
           
-        dataType: "json"  
-        error: (data) ->
-          console.log data
+        dataType: "json"
       return false
       
   ($ '.experiments_filter_checkbox').click ->
@@ -157,12 +151,14 @@ $ ->
       layoutMode : 'masonry'
       masonry:
         columnWidth: $('#experiments').width()/numCols
+        
+  $("#experiments_search").submit()
 
 window.reLayout = ->
 
   numCols = 1
 
-  while $('#experiments').width()/numCols>300
+  while $('#experiments').width()/numCols>200
     numCols++
   
   $('#experiments').imagesLoaded ->
@@ -174,15 +170,6 @@ window.reLayout = ->
       layoutMode : 'masonry'
       masonry:
         columnWidth: $('#experiments').width()/numCols
-
-    
-
-    ###
-    $('#experiments').isotope( 'option', { masonry: { columnWidth: ($('#experiments').width() / numCols) } } )
-    
-    $('#experiments').isotope('reLayout')
-    ###
-  
   true
 
 $(window).resize reLayout
