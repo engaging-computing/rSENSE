@@ -38,8 +38,9 @@ class ExperimentsController < ApplicationController
       newJsonExperiment["ownerPath"]      = user_path(exp.owner)
       newJsonExperiment["filters"]        = exp.filter
       
-      newJsonExperiment["mediaType"]      = nil
-      newJsonExperiment["mediaPath"]      = nil
+      if(exp.featured_media_id != nil) 
+        newJsonExperiment["mediaPath"] = MediaObject.find_by_id(exp.featured_media_id).src;
+      end
       
       jsonExperiments = jsonExperiments << newJsonExperiment
       
