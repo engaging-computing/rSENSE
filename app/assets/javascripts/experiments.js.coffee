@@ -3,6 +3,25 @@
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
 $ ->
+  
+  #selection of featured image
+  ($ '.img_selector').click ->
+    mo = ($ @).attr("mo_id")
+    exp = ($ @).attr("exp_id")
+    
+    data={}
+    data["experiment"] = {}
+    data["experiment"]["featured_media_id"] = mo
+    
+    $.ajax
+      url: "/experiments/#{exp}"
+      type: "PUT"
+      dataType: "json"
+      data:
+         data
+
+  
+  # Needs commenting
   ($ '#doc_box').modal                 
     backdrop: 'static'
     keyboard: true

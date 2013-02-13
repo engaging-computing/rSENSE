@@ -1,12 +1,9 @@
 <div class="span3" id=<%=id%>> 
-  <div class="hero-unit sub-hero">
+  <div class="hero-unit sub-hero"  style="height:100px;">
     <span class="tutorial">
-
         <%if @tutorials[id.to_i] != nil %>
-          <h3><%= @tutorials[id.to_i].title %></h3>
+          <h3><%= link_to @tutorials[id.to_i].title, tutorial_path(@tutorials[id.to_i]) %></h3>
         <% end %>
-
-      
       <%if @cur_user.try(:admin) %>
         <select class="set_tutorial" id=<%=id%> style="width:100%"> 
             <option value="" selected="selected">SELECT ONE</option>
