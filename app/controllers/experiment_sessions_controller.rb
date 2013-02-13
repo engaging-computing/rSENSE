@@ -138,13 +138,34 @@ class ExperimentSessionsController < ApplicationController
     
     header = []
     
-    #Get a link to the temp file uploaded to the server
-    @file = params[:csv]
-    
     #Read the CSV
     require "csv"
     
-    data = CSV.read(@file.tempfile)
+    if params[:key].nil?
+    
+      #Get a link to the temp file uploaded to the server
+      @file = params[:csv]
+      
+      data = CSV.read(@file.tempfile)
+    
+    else
+      
+      require "open-uri"
+      
+      #Grabs the key
+      key = params[:key]
+      url = "https://spreadsheets.google.com/tq?tqx=out:csv&tq=select*&key=#{key}"
+      
+      #Use the key to download a csv from docs
+      data = open(url).read()
+
+      #strip extra quotes
+      data.gsub!( /"/, '' )
+      
+      #parse as CSV
+      data = CSV.parse(data)
+
+    end
     
     data = sortColumns(data, doColumnsMatch(@experiment, data[0]))
     
@@ -177,8 +198,10 @@ class ExperimentSessionsController < ApplicationController
     if @experiment_session.save!
       data_to_add = DataSet.new(:experiment_session_id => @experiment_session.id, :data => mongo_data)    
     
+      redirrect = url_for :controller => :visualizations, :action => :displayVis, :id => @experiment.id, :sessions => "#{@experiment_session.id}"
+    
       if data_to_add.save!
-        response = { status: 'success', message: format_data }
+        response = { status: 'success', redirrect: redirrect }
       else
         response = { status: 'fail' }
       end

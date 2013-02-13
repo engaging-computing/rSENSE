@@ -19,31 +19,36 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
-    
     #Grab the User
     @user = User.find_by_username(params[:id])
     
     #See if we are only looking for specific contributions
-    filters = params[:filters] || []
+    @filters = params[:filters] || []
     @contributions = []
     
     #Only grab the contributions we are currently interested in
-    if !filters.empty?
-      if filters.include? "experiments"
+    if !@filters.empty?
+      if @filters.include? "experiments"
         @contributions += @user.experiments.search(params[:search])
       end
       
-      if filters.include? "sessions"
+      if @filters.include? "sessions"
          @contributions += @user.experiment_sessions.search(params[:search]) || []
       end
       
-      if filters.include? "media"
+      if @filters.include? "media"
          @contributions += @user.media_objects.search(params[:search]) || []
       end
     else
-      @contributions += @user.experiments.search(params[:search])
-      @contributions += @user.experiment_sessions.search(params[:search])
-      @contributions += @user.media_objects.search(params[:search])
+      if !@user.try(:experiments).nil?
+        @contributions += @user.try(:experiments).search(params[:search])
+      end
+      if !@user.try(:experiment_sessions).nil?
+        @contributions += @user.try(:experiment_sessions).search(params[:search])
+      end
+      if !@user.try(:media_objects).nil?
+        @contributions += @user.try(:media_objects).search(params[:search])
+      end
     end
 
     #Set up the sort order
@@ -133,6 +138,17 @@ class UsersController < ApplicationController
       @user.save
 
       render action: "validate"
+    end
+  end
+
+  # GET /users/verify
+  def verify
+    respond_to do |format|
+      if @cur_user == nil
+        format.json {render json: "", status: :unauthorized}
+      else
+        format.json {render json: "", status: :ok}
+      end
     end
   end
 end

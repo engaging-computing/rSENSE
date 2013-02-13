@@ -3,38 +3,42 @@
 </p>
 <div class="row">
   <div class="span5">
-  <div class="row">
-    <div class="span5">
-      <%if @user.email?%>
-        <div style="float:left;">
-            <%= gravatar_image_tag(@user.email, alt: @user.firstname) %>
+    <div class="row">
+      <div class="span5" align="center">
+	    <div class="row">
+		   <%if !@user.try(:email).nil?%>
+		     <div class="span2" style="padding-bottom:5px">
+		         <%= gravatar_image_tag(@user.email, alt: @user.firstname) %>
+		     </div>
+		   <%end%>
+		   <div class="span3" style="padding-top:10px">
+		     <span class="info_label">First Name:</span> 
+		     <%= user_edit_helper 'firstname', (can_edit? @user) %>
+		     <br />
+		     <br />
+		     <%if can_edit? @user%>
+		       <span class="info_label">Last Name:</span>
+		       <%= user_edit_helper 'lastname', (can_edit? @user) %>
+		       <br />
+		       <br />
+		     <%end%>
+		     <span class="info_label">Username:</span>
+		     <%= user_edit_helper 'username' %>
+		     <br />
+		   </div>
         </div>
-      <%end%>
-      <span class="info_label">First Name:</span> 
-      <%= user_edit_helper 'firstname', (@user.id == @cur_user.id) %>
-      <br />
-      <br />
-      <%if @user.id == @cur_user.try(:id)%>
-        <span class="info_label">Last Name:</span>
-        <%= user_edit_helper 'lastname', (@user.id == @cur_user.id) %>
-        <br />
-        <br />
-      <%end%>
-      <span class="info_label">Username:</span>
-      <%= user_edit_helper 'username' %>
-      <br />
+      </div>
+    </div>
+    <div class="row">
+      <div class="span5">
+	    <br />
+        <div>
+          <%= user_redactor_helper (can_edit? @user)%>
+          <br />
+        </div>
+      </div>
     </div>
   </div>
-
-  <div class="row">
-        <div class="span5">
-          <div>
-              <%= user_redactor_helper (@user.id == @cur_user.try(:id))%>
-          </div>
-      </div>
-  </div>
- </div>
- 
   <div class="span7">
     <%= form_tag users_path, method: 'get', id:'contribution_search', class:'navbar-search', name: @user.username do%>
       <div class="feed-top">
@@ -50,10 +54,10 @@
         </div>
         <div class="clear"></div>
         <div style="margin-bottom:10px;">
-          Experiments: <%= check_box_tag "filters[]", "experiments", false, class: 'contribution_type_checkbox'%>&nbsp;&nbsp;&nbsp;
-          Sessions: <%= check_box_tag "filters[]", "sessions", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
-          Visualizations: <%= check_box_tag "filters[]", "visualizations", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
-          Media: <%= check_box_tag "filters[]", "media", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
+          Experiments: <%= check_box_tag "filters[]", "experiments", @filters.include?("experiments"), class: 'contribution_type_checkbox'%>&nbsp;&nbsp;&nbsp;
+          Sessions: <%= check_box_tag "filters[]", "sessions", @filters.include?("sessions"), class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
+          Visualizations: <%= check_box_tag "filters[]", "visualizations", @filters.include?("visualizations"), class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
+          Media: <%= check_box_tag "filters[]", "media", @filters.include?("media"), class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
         </div>
       </div>
     <%end%>
@@ -62,7 +66,7 @@
       <%= render 'display_contributions'%>
     </div>
     <div class="feed-bottom">
-    </div>
+  </div>
 </div> 
 
 

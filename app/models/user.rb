@@ -2,7 +2,7 @@ class User < ActiveRecord::Base
   attr_accessible :content, :email, :firstname, :lastname, :password, :password_confirmation, :username, :validated
   
   validates_uniqueness_of :email, case_sensitive: false, if: :email?
-  validates_uniqueness_of :username, case_sensitive: false
+  validates :username, uniqueness: true, format: { :with => /\A[a-zA-Z0-9]+\z/, :message => "Only letters allowed" }
   validates_presence_of :username
   
   has_secure_password

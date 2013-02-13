@@ -22,12 +22,14 @@
 <script src="/assets/highvis/bar.coffee"></script>
 <script src="/assets/highvis/table.coffee"></script>
 <script src="/assets/highvis/map.coffee"></script>
+<script src="/assets/highvis/motion.coffee"></script>
+<script src="/assets/highvis/photos.coffee"></script>
 
 
 <script src="/assets/highvis/runtime.coffee"></script>
 
 <div class="row">  
-    <span class="span4" style="font-size:2em"><%= experiment_edit_helper 'title', @experiment.owner.id == @cur_user.try(:id) %></span><br><br>
+    <span class="span12" style="font-size:2em"><%= experiment_edit_helper 'title', @experiment.owner.id == @cur_user.try(:id) %></span><br><br>
 </div>
 
 <div class="row">

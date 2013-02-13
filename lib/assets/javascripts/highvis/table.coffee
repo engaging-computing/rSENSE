@@ -89,9 +89,14 @@ class window.Table extends BaseVis
                     colorIndex = data.groups.indexOf(sData.toLowerCase())
                     ($ nTd).css 'color', globals.colors[colorIndex % globals.colors.length]
                     },{
-                aTargets: data.timeFields
-                fnRender: (obj) ->
-                    globals.dateFormatter obj.aData[obj.iDataColumn]}]
+                      aTargets: data.timeFields
+                      fnRender: (obj) ->
+                        globals.dateFormatter obj.aData[obj.iDataColumn]
+                    },{
+                      aTargets:data.normalFields.concat data.geoFields
+                      fnRender: (obj) ->
+                        if obj.aData[obj.iDataColumn] is "null" then "" else obj.aData[obj.iDataColumn]
+                      }]
                     
         atable = ($ '#data_table').dataTable(dt)
 

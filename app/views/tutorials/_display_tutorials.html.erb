@@ -1,0 +1,17 @@
+<div class="span3" id=<%=id%>> 
+  <div class="hero-unit sub-hero"  style="height:100px;">
+    <span class="tutorial">
+        <%if @tutorials[id.to_i] != nil %>
+          <h3><%= link_to @tutorials[id.to_i].title, tutorial_path(@tutorials[id.to_i]) %></h3>
+        <% end %>
+      <%if @cur_user.try(:admin) %>
+        <select class="set_tutorial" id=<%=id%> style="width:100%"> 
+            <option value="" selected="selected">SELECT ONE</option>
+          <% @all_tutorials.each do |t| %>
+            <option value=<%=t.id%>><%=t.title%></option>
+          <% end %>
+        </select>
+      <% end %>    
+    </span>
+  </div>
+</div>
