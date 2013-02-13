@@ -3,9 +3,7 @@ class ApplicationController < ActionController::Base
   
   before_filter :get_user
   before_filter :authorize
-
  
-  
   def get_user
       @cur_user = User.find_by_id(session[:user_id])
   end
@@ -15,4 +13,5 @@ class ApplicationController < ActionController::Base
          redirect_to "/", notice: "LOGIN_ERROR"
      end
   end
+  
 end

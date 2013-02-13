@@ -26,6 +26,9 @@ $ ->
         success: =>
           ($ @).siblings('.info_edit_link').show()
           ($ @).hide()
-          info_box.html("<a href='#{($ @).attr('href')}'>#{value}</a>")
-      false
+          if ($ @).parent().attr('make_link') == 'true'
+            info_box.html("<a href='#{($ @).attr('href')}'>#{value}</a>")
+          else if ($ @).parent().attr('make_link') == 'false'
+            info_box.html(value)
+        false
     
