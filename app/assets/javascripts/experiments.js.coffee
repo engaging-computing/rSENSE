@@ -43,9 +43,44 @@ $ ->
       $.getScript this.href
       false
 
-  ($ '#experiments_search').submit ->
-      $.get this.action, ($ this).serialize(), null, 'script'
-      false
+  $("#experiments_search").submit ->
+      $.ajax
+        url: this.action
+        data: $(this).serialize()
+        success: (data, textStatus)->
+          
+          $('#experiments').isotope('remove', $('.item'))
+          
+          for object in data
+            do (object) ->
+              newItem =   "<div class='item'>"
+
+              if(object.mediaPath)
+                newItem += "<img src='#{object.mediaPath}'></img>"
+                
+              newItem +=  "<h4 style='margin-top:0px;'><a href='#{object.experimentPath}'>#{object.title}</a>"
+              
+              if(object.featured)
+                newItem += "<span style='color:#57C142'> (featured)</span>"
+            
+              newItem +=  "</h4><b>Owner: </b><a href='#{object.ownerPath}'>#{object.ownerName}</a><br />"
+              newItem +=  "<b>Created: </b>#{object.timeAgoInWords} ago (on #{object.createdAt})<br />"
+              
+              ###
+              if(object.filters)
+                newitem += "<b>#{object.filters}</b>"
+              ###
+              
+              newItem +=  "</div>"
+              
+              newItem = $(newItem)
+              
+              $('#experiments').append(newItem).isotope('insert', newItem)
+          
+          $(window).resize()
+          
+        dataType: "json"
+      return false
       
   ($ '.experiments_filter_checkbox').click ->
     ($ '#experiments_search').submit()
@@ -98,3 +133,43 @@ $ ->
     ses = ses.split '_'
     ses[3]
     
+    
+  $(".experiments_sort_select").change ->
+    $("#experiments_search").submit()
+    
+  ### Get isotope up and running ###
+
+  numCols = 1
+
+  while $('#experiments').width()/numCols>200
+    numCols++
+
+  $('#experiments').imagesLoaded ->
+    $('.item').width(($('#experiments').width()/numCols)-35)
+    $('#experiments').isotope
+      itemSelector : '.item'
+      layoutMode : 'masonry'
+      masonry:
+        columnWidth: $('#experiments').width()/numCols
+        
+  $("#experiments_search").submit()
+
+window.reLayout = ->
+
+  numCols = 1
+
+  while $('#experiments').width()/numCols>200
+    numCols++
+  
+  $('#experiments').imagesLoaded ->
+
+    $('.item').width(($('#experiments').width()/numCols)-35)
+
+    $('#experiments').isotope
+      itemSelector : '.item'
+      layoutMode : 'masonry'
+      masonry:
+        columnWidth: $('#experiments').width()/numCols
+  true
+
+$(window).resize reLayout
