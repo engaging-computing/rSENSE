@@ -36,31 +36,43 @@
   <div style="position: fixed;border-bottom: 1px solid black;width:100%;background-color:#113;height:72px;z-index:10;top:0px;left:0px;box-shadow: 0px 0px 10px black;">
     <div class="container">
       <div style="float:left;padding-top:10px;">
-        <a href="/"><img src="/assets/isense-logo.png" style="height:50px;width:195px;margin-left:-24px;" /></a>
+        <a href="/">
+          <img class="visible-desktop visible-tablet" src="/assets/isense-logo.png" style="height:50px;width:195px;margin-left:-24px;" />
+          <img class="visible-phone" src="/assets/isense-logo.png" style="height:25px;width:98px;margin-left:10px;" />
+        </a>
       </div>
       <div style="float:left;vertical-align:text-bottom;line-height:15px;font-size:15px;">
-        <div style="height:12px;padding-top:18px;">
+        <div class="visible-desktop visible-tablet" style="height:12px;padding-top:18px;">
           <img src="/assets/facebook.png" style="height:12px;margin-right:5px;" />
           <img src="/assets/twitter.png" style="height:12px;margin-right:5px;" />
           <img src="/assets/rss.png" style="height:12px;margin-right:5px;" />
         </div>
-        <div style="height:15px;padding-top:14px;">
+        <div class="visible-phone" style="height:12px;padding-top:12px;position:relative;top:0px;left:5px;">
+          <img src="/assets/facebook.png" style="height:12px;margin-right:5px;" />
+          <img src="/assets/twitter.png" style="height:12px;margin-right:5px;" />
+          <img src="/assets/rss.png" style="height:12px;margin-right:5px;" />
+        </div>
+        <div class="visible-desktop visible-tablet" style="height:15px;padding-top:14px;">
           <a href="/experiments" style="color:#fff;"><i class="icon-folder-open icon-white"> </i> Experiments</a>&nbsp;&nbsp;&nbsp;
           <a href="/users" style="color:#fff;"><i class="icon-user icon-white"> </i> People</a>&nbsp;&nbsp;&nbsp;
           <a href="/visualizations" style="color:#fff;"><i class="icon-eye-open icon-white"> </i> Visualizations</a>&nbsp;&nbsp;&nbsp;
           <a href="/experiment_templates" style="color:#fff;"><i class="icon-gift icon-white"> </i> Store </a>
         </div>
+        <div class="visible-phone" style="height:15px;padding-top:14px;position:absolute;top:30px;left:11px;">
+          <a href="/experiments" style="color:#fff;"><i class="icon-folder-open icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
+          <a href="/users" style="color:#fff;"><i class="icon-user icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
+          <a href="/visualizations" style="color:#fff;"><i class="icon-eye-open icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
+          <a href="/experiment_templates" style="color:#fff;"><i class="icon-gift icon-white"> </i> </a>
+        </div>
       </div>
-      <div style="padding-top:25px;float:left;line-height:15px;font-size:15px;text-align:right;float:right;margin-right:-20px;">
+      
+      <div class="visible-desktop visible-tablet" style="padding-top:25px;float:left;line-height:15px;font-size:15px;text-align:right;float:right;margin-right:-20px;">
         <% if @cur_user == nil %>
-
           <div class="btn-group">
             <button class="btn btn-small btn-info"><a href="" class="login" style="color:white;">Login</a></button>
             <button class="btn btn-small btn-info"><a href="<%= new_user_path %>" style="color:white;">Register</a></button>
           </div>
-
         <% else %>
-        
           <div class="btn-group">
             <button class="btn btn-small btn-info"><a href="<%= user_path(@cur_user) %>" style="color:white;"><%= @cur_user.name %></a></button>
             <button class="btn btn-small dropdown-toggle btn-info" data-toggle="dropdown">
@@ -74,10 +86,32 @@
               <li><%= link_to 'My Media', user_path(@cur_user.username,  :filters => ["media"]), action: :show%></li>
             </ul>
           </div>
-        
         <% end %>
-         
       </div>
+      
+      <div class="visible-phone" style="padding-top:25px;float:left;line-height:15px;font-size:15px;text-align:right;float:right;margin-right:10px;">
+        <% if @cur_user == nil %>
+          <div class="btn-group">
+            <button class="btn btn-small btn-info"><a href="" class="login" style="color:white;">Login</a></button>
+            <button class="btn btn-small btn-info"><a href="<%= new_user_path %>" style="color:white;">Register</a></button>
+          </div>
+        <% else %>
+          <div class="btn-group">
+            <button class="btn btn-small btn-info"><a href="<%= user_path(@cur_user) %>" style="color:white;"><%= @cur_user.name %></a></button>
+            <button class="btn btn-small dropdown-toggle btn-info" data-toggle="dropdown">
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><%= link_to 'Logout', login_path(), method: :delete %></li>
+              <li><%= link_to 'My Experiments', user_path(@cur_user.username,  :filters => ["experiments"]), action: :show%></li>
+              <li><%= link_to 'My Sessions', user_path(@cur_user.username,  :filters => ["sessions"]), action: :show%></li>
+              <li><%= link_to 'My Visualizations', user_path(@cur_user.username,  :filters => ["visualizations"]), action: :show%></li>
+              <li><%= link_to 'My Media', user_path(@cur_user.username,  :filters => ["media"]), action: :show%></li>
+            </ul>
+          </div>
+        <% end %>
+      </div>
+      
     </div>
   </div>
   
