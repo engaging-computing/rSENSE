@@ -46,8 +46,9 @@ $ ->
         data:
             data
         success: =>        
-            $(@).siblings('.field_edit_link').show()
-            $(@).hide()
+            ($ @).siblings('.field_edit_link').show()
+            ($ @).hide()
+            ($ @).siblings('.field_delete_link').hide()
             name.html(name_text)
             unit.html(unit_text)
             
@@ -55,12 +56,11 @@ $ ->
 
   remove_field = ->
     $.ajax
-      url: (($ @).attr 'href') + "removeField"
+      url: ($ @).attr('href') + "/removeField"
       type: "POST"
       dataType: "json"
       data: {field_id: ($ @).attr 'field'}
       success: (msg) =>
-        console.log msg
         ($ @).parent().parent().remove()
       error: (msg) =>
         console.log msg
@@ -90,7 +90,7 @@ $ ->
         ($ '#create_session').show()
         
         if not (type in [(helpers.get_field_type "Latitude"), (helpers.get_field_type "Longitude")])
-          htmlStr += "<td><a class='field_edit_link'><i class='icon-edit'></i></a><a href='/fields/#{msg.id}' class='field_save_link'><i class='icon-ok'></i></a></td>"
+          htmlStr += "<td><a class='field_edit_link'><i class='icon-edit'></i></a><a href='/fields/#{msg.id}' class='field_save_link'><i class='icon-ok'></i></a><a href='" + window.location.pathname  + "' field='#{msg.id}' class='field_delete_link'><i class='icon-remove-circle'></i></a></td>"
         else
           htmlStr += "<td></td>"
         
@@ -99,6 +99,7 @@ $ ->
 
         ($ '.field_edit_link').click edit
         ($ '.field_save_link').click save
+        ($ '.field_delete_link').click remove_field
 
         if not (type in [(helpers.get_field_type "Latitude"), (helpers.get_field_type "Longitude")])
           ($ '.field_edit_link').last().trigger 'click'
