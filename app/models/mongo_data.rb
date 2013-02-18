@@ -1,4 +1,4 @@
-class DataSet
+class MongoData
   include MongoMapper::Document
   
   key :experiment_session_id, Integer
