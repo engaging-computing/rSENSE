@@ -14,7 +14,7 @@ class ExperimentSessionsController < ApplicationController
   # GET /experiment_sessions/1.json
   def show
     @experiment_session = ExperimentSession.find(params[:id])
-    @data_set = DataSet.find_by_experiment_session_id(@experiment_session.id)
+    @mongo_data_set = MongoData.find_by_experiment_session_id(@experiment_session.id)
     
     respond_to do |format|
       format.html # show.html.erb
@@ -108,7 +108,7 @@ class ExperimentSessionsController < ApplicationController
         mongo_data << row
       end
                 
-      data_to_add = DataSet.new(:experiment_session_id => @experiment_session.id, :data => mongo_data)    
+      data_to_add = MongoData.new(:experiment_session_id => @experiment_session.id, :data => mongo_data)    
       
       followURL = url_for :controller => :visualizations, :action => :displayVis, :id => @experiment.id, :sessions => "#{@experiment_session.id}"
       
@@ -134,7 +134,7 @@ class ExperimentSessionsController < ApplicationController
     #Grab the experiment so we can get field names
     @experiment_session = ExperimentSession.new(:experiment_id => params[:id], :title => "#{@cur_user.name}'s Session", :user_id => @cur_user.try(:id))
     @experiment = @experiment_session.experiment
-    @data_set = DataSet.all({:experiment_session_id => @experiment_session.id})
+    @data_set = MongoData.all({:experiment_session_id => @experiment_session.id})
     
     header = []
     
@@ -196,7 +196,7 @@ class ExperimentSessionsController < ApplicationController
     end
 
     if @experiment_session.save!
-      data_to_add = DataSet.new(:experiment_session_id => @experiment_session.id, :data => mongo_data)    
+      data_to_add = MongoData.new(:experiment_session_id => @experiment_session.id, :data => mongo_data)    
     
       redirrect = url_for :controller => :visualizations, :action => :displayVis, :id => @experiment.id, :sessions => "#{@experiment_session.id}"
     

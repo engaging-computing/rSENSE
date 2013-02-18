@@ -117,7 +117,7 @@ class VisualizationsController < ApplicationController
     
     # get data for each session    
     @sessions.each do |session|
-      d = DataSet.find_by_experiment_session_id(session.id)
+      d = MongoData.find_by_experiment_session_id(session.id)
       session[:data] = d.data
     end
 
