@@ -51,6 +51,19 @@ $ ->
           
           $('#experiments').isotope('remove', $('.item'))
           
+          addExperimentButton = $("<div id='addExperimentButton' style='text-align:center;cursor: pointer;' class='item'><img style='width:66%;' src='/assets/green_plus_icon.svg'><br /><h4 style='color:#0a0;'>Create Experiment</h4></img></div>")
+          
+          $('#experiments').append(addExperimentButton).isotope('insert', addExperimentButton)
+          
+          $('#addExperimentButton').click ->
+            $.ajax
+              type: "POST"
+              url: "/experiments/"
+              data: {}
+              dataType: "json"
+              success: (data) =>
+                window.location.replace("/experiments/#{data['id']}");
+          
           for object in data
             do (object) ->
               newItem =   "<div class='item'>"
