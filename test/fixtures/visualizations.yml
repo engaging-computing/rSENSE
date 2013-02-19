@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+#Don't know what to put in content, data, and global fields
+
+visualization1:
+  title: VisualizationTitle1
+  user_id: 1
+  experiment_id: 1
+  content: MyText
+  data: MyText
+  globals: MyText
+
+visualization2:
+  title: VisualizationTitle2
+  user_id: 2
+  experiment_id: 2
+  content: MyText
+  data: MyText
+  globals: MyText
