@@ -44,6 +44,8 @@ Rsense::Application.routes.draw do
   #Routes for displaying data
   match "/experiments/:id/sessions/*sessions" => "visualizations#displayVis"
   match "/experiments/:id/sessions/" => "visualizations#displayVis"
+  
+  match "/experiments/:id/removeField" => "experiments#removeField"
 
   match "/experiment_sessions/:id/postCSV" => "experiment_sessions#uploadCSV"
   match "/media_objects/saveimage/*keys" => "media_objects#saveimage"
