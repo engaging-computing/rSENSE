@@ -4,13 +4,13 @@
 
 $ ->
 
-  ($ '#experiments_search').submit ->
+  ($ '#experiment_templates_search').submit ->
       $.get this.action, ($ this).serialize(), null, 'script'
       false
       
-  ($ '.experiments_filter_checkbox').click ->
-    ($ '#experiments_search').submit()
+  ($ '.experiment_templates_filter_checkbox').click ->
+    ($ '#experiment_templates_search').submit()
     
-  ($ '.experiments_sort_select').change ->
-    ($ '#experiments_search').submit()
+  ($ '.experiment_templates_sort_select').change ->
+    ($ '#experiment_templates_search').submit()
 
