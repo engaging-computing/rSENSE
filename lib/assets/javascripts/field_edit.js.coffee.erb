@@ -93,7 +93,7 @@ $ ->
           url: ($ row).find('.field_delete_link').attr('href') + "/removeField"
           type: "POST"
           dataType: "json"
-          data: {field_id: ($ row).find('field_delete_link').attr 'field'}
+          data: {field_id: ($ row).find('.field_delete_link').attr 'field'}
           success: (msg) =>
             ($ row).remove()
             ($ '#add-field-dropdown ul li a.add_location_field').show()
@@ -105,7 +105,7 @@ $ ->
           url: ($ pair_field).find('.field_delete_link').attr('href') + "/removeField"
           type: "POST"
           dataType: "json"
-          data: {field_id: ($ pair_field).find('field_delete_link').attr 'field'}
+          data: {field_id: ($ pair_field).find('.field_delete_link').attr 'field'}
           success: (msg) =>
             ($ pair_field).remove()
           error: (msg) =>
