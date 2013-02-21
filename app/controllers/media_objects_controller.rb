@@ -83,10 +83,12 @@ class MediaObjectsController < ApplicationController
   
   #POST /media_object/saveimage
   def saveimage
+    
     #Figure out where we are uploading data to
     data = params[:keys].split('/')
     type = data[0]
     id = data[1]
+    logger.info "I AM HERE!!!!!!!!!!!!!#{data}!!!!!!!!!!!!!!!!!!!!!!!!"
     
     #Set up the link to S3
     s3ConfigFile = YAML.load_file('config/aws_config.yml')
@@ -121,6 +123,12 @@ class MediaObjectsController < ApplicationController
       @user = User.find_by_username(id)
       if(@user==@cur_user)
         @mo = {user_id: @user.id, src: o.public_url.to_s, name: @user.name.pluralize + " image", media_type:"image"}
+      end
+    when 'tutorial'
+      @tutorial = Tutorial.find_by_id(id)
+      logger.info "####{@tutorial.owner}###"
+      if(@tutorial.owner == @cur_user)
+        @mo = {user_id: @tutorial.owner.id, src: o.public_url.to_s, name: @tutorial.title + " image", media_type:"image"}
       end
     end
 
