@@ -25,7 +25,6 @@ $ ->
 
   #This is where we save after editing    
   save = ->
-    console.log "taco"
     name = ($ @).parent().parent().find '.field_name'
     unit = ($ @).parent().parent().find '.field_unit'
     field = helpers.get_field_type ($(@).parent().parent().find('.field_type').text())
