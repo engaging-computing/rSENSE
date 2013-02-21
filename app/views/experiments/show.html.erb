@@ -41,6 +41,7 @@
                         <li><a href='#' class=add_number_field> Number </a></li>
                         <li><a href='#' class=add_text_field> Text </a></li>
                         <% if (@experiment.fields.any? {|field| field.field_type == LONGITUDE_TYPE or field.field_type == LATITUDE_TYPE}) %>
+                          <li><a href='#' style="display:none;" class=add_location_field> Location </a></li>
                         <% else %>
                           <li><a href='#' class=add_location_field> Location </a></li>
                         <% end %>
@@ -50,7 +51,7 @@
                 </th>
                 <% @experiment.fields.all.each do |f| %>
                     <!-- Render all the fields, Lat and Lon cant be edited -->
-                    <%= render 'field_edit', field: f, type: "field",row_id: f.id, can_edit: ( (can_edit? @experiment) and (f.field_type != LATITUDE_TYPE and f.field_type != LONGITUDE_TYPE ))%>
+                    <%= render 'field_edit', field: f, type: "field",row_id: f.id, can_edit: (can_edit? @experiment), has_ses: @experiment.experiment_sessions.count %>
                 <% end %>
             </table>
         <%end%>
