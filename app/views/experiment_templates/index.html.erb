@@ -1,9 +1,9 @@
 <div class="row">
-  <div class="span8">
+  <div class="span12">
 	<div class="row">
-	  <div class="span8">
+	  <div class="span12">
 	    <%=form_tag experiment_templates_path, method: 'get', id: 'experiment_templates_search', class:'navbar-search' do%>
-		  <div class="feed-top">		
+		  <div class="experiments-top">		
 	      <h1>Experiment Store</h1>
 		  <p> Find an experiment template to use for your own experiment! <p>
 	      	<div style="width:20%;float:left;">
@@ -31,15 +31,16 @@
 	    <%end%>
 	  </div>
 	</div>
+	<div class="row">
+	  <div id="experiment_templates" class="span12" style="overflow:visible;z-index:0;">
+	    <div style="width:100%;height:100%;border:0px solid grey;overflow:visible;padding:10px;">
+
+	    </div>
+	  </div>
+	</div>
   </div>
 </div>
 
 
-<div class="row">
-  <div id="experiment_templates" class="span8" >
-    <div id="experiment_templates">
-      <%=render 'display_experiment_templates'%>
-    </div>
-  </div>
-</div>
+
 
