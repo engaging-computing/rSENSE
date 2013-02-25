@@ -1,5 +1,8 @@
 class Tutorial < ActiveRecord::Base
-  attr_accessible :content, :title, :featured_number
+  attr_accessible :content, :title, :featured_number, "user_id"
+
+  validates_presence_of :title
+  validates_presence_of :user_id
   
   validates_uniqueness_of :featured_number, :allow_nil => true
   has_many :media_objects
