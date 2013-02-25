@@ -1,9 +1,16 @@
 
 $(document).ready ->
     $('.redactor_content_edit_link').click ->
-        path =  type + '/' + row_id 
+
+        csrf_token = $('meta[name=csrf-token]').attr('content');
+        csrf_param = $('meta[name=csrf-param]').attr('content');
+        path = ""
+        if (csrf_param isnt undefined && csrf_token isnt undefined)
+          params = csrf_param + "=" + encodeURIComponent(csrf_token);
+          path =  "#{type}/#{row_id}?#{params}"
+        
         $(@).parent().parent().find('.redactor_content').redactor
-          imageUpload: '/media_objects/saveimage/' + path
+          imageUpload: "/media_objects/saveimage/#{path}"
         $(@).siblings('.redactor_content_save_link').show();
         $(@).hide();
     
@@ -30,7 +37,16 @@ $(document).ready ->
         
     $('.add_content_link').click ->
         $(@).parent().parent().siblings('.redactor_content').show()
-        $(@).parent().parent().siblings('.redactor_content').redactor()
+        
+        csrf_token = $('meta[name=csrf-token]').attr('content');
+        csrf_param = $('meta[name=csrf-param]').attr('content');
+        path = ""
+        if (csrf_param isnt undefined && csrf_token isnt undefined)
+          params = csrf_param + "=" + encodeURIComponent(csrf_token);
+          path =  "#{type}/#{row_id}?#{params}"
+        
+        $(@).parent().parent().siblings('.redactor_content').redactor
+          imageUpload: "/media_objects/saveimage/#{path}"
         $(@).parent().parent().parent().parent().find('.redactor_content_save_link').show()
         $(@).parent().parent().hide()
 
