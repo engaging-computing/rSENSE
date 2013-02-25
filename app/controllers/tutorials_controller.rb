@@ -42,7 +42,7 @@ class TutorialsController < ApplicationController
   # POST /tutorials
   # POST /tutorials.json
   def create
-    @tutorial = Tutorial.new(params[:tutorial])
+    @tutorial = Tutorial.new({user_id: @cur_user.id, title: "#{@cur_user.name}'s Tutorial"})
 
     respond_to do |format|
       if @tutorial.save
