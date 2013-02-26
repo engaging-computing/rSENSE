@@ -1,0 +1,26 @@
+<script type="text/javascript">
+  window.fields = JSON.parse('<%= raw @experiment.fields.to_json%>');
+  window.postURL = '<%= url_for :controller => :data_sets, :action => :manualUpload, :eid => @experiment.id %>';
+</script>
+
+<div class="row">
+	<div style="margin-bottom:20px" class="span12">			
+          <table class="table editablegrid">
+            <thead><tr>
+              <% for field in @experiment.fields %>
+                <th><%= field.name %></th>
+              <% end %>
+            </tr></thead>
+
+            <tbody id="manualTable"><tr id="row0">
+              <% for i in 0...@experiment.fields.length %>
+                <td><input class='<%= "col" + i.to_s %>' style='width:100%' /></td>
+              <% end %>
+            </tr></tbody>
+          </table>
+	</div>
+	<div style="margin-bottom:20px" class="span12">
+		<button class="add_row_button">Add Row</button>
+		<button class="submit_manual_data">Submit</button>
+	</div>
+</div>
