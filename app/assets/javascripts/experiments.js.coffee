@@ -112,7 +112,7 @@ $ ->
       key = tmp[1]
       tmp = window.location.pathname.split 'experiments/'
       eid = tmp[1]
-      url = "/experiment_sessions/#{eid}/postCSV"
+      url = "/data_sets/#{eid}/postCSV"
       $.ajax( { url: url, data: { key: key, id: eid } } ).done (data, textStatus, error) ->
         if data.status is 'success'
           window.location = data.redirrect     
@@ -125,7 +125,7 @@ $ ->
     ses = ses.split '_'
     eid = ses[1]
     ses_list = (grab_ses t for t in targets )
-    url = '/experiments/' + eid + '/sessions/' + ses_list.join ','
+    url = '/experiments/' + eid + '/data_sets/' + ses_list.join ','
     window.location = url
     
   grab_ses = (t) ->

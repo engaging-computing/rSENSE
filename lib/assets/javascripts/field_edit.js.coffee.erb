@@ -87,7 +87,7 @@ $ ->
         htmlStr += "<td class='field_name'>#{typeName}</td>"
         htmlStr += "<td class='field_unit'>#{unit}</td>"
         htmlStr += "<td class='field_type'>#{typeName}</td>"
-        ($ '#create_session').show()
+        ($ '#create_data_set').show()
         
         if not (type in [(helpers.get_field_type "Latitude"), (helpers.get_field_type "Longitude")])
           htmlStr += "<td><a class='field_edit_link'><i class='icon-edit'></i></a><a href='/fields/#{msg.id}' class='field_save_link'><i class='icon-ok'></i></a><a href='" + window.location.pathname  + "' field='#{msg.id}' class='field_delete_link'><i class='icon-remove-circle'></i></a></td>"

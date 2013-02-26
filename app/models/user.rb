@@ -13,7 +13,7 @@ class User < ActiveRecord::Base
   has_many :experiments
   has_many :memberships
   has_many :groups, :through => :memberships
-  has_many :experiment_sessions
+  has_many :data_sets
   has_many :media_objects
   
   def to_param
