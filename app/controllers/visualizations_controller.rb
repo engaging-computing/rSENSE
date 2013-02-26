@@ -93,7 +93,7 @@ class VisualizationsController < ApplicationController
     
     @experiment = Experiment.find_by_id params[:id]
     
-    @sessions = []
+    @datasets = []
     data_fields = []
     format_data = []
     metadata = {}
@@ -101,27 +101,30 @@ class VisualizationsController < ApplicationController
     total = 0
     field_count = []
     
-    # build list of sessions
-    if( !params[:sessions].nil? )
-      seses = params[:sessions].split(",")
-      seses.each do |s|
+    # build list of datasets
+    if( !params[:datasets].nil? )
+      
+      dsets = params[:datasets].split(",")
+      dsets.each do |s|
         begin
-          @sessions.push ExperimentSession.find_by_id_and_experiment_id s, params[:id]
+          @datasets.push DataSet.find_by_id_and_experiment_id s, params[:id]
         rescue
-          logger.info "Either experiment id or session does not exist in the DB"
+          logger.info "Either experiment id or dataset does not exist in the DB"
         end
       end
     else
-      @sessions = ExperimentSession.find_all_by_experiment_id params[:id]
+      @datasets = DataSet.find_all_by_experiment_id params[:id]
     end
     
-    # get data for each session    
-    @sessions.each do |session|
-      d = MongoData.find_by_experiment_session_id(session.id)
-      session[:data] = d.data
+    # get data for each dataset    
+    @datasets.each do |dataset|
+      d = MongoData.find_by_data_set_id(dataset.id)
+      logger.info "------------------------"
+      logger.info dataset
+      dataset[:data] = d.data
     end
 
-    # create special session grouping field
+    # create special dataset grouping field
     data_fields.push({ typeID: TEXT_TYPE, unitName: "String", fieldID: -1, fieldName: "Session Name (id)" })
     
     # push real fields to temp variable
@@ -130,12 +133,12 @@ class VisualizationsController < ApplicationController
     end
     
     
-    # create/push metadata for sessions
-    @sessions.each do |session|
-      session.data.each do |rows|
-        metadata["#{session.title}(#{session.id})"] = { name: session.title, user_id: session.user_id, session_id: session.id, timecreated: session.created_at, timemodified: session.updated_at }
+    # create/push metadata for datasets
+    @datasets.each do |dataset|
+      dataset.data.each do |rows|
+        metadata["#{dataset.title}(#{dataset.id})"] = { name: dataset.title, user_id: dataset.user_id, dataset_id: dataset.id, timecreated: dataset.created_at, timemodified: dataset.updated_at }
         arr = []
-        arr.push "#{session.title}(#{session.id})"
+        arr.push "#{dataset.title}(#{dataset.id})"
         rows.each do |dp|
           key = dp.keys
           arr.push dp[key[0]]

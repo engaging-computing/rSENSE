@@ -7,7 +7,8 @@ class SessionsController < ApplicationController
       if !user
         user = User.find(:first, :conditions => [ "lower(username) = ?", login_name.downcase ])
       end
-      
+      logger.info "--------------------"
+      logger.info params
       if user and user.authenticate(params[:password])
         session[:user_id] = user.id
         
