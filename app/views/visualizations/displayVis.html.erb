@@ -1,5 +1,5 @@
 <script>
-  window.sessions = <%= raw @sessions.to_json %>
+  window.datasets = <%= raw @datasets.to_json %>
   window.data = <%= raw @Data.to_json %>
 </script>
 <script type="text/javascript"
@@ -62,9 +62,9 @@
   <div class="span12" id="tabcontainer" style="margin-top: 10px;">
     <ul class="nav nav-tabs" id="myTab">
       <% i = 0 %>
-      <% @sessions.each do |s| %>
+      <% @datasets.each do |s| %>
           <li class="vis_tab"><a href="#<%=s.id%>">
-            <%= experiment_session_edit_helper 'title', @sessions[i].owner.id == @cur_user.try(:id), @sessions[i], make_link = false %>
+            <%= data_set_edit_helper 'title', @datasets[i].owner.id == @cur_user.try(:id), @datasets[i], make_link = false %>
           </a></li>
         <% i=i+1 %>
 
@@ -72,8 +72,8 @@
     </ul>
     
     <% i = 0 %>
-     <% @sessions.each do |s| %>
-         <div class="tab-pane" id="<%=s.id%>"><%= experiment_session_redactor_helper s, (@experiment.owner.id == @cur_user.try(:id)) %></div>
+     <% @datasets.each do |s| %>
+         <div class="tab-pane" id="<%=s.id%>"><%= data_set_redactor_helper s, (@experiment.owner.id == @cur_user.try(:id)) %></div>
        <% i=i+1 %>
     <% end %>
   </div>

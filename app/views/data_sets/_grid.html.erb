@@ -1,0 +1,4 @@
+<script>
+      window.fields = <%=raw @data_set.experiment.try(:fields).to_json%>;
+      window.mongo_data = <%=raw @mongo_data_set.try(:data).to_json%>
+</script>
