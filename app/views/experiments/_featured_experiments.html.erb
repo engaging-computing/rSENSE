@@ -11,7 +11,7 @@
       <image src="<%=f.media_objects[0].src%>">
     <%else%>
       Owner: <%=link_to f.owner.name, user_path(f)%> <br>
-      Sessions: <%=f.experiment_sessions.count%>
+      Data Sets: <%=f.data_sets.count%>
     <%end%>
   </div>
   

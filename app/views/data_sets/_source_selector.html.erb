@@ -26,7 +26,7 @@
 <div id="upload-csv" style="display: none;">
   <div class="row">
     <div class="span12 center">
-      <%= form_for @experiment_session, :url => { :action => "postCSV" }, :html => { :multipart => true, :class => "file_upload", :'data-type' => 'json' }, :remote => true do |f| %>
+      <%= form_for @data_set, :url => { :action => "postCSV" }, :html => { :multipart => true, :class => "file_upload", :'data-type' => 'json' }, :remote => true do |f| %>
       <div class="field">
         <%= f.file_field :file %>
       </div>
