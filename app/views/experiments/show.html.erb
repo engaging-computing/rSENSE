@@ -51,7 +51,7 @@
                 </th>
                 <% @experiment.fields.all.each do |f| %>
                     <!-- Render all the fields, Lat and Lon cant be edited -->
-                    <%= render 'field_edit', field: f, type: "field",row_id: f.id, can_edit: (can_edit? @experiment), has_ses: @experiment.experiment_sessions.count %>
+                    <%= render 'field_edit', field: f, type: "field",row_id: f.id, can_edit: (can_edit? @experiment), has_ses: @experiment.data_sets.count %>
                 <% end %>
             </table>
         <%end%>
@@ -85,7 +85,7 @@
                     </tr>
                 <% end %>
             </table>
-            <center><input type="button" value="Visualize" id="vis_button" <% if @experiment.experiment_sessions.count == 0 %> style="display:none;" <% end %> /></center>
+            <center><input type="button" value="Visualize" id="vis_button" <% if @experiment.data_sets.count == 0 %> style="display:none;" <% end %> /></center>
         <%end%>
         <%=render layout: "shared/collapse", locals: {title: 'Media', width: '4', unique_id: 'media', should_hide: false} do %>
             <table class="table">
