@@ -82,7 +82,7 @@ class ExperimentsController < ApplicationController
         
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: {exp: @experiment, ses: @experiment.experiment_sessions} }
+      format.json { render json: {exp: @experiment, ses: @experiment.data_sets} }
     end
   end
   
@@ -196,7 +196,7 @@ class ExperimentsController < ApplicationController
     
     msg = ""
     
-    if @experiment.experiment_sessions.count == 0
+    if @experiment.data_sets.count == 0
       
       field_list = []
       
