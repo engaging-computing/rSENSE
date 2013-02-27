@@ -1,83 +1,83 @@
-class ExperimentSessionsController < ApplicationController
-  # GET /experiment_sessions
-  # GET /experiment_sessions.json
+class DataSetsController < ApplicationController
+  # GET /data_sets
+  # GET /data_sets.json
   def index
-    @experiment_sessions = ExperimentSession.all
+    @data_sets = DataSet.all
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @experiment_sessions }
+      format.json { render json: @data_sets }
     end
   end
 
-  # GET /experiment_sessions/1
-  # GET /experiment_sessions/1.json
+  # GET /data_sets/1
+  # GET /data_sets/1.json
   def show
-    @experiment_session = ExperimentSession.find(params[:id])
-    @data_set = DataSet.find_by_experiment_session_id(@experiment_session.id)
+    @data_set = DataSet.find(params[:id])
+    @mongo_data_set = MongoData.find_by_data_set_id(@data_set.id)
     
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @experiment_session }
+      format.json { render json: @data_set }
     end
   end
 
-  # GET /experiment_sessions/new
-  # GET /experiment_sessions/new.json
+  # GET /data_sets/new
+  # GET /data_sets/new.json
   def new
-    @experiment_session = ExperimentSession.new
+    @data_set = DataSet.new
 
     respond_to do |format|
       format.html # new.html.erb
-      format.json { render json: @experiment_session }
+      format.json { render json: @data_set }
     end
   end
 
-  # GET /experiment_sessions/1/edit
+  # GET /data_sets/1/edit
   def edit
-    @experiment_session = ExperimentSession.find(params[:id])
+    @data_set = DataSet.find(params[:id])
   end
 
-  # POST /experiment_sessions
-  # POST /experiment_sessions.json
+  # POST /data_sets
+  # POST /data_sets.json
   def create
-    @experiment_session = ExperimentSession.new(params[:experiment_session])
+    @data_set = DataSet.new(params[:data_set])
 
     respond_to do |format|
-      if @experiment_session.save
-        format.html { redirect_to @experiment_session, notice: 'Experiment session was successfully created.' }
-        format.json { render json: @experiment_session, status: :created, location: @experiment_session }
+      if @data_set.save
+        format.html { redirect_to @data_set, notice: 'Experiment session was successfully created.' }
+        format.json { render json: @data_set, status: :created, location: @data_set }
       else
         format.html { render action: "new" }
-        format.json { render json: @experiment_session.errors, status: :unprocessable_entity }
+        format.json { render json: @data_set.errors, status: :unprocessable_entity }
       end
     end
   end
 
-  # PUT /experiment_sessions/1
-  # PUT /experiment_sessions/1.json
+  # PUT /data_sets/1
+  # PUT /data_sets/1.json
   def update
-    @experiment_session = ExperimentSession.find(params[:id])
+    @data_set = DataSet.find(params[:id])
 
     respond_to do |format|
-      if @experiment_session.update_attributes(params[:experiment_session])
-        format.html { redirect_to @experiment_session, notice: 'Experiment session was successfully updated.' }
+      if @data_set.update_attributes(params[:data_set])
+        format.html { redirect_to @data_set, notice: 'Experiment session was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
-        format.json { render json: @experiment_session.errors, status: :unprocessable_entity }
+        format.json { render json: @data_set.errors, status: :unprocessable_entity }
       end
     end
   end
 
-  # DELETE /experiment_sessions/1
-  # DELETE /experiment_sessions/1.json
+  # DELETE /data_sets/1
+  # DELETE /data_sets/1.json
   def destroy
-    @experiment_session = ExperimentSession.find(params[:id])
-    @experiment_session.destroy
+    @data_set = DataSet.find(params[:id])
+    @data_set.destroy
 
     respond_to do |format|
-      format.html { redirect_to experiment_sessions_url }
+      format.html { redirect_to data_sets_url }
       format.json { head :no_content }
     end
   end
@@ -86,7 +86,7 @@ class ExperimentSessionsController < ApplicationController
       @experiment = Experiment.find(params[:eid])
   end
   
-  # POST /experiment_session/1/manualUpload
+  # POST /data_set/1/manualUpload
   def manualUpload
     
     @experiment = Experiment.find(params[:eid])
@@ -96,7 +96,7 @@ class ExperimentSessionsController < ApplicationController
 
     if !data.nil?
      
-      @experiment_session = ExperimentSession.create(:user_id => @cur_user.id, :experiment_id => @experiment.id, :title => "#{@cur_user.name}'s Session")
+      @data_set = DataSet.create(:user_id => @cur_user.id, :experiment_id => @experiment.id, :title => "#{@cur_user.name}'s Session")
 
       mongo_data = []
       
@@ -108,9 +108,9 @@ class ExperimentSessionsController < ApplicationController
         mongo_data << row
       end
                 
-      data_to_add = DataSet.new(:experiment_session_id => @experiment_session.id, :data => mongo_data)    
+      data_to_add = MongoData.new(:data_set_id => @data_set.id, :data => mongo_data)    
       
-      followURL = url_for :controller => :visualizations, :action => :displayVis, :id => @experiment.id, :sessions => "#{@experiment_session.id}"
+      followURL = url_for :controller => :visualizations, :action => :displayVis, :id => @experiment.id, :sessions => "#{@data_set.id}"
       
       if data_to_add.save!
         response = { status: 'success', follow: followURL }
@@ -129,12 +129,12 @@ class ExperimentSessionsController < ApplicationController
     
   end
   
-  ## POST /experiment_sessions/1
+  ## POST /data_sets/1
   def uploadCSV
     #Grab the experiment so we can get field names
-    @experiment_session = ExperimentSession.new(:experiment_id => params[:id], :title => "#{@cur_user.name}'s Session", :user_id => @cur_user.try(:id))
-    @experiment = @experiment_session.experiment
-    @data_set = DataSet.all({:experiment_session_id => @experiment_session.id})
+    @data_set = DataSet.new(:experiment_id => params[:id], :title => "#{@cur_user.name}'s Session", :user_id => @cur_user.try(:id))
+    @experiment = @data_set.experiment
+    @data_set = MongoData.all({:data_set_id => @data_set.id})
     
     header = []
     
@@ -195,10 +195,10 @@ class ExperimentSessionsController < ApplicationController
       mongo_data << row
     end
 
-    if @experiment_session.save!
-      data_to_add = DataSet.new(:experiment_session_id => @experiment_session.id, :data => mongo_data)    
+    if @data_set.save!
+      data_to_add = MongoData.new(:data_set_id => @data_set.id, :data => mongo_data)    
     
-      redirrect = url_for :controller => :visualizations, :action => :displayVis, :id => @experiment.id, :sessions => "#{@experiment_session.id}"
+      redirrect = url_for :controller => :visualizations, :action => :displayVis, :id => @experiment.id, :sessions => "#{@data_set.id}"
     
       if data_to_add.save!
         response = { status: 'success', redirrect: redirrect }
@@ -212,7 +212,7 @@ class ExperimentSessionsController < ApplicationController
     #Send the object as json
     respond_to do |format|
       format.json { render json: response }
-      format.html { redirect_to :controller => :visualizations, :action => :displayVis, :id => @experiment.id, :sessions => "#{@experiment_session.id}" }
+      format.html { redirect_to :controller => :visualizations, :action => :displayVis, :id => @experiment.id, :sessions => "#{@data_set.id}" }
     end
     
   end

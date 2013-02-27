@@ -1,10 +1,10 @@
-<%= form_for(@experiment_session) do |f| %>
-  <% if @experiment_session.errors.any? %>
+<%= form_for(@data_set) do |f| %>
+  <% if @data_set.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@experiment_session.errors.count, "error") %> prohibited this experiment_session from being saved:</h2>
+      <h2><%= pluralize(@data_set.errors.count, "error") %> prohibited this data_set from being saved:</h2>
 
       <ul>
-      <% @experiment_session.errors.full_messages.each do |msg| %>
+      <% @data_set.errors.full_messages.each do |msg| %>
         <li><%= msg %></li>
       <% end %>
       </ul>
