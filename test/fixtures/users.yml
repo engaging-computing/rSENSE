@@ -1,15 +1,16 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
-  firstname: MyString
-  lastname: MyString
-  username: MyString
-  email: MyString
-  content: MyText
-  group_id: 1
+  firstname: kate
+  lastname: carcia
+  username: kate
+  email: 
+  content: 
+  group_id: 
   validated: false
-  password_digest: MyString
-
+  password_digest: $2a$10$zKJclx4eQl17woUlK8hlE.6fn9rAMwru8uMlbtLQbS97...
+  admin: false
+  
 two:
   firstname: MyString
   lastname: MyString
