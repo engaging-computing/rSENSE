@@ -83,6 +83,7 @@ class MediaObjectsController < ApplicationController
   
   #POST /media_object/saveimage
   def saveimage
+    
     #Figure out where we are uploading data to
     data = params[:keys].split('/')
     type = data[0]
@@ -109,7 +110,7 @@ class MediaObjectsController < ApplicationController
     case type
     when 'experiment'
       @experiment = Experiment.find_by_id(id)
-      if(@experiment.owner == @cur_user)
+      if(can_edit?(@experiment))
         @mo = {user_id: @experiment.owner.id, experiment_id: id, src: o.public_url.to_s, name: @experiment.title + " image", media_type:"image"}
       end
     when 'data_set'
@@ -119,8 +120,13 @@ class MediaObjectsController < ApplicationController
       end
     when 'user'
       @user = User.find_by_username(id)
-      if(@user==@cur_user)
+      if(can_edit?(@user))
         @mo = {user_id: @user.id, src: o.public_url.to_s, name: @user.name.pluralize + " image", media_type:"image"}
+      end
+    when 'tutorial'
+      @tutorial = Tutorial.find_by_id(id)
+      if(can_edit?(@tutorial))
+        @mo = {user_id: @tutorial.owner.id, src: o.public_url.to_s, name: @tutorial.title + " image", media_type:"image"}
       end
     end
 
