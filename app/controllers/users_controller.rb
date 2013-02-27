@@ -32,8 +32,8 @@ class UsersController < ApplicationController
         @contributions += @user.experiments.search(params[:search])
       end
       
-      if @filters.include? "sessions"
-         @contributions += @user.experiment_sessions.search(params[:search]) || []
+      if @filters.include? "data_sets"
+         @contributions += @user.data_sets.search(params[:search]) || []
       end
       
       if @filters.include? "media"
@@ -43,8 +43,8 @@ class UsersController < ApplicationController
       if !@user.try(:experiments).nil?
         @contributions += @user.try(:experiments).search(params[:search])
       end
-      if !@user.try(:experiment_sessions).nil?
-        @contributions += @user.try(:experiment_sessions).search(params[:search])
+      if !@user.try(:data_sets).nil?
+        @contributions += @user.try(:data_sets).search(params[:search])
       end
       if !@user.try(:media_objects).nil?
         @contributions += @user.try(:media_objects).search(params[:search])
