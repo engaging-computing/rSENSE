@@ -3,64 +3,88 @@
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
 $ ->
-  ($ '#doc_box').modal
-    backdrop: 'static'
-    keyboard: true
-    show: false
 
-  ($ '.liked_status').click ->
-    icon = ($ @).children 'i'
-    if icon.attr('class').indexOf('icon-star-empty') != -1
-      icon.replaceWith "<i class='icon-star'></i>"
-    else
-      icon.replaceWith "<i class='icon-star-empty'></i>"
-    $.ajax
-      url: '/experiments/' + ($ this).attr('exp_id') + '/updateLikedStatus'
-      dataType: 'json'
-      success: (resp) =>
-        ($ @).siblings('.like_display').html resp['update']
+  $("#experiment_templates_search").submit ->
+      $.ajax
+        url: this.action
+        data: $(this).serialize()
+        success: (data, textStatus)->
+          
+          $('#experiment_templates').isotope('remove', $('.item'))
+          
+          for object in data
+            do (object) ->
+              newItem =   "<div class='item'>"
+  
+              if(object.mediaPath)
+                newItem += "<img src='#{object.mediaPath}'></img>"
+                
+              newItem +=  "<h4 style='margin-top:0px;'><a href='#{object.experimentPath}'>#{object.title}</a>"
+              
+              if(object.featured)
+                newItem += "<span style='color:#57C142'> (featured)</span>"
+          
+              newItem +=  "</h4><b>Owner: </b><a href='#{object.ownerPath}'>#{object.ownerName}</a><br />"
+              newItem +=  "<b>Created: </b>#{object.timeAgoInWords} ago (on #{object.createdAt})<br />"
+              
+              ###
+              if(object.filters)
+                newitem += "<b>#{object.filters}</b>"
+              ###
+              
+              newItem +=  "</div>"
+              
+              newItem = $(newItem)
+              
+              $('#experiment_templates').append(newItem).isotope('insert', newItem)
+          
+          $(window).resize()
+          
+        dataType: "json"
+      return false
 
-  ($ '#experiments .pagination a').live 'click', ->
-      $.getScript this.href
-      false
+  ($ '.experiment_templates_filter_checkbox').click ->
+    ($ '#experiment_templates_search').submit()
+    
+  ($ '.experiment_templates_sort_select').change ->
+    ($ '#experiment_templates_search').submit()
+    
+  $(".experiment_templates_sort_select").change ->
+    $("#experiment_templates_search").submit()
 
-  ($ '#experiments_search').submit ->
-      $.get this.action, ($ this).serialize(), null, 'script'
-      false
-      
-  ($ '.experiments_filter_checkbox').click ->
-    ($ '#experiments_search').submit()
-    
-  ($ '.experiments_sort_select').change ->
-    ($ '#experiments_search').submit()
-    
-  ($ '#upload_csv').click ->
-    ($ '#csv_file_input').click()
-    false
-    
-  ($ '#csv_file_input').change ->
-    ($ '#csv_file_form').submit()
-    
-  ($ '#cancel_doc').click ->
-    ($ '#doc_box').modal 'hide'
-    
-  ($ '#doc_box').on 'hidden', ->
-      ($ '#doc_box').hide()
-    
-  ($ '#google_doc').click ->
-    ($ '#doc_box').modal()
-    false
-    
-  ($ '#save_doc').click ->
-    tmp = ($ '#doc_url').val()
-    if tmp.indexOf('key=') isnt -1
-      tmp = tmp.split 'key='
-      key = tmp[1]
-      tmp = window.location.pathname.split 'experiments/'
-      eid = tmp[1]
-      url = "/experiment_sessions/#{eid}/postCSV"
-      $.ajax( { url: url, data: { key: key} } ).done (data, textStatus, error) ->
-        if data.status is 'success'
-          window.location = window.location      
-    else
-      ($ '#doc_url').css 'background-color', 'red'
+  ### Get isotope up and running ###
+
+  numCols = 1
+
+  while $('#experiment_templates').width()/numCols>200
+    numCols++
+
+  $('#experiment_templates').imagesLoaded ->
+    $('.item').width(($('#experiment_templates').width()/numCols)-35)
+    $('#experiment_templates').isotope
+      itemSelector : '.item'
+      layoutMode : 'masonry'
+      masonry:
+        columnWidth: $('#experiment_templates').width()/numCols
+
+  $("#experiment_templates_search").submit()
+
+window.reLayout = ->
+
+  numCols = 1
+
+  while $('#experiment_templates').width()/numCols>200
+    numCols++
+
+  $('#experiment_templates').imagesLoaded ->
+
+    $('.item').width(($('#experiment_templates').width()/numCols)-35)
+
+    $('#experiment_templates').isotope
+      itemSelector : '.item'
+      layoutMode : 'masonry'
+      masonry:
+        columnWidth: $('#experiment_templates').width()/numCols
+  true
+
+$(window).resize reLayout
