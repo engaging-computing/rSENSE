@@ -4,6 +4,10 @@
 
 $ ->
 
+  ($ '#experiment_templates .pagination a').live 'click', ->
+      $.getScript this.href
+      false
+
   $("#experiment_templates_search").submit ->
       $.ajax
         url: this.action
@@ -60,6 +64,7 @@ $ ->
     numCols++
 
   $('#experiment_templates').imagesLoaded ->
+   
     $('.item').width(($('#experiment_templates').width()/numCols)-35)
     $('#experiment_templates').isotope
       itemSelector : '.item'
