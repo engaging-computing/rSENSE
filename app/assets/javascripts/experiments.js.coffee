@@ -150,6 +150,28 @@ $ ->
   $(".experiments_sort_select").change ->
     $("#experiments_search").submit()
     
+    
+  $('#csv_file_form').ajaxForm (success) ->
+    matches = success['partialMatches']
+    headers = success['headers']
+    fields = success['fields']
+    console.log success
+    for k,v of matches
+      $('#match_box').append('<div>' +fields[k] + " matches " +  headers[v['hindex']] + '</div>')
+    
+    $('#match_box').modal()
+    $.ajax
+      type: "POST"
+      url: "/data_sets/test"
+      dataType: "json"
+      data: success
+      success: ->
+        console.log "yay"
+      
+  ($ '#match_box').modal                 
+    backdrop: 'static'
+    keyboard: true
+    show: false
   ### Get isotope up and running ###
 
   numCols = 1

@@ -39,7 +39,7 @@ Rsense::Application.routes.draw do
   match "/experiments/:id/uploadCSV" => "data_sets#uploadCSV"
   match "/data_sets/:eid/manualEntry" => "data_sets#manualEntry"
   match "/data_sets/:eid/manualUpload" => "data_sets#manualUpload"
-  
+  match "/data_sets/test" => "data_sets#test"
 
   #Routes for displaying data
   match "/experiments/:id/datasets/*datasets" => "visualizations#displayVis"

@@ -129,95 +129,124 @@ class DataSetsController < ApplicationController
     
   end
   
+  def test
+      logger.info "-----------"
+      logger.info params
+      logger.info "-----------"
+      logger.info params[:file]
+      
+      require "csv"
+      
+      @file = File.open(params[:file][:filename], "r")
+      data = CSV.read(@file.tempfile)
+      
+      logger.info "-----------"
+      logger.info data[0]
+  end
+  
+  
   ## POST /data_sets/1
   def uploadCSV
-    #Grab the experiment so we can get field names
-    @data_set = DataSet.new(:experiment_id => params[:id], :title => "#{@cur_user.name}'s Session", :user_id => @cur_user.try(:id))
-    @experiment = @data_set.experiment
-    @data_set = MongoData.all({:data_set_id => @data_set.id})
-    
-    header = []
+
+    @experiment = Experiment.find(params[:id])
     
     #Read the CSV
     require "csv"
     
-    if params[:key].nil?
     
-      #Get a link to the temp file uploaded to the server
-      @file = params[:csv]
+    #Get a link to the temp file uploaded to the server
+    @file = params[:csv]
       
-      data = CSV.read(@file.tempfile)
+    data = CSV.read(@file.tempfile)
     
-    else
-      
-      require "open-uri"
-      
-      #Grabs the key
-      key = params[:key]
-      url = "https://spreadsheets.google.com/tq?tqx=out:csv&tq=select*&key=#{key}"
-      
-      #Use the key to download a csv from docs
-      data = open(url).read()
-
-      #strip extra quotes
-      data.gsub!( /"/, '' )
-      
-      #parse as CSV
-      data = CSV.parse(data)
-
+    #Grabs fields names from experiment
+    fields = @experiment.fields
+    exp_fields = []
+    fields.each do |f|
+      exp_fields.append f.name
+    end
+    fields = exp_fields 
+    headers = data[0]
+    
+    matrix = buildMatchMatrix(fields,headers) 
+    
+    results = {}
+    worstMatch = 0
+    
+    until false
+       max =  matrixMax(matrix)
+       
+       break if max['val'] == 0
+       matrixZeroCross(matrix, max['findex'], max['hindex'])
+       
+       results[max['findex']] = {hindex: max['hindex'], quality: max['val']}
+       worstMatch = max['val']
     end
     
-    data = sortColumns(data, doColumnsMatch(@experiment, data[0]))
-    
-    #Parse out the headers and the data
-    fields = data[0]
-    data = data[1..(data.size-1)]
-    
-    #Data that will be stuffed into mongo
-    mongo_data = Array.new
-    
-    #Build the object that will be displayed in the table
-    format_data = {}
-    format_data["metadata"] = []
-    format_data["data"] = []
-
-    fields.count.times do |i|
-      format_data["metadata"].push({name: headers[i], label: headers[i], datatype: "string", editable: true})
+    if (results.size != @experiment.fields.size) or (worstMatch < 0.6)
+      logger.info "-------------------------------"
+      logger.info "Either a field was not matched,"
+      logger.info " or one or more matched poorly."
+      logger.info "  Worst match quality:#{worstMatch}"
+      logger.info "-------------------------------"
     end
     
-    header = Field.find_all_by_experiment_id(@experiment.id)
-    
-    data.each do |dp|
-      row = []
-      header.each_with_index do |field, col_index|
-        row << { "#{field[:id]}" => dp[col_index] }
-      end
-      mongo_data << row
-    end
-
-    if @data_set.save!
-      data_to_add = MongoData.new(:data_set_id => @data_set.id, :data => mongo_data)    
-    
-      redirrect = url_for :controller => :visualizations, :action => :displayVis, :id => @experiment.id, :sessions => "#{@data_set.id}"
-    
-      if data_to_add.save!
-        response = { status: 'success', redirrect: redirrect }
-      else
-        response = { status: 'fail' }
-      end
-    else
-      response = { status: 'fail' }
-    end  
-      
-    #Send the object as json
     respond_to do |format|
-      format.json { render json: response }
-      format.html { redirect_to :controller => :visualizations, :action => :displayVis, :id => @experiment.id, :sessions => "#{@data_set.id}" }
+      format.json { render json: {headers: headers, fields: fields, partialMatches: results,file: params[:csv]}   }
+      format.html {render json: {headers: headers, fields: fields, partialMatches: results,file: params[:csv]} }
     end
-    
   end
 
 private
+
+  def matrixMax(matrix)
+    
+    n = matrix.map do |x|
+      m = {}
+      m['val'] = x.max
+      m['hindex'] = x.index(m['val'])
+      m['findex'] = matrix.index(x)
+      m
+    end
+    
+    n.inject do |h1, h2|
+      if h1['val'] > h2['val']
+        h1
+      else
+        h2
+      end
+    end
+  end
+  
+  def matrixZeroCross(matrix, findex, hindex)
+    
+    (0...matrix.size).each do |fi|
+      matrix[fi][hindex] = 0
+    end
+    
+    (0...matrix[0].size).each do |hi|
+      matrix[findex][hi] = 0
+    end
+    
+    matrix
+  end
+
+  def buildMatchMatrix(fields, headers)
+   
+    matrix = []
+    fields.each_with_index do |f,fi|
+      matrix.append []
+      headers.each_with_index do |h,hi|
+        lcs_length = lcs(fields[fi],headers[hi]).length.to_f
+        x = lcs_length / fields[fi].length.to_f
+        y = lcs_length / headers[hi].length.to_f
+        avg = (x + y) / 2                      
+        matrix[fi].append avg
+      end
+    end
+    matrix
+  end
+
   #determine whether or not the headers match the file. 
   def doColumnsMatch(experiment, headers)
     fields = experiment.fields
