@@ -41,6 +41,12 @@ $ ->
       data['field']['name'] = name_text
       data['field']['unit'] = unit_text
     
+    	#check that no field has this name already
+      #$.get
+      #	url: 
+      
+    
+    	#if nothing does save it with this new name
       $.ajax
         url: $(@).attr('href')
         type: "PUT"
@@ -67,6 +73,9 @@ $ ->
     type = helpers.get_field_type ($ row).find('.field_type').text()
     
     pair_field = null
+    
+    if( ($ row).siblings().length <= 1 )
+        ($ '#create_data_set').hide()
 
     if not (type in [(helpers.get_field_type "Latitude"), (helpers.get_field_type "Longitude")])  
       $.ajax
@@ -109,7 +118,7 @@ $ ->
             ($ pair_field).remove()
           error: (msg) =>
             console.log msg
-        
+    
     false
 
   addField = (type) ->
