@@ -41,6 +41,12 @@ $ ->
       data['field']['name'] = name_text
       data['field']['unit'] = unit_text
     
+    	#check that no field has this name already
+      #$.get
+      #	url: 
+      
+    
+    	#if nothing does save it with this new name
       $.ajax
         url: $(@).attr('href')
         type: "PUT"
