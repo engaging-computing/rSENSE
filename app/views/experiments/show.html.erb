@@ -85,7 +85,7 @@
                     </tr>
                 <% end %>
             </table>
-            <center><input type="button" value="Visualize" id="vis_button" /></center>
+            <center><input type="button" value="Visualize" id="vis_button" <% if @experiment.data_sets.count == 0 %> style="display:none;" <% end %> /></center>
         <%end%>
         <%=render layout: "shared/collapse", locals: {title: 'Media', width: '4', unique_id: 'media', should_hide: false} do %>
             <table class="table">
