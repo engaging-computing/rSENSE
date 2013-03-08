@@ -31,7 +31,26 @@
 # redirects the user to the view sessions page (Vis page)
 
 $ ->
-  ($ '#doc_box').modal
+  
+  #selection of featured image
+  ($ '.img_selector').click ->
+    mo = ($ @).attr("mo_id")
+    exp = ($ @).attr("exp_id")
+    
+    data={}
+    data["experiment"] = {}
+    data["experiment"]["featured_media_id"] = mo
+    
+    $.ajax
+      url: "/experiments/#{exp}"
+      type: "PUT"
+      dataType: "json"
+      data:
+         data
+
+  
+  # Needs commenting
+  ($ '#doc_box').modal                 
     backdrop: 'static'
     keyboard: true
     show: false
@@ -52,9 +71,57 @@ $ ->
       $.getScript this.href
       false
 
-  ($ '#experiments_search').submit ->
-      $.get this.action, ($ this).serialize(), null, 'script'
-      false
+  $("#experiments_search").submit ->
+      $.ajax
+        url: this.action
+        data: $(this).serialize()
+        success: (data, textStatus)->
+          
+          $('#experiments').isotope('remove', $('.item'))
+          
+          addExperimentButton = $("<div id='addExperimentButton' style='text-align:center;cursor: pointer;' class='item'><img style='width:66%;' src='/assets/green_plus_icon.svg'><br /><h4 style='color:#0a0;'>Create Experiment</h4></img></div>")
+          
+          $('#experiments').append(addExperimentButton).isotope('insert', addExperimentButton)
+          
+          $('#addExperimentButton').click ->
+            $.ajax
+              type: "POST"
+              url: "/experiments/"
+              data: {}
+              dataType: "json"
+              success: (data) =>
+                window.location.replace("/experiments/#{data['id']}");
+          
+          for object in data
+            do (object) ->
+              newItem =   "<div class='item'>"
+
+              if(object.mediaPath)
+                newItem += "<img src='#{object.mediaPath}'></img>"
+                
+              newItem +=  "<h4 style='margin-top:0px;'><a href='#{object.experimentPath}'>#{object.title}</a>"
+              
+              if(object.featured)
+                newItem += "<span style='color:#57C142'> (featured)</span>"
+            
+              newItem +=  "</h4><b>Owner: </b><a href='#{object.ownerPath}'>#{object.ownerName}</a><br />"
+              newItem +=  "<b>Created: </b>#{object.timeAgoInWords} ago (on #{object.createdAt})<br />"
+              
+              ###
+              if(object.filters)
+                newitem += "<b>#{object.filters}</b>"
+              ###
+              
+              newItem +=  "</div>"
+              
+              newItem = $(newItem)
+              
+              $('#experiments').append(newItem).isotope('insert', newItem)
+          
+          $(window).resize()
+          
+        dataType: "json"
+      return false
       
   ($ '.experiments_filter_checkbox').click ->
     ($ '#experiments_search').submit()
@@ -107,3 +174,19 @@ $ ->
     ses = ($ t).attr 'id'
     ses = ses.split '_'
     ses[3]
+  
+  # A File has been uploaded, decide what to do
+  ($ "#csv_file_form").ajaxForm (resp) ->
+    if resp["status"] == "success"
+      console.log "should redirect"
+    else
+      $.ajax
+        type: "POST"
+        dataType: "json"
+        url: "/experiments/#{resp['eid']}/uploadCSV"
+        data:
+          mismatch: "true"
+          tmpFile: resp['tmpFile']
+        success: =>
+          console.log "fixed, should redirect"
+  
