@@ -121,12 +121,12 @@
 <%end%>
 
 
-  
+<div style="display:none">  
   <%= form_tag "./#{@experiment.id}/uploadCSV", multipart: true, id: 'csv_file_form', target: "upload_target" do %>
     <%= file_field_tag 'csv', id: 'csv_file_input' %>
   <% end %>
   <iframe id="upload_target" name="upload_target" src="#" style="width:100%;height:100;border:0px solid #fff;"></iframe>  
-
+</div>
 
 <div id="doc_box" class="modal hide fade well container" style="width:400px">
   <div>Share URL: <input id="doc_url" class="login_field" type="text" style="width:75%"></input></div><div class="clear"></div>

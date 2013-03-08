@@ -174,3 +174,19 @@ $ ->
     ses = ($ t).attr 'id'
     ses = ses.split '_'
     ses[3]
+  
+  # A File has been uploaded, decide what to do
+  ($ "#csv_file_form").ajaxForm (resp) ->
+    if resp["status"] == "success"
+      console.log "should redirect"
+    else
+      $.ajax
+        type: "POST"
+        dataType: "json"
+        url: "/experiments/#{resp['eid']}/uploadCSV"
+        data:
+          mismatch: "true"
+          tmpFile: resp['tmpFile']
+        success: =>
+          console.log "fixed, should redirect"
+  
