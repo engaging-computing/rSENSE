@@ -185,9 +185,44 @@ class DataSetsController < ApplicationController
         
       # If the headers are fine we should create the mongo objects and redirect  
       else
-        respond_to do |format|
-          format.json { render json: {status: "success", headers: headers, fields: fields, partialMatches: results,tmpFile: @file.tempfile.path}   }
+        logger.info "got here"
+        data = data[1..(data.size-1)]
+  
+        #Data that will be stuffed into mongo
+        mongo_data = Array.new
+        
+        #Build the object that will be displayed in the table
+        format_data = {}
+        format_data["metadata"] = []
+        format_data["data"] = []
+
+        fields.count.times do |i|
+          format_data["metadata"].push({name: headers[i], label: headers[i], datatype: "string", editable: true})
         end
+        
+        header = Field.find_all_by_experiment_id(@experiment.id)
+        
+        data.each do |dp|
+          row = []
+          header.each_with_index do |field, col_index|
+            row << { "#{field[:id]}" => dp[col_index] }
+          end
+          mongo_data << row
+        end
+
+        if @data_set.save!
+          data_to_add = MongoData.new(:data_set_id => @data_set.id, :data => mongo_data)    
+        
+          redirrect = url_for :controller => :visualizations, :action => :displayVis, :id => @experiment.id, :sessions => "#{@data_set.id}"
+        
+          if data_to_add.save!
+            response = { status: 'success', redirrect: redirrect }
+          else
+            response = { status: 'fail' }
+          end
+        else
+          response = { status: 'fail' }
+        end  
       end
     end
   end
