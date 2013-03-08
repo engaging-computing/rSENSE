@@ -129,71 +129,66 @@ class DataSetsController < ApplicationController
     
   end
   
-  def test
-      logger.info "-----------"
-      logger.info params
-      logger.info "-----------"
-      logger.info params[:file]
-      
-      require "csv"
-      
-      @file = File.open(params[:file][:filename], "r")
-      data = CSV.read(@file.tempfile)
-      
-      logger.info "-----------"
-      logger.info data[0]
-  end
-  
-  
   ## POST /data_sets/1
   def uploadCSV
-
-    @experiment = Experiment.find(params[:id])
-    
-    #Read the CSV
-    require "csv"
-    
-    
-    #Get a link to the temp file uploaded to the server
-    @file = params[:csv]
+    if(params.has_key?(:mismatch))
+      logger.info "-----------"
+      logger.info params
+      require "csv"
       
-    data = CSV.read(@file.tempfile)
-    
-    #Grabs fields names from experiment
-    fields = @experiment.fields
-    exp_fields = []
-    fields.each do |f|
-      exp_fields.append f.name
-    end
-    fields = exp_fields 
-    headers = data[0]
-    
-    matrix = buildMatchMatrix(fields,headers) 
-    
-    results = {}
-    worstMatch = 0
-    
-    until false
-       max =  matrixMax(matrix)
-       
-       break if max['val'] == 0
-       matrixZeroCross(matrix, max['findex'], max['hindex'])
-       
-       results[max['findex']] = {hindex: max['hindex'], quality: max['val']}
-       worstMatch = max['val']
-    end
-    
-    if (results.size != @experiment.fields.size) or (worstMatch < 0.6)
-      logger.info "-------------------------------"
-      logger.info "Either a field was not matched,"
-      logger.info " or one or more matched poorly."
-      logger.info "  Worst match quality:#{worstMatch}"
-      logger.info "-------------------------------"
-    end
-    
-    respond_to do |format|
-      format.json { render json: {headers: headers, fields: fields, partialMatches: results,file: params[:csv]}   }
-      format.html {render json: {headers: headers, fields: fields, partialMatches: results,file: params[:csv]} }
+      data = CSV.read(params['tmpFile'])
+      logger.info data
+      respond_to do |format|
+        format.json { render json: {status: "success"} }
+      end
+    else  
+      #Read the CSV
+      require "csv"
+      @file = params[:csv]
+      data = CSV.read(@file.tempfile)
+      
+      #Grab field names from experiment
+      @experiment = Experiment.find(params[:id])
+      fields = @experiment.fields
+      exp_fields = []
+      fields.each do |f|
+        exp_fields.append f.name
+      end
+      fields = exp_fields 
+      headers = data[0]
+          
+      #Build match matrix with quality
+      matrix = buildMatchMatrix(fields,headers) 
+      results = {}
+      worstMatch = 0
+      until false
+        max =  matrixMax(matrix)
+        
+        break if max['val'] == 0
+        matrixZeroCross(matrix, max['findex'], max['hindex'])
+        
+        results[max['findex']] = {hindex: max['hindex'], quality: max['val']}
+        worstMatch = max['val']
+      end
+      
+      # If the headers are mismatched respond with mismatch
+      if (results.size != @experiment.fields.size) or (worstMatch < 0.6)
+        
+        #Save file so we can grab it again
+        base = "/tmp/rsense/dataset"
+        f = File.new(base + "#{Time.now.to_i}.csv", "w")
+        f.write @file.tempfile.read
+        f.close
+        respond_to do |format|
+          format.json { render json: {status: "mismatch", eid: params[:id],headers: headers, fields: fields, partialMatches: results,tmpFile: @file.tempfile.path}   }
+        end
+        
+      # If the headers are fine we should create the mongo objects and redirect  
+      else
+        respond_to do |format|
+          format.json { render json: {status: "success", headers: headers, fields: fields, partialMatches: results,tmpFile: @file.tempfile.path}   }
+        end
+      end
     end
   end
 
