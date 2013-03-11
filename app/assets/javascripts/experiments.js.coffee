@@ -180,6 +180,7 @@ $ ->
     if resp["status"] == "success"
       console.log "should redirect"
     else
+      console.log "sending back mismatch data"
       $.ajax
         type: "POST"
         dataType: "json"

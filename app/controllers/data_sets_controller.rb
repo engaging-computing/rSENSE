@@ -130,20 +130,24 @@ class DataSetsController < ApplicationController
   end
   
   ## POST /data_sets/1
-  def uploadCSV
+  def uploadCSV      
+    require "csv"
+    
+    #Client has responded to a call for matching
     if(params.has_key?(:mismatch))
-      logger.info "-----------"
-      logger.info params
-      require "csv"
       
       data = CSV.read(params['tmpFile'])
       logger.info data
+      
+      ##SHOULD SWAP COLUMNS THIS RESPOND TO SHOULD GO AWAY
       respond_to do |format|
         format.json { render json: {status: "success"} }
       end
+      return false
+    
+    #First call to upload a csv.
     else  
-      #Read the CSV
-      require "csv"
+      
       @file = params[:csv]
       data = CSV.read(@file.tempfile)
       
@@ -167,68 +171,90 @@ class DataSetsController < ApplicationController
         break if max['val'] == 0
         matrixZeroCross(matrix, max['findex'], max['hindex'])
         
-        results[max['findex']] = {hindex: max['hindex'], quality: max['val']}
+        results[max['findex']] = {findex: max['findex'], hindex: max['hindex'], quality: max['val']}
         worstMatch = max['val']
       end
-      
+     
       # If the headers are mismatched respond with mismatch
       if (results.size != @experiment.fields.size) or (worstMatch < 0.6)
-        
+        #Create a tmp directory if it does not exist
+        begin
+          Dir.mkdir("/tmp/rsense")
+        rescue
+        end
+       
         #Save file so we can grab it again
         base = "/tmp/rsense/dataset"
         f = File.new(base + "#{Time.now.to_i}.csv", "w")
         f.write @file.tempfile.read
-        f.close
+        f.close    
         respond_to do |format|
           format.json { render json: {status: "mismatch", eid: params[:id],headers: headers, fields: fields, partialMatches: results,tmpFile: @file.tempfile.path}   }
         end
-        
-      # If the headers are fine we should create the mongo objects and redirect  
-      else
-        logger.info "got here"
-        data = data[1..(data.size-1)]
-  
-        #Data that will be stuffed into mongo
-        mongo_data = Array.new
-        
-        #Build the object that will be displayed in the table
-        format_data = {}
-        format_data["metadata"] = []
-        format_data["data"] = []
-
-        fields.count.times do |i|
-          format_data["metadata"].push({name: headers[i], label: headers[i], datatype: "string", editable: true})
-        end
-        
-        header = Field.find_all_by_experiment_id(@experiment.id)
-        
-        data.each do |dp|
-          row = []
-          header.each_with_index do |field, col_index|
-            row << { "#{field[:id]}" => dp[col_index] }
-          end
-          mongo_data << row
-        end
-
-        if @data_set.save!
-          data_to_add = MongoData.new(:data_set_id => @data_set.id, :data => mongo_data)    
-        
-          redirrect = url_for :controller => :visualizations, :action => :displayVis, :id => @experiment.id, :sessions => "#{@data_set.id}"
-        
-          if data_to_add.save!
-            response = { status: 'success', redirrect: redirrect }
-          else
-            response = { status: 'fail' }
-          end
-        else
-          response = { status: 'fail' }
-        end  
+        return
+      
+      #EVERYTHING MATCHED, SORT THE COLUMNS
+      else 
+        logger.info "-- before #{data}"
+        data = sortColumns(data,results)
+        logger.info "-- after #{data}"
+        return false
       end
     end
+    
+    #WE HAVE SUCCESSFULLY MATCHED HEADERS AND FIELDS, SAVE THE DATA FINALLY.
+    @data_set = DataSet.new(:experiment_id => params[:id], :title => "#{@cur_user.name}'s Session", :user_id => @cur_user.try(:id))
+    @experiment = @data_set.experiment
+    
+    #Parse out just the data
+    data = data[1..(data.size-1)]
+    
+    #Data that will be stuffed into mongo
+    mongo_data = Array.new
+    
+    #Build the object that will be displayed in the table
+    format_data = {}
+    format_data["metadata"] = []
+    format_data["data"] = []
+    fields.count.times do |i|
+      format_data["metadata"].push({name: headers[i], label: headers[i], datatype: "string", editable: true})
+    end
+    
+    header = Field.find_all_by_experiment_id(@experiment.id)
+    
+    data.each do |dp|
+      row = []
+      header.each_with_index do |field, col_index|
+        row << { "#{field[:id]}" => dp[col_index] }
+      end
+      mongo_data << row
+    end
+
+    if @data_set.save!
+      data_to_add = MongoData.new(:data_set_id => @data_set.id, :data => mongo_data)    
+    
+      redirrect = url_for :controller => :visualizations, :action => :displayVis, :id => @experiment.id, :sessions => "#{@data_set.id}"
+    
+      if data_to_add.save!
+        response = { status: 'success', redirrect: redirrect }
+      else
+        response = { status: 'fail' }
+      end
+    else
+      response = { status: 'fail' }
+    end  
+    
+    #Send the object as json
+    respond_to do |format|
+      format.json { render json: response }
+      format.html { redirect_to :controller => :visualizations, :action => :displayVis, :id => @experiment.id, :sessions => "#{@data_set.id}" }
+    end
+    
   end
 
 private
 
+  #Returns the index of the highest value in the match matrix.
   def matrixMax(matrix)
     
     n = matrix.map do |x|
@@ -248,6 +274,7 @@ private
     end
   end
   
+  #Zero out a row and column of the match matrix
   def matrixZeroCross(matrix, findex, hindex)
     
     (0...matrix.size).each do |fi|
@@ -257,12 +284,12 @@ private
     (0...matrix[0].size).each do |hi|
       matrix[findex][hi] = 0
     end
-    
+
     matrix
   end
 
-  def buildMatchMatrix(fields, headers)
-   
+  #Use LCS to build a matches with quality.
+  def buildMatchMatrix(fields, headers) 
     matrix = []
     fields.each_with_index do |f,fi|
       matrix.append []
@@ -276,70 +303,8 @@ private
     end
     matrix
   end
-
-  #determine whether or not the headers match the file. 
-  def doColumnsMatch(experiment, headers)
-    fields = experiment.fields
-    
-    matches = []
-    fields.size.times do |i|
-      matches[i] = -1
-    end
-    
-    fields.each do |field|
-      headers.each do |header|
-        if(field.name.size() > header.size())
-          smallest = header.size()
-        else
-          smallest = field.name.size()
-        end
-        
-        size_of_subsequence = lcs(field.name,header).size()
-        
-        if(size_of_subsequence/smallest > 0.65)
-          matches[fields.index(field)] = headers.index(header);
-        end
-      end
-    end
-
-    matches
-    
-  end
   
-  def rotateMatrix(matrix)
-    
-    newMatrix = []
-    
-    for i in 0...matrix[0].size()
-      newMatrix[i] = []
-    end
-      
-    for i in 0...matrix.size()
-      
-      for j in 0...matrix[i].size()
-        newMatrix[j][i] = matrix[i][j]
-      end
-    end
-    
-    newMatrix
-    
-  end
-  
-  def sortColumns(rowColMatrix, indexArray)
-    rotatedMatrix = rotateMatrix(rowColMatrix)
-    indexArray.size.times do |i|
-      if indexArray[i] != i
-        if(indexArray.index(i) != nil)
-          #rowColMatrix = swapColumns(rowColMatrix, i, indexArray.index(i))
-          rotatedMatrix[i],rotatedMatrix[indexArray.index(i)] = rotatedMatrix[indexArray.index(i)],rotatedMatrix[i]
-          indexArray[indexArray.index(i)],indexArray[i] = indexArray[i],indexArray[indexArray.index(i)]
-        end
-      end
-    end
-    rotatedMatrix = rotateMatrix(rotatedMatrix)
-    rotatedMatrix  
-  end
-  
+  #Longest common subsequence. Used in column matching
   def lcs(a, b)
       lengths = Array.new(a.size+1) { Array.new(b.size+1) { 0 } }
       # row 0 and column 0 are initialized to 0 already
@@ -369,6 +334,53 @@ private
           end
       end
       result.reverse
+  end
+  
+  #It is easier to swap columns around after rotating the data matrix
+  def rotateDataMatrix(dataMatrix)
+    
+    newDataMatrix = []
+    
+    for i in 0...dataMatrix[0].size()
+      newDataMatrix[i] = []
+    end
+      
+    for i in 0...dataMatrix.size()
+      
+      for j in 0...dataMatrix[i].size()
+        newDataMatrix[j][i] = dataMatrix[i][j]
+      end
+    end
+    
+    newDataMatrix
+    
+  end
+  
+  #Rotate the matrix then swap the columns to the correct order
+  def sortColumns(rowColMatrix, matches)
+    rotatedMatrix = rotateDataMatrix(rowColMatrix)
+    
+    logger.info matches
+    #{0=>{:findex=>0, :hindex=>0, :quality=>1.0}, 
+    # 2=>{:findex=>2, :hindex=>1, :quality=>0.9285714285714286}, 
+    # 1=>{:findex=>1, :hindex=>2, :quality=>0.8333333333333333}}
+
+    matches.size.times do |i|
+      tmp = matches[i]
+      if (tmp[:findex] != tmp[:hindex]) and !(matches[tmp[:hindex]].has_key?("moved"))
+        #swap columns in data matrix
+        x = rotatedMatrix[tmp[:hindex]]
+        rotatedMatrix[tmp[:hindex]] = rotatedMatrix[tmp[:findex]]
+        rotatedMatrix[tmp[:findex]] = x
+        
+        #update matches    
+        tmp["moved"] = "true"
+        matches[i] = tmp
+      end
+    end
+    
+    rotatedMatrix = rotateDataMatrix(rotatedMatrix)
+    rotatedMatrix  
   end
   
 end
