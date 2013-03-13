@@ -36,6 +36,8 @@ Rsense::Application.routes.draw do
   match "/experiments/:id/createSession" => "experiments#createSession"
   match "/experiments/:id/addDataSet" => "experiments#addDataSet"
   
+  match "/experiments/:eid/:fid/checkFieldName" => "experiments#checkFieldName"
+  
   match "/experiments/:id/uploadCSV" => "data_sets#uploadCSV"
   match "/data_sets/:eid/manualEntry" => "data_sets#manualEntry"
   match "/data_sets/:eid/manualUpload" => "data_sets#manualUpload"
