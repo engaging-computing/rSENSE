@@ -53,7 +53,6 @@ $ ->
         dataType: "json"
         data: data
         success: (msg, xhtm, options) =>
-          console.log msg
           if msg.orig == true
             ($ name).find('.name_edit_box').css('background-color', '#FFFFFF')
             #if nothing does save it with this new name
