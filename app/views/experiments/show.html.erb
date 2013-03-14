@@ -136,9 +136,16 @@
   </div>
 </div>
 
+<!-- Field matching Modal Box -->
 <div id="match_box" class="modal hide fade well container" style="width:400px">
-  <table id="match_table" style="float:left">
-  </table>
-  <div id="match_headers" class="header_drop" style="float:right">
+  <p>
+    We were unable to automatically match up your CSV headers with the experiment fields. Below is our best guess - please correct it with the dropdown boxes before continuing.
+  </p>
+  
+  <table id="match_table"> </table>
+
+  <div style="float:right;">
+    <button class="finished_button btn btn-success"> Finished </button>
+    <button class="cancel_upload_button btn" style="margin:15px 10px 0px 0px"> Cancel Upload </button>
   </div>
 </div>

@@ -25,3 +25,6 @@ $ ->
       when 3 then ""
       when 4 then "deg"
       when 5 then "deg"
+
+  $.fn.errorFlash = () ->
+    this.effect "highlight", {color: "#F00"}, 2000
