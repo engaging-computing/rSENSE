@@ -120,12 +120,12 @@
 	<%= submit_tag "Clone Experiment" %>
 <%end%>
 
-<div id="hidden_form_div" style="display:none;">
-  
-  <%= form_tag "./#{@experiment.id}/uploadCSV", multipart: true, id: 'csv_file_form' do %>
+
+<div style="display:none">  
+  <%= form_tag "./#{@experiment.id}/uploadCSV", multipart: true, id: 'csv_file_form', target: "upload_target" do %>
     <%= file_field_tag 'csv', id: 'csv_file_input' %>
   <% end %>
-  
+  <iframe id="upload_target" name="upload_target" src="#" style="width:100%;height:100;border:0px solid #fff;"></iframe>  
 </div>
 
 <div id="doc_box" class="modal hide fade well container" style="width:400px">
@@ -133,5 +133,19 @@
   <div style="float:right;">
       <button id="save_doc" class="login_button btn btn-success">Save!</button>
       <button id="cancel_doc" class="cancel_login_button btn" style="margin:15px 10px 0px 0px">Cancel</button>
+  </div>
+</div>
+
+<!-- Field matching Modal Box -->
+<div id="match_box" class="modal hide fade well container" style="width:400px">
+  <p>
+    We were unable to automatically match up your CSV headers with the experiment fields. Below is our best guess - please correct it with the dropdown boxes before continuing.
+  </p>
+  
+  <table id="match_table"> </table>
+
+  <div style="float:right;">
+    <button class="finished_button btn btn-success"> Finished </button>
+    <button class="cancel_upload_button btn" style="margin:15px 10px 0px 0px"> Cancel Upload </button>
   </div>
 </div>
