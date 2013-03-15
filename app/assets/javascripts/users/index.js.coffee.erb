@@ -16,10 +16,12 @@ $ ->
               newItem =   "<div class='item'>"
                 
               newItem +=  "<h4 style='margin-top:0px;'><a href='#{object.ownerPath}'>#{object.username}</a>"
-              
-              newItem +=  "</h4><b>First Name: </b><a href='#{object.ownerPath}'>#{object.ownerName}</a><br />"
+
+              newItem += "<br />"
 
               newItem += "<img src='#{object.userGravatar}'> </img>"
+              
+              newItem +=  "</h4><b>Name: </b><a href='#{object.ownerPath}'>#{object.ownerName}</a><br />"
 
               newItem +=  "</div>"
             
