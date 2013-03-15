@@ -132,33 +132,42 @@ class DataSetsController < ApplicationController
   ## POST /data_sets/1
   def uploadCSV      
     require "csv"
+
+    #Grab field names from experiment
+    @experiment = Experiment.find(params[:id])
+    fields = @experiment.fields
+    exp_fields = []
+    fields.each do |f|
+      exp_fields.append f.name
+    end
+    fields = exp_fields
     
     #Client has responded to a call for matching
-    if(params.has_key?(:mismatch))
+    if(params.has_key?(:matches))
       
       data = CSV.read(params['tmpFile'])
-      logger.info data
+
+      headers = params[:headers]
+      matches = params[:matches]
       
-      ##SHOULD SWAP COLUMNS THIS RESPOND TO SHOULD GO AWAY
-      respond_to do |format|
-        format.json { render json: {status: "success"} }
+      matches = matches.inject({}) do |acc, kvp|
+        v = kvp[1].inject({}) do |acc, kvp|
+          acc[kvp[0].to_sym] = Integer(kvp[1])
+          acc
+        end
+        
+        acc[Integer(kvp[0])] = v
+        acc
       end
-      return false
-    
+
+      data = sortColumns(data, matches)
+      
     #First call to upload a csv.
     else  
       
       @file = params[:csv]
       data = CSV.read(@file.tempfile)
       
-      #Grab field names from experiment
-      @experiment = Experiment.find(params[:id])
-      fields = @experiment.fields
-      exp_fields = []
-      fields.each do |f|
-        exp_fields.append f.name
-      end
-      fields = exp_fields 
       headers = data[0]
           
       #Build match matrix with quality
@@ -185,20 +194,18 @@ class DataSetsController < ApplicationController
        
         #Save file so we can grab it again
         base = "/tmp/rsense/dataset"
-        f = File.new(base + "#{Time.now.to_i}.csv", "w")
+        fname = base + "#{Time.now.to_i}.csv"
+        f = File.new(fname, "w")
         f.write @file.tempfile.read
         f.close    
         respond_to do |format|
-          format.json { render json: {status: "mismatch", eid: params[:id],headers: headers, fields: fields, partialMatches: results,tmpFile: @file.tempfile.path}   }
+          format.json { render json: {status: "mismatch", eid: params[:id],headers: headers, fields: fields, partialMatches: results,tmpFile: fname}   }
         end
         return
       
       #EVERYTHING MATCHED, SORT THE COLUMNS
       else 
-        logger.info "-- before #{data}"
         data = sortColumns(data,results)
-        logger.info "-- after #{data}"
-        return false
       end
     end
     
@@ -233,10 +240,10 @@ class DataSetsController < ApplicationController
     if @data_set.save!
       data_to_add = MongoData.new(:data_set_id => @data_set.id, :data => mongo_data)    
     
-      redirrect = url_for :controller => :visualizations, :action => :displayVis, :id => @experiment.id, :sessions => "#{@data_set.id}"
+      redirect = url_for :controller => :visualizations, :action => :displayVis, :id => @experiment.id, :datasets => "#{@data_set.id}"
     
       if data_to_add.save!
-        response = { status: 'success', redirrect: redirrect }
+        response = { status: 'success', redirect: redirect }
       else
         response = { status: 'fail' }
       end
@@ -247,7 +254,7 @@ class DataSetsController < ApplicationController
     #Send the object as json
     respond_to do |format|
       format.json { render json: response }
-      format.html { redirect_to :controller => :visualizations, :action => :displayVis, :id => @experiment.id, :sessions => "#{@data_set.id}" }
+      format.html { redirect_to :controller => :visualizations, :action => :displayVis, :id => @experiment.id, :datasets => "#{@data_set.id}" }
     end
     
   end
@@ -359,28 +366,13 @@ private
   #Rotate the matrix then swap the columns to the correct order
   def sortColumns(rowColMatrix, matches)
     rotatedMatrix = rotateDataMatrix(rowColMatrix)
-    
-    logger.info matches
-    #{0=>{:findex=>0, :hindex=>0, :quality=>1.0}, 
-    # 2=>{:findex=>2, :hindex=>1, :quality=>0.9285714285714286}, 
-    # 1=>{:findex=>1, :hindex=>2, :quality=>0.8333333333333333}}
+    newData = []
 
     matches.size.times do |i|
-      tmp = matches[i]
-      if (tmp[:findex] != tmp[:hindex]) and !(matches[tmp[:hindex]].has_key?("moved"))
-        #swap columns in data matrix
-        x = rotatedMatrix[tmp[:hindex]]
-        rotatedMatrix[tmp[:hindex]] = rotatedMatrix[tmp[:findex]]
-        rotatedMatrix[tmp[:findex]] = x
-        
-        #update matches    
-        tmp["moved"] = "true"
-        matches[i] = tmp
-      end
+      newData[i] = rotatedMatrix[matches[i][:hindex]]
     end
     
-    rotatedMatrix = rotateDataMatrix(rotatedMatrix)
-    rotatedMatrix  
+    rotateDataMatrix(newData)
   end
   
 end
