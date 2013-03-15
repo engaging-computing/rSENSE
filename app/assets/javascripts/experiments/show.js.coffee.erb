@@ -12,7 +12,7 @@ $ ->
 
         options = "<option value='-1'> Select One... </option>"
         for header, headerIndex in resp['headers']
-          if (resp.partialMatches[fieldIndex].hindex is headerIndex) and (resp.partialMatches[fieldIndex] isnt undefined)
+          if resp.partialMatches[fieldIndex] isnt undefined) and (resp.partialMatches[fieldIndex].hindex is headerIndex)
             options += "<option selected='true' value='#{headerIndex}'> #{header} </option>"
           else
             options += "<option value='#{headerIndex}'> #{header} </option>"
