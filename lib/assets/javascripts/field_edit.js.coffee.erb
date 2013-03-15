@@ -24,7 +24,9 @@ $ ->
 
 
   #This is where we save after editing    
-  save = ->
+  save = (e) ->
+  
+    e.preventDefault()
     name = ($ @).parent().parent().find '.field_name'
     unit = ($ @).parent().parent().find '.field_unit'
     field = helpers.get_field_type ($(@).parent().parent().find('.field_type').text())
@@ -40,25 +42,35 @@ $ ->
       data['field'] = {}
       data['field']['name'] = name_text
       data['field']['unit'] = unit_text
-    
-    	#check that no field has this name already
-      #$.get
-      #	url: 
+      exp_id = ($ @).attr('exp')
+      field_id = ($ @).attr('field')
+      url = '/experiments/' + exp_id + '/' + field_id + '/checkFieldName'
       
-    
-    	#if nothing does save it with this new name
+      
+    	#check that no field has this name already
       $.ajax
-        url: $(@).attr('href')
-        type: "PUT"
+        url: url
         dataType: "json"
-        data:
-          data
-        success: =>        
-          ($ @).siblings('.field_edit_link').show()
-          ($ @).hide()
-          ($ @).siblings('.field_delete_link').hide()
-          name.html(name_text)
-          unit.html(unit_text)
+        data: data
+        success: (msg, xhtm, options) =>
+          if msg.orig == true
+            ($ name).find('.name_edit_box').css('background-color', '#FFFFFF')
+            #if nothing does save it with this new name
+            $.ajax
+              url: $(@).attr('href')
+              type: "PUT"
+              dataType: "json"
+              data: data
+              success: =>
+                ($ @).siblings('.field_edit_link').show()
+                ($ @).hide()
+                ($ @).siblings('.field_delete_link').hide()
+                name.html(name_text)
+                unit.html(unit_text)
+          else
+            ($ name).find('.name_edit_box').css('background-color', '#D80000')
+
+
             
     else
       ($ @).siblings('.field_edit_link').show()
