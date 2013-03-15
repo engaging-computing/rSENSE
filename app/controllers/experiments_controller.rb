@@ -151,6 +151,25 @@ class ExperimentsController < ApplicationController
       end
     end
   end
+  
+  # GET /experiments/eid/fid
+  def checkFieldName
+
+    @experiment = Experiment.find(params[:eid])
+    orig = true
+
+    @experiment.fields.all.each do |f|
+      if f.id != params[:fid].to_i
+        if f.name == params['field']['name']
+          orig = false
+        end
+      end      
+    end
+
+    respond_to do |format|
+      format.json { render json: {orig: orig} }
+    end
+  end
 
   # DELETE /experiments/1
   # DELETE /experiments/1.json
