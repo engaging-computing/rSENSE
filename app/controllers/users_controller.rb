@@ -13,6 +13,28 @@ class UsersController < ApplicationController
     
     @users = User.search(params[:search]).paginate(page: params[:page], per_page: 8).order("created_at #{sort}")
     
+    jsonExperiments = []
+    
+    @users.each do |user|
+      
+      newJsonExperiment = {}
+      
+      newJsonExperiment["username"]          = user.username
+      newJsonExperiment["ownerName"]      = "#{user.firstname} #{user.lastname}"
+      newJsonExperiment["ownerPath"]      = user_path(user)
+      
+      if(!user.try(:email).nil?)
+        newJsonExperiment["userGravatar"] = "http://www.gravatar.com/avatar.php?gravatar_id=#{Digest::MD5::hexdigest(user.email)}"
+      end
+      
+      jsonExperiments = jsonExperiments << newJsonExperiment
+      
+    end
+    
+    respond_to do |format|
+      format.html
+      format.json { render json: jsonExperiments }
+    end
 
   end
 
