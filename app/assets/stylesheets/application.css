@@ -40,6 +40,11 @@ button.login_button
     margin: 15px 0px 0px 0px;
 }
 
+button.cancel_login_button
+{
+    margin: 15px 0px 0px 0px;
+}
+
 div.clear
 {
     clear: both;
