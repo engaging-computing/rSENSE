@@ -27,7 +27,6 @@ class UsersController < ApplicationController
       newJsonObject["userGravatar"] = "http://www.gravatar.com/avatar.php?gravatar_id=#{Digest::MD5::hexdigest(user.email)}"
       if (newJsonObject["userGravatar"] == "http://www.gravatar.com/avatar.php?gravatar_id=d41d8cd98f00b204e9800998ecf8427e")
         newJsonObject["userGravatar"] = "NULL"
-        
       end
       
       jsonObjects = jsonObjects << newJsonObject
