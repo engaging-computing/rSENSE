@@ -19,8 +19,9 @@ class UsersController < ApplicationController
       
       newJsonObject = {}
       
+      newJsonObject["ownerName"]      = "#{user.name}"      
       newJsonObject["username"]          = user.username
-      newJsonObject["ownerName"]      = "#{user.name}"
+      newJsonObject["timeAgoInWords"] = time_ago_in_words(user.created_at)
       newJsonObject["createdAt"]      = user.created_at.strftime("%B %d, %Y")
       newJsonObject["ownerPath"]      = user_path(user)
       newJsonObject["userGravatar"] = "http://www.gravatar.com/avatar.php?gravatar_id=#{Digest::MD5::hexdigest(user.email)}"
