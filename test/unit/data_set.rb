@@ -1,45 +1,36 @@
 require 'test_helper'
 
-<<<<<<< HEAD:test/unit/experiment_session_test.rb
-class ExperimentSessionTest < ActiveSupport::TestCase
- 
-  # Creates a new experiment session and tests that the default fields are correctly set
+class DataSetTest < ActiveSupport::TestCase
+
+  # Creates a new data set and tests that the default fields are correctly set
   
-  # Defines and initializes a new experiment session
-  experiment_session = ExperimentSession.new
+  # Defines and initializes a new data set
+  data_set = DataSet.new
   
   # Passes if content is nil
   test "content is nil" do
-    assert_nil( experiment_session.content, "Expected content is nil." )
+    assert_nil( data_set.content, "Expected content is nil." )
   end
   
+
+
   # ---------------------------------------------------
   # Testing with fixtures
   
   test "sessions title" do
-    assert_equal "Sample Title", experiment_sessions(:one).title
+    assert_equal "Sample Title", data_sets(:one).title
   end
 
   test "user_id" do
-    assert_equal 1, experiment_sessions(:one).user_id
+    assert_equal 1, data_sets(:one).user_id
   end
   
   test "experiment_id" do
-    assert_equal 1, experiment_sessions(:one).experiment_id
+    assert_equal 1, data_sets(:one).experiment_id
   end
 
   test " experiment content" do
-    assert_nil experiment_sessions(:one).content, "Expected content is nil." 
+    assert_nil data_sets(:one).content, "Expected content is nil." 
   end
   
-# test " experiment src" do
-#    assert_nil experiment_sessions(:one).src, "Expected src is nil." 
-# end
-
-=======
-class DataSetTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
->>>>>>> 822464eb9ebb1a56c1a36c63ced711a7bd7714f8:test/unit/data_set.rb
 end
