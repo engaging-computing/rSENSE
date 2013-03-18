@@ -13,18 +13,21 @@ $ ->
 
           for object in data
             do (object) ->
-              newItem =   "<div class='item'>"
+              newItem =   "<div class='item' align='center'>"
                 
               newItem +=  "<h4 style='margin-top:0px;'><a href='#{object.ownerPath}'>#{object.username}</a>"
 
-              newItem += "<br />"
+              newItem += "</h4>"
 
-              newItem += "<img src='#{object.userGravatar}'> </img>"
-              
-              newItem +=  "</h4><b>Name: </b><a href='#{object.ownerPath}'>#{object.ownerName}</a><br />"
+              if (object.userGravatar) != "NULL"
+                newItem += "<img src='#{object.userGravatar}'> </img><br />"
+
+              newItem +=  "<h8><b>Name: </b><a href='#{object.ownerPath}'>#{object.ownerName}</a></h8><br />"
+
+              newItem +=  "<h8><b>Member Since: </b>#{object.createdAt}</h8><br />"
 
               newItem +=  "</div>"
-            
+
               newItem = $(newItem)
             
               $('#users').append(newItem).isotope('insert', newItem)

@@ -13,27 +13,29 @@ class UsersController < ApplicationController
     
     @users = User.search(params[:search]).paginate(page: params[:page], per_page: 8).order("created_at #{sort}")
     
-    jsonExperiments = []
+    jsonObjects = []
     
     @users.each do |user|
       
-      newJsonExperiment = {}
+      newJsonObject = {}
       
-      newJsonExperiment["username"]          = user.username
-      newJsonExperiment["ownerName"]      = "#{user.firstname} #{user.lastname}"
-      newJsonExperiment["ownerPath"]      = user_path(user)
-      
-      if(!user.try(:email).nil?)
-        newJsonExperiment["userGravatar"] = "http://www.gravatar.com/avatar.php?gravatar_id=#{Digest::MD5::hexdigest(user.email)}"
+      newJsonObject["username"]          = user.username
+      newJsonObject["ownerName"]      = "#{user.name}"
+      newJsonObject["createdAt"]      = user.created_at.strftime("%B %d, %Y")
+      newJsonObject["ownerPath"]      = user_path(user)
+      newJsonObject["userGravatar"] = "http://www.gravatar.com/avatar.php?gravatar_id=#{Digest::MD5::hexdigest(user.email)}"
+      if (newJsonObject["userGravatar"] == "http://www.gravatar.com/avatar.php?gravatar_id=d41d8cd98f00b204e9800998ecf8427e")
+        newJsonObject["userGravatar"] = "NULL"
+        
       end
       
-      jsonExperiments = jsonExperiments << newJsonExperiment
+      jsonObjects = jsonObjects << newJsonObject
       
     end
     
     respond_to do |format|
       format.html
-      format.json { render json: jsonExperiments }
+      format.json { render json: jsonObjects }
     end
 
   end
