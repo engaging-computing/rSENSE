@@ -52,7 +52,7 @@ class FieldsController < ApplicationController
       end
     end
     
-    if counter > 0
+    if counter > 1
       @field.name += "_#{counter}"
     end
     
