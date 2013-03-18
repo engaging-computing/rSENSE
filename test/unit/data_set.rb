@@ -1,5 +1,6 @@
 require 'test_helper'
 
+<<<<<<< HEAD:test/unit/experiment_session_test.rb
 class ExperimentSessionTest < ActiveSupport::TestCase
  
   # Creates a new experiment session and tests that the default fields are correctly set
@@ -35,4 +36,10 @@ class ExperimentSessionTest < ActiveSupport::TestCase
 #    assert_nil experiment_sessions(:one).src, "Expected src is nil." 
 # end
 
+=======
+class DataSetTest < ActiveSupport::TestCase
+  # test "the truth" do
+  #   assert true
+  # end
+>>>>>>> 822464eb9ebb1a56c1a36c63ced711a7bd7714f8:test/unit/data_set.rb
 end

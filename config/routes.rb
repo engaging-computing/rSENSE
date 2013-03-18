@@ -5,7 +5,7 @@ Rsense::Application.routes.draw do
 
   resources :visualizations
 
-  #resources :experiment_sessions
+  #resources :data_sets
 
   resources :memberships
 
@@ -25,7 +25,7 @@ Rsense::Application.routes.draw do
 
   get 'admin' => 'admin#index'
 
-  resources :experiment_sessions do
+  resources :data_sets do
     get 'getData' => :getData
   end
 
@@ -34,20 +34,20 @@ Rsense::Application.routes.draw do
 
   #Routes for uploading data
   match "/experiments/:id/createSession" => "experiments#createSession"
-  match "/experiments/:id/addExperimentSession" => "experiments#addExperimentSession"
+  match "/experiments/:id/addDataSet" => "experiments#addDataSet"
   
-  match "/experiments/:id/uploadCSV" => "experiment_sessions#uploadCSV"
-  match "/experiment_sessions/:eid/manualEntry" => "experiment_sessions#manualEntry"
-  match "/experiment_sessions/:eid/manualUpload" => "experiment_sessions#manualUpload"
+  match "/experiments/:id/uploadCSV" => "data_sets#uploadCSV"
+  match "/data_sets/:eid/manualEntry" => "data_sets#manualEntry"
+  match "/data_sets/:eid/manualUpload" => "data_sets#manualUpload"
   
 
   #Routes for displaying data
-  match "/experiments/:id/sessions/*sessions" => "visualizations#displayVis"
-  match "/experiments/:id/sessions/" => "visualizations#displayVis"
+  match "/experiments/:id/datasets/*datasets" => "visualizations#displayVis"
+  match "/experiments/:id/datasets/" => "visualizations#displayVis"
   
   match "/experiments/:id/removeField" => "experiments#removeField"
 
-  match "/experiment_sessions/:id/postCSV" => "experiment_sessions#uploadCSV"
+  match "/data_sets/:id/postCSV" => "data_sets#uploadCSV"
   match "/media_objects/saveimage/*keys" => "media_objects#saveimage"
   
   controller :sessions do
@@ -58,9 +58,6 @@ Rsense::Application.routes.draw do
   match "/users/verify" => "users#verify"
   resources :users
   match "/users/validate/:key" => "users#validate"
-  
-  
-  match "/experiments/:id/addExperimentSession" => "experiments#addExperimentSession"
   
   match "/experiments/:id/updateLikedStatus" => "experiments#updateLikedStatus"
 
