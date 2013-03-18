@@ -51,14 +51,14 @@
                 </th>
                 <% @experiment.fields.all.each do |f| %>
                     <!-- Render all the fields, Lat and Lon cant be edited -->
-                    <%= render 'field_edit', field: f, type: "field",row_id: f.id, can_edit: (can_edit? @experiment), has_ses: @experiment.experiment_sessions.count %>
+                    <%= render 'field_edit', field: f, type: "field",row_id: f.id, can_edit: (can_edit? @experiment), has_ses: @experiment.data_sets.count %>
                 <% end %>
             </table>
         <%end%>
-        <%=render layout: "shared/collapse", locals: {title: 'Create Session', width:'4', unique_id: 'create_session', should_hide: !@has_fields} do %>
+        <%=render layout: "shared/collapse", locals: {title: 'Create Data Set', width:'4', unique_id: 'create_data_set', should_hide: !@has_fields} do %>
        
             <div class="span1 center">
-                <%= link_to :controller => :experiment_sessions, :action => :manualEntry, :eid => @experiment.id do %>
+                <%= link_to :controller => :data_sets, :action => :manualEntry, :eid => @experiment.id do %>
                 <img style="height: 75px;" src="/assets/manual.svg" /><br />Manual Entry
                 <% end %>
             </div>
@@ -74,18 +74,18 @@
             </div>
        
         <% end %>
-        <%=render layout: "shared/collapse", locals: {title: 'Sessions', width: '4', unique_id: 'sessions', should_hide: false} do %>
+        <%=render layout: "shared/collapse", locals: {title: 'Data Sets', width: '4', unique_id: 'data_sets', should_hide: false} do %>
             <table class="table">
-                <% @experiment.experiment_sessions.all.each do |s| %>
+                <% @experiment.data_sets.all.each do |s| %>
                     <tr>
                         <td style="width:32px;height:32px;"><%= gravatar_image_tag(s.owner.email, alt: s.owner.firstname) %></td>
                         <td><%= link_to "#{s.owner.name}", user_path(s.owner) %></td>
-                        <td><%= link_to s.title, "#{params[:id]}/sessions/#{s.id}" %></td>
+                        <td><%= link_to s.title, "#{params[:id]}/datasets/#{s.id}" %></td>
                         <td><input type="checkbox" id="experiment_<%=params[:id]%>_session_<%=s.id%>"/></td>
                     </tr>
                 <% end %>
             </table>
-            <center><input type="button" value="Visualize" id="vis_button" /></center>
+            <center><input type="button" value="Visualize" id="vis_button" <% if @experiment.data_sets.count == 0 %> style="display:none;" <% end %> /></center>
         <%end%>
         <%=render layout: "shared/collapse", locals: {title: 'Media', width: '4', unique_id: 'media', should_hide: false} do %>
             <table class="table">

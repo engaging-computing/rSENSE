@@ -5,7 +5,7 @@ class Experiment < ActiveRecord::Base
   validates_presence_of :user_id
   
   has_many :fields
-  has_many :experiment_sessions
+  has_many :data_sets
   has_many :media_objects
   has_many :likes
 
