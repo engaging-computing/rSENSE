@@ -5,11 +5,10 @@ one:
   content: 
   user_id: 1
   experiment_id: 1
-#  src: 
 
 two:
   title: MyString
   content: MyText
   user_id: 1
   experiment_id: 1
-#  src: 
+ 
