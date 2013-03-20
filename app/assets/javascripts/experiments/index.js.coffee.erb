@@ -3,7 +3,7 @@
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
 $ ->
-  
+
   #selection of featured image
   ($ '.img_selector').click ->
     mo = ($ @).attr("mo_id")
@@ -20,7 +20,6 @@ $ ->
       data:
          data
 
-  
   # Needs commenting
   ($ '#doc_box').modal                 
     backdrop: 'static'
@@ -49,6 +48,7 @@ $ ->
         data: $(this).serialize()
         success: (data, textStatus)->
           
+          console.log($('#experiments').width())
           $('#experiments').isotope('remove', $('.item'))
           
           addExperimentButton = $("<div id='addExperimentButton' style='text-align:center;cursor: pointer;' class='item'><img style='width:66%;' src='/assets/green_plus_icon.svg'><br /><h4 style='color:#0a0;'>Create Experiment</h4></img></div>")
@@ -141,23 +141,48 @@ $ ->
     url = '/experiments/' + eid + '/data_sets/' + ses_list.join ','
     window.location = url
     
-  # get the session number for viewing vises
   grab_ses = (t) ->
     ses = ($ t).attr 'id'
     ses = ses.split '_'
     ses[3]
-# A File has been uploaded, decide what to do
-#   ($ "#csv_file_form").ajaxForm (resp) ->
-#     if resp["status"] == "success"
-#       console.log "should redirect"
-#     else
-#       console.log "sending back mismatch data"
-#       $.ajax
-#         type: "POST"
-#         dataType: "json"
-#         url: "/experiments/#{resp['eid']}/uploadCSV"
-#         data:
-#           mismatch: "true"
-#           tmpFile: resp['tmpFile']
-#         success: =>
-#           console.log "fixed, should redirect"
+    
+    
+  $(".experiments_sort_select").change ->
+    $("#experiments_search").submit()
+    
+  ### Get isotope up and running ###
+
+  numCols = 1
+
+  while $('#experiments').width()/numCols>200
+    numCols++
+
+  $('#experiments').imagesLoaded ->
+    $('.item').width(($('#experiments').width()/numCols)-35)
+    $('#experiments').isotope
+      itemSelector : '.item'
+      layoutMode : 'masonry'
+      masonry:
+        columnWidth: $('#experiments').width()/numCols
+        
+  $("#experiments_search").submit()
+
+window.reLayout = ->
+
+  numCols = 1
+
+  while $('#experiments').width()/numCols>200
+    numCols++
+  
+  $('#experiments').imagesLoaded ->
+
+    $('.item').width(($('#experiments').width()/numCols)-35)
+
+    $('#experiments').isotope
+      itemSelector : '.item'
+      layoutMode : 'masonry'
+      masonry:
+        columnWidth: $('#experiments').width()/numCols
+  true
+
+$(window).resize reLayout

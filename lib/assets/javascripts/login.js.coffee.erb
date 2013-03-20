@@ -35,8 +35,10 @@ $ ->
               ($ '#login_box').dialog 'close'
               location.reload();
             when 'fail'
-             ($ '#login_user').css 'background','red'
-             ($ '#login_password').css 'background','red'
+              ($ '#login_user').errorFlash()
+              ($ '#login_password').errorFlash()
+             #($ '#login_user').css 'background','red'
+             #($ '#login_password').css 'background','red'
             
   
   ($ 'a.login').click ->
