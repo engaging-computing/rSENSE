@@ -1,11 +1,17 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
-  title: MyString
+  title: Sample Test
   user_id: 1
-  content: MyText
-
+  content: Sample Content
+  cloned_from: 
+  featured: false
+  is_template: false
+  
 two:
   title: MyString
   user_id: 1
   content: MyText
+  cloned_from: 
+  featured: false
+  is_template: false
