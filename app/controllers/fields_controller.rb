@@ -40,8 +40,22 @@ class FieldsController < ApplicationController
   # POST /fields
   # POST /fields.json
   def create
-    @field = Field.new(params[:field])
+    @field = Field.new(params[:field])    
+    @experiment = Experiment.find(params[:field][:experiment_id])
 
+    counter = 1
+    
+    @experiment.fields.all.each do |f|
+      fname = f.name.split("_")
+      if @field.name == fname[0] or @field.name == f
+        counter += 1
+      end
+    end
+    
+    if counter > 1
+      @field.name += "_#{counter}"
+    end
+    
     respond_to do |format|
       if @field.save
         format.html { redirect_to @field, notice: 'Field was successfully created.' }
