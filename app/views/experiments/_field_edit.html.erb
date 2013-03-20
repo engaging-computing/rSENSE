@@ -9,13 +9,13 @@
   <%if can_edit%>
     <% unless (get_field_name(field.field_type) == "Longitude" || get_field_name(field.field_type) == "Latitude") %>
       <td><a class="field_edit_link"><i class="icon-edit"></i></a>
-        <a href="/<%=type.pluralize%>/<%=row_id%>" class="field_save_link"><i class="icon-ok"></i></a>
+          <a href="/<%=type.pluralize%>/<%=row_id%>" exp="<%=@experiment.id%>" field="<%=row_id%>" class="field_save_link"><i class="icon-ok"></i></a>
         <a href="/experiments/<%=@experiment.id%>/" field="<%=row_id%>" class="field_delete_link"><i class="icon-remove-circle"></i></a>
       </td>
     <%else%>
       <% if has_ses == 0 %>
         <td><a class="field_edit_link"><i class="icon-edit"></i></a>
-          <a href="/<%=type.pluralize%>/<%=row_id%>" class="field_save_link"><i class="icon-ok"></i></a>
+            <a href="/<%=type.pluralize%>/<%=row_id%>" exp="<%=@experiment.id%>" class="field_save_link"><i class="icon-ok"></i></a>
           <a href="/experiments/<%=@experiment.id%>/" field="<%=row_id%>" class="field_delete_link"><i class="icon-remove-circle"></i></a>
         </td>
       <%end%>
