@@ -19,32 +19,32 @@ class ExperimentTemplatesController < ApplicationController
       @experiments = Experiment.filter(params[:filters]).search(params[:search]).paginate(page: params[:page], per_page: 8).order("like_count DESC").is_template
     end
   
-    jsonExperiments = []
+    jsonObjects = []
   
     @experiments.each do |exp|
     
-      newJsonExperiment = {}
+      newJsonObject = {}
     
-      newJsonExperiment["title"]          = exp.title
-      newJsonExperiment["timeAgoInWords"] = time_ago_in_words(exp.created_at)
-      newJsonExperiment["createdAt"]      = exp.created_at.strftime("%B %d, %Y")
-      newJsonExperiment["featured"]       = exp.featured
-      newJsonExperiment["ownerName"]      = "#{exp.owner.firstname} #{exp.owner.lastname}"
-      newJsonExperiment["experimentPath"] = experiment_path(exp)
-      newJsonExperiment["ownerPath"]      = user_path(exp.owner)
-      newJsonExperiment["filters"]        = exp.filter
+      newJsonObject["title"]          = exp.title
+      newJsonObject["timeAgoInWords"] = time_ago_in_words(exp.created_at)
+      newJsonObject["createdAt"]      = exp.created_at.strftime("%B %d, %Y")
+      newJsonObject["featured"]       = exp.featured
+      newJsonObject["ownerName"]      = "#{exp.owner.name}"
+      newJsonObject["experimentPath"] = experiment_path(exp)
+      newJsonObject["ownerPath"]      = user_path(exp.owner)
+      newJsonObject["filters"]        = exp.filter
     
       if(exp.featured_media_id != nil) 
-        newJsonExperiment["mediaPath"] = MediaObject.find_by_id(exp.featured_media_id).src;
+        newJsonObject["mediaPath"] = MediaObject.find_by_id(exp.featured_media_id).src;
       end
     
-      jsonExperiments = jsonExperiments << newJsonExperiment
+      jsonObjects = jsonObjects << newJsonObject
     
     end
   
     respond_to do |format|
       format.html
-      format.json { render json: jsonExperiments }
+      format.json { render json: jsonObjects }
     end
   end
   
