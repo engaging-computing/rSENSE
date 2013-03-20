@@ -1,6 +1,8 @@
 class UsersController < ApplicationController
   skip_before_filter :authorize, only: [:new, :create, :validate]
  
+  include ActionView::Helpers::DateHelper
+ 
   # GET /users
   # GET /users.json
   def index
