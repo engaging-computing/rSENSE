@@ -32,6 +32,7 @@
 //= require editablegrid_validators.js
 //= require isotope/jquery.isotope.js
 //= require jquery.form.js
+//= require jquery.qrcode.min.js
 //
 // Visualization stuff follows
 //
