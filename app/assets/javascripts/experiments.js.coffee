@@ -1,6 +1,34 @@
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
+# This is the coffeescript for the experiment controller
+#
+# ($ '#doc_box').modal
+# Initializes the dropdown lightbox for google drive upload
+#
+# ($ '.liked_status').click ->
+# Binds the click handlers for liking an experiment
+#
+# ($ '#experiments .pagination a').live 'click', ->
+# Binds a click handler to the experiment pagination links
+# that requests the pagination data through ajax as a json object
+#
+# ($ '#experiments_search').submit ->
+# Binds an ajax request for searching experiments to the #experiments_search form
+#
+# ($ '.experiments_filter_checkbox').click ->
+# Binds a click handler to the filters (Math, Physics, Chemistry, etc.)
+# that immediately searches for the filtered list of experiments
+#
+# ($ '.experiments_sort_select').change ->
+# Calls the search with a new sort order (Newest, Oldest, Rated) when changed
+#
+# ($ '#upload_csv').click -> to ($ '#google_doc').click ->
+# This is black magic that displays the upload csv and upload google doc lightboxes
+#
+# ($ '#save_doc').click ->
+# Parse the Share url from a google doc to upload a csv from google drive
+#
+# ($ '#vis_button').click (e) ->
+# Takes all sessions that are checked, appends its id to the url and
+# redirects the user to the view sessions page (Vis page)
 
 $ ->
 
@@ -29,8 +57,6 @@ $ ->
       data:
          data
 
-  
-  # Needs commenting
   ($ '#doc_box').modal                 
     backdrop: 'static'
     keyboard: true
