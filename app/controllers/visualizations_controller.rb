@@ -125,7 +125,9 @@ class VisualizationsController < ApplicationController
     end
 
     # create special dataset grouping field
-    data_fields.push({ typeID: TEXT_TYPE, unitName: "String", fieldID: -1, fieldName: "Session Name (id)" })
+    data_fields.push({ typeID: TEXT_TYPE, unitName: "String", fieldID: -1, fieldName: "Dataset Name (id)" })
+    # create special grouping field for all datasets
+    data_fields.push({ typeID: TEXT_TYPE, unitName: "String", fieldID: -1, fieldName: "Combined Datasets" })
     
     # push real fields to temp variable
     @experiment.fields.each do |field|
@@ -139,6 +141,7 @@ class VisualizationsController < ApplicationController
         metadata["#{dataset.title}(#{dataset.id})"] = { name: dataset.title, user_id: dataset.user_id, dataset_id: dataset.id, timecreated: dataset.created_at, timemodified: dataset.updated_at }
         arr = []
         arr.push "#{dataset.title}(#{dataset.id})"
+        arr.push "All"
         rows.each do |dp|
           key = dp.keys
           arr.push dp[key[0]]
