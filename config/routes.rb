@@ -13,7 +13,7 @@ Rsense::Application.routes.draw do
 
   resources :fields
 
-  resources :experiments
+  resources :projects
 
   match "/tutorials/switch/" => "tutorials#switch"
   resources :tutorials
@@ -33,21 +33,21 @@ Rsense::Application.routes.draw do
   match "/experiment_templates" => "experiment_templates#index"
 
   #Routes for uploading data
-  match "/experiments/:id/createSession" => "experiments#createSession"
-  match "/experiments/:id/addDataSet" => "experiments#addDataSet"
+  match "/projects/:id/createSession" => "projects#createSession"
+  match "/projects/:id/addDataSet" => "projects#addDataSet"
   
-  match "/experiments/:eid/:fid/checkFieldName" => "experiments#checkFieldName"
+  match "/projects/:eid/:fid/checkFieldName" => "projects#checkFieldName"
   
-  match "/experiments/:id/uploadCSV" => "data_sets#uploadCSV"
+  match "/projects/:id/uploadCSV" => "data_sets#uploadCSV"
   match "/data_sets/:eid/manualEntry" => "data_sets#manualEntry"
   match "/data_sets/:eid/manualUpload" => "data_sets#manualUpload"
   match "/data_sets/test" => "data_sets#test"
 
   #Routes for displaying data
-  match "/experiments/:id/datasets/*datasets" => "visualizations#displayVis"
-  match "/experiments/:id/datasets/" => "visualizations#displayVis"
+  match "/projects/:id/data_sets/*datasets" => "visualizations#displayVis"
+  match "/projects/:id/data_sets/" => "visualizations#displayVis"
   
-  match "/experiments/:id/removeField" => "experiments#removeField"
+  match "/projects/:id/removeField" => "projects#removeField"
 
   match "/data_sets/:id/postCSV" => "data_sets#uploadCSV"
   match "/media_objects/saveimage/*keys" => "media_objects#saveimage"
@@ -61,7 +61,7 @@ Rsense::Application.routes.draw do
   resources :users
   match "/users/validate/:key" => "users#validate"
   
-  match "/experiments/:id/updateLikedStatus" => "experiments#updateLikedStatus"
+  match "/projects/:id/updateLikedStatus" => "projects#updateLikedStatus"
 
 
   
