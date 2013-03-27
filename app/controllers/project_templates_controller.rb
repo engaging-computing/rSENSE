@@ -1,4 +1,4 @@
-class ExperimentTemplatesController < ApplicationController
+class ProjectTemplatesController < ApplicationController
 
   skip_before_filter :authorize, only: [:show,:index]  
 

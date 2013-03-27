@@ -80,7 +80,7 @@
                     <tr>
                         <td style="width:32px;height:32px;"><%= gravatar_image_tag(s.owner.email, alt: s.owner.firstname) %></td>
                         <td><%= link_to "#{s.owner.name}", user_path(s.owner) %></td>
-                        <td><%= link_to s.title, "#{params[:id]}/datasets/#{s.id}" %></td>
+                        <td><%= link_to s.title, "#{params[:id]}/data_sets/#{s.id}" %></td>
                         <td><input type="checkbox" id="project_<%=params[:id]%>_session_<%=s.id%>"/></td>
                     </tr>
                 <% end %>
