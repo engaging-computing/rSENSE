@@ -1,7 +1,7 @@
 Rsense::Application.routes.draw do
   resources :media_objects
 
-  get "experiment_templates/index"
+  get "project_templates/index"
 
   resources :visualizations
 
@@ -29,8 +29,8 @@ Rsense::Application.routes.draw do
     get 'getData' => :getData
   end
 
-  #Routes for experiment templates
-  match "/experiment_templates" => "experiment_templates#index"
+  #Routes for project templates
+  match "/project_templates" => "project_templates#index"
 
   #Routes for uploading data
   match "/projects/:id/createSession" => "projects#createSession"
