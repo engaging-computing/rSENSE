@@ -3,6 +3,15 @@
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
 $ ->
+
+  load_qr = ->
+    ($ '#exp_qr_tag').empty()
+    ($ '#exp_qr_tag').qrcode { text : window.location.href, height: ($ '#exp_qr_tag').width(), width: ($ '#exp_qr_tag').width() }
+  
+  load_qr()
+  
+  ($ window).resize ->
+    load_qr()
   
   #selection of featured image
   ($ '.img_selector').click ->
