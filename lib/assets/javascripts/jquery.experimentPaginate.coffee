@@ -29,7 +29,7 @@
 $ = jQuery
 
 #Extend jQuery
-$.fn.experimentPaginate = ( options = null ) ->
+$.fn.projectPaginate = ( options = null ) ->
 
     #Default settings
     settings =
@@ -73,7 +73,7 @@ $.fn.experimentPaginate = ( options = null ) ->
         #En/Disable Back button
         if settings.start - settings.limit >= 0
             $('#page_back input').click () ->
-                $('#session_list').experimentPaginate({ start : (settings.start - settings.limit), limit : settings.limit});
+                $('#session_list').projectPaginate({ start : (settings.start - settings.limit), limit : settings.limit});
             $('#page_back input').mouseover () ->
                 $('#page_back input').css { 'background-color' : '#DDD', 'border-color' : '#CCC' }
             $('#page_back input').mouseout () ->
@@ -84,7 +84,7 @@ $.fn.experimentPaginate = ( options = null ) ->
         #En/Disable Next button
         if (settings.start + settings.limit) < $('#session_list').children().length
             $('#page_forward input').click () ->
-                $('#session_list').experimentPaginate({ start : (settings.start + settings.limit), limit : settings.limit});
+                $('#session_list').projectPaginate({ start : (settings.start + settings.limit), limit : settings.limit});
             $('#page_forward input').mouseover () ->
                 $('#page_forward input').css { 'background-color' : '#DDD', 'border-color' : '#CCC' }
             $('#page_forward input').mouseout () ->

@@ -14,7 +14,7 @@ class FieldsController < ApplicationController
   # GET /fields/1.json
   def show
     @field = Field.find(params[:id])
-    @owner = Experiment.find(@field.experiment_id).user_id
+    @owner = Project.find(@field.project_id).user_id
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @field }
@@ -41,11 +41,11 @@ class FieldsController < ApplicationController
   # POST /fields.json
   def create
     @field = Field.new(params[:field])    
-    @experiment = Experiment.find(params[:field][:experiment_id])
+    @project = Project.find(params[:field][:project_id])
 
     counter = 1
     
-    @experiment.fields.all.each do |f|
+    @project.fields.all.each do |f|
       fname = f.name.split("_")
       if @field.name == fname[0] or @field.name == f
         counter += 1

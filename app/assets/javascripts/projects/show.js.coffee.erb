@@ -50,7 +50,7 @@ $ ->
         $.ajax
           type: "POST"
           dataType: "json"
-          url: "/experiments/#{resp['eid']}/uploadCSV"
+          url: "/projects/#{resp['eid']}/uploadCSV"
           data: matchData
           success: (resp) ->
             window.location = resp['redirect']

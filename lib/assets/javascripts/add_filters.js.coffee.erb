@@ -1,5 +1,5 @@
 $(document).ready ->
-    $(".experiment_filters").submit ->
+    $(".project_filters").submit ->
     
         x = $(@).children("input:checked").map ->
             return this.name
@@ -8,8 +8,8 @@ $(document).ready ->
         filters += x[j] + " " for i,j in x
 
         data={}
-        data["experiment"] = {}
-        data["experiment"]["filter"] = filters
+        data["project"] = {}
+        data["project"]["filter"] = filters
 
         $.ajax
             url: $(@).attr('id')
@@ -20,5 +20,5 @@ $(document).ready ->
                 
         false
 
-    $(".experiments_add_filter_checkbox").click ->
+    $(".projects_add_filter_checkbox").click ->
         $(@).parent().submit()

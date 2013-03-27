@@ -1,23 +1,23 @@
-# This is the coffeescript for the experiment controller
+# This is the coffeescript for the project controller
 #
 # ($ '#doc_box').modal
 # Initializes the dropdown lightbox for google drive upload
 #
 # ($ '.liked_status').click ->
-# Binds the click handlers for liking an experiment
+# Binds the click handlers for liking an project
 #
-# ($ '#experiments .pagination a').live 'click', ->
-# Binds a click handler to the experiment pagination links
+# ($ '#projects .pagination a').live 'click', ->
+# Binds a click handler to the project pagination links
 # that requests the pagination data through ajax as a json object
 #
-# ($ '#experiments_search').submit ->
-# Binds an ajax request for searching experiments to the #experiments_search form
+# ($ '#projects_search').submit ->
+# Binds an ajax request for searching projects to the #projects_search form
 #
-# ($ '.experiments_filter_checkbox').click ->
+# ($ '.projects_filter_checkbox').click ->
 # Binds a click handler to the filters (Math, Physics, Chemistry, etc.)
-# that immediately searches for the filtered list of experiments
+# that immediately searches for the filtered list of projects
 #
-# ($ '.experiments_sort_select').change ->
+# ($ '.projects_sort_select').change ->
 # Calls the search with a new sort order (Newest, Oldest, Rated) when changed
 #
 # ($ '#upload_csv').click -> to ($ '#google_doc').click ->
@@ -38,11 +38,11 @@ $ ->
     exp = ($ @).attr("exp_id")
     
     data={}
-    data["experiment"] = {}
-    data["experiment"]["featured_media_id"] = mo
+    data["project"] = {}
+    data["project"]["featured_media_id"] = mo
     
     $.ajax
-      url: "/experiments/#{exp}"
+      url: "/projects/#{exp}"
       type: "PUT"
       dataType: "json"
       data:
@@ -60,35 +60,35 @@ $ ->
     else
       icon.replaceWith "<i class='icon-star-empty'></i>"
     $.ajax
-      url: '/experiments/' + ($ this).attr('exp_id') + '/updateLikedStatus'
+      url: '/projects/' + ($ this).attr('exp_id') + '/updateLikedStatus'
       dataType: 'json'
       success: (resp) =>
         ($ @).siblings('.like_display').html resp['update']
 
-  ($ '#experiments .pagination a').live 'click', ->
+  ($ '#projects .pagination a').live 'click', ->
       $.getScript this.href
       false
 
-  $("#experiments_search").submit ->
+  $("#projects_search").submit ->
       $.ajax
         url: this.action
         data: $(this).serialize()
         success: (data, textStatus)->
           
-          $('#experiments').isotope('remove', $('.item'))
+          $('#projects').isotope('remove', $('.item'))
           
-          addExperimentButton = $("<div id='addExperimentButton' style='text-align:center;cursor: pointer;' class='item'><img style='width:66%;' src='/assets/green_plus_icon.svg'><br /><h4 style='color:#0a0;'>Create Experiment</h4></img></div>")
+          addProjectButton = $("<div id='addProjectButton' style='text-align:center;cursor: pointer;' class='item'><img style='width:66%;' src='/assets/green_plus_icon.svg'><br /><h4 style='color:#0a0;'>Create Project</h4></img></div>")
           
-          $('#experiments').append(addExperimentButton).isotope('insert', addExperimentButton)
+          $('#projects').append(addProjectButton).isotope('insert', addProjectButton)
           
-          $('#addExperimentButton').click ->
+          $('#addProjectButton').click ->
             $.ajax
               type: "POST"
-              url: "/experiments/"
+              url: "/projects/"
               data: {}
               dataType: "json"
               success: (data) =>
-                window.location.replace("/experiments/#{data['id']}");
+                window.location.replace("/projects/#{data['id']}");
           
           for object in data
             do (object) ->
@@ -97,7 +97,7 @@ $ ->
               if(object.mediaPath)
                 newItem += "<img src='#{object.mediaPath}'></img>"
                 
-              newItem +=  "<h4 style='margin-top:0px;'><a href='#{object.experimentPath}'>#{object.title}</a>"
+              newItem +=  "<h4 style='margin-top:0px;'><a href='#{object.projectPath}'>#{object.title}</a>"
               
               if(object.featured)
                 newItem += "<span style='color:#57C142'> (featured)</span>"
@@ -114,18 +114,18 @@ $ ->
               
               newItem = $(newItem)
               
-              $('#experiments').append(newItem).isotope('insert', newItem)
+              $('#projects').append(newItem).isotope('insert', newItem)
           
           $(window).resize()
           
         dataType: "json"
       return false
       
-  ($ '.experiments_filter_checkbox').click ->
-    ($ '#experiments_search').submit()
+  ($ '.projects_filter_checkbox').click ->
+    ($ '#projects_search').submit()
     
-  ($ '.experiments_sort_select').change ->
-    ($ '#experiments_search').submit()
+  ($ '.projects_sort_select').change ->
+    ($ '#projects_search').submit()
     
   ($ '#upload_csv').click ->
     ($ '#csv_file_input').click()
@@ -149,7 +149,7 @@ $ ->
     if tmp.indexOf('key=') isnt -1
       tmp = tmp.split 'key='
       key = tmp[1]
-      tmp = window.location.pathname.split 'experiments/'
+      tmp = window.location.pathname.split 'projects/'
       eid = tmp[1]
       url = "/data_sets/#{eid}/postCSV"
       $.ajax( { url: url, data: { key: key, id: eid } } ).done (data, textStatus, error) ->
@@ -164,7 +164,7 @@ $ ->
     ses = ses.split '_'
     eid = ses[1]
     ses_list = (grab_ses t for t in targets )
-    url = '/experiments/' + eid + '/data_sets/' + ses_list.join ','
+    url = '/projects/' + eid + '/data_sets/' + ses_list.join ','
     window.location = url
     
   # get the session number for viewing vises
@@ -181,7 +181,7 @@ $ ->
 #       $.ajax
 #         type: "POST"
 #         dataType: "json"
-#         url: "/experiments/#{resp['eid']}/uploadCSV"
+#         url: "/projects/#{resp['eid']}/uploadCSV"
 #         data:
 #           mismatch: "true"
 #           tmpFile: resp['tmpFile']

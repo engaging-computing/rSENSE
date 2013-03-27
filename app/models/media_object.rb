@@ -1,8 +1,8 @@
 class MediaObject < ActiveRecord::Base
-  attr_accessible :experiment_id, :media_type, :name, :session_id, :src, :user_id, :tutorial_id
+  attr_accessible :project_id, :media_type, :name, :session_id, :src, :user_id, :tutorial_id
   
   belongs_to :owner, class_name: "User", foreign_key: "user_id"
-  belongs_to :experiment, class_name: "Experiment", foreign_key: "experiment_id" 
+  belongs_to :project, class_name: "Project", foreign_key: "project_id" 
   belongs_to :session, class_name: "DataSet", foreign_key: "data_set_id" 
   belongs_to :tutorial, class_name: "Tutorial", foreign_key: "tutorial_id"
   
