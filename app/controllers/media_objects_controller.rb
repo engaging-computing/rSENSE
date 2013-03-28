@@ -1,4 +1,6 @@
 class MediaObjectsController < ApplicationController
+  include ApplicationHelper
+  
   # GET /media_objects
   # GET /media_objects.json
   def index
