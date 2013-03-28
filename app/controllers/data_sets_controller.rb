@@ -45,7 +45,7 @@ class DataSetsController < ApplicationController
 
     respond_to do |format|
       if @data_set.save
-        format.html { redirect_to @data_set, notice: 'Experiment session was successfully created.' }
+        format.html { redirect_to @data_set, notice: 'Project session was successfully created.' }
         format.json { render json: @data_set, status: :created, location: @data_set }
       else
         format.html { render action: "new" }
@@ -61,7 +61,7 @@ class DataSetsController < ApplicationController
 
     respond_to do |format|
       if @data_set.update_attributes(params[:data_set])
-        format.html { redirect_to @data_set, notice: 'Experiment session was successfully updated.' }
+        format.html { redirect_to @data_set, notice: 'Project session was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -83,20 +83,20 @@ class DataSetsController < ApplicationController
   end
   
   def manualEntry
-      @experiment = Experiment.find(params[:eid])
+      @project = Project.find(params[:eid])
   end
   
   # POST /data_set/1/manualUpload
   def manualUpload
     
-    @experiment = Experiment.find(params[:eid])
+    @project = Project.find(params[:eid])
 
     header = params[:ses_info][:header]
     data = params[:ses_info][:data]
 
     if !data.nil?
      
-      @data_set = DataSet.create(:user_id => @cur_user.id, :experiment_id => @experiment.id, :title => "#{@cur_user.name}'s Session")
+      @data_set = DataSet.create(:user_id => @cur_user.id, :project_id => @project.id, :title => "#{@cur_user.name}'s Session")
 
       mongo_data = []
       
@@ -110,7 +110,7 @@ class DataSetsController < ApplicationController
                 
       data_to_add = MongoData.new(:data_set_id => @data_set.id, :data => mongo_data)    
       
-      followURL = url_for :controller => :visualizations, :action => :displayVis, :id => @experiment.id, :sessions => "#{@data_set.id}"
+      followURL = url_for :controller => :visualizations, :action => :displayVis, :id => @project.id, :sessions => "#{@data_set.id}"
       
       if data_to_add.save!
         response = { status: 'success', follow: followURL }
@@ -133,9 +133,9 @@ class DataSetsController < ApplicationController
   def uploadCSV      
     require "csv"
 
-    #Grab field names from experiment
-    @experiment = Experiment.find(params[:id])
-    fields = @experiment.fields
+    #Grab field names from project
+    @project = Project.find(params[:id])
+    fields = @project.fields
     exp_fields = []
     fields.each do |f|
       exp_fields.append f.name
@@ -185,7 +185,7 @@ class DataSetsController < ApplicationController
       end
      
       # If the headers are mismatched respond with mismatch
-      if (results.size != @experiment.fields.size) or (worstMatch < 0.6)
+      if (results.size != @project.fields.size) or (worstMatch < 0.6)
         #Create a tmp directory if it does not exist
         begin
           Dir.mkdir("/tmp/rsense")
@@ -210,8 +210,8 @@ class DataSetsController < ApplicationController
     end
     
     #WE HAVE SUCCESSFULLY MATCHED HEADERS AND FIELDS, SAVE THE DATA FINALLY.
-    @data_set = DataSet.new(:experiment_id => params[:id], :title => "#{@cur_user.name}'s Session", :user_id => @cur_user.try(:id))
-    @experiment = @data_set.experiment
+    @data_set = DataSet.new(:project_id => params[:id], :title => "#{@cur_user.name}'s Session", :user_id => @cur_user.try(:id))
+    @project = @data_set.project
     
     #Parse out just the data
     data = data[1..(data.size-1)]
@@ -227,7 +227,7 @@ class DataSetsController < ApplicationController
       format_data["metadata"].push({name: headers[i], label: headers[i], datatype: "string", editable: true})
     end
     
-    header = Field.find_all_by_experiment_id(@experiment.id)
+    header = Field.find_all_by_project_id(@project.id)
     
     data.each do |dp|
       row = []
@@ -240,7 +240,7 @@ class DataSetsController < ApplicationController
     if @data_set.save!
       data_to_add = MongoData.new(:data_set_id => @data_set.id, :data => mongo_data)    
     
-      redirect = url_for :controller => :visualizations, :action => :displayVis, :id => @experiment.id, :datasets => "#{@data_set.id}"
+      redirect = url_for :controller => :visualizations, :action => :displayVis, :id => @project.id, :datasets => "#{@data_set.id}"
     
       if data_to_add.save!
         response = { status: 'success', redirect: redirect }
@@ -254,7 +254,7 @@ class DataSetsController < ApplicationController
     #Send the object as json
     respond_to do |format|
       format.json { render json: response }
-      format.html { redirect_to :controller => :visualizations, :action => :displayVis, :id => @experiment.id, :datasets => "#{@data_set.id}" }
+      format.html { redirect_to :controller => :visualizations, :action => :displayVis, :id => @project.id, :datasets => "#{@data_set.id}" }
     end
     
   end

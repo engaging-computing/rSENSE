@@ -44,7 +44,7 @@ $ ->
       data['field']['unit'] = unit_text
       exp_id = ($ @).attr('exp')
       field_id = ($ @).attr('field')
-      url = '/experiments/' + exp_id + '/' + field_id + '/checkFieldName'
+      url = '/projects/' + exp_id + '/' + field_id + '/checkFieldName'
       
       
     	#check that no field has this name already
@@ -144,7 +144,7 @@ $ ->
       dataType: 'json'
       data:
         field:
-          experiment_id: ($ '.fields_table').attr 'experiment'
+          project_id: ($ '.fields_table').attr 'project'
           name: typeName
           unit: unit
           field_type: type
@@ -157,7 +157,7 @@ $ ->
         
         #if not (type in [(helpers.get_field_type "Latitude"), (helpers.get_field_type "Longitude")])
         htmlStr += "<td class='token'><a class='field_edit_link'><i class='icon-edit'></i></a>"
-        htmlStr += "<a href='/fields/#{msg.id}' exp='#{msg.experiment_id}' field='#{msg.id}' class='field_save_link'><i class='icon-ok'></i></a>"
+        htmlStr += "<a href='/fields/#{msg.id}' exp='#{msg.project_id}' field='#{msg.id}' class='field_save_link'><i class='icon-ok'></i></a>"
         htmlStr += "<a href='" + window.location.pathname  + "' field='#{msg.id}' class='field_delete_link'><i class='icon-remove-circle'></i></a></td>"
         #else
           #htmlStr += "<td></td>"
