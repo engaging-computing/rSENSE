@@ -4,13 +4,13 @@
 
 $ ->
 
-  $("#experiment_templates_search").submit ->
+  $("#project_templates_search").submit ->
       $.ajax
         url: this.action
         data: $(this).serialize()
         success: (data, textStatus)->
           
-          $('#experiment_templates').isotope('remove', $('.item'))
+          $('#project_templates').isotope('remove', $('.item'))
           
           for object in data
             do (object) ->
@@ -19,7 +19,7 @@ $ ->
               if(object.mediaPath)
                 newItem += "<img src='#{object.mediaPath}'></img>"
                 
-              newItem +=  "<h4 style='margin-top:0px;'><a href='#{object.experimentPath}'>#{object.title}</a>"
+              newItem +=  "<h4 style='margin-top:0px;'><a href='#{object.projectPath}'>#{object.title}</a>"
               
               if(object.featured)
                 newItem += "<span style='color:#57C142'> (featured)</span>"
@@ -36,56 +36,56 @@ $ ->
               
               newItem = $(newItem)
               
-              $('#experiment_templates').append(newItem).isotope('insert', newItem)
+              $('#project_templates').append(newItem).isotope('insert', newItem)
           
           $(window).resize()
           
         dataType: "json"
       return false
 
-  ($ '.experiment_templates_filter_checkbox').click ->
-    ($ '#experiment_templates_search').submit()
+  ($ '.project_templates_filter_checkbox').click ->
+    ($ '#project_templates_search').submit()
     
-  ($ '.experiment_templates_sort_select').change ->
-    ($ '#experiment_templates_search').submit()
+  ($ '.project_templates_sort_select').change ->
+    ($ '#project_templates_search').submit()
     
-  $(".experiment_templates_sort_select").change ->
-    $("#experiment_templates_search").submit()
+  $(".project_templates_sort_select").change ->
+    $("#project_templates_search").submit()
 
   ### Get isotope up and running ###
 
   numCols = 1
 
-  while $('#experiment_templates').width()/numCols>200
+  while $('#project_templates').width()/numCols>200
     numCols++
 
-  $('#experiment_templates').imagesLoaded ->
+  $('#project_templates').imagesLoaded ->
    
-    $('.item').width(($('#experiment_templates').width()/numCols)-35)
-    $('#experiment_templates').isotope
+    $('.item').width(($('#project_templates').width()/numCols)-35)
+    $('#project_templates').isotope
       itemSelector : '.item'
       layoutMode : 'masonry'
       masonry:
-        columnWidth: $('#experiment_templates').width()/numCols
+        columnWidth: $('#project_templates').width()/numCols
 
-  $("#experiment_templates_search").submit()
+  $("#project_templates_search").submit()
 
 window.reLayout = ->
 
   numCols = 1
 
-  while $('#experiment_templates').width()/numCols>200
+  while $('#project_templates').width()/numCols>200
     numCols++
 
-  $('#experiment_templates').imagesLoaded ->
+  $('#project_templates').imagesLoaded ->
 
-    $('.item').width(($('#experiment_templates').width()/numCols)-35)
+    $('.item').width(($('#project_templates').width()/numCols)-35)
 
-    $('#experiment_templates').isotope
+    $('#project_templates').isotope
       itemSelector : '.item'
       layoutMode : 'masonry'
       masonry:
-        columnWidth: $('#experiment_templates').width()/numCols
+        columnWidth: $('#project_templates').width()/numCols
   true
 
 $(window).resize reLayout

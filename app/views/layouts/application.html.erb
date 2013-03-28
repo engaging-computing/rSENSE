@@ -53,16 +53,16 @@
           <img src="/assets/rss.png" style="height:12px;margin-right:5px;" />
         </div>
         <div class="visible-desktop visible-tablet" style="height:15px;padding-top:14px;">
-          <a href="/experiments" style="color:#fff;"><i class="icon-folder-open icon-white"> </i> Experiments</a>&nbsp;&nbsp;&nbsp;
+          <a href="/projects" style="color:#fff;"><i class="icon-folder-open icon-white"> </i> Projects</a>&nbsp;&nbsp;&nbsp;
           <a href="/users" style="color:#fff;"><i class="icon-user icon-white"> </i> People</a>&nbsp;&nbsp;&nbsp;
           <a href="/visualizations" style="color:#fff;"><i class="icon-eye-open icon-white"> </i> Visualizations</a>&nbsp;&nbsp;&nbsp;
-          <a href="/experiment_templates" style="color:#fff;"><i class="icon-gift icon-white"> </i> Store </a>
+          <a href="/project_templates" style="color:#fff;"><i class="icon-gift icon-white"> </i> Store </a>
         </div>
         <div class="visible-phone" style="height:15px;padding-top:14px;position:absolute;top:30px;left:11px;">
-          <a href="/experiments" style="color:#fff;"><i class="icon-folder-open icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
+          <a href="/projects" style="color:#fff;"><i class="icon-folder-open icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
           <a href="/users" style="color:#fff;"><i class="icon-user icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
           <a href="/visualizations" style="color:#fff;"><i class="icon-eye-open icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
-          <a href="/experiment_templates" style="color:#fff;"><i class="icon-gift icon-white"> </i> </a>
+          <a href="/project_templates" style="color:#fff;"><i class="icon-gift icon-white"> </i> </a>
         </div>
       </div>
       
@@ -80,7 +80,7 @@
             </button>
             <ul class="dropdown-menu">
               <li><%= link_to 'Logout', login_path(), method: :delete %></li>
-              <li><%= link_to 'My Experiments', user_path(@cur_user.username,  :filters => ["experiments"]), action: :show%></li>
+              <li><%= link_to 'My Projects', user_path(@cur_user.username,  :filters => ["projects"]), action: :show%></li>
               <li><%= link_to 'My Data Sets', user_path(@cur_user.username,  :filters => ["data_sets"]), action: :show%></li>
               <li><%= link_to 'My Visualizations', user_path(@cur_user.username,  :filters => ["visualizations"]), action: :show%></li>
               <li><%= link_to 'My Media', user_path(@cur_user.username,  :filters => ["media"]), action: :show%></li>
@@ -103,7 +103,7 @@
             </button>
             <ul class="dropdown-menu">
               <li><%= link_to 'Logout', login_path(), method: :delete %></li>
-              <li><%= link_to 'My Experiments', user_path(@cur_user.username,  :filters => ["experiments"]), action: :show%></li>
+              <li><%= link_to 'My Projects', user_path(@cur_user.username,  :filters => ["projects"]), action: :show%></li>
               <li><%= link_to 'My Data Sets', user_path(@cur_user.username,  :filters => ["data_sets"]), action: :show%></li>
               <li><%= link_to 'My Visualizations', user_path(@cur_user.username,  :filters => ["visualizations"]), action: :show%></li>
               <li><%= link_to 'My Media', user_path(@cur_user.username,  :filters => ["media"]), action: :show%></li>

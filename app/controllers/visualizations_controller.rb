@@ -17,7 +17,7 @@ class VisualizationsController < ApplicationController
   # GET /visualizations/1.json
   def show
     @visualization = Visualization.find(params[:id])
-    @experiment = Experiment.find_by_id(@visualization.experiment_id)
+    @project = Project.find_by_id(@visualization.project_id)
 
     # The finalized data object
     @Data = { savedData: @visualization.data, savedGlobals: @visualization.globals }
@@ -91,7 +91,7 @@ class VisualizationsController < ApplicationController
   # GET 
   def displayVis
     
-    @experiment = Experiment.find_by_id params[:id]
+    @project = Project.find_by_id params[:id]
     
     @datasets = []
     data_fields = []
@@ -107,13 +107,13 @@ class VisualizationsController < ApplicationController
       dsets = params[:datasets].split(",")
       dsets.each do |s|
         begin
-          @datasets.push DataSet.find_by_id_and_experiment_id s, params[:id]
+          @datasets.push DataSet.find_by_id_and_project_id s, params[:id]
         rescue
-          logger.info "Either experiment id or dataset does not exist in the DB"
+          logger.info "Either project id or dataset does not exist in the DB"
         end
       end
     else
-      @datasets = DataSet.find_all_by_experiment_id params[:id]
+      @datasets = DataSet.find_all_by_project_id params[:id]
     end
     
     # get data for each dataset    
@@ -130,7 +130,7 @@ class VisualizationsController < ApplicationController
     data_fields.push({ typeID: TEXT_TYPE, unitName: "String", fieldID: -1, fieldName: "Combined Datasets" })
     
     # push real fields to temp variable
-    @experiment.fields.each do |field|
+    @project.fields.each do |field|
       data_fields.push({ typeID: field.field_type, unitName: field.unit, fieldID: field.id, fieldName: field.name })
     end
     
@@ -152,7 +152,7 @@ class VisualizationsController < ApplicationController
     
     field_count = [0,0,0,0,0,0]
     
-    @experiment.fields.each do |field|
+    @project.fields.each do |field|
       field_count[field.field_type] += 1 
     end
 
@@ -186,7 +186,7 @@ class VisualizationsController < ApplicationController
     allVis =  ['Map','Timeline','Scatter','Bar','Histogram','Table','Motion','Photos']
 
     # The finalized data object
-    @Data = { experimentName: @experiment.title, experimentID: @experiment.id, hasPics: false, fields: data_fields, dataPoints: format_data, metadata: metadata, relVis: rel_vis, allVis: allVis }
+    @Data = { projectName: @project.title, projectID: @project.id, hasPics: false, fields: data_fields, dataPoints: format_data, metadata: metadata, relVis: rel_vis, allVis: allVis }
     
     
     respond_to do |format|
