@@ -108,15 +108,15 @@ class MediaObjectsController < ApplicationController
 
     #Build media object params based on what we are doing
     case type
-    when 'experiment'
-      @experiment = Experiment.find_by_id(id)
-      if(can_edit?(@experiment))
-        @mo = {user_id: @experiment.owner.id, experiment_id: id, src: o.public_url.to_s, name: @experiment.title + " image", media_type:"image"}
+    when 'project'
+      @project = Project.find_by_id(id)
+      if(can_edit?(@project))
+        @mo = {user_id: @project.owner.id, project_id: id, src: o.public_url.to_s, name: @project.title + " image", media_type:"image"}
       end
     when 'data_set'
       @data_set = DataSet.find_by_id(id)
       if(@data_set.owner == @cur_user)
-        @mo = {user_id: @data_set.owner.id, experiment_id: @data_set.experiment_id, session_id: @data_set.id, src: o.public_url.to_s, name: @data_set.title + " image", media_type:"image"}
+        @mo = {user_id: @data_set.owner.id, project_id: @data_set.project_id, session_id: @data_set.id, src: o.public_url.to_s, name: @data_set.title + " image", media_type:"image"}
       end
     when 'user'
       @user = User.find_by_username(id)

@@ -1,6 +1,6 @@
 <span style="color:#07D" class="like_display"><%=pluralize(@likes,"person")%> liked this</span>
 <%if @cur_user.try(:id)%>
-	<span class="liked_status" exp_id="<%=@experiment.id%>">
+	<span class="liked_status" exp_id="<%=@project.id%>">
 		<%if @liked_by_cur_user%>
 			<i class="icon-star"></i>
 		<%else%>

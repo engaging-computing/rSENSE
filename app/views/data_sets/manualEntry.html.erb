@@ -1,19 +1,19 @@
 <script type="text/javascript">
-  window.fields = JSON.parse('<%= raw @experiment.fields.to_json%>');
-  window.postURL = '<%= url_for :controller => :data_sets, :action => :manualUpload, :eid => @experiment.id %>';
+  window.fields = JSON.parse('<%= raw @project.fields.to_json%>');
+  window.postURL = '<%= url_for :controller => :data_sets, :action => :manualUpload, :eid => @project.id %>';
 </script>
 
 <div class="row">
 	<div style="margin-bottom:20px" class="span12">			
           <table class="table editablegrid">
             <thead><tr>
-              <% for field in @experiment.fields %>
+              <% for field in @project.fields %>
                 <th><%= field.name %></th>
               <% end %>
             </tr></thead>
 
             <tbody id="manualTable"><tr id="row0">
-              <% for i in 0...@experiment.fields.length %>
+              <% for i in 0...@project.fields.length %>
                 <td><input class='<%= "col" + i.to_s %>' style='width:100%' /></td>
               <% end %>
             </tr></tbody>

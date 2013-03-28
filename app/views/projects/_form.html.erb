@@ -1,12 +1,12 @@
 <!-- This file is no longer used and should be removed.  -->
 
-<%= form_for(@experiment) do |f| %>
-  <% if @experiment.errors.any? %>
+<%= form_for(@project) do |f| %>
+  <% if @project.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@experiment.errors.count, "error") %> prohibited this experiment from being saved:</h2>
+      <h2><%= pluralize(@project.errors.count, "error") %> prohibited this project from being saved:</h2>
 
       <ul>
-      <% @experiment.errors.full_messages.each do |msg| %>
+      <% @project.errors.full_messages.each do |msg| %>
         <li><%= msg %></li>
       <% end %>
       </ul>
