@@ -1,8 +1,8 @@
 <% if @cur_user.admin %>
-  <h1>Editing experiment</h1>
+  <h1>Editing project</h1>
   <%= render 'form' %>
-  <%= link_to 'Show', @experiment %> |
-  <%= link_to 'Back', experiments_path %>
+  <%= link_to 'Show', @project %> |
+  <%= link_to 'Back', projects_path %>
 <% else %>
   You are not authorized to view this page.
 <% end %>

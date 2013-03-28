@@ -2,12 +2,12 @@
   <div class="span12">
 	<div class="row">
 	  <div class="span12">
-	    <%=form_tag experiment_templates_path, method: 'get', id: 'experiment_templates_search', class:'navbar-search' do%>
+	    <%=form_tag project_templates_path, method: 'get', id: 'project_templates_search', class:'navbar-search' do%>
 		  <div class="isotope-top">		
 	      <h1>Experiment Store</h1>
-		  <p>Find an experiment template to use for your own experiment<p>
+		  <p>Find an project template to use for your own project<p>
 	      	<div style="width:20%;float:left;">
-              <select name="sort" class="experiment_templates_sort_select">
+              <select name="sort" class="project_templates_sort_select">
                 <option value="DESC">Newest First</option>
                 <option value="ASC">Oldest First</option>
                 <option value="RATING">Rating</option>
@@ -21,18 +21,18 @@
             </div>
             <div class="clear"></div>
             <div style="margin-bottom:10px;">
-              Math: <%= check_box_tag "filters[]", "%math%", false, class: 'experiment_templates_filter_checkbox'%>&nbsp;&nbsp;&nbsp;
-              Physics: <%= check_box_tag "filters[]", "%physics%", false, class: 'experiment_templates_filter_checkbox' %>&nbsp;&nbsp;&nbsp;
-              Chemistry: <%= check_box_tag "filters[]", "%chemistry%", false, class: 'experiment_templates_filter_checkbox' %>&nbsp;&nbsp;&nbsp;
-              Earth: <%= check_box_tag "filters[]", "%earth%", false, class: 'experiment_templates_filter_checkbox' %>&nbsp;&nbsp;&nbsp;
-              Biology: <%= check_box_tag "filters[]", "%biology%", false, class: 'experiment_templates_filter_checkbox' %>
+              Math: <%= check_box_tag "filters[]", "%math%", false, class: 'project_templates_filter_checkbox'%>&nbsp;&nbsp;&nbsp;
+              Physics: <%= check_box_tag "filters[]", "%physics%", false, class: 'project_templates_filter_checkbox' %>&nbsp;&nbsp;&nbsp;
+              Chemistry: <%= check_box_tag "filters[]", "%chemistry%", false, class: 'project_templates_filter_checkbox' %>&nbsp;&nbsp;&nbsp;
+              Earth: <%= check_box_tag "filters[]", "%earth%", false, class: 'project_templates_filter_checkbox' %>&nbsp;&nbsp;&nbsp;
+              Biology: <%= check_box_tag "filters[]", "%biology%", false, class: 'project_templates_filter_checkbox' %>
             </div>
 	      </div>
 	    <%end%>
 	  </div>
 	</div>
     <div class="row">
-      <div id="experiment_templates" class="span12" style="overflow:visible;z-index:0;">
+      <div id="project_templates" class="span12" style="overflow:visible;z-index:0;">
         <div style="width:100%;height:100%;border:0px solid grey;overflow:visible;padding:10px;">
           
         </div>

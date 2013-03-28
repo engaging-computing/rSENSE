@@ -6,7 +6,7 @@
 <% @featured_3.all.each do |f|%>
 
   <div class="hero-unit">
-    <h5><%=link_to f.title, experiment_path(f)%></h5>
+    <h5><%=link_to f.title, project_path(f)%></h5>
     <% if f.media_objects.length > 0%>
       <image src="<%=f.media_objects[0].src%>">
     <%else%>

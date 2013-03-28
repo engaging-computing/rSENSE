@@ -1,4 +1,4 @@
-class ExperimentTemplatesController < ApplicationController
+class ProjectTemplatesController < ApplicationController
 
   skip_before_filter :authorize, only: [:show,:index]  
 
@@ -14,14 +14,14 @@ class ExperimentTemplatesController < ApplicationController
     end
     
     if sort=="ASC" or sort=="DESC"
-      @experiments = Experiment.filter(params[:filters]).search(params[:search]).paginate(page: params[:page], per_page: 8).order("created_at #{sort}").is_template
+      @projects = Project.filter(params[:filters]).search(params[:search]).paginate(page: params[:page], per_page: 8).order("created_at #{sort}").is_template
     else
-      @experiments = Experiment.filter(params[:filters]).search(params[:search]).paginate(page: params[:page], per_page: 8).order("like_count DESC").is_template
+      @projects = Project.filter(params[:filters]).search(params[:search]).paginate(page: params[:page], per_page: 8).order("like_count DESC").is_template
     end
   
     jsonObjects = []
   
-    @experiments.each do |exp|
+    @projects.each do |exp|
     
       newJsonObject = {}
     
@@ -30,7 +30,7 @@ class ExperimentTemplatesController < ApplicationController
       newJsonObject["createdAt"]      = exp.created_at.strftime("%B %d, %Y")
       newJsonObject["featured"]       = exp.featured
       newJsonObject["ownerName"]      = "#{exp.owner.name}"
-      newJsonObject["experimentPath"] = experiment_path(exp)
+      newJsonObject["projectPath"] = project_path(exp)
       newJsonObject["ownerPath"]      = user_path(exp.owner)
       newJsonObject["filters"]        = exp.filter
     

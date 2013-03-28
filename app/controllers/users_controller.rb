@@ -54,8 +54,8 @@ class UsersController < ApplicationController
     
     #Only grab the contributions we are currently interested in
     if !@filters.empty?
-      if @filters.include? "experiments"
-        @contributions += @user.experiments.search(params[:search])
+      if @filters.include? "projects"
+        @contributions += @user.projects.search(params[:search])
       end
       
       if @filters.include? "data_sets"
@@ -66,8 +66,8 @@ class UsersController < ApplicationController
          @contributions += @user.media_objects.search(params[:search]) || []
       end
     else
-      if !@user.try(:experiments).nil?
-        @contributions += @user.try(:experiments).search(params[:search])
+      if !@user.try(:projects).nil?
+        @contributions += @user.try(:projects).search(params[:search])
       end
       if !@user.try(:data_sets).nil?
         @contributions += @user.try(:data_sets).search(params[:search])
