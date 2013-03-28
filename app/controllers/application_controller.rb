@@ -11,7 +11,11 @@ class ApplicationController < ActionController::Base
   def authorize
      unless User.find_by_id(session[:user_id])
         
-        ref = URI.parse(request.env["HTTP_REFERER"])
+        ref = begin
+          URI.parse(request.env["HTTP_REFERER"])
+        rescue
+          URI.parse("http://www.external.com")
+        end
          
         if ref.host == request.host
           if ref.path == request.path
