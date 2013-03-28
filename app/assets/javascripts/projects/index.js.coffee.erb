@@ -38,10 +38,6 @@ $ ->
       success: (resp) =>
         ($ @).siblings('.like_display').html resp['update']
 
-  ($ '#projects .pagination a').live 'click', ->
-      $.getScript this.href
-      false
-
   $("#projects_search").submit ->
       $.ajax
         url: this.action
