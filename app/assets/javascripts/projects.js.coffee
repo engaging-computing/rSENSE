@@ -6,6 +6,7 @@
 # ($ '.liked_status').click ->
 # Binds the click handlers for liking an project
 #
+#
 # ($ '#projects_search').submit ->
 # Binds an ajax request for searching projects to the #projects_search form
 #
@@ -70,63 +71,7 @@ $ ->
       success: (resp) =>
         ($ @).siblings('.like_display').html resp['update']
 
-  $("#projects_search").submit ->
-      $.ajax
-        url: this.action
-        data: $(this).serialize()
-        success: (data, textStatus)->
-          
-          $('#projects').isotope('remove', $('.item'))
-          
-          addProjectButton = $("<div id='addProjectButton' style='text-align:center;cursor: pointer;' class='item'><img style='width:66%;' src='/assets/green_plus_icon.svg'><br /><h4 style='color:#0a0;'>Create Project</h4></img></div>")
-          
-          $('#projects').append(addProjectButton).isotope('insert', addProjectButton)
-          
-          $('#addProjectButton').click ->
-            $.ajax
-              type: "POST"
-              url: "/projects/"
-              data: {}
-              dataType: "json"
-              success: (data) =>
-                window.location.replace("/projects/#{data['id']}");
-          
-          for object in data
-            do (object) ->
-              newItem =   "<div class='item'>"
-
-              if(object.mediaPath)
-                newItem += "<img src='#{object.mediaPath}'></img>"
-                
-              newItem +=  "<h4 style='margin-top:0px;'><a href='#{object.projectPath}'>#{object.title}</a>"
-              
-              if(object.featured)
-                newItem += "<span style='color:#57C142'> (featured)</span>"
-            
-              newItem +=  "</h4><b>Owner: </b><a href='#{object.ownerPath}'>#{object.ownerName}</a><br />"
-              newItem +=  "<b>Created: </b>#{object.timeAgoInWords} ago (on #{object.createdAt})<br />"
-              
-              ###
-              if(object.filters)
-                newitem += "<b>#{object.filters}</b>"
-              ###
-              
-              newItem +=  "</div>"
-              
-              newItem = $(newItem)
-              
-              $('#projects').append(newItem).isotope('insert', newItem)
-          
-          $(window).resize()
-          
-        dataType: "json"
-      return false
-      
-  ($ '.projects_filter_checkbox').click ->
-    ($ '#projects_search').submit()
-    
-  ($ '.projects_sort_select').change ->
-    ($ '#projects_search').submit()
+ 
     
   ($ '#upload_csv').click ->
     ($ '#csv_file_input').click()
