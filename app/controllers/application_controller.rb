@@ -10,7 +10,14 @@ class ApplicationController < ActionController::Base
   
   def authorize
      unless User.find_by_id(session[:user_id])
-         redirect_to "/", notice: "LOGIN_ERROR"
+        
+        ref = URI.parse(request.env["HTTP_REFERER"])
+         
+        if ref.host == request.host
+          redirect_to :back, flash: {notice: "LOGIN_ERROR", path: request.path}
+        else
+          redirect_to "/", flash: {notice: "LOGIN_ERROR", path: request.path}
+        end
      end
   end
   
