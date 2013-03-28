@@ -14,8 +14,15 @@ class ApplicationController < ActionController::Base
         ref = URI.parse(request.env["HTTP_REFERER"])
          
         if ref.host == request.host
-          redirect_to :back, flash: {notice: "LOGIN_ERROR", path: request.path}
+          if ref.path == request.path
+            # logout caused a loop, escape!
+            redirect_to "/"
+          else
+            # Refresh with login request
+            redirect_to :back, flash: {notice: "LOGIN_ERROR", path: request.path}
+          end
         else
+          # External referer needs home page to log in
           redirect_to "/", flash: {notice: "LOGIN_ERROR", path: request.path}
         end
      end
