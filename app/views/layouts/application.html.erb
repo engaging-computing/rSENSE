@@ -15,6 +15,7 @@
     <% if flash[:notice] == "LOGIN_ERROR" %>
       <script type="text/javascript">
         $(document).ready( function(e){
+          $.data($('#login_box')[0], "redirect", "<%= flash.try(:[], :path) %>");
           $('#login_box').modal()
           return false;
         });
