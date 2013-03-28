@@ -29,7 +29,7 @@
 <script src="/assets/highvis/runtime.coffee"></script>
 
 <div class="row">  
-    <span class="span12" style="font-size:2em"><%= experiment_edit_helper 'title', @experiment.owner.id == @cur_user.try(:id) %></span><br><br>
+    <span class="span12" style="font-size:2em"><%= project_edit_helper 'title', @project.owner.id == @cur_user.try(:id) %></span><br><br>
 </div>
 
 <div class="row">
@@ -73,7 +73,7 @@
     
     <% i = 0 %>
      <% @datasets.each do |s| %>
-         <div class="tab-pane" id="<%=s.id%>"><%= data_set_redactor_helper s, (@experiment.owner.id == @cur_user.try(:id)) %></div>
+         <div class="tab-pane" id="<%=s.id%>"><%= data_set_redactor_helper s, (@project.owner.id == @cur_user.try(:id)) %></div>
        <% i=i+1 %>
     <% end %>
   </div>

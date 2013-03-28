@@ -16,40 +16,40 @@
         </center>
       </div>
       
-      <!-- experiment title -->
+      <!-- project title -->
       <div class="span5">
-        <div class="experiment_info_box">
-          <span style="font-size:2em"><%= experiment_edit_helper 'title', (can_edit? @experiment) %></span><br>
+        <div class="project_info_box">
+          <span style="font-size:2em"><%= project_edit_helper 'title', (can_edit? @project) %></span><br>
           <span class="info_label" style="font-size:1.1em">Owner:</span> 
-          <%= link_to @experiment.owner.name, user_path(@experiment.owner) %><br>
-            <%if !@cloned_experiment.nil? %>
+          <%= link_to @project.owner.name, user_path(@project.owner) %><br>
+            <%if !@cloned_project.nil? %>
                     <span class="info_label" style="font-size:1.1em">Cloned From:</span>
-                    <%=link_to @cloned_experiment.title, experiment_path(@cloned_experiment.id)%><br>
+                    <%=link_to @cloned_project.title, project_path(@cloned_project.id)%><br>
             <%end%>
-          <span class="info_label" style="font-size:1.1em">Created:</span><%=time_ago_in_words(@experiment.created_at)%> ago <br>
+          <span class="info_label" style="font-size:1.1em">Created:</span><%=time_ago_in_words(@project.created_at)%> ago <br>
           <%=render "likes"%>
         </div>
       </div>
       
-      <!-- experiment content -->
+      <!-- project content -->
       <div class="span7">
-        <%= experiment_redactor_helper (can_edit? @experiment) %>
+        <%= project_redactor_helper (can_edit? @project) %>
       </div>
         
         
       <!-- data sets -->
       <%=render layout: "shared/collapse", locals: {title: 'Data Sets', width: '7', unique_id: 'data_sets', should_hide: false} do %>
         <table class="table">
-          <% @experiment.data_sets.all.each do |s| %>
+          <% @project.data_sets.all.each do |s| %>
             <tr>
               <td style="width:32px;height:32px;"><%= gravatar_image_tag(s.owner.email, alt: s.owner.firstname) %></td>
               <td><%= link_to "#{s.owner.name}", user_path(s.owner) %></td>
-              <td><%= link_to s.title, "#{params[:id]}/datasets/#{s.id}" %></td>
-              <td><input type="checkbox" id="experiment_<%=params[:id]%>_session_<%=s.id%>"/></td>
+              <td><%= link_to s.title, "#{params[:id]}/data_sets/#{s.id}" %></td>
+              <td><input type="checkbox" id="project_<%=params[:id]%>_session_<%=s.id%>"/></td>
             </tr>
           <% end %>
         </table>
-        <center><input type="button" value="Visualize" id="vis_button" <% if @experiment.data_sets.count == 0 %> style="display:none;" <% end %> /></center>
+        <center><input type="button" value="Visualize" id="vis_button" <% if @project.data_sets.count == 0 %> style="display:none;" <% end %> /></center>
       <%end%>
         
     </div>
@@ -59,18 +59,18 @@
     <div class="row">
       
       <!-- tools -->
-      <%=render layout: "shared/collapse", locals: {title: 'Tools', width: '2', unique_id: 'tools', should_hide: !can_edit?(@experiment)} do %>
-        <%=form_tag experiments_path, method: 'get', id: @experiment.id, class:'experiment_filters' do%>
-          Math: <%= check_box_tag "math", "math", (filter_exists "math"), class: 'experiments_add_filter_checkbox' %><br>
-          Physics: <%= check_box_tag "physics", "physics", (filter_exists "physics"), class: 'experiments_add_filter_checkbox' %><br>
-          Chemistry: <%= check_box_tag "chemistry", "chemistry", (filter_exists "chemistry"), class: 'experiments_add_filter_checkbox' %><br>
-          Earth: <%= check_box_tag "earth", "earth", (filter_exists "earth"), class: 'experiments_add_filter_checkbox' %><br>
-          Biology: <%= check_box_tag "biology", "biology", (filter_exists "biology"), class: 'experiments_add_filter_checkbox' %>
+      <%=render layout: "shared/collapse", locals: {title: 'Tools', width: '2', unique_id: 'tools', should_hide: !can_edit?(@project)} do %>
+        <%=form_tag projects_path, method: 'get', id: @project.id, class:'project_filters' do%>
+          Math: <%= check_box_tag "math", "math", (filter_exists "math"), class: 'projects_add_filter_checkbox' %><br>
+          Physics: <%= check_box_tag "physics", "physics", (filter_exists "physics"), class: 'projects_add_filter_checkbox' %><br>
+          Chemistry: <%= check_box_tag "chemistry", "chemistry", (filter_exists "chemistry"), class: 'projects_add_filter_checkbox' %><br>
+          Earth: <%= check_box_tag "earth", "earth", (filter_exists "earth"), class: 'projects_add_filter_checkbox' %><br>
+          Biology: <%= check_box_tag "biology", "biology", (filter_exists "biology"), class: 'projects_add_filter_checkbox' %>
         <%end%>
           <br/>
-        <%=form_tag('/experiments', :method => "post" ) do %>
-          <input type="hidden" name="experiment_id" value="<%=@experiment.id%>"/>
-	        <%= submit_tag "Clone Experiment" %>
+        <%=form_tag('/projects', :method => "post" ) do %>
+          <input type="hidden" name="project_id" value="<%=@project.id%>"/>
+	        <%= submit_tag "Clone Project" %>
         <%end%>
       <%end%>
 
@@ -78,7 +78,7 @@
       <%=render layout: "shared/collapse", locals: {title: 'Create Data Set', width:'3', unique_id: 'create_data_set', should_hide: !@has_fields} do %>
       <div class="row-fluid">
         <div class="span4 center">
-        <%= link_to :controller => :data_sets, :action => :manualEntry, :eid => @experiment.id do %>
+        <%= link_to :controller => :data_sets, :action => :manualEntry, :eid => @project.id do %>
           <img style="height: 75px;" src="/assets/manual.svg" /><br />Manual Entry
         <% end %>
         </div>
@@ -97,13 +97,13 @@
       
       <!-- field -->
       <%=render layout: "shared/collapse", locals: {title: 'Fields',width: '5', unique_id: 'fields', should_hide: false} do %>
-        <table class="table fields_table" experiment="<%=@experiment.id%>">
+        <table class="table fields_table" project="<%=@project.id%>">
           <th>Name</th>
           <th>Units</th>
           <th>Type</th>
           <th>
           <!-- Add field dropdown -->
-          <%if (can_edit? @experiment) %>
+          <%if (can_edit? @project) %>
             <div class='btn-group' id='add-field-dropdown'>
               <a class='btn-mini btn-success dropdown-toggle' data-toggle='dropdown' href='#'>
                 Add Field
@@ -113,7 +113,7 @@
                 <li><a href='#' class=add_timestamp_field> Timestamp </a></li>
                 <li><a href='#' class=add_number_field> Number </a></li>
                 <li><a href='#' class=add_text_field> Text </a></li>
-                <% if (@experiment.fields.any? {|field| field.field_type == LONGITUDE_TYPE or field.field_type == LATITUDE_TYPE}) %>
+                <% if (@project.fields.any? {|field| field.field_type == LONGITUDE_TYPE or field.field_type == LATITUDE_TYPE}) %>
                   <li><a href='#' style="display:none;" class=add_location_field> Location </a></li>
                 <% else %>
                   <li><a href='#' class=add_location_field> Location </a></li>
@@ -122,9 +122,9 @@
             </div>
           <%end%>
           </th>
-          <% @experiment.fields.all.each do |f| %>
+          <% @project.fields.all.each do |f| %>
             <!-- Render all the fields, Lat and Lon cant be edited -->
-            <%= render 'field_edit', field: f, type: "field",row_id: f.id, can_edit: (can_edit? @experiment), has_ses: @experiment.data_sets.count %>
+            <%= render 'field_edit', field: f, type: "field",row_id: f.id, can_edit: (can_edit? @project), has_ses: @project.data_sets.count %>
           <% end %>
           </table>
         <%end%>
@@ -132,24 +132,40 @@
         <!-- media objects -->
         <%=render layout: "shared/collapse", locals: {title: 'Media', width: '5', unique_id: 'media', should_hide: false} do %>
             <table class="table">
-                <% @experiment.media_objects.all.each do |mo| %>
+                <% @project.media_objects.all.each do |mo| %>
                     <tr>
                         <td><img src='<%=mo.src%>'width="100px" heigh="100px"/></td>
                         <td><%= link_to mo.name, media_object_path(mo.id)%></td> 
                         <% if ((mo.media_type == "image") && (can_edit? mo))%>
-                          <td><input type="radio" class="img_selector" name="img_selector" exp_id="<%=@experiment.id%>" <%if @experiment.featured_media_id == mo.id%>checked<%end%> mo_id="<%=mo.id%>"></input></td>
+                          <td><input type="radio" class="img_selector" name="img_selector" exp_id="<%=@project.id%>" <%if @project.featured_media_id == mo.id%>checked<%end%> mo_id="<%=mo.id%>"></input></td>
                         <% end %>
                     </tr>
                 <%end%>
             </table>
         <%end%>
         
+        <%=render layout: "shared/collapse", locals: {title: 'Tools', width: '4', unique_id: 'tools', should_hide: !can_edit?(@project)} do %>
+            <%=form_tag projects_path, method: 'get', id: @project.id, class:'project_filters' do%>
+                Math: <%= check_box_tag "math", "math", (filter_exists "math"), class: 'projects_add_filter_checkbox' %><br>
+                Physics: <%= check_box_tag "physics", "physics", (filter_exists "physics"), class: 'projects_add_filter_checkbox' %><br>
+                Chemistry: <%= check_box_tag "chemistry", "chemistry", (filter_exists "chemistry"), class: 'projects_add_filter_checkbox' %><br>
+                Earth: <%= check_box_tag "earth", "earth", (filter_exists "earth"), class: 'projects_add_filter_checkbox' %><br>
+                Biology: <%= check_box_tag "biology", "biology", (filter_exists "biology"), class: 'projects_add_filter_checkbox' %>
+            <%end%>
+        <%end%>
+
     </div>
   </div>
 </div>
 
+<%=form_tag('/projects', :method => "post" ) do %>
+ <input type="hidden" name="project_id" value="<%=@project.id%>"/>
+	<%= submit_tag "Clone Project" %>
+<%end%>
+
+
 <div style="display:none">  
-  <%= form_tag "./#{@experiment.id}/uploadCSV", multipart: true, id: 'csv_file_form', target: "upload_target" do %>
+  <%= form_tag "./#{@project.id}/uploadCSV", multipart: true, id: 'csv_file_form', target: "upload_target" do %>
     <%= file_field_tag 'csv', id: 'csv_file_input' %>
   <% end %>
   <iframe id="upload_target" name="upload_target" src="#" style="width:100%;height:100;border:0px solid #fff;"></iframe>  
@@ -166,7 +182,7 @@
 <!-- Field matching Modal Box -->
 <div id="match_box" class="modal hide fade well container" style="width:400px">
   <p>
-    We were unable to automatically match up your CSV headers with the experiment fields. Below is our best guess - please correct it with the dropdown boxes before continuing.
+    We were unable to automatically match up your CSV headers with the project fields. Below is our best guess - please correct it with the dropdown boxes before continuing.
   </p>
   
   <table id="match_table"> </table>
