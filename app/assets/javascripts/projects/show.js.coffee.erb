@@ -59,5 +59,4 @@ $ ->
       
       ($ "#match_box").modal
         backdrop: 'static'
-        keyboard: true
-#       
+        keyboard: true  
