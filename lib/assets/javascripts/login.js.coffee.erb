@@ -33,7 +33,11 @@ $ ->
           switch data.status
             when 'success'
               ($ '#login_box').dialog 'close'
-              window.location = $.data($('#login_box')[0], "redirect")
+              target =  $.data($('#login_box')[0], "redirect")
+              if target isnt undefined
+                window.location = target
+              else
+                location.reload(true)
             when 'fail'
               ($ '#login_user').errorFlash()
               ($ '#login_password').errorFlash()
