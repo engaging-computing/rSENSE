@@ -4,6 +4,7 @@
 
 $ ->
 
+ 
   $("#projects_search").submit ->
       $.ajax
         url: this.action
@@ -61,6 +62,8 @@ $ ->
     
   ($ '.projects_sort_select').change ->
     ($ '#projects_search').submit()
+    
+
     
   grab_ses = (t) ->
     ses = ($ t).attr 'id'

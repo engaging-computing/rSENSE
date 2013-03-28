@@ -6,9 +6,6 @@
 # ($ '.liked_status').click ->
 # Binds the click handlers for liking an project
 #
-# ($ '#projects .pagination a').live 'click', ->
-# Binds a click handler to the project pagination links
-# that requests the pagination data through ajax as a json object
 #
 # ($ '#projects_search').submit ->
 # Binds an ajax request for searching projects to the #projects_search form
@@ -74,9 +71,7 @@ $ ->
       success: (resp) =>
         ($ @).siblings('.like_display').html resp['update']
 
-  ($ '#projects .pagination a').live 'click', ->
-      $.getScript this.href
-      false
+ 
     
   ($ '#upload_csv').click ->
     ($ '#csv_file_input').click()
