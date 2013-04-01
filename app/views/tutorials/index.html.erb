@@ -3,18 +3,30 @@
     <div class="row">
       <div class="span12">
         <%= form_tag tutorials_path, method: 'get', id: 'tutorials_search', class: 'navbar-search' do%>
-          <div class="feed-top">
+          <div class="isotope-top">
             <h1>Tutorials</h1>
+            <div style="widht:20%;float:left;">
+              <select name="sort" class="tutorials_sort_select">
+                <option value="DESC">Newest First</option>
+                <option value="ASC">Oldest First</option>
+              </select> 
+            </div>
+            <div style="width:40%;float:left;margin-left:20px;">
+              <%= text_field_tag :search, params[:search], class:'search-query'%>
+            </div>
+            <div style="width:20%;float:left;margin-left:40px;">
+              <%= submit_tag "Search", name: nil, class:'btn'%>
+            </div>
+            <div class="clear"></div>
           </div>
-        <% end %>
+        <%end%>
       </div>
     </div>
     <div class="row">
-      <div id="tutorials" class="span12">
-        <%=render 'display_tutorials'%>
+      <div id="tutorials" class="span12" style="overflow:visible;z-index:0;">
+        <div style="width:100%;height:100%;border:0px solid grey;overflow:visible;padding:10px;">
+        </div>
       </div>
     </div>
   </div>
 </div>
-
-<%= link_to 'New Tutorial', new_tutorial_path %>
