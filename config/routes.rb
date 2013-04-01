@@ -13,8 +13,10 @@ Rsense::Application.routes.draw do
 
   resources :fields
 
+  match "projects/create" => "projects#create"
   resources :projects
 
+  match "tutorials/create" => "tutorials#create"
   match "/tutorials/switch/" => "tutorials#switch"
   resources :tutorials
   
