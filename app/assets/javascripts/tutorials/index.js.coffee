@@ -17,13 +17,9 @@ $ ->
           $('#tutorials').append(addProjectButton).isotope('insert', addProjectButton)
           
           $('#addProjectButton').click ->
-            $.ajax
-              type: "POST"
-              url: "/tutorials/"
-              data: {}
-              dataType: "json"
-              success: (data) =>
-                window.location.replace("/tutorials/#{data['id']}");
+            form = ($ "<form action='/tutorials/create' method='post'> </form>")
+            ($ "body").append(form)
+            ($ form).submit()
           
           for object in data
             do (object) ->
