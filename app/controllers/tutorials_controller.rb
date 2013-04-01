@@ -3,13 +3,45 @@ class TutorialsController < ApplicationController
   # GET /tutorials.json
   skip_before_filter :authorize, only: [:show, :index]
   
-  def index
-    @tutorials = Tutorial.all
+  include ActionView::Helpers::DateHelper
 
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @tutorials }
+  def index
+    
+    #Main List
+    if !params[:sort].nil?
+        sort = params[:sort]
+    else
+        sort = "DESC"
     end
+    
+    if sort=="ASC" or sort=="DESC"
+      @tutorials = Tutorial.search(params[:search]).paginate(page: params[:page], per_page: 100).order("created_at #{sort}")
+    else
+      @tutorials = Tutorial.search(params[:search]).paginate(page: params[:page], per_page: 100).order("like_count DESC")
+    end
+    
+    jsonObjects = []
+    
+    @tutorials.each do |t|
+      
+      newJsonObject = {}
+      
+      newJsonObject["title"]          = t.title
+      newJsonObject["timeAgoInWords"] = time_ago_in_words(t.created_at)
+      newJsonObject["createdAt"]      = t.created_at.strftime("%B %d, %Y")
+      newJsonObject["ownerName"]      = "#{t.owner.name}"
+      newJsonObject["tutorialPath"] = tutorial_path(t)
+      newJsonObject["ownerPath"]      = user_path(t.owner)
+      
+      jsonObjects = jsonObjects << newJsonObject
+      
+    end
+    
+    respond_to do |format|
+      format.html
+      format.json { render json: jsonObjects }
+    end
+    
   end
 
   # GET /tutorials/1
