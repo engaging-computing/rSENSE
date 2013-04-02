@@ -18,7 +18,8 @@ $ ->
           $('#projects').append(addProjectButton).isotope('insert', addProjectButton)
           
           $('#addProjectButton').click ->
-            form = ($ "<form action='/projects/create' method='post'> </form>")
+            token = $("meta[name='csrf-token']").attr('content')
+            form = ($ "<form action='/projects/create' method='post'> <input type='hidden' name='authenticity_token' value='#{token}'> </form>")
             ($ "body").append(form)
             ($ form).submit()
           
