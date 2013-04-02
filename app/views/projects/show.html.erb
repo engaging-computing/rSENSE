@@ -1,10 +1,6 @@
 <p id="notice"><%= notice %></p>
 <%= flash[:title_edit] %>
 <div class="row">
-  
-  
-  
-  
   <div class="span7">
     <div class="row">
       
@@ -59,18 +55,22 @@
     <div class="row">
       
       <!-- tools -->
-      <%=render layout: "shared/collapse", locals: {title: 'Tools', width: '2', unique_id: 'tools', should_hide: !can_edit?(@project)} do %>
-        <%=form_tag projects_path, method: 'get', id: @project.id, class:'project_filters' do%>
-          Math: <%= check_box_tag "math", "math", (filter_exists "math"), class: 'projects_add_filter_checkbox' %><br>
-          Physics: <%= check_box_tag "physics", "physics", (filter_exists "physics"), class: 'projects_add_filter_checkbox' %><br>
-          Chemistry: <%= check_box_tag "chemistry", "chemistry", (filter_exists "chemistry"), class: 'projects_add_filter_checkbox' %><br>
-          Earth: <%= check_box_tag "earth", "earth", (filter_exists "earth"), class: 'projects_add_filter_checkbox' %><br>
-          Biology: <%= check_box_tag "biology", "biology", (filter_exists "biology"), class: 'projects_add_filter_checkbox' %>
+      <%=render layout: "shared/collapse", locals: {title: 'Tools', width: '2', unique_id: 'tools', should_hide: false} do %>
+        <%if can_edit?(@project)%>
+          <%=form_tag projects_path, method: 'get', id: @project.id, class:'project_filters' do%>
+            Math: <%= check_box_tag "math", "math", (filter_exists "math"), class: 'projects_add_filter_checkbox' %><br>
+            Physics: <%= check_box_tag "physics", "physics", (filter_exists "physics"), class: 'projects_add_filter_checkbox' %><br>
+            Chemistry: <%= check_box_tag "chemistry", "chemistry", (filter_exists "chemistry"), class: 'projects_add_filter_checkbox' %><br>
+            Earth: <%= check_box_tag "earth", "earth", (filter_exists "earth"), class: 'projects_add_filter_checkbox' %><br>
+            Biology: <%= check_box_tag "biology", "biology", (filter_exists "biology"), class: 'projects_add_filter_checkbox' %>
+          <%end%>
+            <br/>
         <%end%>
-          <br/>
-        <%=form_tag('/projects', :method => "post" ) do %>
-          <input type="hidden" name="project_id" value="<%=@project.id%>"/>
-	        <%= submit_tag "Clone Project" %>
+        <%if @cur_user.try(:id)%>
+          <%=form_tag('/projects', :method => "post" ) do %>
+            <input type="hidden" name="project_id" value="<%=@project.id%>"/>
+                <%= submit_tag "Clone Project" %>
+          <%end%>
         <%end%>
       <%end%>
 
@@ -146,12 +146,6 @@
     </div>
   </div>
 </div>
-
-<%=form_tag('/projects', :method => "post" ) do %>
- <input type="hidden" name="project_id" value="<%=@project.id%>"/>
-	<%= submit_tag "Clone Project" %>
-<%end%>
-
 
 <div style="display:none">  
   <%= form_tag "./#{@project.id}/uploadCSV", multipart: true, id: 'csv_file_form', target: "upload_target" do %>
