@@ -4,11 +4,11 @@ one:
   title: Sample Title
   content: 
   user_id: 1
-  experiment_id: 1
+  project_id: 1
 
 two:
   title: MyString
   content: MyText
   user_id: 1
-  experiment_id: 1
+  project_id: 1
  

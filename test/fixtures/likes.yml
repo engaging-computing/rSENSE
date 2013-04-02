@@ -2,8 +2,8 @@
 
 one:
   user_id: 1
-  experiment_id: 1
+  project_id: 1
 
 two:
   user_id: 1
-  experiment_id: 1
+  project_id: 1
