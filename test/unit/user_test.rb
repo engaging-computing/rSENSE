@@ -4,27 +4,28 @@ class UserTest < ActiveSupport::TestCase
 
   # Creates a new user and tests that the default fields are correctly set
   
-  # Defines and initializes a new user
-  user = User.new
-  
+  # Declares a new data set
+  def setup
+    @user = User.new
+  end
   # Passes if email is nil
   test "email is nil" do
-    assert_nil( user.email, "Expected email is nil." )
+    assert_default_nil( @user, @user.email )
   end
   
   # Passes if validated is false
   test "validated is false" do
-    assert_equal( false, user.validated, "Expected validated is false." )
+    assert_default_false( @user, @user.validated )
   end
   
   # Passes if admin is false
   test "admin is false" do
-    assert_equal( false, user.admin, "Expected admin is false." )
+    assert_default_false( @user, @user.admin )
   end
   
   # Passes if content is nil
   test "content is nil" do
-    assert_nil( user.content, "Excepted content is nil." )
+    assert_default_nil( @user, @user.content )
   end
 
   
@@ -47,7 +48,7 @@ class UserTest < ActiveSupport::TestCase
      assert_nil( users(:one).email, "Expected email is nil." )
   end
   
-  test "validated" do
+  test "validation" do
     assert_equal false, users(:one).validated
   end
   
