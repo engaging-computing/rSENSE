@@ -1,14 +1,14 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
-  experiment_id: 1
+  project_id: 1
   media_type: MyString
   name: MyString
   session_id: 1
   user_id: 1
 
 two:
-  experiment_id: 1
+  project_id: 1
   media_type: MyString
   name: MyString
   session_id: 1

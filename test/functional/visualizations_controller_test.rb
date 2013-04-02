@@ -18,7 +18,7 @@ class VisualizationsControllerTest < ActionController::TestCase
 
   test "should create visualization" do
     assert_difference('Visualization.count') do
-      post :create, visualization: { content: @visualization.content, data: @visualization.data, experiment_id: @visualization.experiment_id, globals: @visualization.globals, title: @visualization.title, user_id: @visualization.user_id }
+      post :create, visualization: { content: @visualization.content, data: @visualization.data, project_id: @visualization.project_id, globals: @visualization.globals, title: @visualization.title, user_id: @visualization.user_id }
     end
 
     assert_redirected_to visualization_path(assigns(:visualization))
@@ -35,7 +35,7 @@ class VisualizationsControllerTest < ActionController::TestCase
   end
 
   test "should update visualization" do
-    put :update, id: @visualization, visualization: { content: @visualization.content, data: @visualization.data, experiment_id: @visualization.experiment_id, globals: @visualization.globals, title: @visualization.title, user_id: @visualization.user_id }
+    put :update, id: @visualization, visualization: { content: @visualization.content, data: @visualization.data, project_id: @visualization.project_id, globals: @visualization.globals, title: @visualization.title, user_id: @visualization.user_id }
     assert_redirected_to visualization_path(assigns(:visualization))
   end
 
