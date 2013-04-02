@@ -36,8 +36,8 @@ class UsersController < ApplicationController
     end
     
     respond_to do |format|
-      format.html
-      format.json { render json: jsonObjects }
+      format.html { render status: :ok }
+      format.json { render json: jsonObjects, status: :ok }
     end
 
   end
