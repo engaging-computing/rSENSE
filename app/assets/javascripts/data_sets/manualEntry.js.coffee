@@ -10,11 +10,11 @@ $ ->
   # Sets the apropriate validator class for each column
   setValidators = ->
     for i in [0...columns]
-      if fields[i].field_type is <%= NUMBER_TYPE %>
+      if fields[i].field_type is helpers.get_field_type("Number")
         ($ "input.col#{i}").addClass 'validate_number'
-      if fields[i].field_type is <%= LATITUDE_TYPE %>
+      if fields[i].field_type is helpers.get_field_type("Latitude")
         ($ "input.col#{i}").addClass 'validate_latitude'
-      if fields[i].field_type is <%= LONGITUDE_TYPE %>
+      if fields[i].field_type is helpers.get_field_type("Longitude")
         ($ "input.col#{i}").addClass 'validate_longitude'
 
   setValidators()
