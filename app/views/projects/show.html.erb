@@ -69,7 +69,7 @@
         <%if @cur_user.try(:id)%>
           <%=form_tag('/projects', :method => "post" ) do %>
             <input type="hidden" name="project_id" value="<%=@project.id%>"/>
-                <%= submit_tag "Clone Project" %>
+                <%= submit_tag "Clone Project", class: "btn" %>
           <%end%>
         <%end%>
       <%end%>
