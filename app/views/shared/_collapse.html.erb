@@ -1,13 +1,15 @@
 <div class="span<%=width%>" id="<%=unique_id%>" <%if should_hide == true %> style="display:none"<%end%> >
     <div class="sidebar_box grey_content">
-        <div class="accordion" id="accordion<%=title%>">
+        <div class="accordion" id="accordion<%=unique_id%>">
             <div class="accordion-group">
                 <div class="accordion-heading">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion<%=title%>" href='#collapse<%=title%>'>
-                    <h4 class="center"><%=title%> <i class="icon-chevron-down"></i></h4>
-                </a>
+                  <div class="center" style="font-size:1.5em">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion<%=unique_id%>" href='#collapse<%=unique_id%>'>
+                        <%=title%> 
+                    </a>
+                  </div>
                 </div>
-                <div id="collapse<%=title%>" class="accordion-body collapse in">
+                <div id="collapse<%=unique_id%>" class="accordion-body collapse in">
                     <div class="accordion-inner">
                         <%= yield %>
                     </div>
