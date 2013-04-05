@@ -1,4 +1,3 @@
-
 $ ->
   # A File has been uploaded, decide what to do
   ($ "#csv_file_form").ajaxForm (resp) ->
@@ -155,3 +154,28 @@ $ ->
     ses = ($ t).attr 'id'
     ses = ses.split '_'
     ses[3]
+    
+ #Select all/none check box in the data sets box
+  ($ "#check_selector").click ->
+    if ($ this).is(":checked")
+      ($ this).parent().parent().parent().find("[id^=project_]").each (i,j) =>
+       ($ j).prop("checked",true)
+       ($ '#vis_button').prop("disabled",false)
+    else
+      ($ this).parent().parent().parent().find("[id^=project_]").each (i,j) =>
+        ($ j).prop("checked",false)
+        ($ '#vis_button').prop("disabled",true)
+  
+  #Turn off visualize button on page load, and when nothings checked  
+  check_for_selection = =>
+    should_disable = true
+    ($ document).find("[id^=project_]").each (i,j) =>
+      if(($ j).is(":checked"))
+         should_disable = false    
+      $('#vis_button').prop("disabled", should_disable)
+      
+  ($ '#vis_button').prop("disabled",true)
+       
+  #Add click events to all check boxes in the data_sets box     
+  ($ document).find("[id^=project_]").each (i,j) =>
+    ($ j).click check_for_selection
