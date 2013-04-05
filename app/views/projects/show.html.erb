@@ -36,16 +36,20 @@
       <!-- data sets -->
       <%=render layout: "shared/collapse", locals: {title: 'Data Sets', width: '7', unique_id: 'data_sets', should_hide: false} do %>
         <table class="table">
+          <tr>
+            <th colspan="3" style="text-align:center;padding-bottom:5px"><input type="button" class="btn btn-info" value="Visualize" id="vis_button" <% if @project.data_sets.count == 0 %> style="display:none;" <% end %> /></th>
+        
+            <th><input type="checkbox" id="check_selector"/></th>
+          </tr>
           <% @project.data_sets.all.each do |s| %>
             <tr>
-              <td style="width:32px;height:32px;"><%= gravatar_image_tag(s.owner.email, alt: s.owner.firstname) %></td>
+              <td style="width:32px;height:32px;"><%= gravatar_image_tag(s.owner.email, alt: s.owner.firstname,:gravatar => { :size => 32 }) %></td>
               <td><%= link_to "#{s.owner.name}", user_path(s.owner) %></td>
               <td><%= link_to s.title, "#{params[:id]}/data_sets/#{s.id}" %></td>
               <td><input type="checkbox" id="project_<%=params[:id]%>_session_<%=s.id%>"/></td>
             </tr>
           <% end %>
         </table>
-        <center><input type="button" value="Visualize" id="vis_button" <% if @project.data_sets.count == 0 %> style="display:none;" <% end %> /></center>
       <%end%>
         
     </div>

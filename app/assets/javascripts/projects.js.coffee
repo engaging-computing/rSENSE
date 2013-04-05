@@ -105,7 +105,7 @@ $ ->
       ($ '#doc_url').css 'background-color', 'red'
       
   ($ '#vis_button').click (e) ->
-    targets = ($ @).parent().parent().find('table tbody tr input:checked')
+    targets = ($ @).parent().parent().parent().find('td input:checked')
     ses = ($ targets[0]).attr 'id'
     ses = ses.split '_'
     eid = ses[1]

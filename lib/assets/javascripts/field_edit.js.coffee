@@ -98,7 +98,7 @@ $ ->
         success: (msg) =>
           ($ @).parent().parent().remove()
         error: (msg) =>
-          console.log msg
+
     else
       if confirm "Latitude and Longitude must be deleted together\nAre you sure you would like to continue?"
         sibs = $ row.siblings()
@@ -118,8 +118,6 @@ $ ->
             ($ row).remove()
             ($ '#add-field-dropdown ul li a.add_location_field').show()
           error: (msg) =>
-            console.log msg
-            
             
         $.ajax
           url: ($ pair_field).find('.field_delete_link').attr('href') + "/removeField"
@@ -129,7 +127,6 @@ $ ->
           success: (msg) =>
             ($ pair_field).remove()
           error: (msg) =>
-            console.log msg
     
     false
 
