@@ -34,9 +34,9 @@
         
       <!-- data sets -->
       <%=render layout: "shared/collapse", locals: {title: 'Data Sets', width: '7', unique_id: 'data_sets', should_hide: false} do %>
-        <table class="table">
+        <table class="table" <% if @project.data_sets.count == 0 %> style="display:none;" <% end %> >
           <tr>
-            <th colspan="3" style="text-align:center;padding-bottom:5px"><input type="button" class="btn btn-info" value="Visualize" id="vis_button" <% if @project.data_sets.count == 0 %> style="display:none;" <% end %> /></th>
+            <th colspan="3" style="text-align:center;padding-bottom:5px"><input type="button" class="btn btn-info" value="Visualize" id="vis_button"/></th>
         
             <th><input type="checkbox" id="check_selector"/></th>
           </tr>

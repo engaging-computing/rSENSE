@@ -141,7 +141,7 @@ $ ->
   # Takes all sessions that are checked, appends its id to the url and
   # redirects the user to the view sessions page (Vis page)
   ($ '#vis_button').click (e) ->
-    targets = ($ @).parent().parent().find('table tbody tr input:checked')
+    targets = ($ @).parent().parent().parent().find('td input:checked')
     ses = ($ targets[0]).attr 'id'
     ses = ses.split '_'
     eid = ses[1]
