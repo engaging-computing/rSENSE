@@ -7,8 +7,8 @@ $ ->
     field = helpers.get_field_type $(@).parent().parent().find('.field_type').text()
 
     if not (field in [(helpers.get_field_type "Latitude"), (helpers.get_field_type "Longitude")])
-      name.wrapInner "<input type='text' class='name_edit_box' value='#{name.text().trim()}'>"
-      unit.wrapInner "<input type='text' class='unit_edit_box' value='#{unit.text().trim()}'>" if field is (helpers.get_field_type "Number")
+      name.wrapInner "<input type='text' size='1' class='name_edit_box' value='#{name.text().trim()}'>"
+      unit.wrapInner "<input type='text' size='1' class='unit_edit_box' value='#{unit.text().trim()}'>" if field is (helpers.get_field_type "Number")
       name.find('.name_edit_box').focus()
 
     ($ @).hide()
