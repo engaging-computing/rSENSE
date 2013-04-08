@@ -1,5 +1,14 @@
 $ ->
-    
+
+  hide_upload = ->
+    if ($ '#collapsefields div table tbody tr').size() == 1
+      ($ '#collapsecreate_data_set').hide()
+    else
+      ($ '#collapsecreate_data_set').show()
+
+      
+  hide_upload();  
+  
   #This is where we edit 
   edit = ->
     name = ($ @).parent().parent().find '.field_name'
@@ -70,6 +79,7 @@ $ ->
           else
             ($ name).find('.name_edit_box').css('background-color', '#D80000')
 
+      hide_upload();  
 
             
     else
@@ -130,6 +140,8 @@ $ ->
             ($ pair_field).remove()
           error: (msg) =>
             console.log msg
+            
+    hide_upload();  
     
     false
 
@@ -174,6 +186,8 @@ $ ->
         if not (type in [(helpers.get_field_type "Latitude"), (helpers.get_field_type "Longitude")])
           ($ '.field_edit_link').last().trigger 'click'
 
+    hide_upload();  
+          
   ($ '.field_edit_link').click edit
   ($ '.field_save_link').click save
   ($ '.field_delete_link').click remove_field
