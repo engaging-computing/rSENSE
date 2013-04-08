@@ -27,9 +27,9 @@
       </div>
       
       <!-- project content -->
-      <div class="span7">
-        <%= project_redactor_helper (can_edit? @project) %>
-      </div>
+      <%=render layout: "shared/collapse", locals: {title: 'Description', width: '7', unique_id: 'description', should_hide: false} do %>
+        <%= project_redactor_helper (can_edit? @project), false %>
+      <%end%>
         
         
       <!-- data sets -->
