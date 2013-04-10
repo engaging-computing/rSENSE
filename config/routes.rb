@@ -52,7 +52,7 @@ Rsense::Application.routes.draw do
   match "/projects/:id/removeField" => "projects#removeField"
 
   match "/data_sets/:id/postCSV" => "data_sets#uploadCSV"
-  match "/media_objects/saveimage/*keys" => "media_objects#saveimage"
+  match "/media_objects/saveMedia/*keys" => "media_objects#saveMedia"
   
   controller :sessions do
     post 'login' => :create
