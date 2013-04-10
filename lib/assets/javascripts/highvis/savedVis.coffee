@@ -47,7 +47,7 @@ globals.saveVis = (title, desc, succCallback, failCallback) ->
     if sessionNames.length >= 30
       sessionNames = (sessionNames.slice 0, 27) + '...'
 
-    name = 'Saved Vis - ' + data.experimentName + "(#{sessionNames})"
+    name = 'Saved Vis - ' + data.projectName
 
     req = $.ajax
         type: 'POST'
@@ -55,7 +55,7 @@ globals.saveVis = (title, desc, succCallback, failCallback) ->
         dataType: 'json'
         data:
           visualization:
-            experiment_id: Number data.experimentID
+            project_id: Number data.projectID
             title: name
             data: savedData.data
             globals: savedData.globals
