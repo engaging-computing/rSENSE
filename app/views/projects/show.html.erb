@@ -135,12 +135,17 @@
         <!-- media objects -->
         <%=render layout: "shared/collapse", locals: {title: 'Media', width: '5', unique_id: 'media', should_hide: false} do %>
             <table class="table">
+              <th>Object</th>
+              <th>Name</th>
+              <th>Type</th>
+              <th style="text-align:center;">Display Image</th>
                 <% @project.media_objects.all.each do |mo| %>
                     <tr>
-                        <td><img src='<%=mo.src%>'width="100px" heigh="100px"/></td>
-                        <td><%= link_to mo.name, media_object_path(mo.id)%></td> 
+                        <td style="text-align:center"><%=media_object_thumbnail_helper(mo)%></td>
+                        <td><%= link_to mo.name, mo.src%></td> 
+                        <td><%= mo.media_type %></td>
                         <% if ((mo.media_type == "image") && (can_edit? mo))%>
-                          <td><input type="radio" class="img_selector" name="img_selector" exp_id="<%=@project.id%>" <%if @project.featured_media_id == mo.id%>checked<%end%> mo_id="<%=mo.id%>"></input></td>
+                          <td style="text-align:center;"><input type="radio" class="img_selector" name="img_selector" exp_id="<%=@project.id%>" <%if @project.featured_media_id == mo.id%>checked<%end%> mo_id="<%=mo.id%>"></input></td>
                         <% end %>
                     </tr>
                 <%end%>
