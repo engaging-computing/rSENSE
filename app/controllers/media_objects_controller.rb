@@ -83,12 +83,12 @@ class MediaObjectsController < ApplicationController
     end
   end
   
-  #POST /media_object/saveimage
-  def saveimage
+  #POST /media_object/saveMedia
+  def saveMedia
     
     #Figure out where we are uploading data to
     data = params[:keys].split('/')
-    type = data[0]
+    target = data[0]
     id = data[1]
     
     #Set up the link to S3
@@ -103,32 +103,43 @@ class MediaObjectsController < ApplicationController
 
     #Set up the file for upload
     fileKey = (Time.now.strftime "%s") + "." + params[:file].content_type.split("/")[1]
+    fileType = params[:file].content_type.split("/")[0]
     filePath = params[:file].tempfile 
-
+    fileName = params[:file].original_filename
+    
+    if fileType == 'application'
+      extended = params[:file].content_type.split("/")[1]
+      if extended.include? 'pdf'
+        fileType = 'pdf'
+      else
+        fileType = 'document'
+      end
+    end
+    
     #Generate the key for our file in the bucket
     o = bucket.objects[fileKey]
 
     #Build media object params based on what we are doing
-    case type
+    case target
     when 'project'
       @project = Project.find_by_id(id)
       if(can_edit?(@project))
-        @mo = {user_id: @project.owner.id, project_id: id, src: o.public_url.to_s, name: @project.title + " image", media_type:"image"}
+        @mo = {user_id: @project.owner.id, project_id: id, src: o.public_url.to_s, name: fileName, media_type: fileType}
       end
     when 'data_set'
       @data_set = DataSet.find_by_id(id)
       if(@data_set.owner == @cur_user)
-        @mo = {user_id: @data_set.owner.id, project_id: @data_set.project_id, session_id: @data_set.id, src: o.public_url.to_s, name: @data_set.title + " image", media_type:"image"}
+        @mo = {user_id: @data_set.owner.id, project_id: @data_set.project_id, session_id: @data_set.id, src: o.public_url.to_s, name: fileName, media_type: fileType}
       end
     when 'user'
       @user = User.find_by_username(id)
       if(can_edit?(@user))
-        @mo = {user_id: @user.id, src: o.public_url.to_s, name: @user.name.pluralize + " image", media_type:"image"}
+        @mo = {user_id: @user.id, src: o.public_url.to_s, name: fileName, media_type: fileType}
       end
     when 'tutorial'
       @tutorial = Tutorial.find_by_id(id)
       if(can_edit?(@tutorial))
-        @mo = {user_id: @tutorial.owner.id, src: o.public_url.to_s, name: @tutorial.title + " image", media_type:"image"}
+        @mo = {user_id: @tutorial.owner.id, src: o.public_url.to_s, name: fileName, media_type: fileType}
       end
     end
 
@@ -142,7 +153,7 @@ class MediaObjectsController < ApplicationController
       o.write file: filePath
       
       #Tell redactor where the image is located
-      render json: {filelink: o.public_url.to_s}
+      render json: {filelink: o.public_url.to_s, filename: fileName}
 
     else
       
