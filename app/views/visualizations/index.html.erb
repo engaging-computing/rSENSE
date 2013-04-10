@@ -1,33 +1,34 @@
-<h1>Listing visualizations</h1>
+<div class="row">
+  <div class="span12">
+    <div class="row">
+      <div class="span12">
+        <%=form_tag visualizations_path, method: 'get', id: 'visualizations_search', class:'navbar-search' do%>
+          <div class="isotope-top">
+            <h1>Visualizations</h1>
+            <div style="width:20%;float:left;">
+              <select name="sort" class="visualizations_sort_select">
+                <option value="DESC">Newest First</option>
+                <option value="ASC">Oldest First</option>
+              </select>
+            </div>
+            <div style="width:40%;float:left;margin-left:20px;">
+              <%= text_field_tag :search, params[:search], class:'search-query'%>
+            </div>
+            <div style="width:20%;float:left;margin-left:40px;">
+              <%= submit_tag "Search", name: nil, class:'btn'%>
+            </div>
+            <div class="clear"></div>
+          </div>
+        <%end%>
+      </div>
+    </div>
+    <div class="row">
+      <div id="visualizations" class="span12" style="overflow:visible;z-index:0;">
+        <div style="width:100%;height:100%;border:0px solid grey;overflow:visible;padding:10px;">
+          
+        </div>
+      </div>
+    </div>
+  </div>
 
-<table>
-  <tr>
-    <th>Title</th>
-    <th>User</th>
-    <th>Project</th>
-    <th>Content</th>
-    <th>Data</th>
-    <th>Globals</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @visualizations.each do |visualization| %>
-  <tr>
-    <td><%= visualization.title %></td>
-    <td><%= visualization.user_id %></td>
-    <td><%= visualization.project_id %></td>
-    <td><%= visualization.content %></td>
-    <td><%= visualization.data %></td>
-    <td><%= visualization.globals %></td>
-    <td><%= link_to 'Show', visualization %></td>
-    <td><%= link_to 'Edit', edit_visualization_path(visualization) %></td>
-    <td><%= link_to 'Destroy', visualization, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Visualization', new_visualization_path %>
+</div>

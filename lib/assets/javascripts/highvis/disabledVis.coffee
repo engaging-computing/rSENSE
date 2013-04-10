@@ -30,7 +30,7 @@
 class window.DisabledVis extends BaseVis
     constructor: (@canvas) -> 
 
-    motion_err = "Motion Chart could not be displayed<br>A time field was not found in this experiment"
+    motion_err = "Motion Chart could not be displayed<br>A time field was not found in this project"
     time_err = "Timeline could not be displayed<br>Either a time field was not found or there were not enough data"
     scatter_err = "Scatter Chart could not be displayed<br>Either two numeric fields were not found or there were not enough data"
     histogram_err = "Histogram could not be displayed<br>Either no numeric fields were found, or there were not enough data"
