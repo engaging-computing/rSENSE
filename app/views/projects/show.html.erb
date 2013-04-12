@@ -94,7 +94,7 @@
       <%=render layout: "shared/collapse", locals: {title: 'Create Data Set', width:'3', unique_id: 'create_data_set', should_hide: false} do %>
       <div class="row-fluid">
         <div class="span4 center">
-        <%= link_to :controller => :data_sets, :action => :manualEntry, :eid => @project.id do %>
+        <%= link_to :controller => :data_sets, :action => :manualEntry, :pid => @project.id do %>
           <img style="height: 75px;" src="/assets/manual.svg" /><br />Manual Entry
         <% end %>
         </div>
