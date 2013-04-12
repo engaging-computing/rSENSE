@@ -1,16 +1,44 @@
 $ ->
+  # Control code for name popup box
+  if ($ '#name_box') isnt []
+    ($ '#name_box').modal();
+    selectFunc = ->
+      ($ '#name_name').select()
+    setTimeout selectFunc, 300
+    
+    ($ '#name_name').keyup (e) ->
+      if (e.keyCode == 13)
+        ($ '.name_button').click()
+    
+    ($ '.name_button').click ->
+      name = ($ '#name_name').val()
+      data = 
+        project:
+          title: name
+          
+      $.ajax
+        url: ($ '#title_span .info_save_link').attr 'href'
+        type: 'PUT'
+        dataType: 'json'
+        data: data
+        success: ->
+          ($ '#title_span span.info_text a').text(name)
+          ($ '#name_box').modal('hide')
+  
   # A File has been uploaded, decide what to do
   ($ "#csv_file_form").ajaxForm (resp) ->
-    if resp["status"] == "success"
-      window.location = resp['redirect']
+    
+    if resp.status == "success"
+      helpers.name_dataset resp.title, resp.datasets, () ->
+        window.location = resp.redirect
     else
       ($ "#match_table").html ''
       ($ "#match_table").append "<tr><th> Experiment Field </th> <th> CSV Header </th></tr>"
       
-      for field, fieldIndex in resp["fields"]
+      for field, fieldIndex in resp.fields
 
         options = "<option value='-1'> Select One... </option>"
-        for header, headerIndex in resp['headers']
+        for header, headerIndex in resp.headers
           if (resp.partialMatches[fieldIndex] isnt undefined) and (resp.partialMatches[fieldIndex].hindex is headerIndex)
             options += "<option selected='true' value='#{headerIndex}'> #{header} </option>"
           else
@@ -27,7 +55,7 @@ $ ->
       ($ "button.finished_button").click ->
 
         matchData =
-          eid: resp.eid
+          pid: resp.pid
           fields: resp.fields
           headers: resp.headers
           matches: []
@@ -49,10 +77,12 @@ $ ->
         $.ajax
           type: "POST"
           dataType: "json"
-          url: "/projects/#{resp['eid']}/uploadCSV"
+          url: "/projects/#{resp['pid']}/uploadCSV"
           data: matchData
           success: (resp) ->
-            window.location = resp['redirect']
+            ($ "#match_box").modal("hide")
+            helpers.name_dataset resp.title, resp.datasets, () ->
+              window.location = resp.redirect
           error: (resp) ->
             alert "Somthing went horribly wrong. I'm sorry."
       
@@ -130,9 +160,9 @@ $ ->
       tmp = tmp.split 'key='
       key = tmp[1]
       tmp = window.location.pathname.split 'projects/'
-      eid = tmp[1]
-      url = "/data_sets/#{eid}/postCSV"
-      $.ajax( { url: url, data: { key: key, id: eid } } ).done (data, textStatus, error) ->
+      pid = tmp[1]
+      url = "/data_sets/#{pid}/postCSV"
+      $.ajax( { url: url, data: { key: key, id: pid } } ).done (data, textStatus, error) ->
         if data.status is 'success'
           window.location = data.redirrect     
     else
@@ -144,9 +174,9 @@ $ ->
     targets = ($ @).parent().parent().parent().find('td input:checked')
     ses = ($ targets[0]).attr 'id'
     ses = ses.split '_'
-    eid = ses[1]
+    pid = ses[1]
     ses_list = (grab_ses t for t in targets )
-    url = '/projects/' + eid + '/data_sets/' + ses_list.join ','
+    url = '/projects/' + pid + '/data_sets/' + ses_list.join ','
     window.location = url
     
   # get the session number for viewing vises
