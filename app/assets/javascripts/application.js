@@ -13,6 +13,7 @@
 //
 //= require jquery
 //= require helpers
+//= require dataset_name
 //= require jquery_ujs
 //= require twitter/bootstrap
 //= require jquery.ui.all

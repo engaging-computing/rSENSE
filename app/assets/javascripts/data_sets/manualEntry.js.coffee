@@ -51,8 +51,8 @@ $ ->
       type: 'POST',
       data: { ses_info: data_for_upload },
       success: (data, textStatus, jqXHR) ->
-        data = JSON.parse data
-        window.location.replace data.follow
+        data = JSON.parse(data)
+        helpers.name_dataset data.title, data.datasets, () ->
+              window.location = data.redirect
       error: (jqXHR, textStatus, errorThrown) ->
-        console.log textStatus
-        console.log errorThrown
+        alert "Somthing went horribly wrong. I'm sorry."

@@ -152,10 +152,10 @@ class ProjectsController < ApplicationController
     end
   end
   
-  # GET /projects/eid/fid
+  # GET /projects/pid/fid
   def checkFieldName
 
-    @project = Project.find(params[:eid])
+    @project = Project.find(params[:pid])
     orig = true
 
     @project.fields.all.each do |f|
