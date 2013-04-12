@@ -38,11 +38,11 @@ Rsense::Application.routes.draw do
   match "/projects/:id/createSession" => "projects#createSession"
   match "/projects/:id/addDataSet" => "projects#addDataSet"
   
-  match "/projects/:eid/:fid/checkFieldName" => "projects#checkFieldName"
+  match "/projects/:pid/:fid/checkFieldName" => "projects#checkFieldName"
   
   match "/projects/:id/uploadCSV" => "data_sets#uploadCSV"
-  match "/data_sets/:eid/manualEntry" => "data_sets#manualEntry"
-  match "/data_sets/:eid/manualUpload" => "data_sets#manualUpload"
+  match "/data_sets/:pid/manualEntry" => "data_sets#manualEntry"
+  match "/data_sets/:pid/manualUpload" => "data_sets#manualUpload"
   match "/data_sets/test" => "data_sets#test"
 
   #Routes for displaying data
