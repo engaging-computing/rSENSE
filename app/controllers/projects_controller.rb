@@ -25,21 +25,21 @@ class ProjectsController < ApplicationController
     
     jsonObjects = []
     
-    @projects.each do |exp|
+    @projects.each do |proj|
       
       newJsonObject = {}
       
-      newJsonObject["title"]          = exp.title
-      newJsonObject["timeAgoInWords"] = time_ago_in_words(exp.created_at)
-      newJsonObject["createdAt"]      = exp.created_at.strftime("%B %d, %Y")
-      newJsonObject["featured"]       = exp.featured
-      newJsonObject["ownerName"]      = "#{exp.owner.name}"
-      newJsonObject["projectPath"] = project_path(exp)
-      newJsonObject["ownerPath"]      = user_path(exp.owner)
-      newJsonObject["filters"]        = exp.filter
+      newJsonObject["title"]          = proj.title
+      newJsonObject["timeAgoInWords"] = time_ago_in_words(proj.created_at)
+      newJsonObject["createdAt"]      = proj.created_at.strftime("%B %d, %Y")
+      newJsonObject["featured"]       = proj.featured
+      newJsonObject["ownerName"]      = "#{proj.owner.name}"
+      newJsonObject["projectPath"] = project_path(proj)
+      newJsonObject["ownerPath"]      = user_path(proj.owner)
+      newJsonObject["filters"]        = proj.filter
       
-      if(exp.featured_media_id != nil) 
-        newJsonObject["mediaPath"] = MediaObject.find_by_id(exp.featured_media_id).src;
+      if(proj.featured_media_id != nil) 
+        newJsonObject["mediaPath"] = MediaObject.find_by_id(proj.featured_media_id).src;
       end
       
       jsonObjects = jsonObjects << newJsonObject
@@ -82,7 +82,7 @@ class ProjectsController < ApplicationController
         
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: {exp: @project, ses: @project.data_sets} }
+      format.json { render json: {proj: @project, ses: @project.data_sets} }
     end
   end
   
@@ -114,10 +114,10 @@ class ProjectsController < ApplicationController
     #@project = Project.new(params[:project])
     
     if(params[:project_id])
-      @tmp_exp = Project.find(params[:project_id])
-      @project = Project.new({user_id: @cur_user.id, title:"#{@tmp_exp.title} (clone)", content: @tmp_exp.content, filter: @tmp_exp.filter, cloned_from:@tmp_exp.id})
+      @tmp_proj = Project.find(params[:project_id])
+      @project = Project.new({user_id: @cur_user.id, title:"#{@tmp_proj.title} (clone)", content: @tmp_proj.content, filter: @tmp_proj.filter, cloned_from:@tmp_proj.id})
       success = @project.save
-      @tmp_exp.fields.all.each do |f|
+      @tmp_proj.fields.all.each do |f|
         Field.create({project_id:@project.id, field_type: f.field_type, name: f.name, unit: f.unit})
       end
     else

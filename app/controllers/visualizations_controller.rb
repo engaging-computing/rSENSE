@@ -1,16 +1,62 @@
 class VisualizationsController < ApplicationController
   include ApplicationHelper
+  include ActionView::Helpers::DateHelper
+  
   skip_before_filter :authorize, only: [:show, :displayVis, :index]
   
   # GET /visualizations
   # GET /visualizations.json
   def index
-    @visualizations = Visualization.all
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @visualizations }
+        #Main List
+    if !params[:sort].nil?
+        sort = params[:sort]
+    else
+        sort = "DESC"
     end
+    
+    if sort=="ASC" or sort=="DESC"
+      @visualizaions = Visualization.search(params[:search]).paginate(page: params[:page], per_page: 100).order("created_at #{sort}")
+    else
+      @visualizaions = Visualization.search(params[:search]).paginate(page: params[:page], per_page: 100).order("like_count DESC")
+    end
+    
+    #Featured list
+    @featured_3 = Visualization.where(featured: true).order("updated_at DESC").limit(3);
+    
+    jsonObjects = []
+    
+    @visualizaions.each do |viz|
+      
+      
+      project = Project.find(viz.project_id)
+      
+      newJsonObject = {}
+      
+      newJsonObject["title"]          = viz.title
+      newJsonObject["projectPath"]    = project_path(project)
+      newJsonObject["projectTitle"]   = project.title
+      newJsonObject["timeAgoInWords"] = time_ago_in_words(viz.created_at)
+      newJsonObject["createdAt"]      = viz.created_at.strftime("%B %d, %Y")
+      newJsonObject["ownerName"]      = "#{viz.owner.name}"
+      newJsonObject["vizPath"]        = visualization_path(viz)
+      newJsonObject["ownerPath"]      = user_path(viz.owner)
+      
+      logger.info "-----=========----"
+      logger.info(visualization_path(viz))
+      
+      if(project.featured_media_id != nil) 
+        newJsonObject["mediaPath"] = MediaObject.find_by_id(project.featured_media_id).src;
+      end
+      
+      jsonObjects = jsonObjects << newJsonObject
+      
+    end
+    
+    respond_to do |format|
+      format.html
+      format.json { render json: jsonObjects }
+    end
+    
   end
 
   # GET /visualizations/1
