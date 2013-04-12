@@ -306,7 +306,7 @@ private
     fields.each_with_index do |f,fi|
       matrix.append []
       headers.each_with_index do |h,hi|
-        lcs_length = lcs(fields[fi],headers[hi]).length.to_f
+        lcs_length = lcs(fields[fi].downcase,headers[hi].downcase).length.to_f
         x = lcs_length / fields[fi].length.to_f
         y = lcs_length / headers[hi].length.to_f
         avg = (x + y) / 2                      
