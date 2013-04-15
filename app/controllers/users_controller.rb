@@ -65,6 +65,10 @@ class UsersController < ApplicationController
       if @filters.include? "media"
          @contributions += @user.media_objects.search(params[:search]) || []
       end
+
+      if @filters.include? "visualizations"
+        @contributions += @user.visualizations.search(params[:search]) || []
+      end
     else
       if !@user.try(:projects).nil?
         @contributions += @user.try(:projects).search(params[:search])
@@ -74,6 +78,9 @@ class UsersController < ApplicationController
       end
       if !@user.try(:media_objects).nil?
         @contributions += @user.try(:media_objects).search(params[:search])
+      end
+      if !@user.try(:visualizations).nil?
+        @contributions += @user.try(:visualizations).search(params[:search])
       end
     end
 

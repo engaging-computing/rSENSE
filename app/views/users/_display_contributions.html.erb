@@ -1,15 +1,32 @@
 <% @contributions.each do |contribution| %>
   <div class="<%= cycle('feed-even', 'feed-odd')%>">
-	<% if contribution.class.to_s == "Project" %>
-	  <h4><%= link_to contribution.title, project_path(contribution) %><%if contribution.featured%><span style="color:#57C142"> (featured)</span><%end%></h4>
+    <% if contribution.class.to_s == "Project" %>
+      <h4><%= link_to contribution.title, project_path(contribution) %><%if contribution.featured%><span style="color:#57C142"> (featured)</span><%end%></h4>
       <b>Created: </b><%= time_ago_in_words(contribution.created_at)%> ago (on <%=contribution.created_at.strftime("%B %d, %Y")%>)<br>
       <%if !contribution.filter.nil?%>
 	  <b>Filters: </b><%=contribution.filter%>
-	  <%end%>
+      <%end%>
     <% elsif contribution.class.to_s == "DataSet" %>
-	  <h4><%= link_to contribution.title, "/projects/#{contribution.project_id}/data_sets/#{contribution.id}" %></h4> 
+      <h4><%= link_to contribution.title, "/projects/#{contribution.project_id}/data_sets/#{contribution.id}" %></h4> 
       <b>Created: </b><%= time_ago_in_words(contribution.created_at)%> ago (on <%=contribution.created_at.strftime("%B %d, %Y")%>)<br>
       <b>Belongs To Project: </b><%= contribution.project.title %>
-    <% end%>
+    <% elsif contribution.class.to_s == "MediaObject" %>
+      <table>
+        <tr>
+          <td>
+            <%=media_object_thumbnail_helper(contribution)%>
+          </td>
+          <td>
+            <h4><%= link_to contribution.title, contribution.src%></h4>
+            <b>Created: </b><%= time_ago_in_words(contribution.created_at)%> ago (on <%=contribution.created_at.strftime("%B %d, %Y")%>)<br>
+          </td>
+         </tr>
+      </table>
+    
+    <% else %>
+      <h4><%= link_to contribution.title, visualization_path(contribution) %></h4>
+      <b>Created: </b><%= time_ago_in_words(contribution.created_at)%> ago (on <%=contribution.created_at.strftime("%B %d, %Y")%>)<br>
+      <b>Belongs To Project: </b><%= contribution.project.title %>
+    <%end%>
   </div>
 <% end%> 
