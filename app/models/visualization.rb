@@ -8,7 +8,7 @@ class Visualization < ActiveRecord::Base
   validates_presence_of :globals
 
   belongs_to :owner, class_name: "User", foreign_key: "user_id"
-  
+  belongs_to :project
    def self.search(search)
     if search
         where('title LIKE ?', "%#{search}%")
