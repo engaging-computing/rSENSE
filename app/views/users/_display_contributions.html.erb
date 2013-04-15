@@ -25,6 +25,8 @@
     
     <% else %>
       <h4><%= link_to contribution.title, visualization_path(contribution) %></h4>
+      <b>Created: </b><%= time_ago_in_words(contribution.created_at)%> ago (on <%=contribution.created_at.strftime("%B %d, %Y")%>)<br>
+      <b>Belongs To Project: </b><%= contribution.project.title %>
     <%end%>
   </div>
 <% end%> 
