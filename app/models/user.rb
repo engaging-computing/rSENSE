@@ -15,6 +15,7 @@ class User < ActiveRecord::Base
   has_many :groups, :through => :memberships
   has_many :data_sets
   has_many :media_objects
+  has_many :visualizations
   
   def to_param
     self.username
