@@ -12,16 +12,7 @@
   <% end %>
   <div class="row">
     <div class="span12">
-      <div class="field">
-        Title:<%= f.text_field :title %>
-      </div>
-      
-      <div class="clear"></div>
-      
-      <div class="field">
-        Content: <%= f.text_area :content %>
-      </div>
-      
+
       <div class="clear"></div>
       
       <div class="field">
@@ -31,7 +22,7 @@
       <div class="clear"></div>
       
       <div class="actions">
-        <%= f.submit %>
+        <%= f.submit "Update Data Set", :class => "btn btn-primary" %>
       </div>
     </div>
   </div>
