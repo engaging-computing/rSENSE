@@ -62,8 +62,8 @@
       <div class="visible-desktop visible-tablet" style="padding-top:25px;float:left;line-height:15px;font-size:15px;text-align:right;float:right;margin-right:-20px;">
         <% if @cur_user == nil %>
           <div class="btn-group">
-            <a href="" class="login" style="color:white;"><button class="btn btn-small btn-info">Login</button></a>
-            <a href="<%= new_user_path %>" style="color:white;"><button class="btn btn-small btn-info">Register</button></a>
+            <a href="" class="login btn btn-small btn-info" style="color:white;">Login</a>
+            <a href="<%= new_user_path %>" style="color:white;" class="btn btn-small btn-info">Register</a>
           </div>
         <% else %>
           <div class="btn-group">

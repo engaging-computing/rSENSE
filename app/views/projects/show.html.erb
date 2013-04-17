@@ -80,7 +80,10 @@
             Earth: <%= check_box_tag "earth", "earth", (filter_exists "earth"), class: 'projects_add_filter_checkbox' %><br>
             Biology: <%= check_box_tag "biology", "biology", (filter_exists "biology"), class: 'projects_add_filter_checkbox' %>
           <%end%>
+          <%=form_tag projects_path, method: 'get', id: "#{@project.id}", class:'project_hider' do%>
+            <b>Hidden: </b><%= check_box_tag "hidden", "hidden", (@project.hidden), class: 'projects_hidden_checkbox' %>  
             <br/>
+          <%end%> 
         <%end%>
         <%if @cur_user.try(:id)%>
           <%=form_tag('/projects', :method => "post" ) do %>
