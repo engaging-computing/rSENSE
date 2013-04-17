@@ -209,3 +209,48 @@ $ ->
   #Add click events to all check boxes in the data_sets box     
   ($ document).find("[id^=project_]").each (i,j) =>
     ($ j).click check_for_selection
+    
+   #Add submit event to project filters form. Performs AJAX request to update project filters 
+  ($ ".project_filters").submit ->
+    
+    x = ($ @).children("input:checked").map ->
+        return this.name
+    
+    filters = ""
+    filters += x[j] + " " for i,j in x
+
+    data={}
+    data["project"] = {}
+    data["project"]["filter"] = filters
+
+    $.ajax
+      url: ($ @).attr('id')
+      type: "PUT"
+      dataType: "json"
+      data:
+        data
+            
+    false
+
+        
+  ($ ".projects_add_filter_checkbox").click ->
+    $(@).parent().submit()
+      
+  
+  #Add submit event to project hider form. Performs AJAX request to update whether or not a project is hidden
+  ($ ".project_hider").submit ->
+    data={}
+    data["project"] = {}
+    data["project"]["hidden"] = $('.projects_hidden_checkbox').is(':checked')
+
+    $.ajax
+      url: ($ @).attr('id')
+      type: "PUT"
+      dataType: "json"
+      data:
+        data
+            
+    false
+      
+  ($ '.projects_hidden_checkbox').click ->    
+    ($ @).parent().submit()

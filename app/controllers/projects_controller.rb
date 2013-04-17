@@ -26,24 +26,24 @@ class ProjectsController < ApplicationController
     jsonObjects = []
     
     @projects.each do |proj|
-      
-      newJsonObject = {}
-      
-      newJsonObject["title"]          = proj.title
-      newJsonObject["timeAgoInWords"] = time_ago_in_words(proj.created_at)
-      newJsonObject["createdAt"]      = proj.created_at.strftime("%B %d, %Y")
-      newJsonObject["featured"]       = proj.featured
-      newJsonObject["ownerName"]      = "#{proj.owner.name}"
-      newJsonObject["projectPath"] = project_path(proj)
-      newJsonObject["ownerPath"]      = user_path(proj.owner)
-      newJsonObject["filters"]        = proj.filter
-      
-      if(proj.featured_media_id != nil) 
-        newJsonObject["mediaPath"] = MediaObject.find_by_id(proj.featured_media_id).src;
+      if(!proj.hidden)
+        newJsonObject = {}
+        
+        newJsonObject["title"]          = proj.title
+        newJsonObject["timeAgoInWords"] = time_ago_in_words(proj.created_at)
+        newJsonObject["createdAt"]      = proj.created_at.strftime("%B %d, %Y")
+        newJsonObject["featured"]       = proj.featured
+        newJsonObject["ownerName"]      = "#{proj.owner.name}"
+        newJsonObject["projectPath"] = project_path(proj)
+        newJsonObject["ownerPath"]      = user_path(proj.owner)
+        newJsonObject["filters"]        = proj.filter
+        
+        if(proj.featured_media_id != nil) 
+          newJsonObject["mediaPath"] = MediaObject.find_by_id(proj.featured_media_id).src;
+        end
+        
+        jsonObjects = jsonObjects << newJsonObject
       end
-      
-      jsonObjects = jsonObjects << newJsonObject
-      
     end
     
     respond_to do |format|
