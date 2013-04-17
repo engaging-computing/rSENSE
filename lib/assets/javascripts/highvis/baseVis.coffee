@@ -124,6 +124,8 @@ class window.BaseVis
 
         # Populate choices
         counter = 0
+        if data.groups.length > 1
+          controls += "<input class='group_input_all' type='checkbox' value='#{gIndex}' #{if globals.groupSelection.length == data.groups.length then "checked" else ""}/>&nbsp"
         for group, gIndex in data.groups
             controls += "<div class='inner_control_div' style=\"color:#{globals.colors[counter % globals.colors.length]};\">"
 
@@ -160,6 +162,19 @@ class window.BaseVis
             globals.groupSelection = selection
             
             @delayedUpdate()
+            
+        # Make group checkbox for all groups
+        ($ '.group_input_all').click (e) =>
+          if e.target.checked
+            globals.groupSelection = for vals, keys in data.groups
+              Number keys
+            ($ '.group_input').prop 'checked', true
+          else
+            globals.groupSelection = []
+            ($ '.group_input').prop 'checked', false
+          
+          @delayedUpdate()
+            
 
         #Set up accordion
         globals.groupOpen ?= 0
