@@ -91,7 +91,7 @@ class VisualizationsController < ApplicationController
   # GET 
   def displayVis
     
-    @project = Project.find_by_id params[:id]
+    @project = Project.find_by_id(params[:id])
     
     @datasets = []
     data_fields = []

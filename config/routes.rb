@@ -2,7 +2,11 @@ Rsense::Application.routes.draw do
   resources :media_objects
 
   get "project_templates/index"
+  
+  match "/projects/import" => "projects#importFromIsense"
+  match "/projects/import/:pid" => "projects#importFromIsense"
 
+  
   resources :visualizations
 
   #resources :data_sets
