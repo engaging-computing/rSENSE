@@ -47,12 +47,12 @@ $ ->
 
   $('#users').imagesLoaded ->
     $('.item').width(($('#users').width()/numCols)-35)
-    $('#projects').isotope
+    $('#users').isotope
       itemSelector : '.item'
       layoutMode : 'masonry'
       masonry:
         columnWidth: $('#users').width()/numCols
-
+        
   $("#users_search").submit()
 
 window.reLayout = ->
@@ -61,7 +61,7 @@ window.reLayout = ->
 
   while $('#users').width()/numCols>200
     numCols++
-
+  
   $('#users').imagesLoaded ->
 
     $('.item').width(($('#users').width()/numCols)-35)
