@@ -21,6 +21,7 @@
 //= require redactor.min.js
 //= require redactor_edit_pane.js.coffee
 //= require info_edit.js.coffee
+//= require object_hider.js.coffee
 //= require login.js.coffee.erb
 //= require field_edit.js.coffee
 //= require collapse_link_flipper.js.coffee

@@ -235,22 +235,3 @@ $ ->
         
   ($ ".projects_add_filter_checkbox").click ->
     $(@).parent().submit()
-      
-  
-  #Add submit event to project hider form. Performs AJAX request to update whether or not a project is hidden
-  ($ ".project_hider").submit ->
-    data={}
-    data["project"] = {}
-    data["project"]["hidden"] = $('.projects_hidden_checkbox').is(':checked')
-
-    $.ajax
-      url: ($ @).attr('id')
-      type: "PUT"
-      dataType: "json"
-      data:
-        data
-            
-    false
-      
-  ($ '.projects_hidden_checkbox').click ->    
-    ($ @).parent().submit()
