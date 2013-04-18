@@ -42,11 +42,11 @@ Rsense::Application.routes.draw do
   match "/projects/:id/createSession" => "projects#createSession"
   match "/projects/:id/addDataSet" => "projects#addDataSet"
   
-  match "/projects/:eid/:fid/checkFieldName" => "projects#checkFieldName"
+  match "/projects/:pid/:fid/checkFieldName" => "projects#checkFieldName"
   
   match "/projects/:id/uploadCSV" => "data_sets#uploadCSV"
-  match "/data_sets/:eid/manualEntry" => "data_sets#manualEntry"
-  match "/data_sets/:eid/manualUpload" => "data_sets#manualUpload"
+  match "/data_sets/:pid/manualEntry" => "data_sets#manualEntry"
+  match "/data_sets/:pid/manualUpload" => "data_sets#manualUpload"
   match "/data_sets/test" => "data_sets#test"
 
   #Routes for displaying data
@@ -56,7 +56,7 @@ Rsense::Application.routes.draw do
   match "/projects/:id/removeField" => "projects#removeField"
 
   match "/data_sets/:id/postCSV" => "data_sets#uploadCSV"
-  match "/media_objects/saveimage/*keys" => "media_objects#saveimage"
+  match "/media_objects/saveMedia/*keys" => "media_objects#saveMedia"
   
   controller :sessions do
     post 'login' => :create

@@ -60,7 +60,7 @@
 
   <div class="span12" id="tabcontainer" style="margin-top: 10px;">
     <ul class="nav nav-tabs" id="myTab">
-      <li class="vis_tab"><a href="#<%=@visualization.id%>">
+      <li class="dataset_tab"><a href="#<%=@visualization.id%>">
         <%= visualization_edit_helper 'title', @visualization.owner.id == @cur_user.try(:id), make_link = false %>
       </a></li>
     </ul>
