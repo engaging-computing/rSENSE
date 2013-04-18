@@ -94,34 +94,18 @@ class DataSetsController < ApplicationController
     header = params[:ses_info][:header]
     data = params[:ses_info][:data]
 
-    if !data.nil?
-     
-      @data_set = DataSet.create(:user_id => @cur_user.id, :project_id => @project.id, :title => "#{@cur_user.name}'s Session")
-
-      mongo_data = []
-      
-      data.each do |dp|
-        row = []
-        header.each_with_index do |field, col_index|
-          row << { field[1][:id] => dp[1][col_index] }
-        end
-        mongo_data << row
-      end
-                
-      data_to_add = MongoData.new(:data_set_id => @data_set.id, :data => mongo_data)    
-      
+    @data_set = DataSet.find(DataSet.upload_form(header, data, @cur_user, @project))
+    
+    if !@data_set.nil?
+    
       followURL = url_for :controller => :visualizations, :action => :displayVis, :id => @project.id, :sessions => "#{@data_set.id}"
       
-      if data_to_add.save!
-        response = { status: 'success', follow: followURL }
-      else
-        response = { status: 'fail' }
-      end 
-      
-    else
-      response = ["No data"]
-    end
+      response = { status: 'success', follow: followURL }
 
+    else
+      response = { status: 'fail' }
+    end
+    
     respond_to do |format|
       format.html { render json: response }
       format.json { render json: response }

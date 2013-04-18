@@ -236,4 +236,112 @@ class ProjectsController < ApplicationController
     
   end
   
+  def importFromIsense
+    require 'net/http'
+    
+    @pid = params[:pid]
+    
+    if( !@pid.nil? )
+    
+      #Clone existing project from iSENSE
+      json = ActiveSupport::JSON.decode(
+        Net::HTTP.get(
+          URI.parse(
+            "http://isenseproject.org/ws/api.php?method=getExperiment&experiment=#{@pid}"
+            )
+          )
+        )
+    
+      @project = Project.new({user_id: @cur_user.id, title: json["data"]["name"], content: json["data"]["description"], featured: json["data"]["featured"]})
+    
+      #If clone is successful clone fields
+      if @project.save
+        json = ActiveSupport::JSON.decode(
+          Net::HTTP.get(
+            URI.parse(
+              "http://isenseproject.org/ws/api.php?method=getExperimentFields&experiment=#{@pid}"
+            )
+          )
+        )
+      
+        #For each field append it to the project's field list
+        json["data"].each do |f|
+          if f["type_id"].to_i == 7
+            type = 1
+          elsif f["type_id"].to_i == 37
+            type = 3
+          elsif f["type_id"].to_i == 19
+            if f["unit_name"].downcase == "latitude"
+              type = 4
+            else
+              type = 5
+            end
+          else
+            type = 2
+          end
+          @project.fields.push Field.create({project_id: @project.id, field_type: type, name: f["field_name"], unit: f["unit_name"]})
+        end
+      
+        #Get session list
+      
+        json = ActiveSupport::JSON.decode(
+          Net::HTTP.get(
+            URI.parse("http://isenseproject.org/ws/api.php?method=getSessions&experiment=#{@pid}")
+          )
+        )
+      
+        sessions = Array.new()
+      
+        json["data"].each do |ses|
+          sessions.push Hash["id" => ses["session_id"].to_s, "name" => ses["name"].to_s, "desc" => ses["description"].to_s ]
+        end
+
+        params[:pid] = @project.id
+      
+        #Get the data from each session
+        sessions.each_with_index do |ses, ses_index|
+          response = Net::HTTP.get(
+            URI.parse("http://isenseproject.org/ws/json.php?sessions=#{ses['id']}")
+          )
+      
+          response["var DATA = "] = ""
+          response[";"] = ""
+          response["var STATE = \"\""] = ""
+          response[";"] = ""
+  
+          json = ActiveSupport::JSON.decode response
+      
+          header = Hash.new
+        
+          @project.fields.all.each_with_index do |f, i|
+            header["#{i}"] = { id: "#{f.id}", type: "#{f.field_type}" }
+          end
+     
+          data = Hash.new
+        
+          json[0]["data"].each_with_index do |d, i|
+            data["#{i}"] = d
+          end
+        
+          DataSet.upload_form(header, data, @cur_user, @project)
+
+        end
+  
+        redirect_to @project
+      else
+        
+        logger.info "The project didn't save for some reason..."
+      
+      end
+    
+    
+    else
+      respond_to do |format|
+        format.json { render json: json }
+        format.html
+      end
+    end
+    
+  end
+  
 end
