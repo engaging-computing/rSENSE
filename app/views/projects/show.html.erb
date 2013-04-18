@@ -5,15 +5,12 @@
       
       <!-- qr code  -->
       <div class="span2">
-        <center>
-        <div class="sidebar_box grey_content" id="exp_qr_tag">
-        </div>
-        </center>
+        <div class="sidebar_box grey_content center" id="exp_qr_tag"></div>
       </div>
       
       <!-- project title -->
       <div class="span5">
-        <div class="project_info_box">
+        <div class="project_info_box" style="padding-top:15px">
           <span id="title_span" style="font-size:2em"><%= project_edit_helper 'title', (can_edit? @project) %></span><br>
           <span class="info_label" style="font-size:1.1em">Owner:</span> 
           <%= link_to @project.owner.name, user_path(@project.owner) %><br>
