@@ -92,7 +92,7 @@ $ ->
         
   load_qr = ->
     ($ '#exp_qr_tag').empty()
-    ($ '#exp_qr_tag').qrcode { text : window.location.href, height: ($ '#exp_qr_tag').width(), width: ($ '#exp_qr_tag').width() }
+    ($ '#exp_qr_tag').qrcode { text : window.location.href, height: ($ '#exp_qr_tag').width()*.75, width: ($ '#exp_qr_tag').width()*.75 }
   
   load_qr()
   
@@ -235,22 +235,3 @@ $ ->
         
   ($ ".projects_add_filter_checkbox").click ->
     $(@).parent().submit()
-      
-  
-  #Add submit event to project hider form. Performs AJAX request to update whether or not a project is hidden
-  ($ ".project_hider").submit ->
-    data={}
-    data["project"] = {}
-    data["project"]["hidden"] = $('.projects_hidden_checkbox').is(':checked')
-
-    $.ajax
-      url: ($ @).attr('id')
-      type: "PUT"
-      dataType: "json"
-      data:
-        data
-            
-    false
-      
-  ($ '.projects_hidden_checkbox').click ->    
-    ($ @).parent().submit()

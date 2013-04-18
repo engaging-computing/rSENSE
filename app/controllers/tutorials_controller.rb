@@ -23,18 +23,18 @@ class TutorialsController < ApplicationController
     jsonObjects = []
     
     @tutorials.each do |t|
-      
-      newJsonObject = {}
-      
-      newJsonObject["title"]          = t.title
-      newJsonObject["timeAgoInWords"] = time_ago_in_words(t.created_at)
-      newJsonObject["createdAt"]      = t.created_at.strftime("%B %d, %Y")
-      newJsonObject["ownerName"]      = "#{t.owner.name}"
-      newJsonObject["tutorialPath"] = tutorial_path(t)
-      newJsonObject["ownerPath"]      = user_path(t.owner)
-      
-      jsonObjects = jsonObjects << newJsonObject
-      
+      if(!t.hidden)
+        newJsonObject = {}
+        
+        newJsonObject["title"]          = t.title
+        newJsonObject["timeAgoInWords"] = time_ago_in_words(t.created_at)
+        newJsonObject["createdAt"]      = t.created_at.strftime("%B %d, %Y")
+        newJsonObject["ownerName"]      = "#{t.owner.name}"
+        newJsonObject["tutorialPath"] = tutorial_path(t)
+        newJsonObject["ownerPath"]      = user_path(t.owner)
+        
+        jsonObjects = jsonObjects << newJsonObject
+      end
     end
     
     respond_to do |format|

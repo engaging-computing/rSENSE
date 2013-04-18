@@ -5,15 +5,12 @@
       
       <!-- qr code  -->
       <div class="span2">
-        <center>
-        <div class="sidebar_box grey_content" id="exp_qr_tag">
-        </div>
-        </center>
+        <div class="sidebar_box grey_content center" id="exp_qr_tag"></div>
       </div>
       
       <!-- project title -->
       <div class="span5">
-        <div class="project_info_box">
+        <div class="project_info_box" >
           <span id="title_span" style="font-size:2em"><%= project_edit_helper 'title', (can_edit? @project) %></span><br>
           <span class="info_label" style="font-size:1.1em">Owner:</span> 
           <%= link_to @project.owner.name, user_path(@project.owner) %><br>
@@ -80,8 +77,8 @@
             Earth: <%= check_box_tag "earth", "earth", (filter_exists "earth"), class: 'projects_add_filter_checkbox' %><br>
             Biology: <%= check_box_tag "biology", "biology", (filter_exists "biology"), class: 'projects_add_filter_checkbox' %>
           <%end%>
-          <%=form_tag projects_path, method: 'get', id: "#{@project.id}", class:'project_hider' do%>
-            <b>Hidden: </b><%= check_box_tag "hidden", "hidden", (@project.hidden), class: 'projects_hidden_checkbox' %>  
+          <%=form_tag projects_path, method: 'get', id: "#{@project.id}", class:'object_hider', type: 'project' do%>
+            <b>Hidden: </b><%= check_box_tag "hidden", "hidden", (@project.hidden), class: 'object_hidden_checkbox' %>  
             <br/>
           <%end%> 
         <%end%>
