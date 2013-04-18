@@ -92,7 +92,7 @@ $ ->
         
   load_qr = ->
     ($ '#exp_qr_tag').empty()
-    ($ '#exp_qr_tag').qrcode { text : window.location.href, height: ($ '#exp_qr_tag').width(), width: ($ '#exp_qr_tag').width() }
+    ($ '#exp_qr_tag').qrcode { text : window.location.href, height: ($ '#exp_qr_tag').width()*.75, width: ($ '#exp_qr_tag').width()*.75 }
   
   load_qr()
   
