@@ -63,11 +63,10 @@
     <ul class="nav nav-tabs" id="myTab">
       <% i = 0 %>
       <% @datasets.each do |s| %>
-          <li class="vis_tab"><a href="#<%=s.id%>">
+          <li class="dataset_tab"><a href="#<%=s.id%>">
             <%= data_set_edit_helper 'title', @datasets[i].owner.id == @cur_user.try(:id), @datasets[i], make_link = false %>
           </a></li>
         <% i=i+1 %>
-
       <% end %>
     </ul>
     

@@ -14,15 +14,13 @@
   <% end %>
   <div class="row"> 
     <div class="span12" style="font-weight:bold">
-          <div class="field">
-            Title: <%= f.text_field :title %>
-          </div>
-          
-          <div class="clear"></div>
-          
+
           <div class="field">
             Featured: <%= f.check_box :featured %>
           </div>
+          
+          <div class="clear"><br></div>
+          
           <div class="field">
             In Store: <%= f.check_box :is_template %>
           </div>
@@ -32,29 +30,11 @@
           <div class="field">
             Owner: <%= f.number_field :user_id %>
           </div>
-          
-          <div class="clear"></div>
-          
-          <div class="field">
-            Filters: <%= f.text_field :filter %>
-          </div>
-          
-          <div class="clear"></div>
-          
-          <div class="field">
-            Cloned From: <%= f.number_field :filter %>
-          </div>
-          
-          <div class="clear"></div>    
-          
-          <div class="field">
-            Content: <%= f.text_area :content %>
-          </div>
-          
+
           <div class="clear"><br></div>
           
           <div class="actions">
-            <%= f.submit %>
+            <%= f.submit 'Update Project', :class => 'btn btn-primary'%>
           </div>
           
     </div>

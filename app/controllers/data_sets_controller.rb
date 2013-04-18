@@ -83,29 +83,47 @@ class DataSetsController < ApplicationController
   end
   
   def manualEntry
-      @project = Project.find(params[:eid])
+      @project = Project.find(params[:pid])
   end
   
   # POST /data_set/1/manualUpload
   def manualUpload
     
-    @project = Project.find(params[:eid])
+    @project = Project.find(params[:pid])
+    defaultName  = @project.title + " Dataset #"
+    defaultName += (DataSet.find_all_by_project_id(params[:pid]).count + 1).to_s
 
     header = params[:ses_info][:header]
     data = params[:ses_info][:data]
 
-    @data_set = DataSet.find(DataSet.upload_form(header, data, @cur_user, @project))
-    
-    if !@data_set.nil?
-    
+    if !data.nil?
+     
+      @data_set = DataSet.create(:user_id => @cur_user.id, :project_id => @project.id, :title => defaultName)
+
+      mongo_data = []
+      
+      data.each do |dp|
+        row = []
+        header.each_with_index do |field, col_index|
+          row << { field[1][:id] => dp[1][col_index] }
+        end
+        mongo_data << row
+      end
+                
+      data_to_add = MongoData.new(:data_set_id => @data_set.id, :data => mongo_data)    
+      
       followURL = url_for :controller => :visualizations, :action => :displayVis, :id => @project.id, :sessions => "#{@data_set.id}"
       
-      response = { status: 'success', follow: followURL }
-
+      if data_to_add.save!
+        response = { status: 'success', redirect: followURL, datasets: @data_set.id, title: defaultName }
+      else
+        response = { status: 'fail' }
+      end 
+      
     else
-      response = { status: 'fail' }
+      response = ["No data"]
     end
-    
+
     respond_to do |format|
       format.html { render json: response }
       format.json { render json: response }
@@ -183,7 +201,7 @@ class DataSetsController < ApplicationController
         f.write @file.tempfile.read
         f.close    
         respond_to do |format|
-          format.json { render json: {status: "mismatch", eid: params[:id],headers: headers, fields: fields, partialMatches: results,tmpFile: fname}   }
+          format.json { render json: {status: "mismatch", pid: params[:id],headers: headers, fields: fields, partialMatches: results,tmpFile: fname}   }
         end
         return
       
@@ -194,8 +212,11 @@ class DataSetsController < ApplicationController
     end
     
     #WE HAVE SUCCESSFULLY MATCHED HEADERS AND FIELDS, SAVE THE DATA FINALLY.
-    @data_set = DataSet.new(:project_id => params[:id], :title => "#{@cur_user.name}'s Session", :user_id => @cur_user.try(:id))
-    @project = @data_set.project
+    @project = Project.find_by_id(params[:id])
+    defaultName  = @project.title + " Dataset #"
+    defaultName += (DataSet.find_all_by_project_id(params[:id]).count + 1).to_s
+    
+    @data_set = DataSet.new(:project_id => params[:id], :title => defaultName, :user_id => @cur_user.try(:id))
     
     #Parse out just the data
     data = data[1..(data.size-1)]
@@ -224,10 +245,10 @@ class DataSetsController < ApplicationController
     if @data_set.save!
       data_to_add = MongoData.new(:data_set_id => @data_set.id, :data => mongo_data)    
     
-      redirect = url_for :controller => :visualizations, :action => :displayVis, :id => @project.id, :datasets => "#{@data_set.id}"
+      redirect = url_for :controller => :visualizations, :action => :displayVis, :id => @project.id, :datasets => @data_set.id
     
       if data_to_add.save!
-        response = { status: 'success', redirect: redirect }
+        response = { status: 'success', redirect: redirect, :datasets => @data_set.id, :title => @data_set.title }
       else
         response = { status: 'fail' }
       end
@@ -238,7 +259,7 @@ class DataSetsController < ApplicationController
     #Send the object as json
     respond_to do |format|
       format.json { render json: response }
-      format.html { redirect_to :controller => :visualizations, :action => :displayVis, :id => @project.id, :datasets => "#{@data_set.id}" }
+      format.html { redirect_to :controller => :visualizations, :action => :displayVis, :id => @project.id, :datasets => @data_set.id, :title =>  @data_set.title }
     end
     
   end
@@ -285,7 +306,7 @@ private
     fields.each_with_index do |f,fi|
       matrix.append []
       headers.each_with_index do |h,hi|
-        lcs_length = lcs(fields[fi],headers[hi]).length.to_f
+        lcs_length = lcs(fields[fi].downcase,headers[hi].downcase).length.to_f
         x = lcs_length / fields[fi].length.to_f
         y = lcs_length / headers[hi].length.to_f
         avg = (x + y) / 2                      

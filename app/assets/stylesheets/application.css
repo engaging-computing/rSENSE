@@ -150,9 +150,14 @@ table.editablegrid > tbody > tr > td
     display: none;
 }
 
-.info_edit_box
+input.info_edit_box
 {
     resize:none;
+    margin:0;
+    padding:0;
+/*     font-size:0.8em; */
+    height:auto;
+    border:0;
 }
 
 .info_text
@@ -199,4 +204,16 @@ table.editablegrid > tbody > tr > td
 .redactor_box
 {
   margin-bottom: 15px;
+}
+
+li.dataset_tab
+{
+  margin: 0;
+  font-size:14px;
+  height:40px;
+}
+
+input.object_hidden_checkbox
+{
+ margin-top: 0px; 
 }
