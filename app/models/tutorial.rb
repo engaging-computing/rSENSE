@@ -1,5 +1,5 @@
 class Tutorial < ActiveRecord::Base
-  attr_accessible :content, :title, :featured_number, "user_id"
+  attr_accessible :content, :title, :featured_number, "user_id", :hidden
 
   validates_presence_of :title
   validates_presence_of :user_id

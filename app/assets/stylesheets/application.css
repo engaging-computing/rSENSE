@@ -208,3 +208,8 @@ li.dataset_tab
   font-size:14px;
   height:40px;
 }
+
+input.object_hidden_checkbox
+{
+ margin-top: 0px; 
+}
