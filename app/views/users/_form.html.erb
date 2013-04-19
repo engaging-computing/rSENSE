@@ -14,14 +14,10 @@
         </div>
       <% end %>
     </div>
-    <div class="span12">
-      <div class="field">
-        Is Admin: <%= f.check_box :admin %>
-      </div>
+    <div class="span12"> 
+      <h4 style="color:red">Warning! This can not be undone.</h4>
+      <%= submit_tag "Delete User", class: 'btn btn-danger' %><br /><br />
       <div class="clear"></div>
-      <div class="actions">
-        <%= f.submit %>
-      </div>
     </div>
   <% end %>
 </div>
