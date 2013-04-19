@@ -9,13 +9,13 @@ class User < ActiveRecord::Base
 
   before_create :check_validation
   after_create :check_and_send_validation
-
   has_many :projects
   has_many :memberships
   has_many :groups, :through => :memberships
   has_many :data_sets
   has_many :media_objects
   has_many :visualizations
+  has_many :tutorials
   
   def to_param
     self.username
