@@ -4,33 +4,41 @@
   <%= render "tutorials/display_tutorials", :id => "3"%>
   <%= render "tutorials/display_tutorials", :id => "4"%>
 </div>
-<hr>
+<hr style="margin-top:0px;border-top-color:black;">
+
 <div class="row">
-  <div class="span4"><div class="hero-unit" style="height:100px;">Project 1</div>
-  </div>  
-  
-  <div class="span4"><div class="hero-unit" style="height:100px;">Project 2</div>
-  </div>
-  
-  <div class="span4"><div class="hero-unit" style="height:100px;">Project 3</div>
+  <div class="span12">
+    <div class="hero-unit" style="height:120px;">Saved Visualization 1</div>
   </div>
 </div>
 <div class="row">
-  <div class="span2"><div class="hero-unit" style="height:100px;">Create Project</div></div>  
-  
-  <div class="span8">
-    <div class="hero-unit" style="height:100px;">Saved Visualization 1</div>
-  </div>
-  
-  <div class="span2"><div class="hero-unit" style="height:100px;">Upload Data</div></div>
-</div>
-<div class="row">
-  <div class="span4"><div class="hero-unit" style="height:100px;">Project 4</div>
+  <div class="span4">
+    <div class="hero-unit">
+      <%if @featured_projects[0] != nil%>
+        <%if @featured_projects[0].featured_media_id != nil%><img src=<%=MediaObject.find(@featured_projects[0].featured_media_id).src%>></img><%end%>
+        <h3><%= link_to @featured_projects[0].title, project_path(@featured_projects[0]) %></h3>
+        <b>Created:</b><%= time_ago_in_words(@featured_projects[0].created_at)%> ago, on <%=@featured_projects[0].created_at.strftime("%B %d, %Y")%>
+      <%end%>
+    </div>
   </div>  
   
-  <div class="span4"><div class="hero-unit" style="height:100px;">Project 5</div>
+  <div class="span4">
+    <div class="hero-unit">
+      <%if @featured_projects[1] != nil%>
+        <%if @featured_projects[1].featured_media_id != nil%><img src=<%=MediaObject.find(@featured_projects[1].featured_media_id).src%>></img><%end%>
+        <h3><%= link_to @featured_projects[1].title, project_path(@featured_projects[1]) %></h3>
+        <b>Created:</b><%= time_ago_in_words(@featured_projects[1].created_at)%> ago, on <%=@featured_projects[1].created_at.strftime("%B %d, %Y")%>
+      <%end%>
+    </div>
   </div>
   
-  <div class="span4"><div class="hero-unit" style="height:100px;">Project 6</div>
+  <div class="span4">
+    <div class="hero-unit">
+      <%if @featured_projects[2] != nil%>
+        <%if @featured_projects[2].featured_media_id != nil%><img src=<%=MediaObject.find(@featured_projects[2].featured_media_id).src%>></img><%end%>
+        <h3><%= link_to @featured_projects[2].title, project_path(@featured_projects[2]) %></h3>
+        <b>Created:</b><%= time_ago_in_words(@featured_projects[2].created_at)%> ago, on <%=@featured_projects[2].created_at.strftime("%B %d, %Y")%>
+      <%end%>
+    </div>
   </div>
 </div>

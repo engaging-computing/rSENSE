@@ -1,5 +1,5 @@
 class Project < ActiveRecord::Base
-  attr_accessible :content, :title, :user_id, :filter, :cloned_from, :like_count, :has_fields, :featured, :is_template, :featured_media_id, :hidden
+  attr_accessible :content, :title, :user_id, :filter, :cloned_from, :like_count, :has_fields, :featured, :is_template, :featured_media_id, :hidden, :featured_at
   
   validates_presence_of :title
   validates_presence_of :user_id

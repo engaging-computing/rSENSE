@@ -141,6 +141,16 @@ class ProjectsController < ApplicationController
   def update
     @project = Project.find(params[:id])
 
+    ps = params[:project]
+   
+    if ps.has_key?(:featured)
+      if ps['featured'] == "1"
+        ps['featured_at'] = Time.now()
+      else
+        ps['featured_at'] = nil
+      end
+    end
+    
     respond_to do |format|
       if @project.update_attributes(params[:project])
         format.html { redirect_to @project, notice: 'Project was successfully updated.' }
