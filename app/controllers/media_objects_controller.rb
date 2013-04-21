@@ -129,7 +129,7 @@ class MediaObjectsController < ApplicationController
     when 'data_set'
       @data_set = DataSet.find_by_id(id)
       if(@data_set.owner == @cur_user)
-        @mo = {user_id: @data_set.owner.id, project_id: @data_set.project_id, session_id: @data_set.id, src: o.public_url.to_s, name: fileName, media_type: fileType}
+        @mo = {user_id: @data_set.owner.id, project_id: @data_set.project_id, data_set_id: @data_set.id, src: o.public_url.to_s, name: fileName, media_type: fileType}
       end
     when 'user'
       @user = User.find_by_username(id)
@@ -139,7 +139,7 @@ class MediaObjectsController < ApplicationController
     when 'tutorial'
       @tutorial = Tutorial.find_by_id(id)
       if(can_edit?(@tutorial))
-        @mo = {user_id: @tutorial.owner.id, src: o.public_url.to_s, name: fileName, media_type: fileType}
+        @mo = {user_id: @tutorial.owner.id, src: o.public_url.to_s, name: fileName, media_type: fileType, tutorial_id: @tutorial.id}
       end
     end
 
