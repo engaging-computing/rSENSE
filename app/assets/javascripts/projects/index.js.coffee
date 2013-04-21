@@ -19,8 +19,7 @@ $ ->
             ($ "body").append(form)
             ($ form).submit()
           
-          for obje
-          ct in data
+          for object in data
             do (object) ->
               newItem =   "<div class='item'>"
 
