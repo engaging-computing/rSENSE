@@ -262,7 +262,6 @@ data.preprocessData = ->
     1
 
 data.parseDate = (str) ->
-    console.log str
     year = month = day = minutes = seconds = milliseconds = 0
     hours = 12
     hourAdj = 0
