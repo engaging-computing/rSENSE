@@ -36,7 +36,7 @@ if data.savedData?
 data.COMBINED_FIELD = 1
 
 data.types ?=
-    TIME: 7
+    TIME: 1
     TEXT: 3
     LOCATION: [4,5]
 
@@ -262,6 +262,7 @@ data.preprocessData = ->
     1
 
 data.parseDate = (str) ->
+    console.log str
     year = month = day = minutes = seconds = milliseconds = 0
     hours = 12
     hourAdj = 0
