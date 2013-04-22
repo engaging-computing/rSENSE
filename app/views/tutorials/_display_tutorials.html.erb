@@ -1,8 +1,11 @@
 <div class="span3" id=<%=id%>> 
-  <div class="hero-unit sub-hero"  style="height:100px;">
+  <div class="hero-unit sub-hero">
     <span class="tutorial">
         <%if @tutorials[id.to_i] != nil %>
           <h3><%= link_to @tutorials[id.to_i].title, tutorial_path(@tutorials[id.to_i]) %></h3>
+          <%if @tutorials[id.to_i].media_objects.first != nil %>
+            <img src=<%=@tutorials[id.to_i].media_objects.first.src%> style="height:150px" />
+          <%end%>
         <% end %>
       <%if @cur_user.try(:admin) %>
         <select class="set_tutorial" id=<%=id%> style="width:100%"> 

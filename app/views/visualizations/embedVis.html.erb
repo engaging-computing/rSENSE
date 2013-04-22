@@ -1,0 +1,47 @@
+<script>
+  window.datasets = <%= raw @datasets.to_json %>
+  window.data = <%= raw @Data.to_json %>
+</script>
+<script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBxtPK1_mxwVdl1NRu7ZEiSNvmCekFSZAw&sensor=false&libraries=visualization&v=3.9">
+</script>
+<script src="/assets/StyledMarker.js"></script>
+
+<script src="/assets/highvis/savedVis.coffee"></script>
+<script src="/assets/highvis/visUtils.coffee"></script>
+<script src="/assets/highvis/dataReduction.coffee"></script>
+<script src="/assets/highvis/highmodifiers.coffee"></script>
+
+<script src="/assets/highvis/baseVis.coffee"></script>
+
+<script src="/assets/highvis/disabledVis.coffee"></script>
+
+<script src="/assets/highvis/scatter.coffee"></script>
+<script src="/assets/highvis/timeline.coffee"></script>
+<script src="/assets/highvis/histogram.coffee"></script>
+<script src="/assets/highvis/bar.coffee"></script>
+<script src="/assets/highvis/table.coffee"></script>
+<script src="/assets/highvis/map.coffee"></script>
+<script src="/assets/highvis/motion.coffee"></script>
+<script src="/assets/highvis/photos.coffee"></script>
+
+
+<script src="/assets/highvis/runtime.coffee"></script>
+
+
+    <div id="viscontainer">
+        <ul id='visTabList'>
+        </ul>
+        <div id="map_canvas" class="vis_canvas"></div>
+        <div id="table_canvas" class="vis_canvas"></div>
+        <div id="timeline_canvas" class="vis_canvas"></div>
+        <div id="scatter_canvas" class="vis_canvas"></div>
+        <div id="bar_canvas" class="vis_canvas"></div>
+        <div id="histogram_canvas" class="vis_canvas"></div>
+        <div id="motion_canvas" class="vis_canvas"></div>
+        <div id="photos_canvas" class="vis_canvas"></div>
+        <div id='controlhider'>
+            <button id="control_hide_button" type="button" style="margin:5px;"> > </button>
+        </div>
+        <div id="controldiv"></div>
+    </div>
