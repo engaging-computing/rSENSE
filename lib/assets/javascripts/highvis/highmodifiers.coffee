@@ -36,7 +36,7 @@ if data.savedData?
 data.COMBINED_FIELD = 1
 
 data.types ?=
-    TIME: 7
+    TIME: 1
     TEXT: 3
     LOCATION: [4,5]
 
