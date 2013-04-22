@@ -31,6 +31,8 @@ module ApplicationHelper
   end
   
   def can_edit? (obj)
+    logger.info "-==--==--==--==--==--==--"
+    logger.info obj.class
     if(obj.class == User)
       (obj.id == @cur_user.try(:id)) || @cur_user.try(:admin)
     else
