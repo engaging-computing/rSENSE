@@ -1,42 +1,43 @@
 <div class="row">
-  <%= render "tutorials/display_tutorials", :id => "1"%>
-  <%= render "tutorials/display_tutorials", :id => "2"%>
-  <%= render "tutorials/display_tutorials", :id => "3"%>
-  <%= render "tutorials/display_tutorials", :id => "4"%>
+  <% (1..4).each do |i|%>
+    <%= render "tutorials/display_tutorials", :id => "#{i}"%>
+  <%end%>
 </div>
-<hr style="margin-top:0px;border-top-color:black;">
 
+<hr style="margin-top:0px;border-top-color:black;">
+<% if @featured_vis != nil%>
+  <div class="row">
+    <div class="span12">
+      <h2>Featured Visualization</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="span8"><iframe scrolling="no" style="width:100%;height:400px;border:0px;" src="/visualizations/<%=@featured_vis.id%>/embeded"></iframe></div>
+    <div class="span4">
+      <h2><%= link_to @featured_vis.title, visualization_path(@featured_vis)%></h2>
+      <b>Created: </b><%= time_ago_in_words(@featured_vis.created_at)%> ago, on <%=@featured_vis.created_at.strftime("%B %d, %Y")%><br />
+      <b>From Project: </b><%= link_to @featured_vis.project.title, project_path(@featured_vis.project)%><br />
+      <b>By: </b><%= link_to @featured_vis.owner.name, user_path(@featured_vis.owner)%>
+      <%= render 'shared/content_borderless', {type: 'visualization', field: "content", content: @featured_vis.content, row_id: @featured_vis.id, has_content: !@featured_vis.content.blank?, can_edit: false} %>
+    </div>
+</div>
+<%end%>
+<br />
 <div class="row">
-  <div class="span12"><iframe style="width:100%;height:610px;border:0px;" src="/visualizations/3/embeded"></iframe></div>
+  <div class="span12">
+    <h2>Featured Experiments</h2>
+  </div>
 </div>
 <div class="row">
-  <div class="span4">
-    <div class="hero-unit">
-      <%if @featured_projects[0] != nil%>
-        <%if @featured_projects[0].featured_media_id != nil%><img src=<%=MediaObject.find(@featured_projects[0].featured_media_id).src%>></img><%end%>
-        <h3><%= link_to @featured_projects[0].title, project_path(@featured_projects[0]) %></h3>
-        <b>Created:</b><%= time_ago_in_words(@featured_projects[0].created_at)%> ago, on <%=@featured_projects[0].created_at.strftime("%B %d, %Y")%>
-      <%end%>
-    </div>
-  </div>  
-  
-  <div class="span4">
-    <div class="hero-unit">
-      <%if @featured_projects[1] != nil%>
-        <%if @featured_projects[1].featured_media_id != nil%><img src=<%=MediaObject.find(@featured_projects[1].featured_media_id).src%>></img><%end%>
-        <h3><%= link_to @featured_projects[1].title, project_path(@featured_projects[1]) %></h3>
-        <b>Created:</b><%= time_ago_in_words(@featured_projects[1].created_at)%> ago, on <%=@featured_projects[1].created_at.strftime("%B %d, %Y")%>
-      <%end%>
-    </div>
-  </div>
-  
-  <div class="span4">
-    <div class="hero-unit">
-      <%if @featured_projects[2] != nil%>
-        <%if @featured_projects[2].featured_media_id != nil%><img src=<%=MediaObject.find(@featured_projects[2].featured_media_id).src%>></img><%end%>
-        <h3><%= link_to @featured_projects[2].title, project_path(@featured_projects[2]) %></h3>
-        <b>Created:</b><%= time_ago_in_words(@featured_projects[2].created_at)%> ago, on <%=@featured_projects[2].created_at.strftime("%B %d, %Y")%>
-      <%end%>
-    </div>
-  </div>
+  <% (0..2).each do |i|%>
+    <div class="span4">
+      <div class="hero-unit">
+        <%if @featured_projects[i] != nil%>
+          <%if @featured_projects[i].featured_media_id != nil%><img src=<%=MediaObject.find(@featured_projects[i].featured_media_id).src%>></img><%end%>
+          <h3><%= link_to @featured_projects[i].title, project_path(@featured_projects[i]) %></h3>
+          <b>Created:</b><%= time_ago_in_words(@featured_projects[i].created_at)%> ago, on <%=@featured_projects[i].created_at.strftime("%B %d, %Y")%>
+        <%end%>
+      </div>
+    </div>  
+  <%end%>
 </div>
