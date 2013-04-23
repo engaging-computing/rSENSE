@@ -18,6 +18,10 @@
  *= require jquery.dataTables.css
  */
  
+.vcenter {
+    vertical-align: middle;
+}
+
 #header
 {
     background-color : #fff;
