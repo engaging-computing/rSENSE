@@ -2,7 +2,7 @@ class VisualizationsController < ApplicationController
   include ApplicationHelper
   include ActionView::Helpers::DateHelper
   
-  skip_before_filter :authorize, only: [:show, :displayVis, :index]
+  skip_before_filter :authorize, only: [:show, :displayVis, :index,:embedVis]
   
   # GET /visualizations
   # GET /visualizations.json
@@ -73,6 +73,19 @@ class VisualizationsController < ApplicationController
     end
   end
 
+  # GET /visualizations/1/embeded
+  def embedVis
+    @visualization = Visualization.find(params[:id])
+    @project = Project.find_by_id(@visualization.project_id)
+
+    # The finalized data object
+    @Data = { savedData: @visualization.data, savedGlobals: @visualization.globals }
+
+    respond_to do |format|
+      format.html {render :layout => 'embeded' }
+    end
+  end
+  
   # GET /visualizations/new
   # GET /visualizations/new.json
   def new
@@ -137,7 +150,7 @@ class VisualizationsController < ApplicationController
   # GET 
   def displayVis
     
-    @project = Project.find_by_id(params[:id])
+    @project = Project.find_by_id params[:id]
     
     @datasets = []
     data_fields = []
