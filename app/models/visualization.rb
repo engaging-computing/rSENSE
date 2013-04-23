@@ -1,5 +1,5 @@
 class Visualization < ActiveRecord::Base
-  attr_accessible :content, :data, :project_id, :globals, :title, :user_id, :featured, :featured_at
+  attr_accessible :content, :data, :project_id, :globals, :title, :user_id, :hidden, :featured, :featured_at
 
   validates_presence_of :title
   validates_presence_of :user_id
@@ -16,4 +16,5 @@ class Visualization < ActiveRecord::Base
         scoped
     end
   end
+  
 end
