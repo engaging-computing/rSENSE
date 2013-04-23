@@ -40,10 +40,7 @@ class VisualizationsController < ApplicationController
       newJsonObject["ownerName"]      = "#{viz.owner.name}"
       newJsonObject["vizPath"]        = visualization_path(viz)
       newJsonObject["ownerPath"]      = user_path(viz.owner)
-      
-      logger.info "-----=========----"
-      logger.info(visualization_path(viz))
-      
+
       if(project.featured_media_id != nil) 
         newJsonObject["mediaPath"] = MediaObject.find_by_id(project.featured_media_id).src;
       end
@@ -124,8 +121,18 @@ class VisualizationsController < ApplicationController
   def update
     @visualization = Visualization.find(params[:id])
 
+    vs = params[:visualization]
+   
+    if vs.has_key?(:featured)
+      if vs['featured'] == "1"
+        vs['featured_at'] = Time.now()
+      else
+        vs['featured_at'] = nil
+      end
+    end
+    
     respond_to do |format|
-      if @visualization.update_attributes(params[:visualization])
+      if @visualization.update_attributes(vs)
         format.html { redirect_to @visualization, notice: 'Visualization was successfully updated.' }
         format.json { head :no_content }
       else
