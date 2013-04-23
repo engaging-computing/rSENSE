@@ -101,7 +101,7 @@ CoffeeScript version of runtime.
     globals.curVis.start()
 
     #Toggle control panel
-    resizeVis = ->
+    resizeVis = (aniLength = 600) ->
     
         containerSize = ($ '#viscontainer').width()
         hiderSize     = ($ '#controlhider').outerWidth()
@@ -112,9 +112,9 @@ CoffeeScript version of runtime.
 
         newWidth = containerSize - (hiderSize + controlSize + globals.VIS_MARGIN)
         
-        ($ '#controldiv').animate {width: controlSize}, 600, 'linear'
-        ($ '.vis_canvas').animate {width: newWidth}, 600, 'linear'
-        globals.curVis.resize newWidth, $('.vis_canvas').height(), 600
+        ($ '#controldiv').animate {width: controlSize}, aniLength, 'linear'
+        ($ '.vis_canvas').animate {width: newWidth}, aniLength, 'linear'
+        globals.curVis.resize newWidth, $('.vis_canvas').height(), aniLength
 
     ($ '#control_hide_button').click ->
         
@@ -125,6 +125,8 @@ CoffeeScript version of runtime.
         resizeVis()
         
                 
-        
+    if globals.options? and globals.options.startCollasped?
+      $("#control_hide_button").html('<')
+      resizeVis(0)
 
                 
