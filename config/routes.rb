@@ -34,7 +34,7 @@ Rsense::Application.routes.draw do
   resources :data_sets do
     get 'getData' => :getData
   end
-
+  
   #Routes for project templates
   match "/project_templates" => "project_templates#index"
 
@@ -52,6 +52,7 @@ Rsense::Application.routes.draw do
   #Routes for displaying data
   match "/projects/:id/data_sets/*datasets" => "visualizations#displayVis"
   match "/projects/:id/data_sets/" => "visualizations#displayVis"
+  match "/visualizations/:id/embeded" => "visualizations#embedVis"
   
   match "/projects/:id/removeField" => "projects#removeField"
 
