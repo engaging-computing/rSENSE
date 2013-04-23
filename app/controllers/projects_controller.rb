@@ -152,7 +152,7 @@ class ProjectsController < ApplicationController
     end
     
     respond_to do |format|
-      if @project.update_attributes(params[:project])
+      if @project.update_attributes(ps)
         format.html { redirect_to @project, notice: 'Project was successfully updated.' }
         format.json { head :no_content }
       else
