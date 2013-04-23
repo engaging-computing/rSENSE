@@ -11,31 +11,15 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :title %><br />
-    <%= f.text_field :title %>
+  
+  <div class="row"> 
+    <div class="span12" style="font-weight:bold">
+      <div class="field">
+        Featured: <%= f.check_box :featured %>
+      </div>
+    </div>
+    <br />
   </div>
-  <div class="field">
-    <%= f.label :user_id %><br />
-    <%= f.number_field :user_id %>
-  </div>
-  <div class="field">
-    <%= f.label :project_id %><br />
-    <%= f.number_field :project_id %>
-  </div>
-  <div class="field">
-    <%= f.label :content %><br />
-    <%= f.text_area :content %>
-  </div>
-  <div class="field">
-    <%= f.label :data %><br />
-    <%= f.text_area :data %>
-  </div>
-  <div class="field">
-    <%= f.label :globals %><br />
-    <%= f.text_area :globals %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
+    <%= f.submit "Update Visualization", class: "btn btn-primary" %>
   </div>
 <% end %>
