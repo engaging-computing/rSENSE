@@ -4,17 +4,17 @@
 
 
 $ ->
-
-  $('.set_tutorial').change ->
-    data={}
-    data["selected"] = $(this).val()
-    data["location"] = $(this).attr("id")
-    if $(this).val() == "SELECT ONE"
-      false
-    else
-      $.ajax
-        url: '/tutorials/switch/'
-        dataType: 'json'
-        data:
-          data
-        false  
+  if namespace.controller is "home"
+    $('.set_tutorial').change ->
+      data={}
+      data["selected"] = $(this).val()
+      data["location"] = $(this).attr("id")
+      if $(this).val() == "SELECT ONE"
+        false
+      else
+        $.ajax
+          url: '/tutorials/switch/'
+          dataType: 'json'
+          data:
+            data
+          false  

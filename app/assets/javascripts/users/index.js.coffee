@@ -1,76 +1,76 @@
 # Place all the behaviors and hooks related to the users index page here.
 $ ->
-        
-  $("#users_search").submit ->
-      $.ajax
-        url: this.action
-        data: $(this).serialize()
-        success: (data, textStatus)->
+  if namespace.controller is "users" and namespace.action is "index"
+    $("#users_search").submit ->
+        $.ajax
+          url: this.action
+          data: $(this).serialize()
+          success: (data, textStatus)->
 
-          $('#users').isotope('remove', $('.item'))
+            $('#users').isotope('remove', $('.item'))
 
-          for object in data
-            do (object) ->
-              newItem =   "<div class='item' align='center'>"
-                
-              newItem +=  "<h4 style='margin-top:0px;'><a href='#{object.ownerPath}'>#{object.username}</a>"
+            for object in data
+              do (object) ->
+                newItem =   "<div class='item' align='center'>"
+                  
+                newItem +=  "<h4 style='margin-top:0px;'><a href='#{object.ownerPath}'>#{object.username}</a>"
 
-              newItem += "</h4>"
+                newItem += "</h4>"
 
-              if (object.userGravatar) != "NULL"
-                newItem += "<img src='#{object.userGravatar}'> </img><br />"
+                if (object.userGravatar) != "NULL"
+                  newItem += "<img src='#{object.userGravatar}'> </img><br />"
 
-              newItem +=  "<h8><b>Name: </b><a href='#{object.ownerPath}'>#{object.ownerName}</a></h8><br />"
+                newItem +=  "<h8><b>Name: </b><a href='#{object.ownerPath}'>#{object.ownerName}</a></h8><br />"
 
-              newItem +=  "<h8><b>Member Since: </b>#{object.createdAt}</h8><br />"
+                newItem +=  "<h8><b>Member Since: </b>#{object.createdAt}</h8><br />"
 
-              newItem +=  "</div>"
+                newItem +=  "</div>"
 
-              newItem = $(newItem)
+                newItem = $(newItem)
+              
+                $('#users').append(newItem).isotope('insert', newItem)
             
-              $('#users').append(newItem).isotope('insert', newItem)
+            $(window).resize()
+            
+          dataType: "json"
+        return false
+    
+    $(".users_sort_select").change ->
+      $("#users_search").submit()
+
+      
+    ### Get isotope up and running ###
+    numCols = 1
+
+    while $('#users').width()/numCols>200
+      numCols++
+
+    $('#users').imagesLoaded ->
+      $('.item').width(($('#users').width()/numCols)-35)
+      $('#users').isotope
+        itemSelector : '.item'
+        layoutMode : 'masonry'
+        masonry:
+          columnWidth: $('#users').width()/numCols
           
-          $(window).resize()
-          
-        dataType: "json"
-      return false
-  
-  $(".users_sort_select").change ->
     $("#users_search").submit()
 
-    
-  ### Get isotope up and running ###
-  numCols = 1
+    window.reLayout = ->
 
-  while $('#users').width()/numCols>200
-    numCols++
+      numCols = 1
 
-  $('#users').imagesLoaded ->
-    $('.item').width(($('#users').width()/numCols)-35)
-    $('#users').isotope
-      itemSelector : '.item'
-      layoutMode : 'masonry'
-      masonry:
-        columnWidth: $('#users').width()/numCols
-        
-  $("#users_search").submit()
+      while $('#users').width()/numCols>200
+        numCols++
+      
+      $('#users').imagesLoaded ->
 
-window.reLayout = ->
+        $('.item').width(($('#users').width()/numCols)-35)
 
-  numCols = 1
+        $('#users').isotope
+          itemSelector : '.item'
+          layoutMode : 'masonry'
+          masonry:
+            columnWidth: $('#users').width()/numCols
+      true
 
-  while $('#users').width()/numCols>200
-    numCols++
-  
-  $('#users').imagesLoaded ->
-
-    $('.item').width(($('#users').width()/numCols)-35)
-
-    $('#users').isotope
-      itemSelector : '.item'
-      layoutMode : 'masonry'
-      masonry:
-        columnWidth: $('#users').width()/numCols
-  true
-
-$(window).resize reLayout
+    $(window).resize reLayout
