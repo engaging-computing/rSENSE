@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
  
   def get_user
       @cur_user = User.find_by_id(session[:user_id])
+      @namespace = params
   end
   
   def authorize
