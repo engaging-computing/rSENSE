@@ -37,6 +37,21 @@ globals.VIS_MARGIN = 20
 CoffeeScript version of runtime.
 ###
 ($ document).ready ->
+    ### Fix height ###
+    if globals.options? and globals.options.isEmbed?
+      ($ "#viscontainer").height
+    else
+      h = (Number ($ "div.mainContent").css("padding-top").replace("px", ""))
+      h += ($ "#title_bar").height()
+      h += ($ "#title_row").height()
+      h += globals.VIS_MARGIN
+      
+      ($ "#viscontainer").height(($ window).height() - h)
+
+    #Number($("div.mainContent").css("padding-top").replace("px", ""))
+    #$("#title_bar").height() + $("#title_row").height()
+
+    ### hide all vis canvases to start ###
     ($ can).hide() for can in ['#map_canvas', '#timeline_canvas', '#scatter_canvas', '#bar_canvas', '#histogram_canvas', '#table_canvas', '#viscanvas','#motion_canvas','#photos_canvas']
 
     ### Load saved data if there ###
@@ -101,7 +116,7 @@ CoffeeScript version of runtime.
     globals.curVis.start()
 
     #Toggle control panel
-    resizeVis = ->
+    resizeVis = (aniLength = 600) ->
     
         containerSize = ($ '#viscontainer').width()
         hiderSize     = ($ '#controlhider').outerWidth()
@@ -112,9 +127,9 @@ CoffeeScript version of runtime.
 
         newWidth = containerSize - (hiderSize + controlSize + globals.VIS_MARGIN)
         
-        ($ '#controldiv').animate {width: controlSize}, 600, 'linear'
-        ($ '.vis_canvas').animate {width: newWidth}, 600, 'linear'
-        globals.curVis.resize newWidth, $('.vis_canvas').height(), 600
+        ($ '#controldiv').animate {width: controlSize}, aniLength, 'linear'
+        ($ '.vis_canvas').animate {width: newWidth}, aniLength, 'linear'
+        globals.curVis.resize newWidth, $('.vis_canvas').height(), aniLength
 
     ($ '#control_hide_button').click ->
         
@@ -125,6 +140,8 @@ CoffeeScript version of runtime.
         resizeVis()
         
                 
-        
+    if globals.options? and globals.options.startCollasped?
+      $("#control_hide_button").html('<')
+      resizeVis(0)
 
                 

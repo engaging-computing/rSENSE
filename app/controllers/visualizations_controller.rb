@@ -77,6 +77,7 @@ class VisualizationsController < ApplicationController
 
     # The finalized data object
     @Data = { savedData: @visualization.data, savedGlobals: @visualization.globals }
+    @Globals = { options: {startCollasped: true, isEmbed: true} }
 
     respond_to do |format|
       format.html {render :layout => 'embeded' }
