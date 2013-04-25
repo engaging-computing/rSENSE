@@ -1,6 +1,9 @@
 <%= stylesheet_link_tag    "application", :media => "all" %>
 <%= javascript_include_tag "application" %>
-<%= raw include_page_spesific_js %>
 <%= csrf_meta_tags %>
+
+<%= javascript_tag do %>
+  window.namespace = <%= raw @namespace.to_json %>
+<% end %>
 
 <div class="embeded"><%= yield %></div>
