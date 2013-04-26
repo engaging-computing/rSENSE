@@ -141,6 +141,11 @@ class MediaObjectsController < ApplicationController
       if(can_edit?(@tutorial))
         @mo = {user_id: @tutorial.owner.id, src: o.public_url.to_s, name: fileName, media_type: fileType, tutorial_id: @tutorial.id}
       end
+    when 'visualization'
+      @visualization = Visualization.find_by_id(id)
+      if(can_edit?(@visualization))
+        @mo = {user_id: @visualization.owner.id, src: o.public_url.to_s, name: fileName, media_type: fileType, visualization_id: @visualization.id}
+      end
     end
 
     #If we managed to make some params build the media object and write to S3
