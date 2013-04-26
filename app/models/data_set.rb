@@ -14,9 +14,13 @@ class DataSet < ActiveRecord::Base
     end
   end
   
-  def self.upload_form(header, datapoints, cur_user, project)
+  def self.upload_form(header, datapoints, cur_user, project, name = nil)
+    if name == nil
+      name = "#{cur_user.name}'s Session"
+    end
+    
     if !datapoints.nil?     
-      data_set = DataSet.create(:user_id => cur_user.id, :project_id => project.id, :title => "#{cur_user.name}'s Session")
+      data_set = DataSet.create(:user_id => cur_user.id, :project_id => project.id, :title => name)
 
       mongo_data = []
       
