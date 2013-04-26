@@ -41,4 +41,4 @@
 //= require Hydrate
 //= require jquery.dataTables
 //= require jquery.prettyPhoto
-//= require_directory .
+//= require_tree .
