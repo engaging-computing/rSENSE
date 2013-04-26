@@ -8,6 +8,9 @@ class MediaObject < ActiveRecord::Base
   
   alias_attribute :title, :name
   
+  validates_presence_of :src
+  validates_presence_of :media_type
+  
   def self.search(search)
     if search
         where('name LIKE ?', "%#{search}%")
