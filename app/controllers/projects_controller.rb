@@ -333,7 +333,7 @@ class ProjectsController < ApplicationController
             data["#{i}"] = d
           end
         
-          DataSet.upload_form(header, data, @cur_user, @project)
+          DataSet.upload_form(header, data, @cur_user, @project, ses['name'])
 
         end
   
