@@ -4,13 +4,12 @@
   <title>Rsense</title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
-  <%= raw include_page_spesific_js %>
   <%= csrf_meta_tags %>
 </head>
 
-<script>
+<%= javascript_tag do %>
   window.namespace = <%= raw @namespace.to_json %>
-</script>
+<% end %>
 
 <body style="margin:0;padding:0;height:100%;background-color:#ddd;">
 

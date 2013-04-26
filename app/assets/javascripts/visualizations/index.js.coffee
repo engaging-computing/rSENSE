@@ -3,91 +3,91 @@
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
 $ ->
-
+  if namespace.controller is "visualizations" and namespace.action is "index"
  
-  $("#visualizations_search").submit ->
-      $.ajax
-        url: this.action
-        data: $(this).serialize()
-        success: (data, textStatus)->
-          
-          $('#visualizations').isotope('remove', $('.item'))
-    
-          for object in data
-            do (object) ->
-              newItem =   "<div class='item'>"
-
-              if(object.mediaPath)
-                newItem += "<img src='#{object.mediaPath}'></img>"
-                
-              newItem +=  "<h4 style='margin-top:0px;'><a href='#{object.vizPath}'>#{object.title}</a>"
-              
-              if(object.featured)
-                newItem += "<span style='color:#57C142'> (featured)</span>"
+    $("#visualizations_search").submit ->
+        $.ajax
+          url: this.action
+          data: $(this).serialize()
+          success: (data, textStatus)->
             
-              newItem +=  "</h4><b>Owner: </b><a href='#{object.ownerPath}'>#{object.ownerName}</a><br />"
-              newItem +=  "<b>Project: </b><a href='#{object.projectPath}'>#{object.projectTitle}</a><br />"
-              newItem +=  "<b>Created: </b>#{object.timeAgoInWords} ago (on #{object.createdAt})<br />"
-              
-              ###
-              if(object.filters)
-                newitem += "<b>#{object.filters}</b>"
-              ###
-              
-              newItem +=  "</div>"
-              
-              newItem = $(newItem)
-              
-              $('#visualizations').append(newItem).isotope('insert', newItem)
-          
-          $(window).resize()
-          
-        dataType: "json"
-      return false
+            $('#visualizations').isotope('remove', $('.item'))
       
-  ($ '.visualizations_filter_checkbox').click ->
-    ($ '#visualizations_search').submit()
-    
-  ($ '.visualizations_sort_select').change ->
-    ($ '#visualizations_search').submit()
-    
-  $(".visualizations_sort_select").change ->
-    $("#visualizations_search").submit()
-    
-  ### Get isotope up and running ###
+            for object in data
+              do (object) ->
+                newItem =   "<div class='item'>"
 
-  numCols = 1
-
-  while $('#visualizations').width()/numCols>200
-    numCols++
-
-  $('#visualizations').imagesLoaded ->
-    $('.item').width(($('#visualizations').width()/numCols)-35)
-    $('#visualizations').isotope
-      itemSelector : '.item'
-      layoutMode : 'masonry'
-      masonry:
-        columnWidth: $('#visualizations').width()/numCols
+                if(object.mediaPath)
+                  newItem += "<img src='#{object.mediaPath}'></img>"
+                  
+                newItem +=  "<h4 style='margin-top:0px;'><a href='#{object.vizPath}'>#{object.title}</a>"
+                
+                if(object.featured)
+                  newItem += "<span style='color:#57C142'> (featured)</span>"
+              
+                newItem +=  "</h4><b>Owner: </b><a href='#{object.ownerPath}'>#{object.ownerName}</a><br />"
+                newItem +=  "<b>Project: </b><a href='#{object.projectPath}'>#{object.projectTitle}</a><br />"
+                newItem +=  "<b>Created: </b>#{object.timeAgoInWords} ago (on #{object.createdAt})<br />"
+                
+                ###
+                if(object.filters)
+                  newitem += "<b>#{object.filters}</b>"
+                ###
+                
+                newItem +=  "</div>"
+                
+                newItem = $(newItem)
+                
+                $('#visualizations').append(newItem).isotope('insert', newItem)
+            
+            $(window).resize()
+            
+          dataType: "json"
+        return false
         
-  $("#visualizations_search").submit()
+    ($ '.visualizations_filter_checkbox').click ->
+      ($ '#visualizations_search').submit()
+      
+    ($ '.visualizations_sort_select').change ->
+      ($ '#visualizations_search').submit()
+      
+    $(".visualizations_sort_select").change ->
+      $("#visualizations_search").submit()
+      
+    ### Get isotope up and running ###
 
-window.reLayout = ->
+    numCols = 1
 
-  numCols = 1
+    while $('#visualizations').width()/numCols>200
+      numCols++
 
-  while $('#visualizations').width()/numCols>200
-    numCols++
-  
-  $('#visualizations').imagesLoaded ->
+    $('#visualizations').imagesLoaded ->
+      $('.item').width(($('#visualizations').width()/numCols)-35)
+      $('#visualizations').isotope
+        itemSelector : '.item'
+        layoutMode : 'masonry'
+        masonry:
+          columnWidth: $('#visualizations').width()/numCols
+          
+    $("#visualizations_search").submit()
 
-    $('.item').width(($('#visualizations').width()/numCols)-35)
+    window.reLayout = ->
 
-    $('#visualizations').isotope
-      itemSelector : '.item'
-      layoutMode : 'masonry'
-      masonry:
-        columnWidth: $('#visualizations').width()/numCols
-  true
+      numCols = 1
 
-$(window).resize reLayout  
-    
+      while $('#visualizations').width()/numCols>200
+        numCols++
+      
+      $('#visualizations').imagesLoaded ->
+
+        $('.item').width(($('#visualizations').width()/numCols)-35)
+
+        $('#visualizations').isotope
+          itemSelector : '.item'
+          layoutMode : 'masonry'
+          masonry:
+            columnWidth: $('#visualizations').width()/numCols
+      true
+
+    $(window).resize reLayout  
+        
