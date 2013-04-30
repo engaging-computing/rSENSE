@@ -26,65 +26,67 @@
  * DAMAGE.
  *
 ###
+$ ->
+  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+      
+    class window.Timeline extends Scatter
+        ###
+        Constructor
+            Change default mode to lines only
+        ###
+        constructor: (@canvas) ->
+            super @canvas
+            @mode = @LINES_MODE
+            @xAxis = data.timeFields[0]
 
-class window.Timeline extends Scatter
-    ###
-    Constructor
-        Change default mode to lines only
-    ###
-    constructor: (@canvas) ->
-        super @canvas
-        @mode = @LINES_MODE
-        @xAxis = data.timeFields[0]
+        ###
+        Build options relevent to timeline
+        ###
+        buildOptions: ->
+            super()
 
-    ###
-    Build options relevent to timeline
-    ###
-    buildOptions: ->
-        super()
+            self = this
 
-        self = this
+            $.extend true, @chartOptions,
+                title:
+                    text: ''
+                tooltip:
+                    formatter: ->
+                        if self.advancedTooltips
+                            str  = "<div style='width:100%;text-align:center;color:#{@series.color};'> #{@series.name.group}</div><br>"
+                            str += "<table>"
 
-        $.extend true, @chartOptions,
-            title:
-                text: ''
-            tooltip:
-                formatter: ->
-                    if self.advancedTooltips
-                        str  = "<div style='width:100%;text-align:center;color:#{@series.color};'> #{@series.name.group}</div><br>"
-                        str += "<table>"
+                            for field, fieldIndex in data.fields when @point.datapoint[fieldIndex] isnt null
+                                dat = if (Number field.typeID) is data.types.TIME
+                                    (globals.dateFormatter @point.datapoint[fieldIndex])
+                                else
+                                    @point.datapoint[fieldIndex]
 
-                        for field, fieldIndex in data.fields when @point.datapoint[fieldIndex] isnt null
-                            dat = if (Number field.typeID) is data.types.TIME
-                                (globals.dateFormatter @point.datapoint[fieldIndex])
-                            else
-                                @point.datapoint[fieldIndex]
+                                str += "<tr><td>#{field.fieldName}</td>"
+                                str += "<td><strong>#{dat}</strong></td></tr>"
 
-                            str += "<tr><td>#{field.fieldName}</td>"
-                            str += "<td><strong>#{dat}</strong></td></tr>"
+                            str += "</table>"
+                        else
+                            str  = "<div style='width:100%;text-align:center;color:#{@series.color};'> #{@series.name.group}</div><br>"
+                            str += "<table>"
+                            str += "<tr><td>#{@series.xAxis.options.title.text}:</td><td><strong>#{globals.dateFormatter @x}</strong></td></tr>"
+                            str += "<tr><td>#{@series.name.field}:</td><td><strong>#{@y}</strong></td></tr>"
+                            str += "</table>"
+                    useHTML: true
 
-                        str += "</table>"
-                    else
-                        str  = "<div style='width:100%;text-align:center;color:#{@series.color};'> #{@series.name.group}</div><br>"
-                        str += "<table>"
-                        str += "<tr><td>#{@series.xAxis.options.title.text}:</td><td><strong>#{globals.dateFormatter @x}</strong></td></tr>"
-                        str += "<tr><td>#{@series.name.field}:</td><td><strong>#{@y}</strong></td></tr>"
-                        str += "</table>"
-                useHTML: true
+            @chartOptions.xAxis =
+                type: 'datetime'
+            
+        ###
+        Overwrite xAxis controls to only allow time fields
+        ###
+        drawXAxisControls: ->
+            super (fieldIndex) -> fieldIndex in data.timeFields
 
-        @chartOptions.xAxis =
-            type: 'datetime'
-        
-    ###
-    Overwrite xAxis controls to only allow time fields
-    ###
-    drawXAxisControls: ->
-        super (fieldIndex) -> fieldIndex in data.timeFields
+        drawToolControls: ->
+            super(false)
 
-    drawToolControls: ->
-        super(false)
-
-if "Timeline" in data.relVis
-    globals.timeline = new Timeline 'timeline_canvas'
-else
-    globals.timeline = new DisabledVis "timeline_canvas"
+    if "Timeline" in data.relVis
+        globals.timeline = new Timeline 'timeline_canvas'
+    else
+        globals.timeline = new DisabledVis "timeline_canvas"

@@ -2,8 +2,12 @@
 @import "twitter/bootstrap/responsive";
 
 // Set the correct sprite paths
-@iconSpritePath: asset-path("twitter/bootstrap/glyphicons-halflings.png");
-@iconWhiteSpritePath: asset-path("twitter/bootstrap/glyphicons-halflings-white.png");
+//@iconSpritePath: asset-path("twitter/bootstrap/glyphicons-halflings");
+//@iconWhiteSpritePath: asset-path("twitter/bootstrap/glyphicons-halflings-white");
+
+@iconWhiteSpritePath: "twitter/bootstrap/glyphicons-halflings-white.png";
+@iconSpritePath: "twitter/bootstrap/glyphicons-halflings.png";
+
 
 // Set the Font Awesome (Font Awesome is default. You can disable by commenting below lines)
 // Note: If you use asset_path() here, your compiled boostrap_and_overrides.css will not
@@ -16,6 +20,9 @@
 // Font Awesome
 @import "fontawesome";
 
+// Glyphicons
+//@import "twitter/bootstrap/sprites.less";
+
 // Your custom LESS stylesheets goes here
 //
 // Since bootstrap was imported above you have access to its mixins which
@@ -23,12 +30,6 @@
 //
 // If you'd like to override bootstrap's own variables, you can do so here as well
 // See http://twitter.github.com/bootstrap/customize.html#variables for their names and documentation
-
-@navbarBackground: #111144;
-@navbarBackgroundHighlight: #222244;
-@navbarText: #ffffff;
-@navbarBrandColor: #ffffff;
-@navbarLinkColor: #ffffff;
-@navbarLinkColorHover: #ffffff;
-@linkColor: #09d;
-@linkColorHover: lighten(@linkColor, 10%);
+//
+// Example:
+// @linkColor: #ff0000;
