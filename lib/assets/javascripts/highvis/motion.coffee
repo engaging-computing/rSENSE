@@ -26,70 +26,72 @@
  * DAMAGE.
  *
 ###
+$ ->
+  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+      
+    class window.Motion extends BaseVis
+        constructor: (@canvas) -> 
 
-class window.Motion extends BaseVis
-    constructor: (@canvas) -> 
+        start: ->
+            #Make table visible? (or somthing)
+            ($ '#' + @canvas).show()
+            
+            @hideControls()
+            
+            dt = new google.visualization.DataTable();
+            
+            #Generate a list of fieldIndexes (incase we need to shuffle)
+            fieldIndexes = for field,fieldIndex in data.fields
+                fieldIndex
+            
+            
+            fieldIndexes[0] = data.groupingFieldIndex
+            fieldIndexes[data.groupingFieldIndex] = 0;
+            
+            # Check to see if we should shuffle a time field to the front. 
+            if ( data.timeFields.length > 0 )
+                if ( data.timeFields[0] != 1)
+                    tmp = fieldIndexes[1];
+                    fieldIndexes[1] = data.timeFields[0]
+                    fieldIndexes[data.timeFields[0]] = tmp       
+                    
+            for i in fieldIndexes
+                field = data.fields[i]
+                switch (Number field.typeID)
+                    when data.types.TEXT then dt.addColumn('string', field.fieldName) 
+                    when data.types.TIME then dt.addColumn('date', field.fieldName)
+                    else dt.addColumn('number', field.fieldName)
 
-    start: ->
-        #Make table visible? (or somthing)
-        ($ '#' + @canvas).show()
-        
-        @hideControls()
-        
-        dt = new google.visualization.DataTable();
-        
-        #Generate a list of fieldIndexes (incase we need to shuffle)
-        fieldIndexes = for field,fieldIndex in data.fields
-            fieldIndex
-        
-        
-        fieldIndexes[0] = data.groupingFieldIndex
-        fieldIndexes[data.groupingFieldIndex] = 0;
-        
-        # Check to see if we should shuffle a time field to the front. 
-        if ( data.timeFields.length > 0 )
-            if ( data.timeFields[0] != 1)
-                tmp = fieldIndexes[1];
-                fieldIndexes[1] = data.timeFields[0]
-                fieldIndexes[data.timeFields[0]] = tmp       
-                
-        for i in fieldIndexes
-            field = data.fields[i]
-            switch (Number field.typeID)
-                when data.types.TEXT then dt.addColumn('string', field.fieldName) 
-                when data.types.TIME then dt.addColumn('date', field.fieldName)
-                else dt.addColumn('number', field.fieldName)
+            rows = for dataPoint in data.dataPoints
+                line = for i in fieldIndexes
+                    dat = dataPoint[i]              
+                    datType = (Number data.fields[i].typeID)
+                    if(datType is data.types.TIME)
+                        new Date(dat)
+                    else 
+                        dat
+                line
+    
+            dt.addRow(row) for row in rows
+            
+            chart = new google.visualization.MotionChart(document.getElementById('motion_canvas'));
+            chart.draw(dt, {width: '100%', height: '100%'});
+            super()
 
-        rows = for dataPoint in data.dataPoints
-            line = for i in fieldIndexes
-                dat = dataPoint[i]              
-                datType = (Number data.fields[i].typeID)
-                if(datType is data.types.TIME)
-                    new Date(dat)
-                else 
-                    dat
-            line
- 
-        dt.addRow(row) for row in rows
-        
-        chart = new google.visualization.MotionChart(document.getElementById('motion_canvas'));
-        chart.draw(dt, {width: '100%', height: '100%'});
-        super()
+        #Gets called when the controls are clicked and at start
+        update: ->
+            super()
+            
+        end: ->
+            ($ '#' + @canvas).hide()
+            @unhideControls()
+            
+        drawControls: ->
+            super()
 
-    #Gets called when the controls are clicked and at start
-    update: ->
-        super()
-        
-    end: ->
-        ($ '#' + @canvas).hide()
-        @unhideControls()
-        
-    drawControls: ->
-        super()
+        drawChart: ->
 
-    drawChart: ->
-
-if "Motion" in data.relVis
-    globals.motion = new Motion "motion_canvas"      
-else
-    globals.motion = new DisabledVis "motion_canvas"
+    if "Motion" in data.relVis
+        globals.motion = new Motion "motion_canvas"      
+    else
+        globals.motion = new DisabledVis "motion_canvas"

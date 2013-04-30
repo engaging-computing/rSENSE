@@ -26,65 +26,67 @@
  * DAMAGE.
  *
 ###
+$ ->
+  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+      
+    class window.Photos extends BaseVis
+        constructor: (@canvas) -> 
 
-class window.Photos extends BaseVis
-    constructor: (@canvas) -> 
-
-    start: ->
-        ($ '#' + @canvas).show()
-        
-        #Hide the controls
-        @hideControls()
-        
-        super()
- 
-    #Gets called when the controls are clicked and at start
-    update: ->
-        #clear the old canvas
-        ($ '#' + @canvas).html('')
+        start: ->
+            ($ '#' + @canvas).show()
             
-        #Append the photoTable to the canvas    
-        ($ '#' + @canvas).append '<div id="photoTable"></div>'
-        
-        #Build the table of pictures with their onlick handlers
-        i=0
-        for ses of data.metaData
-            if data.metaData[ses].pictures.length > 0
-                for pic of data.metaData[ses].pictures
-                    tmp = data.metaData[ses].pictures[pic]
-                    session = data.metaData[ses]
-                    do (tmp,session) =>
-                        thumb = "<img id='pic_#{i}' class='photoTable_photo' src='#{tmp.provider_url}'/>"
-                        full = "<img id='fullpic_#{i}' class='photoTable_openPhoto' src='#{tmp.provider_url}'/>"
-                        ($ '#photoTable').append thumb
-                        ($ '#pic_'+i).click ->
-                            description = if(tmp.description != null)
-                                tmp.description
-                            else
-                                "No description provided."
-                                
-                            ($ '#photoTable').append("<div id='dialog' style='overflow-x:hidden'><table><tr><td style='text-align:center'>#{full}</td></tr><tr><td style='word-wrap:word-break;max-width:800px'><b>Description: </b>#{description}</td></tr></table></div>")
-                            ($ '#dialog').dialog
-                                modal: true
-                                draggable:false
-                                width:'auto'
-                                height:'auto'
-                                resizable:false
-                                title: "Session: #{session.name} (#{session.session_id})"
-                                open: ->
-                                    ($ ".ui-widget-overlay").click ->
-                                        ($ "#dialog").dialog 'close'
-                                        ($ "#dialog").remove()
-                        i++
-                      
-    end: ->    
-        ($ '#' + @canvas).hide()
-        @unhideControls()
-        
-    drawControls: ->
-        super()
-        
-if "Photos" in data.relVis
-    globals.photos = new Photos "photos_canvas"
-else
-    globals.photos = new DisabledVis "photos_canvas"
+            #Hide the controls
+            @hideControls()
+            
+            super()
+    
+        #Gets called when the controls are clicked and at start
+        update: ->
+            #clear the old canvas
+            ($ '#' + @canvas).html('')
+                
+            #Append the photoTable to the canvas    
+            ($ '#' + @canvas).append '<div id="photoTable"></div>'
+            
+            #Build the table of pictures with their onlick handlers
+            i=0
+            for ses of data.metaData
+                if data.metaData[ses].pictures.length > 0
+                    for pic of data.metaData[ses].pictures
+                        tmp = data.metaData[ses].pictures[pic]
+                        session = data.metaData[ses]
+                        do (tmp,session) =>
+                            thumb = "<img id='pic_#{i}' class='photoTable_photo' src='#{tmp.provider_url}'/>"
+                            full = "<img id='fullpic_#{i}' class='photoTable_openPhoto' src='#{tmp.provider_url}'/>"
+                            ($ '#photoTable').append thumb
+                            ($ '#pic_'+i).click ->
+                                description = if(tmp.description != null)
+                                    tmp.description
+                                else
+                                    "No description provided."
+                                    
+                                ($ '#photoTable').append("<div id='dialog' style='overflow-x:hidden'><table><tr><td style='text-align:center'>#{full}</td></tr><tr><td style='word-wrap:word-break;max-width:800px'><b>Description: </b>#{description}</td></tr></table></div>")
+                                ($ '#dialog').dialog
+                                    modal: true
+                                    draggable:false
+                                    width:'auto'
+                                    height:'auto'
+                                    resizable:false
+                                    title: "Session: #{session.name} (#{session.session_id})"
+                                    open: ->
+                                        ($ ".ui-widget-overlay").click ->
+                                            ($ "#dialog").dialog 'close'
+                                            ($ "#dialog").remove()
+                            i++
+                          
+        end: ->    
+            ($ '#' + @canvas).hide()
+            @unhideControls()
+            
+        drawControls: ->
+            super()
+            
+    if "Photos" in data.relVis
+        globals.photos = new Photos "photos_canvas"
+    else
+        globals.photos = new DisabledVis "photos_canvas"

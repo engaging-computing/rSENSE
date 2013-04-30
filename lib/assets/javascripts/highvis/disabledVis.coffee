@@ -26,32 +26,34 @@
  * DAMAGE.
  *
 ###
+$ ->
+  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+      
+    class window.DisabledVis extends BaseVis
+        constructor: (@canvas) -> 
 
-class window.DisabledVis extends BaseVis
-    constructor: (@canvas) -> 
-
-    motion_err = "Motion Chart could not be displayed<br>A time field was not found in this project"
-    time_err = "Timeline could not be displayed<br>Either a time field was not found or there were not enough data"
-    scatter_err = "Scatter Chart could not be displayed<br>Either two numeric fields were not found or there were not enough data"
-    histogram_err = "Histogram could not be displayed<br>Either no numeric fields were found, or there were not enough data"
-    bar_err = "Bar Chart could not be displayed<br>Either no numeric fields were found, or there were not enough data"
-    map_err = "Map could not be displayed<br>No geographic data were found"
-    photos_err = "There are no photos to display"
-    
-    start: ->  
-        ($ '#' + @canvas).show()
+        motion_err = "Motion Chart could not be displayed<br>A time field was not found in this project"
+        time_err = "Timeline could not be displayed<br>Either a time field was not found or there were not enough data"
+        scatter_err = "Scatter Chart could not be displayed<br>Either two numeric fields were not found or there were not enough data"
+        histogram_err = "Histogram could not be displayed<br>Either no numeric fields were found, or there were not enough data"
+        bar_err = "Bar Chart could not be displayed<br>Either no numeric fields were found, or there were not enough data"
+        map_err = "Map could not be displayed<br>No geographic data were found"
+        photos_err = "There are no photos to display"
         
-        switch @canvas
-            when "map_canvas" then ($ '#' + @canvas).html("<div id='vis_disabled'>#{map_err}</div>")
-            when "motion_canvas" then ($ '#' + @canvas).html("<div id='vis_disabled'>#{motion_err}</div>")
-            when "bar_canvas" then ($ '#' + @canvas).html("<div id='vis_disabled'>#{bar_err}</div>")
-            when "histogram_canvas" then ($ '#' + @canvas).html("<div id='vis_disabled'>#{histogram_err}</div>")
-            when "timeline_canvas" then ($ '#' + @canvas).html("<div id='vis_disabled'>#{time_err}</div>")
-            when "scatter_canvas" then ($ '#' + @canvas).html("<div id='vis_disabled'>#{scatter_err}</div>")
-            when "photos_canvas" then ($ '#' + @canvas).html("<div id='vis_disabled'>#{photos_err}</div>")
-        
-        @hideControls()
-        
-    end: ->
-        ($ '#' + @canvas).hide()
-        @unhideControls(@controlWidth)
+        start: ->  
+            ($ '#' + @canvas).show()
+            
+            switch @canvas
+                when "map_canvas" then ($ '#' + @canvas).html("<div id='vis_disabled'>#{map_err}</div>")
+                when "motion_canvas" then ($ '#' + @canvas).html("<div id='vis_disabled'>#{motion_err}</div>")
+                when "bar_canvas" then ($ '#' + @canvas).html("<div id='vis_disabled'>#{bar_err}</div>")
+                when "histogram_canvas" then ($ '#' + @canvas).html("<div id='vis_disabled'>#{histogram_err}</div>")
+                when "timeline_canvas" then ($ '#' + @canvas).html("<div id='vis_disabled'>#{time_err}</div>")
+                when "scatter_canvas" then ($ '#' + @canvas).html("<div id='vis_disabled'>#{scatter_err}</div>")
+                when "photos_canvas" then ($ '#' + @canvas).html("<div id='vis_disabled'>#{photos_err}</div>")
+            
+            @hideControls()
+            
+        end: ->
+            ($ '#' + @canvas).hide()
+            @unhideControls(@controlWidth)
