@@ -24,9 +24,11 @@
 
 $(function() {
   if (namespace.controller === "visualizations" && ( namespace.action === "displayVis" || namespace.action === "embedVis" || namespace.action === "show"))
-
-    var StyledIconTypes = {};
-    var StyledMarker, StyledIcon;
+  {
+    
+    window.StyledIconTypes = {};
+    window.StyledMarker = null;
+    window.StyledIcon = null;
 
     (function() {
       var bu_ = 'http://chart.apis.google.com/chart?chst=';
@@ -42,7 +44,7 @@ $(function() {
       * @extends google.maps.Marker
       * @param {StyledMarkerOptions} StyledMarkerOptions The options for the Marker
       */
-      StyledMarker = function(styledMarkerOptions) {
+      window.StyledMarker = function(styledMarkerOptions) {
         var me=this;
         var ci = me.styleIcon = styledMarkerOptions.styleIcon;
         me.bindTo('icon',ci);
@@ -50,7 +52,7 @@ $(function() {
         me.bindTo('shape',ci);
         me.setOptions(styledMarkerOptions);
       };
-      StyledMarker.prototype = new gm_.Marker();
+      window.StyledMarker.prototype = new gm_.Marker();
 
       /**
       * This class stores style information that can be applied to StyledMarkers.
@@ -59,7 +61,7 @@ $(function() {
       * @param {StyledIconOptions} styledIconOptions The options for this StyledIcon.
       * @param {StyledIcon} styleClass A class to apply extended style information.
       */
-      StyledIcon = function(styledIconType,styledIconOptions,styleClass) {
+      window.StyledIcon = function(styledIconType,styledIconOptions,styleClass) {
         var k;
         var me=this;
         var i_ = 'icon';
@@ -127,7 +129,7 @@ $(function() {
           if (styleClass) styleClass.as_(me);
         }
       };
-      StyledIcon.prototype = new gm_.MVCObject();
+      window.StyledIcon.prototype = new gm_.MVCObject();
 
       /**
       * StyledIconType
@@ -160,9 +162,9 @@ $(function() {
       * @return {google.maps.MarkerShape}
       */
 
-      StyledIconTypes.CLASS = {};
+      window.StyledIconTypes.CLASS = {};
 
-      StyledIconTypes.MARKER = {
+      window.StyledIconTypes.MARKER = {
         defaults: {
           text:'',
           color:'00ff00',
@@ -225,7 +227,7 @@ $(function() {
           return _iconmap;
         }
       };
-      StyledIconTypes.BUBBLE = {
+      window.StyledIconTypes.BUBBLE = {
         defaults: {
           text:'',
           color:'00ff00',
@@ -265,4 +267,4 @@ $(function() {
         }
       };
     })();
-});
+}});
