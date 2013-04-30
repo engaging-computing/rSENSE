@@ -26,122 +26,124 @@
  * DAMAGE.
  *
 ###
-
-window.globals ?= {}
-globals.curVis = null
-
-globals.CONTROL_SIZE = 210
-globals.VIS_MARGIN = 20
-
-###
-CoffeeScript version of runtime.
-###
-($ document).ready ->
-    ### Fix height ###
-    if globals.options? and globals.options.isEmbed?
-      ($ "#viscontainer").height
-    else
-      h = (Number ($ "div.mainContent").css("padding-top").replace("px", ""))
-      h += ($ "#title_bar").height()
-      h += ($ "#title_row").height()
-      h += globals.VIS_MARGIN
+$ ->
+  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
       
-      ($ "#viscontainer").height(($ window).height() - h)
+    window.globals ?= {}
+    globals.curVis = null
 
-    #Number($("div.mainContent").css("padding-top").replace("px", ""))
-    #$("#title_bar").height() + $("#title_row").height()
+    globals.CONTROL_SIZE = 210
+    globals.VIS_MARGIN = 20
 
-    ### hide all vis canvases to start ###
-    ($ can).hide() for can in ['#map_canvas', '#timeline_canvas', '#scatter_canvas', '#bar_canvas', '#histogram_canvas', '#table_canvas', '#viscanvas','#motion_canvas','#photos_canvas']
-
-    ### Load saved data if there ###
-    if data.savedGlobals?
-        hydrate = new Hydrate()
-        
-        globals.extendObject globals, (hydrate.parse data.savedGlobals)
-        delete data.savedGlobals
-    
-    ### Generate tabs ###
-    for vis of data.allVis
-        if data.allVis[vis] in data.relVis
-            ($ '#visTabList').append "<li class='vis_tab'><a href='##{data.allVis[vis].toLowerCase()}_canvas'>#{data.allVis[vis]}</a></li>"
+    ###
+    CoffeeScript version of runtime.
+    ###
+    ($ document).ready ->
+        ### Fix height ###
+        if globals.options? and globals.options.isEmbed?
+          ($ "#viscontainer").height
         else
-            ($ '#visTabList').append "<li class='vis_tab' ><a href='##{data.allVis[vis].toLowerCase()}_canvas' style='text-decoration:line-through'>#{data.allVis[vis]}</a></li>"
+          h = (Number ($ "div.mainContent").css("padding-top").replace("px", ""))
+          h += ($ "#title_bar").height()
+          h += ($ "#title_row").height()
+          h += globals.VIS_MARGIN
+          
+          ($ "#viscontainer").height(($ window).height() - h)
+
+        #Number($("div.mainContent").css("padding-top").replace("px", ""))
+        #$("#title_bar").height() + $("#title_row").height()
+
+        ### hide all vis canvases to start ###
+        ($ can).hide() for can in ['#map_canvas', '#timeline_canvas', '#scatter_canvas', '#bar_canvas', '#histogram_canvas', '#table_canvas', '#viscanvas','#motion_canvas','#photos_canvas']
+
+        ### Load saved data if there ###
+        if data.savedGlobals?
+            hydrate = new Hydrate()
             
-    ### Jquery up the tabs ###
-    ($ '#viscontainer').tabs()
-    ($ '#tabcontainer').tabs()
-    
-
-    ($ '#viscontainer').width ($ '#viscontainer').width() - (($ '#viscontainer').outerWidth() - ($ '#viscontainer').width())
-
-    ### Pick vis ###
-    if not (data.defaultVis in data.relVis)
-        globals.curVis = (eval 'globals.' + data.relVis[0].toLowerCase())
-        ($ '#viscontainer').tabs('select', "##{data.relVis[0].toLowerCase()}_canvas")
-    else
-        globals.curVis = (eval 'globals.' + data.defaultVis.toLowerCase())
-        ($ '#viscontainer').tabs('select', "##{data.defaultVis.toLowerCase()}_canvas")
+            globals.extendObject globals, (hydrate.parse data.savedGlobals)
+            delete data.savedGlobals
         
-    ### Change vis click handler ###
-    ($ '#visTabList a').click ->
-        oldVis = globals.curVis
-
-        globals.curVis = (eval 'globals.' + innerTextCompat(this).toLowerCase())
+        ### Generate tabs ###
+        for vis of data.allVis
+            if data.allVis[vis] in data.relVis
+                ($ '#visTabList').append "<li class='vis_tab'><a href='##{data.allVis[vis].toLowerCase()}_canvas'>#{data.allVis[vis]}</a></li>"
+            else
+                ($ '#visTabList').append "<li class='vis_tab' ><a href='##{data.allVis[vis].toLowerCase()}_canvas' style='text-decoration:line-through'>#{data.allVis[vis]}</a></li>"
+                
+        ### Jquery up the tabs ###
+        ($ '#viscontainer').tabs()
+        ($ '#tabcontainer').tabs()
         
-        if oldVis is globals.curVis
-            return
 
-        oldVis.end() if oldVis?
-        globals.curVis.start()
-        
-    #Set initial div sizes
-    containerSize = ($ '#viscontainer').width()
-    hiderSize     = ($ '#controlhider').outerWidth()
-    controlSize = globals.CONTROL_SIZE
+        ($ '#viscontainer').width ($ '#viscontainer').width() - (($ '#viscontainer').outerWidth() - ($ '#viscontainer').width())
 
-    visWidth = containerSize - (hiderSize + controlSize + globals.VIS_MARGIN)
-    visHeight = ($ '#viscontainer').height() - ($ '#visTabList').outerHeight()
+        ### Pick vis ###
+        if not (data.defaultVis in data.relVis)
+            globals.curVis = (eval 'globals.' + data.relVis[0].toLowerCase())
+            ($ '#viscontainer').tabs('select', "##{data.relVis[0].toLowerCase()}_canvas")
+        else
+            globals.curVis = (eval 'globals.' + data.defaultVis.toLowerCase())
+            ($ '#viscontainer').tabs('select', "##{data.defaultVis.toLowerCase()}_canvas")
+            
+        ### Change vis click handler ###
+        ($ '#visTabList a').click ->
+            oldVis = globals.curVis
 
-    ($ '.vis_canvas').width  visWidth
-    ($ '.vis_canvas').height visHeight
-    ($ '#controlhider').height visHeight
-    ($ '#controldiv').height visHeight
+            globals.curVis = (eval 'globals.' + innerTextCompat(this).toLowerCase())
+            
+            if oldVis is globals.curVis
+                return
 
-    ($ '.vis_canvas').css('padding', 0)
-    ($ '.vis_canvas').css('margin', 0)
-
-    
-    #Start up vis
-    globals.curVis.start()
-
-    #Toggle control panel
-    resizeVis = (aniLength = 600) ->
-    
+            oldVis.end() if oldVis?
+            globals.curVis.start()
+            
+        #Set initial div sizes
         containerSize = ($ '#viscontainer').width()
         hiderSize     = ($ '#controlhider').outerWidth()
-        controlSize = if ($ '#controldiv').width() <= 0
-            globals.CONTROL_SIZE
-        else
-            0
+        controlSize = globals.CONTROL_SIZE
 
-        newWidth = containerSize - (hiderSize + controlSize + globals.VIS_MARGIN)
-        
-        ($ '#controldiv').animate {width: controlSize}, aniLength, 'linear'
-        ($ '.vis_canvas').animate {width: newWidth}, aniLength, 'linear'
-        globals.curVis.resize newWidth, $('.vis_canvas').height(), aniLength
+        visWidth = containerSize - (hiderSize + controlSize + globals.VIS_MARGIN)
+        visHeight = ($ '#viscontainer').height() - ($ '#visTabList').outerHeight()
 
-    ($ '#control_hide_button').click ->
-        
-        if ($ '#controldiv').width() is 0
-            $("##{@id}").html('>')
-        else
-            $("##{@id}").html('<')
-        resizeVis()
-        
-                
-    if globals.options? and globals.options.startCollasped?
-      $("#control_hide_button").html('<')
-      resizeVis(0)
+        ($ '.vis_canvas').width  visWidth
+        ($ '.vis_canvas').height visHeight
+        ($ '#controlhider').height visHeight
+        ($ '#controldiv').height visHeight
 
-                
+        ($ '.vis_canvas').css('padding', 0)
+        ($ '.vis_canvas').css('margin', 0)
+
+        
+        #Start up vis
+        globals.curVis.start()
+
+        #Toggle control panel
+        resizeVis = (aniLength = 600) ->
+        
+            containerSize = ($ '#viscontainer').width()
+            hiderSize     = ($ '#controlhider').outerWidth()
+            controlSize = if ($ '#controldiv').width() <= 0
+                globals.CONTROL_SIZE
+            else
+                0
+
+            newWidth = containerSize - (hiderSize + controlSize + globals.VIS_MARGIN)
+            
+            ($ '#controldiv').animate {width: controlSize}, aniLength, 'linear'
+            ($ '.vis_canvas').animate {width: newWidth}, aniLength, 'linear'
+            globals.curVis.resize newWidth, $('.vis_canvas').height(), aniLength
+
+        ($ '#control_hide_button').click ->
+            
+            if ($ '#controldiv').width() is 0
+                $("##{@id}").html('>')
+            else
+                $("##{@id}").html('<')
+            resizeVis()
+            
+                    
+        if globals.options? and globals.options.startCollasped?
+          $("#control_hide_button").html('<')
+          resizeVis(0)
+
+                    

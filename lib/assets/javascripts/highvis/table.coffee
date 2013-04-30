@@ -26,94 +26,96 @@
  * DAMAGE.
  *
 ###
+$ ->
+  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+      
+    class window.Table extends BaseVis
+        constructor: (@canvas) -> 
 
-class window.Table extends BaseVis
-    constructor: (@canvas) -> 
+        start: ->
+            #Make table visible? (or somthing)
+            ($ '#' + @canvas).show()
 
-    start: ->
-        #Make table visible? (or somthing)
-        ($ '#' + @canvas).show()
-
-        ($ "##{@canvas}").css 'padding-top'    , (globals.VIS_MARGIN / 2)
-        ($ "##{@canvas}").css 'padding-left'   , (globals.VIS_MARGIN / 2)
-        
-        #Calls update
-        super()
-
-    #Gets called when the controls are clicked and at start
-    update: ->
-        ($ '#' + @canvas).html('')
-    
-        #updates controls by default       
-        ($ '#' + @canvas).append '<table id="data_table"></table>'  
-        
-        ($ '#data_table').append '<thead><tr id="table_headers"></tr></thead>'
-        
-        #Build the headers for the table
-        headers = for field, fieldIndex in data.fields
-          if (fieldIndex is data.COMBINED_FIELD)
-            "<td style='display:none'>#{field.fieldName}</td>"
-          else
-            "<td>#{field.fieldName}</td>"
+            ($ "##{@canvas}").css 'padding-top'    , (globals.VIS_MARGIN / 2)
+            ($ "##{@canvas}").css 'padding-left'   , (globals.VIS_MARGIN / 2)
             
-        ($ '#table_headers').append header for header in headers
+            #Calls update
+            super()
+
+        #Gets called when the controls are clicked and at start
+        update: ->
+            ($ '#' + @canvas).html('')
         
-        #Build the data for the table
-        visibleGroups = for group, groupIndex in data.groups when groupIndex in globals.groupSelection
-            group
-        
-        rows = for dataPoint in data.dataPoints when (String dataPoint[data.groupingFieldIndex]).toLowerCase() in visibleGroups
-            line = for dat, fieldIndex in dataPoint
+            #updates controls by default       
+            ($ '#' + @canvas).append '<table id="data_table"></table>'  
+            
+            ($ '#data_table').append '<thead><tr id="table_headers"></tr></thead>'
+            
+            #Build the headers for the table
+            headers = for field, fieldIndex in data.fields
               if (fieldIndex is data.COMBINED_FIELD)
-                "<td style='display:none'>#{dat}</td>"
+                "<td style='display:none'>#{field.fieldName}</td>"
               else
-                "<td>#{dat}</td>"
+                "<td>#{field.fieldName}</td>"
                 
-            "<tr>#{line.reduce (a,b)-> a+b}</tr>"
-        
-        ($ '#data_table').append '<tbody id="table_body"></tbody>'
-        
-        ($ '#table_body').append row for row in rows 
-
-        dt = 
-            sScrollY: "#{($ '#' + @canvas).height() - (122 + (globals.VIS_MARGIN / 2))}px"
-            sScrollX: "100%"
-            iDisplayLength: -1
-            bDeferRender: true
-            bJQueryUI: true
-            oLanguage:
-                sLengthMenu: 'Display <select>'   +
-                             '<option value="10">10</option>' +
-                             '<option value="25">25</option>' +
-                             '<option value="50">50</option>' +
-                             '<option value="100">100</option>' +
-                             '<option value="-1">All</option>'+
-                             '</select> records'
-            aoColumnDefs: [{
-                aTargets: [data.groupingFieldIndex]
-                fnCreatedCell: (nTd, sData, oData, iRow, iCol) ->
-                    colorIndex = data.groups.indexOf(sData.toLowerCase())
-                    ($ nTd).css 'color', globals.colors[colorIndex % globals.colors.length]
-                    },{
-                      aTargets: data.timeFields
-                      fnRender: (obj) ->
-                        globals.dateFormatter obj.aData[obj.iDataColumn]
-                    },{
-                      aTargets:data.normalFields.concat data.geoFields
-                      fnRender: (obj) ->
-                        if obj.aData[obj.iDataColumn] is "null" then "" else obj.aData[obj.iDataColumn]
-                      }]
+            ($ '#table_headers').append header for header in headers
+            
+            #Build the data for the table
+            visibleGroups = for group, groupIndex in data.groups when groupIndex in globals.groupSelection
+                group
+            
+            rows = for dataPoint in data.dataPoints when (String dataPoint[data.groupingFieldIndex]).toLowerCase() in visibleGroups
+                line = for dat, fieldIndex in dataPoint
+                  if (fieldIndex is data.COMBINED_FIELD)
+                    "<td style='display:none'>#{dat}</td>"
+                  else
+                    "<td>#{dat}</td>"
                     
-        atable = ($ '#data_table').dataTable(dt)
+                "<tr>#{line.reduce (a,b)-> a+b}</tr>"
+            
+            ($ '#data_table').append '<tbody id="table_body"></tbody>'
+            
+            ($ '#table_body').append row for row in rows 
 
-        super()
+            dt = 
+                sScrollY: "#{($ '#' + @canvas).height() - (122 + (globals.VIS_MARGIN / 2))}px"
+                sScrollX: "100%"
+                iDisplayLength: -1
+                bDeferRender: true
+                bJQueryUI: true
+                oLanguage:
+                    sLengthMenu: 'Display <select>'   +
+                                '<option value="10">10</option>' +
+                                '<option value="25">25</option>' +
+                                '<option value="50">50</option>' +
+                                '<option value="100">100</option>' +
+                                '<option value="-1">All</option>'+
+                                '</select> records'
+                aoColumnDefs: [{
+                    aTargets: [data.groupingFieldIndex]
+                    fnCreatedCell: (nTd, sData, oData, iRow, iCol) ->
+                        colorIndex = data.groups.indexOf(sData.toLowerCase())
+                        ($ nTd).css 'color', globals.colors[colorIndex % globals.colors.length]
+                        },{
+                          aTargets: data.timeFields
+                          fnRender: (obj) ->
+                            globals.dateFormatter obj.aData[obj.iDataColumn]
+                        },{
+                          aTargets:data.normalFields.concat data.geoFields
+                          fnRender: (obj) ->
+                            if obj.aData[obj.iDataColumn] is "null" then "" else obj.aData[obj.iDataColumn]
+                          }]
+                        
+            atable = ($ '#data_table').dataTable(dt)
 
-    end: ->
-        ($ '#' + @canvas).hide()
+            super()
 
-    drawControls: ->
-        super()    
-        @drawGroupControls()
-        @drawSaveControls()
+        end: ->
+            ($ '#' + @canvas).hide()
 
-globals.table = new Table "table_canvas"
+        drawControls: ->
+            super()    
+            @drawGroupControls()
+            @drawSaveControls()
+
+    globals.table = new Table "table_canvas"
