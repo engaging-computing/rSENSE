@@ -41,4 +41,22 @@
 //= require Hydrate
 //= require jquery.dataTables
 //= require jquery.prettyPhoto
+//= require StyledMarker
+//
+//= require highvis/savedVis
+//= require highvis/visUtils
+//= require highvis/dataReduction
+//= require highvis/highmodifiers
+//= require highvis/baseVis
+//= require highvis/disabledVis
+//= require highvis/scatter
+//= require highvis/timeline
+//= require highvis/histogram
+//= require highvis/bar
+//= require highvis/table
+//= require highvis/map
+//= require highvis/motion
+//= require highvis/photos
+//= require highvis/runtime
+//
 //= require_tree .
