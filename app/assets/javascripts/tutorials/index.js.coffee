@@ -3,7 +3,7 @@
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
 $ ->
-  if namespace.controller is "tutorials" and namespace.action is "show"
+  if namespace.controller is "tutorials" and namespace.action is "index"
       $("#tutorials_search").submit ->
           $.ajax
             url: this.action
