@@ -1,15 +1,11 @@
 <script>
-  window.datasets = <%= raw @datasets.to_json %>
-  window.data = <%= raw @Data.to_json %>
-  window.globals = <%= raw @Globals.to_json %>
+  window.data = <%= raw @Data.to_json %>;
+  window.globals = <%= raw @Globals.to_json %>;
 </script>
 <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBxtPK1_mxwVdl1NRu7ZEiSNvmCekFSZAw&sensor=false&libraries=visualization&v=3.9">
 </script>
 
-
-<script src="/assets/highvis/runtime.coffee"></script>
-<script type="text/javascript">$('#control_hide_button').trigger('click');</script>
 <div id="viscontainer">
     <ul id='visTabList'></ul>
     <div id="map_canvas" class="vis_canvas"></div>
