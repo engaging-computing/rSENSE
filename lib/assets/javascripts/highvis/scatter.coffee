@@ -47,7 +47,7 @@ $ ->
 
             @xAxis = data.normalFields[0]
 
-            @advancedTooltips = false
+            @advancedTooltips = 0
 
             @xBounds =
                 dataMax: undefined
@@ -65,8 +65,8 @@ $ ->
                 userMax: undefined
                 userMin: undefined
 
-            @fullDetail = false
-            @lockZoom = false
+            @fullDetail = 0
+            @lockZoom = 0
 
         storeXBounds: (bounds) ->
             @xBounds = bounds
@@ -179,6 +179,7 @@ $ ->
         update: ->
             #Remove all series and draw legend
             super()
+            
 
             #Set axis title
             title =
@@ -198,7 +199,7 @@ $ ->
 
                         @xBounds.min = Math.min @xBounds.min, (data.getMin @xAxis, groupIndex)
                         @xBounds.max = Math.max @xBounds.max, (data.getMax @xAxis, groupIndex)
-
+            
             #Calculate grid spacing for data reduction
             width = ($ '#' + @canvas).width()
             height = ($ '#' + @canvas).height()
@@ -209,7 +210,7 @@ $ ->
                 @yGridSize = Math.round (height / width * @INITIAL_GRID_SIZE)
             else
                 @xGridSize = Math.round (width / height * @INITIAL_GRID_SIZE)
-
+                
             #Draw series
             for fieldIndex, symbolIndex in data.normalFields when fieldIndex in globals.fieldSelection
                 for group, groupIndex in data.groups when groupIndex in globals.groupSelection
@@ -252,9 +253,9 @@ $ ->
                 if (@xBounds.userMax isnt undefined and @xBounds.userMax isnt null)
                   if ($ 'g[title="Reset zoom level 1:1"]').length is 0
                     @chart.showResetZoom()
-
+                    
             @chart.redraw()
-
+            
             @storeXBounds @chart.xAxis[0].getExtremes()
             @storeYBounds @chart.yAxis[0].getExtremes()
             
@@ -312,16 +313,16 @@ $ ->
                 @delayedUpdate()
 
             ($ '.tooltip_box').click (e) =>
-                @advancedTooltips = ($ '.tooltip_box').is(':checked')
+                @advancedTooltips = (@advancedTooltips + 1) % 2
                 true
 
             ($ '.full_detail_box').click (e) =>
-                @fullDetail = ($ '.full_detail_box').is(':checked')
+                @fullDetail = (@fullDetail + 1) % 2
                 @delayedUpdate()
                 true
 
             ($ '.lock_zoom_box').click (e) =>
-                @lockZoom = ($ '.lock_zoom_box').is(':checked')
+                @lockZoom = (@lockZoom + 1) % 2
                 true
                 
             ($ '.logY_box').click (e) =>
