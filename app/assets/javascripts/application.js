@@ -38,6 +38,7 @@
 // Visualization stuff follows
 //
 //= require highcharts/highcharts
+//= require highcharts/modules/exporting
 //= require Hydrate
 //= require jquery.dataTables
 //= require jquery.prettyPhoto
