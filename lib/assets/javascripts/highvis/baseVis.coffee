@@ -192,22 +192,26 @@ $ ->
         Draws vis saving controls
         ###
         drawSaveControls: (e) ->
+        
+            if (globals.options? and globals.options.isEmbed?) and not @chart? 
+              return
 
             controls = '<div id="saveControl" class="vis_controls">'
 
             controls += "<h3 class='clean_shrink'><a href='#'>Saving:</a></h3>"
             controls += "<div class='outer_control_div' style='text-align:center'>"
 
-            controls += "<div class='inner_control_div'>"
-            controls += "<button id='saveVisButton' class='save_button'>Save Visualization </button>"
-            controls += "</div>"
+            if not (globals.options? and globals.options.isEmbed?)
+              controls += "<div class='inner_control_div'>"
+              controls += "<button id='saveVisButton' class='save_button'>Save Visualization </button>"
+              controls += "</div>"
 
             if @chart?
-                ###
+                
                 controls += "<div class='inner_control_div'>"
                 controls += "<button id='downloadVisButton' class='save_button'> Download Visualization </button>"
                 controls += "</div>"
-                ###
+                
                 controls += "<div class='inner_control_div'>"
                 controls += "<button id='printVisButton' class='save_button'> Print Visualization </button>"
                 controls += "</div>"
@@ -222,11 +226,11 @@ $ ->
             ($ "#saveVisButton").click ->
                 globals.verifyUser (-> globals.saveVis()), (-> alert 'You must be logged in to save a visualization.')
 
-            ###
+            
             ($ '#downloadVisButton').click =>
                 @chart.exportChart
                     type: "image/svg+xml"
-            ###
+            
 
             ($ '#printVisButton').click =>
                 @chart.print()
@@ -287,11 +291,7 @@ $ ->
                 credits:
                     enabled: false
                 exporting:
-                    buttons:
-                        exportButton:
-                            enabled:false
-                        printButton:
-                            enabled:false
+                  enabled: false
                 legend:
                     itemHoverStyle: ''
                     backgroundColor: 'white'
