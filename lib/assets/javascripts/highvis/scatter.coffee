@@ -300,7 +300,7 @@ $ ->
 
             if elaspedTimeButton
                 controls += "<div class='inner_control_div'>"
-                controls += "<button id='elaspedTimeButton' class='save_button'>Generate Elasped Time </button>"
+                controls += "<button id='elaspedTimeButton' class='save_button'>Generate Elapsed Time </button>"
                 controls += "</div>"
                 
             controls+= "</div></div>"
@@ -331,7 +331,7 @@ $ ->
 
             ($ '#elaspedTimeButton').button()
             ($ '#elaspedTimeButton').click (e) =>
-                globals.generateElaspedTimeDialog()
+                globals.generateElapsedTimeDialog()
 
             #Set up accordion
             globals.toolsOpen ?= 0
