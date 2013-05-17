@@ -1,34 +1,34 @@
-class ProjectsController < ApplicationController  
+class ProjectsController < ApplicationController
   # GET /projects
   # GET /projects.json
   skip_before_filter :authorize, only: [:show,:index]
-  
+
   include ActionView::Helpers::DateHelper
 
   def index
-    
+
     #Main List
     if !params[:sort].nil?
         sort = params[:sort]
     else
         sort = "DESC"
     end
-    
+
     if sort=="ASC" or sort=="DESC"
       @projects = Project.filter(params[:filters]).search(params[:search]).paginate(page: params[:page], per_page: 100).order("created_at #{sort}")
     else
       @projects = Project.filter(params[:filters]).search(params[:search]).paginate(page: params[:page], per_page: 100).order("like_count DESC")
     end
-    
+
     #Featured list
     @featured_3 = Project.where(featured: true).order("updated_at DESC").limit(3);
-    
+
     jsonObjects = []
-    
+
     @projects.each do |proj|
       if(!proj.hidden)
         newJsonObject = {}
-        
+
         newJsonObject["title"]          = proj.title
         newJsonObject["timeAgoInWords"] = time_ago_in_words(proj.created_at)
         newJsonObject["createdAt"]      = proj.created_at.strftime("%B %d, %Y")
@@ -37,66 +37,66 @@ class ProjectsController < ApplicationController
         newJsonObject["projectPath"] = project_path(proj)
         newJsonObject["ownerPath"]      = user_path(proj.owner)
         newJsonObject["filters"]        = proj.filter
-        
-        if(proj.featured_media_id != nil) 
+
+        if(proj.featured_media_id != nil)
           newJsonObject["mediaPath"] = MediaObject.find_by_id(proj.featured_media_id).src;
         end
-        
+
         jsonObjects = jsonObjects << newJsonObject
       end
     end
-    
+
     respond_to do |format|
       format.html
       format.json { render json: jsonObjects }
     end
-    
+
   end
 
   # GET /projects/1
   # GET /projects/1.json
   def show
     @project = Project.find(params[:id])
-    
+
     #Determine if the project is cloned
     @cloned_project = nil
     if(!@project.cloned_from.nil?)
       @cloned_project = Project.find(@project.cloned_from)
     end
-    
+
     #Get number of likes
     @likes = @project.likes.count
-    
+
     @liked_by_cur_user = false
-    if(Like.find_by_user_id_and_project_id(@cur_user,@project.id)) 
+    if(Like.find_by_user_id_and_project_id(@cur_user,@project.id))
       @liked_by_cur_user = true
     end
-    
+
     #checks for fields
     @has_fields = false
     if( @project.fields.count > 0)
       @has_fields = true
     end
-    
-    
-        
+
+
+
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: {proj: @project, ses: @project.data_sets} }
     end
   end
-  
+
   def createSession
-    
+
     @project = Project.find(params[:id])
-   
+
   end
 
   # GET /projects/new
   # GET /projects/new.json
   def new
     @project = Project.new
-    
+
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @project }
@@ -112,7 +112,7 @@ class ProjectsController < ApplicationController
   # POST /projects.json
   def create
     #@project = Project.new(params[:project])
-    
+
     if(params[:project_id])
       @tmp_proj = Project.find(params[:project_id])
       @project = Project.new({user_id: @cur_user.id, title:"#{@tmp_proj.title} (clone)", content: @tmp_proj.content, filter: @tmp_proj.filter, cloned_from:@tmp_proj.id})
@@ -142,7 +142,7 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
 
     ps = params[:project]
-   
+
     if ps.has_key?(:featured)
       if ps['featured'] == "1"
         ps['featured_at'] = Time.now()
@@ -150,7 +150,7 @@ class ProjectsController < ApplicationController
         ps['featured_at'] = nil
       end
     end
-    
+
     respond_to do |format|
       if @project.update_attributes(ps)
         format.html { redirect_to @project, notice: 'Project was successfully updated.' }
@@ -161,7 +161,7 @@ class ProjectsController < ApplicationController
       end
     end
   end
-  
+
   # GET /projects/pid/fid
   def checkFieldName
 
@@ -173,7 +173,7 @@ class ProjectsController < ApplicationController
         if f.name == params['field']['name']
           orig = false
         end
-      end      
+      end
     end
 
     respond_to do |format|
@@ -192,10 +192,10 @@ class ProjectsController < ApplicationController
       format.json { head :no_content }
     end
   end
-  
-  
+
+
   def updateLikedStatus
-    
+
     like = Like.find_by_user_id_and_project_id(@cur_user,params[:id])
 
     if(like)
@@ -203,56 +203,56 @@ class ProjectsController < ApplicationController
     else
       Like.create({user_id:@cur_user.id,project_id:params[:id]})
     end
-    
+
     count = Project.find(params[:id]).likes.count
-    
+
     Project.find(params[:id]).update_attributes(:like_count => count)
-    
+
     if(count == 0 || count > 1)
-      @response = count.to_s + " people liked this"  
+      @response = count.to_s + " people liked this"
     else
       @response = count.to_s + " person liked this"
     end
-    
+
     respond_to do |format|
       format.json { render json: {update: @response} }
     end
   end
-  
+
   def removeField
-    
+
     @project = Project.find(params[:id])
-    
+
     msg = ""
-    
+
     if @project.data_sets.count == 0
-      
+
       field_list = []
-      
+
       @project.fields.each do |f|
         if f.id != params[:field_id].to_i
           field_list.push(f)
         end
       end
-      
+
     @project.fields = field_list
     @project.save!
-    
+
     end
-    
+
     respond_to do |format|
       format.json { render json: {project: @project, fields: field_list} }
     end
-    
+
   end
-  
+
   def importFromIsense
     require 'net/http'
-    
+
     @pid = params[:pid]
-    
+
     if( !@pid.nil? )
-    
+
       #Clone existing project from iSENSE
       json = ActiveSupport::JSON.decode(
         Net::HTTP.get(
@@ -261,9 +261,9 @@ class ProjectsController < ApplicationController
             )
           )
         )
-    
+
       @project = Project.new({user_id: @cur_user.id, title: json["data"]["name"], content: json["data"]["description"], featured: json["data"]["featured"]})
-    
+
       #If clone is successful clone fields
       if @project.save
         json = ActiveSupport::JSON.decode(
@@ -273,7 +273,7 @@ class ProjectsController < ApplicationController
             )
           )
         )
-      
+
         #For each field append it to the project's field list
         json["data"].each do |f|
           if f["type_id"].to_i == 7
@@ -291,67 +291,84 @@ class ProjectsController < ApplicationController
           end
           @project.fields.push Field.create({project_id: @project.id, field_type: type, name: f["field_name"], unit: f["unit_name"]})
         end
-      
+
         #Get session list
-      
+
         json = ActiveSupport::JSON.decode(
           Net::HTTP.get(
             URI.parse("http://isenseproject.org/ws/api.php?method=getSessions&experiment=#{@pid}")
           )
         )
-      
+
         sessions = Array.new()
-      
+
         json["data"].each do |ses|
           sessions.push Hash["id" => ses["session_id"].to_s, "name" => ses["name"].to_s, "desc" => ses["description"].to_s ]
         end
 
         params[:pid] = @project.id
-      
+
+        retry_attempts = 5
+
         #Get the data from each session
         sessions.each_with_index do |ses, ses_index|
-          response = Net::HTTP.get(
-            URI.parse("http://isenseproject.org/ws/json.php?sessions=#{ses['id']}")
-          )
-      
+
+          begin
+
+            response = Net::HTTP.get(
+              URI.parse("http://isenseproject.org/ws/json.php?sessions=#{ses['id']}")
+            )
+
+          rescue SocketError => error
+            if retry_attempts > 0
+              retry_attempts -= 1
+              sleep 5
+              retry
+            end
+
+            raise
+          end
+
           response["var DATA = "] = ""
-          response[";"] = ""
           response["var STATE = \"\""] = ""
-          response[";"] = ""
-  
+
+          while( response[";"] )
+            response[";"] = ""
+          end
+
           json = ActiveSupport::JSON.decode response
-      
+
           header = Hash.new
-        
+
           @project.fields.all.each_with_index do |f, i|
             header["#{i}"] = { id: "#{f.id}", type: "#{f.field_type}" }
           end
-     
+
           data = Hash.new
-        
+
           json[0]["data"].each_with_index do |d, i|
             data["#{i}"] = d
           end
-        
+
           DataSet.upload_form(header, data, @cur_user, @project, ses['name'])
 
         end
-  
+
         redirect_to @project
       else
-        
+
         logger.info "The project didn't save for some reason..."
-      
+
       end
-    
-    
+
+
     else
       respond_to do |format|
         format.json { render json: json }
         format.html
       end
     end
-    
+
   end
-  
+
 end
