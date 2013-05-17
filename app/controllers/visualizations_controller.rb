@@ -66,7 +66,7 @@ class VisualizationsController < ApplicationController
     @Data = { savedData: @visualization.data, savedGlobals: @visualization.globals }
 
     respond_to do |format|
-      format.html
+      format.html {render :layout => 'applicationWide' }
     end
   end
 
@@ -257,7 +257,7 @@ class VisualizationsController < ApplicationController
     
     
     respond_to do |format|
-      format.html
+      format.html {render :layout => 'applicationWide' }
     end
   end
   
