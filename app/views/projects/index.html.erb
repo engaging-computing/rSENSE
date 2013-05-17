@@ -15,8 +15,7 @@
               </select>
             </div>
             <div style="width:40%;float:left;margin-left:20px;">
-              <%= text_field_tag :search, params[:search], class:'search-query'%>
-            </div>
+              <input class="search-query" id="search" name="search" type="text" x-webkit-speech>            </div>
             <div style="width:20%;float:left;margin-left:40px;">
               <%= submit_tag "Search", name: nil, class:'btn'%>
             </div>

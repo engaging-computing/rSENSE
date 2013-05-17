@@ -1,52 +1,43 @@
 <div class="row">
-  
-  <%= render "tutorials/display_tutorials", :id => "1"%>
-  <%= render "tutorials/display_tutorials", :id => "2"%>
-  <%= render "tutorials/display_tutorials", :id => "3"%>
-  <%= render "tutorials/display_tutorials", :id => "4"%>
-
+  <% (1..4).each do |i|%>
+    <%= render "tutorials/display_tutorials", :id => "#{i}"%>
+  <%end%>
 </div>
 
+<hr style="margin-top:0px;border-top-color:black;">
+<% if @featured_vis != nil%>
+  <div class="row">
+    <div class="span12">
+      <h2>Featured Visualization</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="span8"><iframe scrolling="no" style="width:100%;height:400px;border:0px;" src="/visualizations/<%=@featured_vis.id%>/embeded"></iframe></div>
+    <div class="span4">
+      <h2><%= link_to @featured_vis.title, visualization_path(@featured_vis)%></h2>
+      <b>Created: </b><%= time_ago_in_words(@featured_vis.created_at)%> ago, on <%=@featured_vis.created_at.strftime("%B %d, %Y")%><br />
+      <b>From Project: </b><%= link_to @featured_vis.project.title, project_path(@featured_vis.project)%><br />
+      <b>By: </b><%= link_to @featured_vis.owner.name, user_path(@featured_vis.owner)%>
+      <%= render 'shared/content_borderless', {type: 'visualization', field: "content", content: @featured_vis.content, row_id: @featured_vis.id, has_content: !@featured_vis.content.blank?, can_edit: false} %>
+    </div>
+</div>
+<%end%>
+<br />
 <div class="row">
-  
-  <div class="span8">
-    <div class="row">
-      <div class="span8">
-        <h1>Lorem Ipsum</h1>
-      </div>
-    </div>
-    <div class="row">
-      <div class="span8">
-        <div class="content-block">
-          <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum pretium rhoncus nibh vel varius. Proin molestie sollicitudin augue, nec venenatis dolor auctor sed. Ut eget aliquam dui. Ut urna arcu, ullamcorper et interdum at, adipiscing a est. Curabitur erat est, aliquet et gravida at, hendrerit consequat ipsum. Suspendisse malesuada nisl quis felis vestibulum ut interdum lacus ornare. Sed non turpis velit, quis fermentum mauris. Mauris in nunc metus. Praesent at mauris in leo tempor malesuada. Aliquam libero lorem, placerat vel volutpat in, commodo a erat. Praesent a nibh aliquam nisl lacinia sagittis in adipiscing libero. Etiam non massa nulla. Morbi quis eros a augue venenatis eleifend vel sed dolor. Sed ac lectus ac dolor mattis vulputate.</p>
-
-          <p>Vivamus dictum leo non velit vulputate suscipit at in eros. Ut lorem nibh, suscipit a auctor adipiscing, lobortis et felis. Vestibulum id risus eu tortor sodales posuere. Cras nec luctus sem. Sed tristique placerat malesuada. Vivamus at tellus a tellus luctus placerat at ut turpis. Sed hendrerit pretium magna quis bibendum. Quisque vel nunc dolor.</p>
-
-          <p>Sed id neque enim, sit amet gravida eros. Sed massa purus, consectetur id semper et, vestibulum id nisi. Morbi bibendum sollicitudin neque eu luctus. Fusce id risus vitae orci pharetra gravida sit amet et magna. Maecenas metus mi, tristique et vestibulum non, tincidunt venenatis eros. Fusce enim nulla, auctor malesuada malesuada ac, rutrum sed neque. In hac habitasse platea dictumst. Mauris sed massa urna, at aliquet nunc. Suspendisse feugiat vestibulum nisl ut accumsan. Nullam laoreet posuere tempor. Curabitur neque elit, varius in commodo lobortis, semper non tellus. Donec fermentum justo sed risus facilisis tristique. Sed a tellus nec massa tempus malesuada sit amet faucibus diam. Ut in magna arcu, quis pulvinar nibh.</p>
-
-          <p>Morbi bibendum purus facilisis tellus gravida mollis. Phasellus interdum, odio quis feugiat sagittis, mauris erat porta quam, sed posuere ligula sapien eget nisi. Sed sagittis libero et sapien pellentesque scelerisque. Donec gravida porttitor nisi vitae consectetur. Vivamus convallis ligula vitae tellus cursus at fringilla metus viverra. Sed sed lacus consequat eros egestas facilisis. Phasellus magna massa, aliquet non tempus ut, eleifend sit amet nisi. Ut eu sem eros. Pellentesque varius est nec nibh elementum hendrerit. Vestibulum nulla est, commodo id auctor congue, pellentesque a felis. Nullam nec cursus nulla. Cras blandit lectus quis mi tincidunt vestibulum. Nullam tincidunt, enim nec varius bibendum, leo turpis aliquam quam, in hendrerit lorem purus sit amet neque. Nam congue elit id augue tempus nec auctor erat semper. Donec ac augue sapien, quis lacinia ipsum.</p>
-
-          <p>Nunc vehicula tellus et purus fermentum vestibulum. Duis commodo commodo viverra. Vestibulum felis odio, vehicula non ultrices eu, posuere id ipsum. Fusce pulvinar purus nec nulla pretium feugiat eget sit amet orci. Phasellus vel velit eget nibh tempus porttitor vitae at odio. Proin sit amet risus felis. Phasellus nulla magna, sollicitudin eget ornare quis, scelerisque eget nunc. Quisque dictum fermentum arcu sed consectetur. Fusce accumsan magna nibh, at scelerisque est. Nullam massa nunc, rutrum sit amet pharetra ac, interdum ut felis. Mauris eleifend urna at purus dapibus hendrerit. Integer fermentum tristique ipsum, vitae commodo velit euismod eget. Proin vestibulum turpis et lectus malesuada tempor ullamcorper in dui.</p>
-          <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum pretium rhoncus nibh vel varius. Proin molestie sollicitudin augue, nec venenatis dolor auctor sed. Ut eget aliquam dui. Ut urna arcu, ullamcorper et interdum at, adipiscing a est. Curabitur erat est, aliquet et gravida at, hendrerit consequat ipsum. Suspendisse malesuada nisl quis felis vestibulum ut interdum lacus ornare. Sed non turpis velit, quis fermentum mauris. Mauris in nunc metus. Praesent at mauris in leo tempor malesuada. Aliquam libero lorem, placerat vel volutpat in, commodo a erat. Praesent a nibh aliquam nisl lacinia sagittis in adipiscing libero. Etiam non massa nulla. Morbi quis eros a augue venenatis eleifend vel sed dolor. Sed ac lectus ac dolor mattis vulputate.</p>
-
-          <p>Vivamus dictum leo non velit vulputate suscipit at in eros. Ut lorem nibh, suscipit a auctor adipiscing, lobortis et felis. Vestibulum id risus eu tortor sodales posuere. Cras nec luctus sem. Sed tristique placerat malesuada. Vivamus at tellus a tellus luctus placerat at ut turpis. Sed hendrerit pretium magna quis bibendum. Quisque vel nunc dolor.</p>
-
-          <p>Sed id neque enim, sit amet gravida eros. Sed massa purus, consectetur id semper et, vestibulum id nisi. Morbi bibendum sollicitudin neque eu luctus. Fusce id risus vitae orci pharetra gravida sit amet et magna. Maecenas metus mi, tristique et vestibulum non, tincidunt venenatis eros. Fusce enim nulla, auctor malesuada malesuada ac, rutrum sed neque. In hac habitasse platea dictumst. Mauris sed massa urna, at aliquet nunc. Suspendisse feugiat vestibulum nisl ut accumsan. Nullam laoreet posuere tempor. Curabitur neque elit, varius in commodo lobortis, semper non tellus. Donec fermentum justo sed risus facilisis tristique. Sed a tellus nec massa tempus malesuada sit amet faucibus diam. Ut in magna arcu, quis pulvinar nibh.</p>
-
-          <p>Morbi bibendum purus facilisis tellus gravida mollis. Phasellus interdum, odio quis feugiat sagittis, mauris erat porta quam, sed posuere ligula sapien eget nisi. Sed sagittis libero et sapien pellentesque scelerisque. Donec gravida porttitor nisi vitae consectetur. Vivamus convallis ligula vitae tellus cursus at fringilla metus viverra. Sed sed lacus consequat eros egestas facilisis. Phasellus magna massa, aliquet non tempus ut, eleifend sit amet nisi. Ut eu sem eros. Pellentesque varius est nec nibh elementum hendrerit. Vestibulum nulla est, commodo id auctor congue, pellentesque a felis. Nullam nec cursus nulla. Cras blandit lectus quis mi tincidunt vestibulum. Nullam tincidunt, enim nec varius bibendum, leo turpis aliquam quam, in hendrerit lorem purus sit amet neque. Nam congue elit id augue tempus nec auctor erat semper. Donec ac augue sapien, quis lacinia ipsum.</p>
-
-          <p>Nunc vehicula tellus et purus fermentum vestibulum. Duis commodo commodo viverra. Vestibulum felis odio, vehicula non ultrices eu, posuere id ipsum. Fusce pulvinar purus nec nulla pretium feugiat eget sit amet orci. Phasellus vel velit eget nibh tempus porttitor vitae at odio. Proin sit amet risus felis. Phasellus nulla magna, sollicitudin eget ornare quis, scelerisque eget nunc. Quisque dictum fermentum arcu sed consectetur. Fusce accumsan magna nibh, at scelerisque est. Nullam massa nunc, rutrum sit amet pharetra ac, interdum ut felis. Mauris eleifend urna at purus dapibus hendrerit. Integer fermentum tristique ipsum, vitae commodo velit euismod eget. Proin vestibulum turpis et lectus malesuada tempor ullamcorper in dui.</p>
-        </div>
-      </div>
-    </div>
+  <div class="span12">
+    <h2>Featured Experiments</h2>
   </div>
-  
-  <div class="span4">
-    <div id="projects">
-        <%=render 'display_projects'%>
-    </div>
-  </div>
-  
+</div>
+<div class="row">
+  <% (0..2).each do |i|%>
+    <div class="span4">
+      <div class="hero-unit">
+        <%if @featured_projects[i] != nil%>
+          <%if @featured_projects[i].featured_media_id != nil%><img src=<%=MediaObject.find(@featured_projects[i].featured_media_id).src%>></img><%end%>
+          <h3><%= link_to @featured_projects[i].title, project_path(@featured_projects[i]) %></h3>
+          <b>Created:</b><%= time_ago_in_words(@featured_projects[i].created_at)%> ago, on <%=@featured_projects[i].created_at.strftime("%B %d, %Y")%>
+        <%end%>
+      </div>
+    </div>  
+  <%end%>
 </div>

@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  attr_accessible :content, :email, :firstname, :lastname, :password, :password_confirmation, :username, :validated
+  attr_accessible :content, :email, :firstname, :lastname, :password, :password_confirmation, :username, :validated, :hidden
   
   validates_uniqueness_of :email, case_sensitive: false, if: :email?
   validates :username, uniqueness: true, format: { :with => /\A[a-zA-Z0-9]+\z/, :message => "Only letters allowed" }
@@ -9,13 +9,13 @@ class User < ActiveRecord::Base
 
   before_create :check_validation
   after_create :check_and_send_validation
-
   has_many :projects
   has_many :memberships
   has_many :groups, :through => :memberships
   has_many :data_sets
   has_many :media_objects
   has_many :visualizations
+  has_many :tutorials
   
   def to_param
     self.username

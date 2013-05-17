@@ -26,23 +26,40 @@
  * DAMAGE.
  *
 ###
+$ ->
+  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+      
+    window.globals ?= {}
+    globals.curVis = null
 
-window.globals ?= {}
-globals.curVis = null
+    globals.CONTROL_SIZE = 210
+    globals.VIS_MARGIN = 20
 
-globals.CONTROL_SIZE = 210
-globals.VIS_MARGIN = 20
+    ###
+    CoffeeScript version of runtime.
+    ###
+    
+    ### Fix height ###
+    
+    if globals.options? and globals.options.isEmbed?
+      ($ "#viscontainer").height
+    else
+      h = (Number ($ "div.mainContent").css("padding-top").replace("px", ""))
+      h += ($ "#title_bar").height()
+      h += ($ "#title_row").height()
+      h += globals.VIS_MARGIN
+      
+      ($ "#viscontainer").height(($ window).height() - h)
 
-###
-CoffeeScript version of runtime.
-###
-($ document).ready ->
+    #Number($("div.mainContent").css("padding-top").replace("px", ""))
+    #$("#title_bar").height() + $("#title_row").height()
+
+    ### hide all vis canvases to start ###
     ($ can).hide() for can in ['#map_canvas', '#timeline_canvas', '#scatter_canvas', '#bar_canvas', '#histogram_canvas', '#table_canvas', '#viscanvas','#motion_canvas','#photos_canvas']
-
+    
     ### Load saved data if there ###
     if data.savedGlobals?
         hydrate = new Hydrate()
-        
         globals.extendObject globals, (hydrate.parse data.savedGlobals)
         delete data.savedGlobals
     
@@ -59,7 +76,7 @@ CoffeeScript version of runtime.
     
 
     ($ '#viscontainer').width ($ '#viscontainer').width() - (($ '#viscontainer').outerWidth() - ($ '#viscontainer').width())
-
+    
     ### Pick vis ###
     if not (data.defaultVis in data.relVis)
         globals.curVis = (eval 'globals.' + data.relVis[0].toLowerCase())
@@ -79,18 +96,26 @@ CoffeeScript version of runtime.
 
         oldVis.end() if oldVis?
         globals.curVis.start()
-        
+    
     #Set initial div sizes
     containerSize = ($ '#viscontainer').width()
     hiderSize     = ($ '#controlhider').outerWidth()
-    controlSize = globals.CONTROL_SIZE
+    controlSize =  if globals.options? and globals.options.startCollasped?
+      $("#control_hide_button").html('<')
+      0
+    else
+      $("#control_hide_button").html('>')
+      globals.CONTROL_SIZE
 
     visWidth = containerSize - (hiderSize + controlSize + globals.VIS_MARGIN)
     visHeight = ($ '#viscontainer').height() - ($ '#visTabList').outerHeight()
 
     ($ '.vis_canvas').width  visWidth
     ($ '.vis_canvas').height visHeight
+    
     ($ '#controlhider').height visHeight
+    
+    ($ '#controldiv').width controlSize
     ($ '#controldiv').height visHeight
 
     ($ '.vis_canvas').css('padding', 0)
@@ -99,9 +124,9 @@ CoffeeScript version of runtime.
     
     #Start up vis
     globals.curVis.start()
-
+    
     #Toggle control panel
-    resizeVis = ->
+    resizeVis = (aniLength = 600) ->
     
         containerSize = ($ '#viscontainer').width()
         hiderSize     = ($ '#controlhider').outerWidth()
@@ -112,9 +137,9 @@ CoffeeScript version of runtime.
 
         newWidth = containerSize - (hiderSize + controlSize + globals.VIS_MARGIN)
         
-        ($ '#controldiv').animate {width: controlSize}, 600, 'linear'
-        ($ '.vis_canvas').animate {width: newWidth}, 600, 'linear'
-        globals.curVis.resize newWidth, $('.vis_canvas').height(), 600
+        ($ '#controldiv').animate {width: controlSize}, aniLength, 'linear'
+        ($ '.vis_canvas').animate {width: newWidth}, aniLength, 'linear'
+        globals.curVis.resize newWidth, $('.vis_canvas').height(), aniLength
 
     ($ '#control_hide_button').click ->
         
@@ -123,8 +148,6 @@ CoffeeScript version of runtime.
         else
             $("##{@id}").html('<')
         resizeVis()
-        
-                
-        
 
-                
+
+                    
