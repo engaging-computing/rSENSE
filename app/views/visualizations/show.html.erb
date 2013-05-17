@@ -7,7 +7,7 @@
 
 <p id="notice"><%= notice %></p>
 
-<div class="row" id="title_row">
+<div class="row" id="title_row" style="margin-left: 0px;">
     <span id="title_span" class="span12" style="font-size:2em"><%= visualization_edit_helper 'title', @visualization.owner.id == @cur_user.try(:id) %></span><br><br>
 </div>
 
@@ -24,9 +24,7 @@
   </div>
 <% end %>
 
-<div class="row">
-
-  <div class="span12">
+<div style="margin: 0px 10px;">
 
     <div id="viscontainer" style="height:500px;">
 
@@ -47,11 +45,10 @@
             <button id="control_hide_button" type="button" style="margin:5px;"> > </button>
         </div>
         <div id="controldiv"></div>
-    </div>
 
   </div>
 
-  <div class="span12" id="tabcontainer" style="margin-top: 10px;">
+  <div class="" id="tabcontainer">
     <ul class="nav nav-tabs" id="myTab">
       <li class="dataset_tab"><a href="#<%=@visualization.id%>">
         <%= visualization_edit_helper 'title', @visualization.owner.id == @cur_user.try(:id), make_link = false %>
