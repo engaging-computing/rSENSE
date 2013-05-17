@@ -1,10 +1,10 @@
 module ApplicationHelper
 
-  def include_page_spesific_js
-    if FileTest.exists? "app/assets/javascripts/"+params[:controller]+"/"+params[:action]+".js.coffee"
-      return '<script src="/assets/'+params[:controller]+'/'+params[:action]+'.js.coffee" type="text/javascript"></script>'
-    end
-  end
+#   def include_page_spesific_js
+#     if FileTest.exists? "app/assets/javascripts/"+params[:controller]+"/"+params[:action]+".js.coffee"
+#       return '<script src="/assets/'+params[:controller]+'/'+params[:action]+'.js.coffee" type="text/javascript"></script>'
+#     end
+#   end
   
   def get_field_id (type)
     if type == "Time"
@@ -31,6 +31,8 @@ module ApplicationHelper
   end
   
   def can_edit? (obj)
+    logger.info "-==--==--==--==--==--==--"
+    logger.info obj.class
     if(obj.class == User)
       (obj.id == @cur_user.try(:id)) || @cur_user.try(:admin)
     else

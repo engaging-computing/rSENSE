@@ -1,5 +1,5 @@
 $ ->
-  if namespace.controller is "tutorials" and namespace.action is "show"
+  if namespace.controller is "visualizations" and namespace.action is "show"
     # Control code for name popup box
     if ($ '#name_box') isnt []
       ($ '#name_box').modal();
@@ -14,7 +14,7 @@ $ ->
       ($ '.name_button').click ->
         name = ($ '#name_name').val()
         data = 
-          tutorial:
+          project:
             title: name
             
         $.ajax

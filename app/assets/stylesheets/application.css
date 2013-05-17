@@ -17,7 +17,11 @@
  *= require highvis.css
  *= require jquery.dataTables.css
  */
- 
+
+.vcenter {
+    vertical-align: middle;
+}
+
 #header
 {
     background-color : #fff;
@@ -176,7 +180,6 @@ input.info_edit_box
 
 .redactor_content
 {
-  background-color: #fff;
   padding: 10px;
   margin: 1px 1px 15px 1px;
 }
@@ -200,6 +203,14 @@ input.info_edit_box
 .redactor_box
 {
   margin-bottom: 15px;
+}
+
+.redactor_box, .redactor_box textarea {
+  background-color: rgba(0,0,0,0) !important;
+}
+
+.redactor_editor, .redactor_editor:focus {
+  background-color: rgba(0,0,0,0) !important;
 }
 
 li.dataset_tab

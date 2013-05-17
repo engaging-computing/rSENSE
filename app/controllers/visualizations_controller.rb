@@ -2,7 +2,7 @@ class VisualizationsController < ApplicationController
   include ApplicationHelper
   include ActionView::Helpers::DateHelper
   
-  skip_before_filter :authorize, only: [:show, :displayVis, :index]
+  skip_before_filter :authorize, only: [:show, :displayVis, :index,:embedVis]
   
   # GET /visualizations
   # GET /visualizations.json
@@ -40,10 +40,7 @@ class VisualizationsController < ApplicationController
       newJsonObject["ownerName"]      = "#{viz.owner.name}"
       newJsonObject["vizPath"]        = visualization_path(viz)
       newJsonObject["ownerPath"]      = user_path(viz.owner)
-      
-      logger.info "-----=========----"
-      logger.info(visualization_path(viz))
-      
+
       if(project.featured_media_id != nil) 
         newJsonObject["mediaPath"] = MediaObject.find_by_id(project.featured_media_id).src;
       end
@@ -69,10 +66,24 @@ class VisualizationsController < ApplicationController
     @Data = { savedData: @visualization.data, savedGlobals: @visualization.globals }
 
     respond_to do |format|
-      format.html
+      format.html {render :layout => 'applicationWide' }
     end
   end
 
+  # GET /visualizations/1/embeded
+  def embedVis
+    @visualization = Visualization.find(params[:id])
+    @project = Project.find_by_id(@visualization.project_id)
+
+    # The finalized data object
+    @Data = { savedData: @visualization.data, savedGlobals: @visualization.globals }
+    @Globals = { options: {startCollasped: 1, isEmbed: 1} }
+
+    respond_to do |format|
+      format.html {render :layout => 'embeded' }
+    end
+  end
+  
   # GET /visualizations/new
   # GET /visualizations/new.json
   def new
@@ -111,8 +122,18 @@ class VisualizationsController < ApplicationController
   def update
     @visualization = Visualization.find(params[:id])
 
+    vs = params[:visualization]
+   
+    if vs.has_key?(:featured)
+      if vs['featured'] == "1"
+        vs['featured_at'] = Time.now()
+      else
+        vs['featured_at'] = nil
+      end
+    end
+    
     respond_to do |format|
-      if @visualization.update_attributes(params[:visualization])
+      if @visualization.update_attributes(vs)
         format.html { redirect_to @visualization, notice: 'Visualization was successfully updated.' }
         format.json { head :no_content }
       else
@@ -236,7 +257,7 @@ class VisualizationsController < ApplicationController
     
     
     respond_to do |format|
-      format.html
+      format.html {render :layout => 'applicationWide' }
     end
   end
   

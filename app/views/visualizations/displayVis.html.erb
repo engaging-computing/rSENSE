@@ -1,42 +1,18 @@
 <script>
-  window.datasets = <%= raw @datasets.to_json %>
-  window.data = <%= raw @Data.to_json %>
+  window.data = <%= raw @Data.to_json %>;
 </script>
 <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBxtPK1_mxwVdl1NRu7ZEiSNvmCekFSZAw&sensor=false&libraries=visualization&v=3.9">
 </script>
-<script src="/assets/StyledMarker.js"></script>
 
-<script src="/assets/highvis/savedVis.coffee"></script>
-<script src="/assets/highvis/visUtils.coffee"></script>
-<script src="/assets/highvis/dataReduction.coffee"></script>
-<script src="/assets/highvis/highmodifiers.coffee"></script>
-
-<script src="/assets/highvis/baseVis.coffee"></script>
-
-<script src="/assets/highvis/disabledVis.coffee"></script>
-
-<script src="/assets/highvis/scatter.coffee"></script>
-<script src="/assets/highvis/timeline.coffee"></script>
-<script src="/assets/highvis/histogram.coffee"></script>
-<script src="/assets/highvis/bar.coffee"></script>
-<script src="/assets/highvis/table.coffee"></script>
-<script src="/assets/highvis/map.coffee"></script>
-<script src="/assets/highvis/motion.coffee"></script>
-<script src="/assets/highvis/photos.coffee"></script>
-
-
-<script src="/assets/highvis/runtime.coffee"></script>
-
-<div class="row">  
+<div class="row" id="title_row" style="margin-left: 0px;">  
     <span class="span12" style="font-size:2em"><%= project_edit_helper 'title', @project.owner.id == @cur_user.try(:id) %></span><br><br>
 </div>
 
-<div class="row">
+<div style="margin: 0px 10px;">
 
-  <div class="span12">
   
-    <div id="viscontainer">
+    <div id="viscontainer" style="height:500px;">
 
         <ul id='visTabList'>
         </ul>
@@ -59,7 +35,7 @@
   
   </div>
   
-  <div class="span12" id="tabcontainer" style="margin-top: 10px;">
+  <div class="" id="tabcontainer">
     <ul class="nav nav-tabs" id="myTab">
       <% i = 0 %>
       <% @datasets.each do |s| %>
@@ -75,7 +51,6 @@
          <div class="tab-pane" id="<%=s.id%>"><%= data_set_redactor_helper s, (@project.owner.id == @cur_user.try(:id)) %></div>
        <% i=i+1 %>
     <% end %>
-  </div>
 
 
 </div>
