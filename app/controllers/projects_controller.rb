@@ -236,4 +236,82 @@ class ProjectsController < ApplicationController
     
   end
   
+  def templateFields
+
+    require "csv"
+
+    @file = params[:csv]
+    @project = Project.find params[:id]
+    
+    if @project.fields.count == 0
+    
+      tmp = CSV.read(@file.tempfile)
+      
+      col = Array.new
+      p_fields = Array.new
+      
+      
+      
+      tmp[0].each_with_index do |dp, i|
+        col[i] = Array.new
+        p_fields[i] = { t: "Timestamp", n: "Number", s: "String", l: "Location" }
+      end
+      
+      tmp.each_with_index do |row, skip|
+        if( skip == 0 )
+        else
+          row.each_with_index do |data_point, i|
+            col[i].push [ data_point.strip() ]
+          end
+        end
+      end
+      
+      col.each_with_index do |c, i|
+        c.each do |dp|
+          if( dp[0] != "")
+            if( dp[0].to_i == 0 and dp[0] != "0" )
+              p_fields[i][:n] = ""
+              p_fields[i][:l] = ""
+            end
+            
+            if( dp[0].to_f > 180 or dp[0].to_f < -180 )
+              p_fields[i][:l] = ""
+            end
+            
+            if( dp[0].to_i.to_f.to_s != dp[0].to_f.to_s )
+              p_fields[i][:t] = ""
+            end
+          end
+        end
+      end
+      
+      params[:tmp] = Hash.new()
+      
+      p_fields.each_with_index do |f, i|
+        params[:tmp] = Field.new( project_id: @project.id, name: tmp[0][i] )
+      end
+      
+    end
+    
+    respond_to do |format|
+      format.json { render json: {p_field_types: p_fields} }
+      format.html { redirect_to action: "fieldSelect", id: @project.id }
+    end
+  
+  end
+  
+  def fieldSelect
+  
+    @project = Project.find(params[:id])
+    
+    if( !params[:createFields].nil? )
+    end
+    
+    respond_to do |format|
+      format.json { render json: {fields: [1,2,3]} }
+      format.html
+    end
+  
+  end
+  
 end

@@ -1,5 +1,8 @@
 Rsense::Application.routes.draw do
   resources :media_objects
+  
+  match "projects/:id/templateFields" => "projects#templateFields"
+  match "projects/:id/selectFields" => "projects#selectFields"
 
   get "project_templates/index"
 
