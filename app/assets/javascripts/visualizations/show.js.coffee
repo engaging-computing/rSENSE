@@ -14,7 +14,7 @@ $ ->
       ($ '.name_button').click ->
         name = ($ '#name_name').val()
         data = 
-          project:
+          visualization:
             title: name
             
         $.ajax
