@@ -5,8 +5,6 @@
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBxtPK1_mxwVdl1NRu7ZEiSNvmCekFSZAw&sensor=false&libraries=visualization&v=3.9">
 </script>
 
-<p id="notice"><%= notice %></p>
-
 <div class="row" id="title_row" style="margin-left: 0px;">
     <span id="title_span" class="span12" style="font-size:2em"><%= visualization_edit_helper 'title', @visualization.owner.id == @cur_user.try(:id) %></span><br><br>
 </div>
@@ -15,7 +13,7 @@
 <% if notice == "Visualization was successfully created." %>
   <div id="name_box" class="modal hide fade well container" style="width:400px">
     <div> Please enter a name for this Visualization. <br>
-      <input id="name_name" class="name_field" type="text" style="width:75%" value="<%= "TODO: FIX THIS NAME" %>"></input>
+      <input id="name_name" class="name_field" type="text" style="width:75%" value="<%= "Saved Vis - #{@project.title}" %>"></input>
       </div>
       <div class="clear"></div>
     <div style="float:right;">
