@@ -75,8 +75,16 @@ $ ->
                     useHTML: true
 
             @chartOptions.xAxis =
-                type: 'datetime'
-            
+                #type: 'datetime'
+                labels:
+                  formatter: () ->
+                    offset = this.value / (1000 * 3600 * 24 * 365)
+                    year = Math.floor 1970 + offset
+                    if year >= 0
+                      "#{year} AD"
+                    else
+                      "#{year} BC"
+                  
         ###
         Overwrite xAxis controls to only allow time fields
         ###
