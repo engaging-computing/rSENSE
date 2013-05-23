@@ -83,6 +83,15 @@ $ ->
         str += (minDigits 3, dat.getUTCMilliseconds()) + " GMT"
         
     ###
+    Date formatter for geological scale dates
+    ###
+    globals.geoDateFormatter = (dat) ->
+      if dat >= 0
+        "#{dat} CE"
+      else
+        "#{Math.abs dat} BCE"
+        
+    ###
     Cross platform accessor/mutator for element inner text
     ###
     window.innerTextCompat = (self, value = null) ->
@@ -315,3 +324,4 @@ $ ->
             close: ->
                 ($ "#dialog-form").remove()
             
+    globals.identity = (i) -> i
