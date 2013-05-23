@@ -176,7 +176,7 @@ $ ->
         ###
         Update the chart by removing all current series and recreating them
         ###
-        update: ->
+        update: (dataMapper = globals.identity) ->
             #Remove all series and draw legend
             super()
             
@@ -221,7 +221,7 @@ $ ->
                         data.xySelector(@xAxis, fieldIndex, groupIndex)
                     
                     options =
-                        data: dat
+                        data: dataMapper dat
                         showInLegend: false
                         color: globals.colors[groupIndex % globals.colors.length]
                         name:
@@ -263,7 +263,7 @@ $ ->
         ###
         Draws radio buttons for changing symbol/line mode.
         ###
-        drawToolControls: (elaspedTimeButton = true) ->
+        drawToolControls: (elaspedTimeButton = true, inject = "") ->
             controls =  '<div id="toolControl" class="vis_controls">'
 
             controls += "<h3 class='clean_shrink'><a href='#'>Tools:</a></h3>"
@@ -295,8 +295,10 @@ $ ->
 
             if data.logSafe is 1
                 controls += '<div class="inner_control_div">'
-                controls += "<input class='logY_box' type='checkbox' name='tooltip_selector' #{if globals.logY is 1 then 'checked' else ''}/> Logarithmic Y Axis "
+                controls += "<input class='logY_box' type='checkbox' name='log_selector' #{if globals.logY is 1 then 'checked' else ''}/> Logarithmic Y Axis "
                 controls += "</div>"
+                
+            controls += inject
 
             if elaspedTimeButton
                 controls += "<div class='inner_control_div'>"

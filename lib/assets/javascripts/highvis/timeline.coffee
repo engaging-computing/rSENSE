@@ -36,7 +36,26 @@ $ ->
         ###
         constructor: (@canvas) ->
             super @canvas
+            
+            @NORM_TIME_MODE = 0
+            @GEO_TIME_MODE = 1
+            
+            min = Number.POSITIVE_INFINITY
+            max = Number.NEGATIVE_INFINITY
+            
+            for dp in data.dataPoints
+              for fieldIndex in data.timeFields
+                min = Math.min(dp[fieldIndex], min)
+                max = Math.max(dp[fieldIndex], max)
+                
+            # In years
+            timeDiff = (max - min) / (1000*60*60*24*365)
+            
             @mode = @LINES_MODE
+            @timeMode = if timeDiff > 100
+              @GEO_TIME_MODE
+            else
+              @NORM_TIME_MODE
             @xAxis = data.timeFields[0]
 
         ###
@@ -58,32 +77,45 @@ $ ->
 
                             for field, fieldIndex in data.fields when @point.datapoint[fieldIndex] isnt null
                                 dat = if (Number field.typeID) is data.types.TIME
+                                  if self.timeMode is self.NORM_TIME_MODE  
                                     (globals.dateFormatter @point.datapoint[fieldIndex])
+                                  else #elif @timeMode is @GEO_TIME_MODE
+                                    (globals.geoDateFormatter (new Date(@point.datapoint[fieldIndex])).getUTCFullYear())
                                 else
-                                    @point.datapoint[fieldIndex]
+                                  @point.datapoint[fieldIndex]
 
                                 str += "<tr><td>#{field.fieldName}</td>"
                                 str += "<td><strong>#{dat}</strong></td></tr>"
 
                             str += "</table>"
                         else
+                            dl = if self.timeMode is self.NORM_TIME_MODE
+                              "<tr><td>#{@series.xAxis.options.title.text}:</td><td><strong>#{globals.dateFormatter @x}</strong></td></tr>"
+                            else #elif @timeMode is @GEO_TIME_MODE
+                              "<tr><td>#{@series.xAxis.options.title.text}:</td><td><strong>#{globals.geoDateFormatter @x}</strong></td></tr>"
                             str  = "<div style='width:100%;text-align:center;color:#{@series.color};'> #{@series.name.group}</div><br>"
                             str += "<table>"
-                            str += "<tr><td>#{@series.xAxis.options.title.text}:</td><td><strong>#{globals.dateFormatter @x}</strong></td></tr>"
+                            str += dl
                             str += "<tr><td>#{@series.name.field}:</td><td><strong>#{@y}</strong></td></tr>"
                             str += "</table>"
                     useHTML: true
 
             @chartOptions.xAxis =
-                #type: 'datetime'
+              if @timeMode is @NORM_TIME_MODE
+                type: 'datetime'
+              else #elif @timeMode is @GEO_TIME_MODE
                 labels:
-                  formatter: () ->
-                    offset = this.value / (1000 * 3600 * 24 * 365)
-                    year = Math.floor 1970 + offset
-                    if year >= 0
-                      "#{year} AD"
-                    else
-                      "#{year} BC"
+                  formatter: ->
+                    globals.geoDateFormatter @value
+            
+        ###
+        Conditionally change time into geological mode
+        ###
+        update: ->
+          if @timeMode is @NORM_TIME_MODE
+            super()
+          else #elif @timeMode is @GEO_TIME_MODE
+            super(@addYears)
                   
         ###
         Overwrite xAxis controls to only allow time fields
@@ -92,7 +124,25 @@ $ ->
             super (fieldIndex) -> fieldIndex in data.timeFields
 
         drawToolControls: ->
-            super(false)
+        
+          controls  = '<div class="inner_control_div">'
+          controls += "<input class='timeMode_box' type='checkbox' name='timeMode_selector' #{if @timeMode is @GEO_TIME_MODE then 'checked' else ''}/> Geological Time Scale "
+          controls += "</div>"  
+        
+          super(false, controls)
+          
+          ($ '.timeMode_box').click (e) =>
+            @timeMode = (@timeMode + 1) % 2
+            @start()
+            
+        ###
+        Mutates datapoints to store geological dates instead of js dates on the x axis.
+        ###
+        addYears: (data) ->
+          for dat in data
+            dat.time = dat.x
+            dat.x = (new Date(dat.x)).getUTCFullYear()
+            dat
 
     if "Timeline" in data.relVis
         globals.timeline = new Timeline 'timeline_canvas'
