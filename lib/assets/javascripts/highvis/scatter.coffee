@@ -199,6 +199,10 @@ $ ->
 
                         @xBounds.min = Math.min @xBounds.min, (data.getMin @xAxis, groupIndex)
                         @xBounds.max = Math.max @xBounds.max, (data.getMax @xAxis, groupIndex)
+                        
+                        if (@timeMode isnt undefined) and (@timeMode is @GEO_TIME_MODE)
+                          @xBounds.min = (new Date(@xBounds.min)).getUTCFullYear()
+                          @xBounds.max = (new Date(@xBounds.max)).getUTCFullYear()
             
             #Calculate grid spacing for data reduction
             width = ($ '#' + @canvas).width()
@@ -215,13 +219,13 @@ $ ->
             for fieldIndex, symbolIndex in data.normalFields when fieldIndex in globals.fieldSelection
                 for group, groupIndex in data.groups when groupIndex in globals.groupSelection
                     dat = if not @fullDetail
-                        sel = data.xySelector(@xAxis, fieldIndex, groupIndex)
+                        sel = dataMapper data.xySelector(@xAxis, fieldIndex, groupIndex)
                         globals.dataReduce sel, @xBounds, @yBounds, @xGridSize, @yGridSize, @MAX_SERIES_SIZE
                     else
-                        data.xySelector(@xAxis, fieldIndex, groupIndex)
+                        dataMapper data.xySelector(@xAxis, fieldIndex, groupIndex)
                     
                     options =
-                        data: dataMapper dat
+                        data: dat
                         showInLegend: false
                         color: globals.colors[groupIndex % globals.colors.length]
                         name:
@@ -415,6 +419,20 @@ $ ->
                 @chart.xAxis[0].setExtremes(@xAxisExtremes['min'],@xAxisExtremes['max'],true)
                 @chart.yAxis[0].setExtremes(@yAxisExtremes['min'],@yAxisExtremes['max'],true)
                 @chart.showResetZoom()
+                
+        zoomOutExtremes: ->
+          @getExtremes()
+          
+          xRange = @xAxisExtremes.max - @xAxisExtremes.min
+          yRange = @yAxisExtremes.max - @yAxisExtremes.min
+          
+          @xAxisExtremes.max += xRange * 0.1
+          @xAxisExtremes.min -= xRange * 0.1
+          
+          @yAxisExtremes.max += yRange * 0.1
+          @yAxisExtremes.min -= yRange * 0.1
+          
+          @setExtremes()
                 
         clearExtremes: ->
             @xAxisExtremes = undefined;
