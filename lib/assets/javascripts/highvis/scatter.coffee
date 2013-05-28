@@ -66,7 +66,6 @@ $ ->
                 userMin: undefined
 
             @fullDetail = 0
-            @lockZoom = 0
 
         storeXBounds: (bounds) ->
             @xBounds = bounds
@@ -117,19 +116,15 @@ $ ->
                     type: 'linear'
                     gridLineWidth: 1
                     minorTickInterval: 'auto'
-    #                 events:
-    #                     afterSetExtremes: (e) =>
-    #                         console.log 'X'
-    #                         @storeXBounds e
                     }]
                 yAxis:
                     type: if globals.logY is 1 then 'logarithmic' else 'linear'
                     events:
                         afterSetExtremes: (e) =>
-                            @storeXBounds @chart.xAxis[0].getExtremes()
-                            @storeYBounds @chart.yAxis[0].getExtremes()
-                            if not @lockZoom
-                              @delayedUpdate()
+                          @storeXBounds @chart.xAxis[0].getExtremes()
+                          @storeYBounds @chart.yAxis[0].getExtremes()
+                          if not @isZoomLocked()
+                            @delayedUpdate()
 
         ###
         Build the dummy series for the legend.
@@ -186,8 +181,8 @@ $ ->
               text: data.fields[@xAxis].fieldName
             @chart.xAxis[0].setTitle title, false
 
-            #Compute max bounds
-            if (@xBounds.userMax is undefined or @xBounds.userMax is null) and not @lockZoom
+            #Compute max bounds if there is no user zoom
+            if not @isZoomLocked()
 
                 @yBounds.min = @xBounds.min =  Number.MAX_VALUE
                 @yBounds.max = @xBounds.max = -Number.MAX_VALUE
@@ -249,14 +244,9 @@ $ ->
 
                     @chart.addSeries options, false
                     
-            if (@xBounds.userMax isnt undefined and @xBounds.userMax isnt null) or @lockZoom
-              if (@chart.xAxis[0].getExtremes().min is undefined) or @lockZoom
-                @chart.xAxis[0].setExtremes @xBounds.min, @xBounds.max, false
-                @chart.yAxis[0].setExtremes @yBounds.min, @yBounds.max, false
-
-                if (@xBounds.userMax isnt undefined and @xBounds.userMax isnt null)
-                  if ($ 'g[title="Reset zoom level 1:1"]').length is 0
-                    @chart.showResetZoom()
+            if @isZoomLocked()
+              @chart.xAxis[0].setExtremes @xBounds.min, @xBounds.max, false
+              @chart.yAxis[0].setExtremes @yBounds.min, @yBounds.max, false
                     
             @chart.redraw()
             
@@ -267,11 +257,16 @@ $ ->
         ###
         Draws radio buttons for changing symbol/line mode.
         ###
-        drawToolControls: (elaspedTimeButton = true, inject = "") ->
+        drawToolControls: (elaspedTimeButton = true, injectEnd = "") ->
             controls =  '<div id="toolControl" class="vis_controls">'
 
             controls += "<h3 class='clean_shrink'><a href='#'>Tools:</a></h3>"
             controls += "<div class='outer_control_div'>"
+            
+            controls += "<h4 class='clean_shrink'>Zoom</h4>"
+            controls += '<div class="inner_control_div">'
+            controls += "<button id='zoomResetButton' class='zoom_reset_button'>Reset Zoom </button>"
+            controls += "<button id='zoomOutButton' class='zoom_out_button'>Zoom Out </button>"
 
             controls += "<h4 class='clean_shrink'>Display Mode</h4>"
 
@@ -293,16 +288,12 @@ $ ->
             controls += "<input class='full_detail_box' type='checkbox' name='full_detail_selector' #{if @fullDetail then 'checked' else ''}/> Full Detail "
             controls += "</div>"
 
-            controls += '<div class="inner_control_div">'
-            controls += "<input class='lock_zoom_box' type='checkbox' name='lock_zoom_selector' #{if @fullDetail then 'checked' else ''}/> Lock Zoom "
-            controls += "</div>"
-
             if data.logSafe is 1
                 controls += '<div class="inner_control_div">'
                 controls += "<input class='logY_box' type='checkbox' name='log_selector' #{if globals.logY is 1 then 'checked' else ''}/> Logarithmic Y Axis "
                 controls += "</div>"
                 
-            controls += inject
+            controls += injectEnd
 
             if elaspedTimeButton
                 controls += "<div class='inner_control_div'>"
@@ -313,6 +304,14 @@ $ ->
             
             # Write HTML
             ($ '#controldiv').append controls
+
+            ($ '#zoomResetButton').button()
+            ($ '#zoomResetButton').click (e) =>
+              @chart.zoomOut()
+            
+            ($ '#zoomOutButton').button()
+            ($ '#zoomOutButton').click (e) =>
+              @zoomOutExtremes()
 
             ($ '.mode_radio').click (e) =>
                 @mode = Number e.target.value
@@ -325,10 +324,6 @@ $ ->
             ($ '.full_detail_box').click (e) =>
                 @fullDetail = (@fullDetail + 1) % 2
                 @delayedUpdate()
-                true
-
-            ($ '.lock_zoom_box').click (e) =>
-                @lockZoom = (@lockZoom + 1) % 2
                 true
                 
             ($ '.logY_box').click (e) =>
@@ -399,6 +394,12 @@ $ ->
 
             ($ '#xAxisControl > h3').click ->
                 globals.xAxisOpen = (globals.xAxisOpen + 1) % 2
+
+        ###
+        Checks if the user has requested a specific zoom
+        ###
+        isZoomLocked: ->
+            not (undefined in [@xAxis.userMin, @xAxis.userMax])
 
         resetExtremes: ->
             if @chart isnt undefined

@@ -325,3 +325,14 @@ $ ->
                 ($ "#dialog-form").remove()
             
     globals.identity = (i) -> i
+
+###
+Override default highcarts zoom behavior (because it sucks when allowing zoom out)
+###
+Highcharts.Axis.prototype.zoom = (newMin, newMax) ->
+
+  this.displayBtn = newMin != undefined || newMax != undefined
+  
+  this.setExtremes newMin, newMax, true, undefined, {trigger: 'zoom'}
+  
+  true
