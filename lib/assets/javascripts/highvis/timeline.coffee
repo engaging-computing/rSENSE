@@ -125,11 +125,11 @@ $ ->
 
         drawToolControls: ->
         
-          controls  = '<div class="inner_control_div">'
-          controls += "<input class='timeMode_box' type='checkbox' name='timeMode_selector' #{if @timeMode is @GEO_TIME_MODE then 'checked' else ''}/> Geological Time Scale "
-          controls += "</div>"  
+          controlsEnd  = '<div class="inner_control_div">'
+          controlsEnd += "<input class='timeMode_box' type='checkbox' name='timeMode_selector' #{if @timeMode is @GEO_TIME_MODE then 'checked' else ''}/> Geological Time Scale "
+          controlsEnd += "</div>"  
         
-          super(false, controls)
+          super(true, controlsEnd)
           
           ($ '.timeMode_box').click (e) =>
             @timeMode = (@timeMode + 1) % 2
