@@ -130,10 +130,8 @@ $ ->
                           if not @isZoomLocked()
                             @delayedUpdate()
                             ($ '#zoomResetButton').button("disable")
-                            console.log "off"
                           else
                             ($ '#zoomResetButton').button("enable")
-                            console.log "on"
                             
 
         ###
@@ -443,8 +441,12 @@ $ ->
           @xAxisExtremes.max += xRange * 0.1
           @xAxisExtremes.min -= xRange * 0.1
           
-          @yAxisExtremes.max += yRange * 0.1
-          @yAxisExtremes.min -= yRange * 0.1
+          if globals.logY is 1
+            @yAxisExtremes.max *= 10
+            @yAxisExtremes.min /= 10
+          else
+            @yAxisExtremes.max += yRange * 0.1
+            @yAxisExtremes.min -= yRange * 0.1
           
           @setExtremes()
                 
