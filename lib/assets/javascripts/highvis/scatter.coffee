@@ -87,6 +87,9 @@ $ ->
                 chart:
                     type: "line"
                     zoomType: "xy"
+                    resetZoomButton:
+                        theme:
+                            display: "none"
                 title:
                     text: ""
                 tooltip:
@@ -123,8 +126,15 @@ $ ->
                         afterSetExtremes: (e) =>
                           @storeXBounds @chart.xAxis[0].getExtremes()
                           @storeYBounds @chart.yAxis[0].getExtremes()
+                          
                           if not @isZoomLocked()
                             @delayedUpdate()
+                            ($ '#zoomResetButton').button("disable")
+                            console.log "off"
+                          else
+                            ($ '#zoomResetButton').button("enable")
+                            console.log "on"
+                            
 
         ###
         Build the dummy series for the legend.
@@ -308,6 +318,11 @@ $ ->
             ($ '#zoomResetButton').button()
             ($ '#zoomResetButton').click (e) =>
               @chart.zoomOut()
+            # Set initial state of zoom reset
+            if not @isZoomLocked()
+              ($ '#zoomResetButton').button("disable")
+            else
+              ($ '#zoomResetButton').button("enable")
             
             ($ '#zoomOutButton').button()
             ($ '#zoomOutButton').click (e) =>
@@ -399,7 +414,7 @@ $ ->
         Checks if the user has requested a specific zoom
         ###
         isZoomLocked: ->
-            not (undefined in [@xAxis.userMin, @xAxis.userMax])
+            not (undefined in [@xBounds.userMin, @xBounds.userMax])
 
         resetExtremes: ->
             if @chart isnt undefined
@@ -408,7 +423,6 @@ $ ->
                 
                 if @xAxisExtremes isnt undefined then @chart.xAxis[0].setExtremes(@xAxisExtremes['dataMin'],@xAxisExtremes['dataMax'],true)
                 if @yAxisExtremes isnt undefined then @chart.yAxis[0].setExtremes(@yAxisExtremes['dataMin'],@yAxisExtremes['dataMax'],true)
-                #@chart.hideResetZoom()
                 
         getExtremes: ->
             if @chart isnt undefined
@@ -419,7 +433,6 @@ $ ->
             if (@xAxisExtremes isnt undefined) and (@yAxisExtremes isnt undefined)
                 @chart.xAxis[0].setExtremes(@xAxisExtremes['min'],@xAxisExtremes['max'],true)
                 @chart.yAxis[0].setExtremes(@yAxisExtremes['min'],@yAxisExtremes['max'],true)
-                @chart.showResetZoom()
                 
         zoomOutExtremes: ->
           @getExtremes()
