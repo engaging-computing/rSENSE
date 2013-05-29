@@ -1,12 +1,14 @@
 Rsense::Application.routes.draw do
   resources :media_objects
 
+  match "projects/:id/templateFields" => "projects#templateFields"
+
   get "project_templates/index"
-  
+
   match "/projects/import" => "projects#importFromIsense"
   match "/projects/import/:pid" => "projects#importFromIsense"
 
-  
+
   resources :visualizations
 
   #resources :data_sets
@@ -23,10 +25,10 @@ Rsense::Application.routes.draw do
   match "tutorials/create" => "tutorials#create"
   match "/tutorials/switch/" => "tutorials#switch"
   resources :tutorials
-  
+
   get "home/index"
   root :to => "home#index"
-  
+
   get "admin/index"
 
   get 'admin' => 'admin#index'
@@ -34,16 +36,16 @@ Rsense::Application.routes.draw do
   resources :data_sets do
     get 'getData' => :getData
   end
-  
+
   #Routes for project templates
   match "/project_templates" => "project_templates#index"
 
   #Routes for uploading data
   match "/projects/:id/createSession" => "projects#createSession"
   match "/projects/:id/addDataSet" => "projects#addDataSet"
-  
+
   match "/projects/:pid/:fid/checkFieldName" => "projects#checkFieldName"
-  
+
   match "/projects/:id/uploadCSV" => "data_sets#uploadCSV"
   match "/data_sets/:pid/manualEntry" => "data_sets#manualEntry"
   match "/data_sets/:pid/manualUpload" => "data_sets#manualUpload"
@@ -53,12 +55,12 @@ Rsense::Application.routes.draw do
   match "/projects/:id/data_sets/*datasets" => "visualizations#displayVis"
   match "/projects/:id/data_sets/" => "visualizations#displayVis"
   match "/visualizations/:id/embeded" => "visualizations#embedVis"
-  
+
   match "/projects/:id/removeField" => "projects#removeField"
 
   match "/data_sets/:id/postCSV" => "data_sets#uploadCSV"
   match "/media_objects/saveMedia/*keys" => "media_objects#saveMedia"
-  
+
   controller :sessions do
     post 'login' => :create
     delete 'login' => :destroy
@@ -67,11 +69,11 @@ Rsense::Application.routes.draw do
   match "/users/verify" => "users#verify"
   resources :users
   match "/users/validate/:key" => "users#validate"
-  
+
   match "/projects/:id/updateLikedStatus" => "projects#updateLikedStatus"
 
 
-  
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
