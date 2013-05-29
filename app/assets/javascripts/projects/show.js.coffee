@@ -26,6 +26,76 @@ $ ->
             ($ '#title_span span.info_text a').text(name)
             ($ '#name_box').modal('hide')
 
+    respond_template = ( resp ) ->
+      ($ 'button.finished_button').addClass 'disabled'
+
+      ($ '#match_table').html ''
+      ($ '#match_table').append '<tr><th> Field Name </th><th> Field Unit </th><th> Field Type </th></tr>'
+
+      for field, field_index in resp.fields
+        options = "<option value='-1'>Select One...</option>"
+        for type, type_index in resp.p_field_types[field_index]
+          options += "<option value='#{type_index}'>#{type}</option>"
+
+        html = "<tr><td class='field_name'>#{field.name[0..29]}"
+
+        if field.name.length > 29
+          html += '...'
+
+        html += "</td><td><input type='text' class='field_unit' /></td><td><select>#{options}</select></td></tr>"
+
+        ($ '#match_table').append html
+
+      ($ "button.cancel_upload_button").click ->
+          ($ "#match_box").modal("hide")
+
+      ($ "#match_table select").change ->
+        check = true
+        for sel in ($ '#match_table').find(':selected')
+          if ($ sel).text() == "Select One..."
+            check = false
+
+        if check
+          ($ 'button.finished_button').removeClass 'disabled'
+        else
+          ($ 'button.finished_button').addClass 'disabled'
+
+
+      ($ "button.finished_button").click ->
+        if !($ 'button.finished_button').hasClass('disabled')
+          newFields =
+            pid: resp.pid
+            names: []
+            units: []
+            types: []
+
+          for names in ($ '#match_table').find('.field_name')
+            newFields.names.push ($ names).text()
+
+          for units in ($ '#match_table').find('.field_unit')
+            newFields.units.push ($ units).val()
+
+          for types in ($ '#match_table').find(':selected')
+            newFields.types.push ($ types).text()
+
+          $.ajax
+            type: "POST"
+            dataType: "json"
+            url: "#{window.location}/templateFields"
+            data: {save: true, fields: newFields}
+            success: (resp) ->
+              ($ "#match_box").modal("hide")
+              window.location = window.location
+
+      #begin horrible hackeyness of prodding the modal box
+      #were gonna strech it and try and poke it to the center
+      ($ '#match_box').css('width', '670px')
+
+      ($ "#match_box").modal
+          backdrop: 'static'
+          keyboard: true
+
+
     respond_csv = ( resp ) ->
       ($ "#match_table").html ''
       ($ "#match_table").append "<tr><th> Experiment Field </th> <th> CSV Header </th></tr>"
@@ -95,6 +165,8 @@ $ ->
       else
         if( resp.action != "template" )
           respond_csv(resp)
+        else
+          respond_template(resp)
 
 
     load_qr = ->

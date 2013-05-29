@@ -374,66 +374,118 @@ class ProjectsController < ApplicationController
 
   def templateFields
 
-    require "csv"
+    #include FieldHelper
 
-    @file = params[:csv]
     @project = Project.find params[:id]
 
-    if @project.fields.count == 0
+    if !params[:save].nil?
 
-      tmp = CSV.read(@file.tempfile)
+      field_list = []
 
-      col = Array.new
-      p_fields = Array.new
-
-
-
-      tmp[0].each_with_index do |dp, i|
-        col[i] = Array.new
-        p_fields[i] = { t: "Timestamp", n: "Number", s: "String", l: "Location" }
+      @project.fields.each do |f|
+        field_list.push(f)
       end
 
-      tmp.each_with_index do |row, skip|
-        if( skip == 0 )
-        else
-          row.each_with_index do |data_point, i|
-            col[i].push [ data_point.strip() ]
+      logger.info params
+
+      params[:fields][:names].each_with_index do |f, f_index|
+
+        field = Field.create( { name: f, field_type: view_context.get_field_type(params[:fields][:types][f_index]), project_id: @project.id, unit: params[:fields][:units][f_index] } )
+
+        if view_context.get_field_name(field.field_type) == "Latitude"
+          field.unit = "deg"
+        elsif view_context.get_field_name(field.field_type) == "Longitude"
+          field.unit = "deg"
+        elsif view_context.get_field_name(field.field_type) == "Text"
+          field.unit = ""
+        end
+
+        field_list.push field
+
+      end
+
+      @project.fields = field_list
+      @project.save!
+
+      respond_to do |format|
+        format.json { render json: {project: @project, fields: field_list} }
+      end
+
+    else
+
+      require "csv"
+
+      @file = params[:csv]
+
+      if @project.fields.count == 0
+
+        tmp = CSV.read(@file.try(:tempfile))
+
+        col = Array.new
+        p_fields = Array.new
+
+        tmp[0].each_with_index do |dp, i|
+          col[i] = Array.new
+          p_fields[i] = [ "Timestamp", "Number", "Text", "Latitude", "Longitude" ]
+        end
+
+        tmp.each_with_index do |row, skip|
+          if( skip == 0 )
+          else
+            row.each_with_index do |data_point, i|
+              col[i].push [ data_point.strip() ]
+            end
           end
         end
-      end
 
-      col.each_with_index do |c, i|
-        c.each do |dp|
-          if( dp[0] != "")
-            if( dp[0].to_i == 0 and dp[0] != "0" )
-              p_fields[i][:n] = ""
-              p_fields[i][:l] = ""
-            end
+        col.each_with_index do |c, i|
+          c.each do |dp|
+            if( dp[0] != "")
+              if( dp[0].to_i == 0 and dp[0] != "0" )
+                p_fields[i][1] = ""
+                p_fields[i][3] = ""
+                p_fields[i][4] = ""
+              end
 
-            if( dp[0].to_f > 180 or dp[0].to_f < -180 )
-              p_fields[i][:l] = ""
-            end
+              if( dp[0].to_f > 180 or dp[0].to_f < -180 )
+                p_fields[i][3] = ""
+                p_fields[i][4] = ""
+              end
 
-            if( dp[0].to_i.to_f.to_s != dp[0].to_f.to_s )
-              p_fields[i][:t] = ""
+              if( dp[0].to_i.to_f.to_s != dp[0].to_f.to_s )
+                p_fields[i][0] = ""
+              end
             end
           end
         end
+
+        p_fields.each_with_index do |p, i|
+
+          new_p = Array.new
+
+          p.each do |f|
+            if f != ""
+              new_p.push f
+            end
+          end
+
+          p_fields[i] = new_p
+
+        end
+
+        params[:tmp] = Array.new()
+
+        p_fields.each_with_index do |f, i|
+          params[:tmp].push Field.new( name: tmp[0][i] )
+        end
+
       end
 
-      params[:tmp] = Hash.new()
-
-      p_fields.each_with_index do |f, i|
-        params[:tmp] = Field.new( project_id: @project.id, name: tmp[0][i] )
+      respond_to do |format|
+        format.json { render json: { action: "template" , pid: @project.id , fields: params[:tmp], p_field_types: p_fields} }
+        format.html { redirect_to action: "fieldSelect", id: @project.id }
       end
-
     end
-
-    respond_to do |format|
-      format.json { render json: { action: "template" , p_field_types: p_fields} }
-      format.html { redirect_to action: "fieldSelect", id: @project.id }
-    end
-
   end
 
   def fieldSelect
