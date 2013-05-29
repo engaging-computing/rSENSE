@@ -64,6 +64,7 @@ $ ->
                 obj =
                     x: new Date(dp[xIndex])
                     y: Number dp[yIndex]
+                    year: (new Date(dp[xIndex])).getUTCFullYear()
                     datapoint: dp
         else
             mapFunc = (dp) ->

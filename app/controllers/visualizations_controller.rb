@@ -108,8 +108,9 @@ class VisualizationsController < ApplicationController
 
     respond_to do |format|
       if @visualization.save
-        format.html { redirect_to @visualization, notice: 'Visualization was successfully created.' }
-        format.json { render json: @visualization.id, status: :created, location: @visualization }
+        flash[:notice] = 'Visualization was successfully created.'
+        format.html { redirect_to @visualization }
+        format.json { render json: @visualization.id, status: :created, location: @visualization}
       else
         format.html { render action: "new" }
         format.json { render json: @visualization.errors, status: :unprocessable_entity }
