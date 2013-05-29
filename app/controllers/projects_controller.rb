@@ -386,8 +386,6 @@ class ProjectsController < ApplicationController
         field_list.push(f)
       end
 
-      logger.info params
-
       params[:fields][:names].each_with_index do |f, f_index|
 
         field = Field.create( { name: f, field_type: view_context.get_field_type(params[:fields][:types][f_index]), project_id: @project.id, unit: params[:fields][:units][f_index] } )
