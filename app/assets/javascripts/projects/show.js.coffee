@@ -280,7 +280,7 @@ $ ->
     ($ "#check_selector").click ->
       if ($ this).is(":checked")
         ($ this).parent().parent().parent().find("[id^=project_]").each (i,j) =>
-        ($ j).prop("checked",true)
+          ($ j).prop("checked",true)
         ($ '#vis_button').prop("disabled",false)
       else
         ($ this).parent().parent().parent().find("[id^=project_]").each (i,j) =>

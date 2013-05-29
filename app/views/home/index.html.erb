@@ -25,7 +25,7 @@
 <br />
 <div class="row">
   <div class="span12">
-    <h2>Featured Experiments</h2>
+    <h2>Featured Projects</h2>
   </div>
 </div>
 <div class="row">
@@ -35,7 +35,7 @@
         <%if @featured_projects[i] != nil%>
           <%if @featured_projects[i].featured_media_id != nil%><img src=<%=MediaObject.find(@featured_projects[i].featured_media_id).src%>></img><%end%>
           <h3><%= link_to @featured_projects[i].title, project_path(@featured_projects[i]) %></h3>
-          <b>Created:</b><%= time_ago_in_words(@featured_projects[i].created_at)%> ago, on <%=@featured_projects[i].created_at.strftime("%B %d, %Y")%>
+          <b>Created: </b><%= time_ago_in_words(@featured_projects[i].created_at)%> ago, on <%=@featured_projects[i].created_at.strftime("%B %d, %Y")%>
         <%end%>
       </div>
     </div>  
