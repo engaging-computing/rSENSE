@@ -265,7 +265,7 @@ $ ->
         ###
         Draws radio buttons for changing symbol/line mode.
         ###
-        drawToolControls: (elaspedTimeButton = true, injectEnd = "") ->
+        drawToolControls: (elaspedTimeButton = true) ->
             controls =  '<div id="toolControl" class="vis_controls">'
 
             controls += "<h3 class='clean_shrink'><a href='#'>Tools:</a></h3>"
@@ -300,8 +300,6 @@ $ ->
                 controls += '<div class="inner_control_div">'
                 controls += "<input class='logY_box' type='checkbox' name='log_selector' #{if globals.logY is 1 then 'checked' else ''}/> Logarithmic Y Axis "
                 controls += "</div>"
-                
-            controls += injectEnd
 
             if elaspedTimeButton
                 controls += "<div class='inner_control_div'>"
