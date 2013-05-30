@@ -18,7 +18,7 @@ $ ->
                 newItem += "</h4>"
 
                 if (object.userGravatar) != "NULL"
-                  newItem += "<img src='#{object.userGravatar}'> </img><br />"
+                  newItem += "<img src='#{object.userGravatar}'/><br />"
 
                 newItem +=  "<h8><b>Name: </b><a href='#{object.ownerPath}'>#{object.ownerName}</a></h8><br />"
 

@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   skip_before_filter :authorize, only: [:new, :create, :validate]
  
   include ActionView::Helpers::DateHelper
+  include ApplicationHelper
  
   # GET /users
   # GET /users.json
@@ -26,9 +27,11 @@ class UsersController < ApplicationController
         newJsonObject["timeAgoInWords"] = time_ago_in_words(user.created_at)
         newJsonObject["createdAt"]      = user.created_at.strftime("%B %d, %Y")
         newJsonObject["ownerPath"]      = user_path(user)
-        newJsonObject["userGravatar"] = "http://www.gravatar.com/avatar.php?gravatar_id=#{Digest::MD5::hexdigest(user.email)}"
-        if (newJsonObject["userGravatar"] == "http://www.gravatar.com/avatar.php?gravatar_id=d41d8cd98f00b204e9800998ecf8427e")
+        
+        if (user.email.to_s == '')
           newJsonObject["userGravatar"] = "NULL"
+        else
+          newJsonObject["userGravatar"] = gravatar_url(user, 80)
         end
         
         jsonObjects = jsonObjects << newJsonObject
