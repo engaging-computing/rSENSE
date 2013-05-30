@@ -24,9 +24,6 @@ gem 'jquery-rails'
 # To use ActiveModel has_secure_password
 gem 'bcrypt-ruby', '~> 3.0.0'
 
-# For using the Gravatar
-gem 'gravatar_image_tag'
-
 # Include JQuery UI
 gem 'jquery-ui-rails'
 
