@@ -31,8 +31,6 @@ module ApplicationHelper
   end
   
   def can_edit? (obj)
-    logger.info "-==--==--==--==--==--==--"
-    logger.info obj.class
     if(obj.class == User)
       (obj.id == @cur_user.try(:id)) || @cur_user.try(:admin)
     else
@@ -40,4 +38,8 @@ module ApplicationHelper
     end
   end
   
+  def gravatar_url (user, size = 150)
+    hash = Digest::MD5.hexdigest(user.email.downcase)
+    "http://gravatar.com/avatar/#{hash}.png?s=#{size}"
+  end
 end
