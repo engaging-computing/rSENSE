@@ -122,18 +122,6 @@ $ ->
         ###
         drawXAxisControls: ->
             super (fieldIndex) -> fieldIndex in data.timeFields
-
-        drawToolControls: ->
-        
-          controlsEnd  = '<div class="inner_control_div">'
-          controlsEnd += "<input class='timeMode_box' type='checkbox' name='timeMode_selector' #{if @timeMode is @GEO_TIME_MODE then 'checked' else ''}/> Geological Time Scale "
-          controlsEnd += "</div>"  
-        
-          super(true, controlsEnd)
-          
-          ($ '.timeMode_box').click (e) =>
-            @timeMode = (@timeMode + 1) % 2
-            @start()
             
         ###
         Mutates datapoints to store geological dates instead of js dates on the x axis.
