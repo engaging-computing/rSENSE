@@ -29,8 +29,8 @@ $ ->
     respond_template = ( resp ) ->
       ($ 'button.finished_button').addClass 'disabled'
 
-      ($ '#match_table').html ''
-      ($ '#match_table').append '<tr><th> Field Name </th><th> Field Unit </th><th> Field Type </th></tr>'
+      ($ '#template_match_table').html ''
+      ($ '#template_match_table').append '<tr><th> Field Name </th><th> Field Unit </th><th> Field Type </th></tr>'
 
       for field, field_index in resp.fields
         options = "<option value='-1'>Select One...</option>"
@@ -44,14 +44,14 @@ $ ->
 
         html += "</td><td><input type='text' class='field_unit' /></td><td><select>#{options}</select></td></tr>"
 
-        ($ '#match_table').append html
+        ($ '#template_match_table').append html
 
       ($ "button.cancel_upload_button").click ->
-          ($ "#match_box").modal("hide")
+          ($ "#template_match_box").modal("hide")
 
-      ($ "#match_table select").change ->
+      ($ "#template_match_table select").change ->
         check = true
-        for sel in ($ '#match_table').find(':selected')
+        for sel in ($ '#template_match_table').find(':selected')
           if ($ sel).text() == "Select One..."
             check = false
 
@@ -69,13 +69,13 @@ $ ->
             units: []
             types: []
 
-          for names in ($ '#match_table').find('.field_name')
+          for names in ($ '#template_match_table').find('.field_name')
             newFields.names.push ($ names).text()
 
-          for units in ($ '#match_table').find('.field_unit')
+          for units in ($ '#template_match_table').find('.field_unit')
             newFields.units.push ($ units).val()
 
-          for types in ($ '#match_table').find(':selected')
+          for types in ($ '#template_match_table').find(':selected')
             newFields.types.push ($ types).text()
 
           $.ajax
@@ -89,9 +89,9 @@ $ ->
 
       #begin horrible hackeyness of prodding the modal box
       #were gonna strech it and try and poke it to the center
-      ($ '#match_box').css('width', '670px')
+      ($ '#template_match_box').css('width', '670px')
 
-      ($ "#match_box").modal
+      ($ "#template_match_box").modal
           backdrop: 'static'
           keyboard: true
 
@@ -109,64 +109,64 @@ $ ->
           else
             options += "<option value='#{headerIndex}'> #{header} </option>"
 
-          ($ "#match_table").append "<tr>
-              <td> #{field} </td>
-              <td><select>" + options + "</select></td>
-              </tr>"
+        ($ "#match_table").append "<tr>
+                                  <td> #{field} </td>
+                                  <td><select>" + options + "</select></td>
+                                  </tr>"
 
-        ($ "button.cancel_upload_button").click ->
-          ($ "#match_box").modal("hide")
+      ($ "button.cancel_upload_button").click ->
+        ($ "#match_box").modal("hide")
 
-        ($ "button.finished_button").click ->
+      ($ "button.finished_button").click ->
 
-          matchData =
-            pid: resp.pid
-            fields: resp.fields
-            headers: resp.headers
-            matches: []
-            tmpFile: resp.tmpFile
+        matchData =
+          pid: resp.pid
+          fields: resp.fields
+          headers: resp.headers
+          matches: []
+          tmpFile: resp.tmpFile
 
-          ($ "#match_table tr").each (idx, ele) ->
-            if idx > 0
-              matchVal = ($ ele).find("td select").val()
-              headerIndex = Number matchVal
-              fieldIndex = idx - 1
+        ($ "#match_table tr").each (idx, ele) ->
+          if idx > 0
+            matchVal = ($ ele).find("td select").val()
+            headerIndex = Number matchVal
+            fieldIndex = idx - 1
 
-              if headerIndex is -1
-                ($ "#match_table tr td select[value=-1]").errorFlash()
+            if headerIndex is -1
+              ($ "#match_table tr td select[value=-1]").errorFlash()
 
-              matchData.matches[fieldIndex] =
-                findex: fieldIndex
-                hindex: headerIndex
+            matchData.matches[fieldIndex] =
+              findex: fieldIndex
+              hindex: headerIndex
 
-          $.ajax
-            type: "POST"
-            dataType: "json"
-            url: "/projects/#{resp['pid']}/uploadCSV"
-            data: matchData
-            success: (resp) ->
-              ($ "#match_box").modal("hide")
-              helpers.name_dataset resp.title, resp.datasets, () ->
-                window.location = resp.redirect
-            error: (resp) ->
-              alert "Somthing went horribly wrong. I'm sorry."
+        $.ajax
+          type: "POST"
+          dataType: "json"
+          url: "/projects/#{resp['pid']}/uploadCSV"
+          data: matchData
+          success: (resp) ->
+            ($ "#match_box").modal("hide")
+            helpers.name_dataset resp.title, resp.datasets, () ->
+              window.location = resp.redirect
+          error: (resp) ->
+            alert "Somthing went horribly wrong. I'm sorry."
 
-        ($ "#match_box").modal
-          backdrop: 'static'
-          keyboard: true
+      ($ "#match_box").modal
+        backdrop: 'static'
+        keyboard: true
 
     # A File has been uploaded, decide what to do
     ($ "#csv_file_form").ajaxForm (resp) ->
-
 
       if resp.status == "success"
         helpers.name_dataset resp.title, resp.datasets, () ->
           window.location = resp.redirect
       else
-        if( resp.action != "template" )
-          respond_csv(resp)
-        else
-          respond_template(resp)
+        respond_csv(resp)
+
+    ($ "#template_file_form").ajaxForm (resp) ->
+      respond_template(resp)
+
 
 
     load_qr = ->
@@ -219,20 +219,23 @@ $ ->
       ($ '#csv_file_input').click()
       false
 
-    ($ '#csv_file_input').change (e) ->
-      if( e.type == "change" )
-        ($ '#csv_file_form').attr 'action', "#{window.location}/templateFields"
-      else
-        ($ '#csv_file_form').attr 'action', "#{window.location}/uploadCSV"
+    ($ '#csv_file_input').click ->
+      ($ '#csv_file_form').attr 'action', "#{window.location}/uploadCSV"
+
+    ($ '#template_file_form').click ->
+      ($ '#template_file_form').attr 'action', "#{window.location}/templateFields"
 
     ($ '#csv_file_form').submit()
 
     ($ '#template-from-file').click ->
-      ($ '#csv_file_input').click()
+      ($ '#template_file_input').click()
       false
 
     ($ '#csv_file_input').change ->
       ($ '#csv_file_form').submit()
+
+    ($ '#template_file_input').change ->
+      ($ '#template_file_form').submit()
 
     ($ '#cancel_doc').click ->
       ($ '#doc_box').modal 'hide'
