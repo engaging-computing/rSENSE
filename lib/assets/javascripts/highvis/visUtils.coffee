@@ -86,10 +86,10 @@ $ ->
     Date formatter for geological scale dates
     ###
     globals.geoDateFormatter = (dat) ->
-      if dat >= 0
+      if dat > 0
         "#{dat} CE"
       else
-        "#{Math.abs dat} BCE"
+        "#{Math.abs (dat - 1)} BCE"
         
     ###
     Cross platform accessor/mutator for element inner text
