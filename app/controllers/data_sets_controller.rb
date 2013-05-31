@@ -15,7 +15,7 @@ class DataSetsController < ApplicationController
   def show
     @data_set = DataSet.find(params[:id])
     @mongo_data_set = MongoData.find_by_data_set_id(@data_set.id)
-    
+
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @data_set }
@@ -81,14 +81,14 @@ class DataSetsController < ApplicationController
       format.json { head :no_content }
     end
   end
-  
+
   def manualEntry
       @project = Project.find(params[:pid])
   end
-  
+
   # POST /data_set/1/manualUpload
   def manualUpload
-    
+
     @project = Project.find(params[:pid])
     defaultName  = @project.title + " Dataset #"
     defaultName += (DataSet.find_all_by_project_id(params[:pid]).count + 1).to_s
@@ -97,11 +97,11 @@ class DataSetsController < ApplicationController
     data = params[:ses_info][:data]
 
     if !data.nil?
-     
+
       @data_set = DataSet.create(:user_id => @cur_user.id, :project_id => @project.id, :title => defaultName)
 
       mongo_data = []
-      
+
       data.each do |dp|
         row = []
         header.each_with_index do |field, col_index|
@@ -109,17 +109,17 @@ class DataSetsController < ApplicationController
         end
         mongo_data << row
       end
-                
-      data_to_add = MongoData.new(:data_set_id => @data_set.id, :data => mongo_data)    
-      
+
+      data_to_add = MongoData.new(:data_set_id => @data_set.id, :data => mongo_data)
+
       followURL = url_for :controller => :visualizations, :action => :displayVis, :id => @project.id, :sessions => "#{@data_set.id}"
-      
+
       if data_to_add.save!
         response = { status: 'success', redirect: followURL, datasets: @data_set.id, title: defaultName }
       else
         response = { status: 'fail' }
-      end 
-      
+      end
+
     else
       response = ["No data"]
     end
@@ -128,11 +128,11 @@ class DataSetsController < ApplicationController
       format.html { render json: response }
       format.json { render json: response }
     end
-    
+
   end
-  
+
   ## POST /data_sets/1
-  def uploadCSV      
+  def uploadCSV
     require "csv"
 
     #Grab field names from project
@@ -143,49 +143,49 @@ class DataSetsController < ApplicationController
       exp_fields.append f.name
     end
     fields = exp_fields
-    
+
     #Client has responded to a call for matching
     if(params.has_key?(:matches))
-      
+
       data = CSV.read(params['tmpFile'])
 
       headers = params[:headers]
       matches = params[:matches]
-      
+
       matches = matches.inject({}) do |acc, kvp|
         v = kvp[1].inject({}) do |acc, kvp|
           acc[kvp[0].to_sym] = Integer(kvp[1])
           acc
         end
-        
+
         acc[Integer(kvp[0])] = v
         acc
       end
 
       data = sortColumns(data, matches)
-      
+
     #First call to upload a csv.
-    else  
-      
+    else
+
       @file = params[:csv]
       data = CSV.read(@file.tempfile)
-      
+
       headers = data[0]
-          
+
       #Build match matrix with quality
-      matrix = buildMatchMatrix(fields,headers) 
+      matrix = buildMatchMatrix(fields,headers)
       results = {}
       worstMatch = 0
       until false
         max =  matrixMax(matrix)
-        
+
         break if max['val'] == 0
         matrixZeroCross(matrix, max['findex'], max['hindex'])
-        
+
         results[max['findex']] = {findex: max['findex'], hindex: max['hindex'], quality: max['val']}
         worstMatch = max['val']
       end
-     
+
       # If the headers are mismatched respond with mismatch
       if (results.size != @project.fields.size) or (worstMatch < 0.6)
         #Create a tmp directory if it does not exist
@@ -193,37 +193,37 @@ class DataSetsController < ApplicationController
           Dir.mkdir("/tmp/rsense")
         rescue
         end
-       
+
         #Save file so we can grab it again
         base = "/tmp/rsense/dataset"
         fname = base + "#{Time.now.to_i}.csv"
         f = File.new(fname, "w")
         f.write @file.tempfile.read
-        f.close    
+        f.close
         respond_to do |format|
           format.json { render json: {status: "mismatch", pid: params[:id],headers: headers, fields: fields, partialMatches: results,tmpFile: fname}   }
         end
         return
-      
+
       #EVERYTHING MATCHED, SORT THE COLUMNS
-      else 
+      else
         data = sortColumns(data,results)
       end
     end
-    
+
     #WE HAVE SUCCESSFULLY MATCHED HEADERS AND FIELDS, SAVE THE DATA FINALLY.
     @project = Project.find_by_id(params[:id])
     defaultName  = @project.title + " Dataset #"
     defaultName += (DataSet.find_all_by_project_id(params[:id]).count + 1).to_s
-    
+
     @data_set = DataSet.new(:project_id => params[:id], :title => defaultName, :user_id => @cur_user.try(:id))
-    
+
     #Parse out just the data
     data = data[1..(data.size-1)]
-    
+
     #Data that will be stuffed into mongo
     mongo_data = Array.new
-    
+
     #Build the object that will be displayed in the table
     format_data = {}
     format_data["metadata"] = []
@@ -231,9 +231,9 @@ class DataSetsController < ApplicationController
     fields.count.times do |i|
       format_data["metadata"].push({name: headers[i], label: headers[i], datatype: "string", editable: true})
     end
-    
+
     header = Field.find_all_by_project_id(@project.id)
-    
+
     data.each do |dp|
       row = []
       header.each_with_index do |field, col_index|
@@ -243,10 +243,10 @@ class DataSetsController < ApplicationController
     end
 
     if @data_set.save!
-      data_to_add = MongoData.new(:data_set_id => @data_set.id, :data => mongo_data)    
-    
+      data_to_add = MongoData.new(:data_set_id => @data_set.id, :data => mongo_data)
+
       redirect = url_for :controller => :visualizations, :action => :displayVis, :id => @project.id, :datasets => @data_set.id
-    
+
       if data_to_add.save!
         response = { status: 'success', redirect: redirect, :datasets => @data_set.id, :title => @data_set.title }
       else
@@ -254,21 +254,21 @@ class DataSetsController < ApplicationController
       end
     else
       response = { status: 'fail' }
-    end  
-    
+    end
+
     #Send the object as json
     respond_to do |format|
       format.json { render json: response }
       format.html { redirect_to :controller => :visualizations, :action => :displayVis, :id => @project.id, :datasets => @data_set.id, :title =>  @data_set.title }
     end
-    
+
   end
 
 private
 
   #Returns the index of the highest value in the match matrix.
   def matrixMax(matrix)
-    
+
     n = matrix.map do |x|
       m = {}
       m['val'] = x.max
@@ -276,7 +276,7 @@ private
       m['findex'] = matrix.index(x)
       m
     end
-    
+
     n.inject do |h1, h2|
       if h1['val'] > h2['val']
         h1
@@ -285,14 +285,14 @@ private
       end
     end
   end
-  
+
   #Zero out a row and column of the match matrix
   def matrixZeroCross(matrix, findex, hindex)
-    
+
     (0...matrix.size).each do |fi|
       matrix[fi][hindex] = 0
     end
-    
+
     (0...matrix[0].size).each do |hi|
       matrix[findex][hi] = 0
     end
@@ -301,7 +301,7 @@ private
   end
 
   #Use LCS to build a matches with quality.
-  def buildMatchMatrix(fields, headers) 
+  def buildMatchMatrix(fields, headers)
     matrix = []
     fields.each_with_index do |f,fi|
       matrix.append []
@@ -309,13 +309,13 @@ private
         lcs_length = lcs(fields[fi].downcase,headers[hi].downcase).length.to_f
         x = lcs_length / fields[fi].length.to_f
         y = lcs_length / headers[hi].length.to_f
-        avg = (x + y) / 2                      
+        avg = (x + y) / 2
         matrix[fi].append avg
       end
     end
     matrix
   end
-  
+
   #Longest common subsequence. Used in column matching
   def lcs(a, b)
       lengths = Array.new(a.size+1) { Array.new(b.size+1) { 0 } }
@@ -347,27 +347,27 @@ private
       end
       result.reverse
   end
-  
+
   #It is easier to swap columns around after rotating the data matrix
   def rotateDataMatrix(dataMatrix)
-    
+
     newDataMatrix = []
-    
+
     for i in 0...dataMatrix[0].size()
       newDataMatrix[i] = []
     end
-      
+
     for i in 0...dataMatrix.size()
-      
+
       for j in 0...dataMatrix[i].size()
         newDataMatrix[j][i] = dataMatrix[i][j]
       end
     end
-    
+
     newDataMatrix
-    
+
   end
-  
+
   #Rotate the matrix then swap the columns to the correct order
   def sortColumns(rowColMatrix, matches)
     rotatedMatrix = rotateDataMatrix(rowColMatrix)
@@ -376,8 +376,8 @@ private
     matches.size.times do |i|
       newData[i] = rotatedMatrix[matches[i][:hindex]]
     end
-    
+
     rotateDataMatrix(newData)
   end
-  
+
 end
