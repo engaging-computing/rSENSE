@@ -268,6 +268,14 @@ $ ->
         year = month = day = minutes = seconds = milliseconds = 0
         hours = 12
         hourAdj = 0
+        
+        # Check for LT format to short circut
+        if (str.match /lt/gi) isnt null
+          str = str.replace /lt/gi, ""
+          year = Number(str)
+          d = new Date(0)
+          d.setUTCFullYear(year)
+          return d.valueOf()
 
         # Find and extract AM/PM information
         if (str.match /pm/gi) isnt null
