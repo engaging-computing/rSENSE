@@ -52,7 +52,7 @@
           </tr>
           <% @project.data_sets.all.each do |s| %>
             <tr>
-              <td style="width:32px;height:32px;"><%= gravatar_image_tag(s.owner.email, alt: s.owner.firstname,:gravatar => { :size => 32 }) %></td>
+              <td style="width:32px;height:32px;"><%= image_tag gravatar_url(s.owner, 32) %></td>
               <td><%= link_to "#{s.owner.name}", user_path(s.owner) %></td>
               <td><%= link_to s.title, "#{params[:id]}/data_sets/#{s.id}" %></td>
               <td><input type="checkbox" id="project_<%=params[:id]%>_session_<%=s.id%>"/></td>
