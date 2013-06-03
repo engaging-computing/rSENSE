@@ -80,10 +80,12 @@ $ ->
     ### Pick vis ###
     if not (data.defaultVis in data.relVis)
         globals.curVis = (eval 'globals.' + data.relVis[0].toLowerCase())
-        ($ '#viscontainer').tabs('select', "##{data.relVis[0].toLowerCase()}_canvas")
+        #($ '#viscontainer').tabs('select', "##{data.relVis[0].toLowerCase()}_canvas")
+        ($ '#viscontainer').tabs('option', 'active', data.allVis.indexOf(data.relVis[0]))
     else
         globals.curVis = (eval 'globals.' + data.defaultVis.toLowerCase())
-        ($ '#viscontainer').tabs('select', "##{data.defaultVis.toLowerCase()}_canvas")
+        #($ '#viscontainer').tabs('select', "##{data.defaultVis.toLowerCase()}_canvas")
+        ($ '#viscontainer').tabs('option', 'active', data.allVis.indexOf(data.defaultVis))
         
     ### Change vis click handler ###
     ($ '#visTabList a').click ->
