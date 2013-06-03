@@ -46,6 +46,10 @@ $ ->
         LOCATION:
             LATITUDE: 4
             LONGITUDE: 5
+            
+    data.GEO_TIME  ?= 1
+    data.NORM_TIME ?= 0
+    data.timeType  ?= data.NORM_TIME
 
     ###
     Selects data in an x,y object format of the given group.
@@ -59,19 +63,11 @@ $ ->
 
             group and notNull and notNaN
 
-        if (Number @fields[xIndex].typeID) is data.types.TIME
-            mapFunc = (dp) ->
-                obj =
-                    x: new Date(dp[xIndex])
-                    y: Number dp[yIndex]
-                    year: (new Date(dp[xIndex])).getUTCFullYear()
-                    datapoint: dp
-        else
-            mapFunc = (dp) ->
-                obj =
-                    x: Number dp[xIndex]
-                    y: Number dp[yIndex]
-                    datapoint: dp
+        mapFunc = (dp) ->
+            obj =
+                x: Number dp[xIndex]
+                y: Number dp[yIndex]
+                datapoint: dp
 
         mapped = rawData.map mapFunc
         mapped.sort (a, b) -> (a.x - b.x)
@@ -257,11 +253,16 @@ $ ->
                         if isNaN Number dp[fIndex]
                             dp[fIndex] = data.parseDate dp[fIndex]
                         else
-                            dp[fIndex] = (new Date (Number dp[fIndex])).valueOf()
+                            d = new Date (Number dp[fIndex])
+                            dp[fIndex] = [d.valueOf(), d.getUTCFullYear()]
                     when data.types.TEXT
                         NaN
                     else
                         dp[fIndex] = if isNaN (Number dp[fIndex]) then null else (Number dp[fIndex])
+        
+        for dp, dIndex in data.dataPoints
+              for fieldIndex in data.timeFields
+                  data.dataPoints[dIndex][fieldIndex] = dp[fieldIndex][data.timeType]
         1
 
     data.parseDate = (str) ->
@@ -275,7 +276,11 @@ $ ->
           year = Number(str)
           d = new Date(0)
           d.setUTCFullYear(year)
-          return d.valueOf()
+          
+          if isNaN(d.valueOf())
+            data.timeType = data.GEO_TIME
+            
+          return [d.valueOf(), year]
 
         # Find and extract AM/PM information
         if (str.match /pm/gi) isnt null
@@ -320,7 +325,8 @@ $ ->
         seconds = 0 if isNaN seconds
         milliseconds = 0 if isNaN milliseconds
 
-        Date.UTC year, month, day, hours, minutes, seconds, milliseconds
+        d= new Date(Date.UTC year, month, day, hours, minutes, seconds, milliseconds)
+        return [d.valueOf(), d.getUTCFullYear()]
 
 
 
