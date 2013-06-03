@@ -225,8 +225,6 @@ $ ->
     ($ '#template_file_form').click ->
       ($ '#template_file_form').attr 'action', "#{window.location}/templateFields"
 
-    ($ '#csv_file_form').submit()
-
     ($ '#template-from-file').click ->
       ($ '#template_file_input').click()
       false
