@@ -240,8 +240,8 @@ class VisualizationsController < ApplicationController
     end
     
     if field_count[NUMBER_TYPE] > 0 and format_data.count > 1
-      rel_vis.push "Histogram"
       rel_vis.push "Bar"
+      rel_vis.push "Histogram"
     end
     
     rel_vis.push "Table"
