@@ -179,7 +179,7 @@ $ ->
         ###
         Update the chart by removing all current series and recreating them
         ###
-        update: (dataMapper = globals.identity) ->
+        update: () ->
             #Remove all series and draw legend
             super()
             
@@ -222,10 +222,10 @@ $ ->
             for fieldIndex, symbolIndex in data.normalFields when fieldIndex in globals.fieldSelection
                 for group, groupIndex in data.groups when groupIndex in globals.groupSelection
                     dat = if not @fullDetail
-                        sel = dataMapper data.xySelector(@xAxis, fieldIndex, groupIndex)
+                        sel = data.xySelector(@xAxis, fieldIndex, groupIndex)
                         globals.dataReduce sel, @xBounds, @yBounds, @xGridSize, @yGridSize, @MAX_SERIES_SIZE
                     else
-                        dataMapper data.xySelector(@xAxis, fieldIndex, groupIndex)
+                        data.xySelector(@xAxis, fieldIndex, groupIndex)
                     
                     options =
                         data: dat
