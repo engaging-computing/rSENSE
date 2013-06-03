@@ -1,12 +1,12 @@
 $ ->
-  ($ 'input.validate_number').live 'change', (event) ->
+  ($ '.mainContent').on 'change', 'input.validate_number', (event) ->
   
     if isNaN Number event.target.value
       ($ @).addClass 'invalid'
     else
       ($ @).removeClass 'invalid'
 
-  ($ 'input.validate_latitude').live 'change', (event) ->
+  ($ '.mainContent').on 'change', 'input.validate_latitude', (event) ->
 
     val = Number event.target.value
     
@@ -15,7 +15,7 @@ $ ->
     else
       ($ @).removeClass 'invalid'
 
-  ($ 'input.validate_longitude').live 'change', (event) ->
+  ($ '.mainContent').on 'change', 'input.validate_longitude', (event) ->
 
     val = Number event.target.value
 
@@ -24,7 +24,7 @@ $ ->
     else
       ($ @).removeClass 'invalid'
 
-  ($ 'input.validate_timestamp').live 'change', (event) ->
+  ($ '.mainContent').on 'change', 'input.validate_timestamp', (event) ->
 
     #Put date validator here
     true
