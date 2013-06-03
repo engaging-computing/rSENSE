@@ -58,6 +58,9 @@ $ ->
 
         if isNaN dat
             return "Invalid Date"
+          
+        if data.timeType is data.GEO_TIME
+          return globals.geoDateFormatter(dat)
 
         dat = new Date(Number dat)
         
@@ -86,10 +89,12 @@ $ ->
     Date formatter for geological scale dates
     ###
     globals.geoDateFormatter = (dat) ->
-      if dat > 0
+      if dat is 0
+        "BCE / CE"
+      else if dat > 0
         "#{dat} CE"
       else
-        "#{Math.abs (dat - 1)} BCE"
+        "#{Math.abs dat} BCE"
         
     ###
     Cross platform accessor/mutator for element inner text
