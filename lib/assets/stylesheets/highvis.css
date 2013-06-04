@@ -48,7 +48,7 @@
 
 .vis_controls {
     float: right;
-    
+    width:100%;
 }
 
 .ui-accordion .ui-accordion-content {
