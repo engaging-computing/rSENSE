@@ -1,10 +1,10 @@
 class User < ActiveRecord::Base
   attr_accessible :content, :email, :firstname, :lastname, :password, :password_confirmation, :username, :validated, :hidden
-  
+
   validates_uniqueness_of :email, case_sensitive: false, if: :email?
   validates :username, uniqueness: true, format: { :with => /\A[a-zA-Z0-9]+\z/, :message => "Only letters allowed" }
   validates_presence_of :username
-  
+
   has_secure_password
 
   before_create :check_validation
@@ -16,7 +16,7 @@ class User < ActiveRecord::Base
   has_many :media_objects
   has_many :visualizations
   has_many :tutorials
-  
+
   def to_param
     self.username
   end
@@ -24,25 +24,25 @@ class User < ActiveRecord::Base
   def name
     firstname + " " + lastname[0] + "."
   end
-  
+
   def self.search(search)
     if search
-      where('firstname LIKE ? or username LIKE ?', "%#{search}%", "%#{search}%") 
+      where('firstname LIKE ? or username LIKE ?', "%#{search}%", "%#{search}%")
     else
       scoped
     end
   end
-  
+
   private
   def check_validation
     if (not validated) and (not email.blank?)
       self.validation_key = BCrypt::Password::create(email)
     end
   end
-  
+
   def check_and_send_validation
     if (not validated) and (not validation_key.blank?)
-      UserMailer.validation_email(self)
+      UserMailer.validation_email(self).deliver
     end
   end
 end
