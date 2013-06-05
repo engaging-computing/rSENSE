@@ -21,7 +21,7 @@ $(document).ready ->
         $(@).hide()
         
         field_name = $(@).parent().parent().attr('field')
-        value = $(@).parent().parent().find('.redactor_content').getCode()
+        value = $(@).parent().parent().find('.redactor_content').redactor('get')
         data={}
         data[type] = {}
         data[type][field_name] = value
@@ -33,7 +33,7 @@ $(document).ready ->
             data:
                 data
             success: =>
-                $(@).parent().parent().find('.redactor_content').destroyEditor()
+                $(@).parent().parent().find('.redactor_content').redactor('destroy')
         false
         
     $('.add_content_link').click ->
