@@ -32,7 +32,7 @@ $ ->
         success: (data) ->
           switch data.status
             when 'success'
-              ($ '#login_box').dialog 'close'
+              ($ '#login_box').modal 'hide'
               target =  $.data($('#login_box')[0], "redirect")
               if target isnt undefined
                 window.location = target
