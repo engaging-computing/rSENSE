@@ -28,7 +28,7 @@ body .redactor_air {
 	width: 100%;
 	white-space: normal;	
 }
-
+/*
 .redactor_editor, .redactor_editor:focus {
 	position: relative;
 	outline: none;
@@ -198,7 +198,7 @@ body .redactor_air {
 	border: 1px solid #e4e4e4 !important;
 	padding: 10px !important;
 	margin: 10px 0 !important;
-}
+}*/
 
 
 /*
@@ -223,7 +223,7 @@ body .redactor_air {
 	background: -ms-linear-gradient(top,  #f5f5f5 0%,#ddd 100%);
 	background: linear-gradient(top,  #f5f5f5 0%,#ddd 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5f5f5', endColorstr='#dddddd',GradientType=0 );
-	overflow: hidden !important;
+/* 	overflow: hidden !important; */
 	height: 32px !important;
 	border-bottom: 1px solid #bbb;
 }
