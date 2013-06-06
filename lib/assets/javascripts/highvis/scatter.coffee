@@ -66,6 +66,7 @@ $ ->
                 userMin: undefined
 
             @fullDetail = 0
+            @updateOnZoom = 1
 
         storeXBounds: (bounds) ->
             @xBounds = bounds
@@ -126,9 +127,16 @@ $ ->
                         afterSetExtremes: (e) =>
                           @storeXBounds @chart.xAxis[0].getExtremes()
                           @storeYBounds @chart.yAxis[0].getExtremes()
+                          ###
+                          If We actually zoomed, we want to update so the data reduction can trigger.
+                          Otherwise this zoom was triggered by an update, so don't recurse!
+                          ###
+                          if @updateOnZoom is 1
+                            @delayedUpdate()
+                          else
+                            @updateOnZoom = 1
                           
                           if not @isZoomLocked()
-                            @delayedUpdate()
                             ($ '#zoomResetButton').button("disable")
                           else
                             ($ '#zoomResetButton').button("enable")
@@ -253,6 +261,7 @@ $ ->
                     @chart.addSeries options, false
                     
             if @isZoomLocked()
+              @updateOnZoom = 0
               @chart.xAxis[0].setExtremes @xBounds.min, @xBounds.max, false
               @chart.yAxis[0].setExtremes @yBounds.min, @yBounds.max, false
                     
