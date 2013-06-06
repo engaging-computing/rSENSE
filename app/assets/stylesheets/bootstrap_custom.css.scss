@@ -204,3 +204,8 @@ i
   border-top: 0px;
 }
 
+/*This is a fix for dropdown menus being disallowed overflowing off accordians.*/
+.collapse.in
+{
+  overflow: visible !important;
+}
