@@ -222,9 +222,9 @@ class UsersController < ApplicationController
   def verify
     respond_to do |format|
       if @cur_user == nil
-        format.json {render json: "", status: :unauthorized}
+        format.json {render json: "{}", status: :unauthorized}
       else
-        format.json {render json: "", status: :ok}
+        format.json {render json: "{}", status: :ok}
       end
     end
   end
