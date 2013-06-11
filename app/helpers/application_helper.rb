@@ -31,10 +31,35 @@ module ApplicationHelper
   end
   
   def can_edit? (obj)
-    if(obj.class == User)
-      (obj.id == @cur_user.try(:id)) || @cur_user.try(:admin)
+    case obj
+    when User
+      (obj.id == @cur_user.try(:id)) || cur_user.try(:admin)
+    when Project, DataSet, Visualization, Tutorial
+      (obj.owner.id == @cur_user.try(:id)) || cur_user.try(:admin)
     else
-      (obj.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin)
+      false
+    end
+  end
+  
+  def can_hide? (obj)
+    case obj
+    when DataSet
+      (obj.owner.id == @cur_user.try(:id)) || cur_user.try(:admin) || (obj.project.owner.id == @cur_user.try(:id))
+    when Project, Visualization, Tutorial
+      (obj.owner.id == @cur_user.try(:id)) || cur_user.try(:admin)
+    else
+      false
+    end
+  end
+  
+  def can_delete? (obj)
+    case obj
+    when User, Project, Tutorial
+      cur_user.try(:admin)
+    when Dataset, Visualization, MediaObject
+      (obj.owner.id == @cur_user.try(:id)) || cur_user.try(:admin)
+    else
+      false
     end
   end
   
