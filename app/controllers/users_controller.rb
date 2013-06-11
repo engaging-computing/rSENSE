@@ -147,8 +147,9 @@ class UsersController < ApplicationController
   # PUT /users/1.json
   def update
     @user = User.find_by_username(params[:id])
+    success = false
 
-    if params[:commit] == "Delete User"
+    if (params[:commit] == "Delete User") && (can_delete?(@user)) #DELETE REQUEST
       @user.projects.each do |p|
         p.hidden = true
         p.save
@@ -177,31 +178,38 @@ class UsersController < ApplicationController
       
       respond_to do |format|
         format.html {redirect_to '/users'}
+        # Log out here?
       end
-    else
-      respond_to do |format|
-        if @user.update_attributes(params[:user])
-          format.html { redirect_to @user, notice: 'User was successfully updated.' }
-          format.json { head :no_content }
-        else
-          format.html { render action: "edit" }
-          format.json { render json: @user.errors, status: :unprocessable_entity }
-        end
+    elsif can_edit?(@user) #EDIT REQUEST
+      success = @user.update_attributes(params[:user])
+    elsif can_hide?(@user) #HIDE REQUEST
+      if params[:user].has_key?(:hidden)
+        success = @user.update_attributes({hidden: params[:user][:hidden]})
+      end
+    end
+    
+    respond_to do |format|
+      if success
+        format.html { redirect_to @user, notice: 'User was successfully updated.' }
+        format.json { head :no_content }
+      else
+        format.html { render "public/404.html" }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
   end
 
   # DELETE /users/1
   # DELETE /users/1.json
-  def destroy
-    @user = User.find_by_username(params[:id])
-    @user.destroy
-
-    respond_to do |format|
-      format.html { redirect_to users_url }
-      format.json { head :no_content }
-    end
-  end
+#   def destroy
+#     @user = User.find_by_username(params[:id])
+#     @user.destroy
+# 
+#     respond_to do |format|
+#       format.html { redirect_to users_url }
+#       format.json { head :no_content }
+#     end
+#   end
 
   # GET /users/validate/:key
   def validate
