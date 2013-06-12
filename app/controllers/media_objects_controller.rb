@@ -59,10 +59,28 @@ class MediaObjectsController < ApplicationController
   # PUT /media_objects/1.json
   def update
     @media_object = MediaObject.find(params[:id])
+    editUpdate  = params[:tutorial].to_hash
+    hideUpdate  = editUpdate.extract_keys!([:hidden])
+    success = false
+    
+    #EDIT REQUEST
+    if can_edit?(@media_object) 
+      success = @media_object.update_attributes(editUpdate)
+    end
+    
+    #HIDE REQUEST
+    if can_hide?(@media_object) 
+      success = @media_object.update_attributes(hideUpdate)
+    end
+    
+    #ADMIN REQUEST
+    if can_admin?(@media_object)
+      success = @media_object.update_attributes(adminUpdate)
+    end
 
     respond_to do |format|
-      if @media_object.update_attributes(params[:media_object])
-        format.html { redirect_to @media_object, notice: 'Media object was successfully updated.' }
+      if success
+        format.html { redirect_to @media_object, notice: 'MediaObject was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -75,11 +93,29 @@ class MediaObjectsController < ApplicationController
   # DELETE /media_objects/1.json
   def destroy
     @media_object = MediaObject.find(params[:id])
-    @media_object.destroy
+    
+    if can_delete?(@media_object)
+        
+      #Set up the link to S3
+      s3ConfigFile = YAML.load_file('config/aws_config.yml')
+    
+      s3 = AWS::S3.new(
+        :access_key_id => s3ConfigFile['access_key_id'],
+        :secret_access_key => s3ConfigFile['secret_access_key'])
+      
+      S3Object.delete(@media_object.file_key, 'isenseimgs')
+      
+      @media_object.destroy
 
-    respond_to do |format|
-      format.html { redirect_to media_objects_url }
-      format.json { head :no_content }
+      respond_to do |format|
+        format.html { redirect_to media_objects_url }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to 'public/401.html' }
+        format.json { render status: :forbidden }
+      end
     end
   end
   
@@ -124,27 +160,27 @@ class MediaObjectsController < ApplicationController
     when 'project'
       @project = Project.find_by_id(id)
       if(can_edit?(@project))
-        @mo = {user_id: @project.owner.id, project_id: id, src: o.public_url.to_s, name: fileName, media_type: fileType}
+        @mo = {user_id: @project.owner.id, project_id: id, src: o.public_url.to_s, name: fileName, media_type: fileType, file_key: fileKey}
       end
     when 'data_set'
       @data_set = DataSet.find_by_id(id)
       if(@data_set.owner == @cur_user)
-        @mo = {user_id: @data_set.owner.id, project_id: @data_set.project_id, data_set_id: @data_set.id, src: o.public_url.to_s, name: fileName, media_type: fileType}
+        @mo = {user_id: @data_set.owner.id, project_id: @data_set.project_id, data_set_id: @data_set.id, src: o.public_url.to_s, name: fileName, media_type: fileType, file_key: fileKey}
       end
     when 'user'
       @user = User.find_by_username(id)
       if(can_edit?(@user))
-        @mo = {user_id: @user.id, src: o.public_url.to_s, name: fileName, media_type: fileType}
+        @mo = {user_id: @user.id, src: o.public_url.to_s, name: fileName, media_type: fileType, file_key: fileKey}
       end
     when 'tutorial'
       @tutorial = Tutorial.find_by_id(id)
       if(can_edit?(@tutorial))
-        @mo = {user_id: @tutorial.owner.id, src: o.public_url.to_s, name: fileName, media_type: fileType, tutorial_id: @tutorial.id}
+        @mo = {user_id: @tutorial.owner.id, src: o.public_url.to_s, name: fileName, media_type: fileType, tutorial_id: @tutorial.id, file_key: fileKey}
       end
     when 'visualization'
       @visualization = Visualization.find_by_id(id)
       if(can_edit?(@visualization))
-        @mo = {user_id: @visualization.owner.id, src: o.public_url.to_s, name: fileName, media_type: fileType, visualization_id: @visualization.id}
+        @mo = {user_id: @visualization.owner.id, src: o.public_url.to_s, name: fileName, media_type: fileType, visualization_id: @visualization.id, file_key: fileKey}
       end
     end
 

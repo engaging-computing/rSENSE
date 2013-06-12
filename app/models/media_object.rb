@@ -1,5 +1,5 @@
 class MediaObject < ActiveRecord::Base
-  attr_accessible :project_id, :media_type, :name, :session_id, :src, :user_id, :tutorial_id, :visualization_id
+  attr_accessible :project_id, :media_type, :name, :session_id, :src, :user_id, :tutorial_id, :visualization_id, :file_key
   
   belongs_to :owner, class_name: "User", foreign_key: "user_id"
   belongs_to :project, class_name: "Project", foreign_key: "project_id" 
@@ -9,8 +9,7 @@ class MediaObject < ActiveRecord::Base
   
   alias_attribute :title, :name
   
-  validates_presence_of :src
-  validates_presence_of :media_type
+  validates_presence_of :src, :media_type, :file_key
   
   def self.search(search)
     if search
