@@ -147,9 +147,11 @@ class UsersController < ApplicationController
   # PUT /users/1.json
   def update
     @user = User.find_by_username(params[:id])
+    editUpdate = params[:user]
+    hideUpdate = editUpdate.extract_keys!([:hidden])
     success = false
 
-    if (params[:commit] == "Delete User") && (can_delete?(@user)) #DELETE REQUEST
+    if (params[:commit] == "Delete User") && (can_delete?(@cur_user)) #DELETE REQUEST
       @user.projects.each do |p|
         p.hidden = true
         p.save
@@ -180,12 +182,14 @@ class UsersController < ApplicationController
         format.html {redirect_to '/users'}
         # Log out here?
       end
-    elsif can_edit?(@user) #EDIT REQUEST
-      success = @user.update_attributes(params[:user])
-    elsif can_hide?(@user) #HIDE REQUEST
-      if params[:user].has_key?(:hidden)
-        success = @user.update_attributes({hidden: params[:user][:hidden]})
-      end
+    end
+    
+    if can_edit?(@cur_user) #EDIT REQUEST
+      success = @user.update_attributes(editUpdate)
+    end
+    
+    if can_hide?(@cur_user) #HIDE REQUEST
+      success = @user.update_attributes(hideUpdate)
     end
     
     respond_to do |format|

@@ -1,10 +1,4 @@
 module ApplicationHelper
-
-#   def include_page_spesific_js
-#     if FileTest.exists? "app/assets/javascripts/"+params[:controller]+"/"+params[:action]+".js.coffee"
-#       return '<script src="/assets/'+params[:controller]+'/'+params[:action]+'.js.coffee" type="text/javascript"></script>'
-#     end
-#   end
   
   def get_field_id (type)
     if type == "Time"
@@ -30,10 +24,11 @@ module ApplicationHelper
     end
   end
   
+  # Begin permissions stuff
   def can_edit? (obj)
     case obj
     when User
-      (obj.id == @cur_user.try(:id)) || cur_user.try(:admin)
+      (obj.id == @cur_user.try(:id)) || @cur_user.try(:admin)
     when Project, DataSet, Visualization, Tutorial
       (obj.owner.id == @cur_user.try(:id)) || cur_user.try(:admin)
     else
@@ -44,7 +39,7 @@ module ApplicationHelper
   def can_hide? (obj)
     case obj
     when DataSet
-      (obj.owner.id == @cur_user.try(:id)) || cur_user.try(:admin) || (obj.project.owner.id == @cur_user.try(:id))
+      (obj.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin) || (obj.project.owner.id == @cur_user.try(:id))
     when Project, Visualization, Tutorial
       (obj.owner.id == @cur_user.try(:id)) || cur_user.try(:admin)
     else
@@ -57,12 +52,32 @@ module ApplicationHelper
     when User, Project, Tutorial
       cur_user.try(:admin)
     when Dataset, Visualization, MediaObject
-      (obj.owner.id == @cur_user.try(:id)) || cur_user.try(:admin)
+      (obj.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin)
     else
       false
     end
   end
   
+  def can_admin? (obj)
+      @cur_user.try(:admin)
+    end
+  
+  # Helper method for seperating hashes.
+  # Removes the keys from hs that are in ls and returns them in a new hash
+  class Hash
+    def extract_keys! (ls)
+      res = self.select do |k, v|
+        ls.include?(k)
+      end
+
+      self.keep_if do |k, v|
+        not ls.include?(k)
+      end
+      res
+    end
+  end
+  
+  # Generate a gravatar url of the given size for the given user
   def gravatar_url (user, size = 150)
     hash = Digest::MD5.hexdigest(user.email.downcase)
     "http://gravatar.com/avatar/#{hash}.png?s=#{size}"

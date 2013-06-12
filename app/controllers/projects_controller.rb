@@ -140,19 +140,44 @@ class ProjectsController < ApplicationController
   # PUT /projects/1.json
   def update
     @project = Project.find(params[:id])
-
-    ps = params[:project]
-
-    if ps.has_key?(:featured)
-      if ps['featured'] == "1"
-        ps['featured_at'] = Time.now()
-      else
-        ps['featured_at'] = nil
+    editUpdate  = params[:project]
+    hideUpdate  = editUpdate.extract_keys!([:hidden])
+    adminUpdate = editUpdate.extract_keys!([:featured, :is_template])
+    success = false
+    
+    if (params[:commit] == "Delete Project") && (can_delete?(@cur_user)) #DELETE REQUEST
+      @project.user_id = -1
+      @project.hidden = true
+      @project.save
+      
+      respond_to do |format|
+        format.html {redirect_to '/projects'}
       end
     end
 
+    if can_edit?(@cur_user) #EDIT REQUEST
+      success = @user.update_attributes(editUpdate)
+    end
+    
+    if can_hide?(@cur_user) #HIDE REQUEST
+      success = @user.update_attributes(hideUpdate)
+    end
+    
+    if can_admin?(@cur_user) #ADMIN REQUEST
+      
+      if adminUpdate.has_key?(:featured)
+        if adminUpdate['featured'] == "1"
+          adminUpdate['featured_at'] = Time.now()
+        else
+          adminUpdate['featured_at'] = nil
+        end
+      end
+      
+      success = @user.update_attributes(adminUpdate)
+    end
+
     respond_to do |format|
-      if @project.update_attributes(ps)
+      if success
         format.html { redirect_to @project, notice: 'Project was successfully updated.' }
         format.json { head :no_content }
       else
