@@ -3,6 +3,7 @@ class TutorialsController < ApplicationController
   # GET /tutorials.json
   skip_before_filter :authorize, only: [:show, :index]
   
+  include ApplicationHelper
   include ActionView::Helpers::DateHelper
 
   def index
@@ -91,11 +92,30 @@ class TutorialsController < ApplicationController
   # PUT /tutorials/1.json
   def update
     @tutorial = Tutorial.find(params[:id])
+    editUpdate  = params[:tutorial]
+    hideUpdate  = editUpdate.extract_keys!([:hidden])
+    adminUpdate = editUpdate.extract_keys!([:featured_number])
+    success = false
+    
+    #EDIT REQUEST
+    if can_edit?(@tutorial) 
+      success = @tutorial.update_attributes(editUpdate)
+    end
+    
+    #HIDE REQUEST
+    if can_hide?(@tutorial) 
+      success = @tutorial.update_attributes(hideUpdate)
+    end
+    
+    #ADMIN REQUEST
+    if can_admin?(@tutorial)
+      success = @tutorial.update_attributes(adminUpdate)
+    end
 
     respond_to do |format|
-      if @tutorial.update_attributes(params[:tutorial])
+      if success
         format.html { redirect_to @tutorial, notice: 'Tutorial was successfully updated.' }
-        format.json { head :no_content }
+        format.json { render status: :success }
       else
         format.html { render action: "edit" }
         format.json { render json: @tutorial.errors, status: :unprocessable_entity }
@@ -107,11 +127,22 @@ class TutorialsController < ApplicationController
   # DELETE /tutorials/1.json
   def destroy
     @tutorial = Tutorial.find(params[:id])
-    @tutorial.destroy
-
-    respond_to do |format|
-      format.html { redirect_to tutorials_url }
-      format.json { head :no_content }
+    
+    if can_delete?(@tutorial)
+      
+      @tutorial.user_id = -1
+      @tutorial.hidden = true
+      @tutorial.save
+      
+      respond_to do |format|
+        format.html { redirect_to tutorials_url }
+        format.json { render status: :success }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to 'public/401.html' }
+        format.json { render status: :forbidden }
+      end
     end
   end
   

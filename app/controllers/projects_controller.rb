@@ -3,6 +3,7 @@ class ProjectsController < ApplicationController
   # GET /projects.json
   skip_before_filter :authorize, only: [:show,:index]
 
+  include ApplicationHelper
   include ActionView::Helpers::DateHelper
 
   def index
@@ -140,30 +141,23 @@ class ProjectsController < ApplicationController
   # PUT /projects/1.json
   def update
     @project = Project.find(params[:id])
-    editUpdate  = params[:project]
+    editUpdate  = params[:project].to_hash
     hideUpdate  = editUpdate.extract_keys!([:hidden])
     adminUpdate = editUpdate.extract_keys!([:featured, :is_template])
     success = false
     
-    if (params[:commit] == "Delete Project") && (can_delete?(@cur_user)) #DELETE REQUEST
-      @project.user_id = -1
-      @project.hidden = true
-      @project.save
-      
-      respond_to do |format|
-        format.html {redirect_to '/projects'}
-      end
-    end
-
-    if can_edit?(@cur_user) #EDIT REQUEST
-      success = @user.update_attributes(editUpdate)
+    #EDIT REQUEST
+    if can_edit?(@project) 
+      success = @project.update_attributes(editUpdate)
     end
     
-    if can_hide?(@cur_user) #HIDE REQUEST
-      success = @user.update_attributes(hideUpdate)
+    #HIDE REQUEST
+    if can_hide?(@project) 
+      success = @project.update_attributes(hideUpdate)
     end
     
-    if can_admin?(@cur_user) #ADMIN REQUEST
+    #ADMIN REQUEST
+    if can_admin?(@project) 
       
       if adminUpdate.has_key?(:featured)
         if adminUpdate['featured'] == "1"
@@ -173,7 +167,7 @@ class ProjectsController < ApplicationController
         end
       end
       
-      success = @user.update_attributes(adminUpdate)
+      success = @project.update_attributes(adminUpdate)
     end
 
     respond_to do |format|
@@ -209,12 +203,34 @@ class ProjectsController < ApplicationController
   # DELETE /projects/1
   # DELETE /projects/1.json
   def destroy
+    
     @project = Project.find(params[:id])
-    @project.destroy
-
-    respond_to do |format|
-      format.html { redirect_to projects_url }
-      format.json { head :no_content }
+    
+    if can_delete?(@project)
+      
+      @project.data_sets.each do |d|
+        d.hidden = true
+        d.user_id = -1
+        d.save
+      end
+      
+      @project.media_objects.each do |m|
+        #delete it for real
+      end
+      
+      @project.user_id = -1
+      @project.hidden = true
+      @project.save
+      
+      respond_to do |format|
+        format.html { redirect_to projects_url }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to 'public/401.html' }
+        format.json { render status: :forbidden }
+      end
     end
   end
 

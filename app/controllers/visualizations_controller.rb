@@ -122,19 +122,37 @@ class VisualizationsController < ApplicationController
   # PUT /visualizations/1.json
   def update
     @visualization = Visualization.find(params[:id])
-
-    vs = params[:visualization]
+    editUpdate  = params[:visualization].to_hash
+    hideUpdate  = editUpdate.extract_keys!([:hidden])
+    adminUpdate = editUpdate.extract_keys!([:featured])
+    success = false
    
-    if vs.has_key?(:featured)
-      if vs['featured'] == "1"
-        vs['featured_at'] = Time.now()
-      else
-        vs['featured_at'] = nil
+    #EDIT REQUEST
+    if can_edit?(@visualizaion) 
+      success = @visualizaion.update_attributes(editUpdate)
+    end
+    
+    #HIDE REQUEST
+    if can_hide?(@visualizaion) 
+      success = @visualizaion.update_attributes(hideUpdate)
+    end
+    
+    #ADMIN REQUEST
+    if can_admin?(@visualizaion) 
+      
+      if adminUpdate.has_key?(:featured)
+        if adminUpdate['featured'] == "1"
+          adminUpdate['featured_at'] = Time.now()
+        else
+          adminUpdate['featured_at'] = nil
+        end
       end
+      
+      success = @visualizaion.update_attributes(adminUpdate)
     end
     
     respond_to do |format|
-      if @visualization.update_attributes(vs)
+      if success
         format.html { redirect_to @visualization, notice: 'Visualization was successfully updated.' }
         format.json { head :no_content }
       else
@@ -148,11 +166,21 @@ class VisualizationsController < ApplicationController
   # DELETE /visualizations/1.json
   def destroy
     @visualization = Visualization.find(params[:id])
-    @visualization.destroy
-
-    respond_to do |format|
-      format.html { redirect_to visualizations_url }
-      format.json { head :no_content }
+    
+    if (params[:commit] == "Delete Project") && (can_delete?(@visualizaion))
+      @visualizaion.hidden = true
+      @visualizaion.user_id = -1
+      @visualizaion.save
+      
+      respond_to do |format|
+        format.html { redirect_to visualizaions_url }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to 'public/401.html' }
+        format.json { render status: :forbidden }
+      end
     end
   end
 

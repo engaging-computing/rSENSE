@@ -1,4 +1,7 @@
 class DataSetsController < ApplicationController
+  
+  include ApplicationHelper
+  
   # GET /data_sets
   # GET /data_sets.json
   def index
@@ -58,10 +61,23 @@ class DataSetsController < ApplicationController
   # PUT /data_sets/1.json
   def update
     @data_set = DataSet.find(params[:id])
+    editUpdate  = params[:data_set].to_hash
+    hideUpdate  = editUpdate.extract_keys!([:hidden])
+    success = false
+    
+    #EDIT REQUEST
+    if can_edit?(@data_set)
+      success = @data_set.update_attributes(editUpdate)
+    end
+    
+    #HIDE REQUEST
+    if can_hide?(@data_set)
+      success = @data_set.update_attributes(hideUpdate)
+    end
 
     respond_to do |format|
       if @data_set.update_attributes(params[:data_set])
-        format.html { redirect_to @data_set, notice: 'Project session was successfully updated.' }
+        format.html { redirect_to @data_set, notice: 'DataSet was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -74,11 +90,21 @@ class DataSetsController < ApplicationController
   # DELETE /data_sets/1.json
   def destroy
     @data_set = DataSet.find(params[:id])
-    @data_set.destroy
-
-    respond_to do |format|
-      format.html { redirect_to data_sets_url }
-      format.json { head :no_content }
+    
+    if can_delete?(@data_set)
+      @data_set.hidden = true
+      @data_set.user_id = -1
+      @data_set.save
+      
+      respond_to do |format|
+        format.html { redirect_to @data_set.project }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to 'public/401.html' }
+        format.json { render status: :forbidden }
+      end
     end
   end
 

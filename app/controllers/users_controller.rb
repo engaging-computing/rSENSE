@@ -147,18 +147,43 @@ class UsersController < ApplicationController
   # PUT /users/1.json
   def update
     @user = User.find_by_username(params[:id])
-    editUpdate = params[:user]
+    editUpdate = params[:user].to_hash
     hideUpdate = editUpdate.extract_keys!([:hidden])
     success = false
+    
+    #EDIT REQUEST
+    if can_edit?(@user) 
+      success = @user.update_attributes(editUpdate)
+    end
+    
+    #HIDE REQUEST
+    if can_hide?(@user) 
+      success = @user.update_attributes(hideUpdate)
+    end
+    
+    respond_to do |format|
+      if success
+        format.html { redirect_to @user, notice: 'User was successfully updated.' }
+        format.json { head :no_content }
+      else
+        format.html { render "public/404.html" }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
+      end
+    end
+  end
 
-    if (params[:commit] == "Delete User") && (can_delete?(@cur_user)) #DELETE REQUEST
+  # DELETE /users/1
+  # DELETE /users/1.json
+  def destroy
+    @user = User.find_by_username(params[:id])
+    
+    if can_delete?(@user)
       @user.projects.each do |p|
         p.hidden = true
         p.save
       end
       @user.media_objects.each do |m|
-        m.hidden = true
-        m.save
+        #delete it for real
       end
       @user.visualizations.each do |v|
         v.hidden = true
@@ -178,42 +203,19 @@ class UsersController < ApplicationController
       @user.username =  "#{Time.now().to_i}"
       @user.save
       
+      session[:user_id] = nil
+      
       respond_to do |format|
-        format.html {redirect_to '/users'}
-        # Log out here?
-      end
-    end
-    
-    if can_edit?(@cur_user) #EDIT REQUEST
-      success = @user.update_attributes(editUpdate)
-    end
-    
-    if can_hide?(@cur_user) #HIDE REQUEST
-      success = @user.update_attributes(hideUpdate)
-    end
-    
-    respond_to do |format|
-      if success
-        format.html { redirect_to @user, notice: 'User was successfully updated.' }
+        format.html { redirect_to users_url}
         format.json { head :no_content }
-      else
-        format.html { render "public/404.html" }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to 'public/401.html' }
+        format.json { render status: :forbidden }
       end
     end
   end
-
-  # DELETE /users/1
-  # DELETE /users/1.json
-#   def destroy
-#     @user = User.find_by_username(params[:id])
-#     @user.destroy
-# 
-#     respond_to do |format|
-#       format.html { redirect_to users_url }
-#       format.json { head :no_content }
-#     end
-#   end
 
   # GET /users/validate/:key
   def validate
