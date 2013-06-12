@@ -35,6 +35,8 @@
 //= require jquery.form.js
 //= require jquery.qrcode.min.js
 //
+//= require editTable
+//
 // Visualization stuff follows
 //
 //= require highcharts/highcharts

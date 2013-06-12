@@ -29,13 +29,13 @@ i
   border-width: 1px;
   /*box-shadow: 0px 0px 5px grey;*/
   padding: 15px 0px;
-  
+
   background-color: #e8e8e8;
-  
+
   border-style: groove;
   border-color: #ffffff;
   border-width: 2px 0px 0px 0px;
-  
+
   width: 100%;
   height: 60px;
 }
@@ -64,11 +64,11 @@ i
   padding: 2px 20px 2px 20px;
   background-color: #e8e8e8;
   color: #000000;
-  
+
   border-style: groove;
   border-color: #ffffff;
   border-width: 2px 2px 0px 2px;
-  
+
   margin-top: 0px;
 
   -webkit-border-radius: 6px 6px 0px 0px;
@@ -81,18 +81,18 @@ i
   padding: 2px 20px 2px 20px;
   background-color: #e8e8e8;
   color: #000000;
-  
+
   border-style: groove;
   border-color: white;
   border-width: 2px;
-  
+
   margin: 0px 5px 5px 5px;
 
   -webkit-border-radius: 6px 6px 6px 6px;
      -moz-border-radius: 6px 6px 6px 6px;
           border-radius: 6px 6px 6px 6px;
 
-  /*box-shadow: 0px 0px 10px #999;*/       
+  /*box-shadow: 0px 0px 10px #999;*/
 
 }
 
@@ -110,9 +110,9 @@ i
   -webkit-border-radius: 6px 6px 6px 6px;
      -moz-border-radius: 6px 6px 6px 6px;
           border-radius: 6px 6px 6px 6px;
-          
+
   /*box-shadow: 0px 0px 10px #999;*/
-  
+
 }
 
 .item > img
@@ -126,11 +126,11 @@ i
   padding: 0px;
   background-color: #e8e8e8;
   color: #000000;
-  
+
   border-style: groove;
   border-color: #ffffff;
   border-width: 2px 2px 2px 2px;
-  
+
   margin-top: 0px;
 
   -webkit-border-radius: 6px 6px 6px 6px;
@@ -149,11 +149,11 @@ i
   magrin: 0px;
   background-color: #e8e8e8;
   border-top: 2px groove #ffffff;
-  
+
   border-style: groove;
   border-color: #ffffff;
   border-width: 2px 2px 2px 2px;
-  
+
   color: #000;
   text-align: center;
   height: 35px;
@@ -167,7 +167,7 @@ i
   padding: 2px 20px 15px 20px;
   margin: 0px;
   background-color: #e8e8e8;
-  
+
   border-style: groove;
   border-color: #ffffff;
   border-width: 2px 2px 0px 2px;
@@ -178,7 +178,7 @@ i
   padding: 2px 20px 15px 20px;
   margin: 0px;
   background-color: #f8f8f8;
-  
+
   border-style: groove;
   border-color: #ffffff;
   border-width: 2px 2px 0px 2px;
@@ -187,18 +187,18 @@ i
 .mainContent
 {
   margin-bottom: 18px;
-  
+
   -webkit-border-radius: 0px 0px 6px 6px;
      -moz-border-radius: 0px 0px 6px 6px;
           border-radius: 0px 0px 6px 6px;
 }
 
-.table td
+.field_table td
 {
   padding: 2px;
 }
 
-.table th
+.field_table th
 {
   padding: 2px;
   border-top: 0px;
@@ -208,4 +208,9 @@ i
 .collapse.in
 {
   overflow: visible !important;
+}
+
+.table-striped tbody > tr:nth-child(odd) > td,
+.table-striped tbody > tr:nth-child(odd) > th {
+  background-color: #EEE;
 }
