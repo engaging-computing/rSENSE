@@ -50,6 +50,7 @@ Rsense::Application.routes.draw do
   match "/data_sets/:pid/manualEntry" => "data_sets#manualEntry"
   match "/data_sets/:pid/manualUpload" => "data_sets#manualUpload"
   match "/data_sets/test" => "data_sets#test"
+  match "/data_sets/:id/editTable" => "data_sets#editTable"
 
   #Routes for displaying data
   match "/projects/:id/data_sets/*datasets" => "visualizations#displayVis"

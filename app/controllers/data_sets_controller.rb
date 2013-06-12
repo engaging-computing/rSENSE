@@ -37,6 +37,17 @@ class DataSetsController < ApplicationController
   def edit
     @data_set = DataSet.find(params[:id])
   end
+  
+  def editTable
+    @data_set = DataSet.find(params[:id])
+    @project = Project.find(@data_set.project_id)
+    @mongo_data_set = MongoData.find_by_data_set_id(@data_set.id)
+  
+    logger.info "-------------------------------------"
+    logger.info @mongo_data_set
+    logger.info "-------------------------------------"
+    
+  end
 
   # POST /data_sets
   # POST /data_sets.json
