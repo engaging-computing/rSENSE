@@ -31,7 +31,7 @@ module ApplicationHelper
       (obj.id == @cur_user.try(:id)) || @cur_user.try(:admin)
     when Project, DataSet, Visualization, Tutorial
       (obj.owner.id == @cur_user.try(:id)) || cur_user.try(:admin)
-    when Field
+    when Field0
       (obj.owner.owner == @cur_user.try(:id)) || @cur_user.try(:admin)
     else
       false
@@ -52,7 +52,7 @@ module ApplicationHelper
   def can_delete? (obj)
     case obj
     when User, Project, Tutorial
-      cur_user.try(:admin)
+      @cur_user.try(:admin)
     when Dataset, Visualization, MediaObject
       (obj.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin)
     when Field
