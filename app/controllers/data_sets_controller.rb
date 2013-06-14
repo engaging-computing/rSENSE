@@ -78,7 +78,7 @@ class DataSetsController < ApplicationController
     respond_to do |format|
       if @data_set.update_attributes(params[:data_set])
         format.html { redirect_to @data_set, notice: 'DataSet was successfully updated.' }
-        format.json { head :no_content }
+        { render json: {}, status: :ok }
       else
         format.html { render action: "edit" }
         format.json { render json: @data_set.errors, status: :unprocessable_entity }
@@ -92,18 +92,23 @@ class DataSetsController < ApplicationController
     @data_set = DataSet.find(params[:id])
     
     if can_delete?(@data_set)
+      
+      @data_set.media_objects.each do |m|
+        m.destroy
+      end
+      
       @data_set.hidden = true
       @data_set.user_id = -1
       @data_set.save
       
       respond_to do |format|
         format.html { redirect_to @data_set.project }
-        format.json { head :no_content }
+        { render json: {}, status: :ok }
       end
     else
       respond_to do |format|
         format.html { redirect_to 'public/401.html' }
-        format.json { render status: :forbidden }
+        { render json: {}, status: :forbidden }
       end
     end
   end

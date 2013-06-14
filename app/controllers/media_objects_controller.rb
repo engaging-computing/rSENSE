@@ -81,7 +81,7 @@ class MediaObjectsController < ApplicationController
     respond_to do |format|
       if success
         format.html { redirect_to @media_object, notice: 'MediaObject was successfully updated.' }
-        format.json { head :no_content }
+        format.json { render json: {}, status: :ok }
       else
         format.html { render action: "edit" }
         format.json { render json: @media_object.errors, status: :unprocessable_entity }
@@ -95,26 +95,17 @@ class MediaObjectsController < ApplicationController
     @media_object = MediaObject.find(params[:id])
     
     if can_delete?(@media_object)
-        
-      #Set up the link to S3
-      s3ConfigFile = YAML.load_file('config/aws_config.yml')
-    
-      s3 = AWS::S3.new(
-        :access_key_id => s3ConfigFile['access_key_id'],
-        :secret_access_key => s3ConfigFile['secret_access_key'])
-      
-      S3Object.delete(@media_object.file_key, 'isenseimgs')
       
       @media_object.destroy
 
       respond_to do |format|
         format.html { redirect_to media_objects_url }
-        format.json { head :no_content }
+        format.json { render json: {}, status: :ok }
       end
     else
       respond_to do |format|
         format.html { redirect_to 'public/401.html' }
-        format.json { render status: :forbidden }
+        format.json { render json: {}, status: :forbidden }
       end
     end
   end

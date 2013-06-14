@@ -164,7 +164,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       if success
         format.html { redirect_to @user, notice: 'User was successfully updated.' }
-        format.json { head :no_content }
+        format.json { render json: {}, status: :ok }
       else
         format.html { render "public/404.html" }
         format.json { render json: @user.errors, status: :unprocessable_entity }
@@ -183,7 +183,7 @@ class UsersController < ApplicationController
         p.save
       end
       @user.media_objects.each do |m|
-        #delete it for real
+        m.destroy
       end
       @user.visualizations.each do |v|
         v.hidden = true
@@ -207,12 +207,12 @@ class UsersController < ApplicationController
       
       respond_to do |format|
         format.html { redirect_to users_url}
-        format.json { head :no_content }
+        format.json { render json: {}, status: :ok }
       end
     else
       respond_to do |format|
         format.html { redirect_to 'public/401.html' }
-        format.json { render status: :forbidden }
+        format.json { render json: {}, status: :forbidden }
       end
     end
   end

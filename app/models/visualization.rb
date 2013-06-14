@@ -1,6 +1,8 @@
 class Visualization < ActiveRecord::Base
   attr_accessible :content, :data, :project_id, :globals, :title, :user_id, :hidden, :featured, :featured_at
 
+  has_many :media_objects
+  
   validates_presence_of :title
   validates_presence_of :user_id
   validates_presence_of :project_id

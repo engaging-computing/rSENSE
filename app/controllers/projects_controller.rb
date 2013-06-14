@@ -173,7 +173,7 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       if success
         format.html { redirect_to @project, notice: 'Project was successfully updated.' }
-        format.json { head :no_content }
+        format.json { render json: {}, status: :ok }
       else
         format.html { render action: "edit" }
         format.json { render json: @project.errors, status: :unprocessable_entity }
@@ -215,7 +215,7 @@ class ProjectsController < ApplicationController
       end
       
       @project.media_objects.each do |m|
-        #delete it for real
+        m.destroy
       end
       
       @project.user_id = -1
@@ -224,12 +224,12 @@ class ProjectsController < ApplicationController
       
       respond_to do |format|
         format.html { redirect_to projects_url }
-        format.json { head :no_content }
+        format.json { render json: {}, status: :ok }
       end
     else
       respond_to do |format|
-        format.html { redirect_to 'public/401.html' }
-        format.json { render status: :forbidden }
+        format.html { redirect_to '/401.html' }
+        format.json { render json: {}, status: :forbidden }
       end
     end
   end

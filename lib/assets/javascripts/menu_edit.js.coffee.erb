@@ -84,6 +84,19 @@ $ ->
         data
       success: =>
         window.location = top.attr("escape_link")
+        
+  ($ 'a.menu_delete').click (e) ->
+    
+    e.preventDefault()
+    
+    top = ($ @).parents('span.edit_menu')
+    
+    $.ajax
+      url: ($ @).attr('href')
+      type: 'DELETE'
+      dataType: "json"
+      success: =>
+        window.location = top.attr("escape_link")
     
 ###
 
