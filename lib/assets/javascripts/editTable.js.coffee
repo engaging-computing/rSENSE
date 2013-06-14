@@ -8,7 +8,7 @@ $.fn.extend
       upload:
         ajaxify: true
         url: "#"
-        method: 'get'
+        method: 'POST'
       debug: true
 
     settings = $.extend settings, options
@@ -35,9 +35,9 @@ $.fn.extend
           ($ @).html ($ @).text()
 
       wrap_table = (tab) ->
-        ($ @).find('th').each ->
+        ($ tab).find('th').each ->
           ($ @).html "<div class='text-center'>#{($ @).html()}</div>"
-        ($ @).find('td').each ->
+        ($ tab).find('td').each ->
           ($ @).html "<div class='text-center'>#{($ @).html()}</div>"
 
 
@@ -59,7 +59,7 @@ $.fn.extend
       if ($ '#edit_table_control').html() is ""
         ($ '#edit_table_control').remove()
 
-      if settings.bootstrapify
+      if settings.bootstrapify is true
         ($ @).addClass "table table-bordered table-striped"
         wrap_table(table)
 
@@ -82,14 +82,41 @@ $.fn.extend
       ($ '#edit_table_save').click ->
         strip_table(table)
 
-        if settings.upload.ajaxify
+        if settings.upload.ajaxify is true
 
-          head = [($ table).find('th').text()]
-
-          log head
-
-          data =
+          head = []
+          
+          ($ table).find('th').each ->
+            head.push ($ @).text()
+            
+          row_data = []
+          
+          ($ table).find('tr').has('td').each ->
+          
+            row = []
+            
+            ($ @).children().each ->
+              row.push ($ @).text()
+              
+            row_data.push row
+            
+          table_data = for tmp, col_i in row_data
+            tmp = for row, row_i in row_data
+              row[col_i]
+          
+          ajax_data =
             headers: head
+            data: table_data
+            
+          $.ajax "/#{settings.upload.url}",
+            type: "#{settings.upload.method}"
+            dataType: 'JSON'
+            data: ajax_data
+            error: (jqXHR, textStatus, errorThrown) ->
+              log errorThrown
+            success: (data, textStatus, jqXHR) ->
+              log data
+          
         else
           ($ table).wrap "<form action='#{settings.upload.url}' method='#{settings.upload.method}' />"
 
