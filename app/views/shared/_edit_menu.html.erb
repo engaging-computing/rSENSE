@@ -1,0 +1,46 @@
+<span class="edit_menu" field='title' type='<%=type%>' make_link='<%=make_link%>' escape_link='<%=escape_link%>'>
+
+  <%if make_link %>
+      <span class="info_text"><%= link_to value, "/#{type.pluralize}/#{row_id}" %></span>
+  <%else%>
+      <span class="info_text"><%=value%></span>
+  <%end%>
+  
+  <% if can_edit?(obj) || can_hide?(obj) || can_delete?(obj)  %>
+  
+      <span class="dropdown" style="font-size:14px">
+        <a class=dropdown-toggle" data-toggle="dropdown" href="#"> 
+          <i class="icon-cog icon-content"></i>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+        
+          <% if can_edit?(obj)%>
+            <li role="presentation">
+              <a class="menu_edit" role="menuitem" href="#"> Edit Title </a>
+            </li>
+          <%end%>
+          
+          <% if can_hide?(obj) %>
+            <li role="presentation" class="menu_unhider" <%if not obj.hidden %> style="display:none" <%end%> >
+              <a class="menu_unhider" role="menuitem" href="#"> Unhide <%= type.capitalize %> </a>
+            </li>
+            
+            <li role="presentation" class="menu_hider" <%if obj.hidden %> style="display:none" <%end%> >
+              <a class="menu_hider" role="menuitem" href="#"> Hide <%= type.capitalize %> </a>
+            </li>
+          <%end%>
+          
+          <% if can_delete?(obj)%>
+            <li role="presentation">
+              <a class="menu_delete" role="menuitem" href="#"> Delete <%= type.capitalize %> </a>
+            </li>
+          <%end%>
+          
+        </ul>
+      </span>
+  
+      <% if can_edit?(obj) %>
+        <a href="/<%=type.pluralize%>/<%=row_id%>" class="menu_save_link"><i class="icon-ok"></i></a>
+      <%end%>
+  <%end%>
+</span>

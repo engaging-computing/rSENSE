@@ -154,7 +154,7 @@ class VisualizationsController < ApplicationController
     respond_to do |format|
       if success
         format.html { redirect_to @visualization, notice: 'Visualization was successfully updated.' }
-        format.json { head :no_content }
+        format.json { render json: {}, status: :ok }
       else
         format.html { render action: "edit" }
         format.json { render json: @visualization.errors, status: :unprocessable_entity }
@@ -167,19 +167,24 @@ class VisualizationsController < ApplicationController
   def destroy
     @visualization = Visualization.find(params[:id])
     
-    if (params[:commit] == "Delete Project") && (can_delete?(@visualizaion))
+    if can_delete?(@visualizaion)
+      
+      @visualizaion.media_objects.each do |m|
+        m.destroy
+      end
+      
       @visualizaion.hidden = true
       @visualizaion.user_id = -1
       @visualizaion.save
       
       respond_to do |format|
         format.html { redirect_to visualizaions_url }
-        format.json { head :no_content }
+        format.json { render json: {}, status: :ok }
       end
     else
       respond_to do |format|
         format.html { redirect_to 'public/401.html' }
-        format.json { render status: :forbidden }
+        format.json { render json: {}, status: :forbidden }
       end
     end
   end

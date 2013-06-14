@@ -115,7 +115,7 @@ class TutorialsController < ApplicationController
     respond_to do |format|
       if success
         format.html { redirect_to @tutorial, notice: 'Tutorial was successfully updated.' }
-        format.json { render status: :success }
+        format.json { render json: {}, status: :ok }
       else
         format.html { render action: "edit" }
         format.json { render json: @tutorial.errors, status: :unprocessable_entity }
@@ -130,18 +130,22 @@ class TutorialsController < ApplicationController
     
     if can_delete?(@tutorial)
       
+      @tutorial.media_objects.each do |m|
+        m.destroy
+      end
+      
       @tutorial.user_id = -1
       @tutorial.hidden = true
       @tutorial.save
       
       respond_to do |format|
         format.html { redirect_to tutorials_url }
-        format.json { render status: :success }
+        format.json { render json: {}, status: :ok }
       end
     else
       respond_to do |format|
         format.html { redirect_to 'public/401.html' }
-        format.json { render status: :forbidden }
+        format.json { render json: {}, status: :forbidden }
       end
     end
   end
