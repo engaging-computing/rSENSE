@@ -1,10 +1,10 @@
-<span style="color:#07D" class="like_display"><%=pluralize(@likes,"person")%> liked this</span>
+<span class="like_display"><%=pluralize(@likes,"person")%> liked this</span>
 <%if @cur_user.try(:id)%>
-	<span class="liked_status" exp_id="<%=@project.id%>">
-		<%if @liked_by_cur_user%>
-			<i class="icon-star"></i>
-		<%else%>
-			<i class="icon-star-empty"></i>
-		<%end%>
-	</span>
+	<a href="#" exp_id="<%=@project.id%>" class="liked_status">
+	  <%if @liked_by_cur_user%>
+	     <i class="icon-star"></i>
+	  <%else%>
+	     <i class="icon-star-empty"></i>
+	  <%end%>
+	</a>
 <%end%>
