@@ -154,27 +154,29 @@ class TutorialsController < ApplicationController
   # Switches between which tutorials are featured
   def switch
 
-    #Which tutorial should we make featured
-    to_tutorial = params[:selected]
+    new_tutorial = Tutorial.find_by_id(params[:selected].to_i)
+    old_tutorial = Tutorial.where("featured_number = ?",params[:location]).first || nil
     
-    #Which featured tutorial are we changing
-    featured_value = params[:location]
-    
-    old_tutorial = Tutorial.where("featured_number = ?",featured_value).first || nil
-    
-    #Set the old tutorials featured number to nil if necessary
-    if !(old_tutorial == nil)
-      old_tutorial.featured_number = nil
-      old_tutorial.save
+    if can_admin(new_tutorial) && can_admin(old_tutorial)
+      #Set the old tutorials featured number to nil if necessary
+      if !(old_tutorial == nil)
+        old_tutorial.featured_number = nil
+        old_tutorial.save
+      end
+      
+      #Update the featured number for the selected tutorial
+      new_tutorial.featured_number = featured_value.to_i    
+      new_tutorial.save
+      
+      respond_to do |format|
+        format.json { render json: {}, status: :ok }
+      end
+    else
+      respond_to do |format|
+        format.json { render json: {}, status: :forbidden }
+      end
     end
     
-    #Update the featured number for the selected tutorial
-    new_tutorial = Tutorial.find_by_id(to_tutorial.to_i)
-    new_tutorial.featured_number = featured_value.to_i    
-    new_tutorial.save
     
-    respond_to do |format|
-      format.json { head :no_content }
-    end
   end
 end
