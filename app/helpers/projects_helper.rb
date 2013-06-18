@@ -1,6 +1,6 @@
 module ProjectsHelper
     
-  def project_edit_menu_helper(make_link = true)
+  def project_edit_menu_helper(make_link = false)
     render 'shared/edit_menu', {type: 'project', typeName: 'Project', obj: @project, make_link: make_link, escape_link: projects_url}
   end
   
