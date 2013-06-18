@@ -128,17 +128,17 @@ class VisualizationsController < ApplicationController
     success = false
    
     #EDIT REQUEST
-    if can_edit?(@visualizaion) 
-      success = @visualizaion.update_attributes(editUpdate)
+    if can_edit?(@visualization) 
+      success = @visualization.update_attributes(editUpdate)
     end
     
     #HIDE REQUEST
-    if can_hide?(@visualizaion) 
-      success = @visualizaion.update_attributes(hideUpdate)
+    if can_hide?(@visualization) 
+      success = @visualization.update_attributes(hideUpdate)
     end
     
     #ADMIN REQUEST
-    if can_admin?(@visualizaion) 
+    if can_admin?(@visualization) 
       
       if adminUpdate.has_key?(:featured)
         if adminUpdate['featured'] == "1"
@@ -148,7 +148,7 @@ class VisualizationsController < ApplicationController
         end
       end
       
-      success = @visualizaion.update_attributes(adminUpdate)
+      success = @visualization.update_attributes(adminUpdate)
     end
     
     respond_to do |format|
