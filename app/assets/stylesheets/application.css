@@ -130,9 +130,9 @@ table.editablegrid > tbody > tr > td
   background-color: #dce0e8;
 }
 
-.info_edit_link
+.info_edit_link, .menu_edit_link
 {
-    vertical-align: super;
+/*     vertical-align: super; */
     font-size: 0.75em;
 }
 
