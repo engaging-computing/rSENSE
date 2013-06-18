@@ -15,8 +15,8 @@
 //= require helpers
 //= require dataset_name
 //= require jquery_ujs
-//= require twitter/bootstrap
 //= require jquery.ui.all
+//= require twitter/bootstrap
 //= require bootstrap
 //= require redactor.min.js
 //= require redactor_edit_pane.js.coffee

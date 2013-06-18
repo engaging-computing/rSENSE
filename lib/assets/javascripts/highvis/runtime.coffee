@@ -72,7 +72,7 @@ $ ->
             
     ### Jquery up the tabs ###
     ($ '#viscontainer').tabs()
-    ($ '#tabcontainer').tabs()
+    #($ '#tabcontainer').tabs()
     
 
     ($ '#viscontainer').width ($ '#viscontainer').width() - (($ '#viscontainer').outerWidth() - ($ '#viscontainer').width())
