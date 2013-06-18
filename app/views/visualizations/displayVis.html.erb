@@ -36,11 +36,11 @@
   </div>
   
   <div class="" id="tabcontainer">
-    <ul class="nav nav-pills" id="myTab">
+    <ul class="nav nav-tabs" id="myTab">
       <% i = 0 %>
       <% @datasets.each do |s| %>
           <li class="dataset_tab"><a href="#<%=s.id%>">
-            <div><%= data_set_edit_menu_helper s.id,  false %></div>
+            <%= data_set_edit_helper 'title', @datasets[i].owner.id == @cur_user.try(:id), @datasets[i], make_link = false %>
           </a></li>
         <% i=i+1 %>
       <% end %>
