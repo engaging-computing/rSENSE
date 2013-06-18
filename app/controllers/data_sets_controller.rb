@@ -78,7 +78,7 @@ class DataSetsController < ApplicationController
     respond_to do |format|
       if @data_set.update_attributes(params[:data_set])
         format.html { redirect_to @data_set, notice: 'DataSet was successfully updated.' }
-        { render json: {}, status: :ok }
+        format.json { render json: {}, status: :ok }
       else
         format.html { render action: "edit" }
         format.json { render json: @data_set.errors, status: :unprocessable_entity }
@@ -103,12 +103,12 @@ class DataSetsController < ApplicationController
       
       respond_to do |format|
         format.html { redirect_to @data_set.project }
-        { render json: {}, status: :ok }
+        format.json { render json: {}, status: :ok }
       end
     else
       respond_to do |format|
         format.html { redirect_to 'public/401.html' }
-        { render json: {}, status: :forbidden }
+        format.json { render json: {}, status: :forbidden }
       end
     end
   end
