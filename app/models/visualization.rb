@@ -13,9 +13,9 @@ class Visualization < ActiveRecord::Base
   belongs_to :project
    def self.search(search)
     if search
-        where('title LIKE ?', "%#{search}%").where({hidden: false}).
+        where('title LIKE ?', "%#{search}%").where({hidden: false})
     else
-        scoped.where({hidden: false}).
+        scoped.where({hidden: false})
     end
   end
   

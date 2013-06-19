@@ -50,13 +50,16 @@
             <th></th>
             <th></th>
             <th></th>
+            <th></th>
             <th><input type="checkbox" id="check_selector"/></th>
           </tr>
-          <% @project.data_sets.all.each do |s| %>
+          <% @project.data_sets.where({hidden: false}).each do |s| %>
             <tr>
               <td style="width:32px;height:32px;"><%= image_tag gravatar_url(s.owner, 32) %></td>
               <td><%= link_to "#{s.owner.name}", user_path(s.owner) %></td>
               <td><%= link_to s.title, "#{params[:id]}/data_sets/#{s.id}" %></td>
+              
+              <td><a class="data_set_export" href="<%= data_set_url s %>">Export</a></td>
               
               <% if can_edit? s %>
                 <td><a class="data_set_edit" href="<%= data_set_url s %>">Edit</a></td>
@@ -67,7 +70,7 @@
               <% end %>
               
               <% if can_delete? s %>
-                <td><a class="data_set_delete" href="<%= data_set_url s %>">Delete</a></td>
+                <td><a class="data_set_delete" href="<%= data_set_url s %>" name="<%= s.title %>">Delete</a></td>
               <% end %>
               
               <td><input type="checkbox" id="project_<%=params[:id]%>_session_<%=s.id%>"/></td>
