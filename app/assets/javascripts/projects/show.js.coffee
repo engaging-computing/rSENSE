@@ -200,7 +200,7 @@ $ ->
       keyboard: true
       show: false
 
-    # Initializes the dropdown lightbox for google drive upload
+    # Does the liking and unliking when the star icon is clicked
     ($ '.liked_status').click ->
       icon = ($ @).children 'i'
       if icon.attr('class').indexOf('icon-star-empty') != -1
