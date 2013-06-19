@@ -344,3 +344,18 @@ $ ->
             hidden: true
         success: =>
           ($ @).parents('tr').hide()
+          
+    ($ 'a.data_set_delete').click (e) ->
+  
+      e.preventDefault()
+      
+      if helpers.confirm_delete ($ @).attr('name')
+        $.ajax
+          url: ($ @).attr('href')
+          type: 'PUT'
+          dataType: "json"
+          data: 
+            data_set:
+              hidden: true
+          success: =>
+            ($ @).parents('tr').hide()
