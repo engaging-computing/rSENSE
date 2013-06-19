@@ -18,7 +18,7 @@ $ ->
             title: name
             
         $.ajax
-          url: ($ '#title_span .info_save_link').attr 'href'
+          url: ($ '#title_span .menu_save_link').attr 'href'
           type: 'PUT'
           dataType: 'json'
           data: data

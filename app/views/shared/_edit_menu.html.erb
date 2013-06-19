@@ -1,7 +1,7 @@
 <span class="edit_menu" field='title' type='<%=type%>' make_link='<%=make_link%>' escape_link='<%=escape_link%>'>
 
   <%if make_link %>
-      <span class="info_text"><%= link_to obj.title, "/#{typeName.pluralize}/#{obj.id}" %></span>
+      <span class="info_text"><%= link_to obj.title, "/#{type.pluralize}/#{obj.id}" %></span>
   <%else%>
       <span class="info_text"><%=obj.title%></span>
   <%end%>
