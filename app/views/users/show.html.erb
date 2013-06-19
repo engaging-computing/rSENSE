@@ -10,7 +10,7 @@
                 <%= image_tag gravatar_url(@user) %>
               </div>
             <%end%>
-            <div class="span2"style="padding-top:10px">
+            <div class="span2" style="padding-top:10px;">
               <span class="info_label">First Name:</span> 
               <%= user_edit_helper 'firstname', (can_edit? @user) %>
               <br />

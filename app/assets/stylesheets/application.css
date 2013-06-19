@@ -180,7 +180,7 @@ input.info_edit_box
 
 .redactor_content
 {
-  padding: 0px !important;
+  padding: 5px !important;
   margin: 0px !important;
   word-wrap: break-word;
 /*   margin: 1px 1px 15px 1px; */
