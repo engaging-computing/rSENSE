@@ -27,9 +27,9 @@ class User < ActiveRecord::Base
 
   def self.search(search)
     if search
-      where('firstname LIKE ? or username LIKE ?', "%#{search}%", "%#{search}%")
+      where('firstname LIKE ? or username LIKE ?', "%#{search}%", "%#{search}%").where({hidden: false})
     else
-      scoped
+      scoped.where({hidden: false})
     end
   end
 

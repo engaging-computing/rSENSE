@@ -327,3 +327,20 @@ $ ->
 
     ($ ".projects_add_filter_checkbox").click ->
       $(@).parent().submit()
+      
+    ###
+    Hide link for dataset table
+    ###
+    ($ 'a.data_set_hide').click (e) ->
+    
+      e.preventDefault()
+      
+      $.ajax
+        url: ($ @).attr('href')
+        type: 'PUT'
+        dataType: "json"
+        data: 
+          data_set:
+            hidden: true
+        success: =>
+          ($ @).parents('tr').hide()

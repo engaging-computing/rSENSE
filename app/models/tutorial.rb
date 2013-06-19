@@ -12,9 +12,9 @@ class Tutorial < ActiveRecord::Base
   
   def self.search(search)
     if search
-        where('title LIKE ?', "%#{search}%")
+        where('title LIKE ?', "%#{search}%").where({hidden: false})
     else
-        scoped
+        scoped.where({hidden: false})
     end
   end
   
