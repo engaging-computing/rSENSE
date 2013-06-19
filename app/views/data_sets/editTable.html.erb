@@ -1,11 +1,11 @@
 <% if @cur_user.admin or @cur_user = @data_set.owner %>
   <h1>Editing Data</h1>
 
-  <table id="editTable">
+  <table id="editTable" class="table">
     <thead>
       <tr>
         <% @project.fields.each do |f| %>
-          <th><%= f.name %></th>
+          <th data-field-type="<%= get_field_name(f.field_type) %>"><%= f.name %></th>
         <% end %>
       </tr>
     </thead>
@@ -13,7 +13,7 @@
       <% @mongo_data_set.data.each_with_index do |row, r_index| %>
         <tr>
           <% row.each_with_index do |data, d_index| %>
-            <td><input type="text" class="input" value="<%= data["#{@project.fields[d_index].id}"] %>" /></td>
+            <td><%= data["#{@project.fields[d_index].id}"] %></td>
           <% end %>
         </tr>
       <% end %>

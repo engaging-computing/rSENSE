@@ -5,7 +5,7 @@ module ApplicationHelper
 #       return '<script src="/assets/'+params[:controller]+'/'+params[:action]+'.js.coffee" type="text/javascript"></script>'
 #     end
 #   end
-  
+
   def get_field_id (type)
     if type == "Time"
       1
@@ -15,9 +15,11 @@ module ApplicationHelper
       3
     elsif type == "Text"
       4
+    else
+      "invalid input: try get_field_type(int)"
     end
   end
-  
+
   def get_field_type (id)
     if id == 1
       "Time"
@@ -27,9 +29,11 @@ module ApplicationHelper
       "Location"
     elsif id == 4
       "Text"
+    else
+      "invalid input: try get_field_id(string)"
     end
   end
-  
+
   def can_edit? (obj)
     if(obj.class == User)
       (obj.id == @cur_user.try(:id)) || @cur_user.try(:admin)
@@ -37,7 +41,7 @@ module ApplicationHelper
       (obj.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin)
     end
   end
-  
+
   def gravatar_url (user, size = 150)
     hash = Digest::MD5.hexdigest(user.email.downcase)
     "http://gravatar.com/avatar/#{hash}.png?s=#{size}"
