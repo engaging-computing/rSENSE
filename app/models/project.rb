@@ -13,27 +13,9 @@ class Project < ActiveRecord::Base
   
   def self.search(search)
     if search
-        where('title LIKE ?', "%#{search}%")
+        where('title LIKE ?', "%#{search}%").where({hidden: false})
     else
-        scoped
-    end
-  end
-  
-  def self.filter(filters)
-   
-    if filters
-      query = ""
-      filters.count.times do |f|
-        if(f == 0)
-          query += "filter LIKE '#{filters[f]}'"
-        else
-          query += " OR filter LIKE '#{filters[f]}'"
-        end
-      end      
-      where(query)  
-
-    else
-      scoped
+        scoped.where({hidden: false})
     end
   end
   
