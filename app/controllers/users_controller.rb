@@ -108,6 +108,27 @@ class UsersController < ApplicationController
         @contributions.sort! {|a,b| b.created_at <=> a.created_at}
       end
     end
+    
+    newJsonObject = {}
+    if(!@user.hidden)
+        
+        newJsonObject["ownerName"]      = "#{@user.name}"      
+        newJsonObject["username"]          = @user.username
+        newJsonObject["timeAgoInWords"] = time_ago_in_words(@user.created_at)
+        newJsonObject["createdAt"]      = @user.created_at.strftime("%B %d, %Y")
+        newJsonObject["ownerPath"]      = user_path(@user)
+        
+        if (@user.email.to_s == '')
+          newJsonObject["userGravatar"] = "NULL"
+        else
+          newJsonObject["userGravatar"] = gravatar_url(@user, 80)
+        end
+      end
+          
+    respond_to do |format|
+      format.html { render status: :ok }
+      format.json { render json: newJsonObject, status: :ok }
+    end
   end
 
   # GET /users/new
