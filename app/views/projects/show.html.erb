@@ -74,7 +74,7 @@
               <% end %>
               
               <td><input type="checkbox" id="project_<%=params[:id]%>_session_<%=s.id%>"/></td>
-            </tr>
+            </div></tr>
           <% end %>
         </table>
       <%end%>
@@ -86,7 +86,7 @@
     <div class="row">
 
       <!-- tools -->
-      <%=render layout: "shared/collapse", locals: {title: 'Tools', width: '2', unique_id: 'tools', should_hide: false} do %>
+      <!--<%=render layout: "shared/collapse", locals: {title: 'Tools', width: '2', unique_id: 'tools', should_hide: false} do %>
         <%if can_edit?(@project)%>
           <%=form_tag projects_path, method: 'get', id: @project.id, class:'project_filters' do%>
             Math: <%= check_box_tag "math", "math", (filter_exists "math"), class: 'projects_add_filter_checkbox' %><br>
@@ -106,10 +106,10 @@
                 <%= submit_tag "Clone Project", class: "btn" %>
           <%end%>
         <%end%>
-      <%end%>
+      <%end%>-->
 
       <!-- session creation -->
-      <%=render layout: "shared/collapse", locals: {title: 'Create Data Set', width:'3', unique_id: 'create_data_set', should_hide: false} do %>
+      <%=render layout: "shared/collapse", locals: {title: 'Create Data Set', width:'5', unique_id: 'create_data_set', should_hide: false} do %>
       <div class="row-fluid">
         <div class="span4 center">
         <%= link_to :controller => :data_sets, :action => :manualEntry, :pid => @project.id do %>

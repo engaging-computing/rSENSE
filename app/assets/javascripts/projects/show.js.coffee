@@ -343,7 +343,7 @@ $ ->
           data_set:
             hidden: true
         success: =>
-          ($ @).parents('tr').hide()
+          ($ @).parents('tr').hide_row()
           
     ($ 'a.data_set_delete').click (e) ->
   
@@ -358,4 +358,4 @@ $ ->
             data_set:
               hidden: true
           success: =>
-            ($ @).parents('tr').hide()
+            ($ @).parents('tr').hide_row()
