@@ -39,6 +39,7 @@ class User < ActiveRecord::Base
     h = {
       id: self.id,
       name: self.name,
+      username: self.username,
       hidden: self.hidden,
       url: UrlGenerator.new.user_url(self),
       createdAt: self.created_at.strftime("%B %d, %Y"),
