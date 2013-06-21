@@ -5,7 +5,13 @@ $ ->
       $("#contribution_search").submit()
       
     $("#contribution_search").submit ->
-      $.get("/users/#{$(this).attr('name')}", $(this).serialize(), null, "script")
+      $.ajax
+        url: "/users/#{$(this).attr('name')}/contributions"
+        data: $(this).serialize()
+        dataType: "html"
+        success: (dat) ->
+          $("#contributions").html dat
+          
       return false
         
     $(".contribution_type_checkbox").click ->

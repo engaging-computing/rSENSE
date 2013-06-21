@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+  
   attr_accessible :content, :email, :firstname, :lastname, :password, :password_confirmation, :username, :validated, :hidden
 
   validates_uniqueness_of :email, case_sensitive: false, if: :email?
@@ -31,6 +32,29 @@ class User < ActiveRecord::Base
     else
       scoped.where({hidden: false})
     end
+  end
+  
+  def to_hash(recurse = true)
+    logger.info "USER.TO_HASH"
+    h = {
+      id: self.id,
+      name: self.name,
+      hidden: self.hidden,
+      url: UrlGenerator.new.user_url(self),
+      createdAt: self.created_at.strftime("%B %d, %Y"),
+      gravatar: self.email.to_s == "" ? nil : Gravatar.new.url(self,80)
+    }
+    
+    if recurse
+      h.merge! ({
+        dataSets:       self.data_sets.map      {|o| o.to_hash false},
+        mediaObjects:   self.media_objects.map  {|o| o.to_hash false},
+        projects:       self.projects.map       {|o| o.to_hash false},
+        tutorials:      self.tutorials.map      {|o| o.to_hash false},
+        visualizations: self.visualizations.map {|o| o.to_hash false}
+      })
+    end
+    h
   end
 
   private

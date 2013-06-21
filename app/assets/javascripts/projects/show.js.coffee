@@ -329,7 +329,7 @@ $ ->
       $(@).parent().submit()
       
     ###
-    Hide link for dataset table
+    Links for Datasets
     ###
     ($ 'a.data_set_hide').click (e) ->
     
