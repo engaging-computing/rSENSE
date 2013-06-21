@@ -239,3 +239,8 @@ input.object_hidden_checkbox
   -moz-filter: brightness(70%);
   filter: brightness(70%);
 }
+
+.dropdown-menu
+{
+  left: -54px; !important
+}
