@@ -85,12 +85,4 @@ module ApplicationHelper
     
     @cur_user.try(:admin)
   end
-  
-  
-  
-  # Generate a gravatar url of the given size for the given user
-  def gravatar_url (user, size = 150)
-    hash = Digest::MD5.hexdigest(user.email.downcase)
-    "http://gravatar.com/avatar/#{hash}.png?s=#{size}"
-  end
 end

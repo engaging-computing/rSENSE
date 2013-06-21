@@ -31,7 +31,7 @@ class UsersController < ApplicationController
         if (user.email.to_s == '')
           newJsonObject["userGravatar"] = "NULL"
         else
-          newJsonObject["userGravatar"] = gravatar_url(user, 80)
+          newJsonObject["userGravatar"] = Gravatar.new.url(user, 80)
         end
         
         jsonObjects = jsonObjects << newJsonObject
@@ -40,7 +40,7 @@ class UsersController < ApplicationController
     
     respond_to do |format|
       format.html { render status: :ok }
-      format.json { render json: jsonObjects, status: :ok }
+      format.json { render json: @users.map {|u| u.to_hash(false)}, status: :ok }
     end
 
   end
@@ -51,84 +51,88 @@ class UsersController < ApplicationController
     #Grab the User
     @user = User.find_by_username(params[:id])
     
-    if(@user == nil)
+    if(@user == nil || @user.hidden)
       respond_to do |format|
         format.html { render :file => "#{Rails.root}/public/404.html", :status => :not_found }
-      end
-      return
-    else
-    
-      
-      #See if we are only looking for specific contributions
-      @filters = params[:filters] || []
-      @contributions = []
-      
-      #Only grab the contributions we are currently interested in
-      if !@filters.empty?
-        if @filters.include? "projects"
-          @contributions += @user.projects.search(params[:search])
-        end
-        
-        if @filters.include? "data_sets"
-          @contributions += @user.data_sets.search(params[:search]) || []
-        end
-        
-        if @filters.include? "media"
-          @contributions += @user.media_objects.search(params[:search]) || []
-        end
-
-        if @filters.include? "visualizations"
-          @contributions += @user.visualizations.search(params[:search]) || []
-        end
-      else
-        if !@user.try(:projects).nil?
-          @contributions += @user.try(:projects).search(params[:search])
-        end
-        if !@user.try(:data_sets).nil?
-          @contributions += @user.try(:data_sets).search(params[:search])
-        end
-        if !@user.try(:media_objects).nil?
-          @contributions += @user.try(:media_objects).search(params[:search])
-        end
-        if !@user.try(:visualizations).nil?
-          @contributions += @user.try(:visualizations).search(params[:search])
-        end
-      end
-
-      #Set up the sort order
-      if !params[:sort].nil?
-        sort = params[:sort]
-      else
-        sort = "DESC"
-      end
-      
-      if sort=="ASC"
-        @contributions.sort! {|a,b| a.created_at <=> b.created_at} 
-      else
-        @contributions.sort! {|a,b| b.created_at <=> a.created_at}
+        format.json { render json: {}, status: :unprocessable_entity }
       end
     end
     
-    newJsonObject = {}
-    if(!@user.hidden)
-        
-        newJsonObject["ownerName"]      = "#{@user.name}"      
-        newJsonObject["username"]          = @user.username
-        newJsonObject["timeAgoInWords"] = time_ago_in_words(@user.created_at)
-        newJsonObject["createdAt"]      = @user.created_at.strftime("%B %d, %Y")
-        newJsonObject["ownerPath"]      = user_path(@user)
-        
-        if (@user.email.to_s == '')
-          newJsonObject["userGravatar"] = "NULL"
-        else
-          newJsonObject["userGravatar"] = gravatar_url(@user, 80)
-        end
-      end
+    recur = params.key? :recur ? params[:recur] : false
           
     respond_to do |format|
       format.html { render status: :ok }
-      format.json { render json: newJsonObject, status: :ok }
+      format.json { render json: @user.to_hash(recur), status: :ok }
     end
+  end
+  
+  # GET /users/1/contributions
+  # GET /users/1.json
+  def contributions
+    
+    @user = User.find_by_username(params[:id])
+    
+    #See if we are only looking for specific contributions
+    @filters = params[:filters].to_a
+    
+    #Only grab the contributions we are currently interested in
+    if !@filters.empty?
+      if @filters.include? "projects"
+        @projects = @user.projects.search(params[:search])
+      end
+      
+      if @filters.include? "data_sets"
+        @dataSets = @user.data_sets.search(params[:search])
+      end
+      
+      if @filters.include? "media"
+        @mediaObjects = @user.media_objects.search(params[:search])
+      end
+
+      if @filters.include? "visualizations"
+        @visualizations = @user.visualizations.search(params[:search])
+      end
+      
+      if @filters.include? "tutorials"
+        @tutorials = @user.tutorials.search(params[:search])
+      end
+    else
+      if !@user.try(:projects).nil?
+        @projects = @user.projects.search(params[:search])
+      end
+      if !@user.try(:data_sets).nil?
+        @dataSets = @user.data_sets.search(params[:search])
+      end
+      if !@user.try(:media_objects).nil?
+        @mediaObjects = @user.media_objects.search(params[:search])
+      end
+      if !@user.try(:visualizations).nil?
+        @visualizations = @user.visualizations.search(params[:search])
+      end
+      if !@user.try(:tutorials).nil?
+        @tutorials = @user.tutorials.search(params[:search])
+      end
+    end
+
+    @contributions = @projects.to_a + @dataSets.to_a + @mediaObjects.to_a + @visualizations.to_a + @tutorials.to_a
+    
+    #Set up the sort order
+    if !params[:sort].nil?
+      sort = params[:sort]
+    else
+      sort = "DESC"
+    end
+    
+    if sort=="ASC"
+      @contributions.sort! {|a,b| a.created_at <=> b.created_at} 
+    else
+      @contributions.sort! {|a,b| b.created_at <=> a.created_at}
+    end
+    
+    respond_to do |format|
+      format.html { render partial: "display_contributions" }
+    end
+    
   end
 
   # GET /users/new
@@ -138,7 +142,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       format.html # new.html.erb
-      format.json { render json: @user }
+      format.json { render json: @user.to_hash(false) }
     end
   end
 
@@ -156,7 +160,7 @@ class UsersController < ApplicationController
       if @user.save
         session[:user_id] = @user.id
         format.html { redirect_to @user, notice: 'User was successfully created.' }
-        format.json { render json: @user, status: :created, location: @user }
+        format.json { render json: @user.to_hash(false), status: :created, location: @user }
       else
         format.html { render action: "new" }
         format.json { render json: @user.errors, status: :unprocessable_entity }

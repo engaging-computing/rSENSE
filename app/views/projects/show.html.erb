@@ -55,7 +55,7 @@
           </tr>
           <% @project.data_sets.where({hidden: false}).each do |s| %>
             <tr>
-              <td style="width:32px;height:32px;"><%= image_tag gravatar_url(s.owner, 32) %></td>
+              <td style="width:32px;height:32px;"><%= image_tag Gravatar.new.url(s.owner, 32) %></td>
               <td><%= link_to "#{s.owner.name}", user_path(s.owner) %></td>
               <td><%= link_to s.title, "#{params[:id]}/data_sets/#{s.id}" %></td>
               

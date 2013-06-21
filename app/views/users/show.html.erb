@@ -7,7 +7,7 @@
           <div class="row">
             <%if !@user.try(:email).nil?%>
               <div class="span2" style="padding-bottom:5px">
-                <%= image_tag gravatar_url(@user) %>
+                <%= image_tag Gravatar.new.url(@user) %>
               </div>
             <%end%>
             <div class="span2" style="padding-top:10px;">
@@ -56,17 +56,17 @@
             </div>
             <div class="clear"></div>
             <div style="margin-bottom:10px;">
-              Projects: <%= check_box_tag "filters[]", "projects", @filters.include?("projects"), class: 'contribution_type_checkbox'%>&nbsp;&nbsp;&nbsp;
-              DataSets: <%= check_box_tag "filters[]", "data_sets", @filters.include?("data_sets"), class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
-              Visualizations: <%= check_box_tag "filters[]", "visualizations", @filters.include?("visualizations"), class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
-              Media: <%= check_box_tag "filters[]", "media", @filters.include?("media"), class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
+              Projects: <%= check_box_tag "filters[]", "projects", false, class: 'contribution_type_checkbox'%>&nbsp;&nbsp;&nbsp;
+              DataSets: <%= check_box_tag "filters[]", "data_sets", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
+              Visualizations: <%= check_box_tag "filters[]", "visualizations", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
+              Media: <%= check_box_tag "filters[]", "media", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
+              Tutorials: <%= check_box_tag "filters[]", "tutorials", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
             </div>
           </div>
         <%end%>
       </div>
     </div>
     <div id="contributions">
-      <%= render 'display_contributions'%>
     </div>
     <div class="feed-bottom">
   </div>
