@@ -226,3 +226,14 @@ input.object_hidden_checkbox
 {
  margin-top: 0px; 
 }
+
+.hoverimage
+{
+  -webkit-filter: brightness(100%);
+  filter: brightness(100%);
+}
+.hoverimage:hover
+{
+  -webkit-filter: brightness(70%);
+  filter: brightness(70%);
+}
