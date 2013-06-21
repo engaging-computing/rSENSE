@@ -230,10 +230,12 @@ input.object_hidden_checkbox
 .hoverimage
 {
   -webkit-filter: brightness(100%);
+  -moz-filter: brightness(100%);
   filter: brightness(100%);
 }
 .hoverimage:hover
 {
   -webkit-filter: brightness(70%);
+  -moz-filter: brightness(70%);
   filter: brightness(70%);
 }
