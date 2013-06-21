@@ -65,8 +65,25 @@ class VisualizationsController < ApplicationController
     # The finalized data object
     @Data = { savedData: @visualization.data, savedGlobals: @visualization.globals }
 
+      project = Project.find(@visualization.project_id)
+      
+      newJsonObject = {}
+      
+      newJsonObject["title"]          = @visualization.title
+      newJsonObject["projectPath"]    = project_path(project)
+      newJsonObject["projectTitle"]   = project.title
+      newJsonObject["timeAgoInWords"] = time_ago_in_words(@visualization.created_at)
+      newJsonObject["createdAt"]      = @visualization.created_at.strftime("%B %d, %Y")
+      newJsonObject["ownerName"]      = "#{@visualization.owner.name}"
+      newJsonObject["ownerPath"]      = user_path(@visualization.owner)
+
+      if(project.featured_media_id != nil) 
+        newJsonObject["mediaPath"] = MediaObject.find_by_id(project.featured_media_id).src;
+      end
+
     respond_to do |format|
-      format.html {render :layout => 'applicationWide' }
+      format.html { render :layout => 'applicationWide' }
+      format.json { render json: newJsonObject }
     end
   end
 
