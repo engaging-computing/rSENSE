@@ -55,23 +55,27 @@
           </tr>
           <% @project.data_sets.where({hidden: false}).each do |s| %>
             <tr>
-              <td style="width:32px;height:32px;"><%= image_tag Gravatar.new.url(s.owner, 32) %></td>
+              <td style="width:32px;height:32px;">
+                <%if Gravatar.new.url(s.owner, 32) != nil%>
+                  <%= image_tag Gravatar.new.url(s.owner, 32) %>
+                <%end%>
+              </td>
               <td><%= link_to "#{s.owner.name}", user_path(s.owner) %></td>
               <td><%= link_to s.title, "#{params[:id]}/data_sets/#{s.id}" %></td>
               
               <td><a class="data_set_export" href="<%= data_set_url s %>">Export</a></td>
               
-              <% if can_edit? s %>
-                <td><a class="data_set_edit" href="<%= data_set_url s %>">Edit</a></td>
-              <% end %>
+              <td><% if can_edit? s %>
+                <a class="data_set_edit" href="<%= data_set_url s %>">Edit</a>
+              <% end %></td>
               
-              <% if can_hide? s %>
-                <td><a class="data_set_hide" href="<%= data_set_url s %>">Hide</a></td>
-              <% end %>
+              <td><% if can_hide? s %>
+                <a class="data_set_hide" href="<%= data_set_url s %>">Hide</a>
+              <% end %></td>
               
-              <% if can_delete? s %>
-                <td><a class="data_set_delete" href="<%= data_set_url s %>" name="<%= s.title %>">Delete</a></td>
-              <% end %>
+              <td><% if can_delete? s %>
+                <a class="data_set_delete" href="<%= data_set_url s %>" name="<%= s.title %>">Delete</a>
+              <% end %></td>
               
               <td><input type="checkbox" id="project_<%=params[:id]%>_session_<%=s.id%>"/></td>
             </div></tr>
