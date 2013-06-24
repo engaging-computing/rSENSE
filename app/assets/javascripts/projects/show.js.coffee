@@ -352,10 +352,7 @@ $ ->
       if helpers.confirm_delete ($ @).attr('name')
         $.ajax
           url: ($ @).attr('href')
-          type: 'PUT'
+          type: 'DELETE'
           dataType: "json"
-          data: 
-            data_set:
-              hidden: true
           success: =>
             ($ @).parents('tr').hide_row()

@@ -14,11 +14,17 @@ class Project < ActiveRecord::Base
   
   alias_attribute :name, :title
   
-  def self.search(search)
-    if search
-        where('title LIKE ?', "%#{search}%").where({hidden: false})
+  def self.search(search, include_hidden = false)
+    res = if search
+        where('title LIKE ?', "%#{search}%")
     else
-        scoped.where({hidden: false})
+        scoped
+    end
+    
+    if include_hidden
+      res
+    else
+      res.where({hidden: false})
     end
   end
   

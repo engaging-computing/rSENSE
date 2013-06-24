@@ -78,11 +78,11 @@ class UsersController < ApplicationController
     #Only grab the contributions we are currently interested in
     if !@filters.empty?
       if @filters.include? "projects"
-        @projects = @user.projects.search(params[:search])
+        @projects = @user.projects.search(params[:search], true)
       end
       
       if @filters.include? "data_sets"
-        @dataSets = @user.data_sets.search(params[:search])
+        @dataSets = @user.data_sets.search(params[:search], true)
       end
       
       if @filters.include? "media"
@@ -90,27 +90,27 @@ class UsersController < ApplicationController
       end
 
       if @filters.include? "visualizations"
-        @visualizations = @user.visualizations.search(params[:search])
+        @visualizations = @user.visualizations.search(params[:search], true)
       end
       
       if @filters.include? "tutorials"
-        @tutorials = @user.tutorials.search(params[:search])
+        @tutorials = @user.tutorials.search(params[:search], true)
       end
     else
       if !@user.try(:projects).nil?
-        @projects = @user.projects.search(params[:search])
+        @projects = @user.projects.search(params[:search], true)
       end
       if !@user.try(:data_sets).nil?
-        @dataSets = @user.data_sets.search(params[:search])
+        @dataSets = @user.data_sets.search(params[:search], true)
       end
       if !@user.try(:media_objects).nil?
         @mediaObjects = @user.media_objects.search(params[:search])
       end
       if !@user.try(:visualizations).nil?
-        @visualizations = @user.visualizations.search(params[:search])
+        @visualizations = @user.visualizations.search(params[:search], true)
       end
       if !@user.try(:tutorials).nil?
-        @tutorials = @user.tutorials.search(params[:search])
+        @tutorials = @user.tutorials.search(params[:search], true)
       end
     end
 
