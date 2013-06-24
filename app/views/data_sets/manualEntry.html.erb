@@ -4,23 +4,23 @@
 </script>
 
 <div class="row">
-	<div style="margin-bottom:20px" class="span12">			
-          <table class="table editablegrid">
-            <thead><tr>
-              <% for field in @project.fields %>
-                <th><%= field.name %></th>
-              <% end %>
-            </tr></thead>
-
-            <tbody id="manualTable"><tr id="row0">
-              <% for i in 0...@project.fields.length %>
-                <td><input class='<%= "col" + i.to_s %>' style='width:100%' /></td>
-              <% end %>
-            </tr></tbody>
-          </table>
-	</div>
 	<div style="margin-bottom:20px" class="span12">
-		<button class="add_row_button">Add Row</button>
-		<button class="submit_manual_data">Submit</button>
+    <table id="manualTable">
+      <thead>
+        <tr>
+        <% for field in @project.fields %>
+          <th data-field-type="<%= get_field_name(field.field_type) %>"><%= field.name %></th>
+        <% end %>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+        <% for i in 0...@project.fields.length %>
+          <td></td>
+        <% end %>
+        </tr>
+      </tbody>
+    </table>
 	</div>
 </div>
