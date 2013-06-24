@@ -29,6 +29,6 @@ $ ->
     #Put date validator here
     true
 
-  ($ '.mainContent').on 'change', 'input.text', (event) ->
+  ($ '.mainContent').on 'change', 'input.validate_text', (event) ->
 
     true
