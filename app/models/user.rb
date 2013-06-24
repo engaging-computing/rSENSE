@@ -26,16 +26,21 @@ class User < ActiveRecord::Base
     firstname + " " + lastname[0] + "."
   end
 
-  def self.search(search)
-    if search
-      where('firstname LIKE ? or username LIKE ?', "%#{search}%", "%#{search}%").where({hidden: false})
+  def self.search(search, include_hidden = false)
+    res = if search
+        where('title LIKE ?', "%#{search}%")
     else
-      scoped.where({hidden: false})
+        scoped
+    end
+    
+    if include_hidden
+      res
+    else
+      res.where({hidden: false})
     end
   end
   
   def to_hash(recurse = true)
-    logger.info "USER.TO_HASH"
     h = {
       id: self.id,
       name: self.name,

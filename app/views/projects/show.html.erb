@@ -53,7 +53,7 @@
             <th></th>
             <th><input type="checkbox" id="check_selector"/></th>
           </tr>
-          <% @project.data_sets.where({hidden: false}).each do |s| %>
+          <% @project.data_sets.search(false).each do |s| %>
             <tr>
               <td style="width:32px;height:32px;">
                 <%if Gravatar.new.url(s.owner, 32) != nil%>
@@ -186,7 +186,7 @@
                         <td style="text-align:center"><%=media_object_thumbnail_helper(mo)%></td>
                         <td><%= link_to mo.name, mo.src%></td>
                         <td><%= mo.media_type %></td>
-                        <% if ((mo.media_type == "image") && (can_edit? mo))%>
+                        <% if ((mo.media_type == "image") && (can_edit? @project))%>
                           <td style="text-align:center;"><input type="radio" class="img_selector" name="img_selector" exp_id="<%=@project.id%>" <%if @project.featured_media_id == mo.id%>checked<%end%> mo_id="<%=mo.id%>"></input></td>
                         <% end %>
                     </tr>

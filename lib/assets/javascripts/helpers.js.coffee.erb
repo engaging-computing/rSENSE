@@ -29,7 +29,7 @@ $ ->
   $.fn.errorFlash = () ->
     this.effect "highlight", {color: "#F00"}, 2000
     
-  $.fn.hide_row = () ->
+  $.fn.hide_row = (callback = null) ->
   
     prop = 
       height: "0px"
@@ -39,6 +39,8 @@ $ ->
       duration: 400
       always: () ->
         ($ this).hide()
+        if callback isnt null
+          callback()
   
     this.animate prop, options
     
