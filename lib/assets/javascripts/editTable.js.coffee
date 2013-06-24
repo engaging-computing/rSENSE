@@ -8,7 +8,7 @@ $.fn.extend
       upload:
         ajaxify: true
         url: "#"
-        method: 'POST'
+        method: 'PUT'
       debug: true
 
     settings = $.extend settings, options
