@@ -12,7 +12,7 @@ $ ->
               
               $('#tutorials').isotope('remove', $('.item'))
               
-              addProjectButton = $("<div id='addProjectButton' style='text-align:center;cursor: pointer;' class='item'><img style='width:66%;' src='/assets/green_plus_icon.svg'><br /><h4 style='color:#0a0;'>Create Tutorial</h4></img></div>")
+              addProjectButton = $("<div id='addProjectButton' style='text-align:center;cursor: pointer;' class='item'><img style='width:66%;' class='hoverimage' src='/assets/green_plus_icon.svg'><br /><h4 style='color:#0a0;'>Create Tutorial</h4></img></div>")
               
               $('#tutorials').append(addProjectButton).isotope('insert', addProjectButton)
               
