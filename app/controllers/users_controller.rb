@@ -58,11 +58,16 @@ class UsersController < ApplicationController
       end
     end
     
-    recur = params.key? :recur ? params[:recur] : false
+    recur = params.key?(:recur) ? params[:recur] : false
+    show_hidden = @cur_user.id == @user.id
+    
+    logger.info "---------------------"
+    logger.info recur
+    logger.info "---------------------"
           
     respond_to do |format|
       format.html { render status: :ok }
-      format.json { render json: @user.to_hash(recur), status: :ok }
+      format.json { render json: @user.to_hash(recur, show_hidden), status: :ok }
     end
   end
   
@@ -74,15 +79,16 @@ class UsersController < ApplicationController
     
     #See if we are only looking for specific contributions
     @filters = params[:filters].to_a
+    show_hidden = @cur_user.id == @user.id
     
     #Only grab the contributions we are currently interested in
     if !@filters.empty?
       if @filters.include? "projects"
-        @projects = @user.projects.search(params[:search], true)
+        @projects = @user.projects.search(params[:search], show_hidden)
       end
       
       if @filters.include? "data_sets"
-        @dataSets = @user.data_sets.search(params[:search], true)
+        @dataSets = @user.data_sets.search(params[:search], show_hidden)
       end
       
       if @filters.include? "media"
@@ -90,27 +96,27 @@ class UsersController < ApplicationController
       end
 
       if @filters.include? "visualizations"
-        @visualizations = @user.visualizations.search(params[:search], true)
+        @visualizations = @user.visualizations.search(params[:search], show_hidden)
       end
       
       if @filters.include? "tutorials"
-        @tutorials = @user.tutorials.search(params[:search], true)
+        @tutorials = @user.tutorials.search(params[:search], show_hidden)
       end
     else
       if !@user.try(:projects).nil?
-        @projects = @user.projects.search(params[:search], true)
+        @projects = @user.projects.search(params[:search], show_hidden)
       end
       if !@user.try(:data_sets).nil?
-        @dataSets = @user.data_sets.search(params[:search], true)
+        @dataSets = @user.data_sets.search(params[:search], show_hidden)
       end
       if !@user.try(:media_objects).nil?
         @mediaObjects = @user.media_objects.search(params[:search])
       end
       if !@user.try(:visualizations).nil?
-        @visualizations = @user.visualizations.search(params[:search], true)
+        @visualizations = @user.visualizations.search(params[:search], show_hidden)
       end
       if !@user.try(:tutorials).nil?
-        @tutorials = @user.tutorials.search(params[:search], true)
+        @tutorials = @user.tutorials.search(params[:search], show_hidden)
       end
     end
 
