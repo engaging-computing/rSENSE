@@ -2,7 +2,7 @@
 
 <div class="row">
   <div class="span12">
-    <h1 id="title_span"><%= tutorial_edit_helper 'title', (can_edit? @tutorial) %></h1>
+    <h1 id="title_span"><%= tutorial_edit_menu_helper %></h1>
   </div>
   
   <!-- Somwhat hacky name box popup on create -->
@@ -18,19 +18,8 @@
     </div>
   <% end %>
   
-  <% if (can_edit? @tutorial)%>
-    <div class="span9">
-      <%= tutorial_redactor_helper (can_edit? @tutorial) %>
-    </div>
-    <%=render layout: "shared/collapse", locals: {title: 'Tools', width: '2', unique_id: 'tools', should_hide: false} do %>
-      <%=form_tag tutorials_path, method: 'get', id: @tutorial.id, class:'object_hider', type: "tutorial" do%>
-        <b>Hidden: </b><%= check_box_tag "hidden", "hidden", (@tutorial.hidden), class: 'object_hidden_checkbox' %> 
-      <% end %>  
-    <% end %>
-  <%else %>
-     <div class="span12">
-      <%= tutorial_redactor_helper (can_edit? @tutorial) %>
-    </div>
-  <% end %>  
+  <div class="span12">
+  <%= tutorial_redactor_helper (can_edit? @tutorial) %>
+  </div>
 </div>
 
