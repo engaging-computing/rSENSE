@@ -1,0 +1,103 @@
+$ ->
+
+  ($ 'a.menu_edit').click (e) ->
+    
+    e.preventDefault()
+    
+    top = ($ @).parents('span.edit_menu')
+    info_box = top.find('.info_text')
+    
+    val = info_box.text()
+    info_box.html("<input type='text' class='info_edit_box' value='#{val}'>")
+    info_box.find('.info_edit_box').focus()
+    
+    top.find('span.dropdown').hide()
+    top.find('a.menu_save_link').show()
+    
+    info_box.find('.info_edit_box').keypress (e) ->
+      if (e.keyCode is 13)
+        top.find('a.menu_save_link').trigger 'click'
+        
+        
+  ($ 'a.menu_save_link').click (e) ->
+    
+    e.preventDefault()
+    
+    top = ($ @).parents('span.edit_menu')
+    type = top.attr('type')
+    info_box = top.find('.info_text')
+    value = info_box.find('.info_edit_box').val()
+    data = {}
+    data[type] = 
+      title: value
+
+    $.ajax
+      url: ($ @).attr('href')
+      type: 'PUT'
+      dataType: "json"
+      data: 
+        data
+      success: =>
+        top.find('span.dropdown').show()
+        ($ @).hide()
+        
+        if ($ @).parent().attr('make_link') == 'true'
+          info_box.html("<a href='#{($ @).attr('href')}'>#{value}</a>")
+        else if ($ @).parent().attr('make_link') == 'false'
+          info_box.html(value)
+            
+  ($ 'a.menu_unhider').click (e) ->
+    
+    e.preventDefault()
+    
+    top = ($ @).parents('span.edit_menu')
+    type = top.attr('type')
+    data = {}
+    data[type] =
+      hidden: false
+    
+    $.ajax
+      url: ($ @).attr('href')
+      type: 'PUT'
+      dataType: "json"
+      data: 
+        data
+      success: =>
+        top.find('li.menu_hider').show()
+        top.find('li.menu_unhider').hide()
+        
+  ($ 'a.menu_hider').click (e) ->
+    
+    e.preventDefault()
+    
+    top = ($ @).parents('span.edit_menu')
+    type = top.attr('type')
+    data = {}
+    data[type] =
+      hidden: true
+    
+    $.ajax
+      url: ($ @).attr('href')
+      type: 'PUT'
+      dataType: "json"
+      data: 
+        data
+      success: =>
+        window.location = top.attr("escape_link")
+        
+  ($ 'a.menu_delete').click (e) ->
+    
+    e.preventDefault()
+    
+    top = ($ @).parents('span.edit_menu')
+    info_box = top.find('.info_text')
+    
+    val = info_box.text()
+    
+    if helpers.confirm_delete(val)
+      $.ajax
+        url: ($ @).attr('href')
+        type: 'DELETE'
+        dataType: "json"
+        success: =>
+          window.location = top.attr("escape_link")

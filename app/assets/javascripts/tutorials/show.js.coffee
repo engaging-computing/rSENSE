@@ -18,10 +18,10 @@ $ ->
             title: name
             
         $.ajax
-          url: ($ '#title_span .info_save_link').attr 'href'
+          url: ($ 'span.edit_menu .menu_save_link').attr 'href'
           type: 'PUT'
           dataType: 'json'
           data: data
           success: ->
-            ($ '#title_span span.info_text a').text(name)
+            ($ 'span.edit_menu span.info_text').text(name)
             ($ '#name_box').modal('hide')

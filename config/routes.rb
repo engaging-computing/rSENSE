@@ -70,6 +70,7 @@ Rsense::Application.routes.draw do
   match "/users/verify" => "users#verify"
   resources :users
   match "/users/validate/:key" => "users#validate"
+  match "/users/:id/contributions" => "users#contributions"
 
   match "/projects/:id/updateLikedStatus" => "projects#updateLikedStatus"
 

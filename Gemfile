@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.7'
+gem 'rails', '3.2.13'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -16,6 +16,7 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
 end
 
+# Jquery stuff
 gem 'less-rails'
 gem 'less-rails-bootstrap'
 
@@ -44,14 +45,5 @@ gem "remotipart", "~> 1.0.2"
 gem 'mongo_mapper'
 gem 'bson_ext'
 
-# To use Jbuilder templates for JSON
-# gem 'jbuilder'
-
-# Use unicorn as the app server
-# gem 'unicorn'
-
-# Deploy with Capistrano
-# gem 'capistrano'
-
-# To use debugger
-# gem 'debugger'
+# To allow coffescript views
+gem 'coffeebeans'
