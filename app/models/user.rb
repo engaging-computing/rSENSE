@@ -28,7 +28,7 @@ class User < ActiveRecord::Base
 
   def self.search(search, include_hidden = false)
     res = if search
-        where('title LIKE ?', "%#{search}%")
+        where('firstname LIKE ? OR lastname LIKE ? OR username LIKE ?', "%#{search}%", "%#{search}%", "%#{search}%")
     else
         scoped
     end
@@ -40,7 +40,7 @@ class User < ActiveRecord::Base
     end
   end
   
-  def to_hash(recurse = true)
+  def to_hash(recurse = true, show_hidden = false)
     h = {
       id: self.id,
       name: self.name,
@@ -53,11 +53,11 @@ class User < ActiveRecord::Base
     
     if recurse
       h.merge! ({
-        dataSets:       self.data_sets.map      {|o| o.to_hash false},
-        mediaObjects:   self.media_objects.map  {|o| o.to_hash false},
-        projects:       self.projects.map       {|o| o.to_hash false},
-        tutorials:      self.tutorials.map      {|o| o.to_hash false},
-        visualizations: self.visualizations.map {|o| o.to_hash false}
+        dataSets:       self.data_sets.search(false, show_hidden).map      {|o| o.to_hash false},
+        mediaObjects:   self.media_objects.search(false).map  {|o| o.to_hash false},
+        projects:       self.projects.search(false, show_hidden).map       {|o| o.to_hash false},
+        tutorials:      self.tutorials.search(false, show_hidden).map      {|o| o.to_hash false},
+        visualizations: self.visualizations.search(false, show_hidden).map {|o| o.to_hash false}
       })
     end
     h
