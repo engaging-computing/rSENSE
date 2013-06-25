@@ -131,6 +131,47 @@ class DataSetsController < ApplicationController
 
   end
 
+  def export
+
+    require 'CSV'
+
+
+    @project = Project.find params[:id]
+    @datasets = []
+
+    # build list of datasets
+    if( !params[:datasets].nil? )
+
+      dsets = params[:datasets].split(",")
+      dsets.each do |s|
+        begin
+          @datasets.push DataSet.find_by_id_and_project_id s, params[:id]
+        rescue
+          logger.info "Either project id or dataset does not exist in the DB"
+        end
+      end
+    else
+      @datasets = DataSet.find_all_by_project_id params[:id]
+    end
+
+    @csv = CSV.generate do |csv|
+      tmp = []
+      @project.fields.each do |field|
+        tmp.push field.name
+      end
+
+      csv << tmp
+
+      @datasets.each do |data|
+      end
+
+    end
+
+    logger.info @csv
+
+  end
+
+
   ## POST /data_sets/1
   def uploadCSV
     require "csv"
