@@ -431,7 +431,11 @@ class ProjectsController < ApplicationController
           if( skip == 0 )
           else
             row.each_with_index do |data_point, i|
-              col[i].push [ data_point.strip() ]
+              if data_point = ""
+                col[i].push [ data_point ]
+              else
+                col[i].push [ data_point.strip() ]
+              end
             end
           end
         end

@@ -3,15 +3,16 @@ class SessionsController < ApplicationController
 
   def create
     login_name = params[:username_or_email]
+      
       user = User.find(:first, :conditions => [ "lower(email) = ?", login_name.downcase ])
+      
       if !user
         user = User.find(:first, :conditions => [ "lower(username) = ?", login_name.downcase ])
       end
-      logger.info "--------------------"
-      logger.info params
+      
       if user and user.authenticate(params[:password])
+      
         session[:user_id] = user.id
-        
         response = { status: 'success' }
           
       else
