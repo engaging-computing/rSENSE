@@ -3,6 +3,7 @@ class ProjectsController < ApplicationController
   # GET /projects.json
   skip_before_filter :authorize, only: [:show,:index]
 
+  include ApplicationHelper
   include ActionView::Helpers::DateHelper
 
   def index
@@ -15,9 +16,9 @@ class ProjectsController < ApplicationController
     end
 
     if sort=="ASC" or sort=="DESC"
-      @projects = Project.filter(params[:filters]).search(params[:search]).paginate(page: params[:page], per_page: 100).order("created_at #{sort}")
+      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: 100).order("created_at #{sort}")
     else
-      @projects = Project.filter(params[:filters]).search(params[:search]).paginate(page: params[:page], per_page: 100).order("like_count DESC")
+      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: 100).order("like_count DESC")
     end
 
     #Featured list
@@ -140,21 +141,39 @@ class ProjectsController < ApplicationController
   # PUT /projects/1.json
   def update
     @project = Project.find(params[:id])
-
-    ps = params[:project]
-
-    if ps.has_key?(:featured)
-      if ps['featured'] == "1"
-        ps['featured_at'] = Time.now()
-      else
-        ps['featured_at'] = nil
+    editUpdate  = params[:project].to_hash
+    hideUpdate  = editUpdate.extract_keys!([:hidden])
+    adminUpdate = editUpdate.extract_keys!([:featured, :is_template])
+    success = false
+    
+    #EDIT REQUEST
+    if can_edit?(@project) 
+      success = @project.update_attributes(editUpdate)
+    end
+    
+    #HIDE REQUEST
+    if can_hide?(@project) 
+      success = @project.update_attributes(hideUpdate)
+    end
+    
+    #ADMIN REQUEST
+    if can_admin?(@project) 
+      
+      if adminUpdate.has_key?(:featured)
+        if adminUpdate['featured'] == "1"
+          adminUpdate['featured_at'] = Time.now()
+        else
+          adminUpdate['featured_at'] = nil
+        end
       end
+      
+      success = @project.update_attributes(adminUpdate)
     end
 
     respond_to do |format|
-      if @project.update_attributes(ps)
+      if success
         format.html { redirect_to @project, notice: 'Project was successfully updated.' }
-        format.json { head :no_content }
+        format.json { render json: {}, status: :ok }
       else
         format.html { render action: "edit" }
         format.json { render json: @project.errors, status: :unprocessable_entity }
@@ -184,12 +203,34 @@ class ProjectsController < ApplicationController
   # DELETE /projects/1
   # DELETE /projects/1.json
   def destroy
+    
     @project = Project.find(params[:id])
-    @project.destroy
-
-    respond_to do |format|
-      format.html { redirect_to projects_url }
-      format.json { head :no_content }
+    
+    if can_delete?(@project)
+      
+      @project.data_sets.each do |d|
+        d.hidden = true
+        d.user_id = -1
+        d.save
+      end
+      
+      @project.media_objects.each do |m|
+        m.destroy
+      end
+      
+      @project.user_id = -1
+      @project.hidden = true
+      @project.save
+      
+      respond_to do |format|
+        format.html { redirect_to projects_url }
+        format.json { render json: {}, status: :ok }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to '/401.html' }
+        format.json { render json: {}, status: :forbidden }
+      end
     end
   end
 
@@ -431,7 +472,11 @@ class ProjectsController < ApplicationController
           if( skip == 0 )
           else
             row.each_with_index do |data_point, i|
-              col[i].push [ data_point.strip() ]
+              if data_point = ""
+                col[i].push [ data_point ]
+              else
+                col[i].push [ data_point.strip() ]
+              end
             end
           end
         end
