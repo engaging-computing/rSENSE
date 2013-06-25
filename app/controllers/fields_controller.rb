@@ -1,4 +1,7 @@
 class FieldsController < ApplicationController
+  
+  include ApplicationHelper
+  
   # GET /fields
   # GET /fields.json
   def index
@@ -71,11 +74,18 @@ class FieldsController < ApplicationController
   # PUT /fields/1.json
   def update
     @field = Field.find(params[:id])
-
+    editUpdate  = params[:field].to_hash
+    success = false
+    
+    #EDIT REQUEST
+    if can_edit?(@field) 
+      success = @field.update_attributes(editUpdate)
+    end
+    
     respond_to do |format|
-      if @field.update_attributes(params[:field])
+      if success
         format.html { redirect_to @field, notice: 'Field was successfully updated.' }
-        format.json { head :no_content }
+        format.json { render json:{}, status: :ok }
       else
         format.html { render action: "edit" }
         format.json { render json: @field.errors, status: :unprocessable_entity }
@@ -87,11 +97,19 @@ class FieldsController < ApplicationController
   # DELETE /fields/1.json
   def destroy
     @field = Field.find(params[:id])
-    @field.destroy
-
-    respond_to do |format|
-      format.html { redirect_to fields_url }
-      format.json { head :no_content }
+    
+    if can_delete?(@field)
+      @field.destroy
+      
+      respond_to do |format|
+        format.html { redirect_to fields_url }
+        format.json { render json: {}, status: :ok }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to 'public/401.html' }
+        { render json: {}, status: :forbidden }
+      end
     end
   end
 end

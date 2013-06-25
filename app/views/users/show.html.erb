@@ -1,16 +1,16 @@
 <p id="notice"><%= notice %></p>
 <div class="row">
-  <div class="span5">
+  <div class="span6">
     <div class="row">
-      <div class="span5" align="center">
+      <div class="span6" align="center">
         <div class="content-block grey_content">
           <div class="row">
             <%if !@user.try(:email).nil?%>
               <div class="span2" style="padding-bottom:5px">
-                <%= image_tag gravatar_url(@user) %>
+                <%= image_tag Gravatar.new.url(@user) %>
               </div>
             <%end%>
-            <div class="span2" style="padding-top:10px;">
+            <div class="span3" style="padding-top:10px;">
               <span class="info_label">First Name:</span> 
               <%= user_edit_helper 'firstname', (can_edit? @user) %>
               <br />
@@ -30,7 +30,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="span5">
+      <div class="span6">
         <br />
         <div>
           <%= user_redactor_helper (can_edit? @user)%>
@@ -39,9 +39,9 @@
       </div>
     </div>
   </div>
-  <div class="span7">
+  <div class="span6">
     <div class="row">
-      <div class="span7">
+      <div class="span6">
         <%= form_tag users_path, method: 'get', id:'contribution_search', class:'navbar-search', name: @user.username do%>
           <div class="feed-top">
             <h2>My Stuff</h2>
@@ -56,17 +56,17 @@
             </div>
             <div class="clear"></div>
             <div style="margin-bottom:10px;">
-              Projects: <%= check_box_tag "filters[]", "projects", @filters.include?("projects"), class: 'contribution_type_checkbox'%>&nbsp;&nbsp;&nbsp;
-              DataSets: <%= check_box_tag "filters[]", "data_sets", @filters.include?("data_sets"), class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
-              Visualizations: <%= check_box_tag "filters[]", "visualizations", @filters.include?("visualizations"), class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
-              Media: <%= check_box_tag "filters[]", "media", @filters.include?("media"), class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
+              Projects: <%= check_box_tag "filters[]", "projects", false, class: 'contribution_type_checkbox'%>&nbsp;&nbsp;&nbsp;
+              DataSets: <%= check_box_tag "filters[]", "data_sets", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
+              Visualizations: <%= check_box_tag "filters[]", "visualizations", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
+              Media: <%= check_box_tag "filters[]", "media", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
+              Tutorials: <%= check_box_tag "filters[]", "tutorials", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
             </div>
           </div>
         <%end%>
       </div>
     </div>
     <div id="contributions">
-      <%= render 'display_contributions'%>
     </div>
     <div class="feed-bottom">
   </div>

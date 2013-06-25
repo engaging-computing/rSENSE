@@ -3,6 +3,7 @@ class TutorialsController < ApplicationController
   # GET /tutorials.json
   skip_before_filter :authorize, only: [:show, :index]
   
+  include ApplicationHelper
   include ActionView::Helpers::DateHelper
 
   def index
@@ -91,11 +92,30 @@ class TutorialsController < ApplicationController
   # PUT /tutorials/1.json
   def update
     @tutorial = Tutorial.find(params[:id])
+    editUpdate  = params[:tutorial]
+    hideUpdate  = editUpdate.extract_keys!([:hidden])
+    adminUpdate = editUpdate.extract_keys!([:featured_number])
+    success = false
+    
+    #EDIT REQUEST
+    if can_edit?(@tutorial) 
+      success = @tutorial.update_attributes(editUpdate)
+    end
+    
+    #HIDE REQUEST
+    if can_hide?(@tutorial) 
+      success = @tutorial.update_attributes(hideUpdate)
+    end
+    
+    #ADMIN REQUEST
+    if can_admin?(@tutorial)
+      success = @tutorial.update_attributes(adminUpdate)
+    end
 
     respond_to do |format|
-      if @tutorial.update_attributes(params[:tutorial])
+      if success
         format.html { redirect_to @tutorial, notice: 'Tutorial was successfully updated.' }
-        format.json { head :no_content }
+        format.json { render json: {}, status: :ok }
       else
         format.html { render action: "edit" }
         format.json { render json: @tutorial.errors, status: :unprocessable_entity }
@@ -107,11 +127,26 @@ class TutorialsController < ApplicationController
   # DELETE /tutorials/1.json
   def destroy
     @tutorial = Tutorial.find(params[:id])
-    @tutorial.destroy
-
-    respond_to do |format|
-      format.html { redirect_to tutorials_url }
-      format.json { head :no_content }
+    
+    if can_delete?(@tutorial)
+      
+      @tutorial.media_objects.each do |m|
+        m.destroy
+      end
+      
+      @tutorial.user_id = -1
+      @tutorial.hidden = true
+      @tutorial.save
+      
+      respond_to do |format|
+        format.html { redirect_to tutorials_url }
+        format.json { render json: {}, status: :ok }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to 'public/401.html' }
+        format.json { render json: {}, status: :forbidden }
+      end
     end
   end
   
@@ -119,27 +154,29 @@ class TutorialsController < ApplicationController
   # Switches between which tutorials are featured
   def switch
 
-    #Which tutorial should we make featured
-    to_tutorial = params[:selected]
+    new_tutorial = Tutorial.find_by_id(params[:selected].to_i)
+    old_tutorial = Tutorial.where("featured_number = ?",params[:location]).first || nil
     
-    #Which featured tutorial are we changing
-    featured_value = params[:location]
-    
-    old_tutorial = Tutorial.where("featured_number = ?",featured_value).first || nil
-    
-    #Set the old tutorials featured number to nil if necessary
-    if !(old_tutorial == nil)
-      old_tutorial.featured_number = nil
-      old_tutorial.save
+    if can_admin(new_tutorial) && can_admin(old_tutorial)
+      #Set the old tutorials featured number to nil if necessary
+      if !(old_tutorial == nil)
+        old_tutorial.featured_number = nil
+        old_tutorial.save
+      end
+      
+      #Update the featured number for the selected tutorial
+      new_tutorial.featured_number = featured_value.to_i    
+      new_tutorial.save
+      
+      respond_to do |format|
+        format.json { render json: {}, status: :ok }
+      end
+    else
+      respond_to do |format|
+        format.json { render json: {}, status: :forbidden }
+      end
     end
     
-    #Update the featured number for the selected tutorial
-    new_tutorial = Tutorial.find_by_id(to_tutorial.to_i)
-    new_tutorial.featured_number = featured_value.to_i    
-    new_tutorial.save
     
-    respond_to do |format|
-      format.json { head :no_content }
-    end
   end
 end
