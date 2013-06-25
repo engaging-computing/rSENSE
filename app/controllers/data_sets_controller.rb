@@ -4,14 +4,14 @@ class DataSetsController < ApplicationController
   
   # GET /data_sets
   # GET /data_sets.json
-  def index
-    @data_sets = DataSet.all
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @data_sets }
-    end
-  end
+#   def index
+#     @data_sets = DataSet.all
+# 
+#     respond_to do |format|
+#       format.html # index.html.erb
+#       format.json { render json: @data_sets }
+#     end
+#   end
 
   # GET /data_sets/1
   # GET /data_sets/1.json
@@ -21,7 +21,7 @@ class DataSetsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @data_set }
+      format.json { render json: @data_set.to_hash(false) }
     end
   end
 
@@ -32,7 +32,7 @@ class DataSetsController < ApplicationController
 
     respond_to do |format|
       format.html # new.html.erb
-      format.json { render json: @data_set }
+      format.json { render json: @data_set.to_hash(false) }
     end
   end
 
@@ -107,7 +107,7 @@ class DataSetsController < ApplicationController
     respond_to do |format|
       if @data_set.save
         format.html { redirect_to @data_set, notice: 'Project session was successfully created.' }
-        format.json { render json: @data_set, status: :created, location: @data_set }
+        format.json { render json: @data_set.to_hash(false), status: :created, location: @data_set }
       else
         format.html { render action: "new" }
         format.json { render json: @data_set.errors, status: :unprocessable_entity }
@@ -157,6 +157,7 @@ class DataSetsController < ApplicationController
       
       @data_set.hidden = true
       @data_set.user_id = -1
+      @data_set.project_id = -1
       @data_set.save
       
       respond_to do |format|
