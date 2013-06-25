@@ -18,7 +18,7 @@ class ProjectsController < ApplicationController
     if sort=="ASC" or sort=="DESC"
       @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: 100).order("created_at #{sort}")
     else
-      @projects = Projectsearch(params[:search]).paginate(page: params[:page], per_page: 100).order("like_count DESC")
+      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: 100).order("like_count DESC")
     end
 
     #Featured list
