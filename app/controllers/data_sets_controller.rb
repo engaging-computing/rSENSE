@@ -1,4 +1,7 @@
 class DataSetsController < ApplicationController
+  
+  include ApplicationHelper
+  
   # GET /data_sets
   # GET /data_sets.json
   def index
@@ -38,6 +41,64 @@ class DataSetsController < ApplicationController
     @data_set = DataSet.find(params[:id])
   end
 
+  def editTable
+    @data_set = DataSet.find(params[:id])
+    @project = Project.find(@data_set.project_id)
+    @mongo_data_set = MongoData.find_by_data_set_id(@data_set.id)
+    @fields = @project.fields
+
+    header_to_field_map = []
+
+    if !params["data"].nil? and !params["headers"].nil?
+      @project.fields.each do |field|
+        params["headers"].each_with_index do |header, header_index|
+          if header == field.name
+            header_to_field_map.push header_index
+          end
+        end
+      end
+
+      new_data = []
+
+      params["data"]["0"].each_with_index do |tmp, row_index|
+
+        row = []
+
+        header_to_field_map.each do |htf, htf_index|
+          if params["data"]["#{htf}"][row_index] == ""
+            if @fields[htf].field_type == 3
+              val = ""
+            else
+              val = nil
+            end
+          else
+            val = params["data"]["#{htf}"][row_index]
+          end
+          dp = { "#{@fields[htf].id}" => val }
+          row.push dp
+        end
+
+
+        new_data[row_index] = row
+
+      end
+
+      @mongo_data_set[:data] = new_data
+
+      if @mongo_data_set.save!
+        ret = { status: :success, redirect: "/projects/#{@project.id}/data_sets/#{@data_set.id}" }
+      else
+        ret = :error
+      end
+    end
+
+    respond_to do |format|
+      format.html # new.html.erb
+      format.json { render json: ret }
+    end
+
+  end
+
   # POST /data_sets
   # POST /data_sets.json
   def create
@@ -58,11 +119,24 @@ class DataSetsController < ApplicationController
   # PUT /data_sets/1.json
   def update
     @data_set = DataSet.find(params[:id])
+    editUpdate  = params[:data_set].to_hash
+    hideUpdate  = editUpdate.extract_keys!([:hidden])
+    success = false
+    
+    #EDIT REQUEST
+    if can_edit?(@data_set)
+      success = @data_set.update_attributes(editUpdate)
+    end
+    
+    #HIDE REQUEST
+    if can_hide?(@data_set)
+      success = @data_set.update_attributes(hideUpdate)
+    end
 
     respond_to do |format|
       if @data_set.update_attributes(params[:data_set])
-        format.html { redirect_to @data_set, notice: 'Project session was successfully updated.' }
-        format.json { head :no_content }
+        format.html { redirect_to @data_set, notice: 'DataSet was successfully updated.' }
+        format.json { render json: {}, status: :ok }
       else
         format.html { render action: "edit" }
         format.json { render json: @data_set.errors, status: :unprocessable_entity }
@@ -74,11 +148,26 @@ class DataSetsController < ApplicationController
   # DELETE /data_sets/1.json
   def destroy
     @data_set = DataSet.find(params[:id])
-    @data_set.destroy
-
-    respond_to do |format|
-      format.html { redirect_to data_sets_url }
-      format.json { head :no_content }
+    
+    if can_delete?(@data_set)
+      
+      @data_set.media_objects.each do |m|
+        m.destroy
+      end
+      
+      @data_set.hidden = true
+      @data_set.user_id = -1
+      @data_set.save
+      
+      respond_to do |format|
+        format.html { redirect_to @data_set.project }
+        format.json { render json: {}, status: :ok }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to 'public/401.html' }
+        format.json { render json: {}, status: :forbidden }
+      end
     end
   end
 
@@ -93,8 +182,8 @@ class DataSetsController < ApplicationController
     defaultName  = @project.title + " Dataset #"
     defaultName += (DataSet.find_all_by_project_id(params[:pid]).count + 1).to_s
 
-    header = params[:ses_info][:header]
-    data = params[:ses_info][:data]
+    header = params["headers"]
+    data = params["data"]
 
     if !data.nil?
 
@@ -105,7 +194,7 @@ class DataSetsController < ApplicationController
       data.each do |dp|
         row = []
         header.each_with_index do |field, col_index|
-          row << { field[1][:id] => dp[1][col_index] }
+          row << { field => dp[1][col_index] }
         end
         mongo_data << row
       end
@@ -113,6 +202,7 @@ class DataSetsController < ApplicationController
       data_to_add = MongoData.new(:data_set_id => @data_set.id, :data => mongo_data)
 
       followURL = url_for :controller => :visualizations, :action => :displayVis, :id => @project.id, :sessions => "#{@data_set.id}"
+      followURL = "/projects/#{@project.id}/data_sets/#{@data_set.id}"
 
       if data_to_add.save!
         response = { status: 'success', redirect: followURL, datasets: @data_set.id, title: defaultName }

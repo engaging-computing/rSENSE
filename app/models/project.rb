@@ -1,4 +1,5 @@
 class Project < ActiveRecord::Base
+  
   attr_accessible :content, :title, :user_id, :filter, :cloned_from, :like_count, :has_fields, :featured, :is_template, :featured_media_id, :hidden, :featured_at
   
   validates_presence_of :title
@@ -11,29 +12,19 @@ class Project < ActiveRecord::Base
 
   belongs_to :owner, class_name: "User", foreign_key: "user_id"
   
-  def self.search(search)
-    if search
+  alias_attribute :name, :title
+  
+  def self.search(search, include_hidden = false)
+    res = if search
         where('title LIKE ?', "%#{search}%")
     else
         scoped
     end
-  end
-  
-  def self.filter(filters)
-   
-    if filters
-      query = ""
-      filters.count.times do |f|
-        if(f == 0)
-          query += "filter LIKE '#{filters[f]}'"
-        else
-          query += " OR filter LIKE '#{filters[f]}'"
-        end
-      end      
-      where(query)  
-
+    
+    if include_hidden
+      res
     else
-      scoped
+      res.where({hidden: false})
     end
   end
   
@@ -41,6 +32,28 @@ class Project < ActiveRecord::Base
     where(:is_template => true)
   end
   
+  def to_hash(recurse = true)
+    h = {
+      id: self.id,
+      featuredMediaId: self.featured_media_id,
+      title: self.name,
+      url: UrlGenerator.new.project_url(self),
+      hidden: self.hidden,
+      featured: self.featured,
+      likeCount: self.like_count,
+      createdAt: self.created_at.strftime("%B %d, %Y")
+    }
+    
+    if recurse
+      h.merge! ({
+        fields:       self.fields.map        {|o| o.to_hash false},
+        dataSets:     self.data_sets.map     {|o| o.to_hash false},
+        mediaObjects: self.media_objects.map {|o| o.to_hash false},
+        owner:        self.owner.to_hash(false)
+      })
+    end
+    h
+  end
 end
 
 # where filter like filters[0] AND filter like filters[1]

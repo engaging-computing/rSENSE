@@ -14,9 +14,9 @@ class ProjectTemplatesController < ApplicationController
     end
     
     if sort=="ASC" or sort=="DESC"
-      @projects = Project.filter(params[:filters]).search(params[:search]).paginate(page: params[:page], per_page: 8).order("created_at #{sort}").is_template
+      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: 8).order("created_at #{sort}").is_template
     else
-      @projects = Project.filter(params[:filters]).search(params[:search]).paginate(page: params[:page], per_page: 8).order("like_count DESC").is_template
+      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: 8).order("like_count DESC").is_template
     end
   
     jsonObjects = []

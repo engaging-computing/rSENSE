@@ -13,14 +13,14 @@ $ ->
               do (object) ->
                 newItem =   "<div class='item' align='center'>"
                   
-                newItem +=  "<h4 style='margin-top:0px;'><a href='#{object.ownerPath}'>#{object.username}</a>"
+                newItem +=  "<h4 style='margin-top:0px;'><a href='#{object.url}'>#{object.username}</a>"
 
                 newItem += "</h4>"
+                
+                if (object.gravatar) != null
+                  newItem += "<img src='#{object.gravatar}'> </img><br />"
 
-                if (object.userGravatar) != "NULL"
-                  newItem += "<img src='#{object.userGravatar}'> </img><br />"
-
-                newItem +=  "<h8><b>Name: </b><a href='#{object.ownerPath}'>#{object.ownerName}</a></h8><br />"
+                newItem +=  "<h8><b>Name: </b><a href='#{object.url}'>#{object.name}</a></h8><br />"
 
                 newItem +=  "<h8><b>Member Since: </b>#{object.createdAt}</h8><br />"
 
