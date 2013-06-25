@@ -14,7 +14,7 @@ class MediaObject < ActiveRecord::Base
   
   before_destroy :aws_del
   
-  def self.search(search)
+  def self.search(search, dc)
     if search
         where('name LIKE ?', "%#{search}%")
     else

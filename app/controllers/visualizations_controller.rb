@@ -15,43 +15,17 @@ class VisualizationsController < ApplicationController
     end
     
     if sort=="ASC" or sort=="DESC"
-      @visualizaions = Visualization.search(params[:search]).paginate(page: params[:page], per_page: 100).order("created_at #{sort}")
+      @visualizations = Visualization.search(params[:search]).paginate(page: params[:page], per_page: 100).order("created_at #{sort}")
     else
-      @visualizaions = Visualization.search(params[:search]).paginate(page: params[:page], per_page: 100).order("like_count DESC")
+      @visualizations = Visualization.search(params[:search]).paginate(page: params[:page], per_page: 100).order("like_count DESC")
     end
     
     #Featured list
     @featured_3 = Visualization.where(featured: true).order("updated_at DESC").limit(3);
     
-    jsonObjects = []
-    
-    @visualizaions.each do |viz|
-      
-      
-      project = Project.find(viz.project_id)
-      
-      newJsonObject = {}
-      
-      newJsonObject["title"]          = viz.title
-      newJsonObject["projectPath"]    = project_path(project)
-      newJsonObject["projectTitle"]   = project.title
-      newJsonObject["timeAgoInWords"] = time_ago_in_words(viz.created_at)
-      newJsonObject["createdAt"]      = viz.created_at.strftime("%B %d, %Y")
-      newJsonObject["ownerName"]      = "#{viz.owner.name}"
-      newJsonObject["vizPath"]        = visualization_path(viz)
-      newJsonObject["ownerPath"]      = user_path(viz.owner)
-
-      if(project.featured_media_id != nil) 
-        newJsonObject["mediaPath"] = MediaObject.find_by_id(project.featured_media_id).src;
-      end
-      
-      jsonObjects = jsonObjects << newJsonObject
-      
-    end
-    
     respond_to do |format|
       format.html
-      format.json { render json: jsonObjects }
+      format.json { render json: @visualizations.to_hash(false) }
     end
     
   end
@@ -65,25 +39,11 @@ class VisualizationsController < ApplicationController
     # The finalized data object
     @Data = { savedData: @visualization.data, savedGlobals: @visualization.globals }
 
-      project = Project.find(@visualization.project_id)
-      
-      newJsonObject = {}
-      
-      newJsonObject["title"]          = @visualization.title
-      newJsonObject["projectPath"]    = project_path(project)
-      newJsonObject["projectTitle"]   = project.title
-      newJsonObject["timeAgoInWords"] = time_ago_in_words(@visualization.created_at)
-      newJsonObject["createdAt"]      = @visualization.created_at.strftime("%B %d, %Y")
-      newJsonObject["ownerName"]      = "#{@visualization.owner.name}"
-      newJsonObject["ownerPath"]      = user_path(@visualization.owner)
-
-      if(project.featured_media_id != nil) 
-        newJsonObject["mediaPath"] = MediaObject.find_by_id(project.featured_media_id).src;
-      end
+    recur = params.key?(:recur) ? params[:recur] : false
 
     respond_to do |format|
       format.html { render :layout => 'applicationWide' }
-      format.json { render json: newJsonObject }
+      format.json { render json: @visualization.to_hash(recur) }
     end
   end
 
@@ -103,14 +63,14 @@ class VisualizationsController < ApplicationController
   
   # GET /visualizations/new
   # GET /visualizations/new.json
-  def new
-    @visualization = Visualization.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @visualization }
-    end
-  end
+#   def new
+#     @visualization = Visualization.new
+# 
+#     respond_to do |format|
+#       format.html # new.html.erb
+#       format.json { render json: @visualization }
+#     end
+#   end
 
   # GET /visualizations/1/edit
   def edit
@@ -127,7 +87,7 @@ class VisualizationsController < ApplicationController
       if @visualization.save
         flash[:notice] = 'Visualization was successfully created.'
         format.html { redirect_to @visualization }
-        format.json { render json: @visualization.id, status: :created, location: @visualization}
+        format.json { render json: @visualization.to_hash(false), status: :created, location: @visualization}
       else
         format.html { render action: "new" }
         format.json { render json: @visualization.errors, status: :unprocessable_entity }
