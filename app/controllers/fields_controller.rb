@@ -108,7 +108,7 @@ class FieldsController < ApplicationController
     else
       respond_to do |format|
         format.html { redirect_to 'public/401.html' }
-        { render json: {}, status: :forbidden }
+        format.json { render json: {}, status: :forbidden }
       end
     end
   end
