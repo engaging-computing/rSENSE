@@ -14,10 +14,16 @@ class DataSetTest < ActiveSupport::TestCase
     assert_default_nil( @data_set, @data_set.content )
   end
   
+  # Passes if hidden is false
+  test "hidden is false" do
+    assert_default_false( @data_set, @data_set.hidden )
+  end
+  
+  
   # ---------------------------------------------------
   # Testing with fixtures
   
-  test "sessions title" do
+  test "data set title" do
     assert_equal "Sample Title", data_sets(:one).title
   end
 
