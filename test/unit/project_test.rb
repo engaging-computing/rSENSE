@@ -49,6 +49,11 @@ class ProjectTest < ActiveSupport::TestCase
      assert_default_nil( @project, @project.featured_media_id )
    end
 
+   #Passes if hidden is false
+   test "hidden is false" do
+     assert_default_false( @project, @project.hidden )
+   end
+   
   
   # ---------------------------------------------------
   # Testing with fixtures
@@ -89,5 +94,4 @@ class ProjectTest < ActiveSupport::TestCase
     assert_nil projects(:one).featured_media_id, "Expected project featured_media_id is not nil."
   end
  
-  
 end

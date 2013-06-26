@@ -4,10 +4,11 @@ class UserTest < ActiveSupport::TestCase
 
   # Creates a new user and tests that the default fields are correctly set
   
-  # Declares a new data set
+  # Declares a new user
   def setup
     @user = User.new
   end
+  
   # Passes if email is nil
   test "email is nil" do
     assert_default_nil( @user, @user.email )
@@ -26,6 +27,11 @@ class UserTest < ActiveSupport::TestCase
   # Passes if content is nil
   test "content is nil" do
     assert_default_nil( @user, @user.content )
+  end
+
+  # Passes if hidden is false
+  test "hidden is false" do
+    assert_default_false( @user, @user.hidden )
   end
 
   
