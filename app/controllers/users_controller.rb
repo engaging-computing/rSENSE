@@ -16,28 +16,6 @@ class UsersController < ApplicationController
     
     @users = User.search(params[:search]).paginate(page: params[:page], per_page: 8).order("created_at #{sort}")
     
-    jsonObjects = []
-    
-    @users.each do |user|
-      if(!user.hidden)
-        newJsonObject = {}
-        
-        newJsonObject["ownerName"]      = "#{user.name}"      
-        newJsonObject["username"]          = user.username
-        newJsonObject["timeAgoInWords"] = time_ago_in_words(user.created_at)
-        newJsonObject["createdAt"]      = user.created_at.strftime("%B %d, %Y")
-        newJsonObject["ownerPath"]      = user_path(user)
-        
-        if (user.email.to_s == '')
-          newJsonObject["userGravatar"] = "NULL"
-        else
-          newJsonObject["userGravatar"] = Gravatar.new.url(user, 80)
-        end
-        
-        jsonObjects = jsonObjects << newJsonObject
-      end
-    end
-    
     respond_to do |format|
       format.html { render status: :ok }
       format.json { render json: @users.map {|u| u.to_hash(false)}, status: :ok }
@@ -60,10 +38,6 @@ class UsersController < ApplicationController
     
     recur = params.key?(:recur) ? params[:recur] : false
     show_hidden = @cur_user.id == @user.id
-    
-    logger.info "---------------------"
-    logger.info recur
-    logger.info "---------------------"
           
     respond_to do |format|
       format.html { render status: :ok }
@@ -92,7 +66,7 @@ class UsersController < ApplicationController
       end
       
       if @filters.include? "media"
-        @mediaObjects = @user.media_objects.search(params[:search])
+        @mediaObjects = @user.media_objects.search(params[:search], show_hidden)
       end
 
       if @filters.include? "visualizations"
@@ -110,7 +84,7 @@ class UsersController < ApplicationController
         @dataSets = @user.data_sets.search(params[:search], show_hidden)
       end
       if !@user.try(:media_objects).nil?
-        @mediaObjects = @user.media_objects.search(params[:search])
+        @mediaObjects = @user.media_objects.search(params[:search], show_hidden)
       end
       if !@user.try(:visualizations).nil?
         @visualizations = @user.visualizations.search(params[:search], show_hidden)
@@ -139,17 +113,6 @@ class UsersController < ApplicationController
       format.html { render partial: "display_contributions" }
     end
     
-  end
-
-  # GET /users/new
-  # GET /users/new.json
-  def new
-    @user = User.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @user.to_hash(false) }
-    end
   end
 
   # GET /users/1/edit

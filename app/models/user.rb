@@ -54,7 +54,7 @@ class User < ActiveRecord::Base
     if recurse
       h.merge! ({
         dataSets:       self.data_sets.search(false, show_hidden).map      {|o| o.to_hash false},
-        mediaObjects:   self.media_objects.search(false).map  {|o| o.to_hash false},
+        mediaObjects:   self.media_objects.search(false, show_hidden).map  {|o| o.to_hash false},
         projects:       self.projects.search(false, show_hidden).map       {|o| o.to_hash false},
         tutorials:      self.tutorials.search(false, show_hidden).map      {|o| o.to_hash false},
         visualizations: self.visualizations.search(false, show_hidden).map {|o| o.to_hash false}
