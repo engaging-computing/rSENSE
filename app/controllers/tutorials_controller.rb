@@ -41,22 +41,6 @@ class TutorialsController < ApplicationController
     end
   end
 
-  # GET /tutorials/new
-  # GET /tutorials/new.json
-#   def new
-#     @tutorial = Tutorial.new
-# 
-#     respond_to do |format|
-#       format.html # new.html.erb
-#       format.json { render json: @tutorial }
-#     end
-#   end
-
-  # GET /tutorials/1/edit
-#   def edit
-#     @tutorial = Tutorial.find(params[:id])
-#   end
-
   # POST /tutorials
   # POST /tutorials.json
   def create

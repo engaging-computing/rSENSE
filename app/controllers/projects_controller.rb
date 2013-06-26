@@ -64,23 +64,6 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def createSession
-
-    @project = Project.find(params[:id])
-
-  end
-
-  # GET /projects/new
-  # GET /projects/new.json
-#   def new
-#     @project = Project.new
-# 
-#     respond_to do |format|
-#       format.html # new.html.erb
-#       format.json { render json: @project }
-#     end
-#   end
-
   # GET /projects/1/edit
   def edit
     @project = Project.find(params[:id])
@@ -158,25 +141,6 @@ class ProjectsController < ApplicationController
     end
   end
 
-  # GET /projects/pid/fid
-#   def checkFieldName
-# 
-#     @project = Project.find(params[:pid])
-#     orig = true
-# 
-#     @project.fields.all.each do |f|
-#       if f.id != params[:fid].to_i
-#         if f.name == params['field']['name']
-#           orig = false
-#         end
-#       end
-#     end
-# 
-#     respond_to do |format|
-#       format.json { render json: {orig: orig} }
-#     end
-#   end
-
   # DELETE /projects/1
   # DELETE /projects/1.json
   def destroy
@@ -236,33 +200,6 @@ class ProjectsController < ApplicationController
       format.json { render json: {update: @response} }
     end
   end
-
-#   def removeField
-# 
-#     @project = Project.find(params[:id])
-# 
-#     msg = ""
-# 
-#     if @project.data_sets.count == 0
-# 
-#       field_list = []
-# 
-#       @project.fields.each do |f|
-#         if f.id != params[:field_id].to_i
-#           field_list.push(f)
-#         end
-#       end
-# 
-#     @project.fields = field_list
-#     @project.save!
-# 
-#     end
-# 
-#     respond_to do |format|
-#       format.json { render json: {project: @project, fields: field_list} }
-#     end
-# 
-#   end
 
   def importFromIsense
     require 'net/http'

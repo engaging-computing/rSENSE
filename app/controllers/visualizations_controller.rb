@@ -60,17 +60,6 @@ class VisualizationsController < ApplicationController
       format.html {render :layout => 'embeded' }
     end
   end
-  
-  # GET /visualizations/new
-  # GET /visualizations/new.json
-#   def new
-#     @visualization = Visualization.new
-# 
-#     respond_to do |format|
-#       format.html # new.html.erb
-#       format.json { render json: @visualization }
-#     end
-#   end
 
   # GET /visualizations/1/edit
   def edit

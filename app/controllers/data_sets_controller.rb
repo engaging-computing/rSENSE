@@ -1,17 +1,6 @@
 class DataSetsController < ApplicationController
   
   include ApplicationHelper
-  
-  # GET /data_sets
-  # GET /data_sets.json
-#   def index
-#     @data_sets = DataSet.all
-# 
-#     respond_to do |format|
-#       format.html # index.html.erb
-#       format.json { render json: @data_sets }
-#     end
-#   end
 
   # GET /data_sets/1
   # GET /data_sets/1.json
