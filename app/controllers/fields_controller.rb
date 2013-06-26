@@ -1,17 +1,6 @@
 class FieldsController < ApplicationController
   
   include ApplicationHelper
-  
-  # GET /fields
-  # GET /fields.json
-#   def index
-#     @fields = Field.all
-# 
-#     respond_to do |format|
-#       format.html # index.html.erb
-#       format.json { render json: @fields }
-#     end
-#   end
 
   # GET /fields/1
   # GET /fields/1.json
@@ -26,22 +15,6 @@ class FieldsController < ApplicationController
       format.json { render json: @field.to_hash(recur) }
     end
   end
-
-  # GET /fields/new
-  # GET /fields/new.json
-#   def new
-#     @field = Field.new
-# 
-#     respond_to do |format|
-#       format.html # new.html.erb
-#       format.json { render json: @field }
-#     end
-#   end
-
-  # GET /fields/1/edit
-#   def edit
-#     @field = Field.find(params[:id])
-#   end
 
   # POST /fields
   # POST /fields.json
