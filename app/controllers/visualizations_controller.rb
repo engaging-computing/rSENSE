@@ -15,43 +15,17 @@ class VisualizationsController < ApplicationController
     end
     
     if sort=="ASC" or sort=="DESC"
-      @visualizaions = Visualization.search(params[:search]).paginate(page: params[:page], per_page: 100).order("created_at #{sort}")
+      @visualizations = Visualization.search(params[:search]).paginate(page: params[:page], per_page: 100).order("created_at #{sort}")
     else
-      @visualizaions = Visualization.search(params[:search]).paginate(page: params[:page], per_page: 100).order("like_count DESC")
+      @visualizations = Visualization.search(params[:search]).paginate(page: params[:page], per_page: 100).order("like_count DESC")
     end
     
     #Featured list
     @featured_3 = Visualization.where(featured: true).order("updated_at DESC").limit(3);
     
-    jsonObjects = []
-    
-    @visualizaions.each do |viz|
-      
-      
-      project = Project.find(viz.project_id)
-      
-      newJsonObject = {}
-      
-      newJsonObject["title"]          = viz.title
-      newJsonObject["projectPath"]    = project_path(project)
-      newJsonObject["projectTitle"]   = project.title
-      newJsonObject["timeAgoInWords"] = time_ago_in_words(viz.created_at)
-      newJsonObject["createdAt"]      = viz.created_at.strftime("%B %d, %Y")
-      newJsonObject["ownerName"]      = "#{viz.owner.name}"
-      newJsonObject["vizPath"]        = visualization_path(viz)
-      newJsonObject["ownerPath"]      = user_path(viz.owner)
-
-      if(project.featured_media_id != nil) 
-        newJsonObject["mediaPath"] = MediaObject.find_by_id(project.featured_media_id).src;
-      end
-      
-      jsonObjects = jsonObjects << newJsonObject
-      
-    end
-    
     respond_to do |format|
       format.html
-      format.json { render json: jsonObjects }
+      format.json { render json: @visualizations.to_hash(false) }
     end
     
   end
@@ -65,8 +39,11 @@ class VisualizationsController < ApplicationController
     # The finalized data object
     @Data = { savedData: @visualization.data, savedGlobals: @visualization.globals }
 
+    recur = params.key?(:recur) ? params[:recur] : false
+
     respond_to do |format|
-      format.html {render :layout => 'applicationWide' }
+      format.html { render :layout => 'applicationWide' }
+      format.json { render json: @visualization.to_hash(recur) }
     end
   end
 
@@ -81,17 +58,6 @@ class VisualizationsController < ApplicationController
 
     respond_to do |format|
       format.html {render :layout => 'embeded' }
-    end
-  end
-  
-  # GET /visualizations/new
-  # GET /visualizations/new.json
-  def new
-    @visualization = Visualization.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @visualization }
     end
   end
 
@@ -110,7 +76,7 @@ class VisualizationsController < ApplicationController
       if @visualization.save
         flash[:notice] = 'Visualization was successfully created.'
         format.html { redirect_to @visualization }
-        format.json { render json: @visualization.id, status: :created, location: @visualization}
+        format.json { render json: @visualization.to_hash(false), status: :created, location: @visualization}
       else
         format.html { render action: "new" }
         format.json { render json: @visualization.errors, status: :unprocessable_entity }
@@ -122,21 +88,39 @@ class VisualizationsController < ApplicationController
   # PUT /visualizations/1.json
   def update
     @visualization = Visualization.find(params[:id])
-
-    vs = params[:visualization]
+    editUpdate  = params[:visualization].to_hash
+    hideUpdate  = editUpdate.extract_keys!([:hidden])
+    adminUpdate = editUpdate.extract_keys!([:featured])
+    success = false
    
-    if vs.has_key?(:featured)
-      if vs['featured'] == "1"
-        vs['featured_at'] = Time.now()
-      else
-        vs['featured_at'] = nil
+    #EDIT REQUEST
+    if can_edit?(@visualization) 
+      success = @visualization.update_attributes(editUpdate)
+    end
+    
+    #HIDE REQUEST
+    if can_hide?(@visualization) 
+      success = @visualization.update_attributes(hideUpdate)
+    end
+    
+    #ADMIN REQUEST
+    if can_admin?(@visualization) 
+      
+      if adminUpdate.has_key?(:featured)
+        if adminUpdate['featured'] == "1"
+          adminUpdate['featured_at'] = Time.now()
+        else
+          adminUpdate['featured_at'] = nil
+        end
       end
+      
+      success = @visualization.update_attributes(adminUpdate)
     end
     
     respond_to do |format|
-      if @visualization.update_attributes(vs)
+      if success
         format.html { redirect_to @visualization, notice: 'Visualization was successfully updated.' }
-        format.json { head :no_content }
+        format.json { render json: {}, status: :ok }
       else
         format.html { render action: "edit" }
         format.json { render json: @visualization.errors, status: :unprocessable_entity }
@@ -148,11 +132,26 @@ class VisualizationsController < ApplicationController
   # DELETE /visualizations/1.json
   def destroy
     @visualization = Visualization.find(params[:id])
-    @visualization.destroy
-
-    respond_to do |format|
-      format.html { redirect_to visualizations_url }
-      format.json { head :no_content }
+    
+    if can_delete?(@visualizaion)
+      
+      @visualizaion.media_objects.each do |m|
+        m.destroy
+      end
+      
+      @visualizaion.hidden = true
+      @visualizaion.user_id = -1
+      @visualizaion.save
+      
+      respond_to do |format|
+        format.html { redirect_to visualizaions_url }
+        format.json { render json: {}, status: :ok }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to 'public/401.html' }
+        format.json { render json: {}, status: :forbidden }
+      end
     end
   end
 

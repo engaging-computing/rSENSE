@@ -28,3 +28,21 @@ $ ->
 
   $.fn.errorFlash = () ->
     this.effect "highlight", {color: "#F00"}, 2000
+    
+  $.fn.hide_row = (callback = null) ->
+  
+    prop = 
+      height: "0px"
+      opacity: 0
+      
+    options =
+      duration: 400
+      always: () ->
+        ($ this).hide()
+        if callback isnt null
+          callback()
+  
+    this.animate prop, options
+    
+  helpers.confirm_delete = (objName) ->
+    confirm("Are you sure you want to delete #{objName}?")

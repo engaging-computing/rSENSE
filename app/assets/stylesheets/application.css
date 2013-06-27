@@ -130,9 +130,9 @@ table.editablegrid > tbody > tr > td
   background-color: #dce0e8;
 }
 
-.info_edit_link
+.info_edit_link, .menu_edit_link
 {
-    vertical-align: super;
+/*     vertical-align: super; */
     font-size: 0.75em;
 }
 
@@ -143,7 +143,7 @@ table.editablegrid > tbody > tr > td
     padding-right:5px;
 }
 
-.info_save_link
+.info_save_link, .menu_save_link
 {
     vertical-align: super;
     font-size: 0.75em;
@@ -180,7 +180,7 @@ input.info_edit_box
 
 .redactor_content
 {
-  padding: 0px !important;
+  padding: 5px !important;
   margin: 0px !important;
   word-wrap: break-word;
 /*   margin: 1px 1px 15px 1px; */
@@ -225,4 +225,9 @@ li.dataset_tab
 input.object_hidden_checkbox
 {
  margin-top: 0px; 
+}
+
+.dropdown-menu
+{
+  left: -54px; !important
 }

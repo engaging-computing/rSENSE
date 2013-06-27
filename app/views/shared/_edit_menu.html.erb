@@ -1,0 +1,46 @@
+<span class="edit_menu" field='title' type='<%=type%>' make_link='<%=make_link%>' escape_link='<%=escape_link%>'>
+
+  <%if make_link %>
+      <span class="info_text"><%= link_to obj.title, "/#{type.pluralize}/#{obj.id}" %></span>
+  <%else%>
+      <span class="info_text"><%=obj.title%></span>
+  <%end%>
+  
+  <% if can_edit?(obj) || can_hide?(obj) || can_delete?(obj)  %>
+  
+      <span class="dropdown" style="font-size:14px; vertical-align: super;">
+        <a class="dropdown-toggle menu_edit_link" data-toggle="dropdown" href="#"> 
+          <i class="icon-cog icon-content"></i>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+        
+          <% if can_edit?(obj)%>
+            <li role="presentation">
+              <a class="menu_edit" role="menuitem" href="<%=url_for obj%>"> Edit Title </a>
+            </li>
+          <%end%>
+          
+          <% if can_hide?(obj) %>
+            <li role="presentation" class="menu_unhider" <%if not obj.hidden %> style="display:none" <%end%> >
+              <a class="menu_unhider" role="menuitem" href="<%=url_for obj%>"> Unhide <%= typeName.capitalize %> </a>
+            </li>
+            
+            <li role="presentation" class="menu_hider" <%if obj.hidden %> style="display:none" <%end%> >
+              <a class="menu_hider" role="menuitem" href="<%=url_for obj%>"> Hide <%= typeName.capitalize %> </a>
+            </li>
+          <%end%>
+          
+          <% if can_delete?(obj)%>
+            <li role="presentation">
+              <a class="menu_delete" role="menuitem" href="<%=url_for obj%>"> Delete <%= typeName.capitalize %> </a>
+            </li>
+          <%end%>
+          
+        </ul>
+      </span>
+  
+      <% if can_edit?(obj) %>
+        <a href="<%=url_for obj%>" class="menu_save_link"><i class="icon-ok"></i></a>
+      <%end%>
+  <%end%>
+</span>

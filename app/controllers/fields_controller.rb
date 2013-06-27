@@ -1,40 +1,19 @@
 class FieldsController < ApplicationController
-  # GET /fields
-  # GET /fields.json
-  def index
-    @fields = Field.all
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @fields }
-    end
-  end
+  
+  include ApplicationHelper
 
   # GET /fields/1
   # GET /fields/1.json
   def show
     @field = Field.find(params[:id])
     @owner = Project.find(@field.project_id).user_id
+    
+    recur = params.key?(:recur) ? params[:recur] : false
+    
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @field }
+      format.json { render json: @field.to_hash(recur) }
     end
-  end
-
-  # GET /fields/new
-  # GET /fields/new.json
-  def new
-    @field = Field.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @field }
-    end
-  end
-
-  # GET /fields/1/edit
-  def edit
-    @field = Field.find(params[:id])
   end
 
   # POST /fields
@@ -59,7 +38,7 @@ class FieldsController < ApplicationController
     respond_to do |format|
       if @field.save
         format.html { redirect_to @field, notice: 'Field was successfully created.' }
-        format.json { render json: @field, status: :created, location: @field }
+        format.json { render json: @field.to_hash(false), status: :created, location: @field }
       else
         format.html { render action: "new" }
         format.json { render json: @field.errors, status: :unprocessable_entity }
@@ -71,11 +50,34 @@ class FieldsController < ApplicationController
   # PUT /fields/1.json
   def update
     @field = Field.find(params[:id])
-
+    editUpdate  = params[:field].to_hash
+    success = false
+    
+    #EDIT REQUEST
+    if can_edit?(@field)
+      
+      unique = true
+      
+      #Enforce name uniqueness per project
+      if params[:field].try(:[], :name)
+        @field.owner.fields.all.each do |f|
+          if f.id != params[:id].to_i
+            if f.name == params[:field][:name]
+              unique = false
+            end
+          end
+        end
+      end
+      
+      if unique
+        success = @field.update_attributes(editUpdate)
+      end
+    end
+    
     respond_to do |format|
-      if @field.update_attributes(params[:field])
+      if success
         format.html { redirect_to @field, notice: 'Field was successfully updated.' }
-        format.json { head :no_content }
+        format.json { render json:{}, status: :ok }
       else
         format.html { render action: "edit" }
         format.json { render json: @field.errors, status: :unprocessable_entity }
@@ -87,11 +89,19 @@ class FieldsController < ApplicationController
   # DELETE /fields/1.json
   def destroy
     @field = Field.find(params[:id])
-    @field.destroy
-
-    respond_to do |format|
-      format.html { redirect_to fields_url }
-      format.json { head :no_content }
+    
+    if can_delete?(@field)
+      @field.destroy
+      
+      respond_to do |format|
+        format.html { redirect_to fields_url }
+        format.json { render json: {}, status: :ok }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to 'public/401.html' }
+        format.json { render json: {}, status: :forbidden }
+      end
     end
   end
 end

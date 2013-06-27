@@ -18,12 +18,12 @@ $ ->
             title: name
 
         $.ajax
-          url: ($ '#title_span .info_save_link').attr 'href'
+          url: ($ 'span.edit_menu .menu_save_link').attr 'href'
           type: 'PUT'
           dataType: 'json'
           data: data
           success: ->
-            ($ '#title_span span.info_text a').text(name)
+            ($ 'span.edit_menu span.info_text').text(name)
             ($ '#name_box').modal('hide')
 
     respond_template = ( resp ) ->
@@ -200,7 +200,7 @@ $ ->
       keyboard: true
       show: false
 
-    # Initializes the dropdown lightbox for google drive upload
+    # Does the liking and unliking when the star icon is clicked
     ($ '.liked_status').click ->
       icon = ($ @).children 'i'
       if icon.attr('class').indexOf('icon-star-empty') != -1
@@ -327,3 +327,32 @@ $ ->
 
     ($ ".projects_add_filter_checkbox").click ->
       $(@).parent().submit()
+      
+    ###
+    Links for Datasets
+    ###
+    ($ 'a.data_set_hide').click (e) ->
+    
+      e.preventDefault()
+      
+      $.ajax
+        url: ($ @).attr('href')
+        type: 'PUT'
+        dataType: "json"
+        data: 
+          data_set:
+            hidden: true
+        success: =>
+          ($ @).parents('tr').hide_row()
+          
+    ($ 'a.data_set_delete').click (e) ->
+  
+      e.preventDefault()
+      
+      if helpers.confirm_delete ($ @).attr('name')
+        $.ajax
+          url: ($ @).attr('href')
+          type: 'DELETE'
+          dataType: "json"
+          success: =>
+            ($ @).parents('tr').hide_row()
