@@ -183,7 +183,7 @@
                 <% @project.media_objects.all.each do |mo| %>
                     <tr>
                         <td style="text-align:center"><%=media_object_thumbnail_helper(mo)%></td>
-                        <td><%= link_to mo.name, mo.src%></td>
+                        <td><%= link_to mo.name, mo%></td>
                         <td><%= mo.media_type %></td>
                         <% if ((mo.media_type == "image") && (can_edit? @project))%>
                           <td style="text-align:center;"><input type="radio" class="img_selector" name="img_selector" exp_id="<%=@project.id%>" <%if @project.featured_media_id == mo.id%>checked<%end%> mo_id="<%=mo.id%>"></input></td>
