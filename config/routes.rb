@@ -52,8 +52,8 @@ Rsense::Application.routes.draw do
   match "/data_sets/test" => "data_sets#test"
   match "/data_sets/:id/editTable" => "data_sets#editTable"
 
-  match "/projects/:id/data_sets/export/*datasets" => "data_sets#export"
-  match "/projects/:id/data_sets/export" => "data_sets#export"
+  match "/projects/:id/export/data_sets/*datasets" => "data_sets#export"
+  match "/projects/:id/export" => "data_sets#export"
 
   #Routes for displaying data
   match "/projects/:id/data_sets/*datasets" => "visualizations#displayVis"
