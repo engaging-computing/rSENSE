@@ -46,7 +46,7 @@ $ ->
     else
       h = (Number ($ "div.mainContent").css("padding-top").replace("px", ""))
       h += ($ "#title_bar").height()
-      h += ($ "#title_row").height()
+      h += ($ "#title_row").outerHeight(true)
       h += globals.VIS_MARGIN
       
       ($ "#viscontainer").height(($ window).height() - h)
