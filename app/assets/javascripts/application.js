@@ -15,12 +15,13 @@
 //= require helpers
 //= require dataset_name
 //= require jquery_ujs
-//= require twitter/bootstrap
 //= require jquery.ui.all
+//= require twitter/bootstrap
 //= require bootstrap
 //= require redactor.min.js
 //= require redactor_edit_pane.js.coffee
 //= require info_edit.js.coffee
+//= require menu_edit.js.coffee
 //= require object_hider.js.coffee
 //= require login.js.coffee.erb
 //= require field_edit.js.coffee

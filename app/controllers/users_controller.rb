@@ -16,31 +16,9 @@ class UsersController < ApplicationController
     
     @users = User.search(params[:search]).paginate(page: params[:page], per_page: 8).order("created_at #{sort}")
     
-    jsonObjects = []
-    
-    @users.each do |user|
-      if(!user.hidden)
-        newJsonObject = {}
-        
-        newJsonObject["ownerName"]      = "#{user.name}"      
-        newJsonObject["username"]          = user.username
-        newJsonObject["timeAgoInWords"] = time_ago_in_words(user.created_at)
-        newJsonObject["createdAt"]      = user.created_at.strftime("%B %d, %Y")
-        newJsonObject["ownerPath"]      = user_path(user)
-        
-        if (user.email.to_s == '')
-          newJsonObject["userGravatar"] = "NULL"
-        else
-          newJsonObject["userGravatar"] = gravatar_url(user, 80)
-        end
-        
-        jsonObjects = jsonObjects << newJsonObject
-      end
-    end
-    
     respond_to do |format|
       format.html { render status: :ok }
-      format.json { render json: jsonObjects, status: :ok }
+      format.json { render json: @users.map {|u| u.to_hash(false)}, status: :ok }
     end
 
   end
@@ -51,95 +29,90 @@ class UsersController < ApplicationController
     #Grab the User
     @user = User.find_by_username(params[:id])
     
-    if(@user == nil)
+    if(@user == nil || @user.hidden)
       respond_to do |format|
         format.html { render :file => "#{Rails.root}/public/404.html", :status => :not_found }
-      end
-      return
-    else
-    
-      
-      #See if we are only looking for specific contributions
-      @filters = params[:filters] || []
-      @contributions = []
-      
-      #Only grab the contributions we are currently interested in
-      if !@filters.empty?
-        if @filters.include? "projects"
-          @contributions += @user.projects.search(params[:search])
-        end
-        
-        if @filters.include? "data_sets"
-          @contributions += @user.data_sets.search(params[:search]) || []
-        end
-        
-        if @filters.include? "media"
-          @contributions += @user.media_objects.search(params[:search]) || []
-        end
-
-        if @filters.include? "visualizations"
-          @contributions += @user.visualizations.search(params[:search]) || []
-        end
-      else
-        if !@user.try(:projects).nil?
-          @contributions += @user.try(:projects).search(params[:search])
-        end
-        if !@user.try(:data_sets).nil?
-          @contributions += @user.try(:data_sets).search(params[:search])
-        end
-        if !@user.try(:media_objects).nil?
-          @contributions += @user.try(:media_objects).search(params[:search])
-        end
-        if !@user.try(:visualizations).nil?
-          @contributions += @user.try(:visualizations).search(params[:search])
-        end
-      end
-
-      #Set up the sort order
-      if !params[:sort].nil?
-        sort = params[:sort]
-      else
-        sort = "DESC"
-      end
-      
-      if sort=="ASC"
-        @contributions.sort! {|a,b| a.created_at <=> b.created_at} 
-      else
-        @contributions.sort! {|a,b| b.created_at <=> a.created_at}
+        format.json { render json: {}, status: :unprocessable_entity }
       end
     end
     
-    newJsonObject = {}
-    if(!@user.hidden)
-        
-        newJsonObject["ownerName"]      = "#{@user.name}"      
-        newJsonObject["username"]          = @user.username
-        newJsonObject["timeAgoInWords"] = time_ago_in_words(@user.created_at)
-        newJsonObject["createdAt"]      = @user.created_at.strftime("%B %d, %Y")
-        newJsonObject["ownerPath"]      = user_path(@user)
-        
-        if (@user.email.to_s == '')
-          newJsonObject["userGravatar"] = "NULL"
-        else
-          newJsonObject["userGravatar"] = gravatar_url(@user, 80)
-        end
-      end
+    recur = params.key?(:recur) ? params[:recur] : false
+    show_hidden = @cur_user.id == @user.id
           
     respond_to do |format|
       format.html { render status: :ok }
-      format.json { render json: newJsonObject, status: :ok }
+      format.json { render json: @user.to_hash(recur, show_hidden), status: :ok }
     end
   end
+  
+  # GET /users/1/contributions
+  # GET /users/1.json
+  def contributions
+    
+    @user = User.find_by_username(params[:id])
+    
+    #See if we are only looking for specific contributions
+    @filters = params[:filters].to_a
+    show_hidden = @cur_user.id == @user.id
+    
+    #Only grab the contributions we are currently interested in
+    if !@filters.empty?
+      if @filters.include? "projects"
+        @projects = @user.projects.search(params[:search], show_hidden)
+      end
+      
+      if @filters.include? "data_sets"
+        @dataSets = @user.data_sets.search(params[:search], show_hidden)
+      end
+      
+      if @filters.include? "media"
+        @mediaObjects = @user.media_objects.search(params[:search], show_hidden)
+      end
 
-  # GET /users/new
-  # GET /users/new.json
-  def new
-    @user = User.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @user }
+      if @filters.include? "visualizations"
+        @visualizations = @user.visualizations.search(params[:search], show_hidden)
+      end
+      
+      if @filters.include? "tutorials"
+        @tutorials = @user.tutorials.search(params[:search], show_hidden)
+      end
+    else
+      if !@user.try(:projects).nil?
+        @projects = @user.projects.search(params[:search], show_hidden)
+      end
+      if !@user.try(:data_sets).nil?
+        @dataSets = @user.data_sets.search(params[:search], show_hidden)
+      end
+      if !@user.try(:media_objects).nil?
+        @mediaObjects = @user.media_objects.search(params[:search], show_hidden)
+      end
+      if !@user.try(:visualizations).nil?
+        @visualizations = @user.visualizations.search(params[:search], show_hidden)
+      end
+      if !@user.try(:tutorials).nil?
+        @tutorials = @user.tutorials.search(params[:search], show_hidden)
+      end
     end
+
+    @contributions = @projects.to_a + @dataSets.to_a + @mediaObjects.to_a + @visualizations.to_a + @tutorials.to_a
+    
+    #Set up the sort order
+    if !params[:sort].nil?
+      sort = params[:sort]
+    else
+      sort = "DESC"
+    end
+    
+    if sort=="ASC"
+      @contributions.sort! {|a,b| a.created_at <=> b.created_at} 
+    else
+      @contributions.sort! {|a,b| b.created_at <=> a.created_at}
+    end
+    
+    respond_to do |format|
+      format.html { render partial: "display_contributions" }
+    end
+    
   end
 
   # GET /users/1/edit
@@ -156,7 +129,7 @@ class UsersController < ApplicationController
       if @user.save
         session[:user_id] = @user.id
         format.html { redirect_to @user, notice: 'User was successfully created.' }
-        format.json { render json: @user, status: :created, location: @user }
+        format.json { render json: @user.to_hash(false), status: :created, location: @user }
       else
         format.html { render action: "new" }
         format.json { render json: @user.errors, status: :unprocessable_entity }
@@ -168,15 +141,43 @@ class UsersController < ApplicationController
   # PUT /users/1.json
   def update
     @user = User.find_by_username(params[:id])
+    editUpdate = params[:user].to_hash
+    hideUpdate = editUpdate.extract_keys!([:hidden])
+    success = false
+    
+    #EDIT REQUEST
+    if can_edit?(@user) 
+      success = @user.update_attributes(editUpdate)
+    end
+    
+    #HIDE REQUEST
+    if can_hide?(@user) 
+      success = @user.update_attributes(hideUpdate)
+    end
+    
+    respond_to do |format|
+      if success
+        format.html { redirect_to @user, notice: 'User was successfully updated.' }
+        format.json { render json: {}, status: :ok }
+      else
+        format.html { render "public/404.html" }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
+      end
+    end
+  end
 
-    if params[:commit] == "Delete User"
+  # DELETE /users/1
+  # DELETE /users/1.json
+  def destroy
+    @user = User.find_by_username(params[:id])
+    
+    if can_delete?(@user)
       @user.projects.each do |p|
         p.hidden = true
         p.save
       end
       @user.media_objects.each do |m|
-        m.hidden = true
-        m.save
+        m.destroy
       end
       @user.visualizations.each do |v|
         v.hidden = true
@@ -196,31 +197,17 @@ class UsersController < ApplicationController
       @user.username =  "#{Time.now().to_i}"
       @user.save
       
+      session[:user_id] = nil
+      
       respond_to do |format|
-        format.html {redirect_to '/users'}
+        format.html { redirect_to users_url}
+        format.json { render json: {}, status: :ok }
       end
     else
       respond_to do |format|
-        if @user.update_attributes(params[:user])
-          format.html { redirect_to @user, notice: 'User was successfully updated.' }
-          format.json { head :no_content }
-        else
-          format.html { render action: "edit" }
-          format.json { render json: @user.errors, status: :unprocessable_entity }
-        end
+        format.html { redirect_to 'public/401.html' }
+        format.json { render json: {}, status: :forbidden }
       end
-    end
-  end
-
-  # DELETE /users/1
-  # DELETE /users/1.json
-  def destroy
-    @user = User.find_by_username(params[:id])
-    @user.destroy
-
-    respond_to do |format|
-      format.html { redirect_to users_url }
-      format.json { head :no_content }
     end
   end
 
