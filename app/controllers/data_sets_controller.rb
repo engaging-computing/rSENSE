@@ -250,6 +250,7 @@ class DataSetsController < ApplicationController
 
     @project = Project.find params[:id]
     @datasets = []
+    @divfiller = ""
 
     # build list of datasets
     if( !params[:datasets].nil? )
@@ -266,6 +267,12 @@ class DataSetsController < ApplicationController
       @datasets = DataSet.find_all_by_project_id params[:id]
     end
 
+
+    @datasets.each do |dataset|
+      mongo_data = MongoData.find_by_data_set_id dataset.id
+      dataset[:data] = mongo_data.data
+    end
+
     @csv = CSV.generate do |csv|
       tmp = []
       @project.fields.each do |field|
@@ -274,12 +281,43 @@ class DataSetsController < ApplicationController
 
       csv << tmp
 
-      @datasets.each do |data|
-      end
+      @datasets.each do |dataset|
 
+        dataset[:data].each do |row|
+
+          tmp = []
+
+          row.each do |data|
+            # rails gives us each hash as an array of field number and value
+            # e.x. ["1363", "444"] and we only want the value
+            tmp.push data[1]
+          end
+
+          csv << tmp
+
+
+        end
+      end
     end
 
-    logger.info @csv
+    CSV.parse(@csv).each do |row|
+
+      row_html = ""
+
+      row.each_with_index do |data, index|
+        if data.nil?
+          row_html = row_html + " "
+        else
+          row_html = row_html + data
+        end
+        if index != (row.count - 1)
+          row_html = row_html + ", "
+        end
+      end
+
+      @divfiller = @divfiller + row_html + '<br />'
+
+    end
 
   end
 
