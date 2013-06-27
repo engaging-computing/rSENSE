@@ -1,14 +1,6 @@
 class DataSetsController < ApplicationController
-  # GET /data_sets
-  # GET /data_sets.json
-  def index
-    @data_sets = DataSet.all
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @data_sets }
-    end
-  end
+  
+  include ApplicationHelper
 
   # GET /data_sets/1
   # GET /data_sets/1.json
@@ -18,7 +10,7 @@ class DataSetsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @data_set }
+      format.json { render json: @data_set.to_hash(false) }
     end
   end
 
@@ -29,7 +21,7 @@ class DataSetsController < ApplicationController
 
     respond_to do |format|
       format.html # new.html.erb
-      format.json { render json: @data_set }
+      format.json { render json: @data_set.to_hash(false) }
     end
   end
 
@@ -104,7 +96,7 @@ class DataSetsController < ApplicationController
     respond_to do |format|
       if @data_set.save
         format.html { redirect_to @data_set, notice: 'Project session was successfully created.' }
-        format.json { render json: @data_set, status: :created, location: @data_set }
+        format.json { render json: @data_set.to_hash(false), status: :created, location: @data_set }
       else
         format.html { render action: "new" }
         format.json { render json: @data_set.errors, status: :unprocessable_entity }
@@ -116,11 +108,24 @@ class DataSetsController < ApplicationController
   # PUT /data_sets/1.json
   def update
     @data_set = DataSet.find(params[:id])
+    editUpdate  = params[:data_set].to_hash
+    hideUpdate  = editUpdate.extract_keys!([:hidden])
+    success = false
+    
+    #EDIT REQUEST
+    if can_edit?(@data_set)
+      success = @data_set.update_attributes(editUpdate)
+    end
+    
+    #HIDE REQUEST
+    if can_hide?(@data_set)
+      success = @data_set.update_attributes(hideUpdate)
+    end
 
     respond_to do |format|
       if @data_set.update_attributes(params[:data_set])
-        format.html { redirect_to @data_set, notice: 'Project session was successfully updated.' }
-        format.json { head :no_content }
+        format.html { redirect_to @data_set, notice: 'DataSet was successfully updated.' }
+        format.json { render json: {}, status: :ok }
       else
         format.html { render action: "edit" }
         format.json { render json: @data_set.errors, status: :unprocessable_entity }
@@ -132,11 +137,27 @@ class DataSetsController < ApplicationController
   # DELETE /data_sets/1.json
   def destroy
     @data_set = DataSet.find(params[:id])
-    @data_set.destroy
-
-    respond_to do |format|
-      format.html { redirect_to data_sets_url }
-      format.json { head :no_content }
+    
+    if can_delete?(@data_set)
+      
+      @data_set.media_objects.each do |m|
+        m.destroy
+      end
+      
+      @data_set.hidden = true
+      @data_set.user_id = -1
+      @data_set.project_id = -1
+      @data_set.save
+      
+      respond_to do |format|
+        format.html { redirect_to @data_set.project }
+        format.json { render json: {}, status: :ok }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to 'public/401.html' }
+        format.json { render json: {}, status: :forbidden }
+      end
     end
   end
 

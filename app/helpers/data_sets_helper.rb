@@ -1,5 +1,23 @@
 module DataSetsHelper
   
+  def data_set_edit_menu_helper(id, make_link = false)
+    
+    @data_set = DataSet.find_by_id(id)
+    
+    logger.info "------------------------------"
+    logger.info id
+    logger.info make_link
+    logger.info data_set_url
+    logger.info @data_set
+    logger.info "------------------------------"
+    
+    datasets = params['datasets'].split(",").map {|n| n.to_i}
+    datasets.delete id
+    escapeLink = "#"
+    
+    render 'shared/edit_menu', {type: 'data_set', typeName: 'Data Set', obj: @data_set, make_link: make_link, escape_link: escapeLink}
+  end
+  
   def data_set_edit_helper(field,can_edit = false,data_set = @data_set,make_link = true)
      render 'shared/edit_info', {type: 'data_set', field: field, value: data_set[field], row_id: data_set.id, can_edit: can_edit, make_link: make_link}
   end

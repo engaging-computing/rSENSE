@@ -1,12 +1,7 @@
 module ApplicationHelper
 
-#   def include_page_spesific_js
-#     if FileTest.exists? "app/assets/javascripts/"+params[:controller]+"/"+params[:action]+".js.coffee"
-#       return '<script src="/assets/'+params[:controller]+'/'+params[:action]+'.js.coffee" type="text/javascript"></script>'
-#     end
-#   end
-
-  def get_field_id (type)
+  
+    def get_field_id (type)
     if type == "Time"
       1
     elsif type == "Number"
@@ -51,17 +46,66 @@ module ApplicationHelper
       "invalid input: try get_field_name(string)"
     end
   end
-
+  
+  # Begin permissions stuff
   def can_edit? (obj)
-    if(obj.class == User)
+    
+    if @cur_user.nil?
+      return false
+    end
+    
+    case obj
+    when User
       (obj.id == @cur_user.try(:id)) || @cur_user.try(:admin)
-    else
+    when Project, DataSet, Visualization, Tutorial
       (obj.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin)
+    when Field
+      (obj.owner.owner == @cur_user.try(:id)) || @cur_user.try(:admin)
+    else
+      false
     end
   end
-
-  def gravatar_url (user, size = 150)
-    hash = Digest::MD5.hexdigest(user.email.downcase)
-    "http://gravatar.com/avatar/#{hash}.png?s=#{size}"
+  
+  def can_hide? (obj)
+    
+    if @cur_user.nil?
+      return false
+    end
+    
+    case obj
+    when DataSet
+      (obj.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin) || (obj.project.owner.id == @cur_user.try(:id))
+    when Project, Visualization, Tutorial
+      (obj.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin)
+    else
+      false
+    end
+  end
+  
+  def can_delete? (obj)
+    
+    if @cur_user.nil?
+      return false
+    end
+    
+    case obj
+    when User, Project, Tutorial
+      @cur_user.try(:admin)
+    when DataSet, Visualization, MediaObject
+      (obj.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin)
+    when Field
+      (obj.owner.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin)
+    else
+      false
+    end
+  end
+  
+  def can_admin? (obj)
+    
+    if @cur_user.nil?
+      return false
+    end
+    
+    @cur_user.try(:admin)
   end
 end
