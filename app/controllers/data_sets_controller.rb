@@ -277,10 +277,12 @@ class DataSetsController < ApplicationController
 
           tmp = []
 
-          row.each do |data|
-            # rails gives us each hash as an array of field number and value
-            # e.x. ["1363", "444"] and we only want the value
-            tmp.push data[1]
+          @project.fields.each do |f|
+            if !row["#{f.id}"].nil?
+              tmp.push row["#{f.id}"]
+            else
+              tmp.push ""
+            end
           end
 
           csv << tmp
@@ -290,23 +292,39 @@ class DataSetsController < ApplicationController
       end
     end
 
+    require 'tempfile'
+
+    file_name = "#{@project.id}"
+
+    @datasets.each do |dataset|
+      file_name = file_name + "_#{dataset.id}"
+    end
+
+    tmp_file = File.new("./tmp/#{file_name}.csv", 'w+')
+
     CSV.parse(@csv).each do |row|
 
-      row_html = ""
+      row_text = ""
 
       row.each_with_index do |data, index|
         if data.nil?
-          row_html = row_html + " "
+          row_text = row_text + " "
         else
-          row_html = row_html + data
+          row_text = row_text + data
         end
         if index != (row.count - 1)
-          row_html = row_html + ", "
+          row_text = row_text + ", "
         end
       end
 
-      @divfiller = @divfiller + row_html + '<br />'
+      tmp_file.puts "#{row_text}\n"
 
+    end
+
+    tmp_file.close
+
+    respond_to do |format|
+      format.html { send_file tmp_file.path, :type => 'text/csv' }
     end
 
   end
