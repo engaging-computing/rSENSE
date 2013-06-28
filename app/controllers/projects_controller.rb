@@ -24,32 +24,9 @@ class ProjectsController < ApplicationController
     #Featured list
     @featured_3 = Project.where(featured: true).order("updated_at DESC").limit(3);
 
-    jsonObjects = []
-
-    @projects.each do |proj|
-      if(!proj.hidden)
-        newJsonObject = {}
-
-        newJsonObject["title"]          = proj.title
-        newJsonObject["timeAgoInWords"] = time_ago_in_words(proj.created_at)
-        newJsonObject["createdAt"]      = proj.created_at.strftime("%B %d, %Y")
-        newJsonObject["featured"]       = proj.featured
-        newJsonObject["ownerName"]      = "#{proj.owner.name}"
-        newJsonObject["projectPath"] = project_path(proj)
-        newJsonObject["ownerPath"]      = user_path(proj.owner)
-        newJsonObject["filters"]        = proj.filter
-
-        if(proj.featured_media_id != nil)
-          newJsonObject["mediaPath"] = MediaObject.find_by_id(proj.featured_media_id).src;
-        end
-
-        jsonObjects = jsonObjects << newJsonObject
-      end
-    end
-
     respond_to do |format|
       format.html
-      format.json { render json: jsonObjects }
+      format.json { render json: @projects.map {|p| p.to_hash(false)} }
     end
 
   end
@@ -79,28 +56,11 @@ class ProjectsController < ApplicationController
       @has_fields = true
     end
 
-
+    recur = params.key?(:recur) ? params[:recur] : false
 
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: {proj: @project, ses: @project.data_sets} }
-    end
-  end
-
-  def createSession
-
-    @project = Project.find(params[:id])
-
-  end
-
-  # GET /projects/new
-  # GET /projects/new.json
-  def new
-    @project = Project.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @project }
+      format.json { render json: @project.to_hash(recur) }
     end
   end
 
@@ -129,7 +89,7 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       if success
         format.html { redirect_to @project, notice: 'Project was successfully created.'}
-        format.json { render json: @project, status: :created, location: @project }
+        format.json { render json: @project.to_hash(false), status: :created, location: @project }
       else
         format.html { render action: "new" }
         format.json { render json: @project.errors, status: :unprocessable_entity }
@@ -178,25 +138,6 @@ class ProjectsController < ApplicationController
         format.html { render action: "edit" }
         format.json { render json: @project.errors, status: :unprocessable_entity }
       end
-    end
-  end
-
-  # GET /projects/pid/fid
-  def checkFieldName
-
-    @project = Project.find(params[:pid])
-    orig = true
-
-    @project.fields.all.each do |f|
-      if f.id != params[:fid].to_i
-        if f.name == params['field']['name']
-          orig = false
-        end
-      end
-    end
-
-    respond_to do |format|
-      format.json { render json: {orig: orig} }
     end
   end
 
@@ -258,33 +199,6 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       format.json { render json: {update: @response} }
     end
-  end
-
-  def removeField
-
-    @project = Project.find(params[:id])
-
-    msg = ""
-
-    if @project.data_sets.count == 0
-
-      field_list = []
-
-      @project.fields.each do |f|
-        if f.id != params[:field_id].to_i
-          field_list.push(f)
-        end
-      end
-
-    @project.fields = field_list
-    @project.save!
-
-    end
-
-    respond_to do |format|
-      format.json { render json: {project: @project, fields: field_list} }
-    end
-
   end
 
   def importFromIsense
@@ -472,7 +386,7 @@ class ProjectsController < ApplicationController
           if( skip == 0 )
           else
             row.each_with_index do |data_point, i|
-              if data_point = ""
+              if data_point == ""
                 col[i].push [ data_point ]
               else
                 col[i].push [ data_point.strip() ]
@@ -529,20 +443,6 @@ class ProjectsController < ApplicationController
         format.html { redirect_to action: "fieldSelect", id: @project.id }
       end
     end
-  end
-
-  def fieldSelect
-
-    @project = Project.find(params[:id])
-
-    if( !params[:createFields].nil? )
-    end
-
-    respond_to do |format|
-      format.json { render json: {fields: [1,2,3]} }
-      format.html
-    end
-
   end
 
 end

@@ -1,43 +1,19 @@
 class FieldsController < ApplicationController
   
   include ApplicationHelper
-  
-  # GET /fields
-  # GET /fields.json
-  def index
-    @fields = Field.all
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @fields }
-    end
-  end
 
   # GET /fields/1
   # GET /fields/1.json
   def show
     @field = Field.find(params[:id])
     @owner = Project.find(@field.project_id).user_id
+    
+    recur = params.key?(:recur) ? params[:recur] : false
+    
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @field }
+      format.json { render json: @field.to_hash(recur) }
     end
-  end
-
-  # GET /fields/new
-  # GET /fields/new.json
-  def new
-    @field = Field.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @field }
-    end
-  end
-
-  # GET /fields/1/edit
-  def edit
-    @field = Field.find(params[:id])
   end
 
   # POST /fields
@@ -62,7 +38,7 @@ class FieldsController < ApplicationController
     respond_to do |format|
       if @field.save
         format.html { redirect_to @field, notice: 'Field was successfully created.' }
-        format.json { render json: @field, status: :created, location: @field }
+        format.json { render json: @field.to_hash(false), status: :created, location: @field }
       else
         format.html { render action: "new" }
         format.json { render json: @field.errors, status: :unprocessable_entity }
@@ -78,8 +54,24 @@ class FieldsController < ApplicationController
     success = false
     
     #EDIT REQUEST
-    if can_edit?(@field) 
-      success = @field.update_attributes(editUpdate)
+    if can_edit?(@field)
+      
+      unique = true
+      
+      #Enforce name uniqueness per project
+      if params[:field].try(:[], :name)
+        @field.owner.fields.all.each do |f|
+          if f.id != params[:id].to_i
+            if f.name == params[:field][:name]
+              unique = false
+            end
+          end
+        end
+      end
+      
+      if unique
+        success = @field.update_attributes(editUpdate)
+      end
     end
     
     respond_to do |format|
@@ -108,7 +100,7 @@ class FieldsController < ApplicationController
     else
       respond_to do |format|
         format.html { redirect_to 'public/401.html' }
-        { render json: {}, status: :forbidden }
+        format.json { render json: {}, status: :forbidden }
       end
     end
   end

@@ -1,5 +1,7 @@
 class Project < ActiveRecord::Base
   
+  include ActionView::Helpers::DateHelper
+  
   attr_accessible :content, :title, :user_id, :filter, :cloned_from, :like_count, :has_fields, :featured, :is_template, :featured_media_id, :hidden, :featured_at
   
   validates_presence_of :title
@@ -36,13 +38,20 @@ class Project < ActiveRecord::Base
     h = {
       id: self.id,
       featuredMediaId: self.featured_media_id,
-      title: self.name,
+      name: self.name,
       url: UrlGenerator.new.project_url(self),
       hidden: self.hidden,
       featured: self.featured,
       likeCount: self.like_count,
-      createdAt: self.created_at.strftime("%B %d, %Y")
+      timeAgoInWords: time_ago_in_words(self.created_at),
+      createdAt: self.created_at.strftime("%B %d, %Y"),
+      ownerName: self.owner.name,
+      ownerUrl: UrlGenerator.new.user_url(self.owner)
     }
+    
+    if self.featured_media_id != nil
+      h.merge!({mediaSrc: self.media_objects.find(self.featured_media_id).src})
+    end
     
     if recurse
       h.merge! ({
