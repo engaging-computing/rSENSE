@@ -1,5 +1,7 @@
 class Tutorial < ActiveRecord::Base
   
+  include ActionView::Helpers::DateHelper
+  
   attr_accessible :content, :title, :featured_number, :user_id, :hidden
 
   has_many :media_objects
@@ -33,7 +35,10 @@ class Tutorial < ActiveRecord::Base
       name: self.name,
       url: UrlGenerator.new.tutorial_url(self),
       hidden: self.hidden,
-      createdAt: self.created_at.strftime("%B %d, %Y")
+      timeAgoInWords: time_ago_in_words(self.created_at),
+      createdAt: self.created_at.strftime("%B %d, %Y"),
+      ownerName: self.owner.name,
+      ownerUrl: UrlGenerator.new.user_url(self.owner)
     }
     
     if recurse

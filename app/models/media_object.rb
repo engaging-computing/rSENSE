@@ -1,6 +1,6 @@
 class MediaObject < ActiveRecord::Base
   
-  attr_accessible :project_id, :media_type, :name, :data_set_id, :src, :user_id, :tutorial_id, :visualization_id, :file_key
+  attr_accessible :project_id, :media_type, :name, :data_set_id, :src, :user_id, :tutorial_id, :visualization_id
   
   belongs_to :owner, class_name: "User", foreign_key: "user_id"
   belongs_to :project, class_name: "Project", foreign_key: "project_id" 
@@ -14,7 +14,7 @@ class MediaObject < ActiveRecord::Base
   
   before_destroy :aws_del
   
-  def self.search(search)
+  def self.search(search, dc)
     if search
         where('name LIKE ?', "%#{search}%")
     else
