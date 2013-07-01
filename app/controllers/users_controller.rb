@@ -109,6 +109,9 @@ class UsersController < ApplicationController
       @contributions.sort! {|a,b| b.created_at <=> a.created_at}
     end
     
+    page = params[:page].to_i
+    @contributions = @contributions[page*10..(page*10)+9]
+    
     respond_to do |format|
       format.html { render partial: "display_contributions" }
     end
