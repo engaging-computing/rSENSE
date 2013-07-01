@@ -44,7 +44,7 @@ $.fn.extend
       ### FUNCTIONS ###
 
       remove_row = (row) ->
-        ($ row).parent().parent().remove()
+        ($ row).closest('tr').remove()
 
       add_row = (tab) ->
 
@@ -54,7 +54,7 @@ $.fn.extend
         ($ tab).find('th:not(:last-child)').each (index) ->
           new_row += "<td><div class='text-center'><input type='text' class='input-small' /></div></td>"
 
-        new_row += "<td><div class='text-center'><button type='button' class='close' style='float:none;'>&times;</button></div></td></tr>"
+        new_row += "<td><div class='text-center'><a class='close' style='float:none;'>&times;</a></div></td></tr>"
 
         # and attach it to our table
         ($ tab).append new_row
@@ -94,7 +94,7 @@ $.fn.extend
 
         ($ tab).find('th:last-child').empty().remove()
 
-        ($ tab).find('td').has('button.close').each ->
+        ($ tab).find('td').has('a.close').each ->
           ($ @).remove()
 
         ($ tab).find('th').each ->
@@ -105,7 +105,7 @@ $.fn.extend
         ($ tab).find('th').each ->
           ($ @).children().wrap "<div class='text-center' />"
 
-        ($ tab).find('td').not(':has(button)').each ->
+        ($ tab).find('td').not(':has(a.close)').each ->
           ($ @).html "<input type='text' class='input-small' value='#{($ @).text()}' />"
           ($ @).children().wrap "<div class='text-center' />"
 
@@ -156,7 +156,7 @@ $.fn.extend
           if button is "close" or button is "Close"
             ($ table).find('tr').eq(0).append '<th></th>'
             ($ table).find('tbody').children().each ->
-              ($ @).append '<td><button type="button" class="close" style="float:none;">&times;</button></td>'
+              ($ @).append '<td><div class="text-center"><a class="close" style="float:none;">&times;</a></div></td>'
 
           if button is "add" or button is "Add"
             ($ '#edit_table_control').append "<button id='edit_table_add' class='btn btn-success' style='margin-right:10px;'>Add Row</button>"
