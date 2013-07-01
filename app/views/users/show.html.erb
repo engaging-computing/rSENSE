@@ -63,12 +63,17 @@
               Tutorials: <%= check_box_tag "filters[]", "tutorials", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
             </div>
           </div>
-          <%= hidden_field_tag "page", "0" %>
+          <%= hidden_field_tag "page", params[:page].to_i - 1 %>
         <%end%>
       </div>
     </div>
     <div id="contributions">
     </div>
-    <div class="feed-bottom">
+    <div class="feed-bottom">Page <%= if params[:page].to_i != 0
+                                         params[:page].to_i
+                                      else 
+                                         1
+                                      end
+                                  %>
   </div>
 </div> 
