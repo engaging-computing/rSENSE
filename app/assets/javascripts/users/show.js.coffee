@@ -20,6 +20,16 @@ $ ->
       
     $("#contribution_search").submit()
     
+    $(".pagefwd").click ->
+      pageNum = parseInt( $("#page").val(), 10 )
+      $("#page").val(""+(pageNum+1))
+      $("#contribution_search").submit()
+      
+    $(".pagebck").click ->
+      pageNum = parseInt( $("#page").val(), 10 )
+      $("#page").val(""+(pageNum-1))
+      $("#contribution_search").submit()
+        
     ###
     Links for Contributions
     ###
