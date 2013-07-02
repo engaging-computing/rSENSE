@@ -110,9 +110,13 @@ class UsersController < ApplicationController
     end
     
     page = params[:page].to_i
-    if page < 0
-      page = 0
+    
+    @lastPage = false
+    logger.info((page*10) + 10)
+    if @contributions.length < ((page*10) + 10)
+      @lastPage = true
     end
+    
     @contributions = @contributions[page*10..(page*10)+9]
     
     respond_to do |format|
