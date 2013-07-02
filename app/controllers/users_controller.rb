@@ -110,6 +110,9 @@ class UsersController < ApplicationController
     end
     
     page = params[:page].to_i
+    if page < 0
+      page = 0
+    end
     @contributions = @contributions[page*10..(page*10)+9]
     
     respond_to do |format|
