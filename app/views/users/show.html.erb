@@ -40,9 +40,9 @@
     </div>
   </div>
   <div class="span6">
+   <%= form_tag users_path, method: 'get', id:'contribution_search', class:'navbar-search', name: @user.username do%>
     <div class="row">
       <div class="span6">
-        <%= form_tag users_path, method: 'get', id:'contribution_search', class:'navbar-search', name: @user.username do%>
           <div class="feed-top">
             <h2>My Stuff</h2>
             <div style="width:20%;float:left;">
@@ -64,16 +64,17 @@
             </div>
           </div>
           <%= hidden_field_tag "page", params[:page].to_i - 1 %>
-        <%end%>
       </div>
     </div>
     <div id="contributions">
     </div>
-    <div class="feed-bottom">Page <%= if params[:page].to_i != 0
-                                         params[:page].to_i
-                                      else 
-                                         1
-                                      end
-                                  %>
-  </div>
+    <div class="feed-bottom">
+      <%= if params[:page].to_i != 0
+            "Page " + params[:page]
+          else 
+            "Page 1"
+          end
+      %>
+    </div>
+    <%end%>
 </div> 
