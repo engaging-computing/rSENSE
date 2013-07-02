@@ -21,26 +21,11 @@ class TutorialsController < ApplicationController
       @tutorials = Tutorial.search(params[:search]).paginate(page: params[:page], per_page: 100).order("like_count DESC")
     end
     
-    jsonObjects = []
-    
-    @tutorials.each do |t|
-      if(!t.hidden)
-        newJsonObject = {}
-        
-        newJsonObject["title"]          = t.title
-        newJsonObject["timeAgoInWords"] = time_ago_in_words(t.created_at)
-        newJsonObject["createdAt"]      = t.created_at.strftime("%B %d, %Y")
-        newJsonObject["ownerName"]      = "#{t.owner.name}"
-        newJsonObject["tutorialPath"] = tutorial_path(t)
-        newJsonObject["ownerPath"]      = user_path(t.owner)
-        
-        jsonObjects = jsonObjects << newJsonObject
-      end
-    end
+    recur = params.key?(:recur) ? params[:recur] : false
     
     respond_to do |format|
       format.html
-      format.json { render json: jsonObjects }
+      format.json { render json: @tutorials.map {|t| t.to_hash(recur)} }
     end
     
   end
@@ -52,24 +37,8 @@ class TutorialsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @tutorial }
+      format.json { render json: @tutorial.to_hash(false) }
     end
-  end
-
-  # GET /tutorials/new
-  # GET /tutorials/new.json
-  def new
-    @tutorial = Tutorial.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @tutorial }
-    end
-  end
-
-  # GET /tutorials/1/edit
-  def edit
-    @tutorial = Tutorial.find(params[:id])
   end
 
   # POST /tutorials
@@ -80,7 +49,7 @@ class TutorialsController < ApplicationController
     respond_to do |format|
       if @tutorial.save
         format.html { redirect_to @tutorial, notice: 'Tutorial was successfully created.' }
-        format.json { render json: @tutorial, status: :created, location: @tutorial }
+        format.json { render json: @tutorial.to_hash(false), status: :created, location: @tutorial }
       else
         format.html { render action: "new" }
         format.json { render json: @tutorial.errors, status: :unprocessable_entity }

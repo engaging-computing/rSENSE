@@ -36,7 +36,11 @@ class Visualization < ActiveRecord::Base
       url: UrlGenerator.new.visualization_url(self),
       hidden: self.hidden,
       featured: self.featured,
-      createdAt: self.created_at.strftime("%B %d, %Y")
+      createdAt: self.created_at.strftime("%B %d, %Y"),
+      ownerName: self.owner.name,
+      ownerUrl: UrlGenerator.new.user_url(self.owner),
+      projectName: self.project.name,
+      projectUrl: UrlGenerator.new.project_url(self.project)
     }
     
     if recurse

@@ -41,15 +41,9 @@ Rsense::Application.routes.draw do
   match "/project_templates" => "project_templates#index"
 
   #Routes for uploading data
-  match "/projects/:id/createSession" => "projects#createSession"
-  match "/projects/:id/addDataSet" => "projects#addDataSet"
-
-  match "/projects/:pid/:fid/checkFieldName" => "projects#checkFieldName"
-
   match "/projects/:id/uploadCSV" => "data_sets#uploadCSV"
   match "/data_sets/:pid/manualEntry" => "data_sets#manualEntry"
   match "/data_sets/:pid/manualUpload" => "data_sets#manualUpload"
-  match "/data_sets/test" => "data_sets#test"
   match "/data_sets/:id/editTable" => "data_sets#editTable"
 
   #Routes for displaying data

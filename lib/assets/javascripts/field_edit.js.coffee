@@ -24,11 +24,13 @@ $ ->
     ($ @).siblings('.field_save_link').show()
     
     $.ajax
-      url: ($ @).siblings('.field_delete_link').attr 'href'
+      url: ($ @).parents('tr').attr 'project_url'
       type: "GET"
       dataType: "json"
+      data:
+        recur: true
       success: (msg) =>
-        if msg.ses.length is 0
+        if msg.dataSets.length is 0
           ($ @).siblings('.field_delete_link').show()
 
 
@@ -51,33 +53,20 @@ $ ->
       data['field'] = {}
       data['field']['name'] = name_text
       data['field']['unit'] = unit_text
-      exp_id = ($ @).attr('exp')
-      field_id = ($ @).attr('field')
-      url = '/projects/' + exp_id + '/' + field_id + '/checkFieldName'
       
-      
-    	#check that no field has this name already
       $.ajax
-        url: url
+        url: $(@).attr('href')
+        type: "PUT"
         dataType: "json"
         data: data
-        success: (msg, xhtm, options) =>
-          if msg.orig == true
-            ($ name).find('.name_edit_box').css('background-color', '#FFFFFF')
-            #if nothing does save it with this new name
-            $.ajax
-              url: $(@).attr('href')
-              type: "PUT"
-              dataType: "json"
-              data: data
-              success: =>
-                ($ @).siblings('.field_edit_link').show()
-                ($ @).hide()
-                ($ @).siblings('.field_delete_link').hide()
-                name.html(name_text)
-                unit.html(unit_text)
-          else
-            ($ name).find('.name_edit_box').css('background-color', '#D80000')
+        success: =>
+          ($ @).siblings('.field_edit_link').show()
+          ($ @).hide()
+          ($ @).siblings('.field_delete_link').hide()
+          name.html(name_text)
+          unit.html(unit_text)
+        error: ->
+          ($ name).find('.name_edit_box').errorFlash()
 
       hide_upload();  
 
@@ -95,18 +84,15 @@ $ ->
     type = helpers.get_field_type ($ row).find('.field_type').text()
     
     pair_field = null
-    
-    if( ($ row).siblings().length <= 1 )
-        ($ '#create_data_set').hide()
 
     if not (type in [(helpers.get_field_type "Latitude"), (helpers.get_field_type "Longitude")])  
       $.ajax
-        url: ($ @).attr('href') + "/removeField"
-        type: "POST"
+        url: ($ @).attr('href')
+        type: "DELETE"
         dataType: "json"
-        data: {field_id: ($ @).attr 'field'}
         success: (msg) =>
           ($ @).parent().parent().remove()
+          hide_upload()
         error: (msg) =>
           console.log msg
     else
@@ -120,24 +106,23 @@ $ ->
               pair_field = sib
         
         $.ajax
-          url: ($ row).find('.field_delete_link').attr('href') + "/removeField"
-          type: "POST"
+          url: ($ @).attr('href')
+          type: "DELETE"
           dataType: "json"
-          data: {field_id: ($ row).find('.field_delete_link').attr 'field'}
           success: (msg) =>
-            ($ row).remove()
-            ($ '#add-field-dropdown ul li a.add_location_field').show()
+            ($ @).parent().parent().remove()
+            hide_upload()
           error: (msg) =>
             console.log msg
             
             
         $.ajax
-          url: ($ pair_field).find('.field_delete_link').attr('href') + "/removeField"
-          type: "POST"
+          url: ($ @).attr('href')
+          type: "DELETE"
           dataType: "json"
-          data: {field_id: ($ pair_field).find('.field_delete_link').attr 'field'}
           success: (msg) =>
-            ($ pair_field).remove()
+            ($ @).parent().parent().remove()
+            hide_upload()
           error: (msg) =>
             console.log msg
             
