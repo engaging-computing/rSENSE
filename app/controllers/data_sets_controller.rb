@@ -162,7 +162,16 @@ class DataSetsController < ApplicationController
   end
 
   def manualEntry
+
       @project = Project.find(params[:pid])
+      @has_location = false
+      @project.fields.each do |x|
+          if x.name.downcase == "longitude"
+            @has_location = true
+          end
+      end
+
+
   end
 
   # POST /data_set/1/manualUpload
