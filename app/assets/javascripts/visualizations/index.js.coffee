@@ -27,7 +27,7 @@ $ ->
               
                 newItem +=  "</h4><b>Owner: </b><a href='#{object.ownerUrl}'>#{object.ownerName}</a><br />"
                 newItem +=  "<b>Project: </b><a href='#{object.projectUrl}'>#{object.projectName}</a><br />"
-                newItem +=  "<b>Created: </b>#{time_ago_in_words object.createdAt} ago (on #{object.createdAt})<br />"
+                newItem +=  "<b>Created: </b>#{object.timeAgoInWords} ago (on #{object.createdAt})<br />"
                 
                 ###
                 if(object.filters)

@@ -1,6 +1,6 @@
 class MediaObject < ActiveRecord::Base
   
-  attr_accessible :project_id, :media_type, :name, :data_set_id, :src, :user_id, :tutorial_id, :visualization_id
+  attr_accessible :project_id, :media_type, :name, :data_set_id, :src, :user_id, :tutorial_id, :visualization_id, :title, :file_key, :hidden
   
   belongs_to :owner, class_name: "User", foreign_key: "user_id"
   belongs_to :project, class_name: "Project", foreign_key: "project_id" 
