@@ -25,7 +25,7 @@ class VisualizationsController < ApplicationController
     
     respond_to do |format|
       format.html
-      format.json { render json: @visualizations.to_hash(false) }
+      format.json { render json: @visualizations.map {|v| v.to_hash(false) } }
     end
     
   end
