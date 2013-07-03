@@ -19,4 +19,14 @@ class VisualizationTest < ActiveSupport::TestCase
     assert_default_nil( @visualization, @visualization.content )
   end
   
+  # Passes if featured is false
+  test "featured is false" do
+  	assert_default_false( @visualization, @visualization.featured )
+  end
+  
+  # Passes if featured_at is nil
+  test "featured_at is nil" do
+  	assert_default_nil( @visualization, @visualization.featured_at )
+  end
+	
 end
