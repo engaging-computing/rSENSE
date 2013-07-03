@@ -31,10 +31,7 @@ class MediaObjectsController < ApplicationController
         format.json { render json:{}, status: :ok }
       else
         format.html { render action: "edit" }
-        format.json do
-          logger.info @media_object.errors.full_messages
-          render json: @media_object.errors, status: :unprocessable_entity
-        end
+        format.json { render json: @media_object.errors, status: :unprocessable_entity }
       end
     end
   end
