@@ -1,6 +1,6 @@
 $ ->
   if namespace.controller is "data_sets" and namespace.action is "manualEntry"
-
+  
     settings =
       buttons: ['close', 'add', 'save']
       bootstrapify: true
@@ -11,6 +11,9 @@ $ ->
       debug: true
 
     ($ '#manualTable').editTable(settings)
+
+    ($ "#test").click ->
+      ($ "#map_picker").modal();
 
     initialize = ->
       latlng = new google.maps.LatLng(41.659,-4.714)
@@ -32,8 +35,6 @@ $ ->
           if (status == google.maps.GeocoderStatus.OK)
             if (results[0]) 
               $('#address').val(results[0].formatted_address)
-              $('#latitude').val(window.marker.getPosition().lat())
-              $('#longitude').val(window.marker.getPosition().lng())
     
     initialize()
     
@@ -49,12 +50,22 @@ $ ->
               longitude: item.geometry.location.lng() 
       #This bit is executed upon selection of an address
       select: (event, ui) -> 
-        ($ "#latitude").val(ui.item.latitude)
-        ($ "#longitude").val(ui.item.longitude)
         location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude)
         window.marker.setPosition(location)
         window.map.setCenter(location)
-        
+    
+    ($ "#address").autocomplete("option", "appendTo", "#map_picker")
 
+    ($ '#map_picker').on 'shown', () ->
+      google.maps.event.trigger window.map, "resize" 
 
+    ($ "#apply_location").click ->
+      ($ "#map_picker").modal('hide')
+      location = window.marker.getPosition()
+      ($ '#manualTable .validate_latitude').each (i) ->
+          ($ this).val(location['jb']);
+      ($ '#manualTable .validate_longitude').each (i) ->
+          ($ this).val(location['kb']);
+    
+      
 
