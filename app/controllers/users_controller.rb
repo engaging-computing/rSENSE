@@ -120,6 +120,17 @@ class UsersController < ApplicationController
     @user = User.find_by_username(params[:id])
   end
 
+  # GET /users/new
+  # GET /users/new.json
+  def new
+    @user = User.new
+
+    respond_to do |format|
+      format.html # new.html.erb
+      format.json { render json: @user }
+    end
+  end
+  
   # POST /users
   # POST /users.json
   def create
