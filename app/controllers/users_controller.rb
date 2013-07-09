@@ -111,13 +111,14 @@ class UsersController < ApplicationController
     
     page = params[:page].to_i
     
+    @totalPages = (@contributions.length/5.0).ceil
+    
     @lastPage = false
-    logger.info((page*10) + 10)
-    if @contributions.length < ((page*10) + 10)
+    if @contributions.length < ((page*5) + 5)
       @lastPage = true
     end
     
-    @contributions = @contributions[page*10..(page*10)+9]
+    @contributions = @contributions[page*5..(page*5)+4]
     
     respond_to do |format|
       format.html { render partial: "display_contributions" }

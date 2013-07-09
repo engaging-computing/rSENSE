@@ -19,12 +19,12 @@ $ ->
         dataType: "html"
         success: (dat) ->
           $("#contributions").html dat
-          $("#pageLabel").html parseInt( $("#page").val(), 10 ) + 1
+          $("#pageLabel").html (parseInt( $("#page").val(), 10 ) + 1) + " of " + $("#mparams").attr("totalPages")
           if (parseInt( $("#page").val(), 10 ) == 0)
             $(".pagebck").hide()
           else 
             $(".pagebck").show()
-          if($("#isLastPage").attr("lastPage")=="true")
+          if($("#mparams").attr("lastPage")=="true")
             $(".pagefwd").hide()
           else
             $(".pagefwd").show()
