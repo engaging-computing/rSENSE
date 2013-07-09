@@ -48,6 +48,22 @@ $.fn.extend
 
       add_row = (tab) ->
 
+        num_cols = []
+        lat_cols = []
+        lon_cols = []
+        text_cols = []
+        time_cols = []
+
+        ($ table).find('th').each (index) ->
+          type = ($ @).attr 'data-field-type'
+
+          switch type
+            when "Time" then time_cols.push index
+            when "Text" then text_cols.push index
+            when "Number" then num_cols.push index
+            when "Latitude" then lat_cols.push index
+            when "Longitude" then lon_cols.push index
+
         # create a string of the new row
         new_row = "<tr class='new_row'>"
 
@@ -59,26 +75,28 @@ $.fn.extend
         # and attach it to our table
         ($ tab).append new_row
 
+        log ($ '.new_row').children()
+
         # attach validators
         for col in num_cols
           do (col) ->
-            ($ '.new_row').find('tr').children().eq(col).find('input').addClass 'validate_number'
+            ($ '.new_row').children().eq(col).find('input').addClass 'validate_number'
 
         for col in lat_cols
           do (col) ->
-            ($ '.new_row').find('tr').children().eq(col).find('input').addClass 'validate_latitude'
+            ($ '.new_row').children().eq(col).find('input').addClass 'validate_latitude'
 
         for col in lon_cols
           do (col) ->
-            ($ '.new_row').find('tr').children().eq(col).find('input').addClass 'validate_longitude'
+            ($ '.new_row').children().eq(col).find('input').addClass 'validate_longitude'
 
         for col in text_cols
           do (col) ->
-            ($ '.new_row').find('tr').children().eq(col).find('input').addClass 'validate_text'
+            ($ '.new_row').children().eq(col).find('input').addClass 'validate_text'
 
         for col in time_cols
           do (col) ->
-            ($ '.new_row').find('tr').children().eq(col).find('input').addClass 'validate_timestamp'
+            ($ '.new_row').children().eq(col).find('input').addClass 'validate_timestamp'
 
         # bind row removal
         ($ '.new_row').find('.close').click ->
