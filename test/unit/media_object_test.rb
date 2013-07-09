@@ -19,7 +19,7 @@ class MediaObjectTest < ActiveSupport::TestCase
     assert_default_nil( @media_object, @media_object.user_id )
   end
 
-  # Passes if user_id is nil
+  # Passes if tutorial_id is nil
   test "tutorial_id is nil" do
     assert_default_nil( @media_object, @media_object.tutorial_id )
   end

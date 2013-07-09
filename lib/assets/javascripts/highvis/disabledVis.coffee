@@ -32,13 +32,13 @@ $ ->
     class window.DisabledVis extends BaseVis
         constructor: (@canvas) -> 
 
-        motion_err = "Motion Chart could not be displayed<br>A time field was not found in this project"
-        time_err = "Timeline could not be displayed<br>Either a time field was not found or there were not enough data"
-        scatter_err = "Scatter Chart could not be displayed<br>Either two numeric fields were not found or there were not enough data"
-        histogram_err = "Histogram could not be displayed<br>Either no numeric fields were found, or there were not enough data"
-        bar_err = "Bar Chart could not be displayed<br>Either no numeric fields were found, or there were not enough data"
-        map_err = "Map could not be displayed<br>No geographic data were found"
-        photos_err = "There are no photos to display"
+        motion_err = "<div style='padding: 10px'>Motion Chart could not be displayed<br>A time field was not found in this project</div>"
+        time_err = "<div style='padding: 10px'>Timeline could not be displayed<br>Either a time field was not found or there were not enough data</div>"
+        scatter_err = "<div style='padding: 10px'>Scatter Chart could not be displayed<br>Either two numeric fields were not found or there were not enough data</div>"
+        histogram_err = "<div style='padding: 10px'>Histogram could not be displayed<br>Either no numeric fields were found, or there were not enough data</div>"
+        bar_err = "<div style='padding: 10px'>Bar Chart could not be displayed<br>Either no numeric fields were found, or there were not enough data</div>"
+        map_err = "<div style='padding: 10px'>Map could not be displayed<br>No geographic data were found</div>"
+        photos_err = "<div style='padding: 10px'>There are no photos to display</div>"
         
         start: ->  
             ($ '#' + @canvas).show()
