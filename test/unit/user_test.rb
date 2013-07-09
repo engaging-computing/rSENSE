@@ -33,7 +33,11 @@ class UserTest < ActiveSupport::TestCase
   test "hidden is false" do
     assert_default_false( @user, @user.hidden )
   end
-
+  
+  # Passes if password_confirmation and password match
+  test "password_confirmation matches password" do
+  	assert_equal @user.password, @user.password_confirmation,  "Password_confirmation does not match password."
+  end
   
   # ---------------------------------------------------
   # Testing with fixtures

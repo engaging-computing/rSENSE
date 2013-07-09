@@ -23,9 +23,11 @@ class VisualizationsController < ApplicationController
     #Featured list
     @featured_3 = Visualization.where(featured: true).order("updated_at DESC").limit(3);
     
+    recur = params.key?(:recur) ? params[:recur] : false
+    
     respond_to do |format|
       format.html
-      format.json { render json: @visualizations.to_hash(false) }
+      format.json { render json: @visualizations.map {|v| v.to_hash(recur)} }
     end
 
   end
