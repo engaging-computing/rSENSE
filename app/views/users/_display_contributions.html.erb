@@ -1,4 +1,6 @@
-<% @contributions.each do |contribution| %>
+<div style="display: none" id="isLastPage" lastPage="<%= @lastPage %>"></div>
+
+ <% @contributions.each do |contribution| %>
   <div class="<%= cycle('feed-even', 'feed-odd')%> contribution">
 <!--    -->
 
