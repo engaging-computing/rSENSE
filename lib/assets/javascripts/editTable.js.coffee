@@ -89,6 +89,7 @@ $.fn.extend
         for col in lon_cols
           do (col) ->
             ($ '.new_row').children().eq(col).find('input').addClass 'validate_longitude'
+            ($ '.new_row').children().eq(col).children().eq(0).append "<a>Map</a>"
 
         for col in text_cols
           do (col) ->
@@ -141,6 +142,7 @@ $.fn.extend
           do (col) ->
             ($ tab).find('tbody').find('tr').each ->
               ($ @).children().eq(col).find('input').addClass 'validate_longitude'
+              ($ @).children().eq(col).children().eq(0).append "<a>Map</a>"
 
         for col in text_cols
           do (col) ->
