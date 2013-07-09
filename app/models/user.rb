@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
 
   validates_uniqueness_of :email, case_sensitive: false, if: :email?
   validates :username, uniqueness: true, format: { :with => /\A[a-zA-Z0-9]+\z/, :message => "Only letters allowed" }
-  validates_presence_of :username
+  validates_presence_of :username, :firstname, :lastname, :password 
 
   has_secure_password
 
