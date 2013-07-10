@@ -1,5 +1,5 @@
 class DataSetsController < ApplicationController
-  
+
   include ApplicationHelper
 
   # GET /data_sets/1
@@ -51,7 +51,7 @@ class DataSetsController < ApplicationController
 
       params["data"]["0"].each_with_index do |tmp, row_index|
 
-        row = []
+        row = {}
 
         header_to_field_map.each do |htf, htf_index|
           if params["data"]["#{htf}"][row_index] == ""
@@ -63,8 +63,7 @@ class DataSetsController < ApplicationController
           else
             val = params["data"]["#{htf}"][row_index]
           end
-          dp = { "#{@fields[htf].id}" => val }
-          row.push dp
+          row["#{@fields[htf].id}"] = val
         end
 
 
@@ -111,12 +110,12 @@ class DataSetsController < ApplicationController
     editUpdate  = params[:data_set].to_hash
     hideUpdate  = editUpdate.extract_keys!([:hidden])
     success = false
-    
+
     #EDIT REQUEST
     if can_edit?(@data_set)
       success = @data_set.update_attributes(editUpdate)
     end
-    
+
     #HIDE REQUEST
     if can_hide?(@data_set)
       success = @data_set.update_attributes(hideUpdate)
@@ -137,18 +136,18 @@ class DataSetsController < ApplicationController
   # DELETE /data_sets/1.json
   def destroy
     @data_set = DataSet.find(params[:id])
-    
+
     if can_delete?(@data_set)
-      
+
       @data_set.media_objects.each do |m|
         m.destroy
       end
-      
+
       @data_set.hidden = true
       @data_set.user_id = -1
       @data_set.project_id = -1
       @data_set.save
-      
+
       respond_to do |format|
         format.html { redirect_to @data_set.project }
         format.json { render json: {}, status: :ok }
@@ -162,7 +161,16 @@ class DataSetsController < ApplicationController
   end
 
   def manualEntry
+
       @project = Project.find(params[:pid])
+      @has_location = false
+      @project.fields.each do |x|
+          if x.name.downcase == "longitude"
+            @has_location = true
+          end
+      end
+
+
   end
 
   # POST /data_set/1/manualUpload
@@ -172,24 +180,47 @@ class DataSetsController < ApplicationController
     defaultName  = @project.title + " Dataset #"
     defaultName += (DataSet.find_all_by_project_id(params[:pid]).count + 1).to_s
 
-    header = params["headers"]
-    data = params["data"]
+    @fields = @project.fields
 
-    if !data.nil?
+    header_to_field_map = []
+
+    if !params["data"].nil? and !params["headers"].nil?
 
       @data_set = DataSet.create(:user_id => @cur_user.id, :project_id => @project.id, :title => defaultName)
 
-      mongo_data = []
-
-      data.each do |dp|
-        row = []
-        header.each_with_index do |field, col_index|
-          row << { field => dp[1][col_index] }
+      @project.fields.each do |field|
+        params["headers"].each_with_index do |header, header_index|
+          if header == field.name
+            header_to_field_map.push header_index
+          end
         end
-        mongo_data << row
       end
 
-      data_to_add = MongoData.new(:data_set_id => @data_set.id, :data => mongo_data)
+      new_data = []
+
+      params["data"]["0"].each_with_index do |tmp, row_index|
+
+        row = {}
+
+        header_to_field_map.each do |htf, htf_index|
+          if params["data"]["#{htf}"][row_index] == ""
+            if @fields[htf].field_type == 3
+              val = ""
+            else
+              val = nil
+            end
+          else
+            val = params["data"]["#{htf}"][row_index]
+          end
+          row["#{@fields[htf].id}"] = val
+        end
+
+
+        new_data[row_index] = row
+
+      end
+
+      data_to_add = MongoData.new(:data_set_id => @data_set.id, :data => new_data)
 
       followURL = url_for :controller => :visualizations, :action => :displayVis, :id => @project.id, :sessions => "#{@data_set.id}"
       followURL = "/projects/#{@project.id}/data_sets/#{@data_set.id}"
@@ -210,6 +241,103 @@ class DataSetsController < ApplicationController
     end
 
   end
+
+  def export
+
+    require 'CSV'
+
+
+    @project = Project.find params[:id]
+    @datasets = []
+    @divfiller = ""
+
+    # build list of datasets
+    if( !params[:datasets].nil? )
+
+      dsets = params[:datasets].split(",")
+      dsets.each do |s|
+        begin
+          @datasets.push DataSet.find_by_id_and_project_id s, params[:id]
+        rescue
+          logger.info "Either project id or dataset does not exist in the DB"
+        end
+      end
+    else
+      @datasets = DataSet.find_all_by_project_id params[:id]
+    end
+
+
+    @datasets.each do |dataset|
+      mongo_data = MongoData.find_by_data_set_id dataset.id
+      dataset[:data] = mongo_data.data
+    end
+
+    @csv = CSV.generate do |csv|
+      tmp = []
+      @project.fields.each do |field|
+        tmp.push field.name
+      end
+
+      csv << tmp
+
+      @datasets.each do |dataset|
+
+        dataset[:data].each do |row|
+
+          tmp = []
+
+          @project.fields.each do |f|
+            if !row["#{f.id}"].nil?
+              tmp.push row["#{f.id}"]
+            else
+              tmp.push ""
+            end
+          end
+
+          csv << tmp
+
+
+        end
+      end
+    end
+
+    require 'tempfile'
+
+    file_name = "#{@project.id}"
+
+    @datasets.each do |dataset|
+      file_name = file_name + "_#{dataset.id}"
+    end
+
+    tmp_file = File.new("./tmp/#{file_name}.csv", 'w+')
+
+    CSV.parse(@csv).each do |row|
+
+      row_text = ""
+
+      row.each_with_index do |data, index|
+        if data.nil?
+          row_text = row_text + " "
+        else
+          row_text = row_text + data
+        end
+        if index != (row.count - 1)
+          row_text = row_text + ", "
+        end
+      end
+
+      tmp_file.puts "#{row_text}\n"
+
+    end
+
+    tmp_file.close
+
+    respond_to do |format|
+      format.html { send_file tmp_file.path, :type => 'text/csv' }
+    end
+
+  end
+
 
   ## POST /data_sets/1
   def uploadCSV
@@ -315,9 +443,9 @@ class DataSetsController < ApplicationController
     header = Field.find_all_by_project_id(@project.id)
 
     data.each do |dp|
-      row = []
+      row = {}
       header.each_with_index do |field, col_index|
-        row << { "#{field[:id]}" => dp[col_index] }
+        row["#{field[:id]}"] = dp[col_index]
       end
       mongo_data << row
     end

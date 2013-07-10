@@ -1,9 +1,9 @@
 class VisualizationsController < ApplicationController
   include ApplicationHelper
   include ActionView::Helpers::DateHelper
-  
+
   skip_before_filter :authorize, only: [:show, :displayVis, :index,:embedVis]
-  
+
   # GET /visualizations
   # GET /visualizations.json
   def index
@@ -13,13 +13,13 @@ class VisualizationsController < ApplicationController
     else
         sort = "DESC"
     end
-    
+
     if sort=="ASC" or sort=="DESC"
       @visualizations = Visualization.search(params[:search]).paginate(page: params[:page], per_page: 100).order("created_at #{sort}")
     else
       @visualizations = Visualization.search(params[:search]).paginate(page: params[:page], per_page: 100).order("like_count DESC")
     end
-    
+
     #Featured list
     @featured_3 = Visualization.where(featured: true).order("updated_at DESC").limit(3);
     
@@ -29,7 +29,7 @@ class VisualizationsController < ApplicationController
       format.html
       format.json { render json: @visualizations.map {|v| v.to_hash(recur)} }
     end
-    
+
   end
 
   # GET /visualizations/1
@@ -94,20 +94,20 @@ class VisualizationsController < ApplicationController
     hideUpdate  = editUpdate.extract_keys!([:hidden])
     adminUpdate = editUpdate.extract_keys!([:featured])
     success = false
-   
+
     #EDIT REQUEST
-    if can_edit?(@visualization) 
+    if can_edit?(@visualization)
       success = @visualization.update_attributes(editUpdate)
     end
-    
+
     #HIDE REQUEST
-    if can_hide?(@visualization) 
+    if can_hide?(@visualization)
       success = @visualization.update_attributes(hideUpdate)
     end
-    
+
     #ADMIN REQUEST
-    if can_admin?(@visualization) 
-      
+    if can_admin?(@visualization)
+
       if adminUpdate.has_key?(:featured)
         if adminUpdate['featured'] == "1"
           adminUpdate['featured_at'] = Time.now()
@@ -115,10 +115,10 @@ class VisualizationsController < ApplicationController
           adminUpdate['featured_at'] = nil
         end
       end
-      
+
       success = @visualization.update_attributes(adminUpdate)
     end
-    
+
     respond_to do |format|
       if success
         format.html { redirect_to @visualization, notice: 'Visualization was successfully updated.' }
@@ -134,17 +134,17 @@ class VisualizationsController < ApplicationController
   # DELETE /visualizations/1.json
   def destroy
     @visualization = Visualization.find(params[:id])
-    
+
     if can_delete?(@visualizaion)
-      
+
       @visualizaion.media_objects.each do |m|
         m.destroy
       end
-      
+
       @visualizaion.hidden = true
       @visualizaion.user_id = -1
       @visualizaion.save
-      
+
       respond_to do |format|
         format.html { redirect_to visualizaions_url }
         format.json { render json: {}, status: :ok }
@@ -157,11 +157,11 @@ class VisualizationsController < ApplicationController
     end
   end
 
-  # GET 
+  # GET
   def displayVis
-    
+
     @project = Project.find_by_id params[:id]
-    
+
     @datasets = []
     data_fields = []
     format_data = []
@@ -169,10 +169,10 @@ class VisualizationsController < ApplicationController
     rel_viz = []
     total = 0
     field_count = []
-    
+
     # build list of datasets
     if( !params[:datasets].nil? )
-      
+
       dsets = params[:datasets].split(",")
       dsets.each do |s|
         begin
@@ -184,12 +184,10 @@ class VisualizationsController < ApplicationController
     else
       @datasets = DataSet.find_all_by_project_id params[:id]
     end
-    
-    # get data for each dataset    
+
+    # get data for each dataset
     @datasets.each do |dataset|
       d = MongoData.find_by_data_set_id(dataset.id)
-      logger.info "------------------------"
-      logger.info dataset
       dataset[:data] = d.data
     end
 
@@ -197,13 +195,13 @@ class VisualizationsController < ApplicationController
     data_fields.push({ typeID: TEXT_TYPE, unitName: "String", fieldID: -1, fieldName: "Dataset Name (id)" })
     # create special grouping field for all datasets
     data_fields.push({ typeID: TEXT_TYPE, unitName: "String", fieldID: -1, fieldName: "Combined Datasets" })
-    
+
     # push real fields to temp variable
     @project.fields.each do |field|
       data_fields.push({ typeID: field.field_type, unitName: field.unit, fieldID: field.id, fieldName: field.name })
     end
-    
-    
+
+
     # create/push metadata for datasets
     @datasets.each do |dataset|
       dataset.data.each do |rows|
@@ -211,18 +209,18 @@ class VisualizationsController < ApplicationController
         arr = []
         arr.push "#{dataset.title}(#{dataset.id})"
         arr.push "All"
+
         rows.each do |dp|
-          key = dp.keys
-          arr.push dp[key[0]]
+          arr.push dp[1]
         end
         format_data.push arr
       end
     end
-    
+
     field_count = [0,0,0,0,0,0]
-    
+
     @project.fields.each do |field|
-      field_count[field.field_type] += 1 
+      field_count[field.field_type] += 1
     end
 
     rel_vis = []
@@ -235,18 +233,18 @@ class VisualizationsController < ApplicationController
     if field_count[TIME_TYPE] > 0 and field_count[NUMBER_TYPE] > 0 and format_data.count > 1
       rel_vis.push "Timeline"
     end
-    
+
     if field_count[NUMBER_TYPE] > 1 and format_data.count > 1
       rel_vis.push "Scatter"
     end
-    
+
     if field_count[NUMBER_TYPE] > 0 and format_data.count > 1
       rel_vis.push "Bar"
       rel_vis.push "Histogram"
     end
-    
+
     rel_vis.push "Table"
-    
+
     if field_count[TIME_TYPE] > 0 and field_count[NUMBER_TYPE] > 0 and format_data.count > 1
       rel_vis.push "Motion"
     end
@@ -256,11 +254,11 @@ class VisualizationsController < ApplicationController
 
     # The finalized data object
     @Data = { projectName: @project.title, projectID: @project.id, hasPics: false, fields: data_fields, dataPoints: format_data, metadata: metadata, relVis: rel_vis, allVis: allVis }
-    
-    
+
+
     respond_to do |format|
       format.html {render :layout => 'applicationWide' }
     end
   end
-  
+
 end
