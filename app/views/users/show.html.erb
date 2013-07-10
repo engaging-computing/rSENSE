@@ -30,13 +30,9 @@
       </div>
     </div>
     <div class="row">
-      <div class="span6">
-        <br />
-        <div>
+      <%=render layout: "shared/collapse", locals: {title: 'Description', width: '6', unique_id: 'description', should_hide: false} do %>
           <%= user_redactor_helper (can_edit? @user)%>
-          <br />
-        </div>
-      </div>
+      <%end%>
     </div>
   </div>
   <div class="span6">
