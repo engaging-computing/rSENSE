@@ -22,8 +22,7 @@
               <span class="info_label" style="line-height: 30px;">Username:</span>
               <%= user_edit_helper 'username' %>
               <br />
-              <span class="info_label" style="line-height: 30px;">Joined:</span>
-              <%= time_ago_in_words(@user.created_at)%> ago 
+              <span style="line-height: 30px;">Joined <%= time_ago_in_words(@user.created_at)%> ago</span>
               <br />
             </div>
           </div>
