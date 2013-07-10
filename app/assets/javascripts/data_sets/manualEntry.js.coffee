@@ -12,11 +12,11 @@ $ ->
 
     ($ '#manualTable').editTable(settings)
 
-    ($ "#test").click ->
+    ($ ".map_picker").click ->
       ($ "#map_picker").modal();
 
     initialize = ->
-      latlng = new google.maps.LatLng(41.659,-4.714)
+      latlng = new google.maps.LatLng(42.6333,-71.3167)
       options =
         zoom: 16
         center: latlng
@@ -60,6 +60,7 @@ $ ->
       google.maps.event.trigger window.map, "resize" 
 
     ($ "#apply_location").click ->
+      ($ this).parent().attr("row")
       ($ "#map_picker").modal('hide')
       location = window.marker.getPosition()
       ($ '#manualTable .validate_latitude').each (i) ->
