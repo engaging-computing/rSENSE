@@ -8,7 +8,7 @@
     <div class="row-fluid">
     <h4><%= link_to contribution.title, url_for(contribution) %></h4>
     
-    <div class="span7">
+    <div class="span6">
       <b>Created: </b><%= time_ago_in_words(contribution.created_at)%> ago (on <%=contribution.created_at.strftime("%B %d, %Y")%>)<br>
     
       <% case contribution %>
