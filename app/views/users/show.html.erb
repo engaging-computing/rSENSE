@@ -10,19 +10,20 @@
                 <%= image_tag Gravatar.new.url(@user) %>
               </div>
             <%end%>
-            <div class="span3" style="padding-top:10px;">
-              <span class="info_label">First Name:</span> 
+            <div class="span3" style="padding-top:10px; text-align: left">
+              <span class="info_label" style="line-height: 30px;">First Name:</span> 
               <%= user_edit_helper 'firstname', (can_edit? @user) %>
               <br />
-              <br />
               <%if can_edit? @user%>
-                <span class="info_label">Last Name:</span>
+                <span class="info_label" style="line-height: 30px;">Last Name:</span>
                 <%= user_edit_helper 'lastname', (can_edit? @user) %>
                 <br />
-                <br />
               <%end%>
-              <span class="info_label">Username:</span>
+              <span class="info_label" style="line-height: 30px;">Username:</span>
               <%= user_edit_helper 'username' %>
+              <br />
+              <span class="info_label" style="line-height: 30px;">Joined:</span>
+              <%= time_ago_in_words(@user.created_at)%> ago 
               <br />
             </div>
           </div>
