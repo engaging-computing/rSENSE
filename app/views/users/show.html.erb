@@ -35,40 +35,38 @@
       <%end%>
     </div>
   </div>
-  <div class="span6">
+  <%=render layout: "shared/collapse", locals: {title: 'My Stuff', width: '6', unique_id: 'contribs', should_hide: false} do %>
+  <div>
    <%= form_tag users_path, method: 'get', id:'contribution_search', class:'navbar-search', name: @user.username do%>
-    <div class="row">
-      <div class="span6">
-          <div class="feed-top">
-            <h2>My Stuff</h2>
-            <div style="width:30%;float:left;">
-              <select name="sort" class="contribution_sort_select">
-                <option value="DESC">Newest First</option>
-                <option value="ASC">Oldest First</option>
-              </select>
-            </div>
-            <div style="width:30%;float:left;margin-left:20px;">
-                  <%= text_field_tag :search, params[:search], class:'search-query'%>
-            </div>
-            <div class="clear"></div>
-            <div style="margin-bottom:10px;">
-              Projects <%= check_box_tag "filters[]", "projects", false, class: 'contribution_type_checkbox'%>&nbsp;&nbsp;&nbsp;
-              DataSets <%= check_box_tag "filters[]", "data_sets", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
-              Visualizations <%= check_box_tag "filters[]", "visualizations", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
-              Media <%= check_box_tag "filters[]", "media", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
-              Tutorials <%= check_box_tag "filters[]", "tutorials", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
-            </div>
+        <div>
+          <div style="width:30%;float:left;">
+            <select name="sort" class="contribution_sort_select">
+              <option value="DESC">Newest First</option>
+              <option value="ASC">Oldest First</option>
+            </select>
           </div>
-          <%= hidden_field_tag "page", params[:page].to_i %>
-      </div>
-    </div>
+          <div style="width:30%;float:left;margin-left:20px;">
+            <%= text_field_tag :search, params[:search], class:'search-query'%>
+          </div>
+          <div class="clear"></div>
+          <div style="margin-bottom:10px;">
+            Projects <%= check_box_tag "filters[]", "projects", false, class: 'contribution_type_checkbox'%>&nbsp;&nbsp;&nbsp;
+            DataSets <%= check_box_tag "filters[]", "data_sets", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
+            Visualizations <%= check_box_tag "filters[]", "visualizations", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
+            Media <%= check_box_tag "filters[]", "media", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
+            Tutorials <%= check_box_tag "filters[]", "tutorials", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
+          </div>
+        </div>
+        <%= hidden_field_tag "page", params[:page].to_i %>
+      
     <div id="contributions">
     </div>
-    <div class="feed-bottom">
+    <div style="text-align: center; padding: 5px">
       <a href="#" class="pagebck"><<</a>
        Page <span id="pageLabel">1 of 1</span>
        
       <a href="#" class="pagefwd">>></a>
     </div>
     <%end%>
-</div> 
+    <div>
+  <%end%>
