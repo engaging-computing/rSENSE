@@ -89,7 +89,7 @@ $.fn.extend
         for col in lon_cols
           do (col) ->
             ($ '.new_row').children().eq(col).find('input').addClass 'validate_longitude'
-            ($ '.new_row').children().eq(col).children().eq(0).append "<a>Map</a>"
+            ($ '.new_row').children().eq(col).children().eq(0).append " <i class='icon-globe map_picker'></i>"
 
         for col in text_cols
           do (col) ->
@@ -102,6 +102,10 @@ $.fn.extend
         # bind row removal
         ($ '.new_row').find('.close').click ->
           remove_row(@)
+          
+        # bind map button
+        ($ '.new_row').find('.map_picker').click ->
+          ($ '#map_picker').modal();
 
         # remove token
         ($ '.new_row').removeClass('new_row')
@@ -119,7 +123,7 @@ $.fn.extend
         ($ tab).find('th').each ->
           ($ @).html ($ @).text()
 
-      # make it pretty and functional
+      # make it pretty and functional the first row.
       wrap_table = (tab) ->
         ($ tab).find('th').each ->
           ($ @).children().wrap "<div class='text-center' />"
@@ -142,7 +146,7 @@ $.fn.extend
           do (col) ->
             ($ tab).find('tbody').find('tr').each ->
               ($ @).children().eq(col).find('input').addClass 'validate_longitude'
-              ($ @).children().eq(col).children().eq(0).append "<a>Map</a>"
+              ($ @).children().eq(col).children().eq(0).append " <i class='icon-globe map_picker'></i>"
 
         for col in text_cols
           do (col) ->
