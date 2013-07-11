@@ -38,6 +38,9 @@
 //
 //= require editTable
 //
+//= require raptorize.js
+//= require raptorize-konami.js
+//
 // Visualization stuff follows
 //
 //= require highcharts/highcharts
