@@ -8,7 +8,7 @@ $ ->
         ajaxify: true
         url: window.postURL
         method: 'POST'
-      debug: true
+      debug: false
 
     ($ '#manualTable').editTable(settings)
 
