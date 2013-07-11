@@ -5,7 +5,7 @@
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 
 <div class="row">
-	<div style="margin-bottom:20px" class="span12">
+  <div style="margin-bottom:20px" class="span12">
     <table id="manualTable">
       <thead>
         <tr>
@@ -22,15 +22,8 @@
         <% end %>
         </tr>
       </tbody>
-    </table>    </div>
+    </table>    
+  </div>
 </div>
 
-<!-- This is the map picker -->
-<%if @has_location%>
-  <div id="map_picker" class="modal hide fade well container" style="width:400px">
-    <div id="map_canvas" style="width:400px; height:300px"></div><br/>
-    <label>Address: </label><input id="address"  type="text"/>
-    <button class="btn btn-primary pull-right" id="apply_location">Apply</button>
-  </div>
-<%end%>
 
