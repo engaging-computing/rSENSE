@@ -114,7 +114,7 @@ class UsersController < ApplicationController
     @totalPages = (@contributions.length/5.0).ceil
     
     @lastPage = false
-    if @contributions.length < ((page*5) + 5)
+    if page+1 == @totalPages.to_i
       @lastPage = true
     end
     
