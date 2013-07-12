@@ -66,7 +66,7 @@
               <td><a class="data_set_export" href="<%= data_set_url s %>">Export</a></td>
               
               <td><% if can_edit? s %>
-                <a class="data_set_edit" href="<%= data_set_url s %>">Edit</a>
+                <a class="data_set_edit" href="<%= edit_data_set_path s %>">Edit</a>
               <% end %></td>
               
               <td><% if can_hide? s %>
