@@ -37,7 +37,7 @@ $ ->
         scatter_err = "<div style='padding: 10px'>Scatter Chart could not be displayed<br>Either two numeric fields were not found or there were not enough data</div>"
         histogram_err = "<div style='padding: 10px'>Histogram could not be displayed<br>Either no numeric fields were found, or there were not enough data</div>"
         bar_err = "<div style='padding: 10px'>Bar Chart could not be displayed<br>Either no numeric fields were found, or there were not enough data</div>"
-        map_err = "<div class='novis_message'><img src='../assets/novis_map.png'><br><br>No geographic data found<br>Cannot display Map visualization</div>"
+        map_err = "<div class='novis_message'><img src='/assets/novis_map.png'><br><br>No geographic data found<br>Cannot display Map visualization </div>"
         photos_err = "<div style='padding: 10px'>There are no photos to display</div>"
         
         start: ->  
