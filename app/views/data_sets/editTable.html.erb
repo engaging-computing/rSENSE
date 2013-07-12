@@ -13,11 +13,17 @@
     </thead>
     <tbody>
       <% @mongo_data_set.data.each_with_index do |row, r_index| %>
-        <tr>
-          <% row.each_with_index do |data, d_index| %>
-            <td><%= data["#{@project.fields[d_index].id}"] %></td>
-          <% end %>
-        </tr>
+        <% row.each_with_index do |data, d_index| %>
+          <tr>
+            <% @project.fields.each_with_index do |field| %>
+              <td>
+                <% if !data[field.id].nil? %>
+                  <%= data[field.id] %>
+                <% end %>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
       <% end %>
     </tbody>
   </table>
