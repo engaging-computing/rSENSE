@@ -1,5 +1,4 @@
 $ ->
-  console.log "tacos"
   if namespace.controller is "data_sets" and namespace.action is "edit"
 
     settings =
