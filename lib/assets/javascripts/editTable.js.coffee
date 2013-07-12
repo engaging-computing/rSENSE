@@ -1,7 +1,7 @@
 $ = jQuery
 
 $ ->
-  if (namespace.controller is "data_sets") and (namespace.action is "manualEntry" or namespace.action is "editTable")
+  if (namespace.controller is "data_sets") and (namespace.action is "manualEntry" or namespace.action is "edit")
     for x in window.fields
       if x["name"] == "Latitude"
         ($ ".mainContent").append '<div id="map_picker" class="modal hide fade well container" style="width:400px"><div id="map_canvas" style="width:400px; height:300px"></div><br/><label>Address: </label><input id="address"  type="text"/><button class="btn btn-primary pull-right" id="apply_location">Apply</button></div>'
@@ -12,21 +12,21 @@ $ ->
         window.map = new google.maps.Map(document.getElementById("map_canvas"), options)
 
         window.geocoder = new google.maps.Geocoder()
-        
-        marker_options = 
+
+        marker_options =
           map: window.map
           draggable: true
-        
+
         window.marker = new google.maps.Marker marker_options
-        
+
         google.maps.event.addListener window.marker, 'dragend', ->
           window.geocoder.geocode {'latLng': window.marker.getPosition()},(results, status) ->
             if (status == google.maps.GeocoderStatus.OK)
-              if (results[0]) 
+              if (results[0])
                 $('#address').val(results[0].formatted_address)
-        
 
-        
+
+
         ($ "#address").autocomplete
           #This bit uses the geocoder to fetch address values
           source: (request, response) ->
@@ -36,17 +36,17 @@ $ ->
                   label:  item.formatted_address
                   value: item.formatted_address
                   latitude: item.geometry.location.lat()
-                  longitude: item.geometry.location.lng() 
+                  longitude: item.geometry.location.lng()
           #This bit is executed upon selection of an address
-          select: (event, ui) -> 
+          select: (event, ui) ->
             location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude)
             window.marker.setPosition(location)
             window.map.setCenter(location)
-        
+
         ($ "#address").autocomplete("option", "appendTo", "#map_picker")
 
         ($ '#map_picker').on 'shown', () ->
-          google.maps.event.trigger window.map, "resize" 
+          google.maps.event.trigger window.map, "resize"
 
         ($ "#apply_location").click ->
           ($ "#map_picker").modal('hide')
@@ -93,7 +93,7 @@ $ ->
             when "Time" then time_cols.push index
             when "Text" then text_cols.push index
             when "Number" then num_cols.push index
-            when "Latitude" then lat_cols.push index 
+            when "Latitude" then lat_cols.push index
             when "Latitude" then add_map()
             when "Longitude" then lon_cols.push index
 
@@ -158,7 +158,7 @@ $ ->
           # bind row removal
           ($ '.new_row').find('.close').click ->
             remove_row(@)
-            
+
           # bind map button
           ($ '.new_row').find('.map_picker').click ->
             ($ this).closest("tr").addClass('target')
@@ -263,7 +263,7 @@ $ ->
         ($ 'td').find('.map_picker').click ->
           ($ this).closest("tr").addClass('target')
           ($ '#map_picker').modal();
-        
+
         # add row functionality
         ($ '#edit_table_add').click ->
           add_row(table)
@@ -317,5 +317,5 @@ $ ->
 
 
 
-        
+
 
