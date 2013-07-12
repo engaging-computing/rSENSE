@@ -1,5 +1,6 @@
 $ ->
-  if namespace.controller is "data_sets" and namespace.action is "editTable"
+  console.log "tacos"
+  if namespace.controller is "data_sets" and namespace.action is "edit"
 
     settings =
       buttons: ['close', 'add', 'save']
