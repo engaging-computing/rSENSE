@@ -28,10 +28,6 @@ class DataSetsController < ApplicationController
   # GET /data_sets/1/edit
   def edit
     @data_set = DataSet.find(params[:id])
-  end
-
-  def editTable
-    @data_set = DataSet.find(params[:id])
     @project = Project.find(@data_set.project_id)
     @mongo_data_set = MongoData.find_by_data_set_id(@data_set.id)
     @fields = @project.fields
