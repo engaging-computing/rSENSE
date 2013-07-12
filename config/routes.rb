@@ -44,7 +44,7 @@ Rsense::Application.routes.draw do
   match "/projects/:id/uploadCSV" => "data_sets#uploadCSV"
   match "/data_sets/:pid/manualEntry" => "data_sets#manualEntry"
   match "/data_sets/:pid/manualUpload" => "data_sets#manualUpload"
-  match "/data_sets/:id/editTable" => "data_sets#editTable"
+  match "/data_sets/:id/edit" => "data_sets#edit"
 
   match "/projects/:id/export/data_sets/*datasets" => "data_sets#export"
   match "/projects/:id/export" => "data_sets#export"
