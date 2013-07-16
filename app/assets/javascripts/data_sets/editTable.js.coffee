@@ -11,3 +11,4 @@ $ ->
       debug: true
 
     ($ '#editTable').editTable(settings)
+    
