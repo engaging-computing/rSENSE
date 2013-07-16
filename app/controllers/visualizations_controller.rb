@@ -186,8 +186,6 @@ class VisualizationsController < ApplicationController
     # get data for each dataset    
     @datasets.each do |dataset|
       d = MongoData.find_by_data_set_id(dataset.id)
-      logger.info "------------------------"
-      logger.info dataset
       dataset[:data] = d.data
     end
 
@@ -209,9 +207,9 @@ class VisualizationsController < ApplicationController
         arr = []
         arr.push "#{dataset.title}(#{dataset.id})"
         arr.push "All"
+
         rows.each do |dp|
-          key = dp.keys
-          arr.push dp[key[0]]
+          arr.push dp[1]
         end
         format_data.push arr
       end
