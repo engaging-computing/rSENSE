@@ -1,7 +1,6 @@
 $ ->
 
   hide_upload = ->
-    console.log ($ '#collapsefields div table tbody tr').size()
     if ($ '#collapsefields div table tbody tr').size() == 0
       ($ '#collapsecreate_data_set').hide()
     else
