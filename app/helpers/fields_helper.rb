@@ -12,9 +12,9 @@ module FieldsHelper
     elsif field == 3
       "Text"
     elsif field == 4
-      "Longitude"
-    elsif field == 5
       "Latitude"
+    elsif field == 5
+      "Longitude"
     else
       "invalid input: try get_field_type(int)"
     end
@@ -27,9 +27,9 @@ module FieldsHelper
       2
     elsif field == "Text"
       3
-    elsif field == "Longitude"
-      4
     elsif field == "Latitude"
+      4
+    elsif field == "Longitude"
       5
     else
       "invalid input: try get_field_name(string)"
