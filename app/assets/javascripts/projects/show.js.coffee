@@ -343,7 +343,14 @@ $ ->
           data_set:
             hidden: true
         success: =>
-          ($ @).parents('tr').hide_row()
+          ($ @).parents('div.dataset').hide_row()
+          ($ 'div#datset_list div.dataset').filter(':visible').each (idx) ->
+            if idx % 2 is 0
+              ($ @).addClass 'feed-even'
+              ($ @).removeClass 'feed-odd'
+            else
+              ($ @).removeClass 'feed-even'
+              ($ @).addClass 'feed-odd'
           
     ($ 'a.data_set_delete').click (e) ->
   
@@ -355,4 +362,11 @@ $ ->
           type: 'DELETE'
           dataType: "json"
           success: =>
-            ($ @).parents('tr').hide_row()
+            ($ @).parents('div.dataset').hide_row()
+            ($ 'div#datset_list div.dataset').filter(':visible').each (idx) ->
+              if idx % 2 is 0
+                ($ @).addClass 'feed-even'
+                ($ @).removeClass 'feed-odd'
+              else
+                ($ @).removeClass 'feed-even'
+                ($ @).addClass 'feed-odd'
