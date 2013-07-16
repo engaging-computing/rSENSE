@@ -159,51 +159,63 @@
       <!-- field -->
       <%=render layout: "shared/collapse", locals: {title: 'Fields',width: '5', unique_id: 'fields', should_hide: false} do %>
         <table class="table fields_table" project="<%=@project.id%>" style="width:100%; height:125px;">
-          <th>Name</th>
-          <th>Units</th>
-          <th>Type</th>
-          <th>
-          <!-- Add field dropdown -->
-          <%if (can_edit? @project) %>
-            <div class='btn-group' id='add-field-dropdown'>
-              <a class='btn-mini btn-success dropdown-toggle' data-toggle='dropdown' href='#'>
-                Add Field
-                <span class='caret'/>
-              </a>
-              <ul class='dropdown-menu'>
-                <li><a href='#' class=add_timestamp_field> Timestamp </a></li>
-                <li><a href='#' class=add_number_field> Number </a></li>
-                <li><a href='#' class=add_text_field> Text </a></li>
-                <% if (@project.fields.any? {|field| field.field_type == LONGITUDE_TYPE or field.field_type == LATITUDE_TYPE}) %>
-                  <li><a href='#' style="display:none;" class=add_location_field> Location </a></li>
-                <% else %>
-                  <li><a href='#' class=add_location_field> Location </a></li>
-                <% end %>
-              </ul>
-            </div>
-          <%end%>
-          <% if @project.fields.count == 0 %>
-            <th id="template_th">
-              <div class="btn-group">
-                <a class='btn-mini btn-success dropdown-toggle' id="template-from-file">Template from File</a>
-              </div>
-            </th>
-          <%end%>
-          </th>
-          <% @project.fields.all.each do |f| %>
-            <!-- Render all the fields, Lat and Lon cant be edited -->
-            <%= render 'field_edit', field: f, type: "field",row_id: f.id, can_edit: (can_edit? @project), has_ses: @project.data_sets.count %>
-          <% end %>
-          </table>
-        <%end%>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Units</th>
+              <th>Type</th>
+              <th>
+
+                <!-- Add field dropdown -->
+                <%if (can_edit? @project) %>
+                  <div class='btn-group' id='add-field-dropdown'>
+                    <a class='btn-mini btn-success dropdown-toggle' data-toggle='dropdown' href='#'>
+                      Add Field
+                      <span class='caret'/>
+                    </a>
+                    <ul class='dropdown-menu'>
+                      <li><a href='#' class=add_timestamp_field> Timestamp </a></li>
+                      <li><a href='#' class=add_number_field> Number </a></li>
+                      <li><a href='#' class=add_text_field> Text </a></li>
+                      <% if (@project.fields.any? {|field| field.field_type == LONGITUDE_TYPE or field.field_type == LATITUDE_TYPE}) %>
+                        <li><a href='#' style="display:none;" class=add_location_field> Location </a></li>
+                      <% else %>
+                        <li><a href='#' class=add_location_field> Location </a></li>
+                      <% end %>
+                    </ul>
+                  </div>
+                <%end%>
+                <% if @project.fields.count == 0 %>
+                  <th id="template_th">
+                    <div class="btn-group">
+                      <a class='btn-mini btn-success dropdown-toggle' id="template-from-file">Template from File</a>
+                    </div>
+                  </th>
+                <%end%>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @project.fields.all.each do |f| %>
+              <!-- Render all the fields, Lat and Lon cant be edited -->
+              <%= render 'field_edit', field: f, type: "field",row_id: f.id, can_edit: (can_edit? @project), has_ses: @project.data_sets.count %>
+            <% end %>
+          </tbody>
+        </table>
+      <%end%>
 
         <!-- media objects -->
         <%=render layout: "shared/collapse", locals: {title: 'Media', width: '5', unique_id: 'media', should_hide: false} do %>
             <table class="table">
-              <th>Object</th>
-              <th>Name</th>
-              <th>Type</th>
-              <th style="text-align:center;">Display Image</th>
+              <thead>
+                <tr>
+                  <th>Object</th>
+                  <th>Name</th>
+                  <th>Type</th>
+                  <th style="text-align:center;">Display Image</th>
+                </tr>
+              </thead>
+              <tbody>
                 <% @project.media_objects.all.each do |mo| %>
                     <tr>
                         <td style="text-align:center"><%=media_object_thumbnail_helper(mo)%></td>
@@ -214,6 +226,7 @@
                         <% end %>
                     </tr>
                 <%end%>
+              </tbody>
             </table>
         <%end%>
     </div>
