@@ -131,3 +131,12 @@
     padding:1px;
     background:#fff;
 }
+
+.novis_message{
+  padding: 25px; 
+  text-align: center; 
+  font-size: 15pt;
+  font-weight: bold;
+  line-height: 25pt;
+  color: #8e8e8e
+}
