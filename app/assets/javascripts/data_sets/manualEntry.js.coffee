@@ -11,4 +11,4 @@ $ ->
       debug: false
 
     ($ '#manualTable').editTable(settings)
-
+    

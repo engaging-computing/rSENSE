@@ -16,6 +16,7 @@
  *= require editablegrid-2.0.1.css
  *= require highvis.css
  *= require jquery.dataTables.css
+ *= require bootstrap-datetimepicker.less
  */
 
 .vcenter {
