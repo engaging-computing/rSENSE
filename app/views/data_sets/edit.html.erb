@@ -4,8 +4,11 @@
 </script>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 
-<% if @cur_user.admin or @cur_user = @data_set.owner %>
-  <h1>Editing Data</h1>
+<% if can_edit?(@data_set) %>
+ 
+  <h1>Editing Data</h1> 
+  
+  <span style="font-size:2em;"><%= data_set_edit_helper 'title', @project.owner.id == @cur_user.try(:id) %></span><br><br>
 
   <table id="editTable" class="table">
     <thead>
