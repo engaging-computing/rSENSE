@@ -6,7 +6,7 @@
         <div class="content-block grey_content">
           <div class="row">
             <%if !@user.try(:email).nil?%>
-              <div class="span2" style="padding-bottom:5px">
+              <div class="span2">
                 <%= image_tag Gravatar.new.url(@user), :style => "border-radius: 8px" %>
               </div>
             <%end%>
