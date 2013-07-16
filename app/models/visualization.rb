@@ -1,5 +1,7 @@
 class Visualization < ActiveRecord::Base
   
+  include ActionView::Helpers::DateHelper
+  
   attr_accessible :content, :data, :project_id, :globals, :title, :user_id, :hidden, :featured, :featured_at
 
   has_many :media_objects
@@ -36,6 +38,7 @@ class Visualization < ActiveRecord::Base
       url: UrlGenerator.new.visualization_url(self),
       hidden: self.hidden,
       featured: self.featured,
+      timeAgoInWords: time_ago_in_words(self.created_at),
       createdAt: self.created_at.strftime("%B %d, %Y"),
       ownerName: self.owner.name,
       ownerUrl: UrlGenerator.new.user_url(self.owner),

@@ -1,10 +1,21 @@
 $ = jQuery
 
 $ ->
+  # Only allows the plugin to run on certain pages. Probably not the right place to do this.
   if (namespace.controller is "data_sets") and (namespace.action is "manualEntry" or namespace.action is "edit")
+    
+    #-----------------------------------------------------------------------
+    # Map Specific Code
+    #----------------------------------------------------------------------- 
     for x in window.fields
+      
+      #Check if there is location in the experiment
       if x["name"] == "Latitude"
+      
+        #If there is location add the map picker modal dialog
         ($ ".mainContent").append '<div id="map_picker" class="modal hide fade well container" style="width:400px"><div id="map_canvas" style="width:400px; height:300px"></div><br/><label>Address: </label><input id="address"  type="text"/><button class="btn btn-primary pull-right" id="apply_location">Apply</button></div>'
+        
+        #Set up the Map and geocoder
         latlng = new google.maps.LatLng(42.6333,-71.3167)
         options =
           zoom: 16
@@ -19,14 +30,14 @@ $ ->
 
         window.marker = new google.maps.Marker marker_options
 
+        #Event to grab lat/lon when the marker is released on the map
         google.maps.event.addListener window.marker, 'dragend', ->
           window.geocoder.geocode {'latLng': window.marker.getPosition()},(results, status) ->
             if (status == google.maps.GeocoderStatus.OK)
               if (results[0])
                 $('#address').val(results[0].formatted_address)
 
-
-
+        #Add autocomplete to the dialog with responses from the geocoder.
         ($ "#address").autocomplete
           #This bit uses the geocoder to fetch address values
           source: (request, response) ->
@@ -45,15 +56,23 @@ $ ->
 
         ($ "#address").autocomplete("option", "appendTo", "#map_picker")
 
+        #Maps are dumb and need to be resized if shown in a dynamicly sized window
         ($ '#map_picker').on 'shown', () ->
           google.maps.event.trigger window.map, "resize"
 
+        #What to do when a location is picked   
         ($ "#apply_location").click ->
           ($ "#map_picker").modal('hide')
           location = window.marker.getPosition()
           ($ '.target').find('.validate_longitude').val(location['kb']);
           ($ '.target').find('.validate_latitude').val(location['jb']);
           ($ '.target').removeClass('target')
+        
+        ($ "#map_picker").on "hidden", ->
+          ($ '.target').removeClass('target')
+    #-----------------------------------------------------------------------
+    # End of Map Specific Code
+    #-----------------------------------------------------------------------
 
   $.fn.extend
     editTable: (options) ->
@@ -90,7 +109,7 @@ $ ->
           type = ($ @).attr 'data-field-type'
 
           switch type
-            when "Time" then time_cols.push index
+            when "Timestamp" then time_cols.push index
             when "Text" then text_cols.push index
             when "Number" then num_cols.push index
             when "Latitude" then lat_cols.push index
@@ -114,7 +133,7 @@ $ ->
             type = ($ @).attr 'data-field-type'
 
             switch type
-              when "Time" then time_cols.push index
+              when "Timestamp" then time_cols.push index
               when "Text" then text_cols.push index
               when "Number" then num_cols.push index
               when "Latitude" then lat_cols.push index
@@ -124,14 +143,12 @@ $ ->
           new_row = "<tr class='new_row'>"
 
           ($ tab).find('th:not(:last-child)').each (index) ->
-            new_row += "<td><div class='text-center'><input type='text' class='input-small' /></div></td>"
+            new_row += "<td><div class='text-center'><input type='text' class='input-small'/></div></td>"
 
           new_row += "<td><div class='text-center'><a class='close' style='float:none;'>&times;</a></div></td></tr>"
 
           # and attach it to our table
           ($ tab).append new_row
-
-          log ($ '.new_row').children()
 
           # attach validators
           for col in num_cols
@@ -144,8 +161,7 @@ $ ->
 
           for col in lon_cols
             do (col) ->
-              ($ '.new_row').children().eq(col).find('input').addClass 'validate_longitude'
-              ($ '.new_row').children().eq(col).children().eq(0).append " <i class='icon-globe map_picker'></i>"
+              ($ '.new_row').children().eq(col).find('input').replaceWith '<div class="input-append"><input class="validate_longitude input-small" id="appendedInput" type="text"><span class="add-on"><i class="icon-globe map_picker"></i></span></div>'
 
           for col in text_cols
             do (col) ->
@@ -153,7 +169,7 @@ $ ->
 
           for col in time_cols
             do (col) ->
-              ($ '.new_row').children().eq(col).find('input').addClass 'validate_timestamp'
+              ($ '.new_row').children().eq(col).find('input').replaceWith '<div class="input-append datepicker"><input class="validate_timestamp input-small" type="text" data-format="dd/MM/yyyy hh:mm:ss"><span class="add-on"><i class="icon-calendar"></i></span></div>'
 
           # bind row removal
           ($ '.new_row').find('.close').click ->
@@ -163,6 +179,9 @@ $ ->
           ($ '.new_row').find('.map_picker').click ->
             ($ this).closest("tr").addClass('target')
             ($ '#map_picker').modal();
+
+          # bind time to input
+          ($ '.new_row').find('.datepicker').datetimepicker()
 
           # remove token
           ($ '.new_row').removeClass('new_row')
@@ -202,9 +221,10 @@ $ ->
           for col in lon_cols
             do (col) ->
               ($ tab).find('tbody').find('tr').each ->
-                ($ @).children().eq(col).find('input').addClass 'validate_longitude'
-                ($ @).children().eq(col).children().eq(0).append " <i class='icon-globe map_picker'></i>"
-
+                tmp = ($ @).children().eq(col).find('input')
+                tmp_val = tmp.val()
+                tmp.replaceWith "<div class='input-append'><input class='validate_longitude input-small' id='appendedInput' type='text' value='#{tmp_val}'><span class='add-on'><i class='icon-globe map_picker'></i></span></div>"
+               
           for col in text_cols
             do (col) ->
               ($ tab).find('tbody').find('tr').each ->
@@ -213,7 +233,9 @@ $ ->
           for col in time_cols
             do (col) ->
               ($ tab).find('tbody').find('tr').each ->
-                ($ @).children().eq(col).find('input').addClass 'validate_timestamp'
+                tmp = ($ @).children().eq(col).find('input')
+                tmp_val = tmp.val()
+                tmp.replaceWith "<div class='input-append datepicker'><input class='validate_timestamp input-small' type='text' data-format='dd/MM/yyyy hh:mm:ss' value='#{tmp_val}'><span class='add-on'><i class='icon-calendar'></i></span></div>"
 
 
         # does it pass?
@@ -264,6 +286,9 @@ $ ->
           ($ this).closest("tr").addClass('target')
           ($ '#map_picker').modal();
 
+        #bind time button
+        ($ 'td').find('.datepicker').datetimepicker()
+        
         # add row functionality
         ($ '#edit_table_add').click ->
           add_row(table)

@@ -35,7 +35,7 @@
 //= require isotope/jquery.isotope.js
 //= require jquery.form.js
 //= require jquery.qrcode.min.js
-//
+//= require bootstrap-datetimepicker.js
 //= require editTable
 //
 //= require raptorize.js

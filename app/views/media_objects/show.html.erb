@@ -1,30 +1,9 @@
-<p id="notice"><%= notice %></p>
+<div class="row" id="title_row" style="margin-left: 0px;">
+    <span id="title_span" class="span12" style="font-size:2em"><%= media_object_edit_menu_helper %></span><br><br>
+</div>
 
-<p>
-  <b>Project:</b>
-  <%= @media_object.project_id %>
-</p>
-
-<p>
-  <b>Media type:</b>
-  <%= @media_object.media_type %>
-</p>
-
-<p>
-  <b>Name:</b>
-  <%= @media_object.name %>
-</p>
-
-<p>
-  <b>Data Set:</b>
-  <%= @media_object.data_set_id %>
-</p>
-
-<p>
-  <b>User:</b>
-  <%= @media_object.user_id %>
-</p>
-
-
-<%= link_to 'Edit', edit_media_object_path(@media_object) %> |
-<%= link_to 'Back', media_objects_path %>
+<% if @media_object.media_type == "image" %>
+  <%= image_tag @media_object.src %>
+<% else %>
+  <%= link_to "Link to Media", @media_object.src %>
+<% end %>
