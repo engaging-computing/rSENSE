@@ -20,7 +20,7 @@ class DataSetsController < ApplicationController
     @data_set = DataSet.new
 
     respond_to do |format|
-      format.html 
+      format.html
       format.json { render json: @data_set.to_hash(false) }
     end
   end
@@ -232,11 +232,10 @@ class DataSetsController < ApplicationController
   def export
 
     require 'CSV'
-
+    require 'tempfile'
 
     @project = Project.find params[:id]
     @datasets = []
-    @divfiller = ""
 
     # build list of datasets
     if( !params[:datasets].nil? )
@@ -259,37 +258,6 @@ class DataSetsController < ApplicationController
       dataset[:data] = mongo_data.data
     end
 
-    @csv = CSV.generate do |csv|
-      tmp = []
-      @project.fields.each do |field|
-        tmp.push field.name
-      end
-
-      csv << tmp
-
-      @datasets.each do |dataset|
-
-        dataset[:data].each do |row|
-
-          tmp = []
-
-          @project.fields.each do |f|
-            if !row["#{f.id}"].nil?
-              tmp.push row["#{f.id}"]
-            else
-              tmp.push ""
-            end
-          end
-
-          csv << tmp
-
-
-        end
-      end
-    end
-
-    require 'tempfile'
-
     file_name = "#{@project.id}"
 
     @datasets.each do |dataset|
@@ -298,22 +266,33 @@ class DataSetsController < ApplicationController
 
     tmp_file = File.new("./tmp/#{file_name}.csv", 'w+')
 
-    CSV.parse(@csv).each do |row|
+    @project.fields.each_with_index do |field, f_index|
+      tmp_file.write field[:name]
 
-      row_text = ""
-
-      row.each_with_index do |data, index|
-        if data.nil?
-          row_text = row_text + " "
-        else
-          row_text = row_text + data
-        end
-        if index != (row.count - 1)
-          row_text = row_text + ", "
-        end
+      if( f_index != @project.fields.count )
+        tmp_file.write ", "
       end
+    end
 
-      tmp_file.puts "#{row_text}\n"
+    tmp_file.write "\n"
+
+    @datasets.each_with_index do |data_set, d_index|
+
+      data_set[:data].each_with_index do |data_row, dr_index|
+
+        data_row.each_with_index do |data_point, dp_index|
+
+          tmp_file.write data_point[1]
+
+          if( dp_index = data_row.count )
+            tmp_file.write ", "
+          end
+
+        end
+
+        tmp_file.write "\n"
+
+      end
 
     end
 
