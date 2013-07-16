@@ -44,46 +44,70 @@
 
       <!-- data sets -->
       <%=render layout: "shared/collapse", locals: {title: 'Data Sets', width: '7', unique_id: 'data_sets', should_hide: false} do %>
-        <table class="table" <% if @project.data_sets.count == 0 %> style="display:none;" <% end %> >
-          <tr>
-            <th colspan="3" style="text-align:center;padding-bottom:5px"><input type="button" class="btn btn-info" value="Visualize" id="vis_button"/></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th><input type="checkbox" id="check_selector"/></th>
-          </tr>
+        <div id="dataset_list" <% if @project.data_sets.count == 0 %> style="display:none;" <% end %> >
+        
+          <div class="feed-top">
+            <input type="button" class="btn btn-info" value="Visualize" id="vis_button"/>
+            <div class="pull-right">
+              <input type="checkbox" id="check_selector"/>
+            </div>
+          </div>
+          
           <% @project.data_sets.search(false).each do |s| %>
-            <tr>
-              <td style="width:32px;height:32px;">
+          
+            <div class="<%= cycle('feed-even', 'feed-odd')%> dataset" style="position:relative">
+            
+              <div style="display:inline-block; width:32px; height:32px; vertical-align: middle">
                 <%if Gravatar.new.url(s.owner, 32) != nil%>
-                  <%= image_tag Gravatar.new.url(s.owner, 32) %>
+                  <%= image_tag Gravatar.new.url(s.owner, 32)%>
                 <%end%>
-              </td>
-              <td><%= link_to "#{s.owner.name}", user_path(s.owner) %></td>
-              <td><%= link_to s.title, "#{params[:id]}/data_sets/#{s.id}" %></td>
-
-              <td><a class="data_set_export" href="<%= data_set_url s %>">Export</a></td>
-
-              <td><% if can_edit? s %>
-                <a class="data_set_edit" href="<%= edit_data_set_path s %>">Edit</a>
-              <% end %></td>
-
-              <td><% if can_hide? s %>
-                <a class="data_set_hide" href="<%= data_set_url s %>">Hide</a>
-              <% end %></td>
-
-              <td><% if can_delete? s %>
-                <a class="data_set_delete" href="<%= data_set_url s %>" name="<%= s.title %>">Delete</a>
-              <% end %></td>
-
-              <td><input type="checkbox" id="project_<%=params[:id]%>_session_<%=s.id%>"/></td>
-            </div></tr>
-          <% end %>
-        </table>
-      <%end%>
-
-    </div>
+              </div>
+              
+              <div style="display:inline-block; margin: 5px 0px">
+                <div style="width:95px; padding-left:4px; display: inline-block">
+                  <%= link_to truncate(s.owner.name, length:10), user_path(s.owner) %>
+                </div>
+                
+                <div style="width:220px; display: inline-block">
+                  <%= link_to truncate(s.title, length:30), "#{params[:id]}/data_sets/#{s.id}" %>
+                </div>
+              </div>
+              
+              <div style="display:inline-block; margin: 5px 0px; float:right">
+                
+                <div style="width:50px; text-align: center; display:inline-block">
+                  <a class="data_set_export" href="<%= data_set_url s %>">Export</a>
+                </div>
+                
+                <div style="width:50px; text-align: center; display:inline-block">
+                  <% if can_edit? s %>
+                    <a class="data_set_edit" href="<%= edit_data_set_path s %>">Edit</a>
+                  <% end %>
+                </div>
+                
+                <div style="width:50px; text-align: center; display:inline-block">
+                  <% if can_hide? s %>
+                    <a class="data_set_hide" href="<%= data_set_url s %>">Hide</a>
+                  <% end %>
+                </div>
+                
+                <div style="width:50px; text-align: center; display:inline-block">
+                  <% if can_delete? s %>
+                    <a class="data_set_delete" href="<%= data_set_url s %>" name="<%= s.title %>">Delete</a>
+                  <% end %>
+                </div>
+                
+                <div style="width:15px; display:inline-block">
+                  <input type="checkbox" class="pull-right" id="project_<%=params[:id]%>_session_<%=s.id%>"/>
+                </div>
+              </div>
+              
+            </div>
+          <%end%>
+          <div class="feed-bottom"> </div>
+        </div>
+    <%end%>
+  </div>
   </div>
 
   <div class="span5">
