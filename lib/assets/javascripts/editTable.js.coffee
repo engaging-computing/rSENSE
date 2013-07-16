@@ -221,7 +221,9 @@ $ ->
           for col in lon_cols
             do (col) ->
               ($ tab).find('tbody').find('tr').each ->
-                ($ @).children().eq(col).find('input').replaceWith '<div class="input-append"><input class="validate_longitude input-small" id="appendedInput" type="text"><span class="add-on"><i class="icon-globe map_picker"></i></span></div>'
+                tmp = ($ @).children().eq(col).find('input')
+                tmp_val = tmp.val()
+                tmp.replaceWith "<div class='input-append'><input class='validate_longitude input-small' id='appendedInput' type='text' value='#{tmp_val}'><span class='add-on'><i class='icon-globe map_picker'></i></span></div>"
                
           for col in text_cols
             do (col) ->
@@ -231,7 +233,9 @@ $ ->
           for col in time_cols
             do (col) ->
               ($ tab).find('tbody').find('tr').each ->
-                ($ @).children().eq(col).find('input').replaceWith '<div class="input-append datepicker"><input class="validate_timestamp input-small" type="text" data-format="dd/MM/yyyy hh:mm:ss"><span class="add-on"><i class="icon-calendar"></i></span></div>'
+                tmp = ($ @).children().eq(col).find('input')
+                tmp_val = tmp.val()
+                tmp.replaceWith "<div class='input-append datepicker'><input class='validate_timestamp input-small' type='text' data-format='dd/MM/yyyy hh:mm:ss' value='#{tmp_val}'><span class='add-on'><i class='icon-calendar'></i></span></div>"
 
 
         # does it pass?
