@@ -9,7 +9,7 @@ class DataSetsController < ApplicationController
     @mongo_data_set = MongoData.find_by_data_set_id(@data_set.id)
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html { redirect_to (project_path @data_set.project) + (data_set_path @data_set) }
       format.json { render json: @data_set.to_hash(false) }
     end
   end
@@ -20,7 +20,7 @@ class DataSetsController < ApplicationController
     @data_set = DataSet.new
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html 
       format.json { render json: @data_set.to_hash(false) }
     end
   end

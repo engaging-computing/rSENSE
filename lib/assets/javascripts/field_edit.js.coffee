@@ -155,7 +155,7 @@ $ ->
         #if not (type in [(helpers.get_field_type "Latitude"), (helpers.get_field_type "Longitude")])
         htmlStr += "<td class='token'><a class='field_edit_link'><i class='icon-edit'></i></a>"
         htmlStr += "<a href='/fields/#{msg.id}' exp='#{msg.project_id}' field='#{msg.id}' class='field_save_link'><i class='icon-ok'></i></a>"
-        htmlStr += "<a href='" + window.location.pathname  + "' field='#{msg.id}' class='field_delete_link'><i class='icon-remove-circle'></i></a></td>"
+        htmlStr += "<a href='/fields/#{msg.id}"  + "' field='#{msg.id}' class='field_delete_link'><i class='icon-remove-circle'></i></a></td>"
         #else
           #htmlStr += "<td></td>"
         
