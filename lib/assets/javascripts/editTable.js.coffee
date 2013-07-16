@@ -3,18 +3,18 @@ $ = jQuery
 $ ->
   # Only allows the plugin to run on certain pages. Probably not the right place to do this.
   if (namespace.controller is "data_sets") and (namespace.action is "manualEntry" or namespace.action is "edit")
-    
+
     #-----------------------------------------------------------------------
     # Map Specific Code
-    #----------------------------------------------------------------------- 
+    #-----------------------------------------------------------------------
     for x in window.fields
-      
+
       #Check if there is location in the experiment
       if x["name"] == "Latitude"
-      
+
         #If there is location add the map picker modal dialog
         ($ ".mainContent").append '<div id="map_picker" class="modal hide fade well container" style="width:400px"><div id="map_canvas" style="width:400px; height:300px"></div><br/><label>Address: </label><input id="address"  type="text"/><button class="btn btn-primary pull-right" id="apply_location">Apply</button></div>'
-        
+
         #Set up the Map and geocoder
         latlng = new google.maps.LatLng(42.6333,-71.3167)
         options =
@@ -60,14 +60,14 @@ $ ->
         ($ '#map_picker').on 'shown', () ->
           google.maps.event.trigger window.map, "resize"
 
-        #What to do when a location is picked   
+        #What to do when a location is picked
         ($ "#apply_location").click ->
           ($ "#map_picker").modal('hide')
           location = window.marker.getPosition()
           ($ '.target').find('.validate_longitude').val(location['kb']);
           ($ '.target').find('.validate_latitude').val(location['jb']);
           ($ '.target').removeClass('target')
-        
+
         ($ "#map_picker").on "hidden", ->
           ($ '.target').removeClass('target')
     #-----------------------------------------------------------------------
@@ -121,23 +121,30 @@ $ ->
         remove_row = (row) ->
           ($ row).closest('tr').remove()
 
+        add_validators = (row) ->
+          # attach validators
+          for col in num_cols
+            do (col) ->
+              ($ row).children().eq(col).find('input').addClass 'validate_number'
+
+          for col in lat_cols
+            do (col) ->
+              ($ row).children().eq(col).find('input').addClass 'validate_latitude'
+
+          for col in lon_cols
+            do (col) ->
+              ($ row).children().eq(col).find('input').replaceWith "<div class='input-append'><input class='validate_longitude input-small' id='appendedInput' type='text' value='#{ ($ row).find('input').eq(col).val() }' /><span class='add-on'><i class='icon-globe map_picker'></i></span></div>"
+
+          for col in text_cols
+            do (col) ->
+              ($ row).children().eq(col).find('input').addClass 'validate_text'
+
+          for col in time_cols
+            do (col) ->
+              ($ row).children().eq(col).find('input').replaceWith "<div class='input-append datepicker'><input class='validate_timestamp input-small' type='text' data-format='dd/MM/yyyy hh:mm:ss' value='#{ ($ row).find('input').eq(col).val() }' /><span class='add-on'><i class='icon-calendar'></i></span></div>"
+
+
         add_row = (tab) ->
-
-          num_cols = []
-          lat_cols = []
-          lon_cols = []
-          text_cols = []
-          time_cols = []
-
-          ($ table).find('th').each (index) ->
-            type = ($ @).attr 'data-field-type'
-
-            switch type
-              when "Timestamp" then time_cols.push index
-              when "Text" then text_cols.push index
-              when "Number" then num_cols.push index
-              when "Latitude" then lat_cols.push index
-              when "Longitude" then lon_cols.push index
 
           # create a string of the new row
           new_row = "<tr class='new_row'>"
@@ -151,25 +158,7 @@ $ ->
           ($ tab).append new_row
 
           # attach validators
-          for col in num_cols
-            do (col) ->
-              ($ '.new_row').children().eq(col).find('input').addClass 'validate_number'
-
-          for col in lat_cols
-            do (col) ->
-              ($ '.new_row').children().eq(col).find('input').addClass 'validate_latitude'
-
-          for col in lon_cols
-            do (col) ->
-              ($ '.new_row').children().eq(col).find('input').replaceWith '<div class="input-append"><input class="validate_longitude input-small" id="appendedInput" type="text"><span class="add-on"><i class="icon-globe map_picker"></i></span></div>'
-
-          for col in text_cols
-            do (col) ->
-              ($ '.new_row').children().eq(col).find('input').addClass 'validate_text'
-
-          for col in time_cols
-            do (col) ->
-              ($ '.new_row').children().eq(col).find('input').replaceWith '<div class="input-append datepicker"><input class="validate_timestamp input-small" type="text" data-format="dd/MM/yyyy hh:mm:ss"><span class="add-on"><i class="icon-calendar"></i></span></div>'
+          add_validators ($ '.new_row')
 
           # bind row removal
           ($ '.new_row').find('.close').click ->
@@ -208,34 +197,8 @@ $ ->
             ($ @).html "<input type='text' class='input-small' value='#{($ @).text()}' />"
             ($ @).children().wrap "<div class='text-center' />"
 
-          for col in num_cols
-            do (col) ->
-              ($ tab).find('tbody').find('tr').each ->
-                ($ @).children().eq(col).find('input').addClass 'validate_number'
-
-          for col in lat_cols
-            do (col) ->
-              ($ tab).find('tbody').find('tr').each ->
-                ($ @).children().eq(col).find('input').addClass 'validate_latitude'
-
-          for col in lon_cols
-            do (col) ->
-              ($ tab).find('tbody').find('tr').each ->
-                tmp = ($ @).children().eq(col).find('input')
-                tmp_val = tmp.val()
-                tmp.replaceWith "<div class='input-append'><input class='validate_longitude input-small' id='appendedInput' type='text' value='#{tmp_val}'><span class='add-on'><i class='icon-globe map_picker'></i></span></div>"
-               
-          for col in text_cols
-            do (col) ->
-              ($ tab).find('tbody').find('tr').each ->
-                ($ @).children().eq(col).find('input').addClass 'validate_text'
-
-          for col in time_cols
-            do (col) ->
-              ($ tab).find('tbody').find('tr').each ->
-                tmp = ($ @).children().eq(col).find('input')
-                tmp_val = tmp.val()
-                tmp.replaceWith "<div class='input-append datepicker'><input class='validate_timestamp input-small' type='text' data-format='dd/MM/yyyy hh:mm:ss' value='#{tmp_val}'><span class='add-on'><i class='icon-calendar'></i></span></div>"
+          ($ tab).find('tr').each ->
+            add_validators ($ @)
 
 
         # does it pass?
@@ -245,6 +208,11 @@ $ ->
             false
           else
             true
+
+
+        ### FIRST PASS (on load) ###
+
+        ### MODIFY HTML ###
 
         # add control panel
         ($ table).after "<span id='edit_table_control' class='pull-right'></span>"
@@ -276,6 +244,8 @@ $ ->
           ($ @).addClass "table table-bordered table-striped"
           wrap_table(table)
 
+        ### BIND ACTIONS ###
+
         # bind remove_row to .close buttons
         ($ table).find('td .close').each ->
           ($ @).click ->
@@ -288,10 +258,12 @@ $ ->
 
         #bind time button
         ($ 'td').find('.datepicker').datetimepicker()
-        
+
         # add row functionality
         ($ '#edit_table_add').click ->
           add_row(table)
+
+        ### SAVE TABLE ###
 
         ($ '#edit_table_save').click ->
 
@@ -339,8 +311,3 @@ $ ->
             else
               ## I guess I'm not gonna write this part because we only use ajax to submit data
               ($ table).wrap "<form action='#{settings.upload.url}' method='#{settings.upload.method}' />"
-
-
-
-
-
