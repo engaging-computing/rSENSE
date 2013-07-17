@@ -5,11 +5,9 @@
       <div class="span6" align="center">
         <div class="content-block grey_content">
           <div class="row">
-            <%if !@user.try(:email).nil?%>
               <div class="span2">
                 <%= image_tag Gravatar.new.url(@user), :style => "border-radius: 8px" %>
               </div>
-            <%end%>
             <div class="span3" style="padding-top:10px; text-align: left">
               <span class="info_label" style="line-height: 30px;">First Name:</span> 
               <%= user_edit_helper 'firstname', (can_edit? @user) %>
