@@ -232,3 +232,9 @@ input.object_hidden_checkbox
 {
   left: -54px;
 }
+
+.feed-even, .feed-odd
+{
+  border-right-width: 2px;
+  border-left-width: 2px;
+}
