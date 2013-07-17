@@ -5,11 +5,9 @@
       <div class="span6" align="center">
         <div class="content-block grey_content">
           <div class="row">
-            <%if !@user.try(:email).nil?%>
-              <div class="span2" style="padding-bottom:5px">
-                <%= image_tag Gravatar.new.url(@user) %>
+              <div class="span2">
+                <%= image_tag Gravatar.new.url(@user), :style => "border-radius: 8px" %>
               </div>
-            <%end%>
             <div class="span3" style="padding-top:10px; text-align: left">
               <span class="info_label" style="line-height: 30px;">First Name:</span> 
               <%= user_edit_helper 'firstname', (can_edit? @user) %>
@@ -62,7 +60,7 @@
       </div>
       <div class="feed-bottom" style="text-align: center; padding: 5px">
           <a href="#" class="pagebck"><<</a>
-          Page <span id="pageLabel">1 of 1</span>
+          <span id="pageLabel">Page 1 of 1</span>
           <a href="#" class="pagefwd">>></a>
       </div>
     <%end%>

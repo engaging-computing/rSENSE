@@ -1,6 +1,8 @@
 class SessionsController < ApplicationController
   skip_before_filter :authorize, only: ['create','new'] 
-
+  
+  protect_from_forgery :except => :create
+  
   def create
     login_name = params[:username_or_email]
       
@@ -13,7 +15,7 @@ class SessionsController < ApplicationController
       if user and user.authenticate(params[:password])
       
         session[:user_id] = user.id
-        response = { status: 'success' }
+        response = { status: 'success', authenticity_token: form_authenticity_token }
           
       else
 
