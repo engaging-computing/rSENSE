@@ -231,7 +231,7 @@ class DataSetsController < ApplicationController
 
   def export
 
-    require 'CSV'
+    #require 'CSV'
     require 'tempfile'
 
     @project = Project.find params[:id]
