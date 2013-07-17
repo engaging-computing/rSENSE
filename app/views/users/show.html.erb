@@ -38,7 +38,7 @@
   
   <%=render layout: "shared/collapse", locals: {title: 'Contributions', width: '6', unique_id: 'contribs', should_hide: false} do %>
     <%= form_tag users_path, method: 'get', id:'contribution_search', name: @user.username do%>
-      <div>
+      <div class="feed-top">
           <div style="width:30%;float:left;">
             <select name="sort" class="contribution_sort_select">
               <option value="DESC">Newest First</option>
@@ -58,9 +58,9 @@
           </div>
         </div>
       <%= hidden_field_tag "page", params[:page].to_i %>
-      <div id="contributions" style="border-style: groove;border-color: #ffffff;border-width: 0px 2px 2px 2px;">
+      <div id="contributions">
       </div>
-      <div style="text-align: center; padding: 5px">
+      <div class="feed-bottom" style="text-align: center; padding: 5px">
           <a href="#" class="pagebck"><<</a>
           Page <span id="pageLabel">1 of 1</span>
           <a href="#" class="pagefwd">>></a>
