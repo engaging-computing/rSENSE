@@ -251,3 +251,35 @@ input.object_hidden_checkbox
   left:0px;
   box-shadow: 0px 0px 10px black;
 }
+
+.mainContent
+{
+  background-color:#fff;
+  box-shadow:0px 0px 20px grey;
+  padding:18px 20px 18px 20px;
+  min-height:100%;
+}
+
+.footer
+{
+  p
+  {
+    font-size: .9em;
+    margin-bottom: 0px;
+  }
+  
+  position:absolute;
+  bottom:0;
+  width:100%;
+  height:92px;
+}
+
+.visible-tablet, .visible-desktop, .visible-phone
+{
+  a, button
+  {
+   color: white; 
+  }
+  
+  
+}
