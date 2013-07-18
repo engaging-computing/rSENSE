@@ -97,7 +97,7 @@
                   <% end %>
                 </div>
 
-                <div style="width:15px; display:inline-block">
+                <div class="selector">
                   <input type="checkbox" class="pull-right" id="project_<%=params[:id]%>_session_<%=s.id%>"/>
                 </div>
               </div>
@@ -112,28 +112,6 @@
 
   <div class="span5">
     <div class="row">
-
-      <!-- tools -->
-      <!--<%=render layout: "shared/collapse", locals: {title: 'Tools', width: '2', unique_id: 'tools', should_hide: false} do %>
-        <%if can_edit?(@project)%>
-          <%=form_tag projects_path, method: 'get', id: @project.id, class:'project_filters' do%>
-            <%= check_box_tag "math", "math", (filter_exists "math"), class: 'projects_add_filter_checkbox' %> Math<br>
-            <%= check_box_tag "physics", "physics", (filter_exists "physics"), class: 'projects_add_filter_checkbox' %> Physics<br>
-            <%= check_box_tag "chemistry", "chemistry", (filter_exists "chemistry"), class: 'projects_add_filter_checkbox' %> Chemistry<br>
-            <%= check_box_tag "earth", "earth", (filter_exists "earth"), class: 'projects_add_filter_checkbox' %> Earth<br>
-            <%= check_box_tag "biology", "biology", (filter_exists "biology"), class: 'projects_add_filter_checkbox' %> Biology
-          <%end%>
-          <%=form_tag projects_path, method: 'get', id: "#{@project.id}", class:'object_hider', type: 'project' do%>
-            <%= check_box_tag "hidden", "hidden", (@project.hidden), class: 'object_hidden_checkbox' %> <b>Hidden</b>
-          <%end%>
-        <%end%>
-        <%if @cur_user.try(:id)%>
-          <%=form_tag('/projects', :method => "post" ) do %>
-            <input type="hidden" name="project_id" value="<%=@project.id%>"/>
-                <%= submit_tag "Clone Project", class: "btn" %>
-          <%end%>
-        <%end%>
-      <%end%>-->
 
       <!-- session creation -->
       <%=render layout: "shared/collapse", locals: {title: 'Create Data Set', width:'5', unique_id: 'create_data_set', should_hide: false} do %>
