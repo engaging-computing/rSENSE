@@ -19,29 +19,29 @@ $ ->
 
       newItem +=  "</div>"
 
-      newItem = $(newItem)
+      newItem = ($ newItem)
 
-      $('#projects').append(newItem).isotope('insert', newItem)
+      ($ '#projects').append(newItem).isotope('insert', newItem)
 
 
-    $("#projects_search").submit ->
-    
+    ($ '#projects_search').submit ->
+
       ($ '#hidden_pagination').val(1)
-  
+
       $.ajax
         url: this.action
-        data: $(this).serialize()
+        data: ($ this).serialize()
         dataType: "json"
         success: (data, textStatus)->
 
-          $('#projects').isotope('remove', $('.item'))
+          ($ '#projects').isotope('remove', ($ '.item'))
 
-          addProjectButton = $("<div id='addProjectButton' style='text-align:center;cursor: pointer;' class='item'><img style='width:66%;' class='hoverimage' src='/assets/green_plus_icon.svg'><br /><h4 style='color:#0a0;'>Create Project</h4></img></div>")
+          addProjectButton = ($ "<div id='addProjectButton' style='text-align:center;cursor: pointer;' class='item'><img style='width:66%;' class='hoverimage' src='/assets/green_plus_icon.svg'><br /><h4 style='color:#0a0;'>Create Project</h4></img></div>")
 
-          $('#projects').append(addProjectButton).isotope('insert', addProjectButton)
+          ($ '#projects').append(addProjectButton).isotope('insert', addProjectButton)
 
-          $('#addProjectButton').click ->
-            token = $("meta[name='csrf-token']").attr('content')
+          ($ '#addProjectButton').click ->
+            token = ($ "meta[name='csrf-token']").attr('content')
             form = ($ "<form action='/projects/create' method='post'> <input type='hidden' name='authenticity_token' value='#{token}'> </form>")
             ($ "body").append(form)
             ($ form).submit()
@@ -58,10 +58,10 @@ $ ->
 
     ($ '.projects_sort_select').change ->
       ($ '#projects_search').submit()
-      
 
-    $(window).resize () ->
+
+    ($ window).resize () ->
       helpers.isotope_layout('#projects')
-        
+
     helpers.isotope_layout('#projects')
-    $("#projects_search").submit()
+    ($ "#projects_search").submit()
