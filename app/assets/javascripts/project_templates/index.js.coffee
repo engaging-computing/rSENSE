@@ -5,88 +5,56 @@
 $ ->
   if namespace.controller is "project_templates" and namespace.action is "index"
 
-    $("#project_templates_search").submit ->
+    addItem = (object) ->
+      newItem =   "<div class='item'>"
+
+      if(object.mediaSrc)
+        newItem += "<img src='#{object.mediaSrc}'></img>"
+
+      newItem +=  "<h4 style='margin-top:0px;'><a href='#{object.url}'>#{object.name}</a>"
+
+      if(object.featured)
+        newItem += "<span style='color:#57C142'> (featured)</span>"
+
+      newItem +=  "</h4><b>Owner: </b><a href='#{object.ownerUrl}'>#{object.ownerName}</a><br />"
+      newItem +=  "<b>Created: </b>#{object.timeAgoInWords} ago (on #{object.createdAt})<br />"
+
+      newItem +=  "</div>"
+
+      newItem = $(newItem)
+
+      ($ '#project_templates').append(newItem).isotope('insert', newItem)
+
+
+    ($ "#project_templates_search").submit ->
         $.ajax
           url: this.action
-          data: $(this).serialize()
+          data: ($ this).serialize()
+          dataType: "json"
           success: (data, textStatus)->
-            
-            $('#project_templates').isotope('remove', $('.item'))
-            
+
+            ($ '#project_templates').isotope('remove', $('.item'))
+
             for object in data
               do (object) ->
-                newItem =   "<div class='item'>"
-    
-                if(object.mediaSrc)
-                  newItem += "<img src='#{object.mediaSrc}'></img>"
-                  
-                newItem +=  "<h4 style='margin-top:0px;'><a href='#{object.url}'>#{object.name}</a>"
-                
-                if(object.featured)
-                  newItem += "<span style='color:#57C142'> (featured)</span>"
-            
-                newItem +=  "</h4><b>Owner: </b><a href='#{object.ownerUrl}'>#{object.ownerName}</a><br />"
-                newItem +=  "<b>Created: </b>#{object.timeAgoInWords} ago (on #{object.createdAt})<br />"
-                
-                ###
-                if(object.filters)
-                  newitem += "<b>#{object.filters}</b>"
-                ###
-                
-                newItem +=  "</div>"
-                
-                newItem = $(newItem)
-                
-                $('#project_templates').append(newItem).isotope('insert', newItem)
-            
-            $(window).resize()
-            
-          dataType: "json"
+                addItem object
+
+            helpers.infinite_scroll(data.length, '#project_templates', '#project_templates_search', '#hidden_pagination', '#load_project_templates', addItem)
+
+            ($ window).resize()
+
         return false
 
     ($ '.project_templates_filter_checkbox').click ->
       ($ '#project_templates_search').submit()
-      
+
     ($ '.project_templates_sort_select').change ->
       ($ '#project_templates_search').submit()
-      
-    $(".project_templates_sort_select").change ->
-      $("#project_templates_search").submit()
 
-    ### Get isotope up and running ###
+    ($ ".project_templates_sort_select").change ->
+      ($ "#project_templates_search").submit()
 
-    numCols = 1
+    helpers.isotope_layout('#project_templates')
+    ($ "#project_templates_search").submit()
 
-    while $('#project_templates').width()/numCols>200
-      numCols++
-
-    $('#project_templates').imagesLoaded ->
-    
-      $('.item').width(($('#project_templates').width()/numCols)-35)
-      $('#project_templates').isotope
-        itemSelector : '.item'
-        layoutMode : 'masonry'
-        masonry:
-          columnWidth: $('#project_templates').width()/numCols
-
-    $("#project_templates_search").submit()
-
-    window.reLayout = ->
-
-      numCols = 1
-
-      while $('#project_templates').width()/numCols>200
-        numCols++
-
-      $('#project_templates').imagesLoaded ->
-
-        $('.item').width(($('#project_templates').width()/numCols)-35)
-
-        $('#project_templates').isotope
-          itemSelector : '.item'
-          layoutMode : 'masonry'
-          masonry:
-            columnWidth: $('#project_templates').width()/numCols
-      true
-
-    $(window).resize reLayout
+    ($ window).resize helpers.isotope_layout("#project_templates")
