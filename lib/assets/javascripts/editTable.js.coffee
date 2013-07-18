@@ -83,6 +83,11 @@ $ ->
           ajaxify: true
           url: "#"
           method: 'PUT'
+          success: (data, textStatus, jqXHR) ->
+            window.location = data.redirect
+          error: (jqXHR, textStatus, errorThrown) ->
+            log [textStatus, errorThrown]
+            alert "An upload error occured."
         debug: true
 
       settings = $.extend settings, options
@@ -302,11 +307,8 @@ $ ->
                 type: "#{settings.upload.method}"
                 dataType: 'json'
                 data: ajax_data
-                error: (jqXHR, textStatus, errorThrown) ->
-                  log [textStatus, errorThrown]
-                  alert "Sorry, something went wrong."
-                success: (data, textStatus, jqXHR) ->
-                  window.location = data.redirect
+                error: settings.upload.error
+                success: settings.upload.success
 
             else
               ## I guess I'm not gonna write this part because we only use ajax to submit data
