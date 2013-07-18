@@ -29,11 +29,6 @@
 //= require collapse_link_flipper.js.coffee
 //= require validator
 //= require infinite_scroll
-//= require editablegrid-2.0.1.js
-//= require editablegrid_utils.js
-//= require editablegrid_renderers.js
-//= require editablegrid_editors.js
-//= require editablegrid_validators.js
 //= require isotope/jquery.isotope.js
 //= require jquery.form.js
 //= require jquery.qrcode.min.js
