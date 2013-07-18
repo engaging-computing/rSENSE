@@ -48,18 +48,18 @@
       </div>
       <div style="float:left;vertical-align:text-bottom;line-height:15px;font-size:15px;">
         <div class="visible-desktop visible-tablet" style="height:15px;padding-top:44px;">
-          <a href="/projects" style="color:#fff;"><i class="icon-folder-open icon-white"> </i> Projects</a>&nbsp;&nbsp;&nbsp;
-          <a href="/users" style="color:#fff;"><i class="icon-user icon-white"> </i> People</a>&nbsp;&nbsp;&nbsp;
-          <a href="/visualizations" style="color:#fff;"><i class="icon-picture icon-white"> </i> Visualizations</a>&nbsp;&nbsp;&nbsp;
-          <a href="/project_templates" style="color:#fff;"><i class="icon-gift icon-white"> </i> Store </a>&nbsp;&nbsp;&nbsp;
-          <a href="/tutorials" style="color:#fff;"><i class="icon-info-sign icon-white"> </i> Tutorials </a>
+          <a href="/projects"><i class="icon-folder-open icon-white"> </i> Projects</a>&nbsp;&nbsp;&nbsp;
+          <a href="/users"><i class="icon-user icon-white"> </i> People</a>&nbsp;&nbsp;&nbsp;
+          <a href="/visualizations"><i class="icon-picture icon-white"> </i> Visualizations</a>&nbsp;&nbsp;&nbsp;
+          <a href="/project_templates"><i class="icon-gift icon-white"> </i> Store </a>&nbsp;&nbsp;&nbsp;
+          <a href="/tutorials"><i class="icon-info-sign icon-white"> </i> Tutorials </a>
         </div>
-        <div class="visible-phone" style="height:15px;padding-top:44px;position:absolute;top:30px;left:11px;">
-          <a href="/projects" style="color:#fff;"><i class="icon-folder-open icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
-          <a href="/users" style="color:#fff;"><i class="icon-user icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
-          <a href="/visualizations" style="color:#fff;"><i class="icon-picture icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
-          <a href="/project_templates" style="color:#fff;"><i class="icon-gift icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
-          <a href="/tutorials" style="color:#fff;"><i class="icon-info-sign icon-white"> </i> </a>
+        <div class="visible-phone" style="height:15px;padding-top:44px;position:absolute;left:11px;">
+          <a href="/projects"><i class="icon-folder-open icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
+          <a href="/users"><i class="icon-user icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
+          <a href="/visualizations"><i class="icon-picture icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
+          <a href="/project_templates"><i class="icon-gift icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
+          <a href="/tutorials"><i class="icon-info-sign icon-white"> </i> </a>
         </div>
       </div>
       
@@ -89,8 +89,8 @@
       <div class="visible-phone" style="padding-top:25px;float:left;line-height:15px;font-size:15px;text-align:right;float:right;margin-right:10px;">
         <% if @cur_user == nil %>
           <div class="btn-group">
-            <a href="" class="login" style="color:white;"><button class="btn btn-small btn-info">Login</button></a>
-            <a href="<%= new_user_path %>" style="color:white;"><button class="btn btn-small btn-info">Register</button></a>
+            <a href="" class="login btn btn-small btn-info" style="color:white;">Login</a>
+            <a href="<%= new_user_path %>" style="color:white;" class="btn btn-small btn-info">Register</a>
           </div>
         <% else %>
           <div class="btn-group">
@@ -112,19 +112,19 @@
     </div>
   </div>
   
-	<div style="padding:72px 0px 92px 0px;margin:0;min-height:100%;">
-    <div class="container mainContent" style="background-color:#fff;box-shadow:0px 0px 20px grey;min-height:100%; width:100%">
+  <div style="padding:72px 0px 92px 0px;margin:0;min-height:100%;margin-right:40px">
+    <div class="container mainContent mc_wide" style="background-color:#fff;box-shadow:0px 0px 20px grey;min-height:100%; width:100%;">
       <%= yield %>
     </div>
-	</div>
+  </div>
 	
-	<div style="position:absolute;bottom:0;width:100%;height:92px;">
+  <div style="position:absolute;bottom:0;width:100%;height:92px;">
     <div class="footer">
       <p style="font-size:1.0em;margin-bottom:0px;">The iSENSE project is a collaborative effort of the University of Massachusetts Lowell and Machine Science Inc. </p>
       <p style="font-size:0.8em;margin-bottom:0px;">Our work is supported by grants <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0735597">DRL-0735597</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0735592">DRL-0735592</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0546513">DRL-0546513</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=1123998">IIS-1123998</a>, and <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=1123972">IIS-1123972</a> from the National Science Foundation, and a gift from Google Inc.</p>
       <p><%= @version %></p>
     </div>
-	</div>
+  </div>
 
 </div>
 
