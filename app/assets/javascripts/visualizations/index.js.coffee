@@ -4,7 +4,6 @@
 
 $ ->
   if namespace.controller is "visualizations" and namespace.action is "index"
- 
     $("#visualizations_search").submit ->
         $.ajax
           url: this.action

@@ -105,7 +105,47 @@ input.projects_add_filter_checkbox
   margin-top: 0px;
 }
 
-div.dataset.feed-even, div.dataset.feed-odd, div#dataset_list div.feed-top
-{
+div.dataset.feed-even, div.dataset.feed-odd, div#dataset_list div.feed-top{
+  
   padding: 2px 5px 2px 5px;
+  
+  .control_block{
+    display:inline-block; 
+    margin: 5px 0px; 
+    float:right;
+    
+    .control{
+      width:50px;
+      text-align: center; 
+      display:inline-block;
+    }
+  }
+  .gravatar{
+    display:inline-block; 
+    width:32px; 
+    height:32px; 
+    vertical-align: middle
+  }
+  
+  .links{
+    display:inline-block; 
+    margin: 5px 0px;
+    
+    .owner{
+      width:95px; 
+      padding-left:4px;
+      display: inline-block
+    }
+    
+    .title{
+      width:220px; 
+      display: inline-block
+    }
+  }
+  
+  .selector{
+    width:15px; 
+    display:inline-block;
+  }
 }
+
