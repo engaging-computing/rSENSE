@@ -11,6 +11,7 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 //
+//= require constants
 //= require jquery
 //= require helpers
 //= require dataset_name
@@ -27,6 +28,7 @@
 //= require field_edit.js.coffee
 //= require collapse_link_flipper.js.coffee
 //= require validator
+//= require infinite_scroll
 //= require editablegrid-2.0.1.js
 //= require editablegrid_utils.js
 //= require editablegrid_renderers.js
