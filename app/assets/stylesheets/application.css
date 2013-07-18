@@ -13,7 +13,6 @@
  *= require redactor.css
  *= require jquery.ui.all
  *= require_self
- *= require editablegrid-2.0.1.css
  *= require highvis.css
  *= require jquery.dataTables.css
  *= require bootstrap-datetimepicker.less
@@ -121,16 +120,6 @@ div.clear
     text-align: center;
 }
 
-table.editablegrid > tbody > tr > td
-{
-  height: 20px;
-  -webkit-border-radius: 15px 15px 15px 15px;
-  -moz-border-radius: 15px 15px 15px 15px;
-  border-radius: 15px 15px 15px 15px;
-  border: solid 5px white;
-  background-color: #dce0e8;
-}
-
 .info_edit_link, .menu_edit_link
 {
 /*     vertical-align: super; */
@@ -225,7 +214,7 @@ li.dataset_tab
 
 input.object_hidden_checkbox
 {
- margin-top: 0px; 
+ margin-top: 0px;
 }
 
 .dropdown-menu
