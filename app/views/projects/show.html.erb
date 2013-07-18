@@ -57,47 +57,47 @@
 
             <div class="<%= cycle('feed-even', 'feed-odd')%> dataset" style="position:relative">
 
-              <div style="display:inline-block; width:32px; height:32px; vertical-align: middle">
+              <div class="gravatar">
                 <%if Gravatar.new.url(s.owner, 32) != nil%>
                   <%= image_tag Gravatar.new.url(s.owner, 32)%>
                 <%end%>
               </div>
 
-              <div style="display:inline-block; margin: 5px 0px">
-                <div style="width:95px; padding-left:4px; display: inline-block">
+              <div class="links">
+                <div class="owner">
                   <%= link_to truncate(s.owner.name, length:10), user_path(s.owner) %>
                 </div>
 
-                <div style="width:220px; display: inline-block">
+                <div class="title">
                   <%= link_to truncate(s.title, length:30), "#{params[:id]}/data_sets/#{s.id}" %>
                 </div>
               </div>
 
-              <div style="display:inline-block; margin: 5px 0px; float:right">
+              <div class="control_block">
 
-                <div style="width:50px; text-align: center; display:inline-block">
+                <div class="control">
                   <a class="data_set_export" href="/projects/<%= @project.id %>/export/data_sets/<%= s.id %>">Export</a>
                 </div>
 
-                <div style="width:50px; text-align: center; display:inline-block">
+                <div class="control">
                   <% if can_edit? s %>
                     <a class="data_set_edit" href="<%= edit_data_set_path s %>">Edit</a>
                   <% end %>
                 </div>
 
-                <div style="width:50px; text-align: center; display:inline-block">
+                <div class="control">
                   <% if can_hide? s %>
                     <a class="data_set_hide" href="<%= data_set_url s %>">Hide</a>
                   <% end %>
                 </div>
 
-                <div style="width:50px; text-align: center; display:inline-block">
+                <div class="control">
                   <% if can_delete? s %>
                     <a class="data_set_delete" href="<%= data_set_url s %>" name="<%= s.title %>">Delete</a>
                   <% end %>
                 </div>
 
-                <div style="width:15px; display:inline-block">
+                <div class="selector">
                   <input type="checkbox" class="pull-right" id="project_<%=params[:id]%>_session_<%=s.id%>"/>
                 </div>
               </div>
@@ -112,28 +112,6 @@
 
   <div class="span5">
     <div class="row">
-
-      <!-- tools -->
-      <!--<%=render layout: "shared/collapse", locals: {title: 'Tools', width: '2', unique_id: 'tools', should_hide: false} do %>
-        <%if can_edit?(@project)%>
-          <%=form_tag projects_path, method: 'get', id: @project.id, class:'project_filters' do%>
-            <%= check_box_tag "math", "math", (filter_exists "math"), class: 'projects_add_filter_checkbox' %> Math<br>
-            <%= check_box_tag "physics", "physics", (filter_exists "physics"), class: 'projects_add_filter_checkbox' %> Physics<br>
-            <%= check_box_tag "chemistry", "chemistry", (filter_exists "chemistry"), class: 'projects_add_filter_checkbox' %> Chemistry<br>
-            <%= check_box_tag "earth", "earth", (filter_exists "earth"), class: 'projects_add_filter_checkbox' %> Earth<br>
-            <%= check_box_tag "biology", "biology", (filter_exists "biology"), class: 'projects_add_filter_checkbox' %> Biology
-          <%end%>
-          <%=form_tag projects_path, method: 'get', id: "#{@project.id}", class:'object_hider', type: 'project' do%>
-            <%= check_box_tag "hidden", "hidden", (@project.hidden), class: 'object_hidden_checkbox' %> <b>Hidden</b>
-          <%end%>
-        <%end%>
-        <%if @cur_user.try(:id)%>
-          <%=form_tag('/projects', :method => "post" ) do %>
-            <input type="hidden" name="project_id" value="<%=@project.id%>"/>
-                <%= submit_tag "Clone Project", class: "btn" %>
-          <%end%>
-        <%end%>
-      <%end%>-->
 
       <!-- session creation -->
       <%=render layout: "shared/collapse", locals: {title: 'Create Data Set', width:'5', unique_id: 'create_data_set', should_hide: false} do %>
