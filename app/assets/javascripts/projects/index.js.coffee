@@ -23,7 +23,6 @@ $ ->
 
       $('#projects').append(newItem).isotope('insert', newItem)
 
-    intId = 0
 
     $("#projects_search").submit ->
     
@@ -50,11 +49,7 @@ $ ->
           for object in data
             addItem object
 
-          reLayout()
-          
-          clearInterval intId
-          intId = setInterval populate_projects, 500
-          ($ '#load_projects').show()
+          helpers.infinite_scroll(data.length, '#projects', '#projects_search', '#hidden_pagination', '#load_projects', addItem)
 
       return false
 
@@ -63,53 +58,10 @@ $ ->
 
     ($ '.projects_sort_select').change ->
       ($ '#projects_search').submit()
+      
 
-    window.reLayout = ->
-
-      numCols = 1
-
-      while $('#projects').width()/numCols>200
-        numCols++
-
-      $('#projects').imagesLoaded ->
-
-        $('.item').width(($('#projects').width()/numCols)-35)
-
-        $('#projects').isotope
-          itemSelector : '.item'
-          layoutMode : 'masonry'
-          masonry:
-            columnWidth: $('#projects').width()/numCols
-      true
-
-    $(window).resize reLayout
-    
-    paginate = ( form ) ->
-
-      ($ '#hidden_pagination').val( parseInt(($ '#hidden_pagination').val()) + 1 )
-
-      $.ajax
-          url: form.action
-          data: form.serialize()
-          dataType: "json"
-          success: (data, textStatus)->
-
-            if( data.length == 0 )
-              ($ '#load_projects').hide()
-              clearInterval intId
-              
-
-            for object in data
-              addItem object
-
-            reLayout()
-
-        return false
-
-
-    populate_projects = ->
-      if( ($ '#projects').height() - ($ window).scrollTop() < ($ window).height() + 200)
-        paginate( ($ '#projects_search') )
+    $(window).resize () ->
+      helpers.isotope_layout('#projects')
         
-    reLayout()
+    helpers.isotope_layout('#projects')
     $("#projects_search").submit()
