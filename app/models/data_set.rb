@@ -2,7 +2,7 @@ class DataSet < ActiveRecord::Base
   
   attr_accessible :content, :project_id, :title, :user_id, :hidden
   
-  validates_presence_of :project_id, :user_id
+  validates_presence_of :project_id, :user_id, :title
   
   has_many :media_objects
   
@@ -13,9 +13,9 @@ class DataSet < ActiveRecord::Base
   
   def self.search(search, include_hidden = false)
     res = if search
-        where('title LIKE ?', "%#{search}%")
+        where('title LIKE ?', "%#{search}%").order("created_at DESC")
     else
-        scoped
+        scoped.order("created_at DESC")
     end
     
     if include_hidden

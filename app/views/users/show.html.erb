@@ -5,24 +5,22 @@
       <div class="span6" align="center">
         <div class="content-block grey_content">
           <div class="row">
-            <%if !@user.try(:email).nil?%>
-              <div class="span2" style="padding-bottom:5px">
-                <%= image_tag Gravatar.new.url(@user) %>
+              <div class="span2">
+                <%= image_tag Gravatar.new.url(@user), :style => "border-radius: 8px" %>
               </div>
-            <%end%>
-            <div class="span3" style="padding-top:10px;">
-              <span class="info_label">First Name:</span> 
+            <div class="span3" style="padding-top:10px; text-align: left">
+              <span class="info_label" style="line-height: 30px;">First Name:</span> 
               <%= user_edit_helper 'firstname', (can_edit? @user) %>
               <br />
-              <br />
               <%if can_edit? @user%>
-                <span class="info_label">Last Name:</span>
+                <span class="info_label" style="line-height: 30px;">Last Name:</span>
                 <%= user_edit_helper 'lastname', (can_edit? @user) %>
                 <br />
-                <br />
               <%end%>
-              <span class="info_label">Username:</span>
+              <span class="info_label" style="line-height: 30px;">Username:</span>
               <%= user_edit_helper 'username' %>
+              <br />
+              <span style="line-height: 30px;">Joined <%= time_ago_in_words(@user.created_at)%> ago</span>
               <br />
             </div>
           </div>
@@ -30,44 +28,40 @@
       </div>
     </div>
     <div class="row">
-      <div class="span6">
-        <br />
-        <div>
+      <%=render layout: "shared/collapse", locals: {title: 'Description', width: '6', unique_id: 'description', should_hide: false} do %>
           <%= user_redactor_helper (can_edit? @user)%>
-          <br />
-        </div>
-      </div>
+      <%end%>
     </div>
   </div>
-  <div class="span6">
-    <div class="row">
-      <div class="span6">
-        <%= form_tag users_path, method: 'get', id:'contribution_search', class:'navbar-search', name: @user.username do%>
-          <div class="feed-top">
-            <h2>My Stuff</h2>
-            <div style="width:20%;float:left;">
-              <select name="sort" class="contribution_sort_select">
-                <option value="DESC">Newest First</option>
-                <option value="ASC">Oldest First</option>
-              </select>
-            </div>
-            <div style="width:40%;float:left;margin-left:20px;">
-                  <%= text_field_tag :search, params[:search], class:'search-query'%>
-            </div>
-            <div class="clear"></div>
-            <div style="margin-bottom:10px;">
-              Projects: <%= check_box_tag "filters[]", "projects", false, class: 'contribution_type_checkbox'%>&nbsp;&nbsp;&nbsp;
-              DataSets: <%= check_box_tag "filters[]", "data_sets", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
-              Visualizations: <%= check_box_tag "filters[]", "visualizations", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
-              Media: <%= check_box_tag "filters[]", "media", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
-              Tutorials: <%= check_box_tag "filters[]", "tutorials", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
-            </div>
+  
+  <%=render layout: "shared/collapse", locals: {title: 'Contributions', width: '6', unique_id: 'contribs', should_hide: false} do %>
+    <%= form_tag users_path, method: 'get', id:'contribution_search', name: @user.username do%>
+      <div class="feed-top">
+          <div style="width:30%;float:left;">
+            <select name="sort" class="contribution_sort_select">
+              <option value="DESC">Newest First</option>
+              <option value="ASC">Oldest First</option>
+            </select>
           </div>
-        <%end%>
+          <div style="width:50%;float:left;margin-left:20px;">
+            <%= text_field_tag :search, params[:search], class:'search-query'%>
+          </div>
+          <div class="clear"></div>
+          <div style="margin-bottom:10px;">
+            Projects <%= check_box_tag "filters[]", "projects", false, class: 'contribution_type_checkbox'%>&nbsp;&nbsp;&nbsp;
+            DataSets <%= check_box_tag "filters[]", "data_sets", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
+            Visualizations <%= check_box_tag "filters[]", "visualizations", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
+            Media <%= check_box_tag "filters[]", "media", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
+            Tutorials <%= check_box_tag "filters[]", "tutorials", false, class: 'contribution_type_checkbox' %>&nbsp;&nbsp;&nbsp;
+          </div>
+        </div>
+      <%= hidden_field_tag "page", params[:page].to_i %>
+      <div id="contributions">
       </div>
-    </div>
-    <div id="contributions">
-    </div>
-    <div class="feed-bottom">
-  </div>
-</div> 
+      <div class="feed-bottom" style="text-align: center; padding: 5px">
+          <a href="#" class="pagebck"><<</a>
+          <span id="pageLabel">Page 1 of 1</span>
+          <a href="#" class="pagefwd">>></a>
+      </div>
+    <%end%>
+  <%end%>

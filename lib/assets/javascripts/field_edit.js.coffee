@@ -1,15 +1,17 @@
 $ ->
 
   hide_upload = ->
-    if ($ '#collapsefields div table tbody tr').size() == 1
+    if ($ '#collapsefields div table tbody tr').size() == 0
       ($ '#collapsecreate_data_set').hide()
     else
       ($ '#collapsecreate_data_set').show()
 
-      
-  hide_upload();  
-  
-  #This is where we edit 
+  delayed_hide = -> setTimeout( (-> hide_upload()), 200 )
+
+
+  delayed_hide()
+
+  #This is where we edit
   edit = ->
     name = ($ @).parent().parent().find '.field_name'
     unit = ($ @).parent().parent().find '.field_unit'
@@ -22,7 +24,7 @@ $ ->
 
     ($ @).hide()
     ($ @).siblings('.field_save_link').show()
-    
+
     $.ajax
       url: ($ @).parents('tr').attr 'project_url'
       type: "GET"
@@ -34,9 +36,9 @@ $ ->
           ($ @).siblings('.field_delete_link').show()
 
 
-  #This is where we save after editing    
+  #This is where we save after editing
   save = (e) ->
-  
+
     e.preventDefault()
     name = ($ @).parent().parent().find '.field_name'
     unit = ($ @).parent().parent().find '.field_unit'
@@ -53,7 +55,7 @@ $ ->
       data['field'] = {}
       data['field']['name'] = name_text
       data['field']['unit'] = unit_text
-      
+
       $.ajax
         url: $(@).attr('href')
         type: "PUT"
@@ -68,73 +70,73 @@ $ ->
         error: ->
           ($ name).find('.name_edit_box').errorFlash()
 
-      hide_upload();  
+      delayed_hide()
 
-            
+
     else
       ($ @).siblings('.field_edit_link').show()
       ($ @).hide()
-      ($ @).siblings('.field_delete_link').hide()  
-          
+      ($ @).siblings('.field_delete_link').hide()
+
     false
 
   remove_field = ->
-  
+
     row = ($ @).parent().parent()
     type = helpers.get_field_type ($ row).find('.field_type').text()
-    
+
     pair_field = null
 
-    if not (type in [(helpers.get_field_type "Latitude"), (helpers.get_field_type "Longitude")])  
+    if not (type in [(helpers.get_field_type "Latitude"), (helpers.get_field_type "Longitude")])
       $.ajax
         url: ($ @).attr('href')
         type: "DELETE"
         dataType: "json"
         success: (msg) =>
           ($ @).parent().parent().remove()
-          hide_upload()
+          delayed_hide()
         error: (msg) =>
           console.log msg
     else
       if confirm "Latitude and Longitude must be deleted together\nAre you sure you would like to continue?"
         sibs = $ row.siblings()
-        
+
         for sib in sibs
           do (sib) ->
             sib_type = ($ sib).find('td[class="field_type"]').text()
             if((sib_type is "Longitude") or (sib_type is "Latitude"))
               pair_field = sib
-        
+
         $.ajax
           url: ($ @).attr('href')
           type: "DELETE"
           dataType: "json"
           success: (msg) =>
             ($ @).parent().parent().remove()
-            hide_upload()
+            delayed_hide()
           error: (msg) =>
             console.log msg
-            
-            
+
+
         $.ajax
           url: ($ @).attr('href')
           type: "DELETE"
           dataType: "json"
           success: (msg) =>
             ($ @).parent().parent().remove()
-            hide_upload()
+            delayed_hide()
           error: (msg) =>
             console.log msg
-            
-    hide_upload();  
-    
+
+    delayed_hide()
+
     false
 
   addField = (type) ->
-  
+
     typeName = helpers.get_field_name type
     unit = helpers.get_default_unit type
-    
+
     $.ajax
       url: '/fields/'
       type: 'POST'
@@ -151,14 +153,14 @@ $ ->
         htmlStr += "<td class='field_unit'>#{unit}</td>"
         htmlStr += "<td class='field_type'>#{typeName}</td>"
         ($ '#create_data_set').show()
-        
+
         #if not (type in [(helpers.get_field_type "Latitude"), (helpers.get_field_type "Longitude")])
         htmlStr += "<td class='token'><a class='field_edit_link'><i class='icon-edit'></i></a>"
         htmlStr += "<a href='/fields/#{msg.id}' exp='#{msg.project_id}' field='#{msg.id}' class='field_save_link'><i class='icon-ok'></i></a>"
-        htmlStr += "<a href='" + window.location.pathname  + "' field='#{msg.id}' class='field_delete_link'><i class='icon-remove-circle'></i></a></td>"
+        htmlStr += "<a href='/fields/#{msg.id}"  + "' field='#{msg.id}' class='field_delete_link'><i class='icon-remove-circle'></i></a></td>"
         #else
           #htmlStr += "<td></td>"
-        
+
         htmlStr += "</tr>"
         ($ '.fields_table').append htmlStr
 
@@ -171,25 +173,24 @@ $ ->
         if not (type in [(helpers.get_field_type "Latitude"), (helpers.get_field_type "Longitude")])
           ($ '.field_edit_link').last().trigger 'click'
 
-    hide_upload();  
-          
+    delayed_hide()
+
   ($ '.field_edit_link').click edit
   ($ '.field_save_link').click save
   ($ '.field_delete_link').click remove_field
 
   ($ '.add_timestamp_field').click ->
-    addField helpers.get_field_type 'Timestamp'
+    addField helpers.get_field_type('Timestamp')
 
   ($ '.add_number_field').click ->
-    addField helpers.get_field_type 'Number'
+    addField helpers.get_field_type('Number')
 
   ($ '.add_text_field').click ->
-    addField helpers.get_field_type 'Text'
+    addField helpers.get_field_type('Text')
 
   ($ '.add_location_field').click ->
-    addField helpers.get_field_type 'Latitude'
-    addField helpers.get_field_type 'Longitude'
+    addField helpers.get_field_type('Latitude')
+    addField helpers.get_field_type('Longitude')
     ($ '#add-field-dropdown ul li a.add_location_field').hide()
 
-    
-  
+

@@ -21,7 +21,3 @@ $ ->
 
     keys = Object.keys sort
     data.push {id: key, values: sort[key] } for key in keys
-
-    editableGrid = new EditableGrid "DemoGridAttach"
-    editableGrid.load {metadata: metadata, data: data}
-    editableGrid.renderGrid "tablecontent", "testgrid table editablegrid"

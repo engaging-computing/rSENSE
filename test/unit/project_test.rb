@@ -49,9 +49,14 @@ class ProjectTest < ActiveSupport::TestCase
      assert_default_nil( @project, @project.featured_media_id )
    end
 
-   #Passes if hidden is false
+   # Passes if hidden is false
    test "hidden is false" do
      assert_default_false( @project, @project.hidden )
+   end
+   
+   # Passes if featured_at is nil
+   test "featured_at is nil" do
+   	assert_default_nil( @project, @project.featured_at )
    end
    
   

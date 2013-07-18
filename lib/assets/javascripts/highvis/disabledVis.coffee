@@ -32,13 +32,13 @@ $ ->
     class window.DisabledVis extends BaseVis
         constructor: (@canvas) -> 
 
-        motion_err = "Motion Chart could not be displayed<br>A time field was not found in this project"
-        time_err = "Timeline could not be displayed<br>Either a time field was not found or there were not enough data"
-        scatter_err = "Scatter Chart could not be displayed<br>Either two numeric fields were not found or there were not enough data"
-        histogram_err = "Histogram could not be displayed<br>Either no numeric fields were found, or there were not enough data"
-        bar_err = "Bar Chart could not be displayed<br>Either no numeric fields were found, or there were not enough data"
-        map_err = "Map could not be displayed<br>No geographic data were found"
-        photos_err = "There are no photos to display"
+        motion_err = "<div class='novis_message'><img src='/assets/novis_motion.png'><br><br>A time field was not found<br>Cannot display Motion Chart</div>"
+        time_err = "<div class='novis_message'><img src='/assets/novis_timeline.png'><br><br>Either a time field was not found or there were not enough data<br>Cannot display Timeline visualization</div>"
+        scatter_err = "<div class='novis_message'><img src='/assets/novis_scatter.png'><br><br>Either two numeric fields were not found or there were not enough data<br>Cannot display Scatter Chart visualization</div>"
+        histogram_err = "<div class='novis_message'><img src='/assets/novis_histogram.png'><br><br>Either no numeric fields were found or there were not enough data<br>Cannot display Histogram</div>"
+        bar_err = "<div class='novis_message'><img src='/assets/novis_bar.png'><br><br>Either no numeric fields were found or there were not enough data<br>Cannot display Bar Chart visualization</div>"
+        map_err = "<div class='novis_message'><img src='/assets/novis_map.png'><br><br>No geographic data found<br>Cannot display Map visualization</div>"
+        photos_err = "<div class='novis_message'><img src='/assets/novis_photo.png'><br><br>There are no photos to display</div>"
         
         start: ->  
             ($ '#' + @canvas).show()

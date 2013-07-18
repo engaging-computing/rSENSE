@@ -9,8 +9,30 @@ class MediaObjectsController < ApplicationController
     recur = params.key?(:recur) ? params[:recur] : false
     
     respond_to do |format|
-      format.html # show.html.erb
+      format.html
       format.json { render json: @media_object.to_hash(recur) }
+    end
+  end
+  
+  # PUT /media_objects/1
+  # PUT /media_objects/1.json
+  def update
+    @media_object = MediaObject.find(params[:id])
+    editUpdate = params[:media_object].to_hash
+    success = false
+    
+    if can_edit? @media_object
+      success = @media_object.update_attributes(editUpdate)
+    end
+    
+    respond_to do |format|
+      if success
+        format.html { redirect_to @media_object, notice: 'Media Object was successfully updated.' }
+        format.json { render json:{}, status: :ok }
+      else
+        format.html { render action: "edit" }
+        format.json { render json: @media_object.errors, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -20,6 +42,11 @@ class MediaObjectsController < ApplicationController
     @media_object = MediaObject.find(params[:id])
     
     if can_delete?(@media_object)
+      
+      if !@media_object.project_id.nil? && @media_object.project.featured_media_id == @media_object.id
+        @media_object.project.featured_media_id = nil
+        @media_object.project.save
+      end
       
       @media_object.destroy
 

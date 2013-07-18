@@ -109,17 +109,50 @@ class UsersController < ApplicationController
       @contributions.sort! {|a,b| b.created_at <=> a.created_at}
     end
     
+    page = params[:page].to_i
+    
+    @totalPages = (@contributions.length/5.0).ceil
+    
+    @lastPage = false
+    if page+1 == @totalPages.to_i
+      @lastPage = true
+    end
+    
+    @contributions = @contributions[page*5..(page*5)+4]
+    
     respond_to do |format|
       format.html { render partial: "display_contributions" }
     end
     
   end
 
+  # GET /users/new
+  # GET /users/new.json
+  def new
+    @user = User.new
+
+    respond_to do |format|
+      format.html # new.html.erb
+      format.json { render json: @user.to_hash(false) }
+    end
+  end
+  
   # GET /users/1/edit
   def edit
     @user = User.find_by_username(params[:id])
   end
 
+  # GET /users/new
+  # GET /users/new.json
+  def new
+    @user = User.new
+
+    respond_to do |format|
+      format.html # new.html.erb
+      format.json { render json: @user }
+    end
+  end
+  
   # POST /users
   # POST /users.json
   def create

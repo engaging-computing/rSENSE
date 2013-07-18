@@ -11,6 +11,7 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 //
+//= require constants
 //= require jquery
 //= require helpers
 //= require dataset_name
@@ -27,16 +28,15 @@
 //= require field_edit.js.coffee
 //= require collapse_link_flipper.js.coffee
 //= require validator
-//= require editablegrid-2.0.1.js
-//= require editablegrid_utils.js
-//= require editablegrid_renderers.js
-//= require editablegrid_editors.js
-//= require editablegrid_validators.js
+//= require infinite_scroll
 //= require isotope/jquery.isotope.js
 //= require jquery.form.js
 //= require jquery.qrcode.min.js
-//
+//= require bootstrap-datetimepicker.js
 //= require editTable
+//
+//= require raptorize.js
+//= require raptorize-konami.js
 //
 // Visualization stuff follows
 //

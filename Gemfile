@@ -47,3 +47,6 @@ gem 'bson_ext'
 
 # To allow coffescript views
 gem 'coffeebeans'
+
+# Include newer version of WEBrick
+gem 'webrick', '1.3.1'

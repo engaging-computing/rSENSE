@@ -1,5 +1,5 @@
 $ ->
-  if namespace.controller is "data_sets" and namespace.action is "editTable"
+  if namespace.controller is "data_sets" and namespace.action is "edit"
 
     settings =
       buttons: ['close', 'add', 'save']
@@ -11,3 +11,4 @@ $ ->
       debug: true
 
     ($ '#editTable').editTable(settings)
+    

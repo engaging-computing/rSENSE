@@ -16,9 +16,9 @@ class ProjectsController < ApplicationController
     end
 
     if sort=="ASC" or sort=="DESC"
-      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: 100).order("created_at #{sort}")
+      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: 10).order("created_at #{sort}")
     else
-      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: 100).order("like_count DESC")
+      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: 10).order("like_count DESC")
     end
 
     #Featured list
@@ -105,20 +105,20 @@ class ProjectsController < ApplicationController
     hideUpdate  = editUpdate.extract_keys!([:hidden])
     adminUpdate = editUpdate.extract_keys!([:featured, :is_template])
     success = false
-    
+
     #EDIT REQUEST
-    if can_edit?(@project) 
+    if can_edit?(@project)
       success = @project.update_attributes(editUpdate)
     end
-    
+
     #HIDE REQUEST
-    if can_hide?(@project) 
+    if can_hide?(@project)
       success = @project.update_attributes(hideUpdate)
     end
-    
+
     #ADMIN REQUEST
-    if can_admin?(@project) 
-      
+    if can_admin?(@project)
+
       if adminUpdate.has_key?(:featured)
         if adminUpdate['featured'] == "1"
           adminUpdate['featured_at'] = Time.now()
@@ -126,7 +126,7 @@ class ProjectsController < ApplicationController
           adminUpdate['featured_at'] = nil
         end
       end
-      
+
       success = @project.update_attributes(adminUpdate)
     end
 
@@ -144,25 +144,25 @@ class ProjectsController < ApplicationController
   # DELETE /projects/1
   # DELETE /projects/1.json
   def destroy
-    
+
     @project = Project.find(params[:id])
-    
+
     if can_delete?(@project)
-      
+
       @project.data_sets.each do |d|
         d.hidden = true
         d.user_id = -1
         d.save
       end
-      
+
       @project.media_objects.each do |m|
         m.destroy
       end
-      
+
       @project.user_id = -1
       @project.hidden = true
       @project.save
-      
+
       respond_to do |format|
         format.html { redirect_to projects_url }
         format.json { render json: {}, status: :ok }
@@ -386,7 +386,7 @@ class ProjectsController < ApplicationController
           if( skip == 0 )
           else
             row.each_with_index do |data_point, i|
-              if data_point == ""
+              if( data_point == "" or data_point.nil? )
                 col[i].push [ data_point ]
               else
                 col[i].push [ data_point.strip() ]
