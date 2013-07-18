@@ -11,6 +11,7 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 //
+//= require constants
 //= require jquery
 //= require helpers
 //= require dataset_name
@@ -27,6 +28,7 @@
 //= require field_edit.js.coffee
 //= require collapse_link_flipper.js.coffee
 //= require validator
+//= require infinite_scroll
 //= require isotope/jquery.isotope.js
 //= require jquery.form.js
 //= require jquery.qrcode.min.js
