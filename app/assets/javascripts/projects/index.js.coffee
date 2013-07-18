@@ -23,6 +23,7 @@ $ ->
 
       $('#projects').append(newItem).isotope('insert', newItem)
 
+
     intId = 0
 
     $("#projects_search").submit ->
@@ -52,9 +53,13 @@ $ ->
 
           reLayout()
           
-          clearInterval intId
-          intId = setInterval populate_projects, 500
-          ($ '#load_projects').show()
+          if data.length == 10
+            clearInterval intId
+            intId = setInterval populate_projects, 400
+            ($ '#load_projects').show()
+          else
+            clearInterval intId
+            ($ '#load_projects').hide()
 
       return false
 
