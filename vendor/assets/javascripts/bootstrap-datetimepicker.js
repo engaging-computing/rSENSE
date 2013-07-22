@@ -988,9 +988,9 @@
           });
         }
       } else {
-        this.$element.on({
-          'change': $.proxy(this.change, this)
-        }, 'input');
+//         this.$element.on({
+//           'change': $.proxy(this.change, this)
+//         }, 'input');
         if (this.options.maskInput) {
           this.$element.on({
             'keydown': $.proxy(this.keydown, this),

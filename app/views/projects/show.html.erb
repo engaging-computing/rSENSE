@@ -47,7 +47,7 @@
         <div id="dataset_list" <% if @project.data_sets.count == 0 %> style="display:none;" <% end %> >
 
           <div class="feed-top">
-            <input type="button" class="btn btn-info" value="Visualize" id="vis_button"/>
+            <input type="button" class="btn btn-info" value="Visualize" id="vis_button" href="/projects/<%=@project.id%>/data_sets/"/>
             <div class="pull-right">
               <input type="checkbox" id="check_selector"/>
             </div>
@@ -97,8 +97,8 @@
                   <% end %>
                 </div>
 
-                <div class="selector">
-                  <input type="checkbox" class="pull-right" id="project_<%=params[:id]%>_session_<%=s.id%>"/>
+                <div class="ds_selector">
+                  <input type="checkbox" class="pull-right" id="ds_<%=s.id%>"/>
                 </div>
               </div>
 
@@ -118,15 +118,15 @@
       <div class="row-fluid">
         <div class="span4 center">
         <%= link_to :controller => :data_sets, :action => :manualEntry, :pid => @project.id do %>
-          <img class="hoverimage" style="height: 75px;" src="/assets/manual.svg" /><br />Manual Entry
+          <img class="hoverimage" src="/assets/manual.svg" /><br />Manual Entry
         <% end %>
         </div>
         <div class="span4 center">
-          <a id="upload_csv" href=""><img class="hoverimage" style="height: 75px;" src="/assets/upload.svg" /><br />
+          <a id="upload_csv" href=""><img class="hoverimage" src="/assets/upload.svg" /><br />
           Upload CSV</a>
         </div>
         <div class="span4 center">
-          <a id="google_doc" href=""><img class="hoverimage" style="height: 75px;" src="/assets/google.svg" /><br />
+          <a id="google_doc" href=""><img class="hoverimage" src="/assets/google.svg" /><br />
           Google Doc</a>
         </div>
         <div class="clear">

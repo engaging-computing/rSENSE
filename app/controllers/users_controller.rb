@@ -14,7 +14,7 @@ class UsersController < ApplicationController
         sort = "DESC"
     end
     
-    @users = User.search(params[:search]).paginate(page: params[:page], per_page: 8).order("created_at #{sort}")
+    @users = User.search(params[:search]).paginate(page: params[:page], per_page: 10).order("created_at #{sort}")
     
     respond_to do |format|
       format.html { render status: :ok }

@@ -146,7 +146,7 @@ $ ->
 
           for col in time_cols
             do (col) ->
-              ($ row).children().eq(col).find('input').replaceWith "<div class='input-append datepicker'><input class='validate_timestamp input-small' type='text' data-format='dd/MM/yyyy hh:mm:ss' value='#{ ($ row).find('input').eq(col).val() }' /><span class='add-on'><i class='icon-calendar'></i></span></div>"
+              ($ row).children().eq(col).find('input').replaceWith "<div class='input-append datepicker'><input class='validate_timestamp input-small' type='text' data-format='yyyy/MM/dd hh:mm:ss' value='#{ ($ row).find('input').eq(col).val() }' /><span class='add-on'><i class='icon-calendar'></i></span></div>"
 
 
         add_row = (tab) ->

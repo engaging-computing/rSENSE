@@ -143,9 +143,12 @@ div.dataset.feed-even, div.dataset.feed-odd, div#dataset_list div.feed-top{
     }
   }
   
-  .selector{
+  .ds_selector{
     width:15px; 
     display:inline-block;
   }
 }
 
+.hoverimage{
+  height: 75px;
+}
