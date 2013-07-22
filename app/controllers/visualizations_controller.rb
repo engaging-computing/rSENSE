@@ -15,9 +15,9 @@ class VisualizationsController < ApplicationController
     end
     
     if sort=="ASC" or sort=="DESC"
-      @visualizations = Visualization.search(params[:search]).paginate(page: params[:page], per_page: 100).order("created_at #{sort}")
+      @visualizations = Visualization.search(params[:search]).paginate(page: params[:page], per_page: 10).order("created_at #{sort}")
     else
-      @visualizations = Visualization.search(params[:search]).paginate(page: params[:page], per_page: 100).order("like_count DESC")
+      @visualizations = Visualization.search(params[:search]).paginate(page: params[:page], per_page: 10).order("like_count DESC")
     end
     
     #Featured list
