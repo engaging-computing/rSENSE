@@ -264,7 +264,6 @@ $ ->
     # redirects the user to the view sessions page (Vis page)
     ($ '#vis_button').click (e) ->
       targets = ($ @).parent().parent().parent().find('div input:checked')
-      console.log targets
       ses = ($ targets[0]).attr 'id'
       ses = ses.split '_'
       pid = ses[1]
