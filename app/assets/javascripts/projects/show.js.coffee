@@ -263,35 +263,31 @@ $ ->
     # Takes all sessions that are checked, appends its id to the url and
     # redirects the user to the view sessions page (Vis page)
     ($ '#vis_button').click (e) ->
-      targets = ($ @).parent().parent().parent().find('div input:checked')
-      ses = ($ targets[0]).attr 'id'
-      ses = ses.split '_'
-      pid = ses[1]
-      ses_list = (grab_ses t for t in targets )
-      url = '/projects/' + pid + '/data_sets/' + ses_list.join ','
-      window.location = url
+      targets = ($ document).find(".dataset .ds_selector input:checked")
+      ds_list = (get_ds_id t for t in targets)
+      window.location = ($ this).attr("href") + ds_list
 
     # get the session number for viewing vises
-    grab_ses = (t) ->
-      ses = ($ t).attr 'id'
-      ses = ses.split '_'
-      ses[3]
+    get_ds_id = (t) ->
+      ds_id = ($ t).attr 'id'
+      ds_id = ds_id.split '_'
+      ds_id[1]
 
     #Select all/none check box in the data sets box
     ($ "#check_selector").click ->
       if ($ this).is(":checked")
-        ($ this).parent().parent().parent().find("[id^=project_]").each (i,j) =>
+        ($ this).parent().parent().parent().find("[id^=ds_]").each (i,j) =>
           ($ j).prop("checked",true)
         ($ '#vis_button').prop("disabled",false)
       else
-        ($ this).parent().parent().parent().find("[id^=project_]").each (i,j) =>
+        ($ this).parent().parent().parent().find("[id^=ds_]").each (i,j) =>
           ($ j).prop("checked",false)
           ($ '#vis_button').prop("disabled",true)
 
     #Turn off visualize button on page load, and when nothings checked
     check_for_selection = =>
       should_disable = true
-      ($ document).find("[id^=project_]").each (i,j) =>
+      ($ document).find("[id^=ds_]").each (i,j) =>
         if(($ j).is(":checked"))
           should_disable = false
         $('#vis_button').prop("disabled", should_disable)
@@ -299,7 +295,7 @@ $ ->
     ($ '#vis_button').prop("disabled",true)
 
     #Add click events to all check boxes in the data_sets box
-    ($ document).find("[id^=project_]").each (i,j) =>
+    ($ document).find("[id^=ds_]").each (i,j) =>
       ($ j).click check_for_selection
 
     #Add submit event to project filters form. Performs AJAX request to update project filters
