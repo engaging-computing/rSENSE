@@ -292,7 +292,7 @@ $ ->
           should_disable = false
         $('#vis_button').prop("disabled", should_disable)
 
-    ($ '#vis_button').prop("disabled",true)
+    check_for_selection()
 
     #Add click events to all check boxes in the data_sets box
     ($ document).find("[id^=ds_]").each (i,j) =>
