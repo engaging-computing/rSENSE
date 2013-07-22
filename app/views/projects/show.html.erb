@@ -47,7 +47,7 @@
         <div id="dataset_list" <% if @project.data_sets.count == 0 %> style="display:none;" <% end %> >
 
           <div class="feed-top">
-            <input type="button" class="btn btn-info" value="Visualize" id="vis_button"/>
+            <input type="button" class="btn btn-info" value="Visualize" id="vis_button" href="/projects/<%=@project.id%>/data_sets/"/>
             <div class="pull-right">
               <input type="checkbox" id="check_selector"/>
             </div>
@@ -97,8 +97,8 @@
                   <% end %>
                 </div>
 
-                <div class="selector">
-                  <input type="checkbox" class="pull-right" id="project_<%=params[:id]%>_session_<%=s.id%>"/>
+                <div class="ds_selector">
+                  <input type="checkbox" class="pull-right" id="ds_<%=s.id%>"/>
                 </div>
               </div>
 
