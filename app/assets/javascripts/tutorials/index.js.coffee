@@ -26,6 +26,9 @@ $ ->
       ($ '#tutorials').append(newItem).isotope('insert', newItem)
 
     ($ "#tutorials_search").submit ->
+    
+      ($ '#hidden_pagination').val(1)
+    
       $.ajax
         url: this.action
         data: ($ this).serialize()
