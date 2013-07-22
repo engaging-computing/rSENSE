@@ -1,43 +1,37 @@
 <div class="row">
   <div class="span12">
-	<div class="row">
-	  <div class="span12">
-	    <%=form_tag project_templates_path, method: 'get', id: 'project_templates_search', class:'navbar-search' do%>
+    <div class="row">
+      <div class="span12">
+        <%=form_tag project_templates_path, method: 'get', id: 'project_templates_search', class:'navbar-search' do%>
 
-        <!-- hidden input for pagination -->
-        <input type="text" id="hidden_pagination" name="page" value="1" style="display: none;" />
+          <!-- hidden input for pagination -->
+          <input type="text" id="hidden_pagination" name="page" value="1" style="display: none;" />
 
-		  <div class="isotope-top">
-	      <h1>Experiment Store</h1>
-		  <p>Find an project template to use for your own project<p>
-	      	<div style="width:20%;float:left;">
+          <div class="isotope-top">
+            <h1>Experiment Store</h1>
+            <p>Find an project template to use for your own project<p>
+            <div class="order_selector">
               <select name="sort" class="project_templates_sort_select">
                 <option value="DESC">Newest First</option>
                 <option value="ASC">Oldest First</option>
                 <option value="RATING">Rating</option>
               </select>
             </div>
-            <div style="width:40%;float:left;margin-left:20px;">
+            <div class="search_box">
               <%= text_field_tag :search, params[:search], class:'search-query'%>
             </div>
-            <div style="width:20%;float:left;margin-left:40px;">
+            <div class="submit_button">
               <%= submit_tag "Search", name: nil, class:'btn'%>
             </div>
             <div class="clear"></div>
-            <!--<div style="margin-bottom:10px;">
-              Math: <%= check_box_tag "filters[]", "%math%", false, class: 'project_templates_filter_checkbox'%>&nbsp;&nbsp;&nbsp;
-              Physics: <%= check_box_tag "filters[]", "%physics%", false, class: 'project_templates_filter_checkbox' %>&nbsp;&nbsp;&nbsp;
-              Chemistry: <%= check_box_tag "filters[]", "%chemistry%", false, class: 'project_templates_filter_checkbox' %>&nbsp;&nbsp;&nbsp;
-              Earth: <%= check_box_tag "filters[]", "%earth%", false, class: 'project_templates_filter_checkbox' %>&nbsp;&nbsp;&nbsp;
-              Biology: <%= check_box_tag "filters[]", "%biology%", false, class: 'project_templates_filter_checkbox' %>
-            </div>-->
-	      </div>
-	    <%end%>
-	  </div>
-	</div>
+          </div>
+        <%end%>
+      </div>
+    </div>
+    
     <div class="row">
-      <div id="project_templates" class="span12" style="overflow:visible;z-index:0;">
-        <div style="width:100%;height:100%;border:0px solid grey;overflow:visible;padding:10px;">
+      <div id="project_templates" class="span12 isotope_container">
+        <div class="isotope_pane">
 
         </div>
       </div>
