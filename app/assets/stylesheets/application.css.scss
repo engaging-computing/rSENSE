@@ -269,6 +269,34 @@ input.object_hidden_checkbox
   {
    color: white; 
   }
-  
-  
+}
+
+.isotope-top{
+  .order_selector{
+    width: 20%;
+    float: left;
+  }
+  .search_box{
+    width: 40%;
+    float: left;
+    margin-left: 20px; 
+  }
+  .submit_button{
+    width: 20%;
+    float: left;
+    margin-left: 40px;
+  }
+}
+
+.isotope_container{
+  overflow:visible;
+  z-index:0;
+
+  .isotop_pane{
+    width:100%;
+    height:100%;
+    border:0px solid grey;
+    overflow:visible;
+    padding:10px;
+  }
 }
