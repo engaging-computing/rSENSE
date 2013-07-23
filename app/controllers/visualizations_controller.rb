@@ -39,7 +39,7 @@ class VisualizationsController < ApplicationController
     # The finalized data object
     @Data = { savedData: @visualization.data, savedGlobals: @visualization.globals }
 
-    recur = params.key?(:recur) ? params[:recur] : false
+    recur = params.key?(:recur) ? params[:recur].to_bool : false
 
     respond_to do |format|
       format.html { render :layout => 'applicationWide' }
