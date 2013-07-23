@@ -320,9 +320,6 @@ $ ->
             # Write HTML
             ($ '#controldiv').append controls
 
-            ($ '#3w').click () ->
-              alert 'hi'
-
             ($ '#zoomResetButton').button()
             ($ '#zoomResetButton').click (e) =>
               @chart.zoomOut()
