@@ -203,17 +203,17 @@ $ ->
 
             if not (globals.options? and globals.options.isEmbed?)
               controls += "<div class='inner_control_div'>"
-              controls += "<button id='saveVisButton' class='save_button'>Save Visualization </button>"
+              controls += "<button id='saveVisButton' class='save_button btn'>Save Visualization </button>"
               controls += "</div>"
 
             if @chart?
                 
                 controls += "<div class='inner_control_div'>"
-                controls += "<button id='downloadVisButton' class='save_button'> Download Visualization </button>"
+                controls += "<button id='downloadVisButton' class='save_button btn'> Download Visualization </button>"
                 controls += "</div>"
                 
                 controls += "<div class='inner_control_div'>"
-                controls += "<button id='printVisButton' class='save_button'> Print Visualization </button>"
+                controls += "<button id='printVisButton' class='save_button btn'> Print Visualization </button>"
                 controls += "</div>"
 
             controls += '</div></div>'
