@@ -56,7 +56,7 @@ class ProjectsController < ApplicationController
       @has_fields = true
     end
 
-    recur = params.key?(:recur) ? params[:recur] : false
+    recur = params.key?(:recur) ? params[:recur].to_bool : false
 
     respond_to do |format|
       format.html # show.html.erb

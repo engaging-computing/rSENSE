@@ -50,18 +50,28 @@ class DataSet < ActiveRecord::Base
   end
   
   def to_hash(recurse = true)
+    data = MongoData.find_by_data_set_id(self.id)
+    
+    count = 0
+    data['data'].each do
+      count +=1
+    end
+    
     h = {
       id: self.id,
       name: self.title,
       hidden: self.hidden,
       url: UrlGenerator.new.data_set_url(self),
-      createdAt: self.created_at.strftime("%B %d, %Y")
+      createdAt: self.created_at.strftime("%B %d, %Y"),
+      size: count * self.project.fields.count
     }
     
     if recurse
       h.merge! ({
         owner: self.owner.to_hash(false),
-        project: self.project.to_hash(false)
+        project: self.project.to_hash(false),
+        fields: self.project.fields.map {|f| f.to_hash(false)},
+        data: data
       })
     end
     h
