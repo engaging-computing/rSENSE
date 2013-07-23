@@ -282,8 +282,8 @@ $ ->
             
             controls += "<h4 class='clean_shrink'>Zoom</h4>"
             controls += '<div class="inner_control_div">'
-            controls += "<button id='zoomResetButton' class='zoom_reset_button'>Reset Zoom </button>"
-            controls += "<button id='zoomOutButton' class='zoom_out_button'>Zoom Out </button>"
+            controls += "<button id='zoomResetButton' class='zoom_reset_button btn'>Reset Zoom </button>"
+            controls += "<button id='zoomOutButton' class='zoom_out_button btn'>Zoom Out </button>"
 
             controls += "<h4 class='clean_shrink'>Display Mode</h4>"
 
@@ -311,14 +311,17 @@ $ ->
                 controls += "</div>"
 
             if elaspedTimeButton
-                controls += "<div class='inner_control_div'>"
-                controls += "<button id='elaspedTimeButton' class='save_button'>Generate Elapsed Time </button>"
+                controls += "<div class='inner_control_div' style='text-align:center'>"
+                controls += "<button id='elaspedTimeButton' class='save_button btn'>Generate Elapsed Time </button>"
                 controls += "</div>"
                 
             controls+= "</div></div>"
             
             # Write HTML
             ($ '#controldiv').append controls
+
+            ($ '#3w').click () ->
+              alert 'hi'
 
             ($ '#zoomResetButton').button()
             ($ '#zoomResetButton').click (e) =>
