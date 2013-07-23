@@ -52,15 +52,14 @@ class DataSet < ActiveRecord::Base
   def to_hash(recurse = true)
     data = MongoData.find_by_data_set_id(self.id)
     
-    count = data[:data].length
-    
     h = {
       id: self.id,
       name: self.title,
       hidden: self.hidden,
       url: UrlGenerator.new.data_set_url(self),
       createdAt: self.created_at.strftime("%B %d, %Y"),
-      size: count * self.project.fields.count
+      fieldCount: self.project.fields.length,
+      datapointCount: data[:data].length
     }
     
     if recurse
