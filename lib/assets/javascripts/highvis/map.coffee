@@ -127,9 +127,9 @@ $ ->
                     
                     newMarker = new google.maps.Marker
                       position: latlng
-                      map: @gmap
                       icon: pinImage
                       shadow: pinShadow
+#                       map: @gmap
 
                     google.maps.event.addListener newMarker, 'click', =>
                         info.open @gmap, newMarker
@@ -144,10 +144,21 @@ $ ->
                     @heatPoints[@HEATMAP_MARKERS][groupIndex].push latlng
 
             @gmap.fitBounds(latlngbounds)
+            
+            
+            clusterStyles = []
+            clusterStyles.push
+              url:
+              height:
+              width:
+            
+            @clusterer = new MarkerClusterer @gmap, [].concat.apply([], @markers),
+              maxZoom: 17
+              ignoreHidden: true
 
             # Hack to fix most occurances of bad default zooms
             fixZoom = =>
-                if @gmap.getZoom() > 18
+                if @gmap.getZoom() > 17
                     @gmap.setZoom(18)
             
             setTimeout fixZoom, 300
@@ -178,6 +189,7 @@ $ ->
                 for mark in markGroup
                     mark.setVisible ((index in globals.groupSelection) and @visibleMarkers is 1)
             
+            @clusterer.repaint()
             
             super()
             
