@@ -264,11 +264,30 @@ input.object_hidden_checkbox
 }
 
 .visible-tablet, .visible-desktop, .visible-phone
-{
-  a, button
-  {
+{  
+
+  a.white, button.white{
    color: white; 
   }
+
+  
+  .pillbox{
+    padding-top:25px;
+    line-height:15px;
+    font-size:15px;
+    float:right;
+    
+    .phone{
+      margin-right:10px;
+      text-align:right;
+    }
+    .desktop-tablet{
+      margin-right:-20px;
+    }
+  }
+  
+    
+     
 }
 
 .isotope-top{
