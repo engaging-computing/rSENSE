@@ -79,13 +79,13 @@
             <div class="pillbox desktop-tablet">
               <% if @cur_user == nil %>
                 <div class="btn-group">
-                  <a href="" class="login btn btn-small btn-info" style="color:white;">Login</a>
-                  <a href="<%= new_user_path %>" style="color:white;" class="btn btn-small btn-info">Register</a>
+                  <a href="" class="login btn btn-small btn-info white">Login</a>
+                  <a href="<%= new_user_path %>" class="btn btn-small btn-info white">Register</a>
                 </div>
               <% else %>
                 <div class="btn-group">
-                  <button class="btn btn-small btn-info"><a href="<%= user_path(@cur_user) %>"><%= @cur_user.name %></a></button>
-                  <button class="btn btn-small dropdown-toggle btn-info" data-toggle="dropdown">
+                  <button class="btn btn-small btn-info white"><a href="<%= user_path(@cur_user) %>" class="white"><%= @cur_user.name %></a></button>
+                  <button class="btn btn-small dropdown-toggle btn-info white" data-toggle="dropdown">
                     <span class="caret"></span>
                   </button>
                   <ul class="dropdown-menu">
@@ -104,12 +104,12 @@
             <div class="pillbox phone">
               <% if @cur_user == nil %>
                 <div class="btn-group">
-                  <a href="" class="login btn btn-small btn-info" style="color:white;">Login</a>
-                  <a href="<%= new_user_path %>" style="color:white;" class="btn btn-small btn-info">Register</a>
+                  <a href="" class="login btn btn-small btn-info white">Login</a>
+                  <a href="<%= new_user_path %>"  class="btn btn-small btn-info white">Register</a>
                 </div>
               <% else %>
                 <div class="btn-group">
-                  <button class="btn btn-small btn-info"><a href="<%= user_path(@cur_user) %>" style="color:white;"><%= @cur_user.name %></a></button>
+                  <button class="btn btn-small btn-info"><a href="<%= user_path(@cur_user) %>" class="white"><%= @cur_user.name %></a></button>
                   <button class="btn btn-small dropdown-toggle btn-info" data-toggle="dropdown">
                     <span class="caret"></span>
                   </button>
