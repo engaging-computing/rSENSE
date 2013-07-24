@@ -264,10 +264,12 @@ input.object_hidden_checkbox
 }
 
 .visible-tablet, .visible-desktop, .visible-phone
-{
-  a, button{
+{  
+
+  a.white, button{
    color: white; 
   }
+
   
   .pillbox{
     padding-top:25px;
