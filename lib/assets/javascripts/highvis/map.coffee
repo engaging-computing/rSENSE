@@ -77,6 +77,13 @@ $ ->
                 mapTypeId: google.maps.MapTypeId.ROADMAP
 
             @gmap = new google.maps.Map(document.getElementById(@canvas), mapOptions)
+            initOMS()
+            @oms = new OverlappingMarkerSpiderfier(@gmap)
+            
+            info = new google.maps.InfoWindow()
+            @oms.addListener 'click', (marker, ev) =>
+              info.setContent marker.desc
+              info.open @gmap, marker
             
             for dataPoint in data.dataPoints
                 lat = lon = null
@@ -113,10 +120,6 @@ $ ->
                         label += "<td><strong>#{dat}</strong></td></tr>"
 
                     label += "</table></div>"
-
-                    # make infowindow
-                    info = new google.maps.InfoWindow
-                        content: label
                         
                     if groupIndex in globals.groupSelection
                         latlngbounds.extend latlng
@@ -129,10 +132,9 @@ $ ->
                       position: latlng
                       icon: pinImage
                       shadow: pinShadow
-#                       map: @gmap
-
-                    google.maps.event.addListener newMarker, 'click', =>
-                        info.open @gmap, newMarker
+                      desc: label
+                      
+                    @oms.addMarker newMarker
                     
                     @markers[groupIndex].push newMarker
 
@@ -146,11 +148,11 @@ $ ->
             @gmap.fitBounds(latlngbounds)
             
             
-            clusterStyles = []
-            clusterStyles.push
-              url:
-              height:
-              width:
+#             clusterStyles = []
+#             clusterStyles.push
+#               url:
+#               height:
+#               width:
             
             @clusterer = new MarkerClusterer @gmap, [].concat.apply([], @markers),
               maxZoom: 17
