@@ -45,6 +45,8 @@
 //= require Hydrate
 //= require jquery.dataTables
 //= require jquery.prettyPhoto
+//= require markerclustererplus
+//= require oms
 //
 //= require highvis/savedVis
 //= require highvis/visUtils

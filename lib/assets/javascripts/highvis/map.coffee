@@ -77,6 +77,13 @@ $ ->
                 mapTypeId: google.maps.MapTypeId.ROADMAP
 
             @gmap = new google.maps.Map(document.getElementById(@canvas), mapOptions)
+            initOMS()
+            @oms = new OverlappingMarkerSpiderfier(@gmap)
+            
+            info = new google.maps.InfoWindow()
+            @oms.addListener 'click', (marker, ev) =>
+              info.setContent marker.desc
+              info.open @gmap, marker
             
             for dataPoint in data.dataPoints
                 lat = lon = null
@@ -113,10 +120,6 @@ $ ->
                         label += "<td><strong>#{dat}</strong></td></tr>"
 
                     label += "</table></div>"
-
-                    # make infowindow
-                    info = new google.maps.InfoWindow
-                        content: label
                         
                     if groupIndex in globals.groupSelection
                         latlngbounds.extend latlng
@@ -127,12 +130,11 @@ $ ->
                     
                     newMarker = new google.maps.Marker
                       position: latlng
-                      map: @gmap
                       icon: pinImage
                       shadow: pinShadow
-
-                    google.maps.event.addListener newMarker, 'click', =>
-                        info.open @gmap, newMarker
+                      desc: label
+                      
+                    @oms.addMarker newMarker
                     
                     @markers[groupIndex].push newMarker
 
@@ -144,10 +146,21 @@ $ ->
                     @heatPoints[@HEATMAP_MARKERS][groupIndex].push latlng
 
             @gmap.fitBounds(latlngbounds)
+            
+            
+#             clusterStyles = []
+#             clusterStyles.push
+#               url:
+#               height:
+#               width:
+            
+            @clusterer = new MarkerClusterer @gmap, [].concat.apply([], @markers),
+              maxZoom: 17
+              ignoreHidden: true
 
             # Hack to fix most occurances of bad default zooms
             fixZoom = =>
-                if @gmap.getZoom() > 18
+                if @gmap.getZoom() > 17
                     @gmap.setZoom(18)
             
             setTimeout fixZoom, 300
@@ -178,6 +191,7 @@ $ ->
                 for mark in markGroup
                     mark.setVisible ((index in globals.groupSelection) and @visibleMarkers is 1)
             
+            @clusterer.repaint()
             
             super()
             
