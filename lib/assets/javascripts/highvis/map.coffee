@@ -78,12 +78,16 @@ $ ->
 
             @gmap = new google.maps.Map(document.getElementById(@canvas), mapOptions)
             initOMS()
-            @oms = new OverlappingMarkerSpiderfier(@gmap)
+            @oms = new OverlappingMarkerSpiderfier @gmap,
+              keepSpiderfied: true
             
             info = new google.maps.InfoWindow()
             @oms.addListener 'click', (marker, ev) =>
               info.setContent marker.desc
               info.open @gmap, marker
+              
+            @oms.addListener 'unspiderfy', () =>
+              info.close()
             
             for dataPoint in data.dataPoints
                 lat = lon = null
@@ -123,15 +127,18 @@ $ ->
                         
                     if groupIndex in globals.groupSelection
                         latlngbounds.extend latlng
-                    
-                    pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|#{color.slice 1}", new google.maps.Size(21, 34), new google.maps.Point(0,0), new google.maps.Point(10, 34))
-                    
-                    pinShadow = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_shadow", new google.maps.Size(40, 37), new google.maps.Point(0, 0), new google.maps.Point(12, 35))
-                    
+
+                    pinSym =
+                      fillColor: color
+                      fillOpacity: 1
+                      path: google.maps.SymbolPath.CIRCLE
+                      strokeColor: "#000"
+                      strokeWeight: 2
+                      scale: 7
+                      
                     newMarker = new google.maps.Marker
                       position: latlng
-                      icon: pinImage
-                      shadow: pinShadow
+                      icon: pinSym
                       desc: label
                       
                     @oms.addMarker newMarker
@@ -148,15 +155,37 @@ $ ->
             @gmap.fitBounds(latlngbounds)
             
             
-#             clusterStyles = []
-#             clusterStyles.push
-#               url:
-#               height:
-#               width:
+            clusterStyles = []
+            clusterStyles.push
+              url: "/assets/cluster1.png"
+              height: 35
+              width:  35
+              textColor: '#FFF'
+              textSize: 10
+            clusterStyles.push
+              url: "/assets/cluster2.png"
+              height: 35
+              width:  35
+              textColor: '#FFF'
+              textSize: 11
+            clusterStyles.push
+              url: "/assets/cluster3.png"
+              height: 35
+              width:  35
+              textColor: '#FFF'
+              textSize: 12
+            clusterStyles.push
+              url: "/assets/cluster4.png"
+              height: 35
+              width:  35
+              textColor: '#FFF'
+              textSize: 12
             
             @clusterer = new MarkerClusterer @gmap, [].concat.apply([], @markers),
               maxZoom: 17
+              gridSize: 35
               ignoreHidden: true
+              styles: clusterStyles
 
             # Hack to fix most occurances of bad default zooms
             fixZoom = =>
