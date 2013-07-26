@@ -14,10 +14,16 @@ class VisualizationsController < ApplicationController
         sort = "DESC"
     end
     
-    if sort=="ASC" or sort=="DESC"
-      @visualizations = Visualization.search(params[:search]).paginate(page: params[:page], per_page: 10).order("created_at #{sort}")
+    if !params[:per_page].nil?
+        pagesize = params[:per_page]
     else
-      @visualizations = Visualization.search(params[:search]).paginate(page: params[:page], per_page: 10).order("like_count DESC")
+        pagesize = 10;
+    end
+    
+    if sort=="ASC" or sort=="DESC"
+      @visualizations = Visualization.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("created_at #{sort}")
+    else
+      @visualizations = Visualization.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("like_count DESC")
     end
     
     #Featured list
