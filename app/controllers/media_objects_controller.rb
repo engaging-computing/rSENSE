@@ -64,9 +64,7 @@ class MediaObjectsController < ApplicationController
   
   #POST /media_object/saveMedia
   def saveMedia
-    logger.info "----------------"
-    logger.info params
-    logger.info "----------------"
+    
     #Figure out where we are uploading data to
     data = params[:keys].split('/')
     target = data[0]
