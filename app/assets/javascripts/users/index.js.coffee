@@ -27,9 +27,12 @@ $ ->
     
         ($ '#hidden_pagination').val(1)
     
+        dataObject = ($ this).serialize()
+        dataObject += "&per_page=#{constants.INFINITE_SCROLL_ITEMS_PER}"
+    
         $.ajax
           url: this.action
-          data: ($ this).serialize()
+          data: dataObject
           success: (data, textStatus)->
 
             ($ '#users').isotope('remove', ($ '.item'))

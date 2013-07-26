@@ -7,9 +7,12 @@ $ ->
 
       ($ pager).val(parseInt(($ pager).val()) + 1)
 
+      dataObject = ($ form).serialize()
+      dataObject += "&per_page=#{constants.INFINITE_SCROLL_ITEMS_PER}"
+
       $.ajax
         url: ($ form).action
-        data: ($ form).serialize()
+        data: dataObject
         dataType: "json"
         success: (data, status) ->
 
