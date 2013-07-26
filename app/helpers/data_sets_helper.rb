@@ -3,14 +3,6 @@ module DataSetsHelper
   def data_set_edit_menu_helper(id, make_link = false)
     
     @data_set = DataSet.find_by_id(id)
-    
-    logger.info "------------------------------"
-    logger.info id
-    logger.info make_link
-    logger.info data_set_url
-    logger.info @data_set
-    logger.info "------------------------------"
-    
     datasets = params['datasets'].split(",").map {|n| n.to_i}
     datasets.delete id
     escapeLink = "#"
