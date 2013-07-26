@@ -1,40 +1,38 @@
 <p id="notice"><%= notice %></p>
 <div class="row">
-  <div class="span6">
-    <div class="row">
-      <div class="span6" align="center">
-        <div class="content-block grey_content">
-          <div class="row">
-              <div class="span2">
-                <%= image_tag Gravatar.new.url(@user), :style => "border-radius: 8px" %>
-              </div>
-            <div class="span3" style="padding-top:10px; text-align: left">
-              <span class="info_label" style="line-height: 30px;">First Name:</span> 
-              <%= user_edit_helper 'firstname', (can_edit? @user) %>
-              <br />
-              <%if can_edit? @user%>
-                <span class="info_label" style="line-height: 30px;">Last Name:</span>
-                <%= user_edit_helper 'lastname', (can_edit? @user) %>
-                <br />
-              <%end%>
-              <span class="info_label" style="line-height: 30px;">Username:</span>
-              <%= user_edit_helper 'username' %>
-              <br />
-              <span style="line-height: 30px;">Joined <%= time_ago_in_words(@user.created_at)%> ago</span>
-              <br />
-            </div>
-          </div>
-        </div> 
+  <div class="span3">
+    <div class="container-fluid well">
+      <div class="row-fluid">
+        <div class="span12 text-center">
+          <%= image_tag Gravatar.new.url(@user), :style => "border-radius: 8px" %>
+        </div>
+        <div class="span12 text-center" style="padding-top:10px;">
+          <span class="info_label" style="line-height: 30px;">First Name:</span> 
+          <%= user_edit_helper 'firstname', (can_edit? @user) %>
+          <br />
+          <%if can_edit? @user%>
+            <span class="info_label" style="line-height: 30px;">Last Name:</span>
+            <%= user_edit_helper 'lastname', (can_edit? @user) %>
+            <br />
+          <%end%>
+          <span class="info_label" style="line-height: 30px;">Username:</span>
+          <%= user_edit_helper 'username' %>
+          <br />
+          <span style="line-height: 30px;">Joined <%= time_ago_in_words(@user.created_at)%> ago</span>
+          <br />
+        </div>
       </div>
     </div>
+    
+    <hr />
     <div class="row">
-      <%=render layout: "shared/collapse", locals: {title: 'Description', width: '6', unique_id: 'description', should_hide: false} do %>
-          <%= user_redactor_helper (can_edit? @user)%>
+      <%= render layout: "shared/box", locals: {title: 'Description', width: '3', unique_id: 'box', should_hide: false } do %>
+        <%= user_redactor_helper (can_edit? @user)%>
       <%end%>
     </div>
   </div>
   
-  <%=render layout: "shared/collapse", locals: {title: 'Contributions', width: '6', unique_id: 'contribs', should_hide: false} do %>
+  <%=render layout: "shared/box", locals: {title: 'Contributions', width: '9', unique_id: 'contribs', should_hide: false} do %>
     <%= form_tag users_path, method: 'get', id:'contribution_search', name: @user.username do%>
       <div class="feed-top">
           <div style="width:30%;float:left;">
