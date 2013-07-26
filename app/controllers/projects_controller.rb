@@ -14,11 +14,17 @@ class ProjectsController < ApplicationController
     else
         sort = "DESC"
     end
+    
+    if !params[:per_page].nil?
+        pagesize = params[:per_page]
+    else
+        pagesize = 10;
+    end
 
     if sort=="ASC" or sort=="DESC"
-      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: 10).order("created_at #{sort}")
+      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("created_at #{sort}")
     else
-      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: 10).order("like_count DESC")
+      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("like_count DESC")
     end
 
     #Featured list
