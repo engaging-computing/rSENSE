@@ -273,6 +273,8 @@ $ ->
         ($ '#edit_table_save').click ->
 
           if table_validates(table)
+            
+            ($ '#edit_table_save').unbind()
 
             strip_table(table)
 
