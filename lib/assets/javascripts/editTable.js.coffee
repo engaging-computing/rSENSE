@@ -138,7 +138,7 @@ $ ->
 
           for col in lon_cols
             do (col) ->
-              ($ row).children().eq(col).find('input').replaceWith "<div class='input-append'><input class='validate_longitude input-small' id='appendedInput' type='text' value='#{ ($ row).find('input').eq(col).val() }' /><span class='add-on'><i class='icon-globe map_picker'></i></span></div>"
+              ($ row).children().eq(col).find('input').replaceWith "<div class='input-append'><input class='validate_longitude input-small' id='appendedInput' type='text' value='#{ ($ row).find('input').eq(col).val() }' /><span class='add-on'><a href='#' ><i class='icon-globe map_picker'></i></a></span></div>"
 
           for col in text_cols
             do (col) ->
@@ -146,7 +146,7 @@ $ ->
 
           for col in time_cols
             do (col) ->
-              ($ row).children().eq(col).find('input').replaceWith "<div class='input-append datepicker'><input class='validate_timestamp input-small' type='text' data-format='yyyy/MM/dd hh:mm:ss' value='#{ ($ row).find('input').eq(col).val() }' /><span class='add-on'><i class='icon-calendar'></i></span></div>"
+              ($ row).children().eq(col).find('input').replaceWith "<div class='input-append datepicker'><input class='validate_timestamp input-small' type='text' data-format='yyyy/MM/dd hh:mm:ss' value='#{ ($ row).find('input').eq(col).val() }' /><span class='add-on'><a href='#'><i class='icon-calendar'></i></a></span></div>"
 
 
         add_row = (tab) ->
