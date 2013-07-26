@@ -16,16 +16,9 @@ $ ->
     """
   # Control code for name popup box
     ($ 'body').append modal
-    ($ '#name_dataset_box').modal();
-    selectFunc = ->
-      ($ '#name_dataset_name').select()
-    setTimeout selectFunc, 300
+    ($ '#name_dataset_box').modal()
     
-    ($ '#name_dataset_name').keyup (e) ->
-      if (e.keyCode == 13)
-        ($ '.name_dataset_button').click()
-    
-    ($ '.name_dataset_button').click ->
+    submit_modal = ->
       name = ($ '#name_dataset_name').val()
       data = 
         data_set:
@@ -38,3 +31,18 @@ $ ->
         data: data
         success: ->
           succ()
+    
+    
+    ($ '#name_dataset_box').on 'hidden', ->
+      submit_modal()
+    
+    selectFunc = ->
+      ($ '#name_dataset_name').select()
+    setTimeout selectFunc, 300
+    
+    ($ '#name_dataset_name').keyup (e) ->
+      if (e.keyCode == 13)
+        submit_modal()
+    
+    ($ '.name_dataset_button').click ->
+      submit_modal()
