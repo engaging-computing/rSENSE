@@ -176,7 +176,7 @@
           <tbody>
             <% @project.fields.all.each do |f| %>
               <!-- Render all the fields, Lat and Lon cant be edited -->
-              <%= render 'field_edit', field: f, type: "field",row_id: f.id, can_edit: (can_edit? @project), has_ses: @project.data_sets.count %>
+              <%= render 'field_edit', field: f, type: "field", row_id: f.id, can_edit: (can_edit? @project), has_ses: @project.data_sets.count %>
             <% end %>
           </tbody>
         </table>

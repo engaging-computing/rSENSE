@@ -36,7 +36,7 @@ class UsersController < ApplicationController
       end
     end
     
-    recur = params.key?(:recur) ? params[:recur] : false
+    recur = params.key?(:recur) ? params[:recur].to_bool : false
     show_hidden = @cur_user.id == @user.id
           
     respond_to do |format|
@@ -111,14 +111,14 @@ class UsersController < ApplicationController
     
     page = params[:page].to_i
     
-    @totalPages = (@contributions.length/5.0).ceil
+    @totalPages = (@contributions.length/10.0).ceil
     
     @lastPage = false
     if page+1 == @totalPages.to_i
       @lastPage = true
     end
     
-    @contributions = @contributions[page*5..(page*5)+4]
+    @contributions = @contributions[page*10..(page*10)+9]
     
     respond_to do |format|
       format.html { render partial: "display_contributions" }

@@ -27,6 +27,9 @@ $ ->
       ($ '#visualizations').append(newItem).isotope('insert', newItem)
 
     ($ "#visualizations_search").submit ->
+      
+        ($ '#hidden_pagination').val(1)
+    
         $.ajax
           url: this.action
           data: ($ this).serialize()
