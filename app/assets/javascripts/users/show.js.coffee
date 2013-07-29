@@ -3,6 +3,62 @@ $ ->
   if namespace.controller is "users" and namespace.action is "show"
     
     ($ "#contributions_content").hide()
+    
+    # Start recent 3
+    nav_list = []
+    
+    ($ '#user_filter li').each (index) ->
+      if index != 0
+        nav_list.push ($ @).text()
+    
+    data =
+      template: "three_recent"
+      page_size: 3
+    
+    $.ajax
+      url: "/users/#{($ '#contribution_search').attr('name')}/contributions"
+      data: data
+      dataType: "html"
+      success: (dat) ->
+        ($ '#three_recent').html dat
+        
+    ($ '#user_filter li').click ->
+    
+      ($ "#user_filter .active").removeClass "active"
+      ($ @).addClass "active"
+      tmp = ($ @).text()
+      
+      if( nav_list.some (word) -> ~tmp.indexOf(word) )
+        ($ "#contributions_content").show()
+        ($ "#user_content").hide()
+        
+        ajax_params = ($ '#contribution_search').serialize()
+        ajax_params +="&filters=#{tmp}"
+
+        globals.arrowsClicked = false;
+        $.ajax
+          url: "/users/#{($ '#contribution_search').attr('name')}/contributions"
+          data: ajax_params
+          dataType: "html"
+          success: (dat) ->
+            $("#contributions").html dat
+            if (parseInt($("#mparams").attr("totalPages")) > 0)
+              $("#pageLabel").html "Page " + (parseInt( $("#page").val(), 10 ) + 1) + " of " + $("#mparams").attr("totalPages")
+            else 
+              $("#pageLabel").html "No Contributions"
+            if (parseInt( $("#page").val(), 10 ) == 0)
+              $(".pagebck").hide()
+            else 
+              $(".pagebck").show()
+            if($("#mparams").attr("lastPage")=="true" || parseInt($("#mparams").attr("totalPages")) == 0) 
+              $(".pagefwd").hide()
+            else
+              $(".pagefwd").show()
+      else
+        ($ "#contributions_content").hide()
+        ($ "#user_content").show()
+
+
   
     window.globals = {}
     globals.arrowsClicked = false
@@ -11,13 +67,29 @@ $ ->
       $("#contribution_search").submit()
       
     $("#contribution_search").submit ->
-      if (!globals.arrowsClicked)
+      
+      
+      ###
+      
+      console.log "tacoooooo"
+      console.log globals.arrowsClicked
+      
+      
+      ###
+      
+      
+      
+      
+      if (globals.arrowsClicked)
         $("#page").val("0")
-      else
+      else        
+        ajax_params = ($ '#contribution_search').serialize()
+        ajax_params +="&filters=#{($ '#user_filter .active').text()}"
+        
         globals.arrowsClicked = false;
       $.ajax
-        url: "/users/#{$(this).attr('name')}/contributions"
-        data: $(this).serialize()
+        url: "/users/#{($ '#contribution_search').attr('name')}/contributions"
+        data: ajax_params
         dataType: "html"
         success: (dat) ->
           $("#contributions").html dat
