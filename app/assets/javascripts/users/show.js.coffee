@@ -1,6 +1,8 @@
 # Place all the behaviors and hooks related to the users show page here.    
 $ ->
-  if namespace.controller is "users" and namespace.action is "show" 
+  if namespace.controller is "users" and namespace.action is "show"
+    
+    ($ "#contributions_content").hide()
   
     window.globals = {}
     globals.arrowsClicked = false
@@ -34,7 +36,7 @@ $ ->
           
       return false
         
-    $(".contribution_type_checkbox").click ->
+    $(".contribution_search_btn").click ->
       $("#contribution_search").submit()
       
     $("#contribution_search").submit()

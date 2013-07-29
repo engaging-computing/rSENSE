@@ -1,132 +1,147 @@
 <!DOCTYPE html>
 <html style="margin:0;padding:0;height:100%;">
-<head>
-  <title>Rsense</title>
-  <%= stylesheet_link_tag    "application", :media => "all" %>
-  <%= javascript_include_tag "application" %>
-  <%= csrf_meta_tags %>
-</head>
 
-<%= javascript_tag do %>
-  window.namespace = <%= raw @namespace.to_json %>
-<% end %>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
 
-<body style="margin:0;padding:0;height:100%;background-color:#ddd;">
+  <head>
+    <title>Rsense</title>
+    <%= stylesheet_link_tag    "application", :media => "all" %>
+    <%= javascript_include_tag "application" %>
+    <%= csrf_meta_tags %>
+  </head>
 
-<div style="min-height:100%;position:relative;">
-  
-  <% if flash[:notice] %>
-    <% if flash[:notice] == "LOGIN_ERROR" %>
-      <script type="text/javascript">
-        $(document).ready( function(e){
-          $.data($('#login_box')[0], "redirect", "<%= flash.try(:[], :path) %>");
-          $('#login_box').modal()
-          return false;
-        });
-      </script>
-    <% end %>
+  <%= javascript_tag do %>
+    window.namespace = <%= raw @namespace.to_json %>
   <% end %>
 
+  <body style="margin:0;padding:0;height:100%;background-color:#ddd;">
 
-  <div id="login_box" class="modal hide fade well container" style="width:400px">
-    <div>User: <input id="login_user" class="login_field" type="text" style="width:75%"></input></div><div class="clear"></div>
-    <div>Password: <input id="login_password" class="login_field" type="password" style="width:75%"></input></div><div class="clear"></div>
-    <div style="float:right;">
-        <button class="login_button btn btn-success">Login</button>
-        <button class="cancel_login_button btn">Cancel</button>
-    </div>
-  </div>
+    <div style="min-height:100%;position:relative;">
+      
+      <!-- Login error detected, show dialog -->
+      <% if flash[:notice] %>
+        <% if flash[:notice] == "LOGIN_ERROR" %>
+          <script type="text/javascript">
+            $(document).ready( function(e){
+              $.data($('#login_box')[0], "redirect", "<%= flash.try(:[], :path) %>");
+              $('#login_box').modal()
+              return false;
+            });
+          </script>
+        <% end %>
+      <% end %>
 
-
-  <div id="title_bar" style="position: fixed;border-bottom: 1px solid black;width:100%;background-color:#113;height:72px;z-index:10;top:0px;left:0px;box-shadow: 0px 0px 10px black;">
-    <div class="container">
-      <div style="float:left;padding-top:10px;">
-        <a href="/">
-          <img class="visible-desktop visible-tablet" src="/assets/isense-logo.png" style="height:50px;width:206px;margin-left:-24px;" />
-          <img class="visible-phone" src="/assets/isense-logo.png" style="height:25px;width:103px;margin-left:10px;" />
-        </a>
-      </div>
-      <div style="float:left;vertical-align:text-bottom;line-height:15px;font-size:15px;">
-        <div class="visible-desktop visible-tablet" style="height:15px;padding-top:44px;">
-          <a href="/projects"><i class="icon-folder-open icon-white"> </i> Projects</a>&nbsp;&nbsp;&nbsp;
-          <a href="/users"><i class="icon-user icon-white"> </i> People</a>&nbsp;&nbsp;&nbsp;
-          <a href="/visualizations"><i class="icon-picture icon-white"> </i> Visualizations</a>&nbsp;&nbsp;&nbsp;
-          <a href="/project_templates"><i class="icon-gift icon-white"> </i> Store </a>&nbsp;&nbsp;&nbsp;
-          <a href="/tutorials"><i class="icon-info-sign icon-white"> </i> Tutorials </a>
-        </div>
-        <div class="visible-phone" style="height:15px;padding-top:44px;position:absolute;left:11px;">
-          <a href="/projects"><i class="icon-folder-open icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
-          <a href="/users"><i class="icon-user icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
-          <a href="/visualizations"><i class="icon-picture icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
-          <a href="/project_templates"><i class="icon-gift icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
-          <a href="/tutorials"><i class="icon-info-sign icon-white"> </i> </a>
+      <!-- Add the hidden login dialog to the layout so that its accessable everywhere -->
+      <div id="login_box" class="modal hide fade well container" style="width:400px">
+        <div>User: <input id="login_user" class="login_field" type="text" style="width:75%"></input></div><div class="clear"></div>
+        <div>Password: <input id="login_password" class="login_field" type="password" style="width:75%"></input></div><div class="clear"></div>
+        <div style="float:right;">
+            <button class="login_button btn btn-success">Login</button>
+            <button class="cancel_login_button btn">Cancel</button>
         </div>
       </div>
-      
-      <div class="visible-desktop visible-tablet" style="padding-top:25px;float:left;line-height:15px;font-size:15px;float:right;margin-right:-20px;">
-        <% if @cur_user == nil %>
-          <div class="btn-group">
-            <a href="" class="login btn btn-small btn-info" style="color:white;">Login</a>
-            <a href="<%= new_user_path %>" style="color:white;" class="btn btn-small btn-info">Register</a>
+
+      <!-- The title bar -->
+      <div id="title_bar">
+        <div class="container">
+          
+          <!-- iSENSE Logos for both layouts -->
+          <div style="float:left;padding-top:10px;">
+            <a href="/">
+              <img class="visible-desktop visible-tablet" src="/assets/isense-logo.png" style="height:50px;width:206px;margin-left:-24px;" />
+              <img class="visible-phone" src="/assets/isense-logo.png" style="height:25px;width:103px;margin-left:10px;" />
+            </a>
           </div>
-        <% else %>
-          <div class="btn-group">
-            <button class="btn btn-small btn-info"><a href="<%= user_path(@cur_user) %>" style="color:white;"><%= @cur_user.name %></a></button>
-            <button class="btn btn-small dropdown-toggle btn-info" data-toggle="dropdown">
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-              <li><%= link_to 'Logout', login_path(), method: :delete %></li>
-              <li><%= link_to 'My Projects', user_path(@cur_user.username,  :filters => ["projects"]), action: :show%></li>
-              <li><%= link_to 'My Data Sets', user_path(@cur_user.username,  :filters => ["data_sets"]), action: :show%></li>
-              <li><%= link_to 'My Visualizations', user_path(@cur_user.username,  :filters => ["visualizations"]), action: :show%></li>
-              <li><%= link_to 'My Media', user_path(@cur_user.username,  :filters => ["media"]), action: :show%></li>
-            </ul>
+          
+          <div style="float:left;vertical-align:text-bottom;line-height:15px;font-size:15px;">
+            
+            <div class="visible-desktop visible-tablet" style="height:15px;padding-top:44px;">
+              <a class="white" href="/projects"><i class="icon-folder-open icon-white"> </i> Projects</a>&nbsp;&nbsp;&nbsp;
+              <a class="white" href="/users"><i class="icon-user icon-white"> </i> People</a>&nbsp;&nbsp;&nbsp;
+              <a class="white" href="/visualizations"><i class="icon-picture icon-white"> </i> Visualizations</a>&nbsp;&nbsp;&nbsp;
+              <a class="white" href="/project_templates"><i class="icon-gift icon-white"> </i> Store </a>&nbsp;&nbsp;&nbsp;
+              <a class="white" href="/tutorials"><i class="icon-info-sign icon-white"> </i> Tutorials </a>
+            </div>
+            
+            <div class="visible-phone" style="height:15px;padding-top:44px;position:absolute;left:11px;">
+              <a class="white" href="/projects"><i class="icon-folder-open icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
+              <a class="white" href="/users"><i class="icon-user icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
+              <a class="white" href="/visualizations"><i class="icon-picture icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
+              <a class="white" href="/project_templates"><i class="icon-gift icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
+              <a class="white" href="/tutorials"><i class="icon-info-sign icon-white"> </i> </a>
+            </div>
+            
           </div>
-        <% end %>
+          
+          <!-- Pillbox Menu for both layouts -->
+          <div class="visible-desktop visible-tablet">
+            <div class="pillbox desktop-tablet">
+              <% if @cur_user == nil %>
+                <div class="btn-group">
+                  <a href="" class="login btn btn-small btn-info white">Login</a>
+                  <a href="<%= new_user_path %>" class="btn btn-small btn-info white">Register</a>
+                </div>
+              <% else %>
+                <div class="btn-group">
+                  <button class="btn btn-small btn-info white"><a href="<%= user_path(@cur_user) %>" class="white"><%= @cur_user.name %></a></button>
+                  <button class="btn btn-small dropdown-toggle btn-info white" data-toggle="dropdown">
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><%= link_to 'Logout', login_path(), method: :delete %></li>
+                    <li><%= link_to 'My Projects', user_path(@cur_user.username,  :filters => ["projects"]), action: :show%></li>
+                    <li><%= link_to 'My Data Sets', user_path(@cur_user.username,  :filters => ["data_sets"]), action: :show%></li>
+                    <li><%= link_to 'My Visualizations', user_path(@cur_user.username,  :filters => ["visualizations"]), action: :show%></li>
+                    <li><%= link_to 'My Media', user_path(@cur_user.username,  :filters => ["media"]), action: :show%></li>
+                  </ul>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          
+          <div class="visible-phone">
+            <div class="pillbox phone">
+              <% if @cur_user == nil %>
+                <div class="btn-group">
+                  <a href="" class="login btn btn-small btn-info white">Login</a>
+                  <a href="<%= new_user_path %>"  class="btn btn-small btn-info white">Register</a>
+                </div>
+              <% else %>
+                <div class="btn-group">
+                  <button class="btn btn-small btn-info"><a href="<%= user_path(@cur_user) %>" class="white"><%= @cur_user.name %></a></button>
+                  <button class="btn btn-small dropdown-toggle btn-info" data-toggle="dropdown">
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><%= link_to 'Logout', login_path(), method: :delete %></li>
+                    <li><%= link_to 'My Projects', user_path(@cur_user.username,  :filters => ["projects"]), action: :show%></li>
+                    <li><%= link_to 'My Data Sets', user_path(@cur_user.username,  :filters => ["data_sets"]), action: :show%></li>
+                    <li><%= link_to 'My Visualizations', user_path(@cur_user.username,  :filters => ["visualizations"]), action: :show%></li>
+                    <li><%= link_to 'My Media', user_path(@cur_user.username,  :filters => ["media"]), action: :show%></li>
+                  </ul>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
       </div>
       
-      <div class="visible-phone" style="padding-top:25px;float:left;line-height:15px;font-size:15px;text-align:right;float:right;margin-right:10px;">
-        <% if @cur_user == nil %>
-          <div class="btn-group">
-            <a href="" class="login btn btn-small btn-info" style="color:white;">Login</a>
-            <a href="<%= new_user_path %>" style="color:white;" class="btn btn-small btn-info">Register</a>
-          </div>
-        <% else %>
-          <div class="btn-group">
-            <button class="btn btn-small btn-info"><a href="<%= user_path(@cur_user) %>" style="color:white;"><%= @cur_user.name %></a></button>
-            <button class="btn btn-small dropdown-toggle btn-info" data-toggle="dropdown">
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-              <li><%= link_to 'Logout', login_path(), method: :delete %></li>
-              <li><%= link_to 'My Projects', user_path(@cur_user.username,  :filters => ["projects"]), action: :show%></li>
-              <li><%= link_to 'My Data Sets', user_path(@cur_user.username,  :filters => ["data_sets"]), action: :show%></li>
-              <li><%= link_to 'My Visualizations', user_path(@cur_user.username,  :filters => ["visualizations"]), action: :show%></li>
-              <li><%= link_to 'My Media', user_path(@cur_user.username,  :filters => ["media"]), action: :show%></li>
-            </ul>
-          </div>
-        <% end %>
+      <!-- Main Container -->
+      <div style="padding:72px 0px 92px 0px;margin:0;min-height:100%;margin-right:40px">
+        <div class="container mainContent mc-wide">
+          <%= yield %>
+        </div>
       </div>
-      
-    </div>
-  </div>
-  
-  <div style="padding:72px 0px 92px 0px;margin:0;min-height:100%;margin-right:40px">
-    <div class="container mainContent mc_wide" style="background-color:#fff;box-shadow:0px 0px 20px grey;min-height:100%; width:100%;">
-      <%= yield %>
-    </div>
-  </div>
-	
-  <div style="position:absolute;bottom:0;width:100%;height:92px;">
-    <div class="footer">
-      <p style="font-size:1.0em;margin-bottom:0px;">The iSENSE project is a collaborative effort of the University of Massachusetts Lowell and Machine Science Inc. </p>
-      <p style="font-size:0.8em;margin-bottom:0px;">Our work is supported by grants <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0735597">DRL-0735597</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0735592">DRL-0735592</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0546513">DRL-0546513</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=1123998">IIS-1123998</a>, and <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=1123972">IIS-1123972</a> from the National Science Foundation, and a gift from Google Inc.</p>
-      <p><%= @version %></p>
-    </div>
-  </div>
+            
+      <!-- Footer -->      
+      <div class="footer">
+        <p>The iSENSE project is a collaborative effort of the University of Massachusetts Lowell and Machine Science Inc. </p>
+        <p>Our work is supported by grants <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0735597">DRL-0735597</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0735592">DRL-0735592</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0546513">DRL-0546513</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=1123998">IIS-1123998</a>, and <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=1123972">IIS-1123972</a> from the National Science Foundation, and a gift from Google Inc.</p>
+        <p><%= @version %></p>
+      </div>
 
-</div>
+    </div>
 
-</body>
+  </body>
 </html>

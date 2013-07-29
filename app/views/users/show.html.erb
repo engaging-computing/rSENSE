@@ -31,10 +31,52 @@
       <%end%>
     </div>
   </div>
+  <div class="row">
+    <div class="span9">
+      <%= form_tag users_path, method: 'get', id:'contribution_search', name: @user.username do%>
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#"><%= @user.name %></a></li>
+          <li><a href="#">All</a></li>
+          <li><a href="#">Projects</a></li>
+          <li><a href="#">Data Sets</a></li>
+          <li><a href="#">Visualizations</a></li>
+          <li><a href="#">Media</a></li>
+          <li><a href="#">Tutorials</a></li>
+        </ul>
+        
+        <div id="user_content">
+          <div id="user_long_bio">
+          </div>
+          <div class="well">
+            blahblahablhy
+          </div>
+        </div>
+        
+        <div id="contributions_content">
+          
+          <div class="row">
+            <div class="span9" style="border: 1px solid #f5f5f5; border-top: 10px; border-left: 0px; border-right: 0px;">
+              <input type="text" class="input" id="contribution_search" />
+              <input type="button" class="btn btn-success pull-right" value="Search" id="contribution_search_btn" />
+            </div>
+          </div>
+          
+          <%= hidden_field_tag "page", params[:page].to_i %>
+          <div id="contributions">
+          </div>
+          <div style="text-align: center; padding: 5px">
+            <a href="#" class="pagebck"><<</a>
+            <span id="pageLabel">Page 1 of 1</span>
+            <a href="#" class="pagefwd">>></a>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
   
-  <%=render layout: "shared/box", locals: {title: 'Contributions', width: '9', unique_id: 'contribs', should_hide: false} do %>
+  <!--<%=render layout: "shared/box", locals: {title: 'Contributions', width: '9', unique_id: 'contribs', should_hide: false} do %>
     <%= form_tag users_path, method: 'get', id:'contribution_search', name: @user.username do%>
-      <div class="feed-top">
+       <div class="feed-top">
           <div style="width:30%;float:left;">
             <select name="sort" class="contribution_sort_select">
               <option value="DESC">Newest First</option>
@@ -62,4 +104,4 @@
           <a href="#" class="pagefwd">>></a>
       </div>
     <%end%>
-  <%end%>
+  <%end%>-->

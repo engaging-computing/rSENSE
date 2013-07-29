@@ -1,14 +1,15 @@
 
 $(document).ready ->
     $('.redactor_content_edit_link').click ->
-
+        tmp = ($ @).parent().parent()
+        type = tmp.attr("type")
+        row_id = tmp.attr("row_id")
         csrf_token = $('meta[name=csrf-token]').attr('content');
         csrf_param = $('meta[name=csrf-param]').attr('content');
         path = ""
         if (csrf_param isnt undefined && csrf_token isnt undefined)
           params = csrf_param + "=" + encodeURIComponent(csrf_token);
           path =  "#{type}/#{row_id}?#{params}"
-        
         $(@).parent().parent().find('.redactor_content').redactor
           imageUpload: "/media_objects/saveMedia/#{path}"
           fileUpload: "/media_objects/saveMedia/#{path}"

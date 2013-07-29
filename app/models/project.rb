@@ -46,7 +46,9 @@ class Project < ActiveRecord::Base
       timeAgoInWords: time_ago_in_words(self.created_at),
       createdAt: self.created_at.strftime("%B %d, %Y"),
       ownerName: self.owner.name,
-      ownerUrl: UrlGenerator.new.user_url(self.owner)
+      ownerUrl: UrlGenerator.new.user_url(self.owner),
+      dataSetCount: self.data_sets.count,
+      fieldCount: self.fields.count
     }
     
     if self.featured_media_id != nil

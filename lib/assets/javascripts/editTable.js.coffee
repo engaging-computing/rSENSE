@@ -11,7 +11,7 @@ $ ->
 
       #Check if there is location in the experiment
       if x["name"] == "Latitude"
-
+      
         #If there is location add the map picker modal dialog
         ($ ".mainContent").append '<div id="map_picker" class="modal hide fade well container" style="width:400px"><div id="map_canvas" style="width:400px; height:300px"></div><br/><label>Address: </label><input id="address"  type="text"/><button class="btn btn-primary pull-right" id="apply_location">Apply</button></div>'
 
@@ -146,7 +146,7 @@ $ ->
 
           for col in time_cols
             do (col) ->
-              ($ row).children().eq(col).find('input').replaceWith "<div class='input-append datepicker'><input class='validate_timestamp input-small' type='text' data-format='dd/MM/yyyy hh:mm:ss' value='#{ ($ row).find('input').eq(col).val() }' /><span class='add-on'><i class='icon-calendar'></i></span></div>"
+              ($ row).children().eq(col).find('input').replaceWith "<div class='input-append datepicker'><input class='validate_timestamp input-small' type='text' data-format='yyyy/MM/dd hh:mm:ss' value='#{ ($ row).find('input').eq(col).val() }' /><span class='add-on'><i class='icon-calendar'></i></span></div>"
 
 
         add_row = (tab) ->
@@ -172,8 +172,15 @@ $ ->
           # bind map button
           ($ '.new_row').find('.map_picker').click ->
             ($ this).closest("tr").addClass('target')
+            previous_lon = ($ this).closest('tr').find('.validate_longitude').val()
+            previous_lat = ($ this).closest('tr').find('.validate_latitude').val()
+            if (previous_lat != "") and (previous_lon != "")
+              location = new google.maps.LatLng(previous_lat, previous_lon)
+              window.marker.setPosition(location)
+              window.map.setCenter(location)
+              ($ '#address').val("")
             ($ '#map_picker').modal();
-
+            
           # bind time to input
           ($ '.new_row').find('.datepicker').datetimepicker()
 
@@ -259,6 +266,13 @@ $ ->
         # bind map button
         ($ 'td').find('.map_picker').click ->
           ($ this).closest("tr").addClass('target')
+          previous_lon = ($ this).closest('tr').find('.validate_longitude').val()
+          previous_lat = ($ this).closest('tr').find('.validate_latitude').val()
+          if (previous_lat != "") and (previous_lon != "")
+            location = new google.maps.LatLng(previous_lat, previous_lon)
+            window.marker.setPosition(location)
+            window.map.setCenter(location)
+            ($ '#address').val("")
           ($ '#map_picker').modal();
 
         #bind time button
@@ -273,6 +287,8 @@ $ ->
         ($ '#edit_table_save').click ->
 
           if table_validates(table)
+            
+            ($ '#edit_table_save').unbind()
 
             strip_table(table)
 
