@@ -28,9 +28,12 @@ $ ->
 
       ($ '#hidden_pagination').val(1)
 
+      dataObject = ($ this).serialize()
+      dataObject += "&per_page=#{constants.INFINITE_SCROLL_ITEMS_PER}"
+
       $.ajax
         url: this.action
-        data: ($ this).serialize()
+        data: dataObject
         dataType: "json"
         success: (data, textStatus)->
 

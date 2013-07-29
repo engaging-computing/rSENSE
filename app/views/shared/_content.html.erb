@@ -10,6 +10,7 @@
       <%if can_edit%>
       <a class="redactor_content_edit_link"><i class="icon-edit icon_content"></i></a>
       <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_save_link" style="display:none"><i class="icon-ok  icon_content"></i></a>
+      <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_cancel_link" style="display:none"><i class="icon-remove pull-right  icon_content"></i></a>
       <%end%>
     </div>
 
@@ -25,6 +26,7 @@
     <div class="content_icontainer">
       <a class="redactor_content_edit_link" style="display:none"><i class="icon-edit  icon_content"></i></a>
       <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_save_link" style="display:none"><i class="icon-ok  icon_content"></i></a>
+      <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_cancel_link" style="display:none"><i class="icon-remove  icon_content pull-right"></i></a>
     </div>
     
     <div class="redactor_content" style="display:none">
