@@ -58,7 +58,23 @@ class UsersController < ApplicationController
     @user = User.find_by_username(params[:id])
     
     #See if we are only looking for specific contributions
-    @filters = params[:filters].to_a
+    @filters = params[:filters].to_s.downcase
+    @filters.tr!(' ', '_')
+    
+    logger.info "-=-=-=-=-=-=-=-=-=-=-"
+    logger.info @filters
+    logger.info "-=-=-=-=-=-=-=-=-=-=-"
+    
+    if @filters == "all"
+      @filters = [ "projects", "data_sets", "visualizations", "media", "tutorials" ]
+    end
+    
+    if params[:page_size].nil?
+      page_size = 10
+    else
+      page_size = params[:page_size].to_i
+    end
+    
     show_hidden = @cur_user.id == @user.id
     
     #Only grab the contributions we are currently interested in
@@ -117,19 +133,29 @@ class UsersController < ApplicationController
     
     page = params[:page].to_i
     
-    @totalPages = (@contributions.length/10.0).ceil
+    @totalPages = (@contributions.length/page_size).ceil
     
     @lastPage = false
     if page+1 == @totalPages.to_i
       @lastPage = true
     end
     
-    @contributions = @contributions[page*10..(page*10)+9]
+    @contributions = @contributions[page*page_size..(page*page_size)+(page_size - 1)]
     
-    respond_to do |format|
-      format.html { render partial: "display_contributions" }
+    if params[:template].nil?
+  
+      respond_to do |format|
+        format.html { render partial: "display_contributions" }
+      end
+
+    else
+
+      respond_to do |format|
+        format.html { render partial: params[:template] }
+      end
+
     end
-    
+
   end
 
   # GET /users/new

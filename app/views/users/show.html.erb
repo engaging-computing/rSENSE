@@ -26,15 +26,15 @@
     
     <hr />
     <div class="row">
-      <%= render layout: "shared/box", locals: {title: 'Description', width: '3', unique_id: 'box', should_hide: false } do %>
-        <%= user_redactor_helper (can_edit? @user)%>
+      <%= render layout: "shared/box", locals: {title: 'Bio', width: '3', unique_id: 'box', should_hide: false } do %>
+        <%= user_redactor_helper(can_edit?(@user), "bio")%>
       <%end%>
     </div>
   </div>
   <div class="row">
     <div class="span9">
       <%= form_tag users_path, method: 'get', id:'contribution_search', name: @user.username do%>
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs" id="user_filter">
           <li class="active"><a href="#"><%= @user.name %></a></li>
           <li><a href="#">All</a></li>
           <li><a href="#">Projects</a></li>
@@ -46,8 +46,9 @@
         
         <div id="user_content">
           <div id="user_long_bio">
+            <%= user_redactor_helper(can_edit?(@user))%>
           </div>
-          <div class="well">
+          <div class="well" id="three_recent">
             blahblahablhy
           </div>
         </div>
