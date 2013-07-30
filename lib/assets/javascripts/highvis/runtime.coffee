@@ -33,7 +33,8 @@ $ ->
     globals.curVis = null
 
     globals.CONTROL_SIZE = 210
-    globals.VIS_MARGIN = 20
+    globals.VIS_MARGIN_WIDTH = 20
+    globals.VIS_MARGIN_HEIGHT = 70
 
     ###
     CoffeeScript version of runtime.
@@ -47,7 +48,7 @@ $ ->
       h = (Number ($ "div.mainContent").css("padding-top").replace("px", ""))
       h += ($ "#title_bar").height()
       h += ($ "#title_row").outerHeight(true)
-      h += globals.VIS_MARGIN
+      h += globals.VIS_MARGIN_HEIGHT
       
       ($ "#viscontainer").height(($ window).height() - h)
 
@@ -109,7 +110,7 @@ $ ->
       $("#control_hide_button").html('>')
       globals.CONTROL_SIZE
 
-    visWidth = containerSize - (hiderSize + controlSize + globals.VIS_MARGIN)
+    visWidth = containerSize - (hiderSize + controlSize + globals.VIS_MARGIN_WIDTH)
     visHeight = ($ '#viscontainer').height() - ($ '#visTabList').outerHeight()
 
     ($ '.vis_canvas').width  visWidth
@@ -137,7 +138,7 @@ $ ->
         else
             0
 
-        newWidth = containerSize - (hiderSize + controlSize + globals.VIS_MARGIN)
+        newWidth = containerSize - (hiderSize + controlSize + globals.VIS_MARGIN_WIDTH)
         
         ($ '#controldiv').animate {width: controlSize}, aniLength, 'linear'
         ($ '.vis_canvas').animate {width: newWidth}, aniLength, 'linear'
