@@ -62,7 +62,9 @@ $ ->
     ($ '.projects_sort_select').change ->
       ($ '#projects_search').submit()
 
-
+    ($ '#template_checkbox').change ->
+      ($ '#projects_search').submit()
+      
     ($ window).resize () ->
       helpers.isotope_layout('#projects')
 
