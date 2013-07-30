@@ -3,8 +3,6 @@ Rsense::Application.routes.draw do
 
   post "projects/:id/templateFields" => "projects#templateFields"
 
-  get "project_templates/index"
-
   match "/projects/import" => "projects#importFromIsense"
   match "/projects/import/:pid" => "projects#importFromIsense"
 
@@ -36,9 +34,6 @@ Rsense::Application.routes.draw do
   resources :data_sets do
     get 'getData' => :getData
   end
-
-  #Routes for project templates
-  match "/project_templates" => "project_templates#index"
 
   #Routes for uploading data
   match "/projects/:id/uploadCSV" => "data_sets#uploadCSV"
