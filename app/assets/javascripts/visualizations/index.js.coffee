@@ -63,4 +63,5 @@ $ ->
     helpers.isotope_layout('#visualizations')
     ($ "#visualizations_search").submit()
 
-    ($ window).resize helpers.isotope_layout("#visualizations")
+    ($ window).resize () ->
+      helpers.isotope_layout("#visualizations")
