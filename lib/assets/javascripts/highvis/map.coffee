@@ -44,6 +44,8 @@ $ ->
             delete @heatPoints
             delete @markers
             delete @heatmap
+            delete @clusterer
+            delete @oms
         
         start: ->
             ($ '#' + @canvas).show()
