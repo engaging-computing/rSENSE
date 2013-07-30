@@ -158,7 +158,7 @@ $ ->
         Highcharts.extend Highcharts.Renderer.prototype.symbols, extension
         
     ###
-    Generated using http://jiminy.medialab.sciences-po.fr/tools/palettes/palettes.php
+    Generated using http://tools.medialab.sciences-po.fr/iwanthue/
     Colors: 30
     Hue:       0.0 - 360.00
     Chroma:    0.0 -   1.70
