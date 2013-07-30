@@ -77,4 +77,5 @@ $ ->
     helpers.isotope_layout('#tutorials')
     ($ "#tutorials_search").submit()
 
-    ($ window).resize helpers.isotope_layout("#tutorials")
+    ($ window).resize () -> 
+      helpers.isotope_layout("#tutorials")

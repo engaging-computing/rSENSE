@@ -55,4 +55,5 @@ $ ->
     helpers.isotope_layout('#users')
     ($ "#users_search").submit()
 
-    ($ window).resize helpers.isotope_layout("#users")
+    ($ window).resize () -> 
+      helpers.isotope_layout("#users")

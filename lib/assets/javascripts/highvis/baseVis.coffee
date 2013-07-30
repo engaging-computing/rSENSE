@@ -253,7 +253,7 @@ $ ->
             ($ '#controldiv').width 0
             ($ '#controlhider').hide()
             ($ '#' + @canvas).css
-                width: ($ "#viscontainer").innerWidth() - (($ "#controlhider").outerWidth() + globals.VIS_MARGIN)
+                width: ($ "#viscontainer").innerWidth() - (($ "#controlhider").outerWidth() + globals.VIS_MARGIN_WIDTH)
 
         ###
         Returns the control div with its previous size intact.
