@@ -62,10 +62,10 @@ $ ->
                 data: savedData.data
                 globals: savedData.globals
             success: (msg) ->
-              id = Number msg
-              window.location = "/visualizations/#{id}"
-            error: (msg) ->
-              alert "Somthing went horribly wrong: " + msg
+              window.location = msg.url
+            error: (jqxhr, status, error) ->
+              alert "Somthing went horribly wrong"
+              console.log [status, error]
 
     ###
     Ajax call to check if the user is logged in. Calls the appropriate
