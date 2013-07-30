@@ -30,8 +30,12 @@ class Project < ActiveRecord::Base
     end
   end
   
-  def self.is_template
-    where(:is_template => true)
+  def self.only_templates(value)
+    if value == true
+      where(:is_template => true)
+    else
+      scoped
+    end
   end
   
   def to_hash(recurse = true)
