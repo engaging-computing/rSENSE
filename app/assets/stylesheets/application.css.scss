@@ -13,7 +13,7 @@
  *= require redactor.css
  *= require jquery.ui.all
  *= require_self
- *= require highvis.css
+ *= require highvis.css.scss
  *= require jquery.dataTables.css
  *= require bootstrap-datetimepicker.less
  */
@@ -323,4 +323,16 @@ input.object_hidden_checkbox
 .btn
 {
   font-size: 12px !important;
+}
+
+.mc-wide{
+  background-color:#fff;
+  box-shadow:0px 0px 20px grey;
+  min-height:100%; 
+  width:100%
+}
+
+.invalid
+{
+  background-color: rgba(255, 0, 0, 0.6) !important;
 }

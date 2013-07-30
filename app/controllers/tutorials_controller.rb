@@ -15,10 +15,16 @@ class TutorialsController < ApplicationController
         sort = "DESC"
     end
     
-    if sort=="ASC" or sort=="DESC"
-      @tutorials = Tutorial.search(params[:search]).paginate(page: params[:page], per_page: 10).order("created_at #{sort}")
+    if !params[:per_page].nil?
+        pagesize = params[:per_page]
     else
-      @tutorials = Tutorial.search(params[:search]).paginate(page: params[:page], per_page: 10).order("like_count DESC")
+        pagesize = 10;
+    end
+    
+    if sort=="ASC" or sort=="DESC"
+      @tutorials = Tutorial.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("created_at #{sort}")
+    else
+      @tutorials = Tutorial.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("like_count DESC")
     end
     
     recur = params.key?(:recur) ? params[:recur].to_bool : false

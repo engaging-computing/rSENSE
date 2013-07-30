@@ -29,9 +29,12 @@ $ ->
     
       ($ '#hidden_pagination').val(1)
     
+      dataObject = ($ this).serialize()
+      dataObject += "&per_page=#{constants.INFINITE_SCROLL_ITEMS_PER}"
+    
       $.ajax
         url: this.action
-        data: ($ this).serialize()
+        data: dataObject
         dataType: "json"
         success: (data, textStatus)->
 
@@ -71,7 +74,7 @@ $ ->
     ($ ".tutorials_sort_select").change ->
       ($ "#tutorials_search").submit()
 
-     helpers.isotope_layout('#tutorials')
+    helpers.isotope_layout('#tutorials')
     ($ "#tutorials_search").submit()
 
     ($ window).resize helpers.isotope_layout("#tutorials")

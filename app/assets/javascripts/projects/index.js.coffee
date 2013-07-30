@@ -28,9 +28,12 @@ $ ->
 
       ($ '#hidden_pagination').val(1)
 
+      dataObject = ($ this).serialize()
+      dataObject += "&per_page=#{constants.INFINITE_SCROLL_ITEMS_PER}"
+
       $.ajax
         url: this.action
-        data: ($ this).serialize()
+        data: dataObject
         dataType: "json"
         success: (data, textStatus)->
 
@@ -59,7 +62,9 @@ $ ->
     ($ '.projects_sort_select').change ->
       ($ '#projects_search').submit()
 
-
+    ($ '#template_checkbox').change ->
+      ($ '#projects_search').submit()
+      
     ($ window).resize () ->
       helpers.isotope_layout('#projects')
 

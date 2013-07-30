@@ -7,18 +7,31 @@ class ProjectsController < ApplicationController
   include ActionView::Helpers::DateHelper
 
   def index
-
+    
     #Main List
     if !params[:sort].nil?
         sort = params[:sort]
     else
         sort = "DESC"
     end
-
-    if sort=="ASC" or sort=="DESC"
-      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: 10).order("created_at #{sort}")
+    
+    if !params[:per_page].nil?
+        pagesize = params[:per_page]
     else
-      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: 10).order("like_count DESC")
+        pagesize = 10;
+    end
+
+    
+    if params.has_key? "templates_only"
+      templates = true
+    else
+      templates = false
+    end
+    
+    if sort=="ASC" or sort=="DESC"
+      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("created_at #{sort}").only_templates(templates)
+    else
+      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("like_count DESC").only_templates(templates)
     end
 
     #Featured list

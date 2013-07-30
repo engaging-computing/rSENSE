@@ -253,8 +253,16 @@ $ ->
                         if isNaN Number dp[fIndex]
                             dp[fIndex] = data.parseDate dp[fIndex]
                         else
-                            d = new Date (Number dp[fIndex])
-                            dp[fIndex] = [d.valueOf(), d.getUTCFullYear()]
+                            #LT
+                            year = Number(dp[fIndex])
+                            d = new Date(0)
+                            d.setUTCFullYear(year)
+                            
+                            if isNaN(d.valueOf())
+                              data.timeType = data.GEO_TIME
+                              
+                            dp[fIndex] = [d.valueOf(), year]
+                            
                     when data.types.TEXT
                         NaN
                     else
@@ -270,17 +278,12 @@ $ ->
         hours = 12
         hourAdj = 0
         
-        # Check for LT format to short circut
-        if (str.match /lt/gi) isnt null
-          str = str.replace /lt/gi, ""
-          year = Number(str)
-          d = new Date(0)
-          d.setUTCFullYear(year)
-          
-          if isNaN(d.valueOf())
-            data.timeType = data.GEO_TIME
-            
-          return [d.valueOf(), year]
+        # Check for U format to short circut
+        if (str.match /u/gi) isnt null
+        
+          str = str.replace /u/gi, ""
+          d = new Date (Number dp[fIndex])
+          return [d.valueOf(), d.getUTCFullYear()]
 
         # Find and extract AM/PM information
         if (str.match /pm/gi) isnt null

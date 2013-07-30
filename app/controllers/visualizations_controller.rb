@@ -14,10 +14,16 @@ class VisualizationsController < ApplicationController
         sort = "DESC"
     end
     
-    if sort=="ASC" or sort=="DESC"
-      @visualizations = Visualization.search(params[:search]).paginate(page: params[:page], per_page: 10).order("created_at #{sort}")
+    if !params[:per_page].nil?
+        pagesize = params[:per_page]
     else
-      @visualizations = Visualization.search(params[:search]).paginate(page: params[:page], per_page: 10).order("like_count DESC")
+        pagesize = 10;
+    end
+    
+    if sort=="ASC" or sort=="DESC"
+      @visualizations = Visualization.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("created_at #{sort}")
+    else
+      @visualizations = Visualization.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("like_count DESC")
     end
     
     #Featured list
@@ -76,7 +82,7 @@ class VisualizationsController < ApplicationController
       if @visualization.save
         flash[:notice] = 'Visualization was successfully created.'
         format.html { redirect_to @visualization }
-        format.json { render json: @visualization.to_hash(false), status: :created, location: @visualization}
+        format.json { render json: @visualization.to_hash(false), status: :created}
       else
         format.html { render action: "new" }
         format.json { render json: @visualization.errors, status: :unprocessable_entity }
@@ -199,11 +205,13 @@ class VisualizationsController < ApplicationController
       data_fields.push({ typeID: field.field_type, unitName: field.unit, fieldID: field.id, fieldName: field.name })
     end
     
-    
+    hasPics = false
     # create/push metadata for datasets
+    i = 0
     @datasets.each do |dataset|
+      hasPics = true if dataset.media_objects.size > 0
+      metadata[i] = { name: dataset.title, user_id: dataset.user_id, dataset_id: dataset.id, timecreated: dataset.created_at, timemodified: dataset.updated_at, photos: dataset.media_objects }
       dataset.data.each do |rows|
-        metadata["#{dataset.title}(#{dataset.id})"] = { name: dataset.title, user_id: dataset.user_id, dataset_id: dataset.id, timecreated: dataset.created_at, timemodified: dataset.updated_at }
         arr = []
         arr.push "#{dataset.title}(#{dataset.id})"
         arr.push "All"
@@ -213,14 +221,15 @@ class VisualizationsController < ApplicationController
         end
         format_data.push arr
       end
+      i+=1
     end
     
+    #Count the number of each type of field
     field_count = [0,0,0,0,0,0]
-    
     @project.fields.each do |field|
       field_count[field.field_type] += 1 
     end
-
+    
     rel_vis = []
 
     # Determine which visualizations are relevant
@@ -246,12 +255,16 @@ class VisualizationsController < ApplicationController
     if field_count[TIME_TYPE] > 0 and field_count[NUMBER_TYPE] > 0 and format_data.count > 1
       rel_vis.push "Motion"
     end
-
+    
+    if hasPics
+      rel_vis.push "Photos"
+    end
+    
     # A list of all current visualizations
     allVis =  ['Map','Timeline','Scatter','Bar','Histogram','Table','Motion','Photos']
 
     # The finalized data object
-    @Data = { projectName: @project.title, projectID: @project.id, hasPics: false, fields: data_fields, dataPoints: format_data, metadata: metadata, relVis: rel_vis, allVis: allVis }
+    @Data = { projectName: @project.title, projectID: @project.id, fields: data_fields, dataPoints: format_data, metadata: metadata, relVis: rel_vis, allVis: allVis }
     
     
     respond_to do |format|
