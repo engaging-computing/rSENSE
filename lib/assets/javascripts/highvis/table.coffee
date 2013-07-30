@@ -36,8 +36,8 @@ $ ->
             #Make table visible? (or somthing)
             ($ '#' + @canvas).show()
 
-            ($ "##{@canvas}").css 'padding-top'    , (globals.VIS_MARGIN / 2)
-            ($ "##{@canvas}").css 'padding-left'   , (globals.VIS_MARGIN / 2)
+            ($ "##{@canvas}").css 'padding-top'    , (globals.VIS_MARGIN_WIDTH / 2)
+            ($ "##{@canvas}").css 'padding-left'   , (globals.VIS_MARGIN_WIDTH / 2)
             
             #Calls update
             super()
@@ -78,7 +78,7 @@ $ ->
             ($ '#table_body').append row for row in rows 
 
             dt = 
-                sScrollY: "#{($ '#' + @canvas).height() - (122 + (globals.VIS_MARGIN / 2))}px"
+                sScrollY: "#{($ '#' + @canvas).height() - (122 + (globals.VIS_MARGIN_WIDTH / 2))}px"
                 sScrollX: "100%"
                 iDisplayLength: -1
                 bDeferRender: true
