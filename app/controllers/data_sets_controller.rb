@@ -90,7 +90,7 @@ class DataSetsController < ApplicationController
 
     respond_to do |format|
       if @data_set.save
-        format.html { redirect_to @data_set, notice: 'Project session was successfully created.' }
+        format.html { redirect_to @data_set, notice: 'Project data set was successfully created.' }
         format.json { render json: @data_set.to_hash(false), status: :created, location: @data_set }
       else
         format.html { render action: "new" }
@@ -163,7 +163,7 @@ class DataSetsController < ApplicationController
   # POST /data_set/1/manualUpload
   def manualUpload
 
-    @project = Project.find(params[:pid])
+    @project = Project.find(params[:id])
     defaultName  = @project.title + " Dataset #"
     defaultName += (DataSet.find_all_by_project_id(params[:pid]).count + 1).to_s
 
