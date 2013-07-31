@@ -1,4 +1,7 @@
-<div class="type_content" field='<%=field%>' type='<%=type%>' row_id='<%=row_id%>'>
+<script type='text/javascript'>
+  var type = '<%=type%>';
+  var row_id = '<%=row_id%>';
+</script>
 
   <!-- If there is content show the content -->
   <%if has_content %>
@@ -12,7 +15,9 @@
     </div>
 
     <div class="redactor_content">
-      <%= raw content %>
+      <div class="well">
+        <%= raw content %>
+      </div>
     </div>
     
   <!-- If there is no content and you are the owner-->
@@ -25,7 +30,9 @@
     </div>
     
     <div class="redactor_content" style="display:none">
-      <%= raw content %>
+      <div class="well">
+        <%= raw content %>
+      </div>
     </div>
     
     <div class="well content_well" style="text-align:center">
