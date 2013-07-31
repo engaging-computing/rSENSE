@@ -331,3 +331,8 @@ input.object_hidden_checkbox
   min-height:100%; 
   width:100%
 }
+
+.invalid
+{
+  background-color: rgba(255, 0, 0, 0.6) !important;
+}
