@@ -37,17 +37,17 @@
       <% end %>
 
       <!-- project content -->
-      <%=render layout: "shared/collapse", locals: {title: 'Description', width: '7', unique_id: 'description', should_hide: false} do %>
+      <%=render layout: "shared/box", locals: {title: 'Description', width: '7', unique_id: 'description', should_hide: false} do %>
         <%= project_redactor_helper (can_edit? @project), false %>
       <%end%>
 
 
       <!-- data sets -->
-      <%=render layout: "shared/collapse", locals: {title: 'Data Sets', width: '7', unique_id: 'data_sets', should_hide: false} do %>
+      <%=render layout: "shared/box", locals: {title: 'Data Sets', width: '7', unique_id: 'data_sets', should_hide: false} do %>
         <div id="dataset_list" <% if @project.data_sets.count == 0 %> style="display:none;" <% end %> >
 
-          <div class="feed-top">
-            <input type="button" class="btn btn-info" value="Visualize" id="vis_button" href="/projects/<%=@project.id%>/data_sets/"/>
+          <div class="text-left">
+            <input type="button" class="btn btn-info" style="margin-bottom: 10px;" value="Visualize" id="vis_button" href="/projects/<%=@project.id%>/data_sets/"/>
             <div class="pull-right">
               <input type="checkbox" id="check_selector"/>
             </div>
@@ -104,7 +104,7 @@
 
             </div>
           <%end%>
-          <div class="feed-bottom"> </div>
+          <!--<div class="feed-bottom"> </div>-->
         </div>
     <%end%>
   </div>
@@ -114,7 +114,7 @@
     <div class="row">
 
       <!-- session creation -->
-      <%=render layout: "shared/collapse", locals: {title: 'Create Data Set', width:'5', unique_id: 'create_data_set', should_hide: false} do %>
+      <%=render layout: "shared/box", locals: {title: 'Create Data Set', width:'5', unique_id: 'create_data_set', should_hide: false} do %>
       <div class="row-fluid">
         <div class="span4 center">
         <%= link_to :controller => :data_sets, :action => :manualEntry, :pid => @project.id do %>
@@ -135,7 +135,7 @@
       <% end %>
 
       <!-- field -->
-      <%=render layout: "shared/collapse", locals: {title: 'Fields',width: '5', unique_id: 'fields', should_hide: false} do %>
+      <%=render layout: "shared/box", locals: {title: 'Fields',width: '5', unique_id: 'fields', should_hide: false} do %>
         <table class="table fields_table" project="<%=@project.id%>" style="width:100%; height:125px;">
           <thead>
             <tr>
@@ -176,14 +176,14 @@
           <tbody>
             <% @project.fields.all.each do |f| %>
               <!-- Render all the fields, Lat and Lon cant be edited -->
-              <%= render 'field_edit', field: f, type: "field",row_id: f.id, can_edit: (can_edit? @project), has_ses: @project.data_sets.count %>
+              <%= render 'field_edit', field: f, type: "field", row_id: f.id, can_edit: (can_edit? @project), has_ses: @project.data_sets.count %>
             <% end %>
           </tbody>
         </table>
       <%end%>
 
         <!-- media objects -->
-        <%=render layout: "shared/collapse", locals: {title: 'Media', width: '5', unique_id: 'media', should_hide: false} do %>
+        <%=render layout: "shared/box", locals: {title: 'Media', width: '5', unique_id: 'media', should_hide: false} do %>
             <table class="table">
               <thead>
                 <tr>
