@@ -11,37 +11,44 @@ $ ->
       if index != 0
         nav_list.push ($ @).text()
     
-    data =
+    recent_three_ajax_params =
       template: "three_recent"
       page_size: 3
     
     $.ajax
       url: "/users/#{($ '#contribution_search').attr('name')}/contributions"
-      data: data
+      data: recent_three_ajax_params
       dataType: "html"
-      success: (dat) ->
-        ($ '#three_recent').html dat
+      success: (three_html) ->
+        ($ '#three_recent').html three_html
         
     ($ '#user_filter li').click ->
     
       ($ "#user_filter .active").removeClass "active"
       ($ @).addClass "active"
-      tmp = ($ @).text()
       
-      if( nav_list.some (word) -> ~tmp.indexOf(word) )
+      filter_selection = ($ @).text()
+      
+      # compares the filter you clicked on to the list of filters
+      # to see if its "your" page or a filter
+      if( nav_list.some (word) -> ~filter_selection.indexOf(word) )
         ($ "#contributions_content").show()
         ($ "#user_content").hide()
         
-        ajax_params = ($ '#contribution_search').serialize()
-        ajax_params +="&filters=#{tmp}"
+        $("#page").val("0")
+
+        
+        filter_ajax_params = ($ '#contribution_search').serialize()
+        filter_ajax_params +="&filters=#{filter_selection}"
 
         globals.arrowsClicked = false;
+        
         $.ajax
           url: "/users/#{($ '#contribution_search').attr('name')}/contributions"
-          data: ajax_params
+          data: filter_ajax_params
           dataType: "html"
-          success: (dat) ->
-            $("#contributions").html dat
+          success: (filtered_html) ->
+            $("#contributions").html filtered_html
             if (parseInt($("#mparams").attr("totalPages")) > 0)
               $("#pageLabel").html "Page " + (parseInt( $("#page").val(), 10 ) + 1) + " of " + $("#mparams").attr("totalPages")
             else 
@@ -67,26 +74,11 @@ $ ->
       $("#contribution_search").submit()
       
     $("#contribution_search").submit ->
-      
-      
-      ###
-      
-      console.log "tacoooooo"
-      console.log globals.arrowsClicked
-      
-      
-      ###
-      
-      
-      
-      
-      if (globals.arrowsClicked)
-        $("#page").val("0")
-      else        
-        ajax_params = ($ '#contribution_search').serialize()
-        ajax_params +="&filters=#{($ '#user_filter .active').text()}"
+      ajax_params = ($ '#contribution_search').serialize()
+      ajax_params += "&filters=#{($ '#user_filter .active').text()}"
         
-        globals.arrowsClicked = false;
+      globals.arrowsClicked = false;
+                
       $.ajax
         url: "/users/#{($ '#contribution_search').attr('name')}/contributions"
         data: ajax_params
@@ -108,8 +100,8 @@ $ ->
           
       return false
         
-    $(".contribution_search_btn").click ->
-      $("#contribution_search").submit()
+    ($ "#contribution_search_btn").click ->
+      ($ "#contribution_search").submit()
       
     $("#contribution_search").submit()
     

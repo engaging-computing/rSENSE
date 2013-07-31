@@ -61,10 +61,6 @@ class UsersController < ApplicationController
     @filters = params[:filters].to_s.downcase
     @filters.tr!(' ', '_')
     
-    logger.info "-=-=-=-=-=-=-=-=-=-=-"
-    logger.info @filters
-    logger.info "-=-=-=-=-=-=-=-=-=-=-"
-    
     if @filters == "all"
       @filters = [ "projects", "data_sets", "visualizations", "media", "tutorials" ]
     end

@@ -57,7 +57,7 @@
           
           <div class="row">
             <div class="span9" style="border: 1px solid #f5f5f5; border-top: 10px; border-left: 0px; border-right: 0px;">
-              <input type="text" class="input" id="contribution_search" />
+              <%= text_field_tag :search, params[:search], class: 'input', id: 'contribution_search' %>
               <input type="button" class="btn btn-success pull-right" value="Search" id="contribution_search_btn" />
             </div>
           </div>
