@@ -129,8 +129,12 @@ class UsersController < ApplicationController
     
     page = params[:page].to_i
     
-    @totalPages = (@contributions.length/page_size).ceil
-    
+    if @contributions.length == 0
+      @totalPages = 0
+    else
+      @totalPages = (@contributions.length/page_size).ceil + 1
+    end  
+
     @lastPage = false
     if page+1 == @totalPages.to_i
       @lastPage = true
