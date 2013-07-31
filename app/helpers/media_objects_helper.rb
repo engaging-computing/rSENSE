@@ -1,6 +1,6 @@
 module MediaObjectsHelper
   
-  def media_object_edit_menu_helper(make_link = false)
+  def media_object_edit_menu_helper(make_link = false, trunc = 32)
     
     url = if !@media_object.project_id.nil?
       project_url @media_object.project
@@ -14,11 +14,11 @@ module MediaObjectsHelper
       home_url
     end
     
-    render 'shared/edit_menu', {type: 'media_object', typeName: 'Media Object', obj: @media_object, make_link: make_link, escape_link: url}
+    render 'shared/edit_menu', {type: 'media_object', typeName: 'Media Object', obj: @media_object, make_link: make_link, escape_link: url, trunc: trunc}
   end
   
-  def media_object_edit_helper(field,can_edit = false)
-     render 'shared/edit_info', {type: 'media_object', field: field, value: @media_object[field], row_id: @media_object.id, can_edit: can_edit}
+  def media_object_edit_helper(field,can_edit = false, trunc = 32)
+     render 'shared/edit_info', {type: 'media_object', field: field, value: @media_object[field], row_id: @media_object.id, can_edit: can_edit, trunc: trunc}
   end
     
   def media_object_redactor_helper(can_edit = false)
