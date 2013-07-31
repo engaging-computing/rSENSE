@@ -30,7 +30,7 @@
 
 .add_content
 {
-  margin: 100px 0px 100px 0px;
+  padding: 100px 0px 100px 0px;
 }
 
 .grey_content
@@ -100,6 +100,55 @@ input.projects_add_filter_checkbox
   margin-top: 0px;
 }
 
+.feed 
+{
+  padding: 2px 5px 2px 5px;
+  
+  .control_block{
+    display:inline-block; 
+    margin: 5px 0px; 
+    float:right;
+    
+    .control{
+      width:50px;
+      text-align: center; 
+      display:inline-block;
+    }
+  }
+  .gravatar{
+    display:inline-block; 
+    width:32px; 
+    height:32px; 
+    vertical-align: middle
+  }
+  
+  .links{
+    display:inline-block; 
+    margin: 5px 0px;
+    
+    .owner{
+      width:95px; 
+      padding-left:4px;
+      display: inline-block
+    }
+    
+    .title{
+      width:220px; 
+      display: inline-block
+    }
+  }
+  
+  .ds_selector{
+    width:15px; 
+    display:inline-block;
+  }
+  
+  border-style: solid;
+  border-color: #EEE;
+  border-width: 1px 0px 0px 0px;
+  
+}
+
 div.dataset.feed-even, div.dataset.feed-odd, div#dataset_list div.feed-top{
   
   padding: 2px 5px 2px 5px;
@@ -146,4 +195,40 @@ div.dataset.feed-even, div.dataset.feed-odd, div#dataset_list div.feed-top{
 
 .hoverimage{
   height: 75px;
+}
+
+.box-header 
+{
+  background-image: linear-gradient(#fafafa, #eaeaea);
+  background-repeat: repeat-x;
+  border: 1px solid #d5d5d5;
+  border-radius: 4px 4px 0px 0px;
+  font-size: x-large;
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+}
+
+.box-content
+{
+
+  border: 1px solid #d5d5d5;
+  border-top: 0px;
+  padding: 20px;
+  
+}
+
+.box-slider
+{
+  border: 1px solid #d5d5d5;
+  border-radius: 0px 0px 15px 15px;
+  background-color: #fafafa;
+  border-top: 0px;
+  margin-bottom: 20px;
+
+}
+
+.box-slider:hover
+{
+  bacground-color: #eaeaea;
 }
