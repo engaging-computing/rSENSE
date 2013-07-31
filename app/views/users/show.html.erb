@@ -8,15 +8,15 @@
         </div>
         <div class="span12 text-center" style="padding-top:10px;">
           <span class="info_label" style="line-height: 30px;">First Name:</span> 
-          <%= user_edit_helper 'firstname', (can_edit? @user) %>
+          <%= user_edit_helper 'firstname', (can_edit? @user), false, 32 %>
           <br />
           <%if can_edit? @user%>
             <span class="info_label" style="line-height: 30px;">Last Name:</span>
-            <%= user_edit_helper 'lastname', (can_edit? @user) %>
+            <%= user_edit_helper 'lastname', (can_edit? @user), false, 32 %>
             <br />
           <%end%>
           <span class="info_label" style="line-height: 30px;">Username:</span>
-          <%= user_edit_helper 'username' %>
+          <%= user_edit_helper 'username', false, false, 32 %>
           <br />
           <span style="line-height: 30px;">Joined <%= time_ago_in_words(@user.created_at)%> ago</span>
           <br />
@@ -35,7 +35,7 @@
     <div class="span9">
       <%= form_tag users_path, method: 'get', id:'contribution_search', name: @user.username do%>
         <ul class="nav nav-tabs" id="user_filter">
-          <li class="active"><a href="#"><%= @user.name %></a></li>
+          <li class="active"><a href="#"><%= truncate @user.name, length: 32 %></a></li>
           <li><a href="#">All</a></li>
           <li><a href="#">Projects</a></li>
           <li><a href="#">Data Sets</a></li>
