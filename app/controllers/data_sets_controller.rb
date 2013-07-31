@@ -157,7 +157,7 @@ class DataSetsController < ApplicationController
   end
 
   def manualEntry
-    @project = Project.find(params[:pid])
+    @project = Project.find(params[:id])
   end
 
   # POST /data_set/1/manualUpload
