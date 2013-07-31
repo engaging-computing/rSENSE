@@ -5,7 +5,7 @@ module TutorialsHelper
   end
   
   def tutorial_redactor_helper(can_edit = false)
-      render 'shared/content', {type: 'tutorial', field: "content", content: @tutorial.content, row_id: @tutorial.id, has_content: !@tutorial.content.blank?, can_edit: can_edit}
+    render 'shared/content', {type: 'tutorial', field: 'content', content: @tutorial.content, row_id: @tutorial.id, has_content: !@tutorial.content.blank?, can_edit: can_edit}
   end
   
   def tutorial_edit_helper(field,can_edit = false,make_link = true)
