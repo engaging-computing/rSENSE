@@ -117,7 +117,7 @@
       <%=render layout: "shared/box", locals: {title: 'Create Data Set', width:'5', unique_id: 'create_data_set', should_hide: false} do %>
       <div class="row-fluid">
         <div class="span4 center">
-        <%= link_to :controller => :data_sets, :action => :manualEntry, :pid => @project.id do %>
+        <%= link_to :controller => :data_sets, :action => :manualEntry do %>
           <img class="hoverimage" src="/assets/manual.svg" /><br />Manual Entry
         <% end %>
         </div>
