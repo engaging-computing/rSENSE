@@ -23,5 +23,5 @@ $ ->
           dataType: 'json'
           data: data
           success: ->
-            ($ 'span.edit_menu span.info_text').text(name)
+            ($ 'span.edit_info span.info_text a').text(name)
             ($ '#name_box').modal('hide')
