@@ -6,9 +6,7 @@
 
 <% if can_edit?(@data_set) %>
 
-  <h1>Editing Data</h1>
-
-  <span style="font-size:2em;"><%= data_set_edit_helper 'title', @project.owner.id == @cur_user.try(:id) %></span><br><br>
+  <span style="font-size:2em;"><%= data_set_edit_helper 'title', can_edit?(@data_set), false, 64 %></span><br><br>
 
   <div class="row">
     <div class="span12">
