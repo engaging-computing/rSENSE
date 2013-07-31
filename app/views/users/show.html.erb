@@ -6,17 +6,17 @@
         <div class="span12 text-center">
           <%= image_tag Gravatar.new.url(@user), :style => "border-radius: 8px" %>
         </div>
-        <div class="span12 text-center" style="padding-top:10px;">
+        <div class="span12" style="padding-top:10px;">
           <span class="info_label" style="line-height: 30px;">First Name:</span> 
-          <%= user_edit_helper 'firstname', (can_edit? @user), false, 32 %>
+          <%= user_edit_helper 'firstname', (can_edit? @user), false, 18 %>
           <br />
           <%if can_edit? @user%>
             <span class="info_label" style="line-height: 30px;">Last Name:</span>
-            <%= user_edit_helper 'lastname', (can_edit? @user), false, 32 %>
+            <%= user_edit_helper 'lastname', (can_edit? @user), false, 18 %>
             <br />
           <%end%>
           <span class="info_label" style="line-height: 30px;">Username:</span>
-          <%= user_edit_helper 'username', false, false, 32 %>
+          <%= user_edit_helper 'username', false, false, 18 %>
           <br />
           <span style="line-height: 30px;">Joined <%= time_ago_in_words(@user.created_at)%> ago</span>
           <br />
