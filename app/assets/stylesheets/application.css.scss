@@ -18,6 +18,8 @@
  *= require bootstrap-datetimepicker.less
  */
 
+.invalid { background-color: #FF0000 }
+
 .vcenter {
     vertical-align: middle;
 }
@@ -222,11 +224,11 @@ input.object_hidden_checkbox
   left: -54px;
 }
 
-.feed-even, .feed-odd
+/*.feed-even, .feed-odd
 {
   border-right-width: 2px;
   border-left-width: 2px;
-}
+}*/
 
 #title_bar
 {

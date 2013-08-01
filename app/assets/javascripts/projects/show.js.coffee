@@ -142,7 +142,7 @@ $ ->
         $.ajax
           type: "POST"
           dataType: "json"
-          url: "/projects/#{resp['pid']}/uploadCSV"
+          url: "/projects/#{resp['pid']}/CSVUpload"
           data: matchData
           success: (resp) ->
             ($ "#match_box").modal("hide")
@@ -220,7 +220,7 @@ $ ->
       false
 
     ($ '#csv_file_input').click ->
-      ($ '#csv_file_form').attr 'action', "#{window.location}/uploadCSV"
+      ($ '#csv_file_form').attr 'action', "#{window.location}/CSVUpload"
 
     ($ '#template_file_form').click ->
       ($ '#template_file_form').attr 'action', "#{window.location}/templateFields"
