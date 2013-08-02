@@ -36,9 +36,9 @@ class DataSet < ActiveRecord::Base
       mongo_data = []
       
       datapoints.each do |dp|
-        row = []
+        row = {}
         header.each_with_index do |field, col_index|
-          row << { field[1][:id] => dp[1][col_index] }
+          row["#{field[1][:id]}"] = dp[1][col_index]
         end
         mongo_data << row
       end
