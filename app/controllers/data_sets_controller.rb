@@ -123,7 +123,7 @@ class DataSetsController < ApplicationController
         format.json { render json: {}, status: :ok }
       else
         format.html { render action: "edit" }
-        format.json { render json: @data_set.errors, status: :unprocessable_entity }
+        format.json { render json: @data_set.errors.full_messages(), status: :unprocessable_entity }
       end
     end
   end
@@ -170,6 +170,8 @@ class DataSetsController < ApplicationController
     @fields = @project.fields
 
     header_to_field_map = []
+    
+    success = false
 
     if !params["data"].nil? and !params["headers"].nil?
 
@@ -212,19 +214,18 @@ class DataSetsController < ApplicationController
       followURL = url_for :controller => :visualizations, :action => :displayVis, :id => @project.id, :sessions => "#{@data_set.id}"
       followURL = "/projects/#{@project.id}/data_sets/#{@data_set.id}"
 
-      if data_to_add.save!
-        response = { status: 'success', redirect: followURL, datasets: @data_set.id, title: defaultName }
-      else
-        response = { status: 'fail' }
-      end
+      success =  data_to_add.save!
 
     else
       response = ["No data"]
     end
 
     respond_to do |format|
-      format.html { render json: response }
-      format.json { render json: response }
+      if success
+        format.json { render json: @data_set.to_hash(false), status: :created}
+      else
+        format.json { render json: @data_set.errors.full_messages(), status: :unprocessable_entity }
+      end
     end
 
   end
@@ -375,7 +376,7 @@ class DataSetsController < ApplicationController
         f.write @file.tempfile.read
         f.close
         respond_to do |format|
-          format.json { render json: {status: "mismatch", pid: params[:id],headers: headers, fields: fields, partialMatches: results,tmpFile: fname}   }
+          format.json { render json: {pid: params[:id],headers: headers, fields: fields, partialMatches: results,tmpFile: fname}, status: :partial_content  }
         end
         return
 
@@ -416,24 +417,31 @@ class DataSetsController < ApplicationController
       mongo_data << row
     end
 
+    success = false
+    
     if @data_set.save!
       data_to_add = MongoData.new(:data_set_id => @data_set.id, :data => mongo_data)
 
       redirect = url_for :controller => :visualizations, :action => :displayVis, :id => @project.id, :datasets => @data_set.id
 
       if data_to_add.save!
+        success = true
         response = { status: 'success', redirect: redirect, :datasets => @data_set.id, :title => @data_set.title }
       else
-        response = { status: 'fail' }
+        success = false
+        @data_set.delete
       end
     else
-      response = { status: 'fail' }
+      success = false
     end
-
-    #Send the object as json
+    
     respond_to do |format|
-      format.json { render json: response }
-      format.html { redirect_to :controller => :visualizations, :action => :displayVis, :id => @project.id, :datasets => @data_set.id, :title =>  @data_set.title }
+      if success
+        format.json { render json: @data_set.to_hash(false), status: :created}
+        format.html { redirect_to :controller => :visualizations, :action => :displayVis, :id => @project.id, :datasets => @data_set.id, :title =>  @data_set.title }
+      else
+        format.json { render json: @data_set.errors.full_messages(), status: :unprocessable_entity }
+      end
     end
 
   end
