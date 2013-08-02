@@ -164,8 +164,12 @@ class DataSetsController < ApplicationController
   def manualUpload
 
     @project = Project.find(params[:id])
-    defaultName  = @project.title + " Dataset #"
-    defaultName += (DataSet.find_all_by_project_id(params[:pid]).count + 1).to_s
+    if !params["name"]
+      defaultName  = @project.title + " Dataset #"
+      defaultName += (DataSet.find_all_by_project_id(params[:pid]).count + 1).to_s
+    else
+      defaultName = params["name"]
+    end
 
     @fields = @project.fields
 
