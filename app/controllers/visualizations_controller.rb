@@ -129,7 +129,7 @@ class VisualizationsController < ApplicationController
         format.json { render json: {}, status: :ok }
       else
         format.html { render action: "edit" }
-        format.json { render json: @visualization.errors, status: :unprocessable_entity }
+        format.json { render json: @visualization.errors.full_messages(), status: :unprocessable_entity }
       end
     end
   end
@@ -139,15 +139,15 @@ class VisualizationsController < ApplicationController
   def destroy
     @visualization = Visualization.find(params[:id])
     
-    if can_delete?(@visualizaion)
+    if can_delete?(@visualization)
       
-      @visualizaion.media_objects.each do |m|
+      @visualization.media_objects.each do |m|
         m.destroy
       end
       
-      @visualizaion.hidden = true
-      @visualizaion.user_id = -1
-      @visualizaion.save
+      @visualization.hidden = true
+      @visualization.user_id = -1
+      @visualization.save
       
       respond_to do |format|
         format.html { redirect_to visualizaions_url }
