@@ -45,10 +45,12 @@ $ ->
           ($ '#tutorials').append(addProjectButton).isotope('insert', addProjectButton)
 
           ($ '#addProjectButton').click ->
-            token = ($ "meta[name='csrf-token']").attr('content')
-            form = ($ "<form action='/tutorials/create' method='post'> <input type='hidden' name='authenticity_token' value='#{token}'> </form>")
-            ($ "body").append(form)
-            ($ form).submit()
+            $.ajax
+              url: "tutorials/create"
+              data: {}
+              dataType: "json"
+              success: (data, textStatus) ->
+                helpers.name_popup data, "Tutorial", "tutorial"
 
           for object in data
             do (object) ->
