@@ -149,7 +149,7 @@ class ProjectsController < ApplicationController
         format.json { render json: {}, status: :ok }
       else
         format.html { render action: "edit" }
-        format.json { render json: @project.errors, status: :unprocessable_entity }
+        format.json { render json: @project.errors.full_messages(), status: :unprocessable_entity }
       end
     end
   end
