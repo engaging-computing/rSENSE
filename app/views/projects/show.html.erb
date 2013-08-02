@@ -23,19 +23,6 @@
         </div>
       </div>
 
-      <!-- name box popup on create -->
-      <% if notice == "Project was successfully created." %>
-        <div id="name_box" class="modal hide fade well container" style="width:400px">
-          <div> Please enter a name for this Project. <br>
-            <input id="name_name" class="name_field" type="text" style="width:75%" value="<%= @cur_user.name + "'s Project" %>"></input>
-            </div>
-            <div class="clear"></div>
-          <div style="float:right;">
-              <button class="name_button btn btn-success">Finish</button>
-          </div>
-        </div>
-      <% end %>
-
       <!-- project content -->
       <%=render layout: "shared/box", locals: {title: 'Description', width: '7', unique_id: 'description', should_hide: false} do %>
         <%= project_redactor_helper (can_edit? @project), false %>
