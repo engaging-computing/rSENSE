@@ -214,3 +214,12 @@ i
 .table-striped tbody > tr:nth-child(odd) > th {
   background-color: #EEE;
 }
+
+/* This is the lesser of two evils. In reality there should be different layouts for tablets and phones*/
+.span5{
+  min-width:440px;
+}
+
+.span7{
+  min-width:670px;
+}
