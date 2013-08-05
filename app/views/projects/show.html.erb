@@ -77,23 +77,23 @@
 
                 <div class="control">
                   <a class="data_set_export" href="/projects/<%= @project.id %>/export/data_sets/<%= s.id %>">Export</a>
-                </div>
+       
 
-                <div class="control">
+        
                   <% if can_edit? s %>
-                    <a class="data_set_edit" href="<%= edit_data_set_path s %>">Edit</a>
+                     | <a class="data_set_edit" href="<%= edit_data_set_path s %>">Edit</a>
                   <% end %>
-                </div>
+          
 
-                <div class="control">
+             
                   <% if can_hide? s %>
-                    <a class="data_set_hide" href="<%= data_set_url s %>">Hide</a>
+                     | <a class="data_set_hide" href="<%= data_set_url s %>">Hide</a>
                   <% end %>
-                </div>
+             
 
-                <div class="control">
+            
                   <% if can_delete? s %>
-                    <a class="data_set_delete" href="<%= data_set_url s %>" name="<%= s.title %>">Delete</a>
+                     | <a class="data_set_delete" href="<%= data_set_url s %>" name="<%= s.title %>">Delete</a>
                   <% end %>
                 </div>
 
