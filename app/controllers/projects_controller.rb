@@ -149,7 +149,7 @@ class ProjectsController < ApplicationController
         format.json { render json: {}, status: :ok }
       else
         format.html { render action: "edit" }
-        format.json { render json: @project.errors, status: :unprocessable_entity }
+        format.json { render json: @project.errors.full_messages(), status: :unprocessable_entity }
       end
     end
   end
@@ -225,7 +225,7 @@ class ProjectsController < ApplicationController
       json = ActiveSupport::JSON.decode(
         Net::HTTP.get(
           URI.parse(
-            "http://isenseproject.org/ws/api.php?method=getExperiment&experiment=#{@pid}"
+            "http://129.63.8.186/ws/api.php?method=getExperiment&experiment=#{@pid}"
             )
           )
         )
@@ -237,7 +237,7 @@ class ProjectsController < ApplicationController
         json = ActiveSupport::JSON.decode(
           Net::HTTP.get(
             URI.parse(
-              "http://isenseproject.org/ws/api.php?method=getExperimentFields&experiment=#{@pid}"
+              "http://129.63.8.186/ws/api.php?method=getExperimentFields&experiment=#{@pid}"
             )
           )
         )
@@ -264,7 +264,7 @@ class ProjectsController < ApplicationController
 
         json = ActiveSupport::JSON.decode(
           Net::HTTP.get(
-            URI.parse("http://isenseproject.org/ws/api.php?method=getSessions&experiment=#{@pid}")
+            URI.parse("http://129.63.8.186/ws/api.php?method=getSessions&experiment=#{@pid}")
           )
         )
 
@@ -284,7 +284,7 @@ class ProjectsController < ApplicationController
           begin
 
             response = Net::HTTP.get(
-              URI.parse("http://isenseproject.org/ws/json.php?sessions=#{ses['id']}")
+              URI.parse("http://129.63.8.186/ws/json.php?sessions=#{ses['id']}")
             )
 
           rescue SocketError => error

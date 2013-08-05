@@ -36,9 +36,9 @@ Rsense::Application.routes.draw do
   end
 
   #Routes for uploading data
-  match "/projects/:id/uploadCSV" => "data_sets#uploadCSV"
-  match "/data_sets/:pid/manualEntry" => "data_sets#manualEntry"
-  match "/data_sets/:pid/manualUpload" => "data_sets#manualUpload"
+  match "/projects/:id/CSVUpload" => "data_sets#uploadCSV"
+  match "/projects/:id/manualEntry" => "data_sets#manualEntry"
+  match "/projects/:id/manualUpload" => "data_sets#manualUpload"
   match "/data_sets/:id/edit" => "data_sets#edit"
 
   match "/projects/:id/export/data_sets/*datasets" => "data_sets#export"

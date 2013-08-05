@@ -14,7 +14,7 @@
 //= require constants
 //= require jquery
 //= require helpers
-//= require dataset_name
+//= require name_popup
 //= require jquery_ujs
 //= require jquery.ui.all
 //= require twitter/bootstrap
