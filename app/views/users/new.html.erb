@@ -1,56 +1,68 @@
-  <div class="feed-top">
-    <h1>Create User</h1>
-
-    <%= form_for(@user) do |f| %>
-      <% if @user.errors.any? %>
-        <div id="error_explanation">
-          <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
-
-          <ul>
-          <% @user.errors.full_messages.each do |msg| %>
-            <li><%= msg %></li>
-          <% end %>
-          </ul>
-        </div>
-      <% end %>
-  </div>  
+<div class="feed-top">
+  <h1>Create User</h1>
   
   <div class="feed-even">
     <div class="field_top">First Name: *</div>
-    <div class="field_top"><%= f.text_field :firstname %></div>
+    <div class="field_top">
+      <input id="firstname"></input>
+    </div>
     <div style="clear:both;"></div>
     
-    <div class="field">Last Name: *</div>
-    <div class="field"><%= f.text_field :lastname %></div>
+    <div class="hint"> Can contain letters, single quotes, and hyphens. </div>
+  </div>
+    
+  <div class="feed-odd">
+    <div class="field_top">Last Name: *</div>
+    <div class="field_top">
+      <input id="lastname"></input>
+    </div>
     <div style="clear:both;"></div>
+    
+    <div class="hint"> Can contain letters, single quotes, and hyphens. </div>
+  </div>
+  
+  <div class="feed-even">
+    <div class="field_top">Username: *</div>
+    <div class="field_top">
+      <input id="username"></input>
+    </div>
+    <div style="clear:both;"></div>
+    
+    <div class="hint"> Can contain letters and numbers. </div>
   </div>
   
   <div class="feed-odd">
-    <div class="field_top">Username: *</div>
-    <div class="field_top"><%= f.text_field :username %></div>
+    <div class="field_top">Email:</div>
+    <div class="field_top">
+      <input id="email"></input>
+    </div>
     <div style="clear:both;"></div>
     
-    <div class="field">Email:</div>
-    <div class="field"><%= f.text_field :email %></div>
-    <div style="clear:both;"></div>
+    <div class="hint"> eg. user@example.com </div>
   </div>
   
   <div class="feed-even">
     <div class="field_top">Password: *</div>
-    <div class="field_top"><%= f.password_field :password %></div>
+    <div class="field_top">
+      <input id="password" type="password"></input>
+    </div>
     <div style="clear:both;"></div>
     
-    <div class="field">Confirmation: *</div>
-    <div class="field"><%= f.password_field :password_confirmation %></div>
+    <div class="hint"> Can contain any letters, number, and punctuation. </div>
+  </div>
+    
+  <div class="feed-odd">
+    <div class="field_top">Confirmation: *</div>
+    <div class="field_top">
+      <input id="password_confirmation" type="password"></input>
+    </div>
     <div style="clear:both;"></div>
+    
+    <div class="hint">  </div>
   </div>
   
   <div class="feed-bottom" style="padding-top:4px;"> 
     <div class="actions">
-      <%= f.submit "Create User", :class => "btn btn-primary" %>
+      <button id="register" class="btn btn-primary"> Create User </button>
     </div>
   </div>
-<% end %>
-
-
-<%= link_to 'Back', users_path %>
