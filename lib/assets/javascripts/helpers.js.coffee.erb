@@ -2,6 +2,12 @@ $ ->
 
   window.helpers ?= {}
 
+  helpers.truncate = (str, length) ->
+    if str.length > length
+      str = str.substr(0, length - 3) + '...'
+    else
+      str
+  
   helpers.get_field_name = (type) ->
     switch type
       when 1 then "Timestamp"

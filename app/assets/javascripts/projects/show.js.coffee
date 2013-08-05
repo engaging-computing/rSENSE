@@ -142,12 +142,11 @@ $ ->
         $.ajax
           type: "POST"
           dataType: "json"
-          url: "/projects/#{resp['pid']}/uploadCSV"
+          url: "/projects/#{resp['pid']}/CSVUpload"
           data: matchData
           success: (resp) ->
             ($ "#match_box").modal("hide")
-            helpers.name_dataset resp.title, resp.datasets, () ->
-              window.location = resp.redirect
+            helpers.name_popup resp, "Dataset", "data_set"
           error: (resp) ->
             alert "Somthing went horribly wrong. I'm sorry."
 
@@ -156,11 +155,10 @@ $ ->
         keyboard: true
 
     # A File has been uploaded, decide what to do
-    ($ "#csv_file_form").ajaxForm (resp) ->
+    ($ "#csv_file_form").ajaxForm (resp, status, xhr) ->
 
-      if resp.status == "success"
-        helpers.name_dataset resp.title, resp.datasets, () ->
-          window.location = resp.redirect
+      if xhr.status == 201
+        helpers.name_popup resp, "Dataset", "data_set"
       else
         respond_csv(resp)
 
@@ -220,7 +218,7 @@ $ ->
       false
 
     ($ '#csv_file_input').click ->
-      ($ '#csv_file_form').attr 'action', "#{window.location}/uploadCSV"
+      ($ '#csv_file_form').attr 'action', "#{window.location}/CSVUpload"
 
     ($ '#template_file_form').click ->
       ($ '#template_file_form').attr 'action', "#{window.location}/templateFields"

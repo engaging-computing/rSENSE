@@ -6,7 +6,7 @@
 </script>
 
 <div class="row" id="title_row" style="margin-left: 0px; margin-top:20px">  
-    <span class="span12" style="font-size:2em;"><%= project_edit_helper 'title', @project.owner.id == @cur_user.try(:id) %></span><br><br>
+    <span style="font-size:2em;"><%= project_edit_helper 'title', can_edit?(@project), true, 128 %></span><br><br>
 </div>
 
 <div style="margin: 0px 10px;">
@@ -37,19 +37,16 @@
   
   <div class="" id="tabcontainer">
     <ul class="nav nav-tabs" id="myTab">
-      <% i = 0 %>
       <% @datasets.each do |s| %>
+          <% @data_set = s %>
           <li class="dataset_tab"><a href="#<%=s.id%>">
-            <%= data_set_edit_helper 'title', @datasets[i].owner.id == @cur_user.try(:id), @datasets[i], make_link = false %>
+            <%= data_set_edit_helper 'title', can_edit?(s), make_link = false, 32 %>
           </a></li>
-        <% i=i+1 %>
       <% end %>
     </ul>
     
-    <% i = 0 %>
      <% @datasets.each do |s| %>
-         <div class="tab-pane" id="<%=s.id%>"><%= data_set_redactor_helper s, (@project.owner.id == @cur_user.try(:id)) %></div>
-       <% i=i+1 %>
+         <div class="tab-pane" id="<%=s.id%>"><%= data_set_redactor_helper s, can_edit?(s) %></div>
     <% end %>
 
 

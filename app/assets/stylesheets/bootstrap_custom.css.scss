@@ -164,24 +164,24 @@ i
 
 .feed-odd
 {
-  padding: 2px 20px 15px 20px;
+  padding: 2px 5px 2px 5px;
   margin: 0px;
-  background-color: #e8e8e8;
+  /*background-color: #ffffff;*/
 
-  border-style: groove;
-  border-color: #ffffff;
-  border-width: 2px 0px 0px 0px;
+  border-style: solid;
+  border-color: #CCC;
+  border-width: 1px 0px 0px 0px;
 }
 
 .feed-even
 {
-  padding: 2px 20px 15px 20px;
+  padding: 2px 5px 2px 5px;
   margin: 0px;
-  background-color: #f8f8f8;
+  background-color: #f7f7f7;
 
-  border-style: groove;
-  border-color: #ffffff;
-  border-width: 2px 0px 0px 0px;
+  border-style: solid;
+  border-color: #CCC;
+  border-width: 1px 0px 0px 0px;
 }
 
 .mainContent

@@ -6,21 +6,9 @@
 </script>
 
 <div class="row" id="title_row" style="margin-left: 0px; margin-top:20px">
-    <span id="title_span" class="span12" style="font-size:2em;"><%= visualization_edit_helper 'title', @visualization.owner.id == @cur_user.try(:id) %></span><br><br>
+    <span id="title_span" style="font-size:2em;">
+    <%=visualization_edit_menu_helper false, 64%></span><br><br>
 </div>
-
-<!-- name box popup on create -->
-<% if notice == "Visualization was successfully created." %>
-  <div id="name_box" class="modal hide fade well container" style="width:400px">
-    <div> Please enter a name for this Visualization. <br>
-      <input id="name_name" class="name_field" type="text" style="width:75%" value="<%= "Saved Vis - #{@project.title}" %>"></input>
-      </div>
-      <div class="clear"></div>
-    <div style="float:right;">
-        <button class="name_button btn btn-success">Finish</button>
-    </div>
-  </div>
-<% end %>
 
 <div style="margin: 0px 10px;">
 
