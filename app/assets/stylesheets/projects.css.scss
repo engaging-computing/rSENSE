@@ -105,17 +105,18 @@ div.dataset.feed-even, div.dataset.feed-odd, div#dataset_list div.feed-top{
   padding: 2px 5px 2px 5px;
   
   .control_block{
+    font-size: .75em;
     display:inline-block; 
-    margin: 5px 0px; 
     float:right;
     
     .control{
-      width:50px;
       text-align: center; 
-      display:inline-block;
+      float:left;
+      margin-right:20px;
+      padding-top:7px;
     }
   }
-  .gravatar{
+  .gravatar, .media_icon{
     display:inline-block; 
     width:32px; 
     height:32px; 
@@ -127,7 +128,7 @@ div.dataset.feed-even, div.dataset.feed-odd, div#dataset_list div.feed-top{
     margin: 5px 0px;
     
     .owner{
-      width:95px; 
+      width:110px; 
       padding-left:4px;
       display: inline-block
     }
@@ -140,6 +141,7 @@ div.dataset.feed-even, div.dataset.feed-odd, div#dataset_list div.feed-top{
   
   .ds_selector{
     width:15px; 
+    padding-top:7px;
     display:inline-block;
   }
 }

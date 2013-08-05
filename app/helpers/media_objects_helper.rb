@@ -26,8 +26,8 @@ module MediaObjectsHelper
   end  
   
   def media_object_thumbnail_helper(mo)
-    img_size = '100x100'
-    icon_size = '50x50'
+    img_size = '32x32'
+    icon_size = '32x32'
     if mo.media_type == 'image'
       image_tag(mo.src, :size => img_size)
     elsif mo.media_type == 'text'
