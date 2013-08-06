@@ -20,7 +20,7 @@ class User < ActiveRecord::Base
   has_many :media_objects
   has_many :visualizations
   has_many :tutorials
-  
+
   def to_param
     self.username
   end
