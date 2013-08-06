@@ -36,8 +36,6 @@ $(document).ready ->
         $(@).parent().parent().siblings('.redactor_content_edit_link').show()
         $(@).parent().parent().hide()
         
-        field_name = $(@).parent().parent().attr('field')
-        value = $(@).parent().parent().find('.redactor_content').redactor('get')
         data={}
         data[type] = {}
         data[type][field_name] = value
