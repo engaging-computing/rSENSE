@@ -5,7 +5,7 @@
  
 
   <head>
-    <title>Rsense</title>
+    <title> <%= render_title %> </title>
     <%= stylesheet_link_tag    "application", :media => "all" %>
     <%= javascript_include_tag "application" %>
     <%= csrf_meta_tags %>
@@ -58,7 +58,7 @@
             
             <div class="visible-desktop visible-tablet" style="height:15px;padding-top:44px;">
               <a class="white" href="/projects"><i class="icon-folder-open icon-white"> </i> Projects</a>&nbsp;&nbsp;&nbsp;
-              <a class="white" href="/users"><i class="icon-user icon-white"> </i> People</a>&nbsp;&nbsp;&nbsp;
+              <a class="white" href="/users"><i class="icon-user icon-white"> </i> Users</a>&nbsp;&nbsp;&nbsp;
               <a class="white" href="/visualizations"><i class="icon-picture icon-white"> </i> Visualizations</a>&nbsp;&nbsp;&nbsp;
               <a class="white" href="/tutorials"><i class="icon-info-sign icon-white"> </i> Tutorials </a>
             </div>
