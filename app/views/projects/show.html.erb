@@ -23,19 +23,6 @@
         </div>
       </div>
 
-      <!-- name box popup on create -->
-      <% if notice == "Project was successfully created." %>
-        <div id="name_box" class="modal hide fade well container" style="width:400px">
-          <div> Please enter a name for this Project. <br>
-            <input id="name_name" class="name_field" type="text" style="width:75%" value="<%= @cur_user.name + "'s Project" %>"></input>
-            </div>
-            <div class="clear"></div>
-          <div style="float:right;">
-              <button class="name_button btn btn-success">Finish</button>
-          </div>
-        </div>
-      <% end %>
-
       <!-- project content -->
       <%=render layout: "shared/box", locals: {title: 'Description', width: '7', unique_id: 'description', should_hide: false} do %>
         <%= project_redactor_helper (can_edit? @project), false %>
@@ -77,23 +64,17 @@
 
                 <div class="control">
                   <a class="data_set_export" href="/projects/<%= @project.id %>/export/data_sets/<%= s.id %>">Export</a>
-                </div>
 
-                <div class="control">
                   <% if can_edit? s %>
-                    <a class="data_set_edit" href="<%= edit_data_set_path s %>">Edit</a>
+                     | <a class="data_set_edit" href="<%= edit_data_set_path s %>">Edit</a>
                   <% end %>
-                </div>
 
-                <div class="control">
                   <% if can_hide? s %>
-                    <a class="data_set_hide" href="<%= data_set_url s %>">Hide</a>
+                     | <a class="data_set_hide" href="<%= data_set_url s %>">Hide</a>
                   <% end %>
-                </div>
 
-                <div class="control">
                   <% if can_delete? s %>
-                    <a class="data_set_delete" href="<%= data_set_url s %>" name="<%= s.title %>">Delete</a>
+                     | <a class="data_set_delete" href="<%= data_set_url s %>" name="<%= s.title %>">Delete</a>
                   <% end %>
                 </div>
 
@@ -184,28 +165,39 @@
 
         <!-- media objects -->
         <%=render layout: "shared/box", locals: {title: 'Media', width: '5', unique_id: 'media', should_hide: false} do %>
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Object</th>
-                  <th>Name</th>
-                  <th>Type</th>
-                  <th style="text-align:center;">Display Image</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% @project.media_objects.all.each do |mo| %>
-                    <tr>
-                        <td style="text-align:center"><%=media_object_thumbnail_helper(mo)%></td>
-                        <td><%= link_to mo.name, mo.src%></td>
-                        <td><%= mo.media_type %></td>
-                        <% if ((mo.media_type == "image") && (can_edit? @project))%>
-                          <td style="text-align:center;"><input type="radio" class="img_selector" name="img_selector" exp_id="<%=@project.id%>" <%if @project.featured_media_id == mo.id%>checked<%end%> mo_id="<%=mo.id%>"></input></td>
-                        <% end %>
-                    </tr>
-                <%end%>
-              </tbody>
-            </table>
+            <div id="media_object_list"> 
+
+            <span style="font-weight:bold"> File</span><span class="pull-right" style="font-weight:bold">Display</span>
+            <% @project.media_objects.all.each do |mo| %>
+              <div class="<%= cycle('feed-even', 'feed-odd')%> mediaobject" style="position:relative">
+                <div class="media_icon">
+                  <%=media_object_thumbnail_helper(mo)%>
+                </div>
+                <div class="links">
+                  <%= link_to truncate(mo.name, :length => 25), mo.src%>
+                </div>
+                <div class="control_block" style="width:20px">
+                  <div class="control">
+                    <% if ((mo.media_type == "image") && (can_edit? @project))%>
+                      <input type="radio" class="img_selector" name="img_selector" exp_id="<%=@project.id%>" <%if @project.featured_media_id == mo.id%>checked<%end%> mo_id="<%=mo.id%>"></input>
+                    <%end%>
+                  </div>
+                </div>
+                <div class="control_block">
+                  <div class="control">
+                     <% if can_edit? mo %>
+                      <a class="data_set_edit" href="<%= edit_media_object_path mo %>">Edit</a>
+                     <% end %>
+                     <% if can_delete? mo %>
+                     | <a class="media_object_delete" href="<%= media_object_url mo %>" name="<%= mo.title %>">Delete</a>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+              
+            <%end%>
+            
+          </div>
         <%end%>
     </div>
   </div>

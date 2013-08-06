@@ -44,7 +44,7 @@
     <div class="pull-right" style="width:50px; text-align: center">
       <% if (can_edit? contribution) && (contribution.kind_of? DataSet) %>
         <!--   Just put the actual link here     -->
-        <a href="<%= url_for(contribution) %>">Edit</a>
+        <a href="<%= url_for(contribution) + "/edit" %>">Edit</a>
       <% else %>
         &nbsp;
       <% end %>
@@ -53,7 +53,7 @@
     <div class="pull-right" style="width:50px; text-align: center">
       <% if contribution.kind_of? DataSet %>
         <!--   Just put the actual link here     -->
-        <a href="<%= url_for(contribution) %>">Export</a>
+        <a href="/projects/<%= contribution.project.id %>/export/data_sets/<%= contribution.id %>">Export</a>
       <% else %>
         &nbsp;
       <% end %>

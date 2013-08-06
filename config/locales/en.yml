@@ -3,3 +3,10 @@
 
 en:
   hello: "Hello world"
+  
+  activerecord:
+    attributes:
+      user:
+        firstname: "First Name"
+        lastname: "Last Name"
+        password_digest: "Password"

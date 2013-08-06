@@ -80,7 +80,7 @@ class FieldsController < ApplicationController
         format.json { render json:{}, status: :ok }
       else
         format.html { render action: "edit" }
-        format.json { render json: @field.errors, status: :unprocessable_entity }
+        format.json { render json: @field.errors.full_messages(), status: :unprocessable_entity }
       end
     end
   end
