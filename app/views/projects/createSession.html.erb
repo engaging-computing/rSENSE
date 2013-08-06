@@ -38,7 +38,7 @@
 
 <div id="hidden_form_div" style="display:none;">
   
-  <%= form_tag 'uploadCSV', multipart: true, id: 'csv_file_form' do %>
+  <%= form_tag 'CSVUpload', multipart: true, id: 'csv_file_form' do %>
     <%= file_field_tag 'csv', id: 'csv_file_input' %>
   <% end %>
   

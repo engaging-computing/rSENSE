@@ -58,7 +58,19 @@ class UsersController < ApplicationController
     @user = User.find_by_username(params[:id])
     
     #See if we are only looking for specific contributions
-    @filters = params[:filters].to_a
+    @filters = params[:filters].to_s.downcase
+    @filters.tr!(' ', '_')
+    
+    if @filters == "all"
+      @filters = [ "projects", "data_sets", "visualizations", "media", "tutorials" ]
+    end
+    
+    if params[:page_size].nil?
+      page_size = 10
+    else
+      page_size = params[:page_size].to_i
+    end
+    
     show_hidden = @cur_user.id == @user.id
     
     #Only grab the contributions we are currently interested in
@@ -117,19 +129,33 @@ class UsersController < ApplicationController
     
     page = params[:page].to_i
     
-    @totalPages = (@contributions.length/5.0).ceil
-    
+    if @contributions.length == 0
+      @totalPages = 0
+    else
+      @totalPages = (@contributions.length/page_size).ceil + 1
+    end  
+
     @lastPage = false
     if page+1 == @totalPages.to_i
       @lastPage = true
     end
     
-    @contributions = @contributions[page*5..(page*5)+4]
+    @contributions = @contributions[page*page_size..(page*page_size)+(page_size - 1)]
     
-    respond_to do |format|
-      format.html { render partial: "display_contributions" }
+    if params[:template].nil?
+  
+      respond_to do |format|
+        format.html { render partial: "display_contributions" }
+      end
+
+    else
+
+      respond_to do |format|
+        format.html { render partial: params[:template] }
+      end
+
     end
-    
+
   end
 
   # GET /users/new
@@ -146,17 +172,6 @@ class UsersController < ApplicationController
   # GET /users/1/edit
   def edit
     @user = User.find_by_username(params[:id])
-  end
-
-  # GET /users/new
-  # GET /users/new.json
-  def new
-    @user = User.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @user }
-    end
   end
   
   # POST /users
@@ -200,7 +215,7 @@ class UsersController < ApplicationController
         format.json { render json: {}, status: :ok }
       else
         format.html { render "public/404.html" }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
+        format.json { render json: @user.errors.full_messages(), status: :unprocessable_entity }
       end
     end
   end
@@ -211,6 +226,11 @@ class UsersController < ApplicationController
     @user = User.find_by_username(params[:id])
     
     if can_delete?(@user)
+      
+      if @cur_user.id == @user.id
+        session[:user_id] = nil
+      end
+      
       @user.projects.each do |p|
         p.hidden = true
         p.save
@@ -235,8 +255,6 @@ class UsersController < ApplicationController
       @user.email =  "#{Time.now().to_i}@deleted.org"
       @user.username =  "#{Time.now().to_i}"
       @user.save
-      
-      session[:user_id] = nil
       
       respond_to do |format|
         format.html { redirect_to users_url}

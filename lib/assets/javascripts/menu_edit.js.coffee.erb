@@ -7,7 +7,7 @@ $ ->
     top = ($ @).parents('span.edit_menu')
     info_box = top.find('.info_text')
     
-    val = info_box.text()
+    val = top.attr 'value'
     info_box.html("<input type='text' class='info_edit_box' value='#{val}'>")
     info_box.find('.info_edit_box').focus()
     
@@ -26,7 +26,8 @@ $ ->
     top = ($ @).parents('span.edit_menu')
     type = top.attr('type')
     info_box = top.find('.info_text')
-    value = info_box.find('.info_edit_box').val()
+    edit_box = info_box.children('.info_edit_box')
+    value = edit_box.val()
     data = {}
     data[type] = 
       title: value
@@ -41,10 +42,22 @@ $ ->
         top.find('span.dropdown').show()
         ($ @).hide()
         
+        top.attr 'value', value
+        value = helpers.truncate value, (Number top.attr('trunc'))
+        
         if ($ @).parent().attr('make_link') == 'true'
           info_box.html("<a href='#{($ @).attr('href')}'>#{value}</a>")
         else if ($ @).parent().attr('make_link') == 'false'
           info_box.html(value)
+      error: (j, s, t) =>
+        edit_box.errorFlash()
+        
+        errors = JSON.parse j.responseText
+        edit_box.popover
+          content: errors[0]
+          placement: "bottom"
+          trigger: "manual"
+        edit_box.popover 'show'
             
   ($ 'a.menu_unhider').click (e) ->
     
@@ -90,9 +103,8 @@ $ ->
     e.preventDefault()
     
     top = ($ @).parents('span.edit_menu')
-    info_box = top.find('.info_text')
     
-    val = info_box.text()
+    val = top.attr 'value'
     
     if helpers.confirm_delete(val)
       $.ajax
