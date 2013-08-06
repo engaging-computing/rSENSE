@@ -14,8 +14,9 @@ $(document).ready ->
         $(@).parent().parent().find('.redactor_content').redactor
           imageUpload: "/media_objects/saveMedia/#{path}"
           fileUpload: "/media_objects/saveMedia/#{path}"
-        $(@).siblings('.redactor_content_save_link').show();
-        $(@).siblings('.redactor_content_cancel_link').show();
+        ($ @).siblings('.pillbox').show()
+#         $(@).siblings('.redactor_content_save_link').show();
+#         $(@).siblings('.redactor_content_cancel_link').show();
         $(@).hide();
     
     ($ '.redactor_content_cancel_link').click ->
