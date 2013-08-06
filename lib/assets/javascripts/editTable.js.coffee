@@ -64,7 +64,6 @@ $ ->
         ($ "#apply_location").click ->
           ($ "#map_picker").modal('hide')
           location = window.marker.getPosition()
-          console.log location
          
           ($ '.target').find('.validate_longitude').val(location.lng());
           ($ '.target').find('.validate_latitude').val(location.lat());
