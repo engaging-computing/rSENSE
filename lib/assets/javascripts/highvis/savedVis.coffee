@@ -97,10 +97,10 @@ $ ->
         data.defaultVis = current
         
         # Check for and note LT dates
-        if data.timeType is data.GEO_TIME
+        if data.timeType is data.NORM_TIME
           for dp, dIndex in data.dataPoints
             for fieldIndex in data.timeFields
-              data.dataPoints[dIndex][fieldIndex] = "Lt #{dp[fieldIndex]}"
+              data.dataPoints[dIndex][fieldIndex] = "U #{dp[fieldIndex]}"
 
         hydrate = new Hydrate()
 
