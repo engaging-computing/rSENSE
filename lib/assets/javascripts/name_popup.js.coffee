@@ -6,7 +6,7 @@ $ ->
     console.log 'here'
     modal = """
     <div id="new_name_box" class="modal hide fade well container" style="width:400px">
-      <div> Please enter a name for this #{name}. <br>
+      <div> Please enter a name for this #{name}: <br>
         <input id="new_name" class="name_field" type="text" style="width:75%" value="#{obj.name}"></input>
         </div>
         <div class="clear"></div>

@@ -103,9 +103,8 @@ $ ->
     e.preventDefault()
     
     top = ($ @).parents('span.edit_menu')
-    info_box = top.find('.info_text')
     
-    val = info_box.text()
+    val = top.attr 'value'
     
     if helpers.confirm_delete(val)
       $.ajax
