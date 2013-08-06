@@ -186,7 +186,7 @@
                 <div class="control_block">
                   <div class="control">
                      <% if can_edit? mo %>
-                      <a class="data_set_edit" href="<%= edit_media_object_path mo %>">Edit</a>
+                      <a href="<%= media_object_path mo %>">Edit</a>
                      <% end %>
                      <% if can_delete? mo %>
                      | <a class="media_object_delete" href="<%= media_object_url mo %>" name="<%= mo.title %>">Delete</a>
