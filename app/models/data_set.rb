@@ -65,10 +65,8 @@ class DataSet < ActiveRecord::Base
     if recurse
       fields = self.project.fields.map {|f| f.to_hash(false)}
       fieldIndices = Hash.new
-      i = 0
-      fields.each do |field|
+      fields.each_with_index do |field, i|
         fieldIndices[field[:id].to_s] = i
-        i += 1
       end
       
       newDataHolder = []
