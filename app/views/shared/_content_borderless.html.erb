@@ -5,9 +5,14 @@
 
     <div class="">
       <%if can_edit%>
-      <a class="redactor_content_edit_link"><i class="icon-edit icon_content pull-right"></i></a>
-      <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_save_link pull-right" style="display:none"><i class="icon-ok  icon_content"></i></a>
-      <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_cancel_link" style="display:none"><i class="icon-remove  icon_content pull-right"></i></a>
+        <a class="redactor_content_edit_link btn btn-small pull-right"><i class="icon-edit icon_content"></i></a>
+
+        <div class="pillbox pull-right" style="display:none;">
+          <div class="btn-group">
+          <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_save_link btn btn-small"><i class="icon-ok  icon_content"></i></a>
+          <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_cancel_link btn btn-small"><i class="icon-remove  icon_content"></i></a>
+          </div>
+        </div>
       <%end%>
     </div>
     <div class="clear"></div>
@@ -19,9 +24,14 @@
   <% elsif !has_content && can_edit %>
   
     <div class="">
-      <a class="redactor_content_edit_link" style="display:none"><i class="icon-edit icon_content pull-right"></i></a>
-      <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_save_link pull-right" style="display:none"><i class="icon-ok  icon_content"></i></a>
-      <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_cancel_link" style="display:none"><i class="icon-remove  icon_content pull-right"></i></a>
+      <a class="redactor_content_edit_link btn btn-small pull-right" style="display:none"><i class="icon-edit icon_content"></i></a>
+
+      <div class="pillbox pull-right" style="display:none;">
+        <div class="btn-group">
+        <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_save_link btn btn-small"><i class="icon-ok  icon_content"></i></a>
+        <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_cancel_link btn btn-small"><i class="icon-remove  icon_content"></i></a>
+        </div>
+      </div>
     </div>
     <div class="clear"></div>
     <div class="redactor_content" style="display:none">
