@@ -3,9 +3,9 @@ class User < ActiveRecord::Base
   attr_accessible :content, :email, :firstname, :lastname, :password, :password_confirmation, :username, :validated, :hidden, :bio
 
   validates_uniqueness_of :email, case_sensitive: false, if: :email?
-  validates :username, uniqueness: true, format: { with: /\A\p{Alnum}+\z/, message: "Only letters and numbers allowed" }
-  validates :firstname, format: {with: /\A[\p{Alpha}\p{Blank}\-']+\z/, message: "only allows letters, hypens, single quotes, and spaces allowed."}
-  validates :lastname, format: {with: /\A[\p{Alpha}\p{Blank}\-']+\z/, message: "only allows letters, hypens, single quotes, and spaces allowed."}
+  validates :username, uniqueness: true, format: { with: /\A\p{Alnum}*\z/, message: "can only contain letters and numbers." }
+  validates :firstname, format: {with: /\A[\p{Alpha}\p{Blank}\-']*\z/, message: "can only contain letters, hyphens, single quotes, and spaces."}
+  validates :lastname, format: {with: /\A[\p{Alpha}\p{Blank}\-']*\z/, message: "can only contain letters, hyphens, single quotes, and spaces."}
   
   validates_presence_of :username, :firstname, :lastname
 
@@ -20,7 +20,7 @@ class User < ActiveRecord::Base
   has_many :media_objects
   has_many :visualizations
   has_many :tutorials
-
+  
   def to_param
     self.username
   end
