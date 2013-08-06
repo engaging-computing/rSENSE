@@ -93,6 +93,10 @@ module ApplicationHelper
 
     @cur_user.try(:admin)
   end
+  
+  def render_title
+    "iSENSE - #{@namespace[:controller].capitalize}"
+  end
 end
 
 class String
