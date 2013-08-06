@@ -64,10 +64,12 @@ $ ->
         ($ "#apply_location").click ->
           ($ "#map_picker").modal('hide')
           location = window.marker.getPosition()
-          ($ '.target').find('.validate_longitude').val(location['kb']);
-          ($ '.target').find('.validate_latitude').val(location['jb']);
+          console.log location
+         
+          ($ '.target').find('.validate_longitude').val(location.lng());
+          ($ '.target').find('.validate_latitude').val(location.lat());
           ($ '.target').removeClass('target')
-
+          
         ($ "#map_picker").on "hidden", ->
           ($ '.target').removeClass('target')
     #-----------------------------------------------------------------------
