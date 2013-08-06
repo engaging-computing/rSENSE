@@ -51,7 +51,7 @@ class DataSet < ActiveRecord::Base
   
   def to_hash(recurse = true)
     data = MongoData.find_by_data_set_id(self.id)
-    
+        
     h = {
       id: self.id,
       name: self.title,
@@ -63,10 +63,26 @@ class DataSet < ActiveRecord::Base
     }
     
     if recurse
+      fields = self.project.fields.map {|f| f.to_hash(false)}
+      fieldIndices = Hash.new
+      fields.each_with_index do |field, i|
+        fieldIndices[field[:id].to_s] = i
+      end
+      
+      newDataHolder = []
+      data[:data].each do |inner|
+        newDataRow = Hash.new
+        inner.each_key do |key|
+          newDataRow[fieldIndices[key]] = inner[key]
+        end
+        newDataHolder.push(newDataRow)
+      end
+      data[:data] = newDataHolder
+    
       h.merge! ({
         owner: self.owner.to_hash(false),
         project: self.project.to_hash(false),
-        fields: self.project.fields.map {|f| f.to_hash(false)},
+        fields: fields,
         data: data
       })
     end
