@@ -62,7 +62,7 @@ $ ->
                 data: savedData.data
                 globals: savedData.globals
             success: (msg) ->
-              window.location = msg.url
+              helpers.name_popup msg, "Visualization", "visualization"
             error: (jqxhr, status, error) ->
               alert "Somthing went horribly wrong"
               console.log [status, error]
