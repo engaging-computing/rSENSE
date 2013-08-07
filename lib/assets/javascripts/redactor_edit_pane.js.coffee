@@ -18,7 +18,7 @@ $(document).ready ->
         $(@).hide();
     
     ($ '.redactor_content_cancel_link').click ->
-      r = confirm("This will remove any changes since the last save. Are you sure?")
+      r = confirm("Are you sure you want to cancel? All changes will be lost.")
       if r == true
         tmp = ($ @).parent().parent().parent().parent()
         tmp.find('.redactor_content').redactor('destroy')
