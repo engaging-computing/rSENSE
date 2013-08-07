@@ -313,8 +313,8 @@ class DataSetsController < ApplicationController
   ## POST /data_sets/1
   def uploadCSV
     require "csv"
-
-    #Grab field names from project
+    require "open-uri"
+    
     @project = Project.find(params[:id])
     fields = @project.fields
     exp_fields = []
@@ -345,10 +345,16 @@ class DataSetsController < ApplicationController
 
     #First call to upload a csv.
     else
-
-      @file = params[:csv]
-      data = CSV.read(@file.tempfile)
-
+      isdoc = false
+      if params.has_key? :csv
+        @file = params[:csv]
+        data = CSV.read(@file.tempfile)
+      else 
+        tempfile = CSV.new(open(params[:tmpfile]))
+        data = tempfile.read()
+        isdoc = true
+      end
+      
       headers = data[0]
 
       #Build match matrix with quality
@@ -377,8 +383,18 @@ class DataSetsController < ApplicationController
         base = "/tmp/rsense/dataset"
         fname = base + "#{Time.now.to_i}.csv"
         f = File.new(fname, "w")
-        f.write @file.tempfile.read
+        
+        if !isdoc #Not from a google doc
+          f.write @file.tempfile.read
+        else #From a Google Doc
+          y = ""
+          data.each do |x|
+            y += x.join(",") + "\n"
+          end
+          f.write(y)
+        end
         f.close
+        
         respond_to do |format|
           format.json { render json: {pid: params[:id],headers: headers, fields: fields, partialMatches: results,tmpFile: fname}, status: :partial_content  }
         end
