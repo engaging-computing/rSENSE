@@ -42,15 +42,15 @@ $ ->
 
           addProjectButton = ($ "<div id='addProjectButton' style='text-align:center;cursor: pointer;' class='item'><img style='width:66%;' class='hoverimage' src='/assets/green_plus_icon.svg'><br /><h4 style='color:#0a0;'>Create Tutorial</h4></img></div>")
 
-          ($ '#tutorials').append(addProjectButton).isotope('insert', addProjectButton)
-
-          ($ '#addProjectButton').click ->
-            $.ajax
-              url: "tutorials/create"
-              data: {}
-              dataType: "json"
-              success: (data, textStatus) ->
-                helpers.name_popup data, "Tutorial", "tutorial"
+          if logged_in?
+            ($ '#tutorials').append(addProjectButton).isotope('insert', addProjectButton)
+            ($ '#addProjectButton').click ->
+              $.ajax
+                url: "tutorials/create"
+                data: {}
+                dataType: "json"
+                success: (data, textStatus) ->
+                  helpers.name_popup data, "Tutorial", "tutorial"
 
           for object in data
             do (object) ->

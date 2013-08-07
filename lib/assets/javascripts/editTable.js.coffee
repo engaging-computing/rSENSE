@@ -87,6 +87,8 @@ $ ->
           success: (data, textStatus, jqXHR) ->
             window.location = data.redirect
           error: (jqXHR, textStatus, errorThrown) ->
+            ($ '#edit_table_add').removeClass 'disabled'
+            ($ '#edit_table_save').removeClass 'disabled'
             log [textStatus, errorThrown]
             alert "An upload error occured."
         debug: true
@@ -319,6 +321,9 @@ $ ->
               ajax_data =
                 headers: head
                 data: table_data
+                
+              ($ '#edit_table_add').addClass 'disabled'
+              ($ '#edit_table_save').addClass 'disabled'
 
               $.ajax "#{settings.upload.url}",
                 type: "#{settings.upload.method}"
