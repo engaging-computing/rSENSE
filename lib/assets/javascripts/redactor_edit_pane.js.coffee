@@ -23,8 +23,12 @@ $(document).ready ->
         tmp = ($ @).parent().parent().parent().parent()
         tmp.find('.redactor_content').redactor('destroy')
         tmp.find(".redactor_content").html(window.saved_content)
-        ($ @).parent().parent().parent().find('.redactor_content_edit_link').show();
         ($ @).parent().parent().hide()
+        
+        if saved_content is ""
+          ($ ".add_content_link").parent().parent().show()
+        else
+          $(@).parent().parent().siblings('.redactor_content_edit_link').show()
         
       false
     
@@ -33,8 +37,12 @@ $(document).ready ->
         type = tmp.attr('type')        
         field_name = tmp.attr('field')
         value = tmp.find('.redactor_content').redactor('get')
-        $(@).parent().parent().siblings('.redactor_content_edit_link').show()
         $(@).parent().parent().hide()
+        
+        if value is ""
+          ($ ".add_content_link").parent().parent().show()
+        else
+          $(@).parent().parent().siblings('.redactor_content_edit_link').show()
         
         data={}
         data[type] = {}
@@ -61,6 +69,8 @@ $(document).ready ->
         if (csrf_param isnt undefined && csrf_token isnt undefined)
           params = csrf_param + "=" + encodeURIComponent(csrf_token);
           path =  "#{type}/#{row_id}?#{params}"
+        
+        window.saved_content = ""
         
         $(@).parent().parent().siblings('.redactor_content').redactor
           imageUpload: "/media_objects/saveMedia/#{path}"
