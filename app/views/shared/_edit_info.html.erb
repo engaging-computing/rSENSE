@@ -5,7 +5,6 @@
       <span class="info_text"><%=(truncate value, length: trunc)%></span>
   <%end%>
   <%if can_edit %>
-      <span class="info_edit_link"><i class="icon-edit"></i></span>
-      <span href="/<%=type.pluralize%>/<%=row_id%>" class="info_save_link"><i class="icon-ok"></i></span>
+      <span class="info_edit_link" href=<%="/#{type.pluralize}/#{row_id}"%>><i class="icon-edit"></i></span>
   <%end%>
 </span>
