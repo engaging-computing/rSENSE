@@ -27,7 +27,7 @@
     <hr />
     <div class="row">
       <%= render layout: "shared/box", locals: {title: 'Bio', width: '3', unique_id: 'box', should_hide: false } do %>
-        <%= user_redactor_helper(can_edit?(@user), "bio")%>
+        <%= user_redactor_helper(can_edit?(@user), "bio", false, true)%>
       <%end%>
     </div>
   </div>
