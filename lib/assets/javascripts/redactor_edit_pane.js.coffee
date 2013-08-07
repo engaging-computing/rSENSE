@@ -1,5 +1,21 @@
+$ ->
 
-$(document).ready ->
+    get_redactor_options = (tmp, path) ->
+    
+        options = {}
+        
+        if tmp.attr('no_upload')
+          options = {}
+        else
+          options = 
+            imageUpload: "/media_objects/saveMedia/#{path}"
+            fileUpload: "/media_objects/saveMedia/#{path}"
+            
+        if tmp.attr('simple')
+          options['buttons'] = ['html', '|', 'bold', 'italic', 'deleted', '|', 'link', '|', 'fontcolor', 'backcolor'] 
+          
+        options
+
     $('.redactor_content_edit_link').click ->
         window.saved_content = ($ '.redactor_content').html()
         tmp = ($ @).parent().parent()
@@ -11,9 +27,7 @@ $(document).ready ->
         if (csrf_param isnt undefined && csrf_token isnt undefined)
           params = csrf_param + "=" + encodeURIComponent(csrf_token);
           path =  "#{type}/#{row_id}?#{params}"
-        $(@).parent().parent().find('.redactor_content').redactor
-          imageUpload: "/media_objects/saveMedia/#{path}"
-          fileUpload: "/media_objects/saveMedia/#{path}"
+        $(@).parent().parent().find('.redactor_content').redactor get_redactor_options(tmp, path)
         ($ @).siblings('.pillbox').show()
         $(@).hide();
     
@@ -72,9 +86,7 @@ $(document).ready ->
         
         window.saved_content = ""
         
-        $(@).parent().parent().siblings('.redactor_content').redactor
-          imageUpload: "/media_objects/saveMedia/#{path}"
-          fileUpload: "/media_objects/saveMedia/#{path}"
+        $(@).parent().parent().siblings('.redactor_content').redactor get_redactor_options(tmp, path)
         $(@).parent().parent().parent().parent().find('.pillbox').show()
         $(@).parent().parent().hide()
 
