@@ -1,19 +1,26 @@
 $ ->
   ($ '.info_edit_link').click ->
-    ($ @).siblings('.info_text').wrapInner('<input type="text" class="info_edit_box" value="'+($ @).parent().attr('value')+'">')
-    ($ @).siblings('.info_text').children('.info_edit_box').focus()
-    ($ @).hide()
-    ($ @).siblings('.info_save_link').show()
-    ($ '.info_edit_box').keypress (e) ->
-      if(e.keyCode == 13)
-        ($ @).parent().parent().find('.info_save_link').trigger "click"
+    val = ($ @).parent().attr('value')
+    href = ($ @).attr('href')
 
-  ($ '.info_save_link').click ->
-      type = $(@).parent().attr('type')
-      info_box = $(@).siblings('.info_text')
-      field_name = $(@).parent().attr('field')
-      edit_box = info_box.children('.info_edit_box')
+    info_box = ($ @).siblings('.info_text')
+    info_box.html("<div class='input-append'><input type='text' class='info_edit_box input' id='appendInput' value='#{val}'><span class='add-on'><a href='#{href}' class='info_save_link'><i class='icon-ok'></i></a></span></div>")
+    info_box.children('.info_edit_box').focus()
+    save_link = ($ @)
+    save_link.hide()
+    
+
+    info_box.find('a.info_save_link').click (e)->
+      e.preventDefault()
+      
+      #Get the parts 
+      top = $(@).parent().parent().parent().parent()
+      type = top.attr('type')
+      field_name = top.attr('field')
+      info_box = top.find('.info_text')
+      edit_box = info_box.find('.info_edit_box')
       value = edit_box.val()
+
       data={}
       data[type] = {}
       data[type][field_name] = value
@@ -25,15 +32,14 @@ $ ->
         data:
           data
         success: =>
-          ($ @).siblings('.info_edit_link').show()
+          save_link.show()
           ($ @).hide()
           
-          ($ @).parent().attr 'value', value
-          value = helpers.truncate(value, Number ($ @).parent().attr('trunc'))
-          
-          if ($ @).parent().attr('make_link') == 'true'
+          top.attr 'value', value
+          value = helpers.truncate value, (Number top.attr('trunc'))
+          if ($ @).parent().parent().parent().parent().attr('make_link') == 'true'
             info_box.html("<a href='#{($ @).attr('href')}'>#{value}</a>")
-          else if ($ @).parent().attr('make_link') == 'false'
+          else if ($ @).parent().parent().parent().parent().attr('make_link') == 'false'
             info_box.html(value)
         error: (j, s, t) =>
           edit_box.errorFlash()
@@ -44,5 +50,8 @@ $ ->
             placement: "bottom"
             trigger: "manual"
           edit_box.popover 'show'
-      false
+      
+    ($ '.info_edit_box').keypress (e) =>
+      if(e.keyCode == 13)
+        save_link.trigger "click"
     
