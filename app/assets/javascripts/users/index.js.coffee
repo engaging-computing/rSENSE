@@ -10,7 +10,7 @@ $ ->
       newItem += "</h4>"
 
       if (object.gravatar) != null
-        newItem += "<img src='#{object.gravatar}'> </img><br />"
+        newItem += "<a href='#{object.url}'><img src='#{object.gravatar}' /></a><br />"
 
       newItem +=  "<h8><b>Name: </b><a href='#{object.url}'>#{helpers.truncate object.name, 16}</a></h8><br />"
 
