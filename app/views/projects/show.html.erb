@@ -117,6 +117,7 @@
 
       <!-- field -->
       <%=render layout: "shared/box", locals: {title: 'Fields',width: '5', unique_id: 'fields', should_hide: false} do %>
+      
         <table class="table fields_table" project="<%=@project.id%>" style="width:100%; height:125px;">
           <thead>
             <tr>
@@ -141,15 +142,9 @@
                       <% else %>
                         <li><a href='#' class=add_location_field> Location </a></li>
                       <% end %>
+                      <li><a href='#' id="template-from-file" style=<%= @project.fields.count != 0 ? "display:none" : ""%>> Template from file </a></li>
                     </ul>
                   </div>
-                <%end%>
-                <% if @project.fields.count == 0 %>
-                  <th id="template_th">
-                    <div class="btn-group">
-                      <a class='btn-mini btn-success dropdown-toggle' id="template-from-file">Template from File</a>
-                    </div>
-                  </th>
                 <%end%>
               </th>
             </tr>
