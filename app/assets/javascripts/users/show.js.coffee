@@ -174,4 +174,6 @@ $ ->
                 else
                   ($ @).removeClass 'feed-even'
                   ($ @).addClass 'feed-odd'
+    ($ '.gravatar_img').tooltip
+      title: "You can change your avatar at: www.gravatar.com"
 
