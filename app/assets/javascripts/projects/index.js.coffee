@@ -41,13 +41,16 @@ $ ->
 
           addProjectButton = ($ "<div id='addProjectButton' style='text-align:center;cursor: pointer;' class='item'><img style='width:66%;' class='hoverimage' src='/assets/green_plus_icon.svg'><br /><h4 style='color:#0a0;'>Create Project</h4></img></div>")
 
-          ($ '#projects').append(addProjectButton).isotope('insert', addProjectButton)
-
-          ($ '#addProjectButton').click ->
-            token = ($ "meta[name='csrf-token']").attr('content')
-            form = ($ "<form action='/projects/create' method='post'> <input type='hidden' name='authenticity_token' value='#{token}'> </form>")
-            ($ "body").append(form)
-            ($ form).submit()
+          if logged_in?
+            ($ '#projects').append(addProjectButton).isotope('insert', addProjectButton)
+            ($ '#addProjectButton').click ->
+              $.ajax
+                url: "/projects/create"
+                data: {}
+                dataType: "json"
+                success: (data, textStatus) ->
+                  helpers.name_popup data, "Project", "project"
+                  
 
           for object in data
             addItem object

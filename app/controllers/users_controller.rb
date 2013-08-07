@@ -173,17 +173,6 @@ class UsersController < ApplicationController
   def edit
     @user = User.find_by_username(params[:id])
   end
-
-  # GET /users/new
-  # GET /users/new.json
-  def new
-    @user = User.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @user }
-    end
-  end
   
   # POST /users
   # POST /users.json
@@ -226,7 +215,7 @@ class UsersController < ApplicationController
         format.json { render json: {}, status: :ok }
       else
         format.html { render "public/404.html" }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
+        format.json { render json: @user.errors.full_messages(), status: :unprocessable_entity }
       end
     end
   end
@@ -237,6 +226,11 @@ class UsersController < ApplicationController
     @user = User.find_by_username(params[:id])
     
     if can_delete?(@user)
+      
+      if @cur_user.id == @user.id
+        session[:user_id] = nil
+      end
+      
       @user.projects.each do |p|
         p.hidden = true
         p.save
@@ -261,8 +255,6 @@ class UsersController < ApplicationController
       @user.email =  "#{Time.now().to_i}@deleted.org"
       @user.username =  "#{Time.now().to_i}"
       @user.save
-      
-      session[:user_id] = nil
       
       respond_to do |format|
         format.html { redirect_to users_url}

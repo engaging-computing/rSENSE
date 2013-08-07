@@ -282,7 +282,7 @@ $ ->
         if (str.match /u/gi) isnt null
         
           str = str.replace /u/gi, ""
-          d = new Date (Number dp[fIndex])
+          d = new Date (Number str)
           return [d.valueOf(), d.getUTCFullYear()]
 
         # Find and extract AM/PM information
