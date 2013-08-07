@@ -87,6 +87,8 @@ $ ->
           success: (data, textStatus, jqXHR) ->
             window.location = data.redirect
           error: (jqXHR, textStatus, errorThrown) ->
+            ($ '#edit_table_add').removeClass 'disabled'
+            ($ '#edit_table_save').button 'reset'
             log [textStatus, errorThrown]
             alert "An upload error occured."
         debug: true
@@ -246,7 +248,7 @@ $ ->
               ($ '#edit_table_control').append "<button id='edit_table_add' class='btn btn-success' style='margin-right:10px;'>Add Row</button>"
 
             if button is "save" or button is "Save"
-              ($ '#edit_table_control').append "<button id='edit_table_save' class='btn btn-primary'>Save</button>"
+              ($ '#edit_table_control').append "<button id='edit_table_save' class='btn btn-primary' data-loading-text='Saving...' autocomplete='off' >Save</button>"
 
         # if control panel is empty get rid of it
         if ($ '#edit_table_control').html() is ""
@@ -309,8 +311,15 @@ $ ->
 
                 ($ @).children().each ->
                   row.push ($ @).text()
+                  
+                row_blank = true
+                  
+                ($ @).children().each (index, element) ->
+                  if( row[index]? and row[index] != "" )
+                    row_blank = false
 
-                row_data.push row
+                if !row_blank
+                  row_data.push row
 
               table_data = for tmp, col_i in row_data[0]
                 tmp = for row, row_i in row_data
@@ -319,6 +328,10 @@ $ ->
               ajax_data =
                 headers: head
                 data: table_data
+                
+              ($ '#edit_table_add').addClass 'disabled'
+              ($ '#edit_table_save').button 'loading'
+
 
               $.ajax "#{settings.upload.url}",
                 type: "#{settings.upload.method}"

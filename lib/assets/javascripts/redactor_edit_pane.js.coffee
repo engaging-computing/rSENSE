@@ -1,5 +1,21 @@
+$ ->
 
-$(document).ready ->
+    get_redactor_options = (tmp, path) ->
+    
+        options = {}
+        
+        if tmp.attr('no_upload')
+          options = {}
+        else
+          options = 
+            imageUpload: "/media_objects/saveMedia/#{path}"
+            fileUpload: "/media_objects/saveMedia/#{path}"
+            
+        if tmp.attr('simple')
+          options['buttons'] = ['html', '|', 'bold', 'italic', 'deleted', '|', 'link', '|', 'fontcolor', 'backcolor'] 
+          
+        options
+
     $('.redactor_content_edit_link').click ->
         window.saved_content = ($ '.redactor_content').html()
         tmp = ($ @).parent().parent()
@@ -11,20 +27,22 @@ $(document).ready ->
         if (csrf_param isnt undefined && csrf_token isnt undefined)
           params = csrf_param + "=" + encodeURIComponent(csrf_token);
           path =  "#{type}/#{row_id}?#{params}"
-        $(@).parent().parent().find('.redactor_content').redactor
-          imageUpload: "/media_objects/saveMedia/#{path}"
-          fileUpload: "/media_objects/saveMedia/#{path}"
+        $(@).parent().parent().find('.redactor_content').redactor get_redactor_options(tmp, path)
         ($ @).siblings('.pillbox').show()
         $(@).hide();
     
     ($ '.redactor_content_cancel_link').click ->
-      r = confirm("This will remove any changes since the last save. Are you sure?")
+      r = confirm("Are you sure you want to cancel? All changes will be lost.")
       if r == true
         tmp = ($ @).parent().parent().parent().parent()
         tmp.find('.redactor_content').redactor('destroy')
         tmp.find(".redactor_content").html(window.saved_content)
-        ($ @).parent().parent().parent().find('.redactor_content_edit_link').show();
         ($ @).parent().parent().hide()
+        
+        if saved_content is ""
+          ($ ".add_content_link").parent().parent().show()
+        else
+          $(@).parent().parent().siblings('.redactor_content_edit_link').show()
         
       false
     
@@ -33,8 +51,12 @@ $(document).ready ->
         type = tmp.attr('type')        
         field_name = tmp.attr('field')
         value = tmp.find('.redactor_content').redactor('get')
-        $(@).parent().parent().siblings('.redactor_content_edit_link').show()
         $(@).parent().parent().hide()
+        
+        if value is ""
+          ($ ".add_content_link").parent().parent().show()
+        else
+          $(@).parent().parent().siblings('.redactor_content_edit_link').show()
         
         data={}
         data[type] = {}
@@ -52,7 +74,7 @@ $(document).ready ->
         
     $('.add_content_link').click ->
         $(@).parent().parent().siblings('.redactor_content').show()
-        tmp = ($ @).parent().parent()
+        tmp = ($ @).parent().parent().parent()
         type = tmp.attr("type")
         row_id = tmp.attr("row_id")
         csrf_token = $('meta[name=csrf-token]').attr('content');
@@ -62,9 +84,9 @@ $(document).ready ->
           params = csrf_param + "=" + encodeURIComponent(csrf_token);
           path =  "#{type}/#{row_id}?#{params}"
         
-        $(@).parent().parent().siblings('.redactor_content').redactor
-          imageUpload: "/media_objects/saveMedia/#{path}"
-          fileUpload: "/media_objects/saveMedia/#{path}"
+        window.saved_content = ""
+        
+        $(@).parent().parent().siblings('.redactor_content').redactor get_redactor_options(tmp, path)
         $(@).parent().parent().parent().parent().find('.pillbox').show()
         $(@).parent().parent().hide()
 
