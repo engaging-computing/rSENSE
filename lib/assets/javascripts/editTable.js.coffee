@@ -311,8 +311,15 @@ $ ->
 
                 ($ @).children().each ->
                   row.push ($ @).text()
+                  
+                row_blank = true
+                  
+                ($ @).children().each (index, element) ->
+                  if( row[index]? and row[index] != "" )
+                    row_blank = false
 
-                row_data.push row
+                if !row_blank
+                  row_data.push row
 
               table_data = for tmp, col_i in row_data[0]
                 tmp = for row, row_i in row_data
