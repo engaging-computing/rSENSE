@@ -260,7 +260,7 @@ $ ->
           else
             respond_csv(data)
       else
-        ($ '#doc_url').css 'background-color', 'red'
+        ($ '#doc_url').errorFlash()
 
     # Takes all sessions that are checked, appends its id to the url and
     # redirects the user to the view sessions page (Vis page)
