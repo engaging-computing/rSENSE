@@ -218,10 +218,10 @@ $ ->
       false
 
     ($ '#csv_file_input').click ->
-      ($ '#csv_file_form').attr 'action', "#{window.location}/CSVUpload"
+      ($ '#csv_file_form').attr 'action', "#{window.location.pathname}/CSVUpload"
 
     ($ '#template_file_form').click ->
-      ($ '#template_file_form').attr 'action', "#{window.location}/templateFields"
+      ($ '#template_file_form').attr 'action', "#{window.location.pathname}/templateFields"
 
     ($ '#template-from-file').click ->
       ($ '#template_file_input').click()
