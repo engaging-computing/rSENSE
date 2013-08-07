@@ -149,7 +149,7 @@ class ProjectsController < ApplicationController
         format.json { render json: {}, status: :ok }
       else
         format.html { render action: "edit" }
-        format.json { render json: @project.errors, status: :unprocessable_entity }
+        format.json { render json: @project.errors.full_messages(), status: :unprocessable_entity }
       end
     end
   end
@@ -204,9 +204,9 @@ class ProjectsController < ApplicationController
     Project.find(params[:id]).update_attributes(:like_count => count)
 
     if(count == 0 || count > 1)
-      @response = count.to_s + " people liked this"
+      @response = count.to_s + " people like this"
     else
-      @response = count.to_s + " person liked this"
+      @response = count.to_s + " person likes this"
     end
 
     respond_to do |format|

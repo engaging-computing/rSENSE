@@ -12,7 +12,8 @@ $ ->
       type = $(@).parent().attr('type')
       info_box = $(@).siblings('.info_text')
       field_name = $(@).parent().attr('field')
-      value = info_box.children('.info_edit_box').val()
+      edit_box = info_box.children('.info_edit_box')
+      value = edit_box.val()
       data={}
       data[type] = {}
       data[type][field_name] = value
@@ -34,5 +35,14 @@ $ ->
             info_box.html("<a href='#{($ @).attr('href')}'>#{value}</a>")
           else if ($ @).parent().attr('make_link') == 'false'
             info_box.html(value)
-        false
+        error: (j, s, t) =>
+          edit_box.errorFlash()
+          
+          errors = JSON.parse j.responseText
+          edit_box.popover
+            content: errors[0]
+            placement: "bottom"
+            trigger: "manual"
+          edit_box.popover 'show'
+      false
     
