@@ -60,7 +60,7 @@ $(document).ready ->
         
     $('.add_content_link').click ->
         $(@).parent().parent().siblings('.redactor_content').show()
-        tmp = ($ @).parent().parent()
+        tmp = ($ @).parent().parent().parent()
         type = tmp.attr("type")
         row_id = tmp.attr("row_id")
         csrf_token = $('meta[name=csrf-token]').attr('content');
