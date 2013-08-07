@@ -9,7 +9,7 @@ $ ->
       newItem =   "<div class='item'>"
 
       if(object.mediaSrc)
-        newItem += "<img src='#{object.mediaSrc}'></img>"
+        newItem += "<a href='#{object.url}'><img src='#{object.mediaSrc}'></img></a>"
 
       newItem +=  "<h4 style='margin-top:0px;'><a href='#{object.url}'>#{object.name}</a>"
 
