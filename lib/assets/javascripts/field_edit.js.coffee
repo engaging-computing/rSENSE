@@ -1,10 +1,12 @@
 $ ->
 
   hide_upload = ->
-    if ($ '#collapsefields div table tbody tr').size() == 0
-      ($ '#collapsecreate_data_set').hide()
+    if ($ 'table.fields_table tbody tr').size() == 0
+      ($ '#create_data_set').hide()
+      ($ "#template-from-file").show()
     else
-      ($ '#collapsecreate_data_set').show()
+      ($ '#create_data_set').show()
+      ($ "#template-from-file").hide()
 
   delayed_hide = -> setTimeout( (-> hide_upload()), 200 )
 
