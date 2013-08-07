@@ -5,8 +5,42 @@
     <h1 id="title_span"><%= tutorial_edit_menu_helper %></h1>
   </div>
   
-  <div class="span12">
+  <%=render layout: "shared/box", locals: {title: 'Description', width: '7', unique_id: 'description', should_hide: false} do %>
   <%= tutorial_redactor_helper (can_edit? @tutorial) %>
+  <%end%>
+
+
+  <div class="row">
+    <!-- media objects -->
+      <%=render layout: "shared/box", locals: {title: 'Media', width: '5', unique_id: 'media', should_hide: false} do %>
+          <div id="media_object_list"> 
+
+          <span style="font-weight:bold"> File</span>
+          <% @tutorial.media_objects.all.each do |mo| %>
+            <div class="<%= cycle('feed-even', 'feed-odd')%> mediaobject" style="position:relative">
+              <div class="media_icon">
+                <%=media_object_thumbnail_helper(mo)%>
+              </div>
+              <div class="links">
+                <%= link_to truncate(mo.name, :length => 25), mo.src%>
+              </div>
+              <!--        INSERT FEATURED MEDIA CONTROLS HERE        -->
+              <div class="control_block">
+                <div class="control">
+                    <% if can_edit? mo %>
+                    <a href="<%= media_object_path mo %>">Edit</a>
+                    <% end %>
+                    <% if can_delete? mo %>
+                    | <a class="media_object_delete" href="<%= media_object_url mo %>" name="<%= mo.title %>">Delete</a>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+            
+          <%end%>
+          
+        </div>
+      <%end%>
   </div>
 </div>
 

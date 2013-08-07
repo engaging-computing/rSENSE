@@ -4,7 +4,7 @@
     <div class="container-fluid well">
       <div class="row-fluid">
         <div class="span12 text-center">
-          <%= image_tag Gravatar.new.url(@user), :style => "border-radius: 8px" %>
+          <%= image_tag Gravatar.new.url(@user), style: "border-radius: 8px", class: "gravatar_img" %>
         </div>
         <div class="span12" style="padding-top:10px;">
           <span class="info_label" style="line-height: 30px;">First Name:</span> 
@@ -27,7 +27,7 @@
     <hr />
     <div class="row">
       <%= render layout: "shared/box", locals: {title: 'Bio', width: '3', unique_id: 'box', should_hide: false } do %>
-        <%= user_redactor_helper(can_edit?(@user), "bio")%>
+        <%= user_redactor_helper(can_edit?(@user), "bio", false, true)%>
       <%end%>
     </div>
   </div>
