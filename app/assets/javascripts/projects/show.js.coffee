@@ -246,15 +246,18 @@ $ ->
     # Parse the Share url from a google doc to upload a csv from google drive
     ($ '#save_doc').click ->
       tmp = ($ '#doc_url').val()
+      
       if tmp.indexOf('key=') isnt -1
         tmp = tmp.split 'key='
         key = tmp[1]
         tmp = window.location.pathname.split 'projects/'
         pid = tmp[1]
         url = "/data_sets/#{pid}/postCSV"
-        $.ajax( { url: url, data: { key: key, id: pid } } ).done (data, textStatus, error) ->
-          if data.status is 'success'
-            window.location = data.redirrect
+        $.ajax( { url: url, data: { key: key, id: pid, tmpfile: ($ '#doc_url').val()} } ).done (data, textStatus, error) ->
+          if data.url != undefined
+            window.location = data.url
+          else
+            respond_csv(data)
       else
         ($ '#doc_url').css 'background-color', 'red'
 
