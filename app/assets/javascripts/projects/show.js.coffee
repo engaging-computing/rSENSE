@@ -115,7 +115,8 @@ $ ->
                                   </tr>"
 
       ($ "button.cancel_upload_button").click ->
-        ($ "#match_box").modal("hide")
+        location.reload()
+        #($ "#match_box").modal("hide")
 
       ($ "button.finished_button").click ->
 
