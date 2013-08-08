@@ -4,8 +4,8 @@ $ ->
     href = ($ @).attr('href')
 
     info_box = ($ @).siblings('.info_text')
-    info_box.html("<div class='input-append'><input type='text' class='info_edit_box input' id='appendInput' value='#{val}'><span class='add-on'><a href='#{href}' class='info_save_link'><i class='icon-ok'></i></a></span></div>")
-    info_box.children('.info_edit_box').focus()
+    info_box.html("<div class='input-append'><input type='text' class='info_edit_box input-medium' id='appendInput' value='#{val}'><span class='add-on'><a href='#{href}' class='info_save_link'><i class='icon-ok'></i></a></span></div>")
+    info_box.find('.info_edit_box').focus()
     save_link = ($ @)
     save_link.hide()
     
@@ -50,8 +50,8 @@ $ ->
             placement: "bottom"
             trigger: "manual"
           edit_box.popover 'show'
-      
-    ($ '.info_edit_box').keypress (e) =>
+    
+    info_box.find('.info_edit_box').keypress (e) =>
       if(e.keyCode == 13)
-        save_link.trigger "click"
+        info_box.find('a.info_save_link').trigger "click"
     
