@@ -2,26 +2,6 @@
 <% if !(defined? no_redactor_upload).nil? and no_redactor_upload %> no_upload='1' <%end%> 
 <% if !(defined? simple_redactor_toolbar).nil? and simple_redactor_toolbar %> simple='1' <%end%> 
 >
-
-  <!-- If there is content show the content -->
-  <%if has_content %>
-
-    <div class="content_icontainer">
-      <%if can_edit%>
-        <a class="redactor_content_edit_link btn btn-small pull-right"><i class="icon-edit icon_content"></i></a>
-
-        <div class="pillbox pull-right" style="display:none;">
-          <div class="btn-group">
-          <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_save_link btn btn-small"><i class="icon-ok  icon_content"></i></a>
-          <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_cancel_link btn btn-small"><i class="icon-remove  icon_content"></i></a>
-          </div>
-        </div>
-      <%end%>
-    </div>
-    <div class="clear"></div>
-    <div class="redactor_content">
-      <%= raw content %>
-    </div>
     
   <!-- If there is no content and you are the owner-->
   <% if can_edit || has_content %>
