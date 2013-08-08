@@ -211,13 +211,13 @@ class VisualizationsController < ApplicationController
     @datasets.each do |dataset|
       hasPics = true if dataset.media_objects.size > 0
       metadata[i] = { name: dataset.title, user_id: dataset.user_id, dataset_id: dataset.id, timecreated: dataset.created_at, timemodified: dataset.updated_at, photos: dataset.media_objects }
-      dataset.data.each do |rows|
+      dataset.data.each do |row|
         arr = []
         arr.push "#{dataset.title}(#{dataset.id})"
         arr.push "All"
 
-        rows.each do |dp|
-          arr.push dp[1]
+        data_fields.slice(2, data_fields.length).each do |field|
+          arr.push row[field[:fieldID].to_s]
         end
         format_data.push arr
       end
