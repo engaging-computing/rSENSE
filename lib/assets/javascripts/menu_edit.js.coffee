@@ -1,32 +1,37 @@
 $ ->
-
   ($ 'a.menu_edit').click (e) ->
-    
     e.preventDefault()
     
-    top = ($ @).parents('span.edit_menu')
-    info_box = top.find('.info_text')
+    #Root div that everything should be in.
+    root = ($ @).parents('span.edit_menu')
+    
+    #value should be the current value of the info box
+    val = root.attr('value')
+    
+    #href should be /type/id e.g. /users/jim
     href = ($ @).attr('href')
-    val = top.attr 'value'
+    
+    #The thing that will become a input box
+    info_box = root.find('.info_text')
     info_box.html("<div class='input-append'><input type='text' class='info_edit_box input' id='appendInput' value='#{val}'><span class='add-on'><a href='#{href}' class='menu_save_link'><i class='icon-ok'></i></a></span></div>")
     info_box.find('.info_edit_box').focus()
     
-    top.find('span.dropdown').hide()
-    top.find('a.menu_save_link').show()
+    #Hide the edit link
+    root.find('span.dropdown').hide()
    
     info_box.find('a.menu_save_link').click (e) ->
       e.preventDefault()
       
-      top = ($ @).parents('span.edit_menu')
-      type = top.attr('type')
-      info_box = top.find('.info_text')
-      edit_box = info_box.find('.info_edit_box')
-      
+      #Build the data object to send to the controller
+      type = root.attr('type')
+      field_name = root.attr('field')
+      edit_box = root.find('.info_edit_box')
       value = edit_box.val()
-      data = {}
-      data[type] = 
-        title: value
+      data={}
+      data[type] = {}
+      data[type][field_name] = value
         
+      #Make the request to update 
       $.ajax
         url: ($ @).attr('href')
         type: 'PUT'
@@ -34,19 +39,21 @@ $ ->
         data: 
           data
         success: =>
-          top.find('span.dropdown').show()
+                  
+          #Swap save and edit links
+          root.find('span.dropdown').show()
           ($ @).hide()
           
-          top.attr 'value', value
-          value = helpers.truncate value, (Number top.attr('trunc'))
+          root.attr 'value', value
+          value = helpers.truncate value, (Number root.attr('trunc'))
         
-          if ($ @).parent().parent().parent().parent().attr('make_link') == 'true'
+          #Make it a link or not
+          if root.attr('make_link') == 'true'
             info_box.html("<a href='#{($ @).attr('href')}'>#{value}</a>")
-          else if ($ @).parent().parent().parent().parent().attr('make_link') == 'false'
+          else if root.attr('make_link') == 'false'
             info_box.html(value)
         error: (j, s, t) =>
           edit_box.errorFlash()
-          
           errors = JSON.parse j.responseText
           edit_box.popover
             content: errors[0]
@@ -56,15 +63,15 @@ $ ->
         
     info_box.find('.info_edit_box').keypress (e) ->
       if (e.keyCode is 13)
-        top.find('a.menu_save_link').trigger 'click'   
+        root.find('a.menu_save_link').trigger 'click'   
         
         
   ($ 'a.menu_unhider').click (e) ->
     
     e.preventDefault()
     
-    top = ($ @).parents('span.edit_menu')
-    type = top.attr('type')
+    root = ($ @).parents('span.edit_menu')
+    type = root.attr('type')
     data = {}
     data[type] =
       hidden: false
@@ -76,15 +83,15 @@ $ ->
       data: 
         data
       success: =>
-        top.find('li.menu_hider').show()
-        top.find('li.menu_unhider').hide()
+        root.find('li.menu_hider').show()
+        root.find('li.menu_unhider').hide()
         
   ($ 'a.menu_hider').click (e) ->
     
     e.preventDefault()
     
-    top = ($ @).parents('span.edit_menu')
-    type = top.attr('type')
+    root = ($ @).parents('span.edit_menu')
+    type = root.attr('type')
     data = {}
     data[type] =
       hidden: true
@@ -96,15 +103,15 @@ $ ->
       data: 
         data
       success: =>
-        window.location = top.attr("escape_link")
+        window.location = root.attr("escape_link")
         
   ($ 'a.menu_delete').click (e) ->
     
     e.preventDefault()
     
-    top = ($ @).parents('span.edit_menu')
+    root = ($ @).parents('span.edit_menu')
     
-    val = top.attr 'value'
+    val = root.attr 'value'
     
     if helpers.confirm_delete(val)
       $.ajax
@@ -112,4 +119,4 @@ $ ->
         type: 'DELETE'
         dataType: "json"
         success: =>
-          window.location = top.attr("escape_link")
+          window.location = root.attr("escape_link")
