@@ -25,7 +25,7 @@
 
       <!-- project content -->
       <%=render layout: "shared/box", locals: {title: 'Description', width: '7', unique_id: 'description', should_hide: false} do %>
-        <%= project_redactor_helper (can_edit? @project), false %>
+        <%= project_redactor_helper (can_edit? @project) %>
       <%end%>
 
 
