@@ -35,15 +35,12 @@
 
   </div>
 
-  <div class="" id="tabcontainer">
-    <ul class="nav nav-tabs" id="myTab">
-      <li class="dataset_tab"><a href="#<%=@visualization.id%>">
-        <%= visualization_edit_helper 'title', @visualization.owner.id == @cur_user.try(:id), make_link = false %>
-      </a></li>
-    </ul>
-    <div class="tab-pane" id="<%=@visualization.id%>">
-      <%= visualization_redactor_helper (@visualization.owner.id == @cur_user.try(:id)) %>
-    </div>
+  <div class="well" style="margin-top:10px">
+
+    <span style="font-size:1.5em;"><%= visualization_edit_helper 'title', @visualization.owner.id == @cur_user.try(:id), make_link = false %></span>
+    
+    <%= visualization_redactor_helper (@visualization.owner.id == @cur_user.try(:id)) %>
+    
   </div>
 
 
