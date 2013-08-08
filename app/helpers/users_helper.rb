@@ -12,7 +12,7 @@ module UsersHelper
       content = @user.content
     end
     
-    render 'shared/content_borderless', {type: 'user', field: field, content: content, row_id: @user.username, has_content: !content.blank? , can_edit: can_edit, no_redactor_upload: !upload, simple_redactor_toolbar: simple}
+    render 'shared/content', {type: 'user', field: field, content: content, row_id: @user.username, has_content: !content.blank? , can_edit: can_edit, no_redactor_upload: !upload, simple_redactor_toolbar: simple}
   end
   
 end
