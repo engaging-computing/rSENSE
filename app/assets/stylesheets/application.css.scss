@@ -341,3 +341,8 @@ input.object_hidden_checkbox
   font-size:12px;
   font-weight:normal;
 }
+
+.redactor_box textarea, .redactor_box textarea:focus
+{
+  color: #444;
+}
