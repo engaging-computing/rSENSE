@@ -324,7 +324,6 @@ class ProjectsController < ApplicationController
               logger.info header["#{i}"]
               row[header["#{i}"][:id]] = d
             end
-            logger.info row
             data.push row
           end
           
