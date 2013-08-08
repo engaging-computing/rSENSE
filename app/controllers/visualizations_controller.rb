@@ -193,7 +193,6 @@ class VisualizationsController < ApplicationController
     @datasets.each do |dataset|
       d = MongoData.find_by_data_set_id(dataset.id)
       dataset[:data] = d.data
-      logger.info d.data
     end
 
     # create special dataset grouping field
