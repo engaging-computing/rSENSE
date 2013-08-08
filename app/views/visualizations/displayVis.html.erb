@@ -34,20 +34,25 @@
     </div>
   
   </div>
-  
-  <div class="" id="tabcontainer">
-    <ul class="nav nav-tabs" id="myTab">
-      <% @datasets.each do |s| %>
-          <% @data_set = s %>
-          <li class="dataset_tab"><a href="#<%=s.id%>">
-            <%= data_set_edit_helper 'title', can_edit?(s), make_link = false, 32 %>
-          </a></li>
-      <% end %>
-    </ul>
     
-     <% @datasets.each do |s| %>
-         <div class="tab-pane" id="<%=s.id%>"><%= data_set_redactor_helper s, can_edit?(s) %></div>
-    <% end %>
+  <div id="contentCarousel" class="carousel slide">
+    <ol class="carousel-indicators">
+      <% @datasets.each_with_index do |s,i| %>
+        <li data-target="#contentCarousel" data-slide-to="<%=i%>" class="<%if s == @datasets.first()%>active<%end%>"></li>
+      <%end%>
+    </ol>
+    <!-- Carousel items -->
+    <div class="carousel-inner redactor" >
+      <% @datasets.each do |s| %>
+        <%@data_set = s%>
+        <div class="item <%if s == @datasets.first()%>active<%end%>">
+          <span style="font-size:1.5em">Dataset: <%= data_set_edit_helper 'title', can_edit?(s), make_link = false, 32 %></span>
+          <%= data_set_redactor_helper s, can_edit?(s) %>
+        </div>  
+      <%end%>
+    </div>
+    <!-- Carousel nav -->
+    <a class="carousel-control left" href="#contentCarousel" data-slide="prev">&lsaquo;</a>
+    <a class="carousel-control right" href="#contentCarousel" data-slide="next">&rsaquo;</a>
+  </div>
 
-
-</div>
