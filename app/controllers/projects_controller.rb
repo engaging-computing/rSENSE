@@ -95,7 +95,11 @@ class ProjectsController < ApplicationController
         Field.create({project_id:@project.id, field_type: f.field_type, name: f.name, unit: f.unit})
       end
     else
-      @project = Project.new({user_id: @cur_user.id, title:"#{@cur_user.firstname} #{@cur_user.lastname[0].pluralize} Project"})
+      if(!params[:project_name])
+        @project = Project.new({user_id: @cur_user.id, title:"#{@cur_user.firstname} #{@cur_user.lastname[0].pluralize} Project"})
+      else
+        @project = Project.new({user_id: @cur_user.id, title: params[:project_name]})
+      end
       success = @project.save
     end
 
