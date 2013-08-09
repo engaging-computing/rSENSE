@@ -7,7 +7,6 @@
           <% case contribution %>
           <% when DataSet, Visualization %>
                   
-            <%if contribution.project.featured_media_id.nil? == false %><img src=<%=MediaObject.find(contribution.featured_media_id).src%>></img><%end%>
             <h3><%= link_to contribution.title, url_for(contribution) %></h3>
             <b>Created: </b><%= time_ago_in_words(contribution.created_at)%> ago, on <%= contribution.created_at.strftime("%B %d, %Y")%>
           
@@ -18,6 +17,9 @@
             <b>Created: </b><%= time_ago_in_words(contribution.created_at)%> ago, on <%= contribution.created_at.strftime("%B %d, %Y")%>
           
           <% when MediaObject %>
+          
+            <h3><%= link_to contribution.title, url_for(contribution) %></h3>
+            <b>Created: </b><%= time_ago_in_words(contribution.created_at)%> ago, on <%= contribution.created_at.strftime("%B %d, %Y")%>
           
           <% when Tutorial %>
   
