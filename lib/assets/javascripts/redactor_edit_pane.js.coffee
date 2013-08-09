@@ -5,7 +5,9 @@ $ ->
         options = {}
         
         if top.attr('no_upload')
-          options = {}
+          options = 
+            deniedTags: ['script','applet','iframe']
+            clearTags: ['script','applet','iframe']
         else
           options = 
             imageUpload: "/media_objects/saveMedia/#{path}"
@@ -58,8 +60,9 @@ $ ->
         top = ($ @).parents('div.redactor_top')
         type = top.attr('type')        
         field_name = top.attr('field')
+        top.find('.redactor_content').redactor('toggle')
         value = top.find('.redactor_content').redactor('get')
-        
+
         data={}
         data[type] = {}
         data[type][field_name] = value
