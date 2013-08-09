@@ -315,14 +315,17 @@ class ProjectsController < ApplicationController
             field = field_map[f["field_id"]]
             header["#{i}"] = { id: "#{field.id}", type: "#{field.field_type}" }
           end
-
+          
           data = Array.new
 
           json[0]["data"].each do |dr|
             row =  Hash.new
             dr.each_with_index do |d, i|
-              logger.info header["#{i}"]
-              row[header["#{i}"][:id]] = d
+              if header["#{i}"][:type] == "1"
+                row[header["#{i}"][:id]] = "U #{d}"
+              else
+                row[header["#{i}"][:id]] = d
+              end
             end
             data.push row
           end
