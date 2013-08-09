@@ -5,6 +5,12 @@
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBxtPK1_mxwVdl1NRu7ZEiSNvmCekFSZAw&sensor=false&libraries=visualization&v=3.9">
 </script>
 
+<div class="row print" id="print_title">
+  <span class="viz_title">Title: <%= @visualization.title%></span><br/>
+  <span class="viz_title">Project: <%=@visualization.project.title%></span><br/>
+  <span class="viz_title">Name: <%=@visualization.owner.name%></span><br/><br/>
+</div>
+
 <div class="row" id="title_row" style="margin-left: 0px; margin-top:20px">
     <span style="font-size:2em;"><%= project_edit_menu_helper true, 64 %> / </span>    
     <span id="title_span" style="font-size:2em;">
@@ -13,25 +19,22 @@
 
 <div style="margin: 0px 10px;">
 
-    <div id="viscontainer" style="height:500px;">
+  <div id="viscontainer" style="height:500px;">
 
-        <ul id='visTabList'>
-        </ul>
+    <ul id='visTabList'></ul>
+    <div id="map_canvas" class="vis_canvas"></div>
+    <div id="table_canvas" class="vis_canvas"></div>
+    <div id="timeline_canvas" class="vis_canvas"></div>
+    <div id="scatter_canvas" class="vis_canvas"></div>
+    <div id="bar_canvas" class="vis_canvas"></div>
+    <div id="histogram_canvas" class="vis_canvas"></div>
+    <div id="motion_canvas" class="vis_canvas"></div>
+    <div id="photos_canvas" class="vis_canvas"></div>
 
-
-        <div id="map_canvas" class="vis_canvas"></div>
-        <div id="table_canvas" class="vis_canvas"></div>
-        <div id="timeline_canvas" class="vis_canvas"></div>
-        <div id="scatter_canvas" class="vis_canvas"></div>
-        <div id="bar_canvas" class="vis_canvas"></div>
-        <div id="histogram_canvas" class="vis_canvas"></div>
-        <div id="motion_canvas" class="vis_canvas"></div>
-        <div id="photos_canvas" class="vis_canvas"></div>
-
-        <div id='controlhider'>
-            <button id="control_hide_button" type="button" style="margin:5px;"> > </button>
-        </div>
-        <div id="controldiv"></div>
+    <div id='controlhider'>
+      <button id="control_hide_button" type="button" style="margin:5px;"> > </button>
+    </div>
+    <div id="controldiv"></div>
 
   </div>
 
