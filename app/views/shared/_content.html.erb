@@ -1,51 +1,39 @@
-<div class="" field='<%=field%>' type='<%=type%>' row_id='<%=row_id%>' 
+<div class="redactor_top" field='<%=field%>' type='<%=type%>' row_id='<%=row_id%>' 
 <% if !(defined? no_redactor_upload).nil? and no_redactor_upload %> no_upload='1' <%end%> 
 <% if !(defined? simple_redactor_toolbar).nil? and simple_redactor_toolbar %> simple='1' <%end%> 
 >
-
-  <!-- If there is content show the content -->
-  <%if has_content %>
-
-    <div class="content_icontainer">
-      <%if can_edit%>
-        <a class="redactor_content_edit_link btn btn-small pull-right"><i class="icon-edit icon_content"></i></a>
-
-        <div class="pillbox pull-right" style="display:none;">
-          <div class="btn-group">
-          <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_save_link btn btn-small"><i class="icon-ok  icon_content"></i></a>
-          <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_cancel_link btn btn-small"><i class="icon-remove  icon_content"></i></a>
-          </div>
-        </div>
-      <%end%>
-    </div>
-    <div class="clear"></div>
-    <div class="redactor_content">
-      <%= raw content %>
-    </div>
     
   <!-- If there is no content and you are the owner-->
-  <% elsif !has_content && can_edit %>
+  <% if can_edit || has_content %>
   
-    <div class="content_icontainer">
-     <a class="redactor_content_edit_link btn btn-small pull-right" style="display:none"><i class="icon-edit icon_content"></i></a>
-
-      <div class="pillbox pull-right" style="display:none;">
-        <div class="btn-group">
-        <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_save_link btn btn-small"><i class="icon-ok  icon_content"></i></a>
-        <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_cancel_link btn btn-small"><i class="icon-remove  icon_content"></i></a>
-        </div>
+    <% if can_edit %>
+      <div class="redactor_content_edit" <% if !has_content %> style="display:none" <%end%> >
+        <a class="redactor_content_edit_link btn btn-small pull-right">
+          <i class="icon-edit icon_content"></i>
+        </a>
       </div>
-    </div>
+    <% end %>
+    
     <div class="clear"></div>
-    <div class="redactor_content" style="display:none">
+    
+    <div class="redactor_content" <% if !has_content %> style="display:none" <%end%> >
       <%= raw content %>
     </div>
     
-    <div class="" style="text-align:center">
+    <div class="" <% if has_content %> style="display:none; text-align:center" <%else%> style="text-align:center" <%end%> >
       <div class="add_content">
         <a class="add_content_link"><img src="/assets/green_plus_icon.svg" class="img-rounded hoverimage" style="width:100px"><h4 style='color:#0a0;'>Add Description</h4></a>
       </div>
     </div>
+    
+    <%if can_edit%>
+      <div class="pillbox" style="display:none; height:20px">
+        <div class="pull-right">
+          <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_cancel_link btn btn-danger">Cancel</a>
+          <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_save_link btn btn-success">Save</a>
+        </div>
+      </div>
+    <%end%>
     
   <!-- If there is no content and you are NOT the owner or not logged in-->  
   <% else %>

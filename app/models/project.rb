@@ -11,6 +11,7 @@ class Project < ActiveRecord::Base
   has_many :data_sets
   has_many :media_objects
   has_many :likes
+  has_many :visualizations
 
   belongs_to :owner, class_name: "User", foreign_key: "user_id"
   

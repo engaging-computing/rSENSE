@@ -293,7 +293,7 @@ $ ->
         if(($ j).is(":checked"))
           should_disable = false
         $('#vis_button').prop("disabled", should_disable)
-
+        
     check_for_selection()
 
     #Add click events to all check boxes in the data_sets box
@@ -385,6 +385,51 @@ $ ->
             row = ($ @).parents('div.mediaobject')
             row.hide_row () =>
               ($ 'div#media_object_list div.mediaobject').filter(':visible').each (idx) ->
+                if idx % 2 is 0
+                  ($ @).addClass 'feed-even'
+                  ($ @).removeClass 'feed-odd'
+                else
+                  ($ @).removeClass 'feed-even'
+                  ($ @).addClass 'feed-odd'
+              row.remove()
+              
+    ## controls for saved vizes
+    ($ 'a.viz_hide').click (e) ->
+    
+      e.preventDefault()
+      
+      $.ajax
+        url: ($ @).attr('href')
+        type: 'PUT'
+        dataType: "json"
+        data: 
+          visualization:
+            hidden: true
+        success: =>
+          row = ($ @).parents('div.viz')
+          row.hide_row () =>
+            ($ 'div#viz_list div.viz').filter(':visible').each (idx) ->
+              if idx % 2 is 0
+                ($ @).addClass 'feed-even'
+                ($ @).removeClass 'feed-odd'
+              else
+                ($ @).removeClass 'feed-even'
+                ($ @).addClass 'feed-odd'
+              row.remove()
+              
+    ($ 'a.viz_delete').click (e) ->
+  
+      e.preventDefault()
+      
+      if helpers.confirm_delete ($ @).attr('name')
+        $.ajax
+          url: ($ @).attr('href')
+          type: 'DELETE'
+          dataType: "json"
+          success: =>
+            row = ($ @).parents('div.viz')
+            row.hide_row () =>
+              ($ 'div#viz_list div.viz').filter(':visible').each (idx) ->
                 if idx % 2 is 0
                   ($ @).addClass 'feed-even'
                   ($ @).removeClass 'feed-odd'

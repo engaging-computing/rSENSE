@@ -25,7 +25,7 @@
 
       <!-- project content -->
       <%=render layout: "shared/box", locals: {title: 'Description', width: '7', unique_id: 'description', should_hide: false} do %>
-        <%= project_redactor_helper (can_edit? @project), false %>
+        <%= project_redactor_helper (can_edit? @project) %>
       <%end%>
 
 
@@ -191,9 +191,46 @@
               </div>
               
             <%end%>
-            
           </div>
         <%end%>
+            
+            
+            <!-- saved data sets -->
+            <%=render layout: "shared/box", locals: {title: 'Saved Visualizations', width: '5', unique_id: 'visualizations', should_hide: false} do %>
+              <div id="viz_list" <% if @project.visualizations.count == 0 %> style="display:none;" <% end %> >
+      
+                <% @project.visualizations.search(false).each do |s| %>
+      
+                  <div class="<%= cycle('feed-even', 'feed-odd')%> viz" style="position:relative">
+      
+                    <div class="links">
+      
+                      <div class="title">
+                        <%= link_to truncate(s.title, length:30), "#{params[:id]}/data_sets/#{s.id}" %>
+                      </div>
+                    </div>
+      
+                    <div class="control_block">
+      
+                      <div class="control">
+                              
+                        <% if can_hide? s %>
+                           <a class="viz_hide" href="<%= visualization_url s %>">Hide</a>
+                        <% end %>
+      
+                        <% if can_delete? s %>
+                           | <a class="viz_delete" href="<%= visualization_url s %>" name="<%= s.title %>">Delete</a>
+                        <% end %>
+                      </div>
+
+                    </div>
+      
+                  </div>
+                <%end%>
+                <!--<div class="feed-bottom"> </div>-->
+              </div>
+          <%end%>
+       
     </div>
   </div>
 </div>
