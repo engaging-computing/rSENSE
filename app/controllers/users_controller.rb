@@ -1,3 +1,5 @@
+require 'base64'
+
 class UsersController < ApplicationController
   skip_before_filter :authorize, only: [:new, :create, :validate]
  
@@ -270,7 +272,9 @@ class UsersController < ApplicationController
 
   # GET /users/validate/:key
   def validate
-    @user = User.find_by_validation_key(params[:key])
+    key = Base64.decode64(params[:key])
+    
+    @user = User.find_by_validation_key(key)
 
     if @user == nil or params[:key].blank?
       render "public/404.html"
