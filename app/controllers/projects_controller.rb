@@ -70,7 +70,7 @@ class ProjectsController < ApplicationController
     end
 
     recur = params.key?(:recur) ? params[:recur].to_bool : false
-
+    
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @project.to_hash(recur) }
@@ -222,6 +222,7 @@ class ProjectsController < ApplicationController
     require 'net/http'
 
     @pid = params[:pid]
+    field_map = {}
 
     if( !@pid.nil? )
 
@@ -261,7 +262,9 @@ class ProjectsController < ApplicationController
           else
             type = 2
           end
-          @project.fields.push Field.create({project_id: @project.id, field_type: type, name: f["field_name"], unit: f["unit_name"]})
+          
+          field =  Field.create({project_id: @project.id, field_type: type, name: f["field_name"], unit: f["unit_name"]})
+          field_map[f["field_id"]] = field
         end
 
         #Get session list
@@ -311,18 +314,28 @@ class ProjectsController < ApplicationController
           json = ActiveSupport::JSON.decode response
 
           header = Hash.new
-
-          @project.fields.all.each_with_index do |f, i|
-            header["#{i}"] = { id: "#{f.id}", type: "#{f.field_type}" }
+          
+          json[0]["fields"].each_with_index do |f, i|
+            field = field_map[f["field_id"]]
+            header["#{i}"] = { id: "#{field.id}", type: "#{field.field_type}" }
           end
+          
+          data = Array.new
 
-          data = Hash.new
-
-          json[0]["data"].each_with_index do |d, i|
-            data["#{i}"] = d
+          json[0]["data"].each do |dr|
+            row =  Hash.new
+            dr.each_with_index do |d, i|
+              if header["#{i}"][:type] == "1"
+                row[header["#{i}"][:id]] = "U #{d}"
+              else
+                row[header["#{i}"][:id]] = d
+              end
+            end
+            data.push row
           end
-
-          DataSet.upload_form(header, data, @cur_user, @project, ses['name'])
+          
+          data_set = DataSet.create(user_id: @cur_user.id, project_id: @project.id, title: ses['name'])
+          MongoData.create( data_set_id: data_set.id, data: data)
 
         end
 

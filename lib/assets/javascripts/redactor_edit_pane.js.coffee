@@ -1,62 +1,64 @@
 $ ->
 
-    get_redactor_options = (tmp, path) ->
+    get_redactor_options = (top, path) ->
     
         options = {}
         
-        if tmp.attr('no_upload')
+        if top.attr('no_upload')
           options = {}
         else
           options = 
             imageUpload: "/media_objects/saveMedia/#{path}"
             fileUpload: "/media_objects/saveMedia/#{path}"
             
-        if tmp.attr('simple')
+        if top.attr('simple')
           options['buttons'] = ['html', '|', 'bold', 'italic', 'deleted', '|', 'link', '|', 'fontcolor', 'backcolor'] 
           
         options
 
     $('.redactor_content_edit_link').click ->
-        window.saved_content = ($ '.redactor_content').html()
-        tmp = ($ @).parent().parent()
-        type = tmp.attr("type")
-        row_id = tmp.attr("row_id")
+        top = ($ @).parents('div.redactor_top')
+        type = top.attr("type")
+        row_id = top.attr("row_id")
+        
+        top.attr 'saved_content', top.find('.redactor_content').html()
+        
         csrf_token = $('meta[name=csrf-token]').attr('content');
         csrf_param = $('meta[name=csrf-param]').attr('content');
+        
         path = ""
         if (csrf_param isnt undefined && csrf_token isnt undefined)
           params = csrf_param + "=" + encodeURIComponent(csrf_token);
           path =  "#{type}/#{row_id}?#{params}"
-        $(@).parent().parent().find('.redactor_content').redactor get_redactor_options(tmp, path)
-        ($ @).siblings('.pillbox').show()
-        $(@).hide();
+          
+        top.find('.redactor_content').redactor get_redactor_options(top, path)
+        
+        top.find('.pillbox').show()
+        top.find('.redactor_content_edit').hide()
     
     ($ '.redactor_content_cancel_link').click ->
-      r = confirm("Are you sure you want to cancel? All changes will be lost.")
-      if r == true
-        tmp = ($ @).parent().parent().parent().parent()
-        tmp.find('.redactor_content').redactor('destroy')
-        tmp.find(".redactor_content").html(window.saved_content)
-        ($ @).parent().parent().hide()
+      if confirm("Are you sure you want to cancel? All changes will be lost.")
+      
+        top = ($ @).parents('div.redactor_top')
+        saved_content = top.attr 'saved_content'
+        
+        top.find('.redactor_content').redactor('destroy')
+        top.find(".redactor_content").html(saved_content)
+        
+        top.find('.pillbox').hide()
         
         if saved_content is ""
-          ($ ".add_content_link").parent().parent().show()
+          ($ ".add_content").parent().show()
         else
-          $(@).parent().parent().siblings('.redactor_content_edit_link').show()
+          top.find('.redactor_content_edit').show()
         
       false
     
     $('.redactor_content_save_link').click ->
-        tmp = ($ @).parent().parent().parent().parent()
-        type = tmp.attr('type')        
-        field_name = tmp.attr('field')
-        value = tmp.find('.redactor_content').redactor('get')
-        $(@).parent().parent().hide()
-        
-        if value is ""
-          ($ ".add_content_link").parent().parent().show()
-        else
-          $(@).parent().parent().siblings('.redactor_content_edit_link').show()
+        top = ($ @).parents('div.redactor_top')
+        type = top.attr('type')        
+        field_name = top.attr('field')
+        value = top.find('.redactor_content').redactor('get')
         
         data={}
         data[type] = {}
@@ -69,14 +71,24 @@ $ ->
           data:
             data
           success: =>
-            tmp.find('.redactor_content').redactor('destroy')
+            top.find('.redactor_content').redactor('destroy')
+            
+            top.find('.pillbox').hide()
+        
+            if value is ""
+              ($ ".add_content").parent().show()
+            else
+              top.find('.redactor_content_edit').show()
         false
         
     $('.add_content_link').click ->
-        $(@).parent().parent().siblings('.redactor_content').show()
-        tmp = ($ @).parent().parent().parent()
-        type = tmp.attr("type")
-        row_id = tmp.attr("row_id")
+        top = ($ @).parents('div.redactor_top')
+        
+        top.find('.redactor_content').show()
+        
+        type = top.attr("type")
+        row_id = top.attr("row_id")
+        
         csrf_token = $('meta[name=csrf-token]').attr('content');
         csrf_param = $('meta[name=csrf-param]').attr('content');
         path = ""
@@ -84,9 +96,9 @@ $ ->
           params = csrf_param + "=" + encodeURIComponent(csrf_token);
           path =  "#{type}/#{row_id}?#{params}"
         
-        window.saved_content = ""
+        top.attr 'saved_content', ""
         
-        $(@).parent().parent().siblings('.redactor_content').redactor get_redactor_options(tmp, path)
-        $(@).parent().parent().parent().parent().find('.pillbox').show()
-        $(@).parent().parent().hide()
+        top.find('.redactor_content').redactor get_redactor_options(top, path)
+        top.find('.pillbox').show()
+        ($ ".add_content").parent().hide()
 
