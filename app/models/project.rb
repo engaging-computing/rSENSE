@@ -8,7 +8,6 @@ class Project < ActiveRecord::Base
   
   validates_presence_of :title
   validates_presence_of :user_id
-  validates :title, format: {with: /\A[\p{Alpha}\p{Blank}\-']*\z/, message: "can only contain letters, hyphens, single quotes, and spaces."}
   
   before_save :sanitize_project
   
