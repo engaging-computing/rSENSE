@@ -1,6 +1,7 @@
 class Visualization < ActiveRecord::Base
   
   include ActionView::Helpers::DateHelper
+  include ActionView::Helpers::SanitizeHelper
   
   attr_accessible :content, :data, :project_id, :globals, :title, :user_id, :hidden, :featured, :featured_at
 
@@ -13,9 +14,18 @@ class Visualization < ActiveRecord::Base
   validates_presence_of :globals
   
   alias_attribute :name, :title
+  
+  before_save :sanitize_viz
 
   belongs_to :owner, class_name: "User", foreign_key: "user_id"
   belongs_to :project
+  
+  def sanitize_viz
+  
+    self.content = sanitize self.content
+    self.title = sanitize self.title, tags: %w()
+    
+  end
   
   def self.search(search, include_hidden = false)
     res = if search

@@ -25,30 +25,6 @@ class DataSet < ActiveRecord::Base
     end
   end
   
-  def self.upload_form(header, datapoints, cur_user, project, name = nil)
-    if name == nil
-      name = "#{cur_user.name}'s Session"
-    end
-    
-    if !datapoints.nil?     
-      data_set = DataSet.create(:user_id => cur_user.id, :project_id => project.id, :title => name)
-
-      mongo_data = []
-      
-      datapoints.each do |dp|
-        row = {}
-        header.each_with_index do |field, col_index|
-          row["#{field[1][:id]}"] = dp[1][col_index]
-        end
-        mongo_data << row
-      end
-      
-      MongoData.create( data_set_id: data_set.id, data: mongo_data)
-    end
-    
-    return data_set.id
-  end
-  
   def to_hash(recurse = true)
     data = MongoData.find_by_data_set_id(self.id)
         

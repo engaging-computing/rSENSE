@@ -1,5 +1,8 @@
 class MediaObject < ActiveRecord::Base
   
+  include ActionView::Helpers::SanitizeHelper
+
+  
   attr_accessible :project_id, :media_type, :name, :data_set_id, :src, :user_id, :tutorial_id, :visualization_id, :title, :file_key, :hidden
   
   belongs_to :owner, class_name: "User", foreign_key: "user_id"
@@ -12,7 +15,15 @@ class MediaObject < ActiveRecord::Base
   
   validates_presence_of :src, :media_type, :file_key
   
+  before_save :sanitize_media
+  
   before_destroy :aws_del
+  
+  def sanitize_media
+  
+    self.title = sanitize self.title, tags: %w()
+    
+  end
   
   def self.search(search, dc)
     if search

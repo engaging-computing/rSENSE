@@ -1,5 +1,8 @@
 class User < ActiveRecord::Base
   
+  include ActionView::Helpers::SanitizeHelper
+
+  
   attr_accessible :content, :email, :firstname, :lastname, :password, :password_confirmation, :username, :validated, :hidden, :bio
 
   validates_uniqueness_of :email, case_sensitive: false, if: :email?
@@ -13,6 +16,9 @@ class User < ActiveRecord::Base
 
   before_create :check_validation
   after_create :check_and_send_validation
+  
+  before_save :sanitize_user
+  
   has_many :projects
   has_many :memberships
   has_many :groups, :through => :memberships
@@ -21,6 +27,16 @@ class User < ActiveRecord::Base
   has_many :visualizations
   has_many :tutorials
 
+  def sanitize_user
+  
+    self.firstname = sanitize self.firstname, tags: %w()
+    self.lastname = sanitize self.lastname, tags: %w()
+    self.username = sanitize self.username, tags: %w()
+    self.content = sanitize self.content
+    self.bio = sanitize self.bio, tags: %w()
+    
+  end
+  
   def to_param
     self.username
   end
