@@ -1,6 +1,8 @@
 class Tutorial < ActiveRecord::Base
   
   include ActionView::Helpers::DateHelper
+  include ActionView::Helpers::SanitizeHelper
+
   
   attr_accessible :content, :title, :featured_number, :user_id, :hidden
 
@@ -14,6 +16,15 @@ class Tutorial < ActiveRecord::Base
   belongs_to :owner, class_name: "User", foreign_key: "user_id"
   
   alias_attribute :name, :title
+  
+  before_save :sanitize_tutorial
+  
+  def sanitize_tutorial
+    
+    self.content = sanitize self.content
+    self.title = sanitize self.title, tags: %w()
+    
+  end
   
   def self.search(search, include_hidden = false)
     res = if search
