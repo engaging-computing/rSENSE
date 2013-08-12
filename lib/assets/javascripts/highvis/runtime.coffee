@@ -67,9 +67,9 @@ $ ->
     ### Generate tabs ###
     for vis of data.allVis
         if data.allVis[vis] in data.relVis
-            ($ '#visTabList').append "<li class='vis_tab'><a href='##{data.allVis[vis].toLowerCase()}_canvas'>#{data.allVis[vis]}</a></li>"
+            ($ '#visTabList').append "<li class='vis_tab'><a href='##{data.allVis[vis].toLowerCase()}_canvas'><span class='hidden-phone'>#{data.allVis[vis]}</span><img class='visible-phone' height='32px' width='32' src='/assets/novis_#{data.allVis[vis].toLowerCase()}.png' ></a></li>"
         else
-            ($ '#visTabList').append "<li class='vis_tab' ><a href='##{data.allVis[vis].toLowerCase()}_canvas' style='text-decoration:line-through'>#{data.allVis[vis]}</a></li>"
+            ($ '#visTabList').append "<li class='vis_tab' ><a href='##{data.allVis[vis].toLowerCase()}_canvas' style='text-decoration:line-through'><span class='hidden-phone'>#{data.allVis[vis]}</span><img class='visible-phone' height='32px' width='32' src='/assets/novis_#{data.allVis[vis].toLowerCase()}.png' /></a></li>"
             
     ### Jquery up the tabs ###
     ($ '#viscontainer').tabs()
@@ -92,7 +92,15 @@ $ ->
     ($ '#visTabList a').click ->
         oldVis = globals.curVis
 
-        globals.curVis = (eval 'globals.' + innerTextCompat(this).toLowerCase())
+        href = ($ this).attr 'href'
+        
+        start = href.indexOf('#')
+        end = href.indexOf('_canvas')
+        start = start + 1
+        
+        link = href.substr(start, end-start)
+      
+        globals.curVis = (eval 'globals.' + link)
         
         if oldVis is globals.curVis
             return
