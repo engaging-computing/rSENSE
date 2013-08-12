@@ -1,0 +1,2 @@
+ActionView::Base.sanitized_allowed_tags.replace %w(p strong i em a del img ul ol li h1 h2 h3 h4 h5 table thead tbody tr td hr video)
+ActionView::Base.sanitized_allowed_attributes.replace %w(id class style href src)
