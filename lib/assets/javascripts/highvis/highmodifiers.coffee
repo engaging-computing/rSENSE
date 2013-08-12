@@ -65,8 +65,8 @@ $ ->
 
         mapFunc = (dp) ->
             obj =
-                x: Number dp[xIndex]
-                y: Number dp[yIndex]
+                x: dp[xIndex]
+                y: dp[yIndex]
                 datapoint: dp
 
         mapped = rawData.map mapFunc
@@ -101,7 +101,7 @@ $ ->
         rawData = @selector(fieldIndex, groupIndex)
 
         if rawData.length > 0
-            rawData.reduce (a,b) -> Math.max((Number a), (Number b))
+            rawData.reduce (a,b) -> Math.max(a, b)
         else
             null
 
@@ -113,7 +113,7 @@ $ ->
         rawData = @selector(fieldIndex, groupIndex)
 
         if rawData.length > 0
-            rawData.reduce (a,b) -> Math.min((Number a), (Number b))
+            rawData.reduce (a,b) -> Math.min(a, b)
         else
             null
 
@@ -125,7 +125,7 @@ $ ->
         rawData = @selector(fieldIndex, groupIndex)
 
         if rawData.length > 0
-            (rawData.reduce (a,b) -> (Number a) + (Number b)) / rawData.length
+            (rawData.reduce (a,b) -> a + b) / rawData.length
         else
             null
 
@@ -141,9 +141,9 @@ $ ->
 
         if rawData.length > 0
             if rawData.length % 2
-                return Number rawData[mid]
+                return rawData[mid]
             else
-                return ((Number rawData[mid - 1]) + (Number rawData[mid])) / 2.0
+                return (rawData[mid - 1] + rawData[mid]) / 2.0
         else
             null
 
@@ -166,7 +166,7 @@ $ ->
         if rawData.length > 0
             total = 0
             for value in rawData
-                total = total + (Number value)
+                total = total + value
             return total;
         else
             null
@@ -266,7 +266,10 @@ $ ->
                     when data.types.TEXT
                         NaN
                     else
-                        dp[fIndex] = if isNaN (Number dp[fIndex]) then null else (Number dp[fIndex])
+                        if (isNaN (Number dp[fIndex])) or (dp[fIndex] == "") or (dp[fIndex] == null)
+                          dp[fIndex] = null
+                        else
+                          dp[fIndex] = Number dp[fIndex]
         
         for dp, dIndex in data.dataPoints
               for fieldIndex in data.timeFields
