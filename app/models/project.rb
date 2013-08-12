@@ -1,11 +1,16 @@
 class Project < ActiveRecord::Base
   
+  include ApplicationHelper
   include ActionView::Helpers::DateHelper
-  
+  include ActionView::Helpers::SanitizeHelper
+
   attr_accessible :content, :title, :user_id, :filter, :cloned_from, :like_count, :has_fields, :featured, :is_template, :featured_media_id, :hidden, :featured_at
   
   validates_presence_of :title
   validates_presence_of :user_id
+  validates :title, format: {with: /\A[\p{Alpha}\p{Blank}\-']*\z/, message: "can only contain letters, hyphens, single quotes, and spaces."}
+  
+  before_save :sanitize_project
   
   has_many :fields
   has_many :data_sets
@@ -16,6 +21,11 @@ class Project < ActiveRecord::Base
   belongs_to :owner, class_name: "User", foreign_key: "user_id"
   
   alias_attribute :name, :title
+  
+  def sanitize_project
+    self.title = sanitize self.title
+    self.content = sanitize self.content
+  end
   
   def self.search(search, include_hidden = false)
     res = if search
