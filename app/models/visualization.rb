@@ -23,7 +23,7 @@ class Visualization < ActiveRecord::Base
   def sanitize_viz
   
     self.content = sanitize self.content
-    self.title = sanitize self.title
+    self.title = sanitize self.title, tags: %w()
     
   end
   

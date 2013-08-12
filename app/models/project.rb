@@ -23,8 +23,8 @@ class Project < ActiveRecord::Base
   alias_attribute :name, :title
   
   def sanitize_project
-    self.title = sanitize self.title
     self.content = sanitize self.content
+    self.title = sanitize self.title, tags: %w()
   end
   
   def self.search(search, include_hidden = false)
