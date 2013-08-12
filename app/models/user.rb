@@ -29,11 +29,11 @@ class User < ActiveRecord::Base
 
   def sanitize_user
   
-    self.firstname = sanitize self.firstname
-    self.lastname = sanitize self.lastname
-    self.username = sanitize self.username
+    self.firstname = sanitize self.firstname, tags: %w()
+    self.lastname = sanitize self.lastname, tags: %w()
+    self.username = sanitize self.username, tags: %w()
     self.content = sanitize self.content
-    self.bio = sanitize self.bio
+    self.bio = sanitize self.bio, tags: %w()
     
   end
   

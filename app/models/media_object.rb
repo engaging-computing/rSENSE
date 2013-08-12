@@ -21,7 +21,7 @@ class MediaObject < ActiveRecord::Base
   
   def sanitize_media
   
-    self.title = sanitize self.title
+    self.title = sanitize self.title, tags: %w()
     
   end
   

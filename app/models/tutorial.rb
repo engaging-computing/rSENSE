@@ -19,10 +19,10 @@ class Tutorial < ActiveRecord::Base
   
   before_save :sanitize_tutorial
   
-  def sanititze_tutorial
+  def sanitize_tutorial
     
     self.content = sanitize self.content
-    self.title = sanitize self.title
+    self.title = sanitize self.title, tags: %w()
     
   end
   
