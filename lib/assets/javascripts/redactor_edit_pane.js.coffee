@@ -50,7 +50,7 @@ $ ->
         top.find('.pillbox').hide()
         
         if saved_content is ""
-          ($ ".add_content").parent().show()
+          top.find('.add_content').show()
         else
           top.find('.redactor_content_edit').show()
         
@@ -79,7 +79,7 @@ $ ->
             top.find('.pillbox').hide()
         
             if value is ""
-              ($ ".add_content").parent().show()
+              top.find('.add_content').show()
             else
               top.find('.redactor_content_edit').show()
         false
@@ -103,5 +103,5 @@ $ ->
         
         top.find('.redactor_content').redactor get_redactor_options(top, path)
         top.find('.pillbox').show()
-        ($ ".add_content").parent().hide()
+        top.find('.add_content').hide()
 
