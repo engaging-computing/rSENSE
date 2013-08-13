@@ -311,10 +311,10 @@ $ ->
             # Detect date format
             if ((Number terms[0]) > 12) or (isNaN Number terms[0])
                 year  = Number terms[0]
-                month = (new Date terms[1] + " 20 1970").getMonth()
+                month = (new Date terms[1] + "/20 1970").getMonth()
                 day   = Number terms[2]
             else
-                month = (new Date terms[0] + " 20 1970").getMonth()
+                month = (new Date terms[0] + "/20 1970").getMonth()
                 day   = Number terms[1]
                 year  = Number terms[2]
 
