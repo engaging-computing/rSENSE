@@ -326,7 +326,11 @@ class ProjectsController < ApplicationController
             row =  Hash.new
             dr.each_with_index do |d, i|
               if header["#{i}"][:type] == "1"
-                row[header["#{i}"][:id]] = "U #{d}"
+                begin
+                  row[header["#{i}"][:id]] = "U #{Integer d}"
+                rescue
+                  row[header["#{i}"][:id]] = d
+                end
               else
                 row[header["#{i}"][:id]] = d
               end
