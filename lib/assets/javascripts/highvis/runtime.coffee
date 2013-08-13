@@ -67,9 +67,9 @@ $ ->
     ### Generate tabs ###
     for vis of data.allVis
         if data.allVis[vis] in data.relVis
-            ($ '#visTabList').append "<li class='vis_tab'><a href='##{data.allVis[vis].toLowerCase()}_canvas'><span class='hidden-phone'>#{data.allVis[vis]}</span><img class='visible-phone' height='32px' width='32' src='/assets/novis_#{data.allVis[vis].toLowerCase()}.png' ></a></li>"
+            ($ '#visTabList').append "<li class='vis_tab'><a href='##{data.allVis[vis].toLowerCase()}_canvas'><span class='hidden-phone'>#{data.allVis[vis]}</span><img class='visible-phone' height='32px' width='32' src='/assets/vis_#{data.allVis[vis].toLowerCase()}_dark.png' ></a></li>"
         else
-            ($ '#visTabList').append "<li class='vis_tab' ><a href='##{data.allVis[vis].toLowerCase()}_canvas' style='text-decoration:line-through'><span class='hidden-phone'>#{data.allVis[vis]}</span><img class='visible-phone' height='32px' width='32' src='/assets/novis_#{data.allVis[vis].toLowerCase()}.png' /></a></li>"
+            ($ '#visTabList').append "<li class='vis_tab' ><a href='##{data.allVis[vis].toLowerCase()}_canvas' style='text-decoration:line-through'><span class='hidden-phone'>#{data.allVis[vis]}</span><img class='visible-phone' height='32px' width='32' src='/assets/vis_#{data.allVis[vis].toLowerCase()}_light.png' /></a></li>"
             
     ### Jquery up the tabs ###
     ($ '#viscontainer').tabs()
