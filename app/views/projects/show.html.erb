@@ -33,7 +33,7 @@
       <%=render layout: "shared/box", locals: {title: 'Data Sets', width: '7', unique_id: 'data_sets', should_hide: false} do %>
         <div id="dataset_list" <% if @project.data_sets.count == 0 %> style="display:none;" <% end %> >
 
-          <div class="text-left">
+          <div class="text-left" style="padding: 2px 5px 2px 5px">
             <input type="button" class="btn btn-info" style="margin-bottom: 10px;" value="Visualize" id="vis_button" href="/projects/<%=@project.id%>/data_sets/"/>
             <div class="pull-right">
               <input type="checkbox" id="check_selector"/>
