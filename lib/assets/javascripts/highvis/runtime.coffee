@@ -118,7 +118,7 @@ $ ->
       $("#control_hide_button").html('>')
       globals.CONTROL_SIZE
 
-    visWidth = containerSize - (hiderSize + controlSize + 1)
+    visWidth = containerSize - (hiderSize + controlSize + 10)
     visHeight = ($ '#viscontainer').height() - ($ '#visTabList').outerHeight()
 
     ($ '.vis_canvas').width  visWidth
@@ -146,7 +146,7 @@ $ ->
         else
             0
 
-        newWidth = containerSize - (hiderSize + controlSize + 1)
+        newWidth = containerSize - (hiderSize + controlSize + 10)
         
         ($ '#controldiv').animate {width: controlSize}, aniLength, 'linear'
         ($ '.vis_canvas').animate {width: newWidth}, aniLength, 'linear'
