@@ -9,8 +9,7 @@ $ ->
         url: window.postURL
         method: 'POST'
         success: (data, textStatus, jqXHR) ->
-          helpers.name_popup data, "Dataset", "data_set"
+          helpers.name_popup data, "Dataset", "data_set", ""
       debug: false
-
     ($ '#manualTable').editTable(settings)
     
