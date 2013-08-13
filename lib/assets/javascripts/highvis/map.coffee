@@ -35,6 +35,7 @@ $ ->
             @HEATMAP_MARKERS = -1
 
             @visibleMarkers = 1
+            @visibleClusters = 1
             @heatmapSelection = @HEATMAP_NONE
 
             @heatmapRadius = 30
@@ -154,7 +155,24 @@ $ ->
 
                     @heatPoints[@HEATMAP_MARKERS][groupIndex].push latlng
 
-            @gmap.fitBounds(latlngbounds)
+            # Deal with zoom
+            if @zoomLevel?
+              @gmap.setZoom @zoomLevel
+                
+            google.maps.event.addListener @gmap, "zoom_changed", =>
+              @zoomLevel = @gmap.getZoom()
+
+            # Deal with zoom area
+            if @savedCenter?
+              @gmap.setCenter new google.maps.LatLng(@savedCenter.lat, @savedCenter.lng)
+            else
+              @gmap.fitBounds(latlngbounds)
+              
+            google.maps.event.addListener @gmap, "bounds_changed", =>
+              cen = @gmap.getCenter()
+              @savedCenter =
+                lat: cen.lat()
+                lng: cen.lng()
             
             
             clusterStyles = []
@@ -184,7 +202,7 @@ $ ->
               textSize: 12
             
             @clusterer = new MarkerClusterer @gmap, [].concat.apply([], @markers),
-              maxZoom: 17
+              maxZoom: if @visibleClusters then 17 else -1
               gridSize: 35
               ignoreHidden: true
               styles: clusterStyles
@@ -272,13 +290,26 @@ $ ->
             #marker checkbox
             controls += '<div class="inner_control_div">'
             controls += "<input id='markerBox' type='checkbox' name='marker_selector' #{if @visibleMarkers is 1 then 'checked' else ''}/> Markers "
-            controls += "</div></div></div>"
+            controls += "</div>"
+            
+            #cluster checkbox
+            controls += '<div class="inner_control_div">'
+            controls += "<input id='clusterBox' type='checkbox' name='cluster_selector' #{if @visibleClusters is 1 then 'checked' else ''}/> Cluster Markers "
+            controls += "</div>"
+            
+            
+            controls += "</div></div>"
 
             # Write HTML
             ($ '#controldiv').append controls
 
             ($ '#markerBox').click (e) =>
                 @visibleMarkers = (@visibleMarkers + 1) % 2
+                @delayedUpdate()
+                
+            ($ '#clusterBox').click (e) =>
+                @visibleClusters = (@visibleClusters + 1) % 2
+                @clusterer.setMaxZoom if @visibleClusters then 17 else -1
                 @delayedUpdate()
 
             # Make heatmap select handler
