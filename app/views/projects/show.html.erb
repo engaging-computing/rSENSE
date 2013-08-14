@@ -199,14 +199,14 @@
             <%=render layout: "shared/box", locals: {title: 'Saved Visualizations', width: '5', unique_id: 'visualizations', should_hide: false} do %>
               <div id="viz_list" <% if @project.visualizations.count == 0 %> style="display:none;" <% end %> >
       
-                <% @project.visualizations.search(false).each do |s| %>
+                <% @project.visualizations.search(false).each do |vv| %>
       
                   <div class="<%= cycle('feed-even', 'feed-odd')%> viz" style="position:relative">
       
                     <div class="links">
       
                       <div class="title">
-                        <%= link_to truncate(s.title, length:30), "#{params[:id]}/data_sets/#{s.id}" %>
+                        <%= link_to truncate(vv.title, length:30), visualization_url(vv) %>
                       </div>
                     </div>
       
@@ -214,12 +214,12 @@
       
                       <div class="control">
                               
-                        <% if can_hide? s %>
-                           <a class="viz_hide" href="<%= visualization_url s %>">Hide</a>
+                        <% if can_hide? vv %>
+                           <a class="viz_hide" href="<%= visualization_url vv %>">Hide</a>
                         <% end %>
       
-                        <% if can_delete? s %>
-                           | <a class="viz_delete" href="<%= visualization_url s %>" name="<%= s.title %>">Delete</a>
+                        <% if can_delete? vv %>
+                           | <a class="viz_delete" href="<%= visualization_url vv %>" name="<%= vv.title %>">Delete</a>
                         <% end %>
                       </div>
 
