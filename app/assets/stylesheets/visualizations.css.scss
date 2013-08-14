@@ -29,8 +29,22 @@
 }
 
 
+
 #contentCarousel .add_content{
  padding: 190px 0px 0px 0px ;
+}
+
+ol.carousel-indicators
+{
+  a li
+  {
+    background-color:#AAA;
+  }
+  
+  a.active li
+  {
+    background-color:black;
+  }
 }
 
 @media print 
