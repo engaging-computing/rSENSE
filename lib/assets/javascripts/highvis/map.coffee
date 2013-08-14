@@ -289,7 +289,7 @@ $ ->
 
             #marker checkbox
             controls += '<div class="inner_control_div">'
-            controls += "<input id='markerBox' type='checkbox' name='marker_selector' #{if @visibleMarkers is 1 then 'checked' else ''}/> Markers "
+            controls += "<input id='markerBox' type='checkbox' name='marker_selector' #{if @visibleMarkers is 1 then 'checked' else ''}/> Display Markers "
             controls += "</div>"
             
             #cluster checkbox
