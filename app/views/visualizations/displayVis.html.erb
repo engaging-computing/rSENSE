@@ -34,25 +34,35 @@
     </div>
   
   </div>
-    
-  <div id="contentCarousel" class="carousel slide">
-    <ol class="carousel-indicators">
-      <% @datasets.each_with_index do |s,i| %>
-        <li data-target="#contentCarousel" data-slide-to="<%=i%>" class="<%if s == @datasets.first()%>active<%end%>"></li>
-      <%end%>
-    </ol>
-    <!-- Carousel items -->
-    <div class="carousel-inner redactor" >
-      <% @datasets.each do |s| %>
-        <%@data_set = s%>
-        <div class="item <%if s == @datasets.first()%>active<%end%>">
-          <span style="font-size:1.5em">Dataset: <%= data_set_edit_helper 'title', can_edit?(s), make_link = false, 32 %></span>
-          <%= data_set_redactor_helper s, can_edit?(s) %>
-        </div>  
-      <%end%>
+  
+  <%if @datasets.count > 1%>  
+    <div id="contentCarousel" class="carousel slide">
+      <ol class="carousel-indicators">
+        <% @datasets.each_with_index do |s,i| %>
+          <li data-target="#contentCarousel" data-slide-to="<%=i%>" class="<%if s == @datasets.first()%>active<%end%>"></li>
+        <%end%>
+      </ol>
+      <!-- Carousel items -->
+      <div class="carousel-inner redactor" >
+        <% @datasets.each do |s| %>
+          <%@data_set = s%>
+          <div class="item <%if s == @datasets.first()%>active<%end%>">
+            <span style="font-size:1.5em">Dataset: <%= data_set_edit_helper 'title', can_edit?(s), make_link = false, 32 %></span>
+            <%= data_set_redactor_helper s, can_edit?(s) %>
+          </div>  
+        <%end%>
+      </div>
+      <!-- Carousel nav -->
+      <a class="carousel-control left" href="#contentCarousel" data-slide="prev">&lsaquo;</a>
+      <a class="carousel-control right" href="#contentCarousel" data-slide="next">&rsaquo;</a>
     </div>
-    <!-- Carousel nav -->
-    <a class="carousel-control left" href="#contentCarousel" data-slide="prev">&lsaquo;</a>
-    <a class="carousel-control right" href="#contentCarousel" data-slide="next">&rsaquo;</a>
-  </div>
+  <% elsif @datasets.count == 1%>
+
+    <div class="well" style="margin-top:10px">
+      <%@data_set = @datasets.first()%>
+      <span style="font-size:1.5em">Dataset: <%= data_set_edit_helper 'title', can_edit?(@data_set), make_link = false, 32 %></span>
+      <%= data_set_redactor_helper @data_set, can_edit?(@data_set) %>
+    </div>
+
+  <%end%>
 
