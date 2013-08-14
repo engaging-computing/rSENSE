@@ -4,7 +4,7 @@ $ ->
   if namespace.controller is "projects" and namespace.action is "index"
 
     addItem = (object) ->
-      newItem =   "<div class='item'>"
+      newItem =   "<div class='item word-break'>"
 
       if(object.mediaSrc)
         newItem += "<a href='#{object.url}'><img src='#{object.mediaSrc}'></img></a>"
