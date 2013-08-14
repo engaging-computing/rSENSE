@@ -186,7 +186,7 @@ class VisualizationsController < ApplicationController
         end
       end
     else
-      @datasets = DataSet.find_all_by_project_id params[:id]
+      @datasets = DataSet.find_all_by_project_id(params[:id], :conditions => {hidden: false})
     end
     
     # get data for each dataset    
