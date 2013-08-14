@@ -48,22 +48,16 @@ class VisualizationsController < ApplicationController
     recur = params.key?(:recur) ? params[:recur].to_bool : false
 
     respond_to do |format|
-      format.html { render :layout => 'applicationWide' }
+      format.html do
+        if params.try(:[], :embed) and params[:embed]
+          @Globals = { options: {startCollasped: 1, isEmbed: 1} }
+          
+          render 'embed', :layout => 'embedded'
+        else
+          render :layout => 'applicationWide' 
+        end
+      end
       format.json { render json: @visualization.to_hash(recur) }
-    end
-  end
-
-  # GET /visualizations/1/embeded
-  def embedVis
-    @visualization = Visualization.find(params[:id])
-    @project = Project.find_by_id(@visualization.project_id)
-
-    # The finalized data object
-    @Data = { savedData: @visualization.data, savedGlobals: @visualization.globals }
-    @Globals = { options: {startCollasped: 1, isEmbed: 1} }
-
-    respond_to do |format|
-      format.html {render :layout => 'embeded' }
     end
   end
 
@@ -269,9 +263,16 @@ class VisualizationsController < ApplicationController
     # The finalized data object
     @Data = { projectName: @project.title, projectID: @project.id, fields: data_fields, dataPoints: format_data, metadata: metadata, relVis: rel_vis, allVis: allVis }
     
-    
     respond_to do |format|
-      format.html {render :layout => 'applicationWide' }
+      format.html do
+        if params.try(:[], :embed) and params[:embed]
+          @Globals = { options: {startCollasped: 1, isEmbed: 1} }
+          
+          render 'embed', :layout => 'embedded'
+        else
+          render :layout => 'applicationWide' 
+        end
+      end
     end
   end
   
