@@ -3,7 +3,7 @@ $ ->
   if namespace.controller is "users" and namespace.action is "index"
 
     addItem = (object) ->
-      newItem =   "<div class='item' align='center'>"
+      newItem =   "<div class='item word-break' align='center'>"
 
       newItem +=  "<h4 style='margin-top:0px;'><a href='#{object.url}'>#{helpers.truncate object.username, 16}</a>"
 
