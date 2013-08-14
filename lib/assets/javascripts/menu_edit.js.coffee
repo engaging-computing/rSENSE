@@ -7,6 +7,7 @@ $ ->
     
     #value should be the current value of the info box
     val = root.attr('value')
+    val = val.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;")
     
     #href should be /type/id e.g. /users/jim
     href = ($ @).attr('href')
