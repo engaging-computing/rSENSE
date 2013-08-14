@@ -180,13 +180,16 @@ class VisualizationsController < ApplicationController
       dsets = params[:datasets].split(",")
       dsets.each do |s|
         begin
-          @datasets.push DataSet.find_by_id_and_project_id s, params[:id]
+          dset = DataSet.find_by_id s
+          if dset.project_id = @project.id
+            @datasets.push dset
+          end
         rescue
           logger.info "Either project id or dataset does not exist in the DB"
         end
       end
     else
-      @datasets = DataSet.find_all_by_project_id params[:id]
+      @datasets = DataSet.find_all_by_project_id(params[:id], :conditions => {hidden: false})
     end
     
     # get data for each dataset    
