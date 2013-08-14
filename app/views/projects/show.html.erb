@@ -196,7 +196,7 @@
             
             
             <!-- saved data sets -->
-            <%=render layout: "shared/box", locals: {title: 'Saved Visualizations', width: '5', unique_id: 'visualizations', should_hide: false} do %>
+            <%=render layout: "shared/box", locals: {title: 'Visualizations', width: '5', unique_id: 'visualizations', should_hide: false} do %>
               <div id="viz_list" <% if @project.visualizations.count == 0 %> style="display:none;" <% end %> >
       
                 <% @project.visualizations.search(false).each do |vv| %>
