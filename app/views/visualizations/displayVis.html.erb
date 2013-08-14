@@ -38,7 +38,9 @@
   <div id="contentCarousel" class="carousel slide">
     <ol class="carousel-indicators">
       <% @datasets.each_with_index do |s,i| %>
-        <li data-target="#contentCarousel" data-slide-to="<%=i%>" class="<%if s == @datasets.first()%>active<%end%>"></li>
+        <a href="#" <%if s == @datasets.first()%>class="active"<%end%>>
+          <li data-target="#contentCarousel" data-slide-to="<%=i%>"></li>
+        </a>
       <%end%>
     </ol>
     <!-- Carousel items -->
