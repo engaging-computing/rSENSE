@@ -3,7 +3,6 @@ $ ->
   window.helpers ?= {}
   
   helpers.name_popup = (obj, name, type) ->
-    console.log 'here'
     modal = """
     <div id="new_name_box" class="modal hide fade well container" style="width:400px">
       <div> Please enter a name for this #{name}: <br>
