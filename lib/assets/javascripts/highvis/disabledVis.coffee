@@ -38,7 +38,7 @@ $ ->
         histogram_err = "<div class='novis_message'><img src='/assets/novis_histogram.png'><br><br>Either no numeric fields were found or there were not enough data<br>Cannot display Histogram</div>"
         bar_err = "<div class='novis_message'><img src='/assets/novis_bar.png'><br><br>Either no numeric fields were found or there were not enough data<br>Cannot display Bar Chart visualization</div>"
         map_err = "<div class='novis_message'><img src='/assets/novis_map.png'><br><br>No geographic data found<br>Cannot display Map visualization</div>"
-        photos_err = "<div class='novis_message'><img src='/assets/novis_photo.png'><br><br>There are no photos to display</div>"
+        photos_err = "<div class='novis_message'><img src='/assets/novis_photos.png'><br><br>There are no photos to display</div>"
         
         start: ->  
             ($ '#' + @canvas).show()

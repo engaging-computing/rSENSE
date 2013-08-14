@@ -33,7 +33,7 @@
       <%=render layout: "shared/box", locals: {title: 'Data Sets', width: '7', unique_id: 'data_sets', should_hide: false} do %>
         <div id="dataset_list" <% if @project.data_sets.count == 0 %> style="display:none;" <% end %> >
 
-          <div class="text-left">
+          <div class="text-left" style="padding: 2px 5px 2px 5px">
             <input type="button" class="btn btn-info" style="margin-bottom: 10px;" value="Visualize" id="vis_button" href="/projects/<%=@project.id%>/data_sets/"/>
             <div class="pull-right">
               <input type="checkbox" id="check_selector"/>
@@ -196,17 +196,17 @@
             
             
             <!-- saved data sets -->
-            <%=render layout: "shared/box", locals: {title: 'Saved Visualizations', width: '5', unique_id: 'visualizations', should_hide: false} do %>
+            <%=render layout: "shared/box", locals: {title: 'Visualizations', width: '5', unique_id: 'visualizations', should_hide: false} do %>
               <div id="viz_list" <% if @project.visualizations.count == 0 %> style="display:none;" <% end %> >
       
-                <% @project.visualizations.search(false).each do |s| %>
+                <% @project.visualizations.search(false).each do |vv| %>
       
                   <div class="<%= cycle('feed-even', 'feed-odd')%> viz" style="position:relative">
       
                     <div class="links">
       
                       <div class="title">
-                        <%= link_to truncate(s.title, length:30), "#{params[:id]}/data_sets/#{s.id}" %>
+                        <%= link_to truncate(vv.title, length:30), visualization_url(vv) %>
                       </div>
                     </div>
       
@@ -214,12 +214,12 @@
       
                       <div class="control">
                               
-                        <% if can_hide? s %>
-                           <a class="viz_hide" href="<%= visualization_url s %>">Hide</a>
+                        <% if can_hide? vv %>
+                           <a class="viz_hide" href="<%= visualization_url vv %>">Hide</a>
                         <% end %>
       
-                        <% if can_delete? s %>
-                           | <a class="viz_delete" href="<%= visualization_url s %>" name="<%= s.title %>">Delete</a>
+                        <% if can_delete? vv %>
+                           | <a class="viz_delete" href="<%= visualization_url vv %>" name="<%= vv.title %>">Delete</a>
                         <% end %>
                       </div>
 
