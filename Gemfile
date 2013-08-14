@@ -29,7 +29,7 @@ gem 'bcrypt-ruby', '~> 3.0.0'
 gem 'jquery-ui-rails'
 
 # Include Twitter bootstrap
-gem 'twitter-bootstrap-rails', '2.1.6'
+gem 'twitter-bootstrap-rails', '2.2.8'
 gem 'therubyracer', :platforms => :ruby
 
 # Include AWS
