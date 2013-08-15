@@ -3,7 +3,7 @@
  <% @contributions.each do |contribution| %>
   <div class="<%= cycle('feed-even', 'feed-odd')%> contribution">
 
-    <div class="row-fluid">
+    <div class="row-fluid word-break">
     <h4><%= link_to contribution.title, url_for(contribution) %></h4>
     
     <div class="span6">

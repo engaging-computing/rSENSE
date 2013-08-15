@@ -11,7 +11,7 @@
       <!-- project title -->
       <div class="span5" style="margin-left:0px">
         <div class="project_info_box" >
-          <span id="title_span" style="font-size:2em"><%= project_edit_menu_helper false, 26 %></span><br>
+          <span id="title_span" class="word-break" style="font-size:2em"><%= project_edit_menu_helper false, 128%></span><br>
           <span class="info_label" style="font-size:1.1em">Owner:</span>
           <%= link_to @project.owner.name, user_path(@project.owner) %><br>
             <%if !@cloned_project.nil? %>

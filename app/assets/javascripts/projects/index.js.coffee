@@ -9,7 +9,7 @@ $ ->
       if(object.mediaSrc)
         newItem += "<a href='#{object.url}'><img src='#{object.mediaSrc}'></img></a>"
 
-      newItem +=  "<h4 style='margin-top:0px;'><a href='#{object.url}'>#{object.name}</a>"
+      newItem +=  "<h4 style='margin-top:0px;'><a href='#{object.url}'>#{helpers.truncate object.name, 128}</a>"
 
       if(object.featured)
         newItem += "<span style='color:#57C142'> (featured)</span>"
