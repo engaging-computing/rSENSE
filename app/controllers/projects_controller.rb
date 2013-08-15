@@ -235,7 +235,9 @@ class ProjectsController < ApplicationController
           )
         )
 
-      @project = Project.new({user_id: @cur_user.id, title: json["data"]["name"], content: json["data"]["description"], featured: json["data"]["featured"]})
+      content = json["data"]["description"] + "<br /><br /><br />Created #{json['data']['timecreated'].to_time.strftime '%a %b %d %H:%M:%S %Z %Y'}: click <a href='http://old.isenseproject.org/experiment.php?id=#{@pid}'>here</a> to view the original"
+      
+      @project = Project.new({user_id: @cur_user.id, title: json["data"]["name"], content: content, featured: json["data"]["featured"]})
 
       #If clone is successful clone fields
       if @project.save
