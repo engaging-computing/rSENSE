@@ -194,7 +194,7 @@ $ ->
 
             #Set axis title
             title =
-              text: data.fields[@xAxis].fieldName
+              text: fieldTitle data.fields[@xAxis]
             @chart.xAxis[0].setTitle title, false
 
             #Compute max bounds if there is no user zoom
