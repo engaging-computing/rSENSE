@@ -54,9 +54,9 @@ $ ->
             #Build the headers for the table
             headers = for field, fieldIndex in data.fields
               if (fieldIndex is data.COMBINED_FIELD)
-                "<td style='display:none'>#{field.fieldName}</td>"
+                "<td style='display:none'>#{fieldTitle field}</td>"
               else
-                "<td>#{field.fieldName}</td>"
+                "<td>#{fieldTitle field}</td>"
                 
             ($ '#table_headers').append header for header in headers
             

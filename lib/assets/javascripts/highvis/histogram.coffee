@@ -137,7 +137,7 @@ $ ->
 
             #Name Axis
             @chart.yAxis[0].setTitle {text: "Quantity"}, false
-            @chart.xAxis[0].setTitle {text: data.fields[@displayField].fieldName}, false
+            @chart.xAxis[0].setTitle {text: fieldTitle data.fields[@displayField]}, false
             
             if globals.groupSelection.length is 0
                 return
