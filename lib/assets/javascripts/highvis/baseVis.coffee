@@ -373,7 +373,8 @@ $ ->
                     text: 'Y-Values'
             else
                 temp =
-                    text: data.fields[globals.fieldSelection[0]].fieldName
+                    text: "#{data.fields[globals.fieldSelection[0]].fieldName} (#{data.fields[globals.fieldSelection[0]].unitName})"
+                    
             @chart.yAxis[0].setTitle title, false
         
             #Remove curent data
