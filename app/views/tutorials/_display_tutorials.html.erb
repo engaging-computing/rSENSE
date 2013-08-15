@@ -3,7 +3,7 @@
     <span class="tutorial">
         <%if @tutorials[id.to_i] != nil %>
           <h3><%= link_to @tutorials[id.to_i].title, tutorial_path(@tutorials[id.to_i]) %></h3>
-          <%if @tutorials[id.to_i].media_objects.first != nil %>
+          <%if @tutorials[id.to_i].media_objects.first != nil && false %>
             <img src=<%=@tutorials[id.to_i].media_objects.first.src%> style="height:150px" />
           <%end%>
         <% end %>
