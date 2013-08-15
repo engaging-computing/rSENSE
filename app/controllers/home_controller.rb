@@ -13,6 +13,6 @@ class HomeController < ApplicationController
     @tutorials[3] = tutorials.where('featured_number == ? and hidden == ?',3, false).first || nil
     @tutorials[4] = tutorials.where('featured_number == ? and hidden == ?',4, false).first || nil
     
-    @all_tutorials = Tutorial.find(:all)
+    @all_tutorials = Tutorial.where("hidden == ?", false)
   end
 end
