@@ -73,7 +73,7 @@ class UsersController < ApplicationController
       page_size = params[:page_size].to_i
     end
     
-    show_hidden = @cur_user.id == @user.id
+    show_hidden = (@cur_user.id == @user.id) || can_admin(@user)
     
     #Only grab the contributions we are currently interested in
     if !@filters.empty?
