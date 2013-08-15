@@ -70,7 +70,7 @@ $ ->
             super()
             
             visibleCategories = for selection in data.normalFields when selection in globals.fieldSelection
-                data.fields[selection].fieldName
+                fieldTitle data.fields[selection]
             
             @chart.xAxis[0].setCategories visibleCategories, false
             
@@ -147,7 +147,7 @@ $ ->
                     data: []
                     color: '#000'
                     visible: if fieldIndex in globals.fieldSelection then true else false
-                    name: field.fieldName
+                    name: fieldTitle field
                     type: 'area'
                     xAxis: 1
         
