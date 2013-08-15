@@ -2,12 +2,11 @@ $ ->
 
     get_redactor_options = (top, path) ->
     
-        options = {}
+        options = {deniedTags: ['script','applet','iframe'], clearTags: ['script','applet','iframe']}
         
         if top.attr('no_upload')
-          options = 
-            deniedTags: ['script','applet','iframe']
-            clearTags: ['script','applet','iframe']
+          options = {}
+            
         else
           options = 
             imageUpload: "/media_objects/saveMedia/#{path}"
