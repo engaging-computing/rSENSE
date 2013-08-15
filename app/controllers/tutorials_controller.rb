@@ -132,7 +132,7 @@ class TutorialsController < ApplicationController
     new_tutorial = Tutorial.find_by_id(params[:selected].to_i)
     old_tutorial = Tutorial.where("featured_number = ?",params[:location]).first || nil
     
-    if can_admin(new_tutorial) && can_admin(old_tutorial)
+    if can_admin?(new_tutorial) && can_admin?(old_tutorial)
       #Set the old tutorials featured number to nil if necessary
       if !(old_tutorial == nil)
         old_tutorial.featured_number = nil
@@ -140,7 +140,7 @@ class TutorialsController < ApplicationController
       end
       
       #Update the featured number for the selected tutorial
-      new_tutorial.featured_number = featured_value.to_i    
+      new_tutorial.featured_number = params[:location].to_i    
       new_tutorial.save
       
       respond_to do |format|
