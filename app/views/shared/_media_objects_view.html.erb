@@ -1,4 +1,4 @@
-<div id="media_object_list" type="<%=type%>"> 
+<div id="media_object_list" type="<%=type%>" obj_id="<%=object.id%>"> 
   <span style="font-weight:bold"> File</span><span class="pull-right" style="font-weight:bold">Display</span>
   <% object.media_objects.all.each do |mo| %>
     <div class="<%= cycle('feed-even', 'feed-odd')%> mediaobject" style="position:relative">
@@ -27,4 +27,8 @@
       </div>
     </div>
   <%end%>
+
+  <div class="redactor_file_upload_hidden" style="width:0px;height:0px"></div>
+  <br />
+  <button class="btn" style="width:100%" id="redactor_file_upload_btn">Upload Media</button>
 </div>
