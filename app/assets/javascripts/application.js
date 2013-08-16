@@ -34,6 +34,7 @@
 //= require jquery.qrcode.min.js
 //= require bootstrap-datetimepicker.js
 //= require editTable
+//= require media_objects_view.js.coffee
 //
 // Visualization stuff follows
 //
