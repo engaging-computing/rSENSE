@@ -163,72 +163,103 @@ class DataSetsController < ApplicationController
   # POST /data_set/1/manualUpload
   def manualUpload
 
+    ############ Sanity Checks ############
+    errors = []
+    sane = true
+    
+    if params[:data].nil?
+      errors.push "'data' cannot be nil."
+      sane = false
+    end
+    
+    if params[:headers].nil?
+      errors.push "'headers' cannot be nil."
+      sane = false
+    end
+    
+    if params[:id].nil?
+      errors.push "'id' cannot be nil."
+      sane = false
+    end
+    
+    if sane && !(params[:data].length == params[:headers].length)
+      errors.push "Number of data columns (#{params[:data].length}) does not match number of headers (#{params[:headers].length})."
+      sane  = false
+    end
+    
+    if !sane
+      #insane in the membrane
+      respond_to do |format|
+        format.json { render json: errors, status: :unprocessable_entity }
+      end
+      return
+    end
+    #######################################
+    
     @project = Project.find(params[:id])
-    if !params["name"]
+    @fields = @project.fields
+    header_to_field_map = []
+    success = false
+    defaultName = ""
+    
+    if !params[:name]
       defaultName  = @project.title + " Dataset #"
       defaultName += (DataSet.find_all_by_project_id(params[:id]).count + 1).to_s
     else
       defaultName = params["name"]
     end
 
-    @fields = @project.fields
-
-    header_to_field_map = []
-    
-    success = false
-
-    if !params["data"].nil? and !params["headers"].nil?
-
-      @data_set = DataSet.create(:user_id => @cur_user.id, :project_id => @project.id, :title => defaultName)
-
-      @project.fields.each do |field|
-        params["headers"].each_with_index do |header, header_index|
-          if header == field.name
-            header_to_field_map.push header_index
-          end
+    # Generate field mappings
+    @project.fields.each do |field|
+      params[:headers].each_with_index do |header, header_index|
+        if header == field.name
+          header_to_field_map.push header_index
         end
       end
-
-      new_data = []
-
-      params["data"]["0"].each_with_index do |tmp, row_index|
-
-        row = {}
-
-        header_to_field_map.each do |htf, htf_index|
-          if params["data"]["#{htf}"][row_index] == ""
-            if @fields[htf].field_type == 3
-              val = ""
-            else
-              val = nil
-            end
-          else
-            val = params["data"]["#{htf}"][row_index]
-          end
-          row["#{@fields[htf].id}"] = val
-        end
-
-
-        new_data[row_index] = row
-
-      end
-
-      data_to_add = MongoData.new(:data_set_id => @data_set.id, :data => new_data)
-
-      followURL = url_for :controller => :visualizations, :action => :displayVis, :id => @project.id, :sessions => "#{@data_set.id}"
-      followURL = "/projects/#{@project.id}/data_sets/#{@data_set.id}"
-
-      success =  data_to_add.save!
-
-    else
-      response = ["No data"]
     end
+
+    # Format data
+    new_data = []
+
+    params[:data]["0"].each_with_index do |tmp, row_index|
+
+      row = {}
+
+      header_to_field_map.each do |htf, htf_index|
+        if params["data"]["#{htf}"][row_index] == ""
+          if @fields[htf].field_type == 3
+            val = ""
+          else
+            val = nil
+          end
+        else
+          val = params["data"]["#{htf}"][row_index]
+        end
+        row["#{@fields[htf].id}"] = val
+      end
+
+
+      new_data[row_index] = row
+
+    end
+
+    @data_set = DataSet.create(:user_id => @cur_user.id, :project_id => @project.id, :title => defaultName)
+    data_to_add = MongoData.new(:data_set_id => @data_set.id, :data => new_data)
+
+    followURL = "/projects/#{@project.id}/data_sets/#{@data_set.id}"
+
+    success =  data_to_add.save!
+    
+    if !success
+      @data_set.delete
+    end
+
 
     respond_to do |format|
       if success
         format.json { render json: @data_set.to_hash(false), status: :created}
       else
-        format.json { render json: @data_set.errors.full_messages(), status: :unprocessable_entity }
+        format.json { render json:{}, status: :unprocessable_entity }
       end
     end
 
