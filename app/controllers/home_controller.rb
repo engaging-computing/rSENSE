@@ -3,7 +3,7 @@ class HomeController < ApplicationController
   
   def index
 
-    @featured_projects = Project.where("featured == ? and hidden == ?",  true, false).order("featured_at DESC").limit(3)
+    @featured_projects = Project.where("featured == ? and hidden == ?",  true, false).order("featured_at DESC").limit(6)
     @featured_vis = Visualization.where("featured == ? and hidden == ?", true, false).order("featured_at DESC").first
     tutorials = Tutorial.where("featured_number IS NOT NULL")
     
