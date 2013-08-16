@@ -62,7 +62,8 @@ class Project < ActiveRecord::Base
       ownerName: self.owner.name,
       ownerUrl: UrlGenerator.new.user_url(self.owner),
       dataSetCount: self.data_sets.count,
-      fieldCount: self.fields.count
+      fieldCount: self.fields.count,
+      fields: self.fields.map {|o| o.to_hash false}
     }
     
     if self.featured_media_id != nil
@@ -71,7 +72,6 @@ class Project < ActiveRecord::Base
     
     if recurse
       h.merge! ({
-        fields:       self.fields.map        {|o| o.to_hash false},
         dataSets:     self.data_sets.map     {|o| o.to_hash false},
         mediaObjects: self.media_objects.map {|o| o.to_hash false},
         owner:        self.owner.to_hash(false)
