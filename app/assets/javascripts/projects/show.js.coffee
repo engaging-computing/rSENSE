@@ -177,22 +177,6 @@ $ ->
     ($ window).resize ->
       load_qr()
 
-    #selection of featured image
-    ($ '.img_selector').click ->
-      mo = ($ @).attr("mo_id")
-      exp = ($ @).attr("exp_id")
-
-      data={}
-      data["project"] = {}
-      data["project"]["featured_media_id"] = mo
-
-      $.ajax
-        url: "/projects/#{exp}"
-        type: "PUT"
-        dataType: "json"
-        data:
-          data
-
     # Initializes the dropdown lightbox for google drive upload
     ($ '#doc_box').modal
       backdrop: 'static'

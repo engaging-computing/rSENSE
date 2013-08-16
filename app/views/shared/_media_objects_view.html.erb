@@ -1,0 +1,30 @@
+<div id="media_object_list" type="<%=type%>"> 
+  <span style="font-weight:bold"> File</span><span class="pull-right" style="font-weight:bold">Display</span>
+  <% object.media_objects.all.each do |mo| %>
+    <div class="<%= cycle('feed-even', 'feed-odd')%> mediaobject" style="position:relative">
+      <div class="media_icon">
+        <%=media_object_thumbnail_helper(mo)%>
+      </div>
+      <div class="links">
+        <%= link_to truncate(mo.name, :length => 25), mo.src%>
+      </div>
+      <div class="control_block" style="width:20px">
+        <div class="control">
+          <% if ((mo.media_type == "image") && (can_edit? object))%>
+            <input type="checkbox" class="img_selector" name="img_selector" obj_id="<%=object.id%>" <%if object.featured_media_id == mo.id%>checked<%end%> mo_id="<%=mo.id%>"></input>
+          <%end%>
+        </div>
+      </div>
+      <div class="control_block">
+        <div class="control">
+            <% if can_edit? mo %>
+            <a href="<%= media_object_path mo %>">Edit</a>
+            <% end %>
+            <% if can_delete? mo %>
+            | <a class="media_object_delete" href="<%= media_object_url mo %>" name="<%= mo.title %>">Delete</a>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <%end%>
+</div>
