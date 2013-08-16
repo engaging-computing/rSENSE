@@ -62,7 +62,7 @@ class Project < ActiveRecord::Base
       ownerName: self.owner.name,
       ownerUrl: UrlGenerator.new.user_url(self.owner),
       dataSetCount: self.data_sets.count,
-      fieldCount: self.fields.count
+      fieldCount: self.fields.count,
       fields: self.fields.map {|o| o.to_hash false}
     }
     
