@@ -12,11 +12,11 @@
   <div class="row">
     <div class="span12">
       <div style="overflow-x: scroll;">
-        <table id="editTable" class="table">
+        <table id="editTable" class="table" data-project-id="<%= @project.id %>">
           <thead>
             <tr>
-              <% @project.fields.each do |f| %>
-                <th data-field-type="<%= get_field_name(f.field_type) %>"><%= f.name %></th>
+              <% @project.fields.each do |field| %>
+                <th data-field-type="<%= get_field_name(field.field_type) %>" data-field-id="<%= field.id %>" data-field-name="<%= field.name %>" ><%= field.name %></th>
               <% end %>
             </tr>
           </thead>

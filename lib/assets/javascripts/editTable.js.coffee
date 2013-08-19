@@ -305,8 +305,8 @@ $ ->
               head = []
 
               ($ table).find('th').each ->
-                head.push ($ @).text()
-
+                head.push ($ @).data('field-id')
+                
               row_data = []
 
               ($ table).find('tr').has('td').each ->
