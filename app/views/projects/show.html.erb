@@ -19,6 +19,7 @@
                     <%=link_to @cloned_project.title, project_path(@cloned_project.id)%><br>
             <%end%>
           <span class="info_label" style="font-size:1.1em">Created:</span><%=time_ago_in_words(@project.created_at)%> ago <br>
+          <span class="info_label" style="font-size:1.1em">Project #:</span><%= @project.id %><br>
           <%=render "likes"%>
         </div>
       </div>
@@ -31,16 +32,16 @@
 
       <!-- data sets -->
       <%=render layout: "shared/box", locals: {title: 'Data Sets', width: '7', unique_id: 'data_sets', should_hide: false} do %>
-        <div id="dataset_list" <% if @project.data_sets.count == 0 %> style="display:none;" <% end %> >
-
+        <div id="dataset_list" <% if @data_sets.count == 0 %> style="display:none;" <% end %> >
+        
           <div class="text-left" style="padding: 2px 5px 2px 5px">
             <input type="button" class="btn btn-info" style="margin-bottom: 10px;" value="Visualize" id="vis_button" href="/projects/<%=@project.id%>/data_sets/"/>
             <div class="pull-right">
-              <input type="checkbox" id="check_selector"/>
+              <input type="checkbox" id="check_selector" checked/>
             </div>
           </div>
 
-          <% @project.data_sets.search(false).each do |s| %>
+          <% @data_sets.each do |s| %>
 
             <div class="<%= cycle('feed-even', 'feed-odd')%> dataset" style="position:relative">
 
@@ -79,7 +80,7 @@
                 </div>
 
                 <div class="ds_selector">
-                  <input type="checkbox" class="pull-right" id="ds_<%=s.id%>"/>
+                  <input type="checkbox" class="pull-right" id="ds_<%=s.id%>" checked/>
                 </div>
               </div>
 
@@ -160,38 +161,7 @@
 
         <!-- media objects -->
         <%=render layout: "shared/box", locals: {title: 'Media', width: '5', unique_id: 'media', should_hide: false} do %>
-            <div id="media_object_list"> 
-
-            <span style="font-weight:bold"> File</span><span class="pull-right" style="font-weight:bold">Display</span>
-            <% @project.media_objects.all.each do |mo| %>
-              <div class="<%= cycle('feed-even', 'feed-odd')%> mediaobject" style="position:relative">
-                <div class="media_icon">
-                  <%=media_object_thumbnail_helper(mo)%>
-                </div>
-                <div class="links">
-                  <%= link_to truncate(mo.name, :length => 25), mo.src%>
-                </div>
-                <div class="control_block" style="width:20px">
-                  <div class="control">
-                    <% if ((mo.media_type == "image") && (can_edit? @project))%>
-                      <input type="radio" class="img_selector" name="img_selector" exp_id="<%=@project.id%>" <%if @project.featured_media_id == mo.id%>checked<%end%> mo_id="<%=mo.id%>"></input>
-                    <%end%>
-                  </div>
-                </div>
-                <div class="control_block">
-                  <div class="control">
-                     <% if can_edit? mo %>
-                      <a href="<%= media_object_path mo %>">Edit</a>
-                     <% end %>
-                     <% if can_delete? mo %>
-                     | <a class="media_object_delete" href="<%= media_object_url mo %>" name="<%= mo.title %>">Delete</a>
-                    <% end %>
-                  </div>
-                </div>
-              </div>
-              
-            <%end%>
-          </div>
+          <%=render "shared/media_objects_view", {type: 'project', object: @project}%>
         <%end%>
             
             

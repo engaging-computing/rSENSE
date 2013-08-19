@@ -4,7 +4,7 @@ class Tutorial < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
 
   
-  attr_accessible :content, :title, :featured_number, :user_id, :hidden
+  attr_accessible :content, :title, :featured_number, :user_id, :hidden, :featured_media_id
 
   has_many :media_objects
   
