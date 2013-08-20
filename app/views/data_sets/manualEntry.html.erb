@@ -11,7 +11,10 @@
         <thead>
           <tr>
           <% for field in @project.fields %>
-            <th data-field-type="<%= get_field_name(field.field_type) %>"><%= field.name %></th>
+            <th data-field-type="<%= get_field_name(field.field_type) %>"><%= field.name %>
+            <% if field.unit != "" %>
+		  (<%=field.unit%>)
+		<% end %></th>
           <% end %>
           </tr>
         </thead>
