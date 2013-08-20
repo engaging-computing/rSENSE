@@ -116,6 +116,30 @@
       <% end %>
 
       <!-- field -->
+      <%= render layout: "shared/box", locals: {title: 'Fields', width: '5', unique_id: 'fieldsnew', should_hide: false} do%>
+        <table class="mytable" project="<%=@project.id%>" style="width:100%; height:125px;">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Units</th>
+              <th>Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @project.fields.all.each do |f| %>
+              <!-- Render all the fields, Lat and Lon cant be edited -->
+              <%= render 'field_edit', field: f, type: "field", row_id: f.id, can_edit: (can_edit? @project), has_ses: @project.data_sets.count %>
+            <% end %>
+            <tr class="fields_edit_option"><td></td><td><button class="edit_fields_btn btn btn-success">Edit</button></td><td></td></tr>
+            <tr class="fields_edit_menu" style="display:none">
+              <td><button class="btn btn-success">Add Field</button></td>
+              <td><button class="btn btn-primary">Save Changes</button></td>
+              <td><button class="cancel_field_changes_btn btn btn-danger">Cancel Changes</button></td>
+            </tr>
+          </tbody>
+        </table>
+      <% end %>
+      
       <%=render layout: "shared/box", locals: {title: 'Fields',width: '5', unique_id: 'fields', should_hide: false} do %>
       
         <table class="table fields_table" project="<%=@project.id%>" style="width:100%; height:125px;">
@@ -158,47 +182,47 @@
         </table>
       <%end%>
 
-        <!-- media objects -->
-        <%=render layout: "shared/box", locals: {title: 'Media', width: '5', unique_id: 'media', should_hide: false} do %>
-          <%=render "shared/media_objects_view", {type: 'project', object: @project}%>
-        <%end%>
+      <!-- media objects -->
+      <%=render layout: "shared/box", locals: {title: 'Media', width: '5', unique_id: 'media', should_hide: false} do %>
+        <%=render "shared/media_objects_view", {type: 'project', object: @project}%>
+      <%end%>
             
             
-            <!-- saved data sets -->
-            <%=render layout: "shared/box", locals: {title: 'Visualizations', width: '5', unique_id: 'visualizations', should_hide: false} do %>
-              <div id="viz_list" <% if @project.visualizations.count == 0 %> style="display:none;" <% end %> >
-      
-                <% @project.visualizations.search(false).each do |vv| %>
-      
-                  <div class="<%= cycle('feed-even', 'feed-odd')%> viz" style="position:relative">
-      
-                    <div class="links">
-      
-                      <div class="title">
-                        <%= link_to truncate(vv.title, length:30), visualization_url(vv) %>
-                      </div>
-                    </div>
-      
-                    <div class="control_block">
-      
-                      <div class="control">
-                              
-                        <% if can_hide? vv %>
-                           <a class="viz_hide" href="<%= visualization_url vv %>">Hide</a>
-                        <% end %>
-      
-                        <% if can_delete? vv %>
-                           | <a class="viz_delete" href="<%= visualization_url vv %>" name="<%= vv.title %>">Delete</a>
-                        <% end %>
-                      </div>
+      <!-- saved data sets -->
+      <%=render layout: "shared/box", locals: {title: 'Visualizations', width: '5', unique_id: 'visualizations', should_hide: false} do %>
+        <div id="viz_list" <% if @project.visualizations.count == 0 %> style="display:none;" <% end %> >
 
-                    </div>
-      
-                  </div>
-                <%end%>
-                <!--<div class="feed-bottom"> </div>-->
+          <% @project.visualizations.search(false).each do |vv| %>
+
+            <div class="<%= cycle('feed-even', 'feed-odd')%> viz" style="position:relative">
+
+              <div class="links">
+
+                <div class="title">
+                  <%= link_to truncate(vv.title, length:30), visualization_url(vv) %>
+                </div>
               </div>
+
+              <div class="control_block">
+
+                <div class="control">
+                        
+                  <% if can_hide? vv %>
+                      <a class="viz_hide" href="<%= visualization_url vv %>">Hide</a>
+                  <% end %>
+
+                  <% if can_delete? vv %>
+                      | <a class="viz_delete" href="<%= visualization_url vv %>" name="<%= vv.title %>">Delete</a>
+                  <% end %>
+                </div>
+
+              </div>
+
+            </div>
           <%end%>
+          <!--<div class="feed-bottom"> </div>-->
+        </div>
+      <%end%>
        
     </div>
   </div>

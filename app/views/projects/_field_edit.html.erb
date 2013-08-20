@@ -1,24 +1,10 @@
-<tr project_url="<%= project_url @project %>">
-  <td class="field_name"><%=field.name%></td>
-  <td class="field_unit">
-    <%if !(field.field_type == TEXT_TYPE)%>
-      <%=field.unit%>
-    <% end %>
-  </td>
-  <td class="field_type"><%=get_field_name(field.field_type)%></td>
-  <%if can_edit%>
-    <% unless (get_field_name(field.field_type) == "Longitude" || get_field_name(field.field_type) == "Latitude") %>
-      <td><a class="field_edit_link"><i class="icon-edit"></i></a>
-          <a href="/<%=type.pluralize%>/<%=row_id%>" exp="<%=@project.id%>" field="<%=row_id%>" class="field_save_link"><i class="icon-ok"></i></a>
-        <a href="/<%=type.pluralize%>/<%=row_id%>" field="<%=row_id%>" class="field_delete_link"><i class="icon-remove-circle"></i></a>
-      </td>
-    <%else%>
-      <% if has_ses == 0 %>
-        <td><a class="field_edit_link"><i class="icon-edit"></i></a>
-            <a href="/<%=type.pluralize%>/<%=row_id%>" exp="<%=@project.id%>" class="field_save_link"><i class="icon-ok"></i></a>
-          <a href="/<%=type.pluralize%>/<%=row_id%>" field="<%=row_id%>" class="field_delete_link"><i class="icon-remove-circle"></i></a>
-        </td>
-      <%end%>
-    <%end%>
-  <%end%>
-</tr>
+
+  <tr class="<%= cycle('feed-even', 'feed-odd')%> fields" project_url="<%= project_url @project %>">
+   <td class="field_name"> <div class="truncate"><%=field.name%></div></td>
+   <td class="field_unit"> <div class="truncate">
+      <%if !(field.field_type == TEXT_TYPE)%>
+        <%=field.unit%>
+      <% end %>
+    </div></td>
+    <td class="field_type"><div class="f_<%=row_id%>"><%=get_field_name(field.field_type)%></div></td>
+  </tr>

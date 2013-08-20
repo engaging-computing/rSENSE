@@ -2,16 +2,11 @@ $ ->
 
     get_redactor_options = (top, path) ->
     
-        options = {deniedTags: ['script','applet','iframe'], clearTags: ['script','applet','iframe']}
+        options = {deniedTags: ['script','applet','iframe'], clearTags: ['script','applet','iframe'],imageUpload: "/media_objects/saveMedia/#{path}",fileUpload: "/media_objects/saveMedia/#{path}"}
         
         if top.attr('no_upload')
-          options = {}
-            
-        else
-          options = 
-            imageUpload: "/media_objects/saveMedia/#{path}"
-            fileUpload: "/media_objects/saveMedia/#{path}"
-            
+          options = {deniedTags: ['script','applet','iframe'], clearTags: ['script','applet','iframe']}
+
         if top.attr('simple')
           options['buttons'] = ['html', '|', 'bold', 'italic', 'deleted', '|', 'link', '|', 'fontcolor', 'backcolor'] 
           
