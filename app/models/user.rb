@@ -10,6 +10,10 @@ class User < ActiveRecord::Base
   validates :firstname, format: {with: /\A[\p{Alpha}\p{Blank}\-']*\z/, message: "can only contain letters, hyphens, single quotes, and spaces."}
   validates :lastname, format: {with: /\A[\p{Alpha}\p{Blank}\-']*\z/, message: "can only contain letters, hyphens, single quotes, and spaces."}
   
+  validates :firstname, length: {maximum: 32}
+  validates :lastname, length: {maximum: 32}
+  validates :username, length: {maximum: 32}
+  
   validates_presence_of :username, :firstname, :lastname
 
   has_secure_password
