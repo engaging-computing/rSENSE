@@ -69,7 +69,7 @@ class MediaObjectsController < ApplicationController
     data = params[:keys].split('/')
     target = data[0]
     id = data[1]
-    
+    logger.info "TARGET = #{target} and ID = #{id}"
     #Set up the link to S3
     s3ConfigFile = YAML.load_file('config/aws_config.yml')
     

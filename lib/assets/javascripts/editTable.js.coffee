@@ -236,6 +236,10 @@ $ ->
         ($ table).find('th').each ->
           ($ @).html "<div class='text-center'>#{($ @).text()}</div>"
 
+        button_container = ($ '.edit_table_control')
+        if button_container.length == 0
+          button_container = ($ '#edit_table_control')
+          
         # add buttons
         for button in settings.buttons
           do (button) ->
@@ -245,10 +249,10 @@ $ ->
                 ($ @).append '<td><div class="text-center"><a class="close" style="float:none;">&times;</a></div></td>'
 
             if button is "add" or button is "Add"
-              ($ '#edit_table_control').append "<button id='edit_table_add' class='btn btn-success' style='margin-right:10px;'>Add Row</button>"
+              button_container.append "<button id='edit_table_add' class='btn btn-success' style='margin-right:10px;'>Add Row</button>"
 
             if button is "save" or button is "Save"
-              ($ '#edit_table_control').append "<button id='edit_table_save' class='btn btn-primary' data-loading-text='Saving...' autocomplete='off' >Save</button>"
+              button_container.append "<button id='edit_table_save' class='btn btn-primary' data-loading-text='Saving...' autocomplete='off' >Save</button>"
 
         # if control panel is empty get rid of it
         if ($ '#edit_table_control').html() is ""

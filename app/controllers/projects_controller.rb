@@ -69,6 +69,11 @@ class ProjectsController < ApplicationController
       @has_fields = true
     end
 
+    @data_sets = @project.data_sets.where( 'hidden == ?', false )
+    if @data_sets.nil?
+      @data_sets = []
+    end
+    
     recur = params.key?(:recur) ? params[:recur].to_bool : false
     
     respond_to do |format|
