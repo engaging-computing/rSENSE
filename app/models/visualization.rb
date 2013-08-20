@@ -13,6 +13,8 @@ class Visualization < ActiveRecord::Base
   validates_presence_of :data
   validates_presence_of :globals
   
+  validates :title, length: {maximum: 128}
+  
   alias_attribute :name, :title
   
   before_save :sanitize_viz
