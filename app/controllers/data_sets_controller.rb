@@ -439,8 +439,13 @@ class DataSetsController < ApplicationController
 
     #WE HAVE SUCCESSFULLY MATCHED HEADERS AND FIELDS, SAVE THE DATA FINALLY.
     @project = Project.find_by_id(params[:id])
-    defaultName  = @project.title + " Dataset #"
-    defaultName += (DataSet.find_all_by_project_id(params[:id]).count + 1).to_s
+    
+    if(!params.try(:[], :dataset_name))
+      defaultName  = @project.title + " Dataset #"
+      defaultName += (DataSet.find_all_by_project_id(params[:id]).count + 1).to_s
+    else 
+      defaultName = params[:dataset_name]
+    end
 
     @data_set = DataSet.new(:project_id => params[:id], :title => defaultName, :user_id => @cur_user.try(:id))
 
