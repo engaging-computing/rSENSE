@@ -421,3 +421,5 @@ $ ->
                   ($ @).removeClass 'feed-even'
                   ($ @).addClass 'feed-odd'
               row.remove()
+              
+              

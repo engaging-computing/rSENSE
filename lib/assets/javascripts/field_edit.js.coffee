@@ -15,9 +15,11 @@ $ ->
 
   #This is where we edit
   edit = ->
-    name = ($ @).parent().parent().find '.field_name'
-    unit = ($ @).parent().parent().find '.field_unit'
-    field = helpers.get_field_type $(@).parent().parent().find('.field_type').text()
+    root = ($ @).parents('tr')
+    
+    name = root.find '.field_name'
+    unit = root.find '.field_unit'
+    field = helpers.get_field_type root.find('.field_type').text()
 
     if not (field in [(helpers.get_field_type "Latitude"), (helpers.get_field_type "Longitude")])
       name.wrapInner "<input type='text' size='1' class='name_edit_box' value='#{name.text().trim()}'>"
@@ -39,12 +41,11 @@ $ ->
 
 
   #This is where we save after editing
-  save = (e) ->
-
-    e.preventDefault()
-    name = ($ @).parent().parent().find '.field_name'
-    unit = ($ @).parent().parent().find '.field_unit'
-    field = helpers.get_field_type ($(@).parent().parent().find('.field_type').text())
+  save = () ->
+    root = ($ @).parents('tr')
+    name = root.find '.field_name'
+    unit = root.find '.field_unit'
+    field = helpers.get_field_type root.find('.field_type').text()
 
     if not (field in [(helpers.get_field_type "Latitude"), (helpers.get_field_type "Longitude")])
       name_text = name.find('.name_edit_box').val().trim()
@@ -83,10 +84,8 @@ $ ->
     false
 
   remove_field = ->
-
-    row = ($ @).parent().parent()
-    type = helpers.get_field_type ($ row).find('.field_type').text()
-
+    root = ($ @).parents('tr')
+    type = helpers.get_field_type root.find('.field_type').text() 
     pair_field = null
 
     if not (type in [(helpers.get_field_type "Latitude"), (helpers.get_field_type "Longitude")])
@@ -95,13 +94,20 @@ $ ->
         type: "DELETE"
         dataType: "json"
         success: (msg) =>
-          ($ @).parent().parent().remove()
-          delayed_hide()
+          root.find("div, input").hide_row =>  
+            root.remove()
+            ($ 'tr.fields').filter(':visible').each (idx) -> 
+              if idx % 2 is 0
+                ($ @).addClass 'feed-even'
+                ($ @).removeClass 'feed-odd'
+              else
+                ($ @).removeClass 'feed-even'
+                ($ @).addClass 'feed-odd'
         error: (msg) =>
           console.log msg
     else
       if confirm "Latitude and Longitude must be deleted together\nAre you sure you would like to continue?"
-        sibs = $ row.siblings()
+        sibs = root.siblings()
 
         for sib in sibs
           do (sib) ->
@@ -129,8 +135,6 @@ $ ->
             delayed_hide()
           error: (msg) =>
             console.log msg
-
-    delayed_hide()
 
     false
 
@@ -196,3 +200,23 @@ $ ->
     ($ '#add-field-dropdown ul li a.add_location_field').hide()
 
 
+  ### New Fields Shit ###
+  ($ '.edit_fields_btn').click ->
+    row = ($ @).parents('tr')
+    row.hide()
+    # Turn editable fields into input boxes
+    root = ($ '.mytable')
+    root.find('.fields').each ->
+      name_val = ($ @).find('.field_name').find("div").html()
+      ($ @).find('.field_name').html("<input type='text' class='input-small' value='#{name_val}'>")
+    ($ '.fields_edit_menu').show()
+    window.fields_backup = ($ '#fieldsnew').html()
+    
+  ($ '.cancel_field_changes_btn').click ->
+    
+    root = ($ @).parents('tr')
+    root.hide()
+    ($ '.fields_edit_option').show()
+    ($ '#fieldsnew').html(window.fields_backup)
+    
+    
