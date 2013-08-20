@@ -1,10 +1,7 @@
-
-  <tr class="<%= cycle('feed-even', 'feed-odd')%> fields" project_url="<%= project_url @project %>">
-   <td class="field_name"> <div class="truncate"><%=field.name%></div></td>
-   <td class="field_unit"> <div class="truncate">
-      <%if !(field.field_type == TEXT_TYPE)%>
-        <%=field.unit%>
-      <% end %>
-    </div></td>
-    <td class="field_type"><div class="f_<%=row_id%>"><%=get_field_name(field.field_type)%></div></td>
-  </tr>
+<tr class="<%= cycle('feed-even', 'feed-odd')%> fields" field_id="<%=field.id%>">
+  <td class="field_name"> <div class="truncate"><%=field.name%></div></td>
+  <td class="field_unit"> <div class="truncate">
+    <%if !(field.field_type == TEXT_TYPE)%><%=field.unit%><% end %>
+  </div></td>
+  <td class="field_type"><div class="f_<%=row_id%>"><%=get_field_name(field.field_type)%></div></td>
+</tr>

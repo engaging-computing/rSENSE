@@ -131,57 +131,19 @@
               <!-- Render all the fields, Lat and Lon cant be edited -->
               <%= render 'field_edit', field: f, type: "field", row_id: f.id, can_edit: (can_edit? @project), has_ses: @project.data_sets.count %>
             <% end %>
-            <tr class="fields_edit_option"><td></td><td><button class="edit_fields_btn btn btn-success">Edit</button></td><td></td></tr>
-            <tr class="fields_edit_menu" style="display:none">
-              <td><button class="btn btn-success">Add Field</button></td>
-              <td><button class="btn btn-primary">Save Changes</button></td>
-              <td><button class="cancel_field_changes_btn btn btn-danger">Cancel Changes</button></td>
             </tr>
           </tbody>
         </table>
+        
+        <div class="center fields_edit_option">
+          <button class="edit_fields_btn btn btn-success">Edit</button>
+        </div>
+        <div class="center fields_edit_menu" style="display:none">
+          <button class="btn btn-success">Add Field</button>
+          <button class="save_field_changes_btn btn btn-primary" href="/projects/<%=@project.id%>/updateFields">Save Changes</button>
+          <button class="cancel_field_changes_btn btn btn-danger">Cancel Changes</button>
+        </div>              
       <% end %>
-      
-      <%=render layout: "shared/box", locals: {title: 'Fields',width: '5', unique_id: 'fields', should_hide: false} do %>
-      
-        <table class="table fields_table" project="<%=@project.id%>" style="width:100%; height:125px;">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Units</th>
-              <th>Type</th>
-              <th>
-
-                <!-- Add field dropdown -->
-                <%if (can_edit? @project) %>
-                  <div class='btn-group' id='add-field-dropdown'>
-                    <a class='btn-mini btn-success dropdown-toggle' data-toggle='dropdown' href='#'>
-                      Add Field
-                      <span class='caret'/>
-                    </a>
-                    <ul class='dropdown-menu'>
-                      <li><a href='#' class=add_timestamp_field> Timestamp </a></li>
-                      <li><a href='#' class=add_number_field> Number </a></li>
-                      <li><a href='#' class=add_text_field> Text </a></li>
-                      <% if (@project.fields.any? {|field| field.field_type == LONGITUDE_TYPE or field.field_type == LATITUDE_TYPE}) %>
-                        <li><a href='#' style="display:none;" class=add_location_field> Location </a></li>
-                      <% else %>
-                        <li><a href='#' class=add_location_field> Location </a></li>
-                      <% end %>
-                      <li><a href='#' id="template-from-file" style=<%= @project.fields.count != 0 ? "display:none" : ""%>> Template from file </a></li>
-                    </ul>
-                  </div>
-                <%end%>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @project.fields.all.each do |f| %>
-              <!-- Render all the fields, Lat and Lon cant be edited -->
-              <%= render 'field_edit', field: f, type: "field", row_id: f.id, can_edit: (can_edit? @project), has_ses: @project.data_sets.count %>
-            <% end %>
-          </tbody>
-        </table>
-      <%end%>
 
       <!-- media objects -->
       <%=render layout: "shared/box", locals: {title: 'Media', width: '5', unique_id: 'media', should_hide: false} do %>

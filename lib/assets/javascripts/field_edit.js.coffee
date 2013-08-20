@@ -202,21 +202,54 @@ $ ->
 
   ### New Fields Shit ###
   ($ '.edit_fields_btn').click ->
-    row = ($ @).parents('tr')
+    root = ($ @).parent().parent()
+    table =  root.find('.mytable')
+    # Save state of the div incase of cancel
+    root.data("table", table.html())
+
+    #Hide the edit button
+    row = ($ @).parent()
     row.hide()
+    
     # Turn editable fields into input boxes
-    root = ($ '.mytable')
-    root.find('.fields').each ->
-      name_val = ($ @).find('.field_name').find("div").html()
-      ($ @).find('.field_name').html("<input type='text' class='input-small' value='#{name_val}'>")
+    table.find('.fields').each ->
+      type_val = ($ @).find('.field_type').find("div").html()
+      if(type_val not in ['Latitude','Longitude'])
+        name_val = ($ @).find('.field_name').find("div").html()
+        unit_val = ($ @).find('.field_unit').find("div").html()
+        ($ @).find('.field_name').html("<input type='text' class='input-small' value='#{name_val.trim()}'>")
+        ($ @).find('.field_unit').html("<input type='text' class='input-small' value='#{unit_val.trim()}'>")
+        
     ($ '.fields_edit_menu').show()
-    window.fields_backup = ($ '#fieldsnew').html()
     
   ($ '.cancel_field_changes_btn').click ->
+    root = ($ @).parent().parent()
     
-    root = ($ @).parents('tr')
-    root.hide()
+    #Hide the menu, show the edit button
+    row = ($ @).parent()
+    row.hide()
     ($ '.fields_edit_option').show()
-    ($ '#fieldsnew').html(window.fields_backup)
     
+    #Restore old state of fields table
+    ($ '.mytable').html(root.data("table"))
     
+  ($ '.save_field_changes_btn').click ->
+    root = ($ @).parent().parent()
+    table =  root.find('.mytable')
+    data = {}
+    data['changes'] = {}
+    table.find('.fields').each ->
+      data['changes'][($ this).attr("field_id")] = 
+        name: ($ this).find('.field_name').find("input").val()
+        unit: ($ this).find('.field_unit').find("input").val()
+    $.ajax
+      url: '/projects/12/updateFields'
+      type: "post"
+      dataType: "json"
+      data: 
+        data
+      success: (msg) =>
+        console.log msg
+      error: (msg, status) =>
+        errors = msg['responseText']
+          
