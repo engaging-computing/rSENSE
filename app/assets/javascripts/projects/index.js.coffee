@@ -6,17 +6,22 @@ $ ->
     addItem = (object) ->
       newItem =   "<div class='item word-break'>"
 
+      newItem +=  "<h4 style='margin-top:0px;'><a href='#{object.url}'>#{helpers.truncate object.name, 128}</a>"
+
       if(object.mediaSrc)
         newItem += "<a href='#{object.url}'><img src='#{object.mediaSrc}'></img></a>"
 
-      newItem +=  "<h4 style='margin-top:0px;'><a href='#{object.url}'>#{helpers.truncate object.name, 128}</a>"
-
       if(object.featured)
         newItem += "<span style='color:#57C142'> (featured)</span>"
-
+     
       newItem +=  "</h4><b>Owner: </b><a href='#{object.ownerUrl}'>#{object.ownerName}</a><br />"
       newItem +=  "<b>Created: </b>#{object.timeAgoInWords} ago (on #{object.createdAt})<br />"
 
+      if(object.dataSetCount != 0) and
+      not
+      object.allHidden
+        newItem += "<a href='/projects/#{object.id}/data_sets/'>View All Data Sets</a>"
+  
       newItem +=  "</div>"
 
       newItem = ($ newItem)
