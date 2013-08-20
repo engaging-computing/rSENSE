@@ -104,4 +104,21 @@ class FieldsController < ApplicationController
       end
     end
   end
+  
+  def updateFields
+    errors = Field.bulk_update(params[:changes] )
+    logger.info "-------"
+    logger.info errors
+    logger.info "-------"
+    
+    if errors.length == 0
+      respond_to do |format|
+       format.json { render json: {}, status: :ok }
+      end
+    else
+      respond_to do |format|
+       format.json { render json: errors, status: :unprocessable_entity }
+      end
+    end
+  end
 end
