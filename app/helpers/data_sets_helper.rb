@@ -10,8 +10,8 @@ module DataSetsHelper
     render 'shared/edit_menu', {type: 'data_set', typeName: 'Data Set', obj: @data_set, make_link: make_link, escape_link: escapeLink}
   end
   
-  def data_set_edit_helper(field,can_edit = false, make_link = true, trunc = 32)
-     render 'shared/edit_info', {type: 'data_set', field: field, value: @data_set[field], row_id: @data_set.id, can_edit: can_edit, make_link: make_link, trunc: trunc}
+  def data_set_edit_helper(field,can_edit = false, make_link = true)
+     render 'shared/edit_info', {type: 'data_set', field: field, value: @data_set[field], row_id: @data_set.id, can_edit: can_edit, make_link: make_link}
   end
     
   def data_set_redactor_helper(dataset, can_edit = false)

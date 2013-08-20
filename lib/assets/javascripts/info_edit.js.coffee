@@ -46,7 +46,6 @@ $ ->
           ($ @).hide()
 
           root.attr 'value', value
-          value = helpers.truncate value, (Number root.attr('trunc'))
           
           #Make it a link or not
           if root.attr('make_link') == 'true'
