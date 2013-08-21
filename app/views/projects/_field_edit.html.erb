@@ -1,5 +1,5 @@
-<tr class="<%= cycle('feed-even', 'feed-odd')%> fields" field_id="<%=field.id%>">
-  <td class="field_name"> <div class="truncate"><%=field.name%></div></td>
+<tr class="<%= cycle('feed-even', 'feed-odd')%> fields" >
+  <td class="field_name" field_id="<%=field.id%>"> <div class="truncate"><%=field.name%></div></td>
   <td class="field_unit"> <div class="truncate">
     <%if !(field.field_type == TEXT_TYPE)%><%=field.unit%><% end %>
   </div></td>
