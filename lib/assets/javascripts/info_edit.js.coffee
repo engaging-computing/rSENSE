@@ -32,6 +32,11 @@ $ ->
       data[type] = {}
       data[type][field_name] = value
       
+      root.find('i').removeClass 'icon-ok'
+      root.find('i').addClass 'icon-refresh'
+      root.find('span.btn').addClass 'disabled'
+      root.find('span.btn').button 'toggle'
+      
       #Make the request to update 
       $.ajax
         url: href
@@ -60,6 +65,11 @@ $ ->
             placement: "bottom"
             trigger: "manual"
           edit_box.popover 'show'
+        complete: () ->
+          root.find('i').addClass 'icon-ok'
+          root.find('i').removeClass 'icon-refresh'
+          root.find('span.btn').removeClass 'disabled'
+          root.find('span.btn').button 'toggle'
     
     #Enter key should cause a save
     info_box.find('.info_edit_box').keypress (e) =>
