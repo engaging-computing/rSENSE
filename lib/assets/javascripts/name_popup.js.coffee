@@ -39,6 +39,11 @@ $ ->
       data = {}
       data[type] =
         title: name
+        
+      edit_box.find('.new_name_button').button 'disable'
+      edit_box.find('.cancel_new_button').button 'disable'
+      edit_box.find('.new_name_button').addClass 'disabled'
+      edit_box.find('.cancel_new_button').addClass 'disabled'
           
       $.ajax
         url: obj.url
@@ -57,6 +62,11 @@ $ ->
             placement: "bottom"
             trigger: "manual"
           edit_box.popover 'show'
+        complete: ->
+          edit_box.find('.new_name_button').button 'enable'
+          edit_box.find('.cancel_new_button').button 'enable'
+          edit_box.find('.new_name_button').removeClass 'disabled'
+          edit_box.find('.cancel_new_button').removeClass 'disabled'
     
     selectFunc = ->
       ($ "#new_name").select()
