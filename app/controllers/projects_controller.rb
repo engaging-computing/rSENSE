@@ -436,27 +436,32 @@ class ProjectsController < ApplicationController
           end
         end
 
+        # TIME TO PULL OUT THE FIELDS THAT DONT MAKE SENSE
+        
         col.each_with_index do |c, i|
           c.each do |dp|
             if( dp[0] != "")
-              if( dp[0].to_i == 0 and dp[0] != "0" )
-                p_fields[i][1] = ""
+              # IF ANY DATAPOINT IN THE SET IS NAN
+              if( dp[0].to_i == 0 and  (dp[0] != "0" or dp[0] != "" ) )
+                #p_fields[i][1] = ""
                 p_fields[i][3] = ""
                 p_fields[i][4] = ""
               end
 
+              # IF ANY DATA POINT EXCEEDS LAT/LON 
               if( dp[0].to_f > 180 or dp[0].to_f < -180 )
                 p_fields[i][3] = ""
                 p_fields[i][4] = ""
               end
 
+              # IF ANY DATA POINT IS A FLOAT IT CAN'T BE A TIMESTAMP
               if( dp[0].to_i.to_f.to_s != dp[0].to_f.to_s )
                 p_fields[i][0] = ""
               end
             end
           end
         end
-
+        
         p_fields.each_with_index do |p, i|
 
           new_p = Array.new
