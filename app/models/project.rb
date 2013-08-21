@@ -9,6 +9,8 @@ class Project < ActiveRecord::Base
   validates_presence_of :title
   validates_presence_of :user_id
   
+  validates :title, length: {maximum: 128}
+  
   before_save :sanitize_project
   
   has_many :fields

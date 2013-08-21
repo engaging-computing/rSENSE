@@ -12,6 +12,8 @@ class Tutorial < ActiveRecord::Base
   validates_presence_of :user_id
   
   validates_uniqueness_of :featured_number, :allow_nil => true
+  validates :title, length: {maximum: 128}
+  
   has_many :media_objects
   belongs_to :owner, class_name: "User", foreign_key: "user_id"
   
