@@ -107,9 +107,6 @@ class FieldsController < ApplicationController
   
   def updateFields
     errors = Field.bulk_update(params[:changes] )
-    logger.info "-------"
-    logger.info errors
-    logger.info "-------"
     
     if errors.length == 0
       respond_to do |format|

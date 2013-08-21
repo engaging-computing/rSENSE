@@ -118,7 +118,7 @@
 
       <!-- field -->
       <%= render layout: "shared/box", locals: {title: 'Fields', width: '5', unique_id: 'fieldsnew', should_hide: false} do%>
-        <table class="mytable" project="<%=@project.id%>" style="width:100%; height:125px;">
+        <table class="mytable" project="<%=@project.id%>" can_delete_fields="<%if @project.data_sets.count>0%>false<%else%>true<%end%>" style="width:100%; height:125px;">
           <thead>
             <tr>
               <th>Name</th>
