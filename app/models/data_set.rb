@@ -1,8 +1,12 @@
 class DataSet < ActiveRecord::Base
   
+  include ActionView::Helpers::SanitizeHelper
+  
   attr_accessible :content, :project_id, :title, :user_id, :hidden
   
   validates_presence_of :project_id, :user_id, :title
+  
+  validates :title, length: {maximum: 128}
   
   has_many :media_objects
   
@@ -10,6 +14,12 @@ class DataSet < ActiveRecord::Base
   belongs_to :owner, class_name: "User", foreign_key: "user_id"
   
   alias_attribute :name, :title
+  
+  before_save :sanitize_data_set
+  
+  def sanitize_data_set
+    self.title = sanitize self.title, tags: %w()
+  end
   
   def self.search(search, include_hidden = false)
     res = if search

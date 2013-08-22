@@ -1,8 +1,8 @@
-<span class="edit_info" field='<%=field%>' type='<%=type%>' value='<%=value%>' trunc='<%=trunc%>' make_link='<%=make_link%>'>
+<span class="edit_info" field='<%=field%>' type='<%=type%>' value='<%=value%>' make_link='<%=make_link%>'>
   <%if make_link %>
-      <span class="info_text"><%= link_to (truncate value, length: trunc), "/#{type.pluralize}/#{row_id}" %></span>
+      <div class="info_text"><%= link_to value, "/#{type.pluralize}/#{row_id}" %></div>
   <%else%>
-      <span class="info_text"><%=(truncate value, length: trunc)%></span>
+      <div class="info_text"><%=value%></div>
   <%end%>
   <%if can_edit %>
       <span class="info_edit_link" href=<%="/#{type.pluralize}/#{row_id}"%>><i class="icon-edit"></i></span>
