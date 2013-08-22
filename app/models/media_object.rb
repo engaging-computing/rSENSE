@@ -15,6 +15,8 @@ class MediaObject < ActiveRecord::Base
   
   validates_presence_of :src, :media_type, :file_key
   
+  validates :name, length: {maximum: 128}
+  
   before_save :sanitize_media
   
   before_destroy :aws_del

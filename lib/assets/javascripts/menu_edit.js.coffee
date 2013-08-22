@@ -31,6 +31,11 @@ $ ->
       data={}
       data[type] = {}
       data[type][field_name] = value
+      
+      root.find('i').removeClass 'icon-ok'
+      root.find('i').addClass 'icon-refresh'
+      root.find('span.btn').addClass 'disabled'
+      root.find('span.btn').button 'toggle'
         
       #Make the request to update 
       $.ajax
@@ -46,7 +51,6 @@ $ ->
           ($ @).hide()
           
           root.attr 'value', value
-          value = helpers.truncate value, (Number root.attr('trunc'))
         
           #Make it a link or not
           if root.attr('make_link') == 'true'
@@ -61,6 +65,11 @@ $ ->
             placement: "bottom"
             trigger: "manual"
           edit_box.popover 'show'
+        complete: () ->
+          root.find('i').addClass 'icon-ok'
+          root.find('i').removeClass 'icon-refresh'
+          root.find('span.btn').removeClass 'disabled'
+          root.find('span.btn').button 'toggle'
         
     info_box.find('.info_edit_box').keypress (e) ->
       if (e.keyCode is 13)

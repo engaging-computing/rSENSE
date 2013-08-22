@@ -11,10 +11,14 @@
   <span class="viz_title">Name: <%=@visualization.owner.name%></span><br/><br/>
 </div>
 
-<div class="row" id="title_row" style="margin-left: 0px; margin-top:20px">
-    <span style="font-size:2em;"><%= project_edit_menu_helper true, 64 %> / </span>    
-    <span id="title_span" style="font-size:2em;">
-    <%=visualization_edit_menu_helper false, 64%></span><br><br>
+<div class="row" id="title_row" style="margin-left: 0px; margin-top:20px; ">
+    <span class="half_width_edit" style="font-size:2em;">
+      <%= project_edit_menu_helper true%> / 
+    </span>    
+    <span class="half_width_edit" id="title_span" style="font-size:2em">
+      <%=visualization_edit_menu_helper false %>
+    </span>
+    <br><br>
 </div>
 
 <div style="margin: 0px 10px;">
@@ -40,7 +44,7 @@
 
   <div class="well" style="margin-top:10px">
 
-    <span style="font-size:1.5em;"><%= visualization_edit_helper 'title', @visualization.owner.id == @cur_user.try(:id), make_link = false %></span>
+    <div class="full_width_edit" style="font-size:1.5em;"><%= visualization_edit_helper 'title', @visualization.owner.id == @cur_user.try(:id), make_link = false %></div>
     
     <%= visualization_redactor_helper (@visualization.owner.id == @cur_user.try(:id)) %>
     

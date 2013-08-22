@@ -1,9 +1,9 @@
-<span class="edit_menu" field='title' type='<%=type%>' make_link='<%=make_link%>' escape_link='<%=escape_link%>' value='<%=obj.title%>' trunc='<%=trunc%>'>
+<span class="edit_menu" field='title' type='<%=type%>' make_link='<%=make_link%>' escape_link='<%=escape_link%>' value='<%=obj.title%>'>
 
   <%if make_link %>
-      <span class="info_text"><%= link_to (truncate obj.title, length: trunc), "/#{type.pluralize}/#{obj.id}" %></span>
+      <div class="info_text"><%= link_to obj.title, "/#{type.pluralize}/#{obj.id}" %></div>
   <%else%>
-      <span class="info_text"><%=(truncate obj.title, length: trunc)%></span>
+      <div class="info_text"><%=obj.title%></div>
   <%end%>
   
   <% if can_edit?(obj) || can_hide?(obj) || can_delete?(obj)  %>

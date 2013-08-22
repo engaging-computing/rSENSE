@@ -8,15 +8,21 @@
         </div>
         <div class="span12" style="padding-top:10px;">
           <span class="info_label" style="line-height: 30px;">First Name:</span> 
-          <%= user_edit_helper 'firstname', (can_edit? @user), false, 18 %>
+          <span class="full_width_edit">
+            <%= user_edit_helper 'firstname', (can_edit? @user), false %>
+          </span>
           <br />
           <%if can_edit? @user%>
             <span class="info_label" style="line-height: 30px;">Last Name:</span>
-            <%= user_edit_helper 'lastname', (can_edit? @user), false, 18 %>
+            <span class="full_width_edit">
+              <%= user_edit_helper 'lastname', (can_edit? @user), false%>
+            </span>
             <br />
           <%end%>
           <span class="info_label" style="line-height: 30px;">Username:</span>
-          <%= user_edit_helper 'username', false, false, 18 %>
+          <span class="full_width_edit">
+            <%= user_edit_helper 'username', false, false %>
+          </span>
           <br />
           <span style="line-height: 30px;">Joined <%= time_ago_in_words(@user.created_at)%> ago</span>
           <br />

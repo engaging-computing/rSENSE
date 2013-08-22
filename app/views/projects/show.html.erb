@@ -11,7 +11,7 @@
       <!-- project title -->
       <div class="span5" style="margin-left:0px">
         <div class="project_info_box" >
-          <span id="title_span" class="word-break" style="font-size:2em"><%= project_edit_menu_helper false, 128%></span><br>
+          <span id="title_span" class="word-break" style="font-size:2em"><%= project_edit_menu_helper false%></span><br>
           <span class="info_label" style="font-size:1.1em">Owner:</span>
           <%= link_to @project.owner.name, user_path(@project.owner) %><br>
             <%if !@cloned_project.nil? %>
@@ -32,8 +32,8 @@
 
       <!-- data sets -->
       <%=render layout: "shared/box", locals: {title: 'Data Sets', width: '7', unique_id: 'data_sets', should_hide: false} do %>
-        <div id="dataset_list" <% if @project.data_sets.count == 0 %> style="display:none;" <% end %> >
-
+        <div id="dataset_list" <% if @data_sets.count == 0 %> style="display:none;" <% end %> >
+        
           <div class="text-left" style="padding: 2px 5px 2px 5px">
             <input type="button" class="btn btn-info" style="margin-bottom: 10px;" value="Visualize" id="vis_button" href="/projects/<%=@project.id%>/data_sets/"/>
             <div class="pull-right">
@@ -41,7 +41,7 @@
             </div>
           </div>
 
-          <% @project.data_sets.search(false).each do |s| %>
+          <% @data_sets.each do |s| %>
 
             <div class="<%= cycle('feed-even', 'feed-odd')%> dataset" style="position:relative">
 
@@ -52,12 +52,12 @@
               </div>
 
               <div class="links">
-                <div class="owner">
-                  <%= link_to truncate(s.owner.name, length:10), user_path(s.owner) %>
+                <div class="owner truncate">
+                  <%= link_to s.owner.name, user_path(s.owner) %>
                 </div>
 
-                <div class="title">
-                  <%= link_to truncate(s.title, length:30), "#{params[:id]}/data_sets/#{s.id}" %>
+                <div class="title truncate">
+                  <%= link_to s.title, "#{params[:id]}/data_sets/#{s.id}" %>
                 </div>
               </div>
 
@@ -175,8 +175,8 @@
       
                     <div class="links">
       
-                      <div class="title">
-                        <%= link_to truncate(vv.title, length:30), visualization_url(vv) %>
+                      <div class="title truncate">
+                        <%= link_to vv.title, visualization_url(vv) %>
                       </div>
                     </div>
       
