@@ -442,14 +442,12 @@ class ProjectsController < ApplicationController
           c.each do |dp|
             if( dp[0] != "")
               # IF ANY DATAPOINT IN THE SET IS NAN
-              if( dp[0].to_i == 0 and  (dp[0] != "0" or dp[0] != "" ) )
-                #p_fields[i][1] = ""
-                p_fields[i][3] = ""
-                p_fields[i][4] = ""
+              if( dp[0].to_i == 0 and (dp[0] != "0" or dp[0] != "" ) )
+                p_fields[i][1] = ""
               end
 
               # IF ANY DATA POINT EXCEEDS LAT/LON 
-              if( dp[0].to_f > 180 or dp[0].to_f < -180 )
+              if( dp[0].to_f > 180 or dp[0].to_f < -180 or (dp[0].to_i == 0 and (dp[0] != "0" or dp[0] != "" )))
                 p_fields[i][3] = ""
                 p_fields[i][4] = ""
               end
