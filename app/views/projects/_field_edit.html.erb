@@ -3,5 +3,5 @@
   <td class="field_unit"> <div class="truncate">
     <%if !(field.field_type == TEXT_TYPE)%><%=field.unit%><% end %>
   </div></td>
-  <td class="field_type"><div class="f_<%=row_id%>"><%=get_field_name(field.field_type)%></div></td>
+  <td class="field_type" value="<%=get_field_name(field.field_type)%>"><div><%=get_field_name(field.field_type)%></div></td>
 </tr>
