@@ -26,74 +26,7 @@ $ ->
             ($ 'span.edit_menu span.info_text').text(name)
             ($ '#name_box').modal('hide')
 
-    respond_template = ( resp ) ->
-      ($ 'button.finished_button').addClass 'disabled'
 
-      ($ '#template_match_table').html ''
-      ($ '#template_match_table').append '<tr><th> Field Name </th><th> Field Unit </th><th> Field Type </th></tr>'
-
-      for field, field_index in resp.fields
-        options = "<option value='-1'>Select One...</option>"
-        for type, type_index in resp.p_field_types[field_index]
-          options += "<option value='#{type_index}'>#{type}</option>"
-
-        html = "<tr><td class='field_name'>#{field.name[0..29]}"
-
-        if field.name.length > 29
-          html += '...'
-
-        html += "</td><td><input type='text' class='field_unit' /></td><td><select>#{options}</select></td></tr>"
-
-        ($ '#template_match_table').append html
-
-      ($ "button.cancel_upload_button").click ->
-          ($ "#template_match_box").modal("hide")
-
-      ($ "#template_match_table select").change ->
-        check = true
-        for sel in ($ '#template_match_table').find(':selected')
-          if ($ sel).text() == "Select One..."
-            check = false
-
-        if check
-          ($ 'button.finished_button').removeClass 'disabled'
-        else
-          ($ 'button.finished_button').addClass 'disabled'
-
-
-      ($ "button.finished_button").click ->
-        if !($ 'button.finished_button').hasClass('disabled')
-          newFields =
-            pid: resp.pid
-            names: []
-            units: []
-            types: []
-
-          for names in ($ '#template_match_table').find('.field_name')
-            newFields.names.push ($ names).text()
-
-          for units in ($ '#template_match_table').find('.field_unit')
-            newFields.units.push ($ units).val()
-
-          for types in ($ '#template_match_table').find(':selected')
-            newFields.types.push ($ types).text()
-
-          $.ajax
-            type: "POST"
-            dataType: "json"
-            url: "#{window.location}/templateFields"
-            data: {save: true, fields: newFields}
-            success: (resp) ->
-              ($ "#match_box").modal("hide")
-              window.location = window.location
-
-      #begin horrible hackeyness of prodding the modal box
-      #were gonna strech it and try and poke it to the center
-      ($ '#template_match_box').css('width', '670px')
-
-      ($ "#template_match_box").modal
-          backdrop: 'static'
-          keyboard: true
 
 
     respond_csv = ( resp ) ->
@@ -163,10 +96,6 @@ $ ->
       else
         respond_csv(resp)
 
-    ($ "#template_file_form").ajaxForm (resp) ->
-      respond_template(resp)
-
-
 
     load_qr = ->
       ($ '#exp_qr_tag').empty()
@@ -201,22 +130,12 @@ $ ->
     ($ '#upload_csv').click ->
       ($ '#csv_file_input').click()
       false
-
+      
     ($ '#csv_file_input').click ->
       ($ '#csv_file_form').attr 'action', "#{window.location.pathname}/CSVUpload"
 
-    ($ '#template_file_form').click ->
-      ($ '#template_file_form').attr 'action', "#{window.location.pathname}/templateFields"
-
-    ($ '#template-from-file').click ->
-      ($ '#template_file_input').click()
-      false
-
     ($ '#csv_file_input').change ->
       ($ '#csv_file_form').submit()
-
-    ($ '#template_file_input').change ->
-      ($ '#template_file_form').submit()
 
     ($ '#cancel_doc').click ->
       ($ '#doc_box').modal 'hide'
