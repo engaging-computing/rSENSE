@@ -1,198 +1,294 @@
 $ ->
 
-  hide_upload = ->
-    if ($ 'table.fields_table tbody tr').size() == 0
-      ($ '#create_data_set').hide()
-      ($ "#template-from-file").show()
-    else
-      ($ '#create_data_set').show()
-      ($ "#template-from-file").hide()
+  ### EDIT BUTTON CLICK ###
+  ($ '.edit_fields_btn').click ->
+    root = ($ @).parent().parent()
+    table =  root.find('.fields_table')
+    can_delete_fields = if table.attr('can_delete_fields') is "true" then true  else false
 
-  delayed_hide = -> setTimeout( (-> hide_upload()), 200 )
-
-
-  delayed_hide()
-
-  #This is where we edit
-  edit = ->
-    name = ($ @).parent().parent().find '.field_name'
-    unit = ($ @).parent().parent().find '.field_unit'
-    field = helpers.get_field_type $(@).parent().parent().find('.field_type').text()
-
-    if not (field in [(helpers.get_field_type "Latitude"), (helpers.get_field_type "Longitude")])
-      name.wrapInner "<input type='text' size='1' class='name_edit_box' value='#{name.text().trim()}'>"
-      unit.wrapInner "<input type='text' size='1' class='unit_edit_box' value='#{unit.text().trim()}'>" if field is (helpers.get_field_type "Number")
-      name.find('.name_edit_box').focus()
-
-    ($ @).hide()
-    ($ @).siblings('.field_save_link').show()
-
-    $.ajax
-      url: ($ @).parents('tr').attr 'project_url'
-      type: "GET"
-      dataType: "json"
-      data:
-        recur: true
-      success: (msg) =>
-        if msg.dataSets.length is 0
-          ($ @).siblings('.field_delete_link').show()
-
-
-  #This is where we save after editing
-  save = (e) ->
-
-    e.preventDefault()
-    name = ($ @).parent().parent().find '.field_name'
-    unit = ($ @).parent().parent().find '.field_unit'
-    field = helpers.get_field_type ($(@).parent().parent().find('.field_type').text())
-
-    if not (field in [(helpers.get_field_type "Latitude"), (helpers.get_field_type "Longitude")])
-      name_text = name.find('.name_edit_box').val().trim()
-      unit_text = if field is (helpers.get_field_type "Number")
-        unit.find('.unit_edit_box').val().trim()
-      else
-        ""
-
-      data={}
-      data['field'] = {}
-      data['field']['name'] = name_text
-      data['field']['unit'] = unit_text
-
+    row = ($ @).parent()
+    row.hide()
+    
+    table.find('.fields').each ->
+      type_val = ($ @).find('.field_type').attr('value')
+      field_id = ($ @).find('.field_name').attr("field_id")
+      if can_delete_fields
+          delete_link = ($ "<a href='/fields/#{field_id}' class='field_delete_link'><i class='icon-remove' style='float:right;display:block'></i></a>") 
+          ($ @).find('.field_type').find("div").append delete_link
+          delete_link.click remove_field
+          delete_link.show()
+      if(type_val not in ['Latitude','Longitude'])
+        name_val = ($ @).find('.field_name').find("div").html()
+        unit_val = ($ @).find('.field_unit').find("div").html()
+        ($ @).find('.field_name').html("<input type='text' class='input-small' value='#{name_val.trim()}'>")
+        ($ @).find('.field_unit').html("<input type='text' class='input-small' value='#{unit_val.trim()}'>")
+        
+        
+    ($ '.fields_edit_menu').show()
+  
+  ### SAVE BUTTON CLICK ###
+  ($ '.save_field_changes_btn').click ->
+    row = ($ @).parent()
+    root = ($ @).parent().parent()
+    table =  root.find('.fields_table')
+    data = {}
+    data['changes'] = {}
+    
+    if table.data("num_fields") > 0
+      table.find('.fields').each ->
+        field_name = ($ this).find(".field_name").find("input")
+        if field_name.val() not in ["Latitude", "Longitude"]
+          field_name.find("input").popover "destroy"
+          data['changes'][($ this).find(".field_name").attr('field_id')] = 
+            name: field_name.val()
+            unit: ($ this).find('.field_unit').find("input").val()
+            
       $.ajax
-        url: $(@).attr('href')
-        type: "PUT"
+        url: '/projects/12/updateFields'
+        type: "post"
         dataType: "json"
-        data: data
-        success: =>
-          ($ @).siblings('.field_edit_link').show()
-          ($ @).hide()
-          ($ @).siblings('.field_delete_link').hide()
-          name.html(name_text)
-          unit.html(unit_text)
-        error: ->
-          ($ name).find('.name_edit_box').errorFlash()
+        data: 
+          data
+        success: (msg) =>
+          table.find('.fields').each ->
+            ($ @).find('i').remove()
+            type_val = ($ @).find('.field_type').attr('value')
+            if(type_val not in ['Latitude','Longitude'])
+              field_name = ($ this).find(".field_name")
+              field_name_value = field_name.find("input").val()
+              field_name.html("<div>#{field_name_value}</div>")
+              field_unit = ($ this).find(".field_unit")
+              field_unit_value = field_unit.find("input").val()
+              field_unit.html("<div class='truncate'>#{field_unit_value}</div>")
+              row.hide()
+              ($ '.fields_edit_option').show()
 
-      delayed_hide()
-
-
+        error: (msg) =>
+          errors = JSON.parse msg.responseText
+          for key,value of errors
+            tmp = root.find("[field_id='#{key}']").find("input")
+            tmp.errorFlash()
+            tmp.popover
+              content: value
+              placement: "left"
+              trigger: "manual"
+            tmp.popover "show"
     else
-      ($ @).siblings('.field_edit_link').show()
-      ($ @).hide()
-      ($ @).siblings('.field_delete_link').hide()
+      row.hide()
+      ($ '.fields_edit_option').show()
+      ($ '#template_from_file').show()
+      
+  ### SLIDE HIDE ###
+  delete_row = (row) ->     
+    row.find("div, input").hide_row =>  
+      row.remove()
+      recolor_rows() 
+  
+  recolor_rows = () ->
+    ($ 'tr.fields').filter(':visible').each (idx) -> 
+      if idx % 2 is 0
+        ($ @).addClass 'feed-even'
+        ($ @).removeClass 'feed-odd'
+      else
+        ($ @).removeClass 'feed-even'
+        ($ @).addClass 'feed-odd'   
 
-    false
-
+  ### DELETE BUTTON CLICK ###
   remove_field = ->
+    table = ($ '.fields_table')
 
-    row = ($ @).parent().parent()
-    type = helpers.get_field_type ($ row).find('.field_type').text()
-
+    row = ($ @).parents('tr')
+    type = helpers.get_field_type row.find('.field_type').text() 
     pair_field = null
+    field_name = row.find('.field_name').find("input").val()
 
     if not (type in [(helpers.get_field_type "Latitude"), (helpers.get_field_type "Longitude")])
-      $.ajax
-        url: ($ @).attr('href')
-        type: "DELETE"
-        dataType: "json"
-        success: (msg) =>
-          ($ @).parent().parent().remove()
-          delayed_hide()
-        error: (msg) =>
-          console.log msg
-    else
-      if confirm "Latitude and Longitude must be deleted together\nAre you sure you would like to continue?"
-        sibs = $ row.siblings()
-
-        for sib in sibs
-          do (sib) ->
-            sib_type = ($ sib).find('td[class="field_type"]').text()
-            if((sib_type is "Longitude") or (sib_type is "Latitude"))
-              pair_field = sib
-
+      if(helpers.confirm_delete "#{field_name}")
         $.ajax
           url: ($ @).attr('href')
           type: "DELETE"
           dataType: "json"
+          data:
+            project_id: table.attr('project')
           success: (msg) =>
-            ($ @).parent().parent().remove()
-            delayed_hide()
+            delete_row row
+            table.data("num_fields",msg.num_fields)
+            if msg.num_fields == 0
+              ($ '#create_data_set').hide()
+              ($ '#template_from_file').show()
           error: (msg) =>
             console.log msg
-
-
-        $.ajax
-          url: ($ @).attr('href')
-          type: "DELETE"
-          dataType: "json"
-          success: (msg) =>
-            ($ @).parent().parent().remove()
-            delayed_hide()
-          error: (msg) =>
-            console.log msg
-
-    delayed_hide()
-
+    else     
+      if(helpers.confirm_delete "Latitude & Longitude")
+        table.find('.fields').each ->
+          type_val = helpers.get_field_type ($ this).find('.field_type').text() 
+          if (type_val in [(helpers.get_field_type "Latitude"), (helpers.get_field_type "Longitude")])
+            $.ajax
+              url: ($ this).find('.field_delete_link').attr('href')
+              type: "DELETE"
+              dataType: "json"
+              data:
+                project_id: table.attr('project')
+              success: (msg) =>
+                delete_row ($ this)
+                table.data("num_fields",msg.num_fields)
+                if msg.num_fields == 0
+                  ($ '#create_data_set').hide()
+                  ($ '#template_from_file').show()
+                ($ '#add-field-dropdown ul li a#add_location_field').show()
+              error: (msg) =>
+                console.log msg 
     false
+  
+  add_row = (msg) ->
 
-  addField = (type) ->
-
+    type = if msg.field_type? then msg.field_type else msg.type
+      
+    table = ($ '.fields_table')
+    htmlStr = ""
     typeName = helpers.get_field_name type
-    unit = helpers.get_default_unit type
+    isNotLoc = typeName not in ["Latitude","Longitude"]
+    
+    htmlStr = $ """
+    <tr class="fields">
+    <td class='field_name' field_id='#{msg.id}'>#{if isNotLoc then "<input type='text' class='input-small' value='#{msg.name}'>" else "<div>#{msg.name}</div>"}</td>
+    <td class='field_unit'>#{if isNotLoc then "<input type='text' class='input-small' value='#{msg.unit}'>" else "<div>#{msg.name}</div>"}</td>
+    <td class='field_type' value='#{helpers.get_field_name type}'><div>#{typeName}<a href='/fields/#{msg.id}' class='field_delete_link'><i class='icon-remove' style='float:right;display:block'></i></a></div></td>
+    </tr>
+    """
 
+    delete_field_btn = htmlStr.find('.field_delete_link')
+    delete_field_btn.click remove_field
+    delete_field_btn.show()
+    table.append htmlStr
+    recolor_rows()
+    
+  ### ADD FIELD ###
+  addField = (typeName) ->
+
+    type = helpers.get_field_type typeName
+    unit = helpers.get_default_unit type
+    table = ($ '.fields_table')
+    editable = true
+   
     $.ajax
-      url: '/fields/'
-      type: 'POST'
-      dataType: 'json'
+      url: "/fields/"
+      type: "POST"
+      dataType: "json"
       data:
         field:
-          project_id: ($ '.fields_table').attr 'project'
+          project_id: table.attr 'project'
           name: typeName
           unit: unit
           field_type: type
       success: (msg) =>
-        htmlStr  = "<tr>"
-        htmlStr += "<td class='field_name'>#{msg.name}</td>"
-        htmlStr += "<td class='field_unit'>#{unit}</td>"
-        htmlStr += "<td class='field_type'>#{typeName}</td>"
+        table.data("num_fields",1)
+        add_row(msg)
+        ($ '#template_from_file').hide()
         ($ '#create_data_set').show()
+      error: (msg) =>
+          console.log msg
+          
+          
+  respond_template = ( resp ) ->
+    ($ 'button.finished_button').addClass 'disabled'
 
-        #if not (type in [(helpers.get_field_type "Latitude"), (helpers.get_field_type "Longitude")])
-        htmlStr += "<td class='token'><a class='field_edit_link'><i class='icon-edit'></i></a>"
-        htmlStr += "<a href='/fields/#{msg.id}' exp='#{msg.project_id}' field='#{msg.id}' class='field_save_link'><i class='icon-ok'></i></a>"
-        htmlStr += "<a href='/fields/#{msg.id}"  + "' field='#{msg.id}' class='field_delete_link'><i class='icon-remove-circle'></i></a></td>"
-        #else
-          #htmlStr += "<td></td>"
+    ($ '#template_match_table').html ''
+    ($ '#template_match_table').append '<tr><th> Field Name </th><th> Field Unit </th><th> Field Type </th></tr>'
 
-        htmlStr += "</tr>"
-        ($ '.fields_table').append htmlStr
+    for field, field_index in resp.fields
+      options = "<option value='-1'>Select One...</option>"
+      for type, type_index in resp.p_field_types[field_index]
+        options += "<option value='#{type_index}'>#{type}</option>"
 
+      html = "<tr><td class='field_name'>#{field.name[0..29]}"
 
-        ($ '.token').find('.field_edit_link').click edit
-        ($ '.token').find('.field_save_link').click save
-        ($ '.token').find('.field_delete_link').click remove_field
-        ($ '.token').removeClass 'token'
+      if field.name.length > 29
+        html += '...'
 
-        if not (type in [(helpers.get_field_type "Latitude"), (helpers.get_field_type "Longitude")])
-          ($ '.field_edit_link').last().trigger 'click'
+      html += "</td><td><input type='text' class='field_unit' /></td><td><select>#{options}</select></td></tr>"
 
-    delayed_hide()
+      ($ '#template_match_table').append html
 
-  ($ '.field_edit_link').click edit
-  ($ '.field_save_link').click save
-  ($ '.field_delete_link').click remove_field
+    ($ "button.cancel_upload_button").click ->
+        ($ "#template_match_box").modal("hide")
 
-  ($ '.add_timestamp_field').click ->
-    addField helpers.get_field_type('Timestamp')
+    ($ "#template_match_table select").change ->
+      check = true
+      for sel in ($ '#template_match_table').find(':selected')
+        if ($ sel).text() == "Select One..."
+          check = false
 
-  ($ '.add_number_field').click ->
-    addField helpers.get_field_type('Number')
-
-  ($ '.add_text_field').click ->
-    addField helpers.get_field_type('Text')
-
-  ($ '.add_location_field').click ->
-    addField helpers.get_field_type('Latitude')
-    addField helpers.get_field_type('Longitude')
-    ($ '#add-field-dropdown ul li a.add_location_field').hide()
+      if check
+        ($ 'button.finished_button').removeClass 'disabled'
+      else
+        ($ 'button.finished_button').addClass 'disabled'
 
 
+    ($ "button.finished_button").click ->
+      if !($ 'button.finished_button').hasClass('disabled')
+        newFields =
+          pid: resp.pid
+          names: []
+          units: []
+          types: []
+
+        for names in ($ '#template_match_table').find('.field_name')
+          newFields.names.push ($ names).text()
+
+        for units in ($ '#template_match_table').find('.field_unit')
+          newFields.units.push ($ units).val()
+
+        for types in ($ '#template_match_table').find(':selected')
+          newFields.types.push ($ types).text()
+
+        table = ($ '.fields_table')
+
+        $.ajax
+          type: "POST"
+          dataType: "json"
+          url: "#{window.location.pathname}/templateFields"
+          data: {save: true, fields: newFields}
+          success: (resp) ->
+            ($ "#template_match_box").modal("hide")
+            table.data("num_fields",1)
+            ($ '#create_data_set').show()
+            for field in resp.fields
+              add_row(field)    
+
+    #begin horrible hackeyness of prodding the modal box
+    #were gonna strech it and try and poke it to the center
+    ($ '#template_match_box').css('width', '670px')
+
+    ($ "#template_match_box").modal
+        backdrop: 'static'
+        keyboard: true        
+        
+  ($ '#template_file_form').click ->
+    ($ '#template_file_form').attr 'action', "#{window.location.pathname}/templateFields"
+
+  ($ '#template_from_file').click ->
+    ($ '#template_file_input').click()
+    false    
+        
+  ($ '#template_file_input').change ->
+    ($ '#template_file_form').submit()        
+          
+  ($ "#template_file_form").ajaxForm (resp) ->
+    respond_template(resp)       
+          
+  ### ADD FIELD CLICKS ###
+  ($ '#add_timestamp_field').click -> 
+    addField 'Timestamp'
+  ($ '#add_number_field').click -> 
+    addField 'Number'
+  ($ '#add_text_field').click -> 
+    addField 'Text'
+  ($ '#add_location_field').click -> 
+    addField 'Latitude'
+    addField 'Longitude'
+    ($ '#add-field-dropdown ul li a#add_location_field').hide()
+  
+  
+            
+    
