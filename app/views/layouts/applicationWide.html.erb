@@ -83,7 +83,7 @@
                 </div>
               <% else %>
                 <div class="btn-group">
-                  <button class="btn btn-small btn-info white"><a href="<%= user_path(@cur_user) %>" class="white"><%= @cur_user.name %></a></button>
+                  <a class="btn btn-small btn-info white" href="<%= user_path(@cur_user) %>"><%= @cur_user.name %></a>
                   <%= link_to 'Logout', login_path(), method: :delete, class: "btn btn-small btn-info" %>
                 </div>
               <% end %>
@@ -99,7 +99,7 @@
                 </div>
               <% else %>
                 <div class="btn-group">
-                  <button class="btn btn-small btn-info"><a href="<%= user_path(@cur_user) %>" class="white"><%= @cur_user.name %></a></button>
+                  <a class="btn btn-small btn-info white" href="<%= user_path(@cur_user) %>"><%= @cur_user.name %></a>
                   <%= link_to 'Logout', login_path(), method: :delete, class: "btn btn-small btn-info" %>
                 </div>
               <% end %>
