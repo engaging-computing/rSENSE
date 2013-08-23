@@ -101,12 +101,18 @@ class FieldsController < ApplicationController
     if can_delete?(@field)
       @field.destroy
       
-      num_fields = Project.find(params[:project_id]).fields.count
-      
-      respond_to do |format|
-        format.html { redirect_to fields_url }
-        format.json { render json: {num_fields: num_fields}, status: :ok }
-      end
+      if params.has_key?("project_id")
+        num_fields = Project.find(params[:project_id]).fields.count
+        respond_to do |format|
+          format.html { redirect_to fields_url }
+          format.json { render json: {num_fields: num_fields}, status: :ok }
+        end
+      else
+        respond_to do |format|
+          format.html { redirect_to fields_url }
+          format.json { render json: {}, status: :ok }
+        end
+      end 
     else
       respond_to do |format|
         format.html { redirect_to 'public/401.html' }

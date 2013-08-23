@@ -34,56 +34,55 @@ $ ->
     data = {}
     data['changes'] = {}
     
-    table.find('.fields').each ->
-      field_name = ($ this).find(".field_name").find("input")
-      if field_name.val() not in ["Latitude", "Longitude"]
-        field_name.find("input").popover "destroy"
-        data['changes'][($ this).find(".field_name").attr('field_id')] = 
-          name: field_name.val()
-          unit: ($ this).find('.field_unit').find("input").val()
-          
-    $.ajax
-      url: '/projects/12/updateFields'
-      type: "post"
-      dataType: "json"
-      data: 
-        data
-      success: (msg) =>
-        table.find('.fields').each ->
-          ($ @).find('i').remove()
-          type_val = ($ @).find('.field_type').attr('value')
-          if(type_val not in ['Latitude','Longitude'])
-            field_name = ($ this).find(".field_name")
-            field_name_value = field_name.find("input").val()
-            field_name.html("<div>#{field_name_value}</div>")
-            field_unit = ($ this).find(".field_unit")
-            field_unit_value = field_unit.find("input").val()
-            field_unit.html("<div class='truncate'>#{field_unit_value}</div>")
-            row.hide()
-            ($ '.fields_edit_option').show()
+    if table.data("num_fields") > 0
+      table.find('.fields').each ->
+        field_name = ($ this).find(".field_name").find("input")
+        if field_name.val() not in ["Latitude", "Longitude"]
+          field_name.find("input").popover "destroy"
+          data['changes'][($ this).find(".field_name").attr('field_id')] = 
+            name: field_name.val()
+            unit: ($ this).find('.field_unit').find("input").val()
+            
+      $.ajax
+        url: '/projects/12/updateFields'
+        type: "post"
+        dataType: "json"
+        data: 
+          data
+        success: (msg) =>
+          table.find('.fields').each ->
+            ($ @).find('i').remove()
+            type_val = ($ @).find('.field_type').attr('value')
+            if(type_val not in ['Latitude','Longitude'])
+              field_name = ($ this).find(".field_name")
+              field_name_value = field_name.find("input").val()
+              field_name.html("<div>#{field_name_value}</div>")
+              field_unit = ($ this).find(".field_unit")
+              field_unit_value = field_unit.find("input").val()
+              field_unit.html("<div class='truncate'>#{field_unit_value}</div>")
+              row.hide()
+              ($ '.fields_edit_option').show()
 
-      error: (msg) =>
-        errors = JSON.parse msg.responseText
-        for key,value of errors
-          tmp = root.find("[field_id='#{key}']").find("input")
-          tmp.errorFlash()
-          tmp.popover
-            content: value
-            placement: "left"
-            trigger: "manual"
-          tmp.popover "show"
-       
+        error: (msg) =>
+          errors = JSON.parse msg.responseText
+          for key,value of errors
+            tmp = root.find("[field_id='#{key}']").find("input")
+            tmp.errorFlash()
+            tmp.popover
+              content: value
+              placement: "left"
+              trigger: "manual"
+            tmp.popover "show"
+    else
+      row.hide()
+      ($ '.fields_edit_option').show()
+      ($ '#template_from_file').show()
+      
   ### SLIDE HIDE ###
   delete_row = (row) ->     
     row.find("div, input").hide_row =>  
       row.remove()
-      ($ 'tr.fields').filter(':visible').each (idx) -> 
-        if idx % 2 is 0
-          ($ @).addClass 'feed-even'
-          ($ @).removeClass 'feed-odd'
-        else
-          ($ @).removeClass 'feed-even'
-          ($ @).addClass 'feed-odd'   
+      recolor_rows() 
   
   recolor_rows = () ->
     ($ 'tr.fields').filter(':visible').each (idx) -> 
@@ -113,8 +112,10 @@ $ ->
             project_id: table.attr('project')
           success: (msg) =>
             delete_row row
+            table.data("num_fields",msg.num_fields)
             if msg.num_fields == 0
               ($ '#create_data_set').hide()
+              ($ '#template_from_file').show()
           error: (msg) =>
             console.log msg
     else     
@@ -130,12 +131,38 @@ $ ->
                 project_id: table.attr('project')
               success: (msg) =>
                 delete_row ($ this)
+                table.data("num_fields",msg.num_fields)
                 if msg.num_fields == 0
                   ($ '#create_data_set').hide()
+                  ($ '#template_from_file').show()
+                ($ '#add-field-dropdown ul li a#add_location_field').show()
               error: (msg) =>
                 console.log msg 
     false
   
+  add_row = (msg) ->
+
+    type = if msg.field_type? then msg.field_type else msg.type
+      
+    table = ($ '.fields_table')
+    htmlStr = ""
+    typeName = helpers.get_field_name type
+    isNotLoc = typeName not in ["Latitude","Longitude"]
+    
+    htmlStr = $ """
+    <tr class="fields">
+    <td class='field_name' field_id='#{msg.id}'>#{if isNotLoc then "<input type='text' class='input-small' value='#{msg.name}'>" else "<div>#{msg.name}</div>"}</td>
+    <td class='field_unit'>#{if isNotLoc then "<input type='text' class='input-small' value='#{msg.unit}'>" else "<div>#{msg.name}</div>"}</td>
+    <td class='field_type' value='#{helpers.get_field_name type}'><div>#{typeName}<a href='/fields/#{msg.id}' class='field_delete_link'><i class='icon-remove' style='float:right;display:block'></i></a></div></td>
+    </tr>
+    """
+
+    delete_field_btn = htmlStr.find('.field_delete_link')
+    delete_field_btn.click remove_field
+    delete_field_btn.show()
+    table.append htmlStr
+    recolor_rows()
+    
   ### ADD FIELD ###
   addField = (typeName) ->
 
@@ -155,31 +182,100 @@ $ ->
           unit: unit
           field_type: type
       success: (msg) =>
-        htmlStr = ""
-        if typeName not in ["Latitude", "Longitude"]
-          htmlStr = $ """
-          <tr class="fields">
-          <td class='field_name' field_id='#{msg.id}'><input type='text' class='input-small' value='#{msg.name}'></td>
-          <td class='field_unit'><input type='text' class='input-small' value='#{msg.unit}'></td>
-          <td class='field_type' value='#{helpers.get_field_name msg.type}'><div>#{typeName}<a href='/fields/#{msg.id}' class='field_delete_link'><i class='icon-remove' style='float:right;display:block'></i></a></div></td>
-          </tr>
-          """
-        else
-          htmlStr = $ """
-          <tr class="fields">
-          <td class='field_name' field_id='#{msg.id}'><div>#{msg.name}</div></td>
-          <td class='field_unit'><div>#{msg.unit}</div></td>
-          <td class='field_type' value='#{helpers.get_field_name msg.type}'><div>#{typeName}<a href='/fields/#{msg.id}' class='field_delete_link'><i class='icon-remove' style='float:right;display:block'></i></a></div></td>
-          </tr>
-          """
-        delete_field_btn = htmlStr.find('.field_delete_link')
-        delete_field_btn.click remove_field
-        delete_field_btn.show()
-        table.append htmlStr
-        recolor_rows()
+        table.data("num_fields",1)
+        add_row(msg)
+        ($ '#template_from_file').hide()
         ($ '#create_data_set').show()
       error: (msg) =>
           console.log msg
+          
+          
+  respond_template = ( resp ) ->
+    ($ 'button.finished_button').addClass 'disabled'
+
+    ($ '#template_match_table').html ''
+    ($ '#template_match_table').append '<tr><th> Field Name </th><th> Field Unit </th><th> Field Type </th></tr>'
+
+    for field, field_index in resp.fields
+      options = "<option value='-1'>Select One...</option>"
+      for type, type_index in resp.p_field_types[field_index]
+        options += "<option value='#{type_index}'>#{type}</option>"
+
+      html = "<tr><td class='field_name'>#{field.name[0..29]}"
+
+      if field.name.length > 29
+        html += '...'
+
+      html += "</td><td><input type='text' class='field_unit' /></td><td><select>#{options}</select></td></tr>"
+
+      ($ '#template_match_table').append html
+
+    ($ "button.cancel_upload_button").click ->
+        ($ "#template_match_box").modal("hide")
+
+    ($ "#template_match_table select").change ->
+      check = true
+      for sel in ($ '#template_match_table').find(':selected')
+        if ($ sel).text() == "Select One..."
+          check = false
+
+      if check
+        ($ 'button.finished_button').removeClass 'disabled'
+      else
+        ($ 'button.finished_button').addClass 'disabled'
+
+
+    ($ "button.finished_button").click ->
+      if !($ 'button.finished_button').hasClass('disabled')
+        newFields =
+          pid: resp.pid
+          names: []
+          units: []
+          types: []
+
+        for names in ($ '#template_match_table').find('.field_name')
+          newFields.names.push ($ names).text()
+
+        for units in ($ '#template_match_table').find('.field_unit')
+          newFields.units.push ($ units).val()
+
+        for types in ($ '#template_match_table').find(':selected')
+          newFields.types.push ($ types).text()
+
+        table = ($ '.fields_table')
+
+        $.ajax
+          type: "POST"
+          dataType: "json"
+          url: "#{window.location.pathname}/templateFields"
+          data: {save: true, fields: newFields}
+          success: (resp) ->
+            ($ "#template_match_box").modal("hide")
+            table.data("num_fields",1)
+            ($ '#create_data_set').show()
+            for field in resp.fields
+              add_row(field)    
+
+    #begin horrible hackeyness of prodding the modal box
+    #were gonna strech it and try and poke it to the center
+    ($ '#template_match_box').css('width', '670px')
+
+    ($ "#template_match_box").modal
+        backdrop: 'static'
+        keyboard: true        
+        
+  ($ '#template_file_form').click ->
+    ($ '#template_file_form').attr 'action', "#{window.location.pathname}/templateFields"
+
+  ($ '#template_from_file').click ->
+    ($ '#template_file_input').click()
+    false    
+        
+  ($ '#template_file_input').change ->
+    ($ '#template_file_form').submit()        
+          
+  ($ "#template_file_form").ajaxForm (resp) ->
+    respond_template(resp)       
           
   ### ADD FIELD CLICKS ###
   ($ '#add_timestamp_field').click -> 
@@ -191,7 +287,7 @@ $ ->
   ($ '#add_location_field').click -> 
     addField 'Latitude'
     addField 'Longitude'
-    ($ '#add-field-dropdown ul li a.add_location_field').hide()
+    ($ '#add-field-dropdown ul li a#add_location_field').hide()
   
   
             
