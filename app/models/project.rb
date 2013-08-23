@@ -9,6 +9,8 @@ class Project < ActiveRecord::Base
   validates_presence_of :title
   validates_presence_of :user_id
   
+  validates :title, length: {maximum: 128}
+  
   before_save :sanitize_project
   
   has_many :fields
@@ -48,6 +50,13 @@ class Project < ActiveRecord::Base
     end
   end
   
+  def all_hidden
+    @data_sets = data_sets.where( 'hidden == ?', false )
+    if @data_sets.empty?
+      return true
+    end
+  end
+  
   def to_hash(recurse = true)
     h = {
       id: self.id,
@@ -55,6 +64,7 @@ class Project < ActiveRecord::Base
       name: self.name,
       url: UrlGenerator.new.project_url(self),
       hidden: self.hidden,
+      allHidden: self.all_hidden,
       featured: self.featured,
       likeCount: self.like_count,
       timeAgoInWords: time_ago_in_words(self.created_at),

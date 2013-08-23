@@ -6,7 +6,7 @@
 </script>
 
 <div class="row" id="title_row" style="margin-left: 0px; margin-top:20px">
-    <span style="font-size:2em;"><%= project_edit_helper 'title', can_edit?(@project), true, 128 %></span><br><br>
+    <div class="full_width_edit" style="font-size:2em;"><%= project_edit_helper 'title', can_edit?(@project), true %></div><br><br>
 </div>
 
 <div style="margin: 0px 10px;">
@@ -49,7 +49,7 @@
         <% @datasets.each do |s| %>
           <%@data_set = s%>
           <div class="item <%if s == @datasets.first()%>active<%end%>">
-            <span style="font-size:1.5em">Dataset: <%= data_set_edit_helper 'title', can_edit?(s), make_link = false, 32 %></span>
+            <span style="font-size:1.5em">Dataset: <%= data_set_edit_helper 'title', can_edit?(s), make_link = false %></span>
             <%= data_set_redactor_helper s, can_edit?(s) %>
           </div>  
         <%end%>
@@ -62,7 +62,7 @@
 
     <div class="well" style="margin-top:10px">
       <%@data_set = @datasets.first()%>
-      <span style="font-size:1.5em">Dataset: <%= data_set_edit_helper 'title', can_edit?(@data_set), make_link = false, 32 %></span>
+      <div class="full_width_edit" style="font-size:1.5em">Dataset: <%= data_set_edit_helper 'title', can_edit?(@data_set), make_link = false%></div>
       <%= data_set_redactor_helper @data_set, can_edit?(@data_set) %>
     </div>
 
