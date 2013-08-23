@@ -61,6 +61,9 @@ $ ->
         data[type] = {}
         data[type][field_name] = value
         
+        top.find(".redactor_content_cancel_link").addClass 'disabled'
+        top.find(".redactor_content_save_link").addClass 'disabled'
+        
         $.ajax
           url: $(@).attr('href')
           type: "PUT"
@@ -76,6 +79,9 @@ $ ->
               top.find('.add_content').show()
             else
               top.find('.redactor_content_edit').show()
+          complete: ->
+            top.find(".redactor_content_cancel_link").removeClass 'disabled'
+            top.find(".redactor_content_save_link").removeClass 'disabled'
         false
         
     $('.add_content_link').click ->
