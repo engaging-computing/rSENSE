@@ -66,7 +66,7 @@ Rsense::Application.routes.draw do
 
   match "/projects/:id/updateLikedStatus" => "projects#updateLikedStatus"
 
-
+  match "/projects/:id/updateFields" => "fields#updateFields"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
