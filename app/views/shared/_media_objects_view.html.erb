@@ -30,5 +30,7 @@
 
   <div class="redactor_file_upload_hidden" style="width:0px;height:0px"></div>
   <br />
-  <div class="center"><button class="btn btn-success" id="redactor_file_upload_btn">Upload Media</button></div>
+  <% if can_edit? object %>
+    <div class="center"><button class="btn btn-success" id="redactor_file_upload_btn">Upload Media</button></div>
+  <% end %>
 </div>
