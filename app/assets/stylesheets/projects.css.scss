@@ -195,10 +195,18 @@ div.dataset.feed-even, div.dataset.feed-odd, div#dataset_list div.feed-top, div.
   padding-bottom:20px;
 }
 
-.mytable
+.fields_table
 {
   th
   {
     text-align:left;
+  }
+  td
+  {
+    padding-bottom: 5px;
+    padding-top:    5px;
+  }
+  input{
+    margin-bottom: 0px;
   }
 }

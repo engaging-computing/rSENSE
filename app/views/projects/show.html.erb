@@ -118,7 +118,7 @@
 
       <!-- field -->
       <%= render layout: "shared/box", locals: {title: 'Fields', width: '5', unique_id: 'fieldsnew', should_hide: false} do%>
-        <table class="mytable" project="<%=@project.id%>" can_delete_fields="<%if @project.data_sets.count>0%>false<%else%>true<%end%>" style="width:100%; height:125px;">
+        <table class="fields_table" project="<%=@project.id%>" can_delete_fields="<%if @project.data_sets.count>0%>false<%else%>true<%end%>" style="width:100%; height:125px;">
           <thead>
             <tr>
               <th>Name</th>
@@ -139,9 +139,25 @@
           <button class="edit_fields_btn btn btn-success">Edit</button>
         </div>
         <div class="center fields_edit_menu" style="display:none">
-          <button class="btn btn-success">Add Field</button>
+          <div class='btn-group' id='add-field-dropdown'>
+            <a class='btn btn-success dropdown-toggle' data-toggle='dropdown' href='#'>
+              Add Field 
+              <span class='caret'/>
+            </a>
+            <ul class='dropdown-menu'>
+              <li><a href='#' id="add_timestamp_field" > Timestamp </a></li>
+              <li><a href='#' id="add_number_field"> Number </a></li>
+              <li><a href='#' id="add_text_field"> Text </a></li>
+              <% if (@project.fields.any? {|field| field.field_type == LONGITUDE_TYPE or field.field_type == LATITUDE_TYPE}) %>
+                <li><a href='#' style="display:none;" id="add_location_field"> Location </a></li>
+              <% else %>
+                <li><a href='#' id="add_location_field"> Location </a></li>
+              <% end %>
+              <li><a href='#' id="template-from-file" style=<%= @project.fields.count != 0 ? "display:none" : ""%>> Template from file </a></li>
+            </ul>
+          </div>
           <button class="save_field_changes_btn btn btn-primary" href="/projects/<%=@project.id%>/updateFields">Save Changes</button>
-          <button class="cancel_field_changes_btn btn btn-danger">Cancel Changes</button>
+          
         </div>              
       <% end %>
 
