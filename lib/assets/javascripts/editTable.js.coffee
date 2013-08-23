@@ -305,8 +305,8 @@ $ ->
               head = []
 
               ($ table).find('th').each ->
-                head.push ($ @).text()
-
+                head.push ($ @).data('field-id')
+                
               row_data = []
 
               ($ table).find('tr').has('td').each ->
@@ -315,7 +315,7 @@ $ ->
 
                 ($ @).children().each ->
                   row.push ($ @).text()
-                  
+                                  
                 row_blank = true
                   
                 ($ @).children().each (index, element) ->
@@ -336,13 +336,31 @@ $ ->
               ($ '#edit_table_add').addClass 'disabled'
               ($ '#edit_table_save').button 'loading'
 
-
-              $.ajax "#{settings.upload.url}",
-                type: "#{settings.upload.method}"
-                dataType: 'json'
-                data: ajax_data
-                error: settings.upload.error
-                success: settings.upload.success
+              $.ajax
+                url: "/projects/#{($ table).data('project-id')}"
+                type: "GET"
+                dataType: "json"
+                success: (data, textStatus, jqXHR) ->
+                  console.log data.fields
+                  console.log ajax_data.headers
+                  
+                  ($ data.fields).each (index, field) ->
+                    if field.id in ajax_data.headers
+                      data.fields.shift()
+                      
+                  if data.fields.length == 0
+                  
+                    $.ajax "#{settings.upload.url}",
+                      type: "#{settings.upload.method}"
+                      dataType: 'json'
+                      data: ajax_data
+                      error: settings.upload.error
+                      success: settings.upload.success
+                      
+                   else
+                     ($ data.fields).each (index, element) ->
+                        console.log element
+                        ($ table).find('thead tr').eq(0).append("<th>#{element.name}</th>")
 
             else
               ## I guess I'm not gonna write this part because we only use ajax to submit data

@@ -7,14 +7,14 @@
 <div class="row">
   <div style="margin-bottom:20px" class="span12">
     <div style="overflow-x: scroll;">
-      <table id="manualTable">
+      <table id="manualTable" data-project-id="<%= @project.id %>">
         <thead>
           <tr>
           <% for field in @project.fields %>
-            <th data-field-type="<%= get_field_name(field.field_type) %>"><%= field.name %>
+            <th data-field-type="<%= get_field_name(field.field_type) %>" data-field-id="<%= field.id %>" data-field-name="<%= field.name %>" ><%= field.name %>
             <% if field.unit != "" %>
-		  (<%=field.unit%>)
-		<% end %></th>
+              (<%=field.unit%>)
+            <% end %></th>
           <% end %>
           </tr>
         </thead>

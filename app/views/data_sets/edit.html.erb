@@ -6,19 +6,19 @@
 
 <% if can_edit?(@data_set) %>
 
-  <span style="font-size:2em;"><%= project_edit_menu_helper true, 64 %> / </span>    
-  <span style="font-size:2em;"><%= data_set_edit_helper 'title', can_edit?(@data_set), false, 64 %></span><br><br>
+  <span class="half_width_edit" style="font-size:2em;"><%= project_edit_menu_helper true %> / </span>    
+  <span class="half_width_edit" style="font-size:2em;"><%= data_set_edit_helper 'title', can_edit?(@data_set), false %></span><br><br>
 
   <div class="row">
     <div class="span12">
       <div style="overflow-x: scroll;">
-        <table id="editTable" class="table">
+        <table id="editTable" class="table" data-project-id="<%= @project.id %>">
           <thead>
             <tr>
               <% @project.fields.each do |f| %>
                 <th data-field-type="<%= get_field_name(f.field_type) %>"><%= f.name %>
-                <% if field.unit != "" %>
-                  (<%=field.unit%>)
+                <% if f.unit != "" %>
+                  (<%=f.unit%>)
                 <% end %></th>
               <% end %>
             </tr>
