@@ -1,11 +1,11 @@
 $ ->
   
   #selection of featured image
-  ($ '.img_selector').click ->
+  img_selector_click = (obj) ->
     root = ($ '#media_object_list')
-    type_id = ($ @).attr("obj_id")
+    type_id = obj.attr("obj_id")
     type = root.attr("type") 
-    mo = if ($ @).prop("checked") == false then "nil" else ($ @).attr("mo_id")
+    mo = if obj.prop("checked") == false then "nil" else obj.attr("mo_id")
 
     data={}
     data[type] = {}
@@ -21,18 +21,19 @@ $ ->
         root.find('.img_selector').each ->
           if ($ this).attr("mo_id") != mo
             ($ this).prop("checked", false)
+  
+  ($ '.img_selector').click ->
+    img_selector_click ($ @)
    
   #Delete Media Object
-  ($ 'a.media_object_delete').click (e) ->
-    e.preventDefault()
-    
-    if helpers.confirm_delete ($ @).attr('name')
+  delete_media_object = (obj) ->
+   if helpers.confirm_delete obj.attr('name')
       $.ajax
-        url: ($ @).attr("href")
+        url: obj.attr("href")
         type: 'DELETE'
         dataType: "json"
         success: =>
-          row = ($ @).parents('tr')
+          row = obj.parents('tr')
           row.find("div, input").hide_row () =>
             ($ 'tr').filter(':visible').each (idx) ->
               if idx % 2 is 0
@@ -42,6 +43,38 @@ $ ->
                 ($ @).removeClass 'feed-even'
                 ($ @).addClass 'feed-odd'
             row.remove()
+    
+    
+  ($ 'a.media_object_delete').click (e) ->
+    e.preventDefault()
+    delete_media_object ($ @)
+    
+   
+ 
+  add_media_object = (dom_element,obj) ->
+    root = ($ '#media_object_list')
+    table = root.find('#media_table')
+    object_id = root.attr("obj_id")
+
+    htmlStr =$ """
+    <tr><td id='media_icon'><div><img src="#{obj.filelink}" width="32" height="32"></div></td>
+    <td><div class="truncate"><a href="#{obj.filelink}">#{obj.filename}</div></td>
+    <td><div class="controls"><a href="/media_objects/#{obj.mo.id}">Edit</a> | <a class='media_object_delete' href='/media_objects/#{obj.mo.id}' name=#{obj.mo.name}>Delete</a></div></td>
+    <td><div class="center">#{if obj.mo.media_type == "image" then "<input type='checkbox' class='img_selector' name='img_selector' obj_id='#{object_id}' mo_id='#{obj.mo.id}'></input>" else ""}</div></td>
+    </tr>  
+    """
+    delete_btn = htmlStr.find(".media_object_delete")
+    img_select = htmlStr.find(".img_selector")
+    
+    delete_btn.click (e) ->
+      e.preventDefault()
+      delete_media_object ($ @)
+      
+    img_select.click (e) ->
+      img_selector_click ($ @)
+      
+    table.append htmlStr
+  
    
   #Hidden redactor upload
   ($ '#redactor_file_upload_btn').click ->
@@ -62,7 +95,14 @@ $ ->
       clearTags: ['script','applet','iframe']
       imageUpload: "/media_objects/saveMedia/#{path}"
       fileUpload: "/media_objects/saveMedia/#{path}"
+      fileUploadCallback: (x,y) ->
+        add_media_object(x,y)
+        true
+      imageUploadCallback: (x,y) ->
+        add_media_object(x,y)
+        true
+      
     
     root.find('.redactor_file_upload_hidden').redactor options
     root.find('.redactor_toolbar').hide()
-    root.find(".redactor_btn_image").trigger("click")
+    root.find('.redactor_btn_image').trigger("click")
