@@ -97,8 +97,18 @@ module ApplicationHelper
   def render_title
     "iSENSE - #{@namespace[:controller].capitalize}"
   end
-end
 
+  def is_admin?
+    if !@cur_user.nil?
+      if @cur_user.admin == true
+        logger.info "------"
+        logger.info "user is admin"
+        return true
+      end
+    end
+    return false
+  end
+ end 
 class String
   def to_bool
     return true if self == true || self =~ (/(true|t|yes|y|1)$/i)
