@@ -50,13 +50,20 @@ class TutorialsController < ApplicationController
   # POST /tutorials
   # POST /tutorials.json
   def create
-    @tutorial = Tutorial.new({user_id: @cur_user.id, title: "#{@cur_user.name}'s Tutorial"})
-
-    respond_to do |format|
-      if @tutorial.save
-        format.html { redirect_to @tutorial, notice: 'Tutorial was successfully created.' }
-        format.json { render json: @tutorial.to_hash(false), status: :created, location: @tutorial }
-      else
+    
+    if is_admin?
+      @tutorial = Tutorial.new({user_id: @cur_user.id, title: "#{@cur_user.name}'s Tutorial"})
+      respond_to do |format|
+        if @tutorial.save
+          format.html { redirect_to @tutorial, notice: 'Tutorial was successfully created.' }
+          format.json { render json: @tutorial.to_hash(false), status: :created, location: @tutorial }
+        else
+          format.html { render action: "new" }
+          format.json { render json: @tutorial.errors, status: :unprocessable_entity }
+        end
+      end
+    else
+      respond_to do |format|
         format.html { render action: "new" }
         format.json { render json: @tutorial.errors, status: :unprocessable_entity }
       end
