@@ -3,7 +3,7 @@ class MediaObject < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
 
   
-  attr_accessible :project_id, :media_type, :name, :data_set_id, :src, :user_id, :tutorial_id, :visualization_id, :title, :file_key, :hidden
+  attr_accessible :project_id, :media_type, :name, :data_set_id, :src, :user_id, :tutorial_id, :visualization_id, :title, :file_key, :hidden, :tn_file_key, :tn_src
   
   belongs_to :owner, class_name: "User", foreign_key: "user_id"
   belongs_to :project, class_name: "Project", foreign_key: "project_id" 
@@ -18,7 +18,6 @@ class MediaObject < ActiveRecord::Base
   validates :name, length: {maximum: 128}
   
   before_save :sanitize_media
-  
   before_destroy :aws_del
   
   def sanitize_media
@@ -42,7 +41,8 @@ class MediaObject < ActiveRecord::Base
       name: self.name,
       url: UrlGenerator.new.media_object_url(self),
       createdAt: self.created_at.strftime("%B %d, %Y"),
-      src: self.src
+      src: self.src,
+      tn_src: self.tn_src
     }
     
     if recurse
@@ -67,6 +67,29 @@ class MediaObject < ActiveRecord::Base
     h
   end
   
+  def add_tn()
+    if self.media_type == "image" and self.tn_file_key == "" and self.file_key != nil
+      #setup
+      s3ConfigFile = YAML.load_file('config/aws_config.yml')
+      s3 = AWS::S3.new(
+        :access_key_id => s3ConfigFile['access_key_id'],
+        :secret_access_key => s3ConfigFile['secret_access_key'])
+      
+      bucket = s3.buckets['isenseimgs']
+      self.tn_file_key = 'tn' + self.file_key
+      o = bucket.objects[self.tn_file_key]
+      
+      #make the thumbnail
+      image = MiniMagick::Image.open(self.src)
+      image.resize "128"
+      
+      #finish up
+      o.write image.to_blob
+      self.tn_src = o.public_url.to_s
+      self.save
+    end
+  end
+  
   private
   def aws_del()
     #Set up the link to S3
@@ -76,6 +99,12 @@ class MediaObject < ActiveRecord::Base
       :access_key_id => s3ConfigFile['access_key_id'],
       :secret_access_key => s3ConfigFile['secret_access_key'])
     
-    s3.buckets['isenseimgs'].objects[self.file_key].delete
+    if self.file_key != ""
+      s3.buckets['isenseimgs'].objects[self.file_key].delete
+    end
+    
+    if self.tn_file_key != ""
+      s3.buckets['isenseimgs'].objects[self.tn_file_key].delete
+    end
   end
 end
