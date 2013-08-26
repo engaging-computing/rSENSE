@@ -17,7 +17,6 @@ class MediaObject < ActiveRecord::Base
   
   validates :name, length: {maximum: 128}
   
-  after_create :add_tn
   before_save :sanitize_media
   before_destroy :aws_del
   
@@ -37,6 +36,7 @@ class MediaObject < ActiveRecord::Base
   
   def to_hash(recurse = true)
     h = {
+      id: self.id,
       mediaType: self.media_type,
       name: self.name,
       url: UrlGenerator.new.media_object_url(self),
@@ -67,24 +67,6 @@ class MediaObject < ActiveRecord::Base
     h
   end
   
-  private
-  def aws_del()
-    #Set up the link to S3
-    s3ConfigFile = YAML.load_file('config/aws_config.yml')
-  
-    s3 = AWS::S3.new(
-      :access_key_id => s3ConfigFile['access_key_id'],
-      :secret_access_key => s3ConfigFile['secret_access_key'])
-    
-    if self.file_key != ""
-      s3.buckets['isenseimgs'].objects[self.file_key].delete
-    end
-    
-    if self.tn_file_key != ""
-      s3.buckets['isenseimgs'].objects[self.tn_file_key].delete
-    end
-  end
-  
   def add_tn()
     if self.media_type == "image" and self.tn_file_key == "" and self.file_key != nil
       #setup
@@ -105,6 +87,24 @@ class MediaObject < ActiveRecord::Base
       o.write image.to_blob
       self.tn_src = o.public_url.to_s
       self.save
+    end
+  end
+  
+  private
+  def aws_del()
+    #Set up the link to S3
+    s3ConfigFile = YAML.load_file('config/aws_config.yml')
+  
+    s3 = AWS::S3.new(
+      :access_key_id => s3ConfigFile['access_key_id'],
+      :secret_access_key => s3ConfigFile['secret_access_key'])
+    
+    if self.file_key != ""
+      s3.buckets['isenseimgs'].objects[self.file_key].delete
+    end
+    
+    if self.tn_file_key != ""
+      s3.buckets['isenseimgs'].objects[self.tn_file_key].delete
     end
   end
 end

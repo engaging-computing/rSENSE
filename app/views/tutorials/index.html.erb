@@ -1,8 +1,7 @@
-<% if @cur_user != nil %>
-  <script>
-    window.logged_in = true;
-  </script>
-<%end%>
+<script>
+  window.logged_in = <%= @cur_user != nil %>;
+  window.is_admin = <%= is_admin? %>
+</script>
 
 <div class="row">
   <div class="span12">

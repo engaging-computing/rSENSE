@@ -297,6 +297,26 @@ input.object_hidden_checkbox
   height:92px;
 }
 
+.btn-navbar
+{
+  color: #FFFFFF;
+  background-repeat: repeat-x;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0);
+  border-color: #DAEFFF #1E66B0 #1E66B0;
+  background-color: #9ECEFF;
+  background-image: -moz-linear-gradient(top, #9ECEFF, #1E66B0);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#9ECEFF), to(#1E66B0));
+  background-image: -webkit-linear-gradient(top, #9ECEFF, #1E66B0);
+  background-image: -o-linear-gradient(top, #9ECEFF, #1E66B0);
+  background-image: linear-gradient(to bottom, #9ECEFF, #1E66B0);
+}
+
+.btn-navbar:hover
+{
+  color: #FFFFFF;
+  background-color: #1E66B0;
+}
+
 .visible-tablet, .visible-desktop, .visible-phone
 {  
 
@@ -306,7 +326,6 @@ input.object_hidden_checkbox
 
   
   .pillbox{
-    padding-top:25px;
     line-height:15px;
     font-size:15px;
     float:right;
