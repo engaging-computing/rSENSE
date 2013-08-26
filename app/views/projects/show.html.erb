@@ -120,9 +120,9 @@
         <table class="fields_table" project="<%=@project.id%>" can_delete_fields="<%if @project.data_sets.count>0%>false<%else%>true<%end%>" data-num_fields="<%=@project.fields.count%>">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Units</th>
-              <th>Type</th>
+              <th style="max-width:30%">Name</th>
+              <th style="max-width:30%">Units</th>
+              <th style="max-width:30%">Type</th>
             </tr>
           </thead>
           <tbody>
@@ -177,8 +177,8 @@
             <tbody>
               <% @project.visualizations.search(false).each do |vis|%>
                 <tr class="<%= cycle('feed-even', 'feed-odd')%> vis">
-                  <td>
-                    <div class="title truncate"><%= link_to vis.title, visualization_url(vis) %></div>
+                  <td style="max-width:200px" >
+                    <div class="truncate"><%= link_to vis.title, visualization_url(vis) %></div>
                   </td>
                   <td>
                     <div class="controls" style="float:right">

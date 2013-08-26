@@ -2,17 +2,17 @@
   <table id="media_table">
     <thead>
       <tr>
-        <th style="width:10%">File</th>
-        <th>Name</th>
-        <th style="width:20%"></th>
-        <th style="width:10%">Display</th>
+        <th style="max-width:10%">File</th>
+        <th style="max-widht:60%">Name</th>
+        <th style="max-widht:20%px"></th>
+        <th style="max-width:10%px">Display</th>
       </tr>
     </thead>
     <tbody>
       <% object.media_objects.all.each do |mo| %>
         <tr class="<%= cycle('feed-even','feed-odd') %> media">
           <td class="media_icon"><div><%=media_object_thumbnail_helper(mo)%></div></td>
-          <td><div class="truncate"><%= link_to mo.name, mo.src%></div></td>
+          <td style="max-width:150px;"><div class="truncate"><%= link_to mo.name, mo.src%></div></td>
           <td>
             <div class="controls">
               <% if can_edit? mo %>
