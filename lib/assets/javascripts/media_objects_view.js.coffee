@@ -57,8 +57,8 @@ $ ->
     object_id = root.attr("obj_id")
 
     htmlStr =$ """
-    <tr><td id='media_icon'><div><img src="#{obj.filelink}" width="32" height="32"></div></td>
-    <td style="max-width:150px"><div class="truncate"><a href="#{obj.filelink}">#{obj.filename}</div></td>
+    <tr><td id='media_icon'><div><img src="#{obj.mo.tn_src}" width="32" height="32"></div></td>
+    <td style="max-width:150px"><div class="truncate"><a href="#{obj.mo.src}">#{obj.filename}</div></td>
     <td><div class="controls"><a href="/media_objects/#{obj.mo.id}">Edit</a> | <a class='media_object_delete' href='/media_objects/#{obj.mo.id}' name=#{obj.mo.name}>Delete</a></div></td>
     <td><div class="center">#{if obj.mo.mediaType == "image" then "<input type='checkbox' class='img_selector' name='img_selector' obj_id='#{object_id}' mo_id='#{obj.mo.id}'></input>" else ""}</div></td>
     </tr>  
