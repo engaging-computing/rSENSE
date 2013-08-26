@@ -58,14 +58,14 @@ class TutorialsController < ApplicationController
           format.html { redirect_to @tutorial, notice: 'Tutorial was successfully created.' }
           format.json { render json: @tutorial.to_hash(false), status: :created, location: @tutorial }
         else
-          format.html { render action: "new" }
+          format.html { render :status => 404 }
           format.json { render json: @tutorial.errors, status: :unprocessable_entity }
         end
       end
     else
       respond_to do |format|
-        format.html { render action: "new" }
-        format.json { render json: @tutorial.errors, status: :unprocessable_entity }
+        format.html { render :status => 404 }
+        format.json { render json: @tutorial.errors, status: :forbidden }
       end
     end
   end
