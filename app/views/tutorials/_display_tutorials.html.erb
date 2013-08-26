@@ -1,8 +1,8 @@
 <div class="span3" id=<%=id%>> 
-  <div style="text-align:center">
+  <div class="hero-unit sub-hero">
     <span class="tutorial">
         <%if @tutorials[id.to_i] != nil %>
-          <a class="btn btn-primary btn-large" style="font-size:15pt !important; padding:20px; width:80%;" href="<%=tutorial_path(@tutorials[id.to_i])%>"><%=@tutorials[id.to_i].title%></a>
+          <h3><%= link_to @tutorials[id.to_i].title, tutorial_path(@tutorials[id.to_i]) %></h3>
           <%if @tutorials[id.to_i].media_objects.first != nil && false %>
             <img src=<%=@tutorials[id.to_i].media_objects.first.src%> style="height:150px" />
           <%end%>
