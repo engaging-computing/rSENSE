@@ -37,6 +37,7 @@ class MediaObject < ActiveRecord::Base
   
   def to_hash(recurse = true)
     h = {
+      id: self.id,
       mediaType: self.media_type,
       name: self.name,
       url: UrlGenerator.new.media_object_url(self),
