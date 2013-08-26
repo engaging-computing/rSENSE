@@ -37,7 +37,7 @@ class DataSetsController < ApplicationController
     if !params["data"].nil? and !params["headers"].nil?
       @project.fields.each do |field|
         params["headers"].each_with_index do |header, header_index|
-          if header == field.name
+          if header.to_i == field.id
             header_to_field_map.push header_index
           end
         end
@@ -212,12 +212,21 @@ class DataSetsController < ApplicationController
     # Generate field mappings
     @project.fields.each do |field|
       params[:headers].each_with_index do |header, header_index|
-        if header == field.name
+        if header.to_i == field.id
           header_to_field_map.push header_index
         end
       end
     end
-
+    
+    if header_to_field_map.count != @fields.count
+      #headers dont match... womp womp wahhhhh
+      errors.push "Number of headers (#{header_to_field_map.count}) does not match the number of fields (#{@fields.count})"
+      respond_to do |format|
+        format.json { render json: errors, status: :unprocessable_entity }
+      end
+      return
+    end
+    
     # Format data
     new_data = []
 
