@@ -1,10 +1,9 @@
-<div class="row">
+<div class="row" style="margin-bottom:20px;">
   <% (1..4).each do |i|%>
     <%= render "tutorials/display_tutorials", :id => "#{i}"%>
   <%end%>
 </div>
 
-<hr style="margin-top:0px;border-top-color:black;">
 <% if @featured_vis != nil%>
   <div class="row visible-desktop">
     <div class="span12">
