@@ -57,41 +57,41 @@
           
           <div style="float:left;vertical-align:text-bottom;line-height:15px;font-size:15px;">
             
-            <div class="visible-desktop visible-tablet" style="height:15px;padding-top:44px;">
-              <a class="white" href="/projects"><i class="icon-folder-open icon-white"> </i> Projects</a>&nbsp;&nbsp;&nbsp;
-              <a class="white" href="/users"><i class="icon-user icon-white"> </i> Users</a>&nbsp;&nbsp;&nbsp;
-              <a class="white" href="/visualizations"><i class="icon-picture icon-white"> </i> Visualizations</a>&nbsp;&nbsp;&nbsp;
-              <a class="white" href="/tutorials"><i class="icon-info-sign icon-white"> </i> Tutorials </a>
+            <div class="visible-desktop visible-tablet" style="height:15px;padding-top:25px;">
+              <a class="btn" href="/projects"><i class="icon-folder-open"> </i> Projects</a>&nbsp;
+              <a class="btn" href="/users"><i class="icon-user"> </i> Users</a>&nbsp;
+              <a class="btn" href="/visualizations"><i class="icon-picture"> </i> Visualizations</a>&nbsp;
+              <a class="btn" href="/tutorials"><i class="icon-info-sign"> </i> Tutorials </a>
             </div>
             
-            <div class="visible-phone" style="height:15px;padding-top:44px;position:absolute;left:11px;">
-              <a class="white" href="/projects"><i class="icon-folder-open icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
-              <a class="white" href="/users"><i class="icon-user icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
-              <a class="white" href="/visualizations"><i class="icon-picture icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
-              <a class="white" href="/tutorials"><i class="icon-info-sign icon-white"> </i> </a>
+            <div class="visible-phone" style="height:15px;padding-top:10px;margin-left:10px;">
+              <a class="btn" href="/projects"><i class="icon-folder-open"> </i> </a>&nbsp;
+              <a class="btn" href="/users"><i class="icon-user"> </i> </a>&nbsp;
+              <a class="btn" href="/visualizations"><i class="icon-picture"> </i> </a>&nbsp;
+              <a class="btn" href="/tutorials"><i class="icon-info-sign"> </i> </a>
             </div>
             
           </div>
           
           <!-- Pillbox Menu for both layouts -->
           <div class="visible-desktop visible-tablet">
-            <div class="pillbox desktop-tablet">
+            <div class="pillbox desktop-tablet" style="padding-top:25px;">
               <% if @cur_user == nil %>
                 <div class="btn-group">
                   <a href="" class="login btn btn-small btn-info white">Login</a>
                   <a href="<%= new_user_path %>" class="btn btn-small btn-info white">Register</a>
                 </div>
               <% else %>
-                <div class="btn-group">
+                <div class="btn-group">                  
                   <a class="btn btn-small btn-info white" href="<%= user_path(@cur_user) %>"><%= @cur_user.name %></a>
-                  <%= link_to 'Logout', login_path(), method: :delete, class: "btn btn-small btn-info" %>
+                  <%= link_to 'Logout', login_path(), method: :delete, class: "btn btn-small btn-info" %> 
                 </div>
               <% end %>
             </div>
           </div>
           
           <div class="visible-phone">
-            <div class="pillbox phone">
+            <div class="pillbox phone" style="padding-top:10px;">
               <% if @cur_user == nil %>
                 <div class="btn-group">
                   <a href="" class="login btn btn-small btn-info white">Login</a>
@@ -100,7 +100,9 @@
               <% else %>
                 <div class="btn-group">
                   <a class="btn btn-small btn-info white" href="<%= user_path(@cur_user) %>"><%= @cur_user.name %></a>
+                  
                   <%= link_to 'Logout', login_path(), method: :delete, class: "btn btn-small btn-info" %>
+                  
                 </div>
               <% end %>
             </div>
