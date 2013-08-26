@@ -50,3 +50,5 @@ gem 'coffeebeans'
 
 # Include newer version of WEBrick
 gem 'webrick', '1.3.1'
+
+gem 'mini_magick'
