@@ -101,8 +101,6 @@ module ApplicationHelper
   def is_admin?
     if !@cur_user.nil?
       if @cur_user.admin == true
-        logger.info "------"
-        logger.info "user is admin"
         return true
       end
     end
