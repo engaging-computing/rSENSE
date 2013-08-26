@@ -43,36 +43,44 @@ $ ->
               name: field_name.val()
               unit: ($ this).find('.field_unit').find("input").val()
               
-        $.ajax
-          url: '/projects/12/updateFields'
-          type: "post"
-          dataType: "json"
-          data: 
-            data
-          success: (msg) =>
-            table.find('.fields').each ->
-              ($ @).find('i').remove()
-              type_val = ($ @).find('.field_type').attr('value')
-              if(type_val not in ['Latitude','Longitude'])
-                field_name = ($ this).find(".field_name")
-                field_name_value = field_name.find("input").val()
-                field_name.html("<div>#{field_name_value}</div>")
-                field_unit = ($ this).find(".field_unit")
-                field_unit_value = field_unit.find("input").val()
-                field_unit.html("<div class='truncate'>#{field_unit_value}</div>")
-                row.hide()
-                ($ '.fields_edit_option').show()
+        if data['changes'] != {}
+          $.ajax
+            url: '/projects/12/updateFields'
+            type: "post"
+            dataType: "json"
+            data: 
+              data
+            success: (msg) =>
+              table.find('.fields').each ->
+                ($ @).find('i').remove()
+                type_val = ($ @).find('.field_type').attr('value')
+                if(type_val not in ['Latitude','Longitude'])
+                  field_name = ($ this).find(".field_name")
+                  field_name_value = field_name.find("input").val()
+                  field_name.html("<div>#{field_name_value}</div>")
+                  field_unit = ($ this).find(".field_unit")
+                  field_unit_value = field_unit.find("input").val()
+                  field_unit.html("<div class='truncate'>#{field_unit_value}</div>")
+                  row.hide()
+                  ($ '.fields_edit_option').show()
 
-          error: (msg) =>
-            errors = JSON.parse msg.responseText
-            for key,value of errors
-              tmp = root.find("[field_id='#{key}']").find("input")
-              tmp.errorFlash()
-              tmp.popover
-                content: value
-                placement: "left"
-                trigger: "manual"
-              tmp.popover "show"
+            error: (msg) =>
+              errors = JSON.parse msg.responseText
+              for key,value of errors
+                tmp = root.find("[field_id='#{key}']").find("input")
+                tmp.errorFlash()
+                tmp.popover
+                  content: value
+                  placement: "left"
+                  trigger: "manual"
+                tmp.popover "show"
+        else
+          console.log "in here"
+          table.find('.fields').each ->
+            type_val = ($ @).find('.field_type').attr('value')
+          row.hide()
+          ($ '.fields_edit_option').show()
+          ($ '#template_from_file').show()
       else
         row.hide()
         ($ '.fields_edit_option').show()
