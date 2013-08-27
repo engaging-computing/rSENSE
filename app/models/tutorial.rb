@@ -54,6 +54,10 @@ class Tutorial < ActiveRecord::Base
       ownerUrl: UrlGenerator.new.user_url(self.owner)
     }
     
+    if self.featured_media_id != nil
+      h.merge!({mediaSrc: self.media_objects.find(self.featured_media_id).tn_src})
+    end
+    
     if recurse
       h.merge! ({
         mediaObjects: self.media_objects.map {|o| o.to_hash false},
