@@ -111,7 +111,7 @@ $ ->
     #Set initial div sizes
     containerSize = ($ '#viscontainer').width()
     hiderSize     = ($ '#controlhider').outerWidth()
-    controlSize =  if globals.options? and globals.options.startCollasped?
+    controlSize =  if globals.options? and globals.options.startCollapsed?
       $("#control_hide_button").html('<')
       0
     else
@@ -120,9 +120,13 @@ $ ->
 
     visWidth = containerSize - (hiderSize + controlSize + 10)
     visHeight = ($ '#viscontainer').height() - ($ '#visTabList').outerHeight()
-
-    ($ '.vis_canvas').width  visWidth
-    ($ '.vis_canvas').height visHeight
+    
+    if globals.options? and globals.options.presentation?
+      ($ '.vis_canvas').width  "100%"
+      ($ '.vis_canvas').height "100%"
+    else
+      ($ '.vis_canvas').width  visWidth
+      ($ '.vis_canvas').height visHeight
     
     ($ '#controlhider').height visHeight
     
