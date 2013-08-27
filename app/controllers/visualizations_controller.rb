@@ -100,7 +100,7 @@ class VisualizationsController < ApplicationController
   # PUT /visualizations/1.json
   def update
     @visualization = Visualization.find(params[:id])
-    editUpdate  = params[:visualization].to_hash
+    editUpdate  = params[:visualization]
     hideUpdate  = editUpdate.extract_keys!([:hidden])
     adminUpdate = editUpdate.extract_keys!([:featured])
     success = false

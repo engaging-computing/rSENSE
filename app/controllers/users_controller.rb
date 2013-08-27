@@ -197,7 +197,7 @@ class UsersController < ApplicationController
   # PUT /users/1.json
   def update
     @user = User.find_by_username(params[:id])
-    editUpdate = params[:user].to_hash
+    editUpdate = params[:user]
     hideUpdate = editUpdate.extract_keys!([:hidden])
     success = false
     
