@@ -18,7 +18,7 @@ class MediaObjectsController < ApplicationController
   # PUT /media_objects/1.json
   def update
     @media_object = MediaObject.find(params[:id])
-    editUpdate = params[:media_object].to_hash
+    editUpdate = params[:media_object]
     success = false
     
     if can_edit? @media_object
