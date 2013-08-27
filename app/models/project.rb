@@ -14,7 +14,7 @@ class Project < ActiveRecord::Base
   before_save :sanitize_project
   
   has_many :fields
-  has_many :data_sets
+  has_many :data_sets, order: "created_at desc"
   has_many :media_objects
   has_many :likes
   has_many :visualizations
