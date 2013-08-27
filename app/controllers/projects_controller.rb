@@ -123,7 +123,7 @@ class ProjectsController < ApplicationController
   # PUT /projects/1.json
   def update
     @project = Project.find(params[:id])
-    editUpdate  = params[:project].to_hash
+    editUpdate  = params[:project]
     hideUpdate  = editUpdate.extract_keys!([:hidden])
     adminUpdate = editUpdate.extract_keys!([:featured, :is_template])
     success = false
