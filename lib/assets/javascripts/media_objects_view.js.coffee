@@ -24,7 +24,7 @@ $ ->
   
   ($ '.img_selector').click ->
     img_selector_click ($ @)
-   
+    
   #Delete Media Object
   delete_media_object = (obj) ->
    if helpers.confirm_delete obj.attr('name')
@@ -33,17 +33,14 @@ $ ->
         type: 'DELETE'
         dataType: "json"
         success: =>
+          recolored = false
           row = obj.parents('tr')
-          row.find("div, input").hide_row () =>
-            ($ 'tr').filter(':visible').each (idx) ->
-              if idx % 2 is 0
-                ($ @).addClass 'feed-even'
-                ($ @).removeClass 'feed-odd'
-              else
-                ($ @).removeClass 'feed-even'
-                ($ @).addClass 'feed-odd'
+          tbody = row.parents('tbody')
+          row.delete_row =>
             row.remove()
-    
+            tbody.recolor_rows(recolored)
+            recolored = true
+          
     
   ($ 'a.media_object_delete').click (e) ->
     e.preventDefault()
@@ -74,6 +71,7 @@ $ ->
       img_selector_click ($ @)
       
     table.append htmlStr
+    recolor_rows()
   
    
   #Hidden redactor upload

@@ -86,21 +86,6 @@ $ ->
         ($ '.fields_edit_option').show()
         ($ '#template_from_file').show()
         
-    ### SLIDE HIDE ###
-    delete_row = (row) ->     
-      row.find("div, input").hide_row =>  
-        row.remove()
-        recolor_rows() 
-    
-    recolor_rows = () ->
-      ($ 'tr.fields').filter(':visible').each (idx) -> 
-        if idx % 2 is 0
-          ($ @).addClass 'feed-even'
-          ($ @).removeClass 'feed-odd'
-        else
-          ($ @).removeClass 'feed-even'
-          ($ @).addClass 'feed-odd'   
-
     ### DELETE BUTTON CLICK ###
     remove_field = ->
       table = ($ '.fields_table')
@@ -119,7 +104,12 @@ $ ->
             data:
               project_id: table.attr('project')
             success: (msg) =>
-              delete_row row
+              recolored = false
+              tbody = row.parents('tbody')
+              row.delete_row =>
+                row.remove()
+                tbody.recolor_rows(recolored)
+                recolored = true
               table.data("num_fields",msg.num_fields)
               if msg.num_fields == 0
                 ($ '#create_data_set').hide()
@@ -138,7 +128,13 @@ $ ->
                 data:
                   project_id: table.attr('project')
                 success: (msg) =>
-                  delete_row ($ this)
+                  r = ($ this)
+                  recolored = false
+                  tbody = r.parents('tbody')
+                  r.delete_row =>
+                    r.remove()
+                    tbody.recolor_rows(recolored)
+                    recolored = true
                   table.data("num_fields",msg.num_fields)
                   if msg.num_fields == 0
                     ($ '#create_data_set').hide()
@@ -169,7 +165,7 @@ $ ->
       delete_field_btn.click remove_field
       delete_field_btn.show()
       table.append htmlStr
-      recolor_rows()
+      table.find("tbody").recolor_rows(false)
       
     ### ADD FIELD ###
     addField = (typeName) ->
