@@ -195,7 +195,7 @@ div.dataset.feed-even, div.dataset.feed-odd, div#dataset_list div.feed-top, div.
   padding-bottom:20px;
 }
 
-.fields_table, #viz_table, #media_table
+.fields_table, #viz_table, #media_table, #dataset_table
 {
   width: 100%;
   
@@ -208,6 +208,7 @@ div.dataset.feed-even, div.dataset.feed-odd, div#dataset_list div.feed-top, div.
     padding-bottom: 5px;
     padding-top:    5px;
   }
+  
   input
   {
     margin-bottom: 0px;
@@ -215,5 +216,10 @@ div.dataset.feed-even, div.dataset.feed-odd, div#dataset_list div.feed-top, div.
   .controls
   {
     font-size: .75em;
+  }
+  .gravatar, .media_icon{
+    display:inline-block; 
+    vertical-align: middle;
+    width: 32px;
   }
 }

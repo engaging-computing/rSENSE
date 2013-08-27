@@ -177,12 +177,13 @@ $ ->
 
     #Select all/none check box in the data sets box
     ($ "#check_selector").click ->
+      root = ($ @).parents("table")
       if ($ this).is(":checked")
-        ($ this).parent().parent().parent().find("[id^=ds_]").each (i,j) =>
+        root.find("[id^=ds_]").each (i,j) =>
           ($ j).prop("checked",true)
         ($ '#vis_button').prop("disabled",false)
       else
-        ($ this).parent().parent().parent().find("[id^=ds_]").each (i,j) =>
+        root.find("[id^=ds_]").each (i,j) =>
           ($ j).prop("checked",false)
           ($ '#vis_button').prop("disabled",true)
 
@@ -192,6 +193,8 @@ $ ->
       ($ document).find("[id^=ds_]").each (i,j) =>
         if(($ j).is(":checked"))
           should_disable = false
+        else
+          ($ '#check_selector').prop("checked",false)
         $('#vis_button').prop("disabled", should_disable)
         
     check_for_selection()
@@ -241,16 +244,13 @@ $ ->
           data_set:
             hidden: true
         success: =>
-          row = ($ @).parents('div.dataset')
-          row.hide_row () =>
-            ($ 'div#dataset_list div.dataset').filter(':visible').each (idx) ->
-              if idx % 2 is 0
-                ($ @).addClass 'feed-even'
-                ($ @).removeClass 'feed-odd'
-              else
-                ($ @).removeClass 'feed-even'
-                ($ @).addClass 'feed-odd'
+            recolored = false
+            row = ($ @).parents('tr')
+            tbody = row.parents('tbody')
+            row.delete_row =>
               row.remove()
+              tbody.recolor_rows(recolored)
+              recolored = true
               
     ($ 'a.data_set_delete').click (e) ->
   
@@ -262,17 +262,14 @@ $ ->
           type: 'DELETE'
           dataType: "json"
           success: =>
-            row = ($ @).parents('div.dataset')
-            row.hide_row () =>
-              ($ 'div#dataset_list div.dataset').filter(':visible').each (idx) ->
-                if idx % 2 is 0
-                  ($ @).addClass 'feed-even'
-                  ($ @).removeClass 'feed-odd'
-                else
-                  ($ @).removeClass 'feed-even'
-                  ($ @).addClass 'feed-odd'
+            recolored = false
+            row = ($ @).parents('tr')
+            tbody = row.parents('tbody')
+            row.delete_row =>
               row.remove()
-      
+              tbody.recolor_rows(recolored)
+              recolored = true
+              
     ## controls for saved vizes  
     ($ 'a.viz_hide').click (e) ->
       e.preventDefault()
