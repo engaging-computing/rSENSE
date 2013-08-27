@@ -130,14 +130,15 @@ class MediaObjectsController < ApplicationController
     #If we managed to make some params build the media object and write to S3
     if(defined? @mo)      
     
-      #Generate a media object with the calculated params
-      MediaObject.create(@mo)
-    
       #Write the file to S3
       o.write file: filePath
       
+      #Generate a media object with the calculated params
+      mo = MediaObject.create(@mo)
+      mo.add_tn
+      
       #Tell redactor where the image is located
-      render json: {filelink: o.public_url.to_s, filename: fileName}
+      render json: {filelink: o.public_url.to_s, filename: fileName, mo: mo.to_hash}
 
     else
       
