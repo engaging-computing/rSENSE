@@ -272,23 +272,7 @@ $ ->
                   ($ @).removeClass 'feed-even'
                   ($ @).addClass 'feed-odd'
               row.remove()
-
-    ## SLIDE HIDE ###
-    delete_row = (row) ->     
-      row.find("div, input").hide_row =>  
-        row.remove()
-        recolor_rows() 
-    
-    recolor_rows = () ->
-      ($ 'tr').filter(':visible').each (idx) -> 
-        if idx % 2 is 0
-          ($ @).addClass 'feed-even'
-          ($ @).removeClass 'feed-odd'
-        else
-          ($ @).removeClass 'feed-even'
-          ($ @).addClass 'feed-odd'   
-          
-              
+      
     ## controls for saved vizes  
     ($ 'a.viz_hide').click (e) ->
       e.preventDefault()
@@ -301,8 +285,13 @@ $ ->
           visualization:
             hidden: true
         success: =>
+          recolored = false
           row = ($ @).parents('tr')
-          delete_row row
+          tbody = row.parents('tbody')
+          row.delete_row =>
+            row.remove()
+            tbody.recolor_rows(recolored)
+            recolored = true
               
     ($ 'a.viz_delete').click (e) ->
       e.preventDefault()
@@ -313,7 +302,12 @@ $ ->
           type: 'DELETE'
           dataType: "json"
           success: =>
+            recolored = false
             row = ($ @).parents('tr')
-            delete_row row
+            tbody = row.parents('tbody')
+            row.delete_row =>
+              row.remove()
+              tbody.recolor_rows(recolored)
+              recolored = true
               
               
