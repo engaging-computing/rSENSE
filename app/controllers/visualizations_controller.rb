@@ -46,17 +46,25 @@ class VisualizationsController < ApplicationController
     @Data = { savedData: @visualization.data, savedGlobals: @visualization.globals }
 
     recur = params.key?(:recur) ? params[:recur].to_bool : false
-
+    
+    options = {}
+    
+    # Detect presentation mode (and force embed)
+    if params.try(:[], :presentation) and params[:presentation]
+      @presentation = true
+      options[:presentation] = 1
+      params[:embed] = true
+    else
+      @presentation = false
+    end
+    
     respond_to do |format|
       format.html do
         if params.try(:[], :embed) and params[:embed]
-          @Globals = { options: {startCollasped: 1, isEmbed: 1} }
-          
+          options[:isEmbed] = 1
+          options[:startCollapsed] = 1
+          @Globals = { options: options }
           render 'embed', :layout => 'embedded'
-        elsif params.try(:[], :notabs) and params[:notabs]
-          @Globals = { options: {startCollasped: 1, isEmbed: 1} }
-
-          render 'notabs', :layout => 'embedded'
         else
           render :layout => 'applicationWide' 
         end
@@ -266,17 +274,25 @@ class VisualizationsController < ApplicationController
 
     # The finalized data object
     @Data = { projectName: @project.title, projectID: @project.id, fields: data_fields, dataPoints: format_data, metadata: metadata, relVis: rel_vis, allVis: allVis }
+
+    options = {}
+    
+    # Detect presentation mode (and force embed)
+    if params.try(:[], :presentation) and params[:presentation]
+      @presentation = true
+      options[:presentation] = 1
+      params[:embed] = true
+    else
+      @presentation = false
+    end
     
     respond_to do |format|
       format.html do
         if params.try(:[], :embed) and params[:embed]
-          @Globals = { options: {startCollasped: 1, isEmbed: 1} }
-          
+          options[:isEmbed] = 1
+          options[:startCollapsed] = 1
+          @Globals = { options: options }
           render 'embed', :layout => 'embedded'
-        elsif params.try(:[], :notabs) and params[:notabs]
-          @Globals = { options: {startCollasped: 1, isEmbed: 1} }
-
-          render 'notabs', :layout => 'embedded'
         else
           render :layout => 'applicationWide' 
         end
