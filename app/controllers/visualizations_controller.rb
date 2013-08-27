@@ -53,6 +53,10 @@ class VisualizationsController < ApplicationController
           @Globals = { options: {startCollasped: 1, isEmbed: 1} }
           
           render 'embed', :layout => 'embedded'
+        elsif params.try(:[], :notabs) and params[:notabs]
+          @Globals = { options: {startCollasped: 1, isEmbed: 1} }
+
+          render 'notabs', :layout => 'embedded'
         else
           render :layout => 'applicationWide' 
         end
@@ -269,6 +273,10 @@ class VisualizationsController < ApplicationController
           @Globals = { options: {startCollasped: 1, isEmbed: 1} }
           
           render 'embed', :layout => 'embedded'
+        elsif params.try(:[], :notabs) and params[:notabs]
+          @Globals = { options: {startCollasped: 1, isEmbed: 1} }
+
+          render 'notabs', :layout => 'embedded'
         else
           render :layout => 'applicationWide' 
         end
