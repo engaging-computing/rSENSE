@@ -106,3 +106,4 @@ $ ->
     root.find('.redactor_file_upload_hidden').redactor options
     root.find('.redactor_toolbar').hide()
     root.find('.redactor_btn_image').trigger("click")
+    $('.redactor_tabs_act').siblings("a").hide() #Hide the link tab for media upload
