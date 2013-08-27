@@ -56,7 +56,7 @@
                     </div>
                   </td>
                   <td style="max-width:60px"><div class="truncate"><%= link_to s.owner.name, user_path(s.owner) %></div></td>
-                  <td style="max-width:240px"><div class="truncate"><%= link_to s.title, "#{params[:id]}/data_sets/#{s.id}" %></div></td>
+                  <td style="max-width:200px"><div class="truncate"><%= link_to s.title, "#{params[:id]}/data_sets/#{s.id}" %></div></td>
                   <td>
                     <div class="controls pull-right">
                       <a class="data_set_export" href="/projects/<%= @project.id %>/export/data_sets/<%= s.id %>">Export</a>
