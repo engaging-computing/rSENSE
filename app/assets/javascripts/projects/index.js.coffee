@@ -6,13 +6,15 @@ $ ->
     addItem = (object) ->
       newItem =   "<div class='item word-break'>"
       
-      newItem +=  "<h4 class='center' style='margin-top:0px;'><a href='#{object.url}'>#{object.name}</a></h4>"
+      newItem +=  "<h4 class='center' style='margin-top:0px;'><a href='#{object.url}'>#{object.name}</a>"
+      
+      if(object.featured)
+        newItem += "<span style='color:#57C142'> (featured)</span>"
+        
+      newItem += "</h4>"
 
       if(object.mediaSrc)
         newItem += "<div class='center'><a href='#{object.url}'><img src='#{object.mediaSrc}'></img></a></div>"
-
-      if(object.featured)
-        newItem += "<span style='color:#57C142'> (featured)</span>"
 
       newItem +=  "<b>Owner: </b><a href='#{object.ownerUrl}'>#{object.ownerName}</a><br />"
       newItem +=  "<b>Created: </b>#{object.timeAgoInWords} ago (on #{object.createdAt})<br />"
