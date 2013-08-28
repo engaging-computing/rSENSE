@@ -388,7 +388,7 @@ input.object_hidden_checkbox
 {
   display:inline-block;
   overflow-x: hidden;
-  height:230px;
+  height:250px;
   @media screen and (max-width: 599px) {
     width: 250px !important;
   }
@@ -436,7 +436,8 @@ input.object_hidden_checkbox
   line-height:50px;
   display:inline-block;
   color: white;
-  padding: 1px 18px 0px 18px;
+  font-size: 12pt;
+  padding: 1px 17px 0px 17px;
 }
 .navbar-btn:hover
 {
