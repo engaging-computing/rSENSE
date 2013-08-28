@@ -31,6 +31,12 @@ body
   overflow-x: hidden;
   text-overflow: ellipsis;
 }
+.twolines
+{
+  word-wrap: break-word;
+  overflow: hidden;
+  max-height: 2.4em;
+}
 
 div.info_text
 {
@@ -268,7 +274,7 @@ input.object_hidden_checkbox
   border-bottom: 1px solid black;
   width:100%;
   background-color:#113;
-  height:72px;
+  height:50px;
   z-index:2000;
   top:0px;
   left:0px;
@@ -295,26 +301,6 @@ input.object_hidden_checkbox
   bottom:0;
   width:100%;
   height:35px;
-}
-
-.btn-navbar
-{
-  color: #FFFFFF;
-  background-repeat: repeat-x;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0);
-  border-color: #DAEFFF #1E66B0 #1E66B0;
-  background-color: #9ECEFF;
-  background-image: -moz-linear-gradient(top, #9ECEFF, #1E66B0);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#9ECEFF), to(#1E66B0));
-  background-image: -webkit-linear-gradient(top, #9ECEFF, #1E66B0);
-  background-image: -o-linear-gradient(top, #9ECEFF, #1E66B0);
-  background-image: linear-gradient(to bottom, #9ECEFF, #1E66B0);
-}
-
-.btn-navbar:hover
-{
-  color: #FFFFFF;
-  background-color: #1E66B0;
 }
 
 .visible-tablet, .visible-desktop, .visible-phone
@@ -396,4 +382,65 @@ input.object_hidden_checkbox
 .redactor_box textarea, .redactor_box textarea:focus
 {
   color: #444;
+}
+
+.projectsCarousel
+{
+  display:inline-block;
+  overflow-x: hidden;
+  height:250px;
+  @media screen and (max-width: 599px) {
+    width: 250px !important;
+  }
+  @media screen and (min-width: 600px) {
+    width: 400px !important;
+  }
+  @media screen and (min-width: 800px) {
+    width: 600px !important;
+  }
+  @media screen and (min-width: 980px) {
+    width: 800px !important;
+  }
+  @media screen and (min-width: 1200px) {
+    width: 1000px !important;
+  }
+}
+
+.carousel-cell
+{
+  width: 250px;
+}
+
+.carousel-arrow
+{
+  font-size: 20pt;
+  text-align:center;
+  color: white;
+  background: #888;
+  border-color: #fff;
+  border-radius: 23px;
+  width:35px;
+  height:35px;
+  display: inline-block;
+  position: relative;
+  top: -110px;
+}
+.carousel-arrow:hover
+{
+  color: white;
+  background: #555;
+}
+
+.navbar-btn
+{
+  line-height:50px;
+  display:inline-block;
+  color: white;
+  font-size: 12pt;
+  padding: 1px 17px 0px 17px;
+}
+.navbar-btn:hover
+{
+  color:white;
+  background:#649ce5;
 }
