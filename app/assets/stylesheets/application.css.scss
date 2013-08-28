@@ -397,3 +397,50 @@ input.object_hidden_checkbox
 {
   color: #444;
 }
+
+.projectsCarousel
+{
+  display:inline-block;
+  overflow-x: hidden;
+  height:230px;
+  @media screen and (max-width: 599px) {
+    width: 250px !important;
+  }
+  @media screen and (min-width: 600px) {
+    width: 400px !important;
+  }
+  @media screen and (min-width: 800px) {
+    width: 600px !important;
+  }
+  @media screen and (min-width: 980px) {
+    width: 800px !important;
+  }
+  @media screen and (min-width: 1200px) {
+    width: 1000px !important;
+  }
+}
+
+.carousel-cell
+{
+  width: 250px;
+}
+
+.carousel-arrow
+{
+  font-size: 20pt;
+  text-align:center;
+  color: white;
+  background: #888;
+  border-color: #fff;
+  border-radius: 23px;
+  width:35px;
+  height:35px;
+  display: inline-block;
+  position: relative;
+  top: -100px;
+}
+.carousel-arrow:hover
+{
+  color: white;
+  background: #555;
+}
