@@ -58,7 +58,7 @@ class FieldsController < ApplicationController
   # PUT /fields/1.json
   def update
     @field = Field.find(params[:id])
-    editUpdate  = params[:field].to_hash
+    editUpdate  = params[:field]
     success = false
     
     #EDIT REQUEST

@@ -100,52 +100,6 @@ input.projects_add_filter_checkbox
   margin-top: 0px;
 }
 
-div.dataset.feed-even, div.dataset.feed-odd, div#dataset_list div.feed-top, div.mediaobject, div.viz.feed-even, div.viz.feed-odd, div#viz_list {
-  
-  padding: 2px 5px 2px 5px;
-  
-  .control_block{
-    font-size: .75em;
-    display:inline-block; 
-    float:right;
-    
-    .control{
-      float:left;
-      margin-right:20px;
-      padding-top:7px;
-    }
-  }
- 
-  .gravatar, .media_icon{
-    display:inline-block; 
-    vertical-align: middle;
-    width:32px;
-  }
-  
-  .links{
-    display:inline-block; 
-    margin: 5px 0px;
-    
-    .owner{
-      width:110px; 
-      padding-left:4px;
-      display: inline-block;
-    }
-    
-    .title{
-      width:220px; 
-      display: inline-block;
-    }
-  }
-  
-  .ds_selector{
-    width:15px; 
-    padding-top:7px;
-    display:inline-block;
-  }
-  
-}
-
 .hoverimage{
   height: 75px;
 }
@@ -195,7 +149,7 @@ div.dataset.feed-even, div.dataset.feed-odd, div#dataset_list div.feed-top, div.
   padding-bottom:20px;
 }
 
-.fields_table, #viz_table, #media_table
+.fields_table, #viz_table, #media_table, #dataset_table
 {
   width: 100%;
   
@@ -208,6 +162,7 @@ div.dataset.feed-even, div.dataset.feed-odd, div#dataset_list div.feed-top, div.
     padding-bottom: 5px;
     padding-top:    5px;
   }
+  
   input
   {
     margin-bottom: 0px;
@@ -215,5 +170,15 @@ div.dataset.feed-even, div.dataset.feed-odd, div#dataset_list div.feed-top, div.
   .controls
   {
     font-size: .75em;
+  }
+  .gravatar, .media_icon{
+    display:inline-block; 
+    vertical-align: middle;
+    width: 32px;
+  }
+  .ds_selector{
+    width:15px; 
+    padding-top:7px;
+    display:inline-block;
   }
 }
