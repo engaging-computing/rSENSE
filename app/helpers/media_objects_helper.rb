@@ -29,7 +29,7 @@ module MediaObjectsHelper
     img_size = '32x32'
     icon_size = '32x32'
     if mo.media_type == 'image'
-      image_tag(mo.src, :size => img_size)
+      image_tag(mo.tn_src, :size => img_size)
     elsif mo.media_type == 'text'
       image_tag('mime-icons/text.png', :size => icon_size)
     elsif mo.media_type == 'pdf'

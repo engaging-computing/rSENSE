@@ -46,12 +46,24 @@ class VisualizationsController < ApplicationController
     @Data = { savedData: @visualization.data, savedGlobals: @visualization.globals }
 
     recur = params.key?(:recur) ? params[:recur].to_bool : false
-
+    
+    options = {}
+    
+    # Detect presentation mode (and force embed)
+    if params.try(:[], :presentation) and params[:presentation]
+      @presentation = true
+      options[:presentation] = 1
+      params[:embed] = true
+    else
+      @presentation = false
+    end
+    
     respond_to do |format|
       format.html do
         if params.try(:[], :embed) and params[:embed]
-          @Globals = { options: {startCollasped: 1, isEmbed: 1} }
-          
+          options[:isEmbed] = 1
+          options[:startCollapsed] = 1
+          @Globals = { options: options }
           render 'embed', :layout => 'embedded'
         else
           render :layout => 'applicationWide' 
@@ -70,6 +82,44 @@ class VisualizationsController < ApplicationController
   # POST /visualizations.json
   def create
     params[:visualization][:user_id] = @cur_user.id
+    
+    # Remove any piggybacking updates
+    if params[:visualization].try(:[], :tn_file_key)
+      params[:visualization].delete :tn_file_key
+    end
+    if params[:visualization].try(:[], :tn_src)
+      params[:visualization].delete :tn_src
+    end
+    
+    #Try to make a thumbnail
+    if params[:visualization].try(:[], :svg)
+      begin
+        image = MiniMagick::Image.read(params[:visualization][:svg], '.svg')
+        image.format 'png'
+        image.resize '128'
+        
+        s3ConfigFile = YAML.load_file('config/aws_config.yml')
+        s3 = AWS::S3.new(
+          :access_key_id => s3ConfigFile['access_key_id'],
+          :secret_access_key => s3ConfigFile['secret_access_key'])
+      
+        bucket = s3.buckets['isenseimgs']
+        fileKey = SecureRandom.uuid() + ".svg"
+        while Visualization.find_by_tn_file_key(fileKey) != nil
+          fileKey = SecureRandom.uuid() + ".svg"
+        end
+        o = bucket.objects[fileKey]
+        o.write image.to_blob
+        
+        params[:visualization][:tn_file_key] = fileKey
+        params[:visualization][:tn_src] = o.public_url.to_s
+        
+      rescue MiniMagick::Invalid => err
+        logger.info "Failed to create thumbnail."
+      end
+      params[:visualization].delete :svg
+    end
+    
     @visualization = Visualization.new(params[:visualization])
 
     respond_to do |format|
@@ -88,7 +138,7 @@ class VisualizationsController < ApplicationController
   # PUT /visualizations/1.json
   def update
     @visualization = Visualization.find(params[:id])
-    editUpdate  = params[:visualization].to_hash
+    editUpdate  = params[:visualization]
     hideUpdate  = editUpdate.extract_keys!([:hidden])
     adminUpdate = editUpdate.extract_keys!([:featured])
     success = false
@@ -262,12 +312,24 @@ class VisualizationsController < ApplicationController
 
     # The finalized data object
     @Data = { projectName: @project.title, projectID: @project.id, fields: data_fields, dataPoints: format_data, metadata: metadata, relVis: rel_vis, allVis: allVis }
+
+    options = {}
+    
+    # Detect presentation mode (and force embed)
+    if params.try(:[], :presentation) and params[:presentation]
+      @presentation = true
+      options[:presentation] = 1
+      params[:embed] = true
+    else
+      @presentation = false
+    end
     
     respond_to do |format|
       format.html do
         if params.try(:[], :embed) and params[:embed]
-          @Globals = { options: {startCollasped: 1, isEmbed: 1} }
-          
+          options[:isEmbed] = 1
+          options[:startCollapsed] = 1
+          @Globals = { options: options }
           render 'embed', :layout => 'embedded'
         else
           render :layout => 'applicationWide' 

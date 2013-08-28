@@ -48,50 +48,52 @@
         <div class="container">
           
           <!-- iSENSE Logos for both layouts -->
-          <div style="float:left;padding-top:10px;">
+          <div style="float:left;line-height:43px;">
             <a href="/">
-              <img class="visible-desktop visible-tablet" src="/assets/isense-logo.png" style="height:50px;width:206px;margin-left:-24px;" />
+              <img class="visible-desktop visible-tablet" src="/assets/isense-logo.png" style="height:35px;width:144px;" />
               <img class="visible-phone" src="/assets/isense-logo.png" style="height:25px;width:103px;margin-left:10px;" />
             </a>
           </div>
           
-          <div style="float:left;vertical-align:text-bottom;line-height:15px;font-size:15px;">
+          <div style="float:left;vertical-align:text-bottom;height:50px;font-size:15px;">
             
-            <div class="visible-desktop visible-tablet" style="height:15px;padding-top:44px;">
-              <a class="white" href="/projects"><i class="icon-folder-open icon-white"> </i> Projects</a>&nbsp;&nbsp;&nbsp;
-              <a class="white" href="/users"><i class="icon-user icon-white"> </i> Users</a>&nbsp;&nbsp;&nbsp;
-              <a class="white" href="/visualizations"><i class="icon-picture icon-white"> </i> Visualizations</a>&nbsp;&nbsp;&nbsp;
-              <a class="white" href="/tutorials"><i class="icon-info-sign icon-white"> </i> Tutorials </a>
+            <div class="visible-desktop visible-tablet" style="margin-left:10px;height:50px;">
+              <a class="navbar-btn" href="/news"><i class="icon-book icon-white"></i> News</a>
+              <a class="navbar-btn" href="/projects"><i class="icon-folder-open icon-white"></i> Projects</a>
+              <a class="navbar-btn" href="/users"><i class="icon-user icon-white"></i> Users</a>
+              <a class="navbar-btn" href="/visualizations"><i class="icon-picture icon-white"></i> Visualizations</a>
+              <a class="navbar-btn" href="/tutorials"><i class="icon-info-sign icon-white"></i> Tutorials </a>
             </div>
             
-            <div class="visible-phone" style="height:15px;padding-top:44px;position:absolute;left:11px;">
-              <a class="white" href="/projects"><i class="icon-folder-open icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
-              <a class="white" href="/users"><i class="icon-user icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
-              <a class="white" href="/visualizations"><i class="icon-picture icon-white"> </i> </a>&nbsp;&nbsp;&nbsp;
-              <a class="white" href="/tutorials"><i class="icon-info-sign icon-white"> </i> </a>
+            <div class="visible-phone btn-group" style="height:15px;padding-top:10px;margin-left:10px;">
+              <a class="navbar-btn" href="/news"><i class="icon-book icon-white"></i> </a>
+              <a class="navbar-btn" href="/projects"><i class="icon-folder-open icon-white"> </i> </a>
+              <a class="navbar-btn" href="/users"><i class="icon-user icon-white"> </i> </a>
+              <a class="navbar-btn" href="/visualizations"><i class="icon-picture icon-white"> </i> </a>
+              <a class="navbar-btn" href="/tutorials"><i class="icon-info-sign icon-white"> </i> </a>
             </div>
             
           </div>
           
           <!-- Pillbox Menu for both layouts -->
           <div class="visible-desktop visible-tablet">
-            <div class="pillbox desktop-tablet">
+            <div class="pillbox desktop-tablet" style="line-height:50px;">
               <% if @cur_user == nil %>
                 <div class="btn-group">
                   <a href="" class="login btn btn-small btn-info white">Login</a>
                   <a href="<%= new_user_path %>" class="btn btn-small btn-info white">Register</a>
                 </div>
               <% else %>
-                <div class="btn-group">
+                <div class="btn-group">                  
                   <a class="btn btn-small btn-info white" href="<%= user_path(@cur_user) %>"><%= @cur_user.name %></a>
-                  <%= link_to 'Logout', login_path(), method: :delete, class: "btn btn-small btn-info" %>
+                  <%= link_to 'Logout', login_path(), method: :delete, class: "btn btn-small btn-info" %> 
                 </div>
               <% end %>
             </div>
           </div>
           
           <div class="visible-phone">
-            <div class="pillbox phone">
+            <div class="pillbox phone" style="padding-top:10px;">
               <% if @cur_user == nil %>
                 <div class="btn-group">
                   <a href="" class="login btn btn-small btn-info white">Login</a>
@@ -100,7 +102,9 @@
               <% else %>
                 <div class="btn-group">
                   <a class="btn btn-small btn-info white" href="<%= user_path(@cur_user) %>"><%= @cur_user.name %></a>
+                  
                   <%= link_to 'Logout', login_path(), method: :delete, class: "btn btn-small btn-info" %>
+                  
                 </div>
               <% end %>
             </div>
@@ -109,7 +113,7 @@
       </div>
       
       <!-- Main Container -->
-      <div style="padding:72px 0px 92px 0px;margin:0;min-height:100%;margin-right:40px">
+      <div style="padding:50px 0px 70px 0px;margin:0;min-height:100%;margin-right:40px">
         <div class="container mainContent mc-wide">
           <%= yield %>
         </div>

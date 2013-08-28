@@ -14,7 +14,7 @@ class Project < ActiveRecord::Base
   before_save :sanitize_project
   
   has_many :fields
-  has_many :data_sets
+  has_many :data_sets, order: "created_at desc"
   has_many :media_objects
   has_many :likes
   has_many :visualizations
@@ -69,7 +69,7 @@ class Project < ActiveRecord::Base
     }
     
     if self.featured_media_id != nil
-      h.merge!({mediaSrc: self.media_objects.find(self.featured_media_id).src})
+      h.merge!({mediaSrc: self.media_objects.find(self.featured_media_id).tn_src})
     end
     
     if recurse

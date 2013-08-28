@@ -26,9 +26,6 @@ $ ->
             ($ 'span.edit_menu span.info_text').text(name)
             ($ '#name_box').modal('hide')
 
-
-
-
     respond_csv = ( resp ) ->
       ($ "#match_table").html ''
       ($ "#match_table").append "<tr><th> Experiment Field </th> <th> CSV Header </th></tr>"
@@ -180,12 +177,13 @@ $ ->
 
     #Select all/none check box in the data sets box
     ($ "#check_selector").click ->
+      root = ($ @).parents("table")
       if ($ this).is(":checked")
-        ($ this).parent().parent().parent().find("[id^=ds_]").each (i,j) =>
+        root.find("[id^=ds_]").each (i,j) =>
           ($ j).prop("checked",true)
         ($ '#vis_button').prop("disabled",false)
       else
-        ($ this).parent().parent().parent().find("[id^=ds_]").each (i,j) =>
+        root.find("[id^=ds_]").each (i,j) =>
           ($ j).prop("checked",false)
           ($ '#vis_button').prop("disabled",true)
 
@@ -195,6 +193,8 @@ $ ->
       ($ document).find("[id^=ds_]").each (i,j) =>
         if(($ j).is(":checked"))
           should_disable = false
+        else
+          ($ '#check_selector').prop("checked",false)
         $('#vis_button').prop("disabled", should_disable)
         
     check_for_selection()
@@ -244,16 +244,13 @@ $ ->
           data_set:
             hidden: true
         success: =>
-          row = ($ @).parents('div.dataset')
-          row.hide_row () =>
-            ($ 'div#dataset_list div.dataset').filter(':visible').each (idx) ->
-              if idx % 2 is 0
-                ($ @).addClass 'feed-even'
-                ($ @).removeClass 'feed-odd'
-              else
-                ($ @).removeClass 'feed-even'
-                ($ @).addClass 'feed-odd'
+            recolored = false
+            row = ($ @).parents('tr')
+            tbody = row.parents('tbody')
+            row.delete_row =>
               row.remove()
+              tbody.recolor_rows(recolored)
+              recolored = true
               
     ($ 'a.data_set_delete').click (e) ->
   
@@ -265,40 +262,16 @@ $ ->
           type: 'DELETE'
           dataType: "json"
           success: =>
-            row = ($ @).parents('div.dataset')
-            row.hide_row () =>
-              ($ 'div#dataset_list div.dataset').filter(':visible').each (idx) ->
-                if idx % 2 is 0
-                  ($ @).addClass 'feed-even'
-                  ($ @).removeClass 'feed-odd'
-                else
-                  ($ @).removeClass 'feed-even'
-                  ($ @).addClass 'feed-odd'
+            recolored = false
+            row = ($ @).parents('tr')
+            tbody = row.parents('tbody')
+            row.delete_row =>
               row.remove()
-
-    ($ 'a.media_object_delete').click (e) ->
-      e.preventDefault()
-      
-      if helpers.confirm_delete ($ @).attr('name')
-        $.ajax
-          url: ($ @).attr("href")
-          type: 'DELETE'
-          dataType: "json"
-          success: =>
-            row = ($ @).parents('div.mediaobject')
-            row.hide_row () =>
-              ($ 'div#media_object_list div.mediaobject').filter(':visible').each (idx) ->
-                if idx % 2 is 0
-                  ($ @).addClass 'feed-even'
-                  ($ @).removeClass 'feed-odd'
-                else
-                  ($ @).removeClass 'feed-even'
-                  ($ @).addClass 'feed-odd'
-              row.remove()
+              tbody.recolor_rows(recolored)
+              recolored = true
               
-    ## controls for saved vizes
+    ## controls for saved vizes  
     ($ 'a.viz_hide').click (e) ->
-    
       e.preventDefault()
       
       $.ajax
@@ -309,19 +282,15 @@ $ ->
           visualization:
             hidden: true
         success: =>
-          row = ($ @).parents('div.viz')
-          row.hide_row () =>
-            ($ 'div#viz_list div.viz').filter(':visible').each (idx) ->
-              if idx % 2 is 0
-                ($ @).addClass 'feed-even'
-                ($ @).removeClass 'feed-odd'
-              else
-                ($ @).removeClass 'feed-even'
-                ($ @).addClass 'feed-odd'
-              row.remove()
+          recolored = false
+          row = ($ @).parents('tr')
+          tbody = row.parents('tbody')
+          row.delete_row =>
+            row.remove()
+            tbody.recolor_rows(recolored)
+            recolored = true
               
     ($ 'a.viz_delete').click (e) ->
-  
       e.preventDefault()
       
       if helpers.confirm_delete ($ @).attr('name')
@@ -330,15 +299,12 @@ $ ->
           type: 'DELETE'
           dataType: "json"
           success: =>
-            row = ($ @).parents('div.viz')
-            row.hide_row () =>
-              ($ 'div#viz_list div.viz').filter(':visible').each (idx) ->
-                if idx % 2 is 0
-                  ($ @).addClass 'feed-even'
-                  ($ @).removeClass 'feed-odd'
-                else
-                  ($ @).removeClass 'feed-even'
-                  ($ @).addClass 'feed-odd'
+            recolored = false
+            row = ($ @).parents('tr')
+            tbody = row.parents('tbody')
+            row.delete_row =>
               row.remove()
+              tbody.recolor_rows(recolored)
+              recolored = true
               
               

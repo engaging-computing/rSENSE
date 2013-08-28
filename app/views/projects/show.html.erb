@@ -24,77 +24,72 @@
         </div>
       </div>
 
-      <!-- project content -->
+      <!-- ##### PROJECT CONTENT/REDACTOR ##### -->
       <%=render layout: "shared/box", locals: {title: 'Description', width: '7', unique_id: 'description', should_hide: false} do %>
         <%= project_redactor_helper (can_edit? @project) %>
       <%end%>
 
 
-      <!-- data sets -->
+      <!-- ##### DATA SETS MENU ##### -->
       <%=render layout: "shared/box", locals: {title: 'Data Sets', width: '7', unique_id: 'data_sets', should_hide: false} do %>
         <div id="dataset_list" <% if @data_sets.count == 0 %> style="display:none;" <% end %> >
-        
-          <div class="text-left" style="padding: 2px 5px 2px 5px">
-            <input type="button" class="btn btn-info" style="margin-bottom: 10px;" value="Visualize" id="vis_button" href="/projects/<%=@project.id%>/data_sets/"/>
-            <div class="pull-right">
-              <input type="checkbox" id="check_selector" checked/>
-            </div>
-          </div>
+          <table id="dataset_table">
+            <thead>
+              <tr>
+                <th colspan="3"><input type="button" class="btn btn-info" style="margin-bottom: 10px;" value="Visualize" id="vis_button" href="/projects/<%=@project.id%>/data_sets/"/></th>
+                <th></th>
+                <th>         
+                  <div class="pull-right">
+                    <input type="checkbox" id="check_selector" checked/>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @data_sets.each do |s| %>
+                <tr class="<%= cycle('feed-even', 'feed-odd')%> dataset" style="position:relative">
+                  <td class="gravatar">
+                    <div >
+                      <%if Gravatar.new.url(s.owner, 32) != nil%>
+                        <%= image_tag Gravatar.new.url(s.owner, 32)%>
+                      <%end%>
+                    </div>
+                  </td>
+                  <td style="max-width:60px"><div class="truncate"><%= link_to s.owner.name, user_path(s.owner) %></div></td>
+                  <td style="max-width:200px"><div class="truncate"><%= link_to s.title, "#{params[:id]}/data_sets/#{s.id}" %></div></td>
+                  <td>
+                    <div class="controls pull-right">
+                      <a class="data_set_export" href="/projects/<%= @project.id %>/export/data_sets/<%= s.id %>">Export</a>
 
-          <% @data_sets.each do |s| %>
+                      <% if can_edit? s %>
+                        | <a class="data_set_edit" href="<%= edit_data_set_path s %>">Edit</a>
+                      <% end %>
 
-            <div class="<%= cycle('feed-even', 'feed-odd')%> dataset" style="position:relative">
+                      <% if can_hide? s %>
+                        | <a class="data_set_hide" href="<%= data_set_url s %>">Hide</a>
+                      <% end %>
 
-              <div class="gravatar">
-                <%if Gravatar.new.url(s.owner, 32) != nil%>
-                  <%= image_tag Gravatar.new.url(s.owner, 32)%>
-                <%end%>
-              </div>
-
-              <div class="links">
-                <div class="owner truncate">
-                  <%= link_to s.owner.name, user_path(s.owner) %>
-                </div>
-
-                <div class="title truncate">
-                  <%= link_to s.title, "#{params[:id]}/data_sets/#{s.id}" %>
-                </div>
-              </div>
-
-              <div class="control_block">
-
-                <div class="control">
-                  <a class="data_set_export" href="/projects/<%= @project.id %>/export/data_sets/<%= s.id %>">Export</a>
-
-                  <% if can_edit? s %>
-                     | <a class="data_set_edit" href="<%= edit_data_set_path s %>">Edit</a>
-                  <% end %>
-
-                  <% if can_hide? s %>
-                     | <a class="data_set_hide" href="<%= data_set_url s %>">Hide</a>
-                  <% end %>
-
-                  <% if can_delete? s %>
-                     | <a class="data_set_delete" href="<%= data_set_url s %>" name="<%= s.title %>">Delete</a>
-                  <% end %>
-                </div>
-
-                <div class="ds_selector">
-                  <input type="checkbox" class="pull-right" id="ds_<%=s.id%>" checked/>
-                </div>
-              </div>
-
-            </div>
-          <%end%>
-          <!--<div class="feed-bottom"> </div>-->
+                      <% if can_delete? s %>
+                        | <a class="data_set_delete" href="<%= data_set_url s %>" name="<%= s.title %>">Delete</a>
+                      <% end %>
+                    </div>
+                  </td>
+                  <td><div class="ds_selector"><input type="checkbox" class="pull-right" id="ds_<%=s.id%>" checked/></div></td>
+                </tr>
+              <% end %> 
+            </tbody>
+          
+          </table>
         </div>
-    <%end%>
+      <%end%>
+    </div>
   </div>
-  </div>
+  
 
   <div class="span5">
     <div class="row">
-      <!-- session creation -->
+    
+      <!-- ##### SESSION CREATION MENU ##### -->
       <%=render layout: "shared/box", locals: {title: 'Create Data Set', width:'5', unique_id: 'create_data_set', should_hide: !(@project.fields.count() > 0)} do %>
       <div class="row-fluid">
         <div class="span4 center">
@@ -115,14 +110,14 @@
       </div>
       <% end %>
 
-      <!-- field -->
-      <%= render layout: "shared/box", locals: {title: 'Fields', width: '5', unique_id: 'fieldsnew', should_hide: false} do%>
-        <table class="fields_table" project="<%=@project.id%>" can_delete_fields="<%if @project.data_sets.count>0%>false<%else%>true<%end%>" style="width:100%;">
+      <!-- ##### FIELDS MENU ##### -->
+      <%= render layout: "shared/box", locals: {title: 'Fields', width: '5', unique_id: 'fields', should_hide: false} do%>
+        <table class="fields_table" project="<%=@project.id%>" can_delete_fields="<%if @project.data_sets.count>0%>false<%else%>true<%end%>" data-num_fields="<%=@project.fields.count%>">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Units</th>
-              <th>Type</th>
+              <th style="max-width:30%">Name</th>
+              <th style="max-width:30%">Units</th>
+              <th style="max-width:30%">Type</th>
             </tr>
           </thead>
           <tbody>
@@ -161,48 +156,42 @@
         <%end%>
       <% end %>
 
-      <!-- media objects -->
+      <!-- ##### MEDIA OBJECTS MENU ##### -->
       <%=render layout: "shared/box", locals: {title: 'Media', width: '5', unique_id: 'media', should_hide: false} do %>
         <%=render "shared/media_objects_view", {type: 'project', object: @project}%>
       <%end%>
             
-            
-            <!-- saved data sets -->
-            <%=render layout: "shared/box", locals: {title: 'Visualizations', width: '5', unique_id: 'visualizations', should_hide: false} do %>
-              <div id="viz_list" <% if @project.visualizations.count == 0 %> style="display:none;" <% end %> >
-      
-                <% @project.visualizations.search(false).each do |vv| %>
-      
-                  <div class="<%= cycle('feed-even', 'feed-odd')%> viz" style="position:relative">
-      
-                    <div class="links">
-      
-                      <div class="title truncate">
-                        <%= link_to vv.title, visualization_url(vv) %>
-                      </div>
+        
+      <!-- ##### SAVED VISUALIZATIONS MENU ##### -->
+      <%=render layout: "shared/box", locals: {title: 'Visualizations', width: '5', unique_id: 'visualizations', should_hide: false} do %>
+        <div id="viz_list" <% if @project.visualizations.count == 0 %> style="display:none;" <% end %> >
+          <table id="viz_table">
+            <thead>
+              <tr><th>Name</th><th></th></tr>
+            </thead>
+            <tbody>
+              <% @project.visualizations.search(false).each do |vis|%>
+                <tr class="<%= cycle('feed-even', 'feed-odd')%> vis">
+                  <td style="max-width:200px" >
+                    <div class="truncate"><%= link_to vis.title, visualization_url(vis) %></div>
+                  </td>
+                  <td>
+                    <div class="controls" style="float:right">
+                      <% if can_hide? vis %>
+                        <a class="viz_hide" href="<%= visualization_url vis %>">Hide</a>
+                      <% end %>
+                      <% if can_delete? vis %>
+                         | <a class="viz_delete" href="<%= visualization_url vis %>" name="<%= vis.title %>">Delete</a>
+                      <% end %>
                     </div>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>  
+        </div>
+      <%end%>
       
-                    <div class="control_block">
-      
-                      <div class="control">
-                              
-                        <% if can_hide? vv %>
-                           <a class="viz_hide" href="<%= visualization_url vv %>">Hide</a>
-                        <% end %>
-      
-                        <% if can_delete? vv %>
-                           | <a class="viz_delete" href="<%= visualization_url vv %>" name="<%= vv.title %>">Delete</a>
-                        <% end %>
-                      </div>
-
-                    </div>
-      
-                  </div>
-                <%end%>
-                <!--<div class="feed-bottom"> </div>-->
-              </div>
-          <%end%>
-       
     </div>
   </div>
 </div>
