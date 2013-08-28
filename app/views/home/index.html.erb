@@ -26,10 +26,10 @@
       <li class="carousel-cell">
         <div style="width:240px;">
           <%if i != nil%>
-            <div class='item word-break' style="height:190px; text-align:center;">
+            <div class='item' style="height:190px; text-align:center; position:relative">
+              <h4 class="twolines" style='margin-top:5px; text-align:left;'><%= link_to i.title, project_path(i) %></h4>
               <%if i.featured_media_id != nil%><a href="/projects/#{i.id}"><img style="max-height:110px;" src=<%=MediaObject.find(i.featured_media_id).src%>></img></a><%end%>
-              <h4 style='margin-top:5px; text-align:left;'><%= link_to i.title, project_path(i) %></h4>
-              <div style="text-align:left;"><span style="color:#888;">By</span> <%= link_to i.owner.name, user_path(i.owner) %></div>
+              <div style="text-align:left; position:absolute; bottom:10px"><span style="color:#888;">By</span> <%= link_to i.owner.name, user_path(i.owner) %></div>
             </div>
           <%end%>
         </div>
