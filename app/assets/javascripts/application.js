@@ -35,6 +35,7 @@
 //= require bootstrap-datetimepicker.js
 //= require editTable
 //= require media_objects_view.js.coffee
+//= require jcarousellite.min.js
 //
 // Visualization stuff follows
 //
