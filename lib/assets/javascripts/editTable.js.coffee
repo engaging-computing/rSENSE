@@ -127,32 +127,42 @@ $ ->
         # variable to keep track of our table
 
         table = @
-
-        # separate columns by field type/validator
-
+        
         num_cols = []
         lat_cols = []
         lon_cols = []
         text_cols = []
         time_cols = []
 
-        ($ table).find('th').each (index) ->
-          type = ($ @).attr 'data-field-type'
+        update_headers = () ->
+          # separate columns by field type/validator
 
-          switch type
-            when "Timestamp" then time_cols.push index
-            when "Text" then text_cols.push index
-            when "Number" then num_cols.push index
-            when "Latitude" then lat_cols.push index
-            when "Latitude" then add_map()
-            when "Longitude" then lon_cols.push index
+          num_cols = []
+          lat_cols = []
+          lon_cols = []
+          text_cols = []
+          time_cols = []
+
+          ($ table).find('th').each (index) ->
+            type = ($ @).attr 'data-field-type'
+  
+            switch type
+              when "Timestamp" then time_cols.push index
+              when "Text" then text_cols.push index
+              when "Number" then num_cols.push index
+              when "Latitude" then lat_cols.push index
+              when "Latitude" then add_map()
+              when "Longitude" then lon_cols.push index
 
         ### FUNCTIONS ###
+        
+        update_headers()
 
         remove_row = (row) ->
           ($ row).closest('tr').remove()
 
         add_validators = (row) ->
+          update_headers()
           # attach validators
           for col in num_cols
             do (col) ->
@@ -165,7 +175,17 @@ $ ->
           for col in lon_cols
             do (col) ->
               ($ row).children().eq(col).find('input').replaceWith "<div class='input-append'><input class='validate_longitude input-small' id='appendedInput' type='text' value='#{ ($ row).find('input').eq(col).val() }' /><span class='add-on'><a href='#' ><i class='icon-globe map_picker'></i></a></span></div>"
-
+              ($ row).children().eq(col).find('.map_picker').unbind().click ->
+                ($ this).closest("tr").addClass('target')
+                previous_lon = ($ this).closest('tr').find('.validate_longitude').val()
+                previous_lat = ($ this).closest('tr').find('.validate_latitude').val()
+                if (previous_lat != "") and (previous_lon != "")
+                  location = new google.maps.LatLng(previous_lat, previous_lon)
+                  window.marker.setPosition(location)
+                  window.map.setCenter(location)
+                  ($ '#address').val("")
+                ($ '#map_picker').modal()
+                
           for col in text_cols
             do (col) ->
               ($ row).children().eq(col).find('input').addClass 'validate_text'
@@ -173,7 +193,8 @@ $ ->
           for col in time_cols
             do (col) ->
               ($ row).children().eq(col).find('input').replaceWith "<div class='input-append datepicker'><input class='validate_timestamp input-small' type='text' data-format='yyyy/MM/dd hh:mm:ss' value='#{ ($ row).find('input').eq(col).val() }' /><span class='add-on'><a href='#'><i class='icon-calendar'></i></a></span></div>"
-
+              ($ row).children().eq(col).find('.datepicker').unbind().datetimepicker()
+              
 
         add_row = (tab) ->
 
@@ -197,7 +218,7 @@ $ ->
 
           # bind map button
           ($ '.new_row').find('.map_picker').click ->
-            ($ this).closest("tr").addClass('target')
+            ($ @).closest("tr").addClass('target')
             previous_lon = ($ this).closest('tr').find('.validate_longitude').val()
             previous_lat = ($ this).closest('tr').find('.validate_latitude').val()
             if (previous_lat != "") and (previous_lon != "")
@@ -205,7 +226,7 @@ $ ->
               window.marker.setPosition(location)
               window.map.setCenter(location)
               ($ '#address').val("")
-            ($ '#map_picker').modal();
+            ($ '#map_picker').modal()
             
           # bind time to input
           ($ '.new_row').find('.datepicker').datetimepicker()
@@ -273,6 +294,8 @@ $ ->
           ajax_data =
             headers: head
             data: table_data
+            
+          console.log ajax_data
 
           ($ '#edit_table_add').addClass 'disabled'
           ($ '#edit_table_save').button 'loading'
@@ -292,8 +315,6 @@ $ ->
                 remote.push e.id
               local = ajax_data.headers
               
-              console.log ajax_data
-
               ($ remote).each (index, field) ->
                 if !(field in local)
                   add_fields.push( data.fields[index] )
