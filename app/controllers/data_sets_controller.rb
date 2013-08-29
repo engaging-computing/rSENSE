@@ -103,7 +103,7 @@ class DataSetsController < ApplicationController
   # PUT /data_sets/1.json
   def update
     @data_set = DataSet.find(params[:id])
-    editUpdate  = params[:data_set].to_hash
+    editUpdate  = params[:data_set]
     hideUpdate  = editUpdate.extract_keys!([:hidden])
     success = false
 
