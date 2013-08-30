@@ -84,15 +84,11 @@
           <div class="visible-desktop visible-tablet">
             <div class="pillbox desktop-tablet" style="line-height:50px;">
               <% if @cur_user == nil %>
-                <div class="btn-group">
-                  <a href="" class="login btn btn-small btn-info white">Login</a>
-                  <a href="<%= new_user_path %>" class="btn btn-small btn-info white">Register</a>
-                </div>
+                  <a href="" class="login navbar-btn">Login</a>
+                  <a href="<%= new_user_path %>" class="navbar-btn">Register</a>
               <% else %>
-                <div class="btn-group">                  
-                  <a class="btn btn-small btn-info white" href="<%= user_path(@cur_user) %>"><%= @cur_user.name %></a>
-                  <%= link_to 'Logout', login_path(), method: :delete, class: "btn btn-small btn-info" %> 
-                </div>
+                  <a class="navbar-btn" href="<%= user_path(@cur_user) %>"><%= @cur_user.name %></a>
+                  <%= link_to 'Logout', login_path(), method: :delete, class: "navbar-btn" %> 
               <% end %>
             </div>
           </div>
