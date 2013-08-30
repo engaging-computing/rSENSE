@@ -372,6 +372,14 @@ $ ->
           if ($ tab).find('td').has('.input-small').length == 0
             alert "You must enter at least one row of data."
             return false
+            
+          # Check that there is at least one value
+          noInput = true
+          ($ tab).find('td').has('.input-small').each ->
+              noInput = noInput and (($ @).find('.input-small').val() == "")
+          if noInput
+            alert "You must enter at least one item of data."
+            return false
 
           if ($ 'input').hasClass 'invalid'
             false
