@@ -1,0 +1,15 @@
+<p id="notice"><%= notice %></p>
+
+<div class="row">
+  <div class="span8"><%= news_edit_menu_helper false%></div>
+
+  <%=render layout: "shared/box", locals: {title: 'Content', width: '12', unique_id: 'content', should_hide: false} do %>
+    <%= news_redactor_helper (can_edit? @news) %>
+  <%end%>
+
+  <!-- media objects -->
+  <%=render layout: "shared/box", locals: {title: 'Media', width: '5', unique_id: 'media', should_hide: false} do %>
+    <%=render "shared/media_objects_view", {type: 'news', object: @news} %>
+  <%end%>
+
+</div>
