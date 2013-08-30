@@ -10,9 +10,9 @@ $ ->
     data={}
     data[type] = {}
     data[type]["featured_media_id"] = mo
-
+ 
     $.ajax
-      url: "/#{type}s/#{type_id}"
+      url: ""
       type: "PUT"
       dataType: "json"
       data:

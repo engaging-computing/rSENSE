@@ -1,4 +1,7 @@
 Rsense::Application.routes.draw do
+  resources :news
+
+
   resources :media_objects
 
   post "projects/:id/templateFields" => "projects#templateFields"
