@@ -38,6 +38,24 @@ $ ->
     a string with the new VID.
     ###
     globals.saveVis = (title, desc, succCallback, failCallback) ->
+    
+        modal = """
+        <div id="loadModal" class="modal fade well" style="width:400px">
+          <div class="center">
+            <img src="/assets/spinner.gif" />
+          </div>
+        </div>
+        """
+        ($ 'body').append modal
+        ($ "#loadModal").modal
+          backdrop: 'static'
+          keyboard: 'false'
+    
+        svg = if globals.curVis.chart?
+          globals.curVis.chart.getSVG()
+        else
+          undefined
+          
         savedData = globals.serializeVis()
 
         ## construct default name
@@ -61,11 +79,13 @@ $ ->
                 title: name
                 data: savedData.data
                 globals: savedData.globals
+                svg: svg
             success: (msg) ->
+              ($ "#loadModal").modal('hide')
               helpers.name_popup msg, "Visualization", "visualization"
             error: (jqxhr, status, error) ->
               alert "Somthing went horribly wrong"
-              console.log [status, error]
+              console.log [jqxhr, status, error]
 
     ###
     Ajax call to check if the user is logged in. Calls the appropriate

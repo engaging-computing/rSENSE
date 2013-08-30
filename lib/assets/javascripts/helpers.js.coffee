@@ -70,3 +70,29 @@ $ ->
         masonry:
           columnWidth: $(selector).width()/numCols
     true
+    
+  $.fn.delete_row = (callback = null)->
+    $(@).find('div, input').each ->
+      prop = 
+        height: "0px"
+        opacity: 0
+          
+      options =
+        duration: 400
+        always: () ->
+          ($ this).hide()
+          if callback isnt null
+            callback()
+    
+      ($ this).animate prop, options
+
+  
+  $.fn.recolor_rows = (recolored = false)-> 
+    if not recolored
+      ($ @).find("tr").each (idx) -> 
+        if idx % 2 is 0
+          ($ @).addClass 'feed-even'
+          ($ @).removeClass 'feed-odd'
+        else
+          ($ @).removeClass 'feed-even'
+          ($ @).addClass 'feed-odd'    
