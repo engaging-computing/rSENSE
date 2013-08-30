@@ -440,21 +440,26 @@ class ProjectsController < ApplicationController
         
         col.each_with_index do |c, i|
           c.each do |dp|
-            if( dp[0] != "")
-              # IF ANY DATAPOINT IN THE SET IS NAN
-              if( dp[0].to_i == 0 and (dp[0] != "0" or dp[0] != "" ) )
+            logger.info dp
+            if dp[0] != "" and dp[0] != nil
+              begin
+                f = Float(dp[0])
+                
+                # Check lat Bounds
+                if (f <-90.0 or f > 90.0)
+                  p_fields[i][3] = ""
+                end
+                
+                # Check lon Bounds
+                if (f <-180.0 or f > 180.0)
+                  p_fields[i][4] = ""
+                end
+                
+              rescue
+                # Cell is not a number
                 p_fields[i][1] = ""
-              end
-
-              # IF ANY DATA POINT EXCEEDS LAT/LON 
-              if( dp[0].to_f > 180 or dp[0].to_f < -180 or (dp[0].to_i == 0 and (dp[0] != "0" or dp[0] != "" )))
                 p_fields[i][3] = ""
                 p_fields[i][4] = ""
-              end
-
-              # IF ANY DATA POINT IS A FLOAT IT CAN'T BE A TIMESTAMP
-              if( dp[0].to_i.to_f.to_s != dp[0].to_f.to_s )
-                p_fields[i][0] = ""
               end
             end
           end

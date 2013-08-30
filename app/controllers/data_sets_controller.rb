@@ -198,7 +198,7 @@ class DataSetsController < ApplicationController
     
     @project = Project.find(params[:id])
     @fields = @project.fields
-    header_to_field_map = []
+    header_to_field_map = {}
     success = false
     defaultName = ""
     
@@ -213,7 +213,7 @@ class DataSetsController < ApplicationController
     @project.fields.each do |field|
       params[:headers].each_with_index do |header, header_index|
         if header.to_i == field.id
-          header_to_field_map.push header_index
+          header_to_field_map["#{field.id}"] =  header_index
         end
       end
     end
@@ -234,17 +234,17 @@ class DataSetsController < ApplicationController
 
       row = {}
 
-      header_to_field_map.each do |htf, htf_index|
-        if params["data"]["#{htf}"][row_index] == ""
-          if @fields[htf].field_type == 3
+      header_to_field_map.each do |key, value|
+        if params["data"]["#{value}"][row_index] == ""
+          if @fields.find(key.to_i).field_type == 3
             val = ""
           else
             val = nil
           end
         else
-          val = params["data"]["#{htf}"][row_index]
+          val = params["data"]["#{value}"][row_index]
         end
-        row["#{@fields[htf].id}"] = val
+        row["#{key}"] = val
       end
 
 
