@@ -295,7 +295,7 @@ $ ->
             headers: head
             data: table_data
             
-          console.log ajax_data
+          #console.log ajax_data
 
           ($ '#edit_table_add').addClass 'disabled'
           ($ '#edit_table_save').button 'loading'
@@ -324,7 +324,7 @@ $ ->
                   field_deleted = true
                   
               if field_deleted
-                alert "Someone changed this projects fields. Refreshing..."
+                alert "The project owner deleted a field/fields while you were entering data. Unfortunately we must refresh the page (losing data) to correct the fields."
                 location.reload true
 
               if add_fields.length == 0
@@ -337,6 +337,8 @@ $ ->
                   success: settings.upload.success
                   
               else
+              
+                alert "The project owner added a field/fields while you were entering data. We are adding these new fields for you now, press save again to submit data with the new fields."
                     
                 ($ add_fields).each (index, element) ->
                   ($ table).find('thead tr').eq(0).append("<th data-field-type='#{settings.type(element.type)}' data-field-id='#{element.id}' data-field-name='#{element.name}'>#{element.name}</th>")
@@ -365,6 +367,11 @@ $ ->
 
         # does it pass?
         table_validates = (tab) ->
+        
+          #Check for zero rows
+          if ($ tab).find('td').has('.input-small').length == 0
+            alert "You must enter at least one row of data."
+            return false
 
           if ($ 'input').hasClass 'invalid'
             false
