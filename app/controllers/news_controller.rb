@@ -5,7 +5,7 @@ class NewsController < ApplicationController
   include ApplicationHelper
   
   def index
-    @news = News.where(:hidden => false)
+    @news = News.where(:hidden => false).order("created_at DESC").limit(5)
 
     respond_to do |format|
       format.html # index.html.erb
