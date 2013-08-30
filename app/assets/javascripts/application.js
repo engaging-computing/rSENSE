@@ -36,6 +36,7 @@
 //= require editTable
 //= require media_objects_view.js.coffee
 //= require jcarousellite.min.js
+//= require titlebar.js.coffee
 //
 // Visualization stuff follows
 //
