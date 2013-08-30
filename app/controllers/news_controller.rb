@@ -1,8 +1,11 @@
 class NewsController < ApplicationController
   # GET /news
   # GET /news.json
+  skip_before_filter :authorize, only: [:show, :index]
+  include ApplicationHelper
+  
   def index
-    @news = News.last(3)
+    @news = News.where(:hidden => false)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -21,17 +24,6 @@ class NewsController < ApplicationController
     end
   end
 
-  # GET /news/new
-  # GET /news/new.json
-  def new
-    @news = News.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @news }
-    end
-  end
-
   # GET /news/1/edit
   def edit
     @news = News.find(params[:id])
@@ -40,15 +32,21 @@ class NewsController < ApplicationController
   # POST /news
   # POST /news.json
   def create
-    @news = News.new(params[:news])
-
-    respond_to do |format|
-      if @news.save
-        format.html { redirect_to @news, notice: 'News was successfully created.' }
-        format.json { render json: @news, status: :created, location: @news }
-      else
-        format.html { render action: "new" }
-        format.json { render json: @news.errors, status: :unprocessable_entity }
+    if is_admin?
+      @news = News.new({user_id: @cur_user.id, title: "New Blog Entry"})
+      respond_to do |format|
+        if @news.save
+          format.html { redirect_to @news, notice: 'News entry was successfully created.' }
+          format.json { render json: @news.to_hash(false), status: :created, location: @news }
+        else
+          format.html { render :status => 404 }
+          format.json { render json: @news.errors, status: :unprocessable_entity }
+        end
+      end
+    else
+      respond_to do |format|
+        format.html { render :status => 403 }
+        format.json { render json: @news.errors, status: :forbidden }
       end
     end
   end

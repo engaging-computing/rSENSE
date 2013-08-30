@@ -1,6 +1,6 @@
 class News < ActiveRecord::Base
   
-  attr_accessible :title, :content, :summary, :featured_media_id
+  attr_accessible :title, :content, :summary, :featured_media_id, :user_id, :hidden
   validates :title, length: {maximum: 128}
   validates :summary, length: {maximum: 256}
   has_many :media_objects
