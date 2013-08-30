@@ -5,7 +5,7 @@ $ ->
     root = ($ '#media_object_list')
     type_id = obj.attr("obj_id")
     type = root.attr("type") 
-    mo = if obj.prop("checked") == false then "nil" else obj.attr("mo_id")
+    mo = if obj.prop("checked") == false then null else obj.attr("mo_id")
 
     data={}
     data[type] = {}
