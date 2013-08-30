@@ -75,7 +75,13 @@ div.info_text
 
 div#login_box
 {
+    position:absolute;
+    width:400px;
+    height:144px;
     display: none;
+    top:48px;
+    left:50%;
+    margin-left:-200px;
 }
 
 input.login_field
@@ -86,7 +92,7 @@ input.login_field
 button.login_button
 {
     float: right;
-    margin: 15px 0px 0px 0px;
+    margin: 15px 0px 0px 10px;
 }
 
 button.cancel_login_button
