@@ -1,6 +1,8 @@
 Rsense::Application.routes.draw do
+  
+  match '/news/add', to: 'news#create'
   resources :news
-
+ 
 
   resources :media_objects
 
@@ -71,6 +73,8 @@ Rsense::Application.routes.draw do
 
   match "/projects/:id/updateFields" => "fields#updateFields"
 
+
+  
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

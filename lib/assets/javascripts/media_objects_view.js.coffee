@@ -71,7 +71,7 @@ $ ->
       img_selector_click ($ @)
       
     table.append htmlStr
-    recolor_rows()
+    table.recolor_rows()
   
    
   #Hidden redactor upload
