@@ -8,15 +8,17 @@ $ ->
     addItem = (object) ->
       newItem =   "<div class='item word-break'>"
 
-      if(object.mediaSrc)
-        newItem += "<a href='#{object.url}'><img src='#{object.mediaSrc}'></img></a>"
-
-      newItem +=  "<h4 style='margin-top:0px;'><a href='#{object.url}'>#{helpers.truncate object.name, 128}</a>"
-
+      newItem +=  "<h4 class='center' style='margin-top:0px;'><a href='#{object.url}'>#{object.name}</a>"
+      
       if(object.featured)
         newItem += "<span style='color:#57C142'> (featured)</span>"
+        
+      newItem += "</h4>"
 
-      newItem +=  "</h4><b>Owner: </b><a href='#{object.ownerUrl}'>#{object.ownerName}</a><br />"
+      if(object.mediaSrc)
+        newItem += "<div class='center'><a href='#{object.url}'><img src='#{object.mediaSrc}'></img></a></div>"
+
+      newItem +=  "<b>Owner: </b><a href='#{object.ownerUrl}'>#{object.ownerName}</a><br />"
       newItem +=  "<b>Project: </b><a href='#{object.projectUrl}'>#{object.projectName}</a><br />"
       newItem +=  "<b>Created: </b>#{object.timeAgoInWords} ago (on #{object.createdAt})<br />"
 
