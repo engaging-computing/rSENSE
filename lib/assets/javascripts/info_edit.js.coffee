@@ -1,14 +1,14 @@
 $ ->
   ($ '.info_edit_link').click (e)->
     e.preventDefault()
-  
+    
     #Root div that everything should be in.
     root = ($ @).parents('.edit_info')
    
     #value should be the current value of the info box
     val = root.attr('value')
     val = val.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;")
-   
+
     #href should be /type/id e.g. /users/jim
     href = ($ @).attr('href')
 
@@ -36,7 +36,7 @@ $ ->
       root.find('i').addClass 'icon-refresh'
       root.find('span.btn').addClass 'disabled'
       root.find('span.btn').button 'toggle'
-      
+
       #Make the request to update 
       $.ajax
         url: href
@@ -60,6 +60,7 @@ $ ->
         error: (j, s, t) =>
           edit_box.errorFlash()
           errors = JSON.parse j.responseText
+          console.log errors
           edit_box.popover
             content: errors[0]
             placement: "bottom"
