@@ -18,3 +18,11 @@ $ ->
           data:
             data
           false  
+    $(".projectsCarousel").jCarouselLite({
+        btnNext: ".next",
+        btnPrev: ".prev",
+        responsive: true,
+        speed: 400,
+        visible: 4
+    })
+    

@@ -18,7 +18,7 @@ class MediaObjectsController < ApplicationController
   # PUT /media_objects/1.json
   def update
     @media_object = MediaObject.find(params[:id])
-    editUpdate = params[:media_object].to_hash
+    editUpdate = params[:media_object]
     success = false
     
     if can_edit? @media_object
@@ -81,7 +81,11 @@ class MediaObjectsController < ApplicationController
     bucket = s3.buckets['isenseimgs']
 
     #Set up the file for upload
-    fileKey = (Time.now.strftime "%s") + "." + params[:file].content_type.split("/")[1]
+    
+    fileKey = SecureRandom.uuid() + "." + params[:file].content_type.split("/")[1]
+    while MediaObject.find_by_file_key(fileKey) != nil
+      fileKey = SecureRandom.uuid() + "." + params[:file].content_type.split("/")[1]
+    end
     fileType = params[:file].content_type.split("/")[0]
     filePath = params[:file].tempfile 
     fileName = params[:file].original_filename
