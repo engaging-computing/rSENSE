@@ -31,6 +31,18 @@ module ApplicationHelper
       "invalid input: try get_field_name(string)"
     end
   end
+  
+  def get_featured_tutorials
+    tutorials = Tutorial.where("featured_number IS NOT NULL")
+
+    @tutorials = []
+    @tutorials[1] = tutorials.where('featured_number == ? and hidden == ?',1, false).first || nil
+    @tutorials[2] = tutorials.where('featured_number == ? and hidden == ?',2, false).first || nil
+    @tutorials[3] = tutorials.where('featured_number == ? and hidden == ?',3, false).first || nil
+    @tutorials[4] = tutorials.where('featured_number == ? and hidden == ?',4, false).first || nil
+    
+    @tutorials
+  end
 
   # Begin permissions stuff
   def can_edit? (obj)
