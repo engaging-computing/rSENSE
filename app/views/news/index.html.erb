@@ -1,0 +1,26 @@
+<script>
+  window.logged_in = <%= @cur_user != nil %>;
+  window.is_admin = <%= is_admin? %>
+</script>
+<% @news.each do |n| %>
+  <div class="row <%= cycle('feed-even','feed-odd')%>">
+    <div class="span12 news" href="<%= news_path(n) %>">
+      <h2><div class="truncate"><%= link_to n.title, news_path(n) %></div></h2>
+      <div class="row">
+        <div class="span9 summary">
+          <h3><%= n.summary %></h3>
+        </div>
+        <% if n.featured_media_id? %>
+          <div class="span3 visible-tablet visible-desktop">
+            <img src=<%=MediaObject.find(n.featured_media_id).src%> class="img-rounded" width="230px"/>
+          </div>
+        <% end %>
+      </div>
+      <div class="row">
+        <div class="span12">
+          <h4><%= n.created_at.strftime("%B %d, %Y")%> (<%= time_ago_in_words(n.created_at) %> ago)</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>  

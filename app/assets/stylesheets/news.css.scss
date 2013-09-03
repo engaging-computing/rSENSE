@@ -1,0 +1,36 @@
+// Place all the styles related to the news controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+.summary
+{
+  textarea
+  {
+    border-top-right-radius: 0em;
+    border-bottom-right-radius: 0em;
+  }
+
+  .icon-ok
+  {
+    margin-top: 20px;
+  }
+} 
+
+.news
+{
+
+  .summary
+  {
+    text-align:justify;
+  }
+  margin-left: 10px;
+}
+
+.checkbox_hidden
+{
+ padding-bottom: 5px; 
+}
+
+.news_title .info_text
+{
+ font-size: 1.75em; 
+}
