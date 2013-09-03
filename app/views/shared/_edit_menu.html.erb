@@ -36,7 +36,17 @@
             </li>
           <%end%>
           
+          <% if obj.is_a?(News)%>
+            <li role="presentation">
+              <a class="summary_edit" role="menuitem" href="<%=url_for obj%>"> Edit Summary </a>
+            </li>
+          <% end %>
         </ul>
       </span>
   <%end%>
+  <% if obj.is_a?(News)%>
+    <div class="summary" style="padding:5px 0px 5px 0px">
+      <%= obj.summary %>
+    </div>
+  <% end %>
 </span>
