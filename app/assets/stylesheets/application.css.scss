@@ -73,15 +73,15 @@ div.info_text
     padding: 0px 0px 5px 0px;
 }
 
-div#login_box
+.modal
 {
     position:absolute;
-    width:400px;
+    width:300px;
     height:144px;
     display: none;
-    top:48px;
+    top:46px;
     left:50%;
-    margin-left:-200px;
+    margin-left:-150px;
 }
 
 input.login_field
