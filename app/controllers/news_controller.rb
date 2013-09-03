@@ -20,7 +20,7 @@ class NewsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @news }
+      format.json { render json: @news.to_hash() }
     end
   end
 
@@ -54,15 +54,22 @@ class NewsController < ApplicationController
   # PUT /news/1
   # PUT /news/1.json
   def update
-    @news = News.find(params[:id])
+    if is_admin?
+      @news = News.find(params[:id])
 
-    respond_to do |format|
-      if @news.update_attributes(params[:news])
-        format.html { redirect_to @news, notice: 'News was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: "edit" }
-        format.json { render json: @news.errors, status: :unprocessable_entity }
+      respond_to do |format|
+        if @news.update_attributes(params[:news])
+          format.html { redirect_to @news, notice: 'News was successfully updated.' }
+          format.json { render json: {}, status: :ok }
+        else
+          format.html { render action: "edit" }
+          format.json { render json: @news.errors, status: :unprocessable_entity }
+        end
+      end
+    else
+      respond_to do |format|
+        format.html { render :status => 403 }
+        format.json { render json: @news.errors, status: :forbidden }
       end
     end
   end
@@ -70,12 +77,20 @@ class NewsController < ApplicationController
   # DELETE /news/1
   # DELETE /news/1.json
   def destroy
-    @news = News.find(params[:id])
-    @news.destroy
+    if is_admin?
+      @news = News.find(params[:id])
+      @news.destroy
 
-    respond_to do |format|
-      format.html { redirect_to news_index_url }
-      format.json { head :no_content }
+      respond_to do |format|
+        format.html { redirect_to news_index_url }
+        format.json { render json: {}, status: :ok }
+      end
+    else
+      respond_to do |format|
+        format.html { render :status => 403 }
+        format.json { render json: @news.errors, status: :forbidden }
+      end
     end
+    
   end
 end

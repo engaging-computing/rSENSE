@@ -17,7 +17,7 @@ class News < ActiveRecord::Base
 #     
 #   end
   
-  def to_hash()
+  def to_hash(recur = false)
     h = {
       id: self.id,
       featuredMediaId: self.featured_media_id,
