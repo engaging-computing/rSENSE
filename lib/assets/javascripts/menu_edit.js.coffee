@@ -130,3 +130,30 @@ $ ->
         dataType: "json"
         success: =>
           window.location = root.attr("escape_link")
+  
+  ($ 'a.summary_edit').click (e) ->
+    e.preventDefault()
+    root = ($ @).parents("span.edit_menu")
+    summary = root.find('.summary')
+    summary_text = summary.html()
+    summary_input = $ """<div class='input-append'>
+      <textarea id="appendInput" autofocus class='span8' rows='3' style='resize:none;overflow:hidden' maxlength='256'>#{summary_text.trim()}</textarea>
+      <span class='add-on btn btn-success'><a href='' class='summary_save'><i class='icon-ok icon-white'></i></a></span>
+      </div>"""
+    summary.html(summary_input)
+    btn_height = summary.find('textarea').height()
+    summary.find('.btn-success').height(btn_height)
+    summary_input.find('.summary_save').click (e) ->
+      e.preventDefault()
+      txt = ($ @).parents('.input-append').find('textarea').val()
+      $.ajax
+        url: ''
+        type: 'PUT'
+        dataType: 'json'
+        data:
+          news:
+            summary: txt
+        success: =>
+           ($ @).parents('.summary').html(txt)
+        error: (msg) =>
+          console.log msg
