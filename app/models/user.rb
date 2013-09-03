@@ -30,6 +30,7 @@ class User < ActiveRecord::Base
   has_many :media_objects
   has_many :visualizations
   has_many :tutorials
+  has_many :news
 
   def sanitize_user
   
@@ -80,7 +81,8 @@ class User < ActiveRecord::Base
         mediaObjects:   self.media_objects.search(false, show_hidden).map  {|o| o.to_hash false},
         projects:       self.projects.search(false, show_hidden).map       {|o| o.to_hash false},
         tutorials:      self.tutorials.search(false, show_hidden).map      {|o| o.to_hash false},
-        visualizations: self.visualizations.search(false, show_hidden).map {|o| o.to_hash false}
+        visualizations: self.visualizations.search(false, show_hidden).map {|o| o.to_hash false},
+        news:           self.news.search(false, show_hidden).map           {|o| o.to_hash false}
       })
     end
     h
