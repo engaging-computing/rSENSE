@@ -3,6 +3,9 @@ $ ->
     ($ '.login_button').click login_ajax_submit        
     ($ '.login_field').keydown (e) ->
       if e.which is 13 then login_ajax_submit()
+    selectFunc = ->
+      ($ "#login_user").select()
+    setTimeout selectFunc, 300
      
   ($ '#login_box').on 'hide', ->  
     ($ '#login_box a.btn').off 'click'
