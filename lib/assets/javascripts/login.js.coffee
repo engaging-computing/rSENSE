@@ -2,8 +2,10 @@ $ ->
   ($ '#login_box').on 'show', ->    
     ($ '.login_button').click login_ajax_submit        
     ($ '.login_field').keydown (e) ->
-      if e.which is 13 then login_ajax_submit()  
-    ($ '#login_box').modal 'hide'
+      if e.which is 13 then login_ajax_submit()
+    selectFunc = ->
+      ($ "#login_user").select()
+    setTimeout selectFunc, 300
      
   ($ '#login_box').on 'hide', ->  
     ($ '#login_box a.btn').off 'click'
@@ -13,8 +15,8 @@ $ ->
     ($ '#login_user').css 'border-color', 'black'
     ($ '#login_password').css 'border-color', 'black'
   
-  ($ '#login_box').on 'hidden', ->
-      ($ '#login_box').hide()
+  #($ '#login_box').on 'hidden', ->
+      #($ '#login_box').hide()
 
   ($ '#login_box').modal                 
     backdrop: 'static'
