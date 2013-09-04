@@ -15,7 +15,7 @@ module MediaObjectsHelper
     elsif !@media_object.user_id.nil?
       user_url @media_object.owner
     else
-      home_url "/"
+      "/"
     end
     
     render 'shared/edit_menu', {type: 'media_object', typeName: 'Media Object', obj: @media_object, make_link: make_link, escape_link: url}
