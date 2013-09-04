@@ -1,9 +1,48 @@
-<div class="row" id="title_row" style="margin-left: 0px;">
-    <span id="title_span" class="span12" style="font-size:2em"><%= media_object_edit_menu_helper %></span><br><br>
+<div class="row">
+  <div class="span12" style="padding-bottom:10px">
+    <span id="title_span" style="font-size:2em">
+      <%= media_object_edit_menu_helper %>
+    </span>
+  </div>
+  
+  <div class="span12">
+    <span><b>Owner:</b> <%= link_to @media_object.owner.name, user_path(@media_object.owner)%></span>
+  </div>
+  
+  <% if !@media_object.project_id.nil?%>
+    <div class="span12">
+      <span><b>Project:</b> <%= link_to @media_object.project.title, project_path(@media_object.project)%></span>
+    </div>
+  <% end %>
+  
+  <% if !@media_object.visualization_id.nil?%>
+    <div class="span12">
+      <span><b>Visualization:</b> <%= link_to @media_object.visualization.title, visualization_path(@media_object.visualization)%></span>
+    </div>
+  <% end %>
+  
+  <% if !@media_object.news_id.nil?%>
+    <div class="span12">
+      <span><b>News:</b> <%= link_to @media_object.news.title, news_path(@media_object.news)%></span>
+    </div>
+  <% end %>
+  
+  <% if !@media_object.tutorial_id.nil?%>
+    <div class="span12">
+      <span><b>Tutorial:</b> <%= link_to @media_object.tutorial.title, tutorial_path(@media_object.tutorial)%></span>
+    </div>
+  <% end %>  
 </div>
 
-<% if @media_object.media_type == "image" %>
-  <%= image_tag @media_object.src %>
-<% else %>
-  <%= link_to "Link to Media", @media_object.src %>
-<% end %>
+<br/>
+
+<div class="row">
+  <div class="span12">
+    <% if @media_object.media_type == "image" %>
+      <%= image_tag @media_object.src %>
+    <% else%>
+      <%= link_to (media_object_thumbnail_helper @media_object , "300x300"), @media_object.src%>
+      <span style="color:red">Warning: Download files only if you trust the owner!</span>
+    <% end %>
+  </div>
+</div>
