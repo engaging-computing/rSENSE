@@ -20,13 +20,13 @@
 //= require twitter/bootstrap
 //= require bootstrap
 //= require redactor.min.js
-//= require redactor_edit_pane.js.coffee
-//= require info_edit.js.coffee
-//= require menu_edit.js.coffee
-//= require object_hider.js.coffee
-//= require login.js.coffee.erb
-//= require field_edit.js.coffee
-//= require collapse_link_flipper.js.coffee
+//= require redactor_edit_pane
+//= require info_edit
+//= require menu_edit
+//= require object_hider
+//= require login
+//= require field_edit
+//= require collapse_link_flipper
 //= require validator
 //= require infinite_scroll
 //= require isotope/jquery.isotope.js
@@ -34,7 +34,7 @@
 //= require jquery.qrcode.min.js
 //= require bootstrap-datetimepicker.js
 //= require editTable
-//= require media_objects_view.js.coffee
+//= require media_objects_view
 //= require jcarousellite.min.js
 //= require titlebar.js.coffee
 //

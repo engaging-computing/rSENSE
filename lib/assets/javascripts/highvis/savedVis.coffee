@@ -40,7 +40,7 @@ $ ->
     globals.saveVis = (title, desc, succCallback, failCallback) ->
     
         modal = """
-        <div id="loadModal" class="modal fade well" style="width:400px">
+        <div id="loadModal" class="modal fade well">
           <div class="center">
             <img src="/assets/spinner.gif" />
           </div>
