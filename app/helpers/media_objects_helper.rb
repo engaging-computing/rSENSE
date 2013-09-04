@@ -10,6 +10,10 @@ module MediaObjectsHelper
       tutorial_url @media_object.tutorial
     elsif !@media_object.visualization.nil?
       visualization_url @media_object.visualization
+    elsif !@media_object.news_id.nil?
+      news_url @media_object.news
+    elsif !@media_object.user_id.nil?
+      user_url @media_object.owner
     else
       home_url
     end
