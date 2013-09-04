@@ -5,9 +5,9 @@ $ ->
   helpers.name_popup = (obj, name, type, escape_location = "#") ->
     
     modal = """
-    <div id="new_name_box" class="modal hide fade well container" data-backdrop="static" style="width:400px">
+    <div id="new_name_box" class="modal hide fade well container" data-backdrop="static">
       <div> Please enter a name for this #{name}: <br>
-        <input id="new_name" class="name_field" type="text" style="width:75%" value="#{obj.name}"></input>
+        <input id="new_name" class="name_field" type="text" style="width:95%" value="#{obj.name}"></input>
         </div>
         <div class="clear"></div>
       <div style="float:right;">

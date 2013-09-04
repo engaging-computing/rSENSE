@@ -73,9 +73,15 @@ div.info_text
     padding: 0px 0px 5px 0px;
 }
 
-div#login_box
+.modal
 {
+    position:fixed;
+    width:300px;
     display: none;
+    top:46px !important;
+    left:50%;
+    margin-left:-160px;
+    padding: 10px;
 }
 
 input.login_field
@@ -86,7 +92,7 @@ input.login_field
 button.login_button
 {
     float: right;
-    margin: 15px 0px 0px 0px;
+    margin: 15px 0px 0px 10px;
 }
 
 button.cancel_login_button

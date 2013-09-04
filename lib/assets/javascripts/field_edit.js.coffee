@@ -258,11 +258,7 @@ $ ->
               table.data("num_fields",1)
               ($ '#create_data_set').show()
               for field in resp.fields
-                add_row(field)    
-
-      #begin horrible hackeyness of prodding the modal box
-      #were gonna strech it and try and poke it to the center
-      ($ '#template_match_box').css('width', '670px')
+                add_row(field)
 
       ($ "#template_match_box").modal
           backdrop: 'static'
