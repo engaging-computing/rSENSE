@@ -10,6 +10,7 @@ class MediaObject < ActiveRecord::Base
   belongs_to :dataSet, class_name: "DataSet", foreign_key: "data_set_id" 
   belongs_to :tutorial, class_name: "Tutorial", foreign_key: "tutorial_id"
   belongs_to :visualization, class_name: "Visualization", foreign_key: "visualization_id"
+  belongs_to :news, class_name: "News", foreign_key: "news_id"
   
   alias_attribute :title, :name
   

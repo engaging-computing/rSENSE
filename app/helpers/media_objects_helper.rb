@@ -10,8 +10,12 @@ module MediaObjectsHelper
       tutorial_url @media_object.tutorial
     elsif !@media_object.visualization.nil?
       visualization_url @media_object.visualization
+    elsif !@media_object.news_id.nil?
+      news_url @media_object.news
+    elsif !@media_object.user_id.nil?
+      user_url @media_object.owner
     else
-      home_url
+      "/"
     end
     
     render 'shared/edit_menu', {type: 'media_object', typeName: 'Media Object', obj: @media_object, make_link: make_link, escape_link: url}
