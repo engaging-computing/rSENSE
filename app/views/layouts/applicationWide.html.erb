@@ -58,15 +58,20 @@
           <div style="float:left;vertical-align:text-bottom;height:50px;font-size:15px;">
             
             <div class="visible-desktop visible-tablet" style="margin-left:10px;height:50px;">
-              <!--<a class="navbar-btn" href="/news"><i class="icon-book icon-white"></i> News</a>-->
+              <a class="navbar-btn" href="/news"><i class="icon-book icon-white"></i> News</a>
               <a class="navbar-btn" href="/projects"><i class="icon-folder-open icon-white"></i> Projects</a>
               <a class="navbar-btn" href="/users"><i class="icon-user icon-white"></i> Users</a>
               <a class="navbar-btn" href="/visualizations"><i class="icon-picture icon-white"></i> Visualizations</a>
-              <a class="navbar-btn" href="/tutorials"><i class="icon-info-sign icon-white"></i> Tutorials </a>
+              <a class="navbar-btn" href="/tutorials"><i class="icon-info-sign icon-white"></i> Tutorials <img src="/assets/arrow_down.png"></a>
+              <ul class="ddmenu">
+                 <% (1..4).each do |i|%>
+                  <%= render "tutorials/display_tutorials", :id => "#{i}"%>
+                <%end%>
+              </ul>
             </div>
             
             <div class="visible-phone btn-group" style="height:15px;padding-top:10px;margin-left:10px;">
-              <!--<a class="navbar-btn" href="/news"><i class="icon-book icon-white"></i> </a>-->
+              <a class="navbar-btn" href="/news"><i class="icon-book icon-white"></i> </a>
               <a class="navbar-btn" href="/projects"><i class="icon-folder-open icon-white"> </i> </a>
               <a class="navbar-btn" href="/users"><i class="icon-user icon-white"> </i> </a>
               <a class="navbar-btn" href="/visualizations"><i class="icon-picture icon-white"> </i> </a>
@@ -79,15 +84,11 @@
           <div class="visible-desktop visible-tablet">
             <div class="pillbox desktop-tablet" style="line-height:50px;">
               <% if @cur_user == nil %>
-                <div class="btn-group">
-                  <a href="" class="login btn btn-small btn-info white">Login</a>
-                  <a href="<%= new_user_path %>" class="btn btn-small btn-info white">Register</a>
-                </div>
+                  <a href="" class="login navbar-btn">Login</a>
+                  <a href="<%= new_user_path %>" class="navbar-btn">Register</a>
               <% else %>
-                <div class="btn-group">                  
-                  <a class="btn btn-small btn-info white" href="<%= user_path(@cur_user) %>"><%= @cur_user.name %></a>
-                  <%= link_to 'Logout', login_path(), method: :delete, class: "btn btn-small btn-info" %> 
-                </div>
+                  <a class="navbar-btn" href="<%= user_path(@cur_user) %>"><%= @cur_user.name %></a>
+                  <%= link_to 'Logout', login_path(), method: :delete, class: "navbar-btn" %> 
               <% end %>
             </div>
           </div>

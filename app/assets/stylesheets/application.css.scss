@@ -444,9 +444,54 @@ input.object_hidden_checkbox
   color: white;
   font-size: 12pt;
   padding: 1px 17px 0px 17px;
+  position: relative;
 }
 .navbar-btn:hover
 {
   color:white;
   background:#649ce5;
+}
+
+.navbar-btn:hover + .ddmenu
+{
+  display: block;
+  position: relative;
+  left:443px;
+  z-index: -10;
+}
+
+.ddmenu
+{
+  display:none;
+  background: white;
+  color:black;
+  box-shadow:0px 5px 20px black;
+  width:250px;
+  li
+  { 
+    width:100%;
+    list-style-type: none;
+    a
+    {
+      margin: 0px;
+      color: black;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box; 
+      display: block;
+      padding: 20px;
+    }
+    a:hover
+    {
+      color: white;
+      background:#649ce5;
+    }
+  }
+}
+.ddmenu:hover
+{
+  display: block;
+  position: relative;
+  left:443px;
+  z-index: -10;
 }
