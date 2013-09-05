@@ -109,19 +109,23 @@ $ ->
       keyboard: true
       show: false
 
-    # Does the liking and unliking when the star icon is clicked
+    # Does the liking and unliking when the thumbs-up icon is clicked
     ($ '.liked_status').click ->
-      icon = ($ @).children 'i'
-      if icon.attr('class').indexOf('icon-star-empty') != -1
-        icon.replaceWith "<i class='icon-star'></i>"
-      else
-        icon.replaceWith "<i class='icon-star-empty'></i>"
+      root = ($ ".likes")
+      was_liked = ($ @).hasClass('active')
+
       $.ajax
-        url: '/projects/' + ($ this).attr('exp_id') + '/updateLikedStatus'
+        url: '/projects/' + root.attr('project_id') + '/updateLikedStatus'
         dataType: 'json'
         success: (resp) =>
-          ($ @).siblings('.like_display').html resp['update']
-
+          root.find('.like_display').html resp['update']
+        error: (resp) =>
+          ($ @).errorFlash()
+          if was_liked
+            ($ @).addClass('active')
+          else
+            ($ @).removeClass('active')
+    
 
     # This is black magic that displays the upload csv and upload google doc lightboxes
     ($ '#upload_csv').click ->
