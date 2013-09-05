@@ -443,7 +443,11 @@ input.object_hidden_checkbox
   display:inline-block;
   color: white;
   position: relative;
-  @media screen and (max-width: 979px) {
+  @media screen and (max-width: 449px) {
+    font-size: 7pt;
+    padding: 1px 5px 0px 5px;
+  }
+  @media screen and (min-width: 450px) {
     font-size: 9pt;
     padding: 1px 7px 0px 7px;
   }
