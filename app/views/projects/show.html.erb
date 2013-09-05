@@ -20,7 +20,12 @@
             <%end%>
           <span class="info_label" style="font-size:1.1em">Created:</span><%=time_ago_in_words(@project.created_at)%> ago <br>
           <span class="info_label" style="font-size:1.1em">Project #:</span><%= @project.id %><br>
-          <%=render "likes"%>
+          <%if @cur_user.try(:id)%>
+            <div class="btn-group likes" project_id="<%= @project.id%>">
+              <button type="button" class="btn liked_status <% if @liked_by_cur_user%>active<%end%>" href="#" data-toggle="button"><i class="icon-thumbs-up-alt"></i> Like</button>
+              <button type="button" class="btn like_display" disabled> <%= @likes %></button>
+            </div>
+          <%end%>
         </div>
       </div>
 
