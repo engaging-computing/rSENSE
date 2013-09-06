@@ -1,7 +1,7 @@
 module NewsHelper
     
   def news_edit_menu_helper(make_link = false)
-    render 'shared/edit_menu', {type: 'news', typeName: 'News', obj: @news, make_link: make_link, escape_link: news_url}
+    render 'shared/edit_menu', {type: 'news', typeName: 'News', obj: @news, make_link: make_link, escape_link: "/news"}
   end
   
   def news_redactor_helper(can_edit = false)
