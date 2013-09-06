@@ -7,8 +7,13 @@ a:hover
 
 i[class*='icon-']
 {
-  color: transparent;
-  text-shadow: none;
+  color:black;
+
+}
+
+i.icon-white
+{
+    color: white !important;
 }
 
 .hero-unit
