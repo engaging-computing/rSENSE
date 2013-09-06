@@ -1,10 +1,5 @@
 class FieldsController < ApplicationController
   include ApplicationHelper
-
-  def index
-    redirect_to root_url, alert: "Can't list all fields"
-  end
-
   # GET /fields/1
   # GET /fields/1.json
   def show
@@ -55,14 +50,6 @@ class FieldsController < ApplicationController
         format.json { render json: @field.errors, status: :unprocessable_entity }
       end
     end
-  end
-  
-  def new
-    redirect_to root_url, alert: "That's not how you make a field"
-  end
-  
-  def edit
-    redirect_to root_url, alert: "That's not how you edit a field"
   end
 
   # PUT /fields/1

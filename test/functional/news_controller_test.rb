@@ -3,7 +3,6 @@ require 'test_helper'
 class NewsControllerTest < ActionController::TestCase
   setup do
     @nixon = users(:nixon)
-
     @news = news(:one)
   end
 
@@ -11,11 +10,6 @@ class NewsControllerTest < ActionController::TestCase
     get :index
     assert_response :success
     assert_not_nil assigns(:news)
-  end
-
-  test "should get new" do
-    get :new, {}, { user_id: @nixon }
-    assert_response :redirect
   end
 
   test "should create news" do
@@ -29,11 +23,6 @@ class NewsControllerTest < ActionController::TestCase
   test "should show news" do
     get :show, id: @news
     assert_response :success
-  end
-
-  test "should get edit" do
-    get :edit, { id: @news }, { user_id: @nixon }
-    assert_response :redirect
   end
 
   test "should update news" do

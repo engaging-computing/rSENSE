@@ -1,8 +1,7 @@
 Rsense::Application.routes.draw do
   
   match '/news/add', to: 'news#create'
-  resources :news
- 
+  resources :news, except: [:new, :edit]
 
   resources :media_objects
 
@@ -11,8 +10,7 @@ Rsense::Application.routes.draw do
   match "/projects/import" => "projects#importFromIsense"
   match "/projects/import/:pid" => "projects#importFromIsense"
 
-
-  resources :visualizations
+  resources :visualizations, except: [:new]
 
   #resources :data_sets
 
@@ -20,14 +18,14 @@ Rsense::Application.routes.draw do
 
   resources :groups
 
-  resources :fields
+  resources :fields, except: [:index, :new, :edit]
 
   match "projects/create" => "projects#create"
-  resources :projects
+  resources :projects, except: [:new]
 
   match "tutorials/create" => "tutorials#create"
   match "/tutorials/switch/" => "tutorials#switch"
-  resources :tutorials
+  resources :tutorials, except: [:new]
 
   get "home/index"
   root :to => "home#index"

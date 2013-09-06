@@ -2,7 +2,7 @@ class VisualizationsController < ApplicationController
   include ApplicationHelper
   include ActionView::Helpers::DateHelper
   
-  skip_before_filter :authorize, only: [:show, :displayVis, :index,:embedVis]
+  skip_before_filter :authorize, only: [:show, :displayVis, :index, :embedVis]
   
   # GET /visualizations
   # GET /visualizations.json
@@ -34,10 +34,6 @@ class VisualizationsController < ApplicationController
       format.json { render json: @visualizations.map {|v| v.to_hash(false) } }
     end
     
-  end
-
-  def new
-    redirect_to visualizations_url, alert: "You missed the left turn at Albuquerque"
   end
 
   # GET /visualizations/1
@@ -77,9 +73,8 @@ class VisualizationsController < ApplicationController
     end
   end
 
-  # GET /visualizations/1/edit
   def edit
-    redirect_to visualizations_url, alert: "You missed the left turn at Albuquerque, again"
+    @visualization = Visualization.find(params[:id])
   end
 
   # POST /visualizations

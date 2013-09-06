@@ -24,16 +24,6 @@ class NewsController < ApplicationController
     end
   end
 
-  def new
-    redirect_to root_path, alert: "That's now how you make the news"
-  end
-
-  # GET /news/1/edit
-  def edit
-    @news = News.find(params[:id])
-    redirect_to root_path, alert: "That's now how you change the news"
-  end
-
   # POST /news
   # POST /news.json
   def create

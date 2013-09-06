@@ -6,16 +6,6 @@ class DataSetsControllerTest < ActionController::TestCase
     @data_set = data_sets(:one)
    end
 
-  test "should get index" do
-    get :index, {}, { user_id: @kate }
-    assert_response :redirect
-  end
-
-  test "should get new" do
-    get :new, {}, { user_id: @kate }
-    assert_response :redirect
-  end
-
   test "should create data_set" do
     assert_difference('DataSet.count') do
       post :create, { data_set: { content: @data_set.content, project_id: @data_set.project_id, 
@@ -23,16 +13,6 @@ class DataSetsControllerTest < ActionController::TestCase
     end
 
     assert_redirected_to data_set_path(assigns(:data_set))
-  end
-
-  test "should show data_set" do
-    get :show, { id: @data_set }, { user_id: @kate }
-    assert_response :redirect
-  end
-
-  test "should get edit" do
-    get :edit, { id: @data_set }, { user_id: @kate }
-    assert_response :redirect
   end
 
   test "should update data_set" do
