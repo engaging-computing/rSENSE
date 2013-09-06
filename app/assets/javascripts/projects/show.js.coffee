@@ -79,7 +79,8 @@ $ ->
             ($ "#match_box").modal("hide")
             helpers.name_popup resp, "Dataset", "data_set"
           error: (resp) ->
-            alert "Somthing went horribly wrong. I'm sorry."
+            alert "We were unable to upload your CSV. See console for details."
+            console.log resp
 
       ($ "#match_box").modal
         backdrop: 'static'
