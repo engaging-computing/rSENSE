@@ -96,6 +96,8 @@ class MediaObject < ActiveRecord::Base
   
   private
   def aws_del()
+    return if Rails.env.test?
+
     #Set up the link to S3
     s3ConfigFile = YAML.load_file('config/aws_config.yml')
   
