@@ -258,9 +258,11 @@ $ ->
 
           ($ tab).find('tr').each ->
             add_validators ($ @)
+            
+          ($ tab).find("td:first").find("input").focus()
 
-        submit_form = () ->
-
+        submit_form = () =>
+        
           strip_table(table)
 
           # collect data and ship it off via AJAX
@@ -294,8 +296,6 @@ $ ->
           ajax_data =
             headers: head
             data: table_data
-            
-          #console.log ajax_data
 
           ($ '#edit_table_add').addClass 'disabled'
           ($ '#edit_table_save').button 'loading'
