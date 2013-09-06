@@ -77,9 +77,18 @@ class NewsController < ApplicationController
   # DELETE /news/1
   # DELETE /news/1.json
   def destroy
-    if is_admin?
-      @news = News.find(params[:id])
-      @news.destroy
+    @news = News.find(params[:id])
+    
+    if can_delete? @news
+      
+      @news.media_objects.each do |m|
+        m.destroy
+      end
+      
+      @news.user_id = -1
+      @news.hidden = true
+      @news.featured_media_id = nil
+      @news.save
 
       respond_to do |format|
         format.html { redirect_to news_index_url }
