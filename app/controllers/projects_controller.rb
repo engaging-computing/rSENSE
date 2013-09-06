@@ -82,6 +82,10 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def new
+    redirect_to projects_path, alert: "That's not how you make a project"
+  end
+
   # GET /projects/1/edit
   def edit
     @project = Project.find(params[:id])

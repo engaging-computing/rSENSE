@@ -24,9 +24,14 @@ class NewsController < ApplicationController
     end
   end
 
+  def new
+    redirect_to root_path, alert: "That's now how you make the news"
+  end
+
   # GET /news/1/edit
   def edit
     @news = News.find(params[:id])
+    redirect_to root_path, alert: "That's now how you change the news"
   end
 
   # POST /news
@@ -62,7 +67,7 @@ class NewsController < ApplicationController
           format.html { redirect_to @news, notice: 'News was successfully updated.' }
           format.json { render json: {}, status: :ok }
         else
-          format.html { render action: "edit" }
+          format.html { render action: "show" }
           format.json { render json: @news.errors, status: :unprocessable_entity }
         end
       end

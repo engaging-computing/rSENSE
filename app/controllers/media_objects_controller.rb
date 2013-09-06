@@ -1,6 +1,10 @@
 class MediaObjectsController < ApplicationController
   include ApplicationHelper
 
+  def index
+    redirect_to root_url, :alert => "Can't list all media objects"
+  end
+
   # GET /media_objects/1
   # GET /media_objects/1.json
   def show
@@ -30,10 +34,18 @@ class MediaObjectsController < ApplicationController
         format.html { redirect_to @media_object, notice: 'Media Object was successfully updated.' }
         format.json { render json:{}, status: :ok }
       else
-        format.html { render action: "edit" }
+        format.html { redirect_to @media_object, alert: 'Media Object not successfully updated.' }
         format.json { render json: @media_object.errors.full_messages(), status: :unprocessable_entity }
       end
     end
+  end
+
+  def new
+    redirect_to root_url, :alert => "That's not how you add media data"
+  end
+
+  def edit
+    redirect_to root_url, :alert => "That's not how you edit media data"
   end
 
   # DELETE /media_objects/1

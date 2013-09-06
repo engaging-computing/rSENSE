@@ -1,6 +1,9 @@
 class DataSetsController < ApplicationController
-
   include ApplicationHelper
+
+  def index
+    redirect_to root_path, alert: "Can't list all controllers" 
+  end
 
   # GET /data_sets/1
   # GET /data_sets/1.json
@@ -82,6 +85,14 @@ class DataSetsController < ApplicationController
     end
 
   end
+  
+  def new 
+    redirect_to root_path, alert: "That's not how you make a data set"
+  end
+  
+  def edit
+    redirect_to root_path, alert: "That's not how you edit a data set"
+  end
 
   # POST /data_sets
   # POST /data_sets.json
@@ -145,7 +156,7 @@ class DataSetsController < ApplicationController
       @data_set.save
 
       respond_to do |format|
-        format.html { redirect_to @data_set.project }
+        format.html { redirect_to root_path, notice: "Data set removed" }
         format.json { render json: {}, status: :ok }
       end
     else
