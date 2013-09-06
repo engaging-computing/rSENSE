@@ -2,7 +2,7 @@
 
 one:
   title: Sample Test
-  user_id: 1
+  user: kate
   content: Sample Content
   cloned_from: 
   featured: false
@@ -13,7 +13,7 @@ one:
   
 two:
   title: MyString
-  user_id: 1
+  user: kate
   content: MyText
   cloned_from: 
   featured: false

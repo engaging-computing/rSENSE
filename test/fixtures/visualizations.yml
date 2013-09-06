@@ -4,16 +4,16 @@
 
 visualization1:
   title: VisualizationTitle1
-  user_id: 1
-  project_id: 1
+  user: kate
+  project: one
   content: MyText
   data: MyText
   globals: MyText
 
 visualization2:
   title: VisualizationTitle2
-  user_id: 2
-  project_id: 2
+  user: kate
+  project: two
   content: MyText
   data: MyText
   globals: MyText

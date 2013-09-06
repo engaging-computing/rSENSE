@@ -43,31 +43,31 @@ class UserTest < ActiveSupport::TestCase
   # Testing with fixtures
   
   test "first name" do
-     assert_equal "kate", users(:one).firstname
+     assert_equal "Kate", users(:kate).firstname
   end  
 
   test "last name" do
-     assert_equal "carcia", users(:one).lastname
+     assert_equal "Carcia", users(:kate).lastname
   end
   
   test "username" do
-     assert_equal "kate", users(:one).username
+     assert_equal "kate", users(:kate).username
   end
  
   test "email" do
-     assert_nil( users(:one).email, "Expected email is nil." )
+     assert_equal "kcarcia@cs.uml.edu", users(:kate).email
   end
   
   test "validation" do
-    assert_equal false, users(:one).validated
+    assert_equal true, users(:kate).validated
   end
   
   test "admin" do
-    assert_equal false, users(:one).admin
+    assert_equal false, users(:kate).admin
   end
   
   test "content" do
-     assert_nil( users(:one).content, "Expected content is nil." )
+     assert_nil( users(:kate).content, "Expected content is nil." )
   end
 
 end
