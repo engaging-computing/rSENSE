@@ -11,9 +11,10 @@ class DataSet < ActiveRecord::Base
   has_many :media_objects
   
   belongs_to :project
-  belongs_to :owner, class_name: "User", foreign_key: "user_id"
+  belongs_to :user
   
   alias_attribute :name, :title
+  alias_attribute :owner, :user
   
   before_save :sanitize_data_set
   
