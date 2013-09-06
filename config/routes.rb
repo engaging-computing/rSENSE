@@ -29,6 +29,9 @@ Rsense::Application.routes.draw do
   match "/tutorials/switch/" => "tutorials#switch"
   resources :tutorials
 
+  match 'about' => 'home#about'
+  match 'contact' => 'home#contact'
+  
   get "home/index"
   root :to => "home#index"
 
