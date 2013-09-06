@@ -6,16 +6,6 @@ class FieldsControllerTest < ActionController::TestCase
     @field = fields(:one)
   end
 
-  test "should get index" do
-    get :index, {}, { user_id: @kate }
-    assert_response :redirect
-  end
-
-  test "should get new" do
-    get :new, {}, { user_id: @kate }
-    assert_response :redirect
-  end
-
   test "should create field" do
     assert_difference('Field.count') do
       post :create, { field: { project_id: @field.project_id, field_type: @field.field_type, 
@@ -28,11 +18,6 @@ class FieldsControllerTest < ActionController::TestCase
   test "should show field" do
     get :show, { id: @field }, { user_id: @kate }
     assert_response :success
-  end
-
-  test "should get edit" do
-    get :edit, { id: @field }, { user_id: @kate }
-    assert_response :redirect
   end
 
   test "should update field" do

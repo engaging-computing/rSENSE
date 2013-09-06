@@ -3,6 +3,7 @@ require 'test_helper'
 class VisualizationsControllerTest < ActionController::TestCase
   setup do
     @kate = users(:kate)
+    @admin = users(:nixon)
 
     @vis1 = visualizations(:visualization1)
 
@@ -14,11 +15,6 @@ class VisualizationsControllerTest < ActionController::TestCase
     get :index
     assert_response :success
     assert_not_nil assigns(:visualizations)
-  end
-
-  test "should get new" do
-    get :new
-    assert_response :redirect
   end
 
   test "should create visualization" do
@@ -36,8 +32,8 @@ class VisualizationsControllerTest < ActionController::TestCase
   end
 
   test "should get edit" do
-    get :edit, id: @vis2
-    assert_response :redirect
+    get :edit, { id: @vis2 }, { user_id: @admin }
+    assert_response :success
   end
 
   test "should update visualization" do

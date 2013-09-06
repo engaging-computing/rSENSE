@@ -12,11 +12,6 @@ class ProjectsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:projects)
   end
 
-  test "should get new" do
-    get :new, {}, { user_id: @nixon }
-    assert_response :redirect
-  end
-
   test "should create project" do
     assert_difference('Project.count') do
       post :create, { project: { content: @project.content, title: @project.title, user_id: @project.user_id }},

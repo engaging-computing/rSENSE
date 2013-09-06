@@ -6,16 +6,6 @@ class MediaObjectsControllerTest < ActionController::TestCase
     @media_object = media_objects(:one)
   end
 
-  test "should get index" do
-    get :index, {}, { user_id: @nixon }
-    assert_response :redirect
-  end
-
-  test "should get new" do
-    get :new, {}, { user_id: @nixon }
-    assert_response :redirect
-  end
-
 #   test "should create media_object" do
 #     assert_difference('MediaObject.count') do
 #       post :create, media_object: { project_id: @media_object.project_id: @media_object.media_type, name: @media_object.name, session_id: @media_object.session_id, user_id: @media_object.user_id }
@@ -27,11 +17,6 @@ class MediaObjectsControllerTest < ActionController::TestCase
   test "should show media_object" do
     get :show, { id: @media_object }, { user_id: @nixon }
     assert_response :success
-  end
-
-  test "should get edit" do
-    get :edit, { id: @media_object }, { user_id: @nixon }
-    assert_response :redirect
   end
 
   test "should update media_object" do

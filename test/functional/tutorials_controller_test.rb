@@ -13,11 +13,6 @@ class TutorialsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:tutorials)
   end
 
-  test "should get new" do
-    get :new, {}, { user_id: @nixon }
-    assert_response :redirect
-  end
-
   test "should create tutorial" do
     assert_difference('Tutorial.count') do
       post :create, { tutorial: { content: @tutorial.content, title: @tutorial.title }}, { user_id: @nixon }
@@ -33,7 +28,7 @@ class TutorialsControllerTest < ActionController::TestCase
 
   test "should get edit" do
     get :edit, { id: @tutorial }, { user_id: @nixon }
-    assert_response :redirect
+    assert_response :success
   end
 
   test "should update tutorial" do
