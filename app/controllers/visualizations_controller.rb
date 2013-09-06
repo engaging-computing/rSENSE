@@ -36,6 +36,10 @@ class VisualizationsController < ApplicationController
     
   end
 
+  def new
+    redirect_to visualizations_url, alert: "You missed the left turn at Albuquerque"
+  end
+
   # GET /visualizations/1
   # GET /visualizations/1.json
   def show
@@ -75,7 +79,7 @@ class VisualizationsController < ApplicationController
 
   # GET /visualizations/1/edit
   def edit
-    @visualization = Visualization.find(params[:id])
+    redirect_to visualizations_url, alert: "You missed the left turn at Albuquerque, again"
   end
 
   # POST /visualizations
@@ -194,7 +198,7 @@ class VisualizationsController < ApplicationController
       @visualization.save
       
       respond_to do |format|
-        format.html { redirect_to visualizaions_url }
+        format.html { redirect_to visualizations_url }
         format.json { render json: {}, status: :ok }
       end
     else

@@ -47,6 +47,14 @@ class TutorialsController < ApplicationController
     end
   end
 
+  def new
+    redirect_to tutorials_path, alert: "That's not how you make a tutorial"
+  end
+
+  def edit
+    redirect_to tutorial_path(params[:id]), alert: "That's not how you edit a tutorial"
+  end
+
   # POST /tutorials
   # POST /tutorials.json
   def create
