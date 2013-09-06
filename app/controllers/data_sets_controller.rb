@@ -1,5 +1,4 @@
 class DataSetsController < ApplicationController
-
   include ApplicationHelper
 
   # GET /data_sets/1
@@ -82,7 +81,7 @@ class DataSetsController < ApplicationController
     end
 
   end
-
+  
   # POST /data_sets
   # POST /data_sets.json
   def create
@@ -145,7 +144,7 @@ class DataSetsController < ApplicationController
       @data_set.save
 
       respond_to do |format|
-        format.html { redirect_to @data_set.project }
+        format.html { redirect_to root_path, notice: "Data set removed" }
         format.json { render json: {}, status: :ok }
       end
     else

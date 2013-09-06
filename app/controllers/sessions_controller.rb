@@ -6,28 +6,23 @@ class SessionsController < ApplicationController
   def create
     login_name = params[:username_or_email]
       
-      user = User.find(:first, :conditions => [ "lower(email) = ?", login_name.downcase ])
+    user = User.find(:first, :conditions => [ "lower(email) = ?", login_name.downcase ])
       
-      if !user
-        user = User.find(:first, :conditions => [ "lower(username) = ?", login_name.downcase ])
-      end
+    if !user
+      user = User.find(:first, :conditions => [ "lower(username) = ?", login_name.downcase ])
+    end
       
-      if user and user.authenticate(params[:password])
+    if user and user.authenticate(params[:password])  
+      session[:user_id] = user.id
+      response = { status: 'success', authenticity_token: form_authenticity_token }    
+    else
+      response = { status: 'fail' }
+    end
       
-        session[:user_id] = user.id
-        response = { status: 'success', authenticity_token: form_authenticity_token }
-          
-      else
-
-        response = { status: 'fail' }
-
-      end
-      
-      respond_to do |format|
-        format.json { render json: response }
-      end
-      
-      
+    respond_to do |format|
+      format.json { render json: response }
+      format.html { render text: response.to_json }
+    end
   end
 
   def destroy

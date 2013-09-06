@@ -187,6 +187,7 @@ class UsersController < ApplicationController
         format.html { redirect_to @user, notice: 'User was successfully created.' }
         format.json { render json: @user.to_hash(false), status: :created, location: @user }
       else
+        flash[:debug] = @user.errors.inspect
         format.html { render action: "new" }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
@@ -264,6 +265,7 @@ class UsersController < ApplicationController
       end
     else
       respond_to do |format|
+        flash[:debug] = "Failed can_delete?"
         format.html { redirect_to 'public/401.html' }
         format.json { render json: {}, status: :forbidden }
       end

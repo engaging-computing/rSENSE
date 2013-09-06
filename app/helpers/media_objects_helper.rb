@@ -30,7 +30,7 @@ module MediaObjectsHelper
   end  
   
   def media_object_thumbnail_helper(mo, size=nil)
-    if size = nil
+    if size == nil
       img_size = '32x32'
     else
       img_size = size

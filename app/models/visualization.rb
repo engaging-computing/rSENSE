@@ -20,9 +20,11 @@ class Visualization < ActiveRecord::Base
   before_save :sanitize_viz
   before_destroy :aws_del
 
-  belongs_to :owner, class_name: "User", foreign_key: "user_id"
+  belongs_to :user
   belongs_to :project
-  
+
+  alias_attribute :owner, :user
+
   def sanitize_viz
   
     self.content = sanitize self.content

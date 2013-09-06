@@ -2,6 +2,7 @@ require 'test_helper'
 
 class NewsControllerTest < ActionController::TestCase
   setup do
+    @nixon = users(:nixon)
     @news = news(:one)
   end
 
@@ -11,14 +12,9 @@ class NewsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:news)
   end
 
-  test "should get new" do
-    get :new
-    assert_response :success
-  end
-
   test "should create news" do
     assert_difference('News.count') do
-      post :create, news: {  }
+      post :create, { news: { title: "Breaking News!" }}, { user_id: @nixon }
     end
 
     assert_redirected_to news_path(assigns(:news))
@@ -29,19 +25,14 @@ class NewsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should get edit" do
-    get :edit, id: @news
-    assert_response :success
-  end
-
   test "should update news" do
-    put :update, id: @news, news: {  }
+    put :update, { id: @news, news: { title: "It's raining" } }, { user_id: @nixon }
     assert_redirected_to news_path(assigns(:news))
   end
 
   test "should destroy news" do
     assert_difference('News.count', -1) do
-      delete :destroy, id: @news
+      delete :destroy, { id: @news }, { user_id: @nixon }
     end
 
     assert_redirected_to news_index_path
