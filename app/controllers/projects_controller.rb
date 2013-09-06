@@ -203,27 +203,33 @@ class ProjectsController < ApplicationController
 
 
   def updateLikedStatus
-
     like = Like.find_by_user_id_and_project_id(@cur_user,params[:id])
 
     if(like)
-      Like.destroy(like.id)
+      if Like.destroy(like.id)    
+        count = Project.find(params[:id]).likes.count
+        Project.find(params[:id]).update_attributes(:like_count => count)
+        respond_to do |format|
+          format.json { render json: {update: count}, status: :ok }
+        end
+      else
+        respond_to do |format|
+          format.json { render json: {}, status: :forbidden }
+        end
+      end
+      
     else
-      Like.create({user_id:@cur_user.id,project_id:params[:id]})
-    end
-
-    count = Project.find(params[:id]).likes.count
-
-    Project.find(params[:id]).update_attributes(:like_count => count)
-
-    if(count == 0 || count > 1)
-      @response = count.to_s + " people like this"
-    else
-      @response = count.to_s + " person likes this"
-    end
-
-    respond_to do |format|
-      format.json { render json: {update: @response} }
+      if Like.create({user_id:@cur_user.id,project_id:params[:id]})
+        count = Project.find(params[:id]).likes.count
+        Project.find(params[:id]).update_attributes(:like_count => count)
+        respond_to do |format|
+          format.json { render json: {update: count}, status: :ok }
+        end
+      else
+        respond_to do |format|
+          format.json { render json: {}, status: :forbidden }
+        end
+      end  
     end
   end
 
