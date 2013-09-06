@@ -40,7 +40,7 @@ $ ->
     globals.saveVis = (title, desc, succCallback, failCallback) ->
     
         modal = """
-        <div id="loadModal" class="modal fade well" style="width:400px">
+        <div id="loadModal" class="modal fade well">
           <div class="center">
             <img src="/assets/spinner.gif" />
           </div>
@@ -84,7 +84,7 @@ $ ->
               ($ "#loadModal").modal('hide')
               helpers.name_popup msg, "Visualization", "visualization"
             error: (jqxhr, status, error) ->
-              alert "Somthing went horribly wrong"
+              alert "Could not connect to AWS"
               console.log [jqxhr, status, error]
 
     ###

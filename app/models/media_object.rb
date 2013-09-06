@@ -3,13 +3,14 @@ class MediaObject < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
 
   
-  attr_accessible :project_id, :media_type, :name, :data_set_id, :src, :user_id, :tutorial_id, :visualization_id, :title, :file_key, :hidden, :tn_file_key, :tn_src
+  attr_accessible :project_id, :media_type, :name, :data_set_id, :src, :user_id, :tutorial_id, :visualization_id, :title, :file_key, :hidden, :tn_file_key, :tn_src, :news_id
   
   belongs_to :owner, class_name: "User", foreign_key: "user_id"
   belongs_to :project, class_name: "Project", foreign_key: "project_id" 
   belongs_to :dataSet, class_name: "DataSet", foreign_key: "data_set_id" 
   belongs_to :tutorial, class_name: "Tutorial", foreign_key: "tutorial_id"
   belongs_to :visualization, class_name: "Visualization", foreign_key: "visualization_id"
+  belongs_to :news, class_name: "News", foreign_key: "news_id"
   
   alias_attribute :title, :name
   
