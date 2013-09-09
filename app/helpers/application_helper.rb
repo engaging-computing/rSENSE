@@ -86,7 +86,7 @@ module ApplicationHelper
     end
 
     case obj
-    when User, Project, Tutorial
+    when User, Project, Tutorial, News
       @cur_user.try(:admin)
     when DataSet, Visualization, MediaObject
       (obj.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin)
