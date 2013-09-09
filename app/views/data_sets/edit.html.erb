@@ -16,7 +16,7 @@
           <thead>
             <tr>
               <% @project.fields.each do |f| %>
-                <th data-field-type="<%= get_field_name(f.field_type) %>"><%= f.name %>
+                <th data-field-type="<%= get_field_name(f.field_type) %>" data-field-id="<%= f.id %>" data-field-name="<%= f.name %>"><%= f.name %>
                 <% if f.unit != "" %>
                   (<%=f.unit%>)
                 <% end %></th>

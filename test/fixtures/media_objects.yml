@@ -1,15 +1,17 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
-  project_id: 1
+  project: one
   media_type: MyString
   name: MyString
-  data_set_id: 1
-  user_id: 1
+  data_set: one
+  user: kate
+  file_key: aaa
 
 two:
-  project_id: 1
+  project: one
   media_type: MyString
   name: MyString
-  data_set_id: 1
-  user_id: 1
+  data_set: one
+  user: kate
+  file_key: bbb

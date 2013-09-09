@@ -2,6 +2,7 @@ require 'test_helper'
 
 class ProjectsControllerTest < ActionController::TestCase
   setup do
+    @nixon   = users(:nixon)
     @project = projects(:one)
   end
 
@@ -11,38 +12,38 @@ class ProjectsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:projects)
   end
 
-  test "should get new" do
-    get :new
-    assert_response :success
-  end
-
   test "should create project" do
     assert_difference('Project.count') do
-      post :create, project: { content: @project.content, title: @project.title, user_id: @project.user_id }
+      post :create, { project: { content: @project.content, title: @project.title, user_id: @project.user_id }},
+        { user_id: @nixon }
     end
 
     assert_redirected_to project_path(assigns(:project))
   end
 
   test "should show project" do
-    get :show, id: @project
+    get :show, { id: @project }
     assert_response :success
   end
 
   test "should get edit" do
-    get :edit, id: @project
+    get :edit, { id: @project }, { user_id: @nixon }
     assert_response :success
   end
 
   test "should update project" do
-    put :update, id: @project, project: { content: @project.content, title: @project.title, user_id: @project.user_id }
+    put :update, { id: @project, project: { content: @project.content, title: @project.title,
+      user_id: @project.user_id }}, { user_id: @nixon }
     assert_redirected_to project_path(assigns(:project))
   end
 
   test "should destroy project" do
-    assert_difference('Project.count', -1) do
-      delete :destroy, id: @project
+    assert_difference('Project.count', 0) do
+      delete :destroy, { id: @project }, { user_id: @nixon }
     end
+
+    @p0 = Project.find(@project.id)
+    assert @p0.hidden, "Project Got Hidden"
 
     assert_redirected_to projects_path
   end
