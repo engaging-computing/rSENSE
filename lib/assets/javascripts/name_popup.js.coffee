@@ -74,5 +74,5 @@ $ ->
     
     ($ "#new_name").keyup (e) ->
       if (e.keyCode == 13)
-        submit_modal()
+        $(".new_name_button").trigger 'click'
     
