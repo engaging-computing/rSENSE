@@ -70,6 +70,10 @@ class TutorialsController < ApplicationController
     end
   end
 
+  def edit
+    @tutorial = Tutorial.find(params[:id])
+  end
+
   # PUT /tutorials/1
   # PUT /tutorials/1.json
   def update

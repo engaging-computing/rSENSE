@@ -28,11 +28,11 @@ class DataSetTest < ActiveSupport::TestCase
   end
 
   test "user_id" do
-    assert_equal 1, data_sets(:one).user_id
+    assert_equal users(:kate).id, data_sets(:one).user_id
   end
   
   test "project_id" do
-    assert_equal 1, data_sets(:one).project_id
+    assert_equal projects(:one).id, data_sets(:one).project_id
   end
 
   test "project content" do

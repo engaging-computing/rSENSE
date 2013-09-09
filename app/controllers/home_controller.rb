@@ -7,4 +7,13 @@ class HomeController < ApplicationController
     @featured_vis = Visualization.where("featured == ? and hidden == ?", true, false).order("featured_at DESC").first
     
   end
+  
+  def about
+    
+  end
+  
+  def contact
+    
+  end
+  
 end
