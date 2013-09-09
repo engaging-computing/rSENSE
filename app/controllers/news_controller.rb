@@ -24,11 +24,6 @@ class NewsController < ApplicationController
     end
   end
 
-  # GET /news/1/edit
-  def edit
-    @news = News.find(params[:id])
-  end
-
   # POST /news
   # POST /news.json
   def create
@@ -62,7 +57,7 @@ class NewsController < ApplicationController
           format.html { redirect_to @news, notice: 'News was successfully updated.' }
           format.json { render json: {}, status: :ok }
         else
-          format.html { render action: "edit" }
+          format.html { render action: "show" }
           format.json { render json: @news.errors, status: :unprocessable_entity }
         end
       end
