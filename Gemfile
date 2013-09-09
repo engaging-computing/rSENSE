@@ -16,6 +16,13 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
 end
 
+# Integration testing stuff
+group :development, :test do
+  
+  gem "capybara-webkit"
+  gem "launchy"
+end
+
 # Jquery stuff
 gem 'less', '= 2.3.2'
 gem 'less-rails', '= 2.3.3'
