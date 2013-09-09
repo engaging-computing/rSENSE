@@ -4,27 +4,35 @@ $ ->
   ($ '.edit_fields_btn').click ->
     root = ($ @).parent().parent()
     table =  root.find('.fields_table')
-    can_delete_fields = if table.attr('can_delete_fields') is "true" then true  else false
-
-    row = ($ @).parent()
-    row.hide()
-    
-    table.find('.fields').each ->
-      type_val = ($ @).find('.field_type').attr('value')
-      field_id = ($ @).find('.field_name').attr("field_id")
-      if can_delete_fields
-          delete_link = ($ "<a href='/fields/#{field_id}' class='field_delete_link'><i class='icon-remove' style='float:right;display:block'></i></a>") 
-          ($ @).find('.field_type').find("div").append delete_link
-          delete_link.click remove_field
-          delete_link.show()
-      if(type_val not in ['Latitude','Longitude'])
-        name_val = ($ @).find('.field_name').find("div").html()
-        unit_val = ($ @).find('.field_unit').find("div").html()
-        ($ @).find('.field_name').html("<input type='text' class='input-small' value='#{name_val.trim()}'>")
-        ($ @).find('.field_unit').html("<input type='text' class='input-small' value='#{unit_val.trim()}'>")
+    can_delete_fields = 
+      $.ajax
+        url: ""
+        dataType: "json"
+        type: "GET"
+        data:
+          recur: false
+        success: (msg) =>
+          can_delete_fields = if msg.dataSetCount == 0 then true else false
+          row = ($ @).parent()
+          row.hide()
+          table.find('.fields').each ->
+            type_val = ($ @).find('.field_type').attr('value')
+            field_id = ($ @).find('.field_name').attr("field_id")
+            if can_delete_fields
+                delete_link = ($ "<a href='/fields/#{field_id}' class='field_delete_link'><i class='icon-remove' style='float:right;display:block'></i></a>") 
+                ($ @).find('.field_type').find("div").append delete_link
+                delete_link.click remove_field
+                delete_link.show()
+            if(type_val not in ['Latitude','Longitude'])
+              name_val = ($ @).find('.field_name').find("div").html()
+              unit_val = ($ @).find('.field_unit').find("div").html()
+              ($ @).find('.field_name').html("<input type='text' class='input-small' value='#{name_val.trim()}'>")
+              ($ @).find('.field_unit').html("<input type='text' class='input-small' value='#{unit_val.trim()}'>")
+              ($ '.fields_edit_menu').show()
+        error: (msg) =>
+          console.log msg
         
         
-    ($ '.fields_edit_menu').show()
   
   ### SAVE BUTTON CLICK ###
   ($ '.save_field_changes_btn').click ->
