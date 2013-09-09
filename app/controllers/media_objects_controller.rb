@@ -30,7 +30,7 @@ class MediaObjectsController < ApplicationController
         format.html { redirect_to @media_object, notice: 'Media Object was successfully updated.' }
         format.json { render json:{}, status: :ok }
       else
-        format.html { render action: "edit" }
+        format.html { redirect_to @media_object, alert: 'Media Object not successfully updated.' }
         format.json { render json: @media_object.errors.full_messages(), status: :unprocessable_entity }
       end
     end
