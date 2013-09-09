@@ -4,7 +4,6 @@ require 'rails/test_help'
 
 require 'capybara/rails'
 Capybara.javascript_driver = :webkit
-Capybara.current_driver = :webkit
 
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.

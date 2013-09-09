@@ -1,14 +1,63 @@
 require 'test_helper'
 
 class BasicsTest < ActionDispatch::IntegrationTest
-  test "logging in" do
+  setup do
+    Capybara.current_driver = Capybara.javascript_driver
+  end
+
+  teardown do
+    Capybara.reset_sessions!
+  end
+
+  test "create a user" do
     visit '/'
-    click_on 'Login'
-    fill_in 'Username', with: 'kate'
-    fill_in 'Password', with: '12345'
-    find('#login_box').click_on('Login')
+    find("#title_bar .visible-desktop div").click_on("Register")
+    fill_in "First Name", with: "Mark"
+    fill_in "Last Name",  with: "Sherman"
+    fill_in "Username",   with: "mark"
+    fill_in "Email",      with: "msherman@cs.uml.edu"
+    fill_in "Password:",   with: "pietime"
+    fill_in "Password Confirmation",
+                          with: "pietime"
+    click_on "Create User"
+
+    assert find('#title_bar').has_content?("News")
+  end
+
+  test "user logs in" do
+    login('kate', '12345')
 
     assert page.has_content?('Featured Projects')
     assert find('#title_bar').has_content?('Kate C.')
+    
+    logout
+    
+    assert find('#title_bar').has_no_content?('Kate C.')
+  end
+
+  test "admin logs in" do
+    login('nixon', '12345')
+
+    assert page.has_content?('Featured Projects')
+    assert find('#title_bar').has_content?('Richard N.')
+
+    logout
+    
+    assert find('#title_bar').has_no_content?('Richard N.')
+  end
+
+  private
+
+  def login(user, pass)
+    visit '/'
+    find('#title_bar').click_on('Login')
+    fill_in 'Username', with: user
+    fill_in 'Password', with: pass
+    find('#login_box').click_on('Login')
+  end
+
+  def logout
+    visit '/'
+    find('#title_bar').click_on('Logout')
   end
 end
