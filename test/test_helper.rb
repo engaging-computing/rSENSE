@@ -2,6 +2,10 @@ ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 
+require 'capybara/rails'
+Capybara.javascript_driver = :webkit
+Capybara.current_driver = :webkit
+
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.
   #
@@ -20,5 +24,10 @@ class ActiveSupport::TestCase
   def assert_default_false(model, field)
     assert_equal false, field, "Expected #{model.class} #{field} does not have the correct default field."
   end
-  
 end
+
+class ActionDispatch::IntegrationTest
+  # Make the Capybara DSL available in all integration tests
+  include Capybara::DSL
+end
+
