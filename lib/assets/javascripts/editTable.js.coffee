@@ -1,9 +1,10 @@
 $ = jQuery
 
 $ ->
+   
   # Only allows the plugin to run on certain pages. Probably not the right place to do this.
   if (namespace.controller is "data_sets") and (namespace.action is "manualEntry" or namespace.action is "edit")
-
+ 
     #-----------------------------------------------------------------------
     # Map Specific Code
     #-----------------------------------------------------------------------
@@ -121,7 +122,7 @@ $ ->
       log = (msg) ->
         console?.log msg if settings.debug
 
-      return @each ()->
+      return @each () =>
 
         ### START ###
         # variable to keep track of our table
@@ -134,6 +135,17 @@ $ ->
         text_cols = []
         time_cols = []
 
+        #Enter events to add new row or go to begining of next row.
+        ($ @).on 'keypress', 'input', (event) ->
+          code = if event.keyCode then event.keyCode else event.which
+          if code == 13
+            cur_index = ($ event.target).closest('tr')[0].rowIndex
+            last_index = table.find('tr:last')[0].rowIndex
+            if cur_index == last_index
+              add_row(table)
+            table.find("tr:nth-child(#{cur_index+1})").find('input:first').select()
+
+        
         update_headers = () ->
           # separate columns by field type/validator
 
@@ -162,6 +174,8 @@ $ ->
           ($ row).closest('tr').remove()
 
         add_validators = (row) ->
+          row = ($ row).closest('tr')
+          
           update_headers()
           # attach validators
           for col in num_cols
@@ -197,7 +211,7 @@ $ ->
               
 
         add_row = (tab) ->
-
+ 
           # create a string of the new row
           new_row = "<tr class='new_row'>"
 
