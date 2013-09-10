@@ -3,7 +3,7 @@ class Visualization < ActiveRecord::Base
   include ActionView::Helpers::DateHelper
   include ActionView::Helpers::SanitizeHelper
   
-  attr_accessible :content, :data, :project_id, :globals, :title, :user_id, :hidden, :featured, :featured_at, :tn_src, :tn_file_key
+  attr_accessible :content, :data, :project_id, :globals, :title, :user_id, :hidden, :featured, :featured_at, :tn_src, :tn_file_key, :summary
 
   has_many :media_objects
   

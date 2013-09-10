@@ -20,6 +20,12 @@
             </li>
           <%end%>
           
+          <% if obj.is_a?(News) || obj.is_a?(Visualization)%>
+            <li role="presentation">
+              <a class="summary_edit" role="menuitem" href="<%=url_for obj%>"> Edit Summary </a>
+            </li>
+          <% end %>
+          
           <% if can_hide?(obj) %>
             <li role="presentation" class="menu_unhider" <%if not obj.hidden %> style="display:none" <%end%> >
               <a class="menu_unhider" role="menuitem" href="<%=url_for obj%>"> Unhide <%= typeName.capitalize %> </a>
@@ -35,17 +41,11 @@
               <a class="menu_delete" role="menuitem" href="<%=url_for obj%>"> Delete <%= typeName.capitalize %> </a>
             </li>
           <%end%>
-          
-          <% if obj.is_a?(News)%>
-            <li role="presentation">
-              <a class="summary_edit" role="menuitem" href="<%=url_for obj%>"> Edit Summary </a>
-            </li>
-          <% end %>
         </ul>
       </span>
   <%end%>
-  <% if obj.is_a?(News)%>
-    <div class="summary" style="padding:5px 0px 5px 0px">
+  <% if obj.is_a?(News) || obj.is_a?(Visualization)%>
+    <div class="summary" style="padding:5px 0px 5px 0px" type="<%=obj.class.to_s.downcase%>">
       <%= obj.summary %>
     </div>
   <% end %>
