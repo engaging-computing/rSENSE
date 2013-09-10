@@ -25,7 +25,6 @@
 //= require menu_edit
 //= require object_hider
 //= require login
-//= require field_edit
 //= require collapse_link_flipper
 //= require validator
 //= require infinite_scroll

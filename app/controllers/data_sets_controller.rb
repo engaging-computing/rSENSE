@@ -308,12 +308,14 @@ class DataSetsController < ApplicationController
       file_name = file_name + "_#{dataset.id}"
     end
 
+    field_order = []
     tmp_file = File.new("./tmp/#{file_name}.csv", 'w+')
 
     @project.fields.each_with_index do |field, f_index|
       tmp_file.write field[:name]
+      field_order.push field.id
 
-      if( f_index != @project.fields.count )
+      if( f_index != @project.fields.count - 1)
         tmp_file.write ", "
       end
     end
@@ -323,15 +325,13 @@ class DataSetsController < ApplicationController
     @datasets.each_with_index do |data_set, d_index|
 
       data_set[:data].each_with_index do |data_row, dr_index|
-
-        data_row.each_with_index do |data_point, dp_index|
-
-          tmp_file.write data_point[1]
-
-          if( dp_index = data_row.count )
+        
+        field_order.each_with_index do |field, f_index|
+          tmp_file.write data_row[field.to_s]
+          
+          if( f_index != field_order.count - 1)
             tmp_file.write ", "
           end
-
         end
 
         tmp_file.write "\n"
