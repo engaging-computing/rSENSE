@@ -1,12 +1,14 @@
 require 'test_helper'
 
 class BasicsTest < ActionDispatch::IntegrationTest
+  include CapyHelper
+
   setup do
     Capybara.current_driver = Capybara.javascript_driver
   end
 
   teardown do
-    Capybara.reset_sessions!
+    finish
   end
 
   test "create a user" do
@@ -44,20 +46,5 @@ class BasicsTest < ActionDispatch::IntegrationTest
     logout
     
     assert find('#title_bar').has_no_content?('Richard N.')
-  end
-
-  private
-
-  def login(user, pass)
-    visit '/'
-    find('#title_bar').click_on('Login')
-    fill_in 'Username', with: user
-    fill_in 'Password', with: pass
-    find('#login_box').click_on('Login')
-  end
-
-  def logout
-    visit '/'
-    find('#title_bar').click_on('Logout')
   end
 end

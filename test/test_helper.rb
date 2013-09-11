@@ -31,3 +31,27 @@ class ActionDispatch::IntegrationTest
   include Capybara::DSL
 end
 
+module CapyHelper
+  def login(user, pass)
+    visit '/'
+    find('#title_bar').click_on('Login')
+    fill_in 'Username', with: user
+    fill_in 'Password', with: pass
+    find('#login_box').click_on('Login')
+  end
+
+  def logout
+    visit '/'
+    find('#title_bar').click_on('Logout')
+  end
+
+  def finish
+    begin
+      logout
+    rescue Capybara::ElementNotFound
+      # don't care
+    end
+
+    Capybara.reset_sessions!
+  end
+end
