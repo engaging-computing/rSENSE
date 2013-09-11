@@ -16,6 +16,14 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
 end
 
+# Integration testing stuff
+group :development, :test do
+  gem "capybara"
+  gem "selenium-webdriver"
+  #gem "capybara-webkit"
+  gem "launchy"
+end
+
 # Jquery stuff
 gem 'less', '= 2.3.2'
 gem 'less-rails', '= 2.3.3'
@@ -31,6 +39,7 @@ gem 'jquery-ui-rails'
 
 # Include Twitter bootstrap
 gem 'twitter-bootstrap-rails', '2.2.8'
+gem 'execjs'
 gem 'therubyracer', :platforms => :ruby
 
 # Include AWS

@@ -34,9 +34,11 @@ Rsense::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
-  
+
+  Capybara.server_port = 3001
+
   config.action_mailer.default_url_options = {
     host: "localhost",
-    port: 3000
+    port: 3001
   }
 end
