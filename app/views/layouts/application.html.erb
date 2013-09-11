@@ -97,17 +97,25 @@
           </div>
           
           <div class="visible-phone">
-          <div class="pillbox phone">
-              <% if @cur_user == nil %>
-                  <a href="" class="login navbar-btn">Login</a>
-                  <a href="<%= new_user_path %>"  class="navbar-btn">Register</a>
-              <% else %>
-                  <a class="navbar-btn" href="<%= user_path(@cur_user) %>"><%= @cur_user.name %></a>
-                  
-                  <%= link_to 'Logout', login_path(), method: :delete, class: "navbar-btn" %>
-                  
-              <% end %>
-          </div>
+            <div class="pillbox phone">
+            <!--    <% if @cur_user == nil %>
+                    <a href="" class="login navbar-btn">Login</a>
+                    <a href="<%= new_user_path %>"  class="navbar-btn">Register</a>
+                <% else %>
+                    <a class="navbar-btn" href="<%= user_path(@cur_user) %>"><%= @cur_user.name %></a>
+                    
+                    <%= link_to 'Logout', login_path(), method: :delete, class: "navbar-btn" %>
+                    
+                <% end %>
+            </div>-->
+            
+            <button type="button" class="btn btn-inverse" style="margin-right: 20px; margin-top: 10px;">
+              <a href="/tutorials"><i class="icon-search icon-white"> </i> </a>
+            </button>
+                
+            <button type="button" id="mobile_menu_trigger" class="btn btn-primary" style="margin-right: 20px; margin-top: 10px;"><i class="icon-align-justify icon-white"></i></button>
+                
+            </div>
           </div>
         </div>
       </div>
