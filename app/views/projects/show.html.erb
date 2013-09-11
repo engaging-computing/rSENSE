@@ -20,7 +20,12 @@
             <%end%>
           <span class="info_label" style="font-size:1.1em">Created:</span><%=time_ago_in_words(@project.created_at)%> ago <br>
           <span class="info_label" style="font-size:1.1em">Project #:</span><%= @project.id %><br>
-          <%=render "likes"%>
+          <%if @cur_user.try(:id)%>
+            <div class="btn-group likes" project_id="<%= @project.id%>">
+              <button type="button" class="btn liked_status <% if @liked_by_cur_user%>active<%end%>" href="#" data-toggle="button"><i class="icon-thumbs-up-alt"></i> Like</button>
+              <button type="button" class="btn like_display" disabled> <%= @likes %></button>
+            </div>
+          <%end%>
         </div>
       </div>
 
@@ -203,16 +208,20 @@
   <iframe id="upload_target" name="upload_target" src="" style="width:100%;height:100;border:0px solid #fff;"></iframe>
 </div>
 
-<div id="doc_box" class="modal hide fade well container" style="width:400px">
-  <div>Share URL: <input id="doc_url" class="login_field" type="text" style="width:75%"></input></div><div class="clear"></div>
+<div id="doc_box" class="modal hide fade well container">
+  <div>
+    Please enter the google drive share url below:
+  </div> 
+  <input id="doc_url" class="login_field" type="text" style="width:95%"></input>
+  <div class="clear"/>
   <div style="float:right;">
       <button id="save_doc" class="login_button btn btn-success">Save</button>
-      <button id="cancel_doc" class="cancel_login_button btn" style="margin:15px 10px 0px 0px">Cancel</button>
+      <button id="cancel_doc" class="cancel_login_button btn btn-danger" style="margin:15px 0px 0px 0px">Cancel</button>
   </div>
 </div>
 
 <!-- Field matching Modal Box -->
-<div id="match_box" class="modal hide fade well container" style="width:400px">
+<div id="match_box" class="modal hide fade well container">
   <p>
     We were unable to automatically match up your CSV headers with the project fields. Below is our best guess - please correct it with the dropdown boxes before continuing.
   </p>
@@ -221,7 +230,7 @@
 
   <div style="float:right;">
     <button class="finished_button btn btn-success"> Finished </button>
-    <button class="cancel_upload_button btn" style="margin:15px 10px 0px 0px"> Cancel Upload </button>
+    <button class="cancel_upload_button btn btn-danger" style="margin:15px 0px 0px 0px"> Cancel Upload </button>
   </div>
 </div>
 
@@ -233,7 +242,7 @@
 </div>
 
 <!-- Field Templating Modal Box -->
-<div id="template_match_box" class="modal hide fade well container" style="width:400px">
+<div id="template_match_box" class="modal hide fade well container">
   <p>
     Please finish the template processing by telling us the type of each of your fields.
   </p>
@@ -242,6 +251,6 @@
 
   <div style="float:right;">
     <button class="finished_button btn btn-success"> Finished </button>
-    <button class="cancel_upload_button btn" style="margin:15px 10px 0px 0px"> Cancel Upload </button>
+    <button class="cancel_upload_button btn btn-danger" style="margin:15px 0px 0px 0px"> Cancel Upload </button>
   </div>
 </div>

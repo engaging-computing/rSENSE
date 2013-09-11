@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <html style="margin:0;padding:0;height:100%;">
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
- 
-
   <head>
     <title> <%= render_title %> </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <%= stylesheet_link_tag    "application", :media => "all" %>
     <%= javascript_include_tag "application" %>
     <%= csrf_meta_tags %>
@@ -16,6 +13,12 @@
   <% end %>
 
   <body style="margin:0;padding:0;height:100%;background-color:#ddd;">
+
+    <% unless flash[:debug].nil? %>
+    <!-- 
+    <%= raw flash[:debug] %> 
+    -->
+    <% end %>
 
     <div style="min-height:100%;position:relative;">
       
@@ -33,13 +36,13 @@
       <% end %>
 
       <!-- Add the hidden login dialog to the layout so that its accessable everywhere -->
-      <div id="login_box" class="modal hide fade well container" style="width:400px">
-        <div>Username: <input id="login_user" class="login_field" type="text" style="width:75%"></input></div><div class="clear"></div>
-        <div>Password: <input id="login_password" class="login_field" type="password" style="width:75%"></input></div><div class="clear"></div>
+      <div id="login_box" class="modal hide fade well container">
+        <div>Username: <input id="login_user" class="login_field" type="text" style="width:65%"></input></div><div class="clear"></div>
+        <div>Password: <input id="login_password" class="login_field" type="password" style="width:65%"></input></div><div class="clear"></div>
 	<div>New to iSENSE? <a href="<%= new_user_path %>">Sign up</a></div>
         <div style="float:right;">
             <button class="login_button btn btn-success">Login</button>
-            <button class="cancel_login_button btn">Cancel</button>
+            <button class="cancel_login_button btn btn-danger">Cancel</button>
         </div>
       </div>
 
@@ -58,7 +61,7 @@
           <div style="float:left;vertical-align:text-bottom;height:50px;font-size:15px;">
             
             <div class="visible-desktop visible-tablet" style="margin-left:10px;height:50px;">
-              <!--<a class="navbar-btn" href="/news"><i class="icon-book icon-white"></i> News</a>-->
+              <a class="navbar-btn" href="/news"><i class="icon-book icon-white"></i> News</a>
               <a class="navbar-btn" href="/projects"><i class="icon-folder-open icon-white"></i> Projects</a>
               <a class="navbar-btn" href="/users"><i class="icon-user icon-white"></i> Users</a>
               <a class="navbar-btn" href="/visualizations"><i class="icon-picture icon-white"></i> Visualizations</a>
@@ -82,7 +85,7 @@
           
           <!-- Pillbox Menu for both layouts -->
           <div class="visible-desktop visible-tablet">
-            <div class="pillbox desktop-tablet" style="line-height:50px;">
+            <div class="pillbox desktop-tablet">
               <% if @cur_user == nil %>
                   <a href="" class="login navbar-btn">Login</a>
                   <a href="<%= new_user_path %>" class="navbar-btn">Register</a>
@@ -94,34 +97,28 @@
           </div>
           
           <div class="visible-phone">
-            <div class="pillbox phone" style="padding-top:10px; margin-right: 10px;">
-              <!--<% if @cur_user == nil %>
-                <div class="btn-group">
-                  <a href="" class="login btn btn-small btn-primary white">Login</a>
-                  <a href="<%= new_user_path %>"  class="btn btn-small btn-primary white">Register</a>
-                </div>
+          <div class="pillbox phone">
+              <% if @cur_user == nil %>
+                  <a href="" class="login navbar-btn">Login</a>
+                  <a href="<%= new_user_path %>"  class="navbar-btn">Register</a>
               <% else %>
-                <div class="btn-group">
-                  <a class="btn btn-small btn-primary white" href="<%= user_path(@cur_user) %>"><%= @cur_user.name %></a>
+                  <a class="navbar-btn" href="<%= user_path(@cur_user) %>"><%= @cur_user.name %></a>
                   
-                  <%= link_to 'Logout', login_path(), method: :delete, class: "btn btn-small btn-primary" %>
+                  <%= link_to 'Logout', login_path(), method: :delete, class: "navbar-btn" %>
                   
-                </div>
-              <% end %> -->
-              
-              <button type="button" class="btn btn-inverse" style="margin-right: 20px;">
-                <a href="/tutorials"><i class="icon-search icon-white"> </i> </a>
-              </button>
-              
-              <button type="button" id="mobile_menu_trigger" class="btn btn-primary"><i class="icon-align-justify icon-white"></i></button>
-              
-            </div>
+              <% end %>
+          </div>
           </div>
         </div>
       </div>
-      
-      
-      
+
+      <% unless flash[:alert].nil? %>
+        <div style="clear: both; margin-top: 50px;"> &nbsp; </div>
+        <div style="background: red; color: white; font-weight: bold; text-align: center; padding: 1ex;">
+          <p><%= flash[:alert] %></p>
+        </div>
+      <% end %>
+
       <!-- Main Container -->
       <div style="padding:50px 0px 70px 0px;margin:0;min-height:100%;">
         <div class="container mainContent" data-role="page">
@@ -155,7 +152,7 @@
             
       <!-- Footer -->      
       <div class="footer">
-        <p>The iSENSE project is a collaborative effort of the University of Massachusetts Lowell and Machine Science Inc. </p>
+        <p>The iSENSE project is a collaborative effort of the University of Massachusetts Lowell and Machine Science Inc. <a href="/about">about</a> | <a href="/contact">contact</a></p>
         <p>Our work is supported by grants <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0735597">DRL-0735597</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0735592">DRL-0735592</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0546513">DRL-0546513</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=1123998">IIS-1123998</a>, and <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=1123972">IIS-1123972</a> from the National Science Foundation and a gift from Google Inc.</p>
         <p><%= @version %></p>
       </div>

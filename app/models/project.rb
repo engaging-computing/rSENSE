@@ -19,9 +19,10 @@ class Project < ActiveRecord::Base
   has_many :likes
   has_many :visualizations
 
-  belongs_to :owner, class_name: "User", foreign_key: "user_id"
+  belongs_to :user
   
   alias_attribute :name, :title
+  alias_attribute :owner, :user
   
   def sanitize_project
     self.content = sanitize self.content

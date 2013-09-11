@@ -3,7 +3,7 @@ class Visualization < ActiveRecord::Base
   include ActionView::Helpers::DateHelper
   include ActionView::Helpers::SanitizeHelper
   
-  attr_accessible :content, :data, :project_id, :globals, :title, :user_id, :hidden, :featured, :featured_at, :tn_src, :tn_file_key
+  attr_accessible :content, :data, :project_id, :globals, :title, :user_id, :hidden, :featured, :featured_at, :tn_src, :tn_file_key, :summary
 
   has_many :media_objects
   
@@ -20,9 +20,11 @@ class Visualization < ActiveRecord::Base
   before_save :sanitize_viz
   before_destroy :aws_del
 
-  belongs_to :owner, class_name: "User", foreign_key: "user_id"
+  belongs_to :user
   belongs_to :project
-  
+
+  alias_attribute :owner, :user
+
   def sanitize_viz
   
     self.content = sanitize self.content

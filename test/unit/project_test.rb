@@ -67,10 +67,6 @@ class ProjectTest < ActiveSupport::TestCase
     assert_equal "Sample Test", projects(:one).title
   end
   
-  test "project user_id" do
-    assert_equal 1, projects(:one).user_id
-  end
-  
   test "project content" do
     assert_equal "Sample Content", projects(:one).content
   end

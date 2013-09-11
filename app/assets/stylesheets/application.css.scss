@@ -118,9 +118,16 @@ div.info_text
     padding: 0px 0px 5px 0px;
 }
 
-div#login_box
+.modal
 {
+    position:fixed;
+    width:300px;
     display: none;
+    top:46px !important;
+    left:50%;
+    margin-left:-160px;
+    padding: 10px;
+    padding-top: 25px;
 }
 
 input.login_field
@@ -131,7 +138,7 @@ input.login_field
 button.login_button
 {
     float: right;
-    margin: 15px 0px 0px 0px;
+    margin: 15px 0px 0px 10px;
 }
 
 button.cancel_login_button
@@ -481,9 +488,23 @@ input.object_hidden_checkbox
   line-height:50px;
   display:inline-block;
   color: white;
-  font-size: 12pt;
-  padding: 1px 17px 0px 17px;
   position: relative;
+  @media screen and (max-width: 449px) {
+    font-size: 7pt;
+    padding: 1px 5px 0px 5px;
+  }
+  @media screen and (min-width: 450px) {
+    font-size: 9pt;
+    padding: 1px 7px 0px 7px;
+  }
+  @media screen and (min-width: 980px) {
+    font-size: 11pt;
+    padding: 1px 14px 0px 14px;
+  }
+   @media screen and (min-width: 1200px) {
+    font-size: 12pt;
+    padding: 1px 17px 0px 17px;
+  }
 }
 .navbar-btn:hover
 {
@@ -495,8 +516,19 @@ input.object_hidden_checkbox
 {
   display: block;
   position: relative;
-  left:443px;
   z-index: -10;
+  @media screen and (max-width: 979px) {
+    font-size: 9pt;
+    left:284px;
+  }
+  @media screen and (min-width: 980px) {
+    font-size: 10pt;
+    left:401px;
+  }
+   @media screen and (min-width: 1200px) {
+    font-size: 11pt;
+    left:447px;
+  }
 }
 
 .ddmenu
@@ -531,6 +563,17 @@ input.object_hidden_checkbox
 {
   display: block;
   position: relative;
-  left:443px;
   z-index: -10;
+  @media screen and (max-width: 979px) {
+    font-size: 9pt;
+    left:284px;
+  }
+  @media screen and (min-width: 980px) {
+    font-size: 10pt;
+    left:401px;
+  }
+   @media screen and (min-width: 1200px) {
+    font-size: 11pt;
+    left:447px;
+  }
 }

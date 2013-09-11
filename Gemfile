@@ -17,8 +17,9 @@ group :assets do
 end
 
 # Jquery stuff
-gem 'less-rails'
-gem 'less-rails-bootstrap'
+gem 'less', '= 2.3.2'
+gem 'less-rails', '= 2.3.3'
+gem 'less-rails-bootstrap', '= 2.3.3'
 
 gem 'jquery-rails'
 

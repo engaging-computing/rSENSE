@@ -1,4 +1,8 @@
 Rsense::Application.routes.draw do
+  
+  match '/news/add', to: 'news#create'
+  resources :news, except: [:new, :edit]
+
   resources :media_objects
 
   post "projects/:id/templateFields" => "projects#templateFields"
@@ -6,8 +10,7 @@ Rsense::Application.routes.draw do
   match "/projects/import" => "projects#importFromIsense"
   match "/projects/import/:pid" => "projects#importFromIsense"
 
-
-  resources :visualizations
+  resources :visualizations, except: [:new]
 
   #resources :data_sets
 
@@ -15,15 +18,18 @@ Rsense::Application.routes.draw do
 
   resources :groups
 
-  resources :fields
+  resources :fields, except: [:index, :new, :edit]
 
   match "projects/create" => "projects#create"
-  resources :projects
+  resources :projects, except: [:new]
 
   match "tutorials/create" => "tutorials#create"
   match "/tutorials/switch/" => "tutorials#switch"
-  resources :tutorials
+  resources :tutorials, except: [:new]
 
+  match 'about' => 'home#about'
+  match 'contact' => 'home#contact'
+  
   get "home/index"
   root :to => "home#index"
 
@@ -68,6 +74,8 @@ Rsense::Application.routes.draw do
 
   match "/projects/:id/updateFields" => "fields#updateFields"
 
+
+  
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

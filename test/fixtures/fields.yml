@@ -4,10 +4,10 @@ one:
   name: MyString
   field_type: 1
   unit: MyString
-  project_id: 1
+  project: one
 
 two:
   name: MyString
   field_type: 1
   unit: MyString
-  project_id: 1
+  project: one

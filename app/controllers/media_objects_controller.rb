@@ -30,7 +30,7 @@ class MediaObjectsController < ApplicationController
         format.html { redirect_to @media_object, notice: 'Media Object was successfully updated.' }
         format.json { render json:{}, status: :ok }
       else
-        format.html { render action: "edit" }
+        format.html { redirect_to @media_object, alert: 'Media Object not successfully updated.' }
         format.json { render json: @media_object.errors.full_messages(), status: :unprocessable_entity }
       end
     end
@@ -129,6 +129,12 @@ class MediaObjectsController < ApplicationController
       if(can_edit?(@visualization))
         @mo = {user_id: @visualization.owner.id, src: o.public_url.to_s, name: fileName, media_type: fileType, visualization_id: @visualization.id, file_key: fileKey}
       end
+    when 'news'
+      @news = News.find_by_id(id)
+      if(can_edit?(@news))
+        @mo = {user_id: @news.owner.id, src: o.public_url.to_s, name: fileName, media_type: fileType, news_id: @news.id, file_key: fileKey}
+      end
+        
     end
 
     #If we managed to make some params build the media object and write to S3
