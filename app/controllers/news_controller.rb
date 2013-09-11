@@ -18,9 +18,11 @@ class NewsController < ApplicationController
   def show
     @news = News.find(params[:id])
 
+    recur = params.key?(:recur) ? params[:recur].to_bool : false
+  
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @news.to_hash() }
+      format.json { render json: @news.to_hash(recur) }
     end
   end
 
