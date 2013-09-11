@@ -18,7 +18,6 @@ end
 
 # Integration testing stuff
 group :development, :test do
-  
   gem "capybara-webkit"
   gem "launchy"
 end
@@ -38,6 +37,7 @@ gem 'jquery-ui-rails'
 
 # Include Twitter bootstrap
 gem 'twitter-bootstrap-rails', '2.2.8'
+gem 'execjs'
 gem 'therubyracer', :platforms => :ruby
 
 # Include AWS
