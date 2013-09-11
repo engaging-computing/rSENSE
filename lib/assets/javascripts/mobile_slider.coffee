@@ -1,5 +1,5 @@
 $ ->
-  ($ '#mobile_menu').toggle 'slide'
+  ($ '#mobile_menu').toggle()
   
   ($ '#mobile_menu_trigger').click ->
     ($ '#mobile_menu').toggle 'slide'
