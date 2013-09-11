@@ -107,8 +107,8 @@
       <% end %>
 
       <!-- Main Container -->
-      <div style="padding:50px 0px 70px 0px;margin:0;min-height:100%;">
-        <div class="container mainContent" data-role="page">
+      <div style="padding:50px 0px 70px 0px; margin:0; min-height:100%; <%= @layout_wide ? 'margin-right:40px;' : '' %>">
+        <div class="container mainContent <%= @layout_wide ? 'mc-wide' : '' %>" data-role="page">
           <%= yield %>
         </div>
       </div>
