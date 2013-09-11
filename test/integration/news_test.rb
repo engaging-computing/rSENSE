@@ -1,12 +1,14 @@
 require 'test_helper'
 
 class NewsTest < ActionDispatch::IntegrationTest
+  include CapyHelper
+
   setup do
     Capybara.current_driver = Capybara.javascript_driver
   end
 
   teardown do
-    Capybara.reset_sessions!
+    finish
   end
   
   test "add a news item" do
@@ -35,20 +37,5 @@ class NewsTest < ActionDispatch::IntegrationTest
     
     assert page.has_no_content?("Add News Item")
     assert page.has_content?("The Quick Brown Fox")
-  end
-
-  private
-
-  def login(user, pass)
-    visit '/'
-    find('#title_bar').click_on('Login')
-    fill_in 'Username', with: user
-    fill_in 'Password', with: pass
-    find('#login_box').click_on('Login')
-  end
-
-  def logout
-    visit '/'
-    find('#title_bar').click_on('Logout')
   end
 end
