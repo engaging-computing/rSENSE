@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
       @cur_user = User.find_by_id(session[:user_id])
       @namespace = {action: params[:action], controller: params[:controller]}
       @version = `(git describe --tags)`
-      @version = "Development Version" if @version = ""
+      @version = "Development Version" if @version == ""
   end
   
   def authorize
