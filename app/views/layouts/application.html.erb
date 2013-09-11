@@ -70,13 +70,13 @@
               </ul>
             </div>
             
-            <div class="visible-phone btn-group" style="height:15px;padding-top:10px;margin-left:10px;">
-            <!--<a class="navbar-btn" href="/news"><i class="icon-book icon-white"></i></a>-->
+            <!--<div class="visible-phone btn-group" style="height:15px;padding-top:10px;margin-left:10px;">
+            <!--<a class="navbar-btn" href="/news"><i class="icon-book icon-white"></i></a>->
               <a class="navbar-btn" href="/projects"><i class="icon-folder-open icon-white"> </i> </a>
               <a class="navbar-btn" href="/users"><i class="icon-user icon-white"> </i> </a>
               <a class="navbar-btn" href="/visualizations"><i class="icon-picture icon-white"> </i> </a>
               <a class="navbar-btn" href="/tutorials"><i class="icon-info-sign icon-white"> </i> </a>
-            </div>
+            </div>-->
             
           </div>
           
@@ -94,8 +94,8 @@
           </div>
           
           <div class="visible-phone">
-            <div class="pillbox phone" style="padding-top:10px;">
-              <% if @cur_user == nil %>
+            <div class="pillbox phone" style="padding-top:10px; margin-right: 10px;">
+              <!--<% if @cur_user == nil %>
                 <div class="btn-group">
                   <a href="" class="login btn btn-small btn-primary white">Login</a>
                   <a href="<%= new_user_path %>"  class="btn btn-small btn-primary white">Register</a>
@@ -107,18 +107,51 @@
                   <%= link_to 'Logout', login_path(), method: :delete, class: "btn btn-small btn-primary" %>
                   
                 </div>
-              <% end %>
+              <% end %> -->
+              
+              <button type="button" class="btn btn-inverse" style="margin-right: 20px;">
+                <a href="/tutorials"><i class="icon-search icon-white"> </i> </a>
+              </button>
+              
+              <button type="button" id="mobile_menu_trigger" class="btn btn-primary"><i class="icon-align-justify icon-white"></i></button>
+              
             </div>
           </div>
         </div>
       </div>
       
+      
+      
       <!-- Main Container -->
       <div style="padding:50px 0px 70px 0px;margin:0;min-height:100%;">
-        <div class="container mainContent">
+        <div class="container mainContent" data-role="page">
           <%= yield %>
         </div>
       </div>
+      
+      <!-- Mobile Menu -->
+       <div id="mobile_menu" data-role="panel" style="z-index: 9999;">
+       
+         <ul class="nav nav-list">
+         
+           <li class="active"><a href="/"><i class="icon-home icon-white"></i>Home</a></li>
+           <li class="nav-header">Navigation</li>
+           <li><a href="/news"><i class="icon-book icon-white"></i>News</a></li>
+           <li class="nav-header nav-divider"><hr /></li>
+           <li><a href="/projects"><i class="icon-folder-open icon-white"></i>Projects</a></li>
+           <li class="nav-header nav-divider"><hr /></li>
+           <li><a href="/users"><i class="icon-user icon-white"></i>Users</a></li>
+           <li class="nav-header nav-divider"><hr /></li>
+           <li><a href="/visualizations"><i class="icon-picture icon-white"></i>Visualizations</a></li>
+           <li class="nav-header nav-divider"><hr /></li>
+           <li><a href="/tutorials"><i class="icon-info-sign icon-white"></i>Tutorials</a></li>
+           <li class="nav-header">Settings</li>
+           <li>Login!</li>
+         
+         </ul>
+       
+       </div>
+       
             
       <!-- Footer -->      
       <div class="footer">

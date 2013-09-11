@@ -12,11 +12,56 @@
  *= require_tree .
  *= require redactor.css
  *= require jquery.ui.all
+
+ * require jquery.mobile
+
  *= require_self
  *= require highvis.css.scss
  *= require jquery.dataTables.css
  *= require bootstrap-datetimepicker.less
  */
+
+#mobile_menu {
+  position: absolute;
+  top: 50px;
+  left: 0px;
+  min-width: 65%;
+  min-height: 95%;
+  
+  background-color: #171751;
+  
+  ul li.nav-divider {
+    padding-top:0px;
+    padding-bottom:0px;
+    margin-top: 0px;
+    
+    hr {
+      margin: 0px;
+      color: #131348;
+      background-color: #131348;
+      border-color: #131348;
+    }
+    
+  }
+  
+  ul li {
+    padding: 10px;
+    text-shadow: none !important;
+    
+    
+    /*border: 1px solid #131348;
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;*/
+    
+    a {
+      color: white;
+      width: 100%;
+    }
+  }
+}
+
+
 
 .word-break { word-wrap: break-word; }
 
