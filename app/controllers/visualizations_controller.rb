@@ -66,7 +66,8 @@ class VisualizationsController < ApplicationController
           @Globals = { options: options }
           render 'embed', :layout => 'embedded'
         else
-          render :layout => 'applicationWide' 
+          @layout_wide = true
+          render
         end
       end
       format.json { render json: @visualization.to_hash(recur) }
@@ -331,7 +332,8 @@ class VisualizationsController < ApplicationController
           @Globals = { options: options }
           render 'embed', :layout => 'embedded'
         else
-          render :layout => 'applicationWide' 
+          @layout_wide = true
+          render
         end
       end
     end

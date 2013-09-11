@@ -17,6 +17,10 @@
 //= require name_popup
 //= require jquery_ujs
 //= require jquery.ui.all
+
+// require jquery.mobile.custom.min
+//= require jquery.mobile
+
 //= require twitter/bootstrap
 //= require bootstrap
 //= require redactor.min.js
@@ -36,6 +40,7 @@
 //= require media_objects_view
 //= require jcarousellite.min.js
 //= require titlebar.js.coffee
+//= require mobile_slider
 //
 // Visualization stuff follows
 //
