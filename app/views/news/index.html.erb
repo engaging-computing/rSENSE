@@ -2,6 +2,14 @@
   window.logged_in = <%= @cur_user != nil %>;
   window.is_admin = <%= is_admin? %>
 </script>
+
+<% if is_admin? %>
+  <div class="span12">
+    <p><%= link_to "Add News Item", '/news/add' %></p>
+  </div>
+  <div class="clearfix">&nbsp;</div>
+<% end %>
+
 <% @news.each do |n| %>
   <div class="row <%= cycle('feed-even','feed-odd')%>">
     <div class="span12 news" href="<%= news_path(n) %>">

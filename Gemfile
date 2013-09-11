@@ -18,7 +18,9 @@ end
 
 # Integration testing stuff
 group :development, :test do
-  gem "capybara-webkit"
+  gem "capybara"
+  gem "selenium-webdriver"
+  #gem "capybara-webkit"
   gem "launchy"
 end
 
