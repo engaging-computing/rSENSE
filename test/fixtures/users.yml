@@ -8,7 +8,8 @@ nixon:
   content: 
   group_id: 
   validated: true
-  password_digest: $2b$10$zKJclx4eQl17woUlK8hlE.6fn9rAMwru8uMlbtLQbS97...
+  # Password is "12345"
+  password_digest: $2a$10$aK2OsTVTnWuPVmDthm9pj.vDApO9VGNgRwvwHmwzVQ0ScmW3BOPjC
   admin: true
 
 kate:
