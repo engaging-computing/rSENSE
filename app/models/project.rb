@@ -57,6 +57,7 @@ class Project < ActiveRecord::Base
       featuredMediaId: self.featured_media_id,
       name: self.name,
       url: UrlGenerator.new.project_url(self),
+      path: UrlGenerator.new.project_path(self),
       hidden: self.hidden,
       featured: self.featured,
       likeCount: self.like_count,
