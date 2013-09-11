@@ -3,13 +3,14 @@ class MediaObject < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
 
   
-  attr_accessible :project_id, :media_type, :name, :data_set_id, :src, :user_id, :tutorial_id, :visualization_id, :title, :file_key, :hidden, :tn_file_key, :tn_src
+  attr_accessible :project_id, :media_type, :name, :data_set_id, :src, :user_id, :tutorial_id, :visualization_id, :title, :file_key, :hidden, :tn_file_key, :tn_src, :news_id
   
-  belongs_to :owner, class_name: "User", foreign_key: "user_id"
-  belongs_to :project, class_name: "Project", foreign_key: "project_id" 
-  belongs_to :dataSet, class_name: "DataSet", foreign_key: "data_set_id" 
-  belongs_to :tutorial, class_name: "Tutorial", foreign_key: "tutorial_id"
-  belongs_to :visualization, class_name: "Visualization", foreign_key: "visualization_id"
+  belongs_to :user
+  belongs_to :project
+  belongs_to :data_set
+  belongs_to :tutorial
+  belongs_to :visualization
+  belongs_to :news, class_name: "News", foreign_key: "news_id"
   
   alias_attribute :title, :name
   
@@ -19,6 +20,9 @@ class MediaObject < ActiveRecord::Base
   
   before_save :sanitize_media
   before_destroy :aws_del
+  
+  alias_attribute :owner, :user
+  alias_attribute :dataSet, :data_set
   
   def sanitize_media
   
@@ -92,6 +96,8 @@ class MediaObject < ActiveRecord::Base
   
   private
   def aws_del()
+    return if Rails.env.test?
+
     #Set up the link to S3
     s3ConfigFile = YAML.load_file('config/aws_config.yml')
   

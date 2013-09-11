@@ -2,6 +2,8 @@ require 'test_helper'
 
 class TutorialsControllerTest < ActionController::TestCase
   setup do
+    @nixon = users(:nixon)
+
     @tutorial = tutorials(:one)
   end
 
@@ -11,14 +13,9 @@ class TutorialsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:tutorials)
   end
 
-  test "should get new" do
-    get :new
-    assert_response :success
-  end
-
   test "should create tutorial" do
     assert_difference('Tutorial.count') do
-      post :create, tutorial: { content: @tutorial.content, title: @tutorial.title }
+      post :create, { tutorial: { content: @tutorial.content, title: @tutorial.title }}, { user_id: @nixon }
     end
 
     assert_redirected_to tutorial_path(assigns(:tutorial))
@@ -30,18 +27,19 @@ class TutorialsControllerTest < ActionController::TestCase
   end
 
   test "should get edit" do
-    get :edit, id: @tutorial
+    get :edit, { id: @tutorial }, { user_id: @nixon }
     assert_response :success
   end
 
   test "should update tutorial" do
-    put :update, id: @tutorial, tutorial: { content: @tutorial.content, title: @tutorial.title }
+    put :update, { id: @tutorial, tutorial: { content: @tutorial.content, title: @tutorial.title } }, 
+      { user_id: @nixon }
     assert_redirected_to tutorial_path(assigns(:tutorial))
   end
 
   test "should destroy tutorial" do
-    assert_difference('Tutorial.count', -1) do
-      delete :destroy, id: @tutorial
+    assert_difference('Tutorial.count', 0) do
+      delete :destroy, { id: @tutorial }, { user_id: @nixon }
     end
 
     assert_redirected_to tutorials_path
