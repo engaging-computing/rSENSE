@@ -25,12 +25,14 @@
   margin-left: 10px;
 }
 
-.checkbox_hidden
+.news_title 
 {
- padding-bottom: 5px; 
-}
-
-.news_title .info_text
-{
- font-size: 1.75em; 
+  .info_text
+  {
+    font-size: 1.75em; 
+  }
+  .summary
+  {
+    font-size: 1em;
+  }
 }
