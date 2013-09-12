@@ -3,20 +3,14 @@ $ ->
   if namespace.controller is "users" and namespace.action is "index"
 
     addItem = (object) ->
-      newItem =   "<div class='item word-break'>"
-
-      newItem +=  "<h4 class='center' style='margin-top:0px;'><a href='#{object.url}'>#{object.username}</a>"
-
-      newItem += "</h4>"
-
-      if (object.gravatar) != null
-        newItem += "<div class='center'><a href='#{object.url}'><img src='#{object.gravatar}' /></a><br /></div>"
-
-      newItem +=  "<b>Name: </b><a href='#{object.url}'>#{helpers.truncate object.name, 16}</a><br />"
-
-      newItem +=  "<b>Member Since: </b>#{object.createdAt}<br />"
-
-      newItem +=  "</div>"
+      newItem = """
+        <div class='item word-break'>
+          <h4 class='center' style='margin-top:0px;'><a href='#{object.url}'>#{object.username}</a></h4>
+          #{if object.gravatar? then "<div class='center'><a href='#{object.url}'><img src='#{object.gravatar}' /></a><br /></div>" else ""}
+          <b>Name: </b><a href='#{object.url}'>#{helpers.truncate object.name, 16}</a><br />
+          <b>Member Since: </b>#{object.createdAt}<br />
+        </div>
+      """
 
       newItem = ($ newItem)
 
