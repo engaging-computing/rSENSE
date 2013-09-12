@@ -5,7 +5,7 @@
   <div class="span8 news_title"><%= news_edit_menu_helper false%></div>
 
   <% if is_admin? %>
-    <div class="span12 checkbox_hidden">
+    <div class="span12">
       <label for="hide_news_checkbox">Hidden:
         <input id="hide_news_checkbox" type="checkbox" href='' <%if @news.hidden%>checked<%end%>/>
       </label>
