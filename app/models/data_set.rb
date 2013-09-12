@@ -44,6 +44,7 @@ class DataSet < ActiveRecord::Base
       name: self.title,
       hidden: self.hidden,
       url: UrlGenerator.new.data_set_url(self),
+      path: UrlGenerator.new.data_set_path(self),
       createdAt: self.created_at.strftime("%B %d, %Y"),
       fieldCount: self.project.fields.length,
       datapointCount: data[:data].length
