@@ -51,6 +51,7 @@ class Visualization < ActiveRecord::Base
       id: self.id,
       name: self.name,
       url: UrlGenerator.new.visualization_url(self),
+      path: UrlGenerator.new.visualization_path(self),
       hidden: self.hidden,
       featured: self.featured,
       timeAgoInWords: time_ago_in_words(self.created_at),
