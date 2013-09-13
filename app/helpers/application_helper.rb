@@ -33,15 +33,7 @@ module ApplicationHelper
   end
   
   def get_featured_tutorials
-    tutorials = Tutorial.where("featured_number IS NOT NULL")
-
-    @tutorials = []
-    @tutorials[1] = tutorials.where('featured_number == ? and hidden == ?',1, false).first || nil
-    @tutorials[2] = tutorials.where('featured_number == ? and hidden == ?',2, false).first || nil
-    @tutorials[3] = tutorials.where('featured_number == ? and hidden == ?',3, false).first || nil
-    @tutorials[4] = tutorials.where('featured_number == ? and hidden == ?',4, false).first || nil
-    
-    @tutorials
+    return Tutorial.where("featured_number IS NOT NULL").order('featured_number ASC')
   end
 
   # Begin permissions stuff

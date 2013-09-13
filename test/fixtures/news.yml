@@ -4,7 +4,13 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-one: {}
+one: 
+  title: I'm a news guy
+  content: I am content for news
+  summary: This contains content
+  hidden: -1
+  user: nixon
+  featured_media_id: nil
 # column: value
 #
 two: {}

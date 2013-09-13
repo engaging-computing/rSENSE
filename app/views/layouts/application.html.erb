@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <html style="margin:0;padding:0;height:100%;">
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
- 
-
   <head>
     <title> <%= render_title %> </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <%= stylesheet_link_tag    "application", :media => "all" %>
     <%= javascript_include_tag "application" %>
     <%= csrf_meta_tags %>
@@ -16,6 +13,12 @@
   <% end %>
 
   <body style="margin:0;padding:0;height:100%;background-color:#ddd;">
+
+    <% unless flash[:debug].nil? %>
+    <!-- 
+    <%= raw flash[:debug] %> 
+    -->
+    <% end %>
 
     <div style="min-height:100%;position:relative;">
       
@@ -34,8 +37,12 @@
 
       <!-- Add the hidden login dialog to the layout so that its accessable everywhere -->
       <div id="login_box" class="modal hide fade well container">
-        <div>Username: <input id="login_user" class="login_field" type="text" style="width:65%"></input></div><div class="clear"></div>
-        <div>Password: <input id="login_password" class="login_field" type="password" style="width:65%"></input></div><div class="clear"></div>
+        <div><label for="login_user">Username:</label>
+          <input id="login_user" class="login_field" type="text" style="width:65%"></input>
+        </div><div class="clear"></div>
+        <div><label for="login_password">Password:</label>
+          <input id="login_password" class="login_field" type="password" style="width:65%"></input>
+        </div><div class="clear"></div>
 	<div>New to iSENSE? <a href="<%= new_user_path %>">Sign up</a></div>
         <div style="float:right;">
             <button class="login_button btn btn-success">Login</button>
@@ -64,20 +71,11 @@
               <a class="navbar-btn" href="/visualizations"><i class="icon-picture icon-white"></i> Visualizations</a>
               <a class="navbar-btn" href="/tutorials"><i class="icon-info-sign icon-white"></i> Tutorials <img src="/assets/arrow_down.png"></a>
               <ul class="ddmenu">
-                 <% (1..4).each do |i|%>
-                  <%= render "tutorials/display_tutorials", :id => "#{i}"%>
-                <%end%>
+                <% get_featured_tutorials.each do |tutorial|%>
+                  <li><%= link_to tutorial.title, tutorial_path(tutorial)%></li>
+                <% end %>                
               </ul>
             </div>
-            
-            <div class="visible-phone btn-group" style="height:15px;margin-left:10px;">
-            <a class="navbar-btn" href="/news"><i class="icon-book icon-white"></i></a>
-              <a class="navbar-btn" href="/projects"><i class="icon-folder-open icon-white"> </i> </a>
-              <a class="navbar-btn" href="/users"><i class="icon-user icon-white"> </i> </a>
-              <a class="navbar-btn" href="/visualizations"><i class="icon-picture icon-white"> </i> </a>
-              <a class="navbar-btn" href="/tutorials"><i class="icon-info-sign icon-white"> </i> </a>
-            </div>
-            
           </div>
           
           <!-- Pillbox Menu for both layouts -->
@@ -94,31 +92,58 @@
           </div>
           
           <div class="visible-phone">
-          <div class="pillbox phone">
-              <% if @cur_user == nil %>
-                  <a href="" class="login navbar-btn">Login</a>
-                  <a href="<%= new_user_path %>"  class="navbar-btn">Register</a>
-              <% else %>
-                  <a class="navbar-btn" href="<%= user_path(@cur_user) %>"><%= @cur_user.name %></a>
+            <div class="pillbox phone">
+              <button type="button" class="btn btn-inverse" style="margin-right: 20px; margin-top: 10px;">
+                <a href="/tutorials"><i class="icon-search icon-white"> </i> </a>
+              </button>
                   
-                  <%= link_to 'Logout', login_path(), method: :delete, class: "navbar-btn" %>
-                  
-              <% end %>
-          </div>
+              <button type="button" id="mobile_menu_trigger" class="btn btn-primary" style="margin-right: 20px; margin-top: 10px;"><i class="icon-align-justify icon-white"></i></button>  
+            </div>
           </div>
         </div>
       </div>
-      
+
+      <% unless flash[:alert].nil? %>
+        <div style="clear: both; margin-top: 50px;"> &nbsp; </div>
+        <div style="background: red; color: white; font-weight: bold; text-align: center; padding: 1ex;">
+          <p><%= flash[:alert] %></p>
+        </div>
+      <% end %>
+
       <!-- Main Container -->
-      <div style="padding:50px 0px 70px 0px;margin:0;min-height:100%;">
-        <div class="container mainContent">
+      <div style="padding:50px 0px 70px 0px; margin:0; min-height:100%; <%= @layout_wide ? 'margin-right:40px;' : '' %>">
+        <div class="container mainContent <%= @layout_wide ? 'mc-wide' : '' %>" data-role="page">
           <%= yield %>
         </div>
       </div>
+      
+      <!-- Mobile Menu -->
+       <div id="mobile_menu" data-role="panel" style="z-index: 9999;">
+       
+         <ul class="nav nav-list">
+         
+           <li class="active"><a href="/"><i class="icon-home icon-white"></i>Home</a></li>
+           <li class="nav-header">Navigation</li>
+           <li><a href="/news"><i class="icon-book icon-white"></i>News</a></li>
+           <li class="nav-header nav-divider"><hr /></li>
+           <li><a href="/projects"><i class="icon-folder-open icon-white"></i>Projects</a></li>
+           <li class="nav-header nav-divider"><hr /></li>
+           <li><a href="/users"><i class="icon-user icon-white"></i>Users</a></li>
+           <li class="nav-header nav-divider"><hr /></li>
+           <li><a href="/visualizations"><i class="icon-picture icon-white"></i>Visualizations</a></li>
+           <li class="nav-header nav-divider"><hr /></li>
+           <li><a href="/tutorials"><i class="icon-info-sign icon-white"></i>Tutorials</a></li>
+           <li class="nav-header">Settings</li>
+           <li>Login!</li>
+         
+         </ul>
+       
+       </div>
+       
             
       <!-- Footer -->      
       <div class="footer">
-        <p>The iSENSE project is a collaborative effort of the University of Massachusetts Lowell and Machine Science Inc. </p>
+        <p>The iSENSE project is a collaborative effort of the University of Massachusetts Lowell and Machine Science Inc. <a href="/about">about</a> | <a href="/contact">contact</a></p>
         <p>Our work is supported by grants <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0735597">DRL-0735597</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0735592">DRL-0735592</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0546513">DRL-0546513</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=1123998">IIS-1123998</a>, and <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=1123972">IIS-1123972</a> from the National Science Foundation and a gift from Google Inc.</p>
         <p><%= @version %></p>
       </div>

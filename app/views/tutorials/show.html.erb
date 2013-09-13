@@ -2,7 +2,21 @@
 
 <div class="row">
   <div class="span5"><h1 id="title_span"><%= tutorial_edit_menu_helper %></h1></div>
-
+</div>
+  
+<div class="row">
+  <% if is_admin? %>
+    <div class="span4">
+      <label for="#feature_tutorial_dropdown"><b>Featured Order:</b>
+        <select class="selectpicker" id="feature_tutorial_dropdown" tutorial_id="<%=@tutorial.id%>">
+          <%= options_for_select([['Select One',nil],['1',1],['2',2],['3',3],['4',4]],@tutorial.featured_number)%>
+        </select>
+      </label>
+    </div>
+  <%end%>
+</div>
+  
+<div class="row">
   <%=render layout: "shared/box", locals: {title: 'Description', width: '12', unique_id: 'description', should_hide: false} do %>
     <%= tutorial_redactor_helper (can_edit? @tutorial) %>
   <%end%>
@@ -11,5 +25,4 @@
   <%=render layout: "shared/box", locals: {title: 'Media', width: '5', unique_id: 'media', should_hide: false} do %>
     <%=render "shared/media_objects_view", {type: 'tutorial', object: @tutorial} %>
   <%end%>
-
 </div>

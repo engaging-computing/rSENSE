@@ -1,9 +1,10 @@
 $ = jQuery
 
 $ ->
+   
   # Only allows the plugin to run on certain pages. Probably not the right place to do this.
   if (namespace.controller is "data_sets") and (namespace.action is "manualEntry" or namespace.action is "edit")
-
+ 
     #-----------------------------------------------------------------------
     # Map Specific Code
     #-----------------------------------------------------------------------
@@ -121,7 +122,7 @@ $ ->
       log = (msg) ->
         console?.log msg if settings.debug
 
-      return @each ()->
+      return @each () =>
 
         ### START ###
         # variable to keep track of our table
@@ -134,6 +135,17 @@ $ ->
         text_cols = []
         time_cols = []
 
+        #Enter events to add new row or go to begining of next row.
+        ($ @).on 'keypress', 'input', (event) ->
+          code = if event.keyCode then event.keyCode else event.which
+          if code == 13
+            cur_index = ($ event.target).closest('tr')[0].rowIndex
+            last_index = table.find('tr:last')[0].rowIndex
+            if cur_index == last_index
+              add_row(table)
+            table.find("tr:nth-child(#{cur_index+1})").find('input:first').select()
+
+        
         update_headers = () ->
           # separate columns by field type/validator
 
@@ -162,6 +174,8 @@ $ ->
           ($ row).closest('tr').remove()
 
         add_validators = (row) ->
+          row = ($ row).closest('tr')
+          
           update_headers()
           # attach validators
           for col in num_cols
@@ -174,7 +188,7 @@ $ ->
 
           for col in lon_cols
             do (col) ->
-              ($ row).children().eq(col).find('input').replaceWith "<div class='input-append'><input class='validate_longitude input-small' id='appendedInput' type='text' value='#{ ($ row).find('input').eq(col).val() }' /><span class='add-on'><a href='#' ><i class='icon-globe map_picker'></i></a></span></div>"
+              ($ row).children().eq(col).find('input').replaceWith "<div class='input-append'><input class='validate_longitude input-small' id='appendedInput' type='text' value='#{ ($ row).find('input').eq(col).val() }' /><span class='add-on'><a href='#' tabindex='32767'><i class='icon-globe map_picker'></i></a></span></div>"
               ($ row).children().eq(col).find('.map_picker').unbind().click ->
                 ($ this).closest("tr").addClass('target')
                 previous_lon = ($ this).closest('tr').find('.validate_longitude').val()
@@ -192,12 +206,12 @@ $ ->
 
           for col in time_cols
             do (col) ->
-              ($ row).children().eq(col).find('input').replaceWith "<div class='input-append datepicker'><input class='validate_timestamp input-small' type='text' data-format='yyyy/MM/dd hh:mm:ss' value='#{ ($ row).find('input').eq(col).val() }' /><span class='add-on'><a href='#'><i class='icon-calendar'></i></a></span></div>"
+              ($ row).children().eq(col).find('input').replaceWith "<div class='input-append datepicker'><input class='validate_timestamp input-small' type='text' data-format='yyyy/MM/dd hh:mm:ss' value='#{ ($ row).find('input').eq(col).val() }' /><span class='add-on'><a href='#' tabindex='32767'><i class='icon-calendar'></i></a></span></div>"
               ($ row).children().eq(col).find('.datepicker').unbind().datetimepicker()
               
 
         add_row = (tab) ->
-
+ 
           # create a string of the new row
           new_row = "<tr class='new_row'>"
 

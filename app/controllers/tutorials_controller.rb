@@ -70,6 +70,10 @@ class TutorialsController < ApplicationController
     end
   end
 
+  def edit
+    @tutorial = Tutorial.find(params[:id])
+  end
+
   # PUT /tutorials/1
   # PUT /tutorials/1.json
   def update
@@ -135,23 +139,27 @@ class TutorialsController < ApplicationController
   # /tutorials/switch/
   # Switches between which tutorials are featured
   def switch
-
-    new_tutorial = Tutorial.find_by_id(params[:selected].to_i)
-    old_tutorial = Tutorial.where("featured_number = ?",params[:location]).first || nil
     
+    new_tutorial = Tutorial.find(params[:tutorial])
+    old_tutorial = Tutorial.where("featured_number = ?",params[:selected]).first || nil
+
     if can_admin?(new_tutorial) && can_admin?(old_tutorial)
-      #Set the old tutorials featured number to nil if necessary
+      
       if !(old_tutorial == nil)
         old_tutorial.featured_number = nil
         old_tutorial.save
       end
       
-      #Update the featured number for the selected tutorial
-      new_tutorial.featured_number = params[:location].to_i    
-      new_tutorial.save
+      new_tutorial.featured_number = params[:selected].to_i    
       
-      respond_to do |format|
-        format.json { render json: {}, status: :ok }
+      if new_tutorial.save
+        respond_to do |format|
+          format.json { render json: {}, status: :ok }
+        end
+      else
+        respond_to do |format|
+          format.json {render json: new_tutorial.errors, status: :unprocessable_entity}
+        end
       end
     else
       respond_to do |format|

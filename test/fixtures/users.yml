@@ -1,22 +1,35 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
-one:
-  firstname: kate
-  lastname: carcia
+nixon:
+  firstname: Richard
+  lastname: Nixon
+  username: nixon
+  email: nixon@whitehouse.gov
+  content: 
+  group_id: 
+  validated: true
+  # Password is "12345"
+  password_digest: $2a$10$aK2OsTVTnWuPVmDthm9pj.vDApO9VGNgRwvwHmwzVQ0ScmW3BOPjC
+  admin: true
+
+kate:
+  firstname: Kate
+  lastname: Carcia
   username: kate
-  email: 
+  email: kcarcia@cs.uml.edu 
+  content: 
+  group_id: 
+  validated: true
+  # Password is "12345"
+  password_digest: $2a$10$aK2OsTVTnWuPVmDthm9pj.vDApO9VGNgRwvwHmwzVQ0ScmW3BOPjC
+  admin: false
+  
+new_user:
+  firstname: Captain
+  lastname: Crunch
+  username: crunch
+  email: captncrunch@example.com
   content: 
   group_id: 
   validated: false
-  password_digest: $2a$10$zKJclx4eQl17woUlK8hlE.6fn9rAMwru8uMlbtLQbS97...
-  admin: false
-  
-two:
-  firstname: MyString
-  lastname: MyString
-  username: MyString
-  email: MyString
-  content: MyText
-  group_id: 1
-  validated: false
-  password_digest: MyString
+  password_digest: 

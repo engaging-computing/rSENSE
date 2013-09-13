@@ -19,9 +19,10 @@ class Project < ActiveRecord::Base
   has_many :likes
   has_many :visualizations
 
-  belongs_to :owner, class_name: "User", foreign_key: "user_id"
+  belongs_to :user
   
   alias_attribute :name, :title
+  alias_attribute :owner, :user
   
   def sanitize_project
     self.content = sanitize self.content
@@ -56,6 +57,7 @@ class Project < ActiveRecord::Base
       featuredMediaId: self.featured_media_id,
       name: self.name,
       url: UrlGenerator.new.project_url(self),
+      path: UrlGenerator.new.project_path(self),
       hidden: self.hidden,
       featured: self.featured,
       likeCount: self.like_count,

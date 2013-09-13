@@ -18,15 +18,12 @@ class NewsController < ApplicationController
   def show
     @news = News.find(params[:id])
 
+    recur = params.key?(:recur) ? params[:recur].to_bool : false
+  
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @news.to_hash() }
+      format.json { render json: @news.to_hash(recur) }
     end
-  end
-
-  # GET /news/1/edit
-  def edit
-    @news = News.find(params[:id])
   end
 
   # POST /news
@@ -62,7 +59,7 @@ class NewsController < ApplicationController
           format.html { redirect_to @news, notice: 'News was successfully updated.' }
           format.json { render json: {}, status: :ok }
         else
-          format.html { render action: "edit" }
+          format.html { render action: "show" }
           format.json { render json: @news.errors, status: :unprocessable_entity }
         end
       end

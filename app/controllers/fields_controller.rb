@@ -1,7 +1,5 @@
 class FieldsController < ApplicationController
-  
   include ApplicationHelper
-
   # GET /fields/1
   # GET /fields/1.json
   def show
@@ -11,7 +9,7 @@ class FieldsController < ApplicationController
     recur = params.key?(:recur) ? params[:recur] : false
     
     respond_to do |format|
-      format.html # show.html.erb
+      format.html { render text: @field.to_json }
       format.json { render json: @field.to_hash(recur) }
     end
   end
@@ -84,10 +82,10 @@ class FieldsController < ApplicationController
     
     respond_to do |format|
       if success
-        format.html { redirect_to @field, notice: 'Field was successfully updated.' }
+        format.html { redirect_to @field.project, notice: 'Field was successfully updated.' }
         format.json { render json:{}, status: :ok }
       else
-        format.html { render action: "edit" }
+        format.html { redirect_to @field.project, alert: 'Field was not updated.' }
         format.json { render json: @field.errors.full_messages(), status: :unprocessable_entity }
       end
     end

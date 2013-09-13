@@ -2,7 +2,7 @@ class VisualizationsController < ApplicationController
   include ApplicationHelper
   include ActionView::Helpers::DateHelper
   
-  skip_before_filter :authorize, only: [:show, :displayVis, :index,:embedVis]
+  skip_before_filter :authorize, only: [:show, :displayVis, :index, :embedVis]
   
   # GET /visualizations
   # GET /visualizations.json
@@ -66,14 +66,14 @@ class VisualizationsController < ApplicationController
           @Globals = { options: options }
           render 'embed', :layout => 'embedded'
         else
-          render :layout => 'applicationWide' 
+          @layout_wide = true
+          render
         end
       end
       format.json { render json: @visualization.to_hash(recur) }
     end
   end
 
-  # GET /visualizations/1/edit
   def edit
     @visualization = Visualization.find(params[:id])
   end
@@ -194,7 +194,7 @@ class VisualizationsController < ApplicationController
       @visualization.save
       
       respond_to do |format|
-        format.html { redirect_to visualizaions_url }
+        format.html { redirect_to visualizations_url }
         format.json { render json: {}, status: :ok }
       end
     else
@@ -332,7 +332,8 @@ class VisualizationsController < ApplicationController
           @Globals = { options: options }
           render 'embed', :layout => 'embedded'
         else
-          render :layout => 'applicationWide' 
+          @layout_wide = true
+          render
         end
       end
     end

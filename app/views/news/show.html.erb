@@ -5,7 +5,11 @@
   <div class="span8 news_title"><%= news_edit_menu_helper false%></div>
 
   <% if is_admin? %>
-    <div class="span12 checkbox_hidden">Hidden: <input id="hide_news_checkbox" type="checkbox" href='' <%if @news.hidden%>checked<%end%>/></div>
+    <div class="span12">
+      <label for="hide_news_checkbox">Hidden:
+        <input id="hide_news_checkbox" type="checkbox" href='' <%if @news.hidden%>checked<%end%>/>
+      </label>
+    </div>
   <%end%>
   
   <%=render layout: "shared/box", locals: {title: 'Content', width: '12', unique_id: 'content', should_hide: false} do %>

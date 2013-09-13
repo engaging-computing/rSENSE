@@ -77,9 +77,18 @@ ol.carousel-indicators
     font-size: 1.5em;
   }
 }
+
 @media screen
 {
   .print{
     display:none; 
+  }
+}
+
+.visualization_title 
+{
+  .summary
+  {
+    font-size: .5em; 
   }
 }
