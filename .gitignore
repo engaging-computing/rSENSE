@@ -14,6 +14,7 @@
 /log/*.log
 /tmp
 db/schema.rb
+db/data.yml
 *~
 *.orig
 aws_config.yml

@@ -225,7 +225,7 @@ class VisualizationsController < ApplicationController
       dsets.each do |s|
         begin
           dset = DataSet.find_by_id s
-          if dset.project_id = @project.id
+          if dset.project_id == @project.id
             @datasets.push dset
           end
         rescue
@@ -236,12 +236,6 @@ class VisualizationsController < ApplicationController
       @datasets = DataSet.find_all_by_project_id(params[:id], :conditions => {hidden: false})
     end
     
-    # get data for each dataset    
-    @datasets.each do |dataset|
-      d = MongoData.find_by_data_set_id(dataset.id)
-      dataset[:data] = d.data
-    end
-
     # create special dataset grouping field
     data_fields.push({ typeID: TEXT_TYPE, unitName: "String", fieldID: -1, fieldName: "Dataset Name (id)" })
     # create special grouping field for all datasets
