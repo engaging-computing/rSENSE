@@ -6,22 +6,15 @@ $ ->
   if namespace.controller is "tutorials" and namespace.action is "index"
 
     addItem = (object) ->
-      newItem =   "<div class='item word-break'>"
-
-      newItem +=  "<h4 class='center' style='margin-top:0px;'><a href='#{object.url}'>#{object.name}</a>"
-      
-      if(object.featured)
-        newItem += "<span style='color:#57C142'> (featured)</span>"
-        
-      newItem += "</h4>"
-
-      if(object.mediaSrc)
-        newItem += "<a href='#{object.url}'><img src='#{object.mediaSrc}'></img></a>"
-
-      newItem +=  "<b>Owner: </b><a href='#{object.ownerUrl}'>#{object.ownerName}</a><br />"
-      newItem +=  "<b>Created: </b>#{object.timeAgoInWords} ago (on #{object.createdAt})<br />"
-
-      newItem +=  "</div>"
+      newItem = """
+        <div class='item word-break'>
+          <h4 class='center' style='margin-top:0px;'><a href='#{object.url}'>#{object.name}</a>
+          #{if object.featured then "<span style='color:#57C142'> (featured)</span>" else ""}</h4>
+          #{if object.mediaSrc then "<div class='center'><a href='#{object.url}'><img src='#{object.mediaSrc}'></img></a></div>" else ""}
+          <b>Owner: </b><a href='#{object.ownerUrl}'>#{object.ownerName}</a><br />
+          <b>Created: </b>#{object.timeAgoInWords} ago (on #{object.createdAt})<br />
+       </div>
+      """
 
       newItem = ($ newItem)
 
