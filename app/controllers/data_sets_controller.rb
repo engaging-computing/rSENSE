@@ -5,7 +5,7 @@ class DataSetsController < ApplicationController
   # GET /data_sets/1.json
   def show
     @data_set = DataSet.find(params[:id])
-    @mongo_data_set = MongoData.find_by_data_set_id(@data_set.id)
+    @mongo_data_set = { data: @data_set.data }
     recur = params.key?(:recur) ? params[:recur].to_bool : false
     respond_to do |format|
       format.html { redirect_to (project_path @data_set.project) + (data_set_path @data_set) }
@@ -28,7 +28,7 @@ class DataSetsController < ApplicationController
   def edit
     @data_set = DataSet.find(params[:id])
     @project = Project.find(@data_set.project_id)
-    @mongo_data_set = MongoData.find_by_data_set_id(@data_set.id)
+    @mongo_data_set = { data: @data_set.data }
     @fields = @project.fields
 
     header_to_field_map = []
@@ -66,9 +66,9 @@ class DataSetsController < ApplicationController
 
       end
 
-      @mongo_data_set[:data] = new_data
+      @data_set.data = new_data
 
-      if @mongo_data_set.save!
+      if @data_set.save!
         ret = { status: :success, redirect: "/projects/#{@project.id}/data_sets/#{@data_set.id}" }
       else
         ret = :error
@@ -251,17 +251,10 @@ class DataSetsController < ApplicationController
 
     end
 
-    @data_set = DataSet.create(:user_id => @cur_user.id, :project_id => @project.id, :title => defaultName)
-    data_to_add = MongoData.new(:data_set_id => @data_set.id, :data => new_data)
+    @data_set = DataSet.create(:user_id => @cur_user.id, :project_id => @project.id, 
+                               :title => defaultName, data: new_data)
 
     followURL = "/projects/#{@project.id}/data_sets/#{@data_set.id}"
-
-    success =  data_to_add.save!
-    
-    if !success
-      @data_set.delete
-    end
-
 
     respond_to do |format|
       if success
@@ -294,12 +287,6 @@ class DataSetsController < ApplicationController
       end
     else
       @datasets = DataSet.find_all_by_project_id params[:id]
-    end
-
-
-    @datasets.each do |dataset|
-      mongo_data = MongoData.find_by_data_set_id dataset.id
-      dataset[:data] = mongo_data.data
     end
 
     file_name = "#{@project.id}"
@@ -482,10 +469,10 @@ class DataSetsController < ApplicationController
     end
 
     success = false
+
+    @data_set.data = mongo_data
     
     if @data_set.save!
-      data_to_add = MongoData.new(:data_set_id => @data_set.id, :data => mongo_data)
-
       redirect = url_for :controller => :visualizations, :action => :displayVis, :id => @project.id, :datasets => @data_set.id
 
       if data_to_add.save!
