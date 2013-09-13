@@ -62,3 +62,7 @@ gem 'coffeebeans'
 gem 'webrick', '1.3.1'
 
 gem 'mini_magick'
+
+# Database serialization
+gem 'yaml_db'
+gem 'multi_json'
