@@ -26,9 +26,11 @@ $ ->
                 delete_link.show()
             if(type_val not in ['Latitude','Longitude'])
               name_val = ($ @).find('.field_name').find("div").html()
-              unit_val = ($ @).find('.field_unit').find("div").html()
               ($ @).find('.field_name').html("<input type='text' class='input-small' value='#{name_val.trim()}'>")
-              ($ @).find('.field_unit').html("<input type='text' class='input-small' value='#{unit_val.trim()}'>")
+              if( type_val is 'Number')
+                unit_val = ($ @).find('.field_unit').find("div").html()
+                ($ @).find('.field_unit').html("<input type='text' class='input-small' value='#{unit_val.trim()}'>")
+              
         error: (msg) =>
           console.log msg
           
@@ -44,13 +46,14 @@ $ ->
       
       if table.data("num_fields") > 0
         table.find('.fields').each ->
-          field_name = ($ this).find(".field_name").find("input")
-          if field_name.val() not in ["Latitude", "Longitude"]
-            field_name.find("input").popover "destroy"
-            data['changes'][($ this).find(".field_name").attr('field_id')] = 
-              name: field_name.val()
+          field_type = ($ this).find('td.field_type').attr('value')
+          field = ($ this).find(".field_name")
+          if field_type not in ["Latitude", "Longitude"]
+            field.find("input").popover "destroy"
+            data['changes'][field.attr('field_id')] = 
+              name: field.find('input').val()
               unit: ($ this).find('.field_unit').find("input").val()
-              
+     
         if data['changes'] != {}
           $.ajax
             url: '/projects/12/updateFields'
@@ -66,9 +69,10 @@ $ ->
                   field_name = ($ this).find(".field_name")
                   field_name_value = field_name.find("input").val()
                   field_name.html("<div>#{field_name_value}</div>")
-                  field_unit = ($ this).find(".field_unit")
-                  field_unit_value = field_unit.find("input").val()
-                  field_unit.html("<div class='truncate'>#{field_unit_value}</div>")
+                  if type_val is 'Number'
+                    field_unit = ($ this).find(".field_unit")
+                    field_unit_value = field_unit.find("input").val()
+                    field_unit.html("<div class='truncate'>#{field_unit_value}</div>")
                   row.hide()
                   ($ '.fields_edit_option').show()
 
@@ -160,11 +164,12 @@ $ ->
       htmlStr = ""
       typeName = helpers.get_field_name type
       isNotLoc = typeName not in ["Latitude","Longitude"]
+      isNumber = typeName is 'Number'
       
       htmlStr = $ """
       <tr class="fields">
       <td class='field_name' field_id='#{msg.id}'>#{if isNotLoc then "<input type='text' class='input-small' value='#{msg.name}'>" else "<div>#{msg.name}</div>"}</td>
-      <td class='field_unit'>#{if isNotLoc then "<input type='text' class='input-small' value='#{msg.unit}'>" else "<div>#{msg.name}</div>"}</td>
+      <td class='field_unit'>#{if isNumber then "<input type='text' class='input-small' value='#{msg.unit}'>" else "<div>#{msg.unit}</div>"}</td>
       <td class='field_type' value='#{helpers.get_field_name type}'><div>#{typeName}<a href='/fields/#{msg.id}' class='field_delete_link'><i class='icon-remove' style='float:right;display:block'></i></a></div></td>
       </tr>
       """
