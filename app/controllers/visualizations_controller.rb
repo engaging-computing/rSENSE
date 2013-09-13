@@ -222,9 +222,9 @@ class VisualizationsController < ApplicationController
     if( !params[:datasets].nil? )
       
       dsets = params[:datasets].split(",")
-      dsets.each do |s|
+      dsets.each do |id|
         begin
-          dset = DataSet.find_by_id s
+          dset = DataSet.find_by_id(id.to_i)
           if dset.project_id == @project.id
             @datasets.push dset
           end
