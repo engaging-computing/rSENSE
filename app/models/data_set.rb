@@ -2,7 +2,8 @@ class DataSet < ActiveRecord::Base
   
   include ActionView::Helpers::SanitizeHelper
   
-  attr_accessible :content, :project_id, :title, :user_id, :hidden
+  attr_accessible :content, :project_id, :title, :user_id, :hidden, :data
+  serialize :data, JSON
   
   validates_presence_of :project_id, :user_id, :title
   
@@ -37,8 +38,8 @@ class DataSet < ActiveRecord::Base
   end
   
   def to_hash(recurse = true)
-    data = MongoData.find_by_data_set_id(self.id)
-        
+    data ||= []
+
     h = {
       id: self.id,
       name: self.title,
@@ -47,7 +48,7 @@ class DataSet < ActiveRecord::Base
       path: UrlGenerator.new.data_set_path(self),
       createdAt: self.created_at.strftime("%B %d, %Y"),
       fieldCount: self.project.fields.length,
-      datapointCount: data[:data].length
+      datapointCount: data.length
     }
     
     if recurse
@@ -58,14 +59,14 @@ class DataSet < ActiveRecord::Base
       end
       
       newDataHolder = []
-      data[:data].each do |inner|
+      data.each do |inner|
         newDataRow = Hash.new
         inner.each_key do |key|
           newDataRow[fieldIndices[key]] = inner[key]
         end
         newDataHolder.push(newDataRow)
       end
-      data[:data] = newDataHolder
+      data = newDataHolder
     
       h.merge! ({
         owner: self.owner.to_hash(false),

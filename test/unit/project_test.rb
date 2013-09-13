@@ -64,7 +64,7 @@ class ProjectTest < ActiveSupport::TestCase
   # Testing with fixtures
   
   test "project title" do
-    assert_equal "Sample Test", projects(:one).title
+    assert_equal "Measuring Things", projects(:one).title
   end
   
   test "project content" do
