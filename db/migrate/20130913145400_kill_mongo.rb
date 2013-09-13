@@ -3,8 +3,11 @@ class KillMongo < ActiveRecord::Migration
     add_column :data_sets, :data, :text, default: '[]', null: false
 
     DataSet.all.each do |ds|
-      ds.data = MongoData.find_by_data_set_id(ds.id).data
-      ds.save!
+      md = MongoData.find_by_data_set_id(ds.id)
+      if md
+        ds.data = md.data
+        ds.save!
+      end
     end
   end
 
