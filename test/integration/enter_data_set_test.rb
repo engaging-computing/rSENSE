@@ -5,6 +5,7 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
 
   setup do
     Capybara.current_driver = Capybara.javascript_driver
+    Capybara.default_wait_time = 15
   end
 
   teardown do

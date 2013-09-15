@@ -41,6 +41,8 @@ module CapyHelper
     fill_in 'Password', with: pass
     sleep 0.1
     find('#login_box').click_on('Login')
+
+    assert page.has_content?("Logout")
   end
 
   def logout
