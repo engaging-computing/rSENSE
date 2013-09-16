@@ -2,12 +2,30 @@
 
 one:
   name: MyString
-  field_type: 1
+  field_type: 2
   unit: MyString
-  project: one
+  project: two
 
 two:
   name: MyString
-  field_type: 1
+  field_type: 2
   unit: MyString
-  project: one
+  project: two
+
+cookies:
+  id: 20
+  field_type: 2
+  unit: Cookies
+  project: dessert
+
+cake:
+  id: 21
+  field_type: 2
+  unit: Cakes
+  project: dessert
+
+pie:
+  id: 22
+  field_type: 2
+  unit: Pies
+  project: dessert
