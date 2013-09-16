@@ -468,33 +468,18 @@ class DataSetsController < ApplicationController
       mongo_data << row
     end
 
-    success = false
-
     @data_set.data = mongo_data
     
     if @data_set.save!
-      redirect = url_for :controller => :visualizations, :action => :displayVis, :id => @project.id, :datasets => @data_set.id
-
-      if data_to_add.save!
-        success = true
-        response = { status: 'success', redirect: redirect, :datasets => @data_set.id, :title => @data_set.title }
-      else
-        success = false
-        @data_set.delete
+     respond_to do |format|
+        format.json { render json: @data_set.to_hash(false), status: :created}
       end
     else
-      success = false
-    end
-    
-    respond_to do |format|
-      if success
-        format.json { render json: @data_set.to_hash(false), status: :created}
-        format.html { redirect_to :controller => :visualizations, :action => :displayVis, :id => @project.id, :datasets => @data_set.id, :title =>  @data_set.title }
-      else
+      respond_to do |format|
         format.json { render json: @data_set.errors.full_messages(), status: :unprocessable_entity }
       end
     end
-
+    
   end
 
 private
