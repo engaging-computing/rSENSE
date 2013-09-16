@@ -47,6 +47,8 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     find("#csv_file_form").attach_file("csv", csv_path)
     page.execute_script %Q{$('#csv_file_form').submit()}
 
+    click_on "Finish"
+
     assert page.has_content?('Histogram'), "On the Viz page"
   end
  
@@ -62,13 +64,38 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     find("#csv_file_form").attach_file("csv", csv_path)
     page.execute_script %Q{$('#csv_file_form').submit()}
 
-    assert page.has_content?('pizza')
+    assert page.has_content?('pizza'), "got match dialog"
     click_on "Finished"
     
-    assert page.has_content?('enter a name')
+    assert page.has_content?('enter a name'), "got rename dialog"
     click_on "Finish"
     
     assert page.has_content?('Histogram'), "On the Viz page"
   end
 
+  test "import fields" do
+    login('kate', '12345')
+
+    click_on "Projects"
+    click_on "Empty Project"
+
+    click_on "Edit"
+    
+    csv_path = Rails.root.join('test', 'CSVs', 'dinner.csv')
+
+    page.execute_script %Q{$('#template_file_form').parent().show()}
+    find("#template_file_form").attach_file("csv", csv_path)
+    page.execute_script %Q{$('#template_file_form').submit()}
+
+    assert page.has_content?("telling us the type of each of your fields"), 
+      "got type dialog"
+
+    find('#template_match_table').all('select')[0].select("Number")
+    find('#template_match_table').all('select')[1].select("Number")
+    find('#template_match_table').all('select')[2].select("Number")
+    click_on "Finished"
+
+    assert page.has_content?('Description')
+    assert page.has_content?('pizza'), "Added fields"
+  end
 end
