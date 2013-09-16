@@ -42,4 +42,15 @@ class ProjectTest < ActionDispatch::IntegrationTest
     #click_on "Das Projekt"
     #assert page.has_content?("All your base..."), "Update should have been saved"
   end
+
+  test "search in projects" do
+    visit '/'
+    click_on "Projects"
+    select "Rating", from: "sort"
+    fill_in "search", with: "Empty"
+    click_on "Search"
+
+    assert page.has_content?("Empty Project")
+    assert page.has_no_content?("Breaking Things")
+  end
 end
