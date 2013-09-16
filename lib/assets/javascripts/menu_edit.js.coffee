@@ -14,13 +14,19 @@ $ ->
     
     #The thing that will become a input box
     info_box = root.find('.info_text')
-    info_box.html("<div class='input-append'><input type='text' class='info_edit_box input' id='appendInput' value='#{val}'><span class='add-on btn btn-success'><a href='#{href}' class='menu_save_link'><i class='icon-ok icon-white'></i></a></span></div>")
+    info_box.html("<div class='input-append'><input type='text' class='info_edit_box input' id='appendInput' value='#{val}'><span class='add-on btn btn-success menu_save_link' href='#{href}'><i class='icon-ok icon-white'></i></span></div>")
     info_box.find('.info_edit_box').focus()
     
     #Hide the edit link
     root.find('span.dropdown').hide()
    
-    info_box.find('a.menu_save_link').click (e) ->
+    #Save on enter
+    info_box.on 'keypress', (event) ->
+      code = if event.keyCode then event.keyCode else event.which
+      if code == 13
+        ($ this).find('.menu_save_link').trigger 'click'
+    
+    info_box.find('.menu_save_link').click (e) ->
       e.preventDefault()
       
       #Build the data object to send to the controller
@@ -70,11 +76,6 @@ $ ->
           root.find('i').removeClass 'icon-refresh'
           root.find('span.btn').removeClass 'disabled'
           root.find('span.btn').button 'toggle'
-        
-    info_box.find('.info_edit_box').keypress (e) ->
-      if (e.keyCode is 13)
-        root.find('a.menu_save_link').trigger 'click'   
-        
         
   ($ 'a.menu_unhider').click (e) ->
     

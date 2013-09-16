@@ -21,16 +21,23 @@ class News < ActiveRecord::Base
 #     
 #   end
   
-  def to_hash(recur = false)
+  def to_hash(recurse = false)
     h = {
       id: self.id,
       featuredMediaId: self.featured_media_id,
       name: self.title,
       url: UrlGenerator.new.news_url(self),
+      path: UrlGenerator.new.news_path(self),
       hidden: self.hidden,
       timeAgoInWords: time_ago_in_words(self.created_at),
       createdAt: self.created_at.strftime("%B %d, %Y")
     }
+    
+    if recurse
+      h.merge! ({
+        content: self.content
+      });
+    end
     
     if self.featured_media_id != nil
       h.merge!({mediaSrc: self.media_objects.find(self.featured_media_id).tn_src})
