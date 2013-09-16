@@ -21,6 +21,17 @@ two:
   filter: ""
   like_count: 11
   featured_media_id: 
+
+three:
+  title: Empty Project
+  user: kate
+  content:
+  cloned_from: 
+  featured: false
+  is_template: false
+  filter: ""
+  like_count: 11
+  featured_media_id: 
   
 dessert:
   title: Dessert is Delicious
