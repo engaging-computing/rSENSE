@@ -14,13 +14,20 @@ $ ->
 
     #The thing that will become a input box
     info_box = root.find('.info_text')
-    info_box.html("<div class='input-append'><input type='text' class='info_edit_box input-medium' id='appendInput' value='#{val}'><span class='add-on btn btn-success'><a href='#{href}' class='info_save_link'><i class='icon-ok icon-white'></i></a></span></div>")
+    info_box.html("<div class='input-append'><input type='text' class='info_edit_box input-medium' id='appendInput' value='#{val}'><span class='add-on btn btn-success info_save_link' href='#{href}'><i class='icon-ok icon-white'></i></span></div>")
     root.find('.info_edit_box').focus()
     
     #Hide the edit link
     ($ @).hide()
 
-    info_box.find('a.info_save_link').click (e)->
+    #Save on enter
+    info_box.on 'keypress', (event) ->
+      code = if event.keyCode then event.keyCode else event.which
+      if code == 13
+        ($ this).find('.info_save_link').trigger 'click'
+    
+    #Save button
+    info_box.find('.info_save_link').click (e)->
       e.preventDefault()
 
       #Build the data object to send to the controller

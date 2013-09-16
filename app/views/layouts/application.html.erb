@@ -37,8 +37,12 @@
 
       <!-- Add the hidden login dialog to the layout so that its accessable everywhere -->
       <div id="login_box" class="modal hide fade well container">
-        <div>Username: <input id="login_user" class="login_field" type="text" style="width:65%"></input></div><div class="clear"></div>
-        <div>Password: <input id="login_password" class="login_field" type="password" style="width:65%"></input></div><div class="clear"></div>
+        <div><label for="login_user">Username:</label>
+          <input id="login_user" class="login_field" type="text" style="width:65%"></input>
+        </div><div class="clear"></div>
+        <div><label for="login_password">Password:</label>
+          <input id="login_password" class="login_field" type="password" style="width:65%"></input>
+        </div><div class="clear"></div>
 	<div>New to iSENSE? <a href="<%= new_user_path %>">Sign up</a></div>
         <div style="float:right;">
             <button class="login_button btn btn-success">Login</button>
@@ -67,9 +71,9 @@
               <a class="navbar-btn" href="/visualizations"><i class="icon-picture icon-white"></i> Visualizations</a>
               <a class="navbar-btn" href="/tutorials"><i class="icon-info-sign icon-white"></i> Tutorials <img src="/assets/arrow_down.png"></a>
               <ul class="ddmenu">
-                 <% (1..4).each do |i|%>
-                  <%= render "tutorials/display_tutorials", :id => "#{i}"%>
-                <%end%>
+                <% get_featured_tutorials.each do |tutorial|%>
+                  <li><%= link_to tutorial.title, tutorial_path(tutorial)%></li>
+                <% end %>                
               </ul>
             </div>
           </div>
@@ -107,8 +111,8 @@
       <% end %>
 
       <!-- Main Container -->
-      <div style="padding:50px 0px 70px 0px;margin:0;min-height:100%;">
-        <div class="container mainContent" data-role="page">
+      <div style="padding:50px 0px 70px 0px; margin:0; min-height:100%; <%= @layout_wide ? 'margin-right:40px;' : '' %>">
+        <div class="container mainContent <%= @layout_wide ? 'mc-wide' : '' %>" data-role="page">
           <%= yield %>
         </div>
       </div>

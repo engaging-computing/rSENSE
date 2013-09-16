@@ -47,6 +47,7 @@ class Tutorial < ActiveRecord::Base
     h = {
       id: self.id,
       name: self.name,
+      path: UrlGenerator.new.tutorial_path(self),
       url: UrlGenerator.new.tutorial_url(self),
       hidden: self.hidden,
       timeAgoInWords: time_ago_in_words(self.created_at),

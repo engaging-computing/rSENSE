@@ -351,9 +351,8 @@ class ProjectsController < ApplicationController
             data.push row
           end
           
-          data_set = DataSet.create(user_id: @cur_user.id, project_id: @project.id, title: ses['name'])
-          MongoData.create( data_set_id: data_set.id, data: data)
-
+          data_set = DataSet.create(user_id: @cur_user.id, project_id: @project.id, 
+                                    title: ses['name'], data: data)
         end
 
         redirect_to @project
