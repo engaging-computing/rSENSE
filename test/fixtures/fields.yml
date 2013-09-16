@@ -15,17 +15,20 @@ two:
 cookies:
   id: 20
   field_type: 2
+  name: cookie
   unit: Cookies
   project: dessert
 
 cake:
   id: 21
   field_type: 2
+  name: cake
   unit: Cakes
   project: dessert
 
 pie:
   id: 22
   field_type: 2
+  name: pie
   unit: Pies
   project: dessert
