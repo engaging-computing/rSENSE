@@ -65,6 +65,9 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     page.execute_script %Q{$('#csv_file_form').submit()}
 
     assert page.has_content?('pizza'), "got match dialog"
+    find('#match_table').all('select')[0].select("soup")
+    find('#match_table').all('select')[1].select("pizza")
+    find('#match_table').all('select')[2].select("wings")
     click_on "Finished"
     
     assert page.has_content?('enter a name'), "got rename dialog"
@@ -96,6 +99,5 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     click_on "Finished"
 
     assert page.has_content?('Description')
-    assert page.has_content?('pizza'), "Added fields"
   end
 end
