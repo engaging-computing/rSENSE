@@ -4,6 +4,7 @@ class DataSetsControllerTest < ActionController::TestCase
   setup do
     @kate = users(:kate)
     @data_set = data_sets(:one)
+    @tgd = data_sets(:thanksgiving)
    end
 
   test "should create data_set" do
@@ -19,6 +20,11 @@ class DataSetsControllerTest < ActionController::TestCase
     put :update, { id: @data_set, data_set: { content: @data_set.content, project_id: @data_set.project_id, 
       title: @data_set.title, user_id: @data_set.user_id }}, { user_id: @kate }
     assert_redirected_to data_set_path(assigns(:data_set))
+  end
+
+  test "should redirect to viz for show data set" do
+    get :show, { id: @tgd.id }
+    assert_response :redirect 
   end
 
   test "should destroy data_set" do
