@@ -118,27 +118,37 @@
       </div>
       
       <!-- Mobile Menu -->
-       <div id="mobile_menu" data-role="panel" style="z-index: 9999;">
+      <div class="hidden-desktop">
+        <div id="mobile_menu" data-role="panel" style="z-index: 10;">
        
-         <ul class="nav nav-list">
+          <ul class="nav nav-list">
          
-           <li class="active"><a href="/"><i class="icon-home icon-white"></i>Home</a></li>
-           <li class="nav-header">Navigation</li>
-           <li><a href="/news"><i class="icon-book icon-white"></i>News</a></li>
-           <li class="nav-header nav-divider"><hr /></li>
-           <li><a href="/projects"><i class="icon-folder-open icon-white"></i>Projects</a></li>
-           <li class="nav-header nav-divider"><hr /></li>
-           <li><a href="/users"><i class="icon-user icon-white"></i>Users</a></li>
-           <li class="nav-header nav-divider"><hr /></li>
-           <li><a href="/visualizations"><i class="icon-picture icon-white"></i>Visualizations</a></li>
-           <li class="nav-header nav-divider"><hr /></li>
-           <li><a href="/tutorials"><i class="icon-info-sign icon-white"></i>Tutorials</a></li>
-           <li class="nav-header">Settings</li>
-           <li>Login!</li>
+            <li class="nav-header">My Stuff</li>
          
-         </ul>
+            <% if @cur_user == nil %>
+              <li><a href="" class="login">Login</a></li>
+              <li><a href="<%= new_user_path %>">Register</a></li>
+            <% else %>
+              <li><a href="<%= user_path(@cur_user) %>"><%= @cur_user.name %></a></li>
+              <li><%= link_to 'Logout', login_path(), method: :delete %></li>
+            <% end %>
+           
+            <li class="nav-header">Navigation</li>
+            <li class="active"><a href="/"><i class="icon-home icon-white"></i>Home</a></li>
+            <li><a href="/news"><i class="icon-book icon-white"></i>News</a></li>
+            <li class="nav-header nav-divider"><hr /></li>
+            <li><a href="/projects"><i class="icon-folder-open icon-white"></i>Projects</a></li>
+            <li class="nav-header nav-divider"><hr /></li>
+            <li><a href="/users"><i class="icon-user icon-white"></i>Users</a></li>
+            <li class="nav-header nav-divider"><hr /></li>
+            <li><a href="/visualizations"><i class="icon-picture icon-white"></i>Visualizations</a></li>
+            <li class="nav-header nav-divider"><hr /></li>
+            <li><a href="/tutorials"><i class="icon-info-sign icon-white"></i>Tutorials</a></li>
+
+          </ul>
        
-       </div>
+        </div>
+      </div>
        
             
       <!-- Footer -->      
