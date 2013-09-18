@@ -340,6 +340,7 @@ class DataSetsController < ApplicationController
   def uploadCSV
     require "csv"
     require "open-uri"
+    require "roo"
     
     @project = Project.find(params[:id])
     fields = @project.fields
@@ -374,7 +375,18 @@ class DataSetsController < ApplicationController
       isdoc = false
       if params.has_key? :csv
         @file = params[:csv]
-        data = CSV.read(@file.tempfile)
+        if @file.content_type.include? "opendocument"
+          oo = Roo::Openoffice.new(@file.path,false, :ignore)
+          data = CSV.parse(oo.to_csv)
+        elsif @file.content_type.include? "ms-excel"
+          oo = Roo::Excel.new(@file.path,false,:ignore)
+          data = CSV.parse(oo.to_csv) 
+        elsif @file.content_type.include? "openxmlformats"
+          oo = Roo::Excelx.new(@file.path,false,:ignore)
+          data = CSV.parse(oo.to_csv)
+        else 
+          data = CSV.read(@file.tempfile)
+        end
       else 
         tempfile = CSV.new(open(params[:tmpfile]))
         data = tempfile.read()
@@ -410,15 +422,12 @@ class DataSetsController < ApplicationController
         fname = base + "#{Time.now.to_i}.csv"
         f = File.new(fname, "w")
         
-        if !isdoc #Not from a google doc
-          f.write @file.tempfile.read
-        else #From a Google Doc
-          y = ""
-          data.each do |x|
-            y += x.join(",") + "\n"
-          end
-          f.write(y)
+        y = ""
+        data.each do |x|
+          y += x.join(",") + "\n"
         end
+        f.write(y)
+
         f.close
         
         respond_to do |format|
