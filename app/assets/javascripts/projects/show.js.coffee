@@ -132,11 +132,9 @@ $ ->
     ($ '#upload_csv').click ->
       ($ '#csv_file_input').click()
       false
-      
-    ($ '#csv_file_input').click ->
-      ($ '#csv_file_form').attr 'action', "#{window.location.pathname}/CSVUpload"
 
     ($ '#csv_file_input').change ->
+      ($ '#csv_file_form').attr 'action', "#{window.location.pathname}/CSVUpload"
       ($ '#csv_file_form').submit()
 
     ($ '#cancel_doc').click ->

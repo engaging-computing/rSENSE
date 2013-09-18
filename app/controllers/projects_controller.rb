@@ -402,7 +402,7 @@ class ProjectsController < ApplicationController
 
       end
 
-      @project.fields = field_list
+      @project.fields = field_list.find_all {|ff| not ff.id.nil? }
       @project.save!
 
       respond_to do |format|
