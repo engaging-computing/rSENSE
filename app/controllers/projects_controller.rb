@@ -12,7 +12,7 @@ class ProjectsController < ApplicationController
     if !params[:sort].nil?
         sort = params[:sort]
     else
-        sort = "DESC"
+        sort = "created_at DESC"
     end
     
     if !params[:per_page].nil?
@@ -20,7 +20,6 @@ class ProjectsController < ApplicationController
     else
         pagesize = 10;
     end
-
     
     if params.has_key? "templates_only"
       templates = true
@@ -28,10 +27,10 @@ class ProjectsController < ApplicationController
       templates = false
     end
     
-    if sort=="ASC" or sort=="DESC"
-      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("created_at #{sort}").only_templates(templates)
-    else
+    if sort == "RATING"
       @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("like_count DESC").only_templates(templates)
+    else
+      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("#{sort}").only_templates(templates)
     end
 
     #Featured list
@@ -403,7 +402,7 @@ class ProjectsController < ApplicationController
 
       end
 
-      @project.fields = field_list
+      @project.fields = field_list.find_all {|ff| not ff.id.nil? }
       @project.save!
 
       respond_to do |format|

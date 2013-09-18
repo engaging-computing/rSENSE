@@ -28,7 +28,7 @@ $ ->
 
     respond_csv = ( resp ) ->
       ($ "#match_table").html ''
-      ($ "#match_table").append "<tr><th> Experiment Field </th> <th> CSV Header </th></tr>"
+      ($ "#match_table").append "<tr><th> Experiment Field </th> <th> File Header </th></tr>"
 
       for field, fieldIndex in resp.fields
 
@@ -132,11 +132,9 @@ $ ->
     ($ '#upload_csv').click ->
       ($ '#csv_file_input').click()
       false
-      
-    ($ '#csv_file_input').click ->
-      ($ '#csv_file_form').attr 'action', "#{window.location.pathname}/CSVUpload"
 
     ($ '#csv_file_input').change ->
+      ($ '#csv_file_form').attr 'action', "#{window.location.pathname}/CSVUpload"
       ($ '#csv_file_form').submit()
 
     ($ '#cancel_doc').click ->

@@ -66,3 +66,5 @@ gem 'mini_magick'
 # Database serialization
 gem 'yaml_db'
 gem 'multi_json'
+
+gem 'roo'
