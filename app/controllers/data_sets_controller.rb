@@ -386,7 +386,6 @@ class DataSetsController < ApplicationController
           data = CSV.parse(oo.to_csv)
         else 
           data = CSV.read(@file.tempfile)
-          logger.info data
         end
       else 
         tempfile = CSV.new(open(params[:tmpfile]))
@@ -530,7 +529,6 @@ private
 
   #Use LCS to build a matches with quality.
   def buildMatchMatrix(fields, headers)
-    logger.info headers
     matrix = []
     fields.each_with_index do |f,fi|
       matrix.append []
