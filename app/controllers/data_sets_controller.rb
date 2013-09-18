@@ -251,13 +251,13 @@ class DataSetsController < ApplicationController
 
     end
 
-    @data_set = DataSet.create(:user_id => @cur_user.id, :project_id => @project.id, 
+    @data_set = DataSet.new(:user_id => @cur_user.id, :project_id => @project.id, 
                                :title => defaultName, data: new_data)
 
     followURL = "/projects/#{@project.id}/data_sets/#{@data_set.id}"
 
     respond_to do |format|
-      if success
+      if @data_set.save
         format.json { render json: @data_set.to_hash(false), status: :created}
       else
         format.json { render json:{}, status: :unprocessable_entity }
