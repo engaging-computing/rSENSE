@@ -27,6 +27,13 @@ class DataSetsControllerTest < ActionController::TestCase
     assert_response :redirect 
   end
 
+  test "should get dataset data" do
+    get :show, { id: @tgd.id, format: 'json', recur: 'true' }, { user_id: @kate }
+    assert_response :success
+    ds = JSON.parse(@response.body)
+    assert_equal 3, ds['data'][0].keys.length, "Actually got records in data"
+  end
+
   test "should destroy data_set" do
     assert_difference('DataSet.count', 0) do
       delete :destroy, { id: @data_set }, { user_id: @kate }
