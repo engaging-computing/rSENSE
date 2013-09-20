@@ -38,8 +38,6 @@ class DataSet < ActiveRecord::Base
   end
   
   def to_hash(recurse = true)
-    data ||= []
-
     h = {
       id: self.id,
       name: self.title,
@@ -58,16 +56,6 @@ class DataSet < ActiveRecord::Base
         fieldIndices[field[:id].to_s] = i
       end
       
-      newDataHolder = []
-      data.each do |inner|
-        newDataRow = Hash.new
-        inner.each_key do |key|
-          newDataRow[fieldIndices[key]] = inner[key]
-        end
-        newDataHolder.push(newDataRow)
-      end
-      data = newDataHolder
-    
       h.merge! ({
         owner: self.owner.to_hash(false),
         project: self.project.to_hash(false),
