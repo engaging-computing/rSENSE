@@ -23,7 +23,7 @@
   <ul>
     <% @featured_projects.each do |i|%>
       <li class="carousel-cell">
-        <div style="width:240px;">
+        <div style="width:170px;">
           <%if i != nil%>
             <div class='item center' style="height:210px; position:relative">
               <h4 class="twolines" style='margin-top:5px;'><%= link_to i.title, project_path(i) %></h4>
