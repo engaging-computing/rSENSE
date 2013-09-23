@@ -79,7 +79,7 @@
           </div>
           
           <!-- Pillbox Menu for both layouts -->
-          <div class="visible-desktop visible-tablet">
+          <div class="visible-desktop">
             <div class="pillbox desktop-tablet">
               <% if @cur_user == nil %>
                   <a href="" class="login navbar-btn">Login</a>
@@ -91,11 +91,11 @@
             </div>
           </div>
           
-          <div class="visible-phone">
+          <div class="visible-phone visible-tablet">
             <div class="pillbox phone">
-              <button type="button" class="btn btn-inverse" style="margin-right: 20px; margin-top: 10px;">
-                <a href="/tutorials"><i class="icon-search icon-white"> </i> </a>
-              </button>
+              <!--<button type="button" class="btn btn-inverse" style="margin-right: 20px; margin-top: 10px;">
+                <a href="#"><i class="icon-search icon-white"> </i> </a>
+              </button>-->
                   
               <button type="button" id="mobile_menu_trigger" class="btn btn-primary" style="margin-right: 20px; margin-top: 10px;"><i class="icon-align-justify icon-white"></i></button>  
             </div>
@@ -118,7 +118,7 @@
       </div>
       
       <!-- Mobile Menu -->
-      <div class="hidden-desktop">
+      <div class="hidden-desktop" style="float: left;">
         <div id="mobile_menu" data-role="panel" style="z-index: 10;">
        
           <ul class="nav nav-list">
