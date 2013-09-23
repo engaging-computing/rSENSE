@@ -140,7 +140,7 @@ $ ->
     type = summary.attr("type")
     summary_input = $ """<div class='input-append'>
       <textarea id="appendInput" autofocus class='span8' rows='3' style='resize:none;overflow:hidden' maxlength='256'>#{summary_text.trim()}</textarea>
-      <span class='add-on btn btn-success'><a href='' class='summary_save'><i class='icon-ok icon-white'></i></a></span>
+      <span class='add-on btn btn-success summary_save' href=''><i class='icon-ok icon-white'></i></span>
       </div>"""
     summary.html(summary_input)
     btn_height = summary.find('textarea').height()

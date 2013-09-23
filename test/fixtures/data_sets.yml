@@ -11,4 +11,10 @@ two:
   content: MyText
   user: kate
   project: one
- 
+
+thanksgiving:
+  title: Thanksgiving Dinner
+  content: List of Desserts
+  user: kate
+  project: dessert
+  data: "[{\"20\": 1, \"21\": 2, \"22\": 3}]"

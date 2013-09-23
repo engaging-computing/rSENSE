@@ -127,6 +127,11 @@ GEM
       json (~> 1.4)
     ref (1.0.5)
     remotipart (1.0.5)
+    roo (1.12.2)
+      nokogiri
+      rubyzip
+      spreadsheet (> 0.6.4)
+    ruby-ole (1.2.11.7)
     rubyzip (0.9.9)
     sass (3.2.10)
     sass-rails (3.2.6)
@@ -138,6 +143,8 @@ GEM
       multi_json (~> 1.0)
       rubyzip (< 1.0.0)
       websocket (~> 1.0.4)
+    spreadsheet (0.9.0)
+      ruby-ole (>= 1.0)
     sprockets (2.2.2)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -192,6 +199,7 @@ DEPENDENCIES
   multi_json
   rails (= 3.2.13)
   remotipart (~> 1.0.2)
+  roo
   sass-rails (~> 3.2.3)
   selenium-webdriver
   sqlite3
