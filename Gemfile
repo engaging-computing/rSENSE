@@ -6,6 +6,7 @@ gem 'rails', '3.2.13'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'sqlite3'
+gem 'pg'
 
 
 # Gems used only for assets and not required
@@ -20,7 +21,6 @@ end
 group :development, :test do
   gem "capybara"
   gem "selenium-webdriver"
-  #gem "capybara-webkit"
   gem "launchy"
 end
 
@@ -52,8 +52,8 @@ gem 'will_paginate'
 gem "remotipart", "~> 1.0.2"
 
 # Gem for Mongo Mapper
-gem 'mongo_mapper'
-gem 'bson_ext'
+#gem 'mongo_mapper'
+#gem 'bson_ext'
 
 # To allow coffescript views
 gem 'coffeebeans'
