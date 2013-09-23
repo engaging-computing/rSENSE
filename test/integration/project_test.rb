@@ -18,6 +18,9 @@ class ProjectTest < ActionDispatch::IntegrationTest
     # Add a project
     click_on "Projects"
     find('#addProjectButton img').click
+
+    wait_for_id('new_name')
+
     find('#new_name').set("Das Projekt")
     click_on "Finish"
 
@@ -38,5 +41,16 @@ class ProjectTest < ActionDispatch::IntegrationTest
 
     #click_on "Das Projekt"
     #assert page.has_content?("All your base..."), "Update should have been saved"
+  end
+
+  test "search in projects" do
+    visit '/'
+    click_on "Projects"
+    select "Rating", from: "sort"
+    fill_in "search", with: "Empty"
+    click_on "Search"
+
+    assert page.has_content?("Empty Project")
+    assert page.has_no_content?("Breaking Things")
   end
 end

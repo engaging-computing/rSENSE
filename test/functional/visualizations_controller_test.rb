@@ -7,8 +7,10 @@ class VisualizationsControllerTest < ActionController::TestCase
 
     @vis1 = visualizations(:visualization1)
 
-    @vis2 = visualizations(:visualization2)
+    @vis2 = visualizations(:tasty_viz)
     @vis2.save
+
+    @tgd = data_sets(:thanksgiving)
   end
 
   test "should get index" do
@@ -28,6 +30,11 @@ class VisualizationsControllerTest < ActionController::TestCase
 
   test "should show visualization" do
     get :show, { id: @vis2.id }, { user_id: @kate.id }
+    assert_response :success
+  end
+
+  test "should show thanksgiving dinner data" do
+    get :displayVis, { id: @tgd.project_id, datasets: [ @tgd.id ] }
     assert_response :success
   end
 

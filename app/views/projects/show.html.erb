@@ -102,9 +102,9 @@
           <img class="hoverimage" src="/assets/manual.svg" /><br />Manual Entry
         <% end %>
         </div>
-        <div class="span4 center">
+        <div class="span4 center" title="Supports - CSV,XLS,XLSX,ODS">
           <a id="upload_csv" href=""><img class="hoverimage" src="/assets/upload.svg" /><br />
-          Upload CSV</a>
+          Upload File</a>
         </div>
         <div class="span4 center">
           <a id="google_doc" href=""><img class="hoverimage" src="/assets/google.svg" /><br />
@@ -154,7 +154,7 @@
                 <% end %>
               </ul>
             </div>
-            <button class="btn btn-success" href="#" id="template_from_file" style=<%= @project.fields.count != 0 ? "display:none" : ""%>>Template from file</button>
+            <button class="btn btn-success" href="#" id="template_from_file" style=<%= @project.fields.count != 0 ? "display:none" : ""%>>Template from File</button>
             <button class="save_field_changes_btn btn btn-primary" href="/projects/<%=@project.id%>/updateFields">Save Changes</button>
             
           </div>
@@ -210,7 +210,7 @@
 
 <div id="doc_box" class="modal hide fade well container">
   <div>
-    Please enter the google drive share url below:
+    Please enter the Google Drive link to share below:
   </div> 
   <input id="doc_url" class="login_field" type="text" style="width:95%"></input>
   <div class="clear"> </div>
@@ -235,7 +235,8 @@
 </div>
 
 <div style="display:none">
-  <%= form_tag "./#{@project.id}", multipart: true, id: 'template_file_form', target: "upload_target" do %>
+  <%= form_tag "/projects/#{@project.id}/CSVUpload", multipart: true, id: 'template_file_form', 
+                target: "upload_target" do %>
     <%= file_field_tag 'csv', id: 'template_file_input' %>
   <% end %>
   <iframe id="upload_target" name="upload_target" src="" style="width:100%;height:100;border:0px solid #fff;"></iframe>

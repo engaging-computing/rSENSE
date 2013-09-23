@@ -6,6 +6,8 @@ require 'capybara/rails'
 #Capybara.javascript_driver = :webkit
 Capybara.javascript_driver = :selenium
 
+require "selenium-webdriver"
+
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.
   #
@@ -58,5 +60,10 @@ module CapyHelper
     end
 
     Capybara.reset_sessions!
+  end
+
+  def wait_for_id(id)
+    wait = Selenium::WebDriver::Wait.new(:timeout => 20)
+    wait.until { page.driver.browser.find_element(:id => id).displayed? }
   end
 end

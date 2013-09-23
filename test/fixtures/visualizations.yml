@@ -10,10 +10,10 @@ visualization1:
   data: MyText
   globals: MyText
 
-visualization2:
-  title: VisualizationTitle2
+tasty_viz:
+  title: Tasty Viz
   user: kate
-  project: two
+  project: dessert
   content: MyText
   data: MyText
   globals: MyText
