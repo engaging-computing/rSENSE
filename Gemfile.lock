@@ -35,9 +35,6 @@ GEM
       nokogiri (>= 1.4.4)
       uuidtools (~> 2.1)
     bcrypt-ruby (3.0.1)
-    bson (1.9.2)
-    bson_ext (1.9.2)
-      bson (~> 1.9.2)
     builder (3.0.4)
     capybara (2.1.0)
       mime-types (>= 1.16)
@@ -88,17 +85,10 @@ GEM
     mini_magick (3.6.0)
       subexec (~> 0.2.1)
     mini_portile (0.5.1)
-    mongo (1.9.2)
-      bson (~> 1.9.2)
-    mongo_mapper (0.12.0)
-      activemodel (~> 3.0)
-      activesupport (~> 3.0)
-      plucky (~> 0.5.2)
     multi_json (1.8.0)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
-    plucky (0.5.2)
-      mongo (~> 1.5)
+    pg (0.17.0)
     polyglot (0.3.3)
     rack (1.4.5)
     rack-cache (1.2)
@@ -183,7 +173,6 @@ PLATFORMS
 DEPENDENCIES
   aws-sdk
   bcrypt-ruby (~> 3.0.0)
-  bson_ext
   capybara
   coffee-rails (~> 3.2.1)
   coffeebeans
@@ -195,8 +184,8 @@ DEPENDENCIES
   less-rails (= 2.3.3)
   less-rails-bootstrap (= 2.3.3)
   mini_magick
-  mongo_mapper
   multi_json
+  pg
   rails (= 3.2.13)
   remotipart (~> 1.0.2)
   roo
