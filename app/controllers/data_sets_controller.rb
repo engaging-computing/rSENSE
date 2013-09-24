@@ -202,8 +202,7 @@ class DataSetsController < ApplicationController
     defaultName = ""
     
     if !params[:name]
-      defaultName  = @project.title + " Dataset #"
-      defaultName += (DataSet.find_all_by_project_id(params[:id]).count + 1).to_s
+      defaultName  = "Dataset ##{(DataSet.find_all_by_project_id(params[:id]).count + 1).to_s}"
     else
       defaultName = params["name"]
     end
