@@ -6,7 +6,7 @@ env:
   - DB=default
   - DB=postgres
 before_script:
-  - 
+  - bundle exec rake db:preprep
   - RAILS_ENV=test bundle exec rake db:migrate --trace
   - bundle exec rake db:test:prepare
 before_install:
