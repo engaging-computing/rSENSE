@@ -5,3 +5,11 @@
 require File.expand_path('../config/application', __FILE__)
 
 Rsense::Application.load_tasks
+
+namespace :db do
+  task :preprep do
+    if ENV['DB']
+      system("cp config/database.#{ENV['DB']}.yml config/database.yml")
+    end
+  end
+end
