@@ -57,4 +57,9 @@ class VisualizationsControllerTest < ActionController::TestCase
 
     assert_redirected_to visualizations_path
   end
+
+  test "should for realz show viz" do
+    get :displayVis, { id: @vis2.project.id }
+    assert_response :success
+  end
 end

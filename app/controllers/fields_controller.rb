@@ -64,11 +64,12 @@ class FieldsController < ApplicationController
       
       unique = true
       
-      #Enforce name uniqueness per project
+      # Enforce name uniqueness per project
       if params[:field].try(:[], :name)
         @field.owner.fields.all.each do |f|
           if f.id != params[:id].to_i
             if f.name == params[:field][:name]
+              logger.info "Field name '#{f.name}' not unique"
               unique = false
             end
           end
@@ -85,6 +86,7 @@ class FieldsController < ApplicationController
         format.html { redirect_to @field.project, notice: 'Field was successfully updated.' }
         format.json { render json:{}, status: :ok }
       else
+        logger.info "Errors: #{@field.errors.inspect}"
         format.html { redirect_to @field.project, alert: 'Field was not updated.' }
         format.json { render json: @field.errors.full_messages(), status: :unprocessable_entity }
       end
@@ -118,15 +120,17 @@ class FieldsController < ApplicationController
       end
     end
   end
-  
+ 
+  # POST /projects/id/updateFields 
   def updateFields
-    errors = Field.bulk_update(params[:changes] )
+    errors = Field.bulk_update(params[:changes])
     
     if errors.length == 0
       respond_to do |format|
        format.json { render json: {}, status: :ok }
       end
     else
+      logger.info errors.inspect
       respond_to do |format|
        format.json { render json: errors, status: :unprocessable_entity }
       end
