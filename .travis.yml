@@ -2,9 +2,11 @@ language: ruby
 rvm:
   - 1.9.3
   - 2.0.0
-services: 
-  - mongodb
-before_script: 
+env:
+  - DB=default
+  - DB=postgres
+before_script:
+  - 
   - RAILS_ENV=test bundle exec rake db:migrate --trace
   - bundle exec rake db:test:prepare
 before_install:
