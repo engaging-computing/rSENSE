@@ -187,6 +187,8 @@ class DataSetsController < ApplicationController
     
     if !sane
       #insane in the membrane
+      logger.info "Data set upload is not sane"
+      logger.info errors.inspect
       respond_to do |format|
         format.json { render json: errors, status: :unprocessable_entity }
       end
@@ -218,6 +220,8 @@ class DataSetsController < ApplicationController
     if header_to_field_map.count != @fields.count
       #headers dont match... womp womp wahhhhh
       errors.push "Number of headers (#{header_to_field_map.count}) does not match the number of fields (#{@fields.count})"
+      logger.info "Data set headers don't match fields"
+      logger.info errors.inspect
       respond_to do |format|
         format.json { render json: errors, status: :unprocessable_entity }
       end
