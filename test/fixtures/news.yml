@@ -8,7 +8,7 @@ one:
   title: I'm a news guy
   content: I am content for news
   summary: This contains content
-  hidden: -1
+  hidden: false
   user: nixon
   featured_media_id: nil
 # column: value
