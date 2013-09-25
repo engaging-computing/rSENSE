@@ -139,12 +139,10 @@ class TutorialsController < ApplicationController
   # /tutorials/switch/
   # Switches between which tutorials are featured
   def switch
-    
     new_tutorial = Tutorial.find(params[:tutorial])
     old_tutorial = Tutorial.where("featured_number = ?",params[:selected]).first || nil
 
-    if can_admin?(new_tutorial) && can_admin?(old_tutorial)
-      
+    if can_admin?(new_tutorial) && (old_tutorial.nil? || can_admin?(old_tutorial))
       if !(old_tutorial == nil)
         old_tutorial.featured_number = nil
         old_tutorial.save
@@ -157,16 +155,17 @@ class TutorialsController < ApplicationController
           format.json { render json: {}, status: :ok }
         end
       else
+        logger.info "Apparently that tutorial isn't good enough"
+        logger.info new_tutorial.errors
         respond_to do |format|
           format.json {render json: new_tutorial.errors, status: :unprocessable_entity}
         end
       end
     else
       respond_to do |format|
+        logger.info "Sorry, your face can't switch tutorials"
         format.json { render json: {}, status: :forbidden }
       end
     end
-    
-    
   end
 end
