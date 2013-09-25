@@ -24,7 +24,7 @@
             </tr>
           </thead>
           <tbody>
-            <% @mongo_data_set.data.each_with_index do |row, r_index| %>
+            <% @data_set.data.each_with_index do |row, r_index| %>
               <tr>
                 <% @project.fields.each_with_index do |field| %>
                   <td><% if !row["#{field.id}"].nil? %><%= row["#{field.id}"] %><% end %></td>

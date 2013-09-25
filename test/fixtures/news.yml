@@ -10,7 +10,7 @@ one:
   summary: This contains content
   hidden: false
   user: nixon
-  featured_media_id: nil
+
 # column: value
 #
 two: {}

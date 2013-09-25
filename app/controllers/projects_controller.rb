@@ -196,9 +196,9 @@ class ProjectsController < ApplicationController
     end
   end
 
-
+  # POST /projects/1/updateLikedStatus 
   def updateLikedStatus
-    like = Like.find_by_user_id_and_project_id(@cur_user,params[:id])
+    like = Like.find_by_user_id_and_project_id(@cur_user, params[:id])
 
     if(like)
       if Like.destroy(like.id)    
