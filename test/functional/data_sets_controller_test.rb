@@ -79,6 +79,8 @@ class DataSetsControllerTest < ActionController::TestCase
   end 
 
   test "should export data" do
+    skip 
+
     get :export, { id: @proj.id }, { user_id: @kate }
     assert_response :success
   end
