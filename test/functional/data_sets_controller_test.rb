@@ -4,7 +4,8 @@ class DataSetsControllerTest < ActionController::TestCase
   setup do
     @kate = users(:kate)
     @data_set = data_sets(:one)
-    @tgd = data_sets(:thanksgiving)
+    @tgd  = data_sets(:thanksgiving)
+    @proj = @tgd.project
   end
 
   test "should redirect to viz for show data set" do
@@ -41,7 +42,11 @@ class DataSetsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-
+  test "should show data_set edit page" do
+    get :edit, { id: @tgd.id }, { user_id: @kate }
+    assert @response.body =~ /Thanksgiving/, "Response has data_set title"
+    assert_response :success
+  end
 
   test "should update data_set" do
     put :update, { id: @data_set, data_set: { content: @data_set.content, project_id: @data_set.project_id, 
@@ -58,5 +63,25 @@ class DataSetsControllerTest < ActionController::TestCase
     assert @d0.hidden
 
     assert_response :redirect
+  end
+
+  test "should get manual entry page" do
+    get :manualEntry, { id: @proj.id }
+    #assert_response :success
+  end
+
+  test "should upload data set" do
+    post :manualUpload, { id: @proj.id }
+    # TODO: Test something
+  end 
+
+  test "should export data" do
+    post :export, { format: 'json', id: @proj.id }, { user_id: @kate }
+    #assert_response :success
+  end
+
+  test "should upload CSV" do 
+    post :uploadCSV, { id: @proj.id }
+    # TODO: Test something
   end
 end
