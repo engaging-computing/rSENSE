@@ -1,6 +1,10 @@
 require 'test_helper'
 
 class SessionsControllerTest < ActionController::TestCase
+  setup do
+    @kate = users(:kate)
+  end
+
   test "should log in" do
     post :create, { format: 'json', username_or_email: "kate", password: "12345" }
     puts flash[:debug] if flash[:debug]
@@ -17,5 +21,15 @@ class SessionsControllerTest < ActionController::TestCase
     get :destroy
     assert_nil session[:user_id]
     assert_response :redirect
+  end
+
+  test "verify user is not logged in" do
+    get :verify, { format: 'json' }
+    assert_response :unauthorized
+  end
+
+  test "verify user is logged in" do
+    get :verify, { format: 'json' }, { user_id: @kate }
+    assert_response :success
   end
 end

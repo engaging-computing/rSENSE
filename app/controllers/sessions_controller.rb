@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  skip_before_filter :authorize, only: ['create','new'] 
+  skip_before_filter :authorize, only: ['create','new','verify'] 
   
   protect_from_forgery :except => :create
   
@@ -34,6 +34,17 @@ class SessionsController < ApplicationController
     respond_to do |format| 
       format.html { redirect_to :back, notice: "Logged out" }
       format.json { render json: {}, status: :ok }
+    end
+  end
+
+  # GET /sessions/verify
+  def verify
+    respond_to do |format|
+      if session[:user_id] == nil
+        format.json {render json: "{}", status: :unauthorized}
+      else
+        format.json {render json: "{}", status: :ok}
+      end
     end
   end
 end
