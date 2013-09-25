@@ -6,14 +6,6 @@ class MediaObjectsControllerTest < ActionController::TestCase
     @media_object = media_objects(:one)
   end
 
-#   test "should create media_object" do
-#     assert_difference('MediaObject.count') do
-#       post :create, media_object: { project_id: @media_object.project_id: @media_object.media_type, name: @media_object.name, session_id: @media_object.session_id, user_id: @media_object.user_id }
-#     end
-
-#     assert_redirected_to media_object_path(assigns(:media_object))
-#   end
-
   test "should show media_object" do
     get :show, { id: @media_object }, { user_id: @nixon }
     assert_response :success
@@ -33,4 +25,7 @@ class MediaObjectsControllerTest < ActionController::TestCase
 
     assert_redirected_to media_objects_path
   end
+
+  # No test for saveMedia
+  # Uploading to amazon in tests seems hard.
 end
