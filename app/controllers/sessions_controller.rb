@@ -11,17 +11,21 @@ class SessionsController < ApplicationController
     if !user
       user = User.find(:first, :conditions => [ "lower(username) = ?", login_name.downcase ])
     end
-      
+  
+    status = :ok
+
     if user and user.authenticate(params[:password])  
+      good = true
       session[:user_id] = user.id
       response = { status: 'success', authenticity_token: form_authenticity_token }    
     else
+      status = 403
       response = { status: 'fail' }
     end
       
     respond_to do |format|
-      format.json { render json: response }
-      format.html { render text: response.to_json }
+      format.json { render json: response, status: status }
+      format.html { render text: response.to_json, status: status }
     end
   end
 
