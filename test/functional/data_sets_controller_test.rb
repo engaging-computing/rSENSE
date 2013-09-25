@@ -66,22 +66,27 @@ class DataSetsControllerTest < ActionController::TestCase
   end
 
   test "should get manual entry page" do
-    get :manualEntry, { id: @proj.id }
-    #assert_response :success
+    get :manualEntry, { id: @proj.id }, { user_id: @kate }
+    assert_response :success
   end
 
   test "should upload data set" do
-    post :manualUpload, { id: @proj.id }
-    # TODO: Test something
+    skip
+
+    post :manualUpload, { format: 'json', id: @proj.id, headers: [20, 21, 22], 
+      data: [{20 => 1, 21=> 2, 22 => 3}, {}, {}] }, { user_id: @kate }
+    assert_response :success
   end 
 
   test "should export data" do
-    post :export, { format: 'json', id: @proj.id }, { user_id: @kate }
-    #assert_response :success
+    get :export, { id: @proj.id }, { user_id: @kate }
+    assert_response :success
   end
 
   test "should upload CSV" do 
-    post :uploadCSV, { id: @proj.id }
-    # TODO: Test something
+    skip 
+    
+    post :uploadCSV, { id: @proj.id }, { user_id: @kate }
+    assert_response :success
   end
 end
