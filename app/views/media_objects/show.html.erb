@@ -41,7 +41,7 @@
     <% if @media_object.media_type == "image" %>
       <%= image_tag @media_object.src %>
     <% else%>
-      <%= link_to (media_object_thumbnail_helper @media_object , "300x300"), @media_object.src%>
+      <%= link_to (media_object_thumbnail_helper @media_object , "300x300", true), @media_object.src%>
       <span style="color:red">Warning: Download files only if you trust the owner!</span>
     <% end %>
   </div>
