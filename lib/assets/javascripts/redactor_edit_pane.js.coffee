@@ -50,6 +50,7 @@ $ ->
         
         if saved_content is ""
           top.find('.add_content').show()
+          top.find('.redactor_content').hide()
         else
           top.find('.redactor_content_edit').show()
         
