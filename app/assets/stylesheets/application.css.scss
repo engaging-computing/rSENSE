@@ -178,8 +178,11 @@ div.clear
 
 .info_edit_link, .menu_edit_link
 {
+  .info_edit_link
+  {
     vertical-align: super;
-    font-size: 0.75em;
+  }  
+  font-size: 0.75em;
 }
 
 .info_label
