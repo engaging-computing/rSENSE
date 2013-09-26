@@ -52,12 +52,28 @@
   <% i = @featured_projects[0] %>
   <div>
       <%if i.featured_media_id != nil%>
-        <%= link_to image_tag(MediaObject.find(i.featured_media_id).src, :style=>'max-height:110px; float:right'), project_path(i) %>
+        <%= link_to image_tag(MediaObject.find(i.featured_media_id).src, :style=>'max-height:150px; float:right'), project_path(i) %>
       <% end %>
       <h4><%= link_to i.title, project_path(i) %></h4>
       <span style="font-weight:bold">Owner:</span> <%= link_to i.owner.name, user_path(i.owner) %><br/>
       <span style="font-weight:bold">Created:</span> <%= i.to_hash(false)[:timeAgoInWords] %> ago
       <div><%= i.content %></div>
       <br><a href="projects" class="btn btn-primary">See More Projects</a>
+  </div>
+  <div style="margin-top:20px;">
+    <h4>iSENSE Mobile Apps</h4>
+    <p>Download official apps to use with iSENSE.</p>
+    <div style="display:table; table-layout:fixed; text-align:center; width:100%;">
+      <div style="display:table-cell; width:50%">
+        <a href="https://play.google.com/store/apps/developer?id=Engaging+Computing+Group,+UML" class="btn btn-primary" style="width:80%">
+          <img src="/assets/icon-android.png">
+        </a>
+      </div>
+      <div style="display:table-cell; width:50%">
+        <a class="btn btn-primary disabled" style="width:80%">
+          <img src="/assets/icon-apple.png">
+        </a>
+      </div>
+    </div>
   </div>
 </div>
