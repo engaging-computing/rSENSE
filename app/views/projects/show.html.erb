@@ -52,7 +52,7 @@
             <tbody>
               <% @data_sets.each do |s| %>
                 <tr class="<%= cycle('feed-even', 'feed-odd')%> dataset" style="position:relative">
-                  <td class="gravatar v">
+                  <td class="gravatar">
                     <div >
                       <%if Gravatar.new.url(s.owner, 32) != nil%>
                         <%= image_tag Gravatar.new.url(s.owner, 32)%>
