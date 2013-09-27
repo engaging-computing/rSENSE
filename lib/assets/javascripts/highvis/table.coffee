@@ -36,7 +36,8 @@ $ ->
             #Make table visible? (or somthing)
             ($ '#' + @canvas).show()
 
-            ($ "##{@canvas}").css 'padding-top', 2
+            ($ "##{@canvas}").css 'padding-top'    , (globals.VIS_MARGIN_WIDTH / 2)
+            ($ "##{@canvas}").css 'padding-left'   , (globals.VIS_MARGIN_WIDTH / 2)
             
             #Calls update
             super()
@@ -77,9 +78,8 @@ $ ->
             ($ '#table_body').append row for row in rows 
 
             dt = 
-                sScrollY: "#{($ '#' + @canvas).height() - (122)}px"
+                sScrollY: "#{($ '#' + @canvas).height() - (122 + (globals.VIS_MARGIN_WIDTH / 2))}px"
                 sScrollX: "100%"
-                bScrollInfinite: true
                 iDisplayLength: -1
                 bDeferRender: true
                 bJQueryUI: true
@@ -106,20 +106,12 @@ $ ->
                             if obj.aData[obj.iDataColumn] is "null" then "" else obj.aData[obj.iDataColumn]
                           }]
                         
-            @atable = ($ '#data_table').dataTable(dt)
+            atable = ($ '#data_table').dataTable(dt)
 
             super()
 
         end: ->
             ($ '#' + @canvas).hide()
-            
-        resize: (newWidth, newHeight, aniLength) ->
-          ($ 'div.dataTables_scrollBody').css('height', ($ '#' + @canvas).height() - (122))
-          
-          foo = () -> 
-            @aTable._fnAdjustColumnSizing();
-            
-          setTimeout foo, aniLength
 
         drawControls: ->
             super()    
