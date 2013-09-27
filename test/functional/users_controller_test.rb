@@ -62,4 +62,9 @@ class UsersControllerTest < ActionController::TestCase
 
     assert_redirected_to users_path
   end
+
+  test "should get contributions" do
+    get :contributions, { id: @user }, { user_id: @user }
+    assert_response :success
+  end
 end

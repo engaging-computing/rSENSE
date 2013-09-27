@@ -185,7 +185,6 @@ input.projects_add_filter_checkbox
     font-size: .75em;
   }
   .gravatar, .media_icon{
-    display:inline-block; 
     vertical-align: middle;
     width: 32px;
   }
@@ -206,4 +205,12 @@ input.projects_add_filter_checkbox
 {
   width:400px;
   margin-left: -210px;
+}
+
+#dataset_table
+{       
+  td:not(:last-child)
+  {
+    padding-left: 5px;
+  }
 }

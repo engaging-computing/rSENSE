@@ -31,7 +31,6 @@ class DataSetsController < ApplicationController
   def edit
     @data_set = DataSet.find(params[:id])
     @project = Project.find(@data_set.project_id)
-    @mongo_data_set = { data: @data_set.data }
     @fields = @project.fields
 
     header_to_field_map = []
@@ -64,7 +63,6 @@ class DataSetsController < ApplicationController
           row["#{@fields[htf].id}"] = val
         end
 
-
         new_data[row_index] = row
 
       end
@@ -79,7 +77,7 @@ class DataSetsController < ApplicationController
     end
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html # edit.html.erb
       format.json { render json: ret }
     end
 
@@ -158,11 +156,12 @@ class DataSetsController < ApplicationController
     end
   end
 
+  # GET /projects/1/manualEntry
   def manualEntry
     @project = Project.find(params[:id])
   end
 
-  # POST /data_set/1/manualUpload
+  # POST /projects/1/manualUpload
   def manualUpload
 
     ############ Sanity Checks ############
@@ -191,6 +190,8 @@ class DataSetsController < ApplicationController
     
     if !sane
       #insane in the membrane
+      logger.info "Data set upload is not sane"
+      logger.info errors.inspect
       respond_to do |format|
         format.json { render json: errors, status: :unprocessable_entity }
       end
@@ -205,8 +206,7 @@ class DataSetsController < ApplicationController
     defaultName = ""
     
     if !params[:name]
-      defaultName  = @project.title + " Dataset #"
-      defaultName += (DataSet.find_all_by_project_id(params[:id]).count + 1).to_s
+      defaultName  = "Dataset ##{(DataSet.find_all_by_project_id(params[:id]).count + 1).to_s}"
     else
       defaultName = params["name"]
     end
@@ -223,6 +223,8 @@ class DataSetsController < ApplicationController
     if header_to_field_map.count != @fields.count
       #headers dont match... womp womp wahhhhh
       errors.push "Number of headers (#{header_to_field_map.count}) does not match the number of fields (#{@fields.count})"
+      logger.info "Data set headers don't match fields"
+      logger.info errors.inspect
       respond_to do |format|
         format.json { render json: errors, status: :unprocessable_entity }
       end
@@ -269,6 +271,7 @@ class DataSetsController < ApplicationController
 
   end
 
+  # GET /projects/1/export
   def export
 
     #require 'CSV'

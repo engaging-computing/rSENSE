@@ -68,7 +68,7 @@ class ProjectsController < ApplicationController
       @has_fields = true
     end
 
-    @data_sets = @project.data_sets.where( 'hidden == ?', false )
+    @data_sets = @project.data_sets.where( hidden: false)
     if @data_sets.nil?
       @data_sets = []
     end
@@ -196,9 +196,9 @@ class ProjectsController < ApplicationController
     end
   end
 
-
+  # POST /projects/1/updateLikedStatus 
   def updateLikedStatus
-    like = Like.find_by_user_id_and_project_id(@cur_user,params[:id])
+    like = Like.find_by_user_id_and_project_id(@cur_user, params[:id])
 
     if(like)
       if Like.destroy(like.id)    
