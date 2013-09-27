@@ -76,7 +76,7 @@ $ ->
     ($ '#tabcontainer').tabs()
     
 
-    ($ '#viscontainer').width ($ '#viscontainer').width() - (($ '#viscontainer').outerWidth() - ($ '#viscontainer').width())
+#     ($ '#viscontainer').width ($ '#viscontainer').width() - (($ '#viscontainer').outerWidth() - ($ '#viscontainer').width())
     
     ### Pick vis ###
     if not (data.defaultVis in data.relVis)
@@ -128,9 +128,9 @@ $ ->
       ($ '.vis_canvas').width  visWidth
       ($ '.vis_canvas').height visHeight
     
-    ($ '#controlhider').height visHeight
-    
-    ($ '#controldiv').width controlSize
+#     ($ '#controlhider').height visHeight
+#     
+    ($ '#controldiv').width 0
     ($ '#controldiv').height visHeight
 
     ($ '.vis_canvas').css('padding', 0)
@@ -141,21 +141,41 @@ $ ->
     globals.curVis.start()
     
     #Toggle control panel
-    resizeVis = (aniLength = 600) ->
-    
+    resizeVis = (toggleControls = true, aniLength = 600) ->
+        
+        ($ "#viscontainer").height(($ window).height() - h)
+        
         containerSize = ($ '#viscontainer').width()
         hiderSize     = ($ '#controlhider').outerWidth()
-        controlSize = if ($ '#controldiv').width() <= 0
+        controlSize   = ($ '#controldiv').width()
+            
+        if toggleControls
+          controlSize = if ($ '#controldiv').width() <= 0
             globals.CONTROL_SIZE
-        else
+          else
             0
 
         newWidth = containerSize - (hiderSize + controlSize + 10)
+        newHeight = ($ '#viscontainer').height() - ($ '#visTabList').outerHeight()
         
+        ($ '#controldiv').height newHeight
         ($ '#controldiv').animate {width: controlSize}, aniLength, 'linear'
+        
+        ($ '.vis_canvas').height newHeight
         ($ '.vis_canvas').animate {width: newWidth}, aniLength, 'linear'
+        
         globals.curVis.resize newWidth, $('.vis_canvas').height(), aniLength
 
+    # Set initial size if not in presentation mode
+    if globals.options? and globals.options.presentation?
+      1
+    else
+      resizeVis()
+      
+    # Resize vis on page resize
+    ($ window).resize () ->
+      resizeVis(false, 0)
+      
     ($ '#control_hide_button').click ->
         
         if ($ '#controldiv').width() is 0
