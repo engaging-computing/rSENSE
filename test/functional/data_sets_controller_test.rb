@@ -71,10 +71,10 @@ class DataSetsControllerTest < ActionController::TestCase
   end
 
   test "should upload data set" do
-    skip
-
-    post :manualUpload, { format: 'json', id: @proj.id, headers: [20, 21, 22], 
-      data: [{20 => 1, 21=> 2, 22 => 3}, {}, {}] }, { user_id: @kate }
+    # headers tell you the order of the fields
+    # the index of the header is the key for the field
+    post :manualUpload, { format: 'json', id: @proj.id, headers: ["20", "21", "22"], 
+      data: {"0" => ["1", "2", "3"], "1"=>["4", "5", "6"], "2" => ["14", "13", "12"]} }, { user_id: @kate }
     assert_response :success
   end 
 
