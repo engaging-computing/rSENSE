@@ -31,7 +31,7 @@ class Project < ActiveRecord::Base
   
   def self.search(search, include_hidden = false)
     res = if search
-        where('(title LIKE ?) OR (id LIKE ?)', "%#{search}%", "%#{search}%")
+        where('(title LIKE ?) OR (id = ?)', "%#{search}%", search)
     else
         scoped
     end
