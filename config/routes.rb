@@ -65,6 +65,8 @@ Rsense::Application.routes.draw do
     delete 'login' => :destroy
   end
 
+  match '/sessions/verify' => 'sessions#verify'
+
   match "/users/verify" => "users#verify"
   resources :users
   match "/users/validate/:key" => "users#validate"

@@ -12,6 +12,10 @@ $ ->
           
         options
 
+    #This is an evil fix for a redactor/webkit bug. I can fix it in redactors js but it would break on the next update.    
+    set_background_white = () =>
+      ($ '.redactor_content').css('background-color','white')
+      
     $('.redactor_content_edit_link').click ->
         top = ($ @).parents('div.redactor_top')
         type = top.attr("type")
@@ -28,9 +32,10 @@ $ ->
           path =  "#{type}/#{row_id}?#{params}"
           
         top.find('.redactor_content').redactor get_redactor_options(top, path)
-        
+        setTimeout(set_background_white, 100);
         top.find('.pillbox').show()
         top.find('.redactor_content_edit').hide()
+        
     
     ($ '.redactor_content_cancel_link').click ->
       if confirm("Are you sure you want to cancel? All changes will be lost.")
@@ -45,6 +50,7 @@ $ ->
         
         if saved_content is ""
           top.find('.add_content').show()
+          top.find('.redactor_content').hide()
         else
           top.find('.redactor_content_edit').show()
         
@@ -102,6 +108,7 @@ $ ->
         top.attr 'saved_content', ""
         
         top.find('.redactor_content').redactor get_redactor_options(top, path)
+        setTimeout(set_background_white,100)
         top.find('.pillbox').show()
         top.find('.add_content').hide()
 
