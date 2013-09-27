@@ -6,7 +6,7 @@ class News < ActiveRecord::Base
   validates :title, length: {maximum: 128}
   validates :summary, length: {maximum: 256}
   has_many :media_objects
-  
+
   belongs_to :user
   alias_attribute :owner, :user
   

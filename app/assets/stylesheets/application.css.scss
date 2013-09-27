@@ -86,7 +86,11 @@ div.info_text
     left:50%;
     margin-left:-160px;
     padding: 10px;
-    padding-top: 25px;
+    padding-top: 33px;
+}
+
+label[for=login_user], [for=login_password] {
+  float: left;
 }
 
 input.login_field
@@ -178,8 +182,11 @@ div.clear
 
 .info_edit_link, .menu_edit_link
 {
+  .info_edit_link
+  {
     vertical-align: super;
-    font-size: 0.75em;
+  }  
+  font-size: 0.75em;
 }
 
 .info_label
@@ -230,6 +237,7 @@ input.info_edit_box
   margin: 0px !important;
   word-wrap: break-word;
   font-size: 15px;
+  min-height:200px !important;
 /*   margin: 1px 1px 15px 1px; */
 }
 
@@ -420,7 +428,7 @@ input.object_hidden_checkbox
 
 .carousel-cell
 {
-  width: 170px;
+  width: 240px;
 }
 
 .carousel-arrow
