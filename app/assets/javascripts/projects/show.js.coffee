@@ -28,7 +28,7 @@ $ ->
 
     respond_csv = ( resp ) ->
       ($ "#match_table").html ''
-      ($ "#match_table").append "<tr><th> Experiment Field </th> <th> File Header </th></tr>"
+      ($ "#match_table").append "<tr><th> Project Field </th> <th> File Header </th></tr>"
 
       for field, fieldIndex in resp.fields
 
