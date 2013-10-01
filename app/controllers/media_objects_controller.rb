@@ -1,6 +1,9 @@
 class MediaObjectsController < ApplicationController
   include ApplicationHelper
 
+  # Allow images to be shown without authentication
+  skip_before_filter :authorize, :only => [:show]
+
   # GET /media_objects/1
   # GET /media_objects/1.json
   def show
@@ -82,13 +85,13 @@ class MediaObjectsController < ApplicationController
 
     #Set up the file for upload
     
-    fileKey = SecureRandom.uuid() + "." + params[:file].content_type.split("/")[1]
-    while MediaObject.find_by_file_key(fileKey) != nil
-      fileKey = SecureRandom.uuid() + "." + params[:file].content_type.split("/")[1]
-    end
     fileType = params[:file].content_type.split("/")[0]
     filePath = params[:file].tempfile 
     fileName = params[:file].original_filename
+    fileKey = SecureRandom.uuid() + "." + fileName
+    while MediaObject.find_by_file_key(fileKey) != nil
+      fileKey = SecureRandom.uuid() + "." + fileName
+    end
     
     if fileType == 'application'
       extended = params[:file].content_type.split("/")[1]
@@ -141,8 +144,8 @@ class MediaObjectsController < ApplicationController
     if(defined? @mo)      
     
       #Write the file to S3
-      o.write file: filePath
-      
+      o.write(file: filePath, :content_disposition => "attachment;filename=#{fileName}")
+
       #Generate a media object with the calculated params
       mo = MediaObject.create(@mo)
       mo.add_tn

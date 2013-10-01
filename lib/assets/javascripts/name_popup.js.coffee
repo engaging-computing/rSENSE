@@ -28,7 +28,7 @@ $ ->
         dataType: 'json'
         error: ->
           ($ "#new_name_box").modal("hide")
-          alert ("The project was created. Please delete it form the projects page.")
+          alert ("The project was created. Please delete it from the Projects page.")
         success: ->  
           ($ "#new_name_box").modal("hide")
           window.location = escape_location

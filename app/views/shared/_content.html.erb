@@ -8,8 +8,8 @@
   
     <% if can_edit %>
       <div class="redactor_content_edit" <% if !has_content %> style="display:none" <%end%> >
-        <a class="redactor_content_edit_link btn btn-small pull-right">
-          <i class="icon-edit icon_content"></i>
+        <a class="redactor_content_edit_link btn btn-small btn-success pull-right">
+          Edit
         </a>
       </div>
     <% end %>
@@ -30,7 +30,7 @@
       <div class="pillbox" style="display:none; height:20px">
         <div class="pull-right">
           <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_cancel_link btn btn-danger">Cancel</a>
-          <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_save_link btn btn-success">Save</a>
+          <a href="/<%=type.pluralize%>/<%=row_id%>" class="redactor_content_save_link btn btn-primary">Save</a>
         </div>
       </div>
     <%end%>

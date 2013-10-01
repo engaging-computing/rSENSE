@@ -8,9 +8,10 @@
   
   <% if can_edit?(obj) || can_hide?(obj) || can_delete?(obj)  %>
   
-      <span class="dropdown" style="font-size:14px; vertical-align: super;">
-        <a class="dropdown-toggle menu_edit_link" data-toggle="dropdown" href="#"> 
+      <div class="btn-group" style="font-size:14px; vertical-align: middle;">
+        <a class="btn btn-small dropdown-toggle menu_edit_link" data-toggle="dropdown" href="#"> 
           <i class="icon-cog icon-content"></i>
+          <span class="caret"></span>
         </a>
         <ul class="dropdown-menu" role="menu">
         
@@ -42,7 +43,7 @@
             </li>
           <%end%>
         </ul>
-      </span>
+      </div>
   <%end%>
   <% if obj.is_a?(News) || obj.is_a?(Visualization)%>
     <div class="summary" style="padding:5px 0px 5px 0px" type="<%=obj.class.to_s.downcase%>">
