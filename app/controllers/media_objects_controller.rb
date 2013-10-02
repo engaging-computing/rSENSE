@@ -84,10 +84,11 @@ class MediaObjectsController < ApplicationController
     bucket = s3.buckets['isenseimgs']
 
     #Set up the file for upload
-    
-    fileType = params[:file].content_type.split("/")[0]
-    filePath = params[:file].tempfile 
-    fileName = params[:file].original_filename
+    logger.info "--------------"
+    logger.info params.inspect
+    fileType = params[:upload].content_type.split("/")[0]
+    filePath = params[:upload].tempfile 
+    fileName = params[:upload].original_filename
     fileKey = SecureRandom.uuid() + "." + fileName
     while MediaObject.find_by_file_key(fileKey) != nil
       fileKey = SecureRandom.uuid() + "." + fileName
@@ -149,12 +150,9 @@ class MediaObjectsController < ApplicationController
       #Generate a media object with the calculated params
       mo = MediaObject.create(@mo)
       mo.add_tn
+      @mo = mo
       
-      #Tell redactor where the image is located
-      render json: {filelink: o.public_url.to_s, filename: fileName, mo: mo.to_hash}
-
     else
-      
       #Tell the user there is a problem with uploading their image.
       render json: {filelink: '/assets/noimage.png'}
       

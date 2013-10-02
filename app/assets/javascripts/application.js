@@ -41,6 +41,7 @@
 //= require jcarousellite.min.js
 //= require titlebar.js.coffee
 //= require mobile_slider
+//= require content_edit_pane.js.coffee
 //
 // Visualization stuff follows
 //
@@ -67,5 +68,7 @@
 //= require highvis/motion
 //= require highvis/photos
 //= require highvis/runtime
+//
+//= require ckeditor/init
 //
 //= require_tree .
