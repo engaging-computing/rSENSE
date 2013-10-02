@@ -1,6 +1,9 @@
 class DataSetsController < ApplicationController
   include ApplicationHelper
 
+  # Allow for export without authentication
+  skip_before_filter :authorize, :only => [:export]
+
   # GET /data_sets/1
   # GET /data_sets/1.json
   def show

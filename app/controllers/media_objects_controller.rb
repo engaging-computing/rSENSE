@@ -1,6 +1,9 @@
 class MediaObjectsController < ApplicationController
   include ApplicationHelper
 
+  # Allow images to be shown without authentication
+  skip_before_filter :authorize, :only => [:show]
+
   # GET /media_objects/1
   # GET /media_objects/1.json
   def show
