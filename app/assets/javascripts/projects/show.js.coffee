@@ -1,6 +1,7 @@
 $ ->
   if namespace.controller is "projects" and namespace.action is "show"
-    # Control code for name popup box
+    
+   # Control code for name popup box
     if ($ '#name_box') isnt []
       ($ '#name_box').modal();
       selectFunc = ->

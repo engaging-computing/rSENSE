@@ -33,7 +33,7 @@
     <hr />
     <div class="row">
       <%= render layout: "shared/box", locals: {title: 'Bio', width: '3', unique_id: 'box', should_hide: false } do %>
-        <%= user_redactor_helper(can_edit?(@user), "bio", false, true)%>
+        <%= user_content_helper(can_edit?(@user), "bio", false, true)%>
       <%end%>
     </div>
   </div>
@@ -52,7 +52,7 @@
         
         <div id="user_content">
           <div id="user_long_bio">
-            <%= user_redactor_helper(can_edit?(@user))%>
+            <%= user_content_helper(can_edit?(@user))%>
           </div>
           <div class="well word-break" id="three_recent">
             blahblahablhy

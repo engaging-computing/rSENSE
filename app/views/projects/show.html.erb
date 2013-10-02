@@ -29,9 +29,9 @@
         </div>
       </div>
 
-      <!-- ##### PROJECT CONTENT/REDACTOR ##### -->
+      <!-- ##### PROJECT CONTENT ##### -->
       <%=render layout: "shared/box", locals: {title: 'Description', width: '7', unique_id: 'description', should_hide: false} do %>
-        <%= project_redactor_helper (can_edit? @project) %>
+        <%= project_content_helper (can_edit? @project) %>
       <%end%>
 
 
