@@ -61,6 +61,7 @@ class Project < ActiveRecord::Base
       hidden: self.hidden,
       featured: self.featured,
       likeCount: self.like_count,
+      content: self.content,
       timeAgoInWords: time_ago_in_words(self.created_at),
       createdAt: self.created_at.strftime("%B %d, %Y"),
       ownerName: self.owner.name,
