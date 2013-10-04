@@ -25,26 +25,26 @@ $ ->
 
   login_ajax_submit = ->
     $.ajax
-        url: '/login'
-        type: 'POST'
-        dataType: 'json'
-        data:
-          username_or_email: ($ '#login_user').val()
-          password: ($ '#login_password').val()
-        success: (data) ->
-          switch data.status
-            when 'success'
-              ($ '#login_box').modal 'hide'
-              target =  $.data($('#login_box')[0], "redirect")
-              if target isnt undefined
-                window.location = target
-              else
-                location.reload(true)
-            when 'fail'
-              ($ '#login_user').errorFlash()
-              ($ '#login_password').errorFlash()
-             #($ '#login_user').css 'background','red'
-             #($ '#login_password').css 'background','red'
+      url: '/login'
+      type: 'POST'
+      dataType: 'json'
+      data:
+        username_or_email: ($ '#login_user').val()
+        password: ($ '#login_password').val()
+      error: (data) ->
+        ($ '#login_user').errorFlash()
+        ($ '#login_password').errorFlash()
+      success: (data) ->
+        if data.status is 'success'
+          ($ '#login_box').modal 'hide'
+          target =  $.data($('#login_box')[0], "redirect")
+          if target isnt undefined
+            window.location = target
+          else
+            location.reload(true)
+        else
+          ($ '#login_user').errorFlash()
+          ($ '#login_password').errorFlash()
             
   
   ($ 'a.login').click ->
