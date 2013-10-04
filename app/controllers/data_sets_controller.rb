@@ -354,7 +354,7 @@ class DataSetsController < ApplicationController
     system("cd /tmp && zip -r rsense-export-#{@project.id}/#{@project.id}.zip rsense-export-#{@project.id}/")
     
     respond_to do |format|
-      format.html { send_file zip_file, :type => 'application/zip', :x_sendfile => true }
+      format.html { send_file zip_file, :type => 'file/zip', :x_sendfile => true }
     end
 
   end
