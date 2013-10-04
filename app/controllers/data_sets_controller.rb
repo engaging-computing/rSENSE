@@ -280,11 +280,11 @@ class DataSetsController < ApplicationController
     @project = Project.find params[:id]
     @datasets = []
     
-    if File.directory? "./tmp/#{@project.id}"
-      FileUtils.rm_rf "./tmp/#{@project.id}", secure: true
+    if File.directory? "/tmp/rsense-export-#{@project.id}"
+      FileUtils.rm_rf "/tmp/rsense-export-#{@project.id}", secure: true
     end
     
-    FileUtils.mkdir_p "./tmp/#{@project.id}"
+    FileUtils.mkdir_p "/tmp/rsense-export-#{@project.id}"
 
     # build list of datasets
     if( !params[:datasets].nil? )
@@ -314,9 +314,9 @@ class DataSetsController < ApplicationController
         file_name = "#{file_name}.csv"
         
         if file_name != ""
-          tmp_file = File.new( "./tmp/#{@project.id}/#{file_name}", 'w+' )
+          tmp_file = File.new( "/tmp/rsense-export-#{@project.id}/#{file_name}", 'w+' )
         else
-          tmp_file = File.new( "./tmp/#{@project.id}/#{@project.id}", 'w+' )
+          tmp_file = File.new( "/tmp/rsense-export-#{@project.id}/#{@project.id}", 'w+' )
         end
           
         @project.fields.each_with_index do |field, f_index|
@@ -349,12 +349,12 @@ class DataSetsController < ApplicationController
       
     end
     
-    zip_file = "#{Rails.root}/tmp/#{@project.id}/#{@project.id}.zip"
+    zip_file = "/tmp/rsense-export-#{@project.id}/#{@project.id}.zip"
         
-    system("cd #{Rails.root}/tmp && zip -r #{@project.id}/#{@project.id}.zip #{@project.id}/")
+    system("cd /tmp && zip -r rsense-export-#{@project.id}/#{@project.id}.zip rsense-export-#{@project.id}/")
     
     respond_to do |format|
-      format.html { send_file zip_file, :type => 'text/csv' }
+      format.html { send_file zip_file, :type => 'application/zip', :x_sendfile => true }
     end
 
   end
