@@ -41,7 +41,9 @@
           <table id="dataset_table">
             <thead>
               <tr>
-                <th colspan="4"><input type="button" class="btn btn-info" style="margin-bottom: 10px;" value="Visualize" id="vis_button" href="/projects/<%=@project.id%>/data_sets/"/></th>
+                <th colspan="3"><input type="button" class="btn btn-info" style="margin-bottom: 10px;" value="Visualize" id="vis_button" href="/projects/<%=@project.id%>/data_sets/"/></th>
+                <th> <input type="button" class="btn btn-secondary" style="margin-bottom: 10px;" value="Export" id="export_button" href="/projects/<%=@project.id%>/export/data_sets/">
+                </th>
                 <th>         
                   <div>
                     <input type="checkbox" id="check_selector" checked/>
@@ -63,8 +65,6 @@
                   <td style="max-width:200px"><div class="truncate" title="Created <%=s.created_at.strftime("%B %d, %Y")%>"><%= link_to s.title, "#{params[:id]}/data_sets/#{s.id}" %></div></td>
                   <td>
                     <div class="controls" style="">
-                       &nbsp;<a class="data_set_export" href="/projects/<%= @project.id %>/export/data_sets/<%= s.id %>">Export</a>
-
                       <% if can_edit? s %>
                          &nbsp;<a class="data_set_edit" href="<%= edit_data_set_path s %>">Edit</a>
                       <% end %>
