@@ -24,6 +24,8 @@ group :development, :test do
   gem "launchy"
 end
 
+gem "nokogiri"
+
 # Jquery stuff
 gem 'less', '= 2.3.2'
 gem 'less-rails', '= 2.3.3'
