@@ -13,7 +13,9 @@ class User < ActiveRecord::Base
   validates :firstname, length: {maximum: 32}
   validates :lastname, length: {maximum: 32}
   validates :username, length: {maximum: 32}
-  
+ 
+  validates :email, format: {with: /\@.*\./}, allow_blank: true
+
   validates_presence_of :username, :firstname, :lastname
 
   has_secure_password
@@ -98,7 +100,11 @@ class User < ActiveRecord::Base
 
   def check_and_send_validation
     if (not validated) and (not validation_key.blank?)
-      UserMailer.validation_email(self).deliver
+      begin
+        UserMailer.validation_email(self).deliver
+      rescue Net::SMTPFatalError
+        logger.info "Could not send email"
+      end
     end
   end
 end
