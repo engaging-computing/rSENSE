@@ -185,6 +185,7 @@ DEPENDENCIES
   less-rails-bootstrap (= 2.3.3)
   mini_magick
   multi_json
+  nokogiri
   pg
   rails (= 3.2.13)
   remotipart (~> 1.0.2)

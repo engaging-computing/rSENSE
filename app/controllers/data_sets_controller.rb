@@ -279,6 +279,12 @@ class DataSetsController < ApplicationController
 
     @project = Project.find params[:id]
     @datasets = []
+    
+    if File.directory? "/tmp/rsense-export-#{@project.id}"
+      FileUtils.rm_rf "/tmp/rsense-export-#{@project.id}", secure: true
+    end
+    
+    FileUtils.mkdir_p "/tmp/rsense-export-#{@project.id}"
 
     # build list of datasets
     if( !params[:datasets].nil? )
@@ -295,48 +301,60 @@ class DataSetsController < ApplicationController
       @datasets = DataSet.find_all_by_project_id params[:id]
     end
 
-    file_name = "#{@project.id}"
+    folder_name = "#{@project.name}"
 
     @datasets.each do |dataset|
-      file_name = file_name + "_#{dataset.id}"
-    end
-
-    field_order = []
-    tmp_file = File.new("./tmp/#{file_name}.csv", 'w+')
-
-    @project.fields.each_with_index do |field, f_index|
-      tmp_file.write field[:name]
-      field_order.push field.id
-
-      if( f_index != @project.fields.count - 1)
-        tmp_file.write ", "
-      end
-    end
-
-    tmp_file.write "\n"
-
-    @datasets.each_with_index do |data_set, d_index|
-
-      data_set[:data].each_with_index do |data_row, dr_index|
+      
+      puts dataset.title
+      
+      if !dataset.hidden?
+  
+        field_order = []
+        file_name = "#{dataset.title}".tr(" ", "_").tr("/", "_").gsub(/\W/,'').to_s
+        file_name = "#{file_name}.csv"
         
-        field_order.each_with_index do |field, f_index|
-          tmp_file.write data_row[field.to_s]
+        if file_name != ""
+          tmp_file = File.new( "/tmp/rsense-export-#{@project.id}/#{file_name}", 'w+' )
+        else
+          tmp_file = File.new( "/tmp/rsense-export-#{@project.id}/#{@project.id}", 'w+' )
+        end
           
-          if( f_index != field_order.count - 1)
+        @project.fields.each_with_index do |field, f_index|
+          tmp_file.write field[:name]
+          field_order.push field.id
+    
+          if( f_index != @project.fields.count - 1)
             tmp_file.write ", "
           end
         end
-
+    
         tmp_file.write "\n"
-
+  
+        dataset[:data].each_with_index do |data_row, dr_index|
+          
+          field_order.each_with_index do |field, f_index|
+            tmp_file.write data_row[field.to_s]
+            
+            if( f_index != field_order.count - 1)
+              tmp_file.write ", "
+            end
+          end
+  
+          tmp_file.write "\n"
+  
+        end
+  
+        tmp_file.close
       end
-
+      
     end
-
-    tmp_file.close
-
+    
+    zip_file = "/tmp/rsense-export-#{@project.id}/#{@project.id}.zip"
+        
+    system("cd /tmp && zip -r rsense-export-#{@project.id}/#{@project.id}.zip rsense-export-#{@project.id}/")
+    
     respond_to do |format|
-      format.html { send_file tmp_file.path, :type => 'text/csv' }
+      format.html { send_file zip_file, :type => 'application/zip', :x_sendfile => true }
     end
 
   end
