@@ -23,8 +23,6 @@
 
 //= require twitter/bootstrap
 //= require bootstrap
-//= require redactor.js
-//= require redactor_edit_pane
 //= require info_edit
 //= require menu_edit
 //= require object_hider
