@@ -16,9 +16,13 @@
     <span class="half_width_edit" id="title_span" style="font-size:2em">
       <%=visualization_edit_menu_helper false %>
     </span>
-    <span><b>Project:</b> <%=link_to @visualization.project.title, project_path(@visualization.project)%></span></br>
-    <span><b>Owner:</b> <%= link_to @visualization.owner.name, user_path(@visualization.owner)%></span>
-    <br><br>
+    <div>
+      <b>Project:</b> <%=link_to @visualization.project.title, project_path(@visualization.project)%>
+    </div>
+    <div>
+      <b>Owner:</b> <%= link_to @visualization.owner.name, user_path(@visualization.owner)%>
+    </div>
+    <br>
   </div>
 </div>
 
