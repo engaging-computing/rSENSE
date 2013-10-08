@@ -57,7 +57,7 @@
                   <td class="gravatar">
                     <div >
                       <%if Gravatar.new.url(s.owner, 32) != nil%>
-                        <%= image_tag Gravatar.new.url(s.owner, 32)%>
+                        <%= image_tag Gravatar.new.url(s.owner, 32), :size => "32x32"%>
                       <%end%>
                     </div>
                   </td>
