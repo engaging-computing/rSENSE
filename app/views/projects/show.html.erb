@@ -92,27 +92,6 @@
 
   <div class="span5">
     <div class="row">
-    
-      <!-- ##### SESSION CREATION MENU ##### -->
-      <%=render layout: "shared/box", locals: {title: 'Create Data Set', width:'5', unique_id: 'create_data_set', should_hide: !(@cur_user.try(:id) && @project.fields.count() > 0)} do %>
-      <div class="row-fluid">
-        <div class="span4 center">
-        <%= link_to :controller => :data_sets, :action => :manualEntry do %>
-          <img class="hoverimage" src="/assets/manual.svg" /><br />Manual Entry
-        <% end %>
-        </div>
-        <div class="span4 center" title="Supports - CSV,XLS,XLSX,ODS">
-          <a id="upload_csv" href=""><img class="hoverimage" src="/assets/upload.svg" /><br />
-          Upload File</a>
-        </div>
-        <div class="span4 center">
-          <a id="google_doc" href=""><img class="hoverimage" src="/assets/google.svg" /><br />
-          Google Doc</a>
-        </div>
-        <div class="clear">
-        </div>
-      </div>
-      <% end %>
 
       <!-- ##### FIELDS MENU ##### -->
       <%= render layout: "shared/box", locals: {title: 'Fields', width: '5', unique_id: 'fields', should_hide: false} do%>
@@ -159,6 +138,29 @@
           </div>
         <%end%>
       <% end %>
+
+    
+      <!-- ##### SESSION CREATION MENU ##### -->
+      <%=render layout: "shared/box", locals: {title: 'Create Data Set', width:'5', unique_id: 'create_data_set', should_hide: !(@cur_user.try(:id) && @project.fields.count() > 0)} do %>
+      <div class="row-fluid">
+        <div class="span4 center">
+        <%= link_to :controller => :data_sets, :action => :manualEntry do %>
+          <img class="hoverimage" src="/assets/manual.svg" /><br />Manual Entry
+        <% end %>
+        </div>
+        <div class="span4 center" title="Supports - CSV,XLS,XLSX,ODS">
+          <a id="upload_csv" href=""><img class="hoverimage" src="/assets/upload.svg" /><br />
+          Upload File</a>
+        </div>
+        <div class="span4 center">
+          <a id="google_doc" href=""><img class="hoverimage" src="/assets/google.svg" /><br />
+          Google Doc</a>
+        </div>
+        <div class="clear">
+        </div>
+      </div>
+      <% end %>
+
 
       <!-- ##### MEDIA OBJECTS MENU ##### -->
       <%=render layout: "shared/box", locals: {title: 'Media', width: '5', unique_id: 'media', should_hide: false} do %>
