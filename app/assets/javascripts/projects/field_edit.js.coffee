@@ -53,8 +53,7 @@ $ ->
             data['changes'][field.attr('field_id')] = 
               name: field.find('input').val()
               unit: ($ this).find('.field_unit').find("input").val()
-        ($ '#create_data_set').show()
-        
+     
         if data['changes'] != {}
           $.ajax
             url: '/projects/12/updateFields'
@@ -203,7 +202,7 @@ $ ->
           table.data("num_fields",1)
           add_row(msg)
           ($ '#template_from_file').hide()
-          
+          ($ '#create_data_set').show()
         error: (msg) =>
             console.log msg
             
