@@ -1,3 +1,15 @@
 // Place all the styles related to the Home controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.mobileButtonTable {
+  display:table; 
+  table-layout:fixed; 
+  text-align:center; 
+  width:100%;
+}
+
+.mobileButtonCell {
+  display:table-cell;
+  width:50%
+}
