@@ -41,7 +41,6 @@ gem 'bcrypt-ruby', '~> 3.0.0'
 gem 'jquery-ui-rails'
 
 gem 'ckeditor'
-gem 'carrierwave'
 
 # Include Twitter bootstrap
 gem 'twitter-bootstrap-rails', '2.2.8'
