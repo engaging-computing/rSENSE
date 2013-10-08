@@ -84,8 +84,6 @@ class MediaObjectsController < ApplicationController
     bucket = s3.buckets['isenseimgs']
 
     #Set up the file for upload
-    logger.info "--------------"
-    logger.info params.inspect
     fileType = params[:upload].content_type.split("/")[0]
     filePath = params[:upload].tempfile 
     fileName = params[:upload].original_filename
@@ -95,7 +93,7 @@ class MediaObjectsController < ApplicationController
     end
     
     if fileType == 'application'
-      extended = params[:file].content_type.split("/")[1]
+      extended = params[:upload].content_type.split("/")[1]
       if extended.include? 'pdf'
         fileType = 'pdf'
       else
@@ -151,6 +149,12 @@ class MediaObjectsController < ApplicationController
       mo = MediaObject.create(@mo)
       mo.add_tn
       @mo = mo
+      
+      if params.has_key?(:non_wys)
+        respond_to do |format|
+          format.html {redirect_to params[:non_wys]}
+        end
+      end
       
     else
       #Tell the user there is a problem with uploading their image.

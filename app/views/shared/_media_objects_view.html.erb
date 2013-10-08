@@ -34,10 +34,13 @@
       <% end %>
     </tbody>
   </table>
+ 
+  <div class="upload_media">
+    <%= form_tag({controller: :media_objects ,action: :saveMedia, keys: "#{type}/#{object.id}"}, multipart: true) do %>
+      <div class="center"><button class='btn btn-success center' id="filechooser">Add File</button></div>
+      <input type="file" name="upload" id="upload" style="display:none;"/>
+      <input name="non_wys" type="hidden" value="<%= request.url %>"/>
 
-  <div class="redactor_file_upload_hidden" style="width:0px;height:0px"></div>
-  <br />
-  <% if can_edit? object %>
-    <div class="center"><button class="btn btn-success" id="redactor_file_upload_btn">Upload Media</button></div>
-  <% end %>
+    <% end %>
+  </div>
 </div>
