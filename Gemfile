@@ -15,6 +15,7 @@ group :assets do
   gem 'sass-rails',   '~> 3.2.3'
   gem 'coffee-rails', '~> 3.2.1'
   gem 'uglifier', '>= 1.0.3'
+  gem 'turbo-sprockets-rails3'
 end
 
 # Integration testing stuff
@@ -23,6 +24,8 @@ group :development, :test do
   gem "selenium-webdriver"
   gem "launchy"
 end
+
+gem "nokogiri"
 
 # Jquery stuff
 gem 'less', '= 2.3.2'
