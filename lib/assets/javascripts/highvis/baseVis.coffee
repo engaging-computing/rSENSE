@@ -406,8 +406,11 @@ $ ->
         drawYAxisControls: (radio = false) ->
 
             controls = '<div id="yAxisControl" class="vis_controls">'
-
-            controls += "<h3 class='clean_shrink'><a href='#'>Y Axis:</a></h3>"
+            
+            if radio
+              controls += "<h3 class='clean_shrink'><a href='#'>Field:</a></h3>"
+            else
+              controls += "<h3 class='clean_shrink'><a href='#'>Y Axis:</a></h3>"
 
             controls += "<div class='outer_control_div'>"
 
