@@ -9,7 +9,7 @@
   <%= link_to "#{@owner.firstname} #{@owner.lastname[0]}", user_path(@group.owner_id) %>
 </p>
 
-<%= group_redactor_helper true %>
+<%= group_content_helper true %>
 
   <span class="info_label" style="font-size:1.2em">Members:</span> 
   <% @group.users.all.each do |u| %>

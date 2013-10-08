@@ -1,5 +1,7 @@
 Rsense::Application.routes.draw do
   
+  mount Ckeditor::Engine => '/ckeditor'
+
   match '/news/add', to: 'news#create'
   resources :news, except: [:new, :edit]
 
@@ -76,7 +78,7 @@ Rsense::Application.routes.draw do
 
   match "/projects/:id/updateFields" => "fields#updateFields"
 
-
+  mount Ckeditor::Engine => "/ckeditor"
   
   # The priority is based upon order of creation:
   # first created -> highest priority.
