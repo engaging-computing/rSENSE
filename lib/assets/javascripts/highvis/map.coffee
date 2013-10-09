@@ -35,7 +35,8 @@ $ ->
             @HEATMAP_MARKERS = -1
 
             @visibleMarkers = 1
-            @visibleClusters = 1
+            @visibleLines = 1
+            @visibleClusters = data.dataPoints.length > 100 ? 1 : 0
             @heatmapSelection = @HEATMAP_NONE
 
             @heatmapRadius = 30
@@ -67,6 +68,11 @@ $ ->
             @heatPoints[@HEATMAP_MARKERS] = []
             for index in data.normalFields
                 @heatPoints[index] = []
+                
+            if data.timeFields.length > 0
+              @timeLines = []
+              for group in data.groups
+                @timeLines.push []
 
             for index of @heatPoints
                 for group in data.groups
@@ -111,6 +117,12 @@ $ ->
                     color = globals.colors[groupIndex % globals.colors.length]
 
                     latlng = new google.maps.LatLng(lat, lon)
+                    
+                    # put aside line info if nessisary
+                    if @timeLines?
+                      @timeLines[groupIndex].push
+                        time: dataPoint[data.timeFields[0]]
+                        latlng: latlng
 
                     # Build info window content
                     label  = "<div style='font-size:9pt;overflow-x:none;'>"
@@ -154,6 +166,20 @@ $ ->
                             location: latlng
 
                     @heatPoints[@HEATMAP_MARKERS][groupIndex].push latlng
+
+            # Produce time lines if available
+            if @timeLines?
+              for lineArr, index in @timeLines
+                @timeLines[index].sort (a, b) -> (a.time - b.time)
+                @timeLines[index] = @timeLines[index].map (a) -> a.latlng
+                @timeLines[index] = new google.maps.Polyline
+                  path: @timeLines[index]
+                  geodesic: true
+                  strokeColor: globals.colors[index]
+                  strokeOpacity: 1.0
+                  strokeWeight: 2
+                  
+                @timeLines[index].setMap(@gmap)
 
             # Deal with zoom
             if @zoomLevel?
@@ -239,6 +265,9 @@ $ ->
             for markGroup, index in @markers
                 for mark in markGroup
                     mark.setVisible ((index in globals.groupSelection) and @visibleMarkers is 1)
+                    
+                if @timeLines?
+                  @timeLines[index].setVisible ((index in globals.groupSelection) and @visibleLines is 1)
             
             @clusterer.repaint()
             
@@ -292,6 +321,12 @@ $ ->
             controls += "<input id='markerBox' type='checkbox' name='marker_selector' #{if @visibleMarkers is 1 then 'checked' else ''}/> Display Markers "
             controls += "</div>"
             
+            #marker line checkbox
+            if @timeLines?
+              controls += '<div class="inner_control_div">'
+              controls += "<input id='lineBox' type='checkbox' name='line_selector' #{if @visibleLines is 1 then 'checked' else ''}/> Connect Markers "
+              controls += "</div>"
+            
             #cluster checkbox
             controls += '<div class="inner_control_div">'
             controls += "<input id='clusterBox' type='checkbox' name='cluster_selector' #{if @visibleClusters is 1 then 'checked' else ''}/> Cluster Markers "
@@ -305,6 +340,10 @@ $ ->
 
             ($ '#markerBox').click (e) =>
                 @visibleMarkers = (@visibleMarkers + 1) % 2
+                @delayedUpdate()
+                
+            ($ '#lineBox').click (e) =>
+                @visibleLines = (@visibleLines + 1) % 2
                 @delayedUpdate()
                 
             ($ '#clusterBox').click (e) =>
