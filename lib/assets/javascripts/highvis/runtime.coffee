@@ -142,9 +142,12 @@ $ ->
     
     #Toggle control panel
     resizeVis = (toggleControls = true, aniLength = 600) ->
-        
-        ($ "#viscontainer").height(($ window).height() - h)
-        
+
+        if (globals.fullscreen? and globals.fullscreen)
+          ($ "#viscontainer").height(($ window).height())
+        else
+          ($ "#viscontainer").height(($ window).height() - h)
+          
         containerSize = ($ '#viscontainer').width()
         hiderSize     = ($ '#controlhider').outerWidth()
         controlSize   = ($ '#controldiv').width()
