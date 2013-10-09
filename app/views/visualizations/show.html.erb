@@ -26,12 +26,12 @@
   </div>
 </div>
 
-<div style="margin: 0px 10px;">
+<div style="margin: 0px 10px;" >
 
   <div id="viscontainer" style="height:500px;">
 
     <ul id='visTabList'>
-       <div class="pull-right"><button class="btn" id="fullscreen-viz"><i class="icon-fullscreen"></i></button></div>
+       <div class="pull-right"><button class="btn" id="fullscreen-viz" title="Min/Max"><i class="icon-resize-full"></i></button></div>
     </ul>
     <div class="clear"></div>
     
@@ -51,7 +51,7 @@
 
   </div>
 
-  <div class="well" style="margin-top:10px">
+  <div class="well" style="margin-top:10px" id="dataset_info">
 
     <div class="full_width_edit" style="font-size:1.5em;"><%= visualization_edit_helper 'title', @visualization.owner.id == @cur_user.try(:id), make_link = false %></div>
     
