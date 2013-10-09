@@ -259,10 +259,8 @@ $ ->
               @updateOnZoom = 0
               @chart.xAxis[0].setExtremes @xBounds.min, @xBounds.max, false
               @chart.yAxis[0].setExtremes @yBounds.min, @yBounds.max, false
-              console.log 'locked'
               ($ '#zoomResetButton').removeClass("disabled")
             else
-              console.log 'unlocked'
               ($ '#zoomResetButton').addClass("disabled")
               
                     
