@@ -167,7 +167,7 @@ $ ->
         ($ '.vis_canvas').height newHeight
         ($ '.vis_canvas').animate {width: newWidth}, aniLength, 'linear'
         
-        globals.curVis.resize newWidth, $('.vis_canvas').height(), aniLength
+        globals.curVis.resize newWidth, newHeight, aniLength
 
     # Set initial size if not in presentation mode
     if globals.options? and globals.options.presentation?
