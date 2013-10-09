@@ -143,7 +143,7 @@ $ ->
     #Toggle control panel
     resizeVis = (toggleControls = true, aniLength = 600) ->
 
-        if globals? and globals.fullscreen?
+        if (globals.fullscreen? and globals.fullscreen)
           ($ "#viscontainer").height(($ window).height())
         else
           ($ "#viscontainer").height(($ window).height() - h)
