@@ -170,7 +170,7 @@ $ ->
     if globals.options? and globals.options.presentation?
       1
     else
-      resizeVis()
+      setTimeout resizeVis, 0
       
     # Resize vis on page resize
     ($ window).resize () ->
