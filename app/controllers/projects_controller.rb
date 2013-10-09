@@ -373,6 +373,10 @@ class ProjectsController < ApplicationController
 
 
   def templateFields
+    
+    require "csv"
+    require "open-uri"
+    require "roo"
 
     #include FieldHelper
 
@@ -410,14 +414,32 @@ class ProjectsController < ApplicationController
       end
 
     else
-
-      require "csv"
-
-      @file = params[:csv]
+      
+      isdoc = false
+      
+      if params.has_key? :csv
+        @file = params[:csv]
+        if @file.content_type.include? "opendocument"
+          oo = Roo::Openoffice.new(@file.path,false, :ignore)
+          data = CSV.parse(oo.to_csv)
+        elsif @file.content_type.include? "ms-excel"
+          oo = Roo::Excel.new(@file.path,false,:ignore)
+          data = CSV.parse(oo.to_csv) 
+        elsif @file.content_type.include? "openxmlformats"
+          oo = Roo::Excelx.new(@file.path,false,:ignore)
+          data = CSV.parse(oo.to_csv)
+        else 
+          data = CSV.read(@file.tempfile)
+        end
+      else 
+        tempfile = CSV.new(open(params[:tmpfile]))
+        data = tempfile.read()
+        isdoc = true
+      end
 
       if @project.fields.count == 0
 
-        tmp = CSV.read(@file.try(:tempfile))
+        tmp = data
 
         col = Array.new
         p_fields = Array.new
