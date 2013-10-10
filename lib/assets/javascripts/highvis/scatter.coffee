@@ -135,11 +135,6 @@ $ ->
                             @delayedUpdate()
                           else
                             @updateOnZoom = 1
-                          
-                          if not @isZoomLocked()
-                            ($ '#zoomResetButton').button("disable")
-                          else
-                            ($ '#zoomResetButton').button("enable")
                             
 
         ###
@@ -264,6 +259,10 @@ $ ->
               @updateOnZoom = 0
               @chart.xAxis[0].setExtremes @xBounds.min, @xBounds.max, false
               @chart.yAxis[0].setExtremes @yBounds.min, @yBounds.max, false
+              ($ '#zoomResetButton').removeClass("disabled")
+            else
+              ($ '#zoomResetButton').addClass("disabled")
+              
                     
             @chart.redraw()
             
