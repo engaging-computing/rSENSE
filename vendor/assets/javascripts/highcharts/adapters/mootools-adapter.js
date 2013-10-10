@@ -1,5 +1,5 @@
 /*
- Highcharts JS v3.0.3 (2013-07-31)
+ Highcharts JS v3.0.6 (2013-10-04)
  MooTools adapter
 
  (c) 2010-2013 Torstein Hønsi

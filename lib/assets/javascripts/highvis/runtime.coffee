@@ -142,9 +142,12 @@ $ ->
     
     #Toggle control panel
     resizeVis = (toggleControls = true, aniLength = 600) ->
-        
-        ($ "#viscontainer").height(($ window).height() - h)
-        
+
+        if (globals.fullscreen? and globals.fullscreen)
+          ($ "#viscontainer").height(($ window).height())
+        else
+          ($ "#viscontainer").height(($ window).height() - h)
+          
         containerSize = ($ '#viscontainer').width()
         hiderSize     = ($ '#controlhider').outerWidth()
         controlSize   = ($ '#controldiv').width()
@@ -164,7 +167,7 @@ $ ->
         ($ '.vis_canvas').height newHeight
         ($ '.vis_canvas').animate {width: newWidth}, aniLength, 'linear'
         
-        globals.curVis.resize newWidth, $('.vis_canvas').height(), aniLength
+        globals.curVis.resize newWidth, newHeight, aniLength
 
     # Set initial size if not in presentation mode
     if globals.options? and globals.options.presentation?

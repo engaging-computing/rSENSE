@@ -16,17 +16,25 @@
     <span class="half_width_edit" id="title_span" style="font-size:2em">
       <%=visualization_edit_menu_helper false %>
     </span>
-    <span><b>Project:</b> <%=link_to @visualization.project.title, project_path(@visualization.project)%></span></br>
-    <span><b>Owner:</b> <%= link_to @visualization.owner.name, user_path(@visualization.owner)%></span>
-    <br><br>
+    <div>
+      <b>Project:</b> <%=link_to @visualization.project.title, project_path(@visualization.project)%>
+    </div>
+    <div>
+      <b>Owner:</b> <%= link_to @visualization.owner.name, user_path(@visualization.owner)%>
+    </div>
+    <br>
   </div>
 </div>
 
-<div style="margin: 0px 10px;">
+<div style="margin: 0px 10px;" >
 
   <div id="viscontainer" style="height:500px;">
 
-    <ul id='visTabList'></ul>
+    <ul id='visTabList'>
+       <div class="pull-right"><button class="btn" id="fullscreen-viz" title="Min/Max"><i class="icon-resize-full"></i></button></div>
+    </ul>
+    <div class="clear"></div>
+    
     <div id="map_canvas" class="vis_canvas"></div>
     <div id="table_canvas" class="vis_canvas"></div>
     <div id="timeline_canvas" class="vis_canvas"></div>
@@ -43,7 +51,7 @@
 
   </div>
 
-  <div class="well" style="margin-top:10px">
+  <div class="well" style="margin-top:10px" id="dataset_info">
 
     <div class="full_width_edit" style="font-size:1.5em;"><%= visualization_edit_helper 'title', @visualization.owner.id == @cur_user.try(:id), make_link = false %></div>
     
