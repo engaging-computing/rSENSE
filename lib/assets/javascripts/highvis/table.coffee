@@ -37,7 +37,9 @@ $ ->
             ($ '#' + @canvas).show()
 
             ($ "##{@canvas}").css 'padding-top', 2
-            
+
+	        #if @searchString ? restore search
+
             #Calls update
             super()
 
@@ -76,6 +78,9 @@ $ ->
             
             ($ '#table_body').append row for row in rows 
 
+            # Set sort state to default none existed
+            @sortState ?= [[1, 'asc']]
+
             dt = 
                 sScrollY: "#{($ '#' + @canvas).height() - (122)}px"
                 sScrollX: "100%"
@@ -83,6 +88,7 @@ $ ->
                 iDisplayLength: -1
                 bDeferRender: true
                 bJQueryUI: true
+                aaSorting: [[@sortState[0][0], @sortState[0][1]]]
                 oLanguage:
                     sLengthMenu: 'Display <select>'   +
                                 '<option value="10">10</option>' +
@@ -112,6 +118,10 @@ $ ->
 
         end: ->
             ($ '#' + @canvas).hide()
+
+    	    # save the sort state
+            @sortState = @atable.fnSettings().aaSorting
+	        #@searchString = ($ '#data_table_filter'). 
             
         resize: (newWidth, newHeight, aniLength) ->
           ($ 'div.dataTables_scrollBody').css('height', ($ '#' + @canvas).height() - (122))
