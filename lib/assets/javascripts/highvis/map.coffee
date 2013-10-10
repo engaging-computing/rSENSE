@@ -48,6 +48,8 @@ $ ->
             delete @heatmap
             delete @clusterer
             delete @oms
+            if @timeLines?
+              delete @timeLines
         
         start: ->
             ($ '#' + @canvas).show()
@@ -84,6 +86,7 @@ $ ->
                 center: new google.maps.LatLng(0,0)
                 zoom: 8
                 mapTypeId: google.maps.MapTypeId.ROADMAP
+                scaleControl: true
 
             @gmap = new google.maps.Map(document.getElementById(@canvas), mapOptions)
             initOMS()
@@ -187,6 +190,7 @@ $ ->
                 
             google.maps.event.addListener @gmap, "zoom_changed", =>
               @zoomLevel = @gmap.getZoom()
+              @delayedUpdate()
 
             # Deal with zoom area
             if @savedCenter?
@@ -199,6 +203,9 @@ $ ->
               @savedCenter =
                 lat: cen.lat()
                 lng: cen.lng()
+                
+            google.maps.event.addListener @gmap, "dragend", =>
+              @delayedUpdate()
             
             
             clusterStyles = []
@@ -237,13 +244,13 @@ $ ->
             fixZoom = =>
                 if @gmap.getZoom() > 17
                     @gmap.setZoom(18)
+                #replaces call to super, as its not allowed here for some reason
+                @drawControls()
+                @update()
             
             setTimeout fixZoom, 300
-            
-            super()
           
         update: ->
-
             # Build heatmap points from pre-computed data
             heats = []
             for index, heatArray of @heatPoints when (Number index) is @heatmapSelection
@@ -254,10 +261,11 @@ $ ->
             if @heatmap?
                 @heatmap.setMap null
 
+            console.log @heatmapRadius / @getScale()
             # Draw heatmap
             @heatmap = new google.maps.visualization.HeatmapLayer
                 data: heats
-                radius: @heatmapRadius
+                radius: Math.min(@heatmapRadius / @getScale(), 1000)
                 dissipating:true
             @heatmap.setMap @gmap
 
@@ -359,14 +367,15 @@ $ ->
                 @delayedUpdate()
 
             #Set up slider
+            slideScale = [5, 10, 50, 100, 500, 1000, 5000, 10000, 50000, 100000]
             ($ '#heatmapSlider').slider
                 range: 'min'
                 value: @heatmapRadius
-                min: 5
-                max: 150
-                step: 5
+                min: 0
+                max: slideScale.length - 1
+                values: 0
                 slide: (event, ui) =>
-                    @heatmapRadius = Number ui.value
+                    @heatmapRadius = slideScale[Number ui.value]
                     ($ '#radiusText').html("#{@heatmapRadius}")
                     @delayedUpdate()
             
@@ -384,6 +393,12 @@ $ ->
             func = =>
                 google.maps.event.trigger @gmap, 'resize'
             setTimeout func, duration
+            
+        getScale: () ->
+            bounds = @gmap.getBounds()
+            dist = google.maps.geometry.spherical.computeDistanceBetween bounds.getNorthEast(), bounds.getSouthWest()
+            pixelDist = Math.pow(Math.pow(($ "##{@canvas}").width(), 2) + Math.pow(($ "##{@canvas}").height(), 2), .5)
+            return dist / pixelDist
             
     if "Map" in data.relVis
         globals.map = new Map "map_canvas"
