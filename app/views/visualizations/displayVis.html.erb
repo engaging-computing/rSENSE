@@ -60,7 +60,7 @@
 
     <div class="well" style="margin-top:10px">
       <%@data_set = @datasets.first()%>
-      <div class="full_width_edit" style="font-size:1.5em">Dataset: <%= data_set_edit_helper 'title', can_edit?(@data_set), make_link = false%></div>
+      <div class="full_width_edit" style="font-size:1.5em"><%= data_set_edit_helper 'title', can_edit?(@data_set), make_link = false%></div>
       <%= data_set_content_helper @data_set, can_edit?(@data_set) %>
     </div>
   
