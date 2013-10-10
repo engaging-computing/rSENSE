@@ -113,7 +113,7 @@ class MediaObjectsController < ApplicationController
       end
     when 'data_set'
       @data_set = DataSet.find_by_id(id)
-      if(@data_set.owner == @cur_user)
+      if(can_edit?(@data_set))
         @mo = {user_id: @data_set.owner.id, project_id: @data_set.project_id, data_set_id: @data_set.id, src: o.public_url.to_s, name: fileName, media_type: fileType, file_key: fileKey}
       end
     when 'user'
