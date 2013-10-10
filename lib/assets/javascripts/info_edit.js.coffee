@@ -13,7 +13,7 @@ $ ->
     href = ($ @).attr('href')
 
     #The thing that will become a input box
-    info_box = root.find('.info_text')
+    info_box = root.find('.info_val')
     info_box.html("<div class='input-append'><input type='text' class='info_edit_box input-medium' id='appendInput' value='#{val}'><span class='add-on btn btn-success info_save_link' href='#{href}'><i class='icon-ok icon-white'></i></span></div>")
     root.find('.info_edit_box').focus()
     
