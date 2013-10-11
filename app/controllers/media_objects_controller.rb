@@ -153,6 +153,7 @@ class MediaObjectsController < ApplicationController
       if params.has_key?(:non_wys)
         respond_to do |format|
           format.html {redirect_to params[:non_wys]}
+          format.json {render json: @mo.id}
         end
       end
       
