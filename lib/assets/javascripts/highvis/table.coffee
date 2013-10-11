@@ -37,7 +37,7 @@ $ ->
             ($ '#' + @canvas).show()
 
             ($ "##{@canvas}").css 'padding-top', 2
-            
+
             #Calls update
             super()
 
@@ -45,7 +45,7 @@ $ ->
         update: ->
             ($ '#' + @canvas).html('')
         
-            #updates controls by default       
+            #Updates controls by default       
             ($ '#' + @canvas).append '<table id="data_table"></table>'  
             
             ($ '#data_table').append '<thead><tr id="table_headers"></tr></thead>'
@@ -76,6 +76,12 @@ $ ->
             
             ($ '#table_body').append row for row in rows 
 
+            #Set sort state to default none existed
+            @sortState ?= [[1, 'asc']]
+            
+            #Set default search to empty string
+            @searchString ?= ''
+
             dt = 
                 sScrollY: "#{($ '#' + @canvas).height() - (122)}px"
                 sScrollX: "100%"
@@ -83,6 +89,7 @@ $ ->
                 iDisplayLength: -1
                 bDeferRender: true
                 bJQueryUI: true
+                aaSorting: [[@sortState[0][0], @sortState[0][1]]]
                 oLanguage:
                     sLengthMenu: 'Display <select>'   +
                                 '<option value="10">10</option>' +
@@ -108,16 +115,26 @@ $ ->
                         
             @atable = ($ '#data_table').dataTable(dt)
 
+            #Restore previous search query if exists, else restore empty string
+            if @searchString? and @searchString isnt ''
+                $('#table_canvas').find('input').val(@searchString).keyup()
+
             super()
 
         end: ->
             ($ '#' + @canvas).hide()
+
+            #Save the sort state
+            @sortState = @atable.fnSettings().aaSorting
+	        
+            #Save the table filter
+            @searchString = ($ '#table_canvas').find('input').val()
             
         resize: (newWidth, newHeight, aniLength) ->
           ($ 'div.dataTables_scrollBody').css('height', ($ '#' + @canvas).height() - (122))
           
           foo = () -> 
-            @aTable._fnAdjustColumnSizing();
+            @atable._fnAdjustColumnSizing();
             
           setTimeout foo, aniLength
 
@@ -125,5 +142,8 @@ $ ->
             super()    
             @drawGroupControls()
             @drawSaveControls()
+
+        serializationCleanup: ->
+            delete @atable    
 
     globals.table = new Table "table_canvas"
