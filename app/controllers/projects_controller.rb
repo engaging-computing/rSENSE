@@ -378,7 +378,7 @@ class ProjectsController < ApplicationController
     require "open-uri"
     require "roo"
 
-    #include FieldHelper
+    error = nil
 
     @project = Project.find params[:id]
 
@@ -428,8 +428,10 @@ class ProjectsController < ApplicationController
         elsif @file.content_type.include? "openxmlformats"
           oo = Roo::Excelx.new(@file.path,false,:ignore)
           data = CSV.parse(oo.to_csv)
-        else 
+        elsif @file.original_filename.split(".").last == "csv" or @file.original_filename.split(".").last == "txt"
           data = CSV.read(@file.tempfile)
+        else
+          error = "File type not supported."
         end
       else 
         tempfile = CSV.new(open(params[:tmpfile]))
@@ -437,7 +439,7 @@ class ProjectsController < ApplicationController
         isdoc = true
       end
 
-      if @project.fields.count == 0
+      if @project.fields.count == 0 and error.nil?
 
         tmp = data
 
@@ -512,11 +514,19 @@ class ProjectsController < ApplicationController
         end
 
       end
-
-      respond_to do |format|
-        format.json { render json: { action: "template" , pid: @project.id , fields: params[:tmp], p_field_types: p_fields} }
-        format.html { redirect_to action: "fieldSelect", id: @project.id }
+      
+      if error.nil?
+        respond_to do |format|
+          format.json { render json: { action: "template" , pid: @project.id , fields: params[:tmp], p_field_types: p_fields} }
+          format.html { redirect_to action: "fieldSelect", id: @project.id }
+        end
+      else
+        respond_to do |format|
+          format.json { render json: { status: 500 } }
+          format.html { render status: 500 }
+        end
       end
+      
     end
   end
 
