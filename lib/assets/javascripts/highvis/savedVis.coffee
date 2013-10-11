@@ -148,6 +148,7 @@ $ ->
 
         for visName in data.allVis
             vis  = eval "globals.#{visName.toLowerCase()}"
+            vis.end()
             vis.serializationCleanup()
 
         globalsCpy = stripFunctions globals
