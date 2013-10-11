@@ -285,13 +285,13 @@ $ ->
             
           
     ($ '#template_from_file').click ->
+      ($ '#template_file_input').val "" 
       ($ '#template_file_input').click()
       false    
           
     ($ '#template_file_input').change ->
       ($ '#template_file_form').attr 'action', "#{window.location.pathname}/templateFields"
       ($ '#template_file_form').submit()
-      ($ '#template_file_input').val "" 
             
     ($ "#template_file_form").ajaxForm (resp) ->
       respond_template(resp)       
