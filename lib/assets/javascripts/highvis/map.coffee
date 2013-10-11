@@ -205,7 +205,12 @@ $ ->
                 lng: cen.lng()
                 
             google.maps.event.addListener @gmap, "dragend", =>
-              @delayedUpdate()
+              temp = @getHeatmapScale()
+              if temp isnt @heatmapPixelRadius
+                console.log "#{temp} != #{@heatmapPixelRadius}"
+                @delayedUpdate()
+              else
+                console.log "#{temp} == #{@heatmapPixelRadius}"
             
             
             clusterStyles = []
@@ -262,10 +267,11 @@ $ ->
                 @heatmap.setMap null
 
             console.log @heatmapRadius / @getScale()
+            @heatmapPixelRadius = @getHeatmapScale()
             # Draw heatmap
             @heatmap = new google.maps.visualization.HeatmapLayer
                 data: heats
-                radius: Math.min(@heatmapRadius / @getScale(), 1000)
+                radius: @heatmapPixelRadius
                 dissipating:true
             @heatmap.setMap @gmap
 
@@ -394,11 +400,17 @@ $ ->
                 google.maps.event.trigger @gmap, 'resize'
             setTimeout func, duration
             
+        getPixelDiag: () ->
+            Math.pow(Math.pow(($ "##{@canvas}").width(), 2) + Math.pow(($ "##{@canvas}").height(), 2), .5)
+            
+        getHeatmapScale: () ->
+            Math.min(Math.ceil(@heatmapRadius / @getScale()), @getPixelDiag() / 2)
+            
         getScale: () ->
             bounds = @gmap.getBounds()
             dist = google.maps.geometry.spherical.computeDistanceBetween bounds.getNorthEast(), bounds.getSouthWest()
-            pixelDist = Math.pow(Math.pow(($ "##{@canvas}").width(), 2) + Math.pow(($ "##{@canvas}").height(), 2), .5)
-            return dist / pixelDist
+            
+            return dist / @getPixelDiag()
             
     if "Map" in data.relVis
         globals.map = new Map "map_canvas"
