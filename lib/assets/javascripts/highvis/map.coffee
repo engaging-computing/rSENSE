@@ -383,16 +383,16 @@ $ ->
             ($ '#controldiv').append controls
 
             ($ '#markerBox').click (e) =>
-              @visibleMarkers = (@visibleMarkers + 1) % 2
+              @visibleMarkers = if e.target.checked then 1 else 0
               @delayedUpdate()
                 
             ($ '#lineBox').click (e) =>
-              @visibleLines = (@visibleLines + 1) % 2
+              @visibleLines = if e.target.checked then 1 else 0
               @delayedUpdate()
                 
             ($ '#clusterBox').click (e) =>
-              @visibleClusters = (@visibleClusters + 1) % 2
-              @clusterer.setMaxZoom if @visibleClusters then 17 else -1
+              @visibleClusters = if e.target.checked then 1 else 0
+              @clusterer.setMaxZoom (if @visibleClusters then 17 else -1)
               @delayedUpdate()
 
             # Make heatmap select handler
