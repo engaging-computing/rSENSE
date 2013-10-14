@@ -12,7 +12,7 @@ data.
 
 Install like any Ruby on Rails application.
 
-Requires MongoDB for data storage.
+Uses PostgreSQL by default for data storage.
 
 Requires an Amazon AWS account for media storage. Put your credentials in 
 config/aws_config.yml as follows:
