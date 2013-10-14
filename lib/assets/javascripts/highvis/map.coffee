@@ -269,7 +269,7 @@ $ ->
             sel = if @heatmapSelection is @HEATMAP_NONE then 'selected' else ''
             controls += "<option value=\"#{@HEATMAP_NONE}\" #{sel}>None</option>"
             sel = if @heatmapSelection is @HEATMAP_MARKERS then 'selected' else ''
-            controls += "<option value=\"#{@HEATMAP_MARKERS}\" #{sel}>Location</option>"
+            controls += "<option value=\"#{@HEATMAP_MARKERS}\" #{sel}>Marker Density</option>"
             
             for fieldIndex in data.normalFields
                 sel = if @heatmapSelection is fieldIndex then 'selected' else ''
