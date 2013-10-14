@@ -23,8 +23,6 @@
 
 //= require twitter/bootstrap
 //= require bootstrap
-//= require redactor.js
-//= require redactor_edit_pane
 //= require info_edit
 //= require menu_edit
 //= require object_hider
@@ -41,6 +39,7 @@
 //= require jcarousellite.min.js
 //= require titlebar.js.coffee
 //= require mobile_slider
+//= require content_edit_pane.js.coffee
 //
 // Visualization stuff follows
 //
@@ -67,5 +66,7 @@
 //= require highvis/motion
 //= require highvis/photos
 //= require highvis/runtime
+//
+//= require ckeditor/init
 //
 //= require_tree .

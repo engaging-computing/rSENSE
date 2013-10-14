@@ -373,8 +373,12 @@ class ProjectsController < ApplicationController
 
 
   def templateFields
+    
+    require "csv"
+    require "open-uri"
+    require "roo"
 
-    #include FieldHelper
+    error = nil
 
     @project = Project.find params[:id]
 
@@ -410,14 +414,34 @@ class ProjectsController < ApplicationController
       end
 
     else
+      
+      isdoc = false
+      
+      if params.has_key? :csv
+        @file = params[:csv]
+        if @file.content_type.include? "opendocument"
+          oo = Roo::Openoffice.new(@file.path,false, :ignore)
+          data = CSV.parse(oo.to_csv)
+        elsif @file.content_type.include? "ms-excel"
+          oo = Roo::Excel.new(@file.path,false,:ignore)
+          data = CSV.parse(oo.to_csv) 
+        elsif @file.content_type.include? "openxmlformats"
+          oo = Roo::Excelx.new(@file.path,false,:ignore)
+          data = CSV.parse(oo.to_csv)
+        elsif @file.original_filename.split(".").last == "csv" or @file.original_filename.split(".").last == "txt"
+          data = CSV.read(@file.tempfile)
+        else
+          error = "File type not supported."
+        end
+      else 
+        tempfile = CSV.new(open(params[:tmpfile]))
+        data = tempfile.read()
+        isdoc = true
+      end
 
-      require "csv"
+      if @project.fields.count == 0 and error.nil?
 
-      @file = params[:csv]
-
-      if @project.fields.count == 0
-
-        tmp = CSV.read(@file.try(:tempfile))
+        tmp = data
 
         col = Array.new
         p_fields = Array.new
@@ -490,11 +514,19 @@ class ProjectsController < ApplicationController
         end
 
       end
-
-      respond_to do |format|
-        format.json { render json: { action: "template" , pid: @project.id , fields: params[:tmp], p_field_types: p_fields} }
-        format.html { redirect_to action: "fieldSelect", id: @project.id }
+      
+      if error.nil?
+        respond_to do |format|
+          format.json { render json: { action: "template" , pid: @project.id , fields: params[:tmp], p_field_types: p_fields} }
+          format.html { redirect_to action: "fieldSelect", id: @project.id }
+        end
+      else
+        respond_to do |format|
+          format.json { render json: { status: 500 } }
+          format.html { render status: 500 }
+        end
       end
+      
     end
   end
 

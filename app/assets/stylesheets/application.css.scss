@@ -10,7 +10,6 @@
  *
  *= require bootstrap_and_overrides
  *= require_tree .
- *= require redactor.css
  *= require jquery.ui.all
 
  * require jquery.mobile
@@ -180,14 +179,7 @@ div.clear
     text-align: center;
 }
 
-.info_edit_link, .menu_edit_link
-{
-  .info_edit_link
-  {
-    vertical-align: super;
-  }  
-  font-size: 0.75em;
-}
+
 
 .info_label
 {
@@ -196,22 +188,6 @@ div.clear
     padding-right:5px;
 }
 
-.info_save_link, .menu_save_link
-{
-//     vertical-align: super;
-//     font-size: 0.75em;
-//     display: none;
-}
-
-input.info_edit_box
-{
-//     resize:none;
-//     margin:0;
-//     padding:0;
-// /*     font-size:0.8em; */
-//     height:auto;
-//     border:0;
-}
 
 .info_text
 {
@@ -231,16 +207,6 @@ input.info_edit_box
     margin: 0px 0px;
 }
 
-.redactor_content
-{
-  padding: 5px !important;
-  margin: 0px !important;
-  word-wrap: break-word;
-  font-size: 15px;
-  min-height:200px !important;
-/*   margin: 1px 1px 15px 1px; */
-}
-
 .icon_content
 {
   margin-right: 5px;
@@ -249,19 +215,6 @@ input.info_edit_box
 .content_well
 {
   margin-bottom: 20px;
-}
-
-.redactor_box, .redactor_box textarea {
-  background-color: rgba(0,0,0,0) !important;
-  border:none;
-}
-
-.redactor_editor, .redactor_editor:focus {
-  background-color: rgba(0,0,0,0) !important;
-  padding: 0px !important;
-  margin: 0px !important;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-  outline:none;
 }
 
 li.dataset_tab
@@ -396,11 +349,6 @@ input.object_hidden_checkbox
 {
   font-size:12px;
   font-weight:normal;
-}
-
-.redactor_box textarea, .redactor_box textarea:focus
-{
-  color: #444;
 }
 
 .projectsCarousel
