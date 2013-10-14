@@ -208,82 +208,90 @@ $ ->
             
             
     respond_template = ( resp ) ->
-      ($ 'button.finished_button').addClass 'disabled'
-
-      ($ '#template_match_table').html ''
-      ($ '#template_match_table').append '<tr><th> Field Name </th><th> Field Unit </th><th> Field Type </th></tr>'
-
-      for field, field_index in resp.fields
-        options = "<option value='-1'>Select One...</option>"
-        for type, type_index in resp.p_field_types[field_index]
-          options += "<option value='#{type_index}'>#{type}</option>"
-
-        html = "<tr><td class='field_name'>#{field.name[0..29]}"
-
-        if field.name.length > 29
-          html += '...'
-
-        html += "</td><td><input type='text' class='field_unit' /></td><td><select>#{options}</select></td></tr>"
-
-        ($ '#template_match_table').append html
-
-      ($ "button.cancel_upload_button").click ->
-          ($ "#template_match_box").modal("hide")
-
-      ($ "#template_match_table select").change ->
-        check = true
-        for sel in ($ '#template_match_table').find(':selected')
-          if ($ sel).text() == "Select One..."
-            check = false
-
-        if check
-          ($ 'button.finished_button').removeClass 'disabled'
-        else
-          ($ 'button.finished_button').addClass 'disabled'
-
-
-      ($ "button.finished_button").click ->
-        if !($ 'button.finished_button').hasClass('disabled')
-          newFields =
-            pid: resp.pid
-            names: []
-            units: []
-            types: []
-
-          for names in ($ '#template_match_table').find('.field_name')
-            newFields.names.push ($ names).text()
-
-          for units in ($ '#template_match_table').find('.field_unit')
-            newFields.units.push ($ units).val()
-
-          for types in ($ '#template_match_table').find(':selected')
-            newFields.types.push ($ types).text()
-
-          table = ($ '.fields_table')
-
-          $.ajax
-            type: "POST"
-            dataType: "json"
-            url: "#{window.location.pathname}/templateFields"
-            data: {save: true, fields: newFields}
-            success: (resp) ->
-              ($ "#template_match_box").modal("hide")
-              table.data("num_fields",1)
-              ($ '#create_data_set').show()
-              for field in resp.fields
-                add_row(field)
-
-      ($ "#template_match_box").modal
-          backdrop: 'static'
-          keyboard: true        
+      
+      if resp.status != 500
+      
+        ($ 'button.finished_button').addClass 'disabled'
+  
+        ($ '#template_match_table').html ''
+        ($ '#template_match_table').append '<tr><th> Field Name </th><th> Field Unit </th><th> Field Type </th></tr>'
+  
+        for field, field_index in resp.fields
+          options = "<option value='-1'>Select One...</option>"
+          for type, type_index in resp.p_field_types[field_index]
+            options += "<option value='#{type_index}'>#{type}</option>"
+  
+          html = "<tr><td class='field_name'>#{field.name[0..29]}"
+  
+          if field.name.length > 29
+            html += '...'
+  
+          html += "</td><td><input type='text' class='field_unit' /></td><td><select>#{options}</select></td></tr>"
+  
+          ($ '#template_match_table').append html
+  
+        ($ "button.cancel_upload_button").click ->
+            ($ "#template_match_box").modal("hide")
+  
+        ($ "#template_match_table select").change ->
+          check = true
+          for sel in ($ '#template_match_table').find(':selected')
+            if ($ sel).text() == "Select One..."
+              check = false
+  
+          if check
+            ($ 'button.finished_button').removeClass 'disabled'
+          else
+            ($ 'button.finished_button').addClass 'disabled'
+  
+  
+        ($ "button.finished_button").click ->
+          if !($ 'button.finished_button').hasClass('disabled')
+            newFields =
+              pid: resp.pid
+              names: []
+              units: []
+              types: []
+  
+            for names in ($ '#template_match_table').find('.field_name')
+              newFields.names.push ($ names).text()
+  
+            for units in ($ '#template_match_table').find('.field_unit')
+              newFields.units.push ($ units).val()
+  
+            for types in ($ '#template_match_table').find(':selected')
+              newFields.types.push ($ types).text()
+  
+            table = ($ '.fields_table')
+  
+            $.ajax
+              type: "POST"
+              dataType: "json"
+              url: "#{window.location.pathname}/templateFields"
+              data: {save: true, fields: newFields}
+              success: (resp) ->
+                ($ "#template_match_box").modal("hide")
+                table.data("num_fields",1)
+                ($ '#create_data_set').show()
+                for field in resp.fields
+                  add_row(field)
+  
+        ($ "#template_match_box").modal
+            backdrop: 'static'
+            keyboard: true        
+      else
+        
+        alert "Sorry, We dont recognise that file type. Please try again with a .CSV, .XLS or .ODS"
+            
           
     ($ '#template_from_file').click ->
+      ($ '#template_file_input').val "" 
       ($ '#template_file_input').click()
       false    
           
     ($ '#template_file_input').change ->
       ($ '#template_file_form').attr 'action', "#{window.location.pathname}/templateFields"
-      ($ '#template_file_form').submit()        
+      ($ '#template_file_form').submit()
             
     ($ "#template_file_form").ajaxForm (resp) ->
       respond_template(resp)       

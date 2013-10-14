@@ -1,0 +1,25 @@
+<div class="content_holder">
+  
+  <% if has_content %>
+    <% if can_edit %>
+      <div contenteditable=<%=can_edit%> style="width:100%;min-height:200px" class="content" can_edit="<%=can_edit%>" type="<%=type%>" row_id="<%=row_id%>" field="<%=field%>">
+        <%= raw content%>
+      </div>  
+      <div class="clear"></div>
+      <button class="btn btn-primary center" style="display:none" id="content_save_button">Save</button>
+    <% else %>
+      <%= raw content%>
+    <% end %>
+  <% else %>
+    <% if can_edit%>
+      <div class="center"><a class="add_content_link" href="javascript:void 0"><img src="/assets/green_plus_icon.svg" class="img-rounded hoverimage" style="width:100px"><h4 style='color:#0a0;'>Add Description</h4></a></div>
+      <div style="display:none;width:100%;min-height:200px;" class="content" can_edit="<%=can_edit%>" type="<%=type%>" row_id="<%=row_id%>" field="<%=field%>">
+        click here to edit
+      </div> 
+      <div class="clear"></div>
+      <button class="btn btn-primary center" style="display:none" id="content_save_button">Save</button>
+    <% else %>
+      <img src="/assets/contentplaceholder.png" style="margin:0px;padding:0px;"></img>
+    <% end %>  
+  <% end %>
+</div>    
