@@ -14,13 +14,7 @@ Rsense::Application.routes.draw do
 
   resources :visualizations, except: [:new]
 
-  #resources :data_sets
-
-  resources :memberships
-
-  resources :groups
-
-  resources :fields, except: [:index, :new, :edit]
+  #resources :data_sets  resources :fields, except: [:index, :new, :edit]
 
   match "projects/create" => "projects#create"
   resources :projects, except: [:new]
