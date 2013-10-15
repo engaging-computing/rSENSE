@@ -15,7 +15,11 @@
         </a>
         <ul class="dropdown-menu" role="menu">
         
-          <% if can_edit?(obj)%>
+          <% if obj.is_a?(MediaObject) %>
+            <li role="presentation">
+              <a class="menu_edit" role="menuitem" href="<%=url_for obj%>"> Rename File </a>
+            </li>
+          <% elsif can_edit?(obj)%>
             <li role="presentation">
               <a class="menu_edit" role="menuitem" href="<%=url_for obj%>"> Edit Title </a>
             </li>
@@ -39,7 +43,7 @@
           
           <% if can_delete?(obj)%>
             <li role="presentation">
-              <a class="menu_delete" role="menuitem" href="<%=url_for obj%>"> Delete <%= typeName.capitalize %> </a>
+              <a class="menu_delete" role="menuitem" href="<%=url_for obj%>"> Delete <%= typeName.split.map(&:capitalize).join(' ') %> </a>
             </li>
           <%end%>
         </ul>
