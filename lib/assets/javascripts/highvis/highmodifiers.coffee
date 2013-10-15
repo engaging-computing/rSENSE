@@ -249,8 +249,10 @@ $ ->
 
                 switch Number field.typeID
                     when data.types.TIME
-
-                        if isNaN Number dp[fIndex]
+                        
+                        if dp[fIndex] is null
+                            dp[fIndex] = NaN
+                        else if isNaN Number dp[fIndex]
                             dp[fIndex] = data.parseDate dp[fIndex]
                         else
                             #LT
