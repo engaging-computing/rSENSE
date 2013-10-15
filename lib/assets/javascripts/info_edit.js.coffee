@@ -13,7 +13,7 @@ $ ->
     href = ($ @).attr('href')
 
     #The thing that will become a input box
-    info_box = root.find('.info_text')
+    info_box = root.find('.info_val')
     info_box.html("<div class='input-append'><input type='text' class='info_edit_box input-medium' id='appendInput' value='#{val}'><span class='add-on btn btn-success info_save_link' href='#{href}'><i class='icon-ok icon-white'></i></span></div>")
     root.find('.info_edit_box').focus()
     
@@ -29,7 +29,7 @@ $ ->
     #Save button
     info_box.find('.info_save_link').click (e)->
       e.preventDefault()
-
+     
       #Build the data object to send to the controller
       type = root.attr('type')
       field_name = root.attr('field')
@@ -44,6 +44,8 @@ $ ->
       root.find('span.btn').addClass 'disabled'
       root.find('span.btn').button 'toggle'
 
+      edit_box.popover "destroy"
+      
       #Make the request to update 
       $.ajax
         url: href
