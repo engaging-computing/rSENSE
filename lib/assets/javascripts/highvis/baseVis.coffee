@@ -374,6 +374,9 @@ $ ->
                 temp =
                     text: 'Y-Values'
             else
+              if "#{data.fields[globals.fieldSelection[0]].unitName}" == ""
+                temp = text: "#{data.fields[globals.fieldSelection[0]].fieldName}"
+              else
                 temp =
                     text: "#{data.fields[globals.fieldSelection[0]].fieldName} (#{data.fields[globals.fieldSelection[0]].unitName})"
                     
