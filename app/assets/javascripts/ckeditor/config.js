@@ -19,7 +19,7 @@ CKEDITOR.editorConfig = function( config ) {
   // Load toolbar_Name where Name = Basic.
   config.toolbar = 'Basic';
   
-
+  config.title = "";
 
   config.removePlugins = 'contextmenu,liststyle,tabletools';
 };
