@@ -281,7 +281,7 @@ $ ->
             keyboard: true        
       else
         
-        alert "Sorry, We dont recognise that file type. Please try again with a .CSV, .XLS or .ODS"
+        alert "Sorry, we don't recognize that file type. Please try again with a .CSV, .XLS or .ODS."
             
           
     ($ '#template_from_file').click ->
