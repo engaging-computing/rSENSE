@@ -282,7 +282,7 @@ class DataSetsController < ApplicationController
     
     zip_name = URI.escape "#{@project.id} - #{@project.name}"
     
-    if File.directory? "/tmp/rsense-export-#{@project.id}-"
+    if File.directory? "/tmp/rsense-export-#{@project.id}"
       FileUtils.rm_rf "/tmp/rsense-export-#{@project.id}", secure: true
     end
     
