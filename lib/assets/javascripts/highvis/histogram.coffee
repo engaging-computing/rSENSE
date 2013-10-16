@@ -270,7 +270,7 @@ $ ->
                     
                     if not fpEq newBinSize, @binSize
                         @binSize = newBinSize
-                        ($ '#binSizeInput').attr("value", "#{@binSize}")
+                        ($ '#binSizeInput').val "#{@binSize}"
                         @delayedUpdate()
             
             #Set up accordion
