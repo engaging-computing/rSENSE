@@ -146,6 +146,13 @@ i.icon-white
   }
 }
 
+.c_item:hover
+{
+  -moz-box-shadow: 0 0 20px 2px #fd9dd1;
+  -webkit-box-shadow: 0 0 20px 2px #fd9dd1;
+  box-shadow: 0 0 20px 2px #fd9dd1;  
+}
+
 .item > img
 {
   /*border: 2px groove white;*/
