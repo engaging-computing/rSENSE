@@ -274,13 +274,15 @@ class DataSetsController < ApplicationController
   # GET /projects/1/export
   def export
 
-    #require 'CSV'
+    require 'uri'
     require 'tempfile'
 
     @project = Project.find params[:id]
     @datasets = []
     
-    if File.directory? "/tmp/rsense-export-#{@project.id}"
+    zip_name = URI.escape "#{@project.id} - #{@project.name}"
+    
+    if File.directory? "/tmp/rsense-export-#{@project.id}-"
       FileUtils.rm_rf "/tmp/rsense-export-#{@project.id}", secure: true
     end
     
@@ -349,9 +351,9 @@ class DataSetsController < ApplicationController
       
     end
     
-    zip_file = "/tmp/rsense-export-#{@project.id}/#{@project.id}.zip"
+    zip_file = "/tmp/rsense-export-#{@project.id}/#{zip_name}.zip"
         
-    system("cd /tmp && zip -r rsense-export-#{@project.id}/#{@project.id}.zip rsense-export-#{@project.id}/")
+    system("cd /tmp && zip -r rsense-export-#{@project.id}/#{zip_name}.zip rsense-export-#{@project.id}/")
     
     respond_to do |format|
       format.html { send_file zip_file, :type => 'file/zip', :x_sendfile => true }
