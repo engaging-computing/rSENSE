@@ -26,8 +26,6 @@ class User < ActiveRecord::Base
   before_save :sanitize_user
   
   has_many :projects
-  has_many :memberships
-  has_many :groups, :through => :memberships
   has_many :data_sets
   has_many :media_objects
   has_many :visualizations
