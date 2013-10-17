@@ -34,7 +34,7 @@ class Visualization < ActiveRecord::Base
   
   def self.search(search, include_hidden = false)
     res = if search
-        where('title LIKE ?', "%#{search}%")
+        where('lower(title) LIKE lower(?)', "%#{search}%")
     else
         scoped
     end
