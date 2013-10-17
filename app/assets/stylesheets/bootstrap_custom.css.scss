@@ -122,6 +122,37 @@ i.icon-white
 
 }
 
+.c_item
+{
+  margin:5px 5px 5px 5px;
+
+  overflow:hidden;
+
+  background-color: #e8e8e8;
+
+  border-style: groove;
+  border-color: white;
+  border-width: 2px 1px 1px 2px;
+
+  -webkit-border-radius: 6px 6px 6px 6px;
+     -moz-border-radius: 6px 6px 6px 6px;
+          border-radius: 6px 6px 6px 6px;
+  
+  img
+  {
+    -webkit-border-radius: 6px 6px 0px 0px;
+    -moz-border-radius: 6px 6px 0px 0px;
+        border-radius: 6px 6px 0px 0px;
+  }
+}
+
+.c_item:hover
+{
+  -moz-box-shadow: 0 0 20px 2px #fd9dd1;
+  -webkit-box-shadow: 0 0 20px 2px #fd9dd1;
+  box-shadow: 0 0 20px 2px #fd9dd1;  
+}
+
 .item > img
 {
   /*border: 2px groove white;*/
