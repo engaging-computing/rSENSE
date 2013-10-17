@@ -25,6 +25,12 @@ class UsersControllerTest < ActionController::TestCase
     end
 
     assert_redirected_to user_path(assigns(:user))
+
+    john = User.find_by_email("john@example.com")
+
+    assert_not_nil john
+    assert_equal john.validated?, false, 
+      "New user should not be validated"
   end
 
   test "should show user" do
@@ -66,5 +72,16 @@ class UsersControllerTest < ActionController::TestCase
   test "should get contributions" do
     get :contributions, { id: @user }, { user_id: @user }
     assert_response :success
+  end
+
+  test "should validate user" do
+    captn = users(:crunch)
+    assert_equal captn.validated?, false, "Not validated"
+
+    get :validate, { key: "abcd" }
+    assert_response :success
+
+    captn = User.find_by_username("crunch")
+    assert_equal captn.validated?, true, "Validated"
   end
 end

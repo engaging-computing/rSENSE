@@ -1,7 +1,6 @@
 class User < ActiveRecord::Base
   
   include ActionView::Helpers::SanitizeHelper
-
   
   attr_accessible :content, :email, :firstname, :lastname, :password, :password_confirmation, :username, :validated, :hidden, :bio
 
@@ -20,9 +19,6 @@ class User < ActiveRecord::Base
 
   has_secure_password
 
-  before_create :check_validation
-  after_create :check_and_send_validation
-  
   before_save :sanitize_user
   
   has_many :projects
@@ -91,21 +87,10 @@ class User < ActiveRecord::Base
     h
   end
 
-  private
-  def check_validation
-    if (not validated) and (not email.blank?)
-      self.validation_key = BCrypt::Password::create(email)
-    end
-  end
-
-  def check_and_send_validation
-    if (not validated) and (not validation_key.blank?)
-      begin
-        UserMailer.validation_email(self).deliver
-      rescue Net::SMTPFatalError
-        logger.info "Could not send email"
-      end
-    end
+  def reset_validation!
+    key = SecureRandom.hex(16)
+    self.validation_key = SecureRandom.hex(16)
+    return key
   end
 end
 
