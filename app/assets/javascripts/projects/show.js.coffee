@@ -160,7 +160,8 @@ $ ->
         url = "/data_sets/#{pid}/postCSV"
         $.ajax( { url: url, data: { key: key, id: pid, tmpfile: ($ '#doc_url').val()} } ).done (data, textStatus, error) ->
           if data.url != undefined
-            window.location = data.url
+            ($ '#doc_box').modal 'hide'
+            helpers.name_popup data, "Dataset", "data_set"
           else
             respond_csv(data)
       else
