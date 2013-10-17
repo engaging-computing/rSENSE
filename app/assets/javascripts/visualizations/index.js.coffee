@@ -8,13 +8,13 @@ $ ->
     addItem = (object) ->
       newItem = """
         <div class='item word-break'>
-          #{if object.mediaSrc then "<div class=''><a href='#{object.url}'><img style='width:100%' src='#{object.mediaSrc}'></img></a></div>" else ""}
-          <h4 class='' style='margin-top:0px;'><a href='#{object.url}'>#{object.name}</a>
+          <h4 class='center' style='margin-top:0px;'><a href='#{object.url}'>#{object.name}</a>
           #{if object.featured then "<span style='color:#57C142'> (featured)</span>" else ""}</h4>
+          #{if object.mediaSrc then "<div class='center'><a href='#{object.url}'><img src='#{object.mediaSrc}'></img></a></div>" else ""}
           <b>Owner: </b><a href='#{object.ownerUrl}'>#{object.ownerName}</a><br />
           <b>Project: </b><a href='#{object.projectUrl}'>#{object.projectName}</a><br />
           <b>Created: </b>#{object.timeAgoInWords} ago (on #{object.createdAt})<br />
-       </div>
+        </div>
       """
       
       newItem = ($ newItem)
