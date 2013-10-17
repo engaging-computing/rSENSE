@@ -1,7 +1,7 @@
 require 'base64'
 
 class UsersController < ApplicationController
-  skip_before_filter :authorize, only: [:new, :create, :validate]
+  skip_before_filter :authorize, only: [:new, :create, :validate, :pw_reset, :pw_send]
  
   include ActionView::Helpers::DateHelper
   include ApplicationHelper
@@ -180,10 +180,19 @@ class UsersController < ApplicationController
   # POST /users.json
   def create
     @user = User.new(params[:user])
+    @user.reset_validation!
 
     respond_to do |format|
       if @user.save
         session[:user_id] = @user.id
+
+        begin
+          UserMailer.validation_email(@user).deliver
+        rescue Net::SMTPFatalError => e
+          logger.info "Error sending validation email"
+          logger.info "#{e}"
+        end
+ 
         format.html { redirect_to @user, notice: 'User was successfully created.' }
         format.json { render json: @user.to_hash(false), status: :created, location: @user }
       else
@@ -229,7 +238,6 @@ class UsersController < ApplicationController
     @user = User.find_by_username(params[:id])
     
     if can_delete?(@user)
-      
       if @cur_user.id == @user.id
         session[:user_id] = nil
       end
@@ -274,16 +282,15 @@ class UsersController < ApplicationController
 
   # GET /users/validate/:key
   def validate
-    key = Base64.decode64(params[:key])
+    key = params[:key]
     
     @user = User.find_by_validation_key(key)
 
     if @user == nil or params[:key].blank?
-      render "public/404.html"
+      render "public/404", :formats => [:html]
     else
-
       @user.validated = true
-      @user.save
+      @user.save!
 
       render action: "validate"
     end
@@ -297,6 +304,59 @@ class UsersController < ApplicationController
       else
         format.json {render json: "{}", status: :ok}
       end
+    end
+  end
+
+  # GET /users/pw_reset
+  def pw_request
+    # Show the form
+  end
+
+  # POST /users/pw_send
+  def pw_send
+    @sent = false
+
+    key = params[:username_or_email]
+
+    @user = User.find_by_email(key)
+    if @user.nil?
+      @user = User.find_by_username(key)
+      if @user.nil?
+        @reason = "No such user found."
+        return
+      end
+    end
+
+    if @user.email.nil? or @user.email.empty?
+      @reason = "You didn't set an email."
+      return
+    end
+    
+    @user.reset_validation!
+    unless @user.save
+      @reason = "There was a database error."
+      return
+    end
+
+    begin
+      UserMailer.pw_reset_email(@user).deliver
+    rescue Net::SMTPFatalError
+      @reason = "Failed to send email."
+      return
+    end
+   
+    @sent = true
+  end
+
+  # GET /users/pw_form
+  def pw_form
+    key = params[:key]
+    
+    @user = User.find_by_validation_key(key)
+    if @user.nil?
+      logger.info "No such validation key"
+      redirect_to '/'
+      return
     end
   end
 end

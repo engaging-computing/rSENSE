@@ -69,7 +69,9 @@ Rsense::Application.routes.draw do
 
   match '/sessions/verify' => 'sessions#verify'
 
-  match "/users/verify" => "users#verify"
+  match "/users/pw_request" => "users#pw_request"
+  match "/users/pw_send" => "users#pw_send"
+  match "/users/pw_form" => "users#pw_form"
   resources :users
   match "/users/validate/:key" => "users#validate"
   match "/users/:id/contributions" => "users#contributions"

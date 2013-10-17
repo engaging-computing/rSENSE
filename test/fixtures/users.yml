@@ -24,7 +24,7 @@ kate:
   password_digest: $2a$10$aK2OsTVTnWuPVmDthm9pj.vDApO9VGNgRwvwHmwzVQ0ScmW3BOPjC
   admin: false
   
-new_user:
+crunch:
   firstname: Captain
   lastname: Crunch
   username: crunch
@@ -32,4 +32,5 @@ new_user:
   content: 
   group_id: 
   validated: false
-  password_digest: 
+  password_digest: $2a$10$aK2OsTVTnWuPVmDthm9pj.vDApO9VGNgRwvwHmwzVQ0ScmW3BOPjC
+  validation_key: abcd
