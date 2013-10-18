@@ -22,12 +22,11 @@ kate:
   password_digest: $2a$10$aK2OsTVTnWuPVmDthm9pj.vDApO9VGNgRwvwHmwzVQ0ScmW3BOPjC
   admin: false
   
-crunch:
+new_user:
   firstname: Captain
   lastname: Crunch
   username: crunch
   email: captncrunch@example.com
   content:  
   validated: false
-  password_digest: $2a$10$aK2OsTVTnWuPVmDthm9pj.vDApO9VGNgRwvwHmwzVQ0ScmW3BOPjC
-  validation_key: abcd
+  password_digest: 
