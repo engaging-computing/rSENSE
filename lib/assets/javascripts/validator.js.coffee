@@ -27,7 +27,17 @@ $ ->
   ($ '.mainContent').on 'change', 'input.validate_timestamp', (event) ->
 
     #Put date validator here
-    true
+    val = event.target.value
+    console.log val
+    console.log (helpers.parseTimestamp val)
+    console.log isNaN((helpers.parseTimestamp val))
+    if val is ""
+      ($ @).removeClass 'invalid'
+    else
+      if isNaN (helpers.parseTimestamp val)
+        ($ @).addClass 'invalid'
+      else
+        ($ @).removeClass 'invalid'
 
   ($ '.mainContent').on 'change', 'input.validate_text', (event) ->
 
