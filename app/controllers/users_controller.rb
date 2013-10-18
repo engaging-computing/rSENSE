@@ -229,59 +229,28 @@ class UsersController < ApplicationController
         success = @user.update_attributes(hideUpdate)
       end
     else
-      if params[:email].nil?
-        # Password change
-        old_pw = params[:current_password]
-        new_pw = params[:password]
-        con_pw = params[:password_confirmation]
-        
-        if new_pw != con_pw
-          redirect_to edit_user_path(@user), alert:
-            "New passwords didn't match."
-          return
-        end
-        
-        unless @cur_user.admin? or session[:pw_change]
-          unless @user.authenticate(old_pw)
-            redirect_to edit_user_path(@user), alert:
-              "Old password didn't match."
-            return
-          end 
-        end
-        
-        @user.password = new_pw
-        success = @user.save
-        session[:pw_change] = nil
-      else
-        # Email change
-       
-        new_email = params[:email]
-        con_email = params[:email_confirmation]
+      # Password change
+      old_pw = params[:current_password]
+      new_pw = params[:password]
+      con_pw = params[:password_confirmation]
 
-        if new_email != con_email
-          redirect_to edit_user_path(@user), alert:
-            "New email addresses don't match"
-          return
-        end
-
-        unless new_email =~ /\@.*\./
-          redirect_to edit_user_path(@user), alert:
-            "That's not a plausible email address"
-          return
-        end
-       
-        unless @cur_user.admin?
-          pw = params[:password]
-          unless @cur_user == @user and @user.authenticate(pw)
-            redirect_to edit_user_path(@user), alert:
-              "Bad password"
-            return
-          end
-        end
-
-        @user.email = new_email
-        success = @user.save
+      if new_pw != con_pw
+        redirect_to edit_user_path(@user), alert:
+          "New passwords didn't match."
+        return
       end
+
+      unless @cur_user.admin? or session[:pw_change]
+        unless @user.authenticate(old_pw)
+          redirect_to edit_user_path(@user), alert:
+            "Old password didn't match."
+          return
+        end 
+      end
+      
+      @user.password = new_pw
+      success = @user.save
+      session[:pw_change] = nil
     end
     
     respond_to do |format|
