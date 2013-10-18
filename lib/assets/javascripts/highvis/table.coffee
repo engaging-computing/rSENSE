@@ -124,6 +124,8 @@ $ ->
         end: ->
             ($ '#' + @canvas).hide()
 
+          if @table?
+            
             #Save the sort state
             @sortState = @atable.fnSettings().aaSorting
 	        

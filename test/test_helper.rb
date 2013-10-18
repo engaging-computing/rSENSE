@@ -26,16 +26,6 @@ class ActiveSupport::TestCase
   def assert_default_false(model, field)
     assert_equal false, field, "Expected #{model.class} #{field} does not have the correct default field."
   end
-
-  def assert_contains(short, long)
-    assert_not_nil long.to_s.index(short.to_s), 
-      "String does not contain #{short}"
-  end
-
-  def assert_not_contains(short, long)
-    assert_nil long.to_s.index(short.to_s),
-      "String contains #{short}"
-  end
 end
 
 class ActionDispatch::IntegrationTest

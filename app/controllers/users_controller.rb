@@ -1,8 +1,7 @@
 require 'base64'
 
 class UsersController < ApplicationController
-  skip_before_filter :authorize, only: 
-    [:new, :create, :validate, :pw_request, :pw_send_key, :pw_reset]
+  skip_before_filter :authorize, only: [:new, :create, :validate]
  
   include ActionView::Helpers::DateHelper
   include ApplicationHelper
@@ -175,18 +174,12 @@ class UsersController < ApplicationController
   # GET /users/1/edit
   def edit
     @user = User.find_by_username(params[:id])
-
-    unless @cur_user.admin or @user == @cur_user
-      render_404
-      return
-    end
   end
   
   # POST /users
   # POST /users.json
   def create
     @user = User.new(params[:user])
-    @user.reset_validation!
 
     respond_to do |format|
       if @user.save
@@ -215,75 +208,18 @@ class UsersController < ApplicationController
   # PUT /users/1.json
   def update
     @user = User.find_by_username(params[:id])
-
-    if params[:password].nil?
-      editUpdate = params[:user]
-      hideUpdate = editUpdate.extract_keys!([:hidden])
-      success = false
+    editUpdate = params[:user]
+    hideUpdate = editUpdate.extract_keys!([:hidden])
+    success = false
     
-      #EDIT REQUEST
-      if can_edit?(@user) 
-        success = @user.update_attributes(editUpdate)
-      end
+    #EDIT REQUEST
+    if can_edit?(@user) 
+      success = @user.update_attributes(editUpdate)
+    end
     
-      #HIDE REQUEST
-      if can_hide?(@user) 
-        success = @user.update_attributes(hideUpdate)
-      end
-    else
-      if params[:email].nil?
-        # Password change
-        old_pw = params[:current_password]
-        new_pw = params[:password]
-        con_pw = params[:password_confirmation]
-        
-        if new_pw != con_pw
-          redirect_to edit_user_path(@user), alert:
-            "New passwords didn't match."
-          return
-        end
-        
-        unless @cur_user.admin? or session[:pw_change]
-          unless @user.authenticate(old_pw)
-            redirect_to edit_user_path(@user), alert:
-              "Old password didn't match."
-            return
-          end 
-        end
-        
-        @user.password = new_pw
-        success = @user.save
-        session[:pw_change] = nil
-      else
-        # Email change
-       
-        new_email = params[:email]
-        con_email = params[:email_confirmation]
-
-        if new_email != con_email
-          redirect_to edit_user_path(@user), alert:
-            "New email addresses don't match"
-          return
-        end
-
-        unless new_email =~ /\@.*\./
-          redirect_to edit_user_path(@user), alert:
-            "That's not a plausible email address"
-          return
-        end
-       
-        unless @cur_user.admin?
-          pw = params[:password]
-          unless @cur_user == @user and @user.authenticate(pw)
-            redirect_to edit_user_path(@user), alert:
-              "Bad password"
-            return
-          end
-        end
-
-        @user.email = new_email
-        success = @user.save
-      end
+    #HIDE REQUEST
+    if can_hide?(@user) 
+      success = @user.update_attributes(hideUpdate)
     end
     
     respond_to do |format|
@@ -291,7 +227,7 @@ class UsersController < ApplicationController
         format.html { redirect_to @user, notice: 'User was successfully updated.' }
         format.json { render json: {}, status: :ok }
       else
-        format.html { redirect_to edit_user_path(@user) }
+        format.html { render "public/404.html" }
         format.json { render json: @user.errors.full_messages(), status: :unprocessable_entity }
       end
     end
@@ -303,6 +239,7 @@ class UsersController < ApplicationController
     @user = User.find_by_username(params[:id])
     
     if can_delete?(@user)
+      
       if @cur_user.id == @user.id
         session[:user_id] = nil
       end
@@ -347,17 +284,18 @@ class UsersController < ApplicationController
 
   # GET /users/validate/:key
   def validate
-    key = params[:key]
+    key = Base64.decode64(params[:key])
     
     @user = User.find_by_validation_key(key)
 
     if @user == nil or params[:key].blank?
-      render_404
+      render "public/404.html"
     else
-      @user.validated = true
-      @user.save!
 
-      render
+      @user.validated = true
+      @user.save
+
+      render action: "validate"
     end
   end
 
@@ -369,65 +307,6 @@ class UsersController < ApplicationController
       else
         format.json {render json: "{}", status: :ok}
       end
-    end
-  end
-
-  # GET /users/pw_reset
-  def pw_request
-    # Show the form
-  end
-
-  # POST /users/pw_send
-  def pw_send_key
-    @sent = false
-
-    key = params[:username_or_email]
-
-    @user = User.find_by_email(key)
-    if @user.nil?
-      @user = User.find_by_username(key)
-      if @user.nil?
-        @reason = "No such user found."
-        return
-      end
-    end
-
-    if @user.email.nil? or @user.email.empty?
-      @reason = "You didn't set an email."
-      return
-    end
-    
-    @user.reset_validation!
-    unless @user.save
-      @reason = "There was a database error."
-      return
-    end
-
-    begin
-      UserMailer.pw_reset_email(@user).deliver
-    rescue Net::SMTPFatalError
-      @reason = "Failed to send email."
-      return
-    end
-   
-    @sent = true
-  end
-
-  # GET /users/pw_reset
-  def pw_reset
-    key = params[:key]
-    
-    @user = User.find_by_validation_key(key)
-    if @user.nil?
-      session[:user_id]   = nil
-      session[:pw_change] = nil
-      logger.info "No such validation key"
-      render_404
-      return
-    else
-      session[:user_id]   = @user.id
-      session[:pw_change] = true
-      redirect_to edit_user_path(@user)
     end
   end
 end

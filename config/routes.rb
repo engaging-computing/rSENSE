@@ -14,11 +14,7 @@ Rsense::Application.routes.draw do
 
   resources :visualizations, except: [:new]
 
-  #resources :data_sets
-
-  resources :memberships
-
-  resources :groups
+  resources :data_sets  
 
   resources :fields, except: [:index, :new, :edit]
 
@@ -69,9 +65,7 @@ Rsense::Application.routes.draw do
 
   match '/sessions/verify' => 'sessions#verify'
 
-  match "/users/pw_request" => "users#pw_request"
-  match "/users/pw_send_key" => "users#pw_send_key"
-  match "/users/pw_reset/:key" => "users#pw_reset"
+  match "/users/verify" => "users#verify"
   resources :users
   match "/users/validate/:key" => "users#validate"
   match "/users/:id/contributions" => "users#contributions"
