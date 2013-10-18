@@ -156,24 +156,4 @@ class UsersControllerTest < ActionController::TestCase
     get :edit, { id: @user }, { user_id: users(:crunch) }
     assert_response :not_found
   end
-
-  test "actually change password" do
-    post :update, { id: @user, current_password: '12345',
-      password: 'ninja', password_confirmation: 'ninja' },
-      { user_id: @user }
-    assert_redirected_to @user
-
-    kate = User.find(@user.id)
-    assert kate.authenticate('ninja'), "New password should work"
-  end
-
-  test "actually change email" do
-    post :update, { id: @user, password: '12345',
-      email: 'kate@example.com', email_confirmation: 'kate@example.com' },
-      { user_id: @user }
-    assert_redirected_to @user
-
-    kate = User.find(@user.id)
-    assert_equal kate.email, 'kate@example.com'
-  end
 end
