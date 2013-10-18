@@ -33,6 +33,24 @@ class UsersControllerTest < ActionController::TestCase
       "New user should not be validated"
   end
 
+  test "should create user with blank email" do
+    assert_difference('User.count') do
+      post :create, user: { content: "", email: "", firstname: "John", lastname: "Fertitta", 
+        username: "jfertitt", password: "iguana", password_confirmation: "iguana" }
+      puts flash[:debug] unless flash[:debug].nil?
+    end
+
+    assert_redirected_to user_path(assigns(:user))
+
+    john = User.find_by_username("jfertitt")
+
+    assert_not_nil john
+    assert_equal john.validated?, false, 
+      "New user should not be validated"
+  end
+
+
+
   test "should show user" do
     get :show, { id: @user }, { user_id: @user }
     assert_response :success
