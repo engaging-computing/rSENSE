@@ -1,0 +1,9 @@
+<div class="row">
+
+  <div class="span12"> 
+    <%= form_for(@user, html: {method: :delete}) do |f| %>
+      <h4 style="color:red">Warning! This can not be undone.</h4>
+      <%= f.submit value: "Delete User", class: "btn btn-danger"  %>
+    <%end%>
+  </div>
+</div>
