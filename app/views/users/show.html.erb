@@ -24,12 +24,6 @@
             <%= user_edit_helper 'username', false, false %>
           </span>
           <br />
-
-          <% if @cur_user.admin? or @cur_user.id == @user.id %>
-            <p><%= link_to "Change Email or Password", 
-              edit_user_path(@user) %></p>
-          <% end %>
-
           <span style="line-height: 30px;">Joined <%= time_ago_in_words(@user.created_at)%> ago</span>
           <br />
         </div>
