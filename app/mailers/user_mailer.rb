@@ -5,11 +5,21 @@ class UserMailer < ActionMailer::Base
   
   def validation_email(user)
     @user = user
+    @url  = url_for(controller: 'users', action: 'validate', key: @user.validation_key, only_path: false)
+    
+    hostname = `hostname`.chomp
+    from = "no-reply@#{hostname}"
 
-    from = "no-reply@#{url_for(controller: "home", action: "index", only_path: false, port: nil).split('/')[2].sub('www.', '')}"
-    
-    @url = url_for controller: 'users', action: 'validate', key: Base64.encode64(@user.validation_key), only_path: false
-    
     mail(from: from, to: user.email, subject: "Please verify your iSENSE account's email.")
+  end
+
+  def reset_pw_email(user)
+    @user = user
+    @url  = url_for(controller: 'users', action: 'pw_form', key: @user.validation_key, only_path: false)
+
+    hostname = `hostname`.chomp
+    from = "no-reply@#{hostname}"
+    
+    mail(from: from, to: user.email, subject: "Reset your iSENSE password.")
   end
 end
