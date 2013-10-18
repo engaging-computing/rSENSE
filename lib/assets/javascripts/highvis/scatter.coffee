@@ -266,12 +266,7 @@ $ ->
             @chart.redraw()
             
             @storeXBounds @chart.xAxis[0].getExtremes()
-            @storeYBounds @chart.yAxis[0].getExtremes()
-            
-            console.log('end update')
-            console.log(@xBounds)
-            console.log(@yBounds)
-            
+            @storeYBounds @chart.yAxis[0].getExtremes()           
 
         ###
         Draws radio buttons for changing symbol/line mode.
@@ -457,9 +452,12 @@ $ ->
         Saves the current zoom level
         ###
         end: ->
+        
+          if chart?
             @storeXBounds @chart.xAxis[0].getExtremes()
             @storeYBounds @chart.yAxis[0].getExtremes()
-            super()
+         
+          super()
             
         ###
         Sets the previous zoom level
