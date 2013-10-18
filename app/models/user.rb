@@ -6,8 +6,8 @@ class User < ActiveRecord::Base
 
   validates_uniqueness_of :email, case_sensitive: false, if: :email?
   validates :username, uniqueness: true, format: { with: /\A\p{Alnum}*\z/, message: "can only contain letters and numbers." }
-  validates :firstname, format: {with: /\A[\p{Alpha}\p{Blank}\-']*\z/, message: "can only contain letters, hyphens, single quotes, and spaces."}
-  validates :lastname, format: {with: /\A[\p{Alpha}\p{Blank}\-']*\z/, message: "can only contain letters, hyphens, single quotes, and spaces."}
+  validates :firstname, format: {with: /\A[\p{Alpha}\p{Blank}\-\']*\z/, message: "can only contain letters, hyphens, single quotes, and spaces."}
+  validates :lastname, format: {with: /\A[\p{Alpha}\p{Blank}\-\']*\z/, message: "can only contain letters, hyphens, single quotes, and spaces."}
   
   validates :firstname, length: {maximum: 32}
   validates :lastname, length: {maximum: 32}
