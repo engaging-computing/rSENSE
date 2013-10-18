@@ -193,8 +193,10 @@ class UsersController < ApplicationController
         session[:user_id] = @user.id
 
         begin
-          UserMailer.validation_email(@user).deliver
-        rescue Net::SMTPFatalError => e
+          unless @user.email.nil? or @user.email.empty?
+            UserMailer.validation_email(@user).deliver
+          end
+        rescue Exception => e
           logger.info "Error sending validation email"
           logger.info "#{e}"
         end
