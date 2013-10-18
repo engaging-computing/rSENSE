@@ -28,13 +28,12 @@ $ ->
 
     #Put date validator here
     val = event.target.value
-    console.log val
-    console.log (helpers.parseTimestamp val)
-    console.log isNaN((helpers.parseTimestamp val))
+    dat = (helpers.parseTimestamp val)
+    
     if val is ""
       ($ @).removeClass 'invalid'
     else
-      if isNaN (helpers.parseTimestamp val)
+      if (typeof dat is "number") and (isNaN dat)
         ($ @).addClass 'invalid'
       else
         ($ @).removeClass 'invalid'

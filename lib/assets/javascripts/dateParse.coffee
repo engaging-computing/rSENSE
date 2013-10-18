@@ -16,7 +16,12 @@ $ ->
       year = Number str
       d = new Date(0)
       d.setUTCFullYear(year)
-        
+      
+      return [d.valueOf(), year]
+    else if str.match /[ ]*[uU][ ]*(\d+)/
+      val = Number (str.match /[ ]*[uU][ ]*(\d+)/)[1]
+      d = new Date(val)
+      
       return [d.valueOf(), year]
     else
       try
