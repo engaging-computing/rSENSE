@@ -1,8 +1,7 @@
 require 'base64'
 
 class UsersController < ApplicationController
-  skip_before_filter :authorize, only: 
-    [:new, :create, :validate, :pw_request, :pw_send_key, :pw_reset]
+  skip_before_filter :authorize, only: [:new, :create, :validate, :pw_reset, :pw_send]
  
   include ActionView::Helpers::DateHelper
   include ApplicationHelper
@@ -175,11 +174,6 @@ class UsersController < ApplicationController
   # GET /users/1/edit
   def edit
     @user = User.find_by_username(params[:id])
-
-    unless @cur_user.admin or @user == @cur_user
-      render_404
-      return
-    end
   end
   
   # POST /users
@@ -213,44 +207,18 @@ class UsersController < ApplicationController
   # PUT /users/1.json
   def update
     @user = User.find_by_username(params[:id])
-
-    if params[:password].nil?
-      editUpdate = params[:user]
-      hideUpdate = editUpdate.extract_keys!([:hidden])
-      success = false
+    editUpdate = params[:user]
+    hideUpdate = editUpdate.extract_keys!([:hidden])
+    success = false
     
-      #EDIT REQUEST
-      if can_edit?(@user) 
-        success = @user.update_attributes(editUpdate)
-      end
+    #EDIT REQUEST
+    if can_edit?(@user) 
+      success = @user.update_attributes(editUpdate)
+    end
     
-      #HIDE REQUEST
-      if can_hide?(@user) 
-        success = @user.update_attributes(hideUpdate)
-      end
-    else
-      # Password change
-      old_pw = params[:current_password]
-      new_pw = params[:password]
-      con_pw = params[:password_confirmation]
-
-      if new_pw != con_pw
-        redirect_to edit_user_path(@user), alert:
-          "New passwords didn't match."
-        return
-      end
-
-      unless @cur_user.admin? or session[:pw_change]
-        unless @user.authenticate(old_pw)
-          redirect_to edit_user_path(@user), alert:
-            "Old password didn't match."
-          return
-        end 
-      end
-      
-      @user.password = new_pw
-      success = @user.save
-      session[:pw_change] = nil
+    #HIDE REQUEST
+    if can_hide?(@user) 
+      success = @user.update_attributes(hideUpdate)
     end
     
     respond_to do |format|
@@ -258,7 +226,7 @@ class UsersController < ApplicationController
         format.html { redirect_to @user, notice: 'User was successfully updated.' }
         format.json { render json: {}, status: :ok }
       else
-        format.html { redirect_to edit_user_path(@user) }
+        format.html { render "public/404.html" }
         format.json { render json: @user.errors.full_messages(), status: :unprocessable_entity }
       end
     end
@@ -319,12 +287,12 @@ class UsersController < ApplicationController
     @user = User.find_by_validation_key(key)
 
     if @user == nil or params[:key].blank?
-      render_404
+      render "public/404", :formats => [:html]
     else
       @user.validated = true
       @user.save!
 
-      render
+      render action: "validate"
     end
   end
 
@@ -345,7 +313,7 @@ class UsersController < ApplicationController
   end
 
   # POST /users/pw_send
-  def pw_send_key
+  def pw_send
     @sent = false
 
     key = params[:username_or_email]
@@ -380,21 +348,15 @@ class UsersController < ApplicationController
     @sent = true
   end
 
-  # GET /users/pw_reset
-  def pw_reset
+  # GET /users/pw_form
+  def pw_form
     key = params[:key]
     
     @user = User.find_by_validation_key(key)
     if @user.nil?
-      session[:user_id]   = nil
-      session[:pw_change] = nil
       logger.info "No such validation key"
-      render_404
+      redirect_to '/'
       return
-    else
-      session[:user_id]   = @user.id
-      session[:pw_change] = true
-      redirect_to edit_user_path(@user)
     end
   end
 end
