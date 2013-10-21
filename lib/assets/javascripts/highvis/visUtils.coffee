@@ -64,9 +64,12 @@ $ ->
     Date formatter
     ###
     globals.dateFormatter = (dat) ->
-
+    
+        if dat is "null" or dat is null
+          return ""
+        
         if isNaN dat
-            return "Invalid Date"
+          return "Invalid Date"
           
         if data.timeType is data.GEO_TIME
           return globals.geoDateFormatter(dat)
@@ -77,10 +80,10 @@ $ ->
                       "Jul","Aug", "Sep", "Oct", "Nov", "Dec"]
 
         minDigits = (num, str) ->
-            str = String str
-            while str.length < num
-                str = '0' + str
-            str
+          str = String str
+          while str.length < num
+              str = '0' + str
+          str
 
         str = ""
         str += dat.getUTCDate()              + " "

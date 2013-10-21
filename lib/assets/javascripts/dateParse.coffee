@@ -11,7 +11,7 @@ $ ->
   ###
   helpers.parseTimestamp = (str) ->
     if str is null
-      return NaN
+      return null
     else if not isNaN(Number str)
       year = Number str
       d = new Date(0)
