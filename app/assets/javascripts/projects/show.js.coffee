@@ -28,6 +28,7 @@ $ ->
             ($ '#name_box').modal('hide')
 
     respond_csv = ( resp ) ->
+      console.log "MADE IT HERE"
       ($ "#match_table").html ''
       ($ "#match_table").append "<tr><th> Project Field </th> <th> File Header </th></tr>"
 
@@ -88,13 +89,15 @@ $ ->
         keyboard: true
 
     # A File has been uploaded, decide what to do
-    ($ "#csv_file_form").ajaxForm (resp, status, xhr) ->
-
-      if xhr.status == 201
-        helpers.name_popup resp, "Dataset", "data_set"
-      else
-        respond_csv(resp)
-
+    ($ "#csv_file_form").ajaxForm
+      error: (resp, xhr, status)->
+        alert resp['responseText']
+      
+      success: (resp, xhr, status)->
+        if xhr.status == 201
+          helpers.name_popup resp, "Dataset", "data_set"
+        else
+          respond_csv(resp)
 
     load_qr = ->
       ($ '#exp_qr_tag').empty()

@@ -41,6 +41,15 @@
             </li>
           <%end%>
           
+          <% if obj.is_a?(Project) %>
+            <li role="presentation" class="menu_lock" <% if obj.lock %> style="display:none"<%end%> >
+              <a class="menu_lock" role="menuitem" href="#"> Lock Project </a>
+            </li>
+            <li role="presentation" class="menu_unlock" <% if not obj.lock %> style="display:none"<%end%> >
+              <a class="menu_unlock" role="menuitem" href="#"> Unlock Project </a>
+            </li>
+          <% end %>
+          
           <% if can_delete?(obj)%>
             <li role="presentation">
               <a class="menu_delete" role="menuitem" href="<%=url_for obj%>"> Delete <%= typeName.split.map(&:capitalize).join(' ') %> </a>
