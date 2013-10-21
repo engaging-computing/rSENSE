@@ -14,6 +14,7 @@
 //= require constants
 //= require jquery
 //= require helpers
+//= require dateParse
 //= require name_popup
 //= require jquery_ujs
 //= require jquery.ui.all
