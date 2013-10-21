@@ -216,7 +216,7 @@ class UsersController < ApplicationController
   def update
     @user = User.find_by_username(params[:id])
 
-    if params[:password].nil?
+    if params[:password].nil? and params[:email].nil?
       editUpdate = params[:user]
       hideUpdate = editUpdate.extract_keys!([:hidden])
       success = false
