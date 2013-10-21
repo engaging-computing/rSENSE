@@ -1,14 +1,13 @@
 class User < ActiveRecord::Base
   
   include ActionView::Helpers::SanitizeHelper
-
   
   attr_accessible :content, :email, :firstname, :lastname, :password, :password_confirmation, :username, :validated, :hidden, :bio
 
   validates_uniqueness_of :email, case_sensitive: false, if: :email?
   validates :username, uniqueness: true, format: { with: /\A\p{Alnum}*\z/, message: "can only contain letters and numbers." }
-  validates :firstname, format: {with: /\A[\p{Alpha}\p{Blank}\-']*\z/, message: "can only contain letters, hyphens, single quotes, and spaces."}
-  validates :lastname, format: {with: /\A[\p{Alpha}\p{Blank}\-']*\z/, message: "can only contain letters, hyphens, single quotes, and spaces."}
+  validates :firstname, format: {with: /\A[\p{Alpha}\p{Blank}\-\']*\z/, message: "can only contain letters, hyphens, single quotes, and spaces."}
+  validates :lastname, format: {with: /\A[\p{Alpha}\p{Blank}\-\']*\z/, message: "can only contain letters, hyphens, single quotes, and spaces."}
   
   validates :firstname, length: {maximum: 32}
   validates :lastname, length: {maximum: 32}
@@ -20,9 +19,6 @@ class User < ActiveRecord::Base
 
   has_secure_password
 
-  before_create :check_validation
-  after_create :check_and_send_validation
-  
   before_save :sanitize_user
   
   has_many :projects
@@ -89,21 +85,10 @@ class User < ActiveRecord::Base
     h
   end
 
-  private
-  def check_validation
-    if (not validated) and (not email.blank?)
-      self.validation_key = BCrypt::Password::create(email)
-    end
-  end
-
-  def check_and_send_validation
-    if (not validated) and (not validation_key.blank?)
-      begin
-        UserMailer.validation_email(self).deliver
-      rescue Net::SMTPFatalError
-        logger.info "Could not send email"
-      end
-    end
+  def reset_validation!
+    key = SecureRandom.hex(16)
+    self.validation_key = SecureRandom.hex(16)
+    return key
   end
 end
 

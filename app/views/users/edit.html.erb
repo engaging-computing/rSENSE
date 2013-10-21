@@ -1,10 +1,77 @@
-<% if @cur_user.admin%>
-  <h1>Editing user</h1>
+<h1>Change Password for <%= @user.username %></h1>
 
-  <%= render 'form' %>
+  <div class="row">
+    <div class="span12">
+      <%= form_for(@user) do %>
+        <% unless @cur_user.admin? or session[:pw_change] %>
+          <p>
+          <%= label_tag :current_password, "Current Password" %>
+          <%= password_field_tag :current_password, @cur_pw %>
+          </p>
+        <% end %>
+        <% if session[:pw_change] %>
+          <p>You logged in with a password reset link. Please
+          change your password now.</p>
+        <% end %>
+        <p>
+        <%= label_tag :password, "New Password" %>
+        <%= password_field_tag :password %>
+        </p>
+        <p>
+        <%= label_tag :password_confirmation, "New Password Again" %>
+        <%= password_field_tag :password_confirmation %>
+        </p>
+        <p>
+        <%= submit_tag "Change Password", class: "btn btn-primary" %>
+        </p>
+      <% end %>
+    </div>
+  </div>
+
+<% if @cur_user.admin? or @cur_user == @user %>
+
+  <h2>Change Email Address for <%= @user.username %></h2>
+
+  <div class="row">
+    <div class="span12">
+      <%= form_for(@user) do %>
+        <% unless @cur_user.admin? %>
+          <p>
+          <%= label_tag :password, "Password" %>
+          <%= password_field_tag :password %>
+          </p>
+        <% end %>
+        <p>
+        <%= label_tag :email, "Email" %>
+        <%= text_field_tag :email %>
+        </p>
+        <p>
+        <%= label_tag :email_confirmation, "Email Again" %>
+        <%= text_field_tag :email_confirmation %>
+        </p>
+        <p>
+        <%= submit_tag "Change Email", class: "btn btn-primary" %>
+        </p>
+      <% end %>
+    </div>
+  </div>
+
+<% end # can change email %>
+
+<% if @cur_user.admin? %>
+
+  <h2>Delete User</h2>
+  
+  <div class="row">
+    <div class="span12"> 
+      <%= form_for(@user, html: {method: :delete}) do |f| %>
+        <h4 style="color:red">Warning! This can not be undone.</h4>
+        <%= f.submit value: "Delete User", class: "btn btn-danger"  %>
+      <%end%>
+    </div>
+  </div>
 
   <%= link_to 'Show', @user %> |
   <%= link_to 'Back', users_path %>
-<%else%>
-  You are not authorized to view this page.
-<%end%> 
+
+<% end # admin delete user %>
