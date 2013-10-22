@@ -248,15 +248,11 @@ $ ->
 
                 switch Number field.typeID
                     when data.types.TIME
-                            
-                        if dp[fIndex] is null
-                            dp[fIndex] = NaN
-                        else
-                          dp[fIndex] = helpers.parseTimestamp dp[fIndex]
-                        
-                          if (typeof dp[fIndex]) isnt 'number' and isNaN dp[fIndex][0]
-                                data.timeType = data.GEO_TIME
-                            
+                        dp[fIndex] = helpers.parseTimestamp dp[fIndex]
+                      
+                        if dp[fIndex] instanceof Array and isNaN(dp[fIndex][0])
+                            data.timeType = data.GEO_TIME
+                          
                     when data.types.TEXT
                         NaN
                     else
@@ -266,7 +262,7 @@ $ ->
                           dp[fIndex] = Number dp[fIndex]
         
         for dp, dIndex in data.dataPoints
-              for fieldIndex in data.timeFields
+              for fieldIndex in data.timeFields when dp[fieldIndex] instanceof Array
                   data.dataPoints[dIndex][fieldIndex] = dp[fieldIndex][data.timeType]
         1
 
