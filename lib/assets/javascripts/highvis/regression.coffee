@@ -38,7 +38,7 @@ $ ->
     #TODO
     #Somehow generate and catch the on click event
     
-    getRegression(x_in, y_in, regression_type) ->
+    getRegression:(x_in, y_in, regression_type) ->
     
       #Get the correct regression type
       switch regression_type
@@ -73,8 +73,17 @@ $ ->
       result_series = generateHighchartsSeries(result_matrix, regression_type)
     
     #Calculates the regression according to the provided x and y matrices.
-    calculateResult(x, y) ->
+    calculateResult:(x, y) ->
     
       #Return the resulting vector
       return numeric.dot(numeric.dot(numeric.inv(numeric.dot(numeric.transpose(x), x)), numeric.transpose(x)), y)
+    
+    #Returns a series object to draw on the chart canvas
+    generateHighchartsSeries: (result_matrix, regression_type) ->
+      
+      #Get the correct regression type
+      switch regression_type
+      
+        when 'linear' then
+        
       
