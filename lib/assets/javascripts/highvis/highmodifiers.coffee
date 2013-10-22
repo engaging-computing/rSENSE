@@ -239,7 +239,6 @@ $ ->
     Check various type-related issues
     ###
     data.preprocessData = ->
-
         for dp in data.dataPoints
             for field, fIndex in data.fields
                 if (typeof dp[fIndex] == "string")
@@ -249,21 +248,14 @@ $ ->
 
                 switch Number field.typeID
                     when data.types.TIME
-                        
+                            
                         if dp[fIndex] is null
                             dp[fIndex] = NaN
-                        else if isNaN Number dp[fIndex]
-                            dp[fIndex] = data.parseDate dp[fIndex]
                         else
-                            #LT
-                            year = Number(dp[fIndex])
-                            d = new Date(0)
-                            d.setUTCFullYear(year)
-                            
-                            if isNaN(d.valueOf())
-                              data.timeType = data.GEO_TIME
-                              
-                            dp[fIndex] = [d.valueOf(), year]
+                          dp[fIndex] = helpers.parseTimestamp dp[fIndex]
+                        
+                          if (typeof dp[fIndex]) isnt 'number' and isNaN dp[fIndex][0]
+                                data.timeType = data.GEO_TIME
                             
                     when data.types.TEXT
                         NaN
@@ -277,65 +269,6 @@ $ ->
               for fieldIndex in data.timeFields
                   data.dataPoints[dIndex][fieldIndex] = dp[fieldIndex][data.timeType]
         1
-
-    data.parseDate = (str) ->
-        year = month = day = minutes = seconds = milliseconds = 0
-        hours = 12
-        hourAdj = 0
-        
-        # Check for U format to short circut
-        if (str.match /u/gi) isnt null
-        
-          str = str.replace /u/gi, ""
-          d = new Date (Number str)
-          return [d.valueOf(), d.getUTCFullYear()]
-
-        # Find and extract AM/PM information
-        if (str.match /pm/gi) isnt null
-            hourAdj = 12
-        str = str.replace /[ap]m/gi, ""
-
-        # Find and extract timezone information
-        tz = str.match /\ [\+\-]\d\d\d\d/g
-        if tz isnt null
-            hourAdj += -((Number tz[0]) / 100)
-            str = str.replace /\ [\+\-]\d\d\d\d/g, " "
-
-        # Replace spacing characters with whitespace
-        str = str.replace /[\\\/\-,_]/g, " "
-
-        terms = str.split " "
-
-        terms = terms.filter (item) ->
-            item isnt ""
-
-        try
-            # Detect date format
-            if ((Number terms[0]) > 12) or (isNaN Number terms[0])
-                year  = Number terms[0]
-                month = (new Date terms[1] + "/20 1970").getMonth()
-                day   = Number terms[2]
-            else
-                month = (new Date terms[0] + "/20 1970").getMonth()
-                day   = Number terms[1]
-                year  = Number terms[2]
-
-            # Parse hh:mm:ss.sss
-            clock = terms[3].split ":"
-            hours = (Number clock[0]) + hourAdj
-            minutes = Number clock[1]
-            seconds = Math.floor (Number clock[2])
-            milliseconds = ((Number clock[2]) - seconds) * 1000
-
-        # Ignore any missed clock values
-        hours = 12 if isNaN hours
-        minutes = 0 if isNaN minutes
-        seconds = 0 if isNaN seconds
-        milliseconds = 0 if isNaN milliseconds
-
-        d= new Date(Date.UTC year, month, day, hours, minutes, seconds, milliseconds)
-        return [d.valueOf(), d.getUTCFullYear()]
-
 
 
     #preprocess
