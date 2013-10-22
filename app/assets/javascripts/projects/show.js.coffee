@@ -28,7 +28,6 @@ $ ->
             ($ '#name_box').modal('hide')
 
     respond_csv = ( resp ) ->
-      console.log "MADE IT HERE"
       ($ "#match_table").html ''
       ($ "#match_table").append "<tr><th> Project Field </th> <th> File Header </th></tr>"
 
