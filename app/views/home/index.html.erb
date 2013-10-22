@@ -29,8 +29,7 @@
             <div class='c_item' style="height:210px;">
              
               <%if i.featured_media_id != nil%>
-                <div style="width:100%;">
-                  <%= link_to image_tag(MediaObject.find(i.featured_media_id).src, :style=>'width:100%;position:relative;overflow:hidden'), project_path(i) %>
+                <div class="caroucell" style=<%= "background-image:url(" + MediaObject.find(i.featured_media_id).src + ")"%>>
                 </div>
               <%end%>
           
