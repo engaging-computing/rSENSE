@@ -88,13 +88,15 @@ $ ->
         keyboard: true
 
     # A File has been uploaded, decide what to do
-    ($ "#csv_file_form").ajaxForm (resp, status, xhr) ->
-
-      if xhr.status == 201
-        helpers.name_popup resp, "Dataset", "data_set"
-      else
-        respond_csv(resp)
-
+    ($ "#csv_file_form").ajaxForm
+      error: (resp, status, xhr)->
+        alert resp['responseText']
+      
+      success: (resp, status, xhr)->
+        if xhr.status == 201
+          helpers.name_popup resp, "Dataset", "data_set"
+        else
+          respond_csv(resp)
 
     load_qr = ->
       ($ '#exp_qr_tag').empty()
