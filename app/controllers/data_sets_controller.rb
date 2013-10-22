@@ -31,64 +31,56 @@ class DataSetsController < ApplicationController
   def edit
     @data_set = DataSet.find(params[:id])
     @project = Project.find(@data_set.project_id)
-    
-    if (!@project.lock) || can_edit?(@project)
-    
-      @fields = @project.fields
+    @fields = @project.fields
 
-      header_to_field_map = []
+    header_to_field_map = []
 
-      if !params["data"].nil? and !params["headers"].nil?
-        @project.fields.each do |field|
-          params["headers"].each_with_index do |header, header_index|
-            if header.to_i == field.id
-              header_to_field_map.push header_index
-            end
+    if !params["data"].nil? and !params["headers"].nil?
+      @project.fields.each do |field|
+        params["headers"].each_with_index do |header, header_index|
+          if header.to_i == field.id
+            header_to_field_map.push header_index
           end
         end
+      end
 
-        new_data = []
+      new_data = []
 
-        params["data"]["0"].each_with_index do |tmp, row_index|
+      params["data"]["0"].each_with_index do |tmp, row_index|
 
-          row = {}
+        row = {}
 
-          header_to_field_map.each do |htf, htf_index|
-            if params["data"]["#{htf}"][row_index] == ""
-              if @fields[htf].field_type == 3
-                val = ""
-              else
-                val = nil
-              end
+        header_to_field_map.each do |htf, htf_index|
+          if params["data"]["#{htf}"][row_index] == ""
+            if @fields[htf].field_type == 3
+              val = ""
             else
-              val = params["data"]["#{htf}"][row_index]
+              val = nil
             end
-            row["#{@fields[htf].id}"] = val
+          else
+            val = params["data"]["#{htf}"][row_index]
           end
-
-          new_data[row_index] = row
-
+          row["#{@fields[htf].id}"] = val
         end
 
-        @data_set.data = new_data
+        new_data[row_index] = row
 
-        if @data_set.save!
-          ret = { status: :success, redirect: "/projects/#{@project.id}/data_sets/#{@data_set.id}" }
-        else
-          ret = :error
-        end
       end
 
-      respond_to do |format|
-        format.html # edit.html.erb
-        format.json { render json: ret }
-      end
-    else
-      respond_to do |format|
-        format.json { render json: "Sorry, this project has been locked.", status: :forbidden }
-        format.html 
+      @data_set.data = new_data
+
+      if @data_set.save!
+        ret = { status: :success, redirect: "/projects/#{@project.id}/data_sets/#{@data_set.id}" }
+      else
+        ret = :error
       end
     end
+
+    respond_to do |format|
+      format.html # edit.html.erb
+      format.json { render json: ret }
+    end
+
   end
   
   # POST /data_sets
@@ -110,36 +102,28 @@ class DataSetsController < ApplicationController
   # PUT /data_sets/1
   # PUT /data_sets/1.json
   def update
-    project = Project.find(@data_set.project_id)
-    if !project.lock || can_edit?(project)
-      @data_set = DataSet.find(params[:id])
-      editUpdate  = params[:data_set]
-      hideUpdate  = editUpdate.extract_keys!([:hidden])
-      success = false
+    @data_set = DataSet.find(params[:id])
+    editUpdate  = params[:data_set]
+    hideUpdate  = editUpdate.extract_keys!([:hidden])
+    success = false
 
-      #EDIT REQUEST
-      if can_edit?(@data_set)
-        success = @data_set.update_attributes(editUpdate)
-      end
+    #EDIT REQUEST
+    if can_edit?(@data_set)
+      success = @data_set.update_attributes(editUpdate)
+    end
 
-      #HIDE REQUEST
-      if can_hide?(@data_set)
-        success = @data_set.update_attributes(hideUpdate)
-      end
+    #HIDE REQUEST
+    if can_hide?(@data_set)
+      success = @data_set.update_attributes(hideUpdate)
+    end
 
-      respond_to do |format|
-        if @data_set.update_attributes(params[:data_set])
-          format.html { redirect_to @data_set, notice: 'DataSet was successfully updated.' }
-          format.json { render json: {}, status: :ok }
-        else
-          format.html { render action: "edit" }
-          format.json { render json: @data_set.errors.full_messages(), status: :unprocessable_entity }
-        end
-      end
-    else
-      respond_to do |format|
-        format.json { render json: "Sorry, this project has been locked.", status: :forbidden }
-        format.html { render redirect_to project, notice: 'Project is locked, could not edit data'}
+    respond_to do |format|
+      if @data_set.update_attributes(params[:data_set])
+        format.html { redirect_to @data_set, notice: 'DataSet was successfully updated.' }
+        format.json { render json: {}, status: :ok }
+      else
+        format.html { render action: "edit" }
+        format.json { render json: @data_set.errors.full_messages(), status: :unprocessable_entity }
       end
     end
   end
@@ -179,114 +163,109 @@ class DataSetsController < ApplicationController
 
   # POST /projects/1/manualUpload
   def manualUpload
+
+    ############ Sanity Checks ############
+    errors = []
+    sane = true
+    
+    if params[:data].nil?
+      errors.push "'data' cannot be nil."
+      sane = false
+    end
+    
+    if params[:headers].nil?
+      errors.push "'headers' cannot be nil."
+      sane = false
+    end
+    
+    if params[:id].nil?
+      errors.push "'id' cannot be nil."
+      sane = false
+    end
+    
+    if sane && !(params[:data].length == params[:headers].length)
+      errors.push "Number of data columns (#{params[:data].length}) does not match number of headers (#{params[:headers].length})."
+      sane  = false
+    end
+    
+    if !sane
+      #insane in the membrane
+      logger.info "Data set upload is not sane"
+      logger.info errors.inspect
+      respond_to do |format|
+        format.json { render json: errors, status: :unprocessable_entity }
+      end
+      return
+    end
+    #######################################
+    
     @project = Project.find(params[:id])
-    if (!(@project.lock) || (can_edit?(@project)))
-      ############ Sanity Checks ############
-      errors = []
-      sane = true
-      
-      if params[:data].nil?
-        errors.push "'data' cannot be nil."
-        sane = false
-      end
-      
-      if params[:headers].nil?
-        errors.push "'headers' cannot be nil."
-        sane = false
-      end
-      
-      if params[:id].nil?
-        errors.push "'id' cannot be nil."
-        sane = false
-      end
-      
-      if sane && !(params[:data].length == params[:headers].length)
-        errors.push "Number of data columns (#{params[:data].length}) does not match number of headers (#{params[:headers].length})."
-        sane  = false
-      end
-      
-      if !sane
-        #insane in the membrane
-        logger.info "Data set upload is not sane"
-        logger.info errors.inspect
-        respond_to do |format|
-          format.json { render json: errors, status: :unprocessable_entity }
-        end
-        return
-      end
-      #######################################
-      
-      @fields = @project.fields
-      header_to_field_map = {}
-      success = false
-      defaultName = ""
-      
-      if !params[:name]
-        defaultName  = "Dataset ##{(DataSet.find_all_by_project_id(params[:id]).count + 1).to_s}"
-      else
-        defaultName = params["name"]
-      end
-
-      # Generate field mappings
-      @project.fields.each do |field|
-        params[:headers].each_with_index do |header, header_index|
-          if header.to_i == field.id
-            header_to_field_map["#{field.id}"] =  header_index
-          end
-        end
-      end
-      
-      if header_to_field_map.count != @fields.count
-        #headers dont match... womp womp wahhhhh
-        errors.push "Number of headers (#{header_to_field_map.count}) does not match the number of fields (#{@fields.count})"
-        logger.info "Data set headers don't match fields"
-        logger.info errors.inspect
-        respond_to do |format|
-          format.json { render json: errors, status: :unprocessable_entity }
-        end
-        return
-      end
-      
-      # Format data
-      new_data = []
-
-      params[:data]["0"].each_with_index do |tmp, row_index|
-
-        row = {}
-
-        header_to_field_map.each do |key, value|
-          if params["data"]["#{value}"][row_index] == ""
-            if @fields.find(key.to_i).field_type == 3
-              val = ""
-            else
-              val = nil
-            end
-          else
-            val = params["data"]["#{value}"][row_index]
-          end
-          row["#{key}"] = val
-        end
-
-
-        new_data[row_index] = row
-
-      end
-
-      @data_set = DataSet.new(:user_id => @cur_user.id, :project_id => @project.id, 
-                                :title => defaultName, data: new_data)
-
-      followURL = "/projects/#{@project.id}/data_sets/#{@data_set.id}"
-
-      respond_to do |format|
-        if @data_set.save
-          format.json { render json: @data_set.to_hash(false), status: :created}
-        else
-          format.json { render json:{}, status: :unprocessable_entity }
-        end
-      end
+    @fields = @project.fields
+    header_to_field_map = {}
+    success = false
+    defaultName = ""
+    
+    if !params[:name]
+      defaultName  = "Dataset ##{(DataSet.find_all_by_project_id(params[:id]).count + 1).to_s}"
     else
+      defaultName = params["name"]
+    end
+
+    # Generate field mappings
+    @project.fields.each do |field|
+      params[:headers].each_with_index do |header, header_index|
+        if header.to_i == field.id
+          header_to_field_map["#{field.id}"] =  header_index
+        end
+      end
+    end
+    
+    if header_to_field_map.count != @fields.count
+      #headers dont match... womp womp wahhhhh
+      errors.push "Number of headers (#{header_to_field_map.count}) does not match the number of fields (#{@fields.count})"
+      logger.info "Data set headers don't match fields"
+      logger.info errors.inspect
       respond_to do |format|
-        format.json { render json: "Sorry, this project has been locked.", status: :forbidden }
+        format.json { render json: errors, status: :unprocessable_entity }
+      end
+      return
+    end
+    
+    # Format data
+    new_data = []
+
+    params[:data]["0"].each_with_index do |tmp, row_index|
+
+      row = {}
+
+      header_to_field_map.each do |key, value|
+        if params["data"]["#{value}"][row_index] == ""
+          if @fields.find(key.to_i).field_type == 3
+            val = ""
+          else
+            val = nil
+          end
+        else
+          val = params["data"]["#{value}"][row_index]
+        end
+        row["#{key}"] = val
+      end
+
+
+      new_data[row_index] = row
+
+    end
+
+    @data_set = DataSet.new(:user_id => @cur_user.id, :project_id => @project.id, 
+                               :title => defaultName, data: new_data)
+
+    followURL = "/projects/#{@project.id}/data_sets/#{@data_set.id}"
+
+    respond_to do |format|
+      if @data_set.save
+        format.json { render json: @data_set.to_hash(false), status: :created}
+      else
+        format.json { render json:{}, status: :unprocessable_entity }
       end
     end
 
@@ -383,164 +362,157 @@ class DataSetsController < ApplicationController
 
   ## POST /data_sets/1
   def uploadCSV
+    require "csv"
+    require "open-uri"
+    require "roo"
+    
     @project = Project.find(params[:id])
-    
-    if (!(@project.lock) || (can_edit?(@project)))
-    
-      require "csv"
-      require "open-uri"
-      require "roo"
-      
-      fields = @project.fields
-      exp_fields = []
-      fields.each do |f|
-        exp_fields.append f.name
-      end
-      fields = exp_fields
+    fields = @project.fields
+    exp_fields = []
+    fields.each do |f|
+      exp_fields.append f.name
+    end
+    fields = exp_fields
 
-      #Client has responded to a call for matching
-      if(params.has_key?(:matches))
+    #Client has responded to a call for matching
+    if(params.has_key?(:matches))
 
-        data = CSV.read(params['tmpFile'])
+      data = CSV.read(params['tmpFile'])
 
-        headers = params[:headers]
-        matches = params[:matches]
+      headers = params[:headers]
+      matches = params[:matches]
 
-        matches = matches.inject({}) do |acc, kvp|
-          v = kvp[1].inject({}) do |acc, kvp|
-            acc[kvp[0].to_sym] = Integer(kvp[1])
-            acc
-          end
-
-          acc[Integer(kvp[0])] = v
+      matches = matches.inject({}) do |acc, kvp|
+        v = kvp[1].inject({}) do |acc, kvp|
+          acc[kvp[0].to_sym] = Integer(kvp[1])
           acc
         end
 
-        data = sortColumns(data, matches)
+        acc[Integer(kvp[0])] = v
+        acc
+      end
 
-      #First call to upload a csv.
-      else
-        isdoc = false
-        if params.has_key? :csv
-          @file = params[:csv]
-          if @file.content_type.include? "opendocument"
-            oo = Roo::Openoffice.new(@file.path,false, :ignore)
-            data = CSV.parse(oo.to_csv)
-          elsif @file.content_type.include? "ms-excel"
-            oo = Roo::Excel.new(@file.path,false,:ignore)
-            data = CSV.parse(oo.to_csv) 
-          elsif @file.content_type.include? "openxmlformats"
-            oo = Roo::Excelx.new(@file.path,false,:ignore)
-            data = CSV.parse(oo.to_csv)
-          else 
-            data = CSV.read(@file.tempfile)
-          end
+      data = sortColumns(data, matches)
+
+    #First call to upload a csv.
+    else
+      isdoc = false
+      if params.has_key? :csv
+        @file = params[:csv]
+        if @file.content_type.include? "opendocument"
+          oo = Roo::Openoffice.new(@file.path,false, :ignore)
+          data = CSV.parse(oo.to_csv)
+        elsif @file.content_type.include? "ms-excel"
+          oo = Roo::Excel.new(@file.path,false,:ignore)
+          data = CSV.parse(oo.to_csv) 
+        elsif @file.content_type.include? "openxmlformats"
+          oo = Roo::Excelx.new(@file.path,false,:ignore)
+          data = CSV.parse(oo.to_csv)
         else 
-          tempfile = CSV.new(open(params[:tmpfile]))
-          data = tempfile.read()
-          isdoc = true
+          data = CSV.read(@file.tempfile)
         end
-        
-        headers = data[0]
-
-        #Build match matrix with quality
-        matrix = buildMatchMatrix(fields,headers)
-        results = {}
-        worstMatch = 0
-        until false
-          max =  matrixMax(matrix)
-
-          break if max['val'] == 0
-          matrixZeroCross(matrix, max['findex'], max['hindex'])
-
-          results[max['findex']] = {findex: max['findex'], hindex: max['hindex'], quality: max['val']}
-          worstMatch = max['val']
-        end
-
-        # If the headers are mismatched respond with mismatch
-        if (results.size != @project.fields.size) or (worstMatch < 0.6)
-          #Create a tmp directory if it does not exist
-          begin
-            Dir.mkdir("/tmp/rsense")
-          rescue
-          end
-
-          #Save file so we can grab it again
-          base = "/tmp/rsense/dataset"
-          fname = base + "#{Time.now.to_i}.csv"
-          f = File.new(fname, "w")
-          
-          y = ""
-          data.each do |x|
-            y += x.join(",") + "\n"
-          end
-          f.write(y)
-
-          f.close
-          
-          respond_to do |format|
-            format.json { render json: {pid: params[:id],headers: headers, fields: fields, partialMatches: results,tmpFile: fname}, status: :partial_content  }
-          end
-          return
-
-        #EVERYTHING MATCHED, SORT THE COLUMNS
-        else
-          data = sortColumns(data,results)
-        end
-      end
-
-      #WE HAVE SUCCESSFULLY MATCHED HEADERS AND FIELDS, SAVE THE DATA FINALLY.
-      @project = Project.find_by_id(params[:id])
-      
-      if(!params.try(:[], :dataset_name))
-        defaultName  = "Dataset #"
-        defaultName += (DataSet.find_all_by_project_id(params[:id]).count + 1).to_s
       else 
-        defaultName = params[:dataset_name]
+        tempfile = CSV.new(open(params[:tmpfile]))
+        data = tempfile.read()
+        isdoc = true
       end
-
-      @data_set = DataSet.new(:project_id => params[:id], :title => defaultName, :user_id => @cur_user.try(:id))
-
-      #Parse out just the data
-      data = data[1..(data.size-1)]
-
-      #Data that will be stuffed into mongo
-      mongo_data = Array.new
-
-      #Build the object that will be displayed in the table
-      format_data = {}
-      format_data["metadata"] = []
-      format_data["data"] = []
-      fields.count.times do |i|
-        format_data["metadata"].push({name: headers[i], label: headers[i], datatype: "string", editable: true})
-      end
-
-      header = Field.find_all_by_project_id(@project.id)
-
-      data.each do |dp|
-        row = {}
-        header.each_with_index do |field, col_index|
-          row["#{field[:id]}"] = dp[col_index]
-        end
-        mongo_data << row
-      end
-
-      @data_set.data = mongo_data
       
-      if @data_set.save!
-        respond_to do |format|
-          format.json { render json: @data_set.to_hash(false), status: :created}
+      headers = data[0]
+
+      #Build match matrix with quality
+      matrix = buildMatchMatrix(fields,headers)
+      results = {}
+      worstMatch = 0
+      until false
+        max =  matrixMax(matrix)
+
+        break if max['val'] == 0
+        matrixZeroCross(matrix, max['findex'], max['hindex'])
+
+        results[max['findex']] = {findex: max['findex'], hindex: max['hindex'], quality: max['val']}
+        worstMatch = max['val']
+      end
+
+      # If the headers are mismatched respond with mismatch
+      if (results.size != @project.fields.size) or (worstMatch < 0.6)
+        #Create a tmp directory if it does not exist
+        begin
+          Dir.mkdir("/tmp/rsense")
+        rescue
         end
+
+        #Save file so we can grab it again
+        base = "/tmp/rsense/dataset"
+        fname = base + "#{Time.now.to_i}.csv"
+        f = File.new(fname, "w")
+        
+        y = ""
+        data.each do |x|
+          y += x.join(",") + "\n"
+        end
+        f.write(y)
+
+        f.close
+        
+        respond_to do |format|
+          format.json { render json: {pid: params[:id],headers: headers, fields: fields, partialMatches: results,tmpFile: fname}, status: :partial_content  }
+        end
+        return
+
+      #EVERYTHING MATCHED, SORT THE COLUMNS
       else
-        respond_to do |format|
-          format.json { render json: @data_set.errors.full_messages(), status: :unprocessable_entity }
-        end
+        data = sortColumns(data,results)
+      end
+    end
+
+    #WE HAVE SUCCESSFULLY MATCHED HEADERS AND FIELDS, SAVE THE DATA FINALLY.
+    @project = Project.find_by_id(params[:id])
+    
+    if(!params.try(:[], :dataset_name))
+      defaultName  = "Dataset #"
+      defaultName += (DataSet.find_all_by_project_id(params[:id]).count + 1).to_s
+    else 
+      defaultName = params[:dataset_name]
+    end
+
+    @data_set = DataSet.new(:project_id => params[:id], :title => defaultName, :user_id => @cur_user.try(:id))
+
+    #Parse out just the data
+    data = data[1..(data.size-1)]
+
+    #Data that will be stuffed into mongo
+    mongo_data = Array.new
+
+    #Build the object that will be displayed in the table
+    format_data = {}
+    format_data["metadata"] = []
+    format_data["data"] = []
+    fields.count.times do |i|
+      format_data["metadata"].push({name: headers[i], label: headers[i], datatype: "string", editable: true})
+    end
+
+    header = Field.find_all_by_project_id(@project.id)
+
+    data.each do |dp|
+      row = {}
+      header.each_with_index do |field, col_index|
+        row["#{field[:id]}"] = dp[col_index]
+      end
+      mongo_data << row
+    end
+
+    @data_set.data = mongo_data
+    
+    if @data_set.save!
+     respond_to do |format|
+        format.json { render json: @data_set.to_hash(false), status: :created}
       end
     else
       respond_to do |format|
-        format.json { render json: "Sorry, this project has been locked.", status: :forbidden }
+        format.json { render json: @data_set.errors.full_messages(), status: :unprocessable_entity }
       end
     end
+    
   end
 
 private
