@@ -41,8 +41,9 @@
     <% if @media_object.media_type == "image" %>
       <%= image_tag @media_object.src %>
     <% else%>
-      <%= link_to (media_object_thumbnail_helper @media_object , "300x300", true), @media_object.src%>
-      <span style="color:red">Warning: Download files only if you trust the owner!</span>
+      <%= link_to (media_object_thumbnail_helper @media_object , "300x300", true), @media_object.src%><br><br>
+      Click the image above to download <%= @media_object.title %><br><br>
+      <span style="color:red; font-weight:bold">Warning</span> Do not download any files unless you trust the owner
     <% end %>
   </div>
 </div>

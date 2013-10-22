@@ -127,6 +127,7 @@ $ ->
                         afterSetExtremes: (e) =>
                           @storeXBounds @chart.xAxis[0].getExtremes()
                           @storeYBounds @chart.yAxis[0].getExtremes()
+                          
                           ###
                           If We actually zoomed, we want to update so the data reduction can trigger.
                           Otherwise this zoom was triggered by an update, so don't recurse!
@@ -186,7 +187,6 @@ $ ->
             #Remove all series and draw legend
             super()
             
-
             #Set axis title
             title =
               text: fieldTitle data.fields[@xAxis]
@@ -257,18 +257,16 @@ $ ->
                     
             if @isZoomLocked()
               @updateOnZoom = 0
-              @chart.xAxis[0].setExtremes @xBounds.min, @xBounds.max, false
-              @chart.yAxis[0].setExtremes @yBounds.min, @yBounds.max, false
+              @setExtremes()
               ($ '#zoomResetButton').removeClass("disabled")
             else
+              @resetExtremes
               ($ '#zoomResetButton').addClass("disabled")
               
-                    
             @chart.redraw()
             
             @storeXBounds @chart.xAxis[0].getExtremes()
-            @storeYBounds @chart.yAxis[0].getExtremes()
-            
+            @storeYBounds @chart.yAxis[0].getExtremes()           
 
         ###
         Draws radio buttons for changing symbol/line mode.
@@ -322,11 +320,12 @@ $ ->
             ($ '#zoomResetButton').button()
             ($ '#zoomResetButton').click (e) =>
               @chart.zoomOut()
+              
             # Set initial state of zoom reset
             if not @isZoomLocked()
-              ($ '#zoomResetButton').button("disable")
+              ($ '#zoomResetButton').addClass("disabled")
             else
-              ($ '#zoomResetButton').button("enable")
+              ($ '#zoomResetButton').addClass("enabled")
             
             ($ '#zoomOutButton').button()
             ($ '#zoomOutButton').click (e) =>
@@ -401,8 +400,8 @@ $ ->
                 @xAxis = Number selection
 
                 #@delayedUpdate()
-                @update()
                 @resetExtremes()
+                @update()
 
             #Set up accordion
             globals.xAxisOpen ?= 0
@@ -421,64 +420,55 @@ $ ->
             not (undefined in [@xBounds.userMin, @xBounds.userMax])
 
         resetExtremes: ->
-            if @chart isnt undefined
-                @xAxisExtremes = @chart.xAxis[0].getExtremes()
-                @yAxisExtremes = @chart.yAxis[0].getExtremes()
+            if @chart isnt undefined         
+                @chart.xAxis[0].setExtremes()
+                @chart.yAxis[0].setExtremes()
                 
-                if @xAxisExtremes isnt undefined then @chart.xAxis[0].setExtremes(@xAxisExtremes['dataMin'],@xAxisExtremes['dataMax'],true)
-                if @yAxisExtremes isnt undefined then @chart.yAxis[0].setExtremes(@yAxisExtremes['dataMin'],@yAxisExtremes['dataMax'],true)
-                
-        getExtremes: ->
-            if @chart isnt undefined
-                @xAxisExtremes = @chart.xAxis[0].getExtremes()
-                @yAxisExtremes = @chart.yAxis[0].getExtremes()
-
         setExtremes: ->
-            if (@xAxisExtremes isnt undefined) and (@yAxisExtremes isnt undefined)
-                @chart.xAxis[0].setExtremes(@xAxisExtremes['min'],@xAxisExtremes['max'],true)
-                @chart.yAxis[0].setExtremes(@yAxisExtremes['min'],@yAxisExtremes['max'],true)
+            if (@chart isnt undefined)
+              if(@xBounds.min? and @yBounds.min?)
+                @chart.xAxis[0].setExtremes(@xBounds.min,@xBounds.max,true)
+                @chart.yAxis[0].setExtremes(@yBounds.min,@yBounds.max,true)
+              else @resetExtremes()
                 
         zoomOutExtremes: ->
-          @getExtremes()
           
-          xRange = @xAxisExtremes.max - @xAxisExtremes.min
-          yRange = @yAxisExtremes.max - @yAxisExtremes.min
+          xRange = @xBounds.max - @xBounds.min
+          yRange = @yBounds.max - @yBounds.min
           
-          @xAxisExtremes.max += xRange * 0.1
-          @xAxisExtremes.min -= xRange * 0.1
+          @xBounds.max += xRange * 0.1
+          @xBounds.min -= xRange * 0.1
           
           if globals.logY is 1
-            @yAxisExtremes.max *= 10
-            @yAxisExtremes.min /= 10
+            @yBounds.max *= 10
+            @yBounds.min /= 10
           else
-            @yAxisExtremes.max += yRange * 0.1
-            @yAxisExtremes.min -= yRange * 0.1
+            @yBounds.max += yRange * 0.1
+            @yBounds.min -= yRange * 0.1
           
           @setExtremes()
-                
-        clearExtremes: ->
-            @xAxisExtremes = undefined;
-            @yAxisExtremes = undefined;
 
         ###
         Saves the current zoom level
         ###
         end: ->
-            @getExtremes()
-            super()
+        
+          if chart?
+            @storeXBounds @chart.xAxis[0].getExtremes()
+            @storeYBounds @chart.yAxis[0].getExtremes()
+         
+          super()
             
         ###
         Sets the previous zoom level
         ###
         start: ->
             super()
-            @setExtremes()
             
         ###
         Saves the zoom level before cleanup
         ###
         serializationCleanup: ->
-            @getExtremes()
             super()
             
 
