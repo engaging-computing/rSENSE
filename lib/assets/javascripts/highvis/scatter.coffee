@@ -149,7 +149,7 @@ $ ->
                     legendIndex: fieldIndex
                     data: []
                     color: '#000'
-                    visible: if fieldIndex in globals.fieldSelection then true else false
+                    showInLegend: if fieldIndex in globals.fieldSelection then true else false
                     name: field.fieldName
 
                 switch
