@@ -4,22 +4,24 @@
     <div class="row">
 
       <!-- qr code  -->
-      <div class="span2">
+      <div class="span2" style="width:110px;">
         <div id="exp_qr_tag"></div>
       </div>
 
       <!-- project title -->
       <div class="span5" style="margin-left:0px">
         <div class="project_info_box" >
-          <span id="title_span" class="word-break" style="font-size:2em"><%= project_edit_menu_helper false%></span><br>
-          <span class="info_label" style="font-size:1.1em">Owner:</span>
-          <%= link_to @project.owner.name, user_path(@project.owner) %><br>
-            <%if !@cloned_project.nil? %>
-                    <span class="info_label" style="font-size:1.1em">Cloned From:</span>
-                    <%=link_to @cloned_project.title, project_path(@cloned_project.id)%><br>
-            <%end%>
-          <span class="info_label" style="font-size:1.1em">Created:</span><%=time_ago_in_words(@project.created_at)%> ago <br>
-          <span class="info_label" style="font-size:1.1em">Project #:</span><%= @project.id %><br>
+          <span id="title_span" class="word-break" style="font-size:1.5em"><%= project_edit_menu_helper false%></span><br>
+          <span class="info_label" style="font-size:1.1em">by: <%= link_to @project.owner.name, user_path(@project.owner) %> (<%=time_ago_in_words(@project.created_at)%> ago)</span><br/>
+          <div id="notices">
+            <span id="lock_notice" <%if !@project.lock%>style="display:none"<%end%>><i class="icon-lock"> This project is locked</i></span> 
+            <span id="hidden_notice" <%if !@project.hidden%>style="display:none"<%end%>><i class="icon-eye-close"> This project is hidden</i></span> 
+            <span id="id_notice" <% if @project.hidden || @project.lock%>style="display:none"<% end %>>Project #: <%= @project.id %></span>
+          </div>
+          <%if !@cloned_project.nil? %>
+                  <span class="info_label" style="font-size:1.1em">Cloned From:</span>
+                  <%=link_to @cloned_project.title, project_path(@cloned_project.id)%><br>
+          <%end%>
           <%if @cur_user.try(:id)%>
             <div class="btn-group likes" project_id="<%= @project.id%>">
               <button type="button" class="btn liked_status <% if @liked_by_cur_user%>active<%end%>" href="#" data-toggle="button"><i class="icon-thumbs-up-alt"></i> Like</button>
@@ -142,25 +144,28 @@
     
       <!-- ##### SESSION CREATION MENU ##### -->
       <%=render layout: "shared/box", locals: {title: 'Create Data Set', width:'5', unique_id: 'create_data_set', should_hide: !(@cur_user.try(:id) && @project.fields.count() > 0)} do %>
-      <div class="row-fluid">
-        <div class="span4 center">
-        <%= link_to :controller => :data_sets, :action => :manualEntry do %>
-          <img class="hoverimage" src="/assets/manual.png" /><br />Manual Entry
+        <% if can_edit? @project || !@project.lock%>
+          <div class="row-fluid">
+            <div class="span4 center">
+            <%= link_to :controller => :data_sets, :action => :manualEntry do %>
+              <img class="hoverimage" src="/assets/manual.png" /><br />Manual Entry
+            <% end %>
+            </div>
+            <div class="span4 center" title="Supports - CSV,XLS,XLSX,ODS">
+              <a id="upload_csv" href=""><img class="hoverimage" src="/assets/upload.png" /><br />
+              Upload File</a>
+            </div>
+            <div class="span4 center">
+              <a id="google_doc" href=""><img class="hoverimage" src="/assets/google.png" /><br />
+              Google Doc</a>
+            </div>
+            <div class="clear">
+            </div>
+          </div>
+        <% else %>
+          <h2 class="center"><i class="icon-lock"></i></h2><h4 class="center">This project has been locked</h4>
         <% end %>
-        </div>
-        <div class="span4 center" title="Supports - CSV,XLS,XLSX,ODS">
-          <a id="upload_csv" href=""><img class="hoverimage" src="/assets/upload.png" /><br />
-          Upload File</a>
-        </div>
-        <div class="span4 center">
-          <a id="google_doc" href=""><img class="hoverimage" src="/assets/google.png" /><br />
-          Google Doc</a>
-        </div>
-        <div class="clear">
-        </div>
-      </div>
-      <% end %>
-
+      <% end %>  
 
       <!-- ##### MEDIA OBJECTS MENU ##### -->
       <%=render layout: "shared/box", locals: {title: 'Media', width: '5', unique_id: 'media', should_hide: false} do %>
