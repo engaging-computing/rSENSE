@@ -299,6 +299,10 @@ $ ->
                     backgroundColor: 'white'
                     symbolWidth:60
                     itemWidth: 200
+                    useHTML: true
+                    itemStyle:
+                      width: 140
+                      cursor: 'default'
                 #loading: {}
                 plotOptions:
                     series:
@@ -382,13 +386,23 @@ $ ->
                     
             @chart.yAxis[0].setTitle title, false
         
+            @chart.addSeries
+              name: ' '
+              color: '#FFF'
+              width: 0
+        
             #Remove curent data
-            while @chart.series.length isnt 0
+            while @chart.series.length isnt 1
                 @chart.series[0].remove(false)
 
             #Draw legend
             for options in @buildLegendSeries()
               @chart.addSeries options, false
+              
+            foo = =>
+              if globals.fieldSelection.length isnt 0
+                @chart.series[0].remove(true)
+            setTimeout foo, 0
             
         ###
         Performs an update while displaying the loading text
