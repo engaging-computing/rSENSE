@@ -208,10 +208,8 @@ $ ->
         root = ($ '#dataset_table')
         root.find("[id^=ds_]").each (i,j) =>
             ($ j).prop("checked",false)
-            console.log "unchecking"
         root.find(".mine").each (i,j) =>
             ($ j).prop("checked",true)
-            console.log "checking"
         ($ '#vis_button').prop("disabled",false)
 
     #Turn off visualize button on page load, and when nothings checked
