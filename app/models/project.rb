@@ -4,7 +4,7 @@ class Project < ActiveRecord::Base
   include ActionView::Helpers::DateHelper
   include ActionView::Helpers::SanitizeHelper
 
-  attr_accessible :content, :title, :user_id, :filter, :cloned_from, :like_count, :has_fields, :featured, :is_template, :featured_media_id, :hidden, :featured_at, :lock
+  attr_accessible :content, :title, :user_id, :filter, :cloned_from, :like_count, :has_fields, :featured, :is_template, :featured_media_id, :hidden, :featured_at, :lock, :curated
   
   validates_presence_of :title
   validates_presence_of :user_id
@@ -46,6 +46,14 @@ class Project < ActiveRecord::Base
   def self.only_templates(value)
     if value == true
       where(:is_template => true)
+    else
+      scoped
+    end
+  end
+  
+  def self.only_curated(value)
+    if value == true
+      where(:curated => true)
     else
       scoped
     end

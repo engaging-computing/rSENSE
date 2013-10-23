@@ -55,11 +55,14 @@ $ ->
 
     ($ '.projects_filter_checkbox').click ->
       ($ '#projects_search').submit()
-
+    
     ($ '.projects_sort_select').change ->
       ($ '#projects_search').submit()
 
-    ($ '#template_checkbox').change ->
+    ($ '#template_checkbox').click ->
+      ($ '#projects_search').submit()
+    
+    ($ '#curated_checkbox').click ->
       ($ '#projects_search').submit()
       
     ($ window).resize () ->
