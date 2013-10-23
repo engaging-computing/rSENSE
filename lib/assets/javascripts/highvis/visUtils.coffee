@@ -64,9 +64,12 @@ $ ->
     Date formatter
     ###
     globals.dateFormatter = (dat) ->
-
+    
+        if dat is "null" or dat is null
+          return ""
+        
         if isNaN dat
-            return "Invalid Date"
+          return "Invalid Date"
           
         if data.timeType is data.GEO_TIME
           return globals.geoDateFormatter(dat)
@@ -77,10 +80,10 @@ $ ->
                       "Jul","Aug", "Sep", "Oct", "Nov", "Dec"]
 
         minDigits = (num, str) ->
-            str = String str
-            while str.length < num
-                str = '0' + str
-            str
+          str = String str
+          while str.length < num
+              str = '0' + str
+          str
 
         str = ""
         str += dat.getUTCDate()              + " "
@@ -201,48 +204,39 @@ $ ->
     pieMagList           = [1,1,1,1,1,1,1,1,1,1,1,1,1,0]
     halfmoonMagList      = [1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0]
     starMagList          = [Math.sqrt(2), 2/3]
+    diamondMagList       = [Math.sqrt(2)]
 
-    tempSymbolsMatrix = []
-    symbolList        = ['circle', 'square', 'diamond', '5-star', 'up-tri', 'down-tri', 'right-tri', 'left-tri', '6-star']
+    symbolList           = ['circle', 'square', 'up-tri', '5-star', 'diamond',  'down-tri', '4-fan', '6-star', 'left-tri', '3-fan', '2-pie', 'right-tri', '2-fan', 'up-halfmoon', 'down-halfmoon', 'left-halfmoon', 'right-halfmoon', '3-pie', '4-pie', '5-pie']
 
-    tempSymbolsMatrix[tempSymbolsMatrix.length] = []
-
+    ###
+    Add all the custom symbols for the symbolList.
+    ###
+    
+    #Make the blank icon    
     addRadialMarkerStyle "blank", 1, 0, [0]
-
-    tempSymbolsMatrix[tempSymbolsMatrix.length] = []
+    
+    #Make default diamond as large as a square
+    addRadialMarkerStyle "diamond", 4, 0, diamondMagList
+    
+    #Make the 5 and 6 pointed stars
     for i in [5,6]
-            addRadialMarkerStyle "#{i}-star", i, 0.5, starMagList
-            #tempSymbolsMatrix[tempSymbolsMatrix.length-1].push "#{i}-star"
+      addRadialMarkerStyle "#{i}-star", i, 0.5, starMagList
 
-    tempSymbolsMatrix[tempSymbolsMatrix.length] = []
-    for i in [2,3,4,6]
+    #Make the various 2, 3, and 4 pointed fans
+    for i in [2,3,4]
       addRadialMarkerStyle "#{i}-fan", i, 0, fanMagList
-      tempSymbolsMatrix[tempSymbolsMatrix.length-1].push "#{i}-fan"
-
-    tempSymbolsMatrix[tempSymbolsMatrix.length] = []
+      
+    #Make the triangles of different orientation
     for [phase, direction] in [[0, "down"],[1/4, "right"],[2/4, "up"],[3/4, "left"]]
       addRadialMarkerStyle "#{direction}-tri", 3, phase, [Math.sqrt(2)]
-      #tempSymbolsMatrix[tempSymbolsMatrix.length-1].push "#{direction}-tri"
 
-    tempSymbolsMatrix[tempSymbolsMatrix.length] = []
+    #Make the 2, 3, 4, and 5 sliced pies
     for i in [2,3,4,5]
       addRadialMarkerStyle "#{i}-pie", i, 0, pieMagList
-      tempSymbolsMatrix[tempSymbolsMatrix.length-1].push "#{i}-pie"
       
-    tempSymbolsMatrix[tempSymbolsMatrix.length] = []
+    #Make the multi-direction halfmoons
     for [phase, direction] in[[0, "right"],[1/4, "up"],[2/4, "left"],[3/4, "down"]]
       addRadialMarkerStyle "#{direction}-halfmoon", 1, phase, halfmoonMagList
-      tempSymbolsMatrix[tempSymbolsMatrix.length-1].push "#{direction}-halfmoon"
-
-    while tempSymbolsMatrixCount != 0
-        tempSymbolsMatrixCount = tempSymbolsMatrix.length
-        for index in [0...tempSymbolsMatrix.length]
-          if tempSymbolsMatrix[index].length == 0
-                tempSymbolsMatrixCount -= 1
-            else
-                symbolList.push tempSymbolsMatrix[index][0]
-                tempSymbolsMatrix[index].splice 0, 1
-
 
     ###
     Store the list
