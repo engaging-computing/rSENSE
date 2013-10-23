@@ -49,12 +49,22 @@
               <a class="menu_unlock" role="menuitem" href="#"><i class="icon-unlock"></i> Unlock Project </a>
             </li>
           <% end %>
+
+          <% if is_admin? && obj.is_a?(Project)%>
+            <li role="presentation" class="menu_curate" <% if obj.curated %> style="display:none"<%end%>>
+              <a class="menu_curate" role="menuitem" href="<%=url_for obj%>"><i class="icon-tag"></i> Curate <%= typeName.split.map(&:capitalize).join(' ') %> </a>
+            </li>
+            <li role="presentation" class="menu_uncurate" <% if !obj.curated %> style="display:none"<%end%>>
+              <a class="menu_uncurate" role="menuitem" href="<%=url_for obj%>"><i class="icon-tag"></i> Uncurate <%= typeName.split.map(&:capitalize).join(' ') %> </a>
+            </li>
+          <% end %>
           
           <% if can_delete?(obj)%>
             <li role="presentation">
               <a style="color:red" class="menu_delete" role="menuitem" href="<%=url_for obj%>"><i style="color:red" class="icon-remove-circle"></i> Delete <%= typeName.split.map(&:capitalize).join(' ') %> </a>
             </li>
           <%end%>
+          
         </ul>
       </div>
   <%end%>
