@@ -88,13 +88,15 @@ $ ->
         keyboard: true
 
     # A File has been uploaded, decide what to do
-    ($ "#csv_file_form").ajaxForm (resp, status, xhr) ->
-
-      if xhr.status == 201
-        helpers.name_popup resp, "Dataset", "data_set"
-      else
-        respond_csv(resp)
-
+    ($ "#csv_file_form").ajaxForm
+      error: (resp, status, xhr)->
+        alert resp['responseText']
+      
+      success: (resp, status, xhr)->
+        if xhr.status == 201
+          helpers.name_popup resp, "Dataset", "data_set"
+        else
+          respond_csv(resp)
 
     load_qr = ->
       ($ '#exp_qr_tag').empty()
@@ -190,16 +192,27 @@ $ ->
       ds_id[1]
 
     #Select all/none check box in the data sets box
-    ($ "#check_selector").click ->
-      root = ($ @).parents("table")
-      if ($ this).is(":checked")
+    ($ "a#check_all").click ->
+        root = ($ '#dataset_table')
         root.find("[id^=ds_]").each (i,j) =>
           ($ j).prop("checked",true)
         ($ '#vis_button').prop("disabled",false)
-      else
+
+    ($ "a#uncheck_all").click ->
+        root = ($ '#dataset_table')
         root.find("[id^=ds_]").each (i,j) =>
-          ($ j).prop("checked",false)
-          ($ '#vis_button').prop("disabled",true)
+            ($ j).prop("checked",false)
+        ($ '#vis_button').prop("disabled",true)
+
+    ($ "a#check_mine").click ->
+        root = ($ '#dataset_table')
+        root.find("[id^=ds_]").each (i,j) =>
+            ($ j).prop("checked",false)
+            console.log "unchecking"
+        root.find(".mine").each (i,j) =>
+            ($ j).prop("checked",true)
+            console.log "checking"
+        ($ '#vis_button').prop("disabled",false)
 
     #Turn off visualize button on page load, and when nothings checked
     check_for_selection = =>
