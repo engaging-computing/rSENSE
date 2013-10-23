@@ -96,6 +96,7 @@ $ ->
       success: =>
         root.find('li.menu_hider').show()
         root.find('li.menu_unhider').hide()
+        ($ '#hidden_notice').hide()
         
   ($ 'a.menu_hider').click (e) ->
     
@@ -132,6 +133,43 @@ $ ->
         success: =>
           window.location = root.attr("escape_link")
   
+  ### LOCK PROJECT ###
+  ($ 'a.menu_lock').click (e) ->
+    e.preventDefault()
+    root = ($ @).parents('span.edit_menu')
+    $.ajax
+      url: ($ @).attr('href')
+      type: 'PUT'
+      dataType: 'json'
+      data:
+        project:
+            lock: true
+      success: =>
+        root.find('li.menu_unlock').show()
+        root.find('li.menu_lock').hide()
+        ($ '#lock_notice').show()
+        ($ '#id_notice').hide()
+      error: (msg) =>
+        console.log msg
+        
+  ### UNLOCK PROJECT ###      
+  ($ 'a.menu_unlock').click (e) ->
+    e.preventDefault()
+    root = ($ @).parents('span.edit_menu')
+    $.ajax
+      url: ($ @).attr('href')
+      type: 'PUT'
+      dataType: 'json'
+      data:
+        project:
+            lock: false
+      success: =>
+        root.find('li.menu_lock').show()
+        root.find('li.menu_unlock').hide()
+        ($ '#lock_notice').hide()
+      error: (msg) =>
+        console.log msg 
+        
   ($ 'a.summary_edit').click (e) ->
     e.preventDefault()
     root = ($ @).parents("span.edit_menu")

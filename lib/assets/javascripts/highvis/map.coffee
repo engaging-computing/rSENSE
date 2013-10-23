@@ -170,7 +170,7 @@ $ ->
                     latlng = new google.maps.LatLng(lat, lon)
                     
                     # put aside line info if nessisary
-                    if @timeLines?
+                    if @timeLines? and dataPoint[data.timeFields[0]] isnt null and not(isNaN dataPoint[data.timeFields[0]])
                       @timeLines[groupIndex].push
                         time: dataPoint[data.timeFields[0]]
                         latlng: latlng
