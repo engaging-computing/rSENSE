@@ -43,7 +43,7 @@ $ ->
       #TODO
       #Somehow magically generate and catch the on click event
       
-      getRegression:(x_in, y_in, regression_type) ->
+      getRegression:(x_in, y_in, regression_type, x_bounds) ->
       
         #Get the correct regression type
         switch regression_type
@@ -73,26 +73,37 @@ $ ->
             for x_val in x_in
               x_fin.push([1, Math.log(x_val)])
         
-        #Calculate the result matrix, and finally the highcharts series object
-        result_matrix = calculateResult(x_fin, y_in)
-        result_series = generateHighchartsSeries(result_matrix, regression_type)
+        #Calculate the regression matrix, and finally the highcharts series object
+        regression_matrix = calculateRegression(x_fin, y_in)
+        result_series = generateHighchartsSeries(regression_matrix, regression_type, x_bounds)
       
       #Calculates the regression according to the provided x and y matrices.
-      calculateResult:(x, y) ->
+      calculateRegression:(x, y) ->
       
         #Return the resulting vector
         return numeric.dot(numeric.dot(numeric.inv(numeric.dot(numeric.transpose(x), x)), numeric.transpose(x)), y)
       
       #Returns a series object to draw on the chart canvas
-      generateHighchartsSeries:(result_matrix, regression_type, window_bounds) ->
+      generateHighchartsSeries:(regression_matrix, regression_type, x_bounds) ->
         
         #Get the correct regression type
         switch regression_type
         
           when globals.REGRESSION.LINEAR then
-            
+            series: [{
+              name: 'Linear Trend',
+              data: [ { y : calculateLinearPoint(regression_matrix[0][2], regression_matrix[1][2], x_bounds.min), x : x_bounds.min },
+                      { y : calculateLinearPoint(regression_matrix[0][2], regression_matrix[1][2], x_bounds.max), x : x_bounds.max }]
+            }]
+            return series
           
           when globals.REGRESSION.QUADRATIC then
+            series: [{
+              #TODO actually generate a trend here
+              name: 'Quadratic Trend',
+              data: [ { y : calculateQuadraticPoint(regression_matrix[0][3], regression_matrix[1][3], regression_matrix[2][3], x_bounds.min, x : x_bounds.min },
+                      { y : calculateQuadraticPoint(regression_matrix[0][3], regression_matrix[1][3], regression_matrix[2][3], x_bounds.max, x : x_bounds.max }]
+            }]
           
           when globals.REGRESSION.CUBIC then
           
@@ -100,4 +111,19 @@ $ ->
           
           when globals.REGRESSION.LOGARITHMIC then
           
+      calculateLinearPoint:(const_A, const_B, x_val) ->
+        return const_A + const_B * x_val
+      
+      calculateQuadraticPoint:(const_A, const_B, const_C, x_val) ->
+        return const_A + const_B * x_val  + const_C * Math.pow(x_val, 2)
+      
+      calculateCubicPoint:(const_A, const_B, const_C, const_D, x_val) ->
+        return const_A + const_B * x_val  + const_C * Math.pow(x_val, 2) + const_D * Math.pow(x_val, 3)
+      
+      calculateExponentialPoint:(const_A, const_B, x_val) ->
+        return const_A + const_B * Math.exp(x_val)
+      
+      calculateLogarithmicPoint:(const_A, const_B, x_val) ->
+        return const_A + const_B * Math.log(x_val)
+
         
