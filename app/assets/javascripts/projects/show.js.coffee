@@ -197,22 +197,27 @@ $ ->
         root.find("[id^=ds_]").each (i,j) =>
           ($ j).prop("checked",true)
         ($ '#vis_button').prop("disabled",false)
+        ($ '#export_button').prop("disabled",false)
 
     ($ "a#uncheck_all").click ->
         root = ($ '#dataset_table')
         root.find("[id^=ds_]").each (i,j) =>
             ($ j).prop("checked",false)
         ($ '#vis_button').prop("disabled",true)
+        ($ '#export_button').prop("disabled",true)
 
     ($ "a#check_mine").click ->
         root = ($ '#dataset_table')
         root.find("[id^=ds_]").each (i,j) =>
             ($ j).prop("checked",false)
-            console.log "unchecking"
         root.find(".mine").each (i,j) =>
             ($ j).prop("checked",true)
-            console.log "checking"
-        ($ '#vis_button').prop("disabled",false)
+        if root.find(".mine").length isnt 0
+          ($ '#vis_button').prop("disabled",false)
+          ($ '#export_button').prop("disabled",false)
+        else
+          ($ '#vis_button').prop("disabled",true)
+          ($ '#export_button').prop("disabled",true)
 
     #Turn off visualize button on page load, and when nothings checked
     check_for_selection = =>
@@ -222,7 +227,9 @@ $ ->
           should_disable = false
         else
           ($ '#check_selector').prop("checked",false)
-        $('#vis_button').prop("disabled", should_disable)
+          ($ '#export_button').prop("disabled",false)
+        ($ '#vis_button').prop("disabled", should_disable)
+        ($ '#export_button').prop("disabled", should_disable)
         
     check_for_selection()
 
