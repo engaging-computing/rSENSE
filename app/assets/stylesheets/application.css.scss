@@ -38,7 +38,7 @@ body
 {
   word-wrap: break-word;
   overflow: hidden;
-  max-height: 2.4em;
+  height: 2.4em;
 }
 
 div.info_text
@@ -355,7 +355,7 @@ input.object_hidden_checkbox
 {
   display:inline-block;
   overflow-x: hidden;
-  height:250px;
+  height:220px;
   
   @media screen and (min-width: 300px) {
     width: 170px !important;
@@ -370,7 +370,7 @@ input.object_hidden_checkbox
     width: 800px !important;
   }
   @media screen and (min-width: 1200px) {
-    width: 1000px !important;
+    width: 1020px !important;
   }
 }
 
@@ -391,7 +391,7 @@ input.object_hidden_checkbox
   height:35px;
   display: inline-block;
   position: relative;
-  top: -110px;
+  top: -100px;
 }
 .carousel-arrow:hover
 {

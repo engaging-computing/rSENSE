@@ -27,10 +27,16 @@ class ProjectsController < ApplicationController
       templates = false
     end
     
-    if sort == "RATING"
-      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("like_count DESC").only_templates(templates)
+    if params.has_key? "curated_only"
+      curated = true
     else
-      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("#{sort}").only_templates(templates)
+      curated = false
+    end
+    
+    if sort == "RATING"
+      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("like_count DESC").only_templates(templates).only_curated(curated)
+    else
+      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("#{sort}").only_templates(templates).only_curated(curated)
     end
 
     #Featured list
