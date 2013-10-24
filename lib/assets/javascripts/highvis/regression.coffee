@@ -28,62 +28,76 @@
 ###
 
 $ ->
-    #Regression Types
-    LINEAR = 'linear'
-    QUADRATIC = 'quadratic'
-    CUBIC = 'cubic'
-    EXPONENTIAL = 'exponential'
-    LOGARITHMIC = 'logarithmic'    
 
-    #TODO
-    #Somehow generate and catch the on click event
-    
-    getRegression:(x_in, y_in, regression_type) ->
-    
-      #Get the correct regression type
-      switch regression_type
-    
-        when 'linear' then
-          #Make x_fin based on linear params
-          for x_val in x_in
-            x_fin.push([1, x_val])
-      
-        when 'quadratic' then
-          #Make x_fin based on quadratic params
-          for x_val in x_in
-            x_fin.push([1, x_val, Math.pow(x_val, 2)])
+    if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
 
-        when 'cubic' then
-          #Make x_fin based on cubic params
-          for x_val in x_in
-            x_fin.push([1, x_val, Math.pow(x_val, 2), Math.pow(x_val, 3)])
+      #Regression Types
+      window.globals ?= {}
+      globals.REGRESSION ?= {}
+      globals.REGRESSION.LINEAR = 1
+      globals.REGRESSION.QUADRATIC = 2
+      globals.REGRESSION.CUBIC = 3
+      globals.REGRESSION.EXPONENTIAL = 4
+      globals.REGRESSION.LOGARITHMIC = 5    
+
+      #TODO
+      #Somehow magically generate and catch the on click event
       
-        when 'exponential' then
-          #Make x_fin based on exponential params
-          for x_val in x_in
-            x_fin.push([1, Math.exp(x_val)])
+      getRegression:(x_in, y_in, regression_type) ->
       
-        when 'logarithmic' then
-          #Make x_fin based on logarithmic params
-           for x_val in x_in
-            x_fin.push([1, Math.log(x_val)])
+        #Get the correct regression type
+        switch regression_type
       
-      #Calculate the result matrix, and finally the highcharts series object
-      result_matrix = calculateResult(x_fin, y_in)
-      result_series = generateHighchartsSeries(result_matrix, regression_type)
-    
-    #Calculates the regression according to the provided x and y matrices.
-    calculateResult:(x, y) ->
-    
-      #Return the resulting vector
-      return numeric.dot(numeric.dot(numeric.inv(numeric.dot(numeric.transpose(x), x)), numeric.transpose(x)), y)
-    
-    #Returns a series object to draw on the chart canvas
-    generateHighchartsSeries: (result_matrix, regression_type) ->
-      
-      #Get the correct regression type
-      switch regression_type
-      
-        when 'linear' then
+          when globals.REGRESSION.LINEAR then
+            #Make x_fin based on linear params
+            for x_val in x_in
+              x_fin.push([1, x_val])
         
+          when globals.REGRESSION.QUADRATIC then
+            #Make x_fin based on quadratic params
+            for x_val in x_in
+              x_fin.push([1, x_val, Math.pow(x_val, 2)])
+
+          when globals.REGRESSION.CUBIC then
+            #Make x_fin based on cubic params
+            for x_val in x_in
+              x_fin.push([1, x_val, Math.pow(x_val, 2), Math.pow(x_val, 3)])
+        
+          when globals.REGRESSION.EXPONENTIAL then
+            #Make x_fin based on exponential params
+            for x_val in x_in
+              x_fin.push([1, Math.exp(x_val)])
+        
+          when globals.REGRESSION.LOGARITHMIC then
+            #Make x_fin based on logarithmic params
+            for x_val in x_in
+              x_fin.push([1, Math.log(x_val)])
+        
+        #Calculate the result matrix, and finally the highcharts series object
+        result_matrix = calculateResult(x_fin, y_in)
+        result_series = generateHighchartsSeries(result_matrix, regression_type)
       
+      #Calculates the regression according to the provided x and y matrices.
+      calculateResult:(x, y) ->
+      
+        #Return the resulting vector
+        return numeric.dot(numeric.dot(numeric.inv(numeric.dot(numeric.transpose(x), x)), numeric.transpose(x)), y)
+      
+      #Returns a series object to draw on the chart canvas
+      generateHighchartsSeries:(result_matrix, regression_type, window_bounds) ->
+        
+        #Get the correct regression type
+        switch regression_type
+        
+          when globals.REGRESSION.LINEAR then
+            
+          
+          when globals.REGRESSION.QUADRATIC then
+          
+          when globals.REGRESSION.CUBIC then
+          
+          when globals.REGRESSION.EXPONENTIAL then
+          
+          when globals.REGRESSION.LOGARITHMIC then
+          
+        
