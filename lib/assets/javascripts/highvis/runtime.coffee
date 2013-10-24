@@ -56,7 +56,7 @@ $ ->
     #$("#title_bar").height() + $("#title_row").height()
 
     ### hide all vis canvases to start ###
-    ($ can).hide() for can in ['#map_canvas', '#timeline_canvas', '#scatter_canvas', '#bar_canvas', '#histogram_canvas', '#table_canvas', '#viscanvas','#motion_canvas','#photos_canvas']
+    ($ can).hide() for can in ['#map_canvas', '#timeline_canvas', '#scatter_canvas', '#bar_canvas', '#histogram_canvas', '#table_canvas', '#viscanvas','#photos_canvas']
     
     ### Load saved data if there ###
     if data.savedGlobals?
