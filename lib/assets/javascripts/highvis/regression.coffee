@@ -38,7 +38,8 @@ $ ->
       globals.REGRESSION.QUADRATIC = 2
       globals.REGRESSION.CUBIC = 3
       globals.REGRESSION.EXPONENTIAL = 4
-      globals.REGRESSION.LOGARITHMIC = 5    
+      globals.REGRESSION.LOGARITHMIC = 5
+      globals.REGRESSION.NUM_POINTS = 100
 
       #TODO
       #Somehow magically generate and catch the on click event
@@ -84,44 +85,16 @@ $ ->
         return numeric.dot(numeric.dot(numeric.inv(numeric.dot(numeric.transpose(x), x)), numeric.transpose(x)), y)
       
       #Returns a series object to draw on the chart canvas
-      generateHighchartsSeries:(regression_matrix, regression_type, x_bounds) ->
-        
-        #Get the correct regression type
-        switch regression_type
-        
-          when globals.REGRESSION.LINEAR then
-            ret =
-              name: 'Linear Trend',
-              data: [{ y : calculateRegressionPoint(regression_matrix, x_val, x_bounds.min), x : x_bounds.min },
-                     { y : calculateRegressionPoint(regression_matrix, x_val, x_bounds.max), x : x_bounds.max }]
+      generateHighchartsSeries:(regression_matrix, regression_type, x_bounds, series_name) ->
+  
+        data = for i in [0..NUMPOINTS]
+          x = (i / NUMPOINTS) * (x_bounds.max - x_bounds.min) + x_bounds.min
+          y =  calculateRegressionPoint (regression_matrix, x, regression_type)
+          {x: x, y: y}
           
-          when globals.REGRESSION.QUADRATIC then
-            #TODO actually generate a trend here
-            ret =
-              name: 'Quadratic Trend',
-              data: [{ y : calculateRegressionPoint(regression_matrix, x_val, x_bounds.min), x : x_bounds.min },
-                     { y : calculateRegressionPoint(regression_matrix, x_val, x_bounds.max), x : x_bounds.max }]
-          
-          when globals.REGRESSION.CUBIC then
-            #TODO actually generate a trend here
-            ret =
-              name: 'Cubic Trend',
-              data: [{ y : calculateRegressionPoint(regression_matrix, x_val, x_bounds.min), x : x_bounds.min },
-                     { y : calculateRegressionPoint(regression_matrix, x_val, x_bounds.max), x : x_bounds.max }]
-              
-          when globals.REGRESSION.EXPONENTIAL then
-            #TODO actually generate a trend here
-            ret =
-              name: 'Exponential Trend',
-              data: [{ y : calculateRegressionPoint(regression_matrix, x_val, x_bounds.min), x : x_bounds.min },
-                     { y : calculateRegressionPoint(regression_matrix, x_val, x_bounds.max), x : x_bounds.max }]
-
-          when globals.REGRESSION.LOGARITHMIC then
-            #TODO actually generate a trend here
-            ret =
-              name: 'Logarithmic Trend',
-              data: [{ y : calculateRegressionPoint(regression_matrix, x_val, x_bounds.min), x : x_bounds.min },
-                     { y : calculateRegressionPoint(regression_matrix, x_val, x_bounds.max), x : x_bounds.max }]
+        ret =
+          name: series_name,
+          data: data
       
       #Uses the regression matrix to calculate the y value given an x value
       calculateRegressionPoint:(regression_matrix, x_val, regression_type) ->
