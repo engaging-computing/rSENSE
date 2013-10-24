@@ -106,7 +106,12 @@ class ProjectsController < ApplicationController
       end
     else
       if(!params.try(:[], :project_name))
-        @project = Project.new({user_id: @cur_user.id, title:"#{@cur_user.firstname} #{@cur_user.lastname[0].pluralize} Project"})
+        if @cur_user.lastname[0].downcase == 's'
+            title = "#{@cur_user.firstname} #{@cur_user.lastname[0]}' Project"
+        else
+            title = "#{@cur_user.firstname} #{@cur_user.lastname[0]}'s Project"
+        end
+        @project = Project.new({user_id: @cur_user.id, title: title})
       else
         @project = Project.new({user_id: @cur_user.id, title: params[:project_name]})
       end
