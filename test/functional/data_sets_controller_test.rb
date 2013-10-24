@@ -23,21 +23,22 @@ class DataSetsControllerTest < ActionController::TestCase
   test "should create data_set" do
     assert_difference('DataSet.count') do
       post :create, { data_set: { content: @data_set.content, project_id: @data_set.project_id, 
-        title: @data_set.title, user_id: @data_set.user_id }}, { user_id: @kate }
+        title: "#{@data_set.title}#{Time.now().to_s}", user_id: @data_set.user_id }}, { user_id: @kate }
     end
 
     assert_redirected_to data_set_path(assigns(:data_set))
   end
 
   test "should create data_set and get JSON response" do
+    title = "#{@data_set.title}#{Time.now().to_s}"
     assert_difference('DataSet.count') do
       post :create, { format: 'json', data_set: { content: @data_set.content, 
-        project_id: @data_set.project_id, title: @data_set.title, 
+        project_id: @data_set.project_id, title: title, 
         user_id: @data_set.user_id }}, { user_id: @kate }
     end
 
     ds = JSON.parse(@response.body)
-    assert_equal ds['name'], @data_set.title, "Actually saved data"
+    assert_equal ds['name'], title, "Actually saved data"
 
     assert_response :success
   end
