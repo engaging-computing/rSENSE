@@ -90,40 +90,55 @@ $ ->
         switch regression_type
         
           when globals.REGRESSION.LINEAR then
-            series: [{
+            ret =
               name: 'Linear Trend',
-              data: [ { y : calculateLinearPoint(regression_matrix[0][2], regression_matrix[1][2], x_bounds.min), x : x_bounds.min },
-                      { y : calculateLinearPoint(regression_matrix[0][2], regression_matrix[1][2], x_bounds.max), x : x_bounds.max }]
-            }]
-            return series
+              data: [{ y : calculateRegressionPoint(regression_matrix, x_val, x_bounds.min), x : x_bounds.min },
+                     { y : calculateRegressionPoint(regression_matrix, x_val, x_bounds.max), x : x_bounds.max }]
           
           when globals.REGRESSION.QUADRATIC then
-            series: [{
-              #TODO actually generate a trend here
+            #TODO actually generate a trend here
+            ret =
               name: 'Quadratic Trend',
-              data: [ { y : calculateQuadraticPoint(regression_matrix[0][3], regression_matrix[1][3], regression_matrix[2][3], x_bounds.min, x : x_bounds.min },
-                      { y : calculateQuadraticPoint(regression_matrix[0][3], regression_matrix[1][3], regression_matrix[2][3], x_bounds.max, x : x_bounds.max }]
-            }]
+              data: [{ y : calculateRegressionPoint(regression_matrix, x_val, x_bounds.min), x : x_bounds.min },
+                     { y : calculateRegressionPoint(regression_matrix, x_val, x_bounds.max), x : x_bounds.max }]
           
           when globals.REGRESSION.CUBIC then
+            #TODO actually generate a trend here
+            ret =
+              name: 'Cubic Trend',
+              data: [{ y : calculateRegressionPoint(regression_matrix, x_val, x_bounds.min), x : x_bounds.min },
+                     { y : calculateRegressionPoint(regression_matrix, x_val, x_bounds.max), x : x_bounds.max }]
+              
+          when globals.REGRESSION.EXPONENTIAL then
+            #TODO actually generate a trend here
+            ret =
+              name: 'Exponential Trend',
+              data: [{ y : calculateRegressionPoint(regression_matrix, x_val, x_bounds.min), x : x_bounds.min },
+                     { y : calculateRegressionPoint(regression_matrix, x_val, x_bounds.max), x : x_bounds.max }]
+
+          when globals.REGRESSION.LOGARITHMIC then
+            #TODO actually generate a trend here
+            ret =
+              name: 'Logarithmic Trend',
+              data: [{ y : calculateRegressionPoint(regression_matrix, x_val, x_bounds.min), x : x_bounds.min },
+                     { y : calculateRegressionPoint(regression_matrix, x_val, x_bounds.max), x : x_bounds.max }]
+      
+      #Uses the regression matrix to calculate the y value given an x value
+      calculateRegressionPoint:(regression_matrix, x_val, regression_type) ->
+      
+        switch regression_type
+        
+          when globals.REGRESSION.LINEAR then
+            return regression_matrix[0][2] + regression_matrix[1][2] * x_val
+
+          when globals.REGRESSION.QUADRATIC then
+            return regression_matrix[0][3] + regression_matrix[1][3] * x_val + regression_matrix[2][3] * Math.pow(x_val, 2)
+          
+          when globals.REGRESSION.CUBIC then
+            return regression_matrix[0][4] + regression_matrix[1][4] * x_val + regression_matrix[2][4] * Math.pow(x_val, 2) + regression_matrix[3][4] * Math.pow(x_val, 3)
           
           when globals.REGRESSION.EXPONENTIAL then
+            return regression_matrix[0][2] + regression_matrix[1][2] * Math.exp(x_val)
           
           when globals.REGRESSION.LOGARITHMIC then
-          
-      calculateLinearPoint:(const_A, const_B, x_val) ->
-        return const_A + const_B * x_val
-      
-      calculateQuadraticPoint:(const_A, const_B, const_C, x_val) ->
-        return const_A + const_B * x_val  + const_C * Math.pow(x_val, 2)
-      
-      calculateCubicPoint:(const_A, const_B, const_C, const_D, x_val) ->
-        return const_A + const_B * x_val  + const_C * Math.pow(x_val, 2) + const_D * Math.pow(x_val, 3)
-      
-      calculateExponentialPoint:(const_A, const_B, x_val) ->
-        return const_A + const_B * Math.exp(x_val)
-      
-      calculateLogarithmicPoint:(const_A, const_B, x_val) ->
-        return const_A + const_B * Math.log(x_val)
-
-        
+            return regression_matrix[0][2] + regression_matrix[1][2] * Math.log(x_val)
