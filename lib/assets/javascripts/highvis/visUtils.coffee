@@ -267,7 +267,7 @@ $ ->
                 fieldID: -1
                 fieldName: name
                 typeID: 2
-                unitName: "ms"
+                unitName: "s"
 
         data.numericFields.push (data.fields.length - 1)
         data.normalFields.push (data.fields.length - 1)
