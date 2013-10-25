@@ -429,7 +429,47 @@ class ProjectsController < ApplicationController
           oo = Roo::Excelx.new(@file.path,false,:ignore)
           data = CSV.parse(oo.to_csv)
         elsif @file.original_filename.split(".").last == "csv" or @file.original_filename.split(".").last == "txt"
-          data = CSV.read(@file.tempfile)
+          #data = CSV.read(@file.tempfile)
+          
+          csv = Roo::CSV.new(@file.path)
+          tsv = Roo::CSV.new(@file.path, csv_options: {col_sep: "\t"})
+          ssv = Roo::CSV.new(@file.path, csv_options: {col_sep: ";"})
+          
+          csv = CSV.parse(csv.to_csv)
+          tsv = CSV.parse(tsv.to_csv)
+          ssv = CSV.parse(ssv.to_csv)
+          
+          csv_avg = 0
+          tsv_avg = 0
+          ssv_avg = 0
+          
+          csv.each do |csv_row|
+            csv_avg = csv_avg + csv_row.count  
+          end
+          
+          tsv.each do |tsv_row|
+            tsv_avg = tsv_avg + tsv_row.count  
+          end
+          
+          ssv.each do |ssv_row|
+            ssv_avg = ssv_avg + ssv_row.count  
+          end
+          
+          csv_avg = csv_avg / csv.count
+          tsv_avg = tsv_avg / tsv.count
+          ssv_avg = ssv_avg / ssv.count
+          
+          if( csv[0].count == csv_avg and csv.last.count == csv_avg and csv_avg > 1 )
+            data = csv
+          elsif( tsv[0].count == tsv_avg and tsv.last.count == tsv_avg and tsv_avg > 1 )
+            data = tsv
+          elsif( ssv[0].count == ssv_avg and ssv.last.count == ssv_avg and ssv_avg > 1 )
+            data = ssv
+          else
+            data = csv
+          end
+          
+          
         else
           error = "File type not supported."
         end
