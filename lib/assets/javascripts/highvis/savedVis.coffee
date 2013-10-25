@@ -95,7 +95,7 @@ $ ->
 
         req = $.ajax
             type: 'GET'
-            url: "/users/verify"
+            url: "/sessions/verify"
             dataType: 'json'
             data: {}
             success: (msg, status, details) ->
