@@ -320,6 +320,7 @@ $ ->
             url: "/projects/#{($ table).data('project-id')}"
             type: "GET"
             dataType: "json"
+            cache: false
             success: (data, textStatus, jqXHR) ->
               local = []
               remote = []
