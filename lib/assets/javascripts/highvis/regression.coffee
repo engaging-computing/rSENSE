@@ -41,10 +41,11 @@ $ ->
       globals.REGRESSION.LOGARITHMIC = 5
       globals.REGRESSION.NUM_POINTS = 100
 
+      ###
       #TODO
       #Somehow magically generate and catch the on click event
-      
-      getRegression:(x_in, y_in, regression_type, x_bounds) ->
+      ###
+      getRegression:(x_in, y_in, regression_type, x_bounds, series_name) ->
       
         #Get the correct regression type
         switch regression_type
@@ -76,27 +77,33 @@ $ ->
         
         #Calculate the regression matrix, and finally the highcharts series object
         regression_matrix = calculateRegression(x_fin, y_in)
-        result_series = generateHighchartsSeries(regression_matrix, regression_type, x_bounds)
-      
-      #Calculates the regression according to the provided x and y matrices.
+        result_series = generateHighchartsSeries(regression_matrix, regression_type, x_bounds, series_name)
+        
+      ###
+      Calculates the regression according to the provided x and y matrices.
+      ###
       calculateRegression:(x, y) ->
       
         #Return the resulting vector
         return numeric.dot(numeric.dot(numeric.inv(numeric.dot(numeric.transpose(x), x)), numeric.transpose(x)), y)
       
-      #Returns a series object to draw on the chart canvas
+      ###
+      Returns a series object to draw on the chart canvas
+      ###
       generateHighchartsSeries:(regression_matrix, regression_type, x_bounds, series_name) ->
   
-        data = for i in [0..NUMPOINTS]
-          x = (i / NUMPOINTS) * (x_bounds.max - x_bounds.min) + x_bounds.min
+        data = for i in [0..globals.REGRESSION.NUMPOINTS]
+          x = (i / globals.REGRESSION.NUMPOINTS) * (x_bounds.max - x_bounds.min) + x_bounds.min
           y =  calculateRegressionPoint (regression_matrix, x, regression_type)
           {x: x, y: y}
           
         ret =
           name: series_name,
           data: data
-      
-      #Uses the regression matrix to calculate the y value given an x value
+
+      ###
+      Uses the regression matrix to calculate the y value given an x value
+      ###
       calculateRegressionPoint:(regression_matrix, x_val, regression_type) ->
       
         switch regression_type

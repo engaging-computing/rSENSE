@@ -170,6 +170,55 @@ $ ->
                 options
 
         ###
+        Adds the regression tools to the control bar
+        ###
+        drawRegressionControls: () ->
+        
+            if (globals.options? and globals.options.isEmbed?) and not @chart? 
+              return
+
+            controls = '<div id="regressionControl" class="vis_controls">'
+
+            controls += "<h3 class='clean_shrink'><a href='#'>Regression Tools:</a></h3>"
+            controls += "<div class='outer_control_div' style='text-align:left'>"
+            
+            # Add x-axis label
+            controls += "<div id='regressionXAxis' class='inner_control_div' style='text-align:left'>X Axis: #{fieldTitle(data.fields[@xAxis])}</div>"
+            
+            # Add regression selector
+            controls += '<div class="inner_control_div"> Type: '
+            controls += '<select id="regressionSelector" class="control_select">'
+
+            regressions = ['Linear', 'Quadratic', 'Cubic', 'Exponential', 'Logarithmic']
+            for regression_type in regressions
+              controls += "<option value='#{regressions.indexOf(regression_type)}'>#{regression_type}</option>"
+
+            controls += "</select></div>"
+            
+            controls += "<button id='regressionButton' class='save_button btn'>Draw Regression</button>"
+            
+            controls += '</div></div>'
+
+            # Write HTML
+            ($ '#controldiv').append controls
+
+            ($ "#regressionControl button").button()
+            
+            ($ "#regressionButton").click ->
+              #Save a regression TODO
+              return
+            
+            #Set up accordion
+            globals.regressionOpen ?= 0
+
+            ($ '#regressionControl').accordion
+                collapsible:true
+                active:globals.regressionOpen
+
+            ($ '#regressionControl > h3').click ->
+                globals.regressionOpen = (globals.regressionOpen + 1) % 2
+
+        ###
         Call control drawing methods in order of apperance
         ###
         drawControls: ->
@@ -178,6 +227,7 @@ $ ->
             @drawXAxisControls()
             @drawYAxisControls()
             @drawToolControls()
+            @drawRegressionControls()
             @drawSaveControls()
 
         ###
@@ -476,3 +526,4 @@ $ ->
         globals.scatter = new Scatter "scatter_canvas"
     else
         globals.scatter = new DisabledVis "scatter_canvas"
+        
