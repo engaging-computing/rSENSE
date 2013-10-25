@@ -33,7 +33,7 @@ $ ->
 
           ($ '#projects').isotope('remove', ($ '.item'))
 
-          addProjectButton = ($ "<div id='addProjectButton' style='text-align:center;cursor: pointer;' class='item'><img style='width:66%;' class='hoverimage' src='/assets/green_plus_icon.svg'><br /><h4 style='color:#0a0;'>Create Project</h4></img></div>")
+          addProjectButton = ($ "<div id='addProjectButton' style='text-align:center;cursor: pointer;' class='item'><img style='width:66%; height:66%' class='hoverimage' src='/assets/green_plus_icon.png'><br /><h4 style='color:#0a0;'>Create Project</h4></img></div>")
 
           if logged_in?
             ($ '#projects').append(addProjectButton).isotope('insert', addProjectButton)
@@ -55,11 +55,14 @@ $ ->
 
     ($ '.projects_filter_checkbox').click ->
       ($ '#projects_search').submit()
-
+    
     ($ '.projects_sort_select').change ->
       ($ '#projects_search').submit()
 
-    ($ '#template_checkbox').change ->
+    ($ '#template_checkbox').click ->
+      ($ '#projects_search').submit()
+    
+    ($ '#curated_checkbox').click ->
       ($ '#projects_search').submit()
       
     ($ window).resize () ->

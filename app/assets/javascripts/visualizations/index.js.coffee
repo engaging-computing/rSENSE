@@ -14,7 +14,7 @@ $ ->
           <b>Owner: </b><a href='#{object.ownerUrl}'>#{object.ownerName}</a><br />
           <b>Project: </b><a href='#{object.projectUrl}'>#{object.projectName}</a><br />
           <b>Created: </b>#{object.timeAgoInWords} ago (on #{object.createdAt})<br />
-       </div>
+        </div>
       """
       
       newItem = ($ newItem)
