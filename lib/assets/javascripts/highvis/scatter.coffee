@@ -168,6 +168,12 @@ $ ->
                         options.dashStyle = globals.dashes[count % globals.dashes.length]
 
                 options
+       
+        ###
+        Updates x axis for regression.
+        ###
+        updateXRegression:() ->
+          $('#regressionXAxis').text("X Axis: #{fieldTitle(data.fields[@xAxis])}")
 
         ###
         Adds the regression tools to the control bar.
@@ -180,13 +186,13 @@ $ ->
             controls = '<div id="regressionControl" class="vis_controls">'
 
             controls += "<h3 class='clean_shrink'><a href='#'>Regression Tools:</a></h3>"
-            controls += "<div class='outer_control_div' style='text-align:left'>"
+            controls += "<div class='outer_control_div' style='text-align:center'>"
             
             # Add x axis label
             controls += "<div id='regressionXAxis' class='inner_control_div' style='text-align:left'>X Axis: #{fieldTitle(data.fields[@xAxis])}</div>"
             
             # Add y axis selector
-            controls += '<div class="inner_control_div"> Y Axis: '
+            controls += '<div class="inner_control_div" style="text-align:left"> Y Axis: '
             controls += '<select id="regressionYAxisSelector" class="control_select">'
 
             for fieldIndex in data.normalFields
@@ -195,7 +201,7 @@ $ ->
             controls += "</select></div>"
             
             # Add regression selector
-            controls += '<div class="inner_control_div"> Type: '
+            controls += '<div class="inner_control_div" style="text-align:left"> Type: '
             controls += '<select id="regressionSelector" class="control_select">'
 
             regressions = ['Linear', 'Quadratic', 'Cubic', 'Exponential', 'Logarithmic']
@@ -459,6 +465,7 @@ $ ->
                 @xAxis = Number selection
 
                 #@delayedUpdate()
+                @updateXRegression()
                 @resetExtremes()
                 @update()
 
