@@ -519,7 +519,6 @@ class ProjectsController < ApplicationController
         
         col.each_with_index do |c, i|
           c.each do |dp|
-            logger.info dp
             if dp[0] != "" and dp[0] != nil
               begin
                 f = Float(dp[0])
