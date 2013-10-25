@@ -27,10 +27,16 @@ class ProjectsController < ApplicationController
       templates = false
     end
     
-    if sort == "RATING"
-      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("like_count DESC").only_templates(templates)
+    if params.has_key? "curated_only"
+      curated = true
     else
-      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("#{sort}").only_templates(templates)
+      curated = false
+    end
+    
+    if sort == "RATING"
+      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("like_count DESC").only_templates(templates).only_curated(curated)
+    else
+      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("#{sort}").only_templates(templates).only_curated(curated)
     end
 
     #Featured list
@@ -100,7 +106,12 @@ class ProjectsController < ApplicationController
       end
     else
       if(!params.try(:[], :project_name))
-        @project = Project.new({user_id: @cur_user.id, title:"#{@cur_user.firstname} #{@cur_user.lastname[0].pluralize} Project"})
+        if @cur_user.lastname[0].downcase == 's'
+            title = "#{@cur_user.firstname} #{@cur_user.lastname[0]}' Project"
+        else
+            title = "#{@cur_user.firstname} #{@cur_user.lastname[0]}'s Project"
+        end
+        @project = Project.new({user_id: @cur_user.id, title: title})
       else
         @project = Project.new({user_id: @cur_user.id, title: params[:project_name]})
       end

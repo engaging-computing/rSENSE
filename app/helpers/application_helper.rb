@@ -44,9 +44,11 @@ module ApplicationHelper
     end
 
     case obj
+    when DataSet
+      ((obj.owner.id == @cur_user.try(:id)) && obj.project.lock == false) || @cur_user.try(:admin)
     when User
       (obj.id == @cur_user.try(:id)) || @cur_user.try(:admin)
-    when Project, DataSet, Visualization, Tutorial, MediaObject, News
+    when Project, Visualization, Tutorial, MediaObject, News
       (obj.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin)
     when Field
       (obj.owner.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin)
@@ -63,7 +65,7 @@ module ApplicationHelper
 
     case obj
     when DataSet
-      (obj.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin) || (obj.project.owner.id == @cur_user.try(:id))
+      ((obj.owner.id == @cur_user.try(:id)) && obj.project.lock == false) || @cur_user.try(:admin) || (obj.project.owner.id == @cur_user.try(:id))
     when Project, Visualization, Tutorial
       (obj.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin)
     else
@@ -80,7 +82,9 @@ module ApplicationHelper
     case obj
     when User, Project, Tutorial, News
       @cur_user.try(:admin)
-    when DataSet, Visualization, MediaObject
+    when DataSet, Visualization
+      ((obj.owner.id == @cur_user.try(:id)) && obj.project.lock == false) || @cur_user.try(:admin)
+    when MediaObject
       (obj.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin)
     when Field
       (obj.owner.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin)

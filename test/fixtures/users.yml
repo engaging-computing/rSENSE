@@ -6,7 +6,6 @@ nixon:
   username: nixon
   email: nixon@whitehouse.gov
   content: 
-  group_id: 
   validated: true
   # Password is "12345"
   password_digest: $2a$10$aK2OsTVTnWuPVmDthm9pj.vDApO9VGNgRwvwHmwzVQ0ScmW3BOPjC
@@ -18,18 +17,17 @@ kate:
   username: kate
   email: kcarcia@cs.uml.edu 
   content: 
-  group_id: 
   validated: true
   # Password is "12345"
   password_digest: $2a$10$aK2OsTVTnWuPVmDthm9pj.vDApO9VGNgRwvwHmwzVQ0ScmW3BOPjC
   admin: false
   
-new_user:
+crunch:
   firstname: Captain
   lastname: Crunch
   username: crunch
   email: captncrunch@example.com
-  content: 
-  group_id: 
+  content:  
   validated: false
-  password_digest: 
+  password_digest: $2a$10$aK2OsTVTnWuPVmDthm9pj.vDApO9VGNgRwvwHmwzVQ0ScmW3BOPjC
+  validation_key: abcd
