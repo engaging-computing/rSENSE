@@ -47,7 +47,8 @@ $ ->
             @visibleClusters = if data.dataPoints.length > 100 then 1 else 0
             @heatmapSelection = @HEATMAP_NONE
 
-            @heatmapRadius = 10
+            # Inited in start
+            #@heatmapRadius = 1
 
         serializationCleanup: ->
             delete @gmap
@@ -170,7 +171,7 @@ $ ->
                     latlng = new google.maps.LatLng(lat, lon)
                     
                     # put aside line info if nessisary
-                    if @timeLines?
+                    if @timeLines? and dataPoint[data.timeFields[0]] isnt null and not(isNaN dataPoint[data.timeFields[0]])
                       @timeLines[groupIndex].push
                         time: dataPoint[data.timeFields[0]]
                         latlng: latlng
@@ -238,6 +239,17 @@ $ ->
             # Deal with zoom
             if @zoomLevel?
               @gmap.setZoom @zoomLevel
+              
+            # Figure default heatmap
+            if not @heatmapRadius?
+              @heatmapRadius = 1
+              dist = google.maps.geometry.spherical.computeDistanceBetween latlngbounds.getNorthEast(), latlngbounds.getSouthWest()
+              pixelDist = @getPixelDiag()
+              dpp = pixelDist / dist
+              
+              # Make sure the radius is at least 10px
+              while @heatmapRadius * dpp < 10
+                @heatmapRadius *= 10
               
             # Deal with zoom area
             if @savedCenter?
@@ -420,7 +432,7 @@ $ ->
               range: 'min'
               value: (Math.log @heatmapRadius) / (Math.log 10)
               min: 0
-              max: 5
+              max: 6
               values: 0
               slide: (event, ui) =>
                 newRadius = Math.pow(10, Number ui.value)
@@ -481,7 +493,7 @@ $ ->
           
             pixelDensity = dist / pixelDist
             
-            return Math.min(Math.ceil(@heatmapRadius / pixelDensity), @getPixelDiag() / 2)
+            return Math.min(Math.ceil(@heatmapRadius / pixelDensity), @getPixelDiag() / 4)
           else
             return @heatmapPixelRadius
             

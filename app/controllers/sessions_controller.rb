@@ -17,6 +17,8 @@ class SessionsController < ApplicationController
     if user and user.authenticate(params[:password])  
       good = true
       session[:user_id] = user.id
+      user = User.find(user.id)
+      user.update_attributes(:last_login => Time.now())
       response = { status: 'success', authenticity_token: form_authenticity_token }    
     else
       status = 403
