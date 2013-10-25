@@ -170,7 +170,7 @@ $ ->
                 options
 
         ###
-        Adds the regression tools to the control bar
+        Adds the regression tools to the control bar.
         ###
         drawRegressionControls: () ->
         
@@ -182,8 +182,17 @@ $ ->
             controls += "<h3 class='clean_shrink'><a href='#'>Regression Tools:</a></h3>"
             controls += "<div class='outer_control_div' style='text-align:left'>"
             
-            # Add x-axis label
+            # Add x axis label
             controls += "<div id='regressionXAxis' class='inner_control_div' style='text-align:left'>X Axis: #{fieldTitle(data.fields[@xAxis])}</div>"
+            
+            # Add y axis selector
+            controls += '<div class="inner_control_div"> Y Axis: '
+            controls += '<select id="regressionYAxisSelector" class="control_select">'
+
+            for fieldIndex in data.normalFields
+              controls += "<option value='#{data.fields[fieldIndex]}'>#{fieldTitle(data.fields[fieldIndex])}</option>"
+
+            controls += "</select></div>"
             
             # Add regression selector
             controls += '<div class="inner_control_div"> Type: '
