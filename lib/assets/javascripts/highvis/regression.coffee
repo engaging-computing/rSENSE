@@ -42,8 +42,7 @@ $ ->
       globals.REGRESSION.NUM_POINTS = 100
 
       ###
-      #TODO
-      #Somehow magically generate and catch the on click event
+      Calculates a regression and returns it as a highcharts series.
       ###
       getRegression:(x_in, y_in, regression_type, x_bounds, series_name) ->
       
@@ -79,6 +78,8 @@ $ ->
         regression_matrix = calculateRegression(x_fin, y_in)
         result_series = generateHighchartsSeries(regression_matrix, regression_type, x_bounds, series_name)
         
+        return result_series
+        
       ###
       Calculates the regression according to the provided x and y matrices.
       ###
@@ -88,7 +89,7 @@ $ ->
         return numeric.dot(numeric.dot(numeric.inv(numeric.dot(numeric.transpose(x), x)), numeric.transpose(x)), y)
       
       ###
-      Returns a series object to draw on the chart canvas
+      Returns a series object to draw on the chart canvas.
       ###
       generateHighchartsSeries:(regression_matrix, regression_type, x_bounds, series_name) ->
   
@@ -102,7 +103,7 @@ $ ->
           data: data
 
       ###
-      Uses the regression matrix to calculate the y value given an x value
+      Uses the regression matrix to calculate the y value given an x value.
       ###
       calculateRegressionPoint:(regression_matrix, x_val, regression_type) ->
       
