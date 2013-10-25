@@ -29,7 +29,7 @@ $ ->
     #Save button
     info_box.find('.info_save_link').click (e)->
       e.preventDefault()
-
+     
       #Build the data object to send to the controller
       type = root.attr('type')
       field_name = root.attr('field')
@@ -44,6 +44,8 @@ $ ->
       root.find('span.btn').addClass 'disabled'
       root.find('span.btn').button 'toggle'
 
+      edit_box.popover "destroy"
+      
       #Make the request to update 
       $.ajax
         url: href

@@ -119,22 +119,24 @@ $ ->
             controls += '<select id="groupSelector" class="control_select">'
 
             for fieldIndex in data.textFields
-                sel = if fieldIndex is data.groupingFieldIndex then 'selected' else ''
-                controls += "<option value='#{Number fieldIndex}' #{sel}>#{data.fields[fieldIndex].fieldName}</option>"
+              sel = if fieldIndex is data.groupingFieldIndex then 'selected' else ''
+              controls += "<option value='#{Number fieldIndex}' #{sel}>#{data.fields[fieldIndex].fieldName}</option>"
 
             controls += "</select></div>"
 
             # Populate choices
             counter = 0
             if data.groups.length > 1
+              controls += "<div class='inner_control_div'>"
               controls += "<input class='group_input_all' type='checkbox' value='#{gIndex}' #{if globals.groupSelection.length == data.groups.length then "checked" else ""}/>&nbsp"
+              controls += "Check All </div>"
             for group, gIndex in data.groups
-                controls += "<div class='inner_control_div' style=\"color:#{globals.colors[counter % globals.colors.length]};\">"
+              controls += "<div class='inner_control_div' style=\"color:#{globals.colors[counter % globals.colors.length]};\">"
 
-                controls += "<input class='group_input' type='checkbox' value='#{gIndex}' #{if (Number gIndex) in globals.groupSelection then "checked" else ""}/>&nbsp"
-                controls += "#{group}"
-                controls += "</div>"
-                counter += 1
+              controls += "<input class='group_input' type='checkbox' value='#{gIndex}' #{if (Number gIndex) in globals.groupSelection then "checked" else ""}/>&nbsp"
+              controls += "#{group}"
+              controls += "</div>"
+              counter += 1
             controls += '</div></div>'
 
             # Write HTML
@@ -142,28 +144,28 @@ $ ->
 
             # Make group select handler
             ($ '#groupSelector').change (e) =>
-                element = e.target or e.srcElement
-                data.setGroupIndex (Number element.value)
-                globals.groupSelection = for vals, keys in data.groups
-                    Number keys
+              element = e.target or e.srcElement
+              data.setGroupIndex (Number element.value)
+              globals.groupSelection = for vals, keys in data.groups
+                  Number keys
 
-                if startOnGroup
-                    @start()
-                else
-                    @delayedUpdate()
-                    
-                @drawControls()
+              if startOnGroup
+                @start()
+              else
+                @delayedUpdate()
+                  
+              @drawControls()
 
             # Make group checkbox handler
             ($ '.group_input').click (e) =>
-                selection = []
-                ($ '.group_input').each ()->
-                    if @checked
-                        selection.push Number @value
-                    else
-                globals.groupSelection = selection
-                
-                @delayedUpdate()
+              selection = []
+              ($ '.group_input').each ()->
+                if @checked
+                  selection.push Number @value
+                else
+              globals.groupSelection = selection
+              
+              @delayedUpdate()
                 
             # Make group checkbox for all groups
             ($ '.group_input_all').click (e) =>
@@ -297,6 +299,10 @@ $ ->
                     backgroundColor: 'white'
                     symbolWidth:60
                     itemWidth: 200
+                    useHTML: true
+                    itemStyle:
+                      width: 140
+                      cursor: 'default'
                 #loading: {}
                 plotOptions:
                     series:
@@ -372,18 +378,31 @@ $ ->
                 temp =
                     text: 'Y-Values'
             else
+              if "#{data.fields[globals.fieldSelection[0]].unitName}" == ""
+                temp = text: "#{data.fields[globals.fieldSelection[0]].fieldName}"
+              else
                 temp =
                     text: "#{data.fields[globals.fieldSelection[0]].fieldName} (#{data.fields[globals.fieldSelection[0]].unitName})"
                     
             @chart.yAxis[0].setTitle title, false
         
+            @chart.addSeries
+              name: ' '
+              color: '#FFF'
+              width: 0
+        
             #Remove curent data
-            while @chart.series.length isnt 0
+            while @chart.series.length isnt 1
                 @chart.series[0].remove(false)
 
             #Draw legend
             for options in @buildLegendSeries()
               @chart.addSeries options, false
+              
+            foo = =>
+              if globals.fieldSelection.length isnt 0
+                @chart.series[0].remove(true)
+            setTimeout foo, 0
             
         ###
         Performs an update while displaying the loading text

@@ -270,7 +270,7 @@ $ ->
                     
                     if not fpEq newBinSize, @binSize
                         @binSize = newBinSize
-                        ($ '#binSizeInput').attr("value", "#{@binSize}")
+                        ($ '#binSizeInput').val "#{@binSize}"
                         @delayedUpdate()
             
             #Set up accordion
@@ -288,11 +288,11 @@ $ ->
                     newBinSize = Number ($ '#binSizeInput').val()
 
                     if isNaN newBinSize
-                        alert "Please enter a valid number."
+                        ($ "#binSizeInput").errorFlash()
                         return
                 
                     if newBinSize <= 0
-                        alert "Please enter a positive bin size."
+                        ($ "#binSizeInput").errorFlash()
                         return
 
                     if ((@globalmax - @globalmin) / newBinSize) < @MAX_NUM_BINS

@@ -87,6 +87,19 @@ input.name_edit_box, input.unit_edit_box, .name_add_box, .unit_add_box, .type_ad
   width: 100%;
 }
 
+#notices, #lock_notice, #hidden_notice
+{
+ i
+ {
+   background-color: yellow; 
+ }
+ #id_notice
+ {
+  font-size: 1.1em; 
+  font-weight:bold;
+ }
+}
+
 .center
 {
   text-align: center;
@@ -138,7 +151,6 @@ input.projects_add_filter_checkbox
   border: 1px solid #b5b5b5;
   border-top: 0px;
   padding: 20px;
-  
 }
 
 .box-slider
