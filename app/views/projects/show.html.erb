@@ -162,7 +162,7 @@
     
       <!-- ##### SESSION CREATION MENU ##### -->
       <%=render layout: "shared/box", locals: {title: 'Create Data Set', width:'5', unique_id: 'create_data_set', should_hide: !(@cur_user.try(:id) && @project.fields.count() > 0)} do %>
-        <% if can_edit? @project || !@project.lock%>
+        <% if can_edit?(@project) || !@project.lock%>
           <div class="row-fluid">
             <div class="span4 center">
             <%= link_to :controller => :data_sets, :action => :manualEntry do %>
