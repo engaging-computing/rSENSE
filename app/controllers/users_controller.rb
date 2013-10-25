@@ -365,17 +365,6 @@ class UsersController < ApplicationController
     end
   end
 
-  # GET /users/verify
-  def verify
-    respond_to do |format|
-      if @cur_user == nil
-        format.json {render json: "{}", status: :unauthorized}
-      else
-        format.json {render json: "{}", status: :ok}
-      end
-    end
-  end
-
   # GET /users/pw_reset
   def pw_request
     # Show the form
