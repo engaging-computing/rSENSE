@@ -54,3 +54,9 @@ $ ->
   ($ 'a.media_object_delete').click (e) ->
     e.preventDefault()
     delete_media_object ($ @)
+    
+  ($ '.mo_image a').click (e) ->
+    e.preventDefault()
+    src = ($ @).attr("href")
+    ($ '#mo_image_modal').find('#mo_image').html("<img src='#{src}' ></img>")
+    ($ '#mo_image_modal').modal()
