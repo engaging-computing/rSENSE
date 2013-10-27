@@ -243,7 +243,7 @@ $ ->
             # Figure default heatmap
             if not @heatmapRadius?
               @heatmapRadius = 1
-              dist = google.maps.geometry.spherical.computeDistanceBetween latlngbounds.getNorthEast(), latlngbounds.getSouthWest()
+              dist = @getDiag(latlngbounds)
               pixelDist = @getPixelDiag()
               dpp = pixelDist / dist
               
@@ -366,6 +366,7 @@ $ ->
             controls += "<br>"
             controls += "<div class='inner_control_div'> Heatmap Radius: "
             controls += "<input id='radiusText' value='#{@heatmapRadius}'></input>m</div>"
+            controls += "<div class='inner_control_div'> <div id='heatmapErrorText'> </div></div>"
             controls += "<div id='heatmapSlider' style='width:95%'></div>"
 
             # Other
@@ -461,7 +462,10 @@ $ ->
           ww = ($ "##{@canvas}").width()
           hh = ($ "##{@canvas}").height()
           Math.sqrt(ww*ww + hh*hh)
-            
+          
+        getDiag: (latlngbounds = @gmap.getBounds()) ->
+          google.maps.geometry.spherical.computeDistanceBetween latlngbounds.getNorthEast(), latlngbounds.getSouthWest()
+          
         getHeatmapScale: () ->
           viewBounds = @gmap.getBounds()
           # Extends bounds by radius of heatmap
@@ -489,11 +493,24 @@ $ ->
             
             a = @projOverlay.projectPixels(heatBounds.getNorthEast())
             b = @projOverlay.projectPixels(heatBounds.getSouthWest())
-            pixelDist = Math.sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y))
-          
-            pixelDensity = dist / pixelDist
             
-            return Math.min(Math.ceil(@heatmapRadius / pixelDensity), @getPixelDiag() / 4)
+            pixelDist = Math.sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y))
+            
+            pixelDensity = dist / pixelDist
+            newRad = Math.ceil(@heatmapRadius / pixelDensity)
+            maxRad = Math.ceil(@getPixelDiag() / 4)
+            
+            # Single point check
+            if pixelDist is 0
+              newRad = Math.ceil(@heatmapRadius * (@getPixelDiag() / @getDiag()))
+            
+            if newRad <= maxRad
+              ($ '#heatmapErrorText').html ''
+              return newRad
+            else
+              act = Math.ceil(maxRad * (@getDiag() / @getPixelDiag()))
+              ($ '#heatmapErrorText').html "The radius had to be decreased to #{act}m for performance reasons. It will restore to your selection as the map is zoomed out."
+              return maxRad
           else
             return @heatmapPixelRadius
             
