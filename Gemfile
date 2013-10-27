@@ -14,6 +14,7 @@ gem 'pg'
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
   gem 'coffee-rails', '~> 3.2.1'
+  gem 'coffee-script-source', '1.5.0'
   gem 'uglifier', '>= 1.0.3'
   gem 'turbo-sprockets-rails3'
 end
