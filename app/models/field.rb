@@ -6,7 +6,7 @@ class Field < ActiveRecord::Base
 
   alias_attribute :owner, :project
 
-  default_scope :order => :field_type
+  default_scope order("field_type ASC, created_at ASC")
 
   def to_hash(recurse = true)
     h = {
