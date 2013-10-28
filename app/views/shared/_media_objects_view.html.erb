@@ -45,14 +45,12 @@
       <div class="center"><button class='btn btn-success center' id="filechooser" style="margin-top:15px">Add File</button></div>
       <input type="file" name="upload" id="upload" style="display:none;"/>
       <input name="non_wys" type="hidden" value="<%= request.url %>"/>
-
     <% end %>
   </div>
   
-  <div class="modal fade" id="mo_image_modal" style="max-width:800px;" aria-hidden="true">
-    <div id="mo_image" style="width:100%" class="center">
-    </div>
-    <div class="modal-footer" style="height:1.5em">
+  <div class="modal fade" id="mo_image_modal" aria-hidden="true">
+    <div id="mo_image" style="width:100%" class="center"></div>
+    <div class="modal-footer">
       <button type="button" class="btn btn-small" data-dismiss="modal">Close</button>
     </div>
   </div>
