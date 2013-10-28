@@ -33,6 +33,12 @@ $ ->
     if data.savedData?
         hydrate = new Hydrate()
         globals.extendObject data, (hydrate.parse data.savedData)
+        
+        # Check for motion reference and remove
+        index = ($.inArray 'Motion', data.allVis)
+        if index isnt -1
+          data.allVis.splice index, 1
+        
         delete data.savedData
 
     data.COMBINED_FIELD = 1
