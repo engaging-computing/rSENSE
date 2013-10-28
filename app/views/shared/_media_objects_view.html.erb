@@ -11,8 +11,13 @@
     <tbody>
       <% object.media_objects.all.each do |mo| %>
         <tr class="<%= cycle('feed-even','feed-odd') %> media">
-          <td class="media_icon"><div><%= link_to (media_object_thumbnail_helper mo), media_object_path(mo)  %></div></td>
-          <td style="max-width:140px;"><div class="truncate"><%= link_to mo.name, media_object_path(mo)%></div></td>
+          <% if !(mo.media_type == 'image') %>
+            <td class="media_icon"><div><%= link_to (media_object_thumbnail_helper mo), mo.src %></div></td>
+            <td style="max-width:140px;"><div class="truncate"><%= link_to mo.name, mo.src%></div></td>
+          <% else %>
+            <td class="media_icon mo_image"><div><%= link_to (media_object_thumbnail_helper mo), mo.src %></div></td>
+            <td class="mo_image" style="max-width:140px;"><div class="truncate"><%= link_to mo.name, mo.src%></div></td>
+          <% end %>
           <td>
             <div class="controls">
               <% if can_edit? mo %>
@@ -40,7 +45,13 @@
       <div class="center"><button class='btn btn-success center' id="filechooser" style="margin-top:15px">Add File</button></div>
       <input type="file" name="upload" id="upload" style="display:none;"/>
       <input name="non_wys" type="hidden" value="<%= request.url %>"/>
-
     <% end %>
+  </div>
+  
+  <div class="modal fade" id="mo_image_modal" aria-hidden="true">
+    <div id="mo_image" style="width:100%" class="center"></div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-small" data-dismiss="modal">Close</button>
+    </div>
   </div>
 </div>
