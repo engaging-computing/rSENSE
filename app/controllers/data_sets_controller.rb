@@ -274,17 +274,21 @@ class DataSetsController < ApplicationController
   # GET /projects/1/export
   def export
 
-    #require 'CSV'
+    require 'uri'
     require 'tempfile'
 
     @project = Project.find params[:id]
     @datasets = []
     
-    if File.directory? "/tmp/rsense-export-#{@project.id}"
-      FileUtils.rm_rf "/tmp/rsense-export-#{@project.id}", secure: true
+    pname = @project.name.tr(" ", "_").tr("/", "_").gsub(/\W/,'').to_s
+    
+    zip_name = URI.escape "#{@project.id}-#{pname}"
+    
+    if File.directory? "/tmp/export-#{@project.id}-#{pname}"
+      FileUtils.rm_rf "/tmp/export-#{@project.id}-#{pname}", secure: true
     end
     
-    FileUtils.mkdir_p "/tmp/rsense-export-#{@project.id}"
+    FileUtils.mkdir_p "/tmp/export-#{@project.id}-#{pname}"
 
     # build list of datasets
     if( !params[:datasets].nil? )
@@ -301,22 +305,20 @@ class DataSetsController < ApplicationController
       @datasets = DataSet.find_all_by_project_id params[:id]
     end
 
-    folder_name = "#{@project.name}"
+    folder_name = pname
 
     @datasets.each do |dataset|
-      
-      puts dataset.title
-      
+            
       if !dataset.hidden?
   
         field_order = []
         file_name = "#{dataset.title}".tr(" ", "_").tr("/", "_").gsub(/\W/,'').to_s
-        file_name = "#{file_name}.csv"
+        file_name = "#{dataset.id}-#{file_name}.csv"
         
         if file_name != ""
-          tmp_file = File.new( "/tmp/rsense-export-#{@project.id}/#{file_name}", 'w+' )
+          tmp_file = File.new( "/tmp/export-#{@project.id}-#{pname}/#{file_name}", 'w+' )
         else
-          tmp_file = File.new( "/tmp/rsense-export-#{@project.id}/#{@project.id}", 'w+' )
+          tmp_file = File.new( "/tmp/export-#{@project.id}-#{pname}/#{@project.id}", 'w+' )
         end
           
         @project.fields.each_with_index do |field, f_index|
@@ -349,9 +351,9 @@ class DataSetsController < ApplicationController
       
     end
     
-    zip_file = "/tmp/rsense-export-#{@project.id}/#{@project.id}.zip"
+    zip_file = "/tmp/export-#{@project.id}-#{pname}/#{zip_name}.zip"
         
-    system("cd /tmp && zip -r rsense-export-#{@project.id}/#{@project.id}.zip rsense-export-#{@project.id}/")
+    system("cd /tmp && zip -r export-#{@project.id}-#{pname}/#{zip_name}.zip export-#{@project.id}-#{pname}/")
     
     respond_to do |format|
       format.html { send_file zip_file, :type => 'file/zip', :x_sendfile => true }
