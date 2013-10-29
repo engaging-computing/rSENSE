@@ -1,11 +1,11 @@
-<h1>Change Password for <%= @user.username %></h1>
+<h2>Change Password for <%= @user.username %></h2>
 
   <div class="row">
     <div class="span12">
       <%= form_for(@user) do %>
         <% unless @cur_user.admin? or session[:pw_change] %>
           <p>
-          <%= label_tag :current_password, "Current Password" %>
+          <%= label_tag :current_password, "Current Password:" %>
           <%= password_field_tag :current_password, @cur_pw %>
           </p>
         <% end %>
@@ -14,11 +14,11 @@
           change your password now.</p>
         <% end %>
         <p>
-        <%= label_tag :password, "New Password" %>
+        <%= label_tag :password, "New Password:" %>
         <%= password_field_tag :password %>
         </p>
         <p>
-        <%= label_tag :password_confirmation, "New Password Again" %>
+        <%= label_tag :password_confirmation, "Retype Your Password:" %>
         <%= password_field_tag :password_confirmation %>
         </p>
         <p>
@@ -37,16 +37,16 @@
       <%= form_for(@user) do %>
         <% unless @cur_user.admin? %>
           <p>
-          <%= label_tag :password, "Password" %>
+          <%= label_tag :password, "Password:" %>
           <%= password_field_tag :password %>
           </p>
         <% end %>
         <p>
-        <%= label_tag :email, "Email" %>
+        <%= label_tag :email, "Email:" %>
         <%= text_field_tag :email %>
         </p>
         <p>
-        <%= label_tag :email_confirmation, "Email Again" %>
+        <%= label_tag :email_confirmation, "Retype Your Email:" %>
         <%= text_field_tag :email_confirmation %>
         </p>
         <p>
