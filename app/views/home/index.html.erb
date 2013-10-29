@@ -29,7 +29,7 @@
             <div class='c_item' style="height:198px;">
              
               <%if i.featured_media_id != nil%>
-                <div class="caroucell" style=<%= "background-image:url(" + MediaObject.find(i.featured_media_id).src + ")"%>>
+                <div class="caroucell" style=<%= "height:120px;background-image:url(" + MediaObject.find(i.featured_media_id).src + ")"%>>
                 </div>
               <%end%>
           
