@@ -87,17 +87,13 @@ i.icon-white
   background-color: #e8e8e8;
   color: #000000;
 
-  border-style: groove;
-  border-color: white;
-  border-width: 2px;
-
-  margin: 0px 5px 5px 5px;
+  margin: 0px 8px 8px 8px;
 
   height: 133px;
   
-  -webkit-border-radius: 6px 6px 6px 6px;
-     -moz-border-radius: 6px 6px 6px 6px;
-          border-radius: 6px 6px 6px 6px;
+     -moz-box-shadow: 0 2px 3px 1px #9E9E9E;
+  -webkit-box-shadow: 0 2px 3px 1px #9E9E9E;
+          box-shadow: 0 2px 3px 1px #9E9E9E;  
 
   /*box-shadow: 0px 0px 10px #999;*/
 
@@ -105,20 +101,13 @@ i.icon-white
 
 .item
 {
-  margin:5px 5px 5px 5px;
-  padding:10px;
+  margin:8px 8px 8px 8px;
 
   background-color: #e8e8e8;
 
-  border-style: groove;
-  border-color: white;
-  border-width: 2px;
-
-  -webkit-border-radius: 6px 6px 6px 6px;
-     -moz-border-radius: 6px 6px 6px 6px;
-          border-radius: 6px 6px 6px 6px;
-
-  /*box-shadow: 0px 0px 10px #999;*/
+     -moz-box-shadow: 0 2px 3px 1px #9E9E9E;
+  -webkit-box-shadow: 0 2px 3px 1px #9E9E9E;
+          box-shadow: 0 2px 3px 1px #9E9E9E;  
 
 }
 
@@ -146,11 +135,19 @@ i.icon-white
   }
 }
 
+.caroucell {
+  height:100%;
+  background-position:center;
+  background-repeat: no-repeat;
+  background-size: 120%;
+  overflow:hidden;
+}
+
 .c_item:hover
 {
-  -moz-box-shadow: 0 0 15px 1px #9E9E9E;
-  -webkit-box-shadow: 0 0 15px 1px #9E9E9E;
-  box-shadow: 0 0 15px 1px #9E9E9E;  
+  -moz-box-shadow: 0 1px 15px 1px #9E9E9E;
+  -webkit-box-shadow: 0 1px 15px 1px #9E9E9E;
+  box-shadow: 0 1px 15px 1px #9E9E9E;  
 }
 
 .item > img

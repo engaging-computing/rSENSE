@@ -53,7 +53,7 @@ $ ->
   helpers.confirm_delete = (objName) ->
     confirm("Are you sure you want to delete #{objName}?")
     
-  helpers.isotope_layout = (selector, colWidth = 200, colSep = 35) ->
+  helpers.isotope_layout = (selector, colWidth = 200, colSep = 16) ->
   
     numCols = 1
 
