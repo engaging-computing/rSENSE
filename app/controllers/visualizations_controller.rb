@@ -298,16 +298,16 @@ class VisualizationsController < ApplicationController
     
     rel_vis.push "Table"
     
-    if field_count[TIME_TYPE] > 0 and field_count[NUMBER_TYPE] > 0 and format_data.count > 1
-      rel_vis.push "Motion"
-    end
+#     if field_count[TIME_TYPE] > 0 and field_count[NUMBER_TYPE] > 0 and format_data.count > 1
+#       rel_vis.push "Motion"
+#     end
     
     if hasPics
       rel_vis.push "Photos"
     end
     
     # A list of all current visualizations
-    allVis =  ['Map','Timeline','Scatter','Bar','Histogram','Table','Motion','Photos']
+    allVis =  ['Map','Timeline','Scatter','Bar','Histogram','Table','Photos']
 
     # The finalized data object
     @Data = { projectName: @project.title, projectID: @project.id, fields: data_fields, dataPoints: format_data, metadata: metadata, relVis: rel_vis, allVis: allVis }
