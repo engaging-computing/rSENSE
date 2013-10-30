@@ -17,7 +17,10 @@ $ ->
       path =  "#{type}/#{row_id}?#{params}"
     
     if Boolean(can_edit)
-      CKEDITOR.inline elem, filebrowserImageUploadUrl : "/media_objects/saveMedia/#{path}"
+      CKEDITOR.inline elem, 
+        filebrowserImageUploadUrl: "/media_objects/saveMedia/#{path}"
+        toolbar: constants.CKTOOLBAR_NORM
+        
       button = root.find('#content_save_button')
       ($ elem).focus ->
         button.show()
