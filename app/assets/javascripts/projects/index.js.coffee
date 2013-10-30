@@ -35,7 +35,7 @@ $ ->
 
           ($ '#projects').isotope('remove', ($ '.item'))
 
-          addProjectButton = ($ "<div id='addProjectButton' style='text-align:center;cursor: pointer;' class='item'><img style='width:66%; height:66%' class='hoverimage' src='/assets/green_plus_icon.png'><br /><h4 style='color:#0a0;'>Create Project</h4></img></div>")
+          addProjectButton = ($ "<div id='addProjectButton' style='text-align:center;cursor: pointer;padding-top:5px' class='item'><img style='width:50%; height:50%' src='/assets/green_plus_icon.png'/><br /><h4 style='color:#0a0;'>Create Project</h4></div>")
 
           if logged_in?
             ($ '#projects').append(addProjectButton).isotope('insert', addProjectButton)
