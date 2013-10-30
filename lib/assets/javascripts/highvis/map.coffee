@@ -207,6 +207,7 @@ $ ->
                       position: latlng
                       icon: pinSym
                       desc: label
+                      visible: ((groupIndex in globals.groupSelection) and @visibleMarkers is 1)
                       
                     @oms.addMarker newMarker
                     
@@ -233,6 +234,7 @@ $ ->
                   strokeColor: globals.colors[index]
                   strokeOpacity: 1.0
                   strokeWeight: 2
+                  visible: ((index in globals.groupSelection) and @visibleLines is 1)
                   
                 @timeLines[index].setMap(@gmap)
 
@@ -289,11 +291,14 @@ $ ->
                 
               @update()
             
+            checkProj = =>
+              if @projOverlay.getProjection() is undefined
+                google.maps.event.addListenerOnce @gmap, "idle", checkProj
+              else
+                finalInit()
+            
             # Need to wait for the projection to become available for updates
-            if @gmap.getProjection() is undefined
-              google.maps.event.addListenerOnce @gmap, "projection_changed", finalInit
-            else
-              finalInit()
+            checkProj()
         
         update: ->
           # Disable old heatmap (if there)
