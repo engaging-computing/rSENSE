@@ -167,7 +167,13 @@ class UsersController < ApplicationController
     @user = User.new
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html do
+        if @cur_user.nil?
+          render # new.html.erb
+        else
+          redirect_to '/'
+        end
+      end
       format.json { render json: @user.to_hash(false) }
     end
   end
