@@ -111,6 +111,11 @@ i.icon-white
 
 }
 
+.item:hover
+{
+  background-color: #cfcfcf;
+} 
+
 .c_item
 {
   margin:5px 5px 5px 5px;
@@ -148,12 +153,6 @@ i.icon-white
   -moz-box-shadow: 0 1px 15px 1px #9E9E9E;
   -webkit-box-shadow: 0 1px 15px 1px #9E9E9E;
   box-shadow: 0 1px 15px 1px #9E9E9E;  
-}
-
-.item > img
-{
-  /*border: 2px groove white;*/
-  margin-bottom: 10px;
 }
 
 .innerItem
