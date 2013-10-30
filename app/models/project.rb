@@ -4,7 +4,7 @@ class Project < ActiveRecord::Base
   include ActionView::Helpers::DateHelper
   include ActionView::Helpers::SanitizeHelper
 
-  attr_accessible :content, :title, :user_id, :filter, :cloned_from, :like_count, :has_fields, :featured, :is_template, :featured_media_id, :hidden, :featured_at, :lock, :curated
+  attr_accessible :content, :title, :user_id, :filter, :cloned_from, :like_count, :has_fields, :featured, :is_template, :featured_media_id, :hidden, :featured_at, :lock, :curated, :updated_at
   
   validates_presence_of :title
   validates_presence_of :user_id
