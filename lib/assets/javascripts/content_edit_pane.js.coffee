@@ -19,13 +19,23 @@ $ ->
     if Boolean(can_edit)
       CKEDITOR.inline elem, 
         filebrowserImageUploadUrl: "/media_objects/saveMedia/#{path}"
-        toolbar: constants.CKTOOLBAR_NORM
         
-      button = root.find('#content_save_button')
+      # Save previous value
+      root.attr('saved-data',  root.find('div.content').html())
+       
+      saveButton = root.find('#content_save_button')
+      cancelButton = root.find('#content_cancel_button')
+        
       ($ elem).focus ->
-        button.show()
+        saveButton.show()
+        cancelButton.show()
       
-      button.click =>
+      cancelButton.click =>
+        root.find('div.content').html(root.attr('saved-data'))
+        saveButton.hide()
+        cancelButton.hide()
+      
+      saveButton.click =>
         value = root.find('div.content').html()
         data = {}
         data[type] = {}
@@ -42,7 +52,10 @@ $ ->
           dataType: "json"
           data: data
           success: =>
-            button.hide()
+            # Save previous value now that it has updated
+            root.attr('saved-data',  root.find('div.content').html())
+            saveButton.hide()
+            cancelButton.hide()
   
   ($ document).find('.content:visible').each () ->
     turn_on_ck(this)
