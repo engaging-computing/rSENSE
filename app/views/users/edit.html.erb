@@ -14,12 +14,12 @@
           change your password now.</p>
         <% end %>
         <p>
-        <%= label_tag :password, "New Password:" %>
+        <%= label_tag :new_password, "New Password:" %>
         <%= password_field_tag :password %>
         </p>
         <p>
-        <%= label_tag :password_confirmation, "Retype Your Password:" %>
-        <%= password_field_tag :password_confirmation %>
+        <%= label_tag :password_confirmation, "Retype Your New Password:" %>
+        <%= password_field_tag :new_password_confirmation %>
         </p>
         <p>
         <%= submit_tag "Change Password", class: "btn btn-primary" %>
@@ -46,8 +46,8 @@
         <%= text_field_tag :email %>
         </p>
         <p>
-        <%= label_tag :email_confirmation, "Retype Your Email:" %>
-        <%= text_field_tag :email_confirmation %>
+        <%= label_tag :new_email, "Retype Your New Email:" %>
+        <%= text_field_tag :new_email_confirmation %>
         </p>
         <p>
         <%= submit_tag "Change Email", class: "btn btn-primary" %>
