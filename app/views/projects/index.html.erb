@@ -36,21 +36,19 @@
           <% end %>
           <% @projects.each do |project|%>
               <div class='item word-break'>
-                  <h4 class='center' style='margin-top:0px;'>
+                <%if project.featured_media_id != nil%>
+                    <a href='<%= project_path project%>'><div class='caroucell' style="height:120px;background-image:url(<%=MediaObject.find(project.featured_media_id).src%>) "></div></a>
+                <%end%>
+                <div style="padding:7px;">
+                  <div style="font-size:1.2em; font-weight:bold;">
                     <a href='<%=project_path project%>'><%=project.name%></a>
                     <% if project.featured %>
                       <span style='color:#57C142'> (featured)</span>
                     <%end%>
-                  </h4>
-                  <%if project.featured_media_id != nil%>
-                      <div class='center'>
-                          <a href='<%= project_path project%>'>
-                            <img src='<%= MediaObject.find(project.featured_media_id).tn_src %>'></img>
-                          </a>
-                      </div>
-                  <%end%>
+                  </div>
                   <b>By: </b><a href='<%= user_path project.owner%>'><%=project.owner.name%> </a>
                    <%= time_ago_in_words(project.created_at)%> ago on <%=project.created_at.to_time.strftime '%a %b %d %Y'%><br />
+                </div>
               </div>
           <% end %>
         </div>
