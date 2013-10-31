@@ -135,7 +135,7 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
     editUpdate  = params[:project]
     hideUpdate  = editUpdate.extract_keys!([:hidden])
-    adminUpdate = editUpdate.extract_keys!([:featured, :is_template])
+    adminUpdate = editUpdate.extract_keys!([:featured, :is_template,:curated])
     success = false
 
     #EDIT REQUEST
@@ -159,6 +159,14 @@ class ProjectsController < ApplicationController
         end
       end
 
+      if adminUpdate.has_key?(:curated)
+        if adminUpdate['curated'] == "true"
+          adminUpdate['curated_at'] = Time.now()
+        else
+          adminUpdate['curated_at'] = nil
+        end
+      end
+      
       success = @project.update_attributes(adminUpdate)
     end
 
