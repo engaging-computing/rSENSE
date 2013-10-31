@@ -80,7 +80,7 @@ class Project < ActiveRecord::Base
     }
     
     if self.featured_media_id != nil
-      h.merge!({mediaSrc: self.media_objects.find(self.featured_media_id).tn_src})
+      h.merge!({mediaSrc: self.media_objects.find(self.featured_media_id).src})
     end
     
     if recurse
