@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v3.0.6 (2013-10-04)
+ * @license Highcharts JS v3.0.7 (2013-10-24)
  * Exporting module
  *
  * (c) 2010-2013 Torstein Hønsi
@@ -472,8 +472,8 @@ extend(Chart.prototype, {
 			addEvent(menu, 'mouseenter', function () {
 				clearTimeout(hideTimer);
 			});
-			// Hide it on clicking or touching outside the menu (#2258)
-			addEvent(document, 'mousedown', function (e) {
+			// Hide it on clicking or touching outside the menu (#2258, #2335)
+			addEvent(document, 'mouseup', function (e) {
 				if (!chart.pointer.inClass(e.target, className)) {
 					hide();
 				}
