@@ -8,7 +8,7 @@ $ ->
           #{if object.gravatar? then "<div class='caroucell' style='height:120px; background-image:url(#{object.gravatar})'></div>" else ""}
           <div style="padding:7px">
             <div style="font-size:1.2em; font-weight:bold;"><a href='#{object.url}'>#{helpers.truncate object.name, 16}</a></div>
-            <b>Member Since: </b> #{object.createdAt}<br />
+            <b>Member Since: </b> #{object.createdAt})=<br />
           </div>
        </div>
       """
