@@ -11,7 +11,7 @@
             <h1>Projects</h1>
             <div class="order_selector">
               <select name="sort" class="projects_sort_select">
-                <%= options_for_select([['Modified (newest first)','updated_at DESC'],['Modified (oldest first)','updated_at ASC'],['Created (newest first)','created_at DESC'],['Created (oldest first)','created_at ASC']], params.has_key?(:sort) ? params[:sort] : 'modified_at ASC')%>
+                <%= options_for_select([['Modified (newest first)','updated_at DESC'],['Modified (oldest first)','updated_at ASC'],['Created (newest first)','created_at DESC'],['Created (oldest first)','created_at ASC'],['Rating','RATING']], params.has_key?(:sort) ? params[:sort] : 'modified_at ASC')%>
               </select>
             </div>
             <div class="search_box">
