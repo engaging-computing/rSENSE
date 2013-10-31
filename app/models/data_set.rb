@@ -21,6 +21,13 @@ class DataSet < ActiveRecord::Base
   
   before_save :sanitize_data_set
   
+  after_create :update_project
+  
+  def update_project
+    proj = Project.find(self.project_id)
+    proj.update_attributes(:updated_at => Time.now())
+  end
+  
   def sanitize_data_set
     self.title = sanitize self.title, tags: %w()
   end
