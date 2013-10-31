@@ -133,20 +133,20 @@ $ ->
                             ret =
                                 y:      data.getTotal fieldIndex, groupIndex
                                 name:   data.groups[groupIndex]
-                    
+                                
                 @chart.addSeries options, false
+            
             
             @chart.redraw()
             
         buildLegendSeries: ->
             count = -1
-            for field, fieldIndex in data.fields when fieldIndex in data.normalFields
+            for field, fieldIndex in data.fields when fieldIndex in data.normalFields and fieldIndex in globals.fieldSelection
                 count += 1
                 dummy =
                     legendIndex: fieldIndex
                     data: []
                     color: '#000'
-                    visible: if fieldIndex in globals.fieldSelection then true else false
                     name: fieldTitle field
                     type: 'area'
                     xAxis: 1
