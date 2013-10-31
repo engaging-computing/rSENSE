@@ -18,7 +18,7 @@ class ProjectsController < ApplicationController
     if !params[:per_page].nil?
         pagesize = params[:per_page]
     else
-        pagesize = 10;
+        pagesize = 30;
     end
     
     if params.has_key? "templates_only"
