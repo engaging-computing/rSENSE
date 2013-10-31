@@ -15,7 +15,10 @@ $ ->
     ($ '#curated_checkbox').click ->
       ($ '#projects_search').submit()
       
-    ($ window).resize () ->
+    reflow = () ->
       helpers.isotope_layout('#projects')
+    
+    ($ window).resize () ->  
+      setTimeout(reflow,750)
 
     helpers.isotope_layout('#projects')
