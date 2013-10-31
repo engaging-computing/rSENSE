@@ -37,7 +37,7 @@
           <% @projects.each do |project|%>
               <div class='item word-break'>
                 <%if project.featured_media_id != nil%>
-                    <a href='<%= project_path project%>'><div class='caroucell' style="height:120px;background-image:url(<%=MediaObject.find(project.featured_media_id).src%>) "></div></a>
+                    <a href='<%= project_path project%>'><div class="caroucell" style="height:120px;background-image:url(<%=MediaObject.find(project.featured_media_id).src%>) "></div></a>
                 <%end%>
                 <div style="padding:7px;">
                   <div style="font-size:1.2em; font-weight:bold;">
@@ -54,4 +54,5 @@
         </div>
       </div>
     </div>
+    <%= will_paginate @projects %>
 </div>
