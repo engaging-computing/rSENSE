@@ -219,8 +219,11 @@ $ ->
 
             ($ "#regressionControl button").button()
             
-            ($ "#regressionButton").click ->
+            ($ "#regressionButton").click =>
+              console.log(data)
               #Save a regression TODO
+              name = "#{($ '#regressionSelector option:selected').text()} regression of #{($ '#regressionYAxisSelector option:selected').text()} over #{fieldTitle(data.fields[@xAxis])}"
+              #new_regression = getRegression(TODO X, TODO Y, ($ '#regressionSelector').val(), @xBounds, name)
               return
             
             #Set up accordion
