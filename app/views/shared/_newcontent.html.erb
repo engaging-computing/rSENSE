@@ -6,7 +6,10 @@
         <%= raw content%>
       </div>  
       <div class="clear"></div>
-      <button class="btn btn-primary center" style="display:none" id="content_save_button">Save</button>
+      <div class='center'>
+        <button class="btn btn-primary center" style="display:none" id="content_save_button">Save</button>
+        <button class="btn btn-danger center" style="display:none" id="content_cancel_button">Cancel</button>
+      </div>
     <% else %>
       <%= raw content%>
     <% end %>
@@ -17,7 +20,10 @@
         click here to edit
       </div> 
       <div class="clear"></div>
-      <button class="btn btn-primary center" style="display:none" id="content_save_button">Save</button>
+      <div class='center'>
+        <button class="btn btn-primary center" style="display:none" id="content_save_button">Save</button>
+        <button class="btn btn-danger center" style="display:none" id="content_cancel_button">Cancel</button>
+      </div>
     <% else %>
       <img src="/assets/contentplaceholder.png" style="margin:0px;padding:0px;"></img>
     <% end %>  
