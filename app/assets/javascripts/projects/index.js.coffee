@@ -3,6 +3,14 @@
 $ ->
   if namespace.controller is "projects" and namespace.action is "index"
 
+    ($ '#addProjectButton').click ->
+      $.ajax
+        url: "/projects/create"
+        data: {}
+        dataType: "json"
+        success: (data, textStatus) ->
+          helpers.name_popup data, "Project", "project"
+  
     ($ '.projects_filter_checkbox').click ->
       ($ '#projects_search').submit()
     
