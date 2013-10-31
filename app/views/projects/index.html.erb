@@ -1,5 +1,11 @@
+<% if @cur_user != nil %>
+  <script>
+    window.logged_in = true;
+  </script>
+<%end%>
 
 <div class="row">
+
   <div class="span12">
     <div class="row">
       <div class="span12">
@@ -12,18 +18,21 @@
             <h1>Projects</h1>
             <div class="order_selector">
               <select name="sort" class="projects_sort_select">
-                <%= options_for_select([['Modified (newest first)','updated_at DESC'],['Modified (oldest first)','updated_at ASC'],['Created (newest first)','created_at DESC'],['Created (oldest first)','created_at ASC'],['Rating','RATING']], params.has_key?(:sort) ? params[:sort] : 'modified_at ASC')%>
+                <option value="updated_at DESC">Modified (newest first)</option>
+                <option value="updated_at ASC">Modified (oldest first)</option>
+                <option value="created_at DESC">Created (newest first)</option>
+                <option value="created_at ASC">Created (oldest first)</option>
+                <option value="RATING">Rating</option>
               </select>
             </div>
             <div class="search_box">
-              <input class="search-query" id="search" name="search" type="text" x-webkit-speech value="<%= params.has_key?(:search) ? params[:search] : "" %>">
-            </div>
+              <input class="search-query" id="search" name="search" type="text" x-webkit-speech></div>
             <div class="submit_button">
               <%= submit_tag "Search", name: nil, class:'btn'%>
             </div>
             <div class="clear"></div>
-            <span><input type="checkbox" name="templates_only" id="template_checkbox" style="margin-bottom: 6px;" <%= params.has_key?(:templates_only) ?  "checked" : ""%>> Only Templates &nbsp;
-            <input type="checkbox" name="curated_only" id="curated_checkbox" style="margin-bottom: 6px;" <%= params.has_key?(:curated_only) ?  "checked" : ""%>> Only Curated</span>
+            <span><input type="checkbox" name="templates_only" id="template_checkbox" style="margin-bottom: 6px;"> Only Templates &nbsp;
+            <input type="checkbox" name="curated_only" id="curated_checkbox" style="margin-bottom: 6px;"> Only Curated</span>
             
           </div>
         <%end%>
@@ -32,28 +41,16 @@
     <div class="row">
       <div id="projects" class="span12 isotope_container" >
         <div class="isotope_pane">
-          <% if @cur_user != nil %>
-            <div id='addProjectButton' style='text-align:center;cursor: pointer;' class='item'><img style='width:66%; height:66%' class='hoverimage' src='/assets/green_plus_icon.png'><br /><h4 style='color:#0a0;'>Create Project</h4></img></div>
-          <% end %>
-          <% @projects.each do |project|%>
-              <div class='item word-break'>
-                <%if project.featured_media_id != nil%>
-                    <a href='<%= project_path project%>'><div class="caroucell" style="height:120px;background-image:url(<%=MediaObject.find(project.featured_media_id).src%>) "></div></a>
-                <%end%>
-                <div style="padding:7px;">
-                  <div style="font-size:1.2em; font-weight:bold;">
-                    <a href='<%=project_path project%>'><%=project.name%></a>
-                    <% if project.featured %>
-                      <span style='color:#57C142'> (featured)</span>
-                    <%end%>
-                  </div>
-                  <b>By: </b><a href='<%= user_path project.owner%>'><%=project.owner.name%> </a>
-                   <%= time_ago_in_words(project.created_at)%> ago on <%=project.created_at.to_time.strftime '%a %b %d %Y'%><br />
-                </div>
-              </div>
-          <% end %>
         </div>
       </div>
     </div>
-    <%= will_paginate @projects %>
+    <div class="row" style="padding-top: 10px;">
+      <div class="span12">
+        <div class="well text-center" id="load_projects">
+          <h3 class="muted">Loading More <img src="/assets/spinner.gif" /></h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>

@@ -12,13 +12,13 @@ class ProjectsController < ApplicationController
     if !params[:sort].nil?
         sort = params[:sort]
     else
-        sort = "created_at DESC"
+        sort = "updated_at DESC"
     end
     
     if !params[:per_page].nil?
         pagesize = params[:per_page]
     else
-        pagesize = 30;
+        pagesize = 10;
     end
     
     if params.has_key? "templates_only"
