@@ -7,14 +7,16 @@ $ ->
 
     addItem = (object) ->
       newItem = """
-        <div class='item word-break'>
-          <h4 class='center' style='margin-top:0px;'><a href='#{object.url}'>#{object.name}</a>
-          #{if object.featured then "<span style='color:#57C142'> (featured)</span>" else ""}</h4>
-          #{if object.mediaSrc then "<div class='center'><a href='#{object.url}'><img src='#{object.mediaSrc}'></img></a></div>" else ""}
-          <b>Owner: </b><a href='#{object.ownerUrl}'>#{object.ownerName}</a><br />
-          <b>Project: </b><a href='#{object.projectUrl}'>#{object.projectName}</a><br />
-          <b>Created: </b>#{object.timeAgoInWords} ago (on #{object.createdAt})<br />
-        </div>
+        <div class='item'>
+          #{if object.mediaSrc then "<div class='caroucell' style='height:120px; background-image:url(#{object.mediaSrc})'></div>" else ""}
+          <div style="padding:7px">
+            <div style="font-size:1.2em; font-weight:bold;"><a href='#{object.url}'>#{object.name}</a></div>
+            #{if object.featured then "<span style='color:#57C142'> (featured)</span><br>" else ""}
+            <b>Owner: </b><a href='#{object.ownerUrl}'>#{object.ownerName}</a><br />
+            <b>Project: </b><a href='#{object.projectUrl}'>#{object.projectName}</a><br />
+            <b>Created: </b>#{object.timeAgoInWords} ago (on #{object.createdAt})<br />
+          </div>
+       </div>
       """
       
       newItem = ($ newItem)
