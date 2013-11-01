@@ -56,6 +56,8 @@
 //= require highvis/visUtils
 //= require highvis/dataReduction
 //= require highvis/highmodifiers
+//= require numeric.min
+//= require highvis/regression
 //= require highvis/baseVis
 //= require highvis/disabledVis
 //= require highvis/scatter

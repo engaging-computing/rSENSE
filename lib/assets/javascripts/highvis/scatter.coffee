@@ -196,7 +196,7 @@ $ ->
             controls += '<select id="regressionYAxisSelector" class="control_select">'
 
             for fieldIndex in data.normalFields
-              controls += "<option value='#{data.fields[fieldIndex]}'>#{fieldTitle(data.fields[fieldIndex])}</option>"
+              controls += "<option value='#{fieldIndex}'>#{fieldTitle(data.fields[fieldIndex])}</option>"
 
             controls += "</select></div>"
             
@@ -204,7 +204,7 @@ $ ->
             controls += '<div class="inner_control_div" style="text-align:left"> Type: '
             controls += '<select id="regressionSelector" class="control_select">'
 
-            regressions = ['Linear', 'Quadratic', 'Cubic', 'Exponential', 'Logarithmic']
+            regressions = ['Linear', 'Quadratic', 'Cubic', 'Logarithmic']
             for regression_type in regressions
               controls += "<option value='#{regressions.indexOf(regression_type)}'>#{regression_type}</option>"
 
@@ -220,10 +220,14 @@ $ ->
             ($ "#regressionControl button").button()
             
             ($ "#regressionButton").click =>
-              console.log(data)
+
+              groupIndex = globals.groupSelection
+              y_axis_name = ($ '#regressionYAxisSelector option:selected').text()
+              y_axis_index = ($ '#regressionYAxisSelector').val()
+              name = "#{($ '#regressionSelector option:selected').text()} regression of #{y_axis_name} over #{fieldTitle(data.fields[@xAxis])}"              
+              new_regression = globals.getRegression(data.selector(@xAxis, groupIndex), data.selector(y_axis_index, groupIndex), ($ '#regressionSelector').val(), @xBounds, name)
+              @chart.addSeries(new_regression)
               #Save a regression TODO
-              name = "#{($ '#regressionSelector option:selected').text()} regression of #{($ '#regressionYAxisSelector option:selected').text()} over #{fieldTitle(data.fields[@xAxis])}"
-              #new_regression = getRegression(TODO X, TODO Y, ($ '#regressionSelector').val(), @xBounds, name)
               return
             
             #Set up accordion
