@@ -21,10 +21,11 @@
       <div class="field">
         Owner: <%= f.number_field :user_id %>
       </div>
-      <div class="clear"><br></div>      
+      <div class="clear"><br></div> 
+      <div class="actions">
+        <%= f.submit "Update Visualization", class: "btn btn-primary" %>
+      </div>
     </div>
-    <br />
   </div>
-    <%= f.submit "Update Visualization", class: "btn btn-primary" %>
-  </div>
+
 <% end %>
