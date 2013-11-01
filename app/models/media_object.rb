@@ -1,9 +1,12 @@
+
+require 'store_file'
+
 class MediaObject < ActiveRecord::Base
   
   include ActionView::Helpers::SanitizeHelper
 
-  
-  attr_accessible :project_id, :media_type, :name, :data_set_id, :src, :user_id, :tutorial_id, :visualization_id, :title, :file_key, :hidden, :tn_file_key, :tn_src, :news_id
+  attr_accessible :project_id, :media_type, :name, :data_set_id, :src, :user_id, :tutorial_id, 
+    :visualization_id, :title, :file_key, :hidden, :tn_file_key, :tn_src, :news_id, :store_key
   
   belongs_to :user
   belongs_to :project
@@ -17,27 +20,55 @@ class MediaObject < ActiveRecord::Base
   validates_presence_of :src, :media_type, :file_key
   
   validates :name, length: {maximum: 128}
+  validates :store_key, length: {minimum: 16}
   
   before_save :sanitize_media
+  before_save :check_store!
   before_destroy :aws_del
   
   alias_attribute :owner, :user
   alias_attribute :dataSet, :data_set
   
   def sanitize_media
-  
     self.title = sanitize self.title, tags: %w()
-    
+  end
+
+  def check_store!
+    if self.store_key.nil?
+      self.store_key = store_make_key
+    end
+
+    store_make_uudir!(self.store_key)
   end
   
   def self.search(search, dc)
     if search
-        where('name LIKE ?', "%#{search}%")
+      where('name LIKE ?', "%#{search}%")
     else
-        scoped
+      scoped
     end
   end
-  
+
+  def file_name
+    uudir = store_uudir(self.store_key)
+    "#{uudir}/#{name}"
+  end
+
+  def tn_file_name
+    uudir = store_uudir(self.store_key)
+    "#{uudir}/tn_#{name}"
+  end
+
+  def file_path
+    uupath = store_uupath(self.store_key)
+    "#{uupath}/#{name}"
+  end
+
+  def tn_file_path
+    uupath = store_uupath(self.store_key)
+    "#{uupath}/tn_#{name}"
+  end
+
   def to_hash(recurse = true)
     h = {
       id: self.id,
