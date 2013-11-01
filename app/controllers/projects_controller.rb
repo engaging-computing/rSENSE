@@ -12,7 +12,7 @@ class ProjectsController < ApplicationController
     if !params[:sort].nil?
         sort = params[:sort]
     else
-        sort = "created_at DESC"
+        sort = "updated_at DESC"
     end
     
     if !params[:per_page].nil?

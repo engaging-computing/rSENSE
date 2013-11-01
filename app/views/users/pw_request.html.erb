@@ -1,12 +1,10 @@
 
-<h1>Reset Forgotten Password</h1>
+<h1>Reset Your Password</h1>
 
-<p>I'm sorry you forgot your password. Enter your username or email below to
-request a password reset.</p>
+<p>Enter your username or email below to reset your password.</p>
 
-<%= form_tag('/users/pw_send_key') do %>
-  <p><%= label_tag :username_or_email, "Username or Email" %>
+<%= form_tag('/users/pw_send_key') do %><br>
+  <p><%= label_tag :username_or_email, "Username or Email:" %>
     <%= text_field_tag :username_or_email %>
-  </p>
-  <p><%= submit_tag "Request Password Reset" %></p>
+  <p><%= submit_tag "Reset Password" %></p>
 <% end %>

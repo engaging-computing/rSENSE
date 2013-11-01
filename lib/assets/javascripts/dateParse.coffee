@@ -36,10 +36,15 @@ $ ->
   
   # Acceptable seperators
   sepExp = /[ \-\+\/_T,]*/
+  sepExpReq = /[ \-\+\/_T,]+/
   
   # Match a given pattern on a given string with 0 or more seperators preceeding it
   matchWithSep = (str, pat) ->
     str.match(new RegExp(sepExp.source + pat.source))
+    
+  # Match a given pattern on a given string with 1 or more seperators preceeding it
+  matchWithSepReq = (str, pat) ->
+    str.match(new RegExp(sepExpReq.source + pat.source))
     
   # Wrapper for a normal match (no seperator) for consistant syntax
   matchNoSep = (str, pat) ->
@@ -65,13 +70,19 @@ $ ->
     res.month = (new Date mm[1] + "/20 1970").getMonth()
     str = str.substr mm[0].length
     # Day
-    dm = matchWithSep(str, /(\d{1,2})/)
+    dm = matchWithSep(str, /(\d+)/)
     if dm is null
       throw 'fail'
       
     res.day = Number dm[1]
-    str = str.substr mm[0].length
+    str = str.substr dm[0].length
     
+    # Fall back to American ordering if day is nonsense
+    if res.day > 31
+      year = res.year
+      res.year = res.day
+      res.day = year
+  
     return [res, str]
   
   # Wrapper to call parseHour, which sets off the whole time chain
@@ -83,7 +94,7 @@ $ ->
     If the hour has a fractional value or is not there, skip to AM/PM test
   ###
   parseHour = (res, str) ->
-    hm = matchWithSep(str, /(\d\d)(\.\d+)?/)
+    hm = matchWithSepReq(str, /(\d\d)(\.\d+)?/)
     
     if hm is null
       # no hour

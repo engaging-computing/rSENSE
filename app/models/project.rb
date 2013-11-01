@@ -4,7 +4,7 @@ class Project < ActiveRecord::Base
   include ActionView::Helpers::DateHelper
   include ActionView::Helpers::SanitizeHelper
 
-  attr_accessible :content, :title, :user_id, :filter, :cloned_from, :like_count, :has_fields, :featured, :is_template, :featured_media_id, :hidden, :featured_at, :lock, :curated, :curated_at
+  attr_accessible :content, :title, :user_id, :filter, :cloned_from, :like_count, :has_fields, :featured, :is_template, :featured_media_id, :hidden, :featured_at, :lock, :curated, :curated_at, :updated_at
   
   validates_presence_of :title
   validates_presence_of :user_id
@@ -80,7 +80,7 @@ class Project < ActiveRecord::Base
     }
     
     if self.featured_media_id != nil
-      h.merge!({mediaSrc: self.media_objects.find(self.featured_media_id).tn_src})
+      h.merge!({mediaSrc: self.media_objects.find(self.featured_media_id).src})
     end
     
     if recurse
