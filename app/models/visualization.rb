@@ -3,7 +3,8 @@ class Visualization < ActiveRecord::Base
   include ActionView::Helpers::DateHelper
   include ActionView::Helpers::SanitizeHelper
   
-  attr_accessible :content, :data, :project_id, :globals, :title, :user_id, :hidden, :featured, :featured_at, :tn_src, :tn_file_key, :summary
+  attr_accessible :content, :data, :project_id, :globals, :title, :user_id, :hidden, :featured, 
+    :featured_at, :tn_src, :tn_file_key, :summary, :store_key
 
   has_many :media_objects
   
@@ -18,18 +19,27 @@ class Visualization < ActiveRecord::Base
   alias_attribute :name, :title
   
   before_save :sanitize_viz
+  before_save :check_store!
   before_destroy :aws_del
+  
+  validates :store_key, length: {minimum: 16}
 
   belongs_to :user
   belongs_to :project
 
   alias_attribute :owner, :user
 
+  def check_store!
+    if self.store_key.nil?
+      self.store_key = store_make_key
+    end
+
+    store_make_uudir!(self.store_key)
+  end
+ 
   def sanitize_viz
-  
     self.content = sanitize self.content
     self.title = sanitize self.title, tags: %w()
-    
   end
   
   def self.search(search, include_hidden = false)
@@ -45,7 +55,17 @@ class Visualization < ActiveRecord::Base
       res.where({hidden: false})
     end
   end
-  
+
+  def tn_file_name
+    uudir = store_uudir(self.store_key)
+    "#{uudir}/tn_#{name}"
+  end
+
+  def tn_file_path
+    uupath = store_uupath(self.store_key)
+    "#{uupath}/tn_#{name}"
+  end
+
   def to_hash(recurse = true)
     h = {
       id: self.id,
