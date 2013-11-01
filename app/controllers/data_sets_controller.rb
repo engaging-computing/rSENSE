@@ -401,42 +401,22 @@ class DataSetsController < ApplicationController
       isdoc = false
       if params.has_key? :csv
         @file = params[:csv]
-        if @file.content_type.include? "opendocument"
-          oo = Roo::Openoffice.new(@file.path,false, :ignore)
-          data = CSV.parse(oo.to_csv)
-        elsif @file.content_type.include? "ms-excel"
-          oo = Roo::Excel.new(@file.path,false,:ignore)
-          data = CSV.parse(oo.to_csv) 
-        elsif @file.content_type.include? "openxmlformats"
-          oo = Roo::Excelx.new(@file.path,false,:ignore)
-          data = CSV.parse(oo.to_csv)
-        else 
-          data = CSV.read(@file.tempfile)
-        end
+        fu = FileUploader.new
+        data_obj = fu.generateObject(@file)
+        results = fu.match_headers(@project, data_obj)
+       
       else 
         tempfile = CSV.new(open(params[:tmpfile]))
         data = tempfile.read()
         isdoc = true
       end
-      
+      data = data_obj['old_data']
       headers = data[0]
 
       #Build match matrix with quality
-      matrix = buildMatchMatrix(fields,headers)
-      results = {}
-      worstMatch = 0
-      until false
-        max =  matrixMax(matrix)
-
-        break if max['val'] == 0
-        matrixZeroCross(matrix, max['findex'], max['hindex'])
-
-        results[max['findex']] = {findex: max['findex'], hindex: max['hindex'], quality: max['val']}
-        worstMatch = max['val']
-      end
 
       # If the headers are mismatched respond with mismatch
-      if (results.size != @project.fields.size) or (worstMatch < 0.6)
+      if (results['results'] != @project.fields.size) or (results['worstMatch'] < 0.6)
         #Create a tmp directory if it does not exist
         begin
           Dir.mkdir("/tmp/rsense")
@@ -518,108 +498,6 @@ class DataSetsController < ApplicationController
   end
 
 private
-
-  #Returns the index of the highest value in the match matrix.
-  def matrixMax(matrix)
-
-    n = matrix.map do |x|
-      m = {}
-      m['val'] = x.max
-      m['hindex'] = x.index(m['val'])
-      m['findex'] = matrix.index(x)
-      m
-    end
-
-    n.inject do |h1, h2|
-      if h1['val'] > h2['val']
-        h1
-      else
-        h2
-      end
-    end
-  end
-
-  #Zero out a row and column of the match matrix
-  def matrixZeroCross(matrix, findex, hindex)
-
-    (0...matrix.size).each do |fi|
-      matrix[fi][hindex] = 0
-    end
-
-    (0...matrix[0].size).each do |hi|
-      matrix[findex][hi] = 0
-    end
-
-    matrix
-  end
-
-  #Use LCS to build a matches with quality.
-  def buildMatchMatrix(fields, headers)
-    matrix = []
-    fields.each_with_index do |f,fi|
-      matrix.append []
-      headers.each_with_index do |h,hi|
-        lcs_length = lcs(fields[fi].downcase,headers[hi].downcase).length.to_f
-        x = lcs_length / fields[fi].length.to_f
-        y = lcs_length / headers[hi].length.to_f
-        avg = (x + y) / 2
-        matrix[fi].append avg
-      end
-    end
-    matrix
-  end
-
-  #Longest common subsequence. Used in column matching
-  def lcs(a, b)
-      lengths = Array.new(a.size+1) { Array.new(b.size+1) { 0 } }
-      # row 0 and column 0 are initialized to 0 already
-      a.split('').each_with_index { |x, i|
-          b.split('').each_with_index { |y, j|
-              if x == y
-                  lengths[i+1][j+1] = lengths[i][j] + 1
-              else
-                  lengths[i+1][j+1] = \
-                      [lengths[i+1][j], lengths[i][j+1]].max
-              end
-          }
-      }
-      # read the substring out from the matrix
-      result = ""
-      x, y = a.size, b.size
-      while x != 0 and y != 0
-          if lengths[x][y] == lengths[x-1][y]
-              x -= 1
-          elsif lengths[x][y] == lengths[x][y-1]
-              y -= 1
-          else
-              # assert a[x-1] == b[y-1]
-              result << a[x-1]
-              x -= 1
-              y -= 1
-          end
-      end
-      result.reverse
-  end
-
-  #It is easier to swap columns around after rotating the data matrix
-  def rotateDataMatrix(dataMatrix)
-
-    newDataMatrix = []
-
-    for i in 0...dataMatrix[0].size()
-      newDataMatrix[i] = []
-    end
-
-    for i in 0...dataMatrix.size()
-
-      for j in 0...dataMatrix[i].size()
-        newDataMatrix[j][i] = dataMatrix[i][j]
-      end
-    end
-
-    newDataMatrix
-
-  end
 
   #Rotate the matrix then swap the columns to the correct order
   def sortColumns(rowColMatrix, matches)
