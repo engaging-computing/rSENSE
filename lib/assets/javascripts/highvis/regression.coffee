@@ -34,42 +34,38 @@ $ ->
       #Regression Types
       window.globals ?= {}
       globals.REGRESSION ?= {}
-      globals.REGRESSION.LINEAR = 1
-      globals.REGRESSION.QUADRATIC = 2
-      globals.REGRESSION.CUBIC = 3
-      globals.REGRESSION.EXPONENTIAL = 4
-      globals.REGRESSION.LOGARITHMIC = 5
+      globals.REGRESSION.LINEAR = 0
+      globals.REGRESSION.QUADRATIC = 1
+      globals.REGRESSION.CUBIC = 2
+      globals.REGRESSION.LOGARITHMIC = 3
       globals.REGRESSION.NUM_POINTS = 100
 
       ###
       Calculates a regression and returns it as a highcharts series.
       ###
-      getRegression:(x_in, y_in, regression_type, x_bounds, series_name) ->
-      
+      globals.getRegression = (x_in, y_in, regression_type, x_bounds, series_name) ->
+        #Initialize x array
+        x_fin = []
+        
         #Get the correct regression type
-        switch regression_type
+        switch Number(regression_type)
       
-          when globals.REGRESSION.LINEAR then
+          when globals.REGRESSION.LINEAR
             #Make x_fin based on linear params
             for x_val in x_in
               x_fin.push([1, x_val])
         
-          when globals.REGRESSION.QUADRATIC then
+          when globals.REGRESSION.QUADRATIC
             #Make x_fin based on quadratic params
             for x_val in x_in
               x_fin.push([1, x_val, Math.pow(x_val, 2)])
 
-          when globals.REGRESSION.CUBIC then
+          when globals.REGRESSION.CUBIC
             #Make x_fin based on cubic params
             for x_val in x_in
               x_fin.push([1, x_val, Math.pow(x_val, 2), Math.pow(x_val, 3)])
         
-          when globals.REGRESSION.EXPONENTIAL then
-            #Make x_fin based on exponential params
-            for x_val in x_in
-              x_fin.push([1, Math.exp(x_val)])
-        
-          when globals.REGRESSION.LOGARITHMIC then
+          when globals.REGRESSION.LOGARITHMIC
             #Make x_fin based on logarithmic params
             for x_val in x_in
               x_fin.push([1, Math.log(x_val)])
@@ -83,43 +79,42 @@ $ ->
       ###
       Calculates the regression according to the provided x and y matrices.
       ###
-      calculateRegression:(x, y) ->
-      
+      calculateRegression = (x, y) ->
         #Return the resulting vector
         return numeric.dot(numeric.dot(numeric.inv(numeric.dot(numeric.transpose(x), x)), numeric.transpose(x)), y)
       
       ###
       Returns a series object to draw on the chart canvas.
       ###
-      generateHighchartsSeries:(regression_matrix, regression_type, x_bounds, series_name) ->
+      generateHighchartsSeries = (regression_matrix, regression_type, x_bounds, series_name) ->
   
-        data = for i in [0..globals.REGRESSION.NUMPOINTS]
-          x = (i / globals.REGRESSION.NUMPOINTS) * (x_bounds.max - x_bounds.min) + x_bounds.min
-          y =  calculateRegressionPoint (regression_matrix, x, regression_type)
+        data = for i in [0..globals.REGRESSION.NUM_POINTS]
+          x = (i / globals.REGRESSION.NUM_POINTS) * (x_bounds.max - x_bounds.min) + x_bounds.min
+          y =  calculateRegressionPoint(regression_matrix, x, regression_type)
           {x: x, y: y}
-          
+                   
         ret =
           name: series_name,
-          data: data
+          data: data,
+          color: '#000'
+          marker: 
+            symbol: 'blank'
 
       ###
       Uses the regression matrix to calculate the y value given an x value.
       ###
-      calculateRegressionPoint:(regression_matrix, x_val, regression_type) ->
+      calculateRegressionPoint = (regression_matrix, x_val, regression_type) ->
       
-        switch regression_type
+        switch Number(regression_type)
         
-          when globals.REGRESSION.LINEAR then
-            return regression_matrix[0][2] + regression_matrix[1][2] * x_val
+          when globals.REGRESSION.LINEAR
+            return regression_matrix[0] + regression_matrix[1] * x_val
 
-          when globals.REGRESSION.QUADRATIC then
-            return regression_matrix[0][3] + regression_matrix[1][3] * x_val + regression_matrix[2][3] * Math.pow(x_val, 2)
+          when globals.REGRESSION.QUADRATIC
+            return regression_matrix[0] + regression_matrix[1] * x_val + regression_matrix[2] * Math.pow(x_val, 2)
           
-          when globals.REGRESSION.CUBIC then
-            return regression_matrix[0][4] + regression_matrix[1][4] * x_val + regression_matrix[2][4] * Math.pow(x_val, 2) + regression_matrix[3][4] * Math.pow(x_val, 3)
+          when globals.REGRESSION.CUBIC
+            return regression_matrix[0] + regression_matrix[1] * x_val + regression_matrix[2] * Math.pow(x_val, 2) + regression_matrix[3] * Math.pow(x_val, 3)
           
-          when globals.REGRESSION.EXPONENTIAL then
-            return regression_matrix[0][2] + regression_matrix[1][2] * Math.exp(x_val)
-          
-          when globals.REGRESSION.LOGARITHMIC then
-            return regression_matrix[0][2] + regression_matrix[1][2] * Math.log(x_val)
+          when globals.REGRESSION.LOGARITHMIC
+            return regression_matrix[0] + regression_matrix[1] * Math.log(x_val)
