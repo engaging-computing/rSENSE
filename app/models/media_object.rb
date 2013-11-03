@@ -59,14 +59,16 @@ class MediaObject < ActiveRecord::Base
     "#{uudir}/tn_#{name}"
   end
 
-  def file_path
+  def src
     uupath = store_uupath(self.store_key)
-    "#{uupath}/#{name}"
+    ename  = URI.escape(name)
+    "#{uupath}/#{ename}"
   end
 
-  def tn_file_path
+  def tn_src
     uupath = store_uupath(self.store_key)
-    "#{uupath}/tn_#{name}"
+    ename  = URI.escape(name)
+    "#{uupath}/tn_#{ename}"
   end
 
   def to_hash(recurse = true)
