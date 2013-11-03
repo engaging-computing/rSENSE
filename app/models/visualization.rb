@@ -1,3 +1,6 @@
+
+require 'store_file'
+
 class Visualization < ActiveRecord::Base
   
   include ActionView::Helpers::DateHelper
@@ -61,9 +64,10 @@ class Visualization < ActiveRecord::Base
     "#{uudir}/tn_#{name}"
   end
 
-  def tn_file_path
+  def tn_src
     uupath = store_uupath(self.store_key)
-    "#{uupath}/tn_#{name}"
+    ename  = URI.escape(name)
+    "#{uupath}/tn_#{ename}"
   end
 
   def to_hash(recurse = true)

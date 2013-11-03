@@ -5,9 +5,11 @@ class GetMediaFromAmazon < ActiveRecord::Migration
     MediaObject.all.each do |mo|
       mo.check_store!
 
-      if mo.src && mo.src =~ /amazonaws/
+      src = mo.read_attribute(:src)
+
+      if src && src =~ /amazonaws/
         # The object
-        re = HTTParty.get(mo.src)
+        re = HTTParty.get(src)
         print "."; STDOUT.flush
 
         if re.code == 200
@@ -15,13 +17,13 @@ class GetMediaFromAmazon < ActiveRecord::Migration
             ff.write(re.body)
           end
         end
-
-        mo.src = mo.file_path
       end
 
-      if mo.tn_src =~ /amazonaws/
+      tn_src = mo.read_attribute(:tn_src)
+
+      if tn_src && tn_src =~ /amazonaws/
         # The thumbnail
-        re = HTTParty.get(mo.tn_src)
+        re = HTTParty.get(tn_src)
         print "."; STDOUT.flush
 
         if re.code == 200
@@ -29,8 +31,6 @@ class GetMediaFromAmazon < ActiveRecord::Migration
             ff.write(re.body)
           end
         end
-
-        mo.tn_src = mo.tn_file_path
       end
 
       mo.save!
@@ -41,9 +41,11 @@ class GetMediaFromAmazon < ActiveRecord::Migration
     Visualization.all.each do |vi|
       vi.check_store!
 
-      if vi.tn_src =~ /amazonaws/
+      tn_src = vi.read_attribute(:tn_src)
+
+      if tn_src && tn_src =~ /amazonaws/
         # Get the thumbnail
-        re = HTTParty.get(vi.tn_src)
+        re = HTTParty.get(tn_src)
         print "."; STDOUT.flush
 
         if re.code == 200
@@ -51,8 +53,6 @@ class GetMediaFromAmazon < ActiveRecord::Migration
             ff.write(re.body)
           end
         end
-
-        vi.tn_src = vi.tn_file_path
       end
 
       vi.save!
