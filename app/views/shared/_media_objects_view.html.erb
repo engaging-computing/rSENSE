@@ -1,10 +1,10 @@
 <div id="media_object_list" type="<%=type%>" obj_id="<%=object.id%>">
-  <table id="media_table">
+  <table id="media_table" style="width: 100%">
     <thead>
       <tr>
         <th style="max-width:10%">File</th>
-        <th style="max-widht:60%">Name</th>
-        <th style="max-widht:20%px"></th>
+        <th style="max-width:60%">Name</th>
+        <th style="max-width:20%px"></th>
         <th style="max-width:10%px">Display</th>
       </tr>
     </thead>
@@ -24,7 +24,7 @@
                 <a href="<%= media_object_path mo %>">Edit</a>
               <% end %>
               <% if can_delete? mo %>
-                | <a class="media_object_delete" href="<%= media_object_url mo %>" name="<%= mo.title %>">Delete</a>
+                | <%= link_to "Delete", mo, method: 'delete', confirm: "Are you sure?" %>
               <% end %>
             </div>
           </td>

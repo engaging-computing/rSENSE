@@ -1,7 +1,5 @@
 class GetMediaFromAmazon < ActiveRecord::Migration
   def up
-    add_column :media_objects, :store_key, :string
-
     # First, download all the media.
 
     MediaObject.all.each do |mo|
@@ -9,7 +7,7 @@ class GetMediaFromAmazon < ActiveRecord::Migration
 
       src = mo.read_attribute(:src)
 
-      if src && src =~ /amazonaws/
+      if src && src =~ /amazonaws/ && !File.exists?(mo.file_name)
         # The object
         re = HTTParty.get(src)
         print "."; STDOUT.flush
@@ -18,60 +16,18 @@ class GetMediaFromAmazon < ActiveRecord::Migration
           File.open(mo.file_name, "wb") do |ff|
             ff.write(re.body)
           end
-        end
-      end
-
-      tn_src = mo.read_attribute(:tn_src)
-
-      if tn_src && tn_src =~ /amazonaws/
-        # The thumbnail
-        re = HTTParty.get(tn_src)
-        print "."; STDOUT.flush
-
-        if re.code == 200
-          File.open(mo.tn_file_name, "wb") do |ff|
-            ff.write(re.body)
-          end
+        
+          mo.add_tn
         end
       end
 
       mo.save!
     end
 
-    add_column :visualizations, :store_key, :string
-
-    Visualization.all.each do |vi|
-      vi.check_store!
-
-      tn_src = vi.read_attribute(:tn_src)
-
-      if tn_src && tn_src =~ /amazonaws/
-        # Get the thumbnail
-        re = HTTParty.get(tn_src)
-        print "."; STDOUT.flush
-
-        if re.code == 200
-          File.open(vi.tn_file_name, "wb") do |ff|
-            ff.write(re.body)
-          end
-        end
-      end
-
-      vi.save!
-    end
-
-    # Then, fix all the "content" attributes.
-    [DataSets, News, Projects, Tutorials, Users, Visualizations].each do |model|
-      model.all.each do |item|
-        if item && item.content =~ /amazonaws/
-          raise Exception.new("derp")
-        end
-      end
-    end
+    puts " ="
   end
 
   def down
-    remove_column :media_objects, :store_key
-    remove_column :visualizations, :store_key
+    puts "This is a lie. Nothing is getting reversed."
   end
 end
