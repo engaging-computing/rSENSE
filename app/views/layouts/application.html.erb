@@ -23,16 +23,14 @@
     <div style="min-height:100%;position:relative;">
       
       <!-- Login error detected, show dialog -->
-      <% if flash[:notice] %>
-        <% if flash[:notice] == "LOGIN_ERROR" %>
-          <script type="text/javascript">
-            $(document).ready( function(e){
-              $.data($('#login_box')[0], "redirect", "<%= flash.try(:[], :path) %>");
+      <% if flash[:login_error] %>
+        <script type="text/javascript">
+          $(document).ready( function(e){
+            $.data($('#login_box')[0], "redirect", "<%= flash.try(:[], :path) %>");
               $('#login_box').modal()
               return false;
             });
-          </script>
-        <% end %>
+        </script>
       <% end %>
 
       <!-- Add the hidden login dialog to the layout so that its accessable everywhere -->
@@ -106,16 +104,21 @@
         </div>
       </div>
 
-      <% unless flash[:alert].nil? %>
-        <div style="clear: both; margin-top: 50px;"> &nbsp; </div>
-        <div style="background: red; color: white; font-weight: bold; text-align: center; padding: 1ex;">
-          <p><%= flash[:alert] %></p>
-        </div>
-      <% end %>
-
       <!-- Main Container -->
-      <div id="outer" style="padding:50px 0px 70px 0px; margin:0; min-height:100%; <%= @layout_wide ? 'margin-right:40px;' : '' %>">
+      <div id="outer" style="padding:0px 0px 70px 0px; margin:0; min-height:100%; <%= @layout_wide ? 'margin-right:40px;' : '' %>">
         <div class="container mainContent <%= @layout_wide ? 'mc-wide' : '' %>" data-role="page">
+          <% unless flash[:alert].nil? %>
+            <div class="alert alert-danger">
+              <p><%= raw flash[:alert] %></p>
+            </div>
+          <% end %>
+
+          <% unless flash[:notice].nil? %>
+            <div class="alert alert-success">
+              <p><%= raw flash[:notice] %></p>
+            </div>
+          <% end %>
+
           <%= yield %>
         </div>
       </div>
