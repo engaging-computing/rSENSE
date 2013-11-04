@@ -116,6 +116,11 @@ $ ->
                             str += "<tr><td>#{@series.name.field}:</td><td><strong>#{@y}</strong></td></tr>"
                             str += "</table>"
                     useHTML: true
+                    crosshairs: [true,true]
+                    hideDelay: 0
+                    followPointer: false
+                    followTouchMove: false
+                    
                 xAxis: [{
                     type: 'linear'
                     gridLineWidth: 1
