@@ -2,6 +2,8 @@ class GetMediaFromAmazon < ActiveRecord::Migration
   def up
     add_column :media_objects, :store_key, :string
 
+    # First, download all the media.
+
     MediaObject.all.each do |mo|
       mo.check_store!
 
@@ -56,6 +58,15 @@ class GetMediaFromAmazon < ActiveRecord::Migration
       end
 
       vi.save!
+    end
+
+    # Then, fix all the "content" attributes.
+    [DataSets, News, Projects, Tutorials, Users, Visualizations].each do |model|
+      model.all.each do |item|
+        if item && item.content =~ /amazonaws/
+          raise Exception.new("derp")
+        end
+      end
     end
   end
 
