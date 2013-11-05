@@ -362,6 +362,49 @@ class DataSetsController < ApplicationController
   end
 
 
+  def field_matching
+    @project = Project.find(params[:pid])
+    uploader = FileUploader.new
+    data_obj = uploader.retrieve_obj(params[:file])
+    data = uploader.swap_columns(data_obj, params)
+    d = DataSet.new
+    d.data = data
+    d.project_id = @project.id
+    d.user_id = @cur_user.id
+    d.title = "Something"
+    d.save
+    respond_to do |format|
+      redirect_to "/projects/#{@project.id}/data_sets/#{d.id}"
+    end
+  end
+  
+  def uploadCSV2
+    
+    project = Project.find(params[:pid])
+    
+    if params.has_key?(:file)
+      file = params[:file]
+    else
+      file = open(params[:tmpFile])
+    end
+        
+    uploader = FileUploader.new
+    data_obj = uploader.generateObject(file)
+    @results = uploader.match_headers(project, data_obj)
+
+    if @results[:status]
+      logger.info "All is well"
+    else
+
+      respond_to do |format|
+        format.html
+      end
+     
+    end
+    
+
+  end
+  
   ## POST /data_sets/1
   def uploadCSV
     require "csv"

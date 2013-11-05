@@ -14,10 +14,9 @@ class FileUploader
       data_obj['data'][header[i]] = spreadsheet.column(i+1)[1,spreadsheet.last_row]
     end
     
-    #Temporary to pull stuff out of controller
-    data = CSV.parse(spreadsheet.to_csv)
-    data_obj['old_data'] = data
-    data_obj['file'] = file.path
+
+    data_obj[:file] =  write_temp_file(CSV.parse(spreadsheet.to_csv))
+
     
     data_obj
   end
@@ -25,12 +24,56 @@ class FileUploader
   ### Simply opens the file as the correct type and returns the Roo object.
   def open_spreadsheet(file)
     case File.extname(file.original_filename)
-    when ".csv" then Roo::CSV.new(file.path)
+#     when ".csv" then Roo::CSV.new(file.path)
+    when ".csv" then convert(file.path)
     when ".xls" then Roo::Excel.new(file.path, nil, :ignore)
     when ".xlsx" then Roo::Excelx.new(file.path,nil,:ignore)
     when ".ods" then Roo::OpenOffice.new(file.path,false,:ignore)
     else raise "Unknown file type: #{file.original_filename}"
     end
+  end
+  
+  ### Retrieve Object
+  def retrieve_obj(file)
+    spreadsheet = convert(file)
+    header = spreadsheet.row(1)
+    
+    data_obj = Hash.new
+   
+    (0..spreadsheet.last_column-1).each do |i|
+      data_obj[header[i]] = spreadsheet.column(i+1)[1,spreadsheet.last_row]
+    end
+    
+    data_obj    
+  end
+  
+  ## Swap columns 
+  def swap_columns(data_obj, params) 
+    project = Project.find(params[:pid])
+    final_obj = {}
+    Rails.logger.info params
+    
+    obj = {}
+    size = 0
+    project.fields.each do |f|
+      obj[f.id] = data_obj[params[f.name]]
+      if data_obj[params[f.name]] != nil
+        size =  data_obj[params[f.name]].length
+      end
+    end
+    
+    final_obj = []
+    (0..size-1).each do |i|
+      final_obj[i] = {}
+      project.fields.each do |f|
+        if obj[f.id] != nil
+          final_obj[i][f.id] = obj[f.id][i]
+        end
+      end
+    end
+    
+    
+    final_obj
   end
   
   ### Match headers should return a match_matrix for mismatches or continue
@@ -50,28 +93,65 @@ class FileUploader
     end
     
     results = {}
+    results[:partial_matches] = {}
+    
+    results[:options] = []
+    results[:options][0] = ['Select One',0]
+    
+    headers.each_with_index do |h,i|
+      results[:options][i+1] = [h,h]
+    end
+    
     worstMatch = 0
+    i=0;
     until false
       max =  matrixMax(matrix)
 
       break if max['val'] == 0
       matrixZeroCross(matrix, max['findex'], max['hindex'])
 
-      results[max['findex']] = {findex: max['findex'], hindex: max['hindex'], quality: max['val']}
-      worstMatch = max['val']
+      results[:partial_matches][max['findex']] = max['hindex']
+      i += 1
     end
     
     if (results.size != project.fields.size) or (worstMatch < 0.6)
-      Rails.logger.info "Should launch match columns"
+      results[:status] = false
+      results[:file] = data_obj[:file]
+      results[:fields] = fields
+      results[:headers] = headers
+    else
+      results[:status] = true
     end
     
-    ret = Hash.new
-    ret['results'] = results.size
-    ret['worstMatch'] = worstMatch
-    ret
+    results
   end
   
+  
   private
+  
+  def write_temp_file(data)
+    #Create a tmp directory if it does not exist
+      begin
+        Dir.mkdir("/tmp/rsense")
+      rescue
+      end
+
+      #Save file so we can grab it again
+      base = "/tmp/rsense/dataset"
+      fname = base + "#{Time.now.to_i}.csv"
+      f = File.new(fname, "w")
+      
+       y = ""
+      data.each do |x|
+        y += x.join(",") + "\n"
+      end
+      f.write(y)
+
+      f.close
+      
+      fname
+  end
+  
   
   #Returns the index of the highest value in the match matrix.
   def matrixMax(matrix)
@@ -135,6 +215,42 @@ class FileUploader
           end
       end
       result.reverse
+  end
+  
+    
+  
+  def convert( filepath )
+    possible_separators = [",", "\t", ";"]
+    
+    #delimters
+    delim = Array.new
+    
+    possible_separators.each_with_index do |sep, index|
+      
+      delim[index] = Hash.new
+      delim[index][:input] = filepath
+      delim[index][:file] = Roo::CSV.new( filepath, csv_options: {col_sep: sep, quote_char: "\'"})
+      delim[index][:data] = delim[index][:file].parse()
+      delim[index][:avg] = 0
+      
+      delim[index][:data].each do |row|
+        delim[index][:avg] = delim[index][:avg] + row.count
+      end
+      
+      delim[index][:avg] = delim[index][:avg] / delim[index][:data].count
+      
+    end
+        
+    possible_separators.each_with_index do |sep, index|
+      if( delim[index][:data].first.count == delim[index][:avg] and delim[index][:data].last.count == delim[index][:avg] and delim[index][:avg] > 1)
+        
+        return delim[index][:file]
+        
+      end
+    end
+    
+    delim[0][:file]
+    
   end
   
 end
