@@ -86,11 +86,24 @@ $ ->
             
             $.extend true, @chartOptions,
                 chart:
-                    type: "line"
+                    type: "scatter"
                     zoomType: "xy"
                     resetZoomButton:
                         theme:
                             display: "none"
+                plotOptions:
+                  scatter:
+                    marker:
+                      states:
+                        hover:
+                          lineColor:'#000'
+                    point:
+                      events:
+                        mouseOver: () ->
+                          # Push elements to bottom to draw over others in series
+                          ele = ($ @.graphic.element)
+                          root = ele.parent()
+                          root.append ele
                 title:
                     text: ""
                 tooltip:
@@ -116,11 +129,9 @@ $ ->
                             str += "<tr><td>#{@series.name.field}:</td><td><strong>#{@y}</strong></td></tr>"
                             str += "</table>"
                     useHTML: true
-                    crosshairs: [true,true]
                     hideDelay: 0
-                    followPointer: false
-                    followTouchMove: false
-                    
+                    shared: true
+                
                 xAxis: [{
                     type: 'linear'
                     gridLineWidth: 1
