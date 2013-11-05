@@ -27,76 +27,18 @@ $ ->
             ($ 'span.edit_menu span.info_text').text(name)
             ($ '#name_box').modal('hide')
 
-    respond_csv = ( resp ) ->
-      ($ "#match_table").html ''
-      ($ "#match_table").append "<tr><th> Project Field </th> <th> File Header </th></tr>"
-
-      for field, fieldIndex in resp.fields
-
-        options = "<option value='-1'> Select One... </option>"
-        for header, headerIndex in resp.headers
-          if (resp.partialMatches[fieldIndex] isnt undefined) and (resp.partialMatches[fieldIndex].hindex is headerIndex)
-            options += "<option selected='true' value='#{headerIndex}'> #{header} </option>"
-          else
-            options += "<option value='#{headerIndex}'> #{header} </option>"
-
-        ($ "#match_table").append "<tr>
-                                  <td> #{field} </td>
-                                  <td><select>" + options + "</select></td>
-                                  </tr>"
-
-      ($ "button.cancel_upload_button").click ->
-        location.reload()
-        #($ "#match_box").modal("hide")
-
-      ($ "button.finished_button").click ->
-
-        matchData =
-          pid: resp.pid
-          fields: resp.fields
-          headers: resp.headers
-          matches: []
-          tmpFile: resp.tmpFile
-
-        ($ "#match_table tr").each (idx, ele) ->
-          if idx > 0
-            matchVal = ($ ele).find("td select").val()
-            headerIndex = Number matchVal
-            fieldIndex = idx - 1
-
-            if headerIndex is -1
-              ($ "#match_table tr td select[value=-1]").errorFlash()
-
-            matchData.matches[fieldIndex] =
-              findex: fieldIndex
-              hindex: headerIndex
-
-        $.ajax
-          type: "POST"
-          dataType: "json"
-          url: "/projects/#{resp['pid']}/CSVUpload"
-          data: matchData
-          success: (resp) ->
-            ($ "#match_box").modal("hide")
-            helpers.name_popup resp, "Dataset", "data_set"
-          error: (resp) ->
-            alert "We were unable to upload your CSV. See console for details."
-            console.log resp
-
-      ($ "#match_box").modal
-        backdrop: 'static'
-        keyboard: true
+   
 
     # A File has been uploaded, decide what to do
-    ($ "#csv_file_form").ajaxForm
-      error: (resp, status, xhr)->
-        alert resp['responseText']
-      
-      success: (resp, status, xhr)->
-        if xhr.status == 201
-          helpers.name_popup resp, "Dataset", "data_set"
-        else
-          respond_csv(resp)
+#     ($ "#csv_file_form").ajaxForm
+#       error: (resp, status, xhr)->
+#         alert resp['responseText']
+#       
+#       success: (resp, status, xhr)->
+#         if xhr.status == 201
+#           helpers.name_popup resp, "Dataset", "data_set"
+#         else
+#           respond_csv(resp)
 
     load_qr = ->
       ($ '#exp_qr_tag').empty()
@@ -137,7 +79,7 @@ $ ->
       false
 
     ($ '#csv_file_input').change ->
-      ($ '#csv_file_form').attr 'action', "#{window.location.pathname}/CSVUpload"
+      ($ '#csv_file_form').attr 'action', "/data_sets/uploadCSV2"
       ($ '#csv_file_form').submit()
 
     ($ '#cancel_doc').click ->
