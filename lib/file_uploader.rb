@@ -3,6 +3,7 @@ class FileUploader
   require 'csv'
   require 'iconv'
   require 'roo'
+  require 'open-uri'
 
   ### Generates the object that will be acted on
   def generateObject(file)
@@ -14,22 +15,25 @@ class FileUploader
       data_obj['data'][header[i]] = spreadsheet.column(i+1)[1,spreadsheet.last_row]
     end
     
-
     data_obj[:file] =  write_temp_file(CSV.parse(spreadsheet.to_csv))
 
-    
     data_obj
   end
   
   ### Simply opens the file as the correct type and returns the Roo object.
   def open_spreadsheet(file)
-    case File.extname(file.original_filename)
-#     when ".csv" then Roo::CSV.new(file.path)
-    when ".csv" then convert(file.path)
-    when ".xls" then Roo::Excel.new(file.path, nil, :ignore)
-    when ".xlsx" then Roo::Excelx.new(file.path,nil,:ignore)
-    when ".ods" then Roo::OpenOffice.new(file.path,false,:ignore)
-    else raise "Unknown file type: #{file.original_filename}"
+    if file.class == ActionDispatch::Http::UploadedFile
+      Rails.logger.info file.path
+      case File.extname(file.original_filename)
+      when ".csv" then convert(file.path)
+      when ".xls" then Roo::Excel.new(file.path, nil, :ignore)
+      when ".xlsx" then Roo::Excelx.new(file.path,nil,:ignore)
+      when ".ods" then Roo::OpenOffice.new(file.path,false,:ignore)
+      else raise "Unknown file type: #{file.original_filename}"
+      end
+    else
+      x = write_temp_file(CSV.parse(open(file) {|f| f.read}))
+      convert(x)
     end
   end
   
@@ -110,15 +114,16 @@ class FileUploader
       break if max['val'] == 0
       matrixZeroCross(matrix, max['findex'], max['hindex'])
 
-      results[:partial_matches][max['findex']] = max['hindex']
+      results[:partial_matches][max['findex']] = {:index => max['hindex'], :quality => max['val']}
       i += 1
     end
     
+    results[:file] = data_obj[:file]
+    results[:fields] = fields
+    results[:headers] = headers
+    
     if (results.size != project.fields.size) or (worstMatch < 0.6)
       results[:status] = false
-      results[:file] = data_obj[:file]
-      results[:fields] = fields
-      results[:headers] = headers
     else
       results[:status] = true
     end

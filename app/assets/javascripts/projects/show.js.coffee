@@ -92,25 +92,6 @@ $ ->
       ($ '#doc_box').modal()
       false
 
-    # Parse the Share url from a google doc to upload a csv from google drive
-    ($ '#save_doc').click ->
-      tmp = ($ '#doc_url').val()
-      
-      if tmp.indexOf('key=') isnt -1
-        tmp = tmp.split 'key='
-        key = tmp[1]
-        tmp = window.location.pathname.split 'projects/'
-        pid = tmp[1]
-        url = "/data_sets/#{pid}/postCSV"
-        $.ajax( { url: url, data: { key: key, id: pid, tmpfile: ($ '#doc_url').val()} } ).done (data, textStatus, error) ->
-          if data.url != undefined
-            ($ '#doc_box').modal 'hide'
-            helpers.name_popup data, "Dataset", "data_set"
-          else
-            respond_csv(data)
-      else
-        ($ '#doc_url').errorFlash()
-
     # Takes all sessions that are checked, appends its id to the url and
     # redirects the user to the view sessions page (Vis page)
     ($ '#vis_button').click (e) ->

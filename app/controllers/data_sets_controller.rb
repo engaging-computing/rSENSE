@@ -361,197 +361,55 @@ class DataSetsController < ApplicationController
 
   end
 
-
+  # PUT /data_sets/field_matching
   def field_matching
-    @project = Project.find(params[:pid])
+    project = Project.find(params[:pid])
     uploader = FileUploader.new
     data_obj = uploader.retrieve_obj(params[:file])
     data = uploader.swap_columns(data_obj, params)
-    d = DataSet.new
-    d.data = data
-    d.project_id = @project.id
-    d.user_id = @cur_user.id
-    d.title = "Something"
-    d.save
-    respond_to do |format|
-      redirect_to "/projects/#{@project.id}/data_sets/#{d.id}"
+    dataset = DataSet.new do |d|
+      d.user_id = @cur_user.id
+      d.title = params[:title]
+      d.project_id = project.id
+      d.data = data
+    end
+    
+    if dataset.save
+      redirect_to "/projects/#{project.id}/data_sets/#{dataset.id}"
+    else
+      @results = params[:results]
+      @default_name = params[:title]
+      respond_to do |format|
+        flash[:notice] = dataset.errors.full_messages()
+        format.html {render action: "uploadCSV2"}
+      end
     end
   end
   
+  # POST /data_sets/uploadCSV2
   def uploadCSV2
-    
     project = Project.find(params[:pid])
     
-    if params.has_key?(:file)
-      file = params[:file]
-    else
-      file = open(params[:tmpFile])
-    end
-        
-    uploader = FileUploader.new
-    data_obj = uploader.generateObject(file)
-    @results = uploader.match_headers(project, data_obj)
-
-    if @results[:status]
-      logger.info "All is well"
-    else
-
+    begin
+      
+      if params.has_key?(:file)
+        file = params[:file]
+      else
+        file = open(params[:tmpFile])
+      end
+          
+      uploader = FileUploader.new
+      data_obj = uploader.generateObject(file)
+      @results = uploader.match_headers(project, data_obj)
+      
+      @default_name = "Dataset ##{ (DataSet.find_all_by_project_id(params[:pid]).count + 1).to_s}"
+    
       respond_to do |format|
         format.html
       end
-     
+    rescue
+      flash[:notice] = 'File could not be read'
+      redirect_to project_path(project)
     end
-    
-
   end
-  
-  ## POST /data_sets/1
-  def uploadCSV
-    require "csv"
-    require "open-uri"
-    require "roo"
-    
-    @project = Project.find(params[:id])
-    fields = @project.fields
-    exp_fields = []
-    fields.each do |f|
-      exp_fields.append f.name
-    end
-    fields = exp_fields
-
-    #Client has responded to a call for matching
-    if(params.has_key?(:matches))
-
-      data = CSV.read(params['tmpFile'])
-
-      headers = params[:headers]
-      matches = params[:matches]
-
-      matches = matches.inject({}) do |acc, kvp|
-        v = kvp[1].inject({}) do |acc, kvp|
-          acc[kvp[0].to_sym] = Integer(kvp[1])
-          acc
-        end
-
-        acc[Integer(kvp[0])] = v
-        acc
-      end
-
-      data = sortColumns(data, matches)
-
-    #First call to upload a csv.
-    else
-      isdoc = false
-      if params.has_key? :csv
-        @file = params[:csv]
-        fu = FileUploader.new
-        data_obj = fu.generateObject(@file)
-        results = fu.match_headers(@project, data_obj)
-       
-      else 
-        tempfile = CSV.new(open(params[:tmpfile]))
-        data = tempfile.read()
-        isdoc = true
-      end
-      data = data_obj['old_data']
-      headers = data[0]
-
-      #Build match matrix with quality
-
-      # If the headers are mismatched respond with mismatch
-      if (results['results'] != @project.fields.size) or (results['worstMatch'] < 0.6)
-        #Create a tmp directory if it does not exist
-        begin
-          Dir.mkdir("/tmp/rsense")
-        rescue
-        end
-
-        #Save file so we can grab it again
-        base = "/tmp/rsense/dataset"
-        fname = base + "#{Time.now.to_i}.csv"
-        f = File.new(fname, "w")
-        
-        y = ""
-        data.each do |x|
-          y += x.join(",") + "\n"
-        end
-        f.write(y)
-
-        f.close
-        
-        respond_to do |format|
-          format.json { render json: {pid: params[:id],headers: headers, fields: fields, partialMatches: results,tmpFile: fname}, status: :partial_content  }
-        end
-        return
-
-      #EVERYTHING MATCHED, SORT THE COLUMNS
-      else
-        data = sortColumns(data,results)
-      end
-    end
-
-    #WE HAVE SUCCESSFULLY MATCHED HEADERS AND FIELDS, SAVE THE DATA FINALLY.
-    @project = Project.find_by_id(params[:id])
-    
-    if(!params.try(:[], :dataset_name))
-      defaultName  = "Dataset #"
-      defaultName += (DataSet.find_all_by_project_id(params[:id]).count + 1).to_s
-    else 
-      defaultName = params[:dataset_name]
-    end
-
-    @data_set = DataSet.new(:project_id => params[:id], :title => defaultName, :user_id => @cur_user.try(:id))
-
-    #Parse out just the data
-    data = data[1..(data.size-1)]
-
-    #Data that will be stuffed into mongo
-    mongo_data = Array.new
-
-    #Build the object that will be displayed in the table
-    format_data = {}
-    format_data["metadata"] = []
-    format_data["data"] = []
-    fields.count.times do |i|
-      format_data["metadata"].push({name: headers[i], label: headers[i], datatype: "string", editable: true})
-    end
-
-    header = Field.find_all_by_project_id(@project.id)
-
-    data.each do |dp|
-      row = {}
-      header.each_with_index do |field, col_index|
-        row["#{field[:id]}"] = dp[col_index]
-      end
-      mongo_data << row
-    end
-
-    @data_set.data = mongo_data
-    
-    if @data_set.save!
-     respond_to do |format|
-        format.json { render json: @data_set.to_hash(false), status: :created}
-      end
-    else
-      respond_to do |format|
-        format.json { render json: @data_set.errors.full_messages(), status: :unprocessable_entity }
-      end
-    end
-    
-  end
-
-private
-
-  #Rotate the matrix then swap the columns to the correct order
-  def sortColumns(rowColMatrix, matches)
-    rotatedMatrix = rotateDataMatrix(rowColMatrix)
-    newData = []
-
-    matches.size.times do |i|
-      newData[i] = rotatedMatrix[matches[i][:hindex]]
-    end
-
-    rotateDataMatrix(newData)
-  end
-
 end
