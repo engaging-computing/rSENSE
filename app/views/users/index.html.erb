@@ -1,44 +1,48 @@
 <div class="row">
-  <div class="span12">
-    <div class="row">
-      <div class="span12">
+    <div class="span12">
         <%=form_tag users_path, method: 'get', id: 'users_search', class:'navbar-search' do%>
 
-          <!-- hidden input for pagination -->
-          <input type="text" id="hidden_pagination" name="page" value="1" style="display: none;" />
+            <!-- hidden input for pagination -->
+            <input type="text" id="hidden_pagination" name="page" value="1" style="display: none;" />
 
-          <div class="isotope-top">
+            <div class="isotope-top">
             <h1>Users</h1>
             <div class="order_selector">
-              <select name="sort" class="users_sort_select">
+                <select name="sort" class="users_sort_select">
                 <option value="DESC">Newest First</option>
                 <option value="ASC">Oldest First</option>
-              </select>
+                </select>
             </div>
             <div class="search_box">
-              <%=text_field_tag :search, params[:search], class:'search-query'%>
+                <%=text_field_tag :search, params[:search], class:'search-query'%>
             </div>
             <div class="submit_button">
-              <%= submit_tag "Search", name: nil, class:'btn'%>
+                <%= submit_tag "Search", name: nil, class:'btn'%>
             </div>
             <div class="clear"></div>
-          </div>
+            </div>
         <%end%>
-      </div>
     </div>
-    <div class="row">
-      <div id="users" class="span12 isotope_container">
-        <div class="isotope_pane">
-        </div>
-      </div>
-    </div>
-    <div class="row" style="padding-top: 10px;">
-      <div class="span12">
-        <div class="well text-center" id="load_users">
-          <h3 class="muted">Loading More <img src="/assets/spinner.gif" /></h3>
-        </div>
-      </div>
-    </div>
-  </div>
+</div>
 
+<div class="user_list">
+<% @users.each do |u| %>
+    <div class="row <%=cycle('feed-even','feed-odd')%>">
+        <div class="span1 truncate"><b><%= link_to u.username, user_path(u)%></b></div>
+        <div class="span2 truncate"><p><%= u.email? ? u.email : "" %></p></div>
+        <div class="span2"><p><b>Member:</b> <%= u.created_at.strftime("%b %d, %Y")%></p></div>
+        <div class="span2"><p><b>Login:</b> <%= u.last_login.strftime("%b %d, %Y")%></p></div>
+        <div class="span2 truncate">
+            <p>P: <%=u.projects.count%>
+            | V: <%=u.visualizations.count%>
+            | D: <%=u.data_sets.count%></p>
+        </div>
+        <div class="span1">
+          <%= link_to 'Delete', user_path(u), :confirm => 'Are you sure you want to delete this account?', :method => :delete %>
+        </div>
+    </div>
+<% end %>
+</div>
+<div>
+   <%= will_paginate @users%>
 </div>
