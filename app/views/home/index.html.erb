@@ -63,6 +63,29 @@
       <% end %>
     </div>
   </div>
+  <div class="row">
+    <div class="span4">
+        <h3>Statistics</h3>
+        <div class="item">
+            <div style="font-size:1.3em;padding:5px">
+                To Date,
+                <b><%=User.count%> users</b> have contributed
+                <b><%=DataSet.count%> datasets</b> to
+                <b><%=Project.count%> projects</b>
+            </div>
+        </div>
+    </div>
+    <div class="span4">
+        <h3>News</h3>
+        <div class="item">
+            <div style="font-size:1.3em;padding:5px">
+                <%@news.each do |n|%>
+                    <p><%=link_to n.title, news_path(n)%> (<%=n.created_at.strftime("%B %d, %Y")%>)</p>
+                <% end %>
+            </div>
+        </div>
+    </div>
+  </div>
 </div>
 
 <div class="visible-phone">
