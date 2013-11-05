@@ -1,9 +1,12 @@
 require 'base64'
 
 class UsersController < ApplicationController
-  skip_before_filter :authorize, only: 
+  before_filter :authorize_admin, only: [:index]
+
+  skip_before_filter :authorize, only:
     [:new, :create, :validate, :pw_request, :pw_send_key, :pw_reset]
- 
+
+    
   include ActionView::Helpers::DateHelper
   include ApplicationHelper
  
