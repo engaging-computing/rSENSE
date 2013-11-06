@@ -7,9 +7,9 @@ class SessionsController < ApplicationController
   def new
     
     if request.referrer
-      flash[:redirect_to] = request.referrer
+      session[:redirect_to] = request.referrer
     else
-      flash[:redirect_to] = "/home/index"
+      session[:redirect_to] = "/home/index"
     end
     
     logger.info flash[:redirect_to]
@@ -29,7 +29,7 @@ class SessionsController < ApplicationController
     if @user and @user.authenticate(params[:password])
       session[:user_id] = @user.id
       respond_to do |format|
-        format.html { redirect_to flash[:redirect_to]}
+        format.html { redirect_to session[:redirect_to]}
         format.json { render json: {authenticity_token: form_authenticity_token}, status: :ok }
       end
     else
