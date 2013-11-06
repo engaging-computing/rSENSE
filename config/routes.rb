@@ -60,10 +60,10 @@ Rsense::Application.routes.draw do
   match "/media_objects/saveMedia/*keys" => "media_objects#saveMedia"
 
   controller :sessions do
+    get 'login' => :new
     post 'login' => :create
     delete 'login' => :destroy
   end
-
   match '/sessions/verify' => 'sessions#verify'
 
   match "/users/pw_request" => "users#pw_request"
