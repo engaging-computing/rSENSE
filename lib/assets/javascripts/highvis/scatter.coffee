@@ -243,6 +243,7 @@ $ ->
               name = "#{($ '#regressionSelector option:selected').text()} regression of #{y_axis_name} over #{fieldTitle(data.fields[@xAxis])}"              
               new_regression = globals.getRegression(data.selector(@xAxis, groupIndex), data.selector(y_axis_index, groupIndex), ($ '#regressionSelector').val(), @xBounds, name)
               @chart.addSeries(new_regression)
+              
               #Save a regression TODO
               return
             

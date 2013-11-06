@@ -94,9 +94,11 @@ $ ->
           {x: x, y: y}
                    
         ret =
-          name: series_name,
+          name:
+            group: series_name
           data: data,
-          color: '#000'
+          color: '#000',
+          showInLegend: false,
           marker: 
             symbol: 'blank'
 
