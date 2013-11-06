@@ -13,24 +13,7 @@ class ApplicationController < ActionController::Base
   
   def authorize
     unless User.find_by_id(session[:user_id])
-      ref = begin
-              URI.parse(request.env["HTTP_REFERER"])
-            rescue
-              URI.parse("http://www.external.com")
-            end
-         
-      if ref.host == request.host
-        if ref.path == request.path
-          # logout caused a loop, escape!
-          redirect_to "/"
-        else
-          # Refresh with login request
-          redirect_to :back, flash: {login_error: "LOGIN_ERROR", path: request.path}
-        end
-      else
-        # External referer needs home page to log in
-        redirect_to "/", flash: {login_error: "LOGIN_ERROR", path: request.path}
-      end
+      redirect_to "/login"
     end
   end
 
