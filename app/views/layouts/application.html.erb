@@ -76,19 +76,6 @@
       <!-- Main Container -->
       <div id="outer" style="padding:0px 0px 70px 0px; margin:0; min-height:100%; <%= @layout_wide ? 'margin-right:40px;' : '' %>">
         <div class="container mainContent <%= @layout_wide ? 'mc-wide' : '' %>" data-role="page">
-<<<<<<< HEAD
-          <% unless flash[:alert].nil? %>
-            <div class="alert alert-danger">
-              <p><%= raw flash[:alert] %></p>
-            </div>
-          <% end %>
-
-          <% unless flash[:notice].nil? %>
-            <div class="alert alert-success">
-              <p><%= raw flash[:notice] %></p>
-            </div>
-          <% end %>
-
           <%= bootstrap_flash %>
           <%= yield %>
         </div>
