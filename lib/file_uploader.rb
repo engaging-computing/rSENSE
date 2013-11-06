@@ -4,6 +4,7 @@ class FileUploader
   require 'iconv'
   require 'roo'
   require 'open-uri'
+  require 'fileutils'
 
   ### Generates the object that will be acted on
   def generateObject(file)
@@ -33,7 +34,10 @@ class FileUploader
       end
     else
       x = write_temp_file(CSV.parse(open(file) {|f| f.read}))
-      convert(x)
+      Rails.logger.info x
+      spreadsheet = convert(x)
+      cleanup_temp_file(x)
+      spreadsheet
     end
   end
   
@@ -47,6 +51,8 @@ class FileUploader
     (0..spreadsheet.last_column-1).each do |i|
       data_obj[header[i]] = spreadsheet.column(i+1)[1,spreadsheet.last_row]
     end
+    
+    cleanup_temp_file(file)
     
     data_obj    
   end
@@ -75,7 +81,6 @@ class FileUploader
         end
       end
     end
-    
     
     final_obj
   end
@@ -133,6 +138,13 @@ class FileUploader
   
   
   private
+  
+  def cleanup_temp_file(filename)
+    begin
+      FileUtils.rm(filename, force: true)
+    rescue
+    end
+  end
   
   def write_temp_file(data)
     #Create a tmp directory if it does not exist

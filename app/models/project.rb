@@ -92,6 +92,27 @@ class Project < ActiveRecord::Base
     end
     h
   end
+  
+  def export_data_sets(datasets)
+    require 'fileutils'
+    random_hex = SecureRandom.hex
+    folder_name = self.title.squish.downcase.tr(" ","_")
+    tmpdir = "/tmp/rsense/#{random_hex}/#{folder_name}"    
+    
+    begin
+      FileUtils.mkdir_p(tmpdir)
+      datasets.split(',').each do |d|
+        dataset = DataSet.find(d.to_i)
+        dataset.to_csv(tmpdir)
+      end
+      system("cd /tmp/rsense/#{random_hex} && zip -r #{folder_name}.zip #{folder_name}")
+      zip_file = "/tmp/rsense/#{random_hex}/#{folder_name}.zip"
+    rescue
+      raise "Failed to export"
+    end
+    zip_file
+  end
+  
 end
 
 # where filter like filters[0] AND filter like filters[1]

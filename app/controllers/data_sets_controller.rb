@@ -273,87 +273,10 @@ class DataSetsController < ApplicationController
 
   # GET /projects/1/export
   def export
-
     require 'uri'
     require 'tempfile'
-
-    @project = Project.find params[:id]
-    @datasets = []
     
-    pname = @project.name.tr(" ", "_").tr("/", "_").gsub(/\W/,'').to_s
-    
-    zip_name = URI.escape "#{@project.id}-#{pname}"
-    
-    if File.directory? "/tmp/export-#{@project.id}-#{pname}"
-      FileUtils.rm_rf "/tmp/export-#{@project.id}-#{pname}", secure: true
-    end
-    
-    FileUtils.mkdir_p "/tmp/export-#{@project.id}-#{pname}"
-
-    # build list of datasets
-    if( !params[:datasets].nil? )
-
-      dsets = params[:datasets].split(",")
-      dsets.each do |s|
-        begin
-          @datasets.push DataSet.find_by_id_and_project_id s, params[:id]
-        rescue
-          logger.info "Either project id or dataset does not exist in the DB"
-        end
-      end
-    else
-      @datasets = DataSet.find_all_by_project_id params[:id]
-    end
-
-    folder_name = pname
-
-    @datasets.each do |dataset|
-            
-      if !dataset.hidden?
-  
-        field_order = []
-        file_name = "#{dataset.title}".tr(" ", "_").tr("/", "_").gsub(/\W/,'').to_s
-        file_name = "#{dataset.id}-#{file_name}.csv"
-        
-        if file_name != ""
-          tmp_file = File.new( "/tmp/export-#{@project.id}-#{pname}/#{file_name}", 'w+' )
-        else
-          tmp_file = File.new( "/tmp/export-#{@project.id}-#{pname}/#{@project.id}", 'w+' )
-        end
-          
-        @project.fields.each_with_index do |field, f_index|
-          tmp_file.write field[:name]
-          field_order.push field.id
-    
-          if( f_index != @project.fields.count - 1)
-            tmp_file.write ", "
-          end
-        end
-    
-        tmp_file.write "\n"
-  
-        dataset[:data].each_with_index do |data_row, dr_index|
-          
-          field_order.each_with_index do |field, f_index|
-            tmp_file.write data_row[field.to_s]
-            
-            if( f_index != field_order.count - 1)
-              tmp_file.write ", "
-            end
-          end
-  
-          tmp_file.write "\n"
-  
-        end
-  
-        tmp_file.close
-      end
-      
-    end
-    
-    zip_file = "/tmp/export-#{@project.id}-#{pname}/#{zip_name}.zip"
-        
-    system("cd /tmp && zip -r export-#{@project.id}-#{pname}/#{zip_name}.zip export-#{@project.id}-#{pname}/")
+    zip_file = Project.find(params[:id]).export_data_sets(params[:datasets])
     
     respond_to do |format|
       format.html { send_file zip_file, :type => 'file/zip', :x_sendfile => true }
@@ -391,15 +314,8 @@ class DataSetsController < ApplicationController
     project = Project.find(params[:pid])
     
     begin
-      
-      if params.has_key?(:file)
-        file = params[:file]
-      else
-        file = open(params[:tmpFile])
-      end
-          
       uploader = FileUploader.new
-      data_obj = uploader.generateObject(file)
+      data_obj = uploader.generateObject(params[:file])
       @results = uploader.match_headers(project, data_obj)
       
       @default_name = "Dataset ##{ (DataSet.find_all_by_project_id(params[:pid]).count + 1).to_s}"
