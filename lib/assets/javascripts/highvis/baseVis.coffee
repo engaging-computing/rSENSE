@@ -307,7 +307,7 @@ $ ->
                 plotOptions:
                     series:
                         stickyTracking:false
-                        turboThreshold: Number.MAX_VALUE
+                        turboThreshold: 0
                         marker:
                             lineWidth:0
                             radius:5
