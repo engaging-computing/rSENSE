@@ -167,7 +167,6 @@ class FileUploader
       fname
   end
   
-  
   #Returns the index of the highest value in the match matrix.
   def matrixMax(matrix)
     n = matrix.map do |x|
