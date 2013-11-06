@@ -25,11 +25,11 @@ class ApplicationController < ActionController::Base
           redirect_to "/"
         else
           # Refresh with login request
-          redirect_to :back, flash: {notice: "LOGIN_ERROR", path: request.path}
+          redirect_to :back, flash: {login_error: "LOGIN_ERROR", path: request.path}
         end
       else
         # External referer needs home page to log in
-        redirect_to "/", flash: {notice: "LOGIN_ERROR", path: request.path}
+        redirect_to "/", flash: {login_error: "LOGIN_ERROR", path: request.path}
       end
     end
   end
