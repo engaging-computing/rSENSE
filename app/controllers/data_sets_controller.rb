@@ -303,7 +303,7 @@ class DataSetsController < ApplicationController
       @results = params[:results]
       @default_name = params[:title]
       respond_to do |format|
-        flash[:notice] = dataset.errors.full_messages()
+        flash[:error] = dataset.errors.full_messages()
         format.html {render action: "uploadCSV2"}
       end
     end
@@ -324,7 +324,7 @@ class DataSetsController < ApplicationController
         format.html
       end
     rescue
-      flash[:notice] = 'File could not be read'
+      flash[:error] = 'File could not be read'
       redirect_to project_path(project)
     end
   end
