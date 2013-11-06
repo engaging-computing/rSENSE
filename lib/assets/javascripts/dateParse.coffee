@@ -18,8 +18,8 @@ $ ->
       d.setUTCFullYear(year)
       
       return [d.valueOf(), year]
-    else if str.match /[ ]*[uU][ ]*(\d+)/
-      val = Number (str.match /[ ]*[uU][ ]*(\d+)/)[1]
+    else if str.match /[ ]*[uU][ ]*(\-?\d+)/
+      val = Number (str.match /[ ]*[uU][ ]*(\-?\d+)/)[1]
       d = new Date(val)
       
       return [d.valueOf(), year]
@@ -29,6 +29,8 @@ $ ->
         ret = parseTime(ret[0], ret[1])
         
         d = new Date(Date.UTC ret[0].year, ret[0].month, ret[0].day, ret[0].hour, ret[0].minute, ret[0].second, ret[0].milisecond)
+        # Make sure the year was interpretted correctly
+        d.setUTCFullYear(ret[0].year)
         
         return [d.valueOf(), d.getUTCFullYear()]
       catch err
@@ -79,9 +81,13 @@ $ ->
     
     # Fall back to American ordering if day is nonsense
     if res.day > 31
-      year = res.year
-      res.year = res.day
-      res.day = year
+      month = res.year
+      day = res.month
+      year = res.day
+      
+      res.month = month
+      res.day = day
+      res.year = year
   
     return [res, str]
   
