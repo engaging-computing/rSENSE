@@ -95,14 +95,13 @@ class VisualizationsController < ApplicationController
     mo = MediaObject.new
     mo.media_type = 'image'
     mo.name = 'image.png'
+    mo.check_store!
    
     if params[:visualization].try(:[], :svg)
       begin
         image = MiniMagick::Image.read(params[:visualization][:svg], '.svg')
         image.format 'png'
         image.resize '512'
-       
-        mo.check_store!
         
         File.open(mo.file_name, "wb") do |ff|
           ff.write(image.to_blob)
