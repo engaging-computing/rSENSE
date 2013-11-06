@@ -29,7 +29,7 @@ class Visualization < ActiveRecord::Base
   alias_attribute :owner, :user
 
   def tn_src
-    mo = MediaObject.find(self.thumb_id)
+    mo = MediaObject.find_by_id(self.thumb_id)
     if mo 
       mo.tn_src
     else
