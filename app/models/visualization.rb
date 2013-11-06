@@ -33,7 +33,7 @@ class Visualization < ActiveRecord::Base
     if mo 
       mo.tn_src
     else
-      '/no-such-image.png'
+      '/assets/noimage.png'
     end
   end
  
