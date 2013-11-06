@@ -23,16 +23,14 @@
     <div style="min-height:100%;position:relative;">
       
       <!-- Login error detected, show dialog -->
-      <% if flash[:notice] %>
-        <% if flash[:notice] == "LOGIN_ERROR" %>
-          <script type="text/javascript">
-            $(document).ready( function(e){
-              $.data($('#login_box')[0], "redirect", "<%= flash.try(:[], :path) %>");
+      <% if flash[:login_error] %>
+        <script type="text/javascript">
+          $(document).ready( function(e){
+            $.data($('#login_box')[0], "redirect", "<%= flash.try(:[], :path) %>");
               $('#login_box').modal()
               return false;
             });
-          </script>
-        <% end %>
+        </script>
       <% end %>
 
       <!-- Add the hidden login dialog to the layout so that its accessable everywhere -->
@@ -70,6 +68,7 @@
             <div class="visible-desktop visible-tablet" style="margin-left:10px;height:50px;">
               <a class="navbar-btn" href="/news"><i class="icon-book icon-white"></i> News</a>
               <a class="navbar-btn" href="/projects"><i class="icon-folder-open icon-white"></i> Projects</a>
+              <a class="navbar-btn" href="/users"><i class="icon-user icon-white"></i> Users</a>
               <a class="navbar-btn" href="/visualizations"><i class="icon-picture icon-white"></i> Visualizations</a>
               <a class="navbar-btn" href="/tutorials"><i class="icon-info-sign icon-white"></i> Tutorials <img src="/assets/arrow_down.png"></a>
               <ul class="ddmenu">
@@ -105,16 +104,21 @@
         </div>
       </div>
 
-      <% unless flash[:alert].nil? %>
-        <div style="clear: both; margin-top: 50px;"> &nbsp; </div>
-        <div style="background: red; color: white; font-weight: bold; text-align: center; padding: 1ex;">
-          <p><%= flash[:alert] %></p>
-        </div>
-      <% end %>
-
       <!-- Main Container -->
-      <div id="outer" style="padding:50px 0px 70px 0px; margin:0; min-height:100%; <%= @layout_wide ? 'margin-right:40px;' : '' %>">
+      <div id="outer" style="padding:0px 0px 70px 0px; margin:0; min-height:100%; <%= @layout_wide ? 'margin-right:40px;' : '' %>">
         <div class="container mainContent <%= @layout_wide ? 'mc-wide' : '' %>" data-role="page">
+          <% unless flash[:alert].nil? %>
+            <div class="alert alert-danger">
+              <p><%= raw flash[:alert] %></p>
+            </div>
+          <% end %>
+
+          <% unless flash[:notice].nil? %>
+            <div class="alert alert-success">
+              <p><%= raw flash[:notice] %></p>
+            </div>
+          <% end %>
+
           <%= yield %>
         </div>
       </div>
@@ -140,6 +144,8 @@
             <li><a href="/news"><i class="icon-book icon-white"></i>News</a></li>
             <li class="nav-header nav-divider"><hr /></li>
             <li><a href="/projects"><i class="icon-folder-open icon-white"></i>Projects</a></li>
+            <li class="nav-header nav-divider"><hr /></li>
+            <li><a href="/users"><i class="icon-user icon-white"></i>Users</a></li>
             <li class="nav-header nav-divider"><hr /></li>
             <li><a href="/visualizations"><i class="icon-picture icon-white"></i>Visualizations</a></li>
             <li class="nav-header nav-divider"><hr /></li>
