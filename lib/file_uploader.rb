@@ -52,8 +52,6 @@ class FileUploader
       data_obj[header[i]] = spreadsheet.column(i+1)[1,spreadsheet.last_row]
     end
     
-    cleanup_temp_file(file)
-    
     data_obj    
   end
   
