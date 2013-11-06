@@ -108,6 +108,7 @@ $ ->
                     text: ""
                 tooltip:
                     formatter: ->
+                        console.log("hey")
                         if self.advancedTooltips
                             str  = "<div style='width:100%;text-align:center;color:#{@series.color};'> #{@series.name.group}</div><br>"
                             str += "<table>"

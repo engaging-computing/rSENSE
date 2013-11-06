@@ -97,7 +97,9 @@ $ ->
           name:
             group: series_name
           data: data,
+          type: 'line'
           color: '#000',
+          lineWidth: 2,
           showInLegend: false,
           marker: 
             symbol: 'blank'
