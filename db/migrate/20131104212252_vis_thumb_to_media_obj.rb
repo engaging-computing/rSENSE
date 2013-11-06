@@ -30,6 +30,7 @@ class VisThumbToMediaObj < ActiveRecord::Migration
       mo.save!
 
       vi.thumb_id = mo.id
+
       vi.save!
     end
 
