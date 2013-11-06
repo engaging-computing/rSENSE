@@ -55,7 +55,13 @@ class MediaObjectsController < ApplicationController
       @media_object.destroy
 
       respond_to do |format|
-        format.html { redirect_to :back, notice: "Deleted #{@media_object.name}" }
+        format.html do
+          if request.env["HTTP_REFERER"]
+            redirect_to :back, notice: "Deleted #{@media_object.name}" 
+          else
+            redirect_to media_objects_path, notice: "Deleted #{@media_object.name}" 
+          end
+        end
         format.json { render json: {}, status: :ok }
       end
     else
