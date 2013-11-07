@@ -13,7 +13,7 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
   end
 
   test "enter a data set" do
-    login('kate', '12345')
+    login('kate', '12345')  
     click_on 'Projects'
     click_on 'Measuring Things'
     find('#fields').click_on 'Edit'
@@ -42,12 +42,12 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     click_on "Dessert is Delicious"
 
     csv_path = Rails.root.join('test', 'CSVs', 'dessert.csv')
-
+    
     page.execute_script %Q{$('#csv_file_form').parent().show()}
-    find("#csv_file_form").attach_file("csv", csv_path)
+    find("#csv_file_form").attach_file("file", csv_path)
     page.execute_script %Q{$('#csv_file_form').submit()}
-
-    click_on "Finish"
+    assert page.has_content?('Project Fields')
+    click_on "Submit"
 
     assert page.has_content?('Histogram'), "On the Viz page"
   end
@@ -61,17 +61,15 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     csv_path = Rails.root.join('test', 'CSVs', 'dinner.csv')
 
     page.execute_script %Q{$('#csv_file_form').parent().show()}
-    find("#csv_file_form").attach_file("csv", csv_path)
+    find("#csv_file_form").attach_file("file", csv_path)
     page.execute_script %Q{$('#csv_file_form').submit()}
 
     assert page.has_content?('pizza'), "got match dialog"
-    find('#match_table').all('select')[0].select("soup")
-    find('#match_table').all('select')[1].select("pizza")
-    find('#match_table').all('select')[2].select("wings")
-    click_on "Finished"
+    find('.field_match').all('select')[0].select("soup")
+    find('.field_match').all('select')[1].select("pizza")
+    find('.field_match').all('select')[2].select("wings")
+    click_on "Submit"
     
-    assert page.has_content?('enter a name'), "got rename dialog"
-    click_on "Finish"
     
     assert page.has_content?('Histogram'), "On the Viz page"
   end
