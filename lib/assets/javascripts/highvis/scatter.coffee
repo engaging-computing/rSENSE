@@ -108,27 +108,29 @@ $ ->
                     text: ""
                 tooltip:
                     formatter: ->
-                        console.log("hey")
-                        if self.advancedTooltips
-                            str  = "<div style='width:100%;text-align:center;color:#{@series.color};'> #{@series.name.group}</div><br>"
-                            str += "<table>"
-
-                            for field, fieldIndex in data.fields when @point.datapoint[fieldIndex] isnt null
-                                dat = if (Number field.typeID) is data.types.TIME
-                                    (globals.dateFormatter @point.datapoint[fieldIndex])
-                                else
-                                    @point.datapoint[fieldIndex]
-                                    
-                                str += "<tr><td>#{field.fieldName}</td>"
-                                str += "<td><strong>#{dat}</strong></td></tr>"
-                                
-                            str += "</table>"
+                        if @series.name.regression?
+                          str  = @series.name.regression.tooltip
                         else
-                            str  = "<div style='width:100%;text-align:center;color:#{@series.color};'> #{@series.name.group}</div><br>"
-                            str += "<table>"
-                            str += "<tr><td>#{@series.xAxis.options.title.text}:</td><td><strong>#{@x}</strong></td></tr>"
-                            str += "<tr><td>#{@series.name.field}:</td><td><strong>#{@y}</strong></td></tr>"
-                            str += "</table>"
+                          if self.advancedTooltips
+                              str  = "<div style='width:100%;text-align:center;color:#{@series.color};'> #{@series.name.group}</div><br>"
+                              str += "<table>"
+
+                              for field, fieldIndex in data.fields when @point.datapoint[fieldIndex] isnt null
+                                  dat = if (Number field.typeID) is data.types.TIME
+                                      (globals.dateFormatter @point.datapoint[fieldIndex])
+                                  else
+                                      @point.datapoint[fieldIndex]
+                                      
+                                  str += "<tr><td>#{field.fieldName}</td>"
+                                  str += "<td><strong>#{dat}</strong></td></tr>"
+                                  
+                              str += "</table>"
+                          else
+                              str  = "<div style='width:100%;text-align:center;color:#{@series.color};'> #{@series.name.group}</div><br>"
+                              str += "<table>"
+                              str += "<tr><td>#{@series.xAxis.options.title.text}:</td><td><strong>#{@x}</strong></td></tr>"
+                              str += "<tr><td>#{@series.name.field}:</td><td><strong>#{@y}</strong></td></tr>"
+                              str += "</table>"
                     useHTML: true
                     hideDelay: 0
                 
@@ -187,78 +189,7 @@ $ ->
 
                 options
        
-        ###
-        Updates x axis for regression.
-        ###
-        updateXRegression:() ->
-          $('#regressionXAxis').text("X Axis: #{fieldTitle(data.fields[@xAxis])}")
-
-        ###
-        Adds the regression tools to the control bar.
-        ###
-        drawRegressionControls: () ->
-        
-            if (globals.options? and globals.options.isEmbed?) and not @chart? 
-              return
-
-            controls = '<div id="regressionControl" class="vis_controls">'
-
-            controls += "<h3 class='clean_shrink'><a href='#'>Regression Tools:</a></h3>"
-            controls += "<div class='outer_control_div' style='text-align:center'>"
-            
-            # Add x axis label
-            controls += "<div id='regressionXAxis' class='inner_control_div' style='text-align:left'>X Axis: #{fieldTitle(data.fields[@xAxis])}</div>"
-            
-            # Add y axis selector
-            controls += '<div class="inner_control_div" style="text-align:left"> Y Axis: '
-            controls += '<select id="regressionYAxisSelector" class="control_select">'
-
-            for fieldIndex in data.normalFields
-              controls += "<option value='#{fieldIndex}'>#{fieldTitle(data.fields[fieldIndex])}</option>"
-
-            controls += "</select></div>"
-            
-            # Add regression selector
-            controls += '<div class="inner_control_div" style="text-align:left"> Type: '
-            controls += '<select id="regressionSelector" class="control_select">'
-
-            regressions = ['Linear', 'Quadratic', 'Cubic', 'Logarithmic']
-            for regression_type in regressions
-              controls += "<option value='#{regressions.indexOf(regression_type)}'>#{regression_type}</option>"
-
-            controls += "</select></div>"
-            
-            controls += "<button id='regressionButton' class='save_button btn'>Draw Regression</button>"
-            
-            controls += '</div></div>'
-
-            # Write HTML
-            ($ '#controldiv').append controls
-
-            ($ "#regressionControl button").button()
-            
-            ($ "#regressionButton").click =>
-
-              groupIndex = globals.groupSelection
-              y_axis_name = ($ '#regressionYAxisSelector option:selected').text()
-              y_axis_index = ($ '#regressionYAxisSelector').val()
-              name = "#{($ '#regressionSelector option:selected').text()} regression of #{y_axis_name} over #{fieldTitle(data.fields[@xAxis])}"              
-              new_regression = globals.getRegression(data.selector(@xAxis, groupIndex), data.selector(y_axis_index, groupIndex), ($ '#regressionSelector').val(), @xBounds, name)
-              @chart.addSeries(new_regression)
-              
-              #Save a regression TODO
-              return
-            
-            #Set up accordion
-            globals.regressionOpen ?= 0
-
-            ($ '#regressionControl').accordion
-                collapsible:true
-                active:globals.regressionOpen
-
-            ($ '#regressionControl > h3').click ->
-                globals.regressionOpen = (globals.regressionOpen + 1) % 2
-
+       
         ###
         Call control drawing methods in order of apperance
         ###
@@ -565,9 +496,84 @@ $ ->
         serializationCleanup: ->
             super()
             
+        ###
+        Updates x axis for regression.
+        ###
+        updateXRegression:() ->
+          $('#regressionXAxis').text("X Axis: #{fieldTitle(data.fields[@xAxis])}")
+
+        ###
+        Adds the regression tools to the control bar.
+        ###
+        drawRegressionControls: () ->
+        
+            if (globals.options? and globals.options.isEmbed?) and not @chart? 
+              return
+
+            controls = '<div id="regressionControl" class="vis_controls">'
+
+            controls += "<h3 class='clean_shrink'><a href='#'>Regression Tools:</a></h3>"
+            controls += "<div class='outer_control_div' style='text-align:center'>"
+            
+            # Add x axis label
+            controls += "<div id='regressionXAxis' class='inner_control_div' style='text-align:left'>X Axis: #{fieldTitle(data.fields[@xAxis])}</div>"
+            
+            # Add y axis selector
+            controls += '<div class="inner_control_div" style="text-align:left"> Y Axis: '
+            controls += '<select id="regressionYAxisSelector" class="control_select">'
+
+            for fieldIndex in data.normalFields
+              controls += "<option value='#{fieldIndex}'>#{fieldTitle(data.fields[fieldIndex])}</option>"
+
+            controls += "</select></div>"
+            
+            # Add regression selector
+            controls += '<div class="inner_control_div" style="text-align:left"> Type: '
+            controls += '<select id="regressionSelector" class="control_select">'
+
+            regressions = ['Linear', 'Quadratic', 'Cubic', 'Logarithmic']
+            for regression_type in regressions
+              controls += "<option value='#{regressions.indexOf(regression_type)}'>#{regression_type}</option>"
+
+            controls += "</select></div>"
+            
+            controls += "<button id='regressionButton' class='save_button btn'>Draw Regression</button>"
+            
+            controls += '</div></div>'
+
+            # Write HTML
+            ($ '#controldiv').append controls
+
+            ($ "#regressionControl button").button()
+            
+            ($ "#regressionButton").click =>
+
+              groupIndex = globals.groupSelection
+              y_axis_name = ($ '#regressionYAxisSelector option:selected').text()
+              y_axis_index = ($ '#regressionYAxisSelector').val()
+              name = "#{($ '#regressionSelector option:selected').text()} regression of #{y_axis_name} over #{fieldTitle(data.fields[@xAxis])}"              
+              new_regression = globals.getRegression(data.selector(@xAxis, groupIndex), data.selector(y_axis_index, groupIndex), ($ '#regressionSelector').val(), @xBounds, name)
+              @chart.addSeries(new_regression)
+              
+              #Save a regression TODO
+              return
+            
+            #Set up accordion
+            globals.regressionOpen ?= 0
+
+            ($ '#regressionControl').accordion
+                collapsible:true
+                active:globals.regressionOpen
+
+            ($ '#regressionControl > h3').click ->
+                globals.regressionOpen = (globals.regressionOpen + 1) % 2
+            
 
     if "Scatter" in data.relVis
         globals.scatter = new Scatter "scatter_canvas"
     else
         globals.scatter = new DisabledVis "scatter_canvas"
         
+    
+
+    
