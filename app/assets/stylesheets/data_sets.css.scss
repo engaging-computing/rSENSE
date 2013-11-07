@@ -1,3 +1,17 @@
 // Place all the styles related to the data_sets controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+table.field_match
+{
+  td{
+    padding: 5px;
+    
+  }
+  select{
+    margin-bottom: 0px;
+  }
+  .progress
+  {
+    margin-bottom: 0px;
+  }
+}

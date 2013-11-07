@@ -1,0 +1,51 @@
+<div class="row">
+  <% if ((@results.class) == String) %><%@results =  eval(@results)  %><%end%>
+  <% matches = @results[:partial_matches]%>
+  <%= form_tag '/data_sets/field_matching', method: 'put', id: 'field_matching' do%>
+    <div class="span12">
+      <label for="title"><b>Title </b></label><input type="text" id="title" name="title" value="<%=@default_name%>">
+    </div>
+    <div class="span12">
+      <table class="field_match">
+        <thead>
+          <tr>
+            <th>Project Fields</th>
+            <th>File Headers</th>
+            <th>Match Quality</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @results[:fields].each_with_index do |f,findex|%>
+            <tr class="<%=cycle('feed-even','feed-odd')%>">
+              <td><%=f%></td>
+              <td>
+                <select form="field_matching" name="<%=f%>">
+                  <%= options_for_select(@results[:options], matches.has_key?(findex) ? @results[:headers][findex] : 0 )%>
+                </select>
+              </td>
+              <td>
+                <div class="progress">
+                  <% if matches.has_key?(findex) %>
+                    <% if matches[findex][:quality] < 0.8 %>
+                      <div class="bar bar-warning" style="width:100%">Poor</div>
+                    <% else %>
+                      <div class="bar bar-success" style="width:100%">Good</div>
+                    <% end %>
+                  <% else %>
+                    <div class="bar bar-danger" style="width:100%">No Match</div> 
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>  
+      </table>  
+      <input type="hidden" name="pid" value=<%=params[:pid]%>>
+      <input type="hidden" name="file" value=<%= @results[:file]%>>
+      <input type="hidden" name="results" value="<%=@results%>">
+    </div>
+    <div class="span12">
+      <button type="submit" class='btn btn'>Submit</button>
+    </div>
+  <% end %>
+</div>
