@@ -448,6 +448,16 @@ input.object_hidden_checkbox
   }
 }
 
+.item_title
+{
+  @media screen and (max-width: 980px) {
+    font-size:1em;
+  }
+  @media screen and (min-width: 1200px) {
+    font-size:1.2em;
+  }
+}
+
 .ddmenu
 {
   display:none;
