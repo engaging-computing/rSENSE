@@ -310,7 +310,7 @@ class DataSetsController < ApplicationController
   end
   
   # POST /data_sets/uploadCSV2
-  def uploadCSV2
+  def dataFileUpload
     project = Project.find(params[:pid])
     
     begin

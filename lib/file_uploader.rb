@@ -1,10 +1,10 @@
 #File upload functions 
+require 'csv'
+require 'roo'
+require 'open-uri'
+require 'fileutils'
+
 class FileUploader
-  require 'csv'
-  require 'iconv'
-  require 'roo'
-  require 'open-uri'
-  require 'fileutils'
 
   ### Generates the object that will be acted on
   def generateObject(file)
@@ -166,7 +166,6 @@ class FileUploader
       
       fname
   end
-  
   
   #Returns the index of the highest value in the match matrix.
   def matrixMax(matrix)
