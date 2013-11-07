@@ -2,7 +2,7 @@ Rsense::Application.routes.draw do
   
   mount Ckeditor::Engine => '/ckeditor'
 
-  post "/data_sets/uploadCSV2", to: "data_sets#uploadCSV2"
+  post "/data_sets/dataFileUpload", to: "data_sets#dataFileUpload"
   put "/data_sets/field_matching", to: "data_sets#field_matching"
   match '/news/add', to: 'news#create'
   resources :news, except: [:new, :edit]
@@ -42,8 +42,6 @@ Rsense::Application.routes.draw do
   end
 
   #Routes for uploading data
-#   match "/projects/:id/CSVUpload" => "data_sets#uploadCSV"
-  match "/projects/:id/CSVUpload" => "data_sets#uploadCSV2"
   match "/projects/:id/manualEntry" => "data_sets#manualEntry"
   match "/projects/:id/manualUpload" => "data_sets#manualUpload"
   match "/data_sets/:id/edit" => "data_sets#edit"
