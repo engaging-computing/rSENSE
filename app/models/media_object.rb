@@ -106,7 +106,7 @@ class MediaObject < ActiveRecord::Base
     if self.media_type == "image"
       #make the thumbnail
       image = MiniMagick::Image.open(self.file_name)
-      image.resize "128"
+      image.resize "180"
       
       #finish up
       File.open(self.tn_file_name, "wb") do |oo|

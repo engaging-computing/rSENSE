@@ -7,7 +7,7 @@ class FixMediaInContents < ActiveRecord::Migration
           mo = MediaObject.find_by_src($1)
           mo = MediaObject.find_by_tn_src($1) if mo.nil?
           if mo.nil?
-            puts "orphans are dumb"
+            puts "Skipping deleted media object"
             break
           end
 
