@@ -225,8 +225,8 @@
 </div>
 
 <div style="display:none">
-  <%= form_tag "/data_sets/dataFileUpload", method: 'post',multipart: true, id: 'csv_file_form' do %>
-    <%= file_field_tag 'file', id: 'csv_file_input' %>
+  <%= form_tag "/data_sets/dataFileUpload", method: 'post',multipart: true, id: 'datafile_form' do %>
+    <%= file_field_tag 'file', id: 'datafile_input' %>
     <input type="hidden" name="pid" value="<%=@project.id%>">
   <% end %>
 </div>

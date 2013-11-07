@@ -43,9 +43,9 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
 
     csv_path = Rails.root.join('test', 'CSVs', 'dessert.csv')
     
-    page.execute_script %Q{$('#csv_file_form').parent().show()}
-    find("#csv_file_form").attach_file("file", csv_path)
-    page.execute_script %Q{$('#csv_file_form').submit()}
+    page.execute_script %Q{$('#datafile_form').parent().show()}
+    find("#datafile_form").attach_file("file", csv_path)
+    page.execute_script %Q{$('#datafile_form').submit()}
     assert page.has_content?('Project Fields')
     click_on "Submit"
 
@@ -60,9 +60,9 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
 
     csv_path = Rails.root.join('test', 'CSVs', 'dinner.csv')
 
-    page.execute_script %Q{$('#csv_file_form').parent().show()}
-    find("#csv_file_form").attach_file("file", csv_path)
-    page.execute_script %Q{$('#csv_file_form').submit()}
+    page.execute_script %Q{$('#datafile_form').parent().show()}
+    find("#datafile_form").attach_file("file", csv_path)
+    page.execute_script %Q{$('#datafile_form').submit()}
 
     assert page.has_content?('pizza'), "got match dialog"
     find('.field_match').all('select')[0].select("soup")
