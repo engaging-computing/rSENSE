@@ -169,7 +169,7 @@
             <% end %>
             </div>
             <div class="span4 center" title="Supports - CSV,XLS,XLSX,ODS">
-              <a id="upload_csv" href=""><img class="hoverimage" src="/assets/upload.png" /><br />
+              <a id="upload_datafile" href=""><img class="hoverimage" src="/assets/upload.png" /><br />
               Upload File</a>
             </div>
             <div class="span4 center">
@@ -225,14 +225,14 @@
 </div>
 
 <div style="display:none">
-  <%= form_tag "/data_sets", method: 'post',multipart: true, id: 'csv_file_form', action: 'uploadCSV2' do %>
+  <%= form_tag "/data_sets/dataFileUpload", method: 'post',multipart: true, id: 'csv_file_form' do %>
     <%= file_field_tag 'file', id: 'csv_file_input' %>
     <input type="hidden" name="pid" value="<%=@project.id%>">
   <% end %>
 </div>
 
 <div id="doc_box" class="modal hide fade well container">
-  <%= form_tag "/data_sets/uploadCSV2", method: 'post', multipart: true do %>
+  <%= form_tag "/data_sets/dataFileUpload", method: 'post', multipart: true do %>
     <div>
       Please enter the Google Drive link to share below:
     </div> 

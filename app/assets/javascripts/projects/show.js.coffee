@@ -1,7 +1,10 @@
 $ ->
   if namespace.controller is "projects" and namespace.action is "show"
     
-   # Control code for name popup box
+    # Loads a QR code for the page
+    ($ '#exp_qr_tag').qrcode { text : window.location.href, height: ($ '#exp_qr_tag').width(), width: ($ '#exp_qr_tag').width() }
+
+    # Control code for name popup box, Only for manual entry at the moment.
     if ($ '#name_box') isnt []
       ($ '#name_box').modal();
       selectFunc = ->
@@ -27,33 +30,19 @@ $ ->
             ($ 'span.edit_menu span.info_text').text(name)
             ($ '#name_box').modal('hide')
 
-   
-
-    # A File has been uploaded, decide what to do
-#     ($ "#csv_file_form").ajaxForm
-#       error: (resp, status, xhr)->
-#         alert resp['responseText']
-#       
-#       success: (resp, status, xhr)->
-#         if xhr.status == 201
-#           helpers.name_popup resp, "Dataset", "data_set"
-#         else
-#           respond_csv(resp)
-
-    load_qr = ->
-      ($ '#exp_qr_tag').empty()
-      ($ '#exp_qr_tag').qrcode { text : window.location.href, height: ($ '#exp_qr_tag').width()*.75, width: ($ '#exp_qr_tag').width()*.75 }
-
-    load_qr()
-
-    ($ window).resize ->
-      load_qr()
 
     # Initializes the dropdown lightbox for google drive upload
-    ($ '#doc_box').modal
-      backdrop: 'static'
-      keyboard: true
-      show: false
+    ($ '#google_doc').click ->
+      ($ '#doc_box').modal()
+      false
+      
+    ($ '#cancel_doc').click (e)->
+      e.preventDefault()
+      ($ '#doc_box').modal 'hide'
+
+    ($ '#doc_box').on 'hidden', ->
+        ($ '#doc_box').hide()
+
 
     # Does the liking and unliking when the thumbs-up icon is clicked
     ($ '.liked_status').click ->
@@ -73,25 +62,22 @@ $ ->
             ($ @).removeClass('active')
     
 
+    ###
+    # Controls for uploading a file.
+    ###
     # This is black magic that displays the upload csv and upload google doc lightboxes
-    ($ '#upload_csv').click ->
-      ($ '#csv_file_input').click()
+    ($ '#upload_datafile').click ->
+      ($ '#datafile_input').click()
       false
 
-    ($ '#csv_file_input').change ->
-      ($ '#csv_file_form').attr 'action', "/data_sets/uploadCSV2"
-      ($ '#csv_file_form').submit()
+    # Auto-submit the file upload form when user hits the open button.  
+    ($ '#datafile_input').change ->
+      ($ '#datafile_form').submit()
 
-    ($ '#cancel_doc').click ->
-      ($ '#doc_box').modal 'hide'
 
-    ($ '#doc_box').on 'hidden', ->
-        ($ '#doc_box').hide()
-
-    ($ '#google_doc').click ->
-      ($ '#doc_box').modal()
-      false
-
+    ###
+    # Controls for Data Sets box
+    ###
     # Takes all sessions that are checked, appends its id to the url and
     # redirects the user to the view sessions page (Vis page)
     ($ '#vis_button').click (e) ->
@@ -160,34 +146,8 @@ $ ->
     ($ document).find("[id^=ds_]").each (i,j) =>
       ($ j).click check_for_selection
 
-    #Add submit event to project filters form. Performs AJAX request to update project filters
-    ($ ".project_filters").submit ->
-
-      x = ($ @).children("input:checked").map ->
-          return this.name
-
-      filters = ""
-      filters += x[j] + " " for i,j in x
-
-      data={}
-      data["project"] = {}
-      data["project"]["filter"] = filters
-
-      $.ajax
-        url: ($ @).attr('id')
-        type: "PUT"
-        dataType: "json"
-        data:
-          data
-
-      false
-
-
-    ($ ".projects_add_filter_checkbox").click ->
-      $(@).parent().submit()
-      
     ###
-    Links for Datasets
+    # Hide and delete for datasets
     ###
     ($ 'a.data_set_hide').click (e) ->
     
@@ -227,7 +187,9 @@ $ ->
               tbody.recolor_rows(recolored)
               recolored = true
               
-    ## controls for saved vizes  
+    ###
+    # Hide and delete for visualizations
+    ###
     ($ 'a.viz_hide').click (e) ->
       e.preventDefault()
       
