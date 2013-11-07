@@ -92,10 +92,19 @@ $ ->
           x = (i / globals.REGRESSION.NUM_POINTS) * (x_bounds.max - x_bounds.min) + x_bounds.min
           y =  calculateRegressionPoint(regression_matrix, x, regression_type)
           {x: x, y: y}
+        
+        
+        str = "<div style='width:100%;text-align:center;color:#000;'> #{series_name}</div><br>"
+        str += "<table>"
+        str += "<tr><td>A:</td><td><strong>#{regression_matrix[1]}</strong></td></tr>"
+        str += "<tr><td>B:</td><td><strong>#{regression_matrix[0]}</strong></td></tr>"
+        str += "</table>"
                    
         ret =
           name:
-            group: series_name
+            group: series_name,
+            regression:
+              tooltip: str
           data: data,
           type: 'line'
           color: '#000',
@@ -103,6 +112,9 @@ $ ->
           showInLegend: false,
           marker: 
             symbol: 'blank'
+          states:
+            hover:
+              lineWidth: 4
 
       ###
       Uses the regression matrix to calculate the y value given an x value.
