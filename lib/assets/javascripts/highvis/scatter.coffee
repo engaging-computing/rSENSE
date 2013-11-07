@@ -86,7 +86,7 @@ $ ->
             
             $.extend true, @chartOptions,
                 chart:
-                    type: "scatter"
+                    type: if @mode is @LINES_MODE then "line" else "scatter"
                     zoomType: "xy"
                     resetZoomButton:
                         theme:
@@ -352,7 +352,7 @@ $ ->
 
             ($ '.mode_radio').click (e) =>
                 @mode = Number e.target.value
-                @delayedUpdate()
+                @start()
 
             ($ '.tooltip_box').click (e) =>
                 @advancedTooltips = (@advancedTooltips + 1) % 2
