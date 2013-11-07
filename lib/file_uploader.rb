@@ -1,7 +1,6 @@
 #File upload functions 
 class FileUploader
   require 'csv'
-  require 'iconv'
   require 'roo'
   require 'open-uri'
   require 'fileutils'
