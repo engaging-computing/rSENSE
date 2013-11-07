@@ -45,7 +45,7 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     
     page.execute_script %Q{$('#csv_file_form').parent().show()}
     find("#csv_file_form").attach_file("file", csv_path)
-#     page.execute_script %Q{$('#csv_file_form').submit()}
+    page.execute_script %Q{$('#csv_file_form').submit()}
     assert page.has_content?('Project Fields')
     click_on "Submit"
 
