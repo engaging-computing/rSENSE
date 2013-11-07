@@ -33,6 +33,11 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
 
     assert page.has_content?('Number_2'), "Has new field"
     assert page.has_content?('Histogram'), "On the Viz page"
+
+    click_on "Save Visualization"
+    click_on "Finish"
+
+    click_on "Visualizations"
   end
 
   test "upload a CSV file" do

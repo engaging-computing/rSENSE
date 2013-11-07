@@ -22,7 +22,6 @@
     <% end %>
 
     <div style="min-height:100%;position:relative;">
-
       <!-- The title bar -->
       <div id="title_bar">
         <div class="container">
@@ -75,15 +74,8 @@
         </div>
       </div>
 
-      <% unless flash[:alert].nil? %>
-        <div style="clear: both; margin-top: 50px;"> &nbsp; </div>
-        <div style="background: red; color: white; font-weight: bold; text-align: center; padding: 1ex;">
-          <p><%= flash[:alert] %></p>
-        </div>
-      <% end %>
-
       <!-- Main Container -->
-      <div id="outer" style="padding:50px 0px 70px 0px; margin:0; min-height:100%; <%= @layout_wide ? 'margin-right:40px;' : '' %>">
+      <div id="outer" style="padding:0px 0px 70px 0px; margin:0; min-height:100%; <%= @layout_wide ? 'margin-right:40px;' : '' %>">
         <div class="container mainContent <%= @layout_wide ? 'mc-wide' : '' %>" data-role="page">
           <%= bootstrap_flash %>
           <%= yield %>
