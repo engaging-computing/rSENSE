@@ -13,7 +13,7 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
   end
 
   test "enter a data set" do
-    login('kate', '12345')
+    login('kate', '12345')  
     click_on 'Projects'
     click_on 'Measuring Things'
     find('#fields').click_on 'Edit'
@@ -45,8 +45,8 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     
     page.execute_script %Q{$('#csv_file_form').parent().show()}
     find("#csv_file_form").attach_file("file", csv_path)
-    page.execute_script %Q{$('#csv_file_form').submit()}
-
+#     page.execute_script %Q{$('#csv_file_form').submit()}
+    assert page.has_content?('Project Fields')
     click_on "Submit"
 
     assert page.has_content?('Histogram'), "On the Viz page"
