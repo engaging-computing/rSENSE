@@ -92,13 +92,8 @@ $ ->
           x = (i / globals.REGRESSION.NUM_POINTS) * (x_bounds.max - x_bounds.min) + x_bounds.min
           y =  calculateRegressionPoint(regression_matrix, x, regression_type)
           {x: x, y: y}
-        
-        
-        str = "<div style='width:100%;text-align:center;color:#000;'> #{series_name}</div><br>"
-        str += "<table>"
-        str += "<tr><td>A:</td><td><strong>#{regression_matrix[1]}</strong></td></tr>"
-        str += "<tr><td>B:</td><td><strong>#{regression_matrix[0]}</strong></td></tr>"
-        str += "</table>"
+                   
+        str = makeToolTip(regression_matrix, regression_type, series_name)           
                    
         ret =
           name:
@@ -134,3 +129,56 @@ $ ->
           
           when globals.REGRESSION.LOGARITHMIC
             return regression_matrix[0] + regression_matrix[1] * Math.log(x_val)
+            
+      ###
+      Returns tooltip description of the regression.
+      ###
+      makeToolTip = (regression_matrix, regression_type, series_name) ->
+        
+        #Get the correct regression type
+        switch Number(regression_type)
+      
+          when globals.REGRESSION.LINEAR
+          
+            str = "<div style='width:100%;text-align:center;color:#000;'> #{series_name}</div><br>"
+            str += "<table>"
+            str += "<tr><td>Formula:</td><td><strong>f(x) = Ax+B</strong></td></tr>"
+            str += "<tr><td>A:</td><td><strong>#{regression_matrix[1]}</strong></td></tr>"
+            str += "<tr><td>B:</td><td><strong>#{regression_matrix[0]}</strong></td></tr>"
+            str += "</table>"
+            
+            return str
+            
+          when globals.REGRESSION.QUADRATIC
+          
+            str = "<div style='width:100%;text-align:center;color:#000;'> #{series_name}</div><br>"
+            str += "<table>"
+            str += "<tr><td>Formula:</td><td><strong>f(x) = Ax+B</strong></td></tr>"
+            str += "<tr><td>A:</td><td><strong>#{regression_matrix[1]}</strong></td></tr>"
+            str += "<tr><td>B:</td><td><strong>#{regression_matrix[0]}</strong></td></tr>"
+            str += "</table>"
+            
+            return str
+
+          when globals.REGRESSION.CUBIC
+            
+            str = "<div style='width:100%;text-align:center;color:#000;'> #{series_name}</div><br>"
+            str += "<table>"
+            str += "<tr><td>Formula:</td><td><strong>f(x) = Ax+B</strong></td></tr>"
+            str += "<tr><td>A:</td><td><strong>#{regression_matrix[1]}</strong></td></tr>"
+            str += "<tr><td>B:</td><td><strong>#{regression_matrix[0]}</strong></td></tr>"
+            str += "</table>"
+            
+            return str
+        
+          when globals.REGRESSION.LOGARITHMIC
+          
+            str = "<div style='width:100%;text-align:center;color:#000;'> #{series_name}</div><br>"
+            str += "<table>"
+            str += "<tr><td>Formula:</td><td><strong>f(x) = Ax+B</strong></td></tr>"
+            str += "<tr><td>A:</td><td><strong>#{regression_matrix[1]}</strong></td></tr>"
+            str += "<tr><td>B:</td><td><strong>#{regression_matrix[0]}</strong></td></tr>"
+            str += "</table>"
+            
+            return str
+        
