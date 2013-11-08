@@ -587,5 +587,53 @@ class ProjectsController < ApplicationController
       
     end
   end
-
+  
+  def edit_fields
+    @project = Project.find(params[:id])
+    
+    if params.has_key?(:new_field)
+      if params[:new_field] == "" 
+        @project.fields.each do |field| 
+          if !(field.update_attributes({name: params["#{field.id}_name"]}))
+            respond_to do |format|
+              flash[:error] = "Field names must be uinque"
+              format.html and return
+            end
+          end
+        end
+        redirect_to project_path(@project) and return
+      else   
+        #We added a field, add the field and save old params
+        @tmp_save = params
+        if(params[:new_field] == "Location")
+          latitude =  Field.new({project_id: @project.id,field_type: get_field_type("Latitude"),name: "Latitude"  })
+          longitude =  Field.new({project_id: @project.id,field_type: get_field_type("Longitude"),name: "Longitude"  })
+          respond_to do |format|
+            if latitude.save && longitude.save
+              format.html
+            else
+              flash[:error] = latitude.errors.full_messages()
+              format.html
+            end
+          end
+        else
+          next_name = Field.get_next_name(@project,get_field_type(params[:new_field]))
+          field = Field.new({project_id: @project.id,field_type: get_field_type(params[:new_field]),name: next_name  })
+          respond_to do |format|
+            if field.save
+              format.html
+            else
+              flash[:error] = field.errors.full_messages()
+              format.html
+            end
+          end
+        end
+      end
+    else
+      respond_to do |format|
+        format.html
+      end
+    end
+  end
+  
 end

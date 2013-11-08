@@ -1,3 +1,4 @@
+include ApplicationHelper
 class Field < ActiveRecord::Base
   attr_accessible :project_id, :field_type, :name, :unit
   validates_presence_of :project_id, :field_type, :name
@@ -33,5 +34,30 @@ class Field < ActiveRecord::Base
       end
     end
     errors
+  end
+  
+  def self.get_next_name(project,field_type)
+    highest = 0
+    base = get_field_name(field_type)
+    project.fields.where('field_type = ?',field_type).each do |f|
+      fname = f.name.split("_")
+      if fname[0] == base
+        if fname[1].nil?
+          highest +=1;
+        else
+          tmp = fname[1].to_i
+          if tmp > highest
+            highest = tmp
+          end
+        end
+      end
+    end
+    if highest > 0
+      name = "#{base}_#{highest+1}"
+    else 
+      name = base
+    end
+    
+    name    
   end
 end

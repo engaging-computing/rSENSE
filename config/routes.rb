@@ -9,8 +9,8 @@ Rsense::Application.routes.draw do
 
   resources :media_objects
 
+  match "/projects/:id/edit_fields" => "projects#edit_fields"
   post "projects/:id/templateFields" => "projects#templateFields"
-
   match "/projects/import" => "projects#importFromIsense"
   match "/projects/import/:pid" => "projects#importFromIsense"
 
