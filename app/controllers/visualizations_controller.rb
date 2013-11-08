@@ -233,7 +233,7 @@ class VisualizationsController < ApplicationController
         end
       end
     else
-      @datasets = DataSet.find_all_by_project_id(params[:id], :conditions => {hidden: false})
+      @datasets = DataSet.where(hidden: false, project_id: params[:id])
     end
     
     # create special dataset grouping field

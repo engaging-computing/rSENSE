@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class NewsTest < ActionDispatch::IntegrationTest
+class MakeNewsTest < ActionDispatch::IntegrationTest
   include CapyHelper
 
   setup do

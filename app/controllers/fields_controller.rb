@@ -22,7 +22,7 @@ class FieldsController < ApplicationController
 
     highest = 0
     
-    @project.fields.all.each do |f|
+    @project.fields.to_a.each do |f|
       fname = f.name.split("_")
       if @field.name == fname[0] or @field.name == f
         if fname[1].nil?
@@ -66,7 +66,7 @@ class FieldsController < ApplicationController
       
       # Enforce name uniqueness per project
       if params[:field].try(:[], :name)
-        @field.owner.fields.all.each do |f|
+        @field.owner.fields.to_a.each do |f|
           if f.id != params[:id].to_i
             if f.name == params[:field][:name]
               logger.info "Field name '#{f.name}' not unique"
