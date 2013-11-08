@@ -8,7 +8,6 @@ gem 'rails', '3.2.13'
 gem 'sqlite3'
 gem 'pg'
 
-
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
@@ -42,6 +41,7 @@ gem 'bcrypt-ruby', '~> 3.0.0'
 gem 'jquery-ui-rails'
 
 gem 'ckeditor'
+gem 'httparty'
 
 # Include Twitter bootstrap
 gem 'twitter-bootstrap-rails', '2.2.8'

@@ -1,3 +1,4 @@
+
 class MediaObjectsController < ApplicationController
   include ApplicationHelper
 
@@ -54,7 +55,13 @@ class MediaObjectsController < ApplicationController
       @media_object.destroy
 
       respond_to do |format|
-        format.html { redirect_to media_objects_url }
+        format.html do
+          if request.env["HTTP_REFERER"]
+            redirect_to :back, notice: "Deleted #{@media_object.name}" 
+          else
+            redirect_to media_objects_path, notice: "Deleted #{@media_object.name}" 
+          end
+        end
         format.json { render json: {}, status: :ok }
       end
     else
@@ -67,31 +74,16 @@ class MediaObjectsController < ApplicationController
   
   #POST /media_object/saveMedia
   def saveMedia
-    
     #Figure out where we are uploading data to
     data = params[:keys].split('/')
     target = data[0]
     id = data[1]
-    logger.info "TARGET = #{target} and ID = #{id}"
-    #Set up the link to S3
-    s3ConfigFile = YAML.load_file('config/aws_config.yml')
-    
-    s3 = AWS::S3.new(
-      :access_key_id => s3ConfigFile['access_key_id'],
-      :secret_access_key => s3ConfigFile['secret_access_key'])
-    
-    #Get our bucket
-    bucket = s3.buckets['isenseimgs']
 
     #Set up the file for upload
     fileType = params[:upload].content_type.split("/")[0]
     filePath = params[:upload].tempfile 
     fileName = params[:upload].original_filename
-    fileKey = SecureRandom.uuid() + "." + fileName
-    while MediaObject.find_by_file_key(fileKey) != nil
-      fileKey = SecureRandom.uuid() + "." + fileName
-    end
-    
+
     if fileType == 'application'
       extended = params[:upload].content_type.split("/")[1]
       if extended.include? 'pdf'
@@ -101,66 +93,77 @@ class MediaObjectsController < ApplicationController
       end
     end
     
-    #Generate the key for our file in the bucket
-    o = bucket.objects[fileKey]
-
+    @mo = MediaObject.new
+    @mo.name = fileName
+    @mo.media_type = fileType
+    
     #Build media object params based on what we are doing
     case target
     when 'project'
       @project = Project.find_by_id(id)
       if(can_edit?(@project))
-        @mo = {user_id: @project.owner.id, project_id: id, src: o.public_url.to_s, name: fileName, media_type: fileType, file_key: fileKey}
+        @mo.user_id = @project.owner.id
+        @mo.project_id = @project.id
       end
     when 'data_set'
       @data_set = DataSet.find_by_id(id)
       if(can_edit?(@data_set))
-        @mo = {user_id: @data_set.owner.id, project_id: @data_set.project_id, data_set_id: @data_set.id, src: o.public_url.to_s, name: fileName, media_type: fileType, file_key: fileKey}
+        @mo.user_id = @data_set.owner.id
+        @mo.project_id = @data_set.id
       end
     when 'user'
       @user = User.find_by_username(id)
       if(can_edit?(@user))
-        @mo = {user_id: @user.id, src: o.public_url.to_s, name: fileName, media_type: fileType, file_key: fileKey}
+        @mo.user_id = @user.id
       end
     when 'tutorial'
       @tutorial = Tutorial.find_by_id(id)
       if(can_edit?(@tutorial))
-        @mo = {user_id: @tutorial.owner.id, src: o.public_url.to_s, name: fileName, media_type: fileType, tutorial_id: @tutorial.id, file_key: fileKey}
+        @mo.user_id = @tutorial.owner.id 
+        @mo.tutorial_id = @tutorial.id
       end
     when 'visualization'
       @visualization = Visualization.find_by_id(id)
       if(can_edit?(@visualization))
-        @mo = {user_id: @visualization.owner.id, src: o.public_url.to_s, name: fileName, media_type: fileType, visualization_id: @visualization.id, file_key: fileKey}
+        @mo.user_id = @visualization.owner.id
+        @mo.visualization_id = @visualization.id
       end
     when 'news'
       @news = News.find_by_id(id)
       if(can_edit?(@news))
-        @mo = {user_id: @news.owner.id, src: o.public_url.to_s, name: fileName, media_type: fileType, news_id: @news.id, file_key: fileKey}
+        @mo.user_id = @news.owner.id
+        @mo.news_id = @news.id
       end
-        
     end
 
-    #If we managed to make some params build the media object and write to S3
-    if(defined? @mo)      
-    
-      #Write the file to S3
-      o.write(file: filePath, :content_disposition => "attachment;filename=#{fileName}")
+    #If we managed to make some params build the media object
+    unless @mo.user_id.nil?
+      # Save the file
+      @mo.check_store!
 
-      #Generate a media object with the calculated params
-      mo = MediaObject.create(@mo)
-      mo.add_tn
-      @mo = mo
-      
-      if params.has_key?(:non_wys)
-        respond_to do |format|
-          format.html {redirect_to params[:non_wys]}
-          format.json {render json: @mo.id}
+      FileUtils.cp(filePath, @mo.file_name)
+
+      @mo.add_tn
+
+      # Generate a media object with the calculated params
+      if @mo.save
+        if params.has_key?(:non_wys)
+          respond_to do |format|
+            format.html { redirect_to params[:non_wys] }
+            format.json { render json: @mo.id }
+          end
+        else
+          # render default
         end
+      else
+        render text: "File upload failed"
+        logger.info "Error saving Media Object"
+        logger.info @mo.errors.inspect
       end
       
     else
       #Tell the user there is a problem with uploading their image.
       render json: {filelink: '/assets/noimage.png'}
-      
     end
   end
 end

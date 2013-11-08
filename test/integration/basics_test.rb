@@ -15,12 +15,13 @@ class BasicsTest < ActionDispatch::IntegrationTest
   test "create a user" do
     visit '/'
     find("#title_bar .visible-desktop div").click_on("Register")
-    fill_in "First Name", with: "Mark"
-    fill_in "Last Name",  with: "Sherman"
-    fill_in "Username",   with: "mark"
-    fill_in "Email",      with: "msherman@cs.uml.edu"
-    fill_in "Password:",   with: "pietime"
-    fill_in "Password Confirmation",
+    assert page.has_content?("Register for iSENSE")
+    fill_in "user_firstname", with: "Mark"
+    fill_in "user_lastname",  with: "Sherman"
+    fill_in "user_username",   with: "mark"
+    fill_in "user_email",      with: "msherman@cs.uml.edu"
+    fill_in "user_password",   with: "pietime"
+    fill_in "user_password_confirmation",
                           with: "pietime"
     click_on "Create User"
 
