@@ -20,10 +20,10 @@ class SessionsController < ApplicationController
     
     login_name = params[:username_or_email].downcase
     
-    @user = User.find(:first, :conditions => [ "lower(email) = ?", login_name ])
+    @user = User.where("lower(email) = ?", login_name).first
       
     if !@user
-      @user = User.find(:first, :conditions => [ "lower(username) = ?", login_name ])
+      @user = User.where("lower(username) = ?", login_name).first
     end
     
     if @user and @user.authenticate(params[:password])

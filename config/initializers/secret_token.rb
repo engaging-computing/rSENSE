@@ -15,4 +15,6 @@ unless File.exists?(key_file)
   kk.close
 end
 
-Rsense::Application.config.secret_token = File.open(key_file).read
+secret_key = File.open(key_file).read
+Rsense::Application.config.secret_token = secret_key
+Rsense::Application.config.secret_key_base = secret_key + 'aE'

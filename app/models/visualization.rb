@@ -46,7 +46,7 @@ class Visualization < ActiveRecord::Base
     res = if search
         where('lower(title) LIKE lower(?)', "%#{search}%")
     else
-        scoped
+        all
     end
     
     if include_hidden
