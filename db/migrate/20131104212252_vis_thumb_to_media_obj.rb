@@ -3,17 +3,18 @@ class VisThumbToMediaObj < ActiveRecord::Migration
     add_column :visualizations, :thumb_id, :integer
 
     Visualization.all.each do |vi|
+      tn_src = vi.read_attribute(:tn_src)
+      next unless tn_src
+
       mo = MediaObject.new
       mo.visualization_id = vi.id
       mo.media_type = 'image'
       mo.name = 'image.png'
       mo.check_store!
 
-      FileUtils.cp("#{Rails.root}/public/assets/noimage.png", mo.file_name)
+      FileUtils.cp("#{Rails.root}/app/assets/images/noimage.png", mo.file_name)
 
-      tn_src = vi.read_attribute(:tn_src)
-
-      if tn_src && tn_src =~ /amazonaws/
+      if tn_src =~ /amazonaws/
         # Get the thumbnail
         re = HTTParty.get(tn_src)
         print "."; STDOUT.flush
@@ -32,6 +33,9 @@ class VisThumbToMediaObj < ActiveRecord::Migration
       vi.thumb_id = mo.id
 
       vi.save!
+
+      vi2 = Visualization.find(vi.id)
+      raise Exception.new("WTF") unless vi2.thumb_id
     end
 
     puts "+"
