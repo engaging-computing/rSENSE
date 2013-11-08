@@ -3,12 +3,12 @@
 $ ->
   if namespace.controller is "projects" and namespace.action is "index"
 
-    ($ '.mainContent').on 'click', 'div.item', (event) ->
+    ($ '.mainContent').on 'click', 'div.clickableItem', (event) ->
       window.location = ($ event.currentTarget).children('a').attr 'href'
 
     addItem = (object) ->
       newItem = """
-        <div class='item'>
+        <div class='item clickableItem'>
           <a href='#{object.url}'></a>
           #{if object.mediaSrc then "<div class='caroucell' style='height:120px; background-image:url(#{object.mediaSrc})'></div>" else ""}
           <div style="padding:7px">
