@@ -594,7 +594,7 @@ class ProjectsController < ApplicationController
     if params.has_key?(:new_field)
       if params[:new_field] == "" 
         @project.fields.each do |field| 
-          if !(field.update_attributes({name: params["#{field.id}_name"]}))
+          if !(field.update_attributes({name: params["#{field.id}_name"],unit: params["#{field.id}_unit"]} || ""))
             respond_to do |format|
               flash[:error] = "Field names must be uinque"
               format.html and return
