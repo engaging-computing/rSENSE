@@ -82,7 +82,7 @@ div.info_text
     position:fixed;
     width:300px;
     display: none;
-    top:46px !important;
+    top:60px !important;
     left:50%;
     margin-left:-160px;
     padding: 10px;
@@ -235,15 +235,18 @@ input.object_hidden_checkbox
   left: -54px;
 }
 
-/*.feed-even, .feed-odd
+form
 {
-  border-right-width: 2px;
-  border-left-width: 2px;
-}*/
+  .feed-even, .feed-odd
+  {
+    border-right-width: 2px;
+    border-left-width: 2px;
+  }
+}
 
 #title_bar
 {
-  position: fixed;
+  //position: fixed;
   border-bottom: 1px solid black;
   width:100%;
   background-color:#113;
