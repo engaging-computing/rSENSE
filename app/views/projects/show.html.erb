@@ -133,7 +133,7 @@
             </tbody>
           </table>
           <% if can_edit?(@project) %>
-            <button class="btn btn-primary">Edit</button>
+            <a href="/projects/<%=@project.id%>/edit_fields"><button class="btn btn-primary">Edit</button></a>
           <% end %>
         <% end %>
       <% end %>

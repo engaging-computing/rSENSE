@@ -17,8 +17,8 @@
                 <td><input type="text" name="<%=field.id%>_name" value="<%= (defined?(@tmp_save) && @tmp_save.has_key?("#{field.id}_name")) ? @tmp_save["#{field.id}_name"] : field.name%>"></td>
                 <td><%=get_field_name(field.field_type)%></td>
                 <td>
-                  <% if field.field_type == "Number"%>
-                    <input name="<%=field.id%>_unit" value="<%=field.unit%>">
+                  <% if field.field_type == get_field_type("Number")%>
+                    <input class="input-small" type="text" name="<%=field.id%>_unit" value="<%=field.unit%>">
                   <% else %>
                     <%= field.unit%>
                   <% end %>
