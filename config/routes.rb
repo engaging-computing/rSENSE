@@ -51,8 +51,8 @@ Rsense::Application.routes.draw do
   #Routes for displaying data
   match "/projects/:id/data_sets/*datasets" => "visualizations#displayVis"
   match "/projects/:id/data_sets/" => "visualizations#displayVis"
-
-
+  post "/projects/:id/templateUpload", to: "projects#templateUpload"
+  post "/projects/:id/finishTemplateUpload", to: "projects#finishTemplateUpload"
   match "/projects/:id/removeField" => "projects#removeField"
 
   match "/media_objects/saveMedia/*keys" => "media_objects#saveMedia"

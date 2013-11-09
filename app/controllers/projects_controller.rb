@@ -636,4 +636,53 @@ class ProjectsController < ApplicationController
     end
   end
   
+  def templateUpload
+    @project = Project.find(params[:id])
+    @options = [['Timestamp',get_field_type('Timestamp')],['Number',get_field_type('Number')],['Text',get_field_type('Text')],['Latitude',get_field_type('Latitude')],['Longitude',get_field_type('Longitude')]]
+
+    uploader = FileUploader.new
+    data_obj = uploader.generateObject(params[:file])
+    @tmp_file = data_obj[:file]
+    @headers = data_obj['data'].keys
+        
+    respond_to do |format|
+      format.html
+    end
+  end
+  
+  def finishTemplateUpload
+    uploader = FileUploader.new
+    @matches = params[:headers]
+    @project = Project.find(params[:id])
+    @matches.each do |header|
+      field = Field.new({project_id: @project.id, field_type: header[1].to_i, name: header[0]})
+
+      if !(field.save)
+        respond_to do |format|
+          flash[:error] = field.errors.full_messages()
+          render "templateUpload" and return
+        end
+      end
+    end
+    
+    data_obj = uploader.retrieve_obj(params[:file])
+    redirect_to @project
+#     data = uploader.swap_columns(data_obj, params)
+#     dataset = DataSet.new do |d|
+#       d.user_id = @cur_user.id
+#       d.title = params[:title]
+#       d.project_id = project.id
+#       d.data = data
+#     end
+#     
+#     if dataset.save
+#       redirect_to "/projects/#{project.id}/data_sets/#{dataset.id}"
+#     else
+#       @headers = data_obj['data'].keys
+#       logger.info "THERE WAS AN ERROR #{@headers}"
+#       flash[:error] = dataset.errors.full_messages()
+#       
+#     end
+  end
+  
 end
