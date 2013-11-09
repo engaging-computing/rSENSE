@@ -226,24 +226,9 @@
   <% end %>
 </div>
 
-<div style="display:none">
-  <%= form_tag "/projects/#{@project.id}/CSVUpload", multipart: true, id: 'template_file_form', 
-                target: "upload_target" do %>
-    <%= file_field_tag 'csv', id: 'template_file_input' %>
+<div style="">
+  <%= form_tag "/projects/#{@project.id}/templateUpload", method: 'post',multipart: true, id: 'template_file_form' do %>
+    <%= file_field_tag 'file', id: 'template_file_input' %>
   <% end %>
-  <iframe id="upload_target" name="upload_target" src="" style="width:100%;height:100;border:0px solid #fff;"></iframe>
 </div>
 
-<!-- Field Templating Modal Box -->
-<div id="template_match_box" class="modal hide fade well container">
-  <p>
-    Please finish the template processing by telling us the type of each of your fields.
-  </p>
-
-  <table id="template_match_table"> </table>
-
-  <div style="float:right;">
-    <button class="finished_button btn btn-success"> Finished </button>
-    <button class="cancel_upload_button btn btn-danger" style="margin:15px 6px 0px 0px"> Cancel Upload </button>
-  </div>
-</div>
