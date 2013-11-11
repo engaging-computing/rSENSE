@@ -24,7 +24,6 @@ class FileUploader
   ### Simply opens the file as the correct type and returns the Roo object.
   def open_spreadsheet(file)
     if file.class == ActionDispatch::Http::UploadedFile
-      Rails.logger.info file.path
       case File.extname(file.original_filename)
       when ".csv" then convert(file.path)
       when ".xls" then Roo::Excel.new(file.path, nil, :ignore)
@@ -34,7 +33,6 @@ class FileUploader
       end
     else
       x = write_temp_file(CSV.parse(open(file) {|f| f.read}))
-      Rails.logger.info x
       spreadsheet = convert(x)
       cleanup_temp_file(x)
       spreadsheet
@@ -56,43 +54,50 @@ class FileUploader
   end
   
   ## Swap columns 
-  def swap_columns(data_obj, params) 
-    project = Project.find(params[:pid])
-    final_obj = {}
-    Rails.logger.info params
-    
-    obj = {}
-    size = 0
-    project.fields.each do |f|
-      obj[f.id] = data_obj[params[f.name]]
-      if data_obj[params[f.name]] != nil
-        size =  data_obj[params[f.name]].length
-      end
-    end
-    
-    final_obj = []
+  def swap_columns(data_obj, project, matches) 
+    size = data_obj.first.length
+    data = []
     (0..size-1).each do |i|
-      final_obj[i] = {}
-      project.fields.each do |f|
-        if obj[f.id] != nil
-          final_obj[i][f.id] = obj[f.id][i]
-        end
+      x = {}
+      project.fields.each do |field|
+        x[field.id] = data_obj[matches[field.id.to_s]][i]
       end
+      data << x
     end
     
-    final_obj
+    data
+  end
+  
+  def swap_without_matches(data_obj,project)
+    data = []
+    size = data_obj.first.length
+
+    (0..size-1).each do |i|
+      x = {}
+      project.fields.each do |field|
+        x[field.id] = data_obj[field.name][i]
+      end
+      data << x
+    end
+    data
   end
   
   ### Match headers should return a match_matrix for mismatches or continue
   def match_headers(project,data_obj)
-    fields = project.fields.map {|n| n.name}
-    headers = data_obj['data'].keys
+    fields = project.fields
+    
+    if data_obj.has_key?('data')
+      headers = data_obj['data'].keys
+    else
+      headers = data_obj.keys
+    end
+    
     matrix = []
     fields.each_with_index do |f,fi|
       matrix.append []
       headers.each_with_index do |h,hi|
-        lcs_length = lcs(fields[fi].downcase,headers[hi].downcase).length.to_f
-        x = lcs_length / fields[fi].length.to_f
+        lcs_length = lcs(f.name.downcase,headers[hi].downcase).length.to_f
+        x = lcs_length / f.name.length.to_f
         y = lcs_length / headers[hi].length.to_f
         avg = (x + y) / 2
         matrix[fi].append avg
@@ -124,7 +129,6 @@ class FileUploader
     results[:file] = data_obj[:file]
     results[:fields] = fields
     results[:headers] = headers
-    
     if (results.size != project.fields.size) or (worstMatch < 0.6)
       results[:status] = false
     else

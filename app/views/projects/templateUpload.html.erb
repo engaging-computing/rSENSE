@@ -23,6 +23,16 @@
       </table>
     </div>
   </div>
+  <div class="row">
+    <div class="span2">
+      <b>Create Dataset?</b><input type="checkbox" name="create_dataset" checked><br/>
+    </div>
+    <div class="span2">
+      <label for="title">Dataset Name</label>
+      <input name="title" type="text" value="Dataset #1"><br/>
+    </div>
+  </div>
+  
   <input type="hidden" name="file" value="<%=@tmp_file%>">
   <button type="submit" class="btn">Submit</button>
 <% end %>
