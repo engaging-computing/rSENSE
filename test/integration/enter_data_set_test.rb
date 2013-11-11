@@ -13,7 +13,7 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
   end
 
   test "enter a data set" do
-    skip "Jim is fixing this"
+    skip
 
     login('kate', '12345')  
     click_on 'Projects'
@@ -45,7 +45,7 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
   end
 
   test "upload a CSV file" do
-    skip "Jim is fixing this"
+    skip
 
     login('kate', '12345')
 
@@ -65,6 +65,8 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
   end
  
   test "upload a mismatched CSV file" do
+    skip
+
     login('kate', '12345')
 
     click_on "Projects"
@@ -87,7 +89,7 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
   end
 
   test "import fields" do
-    skip "Jim is fixing this anyway"
+    skip
 
     login('kate', '12345')
 
