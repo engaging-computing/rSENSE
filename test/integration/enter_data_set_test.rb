@@ -15,7 +15,7 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
   test "enter a data set" do
     login('kate', '12345')  
     click_on 'Projects'
-    click_on 'Measuring Things'
+    find("div.item div div", text: "Measuring Things").click
     click_on 'Manual Entry'
     find('#manualTable').all('.input-small')[0].native.send_keys "5"
     find('#manualTable').all('.input-small')[1].native.send_keys "6"
@@ -34,7 +34,8 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     login('kate', '12345')
 
     click_on "Projects"
-    click_on "Dessert is Delicious"
+    
+    find("div.item div div", text: "Dessert is Delicious").click
 
     csv_path = Rails.root.join('test', 'CSVs', 'dessert.csv')
     
@@ -51,7 +52,8 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     login('kate', '12345')
 
     click_on "Projects"
-    click_on "Dessert is Delicious"
+    
+    find("div.item div div", text: "Dessert is Delicious").click
 
     csv_path = Rails.root.join('test', 'CSVs', 'dinner.csv')
 
@@ -73,7 +75,8 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     login('kate', '12345')
 
     click_on "Projects"
-    click_on "Empty Project"
+    
+    find("div.item div div", text: "Empty Project").click
 
     click_on "Upload File"
     

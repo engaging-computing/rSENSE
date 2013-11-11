@@ -1,9 +1,13 @@
+
+require 'store_file'
+
 class Visualization < ActiveRecord::Base
   
   include ActionView::Helpers::DateHelper
   include ActionView::Helpers::SanitizeHelper
   
-  attr_accessible :content, :data, :project_id, :globals, :title, :user_id, :hidden, :featured, :featured_at, :tn_src, :tn_file_key, :summary
+  attr_accessible :content, :data, :project_id, :globals, :title, :user_id, :hidden, :featured, 
+    :featured_at, :tn_src, :tn_file_key, :summary, :thumb_id
 
   has_many :media_objects
   
@@ -18,18 +22,30 @@ class Visualization < ActiveRecord::Base
   alias_attribute :name, :title
   
   before_save :sanitize_viz
-  before_destroy :aws_del
-
+  
   belongs_to :user
   belongs_to :project
 
   alias_attribute :owner, :user
 
+  def tn_src
+    mo = MediaObject.find_by_id(self.thumb_id)
+    if mo 
+      mo.tn_src
+    else
+      nil
+    end
+  end
+ 
   def sanitize_viz
-  
     self.content = sanitize self.content
-    self.title = sanitize self.title, tags: %w()
     
+    # Check to see if there is any valid content left
+    if Nokogiri.HTML(self.content).text.blank?
+      self.content = nil
+    end
+    
+    self.title = sanitize self.title, tags: %w()
   end
   
   def self.search(search, include_hidden = false)
@@ -45,7 +61,7 @@ class Visualization < ActiveRecord::Base
       res.where({hidden: false})
     end
   end
-  
+
   def to_hash(recurse = true)
     h = {
       id: self.id,
@@ -74,19 +90,5 @@ class Visualization < ActiveRecord::Base
       })
     end
     h
-  end
-  
-  private
-  def aws_del()
-    #Set up the link to S3
-    s3ConfigFile = YAML.load_file('config/aws_config.yml')
-  
-    s3 = AWS::S3.new(
-      :access_key_id => s3ConfigFile['access_key_id'],
-      :secret_access_key => s3ConfigFile['secret_access_key'])
-    
-    if self.tn_file_key != nil
-      s3.buckets['isenseimgs'].objects[self.tn_file_key].delete
-    end
   end
 end

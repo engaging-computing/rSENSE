@@ -5,11 +5,15 @@
 $ ->
   if namespace.controller is "tutorials" and namespace.action is "index"
 
+    ($ '.mainContent').on 'click', 'div.clickableItem', (event) ->
+      window.location = ($ event.currentTarget).children('a').attr 'href'
+
     addItem = (object) ->
       newItem = """
-        <div class='item'>
+        <div class='item clickableItem'>
+          <a href='#{object.url}'></a>
           <div style="padding:7px">
-            <div style="font-size:1.2em; font-weight:bold;"><a href='#{object.url}'>#{object.name}</a></div>
+            <div style="font-size:1.2em; font-weight:bold;">#{object.name}</div>
             #{if object.featured then "<span style='color:#57C142'> (featured)</span><br>" else ""}
             <b>Owner: </b><a href='#{object.ownerUrl}'>#{object.ownerName}</a><br />
             <b>Created: </b>#{object.timeAgoInWords} ago (on #{object.createdAt})<br />
