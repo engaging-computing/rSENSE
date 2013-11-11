@@ -25,6 +25,12 @@ class Tutorial < ActiveRecord::Base
   def sanitize_tutorial
     
     self.content = sanitize self.content
+    
+    # Check to see if there is any valid content left
+    if Nokogiri.HTML(self.content).text.blank?
+      self.content = nil
+    end
+    
     self.title = sanitize self.title, tags: %w()
     
   end
