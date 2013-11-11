@@ -8,4 +8,9 @@ class DataSetTest < ActiveSupport::TestCase
     assert vs[2] >= 0, "ruby minorer version"
     assert RUBY_PATCHLEVEL >= 247, "ruby patchlevel"
   end
+
+  test "imagemagick is installed" do
+    iv = `identify --version`
+    assert iv =~ /Version/, "imagemagick is installed"
+  end
 end

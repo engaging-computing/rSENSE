@@ -25,7 +25,7 @@
         <div class="span3">
           <%if i != nil%>
             <div class='item' style="height:198px;">
-              <%if i.featured_media_id != nil%>
+              <%if i.featured_media_id != nil %>
                  <a href="<%=project_path i%>"><div class="featured_image" style=<%= "background-image:url(" + MediaObject.find(i.featured_media_id).src + ")"%>></div></a>
               <%end%>
               <div style="padding:7px">
