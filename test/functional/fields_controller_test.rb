@@ -44,7 +44,7 @@ class FieldsControllerTest < ActionController::TestCase
       delete :destroy, { id: @field }, { user_id: @kate }
     end
 
-    assert_redirected_to fields_path
+    assert_redirected_to project_path(@field.project_id)
   end
 
   test "should destroy field from api" do

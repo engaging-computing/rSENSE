@@ -1,7 +1,8 @@
 <%= form_tag "/projects/#{@project.id}/finishTemplateUpload", method: "post" do%>
   <div class="row">
     <div class="span12">
-      <table class="fields_table">
+      <b>Please select types for each field below.</b><br/>
+      <table id="fields_table">
         <thead>
           <tr>
             <th> File Header </th>
