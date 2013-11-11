@@ -22,7 +22,7 @@
 // require jquery.mobile.custom.min
 //= require jquery.mobile
 
-//= require twitter/bootstrap
+
 //= require bootstrap
 //= require info_edit
 //= require menu_edit
