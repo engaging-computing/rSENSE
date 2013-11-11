@@ -106,11 +106,13 @@ class FieldsController < ApplicationController
         @field.destroy
       end
       respond_to do |format|
-        format.json {render json:{}, status: :ok}
+        format.json { render json:{}, status: :ok }
+        format.html { redirect_to @field.project, notice: 'Field was successfuly deleted.' }
       end
     else
       respond_to do |format|
-        format.json {render json:{}, status: :forbidden}
+        format.json { render json:{}, status: :forbidden }
+        format.html { redirect_to @field.project, alert: 'Field could not be destroyed' }
       end
     end
 

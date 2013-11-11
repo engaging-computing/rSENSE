@@ -16,11 +16,6 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     login('kate', '12345')  
     click_on 'Projects'
     click_on 'Measuring Things'
-    find('#fields').click_on 'Edit'
-    find('#fields').click_on 'Add Field'
-    find('#fields').click_on 'Number'
-    find('#fields').click_on 'Add Field'
-    find('#fields').click_on 'Number'
     click_on 'Manual Entry'
     find('#manualTable').all('.input-small')[0].native.send_keys "5"
     find('#manualTable').all('.input-small')[1].native.send_keys "6"
@@ -80,21 +75,21 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     click_on "Projects"
     click_on "Empty Project"
 
-    click_on "Edit"
+    click_on "Upload File"
     
     csv_path = Rails.root.join('test', 'CSVs', 'dinner.csv')
 
     page.execute_script %Q{$('#template_file_form').parent().show()}
-    find("#template_file_form").attach_file("csv", csv_path)
+    find("#template_file_form").attach_file("file", csv_path)
     page.execute_script %Q{$('#template_file_form').submit()}
 
-    assert page.has_content?("telling us the type of each of your fields"), 
+    assert page.has_content?("Please select types for each field below."), 
       "got type dialog"
 
-    find('#template_match_table').all('select')[0].select("Number")
-    find('#template_match_table').all('select')[1].select("Number")
-    find('#template_match_table').all('select')[2].select("Number")
-    click_on "Finished"
+    find('#fields_table').all('select')[0].select("Number")
+    find('#fields_table').all('select')[1].select("Number")
+    find('#fields_table').all('select')[2].select("Number")
+    click_on "Submit"
 
     assert page.has_content?('Description')
   end
