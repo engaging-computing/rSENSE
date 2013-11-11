@@ -665,24 +665,26 @@ class ProjectsController < ApplicationController
       end
     end
     
-    data_obj = uploader.retrieve_obj(params[:file])
-    redirect_to @project
-#     data = uploader.swap_columns(data_obj, params)
-#     dataset = DataSet.new do |d|
-#       d.user_id = @cur_user.id
-#       d.title = params[:title]
-#       d.project_id = project.id
-#       d.data = data
-#     end
-#     
-#     if dataset.save
-#       redirect_to "/projects/#{project.id}/data_sets/#{dataset.id}"
-#     else
-#       @headers = data_obj['data'].keys
-#       logger.info "THERE WAS AN ERROR #{@headers}"
-#       flash[:error] = dataset.errors.full_messages()
-#       
-#     end
+    if params.has_key?('create_dataset')
+      data_obj = uploader.retrieve_obj(params[:file])
+      data = uploader.swap_without_matches(data_obj,@project)
+
+      dataset = DataSet.new do |d|
+        d.user_id = @cur_user.id
+        d.title = params[:title]
+        d.project_id = @project.id
+        d.data = data
+      end
+      
+      if dataset.save
+        redirect_to "/projects/#{@project.id}/data_sets/#{dataset.id}"
+      else
+        @headers = data_obj['data'].keys
+        flash[:error] = dataset.errors.full_messages()
+      end
+    else
+      redirect_to @project
+    end
   end
   
 end

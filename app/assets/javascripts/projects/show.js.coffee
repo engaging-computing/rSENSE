@@ -74,6 +74,15 @@ $ ->
     ($ '#datafile_input').change ->
       ($ '#datafile_form').submit()
 
+      
+    ###
+    # Controls for uploading template file.
+    ###
+    ($ '#template_file_upload').click ->
+      ($ '#template_file_input').click()
+      false
+    ($ '#template_file_input').change ->
+      ($ '#template_file_form').submit()
 
     ###
     # Controls for Data Sets box

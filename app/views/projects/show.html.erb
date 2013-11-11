@@ -115,7 +115,7 @@
       <!-- ##### FIELDS MENU ##### -->
       <%= render layout: "shared/box", locals: {title: 'Fields', width: '5', unique_id: 'fields', should_hide: false} do%>
         <% if (@project.fields.count == 0) && (can_edit?(@project)) %>
-          <button class="btn btn-success">Upload File</button>
+          <button class="btn btn-success" id="template_file_upload">Upload File</button>
           <a href="/projects/<%=@project.id%>/edit_fields"><button class="btn btn-success">Setup Manually</button></a>
         <% else %>
           <table class="fields_table" project="<%=@project.id%>" can_delete_fields="<%if @project.data_sets.count>0%>false<%else%>true<%end%>" data-num_fields="<%=@project.fields.count%>">
@@ -198,8 +198,7 @@
             </tbody>
           </table>  
         </div>
-      <%end%>
-      
+      <%end%>  
     </div>
   </div>
 </div>
@@ -226,7 +225,7 @@
   <% end %>
 </div>
 
-<div style="">
+<div style="display:none">
   <%= form_tag "/projects/#{@project.id}/templateUpload", method: 'post',multipart: true, id: 'template_file_form' do %>
     <%= file_field_tag 'file', id: 'template_file_input' %>
   <% end %>
