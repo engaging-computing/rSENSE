@@ -92,38 +92,38 @@ class VisualizationsController < ApplicationController
     end
     
     #Try to make a thumbnail
+    mo = MediaObject.new
+    mo.media_type = 'image'
+    mo.name = 'image.png'
+    mo.check_store!
+   
     if params[:visualization].try(:[], :svg)
       begin
         image = MiniMagick::Image.read(params[:visualization][:svg], '.svg')
         image.format 'png'
-        image.resize '128'
+        image.resize '512'
         
-        s3ConfigFile = YAML.load_file('config/aws_config.yml')
-        s3 = AWS::S3.new(
-          :access_key_id => s3ConfigFile['access_key_id'],
-          :secret_access_key => s3ConfigFile['secret_access_key'])
-      
-        bucket = s3.buckets['isenseimgs']
-        fileKey = SecureRandom.uuid() + ".svg"
-        while Visualization.find_by_tn_file_key(fileKey) != nil
-          fileKey = SecureRandom.uuid() + ".svg"
+        File.open(mo.file_name, "wb") do |ff|
+          ff.write(image.to_blob)
         end
-        o = bucket.objects[fileKey]
-        o.write image.to_blob
-        
-        params[:visualization][:tn_file_key] = fileKey
-        params[:visualization][:tn_src] = o.public_url.to_s
-        
+      
+        mo.add_tn
+      
       rescue MiniMagick::Invalid => err
         logger.info "Failed to create thumbnail."
       end
+
       params[:visualization].delete :svg
     end
     
     @visualization = Visualization.new(params[:visualization])
+    @visualization.thumb_id = mo.id unless mo.id.nil?
 
     respond_to do |format|
       if @visualization.save
+        mo.visualization_id = @visualization.id
+        mo.save!
+
         flash[:notice] = 'Visualization was successfully created.'
         format.html { redirect_to @visualization }
         format.json { render json: @visualization.to_hash(false), status: :created}

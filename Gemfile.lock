@@ -62,6 +62,9 @@ GEM
     execjs (2.0.1)
     ffi (1.9.0)
     hike (1.2.3)
+    httparty (0.11.0)
+      multi_json (~> 1.0)
+      multi_xml (>= 0.5.2)
     i18n (0.6.1)
     journey (1.0.4)
     jquery-rails (3.0.4)
@@ -89,6 +92,7 @@ GEM
       subexec (~> 0.2.1)
     mini_portile (0.5.1)
     multi_json (1.8.0)
+    multi_xml (0.5.5)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
     orm_adapter (0.4.0)
@@ -186,6 +190,7 @@ DEPENDENCIES
   coffee-script-source (= 1.5.0)
   coffeebeans
   execjs
+  httparty
   jquery-rails
   jquery-ui-rails
   launchy
