@@ -2,12 +2,17 @@ require 'test_helper'
 
 class DataSetsControllerTest < ActionController::TestCase
   setup do
+    Dir.mkdir("/tmp/html_validation")
     @kate = users(:kate)
     @data_set = data_sets(:one)
     @tgd  = data_sets(:thanksgiving)
     @proj = @tgd.project
   end
 
+ teardown do
+   FileUtils.rm_rf("/tmp/html_validation")
+ end
+  
   test "should redirect to viz for show data set" do
     get :show, { id: @tgd.id }
     assert_response :redirect 
@@ -18,6 +23,9 @@ class DataSetsControllerTest < ActionController::TestCase
     assert_response :success
     ds = JSON.parse(@response.body)
     assert_equal 3, ds['data'][0].keys.length, "Actually got records in data"
+    
+    # HTML validation
+    assert_valid_html(request.body, "Data Set Data Get")
   end
 
   test "should create data_set" do
@@ -47,6 +55,9 @@ class DataSetsControllerTest < ActionController::TestCase
     get :edit, { id: @tgd.id }, { user_id: @kate }
     assert @response.body =~ /Thanksgiving/, "Response has data_set title"
     assert_response :success
+    
+    # HTML validation
+    assert_valid_html(request.body, "Data Set Edit Page Show")
   end
 
   test "should update data_set" do
@@ -69,6 +80,9 @@ class DataSetsControllerTest < ActionController::TestCase
   test "should get manual entry page" do
     get :manualEntry, { id: @proj.id }, { user_id: @kate }
     assert_response :success
+    
+    # HTML validation
+    assert_valid_html(request.body, "Manual Entry Page Get")
   end
 
   test "should upload data set" do
@@ -77,6 +91,9 @@ class DataSetsControllerTest < ActionController::TestCase
     post :manualUpload, { format: 'json', id: @proj.id, headers: ["20", "21", "22"], 
       data: {"0" => ["1", "2", "3"], "1"=>["4", "5", "6"], "2" => ["14", "13", "12"]} }, { user_id: @kate }
     assert_response :success
+    
+    # HTML validation
+    assert_valid_html(request.body, "Upload Data Set")
   end 
 
   test "should export data" do
@@ -84,6 +101,9 @@ class DataSetsControllerTest < ActionController::TestCase
 
     get :export, { id: @proj.id }, { user_id: @kate }
     assert_response :success
+    
+    # HTML validation
+    assert_valid_html(request.body, "Export Data")
   end
 
   test "should upload CSV" do 
@@ -91,5 +111,8 @@ class DataSetsControllerTest < ActionController::TestCase
     
     post :uploadCSV, { id: @proj.id }, { user_id: @kate }
     assert_response :success
+    
+    # HTML validation
+    assert_valid_html(request.body, "Upload CSV")
   end
 end
