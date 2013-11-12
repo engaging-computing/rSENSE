@@ -147,7 +147,7 @@ $ ->
                           @storeYBounds @chart.yAxis[0].getExtremes()
                           
                           ###
-                          If We actually zoomed, we want to update so the data reduction can trigger.
+                          If we actually zoomed, we want to update so the data reduction can trigger.
                           Otherwise this zoom was triggered by an update, so don't recurse!
                           ###
                           if @updateOnZoom is 1
@@ -425,6 +425,7 @@ $ ->
 
                 #@delayedUpdate()
                 @updateXRegression()
+                @updateYRegression()
                 @resetExtremes()
                 @update()
 
@@ -506,7 +507,12 @@ $ ->
         Updates y axis for regression.
         ###
         updateYRegression:() ->
-          $('#regressionXAxis').text("#{fieldTitle(data.fields[@xAxis])}")
+          $('#regressionYAxisSelector').empty()
+          for fieldIndex in globals.fieldSelection
+            $('#regressionYAxisSelector').append($("<option/>", {
+              value: fieldIndex,
+              text: fieldTitle(data.fields[fieldIndex])
+            }));
 
         ###
         Adds the regression tools to the control bar.
@@ -521,21 +527,21 @@ $ ->
             controls += "<h3 class='clean_shrink'><a href='#'>Regression Tools:</a></h3>"
             controls += "<div class='outer_control_div' style='text-align:center'>"
             
-            # Add x axis label
+            #Add x axis label
             controls += "<table><tr>"
             controls += "<td style='text-align:left'>X Axis: </td>"
             controls += "<td id='regressionXAxis' style='text-align:left'>#{fieldTitle(data.fields[@xAxis])}</td></tr>"
 
-            # Add y axis selector
+            #Add y axis selector
             controls += "<tr><td style='text-align:left'>Y Axis: </td>"
             controls += "<td><select id='regressionYAxisSelector' class='control_select'>"
 
             for fieldIndex in globals.fieldSelection
-              controls += "<option value='#{data.fields[fieldIndex]}'>#{fieldTitle(data.fields[fieldIndex])}</option>"
+              controls += "<option value='#{fieldIndex}'>#{fieldTitle(data.fields[fieldIndex])}</option>"
 
             controls += "</select></td></tr>"
             
-            # Add regression selector
+            #Add regression selector
             controls += "<tr><td style='text-align:left'>Type: </td>"
             controls += '<td><select id="regressionSelector" class="control_select">'
 
@@ -549,7 +555,7 @@ $ ->
             controls += "<button id='regressionButton' class='save_button btn'>Draw Regression</button>"
             controls += '</div></div>'
 
-            # Write HTML
+            #Write HTML
             ($ '#controldiv').append controls
 
             ($ "#regressionControl button").button()
@@ -557,7 +563,6 @@ $ ->
             ($ "#regressionButton").click =>
 
               groupIndex = globals.groupSelection
-              console.log(($ '#regressionYAxisSelector option:selected').val())
               y_axis_name = ($ '#regressionYAxisSelector option:selected').text()
               y_axis_index = ($ '#regressionYAxisSelector').val()
               name = "<strong>#{y_axis_name}</strong> as a #{($ '#regressionSelector option:selected').text().toLowerCase()} function of <strong>#{fieldTitle(data.fields[@xAxis])}</strong>"              
