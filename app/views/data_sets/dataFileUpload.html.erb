@@ -1,6 +1,7 @@
 <div class="row">
   <% if ((@results.class) == String) %><%@results =  eval(@results)  %><%end%>
   <% matches = @results[:partial_matches]%>
+
   <%= form_tag '/data_sets/field_matching', method: 'put', id: 'field_matching' do%>
     <div class="span12">
       <label for="title"><b>Title </b></label><input type="text" id="title" name="title" value="<%=@default_name%>">
@@ -17,10 +18,10 @@
         <tbody>
           <% @results[:fields].each_with_index do |f,findex|%>
             <tr class="<%=cycle('feed-even','feed-odd')%>">
-              <td><%=f%></td>
+              <td><%=f.name%></td>
               <td>
-                <select form="field_matching" name="<%=f%>">
-                  <%= options_for_select(@results[:options], matches.has_key?(findex) ? @results[:headers][findex] : 0 )%>
+                <select form="field_matching" name="matches[<%=f.id%>]">
+                  <%= options_for_select(@results[:options], matches.has_key?(findex) ? @results[:headers][matches[findex][:index]] : 0 )%>
                 </select>
               </td>
               <td>
