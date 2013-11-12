@@ -33,8 +33,17 @@ class User < ActiveRecord::Base
     self.firstname = sanitize self.firstname, tags: %w()
     self.lastname = sanitize self.lastname, tags: %w()
     self.username = sanitize self.username, tags: %w()
+    
     self.content = sanitize self.content
     self.bio = sanitize self.bio, tags: %w()
+    
+    # Check to see if there is any valid content left
+    if Nokogiri.HTML(self.bio).text.blank?
+      self.bio = nil
+    end
+    if Nokogiri.HTML(self.content).text.blank?
+      self.content = nil
+    end
     
   end
   
