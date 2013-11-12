@@ -20,7 +20,7 @@
             <tr class="<%=cycle('feed-even','feed-odd')%>">
               <td><%=f.name%></td>
               <td>
-                <select form="field_matching" name="matches[<%=f%>]">
+                <select form="field_matching" name="matches[<%=f.id%>]">
                   <%= options_for_select(@results[:options], matches.has_key?(findex) ? @results[:headers][matches[findex][:index]] : 0 )%>
                 </select>
               </td>
