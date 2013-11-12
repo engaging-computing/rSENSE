@@ -15,7 +15,9 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
   test "enter a data set" do
     login('kate', '12345')  
     click_on 'Projects'
-    click_on 'Measuring Things'
+    
+    find("div.item div div", text: "Measuring Things").click
+    
     find('#fields').click_on 'Edit'
     find('#fields').click_on 'Add Field'
     find('#fields').click_on 'Number'
@@ -44,7 +46,8 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     login('kate', '12345')
 
     click_on "Projects"
-    click_on "Dessert is Delicious"
+    
+    find("div.item div div", text: "Dessert is Delicious").click
 
     csv_path = Rails.root.join('test', 'CSVs', 'dessert.csv')
     
@@ -61,7 +64,8 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     login('kate', '12345')
 
     click_on "Projects"
-    click_on "Dessert is Delicious"
+    
+    find("div.item div div", text: "Dessert is Delicious").click
 
     csv_path = Rails.root.join('test', 'CSVs', 'dinner.csv')
 
@@ -83,7 +87,8 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     login('kate', '12345')
 
     click_on "Projects"
-    click_on "Empty Project"
+    
+    find("div.item div div", text: "Empty Project").click
 
     click_on "Edit"
     

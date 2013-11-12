@@ -68,6 +68,7 @@ $ ->
       elem.attr('contenteditable',true)
       ($ this).hide()
       turn_on_ck(elem[0])
+      elem[0].focus()
       
       
       
