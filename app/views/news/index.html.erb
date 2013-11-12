@@ -11,20 +11,16 @@
 <% end %>
 
 <% @news.each do |n| %>
-  <div class="row <%= cycle('feed-even','feed-odd')%>">
-    <div class="span12 news" href="<%= news_path(n) %>">
-      <h2><div class="truncate"><%= link_to n.title, news_path(n) %></div></h2>
-      <div class="row">
-        <div class="span9 summary">
-          <%= n.summary %>
-        </div>
-        <% if n.featured_media_id? %>
-          <div class="span3 visible-tablet visible-desktop" style="vertical-align:middle;height:100%">
-            <img src=<%=MediaObject.find(n.featured_media_id).src%> class="img-rounded" width="230px"/>
-          </div>
-        <% end %>
-      </div>
-          <h5><%= n.created_at.strftime("%B %d, %Y")%> (<%= time_ago_in_words(n.created_at) %> ago)</h5>
+  <div class="item clickableItem" style="height:198px;">
+    <a href="<%=news_path n%>"></a>
+    <%if n.featured_media_id != nil %>
+      <div style="float:left;clear:left;width:30%;height:198px;margin-right:15px;"><a href="<%=news_path n%>"><div class="featured_image_2" style=<%= "background-image:url(" + MediaObject.find(n.featured_media_id).src + ")"%>></div></a></div>
+    <%end%>
+    <div style="padding:7px;height:184px">
+      <span class="item_title"><%= n.title %></span><br/>
+      <span style="font-size:0.8em">Written on <%=n.created_at.strftime("%B %d, %Y")%></span><br/><br/>
+      <%= n.summary %><br/><br/>
+      <%= link_to "Read More", news_path(n) %>
     </div>
   </div>
 <% end %>  
