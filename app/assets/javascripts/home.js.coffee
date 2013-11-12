@@ -4,6 +4,9 @@
 
 
 $ ->
+  ($ '.mainContent').on 'click', 'div.clickableItem', (event) ->
+      window.location = ($ event.currentTarget).children('a').attr 'href'
+
   if namespace.controller is "home"
     $('.set_tutorial').change ->
       data={}
