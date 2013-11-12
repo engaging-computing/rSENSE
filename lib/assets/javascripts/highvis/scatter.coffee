@@ -500,7 +500,13 @@ $ ->
         Updates x axis for regression.
         ###
         updateXRegression:() ->
-          $('#regressionXAxis').text("X Axis: #{fieldTitle(data.fields[@xAxis])}")
+          $('#regressionXAxis').text("#{fieldTitle(data.fields[@xAxis])}")
+          
+        ###
+        Updates y axis for regression.
+        ###
+        updateYRegression:() ->
+          $('#regressionXAxis').text("#{fieldTitle(data.fields[@xAxis])}")
 
         ###
         Adds the regression tools to the control bar.
@@ -516,29 +522,31 @@ $ ->
             controls += "<div class='outer_control_div' style='text-align:center'>"
             
             # Add x axis label
-            controls += "<div id='regressionXAxis' class='inner_control_div' style='text-align:left'>X Axis: #{fieldTitle(data.fields[@xAxis])}</div>"
-            
+            controls += "<table><tr>"
+            controls += "<td style='text-align:left'>X Axis: </td>"
+            controls += "<td id='regressionXAxis' style='text-align:left'>#{fieldTitle(data.fields[@xAxis])}</td></tr>"
+
             # Add y axis selector
-            controls += '<div class="inner_control_div" style="text-align:left"> Y Axis: '
-            controls += '<select id="regressionYAxisSelector" class="control_select">'
+            controls += "<tr><td style='text-align:left'>Y Axis: </td>"
+            controls += "<td><select id='regressionYAxisSelector' class='control_select'>"
 
-            for fieldIndex in data.normalFields
-              controls += "<option value='#{fieldIndex}'>#{fieldTitle(data.fields[fieldIndex])}</option>"
+            for fieldIndex in globals.fieldSelection
+              controls += "<option value='#{data.fields[fieldIndex]}'>#{fieldTitle(data.fields[fieldIndex])}</option>"
 
-            controls += "</select></div>"
+            controls += "</select></td></tr>"
             
             # Add regression selector
-            controls += '<div class="inner_control_div" style="text-align:left"> Type: '
-            controls += '<select id="regressionSelector" class="control_select">'
+            controls += "<tr><td style='text-align:left'>Type: </td>"
+            controls += '<td><select id="regressionSelector" class="control_select">'
 
             regressions = ['Linear', 'Quadratic', 'Cubic', 'Logarithmic']
             for regression_type in regressions
               controls += "<option value='#{regressions.indexOf(regression_type)}'>#{regression_type}</option>"
 
-            controls += "</select></div>"
-            
+            controls += "</select></td></tr>"           
+            controls += "</table>"
+
             controls += "<button id='regressionButton' class='save_button btn'>Draw Regression</button>"
-            
             controls += '</div></div>'
 
             # Write HTML
@@ -549,9 +557,10 @@ $ ->
             ($ "#regressionButton").click =>
 
               groupIndex = globals.groupSelection
+              console.log(($ '#regressionYAxisSelector option:selected').val())
               y_axis_name = ($ '#regressionYAxisSelector option:selected').text()
               y_axis_index = ($ '#regressionYAxisSelector').val()
-              name = "#{($ '#regressionSelector option:selected').text()} regression of #{y_axis_name} over #{fieldTitle(data.fields[@xAxis])}"              
+              name = "<strong>#{y_axis_name}</strong> as a #{($ '#regressionSelector option:selected').text().toLowerCase()} function of <strong>#{fieldTitle(data.fields[@xAxis])}</strong>"              
               new_regression = globals.getRegression(data.selector(@xAxis, groupIndex), data.selector(y_axis_index, groupIndex), ($ '#regressionSelector').val(), @xBounds, name)
               @chart.addSeries(new_regression)
               
