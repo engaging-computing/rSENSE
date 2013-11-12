@@ -207,22 +207,28 @@ input.projects_add_filter_checkbox
   }
 }
 
-#template_match_box
-{
-  width: 600px;
-  margin-left: -310px;
-}
-
-#match_box
-{
-  width:400px;
-  margin-left: -210px;
-}
-
 #dataset_table
 {       
   td:not(:last-child)
   {
     padding-left: 5px;
+  }
+}
+
+table#fields_table
+{
+
+  tr, td, th
+  {
+    padding: 10px;
+  }
+  
+  select{
+    margin-top: 7px;
+  }
+  
+  tr.row-even
+  {
+    background-color: #dedede;
   }
 }

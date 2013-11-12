@@ -1,7 +1,9 @@
 <%= form_tag "/projects/#{@project.id}/finishTemplateUpload", method: "post" do%>
   <div class="row">
     <div class="span12">
-      <b>Please select types for each field below.</b><br/>
+      <h4>Please select types for each field below.</h4>
+    </div>
+    <div class="span4">
       <table id="fields_table">
         <thead>
           <tr>
@@ -11,29 +13,29 @@
         </thead>
         <tbody>
           <% @headers.each do |header|%>
-            <tr class="<%= cycle('feed-even','feed-odd')%>">
-              <td><%= header %></td>
+            <tr class="<%= cycle('row-even','row-odd')%>">
+              <td><b><%= header %></b></td>
               <td>
                 <select name="headers[<%=header%>]">
                   <%=options_for_select(@options,get_field_type('Number'))%>
                 </select>
               </td>
             </tr>
-          <% end %>
+          <% end %> 
         </tbody>
+       
       </table>
     </div>
   </div>
+  <br/>
   <div class="row">
     <div class="span2">
-      <b>Create Dataset?</b><input type="checkbox" name="create_dataset" checked><br/>
-    </div>
-    <div class="span2">
-      <label for="title">Dataset Name</label>
+      <b>Also create dataset?</b><input type="checkbox" name="create_dataset" style="margin-bottom:4px" checked><br/>
       <input name="title" type="text" value="Dataset #1"><br/>
     </div>
   </div>
   
+  
   <input type="hidden" name="file" value="<%=@tmp_file%>">
-  <button type="submit" class="btn">Submit</button>
+  <button type="submit" class="btn btn-primary">Submit</button>
 <% end %>
