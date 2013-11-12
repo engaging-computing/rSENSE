@@ -6,6 +6,7 @@
     <%= stylesheet_link_tag    "application", :media => "all" %>
     <%= javascript_include_tag "application" %>
     <%= csrf_meta_tags %>
+    <%= favicon_link_tag 'favicon.png' %>
   </head>
 
   <%= javascript_tag do %>
@@ -21,38 +22,6 @@
     <% end %>
 
     <div style="min-height:100%;position:relative;">
-      
-      <!-- Login error detected, show dialog -->
-      <% if flash[:notice] %>
-        <% if flash[:notice] == "LOGIN_ERROR" %>
-          <script type="text/javascript">
-            $(document).ready( function(e){
-              $.data($('#login_box')[0], "redirect", "<%= flash.try(:[], :path) %>");
-              $('#login_box').modal()
-              return false;
-            });
-          </script>
-        <% end %>
-      <% end %>
-
-      <!-- Add the hidden login dialog to the layout so that its accessable everywhere -->
-      <div id="login_box" class="modal hide fade well container">
-        <div><label for="login_user">Username:</label>
-          <input id="login_user" class="login_field" type="text" style="width:65%"></input>
-        </div><div class="clear"></div>
-        <div><label for="login_password">Password:</label>
-          <input id="login_password" class="login_field" type="password" style="width:65%"></input>
-        </div><div class="clear"></div>
-        <div>New to iSENSE? <a href="<%= new_user_path %>">Sign up</a></div>
-        <div style="float:left; margin-top: 2em;">
-          <%= link_to "Forgot password?", '/users/pw_request' %>
-        </div>
-        <div style="float:right;">
-            <button class="login_button btn btn-success">Login</button>
-            <button class="cancel_login_button btn btn-danger">Cancel</button>
-        </div>
-      </div>
-
       <!-- The title bar -->
       <div id="title_bar">
         <div class="container">
@@ -70,7 +39,6 @@
             <div class="visible-desktop visible-tablet" style="margin-left:10px;height:50px;">
               <a class="navbar-btn" href="/news"><i class="icon-book icon-white"></i> News</a>
               <a class="navbar-btn" href="/projects"><i class="icon-folder-open icon-white"></i> Projects</a>
-              <a class="navbar-btn" href="/users"><i class="icon-user icon-white"></i> Users</a>
               <a class="navbar-btn" href="/visualizations"><i class="icon-picture icon-white"></i> Visualizations</a>
               <a class="navbar-btn" href="/tutorials"><i class="icon-info-sign icon-white"></i> Tutorials <img src="/assets/arrow_down.png"></a>
               <ul class="ddmenu">
@@ -85,7 +53,7 @@
           <div class="visible-desktop">
             <div class="pillbox desktop-tablet">
               <% if @cur_user == nil %>
-                  <a href="" class="login navbar-btn">Login</a>
+                  <%= link_to 'Login', login_path(), method: :get, class: " login navbar-btn" %>
                   <a href="<%= new_user_path %>" class="navbar-btn">Register</a>
               <% else %>
                   <a class="navbar-btn" href="<%= user_path(@cur_user) %>"><%= @cur_user.name %></a>
@@ -106,16 +74,10 @@
         </div>
       </div>
 
-      <% unless flash[:alert].nil? %>
-        <div style="clear: both; margin-top: 50px;"> &nbsp; </div>
-        <div style="background: red; color: white; font-weight: bold; text-align: center; padding: 1ex;">
-          <p><%= flash[:alert] %></p>
-        </div>
-      <% end %>
-
       <!-- Main Container -->
-      <div id="outer" style="padding:50px 0px 70px 0px; margin:0; min-height:100%; <%= @layout_wide ? 'margin-right:40px;' : '' %>">
+      <div id="outer" style="padding:0px 0px 70px 0px; margin:0; min-height:100%; <%= @layout_wide ? 'margin-right:40px;' : '' %>">
         <div class="container mainContent <%= @layout_wide ? 'mc-wide' : '' %>" data-role="page">
+          <%= bootstrap_flash %>
           <%= yield %>
         </div>
       </div>
@@ -141,8 +103,6 @@
             <li><a href="/news"><i class="icon-book icon-white"></i>News</a></li>
             <li class="nav-header nav-divider"><hr /></li>
             <li><a href="/projects"><i class="icon-folder-open icon-white"></i>Projects</a></li>
-            <li class="nav-header nav-divider"><hr /></li>
-            <li><a href="/users"><i class="icon-user icon-white"></i>Users</a></li>
             <li class="nav-header nav-divider"><hr /></li>
             <li><a href="/visualizations"><i class="icon-picture icon-white"></i>Visualizations</a></li>
             <li class="nav-header nav-divider"><hr /></li>

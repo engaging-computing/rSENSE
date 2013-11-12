@@ -6,7 +6,7 @@ one:
   name: MyString
   data_set: one
   user: kate
-  file_key: aaa
+  store_key: aaa
 
 two:
   project: one
@@ -14,4 +14,4 @@ two:
   name: MyString
   data_set: one
   user: kate
-  file_key: bbb
+  store_key: bbb

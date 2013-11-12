@@ -1,0 +1,25 @@
+<div class="row">
+  <div class="span6 offset3">
+
+    <%= form_tag("/login", method: "post") do %>
+
+      <div class="feed-top">
+        <h1> Log in to iSENSE </h1>
+      </div>
+
+      <div class="feed-odd">
+        <%= label_tag(:username_or_email, "Username/Email:") %>
+        <%= text_field_tag(:username_or_email, flash[:username_or_email]) %>
+      </div>
+      
+      <div class="feed-even">
+        <%= label_tag(:password, "Password #{(link_to "(forgot password)", '/users/pw_request', tabindex: -1)}:".html_safe) %>
+        <%= password_field_tag(:password) %>
+      </div>
+      
+      <div class="feed-bottom" style="padding-top:4px;">
+        <%= submit_tag("Login", class: "btn btn-primary") %>
+      </div>
+    <% end %>
+  </div>
+</div>

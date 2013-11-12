@@ -86,11 +86,24 @@ $ ->
             
             $.extend true, @chartOptions,
                 chart:
-                    type: "line"
+                    type: if @mode is @LINES_MODE then "line" else "scatter"
                     zoomType: "xy"
                     resetZoomButton:
                         theme:
                             display: "none"
+                plotOptions:
+                  scatter:
+                    marker:
+                      states:
+                        hover:
+                          lineColor:'#000'
+                    point:
+                      events:
+                        mouseOver: () ->
+                          # Push elements to bottom to draw over others in series
+                          ele = ($ @.graphic.element)
+                          root = ele.parent()
+                          root.append ele
                 title:
                     text: ""
                 tooltip:
@@ -116,6 +129,8 @@ $ ->
                             str += "<tr><td>#{@series.name.field}:</td><td><strong>#{@y}</strong></td></tr>"
                             str += "</table>"
                     useHTML: true
+                    hideDelay: 0
+                
                 xAxis: [{
                     type: 'linear'
                     gridLineWidth: 1
@@ -156,6 +171,7 @@ $ ->
                     when @mode is @SYMBOLS_LINES_MODE
                         options.marker =
                             symbol: globals.symbols[count % globals.symbols.length]
+                        options.lineWidth = 2
                 
                     when @mode is @SYMBOLS_MODE
                         options.marker =
@@ -166,6 +182,7 @@ $ ->
                         options.marker =
                             symbol: 'blank'
                         options.dashStyle = globals.dashes[count % globals.dashes.length]
+                        options.lineWidth = 2
 
                 options
 
@@ -242,6 +259,7 @@ $ ->
                         when @mode is @SYMBOLS_LINES_MODE
                             options.marker =
                                 symbol: globals.symbols[symbolIndex % globals.symbols.length]
+                            options.lineWidth = 2
 
                         when @mode is @SYMBOLS_MODE
                             options.marker =
@@ -251,6 +269,7 @@ $ ->
                         when @mode is @LINES_MODE
                             options.marker =
                                 symbol: 'blank'
+                            options.lineWidth = 2
                             options.dashStyle = globals.dashes[symbolIndex % globals.dashes.length]
 
                     @chart.addSeries options, false
@@ -333,7 +352,7 @@ $ ->
 
             ($ '.mode_radio').click (e) =>
                 @mode = Number e.target.value
-                @delayedUpdate()
+                @start()
 
             ($ '.tooltip_box').click (e) =>
                 @advancedTooltips = (@advancedTooltips + 1) % 2

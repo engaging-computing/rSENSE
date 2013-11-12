@@ -13,27 +13,24 @@ class ApplicationController < ActionController::Base
   
   def authorize
     unless User.find_by_id(session[:user_id])
-      ref = begin
-              URI.parse(request.env["HTTP_REFERER"])
-            rescue
-              URI.parse("http://www.external.com")
-            end
-         
-      if ref.host == request.host
-        if ref.path == request.path
-          # logout caused a loop, escape!
-          redirect_to "/"
-        else
-          # Refresh with login request
-          redirect_to :back, flash: {notice: "LOGIN_ERROR", path: request.path}
-        end
-      else
-        # External referer needs home page to log in
-        redirect_to "/", flash: {notice: "LOGIN_ERROR", path: request.path}
-      end
+      redirect_to "/login"
     end
   end
 
+  def authorize_admin
+    begin
+        if @cur_user.admin == true
+            return true
+        end
+    rescue
+    end
+    respond_to do |format|
+      format.html { render :file => "#{Rails.root}/public/404",
+        :layout => false, :status => :not_found }
+      format.any  { head :not_found }
+    end
+  end
+  
   def render_404
     respond_to do |format|
       format.html { render :file => "#{Rails.root}/public/404", 

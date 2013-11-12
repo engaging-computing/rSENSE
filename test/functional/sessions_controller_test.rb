@@ -14,7 +14,7 @@ class SessionsControllerTest < ActionController::TestCase
 
   test "should not log in with bad password" do
     post :create, { format: 'json', username_or_email: "kate", password: "derp" }
-    assert_response 403
+    assert_response 401
   end
 
   test "should log out" do

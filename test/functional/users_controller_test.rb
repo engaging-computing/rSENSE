@@ -6,8 +6,13 @@ class UsersControllerTest < ActionController::TestCase
     @admin = users(:nixon)
   end
 
-  test "should get index" do
+  test "should not get index as user" do
     get :index, {}, { user_id: @user }
+    assert_response :not_found
+  end
+
+  test "should get index as admin" do
+    get :index, {}, { user_id: @admin }
     assert_response :success
     assert_not_nil assigns(:users)
   end

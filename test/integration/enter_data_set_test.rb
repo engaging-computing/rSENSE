@@ -13,9 +13,11 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
   end
 
   test "enter a data set" do
-    login('kate', '12345')
+    login('kate', '12345')  
     click_on 'Projects'
-    click_on 'Measuring Things'
+    
+    find("div.item div div", text: "Measuring Things").click
+    
     find('#fields').click_on 'Edit'
     find('#fields').click_on 'Add Field'
     find('#fields').click_on 'Number'
@@ -33,21 +35,27 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
 
     assert page.has_content?('Number_2'), "Has new field"
     assert page.has_content?('Histogram'), "On the Viz page"
+
+    click_on "Save Visualization"
+    click_on "Finish"
+
+    click_on "Visualizations"
   end
 
   test "upload a CSV file" do
     login('kate', '12345')
 
     click_on "Projects"
-    click_on "Dessert is Delicious"
+    
+    find("div.item div div", text: "Dessert is Delicious").click
 
     csv_path = Rails.root.join('test', 'CSVs', 'dessert.csv')
-
-    page.execute_script %Q{$('#csv_file_form').parent().show()}
-    find("#csv_file_form").attach_file("csv", csv_path)
-    page.execute_script %Q{$('#csv_file_form').submit()}
-
-    click_on "Finish"
+    
+    page.execute_script %Q{$('#datafile_form').parent().show()}
+    find("#datafile_form").attach_file("file", csv_path)
+    page.execute_script %Q{$('#datafile_form').submit()}
+    assert page.has_content?('Project Fields')
+    click_on "Submit"
 
     assert page.has_content?('Histogram'), "On the Viz page"
   end
@@ -56,22 +64,21 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     login('kate', '12345')
 
     click_on "Projects"
-    click_on "Dessert is Delicious"
+    
+    find("div.item div div", text: "Dessert is Delicious").click
 
     csv_path = Rails.root.join('test', 'CSVs', 'dinner.csv')
 
-    page.execute_script %Q{$('#csv_file_form').parent().show()}
-    find("#csv_file_form").attach_file("csv", csv_path)
-    page.execute_script %Q{$('#csv_file_form').submit()}
+    page.execute_script %Q{$('#datafile_form').parent().show()}
+    find("#datafile_form").attach_file("file", csv_path)
+    page.execute_script %Q{$('#datafile_form').submit()}
 
     assert page.has_content?('pizza'), "got match dialog"
-    find('#match_table').all('select')[0].select("soup")
-    find('#match_table').all('select')[1].select("pizza")
-    find('#match_table').all('select')[2].select("wings")
-    click_on "Finished"
+    find('.field_match').all('select')[0].select("soup")
+    find('.field_match').all('select')[1].select("pizza")
+    find('.field_match').all('select')[2].select("wings")
+    click_on "Submit"
     
-    assert page.has_content?('enter a name'), "got rename dialog"
-    click_on "Finish"
     
     assert page.has_content?('Histogram'), "On the Viz page"
   end
@@ -80,7 +87,8 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     login('kate', '12345')
 
     click_on "Projects"
-    click_on "Empty Project"
+    
+    find("div.item div div", text: "Empty Project").click
 
     click_on "Edit"
     

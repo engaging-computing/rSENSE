@@ -2,11 +2,16 @@ require 'test_helper'
 
 class ProjectsControllerTest < ActionController::TestCase
   setup do
+    Dir.mkdir("/tmp/html_validation")
     @nixon   = users(:nixon)
     @kate    = users(:kate)
     @project = projects(:one)
   end
 
+ teardown do
+   FileUtils.rm_rf("/tmp/html_validation")
+ end
+  
   test "should get index" do
     get :index
     assert_response :success
@@ -22,6 +27,15 @@ class ProjectsControllerTest < ActionController::TestCase
   test "should show project" do
     get :show, { id: @project }
     assert_response :success
+    
+    
+    assert_valid_html(request.body, "Projects Show")
+
+#     This works
+#      @h = HTMLAcceptance.new('/tmp/validation')
+#      @v = @h.validator(request.body, 'Project HTML Validation');
+#      assert @v.valid?, @v.exceptions
+    
   end
  
   test "should show project (json)" do
@@ -90,4 +104,6 @@ class ProjectsControllerTest < ActionController::TestCase
     post :updateLikedStatus, { format: 'json', id: @project }, { user_id: @kate }
     assert_response :success
   end
+  
+  
 end

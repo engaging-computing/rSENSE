@@ -3,31 +3,42 @@ class SessionsController < ApplicationController
   
   protect_from_forgery :except => :create
   
-  def create
-    login_name = params[:username_or_email]
-      
-    user = User.find(:first, :conditions => [ "lower(email) = ?", login_name.downcase ])
-      
-    if !user
-      user = User.find(:first, :conditions => [ "lower(username) = ?", login_name.downcase ])
-    end
-  
-    status = :ok
-
-    if user and user.authenticate(params[:password])  
-      good = true
-      session[:user_id] = user.id
-      user = User.find(user.id)
-      user.update_attributes(:last_login => Time.now())
-      response = { status: 'success', authenticity_token: form_authenticity_token }    
+  #GET /sessions/new
+  def new
+    
+    if request.referrer
+      session[:redirect_to] = request.referrer
     else
-      status = 403
-      response = { status: 'fail' }
+      session[:redirect_to] = "/home/index"
     end
+    
+    logger.info flash[:redirect_to]
+    
+  end
+  
+  def create
+    
+    login_name = params[:username_or_email].downcase
+    
+    @user = User.find(:first, :conditions => [ "lower(email) = ?", login_name ])
       
-    respond_to do |format|
-      format.json { render json: response, status: status }
-      format.html { render text: response.to_json, status: status }
+    if !@user
+      @user = User.find(:first, :conditions => [ "lower(username) = ?", login_name ])
+    end
+    
+    if @user and @user.authenticate(params[:password])
+      session[:user_id] = @user.id
+      respond_to do |format|
+        format.html { redirect_to session[:redirect_to]}
+        format.json { render json: {authenticity_token: form_authenticity_token}, status: :ok }
+      end
+    else
+      flash.now[:error] = "The entered username/email and password do not match"
+      flash.now[:username_or_email] = params[:username_or_email]
+      respond_to do |format|
+        format.html { render action: "new" }
+        format.json { render json: {}, status: :unauthorized }
+      end
     end
   end
 

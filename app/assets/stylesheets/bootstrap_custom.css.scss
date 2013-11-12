@@ -109,6 +109,15 @@ i.icon-white
   -webkit-box-shadow: 0 2px 3px 1px #9E9E9E;
           box-shadow: 0 2px 3px 1px #9E9E9E;  
 
+  @media screen and (max-width: 980px) {
+    font-size:0.8em;
+  }
+  @media screen and (min-width: 1200px) {
+    font-size:1em;
+  }
+  
+  cursor:pointer;
+
 }
 
 .item:hover

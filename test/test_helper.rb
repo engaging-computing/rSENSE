@@ -54,12 +54,9 @@ module CapyHelper
   def login(user, pass)
     visit '/'
     find('#title_bar').click_on('Login')
-    sleep 0.1
     fill_in 'Username', with: user
-    sleep 0.1
     fill_in 'Password', with: pass
-    sleep 0.1
-    find('#login_box').click_on('Login')
+    find('.mainContent').click_on('Login')
 
     assert page.has_content?("Logout")
   end

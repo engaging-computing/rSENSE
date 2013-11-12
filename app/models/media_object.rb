@@ -1,9 +1,11 @@
+
+require 'store_file'
+
 class MediaObject < ActiveRecord::Base
-  
   include ActionView::Helpers::SanitizeHelper
 
-  
-  attr_accessible :project_id, :media_type, :name, :data_set_id, :src, :user_id, :tutorial_id, :visualization_id, :title, :file_key, :hidden, :tn_file_key, :tn_src, :news_id
+  attr_accessible :project_id, :media_type, :name, :data_set_id, :src, :user_id, :tutorial_id, 
+    :visualization_id, :title, :file_key, :hidden, :tn_file_key, :tn_src, :news_id, :store_key
   
   belongs_to :user
   belongs_to :project
@@ -14,30 +16,59 @@ class MediaObject < ActiveRecord::Base
   
   alias_attribute :title, :name
   
-  validates_presence_of :src, :media_type, :file_key
-  
+  validates_presence_of :media_type, :store_key
   validates :name, length: {maximum: 128}
   
   before_save :sanitize_media
-  before_destroy :aws_del
+  before_save :check_store!
+
+  after_destroy :remove_data!
   
   alias_attribute :owner, :user
   alias_attribute :dataSet, :data_set
   
   def sanitize_media
-  
     self.title = sanitize self.title, tags: %w()
-    
+  end
+
+  def check_store!
+    if self.store_key.nil?
+      self.store_key = store_make_key
+    end
+
+    store_make_uudir!(self.store_key)
   end
   
   def self.search(search, dc)
     if search
-        where('name LIKE ?', "%#{search}%")
+      where('name LIKE ?', "%#{search}%")
     else
-        scoped
+      scoped
     end
   end
-  
+
+  def file_name
+    uudir = store_uudir(self.store_key)
+    "#{uudir}/#{name}"
+  end
+
+  def tn_file_name
+    uudir = store_uudir(self.store_key)
+    "#{uudir}/tn_#{name}"
+  end
+
+  def src
+    uupath = store_uupath(self.store_key)
+    ename  = URI.escape(name)
+    "#{uupath}/#{ename}"
+  end
+
+  def tn_src
+    uupath = store_uupath(self.store_key)
+    ename  = URI.escape(name)
+    "#{uupath}/tn_#{ename}"
+  end
+
   def to_hash(recurse = true)
     h = {
       id: self.id,
@@ -71,46 +102,29 @@ class MediaObject < ActiveRecord::Base
     h
   end
   
-  def add_tn()
-    if self.media_type == "image" and self.tn_file_key == "" and self.file_key != nil
-      #setup
-      s3ConfigFile = YAML.load_file('config/aws_config.yml')
-      s3 = AWS::S3.new(
-        :access_key_id => s3ConfigFile['access_key_id'],
-        :secret_access_key => s3ConfigFile['secret_access_key'])
-      
-      bucket = s3.buckets['isenseimgs']
-      self.tn_file_key = 'tn' + self.file_key
-      o = bucket.objects[self.tn_file_key]
-      
+  def add_tn
+    if self.media_type == "image"
       #make the thumbnail
-      image = MiniMagick::Image.open(self.src)
-      image.resize "128"
+      image = MiniMagick::Image.open(self.file_name)
+      image.resize "180"
       
       #finish up
-      o.write image.to_blob
-      self.tn_src = o.public_url.to_s
-      self.save
+      File.open(self.tn_file_name, "wb") do |oo|
+        oo.write image.to_blob
+      end
+      
+      self.save!
     end
   end
-  
-  private
-  def aws_del()
-    return if Rails.env.test?
 
-    #Set up the link to S3
-    s3ConfigFile = YAML.load_file('config/aws_config.yml')
-  
-    s3 = AWS::S3.new(
-      :access_key_id => s3ConfigFile['access_key_id'],
-      :secret_access_key => s3ConfigFile['secret_access_key'])
-    
-    if self.file_key != ""
-      s3.buckets['isenseimgs'].objects[self.file_key].delete
-    end
-    
-    if self.tn_file_key != ""
-      s3.buckets['isenseimgs'].objects[self.tn_file_key].delete
+  private
+
+  def remove_data!
+    begin
+      File.delete(self.file_name)
+      File.delete(self.tn_file_name)
+    rescue Errno::ENOENT
+      # whatever
     end
   end
 end

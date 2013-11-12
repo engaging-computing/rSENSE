@@ -169,7 +169,7 @@
             <% end %>
             </div>
             <div class="span4 center" title="Supports - CSV,XLS,XLSX,ODS">
-              <a id="upload_csv" href=""><img class="hoverimage" src="/assets/upload.png" /><br />
+              <a id="upload_datafile" href=""><img class="hoverimage" src="/assets/upload.png" /><br />
               Upload File</a>
             </div>
             <div class="span4 center">
@@ -225,36 +225,25 @@
 </div>
 
 <div style="display:none">
-  <%= form_tag "./#{@project.id}", multipart: true, id: 'csv_file_form', target: "upload_target" do %>
-    <%= file_field_tag 'csv', id: 'csv_file_input' %>
+  <%= form_tag "/data_sets/dataFileUpload", method: 'post',multipart: true, id: 'datafile_form' do %>
+    <%= file_field_tag 'file', id: 'datafile_input' %>
+    <input type="hidden" name="pid" value="<%=@project.id%>">
   <% end %>
-  <iframe id="upload_target" name="upload_target" src="" style="width:100%;height:100;border:0px solid #fff;"></iframe>
 </div>
 
 <div id="doc_box" class="modal hide fade well container">
-  <div>
-    Please enter the Google Drive link to share below:
-  </div> 
-  <input id="doc_url" class="login_field" type="text" style="width:95%"></input>
-  <div class="clear"> </div>
-  <div style="float:right;">
-      <button id="save_doc" class="login_button btn btn-success">Save</button>
-      <button id="cancel_doc" class="cancel_login_button btn btn-danger">Cancel</button>
-  </div>
-</div>
-
-<!-- Field matching Modal Box -->
-<div id="match_box" class="modal hide fade well container">
-  <p>
-    We were unable to automatically match up your CSV headers with the project fields. Below is our best guess - please correct it with the dropdown boxes before continuing.
-  </p>
-
-  <table id="match_table"> </table>
-
-  <div style="float:right;">
-    <button class="finished_button btn btn-success"> Finished </button>
-    <button class="cancel_upload_button btn btn-danger" style="margin:15px 6px 0px 0px"> Cancel Upload </button>
-  </div>
+  <%= form_tag "/data_sets/dataFileUpload", method: 'post', multipart: true do %>
+    <div>
+      Please enter the Google Drive link to share below:
+    </div> 
+    <input name="pid" value="<%=@project.id%>" type="hidden">
+    <input name="file" id="doc_url" class="login_field" type="text" style="width:95%"></input>
+    <div class="clear"> </div>
+    <div style="float:right;">
+        <button id="save_doc" type="submit" class="login_button btn btn-success">Save</button>
+        <button id="cancel_doc" class="cancel_login_button btn btn-danger">Cancel</button>
+    </div>
+  <% end %>
 </div>
 
 <div style="display:none">

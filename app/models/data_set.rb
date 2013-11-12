@@ -74,4 +74,20 @@ class DataSet < ActiveRecord::Base
     end
     h
   end
+
+  def to_csv(tmpdir)
+    project = Project.find(self.project_id)
+    fields = project.fields
+    fname = ("#{self.title}.csv").squish.downcase.tr(" ","_")
+    tmp_file = File.new("#{tmpdir}/#{fname}", 'w+')
+
+    tmp_file.write(fields.map {|f| f.name}.join(',') + "\n")
+    self.data.each do |datapoint|
+      tmp_file.write(fields.map {|f| datapoint["#{f.id}"]}.join(',') + "\n")
+    end
+
+    tmp_file.close()
+    
+    fname
+  end
 end

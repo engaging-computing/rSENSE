@@ -1,9 +1,12 @@
 require 'base64'
 
 class UsersController < ApplicationController
-  skip_before_filter :authorize, only: 
+  before_filter :authorize_admin, only: [:index]
+
+  skip_before_filter :authorize, only:
     [:new, :create, :validate, :pw_request, :pw_send_key, :pw_reset]
- 
+
+    
   include ActionView::Helpers::DateHelper
   include ApplicationHelper
  
@@ -165,17 +168,6 @@ class UsersController < ApplicationController
   # GET /users/new.json
   def new
     @user = User.new
-
-    respond_to do |format|
-      format.html do
-        if @cur_user.nil?
-          render # new.html.erb
-        else
-          redirect_to '/'
-        end
-      end
-      format.json { render json: @user.to_hash(false) }
-    end
   end
   
   # GET /users/1/edit
@@ -192,20 +184,10 @@ class UsersController < ApplicationController
   # POST /users.json
   def create
     @user = User.new(params[:user])
-    @user.reset_validation!
 
     respond_to do |format|
       if @user.save
         session[:user_id] = @user.id
-
-        begin
-          unless @user.email.nil? or @user.email.empty?
-            UserMailer.validation_email(@user).deliver
-          end
-        rescue Exception => e
-          logger.info "Error sending validation email"
-          logger.info "#{e}"
-        end
  
         format.html { redirect_to @user, notice: 'User was successfully created.' }
         format.json { render json: @user.to_hash(false), status: :created, location: @user }

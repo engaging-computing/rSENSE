@@ -273,87 +273,10 @@ class DataSetsController < ApplicationController
 
   # GET /projects/1/export
   def export
-
     require 'uri'
     require 'tempfile'
-
-    @project = Project.find params[:id]
-    @datasets = []
     
-    pname = @project.name.tr(" ", "_").tr("/", "_").gsub(/\W/,'').to_s
-    
-    zip_name = URI.escape "#{@project.id}-#{pname}"
-    
-    if File.directory? "/tmp/export-#{@project.id}-#{pname}"
-      FileUtils.rm_rf "/tmp/export-#{@project.id}-#{pname}", secure: true
-    end
-    
-    FileUtils.mkdir_p "/tmp/export-#{@project.id}-#{pname}"
-
-    # build list of datasets
-    if( !params[:datasets].nil? )
-
-      dsets = params[:datasets].split(",")
-      dsets.each do |s|
-        begin
-          @datasets.push DataSet.find_by_id_and_project_id s, params[:id]
-        rescue
-          logger.info "Either project id or dataset does not exist in the DB"
-        end
-      end
-    else
-      @datasets = DataSet.find_all_by_project_id params[:id]
-    end
-
-    folder_name = pname
-
-    @datasets.each do |dataset|
-            
-      if !dataset.hidden?
-  
-        field_order = []
-        file_name = "#{dataset.title}".tr(" ", "_").tr("/", "_").gsub(/\W/,'').to_s
-        file_name = "#{dataset.id}-#{file_name}.csv"
-        
-        if file_name != ""
-          tmp_file = File.new( "/tmp/export-#{@project.id}-#{pname}/#{file_name}", 'w+' )
-        else
-          tmp_file = File.new( "/tmp/export-#{@project.id}-#{pname}/#{@project.id}", 'w+' )
-        end
-          
-        @project.fields.each_with_index do |field, f_index|
-          tmp_file.write field[:name]
-          field_order.push field.id
-    
-          if( f_index != @project.fields.count - 1)
-            tmp_file.write ", "
-          end
-        end
-    
-        tmp_file.write "\n"
-  
-        dataset[:data].each_with_index do |data_row, dr_index|
-          
-          field_order.each_with_index do |field, f_index|
-            tmp_file.write data_row[field.to_s]
-            
-            if( f_index != field_order.count - 1)
-              tmp_file.write ", "
-            end
-          end
-  
-          tmp_file.write "\n"
-  
-        end
-  
-        tmp_file.close
-      end
-      
-    end
-    
-    zip_file = "/tmp/export-#{@project.id}-#{pname}/#{zip_name}.zip"
-        
-    system("cd /tmp && zip -r export-#{@project.id}-#{pname}/#{zip_name}.zip export-#{@project.id}-#{pname}/")
+    zip_file = Project.find(params[:id]).export_data_sets(params[:datasets])
     
     respond_to do |format|
       format.html { send_file zip_file, :type => 'file/zip', :x_sendfile => true }
@@ -361,276 +284,48 @@ class DataSetsController < ApplicationController
 
   end
 
-
-  ## POST /data_sets/1
-  def uploadCSV
-    require "csv"
-    require "open-uri"
-    require "roo"
-    
-    @project = Project.find(params[:id])
-    fields = @project.fields
-    exp_fields = []
-    fields.each do |f|
-      exp_fields.append f.name
+  # PUT /data_sets/field_matching
+  def field_matching
+    project = Project.find(params[:pid])
+    uploader = FileUploader.new
+    data_obj = uploader.retrieve_obj(params[:file])
+    data = uploader.swap_columns(data_obj, params)
+    dataset = DataSet.new do |d|
+      d.user_id = @cur_user.id
+      d.title = params[:title]
+      d.project_id = project.id
+      d.data = data
     end
-    fields = exp_fields
-
-    #Client has responded to a call for matching
-    if(params.has_key?(:matches))
-
-      data = CSV.read(params['tmpFile'])
-
-      headers = params[:headers]
-      matches = params[:matches]
-
-      matches = matches.inject({}) do |acc, kvp|
-        v = kvp[1].inject({}) do |acc, kvp|
-          acc[kvp[0].to_sym] = Integer(kvp[1])
-          acc
-        end
-
-        acc[Integer(kvp[0])] = v
-        acc
-      end
-
-      data = sortColumns(data, matches)
-
-    #First call to upload a csv.
+    
+    if dataset.save
+      redirect_to "/projects/#{project.id}/data_sets/#{dataset.id}"
     else
-      isdoc = false
-      if params.has_key? :csv
-        @file = params[:csv]
-        if @file.content_type.include? "opendocument"
-          oo = Roo::Openoffice.new(@file.path,false, :ignore)
-          data = CSV.parse(oo.to_csv)
-        elsif @file.content_type.include? "ms-excel"
-          oo = Roo::Excel.new(@file.path,false,:ignore)
-          data = CSV.parse(oo.to_csv) 
-        elsif @file.content_type.include? "openxmlformats"
-          oo = Roo::Excelx.new(@file.path,false,:ignore)
-          data = CSV.parse(oo.to_csv)
-        else 
-          data = CSV.read(@file.tempfile)
-        end
-      else 
-        tempfile = CSV.new(open(params[:tmpfile]))
-        data = tempfile.read()
-        isdoc = true
-      end
-      
-      headers = data[0]
-
-      #Build match matrix with quality
-      matrix = buildMatchMatrix(fields,headers)
-      results = {}
-      worstMatch = 0
-      until false
-        max =  matrixMax(matrix)
-
-        break if max['val'] == 0
-        matrixZeroCross(matrix, max['findex'], max['hindex'])
-
-        results[max['findex']] = {findex: max['findex'], hindex: max['hindex'], quality: max['val']}
-        worstMatch = max['val']
-      end
-
-      # If the headers are mismatched respond with mismatch
-      if (results.size != @project.fields.size) or (worstMatch < 0.6)
-        #Create a tmp directory if it does not exist
-        begin
-          Dir.mkdir("/tmp/rsense")
-        rescue
-        end
-
-        #Save file so we can grab it again
-        base = "/tmp/rsense/dataset"
-        fname = base + "#{Time.now.to_i}.csv"
-        f = File.new(fname, "w")
-        
-        y = ""
-        data.each do |x|
-          y += x.join(",") + "\n"
-        end
-        f.write(y)
-
-        f.close
-        
-        respond_to do |format|
-          format.json { render json: {pid: params[:id],headers: headers, fields: fields, partialMatches: results,tmpFile: fname}, status: :partial_content  }
-        end
-        return
-
-      #EVERYTHING MATCHED, SORT THE COLUMNS
-      else
-        data = sortColumns(data,results)
-      end
-    end
-
-    #WE HAVE SUCCESSFULLY MATCHED HEADERS AND FIELDS, SAVE THE DATA FINALLY.
-    @project = Project.find_by_id(params[:id])
-    
-    if(!params.try(:[], :dataset_name))
-      defaultName  = "Dataset #"
-      defaultName += (DataSet.find_all_by_project_id(params[:id]).count + 1).to_s
-    else 
-      defaultName = params[:dataset_name]
-    end
-
-    @data_set = DataSet.new(:project_id => params[:id], :title => defaultName, :user_id => @cur_user.try(:id))
-
-    #Parse out just the data
-    data = data[1..(data.size-1)]
-
-    #Data that will be stuffed into mongo
-    mongo_data = Array.new
-
-    #Build the object that will be displayed in the table
-    format_data = {}
-    format_data["metadata"] = []
-    format_data["data"] = []
-    fields.count.times do |i|
-      format_data["metadata"].push({name: headers[i], label: headers[i], datatype: "string", editable: true})
-    end
-
-    header = Field.find_all_by_project_id(@project.id)
-
-    data.each do |dp|
-      row = {}
-      header.each_with_index do |field, col_index|
-        row["#{field[:id]}"] = dp[col_index]
-      end
-      mongo_data << row
-    end
-
-    @data_set.data = mongo_data
-    
-    if @data_set.save!
-     respond_to do |format|
-        format.json { render json: @data_set.to_hash(false), status: :created}
-      end
-    else
+      @results = params[:results]
+      @default_name = params[:title]
       respond_to do |format|
-        format.json { render json: @data_set.errors.full_messages(), status: :unprocessable_entity }
+        flash[:error] = dataset.errors.full_messages()
+        format.html {render action: "uploadCSV2"}
       end
     end
+  end
+  
+  # POST /data_sets/uploadCSV2
+  def dataFileUpload
+    project = Project.find(params[:pid])
     
-  end
-
-private
-
-  #Returns the index of the highest value in the match matrix.
-  def matrixMax(matrix)
-
-    n = matrix.map do |x|
-      m = {}
-      m['val'] = x.max
-      m['hindex'] = x.index(m['val'])
-      m['findex'] = matrix.index(x)
-      m
-    end
-
-    n.inject do |h1, h2|
-      if h1['val'] > h2['val']
-        h1
-      else
-        h2
+    begin
+      uploader = FileUploader.new
+      data_obj = uploader.generateObject(params[:file])
+      @results = uploader.match_headers(project, data_obj)
+      
+      @default_name = "Dataset ##{ (DataSet.find_all_by_project_id(params[:pid]).count + 1).to_s}"
+    
+      respond_to do |format|
+        format.html
       end
+    rescue
+      flash[:error] = 'File could not be read'
+      redirect_to project_path(project)
     end
   end
-
-  #Zero out a row and column of the match matrix
-  def matrixZeroCross(matrix, findex, hindex)
-
-    (0...matrix.size).each do |fi|
-      matrix[fi][hindex] = 0
-    end
-
-    (0...matrix[0].size).each do |hi|
-      matrix[findex][hi] = 0
-    end
-
-    matrix
-  end
-
-  #Use LCS to build a matches with quality.
-  def buildMatchMatrix(fields, headers)
-    matrix = []
-    fields.each_with_index do |f,fi|
-      matrix.append []
-      headers.each_with_index do |h,hi|
-        lcs_length = lcs(fields[fi].downcase,headers[hi].downcase).length.to_f
-        x = lcs_length / fields[fi].length.to_f
-        y = lcs_length / headers[hi].length.to_f
-        avg = (x + y) / 2
-        matrix[fi].append avg
-      end
-    end
-    matrix
-  end
-
-  #Longest common subsequence. Used in column matching
-  def lcs(a, b)
-      lengths = Array.new(a.size+1) { Array.new(b.size+1) { 0 } }
-      # row 0 and column 0 are initialized to 0 already
-      a.split('').each_with_index { |x, i|
-          b.split('').each_with_index { |y, j|
-              if x == y
-                  lengths[i+1][j+1] = lengths[i][j] + 1
-              else
-                  lengths[i+1][j+1] = \
-                      [lengths[i+1][j], lengths[i][j+1]].max
-              end
-          }
-      }
-      # read the substring out from the matrix
-      result = ""
-      x, y = a.size, b.size
-      while x != 0 and y != 0
-          if lengths[x][y] == lengths[x-1][y]
-              x -= 1
-          elsif lengths[x][y] == lengths[x][y-1]
-              y -= 1
-          else
-              # assert a[x-1] == b[y-1]
-              result << a[x-1]
-              x -= 1
-              y -= 1
-          end
-      end
-      result.reverse
-  end
-
-  #It is easier to swap columns around after rotating the data matrix
-  def rotateDataMatrix(dataMatrix)
-
-    newDataMatrix = []
-
-    for i in 0...dataMatrix[0].size()
-      newDataMatrix[i] = []
-    end
-
-    for i in 0...dataMatrix.size()
-
-      for j in 0...dataMatrix[i].size()
-        newDataMatrix[j][i] = dataMatrix[i][j]
-      end
-    end
-
-    newDataMatrix
-
-  end
-
-  #Rotate the matrix then swap the columns to the correct order
-  def sortColumns(rowColMatrix, matches)
-    rotatedMatrix = rotateDataMatrix(rowColMatrix)
-    newData = []
-
-    matches.size.times do |i|
-      newData[i] = rotatedMatrix[matches[i][:hindex]]
-    end
-
-    rotateDataMatrix(newData)
-  end
-
 end
