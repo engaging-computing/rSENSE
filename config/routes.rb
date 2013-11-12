@@ -9,8 +9,8 @@ Rsense::Application.routes.draw do
 
   resources :media_objects
 
+  match "/projects/:id/edit_fields" => "projects#edit_fields"
   post "projects/:id/templateFields" => "projects#templateFields"
-
   match "/projects/import" => "projects#importFromIsense"
   match "/projects/import/:pid" => "projects#importFromIsense"
 
@@ -51,8 +51,8 @@ Rsense::Application.routes.draw do
   #Routes for displaying data
   match "/projects/:id/data_sets/*datasets" => "visualizations#displayVis"
   match "/projects/:id/data_sets/" => "visualizations#displayVis"
-
-
+  post "/projects/:id/templateUpload", to: "projects#templateUpload"
+  post "/projects/:id/finishTemplateUpload", to: "projects#finishTemplateUpload"
   match "/projects/:id/removeField" => "projects#removeField"
 
   match "/media_objects/saveMedia/*keys" => "media_objects#saveMedia"
