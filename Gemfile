@@ -74,3 +74,5 @@ gem 'yaml_db'
 gem 'multi_json'
 
 gem 'roo'
+
+gem 'html_acceptance', :git => 'git://github.com/ericbeland/html_acceptance.git'
