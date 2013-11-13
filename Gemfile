@@ -12,6 +12,7 @@ gem 'sass-rails'
 gem 'coffee-rails'
 gem 'coffee-script-source'
 gem 'uglifier'
+gem 'modernizr-rails'
 
 # Integration testing stuff
 group :development, :test do
@@ -66,3 +67,4 @@ gem 'roo'
 
 # Rails 4 migration
 gem 'protected_attributes'
+

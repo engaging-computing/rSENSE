@@ -114,48 +114,28 @@
 
       <!-- ##### FIELDS MENU ##### -->
       <%= render layout: "shared/box", locals: {title: 'Fields', width: '5', unique_id: 'fields', should_hide: false} do%>
-        <table class="fields_table" project="<%=@project.id%>" can_delete_fields="<%if @project.data_sets.count>0%>false<%else%>true<%end%>" data-num_fields="<%=@project.fields.count%>">
-          <thead>
-            <tr>
-              <th style="max-width:30%">Name</th>
-              <th style="max-width:30%">Units</th>
-              <th style="max-width:30%">Type</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @project.fields.to_a.each do |f| %>
-              <!-- Render all the fields, Lat and Lon cant be edited -->
+        <% if (@project.fields.count == 0) && (can_edit?(@project)) %>
+          <button class="btn btn-success" id="template_file_upload">Upload File</button>
+          <a href="/projects/<%=@project.id%>/edit_fields"><button class="btn btn-success">Setup Manually</button></a>
+        <% else %>
+          <table class="fields_table" project="<%=@project.id%>" can_delete_fields="<%if @project.data_sets.count>0%>false<%else%>true<%end%>" data-num_fields="<%=@project.fields.count%>">
+            <thead>
+              <tr>
+                <th style="max-width:30%">Name</th>
+                <th style="max-width:30%">Units</th>
+                <th style="max-width:30%">Type</th>
+              </tr>
+            </thead>
+            <tbody>
+            <% @project.fields.each do |f|%>
               <%= render 'field_edit', field: f, type: "field", row_id: f.id, can_edit: (can_edit? @project), has_ses: @project.data_sets.count %>
             <% end %>
-            </tr>
-          </tbody>
-        </table>
-        <%if can_edit? @project%>
-          <div class="center fields_edit_option">
-            <button class="edit_fields_btn btn btn-success">Edit</button>
-          </div>
-          <div class="center fields_edit_menu" style="display:none">
-            <div class='btn-group' id='add-field-dropdown'>
-              <a class='btn btn-success dropdown-toggle' data-toggle='dropdown' href='#'>
-                Add Field 
-                <span class='caret'/>
-              </a>
-              <ul class='dropdown-menu'>
-                <li><a href='#' id="add_timestamp_field" > Timestamp </a></li>
-                <li><a href='#' id="add_number_field"> Number </a></li>
-                <li><a href='#' id="add_text_field"> Text </a></li>
-                <% if (@project.fields.any? {|field| field.field_type == LONGITUDE_TYPE or field.field_type == LATITUDE_TYPE}) %>
-                  <li><a href='#' style="display:none;" id="add_location_field"> Location </a></li>
-                <% else %>
-                  <li><a href='#' id="add_location_field"> Location </a></li>
-                <% end %>
-              </ul>
-            </div>
-            <button class="btn btn-success" href="#" id="template_from_file" style=<%= @project.fields.count != 0 ? "display:none" : ""%>>Template from File</button>
-            <button class="save_field_changes_btn btn btn-primary" href="/projects/<%=@project.id%>/updateFields">Save Changes</button>
-            
-          </div>
-        <%end%>
+            </tbody>
+          </table>
+          <% if can_edit?(@project) %>
+            <a href="/projects/<%=@project.id%>/edit_fields"><button class="btn btn-primary">Edit</button></a>
+          <% end %>
+        <% end %>
       <% end %>
 
     
@@ -218,8 +198,7 @@
             </tbody>
           </table>  
         </div>
-      <%end%>
-      
+      <%end%>  
     </div>
   </div>
 </div>
@@ -247,23 +226,8 @@
 </div>
 
 <div style="display:none">
-  <%= form_tag "/projects/#{@project.id}/CSVUpload", multipart: true, id: 'template_file_form', 
-                target: "upload_target" do %>
-    <%= file_field_tag 'csv', id: 'template_file_input' %>
+  <%= form_tag "/projects/#{@project.id}/templateUpload", method: 'post',multipart: true, id: 'template_file_form' do %>
+    <%= file_field_tag 'file', id: 'template_file_input' %>
   <% end %>
-  <iframe id="upload_target" name="upload_target" src="" style="width:100%;height:100;border:0px solid #fff;"></iframe>
 </div>
 
-<!-- Field Templating Modal Box -->
-<div id="template_match_box" class="modal hide fade well container">
-  <p>
-    Please finish the template processing by telling us the type of each of your fields.
-  </p>
-
-  <table id="template_match_table"> </table>
-
-  <div style="float:right;">
-    <button class="finished_button btn btn-success"> Finished </button>
-    <button class="cancel_upload_button btn btn-danger" style="margin:15px 6px 0px 0px"> Cancel Upload </button>
-  </div>
-</div>

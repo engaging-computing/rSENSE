@@ -32,3 +32,19 @@ pie:
   name: pie
   unit: Pies
   project: dessert
+  
+number_one:
+  id: 23
+  field_type: 2
+  name: Number_1
+  unit: nums
+  project: one
+  
+number_two:
+  id: 24
+  field_type: 2
+  name: Number_2
+  unit: nums
+  project: one
+  
+  
