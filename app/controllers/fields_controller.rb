@@ -97,28 +97,25 @@ class FieldsController < ApplicationController
   # DELETE /fields/1.json
   def destroy
     @field = Field.find(params[:id])
-    
-    if can_delete?(@field)
-      @field.destroy
-      
-      if params.has_key?("project_id")
-        num_fields = Project.find(params[:project_id]).fields.count
-        respond_to do |format|
-          format.html { redirect_to fields_url }
-          format.json { render json: {num_fields: num_fields}, status: :ok }
-        end
+    @project = Project.find(@field.project_id)
+    if can_delete?(@field) && (@project.data_sets.count == 0)
+      if (@field.field_type == get_field_type('Latitude')) || (@field.field_type == get_field_type('Longitude'))
+        @project.fields.where("field_type = ?", get_field_type('Latitude')).first.destroy
+        @project.fields.where("field_type = ?", get_field_type('Longitude')).first.destroy
       else
-        respond_to do |format|
-          format.html { redirect_to fields_url }
-          format.json { render json: {}, status: :ok }
-        end
-      end 
+        @field.destroy
+      end
+      respond_to do |format|
+        format.json { render json:{}, status: :ok }
+        format.html { redirect_to @field.project, notice: 'Field was successfuly deleted.' }
+      end
     else
       respond_to do |format|
-        format.html { redirect_to 'public/401.html' }
-        format.json { render json: {}, status: :forbidden }
+        format.json { render json:{}, status: :forbidden }
+        format.html { redirect_to @field.project, alert: 'Field could not be destroyed' }
       end
     end
+
   end
  
   # POST /projects/id/updateFields 

@@ -1,0 +1,41 @@
+<%= form_tag "/projects/#{@project.id}/finishTemplateUpload", method: "post" do%>
+  <div class="row">
+    <div class="span12">
+      <h4>Please select types for each field below.</h4>
+    </div>
+    <div class="span4">
+      <table id="fields_table">
+        <thead>
+          <tr>
+            <th> File Header </th>
+            <th> Field Type </th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @headers.each do |header|%>
+            <tr class="<%= cycle('row-even','row-odd')%>">
+              <td><b><%= header %></b></td>
+              <td>
+                <select name="headers[<%=header%>]">
+                  <%=options_for_select(@options,get_field_type('Number'))%>
+                </select>
+              </td>
+            </tr>
+          <% end %> 
+        </tbody>
+       
+      </table>
+    </div>
+  </div>
+  <br/>
+  <div class="row">
+    <div class="span2">
+      <b>Also create dataset?</b><input type="checkbox" name="create_dataset" style="margin-bottom:4px" checked><br/>
+      <input name="title" type="text" value="Dataset #1"><br/>
+    </div>
+  </div>
+  
+  
+  <input type="hidden" name="file" value="<%=@tmp_file%>">
+  <button type="submit" class="btn btn-primary">Submit</button>
+<% end %>
