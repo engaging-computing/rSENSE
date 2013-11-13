@@ -10,8 +10,8 @@ Rsense::Application.routes.draw do
 
   resources :media_objects
 
+  get "/projects/:id/edit_fields" => "projects#edit_fields"
   post "projects/:id/templateFields" => "projects#templateFields"
-
   post "/projects/import" => "projects#importFromIsense"
   post "/projects/import/:pid" => "projects#importFromIsense"
 
@@ -54,6 +54,13 @@ Rsense::Application.routes.draw do
   get "/projects/:id/data_sets/" => "visualizations#displayVis"
 
   post "/projects/:id/removeField" => "projects#removeField"
+
+  post "/media_objects/saveMedia/*keys" => "media_objects#saveMedia"
+  get "/projects/:id/data_sets/*datasets" => "visualizations#displayVis"
+  get "/projects/:id/data_sets/" => "visualizations#displayVis"
+  post "/projects/:id/templateUpload", to: "projects#templateUpload"
+  post "/projects/:id/finishTemplateUpload", to: "projects#finishTemplateUpload"
+  put "/projects/:id/removeField" => "projects#removeField"
 
   post "/media_objects/saveMedia/*keys" => "media_objects#saveMedia"
 

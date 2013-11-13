@@ -21,6 +21,7 @@
 
 // require jquery.mobile.custom.min
 //= require jquery.mobile
+//= require unsupported
 
 
 //= require bootstrap
