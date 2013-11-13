@@ -2,7 +2,8 @@
 
   <div class="row">
     <div class="span12">
-      <%= form_for(@user) do %>
+      <%= form_for(@user) do |ff| %>
+        <%= hidden_field_tag :new_password, "1" %>
         <% unless @cur_user.admin? or session[:pw_change] %>
           <p>
           <%= label_tag :current_password, "Current Password:" %>
@@ -14,12 +15,12 @@
           change your password now.</p>
         <% end %>
         <p>
-        <%= label_tag :new_password, "New Password:" %>
-        <%= password_field_tag :new_password %>
+        <%= ff.label :password, "New Password:" %>
+        <%= ff.password_field :password %>
         </p>
         <p>
-        <%= label_tag :new_password_confirmation, "Retype Your New Password:" %>
-        <%= password_field_tag :new_password_confirmation %>
+        <%= ff.label :password_confirmation, "Retype Your New Password:" %>
+        <%= ff.password_field :password_confirmation %>
         </p>
         <p>
         <%= submit_tag "Change Password", class: "btn btn-primary" %>
