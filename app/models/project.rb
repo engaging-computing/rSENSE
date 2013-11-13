@@ -4,7 +4,9 @@ class Project < ActiveRecord::Base
   include ActionView::Helpers::DateHelper
   include ActionView::Helpers::SanitizeHelper
 
-  attr_accessible :content, :title, :user_id, :filter, :cloned_from, :like_count, :has_fields, :featured, :is_template, :featured_media_id, :hidden, :featured_at, :lock, :curated, :curated_at, :updated_at
+  attr_accessible :content, :title, :user_id, :filter, :cloned_from, :like_count, :has_fields, 
+    :featured, :is_template, :featured_media_id, :hidden, :featured_at, :lock, :curated, 
+    :curated_at, :updated_at
   
   validates_presence_of :title
   validates_presence_of :user_id
@@ -14,7 +16,7 @@ class Project < ActiveRecord::Base
   before_save :sanitize_project
   
   has_many :fields
-  has_many :data_sets, order: "created_at desc"
+  has_many :data_sets, -> { order("created_at desc") }
   has_many :media_objects
   has_many :likes
   has_many :visualizations
@@ -39,7 +41,7 @@ class Project < ActiveRecord::Base
     res = if search
         where('(lower(title) LIKE lower(?)) OR (id = ?)', "%#{search}%", search.to_i)
     else
-        scoped
+        all
     end
     
     if include_hidden
@@ -53,7 +55,7 @@ class Project < ActiveRecord::Base
     if value == true
       where(:is_template => true)
     else
-      scoped
+      all
     end
   end
   
@@ -61,7 +63,7 @@ class Project < ActiveRecord::Base
     if value == true
       where(:curated => true)
     else
-      scoped
+      all
     end
   end
   

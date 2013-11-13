@@ -182,7 +182,7 @@ class UsersControllerTest < ActionController::TestCase
 
   test "actually change password" do
     post :update, { id: @user, current_password: '12345',
-      password: 'ninja', password_confirmation: 'ninja' },
+      user: { password: 'ninja', password_confirmation: 'ninja' } },
       { user_id: @user }
     assert_redirected_to @user
 
@@ -192,7 +192,7 @@ class UsersControllerTest < ActionController::TestCase
 
   test "actually change email" do
     post :update, { id: @user, password: '12345',
-      email: 'kate@example.com', email_confirmation: 'kate@example.com' },
+      new_email: 'kate@example.com', new_email_confirmation: 'kate@example.com' },
       { user_id: @user }
     assert_redirected_to @user
 
