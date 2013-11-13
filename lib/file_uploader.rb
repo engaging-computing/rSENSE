@@ -9,7 +9,6 @@ class FileUploader
   ### Generates the object that will be acted on
   def generateObject(file)
     spreadsheet = open_spreadsheet(file)
-    Rails.logger.info "------#{spreadsheet}"
     header = spreadsheet.row(1)
     data_obj = Hash.new
     data_obj['data'] = Hash.new
@@ -25,6 +24,7 @@ class FileUploader
   ### Simply opens the file as the correct type and returns the Roo object.
   def open_spreadsheet(file)
     if file.class == ActionDispatch::Http::UploadedFile
+      Rails.logger.info "-=-=-=#{file.path}"
       case File.extname(file.original_filename)
       when ".csv" then convert(file.path)
       when ".xls" then Roo::Excel.new(file.path, nil, :ignore)
@@ -62,6 +62,7 @@ class FileUploader
     (0..size-1).each do |i|
       x = {}
       project.fields.each do |field|
+        next if matches[field.id.to_s] == "0"
         x[field.id] = data_obj[matches[field.id.to_s]][i]
       end
       data << x
