@@ -55,7 +55,7 @@ class FileUploader
   
   ## Swap columns 
   def swap_columns(data_obj, project, matches) 
-    size = data_obj.first.length
+    size = data_obj.first[1].length
     data = []
     (0..size-1).each do |i|
       x = {}
@@ -70,7 +70,7 @@ class FileUploader
   
   def swap_without_matches(data_obj,project)
     data = []
-    size = data_obj.first.length
+    size = data_obj.first[1].length
 
     (0..size-1).each do |i|
       x = {}
