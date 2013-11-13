@@ -43,7 +43,7 @@ class MediaObject < ActiveRecord::Base
     if search
       where('name LIKE ?', "%#{search}%")
     else
-      scoped
+      all
     end
   end
 
@@ -58,6 +58,7 @@ class MediaObject < ActiveRecord::Base
   end
 
   def src
+    return "" if self.store_key.nil?
     uupath = store_uupath(self.store_key)
     ename  = URI.escape(name)
     "#{uupath}/#{ename}"

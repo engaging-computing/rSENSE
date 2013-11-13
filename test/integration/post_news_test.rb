@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class NewsTest < ActionDispatch::IntegrationTest
+class MakeNewsTest < ActionDispatch::IntegrationTest
   include CapyHelper
 
   setup do
@@ -20,16 +20,22 @@ class NewsTest < ActionDispatch::IntegrationTest
     assert page.has_no_content?("The Quick Brown Fox")
     
     click_on "Add News Item"
+    assert page.has_content?("News entry was successfully created.")
+
     find('.dropdown-toggle').click
     click_on("Edit Title")
     find('#appendInput').set("The Quick Brown Fox")
     all('.menu_save_link').first.click
 
+    sleep 1
+
     find('#hide_news_checkbox').click
+
+    sleep 1
 
     visit '/news'
 
-    assert page.has_content?("The Quick Brown Fox")
+    assert page.has_content?("The Quick Brown Fox"), "News Was Added"
 
     logout
 

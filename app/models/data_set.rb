@@ -36,7 +36,7 @@ class DataSet < ActiveRecord::Base
     res = if search
         where('title LIKE ?', "%#{search}%").order("created_at DESC")
     else
-        scoped.order("created_at DESC")
+        all.order("created_at DESC")
     end
     
     if include_hidden

@@ -59,7 +59,7 @@ class User < ActiveRecord::Base
     res = if search
         where('lower(firstname) LIKE lower(?) OR lower(lastname) LIKE lower(?) OR lower(username) LIKE lower(?)', "%#{search}%", "%#{search}%", "%#{search}%")
     else
-        scoped
+        all
     end
     
     if include_hidden
