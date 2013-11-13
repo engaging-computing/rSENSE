@@ -246,7 +246,7 @@ form
 
 #title_bar
 {
-  //position: fixed;
+  position: relative;
   border-bottom: 1px solid black;
   width:100%;
   background-color:#113;
@@ -435,20 +435,13 @@ form
 .navbar-btn:hover + .ddmenu
 {
   display: block;
-  position: relative;
-  z-index: -10;
-  @media screen and (max-width: 979px) {
-    font-size: 9pt;
-    left:284px;
-  }
-  @media screen and (min-width: 980px) {
-    font-size: 10pt;
-    left:401px;
-  }
-   @media screen and (min-width: 1200px) {
-    font-size: 11pt;
-    left:447px;
-  }
+  position: absolute;
+  left:-25px;
+}
+.menuholder
+{
+  display:inline-block; 
+  position:relative;
 }
 
 .item_title
@@ -466,6 +459,7 @@ form
   display:none;
   background: white;
   color:black;
+  z-index: -10;
   box-shadow:0px 5px 20px black;
   width:250px;
   li
@@ -492,18 +486,6 @@ form
 .ddmenu:hover
 {
   display: block;
-  position: relative;
-  z-index: -10;
-  @media screen and (max-width: 979px) {
-    font-size: 9pt;
-    left:284px;
-  }
-  @media screen and (min-width: 980px) {
-    font-size: 10pt;
-    left:401px;
-  }
-   @media screen and (min-width: 1200px) {
-    font-size: 11pt;
-    left:447px;
-  }
+  position: absolute;
+  left:-25px;
 }
