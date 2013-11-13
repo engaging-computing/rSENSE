@@ -18,11 +18,8 @@
 //= require name_popup
 //= require jquery_ujs
 //= require jquery.ui.all
-//# require jquery.mobile.custom.min
 //= require twitter/bootstrap
-//#= xrequire jquery.mobile
 //= require unsupported
-//#= xrequire bootstrap
 //= require info_edit
 //= require menu_edit
 //= require object_hider
@@ -42,7 +39,7 @@
 //
 // Visualization stuff follows
 //
-//= require highcharts/highcharts.src.js
+//= require highcharts/highcharts
 //= require highcharts/modules/exporting
 //= require Hydrate
 //= require jquery.dataTables
