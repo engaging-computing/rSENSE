@@ -51,8 +51,8 @@ class FieldsControllerTest < ActionController::TestCase
     assert_difference('Field.count', -1) do
       delete :destroy, { id: @field }, { user_id: @kate }
     end
-    
-    assert_redirected_to fields_path
+
+    assert_redirected_to project_path(@field.project_id)
   end
   
   test "should destroy field from api" do
@@ -73,8 +73,5 @@ class FieldsControllerTest < ActionController::TestCase
     post :updateFields, { format: 'json', id: @field.project.id, changes: [aa] }, 
       { user_id: @kate }
     assert_response :success
-    
-    # HTML validation
-    assert_valid_html(request.body, "Bulk Update Fields")
   end
 end

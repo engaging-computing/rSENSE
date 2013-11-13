@@ -16,6 +16,7 @@ group :assets do
   gem 'coffee-script-source', '1.5.0'
   gem 'uglifier', '>= 1.0.3'
   gem 'turbo-sprockets-rails3'
+  gem 'modernizr-rails'
 end
 
 # Integration testing stuff

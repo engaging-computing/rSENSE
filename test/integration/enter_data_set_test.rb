@@ -15,14 +15,7 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
   test "enter a data set" do
     login('kate', '12345')  
     click_on 'Projects'
-    
     find("div.item div div", text: "Measuring Things").click
-    
-    find('#fields').click_on 'Edit'
-    find('#fields').click_on 'Add Field'
-    find('#fields').click_on 'Number'
-    find('#fields').click_on 'Add Field'
-    find('#fields').click_on 'Number'
     click_on 'Manual Entry'
     find('#manualTable').all('.input-small')[0].native.send_keys "5"
     find('#manualTable').all('.input-small')[1].native.send_keys "6"
@@ -35,11 +28,6 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
 
     assert page.has_content?('Number_2'), "Has new field"
     assert page.has_content?('Histogram'), "On the Viz page"
-
-    click_on "Save Visualization"
-    click_on "Finish"
-
-    click_on "Visualizations"
   end
 
   test "upload a CSV file" do
@@ -90,21 +78,21 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     
     find("div.item div div", text: "Empty Project").click
 
-    click_on "Edit"
+    click_on "Upload File"
     
     csv_path = Rails.root.join('test', 'CSVs', 'dinner.csv')
 
     page.execute_script %Q{$('#template_file_form').parent().show()}
-    find("#template_file_form").attach_file("csv", csv_path)
+    find("#template_file_form").attach_file("file", csv_path)
     page.execute_script %Q{$('#template_file_form').submit()}
 
-    assert page.has_content?("telling us the type of each of your fields"), 
+    assert page.has_content?("Please select types for each field below."), 
       "got type dialog"
 
-    find('#template_match_table').all('select')[0].select("Number")
-    find('#template_match_table').all('select')[1].select("Number")
-    find('#template_match_table').all('select')[2].select("Number")
-    click_on "Finished"
+    find('#fields_table').all('select')[0].select("Number")
+    find('#fields_table').all('select')[1].select("Number")
+    find('#fields_table').all('select')[2].select("Number")
+    click_on "Submit"
 
     assert page.has_content?('Description')
   end
