@@ -18,10 +18,10 @@
 //= require name_popup
 //= require jquery_ujs
 //= require jquery.ui.all
-// require jquery.mobile.custom.min
-//= require jquery.mobile
-//= require unsupported
-//= require bootstrap
+//# require jquery.mobile.custom.min
+//= require twitter/bootstrap
+//#= require jquery.mobile
+//#= xrequire bootstrap
 //= require info_edit
 //= require menu_edit
 //= require object_hider
@@ -67,4 +67,4 @@
 //
 //= require ckeditor/init
 //
-//= require_tree .
+//#= require_tree .
