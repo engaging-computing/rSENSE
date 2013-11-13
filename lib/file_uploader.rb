@@ -9,6 +9,7 @@ class FileUploader
   ### Generates the object that will be acted on
   def generateObject(file)
     spreadsheet = open_spreadsheet(file)
+    Rails.logger.info "------#{spreadsheet}"
     header = spreadsheet.row(1)
     data_obj = Hash.new
     data_obj['data'] = Hash.new
@@ -29,6 +30,7 @@ class FileUploader
       when ".xls" then Roo::Excel.new(file.path, nil, :ignore)
       when ".xlsx" then Roo::Excelx.new(file.path,nil,:ignore)
       when ".ods" then Roo::OpenOffice.new(file.path,false,:ignore)
+      when ".gpx" then GpxParser.new.convert(file.path)
       else raise "Unknown file type: #{file.original_filename}"
       end
     else
