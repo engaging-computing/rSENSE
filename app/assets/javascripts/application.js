@@ -65,4 +65,4 @@
 //
 //= require ckeditor/init
 //
-//#= xrequire_tree .
+//= require_tree .
