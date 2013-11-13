@@ -12,8 +12,7 @@ $ ->
           <a href='#{object.url}'></a>
           #{if object.mediaSrc then "<div class='caroucell' style='height:120px; background-image:url(#{object.mediaSrc})'></div>" else ""}
           <div style="padding:7px">
-            <div style="font-size:1.2em; font-weight:bold;">#{object.name}</div>
-            #{if object.featured then "<span style='color:#57C142'> (featured)</span><br>" else ""}
+            <div style="font-size:1.2em; font-weight:bold;">#{object.name} #{if object.featured then "<span style='color:#57C142'> (featured)</span>" else ""}</div>
             <b>Owner: </b><a href='#{object.ownerUrl}'>#{object.ownerName}</a><br />
             <b>Created: </b>#{object.timeAgoInWords} ago (on #{object.createdAt})<br />
           </div>

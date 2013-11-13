@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <%= stylesheet_link_tag    "application", :media => "all" %>
     <%= javascript_include_tag "application" %>
+    <%= javascript_include_tag :modernizr %>
     <%= csrf_meta_tags %>
     <%= favicon_link_tag 'favicon.png' %>
   </head>
@@ -14,12 +15,6 @@
   <% end %>
 
   <body style="margin:0;padding:0;height:100%;background-color:#ddd;">
-
-    <% unless flash[:debug].nil? %>
-    <!-- 
-    <%= raw flash[:debug] %> 
-    -->
-    <% end %>
 
     <div style="min-height:100%;position:relative;">
       <!-- The title bar -->

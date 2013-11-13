@@ -289,7 +289,7 @@ class DataSetsController < ApplicationController
     project = Project.find(params[:pid])
     uploader = FileUploader.new
     data_obj = uploader.retrieve_obj(params[:file])
-    data = uploader.swap_columns(data_obj, params)
+    data = uploader.swap_columns(data_obj, project, params[:matches])
     dataset = DataSet.new do |d|
       d.user_id = @cur_user.id
       d.title = params[:title]
@@ -317,7 +317,6 @@ class DataSetsController < ApplicationController
       uploader = FileUploader.new
       data_obj = uploader.generateObject(params[:file])
       @results = uploader.match_headers(project, data_obj)
-      
       @default_name = "Dataset ##{ (DataSet.find_all_by_project_id(params[:pid]).count + 1).to_s}"
     
       respond_to do |format|
