@@ -20,7 +20,8 @@
 //= require jquery.ui.all
 //# require jquery.mobile.custom.min
 //= require twitter/bootstrap
-//#= require jquery.mobile
+//#= xrequire jquery.mobile
+//= require unsupported
 //#= xrequire bootstrap
 //= require info_edit
 //= require menu_edit
@@ -41,7 +42,7 @@
 //
 // Visualization stuff follows
 //
-//= require highcharts/highcharts
+//= require highcharts/highcharts.src.js
 //= require highcharts/modules/exporting
 //= require Hydrate
 //= require jquery.dataTables
@@ -67,4 +68,4 @@
 //
 //= require ckeditor/init
 //
-//#= require_tree .
+//#= xrequire_tree .
