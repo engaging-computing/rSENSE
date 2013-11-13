@@ -63,7 +63,7 @@ class MakeProjectTest < ActionDispatch::IntegrationTest
     fill_in "search", with: "Empty"
     click_on "Search"
 
-    assert page.has_content?("Empty Project")
+    assert page.has_content?("Empty Project"), "Search finds project"
     assert page.has_no_content?("Breaking Things")
   end
 end
