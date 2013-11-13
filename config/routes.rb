@@ -1,18 +1,19 @@
 Rsense::Application.routes.draw do
-  
+  # See how all your routes lay out with "rake routes"
   mount Ckeditor::Engine => '/ckeditor'
 
   post "/data_sets/dataFileUpload", to: "data_sets#dataFileUpload"
   put "/data_sets/field_matching", to: "data_sets#field_matching"
-  match '/news/add', to: 'news#create'
+
+  get '/news/add', to: 'news#create'
   resources :news, except: [:new, :edit]
 
   resources :media_objects
 
-  match "/projects/:id/edit_fields" => "projects#edit_fields"
+  get "/projects/:id/edit_fields" => "projects#edit_fields"
   post "projects/:id/templateFields" => "projects#templateFields"
-  match "/projects/import" => "projects#importFromIsense"
-  match "/projects/import/:pid" => "projects#importFromIsense"
+  post "/projects/import" => "projects#importFromIsense"
+  post "/projects/import/:pid" => "projects#importFromIsense"
 
   resources :visualizations, except: [:new]
 
@@ -20,15 +21,15 @@ Rsense::Application.routes.draw do
 
   resources :fields, except: [:index, :new, :edit]
 
-  match "projects/create" => "projects#create"
+  get "projects/create" => "projects#create"
   resources :projects, except: [:new]
 
-  match "tutorials/create" => "tutorials#create"
-  match "/tutorials/switch/" => "tutorials#switch"
+  #match "tutorials/create" => "tutorials#create"
+  post "/tutorials/switch/" => "tutorials#switch"
   resources :tutorials, except: [:new]
 
-  match 'about' => 'home#about'
-  match 'contact' => 'home#contact'
+  get 'about' => 'home#about'
+  get 'contact' => 'home#contact'
   
   get "home/index"
   root :to => "home#index"
@@ -42,95 +43,42 @@ Rsense::Application.routes.draw do
   end
 
   #Routes for uploading data
-  match "/projects/:id/manualEntry" => "data_sets#manualEntry"
-  match "/projects/:id/manualUpload" => "data_sets#manualUpload"
-  match "/data_sets/:id/edit" => "data_sets#edit"
-  match "/projects/:id/export/data_sets/*datasets" => "data_sets#export"
-  match "/projects/:id/export" => "data_sets#export"
+  get "/projects/:id/manualEntry" => "data_sets#manualEntry"
+  post "/projects/:id/manualUpload" => "data_sets#manualUpload"
+  get "/data_sets/:id/edit" => "data_sets#edit"
+  get "/projects/:id/export/data_sets/*datasets" => "data_sets#export"
+  get "/projects/:id/export" => "data_sets#export"
 
   #Routes for displaying data
-  match "/projects/:id/data_sets/*datasets" => "visualizations#displayVis"
-  match "/projects/:id/data_sets/" => "visualizations#displayVis"
+  get "/projects/:id/data_sets/*datasets" => "visualizations#displayVis"
+  get "/projects/:id/data_sets/" => "visualizations#displayVis"
+
+  post "/projects/:id/removeField" => "projects#removeField"
+
+  post "/media_objects/saveMedia/*keys" => "media_objects#saveMedia"
+  get "/projects/:id/data_sets/*datasets" => "visualizations#displayVis"
+  get "/projects/:id/data_sets/" => "visualizations#displayVis"
   post "/projects/:id/templateUpload", to: "projects#templateUpload"
   post "/projects/:id/finishTemplateUpload", to: "projects#finishTemplateUpload"
-  match "/projects/:id/removeField" => "projects#removeField"
+  put "/projects/:id/removeField" => "projects#removeField"
 
-  match "/media_objects/saveMedia/*keys" => "media_objects#saveMedia"
+  post "/media_objects/saveMedia/*keys" => "media_objects#saveMedia"
 
   controller :sessions do
     get 'login' => :new
     post 'login' => :create
     delete 'login' => :destroy
   end
-  match '/sessions/verify' => 'sessions#verify'
+  get '/sessions/verify' => 'sessions#verify'
 
-  match "/users/pw_request" => "users#pw_request"
-  match "/users/pw_send_key" => "users#pw_send_key"
-  match "/users/pw_reset/:key" => "users#pw_reset"
+  get "/users/pw_request" => "users#pw_request"
+  post "/users/pw_send_key" => "users#pw_send_key"
+  get "/users/pw_reset/:key" => "users#pw_reset"
   resources :users
-  match "/users/validate/:key" => "users#validate"
-  match "/users/:id/contributions" => "users#contributions"
+  get "/users/validate/:key" => "users#validate"
+  get "/users/:id/contributions" => "users#contributions"
 
-  match "/projects/:id/updateLikedStatus" => "projects#updateLikedStatus"
+  post "/projects/:id/updateLikedStatus" => "projects#updateLikedStatus"
 
-  match "/projects/:id/updateFields" => "fields#updateFields"
-
-  mount Ckeditor::Engine => "/ckeditor"
-  
-  # The priority is based upon order of creation:
-  # first created -> highest priority.
-
-  # Sample of regular route:
-  #   match 'products/:id' => 'catalog#view'
-  # Keep in mind you can assign values other than :controller and :action
-
-  # Sample of named route:
-  #   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase
-  # This route can be invoked with purchase_url(:id => product.id)
-
-  # Sample resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
-
-  # Sample resource route with options:
-  #   resources :products do
-  #     member do
-  #       get 'short'
-  #       post 'toggle'
-  #     end
-  #
-  #     collection do
-  #       get 'sold'
-  #     end
-  #   end
-
-  # Sample resource route with sub-resources:
-  #   resources :products do
-  #     resources :comments, :sales
-  #     resource :seller
-  #   end
-
-  # Sample resource route with more complex sub-resources
-  #   resources :products do
-  #     resources :comments
-  #     resources :sales do
-  #       get 'recent', :on => :collection
-  #     end
-  #   end
-
-  # Sample resource route within a namespace:
-  #   namespace :admin do
-  #     # Directs /admin/products/* to Admin::ProductsController
-  #     # (app/controllers/admin/products_controller.rb)
-  #     resources :products
-  #   end
-
-  # You can have the root of your site routed with "root"
-  # just remember to delete public/index.html.
-  # root :to => 'welcome#index'
-
-  # See how all your routes lay out with "rake routes"
-
-  # This is a legacy wild controller route that's not recommended for RESTful applications.
-  # Note: This route will make all actions in every controller accessible via GET requests.
-  # match ':controller(/:action(/:id))(.:format)'
+  post "/projects/:id/updateFields" => "fields#updateFields"
 end
