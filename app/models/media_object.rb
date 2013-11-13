@@ -58,6 +58,7 @@ class MediaObject < ActiveRecord::Base
   end
 
   def src
+    return "" if self.store_key.nil?
     uupath = store_uupath(self.store_key)
     ename  = URI.escape(name)
     "#{uupath}/#{ename}"
