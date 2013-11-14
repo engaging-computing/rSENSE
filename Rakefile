@@ -16,3 +16,11 @@ namespace :db do
     end
   end
 end
+
+namespace :test do
+  task :pg do
+    system("DB=postgres rake db:preprep")
+    system("rake test")
+    system("DB=default rake db:preprep")
+  end
+end

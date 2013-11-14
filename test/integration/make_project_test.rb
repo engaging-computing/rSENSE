@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ProjectTest < ActionDispatch::IntegrationTest
+class MakeProjectTest < ActionDispatch::IntegrationTest
   include CapyHelper
 
   setup do
@@ -31,14 +31,14 @@ class ProjectTest < ActionDispatch::IntegrationTest
       "Should be logged in here"
 
     # Get futher with ckEditor than redactor.
-    find('.add_content_link img').click
-    find('.content_holder .content').click
-    find('.cke_button__image_icon').click
-    find('.cke_dialog_tabs [title=Upload]').click
+    #find('.add_content_link img').click
+    #find('.content_holder .content').click
+    #find('.cke_button__image_icon').click
+    #find('.cke_dialog_tabs [title=Upload]').click
 
     # Can't get to form in iFrame, so give up on
     # uploading from editor.
-    find('.cke_dialog').click_on "Cancel"
+    #find('.cke_dialog').click_on "Cancel"
 
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
 
@@ -63,7 +63,7 @@ class ProjectTest < ActionDispatch::IntegrationTest
     fill_in "search", with: "Empty"
     click_on "Search"
 
-    assert page.has_content?("Empty Project")
+    assert page.has_content?("Empty Project"), "Search finds project"
     assert page.has_no_content?("Breaking Things")
   end
 end
