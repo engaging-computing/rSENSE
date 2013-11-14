@@ -80,16 +80,15 @@ class DataSetsControllerTest < ActionController::TestCase
   end 
 
   test "should export data" do
-    skip 
-
-    get :export, { id: @proj.id }, { user_id: @kate }
-    assert_response :success
+    
+    get :export, { id: @proj.id, datasets: "#{@data_set.id}"}, { user_id: @kate }
+    assert(@response["Content-Type"] == "file/zip")
   end
 
   test "should upload CSV" do 
-    skip 
-    
-    post :uploadCSV, { id: @proj.id }, { user_id: @kate }
+    csv_path = Rails.root.join('test', 'CSVs', 'dinner.csv')
+    file = Rack::Test::UploadedFile.new(csv_path, "text/csv")
+    post :dataFileUpload, { pid: @proj.id, file: file }, { user_id: @kate }
     assert_response :success
   end
 end

@@ -9,7 +9,7 @@
       </tr>
     </thead>
     <tbody>
-      <% object.media_objects.all.each do |mo| %>
+      <% object.media_objects.to_a.each do |mo| %>
         <tr class="<%= cycle('feed-even','feed-odd') %> media">
           <% if !(mo.media_type == 'image') %>
             <td class="media_icon"><div class="media_icon"><%= link_to (media_object_thumbnail_helper mo), mo.src %></div></td>
@@ -24,7 +24,7 @@
                 <a href="<%= media_object_path mo %>">Edit</a>
               <% end %>
               <% if can_delete? mo %>
-                | <%= link_to "Delete", mo, method: 'delete', confirm: "Are you sure?" %>
+                | <%= link_to "Delete", mo, method: 'delete', data: { confirm: "Are you sure?" } %>
               <% end %>
             </div>
           </td>

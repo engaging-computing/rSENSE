@@ -25,28 +25,13 @@ class BasicsTest < ActionDispatch::IntegrationTest
                           with: "pietime"
     click_on "Create User"
 
-    assert find('#title_bar').has_content?("News")
-  end
-
-  test "user logs in" do
-    login('kate', '12345')
-
-    assert page.has_content?('Featured Projects')
-    assert find('#title_bar').has_content?('Kate C.')
-    
-    logout
-    
-    assert find('#title_bar').has_no_content?('Kate C.')
-  end
-
-  test "admin logs in" do
-    login('nixon', '12345')
-
-    assert page.has_content?('Featured Projects')
-    assert find('#title_bar').has_content?('Richard N.')
+    assert find('#title_bar').has_content?("News"), "No error registering"
+    assert page.has_content?("Mark S.")
 
     logout
-    
-    assert find('#title_bar').has_no_content?('Richard N.')
+
+    login('mark', 'pietime')
+
+    assert find('#title_bar').has_content?("News"), "Can log in with new user"
   end
 end
