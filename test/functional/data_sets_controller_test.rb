@@ -56,12 +56,9 @@ class DataSetsControllerTest < ActionController::TestCase
   end
 
   test "should destroy data_set" do
-    assert_difference('DataSet.count', 0) do
+    assert_difference('DataSet.count', -1) do
       delete :destroy, { id: @data_set }, { user_id: @kate }
     end
-
-    @d0 = DataSet.find(@data_set.id)
-    assert @d0.hidden
 
     assert_response :redirect
   end
