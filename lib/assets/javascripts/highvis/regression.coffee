@@ -174,3 +174,47 @@ $ ->
     ###
     roundToFourSigFigs = (float) ->
       return float.toPrecision(4) 
+    
+    
+#     foo = function(x,P){return x.map(function(xi){return P[0]*xi + P[1]})}
+#     x = [1,2,3,4,5,6,7,8,9]
+#     y = [2,3,4,5,6,7,8,9,10]
+#     [2, 3, 4, 5, 6, 7, 8, 9, 10]
+#     TEST.fminsearch(foo, [-1,-1], x, y,{maxIter: 1000})
+    window.TEST = {}
+    TEST.fminsearch= (fun,Parm0,x,y,Opt={}) ->
+      
+      if not Opt.maxIter?
+        Opt.maxIter=1000
+        
+      if not Opt.stepSize?
+        Opt.stepSize = Parm0.map((p) -> Math.min(p/100, 1))
+      
+      if not Opt.objFun?
+        Opt.objFun = (y,yp) ->
+          y.map((yi, i) -> Math.pow((yi - yp[i]), 2)).reduce((a, b) -> a + b)
+      
+      cloneVector = (V) -> 
+        V.map (v) -> v
+        
+#       ya,y0,yb,fP0,fP1;
+      P0 = cloneVector Parm0
+      P1 = cloneVector Parm0
+      n = P0.length
+      step = Opt.stepSize
+      funParm = (P) -> 
+        Opt.objFun(y,fun(x,P))#function (of Parameters) to minimize
+        
+      # silly multi-univariate screening
+      for i in [0...Opt.maxIter]
+        console.log '.'
+        for j in [0...n]# take a step for each parameter
+          P1 = cloneVector(P0)
+          P1[j] += step[j]
+          if funParm(P1) < funParm(P0) # if parm value going in the righ direction
+            step[j] = 1.2 * step[j] # then go a little faster
+            P0 = cloneVector(P1)
+          else
+            step[j] =- (0.5 * step[j]) # otherwiese reverse and go slower
+            
+      return P0
