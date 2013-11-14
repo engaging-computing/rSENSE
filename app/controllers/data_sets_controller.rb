@@ -313,7 +313,7 @@ class DataSetsController < ApplicationController
   def dataFileUpload
     project = Project.find(params[:pid])
     
-#     begin
+    begin
       uploader = FileUploader.new
       data_obj = uploader.generateObject(params[:file])
       @results = uploader.match_headers(project, data_obj)
@@ -323,9 +323,10 @@ class DataSetsController < ApplicationController
       respond_to do |format|
         format.html
       end
-#     rescue
-#       flash[:error] = 'File could not be read'
-#       redirect_to project_path(project)
-#     end
+    rescue Exception => e
+      logger.error e.message
+      flash[:error] = 'File could not be read'
+      redirect_to project_path(project)
+    end
   end
 end
