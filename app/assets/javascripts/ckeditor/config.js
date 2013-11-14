@@ -26,7 +26,7 @@ CKEDITOR.editorConfig = function( config ) {
   config.toolbar = 'Basic';
   
   config.title = "";
-
+  config.disableAutoInline = true;
   config.removePlugins = 'contextmenu,liststyle,tabletools';
 };
 
