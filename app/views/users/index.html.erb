@@ -38,7 +38,8 @@
             | D: <%=u.data_sets.count%></p>
         </div>
         <div class="span1">
-          <%= link_to 'Delete', user_path(u), :confirm => 'Are you sure you want to delete this account?', :method => :delete %>
+          <%= link_to 'Delete', user_path(u), data: { 
+            :confirm => 'Are you sure you want to delete this account?' }, :method => :delete %>
         </div>
     </div>
 <% end %>

@@ -96,7 +96,7 @@ $ ->
             mapOptions =
                 center: new google.maps.LatLng(0,0)
                 zoom: 0
-                mapTypeId: google.maps.MapTypeId.ROADMAP
+                mapTypeId: if @mapType? then @mapType else google.maps.MapTypeId.ROADMAP
                 scaleControl: true
 
             @gmap = new google.maps.Map(document.getElementById(@canvas), mapOptions)
@@ -337,6 +337,7 @@ $ ->
         end: ->
             ($ '#' + @canvas).hide()
             @heatmap = undefined
+            @mapType = @gmap.getMapTypeId()
             
         drawControls: ->
             super()

@@ -84,7 +84,7 @@ $ ->
               ($ "#loadModal").modal('hide')
               helpers.name_popup msg, "Visualization", "visualization"
             error: (jqxhr, status, error) ->
-              alert "Could not connect to AWS"
+              alert "AJAX Error: " + error
               console.log [jqxhr, status, error]
 
     ###

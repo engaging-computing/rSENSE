@@ -12,7 +12,7 @@ Rsense::Application.configure do
   config.static_cache_control = "public, max-age=3600"
 
   # Log error messages when you accidentally call methods on nil
-  config.whiny_nils = true
+  #config.whiny_nils = true
 
   # Show full error reports and disable caching
   config.consider_all_requests_local       = true
@@ -34,6 +34,9 @@ Rsense::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
+  ActiveSupport::Deprecation.behavior = :raise
+
+  config.eager_load = false
 
   Capybara.server_port = "127.0.0.1"
   Capybara.server_port = 3001

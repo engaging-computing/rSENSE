@@ -18,13 +18,8 @@
 //= require name_popup
 //= require jquery_ujs
 //= require jquery.ui.all
-
-// require jquery.mobile.custom.min
-//= require jquery.mobile
-//= require unsupported
-
 //= require twitter/bootstrap
-//= require bootstrap
+//= require unsupported
 //= require info_edit
 //= require menu_edit
 //= require object_hider

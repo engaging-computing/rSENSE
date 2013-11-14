@@ -11,14 +11,11 @@
  *= require bootstrap_and_overrides
  *= require_tree .
  *= require jquery.ui.all
-
- * require jquery.mobile
-
  *= require_self
  *= require highvis.css.scss
  *= require mobile_slider
  *= require jquery.dataTables.css
- *= require bootstrap-datetimepicker.less
+ *= require bootstrap-datetimepicker.css
  *= require isotope/isotope.css
  */
 

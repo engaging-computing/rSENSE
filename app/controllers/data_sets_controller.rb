@@ -206,7 +206,7 @@ class DataSetsController < ApplicationController
     defaultName = ""
     
     if !params[:name]
-      defaultName  = "Dataset ##{(DataSet.find_all_by_project_id(params[:id]).count + 1).to_s}"
+      defaultName  = "Dataset ##{(DataSet.where(project_id: params[:id]).to_a.count + 1).to_s}"
     else
       defaultName = params["name"]
     end
@@ -317,12 +317,14 @@ class DataSetsController < ApplicationController
       uploader = FileUploader.new
       data_obj = uploader.generateObject(params[:file])
       @results = uploader.match_headers(project, data_obj)
-      @default_name = "Dataset ##{ (DataSet.find_all_by_project_id(params[:pid]).count + 1).to_s}"
+      
+      @default_name = "Dataset ##{ (DataSet.where(project_id: params[:pid]).to_a.count + 1).to_s}"
     
       respond_to do |format|
         format.html
       end
-    rescue
+    rescue Exception => e
+      logger.error e.message
       flash[:error] = 'File could not be read'
       redirect_to project_path(project)
     end

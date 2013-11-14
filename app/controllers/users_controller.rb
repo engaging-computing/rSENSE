@@ -204,7 +204,7 @@ class UsersController < ApplicationController
   def update
     @user = User.find_by_username(params[:id])
 
-    if params[:password].nil? and params[:email].nil?
+    if params[:new_password].nil? and params[:new_email].nil?
       editUpdate = params[:user]
       hideUpdate = editUpdate.extract_keys!([:hidden])
       success = false
@@ -219,17 +219,9 @@ class UsersController < ApplicationController
         success = @user.update_attributes(hideUpdate)
       end
     else
-      if params[:email].nil?
+      if params[:new_email].nil?
         # Password change
         old_pw = params[:current_password]
-        new_pw = params[:password]
-        con_pw = params[:password_confirmation]
-        
-        if new_pw != con_pw
-          redirect_to edit_user_path(@user), alert:
-            "New passwords didn't match."
-          return
-        end
         
         unless @cur_user.admin? or session[:pw_change]
           unless @user.authenticate(old_pw)
@@ -238,15 +230,16 @@ class UsersController < ApplicationController
             return
           end 
         end
-        
-        @user.password = new_pw
+       
+
+        @user.update_attributes(params[:user])
         success = @user.save
         session[:pw_change] = nil
       else
         # Email change
        
-        new_email = params[:email]
-        con_email = params[:email_confirmation]
+        new_email = params[:new_email]
+        con_email = params[:new_email_confirmation]
 
         if new_email != con_email
           redirect_to edit_user_path(@user), alert:
