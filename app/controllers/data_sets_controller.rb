@@ -323,7 +323,8 @@ class DataSetsController < ApplicationController
       respond_to do |format|
         format.html
       end
-    rescue
+    rescue Exception => e
+      logger.error e.message
       flash[:error] = 'File could not be read'
       redirect_to project_path(project)
     end
