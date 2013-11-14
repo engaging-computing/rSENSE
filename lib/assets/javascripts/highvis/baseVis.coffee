@@ -457,6 +457,7 @@ $ ->
                     else
                         globals.fieldSelection.push(index)
                     @delayedUpdate()
+                    @updateYRegression()
 
             #Set up accordion
             globals.yAxisOpen ?= 0
