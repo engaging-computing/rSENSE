@@ -425,7 +425,6 @@ $ ->
 
                 #@delayedUpdate()
                 @updateXRegression()
-                @updateYRegression()
                 @resetExtremes()
                 @update()
 
@@ -507,12 +506,13 @@ $ ->
         Updates y axis for regression.
         ###
         updateYRegression:() ->
-          $('#regressionYAxisSelector').empty()
-          for fieldIndex in globals.fieldSelection
-            $('#regressionYAxisSelector').append($("<option/>", {
-              value: fieldIndex,
-              text: fieldTitle(data.fields[fieldIndex])
-            }));
+          if $('#regressionYAxisSelector')?
+            $('#regressionYAxisSelector').empty()
+            for fieldIndex in globals.fieldSelection
+              $('#regressionYAxisSelector').append($("<option/>", {
+                value: fieldIndex,
+                text: fieldTitle(data.fields[fieldIndex])
+              }));
 
         ###
         Adds the regression tools to the control bar.
@@ -565,7 +565,9 @@ $ ->
               groupIndex = globals.groupSelection
               y_axis_name = ($ '#regressionYAxisSelector option:selected').text()
               y_axis_index = ($ '#regressionYAxisSelector').val()
-              name = "<strong>#{y_axis_name}</strong> as a #{($ '#regressionSelector option:selected').text().toLowerCase()} function of <strong>#{fieldTitle(data.fields[@xAxis])}</strong>"              
+              name = "<strong>#{y_axis_name}</strong> as a #{($ '#regressionSelector option:selected').text().toLowerCase()} function of <strong>#{fieldTitle(data.fields[@xAxis])}</strong>"
+              console.log(data.selector(@xAxis, groupIndex))
+              console.log(data.selector(y_axis_index, groupIndex))             
               new_regression = globals.getRegression(data.selector(@xAxis, groupIndex), data.selector(y_axis_index, groupIndex), ($ '#regressionSelector').val(), @xBounds, name)
               @chart.addSeries(new_regression)
               

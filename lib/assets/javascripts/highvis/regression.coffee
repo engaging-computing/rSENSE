@@ -141,27 +141,36 @@ $ ->
           when globals.REGRESSION.LINEAR
           
             str = "<div style='width:100%;text-align:center;color:#000;'> #{series_name}</div><br>"
-            str += "<strong>f(x) = #{regression_matrix[1]}x + #{regression_matrix[0]}</strong>"
+            str += "<strong>f(x) = #{roundToFourSigFigs(regression_matrix[1])}x + #{roundToFourSigFigs(regression_matrix[0])}</strong>"
 
             return str
 
           when globals.REGRESSION.QUADRATIC
 
             str = "<div style='width:100%;text-align:center;color:#000;'> #{series_name}</div><br>"
-            str += "<strong>f(x) = #{regression_matrix[2]}x&#178; + #{regression_matrix[1]}x + #{regression_matrix[0]}</strong>"
+            str += "<strong>f(x) = #{roundToFourSigFigs(regression_matrix[2])}x&#178; + "
+            str += "#{roundToFourSigFigs(regression_matrix[1])}x + #{roundToFourSigFigs(regression_matrix[0])}</strong>"
 
             return str
 
           when globals.REGRESSION.CUBIC
             
             str = "<div style='width:100%;text-align:center;color:#000;'> #{series_name}</div><br>"
-            str += "<strong>f(x) = #{regression_matrix[3]}x&#179; + #{regression_matrix[2]}x&#178; + #{regression_matrix[1]}x + #{regression_matrix[0]}</strong>"
+            str += "<strong>f(x) = #{roundToFourSigFigs(regression_matrix[3])}x&#179; + #{roundToFourSigFigs(regression_matrix[2])}x&#178; + "
+            str += "#{roundToFourSigFigs(regression_matrix[1])}x + #{roundToFourSigFigs(regression_matrix[0])}</strong>"
 
             return str
 
           when globals.REGRESSION.LOGARITHMIC
 
             str = "<div style='width:100%;text-align:center;color:#000;'> #{series_name}</div><br>"
-            str += "<strong>f(x) = #{regression_matrix[1]}ln(x) + #{regression_matrix[0]}</strong>"
+            str += "<strong>f(x) = #{roundToFourSigFigs(regression_matrix[1])} ln(x) + #{roundToFourSigFigs(regression_matrix[0])}</strong>"
 
             return str
+            
+    ###
+    Round the current float value to 4 significant figures.
+    I keep this in a separate function because we weren't sure this was the best implemenation.
+    ###
+    roundToFourSigFigs = (float) ->
+      return float.toPrecision(4) 
