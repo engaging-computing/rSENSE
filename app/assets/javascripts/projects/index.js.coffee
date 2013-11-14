@@ -38,19 +38,6 @@ $ ->
 
           ($ '#projects').isotope('remove', ($ '.item'))
 
-          addProjectButton = ($ "<div id='addProjectButton' style='text-align:center;cursor: pointer;padding-top:5px' class='item'><img style='width:50%; height:50%' src='/assets/green_plus_icon.png'/><br /><h4 style='color:#0a0;'>Create Project</h4></div>")
-
-          if logged_in?
-            ($ '#projects').append(addProjectButton).isotope('insert', addProjectButton)
-            ($ '#addProjectButton').click ->
-              $.ajax
-                url: "/projects/create"
-                data: {}
-                dataType: "json"
-                success: (data, textStatus) ->
-                  helpers.name_popup data, "Project", "project"
-                  
-
           for object in data
             addItem object
 
@@ -70,8 +57,19 @@ $ ->
     ($ '#curated_checkbox').click ->
       ($ '#projects_search').submit()
       
-    ($ window).resize () ->
+    relayout = ->
       helpers.isotope_layout('#projects')
+    
+    ($ window).resize () ->
+      setTimeout(relayout,750)
 
     helpers.isotope_layout('#projects')
     ($ "#projects_search").submit()
+    
+    ($ '#addProjectButton').click ->
+      $.ajax
+        url: "/projects/create"
+        data: {}
+        dataType: "json"
+        success: (data, textStatus) ->
+          helpers.name_popup data, "Project", "project"
