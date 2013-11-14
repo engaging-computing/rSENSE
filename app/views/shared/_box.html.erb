@@ -2,17 +2,9 @@
   <div class="box-header text-center">
     <%= title %>
   </div>
-  
-  <% if title == "Description" %>
-    <div class="box-content" style="padding: 70px 0px 70px 0px">
-      <%= yield %>
-    </div>
-  <% else %>
-    <div class="box-content">
-      <%= yield %>
-    </div>
-  <% end %>
-  
+  <div class="box-content">
+    <%= yield %>
+  </div>
   <div class="box-slider text-center">
     <i class="icon-chevron-up"></i>
   </div>
