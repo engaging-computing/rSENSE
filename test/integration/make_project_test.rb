@@ -17,7 +17,7 @@ class MakeProjectTest < ActionDispatch::IntegrationTest
 
     # Add a project
     click_on "Projects"
-    find('#addProjectButton img').click
+    find('#addProjectButton').click
 
     wait_for_id('new_name')
 
