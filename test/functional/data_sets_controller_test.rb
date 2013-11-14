@@ -80,10 +80,8 @@ class DataSetsControllerTest < ActionController::TestCase
   end 
 
   test "should export data" do
-    skip 
-
-    get :export, { id: @proj.id }, { user_id: @kate }
-    assert_response :success
+    get :export, { id: @proj.id, datasets: "#{@data_set.id}"}, { user_id: @kate }
+    assert(@response["Content-Type"] == "file/zip")
   end
 
   test "should upload CSV" do 
