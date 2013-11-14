@@ -173,4 +173,4 @@ $ ->
     I keep this in a separate function because we weren't sure this was the best implemenation.
     ###
     roundToFourSigFigs = (float) ->
-      return float.toPrecision(4) 
+      return Number(float).toPrecision(4) 

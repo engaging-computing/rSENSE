@@ -98,6 +98,14 @@ $ ->
         rawData = @dataPoints.filter newFilterFunc
 
         rawData.map (dp) -> dp[fieldIndex]
+        
+    ###
+    Selects an array of data from the given field index. Support being given an array of group indices.
+    if 'nans' is true then datapoints with NaN values in the given field will be included.
+    ###
+    data.multiGroupSelector = (fieldIndex, groupIndices, nans = false) ->
+      for group in groupIndices
+        data.selector(fieldIndex, group, nans);
 
     ###
     Gets the maximum (numeric) value for the given field index.
