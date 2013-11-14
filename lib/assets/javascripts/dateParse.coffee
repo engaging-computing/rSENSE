@@ -81,8 +81,8 @@ $ ->
     
     # Fall back to American ordering if day is nonsense
     if res.day > 31
-      month = res.year
-      day = res.month
+      month = res.year - 1
+      day = res.month + 1
       year = res.day
       
       res.month = month
