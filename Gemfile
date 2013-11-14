@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.13'
+gem 'rails', '~> 4.0'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -20,8 +20,6 @@ group :development, :test do
   gem "selenium-webdriver", '~> 2.35.1'
   gem "launchy"
 end
-
-gem "nokogiri"
 
 # Jquery stuff
 #gem 'less'
@@ -70,3 +68,5 @@ gem 'roo'
 # Rails 4 migration
 gem 'protected_attributes'
 
+# HTML valudation gem
+gem 'html_acceptance', :git => 'git://github.com/ericbeland/html_acceptance.git'
