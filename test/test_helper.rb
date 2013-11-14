@@ -42,6 +42,7 @@ class ActiveSupport::TestCase
       h = HTMLAcceptance.new('/tmp/html_validation')
       v = h.validator(page, "#{message} HTML Validation");
       assert v.valid?, v.exceptions
+      v.exceptions.clear
   end
 end
 
