@@ -17,26 +17,26 @@ $ ->
       path =  "#{type}/#{row_id}?#{params}"
     
     if Boolean(can_edit)
-      CKEDITOR.inline elem, 
-        filebrowserImageUploadUrl: "/media_objects/saveMedia/#{path}"
-        
+      editor = CKEDITOR.replace elem,
+        startupFocus: true
+        filebrowserImageUploadUrl:  "/media_objects/saveMedia/#{path}"
       # Save previous value
       root.attr('saved-data',  root.find('div.content').html())
        
       saveButton = root.find('#content_save_button')
       cancelButton = root.find('#content_cancel_button')
-        
-      ($ elem).focus ->
-        saveButton.show()
-        cancelButton.show()
+
+      saveButton.show()
+      cancelButton.show()
       
       cancelButton.click =>
+        editor.destroy()
         root.find('div.content').html(root.attr('saved-data'))
         saveButton.hide()
         cancelButton.hide()
       
       saveButton.click =>
-        value = root.find('div.content').html()
+        value = editor.getData()
         data = {}
         data[type] = {}
         data[type][field] = value
@@ -53,11 +53,12 @@ $ ->
           data: data
           success: =>
             # Save previous value now that it has updated
-            root.attr('saved-data',  root.find('div.content').html())
+            root.attr('saved-data',  editor.getData())
             saveButton.hide()
             cancelButton.hide()
+            editor.destroy()
   
-  ($ document).find('.content:visible').each () ->
+  ($ document).find('.content:visible').click () ->
     turn_on_ck(this)
   
   ($ document).find('.content').each () ->

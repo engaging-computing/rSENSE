@@ -1,5 +1,5 @@
 <% if can_edit?(@project) %>
-  <%= form_tag "/projects/#{@project.id}/edit_fields", id: 'fields_table' do%>
+  <%= form_tag "/projects/#{@project.id}/edit_fields", id: 'fields_table', method: :get do%>
     <div class="row">
       <div class="span8">
         <table class="fields_table">
