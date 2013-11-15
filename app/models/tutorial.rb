@@ -1,3 +1,5 @@
+require 'nokogiri'
+
 class Tutorial < ActiveRecord::Base
   
   include ActionView::Helpers::DateHelper
