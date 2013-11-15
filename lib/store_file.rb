@@ -15,5 +15,5 @@ def store_uudir(store_key)
 end
 
 def store_make_uudir!(store_key)
-  FileUtils.mkdir_p(store_uudir(store_key))
+  FileUtils.mkdir_p(store_uudir(store_key), mode: 0755)
 end
