@@ -175,46 +175,54 @@ $ ->
     roundToFourSigFigs = (float) ->
       return float.toPrecision(4) 
     
-    
-#     foo = function(x,P){return x.map(function(xi){return P[0]*xi + P[1]})}
-#     x = [1,2,3,4,5,6,7,8,9]
-#     y = [2,3,4,5,6,7,8,9,10]
-#     [2, 3, 4, 5, 6, 7, 8, 9, 10]
-#     TEST.fminsearch(foo, [-1,-1], x, y,{maxIter: 1000})
     window.TEST = {}
-    TEST.fminsearch= (fun,Parm0,x,y,Opt={}) ->
+    jacobian = (func, xs, Ps) ->
+      jac = []
+       
+      for x in xs
+        for P,Pindex in Ps
+          func[Pindex+1](x, Ps)
+          
+    TEST.iterateNLLS = (func, xs, y, Ps) ->
+      dot = numeric.dot
+      transpose = numeric.transpose
+      inv = numeric.inv
       
-      if not Opt.maxIter?
-        Opt.maxIter=1000
-        
-      if not Opt.stepSize?
-        Opt.stepSize = Parm0.map((p) -> Math.min(p/100, 1))
+      pred = xs.map((x) -> func[0](x, Ps))
+    
+      jac = jacobian(func, xs, Ps)
       
-      if not Opt.objFun?
-        Opt.objFun = (y,yp) ->
-          y.map((yi, i) -> Math.pow((yi - yp[i]), 2)).reduce((a, b) -> a + b)
+      console.log numeric.prettyPrint(jac)
+      console.log numeric.prettyPrint(dot(transpose(jac), jac))
+      console.log numeric.prettyPrint(numeric.det(dot(transpose(jac), jac)))
       
-      cloneVector = (V) -> 
-        V.map (v) -> v
-        
-#       ya,y0,yb,fP0,fP1;
-      P0 = cloneVector Parm0
-      P1 = cloneVector Parm0
-      n = P0.length
-      step = Opt.stepSize
-      funParm = (P) -> 
-        Opt.objFun(y,fun(x,P))#function (of Parameters) to minimize
-        
-      # silly multi-univariate screening
-      for i in [0...Opt.maxIter]
-        console.log '.'
-        for j in [0...n]# take a step for each parameter
-          P1 = cloneVector(P0)
-          P1[j] += step[j]
-          if funParm(P1) < funParm(P0) # if parm value going in the righ direction
-            step[j] = 1.2 * step[j] # then go a little faster
-            P0 = cloneVector(P1)
-          else
-            step[j] =- (0.5 * step[j]) # otherwiese reverse and go slower
-            
-      return P0
+      deltaPs = dot(dot(inv(dot(transpose(jac), jac)), transpose(jac)), numeric.sub(y,pred))
+      numeric.add(Ps, deltaPs)
+    
+    TEST.linearFunction = []
+    TEST.linearFunction.push (x, P) -> P[0] + (x*P[1])
+    TEST.linearFunction.push (x, P) -> 1
+    TEST.linearFunction.push (x, P) -> x
+      
+    TEST.quadraticFunction = []
+    TEST.quadraticFunction.push (x, P) -> P[0] + (x*P[1]) + (x*x*P[2])
+    TEST.quadraticFunction.push (x, P) -> 1
+    TEST.quadraticFunction.push (x, P) -> x
+    TEST.quadraticFunction.push (x, P) -> x*x
+    
+    TEST.cubicFunction = []
+    TEST.cubicFunction.push (x, P) -> P[0] + (x*P[1]) + (x*x*P[2]) + (x*x*x*P[3])
+    TEST.cubicFunction.push (x, P) -> 1
+    TEST.cubicFunction.push (x, P) -> x
+    TEST.cubicFunction.push (x, P) -> x*x
+    TEST.cubicFunction.push (x, P) -> x*x*x
+    
+    TEST.expFunction = []
+    TEST.expFunction.push (x, P) -> P[0] + P[1] * Math.exp(P[2] * x + P[3])
+    TEST.expFunction.push (x, P) -> 1
+    TEST.expFunction.push (x, P) -> Math.exp(P[2] * x + P[3])
+    TEST.expFunction.push (x, P) -> P[1] * x * Math.exp(P[2] * x + P[3])
+    TEST.expFunction.push (x, P) -> P[1] * Math.exp(P[2] * x + P[3])
+      
+    TEST.x = [1...30].map((x) -> x / 10)
+    TEST.y = TEST.x.map((xi) -> Math.exp(2*xi)+7)
