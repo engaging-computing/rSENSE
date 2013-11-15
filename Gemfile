@@ -38,7 +38,7 @@ gem 'ckeditor'
 gem 'httparty'
 
 # Include Twitter bootstrap
-gem 'twitter-bootstrap-rails'
+# gem 'twitter-bootstrap-rails'
 gem 'execjs'
 gem 'therubyracer', :platforms => :ruby
 
