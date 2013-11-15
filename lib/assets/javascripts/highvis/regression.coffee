@@ -218,11 +218,16 @@ $ ->
     TEST.cubicFunction.push (x, P) -> x*x*x
     
     TEST.expFunction = []
-    TEST.expFunction.push (x, P) -> P[0] + P[1] * Math.exp(P[2] * x + P[3])
+    TEST.expFunction.push (x, P) -> P[0] + Math.exp(P[1] * x + P[2])
     TEST.expFunction.push (x, P) -> 1
-    TEST.expFunction.push (x, P) -> Math.exp(P[2] * x + P[3])
-    TEST.expFunction.push (x, P) -> P[1] * x * Math.exp(P[2] * x + P[3])
-    TEST.expFunction.push (x, P) -> P[1] * Math.exp(P[2] * x + P[3])
+    TEST.expFunction.push (x, P) -> x * Math.exp(P[1] * x + P[2])
+    TEST.expFunction.push (x, P) -> Math.exp(P[1] * x + P[2])
+    
+    TEST.logFunction = []
+    TEST.logFunction.push (x, P) -> P[0] + P[1] * Math.log(P[2] * x)
+    TEST.logFunction.push (x, P) -> 1
+    TEST.logFunction.push (x, P) -> Math.log(P[2] * x)
+    TEST.logFunction.push (x, P) -> P[1] / P[2]
       
-    TEST.x = [1...30].map((x) -> x / 10)
-    TEST.y = TEST.x.map((xi) -> Math.exp(2*xi)+7)
+    TEST.x = [1...500].map((x) -> x)
+    TEST.y = TEST.x.map((xi) -> Math.log(2*xi)+7)
