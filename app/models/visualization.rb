@@ -1,4 +1,5 @@
 
+require 'nokogiri'
 require 'store_file'
 
 class Visualization < ActiveRecord::Base
