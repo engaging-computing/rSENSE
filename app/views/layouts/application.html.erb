@@ -35,12 +35,13 @@
               <a class="navbar-btn" href="/news"><i class="icon-book icon-white"></i> News</a>
               <a class="navbar-btn" href="/projects"><i class="icon-folder-open icon-white"></i> Projects</a>
               <a class="navbar-btn" href="/visualizations"><i class="icon-picture icon-white"></i> Visualizations</a>
-              <a class="navbar-btn" href="/tutorials"><i class="icon-info-sign icon-white"></i> Tutorials <img src="/assets/arrow_down.png"></a>
+              <div class="menuholder"><a class="navbar-btn" href="/tutorials"><i class="icon-info-sign icon-white"></i> Tutorials <img src="/assets/arrow_down.png"></a>
               <ul class="ddmenu">
                 <% get_featured_tutorials.each do |tutorial|%>
                   <li><%= link_to tutorial.title, tutorial_path(tutorial)%></li>
                 <% end %>                
               </ul>
+              </div>
             </div>
           </div>
           
