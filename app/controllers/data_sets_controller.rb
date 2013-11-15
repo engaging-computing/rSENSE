@@ -138,15 +138,15 @@ class DataSetsController < ApplicationController
       @data_set.media_objects.each do |m|
         m.destroy
       end
-
-      @data_set.hidden = true
-      @data_set.user_id = -1
-      @data_set.project_id = -1
-      @data_set.save
-
+      
       respond_to do |format|
-        format.html { redirect_to root_path, notice: "Data set removed" }
-        format.json { render json: {}, status: :ok }
+        if @data_set.destroy     
+          format.html { redirect_to root_path, notice: "Data set removed" }
+          format.json { render json: {}, status: :ok }
+        else
+          format.html { redirect_to project_path(@data_set.project.id), notice: "Data set could not be removed" }
+          format.json { render json: {}, status: :unprocessable_entity }
+        end
       end
     else
       respond_to do |format|
@@ -323,7 +323,8 @@ class DataSetsController < ApplicationController
       respond_to do |format|
         format.html
       end
-    rescue
+    rescue Exception => e
+      logger.error e.message
       flash[:error] = 'File could not be read'
       redirect_to project_path(project)
     end
