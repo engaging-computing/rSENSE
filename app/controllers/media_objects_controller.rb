@@ -142,6 +142,7 @@ class MediaObjectsController < ApplicationController
       @mo.check_store!
 
       FileUtils.cp(filePath, @mo.file_name)
+      File.chmod(0644, @mo.file_name)
 
       @mo.add_tn
 
