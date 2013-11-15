@@ -114,6 +114,8 @@ class MediaObject < ActiveRecord::Base
         oo.write image.to_blob
       end
       
+      File.chmod(0644, self.tn_file_name)
+      
       self.save!
     end
   end
