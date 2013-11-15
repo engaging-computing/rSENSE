@@ -1,3 +1,5 @@
+require 'nokogiri'
+
 module HomeHelper
   
      def mobileParse(i)

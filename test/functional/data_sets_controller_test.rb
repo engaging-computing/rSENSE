@@ -56,12 +56,9 @@ class DataSetsControllerTest < ActionController::TestCase
   end
 
   test "should destroy data_set" do
-    assert_difference('DataSet.count', 0) do
+    assert_difference('DataSet.count', -1) do
       delete :destroy, { id: @data_set }, { user_id: @kate }
     end
-
-    @d0 = DataSet.find(@data_set.id)
-    assert @d0.hidden
 
     assert_response :redirect
   end
@@ -80,14 +77,15 @@ class DataSetsControllerTest < ActionController::TestCase
   end 
 
   test "should export data" do
+    
     get :export, { id: @proj.id, datasets: "#{@data_set.id}"}, { user_id: @kate }
     assert(@response["Content-Type"] == "file/zip")
   end
 
   test "should upload CSV" do 
-    skip 
-    
-    post :uploadCSV, { id: @proj.id }, { user_id: @kate }
+    csv_path = Rails.root.join('test', 'CSVs', 'dinner.csv')
+    file = Rack::Test::UploadedFile.new(csv_path, "text/csv")
+    post :dataFileUpload, { pid: @proj.id, file: file }, { user_id: @kate }
     assert_response :success
   end
 end
