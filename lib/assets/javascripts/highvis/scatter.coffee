@@ -555,20 +555,31 @@ $ ->
             controls += "<button id='regressionButton' class='save_button btn'>Draw Regression</button>"
             controls += '</div></div>'
 
-            #Write HTML
+            #Write HTML and bootstrap the button
             ($ '#controldiv').append controls
-
             ($ "#regressionControl button").button()
             
             ($ "#regressionButton").click =>
 
-              groupIndex = globals.groupSelection
+              #Make the title for the tooltip
               y_axis_name = ($ '#regressionYAxisSelector option:selected').text()
-              y_axis_index = ($ '#regressionYAxisSelector').val()
-              name = "<strong>#{y_axis_name}</strong> as a #{($ '#regressionSelector option:selected').text().toLowerCase()} function of <strong>#{fieldTitle(data.fields[@xAxis])}</strong>"
-              console.log(groupIndex)
-              console.log(data.selector(y_axis_index, groupIndex))             
-              new_regression = globals.getRegression(data.selector(@xAxis, groupIndex), data.selector(y_axis_index, groupIndex), ($ '#regressionSelector').val(), @xBounds, name)
+              name = "<strong>#{y_axis_name}</strong> as a #{($ '#regressionSelector option:selected').text().toLowerCase()} "
+              name += "function of <strong>#{fieldTitle(data.fields[@xAxis])}</strong>"
+              
+              #Get the current selected y index and the current group index
+              y_axis_index = Number(($ '#regressionYAxisSelector').val())
+              group_index = globals.groupSelection
+              
+              #Get the x and y data itself
+              x_data = data.multiGroupSelector(@xAxis, group_index)
+              y_data = data.multiGroupSelector(y_axis_index, group_index)
+              
+              #Get dash index
+              dash_index = data.normalFields.indexOf(y_axis_index)
+              dash_style = globals.dashes[dash_index % globals.dashes.length]
+              
+              #Build the series object to display the regression
+              new_regression = globals.getRegression(x_data, y_data, ($ '#regressionSelector').val(), @xBounds, name, dash_style)
               @chart.addSeries(new_regression)
               
               #Save a regression TODO

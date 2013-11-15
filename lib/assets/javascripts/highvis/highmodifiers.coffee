@@ -104,8 +104,12 @@ $ ->
     if 'nans' is true then datapoints with NaN values in the given field will be included.
     ###
     data.multiGroupSelector = (fieldIndex, groupIndices, nans = false) ->
-      for group in groupIndices
-        data.selector(fieldIndex, group, nans);
+      
+      allData =
+        data.selector(fieldIndex, group, nans) for group in groupIndices
+      
+      merged = []
+      merged = merged.concat.apply(merged, allData)
 
     ###
     Gets the maximum (numeric) value for the given field index.

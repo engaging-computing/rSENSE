@@ -43,7 +43,7 @@ $ ->
       ###
       Calculates a regression and returns it as a highcharts series.
       ###
-      globals.getRegression = (x_in, y_in, regression_type, x_bounds, series_name) ->
+      globals.getRegression = (x_in, y_in, regression_type, x_bounds, series_name, dash_style) ->
         #Initialize x array
         x_fin = []
         
@@ -72,7 +72,7 @@ $ ->
         
         #Calculate the regression matrix, and finally the highcharts series object
         regression_matrix = calculateRegression(x_fin, y_in)
-        result_series = generateHighchartsSeries(regression_matrix, regression_type, x_bounds, series_name)
+        result_series = generateHighchartsSeries(regression_matrix, regression_type, x_bounds, series_name, dash_style)
         
         return result_series
         
@@ -86,7 +86,7 @@ $ ->
       ###
       Returns a series object to draw on the chart canvas.
       ###
-      generateHighchartsSeries = (regression_matrix, regression_type, x_bounds, series_name) ->
+      generateHighchartsSeries = (regression_matrix, regression_type, x_bounds, series_name, dash_style) ->
   
         data = for i in [0..globals.REGRESSION.NUM_POINTS]
           x = (i / globals.REGRESSION.NUM_POINTS) * (x_bounds.dataMax - x_bounds.dataMin) + x_bounds.dataMin
@@ -104,12 +104,13 @@ $ ->
           type: 'line'
           color: '#000',
           lineWidth: 2,
+          dashStyle: dash_style,
           showInLegend: false,
           marker: 
             symbol: 'blank'
           states:
             hover:
-              lineWidth: 4
+              lineWidth: 3
 
       ###
       Uses the regression matrix to calculate the y value given an x value.
