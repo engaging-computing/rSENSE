@@ -10,7 +10,7 @@
  *
 
  *= require bootstrap/bootstrap
- *= require bootstrap/bootstrap-theme
+ *= require font-awesome
  *= require_tree .
  *= require jquery.ui.all
  *= require_self
@@ -23,6 +23,67 @@
 
 .word-break { word-wrap: break-word; }
 
+// Customizations for navbar
+.navbar
+{
+ box-shadow: 0px 0px 10px black; 
+ border-bottom:1px solid black;
+ margin-bottom:0px;
+ background-color: rgb(17,17,51);
+ font-size: 1.2em;
+ i,a
+ {
+  color:white !important;
+ }
+ .navbar-brand
+ {
+  padding-top:8px; 
+ }
+ .navbtn a
+ {
+  padding-top:20px; 
+ }
+}
+
+//Top for all index search boxes
+.isotope-top
+{
+  padding: 2px 20px 2px 20px;
+  background-color: #e8e8e8;
+  color: #000000;
+
+   box-shadow: 0 2px 3px 1px #9E9E9E;  
+  -moz-box-shadow: 0 2px 3px 1px #9E9E9E;
+  -webkit-box-shadow: 0 2px 3px 1px #9E9E9E;
+  
+  h1
+  {
+    font-weight:bold; 
+  }
+}
+
+.search_row
+{
+  margin: 0px 8px 8px 8px;
+}
+
+::-webkit-input-placeholder {
+   font-style: italic;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+   font-style: italic;  
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+   font-style: italic;  
+}
+
+:-ms-input-placeholder {  
+   font-style: italic;  
+}
+
+//=======UNVERIFIED CSS====================================================
 body
 {
   line-height:normal !important;
@@ -243,19 +304,6 @@ form
   }
 }
 
-#title_bar
-{
-  //position: fixed;
-  border-bottom: 1px solid black;
-  width:100%;
-  background-color:#113;
-  height:50px;
-  z-index:2000;
-  top:0px;
-  left:0px;
-  box-shadow: 0px 0px 10px black;
-}
-
 .mainContent
 {
   background-color:#fff;
@@ -301,22 +349,6 @@ form
   }
 }
 
-.isotope-top{
-  .order_selector{
-    width: 20%;
-    float: left;
-  }
-  .search_box{
-    width: 60%;
-    float: left;
-    margin-left: 20px; 
-  }
-  .submit_button{
-    //width: 20%;
-    float: left;
-    margin-left: 40px;
-  }
-}
 
 .isotope_container{
   overflow:visible;

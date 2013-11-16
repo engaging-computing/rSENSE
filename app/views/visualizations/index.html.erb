@@ -1,44 +1,40 @@
 <div class="row">
   <div class="span12">
-    <div class="row">
-      <div class="span12">
-        <%=form_tag visualizations_path, method: 'get', id: 'visualizations_search', class:'navbar-search' do%>
+    <%=form_tag visualizations_path, method: 'get', id: 'visualizations_search', class:'navbar-search' do%>
 
-          <!-- hidden input for pagination -->
-          <input type="text" id="hidden_pagination" name="page" value="1" style="display: none;" />
+      <!-- hidden input for pagination -->
+      <input type="text" id="hidden_pagination" name="page" value="1" style="display: none;" />
 
-          <div class="isotope-top">
-            <h1>Visualizations</h1>
-            <div class="order_selector">
-              <select name="sort" class="visualizations_sort_select">
-                <option value="DESC">Newest First</option>
-                <option value="ASC">Oldest First</option>
-              </select>
-            </div>
-            <div class="search_box">
-              <%= text_field_tag :search, params[:search], class:'search-query'%>
-            </div>
-            <div class="submit_button">
-              <%= submit_tag "Search", name: nil, class:'btn'%>
-            </div>
-            <div class="clear"></div>
-          </div>
-        <%end%>
-      </div>
-    </div>
-    <div class="row">
-      <div id="visualizations" class="span12 isotope_container">
-        <div class="isotope_pane">
+      <div class="isotope-top">
+        <h1>Visualizations</h1>
+        <div class="order_selector">
+          <select name="sort" class="visualizations_sort_select">
+            <option value="DESC">Newest First</option>
+            <option value="ASC">Oldest First</option>
+          </select>
         </div>
-      </div>
-    </div>
-    <div class="row" style="padding-top: 10px;">
-      <div class="span12">
-        <div class="well text-center" id="load_visualizations">
-          <h3 class="muted">Loading More <img src="/assets/spinner.gif" /></h3>
+        <div class="search_box">
+          <%= text_field_tag :search, params[:search], class:'search-query'%>
         </div>
+        <div class="submit_button">
+          <%= submit_tag "Search", name: nil, class:'btn'%>
+        </div>
+        <div class="clear"></div>
       </div>
+    <%end%>
+  </div>
+</div>
+<div class="row">
+  <div id="visualizations" class="span12 isotope_container">
+    <div class="isotope_pane">
     </div>
   </div>
-
 </div>
+<div class="row" style="padding-top: 10px;">
+  <div class="span12">
+    <div class="well text-center" id="load_visualizations">
+      <h3 class="muted">Loading More <img src="/assets/spinner.gif" /></h3>
+    </div>
+  </div>
+</div>
+
