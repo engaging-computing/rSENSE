@@ -23,28 +23,6 @@
 
 .word-break { word-wrap: break-word; }
 
-// Customizations for navbar
-.navbar
-{
- box-shadow: 0px 0px 10px black; 
- border-bottom:1px solid black;
- margin-bottom:0px;
- background-color: rgb(17,17,51);
- font-size: 1.2em;
- i,a
- {
-  color:white !important;
- }
- .navbar-brand
- {
-  padding-top:8px; 
- }
- .navbtn a
- {
-  padding-top:20px; 
- }
-}
-
 //Top for all index search boxes
 .isotope-top
 {
@@ -59,6 +37,10 @@
   h1
   {
     font-weight:bold; 
+  }
+  input[type="submit"]
+  {
+    margin-top:2px;
   }
 }
 
@@ -137,17 +119,7 @@ div.info_text
     padding: 0px 0px 5px 0px;
 }
 
-.modal
-{
-    position:fixed;
-    width:300px;
-    display: none;
-    top:60px !important;
-    left:50%;
-    margin-left:-160px;
-    padding: 10px;
-    padding-top: 33px;
-}
+
 
 label[for=login_user], [for=login_password] {
   float: left;
