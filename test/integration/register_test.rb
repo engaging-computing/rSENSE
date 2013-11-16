@@ -14,7 +14,7 @@ class BasicsTest < ActionDispatch::IntegrationTest
 
   test "create a user" do
     visit '/'
-    find("#title_bar .visible-desktop div").click_on("Register")
+    find(".navbar").click_on("Register")
     assert page.has_content?("Register for iSENSE")
     fill_in "user_firstname", with: "Mark"
     fill_in "user_lastname",  with: "Sherman"
@@ -25,13 +25,13 @@ class BasicsTest < ActionDispatch::IntegrationTest
                           with: "pietime"
     click_on "Create User"
 
-    assert find('#title_bar').has_content?("News"), "No error registering"
+    assert find('.navbar').has_content?("News"), "No error registering"
     assert page.has_content?("Mark S.")
 
     logout
 
     login('mark', 'pietime')
 
-    assert find('#title_bar').has_content?("News"), "Can log in with new user"
+    assert find('.navbar').has_content?("News"), "Can log in with new user"
   end
 end
