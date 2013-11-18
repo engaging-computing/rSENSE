@@ -46,7 +46,7 @@ end
 module CapyHelper
   def login(user, pass)
     visit '/'
-    find('.navbar').click_on('Login')
+    find('#title_bar').click_on('Login')
     fill_in 'Username', with: user
     fill_in 'Password', with: pass
     find('.mainContent').click_on('Login')
@@ -56,7 +56,7 @@ module CapyHelper
 
   def logout
     visit '/'
-    find('.navbar').click_on('Logout')
+    find('#title_bar').click_on('Logout')
   end
 
   def finish
