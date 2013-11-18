@@ -12,8 +12,7 @@
             </div>  
             <div class="col-lg-4">
                 <select name="sort" class="users_sort_select form-control">
-                <option value="DESC">Newest First</option>
-                <option value="ASC">Oldest First</option>
+                  <%= options_for_select([["Newest First","DES"],["Oldest First","ASC"]], params.has_key?(:sort) ? params[:sort] : "DESC")%>
                 </select>
             </div>
             <div class="col-lg-6">
