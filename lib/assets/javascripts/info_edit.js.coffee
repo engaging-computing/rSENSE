@@ -14,7 +14,13 @@ $ ->
 
     #The thing that will become a input box
     info_box = root.find('.info_val')
-    info_box.html("<div class='input-append'><input type='text' class='info_edit_box input-medium' id='appendInput' value='#{val}'><span class='add-on btn btn-success info_save_link' href='#{href}'><i class='icon-ok icon-white'></i></span></div>")
+    info_box.html("""
+      <div class='input-group'>
+        <input type='text' class='info_edit_box form-control' value='#{val}'>
+        <span class='input-group-btn info_save_link' href='#{href}'>
+          <button class="btn btn-success" type="button"><i class='fa fa-floppy-o icon-white'></i></button>
+        </span>
+      </div>""")
     root.find('.info_edit_box').focus()
     
     #Hide the edit link
