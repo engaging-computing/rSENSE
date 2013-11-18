@@ -46,6 +46,7 @@ Rsense::Application.routes.draw do
   get "/projects/:id/manualEntry" => "data_sets#manualEntry"
   post "/projects/:id/manualUpload" => "data_sets#manualUpload"
   get "/data_sets/:id/edit" => "data_sets#edit"
+  put "/data_sets/:id/edit" => "data_sets#edit"
   get "/projects/:id/export/data_sets/*datasets" => "data_sets#export"
   get "/projects/:id/export" => "data_sets#export"
 
