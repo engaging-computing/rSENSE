@@ -1,14 +1,15 @@
 <div class="row">
-  <div class="span7">
-    <div class="row">
 
+  <!-- Left hand column -->
+  <div class="col-lg-7">
+    <div class="row">
       <!-- qr code  -->
-      <div class="span2" style="width:110px;">
+      <div class="col-lg-3">
         <div id="exp_qr_tag"></div>
       </div>
 
       <!-- project title -->
-      <div class="span5" style="margin-left:0px">
+      <div class="col-lg-9" style="margin-left:0px">
         <div class="project_info_box" >
           <span id="title_span" class="word-break" style="font-size:1.5em"><%= project_edit_menu_helper false%></span><br>
           <span class="info_label" style="font-size:1.1em">by: <%= link_to @project.owner.name, user_path(@project.owner) %> (<%=time_ago_in_words(@project.created_at)%> ago)</span><br/>
@@ -18,33 +19,34 @@
             <span id="id_notice" <% if @project.hidden || @project.lock%>style="display:none"<% end %>>Project #: <%= @project.id %></span>
           </div>
           <%if !@cloned_project.nil? %>
-                  <span class="info_label" style="font-size:1.1em">Cloned From:</span>
-                  <%=link_to @cloned_project.title, project_path(@cloned_project.id)%><br>
+            <span class="info_label" style="font-size:1.1em">Cloned From:</span>
+            <%=link_to @cloned_project.title, project_path(@cloned_project.id)%><br>
           <%end%>
           <%if @cur_user.try(:id)%>
             <div class="btn-group likes" project_id="<%= @project.id%>">
-              <button type="button" class="btn liked_status <% if @liked_by_cur_user%>active<%end%>" href="#" data-toggle="button"><i class="icon-thumbs-up-alt"></i> Like</button>
-              <button type="button" class="btn like_display" disabled> <%= @likes %></button>
+              <button type="button" class="btn btn-default liked_status <% if @liked_by_cur_user%>active<%end%>" href="#" data-toggle="button"><i class="icon-thumbs-up-alt"></i> Like</button>
+              <button type="button" class="btn btn-default like_display" disabled> <%= @likes %></button>
             </div>
           <%end%>
         </div>
       </div>
-
-      <!-- ##### PROJECT CONTENT ##### -->
-      <%=render layout: "shared/box", locals: {title: 'Description', width: '7', unique_id: 'description', should_hide: false} do %>
-        <%= project_content_helper (can_edit? @project) %>
+    </div>
+    
+    <div class= "row">
+      <%=render layout: "shared/box", locals: {title: 'Description', width: '12', unique_id: 'description', should_hide: false} do %>
+          <%= project_content_helper (can_edit? @project) %>
       <%end%>
-
-
-      <!-- ##### DATA SETS MENU ##### -->
-      <%=render layout: "shared/box", locals: {title: 'Data Sets', width: '7', unique_id: 'data_sets', should_hide: false} do %>
+    </div>
+    
+    <div class="row">
+      <%=render layout: "shared/box", locals: {title: 'Data Sets', width: '12', unique_id: 'data_sets', should_hide: false} do %>
         <div id="dataset_list" <% if @data_sets.count == 0 %> style="display:none;" <% end %> >
           
         <span>
           <input type="button" class="btn btn-info" style="margin-bottom: 10px;" value="Visualize" id="vis_button" href="/projects/<%=@project.id%>/data_sets/"/>
         </span>
         <span>
-          <input type="button" class="btn btn-secondary" style="margin-bottom: 10px;" value="Export" id="export_button" href="/projects/<%=@project.id%>/export/data_sets/">
+          <input type="button" class="btn btn-default" style="margin-bottom: 10px;" value="Export" id="export_button" href="/projects/<%=@project.id%>/export/data_sets/">
         </span>
         
           <div class="pull-right">
@@ -105,15 +107,14 @@
           </table>
         </div>
       <%end%>
-    </div>
+    </div> 
   </div>
   
-
-  <div class="span5">
+  <!--   Right hand column -->
+  <div class="col-lg-5">
+    
     <div class="row">
-
-      <!-- ##### FIELDS MENU ##### -->
-      <%= render layout: "shared/box", locals: {title: 'Fields', width: '5', unique_id: 'fields', should_hide: false} do%>
+      <%= render layout: "shared/box", locals: {title: 'Fields', width: '12', unique_id: 'fields', should_hide: false} do%>
         <% if (@project.fields.count == 0) && (can_edit?(@project)) %>
           <button class="btn btn-success" id="template_file_upload">Upload File</button>
           <a href="/projects/<%=@project.id%>/edit_fields"><button class="btn btn-success">Setup Manually</button></a>
@@ -137,22 +138,22 @@
           <% end %>
         <% end %>
       <% end %>
-
+    </div>
     
-      <!-- ##### SESSION CREATION MENU ##### -->
-      <%=render layout: "shared/box", locals: {title: 'Create Data Set', width:'5', unique_id: 'create_data_set', should_hide: !(@cur_user.try(:id) && @project.fields.count() > 0)} do %>
+    <div class="row">
+      <%=render layout: "shared/box", locals: {title: 'Create Data Set', width:'12', unique_id: 'create_data_set', should_hide: !(@cur_user.try(:id) && @project.fields.count() > 0)} do %>
         <% if can_edit?(@project) || !@project.lock%>
           <div class="row-fluid">
-            <div class="span4 center">
+            <div class="col-lg-4 center">
             <%= link_to :controller => :data_sets, :action => :manualEntry do %>
               <img class="hoverimage" src="/assets/manual.png" /><br />Manual Entry
             <% end %>
             </div>
-            <div class="span4 center" title="Supports - CSV,XLS,XLSX,ODS">
+            <div class="col-lg-4 center" title="Supports - CSV,XLS,XLSX,ODS">
               <a id="upload_datafile" href=""><img class="hoverimage" src="/assets/upload.png" /><br />
               Upload File</a>
             </div>
-            <div class="span4 center">
+            <div class="col-lg-4 center">
               <a id="google_doc" href=""><img class="hoverimage" src="/assets/google.png" /><br />
               Google Doc</a>
             </div>
@@ -163,15 +164,18 @@
           <h2 class="center"><i class="icon-lock"></i></h2><h4 class="center">This project has been locked</h4>
         <% end %>
       <% end %>  
-
+    </div>
+    
+    <div class="row">
       <!-- ##### MEDIA OBJECTS MENU ##### -->
-      <%=render layout: "shared/box", locals: {title: 'Media', width: '5', unique_id: 'media', should_hide: false} do %>
+      <%=render layout: "shared/box", locals: {title: 'Media', width: '12', unique_id: 'media', should_hide: false} do %>
         <%=render "shared/media_objects_view", {type: 'project', object: @project}%>
       <%end%>
-            
-        
+    </div>
+    
+    <div class="row">
       <!-- ##### SAVED VISUALIZATIONS MENU ##### -->
-      <%=render layout: "shared/box", locals: {title: 'Visualizations', width: '5', unique_id: 'visualizations', should_hide: false} do %>
+      <%=render layout: "shared/box", locals: {title: 'Visualizations', width: '12', unique_id: 'visualizations', should_hide: false} do %>
         <div id="viz_list" <% if @project.visualizations.count == 0 %> style="display:none;" <% end %> >
           <table id="viz_table">
             <thead>
@@ -200,9 +204,9 @@
         </div>
       <%end%>  
     </div>
+    
   </div>
 </div>
-
 <div style="display:none">
   <%= form_tag "/data_sets/dataFileUpload", method: 'post',multipart: true, id: 'datafile_form' do %>
     <%= file_field_tag 'file', id: 'datafile_input' %>
@@ -210,19 +214,25 @@
   <% end %>
 </div>
 
-<div id="doc_box" class="modal hide fade well container">
-  <%= form_tag "/data_sets/dataFileUpload", method: 'post', multipart: true do %>
-    <div>
-      Please enter the Google Drive link to share below:
-    </div> 
-    <input name="pid" value="<%=@project.id%>" type="hidden">
-    <input name="file" id="doc_url" class="login_field" type="text" style="width:95%"></input>
-    <div class="clear"> </div>
-    <div style="float:right;">
-        <button id="save_doc" type="submit" class="login_button btn btn-success">Save</button>
-        <button id="cancel_doc" class="cancel_login_button btn btn-danger">Cancel</button>
+<div id="doc_box" class="modal fade" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <%= form_tag "/data_sets/dataFileUpload", method: 'post', multipart: true do %>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Please enter the Google Drive link to share below:</h4>
+        </div>
+        <div class="modal-body">
+          <input name="pid" value="<%=@project.id%>" type="hidden">
+          <input name="file" id="doc_url" class="form-control" type="text" style="width:95%"></input>
+        </div>
+        <div class="modal-footer">
+          <button id="save_doc" type="submit" class="login_button btn btn-success">Save</button>
+          <button id="cancel_doc" class="cancel_login_button btn btn-danger">Cancel</button>        
+        </div>
+      <% end %>
     </div>
-  <% end %>
+  </div>
 </div>
 
 <div style="display:none">
