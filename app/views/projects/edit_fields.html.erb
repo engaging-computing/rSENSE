@@ -1,5 +1,5 @@
 <% if can_edit?(@project) %>
-  <%= form_tag "/projects/#{@project.id}/edit_fields", id: 'fields_table', method: :get do%>
+  <%= form_tag "/projects/#{@project.id}/save_fields", id: 'fields_table' do %>
     <div class="row">
       <div class="span8">
         <table class="fields_table">
@@ -52,7 +52,7 @@
           </select>
       </div>
       <div class="span2 offset4">
-        <button type="submit" class="btn">Save and Return</button>
+        <%= submit_tag "Save and Return", class: 'btn', id: 'fields_form_submit' %>
       </div>
     </div>
   <% end %>  
