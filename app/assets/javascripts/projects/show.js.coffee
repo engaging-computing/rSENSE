@@ -51,6 +51,7 @@ $ ->
 
       $.ajax
         url: '/projects/' + root.attr('project_id') + '/updateLikedStatus'
+        type: 'POST'
         dataType: 'json'
         success: (resp) =>
           root.find('.like_display').html resp['update']

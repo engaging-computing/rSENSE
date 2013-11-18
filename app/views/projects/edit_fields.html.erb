@@ -1,7 +1,7 @@
 <% if can_edit?(@project) %>
-  <%= form_tag "/projects/#{@project.id}/edit_fields", id: 'fields_table', method: :get do%>
+  <%= form_tag "/projects/#{@project.id}/save_fields", id: 'fields_table' do %>
     <div class="row">
-      <div class="span8">
+      <div class="col-lg-8">
         <table class="fields_table">
           <thead>
             <tr>
@@ -13,19 +13,19 @@
           </thead>
           <tbody>
             <% @project.fields.each do |field|%>
-              <tr class="<%= cycle('feed-even','feed-odd')%> <%= (field.name == "Latitude" || field.name == "Longitude") ? "location" : ""%>">
-                <td><input type="text" name="<%=field.id%>_name" value="<%= (defined?(@tmp_save) && @tmp_save.has_key?("#{field.id}_name")) ? @tmp_save["#{field.id}_name"] : field.name%>"></td>
+              <tr class="<%= cycle('row-even','row-odd')%> <%= (field.field_type == get_field_type("Latitude") || field.field_type == get_field_type("Longitude")) ? "location" : ""%>">
+                <td><input class="form-control" type="text" name="<%=field.id%>_name" value="<%= (defined?(@tmp_save) && @tmp_save.has_key?("#{field.id}_name")) ? @tmp_save["#{field.id}_name"] : field.name%>"></td>
                 <td><%=get_field_name(field.field_type)%></td>
                 <td>
                   <% if field.field_type == get_field_type("Number")%>
-                    <input class="input-small" type="text" name="<%=field.id%>_unit" value="<%=field.unit%>">
+                    <input class="input-small form-control" type="text" name="<%=field.id%>_unit" value="<%=field.unit%>">
                   <% else %>
                     <%= field.unit%>
                   <% end %>
                 </td>
                 <td>
-                  <button class="btn field_delete" href="/fields/<%=field.id%>" fid="<%=field.id%>" <%= @project.data_sets.count > 0 ? "disabled" : ""%>>
-                    <i class="icon icon-remove"></i> Delete
+                  <button class="btn btn-danger field_delete" href="/fields/<%=field.id%>" fid="<%=field.id%>" <%= @project.data_sets.count > 0 ? "disabled" : ""%>>
+                    <i class="fa fa-times"></i> Delete
                   </button>
                 </td>
               </tr>
@@ -36,12 +36,12 @@
     </div>
     
     <div class="row">
-      <hr class="span8">
+      <hr class="col-lg-8">
     </div>
     
     <div class="row">
-      <div class="span2">
-          <select form="fields_table" name="new_field" id="new_field">
+      <div class="col-lg-2">
+          <select form="fields_table" name="new_field" id="new_field" class="form-control">
             <option value="">Add Field</option>
             <option value="Number">Number</option>
             <option value="Text">Text</option>
@@ -52,7 +52,7 @@
           </select>
       </div>
       <div class="span2 offset4">
-        <button type="submit" class="btn">Save and Return</button>
+        <%= submit_tag "Save and Return", class: 'btn btn-default', id: 'fields_form_submit' %>
       </div>
     </div>
   <% end %>  

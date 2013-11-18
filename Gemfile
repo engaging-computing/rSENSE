@@ -14,6 +14,8 @@ gem 'coffee-rails-source-maps'
 gem 'uglifier'
 gem 'modernizr-rails'
 
+gem 'therubyracer', :platforms => :ruby
+
 # Integration testing stuff
 group :development, :test do
   gem "capybara"
@@ -37,10 +39,11 @@ gem 'jquery-ui-rails'
 gem 'ckeditor'
 gem 'httparty'
 
-# Include Twitter bootstrap
-gem 'twitter-bootstrap-rails'
 gem 'execjs'
-gem 'therubyracer', :platforms => :ruby
+
+
+# Font-awesome
+gem 'font-awesome-rails'
 
 # Include AWS
 gem 'aws-sdk'

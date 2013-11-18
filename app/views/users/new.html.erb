@@ -1,61 +1,59 @@
 <div class="row">
-  <div class="span6 offset3">
-    <%= form_for @user, url: {action: 'create'} do |ff| %>
-    
-      <% if @user.errors.size > 0 %>
-      <div class="alert alert-error">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <h3><%= pluralize(@user.errors.count, "error") %> were encountered:</h3>
-        
-        <ul>
-          <% @user.errors.full_messages.each do |msg| %>
-            <li><%= msg %></li>
-          <% end %>
-        </ul>
-      </div>
+  <div class="col-lg-6 col-lg-offset-3">
+    <div class="panel panel-default">
+      <%= form_for @user, url: {action: 'create'} do |ff| %>
+      
+        <% if @user.errors.size > 0 %>
+        <div class="alert alert-error">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <h3><%= pluralize(@user.errors.count, "error") %> were encountered:</h3>
+          
+          <ul>
+            <% @user.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+        <% end %>
+      
+        <div class="panel-heading">
+          <h1>Register for iSENSE</h1>
+        </div>
+        <div class="panel-body">
+          <div class="form-group">
+            <%= label_tag(:firstname, "First Name:") %>
+            <%= ff.text_field :firstname, class: "form-control", placeholder: "Bob" %>
+          </div>
+          
+          <div class="form-group">
+            <%= label_tag(:lastname, "Last Name:") %>
+            <%= ff.text_field :lastname, class: "form-control", placeholder: "Only first initial will be shown publicly" %>
+          </div>
+          
+          <div class="form-group">
+            <%= label_tag(:username, "Username:") %>
+            <%= ff.text_field :username, class: "form-control", placeholder: "Can contain letters and numbers only" %>
+          </div>
+          
+          <div class="form-group">
+            <%= label_tag(:email, "Email:") %>
+            <%= ff.text_field :email, class: "form-control", placeholder: "Not required, but allows you to reset your password." %>
+          </div>
+          
+          <div class="form-group">
+            <%= label_tag(:password, "Password:") %>
+            <%= ff.password_field :password, class: "form-control", placeholder: "Can contain any letters, number, and punctuation." %>
+          </div>
+          
+          <div class="form-group">
+            <%= label_tag(:password_confirmation, "Password Confirmation:") %>
+            <%= ff.password_field :password_confirmation, class: "form-control", placeholder: "Retype your password." %>
+          </div>
+        </div>
+        <div class="panel-footer">
+          <%= ff.submit("Create User", class: "btn btn-primary") %>
+        </div>
       <% end %>
-    
-      <div class="feed-top">
-        <h1>Register for iSENSE</h1>
-      </div>
-
-      <div class="feed-odd">
-        <%= label_tag(:firstname, "First Name:") %>
-        <%= ff.text_field :firstname %>
-      </div>
-      
-      <div class="feed-even">
-        <%= label_tag(:lastname, "Last Name:") %>
-        <%= ff.text_field :lastname %>
-      </div>
-      
-      <div class="feed-odd">
-        <%= label_tag(:username, "Username:") %>
-        <%= ff.text_field :username %>
-        <div class="help-block"> Can contain letters and numbers. </div>
-      </div>
-      
-      <div class="feed-even">
-        <%= label_tag(:email, "Email:") %>
-        <%= ff.text_field :email %>
-        <div class="help-block"> Not required, but allows you to reset your password. </div>
-      </div>
-      
-      <div class="feed-odd">
-        <%= label_tag(:password, "Password:") %>
-        <%= ff.password_field :password %>
-        <div class="help-block"> Can contain any letters, number, and punctuation. </div>
-      </div>
-      
-      <div class="feed-even">
-        <%= label_tag(:password_confirmation, "Password Confirmation:") %>
-        <%= ff.password_field :password_confirmation %>
-        <div class="help-block">Retype your password.</div>
-      </div>
-      
-      <div class="feed-bottom">
-        <%= ff.submit("Create User", class: "btn btn-primary") %>
-      </div>
-    <% end %>
+    </div>
   </div>
 </div>
