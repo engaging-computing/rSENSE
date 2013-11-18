@@ -28,9 +28,7 @@ $ ->
       ($ @).addClass "active"
       
       filter_selection = ($ @).text()
-      
-      window.nav_list = nav_list
-      
+            
       # compares the filter you clicked on to the list of filters
       # to see if its "your" page or a filter
       if( nav_list.some (word) -> ~filter_selection.indexOf(word) )
