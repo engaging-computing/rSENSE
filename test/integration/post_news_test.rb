@@ -24,7 +24,7 @@ class MakeNewsTest < ActionDispatch::IntegrationTest
 
     find('.menu_edit_link').click
     click_on("Edit Title")
-    find('#appendInput').set("The Quick Brown Fox")
+    find('.info_edit_box').set("The Quick Brown Fox")
     all('.menu_save_link').first.click
 
     sleep 1
@@ -38,7 +38,7 @@ class MakeNewsTest < ActionDispatch::IntegrationTest
     assert page.has_content?("The Quick Brown Fox"), "News Was Added"
 
     logout
-
+    
     login("kate", "12345")
     click_on "News" 
     
