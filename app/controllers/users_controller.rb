@@ -23,7 +23,7 @@ class UsersController < ApplicationController
     if !params[:per_page].nil?
         pagesize = params[:per_page]
     else
-        pagesize = 10;
+        pagesize = 30;
     end
     
     @users = User.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("created_at #{sort}")
