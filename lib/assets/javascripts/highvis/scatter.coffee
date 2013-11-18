@@ -564,11 +564,16 @@ $ ->
 
               groupIndex = globals.groupSelection
               y_axis_name = ($ '#regressionYAxisSelector option:selected').text()
-              y_axis_index = ($ '#regressionYAxisSelector').val()
+              y_axis_index = Number ($ '#regressionYAxisSelector').val()
               name = "<strong>#{y_axis_name}</strong> as a #{($ '#regressionSelector option:selected').text().toLowerCase()} function of <strong>#{fieldTitle(data.fields[@xAxis])}</strong>"
               console.log(data.selector(@xAxis, groupIndex))
-              console.log(data.selector(y_axis_index, groupIndex))             
-              new_regression = globals.getRegression(data.selector(@xAxis, groupIndex), data.selector(y_axis_index, groupIndex), ($ '#regressionSelector').val(), @xBounds, name)
+              console.log(data.selector(y_axis_index, groupIndex))
+              new_regression = globals.getRegression(
+                data.selector(@xAxis, groupIndex), 
+                data.selector(y_axis_index, groupIndex), 
+                Number (($ '#regressionSelector').val()), 
+                @xBounds, 
+                name)
               @chart.addSeries(new_regression)
               
               #Save a regression TODO
