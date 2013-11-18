@@ -1,3 +1,5 @@
+require 'nokogiri'
+
 class User < ActiveRecord::Base
   
   include ActionView::Helpers::SanitizeHelper
