@@ -14,6 +14,8 @@ gem 'coffee-script-source'
 gem 'uglifier'
 gem 'modernizr-rails'
 
+gem 'therubyracer', :platforms => :ruby
+
 # Integration testing stuff
 group :development, :test do
   gem "capybara"
