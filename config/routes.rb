@@ -10,7 +10,9 @@ Rsense::Application.routes.draw do
 
   resources :media_objects
 
-  get "/projects/:id/edit_fields" => "projects#edit_fields"
+  get  "/projects/:id/edit_fields" => "projects#edit_fields"
+  post "/projects/:id/save_fields" => "projects#save_fields"
+
   post "projects/:id/templateFields" => "projects#templateFields"
   post "/projects/import" => "projects#importFromIsense"
   post "/projects/import/:pid" => "projects#importFromIsense"
@@ -46,6 +48,7 @@ Rsense::Application.routes.draw do
   get "/projects/:id/manualEntry" => "data_sets#manualEntry"
   post "/projects/:id/manualUpload" => "data_sets#manualUpload"
   get "/data_sets/:id/edit" => "data_sets#edit"
+  put "/data_sets/:id/edit" => "data_sets#edit"
   get "/projects/:id/export/data_sets/*datasets" => "data_sets#export"
   get "/projects/:id/export" => "data_sets#export"
 
