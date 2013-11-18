@@ -34,10 +34,44 @@ $ ->
       #Regression Types
       window.globals ?= {}
       globals.REGRESSION ?= {}
-      globals.REGRESSION.LINEAR = 0
-      globals.REGRESSION.QUADRATIC = 1
-      globals.REGRESSION.CUBIC = 2
-      globals.REGRESSION.LOGARITHMIC = 3
+      
+      globals.REGRESSION.FUNCS = []
+      
+      globals.REGRESSION.LINEAR = globals.REGRESSION.FUNCS.length
+      globals.REGRESSION.FUNCS.push [
+        (x, P) -> P[0] + (x*P[1]),
+        (x, P) -> 1,
+        (x, P) -> x]
+      
+      globals.REGRESSION.QUADRATIC = globals.REGRESSION.FUNCS.length
+      globals.REGRESSION.FUNCS.push [
+        (x, P) -> P[0] + (x*P[1]) + (x*x*P[2]),
+        (x, P) -> 1,
+        (x, P) -> x,
+        (x, P) -> x*x]
+      
+      globals.REGRESSION.CUBIC = globals.REGRESSION.FUNCS.length
+      globals.REGRESSION.FUNCS.push [
+        (x, P) -> P[0] + (x*P[1]) + (x*x*P[2]) + (x*x*x*P[3]),
+        (x, P) -> 1,
+        (x, P) -> x,
+        (x, P) -> x*x,
+        (x, P) -> x*x*x]
+      
+      globals.REGRESSION.EXPONENTIAL = globals.REGRESSION.FUNCS.length
+      globals.REGRESSION.FUNCS.push [
+        (x, P) -> P[0] + Math.exp(P[1] * x + P[2]),
+        (x, P) -> 1,
+        (x, P) -> x * Math.exp(P[1] * x + P[2]),
+        (x, P) -> Math.exp(P[1] * x + P[2])]
+      
+      globals.REGRESSION.LOGARITHMIC = globals.REGRESSION.FUNCS.length
+      globals.REGRESSION.FUNCS.push [
+        (x, P) -> P[0] + P[1] * Math.log(P[2] + x),
+        (x, P) -> 1,
+        (x, P) -> Math.log(x + P[2]),
+        (x, P) -> P[1] / (P[2] + x)]
+      
       globals.REGRESSION.NUM_POINTS = 100
 
       ###
@@ -168,66 +202,66 @@ $ ->
 
             return str
             
-    ###
-    Round the current float value to 4 significant figures.
-    I keep this in a separate function because we weren't sure this was the best implemenation.
-    ###
-    roundToFourSigFigs = (float) ->
-      return float.toPrecision(4) 
-    
-    window.TEST = {}
-    jacobian = (func, xs, Ps) ->
-      jac = []
-       
-      for x in xs
-        for P,Pindex in Ps
-          func[Pindex+1](x, Ps)
+      ###
+      Round the current float value to 4 significant figures.
+      I keep this in a separate function because we weren't sure this was the best implemenation.
+      ###
+      roundToFourSigFigs = (float) ->
+        return float.toPrecision(4) 
+      
+      window.TEST = {}
+      jacobian = (func, xs, Ps) ->
+        jac = []
+        
+        res = for x in xs
+          for P,Pindex in Ps
+            func[Pindex+1](x, Ps)
+        console.log Ps
+        console.log numeric.prettyPrint res
+        res.filter (row) -> not isNaN(numeric.sum(row))
+      
+      NLLS_MAX_ITER = 1000
+      NLLS_SHIFT_CUT_DOWN = 0.9
+      NLLS_SHIFT_CUT_UP = 1.01
+      NLLS_THRESH = 0.0001
+      TEST.NLLS = (func, xs, ys, Ps) ->
+      
+        prevErr = Infinity
+        shiftCut = 1
+      
+        for iter in [1..NLLS_MAX_ITER]
+          res = TEST.iterateNLLS(func, xs, ys, Ps)
+          console.log [iter, Ps, prevErr - res[1], numeric.sum(numeric.abs(numeric.div(res[0], Ps)))]
           
-    TEST.iterateNLLS = (func, xs, y, Ps) ->
-      dot = numeric.dot
-      transpose = numeric.transpose
-      inv = numeric.inv
+          if prevErr < res[1]
+            console.log 'DIVERGENCE'
+            shiftCut *= NLLS_SHIFT_CUT_DOWN
+          else
+            shiftCut = Math.min(shiftCut * NLLS_SHIFT_CUT_UP, 1)
+            
+          prevErr = res[1]
+          
+          Ps = numeric.add(Ps, numeric.mul(res[0], shiftCut))
+        Ps
+            
+      TEST.iterateNLLS = (func, xs, ys, Ps) ->
+        
+        residuals = numeric.sub(ys, xs.map((x) -> func[0](x, Ps)))
+        sqe = numeric.sum(residuals.map (x) -> x*x)
       
-      pred = xs.map((x) -> func[0](x, Ps))
-    
-      jac = jacobian(func, xs, Ps)
+        jac = jacobian(func, xs, Ps)
+        jacT = numeric.transpose jac
+        
+        # dP = (JT*J)^-1 * JT * r
+        deltaPs = numeric.dot(numeric.dot(numeric.inv(numeric.dot(jacT, jac)), 
+                                          jacT), 
+                              residuals)
+        console.log deltaPs
+        [deltaPs, sqe]
       
-      console.log numeric.prettyPrint(jac)
-      console.log numeric.prettyPrint(dot(transpose(jac), jac))
-      console.log numeric.prettyPrint(numeric.det(dot(transpose(jac), jac)))
       
-      deltaPs = dot(dot(inv(dot(transpose(jac), jac)), transpose(jac)), numeric.sub(y,pred))
-      numeric.add(Ps, deltaPs)
-    
-    TEST.linearFunction = []
-    TEST.linearFunction.push (x, P) -> P[0] + (x*P[1])
-    TEST.linearFunction.push (x, P) -> 1
-    TEST.linearFunction.push (x, P) -> x
+        
+      TEST.x = [1...30].map((x) -> x)
+      TEST.y = TEST.x.map((xi) -> Math.log(xi)*2+5)
       
-    TEST.quadraticFunction = []
-    TEST.quadraticFunction.push (x, P) -> P[0] + (x*P[1]) + (x*x*P[2])
-    TEST.quadraticFunction.push (x, P) -> 1
-    TEST.quadraticFunction.push (x, P) -> x
-    TEST.quadraticFunction.push (x, P) -> x*x
-    
-    TEST.cubicFunction = []
-    TEST.cubicFunction.push (x, P) -> P[0] + (x*P[1]) + (x*x*P[2]) + (x*x*x*P[3])
-    TEST.cubicFunction.push (x, P) -> 1
-    TEST.cubicFunction.push (x, P) -> x
-    TEST.cubicFunction.push (x, P) -> x*x
-    TEST.cubicFunction.push (x, P) -> x*x*x
-    
-    TEST.expFunction = []
-    TEST.expFunction.push (x, P) -> P[0] + Math.exp(P[1] * x + P[2])
-    TEST.expFunction.push (x, P) -> 1
-    TEST.expFunction.push (x, P) -> x * Math.exp(P[1] * x + P[2])
-    TEST.expFunction.push (x, P) -> Math.exp(P[1] * x + P[2])
-    
-    TEST.logFunction = []
-    TEST.logFunction.push (x, P) -> P[0] + P[1] * Math.log(P[2] * x)
-    TEST.logFunction.push (x, P) -> 1
-    TEST.logFunction.push (x, P) -> Math.log(P[2] * x)
-    TEST.logFunction.push (x, P) -> P[1] / P[2]
-      
-    TEST.x = [1...500].map((x) -> x)
-    TEST.y = TEST.x.map((xi) -> Math.log(2*xi)+7)
+      TEST.NLLS(globals.REGRESSION.FUNCS[globals.REGRESSION.LOGARITHMIC], TEST.x, TEST.y, [1,1,1])
