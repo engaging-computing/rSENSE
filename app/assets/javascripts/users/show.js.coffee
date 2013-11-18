@@ -1,15 +1,15 @@
 # Place all the behaviors and hooks related to the users show page here.    
 $ ->
   if namespace.controller is "users" and namespace.action is "show"
-    
-    ($ "#contributions_content").hide()
-    
+        
     # Start recent 3
     nav_list = []
     
     ($ '#user_filter li').each (index) ->
       if index != 0
         nav_list.push ($ @).text()
+        
+    nav_list.push "All"
     
     recent_three_ajax_params =
       template: "three_recent"
@@ -29,11 +29,12 @@ $ ->
       
       filter_selection = ($ @).text()
       
+      window.nav_list = nav_list
+      
       # compares the filter you clicked on to the list of filters
       # to see if its "your" page or a filter
       if( nav_list.some (word) -> ~filter_selection.indexOf(word) )
         ($ "#contributions_content").show()
-        ($ "#user_content").hide()
         
         $("#page").val("0")
 
@@ -61,9 +62,7 @@ $ ->
               $(".pagefwd").hide()
             else
               $(".pagefwd").show()
-      else
-        ($ "#contributions_content").hide()
-        ($ "#user_content").show()
+
 
 
   
