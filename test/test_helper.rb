@@ -36,6 +36,14 @@ class ActiveSupport::TestCase
     assert_nil long.to_s.index(short.to_s),
       "String contains #{short}"
   end
+  
+  # HTML validation test helper
+  def assert_valid_html(page, message)
+      h = HTMLAcceptance.new('/tmp/html_validation')
+      v = h.validator(page, "#{message} HTML Validation");
+      assert v.valid?, v.exceptions
+      v.exceptions.clear
+  end
 end
 
 class ActionDispatch::IntegrationTest

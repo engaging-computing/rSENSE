@@ -68,3 +68,5 @@ gem 'roo'
 # Rails 4 migration
 gem 'protected_attributes'
 
+# HTML valudation gem
+gem 'html_acceptance', :git => 'git://github.com/ericbeland/html_acceptance.git'

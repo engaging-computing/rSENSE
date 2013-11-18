@@ -1,3 +1,9 @@
+GIT
+  remote: git://github.com/ericbeland/html_acceptance.git
+  revision: 1778f9bd1a8cf71c1d354a57bfde5ba18aa72373
+  specs:
+    html_acceptance (0.1.20)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -177,6 +183,7 @@ DEPENDENCIES
   coffee-script-source
   coffeebeans
   execjs
+  html_acceptance!
   httparty
   jquery-rails
   jquery-ui-rails

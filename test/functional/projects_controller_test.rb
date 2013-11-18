@@ -2,92 +2,109 @@ require 'test_helper'
 
 class ProjectsControllerTest < ActionController::TestCase
   setup do
+    Dir.mkdir("/tmp/html_validation")
     @nixon   = users(:nixon)
     @kate    = users(:kate)
     @project = projects(:one)
   end
-
+  
+  teardown do
+    FileUtils.rm_rf("/tmp/html_validation")
+  end
+  
   test "should get index" do
     get :index
     assert_response :success
     assert_not_nil assigns(:projects)
+    
+    # HTML validation
+    assert_valid_html(request.body, "Index Get")
   end
-
+  
   test "should get index (json)" do
     get :index, { format: 'json' }
     assert_response :success
     assert_not_nil assigns(:projects)
   end
-
+  
   test "should show project" do
     get :show, { id: @project }
     assert_response :success
+    
+    # HTML validation
+    assert_valid_html(request.body, "Projects Show")
   end
- 
+  
   test "should show project (json)" do
     get :show, { format: 'json', id: @project }
     assert_response :success
   end
- 
+  
   test "should create project" do
     assert_difference('Project.count') do
       post :create, { project: { content: @project.content, title: @project.title, user_id: @project.user_id }},
         { user_id: @nixon }
     end
-
+    
     assert_redirected_to project_path(assigns(:project))
   end
-
+  
   test "should create project (json)" do
     assert_difference('Project.count') do
       post :create, { format: 'json', project: { content: @project.content, title: @project.title, 
-        user_id: @project.user_id }}, { user_id: @nixon }
+                                                 user_id: @project.user_id }}, { user_id: @nixon }
     end
-
+    
     assert_response :success
   end
-
+  
   test "should get edit" do
     get :edit, { id: @project }, { user_id: @nixon }
     assert_response :success
+    
+    # HTML validation
+    assert_valid_html(request.body, "Edit Get")
   end
-
+  
   test "should update project" do
     put :update, { id: @project, project: { content: @project.content, title: @project.title,
-      user_id: @project.user_id }}, { user_id: @nixon }
+                                            user_id: @project.user_id }}, { user_id: @nixon }
     assert_redirected_to project_path(assigns(:project))
   end
-
+  
   test "should update project (json)" do
     put :update, { format: 'json', id: @project, project: { content: @project.content, title: @project.title,
-      user_id: @project.user_id }}, { user_id: @nixon }
+                                                            user_id: @project.user_id }}, { user_id: @nixon }
     assert_response :success
   end
-
+  
   test "should destroy project" do
     assert_difference('Project.count', 0) do
       delete :destroy, { id: @project }, { user_id: @nixon }
     end
-
+    
     @p0 = Project.find(@project.id)
     assert @p0.hidden, "Project Got Hidden"
-
+    
     assert_redirected_to projects_path
   end
-
+  
   test "should destroy project (json)" do
     assert_difference('Project.count', 0) do
       delete :destroy, { format: 'json', id: @project }, { user_id: @nixon }
     end
-
+    
     @p0 = Project.find(@project.id)
     assert @p0.hidden, "Project Got Hidden"
-
+    
     assert_response :success
   end
-
+  
   test "should like project" do
     post :updateLikedStatus, { format: 'json', id: @project }, { user_id: @kate }
     assert_response :success
+    
+    # HTML validation
+    assert_valid_html(request.body, "Projects Like")
   end
 end

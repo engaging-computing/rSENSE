@@ -2,10 +2,15 @@ require 'test_helper'
 
 class UsersControllerTest < ActionController::TestCase
   setup do
+    Dir.mkdir("/tmp/html_validation")
     @user  = users(:kate)
     @admin = users(:nixon)
   end
-
+  
+  teardown do
+    FileUtils.rm_rf("/tmp/html_validation")
+  end
+  
   test "should not get index as user" do
     get :index, {}, { user_id: @user }
     assert_response :not_found
@@ -15,11 +20,17 @@ class UsersControllerTest < ActionController::TestCase
     get :index, {}, { user_id: @admin }
     assert_response :success
     assert_not_nil assigns(:users)
+    
+    # HTML validation
+    assert_valid_html(request.body, "Index Get As Admin")
   end
 
   test "should get new" do
     get :new
     assert_response :success
+    
+    # HTML validation
+    assert_valid_html(request.body, "Get New")
   end
 
   test "should create user" do
@@ -59,11 +70,17 @@ class UsersControllerTest < ActionController::TestCase
   test "should show user" do
     get :show, { id: @user }, { user_id: @user }
     assert_response :success
+    
+    # HTML validation
+    assert_valid_html(request.body, "User Show")
   end
 
   test "should get edit" do
     get :edit, { id: @user }, { user_id: @user }
     assert_response :success
+    
+    # HTML validation
+    assert_valid_html(request.body, "Edit Get")
   end
 
   test "should update user" do
@@ -95,6 +112,9 @@ class UsersControllerTest < ActionController::TestCase
   test "should get contributions" do
     get :contributions, { id: @user }, { user_id: @user }
     assert_response :success
+    
+    # HTML validation
+    assert_valid_html(request.body, "Contributions Get")
   end
 
   test "should validate user" do
@@ -103,7 +123,10 @@ class UsersControllerTest < ActionController::TestCase
 
     get :validate, { key: "abcd" }
     assert_response :success
-
+    
+    # HTML validation
+    assert_valid_html(request.body, "Validation User")
+    
     captn = User.find_by_username("crunch")
     assert_equal captn.validated?, true, "Validated"
   end
@@ -116,6 +139,9 @@ class UsersControllerTest < ActionController::TestCase
   test "should show password reset request form" do
     get :pw_request
     assert_response :success
+    
+    # HTML validation
+    assert_valid_html(request.body, "Password Request")
   end
 
   test "should send password reset email for username" do
@@ -126,6 +152,9 @@ class UsersControllerTest < ActionController::TestCase
     user  = User.find_by_username('kate')
     assert_contains user.validation_key, email.body
     assert_not_equal user.validation_key, @user.validation_key
+    
+    # HTML validation
+    assert_valid_html(request.body, "Send Password Reset Email For Username")
   end
 
   test "should send password reset email for email" do
@@ -136,6 +165,9 @@ class UsersControllerTest < ActionController::TestCase
     user  = User.find_by_email('kcarcia@cs.uml.edu')
     assert_contains user.validation_key, email.body
     assert_not_equal user.validation_key, @user.validation_key
+    
+    # HTML validation
+    assert_valid_html(request.body, "Send Password Reset Email for Email")
   end
 
   test "password reset URL should redirect to pw change form" do
@@ -159,6 +191,9 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :success
     assert_contains "New Password", response.body
     assert_not_contains "Current Password", response.body
+    
+    # HTML validation
+    assert_valid_html(request.body, "Password Change Form Should Work After Reset Link")
   end
 
   test "password change form should work normally" do
@@ -166,6 +201,9 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :success
     assert_contains "New Password", response.body
     assert_contains "Current Password", response.body
+    
+    # HTML validation
+    assert_valid_html(request.body, "Password Change Form")
   end
 
   test "password change form should work for admin" do
@@ -173,6 +211,9 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :success
     assert_contains "New Password", response.body
     assert_not_contains "Current Password", response.body
+    
+    # HTML validation
+    assert_valid_html(request.body, "Password Change Form For Admin")
   end
 
   test "password change form should fail for other user" do
