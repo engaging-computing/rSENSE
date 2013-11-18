@@ -24,7 +24,7 @@
           <%end%>
           <%if @cur_user.try(:id)%>
             <div class="btn-group likes" project_id="<%= @project.id%>">
-              <button type="button" class="btn btn-default liked_status <% if @liked_by_cur_user%>active<%end%>" href="#" data-toggle="button"><i class="icon-thumbs-up-alt"></i> Like</button>
+              <button type="button" class="btn btn-default liked_status <% if @liked_by_cur_user%>active<%end%>" href="#" data-toggle="button"><i class="fa fa-thumbs-up"></i> Like</button>
               <button type="button" class="btn btn-default like_display" disabled> <%= @likes %></button>
             </div>
           <%end%>
