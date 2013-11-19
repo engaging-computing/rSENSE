@@ -188,7 +188,15 @@ $ ->
 
           for col in lon_cols
             do (col) ->
-              ($ row).children().eq(col).find('input').replaceWith "<div class='input-append'><input class='validate_longitude input-small' id='appendedInput' type='text' value='#{ ($ row).find('input').eq(col).val() }' /><span class='add-on'><a href='#' tabindex='32767'><i class='icon-globe map_picker'></i></a></span></div>"
+              ($ row).children().eq(col).find('input').replaceWith """
+                <div class='input-group'>
+                  <input class='validate_longitude form-control' id='appendedInput' type='text' value='#{ ($ row).find('input').eq(col).val() }' />
+                  <span class='input-group-btn'>
+                    <a href='#' tabindex='32767' class="btn btn-default">
+                      <i class='fa fa-globe map_picker'></i>
+                    </a>
+                  </span>
+                </div>"""
               ($ row).children().eq(col).find('.map_picker').unbind().click ->
                 ($ this).closest("tr").addClass('target')
                 previous_lon = ($ this).closest('tr').find('.validate_longitude').val()
@@ -206,7 +214,15 @@ $ ->
 
           for col in time_cols
             do (col) ->
-              ($ row).children().eq(col).find('input').replaceWith "<div class='input-append datepicker'><input class='validate_timestamp input-small' type='text' data-format='yyyy/MM/dd hh:mm:ss' value='#{ ($ row).find('input').eq(col).val() }' /><span class='add-on'><a href='#' tabindex='32767'><i class='icon-calendar'></i></a></span></div>"
+              ($ row).children().eq(col).find('input').replaceWith """
+                <div class='input-group datepicker'>
+                  <input class='validate_timestamp input-small form-control' type='text' data-format='yyyy/MM/dd hh:mm:ss' value='#{ ($ row).find('input').eq(col).val() }' />
+                  <span class='input-group-btn'>
+                    <a href='#' tabindex='32767' class="btn btn-default">
+                      <i class='fa fa-calendar'></i>
+                    </a>
+                  </span>
+                </div>"""
               ($ row).children().eq(col).find('.datepicker').unbind().datetimepicker()
               
 
@@ -216,7 +232,7 @@ $ ->
           new_row = "<tr class='new_row'>"
 
           ($ tab).find('th:not(:last-child)').each (index) ->
-            new_row += "<td><div class='text-center'><input type='text' class='input-small'/></div></td>"
+            new_row += "<td><div class='text-center'><input type='text' class='input-small form-control'/></div></td>"
 
           new_row += "<td><div class='text-center'><a class='close' style='float:none;'>&times;</a></div></td></tr>"
 
@@ -269,7 +285,7 @@ $ ->
             ($ @).children().wrap "<div class='text-center' />"
 
           ($ tab).find('td').not(':has(a.close)').each ->
-            ($ @).html "<input type='text' class='input-small' value='#{($ @).text()}' />"
+            ($ @).html "<input type='text' class='input-small form-control' value='#{($ @).text()}' />"
             ($ @).children().wrap "<div class='text-center' />"
 
           ($ tab).find('tr').each ->
