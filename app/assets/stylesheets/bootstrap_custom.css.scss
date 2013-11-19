@@ -23,12 +23,16 @@ input[type="checkbox"]
  {
   padding-top:8px; 
  }
+ .nav > li > a
+ {
+  color: white;
+ }
+ .nav > li > a:hover
+ {
+  color: white;
+ }
  .navbtn
  {
-  a, i
-  {
-    color:white;
-  }
   a
   { 
     padding-top:20px;
