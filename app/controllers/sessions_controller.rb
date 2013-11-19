@@ -28,6 +28,8 @@ class SessionsController < ApplicationController
     
     if @user and @user.authenticate(params[:password])
       session[:user_id] = @user.id
+      @user.update_attributes(:last_login => Time.now())
+
       respond_to do |format|
         format.html { redirect_to session[:redirect_to]}
         format.json { render json: {authenticity_token: form_authenticity_token}, status: :ok }

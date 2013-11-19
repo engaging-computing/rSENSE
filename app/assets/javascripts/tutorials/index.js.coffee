@@ -40,17 +40,6 @@ $ ->
 
           ($ '#tutorials').isotope('remove', ($ '.item'))
 
-          if is_admin
-            addProjectButton = ($ "<div id='addProjectButton' style='text-align:center;cursor: pointer;padding-top:5px' class='item'><img style='width:50%; height:50%' src='/assets/green_plus_icon.png'/><br /><h4 style='color:#0a0;'>Create Tutorial</h4></div>")
-            ($ '#tutorials').append(addProjectButton).isotope('insert', addProjectButton)
-            ($ '#addProjectButton').click ->
-              $.ajax
-                url: "tutorials/create"
-                data: {}
-                dataType: "json"
-                success: (data, textStatus) ->
-                  helpers.name_popup data, "Tutorial", "tutorial"
-
           for object in data
             do (object) ->
               addItem object
@@ -78,5 +67,16 @@ $ ->
     helpers.isotope_layout('#tutorials')
     ($ "#tutorials_search").submit()
 
-    ($ window).resize () -> 
+    relayout = ->
       helpers.isotope_layout("#tutorials")
+      
+    ($ window).resize () -> 
+      setTimeout(relayout, 750)
+      
+    ($ '#addProjectButton').click ->
+      $.ajax
+        url: "tutorials/create"
+        data: {}
+        dataType: "json"
+        success: (data, textStatus) ->
+          helpers.name_popup data, "Tutorial", "tutorial"  

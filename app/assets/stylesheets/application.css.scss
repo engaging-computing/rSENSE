@@ -8,7 +8,9 @@
  * You're free to add application-wide styles to this file and they'll appear at the top of the
  * compiled file, but it's generally better to create a new file per style scope.
  *
- *= require bootstrap_and_overrides
+
+ *= require bootstrap/bootstrap
+ *= require font-awesome
  *= require_tree .
  *= require jquery.ui.all
  *= require_self
@@ -21,6 +23,57 @@
 
 .word-break { word-wrap: break-word; }
 
+//Top for all index search boxes
+.isotope-top
+{
+  padding: 2px 20px 2px 20px;
+  background-color: #e8e8e8;
+  color: #000000;
+
+   box-shadow: 0 2px 3px 1px #9E9E9E;  
+  -moz-box-shadow: 0 2px 3px 1px #9E9E9E;
+  -webkit-box-shadow: 0 2px 3px 1px #9E9E9E;
+  
+  h1
+  {
+    font-weight:bold; 
+  }
+  input[type="submit"]
+  {
+    margin-top:2px;
+  }
+}
+
+.search_row
+{
+  margin: 0px 8px 8px 8px;
+}
+
+::-webkit-input-placeholder {
+   font-style: italic;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+   font-style: italic;  
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+   font-style: italic;  
+}
+
+:-ms-input-placeholder {  
+   font-style: italic;  
+}
+
+.ckeditor
+{
+ img
+ {
+  max-width:100%; 
+ }
+}
+
+//=======UNVERIFIED CSS====================================================
 body
 {
   line-height:normal !important;
@@ -74,17 +127,7 @@ div.info_text
     padding: 0px 0px 5px 0px;
 }
 
-.modal
-{
-    position:fixed;
-    width:300px;
-    display: none;
-    top:60px !important;
-    left:50%;
-    margin-left:-160px;
-    padding: 10px;
-    padding-top: 33px;
-}
+
 
 label[for=login_user], [for=login_password] {
   float: left;
@@ -227,11 +270,6 @@ input.object_hidden_checkbox
  margin-top: 0px;
 }
 
-.dropdown-menu
-{
-  left: -54px;
-}
-
 form
 {
   .feed-even, .feed-odd
@@ -239,19 +277,6 @@ form
     border-right-width: 2px;
     border-left-width: 2px;
   }
-}
-
-#title_bar
-{
-  //position: fixed;
-  border-bottom: 1px solid black;
-  width:100%;
-  background-color:#113;
-  height:50px;
-  z-index:2000;
-  top:0px;
-  left:0px;
-  box-shadow: 0px 0px 10px black;
 }
 
 .mainContent
@@ -299,22 +324,6 @@ form
   }
 }
 
-.isotope-top{
-  .order_selector{
-    width: 20%;
-    float: left;
-  }
-  .search_box{
-    width: 60%;
-    float: left;
-    margin-left: 20px; 
-  }
-  .submit_button{
-    //width: 20%;
-    float: left;
-    margin-left: 40px;
-  }
-}
 
 .isotope_container{
   overflow:visible;
@@ -327,11 +336,6 @@ form
     overflow:visible;
     padding:10px;
   }
-}
-
-.btn
-{
-  font-size: 12px !important;
 }
 
 .mc-wide{
