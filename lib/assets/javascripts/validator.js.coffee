@@ -3,8 +3,12 @@ $ ->
 
     if isNaN Number event.target.value
       ($ @).addClass 'invalid'
+      ($ @).popover
+        content: "Not a valid number"
+      ($ @).popover 'show'  
     else
       ($ @).removeClass 'invalid'
+      ($ @).popover("destroy")
 
   ($ '.mainContent').on 'change', 'input.validate_latitude', (event) ->
 
@@ -12,8 +16,11 @@ $ ->
 
     if (isNaN val) or ((Math.abs val) > 90)
       ($ @).addClass 'invalid'
+      ($ @).popover
+        content: "Not a valid latitude"
     else
       ($ @).removeClass 'invalid'
+      ($ @).popover("destroy")
 
   ($ '.mainContent').on 'change', 'input.validate_longitude', (event) ->
 
@@ -21,8 +28,11 @@ $ ->
 
     if (isNaN val) or ((Math.abs val) > 180)
       ($ @).addClass 'invalid'
+      ($ @).popover
+        content: "Not a valid longitude"
     else
       ($ @).removeClass 'invalid'
+      ($ @).popover("destroy")
 
   ($ '.mainContent').on 'change', 'input.validate_timestamp', (event) ->
 
@@ -32,11 +42,15 @@ $ ->
     
     if val is ""
       ($ @).removeClass 'invalid'
+      ($ @).popover("destroy")
     else
       if (typeof dat is "number") and (isNaN dat)
         ($ @).addClass 'invalid'
+        ($ @).popover
+        content: "Not a valid timestamp"
       else
         ($ @).removeClass 'invalid'
+        ($ @).popover("destroy")
 
   ($ '.mainContent').on 'change', 'input.validate_text', (event) ->
 
