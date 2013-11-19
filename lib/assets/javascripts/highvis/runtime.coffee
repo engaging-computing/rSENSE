@@ -46,14 +46,14 @@ $ ->
       ($ "#viscontainer").height
     else
       h = (Number ($ "div.mainContent").css("padding-top").replace("px", ""))
-      h += ($ "#title_bar").height()
+      h += ($ ".navbar").height()
       h += ($ "#title_row").outerHeight(true)
       h += globals.VIS_MARGIN_HEIGHT
       
       ($ "#viscontainer").height(($ window).height() - h)
 
     #Number($("div.mainContent").css("padding-top").replace("px", ""))
-    #$("#title_bar").height() + $("#title_row").height()
+    #$(".navbar").height() + $("#title_row").height()
 
     ### hide all vis canvases to start ###
     ($ can).hide() for can in ['#map_canvas', '#timeline_canvas', '#scatter_canvas', '#bar_canvas', '#histogram_canvas', '#table_canvas', '#viscanvas','#photos_canvas']
