@@ -18,6 +18,7 @@ $ ->
       ($ @).addClass 'invalid'
       ($ @).popover
         content: "Not a valid latitude"
+      ($ @).popover 'show'  
     else
       ($ @).removeClass 'invalid'
       ($ @).popover("destroy")
@@ -30,6 +31,7 @@ $ ->
       ($ @).addClass 'invalid'
       ($ @).popover
         content: "Not a valid longitude"
+      ($ @).popover 'show'    
     else
       ($ @).removeClass 'invalid'
       ($ @).popover("destroy")
@@ -47,7 +49,8 @@ $ ->
       if (typeof dat is "number") and (isNaN dat)
         ($ @).addClass 'invalid'
         ($ @).popover
-        content: "Not a valid timestamp"
+          content: "Not a valid timestamp"
+        ($ @).popover 'show'    
       else
         ($ @).removeClass 'invalid'
         ($ @).popover("destroy")
