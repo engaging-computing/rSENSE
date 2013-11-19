@@ -105,20 +105,20 @@ $ ->
             Ps = [1,1,Math.min.apply(null, xs) + 1]
         
         # Calculate the regression, and return a highcharts series object
-        Ps = NLLS(func, xs, ys, Ps)
-        generateHighchartsSeries(Ps, type, x_bounds, series_name)
+        [Ps, R2] = NLLS(func, xs, ys, Ps)
+        generateHighchartsSeries(Ps, R2, type, x_bounds, series_name)
       
       ###
       Returns a series object to draw on the chart canvas.
       ###
-      generateHighchartsSeries = (Ps, type, x_bounds, series_name) ->
+      generateHighchartsSeries = (Ps, R2, type, x_bounds, series_name) ->
       
         data = for i in [0..globals.REGRESSION.NUM_POINTS]
           x = (i / globals.REGRESSION.NUM_POINTS) * (x_bounds.dataMax - x_bounds.dataMin) + x_bounds.dataMin
           y =  calculateRegressionPoint(Ps, x, type)
           {x: x, y: y}
                    
-        str = makeToolTip(Ps, type, series_name)
+        str = makeToolTip(Ps, R2, type, series_name)
                    
         ret =
           name:
@@ -145,12 +145,12 @@ $ ->
       ###
       Returns tooltip description of the regression.
       ###
-      makeToolTip = (Ps, type, series_name) ->
+      makeToolTip = (Ps, R2, type, series_name) ->
       
         # Format parameters for output
         Ps = Ps.map roundToFourSigFigs
         
-        switch type
+        ret = switch type
 
           when globals.REGRESSION.LINEAR
             """
@@ -165,7 +165,7 @@ $ ->
             <div class="regressionTooltip"> #{series_name} </div>
             <br>
             <strong>
-              f(x) = #{Ps[2]}x^2 #{Ps[1]}x + #{Ps[0]}
+              f(x) = #{Ps[2]}x<sup>2</sup> #{Ps[1]}x + #{Ps[0]}
             </strong>
             """
           when globals.REGRESSION.CUBIC
@@ -173,7 +173,7 @@ $ ->
             <div class="regressionTooltip"> #{series_name} </div>
             <br>
             <strong>
-              f(x) = #{Ps[3]}x^3 + #{Ps[2]}x^2 + #{Ps[1]}x + #{Ps[0]}
+              f(x) = #{Ps[3]}x<sup>3</sup> + #{Ps[2]}x<sup>2</sup> + #{Ps[1]}x + #{Ps[0]}
             </strong>
             """
           when globals.REGRESSION.EXPONENTIAL
@@ -181,7 +181,7 @@ $ ->
             <div class="regressionTooltip"> #{series_name} </div>
             <br>
             <strong>
-              f(x) = e^(#{Ps[1]}x + #{Ps[2]}) + #{Ps[0]}
+              f(x) = e<sup>(#{Ps[1]}x + #{Ps[2]})</sup> + #{Ps[0]}
             </strong>
             """
 
@@ -193,6 +193,11 @@ $ ->
               f(x) = #{Ps[1]}ln(x + #{Ps[2]}) + #{Ps[0]}
             </strong>
             """
+            
+        ret += """
+        <br>
+        <strong> R <sup>2</sup> = </strong> #{roundToFourSigFigs R2}
+        """
             
       ###
       Round the current float value to 4 significant figures.
@@ -243,6 +248,8 @@ $ ->
             # If the iteration has diverged (or failed), line search a shift cut
             lsIters = 0
             while prevErr < nextErr or isNaN(nextErr)
+              # If we line search too long and can't find a valid value
+              # Then we declare the regression to have failed and throw.
               lsIters += 1
               if lsIters > 500
                 throw new Error()
@@ -262,8 +269,13 @@ $ ->
             break
           
           prevErr = nextErr
-          
-        Ps
+        
+        # calculate R^2 value
+        mean = numeric.sum(ys) / ys.length
+        SStot = numeric.sum(ys.map((y) -> (y - mean)*(y - mean)))
+        R2 = (1 - prevErr / SStot)
+        
+        [Ps, R2]
       
       ###
       Inner loop of Newton-gauss method
