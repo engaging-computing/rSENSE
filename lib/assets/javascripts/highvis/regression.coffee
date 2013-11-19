@@ -31,7 +31,11 @@ $ ->
 
     if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
 
-      #Regression Types
+      # Regression Types
+      # Regression functions are listed with thier partial derrivitives, eg.
+      #
+      # [f(x,Ps), f(x,Ps) dPs[0], f(x,Ps) dPs[1] ,... , f(x,Ps) dPs[dPs.length]]
+      
       window.globals ?= {}
       globals.REGRESSION ?= {}
       
@@ -78,7 +82,6 @@ $ ->
       Calculates a regression and returns it as a highcharts series.
       ###
       globals.getRegression = (xs, ys, type, x_bounds, series_name) ->
-        #Initialize x array
         Ps = []
         func = globals.REGRESSION.FUNCS[type]
         
@@ -101,11 +104,9 @@ $ ->
             # We want to avoid starting with a guess that takes the log of a negative number
             Ps = [1,1,Math.min.apply(null, xs) + 1]
         
-        #Calculate the regression matrix, and finally the highcharts series object
+        # Calculate the regression, and return a highcharts series object
         Ps = NLLS(func, xs, ys, Ps)
-        result_series = generateHighchartsSeries(Ps, type, x_bounds, series_name)
-        
-        return result_series
+        generateHighchartsSeries(Ps, type, x_bounds, series_name)
       
       ###
       Returns a series object to draw on the chart canvas.
@@ -146,9 +147,9 @@ $ ->
       ###
       makeToolTip = (Ps, type, series_name) ->
       
-        #Format parameters for output
+        # Format parameters for output
         Ps = Ps.map roundToFourSigFigs
-        #Get the correct regression type
+        
         switch type
 
           when globals.REGRESSION.LINEAR
@@ -180,7 +181,7 @@ $ ->
             <div class="regressionTooltip"> #{series_name} </div>
             <br>
             <strong>
-              f(x) = e^(#{P[1]}x + #{P[2]}) + #{Ps[0]}
+              f(x) = e^(#{Ps[1]}x + #{Ps[2]}) + #{Ps[0]}
             </strong>
             """
 
@@ -200,53 +201,73 @@ $ ->
       roundToFourSigFigs = (float) ->
         return float.toPrecision(4) 
       
+      ###
+      Calculates the jacobian of the given x over the given parameters using
+        a set of partial derrivitive functions as given at the top of this file.
+      ###
       jacobian = (func, xs, Ps) ->
         jac = []
         
         res = for x in xs
           for P,Pindex in Ps
             func[Pindex+1](x, Ps)
-            
-        res.filter (row) -> not isNaN(numeric.sum(row))
       
-      NLLS_MAX_ITER = 300
+      ###
+      Newton-Gauss non-linear least squares regression using shift-cutting
+      
+        MAX_ITER       - Maximum number of iterations before termination.
+        SHIFT_CUT_DOWN - Shift cut fraction used when divergence occurs.
+        SHIFT_CUT_UP   - Fraction used to increase shift size if no divergence occurs.
+        THRESH         - Threshold of error change, terminates algorithm early if met.
+        
+        func - Array of function, function to be fit followed by its partial derrivitives.
+        xs   - Array of x values
+        ys   - Array of y values (ground truth)
+        Ps   - Array of initial parameter estimates.
+      ###
+      NLLS_MAX_ITER = 1000
       NLLS_SHIFT_CUT_DOWN = 0.9
       NLLS_SHIFT_CUT_UP = 1.1
-      NLLS_THRESH = 0.0001
+      NLLS_THRESH = 1e-10
       NLLS = (func, xs, ys, Ps) ->
-        console.log [xs, ys, Ps]
         prevErr = Infinity
         shiftCut = 1
       
         for iter in [1..NLLS_MAX_ITER]
+          # Iterate
           dPs = iterateNLLS(func, xs, ys, Ps)
           nextPs = numeric.add(Ps, numeric.mul(dPs, shiftCut))
-          nextError = sqe(func, xs, ys, nextPs)
-          console.log [iter, nextPs, nextError]
+          nextErr = sqe(func, xs, ys, nextPs)
           
-          if prevErr < nextError or isNaN(nextError)
-            console.log 'DIVERGENCE - LINE SEARCH'
+          if prevErr < nextErr or isNaN(nextErr)
+            # If the iteration has diverged (or failed), line search a shift cut
             lsIters = 0
-            while prevErr < nextError or isNaN(nextError)
+            while prevErr < nextErr or isNaN(nextErr)
               lsIters += 1
               if lsIters > 500
-                console.log "stuck!"
                 throw new Error()
-              console.log '.'
+                
               shiftCut *= NLLS_SHIFT_CUT_DOWN
               nextPs = numeric.add(Ps, numeric.mul(dPs, shiftCut))
-              nextError = sqe(func, xs, ys, nextPs)
-            console.log 'PICKED: ' + String(shiftCut)
+              nextErr = sqe(func, xs, ys, nextPs)
           else
+            # Otherwise, accelerate towards optimum
             shiftCut = Math.min(shiftCut * NLLS_SHIFT_CUT_UP, 1)
             
-          prevErr = nextError
           Ps = nextPs
+          
+          # Break early if the error ratio has dropped below the threshold
+          if (prevErr - nextErr) / prevErr < NLLS_THRESH
+            console.log "Finished after #{iter} iterations"
+            break
+          
+          prevErr = nextErr
+          
         Ps
       
-      sqe = (func, xs, ys, Ps) ->
-        numeric.sum(numeric.sub(ys, xs.map((x) -> func[0](x, Ps))).map (x) -> x*x)
-      
+      ###
+      Inner loop of Newton-gauss method
+      ###
       iterateNLLS = (func, xs, ys, Ps) ->
         
         residuals = numeric.sub(ys, xs.map((x) -> func[0](x, Ps)))
@@ -260,9 +281,10 @@ $ ->
         
         deltaPs
       
+      ###
+      Calculates the current squared error for the given function, parameters and ground truth.
+      ###
+      sqe = (func, xs, ys, Ps) ->
+        numeric.sum(numeric.sub(ys, xs.map((x) -> func[0](x, Ps))).map (x) -> x*x)
       
-        
-#       TEST.x = [-5...300].map((x) -> x)
-#       TEST.y = TEST.x.map((xi) -> Math.log(xi + 10)*2+5)
-#       
-#       TEST.NLLS(globals.REGRESSION.FUNCS[globals.REGRESSION.LOGARITHMIC], TEST.x, TEST.y, [1,1,6])
+      

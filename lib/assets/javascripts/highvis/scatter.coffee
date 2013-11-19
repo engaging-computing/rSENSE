@@ -545,7 +545,7 @@ $ ->
             controls += "<tr><td style='text-align:left'>Type: </td>"
             controls += '<td><select id="regressionSelector" class="control_select">'
 
-            regressions = ['Linear', 'Quadratic', 'Cubic', 'Logarithmic']
+            regressions = ['Linear', 'Quadratic', 'Cubic', 'Exponential', 'Logarithmic']
             for regression_type in regressions
               controls += "<option value='#{regressions.indexOf(regression_type)}'>#{regression_type}</option>"
 
@@ -571,7 +571,7 @@ $ ->
               new_regression = globals.getRegression(
                 data.selector(@xAxis, groupIndex), 
                 data.selector(y_axis_index, groupIndex), 
-                Number (($ '#regressionSelector').val()), 
+                Number(($ '#regressionSelector').val()), 
                 @xBounds, 
                 name)
               @chart.addSeries(new_regression)
