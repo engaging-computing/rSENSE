@@ -33,11 +33,11 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
-            <li class="navbtn"><%=link_to news_index_path do %><i class='fa fa-book'></i> News<%end%></li>
-            <li class="navbtn"><%=link_to projects_path do %><i class='fa fa-folder-open'></i> Projects<%end%></li>
-            <li class="navbtn"><%=link_to visualizations_path do %><i class='fa fa-picture-o'></i> Visualizations<%end%></li>
+            <li class="navbtn" title="Check out the latest iSENSE news and updates"><%=link_to news_index_path do %><i class='fa fa-book'></i> News<%end%></li>
+            <li class="navbtn" title="Browse through projects created by our iSENSE users"><%=link_to projects_path do %><i class='fa fa-folder-open'></i> Projects<%end%></li>
+            <li class="navbtn" title="Check out visualizations built by our users and their project data"><%=link_to visualizations_path do %><i class='fa fa-picture-o'></i> Visualizations<%end%></li>
             <li class="dropdown navbtn">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-info-circle"></i> Tutorials <b class="caret"></b></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="Check out tutorials for iSENSE know-how's and how-to's"><i class="fa fa-info-circle"></i> Tutorials <b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <% get_featured_tutorials.each do |tutorial|%>
                   <li><%= link_to tutorial.title, tutorial_path(tutorial)%></li>
@@ -47,13 +47,13 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <% if @cur_user.try(:id) %>
-              <li class="navbtn"><%= link_to @cur_user.name, user_path(@cur_user)%></li>
+              <li class="navbtn" title="Click to view <%= @cur_user.name %>'s user profile page"><%= link_to @cur_user.name, user_path(@cur_user)%></li>
               <li class="divider"></li>
               <li class="navbtn"><%= link_to "Logout", login_path, method: :delete%></li>
             <% else %>
               <li class="navbtn"><%= link_to "Login", login_path(), method: :get%></li>
               <li class="divider"></li>
-              <li class="navbtn"><%= link_to "Register", new_user_path %></li>
+              <li class="navbtn" title="Register now to start using iSENSE"><%= link_to "Register", new_user_path %></li>
             <% end %>
           </ul>
         </div><!-- /.navbar-collapse -->

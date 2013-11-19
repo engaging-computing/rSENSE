@@ -11,12 +11,12 @@
             <h1>Visualizations</h1>
           </div>
           <div class="col-lg-4">
-            <select name="sort" class="visualizations_sort_select form-control">
+            <select name="sort" class="visualizations_sort_select form-control" title="Sort by">
               <option value="DESC">Newest First</option>
               <option value="ASC">Oldest First</option>
             </select>
           </div>
-          <div class="col-lg-6">
+          <div class="col-lg-6" title="Enter keyword(s) for visualizations search">
             <%= text_field_tag :search, params[:search], class:'form-control'%>
           </div>
           <div class="col-lg-2">

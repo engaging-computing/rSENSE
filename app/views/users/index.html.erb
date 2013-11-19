@@ -8,12 +8,12 @@
             <div class="isotope-top">
             <h1>Users</h1>
             <div class="order_selector">
-                <select name="sort" class="users_sort_select">
+                <select name="sort" class="users_sort_select" title="Sort by">
                 <option value="DESC">Newest First</option>
                 <option value="ASC">Oldest First</option>
                 </select>
             </div>
-            <div class="search_box">
+            <div class="search_box" title="Enter keyword(s) for users search">
                 <%=text_field_tag :search, params[:search], class:'search-query'%>
             </div>
             <div class="submit_button">

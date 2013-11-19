@@ -11,7 +11,7 @@
             <h1>Projects</h1>
           </div>
           <div class="col-lg-4">
-            <select name="sort" class="projects_sort_select form-control">
+            <select name="sort" class="projects_sort_select form-control" title="Sort by">
               <option value="updated_at DESC">Modified (newest first)</option>
               <option value="updated_at ASC">Modified (oldest first)</option>
               <option value="created_at DESC">Created (newest first)</option>
@@ -20,7 +20,7 @@
             </select>
           </div>
           <div class="col-lg-6">
-            <input type="text" class="form-control" id="search" name="search" type="text" x-webkit-speech>
+            <input type="text" class="form-control" id="search" name="search" type="text" title="Enter keyword(s) or project number for project search" x-webkit-speech>
           </div>
           <div class="col-lg-2">
             <%= submit_tag "Search", name: nil, class:'btn btn-default'%>
