@@ -5,15 +5,21 @@ $ ->
   helpers.name_popup = (obj, name, type, escape_location = "#") ->
     
     modal = """
-    <div id="new_name_box" class="modal hide fade well container" data-backdrop="static">
-      <div> Please enter a name for this #{name}: <br>
-        <input id="new_name" class="name_field" type="text" style="width:95%" value="#{obj.name}"></input>
-        </div>
-        <div class="clear"></div>
-      <div style="float:right;">
-          <button class="cancel_new_button btn btn-danger">Cancel</button>
-          <button class="new_name_button btn btn-success">Finish</button>
-      </div>
+    <div id="new_name_box" class="modal fade" role="dialog" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4> Please enter a name for this #{name}: </h4>
+          </div>
+          <div class="modal-body">
+            <input id="new_name" class="form-control" type="text" style="width:95%" value="#{obj.name}">
+          </div>
+          <div class="modal-footer">
+              <button class="cancel_new_button btn btn-danger">Cancel</button>
+              <button class="new_name_button btn btn-success">Finish</button>
+          </div>
+        </div>  
+      </div>  
     </div>
     """
     

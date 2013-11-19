@@ -18,7 +18,7 @@
 //= require name_popup
 //= require jquery_ujs
 //= require jquery.ui.all
-//= require twitter/bootstrap
+//= require bootstrap/bootstrap
 //= require unsupported
 //= require info_edit
 //= require menu_edit

@@ -58,6 +58,8 @@ GEM
     erubis (2.7.0)
     execjs (2.0.2)
     ffi (1.9.3)
+    font-awesome-rails (4.0.3.0)
+      railties (>= 3.2, < 5.0)
     hike (1.2.3)
     httparty (0.12.0)
       json (~> 1.8)
@@ -148,11 +150,6 @@ GEM
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
-    twitter-bootstrap-rails (2.2.8)
-      actionpack (>= 3.1)
-      execjs
-      rails (>= 3.1)
-      railties (>= 3.1)
     tzinfo (0.3.38)
     uglifier (2.3.1)
       execjs (>= 0.3.0)
@@ -177,6 +174,7 @@ DEPENDENCIES
   coffee-script-source
   coffeebeans
   execjs
+  font-awesome-rails
   httparty
   jquery-rails
   jquery-ui-rails
@@ -193,7 +191,6 @@ DEPENDENCIES
   selenium-webdriver (~> 2.35.1)
   sqlite3
   therubyracer
-  twitter-bootstrap-rails
   uglifier
   webrick
   will_paginate
