@@ -17,6 +17,7 @@ input[type="checkbox"]
  margin-bottom:0px;
  background-color: rgb(17,17,51);
  font-size: 1.2em;
+ height: 55px;
  
  .navbar-brand
  {
@@ -26,19 +27,25 @@ input[type="checkbox"]
  {
   a, i
   {
-    color:white !important;
+    color:white;
   }
   a
   { 
     padding-top:20px;
   }
  }
+ .navbtn:hover
+ {
+  background-color: #649ce5;
+ }
  .dropdown-menu 
  { 
-  background-color: rgb(17,17,51);
+  background-color: white;
+  color: black;
   a:hover
   {
-   background-color: gray;  
+   color: white;
+   background-color: #649ce5;  
   }
  }
 }
