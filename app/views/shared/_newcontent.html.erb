@@ -11,7 +11,9 @@
         <button class="btn btn-danger center" style="display:none" id="content_cancel_button">Cancel</button>
       </div>
     <% else %>
-      <%= raw content%>
+      <div class="word-break">
+        <%= raw content%>
+      </div>
     <% end %>
   <% else %>
     <% if can_edit%>
