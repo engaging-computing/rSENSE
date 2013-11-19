@@ -64,7 +64,7 @@
       </nav>
       
       <!-- Main Container -->
-      <div id="outer" style="padding:0px 0px 70px 0px; margin:0; min-height:100%; <%= @layout_wide ? 'margin-right:40px;' : '' %>">
+      <div id="outer" style="padding:0px 0px 70px 0px; margin:0; min-height:100%;">
         <div class="container mainContent <%= @layout_wide ? 'mc-wide' : '' %>" data-role="page">
           <%= bootstrap_flash %>
           <%= yield %>
@@ -77,8 +77,6 @@
         <p>Our work is supported by grants <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0735597">DRL-0735597</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0735592">DRL-0735592</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0546513">DRL-0546513</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=1123998">IIS-1123998</a>, and <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=1123972">IIS-1123972</a> from the National Science Foundation and a gift from Google Inc.</p>
         <p><%= @version %></p>
       </div>
-
     </div>
-
   </body>
 </html>

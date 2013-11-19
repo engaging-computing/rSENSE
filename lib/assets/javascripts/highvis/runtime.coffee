@@ -67,16 +67,13 @@ $ ->
     ### Generate tabs ###
     for vis of data.allVis
         if data.allVis[vis] in data.relVis
-            ($ '#visTabList').append "<li class='vis_tab'><a href='##{data.allVis[vis].toLowerCase()}_canvas'><span class='hidden-phone'>#{data.allVis[vis]}</span><img class='visible-phone' height='32px' width='32' src='/assets/vis_#{data.allVis[vis].toLowerCase()}_dark.png' data-disable-src='/assets/vis_#{data.allVis[vis].toLowerCase()}_light.png' ></a></li>"
+            ($ '#visTabList').append "<li class='vis_tab'><a href='##{data.allVis[vis].toLowerCase()}_canvas'><span class='hidden-sm hidden-xs'>#{data.allVis[vis]}</span><img class='visible-xs visible-sm' height='32px' width='32' src='/assets/vis_#{data.allVis[vis].toLowerCase()}_dark.png' data-disable-src='/assets/vis_#{data.allVis[vis].toLowerCase()}_light.png' ></a></li>"
         else
-            ($ '#visTabList').append "<li class='vis_tab' ><a href='##{data.allVis[vis].toLowerCase()}_canvas'><span class='hidden-phone' style='text-decoration:line-through'>#{data.allVis[vis]}</span><img class='visible-phone' height='32px' width='32' src='/assets/vis_#{data.allVis[vis].toLowerCase()}_light.png' data-enable-src='/assets/vis_#{data.allVis[vis].toLowerCase()}_dark.png' /></a></li>"
+            ($ '#visTabList').append "<li class='vis_tab' ><a href='##{data.allVis[vis].toLowerCase()}_canvas'><span class='hidden-sm hidden-xs' style='text-decoration:line-through'>#{data.allVis[vis]}</span><img class='visible-xs visible-sm' height='32px' width='32' src='/assets/vis_#{data.allVis[vis].toLowerCase()}_light.png' data-enable-src='/assets/vis_#{data.allVis[vis].toLowerCase()}_dark.png' /></a></li>"
             
     ### Jquery up the tabs ###
     ($ '#viscontainer').tabs()
     ($ '#tabcontainer').tabs()
-    
-
-#     ($ '#viscontainer').width ($ '#viscontainer').width() - (($ '#viscontainer').outerWidth() - ($ '#viscontainer').width())
     
     ### Pick vis ###
     if not (data.defaultVis in data.relVis)
