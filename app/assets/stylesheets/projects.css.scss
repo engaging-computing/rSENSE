@@ -10,6 +10,14 @@
   }
 }
 
+@media print
+{
+  .pagebreak
+  {
+    page-break-after:always;
+  }
+}
+
 //========Unverified CSS==============
 
 #collapseFields
