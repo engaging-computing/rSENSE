@@ -5,15 +5,15 @@ class SessionsController < ApplicationController
   
   #GET /sessions/new
   def new
-    
     if request.referrer
-      session[:redirect_to] = request.referrer
+      if request.fullpath == login_path
+        session[:redirect_to] = "/home/index"
+      else
+        session[:redirect_to] = request.referrer
+      end
     else
       session[:redirect_to] = "/home/index"
     end
-    
-    logger.info flash[:redirect_to]
-    
   end
   
   def create
