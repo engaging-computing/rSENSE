@@ -44,7 +44,7 @@
   }
 }
 
-.search_row
+.padded-row
 {
   margin: 0px 8px 8px 8px;
 }
@@ -507,4 +507,11 @@ form
     font-size: 11pt;
     left:447px;
   }
+}
+
+.full-image
+{
+  max-width:100%;
+  margin:0px;
+  padding:0px;
 }

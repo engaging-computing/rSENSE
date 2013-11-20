@@ -46,14 +46,14 @@ $ ->
       ($ "#viscontainer").height
     else
       h = (Number ($ "div.mainContent").css("padding-top").replace("px", ""))
-      h += ($ "#title_bar").height()
+      h += ($ ".navbar").height()
       h += ($ "#title_row").outerHeight(true)
       h += globals.VIS_MARGIN_HEIGHT
       
       ($ "#viscontainer").height(($ window).height() - h)
 
     #Number($("div.mainContent").css("padding-top").replace("px", ""))
-    #$("#title_bar").height() + $("#title_row").height()
+    #$(".navbar").height() + $("#title_row").height()
 
     ### hide all vis canvases to start ###
     ($ can).hide() for can in ['#map_canvas', '#timeline_canvas', '#scatter_canvas', '#bar_canvas', '#histogram_canvas', '#table_canvas', '#viscanvas','#photos_canvas']
@@ -67,16 +67,13 @@ $ ->
     ### Generate tabs ###
     for vis of data.allVis
         if data.allVis[vis] in data.relVis
-            ($ '#visTabList').append "<li class='vis_tab'><a href='##{data.allVis[vis].toLowerCase()}_canvas'><span class='hidden-phone'>#{data.allVis[vis]}</span><img class='visible-phone' height='32px' width='32' src='/assets/vis_#{data.allVis[vis].toLowerCase()}_dark.png' data-disable-src='/assets/vis_#{data.allVis[vis].toLowerCase()}_light.png' ></a></li>"
+            ($ '#visTabList').append "<li class='vis_tab'><a href='##{data.allVis[vis].toLowerCase()}_canvas'><span class='hidden-sm hidden-xs'>#{data.allVis[vis]}</span><img class='visible-xs visible-sm' height='32px' width='32' src='/assets/vis_#{data.allVis[vis].toLowerCase()}_dark.png' data-disable-src='/assets/vis_#{data.allVis[vis].toLowerCase()}_light.png' ></a></li>"
         else
-            ($ '#visTabList').append "<li class='vis_tab' ><a href='##{data.allVis[vis].toLowerCase()}_canvas'><span class='hidden-phone' style='text-decoration:line-through'>#{data.allVis[vis]}</span><img class='visible-phone' height='32px' width='32' src='/assets/vis_#{data.allVis[vis].toLowerCase()}_light.png' data-enable-src='/assets/vis_#{data.allVis[vis].toLowerCase()}_dark.png' /></a></li>"
+            ($ '#visTabList').append "<li class='vis_tab' ><a href='##{data.allVis[vis].toLowerCase()}_canvas'><span class='hidden-sm hidden-xs' style='text-decoration:line-through'>#{data.allVis[vis]}</span><img class='visible-xs visible-sm' height='32px' width='32' src='/assets/vis_#{data.allVis[vis].toLowerCase()}_light.png' data-enable-src='/assets/vis_#{data.allVis[vis].toLowerCase()}_dark.png' /></a></li>"
             
     ### Jquery up the tabs ###
     ($ '#viscontainer').tabs()
     ($ '#tabcontainer').tabs()
-    
-
-#     ($ '#viscontainer').width ($ '#viscontainer').width() - (($ '#viscontainer').outerWidth() - ($ '#viscontainer').width())
     
     ### Pick vis ###
     if not (data.defaultVis in data.relVis)
@@ -122,12 +119,12 @@ $ ->
     visHeight = ($ '#viscontainer').height() - ($ '#visTabList').outerHeight()
     
     if globals.options? and globals.options.presentation?
-      ($ '.vis_canvas').width  "100%"
-      ($ '.vis_canvas').height "100%"
+      ($ '.vis_canvas').css width:"100%"
+      ($ '.vis_canvas').css height:"100%"
     else
       ($ '.vis_canvas').width  visWidth
       ($ '.vis_canvas').height visHeight
-    
+      
 #     ($ '#controlhider').height visHeight
 #     
     ($ '#controldiv').width 0
