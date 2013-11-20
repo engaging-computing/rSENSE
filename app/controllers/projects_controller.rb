@@ -54,6 +54,15 @@ class ProjectsController < ApplicationController
   def show
     @project = Project.find(params[:id])
 
+    #Update view count
+    session[:viewed] ||= {}
+    session[:viewed][:projects] ||= {}
+    
+    unless session[:viewed][:projects][@project.id]
+      session[:viewed][:projects][@project.id] = true
+      @project.add_view!
+    end
+
     #Determine if the project is cloned
     @cloned_project = nil
     if(!@project.cloned_from.nil?)
