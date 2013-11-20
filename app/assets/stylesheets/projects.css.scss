@@ -12,11 +12,42 @@
 
 @media print
 {
+  .header
+  {
+    font-size:1.3em;
+    font-weight:bold;
+  }
+
+  .input-line
+  {
+    font-size:1.3em;
+    font-weight:bold;
+    margin: 1em 0em 2em 0em;
+  }
+  
   .pagebreak
   {
     page-break-after:always;
+    page-break-before:always;
+  }
+
+  body
+  {
+    font: 12pt Georgia, "Times New Roman", Times, serif;
+    line-height: 1.3;
+  }
+
+  table#entry
+  {
+    td
+    {
+      height:2em;
+      min-width:75px;
+    }
   }
 }
+
+
 
 //========Unverified CSS==============
 
