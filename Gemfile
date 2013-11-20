@@ -10,7 +10,7 @@ gem 'pg'
 
 gem 'sass-rails'
 gem 'coffee-rails'
-gem 'coffee-script-source'
+gem 'coffee-rails-source-maps'
 gem 'uglifier'
 gem 'modernizr-rails'
 
