@@ -119,12 +119,12 @@ $ ->
     visHeight = ($ '#viscontainer').height() - ($ '#visTabList').outerHeight()
     
     if globals.options? and globals.options.presentation?
-      ($ '.vis_canvas').width  "100%"
-      ($ '.vis_canvas').height "100%"
+      ($ '.vis_canvas').css width:"100%"
+      ($ '.vis_canvas').css height:"100%"
     else
       ($ '.vis_canvas').width  visWidth
       ($ '.vis_canvas').height visHeight
-    
+      
 #     ($ '#controlhider').height visHeight
 #     
     ($ '#controldiv').width 0
