@@ -31,10 +31,6 @@ module ApplicationHelper
       "invalid input: try get_field_name(string)"
     end
   end
-  
-  def get_featured_tutorials
-    return Tutorial.where("featured_number IS NOT NULL").order('featured_number ASC')
-  end
 
   # Begin permissions stuff
   def can_edit? (obj)
