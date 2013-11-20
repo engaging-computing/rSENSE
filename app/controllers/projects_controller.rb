@@ -687,4 +687,11 @@ class ProjectsController < ApplicationController
     end
   end
   
+  def printable
+    @project = Project.find(params[:id])
+    respond_to do |format|
+      format.html
+    end 
+  end
+  
 end
