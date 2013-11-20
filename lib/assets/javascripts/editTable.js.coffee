@@ -14,7 +14,29 @@ $ ->
       if x["name"] == "Latitude"
       
         #If there is location add the map picker modal dialog
-        ($ ".mainContent").append '<div id="map_picker" class="modal hide fade well container" style="width:400px"><div id="map_canvas" style="width:400px; height:300px"></div><br/><label>Address: </label><input id="address"  type="text"/><button class="btn btn-primary pull-right" id="apply_location">Apply</button></div>'
+        ($ ".mainContent").append """
+          <div id="map_picker" class="modal fade" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-body">
+                  <div id="map_canvas" style="width:100%; height:300px"></div><br/>
+                </div>
+                <div class="modal-footer">
+                  <div class="row">
+                    <div class="col-md-2">
+                      <label for="address class="control-label">Address: </label>
+                    </div>
+                    <div class="col-md-7">
+                      <input id="address" class="form-control" type="text"/>
+                    </div>
+                    <div class="col-md-3">
+                      <button class="btn btn-primary pull-right" id="apply_location">Apply</button>
+                    </div>
+                  </div>
+                </div>
+              </div> 
+            </div>  
+          </div>"""
 
         #Set up the Map and geocoder
         latlng = new google.maps.LatLng(42.6333,-71.3167)
@@ -54,13 +76,13 @@ $ ->
             location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude)
             window.marker.setPosition(location)
             window.map.setCenter(location)
-
-        ($ "#address").autocomplete("option", "appendTo", "#map_picker")
-
+            
+        ($ "#address").autocomplete("option","appendTo","#map_picker")
+        
         #Maps are dumb and need to be resized if shown in a dynamicly sized window
-        ($ '#map_picker').on 'shown', () ->
+        ($ '#map_picker').on 'shown.bs.modal', () ->
           google.maps.event.trigger window.map, "resize"
-
+        
         #What to do when a location is picked
         ($ "#apply_location").click ->
           ($ "#map_picker").modal('hide')
@@ -192,8 +214,8 @@ $ ->
                 <div class='input-group'>
                   <input class='validate_longitude form-control' id='appendedInput' type='text' value='#{ ($ row).find('input').eq(col).val() }' />
                   <span class='input-group-btn'>
-                    <a href='#' tabindex='32767' class="btn btn-default">
-                      <i class='fa fa-globe map_picker'></i>
+                    <a href='#' tabindex='32767' class="btn btn-default map_picker">
+                      <i class='fa fa-globe'></i>
                     </a>
                   </span>
                 </div>"""
