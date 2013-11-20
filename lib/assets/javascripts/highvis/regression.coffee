@@ -31,69 +31,94 @@ $ ->
 
     if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
 
-      #Regression Types
+      # Regression Types
+      # Regression functions are listed with thier partial derrivitives, eg.
+      #
+      # [f(x,Ps), f(x,Ps) dPs[0], f(x,Ps) dPs[1] ,... , f(x,Ps) dPs[dPs.length]]
+      
       window.globals ?= {}
       globals.REGRESSION ?= {}
-      globals.REGRESSION.LINEAR = 0
-      globals.REGRESSION.QUADRATIC = 1
-      globals.REGRESSION.CUBIC = 2
-      globals.REGRESSION.LOGARITHMIC = 3
+      
+      globals.REGRESSION.FUNCS = []
+      
+      globals.REGRESSION.LINEAR = globals.REGRESSION.FUNCS.length
+      globals.REGRESSION.FUNCS.push [
+        (x, P) -> P[0] + (x*P[1]),
+        (x, P) -> 1,
+        (x, P) -> x]
+      
+      globals.REGRESSION.QUADRATIC = globals.REGRESSION.FUNCS.length
+      globals.REGRESSION.FUNCS.push [
+        (x, P) -> P[0] + (x*P[1]) + (x*x*P[2]),
+        (x, P) -> 1,
+        (x, P) -> x,
+        (x, P) -> x*x]
+      
+      globals.REGRESSION.CUBIC = globals.REGRESSION.FUNCS.length
+      globals.REGRESSION.FUNCS.push [
+        (x, P) -> P[0] + (x*P[1]) + (x*x*P[2]) + (x*x*x*P[3]),
+        (x, P) -> 1,
+        (x, P) -> x,
+        (x, P) -> x*x,
+        (x, P) -> x*x*x]
+      
+      globals.REGRESSION.EXPONENTIAL = globals.REGRESSION.FUNCS.length
+      globals.REGRESSION.FUNCS.push [
+        (x, P) -> P[0] + Math.exp(P[1] * x + P[2]),
+        (x, P) -> 1,
+        (x, P) -> x * Math.exp(P[1] * x + P[2]),
+        (x, P) -> Math.exp(P[1] * x + P[2])]
+      
+      globals.REGRESSION.LOGARITHMIC = globals.REGRESSION.FUNCS.length
+      globals.REGRESSION.FUNCS.push [
+        (x, P) -> P[0] + P[1] * Math.log(P[2] + x),
+        (x, P) -> 1,
+        (x, P) -> Math.log(x + P[2]),
+        (x, P) -> P[1] / (P[2] + x)]
+      
       globals.REGRESSION.NUM_POINTS = 100
 
       ###
       Calculates a regression and returns it as a highcharts series.
       ###
-      globals.getRegression = (x_in, y_in, regression_type, x_bounds, series_name, dash_style) ->
-        #Initialize x array
-        x_fin = []
+      globals.getRegression = (xs, ys, type, x_bounds, series_name) ->
+        Ps = []
+        func = globals.REGRESSION.FUNCS[type]
         
-        #Get the correct regression type
-        switch Number(regression_type)
+        #Make an initial Estimate
+        switch type
       
           when globals.REGRESSION.LINEAR
-            #Make x_fin based on linear params
-            for x_val in x_in
-              x_fin.push([1, x_val])
+            Ps = [1,1]
         
           when globals.REGRESSION.QUADRATIC
-            #Make x_fin based on quadratic params
-            for x_val in x_in
-              x_fin.push([1, x_val, Math.pow(x_val, 2)])
+            Ps = [1,1,1]
 
           when globals.REGRESSION.CUBIC
-            #Make x_fin based on cubic params
-            for x_val in x_in
-              x_fin.push([1, x_val, Math.pow(x_val, 2), Math.pow(x_val, 3)])
+            Ps = [1,1,1,1]
+            
+          when globals.REGRESSION.EXPONENTIAL
+            Ps = [1,1,1]
         
           when globals.REGRESSION.LOGARITHMIC
-            #Make x_fin based on logarithmic params
-            for x_val in x_in
-              x_fin.push([1, Math.log(x_val)])
+            # We want to avoid starting with a guess that takes the log of a negative number
+            Ps = [1,1,Math.min.apply(null, xs) + 1]
         
-        #Calculate the regression matrix, and finally the highcharts series object
-        regression_matrix = calculateRegression(x_fin, y_in)
-        result_series = generateHighchartsSeries(regression_matrix, regression_type, x_bounds, series_name, dash_style)
-        
-        return result_series
-        
-      ###
-      Calculates the regression according to the provided x and y matrices.
-      ###
-      calculateRegression = (x, y) ->
-        #Return the resulting vector
-        return numeric.dot(numeric.dot(numeric.inv(numeric.dot(numeric.transpose(x), x)), numeric.transpose(x)), y)
+        # Calculate the regression, and return a highcharts series object
+        [Ps, R2] = NLLS(func, xs, ys, Ps)
+        generateHighchartsSeries(Ps, R2, type, x_bounds, series_name)
       
       ###
       Returns a series object to draw on the chart canvas.
       ###
-      generateHighchartsSeries = (regression_matrix, regression_type, x_bounds, series_name, dash_style) ->
-  
+      generateHighchartsSeries = (Ps, R2, type, x_bounds, series_name) ->
+      
         data = for i in [0..globals.REGRESSION.NUM_POINTS]
           x = (i / globals.REGRESSION.NUM_POINTS) * (x_bounds.dataMax - x_bounds.dataMin) + x_bounds.dataMin
-          y =  calculateRegressionPoint(regression_matrix, x, regression_type)
+          y =  calculateRegressionPoint(Ps, x, type)
           {x: x, y: y}
                    
-        str = makeToolTip(regression_matrix, regression_type, series_name)
+        str = makeToolTip(Ps, R2, type, series_name)
                    
         ret =
           name:
@@ -115,63 +140,164 @@ $ ->
       ###
       Uses the regression matrix to calculate the y value given an x value.
       ###
-      calculateRegressionPoint = (regression_matrix, x_val, regression_type) ->
-      
-        switch Number(regression_type)
-        
-          when globals.REGRESSION.LINEAR
-            return regression_matrix[0] + regression_matrix[1] * x_val
-
-          when globals.REGRESSION.QUADRATIC
-            return regression_matrix[0] + regression_matrix[1] * x_val + regression_matrix[2] * Math.pow(x_val, 2)
-          
-          when globals.REGRESSION.CUBIC
-            return regression_matrix[0] + regression_matrix[1] * x_val + regression_matrix[2] * Math.pow(x_val, 2) + regression_matrix[3] * Math.pow(x_val, 3)
-          
-          when globals.REGRESSION.LOGARITHMIC
-            return regression_matrix[0] + regression_matrix[1] * Math.log(x_val)
+      calculateRegressionPoint = (Ps, x, type) ->
+        globals.REGRESSION.FUNCS[type][0](x, Ps)
             
       ###
       Returns tooltip description of the regression.
       ###
-      makeToolTip = (regression_matrix, regression_type, series_name) ->
-
-        #Get the correct regression type
-        switch Number(regression_type)
+      makeToolTip = (Ps, R2, type, series_name) ->
+      
+        # Format parameters for output
+        Ps = Ps.map roundToFourSigFigs
+        
+        ret = switch type
 
           when globals.REGRESSION.LINEAR
-          
-            str = "<div style='width:100%;text-align:center;color:#000;'> #{series_name}</div><br>"
-            str += "<strong>f(x) = #{roundToFourSigFigs(regression_matrix[1])}x + #{roundToFourSigFigs(regression_matrix[0])}</strong>"
-
-            return str
-
+            """
+            <div class="regressionTooltip"> #{series_name} </div>
+            <br>
+            <strong>
+              f(x) = #{Ps[1]}x + #{Ps[0]}
+            </strong>
+            """
           when globals.REGRESSION.QUADRATIC
-
-            str = "<div style='width:100%;text-align:center;color:#000;'> #{series_name}</div><br>"
-            str += "<strong>f(x) = #{roundToFourSigFigs(regression_matrix[2])}x&#178; + "
-            str += "#{roundToFourSigFigs(regression_matrix[1])}x + #{roundToFourSigFigs(regression_matrix[0])}</strong>"
-
-            return str
-
+            """
+            <div class="regressionTooltip"> #{series_name} </div>
+            <br>
+            <strong>
+              f(x) = #{Ps[2]}x<sup>2</sup> #{Ps[1]}x + #{Ps[0]}
+            </strong>
+            """
           when globals.REGRESSION.CUBIC
-            
-            str = "<div style='width:100%;text-align:center;color:#000;'> #{series_name}</div><br>"
-            str += "<strong>f(x) = #{roundToFourSigFigs(regression_matrix[3])}x&#179; + #{roundToFourSigFigs(regression_matrix[2])}x&#178; + "
-            str += "#{roundToFourSigFigs(regression_matrix[1])}x + #{roundToFourSigFigs(regression_matrix[0])}</strong>"
-
-            return str
+            """
+            <div class="regressionTooltip"> #{series_name} </div>
+            <br>
+            <strong>
+              f(x) = #{Ps[3]}x<sup>3</sup> + #{Ps[2]}x<sup>2</sup> + #{Ps[1]}x + #{Ps[0]}
+            </strong>
+            """
+          when globals.REGRESSION.EXPONENTIAL
+            """
+            <div class="regressionTooltip"> #{series_name} </div>
+            <br>
+            <strong>
+              f(x) = e<sup>(#{Ps[1]}x + #{Ps[2]})</sup> + #{Ps[0]}
+            </strong>
+            """
 
           when globals.REGRESSION.LOGARITHMIC
-
-            str = "<div style='width:100%;text-align:center;color:#000;'> #{series_name}</div><br>"
-            str += "<strong>f(x) = #{roundToFourSigFigs(regression_matrix[1])} ln(x) + #{roundToFourSigFigs(regression_matrix[0])}</strong>"
-
-            return str
+            """
+            <div class="regressionTooltip"> #{series_name} </div>
+            <br>
+            <strong>
+              f(x) = #{Ps[1]}ln(x + #{Ps[2]}) + #{Ps[0]}
+            </strong>
+            """
             
-    ###
-    Round the current float value to 4 significant figures.
-    I keep this in a separate function because we weren't sure this was the best implemenation.
-    ###
-    roundToFourSigFigs = (float) ->
-      return Number(float).toPrecision(4) 
+        ret += """
+        <br>
+        <strong> R <sup>2</sup> = </strong> #{roundToFourSigFigs R2}
+        """
+            
+      ###
+      Round the current float value to 4 significant figures.
+      I keep this in a separate function because we weren't sure this was the best implemenation.
+      ###
+      roundToFourSigFigs = (float) ->
+        return float.toPrecision(4) 
+      
+      ###
+      Calculates the jacobian of the given x over the given parameters using
+        a set of partial derrivitive functions as given at the top of this file.
+      ###
+      jacobian = (func, xs, Ps) ->
+        jac = []
+        
+        res = for x in xs
+          for P,Pindex in Ps
+            func[Pindex+1](x, Ps)
+      
+      ###
+      Newton-Gauss non-linear least squares regression using shift-cutting
+      
+        MAX_ITER       - Maximum number of iterations before termination.
+        SHIFT_CUT_DOWN - Shift cut fraction used when divergence occurs.
+        SHIFT_CUT_UP   - Fraction used to increase shift size if no divergence occurs.
+        THRESH         - Threshold of error change, terminates algorithm early if met.
+        
+        func - Array of function, function to be fit followed by its partial derrivitives.
+        xs   - Array of x values
+        ys   - Array of y values (ground truth)
+        Ps   - Array of initial parameter estimates.
+      ###
+      NLLS_MAX_ITER = 1000
+      NLLS_SHIFT_CUT_DOWN = 0.9
+      NLLS_SHIFT_CUT_UP = 1.1
+      NLLS_THRESH = 1e-10
+      NLLS = (func, xs, ys, Ps) ->
+        prevErr = Infinity
+        shiftCut = 1
+      
+        for iter in [1..NLLS_MAX_ITER]
+          # Iterate
+          dPs = iterateNLLS(func, xs, ys, Ps)
+          nextPs = numeric.add(Ps, numeric.mul(dPs, shiftCut))
+          nextErr = sqe(func, xs, ys, nextPs)
+          
+          if prevErr < nextErr or isNaN(nextErr)
+            # If the iteration has diverged (or failed), line search a shift cut
+            lsIters = 0
+            while prevErr < nextErr or isNaN(nextErr)
+              # If we line search too long and can't find a valid value
+              # Then we declare the regression to have failed and throw.
+              lsIters += 1
+              if lsIters > 500
+                throw new Error()
+                
+              shiftCut *= NLLS_SHIFT_CUT_DOWN
+              nextPs = numeric.add(Ps, numeric.mul(dPs, shiftCut))
+              nextErr = sqe(func, xs, ys, nextPs)
+          else
+            # Otherwise, accelerate towards optimum
+            shiftCut = Math.min(shiftCut * NLLS_SHIFT_CUT_UP, 1)
+            
+          Ps = nextPs
+          
+          # Break early if the error ratio has dropped below the threshold
+          if (prevErr - nextErr) / prevErr < NLLS_THRESH
+            console.log "Finished after #{iter} iterations"
+            break
+          
+          prevErr = nextErr
+        
+        # calculate R^2 value
+        mean = numeric.sum(ys) / ys.length
+        SStot = numeric.sum(ys.map((y) -> (y - mean)*(y - mean)))
+        R2 = (1 - prevErr / SStot)
+        
+        [Ps, R2]
+      
+      ###
+      Inner loop of Newton-gauss method
+      ###
+      iterateNLLS = (func, xs, ys, Ps) ->
+        
+        residuals = numeric.sub(ys, xs.map((x) -> func[0](x, Ps)))
+        jac = jacobian(func, xs, Ps)
+        jacT = numeric.transpose jac
+        
+        # dP = (JT*J)^-1 * JT * r
+        deltaPs = numeric.dot(numeric.dot(numeric.inv(numeric.dot(jacT, jac)), 
+                                          jacT), 
+                              residuals)
+        
+        deltaPs
+      
+      ###
+      Calculates the current squared error for the given function, parameters and ground truth.
+      ###
+      sqe = (func, xs, ys, Ps) ->
+        numeric.sum(numeric.sub(ys, xs.map((x) -> func[0](x, Ps))).map (x) -> x*x)
+      
+      
