@@ -4,10 +4,9 @@
 </script>
 
 <% if is_admin? %>
-  <div class="span12">
+  <div class="col-lg-12">
     <p><%= link_to "Add News Item", '/news/add' %></p>
   </div>
-  <div class="clearfix">&nbsp;</div>
 <% end %>
 
 <% @news.each do |n| %>

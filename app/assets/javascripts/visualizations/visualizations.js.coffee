@@ -3,7 +3,7 @@ $ ->
     
     ### Maximize event ###
     fullscreen = () ->      
-      ($ '#title_bar').hide()  
+      ($ '.navbar').hide()  
       ($ '#dataset_info').hide()
       ($ '#title_row').hide() 
       ($ '.footer').hide() 
@@ -12,7 +12,7 @@ $ ->
 
     ### Minimize event ###
     unfullscreen = () ->
-      ($ '#title_bar').show()
+      ($ '.navbar').show()
       ($ '#dataset_info').show()
       ($ '#title_row').show() 
       ($ '.footer').show()

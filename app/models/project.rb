@@ -1,3 +1,5 @@
+require 'nokogiri'
+
 class Project < ActiveRecord::Base
   
   include ApplicationHelper

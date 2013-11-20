@@ -2,16 +2,6 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-#visualizations_search
-{
-  width: 100%;
-}
-
-.search-query, .visualizations_sort_select
-{
-  width: 100%;
-}
-
 #tabcontainer {
   margin: 10px;
 }
@@ -40,7 +30,7 @@ ol.carousel-indicators
 
 @media print 
 {
-  #title_bar, .footer, #title_row
+  .footer, #title_row
   {
     display:none;
   }

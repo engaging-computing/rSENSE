@@ -2,6 +2,16 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+#manualTable
+{
+  td
+  {
+    max-width:100px;
+  }
+}
+
+//========Unverified CSS==============
+
 #collapseFields
 {
   width: 100%;
@@ -82,10 +92,6 @@ input.name_edit_box, input.unit_edit_box, .name_add_box, .unit_add_box, .type_ad
   padding: 2px 6px;
 }
 
-#projects_search
-{
-  width: 100%;
-}
 
 #notices, #lock_notice, #hidden_notice
 {
@@ -103,11 +109,6 @@ input.name_edit_box, input.unit_edit_box, .name_add_box, .unit_add_box, .type_ad
 .center
 {
   text-align: center;
-}
-
-.search-query, .projects_sort_select
-{
-  width: 100%;
 }
 
 button.finished_button

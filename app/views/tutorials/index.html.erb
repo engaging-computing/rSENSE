@@ -1,44 +1,48 @@
-<script>
-  window.logged_in = <%= @cur_user != nil %>;
-  window.is_admin = <%= is_admin? %>
-</script>
-
 <div class="row">
-  <div class="span12">
-    <div class="row">
-      <div class="span12">
-        <%= form_tag tutorials_path, method: 'get', id: 'tutorials_search', class: 'navbar-search' do%>
+  <div class="col-lg-12">
+    <div class="row padded-row">
+      <%= form_tag tutorials_path, method: 'get', id: 'tutorials_search', class: 'navbar-search' do%>
 
-          <!-- hidden input for pagination -->
-          <input type="text" id="hidden_pagination" name="page" value="1" style="display: none;" />
+        <!-- hidden input for pagination -->
+        <input type="text" id="hidden_pagination" name="page" value="1" style="display: none;" />
 
-          <div class="isotope-top">
+        <div class="isotope-top">
+          <div class="col-lg-12">
             <h1>Tutorials</h1>
-            <div class="order_selector">
-              <select name="sort" class="tutorials_sort_select">
-                <option value="DESC">Newest First</option>
-                <option value="ASC">Oldest First</option>
-              </select>
-            </div>
-            <div class="search_box">
-              <%= text_field_tag :search, params[:search], class:'search-query'%>
-            </div>
-            <div class="submit_button">
-              <%= submit_tag "Search", name: nil, class:'btn'%>
-            </div>
-            <div class="clear"></div>
           </div>
-        <%end%>
-      </div>
+          <div class="col-lg-4">
+            <select name="sort" class="tutorials_sort_select form-control">
+              <option value="DESC">Newest First</option>
+              <option value="ASC">Oldest First</option>
+            </select>
+          </div>
+          <div class="col-lg-6">
+            <%= text_field_tag :search, params[:search], class:'form-control'%>
+          </div>
+          <div class="col-lg-2">
+            <%= submit_tag "Search", name: nil, class:'btn btn-default'%>
+          </div>
+          <div class="clear" style="padding-bottom:10px"></div>
+        </div>
+      <%end%>
     </div>
+    <% if is_admin? %>
+      <div class="row">
+        <div class='col-lg-12 center'>
+          <div id="addProjectButton">
+            <button class="btn btn-success"><h4>Create Tutorial</h4></button>
+          </div>
+        </div>
+      </div>
+    <% end %>
     <div class="row">
-      <div id="tutorials" class="span12 isotope_container">
+      <div id="tutorials" class="col-lg-12 isotope_container">
         <div class="isotope_pane">
         </div>
       </div>
     </div>
     <div class="row" style="padding-top: 10px;">
-      <div class="span12">
+      <div class="col-lg-12">
         <div class="well text-center" id="load_tutorials">
           <h3 class="muted">Loading More <img src="/assets/spinner.gif" /></h3>
         </div>

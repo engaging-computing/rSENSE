@@ -599,52 +599,52 @@ class ProjectsController < ApplicationController
   
   def edit_fields
     @project = Project.find(params[:id])
-    
-    if params.has_key?(:new_field)
-      if params[:new_field] == "" 
-        @project.fields.each do |field| 
-          if !(field.update_attributes({name: params["#{field.id}_name"],unit: params["#{field.id}_unit"]} || ""))
-            respond_to do |format|
-              flash[:error] = "Field names must be uinque"
-              format.html and return
-            end
-          end
+  end
+
+  def save_fields
+    @project = Project.find(params[:id])
+
+    # Save all the fields
+    @project.fields.each do |field| 
+      if !(field.update_attributes({name: params["#{field.id}_name"],unit: params["#{field.id}_unit"]} || ""))
+        respond_to do |format|
+          flash[:error] = "Field names must be unique"
+          format.html
+          return
         end
-        redirect_to project_path(@project) and return
-      else   
-        #We added a field, add the field and save old params
-        @tmp_save = params
-        if(params[:new_field] == "Location")
-          latitude =  Field.new({project_id: @project.id,field_type: get_field_type("Latitude"),name: "Latitude"  })
-          longitude =  Field.new({project_id: @project.id,field_type: get_field_type("Longitude"),name: "Longitude"  })
-          respond_to do |format|
-            if latitude.save && longitude.save
-              format.html
-            else
-              flash[:error] = latitude.errors.full_messages()
-              format.html
-            end
-          end
-        else
-          next_name = Field.get_next_name(@project,get_field_type(params[:new_field]))
-          field = Field.new({project_id: @project.id,field_type: get_field_type(params[:new_field]),name: next_name  })
-          respond_to do |format|
-            if field.save
-              format.html
-            else
-              flash[:error] = field.errors.full_messages()
-              format.html
-            end
-          end
-        end
-      end
-    else
-      respond_to do |format|
-        format.html
       end
     end
+
+    # If there's a new field, add it.
+    field_type = params[:new_field]
+
+    if field_type == "Location"
+      latitude  = Field.new({project_id: @project.id, field_type: get_field_type("Latitude"), name: "Latitude"})
+      longitude = Field.new({project_id: @project.id, field_type: get_field_type("Longitude"), name: "Longitude"})
+ 
+      unless latitude.save && longitude.save
+        flash[:error] = "#{latitude.errors.full_messages()}\n\n#{longitude.errors.full_messages()}"
+        redirect_to "/projects/#{@project.id}/edit_fields"
+        return
+      end
+    elsif field_type != ""
+      next_name = Field.get_next_name(@project,get_field_type(params[:new_field]))
+      field = Field.new({project_id: @project.id, field_type: get_field_type(field_type), name: next_name})
+
+      unless field.save
+        flash[:error] = field.errors.full_messages()
+        redirect_to "/projects/#{@project.id}/edit_fields"
+        return
+      end
+    end
+
+    if field_type == ""
+      redirect_to project_path(@project), notice: "Changes to fields saved."
+    else
+      redirect_to "/projects/#{@project.id}/edit_fields", notice: "Field added"
+    end
   end
-  
+
   def templateUpload
     @project = Project.find(params[:id])
     @options = [['Timestamp',get_field_type('Timestamp')],['Number',get_field_type('Number')],['Text',get_field_type('Text')],['Latitude',get_field_type('Latitude')],['Longitude',get_field_type('Longitude')]]
