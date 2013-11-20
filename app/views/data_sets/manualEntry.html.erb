@@ -7,9 +7,9 @@
 <div class="full_width_edit" style="font-size:2em;"><%= project_edit_helper 'title', can_edit?(@project), true %></div>
 
 <div class="row">
-  <div style="margin-bottom:20px" class="span12">
+  <div style="margin-bottom:20px" class="col-lg-12">
     <div style="overflow-x: auto;">
-      <table id="manualTable" data-project-id="<%= @project.id %>">
+      <table id="manualTable" data-project-id="<%= @project.id %>" class="table table-bordered table-striped">
         <thead>
           <tr>
           <% for field in @project.fields %>

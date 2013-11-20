@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html style="margin:0;padding:0;height:100%;">
+<html style="height:100%;">
   <head>
     <title> <%= render_title %> </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,96 +18,58 @@
 
     <div style="min-height:100%;position:relative;">
       <!-- The title bar -->
-      <div id="title_bar">
-        <div class="container">
-          
-          <!-- iSENSE Logos for both layouts -->
-          <div style="float:left;line-height:43px;">
-            <a href="/">
-              <img class="visible-desktop visible-tablet" src="/assets/isense-logo.png" style="height:35px;width:144px;" />
-              <img class="visible-phone" src="/assets/isense-logo.png" style="height:25px;width:103px;margin-left:10px;" />
-            </a>
-          </div>
-          
-          <div style="float:left;vertical-align:text-bottom;height:50px;font-size:15px;">
-            
-            <div class="visible-desktop visible-tablet" style="margin-left:10px;height:50px;">
-              <a class="navbar-btn" href="/news"><i class="icon-book icon-white"></i> News</a>
-              <a class="navbar-btn" href="/projects"><i class="icon-folder-open icon-white"></i> Projects</a>
-              <a class="navbar-btn" href="/visualizations"><i class="icon-picture icon-white"></i> Visualizations</a>
-              <a class="navbar-btn" href="/tutorials"><i class="icon-info-sign icon-white"></i> Tutorials <img src="/assets/arrow_down.png"></a>
-              <ul class="ddmenu">
+      <nav class="navbar navbar-default navbar-static-top" role="navigation">
+        <div class="container"><!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/"><img src="/assets/isense-logo.png" style="height:35px;"></a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li class="navbtn"><%=link_to news_index_path do %><i class='fa fa-book'></i> News<%end%></li>
+            <li class="navbtn"><%=link_to projects_path do %><i class='fa fa-folder-open'></i> Projects<%end%></li>
+            <li class="navbtn"><%=link_to visualizations_path do %><i class='fa fa-picture-o'></i> Visualizations<%end%></li>
+            <li class="dropdown navbtn">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-info-circle"></i> Tutorials <b class="caret"></b></a>
+              <ul class="dropdown-menu">
                 <% get_featured_tutorials.each do |tutorial|%>
                   <li><%= link_to tutorial.title, tutorial_path(tutorial)%></li>
-                <% end %>                
+                <% end %> 
               </ul>
-            </div>
-          </div>
-          
-          <!-- Pillbox Menu for both layouts -->
-          <div class="visible-desktop">
-            <div class="pillbox desktop-tablet">
-              <% if @cur_user == nil %>
-                  <%= link_to 'Login', login_path(), method: :get, class: " login navbar-btn" %>
-                  <a href="<%= new_user_path %>" class="navbar-btn">Register</a>
-              <% else %>
-                  <a class="navbar-btn" href="<%= user_path(@cur_user) %>"><%= @cur_user.name %></a>
-                  <%= link_to 'Logout', login_path(), method: :delete, class: "navbar-btn" %> 
-              <% end %>
-            </div>
-          </div>
-          
-          <div class="visible-phone visible-tablet">
-            <div class="pillbox phone">
-              <!--<button type="button" class="btn btn-inverse" style="margin-right: 20px; margin-top: 10px;">
-                <a href="#"><i class="icon-search icon-white"> </i> </a>
-              </button>-->
-                  
-              <button type="button" id="mobile_menu_trigger" class="btn btn-primary" style="margin-right: 20px; margin-top: 10px;"><i class="icon-align-justify icon-white"></i></button>  
-            </div>
-          </div>
+            </li>
+            <% if is_admin? %>
+              <li class="navbtn"><%= link_to users_path do%><i class="fa fa-users"></i> Users<%end%></li>
+            <% end %>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <% if @cur_user.try(:id) %>
+              <li class="navbtn"><%= link_to @cur_user.name, user_path(@cur_user)%></li>
+              <li class="divider"></li>
+              <li class="navbtn"><%= link_to "Logout", login_path, method: :delete%></li>
+            <% else %>
+              <li class="navbtn"><%= link_to "Login", login_path(), method: :get%></li>
+              <li class="divider"></li>
+              <li class="navbtn"><%= link_to "Register", new_user_path %></li>
+            <% end %>
+          </ul>
+        </div><!-- /.navbar-collapse -->
         </div>
-      </div>
-
+      </nav>
+      
       <!-- Main Container -->
-      <div id="outer" style="padding:0px 0px 70px 0px; margin:0; min-height:100%; <%= @layout_wide ? 'margin-right:40px;' : '' %>">
+      <div id="outer" style="padding:0px 0px 70px 0px; margin:0; min-height:100%;">
         <div class="container mainContent <%= @layout_wide ? 'mc-wide' : '' %>" data-role="page">
           <%= bootstrap_flash %>
           <%= yield %>
         </div>
       </div>
-      
-      <!-- Mobile Menu -->
-      <div class="hidden-desktop" style="float: left;">
-        <div id="mobile_menu" data-role="panel" style="z-index: 10;">
-       
-          <ul class="nav nav-list">
-         
-            <li class="nav-header">My Stuff</li>
-         
-            <% if @cur_user == nil %>
-              <li><a href="" class="login">Login</a></li>
-              <li><a href="<%= new_user_path %>">Register</a></li>
-            <% else %>
-              <li><a href="<%= user_path(@cur_user) %>"><%= @cur_user.name %></a></li>
-              <li><%= link_to 'Logout', login_path(), method: :delete %></li>
-            <% end %>
-           
-            <li class="nav-header">Navigation</li>
-            <li class="active"><a href="/"><i class="icon-home icon-white"></i>Home</a></li>
-            <li><a href="/news"><i class="icon-book icon-white"></i>News</a></li>
-            <li class="nav-header nav-divider"><hr /></li>
-            <li><a href="/projects"><i class="icon-folder-open icon-white"></i>Projects</a></li>
-            <li class="nav-header nav-divider"><hr /></li>
-            <li><a href="/visualizations"><i class="icon-picture icon-white"></i>Visualizations</a></li>
-            <li class="nav-header nav-divider"><hr /></li>
-            <li><a href="/tutorials"><i class="icon-info-sign icon-white"></i>Tutorials</a></li>
-
-          </ul>
-       
-        </div>
-      </div>
-       
             
       <!-- Footer -->      
       <div class="footer">
@@ -115,8 +77,6 @@
         <p>Our work is supported by grants <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0735597">DRL-0735597</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0735592">DRL-0735592</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0546513">DRL-0546513</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=1123998">IIS-1123998</a>, and <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=1123972">IIS-1123972</a> from the National Science Foundation and a gift from Google Inc.</p>
         <p><%= @version %></p>
       </div>
-
     </div>
-
   </body>
 </html>

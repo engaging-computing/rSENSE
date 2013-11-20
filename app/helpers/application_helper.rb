@@ -80,7 +80,9 @@ module ApplicationHelper
     end
 
     case obj
-    when User, Project, Tutorial, News
+    when Project
+      @cur_user.try(:admin) || (obj.owner == @cur_user && obj.data_sets.count == 0)
+    when User, Tutorial, News
       @cur_user.try(:admin)
     when DataSet, Visualization
       ((obj.owner.id == @cur_user.try(:id)) && obj.project.lock == false) || @cur_user.try(:admin)

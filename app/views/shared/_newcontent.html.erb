@@ -2,7 +2,7 @@
   
   <% if has_content %>
     <% if can_edit %>
-      <div style="width:100%;min-height:200px" class="content ckeditor" can_edit="<%=can_edit%>" type="<%=type%>" row_id="<%=row_id%>" field="<%=field%>">
+      <div style="width:100%;min-height:200px" class="content ckeditor word-break" can_edit="<%=can_edit%>" type="<%=type%>" row_id="<%=row_id%>" field="<%=field%>">
         <%= raw content%>
       </div>  
       <div class="clear"></div>
@@ -11,7 +11,9 @@
         <button class="btn btn-danger center" style="display:none" id="content_cancel_button">Cancel</button>
       </div>
     <% else %>
-      <%= raw content%>
+      <div class="word-break">
+        <%= raw content%>
+      </div>
     <% end %>
   <% else %>
     <% if can_edit%>
@@ -24,7 +26,7 @@
         <button class="btn btn-danger center" style="display:none" id="content_cancel_button">Cancel</button>
       </div>
     <% else %>
-      <img src="/assets/contentplaceholder.png" style="margin:0px;padding:0px;"></img>
+      <img class="full-image" src="/assets/contentplaceholder.png"></img>
     <% end %>  
   <% end %>
 </div>    
