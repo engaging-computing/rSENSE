@@ -15,7 +15,11 @@
           <div id="notices">
             <span id="lock_notice" <%if !@project.lock%>style="display:none"<%end%>><i class="icon-lock"> This project is locked</i></span> 
             <span id="hidden_notice" <%if !@project.hidden%>style="display:none"<%end%>><i class="icon-eye-close"> This project is hidden</i></span> 
-            <span id="id_notice" <% if @project.hidden || @project.lock%>style="display:none"<% end %>>Project #: <%= @project.id %></span>
+            <span id="id_notice" <% if @project.hidden || @project.lock%>style="display:none"<% end %>>
+              <i class="fa fa-eye"></i> Views: <%= @project.views %>
+              &nbsp; &nbsp; &nbsp;
+              Project #: <%= @project.id %>
+            </span>
           </div>
           <%if !@cloned_project.nil? %>
                   <span class="info_label" style="font-size:1.1em">Cloned From:</span>

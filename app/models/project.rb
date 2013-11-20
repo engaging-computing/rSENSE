@@ -21,6 +21,8 @@ class Project < ActiveRecord::Base
   has_many :likes
   has_many :visualizations
 
+  has_one :view_count
+
   belongs_to :user
   
   alias_attribute :name, :title
@@ -65,6 +67,18 @@ class Project < ActiveRecord::Base
     else
       all
     end
+  end
+
+  def add_view!
+    vc = view_count
+    vc = ViewCount.create({project_id: id}) unless vc
+    vc.count = vc.count + 1
+    vc.save!
+  end
+
+  def views
+    return 0 if view_count.nil?
+    view_count.count
   end
   
   def to_hash(recurse = true)
