@@ -80,7 +80,7 @@ class TutorialsController < ApplicationController
     @tutorial = Tutorial.find(params[:id])
     editUpdate  = params[:tutorial]
     hideUpdate  = editUpdate.extract_keys!([:hidden])
-    adminUpdate = editUpdate.extract_keys!([:featured_number])
+    adminUpdate = editUpdate.extract_keys!([:featured])
     success = false
     
     #EDIT REQUEST
@@ -95,6 +95,14 @@ class TutorialsController < ApplicationController
     
     #ADMIN REQUEST
     if can_admin?(@tutorial)
+      if adminUpdate.has_key?(:featured)
+        if adminUpdate['featured'] == "1"
+          adminUpdate['featured_at'] = Time.now()
+        else
+          adminUpdate['featured_at'] = nil
+        end
+      end
+    
       success = @tutorial.update_attributes(adminUpdate)
     end
 
@@ -131,39 +139,6 @@ class TutorialsController < ApplicationController
     else
       respond_to do |format|
         format.html { redirect_to 'public/401.html' }
-        format.json { render json: {}, status: :forbidden }
-      end
-    end
-  end
-  
-  # /tutorials/switch/
-  # Switches between which tutorials are featured
-  def switch
-    new_tutorial = Tutorial.find(params[:tutorial])
-    old_tutorial = Tutorial.where("featured_number = ?",params[:selected]).first || nil
-
-    if can_admin?(new_tutorial) && (old_tutorial.nil? || can_admin?(old_tutorial))
-      if !(old_tutorial == nil)
-        old_tutorial.featured_number = nil
-        old_tutorial.save
-      end
-      
-      new_tutorial.featured_number = params[:selected].to_i    
-      
-      if new_tutorial.save
-        respond_to do |format|
-          format.json { render json: {}, status: :ok }
-        end
-      else
-        logger.info "Apparently that tutorial isn't good enough"
-        logger.info new_tutorial.errors
-        respond_to do |format|
-          format.json {render json: new_tutorial.errors, status: :unprocessable_entity}
-        end
-      end
-    else
-      respond_to do |format|
-        logger.info "Sorry, your face can't switch tutorials"
         format.json { render json: {}, status: :forbidden }
       end
     end
