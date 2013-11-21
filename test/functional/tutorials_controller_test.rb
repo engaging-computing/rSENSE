@@ -31,7 +31,7 @@ class TutorialsControllerTest < ActionController::TestCase
   end
 
   test "should update tutorial" do
-    put :update, { id: @tutorial, tutorial: { content: @tutorial.content, title: @tutorial.title } }, 
+    put :update, { id: @tutorial, tutorial: { content: @tutorial.content, title: @tutorial.title, featured: true } }, 
       { user_id: @nixon }
     assert_redirected_to tutorial_path(assigns(:tutorial))
   end
@@ -44,8 +44,4 @@ class TutorialsControllerTest < ActionController::TestCase
     assert_redirected_to tutorials_path
   end
 
-  test "should set featured tutorial" do
-    post :switch, { format: 'json', tutorial: @tutorial, selected: 1 }, { user_id: @nixon }
-    assert_response :success
-  end
 end

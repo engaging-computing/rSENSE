@@ -3,9 +3,11 @@
 one:
   content: MyText
   title: MyString
+  featured: false
   user: kate
 
 two:
   content: MyText
   title: MyString
+  featured: false
   user: kate
