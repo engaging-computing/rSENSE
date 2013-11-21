@@ -260,7 +260,10 @@ $ ->
                             data.timeType = data.GEO_TIME
                           
                     when data.types.TEXT
-                        NaN
+                        if dp[fIndex] == null 
+                          dp[fIndex] = ""
+                        else
+                          NaN
                     else
                         if (isNaN (Number dp[fIndex])) or (dp[fIndex] == "") or (dp[fIndex] == null)
                           dp[fIndex] = null
