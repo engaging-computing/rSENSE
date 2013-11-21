@@ -251,6 +251,7 @@ $ ->
                     # Strip all quote characters
                     dp[fIndex] = dp[fIndex].replace /"/g, ""
                     dp[fIndex] = dp[fIndex].replace /'/g, ""
+                    dp[fIndex] = dp[fIndex].strip()
 
                 switch Number field.typeID
                     when data.types.TIME
