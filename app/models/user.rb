@@ -7,7 +7,8 @@ class User < ActiveRecord::Base
   attr_accessible :content, :email, :firstname, :lastname, :password, :password_confirmation, :username, :validated, :hidden, :bio, :last_login
 
   validates_uniqueness_of :email, case_sensitive: false, if: :email?
-  validates :username, uniqueness: true, format: { with: /\A\p{Alnum}*\z/, message: "can only contain letters and numbers." }
+  validates_uniqueness_of :username, case_sensitive: false
+  validates :username, format: { with: /\A\p{Alnum}*\z/, message: "can only contain letters and numbers." }
   validates :firstname, format: {with: /\A[\p{Alpha}\p{Blank}\-\']*\z/, message: "can only contain letters, hyphens, single quotes, and spaces."}
   validates :lastname, format: {with: /\A[\p{Alpha}\p{Blank}\-\']*\z/, message: "can only contain letters, hyphens, single quotes, and spaces."}
   
