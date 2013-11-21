@@ -16,18 +16,25 @@
           <div id="notices">
             <span id="lock_notice" <%if !@project.lock%>style="display:none"<%end%>><i class="icon-lock"> This project is locked</i></span> 
             <span id="hidden_notice" <%if !@project.hidden%>style="display:none"<%end%>><i class="icon-eye-close"> This project is hidden</i></span> 
-            <span id="id_notice" <% if @project.hidden || @project.lock%>style="display:none"<% end %>>Project #: <%= @project.id %></span>
+           <span id="id_notice" <% if @project.hidden || @project.lock%>style="display:none"<% end %>>
+              Project #: <%= @project.id %>
+            </span>
           </div>
           <%if !@cloned_project.nil? %>
             <span class="info_label" style="font-size:1.1em">Cloned From:</span>
             <%=link_to @cloned_project.title, project_path(@cloned_project.id)%><br>
           <%end%>
-          <%if @cur_user.try(:id)%>
-            <div class="btn-group likes" project_id="<%= @project.id%>">
+          <div class="btn-group likes" project_id="<%= @project.id%>">
+            <%if @cur_user.try(:id)%>
               <button type="button" class="btn btn-default liked_status <% if @liked_by_cur_user%>active<%end%>" href="#" data-toggle="button"><i class="fa fa-thumbs-up"></i> Like</button>
               <button type="button" class="btn btn-default like_display" disabled> <%= @likes %></button>
-            </div>
-          <%end%>
+            <%end%>
+            <span style="padding-left: 1em">
+            <button type="button" class="btn btn-default like_display" disabled>
+              <i class="fa fa-eye"></i> <%= @project.views %>
+            </button>
+            </span>
+          </div>
         </div>
       </div>
     </div>

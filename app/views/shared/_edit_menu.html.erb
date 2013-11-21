@@ -48,6 +48,9 @@
             <li role="presentation" class="menu_unlock" <% if not obj.lock %> style="display:none"<%end%> >
               <a class="menu_unlock" role="menuitem" href="#"><i class="fa fa-unlock"></i> Unlock Project </a>
             </li>
+            <li role="presentation" class="menu_print">
+              <a class="menu_print" role="menuitem" href="<%=url_for obj%>/printable"><i class="fa fa-print"></i> Print</a>
+            </li>
           <% end %>
 
           <% if is_admin? && obj.is_a?(Project)%>
