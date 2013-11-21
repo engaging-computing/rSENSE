@@ -303,6 +303,7 @@ $ ->
                     itemStyle:
                       width: 140
                       cursor: 'default'
+                      whiteSpace: 'prewrap'
                 #loading: {}
                 plotOptions:
                     series:
@@ -392,6 +393,7 @@ $ ->
 
             #Draw legend
             for options in @buildLegendSeries()
+              options.name = options.name.replace(/(.{1})/g,"$1&#8203;") + " "
               @chart.addSeries options, false
             
         ###
