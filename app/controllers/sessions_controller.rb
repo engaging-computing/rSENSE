@@ -6,13 +6,11 @@ class SessionsController < ApplicationController
   #GET /sessions/new
   def new
     
-    if request.referrer
+    if request.referrer && !(URI(request.referrer).path == login_path)
       session[:redirect_to] = request.referrer
     else
       session[:redirect_to] = "/home/index"
     end
-    
-    logger.info flash[:redirect_to]
     
   end
   
