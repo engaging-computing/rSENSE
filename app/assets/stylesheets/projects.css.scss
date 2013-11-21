@@ -46,8 +46,12 @@
     }
   }
 }
-
-
+.ui-autocomplete {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1510 !important;
+}
 
 //========Unverified CSS==============
 
