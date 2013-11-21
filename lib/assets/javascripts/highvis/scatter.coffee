@@ -48,6 +48,9 @@ $ ->
             @xAxis = data.normalFields[0]
 
             @advancedTooltips = 0
+                               
+            #Do the cool existential operator thing
+            @savedRegressions ?= []
 
             @xBounds =
                 dataMax: undefined
@@ -563,9 +566,10 @@ $ ->
             ($ "#regressionButton").click =>
 
               #Make the title for the tooltip
+              x_axis_name = fieldTitle(data.fields[@xAxis])
               y_axis_name = ($ '#regressionYAxisSelector option:selected').text()
               name = "<strong>#{y_axis_name}</strong> as a #{($ '#regressionSelector option:selected').text().toLowerCase()} "
-              name += "function of <strong>#{fieldTitle(data.fields[@xAxis])}</strong>"
+              name += "function of <strong>#{x_axis_name}</strong>"
               
               #Get the current selected y index, the regression type, and the current group index
               y_axis_index = Number(($ '#regressionYAxisSelector').val())
@@ -589,10 +593,26 @@ $ ->
                 name,
                 dash_style
                 )
-                
+              
+              #Add the series
               @chart.addSeries(new_regression)
               
-              #Save a regression TODO
+              #Prepare to save regression fields
+              saved_regression =
+                type:
+                  regression_type
+                id:
+                  savedRegressions.length
+                fieldIndices:
+                  [@xAxis, y_axis_index, group_index]
+                fieldNames:
+                  [x_axis_name, y_axis_name]
+                series:
+                  new_regression
+              
+              #Save a regression
+              @savedRegressions.push(saved_regression)
+                
               return
             
             #Set up accordion
@@ -610,7 +630,3 @@ $ ->
         globals.scatter = new Scatter "scatter_canvas"
     else
         globals.scatter = new DisabledVis "scatter_canvas"
-        
-    
-
-    
