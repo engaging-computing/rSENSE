@@ -32,7 +32,7 @@ $ ->
     if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
 
       # Regression Types
-      # Regression functions are listed with thier partial derrivitives, eg.
+      # Regression functions are listed with their partial derrivitives, eg.
       #
       # [f(x,Ps), f(x,Ps) dPs[0], f(x,Ps) dPs[1] ,... , f(x,Ps) dPs[dPs.length]]
       
@@ -81,7 +81,7 @@ $ ->
       ###
       Calculates a regression and returns it as a highcharts series.
       ###
-      globals.getRegression = (xs, ys, type, x_bounds, series_name) ->
+      globals.getRegression = (xs, ys, type, x_bounds, series_name, dash_style) ->
         Ps = []
         func = globals.REGRESSION.FUNCS[type]
         
@@ -106,12 +106,12 @@ $ ->
         
         # Calculate the regression, and return a highcharts series object
         [Ps, R2] = NLLS(func, xs, ys, Ps)
-        generateHighchartsSeries(Ps, R2, type, x_bounds, series_name)
+        generateHighchartsSeries(Ps, R2, type, x_bounds, series_name, dash_style)
       
       ###
       Returns a series object to draw on the chart canvas.
       ###
-      generateHighchartsSeries = (Ps, R2, type, x_bounds, series_name) ->
+      generateHighchartsSeries = (Ps, R2, type, x_bounds, series_name, dash_style) ->
       
         data = for i in [0..globals.REGRESSION.NUM_POINTS]
           x = (i / globals.REGRESSION.NUM_POINTS) * (x_bounds.dataMax - x_bounds.dataMin) + x_bounds.dataMin
@@ -191,7 +191,7 @@ $ ->
             <div class="regressionTooltip"> #{series_name} </div>
             <br>
             <strong>
-              f(x) = #{Ps[1]}ln(x + #{Ps[2]}) + #{Ps[0]}
+              f(x) = #{Ps[1]} ln(x + #{Ps[2]}) + #{Ps[0]}
             </strong>
             """
             
@@ -266,7 +266,6 @@ $ ->
           
           # Break early if the error ratio has dropped below the threshold
           if (prevErr - nextErr) / prevErr < NLLS_THRESH
-            console.log "Finished after #{iter} iterations"
             break
           
           prevErr = nextErr
