@@ -5,18 +5,6 @@
 </div>
   
 <div class="row">
-  <% if is_admin? %>
-    <div class="span4">
-      <label for="#feature_tutorial_dropdown"><b>Featured Order:</b>
-        <select class="selectpicker" id="feature_tutorial_dropdown" tutorial_id="<%=@tutorial.id%>">
-          <%= options_for_select([['Select One',nil],['1',1],['2',2],['3',3],['4',4],['5',5]],@tutorial.featured_number)%>
-        </select>
-      </label>
-    </div>
-  <%end%>
-</div>
-  
-<div class="row">
   <%=render layout: "shared/box", locals: {title: 'Description', width: '12', unique_id: 'description', should_hide: false} do %>
     <%= tutorial_content_helper (can_edit? @tutorial) %>
   <%end%>

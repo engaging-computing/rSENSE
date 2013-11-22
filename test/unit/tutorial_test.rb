@@ -19,9 +19,9 @@ class TutorialTest < ActiveSupport::TestCase
     assert_default_false( @tutorial, @tutorial.hidden )
   end
   
-  # Passes if featured_number is nil
-  test "featured_number is nil" do
-  	assert_default_nil( @tutorial, @tutorial.featured_number)
+  # Passes if featured is false
+  test "featured is false" do
+    assert_default_false( @tutorial, @tutorial.featured )
   end
   	
 end

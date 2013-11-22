@@ -18,7 +18,10 @@
       <div class="field">
         Title: <%= f.text_field :title %>
       </div>
-      <div class="clear"></div>
+      <div class="field">
+        Featured: <%= f.check_box :featured %>
+      </div>    
+      <div class="clear"><br></div>
       <div class="actions">
         <%= f.submit %>
       </div>

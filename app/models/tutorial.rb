@@ -6,14 +6,13 @@ class Tutorial < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
 
   
-  attr_accessible :content, :title, :featured_number, :user_id, :hidden, :featured_media_id
+  attr_accessible :content, :title, :featured, :user_id, :hidden, :featured_media_id, :featured_at
 
   has_many :media_objects
   
   validates_presence_of :title
   validates_presence_of :user_id
   
-  validates_uniqueness_of :featured_number, :allow_nil => true
   validates :title, length: {maximum: 128}
   
   has_many :media_objects
@@ -55,6 +54,7 @@ class Tutorial < ActiveRecord::Base
     h = {
       id: self.id,
       name: self.name,
+      featured: self.featured,
       path: UrlGenerator.new.tutorial_path(self),
       url: UrlGenerator.new.tutorial_url(self),
       hidden: self.hidden,
