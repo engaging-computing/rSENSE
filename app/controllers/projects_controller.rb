@@ -619,8 +619,8 @@ class ProjectsController < ApplicationController
     field_type = params[:new_field]
 
     if field_type == "Location"
-      latitude  = Field.new({project_id: @project.id, field_type: get_field_type("Latitude"), name: "Latitude"})
-      longitude = Field.new({project_id: @project.id, field_type: get_field_type("Longitude"), name: "Longitude"})
+      latitude  = Field.new({project_id: @project.id, field_type: get_field_type("Latitude"), name: "Latitude", unit: "deg"})
+      longitude = Field.new({project_id: @project.id, field_type: get_field_type("Longitude"), name: "Longitude", unit:"deg"})
  
       unless latitude.save && longitude.save
         flash[:error] = "#{latitude.errors.full_messages()}\n\n#{longitude.errors.full_messages()}"
