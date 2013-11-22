@@ -5,7 +5,8 @@ $ ->
   csrf_param = $('meta[name=csrf-param]').attr('content');
   
   turn_on_ck = (elem) =>
-    root = ($ elem).parents('div.content_holder')
+    root = ($ elem).parents('div.box-content')
+    root.css('padding',"0px")
     row_id = ($ elem).attr('row_id')
     type = ($ elem).attr('type')
     field = ($ elem).attr('field')
@@ -30,12 +31,14 @@ $ ->
       cancelButton.show()
       
       cancelButton.click =>
+        root.css('padding',"20px")
         editor.destroy()
         root.find('div.content').html(root.attr('saved-data'))
         saveButton.hide()
         cancelButton.hide()
       
       saveButton.click =>
+        root.css('padding',"20px")
         value = editor.getData()
         data = {}
         data[type] = {}

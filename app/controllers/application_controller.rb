@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   
   before_filter :get_user
   before_filter :authorize
- 
+   
   def get_user
     @cur_user = User.find_by_id(session[:user_id])
     @namespace = {action: params[:action], controller: params[:controller]}
