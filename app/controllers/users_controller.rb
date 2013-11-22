@@ -355,11 +355,11 @@ class UsersController < ApplicationController
   def pw_send_key
     @sent = false
 
-    key = params[:username_or_email]
+    key = params[:username_or_email].downcase
 
-    @user = User.find_by_email(key)
+    @user = User.where("lower(email) = ?", key).first
     if @user.nil?
-      @user = User.find_by_username(key)
+      @user = User.where("lower(username) = ?", key).first
       if @user.nil?
         @reason = "No such user found."
         return

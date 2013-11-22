@@ -237,3 +237,10 @@ $ ->
               recolored = true
               
               
+    ###
+    # Print for page
+    ###
+    ($ '#print').click (e) ->
+      e.preventDefault()
+      window.print()
+      

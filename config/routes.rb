@@ -64,7 +64,6 @@ Rsense::Application.routes.draw do
   post "/projects/:id/templateUpload", to: "projects#templateUpload"
   post "/projects/:id/finishTemplateUpload", to: "projects#finishTemplateUpload"
   put "/projects/:id/removeField" => "projects#removeField"
-  get "/projects/:id/printable" => "projects#printable"
   
   post "/media_objects/saveMedia/*keys" => "media_objects#saveMedia"
 

@@ -4,8 +4,10 @@ $ ->
     if isNaN Number event.target.value
       ($ @).addClass 'invalid'
       ($ @).popover
-        content: "Not a valid number"
-      ($ @).popover 'show'  
+        content: "Not a valid number."
+        trigger: "focus"
+        placement: "top"
+        container: "body"
     else
       ($ @).removeClass 'invalid'
       ($ @).popover("destroy")
@@ -17,8 +19,10 @@ $ ->
     if (isNaN val) or ((Math.abs val) > 90)
       ($ @).addClass 'invalid'
       ($ @).popover
-        content: "Not a valid latitude"
-      ($ @).popover 'show'  
+        content: "Not a valid latitude."
+        trigger: "focus"
+        placement: "top"
+        container: "body"
     else
       ($ @).removeClass 'invalid'
       ($ @).popover("destroy")
@@ -30,8 +34,10 @@ $ ->
     if (isNaN val) or ((Math.abs val) > 180)
       ($ @).addClass 'invalid'
       ($ @).popover
-        content: "Not a valid longitude"
-      ($ @).popover 'show'    
+        content: "Not a valid longitude."
+        trigger: "focus"
+        placement: "top"
+        container: "body"
     else
       ($ @).removeClass 'invalid'
       ($ @).popover("destroy")
@@ -49,8 +55,10 @@ $ ->
       if (typeof dat is "number") and (isNaN dat)
         ($ @).addClass 'invalid'
         ($ @).popover
-          content: "Not a valid timestamp"
-        ($ @).popover 'show'    
+          content: "Not a valid timestamp."
+          trigger: "focus"
+          placement: "top"
+          container: "body"
       else
         ($ @).removeClass 'invalid'
         ($ @).popover("destroy")
