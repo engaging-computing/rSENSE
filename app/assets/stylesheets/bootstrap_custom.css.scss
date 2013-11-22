@@ -17,7 +17,7 @@ input[type="checkbox"]
  margin-bottom:0px;
  background-color: rgb(17,17,51);
  font-size: 1.2em;
- height: 55px;
+ height: 50px;
  
  .navbar-brand
  {
@@ -31,13 +31,6 @@ input[type="checkbox"]
  {
   color: white;
  }
- .navbtn
- {
-  a
-  { 
-    padding-top:20px;
-  }
- }
  .navbtn:hover
  {
   background-color: #649ce5;
@@ -46,10 +39,15 @@ input[type="checkbox"]
  { 
   background-color: white;
   color: black;
-  a:hover
+  margin-left:-1px;
+  li > a
   {
-   color: white;
-   background-color: #649ce5;  
+    padding: 10px 15px;
+  }
+  li:hover > a
+  {
+    background-color: #649ce5;
+    color: white;  
   }
  }
 }
