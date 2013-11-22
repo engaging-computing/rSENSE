@@ -525,44 +525,46 @@ $ ->
             if (globals.options? and globals.options.isEmbed?) and not @chart? 
               return
 
-            controls = '<div id="regressionControl" class="vis_controls">'
+            controls = 
+              """
+              <div id="regressionControl" class="vis_controls">
+              <h3 class='clean_shrink'><a href='#'>Regression Tools:</a></h3>
+              <div class='outer_control_div' style='text-align:center'>
 
-            controls += "<h3 class='clean_shrink'><a href='#'>Regression Tools:</a></h3>"
-            controls += "<div class='outer_control_div' style='text-align:center'>"
-            
-            #Add x axis label
-            controls += "<table><tr>"
-            controls += "<td style='text-align:left'>X Axis: </td>"
-            controls += "<td id='regressionXAxis' style='text-align:left'>#{fieldTitle(data.fields[@xAxis])}</td></tr>"
-
-            #Add y axis selector
-            controls += "<tr><td style='text-align:left'>Y Axis: </td>"
-            controls += "<td><select id='regressionYAxisSelector' class='control_select'>"
+              <table><tr>
+              <td style='text-align:left'>X Axis: </td>
+              <td id='regressionXAxis' style='text-align:left'>#{fieldTitle(data.fields[@xAxis])}</td></tr>
+              
+              <tr><td style='text-align:left'>Y Axis: </td>
+              <td><select id='regressionYAxisSelector' class='control_select'>
+              """
 
             for fieldIndex in globals.fieldSelection
               controls += "<option value='#{fieldIndex}'>#{fieldTitle(data.fields[fieldIndex])}</option>"
 
-            controls += "</select></td></tr>"
-            
-            #Add regression selector
-            controls += "<tr><td style='text-align:left'>Type: </td>"
-            controls += '<td><select id="regressionSelector" class="control_select">'
+            controls +=
+              """
+              </select></td></tr>
+              <tr><td style='text-align:left'>Type: </td>
+              <td><select id="regressionSelector" class="control_select">
+              """
 
             regressions = ['Linear', 'Quadratic', 'Cubic', 'Exponential', 'Logarithmic']
             for regression_type in regressions
               controls += "<option value='#{regressions.indexOf(regression_type)}'>#{regression_type}</option>"
 
-            controls += "</select></td></tr>"           
-            controls += "</table>"
-
-            controls += "<button id='regressionButton' class='save_button btn'>Draw Regression</button>"
-            controls += '</div></div>'
+            controls += 
+              """
+              </select></td></tr>           
+              </table>
+              <table id='regressionTable' class='regression_table'><tbody id='regressionTableBody'></tbody></table>
+              <button id='regressionButton' class='save_button btn'>Draw Regression</button>
+              </div></div>
+              """
 
             #Write HTML
             ($ '#controldiv').append controls
-
-            ($ "#regressionControl button").button()
-            
+            ($ "#regressionControl button").button()           
             ($ "#regressionButton").click =>
 
               #Make the title for the tooltip
@@ -597,22 +599,54 @@ $ ->
               #Add the series
               @chart.addSeries(new_regression)
               
+              #Get a unique identifier
+              regression_identifier = '';
+              count = 0;
+              for regression in @savedRegressions
+                if regression.type == regression_type \
+                and regression.field_indices[0] == @xAxis \
+                and regression.field_indices[1] == y_axis_index
+                  count++;
+              
+              if count
+                regression_identifier = '(' + count + ')'
+              
               #Prepare to save regression fields
               saved_regression =
                 type:
                   regression_type
                 id:
-                  savedRegressions.length
-                fieldIndices:
+                  'regression_' + @savedRegressions.length
+                field_indices:
                   [@xAxis, y_axis_index, group_index]
-                fieldNames:
+                field_names:
                   [x_axis_name, y_axis_name]
                 series:
                   new_regression
+                regression_id:
+                  regression_identifier
               
               #Save a regression
               @savedRegressions.push(saved_regression)
+              
+              #Add the saved regression to the table
+              regression_row =
+                """
+                <tr>
+                <td class='regression_rowdata'>Y: <strong>#{saved_regression.field_names[1]}</strong></td>
+                <td class='regression_rowdata'>Type: #{regressions[saved_regression.type]}#{saved_regression.regression_id}</td>
+                <td id='regression_#{saved_regression.id}' class='delete regression_remove'><i class='fa fa-times-circle'></i></td>
+                </tr>
+                """
                 
+              console.log('#' + saved_regression.id)
+              
+              ($ '#' + saved_regression.id).click() =>
+                console.log("Worked")
+                #($ '#regressionTableBody').remove(($ '#' + saved_regression.id).parent())
+                               
+              ($ '#regressionTableBody').append(regression_row)
+              
               return
             
             #Set up accordion
@@ -621,6 +655,7 @@ $ ->
             ($ '#regressionControl').accordion
                 collapsible:true
                 active:globals.regressionOpen
+                heightStyle:"content"
 
             ($ '#regressionControl > h3').click ->
                 globals.regressionOpen = (globals.regressionOpen + 1) % 2
