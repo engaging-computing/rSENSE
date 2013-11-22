@@ -31,7 +31,7 @@ class TutorialsControllerTest < ActionController::TestCase
   end
 
   test "should update tutorial" do
-    put :update, { id: @tutorial, tutorial: { content: @tutorial.content, title: @tutorial.title, featured: true } }, 
+    put :update, { id: @tutorial, tutorial: { content: @tutorial.content, title: @tutorial.title } }, 
       { user_id: @nixon }
     assert_redirected_to tutorial_path(assigns(:tutorial))
   end
