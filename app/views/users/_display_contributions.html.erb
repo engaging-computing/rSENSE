@@ -1,64 +1,43 @@
 <div style="display: none" id="mparams" lastPage="<%= @lastPage %>" totalPages="<%= @totalPages %>"></div>
 
- <% @contributions.each do |contribution| %>
-  <div class="<%= cycle('feed-even', 'feed-odd')%> contribution">
-
-    <div class="row-fluid word-break">
-    <h4><%= link_to contribution.title, url_for(contribution) %></h4>
-    
-    <div class="span6">
-      <b>Created: </b><%= time_ago_in_words(contribution.created_at)%> ago (on <%=contribution.created_at.strftime("%B %d, %Y")%>)<br>
-    
-      <% case contribution %>
-      <% when DataSet, Visualization %>
-      
-      <% when Project %>
-      
-      <% when MediaObject %>
-      
-      <% when Tutorial %>
-      
-      <%end%>
-    </div>
-    
-    <div class="pull-right" style="width:50px; text-align: center">
-      <% if can_delete? contribution %>
-        <a class="contribution_delete" type="<%= ActiveModel::Naming::param_key(contribution) %>" href="<%= url_for(contribution) %>">Delete</a>
-      <% else %>
-        &nbsp;
-      <% end %>
-    </div>
-    
-    <div class="pull-right" style="width:50px; text-align: center">
-      <% if can_hide? contribution %>
-        <% if contribution.hidden %>
-          <a class="contribution_unhide" type="<%= ActiveModel::Naming::param_key(contribution) %>" href="<%= url_for(contribution) %>">Unhide</a>
-        <% else %>
-          <a class="contribution_hide" type="<%= ActiveModel::Naming::param_key(contribution) %>" href="<%= url_for(contribution) %>">Hide</a>
-        <% end %>
-      <% else %>
-        &nbsp;
-      <% end %>
-    </div>
-    
-    <div class="pull-right" style="width:50px; text-align: center">
-      <% if (can_edit? contribution) && (contribution.kind_of? DataSet) %>
-        <!--   Just put the actual link here     -->
-        <a href="<%= url_for(contribution) + "/edit" %>">Edit</a>
-      <% else %>
-        &nbsp;
-      <% end %>
-    </div>
-        
-    <div class="pull-right" style="width:50px; text-align: center">
-      <% if contribution.kind_of? DataSet %>
-        <!--   Just put the actual link here     -->
-        <a href="/projects/<%= contribution.project.id %>/export/data_sets/<%= contribution.id %>">Export</a>
-      <% else %>
-        &nbsp;
-      <% end %>
-    </div>
-    
-    </div>
-  </div>
-<% end %> 
+<table class="table table-default table-striped">
+  <thead >
+    <tr>
+      <th>Title</th>
+      <th>Created</th>
+      <th class="center" colspan="4">Controls</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @contributions.each do |contribution|%>
+      <tr>
+        <td><%= link_to contribution.title, url_for(contribution) %></td>
+        <td><%= contribution.created_at.strftime("%B %d, %Y")%></td>
+        <td>
+          <% if contribution.kind_of? DataSet %>
+            <a href="/projects/<%= contribution.project.id %>/export/data_sets/<%= contribution.id %>">Export</a>
+          <% end %>  
+        </td>
+        <td>
+          <% if (can_edit? contribution) && (contribution.kind_of? DataSet) %>
+            <a href="<%= url_for(contribution) + "/edit" %>">Edit</a>
+          <% end %>
+        </td>
+        <td>
+          <% if can_hide? contribution %>
+            <% if contribution.hidden %>
+              <a class="contribution_unhide" type="<%= ActiveModel::Naming::param_key(contribution) %>" href="<%= url_for(contribution) %>">Unhide</a>
+            <% else %>
+              <a class="contribution_hide" type="<%= ActiveModel::Naming::param_key(contribution) %>" href="<%= url_for(contribution) %>">Hide</a>
+            <% end %>
+          <% end %>
+        </td>
+        <td class="delete">
+          <% if can_delete? contribution %>
+            <a class="contribution_delete" type="<%= ActiveModel::Naming::param_key(contribution) %>" href="<%= url_for(contribution) %>"><i class="fa fa-times-circle"></i> Delete</a>
+          <% end %>
+        </td>
+      </tr>      
+    <%end%>
+  </tbody>
+</table>  
