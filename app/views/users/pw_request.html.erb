@@ -1,10 +1,21 @@
-
-<h1>Reset Your Password</h1>
-
-<p>Enter your username or email below to reset your password.</p>
-
-<%= form_tag('/users/pw_send_key') do %><br>
-  <p><%= label_tag :username_or_email, "Username or Email:" %>
-    <%= text_field_tag :username_or_email %>
-  <p><%= submit_tag "Reset Password" %></p>
+<%= form_tag('/users/pw_send_key') do %>
+  <div class="row">
+    <div class="col-lg-6 col-lg-offset-3">
+      <div class="panel panel-default">  
+        <div class="panel-heading">
+          <h1>Reset Your Password</h1>
+        </div>  
+        <div class="panel-body">
+          <div class="form-group">
+            <%= label_tag :username_or_email, "Username or Email:" %>
+            <%= text_field_tag :username_or_email, nil, class: "form-control", placeholder: "Enter your username or email to reset your password." %>
+          </div>
+        </div> 
+        <div class="panel-footer">
+          <%= submit_tag "Reset Password", class: "btn btn-primary"%></p>
+        </div>
+      </div>
+    </div>  
+  </div>
 <% end %>
+

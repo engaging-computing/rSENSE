@@ -20,7 +20,7 @@
                   <% if field.field_type == get_field_type("Number")%>
                     <input class="input-small form-control" type="text" name="<%=field.id%>_unit" value="<%=field.unit%>">
                   <% else %>
-                    <%= field.unit%>
+                    <input class="input-small form-control" type="text" name="<%=field.id%>_unit" value="<%=field.unit%>" readonly>
                   <% end %>
                 </td>
                 <td class="center">
