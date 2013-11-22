@@ -34,10 +34,11 @@ $ ->
         dataType: 'json'
         error: ->
           ($ "#new_name_box").modal("hide")
+          ($ "#new_name_box").on('hidden.bs.modal', -> ($ "#new_name_box").remove())
           alert ("The project was created. Please delete it from the Projects page.")
         success: ->  
           ($ "#new_name_box").modal("hide")
-          ($ "#new_name_box").remove()
+          ($ "#new_name_box").on('hidden.bs.modal', -> ($ "#new_name_box").remove())
           window.location = escape_location
       
     ($ ".new_name_button").click (e) ->
