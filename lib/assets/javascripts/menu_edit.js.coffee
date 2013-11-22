@@ -221,16 +221,22 @@ $ ->
     summary = root.find('.summary')
     summary_text = summary.html()
     type = summary.attr("type")
-    summary_input = $ """<div class='input-append'>
-      <textarea id="appendInput" autofocus class='span8' rows='3' style='resize:none;overflow:hidden' maxlength='256'>#{summary_text.trim()}</textarea>
-      <span class='add-on btn btn-success summary_save' href=''><i class='icon-ok icon-white'></i></span>
-      </div>"""
+    summary_input = $ """
+      <div class="row">
+        <div class="col-md-8">
+          <div class='input-group'>
+            <textarea id="appendInput" autofocus class='form-control' rows='3' style='resize:none;overflow:hidden' maxlength='256'>#{summary_text.trim()}</textarea>
+            <span class='input-group-btn btn btn-success summary_save' href=''><i class='fa fa-floppy-o'></i></span>
+          </div>
+        </div>
+      </div>
+      """
     summary.html(summary_input)
     btn_height = summary.find('textarea').height()
     summary.find('.btn-success').height(btn_height)
     summary_input.find('.summary_save').click (e) ->
       e.preventDefault()
-      txt = ($ @).parents('.input-append').find('textarea').val()
+      txt = ($ @).parents('.input-group').find('textarea').val()
       data = {}
       data[type] = {}
       data[type]['summary'] = txt
