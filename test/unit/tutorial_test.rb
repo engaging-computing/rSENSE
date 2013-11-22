@@ -18,5 +18,10 @@ class TutorialTest < ActiveSupport::TestCase
   test "hidden is false" do
     assert_default_false( @tutorial, @tutorial.hidden )
   end
+  
+  # Passes if featured is false
+  test "featured is false" do
+    assert_default_false( @tutorial, @tutorial.featured )
+  end
   	
 end
