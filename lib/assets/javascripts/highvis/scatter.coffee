@@ -599,14 +599,15 @@ $ ->
               #Add the series
               @chart.addSeries(new_regression)
               
-              #Get a unique identifier
+              #Get a unique identifier (last highest count plus one)
               regression_identifier = '';
               count = 0;
               for regression in @savedRegressions
                 if regression.type == regression_type \
                 and regression.field_indices[0] == @xAxis \
-                and regression.field_indices[1] == y_axis_index
-                  count++;
+                and regression.field_indices[1] == y_axis_index \
+                and count <= regression.type_count
+                  count = regression.type_count + 1;
               
               if count
                 regression_identifier = '(' + count + ')'
@@ -614,9 +615,11 @@ $ ->
               #Prepare to save regression fields
               saved_regression =
                 type:
-                  regression_type
+                  regression_type               
                 id:
-                  'regression_' + @savedRegressions.length
+                  'regression_' + regression_type + '_' + count
+                type_count:
+                  count
                 field_indices:
                   [@xAxis, y_axis_index, group_index]
                 field_names:
@@ -635,17 +638,15 @@ $ ->
                 <tr>
                 <td class='regression_rowdata'>Y: <strong>#{saved_regression.field_names[1]}</strong></td>
                 <td class='regression_rowdata'>Type: #{regressions[saved_regression.type]}#{saved_regression.regression_id}</td>
-                <td id='regression_#{saved_regression.id}' class='delete regression_remove'><i class='fa fa-times-circle'></i></td>
+                <td id='#{saved_regression.id}' class='delete regression_remove'><i class='fa fa-times-circle'></i></td>
                 </tr>
                 """
-                
-              console.log('#' + saved_regression.id)
-              
-              ($ '#' + saved_regression.id).click() =>
-                console.log("Worked")
-                #($ '#regressionTableBody').remove(($ '#' + saved_regression.id).parent())
-                               
+
               ($ '#regressionTableBody').append(regression_row)
+              ($ 'td#' + saved_regression.id).click ->
+                #for regression in @saved_regression
+                #remove_regression($(this).attr('id'))
+                $(this).parent().remove()
               
               return
             
