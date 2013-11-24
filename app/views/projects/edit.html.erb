@@ -1,8 +1,16 @@
 <% if @cur_user.admin %>
-  <h1>Editing project</h1>
-  <%= render 'form' %>
-  <%= link_to 'Show', @project %> |
-  <%= link_to 'Back', projects_path %>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h1>Editing project</h1>
+    </div>
+    <div class="panel-body">
+      <%= render 'form' %>
+    </div>
+    <div class="panel-footer">  
+      <%= link_to 'Show', @project %> |
+      <%= link_to 'Back', projects_path %>
+    </div>
+  </div>  
 <% else %>
   You are not authorized to view this page.
 <% end %>
