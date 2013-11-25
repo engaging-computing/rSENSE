@@ -637,7 +637,7 @@ $ ->
               @savedRegressions.push(saved_regression)
                       
               #Actually add the regression to the table
-              addRegressionToTable(saved_regression)
+              addRegressionToTable(saved_regression, @savedRegressions, @chart)
             
             #Set up accordion
             globals.regressionOpen ?= 0
@@ -651,7 +651,7 @@ $ ->
                 globals.regressionOpen = (globals.regressionOpen + 1) % 2
                 
     #Adds a regression row to our table
-    addRegressionToTable = (saved_reg) =>
+    addRegressionToTable = (saved_reg, saved_reg_array, chart) =>
     
       #Remove object from an array :) TODO
       Array::filterOutValue = (v) -> x for x in @ when x != v
@@ -678,15 +678,15 @@ $ ->
         
         #Remove regression from the savedRegressions array.
         id = saved_reg.series.name.id 
-        for regression in @savedRegressions
+        for regression in saved_reg_array
           if (regression.series.name.id == id)
-            @savedRegressions = @savedRegressions.filterOutValue(regression)
+            saved_reg_array = saved_reg_array.filterOutValue(regression)
             break
 
         #Remove regression from the chart
-        for series, i in @chart.series
+        for series, i in chart.series
           if (series.name.id == id)
-            @chart.series[i].remove()
+            chart.series[i].remove()
             break
             
 
