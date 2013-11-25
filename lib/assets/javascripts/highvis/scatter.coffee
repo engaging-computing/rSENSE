@@ -289,6 +289,11 @@ $ ->
             else
               @resetExtremes
               ($ '#zoomResetButton').addClass("disabled")
+            
+            #Add all of the saved regressions
+            console.log(@savedRegressions.length)
+            for regression in @savedRegressions
+              @chart.addSeries(regression.series)
               
             @chart.redraw()
             
@@ -528,7 +533,7 @@ $ ->
             controls = 
               """
               <div id="regressionControl" class="vis_controls">
-              <h3 class='clean_shrink'><a href='#'>Regression Tools:</a></h3>
+              <h3 class='clean_shrink'><a href='#'>Analysis Tools:</a></h3>
               <div class='outer_control_div' style='text-align:center'>
 
               <table><tr>
@@ -558,7 +563,7 @@ $ ->
               </select></td></tr>           
               </table>
               <table id='regressionTable' class='regression_table'><tbody id='regressionTableBody'></tbody></table>
-              <button id='regressionButton' class='save_button btn'>Draw Regression</button>
+              <button id='regressionButton' class='save_button btn'>Draw Best Fit Line</button>
               </div></div>
               """
 
@@ -596,9 +601,6 @@ $ ->
                 dash_style
                 )
               
-              #Add the series
-              @chart.addSeries(new_regression)
-              
               #Get a unique identifier (last highest count plus one)
               regression_identifier = '';
               count = 0;
@@ -610,14 +612,16 @@ $ ->
                   count = regression.type_count + 1;
               
               if count
-                regression_identifier = '(' + count + ')'
+                regression_identifier = '(' + (count + 1) + ')'
+                
+              #Add the series
+              new_regression.name.id = 'regression_' + regression_type + '_' + count
+              @chart.addSeries(new_regression)
               
               #Prepare to save regression fields
               saved_regression =
                 type:
                   regression_type               
-                id:
-                  'regression_' + regression_type + '_' + count
                 type_count:
                   count
                 field_indices:
@@ -631,24 +635,9 @@ $ ->
               
               #Save a regression
               @savedRegressions.push(saved_regression)
-              
-              #Add the saved regression to the table
-              regression_row =
-                """
-                <tr>
-                <td class='regression_rowdata'>Y: <strong>#{saved_regression.field_names[1]}</strong></td>
-                <td class='regression_rowdata'>Type: #{regressions[saved_regression.type]}#{saved_regression.regression_id}</td>
-                <td id='#{saved_regression.id}' class='delete regression_remove'><i class='fa fa-times-circle'></i></td>
-                </tr>
-                """
-
-              ($ '#regressionTableBody').append(regression_row)
-              ($ 'td#' + saved_regression.id).click ->
-                #for regression in @saved_regression
-                #remove_regression($(this).attr('id'))
-                $(this).parent().remove()
-              
-              return
+                      
+              #Actually add the regression to the table
+              addRegressionToTable(saved_regression)
             
             #Set up accordion
             globals.regressionOpen ?= 0
@@ -660,6 +649,45 @@ $ ->
 
             ($ '#regressionControl > h3').click ->
                 globals.regressionOpen = (globals.regressionOpen + 1) % 2
+                
+    #Adds a regression row to our table
+    addRegressionToTable = (saved_reg) =>
+    
+      #Remove object from an array :) TODO
+      Array::filterOutValue = (v) -> x for x in @ when x != v
+    
+      #Here have a list of regressions
+      regressions = ['Linear', 'Quadratic', 'Cubic', 'Exponential', 'Logarithmic']
+    
+      #Add the entry used the passed regression
+      regression_row =
+        """
+        <tr>
+        <td class='regression_rowdata'>Y: <strong>#{saved_reg.field_names[1]}</strong></td>
+        <td class='regression_rowdata'>Type: #{regressions[saved_reg.type]}#{saved_reg.regression_id}</td>
+        <td id='#{saved_reg.series.name.id}' class='delete regression_remove'><i class='fa fa-times-circle'></i></td>
+        </tr>
+        """
+
+      #Added a info relating to this regression
+      ($ '#regressionTableBody').append(regression_row)
+      ($ 'td#' + saved_reg.series.name.id).click =>
+        
+        #Remove regression view from the screen.
+        ($ 'td#' + saved_reg.series.name.id).parent().remove()
+        
+        #Remove regression from the savedRegressions array.
+        id = saved_reg.series.name.id 
+        for regression in @savedRegressions
+          if (regression.series.name.id == id)
+            @savedRegressions = @savedRegressions.filterOutValue(regression)
+            break
+
+        #Remove regression from the chart
+        for series, i in @chart.series
+          if (series.name.id == id)
+            @chart.series[i].remove()
+            break
             
 
     if "Scatter" in data.relVis

@@ -122,6 +122,7 @@ $ ->
                    
         ret =
           name:
+            id: '',
             group: series_name,
             regression:
               tooltip: str
