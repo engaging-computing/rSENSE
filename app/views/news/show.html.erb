@@ -1,25 +1,23 @@
-<p id="notice"><%= notice %></p>
-
 <div class="row">
-  
-  <div class="span8 news_title"><%= news_edit_menu_helper false%></div>
-
+  <div class="col-md-8 news_title"><%= news_edit_menu_helper false%></div>
+</div>
+<div class="row">
   <% if is_admin? %>
-    <div class="span12">
+    <div class="col-md-12">
       <label for="hide_news_checkbox">Hidden:
         <input id="hide_news_checkbox" type="checkbox" href='' <%if @news.hidden%>checked<%end%>/>
       </label>
     </div>
   <%end%>
-  
+</div>  
+<div class="row">
   <%=render layout: "shared/box", locals: {title: 'Content', width: '12', unique_id: 'content', should_hide: false} do %>
     <%= news_content_helper (can_edit? @news) %>
   <%end%>
-
-
+</div>  
+<div class="row">
   <!-- media objects -->
   <%=render layout: "shared/box", locals: {title: 'Media', width: '5', unique_id: 'media', should_hide: false} do %>
     <%=render "shared/media_objects_view", {type: 'news', object: @news} %>
   <%end%>
-
 </div>
