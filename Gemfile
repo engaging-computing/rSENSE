@@ -41,12 +41,8 @@ gem 'httparty'
 
 gem 'execjs'
 
-
 # Font-awesome
 gem 'font-awesome-rails'
-
-# Include AWS
-gem 'aws-sdk'
 
 # Include Will Paginate
 gem 'will_paginate'
