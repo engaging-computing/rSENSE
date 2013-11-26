@@ -122,9 +122,9 @@ $ ->
             "Number"
           else if field is 3
             "Text"
-          else if field is 4
-            "Longitude"
           else if field is 5
+            "Longitude"
+          else if field is 4
             "Latitude"
             
           else if field is "Timestamp"
@@ -134,9 +134,9 @@ $ ->
           else if field is "Text"
             3
           else if field is "Longitude"
-            4
-          else if field is "Latitude"
             5
+          else if field is "Latitude"
+            4
         debug: true
 
       settings = $.extend settings, options
@@ -212,7 +212,7 @@ $ ->
             do (col) ->
               ($ row).children().eq(col).find('input').replaceWith """
                 <div class='input-group'>
-                  <input class='validate_longitude form-control' id='appendedInput' type='text' value='#{ ($ row).find('input').eq(col).val() }' />
+                  <input class='validate_longitude form-control input-small' id='appendedInput' type='text' value='#{ ($ row).find('input').eq(col).val() }' />
                   <span class='input-group-btn'>
                     <a href='#' tabindex='32767' class="btn btn-default map_picker">
                       <i class='fa fa-globe'></i>
