@@ -1,41 +1,31 @@
 <!-- This file is no longer used and should be removed.  -->
 
 <%= form_for(@project) do |f| %>
-  <% if @project.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@project.errors.count, "error") %> prohibited this project from being saved:</h2>
-
-      <ul>
-      <% @project.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
   <div class="row"> 
-    <div class="span12" style="font-weight:bold">
+    <div class="col-md-12">
 
-          <div class="field">
-            Featured: <%= f.check_box :featured %>
-          </div>
-          
-          <div class="clear"><br></div>
-          
-          <div class="field">
-            In Store: <%= f.check_box :is_template %>
-          </div>
-          
-          <div class="clear"><br></div>
-          
-          <div class="field">
-            Owner: <%= f.number_field :user_id %>
-          </div>
+      <div class="checkbox">
+        <div class="checkbox">
+          <%= f.check_box :featured%><strong> Featured</strong>
+        </div>  
+      </div>
+      
+      <div class="checkbox">
+        <div class="checkbox">
+          <%= f.check_box :is_template%><strong> In Store</strong>
+        </div>  
+      </div>
+      
+      <div class="form-group">
+        <label>
+          Owner: <%= f.number_field :user_id, class: "form-control"%>
+        </label>  
+      </div>
 
-          <div class="clear"><br></div>
-          
-          <div class="actions">
-            <%= f.submit 'Update Project', :class => 'btn btn-primary'%>
-          </div>
+      
+      <div class="actions">
+        <%= f.submit 'Update Project', :class => 'btn btn-primary'%>
+      </div>
           
     </div>
   </div>

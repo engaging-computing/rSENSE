@@ -1,29 +1,17 @@
 <div class="row">
-
   <%= form_for(@tutorial) do |f| %>
-    <div class="span12">
-      <% if @tutorial.errors.any? %>
-        <div id="error_explanation">
-          <h2><%= pluralize(@tutorial.errors.count, "error") %> prohibited this tutorial from being saved:</h2>
-
-          <ul>
-          <% @tutorial.errors.full_messages.each do |msg| %>
-            <li><%= msg %></li>
-          <% end %>
-          </ul>
-        </div>
-      <% end %>
-    </div>
-    <div class="span12">
-      <div class="field">
-        Title: <%= f.text_field :title %>
+    <div class="col-md-12">
+      <div class="form-group">
+        <strong>Title: </strong><%= f.text_field :title, class: "form-control" %>
       </div>
-      <div class="field">
-        Featured: <%= f.check_box :featured %>
-      </div>    
+      <div class="checkbox">
+        <label>
+          <%= f.check_box :featured %> <strong>Featured</strong> 
+        </label> 
+      </div>  
       <div class="clear"><br></div>
       <div class="actions">
-        <%= f.submit %>
+        <%= f.submit "Submit",class: "btn btn-default" %>
       </div>
     </div>
   <% end %>
