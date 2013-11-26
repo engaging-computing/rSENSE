@@ -48,7 +48,7 @@ $ ->
             @xAxis = data.normalFields[0]
 
             @advancedTooltips = 0
-                               
+                                          
             #Do the cool existential operator thing
             @savedRegressions ?= []
 
@@ -291,9 +291,9 @@ $ ->
               ($ '#zoomResetButton').addClass("disabled")
             
             #Add all of the saved regressions
-            console.log(@savedRegressions.length)
             for regression in @savedRegressions
               @chart.addSeries(regression.series)
+              @addRegressionToTable(regression)
               
             @chart.redraw()
             
@@ -637,7 +637,7 @@ $ ->
               @savedRegressions.push(saved_regression)
                       
               #Actually add the regression to the table
-              addRegressionToTable(saved_regression, @savedRegressions, @chart)
+              @addRegressionToTable(saved_regression)
             
             #Set up accordion
             globals.regressionOpen ?= 0
@@ -650,46 +650,45 @@ $ ->
             ($ '#regressionControl > h3').click ->
                 globals.regressionOpen = (globals.regressionOpen + 1) % 2
                 
-    #Adds a regression row to our table
-    addRegressionToTable = (saved_reg, saved_reg_array, chart) =>
-    
-      #Remove object from an array :) TODO
-      Array::filterOutValue = (v) -> x for x in @ when x != v
-    
-      #Here have a list of regressions
-      regressions = ['Linear', 'Quadratic', 'Cubic', 'Exponential', 'Logarithmic']
-    
-      #Add the entry used the passed regression
-      regression_row =
-        """
-        <tr>
-        <td class='regression_rowdata'>Y: <strong>#{saved_reg.field_names[1]}</strong></td>
-        <td class='regression_rowdata'>Type: #{regressions[saved_reg.type]}#{saved_reg.regression_id}</td>
-        <td id='#{saved_reg.series.name.id}' class='delete regression_remove'><i class='fa fa-times-circle'></i></td>
-        </tr>
-        """
-
-      #Added a info relating to this regression
-      ($ '#regressionTableBody').append(regression_row)
-      ($ 'td#' + saved_reg.series.name.id).click =>
+        #Adds a regression row to our table
+        addRegressionToTable: (saved_reg) ->
+               
+          #Remove object from an array :) TODO
+          Array::filterOutValue = (v) -> x for x in @ when x != v
         
-        #Remove regression view from the screen.
-        ($ 'td#' + saved_reg.series.name.id).parent().remove()
+          #Here have a list of regressions
+          regressions = ['Linear', 'Quadratic', 'Cubic', 'Exponential', 'Logarithmic']
         
-        #Remove regression from the savedRegressions array.
-        id = saved_reg.series.name.id 
-        for regression in saved_reg_array
-          if (regression.series.name.id == id)
-            saved_reg_array = saved_reg_array.filterOutValue(regression)
-            break
+          #Add the entry used the passed regression
+          regression_row =
+            """
+            <tr>
+            <td class='regression_rowdata'>Y: <strong>#{saved_reg.field_names[1]}</strong></td>
+            <td class='regression_rowdata'>Type: #{regressions[saved_reg.type]}#{saved_reg.regression_id}</td>
+            <td id='#{saved_reg.series.name.id}' class='delete regression_remove'><i class='fa fa-times-circle'></i></td>
+            </tr>
+            """
 
-        #Remove regression from the chart
-        for series, i in chart.series
-          if (series.name.id == id)
-            chart.series[i].remove()
-            break
+          #Added a info relating to this regression
+          ($ '#regressionTableBody').append(regression_row)
+          ($ 'td#' + saved_reg.series.name.id).click =>
             
+            #Remove regression view from the screen.
+            ($ 'td#' + saved_reg.series.name.id).parent().remove()
+            
+            #Remove regression from the savedRegressions array.
+            id = saved_reg.series.name.id 
+            for regression in @savedRegressions
+              if (regression.series.name.id == id)
+                @savedRegressions = @savedRegressions.filterOutValue(regression)
+                break
 
+            #Remove regression from the chart
+            for series, i in @chart.series
+              if (series.name.id == id)
+                @chart.series[i].remove()
+                break
+            
     if "Scatter" in data.relVis
         globals.scatter = new Scatter "scatter_canvas"
     else
