@@ -17,7 +17,46 @@ input[type="checkbox"]
  margin-bottom:0px;
  background-color: rgb(17,17,51);
  font-size: 1.2em;
-
+ height: 55px;
+ 
+  @media screen and (min-width: 450px) {
+    font-size: 9pt;
+    padding: 0px 2px 0px 2px;
+  }
+  @media screen and (min-width: 1000px) {
+    font-size: 11pt;
+    padding: 0px 14px 0px 14px;
+  }
+  @media screen and (min-width: 1200px) {
+    font-size: 12pt;
+    padding: 0px 17px 0px 17px;
+  }
+  
+  @each $mode in in, collapsing {
+    .navbar-collapse.#{$mode}{
+      border: none;
+      background-color: rgb(17,17,51);
+    }
+  }
+  
+  .full
+  {
+    @media screen and (min-width: 450px) {
+      display: none;
+    }
+    @media screen and (min-width: 1000px) {
+      display:inline;
+    }
+  }
+  .small
+  {
+    @media screen and (min-width: 450px) {
+      display: inline;
+    }
+    @media screen and (min-width: 1000px) {
+      display: none;
+    }
+  }
  
  .navbar-brand
  {
