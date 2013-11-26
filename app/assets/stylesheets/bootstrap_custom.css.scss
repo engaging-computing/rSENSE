@@ -32,6 +32,13 @@ input[type="checkbox"]
     padding: 0px 17px 0px 17px;
   }
   
+  @each $mode in in, collapsing {
+    .navbar-collapse.#{$mode}{
+      border: none;
+      background-color: rgb(17,17,51);
+    }
+  }
+  
   .full
   {
     @media screen and (min-width: 450px) {
