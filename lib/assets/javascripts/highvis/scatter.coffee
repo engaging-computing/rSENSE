@@ -289,13 +289,21 @@ $ ->
             else
               @resetExtremes
               ($ '#zoomResetButton').addClass("disabled")
+                        
+            @chart.redraw()
+            
+            #Remove all of the rows
+            ($ '#regressionTableBody > tr').remove()
             
             #Add all of the saved regressions
             for regression in @savedRegressions
-              @chart.addSeries(regression.series)
-              @addRegressionToTable(regression)
-              
-            @chart.redraw()
+              # Only draw the best fit line if the fields and group match.
+              if regression.field_indices[0] == @xAxis \ #X indices must match.
+              && "#{regression.field_indices[2]}" == "#{globals.groupSelection}" \ #Compare the arrays without comparing them.
+              && globals.fieldSelection.indexOf(regression.field_indices[1]) != -1 #Y axis must be present
+                #Draw the regression line.
+                @chart.addSeries(regression.series)
+                @addRegressionToTable(regression)
             
             @storeXBounds @chart.xAxis[0].getExtremes()
             @storeYBounds @chart.yAxis[0].getExtremes()           
