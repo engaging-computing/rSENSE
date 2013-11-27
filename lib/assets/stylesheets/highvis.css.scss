@@ -116,8 +116,8 @@
 
 .regression_table {
   margin-top: 5px;
-  float: center;
   width: 100%;
+  text-align: left;
 }
 
 .regression_rowdata {
@@ -135,6 +135,7 @@
 .regression_remove {
   width: 10%;
   cursor: pointer;
+  text-align: center;
 }
 
 #photoTable {

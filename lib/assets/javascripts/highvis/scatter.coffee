@@ -570,7 +570,9 @@ $ ->
               """
               </select></td></tr>           
               </table>
-              <table id='regressionTable' class='regression_table'><tbody id='regressionTableBody'></tbody></table>
+              <table id='regressionTable' class='regression_table'>
+              <tr><td style='width:55%'><strong>Selected Y<strong></td><td style='width:45%'><strong>Type<strong></td></tr>
+              <tbody id='regressionTableBody'></tbody></table>
               <button id='regressionButton' class='save_button btn'>Draw Best Fit Line</button>
               </div></div>
               """
@@ -678,8 +680,8 @@ $ ->
           regression_row =
             """
             <tr id = 'row_#{saved_reg.series.name.id}' class='regression_row'>
-            <td class='regression_rowdata'>Y: <strong>#{saved_reg.field_names[1]}</strong></td>
-            <td class='regression_rowdata'>Type: #{regressions[saved_reg.type]}#{saved_reg.regression_id}</td>
+            <td class='regression_rowdata' style='width:60%'>#{saved_reg.field_names[1]}</td>
+            <td class='regression_rowdata' style='witdh:30%'>#{regressions[saved_reg.type]}#{saved_reg.regression_id}</td>
             <td id='#{saved_reg.series.name.id}' class='delete regression_remove'><i class='fa fa-times-circle'></i></td>
             </tr>
             """
