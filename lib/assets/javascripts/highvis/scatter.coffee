@@ -578,7 +578,7 @@ $ ->
             #Write HTML
             ($ '#controldiv').append controls
             ($ "#regressionControl button").button()           
-            ($ "#regressionButton").click =>
+            ($ "#regressionButton").click =>      
 
               #Make the title for the tooltip
               x_axis_name = fieldTitle(data.fields[@xAxis])
@@ -594,6 +594,13 @@ $ ->
               #Get the x and y data itself
               x_data = data.multiGroupSelector(@xAxis, group_index)
               y_data = data.multiGroupSelector(y_axis_index, group_index)
+              
+              #Clip the x and y data so they only include the visible points
+              console.log(x_data)
+              console.log(@xBounds)
+              x_data = globals.clip(x_data, @xBounds, @yBounds)
+              y_data = globals.clip(y_data, @yBounds, @yBounds)
+              console.log(x_data)
               
               #Get dash index
               dash_index = data.normalFields.indexOf(y_axis_index)
@@ -707,7 +714,7 @@ $ ->
             for series, i in @chart.series
               if (series.name.id == id)
                 @chart.series[i].setState('hover')
-                @chart.tooltip.refresh(@chart.series[i].points[0])
+                @chart.tooltip.refresh(@chart.series[i].points[@chart.series[i].points.length - 1])
                 break
           
           #When the mouse leaves, don't highlight anymore
