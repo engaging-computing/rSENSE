@@ -122,9 +122,9 @@ $ ->
             "Number"
           else if field is 3
             "Text"
-          else if field is 4
-            "Longitude"
           else if field is 5
+            "Longitude"
+          else if field is 4
             "Latitude"
             
           else if field is "Timestamp"
@@ -134,9 +134,9 @@ $ ->
           else if field is "Text"
             3
           else if field is "Longitude"
-            4
-          else if field is "Latitude"
             5
+          else if field is "Latitude"
+            4
         debug: true
 
       settings = $.extend settings, options
@@ -212,7 +212,7 @@ $ ->
             do (col) ->
               ($ row).children().eq(col).find('input').replaceWith """
                 <div class='input-group'>
-                  <input class='validate_longitude form-control' id='appendedInput' type='text' value='#{ ($ row).find('input').eq(col).val() }' />
+                  <input class='validate_longitude form-control ' id='appendedInput' type='text' value='#{ ($ row).find('input').eq(col).val() }' />
                   <span class='input-group-btn'>
                     <a href='#' tabindex='32767' class="btn btn-default map_picker">
                       <i class='fa fa-globe'></i>
@@ -238,7 +238,7 @@ $ ->
             do (col) ->
               ($ row).children().eq(col).find('input').replaceWith """
                 <div class='input-group datepicker'>
-                  <input class='validate_timestamp input-small form-control' type='text' data-format='yyyy/MM/dd hh:mm:ss' value='#{ ($ row).find('input').eq(col).val() }' />
+                  <input class='validate_timestamp  form-control' type='text' data-format='yyyy/MM/dd hh:mm:ss' value='#{ ($ row).find('input').eq(col).val() }' />
                   <span class='input-group-btn'>
                     <a href='#' tabindex='32767' class="btn btn-default">
                       <i class='fa fa-calendar'></i>
@@ -254,7 +254,7 @@ $ ->
           new_row = "<tr class='new_row'>"
 
           ($ tab).find('th:not(:last-child)').each (index) ->
-            new_row += "<td><div class='text-center'><input type='text' class='input-small form-control'/></div></td>"
+            new_row += "<td><div class='text-center'><input type='text' class=' form-control'/></div></td>"
 
           new_row += "<td><div class='text-center'><a class='close' style='float:none;'>&times;</a></div></td></tr>"
 
@@ -290,8 +290,8 @@ $ ->
 
         # strip table for upload
         strip_table = (tab) ->
-          ($ tab).find('td').has('.input-small').each ->
-            ($ @).html ($ @).find('.input-small').val()
+          ($ tab).find('td').has('input').each ->
+            ($ @).html ($ @).find('input').val()
 
           ($ tab).find('th:last-child').empty().remove()
 
@@ -307,7 +307,7 @@ $ ->
             ($ @).children().wrap "<div class='text-center' />"
 
           ($ tab).find('td').not(':has(a.close)').each ->
-            ($ @).html "<input type='text' class='input-small form-control' value='#{($ @).text()}' />"
+            ($ @).html "<input type='text' class=' form-control' value='#{($ @).text()}' />"
             ($ @).children().wrap "<div class='text-center' />"
 
           ($ tab).find('tr').each ->
@@ -424,14 +424,14 @@ $ ->
         table_validates = (tab) ->
         
           #Check for zero rows
-          if ($ tab).find('td').has('.input-small').length == 0
+          if ($ tab).find('td').has('input').length == 0
             alert "You must enter at least one row of data."
             return false
             
           # Check that there is at least one value
           noInput = true
-          ($ tab).find('td').has('.input-small').each ->
-              noInput = noInput and (($ @).find('.input-small').val() == "")
+          ($ tab).find('td').has('input').each ->
+              noInput = noInput and (($ @).find('input').val() == "")
           if noInput
             alert "You must enter at least one item of data."
             return false
