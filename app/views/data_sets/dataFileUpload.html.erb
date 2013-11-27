@@ -5,7 +5,7 @@
     <%= form_tag '/data_sets/field_matching', method: 'put', id: 'field_matching' do%>
       <div class="row form-group">
         <div class="col-lg-3 col-lg-offset-3">
-          <label for="title"><b>Title </b></label><input type="text" id="title" name="title" value="<%=@default_name%>", class="form-control">
+          <label for="title"><b>Title </b></label><input type="text" id="title" name="title" value="<%=@default_name%>", class="form-control" autofocus>
         </div>
       </div>
       <div class="row">
