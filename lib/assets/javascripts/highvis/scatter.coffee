@@ -670,7 +670,7 @@ $ ->
           #Add the entry used the passed regression
           regression_row =
             """
-            <tr>
+            <tr id = 'row_#{saved_reg.series.name.id}' class='regression_row'>
             <td class='regression_rowdata'>Y: <strong>#{saved_reg.field_names[1]}</strong></td>
             <td class='regression_rowdata'>Type: #{regressions[saved_reg.type]}#{saved_reg.regression_id}</td>
             <td id='#{saved_reg.series.name.id}' class='delete regression_remove'><i class='fa fa-times-circle'></i></td>
@@ -679,6 +679,8 @@ $ ->
 
           #Added a info relating to this regression
           ($ '#regressionTableBody').append(regression_row)
+          
+          #Add a make the delete button remove the regression object
           ($ 'td#' + saved_reg.series.name.id).click =>
             
             #Remove regression view from the screen.
@@ -696,7 +698,29 @@ $ ->
               if (series.name.id == id)
                 @chart.series[i].remove()
                 break
-            
+                
+          #Make the hovering highlight the correct regression
+          ($ 'tr#row_' + saved_reg.series.name.id).mouseover =>
+          
+            #Remove regression from the chart
+            id = saved_reg.series.name.id 
+            for series, i in @chart.series
+              if (series.name.id == id)
+                @chart.series[i].setState('hover')
+                @chart.tooltip.refresh(@chart.series[i].points[0])
+                break
+          
+          #When the mouse leaves, don't highlight anymore
+          ($ 'tr#row_' + saved_reg.series.name.id).mouseout =>
+          
+            #Remove regression from the chart
+            id = saved_reg.series.name.id 
+            for series, i in @chart.series
+              if (series.name.id == id)
+                @chart.series[i].setState()
+                @chart.tooltip.hide()
+                break
+          
     if "Scatter" in data.relVis
         globals.scatter = new Scatter "scatter_canvas"
     else

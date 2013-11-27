@@ -136,7 +136,7 @@ $ ->
             symbol: 'blank'
           states:
             hover:
-              lineWidth: 3
+              lineWidth: 4
 
       ###
       Uses the regression matrix to calculate the y value given an x value.

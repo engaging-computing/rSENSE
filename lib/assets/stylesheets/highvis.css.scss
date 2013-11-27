@@ -126,6 +126,10 @@
   text-align: left;
 }
 
+.regression_row:hover {
+  background-color: #ddd;
+}
+
 .regression_remove {
   width: 10%;
   cursor: pointer;
