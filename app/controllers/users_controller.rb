@@ -68,7 +68,7 @@ class UsersController < ApplicationController
     @filters.tr!(' ', '_')
     
     if @filters == "all"
-      @filters = [ "projects", "data_sets", "visualizations", "media", "tutorials" ]
+      @filters = [ "projects", "data_sets", "visualizations", "media", "tutorials", "liked" ]
     end
     
     if params[:page_size].nil?
@@ -100,6 +100,10 @@ class UsersController < ApplicationController
       if @filters.include? "tutorials"
         @tutorials = @user.tutorials.search(params[:search], show_hidden)
       end
+
+      if @filters.include? "liked"
+        @liked = Project.find(@user.likes.map{ |like| like.project_id});
+      end
     else
       if !@user.try(:projects).nil?
         @projects = @user.projects.search(params[:search], show_hidden)
@@ -116,9 +120,12 @@ class UsersController < ApplicationController
       if !@user.try(:tutorials).nil?
         @tutorials = @user.tutorials.search(params[:search], show_hidden)
       end
+      if !@user.try(:likes).nil?
+        @liked = Project.find(@user.likes.map{ |like| like.project_id})
+      end
     end
 
-    @contributions = @projects.to_a + @dataSets.to_a + @mediaObjects.to_a + @visualizations.to_a + @tutorials.to_a
+    @contributions = @projects.to_a + @dataSets.to_a + @mediaObjects.to_a + @visualizations.to_a + @tutorials.to_a + @liked.to_a
     
     #Set up the sort order
     if !params[:sort].nil?
