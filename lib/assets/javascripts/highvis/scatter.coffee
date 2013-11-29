@@ -308,7 +308,10 @@ $ ->
                 @chart.addSeries(regression.series)
                 @addRegressionToTable(regression)
             
-
+            #Display the table header if necessary    
+            if ($ '#regressionTableBody > tr').length > 0
+              ($ 'tr#regressionTableHeader').show()
+            else ($ 'tr#regressionTableHeader').hide()
 
         ###
         Draws radio buttons for changing symbol/line mode.
@@ -567,7 +570,7 @@ $ ->
               </select></td></tr>           
               </table>
               <table id='regressionTable' class='regression_table'>
-              <tr><td style='width:55%'><strong>Selected Y<strong></td><td style='width:45%'><strong>Type<strong></td></tr>
+              <tr id='regressionTableHeader'><td style='width:55%'><strong>Selected Y<strong></td><td style='width:45%'><strong>Type<strong></td></tr>
               <tbody id='regressionTableBody'></tbody></table>
               <button id='regressionButton' class='save_button btn'>Draw Best Fit Line</button>
               </div></div>
@@ -686,11 +689,19 @@ $ ->
           #Added a info relating to this regression
           ($ '#regressionTableBody').append(regression_row)
           
+          #Display the table header
+          ($ 'tr#regressionTableHeader').show()
+          
           #Add a make the delete button remove the regression object
           ($ 'td#' + saved_reg.series.name.id).click =>
             
             #Remove regression view from the screen.
             ($ 'td#' + saved_reg.series.name.id).parent().remove()
+            
+            #Display the table header if necessary    
+            if ($ '#regressionTableBody > tr').length > 0
+              ($ 'tr#regressionTableHeader').show()
+            else ($ 'tr#regressionTableHeader').hide()
             
             #Remove regression from the savedRegressions array.
             id = saved_reg.series.name.id 
