@@ -292,6 +292,9 @@ $ ->
                         
             @chart.redraw()
             
+            @storeXBounds @chart.xAxis[0].getExtremes()
+            @storeYBounds @chart.yAxis[0].getExtremes()
+            
             #Remove all of the rows
             ($ '#regressionTableBody > tr').remove()
             
@@ -305,8 +308,7 @@ $ ->
                 @chart.addSeries(regression.series)
                 @addRegressionToTable(regression)
             
-            @storeXBounds @chart.xAxis[0].getExtremes()
-            @storeYBounds @chart.yAxis[0].getExtremes()           
+
 
         ###
         Draws radio buttons for changing symbol/line mode.
@@ -501,12 +503,6 @@ $ ->
           super()
             
         ###
-        Sets the previous zoom level
-        ###
-        start: ->
-            super()
-            
-        ###
         Saves the zoom level before cleanup
         ###
         serializationCleanup: ->
@@ -593,16 +589,17 @@ $ ->
               regression_type = Number(($ '#regressionSelector').val())
               group_index = globals.groupSelection
               
-              #Get the x and y data itself
-              x_data = data.multiGroupSelector(@xAxis, group_index)
-              y_data = data.multiGroupSelector(y_axis_index, group_index)
+              #Get the x and y data as a clippable object
+              full_data = data.multiGroupXYSelector(@xAxis, y_axis_index, group_index)
               
               #Clip the x and y data so they only include the visible points
-              console.log(x_data)
-              console.log(@xBounds)
-              x_data = globals.clip(x_data, @xBounds, @yBounds)
-              y_data = globals.clip(y_data, @yBounds, @yBounds)
-              console.log(x_data)
+              full_data = globals.clip(full_data, @xBounds, @yBounds)
+              
+              #Separate the x and y data
+              x_data = 
+                point.x for point in full_data                   
+              y_data = 
+                point.y for point in full_data
               
               #Get dash index
               dash_index = data.normalFields.indexOf(y_axis_index)
@@ -670,7 +667,7 @@ $ ->
         #Adds a regression row to our table
         addRegressionToTable: (saved_reg) ->
                
-          #Remove object from an array :) TODO
+          #Remove object from an array
           Array::filterOutValue = (v) -> x for x in @ when x != v
         
           #Here have a list of regressions
