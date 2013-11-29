@@ -76,7 +76,7 @@ $ ->
         (x, P) -> Math.log(x + P[2]),
         (x, P) -> P[1] / (P[2] + x)]
       
-      globals.REGRESSION.NUM_POINTS = 1000
+      globals.REGRESSION.NUM_POINTS = 200
 
       ###
       Calculates a regression and returns it as a highcharts series.
