@@ -79,6 +79,17 @@ $ ->
         mapped.sort (a, b) -> (a.x - b.x)
 
         mapped
+        
+    ###
+    Selects data in an x,y object format of the given groups.
+    ###
+    data.multiGroupXYSelector = (xIndex, yIndex, groupIndices) ->
+      
+      allData =
+        data.xySelector(xIndex, yIndex, group) for group in groupIndices
+      
+      merged = []
+      merged = merged.concat.apply(merged, allData)
 
     ###
     Selects an array of data from the given field index.
@@ -110,6 +121,7 @@ $ ->
       
       merged = []
       merged = merged.concat.apply(merged, allData)
+
 
     ###
     Gets the maximum (numeric) value for the given field index.
