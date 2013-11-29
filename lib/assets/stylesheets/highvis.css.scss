@@ -126,6 +126,11 @@
   text-align: left;
 }
 
+.regression_row {
+  border-bottom:solid transparent;
+  border-width: thin;
+}
+
 .regression_row:hover {
   background-color: #ddd;
   border-bottom:solid #ddd;
