@@ -9,20 +9,47 @@ class GpxParser
     
     trkpts = doc.css("trkpt")
     
-    csv = "Timestamp,Name,Latitude,Longitude\n"
+    csv = "" 
+    headers = trkpts.first.attributes
+    
+    #Grab attributes from the first trkpt for headers
+    trkpts.first.attributes.each do |header|
+      csv += header[0] + ","
+    end
+    
+    #Grab contents from the first trkpt for headers
+    elements = []
+    trkpts.first.children.each do |test|
+      if test.class == Nokogiri::XML::Element
+        csv += test.name + ","
+        elements << test.name
+      end
+    end
+    csv = csv.chomp(",")
+    csv += "\n"
     
     trkpts.each do |pt|
-      csv += "#{pt.search('time').first.content},"
-      csv += "#{pt.search('name').first.content},"
-      csv += "#{pt.attribute('lat')},"
-      csv += "#{pt.attribute('lon')}\n"
+      line = ""
+      
+      #Grab headers out of attributes for each trkpt
+      headers.each do |h|
+        line += "#{pt.attribute(h[0])},"
+      end
+      
+      #Grab contents out of each trkpt  
+      elements.each do |e|
+        line += "#{pt.search(e).first.content},"
+      end
+      line = line.chomp(",")
+      line += "\n"
+      
+      #Add line to csv
+      csv += line
     end
     
     filename = write_temp_file(csv)
     
     roo = Roo::CSV.new(filename)
-
-#     cleanup_temp_file(filename)
 
     roo
     
