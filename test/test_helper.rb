@@ -27,6 +27,11 @@ class ActiveSupport::TestCase
     assert_equal false, field, "Expected #{model.class} #{field} does not have the correct default field."
   end
 
+  # Method tests if a given field is equal to false
+  def assert_default_true(model, field)
+    assert_equal true, field, "Expected #{model.class} #{field} does not have the correct default field."
+  end
+  
   def assert_contains(short, long)
     assert_not_nil long.to_s.index(short.to_s), 
       "String does not contain #{short}"
