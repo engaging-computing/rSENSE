@@ -31,6 +31,7 @@ $ ->
       cancelButton.show()
       
       cancelButton.click =>
+        root.find('#content_edit').show()
         root.css('padding',"20px")
         editor.destroy()
         root.find('div.content').html(root.attr('saved-data'))
@@ -38,6 +39,7 @@ $ ->
         cancelButton.hide()
       
       saveButton.click =>
+        root.find('#content_edit').show()
         root.css('padding',"20px")
         value = editor.getData()
         data = {}
@@ -61,8 +63,10 @@ $ ->
             cancelButton.hide()
             editor.destroy()
   
-  ($ document).find('.content:visible').click () ->
-    turn_on_ck(this)
+  ($ '#content_edit').click () ->
+    ck = ($ document).find('.content:visible')[0]
+    ($ @).hide()
+    turn_on_ck(ck)
   
   ($ document).find('.content').each () ->
     root = ($ this).parents('div.content_holder')

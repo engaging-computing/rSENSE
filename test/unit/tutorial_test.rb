@@ -14,9 +14,9 @@ class TutorialTest < ActiveSupport::TestCase
     assert_default_nil( @tutorial, @tutorial.content )
   end
   
-  # Passes if hidden is false
-  test "hidden is false" do
-    assert_default_false( @tutorial, @tutorial.hidden )
+  # Passes if hidden is true
+  test "hidden is true" do
+    assert_default_true( @tutorial, @tutorial.hidden )
   end
   
   # Passes if featured is false
