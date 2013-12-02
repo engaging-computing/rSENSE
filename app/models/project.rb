@@ -120,7 +120,7 @@ class Project < ActiveRecord::Base
   def export_data_sets(datasets)
     require 'fileutils'
     random_hex = SecureRandom.hex
-    folder_name = self.title.squish.downcase.tr(" ","_")
+    folder_name = self.title.parameterize
     tmpdir = "/tmp/rsense/#{random_hex}/#{folder_name}"    
     
     begin
