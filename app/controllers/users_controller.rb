@@ -64,12 +64,7 @@ class UsersController < ApplicationController
     @user = User.find_by_username(params[:id])
     
     #See if we are only looking for specific contributions
-    @filters = params[:filters].to_s.downcase
-    @filters.tr!(' ', '_')
-    
-    if @filters == "all"
-      @filters = [ "projects", "data_sets", "visualizations", "media", "tutorials" ]
-    end
+    @filter = params[:filters].to_s.downcase
     
     if params[:page_size].nil?
       page_size = 10
@@ -79,58 +74,22 @@ class UsersController < ApplicationController
     
     show_hidden = (@cur_user.id == @user.id) || can_admin?(@user)
     
-    #Only grab the contributions we are currently interested in
-    if !@filters.empty?
-      if @filters.include? "projects"
-        @projects = @user.projects.search(params[:search], show_hidden)
-      end
-      
-      if @filters.include? "data_sets"
-        @dataSets = @user.data_sets.search(params[:search], show_hidden)
-      end
-      
-      if @filters.include? "media"
-        @mediaObjects = @user.media_objects.search(params[:search], show_hidden)
-      end
-
-      if @filters.include? "visualizations"
-        @visualizations = @user.visualizations.search(params[:search], show_hidden)
-      end
-      
-      if @filters.include? "tutorials"
-        @tutorials = @user.tutorials.search(params[:search], show_hidden)
-      end
-    else
-      if !@user.try(:projects).nil?
-        @projects = @user.projects.search(params[:search], show_hidden)
-      end
-      if !@user.try(:data_sets).nil?
-        @dataSets = @user.data_sets.search(params[:search], show_hidden)
-      end
-      if !@user.try(:media_objects).nil?
-        @mediaObjects = @user.media_objects.search(params[:search], show_hidden)
-      end
-      if !@user.try(:visualizations).nil?
-        @visualizations = @user.visualizations.search(params[:search], show_hidden)
-      end
-      if !@user.try(:tutorials).nil?
-        @tutorials = @user.tutorials.search(params[:search], show_hidden)
-      end
-    end
-
-    @contributions = @projects.to_a + @dataSets.to_a + @mediaObjects.to_a + @visualizations.to_a + @tutorials.to_a
+    @contributions = []
     
-    #Set up the sort order
-    if !params[:sort].nil?
-      sort = params[:sort]
-    else
-      sort = "DESC"
-    end
-    
-    if sort=="ASC"
-      @contributions.sort! {|a,b| a.created_at <=> b.created_at} 
-    else
-      @contributions.sort! {|a,b| b.created_at <=> a.created_at}
+    case @filter
+    when "my projects"
+      @contributions = @user.projects.search(params[:search], show_hidden)
+    when "data sets"
+      @contributions = @user.data_sets.search(params[:search], show_hidden)
+    when "visualizations"
+      @contributions = @user.visualizations.search(params[:search], show_hidden)
+    when "liked projects"
+      @contributions = []
+      @user.likes.each do |like|
+        y = Project.where('(lower(title) LIKE lower(?)) AND (id = ?)', "%#{params[:search]}%", like.project_id).first || next
+        next if ((y.hidden == true) && !(can_edit? y))
+        @contributions << y
+      end
     end
     
     page = params[:page].to_i
@@ -147,21 +106,10 @@ class UsersController < ApplicationController
     end
     
     @contributions = @contributions[page*page_size..(page*page_size)+(page_size - 1)]
-    
-    if params[:template].nil?
-  
-      respond_to do |format|
-        format.html { render partial: "display_contributions" }
-      end
-
-    else
-
-      respond_to do |format|
-        format.html { render partial: params[:template] }
-      end
-
+   
+    respond_to do |format|
+      format.html { render partial: "display_contributions" }
     end
-
   end
 
   # GET /users/new
