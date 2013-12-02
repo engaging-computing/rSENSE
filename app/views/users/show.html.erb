@@ -47,12 +47,10 @@
   <div class="col-lg-8">
     <%= form_tag users_path, method: 'get', id:'contribution_search', name: @user.username do%>
       <ul class="nav nav-tabs" id="user_filter">
-        <li class="active"><a href="#">All</a></li>
-        <li><a href="#">Projects</a></li>
+        <li class="active"><a href="#">Liked Projects</a></li>
+        <li><a href="#">My Projects</a></li>
         <li><a href="#">Data Sets</a></li>
         <li><a href="#">Visualizations</a></li>
-        <li><a href="#">Media</a></li>
-        <li><a href="#">Tutorials</a></li>
       </ul>
       
       <div id="contributions_content">
