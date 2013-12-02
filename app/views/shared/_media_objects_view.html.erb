@@ -40,14 +40,15 @@
     </tbody>
   </table>
  
-  <div class="upload_media">
-    <%= form_tag({controller: :media_objects ,action: :saveMedia, keys: "#{type}/#{object.id}"}, multipart: true) do %>
-      <div class="center"><button class='btn btn-success center' id="filechooser" style="margin-top:15px">Add File</button></div>
-      <input type="file" name="upload" id="upload" style="display:none;"/>
-      <input name="non_wys" type="hidden" value="<%= request.url %>"/>
-    <% end %>
-  </div>
-  
+  <% if @cur_user.try(:id)%>
+    <div class="upload_media">
+      <%= form_tag({controller: :media_objects ,action: :saveMedia, keys: "#{type}/#{object.id}"}, multipart: true) do %>
+        <div class="center"><button class='btn btn-success center' id="filechooser" style="margin-top:15px">Add File</button></div>
+        <input type="file" name="upload" id="upload" style="display:none;"/>
+        <input name="non_wys" type="hidden" value="<%= request.url %>"/>
+      <% end %>
+    </div>
+  <% end %>
   <div class="modal fade" id="mo_image_modal" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
