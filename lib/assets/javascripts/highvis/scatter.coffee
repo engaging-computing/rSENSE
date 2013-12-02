@@ -306,7 +306,9 @@ $ ->
               && globals.fieldSelection.indexOf(regression.field_indices[1]) != -1 #Y axis must be present
                 #Draw the regression line.
                 @chart.addSeries(regression.series)
-                @addRegressionToTable(regression)
+                @addRegressionToTable(regression, true)
+              else
+                @addRegressionToTable(regression, false)
             
             #Display the table header if necessary    
             if ($ '#regressionTableBody > tr').length > 0
@@ -445,7 +447,6 @@ $ ->
                 @xAxis = Number selection
 
                 #@delayedUpdate()
-                @updateXRegression()
                 @resetExtremes()
                 @update()
 
@@ -533,9 +534,6 @@ $ ->
         Adds the regression tools to the control bar.
         ###
         drawRegressionControls: () ->
-        
-            if (globals.options? and globals.options.isEmbed?) and not @chart? 
-              return
 
             controls = 
               """
@@ -569,16 +567,25 @@ $ ->
               """
               </select></td></tr>           
               </table>
+              <button id='regressionButton' class='save_button btn'>Draw Best Fit Line</button>
               <table id='regressionTable' class='regression_table'>
               <tr id='regressionTableHeader'><td style='width:55%'><strong>Selected Y<strong></td><td style='width:45%'><strong>Type<strong></td></tr>
               <tbody id='regressionTableBody'></tbody></table>
-              <button id='regressionButton' class='save_button btn'>Draw Best Fit Line</button>
               </div></div>
               """
 
             #Write HTML
             ($ '#controldiv').append controls
-            ($ "#regressionControl button").button()           
+            ($ "#regressionControl button").button()
+            
+            #Catches change in y axis
+            ($ '.y_axis_input').click (e) =>
+              @updateYRegression()
+            
+            #Catches change in x axis  
+            ($ '.xAxis_input').change (e) =>
+              @updateXRegression()
+                   
             ($ "#regressionButton").click =>      
 
               #Make the title for the tooltip
@@ -613,7 +620,8 @@ $ ->
                 x_data,
                 y_data, 
                 regression_type,
-                @xBounds, 
+                @xBounds,
+                @yBounds,
                 name,
                 dash_style
                 )
@@ -654,7 +662,7 @@ $ ->
               @savedRegressions.push(saved_regression)
                       
               #Actually add the regression to the table
-              @addRegressionToTable(saved_regression)
+              @addRegressionToTable(saved_regression, true)
             
             #Set up accordion
             globals.regressionOpen ?= 0
@@ -667,8 +675,8 @@ $ ->
             ($ '#regressionControl > h3').click ->
                 globals.regressionOpen = (globals.regressionOpen + 1) % 2
                 
-        #Adds a regression row to our table
-        addRegressionToTable: (saved_reg) ->
+        #Adds a regression row to our table, with styling for enabled or disabled
+        addRegressionToTable: (saved_reg, enabled) ->
                
           #Remove object from an array
           Array::filterOutValue = (v) -> x for x in @ when x != v
@@ -681,13 +689,17 @@ $ ->
             """
             <tr id = 'row_#{saved_reg.series.name.id}' class='regression_row'>
             <td class='regression_rowdata' style='width:60%'>#{saved_reg.field_names[1]}</td>
-            <td class='regression_rowdata' style='witdh:30%'>#{regressions[saved_reg.type]}#{saved_reg.regression_id}</td>
+            <td class='regression_rowdata' style='width:30%'>#{regressions[saved_reg.type]}#{saved_reg.regression_id}</td>
             <td id='#{saved_reg.series.name.id}' class='delete regression_remove'><i class='fa fa-times-circle'></i></td>
             </tr>
             """
-
+            
           #Added a info relating to this regression
           ($ '#regressionTableBody').append(regression_row)
+          
+          #Add the disabled style if necessary
+          if !enabled
+            ($ 'tr#row_' + saved_reg.series.name.id).addClass('regression_row_disabled')
           
           #Display the table header
           ($ 'tr#regressionTableHeader').show()
