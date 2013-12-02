@@ -74,6 +74,8 @@ class UsersController < ApplicationController
     
     show_hidden = (@cur_user.id == @user.id) || can_admin?(@user)
     
+    @contributions = []
+    
     case @filter
     when "my projects"
       @contributions = @user.projects.search(params[:search], show_hidden)
