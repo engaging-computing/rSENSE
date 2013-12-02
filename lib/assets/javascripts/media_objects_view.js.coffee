@@ -58,5 +58,10 @@ $ ->
   ($ '.mo_image a').click (e) ->
     e.preventDefault()
     src = ($ @).attr("href")
-    ($ '#mo_image_modal').find('#mo_image').html("<img src='#{src}' ></img>")
+    ($ '#mo_image_modal').find('#mo_image').html("<img id='test_img' src='#{src}' ></img>")
     ($ '#mo_image_modal').modal()
+  
+  ($ '#mo_image_modal').on "shown.bs.modal", () ->
+    ($ '.modal-dialog',this).css
+      width: "#{($ @).find("#test_img").width()+55}px"
+  
