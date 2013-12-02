@@ -8,7 +8,7 @@ $ ->
         dataType: 'json'
         data:
           tutorial:
-            hidden: ($ @).prop("checked")
+            hidden: !($ @).prop("checked")
         error: (msg) ->
           console.log msg
       
