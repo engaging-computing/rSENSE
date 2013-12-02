@@ -131,6 +131,11 @@
   border-width: thin;
 }
 
+.regression_row_disabled {
+  background-color: #eee;
+  color: #555;
+}
+
 .regression_row:hover {
   background-color: #ddd;
   border-bottom:solid #ddd;
