@@ -12,6 +12,6 @@ $ ->
         dataType: 'json'
         data:
           news:
-            hidden: ($ @).prop("checked")
+            hidden: !($ @).prop("checked")
         error: (msg) ->
           console.log msg
