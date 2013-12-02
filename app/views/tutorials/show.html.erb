@@ -1,6 +1,16 @@
 <div class="row">
   <div class="col-md-5"><h1 id="title_span"><%= tutorial_edit_menu_helper %></h1></div>
 </div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" id="publish_tutorial" <%= @tutorial.hidden ? "checked" : ""%>> Publish
+      </label>
+    </div>
+  </div>
+</div>
   
 <div class="row">
   <%=render layout: "shared/box", locals: {title: 'Description', width: '12', unique_id: 'description', should_hide: false} do %>
