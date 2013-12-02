@@ -29,9 +29,9 @@
     <% if is_admin? %>
       <div class="row">
         <div class='col-lg-12 center'>
-          <div id="addProjectButton">
-            <button class="btn btn-success"><h4>Create Tutorial</h4></button>
-          </div>
+          <%= form_tag("/tutorials", method: "post") do%>
+            <button id="addTutorialButton" class="btn btn-success" style="width:100%"><h4>Create Tutorial</h4></button>
+          <%end%>
         </div>
       </div>
     <% end %>
