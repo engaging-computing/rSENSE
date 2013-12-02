@@ -295,20 +295,20 @@ $ ->
             @storeXBounds @chart.xAxis[0].getExtremes()
             @storeYBounds @chart.yAxis[0].getExtremes()
             
-            #Remove all of the rows
-            ($ '#regressionTableBody > tr').remove()
-            
-            #Add all of the saved regressions
+            #Disable/enable all of the saved regressions as necessary
             for regression in @savedRegressions
-              # Only draw the best fit line if the fields and group match.
+              #Filter out the ones that should be enabled.
               if regression.field_indices[0] == @xAxis \ #X indices must match.
               && "#{regression.field_indices[2]}" == "#{globals.groupSelection}" \ #Compare the arrays without comparing them.
               && globals.fieldSelection.indexOf(regression.field_indices[1]) != -1 #Y axis must be present
-                #Draw the regression line.
+                #Add the regression to the chart
                 @chart.addSeries(regression.series)
-                @addRegressionToTable(regression, true)
+                #Enabled the class by removing the disabled class
+                ($ 'tr#row_' + regression.series.name.id).removeClass('regression_row_disabled')
               else
-                @addRegressionToTable(regression, false)
+                #Prevent duplicate add classes
+                if ($ 'tr#row_' + regression.series.name.id).hasClass('regression_row_disabled') is false
+                  ($ 'tr#row_' + regression.series.name.id).addClass('regression_row_disabled')
             
             #Display the table header if necessary    
             if ($ '#regressionTableBody > tr').length > 0
@@ -516,7 +516,7 @@ $ ->
         Updates x axis for regression.
         ###
         updateXRegression:() ->
-          $('#regressionXAxis').text("#{fieldTitle(data.fields[@xAxis])}")
+          $('#regressionXAxis').text("#{data.fields[@xAxis].fieldName}")
           
         ###
         Updates y axis for regression.
@@ -527,7 +527,7 @@ $ ->
             for fieldIndex in globals.fieldSelection
               $('#regressionYAxisSelector').append($("<option/>", {
                 value: fieldIndex,
-                text: fieldTitle(data.fields[fieldIndex])
+                text: data.fields[fieldIndex].fieldName
               }));
 
         ###
@@ -543,14 +543,14 @@ $ ->
 
               <table><tr>
               <td style='text-align:left'>X Axis: </td>
-              <td id='regressionXAxis' style='text-align:left'>#{fieldTitle(data.fields[@xAxis])}</td></tr>
+              <td id='regressionXAxis' style='text-align:left'>#{data.fields[@xAxis].fieldName}</td></tr>
               
               <tr><td style='text-align:left'>Y Axis: </td>
               <td><select id='regressionYAxisSelector' class='control_select'>
               """
 
             for fieldIndex in globals.fieldSelection
-              controls += "<option value='#{fieldIndex}'>#{fieldTitle(data.fields[fieldIndex])}</option>"
+              controls += "<option value='#{fieldIndex}'>#{data.fields[fieldIndex].fieldName}</option>"
 
             controls +=
               """
@@ -569,7 +569,7 @@ $ ->
               </table>
               <button id='regressionButton' class='save_button btn'>Draw Best Fit Line</button>
               <table id='regressionTable' class='regression_table'>
-              <tr id='regressionTableHeader'><td style='width:55%'><strong>Selected Y<strong></td><td style='width:45%'><strong>Type<strong></td></tr>
+              <tr id='regressionTableHeader'><td style='width:55%'><strong>f(x)<strong></td><td style='width:45%'><strong>Type<strong></td></tr>
               <tbody id='regressionTableBody'></tbody></table>
               </div></div>
               """
@@ -577,6 +577,17 @@ $ ->
             #Write HTML
             ($ '#controldiv').append controls
             ($ "#regressionControl button").button()
+            
+            #Add all the saved regressions correctly
+            for regression in @savedRegressions
+              #Filter out the ones that should be enabled.
+              if regression.field_indices[0] == @xAxis \ #X indices must match.
+              && "#{regression.field_indices[2]}" == "#{globals.groupSelection}" \ #Compare the arrays without comparing them.
+              && globals.fieldSelection.indexOf(regression.field_indices[1]) != -1 #Y axis must be present
+                @chart.addSeries(regression.series)
+                @addRegressionToTable(regression, true)
+              else
+                @addRegressionToTable(regression, false)
             
             #Catches change in y axis
             ($ '.y_axis_input').click (e) =>
@@ -589,7 +600,7 @@ $ ->
             ($ "#regressionButton").click =>      
 
               #Make the title for the tooltip
-              x_axis_name = fieldTitle(data.fields[@xAxis])
+              x_axis_name = data.fields[@xAxis].fieldName
               y_axis_name = ($ '#regressionYAxisSelector option:selected').text()
               name = "<strong>#{y_axis_name}</strong> as a #{($ '#regressionSelector option:selected').text().toLowerCase()} "
               name += "function of <strong>#{x_axis_name}</strong>"
@@ -621,7 +632,6 @@ $ ->
                 y_data, 
                 regression_type,
                 @xBounds,
-                @yBounds,
                 name,
                 dash_style
                 )
@@ -631,7 +641,6 @@ $ ->
               count = 0;
               for regression in @savedRegressions
                 if regression.type == regression_type \
-                and regression.field_indices[0] == @xAxis \
                 and regression.field_indices[1] == y_axis_index \
                 and count <= regression.type_count
                   count = regression.type_count + 1;
@@ -640,7 +649,7 @@ $ ->
                 regression_identifier = '(' + (count + 1) + ')'
                 
               #Add the series
-              new_regression.name.id = 'regression_' + regression_type + '_' + count
+              new_regression.name.id = 'regression_' + y_axis_index + '_' + regression_type + '_' + count
               @chart.addSeries(new_regression)
               
               #Prepare to save regression fields
@@ -657,6 +666,8 @@ $ ->
                   new_regression
                 regression_id:
                   regression_identifier
+                bounds:
+                  [@xBounds, @yBounds]
               
               #Save a regression
               @savedRegressions.push(saved_regression)
@@ -688,7 +699,7 @@ $ ->
           regression_row =
             """
             <tr id = 'row_#{saved_reg.series.name.id}' class='regression_row'>
-            <td class='regression_rowdata' style='width:60%'>#{saved_reg.field_names[1]}</td>
+            <td class='regression_rowdata' style='width:60%'>#{saved_reg.field_names[1]}(#{saved_reg.field_names[0]})</td>
             <td class='regression_rowdata' style='width:30%'>#{regressions[saved_reg.type]}#{saved_reg.regression_id}</td>
             <td id='#{saved_reg.series.name.id}' class='delete regression_remove'><i class='fa fa-times-circle'></i></td>
             </tr>
@@ -703,6 +714,22 @@ $ ->
           
           #Display the table header
           ($ 'tr#regressionTableHeader').show()
+          
+          #Make each row a link to its view
+          ($ 'tr#row_' + saved_reg.series.name.id).click =>
+            #Reset the state of when you saved
+            @xAxis = saved_reg.field_indices[0]
+            globals.fieldSelection = [saved_reg.field_indices[1]]
+            globals.groupSelection = saved_reg.field_indices[2]          
+
+            @xBounds = saved_reg.bounds[0]
+            @yBounds = saved_reg.bounds[1]
+            
+            ($ '.xAxis_input').each (i, input)=>
+              if input.val() == saved_reg.field_indices[0]
+                input.prop("checked", true)
+
+            @update()
           
           #Add a make the delete button remove the regression object
           ($ 'td#' + saved_reg.series.name.id).click =>

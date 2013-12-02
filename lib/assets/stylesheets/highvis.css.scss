@@ -129,6 +129,7 @@
 .regression_row {
   border-bottom:solid transparent;
   border-width: thin;
+  cursor: pointer;
 }
 
 .regression_row_disabled {
@@ -144,7 +145,6 @@
 
 .regression_remove {
   width: 10%;
-  cursor: pointer;
   text-align: center;
 }
 
