@@ -726,8 +726,8 @@ $ ->
             @yBounds = saved_reg.bounds[1]
             
             ($ '.xAxis_input').each (i, input)=>
-              if input.val() == saved_reg.field_indices[0]
-                input.prop("checked", true)
+              if Number(input.value) == saved_reg.field_indices[0]
+                input.checked = true
 
             @update()
           
