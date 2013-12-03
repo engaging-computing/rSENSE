@@ -568,8 +568,11 @@ $ ->
               </select></td></tr>           
               </table>
               <button id='regressionButton' class='save_button btn'>Draw Best Fit Line</button>
-              <table id='regressionTable' class='regression_table'>
-              <tr id='regressionTableHeader'><td style='width:55%'><strong>f(x)<strong></td><td style='width:45%'><strong>Type<strong></td></tr>
+              <table id='regressionTable' class='regression_table fixed' >
+              <col width='55%' />
+              <col width='35%' />
+              <col width='10%' />
+              <tr id='regressionTableHeader'><td><strong>f(x)<strong></td><td><strong>Type<strong></td></tr>
               <tbody id='regressionTableBody'></tbody></table>
               </div></div>
               """
@@ -693,14 +696,14 @@ $ ->
           Array::filterOutValue = (v) -> x for x in @ when x != v
         
           #Here have a list of regressions
-          regressions = ['Linear', 'Quadratic', 'Cubic', 'Exponential', 'Logarithmic']
+          regressions = ['Linear', 'Quad', 'Cubic', 'Exp', 'Log']
         
           #Add the entry used the passed regression
           regression_row =
             """
             <tr id = 'row_#{saved_reg.series.name.id}' class='regression_row'>
-            <td class='regression_rowdata' style='width:60%'>#{saved_reg.field_names[1]}(#{saved_reg.field_names[0]})</td>
-            <td class='regression_rowdata' style='width:30%'>#{regressions[saved_reg.type]}#{saved_reg.regression_id}</td>
+            <td class='regression_rowdata truncate'>#{saved_reg.field_names[1]}(#{saved_reg.field_names[0]})</td>
+            <td class='regression_rowdata'>#{regressions[saved_reg.type]}#{saved_reg.regression_id}</td>
             <td id='#{saved_reg.series.name.id}' class='delete regression_remove'><i class='fa fa-times-circle'></i></td>
             </tr>
             """
