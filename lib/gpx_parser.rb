@@ -19,10 +19,10 @@ class GpxParser
     
     #Grab contents from the first trkpt for headers
     elements = []
-    trkpts.first.children.each do |test|
-      if test.class == Nokogiri::XML::Element
-        csv += test.name + ","
-        elements << test.name
+    trkpts.first.children.each do |pt|
+      if (pt.class == Nokogiri::XML::Element) && (pt.name != "extensions")
+        csv += pt.name + ","
+        elements << pt.name
       end
     end
     csv = csv.chomp(",")
