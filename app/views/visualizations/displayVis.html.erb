@@ -4,9 +4,19 @@
 <script type="text/javascript"
       src="https://maps-api-ssl.google.com/maps/api/js?key=AIzaSyBxtPK1_mxwVdl1NRu7ZEiSNvmCekFSZAw&sensor=false&libraries=visualization,geometry&v=3.9">
 </script>
-<div id="title_row" style="padding-left:10px">
-    <h2><a href="<%= project_path @project%>"><%= @project.title %></a></h2>
-</div>
+<% @data_set = @datasets.first()%>
+<% if @datasets.count == 1%>
+  <div id="title_row" style="padding-left:10px">
+    <div style="font-size:1.75em">
+      <%= link_to @project.title, project_path(@project)%> 
+      <div class="half_width_edit"><%= data_set_edit_helper 'title', (can_edit? @data_set), false %></div>
+    </div>
+  </div>
+<%else%>
+  <div id="title_row" style="padding-left:10px">
+      <h2><a href="<%= project_path @project%>"><%= @project.title %></a></h2>
+  </div>
+<%end%>
 
 <div style="margin: 0px 10px;">
   
@@ -59,7 +69,7 @@
 
     <div class="well" style="margin-top:10px">
       <%@data_set = @datasets.first()%>
-      <div class="full_width_edit" style="font-size:1.5em"><%= data_set_edit_helper 'title', can_edit?(@data_set), make_link = false%></div>
+      <div class="full_width_edit" style="font-size:1.5em"><%=@data_set.title%></div>
       <%= data_set_content_helper @data_set, can_edit?(@data_set) %>
     </div>
   
