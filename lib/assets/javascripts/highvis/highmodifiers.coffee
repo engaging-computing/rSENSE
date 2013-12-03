@@ -79,6 +79,17 @@ $ ->
         mapped.sort (a, b) -> (a.x - b.x)
 
         mapped
+        
+    ###
+    Selects data in an x,y object format of the given groups.
+    ###
+    data.multiGroupXYSelector = (xIndex, yIndex, groupIndices) ->
+      
+      allData =
+        data.xySelector(xIndex, yIndex, group) for group in groupIndices
+      
+      merged = []
+      merged = merged.concat.apply(merged, allData)
 
     ###
     Selects an array of data from the given field index.
@@ -98,6 +109,19 @@ $ ->
         rawData = @dataPoints.filter newFilterFunc
 
         rawData.map (dp) -> dp[fieldIndex]
+        
+    ###
+    Selects an array of data from the given field index. Support being given an array of group indices.
+    if 'nans' is true then datapoints with NaN values in the given field will be included.
+    ###
+    data.multiGroupSelector = (fieldIndex, groupIndices, nans = false) ->
+      
+      allData =
+        data.selector(fieldIndex, group, nans) for group in groupIndices
+      
+      merged = []
+      merged = merged.concat.apply(merged, allData)
+
 
     ###
     Gets the maximum (numeric) value for the given field index.
