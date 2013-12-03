@@ -30,7 +30,8 @@ class User < ActiveRecord::Base
   has_many :visualizations
   has_many :tutorials
   has_many :news
-
+  has_many :likes
+  
   def sanitize_user
   
     self.firstname = sanitize self.firstname, tags: %w()
