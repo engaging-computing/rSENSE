@@ -63,20 +63,20 @@
         
           <div class="pull-right">
             <div class="btn-group">
-                <a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="icon-check"></i>
-                    <span class="caret"></span>
+                <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
+                  <i class="fa fa-check-square-o"></i>
+                  <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
                     <li role="presentation">
-                      <a role="menuitem" href="javascript:void(0);" id="check_all"><i class="icon-check"></i> All</a>
+                      <a role="menuitem" href="javascript:void(0);" id="check_all"><i class="fa fa-check-square-o"></i> All</a>
                     </li>
                     <li role="presentation">
-                      <a role="menuitem" href="javascript:void(0);" id="uncheck_all"><i class="icon-unchecked"></i> None</a>
+                      <a role="menuitem" href="javascript:void(0);" id="uncheck_all"><i class="fa fa-square-o"></i> None</a>
                     </li>
                     <% if @cur_user.try(:id) %>
                         <li role="presentation">
-                          <a role="menuitem" href="javascript:void(0);" id="check_mine"><i class="icon-user"></i> Mine</a>
+                          <a role="menuitem" href="javascript:void(0);" id="check_mine"><i class="fa fa-user"></i> Mine</a>
                         </li>
                     <% end %>
                 </ul>
