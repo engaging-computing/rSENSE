@@ -2,6 +2,8 @@
   
   <% if has_content %>
     <% if can_edit %>
+      <button class="btn btn-default" id="content_edit" style="float:right"><i class="fa fa-cog"></i> Edit</button>
+      <div class="clear"></div>
       <div style="width:100%;min-height:200px" class="content ckeditor word-break" can_edit="<%=can_edit%>" type="<%=type%>" row_id="<%=row_id%>" field="<%=field%>">
         <%= raw content%>
       </div>  
