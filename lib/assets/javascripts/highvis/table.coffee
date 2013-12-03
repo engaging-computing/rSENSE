@@ -122,9 +122,9 @@ $ ->
             super()
 
         end: ->
-            ($ '#' + @canvas).hide()
+          ($ '#' + @canvas).hide()
 
-          if @table?
+          if @atable?
             
             #Save the sort state
             @sortState = @atable.fnSettings().aaSorting
