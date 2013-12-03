@@ -5,40 +5,49 @@ require 'roo'
 class GpxParser
   def convert(filepath)
 
-    doc = Nokogiri::XML(File.open(filepath))
+    doc = Nokogiri::XML(File.open(filepath)).remove_namespaces!()
     
     trkpts = doc.css("trkpt")
     
     csv = "" 
     headers = trkpts.first.attributes
-    
+
+    Rails.logger.info "-----BEGIN-----"
+    Rails.logger.info trkpts.first
+
     #Grab attributes from the first trkpt for headers
     trkpts.first.attributes.each do |header|
       csv += header[0] + ","
     end
-    
+
     #Grab contents from the first trkpt for headers
     elements = []
-    trkpts.first.children.each do |pt|
-      if (pt.class == Nokogiri::XML::Element) && (pt.name != "extensions")
-        csv += pt.name + ","
-        elements << pt.name
+    trkpts.first.traverse do |node|
+      if(node.children.count == 0)
+        csv += node.parent.name + ","
+        elements << node.parent.name
       end
     end
     csv = csv.chomp(",")
     csv += "\n"
-    
+
+    Rails.logger.info csv
     trkpts.each do |pt|
       line = ""
-      
+
       #Grab headers out of attributes for each trkpt
       headers.each do |h|
         line += "#{pt.attribute(h[0])},"
       end
-      
-      #Grab contents out of each trkpt  
+
+      #Grab contents out of each trkpt
+
       elements.each do |e|
-        line += "#{pt.search(e).first.content},"
+        begin
+          line += "#{pt.search(e).first.content},"
+        rescue
+          line += ","
+        end
       end
       line = line.chomp(",")
       line += "\n"
