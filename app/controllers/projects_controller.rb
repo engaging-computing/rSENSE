@@ -399,7 +399,6 @@ class ProjectsController < ApplicationController
 
   end
 
-
   def templateFields
     
     require "csv"
