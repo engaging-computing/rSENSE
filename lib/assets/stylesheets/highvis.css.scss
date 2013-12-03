@@ -151,6 +151,10 @@
 table.fixed { table-layout:fixed; }
 table.fixed td { overflow: hidden; }
 
+.dataTables_scroll {
+    overflow:auto;
+}
+
 #photoTable {
     width: 100%;
     height: 100%;

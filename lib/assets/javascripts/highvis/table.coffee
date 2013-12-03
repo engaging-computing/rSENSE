@@ -33,8 +33,9 @@ $ ->
         constructor: (@canvas) -> 
 
         start: ->
-            #Make table visible? (or somthing)
+            #Make table visible? (or something)
             ($ '#' + @canvas).show()
+            ($ '#' + @canvas).addClass('dataTables_scroll')
 
             ($ "##{@canvas}").css 'padding-top', 2
 
@@ -83,8 +84,8 @@ $ ->
             @searchString ?= ''
 
             dt = 
-                sScrollY: "#{($ '#' + @canvas).height() - (122)}px"
-                sScrollX: "100%"
+                #sScrollY: "#{($ '#' + @canvas).height() - (122)}px"
+                #sScrollX: "100%"
                 bScrollInfinite: true
                 iDisplayLength: -1
                 bDeferRender: true
@@ -114,6 +115,8 @@ $ ->
                           }]
                         
             @atable = ($ '#data_table').dataTable(dt)
+            @atable._fnAdjustColumnSizing();
+            console.log(this)
 
             #Restore previous search query if exists, else restore empty string
             if @searchString? and @searchString isnt ''
@@ -135,8 +138,10 @@ $ ->
         resize: (newWidth, newHeight, aniLength) ->
           ($ 'div.dataTables_scrollBody').css('height', ($ '#' + @canvas).height() - (122))
           
-          foo = () -> 
+          foo = () ->
+            console.log(this)
             @atable._fnAdjustColumnSizing();
+            console.log('resizing')
             
           setTimeout foo, aniLength
 
@@ -146,6 +151,6 @@ $ ->
             @drawSaveControls()
 
         serializationCleanup: ->
-            delete @atable    
+          delete @atable    
 
     globals.table = new Table "table_canvas"
