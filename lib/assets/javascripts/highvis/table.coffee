@@ -35,7 +35,6 @@ $ ->
         start: ->
             #Make table visible? (or something)
             ($ '#' + @canvas).show()
-            ($ '#' + @canvas).addClass('dataTables_scroll')
 
             ($ "##{@canvas}").css 'padding-top', 2
 
@@ -85,10 +84,11 @@ $ ->
 
             dt = 
                 bAutoWidth: false
-                bScrollInfinite: true
                 iDisplayLength: -1
                 bDeferRender: true
                 bJQueryUI: true
+                sDom: "frtiS"
+                sScrollY: "#{($ '#' + @canvas).height() - (122)}px"
                 aaSorting: [[@sortState[0][0], @sortState[0][1]]]
                 oLanguage:
                     sLengthMenu: 'Display <select>'   +
@@ -114,6 +114,7 @@ $ ->
                           }]
                         
             @atable = ($ '#data_table').dataTable(dt)
+            new FixedHeader( @atable, { "top":"true", "bottom": "true" } )
 
             #Restore previous search query if exists, else restore empty string
             if @searchString? and @searchString isnt ''
@@ -134,6 +135,11 @@ $ ->
             
         resize: (newWidth, newHeight, aniLength) ->
           ($ 'div.dataTables_scrollBody').css('height', ($ '#' + @canvas).height() - (122))
+          foo = () ->
+            console.log(@atable)
+            @atable._fnAdjustColumnSizing();
+            
+          setTimeout foo, aniLength
 
         drawControls: ->
             super()    

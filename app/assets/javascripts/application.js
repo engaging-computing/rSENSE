@@ -44,6 +44,8 @@
 //= require Hydrate
 //= require jquery.dataTables
 //= require jquery.prettyPhoto
+//= require FixedHeader.min
+//= require dataTables.scroller.min
 //= require markerclustererplus
 //= require oms
 //
