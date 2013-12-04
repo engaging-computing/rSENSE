@@ -5,7 +5,19 @@ class NewsController < ApplicationController
   include ApplicationHelper
   
   def index
-    @news = News.where(:hidden => false).order("created_at DESC").limit(5)
+    if !params[:sort].nil?
+        sort = params[:sort]
+    else
+        sort = "created_at DESC"
+    end
+    
+    if !params[:per_page].nil?
+        pagesize = params[:per_page]
+    else
+        pagesize = 10;
+    end
+    
+    @news = News.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("#{sort}")
 
     respond_to do |format|
       format.html # index.html.erb
