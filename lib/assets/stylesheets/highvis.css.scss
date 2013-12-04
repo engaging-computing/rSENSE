@@ -114,6 +114,43 @@
     margin-bottom: 10px;
 }
 
+.regression_table {
+  margin-top: 5px;
+  width: 100%;
+  text-align: left;
+}
+
+.regression_rowdata {
+  border-bottom:solid #ddd;
+  border-width: thin;
+  text-align: left;
+}
+
+.regression_row {
+  border-bottom:solid transparent;
+  border-width: thin;
+  cursor: pointer;
+}
+
+.regression_row_disabled {
+  background-color: #eee;
+  color: #555;
+}
+
+.regression_row:hover {
+  background-color: #ddd;
+  border-bottom:solid #ddd;
+  border-width: thin;
+}
+
+.regression_remove {
+  width: 10%;
+  text-align: center;
+}
+
+table.fixed { table-layout:fixed; }
+table.fixed td { overflow: hidden; }
+
 #photoTable {
     width: 100%;
     height: 100%;
@@ -216,4 +253,9 @@ figure, figurecaption{
   }
 }
 
-
+div.regressionTooltip
+{
+  width:100%;
+  text-align:center;
+  color:#000;
+}

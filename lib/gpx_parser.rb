@@ -5,24 +5,60 @@ require 'roo'
 class GpxParser
   def convert(filepath)
 
-    doc = Nokogiri::XML(File.open(filepath))
+    doc = Nokogiri::XML(File.open(filepath)).remove_namespaces!()
     
     trkpts = doc.css("trkpt")
     
-    csv = "Timestamp,Name,Latitude,Longitude\n"
-    
+    csv = "" 
+    headers = trkpts.first.attributes
+
+    Rails.logger.info "-----BEGIN-----"
+    Rails.logger.info trkpts.first
+
+    #Grab attributes from the first trkpt for headers
+    trkpts.first.attributes.each do |header|
+      csv += header[0] + ","
+    end
+
+    #Grab contents from the first trkpt for headers
+    elements = []
+    trkpts.first.traverse do |node|
+      if(node.children.count == 0)
+        csv += node.parent.name + ","
+        elements << node.parent.name
+      end
+    end
+    csv = csv.chomp(",")
+    csv += "\n"
+
+    Rails.logger.info csv
     trkpts.each do |pt|
-      csv += "#{pt.search('time').first.content},"
-      csv += "#{pt.search('name').first.content},"
-      csv += "#{pt.attribute('lat')},"
-      csv += "#{pt.attribute('lon')}\n"
+      line = ""
+
+      #Grab headers out of attributes for each trkpt
+      headers.each do |h|
+        line += "#{pt.attribute(h[0])},"
+      end
+
+      #Grab contents out of each trkpt
+
+      elements.each do |e|
+        begin
+          line += "#{pt.search(e).first.content},"
+        rescue
+          line += ","
+        end
+      end
+      line = line.chomp(",")
+      line += "\n"
+      
+      #Add line to csv
+      csv += line
     end
     
     filename = write_temp_file(csv)
     
     roo = Roo::CSV.new(filename)
-
-#     cleanup_temp_file(filename)
 
     roo
     

@@ -4,8 +4,8 @@
 <div class="row">
   <% if is_admin? %>
     <div class="col-md-12">
-      <label for="hide_news_checkbox">Hidden:
-        <input id="hide_news_checkbox" type="checkbox" href='' <%if @news.hidden%>checked<%end%>/>
+      <label for="hide_news_checkbox"> Publish
+        <input id="hide_news_checkbox" type="checkbox" href='' <%= @news.hidden ? "" : "checked"%>/>
       </label>
     </div>
   <%end%>
