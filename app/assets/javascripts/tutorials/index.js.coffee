@@ -53,15 +53,7 @@ $ ->
 
     ($ '.tutorials_sort_select').change ->
       ($ '#tutorials_search').submit()
-
-
-
-    grab_ses = (t) ->
-      ses = ($ t).attr 'id'
-      ses = ses.split '_'
-      ses[3]
-
-
+      
     ($ ".tutorials_sort_select").change ->
       ($ "#tutorials_search").submit()
 
@@ -73,11 +65,3 @@ $ ->
       
     ($ window).resize () -> 
       setTimeout(relayout, 750)
-      
-    ($ '#addProjectButton').click ->
-      $.ajax
-        url: "tutorials/create"
-        data: {}
-        dataType: "json"
-        success: (data, textStatus) ->
-          helpers.name_popup data, "Tutorial", "tutorial"  

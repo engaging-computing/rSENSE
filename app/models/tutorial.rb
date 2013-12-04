@@ -19,22 +19,8 @@ class Tutorial < ActiveRecord::Base
   belongs_to :user
   
   alias_attribute :name, :title
-  
-  before_save :sanitize_tutorial
+ 
   alias_attribute :owner, :user
-  
-  def sanitize_tutorial
-    
-    self.content = sanitize self.content
-    
-    # Check to see if there is any valid content left
-    if Nokogiri.HTML(self.content).text.blank?
-      self.content = nil
-    end
-    
-    self.title = sanitize self.title, tags: %w()
-    
-  end
   
   def self.search(search, include_hidden = false)
     res = if search
