@@ -116,7 +116,7 @@ $ ->
 
             # Add grouping selector
             controls += '<div class="inner_control_div"> Group By: '
-            controls += '<select id="groupSelector" class="control_select">'
+            controls += '<select id="groupSelector" class="form-control">'
 
             for fieldIndex in data.textFields
               sel = if fieldIndex is data.groupingFieldIndex then 'selected' else ''
@@ -128,13 +128,10 @@ $ ->
             counter = 0
             if data.groups.length > 1
               controls += "<div class='inner_control_div'>"
-              controls += "<input class='group_input_all' type='checkbox' value='#{gIndex}' #{if globals.groupSelection.length == data.groups.length then "checked" else ""}/>&nbsp"
-              controls += "Check All </div>"
+              controls += "<div class='checkbox'><label><input class='group_input_all' type='checkbox' value='#{gIndex}' #{if globals.groupSelection.length == data.groups.length then "checked" else ""}> Check All</label></div>"
             for group, gIndex in data.groups
               controls += "<div class='inner_control_div' style=\"color:#{globals.colors[counter % globals.colors.length]};\">"
-
-              controls += "<input class='group_input' type='checkbox' value='#{gIndex}' #{if (Number gIndex) in globals.groupSelection then "checked" else ""}/>&nbsp"
-              controls += "#{group}"
+              controls += "<div class='checkbox'><label><input class='group_input' type='checkbox' value='#{gIndex}' #{if (Number gIndex) in globals.groupSelection then "checked" else ""}/>#{group}</label></div>"
               controls += "</div>"
               counter += 1
             controls += '</div></div>'
@@ -205,17 +202,17 @@ $ ->
 
             if not (globals.options? and globals.options.isEmbed?)
               controls += "<div class='inner_control_div'>"
-              controls += "<button id='saveVisButton' class='save_button btn'>Save Visualization </button>"
+              controls += "<button id='saveVisButton' class='save_button btn btn-default btn-success'>Save Visualization </button>"
               controls += "</div>"
 
             if @chart?
                 
                 controls += "<div class='inner_control_div'>"
-                controls += "<button id='downloadVisButton' class='save_button btn'> Download Visualization </button>"
+                controls += "<button id='downloadVisButton' class='save_button btn btn-default'> Download Visualization </button>"
                 controls += "</div>"
                 
                 controls += "<div class='inner_control_div'>"
-                controls += "<button id='printVisButton' class='save_button btn'> Print Visualization </button>"
+                controls += "<button id='printVisButton' class='save_button btn btn-default'> Print Visualization </button>"
                 controls += "</div>"
 
             controls += '</div></div>'
@@ -430,11 +427,9 @@ $ ->
                 controls += "<div class='inner_control_div' >"
 
                 if radio
-                    controls += "<input class='y_axis_input' name='y_axis_group' type='radio' value='#{fIndex}' #{if (Number fIndex) is @displayField then "checked" else ""}/>&nbsp"
+                    controls += "<div class='radio'><label><input class='y_axis_input' name='y_axis_group' type='radio' value='#{fIndex}' #{if (Number fIndex) is @displayField then "checked" else ""}>#{data.fields[fIndex].fieldName}</label></div>"
                 else
-                    controls += "<input class='y_axis_input' type='checkbox' value='#{fIndex}' #{if (Number fIndex) in globals.fieldSelection then "checked" else ""}/>&nbsp"
-                    
-                controls += "#{data.fields[fIndex].fieldName}"
+                    controls += "<div class='checkbox'><label><input class='y_axis_input' type='checkbox' value='#{fIndex}' #{if (Number fIndex) in globals.fieldSelection then "checked" else ""}/>#{data.fields[fIndex].fieldName}</label></div>"
                 controls += "</div>"
                 
             controls += '</div></div>'
