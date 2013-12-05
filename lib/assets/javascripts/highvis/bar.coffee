@@ -159,7 +159,7 @@ $ ->
             controls += "<div class='outer_control_div'>"
 
             controls += "<div class='inner_control_div'>"
-            controls += 'Sort by: <select class="sortField control_select">'
+            controls += 'Sort by: <select class="sortField form-control">'
 
             tempFields = for fieldID in data.normalFields
                 [fieldID, data.fields[fieldID].fieldName]
@@ -178,7 +178,7 @@ $ ->
             
                 controls += '<div class="inner_control_div">'
             
-                controls += "<input class='analysisType' type='radio' name='analysisTypeSelector' value='#{type}' #{if type is @analysisType then 'checked' else ''}> #{typestring}</input><br>"
+                controls += "<div class='radio'><label><input type='radio' class='analysisType' name='analysisTypeSelector' value='#{type}' #{if type is @analysisType then 'checked' else ''}> #{typestring} </label></div>"
             
                 controls += '</div>'
 
@@ -186,7 +186,7 @@ $ ->
                 
             if data.logSafe is 1
                 controls += '<div class="inner_control_div">'
-                controls += "<input class='logY_box' type='checkbox' name='tooltip_selector' #{if globals.logY is 1 then 'checked' else ''}/> Logarithmic Y Axis "
+                controls += "<div class='checkbox'><label><input class='logY_box' type='checkbox' name='tooltip_selector' #{if globals.logY is 1 then 'checked' else ''}/> Logarithmic Y Axis</label></div>"
                 controls += "</div>"
             
             controls += '</div></div>'
