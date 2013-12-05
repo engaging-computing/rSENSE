@@ -355,7 +355,7 @@ $ ->
 
             # Add heatmap selector
             controls += '<div class="inner_control_div"> Map By: '
-            controls += '<select id="heatmapSelector" class="control_select">'
+            controls += '<select id="heatmapSelector" class="form-control">'
 
             sel = if @heatmapSelection is @HEATMAP_NONE then 'selected' else ''
             controls += "<option value=\"#{@HEATMAP_NONE}\" #{sel}>None</option>"
