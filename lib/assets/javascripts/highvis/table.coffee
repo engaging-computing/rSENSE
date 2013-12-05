@@ -37,90 +37,66 @@ $ ->
             ($ '#' + @canvas).show()
 
             ($ "##{@canvas}").css 'padding-top', 2
+            ($ "##{@canvas}").css 'padding-bottom', 2
 
             #Calls update
             super()
 
         #Gets called when the controls are clicked and at start
         update: ->
-            ($ '#' + @canvas).html('')
-        
-            #Updates controls by default       
-            ($ '#' + @canvas).append '<table id="data_table"></table>'  
+          ($ '#' + @canvas).html('')
+      
+          #Updates controls by default       
+          ($ '#' + @canvas).append '<table id="data_table" class="table table-default table-striped"></table>'
+                     
+          #Build the headers for the table
+          headers = for field, fieldIndex in data.fields
+            fieldTitle(field)
             
-            ($ '#data_table').append '<thead><tr id="table_headers"></tr></thead>'
-            
-            #Build the headers for the table
-            headers = for field, fieldIndex in data.fields
-              if (fieldIndex is data.COMBINED_FIELD)
-                "<td style='display:none'>#{fieldTitle field}</td>"
-              else
-                "<td>#{fieldTitle field}</td>"
-                
-            ($ '#table_headers').append header for header in headers
-            
-            #Build the data for the table
-            visibleGroups = for group, groupIndex in data.groups when groupIndex in globals.groupSelection
-                group
-            
-            rows = for dataPoint in data.dataPoints when (String dataPoint[data.groupingFieldIndex]).toLowerCase() in visibleGroups
-                line = for dat, fieldIndex in dataPoint
-                  if (fieldIndex is data.COMBINED_FIELD)
-                    "<td style='display:none'>#{dat}</td>"
-                  else
-                    "<td>#{dat}</td>"
+          #Build the colModel object
+          columns = for field, fieldIndex in data.fields
+            if (fieldIndex is data.COMBINED_FIELD)
+              { name: fieldTitle(field), index: fieldIndex, search: true, resizable: false, hidden: true }
+            else
+              { name: fieldTitle(field), index: fieldIndex, search: true, resizable: false }
+              
+          @table = jQuery("#data_table").jqGrid({
+            datatype: "local",
+            height: ($ '#' + @canvas).height() - 45,
+            width: ($ '#' + @canvas).width(),
+ 	          colNames: headers,
+ 	          caption: "Header Test"
+ 	          colModel: columns
+ 	          hidegrid: false;
+ 	          autowidth: true;
+          })
+                          
+          #Build the data for the table
+          visibleGroups = for group, groupIndex in data.groups when groupIndex in globals.groupSelection
+              group
                     
-                "<tr>#{line.reduce (a,b)-> a+b}</tr>"
-            
-            ($ '#data_table').append '<tbody id="table_body"></tbody>'
-            
-            ($ '#table_body').append row for row in rows 
+          rows = for dataPoint in data.dataPoints when (String dataPoint[data.groupingFieldIndex]).toLowerCase() in visibleGroups
+            line = {}
+            for dat, fieldIndex in dataPoint
+              line[fieldIndex] = dat
+                
+            console.log(line)   
+            #line.reduce (a,b)-> a+b
+          
+          for row, index in rows
+	          jQuery("#data_table").jqGrid('addRowData', index+1, row);
+          
+          #Set sort state to default none existed
+          @sortState ?= [[1, 'asc']]
+          
+          #Set default search to empty string
+          @searchString ?= ''
+                      
+          #Restore previous search query if exists, else restore empty string
+          if @searchString? and @searchString isnt ''
+              $('#table_canvas').find('input').val(@searchString).keyup()
 
-            #Set sort state to default none existed
-            @sortState ?= [[1, 'asc']]
-            
-            #Set default search to empty string
-            @searchString ?= ''
-
-            dt = 
-                bAutoWidth: false
-                iDisplayLength: -1
-                bDeferRender: true
-                bJQueryUI: true
-                sDom: "frtiS"
-                sScrollY: "#{($ '#' + @canvas).height() - (122)}px"
-                aaSorting: [[@sortState[0][0], @sortState[0][1]]]
-                oLanguage:
-                    sLengthMenu: 'Display <select>'   +
-                                '<option value="10">10</option>' +
-                                '<option value="25">25</option>' +
-                                '<option value="50">50</option>' +
-                                '<option value="100">100</option>' +
-                                '<option value="-1">All</option>'+
-                                '</select> records'
-                aoColumnDefs: [{
-                    aTargets: [data.groupingFieldIndex]
-                    fnCreatedCell: (nTd, sData, oData, iRow, iCol) ->
-                        colorIndex = data.groups.indexOf(sData.toLowerCase())
-                        ($ nTd).css 'color', globals.colors[colorIndex % globals.colors.length]
-                        },{
-                          aTargets: data.timeFields
-                          fnRender: (obj) ->
-                            globals.dateFormatter obj.aData[obj.iDataColumn]
-                        },{
-                          aTargets:data.normalFields.concat data.geoFields
-                          fnRender: (obj) ->
-                            if obj.aData[obj.iDataColumn] is "null" then "" else obj.aData[obj.iDataColumn]
-                          }]
-                        
-            @atable = ($ '#data_table').dataTable(dt)
-            new FixedHeader( @atable, { "top":"true", "bottom": "true" } )
-
-            #Restore previous search query if exists, else restore empty string
-            if @searchString? and @searchString isnt ''
-                $('#table_canvas').find('input').val(@searchString).keyup()
-
-            super()
+          super()
 
         end: ->
           ($ '#' + @canvas).hide()
@@ -134,10 +110,8 @@ $ ->
             @searchString = ($ '#table_canvas').find('input').val()
             
         resize: (newWidth, newHeight, aniLength) ->
-          ($ 'div.dataTables_scrollBody').css('height', ($ '#' + @canvas).height() - (122))
           foo = () ->
-            console.log(@atable)
-            @atable._fnAdjustColumnSizing();
+            jQuery("#data_table").setGridWidth(newWidth);
             
           setTimeout foo, aniLength
 
