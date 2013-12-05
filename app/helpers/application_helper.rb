@@ -44,10 +44,12 @@ module ApplicationHelper
       ((obj.owner.id == @cur_user.try(:id)) && obj.project.lock == false) || @cur_user.try(:admin)
     when User
       (obj.id == @cur_user.try(:id)) || @cur_user.try(:admin)
-    when Project, Visualization, Tutorial, MediaObject, News
+    when Project, Visualization, MediaObject
       (obj.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin)
     when Field
       (obj.owner.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin)
+    when Tutorial, News
+      @cur_user.try(:admin)
     else
       false
     end
