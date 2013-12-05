@@ -42,10 +42,9 @@
 //= require highcharts/highcharts
 //= require highcharts/modules/exporting
 //= require Hydrate
-//= require jquery.dataTables
+//= require grid.locale-en.js
+//= require jquery.jqGrid.min.js
 //= require jquery.prettyPhoto
-//= require FixedHeader.min
-//= require dataTables.scroller.min
 //= require markerclustererplus
 //= require oms
 //
