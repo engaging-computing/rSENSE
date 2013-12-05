@@ -2,6 +2,21 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+.vis_controls
+{
+ div.radio, div.checkbox
+ {
+  margin: 0px; 
+  input
+  {
+   margin-top:2px; 
+  }
+ }
+}
+
+
+//---------------Unverified CSS Below--------------
+
 #tabcontainer {
   margin: 10px;
 }
