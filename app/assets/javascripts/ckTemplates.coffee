@@ -36,20 +36,54 @@ $ ->
         
   if namespace.controller is "visualizations" and namespace.action is "displayVis"
     #add dataset templates here
-    1
+    CKEDITOR.addTemplates "all", 
+      templates:
+        [{
+          title: "Blank Template"
+          description: "This is a blank template."
+          html: """  """
+        }]
     
   if namespace.controller is "visualizations" and namespace.action is "show"
     #add saved vis templates here
-    1
+    CKEDITOR.addTemplates "all", 
+      templates:
+        [{
+          title: "Blank Template"
+          description: "This is a blank template."
+          html: """  """
+        }]
+    
     
   if namespace.controller is "users"
     #add bio templates here
-    1
+    CKEDITOR.addTemplates "all", 
+      templates:
+        [{
+          title: "Blank Template"
+          description: "This is a blank template."
+          html: """  """
+        }]
+    
     
   if namespace.controller is "tutorials"
     #add tutorial templates here
-    1
+    CKEDITOR.addTemplates "all", 
+      templates:
+        [{
+          title: "Blank Template"
+          description: "This is a blank template."
+          html: """  """
+        }]
+    
     
   if namespace.controller is "news"
     #add news templates here
-    1
+    CKEDITOR.addTemplates "all", 
+      templates:
+        [{
+          title: "Blank Template"
+          description: "This is a blank template."
+          html: """  """
+        }]
+    
