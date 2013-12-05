@@ -41,6 +41,9 @@ input[type="checkbox"]
   
   .full
   {
+    @media screen and (max-width: 449px) {
+      display: none;
+    }
     @media screen and (min-width: 450px) {
       display: none;
     }
@@ -50,6 +53,9 @@ input[type="checkbox"]
   }
   .small
   {
+    @media screen and (max-width: 449px) {
+      display: inline;
+    }
     @media screen and (min-width: 450px) {
       display: inline;
     }
