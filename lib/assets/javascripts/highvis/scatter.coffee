@@ -629,55 +629,61 @@ $ ->
               dash_index = data.normalFields.indexOf(y_axis_index)
               dash_style = globals.dashes[dash_index % globals.dashes.length]
               
-              #Get the new regression              
-              new_regression = globals.getRegression(
-                x_data,
-                y_data, 
-                regression_type,
-                @xBounds,
-                name,
-                dash_style
-                )
+              try
+                #Get the new regression              
+                new_regression = globals.getRegression(
+                  x_data,
+                  y_data, 
+                  regression_type,
+                  @xBounds,
+                  name,
+                  dash_style
+                  )
               
-              #Get a unique identifier (last highest count plus one)
-              regression_identifier = '';
-              count = 0;
-              for regression in @savedRegressions
-                if regression.type == regression_type \
-                and regression.field_indices[1] == y_axis_index \
-                and count <= regression.type_count
-                  count = regression.type_count + 1;
-              
-              if count
-                regression_identifier = '(' + (count + 1) + ')'
+                #Get a unique identifier (last highest count plus one)
+                regression_identifier = '';
+                count = 0;
+                for regression in @savedRegressions
+                  if regression.type == regression_type \
+                  and regression.field_indices[1] == y_axis_index \
+                  and count <= regression.type_count
+                    count = regression.type_count + 1;
                 
-              #Add the series
-              new_regression.name.id = 'regression_' + y_axis_index + '_' + regression_type + '_' + count
-              @chart.addSeries(new_regression)
+                if count
+                  regression_identifier = '(' + (count + 1) + ')'
+                  
+                #Add the series
+                new_regression.name.id = 'regression_' + y_axis_index + '_' + regression_type + '_' + count
+                @chart.addSeries(new_regression)
+                
+                #Prepare to save regression fields
+                saved_regression =
+                  type:
+                    regression_type               
+                  type_count:
+                    count
+                  field_indices:
+                    [@xAxis, y_axis_index, group_index]
+                  field_names:
+                    [x_axis_name, y_axis_name]
+                  series:
+                    new_regression
+                  regression_id:
+                    regression_identifier
+                  bounds:
+                    [@xBounds, @yBounds]
+                
+                #Save a regression
+                @savedRegressions.push(saved_regression)
+                        
+                #Actually add the regression to the table
+                @addRegressionToTable(saved_regression, true)
               
-              #Prepare to save regression fields
-              saved_regression =
-                type:
-                  regression_type               
-                type_count:
-                  count
-                field_indices:
-                  [@xAxis, y_axis_index, group_index]
-                field_names:
-                  [x_axis_name, y_axis_name]
-                series:
-                  new_regression
-                regression_id:
-                  regression_identifier
-                bounds:
-                  [@xBounds, @yBounds]
-              
-              #Save a regression
-              @savedRegressions.push(saved_regression)
-                      
-              #Actually add the regression to the table
-              @addRegressionToTable(saved_regression, true)
-            
+              catch error
+                if regression_type is 3
+                  alert "Unable to calculate an #{regressions[regression_type]} regression for this data."
+                else 
+                  alert "Unable to calculate a #{regressions[regression_type]} regression for this data."
             #Set up accordion
             globals.regressionOpen ?= 0
 
