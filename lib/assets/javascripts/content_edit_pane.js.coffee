@@ -62,6 +62,7 @@ $ ->
             saveButton.hide()
             cancelButton.hide()
             editor.destroy()
+      return editor
   
   ($ '#content_edit').click () ->
     ck = ($ document).find('.content:visible')[0]
@@ -74,7 +75,11 @@ $ ->
       elem =  root.find('div.content')
       elem.show()
       ($ this).hide()
-      turn_on_ck(elem[0])
+      editor = turn_on_ck(elem[0])
+      
+      if CKEDITOR.getTemplates('all')?
+        editor.setData CKEDITOR.getTemplates('all').templates[0].html
+      
       elem[0].focus()
       
       
