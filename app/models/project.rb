@@ -129,7 +129,7 @@ class Project < ActiveRecord::Base
         dataset = DataSet.find(d.to_i)
         dataset.to_csv(tmpdir)
       end
-      system("cd /tmp/rsense/#{random_hex} && zip -r #{folder_name}.zip #{folder_name}")
+      system("(cd /tmp/rsense/#{random_hex} && zip -qr #{folder_name}.zip #{folder_name})")
       zip_file = "/tmp/rsense/#{random_hex}/#{folder_name}.zip"
     rescue
       raise "Failed to export"
