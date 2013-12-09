@@ -248,7 +248,7 @@ $ ->
             controls += "<div id='binSizeSlider' style='width:90%;margin-left:5%'></div><br>"
 
             
-            controls += "Manual: <input id='binSizeInput' class='control_select' value='#{@binSize}'></input>"
+            controls += "Manual: <input id='binSizeInput' class='form-control' value='#{@binSize}'></input>"
             
             controls += '</div></div></div>'
             
