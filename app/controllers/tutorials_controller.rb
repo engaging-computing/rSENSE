@@ -27,7 +27,7 @@ class TutorialsController < ApplicationController
       @tutorials = Tutorial.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("like_count DESC")
     end
     
-    recur = params.key?(:recur) ? params[:recur].to_bool : false
+    recur = params.key?(:recur) ? params[:recur] == "true" : false
     
     respond_to do |format|
       format.html

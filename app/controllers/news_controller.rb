@@ -31,7 +31,7 @@ class NewsController < ApplicationController
   def show
     @news = News.find(params[:id])
 
-    recur = params.key?(:recur) ? params[:recur].to_bool : false
+    recur = params.key?(:recur) ? params[:recur] == "true" : false
   
     respond_to do |format|
       format.html # show.html.erb

@@ -48,7 +48,7 @@ class UsersController < ApplicationController
       end
     end
     
-    recur = params.key?(:recur) ? params[:recur].to_bool : false
+    recur = params.key?(:recur) ? params[:recur] == "true" : false
     show_hidden = @cur_user.id == @user.id
           
     respond_to do |format|
