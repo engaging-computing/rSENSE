@@ -216,6 +216,7 @@ $ ->
                     for index in data.normalFields when dataPoint[index] isnt null
                         @heatPoints[index][groupIndex].push
                             weight: dataPoint[index]
+                            val: dataPoint[index]
                             location: latlng
 
                     @heatPoints[@HEATMAP_MARKERS][groupIndex].push latlng
@@ -308,13 +309,33 @@ $ ->
           
           # Build heatmap points from pre-computed data
           if @heatmapSelection isnt @HEATMAP_NONE
+          
+            @heatmapPixelRadius = @getHeatmapScale()
             
             heats = []
             for index, heatArray of @heatPoints when (Number index) is @heatmapSelection
               for groupArray, groupIndex in heatArray when groupIndex in globals.groupSelection
                 heats = heats.concat groupArray
+            
+            if @heatmapSelection >= 0
+              coords = []
+              for heat in heats
+                coords.push @projOverlay.projectPixels heat.location
+                
+              for heat, hIndex in heats
+                ori = @projOverlay.projectPixels heat.location
+                # distance to origin function
+                dist = (a) -> Math.sqrt((a.x - ori.x)*(a.x - ori.x) + (a.y - ori.y)*(a.y - ori.y))
+                # Get all points within one radius of origin
+                neighbors = (coords.map(dist)).filter (a) => return a < (@heatmapPixelRadius)
+                # Reverse the distance, and raise to power (for weighting)
+                neighbors = neighbors.map (a) => Math.pow((@heatmapPixelRadius) - a, 3)
+                # Scale by reciprical
+                neighbors = neighbors.map (a) => a / Math.pow((@heatmapPixelRadius), 3)
+                # Finially, add together to get weight
+                add = (a,b) -> a + b
+                heats[hIndex].weight = heat.val / neighbors.reduce(add, 0)
 
-            @heatmapPixelRadius = @getHeatmapScale()
             # Draw heatmap
             @heatmap = new google.maps.visualization.HeatmapLayer
               data: heats
@@ -355,7 +376,7 @@ $ ->
 
             # Add heatmap selector
             controls += '<div class="inner_control_div"> Map By: '
-            controls += '<select id="heatmapSelector" class="control_select">'
+            controls += '<select id="heatmapSelector" class="form-control">'
 
             sel = if @heatmapSelection is @HEATMAP_NONE then 'selected' else ''
             controls += "<option value=\"#{@HEATMAP_NONE}\" #{sel}>None</option>"
