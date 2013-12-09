@@ -639,7 +639,7 @@ $ ->
                   name,
                   dash_style
                   )
-              
+             
                 #Get a unique identifier (last highest count plus one)
                 regression_identifier = '';
                 count = 0;
