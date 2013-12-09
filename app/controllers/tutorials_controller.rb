@@ -64,7 +64,7 @@ class TutorialsController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { render :status => 404 }
+        format.html { render text: "Not allowed", status: 404 }
         format.json { render json: @tutorial.errors, status: :forbidden }
       end
     end
@@ -138,7 +138,7 @@ class TutorialsController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { redirect_to 'public/401.html' }
+        format.html { redirect_to '/public/401.html' }
         format.json { render json: {}, status: :forbidden }
       end
     end

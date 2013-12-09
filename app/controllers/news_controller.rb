@@ -56,7 +56,7 @@ class NewsController < ApplicationController
     else
       respond_to do |format|
         format.html { render :status => 403 }
-        format.json { render json: @news.errors, status: :forbidden }
+        format.json { render json: "Access denied", status: :forbidden }
       end
     end
   end
