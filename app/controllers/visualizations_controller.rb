@@ -45,7 +45,7 @@ class VisualizationsController < ApplicationController
     # The finalized data object
     @Data = { savedData: @visualization.data, savedGlobals: @visualization.globals }
 
-    recur = params.key?(:recur) ? params[:recur].to_bool : false
+    recur = params.key?(:recur) ? params[:recur] == "true" : false
     
     options = {}
     
