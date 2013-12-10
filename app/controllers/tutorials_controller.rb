@@ -27,7 +27,7 @@ class TutorialsController < ApplicationController
       @tutorials = Tutorial.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("like_count DESC")
     end
     
-    recur = params.key?(:recur) ? params[:recur].to_bool : false
+    recur = params.key?(:recur) ? params[:recur] == "true" : false
     
     respond_to do |format|
       format.html
@@ -64,7 +64,7 @@ class TutorialsController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { render :status => 404 }
+        format.html { render text: "Not allowed", status: 404 }
         format.json { render json: @tutorial.errors, status: :forbidden }
       end
     end
@@ -138,7 +138,7 @@ class TutorialsController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { redirect_to 'public/401.html' }
+        format.html { redirect_to '/public/401.html' }
         format.json { render json: {}, status: :forbidden }
       end
     end

@@ -88,7 +88,7 @@ class ProjectsController < ApplicationController
       @data_sets = []
     end
     
-    recur = params.key?(:recur) ? params[:recur].to_bool : false
+    recur = params.key?(:recur) ? params[:recur] == "true" : false
     
     respond_to do |format|
       format.html # show.html.erb
@@ -398,7 +398,6 @@ class ProjectsController < ApplicationController
     end
 
   end
-
 
   def templateFields
     

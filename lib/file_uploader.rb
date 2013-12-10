@@ -141,6 +141,34 @@ class FileUploader
     results
   end
   
+  def sanitize_data(data_obj, project, matches)
+    matches.each do |match|
+      field = Field.find(match[0])
+      type = get_field_name(field.field_type)
+      column = data_obj[match[1]]
+      column.each do |dp|
+        next if dp.nil?
+        case type
+        when "Number"
+          return {status: false, msg: "\"#{field.name}\" should contain only numbers, found \"#{dp}\""} if !dp.valid_float?
+        when "Latitude"
+          if dp.valid_float?
+            next if ((Float dp).abs <= 90)
+          end
+          return {status: false, msg: "Latitude contains invalid data"}
+        when "Longitude"
+          if dp.valid_float?
+            next if ((Float dp).abs <= 180)
+          end
+          return {status: false, msg: "Longiude contains invalid data"}
+        when "Time"
+        when "Text"
+        end
+      end
+    end
+    return {status: true, msg: "passed"}
+  end
+  
   
   private
   
@@ -274,4 +302,10 @@ class FileUploader
     
   end
   
+end
+
+class String
+  def valid_float?
+    true if Float self rescue false
+  end
 end

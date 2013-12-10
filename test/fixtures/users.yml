@@ -5,7 +5,6 @@ nixon:
   lastname: Nixon
   username: nixon
   email: nixon@whitehouse.gov
-  content: 
   validated: true
   # Password is "12345"
   password_digest: $2a$10$aK2OsTVTnWuPVmDthm9pj.vDApO9VGNgRwvwHmwzVQ0ScmW3BOPjC
@@ -16,7 +15,6 @@ kate:
   lastname: Carcia
   username: kate
   email: kcarcia@cs.uml.edu 
-  content: 
   validated: true
   # Password is "12345"
   password_digest: $2a$10$aK2OsTVTnWuPVmDthm9pj.vDApO9VGNgRwvwHmwzVQ0ScmW3BOPjC
@@ -27,7 +25,6 @@ crunch:
   lastname: Crunch
   username: crunch
   email: captncrunch@example.com
-  content:  
   validated: false
   password_digest: $2a$10$aK2OsTVTnWuPVmDthm9pj.vDApO9VGNgRwvwHmwzVQ0ScmW3BOPjC
   validation_key: abcd
