@@ -147,6 +147,7 @@ class FileUploader
       type = get_field_name(field.field_type)
       column = data_obj[match[1]]
       column.each do |dp|
+        next if dp.nil?
         case type
         when "Number"
           return {status: false, msg: "\"#{field.name}\" should contain only numbers, found \"#{dp}\""} if !dp.valid_float?
