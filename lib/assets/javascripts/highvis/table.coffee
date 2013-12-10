@@ -48,7 +48,8 @@ $ ->
       
           #Updates controls by default       
           ($ '#' + @canvas).append '<table id="data_table" class="table table-default table-striped"></table>'
-                     
+          
+          ###           
           #Build the headers for the table
           headers = for field, fieldIndex in data.fields
             fieldTitle(field)
@@ -59,7 +60,7 @@ $ ->
               { name: fieldTitle(field), index: fieldIndex, search: true, resizable: false, hidden: true }
             else
               { name: fieldTitle(field), index: fieldIndex, search: true, resizable: false }
-              
+           
           @table = jQuery("#data_table").jqGrid({
             datatype: "local",
             height: ($ '#' + @canvas).height() - 45,
@@ -70,21 +71,23 @@ $ ->
  	          hidegrid: false;
  	          autowidth: true;
           })
-                          
+          ###          
+             
           #Build the data for the table
           visibleGroups = for group, groupIndex in data.groups when groupIndex in globals.groupSelection
-              group
-                    
+            group
+            
           rows = for dataPoint in data.dataPoints when (String dataPoint[data.groupingFieldIndex]).toLowerCase() in visibleGroups
-            line = {}
-            for dat, fieldIndex in dataPoint
-              line[fieldIndex] = dat
-                
-            console.log(line)   
-            #line.reduce (a,b)-> a+b
-          
-          for row, index in rows
-	          jQuery("#data_table").jqGrid('addRowData', index+1, row);
+              line = for dat, fieldIndex in dataPoint
+                  if (fieldIndex is data.COMBINED_FIELD)
+                      "<td style='display:none'>#{dat}</td>"
+                  else
+                      "<td>#{dat}</td>"
+                    
+                  "<tr>#{line.reduce (a,b)-> a+b}</tr>"
+            
+          ($ '#data_table').append '<tbody id="table_body"></tbody>' 
+          ($ '#table_body').append row for row in rows 
           
           #Set sort state to default none existed
           @sortState ?= [[1, 'asc']]
