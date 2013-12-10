@@ -303,7 +303,7 @@ $ ->
             <fieldset>
         """
 
-        formText += '<select id="timeSelector" class="control_select">'
+        formText += '<select id="timeSelector" class="form-control">'
 
         for fieldIndex, index in data.timeFields
                 sel = if index is 0 then 'selected' else ''

@@ -326,8 +326,8 @@ $ ->
             
             controls += "<h4 class='clean_shrink'>Zoom</h4>"
             controls += '<div class="inner_control_div">'
-            controls += "<button id='zoomResetButton' class='zoom_reset_button btn'>Reset Zoom </button>"
-            controls += "<button id='zoomOutButton' class='zoom_out_button btn'>Zoom Out </button>"
+            controls += "<button id='zoomResetButton' class='zoom_reset_button btn btn-default'>Reset Zoom </button>"
+            controls += "<button id='zoomOutButton' class='zoom_out_button btn btn-default'>Zoom Out </button>"
 
             controls += "<h4 class='clean_shrink'>Display Mode</h4>"
 
@@ -335,28 +335,28 @@ $ ->
                                     [@LINES_MODE,         "Lines Only"],
                                     [@SYMBOLS_MODE,       "Symbols Only"]]
                 controls += '<div class="inner_control_div">'
-                controls += "<input class='mode_radio' type='radio' name='mode_selector' value='#{mode}' #{if @mode is mode then 'checked' else ''}/>"
-                controls += modeText + "</div>"
+                controls += "<div class='radio'><label><input class='mode_radio' type='radio' name='mode_selector' value='#{mode}' #{if @mode is mode then 'checked' else ''}/>"
+                controls += modeText + "</label></div></div>"
 
             controls += "<br>"
             controls += "<h4 class='clean_shrink'>Other</h4>"
                 
             controls += '<div class="inner_control_div">'
-            controls += "<input class='tooltip_box' type='checkbox' name='tooltip_selector' #{if @advancedTooltips then 'checked' else ''}/> Advanced Tooltips "
+            controls += "<div class='checkbox'><label><input class='tooltip_box' type='checkbox' name='tooltip_selector' #{if @advancedTooltips then 'checked' else ''}/> Advanced Tooltips</label></div> "
             controls += "</div>"
 
             controls += '<div class="inner_control_div">'
-            controls += "<input class='full_detail_box' type='checkbox' name='full_detail_selector' #{if @fullDetail then 'checked' else ''}/> Full Detail "
+            controls += "<div class='checkbox'><label><input class='full_detail_box' type='checkbox' name='full_detail_selector' #{if @fullDetail then 'checked' else ''}/> Full Detail </label></div>"
             controls += "</div>"
 
             if data.logSafe is 1
                 controls += '<div class="inner_control_div">'
-                controls += "<input class='logY_box' type='checkbox' name='log_selector' #{if globals.logY is 1 then 'checked' else ''}/> Logarithmic Y Axis "
+                controls += "<div class='checkbox'><label><input class='logY_box' type='checkbox' name='log_selector' #{if globals.logY is 1 then 'checked' else ''}/> Logarithmic Y Axis </label></div>"
                 controls += "</div>"
 
             if elaspedTimeButton
                 controls += "<div class='inner_control_div' style='text-align:center'>"
-                controls += "<button id='elaspedTimeButton' class='save_button btn'>Generate Elapsed Time </button>"
+                controls += "<button id='elaspedTimeButton' class='save_button btn btn-default'>Generate Elapsed Time </button>"
                 controls += "</div>"
                 
             controls+= "</div></div>"
@@ -429,8 +429,8 @@ $ ->
             for field, fieldIndex in data.fields when filter fieldIndex
                 controls += '<div class="inner_control_div">'
 
-                controls += "<input class=\"xAxis_input\" type=\"radio\" name=\"xaxis\" value=\"#{fieldIndex}\" #{if (Number fieldIndex) == @xAxis then "checked" else ""}></input>&nbsp"
-                controls += "#{data.fields[fieldIndex].fieldName}&nbsp"
+                controls += "<div class='radio'><label><input class='xAxis_input' type='radio' name='xaxis' value='#{fieldIndex}' #{if (Number fieldIndex) == @xAxis then "checked" else ""}>"
+                controls += "#{data.fields[fieldIndex].fieldName}</label></div>"
                 controls += "</div>"
 
             controls += '</div></div>'
@@ -546,7 +546,7 @@ $ ->
               <td id='regressionXAxis' style='text-align:left'>#{data.fields[@xAxis].fieldName}</td></tr>
               
               <tr><td style='text-align:left'>Y Axis: </td>
-              <td><select id='regressionYAxisSelector' class='control_select'>
+              <td><select id='regressionYAxisSelector' class='form-control'>
               """
 
             for fieldIndex in globals.fieldSelection
@@ -556,7 +556,7 @@ $ ->
               """
               </select></td></tr>
               <tr><td style='text-align:left'>Type: </td>
-              <td><select id="regressionSelector" class="control_select">
+              <td><select id="regressionSelector" class="form-control">
               """
 
             regressions = ['Linear', 'Quadratic', 'Cubic', 'Exponential', 'Logarithmic']
@@ -567,7 +567,7 @@ $ ->
               """
               </select></td></tr>           
               </table>
-              <button id='regressionButton' class='save_button btn'>Draw Best Fit Line</button>
+              <button id='regressionButton' class='save_button btn btn-default'>Draw Best Fit Line</button>
               <table id='regressionTable' class='regression_table fixed' >
               <col width='55%' />
               <col width='35%' />
@@ -629,55 +629,61 @@ $ ->
               dash_index = data.normalFields.indexOf(y_axis_index)
               dash_style = globals.dashes[dash_index % globals.dashes.length]
               
-              #Get the new regression              
-              new_regression = globals.getRegression(
-                x_data,
-                y_data, 
-                regression_type,
-                @xBounds,
-                name,
-                dash_style
-                )
-              
-              #Get a unique identifier (last highest count plus one)
-              regression_identifier = '';
-              count = 0;
-              for regression in @savedRegressions
-                if regression.type == regression_type \
-                and regression.field_indices[1] == y_axis_index \
-                and count <= regression.type_count
-                  count = regression.type_count + 1;
-              
-              if count
-                regression_identifier = '(' + (count + 1) + ')'
+              try
+                #Get the new regression              
+                new_regression = globals.getRegression(
+                  x_data,
+                  y_data, 
+                  regression_type,
+                  @xBounds,
+                  name,
+                  dash_style
+                  )
+             
+                #Get a unique identifier (last highest count plus one)
+                regression_identifier = '';
+                count = 0;
+                for regression in @savedRegressions
+                  if regression.type == regression_type \
+                  and regression.field_indices[1] == y_axis_index \
+                  and count <= regression.type_count
+                    count = regression.type_count + 1;
                 
-              #Add the series
-              new_regression.name.id = 'regression_' + y_axis_index + '_' + regression_type + '_' + count
-              @chart.addSeries(new_regression)
+                if count
+                  regression_identifier = '(' + (count + 1) + ')'
+                  
+                #Add the series
+                new_regression.name.id = 'regression_' + y_axis_index + '_' + regression_type + '_' + count
+                @chart.addSeries(new_regression)
+                
+                #Prepare to save regression fields
+                saved_regression =
+                  type:
+                    regression_type               
+                  type_count:
+                    count
+                  field_indices:
+                    [@xAxis, y_axis_index, group_index]
+                  field_names:
+                    [x_axis_name, y_axis_name]
+                  series:
+                    new_regression
+                  regression_id:
+                    regression_identifier
+                  bounds:
+                    [@xBounds, @yBounds]
+                
+                #Save a regression
+                @savedRegressions.push(saved_regression)
+                        
+                #Actually add the regression to the table
+                @addRegressionToTable(saved_regression, true)
               
-              #Prepare to save regression fields
-              saved_regression =
-                type:
-                  regression_type               
-                type_count:
-                  count
-                field_indices:
-                  [@xAxis, y_axis_index, group_index]
-                field_names:
-                  [x_axis_name, y_axis_name]
-                series:
-                  new_regression
-                regression_id:
-                  regression_identifier
-                bounds:
-                  [@xBounds, @yBounds]
-              
-              #Save a regression
-              @savedRegressions.push(saved_regression)
-                      
-              #Actually add the regression to the table
-              @addRegressionToTable(saved_regression, true)
-            
+              catch error
+                if regression_type is 3
+                  alert "Unable to calculate an #{regressions[regression_type]} regression for this data."
+                else 
+                  alert "Unable to calculate a #{regressions[regression_type]} regression for this data."
             #Set up accordion
             globals.regressionOpen ?= 0
 

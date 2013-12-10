@@ -21,6 +21,7 @@ group :development, :test do
   gem "capybara"
   gem "selenium-webdriver", '~> 2.35.1'
   gem "launchy"
+  gem "simplecov"
 end
 
 # Jquery stuff
