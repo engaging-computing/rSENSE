@@ -605,7 +605,15 @@ class ProjectsController < ApplicationController
 
     # Save all the fields
     @project.fields.each do |field| 
-      if !(field.update_attributes({name: params["#{field.id}_name"],unit: params["#{field.id}_unit"]} || ""))
+      restrictions = nil
+      if params.has_key?("#{field.id}_restrictions")
+        restrictions = params["#{field.id}_restrictions"].downcase.split(',')
+        if restrictions.count < 1
+          restrictions = nil
+        end
+      end
+        
+      if !(field.update_attributes({name: params["#{field.id}_name"],unit: params["#{field.id}_unit"],restrictions: restrictions} || ""))
         respond_to do |format|
           flash[:error] = "Field names must be unique"
           format.html

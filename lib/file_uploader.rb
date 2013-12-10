@@ -146,7 +146,8 @@ class FileUploader
       field = Field.find(match[0])
       type = get_field_name(field.field_type)
       column = data_obj[match[1]]
-      column.each do |dp|
+      column.each_with_index do |dp,index|
+        next if dp.nil?
         case type
         when "Number"
           return {status: false, msg: "\"#{field.name}\" should contain only numbers, found \"#{dp}\""} if !dp.valid_float?
@@ -162,10 +163,15 @@ class FileUploader
           return {status: false, msg: "Longiude contains invalid data"}
         when "Time"
         when "Text"
+          if !field.restrictions.nil?
+            if !(field.restrictions.map {|r| r.downcase.gsub(/\s+/, "")}.include? dp.downcase.gsub(/\s+/, ""))
+              data_obj[match[1]][index] = ""
+            end
+          end
         end
       end
     end
-    return {status: true, msg: "passed"}
+    return {status: true, msg: "passed", data_obj: data_obj}
   end
   
   
