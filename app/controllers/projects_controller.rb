@@ -420,7 +420,7 @@ class ProjectsController < ApplicationController
       if !(field.update_attributes({name: params["#{field.id}_name"],unit: params["#{field.id}_unit"],restrictions: restrictions} || ""))
         respond_to do |format|
           flash[:error] = "Field names must be unique"
-          format.html
+          redirect_to "/projects/#{@project.id}/edit_fields"
           return
         end
       end

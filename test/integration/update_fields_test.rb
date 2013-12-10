@@ -39,5 +39,9 @@ class MakeProjectTest < ActionDispatch::IntegrationTest
     find('#new_field').find(:xpath, 'option[5]').select_option
     assert page.has_content?("Field added")
     
+    find('#fields_form_submit').click
+    
+    assert page.has_content?("Changes to fields saved.")
+    
   end
 end
