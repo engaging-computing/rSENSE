@@ -21,6 +21,20 @@ class News < ActiveRecord::Base
 #     
 #   end
   
+  def self.search(search, include_hidden = false)
+    res = if search
+        where('lower(title) LIKE lower(?)', "%#{search}%")
+    else
+        all
+    end
+    
+    if include_hidden
+      res
+    else
+      res.where({hidden: false})
+    end
+  end
+  
   def to_hash(recurse = false)
     h = {
       id: self.id,
