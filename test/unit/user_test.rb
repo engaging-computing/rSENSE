@@ -24,11 +24,6 @@ class UserTest < ActiveSupport::TestCase
     assert_default_false( @user, @user.admin )
   end
   
-  # Passes if content is nil
-  test "content is nil" do
-    assert_default_nil( @user, @user.content )
-  end
-
   # Passes if hidden is false
   test "hidden is false" do
     assert_default_false( @user, @user.hidden )
@@ -65,9 +60,4 @@ class UserTest < ActiveSupport::TestCase
   test "admin" do
     assert_equal false, users(:kate).admin
   end
-  
-  test "content" do
-     assert_nil( users(:kate).content, "Expected content is nil." )
-  end
-
 end

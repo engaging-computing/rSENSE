@@ -1,10 +1,10 @@
-require 'simplecov'
-require 'simplecov_rsense'
-SimpleCov.start 'rsense'
-
 ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
+
+require 'simplecov'
+require 'simplecov_rsense'
+SimpleCov.start 'rsense'
 
 require 'capybara/rails'
 #Capybara.javascript_driver = :webkit

@@ -9,7 +9,7 @@ class DataSetsController < ApplicationController
   def show
     @data_set = DataSet.find(params[:id])
     @mongo_data_set = { data: @data_set.data }
-    recur = params.key?(:recur) ? params[:recur].to_bool : false
+    recur = params.key?(:recur) ? params[:recur] == "true" : false
     respond_to do |format|
       format.html { redirect_to (project_path @data_set.project) + (data_set_path @data_set) }
       format.json { render json: @data_set.to_hash(recur)}

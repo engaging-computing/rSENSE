@@ -32,4 +32,11 @@ class SessionsControllerTest < ActionController::TestCase
     get :verify, { format: 'json' }, { user_id: @kate }
     assert_response :success
   end
+
+  test "should redirect from /login to /" do
+    @request.env['HTTP_REFERER'] = login_url
+    get :new
+    assert_response :success
+    assert_equal session[:redirect_to], "/home/index"
+  end
 end
