@@ -131,7 +131,7 @@ $ ->
           color: '#000',
           lineWidth: 2,
           dashStyle: dash_style,
-          showInLegend: false,
+          showInLegend: 0,
           marker: 
             symbol: 'blank'
           states:
