@@ -3,7 +3,8 @@ require 'test_helper'
 class NewsControllerTest < ActionController::TestCase
   setup do
     @nixon = users(:nixon)
-    @news = news(:one)
+    @kate  = users(:kate)
+    @news  = news(:one)
   end
 
   test "should get index" do
@@ -42,6 +43,14 @@ class NewsControllerTest < ActionController::TestCase
     end
 
     assert_response :success
+  end
+
+  test "should not create news as non-admin (json)" do
+    assert_difference('News.count', 0) do
+      post :create, { format: 'json' }, { user_id: @kate }
+    end
+
+    assert_response :forbidden
   end
 
   test "should update news" do
