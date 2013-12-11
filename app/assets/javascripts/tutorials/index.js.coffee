@@ -16,8 +16,8 @@ $ ->
             <div style="font-size:1.2em; font-weight:bold;">#{object.name}
             #{if object.featured then "<span style='color:#57C142'> (featured)</span>" else ""}
             </div>
-            <b>Owner: </b><a href='#{object.ownerUrl}'>#{object.ownerName}</a><br />
-            <b>Created: </b>#{object.timeAgoInWords} ago (on #{object.createdAt})<br />
+            by <a href='#{object.ownerUrl}'>#{object.ownerName}</a><br />
+            on #{object.createdAt}<br />
           </div>
        </div>
       """
