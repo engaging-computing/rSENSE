@@ -44,67 +44,92 @@ $ ->
 
         #Gets called when the controls are clicked and at start
         update: ->
-          ($ '#' + @canvas).html('')
-      
-          #Updates controls by default       
-          ($ '#' + @canvas).append '<table id="data_table" class="table table-default table-striped"></table>'
-          
-          ###           
-          #Build the headers for the table
-          headers = for field, fieldIndex in data.fields
-            fieldTitle(field)
+            ($ '#' + @canvas).html('')
+        
+            #Updates controls by default
+            ($ '#' + @canvas).append '<table id="data_table" class="table table-striped"></table>'
             
-          #Build the colModel object
-          columns = for field, fieldIndex in data.fields
-            if (fieldIndex is data.COMBINED_FIELD)
-              { name: fieldTitle(field), index: fieldIndex, search: true, resizable: false, hidden: true }
-            else
-              { name: fieldTitle(field), index: fieldIndex, search: true, resizable: false }
-           
-          @table = jQuery("#data_table").jqGrid({
-            datatype: "local",
-            height: ($ '#' + @canvas).height() - 45,
-            width: ($ '#' + @canvas).width(),
- 	          colNames: headers,
- 	          caption: "Header Test"
- 	          colModel: columns
- 	          hidegrid: false;
- 	          autowidth: true;
-          })
-          ###          
-             
-          #Build the data for the table
-          visibleGroups = for group, groupIndex in data.groups when groupIndex in globals.groupSelection
-            group
+            ($ '#data_table').append '<thead><tr id="table_headers"></tr></thead>'
             
-          rows = for dataPoint in data.dataPoints when (String dataPoint[data.groupingFieldIndex]).toLowerCase() in visibleGroups
-              line = for dat, fieldIndex in dataPoint
-                  if (fieldIndex is data.COMBINED_FIELD)
-                      "<td style='display:none'>#{dat}</td>"
-                  else
-                      "<td>#{dat}</td>"
+            #Build the headers for the table
+            headers = for field, fieldIndex in data.fields
+                if (fieldIndex is data.COMBINED_FIELD)
+                    "<th style='display:none'>#{fieldTitle field}</th>"
+                else
+                    "<th>#{fieldTitle field}</th>"
+                
+            ($ '#table_headers').append header for header in headers
+            
+            #Build the data for the table
+            visibleGroups = for group, groupIndex in data.groups when groupIndex in globals.groupSelection
+                group
+            
+            rows = for dataPoint in data.dataPoints when (String dataPoint[data.groupingFieldIndex]).toLowerCase() in visibleGroups
+                line = for dat, fieldIndex in dataPoint
+                    if (fieldIndex is data.COMBINED_FIELD)
+                        "<td style='display:none'>#{dat}</td>"
+                    else
+                        "<td>#{dat}</td>"
                     
-                  "<tr>#{line.reduce (a,b)-> a+b}</tr>"
+                "<tr>#{line.reduce (a,b)-> a+b}</tr>"
             
-          ($ '#data_table').append '<tbody id="table_body"></tbody>' 
-          ($ '#table_body').append row for row in rows 
-          
-          #Set sort state to default none existed
-          @sortState ?= [[1, 'asc']]
-          
-          #Set default search to empty string
-          @searchString ?= ''
-                      
-          #Restore previous search query if exists, else restore empty string
-          if @searchString? and @searchString isnt ''
-              $('#table_canvas').find('input').val(@searchString).keyup()
+            ($ '#data_table').append '<tbody id="table_body"></tbody>'
+            
+            ($ '#table_body').append row for row in rows
 
-          super()
+            #Set sort state to default none existed
+            @sortState ?= [[1, 'asc']]
+            
+            #Set default search to empty string
+            @searchString ?= ''
+
+            #Restore previous search query if exists, else restore empty string
+            if @searchString? and @searchString isnt ''
+                $('#table_canvas').find('input').val(@searchString).keyup()
+                
+            console.log(($ "#data_table"))
+            params = {
+                height: ($ '#' + @canvas).height() - 45,
+                width: ($ '#' + @canvas).width(),
+                caption: "",
+ 	            hidegrid: false,
+ 	            autowidth: true                
+                }   
+            
+            @table = tableToGrid("#data_table", params) 
+
+            #console.log(@table)
+
+            super()
+
+            ###           
+            #Build the headers for the table
+          
+            
+            #Build the colModel object
+
+
+            if (fieldIndex is data.COMBINED_FIELD)
+                { name: fieldTitle(field), index: fieldIndex, search: true, resizable: false, hidden: true }
+            else
+                { name: fieldTitle(field), index: fieldIndex, search: true, resizable: false }
+           
+            @table = jQuery("#data_table").jqGrid({
+                datatype: "local",
+                height: ($ '#' + @canvas).height() - 45,
+                width: ($ '#' + @canvas).width(),
+ 	            colNames: headers,
+ 	            caption: ""
+ 	            colModel: columns
+ 	            hidegrid: false;
+ 	            autowidth: true;
+            })
+            ###          
 
         end: ->
           ($ '#' + @canvas).hide()
 
-          if @atable?
+          if @table?
             
             #Save the sort state
             @sortState = @atable.fnSettings().aaSorting
@@ -124,6 +149,6 @@ $ ->
             @drawSaveControls()
 
         serializationCleanup: ->
-          delete @atable    
+          delete @table    
 
     globals.table = new Table "table_canvas"

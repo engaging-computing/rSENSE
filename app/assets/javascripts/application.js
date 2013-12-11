@@ -42,8 +42,8 @@
 //= require highcharts/highcharts
 //= require highcharts/modules/exporting
 //= require Hydrate
-//= require grid.locale-en.js
 //= require jquery.jqGrid.min.js
+//= require grid.locale-en.js
 //= require jquery.prettyPhoto
 //= require markerclustererplus
 //= require oms
