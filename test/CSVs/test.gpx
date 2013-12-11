@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gpx version="1.1" creator="https://www.findmespot.com" xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+<trk>
+<altitude>Track # 1 - 0-7349462</altitude>
+<desc>A Trip exported from SPOT</desc>
+<number>1</number>
+<trkseg>
+<trkpt lat="43.99417" lon="-71.36945">
+<time>2013-11-10T10:55:30-05:00</time>
+<altitude>1</altitude>
+<cmt>0-7349462 @ 11/10/2013 10:55:30 AM</cmt>
+<desc><![CDATA[]]></desc>
+</trkpt>
+<trkpt lat="43.98484" lon="-71.36957">
+<time>2013-11-10T12:35:41-05:00</time>
+<altitude>2</altitude>
+<cmt>0-7349462 @ 11/10/2013 12:35:41 PM</cmt>
+<desc><![CDATA[]]></desc>
+</trkpt>
+<trkpt lat="43.97661" lon="-71.36459">
+<time>2013-11-10T13:18:58-05:00</time>
+<altitude>3</altitude>
+<cmt>0-7349462 @ 11/10/2013 01:18:58 PM</cmt>
+<desc><![CDATA[]]></desc>
+</trkpt>
+<trkpt lat="43.97308" lon="-71.36179">
+<time>2013-11-10T14:05:22-05:00</time>
+<altitude>4</altitude>
+<cmt>0-7349462 @ 11/10/2013 02:05:22 PM</cmt>
+<desc><![CDATA[]]></desc>
+</trkpt>
+<trkpt lat="43.97312" lon="-71.36179">
+<time>2013-11-10T14:15:53-05:00</time>
+<altitude>5</altitude>
+<cmt>0-7349462 @ 11/10/2013 02:15:53 PM</cmt>
+<desc><![CDATA[]]></desc>
+</trkpt>
+<trkpt lat="43.97314" lon="-71.36172">
+<time>2013-11-10T14:25:51-05:00</time>
+<altitude>6</altitude>
+<cmt>0-7349462 @ 11/10/2013 02:25:51 PM</cmt>
+<desc><![CDATA[]]></desc>
+</trkpt>
+<trkpt lat="43.97950" lon="-71.36627">
+<time>2013-11-10T15:16:03-05:00</time>
+<altitude>7</altitude>
+<cmt>0-7349462 @ 11/10/2013 03:16:03 PM</cmt>
+<desc><![CDATA[]]></desc>
+</trkpt>
+</trkseg>
+</trk>
+</gpx>
+
