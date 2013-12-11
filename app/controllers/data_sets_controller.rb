@@ -291,6 +291,7 @@ class DataSetsController < ApplicationController
     data_obj = uploader.retrieve_obj(params[:file])
     sane = uploader.sanitize_data(data_obj, project, params[:matches])
     if sane[:status]
+      data_obj = sane[:data_obj]
       data = uploader.swap_columns(data_obj, project, params[:matches])
       dataset = DataSet.new do |d|
         d.user_id = @cur_user.id

@@ -90,4 +90,10 @@ class ProjectsControllerTest < ActionController::TestCase
     post :updateLikedStatus, { format: 'json', id: @project }, { user_id: @kate }
     assert_response :success
   end
+  
+  test "should clone project" do 
+    assert_difference('Project.count') do
+      post :create, { format: 'json', project_id: @project.id}, { user_id: @nixon }
+    end
+  end
 end
