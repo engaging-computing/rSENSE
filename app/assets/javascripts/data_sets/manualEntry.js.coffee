@@ -9,6 +9,9 @@ $ ->
         url: window.postURL
         method: 'POST'
         success: (data, textStatus, jqXHR) ->
+          console.log data
+          console.log textStatus
+          console.log jqXHR
           helpers.name_popup data, "Dataset", "data_set", ""
       debug: false
     ($ '#manualTable').editTable(settings)
