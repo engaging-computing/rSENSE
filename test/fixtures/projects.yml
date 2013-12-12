@@ -43,3 +43,15 @@ dessert:
   filter: ""
   like_count: 3
   featured_media_id: 
+  
+project_five:
+  title: Media Test
+  user: nixon
+  content:
+  cloned_from: 
+  featured: false
+  is_template: false
+  filter: ""
+  like_count: 3
+  featured_media_id: 
+  id: 1

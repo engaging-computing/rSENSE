@@ -11,3 +11,10 @@ two:
   title: MyString
   featured: false
   user: kate
+  
+tutorial_three:
+  content: MyText
+  title: MyString
+  featured: false
+  user: kate
+  id: 1
