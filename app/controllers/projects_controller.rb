@@ -148,14 +148,15 @@ class ProjectsController < ApplicationController
     success = false
 
     #EDIT REQUEST
-    if can_edit?(@project)
+    if can_edit?(@project) && !editUpdate.empty?
       success = @project.update_attributes(editUpdate)
     end
 
     #HIDE REQUEST
-    if can_hide?(@project)
+    if can_hide?(@project) && !hideUpdate.empty?
       success = @project.update_attributes(hideUpdate)
     end
+
 
     #ADMIN REQUEST
     if can_admin?(@project)
@@ -169,13 +170,14 @@ class ProjectsController < ApplicationController
       end
 
       if adminUpdate.has_key?(:curated)
-        if adminUpdate['curated'] == "true"
+        if adminUpdate['curated'] == true
           adminUpdate['curated_at'] = Time.now()
+          adminUpdate['lock'] = "true"
         else
           adminUpdate['curated_at'] = nil
         end
       end
-      
+
       success = @project.update_attributes(adminUpdate)
     end
 
