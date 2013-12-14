@@ -36,8 +36,8 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     assert page.has_content?("Dataset #1")
     click_on "File Types"
     assert page.has_content?("Contribute Data")
-    
-    # Test GPX upload 
+
+    # Test GPX upload
     gpx_path = Rails.root.join('test', 'CSVs', 'test.gpx')
     page.execute_script %Q{$('#datafile_form').parent().show()}
     find("#datafile_form").attach_file("file",gpx_path)
@@ -48,7 +48,7 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     click_on "File Types"
     assert page.has_content?("Contribute Data")
 
-    # Test GPX upload 
+    # Test GPX upload
     ods_path = Rails.root.join('test', 'CSVs', 'test.ods')
     page.execute_script %Q{$('#datafile_form').parent().show()}
     find("#datafile_form").attach_file("file",ods_path)
@@ -58,8 +58,8 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     assert page.has_content?("Dataset #3")
     click_on "File Types"
     assert page.has_content?("Contribute Data")
-    
-    # Test GPX upload 
+
+    # Test GPX upload
     xls_path = Rails.root.join('test', 'CSVs', 'test.xls')
     page.execute_script %Q{$('#datafile_form').parent().show()}
     find("#datafile_form").attach_file("file",xls_path)
@@ -70,7 +70,7 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     click_on "File Types"
     assert page.has_content?("Contribute Data")
      
-    # Test GPX upload 
+    # Test GPX upload
     xlsx_path = Rails.root.join('test', 'CSVs', 'test.xlsx')
     page.execute_script %Q{$('#datafile_form').parent().show()}
     find("#datafile_form").attach_file("file",xlsx_path)
@@ -80,6 +80,12 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     assert page.has_content?("Dataset #5")
     click_on "File Types"
     assert page.has_content?("Contribute Data")
+
+    all(".data_set_edit")[0].click
+    assert page.has_content? "Project:"
+    find('#edit_table_save').click
+    assert page.has_content?("Save Visualization")
+    
     
   end
 end

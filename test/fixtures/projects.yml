@@ -47,9 +47,9 @@ dessert:
 project_five:
   title: Media Test
   user: nixon
-  content:
+  content: <p>First Paragraph</p><p>Second Paragraph</p>
   cloned_from: 
-  featured: false
+  featured: true
   is_template: false
   filter: ""
   like_count: 3
