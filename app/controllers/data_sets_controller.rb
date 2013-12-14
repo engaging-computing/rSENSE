@@ -186,8 +186,6 @@ class DataSetsController < ApplicationController
     
     if !sane
       #insane in the membrane
-      logger.info "Data set upload is not sane"
-      logger.info errors.inspect
       respond_to do |format|
         format.json { render json: errors, status: :unprocessable_entity }
       end
@@ -236,11 +234,7 @@ class DataSetsController < ApplicationController
 
       header_to_field_map.each do |key, value|
         if params["data"]["#{value}"][row_index] == ""
-          if @fields.find(key.to_i).field_type == 3
-            val = ""
-          else
-            val = nil
-          end
+          val = nil
         else
           val = params["data"]["#{value}"][row_index]
         end
@@ -328,7 +322,6 @@ class DataSetsController < ApplicationController
         format.html
       end
     rescue Exception => e
-      logger.error e.message
       flash[:error] = 'File could not be read'
       redirect_to project_path(project)
     end

@@ -30,6 +30,7 @@ class MakeProjectTest < ActionDispatch::IntegrationTest
     visit "/"
 
     assert page.has_no_content? "First Paragraph"
+    page.driver.browser.manage.window.resize_to(1100,800)
   end
   
 end
