@@ -121,7 +121,7 @@ class ProjectsControllerTest < ActionController::TestCase
     assert_response :success
     project = Project.find(@project_three)
     assert Project.find(@project_three).curated == true, "Nixon should have curated the project"
-    assert Project.find(@project_three).lock == true, "Curating should have locked the project #{Project.find(@project_three).inspect}"
+    assert Project.find(@project_three).lock == true, "Curating should have locked the project"
     
     put :update, { format: 'json', id: @project_three, project: { curated:false }}, { user_id: @kate }
     assert_response :unprocessable_entity

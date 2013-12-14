@@ -52,11 +52,7 @@ class DataSetsController < ApplicationController
 
         header_to_field_map.each do |htf, htf_index|
           if params["data"]["#{htf}"][row_index] == ""
-            if @fields[htf].field_type == 3
-              val = ""
-            else
-              val = nil
-            end
+            val = nil
           else
             val = params["data"]["#{htf}"][row_index]
           end
