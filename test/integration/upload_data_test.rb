@@ -81,6 +81,13 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     click_on "File Types"
     assert page.has_content?("Contribute Data")
 
+    # Test upload non-readable
+    jpg_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
+    page.execute_script %Q{$('#datafile_form').parent().show()}
+    find("#datafile_form").attach_file("file",jpg_path)
+    assert page.has_content?("File could not be read")
+    
+    #Test edit data set
     all(".data_set_edit")[0].click
     assert page.has_content? "Project:"
     find('#edit_table_save').click
