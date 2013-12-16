@@ -319,6 +319,16 @@ $ ->
         
           strip_table(table)
 
+          #----------------
+          data = {}
+          ($ table).find('th').each ->
+            data[($ @).data('field-id')] = []
+          ($ table).find('tr').has('td').each ->
+            ($ @).children().each (index) ->
+              parent_id = ($ table).find("th:nth-child(#{index+1})").data('field-id')
+              data[parent_id].push(($ @).text())
+          console.log data    
+          #-----------------
           # collect data and ship it off via AJAX
           head = []
 
@@ -349,7 +359,7 @@ $ ->
 
           ajax_data =
             headers: head
-            data: table_data
+            data: data
 
           ($ '#edit_table_add').addClass 'disabled'
           ($ '#edit_table_save').button 'loading'

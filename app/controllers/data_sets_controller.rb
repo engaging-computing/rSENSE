@@ -163,112 +163,28 @@ class DataSetsController < ApplicationController
 
   # POST /projects/1/manualUpload
   def manualUpload
-
-    ############ Sanity Checks ############
-    errors = []
-    sane = true
+    project = Project.find(params['id'])
+  
+    uploader = FileUploader.new
+    sane = uploader.sanitize_data(params[:data])
     
-    if params[:data].nil?
-      errors.push "'data' cannot be nil."
-      sane = false
-    end
-    
-    if params[:headers].nil?
-      errors.push "'headers' cannot be nil."
-      sane = false
-    end
-    
-    if params[:id].nil?
-      errors.push "'id' cannot be nil."
-      sane = false
-    end
-    
-    if sane && !(params[:data].length == params[:headers].length)
-      errors.push "Number of data columns (#{params[:data].length}) does not match number of headers (#{params[:headers].length})."
-      sane  = false
-    end
-    
-    if !sane
-      #insane in the membrane
-      logger.info "Data set upload is not sane"
-      logger.info errors.inspect
-      respond_to do |format|
-        format.json { render json: errors, status: :unprocessable_entity }
+    if sane[:status]
+      data_obj = sane[:data_obj]
+      data = uploader.swap_columns(data_obj, project)
+      dataset = DataSet.new do |d|
+        d.user_id = @cur_user.id
+        d.title = 'Test Dataset'#params[:title]
+        d.project_id = project.id
+        d.data = data
       end
-      return
-    end
-    #######################################
-    
-    @project = Project.find(params[:id])
-    @fields = @project.fields
-    header_to_field_map = {}
-    success = false
-    defaultName = ""
-    
-    if !params[:name]
-      defaultName  = "Dataset ##{(DataSet.where(project_id: params[:id]).to_a.count + 1).to_s}"
-    else
-      defaultName = params["name"]
-    end
-
-    # Generate field mappings
-    @project.fields.each do |field|
-      params[:headers].each_with_index do |header, header_index|
-        if header.to_i == field.id
-          header_to_field_map["#{field.id}"] =  header_index
-        end
-      end
-    end
-    
-    if header_to_field_map.count != @fields.count
-      #headers dont match... womp womp wahhhhh
-      errors.push "Number of headers (#{header_to_field_map.count}) does not match the number of fields (#{@fields.count})"
-      logger.info "Data set headers don't match fields"
-      logger.info errors.inspect
-      respond_to do |format|
-        format.json { render json: errors, status: :unprocessable_entity }
-      end
-      return
-    end
-    
-    # Format data
-    new_data = []
-
-    params[:data]["0"].each_with_index do |tmp, row_index|
-
-      row = {}
-
-      header_to_field_map.each do |key, value|
-        if params["data"]["#{value}"][row_index] == ""
-          if @fields.find(key.to_i).field_type == 3
-            val = ""
-          else
-            val = nil
-          end
-        else
-          val = params["data"]["#{value}"][row_index]
-        end
-        row["#{key}"] = val
-      end
-
-
-      new_data[row_index] = row
-
-    end
-
-    @data_set = DataSet.new(:user_id => @cur_user.id, :project_id => @project.id, 
-                               :title => defaultName, data: new_data)
-
-    followURL = "/projects/#{@project.id}/data_sets/#{@data_set.id}"
-
-    respond_to do |format|
-      if @data_set.save
-        format.json { render json: @data_set.to_hash(false), status: :created}
+      if dataset.save
+        redirect_to "/projects/#{project.id}/data_sets/#{dataset.id}"
       else
-        format.json { render json:{}, status: :unprocessable_entity }
+        #Something went wrong
       end
+    else
+      #needs to reload page
     end
-
   end
 
   # GET /projects/1/export
@@ -289,10 +205,10 @@ class DataSetsController < ApplicationController
     project = Project.find(params[:pid])
     uploader = FileUploader.new
     data_obj = uploader.retrieve_obj(params[:file])
-    sane = uploader.sanitize_data(data_obj, project, params[:matches])
+    sane = uploader.sanitize_data(data_obj, params[:matches])
     if sane[:status]
       data_obj = sane[:data_obj]
-      data = uploader.swap_columns(data_obj, project, params[:matches])
+      data = uploader.swap_columns(data_obj, project)
       dataset = DataSet.new do |d|
         d.user_id = @cur_user.id
         d.title = params[:title]
