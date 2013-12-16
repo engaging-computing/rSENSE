@@ -44,9 +44,6 @@ class ProjectsController < ApplicationController
     
     @projects = @projects.only_templates(templates).only_curated(curated).only_featured(featured).has_data(hasData)
 
-    #Featured list
-    @featured_3 = Project.where(featured: true).order("updated_at DESC").limit(3);
-
     respond_to do |format|
       format.html
       format.json { render json: @projects.map {|p| p.to_hash(false)} }

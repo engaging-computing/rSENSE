@@ -59,8 +59,6 @@ $ ->
     
     while $(selector).width() < numCols * colWidth
       numCols--
-
-    console.log [numCols, $(selector).width(), numCols * colWidth, $(selector).width()/numCols]
     
     $(selector).imagesLoaded ->
 
