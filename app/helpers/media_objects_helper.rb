@@ -21,14 +21,6 @@ module MediaObjectsHelper
     render 'shared/edit_menu', {type: 'media_object', typeName: 'Media Object', obj: @media_object, make_link: make_link, escape_link: url}
   end
   
-  def media_object_edit_helper(field,can_edit = false)
-     render 'shared/edit_info', {type: 'media_object', field: field, value: @media_object[field], row_id: @media_object.id, can_edit: can_edit}
-  end
-    
-  def media_object_content_helper(can_edit = false)
-      render 'shared/newcontent', {type: 'media_object', field: "content", content: @media_object.content, row_id: @media_object.id, has_content: !@media_object.content.blank?, can_edit: can_edit}
-  end  
-  
   def media_object_thumbnail_helper(mo, size=nil, download=false)
     if size == nil
       img_size = '32x32'
