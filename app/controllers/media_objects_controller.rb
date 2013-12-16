@@ -109,7 +109,8 @@ class MediaObjectsController < ApplicationController
       @data_set = DataSet.find_by_id(id)
       if(can_edit?(@data_set))
         @mo.user_id = @data_set.owner.id
-        @mo.project_id = @data_set.id
+        @mo.data_set_id = @data_set.id
+        @mo.project_id = @data_set.project_id
       end
     when 'user'
       @user = User.find_by_username(id)
@@ -151,7 +152,7 @@ class MediaObjectsController < ApplicationController
         if params.has_key?(:non_wys)
           respond_to do |format|
             format.html { redirect_to params[:non_wys] }
-            format.json { render json: @mo.id }
+            format.json { render json: @mo.to_hash(false) }
           end
         else
           # render default
