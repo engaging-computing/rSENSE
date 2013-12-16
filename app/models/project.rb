@@ -100,6 +100,7 @@ class Project < ActiveRecord::Base
       ownerUrl: UrlGenerator.new.user_url(self.owner),
       dataSetCount: self.data_sets.count,
       fieldCount: self.fields.count,
+      viewCount: if(self.view_count) then self.view_count.count else 0 end,
       fields: self.fields.map {|o| o.to_hash false}
     }
     
