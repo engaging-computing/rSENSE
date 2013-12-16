@@ -15,3 +15,11 @@ one:
 #
 two: {}
 #  column: value
+
+news_three:
+  title: I'm a news guy
+  content: I am content for news
+  summary: This contains content
+  hidden: false
+  user: nixon
+  id: 1
