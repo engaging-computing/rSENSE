@@ -63,4 +63,12 @@ class FieldsControllerTest < ActionController::TestCase
       { user_id: @kate }
     assert_response :success
   end
+  
+  test "should add restrictions to text field" do
+    field = Field.find(25)
+    field.restrictions = ['a','b','c']
+    post :updateFields, { format: 'json', id: @field.project.id, changes: [field] }, 
+      { user_id: @kate }
+    assert_response :success
+  end
 end

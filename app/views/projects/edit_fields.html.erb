@@ -8,6 +8,7 @@
               <th>Name</th>
               <th>Type</th>
               <th>Units</th>
+              <th>Restrictions</th>
               <th>Delete Field</th>
             </tr>
           </thead>
@@ -21,6 +22,11 @@
                     <input class="input-small form-control" type="text" name="<%=field.id%>_unit" value="<%=field.unit%>">
                   <% else %>
                     <input class="input-small form-control" type="text" name="<%=field.id%>_unit" value="<%=field.unit%>" readonly>
+                  <% end %>
+                </td>
+                <td>
+                  <%if field.field_type == get_field_type("Text")%>
+                    <input class="input-small form-control" type="text" name="<%=field.id%>_restrictions" value="<%=field.restrictions.nil? ? "" : field.restrictions.join(',')%>">
                   <% end %>
                 </td>
                 <td class="center">

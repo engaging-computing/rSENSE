@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class BasicsTest < ActionDispatch::IntegrationTest
+class RegisterTest < ActionDispatch::IntegrationTest
   include CapyHelper
 
   setup do

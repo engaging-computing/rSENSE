@@ -21,7 +21,7 @@
           <td>
             <div class="controls">
               <% if can_edit? mo %>
-                <a href="<%= media_object_path mo %>">Edit</a>
+                <a class="media_edit" href="<%= media_object_path mo %>">Edit</a>
               <% end %>
               <% if can_delete? mo %>
                 | <%= link_to "Delete", mo, method: 'delete', data: { confirm: "Are you sure?" } %>

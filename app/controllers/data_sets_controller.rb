@@ -9,7 +9,7 @@ class DataSetsController < ApplicationController
   def show
     @data_set = DataSet.find(params[:id])
     @mongo_data_set = { data: @data_set.data }
-    recur = params.key?(:recur) ? params[:recur].to_bool : false
+    recur = params.key?(:recur) ? params[:recur] == "true" : false
     respond_to do |format|
       format.html { redirect_to (project_path @data_set.project) + (data_set_path @data_set) }
       format.json { render json: @data_set.to_hash(recur)}
@@ -52,11 +52,7 @@ class DataSetsController < ApplicationController
 
         header_to_field_map.each do |htf, htf_index|
           if params["data"]["#{htf}"][row_index] == ""
-            if @fields[htf].field_type == 3
-              val = ""
-            else
-              val = nil
-            end
+            val = nil
           else
             val = params["data"]["#{htf}"][row_index]
           end
@@ -190,8 +186,6 @@ class DataSetsController < ApplicationController
     
     if !sane
       #insane in the membrane
-      logger.info "Data set upload is not sane"
-      logger.info errors.inspect
       respond_to do |format|
         format.json { render json: errors, status: :unprocessable_entity }
       end
@@ -240,11 +234,7 @@ class DataSetsController < ApplicationController
 
       header_to_field_map.each do |key, value|
         if params["data"]["#{value}"][row_index] == ""
-          if @fields.find(key.to_i).field_type == 3
-            val = ""
-          else
-            val = nil
-          end
+          val = nil
         else
           val = params["data"]["#{value}"][row_index]
         end
@@ -289,22 +279,30 @@ class DataSetsController < ApplicationController
     project = Project.find(params[:pid])
     uploader = FileUploader.new
     data_obj = uploader.retrieve_obj(params[:file])
-    data = uploader.swap_columns(data_obj, project, params[:matches])
-    dataset = DataSet.new do |d|
-      d.user_id = @cur_user.id
-      d.title = params[:title]
-      d.project_id = project.id
-      d.data = data
-    end
-    
-    if dataset.save
-      redirect_to "/projects/#{project.id}/data_sets/#{dataset.id}"
+    sane = uploader.sanitize_data(data_obj, project, params[:matches])
+    if sane[:status]
+      data_obj = sane[:data_obj]
+      data = uploader.swap_columns(data_obj, project, params[:matches])
+      dataset = DataSet.new do |d|
+        d.user_id = @cur_user.id
+        d.title = params[:title]
+        d.project_id = project.id
+        d.data = data
+      end
+      if dataset.save
+        redirect_to "/projects/#{project.id}/data_sets/#{dataset.id}"
+      else
+        @results = params[:results]
+        @default_name = params[:title]
+        respond_to do |format|
+          flash[:error] = dataset.errors.full_messages()
+          format.html {render action: "uploadCSV2"}
+        end
+      end
     else
-      @results = params[:results]
-      @default_name = params[:title]
       respond_to do |format|
-        flash[:error] = dataset.errors.full_messages()
-        format.html {render action: "uploadCSV2"}
+        flash[:error] = "Data could not be saved: #{sane[:msg]}"
+        format.html {redirect_to project}
       end
     end
   end
@@ -324,7 +322,6 @@ class DataSetsController < ApplicationController
         format.html
       end
     rescue Exception => e
-      logger.error e.message
       flash[:error] = 'File could not be read'
       redirect_to project_path(project)
     end
