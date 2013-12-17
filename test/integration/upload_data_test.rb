@@ -24,7 +24,7 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     assert page.has_content?("Fields"), "Project page should have 'Fields'"
     
     # Test CSV upload by creating fields
-    find('#template_file_upload').click
+    #find('#template_file_upload').click
     csv_path = Rails.root.join('test', 'CSVs', 'test.csv')
     page.execute_script %Q{$('#template_file_form').parent().show()}
     find("#template_file_form").attach_file("file",csv_path)
@@ -92,7 +92,5 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     assert page.has_content? "Project:"
     find('#edit_table_save').click
     assert page.has_content?("Save Visualization")
-    
-    
   end
 end
