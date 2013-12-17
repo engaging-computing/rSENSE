@@ -82,4 +82,9 @@ module CapyHelper
     wait = Selenium::WebDriver::Wait.new(:timeout => 20)
     wait.until { page.driver.browser.find_element(:id => id).displayed? }
   end
+  
+  def wait_for_class(cl)
+    wait = Selenium::WebDriver::Wait.new(:timeout => 20)
+    wait.until { page.driver.browser.find_element(:class => cl).displayed? }
+  end
 end
