@@ -110,6 +110,7 @@ $ ->
           success: (data, textStatus, jqXHR) ->
             window.location = data.redirect
           error: (jqXHR, textStatus, errorThrown) ->
+            console.log jqXHR
             ($ '#edit_table_add').removeClass 'disabled'
             ($ '#edit_table_save').button 'reset'
             log [textStatus, errorThrown]
@@ -319,7 +320,6 @@ $ ->
         
           strip_table(table)
 
-          #----------------
           data = {}
           ($ table).find('th').each ->
             data[($ @).data('field-id')] = []
@@ -327,108 +327,19 @@ $ ->
             ($ @).children().each (index) ->
               parent_id = ($ table).find("th:nth-child(#{index+1})").data('field-id')
               data[parent_id].push(($ @).text())
-          console.log data    
-          #-----------------
-          # collect data and ship it off via AJAX
-          head = []
-
-          ($ table).find('th').each ->
-            head.push ($ @).data('field-id')
-            
-          row_data = []
-
-          ($ table).find('tr').has('td').each ->
-
-            row = []
-
-            ($ @).children().each ->
-              row.push ($ @).text()
-                              
-            row_blank = true
-              
-            ($ @).children().each (index, element) ->
-              if( row[index]? and row[index] != "" )
-                row_blank = false
-
-            if !row_blank
-              row_data.push row
-
-          table_data = for tmp, col_i in row_data[0]
-            tmp = for row, row_i in row_data
-              row[col_i]
-
-          ajax_data =
-            headers: head
-            data: data
 
           ($ '#edit_table_add').addClass 'disabled'
           ($ '#edit_table_save').button 'loading'
 
           $.ajax
-            url: "/projects/#{($ table).data('project-id')}"
-            type: "GET"
-            dataType: "json"
-            cache: false
-            success: (data, textStatus, jqXHR) ->
-              local = []
-              remote = []
-              add_fields = []
-              field_deleted = false
-              dup = []
-                              
-              $(data.fields).each (i, e) ->
-                remote.push e.id
-              local = ajax_data.headers
-              
-              ($ remote).each (index, field) ->
-                if !(field in local)
-                  add_fields.push( data.fields[index] )
-                                        
-              ($ local).each (index, field) ->
-                if !(field in remote)
-                  field_deleted = true
+            url: "#{settings.upload.url}",
+            type: "#{settings.upload.method}"
+            dataType: 'json'
+            data:
+              data: data
+            error: settings.upload.error
+            success: settings.upload.success
                   
-              if field_deleted
-                alert "The project owner deleted a field/fields while you were entering data. Unfortunately we must refresh the page (losing data) to correct the fields."
-                location.reload true
-
-              if add_fields.length == 0
-               
-                $.ajax "#{settings.upload.url}",
-                  type: "#{settings.upload.method}"
-                  dataType: 'json'
-                  data: ajax_data
-                  error: settings.upload.error
-                  success: settings.upload.success
-                  
-              else
-              
-                alert "The project owner added a field/fields while you were entering data. We are adding these new fields for you now, press save again to submit data with the new fields."
-                    
-                ($ add_fields).each (index, element) ->
-                  ($ table).find('thead tr').eq(0).append("<th data-field-type='#{settings.type(element.type)}' data-field-id='#{element.id}' data-field-name='#{element.name}'>#{element.name}</th>")
-                ($ table).find('tbody').find('tr').each (i, e) ->
-                  ($ add_fields).each () ->
-                    ($ e).append('<td></td>')
-                 
-                wrap_table(table)
-                      
-                # add buttons
-                for button in settings.buttons
-                  do (button) ->
-                    if button is "close" or button is "Close"
-                      ($ table).find('tr').eq(0).append '<th></th>'
-                      ($ table).find('tbody').children().each ->
-                        ($ @).append '<td><div class="text-center"><a class="close" style="float:none;">&times;</a></div></td>'
-                        ($ @).find('.close').click () ->
-                          remove_row(@)
-          
-                    if button is "add" or button is "Add"
-                      ($ '#edit_table_add').removeClass 'disabled'
-          
-                    if button is "save" or button is "Save"
-                      ($ '#edit_table_save').button 'reset'
-                      ($ '#edit_table_save').click submit_form
 
         # does it pass?
         table_validates = (tab) ->

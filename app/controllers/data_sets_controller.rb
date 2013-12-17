@@ -27,56 +27,39 @@ class DataSetsController < ApplicationController
     end
   end
 
-  # GET /data_sets/1/edit
+  # GET /data_sets/1/edit && PUT /data_sets/1/edit
   def edit
     @data_set = DataSet.find(params[:id])
     @project = Project.find(@data_set.project_id)
     @fields = @project.fields
 
-    header_to_field_map = []
+    #Save button was hit.
+    if !params[:data].nil?
+      uploader = FileUploader.new
+      sane = uploader.sanitize_data(params[:data])
+      if sane[:status]
+        data_obj = sane[:data_obj]
+        data = uploader.swap_columns(data_obj, @project)
+        @data_set.data = data
 
-    if !params["data"].nil? and !params["headers"].nil?
-      @project.fields.each do |field|
-        params["headers"].each_with_index do |header, header_index|
-          if header.to_i == field.id
-            header_to_field_map.push header_index
+        if @data_set.save
+          respond_to do |format|
+             format.json { render json: {redirect: "/projects/#{@project.id}/data_sets/#{@data_set.id}"}, status: :ok }
           end
         end
-      end
-
-      new_data = []
-
-      params["data"]["0"].each_with_index do |tmp, row_index|
-
-        row = {}
-
-        header_to_field_map.each do |htf, htf_index|
-          if params["data"]["#{htf}"][row_index] == ""
-            val = nil
-          else
-            val = params["data"]["#{htf}"][row_index]
-          end
-          row["#{@fields[htf].id}"] = val
-        end
-
-        new_data[row_index] = row
-
-      end
-
-      @data_set.data = new_data
-
-      if @data_set.save!
-        ret = { status: :success, redirect: "/projects/#{@project.id}/data_sets/#{@data_set.id}" }
       else
-        ret = :error
+        err_msg = sane[:status] ? @data_set.errors.full_messages : sane[:msg]
+        respond_to do |format|
+          format.json {render json: {data: sane[:data_obj], msg: err_msg}, status: :unprocessable_entity}
+        end
+      end
+          
+    else
+      respond_to do |format|
+        format.html # edit.html.erb
+        format.json { render json: ret }
       end
     end
-
-    respond_to do |format|
-      format.html # edit.html.erb
-      format.json { render json: ret }
-    end
-
   end
   
   # POST /data_sets
@@ -159,6 +142,7 @@ class DataSetsController < ApplicationController
 
   # POST /projects/1/manualUpload
   def manualUpload
+
     project = Project.find(params['id'])
   
     uploader = FileUploader.new
@@ -169,17 +153,20 @@ class DataSetsController < ApplicationController
       data = uploader.swap_columns(data_obj, project)
       dataset = DataSet.new do |d|
         d.user_id = @cur_user.id
-        d.title = 'Test Dataset'#params[:title]
+        d.title = "dset-#{SecureRandom.hex}" #params[:title]
         d.project_id = project.id
         d.data = data
       end
       if dataset.save
-        redirect_to "/projects/#{project.id}/data_sets/#{dataset.id}"
-      else
-        #Something went wrong
+        respond_to do |format|
+          format.json {render json: {redirect: "/projects/#{project.id}/data_sets/#{dataset.id}"}, status: :ok}
+        end
       end
     else
-      #needs to reload page
+      err_msg = sane[:status] ? dataset.errors.full_messages : sane[:msg]
+      respond_to do |format|
+        format.json {render json: {data: sane[:data_obj], msg: err_msg}, status: unprocessable_entity}
+      end
     end
   end
 

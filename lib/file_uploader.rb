@@ -24,7 +24,6 @@ class FileUploader
   ### Simply opens the file as the correct type and returns the Roo object.
   def open_spreadsheet(file)
     if file.class == ActionDispatch::Http::UploadedFile
-      Rails.logger.info "-=-=-=#{file.path}"
       case File.extname(file.original_filename)
       when ".csv" then convert(file.path)
       when ".xls" then Roo::Excel.new(file.path, nil, :ignore)
@@ -58,14 +57,27 @@ class FileUploader
   
   def swap_columns(data_obj,project)
     data = []
-    Rails.logger.info "-----------------"
-    Rails.logger.info data_obj
+    
     size = data_obj.first[1].length
     
     (0..size-1).each do |i|
       x = {}
       project.fields.each do |field|
         x[field.id] = data_obj[field.id.to_s][i]
+      end
+      data << x
+    end
+    data
+  end
+
+  def swap_with_field_names(data_obj,project)
+    data = []
+    size = data_obj.first[1].length
+
+    (0..size-1).each do |i|
+      x = {}
+      project.fields.each do |field|
+        x[field.id] = data_obj[field.name][i]
       end
       data << x
     end
@@ -139,7 +151,7 @@ class FileUploader
     else 
       data = data_obj
     end
-    
+
     data.each do |(key,value)|
       field = Field.find(key)
       type = get_field_name(field.field_type)

@@ -24,7 +24,6 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     assert page.has_content?("Fields"), "Project page should have 'Fields'"
     
     # Test CSV upload by creating fields
-    find('#template_file_upload').click
     csv_path = Rails.root.join('test', 'CSVs', 'test.csv')
     page.execute_script %Q{$('#template_file_form').parent().show()}
     find("#template_file_form").attach_file("file",csv_path)
@@ -69,7 +68,7 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     assert page.has_content?("Dataset #4")
     click_on "File Types"
     assert page.has_content?("Contribute Data")
-     
+
     # Test GPX upload
     xlsx_path = Rails.root.join('test', 'CSVs', 'test.xlsx')
     page.execute_script %Q{$('#datafile_form').parent().show()}
@@ -86,7 +85,7 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     page.execute_script %Q{$('#datafile_form').parent().show()}
     find("#datafile_form").attach_file("file",jpg_path)
     assert page.has_content?("File could not be read")
-    
+
     #Test edit data set
     all(".data_set_edit")[0].click
     assert page.has_content? "Project:"
