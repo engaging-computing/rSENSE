@@ -41,7 +41,7 @@ class MakeProjectTest < ActionDispatch::IntegrationTest
     #find('.cke_dialog').click_on "Cancel"
 
     click_on "Projects"
-    assert page.has_content?("Only Templates"), "Should be on Projects page"
+    assert page.has_content?("Templates"), "Should be on Projects page"
     assert page.has_content?("Das Projekt"), "New project should be in list"
 
     #click_on "Das Projekt"

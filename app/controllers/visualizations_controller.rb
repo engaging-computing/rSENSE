@@ -8,26 +8,29 @@ class VisualizationsController < ApplicationController
   # GET /visualizations.json
   def index
         #Main List
+    @params = params
+    
     if !params[:sort].nil?
-        sort = params[:sort]
+      sort = params[:sort]
     else
-        sort = "DESC"
+      sort = "updated_at"
+    end
+    
+    if !params[:order].nil?
+      order = params[:order]
+    else
+      order = "DESC"
     end
     
     if !params[:per_page].nil?
         pagesize = params[:per_page]
     else
-        pagesize = 10;
+        pagesize = 50;
     end
     
-    if sort=="ASC" or sort=="DESC"
-      @visualizations = Visualization.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("created_at #{sort}")
-    else
-      @visualizations = Visualization.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("like_count DESC")
-    end
+    @visualizations = Visualization.search(params[:search]).paginate(page: params[:page], per_page: pagesize)
     
-    #Featured list
-    @featured_3 = Visualization.where(featured: true).order("updated_at DESC").limit(3);
+    @visualizations = @visualizations.order("#{sort} #{order}")
     
     respond_to do |format|
       format.html

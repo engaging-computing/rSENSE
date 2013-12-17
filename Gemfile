@@ -47,6 +47,7 @@ gem 'font-awesome-rails'
 
 # Include Will Paginate
 gem 'will_paginate'
+gem 'will_paginate-bootstrap'
 
 # Include Remotipart
 gem "remotipart"
