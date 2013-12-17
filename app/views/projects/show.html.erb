@@ -124,6 +124,59 @@
   
   <!--   Right hand column -->
   <div class="col-md-5">
+
+    <% if can_edit?(@project) %>
+      <div class="row" id="student_keys_row" class="center">
+        <%= render layout: "shared/box", locals: {title: 'Student Keys', width: '12', 
+                                                  unique_id: 'student_keys', should_hide: false} do %>
+        <div class="col-md-12 center">
+          <table class="student_keys_table table table-striped">
+            <thead>
+              <tr>
+                <th style="min-width: 30%">Label</th>
+                <th style="min-width: 30%">Key</th>
+                <th style="min-width: 30%">&nbsp;</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @project.student_keys.each do |kk| %>
+              <tr>
+                <td><%= kk.name %></td>
+                <td><%= kk.key %></td>
+                <td>
+                  <%= button_to kk, method: :delete do %>
+                    <i class="fa fa-times"></i> Delete
+                  <% end %>
+                </td>
+              </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="center">
+          <p><strong>New Student Key</strong></p>
+          <%= form_for @new_student_key, html: { class: 'form-inline' } do |ff| %>
+            <%= ff.hidden_field :project_id %>
+            <div class="form-group">
+              <%= ff.label :name, "Label" %><br>
+              <%= ff.text_field :name %>
+            </div>
+            <div class="form-group">
+              <%= ff.label :key, "Key" %><br>
+              <%= ff.text_field :key %>
+            </div>
+            <div class="form-group">
+              <br>
+              <%= submit_tag "Create Key", class: 'btn btn-success' %>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="clear"></div>
+        <% end %>
+      </div>
+    <% end %>
     
     <div class="row">
       <%= render layout: "shared/box", locals: {title: 'Fields', width: '12', unique_id: 'fields', should_hide: false} do%>
@@ -158,30 +211,40 @@
     
     <div class="row">
       <%=render layout: "shared/box", locals: {title: 'Contribute Data', width:'12', unique_id: 'create_data_set', should_hide: !(@project.fields.count() > 0)} do %>
-        <% if can_edit?(@project) || !@project.lock%>
-          <% if @cur_user.try(:id) %>
-            <div class="row-fluid">
-              <div class="col-md-4 center">
-              <%= link_to :controller => :data_sets, :action => :manualEntry do %>
-                <img class="hoverimage" src="/assets/manual.png" /><br />Manual Entry
-              <% end %>
-              </div>
-              <div class="col-md-4 center" title="Supports - CSV,XLS,XLSX,ODS">
-                <a id="upload_datafile" href=""><img class="hoverimage" src="/assets/upload.png" /><br />
-                Upload File</a>
-              </div>
-              <div class="col-md-4 center">
-                <a id="google_doc" href=""><img class="hoverimage" src="/assets/google.png" /><br />
-                Google Doc</a>
-              </div>
-              <div class="clear">
-              </div>
+        <% if can_edit?(@project) || can_contribute?(@project) %>
+          <div class="row-fluid">
+            <div class="col-md-4 center">
+            <%= link_to :controller => :data_sets, :action => :manualEntry do %>
+              <img class="hoverimage" src="/assets/manual.png" /><br />Manual Entry
+            <% end %>
             </div>
-          <% else %>
-            Please log in to contribute data
-          <% end %>
+            <div class="col-md-4 center" title="Supports - CSV,XLS,XLSX,ODS">
+              <a id="upload_datafile" href=""><img class="hoverimage" src="/assets/upload.png" /><br />
+              Upload File</a>
+            </div>
+            <div class="col-md-4 center">
+              <a id="google_doc" href=""><img class="hoverimage" src="/assets/google.png" /><br />
+              Google Doc</a>
+            </div>
+            <div class="clear">
+            </div>
+          </div>
         <% else %>
-          <h2 class="center"><i class="icon-lock"></i></h2><h4 class="center">This project has been locked</h4>
+          <% if @project.has_student_key? %>
+            <p>Enter student key to submit data.</p>
+            <%= form_tag '/student_keys/enter', method: 'post' do %>
+              <%= hidden_field_tag :project_id, @project.id %>
+              <%= text_field_tag :key %>
+              <%= submit_tag "Submit Key", class: "btn btn-success" %>
+            <% end %>
+          <% else %>
+            <% if @cur_user.try(:id) %>
+              <h2 class="center"><i class="icon-lock"></i></h2>
+              <h4 class="center">This project has been locked</h4>
+            <% else %>
+              Please log in to contribute data
+            <% end %>
+          <% end %>
         <% end %>
       <% end %>  
     </div>
