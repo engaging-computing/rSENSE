@@ -132,10 +132,13 @@ class UsersController < ApplicationController
   # POST /users.json
   def create
     @user = User.new(params[:user])
+    @user.reset_validation!
 
     respond_to do |format|
       if @user.save
         session[:user_id] = @user.id
+
+        UserMailer.validation_email(@user)
  
         format.html { redirect_to @user, notice: 'User was successfully created.' }
         format.json { render json: @user.to_hash(false), status: :created, location: @user }
