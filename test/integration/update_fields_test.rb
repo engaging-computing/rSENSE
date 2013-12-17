@@ -55,7 +55,7 @@ class MakeProjectTest < ActionDispatch::IntegrationTest
     
     assert page.has_content?("Fields"), "Project page should have 'Fields'"
     
-    find('#template_file_upload').click
+    #find('#template_file_upload').click
     
     csv_path = Rails.root.join('test', 'CSVs', 'dessert.csv')
     page.execute_script %Q{$('#template_file_form').parent().show()}
@@ -79,7 +79,7 @@ class MakeProjectTest < ActionDispatch::IntegrationTest
     
     assert page.has_content?("Fields"), "Project page should have 'Fields'"
     
-    find('#template_file_upload').click
+    #find('#template_file_upload').click
     
     csv_path = Rails.root.join('test', 'CSVs', 'dessert.csv')
     page.execute_script %Q{$('#template_file_form').parent().show()}
