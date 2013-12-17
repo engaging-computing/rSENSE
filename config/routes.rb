@@ -1,4 +1,6 @@
 Rsense::Application.routes.draw do
+  get "student_keys/create"
+  get "student_keys/destroy"
   # See how all your routes lay out with "rake routes"
   mount Ckeditor::Engine => '/ckeditor'
 
@@ -84,4 +86,7 @@ Rsense::Application.routes.draw do
   post "/projects/:id/updateLikedStatus" => "projects#updateLikedStatus"
 
   post "/projects/:id/updateFields" => "fields#updateFields"
+
+  resources :student_keys, only: [:create, :destroy]
+  post "/student_keys/enter" => 'student_keys#enter'
 end

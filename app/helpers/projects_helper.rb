@@ -19,5 +19,9 @@ module ProjectsHelper
       @project.filter.include? filter
     end
   end
-  
+ 
+  def can_contribute?(project)
+    session[:student_access] == project.id ||
+       (@cur_user.try(:id) && !project.lock?)
+  end
 end

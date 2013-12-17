@@ -22,7 +22,7 @@ class Project < ActiveRecord::Base
   has_many :media_objects
   has_many :likes
   has_many :visualizations
-  has_many :student_key
+  has_many :student_keys
 
   has_one :view_count
 
@@ -86,6 +86,10 @@ class Project < ActiveRecord::Base
     else
       all
     end
+  end
+
+  def has_student_key?
+    not student_keys.empty?
   end
 
   def add_view!
