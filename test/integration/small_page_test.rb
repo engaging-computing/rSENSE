@@ -20,11 +20,14 @@ class MakeProjectTest < ActionDispatch::IntegrationTest
 
     visit "/projects/1"
     find("#content_edit").click
-
+    
+    wait_for_class("cke_wysiwyg_frame")
+    
     page.execute_script <<-SCRIPT
       CKEDITOR.instances["editor1"].setData("");
     SCRIPT
     
+    wait_for_id("content_save_button")
     find("#content_save_button").click
 
     visit "/"
