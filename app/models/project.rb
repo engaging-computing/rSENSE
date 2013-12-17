@@ -22,6 +22,7 @@ class Project < ActiveRecord::Base
   has_many :media_objects
   has_many :likes
   has_many :visualizations
+  has_many :student_key
 
   has_one :view_count
 
