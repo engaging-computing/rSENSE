@@ -4,7 +4,7 @@ class StudentKeysController < ApplicationController
   def create
     @key = StudentKey.new(params[:student_key])
 
-    unless can_edit(@key.project)
+    unless can_edit?(@key.project)
       flash[:error] = "Action Not Authorized"
       redirect_to @key.project
       return

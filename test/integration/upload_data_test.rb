@@ -92,5 +92,27 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     assert page.has_content? "Project:"
     find('#edit_table_save').click
     assert page.has_content?("Save Visualization")
+
+    # Add a student key
+    click_on "File Types"
+    fill_in "Label", with: "Starbucks"
+    fill_in "Key", with: "grande"
+    click_on "Create Key"
+
+    click_on "Logout"
+
+    # Upload File With Key
+    find("#key").set("grande")
+    click_on "Submit Key"
+
+    csv_path = Rails.root.join('test', 'CSVs', 'test.csv')
+    page.execute_script %Q{$('#datafile_form').parent().show()}
+    find("#datafile_form").attach_file("file",csv_path)
+    page.execute_script %Q{$('#datafile_form').submit()}
+    assert page.has_content?("Match Quality")
+    click_on "Submit"
+    assert page.has_content?("Dataset")
+    click_on "File Types"
+    assert page.has_content?("Contribute Data")
   end
 end
