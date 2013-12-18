@@ -54,15 +54,27 @@ $ ->
                   tmp = data.metadata[ds].photos[pic]
                   dset = data.metadata[ds]
                   do(tmp, dset) =>
-                    figure = "<figure>
-                                <img id='pic_#{i}' src='#{tmp.src}' class='thumb'/>
+                    thumb = "/media/#{tmp.store_key[0..1]}/#{tmp.store_key}/tn_#{tmp.name}"
+                    img = "/media/#{tmp.store_key[0..1]}/#{tmp.store_key}/#{tmp.name}"
+                    figure = """<figure>
+                                <img id='pic_#{i}' src="#{thumb}" class='thumb'/>
                                 <figurecaption>Data Set: #{dset.name}(#{dset.dataset_id})</figurecaption>
-                              </figure>"
+                              </figure>"""
                     ($ "#polaroid").append figure
-                    ($ '#pic_'+i).click ->
-                      ($ '#polaroid').append("<div id='target_img' class='modal hide fade well'><img src='#{tmp.src}' style='width:100%'/></div>")
+                    ($ '#pic_'+i).click =>
+                      ($ '#polaroid').append("""
+                        <div class="modal fade" id="target_img">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-body">
+                                <img src='#{img}' style='width:100%'/>
+                              </div>
+                            </div>
+                          </div> 
+                        </div>   
+                        """)
                       ($ '#target_img').modal()
-                      ($ '#target_img').on "hidden", ->
+                      ($ '#target_img').on "hidden.bs.modal", ->
                         ($ '#target_img').remove()
                   i++      
                           
