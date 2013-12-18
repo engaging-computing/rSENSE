@@ -38,14 +38,6 @@ class MediaObject < ActiveRecord::Base
 
     store_make_uudir!(self.store_key)
   end
-  
-  def self.search(search, dc)
-    if search
-      where('name LIKE ?', "%#{search}%")
-    else
-      all
-    end
-  end
 
   def file_name
     uudir = store_uudir(self.store_key)
@@ -98,6 +90,10 @@ class MediaObject < ActiveRecord::Base
       
       if self.try(:visualization_id)
         h.merge!({visualization: self.visualization.to_hash(false)})
+      end
+      
+      if self.try(:news_id)
+        h.merge!({news: self.news.to_hash(false)})
       end
     end
     h
