@@ -17,6 +17,18 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def authorize_allow_key
+    return if User.find_by_id(session[:user_id])
+
+    proj = Project.find_by_id(params[:id] || params[:pid])
+    return if proj && session[:student_access].to_i == proj.id
+
+    dset = DataSet.find_by_id(params[:id])
+    return if dset && session[:student_access].to_i == dset.project.id
+
+    redirect_to "/login"
+  end
+
   def authorize_admin
     begin
         if @cur_user.admin == true
