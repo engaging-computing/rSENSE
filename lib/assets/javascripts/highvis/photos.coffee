@@ -54,10 +54,8 @@ $ ->
                   tmp = data.metadata[ds].photos[pic]
                   dset = data.metadata[ds]
                   do(tmp, dset) =>
-                    thumb = "/media/#{tmp.store_key[0..1]}/#{tmp.store_key}/tn_#{tmp.name}"
-                    img = "/media/#{tmp.store_key[0..1]}/#{tmp.store_key}/#{tmp.name}"
                     figure = """<figure>
-                                <img id='pic_#{i}' src="#{thumb}" class='thumb'/>
+                                <img id='pic_#{i}' src="#{tmp.tn_src}" class='thumb'/>
                                 <figurecaption>Data Set: #{dset.name}(#{dset.dataset_id})</figurecaption>
                               </figure>"""
                     ($ "#polaroid").append figure
@@ -67,7 +65,7 @@ $ ->
                           <div class="modal-dialog">
                             <div class="modal-content">
                               <div class="modal-body">
-                                <img src='#{img}' style='width:100%'/>
+                                <img src='#{tmp.src}' style='width:100%'/>
                               </div>
                             </div>
                           </div> 
