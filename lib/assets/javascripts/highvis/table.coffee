@@ -33,10 +33,11 @@ $ ->
         constructor: (@canvas) -> 
 
         start: ->
-            #Make table visible? (or somthing)
+            #Make table visible? (or something)
             ($ '#' + @canvas).show()
 
             ($ "##{@canvas}").css 'padding-top', 2
+            ($ "##{@canvas}").css 'padding-bottom', 2
 
             #Calls update
             super()
@@ -45,17 +46,17 @@ $ ->
         update: ->
             ($ '#' + @canvas).html('')
         
-            #Updates controls by default       
-            ($ '#' + @canvas).append '<table id="data_table"></table>'  
+            #Updates controls by default
+            ($ '#' + @canvas).append '<table id="data_table" class="table table-striped"></table>'
             
             ($ '#data_table').append '<thead><tr id="table_headers"></tr></thead>'
             
             #Build the headers for the table
             headers = for field, fieldIndex in data.fields
-              if (fieldIndex is data.COMBINED_FIELD)
-                "<td style='display:none'>#{fieldTitle field}</td>"
-              else
-                "<td>#{fieldTitle field}</td>"
+                if (fieldIndex is data.COMBINED_FIELD)
+                    "<th style='display:none'>#{fieldTitle field}</th>"
+                else
+                    "<th>#{fieldTitle field}</th>"
                 
             ($ '#table_headers').append header for header in headers
             
@@ -65,16 +66,16 @@ $ ->
             
             rows = for dataPoint in data.dataPoints when (String dataPoint[data.groupingFieldIndex]).toLowerCase() in visibleGroups
                 line = for dat, fieldIndex in dataPoint
-                  if (fieldIndex is data.COMBINED_FIELD)
-                    "<td style='display:none'>#{dat}</td>"
-                  else
-                    "<td>#{dat}</td>"
+                    if (fieldIndex is data.COMBINED_FIELD)
+                        "<td style='display:none'>#{dat}</td>"
+                    else
+                        "<td>#{dat}</td>"
                     
                 "<tr>#{line.reduce (a,b)-> a+b}</tr>"
             
             ($ '#data_table').append '<tbody id="table_body"></tbody>'
             
-            ($ '#table_body').append row for row in rows 
+            ($ '#table_body').append row for row in rows
 
             #Set sort state to default none existed
             @sortState ?= [[1, 'asc']]
@@ -82,47 +83,51 @@ $ ->
             #Set default search to empty string
             @searchString ?= ''
 
-            dt = 
-                sScrollY: "#{($ '#' + @canvas).height() - (122)}px"
-                sScrollX: "100%"
-                bScrollInfinite: true
-                iDisplayLength: -1
-                bDeferRender: true
-                bJQueryUI: true
-                aaSorting: [[@sortState[0][0], @sortState[0][1]]]
-                oLanguage:
-                    sLengthMenu: 'Display <select>'   +
-                                '<option value="10">10</option>' +
-                                '<option value="25">25</option>' +
-                                '<option value="50">50</option>' +
-                                '<option value="100">100</option>' +
-                                '<option value="-1">All</option>'+
-                                '</select> records'
-                aoColumnDefs: [{
-                    aTargets: [data.groupingFieldIndex]
-                    fnCreatedCell: (nTd, sData, oData, iRow, iCol) ->
-                        colorIndex = data.groups.indexOf(sData.toLowerCase())
-                        ($ nTd).css 'color', globals.colors[colorIndex % globals.colors.length]
-                        },{
-                          aTargets: data.timeFields
-                          fnRender: (obj) ->
-                            globals.dateFormatter obj.aData[obj.iDataColumn]
-                        },{
-                          aTargets:data.normalFields.concat data.geoFields
-                          fnRender: (obj) ->
-                            if obj.aData[obj.iDataColumn] is "null" then "" else obj.aData[obj.iDataColumn]
-                          }]
-                        
-            @atable = ($ '#data_table').dataTable(dt)
-
             #Restore previous search query if exists, else restore empty string
             if @searchString? and @searchString isnt ''
                 $('#table_canvas').find('input').val(@searchString).keyup()
+                
+            console.log(($ "#data_table"))
+            params = {
+                height: ($ '#' + @canvas).height() - 45,
+                width: ($ '#' + @canvas).width(),
+                caption: "",
+ 	            hidegrid: false,
+ 	            autowidth: true                
+                }   
+            
+            @table = tableToGrid("#data_table", params) 
+
+            #console.log(@table)
 
             super()
 
+            ###           
+            #Build the headers for the table
+          
+            
+            #Build the colModel object
+
+
+            if (fieldIndex is data.COMBINED_FIELD)
+                { name: fieldTitle(field), index: fieldIndex, search: true, resizable: false, hidden: true }
+            else
+                { name: fieldTitle(field), index: fieldIndex, search: true, resizable: false }
+           
+            @table = jQuery("#data_table").jqGrid({
+                datatype: "local",
+                height: ($ '#' + @canvas).height() - 45,
+                width: ($ '#' + @canvas).width(),
+ 	            colNames: headers,
+ 	            caption: ""
+ 	            colModel: columns
+ 	            hidegrid: false;
+ 	            autowidth: true;
+            })
+            ###          
+
         end: ->
-            ($ '#' + @canvas).hide()
+          ($ '#' + @canvas).hide()
 
           if @table?
             
@@ -133,10 +138,8 @@ $ ->
             @searchString = ($ '#table_canvas').find('input').val()
             
         resize: (newWidth, newHeight, aniLength) ->
-          ($ 'div.dataTables_scrollBody').css('height', ($ '#' + @canvas).height() - (122))
-          
-          foo = () -> 
-            @atable._fnAdjustColumnSizing();
+          foo = () ->
+            jQuery("#data_table").setGridWidth(newWidth);
             
           setTimeout foo, aniLength
 
@@ -146,6 +149,6 @@ $ ->
             @drawSaveControls()
 
         serializationCleanup: ->
-            delete @atable    
+          delete @table    
 
     globals.table = new Table "table_canvas"
