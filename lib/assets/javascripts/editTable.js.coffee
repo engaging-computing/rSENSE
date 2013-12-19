@@ -113,7 +113,8 @@ $ ->
             console.log jqXHR
             ($ '#edit_table_add').removeClass 'disabled'
             ($ '#edit_table_save').button 'reset'
-            log [textStatus, errorThrown]
+            ($ '.mainContent').prepend "<div class='alert alert-danger alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button><strong>An error occured: </strong>  #{jqXHR.responseJSON.msg}</div>"
+            wrap_table(($ '.editTable'))
             alert "An upload error occured."
             
         type: (field) ->
@@ -157,6 +158,11 @@ $ ->
         lon_cols = []
         text_cols = []
         time_cols = []
+        
+        restrictions = []
+        
+        ($ table).find('th').each () ->
+          restrictions.push eval( ($ @).attr 'data-field-restrictions' )
 
         #Enter events to add new row or go to begining of next row.
         ($ @).on 'keypress', 'input', (event) ->
@@ -233,7 +239,8 @@ $ ->
                 
           for col in text_cols
             do (col) ->
-              ($ row).children().eq(col).find('input').addClass 'validate_text'
+              if restrictions[col] == undefined
+                ($ row).children().eq(col).find('input').addClass 'validate_text'
 
           for col in time_cols
             do (col) ->
@@ -255,7 +262,13 @@ $ ->
           new_row = "<tr class='new_row'>"
 
           ($ tab).find('th:not(:last-child)').each (index) ->
-            new_row += "<td><div class='text-center'><input type='text' class=' form-control'/></div></td>"
+            if restrictions[index] == undefined
+              new_row += "<td><div class='text-center'><input type='text' class=' form-control'/></div></td>"
+            else
+              new_row += "<td><div clastables='text-center'><select class='form-control'><option>Select One</option>"
+              ($ restrictions[index]).each (r_index) ->
+                new_row += "<option value='#{restrictions[index][r_index]}'>#{restrictions[index][r_index]}</option>"
+              new_row += "</select></div></td>"
 
           new_row += "<td><div class='text-center'><a class='close' style='float:none;'>&times;</a></div></td></tr>"
 
@@ -289,6 +302,8 @@ $ ->
           # remove token
           ($ '.new_row').removeClass('new_row')
 
+        window.onload = ( -> ($ '#edit_table_add').click() )
+          
         # strip table for upload
         strip_table = (tab) ->
           ($ tab).find('td').has('input').each ->
@@ -306,10 +321,18 @@ $ ->
         wrap_table = (tab) ->
           ($ tab).find('th').each ->
             ($ @).children().wrap "<div class='text-center' />"
+            
+            
+          ($ tab).find('tr').slice(1).each (row_index, row) ->
+            ($ row).find('td').not(':has(a.close)').each (col_index, col) ->
+              if restrictions[col_index] == undefined
+                ($ @).html "<input type='text' class=' form-control' value='#{($ @).text()}' />"
+                ($ @).children().wrap "<div class='text-center' />"
+                
 
-          ($ tab).find('td').not(':has(a.close)').each ->
-            ($ @).html "<input type='text' class=' form-control' value='#{($ @).text()}' />"
-            ($ @).children().wrap "<div class='text-center' />"
+          #($ tab).find('td').not(':has(a.close)').each (col) ->
+          #  ($ @).html "<input type='text' class=' form-control' value='#{($ @).text()}' />"
+          #  ($ @).children().wrap "<div class='text-center' />"
 
           ($ tab).find('tr').each ->
             add_validators ($ @)
@@ -325,8 +348,12 @@ $ ->
             data[($ @).data('field-id')] = []
           ($ table).find('tr').has('td').each ->
             ($ @).children().each (index) ->
-              parent_id = ($ table).find("th:nth-child(#{index+1})").data('field-id')
-              data[parent_id].push(($ @).text())
+              if restrictions[index] == undefined
+                parent_id = ($ table).find("th:nth-child(#{index+1})").data('field-id')
+                data[parent_id].push(($ @).text())
+              else
+                parent_id = ($ table).find("th:nth-child(#{index+1})").data('field-id')
+                data[parent_id].push(($ @).find('option:selected').val())
 
           ($ '#edit_table_add').addClass 'disabled'
           ($ '#edit_table_save').button 'loading'
@@ -341,6 +368,15 @@ $ ->
             success: settings.upload.success
                   
 
+        add_close = (tab) ->
+          ($ tab).find('tr').each (row_index, row) ->
+            if row_index == 0
+              ($ row).append "<td></td>"
+            else
+              ($ row).append "<td><div class='text-center'><a class='close' style='float:none;'>&times;</a></div></td>"
+            ($ row).find('.close').click () ->
+              remove_row row
+                  
         # does it pass?
         table_validates = (tab) ->
         
@@ -440,6 +476,9 @@ $ ->
             if settings.upload.ajaxify is true
               
               submit_form()
+              
+              wrap_table(table)
+              add_close table
 
 
             else

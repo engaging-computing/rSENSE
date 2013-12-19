@@ -156,7 +156,7 @@ class FileUploader
       field = Field.find(key)
       type = get_field_name(field.field_type)
       value.each_with_index do |dp,index|
-        next if dp.nil?
+        next if dp.nil? or dp == ""
         case type
         when "Number"
           return {status: false, msg: "\"#{field.name}\" should contain only numbers, found \"#{dp}\""} if !dp.valid_float?
@@ -174,7 +174,7 @@ class FileUploader
         when "Text"
           if !field.restrictions.nil?
             if !(field.restrictions.map {|r| r.downcase.gsub(/\s+/, "")}.include? dp.downcase.gsub(/\s+/, ""))
-              data[match[1]][index] = ""
+              data_obj[field.id.to_s][index] = ""
             end
           end
         end
