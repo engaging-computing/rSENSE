@@ -3,6 +3,7 @@ require 'test_helper'
 class FieldsControllerTest < ActionController::TestCase
   setup do
     @kate  = users(:kate)
+    @crunch  = users(:crunch)
     @field = fields(:one)
   end
 
@@ -18,11 +19,19 @@ class FieldsControllerTest < ActionController::TestCase
 
   test "should create field" do
     assert_difference('Field.count') do
-      post :create, { field: { project_id: @field.project_id, field_type: @field.field_type, 
+      post :create, {format: 'json', field: { project_id: @field.project_id, field_type: @field.field_type, 
         name: "bacon", unit: @field.unit }}, { user_id: @kate }
     end
 
-    assert_redirected_to field_path(assigns(:field))
+    assert_response :created
+  end
+  
+  test "should not create field" do
+    assert_no_difference('Field.count') do
+      post :create, {format: 'json', field: { project_id: @field.project_id}}, { user_id: @kate }
+    end
+    
+    assert_response :unprocessable_entity
   end
 
   test "should update field" do
@@ -30,6 +39,13 @@ class FieldsControllerTest < ActionController::TestCase
       name: "pork rinds", unit: @field.unit }}, { user_id: @kate }
     assert_equal flash[:notice], "Field was successfully updated."
     assert_response :redirect
+  end
+  
+  test "should not update field" do
+    id = @field.project_id
+    put :update, { id: @field, field: {project_id: nil}}, { user_id: @kate }
+    put :update, { format: 'json', id: @field, field: {project_id: nil}}, { user_id: @kate }
+    assert_equal id, @field.project_id
   end
 
   test "should update field and return json" do
@@ -46,6 +62,16 @@ class FieldsControllerTest < ActionController::TestCase
 
     assert_redirected_to project_path(@field.project_id)
   end
+  
+  test "should not destroy field" do
+    assert_no_difference('Field.count', -1) do
+      delete :destroy, { id: @field }, { user_id: @crunch }
+    end
+    
+    assert_no_difference('Field.count', -1) do
+      delete :destroy, {format: 'json', id: @field }, { user_id: @crunch }
+    end
+  end
 
   test "should destroy field from api" do
     assert_difference('Field.count', -1) do
@@ -54,20 +80,10 @@ class FieldsControllerTest < ActionController::TestCase
 
     assert_response :success
   end
-
-  test "should bulk update fields" do
-    aa = Field.find(22)
-    aa.name = "bork"
-
-    post :updateFields, { format: 'json', id: @field.project.id, changes: [aa] }, 
-      { user_id: @kate }
-    assert_response :success
-  end
   
   test "should add restrictions to text field" do
-    field = Field.find(25)
-    field.restrictions = ['a','b','c']
-    post :updateFields, { format: 'json', id: @field.project.id, changes: [field] }, 
+    
+    post :update, { format: 'json', id: @field.id, field: {restrictions: ['a','b','c']} }, 
       { user_id: @kate }
     assert_response :success
   end
