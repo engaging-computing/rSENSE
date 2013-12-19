@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EnterDataSetTest < ActionDispatch::IntegrationTest
+class UploadDataTest < ActionDispatch::IntegrationTest
   include CapyHelper
 
   setup do
