@@ -43,7 +43,7 @@ class Project < ActiveRecord::Base
   
   def self.search(search, include_hidden = false)
     res = if search
-        where('(lower(projects.title) LIKE lower(?)) OR (projects.id = ?)', "%#{search}%", search.to_i)
+        where('(lower(projects.title) LIKE lower(?)) OR (projects.id = ?) OR (lower(projects.content) LIKE lower(?))', "%#{search}%", search.to_i, "%#{search}%")
     else
         all
     end
