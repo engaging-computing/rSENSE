@@ -22,6 +22,8 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
     page.execute_script %Q{$('#upload').show()}
     find(".upload_media form").attach_file("upload", img_path)
     assert page.has_content?("nerdboy.jpg"), "File should be in list"
+    find('.media_edit').click
+    assert page.has_content?('nerdboy.jpg'), "Should have gone to edit page"
 
     #Upload media to news
     visit '/news/1'
@@ -30,7 +32,9 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
     page.execute_script %Q{$('#upload').show()}
     find(".upload_media form").attach_file("upload", img_path)
     assert page.has_content?("nerdboy.jpg"), "File should be in list"
-
+    find('.media_edit').click
+    assert page.has_content?('nerdboy.jpg'), "Should have gone to edit page"
+    
     #Upload media to project
     visit '/projects/1'
     assert page.has_content? "Media"

@@ -8,7 +8,7 @@ class UsersControllerTest < ActionController::TestCase
 
   test "should not get index as user" do
     get :index, {}, { user_id: @user }
-    assert_response :not_found
+    assert_response :forbidden
   end
 
   test "should get index as admin" do

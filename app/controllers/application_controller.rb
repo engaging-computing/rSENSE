@@ -26,8 +26,8 @@ class ApplicationController < ActionController::Base
     end
     respond_to do |format|
       format.html { render :file => "#{Rails.root}/public/404",
-        :layout => false, :status => :not_found }
-      format.any  { head :not_found }
+        :layout => false, :status => :forbidden }
+      format.any  { head :forbidden }
     end
   end
   

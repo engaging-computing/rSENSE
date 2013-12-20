@@ -26,6 +26,7 @@ class Field < ActiveRecord::Base
   end
   
   def self.get_next_name(project,field_type)
+    logger.error "about to pick next"
     highest = 0
     base = get_field_name(field_type)
     project.fields.where('field_type = ?',field_type).each do |f|
@@ -46,7 +47,6 @@ class Field < ActiveRecord::Base
     else 
       name = base
     end
-    
     name    
   end
 end
