@@ -82,8 +82,7 @@ class DataSet < ActiveRecord::Base
     tmp_file = File.new("#{tmpdir}/#{fname}", 'w+')
 
     tmp_file.write(fields.map {|f| f.name}.join(',') + "\n")
-    logger.error "@@@@@@@@"
-    logger.error self.inspect
+
     self.data.each do |datapoint|
       tmp_file.write(fields.map {|f| datapoint["#{f.id}"]}.join(',') + "\n")
     end

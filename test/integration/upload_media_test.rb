@@ -34,6 +34,10 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
     assert page.has_content?("nerdboy.jpg"), "File should be in list"
     find('.media_edit').click
     assert page.has_content?('nerdboy.jpg'), "Should have gone to edit page"
+    visit '/news/1'
+    find('.menu_edit_link').click
+    find('.menu_delete').click
+    page.driver.browser.switch_to.alert.accept    
     
     #Upload media to project
     visit '/projects/1'
