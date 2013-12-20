@@ -9,26 +9,28 @@
       </div>  
       <div class="clear"></div>
       <div class='center'>
-        <button class="btn btn-primary center" style="display:none" id="content_save_button">Save</button>
-        <button class="btn btn-danger center" style="display:none" id="content_cancel_button">Cancel</button>
+        <button class="btn btn-danger center" style="display:none; margin-right:3px;" id="content_cancel_button">Cancel</button>
+      <button class="btn btn-primary center" style="display:none" id="content_save_button">Save</button>
       </div>
     <% else %>
       <div class="word-break">
         <%= raw content%>
       </div>
+      <div class="clear"></div>
     <% end %>
   <% else %>
     <% if can_edit%>
+      <button class="btn btn-default" id="content_edit" style="float:right;display:none"><i class="fa fa-cog"></i> Edit</button>
       <div class="center"><a class="add_content_link" href="javascript:void 0"><img src="/assets/green_plus_icon.png" class="img-rounded hoverimage" style="width:100px; height:100px;"><h4 style='color:#0a0;'>Add Description</h4></a></div>
       <div style="display:none;width:100%;min-height:200px;" class="content" can_edit="<%=can_edit%>" type="<%=type%>" row_id="<%=row_id%>" field="<%=field%>">
       </div> 
       <div class="clear"></div>
       <div class='center'>
+        <button class="btn btn-danger center" style="display:none; margin-right:3px;" id="content_cancel_button">Cancel</button>
         <button class="btn btn-primary center" style="display:none" id="content_save_button">Save</button>
-        <button class="btn btn-danger center" style="display:none" id="content_cancel_button">Cancel</button>
       </div>
     <% else %>
       <img class="full-image" src="/assets/contentplaceholder.png"></img>
     <% end %>  
   <% end %>
-</div>    
+</div>
