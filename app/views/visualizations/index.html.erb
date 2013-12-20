@@ -51,7 +51,11 @@
     
       <% @visualizations.each do |vi| %>
         <div class='item clickableItem'>
-          <a href='<%=visualization_path vi%>'></a>
+          
+          <a href='<%=visualization_path vi%>'>
+            <img class="areaLink" src="/assets/blank.png"/>
+          </a>
+          
           <% if vi.thumb_id != nil %>
             <div class='caroucell' style='height:120px; background-image:url(<%=vi.media_objects.find(vi.thumb_id).src%>)'></div>
           <% end %>
