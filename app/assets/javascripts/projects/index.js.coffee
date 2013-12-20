@@ -11,8 +11,16 @@ $ ->
         ($ this).button('toggle')
     
     # Make blocks clickable
-    ($ '.mainContent').on 'click', 'div.clickableItem', (event) ->
-      window.location = ($ event.currentTarget).children('a').attr 'href'
+    ($ '.mainContent').on 'mousedown', 'div.clickableItem', (event) ->
+      if event.which is 1
+        window.location = ($ event.currentTarget).children('a').attr 'href'
+      else if event.which is 2
+        # Simulate middle click
+        lk = ($ event.currentTarget).children('a')
+        evt = document.createEvent('MouseEvents')
+        evt.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, event.ctrlKey, false, event.shiftKey, false, 1, lk[0])
+        lk[0].dispatchEvent(evt)
+        event.preventDefault()
 
     # Setup auto-submit
     ($ '.projects_filter_checkbox').click ->
