@@ -43,7 +43,7 @@ class Project < ActiveRecord::Base
   
   def self.search(search, include_hidden = false)
     res = if search
-        where('(lower(title) LIKE lower(?)) OR (id = ?)', "%#{search}%", search.to_i)
+        where('(lower(projects.title) LIKE lower(?)) OR (projects.id = ?) OR (lower(projects.content) LIKE lower(?))', "%#{search}%", search.to_i, "%#{search}%")
     else
         all
     end
@@ -66,6 +66,22 @@ class Project < ActiveRecord::Base
   def self.only_curated(value)
     if value == true
       where(:curated => true)
+    else
+      all
+    end
+  end
+  
+  def self.only_featured(value)
+    if value
+      where(:featured => true)
+    else
+      all
+    end
+  end
+  
+  def self.has_data(value)
+    if value
+      all.joins(:data_sets).distinct
     else
       all
     end
@@ -129,7 +145,7 @@ class Project < ActiveRecord::Base
         dataset = DataSet.find(d.to_i)
         dataset.to_csv(tmpdir)
       end
-      system("cd /tmp/rsense/#{random_hex} && zip -r #{folder_name}.zip #{folder_name}")
+      system("(cd /tmp/rsense/#{random_hex} && zip -qr #{folder_name}.zip #{folder_name})")
       zip_file = "/tmp/rsense/#{random_hex}/#{folder_name}.zip"
     rescue
       raise "Failed to export"

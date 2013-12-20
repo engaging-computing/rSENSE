@@ -55,18 +55,19 @@ $ ->
     
   helpers.isotope_layout = (selector, colWidth = 200, colSep = 16) ->
   
-    numCols = 1
-
-    while $(selector).width()/numCols>colWidth
-      numCols++
-
+    numCols = 6
+    
+    while $(selector).width() < numCols * colWidth
+      numCols--
+    
     $(selector).imagesLoaded ->
 
-      $('.item').width(($(selector).width()/numCols)-colSep)
+      $('.item').width(Math.floor(($(selector).width()/numCols)-colSep))
 
       $(selector).isotope
         itemSelector : '.item'
         layoutMode : 'masonry'
+        resizeable: false
         masonry:
           columnWidth: $(selector).width()/numCols
     true

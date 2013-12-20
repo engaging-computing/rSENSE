@@ -5,7 +5,20 @@ class NewsController < ApplicationController
   include ApplicationHelper
   
   def index
-    @news = News.where(:hidden => false).order("created_at DESC").limit(5)
+
+    if !params[:sort].nil?
+        sort = params[:sort]
+    else
+        sort = "DESC"
+    end
+    
+    if !params[:per_page].nil?
+        pagesize = params[:per_page]
+    else
+        pagesize = 10;
+    end
+    
+    @news = News.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("created_at #{sort}")
 
     respond_to do |format|
       format.html # index.html.erb
@@ -18,7 +31,7 @@ class NewsController < ApplicationController
   def show
     @news = News.find(params[:id])
 
-    recur = params.key?(:recur) ? params[:recur].to_bool : false
+    recur = params.key?(:recur) ? params[:recur] == "true" : false
   
     respond_to do |format|
       format.html # show.html.erb
@@ -43,7 +56,7 @@ class NewsController < ApplicationController
     else
       respond_to do |format|
         format.html { render :status => 403 }
-        format.json { render json: @news.errors, status: :forbidden }
+        format.json { render json: "Access denied", status: :forbidden }
       end
     end
   end

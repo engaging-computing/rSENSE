@@ -23,3 +23,5 @@ aws_config.yml
 public/assets/*
 log/*
 db/data.yml*
+
+coverage/*

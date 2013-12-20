@@ -1,9 +1,9 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
-  user_id: 1
-  project_id: 1
+  user_id: kate
+  project_id: dessert
 
 two:
-  user_id: 1
-  project_id: 1
+  user_id: nixon
+  project_id: dessert

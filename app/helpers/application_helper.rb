@@ -44,10 +44,12 @@ module ApplicationHelper
       ((obj.owner.id == @cur_user.try(:id)) && obj.project.lock == false) || @cur_user.try(:admin)
     when User
       (obj.id == @cur_user.try(:id)) || @cur_user.try(:admin)
-    when Project, Visualization, Tutorial, MediaObject, News
+    when Project, Visualization, MediaObject
       (obj.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin)
     when Field
       (obj.owner.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin)
+    when Tutorial, News
+      @cur_user.try(:admin)
     else
       false
     end
@@ -112,10 +114,4 @@ module ApplicationHelper
     end
     return false
   end
- end 
-class String
-  def to_bool
-    return true if self == true || self =~ (/(true|t|yes|y|1)$/i)
-    return false
-  end
-end
+end 

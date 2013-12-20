@@ -14,12 +14,6 @@ Install like any Ruby on Rails application.
 
 Uses PostgreSQL by default for data storage.
 
-Requires an Amazon AWS account for media storage. Put your credentials in 
-config/aws_config.yml as follows:
-
-    secret_access_key: [your key]
-    access_key_id: [your id]
-    
 == Filing an issue on GitHub
 
 Please use the following issue template when reporting an issue on GitHub:

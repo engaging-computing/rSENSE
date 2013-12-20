@@ -2,6 +2,10 @@ ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 
+require 'simplecov'
+require 'simplecov_rsense'
+SimpleCov.start 'rsense'
+
 require 'capybara/rails'
 #Capybara.javascript_driver = :webkit
 Capybara.javascript_driver = :selenium
@@ -77,5 +81,10 @@ module CapyHelper
   def wait_for_id(id)
     wait = Selenium::WebDriver::Wait.new(:timeout => 20)
     wait.until { page.driver.browser.find_element(:id => id).displayed? }
+  end
+  
+  def wait_for_class(cl)
+    wait = Selenium::WebDriver::Wait.new(:timeout => 20)
+    wait.until { page.driver.browser.find_element(:class => cl).displayed? }
   end
 end

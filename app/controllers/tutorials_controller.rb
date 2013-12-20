@@ -8,24 +8,30 @@ class TutorialsController < ApplicationController
 
   def index
     
+    @params = params
+    
     #Main List
     if !params[:sort].nil?
-        sort = params[:sort]
+      sort = params[:sort]
     else
-        sort = "DESC"
+      sort = "updated_at"
+    end
+    
+    if !params[:order].nil?
+      order = params[:order]
+    else
+      order = "DESC"
     end
     
     if !params[:per_page].nil?
         pagesize = params[:per_page]
     else
-        pagesize = 10;
+        pagesize = 50;
     end
     
-    if sort=="ASC" or sort=="DESC"
-      @tutorials = Tutorial.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("created_at #{sort}")
-    else
-      @tutorials = Tutorial.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("like_count DESC")
-    end
+    @tutorials = Tutorial.search(params[:search]).paginate(page: params[:page], per_page: pagesize)
+    
+    @tutorials = @tutorials.order("#{sort} #{order}")
     
     recur = params.key?(:recur) ? params[:recur].to_bool : false
     
@@ -64,7 +70,7 @@ class TutorialsController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { render :status => 404 }
+        format.html { render text: "Not allowed", status: 404 }
         format.json { render json: @tutorial.errors, status: :forbidden }
       end
     end
@@ -138,7 +144,7 @@ class TutorialsController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { redirect_to 'public/401.html' }
+        format.html { redirect_to '/public/401.html' }
         format.json { render json: {}, status: :forbidden }
       end
     end

@@ -26,6 +26,13 @@
  * DAMAGE.
  */
 
+.clean_shrink{
+    white-space:nowrap;
+    overflow:hidden;
+}
+
+//------UNVERIFIED CSS BELOW----------
+
 #controlcontainer {
     float: right;
     max-width: 20%;
@@ -91,14 +98,7 @@
     font-size:1.2em;
 }
 
-.clean_shrink{
-    white-space:nowrap;
-    overflow-x:hidden;
-}
 
-.control_select {
-    width:124px;
-}
 
 .hint {
   margin-left: 40px;
@@ -201,9 +201,8 @@ figure, figurecaption{
   overflow:hidden;
   
   img.thumb{
-    height:200px;
-    width:200px;
-    
+    height:auto;
+    max-width:100%
   }
   
   figure{

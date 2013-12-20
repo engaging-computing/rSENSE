@@ -21,7 +21,7 @@
           <td>
             <div class="controls">
               <% if can_edit? mo %>
-                <a href="<%= media_object_path mo %>">Edit</a>
+                <a class="media_edit" href="<%= media_object_path mo %>">Edit</a>
               <% end %>
               <% if can_delete? mo %>
                 | <%= link_to "Delete", mo, method: 'delete', data: { confirm: "Are you sure?" } %>
@@ -40,7 +40,7 @@
     </tbody>
   </table>
  
-  <% if @cur_user.try(:id)%>
+  <% if can_edit? object%>
     <div class="upload_media">
       <%= form_tag({controller: :media_objects ,action: :saveMedia, keys: "#{type}/#{object.id}"}, multipart: true) do %>
         <div class="center"><button class='btn btn-success center' id="filechooser" style="margin-top:15px">Add File</button></div>
