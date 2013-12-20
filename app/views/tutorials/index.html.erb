@@ -62,7 +62,11 @@
     
       <% @tutorials.each do |tut| %>
         <div class='item clickableItem'>
-          <a href='<%=tutorial_path tut%>'></a>
+          
+          <a href='<%=tutorial_path tut%>'>
+            <img class="areaLink" src="/assets/blank.png"/>
+          </a>
+          
           <% if tut.featured_media_id != nil %>
             <div class='caroucell' style='height:120px; background-image:url(<%=tut.media_objects.find(tut.featured_media_id).src%>)'></div>
           <% end %>
