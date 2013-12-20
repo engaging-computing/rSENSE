@@ -1,4 +1,4 @@
-class StudentKey < ActiveRecord::Base
+class ContribKey < ActiveRecord::Base
   attr_accessible :name, :key, :project_id
 
   belongs_to :project

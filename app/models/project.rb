@@ -22,7 +22,7 @@ class Project < ActiveRecord::Base
   has_many :media_objects
   has_many :likes
   has_many :visualizations
-  has_many :student_keys
+  has_many :contrib_keys
 
   has_one :view_count
 
@@ -44,7 +44,7 @@ class Project < ActiveRecord::Base
   
   def self.search(search, include_hidden = false)
     res = if search
-        where('(lower(projects.title) LIKE lower(?)) OR (projects.id = ?)', "%#{search}%", search.to_i)
+        where('(lower(projects.title) LIKE lower(?)) OR (projects.id = ?) OR (lower(projects.content) LIKE lower(?))', "%#{search}%", search.to_i, "%#{search}%")
     else
         all
     end
@@ -88,8 +88,8 @@ class Project < ActiveRecord::Base
     end
   end
 
-  def has_student_key?
-    not student_keys.empty?
+  def has_contrib_key?
+    not contrib_keys.empty?
   end
 
   def add_view!

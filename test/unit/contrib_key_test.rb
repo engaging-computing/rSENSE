@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class StudentKeyTest < ActiveSupport::TestCase
+class ContribKeyTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end
