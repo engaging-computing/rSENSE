@@ -348,7 +348,7 @@ class ProjectsController < ApplicationController
     
     if params.has_key?('create_dataset')
       data_obj = uploader.retrieve_obj(params[:file])
-      data = uploader.swap_without_matches(data_obj,@project)
+      data = uploader.swap_with_field_names(data_obj,@project)
 
       dataset = DataSet.new do |d|
         d.user_id = @cur_user.id

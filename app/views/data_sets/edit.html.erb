@@ -1,6 +1,6 @@
 <script type="text/javascript">
   window.fields = JSON.parse('<%= raw @project.fields.to_json%>');
-  window.postURL = '<%= url_for :controller => :data_sets, :action => :edit, :eid => @project.id %>';
+  window.postURL = '<%= url_for :controller => :data_sets, :action => :edit %>';
 </script>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 
@@ -15,7 +15,7 @@
           <thead>
             <tr>
               <% @project.fields.each do |f| %>
-                <th data-field-type="<%= get_field_name(f.field_type) %>" data-field-id="<%= f.id %>" data-field-name="<%= f.name %>"><%= f.name %>
+                <th style="min-width:200px;" data-field-type="<%= get_field_name(f.field_type) %>" data-field-id="<%= f.id %>" data-field-name="<%= f.name %>" data-field-restrictions="<%= f.restrictions %>"><%= f.name %>
                 <% if f.unit != "" %>
                   (<%=f.unit%>)
                 <% end %></th>
@@ -26,7 +26,22 @@
             <% @data_set.data.each_with_index do |row, r_index| %>
               <tr>
                 <% @project.fields.each_with_index do |field| %>
-                  <td><% if !row["#{field.id}"].nil? %><%= row["#{field.id}"] %><% end %></td>
+                  <% if field.restrictions.nil? == true %>
+                    <td><% if !row["#{field.id}"].nil? %><%= row["#{field.id}"] %><% end %></td>
+                  <% else %>
+                    <td>
+                      <select class="form-control">
+                        <option>Select One</option>
+                        <% field.restrictions.each do |r| %>
+                          <% if row[field.id.to_s] == r %>
+                            <option selected value="<%= r %>"><%= r %></option>
+                          <% else %>
+                            <option value="<%= r %>"><%= r %></option>
+                          <% end %>
+                        <% end %>
+                      </select>
+                    </td>
+                  <% end %>
                 <% end %>
               </tr>
             <% end %>

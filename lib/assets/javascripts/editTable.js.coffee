@@ -110,9 +110,11 @@ $ ->
           success: (data, textStatus, jqXHR) ->
             window.location = data.redirect
           error: (jqXHR, textStatus, errorThrown) ->
+            console.log jqXHR
             ($ '#edit_table_add').removeClass 'disabled'
             ($ '#edit_table_save').button 'reset'
-            log [textStatus, errorThrown]
+            ($ '.mainContent').prepend "<div class='alert alert-danger alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button><strong>An error occured: </strong>  #{jqXHR.responseJSON.msg}</div>"
+            #wrap_table(($ '.editTable'))
             alert "An upload error occured."
             
         type: (field) ->
@@ -156,6 +158,11 @@ $ ->
         lon_cols = []
         text_cols = []
         time_cols = []
+        
+        restrictions = []
+        
+        ($ table).find('th').each () ->
+          restrictions.push eval( ($ @).attr 'data-field-restrictions' )
 
         #Enter events to add new row or go to begining of next row.
         ($ @).on 'keypress', 'input', (event) ->
@@ -232,7 +239,8 @@ $ ->
                 
           for col in text_cols
             do (col) ->
-              ($ row).children().eq(col).find('input').addClass 'validate_text'
+              if restrictions[col] == undefined
+                ($ row).children().eq(col).find('input').addClass 'validate_text'
 
           for col in time_cols
             do (col) ->
@@ -254,7 +262,13 @@ $ ->
           new_row = "<tr class='new_row'>"
 
           ($ tab).find('th:not(:last-child)').each (index) ->
-            new_row += "<td><div class='text-center'><input type='text' class=' form-control'/></div></td>"
+            if restrictions[index] == undefined
+              new_row += "<td><div class='text-center'><input type='text' class=' form-control'/></div></td>"
+            else
+              new_row += "<td><div clastables='text-center'><select class='form-control'><option>Select One</option>"
+              ($ restrictions[index]).each (r_index) ->
+                new_row += "<option value='#{restrictions[index][r_index]}'>#{restrictions[index][r_index]}</option>"
+              new_row += "</select></div></td>"
 
           new_row += "<td><div class='text-center'><a class='close' style='float:none;'>&times;</a></div></td></tr>"
 
@@ -288,6 +302,8 @@ $ ->
           # remove token
           ($ '.new_row').removeClass('new_row')
 
+        window.onload = ( -> ($ '#edit_table_add').click() )
+          
         # strip table for upload
         strip_table = (tab) ->
           ($ tab).find('td').has('input').each ->
@@ -305,10 +321,18 @@ $ ->
         wrap_table = (tab) ->
           ($ tab).find('th').each ->
             ($ @).children().wrap "<div class='text-center' />"
+            
+            
+          ($ tab).find('tr').slice(1).each (row_index, row) ->
+            ($ row).find('td').not(':has(a.close)').each (col_index, col) ->
+              if restrictions[col_index] == undefined
+                ($ @).html "<input type='text' class=' form-control' value='#{($ @).text()}' />"
+                ($ @).children().wrap "<div class='text-center' />"
+                
 
-          ($ tab).find('td').not(':has(a.close)').each ->
-            ($ @).html "<input type='text' class=' form-control' value='#{($ @).text()}' />"
-            ($ @).children().wrap "<div class='text-center' />"
+          #($ tab).find('td').not(':has(a.close)').each (col) ->
+          #  ($ @).html "<input type='text' class=' form-control' value='#{($ @).text()}' />"
+          #  ($ @).children().wrap "<div class='text-center' />"
 
           ($ tab).find('tr').each ->
             add_validators ($ @)
@@ -319,107 +343,40 @@ $ ->
         
           strip_table(table)
 
-          # collect data and ship it off via AJAX
-          head = []
-
+          data = {}
           ($ table).find('th').each ->
-            head.push ($ @).data('field-id')
-            
-          row_data = []
-
-          ($ table).find('tr').has('td').each ->
-
-            row = []
-
-            ($ @).children().each ->
-              row.push ($ @).text()
-                              
-            row_blank = true
-              
-            ($ @).children().each (index, element) ->
-              if( row[index]? and row[index] != "" )
-                row_blank = false
-
-            if !row_blank
-              row_data.push row
-
-          table_data = for tmp, col_i in row_data[0]
-            tmp = for row, row_i in row_data
-              row[col_i]
-
-          ajax_data =
-            headers: head
-            data: table_data
+            data[($ @).data('field-id')] = []
+          ($ table).find('tr').slice(1).has('td').each ->
+            ($ @).children().each (index) ->
+              if restrictions[index] == undefined
+                parent_id = ($ table).find("th:nth-child(#{index+1})").data('field-id')
+                data[parent_id].push(($ @).text())
+              else
+                parent_id = ($ table).find("th:nth-child(#{index+1})").data('field-id')
+                data[parent_id].push(($ @).find('option:selected').val())
 
           ($ '#edit_table_add').addClass 'disabled'
           ($ '#edit_table_save').button 'loading'
 
           $.ajax
-            url: "/projects/#{($ table).data('project-id')}"
-            type: "GET"
-            dataType: "json"
-            cache: false
-            success: (data, textStatus, jqXHR) ->
-              local = []
-              remote = []
-              add_fields = []
-              field_deleted = false
-              dup = []
-                              
-              $(data.fields).each (i, e) ->
-                remote.push e.id
-              local = ajax_data.headers
-              
-              ($ remote).each (index, field) ->
-                if !(field in local)
-                  add_fields.push( data.fields[index] )
-                                        
-              ($ local).each (index, field) ->
-                if !(field in remote)
-                  field_deleted = true
+            url: "#{settings.upload.url}",
+            type: "#{settings.upload.method}"
+            dataType: 'json'
+            data:
+              data: data
+            error: settings.upload.error
+            success: settings.upload.success
                   
-              if field_deleted
-                alert "The project owner deleted a field/fields while you were entering data. Unfortunately we must refresh the page (losing data) to correct the fields."
-                location.reload true
 
-              if add_fields.length == 0
-               
-                $.ajax "#{settings.upload.url}",
-                  type: "#{settings.upload.method}"
-                  dataType: 'json'
-                  data: ajax_data
-                  error: settings.upload.error
-                  success: settings.upload.success
+        add_close = (tab) ->
+          ($ tab).find('tr').each (row_index, row) ->
+            if row_index == 0
+              ($ row).append "<td></td>"
+            else
+              ($ row).append "<td><div class='text-center'><a class='close' style='float:none;'>&times;</a></div></td>"
+            ($ row).find('.close').click () ->
+              remove_row row
                   
-              else
-              
-                alert "The project owner added a field/fields while you were entering data. We are adding these new fields for you now, press save again to submit data with the new fields."
-                    
-                ($ add_fields).each (index, element) ->
-                  ($ table).find('thead tr').eq(0).append("<th data-field-type='#{settings.type(element.type)}' data-field-id='#{element.id}' data-field-name='#{element.name}'>#{element.name}</th>")
-                ($ table).find('tbody').find('tr').each (i, e) ->
-                  ($ add_fields).each () ->
-                    ($ e).append('<td></td>')
-                 
-                wrap_table(table)
-                      
-                # add buttons
-                for button in settings.buttons
-                  do (button) ->
-                    if button is "close" or button is "Close"
-                      ($ table).find('tr').eq(0).append '<th></th>'
-                      ($ table).find('tbody').children().each ->
-                        ($ @).append '<td><div class="text-center"><a class="close" style="float:none;">&times;</a></div></td>'
-                        ($ @).find('.close').click () ->
-                          remove_row(@)
-          
-                    if button is "add" or button is "Add"
-                      ($ '#edit_table_add').removeClass 'disabled'
-          
-                    if button is "save" or button is "Save"
-                      ($ '#edit_table_save').button 'reset'
-                      ($ '#edit_table_save').click submit_form
-
         # does it pass?
         table_validates = (tab) ->
         
@@ -519,6 +476,28 @@ $ ->
             if settings.upload.ajaxify is true
               
               submit_form()
+              
+              wrap_table table
+              add_close table
+              
+              ($ '#edit_table_save').click ->
+
+                if table_validates(table)
+                  
+                  ($ '#edit_table_save').unbind()
+
+                  if settings.upload.ajaxify is true
+                    
+                    submit_form()
+                    
+                    wrap_table(table)
+                    add_close table
+
+
+                  else
+                    ## I guess I'm not gonna write this part because we only use ajax to submit data
+                    ($ table).wrap "<form action='#{settings.upload.url}' method='#{settings.upload.method}' />"
+
 
 
             else
