@@ -39,7 +39,7 @@ class UsersController < ApplicationController
   # GET /users/1.json
   def show
     #Grab the User
-    @user = User.find_by_username(params[:id])
+    @user = User.find(params[:id])
     
     if(@user == nil || @user.hidden)
       respond_to do |format|
@@ -60,8 +60,7 @@ class UsersController < ApplicationController
   # GET /users/1/contributions
   # GET /users/1.json
   def contributions
-    
-    @user = User.find_by_username(params[:id])
+    @user = User.find(params[:id])
     
     #See if we are only looking for specific contributions
     @filter = params[:filters].to_s.downcase
@@ -120,7 +119,7 @@ class UsersController < ApplicationController
   
   # GET /users/1/edit
   def edit
-    @user = User.find_by_username(params[:id])
+    @user = User.find(params[:id])
 
     unless @cur_user.admin or @user == @cur_user
       render_404
@@ -153,7 +152,7 @@ class UsersController < ApplicationController
   # PUT /users/1
   # PUT /users/1.json
   def update
-    @user = User.find_by_username(params[:id])
+    @user = User.find(params[:id])
 
     if params[:new_password].nil? and params[:new_email].nil?
       editUpdate = params[:user]
@@ -236,7 +235,7 @@ class UsersController < ApplicationController
   # DELETE /users/1
   # DELETE /users/1.json
   def destroy
-    @user = User.find_by_username(params[:id])
+    @user = User.find(params[:id])
     
     if can_delete?(@user)
       if @cur_user.id == @user.id
@@ -306,7 +305,7 @@ class UsersController < ApplicationController
   def pw_send_key
     @sent = false
 
-    key = params[:username_or_email].downcase
+    key = params[:email].downcase
 
     @user = User.where("lower(email) = ?", key).first
     if @user.nil?
