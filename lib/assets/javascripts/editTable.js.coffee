@@ -114,7 +114,7 @@ $ ->
             ($ '#edit_table_add').removeClass 'disabled'
             ($ '#edit_table_save').button 'reset'
             ($ '.mainContent').prepend "<div class='alert alert-danger alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button><strong>An error occured: </strong>  #{jqXHR.responseJSON.msg}</div>"
-            wrap_table(($ '.editTable'))
+            #wrap_table(($ '.editTable'))
             alert "An upload error occured."
             
         type: (field) ->
@@ -346,7 +346,7 @@ $ ->
           data = {}
           ($ table).find('th').each ->
             data[($ @).data('field-id')] = []
-          ($ table).find('tr').has('td').each ->
+          ($ table).find('tr').slice(1).has('td').each ->
             ($ @).children().each (index) ->
               if restrictions[index] == undefined
                 parent_id = ($ table).find("th:nth-child(#{index+1})").data('field-id')
@@ -477,8 +477,27 @@ $ ->
               
               submit_form()
               
-              wrap_table(table)
+              wrap_table table
               add_close table
+              
+              ($ '#edit_table_save').click ->
+
+                if table_validates(table)
+                  
+                  ($ '#edit_table_save').unbind()
+
+                  if settings.upload.ajaxify is true
+                    
+                    submit_form()
+                    
+                    wrap_table(table)
+                    add_close table
+
+
+                  else
+                    ## I guess I'm not gonna write this part because we only use ajax to submit data
+                    ($ table).wrap "<form action='#{settings.upload.url}' method='#{settings.upload.method}' />"
+
 
 
             else
