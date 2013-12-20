@@ -25,9 +25,9 @@ class UsersController < ApplicationController
     else
         pagesize = 30;
     end
-    
+   
     @users = User.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("created_at #{sort}")
-    
+    logger.error @users.map {|u| u.created_at}
     respond_to do |format|
       format.html { render status: :ok }
       format.json { render json: @users.map {|u| u.to_hash(false)}, status: :ok }
@@ -41,19 +41,20 @@ class UsersController < ApplicationController
     #Grab the User
     @user = User.find_by_username(params[:id])
     
-    if(@user == nil || @user.hidden)
+    if @user == nil
       respond_to do |format|
         format.html { render :file => "#{Rails.root}/public/404.html", :status => :not_found }
         format.json { render json: {}, status: :unprocessable_entity }
       end
-    end
+    else
     
-    recur = params.key?(:recur) ? params[:recur] == "true" : false
-    show_hidden = @cur_user.id == @user.id
-          
-    respond_to do |format|
-      format.html { render status: :ok }
-      format.json { render json: @user.to_hash(recur, show_hidden), status: :ok }
+      recur = params.key?(:recur) ? params[:recur] == "true" : false
+      show_hidden = @cur_user.id == @user.id
+            
+      respond_to do |format|
+        format.html { render status: :ok }
+        format.json { render json: @user.to_hash(recur, show_hidden), status: :ok }
+      end
     end
   end
   
