@@ -80,8 +80,12 @@
     <div class="isotope_pane">
     
       <% @projects.each do |pr| %>
-        <div class='item clickableItem'>
-          <a href='<%=project_path pr%>'></a>
+      <div class='item clickableItem'>
+        
+          <a href='<%=project_path pr%>'>
+            <img class="areaLink" src="/assets/blank.png"/>
+          </a>
+          
           <% if pr.featured_media_id != nil %>
             <div class='caroucell' style='height:120px; background-image:url(<%=pr.media_objects.find(pr.featured_media_id).src%>)'></div>
           <% end %>
@@ -94,7 +98,7 @@
               <% end %>
             </div>
             
-            by <a href='<%=user_url(pr.owner)%>'> <%=pr.owner.name%> </a><br/>
+            by <%=pr.owner.name%> <br/>
             on <%=pr.created_at.strftime("%B %d, %Y")%> <br/>
             <div style="display:table; width:100%; margin-top:10px;">
               <div style="display:table-cell">
