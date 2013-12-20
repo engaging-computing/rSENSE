@@ -13,7 +13,7 @@ CKEDITOR.editorConfig = function( config ) {
   // This second part of the setting name can be anything. You must use this name in the CKEDITOR.config.toolbar setting,
   // so you instruct the editor which toolbar_(name) setting to use.
   config.toolbar_Basic = [
-    { name: 'document', items: ['Source']},
+    { name: 'document', items: ['Templates', 'Source']},
     { name: 'clipboard', groups: [ 'undo' ], items: [ 'Undo', 'Redo' ] },
     { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ] },
     { name: 'paragraph', groups: [ 'list', 'align'], items: [ 'NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'] },
@@ -29,6 +29,7 @@ CKEDITOR.editorConfig = function( config ) {
   config.title = "";
   config.disableAutoInline = true;
   config.removePlugins = 'contextmenu,liststyle,tabletools';
+  config.templates = 'all';
 };
 
 /* Below, as a reference, is the default 'full' ckeditor toolbar */
