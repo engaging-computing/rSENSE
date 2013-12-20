@@ -14,7 +14,7 @@ class MediaObjectsController < ApplicationController
     
     respond_to do |format|
       format.html
-      format.json { render json: @media_object.to_hash(recur) }
+      format.json { render json: @media_object.to_hash(recur), status: :ok }
     end
   end
   
@@ -124,6 +124,7 @@ class MediaObjectsController < ApplicationController
         @mo.tutorial_id = @tutorial.id
       end
     when 'visualization'
+      logger.error 'in visualizaiton' 
       @visualization = Visualization.find_by_id(id)
       if(can_edit?(@visualization))
         @mo.user_id = @visualization.owner.id

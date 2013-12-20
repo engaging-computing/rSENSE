@@ -18,3 +18,10 @@ thanksgiving:
   user: kate
   project: dessert
   data: "[{\"20\": 1, \"21\": 2, \"22\": 3}]"
+  
+needs_media:
+  title: Needs Media
+  content: MyText
+  user: nixon
+  project: one
+  id: 1

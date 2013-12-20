@@ -2,70 +2,41 @@
 
 $ ->
   if namespace.controller is "projects" and namespace.action is "index"
-
+    
+    # Setup toggle buttons
+    $('.btn').button()
+    $('.binary-filters .btn').each () ->
+      tmp = ($ this).children()[0] 
+      if ($ tmp).prop("checked")
+        ($ this).button('toggle')
+    
+    # Make blocks clickable
     ($ '.mainContent').on 'click', 'div.clickableItem', (event) ->
       window.location = ($ event.currentTarget).children('a').attr 'href'
 
-    addItem = (object) ->
-      newItem = """
-        <div class='item clickableItem'>
-          <a href='#{object.url}'></a>
-          #{if object.mediaSrc then "<div class='caroucell' style='height:120px; background-image:url(#{object.mediaSrc})'></div>" else ""}
-          <div style="padding:7px">
-            <div style="font-size:1.2em; font-weight:bold;">#{object.name} #{if object.featured then "<span style='color:#57C142'> (featured)</span>" else ""}</div>
-            <b>Owner: </b><a href='#{object.ownerUrl}'>#{object.ownerName}</a><br />
-            <b>Created: </b>#{object.timeAgoInWords} ago (on #{object.createdAt})<br />
-          </div>
-       </div>
-      """
-      newItem = ($ newItem)
-
-      ($ '#projects').append(newItem).isotope('insert', newItem)
-
-
-    ($ '#projects_search').submit ->
-
-      ($ '#hidden_pagination').val(1)
-
-      dataObject = ($ this).serialize()
-      dataObject += "&per_page=#{constants.INFINITE_SCROLL_ITEMS_PER}"
-
-      $.ajax
-        url: this.action
-        data: dataObject
-        dataType: "json"
-        success: (data, textStatus)->
-
-          ($ '#projects').isotope('remove', ($ '.item'))
-
-          for object in data
-            addItem object
-
-          helpers.infinite_scroll(data.length, '#projects', '#projects_search', '#hidden_pagination', '#load_projects', addItem)
-
-      return false
-
+    # Setup auto-submit
     ($ '.projects_filter_checkbox').click ->
       ($ '#projects_search').submit()
     
     ($ '.projects_sort_select').change ->
       ($ '#projects_search').submit()
-
-    ($ '#template_checkbox').click ->
+      
+    ($ '.projects_order_select').change ->
       ($ '#projects_search').submit()
     
-    ($ '#curated_checkbox').click ->
+    ($ '.binary-filters .btn').on 'click', (e) ->
+      e.preventDefault()
+      cb = ($ ($ e.target).children()[0])
+      cb.prop("checked", not cb.prop("checked"))
       ($ '#projects_search').submit()
-      
-    relayout = ->
+
+    # Setup isotope
+    helpers.isotope_layout('#projects')
+    
+    $(window).smartresize () ->
       helpers.isotope_layout('#projects')
     
-    ($ window).resize () ->
-      setTimeout(relayout,750)
-
-    helpers.isotope_layout('#projects')
-    ($ "#projects_search").submit()
-    
+    # Setup add project button
     ($ '#addProjectButton').click ->
       $.ajax
         url: "/projects/create"

@@ -25,19 +25,25 @@ class MakeProjectTest < ActionDispatch::IntegrationTest
     find('#manual_fields').click
     
     find('#new_field').find(:xpath, 'option[2]').select_option
-    assert page.has_content?("Field added")
+    assert page.has_content?("Field added"), "Flash happened"
+    assert page.has_content?("Number"), "Number field is there"
+    find('#new_field').find(:xpath, 'option[2]').select_option
+    assert page.has_content?("Field added"), "Flash happened"
+    page.assert_selector("tr", count: 3)
+    first(:css, '.field_delete').click
     find('.field_delete').click
     
     find('#new_field').find(:xpath, 'option[3]').select_option
-    assert page.has_content?("Field added")
+    assert page.has_content?("Field added"), "Flash happened"
     find('.field_delete').click
     
     find('#new_field').find(:xpath, 'option[4]').select_option
-    assert page.has_content?("Field added")
+    assert page.has_content?("Field added"), "Flash happened"
     find('.field_delete').click
     
     find('#new_field').find(:xpath, 'option[5]').select_option
-    assert page.has_content?("Field added")
+    assert page.has_content?("Field added"), "Flash happened"
+    first(:css, '.field_delete').click
     
     find('#fields_form_submit').click
     
@@ -55,7 +61,7 @@ class MakeProjectTest < ActionDispatch::IntegrationTest
     
     assert page.has_content?("Fields"), "Project page should have 'Fields'"
     
-    find('#template_file_upload').click
+    #find('#template_file_upload').click
     
     csv_path = Rails.root.join('test', 'CSVs', 'dessert.csv')
     page.execute_script %Q{$('#template_file_form').parent().show()}
@@ -79,7 +85,7 @@ class MakeProjectTest < ActionDispatch::IntegrationTest
     
     assert page.has_content?("Fields"), "Project page should have 'Fields'"
     
-    find('#template_file_upload').click
+    #find('#template_file_upload').click
     
     csv_path = Rails.root.join('test', 'CSVs', 'dessert.csv')
     page.execute_script %Q{$('#template_file_form').parent().show()}
