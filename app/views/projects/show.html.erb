@@ -126,11 +126,11 @@
   <div class="col-md-5">
 
     <% if can_edit?(@project) %>
-      <div class="row" id="student_keys_row" class="center">
-        <%= render layout: "shared/box", locals: {title: 'Student Keys', width: '12', 
-                                                  unique_id: 'student_keys', should_hide: false} do %>
+      <div class="row" id="contrib_keys_row" class="center">
+        <%= render layout: "shared/box", locals: {title: 'Contributor Keys', width: '12', 
+                                                  unique_id: 'contrib_keys', should_hide: false} do %>
         <div class="col-md-12 center">
-          <table class="student_keys_table table table-striped">
+          <table class="contrib_keys_table table table-striped">
             <thead>
               <tr>
                 <th style="min-width: 30%">Label</th>
@@ -139,7 +139,7 @@
               </tr>
             </thead>
             <tbody>
-              <% @project.student_keys.each do |kk| %>
+              <% @project.contrib_keys.each do |kk| %>
               <tr>
                 <td><%= kk.name %></td>
                 <td><%= kk.key %></td>
@@ -155,8 +155,8 @@
         </div>
 
         <div class="center">
-          <p><strong>New Student Key</strong></p>
-          <%= form_for @new_student_key, html: { class: 'form-inline' } do |ff| %>
+          <p><strong>New Contributor Key</strong></p>
+          <%= form_for @new_contrib_key, html: { class: 'form-inline' } do |ff| %>
             <%= ff.hidden_field :project_id %>
             <div class="form-group">
               <%= ff.label :name, "Label" %><br>
@@ -230,9 +230,9 @@
             </div>
           </div>
         <% else %>
-          <% if @project.has_student_key? %>
-            <p>Enter student key to submit data.</p>
-            <%= form_tag '/student_keys/enter', method: 'post' do %>
+          <% if @project.has_contrib_key? %>
+            <p>Enter contributor key to submit data.</p>
+            <%= form_tag '/contrib_keys/enter', method: 'post' do %>
               <%= hidden_field_tag :project_id, @project.id %>
               <%= text_field_tag :key %>
               <%= submit_tag "Submit Key", class: "btn btn-success" %>

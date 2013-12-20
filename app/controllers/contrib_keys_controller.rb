@@ -1,8 +1,8 @@
-class StudentKeysController < ApplicationController
+class ContribKeysController < ApplicationController
   skip_before_filter :authorize, only: [:enter]
 
   def create
-    @key = StudentKey.new(params[:student_key])
+    @key = ContribKey.new(params[:contrib_key])
 
     unless can_edit?(@key.project)
       flash[:error] = "Action Not Authorized"
@@ -11,7 +11,7 @@ class StudentKeysController < ApplicationController
     end
 
     if can_edit?(@key.project) && @key.save
-      flash[:notice] = "Added student key."
+      flash[:notice] = "Added contributor key."
       redirect_to @key.project
     else
       flash[:error] = @key.errors.inspect
@@ -20,11 +20,11 @@ class StudentKeysController < ApplicationController
   end
 
   def destroy
-    @key = StudentKey.find(params[:id])
+    @key = ContribKey.find(params[:id])
 
     if can_edit?(@key.project)
       @key.destroy
-      flash[:notice] = "Deleted student key."
+      flash[:notice] = "Deleted contributor key."
       redirect_to @key.project
     else
       flash[:error] = "Action Not Authorized"
@@ -34,14 +34,14 @@ class StudentKeysController < ApplicationController
 
   def enter
     @project = Project.find(params[:project_id])
-    keys = @project.student_keys.where(key: params[:key])
+    keys = @project.contrib_keys.where(key: params[:key])
     
     if keys.count > 0
-      session[:student_access] = @project.id
-      flash[:notice] = "You have entered a valid student key."
+      session[:contrib_access] = @project.id
+      flash[:notice] = "You have entered a valid contributor key."
       redirect_to @project
     else
-      flash[:error] = "Invalid student key."
+      flash[:error] = "Invalid contributor key."
       redirect_to @project
     end
   end

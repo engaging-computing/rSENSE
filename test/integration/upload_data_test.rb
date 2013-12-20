@@ -148,7 +148,7 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     page.execute_script %Q{$('#datafile_form').parent().show()}
     find("#datafile_form").attach_file("file",csv_path)
     page.execute_script %Q{$('#datafile_form').submit()}
-    assert page.has_content?("Match Quality")
+    assert page.has_content?("Match Quality"), "Data wasn't submitted"
     click_on "Submit"
     assert page.has_content?("Dataset")
     click_on "File Types"
