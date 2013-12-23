@@ -2,10 +2,10 @@ $ ->
   if namespace.controller is "data_sets" and namespace.action is "manualEntry"
   
     settings =
+      page_name: "manualEntry"
       buttons: ['close', 'add', 'save']
       bootstrapify: true
       upload:
-        page_name: "manualEntry"
         ajaxify: true
         url: window.postURL
         method: 'POST'

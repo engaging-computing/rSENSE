@@ -357,11 +357,20 @@ $ ->
           ($ '#edit_table_save').button 'loading'
 
           $.ajax
-            url: "/projects/#{($ table).data('project-id')}"
+            url: "/projects/#{($ table).data('project-id')}.json"
             type: "GET"
-            dataType: "json"
+            dataType: "text"
             cache: false
+            error: (jqXHR, textStatus, errorThrown) ->
+              console.log jqXHR
+              console.log textStatus
+              console.log errorThrown
             success: (data, textStatus, jqXHR) ->
+            
+              console.log data
+              console.log textStatus
+              console.log jqXHR
+              
               local = []
               remote = []
               add_fields = []
@@ -513,8 +522,8 @@ $ ->
         ### SAVE TABLE ###
 
         ($ '#edit_table_save').click ->
-        
-          if ($ '#data_set_name').val() != "" and page_name == "manualEntry"
+                
+          if ($ '#data_set_name').val() != "" and settings.page_name == "manualEntry"
 
             if table_validates(table)
               
@@ -529,4 +538,4 @@ $ ->
                 ## I guess I'm not gonna write this part because we only use ajax to submit data
                 ($ table).wrap "<form action='#{settings.upload.url}' method='#{settings.upload.method}' />"
           else 
-            ($ '#mainContent').prepend "<div class='alert alert-danger alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button><strong>Error</strong></div>"
+            ($ '.mainContent').prepend "<div class='alert alert-danger alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button><strong>Error</strong></div>"
