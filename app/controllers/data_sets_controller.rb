@@ -199,7 +199,7 @@ class DataSetsController < ApplicationController
     success = false
     defaultName = ""
     
-    if !params[:name]
+    if !params[:name] #or params[:name] == "e.g., Bob D. - Test 1"
       defaultName  = "Dataset ##{(DataSet.where(project_id: params[:id]).to_a.count + 1).to_s}"
     else
       defaultName = params["name"]
