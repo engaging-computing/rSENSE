@@ -101,6 +101,7 @@ $ ->
   $.fn.extend
     editTable: (options) ->
       settings =
+        page_name: "blank"
         buttons: ['close', 'add', 'save']
         bootstrapify: true
         upload:
@@ -348,6 +349,7 @@ $ ->
               row[col_i]
 
           ajax_data =
+            name: ($ '#data_set_name').val()
             headers: head
             data: table_data
 
@@ -511,16 +513,20 @@ $ ->
         ### SAVE TABLE ###
 
         ($ '#edit_table_save').click ->
+        
+          if ($ '#data_set_name').val() != "" and page_name == "manualEntry"
 
-          if table_validates(table)
-            
-            ($ '#edit_table_save').unbind()
-
-            if settings.upload.ajaxify is true
+            if table_validates(table)
               
-              submit_form()
+              ($ '#edit_table_save').unbind()
+
+              if settings.upload.ajaxify is true
+                
+                submit_form()
 
 
-            else
-              ## I guess I'm not gonna write this part because we only use ajax to submit data
-              ($ table).wrap "<form action='#{settings.upload.url}' method='#{settings.upload.method}' />"
+              else
+                ## I guess I'm not gonna write this part because we only use ajax to submit data
+                ($ table).wrap "<form action='#{settings.upload.url}' method='#{settings.upload.method}' />"
+          else 
+            ($ '#mainContent').prepend "<div class='alert alert-danger alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button><strong>Error</strong></div>"
