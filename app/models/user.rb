@@ -41,7 +41,9 @@ class User < ActiveRecord::Base
     self.bio = sanitize self.bio, tags: %w()
     
     # Check to see if there is any valid content left
-    if Nokogiri.HTML(self.bio).text.blank?
+    # Check to see if there is any valid content left
+    html = Nokogiri.HTML(self.bio)
+    if html.text.blank? and html.at_css("img").nil?
       self.bio = nil
     end
   end

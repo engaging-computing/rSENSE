@@ -34,7 +34,8 @@ class Project < ActiveRecord::Base
     self.content = sanitize self.content
     
     # Check to see if there is any valid content left
-    if Nokogiri.HTML(self.content).text.blank?
+    html = Nokogiri.HTML(self.content)
+    if html.text.blank? and html.at_css("img").nil?
       self.content = nil
     end
     
