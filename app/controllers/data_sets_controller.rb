@@ -146,7 +146,7 @@ class DataSetsController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { redirect_to 'public/401.html', status: :forbidden }
+        format.html { redirect_to 'public/403.html', status: :forbidden}
         format.json { render json: {}, status: :forbidden }
       end
     end
@@ -157,6 +157,35 @@ class DataSetsController < ApplicationController
     @project = Project.find(params[:id])
   end
 
+  # POST /projects/1/jsonDataUpload
+  def jsonDataUpload
+    project = Project.find(params['id'])
+  
+    uploader = FileUploader.new
+    sane = uploader.sanitize_data(params[:data])
+    
+    if sane[:status]
+      data_obj = sane[:data_obj]
+      data = uploader.swap_columns(data_obj, project)
+      dataset = DataSet.new do |d|
+        d.user_id = @cur_user.id
+        d.title = params[:title]
+        d.project_id = project.id
+        d.data = data
+      end
+      if dataset.save
+        respond_to do |format|
+          format.json {render json: {redirect: "/projects/#{project.id}/data_sets/#{dataset.id}"}, status: :ok}
+        end
+      end
+    else
+      err_msg = sane[:status] ? dataset.errors.full_messages : sane[:msg]
+      respond_to do |format|
+        format.json {render json: {data: sane[:data_obj], msg: err_msg}, status: unprocessable_entity}
+      end
+    end
+  end
+  
   # POST /projects/1/manualUpload
   def manualUpload
 
@@ -279,10 +308,10 @@ class DataSetsController < ApplicationController
     project = Project.find(params[:pid])
     uploader = FileUploader.new
     data_obj = uploader.retrieve_obj(params[:file])
-    sane = uploader.sanitize_data(data_obj, project, params[:matches])
+    sane = uploader.sanitize_data(data_obj, params[:matches])
     if sane[:status]
       data_obj = sane[:data_obj]
-      data = uploader.swap_columns(data_obj, project, params[:matches])
+      data = uploader.swap_columns(data_obj, project)
       dataset = DataSet.new do |d|
         d.user_id = @cur_user.id
         d.title = params[:title]
