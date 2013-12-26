@@ -146,7 +146,7 @@ class DataSetsController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { redirect_to 'public/401.html' }
+        format.html { redirect_to 'public/401.html', status: :forbidden }
         format.json { render json: {}, status: :forbidden }
       end
     end

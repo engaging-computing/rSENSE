@@ -2,23 +2,12 @@ class NewsController < ApplicationController
   # GET /news
   # GET /news.json
   skip_before_filter :authorize, only: [:show, :index]
+  before_filter :authorize_admin, only: [:create,:update,:destroy]
   include ApplicationHelper
   
   def index
-
-    if !params[:sort].nil?
-        sort = params[:sort]
-    else
-        sort = "DESC"
-    end
     
-    if !params[:per_page].nil?
-        pagesize = params[:per_page]
-    else
-        pagesize = 10;
-    end
-    
-    @news = News.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("created_at #{sort}")
+    @news = News.last(10)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -30,9 +19,9 @@ class NewsController < ApplicationController
   # GET /news/1.json
   def show
     @news = News.find(params[:id])
+    
+    recur = ((params[:recur] == true) ? true : false) || false
 
-    recur = params.key?(:recur) ? params[:recur] == "true" : false
-  
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @news.to_hash(recur) }
@@ -42,21 +31,14 @@ class NewsController < ApplicationController
   # POST /news
   # POST /news.json
   def create
-    if is_admin?
-      @news = News.new({user_id: @cur_user.id, title: "New Blog Entry"})
-      respond_to do |format|
-        if @news.save
-          format.html { redirect_to @news, notice: 'News entry was successfully created.' }
-          format.json { render json: @news.to_hash(false), status: :created, location: @news }
-        else
-          format.html { render :status => 404 }
-          format.json { render json: @news.errors, status: :unprocessable_entity }
-        end
-      end
-    else
-      respond_to do |format|
-        format.html { render :status => 403 }
-        format.json { render json: "Access denied", status: :forbidden }
+    @news = News.new({user_id: @cur_user.id, title: "New Blog Entry"})
+    respond_to do |format|
+      if @news.save
+        format.html { redirect_to @news, notice: 'News entry was successfully created.' }
+        format.json { render json: @news.to_hash(false), status: :created, location: @news }
+      else
+        format.html { render :status => 404 }
+        format.json { render json: @news.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -64,22 +46,15 @@ class NewsController < ApplicationController
   # PUT /news/1
   # PUT /news/1.json
   def update
-    if is_admin?
-      @news = News.find(params[:id])
+    @news = News.find(params[:id])
 
-      respond_to do |format|
-        if @news.update_attributes(params[:news])
-          format.html { redirect_to @news, notice: 'News was successfully updated.' }
-          format.json { render json: {}, status: :ok }
-        else
-          format.html { render action: "show" }
-          format.json { render json: @news.errors, status: :unprocessable_entity }
-        end
-      end
-    else
-      respond_to do |format|
-        format.html { render :status => 403 }
-        format.json { render json: @news.errors, status: :forbidden }
+    respond_to do |format|
+      if @news.update_attributes(params[:news])
+        format.html { redirect_to @news, notice: 'News was successfully updated.' }
+        format.json { render json: {}, status: :ok }
+      else
+        format.html { render action: "show" }
+        format.json { render json: @news.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -88,28 +63,16 @@ class NewsController < ApplicationController
   # DELETE /news/1.json
   def destroy
     @news = News.find(params[:id])
-    
-    if can_delete? @news
-      
-      @news.media_objects.each do |m|
-        m.destroy
-      end
-      
-      @news.user_id = -1
-      @news.hidden = true
-      @news.featured_media_id = nil
-      @news.save
-
-      respond_to do |format|
-        format.html { redirect_to news_index_url }
-        format.json { render json: {}, status: :ok }
-      end
-    else
-      respond_to do |format|
-        format.html { render :status => 403 }
-        format.json { render json: @news.errors, status: :forbidden }
-      end
+   
+    @news.media_objects.each do |m|
+      m.destroy
     end
-    
+
+    @news.destroy
+
+    respond_to do |format|
+      format.html { redirect_to news_index_url }
+      format.json { render json: {}, status: :ok }
+    end
   end
 end

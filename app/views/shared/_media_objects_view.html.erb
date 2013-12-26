@@ -24,7 +24,7 @@
                 <a class="media_edit" href="<%= media_object_path mo %>">Edit</a>
               <% end %>
               <% if can_delete? mo %>
-                | <%= link_to "Delete", mo, method: 'delete', data: { confirm: "Are you sure?" } %>
+                | <%= link_to "Delete", mo, method: 'delete', class: "media_delete", data: { confirm: "Are you sure?" } %>
               <% end %>
             </div>
           </td>
