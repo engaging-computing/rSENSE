@@ -226,8 +226,8 @@ class UsersController < ApplicationController
       else
         @errors = @user.errors.full_messages()
         format.html do
-          msg = @errors.join(" ")
-          redirect_to edit_user_path(@user), alert: msg
+          flash[:error] = @errors.join(" ")
+          redirect_to edit_user_path(@user)
         end
         format.json { render json: @errors, status: :unprocessable_entity }
       end
