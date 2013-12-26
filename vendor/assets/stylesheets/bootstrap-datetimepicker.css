@@ -51,6 +51,7 @@
 .bootstrap-datetimepicker-widget > ul {
   list-style-type: none;
   margin: 0;
+  padding:0px;
 }
 .bootstrap-datetimepicker-widget .timepicker-hour,
 .bootstrap-datetimepicker-widget .timepicker-minute,
@@ -164,4 +165,19 @@
 .bootstrap-datetimepicker-widget.left-oriented:after {
   left: auto;
   right: 7px;
+}
+
+.bootstrap-datetimepicker-widget .timepicker-picker td{
+  margin:0px;
+  padding:0px;
+}
+
+.bootstrap-datetimepicker-widget .timepicker-picker td span{
+  line-height: inherit;
+  height: auto;
+}
+
+.bootstrap-datetimepicker-widget hr{
+  margin:2px;
+  border: 1px solid gray;
 }
