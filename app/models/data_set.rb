@@ -105,7 +105,8 @@ class DataSet < ActiveRecord::Base
     project.data_sets.each do |dset|
       title = dset.title
       if title.include? base
-        val = title.split(base)[1]
+        val = title.split(base)[1].to_i || nil
+        next if val == nil
         if val.to_i > highest
           highest = val.to_i
         end
