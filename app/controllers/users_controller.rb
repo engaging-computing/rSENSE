@@ -186,7 +186,9 @@ class UsersController < ApplicationController
 
         @user.update_attributes(params[:user])
         success = @user.save
-        session[:pw_change] = nil
+        if success
+          session[:pw_change] = nil
+        end
       else
         # Email change
        
