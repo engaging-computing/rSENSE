@@ -176,7 +176,7 @@ class DataSetsController < ApplicationController
       end
       if dataset.save
         respond_to do |format|
-          format.json {render json: dataset: dataset.to_hash(false), status: :ok}
+          format.json {render json: dataset.to_hash(false), status: :ok}
         end
       end
     else
