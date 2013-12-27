@@ -56,22 +56,22 @@ class FileUploader
   end
   
   ## Swap columns 
-  def swap_columns(data_obj, project, matches) 
-    size = data_obj.first[1].length
+  def swap_columns(data_obj, project) 
     data = []
+    
+    size = data_obj.first[1].length
+    
     (0..size-1).each do |i|
       x = {}
       project.fields.each do |field|
-        next if matches[field.id.to_s] == "0"
-        x[field.id] = data_obj[matches[field.id.to_s]][i]
+        x[field.id] = data_obj[field.id.to_s][i]
       end
       data << x
     end
-    
     data
   end
   
-  def swap_without_matches(data_obj,project)
+  def swap_with_field_names(data_obj,project)
     data = []
     size = data_obj.first[1].length
 
@@ -141,12 +141,22 @@ class FileUploader
     results
   end
   
-  def sanitize_data(data_obj, project, matches)
-    matches.each do |match|
-      field = Field.find(match[0])
+  def sanitize_data(data_obj, matches = nil)
+    if !matches.nil?
+      data = {}
+      matches.each do |match|
+        field = Field.find(match[0])
+        column = data_obj[match[1]]
+        data[field.id.to_s] = column
+      end
+    else 
+      data = data_obj
+    end
+
+    data.each do |(key,value)|
+      field = Field.find(key)
       type = get_field_name(field.field_type)
-      column = data_obj[match[1]]
-      column.each_with_index do |dp,index|
+      value.each_with_index do |dp,index|
         next if dp.nil?
         case type
         when "Number"
@@ -165,13 +175,13 @@ class FileUploader
         when "Text"
           if !field.restrictions.nil?
             if !(field.restrictions.map {|r| r.downcase.gsub(/\s+/, "")}.include? dp.downcase.gsub(/\s+/, ""))
-              data_obj[match[1]][index] = ""
+              data[match[1]][index] = ""
             end
           end
         end
       end
     end
-    return {status: true, msg: "passed", data_obj: data_obj}
+    return {status: true, msg: "passed", data_obj: data}
   end
   
   

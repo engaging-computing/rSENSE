@@ -68,6 +68,7 @@ class DataSetsControllerTest < ActionController::TestCase
     assert_difference('DataSet.count', 0) do
       delete :destroy, { id: @data_set }, { user_id: @crunch }
     end
+
     assert_response :forbidden
   end
 
@@ -103,4 +104,12 @@ class DataSetsControllerTest < ActionController::TestCase
     post :dataFileUpload, { pid: @proj.id, file: file }, { user_id: @kate }
     assert_response :success
   end
+  
+  test "should upload through jsonDataUpload" do
+    post :jsonDataUpload, { format: 'json', id: @proj.id, title: "JSON Upload",
+      data: {"20" => ["1", "2", "3"], "21"=>["4", "5", "6"], "22" => ["14", "13", "12"]} }, { user_id: @kate }
+    assert_response :success
+    @new_dataset_id = JSON.parse(response.body)['id']
+  end
+  
 end
