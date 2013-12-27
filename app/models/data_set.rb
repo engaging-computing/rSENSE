@@ -98,4 +98,20 @@ class DataSet < ActiveRecord::Base
     
     fname
   end
+  
+  def self.get_next_name(project)
+    highest = 0
+    base = "Dataset #"
+    project.data_sets.each do |dset|
+      title = dset.title
+      if title.include? base
+        val = title.split(base)[1]
+        if val.to_i > highest
+          highest = val.to_i
+        end
+      end  
+    end
+    "#{base}#{highest+1}"
+  end
+  
 end
