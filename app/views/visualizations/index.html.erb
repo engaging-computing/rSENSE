@@ -53,7 +53,7 @@
         <div class='item clickableItem'>
           
           <a href='<%=visualization_path vi%>'>
-            <img class="areaLink" src="/assets/images/blank.png"/>
+            <%= image_tag "blank.png", {class: "areaLink", alt: ""} %>
           </a>
           
           <% if vi.thumb_id != nil %>
