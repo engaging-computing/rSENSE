@@ -28,7 +28,7 @@
 ###
 $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
-      
+
     class window.Table extends BaseVis
         constructor: (@canvas) -> 
 
@@ -45,110 +45,91 @@ $ ->
         #Gets called when the controls are clicked and at start
         update: ->
             ($ '#' + @canvas).html('')
-        
+
             #Updates controls by default
             ($ '#' + @canvas).append '<table id="data_table" class="table table-striped"></table>'
-            
+
             ($ '#data_table').append '<thead><tr id="table_headers"></tr></thead>'
-            
+
             #Build the headers for the table
-            headers = for field, fieldIndex in data.fields
-                if (fieldIndex is data.COMBINED_FIELD)
-                    "<th style='display:none'>#{fieldTitle field}</th>"
-                else
-                    "<th>#{fieldTitle field}</th>"
-                
+            headers = for field in data.fields
+                "<th>#{fieldTitle field}</th>"
+
             ($ '#table_headers').append header for header in headers
-            
+
             #Build the data for the table
             visibleGroups = for group, groupIndex in data.groups when groupIndex in globals.groupSelection
                 group
-            
+
             rows = for dataPoint in data.dataPoints when (String dataPoint[data.groupingFieldIndex]).toLowerCase() in visibleGroups
                 line = for dat, fieldIndex in dataPoint
-                    if (fieldIndex is data.COMBINED_FIELD)
-                        "<td style='display:none'>#{dat}</td>"
-                    else
-                        "<td>#{dat}</td>"
-                    
+                    "<td>#{dat}</td>"
+
                 "<tr>#{line.reduce (a,b)-> a+b}</tr>"
-            
+
             ($ '#data_table').append '<tbody id="table_body"></tbody>'
-            
+
             ($ '#table_body').append row for row in rows
 
             #Set sort state to default none existed
             @sortState ?= [[1, 'asc']]
-            
+
             #Set default search to empty string
             @searchString ?= ''
 
             #Restore previous search query if exists, else restore empty string
             if @searchString? and @searchString isnt ''
                 $('#table_canvas').find('input').val(@searchString).keyup()
-                
-            console.log(($ "#data_table"))
+
+            #Prepare the table to grid parameters
+            @table = ($ "#data_table")
             params = {
                 height: ($ '#' + @canvas).height() - 45,
                 width: ($ '#' + @canvas).width(),
                 caption: "",
- 	            hidegrid: false,
- 	            autowidth: true                
-                }   
-            
-            @table = tableToGrid("#data_table", params) 
+                hidegrid: false,
+                autowidth: true
+                }
 
-            #console.log(@table)
+            #Gridify the table
+            tableToGrid("#data_table", params)
+
+            #Hide the combined datasets column
+            combined_col = @table.jqGrid('getGridParam','colModel')[data.COMBINED_FIELD]
+            @table.hideCol(combined_col.name).trigger("reloadGrid")
+            @table.setGridWidth(($ '#table_canvas').width()).trigger("reloadGrid")
+
+            for column, col_index in @table.jqGrid('getGridParam','colModel')
+                if (data.fields[col_index].typeID is data.types.TEXT)
+                    column.sorttype = 'text';
+                else column.sorttype = 'number';
 
             super()
-
-            ###           
-            #Build the headers for the table
-          
-            
-            #Build the colModel object
-
-
-            if (fieldIndex is data.COMBINED_FIELD)
-                { name: fieldTitle(field), index: fieldIndex, search: true, resizable: false, hidden: true }
-            else
-                { name: fieldTitle(field), index: fieldIndex, search: true, resizable: false }
-           
-            @table = jQuery("#data_table").jqGrid({
-                datatype: "local",
-                height: ($ '#' + @canvas).height() - 45,
-                width: ($ '#' + @canvas).width(),
- 	            colNames: headers,
- 	            caption: ""
- 	            colModel: columns
- 	            hidegrid: false;
- 	            autowidth: true;
-            })
-            ###          
 
         end: ->
           ($ '#' + @canvas).hide()
 
           if @table?
-            
+
             #Save the sort state
             @sortState = @atable.fnSettings().aaSorting
-	        
+
             #Save the table filter
             @searchString = ($ '#table_canvas').find('input').val()
-            
+
         resize: (newWidth, newHeight, aniLength) ->
           foo = () ->
+            #($ '#table_canvas').animate({width: newWidth, height: newHeight}, 800);
             jQuery("#data_table").setGridWidth(newWidth);
-            
+
           setTimeout foo, aniLength
 
         drawControls: ->
-            super()    
+            super()
             @drawGroupControls()
             @drawSaveControls()
 
         serializationCleanup: ->
-          delete @table    
+          delete @table
 
     globals.table = new Table "table_canvas"
