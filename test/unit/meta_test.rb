@@ -1,12 +1,14 @@
 require 'test_helper'
 
-class DataSetTest < ActiveSupport::TestCase
+class MetaTest < ActiveSupport::TestCase
   test "minimum ruby version" do
     vs = RUBY_VERSION.split('.').map {|n| n.to_i}
     assert vs[0] >= 2, "ruby major version"
     assert vs[1] >= 0, "ruby minor version"
     assert vs[2] >= 0, "ruby minorer version"
-    assert RUBY_PATCHLEVEL >= 247, "ruby patchlevel"
+    if vs[1] < 1
+      assert RUBY_PATCHLEVEL >= 247, "ruby patchlevel" #No patchlevel for 2.1.0
+    end
   end
 
   test "imagemagick is installed" do
