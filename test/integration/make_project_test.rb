@@ -40,16 +40,8 @@ class MakeProjectTest < ActionDispatch::IntegrationTest
     # uploading from editor.
     #find('.cke_dialog').click_on "Cancel"
 
-    img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
-
-    page.execute_script %Q{$('#upload').show()}
-    find(".upload_media form").attach_file("upload", img_path)
-    #page.execute_script %Q{$('#csv_file_form').submit()}
-
-    assert page.has_content?("nerdboy.jpg"), "File should be in list"
-
     click_on "Projects"
-    assert page.has_content?("Only Templates"), "Should be on Projects page"
+    assert page.has_content?("Templates"), "Should be on Projects page"
     assert page.has_content?("Das Projekt"), "New project should be in list"
 
     #click_on "Das Projekt"

@@ -8,39 +8,41 @@ class ProjectsController < ApplicationController
 
   def index
     
+    @params = params
+    
     #Main List
     if !params[:sort].nil?
-        sort = params[:sort]
+      sort = params[:sort]
     else
-        sort = "updated_at DESC"
+      sort = "updated_at"
+    end
+    
+    if !params[:order].nil?
+      order = params[:order]
+    else
+      order = "DESC"
     end
     
     if !params[:per_page].nil?
         pagesize = params[:per_page]
     else
-        pagesize = 10;
+        pagesize = 50;
     end
     
-    if params.has_key? "templates_only"
-      templates = true
+    templates = params.has_key? "templates_only"
+    curated = params.has_key? "curated_only"
+    featured = params.has_key? "featured_only"
+    hasData = params.has_key? "has_data"
+    
+    @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: pagesize)
+    
+    if sort == "VIEWS"
+      @projects = @projects.includes(:view_count).order("view_counts.count #{order}")
     else
-      templates = false
+      @projects = @projects.order("#{sort} #{order}")
     end
     
-    if params.has_key? "curated_only"
-      curated = true
-    else
-      curated = false
-    end
-    
-    if sort == "RATING"
-      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("like_count DESC").only_templates(templates).only_curated(curated)
-    else
-      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("#{sort}").only_templates(templates).only_curated(curated)
-    end
-
-    #Featured list
-    @featured_3 = Project.where(featured: true).order("updated_at DESC").limit(3);
+    @projects = @projects.only_templates(templates).only_curated(curated).only_featured(featured).has_data(hasData)
 
     respond_to do |format|
       format.html
@@ -88,7 +90,7 @@ class ProjectsController < ApplicationController
       @data_sets = []
     end
     
-    recur = params.key?(:recur) ? params[:recur].to_bool : false
+    recur = params.key?(:recur) ? params[:recur] == "true" : false
     
     respond_to do |format|
       format.html # show.html.erb
@@ -110,7 +112,7 @@ class ProjectsController < ApplicationController
       @tmp_proj = Project.find(params[:project_id])
       @project = Project.new({user_id: @cur_user.id, title:"#{@tmp_proj.title} (clone)", content: @tmp_proj.content, filter: @tmp_proj.filter, cloned_from:@tmp_proj.id})
       success = @project.save
-      @tmp_proj.fields.all.each do |f|
+      @tmp_proj.fields.load.each do |f|
         Field.create({project_id:@project.id, field_type: f.field_type, name: f.name, unit: f.unit})
       end
     else
@@ -148,14 +150,15 @@ class ProjectsController < ApplicationController
     success = false
 
     #EDIT REQUEST
-    if can_edit?(@project)
+    if can_edit?(@project) && !editUpdate.empty?
       success = @project.update_attributes(editUpdate)
     end
 
     #HIDE REQUEST
-    if can_hide?(@project)
+    if can_hide?(@project) && !hideUpdate.empty?
       success = @project.update_attributes(hideUpdate)
     end
+
 
     #ADMIN REQUEST
     if can_admin?(@project)
@@ -169,13 +172,14 @@ class ProjectsController < ApplicationController
       end
 
       if adminUpdate.has_key?(:curated)
-        if adminUpdate['curated'] == "true"
+        if adminUpdate['curated'] == true
           adminUpdate['curated_at'] = Time.now()
+          adminUpdate['lock'] = "true"
         else
           adminUpdate['curated_at'] = nil
         end
       end
-      
+
       success = @project.update_attributes(adminUpdate)
     end
 
@@ -256,360 +260,28 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def importFromIsense
-    require 'net/http'
-
-    @pid = params[:pid]
-    field_map = {}
-
-    if( !@pid.nil? )
-
-      #Clone existing project from iSENSE
-      json = ActiveSupport::JSON.decode(
-        Net::HTTP.get(
-          URI.parse(
-            "http://129.63.8.186/ws/api.php?method=getExperiment&experiment=#{@pid}"
-            )
-          )
-        )
-
-      content = json["data"]["description"] + "<br /><br />Imported from old iSENSE <br />Originally created on #{json['data']['timecreated'].to_time.strftime '%a %b %d %Y'}<br />Click <a href='http://old.isenseproject.org/experiment.php?id=#{@pid}'>here</a> to view the original"
-      
-      @project = Project.new({user_id: @cur_user.id, title: json["data"]["name"], content: content, featured: json["data"]["featured"]})
-
-      #If clone is successful clone fields
-      if @project.save
-        json = ActiveSupport::JSON.decode(
-          Net::HTTP.get(
-            URI.parse(
-              "http://129.63.8.186/ws/api.php?method=getExperimentFields&experiment=#{@pid}"
-            )
-          )
-        )
-
-        #For each field append it to the project's field list
-        json["data"].each do |f|
-          if f["type_id"].to_i == 7
-            type = 1
-          elsif f["type_id"].to_i == 37
-            type = 3
-          elsif f["type_id"].to_i == 19
-            if f["unit_name"].downcase == "latitude"
-              type = 4
-            else
-              type = 5
-            end
-          else
-            type = 2
-          end
-          
-          field =  Field.create({project_id: @project.id, field_type: type, name: f["field_name"], unit: f["unit_name"]})
-          field_map[f["field_id"]] = field
-        end
-
-        #Get session list
-
-        json = ActiveSupport::JSON.decode(
-          Net::HTTP.get(
-            URI.parse("http://129.63.8.186/ws/api.php?method=getSessions&experiment=#{@pid}")
-          )
-        )
-
-        sessions = Array.new()
-
-        json["data"].each do |ses|
-          sessions.push Hash["id" => ses["session_id"].to_s, "name" => ses["name"].to_s, "desc" => ses["description"].to_s ]
-        end
-
-        params[:pid] = @project.id
-
-        retry_attempts = 5
-
-        #Get the data from each session
-        sessions.each_with_index do |ses, ses_index|
-
-          begin
-
-            response = Net::HTTP.get(
-              URI.parse("http://129.63.8.186/ws/json.php?sessions=#{ses['id']}")
-            )
-
-          rescue SocketError => error
-            if retry_attempts > 0
-              retry_attempts -= 1
-              sleep 5
-              retry
-            end
-
-            raise
-          end
-
-          response["var DATA = "] = ""
-          response["var STATE = \"\""] = ""
-
-          while( response[";"] )
-            response[";"] = ""
-          end
-
-          json = ActiveSupport::JSON.decode response
-
-          header = Hash.new
-          
-          json[0]["fields"].each_with_index do |f, i|
-            field = field_map[f["field_id"]]
-            header["#{i}"] = { id: "#{field.id}", type: "#{field.field_type}" }
-          end
-          
-          data = Array.new
-
-          json[0]["data"].each do |dr|
-            row =  Hash.new
-            dr.each_with_index do |d, i|
-              if header["#{i}"][:type] == "1"
-                begin
-                  row[header["#{i}"][:id]] = "U #{Integer d}"
-                rescue
-                  row[header["#{i}"][:id]] = d
-                end
-              else
-                row[header["#{i}"][:id]] = d
-              end
-            end
-            data.push row
-          end
-          
-          data_set = DataSet.create(user_id: @cur_user.id, project_id: @project.id, 
-                                    title: ses['name'], data: data)
-        end
-
-        redirect_to @project
-      else
-
-        logger.info "The project didn't save for some reason..."
-
-      end
-
-
-    else
-      respond_to do |format|
-        format.json { render json: json }
-        format.html
-      end
-    end
-
-  end
-
-
-  def templateFields
-    
-    require "csv"
-    require "open-uri"
-    require "roo"
-
-    error = nil
-
-    @project = Project.find params[:id]
-
-    if !params[:save].nil?
-
-      field_list = []
-
-      @project.fields.each do |f|
-        field_list.push(f)
-      end
-
-      params[:fields][:names].each_with_index do |f, f_index|
-
-        field = Field.create( { name: f, field_type: view_context.get_field_type(params[:fields][:types][f_index]), project_id: @project.id, unit: params[:fields][:units][f_index] } )
-
-        if view_context.get_field_name(field.field_type) == "Latitude"
-          field.unit = "deg"
-        elsif view_context.get_field_name(field.field_type) == "Longitude"
-          field.unit = "deg"
-        elsif view_context.get_field_name(field.field_type) == "Text"
-          field.unit = ""
-        end
-
-        field_list.push field
-
-      end
-
-      @project.fields = field_list.find_all {|ff| not ff.id.nil? }
-      @project.save!
-
-      respond_to do |format|
-        format.json { render json: {project: @project, fields: field_list} }
-      end
-
-    else
-      
-      isdoc = false
-      
-      if params.has_key? :csv
-        @file = params[:csv]
-        if @file.content_type.include? "opendocument"
-          oo = Roo::Openoffice.new(@file.path,false, :ignore)
-          data = CSV.parse(oo.to_csv)
-        elsif @file.content_type.include? "ms-excel"
-          oo = Roo::Excel.new(@file.path,false,:ignore)
-          data = CSV.parse(oo.to_csv) 
-        elsif @file.content_type.include? "openxmlformats"
-          oo = Roo::Excelx.new(@file.path,false,:ignore)
-          data = CSV.parse(oo.to_csv)
-        elsif @file.original_filename.split(".").last == "csv" or @file.original_filename.split(".").last == "txt"
-          #data = CSV.read(@file.tempfile)
-          
-          csv = Roo::CSV.new(@file.path)
-          tsv = Roo::CSV.new(@file.path, csv_options: {col_sep: "\t"})
-          ssv = Roo::CSV.new(@file.path, csv_options: {col_sep: ";"})
-          
-          csv = CSV.parse(csv.to_csv)
-          tsv = CSV.parse(tsv.to_csv)
-          ssv = CSV.parse(ssv.to_csv)
-          
-          csv_avg = 0
-          tsv_avg = 0
-          ssv_avg = 0
-          
-          csv.each do |csv_row|
-            csv_avg = csv_avg + csv_row.count  
-          end
-          
-          tsv.each do |tsv_row|
-            tsv_avg = tsv_avg + tsv_row.count  
-          end
-          
-          ssv.each do |ssv_row|
-            ssv_avg = ssv_avg + ssv_row.count  
-          end
-          
-          csv_avg = csv_avg / csv.count
-          tsv_avg = tsv_avg / tsv.count
-          ssv_avg = ssv_avg / ssv.count
-          
-          if( csv[0].count == csv_avg and csv.last.count == csv_avg and csv_avg > 1 )
-            data = csv
-          elsif( tsv[0].count == tsv_avg and tsv.last.count == tsv_avg and tsv_avg > 1 )
-            data = tsv
-          elsif( ssv[0].count == ssv_avg and ssv.last.count == ssv_avg and ssv_avg > 1 )
-            data = ssv
-          else
-            data = csv
-          end
-          
-          
-        else
-          error = "File type not supported."
-        end
-      else 
-        tempfile = CSV.new(open(params[:tmpfile]))
-        data = tempfile.read()
-        isdoc = true
-      end
-
-      if @project.fields.count == 0 and error.nil?
-
-        tmp = data
-
-        col = Array.new
-        p_fields = Array.new
-
-        tmp[0].each_with_index do |dp, i|
-          col[i] = Array.new
-          p_fields[i] = [ "Timestamp", "Number", "Text", "Latitude", "Longitude" ]
-        end
-
-        tmp.each_with_index do |row, skip|
-          if( skip == 0 )
-          else
-            row.each_with_index do |data_point, i|
-              if( data_point == "" or data_point.nil? )
-                col[i].push [ data_point ]
-              else
-                col[i].push [ data_point.strip() ]
-              end
-            end
-          end
-        end
-
-        # TIME TO PULL OUT THE FIELDS THAT DONT MAKE SENSE
-        
-        col.each_with_index do |c, i|
-          c.each do |dp|
-            if dp[0] != "" and dp[0] != nil
-              begin
-                f = Float(dp[0])
-                
-                # Check lat Bounds
-                if (f <-90.0 or f > 90.0)
-                  p_fields[i][3] = ""
-                end
-                
-                # Check lon Bounds
-                if (f <-180.0 or f > 180.0)
-                  p_fields[i][4] = ""
-                end
-                
-              rescue
-                # Cell is not a number
-                p_fields[i][1] = ""
-                p_fields[i][3] = ""
-                p_fields[i][4] = ""
-              end
-            end
-          end
-        end
-        
-        p_fields.each_with_index do |p, i|
-
-          new_p = Array.new
-
-          p.each do |f|
-            if f != ""
-              new_p.push f
-            end
-          end
-
-          p_fields[i] = new_p
-
-        end
-
-        params[:tmp] = Array.new()
-
-        p_fields.each_with_index do |f, i|
-          params[:tmp].push Field.new( name: tmp[0][i] )
-        end
-
-      end
-      
-      if error.nil?
-        respond_to do |format|
-          format.json { render json: { action: "template" , pid: @project.id , fields: params[:tmp], p_field_types: p_fields} }
-          format.html { redirect_to action: "fieldSelect", id: @project.id }
-        end
-      else
-        respond_to do |format|
-          format.json { render json: { status: 500 } }
-          format.html { render status: 500 }
-        end
-      end
-      
-    end
-  end
-  
   def edit_fields
     @project = Project.find(params[:id])
   end
 
   def save_fields
+  
     @project = Project.find(params[:id])
 
     # Save all the fields
     @project.fields.each do |field| 
-      if !(field.update_attributes({name: params["#{field.id}_name"],unit: params["#{field.id}_unit"]} || ""))
+      restrictions = nil
+      if params.has_key?("#{field.id}_restrictions")
+        restrictions = params["#{field.id}_restrictions"].downcase.split(',')
+        if restrictions.count < 1
+          restrictions = nil
+        end
+      end
+        
+      if !(field.update_attributes({name: params["#{field.id}_name"],unit: params["#{field.id}_unit"],restrictions: restrictions} || ""))
         respond_to do |format|
           flash[:error] = "Field names must be unique"
-          format.html
+          redirect_to "/projects/#{@project.id}/edit_fields"
           return
         end
       end
@@ -676,7 +348,7 @@ class ProjectsController < ApplicationController
     
     if params.has_key?('create_dataset')
       data_obj = uploader.retrieve_obj(params[:file])
-      data = uploader.swap_without_matches(data_obj,@project)
+      data = uploader.swap_with_field_names(data_obj,@project)
 
       dataset = DataSet.new do |d|
         d.user_id = @cur_user.id
@@ -694,13 +366,6 @@ class ProjectsController < ApplicationController
     else
       redirect_to @project
     end
-  end
-  
-  def printable
-    @project = Project.find(params[:id])
-    respond_to do |format|
-      format.html
-    end 
   end
   
 end

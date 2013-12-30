@@ -17,3 +17,12 @@ tasty_viz:
   content: MyText
   data: MyText
   globals: MyText
+  
+needs_media:
+  title: Needs Media
+  user: nixon
+  project: one
+  content: MyText
+  data: MyText
+  globals: MyText
+  id: 1

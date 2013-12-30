@@ -56,22 +56,22 @@ class FileUploader
   end
   
   ## Swap columns 
-  def swap_columns(data_obj, project, matches) 
-    size = data_obj.first[1].length
+  def swap_columns(data_obj, project) 
     data = []
+    
+    size = data_obj.first[1].length
+    
     (0..size-1).each do |i|
       x = {}
       project.fields.each do |field|
-        next if matches[field.id.to_s] == "0"
-        x[field.id] = data_obj[matches[field.id.to_s]][i]
+        x[field.id] = data_obj[field.id.to_s][i]
       end
       data << x
     end
-    
     data
   end
   
-  def swap_without_matches(data_obj,project)
+  def swap_with_field_names(data_obj,project)
     data = []
     size = data_obj.first[1].length
 
@@ -139,6 +139,49 @@ class FileUploader
     end
     
     results
+  end
+  
+  def sanitize_data(data_obj, matches = nil)
+    if !matches.nil?
+      data = {}
+      matches.each do |match|
+        field = Field.find(match[0])
+        column = data_obj[match[1]]
+        data[field.id.to_s] = column
+      end
+    else 
+      data = data_obj
+    end
+
+    data.each do |(key,value)|
+      field = Field.find(key)
+      type = get_field_name(field.field_type)
+      value.each_with_index do |dp,index|
+        next if dp.nil?
+        case type
+        when "Number"
+          return {status: false, msg: "\"#{field.name}\" should contain only numbers, found \"#{dp}\""} if !dp.valid_float?
+        when "Latitude"
+          if dp.valid_float?
+            next if ((Float dp).abs <= 90)
+          end
+          return {status: false, msg: "Latitude contains invalid data"}
+        when "Longitude"
+          if dp.valid_float?
+            next if ((Float dp).abs <= 180)
+          end
+          return {status: false, msg: "Longiude contains invalid data"}
+        when "Time"
+        when "Text"
+          if !field.restrictions.nil?
+            if !(field.restrictions.map {|r| r.downcase.gsub(/\s+/, "")}.include? dp.downcase.gsub(/\s+/, ""))
+              data[match[1]][index] = ""
+            end
+          end
+        end
+      end
+    end
+    return {status: true, msg: "passed", data_obj: data}
   end
   
   
@@ -274,4 +317,10 @@ class FileUploader
     
   end
   
+end
+
+class String
+  def valid_float?
+    true if Float self rescue false
+  end
 end

@@ -38,17 +38,14 @@ class User < ActiveRecord::Base
     self.lastname = sanitize self.lastname, tags: %w()
     self.username = sanitize self.username, tags: %w()
     
-    self.content = sanitize self.content
     self.bio = sanitize self.bio, tags: %w()
     
     # Check to see if there is any valid content left
-    if Nokogiri.HTML(self.bio).text.blank?
+    # Check to see if there is any valid content left
+    html = Nokogiri.HTML(self.bio)
+    if html.text.blank? and html.at_css("img").nil?
       self.bio = nil
     end
-    if Nokogiri.HTML(self.content).text.blank?
-      self.content = nil
-    end
-    
   end
   
   def to_param

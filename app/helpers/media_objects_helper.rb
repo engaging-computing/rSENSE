@@ -2,32 +2,24 @@ module MediaObjectsHelper
   
   def media_object_edit_menu_helper(make_link = false)
     
-    url = if !@media_object.project_id.nil?
+    url = if !@media_object.data_set_id.nil?
       project_url @media_object.project
-    elsif !@media_object.data_set_id.nil?
-      project_url @media_object.data_set.project
-    elsif !@media_object.tutorial.nil?
-      tutorial_url @media_object.tutorial
     elsif !@media_object.visualization.nil?
       visualization_url @media_object.visualization
+    elsif !@media_object.tutorial.nil?
+      tutorial_url @media_object.tutorial
     elsif !@media_object.news_id.nil?
       news_url @media_object.news
     elsif !@media_object.user_id.nil?
       user_url @media_object.owner
+    elsif !@media_object.project_id.nil?
+      project_url @media_object.data_set.project
     else
       "/"
     end
     
     render 'shared/edit_menu', {type: 'media_object', typeName: 'Media Object', obj: @media_object, make_link: make_link, escape_link: url}
   end
-  
-  def media_object_edit_helper(field,can_edit = false)
-     render 'shared/edit_info', {type: 'media_object', field: field, value: @media_object[field], row_id: @media_object.id, can_edit: can_edit}
-  end
-    
-  def media_object_content_helper(can_edit = false)
-      render 'shared/newcontent', {type: 'media_object', field: "content", content: @media_object.content, row_id: @media_object.id, has_content: !@media_object.content.blank?, can_edit: can_edit}
-  end  
   
   def media_object_thumbnail_helper(mo, size=nil, download=false)
     if size == nil
