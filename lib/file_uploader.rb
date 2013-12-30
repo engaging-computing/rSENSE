@@ -157,7 +157,7 @@ class FileUploader
       field = Field.find(key)
       type = get_field_name(field.field_type)
       value.each_with_index do |dp,index|
-        next if dp.nil?
+        next if dp.nil? or (dp.strip() == "")
         case type
         when "Number"
           return {status: false, msg: "\"#{field.name}\" should contain only numbers, found \"#{dp}\""} if !dp.valid_float?
