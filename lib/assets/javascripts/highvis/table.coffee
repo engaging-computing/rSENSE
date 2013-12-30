@@ -88,6 +88,7 @@ $ ->
                 width: ($ '#' + @canvas).width(),
                 caption: "",
                 hidegrid: false,
+                rowNum: data.dataPoints.length,
                 autowidth: true
                 }
 
