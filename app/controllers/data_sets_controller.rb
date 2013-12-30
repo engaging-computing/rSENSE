@@ -182,7 +182,7 @@ class DataSetsController < ApplicationController
     else
       err_msg = sane[:status] ? dataset.errors.full_messages : sane[:msg]
       respond_to do |format|
-        format.json {render json: {data: sane[:data_obj], msg: err_msg}, status: unprocessable_entity}
+        format.json {render json: {data: sane[:data_obj], msg: err_msg}, status: :unprocessable_entity}
       end
     end
   end
