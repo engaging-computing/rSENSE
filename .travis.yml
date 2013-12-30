@@ -6,8 +6,7 @@ rvm:
 env:
   - DB=default
   - DB=postgres
-before_install:
-  - gem install bundler -v=1.5.1
+before_install: "gem install bundler --version '>= 1.5.1'"
 before_script:
   - bundle exec rake db:preprep
   - psql -c 'create database rsense_test;' -U postgres
