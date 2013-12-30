@@ -391,13 +391,13 @@ $ ->
                   
               if field_deleted
                 alert "The project owner deleted a field/fields while you were entering data. Unfortunately we must refresh the page (losing data) to correct the fields."
-                location.reload true
+                #location.reload true
 
               if add_fields.length == 0
                
                 $.ajax "#{settings.upload.url}",
                   type: "#{settings.upload.method}"
-                  dataType: 'json'
+                  dataType: 'jsonp'
                   data: ajax_data
                   error: settings.upload.error
                   success: settings.upload.success
