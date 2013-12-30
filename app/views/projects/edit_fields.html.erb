@@ -8,7 +8,8 @@
               <th>Name</th>
               <th>Type</th>
               <th>Units</th>
-              <th>Delete Field</th>
+<!--              <th>Restrictions</th>-->
+              <th>Delete Field *</th>
             </tr>
           </thead>
           <tbody>
@@ -23,6 +24,11 @@
                     <input class="input-small form-control" type="text" name="<%=field.id%>_unit" value="<%=field.unit%>" readonly>
                   <% end %>
                 </td>
+<!--                <td>
+                  <%if field.field_type == get_field_type("Text")%>
+                    <input class="input-small form-control" type="text" name="<%=field.id%>_restrictions" value="<%=field.restrictions.nil? ? "" : field.restrictions.join(',')%>">
+                  <% end %>
+                </td>-->
                 <td class="center">
                   <button class="btn btn-danger field_delete" href="/fields/<%=field.id%>" fid="<%=field.id%>" <%= @project.data_sets.count > 0 ? "disabled" : ""%>>
                     <i class="fa fa-times"></i> Delete
@@ -34,7 +40,11 @@
         </table>  
       </div>
     </div>
-    
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <i>* Fields can't be deleted if the project contains data sets. </i>
+      </div>
+    </div>
     <div class="row">
       <hr class="col-lg-8 col-lg-offset-2">
     </div>

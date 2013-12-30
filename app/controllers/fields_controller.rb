@@ -17,36 +17,17 @@ class FieldsController < ApplicationController
   # POST /fields
   # POST /fields.json
   def create
-    @field = Field.new(params[:field])    
+    @field = Field.new(params[:field])
     @project = Project.find(params[:field][:project_id])
-
-    highest = 0
     
-    @project.fields.to_a.each do |f|
-      fname = f.name.split("_")
-      if @field.name == fname[0] or @field.name == f
-        if fname[1].nil?
-          highest += 1
-        else
-          tmp = fname[1].to_i
-          if tmp > highest
-            highest = tmp
-          end
-        end
-      end
-    end
-    
-    if highest > 0
-      @field.name += "_#{highest+1}"
-      logger.info @field.name
+    if !params[:field].has_key? :name
+      @field.name = Field.get_next_name(@project, @field.field_type)
     end
     
     respond_to do |format|
       if @field.save
-        format.html { redirect_to @field, notice: 'Field was successfully created.' }
         format.json { render json: @field.to_hash(false), status: :created, location: @field }
       else
-        format.html { render action: "new" }
         format.json { render json: @field.errors, status: :unprocessable_entity }
       end
     end
@@ -61,24 +42,7 @@ class FieldsController < ApplicationController
     
     #EDIT REQUEST
     if can_edit?(@field)
-      
-      unique = true
-      
-      # Enforce name uniqueness per project
-      if params[:field].try(:[], :name)
-        @field.owner.fields.to_a.each do |f|
-          if f.id != params[:id].to_i
-            if f.name == params[:field][:name]
-              logger.info "Field name '#{f.name}' not unique"
-              unique = false
-            end
-          end
-        end
-      end
-      
-      if unique
-        success = @field.update_attributes(editUpdate)
-      end
+      success = @field.update_attributes(editUpdate)
     end
     
     respond_to do |format|
@@ -86,8 +50,8 @@ class FieldsController < ApplicationController
         format.html { redirect_to @field.project, notice: 'Field was successfully updated.' }
         format.json { render json:{}, status: :ok }
       else
-        logger.info "Errors: #{@field.errors.inspect}"
-        format.html { redirect_to @field.project, alert: 'Field was not updated.' }
+        logger.error "Errors: #{@field.errors.inspect}"
+        format.html { redirect_to Field.find(params[:id]), alert: 'Field was not updated.' }
         format.json { render json: @field.errors.full_messages(), status: :unprocessable_entity }
       end
     end
@@ -116,21 +80,5 @@ class FieldsController < ApplicationController
       end
     end
 
-  end
- 
-  # POST /projects/id/updateFields 
-  def updateFields
-    errors = Field.bulk_update(params[:changes])
-    
-    if errors.length == 0
-      respond_to do |format|
-       format.json { render json: {}, status: :ok }
-      end
-    else
-      logger.info errors.inspect
-      respond_to do |format|
-       format.json { render json: errors, status: :unprocessable_entity }
-      end
-    end
   end
 end

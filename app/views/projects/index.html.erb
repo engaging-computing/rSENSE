@@ -2,44 +2,64 @@
   <div class="col-lg-12">
     <div class="row padded-row">
       <%=form_tag projects_path, method: 'get', id: 'projects_search' do%>
-      
-        <!-- hidden input for pagination -->
-        <input type="text" id="hidden_pagination" name="page" value="1" style="display: none;" />
-
+            
         <div class="isotope-top">
-          <div class="col-lg-12">
+          <div class="col-md-12">
             <h1>Projects</h1>
           </div>
-          <div class="col-lg-4">
-            <select name="sort" class="projects_sort_select form-control">
-              <option value="updated_at DESC">Modified (newest first)</option>
-              <option value="updated_at ASC">Modified (oldest first)</option>
-              <option value="created_at DESC">Created (newest first)</option>
-              <option value="created_at ASC">Created (oldest first)</option>
-              <option value="RATING">Rating</option>
-            </select>
+          
+          <div class='row'>
+            <div class="padded-col col-sm-10">
+              <%= text_field_tag :search, @params[:search], class: "form-control" %>
+            </div>
+            <div class="padded-col col-sm-2">
+              <%= submit_tag "Search", name: nil, class:'btn btn-default'%>
+            </div>
           </div>
-          <div class="col-lg-6">
-            <input type="text" class="form-control" id="search" name="search" type="text" x-webkit-speech>
-          </div>
-          <div class="col-lg-2">
-            <%= submit_tag "Search", name: nil, class:'btn btn-default'%>
-          </div>        
-          <div class="clear"></div>
-          <div class="col-lg-12">
-            <div class="checkbox">
-              <label>
-                <input type="checkbox" name="templates_only" id="template_checkbox"> Only Templates
+          
+          <div class='row'>
+            <div class="padded-col col-md-3 col-sm-6">
+            
+              <%= select_tag(:sort, 
+                options_for_select([["Sort by Modified", "updated_at"],
+                                    ["Sort by Created", "created_at"],
+                                    ["Sort by View Count","VIEWS"],
+                                    ["Sort by Rating", "like_count"]], @params["sort"]),
+                class: "projects_sort_select form-control") 
+              %>
+            </div>
+            
+            <div class="padded-col col-md-3 col-sm-6">
+            
+              <%= select_tag(:order, 
+                options_for_select([["Descending", "DESC"],
+                                    ["Ascending", "ASC"]], @params["order"]),
+                class: "projects_order_select form-control") 
+              %>
+            </div>
+            
+            <div class="padded-col col-md-6 col-xs-12 btn-group binary-filters" data-toggle="buttons">
+              <label class='btn btn-primary'>
+                <%= check_box_tag 'templates_only', 'yes', @params['templates_only'] %>
+                Templates
+              </label>
+              <label class='btn btn-primary'>
+                <%= check_box_tag 'curated_only', 'yes', @params['curated_only'] %>
+                Curated
+              </label>
+              <label class='btn btn-primary'>
+                <%= check_box_tag 'featured_only', 'yes', @params['featured_only'] %>
+                Featured
+              </label>
+              <label class='btn btn-primary'>
+                <%= check_box_tag 'has_data', 'yes', @params['has_data'] %>
+                Has Data
               </label>
             </div>
           </div>
-          <div class="col-lg-12">
-            <div class="checkbox">
-              <label>
-                <input type="checkbox" name="curated_only" id="curated_checkbox"> Only Curated
-              </label>
-            </div>
-          </div>
+          
+          <div class='clear'></div>
+          
         </div>
       <%end%>
     </div>
@@ -54,17 +74,51 @@
     </div>
   </div>
 <% end %>
+
 <div class="row">
-  <div id="projects" class="col-lg-12 isotope_container" >
+  <div id="projects" class="col-xs-12 isotope_container" >
     <div class="isotope_pane">
+    
+      <% @projects.each do |pr| %>
+      <div class='item clickableItem'>
+        
+          <a href='<%=project_path pr%>'>
+            <%= image_tag "blank.png", {class: "areaLink", alt: ""} %>
+          </a>
+          
+          <% if pr.featured_media_id != nil %>
+            <div class='caroucell' style='height:120px; background-image:url(<%=pr.media_objects.find(pr.featured_media_id).src%>)'></div>
+          <% end %>
+          
+          <div style="padding:7px">
+            <div style="font-size:1.2em; font-weight:bold;">
+              <%=pr.name%> 
+              <% if pr.featured %> 
+                <span style='color:#57C142'> (featured)</span>
+              <% end %>
+            </div>
+            
+            by <%=pr.owner.name%> <br/>
+            on <%=pr.created_at.strftime("%B %d, %Y")%> <br/>
+            <div style="display:table; width:100%; margin-top:10px;">
+              <div style="display:table-cell">
+                <span class='badge'><i class="fa fa-flask">&nbsp;</i><%=pr.data_sets.count%></span>
+              </div>
+              <div style="display:table-cell">
+                <span class='badge'><i class="fa fa-eye">&nbsp;</i><%=pr.views%></span>
+              </div>
+              <div style="display:table-cell">
+                <span class='badge'><i class="fa fa-thumbs-up">&nbsp;</i><%=pr.like_count%></span>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>
 
-<div class="row" style="padding-top: 10px;">
-  <div class="col-lg-12">
-    <div class="well text-center" id="load_projects">
-      <h3 class="muted">Loading More <img src="/assets/spinner.gif" /></h3>
-    </div>
-  </div>
+<div class='text-center'>
+<%= will_paginate @projects, renderer: BootstrapPagination::Rails, inner_window: 1, outer_window: 0, previous_label: "<<", next_label: ">>" %>
 </div>

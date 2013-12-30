@@ -130,8 +130,9 @@
         <% if (@project.fields.count == 0) && (can_edit?(@project)) %>
           <div class="col-md-12 center"> 
             <button class="btn btn-success" id="template_file_upload">Upload File</button>
-            <a href="/projects/<%=@project.id%>/edit_fields"><button class="btn btn-success">Setup Manually</button></a>
-          </div>  
+            <a href="/projects/<%=@project.id%>/edit_fields"><button class="btn btn-success" id="manual_fields">Setup Manually</button></a>
+          </div> 
+          <div class="clear"></div>
         <% else %>
           <table class="fields_table" project="<%=@project.id%>" can_delete_fields="<%if @project.data_sets.count>0%>false<%else%>true<%end%>" data-num_fields="<%=@project.fields.count%>">
             <thead>
@@ -149,7 +150,7 @@
           </table>
           <% if can_edit?(@project) %>
             <div class="center">
-              <a href="/projects/<%=@project.id%>/edit_fields"><button class="btn btn-primary">Edit</button></a>
+              <a href="/projects/<%=@project.id%>/edit_fields"><button class="btn btn-primary" id="field_edit">Edit</button></a>
             </div>  
           <% end %>
         <% end %>

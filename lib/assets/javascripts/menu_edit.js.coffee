@@ -150,7 +150,6 @@ $ ->
       data:
         project:
             curated: true
-            lock: true
       success: =>
         root.find('li.menu_unlock').show()
         root.find('li.menu_lock').hide()

@@ -205,9 +205,8 @@ figure, figurecaption{
   overflow:hidden;
   
   img.thumb{
-    height:200px;
-    width:200px;
-    
+    height:auto;
+    max-width:100%
   }
   
   figure{

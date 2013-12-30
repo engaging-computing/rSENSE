@@ -6,6 +6,7 @@ class DataSetsControllerTest < ActionController::TestCase
     @data_set = data_sets(:one)
     @tgd  = data_sets(:thanksgiving)
     @proj = @tgd.project
+    @crunch = users(:crunch)
   end
 
   test "should redirect to viz for show data set" do
@@ -63,6 +64,21 @@ class DataSetsControllerTest < ActionController::TestCase
     assert_response :redirect
   end
 
+  test "should not destroy data_set" do
+    assert_difference('DataSet.count', 0) do
+      delete :destroy, { id: @data_set }, { user_id: @crunch }
+    end
+
+    assert_response :forbidden
+  end
+
+  test "should not destroy data_set (json) " do
+    assert_difference('DataSet.count', 0) do
+      delete :destroy, {format: 'json', id: @data_set }, { user_id: @crunch }
+    end
+    assert_response :forbidden
+  end
+  
   test "should get manual entry page" do
     get :manualEntry, { id: @proj.id }, { user_id: @kate }
     assert_response :success
@@ -74,11 +90,11 @@ class DataSetsControllerTest < ActionController::TestCase
     post :manualUpload, { format: 'json', id: @proj.id, headers: ["20", "21", "22"], 
       data: {"0" => ["1", "2", "3"], "1"=>["4", "5", "6"], "2" => ["14", "13", "12"]} }, { user_id: @kate }
     assert_response :success
+    @new_dataset_id = JSON.parse(response.body)['id']
   end 
 
   test "should export data" do
-    
-    get :export, { id: @proj.id, datasets: "#{@data_set.id}"}, { user_id: @kate }
+    get :export, { id: @proj.id, datasets: "#{@new_dataset_id}"}, { user_id: @kate }
     assert(@response["Content-Type"] == "file/zip")
   end
 
@@ -88,4 +104,12 @@ class DataSetsControllerTest < ActionController::TestCase
     post :dataFileUpload, { pid: @proj.id, file: file }, { user_id: @kate }
     assert_response :success
   end
+  
+  test "should upload through jsonDataUpload" do
+    post :jsonDataUpload, { format: 'json', id: @proj.id, title: "JSON Upload",
+      data: {"20" => ["1", "2", "3"], "21"=>["4", "5", "6"], "22" => ["14", "13", "12"]} }, { user_id: @kate }
+    assert_response :success
+    @new_dataset_id = JSON.parse(response.body)['id']
+  end
+  
 end

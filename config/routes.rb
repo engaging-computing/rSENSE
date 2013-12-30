@@ -46,6 +46,7 @@ Rsense::Application.routes.draw do
 
   #Routes for uploading data
   get "/projects/:id/manualEntry" => "data_sets#manualEntry"
+  post "/projects/:id/jsonDataUpload" => "data_sets#jsonDataUpload"
   post "/projects/:id/manualUpload" => "data_sets#manualUpload"
   get "/data_sets/:id/edit" => "data_sets#edit"
   put "/data_sets/:id/edit" => "data_sets#edit"

@@ -12,9 +12,6 @@ class GpxParser
     csv = "" 
     headers = trkpts.first.attributes
 
-    Rails.logger.info "-----BEGIN-----"
-    Rails.logger.info trkpts.first
-
     #Grab attributes from the first trkpt for headers
     trkpts.first.attributes.each do |header|
       csv += header[0] + ","
@@ -31,7 +28,6 @@ class GpxParser
     csv = csv.chomp(",")
     csv += "\n"
 
-    Rails.logger.info csv
     trkpts.each do |pt|
       line = ""
 
@@ -83,12 +79,5 @@ class GpxParser
       f.close
       
       fname
-  end
-  
-  def cleanup_temp_file(filename)
-    begin
-      FileUtils.rm(filename, force: true)
-    rescue
-    end
   end
 end

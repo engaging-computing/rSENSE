@@ -34,7 +34,8 @@ class Project < ActiveRecord::Base
     self.content = sanitize self.content
     
     # Check to see if there is any valid content left
-    if Nokogiri.HTML(self.content).text.blank?
+    html = Nokogiri.HTML(self.content)
+    if html.text.blank? and html.at_css("img").nil?
       self.content = nil
     end
     
@@ -43,7 +44,7 @@ class Project < ActiveRecord::Base
   
   def self.search(search, include_hidden = false)
     res = if search
-        where('(lower(title) LIKE lower(?)) OR (id = ?)', "%#{search}%", search.to_i)
+        where('(lower(projects.title) LIKE lower(?)) OR (projects.id = ?) OR (lower(projects.content) LIKE lower(?))', "%#{search}%", search.to_i, "%#{search}%")
     else
         all
     end
@@ -66,6 +67,22 @@ class Project < ActiveRecord::Base
   def self.only_curated(value)
     if value == true
       where(:curated => true)
+    else
+      all
+    end
+  end
+  
+  def self.only_featured(value)
+    if value
+      where(:featured => true)
+    else
+      all
+    end
+  end
+  
+  def self.has_data(value)
+    if value
+      all.joins(:data_sets).distinct
     else
       all
     end

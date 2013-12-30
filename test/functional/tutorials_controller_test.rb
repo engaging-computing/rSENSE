@@ -3,6 +3,7 @@ require 'test_helper'
 class TutorialsControllerTest < ActionController::TestCase
   setup do
     @nixon = users(:nixon)
+    @kate  = users(:kate)
     @tutorial = tutorials(:one)
   end
 
@@ -19,6 +20,15 @@ class TutorialsControllerTest < ActionController::TestCase
 
     assert_redirected_to tutorial_path(assigns(:tutorial))
   end
+
+  test "should not create tutorial as non-admin" do
+    assert_difference('Tutorial.count', 0) do
+      post :create, { tutorial: { content: @tutorial.content, title: @tutorial.title }}, { user_id: @kate }
+    end
+
+    assert_response :not_found
+  end
+
 
   test "should show tutorial" do
     get :show, id: @tutorial
@@ -43,5 +53,14 @@ class TutorialsControllerTest < ActionController::TestCase
 
     assert_redirected_to tutorials_path
   end
+
+  test "should not destroy tutorial as non-admin" do
+    assert_difference('Tutorial.count', 0) do
+      delete :destroy, { id: @tutorial }, { user_id: @kate }
+    end
+
+    assert_redirected_to '/public/401.html'
+  end
+
 
 end
