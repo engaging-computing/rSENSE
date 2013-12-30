@@ -84,7 +84,7 @@ $ ->
             #Prepare the table to grid parameters
             @table = ($ "#data_table")
             params = {
-                height: ($ '#' + @canvas).height() - 45,
+                height: ($ '#' + @canvas).height() - 30,
                 width: ($ '#' + @canvas).width(),
                 caption: "",
                 hidegrid: false,
@@ -96,13 +96,30 @@ $ ->
 
             #Hide the combined datasets column
             combined_col = @table.jqGrid('getGridParam','colModel')[data.COMBINED_FIELD]
-            @table.hideCol(combined_col.name).trigger("reloadGrid")
-            @table.setGridWidth(($ '#table_canvas').width()).trigger("reloadGrid")
+            @table.hideCol(combined_col.name)
+            @table.setGridWidth(($ '#table_canvas').width())
 
             for column, col_index in @table.jqGrid('getGridParam','colModel')
                 if (data.fields[col_index].typeID is data.types.TEXT)
                     column.sorttype = 'text';
                 else column.sorttype = 'number';
+
+            ($ '#control_hide_button').click ->
+                #Calulate the new width from these parameters
+                containerSize = ($ '#viscontainer').width()
+                hiderSize     = ($ '#controlhider').outerWidth()
+                controlSize   = ($ '#controldiv').width()
+
+                #Check if you are opening or closing the controls
+                controlSize = if ($ '#controldiv').width() <= 0
+                    globals.CONTROL_SIZE
+                else
+                    0
+
+                #Set the grid to the correct size so the animation is smooth
+                newWidth = containerSize - (hiderSize + controlSize + 10)
+                newHeight = ($ '#viscontainer').height() - ($ '#visTabList').outerHeight()
+                ($ '#data_table').setGridWidth(newWidth).setGridHeight(newHeight - 30)
 
             super()
 
@@ -117,10 +134,12 @@ $ ->
             #Save the table filter
             @searchString = ($ '#table_canvas').find('input').val()
 
+
         resize: (newWidth, newHeight, aniLength) ->
           foo = () ->
-            #($ '#table_canvas').animate({width: newWidth, height: newHeight}, 800);
-            jQuery("#data_table").setGridWidth(newWidth);
+            #In the case that this was called by the hide button, this gets called a second time
+            #needlessly, but doesn't effect the overall performance
+            ($ '#data_table').setGridWidth(newWidth).setGridHeight(newHeight - 30)
 
           setTimeout foo, aniLength
 
