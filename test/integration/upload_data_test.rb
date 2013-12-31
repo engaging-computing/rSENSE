@@ -43,6 +43,8 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     find("#datafile_form").attach_file("file",gpx_path)
     page.execute_script %Q{$('#datafile_form').submit()}
     assert page.has_content?("Match Quality")
+    all('select')[0].find(:xpath, 'option[1]').select_option
+    all('select')[1].find(:xpath, 'option[1]').select_option
     click_on "Submit"
     assert page.has_content?("Dataset #2")
     click_on "File Types"

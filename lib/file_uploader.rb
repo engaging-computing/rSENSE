@@ -64,6 +64,7 @@ class FileUploader
     (0..size-1).each do |i|
       x = {}
       project.fields.each do |field|
+        next if !data_obj.has_key? field.id.to_s
         x[field.id] = data_obj[field.id.to_s][i]
       end
       data << x
@@ -142,17 +143,19 @@ class FileUploader
   end
   
   def sanitize_data(data_obj, matches = nil)
+    
     if !matches.nil?
       data = {}
       matches.each do |match|
-        field = Field.find(match[0])
         column = data_obj[match[1]]
+        next if column == nil
+        field = Field.find(match[0])
         data[field.id.to_s] = column
       end
     else 
       data = data_obj
     end
-
+   
     data.each do |(key,value)|
       field = Field.find(key)
       type = get_field_name(field.field_type)
