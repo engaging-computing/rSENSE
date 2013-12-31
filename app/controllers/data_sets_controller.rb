@@ -327,7 +327,7 @@ class DataSetsController < ApplicationController
         @default_name = params[:title]
         respond_to do |format|
           flash[:error] = dataset.errors.full_messages()
-          format.html {render action: "uploadCSV2"}
+          format.html {render action: "dataFileUpload"}
         end
       end
     else
@@ -347,7 +347,7 @@ class DataSetsController < ApplicationController
       data_obj = uploader.generateObject(params[:file])
       @results = uploader.match_headers(project, data_obj)
       
-      @default_name = "Dataset ##{ (DataSet.where(project_id: params[:pid]).to_a.count + 1).to_s}"
+      @default_name = DataSet.get_next_name(project)
     
       respond_to do |format|
         format.html
