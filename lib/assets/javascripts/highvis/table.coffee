@@ -72,38 +72,65 @@ $ ->
             ($ '#table_body').append row for row in rows
 
             #Set sort state to default none existed
-            @sortState ?= [[1, 'asc']]
+            @sortName ?= '';
+            @sortType ?= '';
 
             #Set default search to empty string
-            @searchString ?= ''
+            @searchParams ?= {}
 
             #Restore previous search query if exists, else restore empty string
             if @searchString? and @searchString isnt ''
                 $('#table_canvas').find('input').val(@searchString).keyup()
+                
+            #Add the nav bar
+            ($ '#table_canvas').append '<div id="toolbar_bottom"></div>'
 
             #Prepare the table to grid parameters
             @table = ($ "#data_table")
             params = {
-                height: ($ '#' + @canvas).height() - 30,
+                loadonce: true,
+                height: ($ '#' + @canvas).height() - 75,
                 width: ($ '#' + @canvas).width(),
                 caption: "",
                 hidegrid: false,
+                ignoreCase:true
                 rowNum: data.dataPoints.length,
-                autowidth: true
-                }
+                autowidth: true,
+                viewrecords: true,
+                pager: '#toolbar_bottom',
+                pgbuttons: false,
+                pgtext: false,
+                pginput: false
+            }
 
             #Gridify the table
             tableToGrid("#data_table", params)
+
+            #Add a refresh button and enable the search bar
+            @table.jqGrid('navGrid','#toolbar_bottom',{del:false,add:false,edit:false,search:false});
+            @table.jqGrid('filterToolbar', {stringResult: true, searchOnEnter: false, defaultSearch:'cn'});
 
             #Hide the combined datasets column
             combined_col = @table.jqGrid('getGridParam','colModel')[data.COMBINED_FIELD]
             @table.hideCol(combined_col.name)
             @table.setGridWidth(($ '#table_canvas').width())
 
+            #Make sure the sort type for each column is appropriate
             for column, col_index in @table.jqGrid('getGridParam','colModel')
                 if (data.fields[col_index].typeID is data.types.TEXT)
                     column.sorttype = 'text';
                 else column.sorttype = 'number';
+
+            #Set the sort parameters
+            @table.sortGrid(@sortName, true, @sortType);
+
+            #Restore the search filters
+            if @searchParams?
+                for column in @searchParams
+                    inputId = "input#gs_" + column.field
+                    ($ inputId).val(column.data)
+
+            @table[0].triggerToolbar()
 
             ($ '#control_hide_button').click ->
                 #Calulate the new width from these parameters
@@ -120,7 +147,7 @@ $ ->
                 #Set the grid to the correct size so the animation is smooth
                 newWidth = containerSize - (hiderSize + controlSize + 10)
                 newHeight = ($ '#viscontainer').height() - ($ '#visTabList').outerHeight()
-                ($ '#data_table').setGridWidth(newWidth).setGridHeight(newHeight - 30)
+                ($ '#data_table').setGridWidth(newWidth).setGridHeight(newHeight - 75)
 
             super()
 
@@ -130,17 +157,19 @@ $ ->
           if @table?
 
             #Save the sort state
-            @sortState = @atable.fnSettings().aaSorting
+            @sortName = @table.getGridParam('sortname');
+            @sortType = @table.getGridParam('sortorder');
 
-            #Save the table filter
-            @searchString = ($ '#table_canvas').find('input').val()
+            #Save the table filters
+            if @table.getGridParam('postData').filters?
+                @searchParams = jQuery.parseJSON(@table.getGridParam('postData').filters).rules;
 
 
         resize: (newWidth, newHeight, aniLength) ->
           foo = () ->
             #In the case that this was called by the hide button, this gets called a second time
             #needlessly, but doesn't effect the overall performance
-            ($ '#data_table').setGridWidth(newWidth).setGridHeight(newHeight - 30)
+            ($ '#data_table').setGridWidth(newWidth).setGridHeight(newHeight - 75)
 
           setTimeout foo, aniLength
 
