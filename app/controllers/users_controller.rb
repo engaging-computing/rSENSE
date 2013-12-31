@@ -245,7 +245,9 @@ class UsersController < ApplicationController
       if @cur_user.id == @user.id
         session[:user_id] = nil
       end
-      
+      @user.likes.each do |l|
+        l.destroy
+      end
       @user.projects.each do |p|
         p.hidden = true
         p.save
@@ -267,8 +269,8 @@ class UsersController < ApplicationController
       end
       
       @user.hidden = true
-      @user.email =  "#{Time.now().to_i}@deleted.org"
-      @user.username =  "#{Time.now().to_i}"
+      @user.email =  "#{SecureRandom.hex}@deleted.org"
+      @user.username =  "#{SecureRandom.hex}"
       @user.save
       
       respond_to do |format|
