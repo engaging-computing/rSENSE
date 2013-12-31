@@ -220,7 +220,7 @@ class DataSetsController < ApplicationController
       logger.info "Data set headers don't match fields"
       logger.info errors.inspect
       respond_to do |format|
-        format.json { render json: errors, status: :unprocessable_entity }
+        format.json { render json: { errors: errors, status: :unprocessable_entity } }
       end
       return
     end
@@ -253,9 +253,9 @@ class DataSetsController < ApplicationController
 
     respond_to do |format|
       if @data_set.save
-        format.json { render json: @data_set.to_hash(false), status: :created}
+        format.json { render json: { data: @data_set.to_hash(false), status: :created } }
       else
-        format.json { render json:{}, status: :unprocessable_entity }
+        format.json { render json:{ status: :unprocessable_entity } }
       end
     end
 
