@@ -38,7 +38,7 @@ class User < ActiveRecord::Base
     self.lastname = sanitize self.lastname, tags: %w()
     self.username = sanitize self.username, tags: %w()
     
-    self.bio = sanitize self.bio, tags: %w()
+    self.bio = sanitize self.bio
     
     # Check to see if there is any valid content left
     # Check to see if there is any valid content left
