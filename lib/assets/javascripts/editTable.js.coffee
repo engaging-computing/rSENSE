@@ -362,47 +362,21 @@ $ ->
             dataType: "text"
             cache: false
             error: (jqXHR, textStatus, errorThrown) ->
-              console.log jqXHR
-              console.log textStatus
-              console.log errorThrown
+              console.log ["error", jqXHR, textStatus, errorThrown]
+              #if data.status == "unprocessable_entity"
+              #  ($ '.mainContent').prepend "<div class='alert alert-danger alert-dismissable'><strong>An error occured: </strong> a Data Set with that name already exists.</div>"
+          
             success: (data, textStatus, jqXHR) ->
+              console.log ["success", data, textStatus, jqXHR]
             
-              console.log data
-              console.log textStatus
-              console.log jqXHR
-              
-              local = []
-              remote = []
-              add_fields = []
-              field_deleted = false
-              dup = []
-                              
-              $(data.fields).each (i, e) ->
-                remote.push e.id
-              local = ajax_data.headers
-              
-              ($ remote).each (index, field) ->
-                if !(field in local)
-                  add_fields.push( data.fields[index] )
-                                        
-              ($ local).each (index, field) ->
-                if !(field in remote)
-                  field_deleted = true
-                  
-              if field_deleted
-                alert "The project owner deleted a field/fields while you were entering data. Unfortunately we must refresh the page (losing data) to correct the fields."
-                #location.reload true
-
-              if add_fields.length == 0
-               
-                $.ajax "#{settings.upload.url}",
-                  type: "#{settings.upload.method}"
-                  dataType: 'jsonp'
-                  data: ajax_data
-                  error: settings.upload.error
-                  success: settings.upload.success
-                  
-              else
+              $.ajax "#{settings.upload.url}",
+                type: "POST"#"#{settings.upload.method}"
+                dataType: 'text'
+                data: ajax_data
+                error: settings.upload.error
+                success: settings.upload.success
+                
+              ###else
               
                 alert "The project owner added a field/fields while you were entering data. We are adding these new fields for you now, press save again to submit data with the new fields."
                     
@@ -429,7 +403,7 @@ $ ->
           
                     if button is "save" or button is "Save"
                       ($ '#edit_table_save').button 'reset'
-                      ($ '#edit_table_save').click submit_form
+                      ($ '#edit_table_save').click submit_form###
 
         # does it pass?
         table_validates = (tab) ->
@@ -522,20 +496,22 @@ $ ->
         ### SAVE TABLE ###
 
         ($ '#edit_table_save').click ->
+               
+          if !($ '#edit_table_save').hasClass 'disabled'
                 
-          if ($ '#data_set_name').val() != "" and settings.page_name == "manualEntry"
+            if ($ '#data_set_name').val() != "" and settings.page_name == "manualEntry"
 
-            if table_validates(table)
-              
-              ($ '#edit_table_save').unbind()
-
-              if settings.upload.ajaxify is true
+              if table_validates(table)
                 
-                submit_form()
+                #($ '#edit_table_save').unbind()
+
+                if settings.upload.ajaxify is true
+                  
+                  submit_form()
 
 
-              else
-                ## I guess I'm not gonna write this part because we only use ajax to submit data
-                ($ table).wrap "<form action='#{settings.upload.url}' method='#{settings.upload.method}' />"
-          else 
-            ($ '.mainContent').prepend "<div class='alert alert-danger alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button><strong>Error</strong></div>"
+                else
+                  ## I guess I'm not gonna write this part because we only use ajax to submit data
+                  ($ table).wrap "<form action='#{settings.upload.url}' method='#{settings.upload.method}' />"
+            else 
+              ($ '.mainContent').prepend "<div class='alert alert-danger alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button><strong>An error occured: </strong> Please enter a name for your project.</div>"
