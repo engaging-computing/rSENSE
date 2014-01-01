@@ -7,7 +7,7 @@ class NewsController < ApplicationController
   
   def index
     
-    @news = News.last(10)
+    @news = News.where({hidden: false}).order("created_at DESC").limit(10)
 
     respond_to do |format|
       format.html # index.html.erb
