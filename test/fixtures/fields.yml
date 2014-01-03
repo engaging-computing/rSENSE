@@ -7,7 +7,7 @@ one:
   project: two
 
 two:
-  name: MyString
+  name: MyString2
   field_type: 2
   unit: MyString
   project: two

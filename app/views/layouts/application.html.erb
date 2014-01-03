@@ -15,6 +15,13 @@
   <% end %>
 
   <body style="margin:0;padding:0;height:100%;background-color:#ddd;">
+  
+    <% if !@cur_user.nil? and @cur_user.email.blank? %>
+      <div class="alert">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        You are currently logged into an account that has no linked email address. In the near future accounts on iSENSE will require email addresses to log in; we recomend you go to your  <%= link_to("user edit page", edit_user_path(@cur_user)) %> and add an email address for this account.
+      </div>
+    <% end %>
 
     <div style="min-height:100%;position:relative;">
       <!-- The title bar -->
@@ -28,7 +35,7 @@
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand full" href="/"><%= image_tag("/assets/isense-logo.png", height: "35") %></a>
-          <a class="navbar-brand small" href="/"><%= image_tag("/assets/isense-logo-small.png", size: "35") %></a>
+          <a class="navbar-brand small" href="/"><%= image_tag("/assets/isense-logo.png", size: "35") %></a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->

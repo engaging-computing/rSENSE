@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EnterDataSetTest < ActionDispatch::IntegrationTest
+class UploadDataTest < ActionDispatch::IntegrationTest
   include CapyHelper
 
   setup do
@@ -43,12 +43,14 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     find("#datafile_form").attach_file("file",gpx_path)
     page.execute_script %Q{$('#datafile_form').submit()}
     assert page.has_content?("Match Quality")
+    all('select')[0].find(:xpath, 'option[1]').select_option
+    all('select')[1].find(:xpath, 'option[1]').select_option
     click_on "Submit"
     assert page.has_content?("Dataset #2")
     click_on "File Types"
     assert page.has_content?("Contribute Data")
 
-    # Test GPX upload
+    # Test ODS upload
     ods_path = Rails.root.join('test', 'CSVs', 'test.ods')
     page.execute_script %Q{$('#datafile_form').parent().show()}
     find("#datafile_form").attach_file("file",ods_path)
@@ -59,7 +61,7 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     click_on "File Types"
     assert page.has_content?("Contribute Data")
 
-    # Test GPX upload
+    # Test XLS upload
     xls_path = Rails.root.join('test', 'CSVs', 'test.xls')
     page.execute_script %Q{$('#datafile_form').parent().show()}
     find("#datafile_form").attach_file("file",xls_path)
@@ -70,7 +72,7 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     click_on "File Types"
     assert page.has_content?("Contribute Data")
      
-    # Test GPX upload
+    # Test XLSX upload
     xlsx_path = Rails.root.join('test', 'CSVs', 'test.xlsx')
     page.execute_script %Q{$('#datafile_form').parent().show()}
     find("#datafile_form").attach_file("file",xlsx_path)
@@ -92,5 +94,44 @@ class EnterDataSetTest < ActionDispatch::IntegrationTest
     assert page.has_content? "Project:"
     find('#edit_table_save').click
     assert page.has_content?("Save Visualization")
+    click_on "File Types"
+    assert page.has_content?("Contribute Data")
+    
+    # Test Saved Vis
+    proj_url = current_url
+    click_on "Dataset #1"
+    ds_url = current_url
+    # Tests visual modes for dataset viewing
+    visit ds_url + "?presentation=true"
+    assert page.has_no_content?("Saved Vis - File Types")
+    assert page.has_no_content?("Groups")
+    visit ds_url + "?embed=true"
+    assert page.has_no_content?("Saved Vis - File Types")
+    assert page.has_content?("Groups")
+    # Tests visual modes for saved vis
+    visit ds_url
+    click_on "Histogram"
+    click_on "Save Visualization"
+    click_on "Finish"
+    assert page.has_content?("Saved Vis - File Types")
+    vis_url = current_url
+    visit vis_url + "?presentation=true"
+    assert page.has_no_content?("Saved Vis - File Types")
+    assert page.has_no_content?("Groups")
+    visit vis_url + "?embed=true"
+    assert page.has_no_content?("Saved Vis - File Types")
+    assert page.has_content?("Groups")
+    visit vis_url
+    # Tests deleting vises
+    click_on "Visualizations"
+    assert page.has_content?("Saved Vis - File Types")
+    visit vis_url
+    find('.menu_edit_link').click
+    click_on "Delete Visualization"
+    page.driver.browser.switch_to.alert.accept
+    assert page.has_no_content?("Saved Vis - File Types")
+    visit proj_url
+    assert page.has_no_content?("Saved Vis - File Types")
+    assert page.has_content?("Contribute Data")
   end
 end
