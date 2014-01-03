@@ -9,11 +9,11 @@
       </div>  
       <div class="clear"></div>
       <div class='center'>
-        <button class="btn btn-primary center" style="display:none" id="content_save_button">Save</button>
-        <button class="btn btn-danger center" style="display:none" id="content_cancel_button">Cancel</button>
+        <button class="btn btn-danger center" style="display:none; margin-right:3px;" id="content_cancel_button">Cancel</button>
+      <button class="btn btn-primary center" style="display:none" id="content_save_button">Save</button>
       </div>
     <% else %>
-      <div class="word-break">
+      <div class="word-break ckeditor content">
         <%= raw content%>
       </div>
       <div class="clear"></div>
@@ -26,8 +26,8 @@
       </div> 
       <div class="clear"></div>
       <div class='center'>
+        <button class="btn btn-danger center" style="display:none; margin-right:3px;" id="content_cancel_button">Cancel</button>
         <button class="btn btn-primary center" style="display:none" id="content_save_button">Save</button>
-        <button class="btn btn-danger center" style="display:none" id="content_cancel_button">Cancel</button>
       </div>
     <% else %>
       <img class="full-image" src="/assets/contentplaceholder.png"></img>

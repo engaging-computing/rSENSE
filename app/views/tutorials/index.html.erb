@@ -1,52 +1,94 @@
 <div class="row">
   <div class="col-lg-12">
     <div class="row padded-row">
-      <%= form_tag tutorials_path, method: 'get', id: 'tutorials_search', class: 'navbar-search' do%>
-
-        <!-- hidden input for pagination -->
-        <input type="text" id="hidden_pagination" name="page" value="1" style="display: none;" />
-
+      <%=form_tag tutorials_path, method: 'get', id: 'tutorials_search' do%>
+            
         <div class="isotope-top">
-          <div class="col-lg-12">
+          <div class="col-md-12">
             <h1>Tutorials</h1>
           </div>
-          <div class="col-lg-4">
-            <select name="sort" class="tutorials_sort_select form-control">
-              <option value="DESC">Newest First</option>
-              <option value="ASC">Oldest First</option>
-            </select>
+          
+          <div class='row'>
+            <div class="padded-col col-sm-10">
+              <%= text_field_tag :search, @params[:search], class: "form-control" %>
+            </div>
+            <div class="padded-col col-sm-2">
+              <%= submit_tag "Search", name: nil, class:'btn btn-default'%>
+            </div>
           </div>
-          <div class="col-lg-6">
-            <%= text_field_tag :search, params[:search], class:'form-control'%>
+          
+          <div class='row'>
+            <div class="padded-col col-md-3 col-sm-6">
+            
+              <%= select_tag(:sort, 
+                options_for_select([["Sort by Modified", "updated_at"],
+                                    ["Sort by Created", "created_at"]], @params["sort"]),
+                class: "tutorials_sort_select form-control") 
+              %>
+            </div>
+            
+            <div class="padded-col col-md-3 col-sm-6">
+            
+              <%= select_tag(:order, 
+                options_for_select([["Descending", "DESC"],
+                                    ["Ascending", "ASC"]], @params["order"]),
+                class: "tutorials_order_select form-control") 
+              %>
+            </div>
+            
+            
           </div>
-          <div class="col-lg-2">
-            <%= submit_tag "Search", name: nil, class:'btn btn-default'%>
-          </div>
-          <div class="clear" style="padding-bottom:10px"></div>
+          
+          <div class='clear'></div>
+          
         </div>
       <%end%>
     </div>
-    <% if is_admin? %>
-      <div class="row">
-        <div class='col-lg-12 center'>
-          <%= form_tag("/tutorials", method: "post") do%>
-            <button id="addTutorialButton" class="btn btn-success" style="width:100%"><h4>Create Tutorial</h4></button>
-          <%end%>
-        </div>
-      </div>
-    <% end %>
-    <div class="row">
-      <div id="tutorials" class="col-lg-12 isotope_container">
-        <div class="isotope_pane">
-        </div>
-      </div>
-    </div>
-    <div class="row" style="padding-top: 10px;">
-      <div class="col-lg-12">
-        <div class="well text-center" id="load_tutorials">
-          <h3 class="muted">Loading More <img src="/assets/spinner.gif" /></h3>
-        </div>
+  </div>
+</div>
+<% if @cur_user.try(:id) %>
+  <div class="row">
+    <div class='col-lg-12 center'>
+      <div id="addProjectButton">
+        <button class="btn btn-success"><h4>Create Tutorial</h4></button>
       </div>
     </div>
   </div>
+<% end %>
+
+<div class="row">
+  <div id="tutorials" class="col-xs-12 isotope_container" >
+    <div class="isotope_pane">
+    
+      <% @tutorials.each do |tut| %>
+        <div class='item clickableItem'>
+          
+          <a href='<%=tutorial_path tut%>'>
+            <%= image_tag "blank.png", {class: "areaLink", alt: ""} %>
+          </a>
+          
+          <% if tut.featured_media_id != nil %>
+            <div class='caroucell' style='height:120px; background-image:url(<%=tut.media_objects.find(tut.featured_media_id).src%>)'></div>
+          <% end %>
+          
+          <div style="padding:7px">
+            <div style="font-size:1.2em; font-weight:bold;">
+              <%=tut.name%> 
+              <% if tut.featured %> 
+                <span style='color:#57C142'> (featured)</span>
+              <% end %>
+            </div>
+            
+            by <a href='<%=user_url(tut.owner)%>'> <%=tut.owner.name%> </a><br/>
+            on <%=tut.created_at.strftime("%B %d, %Y")%> <br/>
+            
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class='text-center'>
+<%= will_paginate @tutorials, renderer: BootstrapPagination::Rails, inner_window: 1, outer_window: 0, previous_label: "<<", next_label: ">>" %>
 </div>

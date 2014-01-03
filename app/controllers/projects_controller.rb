@@ -8,39 +8,41 @@ class ProjectsController < ApplicationController
 
   def index
     
+    @params = params
+    
     #Main List
     if !params[:sort].nil?
-        sort = params[:sort]
+      sort = params[:sort]
     else
-        sort = "updated_at DESC"
+      sort = "updated_at"
+    end
+    
+    if !params[:order].nil?
+      order = params[:order]
+    else
+      order = "DESC"
     end
     
     if !params[:per_page].nil?
         pagesize = params[:per_page]
     else
-        pagesize = 10;
+        pagesize = 50;
     end
     
-    if params.has_key? "templates_only"
-      templates = true
+    templates = params.has_key? "templates_only"
+    curated = params.has_key? "curated_only"
+    featured = params.has_key? "featured_only"
+    hasData = params.has_key? "has_data"
+    
+    @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: pagesize)
+    
+    if sort == "VIEWS"
+      @projects = @projects.includes(:view_count).order("view_counts.count #{order}")
     else
-      templates = false
+      @projects = @projects.order("#{sort} #{order}")
     end
     
-    if params.has_key? "curated_only"
-      curated = true
-    else
-      curated = false
-    end
-    
-    if sort == "RATING"
-      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("like_count DESC").only_templates(templates).only_curated(curated)
-    else
-      @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("#{sort}").only_templates(templates).only_curated(curated)
-    end
-
-    #Featured list
-    @featured_3 = Project.where(featured: true).order("updated_at DESC").limit(3);
+    @projects = @projects.only_templates(templates).only_curated(curated).only_featured(featured).has_data(hasData)
 
     respond_to do |format|
       format.html
@@ -346,7 +348,7 @@ class ProjectsController < ApplicationController
     
     if params.has_key?('create_dataset')
       data_obj = uploader.retrieve_obj(params[:file])
-      data = uploader.swap_without_matches(data_obj,@project)
+      data = uploader.swap_with_field_names(data_obj,@project)
 
       dataset = DataSet.new do |d|
         d.user_id = @cur_user.id

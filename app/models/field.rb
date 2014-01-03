@@ -25,17 +25,6 @@ class Field < ActiveRecord::Base
     h
   end
   
-  def self.bulk_update(fields)
-    errors = {}
-    fields.each do |key, val|
-      field = Field.find(key)
-      unless field.update_attributes(val)
-        errors[key] = field.errors.full_messages
-      end
-    end
-    errors
-  end
-  
   def self.get_next_name(project,field_type)
     highest = 0
     base = get_field_name(field_type)
@@ -57,7 +46,6 @@ class Field < ActiveRecord::Base
     else 
       name = base
     end
-    
     name    
   end
 end

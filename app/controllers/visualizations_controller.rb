@@ -8,26 +8,29 @@ class VisualizationsController < ApplicationController
   # GET /visualizations.json
   def index
         #Main List
+    @params = params
+    
     if !params[:sort].nil?
-        sort = params[:sort]
+      sort = params[:sort]
     else
-        sort = "DESC"
+      sort = "updated_at"
+    end
+    
+    if !params[:order].nil?
+      order = params[:order]
+    else
+      order = "DESC"
     end
     
     if !params[:per_page].nil?
         pagesize = params[:per_page]
     else
-        pagesize = 10;
+        pagesize = 50;
     end
     
-    if sort=="ASC" or sort=="DESC"
-      @visualizations = Visualization.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("created_at #{sort}")
-    else
-      @visualizations = Visualization.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("like_count DESC")
-    end
+    @visualizations = Visualization.search(params[:search]).paginate(page: params[:page], per_page: pagesize)
     
-    #Featured list
-    @featured_3 = Visualization.where(featured: true).order("updated_at DESC").limit(3);
+    @visualizations = @visualizations.order("#{sort} #{order}")
     
     respond_to do |format|
       format.html
@@ -251,7 +254,7 @@ class VisualizationsController < ApplicationController
     i = 0
     @datasets.each do |dataset|
       hasPics = true if dataset.media_objects.size > 0
-      metadata[i] = { name: dataset.title, user_id: dataset.user_id, dataset_id: dataset.id, timecreated: dataset.created_at, timemodified: dataset.updated_at, photos: dataset.media_objects }
+      metadata[i] = { name: dataset.title, user_id: dataset.user_id, dataset_id: dataset.id, timecreated: dataset.created_at, timemodified: dataset.updated_at, photos: dataset.media_objects.map {|m| m.to_hash(true)} }
       dataset.data.each do |row|
         unless row.class == Hash
           logger.info "Bad row in JSON data:"

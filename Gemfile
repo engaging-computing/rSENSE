@@ -47,6 +47,7 @@ gem 'font-awesome-rails'
 
 # Include Will Paginate
 gem 'will_paginate'
+gem 'will_paginate-bootstrap'
 
 # Include Remotipart
 gem "remotipart"
@@ -60,7 +61,7 @@ gem 'webrick'
 gem 'mini_magick'
 
 # Database serialization
-gem 'yaml_db'
+gem 'yaml_db', github: 'jetthoughts/yaml_db'
 gem 'multi_json'
 
 gem 'roo'
