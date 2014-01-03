@@ -1,5 +1,4 @@
 module ProjectsHelper
-    
   def project_edit_menu_helper(make_link = false)
     render 'shared/edit_menu', {type: 'project', typeName: 'Project', obj: @project, make_link: make_link, escape_link: projects_url}
   end
@@ -12,4 +11,8 @@ module ProjectsHelper
       render 'shared/newcontent', {type: 'project', field: "content", content: @project.content, row_id: @project.id, has_content: !@project.content.blank?, can_edit: can_edit}
   end
   
+  def can_contribute?(project)
+    session[:contrib_access] == project.id ||
+       (@cur_user.try(:id) && !project.lock?)
+  end
 end
