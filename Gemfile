@@ -61,7 +61,7 @@ gem 'webrick'
 gem 'mini_magick'
 
 # Database serialization
-gem 'yaml_db'
+gem 'yaml_db', github: 'jetthoughts/yaml_db'
 gem 'multi_json'
 
 gem 'roo'
