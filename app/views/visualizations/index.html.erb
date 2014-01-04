@@ -9,7 +9,7 @@
           </div>
           
           <div class='row'>
-            <div class="padded-col col-sm-10">
+            <div class="padded-col col-sm-10" title="Enter keyword(s) for visualizations search">
               <%= text_field_tag :search, @params[:search], class: "form-control" %>
             </div>
             <div class="padded-col col-sm-2">
@@ -18,7 +18,7 @@
           </div>
           
           <div class='row'>
-            <div class="padded-col col-md-3 col-sm-6">
+            <div class="padded-col col-md-3 col-sm-6" title="Sort by">
             
               <%= select_tag(:sort, 
                 options_for_select([["Sort by Modified Date", "updated_at"],
@@ -27,7 +27,7 @@
               %>
             </div>
             
-            <div class="padded-col col-md-3 col-sm-6">
+            <div class="padded-col col-md-3 col-sm-6" title="Sort order">
             
               <%= select_tag(:order, 
                 options_for_select([["Descending", "DESC"],
