@@ -13,7 +13,7 @@ class MakeNewsTest < ActionDispatch::IntegrationTest
   end
   
   test "add a news item" do
-    login("nixon", "12345")
+    login("nixon@whitehouse.gov", "12345")
     assert find('.navbar').has_content?('Richard N.')
 
     click_on "News"
@@ -39,7 +39,7 @@ class MakeNewsTest < ActionDispatch::IntegrationTest
 
     logout
     
-    login("kate", "12345")
+    login("kcarcia@cs.uml.edu", "12345")
     click_on "News" 
     
     assert page.has_no_content?("Add News Item")

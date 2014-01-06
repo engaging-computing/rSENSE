@@ -53,14 +53,14 @@ class ActionDispatch::IntegrationTest
 end
 
 module CapyHelper
-  def login(user, pass)
+  def login(email, pass)
     visit '/'
     find('.navbar').click_on('Login')
-    fill_in 'Username', :with => user
-    fill_in 'Password', :with => pass
+    fill_in 'Email', with: email
+    fill_in 'Password', with: pass
     find('.mainContent').click_on('Login')
 
-    assert page.has_content?("Logout")
+    assert page.has_content?("Logout"), "Successfully logged in."
   end
 
   def logout

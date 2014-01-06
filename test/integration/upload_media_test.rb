@@ -13,7 +13,7 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
   end
   
   test "upload media" do 
-    login("nixon", "12345")
+    login("nixon@whitehouse.gov", "12345")
     
     #Upload media to tutorial
     visit '/tutorials/1'

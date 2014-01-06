@@ -34,7 +34,7 @@ class SessionsController < ApplicationController
       end
     else
       flash.now[:error] = "The entered username/email and password do not match"
-      flash.now[:username_or_email] = params[:username_or_email]
+      flash.now[:email] = params[:email]
       respond_to do |format|
         format.html { render action: "new" }
         format.json { render json: {}, status: :unauthorized }
