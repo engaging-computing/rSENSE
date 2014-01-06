@@ -38,9 +38,8 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
-    #Grab the User
-    @user = User.find(params[:id])
-    
+    @user = User.find_by_id(params[:id])
+
     if @user == nil
       respond_to do |format|
         format.html { render :file => "#{Rails.root}/public/404.html", :status => :not_found }
