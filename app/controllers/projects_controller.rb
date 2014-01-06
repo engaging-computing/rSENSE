@@ -56,6 +56,9 @@ class ProjectsController < ApplicationController
   def show
     @project = Project.find(params[:id])
 
+    @new_contrib_key = ContribKey.new
+    @new_contrib_key.project_id = @project.id
+
     #Update view count
     session[:viewed] ||= {}
     session[:viewed][:projects] ||= {}

@@ -22,6 +22,7 @@ class Project < ActiveRecord::Base
   has_many :media_objects
   has_many :likes
   has_many :visualizations
+  has_many :contrib_keys
 
   has_one :view_count
 
@@ -86,6 +87,10 @@ class Project < ActiveRecord::Base
     else
       all
     end
+  end
+
+  def has_contrib_key?
+    not contrib_keys.empty?
   end
 
   def add_view!
