@@ -16,3 +16,9 @@ $ ->
     
     ($ '#editTable').editTable(settings)
     
+    field_count = ($ '#editTable').find('tr').eq(0).find('th').size()
+    
+    ($ '#editTable').find('tr').slice(1).each () ->
+      ($ @).find('td:not(:last)').each () ->
+        ($ @).attr 'width', "#{95 / (field_count - 1)}%"
+    
