@@ -12,7 +12,6 @@ $ ->
           redirect.pop()
           url = redirect.join "/"
           window.location = url
-          console.log redirect
     
     ($ '#editTable').editTable(settings)
     

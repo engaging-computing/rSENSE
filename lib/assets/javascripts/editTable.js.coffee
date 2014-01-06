@@ -361,49 +361,15 @@ $ ->
             type: "GET"
             dataType: "text"
             cache: false
-            error: (jqXHR, textStatus, errorThrown) ->
-              console.log ["error", jqXHR, textStatus, errorThrown]
-              #if data.status == "unprocessable_entity"
-              #  ($ '.mainContent').prepend "<div class='alert alert-danger alert-dismissable'><strong>An error occured: </strong> a Data Set with that name already exists.</div>"
-          
             success: (data, textStatus, jqXHR) ->
-              console.log ["success", data, textStatus, jqXHR]
             
               $.ajax "#{settings.upload.url}",
-                type: "POST"#"#{settings.upload.method}"
+                type: "POST"
                 dataType: 'text'
                 data: ajax_data
                 error: settings.upload.error
                 success: settings.upload.success
                 
-              ###else
-              
-                alert "The project owner added a field/fields while you were entering data. We are adding these new fields for you now, press save again to submit data with the new fields."
-                    
-                ($ add_fields).each (index, element) ->
-                  ($ table).find('thead tr').eq(0).append("<th data-field-type='#{settings.type(element.type)}' data-field-id='#{element.id}' data-field-name='#{element.name}'>#{element.name}</th>")
-                ($ table).find('tbody').find('tr').each (i, e) ->
-                  ($ add_fields).each () ->
-                    ($ e).append('<td></td>')
-                 
-                wrap_table(table)
-                      
-                # add buttons
-                for button in settings.buttons
-                  do (button) ->
-                    if button is "close" or button is "Close"
-                      ($ table).find('tr').eq(0).append '<th></th>'
-                      ($ table).find('tbody').children().each ->
-                        ($ @).append '<td><div class="text-center"><a class="close" style="float:none;">&times;</a></div></td>'
-                        ($ @).find('.close').click () ->
-                          remove_row(@)
-          
-                    if button is "add" or button is "Add"
-                      ($ '#edit_table_add').removeClass 'disabled'
-          
-                    if button is "save" or button is "Save"
-                      ($ '#edit_table_save').button 'reset'
-                      ($ '#edit_table_save').click submit_form###
 
         # does it pass?
         table_validates = (tab) ->
