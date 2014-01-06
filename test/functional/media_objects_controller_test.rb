@@ -22,7 +22,7 @@ class MediaObjectsControllerTest < ActionController::TestCase
     assert_difference('MediaObject.count') do
       img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
       file = Rack::Test::UploadedFile.new(img_path,"image/jpeg")
-      post :saveMedia, {keys: 'user/nixon', upload: file}, {user_id: @nixon}
+      post :saveMedia, {keys: "user/#{@nixon.id}", upload: file}, {user_id: @nixon}
     end
     
     get :show, {format:'json', id: MediaObject.last.id, recur: true}
