@@ -146,7 +146,7 @@ class DataSetsController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { redirect_to 'public/401.html' }
+        format.html { redirect_to 'public/403.html', status: :forbidden}
         format.json { render json: {}, status: :forbidden }
       end
     end
@@ -199,7 +199,7 @@ class DataSetsController < ApplicationController
     success = false
     defaultName = ""
     
-    if !params[:name] #or params[:name] == "e.g., Bob D. - Test 1"
+    if !params[:name]
       defaultName  = "Dataset ##{(DataSet.where(project_id: params[:id]).to_a.count + 1).to_s}"
     else
       defaultName = params["name"]
@@ -220,7 +220,7 @@ class DataSetsController < ApplicationController
       logger.info "Data set headers don't match fields"
       logger.info errors.inspect
       respond_to do |format|
-        format.json { render json: { errors: errors, status: :unprocessable_entity } }
+        format.json { render json: errors, status: :unprocessable_entity }
       end
       return
     end
@@ -253,9 +253,9 @@ class DataSetsController < ApplicationController
 
     respond_to do |format|
       if @data_set.save
-        format.json { render json: { data: @data_set.to_hash(false), status: :created } }
+        format.json { render json: @data_set.to_hash(false), status: :created}
       else
-        format.json { render json:{ status: :unprocessable_entity } }
+        format.json { render json:{}, status: :unprocessable_entity }
       end
     end
 

@@ -17,7 +17,7 @@ class FieldsController < ApplicationController
   # POST /fields
   # POST /fields.json
   def create
-    @field = Field.new(params[:field])    
+    @field = Field.new(params[:field])
     @project = Project.find(params[:field][:project_id])
     
     if !params[:field].has_key? :name
