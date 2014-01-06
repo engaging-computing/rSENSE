@@ -51,7 +51,7 @@
   </div> 
  
   <div class="col-lg-8">
-    <%= form_tag users_path, method: 'get', id:'contribution_search', name: @user.username do%>
+    <%= form_tag users_path, method: 'get', id: 'contribution_search', "data-user-id" => @user.id do%>
       <ul class="nav nav-tabs" id="user_filter">
         <li class="active"><a href="#">Liked Projects</a></li>
         <li><a href="#">My Projects</a></li>
