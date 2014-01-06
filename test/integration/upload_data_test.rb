@@ -94,6 +94,7 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     assert page.has_content? "Project:"
     find('#edit_table_save').click
     assert page.has_content?("Save Visualization")
+
     click_on "File Types"
     assert page.has_content?("Contribute Data")
     
@@ -132,6 +133,27 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     assert page.has_no_content?("Saved Vis - File Types")
     visit proj_url
     assert page.has_no_content?("Saved Vis - File Types")
+    assert page.has_content?("Contribute Data")
+
+    # Add a student key
+    fill_in "Label", with: "Starbucks"
+    fill_in "Key", with: "grande"
+    click_on "Create Key"
+
+    click_on "Logout"
+
+    # Upload File With Key
+    find("#key").set("grande")
+    click_on "Submit Key"
+
+    csv_path = Rails.root.join('test', 'CSVs', 'test.csv')
+    page.execute_script %Q{$('#datafile_form').parent().show()}
+    find("#datafile_form").attach_file("file",csv_path)
+    page.execute_script %Q{$('#datafile_form').submit()}
+    assert page.has_content?("Match Quality"), "Data wasn't submitted"
+    click_on "Submit"
+    assert page.has_content?("Dataset")
+    click_on "File Types"
     assert page.has_content?("Contribute Data")
   end
 end
