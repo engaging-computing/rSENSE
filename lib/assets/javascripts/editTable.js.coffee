@@ -499,8 +499,10 @@ $ ->
                
           if !($ '#edit_table_save').hasClass 'disabled'
                 
-            if ($ '#data_set_name').val() != "" and settings.page_name == "manualEntry"
-
+            if ($ '#data_set_name').val() == "" and settings.page_name == "manualEntry"
+              ($ '.mainContent').prepend "<div class='alert alert-danger alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button><strong>An error occured: </strong> Please enter a name for your project.</div>"
+            else
+              
               if table_validates(table)
                 
                 #($ '#edit_table_save').unbind()
@@ -513,5 +515,3 @@ $ ->
                 else
                   ## I guess I'm not gonna write this part because we only use ajax to submit data
                   ($ table).wrap "<form action='#{settings.upload.url}' method='#{settings.upload.method}' />"
-            else 
-              ($ '.mainContent').prepend "<div class='alert alert-danger alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button><strong>An error occured: </strong> Please enter a name for your project.</div>"
