@@ -8,7 +8,7 @@ class UsersControllerTest < ActionController::TestCase
 
   test "should not get index as user" do
     get :index, {}, { user_id: @user }
-    assert_response :not_found
+    assert_response :forbidden
   end
 
   test "should get index as admin" do
@@ -17,6 +17,19 @@ class UsersControllerTest < ActionController::TestCase
     assert_not_nil assigns(:users)
   end
 
+  test "should get index paged" do
+    get :index, {format: 'json', per_page: 1}, { user_id: @admin}
+    assert_response :success
+    assert JSON.parse(response.body).count == 1, "Should only have got one user back"
+  end
+  
+  test "should get index sorted" do
+    get :index, {format: 'json', sort: 'ASC'}, { user_id: @admin}
+    assert_response :success
+    body = JSON.parse(response.body)
+    assert Date.parse(body[0]['createdAt']) < Date.parse(body[1]['createdAt']), "Was not in ascending order"
+  end
+  
   test "should get new" do
     get :new
     assert_response :success
@@ -72,12 +85,22 @@ class UsersControllerTest < ActionController::TestCase
     get :show, { id: @user }, { user_id: @user }
     assert_response :success
   end
+  
+  test "should not show user (html)" do
+    get :show, {id: 'GreenGoblin'}, {user_id: @admin}
+    assert_response :not_found
+  end
+  
+  test "should not show user (json)" do
+    get :show, {format: 'json', id: 'GreenGoblin'}, {user_id: @admin}
+    assert_response :unprocessable_entity
+  end
 
   test "should get edit" do
     get :edit, { id: @user }, { user_id: @user }
     assert_response :success
   end
-
+  
   test "should update user" do
     put :update, {id: @user, user: { email: @user.email, firstname: @user.firstname, 
       lastname: @user.lastname, username: @user.username, validated: @user.validated }}, { user_id: @user }

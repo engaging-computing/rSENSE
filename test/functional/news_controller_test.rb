@@ -5,6 +5,7 @@ class NewsControllerTest < ActionController::TestCase
     @nixon = users(:nixon)
     @kate  = users(:kate)
     @news  = news(:one)
+    @news_three = news(:news_three)
   end
 
   test "should get index" do
@@ -25,8 +26,11 @@ class NewsControllerTest < ActionController::TestCase
   end
 
   test "should show news (json)" do
-    get :show, { format: 'json', id: @news }
+    get :show, { format: 'json', id: @news_three }
     assert_response :success
+
+    get :show, {format: 'json', id: @news_three, recur: true}
+    assert JSON.parse(response.body).has_key?('content'), "Should have included content in to_hash"
   end
 
   test "should create news" do
@@ -44,7 +48,7 @@ class NewsControllerTest < ActionController::TestCase
 
     assert_response :success
   end
-
+  
   test "should not create news as non-admin (json)" do
     assert_difference('News.count', 0) do
       post :create, { format: 'json' }, { user_id: @kate }
@@ -72,24 +76,16 @@ class NewsControllerTest < ActionController::TestCase
   end
 
   test "should destroy news" do
-    delete :destroy, { id: @news }, { user_id: @nixon }
-    
-    news = News.find @news.id
-    assert_equal news.hidden, true
-    assert_equal news.user_id, -1
-    assert_equal news.featured_media_id, nil
-
+    assert_difference('News.count',-1) do
+      delete :destroy, { id: @news }, { user_id: @nixon }
+    end
     assert_redirected_to news_index_path
   end
   
   test "should destroy news (json)" do
-    delete :destroy, { format: 'json', id: @news }, { user_id: @nixon }
-    
-    news = News.find @news.id
-    assert_equal news.hidden, true
-    assert_equal news.user_id, -1
-    assert_equal news.featured_media_id, nil
-
+    assert_difference('News.count',-1) do
+      delete :destroy, { format: 'json', id: @news }, { user_id: @nixon }
+    end
     assert_response :success
   end
 end

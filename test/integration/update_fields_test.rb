@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class MakeProjectTest < ActionDispatch::IntegrationTest
+class UploadFieldsTest < ActionDispatch::IntegrationTest
   include CapyHelper
 
   setup do

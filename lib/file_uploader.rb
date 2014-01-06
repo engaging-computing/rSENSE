@@ -56,22 +56,23 @@ class FileUploader
   end
   
   ## Swap columns 
-  def swap_columns(data_obj, project, matches) 
-    size = data_obj.first[1].length
+  def swap_columns(data_obj, project) 
     data = []
+    
+    size = data_obj.first[1].length
+    
     (0..size-1).each do |i|
       x = {}
       project.fields.each do |field|
-        next if matches[field.id.to_s] == "0"
-        x[field.id] = data_obj[matches[field.id.to_s]][i]
+        next if !data_obj.has_key? field.id.to_s
+        x[field.id] = data_obj[field.id.to_s][i]
       end
       data << x
     end
-    
     data
   end
   
-  def swap_without_matches(data_obj,project)
+  def swap_with_field_names(data_obj,project)
     data = []
     size = data_obj.first[1].length
 
@@ -87,7 +88,7 @@ class FileUploader
   
   ### Match headers should return a match_matrix for mismatches or continue
   def match_headers(project,data_obj)
-    fields = project.fields
+    fields = project.fields.map {|fi| fi.to_hash}
     
     if data_obj.has_key?('data')
       headers = data_obj['data'].keys
@@ -99,8 +100,8 @@ class FileUploader
     fields.each_with_index do |f,fi|
       matrix.append []
       headers.each_with_index do |h,hi|
-        lcs_length = lcs(f.name.downcase,headers[hi].downcase).length.to_f
-        x = lcs_length / f.name.length.to_f
+        lcs_length = lcs(f[:name].downcase,headers[hi].downcase).length.to_f
+        x = lcs_length / f[:name].length.to_f
         y = lcs_length / headers[hi].length.to_f
         avg = (x + y) / 2
         matrix[fi].append avg
@@ -141,13 +142,25 @@ class FileUploader
     results
   end
   
-  def sanitize_data(data_obj, project, matches)
-    matches.each do |match|
-      field = Field.find(match[0])
+  def sanitize_data(data_obj, matches = nil)
+    
+    if !matches.nil?
+      data = {}
+      matches.each do |match|
+        column = data_obj[match[1]]
+        next if column == nil
+        field = Field.find(match[0])
+        data[field.id.to_s] = column
+      end
+    else 
+      data = data_obj
+    end
+   
+    data.each do |(key,value)|
+      field = Field.find(key)
       type = get_field_name(field.field_type)
-      column = data_obj[match[1]]
-      column.each_with_index do |dp,index|
-        next if dp.nil?
+      value.each_with_index do |dp,index|
+        next if dp.nil? or (dp.strip() == "")
         case type
         when "Number"
           return {status: false, msg: "\"#{field.name}\" should contain only numbers, found \"#{dp}\""} if !dp.valid_float?
@@ -165,13 +178,13 @@ class FileUploader
         when "Text"
           if !field.restrictions.nil?
             if !(field.restrictions.map {|r| r.downcase.gsub(/\s+/, "")}.include? dp.downcase.gsub(/\s+/, ""))
-              data_obj[match[1]][index] = ""
+              data[match[1]][index] = ""
             end
           end
         end
       end
     end
-    return {status: true, msg: "passed", data_obj: data_obj}
+    return {status: true, msg: "passed", data_obj: data}
   end
   
   
