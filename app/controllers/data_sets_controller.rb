@@ -2,7 +2,8 @@ class DataSetsController < ApplicationController
   include ApplicationHelper
 
   # Allow for export without authentication
-  skip_before_filter :authorize, :only => [:export]
+  skip_before_filter :authorize, :only => [:export, :manualEntry, :manualUpload, :update, :show, :dataFileUpload, :field_matching]
+  before_filter :authorize_allow_key, :only => [:manualEntry, :manualUpload, :update, :show, :dataFileUpload, :field_matching]
 
   # GET /data_sets/1
   # GET /data_sets/1.json
@@ -246,7 +247,9 @@ class DataSetsController < ApplicationController
 
     end
 
-    @data_set = DataSet.new(:user_id => @cur_user.id, :project_id => @project.id, 
+    owner = @cur_user.try(:id) ? @cur_user.id : @project.owner.id
+
+    @data_set = DataSet.new(:user_id => owner, :project_id => @project.id, 
                                :title => defaultName, data: new_data)
 
     followURL = "/projects/#{@project.id}/data_sets/#{@data_set.id}"
@@ -284,7 +287,7 @@ class DataSetsController < ApplicationController
       data_obj = sane[:data_obj]
       data = uploader.swap_columns(data_obj, project, params[:matches])
       dataset = DataSet.new do |d|
-        d.user_id = @cur_user.id
+        d.user_id = @cur_user.try(:id) || project.owner.id
         d.title = params[:title]
         d.project_id = project.id
         d.data = data
