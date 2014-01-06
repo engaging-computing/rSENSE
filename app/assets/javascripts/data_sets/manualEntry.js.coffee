@@ -10,8 +10,6 @@ $ ->
         url: window.location.pathname.substr(0, window.location.pathname.lastIndexOf("/")) + "/manualUpload"
         method: 'POST'
         error: (j, s, t) =>
-          console.log [j, s, t]        
-          #jdata = JSON.parse data
           
           ($ '.mainContent').prepend "<div class='alert alert-danger alert-dismissable'><strong>An error occured: </strong> Data set names must be unique to their project.</div>"
 
