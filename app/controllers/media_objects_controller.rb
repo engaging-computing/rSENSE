@@ -113,7 +113,7 @@ class MediaObjectsController < ApplicationController
         @mo.project_id = @data_set.project_id
       end
     when 'user'
-      @user = User.find_by_username(id)
+      @user = User.find_by_id(id)
       if(can_edit?(@user))
         @mo.user_id = @user.id
       end

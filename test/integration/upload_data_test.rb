@@ -13,7 +13,7 @@ class UploadDataTest < ActionDispatch::IntegrationTest
   end
   
   test "upload all filetypes" do
-    login("kate", "12345")
+    login("kcarcia@cs.uml.edu", "12345")
 
     # Add a project
     click_on "Projects"
