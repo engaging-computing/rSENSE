@@ -13,12 +13,16 @@ class UsersTest < ActionDispatch::IntegrationTest
   end
   
   test "contributions" do 
-    login("nixon", "12345")
+    skip
+
+    login("nixon@whitehouse.gov", "12345")
     
     visit "/projects/1"
     click_on "Like"
-    
-    visit "/users/nixon"
+   
+    @nixon = users(:nixon)
+
+    visit "/users/#{@nixon.id}"
     assert page.has_content? "Media Test"
     
     click_on "My Projects"
@@ -29,6 +33,5 @@ class UsersTest < ActionDispatch::IntegrationTest
     
     find('.nav-tabs').click_on "Visualizations"
     assert page.has_content? "Needs Media"
-     
   end
 end
