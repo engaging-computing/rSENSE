@@ -157,6 +157,39 @@ class DataSetsController < ApplicationController
   def manualEntry
     @project = Project.find(params[:id])
   end
+  
+  # POST /projects/1/jsonDataUpload
+  # {data => { "20"=>[1,2,3,4,5], "21"=>[6,7,8,9,10], "22"=>['v','w','x','y','z'] }}
+  def jsonDataUpload
+    project = Project.find(params['id'])
+  
+    uploader = FileUploader.new
+    sane = uploader.sanitize_data(params[:data])
+    
+    if sane[:status]
+      data_obj = sane[:data_obj]
+      data = uploader.swap_columns(data_obj, project)
+      dataset = DataSet.new do |d|
+        d.user_id = @cur_user.id
+        d.title = params[:title] || "#{@cur_user.name}s Project"
+        d.project_id = project.id
+        d.data = data
+      end
+      if dataset.save
+        respond_to do |format|
+          format.json {render json: dataset.to_hash(false), status: :ok}
+        end
+      end
+    else
+      err_msg = sane[:status] ? dataset.errors.full_messages : sane[:msg]
+      respond_to do |format|
+        format.json {render json: {data: sane[:data_obj], msg: err_msg}, status: :unprocessable_entity}
+      end
+    end
+  end
+  
+  # POST /projects/1/manualUpload
+  #{headers => [20,21,22], data => { "0"=>[1,2,3,4,5],"1"=>[6,7,8,9,10], "2"=>['v','w','x','y','z'] }}
 
   # POST /projects/1/jsonDataUpload
   # {data => { "20"=>[1,2,3,4,5], "21"=>[6,7,8,9,10], "22"=>['v','w','x','y','z'] }}
