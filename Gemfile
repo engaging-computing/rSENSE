@@ -37,7 +37,7 @@ gem 'bcrypt-ruby'
 # Include JQuery UI
 gem 'jquery-ui-rails'
 
-gem 'ckeditor'
+gem "ckeditor", :git => "https://github.com/galetahub/ckeditor.git"
 gem 'httparty'
 
 gem 'execjs'
@@ -68,4 +68,3 @@ gem 'roo'
 
 # Rails 4 migration
 gem 'protected_attributes'
-
