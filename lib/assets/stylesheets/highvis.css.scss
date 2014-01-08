@@ -202,8 +202,8 @@ figure, figurecaption{
 #polaroid{
   padding:20px 10px;
   width:100%;
-  overflow:hidden;
-  
+  overflow-y:scroll;
+  height: 100%;
   img.thumb{
     height:auto;
     max-width:100%
@@ -215,6 +215,8 @@ figure, figurecaption{
     float:left;
     position:relative;
 
+    max-height: 260px;
+    
     margin: 10px 20px;
     padding: 6px 8px 10px 8px; /*size of the frame*/
     /*give the frame's background colour a gradient*/
@@ -229,24 +231,8 @@ figure, figurecaption{
     -moz-box-shadow: 4px 4px 8px -4px rgba(0, 0, 0, .75);
     box-shadow: 4px 4px 8px -4px rgba(0, 0, 0, .75);
 
-    -webkit-transform:rotate(-1deg);
-    -moz-transform: rotate(-1deg);
-    -o-transform: rotate(-1deg);
-    -ms-transform: rotate(-1deg);
-    transform: rotate(-1deg);
     -webkit-backface-visibility:hidden; /*prevent rotated text in the caption being jagged in Chrome and Safari*/
   } 
-  figure:nth-child(even) { /*see support section below for more info on nth-child*/
-  -webkit-transform:rotate(2deg);
-  -moz-transform: rotate(2deg);
-  -o-transform: rotate(2deg);
-  -ms-transform: rotate(2deg);
-  transform: rotate(2deg);
-  /*because the image is rotated the opposite way, the drop-shadow needs moving to the other side of the image*/
-  -webkit-box-shadow: 4px 4px 8px -4px rgba(0, 0, 0, .75);
-  -moz-box-shadow: 4px 4px 8px -4px rgba(0, 0, 0, .75);
-  box-shadow: -4px 4px 8px -4px rgba(0, 0, 0, .75);
-  }
   
   figcaption{
     font-size:1.3em;
