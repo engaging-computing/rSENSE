@@ -6,14 +6,14 @@ class SessionsControllerTest < ActionController::TestCase
   end
 
   test "should log in" do
-    post :create, { format: 'json', username_or_email: "kcarcia@cs.uml.edu", password: "12345" }
+    post :create, { format: 'json', email: "kcarcia@cs.uml.edu", password: "12345" }
     puts flash[:debug] if flash[:debug]
     assert_match /authenticity_token/, @response.body
     assert_response :success
   end
 
   test "should not log in with bad password" do
-    post :create, { format: 'json', username_or_email: "kcarcia@cs.uml.edu", password: "derp" }
+    post :create, { format: 'json', email: "kcarcia@cs.uml.edu", password: "derp" }
     assert_response 401
   end
 
