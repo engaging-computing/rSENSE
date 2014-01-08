@@ -323,7 +323,16 @@ class DataSetsController < ApplicationController
         d.project_id = project.id
         d.data = data
       end
-      if dataset.save
+
+      if @cur_user.nil? 
+        if params[:contrib_name].empty?
+          dataset.errors[:base] << "Must enter contributor name"
+        else
+          dataset.title += " - #{params[:contrib_name]}"
+        end
+      end
+
+      if dataset.errors[:base].empty? and dataset.save
         redirect_to "/projects/#{project.id}/data_sets/#{dataset.id}"
       else
         @results = params[:results]

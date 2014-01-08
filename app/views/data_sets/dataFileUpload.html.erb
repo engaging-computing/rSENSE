@@ -6,8 +6,15 @@
     <%= form_tag '/data_sets/field_matching', method: 'put', id: 'field_matching' do%>
       <div class="row form-group">
         <div class="col-lg-3 col-lg-offset-3">
-          <label for="title"><b>Title </b></label><input type="text" id="title" name="title" value="<%=@default_name%>", class="form-control" autofocus>
+          <label for="title"><b>Title</b></label>
+          <input type="text" id="title" name="title" value="<%=@default_name%>" class="form-control" autofocus>
         </div>
+        <% if @cur_user.nil? %>
+          <div class="col-lg-3">
+            <label for="contrib_name"><b>Your Name</b></label>
+            <input type="text" id="contrib_name" name="contrib_name" value="" class="form-control">
+          </div>
+        <% end %>
       </div>
       <div class="row">
         <div class="col-lg-6 col-lg-offset-3">
