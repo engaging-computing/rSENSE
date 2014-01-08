@@ -81,9 +81,10 @@ $ ->
       
         success: (data, textStatus, jqXHR) ->
           new_data = {}
+          dname = ($ '#data_set_name').val()
+          cname = ($ '#contrib_name').val()
           new_data['data_set'] =
-            title: ($ '#data_set_name').val()
-                     
+            title: if cname == "" then dname else "#{dname} - #{cname}"
           jdata = JSON.parse data
           
           if jdata.status == "unprocessable_entity"

@@ -348,8 +348,11 @@ $ ->
             tmp = for row, row_i in row_data
               row[col_i]
 
+          dname = ($ '#data_set_name').val()
+          cname = ($ '#contrib_name').val()
+
           ajax_data =
-            name: ($ '#data_set_name').val()
+            name: if cname == "" then dname else "#{dname} - #{cname}"
             headers: head
             data: table_data
 
