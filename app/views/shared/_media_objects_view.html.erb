@@ -5,37 +5,41 @@
         <th style="max-width:10%">File</th>
         <th style="max-width:60%">Name</th>
         <th style="max-width:20%px"></th>
-        <th style="max-width:10%px">Display</th>
+        <% if ["Project","News","Tutorial"].include? object.class%><th style="max-width:10%px">Display</th><%end%>
       </tr>
     </thead>
     <tbody>
       <% object.media_objects.to_a.each do |mo| %>
-        <tr class="<%= cycle('feed-even','feed-odd') %> media">
-          <% if !(mo.media_type == 'image') %>
-            <td class="media_icon"><div class="media_icon"><%= link_to (media_object_thumbnail_helper mo), mo.src %></div></td>
-            <td style="max-width:140px;"><div class="truncate"><%= link_to mo.name, mo.src%></div></td>
-          <% else %>
-            <td class="media_icon mo_image"><div class="media_icon"><%= link_to (media_object_thumbnail_helper mo), mo.src %></div></td>
-            <td class="mo_image" style="max-width:140px;"><div class="truncate"><%= link_to mo.name, mo.src%></div></td>
-          <% end %>
-          <td>
-            <div class="controls">
-              <% if can_edit? mo %>
-                <a class="media_edit" href="<%= media_object_path mo %>">Edit</a>
-              <% end %>
-              <% if can_delete? mo %>
-                | <%= link_to "Delete", mo, method: 'delete', class: "media_delete", data: { confirm: "Are you sure?" } %>
-              <% end %>
-            </div>
-          </td>
-          <td>
-            <div class="center">
-              <% if ((mo.media_type == "image") && (can_edit? object))%>
-                <input type="checkbox" class="img_selector" name="img_selector" obj_id="<%=object.id%>" <%if object.featured_media_id == mo.id%>checked<%end%> mo_id="<%=mo.id%>"></input>
-              <%end%>
-            </div>
-          </td>
-        </tr>
+        <% if !mo.owner.nil? %>
+          <tr class="<%= cycle('feed-even','feed-odd') %> media">
+            <% if !(mo.media_type == 'image') %>
+              <td class="media_icon"><div class="media_icon"><%= link_to (media_object_thumbnail_helper mo), mo.src %></div></td>
+              <td style="max-width:140px;"><div class="truncate"><%= link_to mo.name, mo.src%></div></td>
+            <% else %>
+              <td class="media_icon mo_image"><div class="media_icon"><%= link_to (media_object_thumbnail_helper mo), mo.src %></div></td>
+              <td class="mo_image" style="max-width:140px;"><div class="truncate"><%= link_to mo.name, mo.src%></div></td>
+            <% end %>
+            <td>
+              <div class="controls">
+                <% if can_edit? mo %>
+                  <a class="media_edit" href="<%= media_object_path mo %>">Edit</a>
+                <% end %>
+                <% if can_delete? mo %>
+                  | <%= link_to "Delete", mo, method: 'delete', class: "media_delete", data: { confirm: "Are you sure?" } %>
+                <% end %>
+              </div>
+            </td>
+            <% if ["Project","News","Tutorial"].include? object.class%>
+              <td>
+                <div class="center">
+                  <% if ((mo.media_type == "image") && (can_edit? object))%>
+                    <input type="checkbox" class="img_selector" name="img_selector" obj_id="<%=object.id%>" <%if object.featured_media_id == mo.id%>checked<%end%> mo_id="<%=mo.id%>"></input>
+                  <%end%>
+                </div>
+              </td>
+            <%end%>
+          </tr>
+        <%end%>
       <% end %>
     </tbody>
   </table>
