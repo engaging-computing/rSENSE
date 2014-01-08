@@ -282,24 +282,33 @@ class DataSetsController < ApplicationController
     project = Project.find(params[:pid])
     uploader = FileUploader.new
     data_obj = uploader.retrieve_obj(params[:file])
-    sane = uploader.sanitize_data(data_obj, project, params[:matches])
+    sane = uploader.sanitize_data(data_obj, params[:matches])
     if sane[:status]
       data_obj = sane[:data_obj]
-      data = uploader.swap_columns(data_obj, project, params[:matches])
+      data  = uploader.swap_columns(data_obj, project)
       dataset = DataSet.new do |d|
         d.user_id = @cur_user.try(:id) || project.owner.id
         d.title = params[:title]
         d.project_id = project.id
         d.data = data
       end
-      if dataset.save
+
+      if @cur_user.nil? 
+        if params[:contrib_name].empty?
+          dataset.errors[:base] << "Must enter contributor name"
+        else
+          dataset.title += " - #{params[:contrib_name]}"
+        end
+      end
+
+      if dataset.errors[:base].empty? and dataset.save
         redirect_to "/projects/#{project.id}/data_sets/#{dataset.id}"
       else
         @results = params[:results]
         @default_name = params[:title]
         respond_to do |format|
           flash[:error] = dataset.errors.full_messages()
-          format.html {render action: "uploadCSV2"}
+          format.html {render action: "dataFileUpload"}
         end
       end
     else
