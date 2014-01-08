@@ -321,58 +321,36 @@ $ ->
           strip_table(table)
 
           # collect data and ship it off via AJAX
-          head = []
-
+          table_data = {}
+          
           ($ table).find('th').each ->
-            head.push ($ @).data('field-id')
-            
-          row_data = []
+            table_data[($ @).data('field-id')] = []
 
           ($ table).find('tr').has('td').each ->
 
-            row = []
-
             ($ @).children().each ->
-              row.push ($ @).text()
-                              
-            row_blank = true
+              id =  ($ @).closest('table').find("th:nth-child(#{($ @).index()+1})").data('field-id')
+              table_data[id].push(($ @).text())
               
-            ($ @).children().each (index, element) ->
-              if( row[index]? and row[index] != "" )
-                row_blank = false
-
-            if !row_blank
-              row_data.push row
-
-          table_data = for tmp, col_i in row_data[0]
-            tmp = for row, row_i in row_data
-              row[col_i]
 
           dname = ($ '#data_set_name').val()
           cname = ($ '#contrib_name').val()
-
+          
           ajax_data =
-            name: if cname == "" then dname else "#{dname} - #{cname}"
-            headers: head
+            title: if cname == "" then dname else "#{dname} - #{cname}"
             data: table_data
 
           ($ '#edit_table_add').addClass 'disabled'
           ($ '#edit_table_save').button 'loading'
-
-          $.ajax
-            url: "/projects/#{($ table).data('project-id')}.json"
-            type: "GET"
-            dataType: "text"
-            cache: false
-            success: (data, textStatus, jqXHR) ->
+        
+          $.ajax 
+            url: "#{settings.upload.url}"
+            type: "POST"
+            dataType: 'JSON'
+            data: ajax_data
+            error: settings.upload.error
+            success: settings.upload.success
             
-              $.ajax "#{settings.upload.url}",
-                type: "POST"
-                dataType: 'text'
-                data: ajax_data
-                error: settings.upload.error
-                success: settings.upload.success
-                
 
         # does it pass?
         table_validates = (tab) ->
