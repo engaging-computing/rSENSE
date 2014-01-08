@@ -4,6 +4,14 @@ GIT
   specs:
     yaml_db (0.2.3)
 
+GIT
+  remote: https://github.com/galetahub/ckeditor.git
+  revision: 60af5e541037bb6092dab962d0c66027468ccb0c
+  specs:
+    ckeditor (4.0.8)
+      mime-types
+      orm_adapter
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -44,9 +52,6 @@ GEM
       xpath (~> 2.0)
     childprocess (0.3.9)
       ffi (~> 1.0, >= 1.0.11)
-    ckeditor (4.0.6)
-      mime-types
-      orm_adapter
     coffee-rails (4.0.1)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.0)
@@ -178,7 +183,7 @@ PLATFORMS
 DEPENDENCIES
   bcrypt-ruby
   capybara
-  ckeditor
+  ckeditor!
   coffee-rails
   coffee-rails-source-maps
   coffeebeans
