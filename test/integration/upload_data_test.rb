@@ -151,8 +151,10 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     find("#datafile_form").attach_file("file",csv_path)
     page.execute_script %Q{$('#datafile_form').submit()}
     assert page.has_content?("Match Quality"), "Data wasn't submitted"
+    fill_in 'Title', with: 'Bad Data'
+    fill_in 'Your Name', with: 'Jim D.'
     click_on "Submit"
-    assert page.has_content?("Dataset")
+    assert page.has_content?("Bad Data - Jim D.")
     click_on "File Types"
     assert page.has_content?("Contribute Data")
   end
