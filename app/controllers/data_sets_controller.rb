@@ -46,7 +46,7 @@ class DataSetsController < ApplicationController
         if @data_set.save!
           ret = { status: :success, redirect: "/projects/#{@project.id}/data_sets/#{@data_set.id}" }
         else
-          ret = :error
+          ret = { status: :unprocessable_entity, msg: @data_set.errors.full_messages}
         end
       else
         err_msg = sane[:status] ? dataset.errors.full_messages : sane[:msg]
