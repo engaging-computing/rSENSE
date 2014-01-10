@@ -11,25 +11,30 @@
 
 .mobileButtonCell {
   display:table-cell;
-  width:50%
+  width:50%;
+  
+  a
+  {
+    width:80%;
+  }
 }
 
-.featured_image {
-  width:100%;
-  height:120px;
-  background-position:center;
-  background-repeat: no-repeat;
-  background-size: 100%;
-  overflow:hidden;
-}
-
-.featured_image_2 {
-  width:100%;
-  height:100%;
-  background-position:center;
-  background-repeat: no-repeat;
-  background-size: 175%;
-  overflow:hidden;
+.news_featured_image
+{
+  float:left;
+  clear:left;
+  width:50%;
+  height:198px;
+  margin-right:7px;
+  div.item_image
+  {
+    width:100% ;
+    height:100%;
+    background-position:center;
+    background-repeat: no-repeat;
+    background-size: 175%;
+    overflow:hidden;
+  }
 }
 
 .c_item

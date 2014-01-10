@@ -103,23 +103,17 @@ td.delete
   }
 }
 
-//=======UNVERIFIED CSS====================================================
-body
-{
-  line-height:normal !important;
-}
-
 .truncate 
 {
   white-space: nowrap;
   overflow-x: hidden;
   text-overflow: ellipsis;
 }
-.twolines
+
+//=======UNVERIFIED CSS====================================================
+body
 {
-  word-wrap: break-word;
-  overflow: hidden;
-  height: 2.4em;
+  line-height:normal !important;
 }
 
 div.info_text

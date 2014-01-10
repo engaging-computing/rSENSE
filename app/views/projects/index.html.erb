@@ -80,40 +80,8 @@
     <div class="isotope_pane">
     
       <% @projects.each do |pr| %>
-      <div class='item clickableItem'>
-        
-          <a href='<%=project_path pr%>'>
-            <%= image_tag "blank.png", {class: "areaLink", alt: ""} %>
-          </a>
-          
-          <% if pr.featured_media_id != nil %>
-            <div class='caroucell' style='height:120px; background-image:url(<%=pr.media_objects.find(pr.featured_media_id).src%>)'></div>
-          <% end %>
-          
-          <div style="padding:7px">
-            <div style="font-size:1.2em; font-weight:bold;">
-              <%=pr.name%> 
-              <% if pr.featured %> 
-                <span style='color:#57C142'> (featured)</span>
-              <% end %>
-            </div>
-            
-            by <%=pr.owner.name%> <br/>
-            on <%=pr.created_at.strftime("%B %d, %Y")%> <br/>
-            <div style="display:table; width:100%; margin-top:10px;">
-              <div style="display:table-cell">
-                <span class='badge'><i class="fa fa-flask">&nbsp;</i><%=pr.data_sets.count%></span>
-              </div>
-              <div style="display:table-cell">
-                <span class='badge'><i class="fa fa-eye">&nbsp;</i><%=pr.views%></span>
-              </div>
-              <div style="display:table-cell">
-                <span class='badge'><i class="fa fa-thumbs-up">&nbsp;</i><%=pr.like_count%></span>
-              </div>
-            </div>
-            
-          </div>
-        </div>
+        <% @box_project = pr %>
+        <%= render "shared/project_box" %>
       <% end %>
     </div>
   </div>

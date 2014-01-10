@@ -61,21 +61,21 @@
     <div class="isotope_pane">
     
       <% @tutorials.each do |tut| %>
-        <div class='item clickableItem'>
+        <div class='item clickable_item'>
           
           <a href='<%=tutorial_path tut%>'>
-            <%= image_tag "blank.png", {class: "areaLink", alt: ""} %>
+            <%= image_tag "blank.png", {class: "area_link", alt: ""} %>
           </a>
           
           <% if tut.featured_media_id != nil %>
-            <div class='caroucell' style='height:120px; background-image:url(<%=tut.media_objects.find(tut.featured_media_id).src%>)'></div>
+            <div class='item_image' style='background-image:url(<%=tut.media_objects.find(tut.featured_media_id).src%>)'></div>
           <% end %>
           
-          <div style="padding:7px">
-            <div style="font-size:1.2em; font-weight:bold;">
+          <div class="item_desc">
+            <div class="item_title">
               <%=tut.name%> 
               <% if tut.featured %> 
-                <span style='color:#57C142'> (featured)</span>
+                <span > (featured)</span>
               <% end %>
             </div>
             
