@@ -253,9 +253,7 @@ class VisualizationsController < ApplicationController
     # create/push metadata for datasets
     i = 0
     @datasets.each do |dataset|
-      photos = dataset.media_objects.map {|m| if(m.media_type=="image")
-                                        m.to_hash(true)
-                                       end} 
+      photos = dataset.media_objects.keep_if{|mo| mo.media_type=="image"}.map{|mo| mo.to_hash(true)}
       hasPics = true if photos.size > 0
       metadata[i] = { name: dataset.title, user_id: dataset.user_id, dataset_id: dataset.id, timecreated: dataset.created_at, timemodified: dataset.updated_at, photos: photos}
       dataset.data.each do |row|
