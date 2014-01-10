@@ -27,6 +27,11 @@
           <div class="col-md-3">
             <%if i != nil%>
               <div class='item clickableItem' style="height:198px;">
+
+                <a href='<%= project_path i %>'>
+                  <%= image_tag "blank.png", {class: "areaLink", alt: ""} %>
+                </a>
+
                 <a href="<%=project_path i%>"></a>
                 <%if i.featured_media_id != nil%>
                   <div class="featured_image" style=<%= "background-image:url(" + MediaObject.find(i.featured_media_id).src + ")"%>></div>
@@ -49,6 +54,9 @@
           <div class="col-md-3">
             <%if i != nil%>
               <div class='item clickableItem' style="height:198px;">
+                <a href='<%= project_path i %>'>
+                  <%= image_tag "blank.png", {class: "areaLink", alt: ""} %>
+                </a>
                 <a href="<%=project_path i%>"></a>
                 <%if i.featured_media_id != nil%>
                   <div class="featured_image" style=<%= "background-image:url(" + MediaObject.find(i.featured_media_id).src + ")"%>></div>
@@ -69,6 +77,9 @@
             <h3>What's New</h3>
             <div class="item clickableItem" style="height:198px;">
               <% n = @news.first %>
+              <a href='<%= news_path n %>'>
+                <%= image_tag "blank.png", {class: "areaLink", alt: ""} %>
+              </a>
               <a href="<%=news_path n%>"></a>
               <%if n.featured_media_id != nil %>
                 <div style="float:left;clear:left;width:50%;height:198px;margin-right:7px;"><a href="<%=news_path n%>"><div class="featured_image_2" style=<%= "background-image:url(" + MediaObject.find(n.featured_media_id).src + ")"%>></div></a></div>
