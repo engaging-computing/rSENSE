@@ -9,13 +9,13 @@
 
         <div class="panel-body">
           <div class="form-group">
-            <%= label_tag(:username_or_email, "Username/Email:") %>
-            <%= text_field_tag(:username_or_email, flash[:username_or_email], class: "form-control", placeholder: "user / user@email.com", autofocus: true) %>
+            <%= label_tag(:email, "Email:") %>
+            <%= text_field_tag(:email, flash[:email], class: "form-control", placeholder: "user@email.com", autofocus: true) %>
           </div>
         
           <div class="form-group">
             <%= label_tag(:password, "Password #{(link_to "(forgot password)", '/users/pw_request', tabindex: -1)}:".html_safe) %>
-          <%= password_field_tag(:password,nil ,class: "form-control") %>
+            <%= password_field_tag(:password,nil ,class: "form-control") %>
           </div>
         </div>  
         
