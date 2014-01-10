@@ -36,40 +36,23 @@ class DataSetsController < ApplicationController
 
     header_to_field_map = []
 
-    if !params["data"].nil? and !params["headers"].nil?
-      @project.fields.each do |field|
-        params["headers"].each_with_index do |header, header_index|
-          if header.to_i == field.id
-            header_to_field_map.push header_index
-          end
+    if !params["data"].nil?
+      uploader = FileUploader.new
+      sane = uploader.sanitize_data(params["data"])
+      if sane[:status]
+        data_obj = sane[:data_obj]
+        data = uploader.swap_columns(data_obj, @project)
+        @data_set.data = data
+        if @data_set.save!
+          ret = { status: :success, redirect: "/projects/#{@project.id}/data_sets/#{@data_set.id}" }
+        else
+          ret = { status: :unprocessable_entity, msg: @data_set.errors.full_messages}
         end
-      end
-
-      new_data = []
-
-      params["data"]["0"].each_with_index do |tmp, row_index|
-
-        row = {}
-
-        header_to_field_map.each do |htf, htf_index|
-          if params["data"]["#{htf}"][row_index] == ""
-            val = nil
-          else
-            val = params["data"]["#{htf}"][row_index]
-          end
-          row["#{@fields[htf].id}"] = val
-        end
-
-        new_data[row_index] = row
-
-      end
-
-      @data_set.data = new_data
-
-      if @data_set.save!
-        ret = { status: :success, redirect: "/projects/#{@project.id}/data_sets/#{@data_set.id}" }
       else
-        ret = :error
+        err_msg = sane[:status] ? dataset.errors.full_messages : sane[:msg]
+        respond_to do |format|
+          format.json {render json: {data: sane[:data_obj], msg: err_msg}, status: :unprocessable_entity}
+        end
       end
     end
 
@@ -323,7 +306,16 @@ class DataSetsController < ApplicationController
         d.project_id = project.id
         d.data = data
       end
-      if dataset.save
+
+      if @cur_user.nil? 
+        if params[:contrib_name].empty?
+          dataset.errors[:base] << "Must enter contributor name"
+        else
+          dataset.title += " - #{params[:contrib_name]}"
+        end
+      end
+
+      if dataset.errors[:base].empty? and dataset.save
         redirect_to "/projects/#{project.id}/data_sets/#{dataset.id}"
       else
         @results = params[:results]

@@ -253,8 +253,11 @@ class VisualizationsController < ApplicationController
     # create/push metadata for datasets
     i = 0
     @datasets.each do |dataset|
-      hasPics = true if dataset.media_objects.size > 0
-      metadata[i] = { name: dataset.title, user_id: dataset.user_id, dataset_id: dataset.id, timecreated: dataset.created_at, timemodified: dataset.updated_at, photos: dataset.media_objects.map {|m| m.to_hash(true)} }
+      photos = dataset.media_objects.map {|m| if(m.media_type=="image")
+                                        m.to_hash(true)
+                                       end} 
+      hasPics = true if photos.size > 0
+      metadata[i] = { name: dataset.title, user_id: dataset.user_id, dataset_id: dataset.id, timecreated: dataset.created_at, timemodified: dataset.updated_at, photos: photos}
       dataset.data.each do |row|
         unless row.class == Hash
           logger.info "Bad row in JSON data:"

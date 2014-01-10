@@ -53,19 +53,17 @@ $ ->
   helpers.confirm_delete = (objName) ->
     confirm("Are you sure you want to delete #{objName}?")
     
-  helpers.isotope_layout = (selector, colWidth = 200, colSep = 16) ->
-  
-    numCols = 6
+  helpers.isotope_layout = (selector, colWidth = 200, colSep = 16, numCols = 6, item = '.item') ->
     
     while $(selector).width() < numCols * colWidth
       numCols--
     
     $(selector).imagesLoaded ->
 
-      $('.item').width(Math.floor(($(selector).width()/numCols)-colSep))
+      $(item).width(Math.floor(($(selector).width()/numCols)-colSep))
 
       $(selector).isotope
-        itemSelector : '.item'
+        itemSelector : item
         layoutMode : 'masonry'
         resizeable: false
         masonry:

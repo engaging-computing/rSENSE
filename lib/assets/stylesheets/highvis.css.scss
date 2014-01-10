@@ -155,24 +155,6 @@ table.fixed td { overflow: hidden; }
     overflow:auto;
 }
 
-#photoTable {
-    width: 100%;
-    height: 100%;
-    overflow-y: auto;
-}
-
-.photoTable_photo{
-    height:120px;
-    width:165px;
-    padding:1px;
-    background:#fff;
-}
-
-.photoTable_openPhoto{
-    padding:1px;
-    background:#fff;
-}
-
 .novis_message{
   padding: 25px; 
   text-align: center; 
@@ -200,45 +182,26 @@ figure, figurecaption{
 
 
 #polaroid{
-  padding:20px 10px;
-  width:100%;
+  margin: 10px;
   overflow-y:scroll;
-  height: 100%;
-  img.thumb{
-    height:auto;
-    max-width:100%
-  }
-  
-  figure{
-    border: 1px solid gray;
-    width:200px;
-    float:left;
-    position:relative;
+  div.p_item
+  {
+    .caption
+    {
+     padding: 0px 10px 10px 10px; 
+    }
+    img
+    {
+      padding: 9px;
+    }
+    width: 200px !important;
+    border: 1px solid grey;
+    margin-bottom: 10px;
+    background-color: #e8e8e8;
 
-    max-height: 260px;
-    
-    margin: 10px 20px;
-    padding: 6px 8px 10px 8px; /*size of the frame*/
-    /*give the frame's background colour a gradient*/
-    background: #eee6d8; /*fallback colour for browsers that don't support gradients*/
-    background: -webkit-linear-gradient(top, #ede1c9, #fef8e2 20%, #f2ebde 60%);
-    background: -moz-linear-gradient(top, #ede1c9, #fef8e2 20%, #f2ebde 60%);
-    background: -o-linear-gradient(top, #ede1c9, #fef8e2 20%, #f2ebde 60%);
-    background: -ms-linear-gradient(top, #ede1c9, #fef8e2 20%, #f2ebde 60%);
-    background: linear-gradient(top, #ede1c9, #fef8e2 20%, #f2ebde 60%);
-    /*give the Polaroids a small drop shadow*/
-    -webkit-box-shadow: 4px 4px 8px -4px rgba(0, 0, 0, .75);
-    -moz-box-shadow: 4px 4px 8px -4px rgba(0, 0, 0, .75);
-    box-shadow: 4px 4px 8px -4px rgba(0, 0, 0, .75);
-
-    -webkit-backface-visibility:hidden; /*prevent rotated text in the caption being jagged in Chrome and Safari*/
-  } 
-  
-  figcaption{
-    font-size:1.3em;
-    color: #454f40;
-    letter-spacing: 0.09em; 
-    text-align: center;
+    -moz-box-shadow: 0 2px 3px 1px #9E9E9E;
+    -webkit-box-shadow: 0 2px 3px 1px #9E9E9E;
+    box-shadow: 0 2px 3px 1px #9E9E9E;  
   }
 }
 

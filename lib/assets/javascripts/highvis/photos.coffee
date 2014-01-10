@@ -39,7 +39,7 @@ $ ->
             @hideControls()
             
             super()
-    
+            
         #Gets called when the controls are clicked and at start
         update: ->
             #clear the old canvas
@@ -54,10 +54,10 @@ $ ->
                   tmp = data.metadata[ds].photos[pic]
                   dset = data.metadata[ds]
                   do(tmp, dset) =>
-                    figure = """<figure>
-                                <img id='pic_#{i}' src="#{tmp.tn_src}" class='thumb'/>
-                                <figurecaption>Data Set: #{dset.name}(#{dset.dataset_id})</figurecaption>
-                              </figure>"""
+                    figure = """<div class='p_item'>
+                                <img id='pic_#{i}' src="#{tmp.tn_src}" class='caroucell'/>
+                                <span class="caption">Data Set: #{dset.name}(#{dset.dataset_id})</span>
+                              </div>"""
                     ($ "#polaroid").append figure
                     ($ '#pic_'+i).click =>
                       ($ '#polaroid').append("""
@@ -75,7 +75,9 @@ $ ->
                       ($ '#target_img').on "hidden.bs.modal", ->
                         ($ '#target_img').remove()
                   i++      
-                          
+            helpers.isotope_layout("#polaroid",200,0,8,".p_item")              
+            ($ window).smartresize () ->
+              helpers.isotope_layout("#polaroid",200,0,8,".p_item")
         end: ->    
             ($ '#' + @canvas).hide()
             @unhideControls()
@@ -87,3 +89,4 @@ $ ->
         globals.photos = new Photos "photos_canvas"
     else
         globals.photos = new DisabledVis "photos_canvas"
+    
