@@ -358,7 +358,8 @@ $ ->
         end: ->
             ($ '#' + @canvas).hide()
             @heatmap = undefined
-            @mapType = @gmap.getMapTypeId()
+            if @gmap?
+              @mapType = @gmap.getMapTypeId()
             
         drawControls: ->
             super()
