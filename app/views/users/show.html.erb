@@ -6,21 +6,9 @@
         <%= image_tag Gravatar.new.url(@user), style: "border-radius: 8px", class: "gravatar_img" %>
       </div>
       <div class="col-lg-12" style="padding-top:10px;">
-        <span class="info_label" style="line-height: 30px;">First Name:</span> 
+        <span class="info_label" style="line-height: 30px;">Display Name:</span>
         <span class="full_width_edit">
-          <%= user_edit_helper 'firstname', (can_edit? @user), false %>
-        </span>
-        <br />
-        <%if can_edit? @user%>
-          <span class="info_label" style="line-height: 30px;">Last Name:</span>
-          <span class="full_width_edit">
-            <%= user_edit_helper 'lastname', (can_edit? @user), false%>
-          </span>
-          <br />
-        <%end%>
-        <span class="info_label" style="line-height: 30px;">Username:</span>
-        <span class="full_width_edit">
-          <%= user_edit_helper 'username', false, false %>
+          <%= user_edit_helper 'name', false, false %>
         </span>
         <br />
         
