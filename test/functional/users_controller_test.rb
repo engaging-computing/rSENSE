@@ -8,7 +8,7 @@ class UsersControllerTest < ActionController::TestCase
 
   test "should not get index as user" do
     get :index, {}, { user_id: @user }
-    assert_response :not_found
+    assert_response :forbidden
   end
 
   test "should get index as admin" do
@@ -37,8 +37,8 @@ class UsersControllerTest < ActionController::TestCase
 
   test "should create user" do
     assert_difference('User.count') do
-      post :create, user: { email: "john@example.com", firstname: "John", lastname: "Fertitta", 
-        username: "jfertitt", password: "iguana", password_confirmation: "iguana" }
+      post :create, user: { email: "john@example.com", name: "John F.", 
+                            password: "iguana", password_confirmation: "iguana" }
       puts flash[:debug] unless flash[:debug].nil?
     end
 
@@ -51,26 +51,9 @@ class UsersControllerTest < ActionController::TestCase
       "New user should not be validated"
   end
 
-  test "should create user with blank email" do
-    assert_difference('User.count') do
-      post :create, user: { email: "", firstname: "John", lastname: "Fertitta", 
-        username: "jfertitt", password: "iguana", password_confirmation: "iguana" }
-      puts flash[:debug] unless flash[:debug].nil?
-    end
-
-    assert_redirected_to user_path(assigns(:user))
-
-    john = User.find_by_username("jfertitt")
-
-    assert_not_nil john
-    assert_equal john.validated?, false, 
-      "New user should not be validated"
-  end
-
   test "should show errors on bad attempt to create user" do
     assert_difference('User.count', 0) do
-      post :create, user: { email: "", firstname: "John", lastname: "Fertitta", 
-        username: "jfertitt", password: "iguana", password_confirmation: "iguana1" }
+      post :create, user: { email: "", name: "John F.", password: "iguana", password_confirmation: "iguana1" }
       puts flash[:debug] unless flash[:debug].nil?
     end
 
@@ -102,8 +85,8 @@ class UsersControllerTest < ActionController::TestCase
   end
   
   test "should update user" do
-    put :update, {id: @user, user: { email: @user.email, firstname: @user.firstname, 
-      lastname: @user.lastname, username: @user.username, validated: @user.validated }}, { user_id: @user }
+    put :update, {id: @user, user: { email: @user.email, name: @user.name, 
+                                     validated: @user.validated }}, { user_id: @user }
     assert_redirected_to user_path(assigns(:user))
   end
 
@@ -139,7 +122,7 @@ class UsersControllerTest < ActionController::TestCase
     get :validate, { key: "abcd" }
     assert_response :success
 
-    captn = User.find_by_username("crunch")
+    captn = User.find(captn.id)
     assert_equal captn.validated?, true, "Validated"
   end
 
@@ -153,18 +136,8 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should send password reset email for username" do
-    post :pw_send_key, { username_or_email: 'kate' }
-    assert_response :success
-    
-    email = ActionMailer::Base.deliveries.last
-    user  = User.find_by_username('kate')
-    assert_contains user.validation_key, email.body
-    assert_not_equal user.validation_key, @user.validation_key
-  end
-
   test "should send password reset email for email" do
-    post :pw_send_key, { username_or_email: 'kcarcia@cs.uml.edu' }
+    post :pw_send_key, { email: 'kcarcia@cs.uml.edu' }
     assert_response :success
 
     email = ActionMailer::Base.deliveries.last

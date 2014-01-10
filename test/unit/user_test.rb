@@ -37,18 +37,6 @@ class UserTest < ActiveSupport::TestCase
   # ---------------------------------------------------
   # Testing with fixtures
   
-  test "first name" do
-     assert_equal "Kate", users(:kate).firstname
-  end  
-
-  test "last name" do
-     assert_equal "Carcia", users(:kate).lastname
-  end
-  
-  test "username" do
-     assert_equal "kate", users(:kate).username
-  end
- 
   test "email" do
      assert_equal "kcarcia@cs.uml.edu", users(:kate).email
   end

@@ -13,7 +13,7 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
   end
   
   test "upload media" do 
-    login("nixon", "12345")
+    login("nixon@whitehouse.gov", "12345")
     
     #Upload media to tutorial
     visit '/tutorials/1'
@@ -22,6 +22,8 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
     page.execute_script %Q{$('#upload').show()}
     find(".upload_media form").attach_file("upload", img_path)
     assert page.has_content?("nerdboy.jpg"), "File should be in list"
+    find('.media_edit').click
+    assert page.has_content?('nerdboy.jpg'), "Should have gone to edit page"
 
     #Upload media to news
     visit '/news/1'
@@ -30,7 +32,13 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
     page.execute_script %Q{$('#upload').show()}
     find(".upload_media form").attach_file("upload", img_path)
     assert page.has_content?("nerdboy.jpg"), "File should be in list"
-
+    find('.media_edit').click
+    assert page.has_content?('nerdboy.jpg'), "Should have gone to edit page"
+    visit '/news/1'
+    find('.menu_edit_link').click
+    find('.menu_delete').click
+    page.driver.browser.switch_to.alert.accept    
+    
     #Upload media to project
     visit '/projects/1'
     assert page.has_content? "Media"

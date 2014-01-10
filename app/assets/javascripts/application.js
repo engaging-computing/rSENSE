@@ -41,7 +41,8 @@
 //= require highcharts/highcharts
 //= require highcharts/modules/exporting
 //= require Hydrate
-//= require jquery.dataTables
+//= require jquery.jqGrid.src.js
+//= require grid.locale-en.js
 //= require jquery.prettyPhoto
 //= require markerclustererplus
 //= require oms
@@ -64,6 +65,7 @@
 //= require highvis/photos
 //= require highvis/runtime
 //
+//= require ckeditor/override
 //= require ckeditor/init
 //
 //= require_tree .

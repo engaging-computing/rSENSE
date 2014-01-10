@@ -13,7 +13,7 @@ class UploadDataTest < ActionDispatch::IntegrationTest
   end
   
   test "upload all filetypes" do
-    login("kate", "12345")
+    login("kcarcia@cs.uml.edu", "12345")
 
     # Add a project
     click_on "Projects"
@@ -43,6 +43,8 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     find("#datafile_form").attach_file("file",gpx_path)
     page.execute_script %Q{$('#datafile_form').submit()}
     assert page.has_content?("Match Quality")
+    all('select')[0].find(:xpath, 'option[1]').select_option
+    all('select')[1].find(:xpath, 'option[1]').select_option
     click_on "Submit"
     assert page.has_content?("Dataset #2")
     click_on "File Types"
@@ -92,6 +94,7 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     assert page.has_content? "Project:"
     find('#edit_table_save').click
     assert page.has_content?("Save Visualization")
+
     click_on "File Types"
     assert page.has_content?("Contribute Data")
     
@@ -130,6 +133,29 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     assert page.has_no_content?("Saved Vis - File Types")
     visit proj_url
     assert page.has_no_content?("Saved Vis - File Types")
+    assert page.has_content?("Contribute Data")
+
+    # Add a student key
+    fill_in "Label", with: "Starbucks"
+    fill_in "Key", with: "grande"
+    click_on "Create Key"
+
+    click_on "Logout"
+
+    # Upload File With Key
+    find("#key").set("grande")
+    click_on "Submit Key"
+
+    csv_path = Rails.root.join('test', 'CSVs', 'test.csv')
+    page.execute_script %Q{$('#datafile_form').parent().show()}
+    find("#datafile_form").attach_file("file",csv_path)
+    page.execute_script %Q{$('#datafile_form').submit()}
+    assert page.has_content?("Match Quality"), "Data wasn't submitted"
+    fill_in 'Title', with: 'Bad Data'
+    fill_in 'Your Name', with: 'Jim D.'
+    click_on "Submit"
+    assert page.has_content?("Bad Data - Jim D.")
+    click_on "File Types"
     assert page.has_content?("Contribute Data")
   end
 end

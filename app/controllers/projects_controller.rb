@@ -56,6 +56,9 @@ class ProjectsController < ApplicationController
   def show
     @project = Project.find(params[:id])
 
+    @new_contrib_key = ContribKey.new
+    @new_contrib_key.project_id = @project.id
+
     #Update view count
     session[:viewed] ||= {}
     session[:viewed][:projects] ||= {}
@@ -117,10 +120,10 @@ class ProjectsController < ApplicationController
       end
     else
       if(!params.try(:[], :project_name))
-        if @cur_user.lastname[0].downcase == 's'
-            title = "#{@cur_user.firstname} #{@cur_user.lastname[0]}' Project"
+        if @cur_user.name[-1].downcase == 's'
+            title = "#{@cur_user.name}' Project"
         else
-            title = "#{@cur_user.firstname} #{@cur_user.lastname[0]}'s Project"
+            title = "#{@cur_user.name}'s Project"
         end
         @project = Project.new({user_id: @cur_user.id, title: title})
       else
@@ -348,7 +351,7 @@ class ProjectsController < ApplicationController
     
     if params.has_key?('create_dataset')
       data_obj = uploader.retrieve_obj(params[:file])
-      data = uploader.swap_without_matches(data_obj,@project)
+      data = uploader.swap_with_field_names(data_obj,@project)
 
       dataset = DataSet.new do |d|
         d.user_id = @cur_user.id

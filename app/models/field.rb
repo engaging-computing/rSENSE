@@ -46,7 +46,6 @@ class Field < ActiveRecord::Base
     else 
       name = base
     end
-    
     name    
   end
 end

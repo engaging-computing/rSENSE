@@ -80,11 +80,4 @@ class GpxParser
       
       fname
   end
-  
-  def cleanup_temp_file(filename)
-    begin
-      FileUtils.rm(filename, force: true)
-    rescue
-    end
-  end
 end

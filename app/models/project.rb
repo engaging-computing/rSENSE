@@ -22,6 +22,7 @@ class Project < ActiveRecord::Base
   has_many :media_objects
   has_many :likes
   has_many :visualizations
+  has_many :contrib_keys
 
   has_one :view_count
 
@@ -34,7 +35,8 @@ class Project < ActiveRecord::Base
     self.content = sanitize self.content
     
     # Check to see if there is any valid content left
-    if Nokogiri.HTML(self.content).text.blank?
+    html = Nokogiri.HTML(self.content)
+    if html.text.blank? and html.at_css("img").nil?
       self.content = nil
     end
     
@@ -85,6 +87,10 @@ class Project < ActiveRecord::Base
     else
       all
     end
+  end
+
+  def has_contrib_key?
+    not contrib_keys.empty?
   end
 
   def add_view!
