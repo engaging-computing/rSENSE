@@ -11,10 +11,6 @@ $ ->
       tmp = ($ this).children()[0] 
       if ($ tmp).prop("checked")
         ($ this).button('toggle')
-    
-    # Make blocks clickable
-    ($ '.mainContent').on 'click', 'div.clickableItem', (event) ->
-      window.location = ($ event.currentTarget).children('a').attr 'href'
 
     # Setup auto-submit
     ($ '.visualizations_filter_checkbox').click ->

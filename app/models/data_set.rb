@@ -30,6 +30,13 @@ class DataSet < ActiveRecord::Base
   
   def sanitize_data_set
     self.title = sanitize self.title, tags: %w()
+    self.content = sanitize self.content
+    
+    # Check to see if there is any valid content left
+    html = Nokogiri.HTML(self.content)
+    if html.text.blank? and html.at_css("img").nil?
+      self.content = nil
+    end
   end
   
   def self.search(search, include_hidden = false)
@@ -82,6 +89,7 @@ class DataSet < ActiveRecord::Base
     tmp_file = File.new("#{tmpdir}/#{fname}", 'w+')
 
     tmp_file.write(fields.map {|f| f.name}.join(',') + "\n")
+
     self.data.each do |datapoint|
       tmp_file.write(fields.map {|f| datapoint["#{f.id}"]}.join(',') + "\n")
     end
@@ -90,4 +98,21 @@ class DataSet < ActiveRecord::Base
     
     fname
   end
+  
+  def self.get_next_name(project)
+    highest = 0
+    base = "Dataset #"
+    project.data_sets.each do |dset|
+      title = dset.title
+      if title.include? base
+        val = title.split(base)[1].to_i || nil
+        next if val == nil
+        if val.to_i > highest
+          highest = val.to_i
+        end
+      end  
+    end
+    "#{base}#{highest+1}"
+  end
+  
 end

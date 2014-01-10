@@ -101,6 +101,7 @@ $ ->
   $.fn.extend
     editTable: (options) ->
       settings =
+        page_name: "blank"
         buttons: ['close', 'add', 'save']
         bootstrapify: true
         upload:
@@ -347,7 +348,11 @@ $ ->
             tmp = for row, row_i in row_data
               row[col_i]
 
+          dname = ($ '#data_set_name').val()
+          cname = ($ '#contrib_name').val()
+
           ajax_data =
+            name: if cname == "" then dname else "#{dname} - #{cname}"
             headers: head
             data: table_data
 
@@ -355,70 +360,19 @@ $ ->
           ($ '#edit_table_save').button 'loading'
 
           $.ajax
-            url: "/projects/#{($ table).data('project-id')}"
+            url: "/projects/#{($ table).data('project-id')}.json"
             type: "GET"
-            dataType: "json"
+            dataType: "text"
             cache: false
             success: (data, textStatus, jqXHR) ->
-              local = []
-              remote = []
-              add_fields = []
-              field_deleted = false
-              dup = []
-                              
-              $(data.fields).each (i, e) ->
-                remote.push e.id
-              local = ajax_data.headers
-              
-              ($ remote).each (index, field) ->
-                if !(field in local)
-                  add_fields.push( data.fields[index] )
-                                        
-              ($ local).each (index, field) ->
-                if !(field in remote)
-                  field_deleted = true
-                  
-              if field_deleted
-                alert "The project owner deleted a field/fields while you were entering data. Unfortunately we must refresh the page (losing data) to correct the fields."
-                location.reload true
-
-              if add_fields.length == 0
-               
-                $.ajax "#{settings.upload.url}",
-                  type: "#{settings.upload.method}"
-                  dataType: 'json'
-                  data: ajax_data
-                  error: settings.upload.error
-                  success: settings.upload.success
-                  
-              else
-              
-                alert "The project owner added a field/fields while you were entering data. We are adding these new fields for you now, press save again to submit data with the new fields."
-                    
-                ($ add_fields).each (index, element) ->
-                  ($ table).find('thead tr').eq(0).append("<th data-field-type='#{settings.type(element.type)}' data-field-id='#{element.id}' data-field-name='#{element.name}'>#{element.name}</th>")
-                ($ table).find('tbody').find('tr').each (i, e) ->
-                  ($ add_fields).each () ->
-                    ($ e).append('<td></td>')
-                 
-                wrap_table(table)
-                      
-                # add buttons
-                for button in settings.buttons
-                  do (button) ->
-                    if button is "close" or button is "Close"
-                      ($ table).find('tr').eq(0).append '<th></th>'
-                      ($ table).find('tbody').children().each ->
-                        ($ @).append '<td><div class="text-center"><a class="close" style="float:none;">&times;</a></div></td>'
-                        ($ @).find('.close').click () ->
-                          remove_row(@)
-          
-                    if button is "add" or button is "Add"
-                      ($ '#edit_table_add').removeClass 'disabled'
-          
-                    if button is "save" or button is "Save"
-                      ($ '#edit_table_save').button 'reset'
-                      ($ '#edit_table_save').click submit_form
+            
+              $.ajax "#{settings.upload.url}",
+                type: "POST"
+                dataType: 'text'
+                data: ajax_data
+                error: settings.upload.error
+                success: settings.upload.success
+                
 
         # does it pass?
         table_validates = (tab) ->
@@ -511,16 +465,22 @@ $ ->
         ### SAVE TABLE ###
 
         ($ '#edit_table_save').click ->
-
-          if table_validates(table)
-            
-            ($ '#edit_table_save').unbind()
-
-            if settings.upload.ajaxify is true
-              
-              submit_form()
-
-
+               
+          if !($ '#edit_table_save').hasClass 'disabled'
+                
+            if ($ '#data_set_name').val() == "" and settings.page_name == "manualEntry"
+              ($ '.mainContent').prepend "<div class='alert alert-danger alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button><strong>An error occured: </strong> Please enter a name for your project.</div>"
             else
-              ## I guess I'm not gonna write this part because we only use ajax to submit data
-              ($ table).wrap "<form action='#{settings.upload.url}' method='#{settings.upload.method}' />"
+              
+              if table_validates(table)
+                
+                #($ '#edit_table_save').unbind()
+
+                if settings.upload.ajaxify is true
+                  
+                  submit_form()
+
+
+                else
+                  ## I guess I'm not gonna write this part because we only use ajax to submit data
+                  ($ table).wrap "<form action='#{settings.upload.url}' method='#{settings.upload.method}' />"

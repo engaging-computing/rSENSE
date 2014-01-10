@@ -51,13 +51,21 @@
 
   </div>
 
-  <div class="well" style="margin-top:10px" id="dataset_info">
+  
+  <div class="row">
+    <div class="col-md-8">
+      <div class="well" style="margin-top:10px" id="dataset_info">
 
-    <div class="full_width_edit" style="font-size:1.5em;"><%= visualization_edit_helper 'title', @visualization.owner.id == @cur_user.try(:id), make_link = false %></div>
-    
-    <%= visualization_content_helper (@visualization.owner.id == @cur_user.try(:id)) %>
-    
-  </div>
-
-
+        <div class="full_width_edit" style="font-size:1.5em;"><%= visualization_edit_helper 'title', @visualization.owner.id == @cur_user.try(:id), make_link = false %></div>
+        
+        <%= visualization_content_helper (@visualization.owner.id == @cur_user.try(:id)) %>
+        
+      </div>
+    </div>
+    <div class="col-md-4">
+      <%=render layout: "shared/box", locals: {title: 'Media', width: '12', unique_id: 'media', should_hide: false} do %>
+        <%=render "shared/media_objects_view", {type: 'visualization', object: @visualization} %>
+      <%end%>
+    </div>
+  </div>  
 </div>

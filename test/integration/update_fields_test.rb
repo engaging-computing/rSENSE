@@ -13,7 +13,7 @@ class UploadFieldsTest < ActionDispatch::IntegrationTest
   end
   
   test "edit fields" do
-    login("kate", "12345")
+    login("kcarcia@cs.uml.edu", "12345")
     click_on "Projects"
     find('#addProjectButton').click
     wait_for_id('new_name')
@@ -52,7 +52,7 @@ class UploadFieldsTest < ActionDispatch::IntegrationTest
   end
   
   test "template fields with dataset" do
-    login("kate", "12345")
+    login("kcarcia@cs.uml.edu", "12345")
     click_on "Projects"
     find('#addProjectButton').click
     wait_for_id('new_name')
@@ -76,7 +76,7 @@ class UploadFieldsTest < ActionDispatch::IntegrationTest
   end
   
   test "teplate fields without dataset" do 
-    login("kate", "12345")
+    login("kcarcia@cs.uml.edu", "12345")
     click_on "Projects"
     find('#addProjectButton').click
     wait_for_id('new_name')

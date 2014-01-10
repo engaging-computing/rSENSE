@@ -4,21 +4,16 @@ class User < ActiveRecord::Base
   
   include ActionView::Helpers::SanitizeHelper
   
-  attr_accessible :content, :email, :firstname, :lastname, :password, :password_confirmation, :username, :validated, :hidden, :bio, :last_login
+  attr_accessible :content, :email, :name, :password, :password_confirmation, :username, :validated, :hidden, :bio, :last_login
 
-  validates_uniqueness_of :email, case_sensitive: false, if: :email?
-  validates_uniqueness_of :username, case_sensitive: false
-  validates :username, format: { with: /\A\p{Alnum}*\z/, message: "can only contain letters and numbers." }
-  validates :firstname, format: {with: /\A[\p{Alpha}\p{Blank}\-\']*\z/, message: "can only contain letters, hyphens, single quotes, and spaces."}
-  validates :lastname, format: {with: /\A[\p{Alpha}\p{Blank}\-\']*\z/, message: "can only contain letters, hyphens, single quotes, and spaces."}
+  validates_uniqueness_of :email, case_sensitive: false
+  validates :name, format: {with: /\A[\p{Alpha}\p{Blank}\-\'\.]*\z/, message: "can only contain letters, hyphens, single quotes, periods, and spaces."}
   
-  validates :firstname, length: {maximum: 32}
-  validates :lastname, length: {maximum: 32}
   validates :username, length: {maximum: 32}
  
-  validates :email, format: {with: /\@.*\./}, allow_blank: true
+  validates :email, format: {with: /\@.*\./}
 
-  validates_presence_of :username, :firstname, :lastname
+  validates_presence_of :name, :email
 
   has_secure_password
 
@@ -33,30 +28,22 @@ class User < ActiveRecord::Base
   has_many :likes
   
   def sanitize_user
-  
-    self.firstname = sanitize self.firstname, tags: %w()
-    self.lastname = sanitize self.lastname, tags: %w()
+    self.name = sanitize self.name, tags: %w()
     self.username = sanitize self.username, tags: %w()
     
-    self.bio = sanitize self.bio, tags: %w()
+    self.bio = sanitize self.bio
     
     # Check to see if there is any valid content left
-    if Nokogiri.HTML(self.bio).text.blank?
+    # Check to see if there is any valid content left
+    html = Nokogiri.HTML(self.bio)
+    if html.text.blank? and html.at_css("img").nil?
       self.bio = nil
     end
   end
   
-  def to_param
-    self.username
-  end
-
-  def name
-    firstname + " " + lastname[0] + "."
-  end
-
   def self.search(search, include_hidden = false)
     res = if search
-        where('lower(firstname) LIKE lower(?) OR lower(lastname) LIKE lower(?) OR lower(username) LIKE lower(?)', "%#{search}%", "%#{search}%", "%#{search}%")
+        where('lower(name) LIKE lower(?) OR lower(username) LIKE lower(?)', "%#{search}%", "%#{search}%")
     else
         all
     end

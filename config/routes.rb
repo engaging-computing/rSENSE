@@ -46,11 +46,14 @@ Rsense::Application.routes.draw do
 
   #Routes for uploading data
   get "/projects/:id/manualEntry" => "data_sets#manualEntry"
+  post "/projects/:id/jsonDataUpload" => "data_sets#jsonDataUpload"
   post "/projects/:id/manualUpload" => "data_sets#manualUpload"
-  get "/data_sets/:id/edit" => "data_sets#edit"
-  put "/data_sets/:id/edit" => "data_sets#edit"
   get "/projects/:id/export/data_sets/*datasets" => "data_sets#export"
   get "/projects/:id/export" => "data_sets#export"
+
+  get "/data_sets/:id/edit" => "data_sets#edit"
+  put "/data_sets/:id/edit" => "data_sets#edit"
+  post "/data_sets/:id/edit" => "data_sets#edit"
 
   #Routes for displaying data
   get "/projects/:id/data_sets/*datasets" => "visualizations#displayVis"
@@ -84,4 +87,7 @@ Rsense::Application.routes.draw do
   post "/projects/:id/updateLikedStatus" => "projects#updateLikedStatus"
 
   post "/projects/:id/updateFields" => "fields#updateFields"
+
+  resources :contrib_keys, only: [:create, :destroy]
+  post "/contrib_keys/enter" => 'contrib_keys#enter'
 end

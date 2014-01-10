@@ -2,7 +2,8 @@ class DataSetsController < ApplicationController
   include ApplicationHelper
 
   # Allow for export without authentication
-  skip_before_filter :authorize, :only => [:export]
+  skip_before_filter :authorize, :only => [:export, :manualEntry, :manualUpload, :update, :show, :dataFileUpload, :field_matching]
+  before_filter :authorize_allow_key, :only => [:manualEntry, :manualUpload, :update, :show, :dataFileUpload, :field_matching]
 
   # GET /data_sets/1
   # GET /data_sets/1.json
@@ -78,7 +79,7 @@ class DataSetsController < ApplicationController
     end
 
   end
-  
+
   # POST /data_sets
   # POST /data_sets.json
   def create
@@ -134,9 +135,9 @@ class DataSetsController < ApplicationController
       @data_set.media_objects.each do |m|
         m.destroy
       end
-      
+
       respond_to do |format|
-        if @data_set.destroy     
+        if @data_set.destroy
           format.html { redirect_to root_path, notice: "Data set removed" }
           format.json { render json: {}, status: :ok }
         else
@@ -146,7 +147,7 @@ class DataSetsController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { redirect_to 'public/401.html' }
+        format.html { redirect_to 'public/403.html', status: :forbidden}
         format.json { render json: {}, status: :forbidden }
       end
     end
@@ -157,33 +158,64 @@ class DataSetsController < ApplicationController
     @project = Project.find(params[:id])
   end
 
+  # POST /projects/1/jsonDataUpload
+  # {data => { "20"=>[1,2,3,4,5], "21"=>[6,7,8,9,10], "22"=>['v','w','x','y','z'] }}
+  def jsonDataUpload
+    project = Project.find(params['id'])
+
+    uploader = FileUploader.new
+    sane = uploader.sanitize_data(params[:data])
+
+    if sane[:status]
+      data_obj = sane[:data_obj]
+      data = uploader.swap_columns(data_obj, project)
+      dataset = DataSet.new do |d|
+        d.user_id = @cur_user.id
+        d.title = params[:title] || "#{@cur_user.name}s Project"
+        d.project_id = project.id
+        d.data = data
+      end
+      if dataset.save
+        respond_to do |format|
+          format.json {render json: dataset.to_hash(false), status: :ok}
+        end
+      end
+    else
+      err_msg = sane[:status] ? dataset.errors.full_messages : sane[:msg]
+      respond_to do |format|
+        format.json {render json: {data: sane[:data_obj], msg: err_msg}, status: :unprocessable_entity}
+      end
+    end
+  end
+
   # POST /projects/1/manualUpload
+  #{headers => [20,21,22], data => { "0"=>[1,2,3,4,5],"1"=>[6,7,8,9,10], "2"=>['v','w','x','y','z'] }}
   def manualUpload
 
     ############ Sanity Checks ############
     errors = []
     sane = true
-    
+
     if params[:data].nil?
       errors.push "'data' cannot be nil."
       sane = false
     end
-    
+
     if params[:headers].nil?
       errors.push "'headers' cannot be nil."
       sane = false
     end
-    
+
     if params[:id].nil?
       errors.push "'id' cannot be nil."
       sane = false
     end
-    
+
     if sane && !(params[:data].length == params[:headers].length)
       errors.push "Number of data columns (#{params[:data].length}) does not match number of headers (#{params[:headers].length})."
       sane  = false
     end
-    
+
     if !sane
       #insane in the membrane
       respond_to do |format|
@@ -192,15 +224,15 @@ class DataSetsController < ApplicationController
       return
     end
     #######################################
-    
+
     @project = Project.find(params[:id])
     @fields = @project.fields
     header_to_field_map = {}
     success = false
     defaultName = ""
-    
+
     if !params[:name]
-      defaultName  = "Dataset ##{(DataSet.where(project_id: params[:id]).to_a.count + 1).to_s}"
+      defaultName  = DataSet.get_next_name(@project)
     else
       defaultName = params["name"]
     end
@@ -213,7 +245,7 @@ class DataSetsController < ApplicationController
         end
       end
     end
-    
+
     if header_to_field_map.count != @fields.count
       #headers dont match... womp womp wahhhhh
       errors.push "Number of headers (#{header_to_field_map.count}) does not match the number of fields (#{@fields.count})"
@@ -224,7 +256,7 @@ class DataSetsController < ApplicationController
       end
       return
     end
-    
+
     # Format data
     new_data = []
 
@@ -246,7 +278,9 @@ class DataSetsController < ApplicationController
 
     end
 
-    @data_set = DataSet.new(:user_id => @cur_user.id, :project_id => @project.id, 
+    owner = @cur_user.try(:id) ? @cur_user.id : @project.owner.id
+
+    @data_set = DataSet.new(:user_id => owner, :project_id => @project.id,
                                :title => defaultName, data: new_data)
 
     followURL = "/projects/#{@project.id}/data_sets/#{@data_set.id}"
@@ -265,9 +299,9 @@ class DataSetsController < ApplicationController
   def export
     require 'uri'
     require 'tempfile'
-    
+
     zip_file = Project.find(params[:id]).export_data_sets(params[:datasets])
-    
+
     respond_to do |format|
       format.html { send_file zip_file, :type => 'file/zip', :x_sendfile => true }
     end
@@ -279,24 +313,33 @@ class DataSetsController < ApplicationController
     project = Project.find(params[:pid])
     uploader = FileUploader.new
     data_obj = uploader.retrieve_obj(params[:file])
-    sane = uploader.sanitize_data(data_obj, project, params[:matches])
+    sane = uploader.sanitize_data(data_obj, params[:matches])
     if sane[:status]
       data_obj = sane[:data_obj]
-      data = uploader.swap_columns(data_obj, project, params[:matches])
+      data = uploader.swap_columns(data_obj, project)
       dataset = DataSet.new do |d|
-        d.user_id = @cur_user.id
+        d.user_id = @cur_user.try(:id) || project.owner.id
         d.title = params[:title]
         d.project_id = project.id
         d.data = data
       end
-      if dataset.save
+
+      if @cur_user.nil? 
+        if params[:contrib_name].empty?
+          dataset.errors[:base] << "Must enter contributor name"
+        else
+          dataset.title += " - #{params[:contrib_name]}"
+        end
+      end
+
+      if dataset.errors[:base].empty? and dataset.save
         redirect_to "/projects/#{project.id}/data_sets/#{dataset.id}"
       else
         @results = params[:results]
         @default_name = params[:title]
         respond_to do |format|
           flash[:error] = dataset.errors.full_messages()
-          format.html {render action: "uploadCSV2"}
+          format.html {render action: "dataFileUpload"}
         end
       end
     else
@@ -306,18 +349,18 @@ class DataSetsController < ApplicationController
       end
     end
   end
-  
+
   # POST /data_sets/uploadCSV2
   def dataFileUpload
     project = Project.find(params[:pid])
-    
+
     begin
       uploader = FileUploader.new
       data_obj = uploader.generateObject(params[:file])
       @results = uploader.match_headers(project, data_obj)
-      
-      @default_name = "Dataset ##{ (DataSet.where(project_id: params[:pid]).to_a.count + 1).to_s}"
-    
+
+      @default_name = DataSet.get_next_name(project)
+
       respond_to do |format|
         format.html
       end

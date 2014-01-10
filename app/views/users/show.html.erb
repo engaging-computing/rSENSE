@@ -23,8 +23,14 @@
           <%= user_edit_helper 'username', false, false %>
         </span>
         <br />
-
+        
         <% if @cur_user.admin? or @cur_user.id == @user.id %>
+          <span class="info_label" style="line-height: 30px;">Email:</span>
+          <span class="full_width_edit">
+            <%= user_edit_helper 'email', false, false %>
+          </span>
+          <br />
+        
           <p><%= link_to "Change Email or Password", 
             edit_user_path(@user) %></p>
         <% end %>
@@ -45,12 +51,12 @@
   </div> 
  
   <div class="col-lg-8">
-    <%= form_tag users_path, method: 'get', id:'contribution_search', name: @user.username do%>
+    <%= form_tag users_path, method: 'get', id: 'contribution_search', "data-user-id" => @user.id do%>
       <ul class="nav nav-tabs" id="user_filter">
-        <li class="active"><a href="#">Liked Projects</a></li>
-        <li><a href="#">My Projects</a></li>
-        <li><a href="#">Data Sets</a></li>
-        <li><a href="#">Visualizations</a></li>
+        <li class="active" title="Search through projects liked by <%=@user.name%>"><a href="#">Liked Projects</a></li>
+        <li><a href="#" title="Search through <%=@user.name%>'s projects">My Projects</a></li>
+        <li><a href="#" title="Search through <%=@user.name%>'s data sets">Data Sets</a></li>
+        <li><a href="#" title="Search through <%=@user.name%>'s visualizations">Visualizations</a></li>
       </ul>
       
       <div id="contributions_content">

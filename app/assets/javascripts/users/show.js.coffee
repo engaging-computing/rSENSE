@@ -16,7 +16,7 @@ $ ->
       page_size: 3
     
     $.ajax
-      url: "/users/#{($ '#contribution_search').attr('name')}/contributions"
+      url: "/users/#{($ '#contribution_search').attr('data-user-id')}/contributions"
       data: recent_three_ajax_params
       dataType: "html"
       success: (three_html) ->
@@ -43,7 +43,7 @@ $ ->
         globals.arrowsClicked = false;
         
         $.ajax
-          url: "/users/#{($ '#contribution_search').attr('name')}/contributions"
+          url: "/users/#{($ '#contribution_search').attr('data-user-id')}/contributions"
           data: filter_ajax_params
           dataType: "html"
           success: (filtered_html) ->
@@ -77,7 +77,7 @@ $ ->
       globals.arrowsClicked = false;
                 
       $.ajax
-        url: "/users/#{($ '#contribution_search').attr('name')}/contributions"
+        url: "/users/#{($ '#contribution_search').attr('data-user-id')}/contributions"
         data: ajax_params
         dataType: "html"
         success: (dat) ->

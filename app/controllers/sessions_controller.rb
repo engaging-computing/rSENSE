@@ -16,13 +16,9 @@ class SessionsController < ApplicationController
   
   def create
     
-    login_name = params[:username_or_email].downcase
+    login_email = params[:email].downcase
     
-    @user = User.where("lower(email) = ?", login_name).first
-      
-    if !@user
-      @user = User.where("lower(username) = ?", login_name).first
-    end
+    @user = User.where("lower(email) = ?", login_email).first
     
     if @user and @user.authenticate(params[:password])
       session[:user_id] = @user.id
@@ -30,11 +26,11 @@ class SessionsController < ApplicationController
 
       respond_to do |format|
         format.html { redirect_to session[:redirect_to]}
-        format.json { render json: {authenticity_token: form_authenticity_token}, status: :ok }
+        format.json { render json: {authenticity_token: form_authenticity_token, user: @user.to_hash(false)}, status: :ok }
       end
     else
-      flash.now[:error] = "The entered username/email and password do not match"
-      flash.now[:username_or_email] = params[:username_or_email]
+      flash.now[:error] = "The entered email and password do not match"
+      flash.now[:email] = params[:email]
       respond_to do |format|
         format.html { render action: "new" }
         format.json { render json: {}, status: :unauthorized }
