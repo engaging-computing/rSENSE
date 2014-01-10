@@ -62,7 +62,8 @@ class DataSet < ActiveRecord::Base
       path: UrlGenerator.new.data_set_path(self),
       createdAt: self.created_at.strftime("%B %d, %Y"),
       fieldCount: self.project.fields.length,
-      datapointCount: data.length
+      datapointCount: data.length,
+      displayURL: "/projects/#{self.project.id}/data_sets/#{self.id}"
     }
     
     if recurse
