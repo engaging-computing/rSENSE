@@ -11,7 +11,7 @@ class ProjectsController < ApplicationController
     @params = params
     
     #Main List
-    if !params[:sort].nil?
+    if !params[:sort].nil? and ["like_count", "VIEWS", "created_at", "updated_at"].include? params[:sort]
       sort = params[:sort]
     else
       sort = "updated_at"
@@ -38,8 +38,6 @@ class ProjectsController < ApplicationController
     
     if sort == "VIEWS"
       @projects = @projects.includes(:view_count).order("view_counts.count #{order}")
-    elsif sort == "like_count"
-      @projects = @projects.includes(:likes).order("likes.count #{order}")
     else
       @projects = @projects.order("#{sort} #{order}")
     end
@@ -75,9 +73,6 @@ class ProjectsController < ApplicationController
     if(!@project.cloned_from.nil?)
       @cloned_project = Project.find(@project.cloned_from)
     end
-
-    #Get number of likes
-    @likes = @project.likes.count
 
     @liked_by_cur_user = false
     if(Like.find_by_user_id_and_project_id(@cur_user,@project.id))
@@ -240,7 +235,6 @@ class ProjectsController < ApplicationController
     if(like)
       if Like.destroy(like.id)    
         count = Project.find(params[:id]).likes.count
-        Project.find(params[:id]).update_attributes(:like_count => count)
         respond_to do |format|
           format.json { render json: {update: count}, status: :ok }
         end
@@ -253,7 +247,6 @@ class ProjectsController < ApplicationController
     else
       if Like.create({user_id:@cur_user.id,project_id:params[:id]})
         count = Project.find(params[:id]).likes.count
-        Project.find(params[:id]).update_attributes(:like_count => count)
         respond_to do |format|
           format.json { render json: {update: count}, status: :ok }
         end
