@@ -162,9 +162,20 @@ input[type="checkbox"]
       width:100%;
       margin-top:10px;
       
-      div
+      div:nth-child(1)
       {
         display:table-cell;
+        text-align: left;
+      }
+      div:nth-child(2)
+      {
+        display:table-cell;
+        text-align: center;
+      }
+      div:nth-child(3)
+      {
+        display:table-cell;
+        text-align: right;
       }
     }
   }
