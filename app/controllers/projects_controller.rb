@@ -38,6 +38,8 @@ class ProjectsController < ApplicationController
     
     if sort == "VIEWS"
       @projects = @projects.includes(:view_count).order("view_counts.count #{order}")
+    elsif sort == "like_count"
+      @projects = @projects.includes(:likes).order("likes.count #{order}")
     else
       @projects = @projects.order("#{sort} #{order}")
     end
