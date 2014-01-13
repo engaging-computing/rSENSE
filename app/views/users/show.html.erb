@@ -3,7 +3,7 @@
     
     <div class="row well" style="margin: 19px;">
       <div class="col-lg-12 center">
-        <%= image_tag Gravatar.new.url(@user), style: "border-radius: 8px", class: "gravatar_img" %>
+        <%= image_tag Gravatar.new.url(@user), style: "border-radius: 3px", class: "gravatar_img" %>
       </div>
       <div class="col-lg-12" style="padding-top:10px;">
         <span class="info_label" style="line-height: 30px;">Display Name:</span>
@@ -14,7 +14,7 @@
         
         <% if @cur_user.admin? or @cur_user.id == @user.id %>
           <span class="info_label" style="line-height: 30px;">Email:</span>
-          <span class="full_width_edit">
+          <span class="full_width_edit" style="">
             <%= user_edit_helper 'email', false, false %>
           </span>
           <br />
