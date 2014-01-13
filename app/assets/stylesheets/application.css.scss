@@ -124,7 +124,6 @@ div.info_text
 .full_width_edit div.info_text
 {
   white-space: nowrap;
-  overflow-x: hidden;
   text-overflow: ellipsis;
   
   max-width: 90%;
@@ -315,8 +314,10 @@ form
 {
   p
   {
+    color:#5c5c5c;
     font-size: .9em;
-    margin-bottom: 0px;
+    padding-bottom:10px;
+    line-height:1.6em;
   }
   
   position:absolute;
