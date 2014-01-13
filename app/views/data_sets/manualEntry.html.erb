@@ -26,7 +26,7 @@
         <thead>
           <tr>
           <% for field in @project.fields %>
-            <th data-field-type="<%= get_field_name(field.field_type) %>" data-field-id="<%= field.id %>" data-field-name="<%= field.name %>" ><%= field.name %>
+            <th data-field-type="<%= get_field_name(field.field_type) %>" data-field-id="<%= field.id %>" data-field-restrictions="<%= field.restrictions %>" data-field-name="<%= field.name %>" ><%= field.name %>
             <% if field.unit != "" %>
               (<%=field.unit%>)
             <% end %></th>
@@ -35,11 +35,6 @@
         </thead>
   
         <tbody>
-          <tr>
-          <% @project.fields.length.times do %>
-            <td></td>
-          <% end %>
-          </tr>
         </tbody>
       </table>
     </div>

@@ -157,6 +157,11 @@ $ ->
         lon_cols = []
         text_cols = []
         time_cols = []
+        
+        restrictions = []
+        
+        ($ table).find('th').each () ->
+          restrictions.push eval( ($ @).attr 'data-field-restrictions' )
 
         #Enter events to add new row or go to begining of next row.
         ($ @).on 'keypress', 'input', (event) ->
@@ -255,7 +260,13 @@ $ ->
           new_row = "<tr class='new_row'>"
 
           ($ tab).find('th:not(:last-child)').each (index) ->
-            new_row += "<td><div class='text-center'><input type='text' class=' form-control'/></div></td>"
+            if restrictions[index] == undefined
+              new_row += "<td><div class='text-center'><input type='text' class=' form-control'/></div></td>"
+            else
+              new_row += "<td><div clastables='text-center'><select class='form-control'><option>Select One</option>"
+              ($ restrictions[index]).each (r_index) ->
+                new_row += "<option value='#{restrictions[index][r_index]}'>#{restrictions[index][r_index]}</option>"
+              new_row += "</select></div></td>"
 
           new_row += "<td><div class='text-center'><a class='close' style='float:none;'>&times;</a></div></td></tr>"
 
@@ -288,6 +299,8 @@ $ ->
 
           # remove token
           ($ '.new_row').removeClass('new_row')
+          
+          window.onload = ( -> ($ '#edit_table_add').click() )
 
         # strip table for upload
         strip_table = (tab) ->
@@ -307,9 +320,11 @@ $ ->
           ($ tab).find('th').each ->
             ($ @).children().wrap "<div class='text-center' />"
 
-          ($ tab).find('td').not(':has(a.close)').each ->
-            ($ @).html "<input type='text' class=' form-control' value='#{($ @).text()}' />"
-            ($ @).children().wrap "<div class='text-center' />"
+          ($ tab).find('tr').slice(1).each (row_index, row) ->
+            ($ row).find('td').not(':has(a.close)').each (col_index, col) ->
+              if restrictions[col_index] == undefined
+                ($ @).html "<input type='text' class=' form-control' value='#{($ @).text()}' />"
+                ($ @).children().wrap "<div class='text-center' />"
 
           ($ tab).find('tr').each ->
             add_validators ($ @)
