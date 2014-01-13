@@ -32,6 +32,10 @@ $ ->
     class window.Table extends BaseVis
         constructor: (@canvas) -> 
 
+        nullFormatter = (cellvalue, options, rowObject) ->
+            cellvalue = "" if isNaN(cellvalue)
+            cellvalue;
+
         start: ->
             #Make table visible? (or something)
             ($ '#' + @canvas).show()
@@ -119,7 +123,9 @@ $ ->
             for column, col_index in @table.jqGrid('getGridParam','colModel')
                 if (data.fields[col_index].typeID is data.types.TEXT)
                     column.sorttype = 'text';
-                else column.sorttype = 'number';
+                else 
+                    column.sorttype = 'number';
+                    column.formatter = nullFormatter;
 
             #Set the sort parameters
             @table.sortGrid(@sortName, true, @sortType);
