@@ -118,7 +118,7 @@ class Project < ActiveRecord::Base
       path: UrlGenerator.new.project_path(self),
       hidden: self.hidden,
       featured: self.featured,
-      likeCount: self.like_count,
+      likeCount: self.likes.count,
       content: self.content,
       timeAgoInWords: time_ago_in_words(self.created_at),
       createdAt: self.created_at.strftime("%B %d, %Y"),
