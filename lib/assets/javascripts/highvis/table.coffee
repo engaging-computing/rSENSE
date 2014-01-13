@@ -33,7 +33,7 @@ $ ->
         constructor: (@canvas) -> 
 
         nullFormatter = (cellvalue, options, rowObject) ->
-            cellvalue = "" if cellvalue is undefined or cellvalue.toLowerCase() is 'null'
+            cellvalue = "" if isNaN(cellvalue)
             cellvalue;
 
         start: ->
