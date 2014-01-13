@@ -24,3 +24,18 @@ namespace :test do
     system("DB=default rake db:preprep")
   end
 end
+
+task :dump do
+  system("rake db:data:dump")
+  system("mv db/data.yml public/media")
+  system("tar czvf /tmp/dump.tar.gz public/media")
+  system("mv /tmp/dump.tar.gz public")
+end
+
+task :load do
+  system("mkdir /tmp/#{$$}")
+  system("mv public/media /tmp/#{$$}")
+  system("tar xzvf public/dump.tar.gz")
+  system("mv public/media/data.yml db")
+  system("rake db:data:load")
+end
