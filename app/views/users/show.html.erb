@@ -14,7 +14,7 @@
         
         <% if @cur_user.admin? or @cur_user.id == @user.id %>
           <span class="info_label" style="line-height: 30px;">Email:</span>
-          <span class="full_width_edit" style="">
+          <span class="full_width_edit">
             <%= user_edit_helper 'email', false, false %>
           </span>
           <br />
