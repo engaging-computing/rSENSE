@@ -337,15 +337,16 @@ $ ->
 
           # collect data and ship it off via AJAX
           table_data = {}
-          
           ($ table).find('th').each ->
             table_data[($ @).data('field-id')] = []
-
-          ($ table).find('tr').has('td').each ->
-
-            ($ @).children().each ->
-              id =  ($ @).closest('table').find("th:nth-child(#{($ @).index()+1})").data('field-id')
-              table_data[id].push(($ @).text())
+          ($ table).find('tr').slice(1).has('td').each ->
+            ($ @).children().each (index) ->
+              if restrictions[index] == undefined
+                parent_id = ($ table).find("th:nth-child(#{index+1})").data('field-id')
+                table_data[parent_id].push(($ @).text())
+              else
+                parent_id = ($ table).find("th:nth-child(#{index+1})").data('field-id')
+                table_data[parent_id].push(($ @).find('option:selected').val())
               
 
           dname = ($ '#data_set_name').val()
