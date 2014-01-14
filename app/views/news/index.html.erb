@@ -20,7 +20,7 @@
           <div style="float:left;clear:left;width:30%;height:198px;margin-right:15px;"><a href="<%=news_path n%>"><div class="news_featured_image_2" style=<%= "background-image:url(" + MediaObject.find(n.featured_media_id).src + ")"%>></div></a></div>
         <%end%>
         <div style="padding:7px;height:184px">
-          <span class="item_title"><%= n.title %></span><br/>
+          <span class="news_page_title"><%= n.title %></span><br/>
           <span style="font-size:0.8em">Written on <%=n.created_at.strftime("%B %d, %Y")%></span><br/><br/>
           <%= n.summary %><br/><br/>
           <%= link_to "Read More", news_path(n) %>
