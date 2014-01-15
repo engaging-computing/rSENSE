@@ -160,17 +160,20 @@ class FileUploader
       field = Field.find(key)
       type = get_field_name(field.field_type)
       value.each_with_index do |dp,index|
-        next if dp.nil? or (dp.strip() == "")
+        next if dp.nil? or (dp.to_s.strip() == "")
         case type
         when "Number"
-          return {status: false, msg: "\"#{field.name}\" should contain only numbers, found \"#{dp}\""} if !dp.valid_float?
+          if !valid_float?(dp)
+            errMsg = "'#{field.name}' should contain only numbers, found '#{dp}'"
+            return {status: false, msg: errMsg} 
+          end
         when "Latitude"
-          if dp.valid_float?
+          if valid_float?(dp)
             next if ((Float dp).abs <= 90)
           end
           return {status: false, msg: "Latitude contains invalid data"}
         when "Longitude"
-          if dp.valid_float?
+          if valid_float?(dp)
             next if ((Float dp).abs <= 180)
           end
           return {status: false, msg: "Longiude contains invalid data"}
@@ -320,10 +323,14 @@ class FileUploader
     
   end
   
-end
-
-class String
-  def valid_float?
-    true if Float self rescue false
+  def valid_float?(num)
+    begin
+      Float(num)
+      true
+    rescue
+      false
+    end
   end
+    
+  
 end
