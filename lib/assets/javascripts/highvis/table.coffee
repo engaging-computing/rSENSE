@@ -35,7 +35,7 @@ $ ->
         #Removes nulls from the table
         nullFormatter = (cellvalue, options, rowObject) ->
             cellvalue = "" if isNaN(cellvalue) or cellvalue is null
-            cellvalue;
+            cellvalue
 
         #Formats tables dates properly
         dateFormatter = (cellvalue, options, rowObject) ->
@@ -57,8 +57,9 @@ $ ->
             #Set the grid to the correct size so the animation is smooth
             newWidth = containerSize - (hiderSize + controlSize + 10)
             newHeight = ($ '#viscontainer').height() - ($ '#visTabList').outerHeight()
-            if @table
-                @table.setGridWidth(newWidth).setGridHeight(newHeight - 75)
+            if ($ "#data_table")?
+                ($ '#table_canvas').height(newHeight - 5)
+                ($ "#data_table").setGridWidth(newWidth).setGridHeight(newHeight - 75)
 
         start: ->
             #Make table visible? (or something)
@@ -120,7 +121,7 @@ $ ->
                 colNames: headers,
                 colModel: columns,
                 datatype: 'local',
-                height: ($ '#' + @canvas).height() - 75,
+                height: ($ '#' + @canvas).height() - 71,
                 width: ($ '#' + @canvas).width(),
                 gridview: true,
                 caption: "",
@@ -134,14 +135,14 @@ $ ->
                 pager: '#toolbar_bottom'
             })
 
-            #Add a refresh button and enable the search bar
-            @table.jqGrid('navGrid','#toolbar_bottom',{del:false,add:false,edit:false,search:false});
-            @table.jqGrid('filterToolbar', {stringResult: true, searchOnEnter: false, defaultSearch:'cn'});
-
             #Hide the combined datasets column
             combined_col = @table.jqGrid('getGridParam','colModel')[data.COMBINED_FIELD]
             @table.hideCol(combined_col.name)
-            @table.setGridWidth(($ '#table_canvas').width())
+            ($ '#data_table').setGridWidth(($ '#' + @canvas).width())
+
+            #Add a refresh button and enable the search bar
+            @table.jqGrid('navGrid','#toolbar_bottom',{del:false,add:false,edit:false,search:false});
+            @table.jqGrid('filterToolbar', {stringResult: true, searchOnEnter: false, defaultSearch:'cn'});
 
             #Set the sort parameters
             @table.sortGrid(@sortName, true, @sortType);
@@ -149,8 +150,10 @@ $ ->
             #Restore the search filters
             if @searchParams?
                 for column in @searchParams
-                    inputId = "input#gs_" + column.field
-                    ($ inputId).val(column.data)
+                    console.log(@searchParams)
+                    inputId = "#gs_" + column.field
+                    console.log(column.field)
+                    $(inputId).val(column.data)
 
             @table[0].triggerToolbar()
 
@@ -167,13 +170,13 @@ $ ->
 
             #Save the table filters
             if @table.getGridParam('postData').filters?
-                @searchParams = jQuery.parseJSON(@table.getGridParam('postData').filters).rules;
-
+                @searchParams = jQuery.parseJSON(@table.getGridParam('postData').filters).rules
 
         resize: (newWidth, newHeight, aniLength) ->
           foo = () ->
             #In the case that this was called by the hide button, this gets called a second time
             #needlessly, but doesn't effect the overall performance
+            ($ '#table_canvas').height(newHeight - 5)
             ($ '#data_table').setGridWidth(newWidth).setGridHeight(newHeight - 75)
 
           setTimeout foo, aniLength
