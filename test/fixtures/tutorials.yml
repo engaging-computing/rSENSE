@@ -2,19 +2,22 @@
 
 one:
   content: MyText
-  title: MyString
+  title: Tutorial One
   featured: false
-  user: kate
+  user: nixon
+  hidden: false
 
 two:
   content: MyText
-  title: MyString
+  title: Tutorial Two
   featured: false
-  user: kate
+  user: nixon
+  hidden: false
   
 tutorial_three:
   content: MyText
-  title: MyString
+  title: Tutorial Three
   featured: false
-  user: kate
+  user: nixon
   id: 1
+  hidden: false

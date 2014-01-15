@@ -16,7 +16,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:users)
   end
-
+  
   test "should get index paged" do
     get :index, {format: 'json', per_page: 1}, { user_id: @admin}
     assert_response :success
@@ -28,6 +28,11 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :success
     body = JSON.parse(response.body)
     assert Date.parse(body[0]['createdAt']) < Date.parse(body[1]['createdAt']), "Was not in ascending order"
+  end
+  
+  test "should get index searched" do
+    get :index, {format: 'json', search: "kate", sort:'ASC'}, { user_id: @admin}
+    assert_response :success
   end
   
   test "should get new" do
@@ -68,6 +73,16 @@ class UsersControllerTest < ActionController::TestCase
     get :show, { id: @user }, { user_id: @user }
     assert_response :success
   end
+
+  test "should show user with contributions" do 
+    get :show, {format: 'json', id: @user, recur: "true"}, { user_id: @user }
+    body = JSON.parse(response.body)
+    assert body.has_key?("visualizations"), "Recur should show visualizations"
+    assert body.has_key?("dataSets"), "Recur should show dataSets"
+    assert body.has_key?("mediaObjects"), "Recur should show mediaObjects"
+    assert body.has_key?("projects"), "Recur should show projects"
+    assert_response :success
+  end
   
   test "should not show user (html)" do
     get :show, {id: 'GreenGoblin'}, {user_id: @admin}
@@ -78,7 +93,7 @@ class UsersControllerTest < ActionController::TestCase
     get :show, {format: 'json', id: 'GreenGoblin'}, {user_id: @admin}
     assert_response :unprocessable_entity
   end
-
+  
   test "should get edit" do
     get :edit, { id: @user }, { user_id: @user }
     assert_response :success
@@ -114,7 +129,18 @@ class UsersControllerTest < ActionController::TestCase
     get :contributions, { id: @user }, { user_id: @user }
     assert_response :success
   end
-
+  
+  test "should get contributions with filters" do 
+    get :contributions, { id: @user, filters: "Liked Projects"}, { user_id: @user }
+    assert_response :success
+    get :contributions, { id: @user, filters: "My Projects"}, { user_id: @user }
+    assert_response :success
+    get :contributions, { id: @user, filters: "Data Sets"}, { user_id: @user }
+    assert_response :success
+    get :contributions, { id: @user, filters: "Visualizations"}, { user_id: @user }
+    assert_response :success
+  end
+  
   test "should validate user" do
     captn = users(:crunch)
     assert_equal captn.validated?, false, "Not validated"
