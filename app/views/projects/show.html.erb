@@ -11,7 +11,7 @@
       <!-- project title -->
       <div class="col-md-9" style="margin-left:0px">
         <div class="project_info_box" >
-          <span id="title_span" class="word-break" style="font-size:1.5em"><%= project_edit_menu_helper false%></span><br>
+          <span id="title_span" class="word-break" style="font-size:1.5em"><%= project_edit_helper "title", (can_edit? @project), false%></span><br>
           <span class="info_label" style="font-size:1.1em">by: <%= link_to @project.owner.name, user_path(@project.owner) %> (<%=time_ago_in_words(@project.created_at)%> ago)</span><br/>
           <div id="notices">
             <span id="lock_notice" <%if !@project.lock%>style="display:none"<%end%>><i class="icon-lock"> This project is locked</i></span> 
@@ -39,6 +39,14 @@
                 <i class="fa fa-print"></i> Print
               </button>
             </span>
+            <% if can_edit? @project %>
+              <span style="padding-left: 1em">
+                <a href = "/projects/<%=@project.id%>/edit">
+                <button type="button" class="btn btn-primary" id="print">
+                  <i class="fa fa-cog"></i> Edit
+                </button>
+              </span>
+            <% end %>
           </div>
         </div>
       </div>
