@@ -19,9 +19,10 @@ gem 'therubyracer', :platforms => :ruby
 # Integration testing stuff
 group :development, :test do
   gem "capybara"
-  gem "selenium-webdriver", '~> 2.35.1'
+  gem "selenium-webdriver"
   gem "launchy"
   gem "simplecov"
+  gem "turn"
 end
 
 # Jquery stuff
