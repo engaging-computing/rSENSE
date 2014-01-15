@@ -41,17 +41,11 @@ class User < ActiveRecord::Base
     end
   end
   
-  def self.search(search, include_hidden = false)
+  def self.search(search)
     res = if search
         where('lower(name) LIKE lower(?) OR lower(username) LIKE lower(?)', "%#{search}%", "%#{search}%")
     else
         all
-    end
-    
-    if include_hidden
-      res
-    else
-      res.where({hidden: false})
     end
   end
   
@@ -70,11 +64,10 @@ class User < ActiveRecord::Base
     if recurse
       h.merge! ({
         dataSets:       self.data_sets.search(false, show_hidden).map      {|o| o.to_hash false},
-        mediaObjects:   self.media_objects.search(false, show_hidden).map  {|o| o.to_hash false},
+        mediaObjects:   self.media_objects.map  {|o| o.to_hash false},
         projects:       self.projects.search(false, show_hidden).map       {|o| o.to_hash false},
         tutorials:      self.tutorials.search(false, show_hidden).map      {|o| o.to_hash false},
-        visualizations: self.visualizations.search(false, show_hidden).map {|o| o.to_hash false},
-        news:           self.news.search(false, show_hidden).map           {|o| o.to_hash false}
+        visualizations: self.visualizations.search(false, show_hidden).map {|o| o.to_hash false}
       })
     end
     h
