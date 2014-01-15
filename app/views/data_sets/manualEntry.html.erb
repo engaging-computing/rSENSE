@@ -10,12 +10,13 @@
 
 <div class="row" style="padding-bottom: 2em">
   <div class="col-lg-6">
-    <strong>Dataset Name:</strong>
-    <input id="data_set_name" class="form-control" type="text" placeholder="e.g., Bob D. - Test 1">
+    <strong><label for="data_set_name">Dataset Name:</label></strong>
+      <input id="data_set_name" name="data_set_name" class="form-control" 
+        type="text" placeholder="Elephant Weights, Outer Elbonia">
   </div>
   <div class="col-lg-6" <% unless @cur_user.nil? %>style="display: none"<% end %>>
-    <strong>Your Name:</strong>
-    <input id="contrib_name" class="form-control" type="text">
+    <strong><label for="contrib_name">Your Name:</label></strong>
+    <input id="contrib_name" name="contrib_name" class="form-control" type="text">
   </div>
 </div>
 
