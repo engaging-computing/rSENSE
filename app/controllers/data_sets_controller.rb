@@ -10,21 +10,10 @@ class DataSetsController < ApplicationController
   def show
     @data_set = DataSet.find(params[:id])
     @mongo_data_set = { data: @data_set.data }
-    recur = params.key?(:recur) ? params[:recur] == "true" : false
+    recur = params.include?(:recur) ? params[:recur] == "true" : false
     respond_to do |format|
       format.html { redirect_to (project_path @data_set.project) + (data_set_path @data_set) }
       format.json { render json: @data_set.to_hash(recur)}
-    end
-  end
-
-  # GET /data_sets/new
-  # GET /data_sets/new.json
-  def new
-    @data_set = DataSet.new
-
-    respond_to do |format|
-      format.html
-      format.json { render json: @data_set.to_hash(false) }
     end
   end
 
@@ -169,113 +158,6 @@ class DataSetsController < ApplicationController
         format.json {render json: {data: sane[:data_obj], msg: err_msg}, status: :unprocessable_entity}
       end
     end
-  end
-
-  # POST /projects/1/manualUpload
-  #{headers => [20,21,22], data => { "0"=>[1,2,3,4,5],"1"=>[6,7,8,9,10], "2"=>['v','w','x','y','z'] }}
-  def manualUpload
-
-    ############ Sanity Checks ############
-    errors = []
-    sane = true
-
-    if params[:data].nil?
-      errors.push "'data' cannot be nil."
-      sane = false
-    end
-
-    if params[:headers].nil?
-      errors.push "'headers' cannot be nil."
-      sane = false
-    end
-
-    if params[:id].nil?
-      errors.push "'id' cannot be nil."
-      sane = false
-    end
-
-    if sane && !(params[:data].length == params[:headers].length)
-      errors.push "Number of data columns (#{params[:data].length}) does not match number of headers (#{params[:headers].length})."
-      sane  = false
-    end
-
-    if !sane
-      #insane in the membrane
-      respond_to do |format|
-        format.json { render json: errors, status: :unprocessable_entity }
-      end
-      return
-    end
-    #######################################
-
-    @project = Project.find(params[:id])
-    @fields = @project.fields
-    header_to_field_map = {}
-    success = false
-    defaultName = ""
-
-    if !params[:name]
-      defaultName  = DataSet.get_next_name(@project)
-    else
-      defaultName = params["name"]
-    end
-
-    # Generate field mappings
-    @project.fields.each do |field|
-      params[:headers].each_with_index do |header, header_index|
-        if header.to_i == field.id
-          header_to_field_map["#{field.id}"] =  header_index
-        end
-      end
-    end
-
-    if header_to_field_map.count != @fields.count
-      #headers dont match... womp womp wahhhhh
-      errors.push "Number of headers (#{header_to_field_map.count}) does not match the number of fields (#{@fields.count})"
-      logger.info "Data set headers don't match fields"
-      logger.info errors.inspect
-      respond_to do |format|
-        format.json { render json: errors, status: :unprocessable_entity }
-      end
-      return
-    end
-
-    # Format data
-    new_data = []
-
-    params[:data]["0"].each_with_index do |tmp, row_index|
-
-      row = {}
-
-      header_to_field_map.each do |key, value|
-        if params["data"]["#{value}"][row_index] == ""
-          val = nil
-        else
-          val = params["data"]["#{value}"][row_index]
-        end
-        row["#{key}"] = val
-      end
-
-
-      new_data[row_index] = row
-
-    end
-
-    owner = @cur_user.try(:id) ? @cur_user.id : @project.owner.id
-
-    @data_set = DataSet.new(:user_id => owner, :project_id => @project.id,
-                               :title => defaultName, data: new_data)
-
-    followURL = "/projects/#{@project.id}/data_sets/#{@data_set.id}"
-
-    respond_to do |format|
-      if @data_set.save
-        format.json { render json: @data_set.to_hash(false), status: :created}
-      else
-        format.json { render json:{}, status: :unprocessable_entity }
-      end
-    end
-
   end
 
   # GET /projects/1/export

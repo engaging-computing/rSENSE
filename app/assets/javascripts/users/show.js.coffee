@@ -10,17 +10,6 @@ $ ->
         nav_list.push ($ @).text()
         
     nav_list.push "All"
-    
-    recent_three_ajax_params =
-      template: "three_recent"
-      page_size: 3
-    
-    $.ajax
-      url: "/users/#{($ '#contribution_search').attr('data-user-id')}/contributions"
-      data: recent_three_ajax_params
-      dataType: "html"
-      success: (three_html) ->
-        ($ '#three_recent').html three_html
         
     ($ '#user_filter li').click ->
     
