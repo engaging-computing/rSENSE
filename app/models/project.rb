@@ -6,7 +6,7 @@ class Project < ActiveRecord::Base
   include ActionView::Helpers::DateHelper
   include ActionView::Helpers::SanitizeHelper
 
-  attr_accessible :content, :title, :user_id, :filter, :cloned_from, :like_count, :has_fields, 
+  attr_accessible :content, :title, :user_id, :filter, :cloned_from, :has_fields, 
     :featured, :is_template, :featured_media_id, :hidden, :featured_at, :lock, :curated, 
     :curated_at, :updated_at
   
@@ -45,9 +45,9 @@ class Project < ActiveRecord::Base
   
   def self.search(search, include_hidden = false)
     res = if search
-        where('(lower(projects.title) LIKE lower(?)) OR (projects.id = ?) OR (lower(projects.content) LIKE lower(?))', "%#{search}%", search.to_i, "%#{search}%")
+        Project.joins("left outer join likes on projects.id = likes.id").select("projects.*, count(likes.id) as like_count").group("projects.id").where('(lower(projects.title) LIKE lower(?)) OR (projects.id = ?) OR (lower(projects.content) LIKE lower(?))', "%#{search}%", search.to_i, "%#{search}%")
     else
-        all
+        Project.joins("left outer join likes on projects.id = likes.id").select("projects.*, count(likes.id) as like_count").group("projects.id")
     end
     
     if include_hidden
@@ -114,7 +114,7 @@ class Project < ActiveRecord::Base
       path: UrlGenerator.new.project_path(self),
       hidden: self.hidden,
       featured: self.featured,
-      likeCount: self.like_count,
+      likeCount: self.likes.count,
       content: self.content,
       timeAgoInWords: time_ago_in_words(self.created_at),
       createdAt: self.created_at.strftime("%B %d, %Y"),
