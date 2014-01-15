@@ -390,3 +390,15 @@ i.icon-white
   background-color: #EEE;
 }
 
+.carousel-indicators
+{
+  top: 15px;
+  li {
+    border: none;
+  }
+  .active 
+  {
+    background-color: transparent;
+  }
+}
+

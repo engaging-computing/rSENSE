@@ -45,7 +45,7 @@
   
 </div>
 <div class="row">
-  <div class="col-md-8">
+  <div class="col-md-12">
     <div id="dataset_info">
       <% if @datasets.count > 1 %>
         <div id="contentCarousel" class="carousel slide">
@@ -60,7 +60,7 @@
           <div class="carousel-inner" >
             <% @datasets.each do |s| %>
               <%@data_set = s%>
-              <div class="item <%if s == @datasets.first()%>active<%end%>">
+              <div class="item <%if s == @datasets.first()%>active<%end%>" style="padding:10px">
                 <span style="font-size:1.5em">Dataset: <%= data_set_edit_helper 'title', can_edit?(s), make_link = false %></span>
                 <%= raw s.content %>
               </div>
