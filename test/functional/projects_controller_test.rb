@@ -107,41 +107,46 @@ class ProjectsControllerTest < ActionController::TestCase
   end
 
   test "should feature project (json)" do
-    put :update, { format: 'json', id: @project_three, project: { featured:true }}, { user_id: @nixon }
+    put :update, { format: 'json', id: @project_three, project: { featured: "true" }}, { user_id: @nixon }
     assert_response :success
     assert Project.find(@project_three).featured == true, "Nixon should have featured the project"
 
-    put :update, { format: 'json', id: @project_three, project: { featured:false }}, { user_id: @kate }
+    put :update, { format: 'json', id: @project_three, project: { featured: "false" }}, { user_id: @kate }
     assert_response :unprocessable_entity
     assert Project.find(@project_three).featured == true, "Kate should not have been able to unfeature the project."
   end
 
   test "should curate project (json)" do
-    put :update, { format: 'json', id: @project_three, project: { curated:true }}, { user_id: @nixon }
+    put :update, { format: 'json', id: @project_three, project: { curated: "true" }}, { user_id: @nixon }
     assert_response :success
     project = Project.find(@project_three)
-    assert Project.find(@project_three).curated == true, "Nixon should have curated the project"
-    assert Project.find(@project_three).lock == true, "Curating should have locked the project"
+    assert project.curated == true, "Nixon should have curated the project"
+    assert project.lock == true, "Curating should have locked the project"
     
-    put :update, { format: 'json', id: @project_three, project: { curated:false }}, { user_id: @kate }
+    put :update, { format: 'json', id: @project_three, project: { curated: "false" }}, { user_id: @kate }
     assert_response :unprocessable_entity
     assert Project.find(@project_three).curated == true, "Kate should not have been able to uncurated the project"
 
-    put :update, { format: 'json', id: @project_three, project: { curated:false }}, { user_id: @crunch }
+    put :update, { format: 'json', id: @project_three, project: { curated: "false" }}, { user_id: @crunch }
     assert_response :unprocessable_entity
     assert Project.find(@project_three).curated == true, "Crunch should not have been able to uncurated the project"
+  
+    put :update, { format: 'json', id: @project_three, project: { curated: "false" }}, { user_id: @nixon }
+    assert_response :success
+    assert Project.find(@project_three).curated == false, "Nixon should have been able to uncurated the project"
+  
   end
 
   test "should lock project (json)" do
-    put :update, { format: 'json', id: @project_three, project: { lock: true }}, { user_id: @nixon }
+    put :update, { format: 'json', id: @project_three, project: { lock: "true" }}, { user_id: @nixon }
     assert_response :success
     assert Project.find(@project_three).lock == true, "Nixon should have locked the project"
 
-    put :update, { format: 'json', id: @project_three, project: { lock: false }}, { user_id: @kate }
+    put :update, { format: 'json', id: @project_three, project: { lock: "false" }}, { user_id: @kate }
     assert_response :success
     assert Project.find(@project_three).lock == false, 'Kate should have unlocked the project'
 
-    put :update, { format: 'json', id: @project_three, project: { lock: true }}, { user_id: @crunch }
+    put :update, { format: 'json', id: @project_three, project: { lock: "true" }}, { user_id: @crunch }
     assert_response :unprocessable_entity
     assert Project.find(@project_three).lock == false, 'Crunch should not have locked the project'
   end
