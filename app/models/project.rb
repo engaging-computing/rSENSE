@@ -2,10 +2,6 @@ require 'nokogiri'
 
 class Project < ActiveRecord::Base
   
-  def self.default_scope
-    self.joins("left outer join likes on projects.id = likes.id").select("projects.*, count(likes.id) as like_count").group("projects.id")
-  end
-  
   include ApplicationHelper
   include ActionView::Helpers::DateHelper
   include ActionView::Helpers::SanitizeHelper
@@ -49,9 +45,9 @@ class Project < ActiveRecord::Base
   
   def self.search(search, include_hidden = false)
     res = if search
-        all.where('(lower(projects.title) LIKE lower(?)) OR (projects.id = ?) OR (lower(projects.content) LIKE lower(?))', "%#{search}%", search.to_i, "%#{search}%")
+        Project.joins("left outer join likes on projects.id = likes.id").select("projects.*, count(likes.id) as like_count").group("projects.id").where('(lower(projects.title) LIKE lower(?)) OR (projects.id = ?) OR (lower(projects.content) LIKE lower(?))', "%#{search}%", search.to_i, "%#{search}%")
     else
-        all
+        Project.joins("left outer join likes on projects.id = likes.id").select("projects.*, count(likes.id) as like_count").group("projects.id")
     end
     
     if include_hidden

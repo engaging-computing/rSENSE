@@ -107,7 +107,7 @@ class ProjectsController < ApplicationController
   # POST /projects.json
   def create
     #@project = Project.new(params[:project])
-
+    logger.error "---------------"
     if(params[:project_id])
       @tmp_proj = Project.find(params[:project_id])
       @project = Project.new({user_id: @cur_user.id, title:"#{@tmp_proj.title} (clone)", content: @tmp_proj.content, filter: @tmp_proj.filter, cloned_from:@tmp_proj.id})
