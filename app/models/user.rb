@@ -4,16 +4,19 @@ class User < ActiveRecord::Base
   
   include ActionView::Helpers::SanitizeHelper
   
-  attr_accessible :content, :email, :name, :password, :password_confirmation, :username, :validated, :hidden, :bio, :last_login
+  attr_accessible :content, :email, :email_confirmation, :name, :password, :password_confirmation, 
+    :username, :validated, :hidden, :bio, :last_login
 
   validates_uniqueness_of :email, case_sensitive: false
-  validates :name, format: {with: /\A[\p{Alpha}\p{Blank}\-\'\.]*\z/, message: "can only contain letters, hyphens, single quotes, periods, and spaces."}
+  validates :name, length: {minimum: 4, maximum: 32}, format: { 
+    with: /\A[\p{Alpha}\p{Blank}\-\'\.]*\z/, 
+    message: "can only contain letters, hyphens, single quotes, periods, and spaces."}
   
   validates :username, length: {maximum: 32}
  
-  validates :email, format: {with: /\@.*\./}
+  validates :email, format: {with: /\@.*\./}, confirmation: true
 
-  validates_presence_of :name, :email
+  validates :password, presence: true, on: :create
 
   has_secure_password
 

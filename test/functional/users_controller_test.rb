@@ -101,7 +101,7 @@ class UsersControllerTest < ActionController::TestCase
   
   test "should update user" do
     put :update, {id: @user, user: { email: @user.email, name: @user.name, 
-                                     validated: @user.validated }}, { user_id: @user }
+                                     validated: @user.validated }}, { user_id: @admin }
     assert_redirected_to user_path(assigns(:user))
   end
 
@@ -225,8 +225,8 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   test "actually change email" do
-    post :update, { id: @user, password: '12345',
-      new_email: 'kate@example.com', new_email_confirmation: 'kate@example.com' },
+    post :update, { id: @user, current_password: '12345', user: {
+      email: 'kate@example.com', email_confirmation: 'kate@example.com' } },
       { user_id: @user }
     assert_redirected_to @user
 
