@@ -6,7 +6,6 @@ class UsersController < ApplicationController
   skip_before_filter :authorize, only:
     [:new, :create, :validate, :pw_request, :pw_send_key, :pw_reset]
 
-    
   include ActionView::Helpers::DateHelper
   include ApplicationHelper
  
@@ -153,80 +152,32 @@ class UsersController < ApplicationController
   # PUT /users/1.json
   def update
     @user = User.find(params[:id])
+    auth = false
+    auth_error = "Not authorized to update user"
 
-    if params[:new_password].nil? and params[:new_email].nil?
-      editUpdate = params[:user]
-      hideUpdate = editUpdate.extract_keys!([:hidden])
-      success = false
-    
-      #EDIT REQUEST
-      if can_edit?(@user) 
-        success = @user.update_attributes(editUpdate)
-      end
-    
-      #HIDE REQUEST
-      if can_hide?(@user) 
-        success = @user.update_attributes(hideUpdate)
-      end
-    else
-      if params[:new_email].nil?
-        # Password change
-        old_pw = params[:current_password]
-        
-        unless @cur_user.admin? or session[:pw_change]
-          unless @user.authenticate(old_pw)
-            redirect_to edit_user_path(@user), alert:
-              "Old password didn't match."
-            return
-          end 
-        end
-       
+    auth  = true if @cur_user.admin?
+    auth  = true if can_edit?(@user) && session[:pw_change]
 
-        @user.update_attributes(params[:user])
-        success = @user.save
-        if success
-          session[:pw_change] = nil
-        end
+    if !auth && can_edit?(@user)
+      if @user.authenticate(params[:current_password])
+        auth  = true
       else
-        # Email change
-       
-        new_email = params[:new_email]
-        con_email = params[:new_email_confirmation]
-
-        if new_email != con_email
-          redirect_to edit_user_path(@user), alert:
-            "New email addresses don't match"
-          return
-        end
-
-        unless new_email =~ /\@.*\./
-          redirect_to edit_user_path(@user), alert:
-            "That's not a plausible email address"
-          return
-        end
-       
-        unless @cur_user.admin?
-          pw = params[:password]
-          unless @cur_user == @user and @user.authenticate(pw)
-            redirect_to edit_user_path(@user), alert:
-              "Bad password"
-            return
-          end
-        end
-
-        @user.email = new_email
-        success = @user.save
+        auth_error = "Current password doesn't match"
       end
     end
-    
+
     respond_to do |format|
-      if success
+      if auth && @user.update_attributes(params[:user]) 
         format.html { redirect_to @user, notice: 'User was successfully updated.' }
         format.json { render json: {}, status: :ok }
       else
         @errors = @user.errors.full_messages()
         format.html do
-          flash[:error] = @errors.join(" ")
+          if auth
+            flash[:error] = @errors.join(" ")
+          else
+            flash[:error] = auth_error
+          end
           redirect_to edit_user_path(@user)
         end
         format.json { render json: @errors, status: :unprocessable_entity }
