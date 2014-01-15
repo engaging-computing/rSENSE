@@ -84,15 +84,6 @@ class DataSetsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should upload data set" do
-    # headers tell you the order of the fields
-    # the index of the header is the key for the field
-    post :manualUpload, { format: 'json', id: @proj.id, headers: ["20", "21", "22"],
-      data: {"0" => ["1", "2", "3"], "1"=>["4", "5", "6"], "2" => ["14", "13", "12"]} }, { user_id: @kate }
-    assert_response :success
-    @new_dataset_id = JSON.parse(response.body)['id']
-  end
-
   test "should export data" do
     get :export, { id: @proj.id, datasets: "#{@new_dataset_id}"}, { user_id: @kate }
     assert(@response["Content-Type"] == "file/zip")
