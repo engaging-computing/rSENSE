@@ -167,7 +167,7 @@ class ProjectsController < ApplicationController
     if can_admin?(@project)
 
       if adminUpdate.has_key?(:featured)
-        if adminUpdate['featured'] == "1"
+        if adminUpdate['featured'] == "true"
           adminUpdate['featured_at'] = Time.now()
         else
           adminUpdate['featured_at'] = nil
@@ -175,9 +175,9 @@ class ProjectsController < ApplicationController
       end
 
       if adminUpdate.has_key?(:curated)
-        if adminUpdate['curated'] == true
+        if adminUpdate['curated'] == "true"
           adminUpdate['curated_at'] = Time.now()
-          adminUpdate['lock'] = "true"
+          adminUpdate['lock'] = true
         else
           adminUpdate['curated_at'] = nil
         end

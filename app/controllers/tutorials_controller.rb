@@ -102,7 +102,7 @@ class TutorialsController < ApplicationController
     #ADMIN REQUEST
     if can_admin?(@tutorial)
       if adminUpdate.has_key?(:featured)
-        if adminUpdate['featured'] == true
+        if adminUpdate['featured'] == "true"
           adminUpdate['featured_at'] = Time.now()
         else
           adminUpdate['featured_at'] = nil

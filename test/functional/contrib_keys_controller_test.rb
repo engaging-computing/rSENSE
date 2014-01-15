@@ -5,6 +5,7 @@ class ContribKeysControllerTest < ActionController::TestCase
     @kate = users(:kate)
     @proj = projects(:one)
     @skey = contrib_keys(:one)
+    @crunch = users(:crunch)
   end
 
   test "should create contrib key" do
@@ -14,6 +15,13 @@ class ContribKeysControllerTest < ActionController::TestCase
     assert_response :redirect
   end
 
+  test "should not create contrib key" do
+    assert_difference('ContribKey.count', 0) do
+      post :create, { contrib_key: { project_id: @proj.id, name: "Pie", key: "Pecan" }}, { user_id: @crunch.id }
+    end
+    assert_response :redirect
+  end
+  
   test "should destroy key" do
     assert_difference('ContribKey.count', -1) do
       post :destroy, { id: @skey.id }, { user_id: @kate.id }  
@@ -21,6 +29,13 @@ class ContribKeysControllerTest < ActionController::TestCase
     assert_response :redirect
   end
 
+  test "should not destroy key" do
+    assert_difference('ContribKey.count', 0) do
+      post :destroy, { id: @skey.id }, { user_id: @crunch.id }  
+    end
+    assert_response :redirect
+  end
+ 
   test "should enter key" do
     post :enter, { project_id: @proj.id, key: @skey.key }
     assert_response :redirect
