@@ -313,8 +313,11 @@ class VisualizationsController < ApplicationController
     # A list of all current visualizations
     allVis =  ['Map','Timeline','Scatter','Bar','Histogram','Table','Photos']
 
+    # Defaut vis if one exists for the project
+    defaultVis = @project.default_vis.nil? ? "none" : @project.default_vis
+
     # The finalized data object
-    @Data = { projectName: @project.title, projectID: @project.id, fields: data_fields, dataPoints: format_data, metadata: metadata, relVis: rel_vis, allVis: allVis }
+    @Data = { projectName: @project.title, projectID: @project.id, fields: data_fields, dataPoints: format_data, metadata: metadata, relVis: rel_vis, allVis: allVis, defaultVis: defaultVis }
 
     options = {}
     
