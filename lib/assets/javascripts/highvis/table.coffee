@@ -150,10 +150,8 @@ $ ->
             #Restore the search filters
             if @searchParams?
                 for column in @searchParams
-                    console.log(@searchParams)
-                    inputId = "#gs_" + column.field
-                    console.log(column.field)
-                    $(inputId).val(column.data)
+                    inputId = "gs_" + column.field
+                    ($ '#' + inputId).val(column.data)
 
             @table[0].triggerToolbar()
 
