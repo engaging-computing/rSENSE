@@ -14,7 +14,7 @@ class ContribKeysController < ApplicationController
       flash[:notice] = "Added contributor key."
       redirect_to @key.project
     else
-      flash[:error] = @key.errors.inspect
+      flash[:error] = @key.errors.full_messages
       redirect_to @key.project
     end
   end
