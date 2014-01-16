@@ -1,7 +1,9 @@
-<% if @cur_user.admin %>
+<!-- not admin section -->
+<% if can_edit? @project %>
+ 
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h1>Editing project</h1>
+      <h1>Editing: <%= @project.title%></h1>
     </div>
     <div class="panel-body">
       <%= render 'form' %>
@@ -11,6 +13,8 @@
       <%= link_to 'Back', projects_path %>
     </div>
   </div>  
+
 <% else %>
   You are not authorized to view this page.
 <% end %>
+
