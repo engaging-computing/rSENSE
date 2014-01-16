@@ -3,25 +3,69 @@
 <%= form_for(@project) do |f| %>
   <div class="row"> 
     <div class="col-md-12">
-
-      <div class="checkbox">
-        <div class="checkbox">
-          <%= f.check_box :featured%><strong> Featured</strong>
-        </div>  
+  
+  <!-- regular section -->
+      <div class="form-group">
+        <%= f.select(:default_vis, 
+          options_for_select([["None", "none"],["Map","Map"],["Timeline","Timeline"],["Scatter","Scatter"],["Bar","Bar"],["Histogram","Histogram"],["Table","Table"],["Photos","Photos"]],( @project.default_vis.nil? ? "none" : @project.default_vis)),class: "form-control")%>
       </div>
-      
-      <div class="checkbox">
+  
+      <div class="form-group">
         <div class="checkbox">
-          <%= f.check_box :is_template%><strong> In Store</strong>
-        </div>  
+          <div class="checkbox checkbox-inner">
+            <%= f.check_box :lock%><strong> <i class="fa fa-lock"></i> Lock Project</strong>
+          </div>  
+          <span class="help-block">Locking a project will stop public contribution to your project. You and any users with "contribution keys" will still be able to contribute. </span>
+        </div>
       </div>
       
       <div class="form-group">
-        <label>
-          Owner: <%= f.number_field :user_id, class: "form-control"%>
-        </label>  
+        <div class="checkbox">
+          <div class="checkbox checkbox-inner">
+            <%= f.check_box :hidden%><strong> <i class="fa fa-eye-slash"></i> Hide Project</strong>
+          </div>  
+          <span class="help-block">Hiding a project will hide it from public view. You will still be able to reach the project through your profile page.</span>
+        </div>
+      </div>  
+           
+      <!-- admin section -->
+      <% if can_admin? @project%>
+        <div class="form-group">
+          <div class="checkbox">
+            <div class="checkbox checkbox-inner">
+              <%= f.check_box :featured%><strong> Feature Project</strong>
+            </div>  
+            <span class="help-block">Featuring a project will put it in the running to be on the front page. Featured projects are shown based on when they are featured. Please make sure the project has a featured image before featuring.</span>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <div class="checkbox">
+            <div class="checkbox checkbox-inner">
+              <%= f.check_box :is_template%><strong> Make Project A Template</strong>
+            </div>
+          <span class="help-block">Making a project a template will promte it on the index page as a filter. Projects should only be made a template if it is complete and has a good description describing how to run the project.</span>  
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <div class="checkbox">
+            <div class="checkbox checkbox-inner">
+              <%= f.check_box :curated%><strong> Curate Project</strong>
+            </div>
+          <span class="help-block">Curated projects are professionally recorded data imported into iSENSE. Please make sure the project has a featured image before curating.</span>  
+          </div>
+        </div>
+      <% end %>
+      
+      <div class="form-group">
+        <div class="checkbox">
+          <div class="btn btn-danger" <%= can_delete?(@project) ? "" : "disabled"%>>
+            <i class="fa fa-times-circle"></i>  Delete Project
+          </div>
+          <span class="help-block">A project may only be deleted if it does not contain data sets from other users.</span>
+        </div>
       </div>
-
       
       <div class="actions">
         <%= f.submit 'Update Project', :class => 'btn btn-primary'%>
