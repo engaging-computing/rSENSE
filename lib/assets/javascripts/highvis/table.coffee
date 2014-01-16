@@ -32,9 +32,34 @@ $ ->
     class window.Table extends BaseVis
         constructor: (@canvas) -> 
 
+        #Removes nulls from the table
         nullFormatter = (cellvalue, options, rowObject) ->
-            cellvalue = "" if isNaN(cellvalue)
-            cellvalue;
+            cellvalue = "" if isNaN(cellvalue) or cellvalue is null
+            cellvalue
+
+        #Formats tables dates properly
+        dateFormatter = (cellvalue, options, rowObject) ->
+            globals.dateFormatter cellvalue
+
+        #Resizes the table properly
+        ($ '#control_hide_button').click ->
+            #Calulate the new width from these parameters
+            containerSize = ($ '#viscontainer').width()
+            hiderSize     = ($ '#controlhider').outerWidth()
+            controlSize   = ($ '#controldiv').width()
+
+            #Check if you are opening or closing the controls
+            controlSize = if ($ '#controldiv').width() <= 0
+                globals.CONTROL_SIZE
+            else
+                0
+
+            #Set the grid to the correct size so the animation is smooth
+            newWidth = containerSize - (hiderSize + controlSize + 10)
+            newHeight = ($ '#viscontainer').height() - ($ '#visTabList').outerHeight()
+            if ($ "#data_table")?
+                ($ '#table_canvas').height(newHeight - 5)
+                ($ "#data_table").setGridWidth(newWidth).setGridHeight(newHeight - 75)
 
         start: ->
             #Make table visible? (or something)
@@ -48,32 +73,38 @@ $ ->
 
         #Gets called when the controls are clicked and at start
         update: ->
-            ($ '#' + @canvas).html('')
 
             #Updates controls by default
+            ($ '#' + @canvas).html('')
             ($ '#' + @canvas).append '<table id="data_table" class="table table-striped"></table>'
-
-            ($ '#data_table').append '<thead><tr id="table_headers"></tr></thead>'
 
             #Build the headers for the table
             headers = for field in data.fields
-                "<th>#{fieldTitle field}</th>"
+                fieldTitle(field)
 
-            ($ '#table_headers').append header for header in headers
+            #Make valid id's for the colModel
+            colIds = for header in headers
+                header.replace(/\s+/g, '_').toLowerCase()
+
+            #Make sure the sort type for each column is appropriate
+            columns = for colId, colIndex in colIds
+                if (data.fields[colIndex].typeID is data.types.TEXT)
+                    { name: colId, id: colId, sortType:'text' }
+                else if (data.fields[colIndex].typeID is data.types.TIME)
+                    { name: colId, id: colId, sortType:'number', formatter: dateFormatter }
+                else
+                    { name: colId, id: colId, sortType:'number', formatter: nullFormatter }
 
             #Build the data for the table
             visibleGroups = for group, groupIndex in data.groups when groupIndex in globals.groupSelection
                 group
 
-            rows = for dataPoint in data.dataPoints when (String dataPoint[data.groupingFieldIndex]).toLowerCase() in visibleGroups
-                line = for dat, fieldIndex in dataPoint
-                    "<td>#{dat}</td>"
-
-                "<tr>#{line.reduce (a,b)-> a+b}</tr>"
-
-            ($ '#data_table').append '<tbody id="table_body"></tbody>'
-
-            ($ '#table_body').append row for row in rows
+            rows = []
+            for dataPoint in data.dataPoints when (String dataPoint[data.groupingFieldIndex]).toLowerCase() in visibleGroups
+                line = {}
+                for dat, fieldIndex in dataPoint
+                    line[colIds[fieldIndex]] = dat
+                rows.push(line)
 
             #Set sort state to default none existed
             @sortName ?= '';
@@ -82,50 +113,36 @@ $ ->
             #Set default search to empty string
             @searchParams ?= {}
 
-            #Restore previous search query if exists, else restore empty string
-            if @searchString? and @searchString isnt ''
-                $('#table_canvas').find('input').val(@searchString).keyup()
-                
             #Add the nav bar
             ($ '#table_canvas').append '<div id="toolbar_bottom"></div>'
 
             #Prepare the table to grid parameters
-            @table = ($ "#data_table")
-            params = {
-                loadonce: true,
-                height: ($ '#' + @canvas).height() - 75,
+            @table = jQuery("#data_table").jqGrid({
+                colNames: headers,
+                colModel: columns,
+                datatype: 'local',
+                height: ($ '#' + @canvas).height() - 71,
                 width: ($ '#' + @canvas).width(),
+                gridview: true,
                 caption: "",
+                data: rows,
                 hidegrid: false,
                 ignoreCase:true
-                rowNum: data.dataPoints.length,
+                rowNum: 50,
                 autowidth: true,
                 viewrecords: true,
-                pager: '#toolbar_bottom',
-                pgbuttons: false,
-                pgtext: false,
-                pginput: false
-            }
-
-            #Gridify the table
-            tableToGrid("#data_table", params)
-
-            #Add a refresh button and enable the search bar
-            @table.jqGrid('navGrid','#toolbar_bottom',{del:false,add:false,edit:false,search:false});
-            @table.jqGrid('filterToolbar', {stringResult: true, searchOnEnter: false, defaultSearch:'cn'});
+                loadui: 'block',
+                pager: '#toolbar_bottom'
+            })
 
             #Hide the combined datasets column
             combined_col = @table.jqGrid('getGridParam','colModel')[data.COMBINED_FIELD]
             @table.hideCol(combined_col.name)
-            @table.setGridWidth(($ '#table_canvas').width())
+            ($ '#data_table').setGridWidth(($ '#' + @canvas).width())
 
-            #Make sure the sort type for each column is appropriate
-            for column, col_index in @table.jqGrid('getGridParam','colModel')
-                if (data.fields[col_index].typeID is data.types.TEXT)
-                    column.sorttype = 'text';
-                else 
-                    column.sorttype = 'number';
-                    column.formatter = nullFormatter;
+            #Add a refresh button and enable the search bar
+            @table.jqGrid('navGrid','#toolbar_bottom',{del:false,add:false,edit:false,search:false});
+            @table.jqGrid('filterToolbar', {stringResult: true, searchOnEnter: false, defaultSearch:'cn'});
 
             #Set the sort parameters
             @table.sortGrid(@sortName, true, @sortType);
@@ -133,27 +150,10 @@ $ ->
             #Restore the search filters
             if @searchParams?
                 for column in @searchParams
-                    inputId = "input#gs_" + column.field
-                    ($ inputId).val(column.data)
+                    inputId = "gs_" + column.field
+                    ($ '#' + inputId).val(column.data)
 
             @table[0].triggerToolbar()
-
-            ($ '#control_hide_button').click ->
-                #Calulate the new width from these parameters
-                containerSize = ($ '#viscontainer').width()
-                hiderSize     = ($ '#controlhider').outerWidth()
-                controlSize   = ($ '#controldiv').width()
-
-                #Check if you are opening or closing the controls
-                controlSize = if ($ '#controldiv').width() <= 0
-                    globals.CONTROL_SIZE
-                else
-                    0
-
-                #Set the grid to the correct size so the animation is smooth
-                newWidth = containerSize - (hiderSize + controlSize + 10)
-                newHeight = ($ '#viscontainer').height() - ($ '#visTabList').outerHeight()
-                ($ '#data_table').setGridWidth(newWidth).setGridHeight(newHeight - 75)
 
             super()
 
@@ -168,13 +168,13 @@ $ ->
 
             #Save the table filters
             if @table.getGridParam('postData').filters?
-                @searchParams = jQuery.parseJSON(@table.getGridParam('postData').filters).rules;
-
+                @searchParams = jQuery.parseJSON(@table.getGridParam('postData').filters).rules
 
         resize: (newWidth, newHeight, aniLength) ->
           foo = () ->
             #In the case that this was called by the hide button, this gets called a second time
             #needlessly, but doesn't effect the overall performance
+            ($ '#table_canvas').height(newHeight - 5)
             ($ '#data_table').setGridWidth(newWidth).setGridHeight(newHeight - 75)
 
           setTimeout foo, aniLength
