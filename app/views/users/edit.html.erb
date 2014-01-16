@@ -12,11 +12,9 @@
             <% unless @cur_user.admin? or session[:pw_change] %>
               <p>
               <%= label_tag :current_password, "Current Password:" %>
-              <%= password_field_tag :current_password, @cur_pw %>
+              <%= password_field_tag :current_password, @cur_pw, class: "form-control" %>
               </p>
             <% end %>
-          </div>
-          <div class="form-group">
             <% if session[:pw_change] %>
               <p>You logged in with a password reset link. Please
               change your password now.</p>
@@ -46,7 +44,7 @@
   <div class="">
     <div class="col-lg-6">
       <div class="panel panel-default">
-        <%= form_for(@user) do %>
+        <%= form_for(@user) do |ff| %>
           <div class="panel-heading">
             <h2>Change Email Address for <%= @user.name %></h2>
           </div>
@@ -55,21 +53,21 @@
             <div class="form-group">
               <% unless @cur_user.admin? %>
                 <p>
-                  <%= label_tag :password, "Password:" %>
-                  <%= password_field_tag(:password,nil ,class: "form-control") %>
+                  <%= label_tag :current_password, "Password:" %>
+                  <%= password_field_tag(:current_password, nil, class: "form-control") %>
                 </p>
               <% end %>
             </div>
             <div class="form-group">
               <p>
-                <%= label_tag :new_email, "New Email:" %>
-                <%= text_field_tag(:new_email,nil, class: "form-control")%>
+                <%= ff.label :email, "New Email:" %>
+                <%= ff.text_field(:email, class: "form-control")%>
               </p>
             </div>  
             <div class="form-group">
               <p>
-                <%= label_tag :new_email, "Retype Your New Email:" %>
-                <%= text_field_tag(:new_email_confirmation,nil ,class: "form-control") %>
+                <%= ff.label :email_confirmation, "Retype Your New Email:" %>
+                <%= ff.text_field(:email_confirmation, class: "form-control") %>
               </p>
             </div>
           </div>  

@@ -33,11 +33,6 @@ class ProjectTest < ActiveSupport::TestCase
    test "filter is an empty string" do
      assert_equal "", @project.filter, "Expected project fitler is not an empty string."
    end
-   
-   # Passes if like_count is 0
-   test "like_count is 0" do
-     assert_equal 0, @project.like_count, "Expected project like_count is not 0."
-   end
 
    # Passes if fields.count is equal to 0, which indicated has_fields is false
    test "fields count is false" do
@@ -85,10 +80,6 @@ class ProjectTest < ActiveSupport::TestCase
   
   test "project filter" do
     assert_equal "", projects(:one).filter, "Expected project filter is not an empty string."
-  end
-  
-  test "project like_count" do
-    assert_equal 11, projects(:one).like_count, "Expected project like_count is not 11."
   end
   
   test "project featured_media_id" do

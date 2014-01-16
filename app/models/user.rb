@@ -4,16 +4,19 @@ class User < ActiveRecord::Base
   
   include ActionView::Helpers::SanitizeHelper
   
-  attr_accessible :content, :email, :name, :password, :password_confirmation, :username, :validated, :hidden, :bio, :last_login
+  attr_accessible :content, :email, :email_confirmation, :name, :password, :password_confirmation, 
+    :username, :validated, :hidden, :bio, :last_login
 
   validates_uniqueness_of :email, case_sensitive: false
-  validates :name, format: {with: /\A[\p{Alpha}\p{Blank}\-\'\.]*\z/, message: "can only contain letters, hyphens, single quotes, periods, and spaces."}
+  validates :name, length: {minimum: 4, maximum: 32}, format: { 
+    with: /\A[\p{Alpha}\p{Blank}\-\'\.]*\z/, 
+    message: "can only contain letters, hyphens, single quotes, periods, and spaces."}
   
   validates :username, length: {maximum: 32}
  
-  validates :email, format: {with: /\@.*\./}
+  validates :email, format: {with: /\@.*\./}, confirmation: true
 
-  validates_presence_of :name, :email
+  validates :password, presence: true, on: :create
 
   has_secure_password
 
@@ -41,17 +44,11 @@ class User < ActiveRecord::Base
     end
   end
   
-  def self.search(search, include_hidden = false)
+  def self.search(search)
     res = if search
         where('lower(name) LIKE lower(?) OR lower(username) LIKE lower(?)', "%#{search}%", "%#{search}%")
     else
         all
-    end
-    
-    if include_hidden
-      res
-    else
-      res.where({hidden: false})
     end
   end
   
@@ -69,11 +66,10 @@ class User < ActiveRecord::Base
     if recurse
       h.merge! ({
         dataSets:       self.data_sets.search(false, show_hidden).map      {|o| o.to_hash false},
-        mediaObjects:   self.media_objects.search(false, show_hidden).map  {|o| o.to_hash false},
+        mediaObjects:   self.media_objects.map  {|o| o.to_hash false},
         projects:       self.projects.search(false, show_hidden).map       {|o| o.to_hash false},
         tutorials:      self.tutorials.search(false, show_hidden).map      {|o| o.to_hash false},
-        visualizations: self.visualizations.search(false, show_hidden).map {|o| o.to_hash false},
-        news:           self.news.search(false, show_hidden).map           {|o| o.to_hash false}
+        visualizations: self.visualizations.search(false, show_hidden).map {|o| o.to_hash false}
       })
     end
     h

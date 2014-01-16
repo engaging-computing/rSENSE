@@ -8,7 +8,6 @@ one:
   featured: false
   is_template: false
   filter: ""
-  like_count: 11
   featured_media_id: 
 
 two:
@@ -19,7 +18,6 @@ two:
   featured: false
   is_template: false
   filter: ""
-  like_count: 11
   featured_media_id: 
 
 three:
@@ -30,7 +28,6 @@ three:
   featured: false
   is_template: false
   filter: ""
-  like_count: 11
   featured_media_id: 
   
 dessert:
@@ -41,7 +38,6 @@ dessert:
   featured: false
   is_template: false
   filter: ""
-  like_count: 3
   featured_media_id: 
   
 project_five:
@@ -52,6 +48,5 @@ project_five:
   featured: true
   is_template: false
   filter: ""
-  like_count: 3
   featured_media_id: 
   id: 1
