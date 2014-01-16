@@ -3,7 +3,7 @@ class HomeController < ApplicationController
   
   def index
     @news = News.where("hidden = ?",false).order("created_at DESC").limit(2)
-    @featured_projects = Project.where("featured = ? and hidden = ?",  true, false).order("featured_at DESC").limit(4)
+    @featured_projects = Project.search(false).where("featured = ? and hidden = ?",  true, false).order("featured_at DESC").limit(4)
     @featured_vis = Visualization.where("featured = ? and hidden = ?", true, false).order("featured_at DESC").first
     @curated_projects = Project.where("curated = ? AND hidden = ?", true,false).order("updated_at DESC").limit(4)
   end

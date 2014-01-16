@@ -11,7 +11,7 @@ class ProjectsController < ApplicationController
     @params = params
     
     #Main List
-    if !params[:sort].nil?
+    if !params[:sort].nil? and ["like_count", "VIEWS", "created_at", "updated_at"].include? params[:sort]
       sort = params[:sort]
     else
       sort = "updated_at"
@@ -74,9 +74,6 @@ class ProjectsController < ApplicationController
       @cloned_project = Project.find(@project.cloned_from)
     end
 
-    #Get number of likes
-    @likes = @project.likes.count
-
     @liked_by_cur_user = false
     if(Like.find_by_user_id_and_project_id(@cur_user,@project.id))
       @liked_by_cur_user = true
@@ -110,7 +107,6 @@ class ProjectsController < ApplicationController
   # POST /projects.json
   def create
     #@project = Project.new(params[:project])
-
     if(params[:project_id])
       @tmp_proj = Project.find(params[:project_id])
       @project = Project.new({user_id: @cur_user.id, title:"#{@tmp_proj.title} (clone)", content: @tmp_proj.content, filter: @tmp_proj.filter, cloned_from:@tmp_proj.id})
@@ -167,7 +163,7 @@ class ProjectsController < ApplicationController
     if can_admin?(@project)
 
       if adminUpdate.has_key?(:featured)
-        if adminUpdate['featured'] == "1"
+        if adminUpdate['featured'] == "true"
           adminUpdate['featured_at'] = Time.now()
         else
           adminUpdate['featured_at'] = nil
@@ -175,9 +171,9 @@ class ProjectsController < ApplicationController
       end
 
       if adminUpdate.has_key?(:curated)
-        if adminUpdate['curated'] == true
+        if adminUpdate['curated'] == "true"
           adminUpdate['curated_at'] = Time.now()
-          adminUpdate['lock'] = "true"
+          adminUpdate['lock'] = true
         else
           adminUpdate['curated_at'] = nil
         end
@@ -238,7 +234,6 @@ class ProjectsController < ApplicationController
     if(like)
       if Like.destroy(like.id)    
         count = Project.find(params[:id]).likes.count
-        Project.find(params[:id]).update_attributes(:like_count => count)
         respond_to do |format|
           format.json { render json: {update: count}, status: :ok }
         end
@@ -251,7 +246,6 @@ class ProjectsController < ApplicationController
     else
       if Like.create({user_id:@cur_user.id,project_id:params[:id]})
         count = Project.find(params[:id]).likes.count
-        Project.find(params[:id]).update_attributes(:like_count => count)
         respond_to do |format|
           format.json { render json: {update: count}, status: :ok }
         end
