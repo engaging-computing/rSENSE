@@ -269,7 +269,7 @@ class ProjectsController < ApplicationController
     @project.fields.each do |field| 
       restrictions = nil
       if params.has_key?("#{field.id}_restrictions")
-        restrictions = params["#{field.id}_restrictions"].downcase.split(',')
+        restrictions = params["#{field.id}_restrictions"].split(',')
         if restrictions.count < 1
           restrictions = nil
         end
