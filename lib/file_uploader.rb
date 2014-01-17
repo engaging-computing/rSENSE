@@ -155,9 +155,7 @@ class FileUploader
     else 
       data = data_obj
     end
-    Rails.logger.info "-----------"
-    Rails.logger.info data
-    Rails.logger.info "-----------"
+
     data.each do |(key,value)|
       field = Field.find(key)
       type = get_field_name(field.field_type)
