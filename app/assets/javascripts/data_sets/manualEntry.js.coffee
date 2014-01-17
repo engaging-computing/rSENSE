@@ -1,7 +1,10 @@
 $ ->
   if namespace.controller is "data_sets" and namespace.action is "manualEntry"
   
-    setTimeout (-> ($ '#edit_table_add').click()), 200
+    ($ document).ready () ->
+      ($ '#edit_table_add').click()
+  
+    #setTimeout (-> ($ '#edit_table_add').click()), 200
   
     settings =
       page_name: "manualEntry"
