@@ -5,6 +5,17 @@
     <div class="col-md-12">
   
   <!-- regular section -->
+      <div class="form-group" style="margin-left: 5px">
+        <strong class="col-md-12"><i class="fa fa-bar-chart-o"></i> Default Visualization</strong>
+        <div class="col-md-4">
+          <%= f.select(:default_vis,
+            options_for_select([["None", "none"],["Map","Map"],["Timeline","Timeline"],["Scatter","Scatter"],["Bar","Bar"],["Histogram","Histogram"],["Table","Table"],["Photos","Photos"]],( @project.default_vis.nil? ? "none" : @project.default_vis)),{},{class: "form-control"})%>
+        </div>
+        <span class="help-block col-md-12">Sets the default visualization for the project when visualizing data sets.</span>
+      </div>
+      <div class="clear"></div>
+
+  
       <div class="form-group">
         <div class="checkbox">
           <div class="checkbox checkbox-inner">
