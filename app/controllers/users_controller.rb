@@ -159,7 +159,8 @@ class UsersController < ApplicationController
     auth  = true if can_edit?(@user) && session[:pw_change]
 
     if !auth && can_edit?(@user)
-      if @user.authenticate(params[:current_password])
+      if (params[:user][:password].nil? && params[:user][:email].nil?) or
+           @user.authenticate(params[:current_password])
         auth  = true
       else
         auth_error = "Current password doesn't match"
@@ -180,6 +181,7 @@ class UsersController < ApplicationController
           end
           redirect_to edit_user_path(@user)
         end
+        @errors = auth_error unless auth
         format.json { render json: @errors, status: :unprocessable_entity }
       end
     end
