@@ -326,8 +326,17 @@ $ ->
             
             controls += "<h4 class='clean_shrink'>Zoom</h4>"
             controls += '<div class="inner_control_div">'
-            controls += "<button id='zoomResetButton' class='zoom_reset_button btn btn-default'>Reset Zoom </button>"
-            controls += "<button id='zoomOutButton' class='zoom_out_button btn btn-default'>Zoom Out </button>"
+
+            controls += "<select id='zoomSelector' class='form-control'>"
+
+            axes = ['Both', 'X', 'Y']
+            for axis in axes
+              controls += "<option value='#{axis}'>#{axis}</option>"
+            controls += "</select>"
+
+            controls += "<button id='zoomInButton' class='zoom_button btn btn-default'>In</button>"
+            controls += "<button id='zoomOutButton' class='zoom_button btn btn-default'>Out</button>"
+            controls += "<button id='zoomResetButton' class='zoom_button btn btn-default'>Fit</button>"
 
             controls += "<h4 class='clean_shrink'>Display Mode</h4>"
 
@@ -366,7 +375,7 @@ $ ->
 
             ($ '#zoomResetButton').button()
             ($ '#zoomResetButton').click (e) =>
-              @chart.zoomOut()
+              @resetExtremes(($ '#zoomSelector').val())
               
             # Set initial state of zoom reset
             if not @isZoomLocked()
@@ -376,7 +385,11 @@ $ ->
             
             ($ '#zoomOutButton').button()
             ($ '#zoomOutButton').click (e) =>
-              @zoomOutExtremes()
+              @zoomOutExtremes(($ '#zoomSelector').val())
+
+            ($ '#zoomInButton').button()
+            ($ '#zoomInButton').click (e) =>
+              @zoomInExtremes(($ '#zoomSelector').val())
 
             ($ '.mode_radio').click (e) =>
                 @mode = Number e.target.value
@@ -466,10 +479,12 @@ $ ->
         isZoomLocked: ->
             not (undefined in [@xBounds.userMin, @xBounds.userMax])
 
-        resetExtremes: ->
-            if @chart isnt undefined         
-                @chart.xAxis[0].setExtremes()
-                @chart.yAxis[0].setExtremes()
+        resetExtremes: (whichAxis) ->
+            if @chart isnt undefined    
+                if whichAxis in ['Both', 'X']     
+                    @chart.xAxis[0].setExtremes()
+                if whichAxis in ['Both', 'Y']
+                    @chart.yAxis[0].setExtremes()
                 
         setExtremes: ->
             if (@chart isnt undefined)
@@ -478,22 +493,45 @@ $ ->
                 @chart.yAxis[0].setExtremes(@yBounds.min,@yBounds.max,true)
               else @resetExtremes()
                 
-        zoomOutExtremes: ->
+        zoomOutExtremes: (whichAxis) ->
           
-          xRange = @xBounds.max - @xBounds.min
-          yRange = @yBounds.max - @yBounds.min
+            xRange = @xBounds.max - @xBounds.min
+            yRange = @yBounds.max - @yBounds.min
           
-          @xBounds.max += xRange * 0.1
-          @xBounds.min -= xRange * 0.1
+            if whichAxis in ['Both', 'X']
+                @xBounds.max += xRange * 0.1
+                @xBounds.min -= xRange * 0.1
           
-          if globals.logY is 1
-            @yBounds.max *= 10
-            @yBounds.min /= 10
-          else
-            @yBounds.max += yRange * 0.1
-            @yBounds.min -= yRange * 0.1
+            if whichAxis in ['Both', 'Y']
+                if globals.logY is 1
+                    @yBounds.max *= 10
+                    @yBounds.min /= 10
+                else
+                    @yBounds.max += yRange * 0.1
+                    @yBounds.min -= yRange * 0.1
           
-          @setExtremes()
+            @setExtremes()
+
+        zoomInExtremes: (whichAxis) ->
+          
+            xRange = @xBounds.max - @xBounds.min
+            yRange = @yBounds.max - @yBounds.min
+
+            console.log(xRange)
+          
+            if whichAxis in ['Both', 'X']
+                @xBounds.max -= xRange * 0.1
+                @xBounds.min += xRange * 0.1
+          
+            if whichAxis in ['Both', 'Y']
+                if globals.logY is 1
+                    @yBounds.max /= 10
+                    @yBounds.min *= 10
+                else
+                    @yBounds.max -= yRange * 0.1
+                    @yBounds.min += yRange * 0.1
+          
+            @setExtremes()
 
         ###
         Saves the current zoom level
