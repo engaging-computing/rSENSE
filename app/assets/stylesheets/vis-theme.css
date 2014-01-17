@@ -340,6 +340,10 @@ button.ui-state-highlight, .ui-dialog .ui-dialog-titlebar a, .ui-datepicker .ui-
   background: -o-linear-gradient(0% 100% 90deg, #268ac1, #49a7db);
   background: -ms-linear-gradient(0% 100% 90deg, #268ac1, #49a7db);
 }
+.ui-state-highlight > td
+{
+  background-color: transparent !important;
+}
 /* line 122, ../development/_interaction.scss */
 .ui-state-highlight a, .ui-menu .ui-menu-item:hover a, .ui-button.ui-state-highlight a, input.ui-state-highlight[type='button'] a,
 input.ui-state-highlight[type='reset'] a,
