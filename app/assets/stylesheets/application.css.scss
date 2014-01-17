@@ -137,7 +137,10 @@ div.info_text
   max-width: 45%;
 }
 
-.invalid { background-color: #FF0000 }
+.invalid
+{
+  background-color: rgba(255, 0, 0, 0.6) !important;
+}
 
 .vcenter {
     vertical-align: middle;
@@ -367,11 +370,6 @@ form
   box-shadow:0px 0px 20px grey;
   min-height:100%; 
   width:100%
-}
-
-.invalid
-{
-  background-color: rgba(255, 0, 0, 0.6) !important;
 }
 
 .popover-content
