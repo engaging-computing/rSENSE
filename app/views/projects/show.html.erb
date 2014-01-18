@@ -225,16 +225,21 @@
           <div class="row-fluid">
             <div class="col-md-4 center">
             <%= link_to :controller => :data_sets, :action => :manualEntry do %>
-              <img class="hoverimage" src="/assets/manual.png" /><br />Manual Entry
+                <%= image_tag "manual.png", class: "hoverimage" %><br/>
+                Manual Entry
             <% end %>
             </div>
             <div class="col-md-4 center" title="Supports - CSV,XLS,XLSX,ODS">
-              <a id="upload_datafile" href=""><img class="hoverimage" src="/assets/upload.png" /><br />
-              Upload File</a>
+              <a id="upload_datafile" href="">
+                <%= image_tag "upload.png", class: "hoverimage" %><br/>
+                Upload File
+              </a>
             </div>
             <div class="col-md-4 center">
-              <a id="google_doc" href=""><img class="hoverimage" src="/assets/google.png" /><br />
-              Google Doc</a>
+              <a id="google_doc" href="">
+                <%= image_tag "google.png", class: "hoverimage" %><br/>
+                Google Doc
+              </a>
             </div>
             <div class="clear">
             </div>
