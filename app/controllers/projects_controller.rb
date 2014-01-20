@@ -11,7 +11,7 @@ class ProjectsController < ApplicationController
     @params = params
     
     #Main List
-    if !params[:sort].nil? and ["like_count", "VIEWS", "created_at", "updated_at"].include? params[:sort]
+    if !params[:sort].nil? and ["like_count", "views", "created_at", "updated_at"].include? params[:sort]
       sort = params[:sort]
     else
       sort = "updated_at"
@@ -36,11 +36,8 @@ class ProjectsController < ApplicationController
     
     @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: pagesize)
     
-    if sort == "VIEWS"
-      @projects = @projects.includes(:view_count).order("view_counts.count #{order}")
-    else
-      @projects = @projects.order("#{sort} #{order}")
-    end
+    
+    @projects = @projects.order("#{sort} #{order}")
     
     @projects = @projects.only_templates(templates).only_curated(curated).only_featured(featured).has_data(hasData)
 
