@@ -44,6 +44,8 @@ Rsense::Application.routes.draw do
     get 'getData' => :getData
   end
 
+  get "/projects/:id/clone" => "projects#clone"
+  
   #Routes for uploading data
   get "/projects/:id/manualEntry" => "data_sets#manualEntry"
   post "/projects/:id/jsonDataUpload" => "data_sets#jsonDataUpload"
