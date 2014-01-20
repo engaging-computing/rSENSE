@@ -45,9 +45,9 @@ class Project < ActiveRecord::Base
   
   def self.search(search, include_hidden = false)
     res = if search
-        Project.joins("left outer join likes on projects.id = likes.project_id").select("projects.*, count(likes.id) as like_count").group("projects.id").where('(lower(projects.title) LIKE lower(?)) OR (projects.id = ?) OR (lower(projects.content) LIKE lower(?))', "%#{search}%", search.to_i, "%#{search}%")
+        Project.joins('LEFT OUTER JOIN "likes" ON "likes"."project_id" = "projects"."id" LEFT OUTER JOIN "view_counts" ON "view_counts"."project_id" = "projects"."id"').select("projects.*, count(likes.id) as like_count, view_counts.count as views").group("projects.id, view_counts.count").where('(lower(projects.title) LIKE lower(?)) OR (projects.id = ?) OR (lower(projects.content) LIKE lower(?))', "%#{search}%", search.to_i, "%#{search}%")
     else
-        Project.joins("left outer join likes on projects.id = likes.project_id").select("projects.*, count(likes.id) as like_count").group("projects.id")
+        Project.joins('LEFT OUTER JOIN "likes" ON "likes"."project_id" = "projects"."id" LEFT OUTER JOIN "view_counts" ON "view_counts"."project_id" = "projects"."id"').select("projects.*, count(likes.id) as like_count, view_counts.count as views").group("projects.id, view_counts.count")
     end
     
     if include_hidden
