@@ -365,4 +365,14 @@ class ProjectsController < ApplicationController
     end
   end
   
+  def clone
+    
+    @project = Project.find(params[:id])
+    @clone = Project.new
+    
+    respond_to do |format|
+      format.html
+    end
+  end
+  
 end
