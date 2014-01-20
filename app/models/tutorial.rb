@@ -5,9 +5,6 @@ class Tutorial < ActiveRecord::Base
   include ActionView::Helpers::DateHelper
   include ActionView::Helpers::SanitizeHelper
 
-  
-  attr_accessible :content, :title, :featured, :user_id, :hidden, :featured_media_id, :featured_at
-
   has_many :media_objects
   
   validates_presence_of :title

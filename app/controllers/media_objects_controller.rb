@@ -22,18 +22,13 @@ class MediaObjectsController < ApplicationController
   # PUT /media_objects/1.json
   def update
     @media_object = MediaObject.find(params[:id])
-    editUpdate = params[:media_object]
-    success = false
-    
-    if can_edit? @media_object
-      success = @media_object.update_attributes(editUpdate)
-    end
     
     respond_to do |format|
-      if success
+      if can_edit?(@media_object) && @media_object.update_attributes(media_object_params)
         format.html { redirect_to @media_object, notice: 'Media Object was successfully updated.' }
         format.json { render json:{}, status: :ok }
       else
+        @media_object.errors[:base] << "Permission denied" unless can_edit?(@media_object)
         format.html { redirect_to @media_object, alert: 'Media Object not successfully updated.' }
         format.json { render json: @media_object.errors.full_messages(), status: :unprocessable_entity }
       end
@@ -168,5 +163,12 @@ class MediaObjectsController < ApplicationController
       #Tell the user there is a problem with uploading their image.
       render json: {filelink: '/assets/noimage.png'}
     end
+  end
+
+  private
+
+  def media_object_params
+    params[:media_object].permit(:project_id, :media_type, :name, :data_set_id, :src, :user_id, :tutorial_id, 
+      :visualization_id, :title, :tn_src, :news_id)
   end
 end

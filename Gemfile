@@ -68,4 +68,4 @@ gem 'multi_json'
 gem 'roo'
 
 # Rails 4 migration
-gem 'protected_attributes'
+#gem 'protected_attributes'
