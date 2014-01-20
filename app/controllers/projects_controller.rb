@@ -39,7 +39,7 @@ class ProjectsController < ApplicationController
     
     @projects = @projects.order("#{sort} #{order}")
     
-#     @projects = @projects.only_templates(templates).only_curated(curated).only_featured(featured).has_data(hasData)
+    @projects = @projects.only_templates(templates).only_curated(curated).only_featured(featured).has_data(hasData)
 
     respond_to do |format|
       format.html
