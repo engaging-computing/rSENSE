@@ -344,5 +344,16 @@ class VisualizationsController < ApplicationController
       end
     end
   end
-  
+ 
+  private
+
+  def visualization_params
+    if @cur_user.try(:admin)
+      params[:visualization].permit(:content, :data, :project_id, :globals, :title, :user_id, :featured, 
+                                    :featured_at, :tn_src, :tn_file_key, :summary, :thumb_id)
+    else
+      params[:visualization].permit(:content, :data, :project_id, :globals, :title, :user_id,
+                                    :tn_src, :tn_file_key, :summary, :thumb_id)
+    end
+  end
 end

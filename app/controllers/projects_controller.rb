@@ -143,50 +143,34 @@ class ProjectsController < ApplicationController
   # PUT /projects/1.json
   def update
     @project = Project.find(params[:id])
-    editUpdate  = params[:project]
-    hideUpdate  = editUpdate.extract_keys!([:hidden])
-    adminUpdate = editUpdate.extract_keys!([:featured, :is_template,:curated])
-    success = false
-
-    #EDIT REQUEST
-    if can_edit?(@project) && !editUpdate.empty?
-      success = @project.update_attributes(editUpdate)
-    end
-
-    #HIDE REQUEST
-    if can_hide?(@project) && !hideUpdate.empty?
-      success = @project.update_attributes(hideUpdate)
-    end
-
+    update = project_params
 
     #ADMIN REQUEST
-    if can_admin?(@project)
-
-      if adminUpdate.has_key?(:featured)
-        if adminUpdate['featured'] == "true"
-          adminUpdate['featured_at'] = Time.now()
+    if @cur_user.try(:admin)
+      if update.has_key?(:featured)
+        if update['featured'] == "true"
+          update['featured_at'] = Time.now()
         else
-          adminUpdate['featured_at'] = nil
+          update['featured_at'] = nil
         end
       end
-
-      if adminUpdate.has_key?(:curated)
-        if adminUpdate['curated'] == "true"
-          adminUpdate['curated_at'] = Time.now()
-          adminUpdate['lock'] = true
+      
+      if update.has_key?(:curated)
+        if update['curated'] == "true"
+          update['curated_at'] = Time.now()
+          update['lock'] = true
         else
-          adminUpdate['curated_at'] = nil
+          update['curated_at'] = nil
         end
       end
-
-      success = @project.update_attributes(adminUpdate)
     end
 
     respond_to do |format|
-      if success
+      if can_edit?(@project) && @project.update_attributes(update)
         format.html { redirect_to @project, notice: 'Project was successfully updated.' }
         format.json { render json: {}, status: :ok }
       else
+        @project.errors[:base] << "Permission denied" unless can_edit?(@project)
         format.html { render action: "edit" }
         format.json { render json: @project.errors.full_messages(), status: :unprocessable_entity }
       end
@@ -364,5 +348,22 @@ class ProjectsController < ApplicationController
       redirect_to @project
     end
   end
-  
+ 
+  private
+
+  def project_params
+    if @cur_user.try(:admin)
+      return params[:project].permit(:content, :title, :user_id, :filter, :cloned_from, :has_fields, 
+         :featured, :is_template, :featured_media_id, :hidden, :featured_at, :lock, :curated, 
+         :curated_at, :updated_at, :default_vis)
+    end
+
+    if @project.nil? || !can_hide?(@project)
+      params[:project].permit(:content, :title, :user_id, :filter, :cloned_from, :has_fields, 
+         :featured_media_id, :lock, :updated_at, :default_vis)
+    else
+      params[:project].permit(:content, :title, :user_id, :filter, :cloned_from, :has_fields, 
+         :featured_media_id, :lock, :updated_at, :default_vis)
+    end
+  end
 end

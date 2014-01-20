@@ -1,6 +1,5 @@
 include ApplicationHelper
 class Field < ActiveRecord::Base
-  attr_accessible :project_id, :field_type, :name, :unit, :restrictions
   validates_presence_of :project_id, :field_type, :name
   validates_uniqueness_of :name, scope: :project_id
   belongs_to :project
