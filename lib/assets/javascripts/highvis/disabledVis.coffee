@@ -30,15 +30,14 @@ $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
       
     class window.DisabledVis extends BaseVis
-        constructor: (@canvas) -> 
-
-        motion_err = "<div class='novis_message'><img src='/assets/novis_motion.png'><br><br>A time field was not found<br>Cannot display Motion Chart</div>"
-        time_err = "<div class='novis_message'><img src='/assets/novis_timeline.png'><br><br>Either a time field was not found or there were not enough data<br>Cannot display Timeline visualization</div>"
-        scatter_err = "<div class='novis_message'><img src='/assets/novis_scatter.png'><br><br>Either two numeric fields were not found or there were not enough data<br>Cannot display Scatter Chart visualization</div>"
-        histogram_err = "<div class='novis_message'><img src='/assets/novis_histogram.png'><br><br>Either no numeric fields were found or there were not enough data<br>Cannot display Histogram</div>"
-        bar_err = "<div class='novis_message'><img src='/assets/novis_bar.png'><br><br>Either no numeric fields were found or there were not enough data<br>Cannot display Bar Chart visualization</div>"
-        map_err = "<div class='novis_message'><img src='/assets/novis_map.png'><br><br>No geographic data found<br>Cannot display Map visualization</div>"
-        photos_err = "<div class='novis_message'><img src='/assets/novis_photos.png'><br><br>There are no photos to display</div>"
+        constructor: (@canvas) ->
+        
+        time_err = "<div class='novis_message'><img src='#{window.icons["novis_timeline"]}'><br><br>Either a time field was not found or there were not enough data<br>Cannot display Timeline visualization</div>"
+        scatter_err = "<div class='novis_message'><img src='#{window.icons["novis_scatter"]}'><br><br>Either two numeric fields were not found or there were not enough data<br>Cannot display Scatter Chart visualization</div>"
+        histogram_err = "<div class='novis_message'><img src='#{window.icons["novis_histogram"]}'><br><br>Either no numeric fields were found or there were not enough data<br>Cannot display Histogram</div>"
+        bar_err = "<div class='novis_message'><img src='#{window.icons["novis_bar"]}'><br><br>Either no numeric fields were found or there were not enough data<br>Cannot display Bar Chart visualization</div>"
+        map_err = "<div class='novis_message'><img src='#{window.icons["novis_map"]}'><br><br>No geographic data found<br>Cannot display Map visualization</div>"
+        photos_err = "<div class='novis_message'><img src='#{window.icons["novis_photos"]}'><br><br>There are no photos to display</div>"
         
         start: ->  
             ($ '#' + @canvas).show()
