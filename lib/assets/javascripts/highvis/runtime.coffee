@@ -66,10 +66,21 @@ $ ->
     
     ### Generate tabs ###
     for vis of data.allVis
-        if data.allVis[vis] in data.relVis
-            ($ '#visTabList').append "<li class='vis_tab'><a href='##{data.allVis[vis].toLowerCase()}_canvas'><span class='hidden-sm hidden-xs'>#{data.allVis[vis]}</span><img class='visible-xs visible-sm' height='32px' width='32' src='/assets/vis_#{data.allVis[vis].toLowerCase()}_dark.png' data-disable-src='/assets/vis_#{data.allVis[vis].toLowerCase()}_light.png' ></a></li>"
-        else
-            ($ '#visTabList').append "<li class='vis_tab' ><a href='##{data.allVis[vis].toLowerCase()}_canvas'><span class='hidden-sm hidden-xs' style='text-decoration:line-through'>#{data.allVis[vis]}</span><img class='visible-xs visible-sm' height='32px' width='32' src='/assets/vis_#{data.allVis[vis].toLowerCase()}_light.png' data-enable-src='/assets/vis_#{data.allVis[vis].toLowerCase()}_dark.png' /></a></li>"
+      dark = "#{data.allVis[vis]}_dark"
+      light = "#{data.allVis[vis]}_light"
+      if data.allVis[vis] in data.relVis
+        ($ '#visTabList').append """<li class='vis_tab'>
+            <a href='##{data.allVis[vis].toLowerCase()}_canvas'>
+              <span class='hidden-sm hidden-xs'>#{data.allVis[vis]}</span>
+              <img class='visible-xs visible-sm' height='32px' width='32' src='#{window.icons[dark]}' data-disable-src='/assets/vis_#{window.icons[light]}' >
+            </a>
+          </li>"""
+      else
+        ($ '#visTabList').append """<li class='vis_tab' >
+            <a href='##{data.allVis[vis].toLowerCase()}_canvas'>
+              <span class='hidden-sm hidden-xs' style='text-decoration:line-through'>#{data.allVis[vis]}</span>
+              <img class='visible-xs visible-sm' height='32px' width='32' src='#{window.icons[light]}' data-enable-src='#{window.icons[dark]}' />
+            </a></li>"""
             
     ### Jquery up the tabs ###
     ($ '#viscontainer').tabs()
