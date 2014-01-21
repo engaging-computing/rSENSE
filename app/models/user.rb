@@ -4,9 +4,6 @@ class User < ActiveRecord::Base
   
   include ActionView::Helpers::SanitizeHelper
   
-  attr_accessible :content, :email, :email_confirmation, :name, :password, :password_confirmation, 
-    :username, :validated, :hidden, :bio, :last_login
-
   validates_uniqueness_of :email, case_sensitive: false
   validates :name, length: {minimum: 4, maximum: 32}, format: { 
     with: /\A[\p{Alpha}\p{Blank}\-\'\.]*\z/, 

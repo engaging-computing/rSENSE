@@ -2,7 +2,7 @@ class ContribKeysController < ApplicationController
   skip_before_filter :authorize, only: [:enter]
 
   def create
-    @key = ContribKey.new(params[:contrib_key])
+    @key = ContribKey.new(contrib_key_params)
 
     unless can_edit?(@key.project)
       flash[:error] = "Action Not Authorized"
@@ -44,5 +44,11 @@ class ContribKeysController < ApplicationController
       flash[:error] = "Invalid contributor key."
       redirect_to @project
     end
+  end
+
+  private
+
+  def contrib_key_params
+    params[:contrib_key].permit(:name, :key, :project_id)
   end
 end

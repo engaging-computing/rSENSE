@@ -6,10 +6,6 @@ class Project < ActiveRecord::Base
   include ActionView::Helpers::DateHelper
   include ActionView::Helpers::SanitizeHelper
 
-  attr_accessible :content, :title, :user_id, :filter, :cloned_from, :has_fields, 
-    :featured, :is_template, :featured_media_id, :hidden, :featured_at, :lock, :curated, 
-    :curated_at, :updated_at, :default_vis
-  
   validates_presence_of :title
   validates_presence_of :user_id
   
