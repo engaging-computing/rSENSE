@@ -49,7 +49,7 @@ class TutorialsControllerTest < ActionController::TestCase
       post :create, { tutorial: { content: @tutorial.content, title: @tutorial.title }}, { user_id: @kate }
     end
 
-    assert_response :not_found
+    assert_response 403
   end
 
   test "should show tutorial" do
@@ -91,8 +91,7 @@ class TutorialsControllerTest < ActionController::TestCase
       delete :destroy, { id: @tutorial }, { user_id: @kate }
     end
 
-    assert_redirected_to '/public/401.html'
+    assert_response 403
   end
-
-
 end
+

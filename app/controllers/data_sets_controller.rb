@@ -55,7 +55,7 @@ class DataSetsController < ApplicationController
   # POST /data_sets
   # POST /data_sets.json
   def create
-    @data_set = DataSet.new(params[:data_set])
+    @data_set = DataSet.new(data_set_params)
 
     respond_to do |format|
       if @data_set.save
@@ -72,25 +72,13 @@ class DataSetsController < ApplicationController
   # PUT /data_sets/1.json
   def update
     @data_set = DataSet.find(params[:id])
-    editUpdate  = params[:data_set]
-    hideUpdate  = editUpdate.extract_keys!([:hidden])
-    success = false
-
-    #EDIT REQUEST
-    if can_edit?(@data_set)
-      success = @data_set.update_attributes(editUpdate)
-    end
-
-    #HIDE REQUEST
-    if can_hide?(@data_set)
-      success = @data_set.update_attributes(hideUpdate)
-    end
-
+    
     respond_to do |format|
-      if @data_set.update_attributes(params[:data_set])
+      if can_edit?(@data_set) && @data_set.update_attributes(data_set_params)
         format.html { redirect_to @data_set, notice: 'DataSet was successfully updated.' }
         format.json { render json: {}, status: :ok }
       else
+        @data_set.errors[:base] << "Permission denied" unless can_edit?(@data_set)
         format.html { render action: "edit" }
         format.json { render json: @data_set.errors.full_messages(), status: :unprocessable_entity }
       end
@@ -234,5 +222,11 @@ class DataSetsController < ApplicationController
       flash[:error] = 'File could not be read'
       redirect_to project_path(project)
     end
+  end
+
+  private
+
+  def data_set_params
+    params[:data_set].permit(:content, :project_id, :title, :user_id, :hidden, :data)
   end
 end
