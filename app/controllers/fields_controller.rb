@@ -17,7 +17,7 @@ class FieldsController < ApplicationController
   # POST /fields
   # POST /fields.json
   def create
-    @field = Field.new(params[:field])
+    @field = Field.new(field_params)
     @project = Project.find(params[:field][:project_id])
     
     if !params[:field].has_key? :name
@@ -37,19 +37,13 @@ class FieldsController < ApplicationController
   # PUT /fields/1.json
   def update
     @field = Field.find(params[:id])
-    editUpdate  = params[:field]
-    success = false
-    
-    #EDIT REQUEST
-    if can_edit?(@field)
-      success = @field.update_attributes(editUpdate)
-    end
     
     respond_to do |format|
-      if success
+      if can_edit?(@field) && @field.update_attributes(field_params)
         format.html { redirect_to @field.project, notice: 'Field was successfully updated.' }
         format.json { render json:{}, status: :ok }
       else
+        @field.errors[:base] << ("Permission denied") unless can_edit?(@field)
         logger.error "Errors: #{@field.errors.inspect}"
         format.html { redirect_to Field.find(params[:id]), alert: 'Field was not updated.' }
         format.json { render json: @field.errors.full_messages(), status: :unprocessable_entity }
@@ -80,5 +74,11 @@ class FieldsController < ApplicationController
       end
     end
 
+  end
+
+  private
+
+  def field_params
+    params[:field].permit(:project_id, :field_type, :name, :unit, :restrictions)
   end
 end

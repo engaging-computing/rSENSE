@@ -23,7 +23,7 @@
               <%= select_tag(:sort, 
                 options_for_select([["Sort by Modified", "updated_at"],
                                     ["Sort by Created", "created_at"],
-                                    ["Sort by View Count","VIEWS"],
+                                    ["Sort by View Count","views"],
                                     ["Sort by Rating", "like_count"]], @params["sort"]),
                 class: "projects_sort_select form-control") 
               %>

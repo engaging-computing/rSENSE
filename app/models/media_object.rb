@@ -4,9 +4,6 @@ require 'store_file'
 class MediaObject < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
 
-  attr_accessible :project_id, :media_type, :name, :data_set_id, :src, :user_id, :tutorial_id, 
-    :visualization_id, :title, :file_key, :hidden, :tn_file_key, :tn_src, :news_id, :store_key
-  
   belongs_to :user
   belongs_to :project
   belongs_to :data_set

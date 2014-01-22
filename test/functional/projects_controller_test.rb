@@ -112,7 +112,7 @@ class ProjectsControllerTest < ActionController::TestCase
     assert Project.find(@project_three).featured == true, "Nixon should have featured the project"
 
     put :update, { format: 'json', id: @project_three, project: { featured: "false" }}, { user_id: @kate }
-    assert_response :unprocessable_entity
+    assert_response :ok
     assert Project.find(@project_three).featured == true, "Kate should not have been able to unfeature the project."
   end
 
@@ -124,7 +124,7 @@ class ProjectsControllerTest < ActionController::TestCase
     assert project.lock == true, "Curating should have locked the project"
     
     put :update, { format: 'json', id: @project_three, project: { curated: "false" }}, { user_id: @kate }
-    assert_response :unprocessable_entity
+    assert_response :ok
     assert Project.find(@project_three).curated == true, "Kate should not have been able to uncurated the project"
 
     put :update, { format: 'json', id: @project_three, project: { curated: "false" }}, { user_id: @crunch }
