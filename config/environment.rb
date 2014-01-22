@@ -5,3 +5,8 @@ require File.expand_path('../application', __FILE__)
 Rsense::Application.initialize!
 
 require 'will_paginate'
+
+asdf
+asdf
+asdf
+
