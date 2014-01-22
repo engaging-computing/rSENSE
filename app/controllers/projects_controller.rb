@@ -34,12 +34,15 @@ class ProjectsController < ApplicationController
     featured = params.has_key? "featured_only"
     hasData = params.has_key? "has_data"
     
-    @projects = Project.search(params[:search]).paginate(page: params[:page], per_page: pagesize)
-    
+    @projects = Project.search(params[:search])
     
     @projects = @projects.order("#{sort} #{order}")
     
     @projects = @projects.only_templates(templates).only_curated(curated).only_featured(featured).has_data(hasData)
+    
+    count = @projects.length
+    
+    @projects = @projects.paginate(page: params[:page], per_page: pagesize, total_entries: count)
 
     respond_to do |format|
       format.html
