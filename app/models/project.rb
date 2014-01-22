@@ -6,10 +6,6 @@ class Project < ActiveRecord::Base
   include ActionView::Helpers::DateHelper
   include ActionView::Helpers::SanitizeHelper
 
-  attr_accessible :content, :title, :user_id, :filter, :cloned_from, :has_fields, 
-    :featured, :is_template, :featured_media_id, :hidden, :featured_at, :lock, :curated, 
-    :curated_at, :updated_at, :default_vis
-  
   validates_presence_of :title
   validates_presence_of :user_id
   
@@ -45,9 +41,9 @@ class Project < ActiveRecord::Base
   
   def self.search(search, include_hidden = false)
     res = if search
-        Project.joins("left outer join likes on projects.id = likes.project_id").select("projects.*, count(likes.id) as like_count").group("projects.id").where('(lower(projects.title) LIKE lower(?)) OR (projects.id = ?) OR (lower(projects.content) LIKE lower(?))', "%#{search}%", search.to_i, "%#{search}%")
+        Project.joins('LEFT OUTER JOIN "likes" ON "likes"."project_id" = "projects"."id" LEFT OUTER JOIN "view_counts" ON "view_counts"."project_id" = "projects"."id"').select("projects.*, count(likes.id) as like_count, view_counts.count as views").group("projects.id, view_counts.count").where('(lower(projects.title) LIKE lower(?)) OR (projects.id = ?) OR (lower(projects.content) LIKE lower(?))', "%#{search}%", search.to_i, "%#{search}%")
     else
-        Project.joins("left outer join likes on projects.id = likes.project_id").select("projects.*, count(likes.id) as like_count").group("projects.id")
+        Project.joins('LEFT OUTER JOIN "likes" ON "likes"."project_id" = "projects"."id" LEFT OUTER JOIN "view_counts" ON "view_counts"."project_id" = "projects"."id"').select("projects.*, count(likes.id) as like_count, view_counts.count as views").group("projects.id, view_counts.count")
     end
     
     if include_hidden

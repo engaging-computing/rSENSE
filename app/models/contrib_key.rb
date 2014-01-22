@@ -1,6 +1,4 @@
 class ContribKey < ActiveRecord::Base
-  attr_accessible :name, :key, :project_id
-
   belongs_to :project
 
   validates :name, length: { minimum: 1 }
