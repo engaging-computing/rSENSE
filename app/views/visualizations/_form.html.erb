@@ -13,17 +13,20 @@
 
   
   <div class="row"> 
-    <div class="span12" style="font-weight:bold">
-      <div class="field">
-        Featured: <%= f.check_box :featured %>
+    <div class="col-md-12">
+
+      <div class="form-group">
+        <div class="checkbox">
+          <div class="checkbox-inner">
+            <%= f.check_box :featured %> <strong> Feature Project</strong>
+          </div>
+          <span class="help-block">Featuring a visualization will put it in the running to be on the front page. Featured visualizations are shown based on when they are featured.</span>
+        </div>
       </div>
-      <div class="clear"><br></div>      
-      <div class="field">
-        Owner: <%= f.number_field :user_id %>
-      </div>
-      <div class="clear"><br></div> 
+      
       <div class="actions">
-        <%= f.submit "Update Visualization", class: "btn btn-primary" %>
+        <a href='<%= url_for @visualization %>'> <button type="button" class="btn btn-danger"> Cancel </button></a>
+        <button type="submit" name="commit" class="btn btn-primary"> Submit </button>
       </div>
     </div>
   </div>
