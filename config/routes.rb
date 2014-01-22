@@ -24,6 +24,7 @@ Rsense::Application.routes.draw do
   resources :fields, except: [:index, :new, :edit]
 
   get "projects/create" => "projects#create"
+  post "projects/create" => "projects#create"
   resources :projects, except: [:new]
 
   #match "tutorials/create" => "tutorials#create"

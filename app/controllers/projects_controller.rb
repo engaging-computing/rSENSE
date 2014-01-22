@@ -108,12 +108,65 @@ class ProjectsController < ApplicationController
   def create
     #@project = Project.new(params[:project])
     if(params[:project_id])
-      @tmp_proj = Project.find(params[:project_id])
-      @project = Project.new({user_id: @cur_user.id, title:"#{@tmp_proj.title} (clone)", content: @tmp_proj.content, filter: @tmp_proj.filter, cloned_from:@tmp_proj.id})
+      #Clone
+      @cloned = Project.find(params[:project_id])
+      @project = Project.new({user_id: @cur_user.id, title:"#{@cloned.title} (clone)", content: @cloned.content, filter: @cloned.filter, cloned_from:@cloned.id})
       success = @project.save
-      @tmp_proj.fields.load.each do |f|
-        Field.create({project_id:@project.id, field_type: f.field_type, name: f.name, unit: f.unit})
+      
+      #Clone fields
+      fieldMap = Hash.new
+      @cloned.fields.each do |f|
+        nf = f.dup
+        nf.project_id = @project.id
+        nf.save
+        fieldMap[f.id.to_s] = nf.id.to_s
       end
+      
+      #Clone project media
+      @cloned.media_objects.each do |mo|
+        nmo = mo.cloneMedia
+        nmo.project_id = @project.id
+        nmo.user_id = @cur_user.id
+        nmo.save!
+        @cloned.content.gsub! mo.src, nmo.src
+      end
+      
+      if params[:clone_datasets]
+        #Clone datasets
+        @cloned.data_sets.each do |ds|
+          nds = ds.dup
+          nds.project_id = @project.id
+          nds.user_id = @cur_user.id
+          
+          #Fix data fields
+          data = nds.data
+          newData = []
+          data.each do |row|
+            fieldMap.each do |oldKey, newKey|
+              row[newKey] = row[oldKey]
+              row.delete oldKey
+            end
+            newData.push row
+          end
+          nds.data = newData
+          nds.save!
+          
+          #Clone dataset media
+          ds.media_objects.each do |mo|
+            nmo = mo.cloneMedia
+            nmo.data_set_id = nds.id
+            nmo.project_id = @project.id
+            nmo.user_id = @cur_user.id
+            
+            nmo.save!
+            nds.content.gsub! mo.src, nmo.src
+          end
+          
+          nds.save!
+        end
+      end
+      
+      success &= @project.save
     else
       if(!params.try(:[], :project_name))
         if @cur_user.name[-1].downcase == 's'
@@ -369,6 +422,7 @@ class ProjectsController < ApplicationController
     
     @project = Project.find(params[:id])
     @clone = Project.new
+    @clone.title = @project.title + " (clone)"
     
     respond_to do |format|
       format.html
