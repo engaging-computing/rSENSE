@@ -89,4 +89,17 @@ Rsense::Application.routes.draw do
 
   resources :contrib_keys, only: [:create, :destroy]
   post "/contrib_keys/enter" => 'contrib_keys#enter'
+
+
+  #API routes
+  scope :api, defaults: {:format => 'json'}, except: :destroy do
+    scope :v1 do
+      resources :projects
+      resources :fields
+      resources :users
+      resources :media_objects
+      resources :visualizations
+      post 'login' => "sessions#create"
+    end
+  end
 end
