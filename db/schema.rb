@@ -60,7 +60,7 @@ ActiveRecord::Schema.define(version: 20140116225820) do
     t.datetime "updated_at",                       null: false
     t.integer  "tutorial_id"
     t.boolean  "hidden",           default: false
-    t.integer  "visualization_id"
+    t.decimal  "visualization_id"
     t.integer  "news_id"
     t.string   "store_key"
   end
@@ -100,7 +100,7 @@ ActiveRecord::Schema.define(version: 20140116225820) do
     t.string   "title"
     t.datetime "created_at",                        null: false
     t.datetime "updated_at",                        null: false
-    t.integer  "user_id"
+    t.decimal  "user_id"
     t.boolean  "hidden",            default: true
     t.integer  "featured_media_id"
     t.boolean  "featured",          default: false
