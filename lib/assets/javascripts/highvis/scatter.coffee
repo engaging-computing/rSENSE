@@ -333,8 +333,6 @@ $ ->
             for axis in axes
               controls += "<option value='#{axis}'>#{axis}</option>"
             controls += "</select>"
-
-            controls += "<button id='zoomInButton' class='zoom_button btn btn-default'>In</button>"
             controls += "<button id='zoomOutButton' class='zoom_button btn btn-default'>Out</button>"
             controls += "<button id='zoomResetButton' class='zoom_button btn btn-default'>Fit</button>"
 
@@ -386,10 +384,6 @@ $ ->
             ($ '#zoomOutButton').button()
             ($ '#zoomOutButton').click (e) =>
               @zoomOutExtremes(($ '#zoomSelector').val())
-
-            ($ '#zoomInButton').button()
-            ($ '#zoomInButton').click (e) =>
-              @zoomInExtremes(($ '#zoomSelector').val())
 
             ($ '.mode_radio').click (e) =>
                 @mode = Number e.target.value
@@ -504,32 +498,11 @@ $ ->
           
             if whichAxis in ['Both', 'Y']
                 if globals.logY is 1
-                    @yBounds.max *= 10
-                    @yBounds.min /= 10
+                    @yBounds.max *= 10.0
+                    @yBounds.min /= 10.0
                 else
                     @yBounds.max += yRange * 0.1
                     @yBounds.min -= yRange * 0.1
-          
-            @setExtremes()
-
-        zoomInExtremes: (whichAxis) ->
-          
-            xRange = @xBounds.max - @xBounds.min
-            yRange = @yBounds.max - @yBounds.min
-
-            console.log(xRange)
-          
-            if whichAxis in ['Both', 'X']
-                @xBounds.max -= xRange * 0.1
-                @xBounds.min += xRange * 0.1
-          
-            if whichAxis in ['Both', 'Y']
-                if globals.logY is 1
-                    @yBounds.max /= 10
-                    @yBounds.min *= 10
-                else
-                    @yBounds.max -= yRange * 0.1
-                    @yBounds.min += yRange * 0.1
           
             @setExtremes()
 
