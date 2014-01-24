@@ -85,7 +85,7 @@ class DataSetsControllerTest < ActionController::TestCase
   end
 
   test "should export data" do
-    get :export, { id: @proj.id, datasets: "#{@new_dataset_id}"}, { user_id: @kate }
+    get :export, { id: @proj.id, datasets: @tgd.id.to_s}, { user_id: @kate }
     assert(@response["Content-Type"] == "file/zip")
   end
 

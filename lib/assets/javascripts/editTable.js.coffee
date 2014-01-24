@@ -300,7 +300,7 @@ $ ->
           # remove token
           ($ '.new_row').removeClass('new_row')
           
-          window.onload = ( -> ($ '#edit_table_add').click() )
+          #window.onload = ( -> ($ '#edit_table_add').click() )
 
         # strip table for upload
         strip_table = (tab) ->

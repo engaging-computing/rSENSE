@@ -105,6 +105,18 @@ class UsersControllerTest < ActionController::TestCase
     assert_redirected_to user_path(assigns(:user))
   end
 
+  test "should update bio" do
+    put :update, {id: @user, user: { bio: "Snackcakes are Delicious" }}, { user_id: @user }
+    assert_redirected_to user_path(assigns(:user))
+  end
+  
+  test "should not update email without password" do
+    put :update, {id: @user, user: { email: "fake@derp.com", email_confirmation: "fake@derp.com" }}, 
+      { user_id: @user }
+    assert_redirected_to user_path(assigns(:user)) + "/edit"
+    assert_not_nil flash[:error]
+  end
+
   test "user can't delete themselves" do
     assert_difference('User.count', 0) do
       delete :destroy, { id: @user }, { user_id: @user }

@@ -8,8 +8,8 @@
               <th>Name</th>
               <th>Type</th>
               <th>Units</th>
-              <th>Restrictions</th>
-              <th>Delete Field *</th>
+              <th>Restrictions *</th>
+              <th>Delete Field **</th>
             </tr>
           </thead>
           <tbody>
@@ -21,7 +21,7 @@
                   <% if field.field_type == get_field_type("Number")%>
                     <input class="input-small form-control" type="text" name="<%=field.id%>_unit" value="<%=field.unit%>">
                   <% else %>
-                    <input class="input-small form-control" type="text" name="<%=field.id%>_unit" value="<%=field.unit%>" readonly>
+                    <input class="input-small form-control" type="text" name="<%=field.id%>_unit" value="<%=field.unit%>" readonly disabled>
                   <% end %>
                 </td>
                 <td>
@@ -42,7 +42,13 @@
     </div>
     <div class="row">
       <div class="col-md-8 col-md-offset-2">
-        <i>* Fields can't be deleted if the project contains data sets. </i>
+        <i>* Restrictions are a comma seperated list of values that limit user input to only the predefined values.</i><br/>
+        <i>&nbsp;&nbsp;e.g. High School, Middle School, Elementary School, College</i><br/><br/>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <i>** Fields can't be deleted if the project contains data sets. </i>
       </div>
     </div>
     <div class="row">

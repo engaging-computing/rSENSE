@@ -25,7 +25,8 @@ class UsersController < ApplicationController
         pagesize = 30;
     end
    
-    @users = User.search(params[:search]).paginate(page: params[:page], per_page: pagesize).order("created_at #{sort}")
+    @users = User.search(params[:search]).paginate(
+      page: params[:page], per_page: pagesize).order("created_at #{sort}")
     logger.error @users.map {|u| u.created_at}
     respond_to do |format|
       format.html { render status: :ok }
@@ -84,7 +85,8 @@ class UsersController < ApplicationController
     when "liked projects"
       @contributions = []
       @user.likes.each do |like|
-        y = Project.where('(lower(title) LIKE lower(?)) AND (id = ?)', "%#{params[:search]}%", like.project_id).first || next
+        y = Project.where('(lower(title) LIKE lower(?)) AND (id = ?)', "%#{params[:search]}%",
+                          like.project_id).first || next
         next if ((y.hidden == true) && !(can_edit? y))
         @contributions << y
       end
@@ -129,7 +131,7 @@ class UsersController < ApplicationController
   # POST /users
   # POST /users.json
   def create
-    @user = User.new(params[:user])
+    @user = User.new(user_params)
     @user.reset_validation!
 
     respond_to do |format|
@@ -159,7 +161,8 @@ class UsersController < ApplicationController
     auth  = true if can_edit?(@user) && session[:pw_change]
 
     if !auth && can_edit?(@user)
-      if @user.authenticate(params[:current_password])
+      if (params[:user][:password].nil? && params[:user][:email].nil?) or
+           @user.authenticate(params[:current_password])
         auth  = true
       else
         auth_error = "Current password doesn't match"
@@ -167,7 +170,7 @@ class UsersController < ApplicationController
     end
 
     respond_to do |format|
-      if auth && @user.update_attributes(params[:user]) 
+      if auth && @user.update_attributes(user_params)
         format.html { redirect_to @user, notice: 'User was successfully updated.' }
         format.json { render json: {}, status: :ok }
       else
@@ -180,6 +183,7 @@ class UsersController < ApplicationController
           end
           redirect_to edit_user_path(@user)
         end
+        @errors = auth_error unless auth
         format.json { render json: @errors, status: :unprocessable_entity }
       end
     end
@@ -307,6 +311,18 @@ class UsersController < ApplicationController
       session[:user_id]   = @user.id
       session[:pw_change] = true
       redirect_to edit_user_path(@user)
+    end
+  end
+  
+  private
+
+  def user_params
+    if @cur_user.try(:admin)
+      params[:user].permit(:content, :email, :email_confirmation, :name, :password, :password_confirmation, 
+                           :username, :admin, :validated, :hidden, :bio, :last_login)
+    else
+      params[:user].permit(:content, :email, :email_confirmation, :name, :password, :password_confirmation, 
+                           :username, :hidden, :bio)
     end
   end
 end

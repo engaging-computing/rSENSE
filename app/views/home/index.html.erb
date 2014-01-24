@@ -102,21 +102,21 @@
       <div style="margin-top:20px;"><%= mobileParse(i) %></div>
       <br><a href="projects" class="btn btn-primary">See More Projects</a>
     </div>
+  <%end%>  
     <div style="margin-top:20px;">
       <h4>iSENSE Mobile Apps</h4>
       <p>Download official apps to use with iSENSE.</p>
       <div class="mobileButtonTable">
         <div class="mobileButtonCell">
           <a href="https://play.google.com/store/apps/developer?id=Engaging+Computing+Group,+UML" class="btn btn-primary">
-            <img src="/assets/icon-android.png">
+            <%= image_tag "icon-android.png" %>
           </a>
         </div>
         <div class="mobileButtonCell">
           <a class="btn btn-primary disabled">
-            <img src="/assets/icon-apple.png">
+            <%= image_tag "icon-apple.png" %>
           </a>
         </div>
       </div>
     </div>
-  <%end%>
 </div>

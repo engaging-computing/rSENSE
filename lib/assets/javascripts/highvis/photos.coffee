@@ -61,9 +61,12 @@ $ ->
                     ($ "#polaroid").append figure
                     ($ '#pic_'+i).click =>
                       ($ '#polaroid').append("""
-                        <div class="modal fade" id="target_img">
+                        <div class="modal fade" id="target_img" tabindex='-1'>
                           <div class="modal-dialog">
                             <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i> Close</button>
+                              </div>
                               <div class="modal-body">
                                 <img src='#{tmp.src}' style='width:100%'/>
                               </div>
@@ -71,7 +74,9 @@ $ ->
                           </div> 
                         </div>   
                         """)
-                      ($ '#target_img').modal()
+                      
+                      ($ '#target_img').modal
+                        keyboard: true
                       ($ '#target_img').on "hidden.bs.modal", ->
                         ($ '#target_img').remove()
                   i++      

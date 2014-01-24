@@ -92,6 +92,7 @@
     width: 100%;
     height: 98%;
     font-size:14px;
+    min-height:500px;
 }
 
 .vis_tab {
@@ -164,6 +165,11 @@ table.fixed td { overflow: hidden; }
   color: #8e8e8e
 }
 
+#photos_canvas
+{
+ overflow-y:scroll; 
+}
+
 #radiusText
 {
   width: 75px;
@@ -183,7 +189,7 @@ figure, figurecaption{
 
 #polaroid{
   margin: 10px;
-  overflow-y:scroll;
+  overflow:scroll;
   div.p_item
   {
     .caption

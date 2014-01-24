@@ -1,0 +1,7 @@
+#!/bin/sh
+echo "Executing post-merge hook..."
+bundle install
+rake db:migrate RAILS_ENV=production
+bundle exec rake assets:precompile RAILS_ENV=production
+echo "Now restarting apache..."
+sudo service apache2 reload
