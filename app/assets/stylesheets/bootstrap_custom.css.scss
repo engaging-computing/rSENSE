@@ -1,4 +1,15 @@
 // A stylesheet for overriding bootstrap defaults
+
+span.help-block
+{
+ margin-top: 0px;
+}
+
+div.checkbox-inner
+{
+  margin-bottom:0px;
+}
+
 a:hover
 {
   text-decoration: none;
