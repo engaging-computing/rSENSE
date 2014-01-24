@@ -107,59 +107,78 @@ class ProjectsController < ApplicationController
     if(params[:project_id])
       #Clone
       @cloned = Project.find(params[:project_id])
-      @project = Project.new({user_id: @cur_user.id, title:"#{@cloned.title} (clone)", content: @cloned.content, filter: @cloned.filter, cloned_from:@cloned.id})
+      @project = @cloned.dup
+      @project.user_id = @cur_user.id
+      @project.cloned_from = @cloned.id
+      @project.featured = false
+      @project.curated = false
+      @project.lock = false
+      if (params.try(:[], :project_name))
+        @project.title = params[:project_name]
+      else
+        @project.title = "#{@cloned.title} (clone)"
+      end
+      
       success = @project.save
+      if success
       
-      #Clone fields
-      fieldMap = Hash.new
-      @cloned.fields.each do |f|
-        nf = f.dup
-        nf.project_id = @project.id
-        nf.save
-        fieldMap[f.id.to_s] = nf.id.to_s
-      end
-      
-      #Clone project media
-      @cloned.media_objects.each do |mo|
-        nmo = mo.cloneMedia
-        nmo.project_id = @project.id
-        nmo.user_id = @cur_user.id
-        nmo.save!
-        @cloned.content.gsub! mo.src, nmo.src
-      end
-      
-      if params[:clone_datasets]
-        #Clone datasets
-        @cloned.data_sets.each do |ds|
-          nds = ds.dup
-          nds.project_id = @project.id
-          nds.user_id = @cur_user.id
-          
-          #Fix data fields
-          data = nds.data
-          newData = []
-          data.each do |row|
-            fieldMap.each do |oldKey, newKey|
-              row[newKey] = row[oldKey]
-              row.delete oldKey
-            end
-            newData.push row
-          end
-          nds.data = newData
-          nds.save!
-          
-          #Clone dataset media
-          ds.media_objects.each do |mo|
+        #Clone fields
+        fieldMap = Hash.new
+        @cloned.fields.each do |f|
+          nf = f.dup
+          nf.project_id = @project.id
+          nf.save
+          fieldMap[f.id.to_s] = nf.id.to_s
+        end
+        
+        #Clone project media
+        @cloned.media_objects.each do |mo|
+          if mo.data_set_id.nil?
             nmo = mo.cloneMedia
-            nmo.data_set_id = nds.id
             nmo.project_id = @project.id
             nmo.user_id = @cur_user.id
-            
             nmo.save!
-            nds.content.gsub! mo.src, nmo.src
+            @cloned.content.gsub! mo.src, nmo.src
+            
+            if @project.featured_media_id == mo.id
+              @project.featured_media_id = nmo.id
+            end
           end
-          
-          nds.save!
+        end
+        
+        if params[:clone_datasets]
+          #Clone datasets
+          @cloned.data_sets.each do |ds|
+            nds = ds.dup
+            nds.project_id = @project.id
+            nds.user_id = @cur_user.id
+            
+            #Fix data fields
+            data = nds.data
+            newData = []
+            data.each do |row|
+              fieldMap.each do |oldKey, newKey|
+                row[newKey] = row[oldKey]
+                row.delete oldKey
+              end
+              newData.push row
+            end
+            nds.data = newData
+            nds.save!
+            
+            #Clone dataset media
+            ds.media_objects.each do |mo|
+              nmo = mo.cloneMedia
+              nmo.data_set_id = nds.id
+              nmo.project_id = @project.id
+              nmo.user_id = @cur_user.id
+              
+              nmo.save!
+              nds.content.gsub! mo.src, nmo.src
+            end
+            
+            nds.save!
+          end
         end
       end
       
@@ -213,8 +232,6 @@ class ProjectsController < ApplicationController
           update['curated_at'] = nil
         end
       end
-
-      success = @project.update_attributes(adminUpdate)
     end
 
     respond_to do |format|
@@ -428,5 +445,5 @@ private
       params[:project].permit(:content, :title, :user_id, :filter, :cloned_from, :has_fields, 
          :featured_media_id, :lock, :updated_at, :default_vis)
     end
-  end  
+  end
 end
