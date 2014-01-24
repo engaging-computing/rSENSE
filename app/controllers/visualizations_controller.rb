@@ -119,7 +119,7 @@ class VisualizationsController < ApplicationController
       params[:visualization].delete :svg
     end
     
-    @visualization = Visualization.new(params[:visualization])
+    @visualization = Visualization.new(visualization_params)
     @visualization.thumb_id = mo.id unless mo.id.nil?
 
     respond_to do |format|
@@ -141,40 +141,25 @@ class VisualizationsController < ApplicationController
   # PUT /visualizations/1.json
   def update
     @visualization = Visualization.find(params[:id])
-    editUpdate  = params[:visualization]
-    hideUpdate  = editUpdate.extract_keys!([:hidden])
-    adminUpdate = editUpdate.extract_keys!([:featured])
-    success = false
+    update = visualization_params
    
-    #EDIT REQUEST
-    if can_edit?(@visualization) 
-      success = @visualization.update_attributes(editUpdate)
-    end
-    
-    #HIDE REQUEST
-    if can_hide?(@visualization) 
-      success = @visualization.update_attributes(hideUpdate)
-    end
-    
     #ADMIN REQUEST
     if can_admin?(@visualization) 
-      
-      if adminUpdate.has_key?(:featured)
-        if adminUpdate['featured'] == "1"
-          adminUpdate['featured_at'] = Time.now()
+      if update.has_key?(:featured)
+        if update['featured'] == "1"
+          update['featured_at'] = Time.now()
         else
-          adminUpdate['featured_at'] = nil
+          update['featured_at'] = nil
         end
       end
-      
-      success = @visualization.update_attributes(adminUpdate)
     end
     
     respond_to do |format|
-      if success
+      if can_edit?(@visualization) && @visualization.update_attributes(update)
         format.html { redirect_to @visualization, notice: 'Visualization was successfully updated.' }
         format.json { render json: {}, status: :ok }
       else
+        @visualization.errors[:base] << "Permission denied" unless can_edit(@visualization)
         format.html { render action: "edit" }
         format.json { render json: @visualization.errors.full_messages(), status: :unprocessable_entity }
       end
@@ -344,5 +329,16 @@ class VisualizationsController < ApplicationController
       end
     end
   end
-  
+ 
+  private
+
+  def visualization_params
+    if @cur_user.try(:admin)
+      params[:visualization].permit(:content, :data, :project_id, :globals, :title, :user_id, :featured, 
+                                    :featured_at, :tn_src, :tn_file_key, :summary, :thumb_id)
+    else
+      params[:visualization].permit(:content, :data, :project_id, :globals, :title, :user_id,
+                                    :tn_src, :tn_file_key, :summary, :thumb_id)
+    end
+  end
 end

@@ -2,7 +2,6 @@ class DataSet < ActiveRecord::Base
   
   include ActionView::Helpers::SanitizeHelper
   
-  attr_accessible :content, :project_id, :title, :user_id, :hidden, :data
   serialize :data, JSON
   
   validates_presence_of :project_id, :user_id, :title

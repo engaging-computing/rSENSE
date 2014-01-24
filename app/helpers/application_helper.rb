@@ -35,21 +35,18 @@ module ApplicationHelper
   # Begin permissions stuff
   def can_edit? (obj)
 
-    if @cur_user.nil?
-      return false
-    end
+    return false if @cur_user.nil?
+    return true  if @cur_user.try(:admin)
 
     case obj
     when DataSet
-      ((obj.owner.id == @cur_user.try(:id)) && obj.project.lock == false) || @cur_user.try(:admin)
+      obj.owner.id == @cur_user.try(:id) && obj.project.lock == false
     when User
-      (obj.id == @cur_user.try(:id)) || @cur_user.try(:admin)
+      obj.id == @cur_user.try(:id)
     when Project, Visualization, MediaObject
-      (obj.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin)
+      obj.owner.id == @cur_user.try(:id)
     when Field
-      (obj.owner.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin)
-    when Tutorial, News
-      @cur_user.try(:admin)
+      obj.try(:owner).try(:owner).try(:id) == @cur_user.try(:id)
     else
       false
     end
@@ -62,9 +59,7 @@ module ApplicationHelper
     end
 
     case obj
-    when DataSet
-      ((obj.owner.id == @cur_user.try(:id)) && obj.project.lock == false) || @cur_user.try(:admin) || (obj.project.owner.id == @cur_user.try(:id))
-    when Project, Visualization, Tutorial
+    when Project, Tutorial
       (obj.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin)
     else
       false

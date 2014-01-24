@@ -6,7 +6,6 @@ class NewsController < ApplicationController
   include ApplicationHelper
   
   def index
-    
     @news = News.where({hidden: false}).order("created_at DESC").limit(10)
 
     respond_to do |format|
@@ -49,7 +48,7 @@ class NewsController < ApplicationController
     @news = News.find(params[:id])
 
     respond_to do |format|
-      if @news.update_attributes(params[:news])
+      if @news.update_attributes(news_params)
         format.html { redirect_to @news, notice: 'News was successfully updated.' }
         format.json { render json: {}, status: :ok }
       else
@@ -74,5 +73,11 @@ class NewsController < ApplicationController
       format.html { redirect_to news_index_url }
       format.json { render json: {}, status: :ok }
     end
+  end
+
+  private
+
+  def news_params
+    params[:news].permit(:title, :content, :summary, :featured_media_id, :user_id, :hidden)
   end
 end

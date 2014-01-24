@@ -155,7 +155,7 @@ class FileUploader
     else 
       data = data_obj
     end
-   
+
     data.each do |(key,value)|
       field = Field.find(key)
       type = get_field_name(field.field_type)
@@ -181,7 +181,7 @@ class FileUploader
         when "Text"
           if !field.restrictions.nil?
             if !(field.restrictions.map {|r| r.downcase.gsub(/\s+/, "")}.include? dp.downcase.gsub(/\s+/, ""))
-              data[match[1]][index] = ""
+              data[key][index] = ""
             end
           end
         end
