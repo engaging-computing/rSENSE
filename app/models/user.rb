@@ -9,8 +9,6 @@ class User < ActiveRecord::Base
     with: /\A[\p{Alpha}\p{Blank}\-\'\.]*\z/, 
     message: "can only contain letters, hyphens, single quotes, periods, and spaces."}
   
-  validates :username, length: {maximum: 32}
- 
   validates :email, format: {with: /\@.*\./}, confirmation: true
 
   validates :password, presence: true, on: :create
@@ -29,7 +27,6 @@ class User < ActiveRecord::Base
   
   def sanitize_user
     self.name = sanitize self.name, tags: %w()
-    self.username = sanitize self.username, tags: %w()
     
     self.bio = sanitize self.bio
     
@@ -43,7 +40,7 @@ class User < ActiveRecord::Base
   
   def self.search(search)
     res = if search
-        where('lower(name) LIKE lower(?) OR lower(username) LIKE lower(?)', "%#{search}%", "%#{search}%")
+        where('lower(name) LIKE lower(?)', "%#{search}%")
     else
         all
     end
