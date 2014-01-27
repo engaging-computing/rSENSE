@@ -141,7 +141,10 @@ class ProjectsController < ApplicationController
             nmo.project_id = @project.id
             nmo.user_id = @cur_user.id
             nmo.save!
-            @cloned.content.gsub! mo.src, nmo.src
+            
+            if !@cloned.content.nil?
+              @cloned.content.gsub! mo.src, nmo.src
+            end
             
             if @project.featured_media_id == mo.id
               @project.featured_media_id = nmo.id
@@ -177,7 +180,9 @@ class ProjectsController < ApplicationController
               nmo.user_id = @cur_user.id
               
               nmo.save!
-              nds.content.gsub! mo.src, nmo.src
+              if !nds.content.nil?
+                nds.content.gsub! mo.src, nmo.src
+              end
             end
             
             nds.save!
