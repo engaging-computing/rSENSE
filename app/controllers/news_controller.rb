@@ -6,7 +6,12 @@ class NewsController < ApplicationController
   include ApplicationHelper
   
   def index
-    @news = News.where({hidden: false}).order("created_at DESC").limit(10)
+    
+    if @cur_user.admin
+      @news = News.order("created_at DESC").limit(10)
+    else
+      @news = News.where({hidden: false}).order("created_at DESC").limit(10)
+    end
 
     respond_to do |format|
       format.html # index.html.erb
