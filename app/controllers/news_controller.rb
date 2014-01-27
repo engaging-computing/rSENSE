@@ -7,7 +7,7 @@ class NewsController < ApplicationController
   
   def index
     
-    if @cur_user.admin
+    if @cur_user.try(:admin)
       @news = News.order("created_at DESC").limit(10)
     else
       @news = News.where({hidden: false}).order("created_at DESC").limit(10)
