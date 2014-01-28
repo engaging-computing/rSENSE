@@ -31,7 +31,7 @@
       <div class="user_list">
         <% @users.each do |u| %>
             <div class="row <%=cycle('feed-even','feed-odd')%>">
-                <div class="col-lg-1 truncate"><b><%= link_to u.username, user_path(u)%></b></div>
+                <div class="col-lg-1 truncate"><b><%= link_to u.name, user_path(u)%></b></div>
                 <div class="col-lg-2 truncate"><p><%= u.email? ? u.email : "" %></p></div>
                 <div class="col-lg-2"><p><b>Member:</b> <%= u.created_at.strftime("%b %d, %Y")%></p></div>
                 <div class="col-lg-2"><p><b>Login:</b> <%= u.last_login.strftime("%b %d, %Y")%></p></div>
