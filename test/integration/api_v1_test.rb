@@ -121,6 +121,25 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert_response :success
     assert keys_match(response, @data_keys_extended), "Keys are missing"
   end
+
+  test "edit data set" do
+    dset_id = @dessert_project.data_sets.first.id
+
+    get "/api/v1/data_sets/#{dset_id}?recur=true"
+    assert_response :success
+    old_data = parse(response)['data']
+    
+    get "/api/v1/data_sets/#{dset_id}/edit?data[20][]=5&data[21][]=6&data[22][]=7"
+    assert_response :success
+
+    get "/api/v1/data_sets/#{dset_id}?recur=true"
+    assert_response :success
+    new_data = parse(response)['data']
+
+    assert new_data != old_data, "Data didnt get updated"
+    assert new_data[0]['20'] == '5', "First point should have been updated to 5"
+
+  end
   
   private
   def parse (x)

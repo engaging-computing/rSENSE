@@ -298,3 +298,40 @@
     </table>
   </div>
 </div>
+
+
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-bordered api">
+      <tr>
+        <td class="GET def">GET</td>
+        <td class="method"> Data Sets </td>
+        <td class="code">/api/v1/data_sets/1/edit</td>
+        <td class="args"> id(req)</td>
+      </tr>
+      <tr class="more" style="">
+        <td colspan="4">
+          <b>Response Codes</b>
+          <li>Success: 200 Ok</li>
+          <li>Fail: 404 Not Found</li>
+          <b>Response</b>
+          <pre>
+  {
+    "id"=> Data Set ID (integer),
+    "name"=> Data Set Title (string),
+    "hidden"=> Visibility (boolean),
+    "url"=> Visualization URL (string),
+    "path"=> Data Set Path (string),
+    "createdAt"=>"January 28, 2014",
+    "fieldCount"=> Number of fields (integer),
+    "datapointCount"=> Number of data points (integer),
+    "displayURL"=> Display URL (string)
+  }
+          </pre>
+          <b>Notes</b>
+          <li>Setting recur=true as a get variable will return the associated Project(hash), Fields(hash), Data(hash) </li>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
