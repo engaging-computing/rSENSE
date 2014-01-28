@@ -112,6 +112,17 @@ class MediaObject < ActiveRecord::Base
       self.save!
     end
   end
+  
+  # Creates a deep clone of a mediaobject, including copying the underlying file
+  def cloneMedia
+    nmo = self.dup
+    nmo.store_key = nil
+    nmo.check_store!
+    FileUtils.cp(self.file_name, nmo.file_name)
+    nmo.add_tn
+    nmo.save!
+    nmo
+  end
 
   private
 
