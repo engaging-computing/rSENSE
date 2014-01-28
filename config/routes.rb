@@ -90,7 +90,7 @@ Rsense::Application.routes.draw do
   resources :contrib_keys, only: [:create, :destroy]
   post "/contrib_keys/enter" => 'contrib_keys#enter'
 
-
+  get "/api/v1/docs" => "home#api_v1"
   #API routes
   scope :api, defaults: {:format => 'json'}, except: :destroy do
     scope :v1 do

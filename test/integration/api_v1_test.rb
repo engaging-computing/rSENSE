@@ -19,7 +19,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     post '/api/v1/login?email=kcarcia%40cs%2Euml%2Eedu&password=1234'
     assert_response :unauthorized
   end
-  
+
   test "get projects index" do
     get '/api/v1/projects'
     assert_response :success
