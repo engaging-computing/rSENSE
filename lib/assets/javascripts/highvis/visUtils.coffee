@@ -35,7 +35,7 @@ $ ->
     Makes a title with apropriate units for a field
     ###
     window.fieldTitle = (field) ->
-      if field.unitName isnt ""
+      if field.unitName isnt "" and field.unitName isnt null
         "#{field.fieldName} (#{field.unitName})"
       else
         field.fieldName
