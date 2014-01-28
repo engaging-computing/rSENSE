@@ -20,6 +20,12 @@ $ ->
           dataType: 'json'
           data:
             data
-          false  
+          false
+    ($ 'td.def').click ->
+        more = ($ @).parent().parent().find('tr.more')
+        if more.is(":visible")
+          more.hide()
+        else
+          more.show()
 
     
