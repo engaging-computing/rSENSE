@@ -100,12 +100,6 @@ class ProjectsControllerTest < ActionController::TestCase
     assert Project.find(@project_one).likes.count == before, "Like count should have decreased by 1"   
   end
 
-  test "should clone project" do
-    assert_difference('Project.count') do
-      post :create, { format: 'json', project_id: @project_one.id}, { user_id: @nixon }
-    end
-  end
-
   test "should feature project (json)" do
     put :update, { format: 'json', id: @project_three, project: { featured: "true" }}, { user_id: @nixon }
     assert_response :success

@@ -15,3 +15,10 @@ two:
   data_set: one
   user: kate
   store_key: bbb
+  
+three:
+  project: one
+  media_type: MyString
+  name: MyProjectString
+  user: kate
+  store_key: ccc
