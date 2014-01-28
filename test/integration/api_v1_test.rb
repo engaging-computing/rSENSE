@@ -78,7 +78,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     post "/api/v1/projects?auth_key=#{@auth_key}"
     assert_response :success
     id = parse(response)['id']
-    
+
     post "/api/v1/fields?auth_key=#{@auth_key}&field[project_id]=#{id}&field[field_type]=1"
     assert_response :success
     assert keys_match(response, @field_keys), "Keys are missing"
