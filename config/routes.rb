@@ -94,12 +94,13 @@ Rsense::Application.routes.draw do
   #API routes
   scope :api, defaults: {:format => 'json'}, except: :destroy do
     scope :v1 do
-      resources :projects
-      resources :fields
-      resources :users
+      resources :projects, :only => [:show,:index,:create]
+      resources :fields, :only => [:create,:show]
       resources :media_objects
       resources :visualizations
+      resources :data_sets, :only => [:show,:edit]
       post 'login' => "sessions#create"
+      post '/uploadDataSet' => "data_sets#jsonDataUpload"
     end
   end
 end

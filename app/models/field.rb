@@ -13,7 +13,8 @@ class Field < ActiveRecord::Base
       id: self.id,
       name: self.name,
       type: self.field_type,
-      unit: self.unit
+      unit: self.unit,
+      restrictions: self.restrictions
     }
 
     if recurse
