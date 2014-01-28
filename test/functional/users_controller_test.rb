@@ -58,13 +58,13 @@ class UsersControllerTest < ActionController::TestCase
 
   test "should show errors on bad attempt to create user" do
     assert_difference('User.count', 0) do
-      post :create, user: { email: "", name: "John F.", password: "iguana", password_confirmation: "iguana1" }
+      post :create, user: { email: "johnf@example.com", name: "John F.", password: "iguana", password_confirmation: "iguana1" }
       puts flash[:debug] unless flash[:debug].nil?
     end
 
     assert_response :success
 
-    john = User.find_by_username("jfertitt")
+    john = User.find_by_email("johnf@example.com")
 
     assert_nil john
   end
