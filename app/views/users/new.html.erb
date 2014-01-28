@@ -6,7 +6,7 @@
         <% if @user.errors.size > 0 %>
         <div class="alert alert-error">
           <button type="button" class="close" data-dismiss="alert">&times;</button>
-          <h3><%= pluralize(@user.errors.count, "error") %> were encountered:</h3>
+          <h3><%= pluralize(@user.errors.count, "error") %> <%= @user.errors.count == 1 ? "was" : "were" %> encountered:</h3>
           
           <ul>
             <% @user.errors.full_messages.each do |msg| %>
