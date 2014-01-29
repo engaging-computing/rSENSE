@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140127215956) do
+ActiveRecord::Schema.define(version: 20140129155906) do
 
   create_table "contrib_keys", force: true do |t|
     t.string   "name",       null: false
@@ -60,7 +60,7 @@ ActiveRecord::Schema.define(version: 20140127215956) do
     t.datetime "updated_at",                       null: false
     t.integer  "tutorial_id"
     t.boolean  "hidden",           default: false
-    t.decimal  "visualization_id"
+    t.integer  "visualization_id"
     t.integer  "news_id"
     t.string   "store_key"
   end
@@ -100,7 +100,7 @@ ActiveRecord::Schema.define(version: 20140127215956) do
     t.string   "title"
     t.datetime "created_at",                        null: false
     t.datetime "updated_at",                        null: false
-    t.decimal  "user_id"
+    t.integer  "user_id"
     t.boolean  "hidden",            default: true
     t.integer  "featured_media_id"
     t.boolean  "featured",          default: false
