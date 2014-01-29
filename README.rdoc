@@ -8,11 +8,17 @@ projects, contribute data to projects in the form of data sets, and visualize
 data.
 
 <b>Status:</b> {<img src="https://travis-ci.org/isenseDev/rSENSE.png" />}[https://travis-ci.org/isenseDev/rSENSE]
+
 == Installing the iSense Site
 
 Install like any Ruby on Rails application.
 
-Uses PostgreSQL by default for data storage.
+Tested with Ruby 2.1.0, Passenger, Apache, and PostgreSQL.
+
+Depends on imagemagick and a "zip" archiver.
+
+The server's hostname must be set to the correct fully qualified
+domain name for AJAX elements of the site to function.
 
 == Filing an issue on GitHub
 
