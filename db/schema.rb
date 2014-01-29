@@ -26,8 +26,8 @@ ActiveRecord::Schema.define(version: 20140127215956) do
     t.text     "content"
     t.integer  "user_id"
     t.integer  "project_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.string   "googleDoc"
     t.boolean  "hidden",     default: false
     t.text     "data",       default: "[]",  null: false
@@ -38,16 +38,16 @@ ActiveRecord::Schema.define(version: 20140127215956) do
     t.integer  "field_type"
     t.text     "unit",         limit: 255, default: ""
     t.integer  "project_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
     t.text     "restrictions"
   end
 
   create_table "likes", force: true do |t|
     t.integer  "user_id"
     t.integer  "project_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "media_objects", force: true do |t|
@@ -56,11 +56,11 @@ ActiveRecord::Schema.define(version: 20140127215956) do
     t.string   "name"
     t.integer  "data_set_id"
     t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
     t.integer  "tutorial_id"
     t.boolean  "hidden",           default: false
-    t.integer  "visualization_id"
+    t.decimal  "visualization_id"
     t.integer  "news_id"
     t.string   "store_key"
   end
@@ -70,8 +70,8 @@ ActiveRecord::Schema.define(version: 20140127215956) do
     t.text     "content"
     t.text     "summary"
     t.boolean  "hidden",            default: true
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
     t.integer  "user_id"
     t.integer  "featured_media_id"
   end
@@ -80,8 +80,8 @@ ActiveRecord::Schema.define(version: 20140127215956) do
     t.string   "title"
     t.integer  "user_id"
     t.text     "content"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
     t.boolean  "featured",                      default: false
     t.text     "filter",            limit: 255, default: ""
     t.integer  "cloned_from"
@@ -98,9 +98,9 @@ ActiveRecord::Schema.define(version: 20140127215956) do
   create_table "tutorials", force: true do |t|
     t.text     "content"
     t.string   "title"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "user_id"
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+    t.decimal  "user_id"
     t.boolean  "hidden",            default: true
     t.integer  "featured_media_id"
     t.boolean  "featured",          default: false
@@ -114,8 +114,8 @@ ActiveRecord::Schema.define(version: 20140127215956) do
     t.integer  "group_id"
     t.boolean  "validated",       default: false
     t.string   "password_digest"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
     t.string   "validation_key"
     t.boolean  "admin",           default: false
     t.boolean  "hidden",          default: false
@@ -139,8 +139,8 @@ ActiveRecord::Schema.define(version: 20140127215956) do
     t.text     "content"
     t.text     "data"
     t.text     "globals"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
     t.boolean  "hidden",      default: false
     t.boolean  "featured",    default: false
     t.datetime "featured_at"
