@@ -40,6 +40,7 @@ $ ->
       globals.REGRESSION ?= {}
       
       globals.REGRESSION.FUNCS = []
+      globals.REGRESSION.DENORM_FUNCS = []
       
       globals.REGRESSION.LINEAR = globals.REGRESSION.FUNCS.length
       globals.REGRESSION.FUNCS.push [
@@ -293,11 +294,59 @@ $ ->
                               residuals)
         
         deltaPs
-      
+
       ###
       Calculates the current squared error for the given function, parameters and ground truth.
       ###
       sqe = (func, xs, ys, Ps) ->
         numeric.sum(numeric.sub(ys, xs.map((x) -> func[0](x, Ps))).map (x) -> x*x)
-      
-      
+
+      ###
+      Denormalize functions given Ps, the mean and sigma.
+
+      #Linear
+      globals.REGRESSION.DENORM_FUNCS.push [
+        (Ps, mean, sigma) -> Ps[0] - Ps[1] * mean / sigma
+        (Ps, mean, sigma) -> Ps[1] / sigma
+      ]
+      #Quadratic
+      denormFunc = globals.REGRESSION.DENORM_FUNCS[globals.REGRESSION.LINEAR]
+      globals.REGRESSION.DENORM_FUNCS.push [
+        (Ps, mean, sigma) ->
+          denormFunc[0](Ps, mean, sigma) + (Ps[2] * pow(mean, 2)) / pow(sigma, 2)
+        (Ps, mean, sigma) ->
+          denormFunc[1](Ps, mean, sigma) - (Ps[2] * 2 * mean) / pow(sigma, 2)
+        (Ps, mean, sigma) ->
+          Ps[2] / pow(sigma, 2)
+      ]
+      #Cubic
+      denormFunc = globals.REGRESSION.DENORM_FUNCS[globals.REGRESSION.QUADRATIC]
+      globals.REGRESSION.DENORM_FUNCS.push [
+        (Ps, mean, sigma) ->
+          denormFunc[0](Ps, mean, sigma) - Ps[3] * pow(mean, 3) / pow(sigma, 3)
+        (Ps, mean, sigma) ->
+          denormFunc[1](Ps, mean, sigma) + Ps[3] * 3 * pow(mean, 2) / pow(sigma, 3)
+        (Ps, mean, sigma) ->
+          denormFunc[2](Ps, mean, sigma) - Ps[3] * 3 * mean / pow(sigma, 3)
+        (Ps, mean, sigma) ->
+          Ps[3] / pow(sigma, 3)
+      ]
+      #Exponential
+      globals.REGRESSION.DENORM_FUNCS.push [
+        (Ps, mean, sigma) ->
+          Ps[0]
+        (Ps, mean, sigma) ->
+          Ps[1] / sigma
+        (Ps, mean, sigma) ->
+          Ps[2] - (Ps[1] * mean) / sigma
+      ]
+      #Logarithmic
+      globals.REGRESSION.DENORM_FUNCS.push [
+        (Ps, mean, sigma) ->
+          Ps[0] + Ps[1] * Math.log(1 / sigma)
+        (Ps, mean, sigma) ->
+          Ps[1]
+        (Ps, mean, sigma) ->
+          Ps[2] * sigma - mean
+      ]
+      ###
