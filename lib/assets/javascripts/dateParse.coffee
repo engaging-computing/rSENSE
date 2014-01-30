@@ -10,7 +10,7 @@ $ ->
     Also supports giving a year as an integer.
   ###
   helpers.parseTimestamp = (str) ->
-    if str is null
+    if (str is null)  or (str is "")
       return null
     else if not isNaN(Number str)
       year = Number str
