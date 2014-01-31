@@ -142,6 +142,20 @@ class FileUploader
     results
   end
   
+  def remove_empty_lines(data_obj)
+    row = data_obj.first[1].length
+    keys = data_obj.keys
+    
+    while row >= 0
+      row_empty = keys.collect {|k| (data_obj[k][row].nil? or  (data_obj[k][row].to_s.strip() == ""))}.reduce(:&)
+      if row_empty
+        keys.map {|k| data_obj[k].delete_at(row)}
+      end
+      row -= 1 
+    end
+    data_obj
+  end
+  
   def sanitize_data(data_obj, matches = nil)
     
     if !matches.nil?
@@ -156,6 +170,8 @@ class FileUploader
       data = data_obj
     end
 
+    data_obj = remove_empty_lines(data_obj)
+    
     data.each do |(key,value)|
       field = Field.find(key)
       type = get_field_name(field.field_type)
