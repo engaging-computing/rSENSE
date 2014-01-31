@@ -12,7 +12,7 @@
   <div class="col-lg-6">
     <strong><label for="data_set_name">Dataset Name:</label></strong>
       <input id="data_set_name" name="data_set_name" class="form-control" 
-        type="text" placeholder="Elephant Weights, Outer Elbonia">
+        type="text" placeholder="Boston, MA Snowfall Total">
   </div>
   <div class="col-lg-6" <% unless @cur_user.nil? %>style="display: none"<% end %>>
     <strong><label for="contrib_name">Your Name:</label></strong>
@@ -28,7 +28,7 @@
           <tr>
           <% for field in @project.fields %>
             <th data-field-type="<%= get_field_name(field.field_type) %>" data-field-id="<%= field.id %>" data-field-restrictions="<%= field.restrictions %>" data-field-name="<%= field.name %>" ><%= field.name %>
-            <% if field.unit != "" %>
+            <% if field.unit != "" and !field.unit.nil? %>
               (<%=field.unit%>)
             <% end %></th>
           <% end %>
