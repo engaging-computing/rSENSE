@@ -31,6 +31,7 @@ class FileUploader
       when ".xlsx" then Roo::Excelx.new(file.path,nil,:ignore)
       when ".ods" then Roo::OpenOffice.new(file.path,false,:ignore)
       when ".gpx" then GpxParser.new.convert(file.path)
+      when ".qmbl" then VernierParser.new(file.path)
       else raise "Unknown file type: #{file.original_filename}"
       end
     else
