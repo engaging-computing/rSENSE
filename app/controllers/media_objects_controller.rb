@@ -92,8 +92,10 @@ class MediaObjectsController < ApplicationController
     if fileType == 'image'
       fixRot = MiniMagick::Image.read(filePath)
       fixRot.auto_orient
-      fixRot.strip
-      fixRot.write filePath
+      filePath = '/tmp/' + SecureRandom.hex
+      File.open(filePath, "wb") do |ff|
+          fixRot.write ff
+      end
     end
     
     @mo = MediaObject.new
