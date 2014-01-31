@@ -83,6 +83,7 @@ $ ->
       Calculates a regression and returns it as a highcharts series.
       ###
       globals.getRegression = (xs, ys, type, x_bounds, series_name, dash_style) ->
+        console.log("getRegression")
         Ps = []
         func = globals.REGRESSION.FUNCS[type]
         
@@ -100,15 +101,28 @@ $ ->
             
           when globals.REGRESSION.EXPONENTIAL
             Ps = [1,1,1]
-        
+
           when globals.REGRESSION.LOGARITHMIC
             # We want to avoid starting with a guess that takes the log of a negative number
             Ps = [1,1,Math.min.apply(null, xs) + 1]
         
         # Calculate the regression, and return a highcharts series object
-        [Ps, R2] = NLLS(func, xs, ys, Ps)
+        console.log("Mean is:")
+        mean = calculateMean(xs)
+        console.log(mean)
+        sigma = calculateStandardDev(xs, mean)
+        console.log(sigma)
+        console.log(normalizeData(xs, mean, sigma))
+        [Ps, R2] = NLLS(func, normalizeData(xs, mean, sigma), ys, Ps)
+        console.log(Ps)
+        console.log(type)
+        denormFunc = globals.REGRESSION.DENORM_FUNCS[type]
+        Ps =
+          func(Ps, mean, sigma) for func in denormFunc
+
+        console.log(Ps)
         generateHighchartsSeries(Ps, R2, type, x_bounds, series_name, dash_style)
-      
+
       ###
       Returns a series object to draw on the chart canvas.
       ###
@@ -118,9 +132,9 @@ $ ->
           x = (i / globals.REGRESSION.NUM_POINTS) * (x_bounds.dataMax - x_bounds.dataMin) + x_bounds.dataMin
           y =  calculateRegressionPoint(Ps, x, type)
           {x: x, y: y}
-                   
+
         str = makeToolTip(Ps, R2, type, series_name)
-                   
+
         ret =
           name:
             id: '',
@@ -144,7 +158,7 @@ $ ->
       ###
       calculateRegressionPoint = (Ps, x, type) ->
         globals.REGRESSION.FUNCS[type][0](x, Ps)
-            
+
       ###
       Returns tooltip description of the regression.
       ###
@@ -238,6 +252,7 @@ $ ->
       NLLS_SHIFT_CUT_UP = 1.1
       NLLS_THRESH = 1e-10
       NLLS = (func, xs, ys, Ps) ->
+        console.log(func)
         prevErr = Infinity
         shiftCut = 1
       
@@ -303,50 +318,61 @@ $ ->
 
       ###
       Denormalize functions given Ps, the mean and sigma.
-
+      ###
       #Linear
       globals.REGRESSION.DENORM_FUNCS.push [
-        (Ps, mean, sigma) -> Ps[0] - Ps[1] * mean / sigma
+        (Ps, mean, sigma) -> Ps[0] - Ps[1] * mean / sigma,
         (Ps, mean, sigma) -> Ps[1] / sigma
       ]
       #Quadratic
       denormFunc = globals.REGRESSION.DENORM_FUNCS[globals.REGRESSION.LINEAR]
       globals.REGRESSION.DENORM_FUNCS.push [
         (Ps, mean, sigma) ->
-          denormFunc[0](Ps, mean, sigma) + (Ps[2] * pow(mean, 2)) / pow(sigma, 2)
+          denormFunc[0](Ps, mean, sigma) + (Ps[2] * Math.pow(mean, 2)) / Math.pow(sigma, 2)
         (Ps, mean, sigma) ->
-          denormFunc[1](Ps, mean, sigma) - (Ps[2] * 2 * mean) / pow(sigma, 2)
+          denormFunc[1](Ps, mean, sigma) - (Ps[2] * 2 * mean) / Math.pow(sigma, 2)
         (Ps, mean, sigma) ->
-          Ps[2] / pow(sigma, 2)
+          Ps[2] / Math.pow(sigma, 2)
       ]
       #Cubic
       denormFunc = globals.REGRESSION.DENORM_FUNCS[globals.REGRESSION.QUADRATIC]
       globals.REGRESSION.DENORM_FUNCS.push [
         (Ps, mean, sigma) ->
-          denormFunc[0](Ps, mean, sigma) - Ps[3] * pow(mean, 3) / pow(sigma, 3)
+          denormFunc[0](Ps, mean, sigma) - Ps[3] * Math.pow(mean, 3) / Math.pow(sigma, 3)
         (Ps, mean, sigma) ->
-          denormFunc[1](Ps, mean, sigma) + Ps[3] * 3 * pow(mean, 2) / pow(sigma, 3)
+          denormFunc[1](Ps, mean, sigma) + Ps[3] * 3 * Math.pow(mean, 2) / Math.pow(sigma, 3)
         (Ps, mean, sigma) ->
-          denormFunc[2](Ps, mean, sigma) - Ps[3] * 3 * mean / pow(sigma, 3)
+          denormFunc[2](Ps, mean, sigma) - Ps[3] * 3 * mean / Math.pow(sigma, 3)
         (Ps, mean, sigma) ->
-          Ps[3] / pow(sigma, 3)
+          Ps[3] / Math.pow(sigma, 3)
       ]
       #Exponential
       globals.REGRESSION.DENORM_FUNCS.push [
-        (Ps, mean, sigma) ->
-          Ps[0]
-        (Ps, mean, sigma) ->
-          Ps[1] / sigma
-        (Ps, mean, sigma) ->
-          Ps[2] - (Ps[1] * mean) / sigma
+        (Ps, mean, sigma) -> Ps[0],
+        (Ps, mean, sigma) -> Ps[1] / sigma,
+        (Ps, mean, sigma) -> Ps[2] - (Ps[1] * mean) / sigma
       ]
       #Logarithmic
       globals.REGRESSION.DENORM_FUNCS.push [
-        (Ps, mean, sigma) ->
-          Ps[0] + Ps[1] * Math.log(1 / sigma)
-        (Ps, mean, sigma) ->
-          Ps[1]
-        (Ps, mean, sigma) ->
-          Ps[2] * sigma - mean
+        (Ps, mean, sigma) -> Ps[0] + Ps[1] * Math.log(1 / sigma),
+        (Ps, mean, sigma) -> Ps[1],
+        (Ps, mean, sigma) -> Ps[2] * sigma - mean
       ]
-      ###
+
+      #Calculate the average
+      calculateMean = (points) ->
+        mean = 0
+        for point in points
+          mean += point / points.length
+        mean
+
+      #Normalize
+      normalizeData = (points, mean, sigma) ->
+        (point - mean) / sigma for point in points
+
+      #Calculate the standard deviation
+      calculateStandardDev = (points, mean) ->
+        sigma = 0
+        for point in points
+          sigma += Math.pow(point - mean, 2)
+        Math.sqrt( sigma / points.length )
