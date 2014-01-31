@@ -28,7 +28,7 @@
           <tr>
           <% for field in @project.fields %>
             <th data-field-type="<%= get_field_name(field.field_type) %>" data-field-id="<%= field.id %>" data-field-restrictions="<%= field.restrictions %>" data-field-name="<%= field.name %>" ><%= field.name %>
-            <% if field.unit != "" %>
+            <% if field.unit != "" and !field.unit.nil? %>
               (<%=field.unit%>)
             <% end %></th>
           <% end %>
