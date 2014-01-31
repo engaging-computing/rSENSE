@@ -88,6 +88,14 @@ class MediaObjectsController < ApplicationController
       end
     end
     
+    # Rotate based on EXIF data, then strip it out.
+    if fileType == 'image'
+      fixRot = MiniMagick::Image.read(filePath)
+      fixRot.auto_orient
+      fixRot.strip
+      fixRot.write filePath
+    end
+    
     @mo = MediaObject.new
     @mo.name = fileName
     @mo.media_type = fileType
