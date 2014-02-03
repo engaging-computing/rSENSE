@@ -2,6 +2,8 @@ class FieldsController < ApplicationController
   include ApplicationHelper
   # GET /fields/1
   # GET /fields/1.json
+  skip_before_filter :authorize, only: [:show]
+  
   def show
     @field = Field.find(params[:id])
     @owner = Project.find(@field.project_id).user_id

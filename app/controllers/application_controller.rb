@@ -50,4 +50,27 @@ class ApplicationController < ActionController::Base
       format.any  { head :not_found }
     end
   end
+
+  def set_user
+    if (params.has_key? :email) & (params.has_key? :password)
+      login_email = params[:email].downcase
+
+      @user = User.where("lower(email) = ?", login_email).first
+
+      if @user and @user.authenticate(params[:password])
+        session[:user_id] = @user.id
+        @user.update_attributes(:last_login => Time.now())
+        @cur_user = @user
+      else
+        respond_to do |format|
+          format.json {render json:"",status: :unauthorized}
+        end
+      end
+    else
+      respond_to do |format|
+        format.json {render json:"",status: :unauthorized}
+      end
+    end
+  end
+
 end
