@@ -73,7 +73,9 @@
     
     <div class="row">
       <%=render layout: "shared/box", locals: {title: 'Data Sets', width: '12', unique_id: 'data_sets', should_hide: false} do %>
-        <div id="dataset_list" <% if @data_sets.count == 0 %> style="display:none;" <% end %> >
+        <% if @data_sets.count != 0 %>
+
+        <div id="dataset_list">
           
         <span>
           <input type="button" class="btn btn-info" style="margin-bottom: 10px;" value="Visualize" id="vis_button" href="/projects/<%=@project.id%>/data_sets/"/>
@@ -138,7 +140,15 @@
             </tbody>
           
           </table>
-        </div>
+            </div>
+          <% else %>
+            <% if can_edit?(@project) || can_contribute?(@project) %>
+              <p>This project has no data yet! Use the Contribute Data panel to add some.</p>
+            <% else %>
+              <p>This project has no data yet! Sign in or enter a Contributor Key to add some.</p>
+            <% end %>
+          <%end%>
+
       <%end%>
     </div> 
   </div>
