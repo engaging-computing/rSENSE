@@ -1,46 +1,5 @@
 <h1>API V1 Documentation</h1>
 <p>Click on the type to expand</p>
-<div class="row">
-  <div class="col-md-12">
-    <table class="table table-bordered api">
-      <tr>
-        <td class="POST def">POST</td>
-        <td class="method"> Login </td>
-        <td class="code">/api/v1/login</td>
-        <td class="args">email(req), password(req)</td>
-      </tr>
-      <tr class="more" style="">
-        <td colspan="4">
-          <b>Response Codes</b>
-          <li>Success: 200 Ok</li>
-          <li>Fail: 401 Unauthorized</li>
-          <b>Data</b>
-          <pre>
-  {
-    "email" => email(string),
-    "password" => password(string)
-  }
-          </pre>
-          <b>Response</b>
-          <pre>
-  {
-    "authenticity_token"=>"yjQ2Q2xU3757deGnxS0V9vjd2pcXIY6/qPPdzU4qRdg=",
-    "user"=> {
-      "id"=> ID of user (integer),
-      "name"=> Display Name (string),
-      "hidden"=> Visibility of user (boolean),
-      "url"=> Full url of users profile" (string),
-      "path"=> Path to users profile (string),
-      "createdAt"=>"January 22, 2014",
-      "gravatar"=> Url of users gravatar image (string)
-    }
-  }
-          </pre>
-        </td>
-      </tr>
-    </table>
-  </div>
-</div>
 
 <div class="row">
   <div class="col-md-12">
@@ -48,7 +7,7 @@
       <tr>
         <td class="GET def">GET</td>
         <td class="method"> Projects </td>
-        <td class="code">/api/v1/projects/1</td>
+        <td class="code">/api/v1/projects/XX</td>
         <td class="args">id(req) recur(opt boolean)</td>
       </tr>
       <tr class="more" style="">
@@ -78,6 +37,7 @@
     }
           </pre>
           <b>Notes</b>
+          <li>XX should be replaced with the ID for the project. Or set id as a GET variable</li>
           <li>If recur is set to true, the function will also return 'dataSets', 'mediaObjects', and 'owner' objects</li>
         </td>
       </tr>
@@ -121,7 +81,7 @@
         <td class="POST def">POST</td>
         <td class="method"> Projects </td>
         <td class="code">/api/v1/projects</td>
-        <td class="args">auth_key(req), project_name(opt)</td>
+        <td class="args">email(req), password(req), project_name(opt)</td>
       </tr>
       <tr class="more" style="">
         <td colspan="4">
@@ -132,7 +92,8 @@
           <b>Data</b>
           <pre>
   {
-    "auth_key" => "authenticity_token (string)"
+    "email" => "email address (string)",
+    "password" => "password (string)",
     "project_name" => (string)
   }
           </pre>
@@ -172,7 +133,7 @@
         <td class="POST def">POST</td>
         <td class="method"> Fields </td>
         <td class="code">/api/v1/fields</td>
-        <td class="args">auth_key(req), project_id(req), field_type(req), name(opt), units(opt), restrictions(opt)</td>
+        <td class="args">email(req), password(req), project_id(req), field_type(req), name(opt), units(opt), restrictions(opt)</td>
       </tr>
       <tr class="more" style="">
         <td colspan="4">
@@ -183,7 +144,8 @@
           <b>Data</b>
           <pre>
   {
-    "auth_key" => "authenticity_token (string)"
+    "email" => "email address (string)",
+    "password" => "password (string)",
     "field" =>
       {
         "project_id" =>  integer,
@@ -223,7 +185,7 @@
       <tr>
         <td class="GET def">GET</td>
         <td class="method"> Fields </td>
-        <td class="code">/api/v1/fields/1</td>
+        <td class="code">/api/v1/fields/XX</td>
         <td class="args"> id(req)</td>
       </tr>
       <tr class="more" style="">
@@ -242,6 +204,7 @@
   }
           </pre>
           <b>Notes</b>
+          <li>XX should be replaced with the ID for the field. Or set id as a GET variable</li>
         </td>
       </tr>
     </table>
@@ -254,8 +217,8 @@
       <tr>
         <td class="POST def">POST</td>
         <td class="method"> Data Sets </td>
-        <td class="code">/api/v1/uploadDataSet</td>
-        <td class="args">auth_key(req), title(req), data(req), id(req)</td>
+        <td class="code">/api/v1/projects/XX/jsonDataUpload</td>
+        <td class="args">email(req), password(req), title(req), data(req)</td>
       </tr>
       <tr class="more" style="">
         <td colspan="4">
@@ -266,9 +229,9 @@
           <b>Data</b>
           <pre>
   {
-    "auth_key" => "authenticity_token (string)",
+    "email" => "email address (string)",
+    "password" => "password (string)",
     "title" => (string),
-    "id" => Project ID (string),
     "data" =>
       {
         "FIELD_ID" => [1,2,3,4,5],
@@ -292,6 +255,7 @@
   }
           </pre>
           <b>Notes</b>
+          <li>XX should be replaced with the ID for the project.</li>
           <li>Data is a hash of field_id -> data array pairs. FIELD_ID and FIELD_ID_2 would be replaced with ids for their respective filds.</li>
         </td>
       </tr>
@@ -306,7 +270,7 @@
       <tr>
         <td class="GET def">GET</td>
         <td class="method"> Data Sets </td>
-        <td class="code">/api/v1/data_sets/1/edit</td>
+        <td class="code">/api/v1/data_sets/XX/edit</td>
         <td class="args"> id(req)</td>
       </tr>
       <tr class="more" style="">
@@ -329,6 +293,7 @@
   }
           </pre>
           <b>Notes</b>
+          <li>XX should be replaced with the ID for the project.</li>
           <li>Setting recur=true as a get variable will return the associated Project(hash), Fields(hash), Data(hash) </li>
         </td>
       </tr>
