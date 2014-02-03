@@ -222,9 +222,8 @@ class UsersController < ApplicationController
       end
       
       @user.hidden = true
-      @user.email =  "#{SecureRandom.hex}@deleted.org"
-      @user.username =  "#{SecureRandom.hex}"
-      @user.save
+      @user.email  = "#{SecureRandom.hex}@deleted.org"
+      @user.save!
       
       respond_to do |format|
         format.html { redirect_to users_url}
@@ -268,11 +267,8 @@ class UsersController < ApplicationController
 
     @user = User.where("lower(email) = ?", key).first
     if @user.nil?
-      @user = User.where("lower(username) = ?", key).first
-      if @user.nil?
         @reason = "No such user found."
         return
-      end
     end
 
     if @user.email.nil? or @user.email.empty?
@@ -319,10 +315,10 @@ class UsersController < ApplicationController
   def user_params
     if @cur_user.try(:admin)
       params[:user].permit(:content, :email, :email_confirmation, :name, :password, :password_confirmation, 
-                           :username, :admin, :validated, :hidden, :bio, :last_login)
+                           :admin, :validated, :hidden, :bio, :last_login)
     else
       params[:user].permit(:content, :email, :email_confirmation, :name, :password, :password_confirmation, 
-                           :username, :hidden, :bio)
+                           :hidden, :bio)
     end
   end
 end

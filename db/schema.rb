@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140116225820) do
+ActiveRecord::Schema.define(version: 20140129155906) do
 
   create_table "contrib_keys", force: true do |t|
     t.string   "name",       null: false
@@ -110,7 +110,6 @@ ActiveRecord::Schema.define(version: 20140116225820) do
   create_table "users", force: true do |t|
     t.string   "firstname"
     t.string   "lastname"
-    t.string   "username"
     t.string   "email"
     t.integer  "group_id"
     t.boolean  "validated",       default: false

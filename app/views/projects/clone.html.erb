@@ -1,0 +1,45 @@
+<div class="row">
+
+  <% if @clone.errors.size > 0 %>
+    <div class="alert alert-error">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <h3><%= pluralize(@clone.errors.count, "error") %> were encountered:</h3>
+      
+      <ul>
+        <% @clone.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+    <%= form_for @clone, url: {action: 'create'} do |ff| %>
+      <div class="panel panel-default">
+      
+        <div class="panel-heading">
+          <h1>Cloning: <%= @project.title %></h1>
+        </div>
+        
+        <div class="panel-body">
+          <div class="form-group">
+            <%= label_tag(:name, "Title:") %>
+            <%= text_field_tag :project_name, @project.title + " (clone)", class: "form-control", autofocus: true %>
+          </div>
+          
+          <div class="form-group">
+            <%= label_tag(:clone_datasets, "Clone Datasets:") %>
+            <%= check_box_tag :clone_datasets, class: "form-control", autofocus: true %>
+          </div>
+          
+          <%= hidden_field_tag(:project_id, @project.id) %>
+        </div>
+        
+        <div class="panel-footer text-center">
+          <a href='<%= url_for @project %>'> <button type="button" class="btn btn-danger"> Cancel </button></a>
+          <button type="submit" name="commit" class="btn btn-success"> Clone Project </button>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

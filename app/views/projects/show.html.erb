@@ -29,25 +29,37 @@
               <button type="button" class="btn btn-default liked_status <% if @liked_by_cur_user%>active<%end%>" href="#" data-toggle="button"><i class="fa fa-thumbs-up"></i> Like</button>
               <button type="button" class="btn btn-default like_display" disabled> <%= @project.likes.count %></button>
             <%end%>
+            
             <span style="padding-left: 1em">
               <button type="button" class="btn btn-default" disabled>
                 <i class="fa fa-eye"></i> <%= @project.views %>
               </button>
             </span>
+            
             <span style="padding-left: 1em">
               <button type="button" class="btn btn-default" id="print">
                 <i class="fa fa-print"></i> Print
               </button>
             </span>
+            
             <% if can_edit? @project %>
               <span style="padding-left: 1em">
                 <a href = "/projects/<%=@project.id%>/edit">
-                <button type="button" class="btn btn-primary" id="print">
+                <button type="button" class="btn btn-primary">
                   <i class="fa fa-cog"></i> Edit
                 </button>
                 </a>
               </span>
             <% end %>
+            
+            <span style="padding-left: 1em">
+              <a href = "/projects/<%=@project.id%>/clone">
+                <button type="button" class="btn btn-success">
+                  <i class="fa fa-print"></i> Clone
+                </button>
+              </a>
+            </span>
+            
           </div>
         </div>
       </div>
