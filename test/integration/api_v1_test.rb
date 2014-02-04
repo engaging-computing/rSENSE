@@ -8,6 +8,8 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     @data_keys = ['id','name','hidden','url','path','createdAt','fieldCount','datapointCount','displayURL']
     @data_keys_extended = @data_keys + ['owner','project','fields','data']
     @dessert_project = projects(:dessert)
+    @media_object_keys = ['id','mediaType','name','url','createdAt','src','tn_src']
+    @media_object_keys_extended = @media_object_keys + ['project','owner']
   end
 
   test "get projects index" do
@@ -113,7 +115,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert_response :success
     assert keys_match(response, @field_keys), "Keys are missing"
   end
-  
+
   test "create data set" do
     pid = @dessert_project.id
     post "/api/v1/projects/#{pid}/jsonDataUpload?data[20][]=2&data[20][]=3&title=AwesomeData&email=kcarcia%40cs%2Euml%2Eedu&password=12345"
@@ -152,7 +154,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert new_data[0]['20'] == '5', "First point should have been updated to 5"
 
   end
-  
+
   test "failed edit data set" do
     dset_id = @dessert_project.data_sets.first.id
 
@@ -168,7 +170,64 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     new_data = parse(response)['data']
 
     assert new_data == old_data, "Data didnt get updated"
+  end
 
+  test "create_media_object" do
+    img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
+    file = Rack::Test::UploadedFile.new(img_path,"image/jpeg")
+
+    #Create a media object for a project
+    post '/api/v1/media_objects/saveMedia',
+        {
+         upload: file,
+         email: 'kcarcia@cs.uml.edu',
+         password: '12345',
+         keys: "project/#{@dessert_project.id}",
+         non_wys: true
+        }
+    assert_response :success
+    assert keys_match(response,@media_object_keys), "Keys are missing."
+
+    #Get non recursive
+    id = parse(response)['id']
+    get "/api/v1/media_objects/#{id}"
+    assert_response :success
+    assert keys_match(response, @media_object_keys), "Keys are missing"
+
+    #Get recursive
+    get "/api/v1/media_objects/#{id}?recur=true"
+    assert_response :success
+    assert keys_match(response, @media_object_keys_extended), "Keys are missing"
+  end
+
+  test "failed create_media bad auth" do
+    img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
+    file = Rack::Test::UploadedFile.new(img_path,"image/jpeg")
+
+    #Create a media object for a project
+    post '/api/v1/media_objects/saveMedia',
+        {
+         upload: file,
+         keys: "project/#{@dessert_project.id}",
+         non_wys: true
+        }
+    assert_response :unauthorized
+  end
+
+  test "failed create_media bad project id" do
+    img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
+    file = Rack::Test::UploadedFile.new(img_path,"image/jpeg")
+
+    #Create a media object for a project
+    post '/api/v1/media_objects/saveMedia',
+        {
+         upload: file,
+         email: 'kcarcia@cs.uml.edu',
+         password: '12345',
+         keys: "project/3",
+         non_wys: true
+        }
+    assert_response :unprocessable_entity
   end
   
   private
