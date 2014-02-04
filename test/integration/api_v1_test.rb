@@ -12,12 +12,14 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     @media_object_keys_extended = @media_object_keys + ['project','owner']
   end
 
+  #Get projects listing using defaults
   test "get projects index" do
     get '/api/v1/projects'
     assert_response :success
     assert parse(response).class == Array, "Response should be an array"
   end
 
+  #Get projects listing sorted/ordered
   test "get projects sorted and ordered" do
     get '/api/v1/projects?sort=created_at&order=DESC'
     assert_response :success
@@ -30,12 +32,23 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     end
   end
 
+  #Get projects listing paged.
   test "get projects index paged" do
     get '/api/v1/projects?per_page=3&page=2'
     assert_response :success
     assert parse(response).length <= 3, "Should have <= 3 results"
   end
 
+  #Get projects listing searched.
+  test "get projects index searched" do
+    get '/api/v1/projects?search=Media'
+    assert_response :success
+    resp = parse(response)
+    assert resp.length == 1, "Should have only got one result called Media Test"
+    assert resp[0]['name'] == "Media Test", "Should have gotten project Media Test"
+  end
+
+  #Get project
   test "get project" do
     get '/api/v1/projects/1'
     assert_response :success
@@ -43,6 +56,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert parse(response)['id'] == 1, 'Should have returned project 1'
   end
 
+  #Get project with owner/dataSets/mediaObjects
   test "get project full" do
     get '/api/v1/projects/1?recur=true'
     assert_response :success
@@ -50,28 +64,45 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert parse(response)['id'] == 1, 'Should have returned project 1'
   end
 
+  #Create project without giving a name
   test "create project" do
-    post "/api/v1/projects?email=kcarcia%40cs%2Euml%2Eedu&password=12345"
+    post "/api/v1/projects",
+        {
+          email: "kcarcia@cs.uml.edu",
+          password: "12345"
+        }
     assert_response :success
     assert keys_match(response, @project_keys), "Keys are missing"
   end
 
-  test "failed create project" do
-    assert_difference('Project.count',0) do
-      post "/api/v1/projects?"
-      assert_response :unauthorized
-    end
-  end
-
+  #Create a named project
   test "create project named" do
-    post "/api/v1/projects?project_name=Awesome&email=kcarcia%40cs%2Euml%2Eedu&password=12345"
+    post "/api/v1/projects",
+        {
+          project_name: "Awesome",
+          email: "kcarcia@cs.uml.edu",
+          password: "12345"
+        }
     assert_response :success
     assert keys_match(response, @project_keys), "Keys are missing"
     assert parse(response)['name'] == "Awesome", "Project should have been Awesome"
   end
 
+  #Failed project creation because of unauthorized
+  test "failed create project" do
+    assert_difference('Project.count',0) do
+      post "/api/v1/projects"
+      assert_response :unauthorized
+    end
+  end
+
+  #Create a field with auto-generated name
   test "create fields" do
-    post "/api/v1/projects?email=kcarcia%40cs%2Euml%2Eedu&password=12345"
+    post "/api/v1/projects",
+        {
+          email: "kcarcia@cs.uml.edu",
+          password: "12345"
+        }
     assert_response :success
     id = parse(response)['id']
 
@@ -80,6 +111,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert keys_match(response, @field_keys), "Keys are missing"
   end
 
+  #Create a named field
   test "create fields named" do
     post "/api/v1/projects?email=kcarcia%40cs%2Euml%2Eedu&password=12345"
     assert_response :success
@@ -90,23 +122,96 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert keys_match(response, @field_keys), "Keys are missing"
   end
 
+  #Create field with restrictions
   test "create fields with restrictions" do
-    post "/api/v1/projects?email=kcarcia%40cs%2Euml%2Eedu&password=12345"
+    post "/api/v1/projects",
+        {
+          email: "kcarcia@cs.uml.edu",
+          password: "12345"
+        }
     assert_response :success
     id = parse(response)['id']
 
-    post "/api/v1/fields?field[name]=Fieldy&field[project_id]=#{id}&field[field_type]=1&field[restrictions]=x,y,z&email=kcarcia%40cs%2Euml%2Eedu&password=12345"
+    post "/api/v1/fields",
+        {
+          email: "kcarcia@cs.uml.edu",
+          password: "12345",
+          field:
+            {
+              name: "Favorite Color",
+              project_id: id,
+              field_type: 3,
+              restrictions: "Red,Green,Blue"
+            }
+        }
     assert_response :success
     assert keys_match(response, @field_keys), "Keys are missing"
   end
 
+  #Failed field creation.
   test "failed create fields" do
-    post "/api/v1/projects?email=kcarcia%40cs%2Euml%2Eedu&password=12345"
-    assert_response :success
-    id = parse(response)['id']
+    #Bad auth
     assert_difference('Field.count',0) do
-      post "/api/v1/fields?field[name]=Fieldy&field[project_id]=#{id}&field[field_type]=1&field[restrictions]=x,y,z"
+      post "/api/v1/fields",
+        {
+          email: "kcarcia@cs.uml.edu",
+          password: "WRONG PASSWORD",
+          field:
+            {
+             name: "Field 1",
+             project_id: @dessert_project.id,
+             field_type: 3
+            }
+        }
       assert_response :unauthorized
+    end
+
+    #Bad project id
+    assert_difference('Field.count',0) do
+      post "/api/v1/fields",
+        {
+          email: "kcarcia@cs.uml.edu",
+          password: "12345",
+          field:
+            {
+             name: "Field 1",
+             project_id: 3,
+             field_type: 3
+            }
+        }
+      assert_response :unprocessable_entity
+    end
+
+    #Bad field id
+    assert_difference('Field.count',0) do
+      post "/api/v1/fields",
+        {
+          email: "kcarcia@cs.uml.edu",
+          password: "12345",
+          field:
+            {
+             name: "Field 1",
+             project_id: @dessert_project.id,
+             field_type: 10
+            }
+        }
+      assert_response :unprocessable_entity
+    end
+
+    #Same Name
+    assert_difference('Field.count',0) do
+      post "/api/v1/fields",
+        {
+          email: "kcarcia@cs.uml.edu",
+          password: "12345",
+          field:
+            {
+             name: "pie",
+             project_id: @dessert_project.id,
+             field_type: 3
+            }
+        }
+      assert_response :unprocessable_entity
     end
   end
 
