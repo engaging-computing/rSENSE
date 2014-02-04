@@ -1,4 +1,12 @@
-<h1>API V1 Documentation</h1>
+<div class="row">
+  <div class="col-md-11">
+    <h1>API V1 Documentation</h1>
+  </div>
+  <div class="col-md-1">
+    <img src="https://travis-ci.org/isenseDev/rSENSE.png"/>
+  </div>
+</div>
+
 <p>Click on the type to expand</p>
 
 <div class="row">
@@ -139,7 +147,7 @@
         <td colspan="4">
           <b>Response Codes</b>
           <li>Success: 200 Ok</li>
-          <li>Fail: 422 Unprocessable Entity </li>
+          <li>Fail: 422 Unprocessable Entity (will contain message why) </li>
           <li>Fail: 401 Unauthorized</li>
           <b>Data</b>
           <pre>
@@ -299,4 +307,25 @@
       </tr>
     </table>
   </div>
+</div>
+
+
+
+<hr/>
+<div class="row">
+  <p>This API runs through automated testing every time someone makes a change to the website. The following tests have been written</p>
+  <ul>
+    <li>Project listing - includes search/sort/order/paging</li>
+    <li>Project information - includes test to verify all attributes exist</li>
+    <li>Creating Project - includes tests for auhtorized/unauthorized </li>
+    <li>Field Information - includes test to verify all attributes exist</li>
+    <li>Creating Fields - includes test for authorized/unauthorized/named/unnamed/restrictions</li>
+    <li>Data Set Information - includes test to verify all attributes exist</li>
+    <li>Creating Data Set- includes tests for authorized/unauthorized</li>
+    <li>Editing Data Set - includes test for authorized/unauthorized/changing data</li>
+    <li>Creating Media - includes tests for authorized/unauthorized/bad keys</li>
+    <li>Media Information - includes test to verify all attributes exist</li>
+    <li></li>
+    <li></li>
+  </ul>
 </div>
