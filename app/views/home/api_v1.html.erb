@@ -271,6 +271,56 @@
   </div>
 </div>
 
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-bordered api">
+      <tr>
+        <td class="POST def">POST</td>
+        <td class="method"> Data Sets </td>
+        <td class="code">/api/v1/projects/XX/jsonDataUpload</td>
+        <td class="args">contribution_key(req), contributor_name(req), data(req)</td>
+      </tr>
+      <tr class="more" style="">
+        <td colspan="4">
+          <b>Response Codes</b>
+          <li>Success: 200 Ok</li>
+          <li>Fail: 422 Unprocessable Entity </li>
+          <li>Fail: 401 Unauthorized</li>
+          <b>Data</b>
+          <pre>
+  {
+    "contribution_key" => "key created by project owner (string)",
+    "contributor_name" => (string),
+    "data" =>
+      {
+        "FIELD_ID" => [1,2,3,4,5],
+        "FIELD_ID_2" => ["blue","red",,,"green"]
+      }
+
+  }
+          </pre>
+          <b>Response</b>
+          <pre>
+  {
+    "id"=> Data Set ID (integer),
+    "name"=> Data Set Title (string),
+    "hidden"=> Visibility (boolean),
+    "url"=> Visualization URL (string),
+    "path"=> Data Set Path (string),
+    "createdAt"=>"January 28, 2014",
+    "fieldCount"=> Number of fields (integer),
+    "datapointCount"=> Number of data points (integer),
+    "displayURL"=> Display URL (string)
+  }
+          </pre>
+          <b>Notes</b>
+          <li>XX should be replaced with the ID for the project.</li>
+          <li>Data is a hash of field_id -> data array pairs. FIELD_ID and FIELD_ID_2 would be replaced with ids for their respective filds.</li>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
 
 <div class="row">
   <div class="col-md-12">
@@ -309,7 +359,52 @@
   </div>
 </div>
 
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-bordered api">
+      <tr>
+        <td class="POST def">POST</td>
+        <td class="method"> Media Objects </td>
+        <td class="code">/api/v1/media_objects</td>
+        <td class="args">email(req), password(req), upload(req), type(req), id(req)</td>
+      </tr>
+      <tr class="more" style="">
+        <td colspan="4">
+          <b>Response Codes</b>
+          <li>Success: 200 Ok</li>
+          <li>Fail: 422 Unprocessable Entity (with message why)</li>
+          <li>Fail: 401 Unauthorized</li>
+          <b>Data</b>
+          <pre>
+  {
+    "upload" => only accepts images(file),
+    "email" => "email address (string)",
+    "password" => "password (string)",
+    "type" => "(string) project or data_set",
+    "id" => "ID of thing your pushing to (int)"
 
+  }
+          </pre>
+          <b>Response</b>
+          <pre>
+  {
+    "id" => "ID of media object (int)",
+    "mediaType" => "image",
+    "name" => "name of file uploaded (string)",
+    "url" => "URL of image (string)",
+    "createdAt" => "February 06, 2014",
+    "src" => "location of image",
+    "tn_src"=>"location of thumbnail"
+  }
+          </pre>
+          <b>Notes</b>
+          <li>type - either "project", or "data_set"</li>
+          <li></li>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
 
 <hr/>
 <div class="row">
@@ -325,7 +420,5 @@
     <li>Editing Data Set - includes test for authorized/unauthorized/changing data</li>
     <li>Creating Media - includes tests for authorized/unauthorized/bad keys</li>
     <li>Media Information - includes test to verify all attributes exist</li>
-    <li></li>
-    <li></li>
   </ul>
 </div>

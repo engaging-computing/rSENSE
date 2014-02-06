@@ -223,7 +223,16 @@ class ApiV1Test < ActionDispatch::IntegrationTest
 
   test "create data set" do
     pid = @dessert_project.id
-    post "/api/v1/projects/#{pid}/jsonDataUpload?data[20][]=2&data[20][]=3&title=AwesomeData&email=kcarcia%40cs%2Euml%2Eedu&password=12345"
+    post "/api/v1/projects/#{pid}/jsonDataUpload",
+        {
+          title: "Awesome Data",
+          email:"kcarcia@cs.uml.edu",
+          password: "12345",
+          data:
+            {
+              "20" => ['1','2','3','4','5']
+            }
+        }
     assert_response :success
     assert keys_match(response, @data_keys), "Keys are missing"
 
@@ -233,6 +242,60 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert keys_match(response, @data_keys_extended), "Keys are missing"
   end
 
+  test "create data set with contribution_key" do
+    pid = @dessert_project.id
+    post "/api/v1/projects/#{pid}/jsonDataUpload",
+        {
+          title: "Awesome Data",
+          contribution_key: "apple",
+          contributor_name: "Student 1",
+          data:
+            {
+              "20" => ['1','2','3','4','5']
+            }
+        }
+    assert_response :success
+    assert keys_match(response, @data_keys), "Keys are missing"
+
+    id = parse(response)['id']
+    get "/api/v1/data_sets/#{id}?recur=true"
+    assert_response :success
+    assert keys_match(response, @data_keys_extended), "Keys are missing"
+  end
+
+  
+  test "failed create data set with contribution_key no name" do
+    pid = @dessert_project.id
+    post "/api/v1/projects/#{pid}/jsonDataUpload",
+        {
+          title: "Awesome Data",
+          contribution_key: "apple",
+          data:
+            {
+              "20" => ['1','2','3','4','5']
+            }
+        }
+    assert_response :unprocessable_entity
+
+  end
+
+  test "failed create data set with bad contribution_key" do
+    pid = @dessert_project.id
+    post "/api/v1/projects/#{pid}/jsonDataUpload",
+        {
+          title: "Awesome Data",
+          contribution_key: "blueberry",
+          contributor_name: "Student 1",
+          data:
+            {
+              "20" => ['1','2','3','4','5']
+            }
+        }
+    assert_response :unauthorized
+
+  end
+
+  
   test "failed create data set" do
     assert_difference('DataSet.count',0) do
       pid = @dessert_project.id
@@ -282,13 +345,13 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     file = Rack::Test::UploadedFile.new(img_path,"image/jpeg")
 
     #Create a media object for a project
-    post '/api/v1/media_objects/saveMedia',
+    post '/api/v1/media_objects',
         {
          upload: file,
          email: 'kcarcia@cs.uml.edu',
          password: '12345',
-         keys: "project/#{@dessert_project.id}",
-         non_wys: true
+         type: "project",
+         id: @dessert_project.id
         }
     assert_response :success
     assert keys_match(response,@media_object_keys), "Keys are missing."
@@ -305,32 +368,48 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert keys_match(response, @media_object_keys_extended), "Keys are missing"
   end
 
-  test "failed create_media bad auth" do
+  test "failed create media bad auth" do
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
     file = Rack::Test::UploadedFile.new(img_path,"image/jpeg")
 
-    #Create a media object for a project
-    post '/api/v1/media_objects/saveMedia',
-        {
-         upload: file,
-         keys: "project/#{@dessert_project.id}",
-         non_wys: true
-        }
+    #Failed do to bad auth
+    post '/api/v1/media_objects',
+      {
+        upload: file,
+        id: @dessert_project.id,
+        type: "project",
+      }
     assert_response :unauthorized
   end
 
-  test "failed create_media bad project id" do
+  test "failed create media bad id" do
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
     file = Rack::Test::UploadedFile.new(img_path,"image/jpeg")
 
-    #Create a media object for a project
-    post '/api/v1/media_objects/saveMedia',
+    #Failed due to bad data
+    post '/api/v1/media_objects',
         {
          upload: file,
          email: 'kcarcia@cs.uml.edu',
          password: '12345',
-         keys: "project/3",
-         non_wys: true
+         type: 'project',
+         id: 3
+        }
+    assert_response :unprocessable_entity
+  end
+
+  test "failed create media bad type" do
+    img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
+    file = Rack::Test::UploadedFile.new(img_path,"image/jpeg")
+
+    #Failed due to bad data
+    post '/api/v1/media_objects',
+        {
+         upload: file,
+         email: 'kcarcia@cs.uml.edu',
+         password: '12345',
+         type: 'user',
+         id: 3
         }
     assert_response :unprocessable_entity
   end
