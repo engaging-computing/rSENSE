@@ -413,6 +413,40 @@ class ApiV1Test < ActionDispatch::IntegrationTest
         }
     assert_response :unprocessable_entity
   end
+
+  test "create_media_object contribution_key" do
+    img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
+    file = Rack::Test::UploadedFile.new(img_path,"image/jpeg")
+
+    #Create a media object for a project
+    post '/api/v1/media_objects',
+        {
+         upload: file,
+         contribution_key: 'apple',
+         contributor_name: 'Student 1',
+         type: "project",
+         id: @dessert_project.id
+        }
+    assert_response :success
+    assert keys_match(response,@media_object_keys), "Keys are missing."
+  end
+
+  test "failed create_media_object contribution_key" do
+    img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
+    file = Rack::Test::UploadedFile.new(img_path,"image/jpeg")
+
+    #Create a media object for a project
+    post '/api/v1/media_objects',
+        {
+         upload: file,
+         contribution_key: 'blueberry',
+         contributor_name: 'Student 1',
+         type: "project",
+         id: @dessert_project.id
+        }
+    assert_response :unauthorized
+
+  end
   
   private
   def parse (x)

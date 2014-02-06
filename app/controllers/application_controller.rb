@@ -66,7 +66,7 @@ class ApplicationController < ActionController::Base
           format.json {render json: {msg: "Email & Password do not match"},status: :unauthorized}
         end
       end
-    elsif (params.has_key? :contribution_key) && (params[:action] == "jsonDataUpload")
+    elsif (params.has_key? :contribution_key) && (['jsonDataUpload','saveMedia'].include? params[:action])
       project = Project.find_by_id(params[:id] || params[:pid])
       if project && !project.contrib_keys.find_by_key(params[:contribution_key]).nil?
         if params.has_key? :contributor_name
