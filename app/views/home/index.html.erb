@@ -55,7 +55,7 @@
         </div>
         <div class="col-md-6">
           <%if @news.first != nil%>
-            <div class="item clickableItem" style="height:198px;">
+            <div class="item clickableItem" style="height:210px;">
               <% n = @news.first %>
               <a href='<%=news_path n%>'>
                 <%= image_tag "blank.png", {class: "area_link", alt: ""} %>
@@ -75,7 +75,7 @@
           <% end %>
         </div>
         <div class="col-md-3">
-          <div class="item" style="height:198px;">
+          <div class="item" style="height:210px;">
               <div style="padding:7px">
                 <span class="item_title">Statistics</span><br/><br/>
                 <b><%=User.count%> users</b> registered<br/>
