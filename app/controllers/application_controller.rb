@@ -63,7 +63,7 @@ class ApplicationController < ActionController::Base
         @cur_user = @user
       else
         respond_to do |format|
-          format.json {render json: {msg: "Email & Password do not match"},status: :unauthorized}
+          format.json {render json: {msg: "Email & Password do not match."},status: :unauthorized}
         end
       end
     elsif (params.has_key? :contribution_key) && (['jsonDataUpload','saveMedia'].include? params[:action])
@@ -78,7 +78,7 @@ class ApplicationController < ActionController::Base
         end
       else
         respond_to do |format|
-          format.json {render json: {msg: "contribution_key not valid"},status: :unauthorized}
+          format.json {render json: {msg: "Contribution key not valid"},status: :unauthorized}
         end
       end
     else
