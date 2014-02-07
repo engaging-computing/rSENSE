@@ -6,8 +6,8 @@ class SessionsController < ApplicationController
   #GET /sessions/new
   def new
     
-    if request.referrer && !(URI(request.referrer).path == login_path)
-      session[:redirect_to] = request.referrer
+    if request.referrer && !(URI(request.referrer).path == login_path)  && !( URI(request.referrer).path == "/users/new" )
+      session[:redirect_to] = request.referrer  
     else
       session[:redirect_to] = "/home/index"
     end
