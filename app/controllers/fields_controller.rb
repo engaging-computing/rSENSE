@@ -2,6 +2,8 @@ class FieldsController < ApplicationController
   include ApplicationHelper
   # GET /fields/1
   # GET /fields/1.json
+  skip_before_filter :authorize, only: [:show]
+  
   def show
     @field = Field.find(params[:id])
     @owner = Project.find(@field.project_id).user_id
@@ -17,9 +19,18 @@ class FieldsController < ApplicationController
   # POST /fields
   # POST /fields.json
   def create
+    begin
+      Field.verify_params(params[:field])
+    rescue Exception => e
+      respond_to do |format|
+        format.json {render json: {msg: e}, status: :unprocessable_entity}
+      end
+      return
+    end
+    
     @field = Field.new(field_params)
     @project = Project.find(params[:field][:project_id])
-    
+
     if !params[:field].has_key? :name
       @field.name = Field.get_next_name(@project, @field.field_type)
     end

@@ -19,12 +19,19 @@
   }
 }
 
+.news_description
+{
+  height:110px ; 
+  word-wrap: break-word ;
+  overflow: hidden  
+}
+
 .news_featured_image
 {
   float:left;
   clear:left;
   width:50%;
-  height:198px;
+  height:210px;
   margin-right:7px;
   div.item_image
   {
