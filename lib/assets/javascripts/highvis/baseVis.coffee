@@ -128,7 +128,7 @@ $ ->
             counter = 0
             if data.groups.length > 1
               controls += "<div class='inner_control_div'>"
-              controls += "<div class='checkbox'><label><input class='group_input_all' type='checkbox' value='#{gIndex}' #{if globals.groupSelection.length == data.groups.length then "checked" else ""}> Check All</label></div>"
+              controls += "<div class='checkbox'><label><input id='checkbox_all' class='group_input_all' type='checkbox' value='#{gIndex}' #{if globals.groupSelection.length == data.groups.length then "checked" else ""}> Check All</label></div>"
             for group, gIndex in data.groups
               controls += "<div class='inner_control_div' style=\"color:#{globals.colors[counter % globals.colors.length]};\">"
               controls += "<div class='checkbox'><label><input class='group_input' type='checkbox' value='#{gIndex}' #{if (Number gIndex) in globals.groupSelection then "checked" else ""}/>#{group}</label></div>"
@@ -155,14 +155,24 @@ $ ->
 
             # Make group checkbox handler
             ($ '.group_input').click (e) =>
-              selection = []
-              ($ '.group_input').each ()->
-                if @checked
-                  selection.push Number @value
-                else
-              globals.groupSelection = selection
+                selection = []
+                ($ '.group_input').each ()->
+                    if @checked
+                        selection.push Number @value
+                    else
+                globals.groupSelection = selection
               
-              @delayedUpdate()
+                if globals.groupSelection.length == data.groups.length
+                    ($ '#checkbox_all').prop("checked", true)
+                    ($ '#checkbox_all').prop("indeterminate", false);
+                else if globals.groupSelection.length > 0
+                    ($ '#checkbox_all').prop("checked", false)
+                    ($ '#checkbox_all').prop("indeterminate", true)
+                else
+                    ($ '#checkbox_all').prop("checked", false)
+                    ($ '#checkbox_all').prop("indeterminate", false);
+
+                @delayedUpdate()
                 
             # Make group checkbox for all groups
             ($ '.group_input_all').click (e) =>

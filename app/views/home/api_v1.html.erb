@@ -1,46 +1,13 @@
-<h1>API V1 Documentation</h1>
-<p>Click on the type to expand</p>
 <div class="row">
-  <div class="col-md-12">
-    <table class="table table-bordered api">
-      <tr>
-        <td class="POST def">POST</td>
-        <td class="method"> Login </td>
-        <td class="code">/api/v1/login</td>
-        <td class="args">email(req), password(req)</td>
-      </tr>
-      <tr class="more" style="">
-        <td colspan="4">
-          <b>Response Codes</b>
-          <li>Success: 200 Ok</li>
-          <li>Fail: 401 Unauthorized</li>
-          <b>Data</b>
-          <pre>
-  {
-    "email" => email(string),
-    "password" => password(string)
-  }
-          </pre>
-          <b>Response</b>
-          <pre>
-  {
-    "authenticity_token"=>"yjQ2Q2xU3757deGnxS0V9vjd2pcXIY6/qPPdzU4qRdg=",
-    "user"=> {
-      "id"=> ID of user (integer),
-      "name"=> Display Name (string),
-      "hidden"=> Visibility of user (boolean),
-      "url"=> Full url of users profile" (string),
-      "path"=> Path to users profile (string),
-      "createdAt"=>"January 22, 2014",
-      "gravatar"=> Url of users gravatar image (string)
-    }
-  }
-          </pre>
-        </td>
-      </tr>
-    </table>
+  <div class="col-md-11">
+    <h1>API V1 Documentation</h1>
+  </div>
+  <div class="col-md-1">
+    <img src="https://travis-ci.org/isenseDev/rSENSE.png"/>
   </div>
 </div>
+
+<p>Click on the type to expand</p>
 
 <div class="row">
   <div class="col-md-12">
@@ -48,14 +15,14 @@
       <tr>
         <td class="GET def">GET</td>
         <td class="method"> Projects </td>
-        <td class="code">/api/v1/projects/1</td>
+        <td class="code">/api/v1/projects/XX</td>
         <td class="args">id(req) recur(opt boolean)</td>
       </tr>
       <tr class="more" style="">
         <td colspan="4">
           <b>Response Codes</b>
           <li>Success: 200 Ok</li>
-          <li>Fail: 404 Not Fount</li>
+          <li>Fail: 404 Not Found</li>
           <b>Response</b>
           <pre>
     {
@@ -71,13 +38,14 @@
       "timeAgoInWords"=>"less than a minute",
       "createdAt"=>"January 28, 2014",
       "ownerName"=> Name of project owner (string),
-      "ownerUrl"=> Url of project owners profile (string),
+      "ownerUrl"=> URL of project owners profile (string),
       "dataSetCount"=> Number of associated data sets (integer),
       "fieldCount"=> Number of contained fields (integer),
       "fields"=> Fields associated with project (array)
     }
           </pre>
           <b>Notes</b>
+          <li>XX should be replaced with the ID for the project. Or set id as a GET variable</li>
           <li>If recur is set to true, the function will also return 'dataSets', 'mediaObjects', and 'owner' objects</li>
         </td>
       </tr>
@@ -121,7 +89,7 @@
         <td class="POST def">POST</td>
         <td class="method"> Projects </td>
         <td class="code">/api/v1/projects</td>
-        <td class="args">auth_key(req), project_name(opt)</td>
+        <td class="args">email(req), password(req), project_name(opt)</td>
       </tr>
       <tr class="more" style="">
         <td colspan="4">
@@ -132,7 +100,8 @@
           <b>Data</b>
           <pre>
   {
-    "auth_key" => "authenticity_token (string)"
+    "email" => "email address (string)",
+    "password" => "password (string)",
     "project_name" => (string)
   }
           </pre>
@@ -151,14 +120,14 @@
     "timeAgoInWords"=>"less than a minute",
     "createdAt"=>"January 28, 2014",
     "ownerName"=> Name of project owner (string),
-    "ownerUrl"=> Url of project owners profile (string),
+    "ownerUrl"=> URL of project owners profile (string),
     "dataSetCount"=> Number of associated data sets (integer),
     "fieldCount"=> Number of contained fields (integer),
     "fields"=> Fields associated with project (array)
   }
           </pre>
           <b>Notes</b>
-          <li>If a name is not given, one will be generated based on the user's name</li>
+          <li>If a name is not given, one will be generated based on the user's name.</li>
         </td>
       </tr>
     </table>
@@ -172,18 +141,19 @@
         <td class="POST def">POST</td>
         <td class="method"> Fields </td>
         <td class="code">/api/v1/fields</td>
-        <td class="args">auth_key(req), project_id(req), field_type(req), name(opt), units(opt), restrictions(opt)</td>
+        <td class="args">email(req), password(req), project_id(req), field_type(req), name(opt), units(opt), restrictions(opt)</td>
       </tr>
       <tr class="more" style="">
         <td colspan="4">
           <b>Response Codes</b>
           <li>Success: 200 Ok</li>
-          <li>Fail: 422 Unprocessable Entity </li>
+          <li>Fail: 422 Unprocessable Entity (will contain message why) </li>
           <li>Fail: 401 Unauthorized</li>
           <b>Data</b>
           <pre>
   {
-    "auth_key" => "authenticity_token (string)"
+    "email" => "email address (string)",
+    "password" => "password (string)",
     "field" =>
       {
         "project_id" =>  integer,
@@ -223,7 +193,7 @@
       <tr>
         <td class="GET def">GET</td>
         <td class="method"> Fields </td>
-        <td class="code">/api/v1/fields/1</td>
+        <td class="code">/api/v1/fields/XX</td>
         <td class="args"> id(req)</td>
       </tr>
       <tr class="more" style="">
@@ -242,6 +212,7 @@
   }
           </pre>
           <b>Notes</b>
+          <li>XX should be replaced with the ID for the field. Or set id as a GET variable</li>
         </td>
       </tr>
     </table>
@@ -254,8 +225,8 @@
       <tr>
         <td class="POST def">POST</td>
         <td class="method"> Data Sets </td>
-        <td class="code">/api/v1/uploadDataSet</td>
-        <td class="args">auth_key(req), title(req), data(req), id(req)</td>
+        <td class="code">/api/v1/projects/XX/jsonDataUpload</td>
+        <td class="args">email(req), password(req), title(req), data(req)</td>
       </tr>
       <tr class="more" style="">
         <td colspan="4">
@@ -266,9 +237,9 @@
           <b>Data</b>
           <pre>
   {
-    "auth_key" => "authenticity_token (string)",
+    "email" => "email address (string)",
+    "password" => "password (string)",
     "title" => (string),
-    "id" => Project ID (string),
     "data" =>
       {
         "FIELD_ID" => [1,2,3,4,5],
@@ -292,6 +263,7 @@
   }
           </pre>
           <b>Notes</b>
+          <li>XX should be replaced with the ID for the project.</li>
           <li>Data is a hash of field_id -> data array pairs. FIELD_ID and FIELD_ID_2 would be replaced with ids for their respective filds.</li>
         </td>
       </tr>
@@ -299,6 +271,56 @@
   </div>
 </div>
 
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-bordered api">
+      <tr>
+        <td class="POST def">POST</td>
+        <td class="method"> Data Sets </td>
+        <td class="code">/api/v1/projects/XX/jsonDataUpload</td>
+        <td class="args">contribution_key(req), contributor_name(req), data(req)</td>
+      </tr>
+      <tr class="more" style="">
+        <td colspan="4">
+          <b>Response Codes</b>
+          <li>Success: 200 Ok</li>
+          <li>Fail: 422 Unprocessable Entity </li>
+          <li>Fail: 401 Unauthorized</li>
+          <b>Data</b>
+          <pre>
+  {
+    "contribution_key" => "key created by project owner (string)",
+    "contributor_name" => (string),
+    "data" =>
+      {
+        "FIELD_ID" => [1,2,3,4,5],
+        "FIELD_ID_2" => ["blue","red",,,"green"]
+      }
+
+  }
+          </pre>
+          <b>Response</b>
+          <pre>
+  {
+    "id"=> Data Set ID (integer),
+    "name"=> Data Set Title (string),
+    "hidden"=> Visibility (boolean),
+    "url"=> Visualization URL (string),
+    "path"=> Data Set Path (string),
+    "createdAt"=>"January 28, 2014",
+    "fieldCount"=> Number of fields (integer),
+    "datapointCount"=> Number of data points (integer),
+    "displayURL"=> Display URL (string)
+  }
+          </pre>
+          <b>Notes</b>
+          <li>XX should be replaced with the ID for the project.</li>
+          <li>Data is a hash of field_id -> data array pairs. FIELD_ID and FIELD_ID_2 would be replaced with ids for their respective filds.</li>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
 
 <div class="row">
   <div class="col-md-12">
@@ -306,7 +328,7 @@
       <tr>
         <td class="GET def">GET</td>
         <td class="method"> Data Sets </td>
-        <td class="code">/api/v1/data_sets/1/edit</td>
+        <td class="code">/api/v1/data_sets/XX/edit</td>
         <td class="args"> id(req)</td>
       </tr>
       <tr class="more" style="">
@@ -329,9 +351,121 @@
   }
           </pre>
           <b>Notes</b>
+          <li>XX should be replaced with the ID for the project.</li>
           <li>Setting recur=true as a get variable will return the associated Project(hash), Fields(hash), Data(hash) </li>
         </td>
       </tr>
     </table>
   </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-bordered api">
+      <tr>
+        <td class="POST def">POST</td>
+        <td class="method"> Media Objects </td>
+        <td class="code">/api/v1/media_objects</td>
+        <td class="args">email(req), password(req), upload(req), type(req), id(req)</td>
+      </tr>
+      <tr class="more" style="">
+        <td colspan="4">
+          <b>Response Codes</b>
+          <li>Success: 200 Ok</li>
+          <li>Fail: 422 Unprocessable Entity (with message why)</li>
+          <li>Fail: 401 Unauthorized</li>
+          <b>Data</b>
+          <pre>
+  {
+    "upload" => (file),
+    "email" => "email address (string)",
+    "password" => "password (string)",
+    "type" => "(string) project or data_set",
+    "id" => "ID of thing your pushing to (int)"
+
+  }
+          </pre>
+          <b>Response</b>
+          <pre>
+  {
+    "id" => "ID of media object (int)",
+    "mediaType" => "image",
+    "name" => "name of file uploaded (string)",
+    "url" => "URL of image (string)",
+    "createdAt" => "February 06, 2014",
+    "src" => "location of image",
+    "tn_src"=>"location of thumbnail"
+  }
+          </pre>
+          <b>Notes</b>
+          <li>type - either "project", or "data_set"</li>
+          <li></li>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-bordered api">
+      <tr>
+        <td class="POST def">POST</td>
+        <td class="method"> Media Objects </td>
+        <td class="code">/api/v1/media_objects</td>
+        <td class="args">contribution_key(req),contributor_name(req), upload(req), type(req), id(req)</td>
+      </tr>
+      <tr class="more" style="">
+        <td colspan="4">
+          <b>Response Codes</b>
+          <li>Success: 200 Ok</li>
+          <li>Fail: 422 Unprocessable Entity (with message why)</li>
+          <li>Fail: 401 Unauthorized</li>
+          <b>Data</b>
+          <pre>
+  {
+    "upload" => (file),
+    "contribution_key" => "key created by project owner (string)",
+    "contributor_name" => "Name of contributor (string)",
+    "type" => "(string) project or data_set",
+    "id" => "ID of thing your pushing to (int)"
+
+  }
+          </pre>
+          <b>Response</b>
+          <pre>
+  {
+    "id" => "ID of media object (int)",
+    "mediaType" => "image",
+    "name" => "name of file uploaded (string)",
+    "url" => "URL of image (string)",
+    "createdAt" => "February 06, 2014",
+    "src" => "location of image",
+    "tn_src"=>"location of thumbnail"
+  }
+          </pre>
+          <b>Notes</b>
+          <li>type - either "project", or "data_set"</li>
+          <li></li>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<hr/>
+<div class="row">
+  <p>This API runs through automated testing every time someone makes a change to the website. The following tests have been written</p>
+  <ul>
+    <li>Project listing - includes search/sort/order/paging</li>
+    <li>Project information - includes test to verify all attributes exist</li>
+    <li>Creating Project - includes tests for auhtorized/unauthorized </li>
+    <li>Field Information - includes test to verify all attributes exist</li>
+    <li>Creating Fields - includes test for authorized/unauthorized/named/unnamed/restrictions</li>
+    <li>Data Set Information - includes test to verify all attributes exist</li>
+    <li>Creating Data Set- includes tests for authorized/unauthorized</li>
+    <li>Editing Data Set - includes test for authorized/unauthorized/changing data</li>
+    <li>Creating Media - includes tests for authorized/unauthorized/bad keys</li>
+    <li>Media Information - includes test to verify all attributes exist</li>
+  </ul>
 </div>
