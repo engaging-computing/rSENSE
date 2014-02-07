@@ -70,8 +70,6 @@ Rsense::Application.routes.draw do
   post "/projects/:id/finishTemplateUpload", to: "projects#finishTemplateUpload"
   put "/projects/:id/removeField" => "projects#removeField"
   
-  post "/media_objects/saveMedia/*keys" => "media_objects#saveMedia"
-
   controller :sessions do
     get 'login' => :new
     post 'login' => :create
@@ -92,4 +90,19 @@ Rsense::Application.routes.draw do
 
   resources :contrib_keys, only: [:create, :destroy]
   post "/contrib_keys/enter" => 'contrib_keys#enter'
+
+  get "/api/v1/docs" => "home#api_v1"
+  #API routes
+  
+  namespace :api, defaults: {:format => 'json'}, except: :destroy do
+    namespace :v1 do
+      post '/projects/:id/jsonDataUpload' => "data_sets#jsonDataUpload"
+      post '/media_objects' => "media_objects#saveMedia"
+      get  '/media_objects/:id' => "media_objects#show"
+      resources :projects, :only => [:show,:index,:create]
+      resources :fields, :only => [:create,:show]
+      resources :visualizations, :only => [:show]
+      resources :data_sets, :only => [:show,:edit,:jsonDataUpload]
+    end
+  end
 end
