@@ -119,7 +119,7 @@ class MediaObjectsController < ApplicationController
         @mo.data_set_id = @data_set.id
         @mo.project_id = @data_set.project_id
       else
-        @errors = "Either you do not have access to this data_set, or it does not exist."
+        @errors = "Either you do not have access to this data set, or it does not exist."
       end
     when 'user'
       @user = User.find_by_id(id) || nil
