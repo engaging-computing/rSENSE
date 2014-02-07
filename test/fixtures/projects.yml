@@ -39,7 +39,8 @@ dessert:
   is_template: false
   filter: ""
   featured_media_id: 
-  
+  lock: true
+
 project_five:
   title: Media Test
   user: nixon

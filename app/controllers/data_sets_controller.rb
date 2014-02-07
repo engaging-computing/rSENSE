@@ -21,6 +21,12 @@ class DataSetsController < ApplicationController
   def edit
     @data_set = DataSet.find(params[:id])
     @project = Project.find(@data_set.project_id)
+
+    if @project.lock? and !can_edit?(@project)
+      redirect_to @project, alert: "Project is locked"
+      return
+    end
+
     @fields = @project.fields
 
     header_to_field_map = []
@@ -56,6 +62,12 @@ class DataSetsController < ApplicationController
   # POST /data_sets.json
   def create
     @data_set = DataSet.new(data_set_params)
+    @project  = @data_set.project
+
+    if @project.lock? and !can_edit?(@project) and !has_key?(@project)
+      redirect_to @project, alert: "Project is locked"
+      return
+    end
 
     respond_to do |format|
       if @data_set.save
@@ -72,7 +84,13 @@ class DataSetsController < ApplicationController
   # PUT /data_sets/1.json
   def update
     @data_set = DataSet.find(params[:id])
+    @project  = @data_set.project
     
+    if @project.lock? and !can_edit?(@project)
+      redirect_to @project, alert: "Project is locked"
+      return
+    end
+
     respond_to do |format|
       if can_edit?(@data_set) && @data_set.update_attributes(data_set_params)
         format.html { redirect_to @data_set, notice: 'DataSet was successfully updated.' }
@@ -89,6 +107,12 @@ class DataSetsController < ApplicationController
   # DELETE /data_sets/1.json
   def destroy
     @data_set = DataSet.find(params[:id])
+    @project  = @data_set.project
+    
+    if @project.lock? and !can_edit(@project)
+      redirect_to @project, alert: "Project is locked"
+      return
+    end
 
     if can_delete?(@data_set)
 
@@ -116,12 +140,22 @@ class DataSetsController < ApplicationController
   # GET /projects/1/manualEntry
   def manualEntry
     @project = Project.find(params[:id])
+    
+    if @project.lock? and !can_edit(@project) and !has_key?(@project)
+      redirect_to @project, alert: "Project is locked"
+      return
+    end
   end
 
   # POST /projects/1/jsonDataUpload
   # {data => { "20"=>[1,2,3,4,5], "21"=>[6,7,8,9,10], "22"=>['v','w','x','y','z'] }}
   def jsonDataUpload
     project = Project.find(params['id'])
+    
+    if project.lock? and !can_edit?(project) and !has_key?(project)
+      redirect_to @project, alert: "Project is locked"
+      return
+    end
 
     uploader = FileUploader.new
     sane = uploader.sanitize_data(params[:data])
@@ -207,6 +241,11 @@ class DataSetsController < ApplicationController
   # POST /data_sets/uploadCSV2
   def dataFileUpload
     project = Project.find(params[:pid])
+    
+    if project.lock? and !can_edit?(project) and !has_key?(project)
+      redirect_to @project, alert: "Project is locked"
+      return
+    end
 
     begin
       uploader = FileUploader.new
