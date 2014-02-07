@@ -32,6 +32,10 @@ module ApplicationHelper
     end
   end
 
+  def has_key?(proj)
+    proj && session[:contrib_access].to_i == proj.id
+  end
+
   # Begin permissions stuff
   def can_edit? (obj)
 
