@@ -34,9 +34,11 @@ $ ->
     
     # Setup add tutorial button
     ($ '#addTutorialButton').click ->
+      console.log "here"
       $.ajax
-        url: "/tutorial/create"
+        url: "/tutorials"
         data: {}
         dataType: "json"
+        method: "POST"
         success: (data, textStatus) ->
           helpers.name_popup data, "Tutorial", "tutorial"
