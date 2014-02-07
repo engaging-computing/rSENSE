@@ -34,7 +34,6 @@ $ ->
     
     # Setup add tutorial button
     ($ '#addTutorialButton').click ->
-      console.log "here"
       $.ajax
         url: "/tutorials"
         data: {}
