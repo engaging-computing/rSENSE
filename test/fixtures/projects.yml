@@ -50,3 +50,4 @@ project_five:
   filter: ""
   featured_media_id: 
   id: 1
+  created_at: <%= 7.day.ago.to_s(:db) %>
