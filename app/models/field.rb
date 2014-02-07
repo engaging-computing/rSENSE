@@ -13,7 +13,8 @@ class Field < ActiveRecord::Base
       id: self.id,
       name: self.name,
       type: self.field_type,
-      unit: self.unit
+      unit: self.unit,
+      restrictions: self.restrictions
     }
 
     if recurse
@@ -46,5 +47,25 @@ class Field < ActiveRecord::Base
       name = base
     end
     name    
+  end
+
+  def self.verify_params(params)
+    if !params.has_key? "field_type"
+      raise "No field type given"
+    else
+      if !['1','2','3','4','5'].include?(params['field_type'].to_s)
+        raise "Bad field type given"
+      end
+    end
+
+    if !params.has_key? 'project_id'
+      raise "No project id given"
+    else
+      @project = Project.find_by_id(params['project_id']) || nil
+      if @project == nil
+        raise "Project not found"
+      end
+    end
+      
   end
 end
