@@ -68,8 +68,8 @@
               <div style="padding:7px;height:184px">
                 <span class="item_title"><%= n.title %></span><br/>
                 <span style="font-size:0.8em">Written on <%=n.created_at.strftime("%B %d, %Y")%></span><br/><br/>
-                <%= n.summary %><br/><br/>
-                <%= link_to "Read More", news_path(n) %>
+                <div class="news_description"><%= n.summary%><br/> </div>
+                <div style ="margin-top: 5px"> <%= link_to "Read More", news_path(n) %> </div>
               </div>
             </div>
           <% end %>
