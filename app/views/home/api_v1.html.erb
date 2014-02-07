@@ -329,13 +329,28 @@
         <td class="GET def">GET</td>
         <td class="method"> Data Sets </td>
         <td class="code">/api/v1/data_sets/XX/edit</td>
-        <td class="args"> id(req)</td>
+        <td class="args"> email(Req), password(req), id(req)</td>
       </tr>
       <tr class="more" style="">
         <td colspan="4">
           <b>Response Codes</b>
           <li>Success: 200 Ok</li>
+          <li>Fail: 422 Unprocessable</li>
           <li>Fail: 404 Not Found</li>
+          <li>Fail: 401:Unauthorized</li>
+          <b>Data</b>
+          <pre>
+  {
+    "email" => "email address (string)",
+    "password" => "password (string)",
+    "data" =>
+      {
+        "FIELD_ID" => [1,2,3,4,5],
+        "FIELD_ID_2" => ["blue","red",,,"green"]
+      }
+
+  }
+          </pre>
           <b>Response</b>
           <pre>
   {
