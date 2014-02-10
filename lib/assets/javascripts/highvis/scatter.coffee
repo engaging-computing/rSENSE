@@ -157,7 +157,7 @@ $ ->
                             @delayedUpdate()
                           else
                             @updateOnZoom = 1
-                            
+
 
         ###
         Build the dummy series for the legend.
@@ -678,7 +678,7 @@ $ ->
                 #Prepare to save regression fields
                 saved_regression =
                   type:
-                    regression_type               
+                    regression_type
                   type_count:
                     count
                   field_indices:
