@@ -413,3 +413,14 @@ i.icon-white
   }
 }
 
+.item.clickable_item{
+    .badge p{
+      display: none ;
+    }	
+}
+.item.clickable_item:hover{
+  .badge p{
+    display: inline ;
+    color: white ;     
+  }
+}
