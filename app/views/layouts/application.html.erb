@@ -8,11 +8,12 @@
     <%= javascript_include_tag :modernizr %>
     <%= csrf_meta_tags %>
     <%= favicon_link_tag 'favicon.png' %>
-  </head>
 
-  <%= javascript_tag do %>
-    window.namespace = <%= raw @namespace.to_json %>
-  <% end %>
+    <%= javascript_tag do %>
+      window.namespace = <%= raw @namespace.to_json %>
+    <% end %>
+ 
+  </head>
 
   <body style="margin:0;padding:0;height:100%;background-color:#ddd;">
   
