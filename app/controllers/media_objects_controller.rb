@@ -92,8 +92,10 @@ class MediaObjectsController < ApplicationController
     if fileType == 'image'
       fixRot = MiniMagick::Image.read(filePath)
       fixRot.auto_orient
-      fixRot.strip
-      fixRot.write filePath
+      filePath = '/tmp/' + SecureRandom.hex
+      File.open(filePath, "wb") do |ff|
+          fixRot.write ff
+      end
     end
     
     @mo = MediaObject.new
@@ -103,41 +105,53 @@ class MediaObjectsController < ApplicationController
     #Build media object params based on what we are doing
     case target
     when 'project'
-      @project = Project.find_by_id(id)
-      if(can_edit?(@project))
+      @project = Project.find_by_id(id) || nil 
+      if(can_edit?(@project) || @project != nil)
         @mo.user_id = @project.owner.id
         @mo.project_id = @project.id
+      else
+        @errors = "Either you do not have access to this project, or it does not exist."
       end
     when 'data_set'
-      @data_set = DataSet.find_by_id(id)
-      if(can_edit?(@data_set))
+      @data_set = DataSet.find_by_id(id) || nil
+      if(can_edit?(@data_set) || @data_set != nil)
         @mo.user_id = @data_set.owner.id
         @mo.data_set_id = @data_set.id
         @mo.project_id = @data_set.project_id
+      else
+        @errors = "Either you do not have access to this data set, or it does not exist."
       end
     when 'user'
-      @user = User.find_by_id(id)
-      if(can_edit?(@user))
+      @user = User.find_by_id(id) || nil
+      if(can_edit?(@user) || @user != nil)
         @mo.user_id = @user.id
+      else
+         @errors = "Either you are not the user, or it does not exist."
       end
     when 'tutorial'
-      @tutorial = Tutorial.find_by_id(id)
-      if(can_edit?(@tutorial))
+      @tutorial = Tutorial.find_by_id(id) || nil
+      if(can_edit?(@tutorial) || @tutorial != nil)
         @mo.user_id = @tutorial.owner.id 
         @mo.tutorial_id = @tutorial.id
+      else
+         @errors = "Either you do not have access to this tutorial, or it does not exist."
       end
     when 'visualization'
       logger.error 'in visualizaiton' 
-      @visualization = Visualization.find_by_id(id)
-      if(can_edit?(@visualization))
+      @visualization = Visualization.find_by_id(id) || nil
+      if(can_edit?(@visualization) || @visualizaiton != nil)
         @mo.user_id = @visualization.owner.id
         @mo.visualization_id = @visualization.id
+      else
+        @errors = "Either you do not have access to this visualization, or it does not exist."
       end
     when 'news'
-      @news = News.find_by_id(id)
-      if(can_edit?(@news))
+      @news = News.find_by_id(id) || nil 
+      if(can_edit?(@news) || @news != nil)
         @mo.user_id = @news.owner.id
         @mo.news_id = @news.id
+      else
+        @errors = "Either you do not have access to this news item, or it does not exist."
       end
     end
 
@@ -169,7 +183,10 @@ class MediaObjectsController < ApplicationController
       
     else
       #Tell the user there is a problem with uploading their image.
-      render json: {filelink: '/assets/noimage.png'}
+      respond_to do |format|
+        format.json {render json: {filelink: '/assets/noimage.png', msg: @errors}, status: :unprocessable_entity}
+
+      end
     end
   end
 

@@ -46,11 +46,11 @@
     </div>
   </div>
 </div>
-<% if @cur_user.try(:id) %>
+<% if is_admin? %>
   <div class="row">
     <div class='col-lg-12 center'>
-      <div id="addProjectButton">
-        <button class="btn btn-success"><h4>Create Tutorial</h4></button>
+      <div id="addTutorialButton">
+        <button id="addTutorialButton" class="btn btn-success"><h4>Create Tutorial</h4></button>
       </div>
     </div>
   </div>
