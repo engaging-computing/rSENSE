@@ -10,7 +10,7 @@
   
   <div class="item_desc">
     
-    <div class="item_title">
+    <div class="item_title word_wrap">
       <%=link_to @box_project.name, @box_project%>
       <% if @box_project.featured and !(defined? @box_project_font_page) %> 
         <span> (featured) </span>
