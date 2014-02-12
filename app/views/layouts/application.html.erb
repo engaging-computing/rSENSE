@@ -77,6 +77,7 @@
       <!-- Main Container -->
       <div id="outer" style="padding:0px 0px 70px 0px; margin:0; min-height:100%;">
         <div class="container mainContent <%= @layout_wide ? 'mc-wide' : '' %>" data-role="page">
+          <p><%= flash[:alert] %></p>
           <%= bootstrap_flash %>
           <%= yield %>
         </div>

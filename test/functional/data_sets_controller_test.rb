@@ -79,6 +79,17 @@ class DataSetsControllerTest < ActionController::TestCase
     assert_response :forbidden
   end
 
+  test "should not get manual entry page for locked project" do
+    get :manualEntry, { id: @proj.id }, { user_id: @crunch }
+    assert_response :redirect
+    assert flash[:alert] =~ /locked/, "Project is locked"
+  end
+
+  test "should get manual entry page for locked project with key" do
+    get :manualEntry, { id: @proj.id }, { user_id: @crunch, contrib_access: @proj.id }
+    assert_response :success
+  end
+
   test "should get manual entry page" do
     get :manualEntry, { id: @proj.id }, { user_id: @kate }
     assert_response :success
