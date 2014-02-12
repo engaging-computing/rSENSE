@@ -2,8 +2,8 @@ class DataSetsController < ApplicationController
   include ApplicationHelper
 
   # Allow for export without authentication
-  skip_before_filter :authorize, :only => [:export, :manualEntry, :manualUpload, :update, :show, :dataFileUpload, :field_matching, :jsonDataUpload]
-  before_filter :authorize_allow_key, :only => [:manualEntry, :manualUpload, :update, :show, :dataFileUpload, :field_matching, :jsonDataUpload]
+  skip_before_filter :authorize, :only => [:export, :manualEntry, :manualUpload, :update, :show, :dataFileUpload, :field_matching, :jsonDataUpload, :create]
+  before_filter :authorize_allow_key, :only => [:manualEntry, :manualUpload, :update, :show, :dataFileUpload, :field_matching, :jsonDataUpload, :create]
 
   # GET /data_sets/1
   # GET /data_sets/1.json
@@ -70,12 +70,21 @@ class DataSetsController < ApplicationController
       return
     end
 
+    if @cur_user.nil?
+      @data_set.user_id = @project.user_id
+    else
+      @data_set.user_id = @cur_user.id
+    end
+
     respond_to do |format|
       if @data_set.save
         format.html { redirect_to @data_set, notice: 'Project data set was successfully created.' }
         format.json { render json: @data_set.to_hash(false), status: :created, location: @data_set }
       else
-        format.html { render action: "new" }
+        format.html do
+          flash[:error] = @data_set.errors
+          redirect_to @data_set
+        end
         format.json { render json: @data_set.errors, status: :unprocessable_entity }
       end
     end
@@ -154,7 +163,7 @@ class DataSetsController < ApplicationController
     project = Project.find(params['id'])
     
     if project.lock? and !can_edit?(project) and !has_key?(project)
-      redirect_to @project, alert: "Project is locked"
+      render text: "Project is locked", status: 401
       return
     end
 

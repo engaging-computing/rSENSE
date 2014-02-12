@@ -30,6 +30,36 @@ class DataSetsControllerTest < ActionController::TestCase
     assert_redirected_to data_set_path(assigns(:data_set))
   end
 
+  test "should not create data_set in locked project" do
+    assert_difference('DataSet.count', 0) do
+      post :create, { data_set: { content: @data_set.content, project_id: @tgd.project_id,
+        title: "#{@tgd.title}#{Time.now().to_s}" }}, { user_id: @crunch }
+    end
+
+    assert_response :redirect
+    assert flash[:alert] =~ /locked/, "Project is locked"
+  end
+
+  test "should create data_set with contrib key" do
+    assert_difference('DataSet.count') do
+      post :create, { data_set: { content: @tgd.content, project_id: @tgd.project_id,
+        title: "#{@tgd.title}#{Time.now().to_s}" }}, 
+        { user_id: @crunch, contrib_access: @tgd.project.id }
+    end
+
+    assert_redirected_to data_set_path(assigns(:data_set))
+  end
+
+  test "should create data_set with contrib key when not logged in" do
+    assert_difference('DataSet.count') do
+      post :create, { data_set: { content: @tgd.content, project_id: @tgd.project_id,
+        title: "#{@tgd.title}#{Time.now().to_s}" }}, { contrib_access: @tgd.project.id }
+    end
+
+    assert_redirected_to data_set_path(assigns(:data_set))
+  end
+
+
   test "should create data_set and get JSON response" do
     title = "#{@data_set.title}#{Time.now().to_s}"
     assert_difference('DataSet.count') do
@@ -110,6 +140,29 @@ class DataSetsControllerTest < ActionController::TestCase
   test "should upload through jsonDataUpload" do
     post :jsonDataUpload, { format: 'json', id: @proj.id, title: "JSON Upload",
       data: {"20" => ["1", "2", "3"], "21"=>["4", "5", "6"], "22" => ["14", "13", "12"]} }, { user_id: @kate }
+    assert_response :success
+    @new_dataset_id = JSON.parse(response.body)['id']
+  end
+
+  test "should not upload through jsonDataUpload for locked project" do
+    post :jsonDataUpload, { format: 'json', id: @proj.id, title: "JSON Upload",
+      data: {"20" => ["1", "2", "3"], "21"=>["4", "5", "6"], "22" => ["14", "13", "12"]} }, { user_id: @crunch }
+
+    assert_response 401
+  end
+
+  test "should upload through jsonDataUpload for locked project with key" do
+    post :jsonDataUpload, { format: 'json', id: @proj.id, title: "JSON Upload",
+      data: {"20" => ["1", "2", "3"], "21"=>["4", "5", "6"], "22" => ["14", "13", "12"]} }, 
+      { user_id: @crunch, contrib_access: @proj.id }
+    assert_response :success
+    @new_dataset_id = JSON.parse(response.body)['id']
+  end
+
+  test "should upload through jsonDataUpload for locked project with key while not logged in" do
+    post :jsonDataUpload, { format: 'json', id: @proj.id, title: "JSON Upload",
+      data: {"20" => ["1", "2", "3"], "21"=>["4", "5", "6"], "22" => ["14", "13", "12"]} }, 
+      { contrib_access: @proj.id }
     assert_response :success
     @new_dataset_id = JSON.parse(response.body)['id']
   end
