@@ -2,7 +2,6 @@
  * Highcharts Drilldown plugin
  * 
  * Author: Torstein Honsi
- * Last revision: 2013-02-18
  * License: MIT License
  *
  * Demo: http://jsfiddle.net/highcharts/Vf3yT/
@@ -43,13 +42,13 @@
 	defaultOptions.drilldown = {
 		activeAxisLabelStyle: {
 			cursor: 'pointer',
-			color: '#039',
+			color: '#0d233a',
 			fontWeight: 'bold',
 			textDecoration: 'underline'			
 		},
 		activeDataLabelStyle: {
 			cursor: 'pointer',
-			color: '#039',
+			color: '#0d233a',
 			fontWeight: 'bold',
 			textDecoration: 'underline'			
 		},
@@ -70,7 +69,7 @@
 	/**
 	 * A general fadeIn method
 	 */
-	H.SVGRenderer.prototype.Element.prototype.fadeIn = function () {
+	H.SVGRenderer.prototype.Element.prototype.fadeIn = function (animation) {
 		this
 		.attr({
 			opacity: 0.1,
@@ -78,7 +77,7 @@
 		})
 		.animate({
 			opacity: 1
-		}, {
+		}, animation || {
 			duration: 250
 		});
 	};
@@ -147,22 +146,30 @@
 	Chart.prototype.showDrillUpButton = function () {
 		var chart = this,
 			backText = this.getDrilldownBackText(),
-			buttonOptions = chart.options.drilldown.drillUpButton;
+			buttonOptions = chart.options.drilldown.drillUpButton,
+			attr,
+			states;
 			
 
 		if (!this.drillUpButton) {
+			attr = buttonOptions.theme;
+			states = attr && attr.states;
+						
 			this.drillUpButton = this.renderer.button(
 				backText,
 				null,
 				null,
 				function () {
 					chart.drillUp(); 
-				}
+				},
+				attr, 
+				states && states.hover,
+				states && states.select
 			)
-			.attr(extend({
+			.attr({
 				align: buttonOptions.position.align,
 				zIndex: 9
-			}, buttonOptions.theme))
+			})
 			.add()
 			.align(buttonOptions.position, false, buttonOptions.relativeTo || 'plotBox');
 		} else {
@@ -301,6 +308,9 @@
 				point.graphic
 					.attr(animateFrom)
 					.animate(point.shapeArgs, animationOptions);
+				if (point.dataLabel) {
+					point.dataLabel.fadeIn(animationOptions);
+				}
 			});
 		}
 		
@@ -348,7 +358,7 @@
 		var series = this.series,
 			chart = series.chart,
 			drilldown = chart.options.drilldown,
-			i = drilldown.series.length,
+			i = (drilldown.series || []).length,
 			seriesOptions;
 		
 		while (i-- && !seriesOptions) {
