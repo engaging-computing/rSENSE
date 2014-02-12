@@ -23,7 +23,8 @@ class DataSetsController < ApplicationController
     @project = Project.find(@data_set.project_id)
 
     if @project.lock? and !can_edit?(@project)
-      redirect_to @project, alert: "Project is locked"
+      flash[:error] = "Can't edit data set, project is locked."
+      redirect_to @project
       return
     end
 
@@ -141,7 +142,7 @@ class DataSetsController < ApplicationController
   def manualEntry
     @project = Project.find(params[:id])
     
-    if @project.lock? and !can_edit(@project) and !has_key?(@project)
+    if @project.lock? and !can_edit?(@project) and !has_key?(@project)
       redirect_to @project, alert: "Project is locked"
       return
     end
