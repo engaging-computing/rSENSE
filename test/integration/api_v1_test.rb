@@ -310,7 +310,15 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert_response :success
     old_data = parse(response)['data']
 
-    get "/api/v1/data_sets/#{dset_id}/edit?data[20][]=5&data[21][]=6&data[22][]=7&email=kcarcia%40cs%2Euml%2Eedu&password=12345"
+    get "/api/v1/data_sets/#{dset_id}/edit",
+      {
+        email: "kcarcia@cs.uml.edu" ,
+        password: "12345",
+        data:
+          {
+            "20" => ['5']
+          }
+      }
     assert_response :success
 
     get "/api/v1/data_sets/#{dset_id}?recur=true"
