@@ -245,7 +245,7 @@ $ ->
                 @yGridSize = Math.round (height / width * @INITIAL_GRID_SIZE)
             else
                 @xGridSize = Math.round (width / height * @INITIAL_GRID_SIZE)
-                
+
             #Draw series
             for fieldIndex, symbolIndex in data.normalFields when fieldIndex in globals.fieldSelection
                 for group, groupIndex in data.groups when groupIndex in globals.groupSelection
@@ -623,13 +623,15 @@ $ ->
               y_axis_index = Number(($ '#regressionYAxisSelector').val())
               regression_type = Number(($ '#regressionSelector').val())
               group_index = globals.groupSelection
-              
+
               #Get the x and y data as a clippable object
               full_data = data.multiGroupXYSelector(@xAxis, y_axis_index, group_index)
-              
+              console.log("Pre clip")
+
               #Clip the x and y data so they only include the visible points
               full_data = globals.clip(full_data, @xBounds, @yBounds)
-              
+              console.log("Full data post clip", full_data)
+
               #Separate the x and y data
               x_data = 
                 point.x for point in full_data                   
