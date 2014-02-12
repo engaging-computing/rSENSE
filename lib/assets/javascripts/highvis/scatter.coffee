@@ -626,11 +626,11 @@ $ ->
 
               #Get the x and y data as a clippable object
               full_data = data.multiGroupXYSelector(@xAxis, y_axis_index, group_index)
-              console.log("Pre clip")
+              #console.log("Pre clip")
 
               #Clip the x and y data so they only include the visible points
               full_data = globals.clip(full_data, @xBounds, @yBounds)
-              console.log("Full data post clip", full_data)
+              #console.log("Full data post clip", full_data)
 
               #Separate the x and y data
               x_data = 
