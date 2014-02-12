@@ -114,7 +114,7 @@ $ ->
             ($ '#edit_table_add').removeClass 'disabled'
             ($ '#edit_table_save').button 'reset'
             log [textStatus, errorThrown]
-            alert "An upload error occured."
+            alert "An upload error occurred."
             
         type: (field) ->
           if field is 1
@@ -463,7 +463,7 @@ $ ->
           if !($ '#edit_table_save').hasClass 'disabled'
                 
             if ($ '#data_set_name').val() == "" and settings.page_name == "manualEntry"
-              ($ '.mainContent').prepend "<div class='alert alert-danger alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button><strong>An error occured: </strong> Please enter a name for your project.</div>"
+              ($ '.mainContent').prepend "<div class='alert alert-danger alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button><strong>An error occurred: </strong> Please enter a name for your Data Set.</div>"
             else
               
               if table_validates(table)

@@ -20,6 +20,14 @@
  *= require isotope/isotope.css
  */
 
+#addProjectButton, #addTutorialButton
+{
+  margin:0px 7px 0px 7px;
+  button{
+    width:100%;
+  }
+}
+
 .word-break { word-wrap: break-word; }
 
 //Top for all index search boxes
