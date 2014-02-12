@@ -537,3 +537,14 @@ form
   margin:0px;
   padding:0px;
 }
+
+.word_wrap
+{
+  display:inline; white-space: -moz-pre-wrap !important; 
+  white-space: -pre-wrap;      
+  white-space: -o-pre-wrap;    
+  white-space: pre-wrap;      
+  word-wrap: break-word;   
+  word-break: break-all;
+  white-space: normal;
+}
