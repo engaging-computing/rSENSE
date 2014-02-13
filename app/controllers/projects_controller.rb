@@ -56,8 +56,6 @@ class ProjectsController < ApplicationController
   def show
     @project = Project.find(params[:id])
 
-    @new_contrib_key = ContribKey.new
-    @new_contrib_key.project_id = @project.id
 
     #Update view count
     session[:viewed] ||= {}
@@ -101,6 +99,9 @@ class ProjectsController < ApplicationController
   # GET /projects/1/edit
   def edit
     @project = Project.find(params[:id])
+
+    @new_contrib_key = ContribKey.new
+    @new_contrib_key.project_id = @project.id
   end
 
   # POST /projects
@@ -446,12 +447,7 @@ private
          :curated_at, :updated_at, :default_vis)
     end
 
-    if @project.nil? || !can_hide?(@project)
-      params[:project].permit(:content, :title, :user_id, :filter, :cloned_from, :has_fields, 
-         :featured_media_id, :lock, :updated_at, :default_vis)
-    else
-      params[:project].permit(:content, :title, :user_id, :filter, :cloned_from, :has_fields, 
-         :featured_media_id, :lock, :updated_at, :default_vis)
-    end
+    params[:project].permit(:content, :title, :user_id, :filter, :cloned_from, :has_fields, 
+      :featured_media_id, :lock, :updated_at, :default_vis)
   end
 end

@@ -20,11 +20,13 @@ class ApplicationController < ActionController::Base
   def authorize_allow_key
     return if User.find_by_id(session[:user_id])
 
-    proj = Project.find_by_id(params[:id] || params[:pid])
-    return if proj && session[:contrib_access].to_i == proj.id
+    ckey = session[:contrib_access].to_i
+
+    proj = Project.find_by_id(params[:id] || params[:pid] || params[:data_set][:project_id])
+    return if proj && proj.id == ckey
 
     dset = DataSet.find_by_id(params[:id])
-    return if dset && session[:contrib_access].to_i == dset.project.id
+    return if dset && ckey == dset.project.id
 
     redirect_to "/login"
   end

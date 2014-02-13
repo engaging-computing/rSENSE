@@ -292,7 +292,6 @@ class ApiV1Test < ActionDispatch::IntegrationTest
             }
         }
     assert_response :unauthorized
-
   end
 
   
