@@ -37,7 +37,8 @@ class SmallPageTest < ActionDispatch::IntegrationTest
     assert page.has_content?("I Like Cookies"), "Dataset Name"
 
     click_on "Dessert is Delicious"
-    
+
+    find(".project_info_box .btn-primary").click
     fill_in "Label", with: "Test Key"
     fill_in "Key", with: "strong bad"
     click_on "Create Key"
