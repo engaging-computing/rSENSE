@@ -21,13 +21,13 @@
     on <%=@box_project.created_at.strftime("%B %d, %Y")%> <br/>
     <div class="item_badges">
       <div>
-        <span class='badge'><i class="fa fa-flask">&nbsp;</i><%=@box_project.data_sets.count%></span>
+        <span class='badge'><i class="fa fa-flask">&nbsp;</i><%=@box_project.data_sets.count%> <br/><p>Data </p></span>
       </div>
       <div>
-        <span class='badge'><i class="fa fa-eye">&nbsp;</i><%=@box_project.views%></span>
+        <span class='badge'><i class="fa fa-eye">&nbsp;</i><%=@box_project.views%> <br/><p>Views</p></span>
       </div>
       <div>
-        <span class='badge'><i class="fa fa-thumbs-up">&nbsp;</i><%=@box_project.like_count%></span>
+        <span class='badge'><i class="fa fa-thumbs-up">&nbsp;</i><%=@box_project.like_count%><br/><p>Likes </p></span>
       </div>
     </div>
     
