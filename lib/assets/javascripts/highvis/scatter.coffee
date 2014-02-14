@@ -625,18 +625,16 @@ $ ->
               group_index = globals.groupSelection
 
               #Get the x and y data as a clippable object
-              full_data = data.multiGroupXYSelector(@xAxis, y_axis_index, group_index)
-              #console.log("Pre clip")
+              fullData = data.multiGroupXYSelector(@xAxis, y_axis_index, group_index)
 
               #Clip the x and y data so they only include the visible points
-              full_data = globals.clip(full_data, @xBounds, @yBounds)
-              #console.log("Full data post clip", full_data)
+              fullData = clip(fullData, @xBounds, @yBounds)
 
               #Separate the x and y data
               x_data = 
-                point.x for point in full_data                   
+                point.x for point in fullData
               y_data = 
-                point.y for point in full_data
+                point.y for point in fullData
               
               #Get dash index
               dash_index = data.normalFields.indexOf(y_axis_index)
@@ -672,7 +670,7 @@ $ ->
 
                 if count
                   regression_identifier = '(' + (count + 1) + ')'
-                
+
                 #Add the series
                 new_regression.name.id = 'regression_' + y_axis_index + '_' + regression_type + '_' + count
                 @chart.addSeries(new_regression)
@@ -713,13 +711,13 @@ $ ->
                 
         #Adds a regression row to our table, with styling for enabled or disabled
         addRegressionToTable: (saved_reg, enabled) ->
-               
+
           #Remove object from an array
           Array::filterOutValue = (v) -> x for x in @ when x != v
-        
+
           #Here have a list of regressions
           regressions = ['Linear', 'Quad', 'Cubic', 'Exp', 'Log']
-        
+
           #Add the entry used the passed regression
           regression_row =
             """
@@ -729,23 +727,23 @@ $ ->
             <td id='#{saved_reg.series.name.id}' class='delete regression_remove'><i class='fa fa-times-circle'></i></td>
             </tr>
             """
-            
+
           #Added a info relating to this regression
           ($ '#regressionTableBody').append(regression_row)
-          
+
           #Add the disabled style if necessary
           if !enabled
             ($ 'tr#row_' + saved_reg.series.name.id).addClass('regression_row_disabled')
-          
+
           #Display the table header
           ($ 'tr#regressionTableHeader').show()
-          
+
           #Make each row a link to its view
           ($ 'tr#row_' + saved_reg.series.name.id).click =>
             #Reset the state of when you saved
             @xAxis = saved_reg.field_indices[0]
             globals.fieldSelection = [saved_reg.field_indices[1]]
-            globals.groupSelection = saved_reg.field_indices[2]          
+            globals.groupSelection = saved_reg.field_indices[2]
 
             @xBounds = saved_reg.bounds[0]
             @yBounds = saved_reg.bounds[1]
@@ -782,7 +780,7 @@ $ ->
                 
           #Make the hovering highlight the correct regression
           ($ 'tr#row_' + saved_reg.series.name.id).mouseover =>
-          
+
             #Remove regression from the chart
             id = saved_reg.series.name.id 
             for series, i in @chart.series
@@ -801,7 +799,18 @@ $ ->
                 @chart.series[i].setState()
                 @chart.tooltip.hide()
                 break
-          
+
+        #Clips an array of data to include only bounded points
+        clip = (arr, xBounds, yBounds) ->
+            point for point in arr when clipped(point, xBounds, yBounds)
+
+        #Checks if a point is visible on screen
+        clipped = (point, xBounds, yBounds) ->
+            if point.x >= xBounds.min && point.x <= xBounds.max && point.y >= yBounds.min && point.y <= yBounds.max
+                return true
+            else return false
+
+
     if "Scatter" in data.relVis
         globals.scatter = new Scatter "scatter_canvas"
     else
