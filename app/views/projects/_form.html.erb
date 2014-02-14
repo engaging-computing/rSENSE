@@ -98,13 +98,15 @@
   <div class="row" id="contrib_keys_row" class="center">
     <div class="col-md-12 center">
       <table class="contrib_keys_table table table-striped">
-        <thead>
-          <tr>
-            <th>Label</th>
-            <th>Key</th>
-            <th>&nbsp;</th>
-          </tr>
-        </thead>
+        <%if @project.contrib_keys.count > 0%>
+          <thead>
+            <tr>
+              <th>Label</th>
+              <th>Key</th>
+              <th>&nbsp;</th>
+            </tr>
+          </thead>
+        <%end%>
         <tbody>
         <% @project.contrib_keys.each do |kk| %>
           <tr>
