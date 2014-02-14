@@ -136,6 +136,7 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     assert page.has_content?("Contribute Data")
 
     # Add a student key
+    find(".project_info_box .btn-primary").click
     fill_in "Label", with: "Starbucks"
     fill_in "Key", with: "grande"
     click_on "Create Key"
