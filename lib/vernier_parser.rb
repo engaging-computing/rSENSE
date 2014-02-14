@@ -1,9 +1,10 @@
 require 'nokogiri'
 require 'open-uri'
+require 'roo'
 
 class VernierParser
 
-  def initialize(path_or_xml)
+  def convert(path_or_xml)
     if File.exists?( path_or_xml )
       @xml = File.read path_or_xml
     else
@@ -13,15 +14,28 @@ class VernierParser
     @doc = Nokogiri::HTML(@xml)
     
     @col = []
+    headers = []
     
     @doc.css('document dataset columncells').each do |col|
       @col.push col.children.to_s.split( /\r?\n/ )
     end
     
+    @doc.css('document dataset dataobjectname').each do |header|
+      headers.push header.children.to_s
+    end
+    
+    @col.each_with_index do |col, col_index|
+      col.insert(0, headers[col_index])
+    end
+    
     self.rotate
     
-    self.data
+    filename = write_temp_file(self.to_csv)
     
+    roo = Roo::CSV.new(filename)
+
+    roo
+  
   end
   
   def data
@@ -48,10 +62,12 @@ class VernierParser
     
     @row = row
     
+    
+    
   end
   
   def row( row_id )
-    if row_id >= 0 and row_id < self.last_column
+    if row_id >= 0 and row_id < self.last_row
       return @row[row_id]
     else
       return []
@@ -59,10 +75,10 @@ class VernierParser
   end
   
   def column( col_id )
-    if col_id >= 0 and col_id < self.last_row
+    if col_id >= 0 and col_id < self.last_column
       return @col[col_id]
     else
-#       return []
+      return []
     end
   end
   
@@ -72,6 +88,47 @@ class VernierParser
   
   def last_row
     return @row.size()
+  end
+  
+  def to_csv
+    
+    rows = []
+    
+    @row.each_with_index do |row, row_index|
+    
+      rows.push @row[row_index].join "\",\""
+      
+      rows[row_index].insert(0, "\"")
+      rows[row_index] << "\""
+      
+    
+    end
+    
+    rows = rows.join "\n"
+    
+    rows << "\n"
+    
+  end
+  
+  private
+ 
+  def write_temp_file(data)
+    #Create a tmp directory if it does not exist
+      begin
+        Dir.mkdir("/tmp/rsense")
+      rescue
+      end
+
+      #Save file so we can grab it again
+      base = "/tmp/rsense/dataset"
+      fname = base + "#{SecureRandom.hex}.csv"
+      f = File.new(fname, "w")
+      
+      f.write(data)
+
+      f.close
+      
+      fname
   end
 
 end

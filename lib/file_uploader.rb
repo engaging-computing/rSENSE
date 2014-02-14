@@ -24,14 +24,14 @@ class FileUploader
   ### Simply opens the file as the correct type and returns the Roo object.
   def open_spreadsheet(file)
     if file.class == ActionDispatch::Http::UploadedFile
-      Rails.logger.info "-=-=-=#{file.path}"
+      #Rails.logger.info "-=-=-=#{file.path}"
       case File.extname(file.original_filename)
       when ".csv" then convert(file.path)
       when ".xls" then Roo::Excel.new(file.path, nil, :ignore)
       when ".xlsx" then Roo::Excelx.new(file.path,nil,:ignore)
       when ".ods" then Roo::OpenOffice.new(file.path,false,:ignore)
       when ".gpx" then GpxParser.new.convert(file.path)
-      when ".qmbl" then VernierParser.new(file.path)
+      when ".qmbl" then VernierParser.new.convert(file.path)
       else raise "Unknown file type: #{file.original_filename}"
       end
     else
@@ -45,7 +45,7 @@ class FileUploader
   ### Retrieve Object
   def retrieve_obj(file)
     spreadsheet = convert(file)
-    header = spreadsheet.row(1)
+    header = spreadsheet.row(1) ## BANG BANG! Arrays start at 1 here.
     
     data_obj = Hash.new
    
