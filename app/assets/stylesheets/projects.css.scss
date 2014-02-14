@@ -2,6 +2,20 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+.contrib-keys-box th {
+  min-width: 30%; text-align: center;
+}
+
+#contrib-keys-row {
+  padding: 1em;
+}
+
+.contrib-keys-box p {
+  padding-top: 2em;
+  padding-left: 2em;
+  padding-right: 2em;
+  text-align: center;
+}
 
 //---------Unverified css--------------------------
 
@@ -259,13 +273,5 @@ table#fields_table
   tr.row-even
   {
     background-color: #dedede;
-  }
-}
-
-#addProjectButton
-{
-  margin:0px 7px 0px 7px;
-  button{
-    width:100%;
   }
 }

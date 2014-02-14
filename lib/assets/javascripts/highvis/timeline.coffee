@@ -53,26 +53,29 @@ $ ->
                     text: ''
                 tooltip:
                     formatter: ->
-                        if self.advancedTooltips
-                            str  = "<div style='width:100%;text-align:center;color:#{@series.color};'> #{@series.name.group}</div><br>"
-                            str += "<table>"
-
-                            for field, fieldIndex in data.fields when @point.datapoint[fieldIndex] isnt null
-                                dat = if (Number field.typeID) is data.types.TIME
-                                  (globals.dateFormatter @point.datapoint[fieldIndex])
-                                else
-                                  @point.datapoint[fieldIndex]
-
-                                str += "<tr><td>#{field.fieldName}</td>"
-                                str += "<td><strong>#{dat}</strong></td></tr>"
-
-                            str += "</table>"
+                        if @series.name.regression?
+                          str  = @series.name.regression.tooltip
                         else
-                            str  = "<div style='width:100%;text-align:center;color:#{@series.color};'> #{@series.name.group}</div><br>"
-                            str += "<table>"
-                            str += "<tr><td>#{@series.xAxis.options.title.text}:</td><td><strong>#{globals.dateFormatter @x}</strong></td></tr>"
-                            str += "<tr><td>#{@series.name.field}:</td><td><strong>#{@y}</strong></td></tr>"
-                            str += "</table>"
+                            if self.advancedTooltips
+                                str  = "<div style='width:100%;text-align:center;color:#{@series.color};'> #{@series.name.group}</div><br>"
+                                str += "<table>"
+
+                                for field, fieldIndex in data.fields when @point.datapoint[fieldIndex] isnt null
+                                    dat = if (Number field.typeID) is data.types.TIME
+                                      (globals.dateFormatter @point.datapoint[fieldIndex])
+                                    else
+                                      @point.datapoint[fieldIndex]
+
+                                    str += "<tr><td>#{field.fieldName}</td>"
+                                    str += "<td><strong>#{dat}</strong></td></tr>"
+
+                                str += "</table>"
+                            else
+                                str  = "<div style='width:100%;text-align:center;color:#{@series.color};'> #{@series.name.group}</div><br>"
+                                str += "<table>"
+                                str += "<tr><td>#{@series.xAxis.options.title.text}:</td><td><strong>#{globals.dateFormatter @x}</strong></td></tr>"
+                                str += "<tr><td>#{@series.name.field}:</td><td><strong>#{@y}</strong></td></tr>"
+                                str += "</table>"
                     useHTML: true
 
             @chartOptions.xAxis =
@@ -82,7 +85,16 @@ $ ->
                 labels:
                   formatter: ->
                     globals.geoDateFormatter @value
-                  
+
+        ###
+        Adds the regression tools to the control bar.
+        ###
+        drawRegressionControls: () ->
+            super()
+            #For now we are supporting only linear on timelines
+            for child, index in ($ "#regressionSelector").children() when index isnt 0
+                child.remove()
+
         ###
         Overwrite xAxis controls to only allow time fields
         ###

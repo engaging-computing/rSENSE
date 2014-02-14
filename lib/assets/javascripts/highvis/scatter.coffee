@@ -157,7 +157,7 @@ $ ->
                             @delayedUpdate()
                           else
                             @updateOnZoom = 1
-                            
+
 
         ###
         Build the dummy series for the legend.
@@ -245,7 +245,7 @@ $ ->
                 @yGridSize = Math.round (height / width * @INITIAL_GRID_SIZE)
             else
                 @xGridSize = Math.round (width / height * @INITIAL_GRID_SIZE)
-                
+
             #Draw series
             for fieldIndex, symbolIndex in data.normalFields when fieldIndex in globals.fieldSelection
                 for group, groupIndex in data.groups when groupIndex in globals.groupSelection
@@ -623,13 +623,15 @@ $ ->
               y_axis_index = Number(($ '#regressionYAxisSelector').val())
               regression_type = Number(($ '#regressionSelector').val())
               group_index = globals.groupSelection
-              
+
               #Get the x and y data as a clippable object
               full_data = data.multiGroupXYSelector(@xAxis, y_axis_index, group_index)
-              
+              #console.log("Pre clip")
+
               #Clip the x and y data so they only include the visible points
               full_data = globals.clip(full_data, @xBounds, @yBounds)
-              
+              #console.log("Full data post clip", full_data)
+
               #Separate the x and y data
               x_data = 
                 point.x for point in full_data                   
@@ -640,6 +642,7 @@ $ ->
               dash_index = data.normalFields.indexOf(y_axis_index)
               dash_style = globals.dashes[dash_index % globals.dashes.length]
               
+              regressionMade = true
               try
                 #Get the new regression              
                 new_regression = globals.getRegression(
@@ -650,7 +653,14 @@ $ ->
                   name,
                   dash_style
                   )
-             
+              catch error
+                regressionMade = false
+                if regression_type is 3
+                  alert "Unable to calculate an #{regressions[regression_type]} regression for this data."
+                else 
+                  alert "Unable to calculate a #{regressions[regression_type]} regression for this data."
+
+              if regressionMade
                 #Get a unique identifier (last highest count plus one)
                 regression_identifier = '';
                 count = 0;
@@ -659,18 +669,18 @@ $ ->
                   and regression.field_indices[1] == y_axis_index \
                   and count <= regression.type_count
                     count = regression.type_count + 1;
-                
+
                 if count
                   regression_identifier = '(' + (count + 1) + ')'
-                  
+                
                 #Add the series
                 new_regression.name.id = 'regression_' + y_axis_index + '_' + regression_type + '_' + count
                 @chart.addSeries(new_regression)
-                
+
                 #Prepare to save regression fields
                 saved_regression =
                   type:
-                    regression_type               
+                    regression_type
                   type_count:
                     count
                   field_indices:
@@ -683,18 +693,13 @@ $ ->
                     regression_identifier
                   bounds:
                     [@xBounds, @yBounds]
-                
+
                 #Save a regression
                 @savedRegressions.push(saved_regression)
-                        
+
                 #Actually add the regression to the table
                 @addRegressionToTable(saved_regression, true)
-              
-              catch error
-                if regression_type is 3
-                  alert "Unable to calculate an #{regressions[regression_type]} regression for this data."
-                else 
-                  alert "Unable to calculate a #{regressions[regression_type]} regression for this data."
+
             #Set up accordion
             globals.regressionOpen ?= 0
 

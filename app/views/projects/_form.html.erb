@@ -1,10 +1,13 @@
-<!-- This file is no longer used and should be removed.  -->
 
 <%= form_for(@project) do |f| %>
-  <div class="row"> 
-    <div class="col-md-12">
-  
-  <!-- regular section -->
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h1>Editing: <%= @project.title%></h1>
+    </div>
+    
+    <div class="panel-body"> 
+    
+      <!-- regular section -->
       <div class="form-group" style="margin-left: 5px">
         <strong class="col-md-12"><i class="fa fa-bar-chart-o"></i> Default Visualization</strong>
         <div class="col-md-4">
@@ -15,7 +18,7 @@
       </div>
       <div class="clear"></div>
 
-  
+
       <div class="form-group">
         <div class="checkbox">
           <div class="checkbox checkbox-inner">
@@ -33,7 +36,7 @@
           <span class="help-block">Hiding a project will hide it from public view. You will still be able to reach the project through your profile page.</span>
         </div>
       </div>  
-           
+            
       <!-- admin section -->
       <% if can_admin? @project%>
         <div class="form-group">
@@ -50,7 +53,7 @@
             <div class="checkbox checkbox-inner">
               <%= f.check_box :is_template%><strong> Make Project A Template</strong>
             </div>
-          <span class="help-block">Making a project a template will promte it on the index page as a filter. Projects should only be made a template if it is complete and has a good description describing how to run the project.</span>  
+            <span class="help-block">Making a project a template will promote it on the index page as a filter. Projects should only be made a template if it is complete and has a good description describing how to run the project.</span>  
           </div>
         </div>
         
@@ -78,13 +81,67 @@
           <span class="help-block">A project may only be deleted if it does not contain data sets from other users.</span>
         </div>
       </div>
-      
-      <div class="actions">
-        <a href='<%= url_for @project %>'> <button type="button" class="btn btn-danger"> Cancel </button></a>
-        <button type="submit" name="commit" class="btn btn-primary"> Submit </button>
-      </div>
-          
+    </div>
+    
+    <div class="panel-footer text-center">
+      <a href='<%= url_for @project %>'> <button type="button" class="btn btn-danger"> Cancel </button></a>
+      <button type="submit" name="commit" class="btn btn-primary"> Submit </button>
     </div>
   </div>
-   
 <% end %>
+
+<div class="panel panel-default contrib-keys-box">
+  <div class="panel-heading">
+    <h2>Contributor Keys</h2>
+  </div>
+  
+  <div class="row" id="contrib_keys_row" class="center">
+    <div class="col-md-12 center">
+      <table class="contrib_keys_table table table-striped">
+        <thead>
+          <tr>
+            <th>Label</th>
+            <th>Key</th>
+            <th>&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody>
+        <% @project.contrib_keys.each do |kk| %>
+          <tr>
+          <td><%= kk.name %></td>
+          <td><%= kk.key %></td>
+          <td>
+            <%= button_to kk, method: :delete do %>
+              <i class="fa fa-times"></i> Delete
+          <% end %>
+          </td>
+        </tr>
+      <% end %>
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="center">
+      <p><strong>New Contributor Key</strong></p>
+      <%= form_for @new_contrib_key, html: { class: 'form-inline' } do |ff| %>
+        <%= ff.hidden_field :project_id %>
+      <div class="form-group">
+        <%= ff.label :name, "Label" %><br>
+        <%= ff.text_field :name %>
+      </div>
+      <div class="form-group">
+        <%= ff.label :key, "Key" %><br>
+        <%= ff.text_field :key %>
+      </div>
+      <div class="form-group">
+        <br>
+        <%= submit_tag "Create Key", class: 'btn btn-success' %>
+      </div>
+    <% end %>
+    </div>
+    
+    <p>People who enter a contributor key can always add data sets. This allows
+    users to contribute without logging in and it allows users to contribute to
+    locked projects.</p>
+  </div>
+</div>

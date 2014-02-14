@@ -15,5 +15,9 @@ class HomeController < ApplicationController
   def contact
     
   end
+
+  def api_v1
+
+  end
   
 end
