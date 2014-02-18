@@ -2,8 +2,8 @@ class DataSetsController < ApplicationController
   include ApplicationHelper
 
   # Allow for export without authentication
-  skip_before_filter :authorize, :only => [:export, :manualEntry, :manualUpload, :update, :show, :dataFileUpload, :field_matching, :jsonDataUpload]
-  before_filter :authorize_allow_key, :only => [:manualEntry, :manualUpload, :update, :show, :dataFileUpload, :field_matching, :jsonDataUpload]
+  skip_before_filter :authorize, :only => [:export, :manualEntry, :manualUpload, :update, :show, :dataFileUpload, :field_matching, :jsonDataUpload, :create]
+  before_filter :authorize_allow_key, :only => [:manualEntry, :manualUpload, :update, :show, :dataFileUpload, :field_matching, :jsonDataUpload, :create]
 
   # GET /data_sets/1
   # GET /data_sets/1.json
@@ -21,6 +21,13 @@ class DataSetsController < ApplicationController
   def edit
     @data_set = DataSet.find(params[:id])
     @project = Project.find(@data_set.project_id)
+
+    if @project.lock? and !can_edit?(@project)
+      flash[:error] = "Can't edit data set, project is locked."
+      redirect_to @project
+      return
+    end
+
     @fields = @project.fields
 
     header_to_field_map = []
@@ -56,13 +63,28 @@ class DataSetsController < ApplicationController
   # POST /data_sets.json
   def create
     @data_set = DataSet.new(data_set_params)
+    @project  = @data_set.project
+
+    if @project.lock? and !can_edit?(@project) and !has_key?(@project)
+      redirect_to @project, alert: "Project is locked"
+      return
+    end
+
+    if @cur_user.nil?
+      @data_set.user_id = @project.user_id
+    else
+      @data_set.user_id = @cur_user.id
+    end
 
     respond_to do |format|
       if @data_set.save
         format.html { redirect_to @data_set, notice: 'Project data set was successfully created.' }
         format.json { render json: @data_set.to_hash(false), status: :created, location: @data_set }
       else
-        format.html { render action: "new" }
+        format.html do
+          flash[:error] = @data_set.errors
+          redirect_to @data_set
+        end
         format.json { render json: @data_set.errors, status: :unprocessable_entity }
       end
     end
@@ -72,7 +94,13 @@ class DataSetsController < ApplicationController
   # PUT /data_sets/1.json
   def update
     @data_set = DataSet.find(params[:id])
+    @project  = @data_set.project
     
+    if @project.lock? and !can_edit?(@project)
+      redirect_to @project, alert: "Project is locked"
+      return
+    end
+
     respond_to do |format|
       if can_edit?(@data_set) && @data_set.update_attributes(data_set_params)
         format.html { redirect_to @data_set, notice: 'DataSet was successfully updated.' }
@@ -89,6 +117,12 @@ class DataSetsController < ApplicationController
   # DELETE /data_sets/1.json
   def destroy
     @data_set = DataSet.find(params[:id])
+    @project  = @data_set.project
+    
+    if @project.lock? and !can_edit(@project)
+      redirect_to @project, alert: "Project is locked"
+      return
+    end
 
     if can_delete?(@data_set)
 
@@ -116,12 +150,22 @@ class DataSetsController < ApplicationController
   # GET /projects/1/manualEntry
   def manualEntry
     @project = Project.find(params[:id])
+    
+    if @project.lock? and !can_edit?(@project) and !has_key?(@project)
+      redirect_to @project, alert: "Project is locked"
+      return
+    end
   end
 
   # POST /projects/1/jsonDataUpload
   # {data => { "20"=>[1,2,3,4,5], "21"=>[6,7,8,9,10], "22"=>['v','w','x','y','z'] }}
   def jsonDataUpload
     project = Project.find(params['id'])
+    
+    if project.lock? and !can_edit?(project) and !has_key?(project)
+      render text: "Project is locked", status: 401
+      return
+    end
 
     uploader = FileUploader.new
     sane = uploader.sanitize_data(params[:data])
@@ -207,6 +251,11 @@ class DataSetsController < ApplicationController
   # POST /data_sets/uploadCSV2
   def dataFileUpload
     project = Project.find(params[:pid])
+    
+    if project.lock? and !can_edit?(project) and !has_key?(project)
+      redirect_to @project, alert: "Project is locked"
+      return
+    end
 
     begin
       uploader = FileUploader.new

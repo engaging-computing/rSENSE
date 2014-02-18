@@ -1,4 +1,3 @@
-<!-- This file is no longer used and should be removed.  -->
 
 <%= form_for(@project) do |f| %>
   <div class="panel panel-default">
@@ -90,3 +89,61 @@
     </div>
   </div>
 <% end %>
+
+<div class="panel panel-default contrib-keys-box">
+  <div class="panel-heading">
+    <h2>Contributor Keys</h2>
+  </div>
+  
+  <div class="row" id="contrib_keys_row" class="center">
+    <div class="col-md-12 center">
+      <table class="contrib_keys_table table table-striped">
+        <%if @project.contrib_keys.count > 0%>
+          <thead>
+            <tr>
+              <th>Label</th>
+              <th>Key</th>
+              <th>&nbsp;</th>
+            </tr>
+          </thead>
+        <%end%>
+        <tbody>
+        <% @project.contrib_keys.each do |kk| %>
+          <tr>
+          <td><%= kk.name %></td>
+          <td><%= kk.key %></td>
+          <td>
+            <%= button_to kk, method: :delete do %>
+              <i class="fa fa-times"></i> Delete
+          <% end %>
+          </td>
+        </tr>
+      <% end %>
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="center">
+      <p><strong>New Contributor Key</strong></p>
+      <%= form_for @new_contrib_key, html: { class: 'form-inline' } do |ff| %>
+        <%= ff.hidden_field :project_id %>
+      <div class="form-group">
+        <%= ff.label :name, "Label" %><br>
+        <%= ff.text_field :name %>
+      </div>
+      <div class="form-group">
+        <%= ff.label :key, "Key" %><br>
+        <%= ff.text_field :key %>
+      </div>
+      <div class="form-group">
+        <br>
+        <%= submit_tag "Create Key", class: 'btn btn-success' %>
+      </div>
+    <% end %>
+    </div>
+    
+    <p>People who enter a contributor key can always add data sets. This allows
+    users to contribute without logging in and it allows users to contribute to
+    locked projects.</p>
+  </div>
+</div>

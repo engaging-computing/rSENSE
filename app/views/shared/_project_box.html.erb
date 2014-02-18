@@ -1,16 +1,19 @@
 <div class='item clickable_item <%= (defined? @box_project_font_page) ? "front_page_item" : "" %>'>
         
-  <a href='<%=project_path @box_project%>'>
+  <!--<a href='<%=project_path @box_project%>'>
     <%= image_tag "blank.png", {class: "area_link", alt: ""} %>
-  </a>
+  </a> -->
   
   <% if @box_project.featured_media_id != nil %>
-    <div class="item_image" style='background-image:url(<%=@box_project.media_objects.find(@box_project.featured_media_id).src%>)'></div>
+    <a href='<%=project_path @box_project%>'>
+      <div class="item_image" style='background-image:url(<%=MediaObject.find(@box_project.featured_media_id).src%>)'>
+      </div>
+    </a>
   <% end %>
   
   <div class="item_desc">
     
-    <div class="item_title">
+    <div class="item_title word_wrap">
       <%=link_to @box_project.name, @box_project%>
       <% if @box_project.featured and !(defined? @box_project_font_page) %> 
         <span> (featured) </span>
@@ -21,13 +24,13 @@
     on <%=@box_project.created_at.strftime("%B %d, %Y")%> <br/>
     <div class="item_badges">
       <div>
-        <span class='badge'><i class="fa fa-flask">&nbsp;</i><%=@box_project.data_sets.count%></span>
+        <span class='badge' title="Data Sets"><i class="fa fa-flask">&nbsp;</i><%=@box_project.data_sets.count%></span>
       </div>
       <div>
-        <span class='badge'><i class="fa fa-eye">&nbsp;</i><%=@box_project.views%></span>
+        <span class='badge' title="Likes" ><i class="fa fa-eye">&nbsp;</i><%=@box_project.views%></span>
       </div>
       <div>
-        <span class='badge'><i class="fa fa-thumbs-up">&nbsp;</i><%=@box_project.like_count%></span>
+        <span class='badge' title="Views" ><i class="fa fa-thumbs-up">&nbsp;</i><%=@box_project.like_count%></span>
       </div>
     </div>
     

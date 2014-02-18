@@ -1,5 +1,5 @@
 class ContribKeysController < ApplicationController
-  skip_before_filter :authorize, only: [:enter]
+  skip_before_filter :authorize, only: [:enter, :clear]
 
   def create
     @key = ContribKey.new(contrib_key_params)
@@ -44,6 +44,12 @@ class ContribKeysController < ApplicationController
       flash[:error] = "Invalid contributor key."
       redirect_to @project
     end
+  end
+
+  def clear
+    session[:contrib_access] = nil
+    flash[:notice] = "Your have cleared your contributor key."
+    redirect_to projects_path
   end
 
   private
