@@ -100,6 +100,7 @@ Rsense::Application.routes.draw do
       post '/projects/:id/jsonDataUpload' => "data_sets#jsonDataUpload"
       post '/media_objects' => "media_objects#saveMedia"
       get  '/media_objects/:id' => "media_objects#show"
+      get '/users/myInfo' => "users#my_info"
       resources :projects, :only => [:show,:index,:create]
       resources :fields, :only => [:create,:show]
       resources :visualizations, :only => [:show]
