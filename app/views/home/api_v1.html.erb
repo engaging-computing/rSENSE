@@ -468,6 +468,34 @@
   </div>
 </div>
 
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-bordered api">
+      <tr>
+        <td class="GET def">GET</td>
+        <td class="method"> Users </td>
+        <td class="code">/api/v1/users/myInfo</td>
+        <td class="args">email(req),password(req)</td>
+      </tr>
+      <tr class="more" style="">
+        <td colspan="4">
+          <b>Response Codes</b>
+          <li>Success: 200 Ok</li>
+          <li>Fail: 401 Unauthorized</li>
+          <b>Response</b>
+          <pre>
+    {
+      gravatar: "gravatar url(string)"
+      name: "display name (string)"
+    }
+          </pre>
+          <b>Notes</b>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
 <hr/>
 <div class="row">
   <p>This API runs through automated testing every time someone makes a change to the website. The following tests have been written</p>
