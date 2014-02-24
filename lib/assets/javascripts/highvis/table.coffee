@@ -86,15 +86,6 @@ $ ->
             colIds = for header in headers
                 header.replace(/\s+/g, '_').toLowerCase()
 
-            #Make sure the sort type for each column is appropriate
-            columns = for colId, colIndex in colIds
-                if (data.fields[colIndex].typeID is data.types.TEXT)
-                    { name: colId, id: colId, sortType:'text' }
-                else if (data.fields[colIndex].typeID is data.types.TIME)
-                    { name: colId, id: colId, sortType:'number', formatter: dateFormatter }
-                else
-                    { name: colId, id: colId, sortType:'number', formatter: nullFormatter }
-
             #Build the data for the table
             visibleGroups = for group, groupIndex in data.groups when groupIndex in globals.groupSelection
                 group
@@ -105,6 +96,17 @@ $ ->
                 for dat, fieldIndex in dataPoint
                     line[colIds[fieldIndex]] = dat
                 rows.push(line)
+
+            #Make sure the sort type for each column is appropriate, and save the time column
+            timeCol = ""
+            columns = for colId, colIndex in colIds
+                if (data.fields[colIndex].typeID is data.types.TEXT)
+                    { name: colId, id: colId, sorttype:'text' }
+                else if (data.fields[colIndex].typeID is data.types.TIME)
+                    timeCol = colId
+                    { name: colId, id: colId, sorttype: 'text', formatter: dateFormatter }
+                else
+                    { name: colId, id: colId, sorttype:'number', formatter: nullFormatter }
 
             #Set sort state to default none existed
             @sortName ?= '';
@@ -143,6 +145,11 @@ $ ->
             #Add a refresh button and enable the search bar
             @table.jqGrid('navGrid','#toolbar_bottom',{del:false,add:false,edit:false,search:false});
             @table.jqGrid('filterToolbar', {stringResult: true, searchOnEnter: false, defaultSearch:'cn'});
+
+            #Set the time column formatters
+            timePair = {}
+            timePair[timeCol] = dateFormatter
+            setFilterFormatters(timePair)
 
             #Set the sort parameters
             @table.sortGrid(@sortName, true, @sortType);
@@ -186,5 +193,48 @@ $ ->
 
         serializationCleanup: ->
           delete @table
+
+        ###
+        JQGrid time formatting (to implement search post formatting)
+        http://stackoverflow.com/questions/5822302/how-to-do-local-search-on-formatted-column-value-in-jqgrid
+        Credits to Oleg and adam-p
+        Converted to coffee script by Jeremy Poulin
+        ###
+        # Causes local filtering to use custom formatters for specific columns.
+        # formatters is a dictionary of the form:
+        # { "column_name_1_needing_formatting": "column1FormattingFunctionName",
+        #   "column_name_2_needing_formatting": "column2FormattingFunctionName" }
+        #Note that subsequent calls will *replace* all formatters set by previous calls.
+        setFilterFormatters = (formatters) ->
+            columnUsesCustomFormatter = (column_name) ->
+                for col of formatters
+                    if (col == column_name)
+                        return true
+                return false
+
+            accessor_regex = /jQuery\.jgrid\.getAccessor\(this\,'(.+)'\)/
+
+            oldFrom = $.jgrid.from
+            $.jgrid.from = (source, initialQuery) ->
+
+                result = oldFrom(source, initialQuery)
+                result._getStr = (s) ->
+                    column_formatter = "String"
+
+                    column_match = s.match(accessor_regex, '$1')
+                    if (column_match && columnUsesCustomFormatter(column_match[1]))
+                        column_formatter = formatters[column_match[1]]
+
+                    phrase = []
+                    if(this._trim)
+                        phrase.push("jQuery.trim(")
+                    phrase.push(column_formatter+"("+s+")")
+                    if(this._trim)
+                        phrase.push(")")
+                    if(!this._usecase)
+                        phrase.push(".toLowerCase()")
+                    return phrase.join("")
+
+                return result
 
     globals.table = new Table "table_canvas"
