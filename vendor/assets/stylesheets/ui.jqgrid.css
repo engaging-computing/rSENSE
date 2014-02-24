@@ -56,7 +56,8 @@ tr.ui-search-toolbar select {margin: 1px 0 0 0}
 .ui-jqgrid .ui-pg-button  { height:19px !important;}
 .ui-jqgrid .ui-pg-button span { display: block; margin: 1px; float:left;}
 .ui-jqgrid .ui-pg-button:hover { margin: 1; border: transparent; background: #bbb;}
-.ui-jqgrid .ui-state-disabled:hover {background: transparent}
+.ui-jqgrid .ui-pg-button.ui-state-disabled { background: transparent;}
+.ui-jqgrid .ui-state-disabled { opacity:0.4;}
 .ui-jqgrid .ui-pg-input { height:18px;font-size:.8em; margin: 0;}
 .ui-jqgrid .ui-pg-selbox {font-size:.8em; line-height:18px; display:block; height:18px; margin: 0;}
 .ui-jqgrid .ui-separator {height: 18px; border-left: 1px solid #ccc ; border-right: 1px solid #ccc ; margin: 1px; float: right;}
