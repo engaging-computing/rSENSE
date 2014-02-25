@@ -6,7 +6,7 @@
   
   <% if @box_project.featured_media_id != nil %>
     <a href='<%=project_path @box_project%>'>
-      <div class="item_image" style='background-image:url(<%=@box_project.media_objects.find(@box_project.featured_media_id).src%>)'>
+      <div class="item_image" style='background-image:url(<%=MediaObject.find(@box_project.featured_media_id).src%>)'>
       </div>
     </a>
   <% end %>
@@ -27,10 +27,10 @@
         <span class='badge' title="Data Sets"><i class="fa fa-flask">&nbsp;</i><%=@box_project.data_sets.count%></span>
       </div>
       <div>
-        <span class='badge' title="Likes" ><i class="fa fa-eye">&nbsp;</i><%=@box_project.views%></span>
+        <span class='badge' title="Views" ><i class="fa fa-eye">&nbsp;</i><%=@box_project.views%></span>
       </div>
       <div>
-        <span class='badge' title="Views" ><i class="fa fa-thumbs-up">&nbsp;</i><%=@box_project.like_count%></span>
+        <span class='badge' title="Likes" ><i class="fa fa-thumbs-up">&nbsp;</i><%=@box_project.like_count%></span>
       </div>
     </div>
     

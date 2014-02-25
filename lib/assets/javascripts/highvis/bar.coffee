@@ -30,15 +30,15 @@ $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
     class window.Bar extends BaseHighVis
         constructor: (@canvas) ->
+
+        ANALYSISTYPE_TOTAL:     0        
+        ANALYSISTYPE_MAX:       1
+        ANALYSISTYPE_MIN:       2
+        ANALYSISTYPE_MEAN:      3
+        ANALYSISTYPE_MEDIAN:    4
+        ANALYSISTYPE_COUNT:     5
         
-        ANALYSISTYPE_MAX:       0
-        ANALYSISTYPE_MIN:       1
-        ANALYSISTYPE_MEAN:      2
-        ANALYSISTYPE_MEDIAN:    3
-        ANALYSISTYPE_COUNT:     4
-        ANALYSISTYPE_TOTAL:     5
-        
-        analysisTypeNames: ["Max","Min","Mean","Median","Count","Total"]
+        analysisTypeNames: ["Total","Max","Min","Mean","Median","Row Count"]
         
         analysisType:   0
         sortField:      null
@@ -81,12 +81,12 @@ $ ->
             
             tempGroupIDValuePairs = for groupName, groupIndex in data.groups when groupIndex in globals.groupSelection
                 switch @analysisType
+                    when @ANALYSISTYPE_TOTAL    then [groupIndex, (data.getTotal     @sortField, groupIndex)]
                     when @ANALYSISTYPE_MAX      then [groupIndex, (data.getMax       @sortField, groupIndex)]
                     when @ANALYSISTYPE_MIN      then [groupIndex, (data.getMin       @sortField, groupIndex)]
                     when @ANALYSISTYPE_MEAN     then [groupIndex, (data.getMean      @sortField, groupIndex)]
                     when @ANALYSISTYPE_MEDIAN   then [groupIndex, (data.getMedian    @sortField, groupIndex)]
                     when @ANALYSISTYPE_COUNT    then [groupIndex, (data.getCount     @sortField, groupIndex)]
-                    when @ANALYSISTYPE_TOTAL    then [groupIndex, (data.getTotal     @sortField, groupIndex)]
             
             if @sortField != null
                 fieldSortedGroupIDValuePairs = tempGroupIDValuePairs.sort (a,b) ->
@@ -109,6 +109,10 @@ $ ->
                     
                 options.data = for fieldIndex in data.normalFields when fieldIndex in globals.fieldSelection
                     switch @analysisType
+                        when @ANALYSISTYPE_TOTAL
+                            ret =
+                                y:      data.getTotal fieldIndex, groupIndex
+                                name:   data.groups[groupIndex]                    
                         when @ANALYSISTYPE_MAX
                             ret =
                                 y:      data.getMax fieldIndex, groupIndex
@@ -128,10 +132,6 @@ $ ->
                         when @ANALYSISTYPE_COUNT
                             ret =
                                 y:      data.getCount fieldIndex, groupIndex
-                                name:   data.groups[groupIndex]
-                        when @ANALYSISTYPE_TOTAL
-                            ret =
-                                y:      data.getTotal fieldIndex, groupIndex
                                 name:   data.groups[groupIndex]
                                 
                 @chart.addSeries options, false

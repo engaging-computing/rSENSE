@@ -12,10 +12,10 @@ class ContribKeysController < ApplicationController
 
     if can_edit?(@key.project) && @key.save
       flash[:notice] = "Added contributor key."
-      redirect_to @key.project
+      redirect_to [:edit, @key.project]
     else
       flash[:error] = @key.errors.full_messages
-      redirect_to @key.project
+      redirect_to [:edit, @key.project]
     end
   end
 
@@ -25,7 +25,7 @@ class ContribKeysController < ApplicationController
     if can_edit?(@key.project)
       @key.destroy
       flash[:notice] = "Deleted contributor key."
-      redirect_to @key.project
+      redirect_to [:edit, @key.project]
     else
       flash[:error] = "Action Not Authorized"
       redirect_to @key.project
