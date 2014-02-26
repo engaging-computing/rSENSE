@@ -51,7 +51,9 @@ $ ->
         start: ->
             @drawControls()
             @update()
-            
+            console.trace()
+            console.log(data)
+
         ###
         Update minor state
             Redraws html controls
