@@ -91,8 +91,8 @@ $ ->
         ###
         drawRegressionControls: () ->
             super()
-            #For now we are supporting only linear on timelines
-            for child, index in ($ "#regressionSelector").children() when index isnt 0
+            #For now we are supporting only linear and quadratic on timelines
+            for child, index in ($ "#regressionSelector").children() when index >= 2
                 child.remove()
 
         ###
