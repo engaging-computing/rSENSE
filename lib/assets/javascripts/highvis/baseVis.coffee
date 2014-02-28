@@ -51,7 +51,7 @@ $ ->
         start: ->
             @drawControls()
             @update()
-            
+
         ###
         Update minor state
             Redraws html controls

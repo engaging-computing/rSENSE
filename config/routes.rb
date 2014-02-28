@@ -90,6 +90,7 @@ Rsense::Application.routes.draw do
 
   resources :contrib_keys, only: [:create, :destroy]
   post "/contrib_keys/enter" => 'contrib_keys#enter'
+  get  "/contrib_keys/clear" => 'contrib_keys#clear'
 
   get "/api/v1/docs" => "home#api_v1"
   #API routes
@@ -99,6 +100,7 @@ Rsense::Application.routes.draw do
       post '/projects/:id/jsonDataUpload' => "data_sets#jsonDataUpload"
       post '/media_objects' => "media_objects#saveMedia"
       get  '/media_objects/:id' => "media_objects#show"
+      get '/users/myInfo' => "users#my_info"
       resources :projects, :only => [:show,:index,:create]
       resources :fields, :only => [:create,:show]
       resources :visualizations, :only => [:show]

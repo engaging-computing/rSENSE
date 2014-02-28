@@ -32,6 +32,10 @@ module ApplicationHelper
     end
   end
 
+  def has_key?(proj)
+    proj && session[:contrib_access].to_i == proj.id
+  end
+
   # Begin permissions stuff
   def can_edit? (obj)
 
@@ -40,7 +44,7 @@ module ApplicationHelper
 
     case obj
     when DataSet
-      obj.owner.id == @cur_user.try(:id) && obj.project.lock == false
+      obj.owner.id == @cur_user.try(:id)
     when User
       obj.id == @cur_user.try(:id)
     when Project, Visualization, MediaObject
@@ -78,7 +82,7 @@ module ApplicationHelper
     when User, Tutorial, News
       @cur_user.try(:admin)
     when DataSet, Visualization
-      ((obj.owner.id == @cur_user.try(:id)) && obj.project.lock == false) || @cur_user.try(:admin)
+      (obj.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin)
     when MediaObject
       (obj.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin)
     when Field
