@@ -455,6 +455,24 @@ class ApiV1Test < ActionDispatch::IntegrationTest
 
   end
   
+  test "get user info" do
+    get '/api/v1/users/myInfo',
+      {
+        email: 'kcarcia@cs.uml.edu',
+        password: '12345'
+      }
+    assert_response :success
+  end
+  
+  test "fail get user info" do
+    get '/api/v1/users/myInfo',
+      {
+        email: 'kcarcia@cs.uml.edu',
+        password: '1234'
+      }
+    assert_response :unauthorized
+  end
+  
   private
   def parse (x)
     JSON.parse(x.body)
