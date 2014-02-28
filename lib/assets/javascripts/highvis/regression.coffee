@@ -41,7 +41,7 @@ $ ->
       
       globals.REGRESSION.FUNCS = []
       globals.REGRESSION.DENORM_FUNCS = []
-      
+
       globals.REGRESSION.LINEAR = globals.REGRESSION.FUNCS.length
       globals.REGRESSION.FUNCS.push [
         (x, P) -> P[0] + (x*P[1]),
@@ -54,7 +54,7 @@ $ ->
         (x, P) -> 1
         (x, P) -> x
         (x, P) -> x*x]
-      
+
       globals.REGRESSION.CUBIC = globals.REGRESSION.FUNCS.length
       globals.REGRESSION.FUNCS.push [
         (x, P) -> P[0] + (x*P[1]) + (x*x*P[2]) + (x*x*x*P[3]),
@@ -62,14 +62,14 @@ $ ->
         (x, P) -> x,
         (x, P) -> x*x,
         (x, P) -> x*x*x]
-      
+
       globals.REGRESSION.EXPONENTIAL = globals.REGRESSION.FUNCS.length
       globals.REGRESSION.FUNCS.push [
         (x, P) -> P[0] + Math.exp(P[1] * x + P[2]),
         (x, P) -> 1,
         (x, P) -> x * Math.exp(P[1] * x + P[2]),
         (x, P) -> Math.exp(P[1] * x + P[2])]
-      
+
       globals.REGRESSION.LOGARITHMIC = globals.REGRESSION.FUNCS.length
       globals.REGRESSION.FUNCS.push [
         (x, P) -> P[0] + P[1] * Math.log(P[2] + x),
@@ -86,7 +86,7 @@ $ ->
 
         Ps = []
         func = globals.REGRESSION.FUNCS[type]
-        
+
         #Make an initial Estimate
         switch type
 
@@ -98,7 +98,7 @@ $ ->
 
           when globals.REGRESSION.CUBIC
             Ps = [1,1,1,1]
-            
+
           when globals.REGRESSION.EXPONENTIAL
             Ps = [1,1,1]
 
@@ -115,35 +115,38 @@ $ ->
         denormFunc = globals.REGRESSION.DENORM_FUNCS[type]
         Ps =
             func(Ps, mean, sigma) for func in denormFunc
-        #console.log(Ps) #use this log when examining timeline regressions
 
         generateHighchartsSeries(Ps, R2, type, x_bounds, series_name, dash_style)
 
       ###
       Returns a series object to draw on the chart canvas.
       ###
-      generateHighchartsSeries = (Ps, R2, type, x_bounds, series_name, dash_style) ->
+      generateHighchartsSeries = (Ps, R2, type, xBounds, seriesName, dashStyle) ->
+        str = makeToolTip(Ps, R2, type, seriesName)
+
+        #Left shift the input values to zero and adjust the Ps for the left shift
+        denormFunc = globals.REGRESSION.DENORM_FUNCS[type]
+        Ps =
+            func(Ps, -1 * xBounds.dataMin, 1) for func in denormFunc
+
         y = 0
         data = for i in [0..globals.REGRESSION.NUM_POINTS]
-          x = (i / globals.REGRESSION.NUM_POINTS) * (x_bounds.dataMax - x_bounds.dataMin) + x_bounds.dataMin
-          y =  calculateRegressionPoint(Ps, x, type, y)
-          #console.log("x is", x, "y is", y) #use this log when examining timeline regressions
+          x = (i / globals.REGRESSION.NUM_POINTS) * (xBounds.dataMax - xBounds.dataMin) + xBounds.dataMin
+          y = calculateRegressionPoint(Ps, x - xBounds.dataMin, type)
           {x: x, y: y}
-
-        str = makeToolTip(Ps, R2, type, series_name)
 
         ret =
           name:
-            id: '',
-            group: series_name,
+            id: ''
+            group: seriesName
             regression:
               tooltip: str
-          data: data,
+          data: data
           type: 'line'
-          color: '#000',
-          lineWidth: 2,
-          dashStyle: dash_style,
-          showInLegend: 0,
+          color: '#000'
+          lineWidth: 2
+          dashStyle: dashStyle
+          showInLegend: 0
           marker: 
             symbol: 'blank'
           states:
@@ -153,17 +156,17 @@ $ ->
       ###
       Uses the regression matrix to calculate the y value given an x value.
       ###
-      calculateRegressionPoint = (Ps, x, type, previous) ->
-        globals.REGRESSION.FUNCS[type][0](x, Ps)
+      calculateRegressionPoint = (Ps, x, type) ->
+          globals.REGRESSION.FUNCS[type][0](x, Ps)
 
       ###
       Returns tooltip description of the regression.
       ###
       makeToolTip = (Ps, R2, type, series_name) ->
-      
+
         # Format parameters for output
         Ps = Ps.map roundToFourSigFigs
-        
+
         ret = switch type
 
           when globals.REGRESSION.LINEAR
@@ -207,7 +210,7 @@ $ ->
               f(x) = #{Ps[1]} ln(x + #{Ps[2]}) + #{Ps[0]}
             </strong>
             """
-            
+
         ret += """
         <br>
         <strong> R <sup>2</sup> = </strong> #{roundToFourSigFigs R2}
@@ -357,18 +360,18 @@ $ ->
 
       #Calculate the average
       calculateMean = (points) ->
-        mean = 0
-        for point in points
-          mean += point / points.length
-        mean
+          mean = 0
+          for point in points
+              mean += point / points.length
+          mean
 
       #Normalize
       normalizeData = (points, mean, sigma) ->
-        (point - mean) / sigma for point in points
+          (point - mean) / sigma for point in points
 
       #Calculate the standard deviation
       calculateStandardDev = (points, mean) ->
-        sigma = 0
-        for point in points
-          sigma += Math.pow(point - mean, 2)
-        Math.sqrt( sigma / points.length )
+          sigma = 0
+          for point in points
+              sigma += Math.pow(point - mean, 2)
+          Math.sqrt( sigma / points.length )

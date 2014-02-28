@@ -28,7 +28,7 @@
 ###
 $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
-      
+
     class window.Scatter extends BaseHighVis
         ###
         Initialize constants for scatter display mode.
@@ -42,13 +42,13 @@ $ ->
             @INITIAL_GRID_SIZE = 150
 
             @xGridSize = @yGridSize = @INITIAL_GRID_SIZE
-                
+
             @mode = @SYMBOLS_MODE
 
             @xAxis = data.normalFields[0]
 
             @advancedTooltips = 0
-                                          
+
             #Do the cool existential operator thing
             @savedRegressions ?= []
 
@@ -76,8 +76,7 @@ $ ->
 
         storeYBounds: (bounds) ->
             @yBounds = bounds
-            
-                
+
         ###
         Build up the chart options specific to scatter chart
             The only complex thing here is the html-formatted tooltip.
@@ -123,10 +122,10 @@ $ ->
                                       (globals.dateFormatter @point.datapoint[fieldIndex])
                                   else
                                       @point.datapoint[fieldIndex]
-                                      
+
                                   str += "<tr><td>#{field.fieldName}</td>"
                                   str += "<td><strong>#{dat}</strong></td></tr>"
-                                  
+
                               str += "</table>"
                           else
                               str  = "<div style='width:100%;text-align:center;color:#{@series.color};'> #{@series.name.group}</div><br>"
@@ -136,7 +135,7 @@ $ ->
                               str += "</table>"
                     useHTML: true
                     hideDelay: 0
-                
+
                 xAxis: [{
                     type: 'linear'
                     gridLineWidth: 1
@@ -148,7 +147,7 @@ $ ->
                         afterSetExtremes: (e) =>
                           @storeXBounds @chart.xAxis[0].getExtremes()
                           @storeYBounds @chart.yAxis[0].getExtremes()
-                          
+
                           ###
                           If we actually zoomed, we want to update so the data reduction can trigger.
                           Otherwise this zoom was triggered by an update, so don't recurse!
@@ -178,7 +177,7 @@ $ ->
                         options.marker =
                             symbol: globals.symbols[count % globals.symbols.length]
                         options.lineWidth = 2
-                
+
                     when @mode is @SYMBOLS_MODE
                         options.marker =
                             symbol: globals.symbols[count % globals.symbols.length]
@@ -191,8 +190,8 @@ $ ->
                         options.lineWidth = 2
 
                 options
-       
-       
+
+
         ###
         Call control drawing methods in order of apperance
         ###
@@ -222,7 +221,7 @@ $ ->
 
                 @yBounds.min = @xBounds.min =  Number.MAX_VALUE
                 @yBounds.max = @xBounds.max = -Number.MAX_VALUE
-            
+
                 for fieldIndex, symbolIndex in data.normalFields when fieldIndex in globals.fieldSelection
                     for group, groupIndex in data.groups when groupIndex in globals.groupSelection
                         @yBounds.min = Math.min @yBounds.min, (data.getMin fieldIndex, groupIndex)
@@ -230,17 +229,17 @@ $ ->
 
                         @xBounds.min = Math.min @xBounds.min, (data.getMin @xAxis, groupIndex)
                         @xBounds.max = Math.max @xBounds.max, (data.getMax @xAxis, groupIndex)
-                        
+
                         if (@timeMode isnt undefined) and (@timeMode is @GEO_TIME_MODE)
                           @xBounds.min = (new Date(@xBounds.min)).getUTCFullYear()
                           @xBounds.max = (new Date(@xBounds.max)).getUTCFullYear()
-            
+
             #Calculate grid spacing for data reduction
             width = ($ '#' + @canvas).width()
             height = ($ '#' + @canvas).height()
 
             @xGridSize = @yGridSize = @INITIAL_GRID_SIZE
-            
+
             if width > height
                 @yGridSize = Math.round (height / width * @INITIAL_GRID_SIZE)
             else
@@ -254,7 +253,7 @@ $ ->
                         globals.dataReduce sel, @xBounds, @yBounds, @xGridSize, @yGridSize, @MAX_SERIES_SIZE
                     else
                         data.xySelector(@xAxis, fieldIndex, groupIndex)
-                    
+
                     options =
                         data: dat
                         showInLegend: false
@@ -281,7 +280,7 @@ $ ->
                             options.dashStyle = globals.dashes[symbolIndex % globals.dashes.length]
 
                     @chart.addSeries options, false
-                    
+
             if @isZoomLocked()
               @updateOnZoom = 0
               @setExtremes()
@@ -289,12 +288,12 @@ $ ->
             else
               @resetExtremes
               ($ '#zoomResetButton').addClass("disabled")
-                        
+
             @chart.redraw()
-            
+
             @storeXBounds @chart.xAxis[0].getExtremes()
             @storeYBounds @chart.yAxis[0].getExtremes()
-            
+
             #Disable/enable all of the saved regressions as necessary
             for regression in @savedRegressions
               #Filter out the ones that should be enabled.
@@ -309,7 +308,7 @@ $ ->
                 #Prevent duplicate add classes
                 if ($ 'tr#row_' + regression.series.name.id).hasClass('regression_row_disabled') is false
                   ($ 'tr#row_' + regression.series.name.id).addClass('regression_row_disabled')
-            
+
             #Display the table header if necessary    
             if ($ '#regressionTableBody > tr').length > 0
               ($ 'tr#regressionTableHeader').show()
@@ -323,7 +322,7 @@ $ ->
 
             controls += "<h3 class='clean_shrink'><a href='#'>Tools:</a></h3>"
             controls += "<div class='outer_control_div'>"
-            
+
             controls += "<h4 class='clean_shrink'>Zoom</h4>"
             controls += '<div class="inner_control_div">'
 
@@ -347,7 +346,7 @@ $ ->
 
             controls += "<br>"
             controls += "<h4 class='clean_shrink'>Other</h4>"
-                
+
             controls += '<div class="inner_control_div">'
             controls += "<div class='checkbox'><label><input class='tooltip_box' type='checkbox' name='tooltip_selector' #{if @advancedTooltips then 'checked' else ''}/> Advanced Tooltips</label></div> "
             controls += "</div>"
@@ -365,22 +364,22 @@ $ ->
                 controls += "<div class='inner_control_div' style='text-align:center'>"
                 controls += "<button id='elaspedTimeButton' class='save_button btn btn-default'>Generate Elapsed Time </button>"
                 controls += "</div>"
-                
+
             controls+= "</div></div>"
-            
+
             # Write HTML
             ($ '#controldiv').append controls
 
             ($ '#zoomResetButton').button()
             ($ '#zoomResetButton').click (e) =>
               @resetExtremes(($ '#zoomSelector').val())
-              
+
             # Set initial state of zoom reset
             if not @isZoomLocked()
               ($ '#zoomResetButton').addClass("disabled")
             else
               ($ '#zoomResetButton').addClass("enabled")
-            
+
             ($ '#zoomOutButton').button()
             ($ '#zoomOutButton').click (e) =>
               @zoomOutExtremes(($ '#zoomSelector').val())
@@ -397,7 +396,7 @@ $ ->
                 @fullDetail = (@fullDetail + 1) % 2
                 @delayedUpdate()
                 true
-                
+
             ($ '.logY_box').click (e) =>
                 globals.logY = (globals.logY + 1) % 2
                 @start()
@@ -426,7 +425,7 @@ $ ->
                 true
             if possible.length <= 1
                 return
-        
+
             controls =  '<div id="xAxisControl" class="vis_controls">'
 
             controls += "<h3 class='clean_shrink'><a href='#'>X Axis:</a></h3>"
@@ -479,23 +478,23 @@ $ ->
                     @chart.xAxis[0].setExtremes()
                 if whichAxis in ['Both', 'Y']
                     @chart.yAxis[0].setExtremes()
-                
+
         setExtremes: ->
             if (@chart isnt undefined)
               if(@xBounds.min? and @yBounds.min?)
                 @chart.xAxis[0].setExtremes(@xBounds.min,@xBounds.max,true)
                 @chart.yAxis[0].setExtremes(@yBounds.min,@yBounds.max,true)
               else @resetExtremes()
-                
+
         zoomOutExtremes: (whichAxis) ->
-          
+
             xRange = @xBounds.max - @xBounds.min
             yRange = @yBounds.max - @yBounds.min
-          
+
             if whichAxis in ['Both', 'X']
                 @xBounds.max += xRange * 0.1
                 @xBounds.min -= xRange * 0.1
-          
+
             if whichAxis in ['Both', 'Y']
                 if globals.logY is 1
                     @yBounds.max *= 10.0
@@ -503,32 +502,32 @@ $ ->
                 else
                     @yBounds.max += yRange * 0.1
                     @yBounds.min -= yRange * 0.1
-          
+
             @setExtremes()
 
         ###
         Saves the current zoom level
         ###
         end: ->
-        
+
           if chart?
             @storeXBounds @chart.xAxis[0].getExtremes()
             @storeYBounds @chart.yAxis[0].getExtremes()
-         
+
           super()
-            
+
         ###
         Saves the zoom level before cleanup
         ###
         serializationCleanup: ->
             super()
-            
+
         ###
         Updates x axis for regression.
         ###
         updateXRegression:() ->
           $('#regressionXAxis').text("#{data.fields[@xAxis].fieldName}")
-          
+
         ###
         Updates y axis for regression.
         ###
@@ -591,7 +590,7 @@ $ ->
             #Write HTML
             ($ '#controldiv').append controls
             ($ "#regressionControl button").button()
-            
+
             #Add all the saved regressions correctly
             for regression in @savedRegressions
               #Filter out the ones that should be enabled.
@@ -602,11 +601,11 @@ $ ->
                 @addRegressionToTable(regression, true)
               else
                 @addRegressionToTable(regression, false)
-            
+
             #Catches change in y axis
             ($ '.y_axis_input').click (e) =>
               @updateYRegression()
-            
+
             #Catches change in x axis  
             ($ '.xAxis_input').change (e) =>
               @updateXRegression()
@@ -631,21 +630,21 @@ $ ->
               fullData = clip(fullData, @xBounds, @yBounds)
 
               #Separate the x and y data
-              x_data = 
+              xData = 
                 point.x for point in fullData
-              y_data = 
+              yData = 
                 point.y for point in fullData
-              
+
               #Get dash index
               dash_index = data.normalFields.indexOf(y_axis_index)
               dash_style = globals.dashes[dash_index % globals.dashes.length]
-              
+
               regressionMade = true
               try
                 #Get the new regression              
                 new_regression = globals.getRegression(
-                  x_data,
-                  y_data, 
+                  xData,
+                  yData, 
                   regression_type,
                   @xBounds,
                   name,
@@ -708,7 +707,7 @@ $ ->
 
             ($ '#regressionControl > h3').click ->
                 globals.regressionOpen = (globals.regressionOpen + 1) % 2
-                
+
         #Adds a regression row to our table, with styling for enabled or disabled
         addRegressionToTable: (saved_reg, enabled) ->
 
@@ -747,24 +746,24 @@ $ ->
 
             @xBounds = saved_reg.bounds[0]
             @yBounds = saved_reg.bounds[1]
-            
+
             ($ '.xAxis_input').each (i, input)=>
               if Number(input.value) == saved_reg.field_indices[0]
                 input.checked = true
 
             @update()
-          
+
           #Add a make the delete button remove the regression object
           ($ 'td#' + saved_reg.series.name.id).click =>
-            
+
             #Remove regression view from the screen.
             ($ 'td#' + saved_reg.series.name.id).parent().remove()
-            
+
             #Display the table header if necessary    
             if ($ '#regressionTableBody > tr').length > 0
               ($ 'tr#regressionTableHeader').show()
             else ($ 'tr#regressionTableHeader').hide()
-            
+
             #Remove regression from the savedRegressions array.
             id = saved_reg.series.name.id 
             for regression in @savedRegressions
@@ -777,7 +776,7 @@ $ ->
               if (series.name.id == id)
                 @chart.series[i].remove()
                 break
-                
+
           #Make the hovering highlight the correct regression
           ($ 'tr#row_' + saved_reg.series.name.id).mouseover =>
 
@@ -788,10 +787,10 @@ $ ->
                 @chart.series[i].setState('hover')
                 @chart.tooltip.refresh(@chart.series[i].points[@chart.series[i].points.length - 1])
                 break
-          
+
           #When the mouse leaves, don't highlight anymore
           ($ 'tr#row_' + saved_reg.series.name.id).mouseout =>
-          
+
             #Remove regression from the chart
             id = saved_reg.series.name.id 
             for series, i in @chart.series
@@ -809,7 +808,6 @@ $ ->
             if point.x >= xBounds.min && point.x <= xBounds.max && point.y >= yBounds.min && point.y <= yBounds.max
                 return true
             else return false
-
 
     if "Scatter" in data.relVis
         globals.scatter = new Scatter "scatter_canvas"
