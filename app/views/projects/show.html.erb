@@ -110,18 +110,20 @@
             <tbody>
               <% @data_sets.each do |s| %>
                 <tr class="<%= cycle('feed-even', 'feed-odd')%> dataset" style="position:relative">
+                  <%if not s.key.nil?%>
+                  <td class="key_icon" title="<%= s.key %>"> <%= image_tag("key.png") %> </td>
+                  <% else %>
                   <td class="gravatar">
                     <div class="gravatar">
-                      <%if Gravatar.new.url(s.owner, 32) != nil%>
-                        <%= image_tag Gravatar.new.url(s.owner, 32), :size => "32x32"%>
-                      <%end%>
+		     <%# if Gravatar.new.url(s.owner, 32) != nil %> 
+                     <%= image_tag Gravatar.new.url(s.owner, 32), :size => "32x32"%>
+                  <%end%> 
+                    
                     </div>
                   </td>
                   <td style="max-width: 110px"><div class="truncate"><%= link_to s.owner.name, user_path(s.owner) %></div></td>
                   <td style="max-width: 140px"><div class="truncate" title="Created <%=s.created_at.strftime("%B %d, %Y")%>"><%= link_to s.title, "#{params[:id]}/data_sets/#{s.id}" %></div></td>
-		   <% unless @project.contrib_keys.nil? %>
-		    <td class="key_icon"> <%= image_tag("key.png") %> </td>
-		   <%end%>
+		   
                   <td>
 		    <div class="controls" style="">
 		      

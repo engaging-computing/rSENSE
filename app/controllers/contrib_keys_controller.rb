@@ -2,8 +2,9 @@ class ContribKeysController < ApplicationController
   skip_before_filter :authorize, only: [:enter, :clear]
 
   def create
+    puts "Created!!!"
     @key = ContribKey.new(contrib_key_params)
-
+    
     unless can_edit?(@key.project)
       flash[:error] = "Action Not Authorized"
       redirect_to @key.project
@@ -37,6 +38,8 @@ class ContribKeysController < ApplicationController
     keys = @project.contrib_keys.where(key: params[:key])
     
     if keys.count > 0
+      puts "keys > 0!"
+      session[:key_name] = params[:name]
       session[:contrib_access] = @project.id
       flash[:notice] = "You have entered a valid contributor key."
       redirect_to @project

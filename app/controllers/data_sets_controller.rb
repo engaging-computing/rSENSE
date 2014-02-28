@@ -64,7 +64,8 @@ class DataSetsController < ApplicationController
   def create
     @data_set = DataSet.new(data_set_params)
     @project  = @data_set.project
-
+    @data_set.key = session[:key_name]
+    @data_set.key.save
     if @project.lock? and !can_edit?(@project) and !has_key?(@project)
       redirect_to @project, alert: "Project is locked"
       return
@@ -276,6 +277,6 @@ class DataSetsController < ApplicationController
   private
 
   def data_set_params
-    params[:data_set].permit(:content, :project_id, :title, :user_id, :hidden, :data)
+    params[:data_set].permit(:content, :project_id, :title, :user_id, :hidden, :data, :key)
   end
 end
