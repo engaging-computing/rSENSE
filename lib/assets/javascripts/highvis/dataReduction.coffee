@@ -28,7 +28,7 @@
 ###
 $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
-      
+
     window.globals ?= {}
 
     ###
@@ -115,7 +115,7 @@ $ ->
             arr[arr.length - 1].delete = true
 
         arr.filter (dataPoint) -> not dataPoint.delete?
-                        
+
     ###
     Reduces data based on a first-to-enter grid cell approach.
 
@@ -149,6 +149,6 @@ $ ->
 
         if res.length > target
             return globals.dataReduce res, xBounds, yBounds, (xCells / 2), (yCells / 2), target
-        
+
         res
-                
+

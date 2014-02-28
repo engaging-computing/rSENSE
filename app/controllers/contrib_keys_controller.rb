@@ -1,5 +1,5 @@
 class ContribKeysController < ApplicationController
-  skip_before_filter :authorize, only: [:enter]
+  skip_before_filter :authorize, only: [:enter, :clear]
 
   def create
     @key = ContribKey.new(contrib_key_params)
@@ -12,10 +12,10 @@ class ContribKeysController < ApplicationController
 
     if can_edit?(@key.project) && @key.save
       flash[:notice] = "Added contributor key."
-      redirect_to @key.project
+      redirect_to [:edit, @key.project]
     else
       flash[:error] = @key.errors.full_messages
-      redirect_to @key.project
+      redirect_to [:edit, @key.project]
     end
   end
 
@@ -25,7 +25,7 @@ class ContribKeysController < ApplicationController
     if can_edit?(@key.project)
       @key.destroy
       flash[:notice] = "Deleted contributor key."
-      redirect_to @key.project
+      redirect_to [:edit, @key.project]
     else
       flash[:error] = "Action Not Authorized"
       redirect_to @key.project
@@ -44,6 +44,12 @@ class ContribKeysController < ApplicationController
       flash[:error] = "Invalid contributor key."
       redirect_to @project
     end
+  end
+
+  def clear
+    session[:contrib_access] = nil
+    flash[:notice] = "Your have cleared your contributor key."
+    redirect_to projects_path
   end
 
   private
