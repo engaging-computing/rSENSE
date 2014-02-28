@@ -32,6 +32,11 @@
             <%= check_box_tag :clone_datasets, class: "form-control", autofocus: true %>
           </div>
           
+          <div class="form-group">
+            <%= label_tag(:clone_media, "Clone Media:") %>
+            <%= check_box_tag :clone_media, class: "form-control", autofocus: true %>
+          </div>
+          
           <%= hidden_field_tag(:project_id, @project.id) %>
         </div>
         
