@@ -9,7 +9,7 @@ def store_uupath(store_key)
   d0 = store_key.slice(0, 2)
   "/media/#{d0}/#{store_key}"
 end
-  
+
 def store_uudir(store_key)
   File.join(Rails.root, 'public', store_uupath(store_key))
 end

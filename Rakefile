@@ -56,3 +56,11 @@ task :load do
   system("mv public/media/data.yml db")
   system("rake db:data:load")
 end
+
+if %w(development test).include? Rails.env
+  require 'rubocop/rake_task'
+  Rubocop::RakeTask.new
+
+  task(:default).clear
+  task default: [:test, :rubocop]
+end

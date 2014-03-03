@@ -3,13 +3,13 @@ class FieldsController < ApplicationController
   # GET /fields/1
   # GET /fields/1.json
   skip_before_filter :authorize, only: [:show]
-  
+
   def show
     @field = Field.find(params[:id])
     @owner = Project.find(@field.project_id).user_id
-    
+
     recur = params.key?(:recur) ? params[:recur] : false
-    
+
     respond_to do |format|
       format.html { render text: @field.to_json }
       format.json { render json: @field.to_hash(recur) }
@@ -23,18 +23,18 @@ class FieldsController < ApplicationController
       Field.verify_params(params[:field])
     rescue Exception => e
       respond_to do |format|
-        format.json {render json: {msg: e}, status: :unprocessable_entity}
+        format.json { render json: { msg: e }, status: :unprocessable_entity }
       end
       return
     end
-    
+
     @field = Field.new(field_params)
     @project = Project.find(params[:field][:project_id])
 
-    if !params[:field].has_key? :name
+    unless params[:field].key?(:name)
       @field.name = Field.get_next_name(@project, @field.field_type)
     end
-    
+
     respond_to do |format|
       if @field.save
         format.json { render json: @field.to_hash(false), status: :created, location: @field }
@@ -48,16 +48,16 @@ class FieldsController < ApplicationController
   # PUT /fields/1.json
   def update
     @field = Field.find(params[:id])
-    
+
     respond_to do |format|
       if can_edit?(@field) && @field.update_attributes(field_params)
         format.html { redirect_to @field.project, notice: 'Field was successfully updated.' }
-        format.json { render json:{}, status: :ok }
+        format.json { render json: {}, status: :ok }
       else
-        @field.errors[:base] << ("Permission denied") unless can_edit?(@field)
+        @field.errors[:base] << ('Permission denied') unless can_edit?(@field)
         logger.error "Errors: #{@field.errors.inspect}"
         format.html { redirect_to Field.find(params[:id]), alert: 'Field was not updated.' }
-        format.json { render json: @field.errors.full_messages(), status: :unprocessable_entity }
+        format.json { render json: @field.errors.full_messages, status: :unprocessable_entity }
       end
     end
   end
@@ -69,22 +69,21 @@ class FieldsController < ApplicationController
     @project = Project.find(@field.project_id)
     if can_delete?(@field) && (@project.data_sets.count == 0)
       if (@field.field_type == get_field_type('Latitude')) || (@field.field_type == get_field_type('Longitude'))
-        @project.fields.where("field_type = ?", get_field_type('Latitude')).first.destroy
-        @project.fields.where("field_type = ?", get_field_type('Longitude')).first.destroy
+        @project.fields.where('field_type = ?', get_field_type('Latitude')).first.destroy
+        @project.fields.where('field_type = ?', get_field_type('Longitude')).first.destroy
       else
         @field.destroy
       end
       respond_to do |format|
-        format.json { render json:{}, status: :ok }
+        format.json { render json: {}, status: :ok }
         format.html { redirect_to @field.project, notice: 'Field was successfuly deleted.' }
       end
     else
       respond_to do |format|
-        format.json { render json:{}, status: :forbidden }
+        format.json { render json: {}, status: :forbidden }
         format.html { redirect_to @field.project, alert: 'Field could not be destroyed' }
       end
     end
-
   end
 
   private

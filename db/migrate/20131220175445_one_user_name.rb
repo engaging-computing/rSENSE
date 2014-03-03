@@ -9,9 +9,7 @@ class OneUserName < ActiveRecord::Migration
         uu.email = "#{uu.username}.fake@example.com"
       end
 
-      while !uu.save
-        uu.username = uu.username + "1"
-      end
+      uu.save!
     end
   end
 
