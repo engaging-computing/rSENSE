@@ -8,6 +8,7 @@
 AllCops:
   Excludes:
     - db/schema.rb
+    - vendor/**
 
 # Offence count: 1
 # Cop supports --auto-correct.
