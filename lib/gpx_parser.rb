@@ -4,80 +4,78 @@ require 'roo'
 
 class GpxParser
   def convert(filepath)
+    doc = Nokogiri::XML(File.open(filepath)).remove_namespaces!
 
-    doc = Nokogiri::XML(File.open(filepath)).remove_namespaces!()
-    
-    trkpts = doc.css("trkpt")
-    
-    csv = "" 
+    trkpts = doc.css('trkpt')
+
+    csv = ''
     headers = trkpts.first.attributes
 
-    #Grab attributes from the first trkpt for headers
+    # Grab attributes from the first trkpt for headers
     trkpts.first.attributes.each do |header|
-      csv += header[0] + ","
+      csv += header[0] + ','
     end
 
-    #Grab contents from the first trkpt for headers
+    # Grab contents from the first trkpt for headers
     elements = []
     trkpts.first.traverse do |node|
-      if(node.children.count == 0)
-        csv += node.parent.name + ","
+      if node.children.count == 0
+        csv += node.parent.name + ','
         elements << node.parent.name
       end
     end
-    csv = csv.chomp(",")
+    csv = csv.chomp(',')
     csv += "\n"
 
     trkpts.each do |pt|
-      line = ""
+      line = ''
 
-      #Grab headers out of attributes for each trkpt
+      # Grab headers out of attributes for each trkpt
       headers.each do |h|
         line += "#{pt.attribute(h[0])},"
       end
 
-      #Grab contents out of each trkpt
+      # Grab contents out of each trkpt
 
       elements.each do |e|
         begin
           line += "#{pt.search(e).first.content},"
         rescue
-          line += ","
+          line += ','
         end
       end
-      line = line.chomp(",")
+      line = line.chomp(',')
       line += "\n"
-      
-      #Add line to csv
+
+      # Add line to csv
       csv += line
     end
-    
+
     filename = write_temp_file(csv)
-    
+
     roo = Roo::CSV.new(filename)
 
     roo
-    
   end
-  
+
   private
- 
+
   def write_temp_file(data)
-    #Create a tmp directory if it does not exist
-      begin
-        Dir.mkdir("/tmp/rsense")
-      rescue
-      end
+    # Create a tmp directory if it does not exist
+    begin
+      Dir.mkdir('/tmp/rsense')
+    rescue
+    end
 
-      #Save file so we can grab it again
-      base = "/tmp/rsense/dataset"
-      fname = base + "#{SecureRandom.hex}.csv"
-      f = File.new(fname, "w")
-      
-      f.write(data)
+    # Save file so we can grab it again
+    base = '/tmp/rsense/dataset'
+    fname = base + "#{SecureRandom.hex}.csv"
+    f = File.new(fname, 'w')
 
-      f.close
-      
-      fname
+    f.write(data)
+
+    f.close
+
+    fname
   end
 end

@@ -17,13 +17,14 @@ class VisThumbToMediaObj < ActiveRecord::Migration
       if tn_src =~ /amazonaws/
         # Get the thumbnail
         re = HTTParty.get(tn_src)
-        print "."; STDOUT.flush
+        print '.'
+        STDOUT.flush
 
         if re.code == 200
-          File.open(mo.file_name, "wb") do |ff|
+          File.open(mo.file_name, 'wb') do |ff|
             ff.write(re.body)
           end
-      
+
           mo.add_tn
         end
       end
@@ -35,15 +36,15 @@ class VisThumbToMediaObj < ActiveRecord::Migration
       vi.save!
 
       vi2 = Visualization.find(vi.id)
-      raise Exception.new("WTF") unless vi2.thumb_id
+      fail Exception.new('WTF') unless vi2.thumb_id
     end
 
-    puts "+"
+    puts '+'
   end
 
   def down
-    remove_column :visualizations, :thumb_id 
+    remove_column :visualizations, :thumb_id
 
-    puts "Again, non-reversable migrations are awesome."
+    puts 'Again, non-reversable migrations are awesome.'
   end
 end

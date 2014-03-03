@@ -13,53 +13,53 @@ class VisualizationsControllerTest < ActionController::TestCase
     @tgd = data_sets(:thanksgiving)
   end
 
-  test "should get index" do
+  test 'should get index' do
     get :index
     assert_response :success
     assert_not_nil assigns(:visualizations)
   end
 
-  test "should create visualization" do
+  test 'should create visualization' do
     assert_difference('Visualization.count') do
-      post :create, {visualization: { content: @vis1.content, data: @vis1.data, project_id: @vis1.project_id, 
-        globals: @vis1.globals, title: @vis1.title, user_id: @vis1.user_id }}, { user_id: @kate.id }
+      post :create, { visualization: { content: @vis1.content, data: @vis1.data, project_id: @vis1.project_id,
+        globals: @vis1.globals, title: @vis1.title, user_id: @vis1.user_id } },  user_id: @kate.id
     end
 
     assert_redirected_to visualization_path(assigns(:visualization))
   end
 
-  test "should show visualization" do
-    get :show, { id: @vis2.id }, { user_id: @kate.id }
+  test 'should show visualization' do
+    get :show, { id: @vis2.id },  user_id: @kate.id
     assert_response :success
   end
 
-  test "should show thanksgiving dinner data" do
-    get :displayVis, { id: @tgd.project_id, datasets: [ @tgd.id ] }
+  test 'should show thanksgiving dinner data' do
+    get :displayVis,  id: @tgd.project_id, datasets: [@tgd.id]
     assert_response :success
   end
 
-  test "should get edit" do
-    get :edit, { id: @vis2 }, { user_id: @admin }
+  test 'should get edit' do
+    get :edit, { id: @vis2 },  user_id: @admin
     assert_response :success
   end
 
-  test "should update visualization" do
-    put :update, { id: @vis2, visualization: { content: @vis1.content, data: @vis1.data, 
+  test 'should update visualization' do
+    put :update, { id: @vis2, visualization: { content: @vis1.content, data: @vis1.data,
       project_id: @vis1.project_id, globals: @vis1.globals, title: @vis1.title, user_id: @vis1.user_id } },
-      { user_id: @kate.id }
+       user_id: @kate.id
     assert_redirected_to visualization_path(assigns(:visualization))
   end
 
-  test "should destroy visualization" do
+  test 'should destroy visualization' do
     assert_difference('Visualization.count', 0) do
-      delete :destroy, { id: @vis2 }, { user_id: @kate.id }
+      delete :destroy, { id: @vis2 },  user_id: @kate.id
     end
 
     assert_redirected_to visualizations_path
   end
 
-  test "should for realz show viz" do
-    get :displayVis, { id: @vis2.project.id }
+  test 'should for realz show viz' do
+    get :displayVis,  id: @vis2.project.id
     assert_response :success
   end
 end
