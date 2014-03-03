@@ -33,7 +33,7 @@
               <td>
                 <div class="center">
                   <% if ((mo.media_type == "image") && (can_edit? object))%>
-                    <input type="checkbox" class="img_selector" name="img_selector" obj_id="<%=object.id%>" <%if object.featured_media_id == mo.id%>checked<%end%> mo_id="<%=mo.id%>"></input>
+                    <input type="checkbox" title="Select to set this as your featured project image." class="img_selector" name="img_selector" obj_id="<%=object.id%>" <%if object.featured_media_id == mo.id%>checked<%end%> mo_id="<%=mo.id%>"></input>
                   <%end%>
                 </div>
               </td>
