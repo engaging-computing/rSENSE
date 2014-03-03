@@ -224,12 +224,12 @@ class VisualizationsController < ApplicationController
       @datasets = DataSet.where(hidden: false, project_id: params[:id])
     end
 
+    # create special row identifier field for all datasets
+    data_fields.push({ typeID: NUMBER_TYPE, unitName: "id", fieldID: -1, fieldName: "Data Point"})
     # create special dataset grouping field
     data_fields.push({ typeID: TEXT_TYPE, unitName: "String", fieldID: -1, fieldName: "Dataset Name (id)" })
     # create special grouping field for all datasets
     data_fields.push({ typeID: TEXT_TYPE, unitName: "String", fieldID: -1, fieldName: "Combined Datasets" })
-    # create special row identifier field for all datasets
-    #data_fields.push({ typeID: NUMBER_TYPE, unitName: "id", fieldID: -1, fieldName: "Data Point"})
 
     # push real fields to temp variable
     @project.fields.each do |field|
@@ -243,23 +243,22 @@ class VisualizationsController < ApplicationController
       photos = dataset.media_objects.keep_if{|mo| mo.media_type=="image"}.map{|mo| mo.to_hash(true)}
       hasPics = true if photos.size > 0
       metadata[i] = { name: dataset.title, user_id: dataset.user_id, dataset_id: dataset.id, timecreated: dataset.created_at, timemodified: dataset.updated_at, photos: photos}
-      #dataset.data.each_with_index do |row, index|
-      dataset.data.each do |row|
-	unless row.class == Hash
+      dataset.data.each_with_index do |row, index|
+
+        unless row.class == Hash
           logger.info "Bad row in JSON data:"
           logger.info row.inspect
         end
 
         arr = []
+        arr.push index + 1
         arr.push "#{dataset.title}(#{dataset.id})"
         arr.push "All"
-        # arr.push index + 1
 
-
-        #data_fields.slice(arr.length, data_fields.length).each do |field|
-        data_fields.slice(2, data_fields.length).each do |field|
-	  arr.push row[field[:fieldID].to_s]
+        data_fields.slice(arr.length, data_fields.length).each do |field|
+            arr.push row[field[:fieldID].to_s]
         end
+
         format_data.push arr
       end
       i+=1

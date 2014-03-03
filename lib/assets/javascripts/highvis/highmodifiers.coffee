@@ -41,7 +41,9 @@ $ ->
         
         delete data.savedData
 
-    data.COMBINED_FIELD = 1
+    data.DATA_POINT_ID_FIELD = 0
+    data.DATASET_NAME_FIELD = 1
+    data.COMBINED_FIELD = 2
 
     data.types ?=
         TIME: 1
@@ -115,10 +117,10 @@ $ ->
     if 'nans' is true then datapoints with NaN values in the given field will be included.
     ###
     data.multiGroupSelector = (fieldIndex, groupIndices, nans = false) ->
-      
+
       allData =
         data.selector(fieldIndex, group, nans) for group in groupIndices
-      
+
       merged = []
       merged = merged.concat.apply(merged, allData)
 
@@ -304,6 +306,6 @@ $ ->
     #preprocess
     data.preprocessData()
     #Field index of grouping field
-    data.groupingFieldIndex ?= 0
+    data.groupingFieldIndex ?= data.DATASET_NAME_FIELD
     #Array of current groups
     data.groups ?= data.makeGroups()
