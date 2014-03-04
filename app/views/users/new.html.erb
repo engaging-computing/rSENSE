@@ -42,8 +42,13 @@
         </div>
         <div class="panel-footer">
           <%= ff.submit("Create User", class: "btn btn-primary") %>
+          <div class="pull-right"><a href="#" onclick="$('#privacy_policy').toggle()">Privacy Policy</a></div>
+          <div class="clear"></div>
         </div>
       <% end %>
     </div>
   </div>
+</div>
+<div class="row" id="privacy_policy" style="display:none">
+  <%= render :partial => "shared/privacy_policy"%>
 </div>

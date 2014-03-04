@@ -33,6 +33,7 @@ Rsense::Application.routes.draw do
 
   get 'about' => 'home#about'
   get 'contact' => 'home#contact'
+  get 'privacy_policy' => 'home#privacy_policy'
   
   get "home/index"
   root :to => "home#index"
