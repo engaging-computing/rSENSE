@@ -7,5 +7,5 @@ $ ->
 
     helpers.isotope_layout('#users')
 
-    ($ window).resize () -> 
+    ($ window).resize () ->
       helpers.isotope_layout("#users")

@@ -40,7 +40,8 @@ $ ->
       ($ '#doc_box').modal 'hide'
 
     ($ '#doc_box').on 'hidden', ->
-      ($ '#doc_box').hide()
+        ($ '#doc_box').hide()
+
 
     # Does the liking and unliking when the thumbs-up icon is clicked
     ($ '.liked_status').click ->
@@ -129,35 +130,22 @@ $ ->
         ($ j).prop("checked",false)
       root.find(".mine").each (i,j) =>
         ($ j).prop("checked",true)
-        if root.find(".mine").length isnt 0
-          ($ '#vis_button').prop("disabled",false)
-          ($ '#export_button').prop("disabled",false)
-        else
-          ($ '#vis_button').prop("disabled",true)
-          ($ '#export_button').prop("disabled",true)
-    
-    #Selects Data Sets based upon its corresponding Contributor Key
-    ($ "a.check_id").click -> 
-      root = ($ '#dataset_table')
-      ($ '#vis_button').prop("disabled",true)
-      ($ '#export_button').prop("disabled",true)  
-      root.find("[id^=ds_]").each (i,j) => 
-        ($ j).prop("checked",false) 
-      root.find('tr').each (i,j) =>
-        if ($ j).find('.key').attr('title') is ($ this).attr('m-title')
-          ($ j).find("[id^=ds_]").prop('checked',true)
-          ($ '#vis_button').prop("disabled",false)
-          ($ '#export_button').prop("disabled",false)  
-           
-    #Turn off visualize button on page load, and when nothings checked 
+      if root.find(".mine").length isnt 0
+        ($ '#vis_button').prop("disabled",false)
+        ($ '#export_button').prop("disabled",false)
+      else
+        ($ '#vis_button').prop("disabled",true)
+        ($ '#export_button').prop("disabled",true)
+
+    #Turn off visualize button on page load, and when nothings checked
     check_for_selection = =>
       should_disable = true
-    ($ document).find("[id^=ds_]").each (i,j) => 
-      if (($ j).is(":checked")) 
-        should_disable = false
-      else
-        ($ '#check_selector').prop("checked",false) 
-        ($ '#export_button').prop("disabled",false)
+      ($ document).find("[id^=ds_]").each (i,j) =>
+        if(($ j).is(":checked"))
+          should_disable = false
+        else
+          ($ '#check_selector').prop("checked",false)
+          ($ '#export_button').prop("disabled",false)
         ($ '#vis_button').prop("disabled", should_disable)
         ($ '#export_button').prop("disabled", should_disable)
         
@@ -178,7 +166,7 @@ $ ->
         url: ($ @).attr('href')
         type: 'PUT'
         dataType: "json"
-        data: 
+        data:
           data_set:
             hidden: true
         success: =>

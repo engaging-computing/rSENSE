@@ -2,18 +2,18 @@ class DataSetsController < ApplicationController
   include ApplicationHelper
 
   # Allow for export without authentication
-  skip_before_filter :authorize, :only => [:export, :manualEntry, :manualUpload, :update, :show, :dataFileUpload, :field_matching, :jsonDataUpload, :create]
-  before_filter :authorize_allow_key, :only => [:manualEntry, :manualUpload, :update, :show, :dataFileUpload, :field_matching, :jsonDataUpload, :create]
+  skip_before_filter :authorize, only: [:export, :manualEntry, :manualUpload, :update, :show, :dataFileUpload, :field_matching, :jsonDataUpload, :create]
+  before_filter :authorize_allow_key, only: [:manualEntry, :manualUpload, :update, :show, :dataFileUpload, :field_matching, :jsonDataUpload, :create]
 
   # GET /data_sets/1
   # GET /data_sets/1.json
   def show
     @data_set = DataSet.find(params[:id])
     @mongo_data_set = { data: @data_set.data }
-    recur = params.include?(:recur) ? params[:recur] == "true" : false
+    recur = params.include?(:recur) ? params[:recur] == 'true' : false
     respond_to do |format|
-      format.html { redirect_to (project_path @data_set.project) + (data_set_path @data_set) }
-      format.json { render json: @data_set.to_hash(recur)}
+      format.html { redirect_to project_path(@data_set.project) + data_set_path(@data_set) }
+      format.json { render json: @data_set.to_hash(recur) }
     end
   end
 
@@ -30,11 +30,9 @@ class DataSetsController < ApplicationController
 
     @fields = @project.fields
 
-    header_to_field_map = []
-
-    if !params["data"].nil?
+    unless params['data'].nil?
       uploader = FileUploader.new
-      sane = uploader.sanitize_data(params["data"])
+      sane = uploader.sanitize_data(params['data'])
       if sane[:status]
         data_obj = sane[:data_obj]
         data = uploader.swap_columns(data_obj, @project)
@@ -42,12 +40,12 @@ class DataSetsController < ApplicationController
         if @data_set.save!
           ret = { status: :success, redirect: "/projects/#{@project.id}/data_sets/#{@data_set.id}" }
         else
-          ret = { status: :unprocessable_entity, msg: @data_set.errors.full_messages}
+          ret = { status: :unprocessable_entity, msg: @data_set.errors.full_messages }
         end
       else
         err_msg = sane[:status] ? dataset.errors.full_messages : sane[:msg]
         respond_to do |format|
-          format.json {render json: {data: sane[:data_obj], msg: err_msg}, status: :unprocessable_entity}
+          format.json { render json: { data: sane[:data_obj], msg: err_msg }, status: :unprocessable_entity }
         end
       end
     end
@@ -64,8 +62,9 @@ class DataSetsController < ApplicationController
   def create
     @data_set = DataSet.new(data_set_params)
     @project  = @data_set.project
-    if @project.lock? and !can_edit?(@project) and !has_key?(@project)
-      redirect_to @project, alert: "Project is locked"
+
+    if @project.lock? and !can_edit?(@project) and !key?(@project)
+      redirect_to @project, alert: 'Project is locked'
       return
     end
 
@@ -77,7 +76,7 @@ class DataSetsController < ApplicationController
 
     respond_to do |format|
       if @data_set.save
-	format.html { redirect_to @data_set, notice: 'Project data set was successfully created.' }
+        format.html { redirect_to @data_set, notice: 'Project data set was successfully created.' }
         format.json { render json: @data_set.to_hash(false), status: :created, location: @data_set }
       else
         format.html do
@@ -94,9 +93,9 @@ class DataSetsController < ApplicationController
   def update
     @data_set = DataSet.find(params[:id])
     @project  = @data_set.project
-    
+
     if @project.lock? and !can_edit?(@project)
-      redirect_to @project, alert: "Project is locked"
+      redirect_to @project, alert: 'Project is locked'
       return
     end
 
@@ -105,9 +104,9 @@ class DataSetsController < ApplicationController
         format.html { redirect_to @data_set, notice: 'DataSet was successfully updated.' }
         format.json { render json: {}, status: :ok }
       else
-        @data_set.errors[:base] << "Permission denied" unless can_edit?(@data_set)
-        format.html { render action: "edit" }
-        format.json { render json: @data_set.errors.full_messages(), status: :unprocessable_entity }
+        @data_set.errors[:base] << 'Permission denied' unless can_edit?(@data_set)
+        format.html { render action: 'edit' }
+        format.json { render json: @data_set.errors.full_messages, status: :unprocessable_entity }
       end
     end
   end
@@ -117,9 +116,9 @@ class DataSetsController < ApplicationController
   def destroy
     @data_set = DataSet.find(params[:id])
     @project  = @data_set.project
-    
+
     if @project.lock? and !can_edit(@project)
-      redirect_to @project, alert: "Project is locked"
+      redirect_to @project, alert: 'Project is locked'
       return
     end
 
@@ -131,16 +130,16 @@ class DataSetsController < ApplicationController
 
       respond_to do |format|
         if @data_set.destroy
-          format.html { redirect_to root_path, notice: "Data set removed" }
+          format.html { redirect_to root_path, notice: 'Data set removed' }
           format.json { render json: {}, status: :ok }
         else
-          format.html { redirect_to project_path(@data_set.project.id), notice: "Data set could not be removed" }
+          format.html { redirect_to project_path(@data_set.project.id), notice: 'Data set could not be removed' }
           format.json { render json: {}, status: :unprocessable_entity }
         end
       end
     else
       respond_to do |format|
-        format.html { redirect_to 'public/403.html', status: :forbidden}
+        format.html { redirect_to 'public/403.html', status: :forbidden }
         format.json { render json: {}, status: :forbidden }
       end
     end
@@ -149,8 +148,9 @@ class DataSetsController < ApplicationController
   # GET /projects/1/manualEntry
   def manualEntry
     @project = Project.find(params[:id])
-    if @project.lock? and !can_edit?(@project) and !has_key?(@project)
-      redirect_to @project, alert: "Project is locked"
+
+    if @project.lock? and !can_edit?(@project) and !key?(@project)
+      redirect_to @project, alert: 'Project is locked'
       return
     end
   end
@@ -159,8 +159,9 @@ class DataSetsController < ApplicationController
   # {data => { "20"=>[1,2,3,4,5], "21"=>[6,7,8,9,10], "22"=>['v','w','x','y','z'] }}
   def jsonDataUpload
     project = Project.find(params['id'])
-    if project.lock? and !can_edit?(project) and !has_key?(project)
-      render text: "Project is locked", status: 401
+
+    if project.lock? and !can_edit?(project) and !key?(project)
+      render text: 'Project is locked', status: 401
       return
     end
 
@@ -175,20 +176,17 @@ class DataSetsController < ApplicationController
         d.title = params[:title]
         d.project_id = project.id
         d.data = data
-	if not can_edit? (@project)
-	  d.key = session[:key_name]
-	end
-    end
+      end
 
       if dataset.save
         respond_to do |format|
-          format.json {render json: dataset.to_hash(false), status: :ok}
+          format.json { render json: dataset.to_hash(false), status: :ok }
         end
       end
     else
       err_msg = sane[:status] ? dataset.errors.full_messages : sane[:msg]
       respond_to do |format|
-        format.json {render json: {data: sane[:data_obj], msg: err_msg}, status: :unprocessable_entity}
+        format.json { render json: { data: sane[:data_obj], msg: err_msg }, status: :unprocessable_entity }
       end
     end
   end
@@ -201,7 +199,7 @@ class DataSetsController < ApplicationController
     zip_file = Project.find(params[:id]).export_data_sets(params[:datasets])
 
     respond_to do |format|
-      format.html { send_file zip_file, :type => 'file/zip', :x_sendfile => true }
+      format.html { send_file zip_file, type: 'file/zip', x_sendfile: true }
     end
 
   end
@@ -225,13 +223,12 @@ class DataSetsController < ApplicationController
 	end
       end
 
-      if @cur_user.nil? 
+      if @cur_user.nil?
         if params[:contrib_name].empty?
-          dataset.errors[:base] << "Must enter contributor name"
+          dataset.errors[:base] << 'Must enter contributor name'
         else
           dataset.title += " - #{params[:contrib_name]}"
-	  
-	end
+        end
       end
 
       if dataset.errors[:base].empty? and dataset.save
@@ -240,14 +237,14 @@ class DataSetsController < ApplicationController
         @results = params[:results]
         @default_name = params[:title]
         respond_to do |format|
-          flash[:error] = dataset.errors.full_messages()
-          format.html {render action: "dataFileUpload"}
+          flash[:error] = dataset.errors.full_messages
+          format.html { render action: 'dataFileUpload' }
         end
       end
     else
       respond_to do |format|
         flash[:error] = "Data could not be saved: #{sane[:msg]}"
-        format.html {redirect_to project}
+        format.html { redirect_to project }
       end
     end
   end
@@ -255,9 +252,9 @@ class DataSetsController < ApplicationController
   # POST /data_sets/uploadCSV2
   def dataFileUpload
     project = Project.find(params[:pid])
-    
-    if project.lock? and !can_edit?(project) and !has_key?(project)
-      redirect_to @project, alert: "Project is locked"
+
+    if project.lock? and !can_edit?(project) and !key?(project)
+      redirect_to @project, alert: 'Project is locked'
       return
     end
 
@@ -265,13 +262,14 @@ class DataSetsController < ApplicationController
       uploader = FileUploader.new
       data_obj = uploader.generateObject(params[:file])
       @results = uploader.match_headers(project, data_obj)
-      
+
       @default_name = DataSet.get_next_name(project)
-      
+
       respond_to do |format|
         format.html
       end
     rescue Exception => e
+      logger.info "File could not be read: #{e}"
       flash[:error] = 'File could not be read'
       redirect_to project_path(project)
     end
@@ -280,6 +278,6 @@ class DataSetsController < ApplicationController
   private
 
   def data_set_params
-    params[:data_set].permit(:content, :project_id, :title, :user_id, :hidden, :data, :key)
+    params[:data_set].permit(:content, :project_id, :title, :user_id, :hidden, :data)
   end
 end

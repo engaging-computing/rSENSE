@@ -1,4 +1,4 @@
-ENV["RAILS_ENV"] = "test"
+ENV['RAILS_ENV'] = 'test'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 
@@ -7,10 +7,10 @@ require 'simplecov_rsense'
 SimpleCov.start 'rsense'
 
 require 'capybara/rails'
-#Capybara.javascript_driver = :webkit
+# Capybara.javascript_driver = :webkit
 Capybara.javascript_driver = :selenium
 
-require "selenium-webdriver"
+require 'selenium-webdriver'
 
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.
@@ -20,12 +20,12 @@ class ActiveSupport::TestCase
   fixtures :all
 
   # Add more helper methods to be used by all tests here...
-  
+
   # Method tests if a given field is nil
   def assert_default_nil(model, field)
-    assert_nil( field, " Expected #{model.class} #{field} is not nil." )
+    assert_nil(field, " Expected #{model.class} #{field} is not nil.")
   end
-  
+
   # Method tests if a given field is equal to false
   def assert_default_false(model, field)
     assert_equal false, field, "Expected #{model.class} #{field} does not have the correct default field."
@@ -35,9 +35,9 @@ class ActiveSupport::TestCase
   def assert_default_true(model, field)
     assert_equal true, field, "Expected #{model.class} #{field} does not have the correct default field."
   end
-  
+
   def assert_contains(short, long)
-    assert_not_nil long.to_s.index(short.to_s), 
+    assert_not_nil long.to_s.index(short.to_s),
       "String does not contain #{short}"
   end
 
@@ -60,7 +60,7 @@ module CapyHelper
     fill_in 'Password', with: pass
     find('.mainContent').click_on('Login')
 
-    assert page.has_content?("Logout"), "Successfully logged in."
+    assert page.has_content?('Logout'), 'Successfully logged in.'
   end
 
   def logout
@@ -79,12 +79,12 @@ module CapyHelper
   end
 
   def wait_for_id(id)
-    wait = Selenium::WebDriver::Wait.new(:timeout => 20)
-    wait.until { page.driver.browser.find_element(:id => id).displayed? }
+    wait = Selenium::WebDriver::Wait.new(timeout: 20)
+    wait.until { page.driver.browser.find_element(id: id).displayed? }
   end
-  
+
   def wait_for_class(cl)
-    wait = Selenium::WebDriver::Wait.new(:timeout => 20)
-    wait.until { page.driver.browser.find_element(:class => cl).displayed? }
+    wait = Selenium::WebDriver::Wait.new(timeout: 20)
+    wait.until { page.driver.browser.find_element(class: cl).displayed? }
   end
 end

@@ -7,7 +7,7 @@ end
 
 APP_PATH = File.expand_path('../../config/application',  __FILE__)
 require File.expand_path('../../config/boot',  __FILE__)
-  
+
 if ENV['RAILS_ENV'] == 'test'
   $LOAD_PATH.unshift(Pathname.new(APP_PATH).join('../../lib'))
   require 'simplecov_rsense'
