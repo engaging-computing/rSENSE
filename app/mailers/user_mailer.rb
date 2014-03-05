@@ -2,11 +2,11 @@ require 'base64'
 
 class UserMailer < ActionMailer::Base
   helper ActionView::Helpers::UrlHelper
-  
+
   def validation_email(user)
     @user = user
     @url  = url_for(controller: 'users', action: 'validate', key: @user.validation_key, only_path: false)
-    
+
     hostname = `hostname`.chomp
     from = "no-reply@#{hostname}"
 
@@ -19,7 +19,7 @@ class UserMailer < ActionMailer::Base
 
     hostname = `hostname`.chomp
     from = "no-reply@#{hostname}"
-    
-    mail(from: from, to: user.email, subject: "Reset your iSENSE password.")
+
+    mail(from: from, to: user.email, subject: 'Reset your iSENSE password.')
   end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140129155906) do
+ActiveRecord::Schema.define(version: 20140226164331) do
 
   create_table "contrib_keys", force: true do |t|
     t.string   "name",       null: false
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(version: 20140129155906) do
     t.string   "googleDoc"
     t.boolean  "hidden",     default: false
     t.text     "data",       default: "[]",  null: false
+    t.string   "key"
   end
 
   create_table "fields", force: true do |t|
@@ -63,6 +64,7 @@ ActiveRecord::Schema.define(version: 20140129155906) do
     t.integer  "visualization_id"
     t.integer  "news_id"
     t.string   "store_key"
+    t.string   "file"
   end
 
   create_table "news", force: true do |t|

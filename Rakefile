@@ -56,3 +56,18 @@ task :load do
   system("mv public/media/data.yml db")
   system("rake db:data:load")
 end
+
+if %w(development test).include? Rails.env
+  require 'rubocop/rake_task'
+
+  Rubocop::RakeTask.new do |task|
+    task.formatters = ['fuubar']
+  end
+
+  task(:default).clear
+
+  task :default do
+    Rake::Task["rubocop"].invoke
+    Rake::Task["test"].invoke
+  end
+end

@@ -5,13 +5,13 @@ class ContribKeysController < ApplicationController
     @key = ContribKey.new(contrib_key_params)
 
     unless can_edit?(@key.project)
-      flash[:error] = "Action Not Authorized"
+      flash[:error] = 'Action Not Authorized'
       redirect_to @key.project
       return
     end
 
     if can_edit?(@key.project) && @key.save
-      flash[:notice] = "Added contributor key."
+      flash[:notice] = 'Added contributor key.'
       redirect_to [:edit, @key.project]
     else
       flash[:error] = @key.errors.full_messages
@@ -24,10 +24,10 @@ class ContribKeysController < ApplicationController
 
     if can_edit?(@key.project)
       @key.destroy
-      flash[:notice] = "Deleted contributor key."
+      flash[:notice] = 'Deleted contributor key.'
       redirect_to [:edit, @key.project]
     else
-      flash[:error] = "Action Not Authorized"
+      flash[:error] = 'Action Not Authorized'
       redirect_to @key.project
     end
   end
@@ -35,20 +35,20 @@ class ContribKeysController < ApplicationController
   def enter
     @project = Project.find(params[:project_id])
     keys = @project.contrib_keys.where(key: params[:key])
-    
+
     if keys.count > 0
       session[:contrib_access] = @project.id
-      flash[:notice] = "You have entered a valid contributor key."
+      flash[:notice] = 'You have entered a valid contributor key.'
       redirect_to @project
     else
-      flash[:error] = "Invalid contributor key."
+      flash[:error] = 'Invalid contributor key.'
       redirect_to @project
     end
   end
 
   def clear
     session[:contrib_access] = nil
-    flash[:notice] = "Your have cleared your contributor key."
+    flash[:notice] = 'Your have cleared your contributor key.'
     redirect_to projects_path
   end
 
