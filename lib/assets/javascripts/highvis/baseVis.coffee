@@ -35,7 +35,6 @@ $ ->
 
     #Only init selections if this is not a saved vis
     if not data.savedGlobals?
-        console.log(data.normalFields, data.normalFields[1..1])
         globals.groupSelection ?= for vals, keys in data.groups
             Number keys
         if data.normalFields.length > 1
