@@ -24,3 +24,7 @@ log/*
 db/data.yml*
 
 coverage/*
+
+db/test.sqlite3-journal
+node_modules/
+

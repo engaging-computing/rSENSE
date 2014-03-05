@@ -16,7 +16,10 @@ $ ->
         method: 'POST'
         error: (j, s, t) =>
           
-          ($ '.mainContent').prepend "<div class='alert alert-danger alert-dismissable'><strong>An error occured: </strong> Data set names must be unique to their project.</div>"
+          ($ '.mainContent').prepend(
+            "<div class='alert alert-danger alert-dismissable'><strong>An error occured: </strong>" +
+            "Data set names must be unique to their project.</div>"
+          )
 
           ($ '#manualTable th').each (header_i, header) ->
             ($ header).wrapInner "<div class='center'></div>"
@@ -25,7 +28,10 @@ $ ->
             
           ($ '#manualTable tr').slice(1).each (row_i, row) ->
             ($ row).find('td').each (col_i, col) ->
-              ($ col).replaceWith "<td><div class='center'><input type='text' class='form-control' value='#{ ($ col).text() }'></div></td>"
+              ($ col).replaceWith(
+                "<td><div class='center'><input type='text' class='form-control'" +
+                "value='#{ ($ col).text() }'></div></td>"
+              )
               
             ($ row).append "<td><div class='center'><a class='close' style='float:none;'>&times;</a></div></td>"
             ($ row).find('.close').click ->
@@ -49,7 +55,8 @@ $ ->
               do (col) ->
                 ($ row).children().eq(col).find('input').replaceWith """
                   <div class='input-group'>
-                    <input class='validate_longitude form-control ' id='appendedInput' type='text' value='#{ ($ row).find('input').eq(col).val() }' />
+                    <input class='validate_longitude form-control ' id='appendedInput'
+                      type='text' value='#{ ($ row).find('input').eq(col).val() }' />
                     <span class='input-group-btn'>
                       <a href='#' tabindex='32767' class="btn btn-default map_picker">
                         <i class='fa fa-globe'></i>
@@ -75,7 +82,8 @@ $ ->
               do (col) ->
                 ($ row).children().eq(col).find('input').replaceWith """
                   <div class='input-group datepicker'>
-                    <input class='validate_timestamp  form-control' type='text' data-format='yyyy/MM/dd hh:mm:ss' value='#{ ($ row).find('input').eq(col).val() }' />
+                    <input class='validate_timestamp  form-control' type='text'
+                      data-format='yyyy/MM/dd hh:mm:ss' value='#{ ($ row).find('input').eq(col).val() }' />
                     <span class='input-group-btn'>
                       <a href='#' tabindex='32767' class="btn btn-default">
                         <i class='fa fa-calendar'></i>
@@ -99,23 +107,22 @@ $ ->
     time_cols = []
     
     update_headers = () ->
-          # separate columns by field type/validator
+      # separate columns by field type/validator
 
-          num_cols = []
-          lat_cols = []
-          lon_cols = []
-          text_cols = []
-          time_cols = []
+      num_cols = []
+      lat_cols = []
+      lon_cols = []
+      text_cols = []
+      time_cols = []
 
-          ($ '#manualTable').find('th').each (index) ->
-            type = ($ @).attr 'data-field-type'
+      ($ '#manualTable').find('th').each (index) ->
+        type = ($ @).attr 'data-field-type'
   
-            switch type
-              when "Timestamp" then time_cols.push index
-              when "Text" then text_cols.push index
-              when "Number" then num_cols.push index
-              when "Latitude" then lat_cols.push index
-              when "Latitude" then add_map()
-              when "Longitude" then lon_cols.push index
+        switch type
+          when "Timestamp" then time_cols.push index
+          when "Text" then text_cols.push index
+          when "Number" then num_cols.push index
+          when "Latitude" then lat_cols.push index
+          when "Latitude" then add_map()
+          when "Longitude" then lon_cols.push index
 
-    
