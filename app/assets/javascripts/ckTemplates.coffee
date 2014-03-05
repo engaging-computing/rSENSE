@@ -62,7 +62,7 @@ $ ->
                   Science in the Charles River's lower basin.)
                 </p>
 
-                <p>DATA SOURC`E</p>
+                <p>DATA SOURCE</p>
                 <p>
                   For existing data sets, please specify where the data were obtained. (E.g.
                   These data were provided online by the Charles River Watershed Association.
