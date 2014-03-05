@@ -73,7 +73,7 @@ $ ->
 
     # Auto-submit the file upload form when user hits the open button.  
     ($ '#datafile_input').change ->
-      #($ '#datafile_form').submit()
+      ($ '#datafile_form').submit()
 
       
     ###
