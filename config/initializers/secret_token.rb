@@ -6,8 +6,8 @@
 # no regular words or you'll be exposed to dictionary attacks.
 require 'securerandom'
 
-key_file = File.expand_path("~/.rails_key").to_s
-unless File.exists?(key_file)
+key_file = File.expand_path('~/.rails_key').to_s
+unless File.exist?(key_file)
   kk = File.open(key_file, 'wb')
   6.times do
     kk.write(SecureRandom.urlsafe_base64)

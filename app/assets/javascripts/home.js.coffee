@@ -5,11 +5,11 @@
 
 $ ->
   ($ '.mainContent').on 'click', 'div.clickableItem', (event) ->
-      window.location = ($ event.currentTarget).children('a').attr 'href'
+    window.location = ($ event.currentTarget).children('a').attr 'href'
 
   if namespace.controller is "home"
     $('.set_tutorial').change ->
-      data={}
+      data = {}
       data["selected"] = $(this).val()
       data["location"] = $(this).attr("id")
       if $(this).val() == "SELECT ONE"
@@ -22,10 +22,10 @@ $ ->
             data
           false
     ($ 'td.def').click ->
-        more = ($ @).parent().parent().find('tr.more')
-        if more.is(":visible")
-          more.hide()
-        else
-          more.show()
+      more = ($ @).parent().parent().find('tr.more')
+      if more.is(":visible")
+        more.hide()
+      else
+        more.show()
 
     

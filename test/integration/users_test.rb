@@ -11,27 +11,27 @@ class UsersTest < ActionDispatch::IntegrationTest
   teardown do
     finish
   end
-  
-  test "contributions" do 
+
+  test 'contributions' do
     skip
 
-    login("nixon@whitehouse.gov", "12345")
-    
-    visit "/projects/1"
-    click_on "Like"
-   
+    login('nixon@whitehouse.gov', '12345')
+
+    visit '/projects/1'
+    click_on 'Like'
+
     @nixon = users(:nixon)
 
     visit "/users/#{@nixon.id}"
-    assert page.has_content? "Media Test"
-    
-    click_on "My Projects"
-    assert page.has_content? "Media Test"
-    
-    click_on "Data Sets"
-    assert page.has_content? "Needs Media"
-    
-    find('.nav-tabs').click_on "Visualizations"
-    assert page.has_content? "Needs Media"
+    assert page.has_content? 'Media Test'
+
+    click_on 'My Projects'
+    assert page.has_content? 'Media Test'
+
+    click_on 'Data Sets'
+    assert page.has_content? 'Needs Media'
+
+    find('.nav-tabs').click_on 'Visualizations'
+    assert page.has_content? 'Needs Media'
   end
 end

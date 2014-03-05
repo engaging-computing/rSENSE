@@ -25,6 +25,8 @@ group :development, :test do
   gem "launchy"
   gem "simplecov"
   gem "turn"
+  gem "rubocop", git: 'https://github.com/bbatsov/rubocop'
+  gem "coffeelint"
 end
 
 # Jquery stuff

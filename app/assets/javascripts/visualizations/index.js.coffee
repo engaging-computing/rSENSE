@@ -8,7 +8,7 @@ $ ->
     # Setup toggle buttons
     $('.btn').button()
     $('.binary-filters .btn').each () ->
-      tmp = ($ this).children()[0] 
+      tmp = ($ this).children()[0]
       if ($ tmp).prop("checked")
         ($ this).button('toggle')
 
