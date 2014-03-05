@@ -7,88 +7,88 @@ class TutorialsControllerTest < ActionController::TestCase
     @tutorial = tutorials(:one)
   end
 
-  test "should get index" do
+  test 'should get index' do
     get :index
     assert_response :success
     assert_not_nil assigns(:tutorials)
   end
 
-  test "should get index sorted" do
-    get :index, {format: "json", sort: "created_at"}
+  test 'should get index sorted' do
+    get :index, format: 'json', sort: 'created_at'
     assert_response :success
   end
-  
-  test "should get index ordered" do
-    get :index, {format: "json", order: "ASC"}
+
+  test 'should get index ordered' do
+    get :index, format: 'json', order: 'ASC'
     assert_response :success
   end
-  
-  test "should get index paged" do 
-    get :index, {format: "json", per_page: "1"}
-    assert JSON.parse(response.body).length == 1, "Should have only had one tutorial returned" 
+
+  test 'should get index paged' do
+    get :index, format: 'json', per_page: '1'
+    assert JSON.parse(response.body).length == 1, 'Should have only had one tutorial returned'
     assert_response :success
   end
-  
-  test "should get index searched" do
-    get :index, {format: "json", search: "Three"}
-    assert JSON.parse(response.body).length == 1, "Should have only had one tutorial returned" 
-    assert JSON.parse(response.body).first["name"] == "Tutorial Three", "Should have found \"Tutorial Three\""
+
+  test 'should get index searched' do
+    get :index, format: 'json', search: 'Three'
+    assert JSON.parse(response.body).length == 1, 'Should have only had one tutorial returned'
+    assert JSON.parse(response.body).first['name'] == 'Tutorial Three', "Should have found \"Tutorial Three\""
     assert_response :success
   end
-  
-  test "should create tutorial" do
+
+  test 'should create tutorial' do
     assert_difference('Tutorial.count') do
-      post :create, { tutorial: { content: @tutorial.content, title: @tutorial.title }}, { user_id: @nixon }
+      post :create, { tutorial: { content: @tutorial.content, title: @tutorial.title } },  user_id: @nixon
     end
 
     assert_redirected_to tutorial_path(assigns(:tutorial))
   end
 
-  test "should not create tutorial as non-admin" do
+  test 'should not create tutorial as non-admin' do
     assert_difference('Tutorial.count', 0) do
-      post :create, { tutorial: { content: @tutorial.content, title: @tutorial.title }}, { user_id: @kate }
+      post :create, { tutorial: { content: @tutorial.content, title: @tutorial.title } },  user_id: @kate
     end
 
     assert_response 403
   end
 
-  test "should show tutorial" do
+  test 'should show tutorial' do
     get :show, id: @tutorial
     assert_response :success
   end
 
-  test "should get edit" do
-    get :edit, { id: @tutorial }, { user_id: @nixon }
+  test 'should get edit' do
+    get :edit, { id: @tutorial },  user_id: @nixon
     assert_response :success
   end
 
-  test "should update tutorial" do
-    put :update, { id: @tutorial, tutorial: { content: @tutorial.content, title: @tutorial.title } }, 
-      { user_id: @nixon }
+  test 'should update tutorial' do
+    put :update, { id: @tutorial, tutorial: { content: @tutorial.content, title: @tutorial.title } },
+       user_id: @nixon
     assert_redirected_to tutorial_path(assigns(:tutorial))
   end
 
-  test "should feature tutorial" do
-    put :update, { id: @tutorial, tutorial: { featured: "true" } }, { user_id: @nixon }
+  test 'should feature tutorial' do
+    put :update, { id: @tutorial, tutorial: { featured: 'true' } },  user_id: @nixon
     assert_redirected_to tutorial_path(assigns(:tutorial))
     assert Tutorial.find(@tutorial.id).featured == true
-    
-    put :update, { id: @tutorial, tutorial: { featured: "false" } }, { user_id: @nixon }
+
+    put :update, { id: @tutorial, tutorial: { featured: 'false' } },  user_id: @nixon
     assert_redirected_to tutorial_path(assigns(:tutorial))
     assert Tutorial.find(@tutorial.id).featured == false
   end
-  
-  test "should destroy tutorial" do
+
+  test 'should destroy tutorial' do
     assert_difference('Tutorial.count', 0) do
-      delete :destroy, { id: @tutorial }, { user_id: @nixon }
+      delete :destroy, { id: @tutorial },  user_id: @nixon
     end
 
     assert_redirected_to tutorials_path
   end
 
-  test "should not destroy tutorial as non-admin" do
+  test 'should not destroy tutorial as non-admin' do
     assert_difference('Tutorial.count', 0) do
-      delete :destroy, { id: @tutorial }, { user_id: @kate }
+      delete :destroy, { id: @tutorial },  user_id: @kate
     end
 
     assert_response 403

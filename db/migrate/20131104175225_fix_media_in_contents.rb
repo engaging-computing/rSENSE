@@ -4,14 +4,14 @@ class FixMediaInContents < ActiveRecord::Migration
     [DataSet, News, Project, Tutorial, User, Visualization].each do |model|
       model.all.each do |item|
         while item && item.content =~ /([^\s\"]*amazonaws[^\s\"]*)/
-          mo = MediaObject.find_by_src($1)
-          mo = MediaObject.find_by_tn_src($1) if mo.nil?
+          mo = MediaObject.find_by_src(Regexp.last_match[1])
+          mo = MediaObject.find_by_tn_src(Regexp.last_match[1]) if mo.nil?
           if mo.nil?
-            puts "Skipping deleted media object"
+            puts 'Skipping deleted media object'
             break
           end
 
-          item.content.gsub!($1, mo.src)
+          item.content.gsub!(Regexp.last_match[1], mo.src)
         end
 
         item.save! if item.changed?

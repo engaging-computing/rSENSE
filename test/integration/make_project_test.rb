@@ -12,50 +12,50 @@ class MakeProjectTest < ActionDispatch::IntegrationTest
     finish
   end
 
-  test "kate makes a new project" do
-    login("kcarcia@cs.uml.edu", "12345")
+  test 'kate makes a new project' do
+    login('kcarcia@cs.uml.edu', '12345')
 
     # Add a project
-    click_on "Projects"
+    click_on 'Projects'
     find('#addProjectButton').click
 
     wait_for_id('new_name')
 
-    find('#new_name').set("Das Projekt")
-    click_on "Finish"
+    find('#new_name').set('Das Projekt')
+    click_on 'Finish'
 
-    assert page.has_content?("Visualizations"),
+    assert page.has_content?('Visualizations'),
       "Project page should have 'Visualizations'"
 
-    assert page.has_content?("Logout"),
-      "Should be logged in here"
+    assert page.has_content?('Logout'),
+      'Should be logged in here'
 
     # Get futher with ckEditor than redactor.
-    #find('.add_content_link img').click
-    #find('.content_holder .content').click
-    #find('.cke_button__image_icon').click
-    #find('.cke_dialog_tabs [title=Upload]').click
+    # find('.add_content_link img').click
+    # find('.content_holder .content').click
+    # find('.cke_button__image_icon').click
+    # find('.cke_dialog_tabs [title=Upload]').click
 
     # Can't get to form in iFrame, so give up on
     # uploading from editor.
-    #find('.cke_dialog').click_on "Cancel"
+    # find('.cke_dialog').click_on "Cancel"
 
-    click_on "Projects"
-    assert page.has_content?("Templates"), "Should be on Projects page"
-    assert page.has_content?("Das Projekt"), "New project should be in list"
+    click_on 'Projects'
+    assert page.has_content?('Templates'), 'Should be on Projects page'
+    assert page.has_content?('Das Projekt'), 'New project should be in list'
 
-    #click_on "Das Projekt"
-    #assert page.has_content?("All your base..."), "Update should have been saved"
+    # click_on "Das Projekt"
+    # assert page.has_content?("All your base..."), "Update should have been saved"
   end
 
-  test "search in projects" do
+  test 'search in projects' do
     visit '/'
-    click_on "Projects"
-    select "Rating", from: "sort"
-    fill_in "search", with: "Empty"
-    click_on "Search"
+    click_on 'Projects'
+    select 'Rating', from: 'sort'
+    fill_in 'search', with: 'Empty'
+    click_on 'Search'
 
-    assert page.has_content?("Empty Project"), "Search finds project"
-    assert page.has_no_content?("Breaking Things")
+    assert page.has_content?('Empty Project'), 'Search finds project'
+    assert page.has_no_content?('Breaking Things')
   end
 end

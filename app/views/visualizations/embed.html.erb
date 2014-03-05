@@ -1,6 +1,6 @@
 <script>
-  window.data = <%= raw @Data.to_json %>;
-  window.globals = <%= raw @Globals.to_json %>;
+  window.data = <%= raw @data.to_json %>;
+  window.globals = <%= raw @globals.to_json %>;
   window.icons = { 'Map_dark': "<%= path_to_image('vis_map_dark.png')%>",
                    'Map_light': "<%= path_to_image('vis_map_light.png')%>",
                    'Timeline_dark': "<%= path_to_image('vis_timeline_dark.png')%>",

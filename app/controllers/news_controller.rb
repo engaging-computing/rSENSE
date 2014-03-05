@@ -2,20 +2,19 @@ class NewsController < ApplicationController
   # GET /news
   # GET /news.json
   skip_before_filter :authorize, only: [:show, :index]
-  before_filter :authorize_admin, only: [:create,:update,:destroy]
+  before_filter :authorize_admin, only: [:create, :update, :destroy]
   include ApplicationHelper
-  
+
   def index
-    
     if @cur_user.try(:admin)
-      @news = News.order("created_at DESC").limit(10)
+      @news = News.order('created_at DESC').limit(10)
     else
-      @news = News.where({hidden: false}).order("created_at DESC").limit(10)
+      @news = News.where(hidden: false).order('created_at DESC').limit(10)
     end
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @news.map {|p| p.to_hash()} }
+      format.json { render json: @news.map { |p| p.to_hash } }
     end
   end
 
@@ -23,7 +22,7 @@ class NewsController < ApplicationController
   # GET /news/1.json
   def show
     @news = News.find(params[:id])
-    
+
     recur = ((params[:recur] == true) ? true : false) || false
 
     respond_to do |format|
@@ -35,13 +34,13 @@ class NewsController < ApplicationController
   # POST /news
   # POST /news.json
   def create
-    @news = News.new({user_id: @cur_user.id, title: "New Blog Entry"})
+    @news = News.new(user_id: @cur_user.id, title: 'New Blog Entry')
     respond_to do |format|
       if @news.save
         format.html { redirect_to @news, notice: 'News entry was successfully created.' }
         format.json { render json: @news.to_hash(false), status: :created, location: @news }
       else
-        format.html { render :status => 404 }
+        format.html { render status: 404 }
         format.json { render json: @news.errors, status: :unprocessable_entity }
       end
     end
@@ -57,7 +56,7 @@ class NewsController < ApplicationController
         format.html { redirect_to @news, notice: 'News was successfully updated.' }
         format.json { render json: {}, status: :ok }
       else
-        format.html { render action: "show" }
+        format.html { render action: 'show' }
         format.json { render json: @news.errors, status: :unprocessable_entity }
       end
     end
@@ -67,7 +66,7 @@ class NewsController < ApplicationController
   # DELETE /news/1.json
   def destroy
     @news = News.find(params[:id])
-   
+
     @news.media_objects.each do |m|
       m.destroy
     end
