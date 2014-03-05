@@ -65,5 +65,12 @@ if %w(development test).include? Rails.env
   end
 
   task(:default).clear
-  task default: [:test, :rubocop]
+
+  task :default do
+    aa = Rake::Task["rubocop"].invoke
+    puts "Result for rubocop: #{aa}"
+
+    bb = Rake::Task["test"].invoke
+    puts "Result for test: #{bb}"
+  end
 end
