@@ -15,4 +15,9 @@ class HomeControllerTest < ActionController::TestCase
     get :contact
     assert_response :success
   end
+  
+  test "should get privacy policy" do 
+    get :privacy_policy
+    assert_response :success
+  end
 end
