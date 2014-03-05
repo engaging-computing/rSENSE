@@ -54,6 +54,7 @@ class DataSetsController < ApplicationController
       format.html # edit.html.erb
       format.json { render json: ret }
     end
+
   end
 
   # POST /data_sets
@@ -200,6 +201,7 @@ class DataSetsController < ApplicationController
     respond_to do |format|
       format.html { send_file zip_file, type: 'file/zip', x_sendfile: true }
     end
+
   end
 
   # PUT /data_sets/field_matching
@@ -216,6 +218,9 @@ class DataSetsController < ApplicationController
         d.title = params[:title]
         d.project_id = project.id
         d.data = data
+	if not can_edit? (@project)
+	    d.key = session[:key_name]
+	end
       end
 
       if @cur_user.nil?

@@ -277,35 +277,3 @@ table#fields_table
     background-color: #dedede;
   }
 }
-
-//New & in testing
-.truncate{
-    overflow: hidden ;
-    margin-left: 20px ;
-    margin-right: 20px ;
-  
-}
-
-
-.data_set_edit{
-    float: right ;
-    margin-left: 10px ;  
-    margin-right: -5px ;
-  
-}
-.data_set_delete{
-    float: right ;
-     
-}
-
-.key_icon {
-    width: 32px ;
-    height: 32px ;
-    //margin-right: 100px ;
-  
-}
-.key_icon img{
-    width: 100% ;
-    height: 100% ; 
-    margin-right: -100px ;
-}

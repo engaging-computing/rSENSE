@@ -2,23 +2,18 @@ $ ->
   if namespace.controller is "projects" and namespace.action is "show"
     
     # Loads a QR code for the page
-    ($ '#exp_qr_tag').qrcode {
-      text: window.location.href,
-      height: ($ '#exp_qr_tag').width(),
-      width: ($ '#exp_qr_tag').width()
-    }
+    ($ '#exp_qr_tag').qrcode { text : window.location.href, height: ($ '#exp_qr_tag').width(), width: ($ '#exp_qr_tag').width() }
 
     # Control code for name popup box, Only for manual entry at the moment.
     if ($ '#name_box') isnt []
-      ($ '#name_box').modal()
-      selectFunc = ->
-        ($ '#name_name').select()
+      ($ '#name_box').modal();
+    selectFunc = ->
+      ($ '#name_name').select()
       setTimeout selectFunc, 300
 
-      ($ '#name_name').keyup (e) ->
-        if (e.keyCode == 13)
-          ($ '.name_button').click()
-
+    ($ '#name_name').keyup (e) ->
+      if (e.keyCode == 13)
+        ($ '.name_button').click()
       ($ '.name_button').click ->
         name = ($ '#name_name').val()
         data =
@@ -40,12 +35,12 @@ $ ->
       ($ '#doc_box').modal()
       false
       
-    ($ '#cancel_doc').click (e) ->
+    ($ '#cancel_doc').click (e)->
       e.preventDefault()
       ($ '#doc_box').modal 'hide'
 
     ($ '#doc_box').on 'hidden', ->
-      ($ '#doc_box').hide()
+        ($ '#doc_box').hide()
 
 
     # Does the liking and unliking when the thumbs-up icon is clicked
@@ -75,7 +70,7 @@ $ ->
       ($ '#datafile_input').click()
       false
 
-    # Auto-submit the file upload form when user hits the open button.
+    # Auto-submit the file upload form when user hits the open button.  
     ($ '#datafile_input').change ->
       ($ '#datafile_form').submit()
 
@@ -175,13 +170,13 @@ $ ->
           data_set:
             hidden: true
         success: =>
-          recolored = false
-          row = ($ @).parents('tr')
-          tbody = row.parents('tbody')
-          row.delete_row =>
-            row.remove()
-            tbody.recolor_rows(recolored)
-            recolored = true
+            recolored = false
+            row = ($ @).parents('tr')
+            tbody = row.parents('tbody')
+            row.delete_row =>
+              row.remove()
+              tbody.recolor_rows(recolored)
+              recolored = true
               
     ($ 'a.data_set_delete').click (e) ->
   
@@ -211,7 +206,7 @@ $ ->
         url: ($ @).attr('href')
         type: 'PUT'
         dataType: "json"
-        data:
+        data: 
           visualization:
             hidden: true
         success: =>

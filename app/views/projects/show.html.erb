@@ -102,6 +102,17 @@
                           <a role="menuitem" href="javascript:void(0);" id="check_mine"><i class="fa fa-user"></i> Mine</a>
                         </li>
                     <% end %>
+                <% if not @project.contrib_keys.nil? and can_edit? @project %> 
+                <% @project.contrib_keys.each do |c| %>
+        
+        <li role="presentation">
+                      <a role="menuitem" m-title="<%=c.name%>" href="javascript:void(0);" class="check_id"><i class="fa fa-square-o"></i> <%=c.name%> </a>
+                    </li>  
+                
+                
+                <%end%>
+                
+                <% end %>
                 </ul>
             </div>  
           </div>
@@ -110,21 +121,26 @@
             <tbody>
               <% @data_sets.each do |s| %>
                 <tr class="<%= cycle('feed-even', 'feed-odd')%> dataset" style="position:relative">
+                  <% if( not (s.key.nil?) and can_edit?( @project) )%>
+                  <td class="key_icon">
+          <div class="key" title="<%= s.key %>"> <%= image_tag("key.png", :size => "32x32") %> </div> 
+                  </td>
+                  <% else %>
                   <td class="gravatar">
                     <div class="gravatar">
-                      <%if Gravatar.new.url(s.owner, 32) != nil%>
-                        <%= image_tag Gravatar.new.url(s.owner, 32), :size => "32x32"%>
-                      <%end%>
+         <%# if Gravatar.new.url(s.owner, 32) != nil %> 
+                     <%= image_tag Gravatar.new.url(s.owner, 32), :size => "32x32"%>
+                  <%end%> 
+                    
                     </div>
                   </td>
-                  <td style="max-width: 110px"><div class="truncate"><%= link_to s.owner.name, user_path(s.owner) %></div></td>
-                  <td style="max-width: 140px"><div class="truncate" title="Created <%=s.created_at.strftime("%B %d, %Y")%>"><%= link_to s.title, "#{params[:id]}/data_sets/#{s.id}" %></div></td>
-		   <% unless @project.contrib_keys.nil? %>
-		    <td class="key_icon"> <%= image_tag("key.png") %> </td>
-		   <%end%>
+                  <td style="max-width: 60px"><div class="truncate"><%= link_to s.owner.name, user_path(s.owner) %></div></td>
+                  <!--<td style="width: 30px"> </td>  -->
+                  <td style="max-width: 200px"><div class="truncate" id = "data_set_desc" title="Created <%=s.created_at.strftime("%B %d, %Y")%>"> &nbsp;<%= link_to s.title, "#{params[:id]}/data_sets/#{s.id}" %></div></td>
+       
                   <td>
-		    <div class="controls" style="">
-		      
+        <div class="controls" style="">
+          
                       <% if can_edit? s %>
                          &nbsp;<a class="data_set_edit" href="<%= edit_data_set_path s %>">Edit</a>
                       <% end %>

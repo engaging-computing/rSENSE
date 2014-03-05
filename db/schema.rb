@@ -31,7 +31,6 @@ ActiveRecord::Schema.define(version: 20140226164331) do
     t.string   "googleDoc"
     t.boolean  "hidden",     default: false
     t.text     "data",       default: "[]",  null: false
-    t.string   "key"
   end
 
   create_table "fields", force: true do |t|

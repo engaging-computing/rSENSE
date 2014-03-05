@@ -96,7 +96,6 @@ class ProjectsController < ApplicationController
   # GET /projects/1/edit
   def edit
     @project = Project.find(params[:id])
-
     @new_contrib_key = ContribKey.new
     @new_contrib_key.project_id = @project.id
   end

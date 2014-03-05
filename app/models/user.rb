@@ -1,6 +1,7 @@
 require 'nokogiri'
 
 class User < ActiveRecord::Base
+  
   include ActionView::Helpers::SanitizeHelper
 
   validates_uniqueness_of :email, case_sensitive: false
