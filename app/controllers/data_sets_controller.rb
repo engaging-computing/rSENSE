@@ -64,8 +64,6 @@ class DataSetsController < ApplicationController
   def create
     @data_set = DataSet.new(data_set_params)
     @project  = @data_set.project
-    @data_set.key = session[:key_name]
-    @data_set.key.save
     if @project.lock? and !can_edit?(@project) and !has_key?(@project)
       redirect_to @project, alert: "Project is locked"
       return
@@ -79,7 +77,7 @@ class DataSetsController < ApplicationController
 
     respond_to do |format|
       if @data_set.save
-        format.html { redirect_to @data_set, notice: 'Project data set was successfully created.' }
+	format.html { redirect_to @data_set, notice: 'Project data set was successfully created.' }
         format.json { render json: @data_set.to_hash(false), status: :created, location: @data_set }
       else
         format.html do
@@ -151,7 +149,6 @@ class DataSetsController < ApplicationController
   # GET /projects/1/manualEntry
   def manualEntry
     @project = Project.find(params[:id])
-    
     if @project.lock? and !can_edit?(@project) and !has_key?(@project)
       redirect_to @project, alert: "Project is locked"
       return
@@ -162,7 +159,6 @@ class DataSetsController < ApplicationController
   # {data => { "20"=>[1,2,3,4,5], "21"=>[6,7,8,9,10], "22"=>['v','w','x','y','z'] }}
   def jsonDataUpload
     project = Project.find(params['id'])
-    
     if project.lock? and !can_edit?(project) and !has_key?(project)
       render text: "Project is locked", status: 401
       return
@@ -179,7 +175,10 @@ class DataSetsController < ApplicationController
         d.title = params[:title]
         d.project_id = project.id
         d.data = data
-      end
+	if not can_edit? (@project)
+	  d.key = session[:key_name]
+	end
+    end
 
       if dataset.save
         respond_to do |format|
@@ -221,6 +220,9 @@ class DataSetsController < ApplicationController
         d.title = params[:title]
         d.project_id = project.id
         d.data = data
+	if not can_edit? (@project)
+	    d.key = session[:key_name]
+	end
       end
 
       if @cur_user.nil? 
@@ -228,7 +230,8 @@ class DataSetsController < ApplicationController
           dataset.errors[:base] << "Must enter contributor name"
         else
           dataset.title += " - #{params[:contrib_name]}"
-        end
+	  
+	end
       end
 
       if dataset.errors[:base].empty? and dataset.save
@@ -262,9 +265,9 @@ class DataSetsController < ApplicationController
       uploader = FileUploader.new
       data_obj = uploader.generateObject(params[:file])
       @results = uploader.match_headers(project, data_obj)
-
+      
       @default_name = DataSet.get_next_name(project)
-
+      
       respond_to do |format|
         format.html
       end

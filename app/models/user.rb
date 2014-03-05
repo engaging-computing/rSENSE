@@ -54,7 +54,8 @@ class User < ActiveRecord::Base
       url: UrlGenerator.new.user_url(self),
       path: UrlGenerator.new.user_path(self),
       createdAt: self.created_at.strftime("%B %d, %Y"),
-      gravatar: self.email.to_s == "" ? nil : Gravatar.new.url(self,80)
+      gravatar: self.email.to_s == "" ? nil : Gravatar.new.url(self,80),
+      key: self.key 
     }
     
     if recurse

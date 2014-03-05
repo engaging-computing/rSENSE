@@ -7,14 +7,13 @@ $ ->
     # Control code for name popup box, Only for manual entry at the moment.
     if ($ '#name_box') isnt []
       ($ '#name_box').modal();
-      selectFunc = ->
-        ($ '#name_name').select()
+    selectFunc = ->
+      ($ '#name_name').select()
       setTimeout selectFunc, 300
 
-      ($ '#name_name').keyup (e) ->
-        if (e.keyCode == 13)
-          ($ '.name_button').click()
-
+    ($ '#name_name').keyup (e) ->
+      if (e.keyCode == 13)
+        ($ '.name_button').click()
       ($ '.name_button').click ->
         name = ($ '#name_name').val()
         data =
@@ -41,8 +40,7 @@ $ ->
       ($ '#doc_box').modal 'hide'
 
     ($ '#doc_box').on 'hidden', ->
-        ($ '#doc_box').hide()
-
+      ($ '#doc_box').hide()
 
     # Does the liking and unliking when the thumbs-up icon is clicked
     ($ '.liked_status').click ->
@@ -112,41 +110,50 @@ $ ->
 
     #Select all/none check box in the data sets box
     ($ "a#check_all").click ->
-        root = ($ '#dataset_table')
-        root.find("[id^=ds_]").each (i,j) =>
-          ($ j).prop("checked",true)
-        ($ '#vis_button').prop("disabled",false)
-        ($ '#export_button').prop("disabled",false)
+      root = ($ '#dataset_table')
+      root.find("[id^=ds_]").each (i,j) =>
+        ($ j).prop("checked",true)
+      ($ '#vis_button').prop("disabled",false)
+      ($ '#export_button').prop("disabled",false)
 
     ($ "a#uncheck_all").click ->
-        root = ($ '#dataset_table')
-        root.find("[id^=ds_]").each (i,j) =>
-            ($ j).prop("checked",false)
-        ($ '#vis_button').prop("disabled",true)
-        ($ '#export_button').prop("disabled",true)
+      root = ($ '#dataset_table')
+      root.find("[id^=ds_]").each (i,j) =>
+        ($ j).prop("checked",false)
+      ($ '#vis_button').prop("disabled",true)
+      ($ '#export_button').prop("disabled",true)
 
     ($ "a#check_mine").click ->
-        root = ($ '#dataset_table')
-        root.find("[id^=ds_]").each (i,j) =>
-            ($ j).prop("checked",false)
-        root.find(".mine").each (i,j) =>
-            ($ j).prop("checked",true)
+      root = ($ '#dataset_table')
+      root.find("[id^=ds_]").each (i,j) =>
+        ($ j).prop("checked",false)
+      root.find(".mine").each (i,j) =>
+        ($ j).prop("checked",true)
         if root.find(".mine").length isnt 0
           ($ '#vis_button').prop("disabled",false)
           ($ '#export_button').prop("disabled",false)
         else
           ($ '#vis_button').prop("disabled",true)
           ($ '#export_button').prop("disabled",true)
+    
+    #Selects Data Sets based upon its corresponding Contributor Key
+    ($ "a.check_id").click -> 
+      root = ($ '#dataset_table')
+      root.find("[id^=ds_]").each (i,j) => 
+        ($ j).prop("checked",false) 
+      root.find('tr').each (i,j) =>
+        if ($ j).find('.key').attr('title') is ($ this).attr('m-title')
+          ($ j).find("[id^=ds_]").prop('checked',true)
 
-    #Turn off visualize button on page load, and when nothings checked
+    #Turn off visualize button on page load, and when nothings checked 
     check_for_selection = =>
       should_disable = true
-      ($ document).find("[id^=ds_]").each (i,j) =>
-        if(($ j).is(":checked"))
-          should_disable = false
-        else
-          ($ '#check_selector').prop("checked",false)
-          ($ '#export_button').prop("disabled",false)
+    ($ document).find("[id^=ds_]").each (i,j) => 
+      if (($ j).is(":checked")) 
+        should_disable = false
+      else
+        ($ '#check_selector').prop("checked",false) 
+        ($ '#export_button').prop("disabled",false)
         ($ '#vis_button').prop("disabled", should_disable)
         ($ '#export_button').prop("disabled", should_disable)
         
