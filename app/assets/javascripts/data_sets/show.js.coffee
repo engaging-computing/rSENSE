@@ -8,8 +8,12 @@ $ ->
     mongo_data = window.mongo_data
 
     sort[field.id] = [] for field in fields
-
-    metadata.push {name: field['name'], label: field['name'], dataType:'string', id: field['id'], editable:'true'} for field in fields
+    
+    for field in fields
+      metadata.push {
+        name: field['name'], label: field['name'], dataType:'string',
+        id: field['id'], editable:'true'
+      }
 
     for row in mongo_data
       do (row) ->
