@@ -278,7 +278,7 @@ class VisualizationsController < ApplicationController
       rel_vis.push 'Timeline'
     end
 
-    if field_count[NUMBER_TYPE] > 1 and format_data.count > 1
+    if field_count[NUMBER_TYPE] > 0 and format_data.count > 1
       rel_vis.push 'Scatter'
     end
 
