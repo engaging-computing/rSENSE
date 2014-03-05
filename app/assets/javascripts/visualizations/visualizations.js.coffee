@@ -2,11 +2,11 @@ $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis","show"]
     
     ### Maximize event ###
-    fullscreen = () ->      
-      ($ '.navbar').hide()  
+    fullscreen = () ->
+      ($ '.navbar').hide()
       ($ '#dataset_info').hide()
-      ($ '#title_row').hide() 
-      ($ '.footer').hide() 
+      ($ '#title_row').hide()
+      ($ '.footer').hide()
       ($ '.mainContent').data('padding',  ($ '.mainContent').parent().css('padding'))
       ($ '.mainContent').parent().css('padding',"")
 
@@ -14,7 +14,7 @@ $ ->
     unfullscreen = () ->
       ($ '.navbar').show()
       ($ '#dataset_info').show()
-      ($ '#title_row').show() 
+      ($ '#title_row').show()
       ($ '.footer').show()
       ($ '.mainContent').parent().css('padding',($ '.mainContent').data('padding'))
     
@@ -22,15 +22,15 @@ $ ->
     ($ '#fullscreen-viz').click ->
       icon = ($ this).find('i')
       if (globals.fullscreen? and globals.fullscreen)
-        window.globals.fullscreen = false;
+        window.globals.fullscreen = false
         icon.removeClass('icon-resize-small')
         icon.addClass('icon-resize-full')
         unfullscreen()
       else
-        window.globals.fullscreen = true;
+        window.globals.fullscreen = true
         icon.removeClass('icon-resize-full')
         icon.addClass('icon-resize-small')
-        fullscreen() 
+        fullscreen()
       ($ window).trigger('resize')
     
     

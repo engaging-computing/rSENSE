@@ -1,4 +1,4 @@
-# Place all the behaviors and hooks related to the users show page here.    
+# Place all the behaviors and hooks related to the users show page here.
 $ ->
   if namespace.controller is "users" and namespace.action is "show"
         
@@ -27,9 +27,9 @@ $ ->
 
         
         filter_ajax_params = ($ '#contribution_search').serialize()
-        filter_ajax_params +="&filters=#{filter_selection}"
+        filter_ajax_params += "&filters=#{filter_selection}"
 
-        globals.arrowsClicked = false;
+        globals.arrowsClicked = false
         
         $.ajax
           url: "/users/#{($ '#contribution_search').attr('data-user-id')}/contributions"
@@ -38,14 +38,15 @@ $ ->
           success: (filtered_html) ->
             $("#contributions").html filtered_html
             if (parseInt($("#mparams").attr("totalPages")) > 0)
-              $("#pageLabel").html "Page " + (parseInt( $("#page").val(), 10 ) + 1) + " of " + $("#mparams").attr("totalPages")
-            else 
+              $("#pageLabel").html "Page " + (parseInt( $("#page").val(), 10 ) +
+                1) + " of " + $("#mparams").attr("totalPages")
+            else
               $("#pageLabel").html "No Contributions"
             if (parseInt( $("#page").val(), 10 ) == 0)
               $(".pagebck").hide()
-            else 
+            else
               $(".pagebck").show()
-            if($("#mparams").attr("lastPage")=="true" || parseInt($("#mparams").attr("totalPages")) == 0) 
+            if($("#mparams").attr("lastPage") == "true" || parseInt($("#mparams").attr("totalPages")) == 0)
               $(".pagefwd").hide()
             else
               $(".pagefwd").show()
@@ -63,7 +64,7 @@ $ ->
       ajax_params = ($ '#contribution_search').serialize()
       ajax_params += "&filters=#{($ '#user_filter .active').text()}"
         
-      globals.arrowsClicked = false;
+      globals.arrowsClicked = false
                 
       $.ajax
         url: "/users/#{($ '#contribution_search').attr('data-user-id')}/contributions"
@@ -72,14 +73,15 @@ $ ->
         success: (dat) ->
           $("#contributions").html dat
           if (parseInt($("#mparams").attr("totalPages")) > 0)
-            $("#pageLabel").html "Page " + (parseInt( $("#page").val(), 10 ) + 1) + " of " + $("#mparams").attr("totalPages")
-          else 
+            $("#pageLabel").html "Page " + (parseInt( $("#page").val(), 10 ) + 1) +
+              " of " + $("#mparams").attr("totalPages")
+          else
             $("#pageLabel").html "No Contributions"
           if (parseInt( $("#page").val(), 10 ) == 0)
             $(".pagebck").hide()
-          else 
+          else
             $(".pagebck").show()
-          if($("#mparams").attr("lastPage")=="true" || parseInt($("#mparams").attr("totalPages")) == 0) 
+          if($("#mparams").attr("lastPage") == "true" || parseInt($("#mparams").attr("totalPages")) == 0)
             $(".pagefwd").hide()
           else
             $(".pagefwd").show()
@@ -92,15 +94,15 @@ $ ->
     $("#contribution_search").submit()
     
     $(".pagefwd").click ->
-      globals.arrowsClicked = true;
+      globals.arrowsClicked = true
       pageNum = parseInt( $("#page").val(), 10 )
-      $("#page").val(""+(pageNum+1))
+      $("#page").val("" + (pageNum + 1))
       $("#contribution_search").submit()
       
     $(".pagebck").click ->
-      globals.arrowsClicked = true;
+      globals.arrowsClicked = true
       pageNum = parseInt( $("#page").val(), 10 )
-      $("#page").val(""+(pageNum-1))
+      $("#page").val("" + (pageNum - 1))
       $("#contribution_search").submit()
         
     ###

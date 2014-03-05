@@ -64,9 +64,17 @@ if %w(development test).include? Rails.env
     task.formatters = ['fuubar']
   end
 
-  task(:default).clear
+  task(:coffeelint).clear
+  task :coffeelint do
+    conf = Rails.root.join('.coffeelint')
+    success = Coffeelint.run_test_suite('app', config_file: conf.to_s) and 
+      Coffeelint.run_test_suite('spec',  config_file: conf.to_s) 
+    fail "Goats!" unless success
+  end
 
+  task(:default).clear
   task :default do
+    Rake::Task["coffeelint"].invoke
     Rake::Task["rubocop"].invoke
     Rake::Task["test"].invoke
   end
