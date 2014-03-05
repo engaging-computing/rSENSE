@@ -56,3 +56,26 @@ task :load do
   system("mv public/media/data.yml db")
   system("rake db:data:load")
 end
+
+if %w(development test).include? Rails.env
+  require 'rubocop/rake_task'
+
+  Rubocop::RakeTask.new do |task|
+    task.formatters = ['fuubar']
+  end
+
+  task(:coffeelint).clear
+  task :coffeelint do
+    conf = Rails.root.join('.coffeelint')
+    success = Coffeelint.run_test_suite('app', config_file: conf.to_s) and 
+      Coffeelint.run_test_suite('spec',  config_file: conf.to_s) 
+    fail "Goats!" unless success
+  end
+
+  task(:default).clear
+  task :default do
+    Rake::Task["coffeelint"].invoke
+    Rake::Task["rubocop"].invoke
+    Rake::Task["test"].invoke
+  end
+end

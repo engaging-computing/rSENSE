@@ -3,7 +3,7 @@ module Api
     class DataSetsController < ActionController::DataSetsController
       skip_before_filter :authorize
       skip_before_filter :authorize_allow_key
-      before_filter :set_user, :only => [:edit,:jsonDataUpload]
+      before_filter :set_user, only: [:edit, :jsonDataUpload]
 
       def show
         super
@@ -16,7 +16,6 @@ module Api
       def jsonDataUpload
         super
       end
-      
     end
   end
 end

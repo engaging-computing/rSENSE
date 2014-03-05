@@ -7,16 +7,17 @@ class GetMediaFromAmazon < ActiveRecord::Migration
 
       src = mo.read_attribute(:src)
 
-      if src && src =~ /amazonaws/ && !File.exists?(mo.file_name)
+      if src && src =~ /amazonaws/ && !File.exist?(mo.file_name)
         # The object
         re = HTTParty.get(src)
-        print "."; STDOUT.flush
+        print '.'
+        STDOUT.flush
 
         if re.code == 200
-          File.open(mo.file_name, "wb") do |ff|
+          File.open(mo.file_name, 'wb') do |ff|
             ff.write(re.body)
           end
-        
+
           mo.add_tn
         end
       end
@@ -24,10 +25,10 @@ class GetMediaFromAmazon < ActiveRecord::Migration
       mo.save!
     end
 
-    puts " ="
+    puts ' ='
   end
 
   def down
-    puts "This is a lie. Nothing is getting reversed."
+    puts 'This is a lie. Nothing is getting reversed.'
   end
 end

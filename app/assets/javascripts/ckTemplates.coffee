@@ -7,7 +7,7 @@ present in 'all' will always be used as a default.
 
 $ ->
   if namespace.controller is "projects"
-    CKEDITOR.addTemplates "all", 
+    CKEDITOR.addTemplates "all",
       templates:
         [{
           title: "Project Template"
@@ -35,7 +35,9 @@ $ ->
                 <p>SOURCE</p>
                 <p>
                   If the project contains an existing data set, please specify the source of
-                  the data, including a web link or bibliographical reference. (E.g., <a href="http://www.crwa.org/water_quality.html">http://www.crwa.org/water_quality.html</a>)
+                  the data, including a web link or bibliographical reference.
+                  (E.g., <a href="http://www.crwa.org/water_quality.html">
+                  http://www.crwa.org/water_quality.html</a>)
                 </p>
                 """
 #         },{
@@ -46,12 +48,12 @@ $ ->
         
   if namespace.controller is "visualizations" and namespace.action is "displayVis"
     #add dataset templates here
-    CKEDITOR.addTemplates "all", 
+    CKEDITOR.addTemplates "all",
       templates:
         [{
           title: "Dataset Template"
           description: "Basic template for describing a dataset."
-          html: """  
+          html: """
                 <p>COLLECTION METHOD</p>
                 <p>
                   Please describe how, when, and where these data were collected. (E.g. This
@@ -63,14 +65,16 @@ $ ->
                 <p>DATA SOURCE</p>
                 <p>
                   For existing data sets, please specify where the data were obtained. (E.g.
-                  These data were provided online by the Charles River Watershed Association. <a href="http://www.crwa.org/water_quality.html">http://www.crwa.org/water_quality.html</a>)
+                  These data were provided online by the Charles River Watershed Association.
+                  <a href="http://www.crwa.org/water_quality.html">
+                  http://www.crwa.org/water_quality.html</a>)
                 </p>
                 """
         }]
     
   if namespace.controller is "visualizations" and namespace.action is "show"
     #add saved vis templates here
-    CKEDITOR.addTemplates "all", 
+    CKEDITOR.addTemplates "all",
       templates:
         [{
           title: "Visualization Template"
@@ -103,12 +107,12 @@ $ ->
     
   if namespace.controller is "users"
     #add bio templates here
-    CKEDITOR.addTemplates "all", 
+    CKEDITOR.addTemplates "all",
       templates:
         [{
           title: "User Template"
           description: "Basic template for user biography."
-          html: """  
+          html: """
                 <p>INSTITUTIONAL AFFILIATION</p>
                 <p>
                   Please describe your institutional affiliation(s). (E.g., I teach
@@ -127,7 +131,7 @@ $ ->
     
   if namespace.controller is "tutorials"
     #add tutorial templates here
-    CKEDITOR.addTemplates "all", 
+    CKEDITOR.addTemplates "all",
       templates:
         [{
           title: "Blank Template"
@@ -138,7 +142,7 @@ $ ->
     
   if namespace.controller is "news"
     #add news templates here
-    CKEDITOR.addTemplates "all", 
+    CKEDITOR.addTemplates "all",
       templates:
         [{
           title: "Blank Template"
