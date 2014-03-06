@@ -1,6 +1,6 @@
 $ ->
   $(".ddmenu").on
-    "mouseenter": -> 
+    "mouseenter": ->
       $(this).prev().css('background-color', '#649ce5')
-    "mouseleave": -> 
+    "mouseleave": ->
       $(this).prev().css('background-color', '')

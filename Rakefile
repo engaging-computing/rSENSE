@@ -67,8 +67,10 @@ if %w(development test).include? Rails.env
   task(:coffeelint).clear
   task :coffeelint do
     conf = Rails.root.join('.coffeelint')
-    success = Coffeelint.run_test_suite('app', config_file: conf.to_s) and 
-      Coffeelint.run_test_suite('spec',  config_file: conf.to_s) 
+    success = true
+    ['app', 'lib'].each do |dd|
+      success &&= Coffeelint.run_test_suite(dd, config_file: conf.to_s)
+    end
     fail "Goats!" unless success
   end
 

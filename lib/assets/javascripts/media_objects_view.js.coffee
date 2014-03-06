@@ -1,7 +1,7 @@
 $ ->
   ($ '.upload_media').find('input:file').change (event) ->
-      event.preventDefault()
-      ($ this).parents('form').submit()
+    event.preventDefault()
+    ($ this).parents('form').submit()
      
   ($ '#filechooser').click (event) ->
     event.preventDefault()
@@ -13,10 +13,10 @@ $ ->
   img_selector_click = (obj) ->
     root = ($ '#media_object_list')
     type_id = obj.attr("obj_id")
-    type = root.attr("type") 
+    type = root.attr("type")
     mo = if obj.prop("checked") == false then null else obj.attr("mo_id")
 
-    data={}
+    data = {}
     data[type] = {}
     data[type]["featured_media_id"] = mo
  
@@ -36,7 +36,7 @@ $ ->
     
   #Delete Media Object
   delete_media_object = (obj) ->
-   if helpers.confirm_delete obj.attr('name')
+    if helpers.confirm_delete obj.attr('name')
       $.ajax
         url: obj.attr("href")
         type: 'DELETE'

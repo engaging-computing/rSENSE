@@ -2,17 +2,17 @@ $ ->
   ($ 'a.menu_edit').click (e) ->
     e.preventDefault()
     
-    #Root div that everything should be in.
+    # Root div that everything should be in.
     root = ($ @).parents('span.edit_menu')
     
-    #value should be the current value of the info box
+    # value should be the current value of the info box
     val = root.attr('value')
     val = val.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;")
     
-    #href should be /type/id e.g. /users/jim
+    # href should be /type/id e.g. /users/jim
     href = ($ @).attr('href')
     
-    #The thing that will become a input box
+    # The thing that will become a input box
     info_box = root.find('.info_text')
     info_box.html("""
       <div class='input-group'>
@@ -23,10 +23,10 @@ $ ->
       </div>""")
     info_box.find('.info_edit_box').focus()
     
-    #Hide the edit link
+    # Hide the edit link
     root.find('span.dropdown').hide()
    
-    #Save on enter
+    # Save on enter
     info_box.on 'keypress', (event) ->
       code = if event.keyCode then event.keyCode else event.which
       if code == 13
@@ -35,12 +35,12 @@ $ ->
     info_box.find('.menu_save_link').click (e) ->
       e.preventDefault()
       
-      #Build the data object to send to the controller
+      # Build the data object to send to the controller
       type = root.attr('type')
       field_name = root.attr('field')
       edit_box = root.find('.info_edit_box')
       value = edit_box.val()
-      data={}
+      data = {}
       data[type] = {}
       data[type][field_name] = value
       
@@ -49,22 +49,22 @@ $ ->
       root.find('span.btn').addClass 'disabled'
       root.find('span.btn').button 'toggle'
         
-      #Make the request to update 
+      # Make the request to update
       $.ajax
         url: ($ @).attr('href')
         type: 'PUT'
         dataType: "json"
-        data: 
+        data:
           data
         success: =>
                   
-          #Swap save and edit links
+          # Swap save and edit links
           root.find('span.dropdown').show()
           ($ @).hide()
           
           root.attr 'value', value
         
-          #Make it a link or not
+          # Make it a link or not
           if root.attr('make_link') == 'true'
             info_box.html("<a href='#{($ @).attr('href')}'>#{value}</a>")
           else if root.attr('make_link') == 'false'
@@ -97,7 +97,7 @@ $ ->
       url: ($ @).attr('href')
       type: 'PUT'
       dataType: "json"
-      data: 
+      data:
         data
       success: =>
         root.find('li.menu_hider').show()
@@ -118,7 +118,7 @@ $ ->
       url: ($ @).attr('href')
       type: 'PUT'
       dataType: "json"
-      data: 
+      data:
         data
       success: =>
         window.location = root.attr("escape_link")
@@ -139,7 +139,7 @@ $ ->
         success: =>
           window.location = root.attr("escape_link")
 
-  ### Curate Project###
+  ### Curate Project ###
   ($ 'a.menu_curate').click (e) ->
     e.preventDefault()
     root = ($ @).parents('span.edit_menu')
@@ -149,7 +149,7 @@ $ ->
       dataType: 'json'
       data:
         project:
-            curated: true
+          curated: true
       success: =>
         root.find('li.menu_unlock').show()
         root.find('li.menu_lock').hide()
@@ -160,7 +160,7 @@ $ ->
       error: (msg) =>
         console.log msg
         
-  ### Uncurate Project###
+  ### Uncurate Project ###
   ($ 'a.menu_uncurate').click (e) ->
     e.preventDefault()
     root = ($ @).parents('span.edit_menu')
@@ -187,7 +187,7 @@ $ ->
       dataType: 'json'
       data:
         project:
-            lock: true
+          lock: true
       success: =>
         root.find('li.menu_unlock').show()
         root.find('li.menu_lock').hide()
@@ -196,7 +196,7 @@ $ ->
       error: (msg) =>
         console.log msg
         
-  ### UNLOCK PROJECT ###      
+  ### UNLOCK PROJECT ###
   ($ 'a.menu_unlock').click (e) ->
     e.preventDefault()
     root = ($ @).parents('span.edit_menu')
@@ -206,13 +206,13 @@ $ ->
       dataType: 'json'
       data:
         project:
-            lock: false
+          lock: false
       success: =>
         root.find('li.menu_lock').show()
         root.find('li.menu_unlock').hide()
         ($ '#lock_notice').hide()
       error: (msg) =>
-        console.log msg 
+        console.log msg
         
   ($ 'a.summary_edit').click (e) ->
     e.preventDefault()
@@ -224,8 +224,11 @@ $ ->
       <div class="row">
         <div class="col-md-8">
           <div class='input-group'>
-            <textarea id="appendInput" autofocus class='form-control' rows='3' style='resize:none;overflow:hidden' maxlength='256'>#{summary_text.trim()}</textarea>
-            <span class='input-group-btn btn btn-success summary_save' href=''><i class='fa fa-floppy-o'></i></span>
+            <textarea id="appendInput" autofocus class='form-control'
+              rows='3' style='resize:none;overflow:hidden' maxlength='256'>
+                #{summary_text.trim()}</textarea>
+            <span class='input-group-btn btn btn-success summary_save' href=''>
+              <i class='fa fa-floppy-o'></i></span>
           </div>
         </div>
       </div>
@@ -245,6 +248,6 @@ $ ->
         dataType: 'json'
         data: data
         success: =>
-           ($ @).parents('.summary').html(txt)
+          ($ @).parents('.summary').html(txt)
         error: (msg) =>
           console.log msg
