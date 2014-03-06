@@ -1,5 +1,5 @@
 $ ->
-  ($ '.info_edit_link').click (e)->
+  ($ '.info_edit_link').click (e) ->
     e.preventDefault()
     
     #Root div that everything should be in.
@@ -33,7 +33,7 @@ $ ->
         ($ this).find('.info_save_link').trigger 'click'
     
     #Save button
-    info_box.find('.info_save_link').click (e)->
+    info_box.find('.info_save_link').click (e) ->
       e.preventDefault()
      
       #Build the data object to send to the controller
@@ -41,7 +41,7 @@ $ ->
       field_name = root.attr('field')
       edit_box = root.find('.info_edit_box')
       value = edit_box.val()
-      data={}
+      data = {}
       data[type] = {}
       data[type][field_name] = value
       
@@ -52,7 +52,7 @@ $ ->
 
       edit_box.popover "destroy"
       
-      #Make the request to update 
+      #Make the request to update
       $.ajax
         url: href
         type: "PUT"

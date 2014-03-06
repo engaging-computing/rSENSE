@@ -4,7 +4,7 @@ $ ->
   ###
   Timestamp Parser
     This supports the date and time portions of http://en.wikipedia.org/wiki/ISO_8601
-    except it requires a full date (cannot ommit month or day). In addition, it 
+    except it requires a full date (cannot ommit month or day). In addition, it
     some alternate seperator characters and AM/PM which are not supported in 8601.
     
     Also supports giving a year as an integer.
@@ -28,7 +28,8 @@ $ ->
         ret = parseDate({}, str)
         ret = parseTime(ret[0], ret[1])
         
-        d = new Date(Date.UTC ret[0].year, ret[0].month, ret[0].day, ret[0].hour, ret[0].minute, ret[0].second, ret[0].milisecond)
+        d = new Date(Date.UTC ret[0].year, ret[0].month, ret[0].day,
+          ret[0].hour, ret[0].minute, ret[0].second, ret[0].milisecond)
         # Make sure the year was interpretted correctly
         d.setUTCFullYear(ret[0].year)
         
@@ -60,21 +61,21 @@ $ ->
     # Year
     ym = matchNoSep(str, /[\-\+]?\d+/)
     if ym is null
-      throw 'fail'
+      throw new Error('fail')
       
     res.year = Number ym[0]
     str = str.substr ym[0].length
     # Month
     mm = matchWithSep(str, /(\d{1,2}|[a-zA-Z]{3})/)
     if mm is null
-      throw 'fail'
+      throw new Error('fail')
       
     res.month = (new Date mm[1] + "/20 1970").getMonth()
     str = str.substr mm[0].length
     # Day
     dm = matchWithSep(str, /(\d+)/)
     if dm is null
-      throw 'fail'
+      throw new Error('fail')
       
     res.day = Number dm[1]
     str = str.substr dm[0].length
