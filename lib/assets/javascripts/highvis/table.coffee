@@ -32,29 +32,29 @@ $ ->
     class window.Table extends BaseVis
       constructor: (@canvas) ->
 
-        #Removes nulls from the table
+      #Removes nulls from the table
       nullFormatter = (cellvalue, options, rowObject) ->
         cellvalue = "" if isNaN(cellvalue) or cellvalue is null
         cellvalue
 
-        #Formats tables dates properly
+      #Formats tables dates properly
       dateFormatter = (cellvalue, options, rowObject) ->
         globals.dateFormatter cellvalue
 
-        #Resizes the table properly
+      #Resizes the table properly
       ($ '#control_hide_button').click ->
-            #Calulate the new width from these parameters
+        #Calulate the new width from these parameters
         containerSize = ($ '#viscontainer').width()
         hiderSize     = ($ '#controlhider').outerWidth()
         controlSize   = ($ '#controldiv').width()
 
-            #Check if you are opening or closing the controls
+        #Check if you are opening or closing the controls
         controlSize = if ($ '#controldiv').width() <= 0
           globals.CONTROL_SIZE
         else
           0
 
-            #Set the grid to the correct size so the animation is smooth
+        #Set the grid to the correct size so the animation is smooth
         newWidth = containerSize - (hiderSize + controlSize + 10)
         newHeight = ($ '#viscontainer').height() - ($ '#visTabList').outerHeight()
         if ($ "#data_table")?
@@ -62,31 +62,31 @@ $ ->
           ($ "#data_table").setGridWidth(newWidth).setGridHeight(newHeight - 75)
 
       start: ->
-            #Make table visible? (or something)
+        #Make table visible? (or something)
         ($ '#' + @canvas).show()
 
         ($ "##{@canvas}").css 'padding-top', 2
         ($ "##{@canvas}").css 'padding-bottom', 2
 
-            #Calls update
+        #Calls update
         super()
 
-        #Gets called when the controls are clicked and at start
+      #Gets called when the controls are clicked and at start
       update: ->
 
-            #Updates controls by default
+        #Updates controls by default
         ($ '#' + @canvas).html('')
         ($ '#' + @canvas).append '<table id="data_table" class="table table-striped"></table>'
 
-            #Build the headers for the table
+        #Build the headers for the table
         headers = for field in data.fields
           fieldTitle(field)
 
-            #Make valid id's for the colModel
+        #Make valid id's for the colModel
         colIds = for header in headers
           header.replace(/\s+/g, '_').toLowerCase()
 
-            #Build the data for the table
+        #Build the data for the table
         visibleGroups = for group, groupIndex in data.groups when groupIndex in globals.groupSelection
           group
 
@@ -97,7 +97,7 @@ $ ->
             line[colIds[fieldIndex]] = dat
           rows.push(line)
 
-            #Make sure the sort type for each column is appropriate, and save the time column
+        #Make sure the sort type for each column is appropriate, and save the time column
         timeCol = ""
         columns = for colId, colIndex in colIds
           if (data.fields[colIndex].typeID is data.types.TEXT)
@@ -108,17 +108,17 @@ $ ->
           else
             { name: colId, id: colId, sorttype:'number', formatter: nullFormatter }
 
-            #Set sort state to default none existed
+        #Set sort state to default none existed
         @sortName ?= ''
         @sortType ?= ''
 
-            #Set default search to empty string
+        #Set default search to empty string
         @searchParams ?= {}
 
-            #Add the nav bar
+        #Add the nav bar
         ($ '#table_canvas').append '<div id="toolbar_bottom"></div>'
 
-            #Prepare the table to grid parameters
+        #Prepare the table to grid parameters
         @table = jQuery("#data_table").jqGrid({
           colNames: headers,
           colModel: columns,
@@ -148,15 +148,15 @@ $ ->
         @table.jqGrid('navGrid','#toolbar_bottom',{del:false,add:false,edit:false,search:false})
         @table.jqGrid('filterToolbar', {stringResult: true, searchOnEnter: false, defaultSearch:'cn'})
 
-            #Set the time column formatters
+        #Set the time column formatters
         timePair = {}
         timePair[timeCol] = dateFormatter
         setFilterFormatters(timePair)
 
-            #Set the sort parameters
+        #Set the sort parameters
         @table.sortGrid(@sortName, true, @sortType)
 
-            #Restore the search filters
+        #Restore the search filters
         if @searchParams?
           for column in @searchParams
             inputId = "gs_" + column.field
@@ -170,19 +170,18 @@ $ ->
         ($ '#' + @canvas).hide()
 
         if @table?
-
-            #Save the sort state
+          #Save the sort state
           @sortName = @table.getGridParam('sortname')
           @sortType = @table.getGridParam('sortorder')
 
-            #Save the table filters
+          #Save the table filters
           if @table.getGridParam('postData').filters?
             @searchParams = jQuery.parseJSON(@table.getGridParam('postData').filters).rules
 
       resize: (newWidth, newHeight, aniLength) ->
         foo = () ->
-            #In the case that this was called by the hide button, this gets called a second time
-            #needlessly, but doesn't effect the overall performance
+          #In the case that this was called by the hide button, this gets called a second time
+          #needlessly, but doesn't effect the overall performance
           ($ '#table_canvas').height(newHeight - 5)
           ($ '#data_table').setGridWidth(newWidth).setGridHeight(newHeight - 75)
 
@@ -196,17 +195,18 @@ $ ->
       serializationCleanup: ->
         delete @table
 
-        ###
+      ###
       JQGrid time formatting (to implement search post formatting)
       http://stackoverflow.com/questions/5822302/how-to-do-local-search-on-formatted-column-value-in-jqgrid
       Credits to Oleg and adam-p
       Converted to coffee script by Jeremy Poulin
-        ###
-        # Causes local filtering to use custom formatters for specific columns.
-        # formatters is a dictionary of the form:
-        # { "column_name_1_needing_formatting": "column1FormattingFunctionName",
-        #   "column_name_2_needing_formatting": "column2FormattingFunctionName" }
-        #Note that subsequent calls will *replace* all formatters set by previous calls.
+      
+      Causes local filtering to use custom formatters for specific columns.
+      formatters is a dictionary of the form:
+      { "column_name_1_needing_formatting": "column1FormattingFunctionName",
+        "column_name_2_needing_formatting": "column2FormattingFunctionName" }
+      Note that subsequent calls will *replace* all formatters set by previous calls.
+      ###
       setFilterFormatters = (formatters) ->
         columnUsesCustomFormatter = (column_name) ->
           for col of formatters
@@ -238,5 +238,8 @@ $ ->
             return phrase.join("")
 
           return result
+        
+      clip = () ->
+      
 
     globals.table = new Table "table_canvas"
