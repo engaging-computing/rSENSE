@@ -213,7 +213,7 @@ $ ->
             
             #Set axis title
             title =
-              text: fieldTitle data.fields[@xAxis]
+                text: fieldTitle data.fields[@xAxis]
             @chart.xAxis[0].setTitle title, false
 
             #Compute max bounds if there is no user zoom
@@ -282,12 +282,12 @@ $ ->
                     @chart.addSeries options, false
 
             if @isZoomLocked()
-              @updateOnZoom = 0
-              @setExtremes()
-              ($ '#zoomResetButton').removeClass("disabled")
+                @updateOnZoom = 0
+                @setExtremes()
+                ($ '#zoomResetButton').removeClass("disabled")
             else
-              @resetExtremes
-              ($ '#zoomResetButton').addClass("disabled")
+                @resetExtremes
+                ($ '#zoomResetButton').addClass("disabled")
 
             @chart.redraw()
 
@@ -296,22 +296,22 @@ $ ->
 
             #Disable/enable all of the saved regressions as necessary
             for regression in @savedRegressions
-              #Filter out the ones that should be enabled.
-              if regression.field_indices[0] == @xAxis \ #X indices must match.
-              && "#{regression.field_indices[2]}" == "#{globals.groupSelection}" \ #Compare the arrays without comparing them.
-              && globals.fieldSelection.indexOf(regression.field_indices[1]) != -1 #Y axis must be present
-                #Add the regression to the chart
-                @chart.addSeries(regression.series)
-                #Enabled the class by removing the disabled class
-                ($ 'tr#row_' + regression.series.name.id).removeClass('regression_row_disabled')
-              else
-                #Prevent duplicate add classes
-                if ($ 'tr#row_' + regression.series.name.id).hasClass('regression_row_disabled') is false
-                  ($ 'tr#row_' + regression.series.name.id).addClass('regression_row_disabled')
+                #Filter out the ones that should be enabled.
+                if regression.field_indices[0] == @xAxis \ #X indices must match.
+                && "#{regression.field_indices[2]}" == "#{globals.groupSelection}" \ #Compare the arrays without comparing them.
+                && globals.fieldSelection.indexOf(regression.field_indices[1]) != -1 #Y axis must be present
+                    #Add the regression to the chart
+                    @chart.addSeries(regression.series)
+                    #Enabled the class by removing the disabled class
+                    ($ 'tr#row_' + regression.series.name.id).removeClass('regression_row_disabled')
+                else
+                    #Prevent duplicate add classes
+                    if ($ 'tr#row_' + regression.series.name.id).hasClass('regression_row_disabled') is false
+                        ($ 'tr#row_' + regression.series.name.id).addClass('regression_row_disabled')
 
             #Display the table header if necessary    
             if ($ '#regressionTableBody > tr').length > 0
-              ($ 'tr#regressionTableHeader').show()
+                ($ 'tr#regressionTableHeader').show()
             else ($ 'tr#regressionTableHeader').hide()
 
         ###
@@ -372,17 +372,17 @@ $ ->
 
             ($ '#zoomResetButton').button()
             ($ '#zoomResetButton').click (e) =>
-              @resetExtremes(($ '#zoomSelector').val())
+                @resetExtremes(($ '#zoomSelector').val())
 
             # Set initial state of zoom reset
             if not @isZoomLocked()
-              ($ '#zoomResetButton').addClass("disabled")
+                ($ '#zoomResetButton').addClass("disabled")
             else
-              ($ '#zoomResetButton').addClass("enabled")
+                ($ '#zoomResetButton').addClass("enabled")
 
             ($ '#zoomOutButton').button()
             ($ '#zoomOutButton').click (e) =>
-              @zoomOutExtremes(($ '#zoomSelector').val())
+                @zoomOutExtremes(($ '#zoomSelector').val())
 
             ($ '.mode_radio').click (e) =>
                 @mode = Number e.target.value
@@ -481,10 +481,10 @@ $ ->
 
         setExtremes: ->
             if (@chart isnt undefined)
-              if(@xBounds.min? and @yBounds.min?)
-                @chart.xAxis[0].setExtremes(@xBounds.min,@xBounds.max,true)
-                @chart.yAxis[0].setExtremes(@yBounds.min,@yBounds.max,true)
-              else @resetExtremes()
+                if(@xBounds.min? and @yBounds.min?)
+                    @chart.xAxis[0].setExtremes(@xBounds.min,@xBounds.max,true)
+                    @chart.yAxis[0].setExtremes(@yBounds.min,@yBounds.max,true)
+                else @resetExtremes()
 
         zoomOutExtremes: (whichAxis) ->
 
@@ -510,11 +510,11 @@ $ ->
         ###
         end: ->
 
-          if chart?
-            @storeXBounds @chart.xAxis[0].getExtremes()
-            @storeYBounds @chart.yAxis[0].getExtremes()
+            if chart?
+                @storeXBounds @chart.xAxis[0].getExtremes()
+                @storeYBounds @chart.yAxis[0].getExtremes()
 
-          super()
+            super()
 
         ###
         Saves the zoom level before cleanup
@@ -526,19 +526,19 @@ $ ->
         Updates x axis for regression.
         ###
         updateXRegression:() ->
-          $('#regressionXAxis').text("#{data.fields[@xAxis].fieldName}")
+            $('#regressionXAxis').text("#{data.fields[@xAxis].fieldName}")
 
         ###
         Updates y axis for regression.
         ###
         updateYRegression:() ->
-          if $('#regressionYAxisSelector')?
-            $('#regressionYAxisSelector').empty()
-            for fieldIndex in globals.fieldSelection
-              $('#regressionYAxisSelector').append($("<option/>", {
-                value: fieldIndex,
-                text: data.fields[fieldIndex].fieldName
-              }));
+            if $('#regressionYAxisSelector')?
+              $('#regressionYAxisSelector').empty()
+              for fieldIndex in globals.fieldSelection
+                    $('#regressionYAxisSelector').append($("<option/>", {
+                        value: fieldIndex,
+                        text: data.fields[fieldIndex].fieldName
+                    }));
 
         ###
         Adds the regression tools to the control bar.
@@ -593,82 +593,82 @@ $ ->
 
             #Add all the saved regressions correctly
             for regression in @savedRegressions
-              #Filter out the ones that should be enabled.
-              if regression.field_indices[0] == @xAxis \ #X indices must match.
-              && "#{regression.field_indices[2]}" == "#{globals.groupSelection}" \ #Compare the arrays without comparing them.
-              && globals.fieldSelection.indexOf(regression.field_indices[1]) != -1 #Y axis must be present
-                @chart.addSeries(regression.series)
-                @addRegressionToTable(regression, true)
-              else
-                @addRegressionToTable(regression, false)
+                #Filter out the ones that should be enabled.
+                if regression.field_indices[0] == @xAxis \ #X indices must match.
+                && "#{regression.field_indices[2]}" == "#{globals.groupSelection}" \ #Compare the arrays without comparing them.
+                && globals.fieldSelection.indexOf(regression.field_indices[1]) != -1 #Y axis must be present
+                    @chart.addSeries(regression.series)
+                    @addRegressionToTable(regression, true)
+                else
+                    @addRegressionToTable(regression, false)
 
             #Catches change in y axis
             ($ '.y_axis_input').click (e) =>
-              @updateYRegression()
+                @updateYRegression()
 
             #Catches change in x axis  
             ($ '.xAxis_input').change (e) =>
-              @updateXRegression()
+                @updateXRegression()
                    
             ($ "#regressionButton").click =>      
 
-              #Make the title for the tooltip
-              x_axis_name = data.fields[@xAxis].fieldName
-              y_axis_name = ($ '#regressionYAxisSelector option:selected').text()
-              name = "<strong>#{y_axis_name}</strong> as a #{($ '#regressionSelector option:selected').text().toLowerCase()} "
-              name += "function of <strong>#{x_axis_name}</strong>"
+                #Make the title for the tooltip
+                x_axis_name = data.fields[@xAxis].fieldName
+                y_axis_name = ($ '#regressionYAxisSelector option:selected').text()
+                name = "<strong>#{y_axis_name}</strong> as a #{($ '#regressionSelector option:selected').text().toLowerCase()} "
+                name += "function of <strong>#{x_axis_name}</strong>"
               
-              #Get the current selected y index, the regression type, and the current group index
-              y_axis_index = Number(($ '#regressionYAxisSelector').val())
-              regression_type = Number(($ '#regressionSelector').val())
-              group_index = globals.groupSelection
+                #Get the current selected y index, the regression type, and the current group index
+                y_axis_index = Number(($ '#regressionYAxisSelector').val())
+                regression_type = Number(($ '#regressionSelector').val())
+                group_index = globals.groupSelection
 
-              #Get the x and y data as a clippable object
-              fullData = data.multiGroupXYSelector(@xAxis, y_axis_index, group_index)
+                #Get the x and y data as a clippable object
+                fullData = data.multiGroupXYSelector(@xAxis, y_axis_index, group_index)
 
-              #Clip the x and y data so they only include the visible points
-              fullData = clip(fullData, @xBounds, @yBounds)
+                #Clip the x and y data so they only include the visible points
+                fullData = clip(fullData, @xBounds, @yBounds)
 
-              #Separate the x and y data
-              xData = 
-                point.x for point in fullData
-              yData = 
-                point.y for point in fullData
+                #Separate the x and y data
+                xData = 
+                    point.x for point in fullData
+                yData = 
+                    point.y for point in fullData
 
-              #Get dash index
-              dash_index = data.normalFields.indexOf(y_axis_index)
-              dash_style = globals.dashes[dash_index % globals.dashes.length]
+                #Get dash index
+                dash_index = data.normalFields.indexOf(y_axis_index)
+                dash_style = globals.dashes[dash_index % globals.dashes.length]
 
-              regressionMade = true
-              try
-                #Get the new regression              
-                new_regression = globals.getRegression(
-                  xData,
-                  yData, 
-                  regression_type,
-                  @xBounds,
-                  name,
-                  dash_style
-                  )
-              catch error
-                regressionMade = false
-                if regression_type is 3
-                  alert "Unable to calculate an #{regressions[regression_type]} regression for this data."
-                else 
-                  alert "Unable to calculate a #{regressions[regression_type]} regression for this data."
+                regressionMade = true
+                try
+                    #Get the new regression              
+                    new_regression = globals.getRegression(
+                        xData,
+                        yData, 
+                        regression_type,
+                        @xBounds,
+                        name,
+                        dash_style
+                    )
+                catch error
+                    regressionMade = false
+                    if regression_type is 3
+                        alert "Unable to calculate an #{regressions[regression_type]} regression for this data."
+                    else 
+                        alert "Unable to calculate a #{regressions[regression_type]} regression for this data."
 
-              if regressionMade
-                #Get a unique identifier (last highest count plus one)
-                regression_identifier = '';
-                count = 0;
-                for regression in @savedRegressions
-                  if regression.type == regression_type \
-                  and regression.field_indices[1] == y_axis_index \
-                  and count <= regression.type_count
-                    count = regression.type_count + 1;
+                if regressionMade
+                    #Get a unique identifier (last highest count plus one)
+                    regression_identifier = '';
+                    count = 0;
+                    for regression in @savedRegressions
+                        if regression.type == regression_type \
+                        and regression.field_indices[1] == y_axis_index \
+                        and count <= regression.type_count
+                            count = regression.type_count + 1;
 
                 if count
-                  regression_identifier = '(' + (count + 1) + ')'
+                    regression_identifier = '(' + (count + 1) + ')'
 
                 #Add the series
                 new_regression.name.id = 'regression_' + y_axis_index + '_' + regression_type + '_' + count
@@ -676,20 +676,20 @@ $ ->
 
                 #Prepare to save regression fields
                 saved_regression =
-                  type:
-                    regression_type
-                  type_count:
-                    count
-                  field_indices:
-                    [@xAxis, y_axis_index, group_index]
-                  field_names:
-                    [x_axis_name, y_axis_name]
-                  series:
-                    new_regression
-                  regression_id:
-                    regression_identifier
-                  bounds:
-                    [@xBounds, @yBounds]
+                    type:
+                        regression_type
+                    type_count:
+                        count
+                    field_indices:
+                        [@xAxis, y_axis_index, group_index]
+                    field_names:
+                        [x_axis_name, y_axis_name]
+                    series:
+                        new_regression
+                    regression_id:
+                        regression_identifier
+                    bounds:
+                        [@xBounds, @yBounds]
 
                 #Save a regression
                 @savedRegressions.push(saved_regression)

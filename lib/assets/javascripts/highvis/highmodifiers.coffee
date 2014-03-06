@@ -41,7 +41,9 @@ $ ->
         
         delete data.savedData
 
-    data.COMBINED_FIELD = 1
+    data.DATA_POINT_ID_FIELD = 0
+    data.DATASET_NAME_FIELD = 1
+    data.COMBINED_FIELD = 2
 
     data.types ?=
         TIME: 1
@@ -61,7 +63,7 @@ $ ->
     Selects data in an x,y object format of the given group.
     ###
     data.xySelector = (xIndex, yIndex, groupIndex) ->
-
+    
         rawData = @dataPoints.filter (dp) =>
             group = (String dp[@groupingFieldIndex]).toLowerCase() == @groups[groupIndex]
             notNull = (dp[xIndex] isnt null) and (dp[yIndex] isnt null)
@@ -97,7 +99,7 @@ $ ->
     'filterFunc' is a boolean filter that must be passed (true) for a datapoint to be included.
     ###
     data.selector = (fieldIndex, groupIndex, nans = false) ->
-
+    
         filterFunc = (dp) =>
             (String dp[@groupingFieldIndex]).toLowerCase() == @groups[groupIndex]
 
@@ -115,10 +117,10 @@ $ ->
     if 'nans' is true then datapoints with NaN values in the given field will be included.
     ###
     data.multiGroupSelector = (fieldIndex, groupIndices, nans = false) ->
-      
+
       allData =
         data.selector(fieldIndex, group, nans) for group in groupIndices
-      
+
       merged = []
       merged = merged.concat.apply(merged, allData)
 
@@ -208,6 +210,25 @@ $ ->
     data.setGroupIndex = (index) ->
         @groupingFieldIndex = index
         @groups = @makeGroups()
+        @dataPoints = @setIndexFromGroups()
+        
+    ###
+    Sets the value of the Data Point (id) field to its index within the selected group.
+    ###
+    data.setIndexFromGroups = () ->
+        filterFunc = (dp) =>
+            (String dp[@groupingFieldIndex]).toLowerCase() == @groups[groupIndex]
+        
+        rawData = for group, groupIndex in @groups
+            selectedPoints = @dataPoints.filter filterFunc
+            
+            for dp, dpIndex in selectedPoints
+                dp[data.DATA_POINT_ID_FIELD] = dpIndex + 1
+                dp
+                
+        merged = []
+        merged = merged.concat.apply(merged, rawData)
+
 
     ###
     Gets a list of unique, non-null, stringified vals from the group field index.
@@ -255,9 +276,9 @@ $ ->
     data.geoFields = for field, index in data.fields when (Number field.typeID) in data.types.LOCATION
         Number index
 
-
-
-    #Check if data is log safe
+    ###
+    Check if data is log safe
+    ###
     data.logSafe ?= do ->
         for dataPoint in data.dataPoints
             for field, fieldIndex in data.fields when fieldIndex in data.normalFields
@@ -301,9 +322,9 @@ $ ->
         1
 
 
-    #preprocess
+    #Preprocess
     data.preprocessData()
     #Field index of grouping field
-    data.groupingFieldIndex ?= 0
+    data.groupingFieldIndex ?= data.DATASET_NAME_FIELD
     #Array of current groups
     data.groups ?= data.makeGroups()
