@@ -137,9 +137,11 @@ $ ->
                 pager: '#toolbar_bottom'
             })
 
-            #Hide the combined datasets column
-            combined_col = @table.jqGrid('getGridParam','colModel')[data.COMBINED_FIELD]
-            @table.hideCol(combined_col.name)
+            #Hide the combined datasets and data point columns
+            combinedCol = @table.jqGrid('getGridParam','colModel')[data.COMBINED_FIELD]
+            #dataPointIdCol = @table.jqGrid('getGridParam','colModel')[data.DATA_POINT_ID_FIELD]
+            @table.hideCol(combinedCol.name)
+            #@table.hideCol(dataPointIdCol.name)
             ($ '#data_table').setGridWidth(($ '#' + @canvas).width())
 
             #Add a refresh button and enable the search bar

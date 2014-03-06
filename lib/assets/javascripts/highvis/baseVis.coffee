@@ -500,6 +500,3 @@ $ ->
         serializationCleanup: ->
             delete @chart
             delete @chartOptions
-
-
-                
