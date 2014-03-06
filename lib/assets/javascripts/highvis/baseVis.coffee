@@ -45,38 +45,38 @@ $ ->
     class window.BaseVis
       constructor: (@canvas) ->
 
-      ###
+        ###
       Start sequence used by runtime
-      ###
+        ###
       start: ->
         @drawControls()
         @update()
 
-      ###
+        ###
       Update minor state
-      Redraws html controls
+        Redraws html controls
 
-      Derrived classes should overload to reload content.
-      ###
+        Derrived classes should overload to reload content.
+        ###
       update: ->
 
-      ###
+        ###
       Default delayed update simply updates
-      ###
+        ###
       delayedUpdate: ->
         @update()
 
-      ###
+        ###
       Method called when vis resize has begun
-      Defaults to doing nothing.
-      ###
+        Defaults to doing nothing.
+        ###
       resize: (newWidth, newHeight) ->
 
-      ###
+        ###
       End sequence used by runtime
-      This is called when the user switches away from this vis.
-      Should destroy the chart, hide its canvas and remove controls.
-      ###
+        This is called when the user switches away from this vis.
+        Should destroy the chart, hide its canvas and remove controls.
+        ###
       end: ->
         console.log console.trace()
         alert   """
@@ -87,26 +87,25 @@ $ ->
           See logged stack trace in console.
           """
 
-      ###
+        ###
       Draws controls
-      Derived classes should write control HTML and bind handlers using the
-      method such as drawGroupControls.
-      ###
+        Derived classes should write control HTML and bind handlers using the method such as drawGroupControls.
+        ###
       drawControls: ->
         @clearControls()
 
-      ###
+        ###
       Clear the controls
-      Unbinds control handlers and clears the HTML elements.
-      ###
+        Unbinds control handlers and clears the HTML elements.
+        ###
       clearControls: ->
         ($ '#controldiv').empty()
 
-      ###
+        ###
       Draws group selection controls
-      This includes a series of checkboxes and a selector for the grouping field.
-      The checkbox text color should correspond to the graph color.
-      ###
+        This includes a series of checkboxes and a selector for the grouping field.
+        The checkbox text color should correspond to the graph color.
+        ###
       drawGroupControls: (startOnGroup = false) ->
 
         controls = '<div id="groupControl" class="vis_controls">'
@@ -115,7 +114,7 @@ $ ->
 
         controls += "<div class='outer_control_div'>"
 
-        # Add grouping selector
+            # Add grouping selector
         controls += '<div class="inner_control_div"> Group By: '
         controls += '<select id="groupSelector" class="form-control">'
 
@@ -125,7 +124,7 @@ $ ->
 
         controls += "</select></div>"
 
-        # Populate choices
+            # Populate choices
         counter = 0
         if data.groups.length > 1
           controls += "<div class='inner_control_div'>"
@@ -134,20 +133,20 @@ $ ->
             #{if globals.groupSelection.length == data.groups.length then "checked" else ""}>
             #Check All</label></div>"""
         for group, gIndex in data.groups
-          controls += """<div class='inner_control_div'
-            style=\"color:#{globals.colors[counter % globals.colors.length]};\">"""
-          controls += """<div class='checkbox'><label><input class='group_input'
-            type='checkbox' value='#{gIndex}'
-            #{if (Number gIndex) in globals.groupSelection then "checked" else ""}/>
-            ##{group}</label></div>"""
+          controls += "<div class='inner_control_div' "
+          controls += "style=\"color:#{globals.colors[counter % globals.colors.length]};\">"
+          controls += "<div class='checkbox'><label><input class='group_input' type='checkbox'"
+          controls += " value='#{gIndex}' "
+          controls += "#{if (Number gIndex) in globals.groupSelection then "checked" else ""}/>"
+          controls += "#{group}</label></div>"
           controls += "</div>"
           counter += 1
         controls += '</div></div>'
 
-        # Write HTML
+            # Write HTML
         ($ '#controldiv').append controls
 
-        # Make group select handler
+            # Make group select handler
         ($ '#groupSelector').change (e) =>
           element = e.target or e.srcElement
           data.setGroupIndex (Number element.value)
@@ -161,7 +160,7 @@ $ ->
 
           @drawControls()
 
-        # Make group checkbox handler
+            # Make group checkbox handler
         ($ '.group_input').click (e) =>
           selection = []
           ($ '.group_input').each () ->
@@ -182,7 +181,7 @@ $ ->
 
           @delayedUpdate()
 
-        # Make group checkbox for all groups
+            # Make group checkbox for all groups
         ($ '.group_input_all').click (e) =>
           if e.target.checked
             globals.groupSelection = for vals, keys in data.groups
@@ -195,7 +194,7 @@ $ ->
           @delayedUpdate()
 
 
-        #Set up accordion
+            #Set up accordion
         globals.groupOpen ?= 0
 
         ($ '#groupControl').accordion
@@ -205,9 +204,9 @@ $ ->
         ($ '#groupControl > h3').click ->
           globals.groupOpen = (globals.groupOpen + 1) % 2
 
-      ###
+        ###
       Draws vis saving controls
-      ###
+        ###
       drawSaveControls: (e) ->
 
         if (globals.options? and globals.options.isEmbed?) and not @chart?
@@ -219,30 +218,33 @@ $ ->
         controls += "<div class='outer_control_div' style='text-align:center'>"
 
         if not (globals.options? and globals.options.isEmbed?)
-          controls += """<div class='inner_control_div'>
-            <button id='saveVisButton' class='save_button btn btn-default btn-success'>
-            Save Visualization </button></div>"""
+          controls += "<div class='inner_control_div'>"
+          controls += "<button id='saveVisButton' class='save_button btn btn-default btn-success'>"
+          controls += "Save Visualization </button>"
+          controls += "</div>"
 
         if @chart?
 
           controls += "<div class='inner_control_div'>"
-          controls += "<button id='downloadVisButton' class='save_button btn btn-default'> "
+          controls += "<button id='downloadVisButton' class='save_button btn btn-default'>"
           controls += "Download Visualization </button>"
           controls += "</div>"
 
           controls += "<div class='inner_control_div'>"
-          controls += "<button id='printVisButton' class='save_button btn btn-default'> Print Visualization </button>"
+          controls += "<button id='printVisButton' class='save_button btn btn-default'>"
+          controls += "Print Visualization </button>"
           controls += "</div>"
 
         controls += '</div></div>'
 
-        # Write HTML
+            # Write HTML
         ($ '#controldiv').append controls
 
         ($ "#saveControl button").button()
 
         ($ "#saveVisButton").click ->
-          globals.verifyUser (-> globals.saveVis()), (-> alert 'You must be logged in to save a visualization.')
+          globals.verifyUser (-> globals.saveVis()), (->
+            alert 'You must be logged in to save a visualization.')
 
 
         ($ '#downloadVisButton').click =>
@@ -271,7 +273,8 @@ $ ->
         ($ '#controldiv').width 0
         ($ '#controlhider').hide()
         ($ '#' + @canvas).css
-          width: ($ "#viscontainer").innerWidth() - (($ "#controlhider").outerWidth() + globals.VIS_MARGIN_WIDTH)
+          width: ($ "#viscontainer").innerWidth() - (($ "#controlhider").outerWidth() +
+            globals.VIS_MARGIN_WIDTH)
 
       ###
       Returns the control div with its previous size intact.
@@ -305,7 +308,7 @@ $ ->
           chart:
             renderTo: @canvas
             reflow: false
-            #colors:
+                #colors:
           credits:
             enabled: false
           exporting:
@@ -320,7 +323,7 @@ $ ->
               width: 140
               cursor: 'default'
               whiteSpace: 'prewrap'
-              #loading: {}
+                #loading: {}
           plotOptions:
             series:
               stickyTracking:false
@@ -331,13 +334,13 @@ $ ->
               events:
                 legendItemClick: (event) ->
                   false
-              #point: {}
+                #point: {}
           series: []
-            #subtitle: {}
-            #symbols:
+                #subtitle: {}
+                #symbols:
           title: {}
-            #tooltop: {}
-            #xAxis: {}
+                #tooltop: {}
+                #xAxis: {}
           yAxis:
             minorTickInterval: 'auto'
             title:
@@ -366,15 +369,15 @@ $ ->
 
           See logged stack trace in console.
           """
-      ###
+        ###
       Start sequence used by runtime
-      This is called when the user switched to this vis.
-      Should re-build options and the chart itself to ensure sync with global settings.
-      This method should also be usable as a 'full update' in that it should destroy the
-      current chart if it exists before generating a fresh one.
+        This is called when the user switched to this vis.
+        Should re-build options and the chart itself to ensure sync with global settings.
+        This method should also be usable as a 'full update' in that it
+        should destroy the current chart if it exists before generating a fresh one.
 
-      TODO: Update comment
-      ###
+        TODO: Update comment
+        ###
       start: ->
         @buildOptions()
 
@@ -384,14 +387,14 @@ $ ->
 
         super()
 
-      ###
+        ###
       Update minor state
-      Clears current series and re-loads the legend.
+        Clears current series and re-loads the legend.
 
-      Derrived classes should overload to add data drawing.
-      ###
+        Derrived classes should overload to add data drawing.
+        ###
       update: ->
-        #Name Y Axis
+            #Name Y Axis
         title = if globals.fieldSelection.length isnt 1
           temp =
             text: 'Y-Values'
@@ -405,33 +408,33 @@ $ ->
 
         @chart.yAxis[0].setTitle title, false
 
-        #Remove curent data
+            #Remove curent data
         while @chart.series.length > 0
           @chart.series[0].remove(false)
 
-        #Draw legend
+            #Draw legend
         for options in @buildLegendSeries()
           options.name = options.name.replace(/(.{1})/g,"$1&#8203;") + " "
           @chart.addSeries options, false
 
-      ###
+        ###
       Performs an update while displaying the loading text
-      ###
+        ###
       delayedUpdate: ->
         @chart.showLoading 'Loading...'
 
-        #Save context
+            #Save context
         mySelf = this
         update = -> mySelf.update()
         setTimeout update, 1
 
         @chart.hideLoading()
 
-      ###
+        ###
       Draws y axis controls
-      This includes a series of checkboxes or radio buttons for selecting
-      the active y axis field(s).
-      ###
+        This includes a series of checkboxes or radio buttons for selecting
+        the active y axis field(s).
+        ###
       drawYAxisControls: (radio = false) ->
 
         controls = '<div id="yAxisControl" class="vis_controls">'
@@ -443,30 +446,29 @@ $ ->
 
         controls += "<div class='outer_control_div'>"
 
-        # Populate choices
+            # Populate choices
         for fIndex in data.normalFields
           controls += "<div class='inner_control_div' >"
 
           if radio
-            controls += """<div class='radio'><label><input class='y_axis_input'
-              name='y_axis_group' type='radio' value='#{fIndex}'
+            controls += """<div class='radio'><label><input class='y_axis_input' name='y_axis_group'
+              type='radio' value='#{fIndex}'
               #{if (Number fIndex) is @displayField then "checked" else ""}>
-              ##{data.fields[fIndex].fieldName}</label></div>"""
+              #{data.fields[fIndex].fieldName}</label></div>"""
           else
-            controls += """<div class='checkbox'><label><input class='y_axis_input'
-              type='checkbox' value='#{fIndex}'
-              #{if (Number fIndex) in globals.fieldSelection then "checked" else ""}/>
-              ##{data.fields[fIndex].fieldName}</label></div>"""
+            controls += """<div class='checkbox'><label><input class='y_axis_input' type='checkbox'
+              value='#{fIndex}' #{if (Number fIndex) in globals.fieldSelection then "checked" else ""}
+              />#{data.fields[fIndex].fieldName}</label></div>"""
           controls += "</div>"
 
         controls += '</div></div>'
 
-        # Write HTML
+            # Write HTML
         ($ '#controldiv').append controls
 
-        # Make y axis checkbox/radio handler
+            # Make y axis checkbox/radio handler
         if radio
-          # Currently specific to histogram - TODO: decouple
+                # Currently specific to histogram - TODO: decouple
           ($ '.y_axis_input').click (e) =>
             @displayField = Number e.target.value
             @binSize = @defaultBinSize()
@@ -482,7 +484,7 @@ $ ->
               globals.fieldSelection.push(index)
             @delayedUpdate()
 
-        #Set up accordion
+            #Set up accordion
         globals.yAxisOpen ?= 0
 
         ($ '#yAxisControl').accordion
@@ -492,18 +494,18 @@ $ ->
         ($ '#yAxisControl > h3').click ->
           globals.yAxisOpen = (globals.yAxisOpen + 1) % 2
 
-      ###
+        ###
       Method called when vis resize has begun
-      Resize highcharts to match
-      ###
+        Resize highcharts to match
+        ###
       resize: (newWidth, newHeight, duration) ->
         @chart.setSize(newWidth, newHeight, {duration: duration, easing:'linear'})
 
-      ###
+        ###
       End sequence used by runtime
-      This is called when the user switches away from this vis.
-      Should destroy the chart, hide its canvas and remove controls.
-      ###
+        This is called when the user switches away from this vis.
+        Should destroy the chart, hide its canvas and remove controls.
+        ###
       end: ->
         if @chart?
           @chart.destroy()
@@ -511,12 +513,9 @@ $ ->
 
         ($ '#' + @canvas).hide()
 
-      ###
+        ###
       Remove the chart and chart options object
-      ###
+        ###
       serializationCleanup: ->
         delete @chart
         delete @chartOptions
-
-
-

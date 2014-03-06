@@ -220,12 +220,12 @@ class VisualizationsController < ApplicationController
       @datasets = DataSet.where(hidden: false, project_id: params[:id])
     end
 
+    # create special row identifier field for all datasets
+    data_fields.push(typeID: NUMBER_TYPE, unitName: 'id', fieldID: -1, fieldName: 'Data Point')
     # create special dataset grouping field
     data_fields.push(typeID: TEXT_TYPE, unitName: 'String', fieldID: -1, fieldName: 'Dataset Name (id)')
     # create special grouping field for all datasets
     data_fields.push(typeID: TEXT_TYPE, unitName: 'String', fieldID: -1, fieldName: 'Combined Datasets')
-    # create special row identifier field for all datasets
-    # data_fields.push({ typeID: NUMBER_TYPE, unitName: "id", fieldID: -1, fieldName: "Data Point"})
 
     # push real fields to temp variable
     @project.fields.each do |field|
@@ -239,20 +239,19 @@ class VisualizationsController < ApplicationController
       photos = dataset.media_objects.keep_if { |mo| mo.media_type == 'image' }.map { |mo| mo.to_hash(true) }
       has_pics = true if photos.size > 0
       metadata[i] = { name: dataset.title, user_id: dataset.user_id, dataset_id: dataset.id, timecreated: dataset.created_at, timemodified: dataset.updated_at, photos: photos }
-      # dataset.data.each_with_index do |row, index|
-      dataset.data.each do |row|
+
+      dataset.data.each_with_index do |row, index|
         unless row.class == Hash
           logger.info 'Bad row in JSON data:'
           logger.info row.inspect
         end
 
         arr = []
+        arr.push index + 1
         arr.push "#{dataset.title}(#{dataset.id})"
         arr.push 'All'
-        # arr.push index + 1
 
-        # data_fields.slice(arr.length, data_fields.length).each do |field|
-        data_fields.slice(2, data_fields.length).each do |field|
+        data_fields.slice(arr.length, data_fields.length).each do |field|
           arr.push row[field[:fieldID].to_s]
         end
 
@@ -279,7 +278,7 @@ class VisualizationsController < ApplicationController
       rel_vis.push 'Timeline'
     end
 
-    if field_count[NUMBER_TYPE] > 1 and format_data.count > 1
+    if field_count[NUMBER_TYPE] > 0 and format_data.count > 1
       rel_vis.push 'Scatter'
     end
 
@@ -289,10 +288,6 @@ class VisualizationsController < ApplicationController
     end
 
     rel_vis.push 'Table'
-
-#     if field_count[TIME_TYPE] > 0 and field_count[NUMBER_TYPE] > 0 and format_data.count > 1
-#       rel_vis.push "Motion"
-#     end
 
     if has_pics
       rel_vis.push 'Photos'

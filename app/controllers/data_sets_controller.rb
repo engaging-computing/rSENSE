@@ -175,6 +175,9 @@ class DataSetsController < ApplicationController
         d.title = params[:title]
         d.project_id = project.id
         d.data = data
+        unless can_edit? @project
+          d.key = session[:key]
+        end
       end
 
       if dataset.save
@@ -216,6 +219,9 @@ class DataSetsController < ApplicationController
         d.title = params[:title]
         d.project_id = project.id
         d.data = data
+        unless can_edit? @project
+          d.key = session[:key]
+        end
       end
 
       if @cur_user.nil?
@@ -273,6 +279,6 @@ class DataSetsController < ApplicationController
   private
 
   def data_set_params
-    params[:data_set].permit(:content, :project_id, :title, :user_id, :hidden, :data)
+    params[:data_set].permit(:content, :project_id, :title, :user_id, :hidden, :key, :data)
   end
 end

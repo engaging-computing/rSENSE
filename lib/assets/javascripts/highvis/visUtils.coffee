@@ -202,7 +202,7 @@ $ ->
     Generate a list of symbols and symbol rendering routines and then add them
     in an order that is clear and easy to read.
     ###
-
+    
     fanMagList           = [1, 1, 15 / 16, 7 / 8, 3 / 4, 1 / 4, 1 / 4, 3 / 4, 7 / 8, 15 / 16, 1]
     pieMagList           = [1,1,1,1,1,1,1,1,1,1,1,1,1,0]
     halfmoonMagList      = [1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0]

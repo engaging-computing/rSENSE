@@ -141,7 +141,17 @@ $ ->
       else
         ($ '#vis_button').prop("disabled",true)
         ($ '#export_button').prop("disabled",true)
-
+    ($ "a.check_id").click ->
+      root = ($ '#dataset_table')
+      ($ '#vis_button').prop("disabled",true)
+      ($ '#export_button').prop("disabled",true)
+      root.find("[id^=ds_]").each (i,j) =>
+        ($ j).prop("checked",false)
+      root.find('tr').each (i,j) =>
+        if ($ j).find('.key').attr('title') is ($ this).attr('m-title')
+          ($ j).find("[id^=ds_]").prop("checked",true)
+          ($ '#vis_button').prop("disabled",false)
+          ($ '#export_button').prop("disabled",false)
     #Turn off visualize button on page load, and when nothings checked
     check_for_selection = =>
       should_disable = true
