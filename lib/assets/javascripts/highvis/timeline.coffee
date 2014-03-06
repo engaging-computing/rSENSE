@@ -41,7 +41,7 @@ $ ->
         @xAxis = data.timeFields[0]
 
       ###
-      Build options relevent to timeline
+      Build options relevant to timeline
       ###
       buildOptions: ->
         super()
