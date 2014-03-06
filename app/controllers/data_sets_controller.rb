@@ -175,7 +175,7 @@ class DataSetsController < ApplicationController
         d.title = params[:title]
         d.project_id = project.id
         d.data = data
-        if not can_edit?( @project )
+        unless can_edit? @project
           d.key = session[:key]
         end
       end
@@ -219,7 +219,7 @@ class DataSetsController < ApplicationController
         d.title = params[:title]
         d.project_id = project.id
         d.data = data
-        if not can_edit? ( @project )
+        unless can_edit? @project
           d.key = session[:key]
         end
       end
