@@ -3,7 +3,7 @@
 coffee_file = ARGV[0]
 
 unless coffee_file =~ /\.coffee/
-  raise Exception.new("Expected a .coffee file")
+  fail Exception.new('Expected a .coffee file')
 end
 
 File.open(coffee_file) do |ff|
@@ -18,7 +18,7 @@ File.open(coffee_file) do |ff|
     line.sub!(/;*$/, '')
 
     if line =~ /\t/
-      raise Exception.new("Tabs can die in a fire")
+      fail Exception.new('Tabs can die in a fire')
     end
 
     if line =~ /^\s*$/
@@ -31,7 +31,6 @@ File.open(coffee_file) do |ff|
       next
     end
 
-
     pre = line.match(/^\s*/)[0].size
 
     case
@@ -41,7 +40,7 @@ File.open(coffee_file) do |ff|
       stops[indent] = pre
     when pre < spaces
       # outdent
-      
+
       stops.each_index do |ii|
         if stops[ii] == pre
           indent = ii
@@ -51,9 +50,9 @@ File.open(coffee_file) do |ff|
       end
     end
 
-    #puts "#{spaces}, #{pre}, #{indent}, #{stops}"
+    # puts "#{spaces}, #{pre}, #{indent}, #{stops}"
 
     spaces = pre
-    puts line.sub(/^\s*/, " " * (2 * indent))
+    puts line.sub(/^\s*/, ' ' * (2 * indent))
   end
 end
