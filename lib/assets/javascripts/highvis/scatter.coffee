@@ -102,7 +102,7 @@ $ ->
               point:
                 events:
                   mouseOver: () ->
-                          # Push elements to bottom to draw over others in series
+                    # Push elements to bottom to draw over others in series
                     ele = ($ @.graphic.element)
                     root = ele.parent()
                     root.append ele
@@ -161,9 +161,9 @@ $ ->
                   @updateOnZoom = 1
 
 
-        ###
+      ###
       Build the dummy series for the legend.
-        ###
+      ###
       buildLegendSeries: ->
         count = -1
         for field, fieldIndex in data.fields when fieldIndex in data.normalFields
@@ -195,9 +195,9 @@ $ ->
           options
 
 
-        ###
+      ###
       Call control drawing methods in order of apperance
-        ###
+      ###
       drawControls: ->
         super()
         @drawGroupControls()
@@ -207,19 +207,19 @@ $ ->
         @drawRegressionControls()
         @drawSaveControls()
 
-        ###
+      ###
       Update the chart by removing all current series and recreating them
-        ###
+      ###
       update: () ->
-            #Remove all series and draw legend
+        #Remove all series and draw legend
         super()
 
-            #Set axis title
+        #Set axis title
         title =
           text: fieldTitle data.fields[@xAxis]
         @chart.xAxis[0].setTitle title, false
 
-            #Compute max bounds if there is no user zoom
+        #Compute max bounds if there is no user zoom
         if not @isZoomLocked()
 
           @yBounds.min = @xBounds.min =  Number.MAX_VALUE
@@ -237,7 +237,7 @@ $ ->
                 @xBounds.min = (new Date(@xBounds.min)).getUTCFullYear()
                 @xBounds.max = (new Date(@xBounds.max)).getUTCFullYear()
 
-            #Calculate grid spacing for data reduction
+        #Calculate grid spacing for data reduction
         width = ($ '#' + @canvas).width()
         height = ($ '#' + @canvas).height()
 
@@ -248,7 +248,7 @@ $ ->
         else
           @xGridSize = Math.round (width / height * @INITIAL_GRID_SIZE)
 
-            #Draw series
+        #Draw series
         for fieldIndex, symbolIndex in data.normalFields when fieldIndex in globals.fieldSelection
           for group, groupIndex in data.groups when groupIndex in globals.groupSelection
             dat = if not @fullDetail
@@ -297,7 +297,7 @@ $ ->
         @storeXBounds @chart.xAxis[0].getExtremes()
         @storeYBounds @chart.yAxis[0].getExtremes()
 
-            #Disable/enable all of the saved regressions as necessary
+        #Disable/enable all of the saved regressions as necessary
         for regression in @savedRegressions
           #Filter out the ones that should be enabled.
           # - X indices must match.
@@ -306,23 +306,23 @@ $ ->
           if regression.field_indices[0] == @xAxis \
           && "#{regression.field_indices[2]}" == "#{globals.groupSelection}" \
           && globals.fieldSelection.indexOf(regression.field_indices[1]) != -1
-                    #Add the regression to the chart
+            #Add the regression to the chart
             @chart.addSeries(regression.series)
-                    #Enabled the class by removing the disabled class
+            #Enabled the class by removing the disabled class
             ($ 'tr#row_' + regression.series.name.id).removeClass('regression_row_disabled')
           else
-                    #Prevent duplicate add classes
+            #Prevent duplicate add classes
             if ($ 'tr#row_' + regression.series.name.id).hasClass('regression_row_disabled') is false
               ($ 'tr#row_' + regression.series.name.id).addClass('regression_row_disabled')
 
-            #Display the table header if necessary
+        #Display the table header if necessary
         if ($ '#regressionTableBody > tr').length > 0
           ($ 'tr#regressionTableHeader').show()
         else ($ 'tr#regressionTableHeader').hide()
 
-        ###
+      ###
       Draws radio buttons for changing symbol/line mode.
-        ###
+      ###
       drawToolControls: (elaspedTimeButton = true) ->
         controls =  '<div id="toolControl" class="vis_controls">'
 
@@ -601,11 +601,11 @@ $ ->
           </div></div>
           """
 
-            #Write HTML
+        #Write HTML
         ($ '#controldiv').append controls
         ($ "#regressionControl button").button()
 
-            #Add all the saved regressions correctly
+        #Add all the saved regressions correctly
         for regression in @savedRegressions
           #Filter out the ones that should be enabled.
           # - X indices must match.
@@ -619,47 +619,47 @@ $ ->
           else
             @addRegressionToTable(regression, false)
 
-            #Catches change in y axis
+        #Catches change in y axis
         ($ '.y_axis_input').click (e) =>
           @updateYRegression()
 
-            #Catches change in x axis
+        #Catches change in x axis
         ($ '.xAxis_input').change (e) =>
           @updateXRegression()
 
         ($ "#regressionButton").click =>
 
-                #Make the title for the tooltip
+          #Make the title for the tooltip
           x_axis_name = data.fields[@xAxis].fieldName
           y_axis_name = ($ '#regressionYAxisSelector option:selected').text()
           name = "<strong>#{y_axis_name}</strong> as a "
           name += "#{($ '#regressionSelector option:selected').text().toLowerCase()} "
           name += "function of <strong>#{x_axis_name}</strong>"
 
-                #Get the current selected y index, the regression type, and the current group index
+          #Get the current selected y index, the regression type, and the current group index
           y_axis_index = Number(($ '#regressionYAxisSelector').val())
           regression_type = Number(($ '#regressionSelector').val())
           group_index = globals.groupSelection
 
-                #Get the x and y data as a clippable object
+          #Get the x and y data as a clippable object
           fullData = data.multiGroupXYSelector(@xAxis, y_axis_index, group_index)
 
-                #Clip the x and y data so they only include the visible points
+          #Clip the x and y data so they only include the visible points
           fullData = clip(fullData, @xBounds, @yBounds)
 
-                #Separate the x and y data
+          #Separate the x and y data
           xData =
             point.x for point in fullData
           yData =
             point.y for point in fullData
 
-                #Get dash index
+          #Get dash index
           dash_index = data.normalFields.indexOf(y_axis_index)
           dash_style = globals.dashes[dash_index % globals.dashes.length]
 
           regressionMade = true
           try
-                    #Get the new regression
+            #Get the new regression
             new_regression = globals.getRegression(
               xData,
               yData,
@@ -676,7 +676,7 @@ $ ->
               alert "Unable to calculate a #{regressions[regression_type]} regression for this data."
 
           if regressionMade
-                    #Get a unique identifier (last highest count plus one)
+            #Get a unique identifier (last highest count plus one)
             regression_identifier = ''
             count = 0
             for regression in @savedRegressions
@@ -688,11 +688,11 @@ $ ->
           if count
             regression_identifier = '(' + (count + 1) + ')'
 
-                #Add the series
+          #Add the series
           new_regression.name.id = 'regression_' + y_axis_index + '_' + regression_type + '_' + count
           @chart.addSeries(new_regression)
 
-                #Prepare to save regression fields
+          #Prepare to save regression fields
           saved_regression =
             type:
               regression_type
@@ -709,13 +709,13 @@ $ ->
             bounds:
               [@xBounds, @yBounds]
 
-                #Save a regression
+          #Save a regression
           @savedRegressions.push(saved_regression)
 
-                #Actually add the regression to the table
+          #Actually add the regression to the table
           @addRegressionToTable(saved_regression, true)
 
-            #Set up accordion
+        #Set up accordion
         globals.regressionOpen ?= 0
 
         ($ '#regressionControl').accordion
@@ -726,16 +726,16 @@ $ ->
         ($ '#regressionControl > h3').click ->
           globals.regressionOpen = (globals.regressionOpen + 1) % 2
 
-        #Adds a regression row to our table, with styling for enabled or disabled
+      #Adds a regression row to our table, with styling for enabled or disabled
       addRegressionToTable: (saved_reg, enabled) ->
 
-          #Remove object from an array
+        #Remove object from an array
         Array::filterOutValue = (v) -> x for x in @ when x != v
 
-          #Here have a list of regressions
+        #Here have a list of regressions
         regressions = ['Linear', 'Quad', 'Cubic', 'Exp', 'Log']
 
-          #Add the entry used the passed regression
+        #Add the entry used the passed regression
         regression_row =
           """
           <tr id = 'row_#{saved_reg.series.name.id}' class='regression_row'>
@@ -745,19 +745,19 @@ $ ->
           </tr>
           """
 
-          #Added a info relating to this regression
+        #Added a info relating to this regression
         ($ '#regressionTableBody').append(regression_row)
 
-          #Add the disabled style if necessary
+        #Add the disabled style if necessary
         if !enabled
           ($ 'tr#row_' + saved_reg.series.name.id).addClass('regression_row_disabled')
 
-          #Display the table header
+        #Display the table header
         ($ 'tr#regressionTableHeader').show()
 
-          #Make each row a link to its view
+        #Make each row a link to its view
         ($ 'tr#row_' + saved_reg.series.name.id).click =>
-            #Reset the state of when you saved
+          #Reset the state of when you saved
           @xAxis = saved_reg.field_indices[0]
           globals.fieldSelection = [saved_reg.field_indices[1]]
           globals.groupSelection = saved_reg.field_indices[2]
@@ -771,10 +771,10 @@ $ ->
 
           @update()
 
-          #Add a make the delete button remove the regression object
+        #Add a make the delete button remove the regression object
         ($ 'td#' + saved_reg.series.name.id).click =>
 
-            #Remove regression view from the screen.
+          #Remove regression view from the screen.
           ($ 'td#' + saved_reg.series.name.id).parent().remove()
 
           #Display the table header if necessary
@@ -809,7 +809,7 @@ $ ->
         #When the mouse leaves, don't highlight anymore
         ($ 'tr#row_' + saved_reg.series.name.id).mouseout =>
 
-            #Remove regression from the chart
+          #Remove regression from the chart
           id = saved_reg.series.name.id
           for series, i in @chart.series
             if (series.name.id == id)
