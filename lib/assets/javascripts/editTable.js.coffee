@@ -1,10 +1,10 @@
 $ = jQuery
 
 $ ->
-   
+
   # Only allows the plugin to run on certain pages. Probably not the right place to do this.
   if (namespace.controller is "data_sets") and (namespace.action is "manualEntry" or namespace.action is "edit")
- 
+
     #-----------------------------------------------------------------------
     # Map Specific Code
     #-----------------------------------------------------------------------
@@ -12,7 +12,7 @@ $ ->
 
       #Check if there is location in the experiment
       if x["name"] == "Latitude"
-      
+
         #If there is location add the map picker modal dialog
         ($ ".mainContent").append """
           <div id="map_picker" class="modal fade" role="dialog" aria-hidden="true">
@@ -34,8 +34,8 @@ $ ->
                     </div>
                   </div>
                 </div>
-              </div> 
-            </div>  
+              </div>
+            </div>
           </div>"""
 
         #Set up the Map and geocoder
@@ -76,22 +76,22 @@ $ ->
             location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude)
             window.marker.setPosition(location)
             window.map.setCenter(location)
-            
+
         ($ "#address").autocomplete("option","appendTo","#map_picker")
-        
+
         #Maps are dumb and need to be resized if shown in a dynamicly sized window
         ($ '#map_picker').on 'shown.bs.modal', () ->
           google.maps.event.trigger window.map, "resize"
-        
+
         #What to do when a location is picked
         ($ "#apply_location").click ->
           ($ "#map_picker").modal('hide')
           location = window.marker.getPosition()
-         
-          ($ '.target').find('.validate_longitude').val(location.lng());
-          ($ '.target').find('.validate_latitude').val(location.lat());
+
+          ($ '.target').find('.validate_longitude').val(location.lng())
+          ($ '.target').find('.validate_latitude').val(location.lat())
           ($ '.target').removeClass('target')
-          
+
         ($ "#map_picker").on "hidden", ->
           ($ '.target').removeClass('target')
     #-----------------------------------------------------------------------
@@ -115,7 +115,7 @@ $ ->
             ($ '#edit_table_save').button 'reset'
             log [textStatus, errorThrown]
             alert "An upload error occurred."
-            
+
         type: (field) ->
           if field is 1
             "Timestamp"
@@ -127,7 +127,7 @@ $ ->
             "Longitude"
           else if field is 4
             "Latitude"
-            
+
           else if field is "Timestamp"
             1
           else if field is "Number"
@@ -151,15 +151,15 @@ $ ->
         # variable to keep track of our table
 
         table = @
-        
+
         num_cols = []
         lat_cols = []
         lon_cols = []
         text_cols = []
         time_cols = []
-        
+
         restrictions = []
-        
+
         ($ table).find('th').each () ->
           restrictions.push eval( ($ @).attr 'data-field-restrictions' )
 
@@ -173,7 +173,7 @@ $ ->
               add_row(table)
             table.find("tr:nth-child(#{cur_index+1})").find('input:first').select()
 
-        
+
         update_headers = () ->
           # separate columns by field type/validator
 
@@ -185,7 +185,7 @@ $ ->
 
           ($ table).find('th').each (index) ->
             type = ($ @).attr 'data-field-type'
-  
+
             switch type
               when "Timestamp" then time_cols.push index
               when "Text" then text_cols.push index
@@ -195,7 +195,7 @@ $ ->
               when "Longitude" then lon_cols.push index
 
         ### FUNCTIONS ###
-        
+
         update_headers()
 
         remove_row = (row) ->
@@ -203,7 +203,7 @@ $ ->
 
         add_validators = (row) ->
           row = ($ row).closest('tr')
-          
+
           update_headers()
           # attach validators
           for col in num_cols
@@ -218,7 +218,8 @@ $ ->
             do (col) ->
               ($ row).children().eq(col).find('input').replaceWith """
                 <div class='input-group'>
-                  <input class='validate_longitude form-control ' id='appendedInput' type='text' value='#{ ($ row).find('input').eq(col).val() }' />
+                  <input class='validate_longitude form-control ' id='appendedInput' type='text'
+                    value='#{ ($ row).find('input').eq(col).val() }' />
                   <span class='input-group-btn'>
                     <a href='#' tabindex='32767' class="btn btn-default map_picker">
                       <i class='fa fa-globe'></i>
@@ -235,7 +236,7 @@ $ ->
                   window.map.setCenter(location)
                   ($ '#address').val("")
                 ($ '#map_picker').modal()
-                
+
           for col in text_cols
             do (col) ->
               ($ row).children().eq(col).find('input').addClass 'validate_text'
@@ -244,7 +245,8 @@ $ ->
             do (col) ->
               ($ row).children().eq(col).find('input').replaceWith """
                 <div class='input-group datepicker'>
-                  <input class='validate_timestamp  form-control' type='text' data-format='yyyy/MM/dd hh:mm:ss' value='#{ ($ row).find('input').eq(col).val() }' />
+                  <input class='validate_timestamp  form-control' type='text'
+                    data-format='yyyy/MM/dd hh:mm:ss' value='#{ ($ row).find('input').eq(col).val() }' />
                   <span class='input-group-btn'>
                     <a href='#' tabindex='32767' class="btn btn-default">
                       <i class='fa fa-calendar'></i>
@@ -252,10 +254,10 @@ $ ->
                   </span>
                 </div>"""
               ($ row).children().eq(col).find('.datepicker').unbind().datetimepicker()
-              
+
 
         add_row = (tab) ->
- 
+
           # create a string of the new row
           new_row = "<tr class='new_row'>"
 
@@ -291,7 +293,7 @@ $ ->
               window.map.setCenter(location)
               ($ '#address').val("")
             ($ '#map_picker').modal()
-            
+
           # bind time to input
           ($ '.new_row').find('.datepicker').datetimepicker()
           ($ '.new_row').find('.datepicker').on 'changeDate', (e) ->
@@ -299,7 +301,7 @@ $ ->
 
           # remove token
           ($ '.new_row').removeClass('new_row')
-          
+
           #window.onload = ( -> ($ '#edit_table_add').click() )
 
         # strip table for upload
@@ -328,11 +330,11 @@ $ ->
 
           ($ tab).find('tr').each ->
             add_validators ($ @)
-            
+
           ($ tab).find("td:first").find("input").focus()
 
         submit_form = () =>
-        
+
           strip_table(table)
 
           # collect data and ship it off via AJAX
@@ -347,39 +349,39 @@ $ ->
               else
                 parent_id = ($ table).find("th:nth-child(#{index+1})").data('field-id')
                 table_data[parent_id].push(($ @).find('option:selected').val())
-              
+
 
           dname = ($ '#data_set_name').val()
           cname = ($ '#contrib_name').val()
-          
+
           ajax_data =
             title: if cname == "" then dname else "#{dname} - #{cname}"
             data: table_data
 
           ($ '#edit_table_add').addClass 'disabled'
           ($ '#edit_table_save').button 'loading'
-        
-          $.ajax 
+
+          $.ajax
             url: "#{settings.upload.url}"
             type: "POST"
             dataType: 'JSON'
             data: ajax_data
             error: settings.upload.error
             success: settings.upload.success
-            
+
 
         # does it pass?
         table_validates = (tab) ->
-        
+
           #Check for zero rows
           if ($ tab).find('td').has('input').length == 0
             alert "You must enter at least one row of data."
             return false
-            
+
           # Check that there is at least one value
           noInput = true
           ($ tab).find('td').has('input').each ->
-              noInput = noInput and (($ @).find('input').val() == "")
+            noInput = noInput and (($ @).find('input').val() == "")
           if noInput
             alert "You must enter at least one item of data."
             return false
@@ -404,7 +406,7 @@ $ ->
         button_container = ($ '.edit_table_control')
         if button_container.length == 0
           button_container = ($ '#edit_table_control')
-          
+
         # add buttons
         for button in settings.buttons
           do (button) ->
@@ -414,10 +416,12 @@ $ ->
                 ($ @).append '<td><div class="text-center"><a class="close" style="float:none;">&times;</a></div></td>'
 
             if button is "add" or button is "Add"
-              button_container.append "<button id='edit_table_add' class='btn btn-success' style='margin-right:10px;'>Add Row</button>"
+              button_container.append("""<button id='edit_table_add' class='btn btn-success'
+                style='margin-right:10px;'>Add Row</button>""")
 
             if button is "save" or button is "Save"
-              button_container.append "<button id='edit_table_save' class='btn btn-primary' data-loading-text='Saving...' autocomplete='off' >Save</button>"
+              button_container.append("""<button id='edit_table_save' class='btn btn-primary'
+                data-loading-text='Saving...' autocomplete='off' >Save</button>""")
 
         # if control panel is empty get rid of it
         if ($ '#edit_table_control').html() is ""
@@ -445,7 +449,7 @@ $ ->
             window.marker.setPosition(location)
             window.map.setCenter(location)
             ($ '#address').val("")
-          ($ '#map_picker').modal();
+          ($ '#map_picker').modal()
 
         #bind time button
         ($ 'td').find('.datepicker').datetimepicker()
@@ -459,19 +463,22 @@ $ ->
         ### SAVE TABLE ###
 
         ($ '#edit_table_save').click ->
-               
+
           if !($ '#edit_table_save').hasClass 'disabled'
-                
+
             if ($ '#data_set_name').val() == "" and settings.page_name == "manualEntry"
-              ($ '.mainContent').prepend "<div class='alert alert-danger alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button><strong>An error occurred: </strong> Please enter a name for your Data Set.</div>"
+              ($ '.mainContent').prepend """<div class='alert alert-danger alert-dismissable'>
+                <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>
+                &times;</button><strong>An error occurred: </strong>
+                Please enter a name for your Data Set.</div>"""
             else
-              
+
               if table_validates(table)
-                
+
                 #($ '#edit_table_save').unbind()
 
                 if settings.upload.ajaxify is true
-                  
+
                   submit_form()
 
 

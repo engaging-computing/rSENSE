@@ -37,7 +37,7 @@ $ ->
     
   $.fn.hide_row = (callback = null) ->
   
-    prop = 
+    prop =
       height: "0px"
       opacity: 0
       
@@ -60,19 +60,19 @@ $ ->
     
     $(selector).imagesLoaded ->
 
-      $(item).width(Math.floor(($(selector).width()/numCols)-colSep))
+      $(item).width(Math.floor(($(selector).width() / numCols) - colSep))
 
       $(selector).isotope
         itemSelector : item
         layoutMode : 'masonry'
         resizeable: false
         masonry:
-          columnWidth: $(selector).width()/numCols
+          columnWidth: $(selector).width() / numCols
     true
     
-  $.fn.delete_row = (callback = null)->
+  $.fn.delete_row = (callback = null) ->
     $(@).find('div, input').each ->
-      prop = 
+      prop =
         height: "0px"
         opacity: 0
           
@@ -86,12 +86,12 @@ $ ->
       ($ this).animate prop, options
 
   
-  $.fn.recolor_rows = (recolored = false)-> 
+  $.fn.recolor_rows = (recolored = false) ->
     if not recolored
-      ($ @).find("tr").each (idx) -> 
+      ($ @).find("tr").each (idx) ->
         if idx % 2 is 0
           ($ @).addClass 'feed-even'
           ($ @).removeClass 'feed-odd'
         else
           ($ @).removeClass 'feed-even'
-          ($ @).addClass 'feed-odd'    
+          ($ @).addClass 'feed-odd'

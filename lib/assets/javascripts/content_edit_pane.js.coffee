@@ -1,8 +1,8 @@
    
 $ ->
   
-  csrf_token = $('meta[name=csrf-token]').attr('content');
-  csrf_param = $('meta[name=csrf-param]').attr('content');
+  csrf_token = $('meta[name=csrf-token]').attr('content')
+  csrf_param = $('meta[name=csrf-param]').attr('content')
   
   turn_on_ck = (elem) =>
     root = ($ elem).parents('div.content_holder')
@@ -14,7 +14,7 @@ $ ->
 
     path = ""
     if (csrf_param isnt undefined && csrf_token isnt undefined)
-      params = csrf_param + "=" + encodeURIComponent(csrf_token);
+      params = csrf_param + "=" + encodeURIComponent(csrf_token)
       path =  "#{type}/#{row_id}?#{params}"
     
     if Boolean(can_edit)
