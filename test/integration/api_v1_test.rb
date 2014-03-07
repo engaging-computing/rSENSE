@@ -8,6 +8,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     @data_keys = ['id', 'name', 'hidden', 'url', 'path', 'createdAt', 'fieldCount', 'datapointCount', 'displayURL']
     @data_keys_extended = @data_keys + ['owner', 'project', 'fields', 'data']
     @dessert_project = projects(:dessert)
+    @thanksgiving_dataset = data_sets(:thanksgiving)
     @media_object_keys = ['id', 'mediaType', 'name', 'url', 'createdAt', 'src', 'tn_src']
     @media_object_keys_extended = @media_object_keys + ['project', 'owner']
   end
@@ -506,6 +507,37 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert !parse(response)['msg'].nil?
   end
   
+  
+  test 'append to data set (contribution_key)' do
+    post '/api/v1/data_sets/append',
+        id: @dessert_project.data_sets.first.id,
+        contribution_key: "apple",
+        data:
+          {
+          '20' => [ '1000' ],
+          '21' => [ '1001' ],
+          '22' => [ '1002' ]
+          }
+    assert_response :success
+    
+    data = parse(response)['data']
+    some_new_data = { '20' => "1000", '21' => '1001', '22' => '1002' }
+    
+    assert data.include?(some_new_data), "Updated data did not include new data points"
+  end
+  
+  test 'fail append to data set (bad contribution_key)' do
+    post '/api/v1/data_sets/append',
+        id: @dessert_project.data_sets.first.id,
+        contribution_key: 'blueberry',
+        data:
+          {
+          '20' => [ '1000' ],
+          '21' => [ '1001' ],
+          '22' => [ '1002' ]
+          }
+    assert_response :unauthorized
+  end
   
   private
 
