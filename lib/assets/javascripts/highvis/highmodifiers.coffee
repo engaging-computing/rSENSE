@@ -68,7 +68,9 @@ $ ->
         group = (String dp[@groupingFieldIndex]).toLowerCase() == @groups[groupIndex]
         notNull = (dp[xIndex] isnt null) and (dp[yIndex] isnt null)
         notNaN = (not isNaN(dp[xIndex])) and (not isNaN(dp[yIndex]))
-
+        
+        group and notNull and notNaN
+      
       mapFunc = (dp) ->
         obj =
           x: dp[xIndex]
