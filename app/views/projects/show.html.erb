@@ -188,7 +188,7 @@
             <button class="btn btn-success" id="template_file_upload"><i class="fa fa-file-o" style="margin:5px"></i>Upload File</button>
           </div> 
           <div class="clear"></div>
-        <% else %>
+        <% elsif @project.fields.count != 0 %>
           <table class="fields_table" project="<%=@project.id%>" can_delete_fields="<%if @project.data_sets.count>0%>false<%else%>true<%end%>" data-num_fields="<%=@project.fields.count%>">
             <thead>
               <tr>
