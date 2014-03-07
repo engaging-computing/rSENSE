@@ -102,7 +102,7 @@ $ ->
               point:
                 events:
                   mouseOver: () ->
-                          # Push elements to bottom to draw over others in series
+                    # Push elements to bottom to draw over others in series
                     ele = ($ @.graphic.element)
                     root = ele.parent()
                     root.append ele
@@ -211,15 +211,15 @@ $ ->
       Update the chart by removing all current series and recreating them
         ###
       update: () ->
-            #Remove all series and draw legend
+        #Remove all series and draw legend
         super()
 
-            #Set axis title
+        #Set axis title
         title =
           text: fieldTitle data.fields[@xAxis]
         @chart.xAxis[0].setTitle title, false
 
-            #Compute max bounds if there is no user zoom
+        #Compute max bounds if there is no user zoom
         if not @isZoomLocked()
 
           @yBounds.min = @xBounds.min =  Number.MAX_VALUE
@@ -237,7 +237,7 @@ $ ->
                 @xBounds.min = (new Date(@xBounds.min)).getUTCFullYear()
                 @xBounds.max = (new Date(@xBounds.max)).getUTCFullYear()
 
-            #Calculate grid spacing for data reduction
+        #Calculate grid spacing for data reduction
         width = ($ '#' + @canvas).width()
         height = ($ '#' + @canvas).height()
 
@@ -256,7 +256,7 @@ $ ->
               globals.dataReduce sel, @xBounds, @yBounds, @xGridSize, @yGridSize, @MAX_SERIES_SIZE
             else
               data.xySelector(@xAxis, fieldIndex, groupIndex)
-
+              
             options =
               data: dat
               showInLegend: false
@@ -264,7 +264,7 @@ $ ->
               name:
                 group: data.groups[groupIndex]
                 field: data.fields[fieldIndex].fieldName
-
+            
             switch
               when @mode is @SYMBOLS_LINES_MODE
                 options.marker =
@@ -297,9 +297,9 @@ $ ->
         @storeXBounds @chart.xAxis[0].getExtremes()
         @storeYBounds @chart.yAxis[0].getExtremes()
 
-            #Disable/enable all of the saved regressions as necessary
+        # Disable/enable all of the saved regressions as necessary
         for regression in @savedRegressions
-          #Filter out the ones that should be enabled.
+          # Filter out the ones that should be enabled.
           # - X indices must match.
           # - Compare the arrays without comparing them.
           # - #Y axis must be present
