@@ -1,10 +1,9 @@
 <div id="media_object_list" type="<%=type%>" obj_id="<%=object.id%>">
   <table id="media_table" style="width: 100%">
-    <tbody>
-      <% object.media_objects.to_a.each do |mo| %>
-      <% if !mo.media_type.nil? %>
-      <thead>
-      <tr>
+    <thead>
+     <% object.media_objects.to_a.each_with_index do |mo, i| %>
+      <% if !mo.media_type.nil? and i == 0 %>
+       <tr>
         <th style="max-width:10%">File</th>
         <th style="max-width:60%">Name</th>
         <th style="max-width:20%px"></th>
@@ -12,6 +11,7 @@
       </tr>
     </thead>
     <% end %>
+    <tbody>
         <% if !mo.owner.nil? %>
           <tr class="<%= cycle('feed-even','feed-odd') %> media">
             <% if !(mo.media_type == 'image') %>
