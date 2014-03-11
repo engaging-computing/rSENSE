@@ -464,7 +464,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
 
     assert_response :unauthorized
   end
-  
+
   test 'fail append to data set (not found)' do
     post '/api/v1/data_sets/append',
         id: 2,
@@ -480,18 +480,18 @@ class ApiV1Test < ActionDispatch::IntegrationTest
         password: '12345',
         data:
           {
-          '20' => [ '99', '100', '101' ],
-          '21' => [ '102', '103', '104' ],
-          '22' => [ '105', '106', '107' ]
+            '20' => ['99', '100', '101'],
+            '21' => ['102', '103', '104'],
+            '22' => ['105', '106', '107']
           }
     assert_response :success
-    
+
     data = parse(response)['data']
-    some_new_data = { '20' => "99", '21' => '102', '22' => '105' }
-    
-    assert data.include?(some_new_data), "Updated data did not include new data points"
+    some_new_data = { '20' => '99', '21' => '102', '22' => '105' }
+
+    assert data.include?(some_new_data), 'Updated data did not include new data points'
   end
-  
+
   test 'fail append to data set (failed sanitization)' do
     post '/api/v1/data_sets/append',
         id: @dessert_project.data_sets.first.id,
@@ -499,46 +499,45 @@ class ApiV1Test < ActionDispatch::IntegrationTest
         password: '12345',
         data:
           {
-          '20' => [ 'blue', '100', '101' ],
-          '21' => [ '102', '103', '104' ],
-          '22' => [ '105', '106', '107' ]
+            '20' => ['blue', '100', '101'],
+            '21' => ['102', '103', '104'],
+            '22' => ['105', '106', '107']
           }
     assert_response :unprocessable_entity
     assert !parse(response)['msg'].nil?
   end
-  
-  
+
   test 'append to data set (contribution_key)' do
     post '/api/v1/data_sets/append',
         id: @dessert_project.data_sets.first.id,
-        contribution_key: "apple",
+        contribution_key: 'apple',
         data:
           {
-          '20' => [ '1000' ],
-          '21' => [ '1001' ],
-          '22' => [ '1002' ]
+            '20' => ['1000'],
+            '21' => ['1001'],
+            '22' => ['1002']
           }
     assert_response :success
-    
+
     data = parse(response)['data']
-    some_new_data = { '20' => "1000", '21' => '1001', '22' => '1002' }
-    
-    assert data.include?(some_new_data), "Updated data did not include new data points"
+    some_new_data = { '20' => '1000', '21' => '1001', '22' => '1002' }
+
+    assert data.include?(some_new_data), 'Updated data did not include new data points'
   end
-  
+
   test 'fail append to data set (bad contribution_key)' do
     post '/api/v1/data_sets/append',
         id: @dessert_project.data_sets.first.id,
         contribution_key: 'blueberry',
         data:
           {
-          '20' => [ '1000' ],
-          '21' => [ '1001' ],
-          '22' => [ '1002' ]
+            '20' => ['1000'],
+            '21' => ['1001'],
+            '22' => ['1002']
           }
     assert_response :unauthorized
   end
-  
+
   private
 
   def parse(x)
