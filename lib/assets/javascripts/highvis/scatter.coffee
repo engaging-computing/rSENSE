@@ -606,7 +606,7 @@ $ ->
 
         # Add all the saved regressions correctly
         for regression in @savedRegressions
-          #Filter out the ones that should be enabled.
+          # Filter out the ones that should be enabled.
           # - X indices must match.
           # - Compare the arrays without comparing them.
           # - #Y axis must be present

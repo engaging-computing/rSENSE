@@ -111,12 +111,12 @@ $ ->
     ###
     globals.serializeVis = ->
 
-        # set current vis to default
+      # set current vis to default
       current = (globals.curVis.canvas.match /([A-z]*)_canvas/)[1]
       current = current[0].toUpperCase() + current.slice 1
       data.defaultVis = current
 
-        # Check for and note LT dates
+      # Check for and note LT dates
       if data.timeType is data.NORM_TIME
         for dp, dIndex in data.dataPoints
           for fieldIndex in data.timeFields
