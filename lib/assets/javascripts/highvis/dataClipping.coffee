@@ -26,11 +26,29 @@
   * DAMAGE.
   *
 ###
-
 $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
     
     # Use this to save vis state
-    globals.CLIPPING.IS_CLIPPED = 0
+    window.globals ?= {}
+    globals.CLIPPING ?= {}
+    globals.CLIPPING.CLIPPING_MODE ?= 0
     
-    console.log this
+    # Retrieve the correct data depending on whether you are clipping or not
+    globals.CLIPPING.getData = (curData) ->
+      dataArray = curData
+      #console.log(curData)
+      if globals.CLIPPING.CLIPPING_MODE
+        # Take the intersection of the clipping visualizations
+        if globals.scatter?
+          dataArray = globals.scatter.clip(dataArray)
+          console.log("scattering", dataArray)
+        if globals.timeline?
+          dataArray = globals.timeline.clip(dataArray)
+          console.log("timelining", dataArray)
+        if globals.map?
+          dataArray = globals.map.clip(dataArray)
+        if globals.table?
+          dataArray = globals.table.clip(dataArray)
+
+      dataArray
