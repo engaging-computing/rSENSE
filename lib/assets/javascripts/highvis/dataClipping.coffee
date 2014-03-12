@@ -29,5 +29,8 @@
 
 $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
-    globals.CLIPPING.CLIPPED = 0
-    globals.CLIPPING.FULL_DATA = 1
+    
+    # Use this to save vis state
+    globals.CLIPPING.IS_CLIPPED = 0
+    
+    console.log this
