@@ -103,6 +103,12 @@ $ ->
       ###
       drawXAxisControls: ->
         super (fieldIndex) -> fieldIndex in data.timeFields
+        
+      ###
+      Clips an array of data to include only bounded points
+      ###
+      clip: (arr) ->
+        super(arr)
 
     if "Timeline" in data.relVis
       globals.timeline = new Timeline 'timeline_canvas'

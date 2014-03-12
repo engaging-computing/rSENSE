@@ -64,7 +64,7 @@ $ ->
     ###
     data.xySelector = (xIndex, yIndex, groupIndex) ->
    
-      rawData = @dataPoints.filter (dp) =>
+      rawData = globals.CLIPPING.getData(@dataPoints).filter (dp) =>
         group = (String dp[@groupingFieldIndex]).toLowerCase() == @groups[groupIndex]
         notNull = (dp[xIndex] isnt null) and (dp[yIndex] isnt null)
         notNaN = (not isNaN(dp[xIndex])) and (not isNaN(dp[yIndex]))

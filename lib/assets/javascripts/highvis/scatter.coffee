@@ -816,9 +816,12 @@ $ ->
               @chart.tooltip.hide()
               break
 
-      # Clips an array of data to include only bounded points
+      ###
+      Clips an array of data to include only bounded points
+      ###
       clip: (arr) ->
-        if @xBounds? and @yBounds?
+        console.log(@xBounds, @yBounds)
+        if @xBounds.min? and @xBounds.max? and @yBounds.min? and @yBounds.max?
           point for point in arr when clipped(point, @xBounds, @yBounds)
         else
           arr
