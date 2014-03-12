@@ -28,5 +28,4 @@
 ###
 
 $ ->
-
-  #if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]

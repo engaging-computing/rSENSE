@@ -302,7 +302,7 @@ $ ->
           # Filter out the ones that should be enabled.
           # - X indices must match.
           # - Compare the arrays without comparing them.
-          # - #Y axis must be present
+          # - Y axis must be present.
           if regression.fieldIndices[0] == @xAxis \
           && "#{regression.fieldIndices[2]}" == "#{globals.groupSelection}" \
           && globals.fieldSelection.indexOf(regression.fieldIndices[1]) != -1
@@ -609,7 +609,7 @@ $ ->
           # Filter out the ones that should be enabled.
           # - X indices must match.
           # - Compare the arrays without comparing them.
-          # - #Y axis must be present
+          # - Y axis must be present.
           if regression.fieldIndices[0] == @xAxis \
           && "#{regression.fieldIndices[2]}" == "#{globals.groupSelection}" \
           && globals.fieldSelection.indexOf(regression.fieldIndices[1]) != -1
