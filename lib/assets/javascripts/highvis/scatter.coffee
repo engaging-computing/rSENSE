@@ -644,7 +644,7 @@ $ ->
           fullData = data.multiGroupXYSelector(@xAxis, yAxisIndex, groupIndex)
 
           # Clip the x and y data so they only include the visible points
-          fullData = clip(fullData, @xBounds, @yBounds)
+          fullData = @clip(fullData)
 
           # Separate the x and y data
           xData =
@@ -817,8 +817,11 @@ $ ->
               break
 
       # Clips an array of data to include only bounded points
-      clip = (arr, xBounds, yBounds) ->
-        point for point in arr when clipped(point, xBounds, yBounds)
+      clip: (arr) ->
+        if @xBounds? and @yBounds?
+          point for point in arr when clipped(point, @xBounds, @yBounds)
+        else
+          arr
 
       # Checks if a point is visible on screen
       clipped = (point, xBounds, yBounds) ->

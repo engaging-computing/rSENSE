@@ -91,6 +91,4 @@ class RefactorDatasetRegressions < ActiveRecord::Migration
       viz.save
     end
   end
-    
-    
 end
