@@ -56,13 +56,13 @@ class ApplicationController < ActionController::Base
   end
 
   def set_user
+    # The API call came with an email and password
     if (params.key? :email) & (params.key? :password)
       login_email = params[:email].downcase
 
       @user = User.where('lower(email) = ?', login_email).first
 
       if @user and @user.authenticate(params[:password])
-#         session[:user_id] = @user.id
         @user.update_attributes(last_login: Time.now)
         @cur_user = @user
       else
@@ -70,6 +70,8 @@ class ApplicationController < ActionController::Base
           format.json { render json: { msg: 'Email & Password do not match.' }, status: :unauthorized }
         end
       end
+
+    # The API call came with a contribution key and they are trying to access a project
     elsif (params.key? :contribution_key) && (['jsonDataUpload', 'saveMedia'].include? params[:action])
       project = Project.find_by_id(params[:id] || params[:pid])
       if project && !project.contrib_keys.find_by_key(params[:contribution_key]).nil?
@@ -85,8 +87,23 @@ class ApplicationController < ActionController::Base
           format.json { render json: { msg: 'Contribution key not valid' }, status: :unauthorized }
         end
       end
-    else
 
+    # The API call came with a contribution key and they are trying to access a dataset
+    elsif (params.key? :contribution_key) &&
+        (['append', 'edit'].include? params[:action]) &&
+        params[:controller].include?('data_sets')
+      data_set = DataSet.find_by_id(params[:id])
+      if data_set &&
+          data_set.key == params[:contribution_key] &&
+          !data_set.project.contrib_keys.find_by_key(params[:contribution_key]).nil?
+        @cur_user = User.find_by_id(data_set.owner.id)
+      else
+        respond_to do |format|
+          format.json { render json: { msg: 'Contribution key not valid' }, status: :unauthorized }
+        end
+      end
+
+    else
       respond_to do |format|
         format.json { render json: { msg: 'Must send Email & Password with this request' }, status: :unauthorized }
       end
