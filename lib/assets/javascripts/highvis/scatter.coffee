@@ -46,6 +46,7 @@ $ ->
         @mode = @SYMBOLS_MODE
 
         @xAxis = data.normalFields[0]
+        @yAxis = globals.fieldSelection
 
         @advancedTooltips = 0
 
@@ -479,6 +480,14 @@ $ ->
 
         ($ '#xAxisControl > h3').click ->
           globals.xAxisOpen = (globals.xAxisOpen + 1) % 2
+          
+      ###
+      Save the Y-axis selection for clipping purposes
+      ###
+      drawYAxisControls: (radio = false) ->
+        super(radio)
+        @yAxis = globals.fieldSelection
+        
 
       ###
       Checks if the user has requested a specific zoom
@@ -640,18 +649,18 @@ $ ->
           regressionType = Number(($ '#regressionSelector').val())
           groupIndex = globals.groupSelection
 
-          # Get the x and y data as a clippable object
-          fullData = data.multiGroupXYSelector(@xAxis, yAxisIndex, groupIndex)
+          # Get the full data so as to be clippable
+          fullData = data.dataPoints
 
-          # Clip the x and y data so they only include the visible points
+          # Clip the data so they only include the visible points
           fullData = @clip(fullData)
 
           # Separate the x and y data
           xData =
-            point.x for point in fullData
+            point[@xAxis] for point in fullData
           yData =
-            point.y for point in fullData
-
+            point[yAxisIndex] for point in fullData
+            
           # Get dash index
           dashIndex = data.normalFields.indexOf(yAxisIndex)
           dashStyle = globals.dashes[dashIndex % globals.dashes.length]
@@ -820,18 +829,25 @@ $ ->
       Clips an array of data to include only bounded points
       ###
       clip: (arr) ->
-        console.log(@xBounds, @yBounds)
+      
+        # Checks if a point is visible on screen
+        clipped = (point, xBounds, yBounds) =>
+          # Check x axis
+          if (point[@xAxis] isnt null) && (not isNaN point[@xAxis]) && point[@xAxis] >= xBounds.min && point[@xAxis] <= xBounds.max
+            
+            # Check all y axes
+            for yAxis in @yAxis
+              if !((point[yAxis] isnt null) && (not isNaN point[yAxis]) && point[yAxis] >= yBounds.min && point[yAxis] <= yBounds.max)
+                return false
+            
+            return true
+          else return false
+        
+        # Do the actual clipping
         if @xBounds.min? and @xBounds.max? and @yBounds.min? and @yBounds.max?
           point for point in arr when clipped(point, @xBounds, @yBounds)
         else
           arr
-
-      # Checks if a point is visible on screen
-      clipped = (point, xBounds, yBounds) ->
-        if point.x >= xBounds.min && point.x <= xBounds.max && point.y >= yBounds.min && point.y <= yBounds.max
-          return true
-        else
-          return false
 
     if "Scatter" in data.relVis
       globals.scatter = new Scatter "scatter_canvas"
