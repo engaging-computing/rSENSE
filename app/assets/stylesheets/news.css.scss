@@ -6,7 +6,7 @@
   textarea
   {
     border-top-right-radius: 0em;
-    border-bottom-right-radius: 0em;
+    border-bottom-right-radius: 0em;    
   }
 
   .icon-ok
@@ -24,6 +24,7 @@
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 1.3em;
     font-weight: 700;
+    word-wrap: break-word;
   }
   margin-left: 10px;
 }

@@ -21,15 +21,19 @@
 
 .news_description
 {
-  height:110px ; 
+  max-height:110px ; 
   word-wrap: break-word ;
-  overflow: hidden  
+  overflow: hidden ;  
+  margin-top: -5px; 
 }
 .news_preview
 {
-  //padding:7px;
-  //height:184px"  
-  
+  padding:7px;
+  height:184px;    
+}
+.article_link
+{
+  //padding-top: 7px;  
 }
 .news_featured_image
 {
