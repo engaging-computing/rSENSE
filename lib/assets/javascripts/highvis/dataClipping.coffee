@@ -36,19 +36,16 @@ $ ->
     
     # Retrieve the correct data depending on whether you are clipping or not
     globals.CLIPPING.getData = (curData) ->
+      clippableVises = ["map", "timeline", "scatter", "table"]
+      
       dataArray = curData
-      #console.log(curData)
+      
       if globals.CLIPPING.CLIPPING_MODE
         # Take the intersection of the clipping visualizations
-        if globals.scatter?
-          dataArray = globals.scatter.clip(dataArray)
-          console.log("scattering", dataArray)
-        if globals.timeline?
-          dataArray = globals.timeline.clip(dataArray)
-          console.log("timelining", dataArray)
-        if globals.map?
-          dataArray = globals.map.clip(dataArray)
-        if globals.table?
-          dataArray = globals.table.clip(dataArray)
-
+        for vis in clippableVises
+          curVis = (eval "globals.#{vis}")
+          if curVis? and curVis isnt globals.curVis
+            dataArray = curVis.clip(dataArray)
+            console.log(vis, dataArray.length)
+       
       dataArray

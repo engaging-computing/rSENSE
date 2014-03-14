@@ -58,7 +58,7 @@ $ ->
 
       savedData = globals.serializeVis()
 
-        ## construct default name
+      # Construct default name
       sessionNames = for index, ses of data.metadata
         ses.name
 

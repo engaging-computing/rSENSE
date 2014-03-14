@@ -239,7 +239,7 @@ $ ->
 
           return result
         
-      clip = () ->
+      clip: (arr) -> arr
       
 
     globals.table = new Table "table_canvas"

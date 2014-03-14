@@ -41,7 +41,6 @@ $ ->
     ###
 
     ### Fix height ###
-
     if globals.options? and globals.options.isEmbed?
       ($ "#viscontainer").height
     else
@@ -135,8 +134,6 @@ $ ->
       ($ '.vis_canvas').width  visWidth
       ($ '.vis_canvas').height visHeight
 
-#     ($ '#controlhider').height visHeight
-#
     ($ '#controldiv').width 0
     ($ '#controldiv').height visHeight
 
