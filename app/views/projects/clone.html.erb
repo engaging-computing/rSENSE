@@ -27,10 +27,12 @@
             <%= text_field_tag :project_name, @project.title + " (clone)", class: "form-control", autofocus: true %>
           </div>
           
-          <div class="form-group">
-            <%= label_tag(:clone_datasets, "Clone Datasets:") %>
-            <%= check_box_tag :clone_datasets, class: "form-control", autofocus: true %>
-          </div>
+          <% if @project.data_sets.any? %>
+			<div class="form-group">
+			   <%= label_tag(:clone_datasets, "Clone Data Sets:") %>
+			   <%= check_box_tag :clone_datasets, class: "form-control", autofocus: true %>
+			</div>
+		  <% end %>
           
           <div style="text-align:center;">
 	    <span style="color:#BBB;">Media objects will automatically be cloned (e.g. photos, text, and files)</span>
