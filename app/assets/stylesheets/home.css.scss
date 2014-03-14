@@ -21,10 +21,10 @@
 
 .news_description
 {
-  max-height:110px ; 
-  word-wrap: break-word ;
-  overflow: hidden ;  
-  margin-top: -5px; 
+  line-height: 2.5ex ;     
+  height: 12.5ex ; 
+  word-wrap: break-all ;
+  overflow: hidden ;    
 }
 .news_preview
 {
@@ -33,7 +33,7 @@
 }
 .article_link
 {
-  //padding-top: 7px;  
+padding-top: 5px;  
 }
 .news_featured_image
 {

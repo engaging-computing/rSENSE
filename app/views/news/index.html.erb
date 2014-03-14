@@ -17,13 +17,16 @@
       <div class="item clickableItem" style="height:198px;">
         <a href="<%=news_path n%>"></a>
         <%if n.featured_media_id != nil %>
-          <div style="word-wrap: break-word;float:left;clear:left;width:30%;height:198px;margin-right:15px;"><a href="<%=news_path n%>"><div class="news_featured_image_2" style=<%= "background-image:url(" + MediaObject.find(n.featured_media_id).src + ")"%>></div></a></div>
-        <%end%>
-        <div style="word-wrap: break-word;padding:7px;height:184px">
-          <span class="news_page_title"><%= n.title %></span><br/>
-          <span style="font-size:0.8em">Written on <%=n.created_at.strftime("%B %d, %Y")%></span><br/><br/>
-          <%= n.summary %><br/><br/>
-          <%= link_to "Read More", news_path(n) %>
+          <div style="word-wrap: break-word;float:left;clear:left;width:30%;height:198px"><a href="<%=news_path n%>"><div class="news_featured_image_2" style=<%= "background-image:url(" + MediaObject.find(n.featured_media_id).src + ")"%>></div></a></div>
+        
+        <div style="word-wrap: break-word;padding:7px;width:68%;height:184px;float:right">
+        <% else %>
+          <div style="word-wrap: break-word;padding:7px;width:100%;height:184px;float:right">
+        <% end %>
+        <span class="news_page_title"><%= n.title %></span><br/>
+          <span style="font-size:0.8em">Written on <%=n.created_at.strftime("%B %d, %Y")%></span> <br /> <br />
+          <span class = "news_description"> <%= n.summary %></span> <br />
+          <span class ="read-more-link"><%= link_to "Read More", news_path(n) %> </span>
         </div>
       </div>      
     </div>  

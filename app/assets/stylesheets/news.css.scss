@@ -24,7 +24,7 @@
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 1.3em;
     font-weight: 700;
-    word-wrap: break-word;
+    
   }
   margin-left: 10px;
 }
@@ -56,3 +56,15 @@
   background-size: 175%;
   overflow:hidden;
 }
+
+.row{
+    
+  word-wrap: break-word;
+  
+}
+
+/*.news_description{
+    word-wrap: break-word;
+    line-height: 16px;
+    height: 90px;
+}*/
