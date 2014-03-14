@@ -6,7 +6,7 @@
   textarea
   {
     border-top-right-radius: 0em;
-    border-bottom-right-radius: 0em;
+    border-bottom-right-radius: 0em;    
   }
 
   .icon-ok
@@ -24,6 +24,7 @@
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 1.3em;
     font-weight: 700;
+    
   }
   margin-left: 10px;
 }
@@ -54,4 +55,28 @@
   background-repeat: no-repeat;
   background-size: 175%;
   overflow:hidden;
+}
+.row{
+    
+  word-wrap: break-word;
+  
+}
+.news-link{
+  float:left;
+  width:30%;
+  height:198px;  
+}
+
+.description_with_image{
+  word-wrap: break-word;
+  padding:7px;
+  width:68%;
+  height:184px;
+  float:right;  
+}
+.description_without_image{
+  word-wrap: break-word;
+  padding:7px;
+  width:100%;
+  height:184px;
 }
