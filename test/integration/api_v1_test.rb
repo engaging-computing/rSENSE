@@ -8,6 +8,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     @data_keys = ['id', 'name', 'hidden', 'url', 'path', 'createdAt', 'fieldCount', 'datapointCount', 'displayURL']
     @data_keys_extended = @data_keys + ['owner', 'project', 'fields', 'data']
     @dessert_project = projects(:dessert)
+    @thanksgiving_dataset = data_sets(:thanksgiving)
     @media_object_keys = ['id', 'mediaType', 'name', 'url', 'createdAt', 'src', 'tn_src']
     @media_object_keys_extended = @media_object_keys + ['project', 'owner']
   end
@@ -379,7 +380,6 @@ class ApiV1Test < ActionDispatch::IntegrationTest
 
     # Failed do to bad auth
     post '/api/v1/media_objects',
-
         upload: file,
         id: @dessert_project.id,
         type: 'project'
@@ -393,7 +393,6 @@ class ApiV1Test < ActionDispatch::IntegrationTest
 
     # Failed due to bad data
     post '/api/v1/media_objects',
-
          upload: file,
          email: 'kcarcia@cs.uml.edu',
          password: '12345',
@@ -409,7 +408,6 @@ class ApiV1Test < ActionDispatch::IntegrationTest
 
     # Failed due to bad data
     post '/api/v1/media_objects',
-
          upload: file,
          email: 'kcarcia@cs.uml.edu',
          password: '12345',
@@ -425,7 +423,6 @@ class ApiV1Test < ActionDispatch::IntegrationTest
 
     # Create a media object for a project
     post '/api/v1/media_objects',
-
          upload: file,
          contribution_key: 'apple',
          contributor_name: 'Student 1',
@@ -442,7 +439,6 @@ class ApiV1Test < ActionDispatch::IntegrationTest
 
     # Create a media object for a project
     post '/api/v1/media_objects',
-
          upload: file,
          contribution_key: 'blueberry',
          contributor_name: 'Student 1',
@@ -455,7 +451,6 @@ class ApiV1Test < ActionDispatch::IntegrationTest
 
   test 'get user info' do
     get '/api/v1/users/myInfo',
-
         email: 'kcarcia@cs.uml.edu',
         password: '12345'
 
@@ -464,10 +459,82 @@ class ApiV1Test < ActionDispatch::IntegrationTest
 
   test 'fail get user info' do
     get '/api/v1/users/myInfo',
-
         email: 'kcarcia@cs.uml.edu',
         password: '1234'
 
+    assert_response :unauthorized
+  end
+
+  test 'fail append to data set (not found)' do
+    post '/api/v1/data_sets/append',
+        id: 2,
+        email: 'kcarcia@cs.uml.edu',
+        password: '12345'
+    assert_response :not_found
+  end
+
+  test 'append to data set' do
+    post '/api/v1/data_sets/append',
+        id: @dessert_project.data_sets.first.id,
+        email: 'kcarcia@cs.uml.edu',
+        password: '12345',
+        data:
+          {
+            '20' => ['99', '100', '101'],
+            '21' => ['102', '103', '104'],
+            '22' => ['105', '106', '107']
+          }
+    assert_response :success
+
+    data = parse(response)['data']
+    some_new_data = { '20' => '99', '21' => '102', '22' => '105' }
+
+    assert data.include?(some_new_data), 'Updated data did not include new data points'
+  end
+
+  test 'fail append to data set (failed sanitization)' do
+    post '/api/v1/data_sets/append',
+        id: @dessert_project.data_sets.first.id,
+        email: 'kcarcia@cs.uml.edu',
+        password: '12345',
+        data:
+          {
+            '20' => ['blue', '100', '101'],
+            '21' => ['102', '103', '104'],
+            '22' => ['105', '106', '107']
+          }
+    assert_response :unprocessable_entity
+    assert !parse(response)['msg'].nil?
+  end
+
+  test 'append to data set (contribution_key)' do
+    post '/api/v1/data_sets/append',
+        id: @dessert_project.data_sets.first.id,
+        contribution_key: 'apple',
+        data:
+          {
+            '20' => ['1000'],
+            '21' => ['1001'],
+            '22' => ['1002']
+          }
+    assert_response :success
+
+    data = parse(response)['data']
+    some_new_data = { '20' => '1000', '21' => '1001', '22' => '1002' }
+
+    assert data.include?(some_new_data), 'Updated data did not include new data points'
+  end
+
+  test 'fail append to data set (bad contribution_key)' do
+    post '/api/v1/data_sets/append',
+        id: @dessert_project.data_sets.first.id,
+        contribution_key: 'blueberry',
+        data:
+          {
+            '20' => ['1000'],
+            '21' => ['1001'],
+            '22' => ['1002']
+          }
     assert_response :unauthorized
   end
 
