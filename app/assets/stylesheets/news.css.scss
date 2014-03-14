@@ -56,15 +56,27 @@
   background-size: 175%;
   overflow:hidden;
 }
-
 .row{
     
   word-wrap: break-word;
   
 }
+.news-link{
+  float:left;
+  width:30%;
+  height:198px;  
+}
 
-/*.news_description{
-    word-wrap: break-word;
-    line-height: 16px;
-    height: 90px;
-}*/
+.description_with_image{
+  word-wrap: break-word;
+  padding:7px;
+  width:68%;
+  height:184px;
+  float:right;  
+}
+.description_without_image{
+  word-wrap: break-word;
+  padding:7px;
+  width:100%;
+  height:184px;
+}
