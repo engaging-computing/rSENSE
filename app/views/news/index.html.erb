@@ -17,7 +17,7 @@
       <div class="item clickableItem" style="height:198px;">
         <a href="<%=news_path n%>"></a>
         <%if n.featured_media_id != nil %>
-          <div style="float:left;clear:left;width:30%;height:198px"><a href="<%=news_path n%>"><div class="news_featured_image_2" style=<%= "background-image:url(" + MediaObject.find(n.featured_media_id).src + ")"%>></div></a></div>
+          <div class="news_picture_image"><a href="<%=news_path n%>"><div class="news_featured_image_2" style=<%= "background-image:url(" + MediaObject.find(n.featured_media_id).src + ")"%>></div></a></div>
           <div class="news_with_image"
         <%end%>
         <div class="news_without_image">
