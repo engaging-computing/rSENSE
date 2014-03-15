@@ -37,7 +37,7 @@ class ContribKeysController < ApplicationController
     keys = @project.contrib_keys.where(key: params[:key])
 
     if keys.count > 0
-#       session[:key] = keys.first.name
+       session[:key] = keys.first.name
       session[:contrib_access] = @project.id
       flash[:notice] = 'You have entered a valid contributor key.'
       redirect_to @project

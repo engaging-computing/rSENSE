@@ -171,6 +171,16 @@ input.name_edit_box, input.unit_edit_box, .name_add_box, .unit_add_box, .type_ad
   text-align: center;
 }
 
+.key{
+  position:relative;
+}
+.key a{
+  position: absolute;
+  left:3px;
+  top:9px;
+  color: black ;
+}
+
 button.finished_button
 {
   float: right;
