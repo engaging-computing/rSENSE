@@ -47,10 +47,8 @@ class MediaObject < ActiveRecord::Base
   end
 
   def src
-    Rails.logger.error('-------------------')
     return '' if store_key.nil?
     uupath = store_uupath(store_key)
-    Rails.logger.error name
     ename  = URI.escape(name)
     "#{uupath}/#{ename}"
   end
