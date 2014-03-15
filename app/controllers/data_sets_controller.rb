@@ -116,7 +116,7 @@ class DataSetsController < ApplicationController
     @data_set = DataSet.find(params[:id])
     @project  = @data_set.project
 
-    if @project.lock? and !can_edit(@project)
+    if @project.lock? and !can_edit?(@project)
       redirect_to @project, alert: 'Project is locked'
       return
     end

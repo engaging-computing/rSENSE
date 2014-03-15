@@ -196,7 +196,6 @@ $ ->
     ($ 'a.data_set_delete').click (e) ->
    
       e.preventDefault()
-      console.log("y u no delete?!?!?!?!")   
       if helpers.confirm_delete ($ @).attr('name')
         $.ajax
           url: ($ @).attr('href')
