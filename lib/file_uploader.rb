@@ -15,8 +15,9 @@ class FileUploader
       data_obj['data'][header[i]] = spreadsheet.column(i + 1)[1, spreadsheet.last_row]
     end
 
+    start = (Time.now.to_f*1000)
     data_obj[:file] =  write_temp_file(CSV.parse(spreadsheet.to_csv))
-
+    Rails.logger.info((Time.now.to_f*1000)-start)
     data_obj
   end
 
@@ -26,9 +27,9 @@ class FileUploader
       # Rails.logger.info "-=-=-=#{file.path}"
       case File.extname(file.original_filename)
       when '.csv' then convert(file.path)
-      when '.xls' then Roo::Excel.new(file.path, nil, :ignore)
-      when '.xlsx' then Roo::Excelx.new(file.path, nil, :ignore)
-      when '.ods' then Roo::OpenOffice.new(file.path, false, :ignore)
+      when '.xls', '.xlsx', '.ods'
+        system "unoconv -f csv #{file.path}"
+        convert("#{file.path}.csv")
       when '.gpx' then GpxParser.new.convert(file.path)
       when '.qmbl' then VernierParser.new.convert(file.path)
       else fail "Unknown file type: #{file.original_filename}"
@@ -88,7 +89,7 @@ class FileUploader
 
   ### Match headers should return a match_matrix for mismatches or continue
   def match_headers(project, data_obj)
-    fields = project.fields.map { |fi| fi.to_hash }
+    fields = project.fields.map { |fi| fi.to_hash(false) }
 
     if data_obj.key?('data')
       headers = data_obj['data'].keys

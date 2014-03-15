@@ -20,9 +20,7 @@
       </tr>
     </thead>
     <tbody>
-      <% @project.fields.each do |f|%>
-        <%= render 'field_edit', field: f, type: "field", row_id: f.id, can_edit: (can_edit? @project), has_ses: @project.data_sets.count %>
-      <% end %>
+      <%= render 'field_edit', type: "field", can_edit: (can_edit? @project), has_ses: @project.data_sets.count %>
     </tbody>
   </table>
 
