@@ -316,7 +316,7 @@ class FileUploader
 
         # Delete the files now since we are done with them.
         if @converted_csv
-          File.delete(@converted_csv) 
+          File.delete(@converted_csv)
           File.delete(@converted_csv[0..-5])
         end
 
