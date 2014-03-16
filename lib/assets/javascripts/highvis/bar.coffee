@@ -74,8 +74,8 @@ $ ->
         visibleCategories = for selection in data.normalFields when selection in globals.fieldSelection
           fieldTitle data.fields[selection]
 
-        # If there is only one series, show the groupby text. else show the diffent x fields titles.
-        if @chart.series.length == 1 
+        # If there is only one series, show the groupby text. else show the diffent y field titles.
+        if @chart.series.length == 1
           @chart.xAxis[0].setCategories [data.fields[data.groupingFieldIndex].fieldName], false
         else
           @chart.xAxis[0].setCategories visibleCategories, false
