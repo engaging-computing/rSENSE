@@ -5,6 +5,8 @@ require 'open-uri'
 require 'fileutils'
 
 class FileUploader
+  @converted_csv = nil
+
   ### Generates the object that will be acted on
   def generateObject(file)
     spreadsheet = open_spreadsheet(file)
@@ -15,21 +17,20 @@ class FileUploader
       data_obj['data'][header[i]] = spreadsheet.column(i + 1)[1, spreadsheet.last_row]
     end
 
-    start = (Time.now.to_f*1000)
     data_obj[:file] =  write_temp_file(CSV.parse(spreadsheet.to_csv))
-    Rails.logger.info((Time.now.to_f*1000)-start)
+
     data_obj
   end
 
   ### Simply opens the file as the correct type and returns the Roo object.
   def open_spreadsheet(file)
     if file.class == ActionDispatch::Http::UploadedFile
-      # Rails.logger.info "-=-=-=#{file.path}"
       case File.extname(file.original_filename)
-      when '.csv' then convert(file.path)
+      when '.csv', '.txt', '.text' then convert(file.path)
       when '.xls', '.xlsx', '.ods'
         system "unoconv -f csv #{file.path}"
-        convert("#{file.path}.csv")
+        @converted_csv = "#{file.path}.csv"
+        convert(@converted_csv)
       when '.gpx' then GpxParser.new.convert(file.path)
       when '.qmbl' then VernierParser.new.convert(file.path)
       else fail "Unknown file type: #{file.original_filename}"
@@ -208,7 +209,7 @@ class FileUploader
 
     # Save file so we can grab it again
     base = '/tmp/rsense/dataset'
-    fname = base + "#{Time.now.to_i}.csv"
+    fname = base + "#{SecureRandom.hex}.csv"
     f = File.new(fname, 'w')
 
     y = ''
@@ -312,6 +313,12 @@ class FileUploader
 
     possible_separators.each_with_index do |sep, index|
       if  delim[index][:data].first.count == delim[index][:avg] and delim[index][:data].last.count == delim[index][:avg] and delim[index][:avg] > 1
+
+        # Delete the files now since we are done with them.
+        if @converted_csv
+          File.delete(@converted_csv) 
+          File.delete(@converted_csv[0..-5])
+        end
 
         return delim[index][:file]
 
