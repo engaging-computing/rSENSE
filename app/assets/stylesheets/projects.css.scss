@@ -277,3 +277,7 @@ table#fields_table
     background-color: #dedede;
   }
 }
+#description.content_holder {
+  overflow: scroll;
+  height:  200px;
+}
