@@ -28,8 +28,8 @@ class FileUploader
       case File.extname(file.original_filename)
       when '.csv', '.txt', '.text' then convert(file.path)
       when '.xls', '.xlsx', '.ods'
-        system "unoconv -f csv #{file.path}"
-        @converted_csv = "#{file.path}.csv"
+        system "libreoffice --headless --nologo --convert-to csv #{file.path} --outdir /tmp/rsense"
+        @converted_csv = "/tmp/rsense/#{file.path.gsub('/tmp/','')}.csv"
         convert(@converted_csv)
       when '.gpx' then GpxParser.new.convert(file.path)
       when '.qmbl' then VernierParser.new.convert(file.path)
@@ -317,7 +317,6 @@ class FileUploader
         # Delete the files now since we are done with them.
         if @converted_csv
           File.delete(@converted_csv)
-          File.delete(@converted_csv[0..-5])
         end
 
         return delim[index][:file]

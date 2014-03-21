@@ -19,8 +19,4 @@ class MetaTest < ActiveSupport::TestCase
     assert zip =~ /This is Zip/, 'zip is not installed'
   end
 
-  test 'unoconv is installed' do
-    unoconv = `unoconv --version`
-    assert unoconv =~ /unoconv/, 'unoconv is not installed'
-  end
 end

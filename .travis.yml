@@ -12,10 +12,7 @@ before_script:
   - bundle exec rake db:test:prepare
 before_install:
   - sudo apt-get update -qq
-  - echo "Installing unoconv"
-  - sudo apt-get install openoffice.org xvfb -qq
-  - xvfb-run -a /usr/lib/libreoffice/program/soffice -headless -nologo -norestore -nofirststartwizard
-  - sudo apt-get install -qq unoconv
+  - sudo apt-get install -qq libreoffice
   - "gem install bundler --version '>= 1.5.1'"
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
