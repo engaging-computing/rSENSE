@@ -29,7 +29,7 @@ class FileUploader
       when '.csv', '.txt', '.text' then convert(file.path)
       when '.xls', '.xlsx', '.ods'
         system "libreoffice --headless --nologo --convert-to csv #{file.path} --outdir /tmp/rsense"
-        @converted_csv = "/tmp/rsense/#{file.path.gsub('/tmp/','')}.csv"
+        @converted_csv = "/tmp/rsense/#{file.path.gsub('/tmp/', '')}.csv"
         convert(@converted_csv)
       when '.gpx' then GpxParser.new.convert(file.path)
       when '.qmbl' then VernierParser.new.convert(file.path)

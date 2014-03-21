@@ -18,5 +18,4 @@ class MetaTest < ActiveSupport::TestCase
     zip = `zip --version`
     assert zip =~ /This is Zip/, 'zip is not installed'
   end
-
 end
