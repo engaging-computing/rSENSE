@@ -13,6 +13,8 @@ before_script:
 before_install:
   - sudo apt-get update -qq
   - echo "Installing unoconv"
+  - sudo apt-get install openoffice.org xvfb -qq
+  - xvfb-run -a /usr/lib/libreoffice/program/soffice -headless -nologo -norestore -nofirststartwizard
   - sudo apt-get install -qq unoconv
   - "gem install bundler --version '>= 1.5.1'"
   - "export DISPLAY=:99.0"
