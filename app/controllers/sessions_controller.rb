@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
   # GET /sessions/new
   def new
     if request.referrer && !(URI(request.referrer).path == login_path)
-      if request.referrer.include? "/users" and not is_admin?
+      if request.referrer.include? "/users"
         session[:redirect_to] = '/home/index'  
       else
         session[:redirect_to] = request.referrer
