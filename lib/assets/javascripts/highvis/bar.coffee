@@ -175,8 +175,8 @@ $ ->
         tempFields = [].concat [[null, 'Group Name']], tempFields
 
         for [fieldID, fieldName] in tempFields
-          selected = if @sortField is fieldID then ' selected' else ''
-          controls += "<option value='#{fieldID}'#{fieldName}#{selected}></option>"
+          selected = if @sortField is fieldID then 'selected' else ''
+          controls += "<option value='#{fieldID}' #{selected}>#{fieldName}</option>"
 
         controls += '</select></div><br>'
 
