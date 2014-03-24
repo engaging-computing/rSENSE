@@ -374,14 +374,14 @@ $ ->
         table_validates = (tab) ->
 
           #Check for zero rows
-          if ($ tab).find('td').has('input').length == 0
+          if (($ tab).find('td').has('input').length == 0 and ($ tab).find('td').has('select').length == 0)
             alert "You must enter at least one row of data."
             return false
 
           # Check that there is at least one value
           noInput = true
-          ($ tab).find('td').has('input').each ->
-            noInput = noInput and (($ @).find('input').val() == "")
+          ($ tab).find('td').has('input, select').each ->
+            noInput = noInput and ((($ @).find('input').val() == "") or ($ @).find('select').val() == "Select One")
           if noInput
             alert "You must enter at least one item of data."
             return false
