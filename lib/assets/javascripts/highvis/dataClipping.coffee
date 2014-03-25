@@ -35,12 +35,15 @@ $ ->
     globals.CLIPPING.CLIPPING_MODE ?= 0
     
     # Retrieve the correct data depending on whether you are clipping or not
-    globals.CLIPPING.getData = (curData) ->
+    globals.CLIPPING.getData = (curData, clip = 1) ->
+     
+      # Prepare to loop through selected visualizations
       clippableVises = ["map", "timeline", "scatter", "table"]
-      
       dataArray = curData
       
-      if globals.CLIPPING.CLIPPING_MODE
+      # Only clip if mode is on and clipping is requested
+      if globals.CLIPPING.CLIPPING_MODE and clip
+      
         # Take the intersection of the clipping visualizations
         for vis in clippableVises
           curVis = (eval "globals.#{vis}")
