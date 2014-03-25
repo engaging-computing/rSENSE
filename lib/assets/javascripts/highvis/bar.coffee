@@ -30,6 +30,9 @@ $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
     class window.Bar extends BaseHighVis
       constructor: (@canvas) ->
+        if data.normalFields.length > 1
+          @displayField = data.normalFields[1]
+        else @displayField = data.normalFields[0]
 
       ANALYSISTYPE_TOTAL:     0
       ANALYSISTYPE_MAX:       1
