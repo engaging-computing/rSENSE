@@ -282,7 +282,7 @@ class VisualizationsController < ApplicationController
       rel_vis.push 'Scatter'
     end
 
-    if field_count[NUMBER_TYPE] > 0 and format_data.count > 0
+    if field_count[NUMBER_TYPE] > -1 and format_data.count > 0
       rel_vis.push 'Bar'
       rel_vis.push 'Histogram'
     end
