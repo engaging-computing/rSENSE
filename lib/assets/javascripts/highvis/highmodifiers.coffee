@@ -106,7 +106,7 @@ $ ->
       else
         (dp) -> (filterFunc dp) and (not isNaN dp[fieldIndex]) and (dp[fieldIndex] isnt null)
 
-      rawData = @dataPoints.filter newFilterFunc
+      rawData = globals.CLIPPING.getData(@dataPoints).filter newFilterFunc
 
       rawData.map (dp) -> dp[fieldIndex]
 
