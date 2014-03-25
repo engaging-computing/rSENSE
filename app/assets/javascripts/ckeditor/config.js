@@ -17,7 +17,7 @@ CKEDITOR.editorConfig = function( config ) {
     { name: 'clipboard', groups: [ 'undo' ], items: [ 'Undo', 'Redo' ] },
     { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ] },
     { name: 'paragraph', groups: [ 'list', 'align'], items: [ 'NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'] },
-    { name: 'upload', groups: [ 'image' ], items: [ 'Image' ] },
+    //{ name: 'upload', groups: [ 'image' ], items: [ 'Image' ] },
     '/',
     { name: 'styles', items: [ 'Format', 'Font', 'FontSize' ] },
     { name: 'colors', items: [ 'TextColor', 'BGColor' ] },
