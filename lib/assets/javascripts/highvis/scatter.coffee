@@ -832,6 +832,7 @@ $ ->
       
         # Checks if a point is visible on screen
         clipped = (point, xBounds, yBounds) =>
+         
           # Check x axis
           if (point[@xAxis] isnt null) && (not isNaN point[@xAxis]) \
           && point[@xAxis] >= xBounds.min && point[@xAxis] <= xBounds.max

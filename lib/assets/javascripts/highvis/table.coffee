@@ -91,7 +91,7 @@ $ ->
           group
 
         rows = []
-        for dataPoint in data.dataPoints when (String dataPoint[data.groupingFieldIndex]).toLowerCase() in visibleGroups
+        for dataPoint in globals.CLIPPING.getData(data.dataPoints) when (String dataPoint[data.groupingFieldIndex]).toLowerCase() in visibleGroups
           line = {}
           for dat, fieldIndex in dataPoint
             line[colIds[fieldIndex]] = dat

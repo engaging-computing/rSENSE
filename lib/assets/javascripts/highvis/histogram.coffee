@@ -129,9 +129,6 @@ $ ->
 
         bestSize
 
-
-
-
       update: ->
         super()
 
@@ -175,9 +172,9 @@ $ ->
 
         for groupIndex in globals.groupSelection
 
-          selecteddata = data.selector @displayField, groupIndex
+          selectedData = data.selector @displayField, groupIndex
 
-          binArr = for i in selecteddata
+          binArr = for i in selectedData
             Math.round(i / @binSize) * @binSize
 
           binObjs[groupIndex] = {}

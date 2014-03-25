@@ -147,7 +147,7 @@ $ ->
           styles: clusterStyles
         ################################################
 
-        for dataPoint in data.dataPoints
+        for dataPoint in globals.CLIPPING.getData(data.dataPoints)
           lat = lon = null
           do =>
             # Grab geospatial
