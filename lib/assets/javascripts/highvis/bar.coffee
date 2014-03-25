@@ -33,6 +33,8 @@ $ ->
         if data.normalFields.length > 1
           @displayField = data.normalFields[1]
         else @displayField = data.normalFields[0]
+        
+        console.log globals.fieldSelection
 
       ANALYSISTYPE_TOTAL:     0
       ANALYSISTYPE_MAX:       1
@@ -144,6 +146,11 @@ $ ->
                   name:   data.groups[groupIndex]
 
           @chart.addSeries options, false
+          
+          # Restrict analysis type to only row count if the y field is "Data Point"
+          console.log ($ '#analysis_types')
+          for option, row in ($ '#analysis_types').each
+            option.hide()
 
 
         @chart.redraw()
@@ -183,11 +190,11 @@ $ ->
 
         controls += '</select></div><br>'
 
-        controls += "<h4 class='clean_shrink'>Analysis Type</h4>"
+        controls += "<h4 class='clean_shrink'>Analysis Type</h4><div id='analysis_types'>"
 
         for typestring, type in @analysisTypeNames
 
-          controls += '<div class="inner_control_div">'
+          controls += "<div class='inner_control_div'>"
 
           controls += "<div class='radio'><label><input type='radio' class='analysisType' "
           controls += "name='analysisTypeSelector' value='"
@@ -196,7 +203,7 @@ $ ->
 
           controls += '</div>'
 
-        controls += "<h4 class='clean_shrink'>Other</h4>"
+        controls += "</div><h4 class='clean_shrink'>Other</h4>"
 
         if data.logSafe is 1
           controls += '<div class="inner_control_div">'
