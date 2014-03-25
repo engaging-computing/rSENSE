@@ -288,6 +288,31 @@ class FileUploader
   end
 
   def convert(filepath)
+    
+    strip_csv = ""
+    file = File.open filepath, 'r'
+    
+    file.readlines.each do |line|
+      if line.index("#") == 0
+        strip_csv += "\n"
+      else
+        strip_csv += line
+      end
+    end
+    
+    file.close
+    new_csv = Tempfile.open 'plain_csv'
+    
+    strip_csv = strip_csv.squeeze "\n"
+    
+    if strip_csv.index("\n") == 0
+      new_csv.write strip_csv[1..-1]
+    else
+      new_csv.write strip_csv
+    end
+    
+    new_csv.close
+    
     possible_separators = [',', "\t", ';']
 
     # delimters
@@ -296,8 +321,8 @@ class FileUploader
     possible_separators.each_with_index do |sep, index|
 
       delim[index] = Hash.new
-      delim[index][:input] = filepath
-      delim[index][:file] = Roo::CSV.new(filepath, csv_options: { col_sep: sep, quote_char: "\'" })
+      delim[index][:input] = new_csv.path
+      delim[index][:file] = Roo::CSV.new(new_csv.path, csv_options: { col_sep: sep, quote_char: "\'" })
       delim[index][:data] = delim[index][:file].parse
       delim[index][:avg] = 0
 
