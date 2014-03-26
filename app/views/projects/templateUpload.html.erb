@@ -16,13 +16,18 @@
             <tr class="<%= cycle('row-even','row-odd')%>">
               <td><b><%= header %></b></td>
               <td>
-                <% unless @text_fields.include? header%>
+                <!--  -->
+                <% if @types['text'].include? header%>
                   <select name="headers[<%=header%>]", class="form-control">
-                    <%=options_for_select(@options,get_field_type('Number'))%>
+                    <%=options_for_select(@options,get_field_type('Text'))%>
+                  </select>
+                <%elsif @types['timestamp'].include? header%>
+                  <select name="headers[<%=header%>]", class="form-control">
+                    <%=options_for_select(@options,get_field_type('Timestamp'))%>
                   </select>
                 <%else%>
                   <select name="headers[<%=header%>]", class="form-control">
-                    <%=options_for_select(@options,get_field_type('Text'))%>
+                    <%=options_for_select(@options,get_field_type('Number'))%>
                   </select>
                 <%end%>
               </td>
