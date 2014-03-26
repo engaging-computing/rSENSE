@@ -7,8 +7,6 @@ $ ->
     $('.btn').button()
     $('.binary-filters .btn').each () ->
       tmp = ($ this).children()[0]
-      if ($ tmp).prop("checked")
-        ($ this).button('toggle')
 
     # Setup auto-submit
     ($ '.projects_filter_checkbox').click ->
