@@ -186,12 +186,11 @@ class DataSetsControllerTest < ActionController::TestCase
     assert ds['data'] != original_data, 'Data has not changed after editing'
     assert ds['data'].length != original_row_count, 'Data same length as before editing'
   end
-  
+
   test 'should fail to edit dataset in locked project' do
     dataset = data_sets(:kates_dataset_in_locked_project)
-    new_data = { '26' => ['1', '2', '3']}
+    new_data = { '26' => ['1', '2', '3'] }
     post :edit, { id: dataset.id, format: 'json', data: new_data }, user_id: @kate
-    assert_redirected_to dataset.project, "Should have failed to edit and get redirected to project page"
+    assert_redirected_to dataset.project, 'Should have failed to edit and get redirected to project page'
   end
-  
 end
