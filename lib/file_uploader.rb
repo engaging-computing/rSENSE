@@ -288,31 +288,31 @@ class FileUploader
   end
 
   def convert(filepath)
-    
-    strip_csv = ""
+
+    strip_csv = ''
     file = File.open filepath, 'r'
-    
+
     file.readlines.each do |line|
-      if line.index("#") == 0
+      if line.index('#') == 0
         strip_csv += "\n"
       else
         strip_csv += line
       end
     end
-    
+
     file.close
     new_csv = Tempfile.open 'plain_csv'
-    
+
     strip_csv = strip_csv.squeeze "\n"
-    
+
     if strip_csv.index("\n") == 0
       new_csv.write strip_csv[1..-1]
     else
       new_csv.write strip_csv
     end
-    
+
     new_csv.close
-    
+
     possible_separators = [',', "\t", ';']
 
     # delimters
