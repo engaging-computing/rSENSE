@@ -36,16 +36,18 @@
         </tbody>
        
       </table>
+      <p><b>From file: </b><%=@original_filename%></p>
     </div>
   </div>
+
   <br/>
   <div class="row">
-    <div class="col-lg-3 col-lg-offset-4">
+    <div class="col-lg-4 col-lg-offset-3">
       <b> Check to save data set.  </b><input type="checkbox" name="create_dataset" id="create_dataset" style="margin:5px 5px" checked><br/>
     </div>  
   </div>
   <div class="row">
-    <div class="col-lg-2 col-lg-offset-4">
+    <div class="col-lg-4 col-lg-offset-3">
       <input name="title" type="text" value="Dataset #1", class="form-control"><br/>
     </div>
     <div class="col-lg-2 col-lg-offset-1 ">
@@ -53,7 +55,5 @@
     </div>
   </div>
   
-  <div class="row">
-  </div>
   <input type="hidden" name="file" value="<%=@tmp_file%>">
 <% end %> 
