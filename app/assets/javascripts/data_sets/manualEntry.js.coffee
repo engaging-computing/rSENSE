@@ -31,15 +31,17 @@ $ ->
               ($ col).find('tr').slice(1).each (row_i, row) ->
                 input_options = ""
                 ($ col).data('field-restrictions').each (res_i, res) ->
-                  p_val = ($ '#manualTable tr').eq(row_i).find('td').eq(col_i).val() 
+                  p_val = ($ '#manualTable tr').eq(row_i).find('td').eq(col_i).val()
                   if res == p_val
                     input_options += "<option value='#{p_val}' selected>#{p_val}</option>"
                   else
                     input_options += "<option value='#{p_val}'>#{p_val}</option>"
-                ($ '#manualTable tr').eq(row_i).find('td').eq(col_i).replaceWith("<td><div class='center'><select class='form-control'>#{input_options}</select></div></td>")
+                ($ '#manualTable tr').eq(row_i).find('td').eq(col_i).replaceWith("<td><div class='center'>" 
+                  + "<select class='form-control'>#{input_options}</select></div></td>")
             else
               ($ '#manualTable').find('tr').each (row_i, row) ->
-                ($ row).find('td').eq(col_i).replaceWith("<td><div class='center'><input type='text' class='form-control' value='#{ ($ '#manualTable tr').eq(row_i).find('td').eq(col_i).text() }'></div></td>")
+                ($ row).find('td').eq(col_i).replaceWith("<td><div class='center'><input type='text' class='form-control'" 
+                  + " value='#{ ($ '#manualTable tr').eq(row_i).find('td').eq(col_i).text() }'></div></td>")
             
           ($ '#manualTable tr').slice(1).each (row_i, row) ->
             ($ row).append "<td><div class='center'><a class='close' style='float:none;'>&times;</a></div></td>"
