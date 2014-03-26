@@ -141,6 +141,17 @@ class FileUploader
     results
   end
 
+  def get_text_fields(data_obj)
+    data = data_obj['data']
+    text_fields = []
+    data.each do |column|
+      unless (column[1]).map { |dp| valid_float?(dp) }.reduce(:&)
+        text_fields.push column[0]
+      end
+    end
+    text_fields
+  end
+
   def sanitize_data(data_obj, matches = nil)
     if !matches.nil?
       data = {}
@@ -321,6 +332,7 @@ class FileUploader
   end
 
   def valid_float?(num)
+    return true if num.nil?
     Float(num)
     true
   rescue
