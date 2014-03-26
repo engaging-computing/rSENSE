@@ -143,20 +143,20 @@ class FileUploader
 
   def get_probable_types(data_obj)
     data = data_obj['data']
-    
+
     types = {}
     types['text'] = []
     types['timestamp'] = []
-        
+
     data.each do |column|
       begin
-        #Test for time, this method throws an exception if it fails. 
-        if (column[1]).map { |dp| Date.parse(dp)}
+        # Test for time, this method throws an exception if it fails.
+        if (column[1]).map { |dp| Date.parse(dp) }
           types['timestamp'].push column[0]
         end
       rescue
-        
-        #If its not time test for text
+
+        # If its not time test for text
         unless (column[1]).map { |dp| valid_float?(dp) }.reduce(:&)
           types['text'].push column[0]
         end
