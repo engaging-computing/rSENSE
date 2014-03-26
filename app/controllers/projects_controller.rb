@@ -378,7 +378,7 @@ class ProjectsController < ApplicationController
 
     uploader = FileUploader.new
     data_obj = uploader.generateObject(params[:file])
-    @text_fields = uploader.get_text_fields(data_obj)
+    @types = uploader.get_probable_types(data_obj)
     @tmp_file = data_obj[:file]
     @headers = data_obj['data'].keys
 

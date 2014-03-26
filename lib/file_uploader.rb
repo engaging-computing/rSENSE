@@ -141,15 +141,28 @@ class FileUploader
     results
   end
 
-  def get_text_fields(data_obj)
+  def get_probable_types(data_obj)
     data = data_obj['data']
-    text_fields = []
+    
+    types = {}
+    types['text'] = []
+    types['timestamp'] = []
+        
     data.each do |column|
-      unless (column[1]).map { |dp| valid_float?(dp) }.reduce(:&)
-        text_fields.push column[0]
+      begin
+        #Test for time, this method throws an exception if it fails. 
+        if (column[1]).map { |dp| Date.parse(dp)}
+          types['timestamp'].push column[0]
+        end
+      rescue
+        
+        #If its not time test for text
+        unless (column[1]).map { |dp| valid_float?(dp) }.reduce(:&)
+          types['text'].push column[0]
+        end
       end
     end
-    text_fields
+    types
   end
 
   def sanitize_data(data_obj, matches = nil)
