@@ -6,9 +6,11 @@
        <tr>
         <th style="max-width:10%">File</th>
         <th style="max-width:60%">Name</th>
-        <!--<th style="max-width:10%"> </th> -->
-        <th style="max-width:20%;text-align:right;vertical-align:right">Featured Image</th>
-        <% if ["Project","News","Tutorial"].include? object.class%><th style="max-width:10%px">Display</th><%end%>
+        <th style="max-width:10%"> </th>
+        <% if can_edit?( @project ) %> 
+          <th class="featured-title"">Featured Image</th>
+        <% end %>
+        <% if ["Project","News","Tutorial"].include? object.class%><th style="max-width:10%">Display</th><%end%>
       </tr>
     </thead>
     <% end %>
@@ -36,7 +38,7 @@
               <td>
                 <div class="center">
                   <% if ((mo.media_type == "image") && (can_edit? object))%>
-                    <input type="checkbox" title="Select to set this as your featured project image." class="img_selector" name="img_selector" obj_id="<%=object.id%>" <%if object.featured_media_id == mo.id%>checked<%end%> mo_id="<%=mo.id%>"></input>
+                    <input type="radio" title="Select to set this as your featured project image." class="img_selector" name="img_selector" obj_id="<%=object.id%>" <%if object.featured_media_id == mo.id%>checked<%end%> mo_id="<%=mo.id%>"></input>
                   <%end%>
                 </div>
               </td>
