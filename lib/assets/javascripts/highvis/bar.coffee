@@ -34,8 +34,6 @@ $ ->
           @displayField = data.normalFields[1]
         else @displayField = data.normalFields[0]
         
-        console.log globals.fieldSelection
-
       ANALYSISTYPE_TOTAL:     0
       ANALYSISTYPE_MAX:       1
       ANALYSISTYPE_MIN:       2
@@ -78,6 +76,16 @@ $ ->
 
         visibleCategories = for selection in data.normalFields when selection in globals.fieldSelection
           fieldTitle data.fields[selection]
+          
+        # Restrict analysis type to only row count if the y field is "Data Point"
+        if (globals.fieldSelection[0] is data.DATA_POINT_ID_FIELD and globals.fieldSelection.length is 1)
+          for option, row in ($ '#analysis_types').children()
+            if row isnt @ANALYSISTYPE_COUNT
+              $(option).hide()
+            else
+              $(option).find('> > >').prop("checked", true)
+          @analysisType = @ANALYSISTYPE_COUNT
+        else ($ '#analysis_types').children().show()
 
         # If there is only one series, show the groupby text. else show the diffent y field titles.
         if @chart.series.length == 1
@@ -146,12 +154,6 @@ $ ->
                   name:   data.groups[groupIndex]
 
           @chart.addSeries options, false
-          
-          # Restrict analysis type to only row count if the y field is "Data Point"
-          console.log ($ '#analysis_types')
-          for option, row in ($ '#analysis_types').each
-            option.hide()
-
 
         @chart.redraw()
 
@@ -240,6 +242,11 @@ $ ->
 
         ($ '#toolControl > h3').click ->
           globals.toolsOpen = (globals.toolsOpen + 1) % 2
+          
+      drawYAxisControls: ->
+        super()
+        
+        
 
       drawControls: ->
         super()
