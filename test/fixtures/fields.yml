@@ -53,3 +53,11 @@ text_field:
   name: Text_Field
   unit:
   project: two
+
+locked_projet_field:
+  id: 26
+  field_type: 2
+  name: Some name
+  unit:
+  project: locked_project
+  
