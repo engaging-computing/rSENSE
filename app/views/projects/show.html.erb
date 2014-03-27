@@ -102,17 +102,19 @@
                           <a role="menuitem" href="javascript:void(0);" id="check_mine"><i class="fa fa-user"></i> Mine</a>
                         </li>
                     <% end %>
+                    <% @sort_keys = []%>
                     <% if can_edit? (@project) %>
-                      <% sort_keys = []%>
                       <% @data_sets.each do |d| %>
-                        <% if !d.key.nil? and !(sort_keys.include? d.key) %>
-                          <%  sort_keys.append d.key %>
-                          <li role="presentation">
-                            <a role="menuitem" m-title="<%= d.key %>" href="javascript:void(0);" class="check_id"><i class="fa fa-square-o"></i> <%= d.key %> </a>
-                          </li>
+                        <% if !d.key.nil? and !(@sort_keys.include? d.key) and d.key != "" %>
+                          <%  @sort_keys.append d.key %>
                         <%end%>
-                      <%end%>
-                    <%end %>
+                      <% end %>
+                      <% for ele in 0...@sort_keys.length do %>
+                        <li role="presentation">
+                          <a role="menuitem" m-title="<%= @sort_keys[@sort_keys.length - ele - 1] %>" href="javascript:void(0);" class="check_id"><i class="fa fa-square-o"></i> <%= @sort_keys[@sort_keys.length - ele - 1] %> </a> 
+                        </li>
+                      <% end %>
+                    <%end%>
                   </ul>
             </div>  
           </div>
@@ -120,19 +122,22 @@
           <table id="dataset_table">
             <tbody>
               <% unless @project.contrib_keys.nil? %>
-                <% used_keys = {} %>
+                <% used_keys = [] %> 
                 <% next_char = 'A' %>
+                <% @sort_keys.size.times do %> 
+                  <% used_keys.unshift next_char %>
+                  <% next_char.next %>
+                <%end %> 
               <% end %>
               <% @data_sets.each do |s| %>
                 <tr class="<%= cycle('feed-even', 'feed-odd')%> dataset" style="position:relative">
                 <% if( not (s.key.nil?) and can_edit?( @project) )%>
-                  <% if used_keys[s.key].nil? %>
+                  <% if used_keys[s.key].nil? %> 
                     <% used_keys[s.key] = next_char %>
-                    <% next_char = next_char.next %>                 
-                  <% end %>
+                    <% next_char = next_char.next %>             
+                <% end %>
                   <td class="key_icon">
                     <div class="key" title="<%= s.key %>"> <%= image_tag("Key.png", :size => "32x32") %> <a class = "key-letter-id"> <%= used_keys[s.key]%></a></div> 
-                  
                   </td>
                 <% else %>
                   <td class="gravatar">
