@@ -30,7 +30,10 @@ $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
     class window.Bar extends BaseHighVis
       constructor: (@canvas) ->
-
+        if data.normalFields.length > 1
+          @displayField = data.normalFields[1]
+        else @displayField = data.normalFields[0]
+        
       ANALYSISTYPE_TOTAL:     0
       ANALYSISTYPE_MAX:       1
       ANALYSISTYPE_MIN:       2
@@ -73,6 +76,16 @@ $ ->
 
         visibleCategories = for selection in data.normalFields when selection in globals.fieldSelection
           fieldTitle data.fields[selection]
+          
+        # Restrict analysis type to only row count if the y field is "Data Point"
+        if (globals.fieldSelection[0] is data.DATA_POINT_ID_FIELD and globals.fieldSelection.length is 1)
+          for option, row in ($ '#analysis_types').children()
+            if row isnt @ANALYSISTYPE_COUNT
+              $(option).hide()
+            else
+              $(option).find('> > >').prop("checked", true)
+          @analysisType = @ANALYSISTYPE_COUNT
+        else ($ '#analysis_types').children().show()
 
         # If there is only one series, show the groupby text. else show the diffent y field titles.
         if @chart.series.length == 1
@@ -141,7 +154,6 @@ $ ->
 
           @chart.addSeries options, false
 
-
         @chart.redraw()
 
       buildLegendSeries: ->
@@ -179,11 +191,11 @@ $ ->
 
         controls += '</select></div><br>'
 
-        controls += "<h4 class='clean_shrink'>Analysis Type</h4>"
+        controls += "<h4 class='clean_shrink'>Analysis Type</h4><div id='analysis_types'>"
 
         for typestring, type in @analysisTypeNames
 
-          controls += '<div class="inner_control_div">'
+          controls += "<div class='inner_control_div'>"
 
           controls += "<div class='radio'><label><input type='radio' class='analysisType' "
           controls += "name='analysisTypeSelector' value='"
@@ -192,7 +204,7 @@ $ ->
 
           controls += '</div>'
 
-        controls += "<h4 class='clean_shrink'>Other</h4>"
+        controls += "</div><h4 class='clean_shrink'>Other</h4>"
 
         if data.logSafe is 1
           controls += '<div class="inner_control_div">'
@@ -228,6 +240,11 @@ $ ->
 
         ($ '#toolControl > h3').click ->
           globals.toolsOpen = (globals.toolsOpen + 1) % 2
+          
+      drawYAxisControls: ->
+        super()
+        
+        
 
       drawControls: ->
         super()
