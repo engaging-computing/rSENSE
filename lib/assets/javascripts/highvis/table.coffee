@@ -101,12 +101,29 @@ $ ->
         timeCol = ""
         columns = for colId, colIndex in colIds
           if (data.fields[colIndex].typeID is data.types.TEXT)
-            { name: colId, id: colId, sorttype:'text' }
+            { 
+              name:           colId
+              id:             colId
+              sorttype:       'text'
+              searchoptions:  { sopt:['cn','nc','bw','bn','ew','en','in','ni'] }
+            }
           else if (data.fields[colIndex].typeID is data.types.TIME)
             timeCol = colId
-            { name: colId, id: colId, sorttype: 'text', formatter: dateFormatter }
+            { 
+              name:           colId
+              id:             colId
+              sorttype:       'text'
+              formatter:      dateFormatter
+              searchoptions:  { sopt:['cn','nc','bw','bn','ew','en','in','ni'] }
+            }
           else
-            { name: colId, id: colId, sorttype:'number', formatter: nullFormatter }
+            { 
+              name:           colId
+              id:             colId
+              sorttype:       'number'
+              formatter:      nullFormatter,
+              searchoptions:  { sopt:['eq','ne','lt','le','gt','ge'] } 
+            }
 
         # Set sort state to default none existed
         @sortName ?= ''
@@ -119,6 +136,7 @@ $ ->
         ($ '#table_canvas').append '<div id="toolbar_bottom"></div>'
 
         # Prepare the table to grid parameters
+        # Height - 71 for reasons
         @table = jQuery("#data_table").jqGrid({
           colNames: headers,
           colModel: columns,
@@ -137,16 +155,15 @@ $ ->
           pager: '#toolbar_bottom'
         })
 
-        # Hide the combined datasets and data point columns
+        # Hide the combined dataset column
         combinedCol = @table.jqGrid('getGridParam','colModel')[data.COMBINED_FIELD]
-        # dataPointIdCol = @table.jqGrid('getGridParam','colModel')[data.DATA_POINT_ID_FIELD]
         @table.hideCol(combinedCol.name)
-        # @table.hideCol(dataPointIdCol.name)
+
         ($ '#data_table').setGridWidth(($ '#' + @canvas).width())
 
         # Add a refresh button and enable the search bar
         @table.jqGrid('navGrid','#toolbar_bottom',{del:false,add:false,edit:false,search:false})
-        @table.jqGrid('filterToolbar', {stringResult: true, searchOnEnter: false, defaultSearch:'cn'})
+        @table.jqGrid('filterToolbar', {stringResult: true, searchOnEnter: false, searchOperators: true})
 
         # Set the time column formatters
         timePair = {}
@@ -177,6 +194,8 @@ $ ->
           # Save the table filters
           if @table.getGridParam('postData').filters?
             @searchParams = jQuery.parseJSON(@table.getGridParam('postData').filters).rules
+            
+          console.log @searchParams
 
       resize: (newWidth, newHeight, aniLength) ->
         foo = () ->
@@ -228,12 +247,12 @@ $ ->
               column_formatter = formatters[column_match[1]]
 
             phrase = []
-            if(this._trim)
+            if (this._trim)
               phrase.push("jQuery.trim(")
             phrase.push(column_formatter + "(" + s + ")")
-            if(this._trim)
+            if (this._trim)
               phrase.push(")")
-            if(!this._usecase)
+            if (!this._usecase)
               phrase.push(".toLowerCase()")
             return phrase.join("")
 

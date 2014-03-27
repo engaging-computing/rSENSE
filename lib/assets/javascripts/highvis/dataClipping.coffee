@@ -49,6 +49,6 @@ $ ->
           curVis = (eval "globals.#{vis}")
           if curVis? and curVis isnt globals.curVis
             dataArray = curVis.clip(dataArray)
-            console.log(vis, dataArray.length)
+            #console.log(vis, dataArray.length)
        
       dataArray
