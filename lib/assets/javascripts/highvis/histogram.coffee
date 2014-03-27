@@ -33,7 +33,10 @@ $ ->
       constructor: (@canvas) ->
         @MAX_NUM_BINS = 1000
 
-        @displayField = data.normalFields[0]
+        if data.normalFields.length > 1
+          @displayField = data.normalFields[1]
+        else @displayField = data.normalFields[0]
+        
         @binNumSug = 1
 
 

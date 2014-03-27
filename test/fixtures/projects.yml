@@ -52,3 +52,8 @@ project_five:
   featured_media_id: 
   id: 1
   created_at: <%= 7.day.ago.to_s(:db) %>
+
+locked_project:
+  title: Locked Project
+  user: nixon
+  lock: true
