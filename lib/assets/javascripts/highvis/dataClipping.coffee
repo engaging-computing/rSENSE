@@ -32,7 +32,7 @@ $ ->
     # Use this to save vis state
     window.globals ?= {}
     globals.CLIPPING ?= {}
-    globals.CLIPPING.CLIPPING_MODE ?= 0
+    globals.CLIPPING.CLIPPING_MODE ?= 1
     
     # Retrieve the correct data depending on whether you are clipping or not
     globals.CLIPPING.getData = (curData, clip = 1) ->

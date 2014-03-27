@@ -542,7 +542,29 @@ $ ->
         else
           return @heatmapPixelRadius
 
-      clip: (arr) -> arr
+      clip: (arr) ->
+        viewBounds = @gmap.getBounds()
+        if viewBounds?
+
+          filterFunc = (row) =>
+            lat = lng = null
+            
+            # Scan for lat and long
+            for field, fieldIndex in data.fields
+              if (Number field.typeID) in data.types.LOCATION
+                if (Number field.typeID) is data.units.LOCATION.LATITUDE
+                  lat = row[fieldIndex]
+                else if (Number field.typeID) is data.units.LOCATION.LONGITUDE
+                  lng = row[fieldIndex]
+                  
+            # If points are valid, check if they are visible
+            if (lat is null) or (lng is null)
+              return false
+            else return viewBounds.contains(new google.maps.LatLng(lat, lng))
+            
+          arr.filter filterFunc
+        
+        else arr
 
     if "Map" in data.relVis
       globals.map = new Map "map_canvas"
