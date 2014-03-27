@@ -138,20 +138,20 @@ $ ->
         # Prepare the table to grid parameters
         # Height - 71 for reasons
         @table = jQuery("#data_table").jqGrid({
-          colNames: headers,
-          colModel: columns,
-          datatype: 'local',
-          height: ($ '#' + @canvas).height() - 71,
-          width: ($ '#' + @canvas).width(),
-          gridview: true,
-          caption: "",
-          data: rows,
-          hidegrid: false,
-          ignoreCase:true
-          rowNum: 50,
-          autowidth: true,
-          viewrecords: true,
-          loadui: 'block',
+          colNames: headers
+          colModel: columns
+          datatype: 'local'
+          height: ($ '#' + @canvas).height() - 71
+          width: ($ '#' + @canvas).width()
+          gridview: true
+          caption: ""
+          data: rows
+          hidegrid: false
+          ignoreCase: true
+          rowNum: 50
+          autowidth: true
+          viewrecords: true
+          loadui: 'block'
           pager: '#toolbar_bottom'
         })
 
@@ -162,8 +162,8 @@ $ ->
         ($ '#data_table').setGridWidth(($ '#' + @canvas).width())
 
         # Add a refresh button and enable the search bar
-        @table.jqGrid('navGrid','#toolbar_bottom',{del:false,add:false,edit:false,search:false})
-        @table.jqGrid('filterToolbar', {stringResult: true, searchOnEnter: false, searchOperators: true})
+        @table.jqGrid('navGrid','#toolbar_bottom',{ del:false, add:false, edit:false, search:false })
+        @table.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false, searchOperators: true })
 
         # Set the time column formatters
         timePair = {}
