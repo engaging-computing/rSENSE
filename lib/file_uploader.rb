@@ -16,7 +16,7 @@ class FileUploader
     end
 
     data_obj[:file] =  write_temp_file(CSV.parse(spreadsheet.to_csv))
-    data_obj[:original_filename] = file.original_filename
+#     data_obj[:original_filename] = file.original_filename
     data_obj
   end
 
