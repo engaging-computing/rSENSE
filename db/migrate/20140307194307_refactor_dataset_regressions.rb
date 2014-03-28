@@ -1,5 +1,5 @@
 class RefactorDatasetRegressions < ActiveRecord::Migration
-   
+  
   def update(old_key, new_key, vis)
     temp = vis[old_key]
     vis[new_key] = temp
@@ -19,25 +19,25 @@ class RefactorDatasetRegressions < ActiveRecord::Migration
     update("fieldIndices", "field_indices", regression)
     update("regressionId", "regression_id", regression)
   end
-    
+
   def up
     say "Refactoring scatter plots"
     #JSON.parse(Visualization.find(5).globals)["scatter"]["savedRegressions"]
     Visualization.find_each do |viz|
       globals = JSON.parse(viz.globals)
- 
+
       regressions = globals["scatter"]["savedRegressions"]
       unless regressions.nil?
         regressions.each do |regression|
           refactor_keys(regression)
         end
       end
-      
+
       # Update the globals
       viz.globals = JSON.dump(globals)
       viz.save
     end
-    
+
     say "Refactoring timelines"
     #JSON.parse(Visualization.find(5).globals)["timeline"]["savedRegressions"]
     Visualization.find_each do |viz|
@@ -49,7 +49,7 @@ class RefactorDatasetRegressions < ActiveRecord::Migration
           refactor_keys(regression)
         end
       end
-      
+
       # Update the globals
       viz.globals = JSON.dump(globals)
       viz.save
@@ -68,12 +68,12 @@ class RefactorDatasetRegressions < ActiveRecord::Migration
           refactor_keys_undo(regression)
         end
       end
-      
+
       # Update the globals
       viz.globals = JSON.dump(globals)
       viz.save
     end
-    
+
     say "Undoing refactoring of timelines"
     # JSON.parse(Visualization.find(5).globals)["timeline"]["savedRegressions"]
     Visualization.find_each do |viz|
@@ -85,7 +85,7 @@ class RefactorDatasetRegressions < ActiveRecord::Migration
           refactor_keys_undo(regression)
         end
       end
-      
+
       # Update the globals
       viz.globals = JSON.dump(globals)
       viz.save

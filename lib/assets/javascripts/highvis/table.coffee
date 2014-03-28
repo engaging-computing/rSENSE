@@ -91,7 +91,8 @@ $ ->
           group
 
         rows = []
-        for dataPoint in globals.CLIPPING.getData(data.dataPoints) when (String dataPoint[data.groupingFieldIndex]).toLowerCase() in visibleGroups
+        for dataPoint in globals.CLIPPING.getData(data.dataPoints) \
+        when (String dataPoint[data.groupingFieldIndex]).toLowerCase() in visibleGroups
           line = {}
           for dat, fieldIndex in dataPoint
             line[colIds[fieldIndex]] = dat
@@ -101,7 +102,7 @@ $ ->
         timeCol = ""
         columns = for colId, colIndex in colIds
           if (data.fields[colIndex].typeID is data.types.TEXT)
-            { 
+            {
               name:           colId
               id:             colId
               sorttype:       'text'
@@ -109,7 +110,7 @@ $ ->
             }
           else if (data.fields[colIndex].typeID is data.types.TIME)
             timeCol = colId
-            { 
+            {
               name:           colId
               id:             colId
               sorttype:       'text'
@@ -117,12 +118,12 @@ $ ->
               searchoptions:  { sopt:['cn','nc','bw','bn','ew','en','in','ni'] }
             }
           else
-            { 
+            {
               name:           colId
               id:             colId
               sorttype:       'number'
-              formatter:      nullFormatter,
-              searchoptions:  { sopt:['eq','ne','lt','le','gt','ge'] } 
+              formatter:      nullFormatter
+              searchoptions:  { sopt:['eq','ne','lt','le','gt','ge'] }
             }
 
         # Set sort state to default none existed
