@@ -97,6 +97,7 @@ class VisualizationsController < ApplicationController
     mo = MediaObject.new
     mo.media_type = 'image'
     mo.name = 'image.png'
+    mo.file = 'image.png'
     mo.check_store!
 
     if params[:visualization].try(:[], :svg)

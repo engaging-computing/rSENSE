@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140224170002) do
+ActiveRecord::Schema.define(version: 20140328182659) do
 
   create_table "contrib_keys", force: true do |t|
     t.string   "name",       null: false
@@ -64,6 +64,7 @@ ActiveRecord::Schema.define(version: 20140224170002) do
     t.integer  "visualization_id"
     t.integer  "news_id"
     t.string   "store_key"
+    t.string   "file"
   end
 
   create_table "news", force: true do |t|
