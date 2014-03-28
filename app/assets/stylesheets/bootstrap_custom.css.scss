@@ -418,3 +418,18 @@ i.icon-white
   }
 }
 
+
+#description{
+  div.box-content{
+    min-height:  200px;
+    max-height: 360px ;
+   overflow:hidden
+  }
+  div.box-content:hover{
+    overflow:scroll;  
+  }
+  p{  
+    padding-bottom: 5px;
+  }
+}
+
