@@ -33,6 +33,7 @@ end
 #gem 'less'
 #gem 'less-rails'
 #gem 'less-rails-bootstrap'
+gem 'bootstrap-colorpicker-rails'
 
 gem 'jquery-rails'
 
