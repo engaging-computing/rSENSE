@@ -28,27 +28,27 @@
 ###
 $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
-    
+
     # Use this to save vis state
     window.globals ?= {}
     globals.CLIPPING ?= {}
     globals.CLIPPING.CLIPPING_MODE ?= 0
-    
+
     # Retrieve the correct data depending on whether you are clipping or not
     globals.CLIPPING.getData = (curData, clip = 1) ->
-     
+
       # Prepare to loop through selected visualizations
       clippableVises = ["map", "timeline", "scatter", "table"]
       dataArray = curData
-      
+
       # Only clip if mode is on and clipping is requested
       if globals.CLIPPING.CLIPPING_MODE and clip
-      
+
         # Take the intersection of the clipping visualizations
         for vis in clippableVises
           curVis = (eval "globals.#{vis}")
           if curVis? and curVis isnt globals.curVis
             dataArray = curVis.clip(dataArray)
-            #console.log(vis, dataArray.length)
-       
+            # console.log(vis, dataArray.length)
+
       dataArray
