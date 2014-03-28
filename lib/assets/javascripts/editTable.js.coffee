@@ -64,8 +64,7 @@ $ ->
         ($ "#address").autocomplete
           #This bit uses the geocoder to fetch address values
           source: (request, response) ->
-            window.geocode
-            r.geocode {'address': request.term }, (results, status) ->
+            window.geocoder.geocode {'address': request.term }, (results, status) ->
               response $.map results, (item) ->
                 x =
                   label:  item.formatted_address
