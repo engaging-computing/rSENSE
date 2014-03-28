@@ -98,9 +98,9 @@ $ ->
       ###
       drawRegressionControls: () ->
         super()
-        #For now we are supporting only linear and quadratic on timelines
+        # For now we are supporting only linear and quadratic on timelines
         for child, index in ($ "#regressionSelector").children() when index >= 2
-          child.remove()
+          ($ child).remove()
 
       ###
       Overwrite xAxis controls to only allow time fields
