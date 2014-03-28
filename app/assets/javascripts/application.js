@@ -12,6 +12,7 @@
 //
 //
 //= require constants
+//= require image_path
 //= require jquery
 //= require helpers
 //= require dateParse
