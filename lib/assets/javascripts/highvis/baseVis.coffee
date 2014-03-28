@@ -138,7 +138,8 @@ $ ->
           controls += "</td><td>Color</td></tr>"
 
         for group, gIndex in data.groups
-          color = globals.colors[counter % globals.colors.length]
+          color_id = counter % globals.colors.length
+          color = globals.colors[color_id]
           controls += "<tr><td>"
           controls += "<div class='inner_control_div' "
           controls += "style=\"color:#{color};\">"
@@ -148,9 +149,8 @@ $ ->
           controls += "#{group}</label>"
           controls += "</div></div>"
           controls += "</td><td>"
-          controls += "<button class=\"color-picker\" "
-          controls += "  style=\"color: #{color}; font-size: 25px;\" "
-          controls += "  data-color-format=\"hex\" data-color=\"#{color}\">■</button>"
+          controls += """<a href="#" class="color-picker" data-color="#{color}" data-color-id="#{color_id}">
+                         <img src=\"#{image_path('color-wheel.png')}\"></a>"""
           controls += "</td></tr>"
           counter += 1
         
@@ -163,8 +163,13 @@ $ ->
             # Write HTML
         ($ '#controldiv').append controls
 
-        ($ '.color-pick').each (_, ee) ->
-          ee.click(() -> console.log(ee))
+        me = this
+        ($ '.color-picker').each (_, ee) ->
+          $(ee).click () ->
+            $(ee).colorpicker().on 'changeColor', (ev) ->
+              cid = $(ee).attr('data-color-id')
+              globals.colors[cid] = ev.color.toHex()
+              me.delayedUpdate()
 
             # Make group select handler
         ($ '#groupSelector').change (e) =>
