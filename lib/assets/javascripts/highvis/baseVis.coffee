@@ -114,7 +114,7 @@ $ ->
 
         controls += "<div class='outer_control_div'>"
 
-            # Add grouping selector
+        # Add grouping selector
         controls += '<div class="inner_control_div"> Group By: '
         controls += '<select id="groupSelector" class="form-control">'
 
@@ -124,27 +124,52 @@ $ ->
 
         controls += "</select></div>"
 
-            # Populate choices
+        controls += "<table>"
+
+        # Populate choices
         counter = 0
         if data.groups.length > 1
+          controls += "<tr><td>"
           controls += "<div class='inner_control_div'>"
           controls += """<div class='checkbox'><label><input id='checkbox_all'
             class='group_input_all' type='checkbox' value='#{gIndex}'
             #{if globals.groupSelection.length == data.groups.length then "checked" else ""}>
             #Check All</label></div>"""
+          controls += "</td><td>Color</td></tr>"
+
         for group, gIndex in data.groups
+          color_id = counter % globals.colors.length
+          color = globals.colors[color_id]
+          controls += "<tr><td>"
           controls += "<div class='inner_control_div' "
-          controls += "style=\"color:#{globals.colors[counter % globals.colors.length]};\">"
+          controls += "style=\"color:#{color};\">"
           controls += "<div class='checkbox'><label><input class='group_input' type='checkbox'"
           controls += " value='#{gIndex}' "
           controls += "#{if (Number gIndex) in globals.groupSelection then "checked" else ""}/>"
-          controls += "#{group}</label></div>"
-          controls += "</div>"
+          controls += "#{group}</label>"
+          controls += "</div></div>"
+          controls += "</td><td>"
+          controls += """<a href="#" class="color-picker" data-color="#{color}" data-color-id="#{color_id}">
+                         <img src=\"#{image_path('color-wheel.png')}\"></a>"""
+          controls += "</td></tr>"
           counter += 1
+        
+        controls += "</table>"
+        
         controls += '</div></div>'
+
+
 
             # Write HTML
         ($ '#controldiv').append controls
+
+        me = this
+        ($ '.color-picker').each (_, ee) ->
+          $(ee).click () ->
+            $(ee).colorpicker().on 'changeColor', (ev) ->
+              cid = $(ee).attr('data-color-id')
+              globals.colors[cid] = ev.color.toHex()
+              me.delayedUpdate()
 
             # Make group select handler
         ($ '#groupSelector').change (e) =>
