@@ -192,10 +192,14 @@ $ ->
           @sortName = @table.getGridParam('sortname')
           @sortType = @table.getGridParam('sortorder')
 
+          # Get the column data
+          @columnModel = @table.getGridParam('colModel')
+          console.log @columnModel
+
           # Save the table filters
           if @table.getGridParam('postData').filters?
             @searchParams = jQuery.parseJSON(@table.getGridParam('postData').filters).rules
-            
+
           console.log @searchParams
 
       resize: (newWidth, newHeight, aniLength) ->
@@ -220,7 +224,7 @@ $ ->
       http://stackoverflow.com/questions/5822302/how-to-do-local-search-on-formatted-column-value-in-jqgrid
       Credits to Oleg and adam-p
       Converted to coffee script by Jeremy Poulin
-      
+
         Causes local filtering to use custom formatters for specific columns.
         formatters is a dictionary of the form:
         { "column_name_1_needing_formatting": "column1FormattingFunctionName",
@@ -258,8 +262,8 @@ $ ->
             return phrase.join("")
 
           return result
-        
+
       clip: (arr) -> arr
-      
+
 
     globals.table = new Table "table_canvas"
