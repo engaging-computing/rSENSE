@@ -358,13 +358,13 @@ $ ->
         controls += '<div class="inner_control_div">'
         controls += "<div class='checkbox'><label><input class='tooltip_box' type='checkbox' "
         controls += "name='tooltip_selector' #{if @advancedTooltips then 'checked' else ''}/>"
-        controls += "Advanced Tooltips</label></div> "
+        controls += "Detailed Tooltips</label></div> "
         controls += "</div>"
 
         controls += '<div class="inner_control_div">'
         controls += "<div class='checkbox'><label><input class='full_detail_box' type='checkbox' "
         controls += "name='full_detail_selector' #{if @fullDetail then 'checked' else ''}/>"
-        controls += "Full Detail </label></div>"
+        controls += "Show All Data</label></div>"
         controls += "</div>"
 
         if data.logSafe is 1
@@ -480,14 +480,14 @@ $ ->
 
         ($ '#xAxisControl > h3').click ->
           globals.xAxisOpen = (globals.xAxisOpen + 1) % 2
-          
+
       ###
       Save the Y-axis selection for clipping purposes
       ###
       drawYAxisControls: (radio = false) ->
         super(radio)
         @yAxis = globals.fieldSelection
-        
+
 
       ###
       Checks if the user has requested a specific zoom
@@ -660,7 +660,7 @@ $ ->
             point[@xAxis] for point in fullData
           yData =
             point[yAxisIndex] for point in fullData
-            
+
           # Get dash index
           dashIndex = data.normalFields.indexOf(yAxisIndex)
           dashStyle = globals.dashes[dashIndex % globals.dashes.length]
@@ -829,23 +829,23 @@ $ ->
       Clips an array of data to include only bounded points
       ###
       clip: (arr) ->
-      
+
         # Checks if a point is visible on screen
         clipped = (point, xBounds, yBounds) =>
-         
+
           # Check x axis
           if (point[@xAxis] isnt null) && (not isNaN point[@xAxis]) \
           && point[@xAxis] >= xBounds.min && point[@xAxis] <= xBounds.max
-            
+
             # Check all y axes
             for yAxis in @yAxis
               if !((point[yAxis] isnt null) && (not isNaN point[yAxis]) \
               && point[yAxis] >= yBounds.min && point[yAxis] <= yBounds.max)
                 return false
-            
+
             return true
           else return false
-        
+
         # Do the actual clipping
         if @xBounds.min? and @xBounds.max? and @yBounds.min? and @yBounds.max?
           point for point in arr when clipped(point, @xBounds, @yBounds)
