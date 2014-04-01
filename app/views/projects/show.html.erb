@@ -102,26 +102,62 @@
                           <a role="menuitem" href="javascript:void(0);" id="check_mine"><i class="fa fa-user"></i> Mine</a>
                         </li>
                     <% end %>
-<!--                <% if not @project.contrib_keys.nil? and can_edit? (@project) %>
-                  <% @project.contrib_keys.each do |c| %>
-                    <li role="presentation">
-                      <a role="menuitem" m-title="<%= c.name %>" href="javascript:void(0);" class="check_id"><i class="fa fa-square-o"></i> <%=c.name%> </a>
-                    </li>
-                  <%end%>
-                <%end%>-->
-                </ul>
+                    <% @sort_keys = {}%>
+                    <% @dataset_keys = []%>
+                    <% @symbol_hash = {} %>
+                    <% if can_edit? (@project) %>
+                      <% @data_sets.each do |d| %>
+                        <% if !d.key.nil? and d.key != "" %>
+                          <% if @dataset_keys.include? d.key %>
+                            <% @dataset_keys.delete d.key %>
+                            <% @dataset_keys = @dataset_keys.select {|x| !x.nil?} %>
+                            <% @dataset_keys.append d.key %>
+                          <% else %>
+                            <%  @dataset_keys.append d.key %>
+                          <% end %>
+                        <%end%>
+                      <% end %> 
+                      <% label = 'A' %>
+                      <% for ele in 0...@dataset_keys.size %>
+                        <% @symbol_hash[@dataset_keys[ele]] = label %>
+                        <% label = label.next %>
+                      <% end %> 
+                      
+                      <% for ele in 0...@dataset_keys.length do %>
+                        <li role="presentation">
+                          <a role="menuitem" m-title="<%= @dataset_keys[@dataset_keys.length - ele - 1] %>" href="javascript:void(0);" class="check_id"><i class="fa fa-square-o"></i> <%= @dataset_keys[@dataset_keys.length - ele - 1]  + ' (' + @symbol_hash[@dataset_keys[ele]] + ')' %> </a> 
+                        </li>
+                      
+                        
+                      <% end %>
+                    <%end%>
+                   
+                  </ul>
             </div>  
           </div>
           
           <table id="dataset_table">
             <tbody>
+              <% unless @project.contrib_keys.nil? %>
+                <% used_keys = {} %> 
+              <% end %>
+              <% counter = 0 %>
+              <% key_label = 'A' %>
+              <% for e in 0...@dataset_keys.length%>
+                <% used_keys[@dataset_keys[@dataset_keys.length - 1 - e ] ] = key_label %> 
+                <%key_label = key_label.next%>
+              <% end %>
               <% @data_sets.each do |s| %>
                 <tr class="<%= cycle('feed-even', 'feed-odd')%> dataset" style="position:relative">
-                <!--<% if( not (s.key.nil?) and can_edit?( @project) )%>
+                <% if( not (s.key.nil?) and can_edit?( @project) )%>
+                  <% if used_keys[s.key].nil? %> 
+                    <% used_keys[s.key] = @dataset_keys[counter] %>
+                    <% counter = counter + 1 %>
+                  <% end %>
                   <td class="key_icon">
-                    <div class="key" title="<%= s.key %>"> <%= image_tag("key.png", :size => "32x32") %> </div> 
+                    <div class="key" title="<%= s.key %>"> <%= image_tag("Key.png", :size => "32x32") %> <a class = "key-letter-id"> <%= used_keys[s.key] %></a></div> 
                   </td>
-                <% else %>-->
+                <% else %>
                   <td class="gravatar">
                     <div class="gravatar">
                       <%if Gravatar.new.url(s.owner, 32) != nil%>
@@ -129,21 +165,11 @@
                       <%end%>
                     </div>
                   </td>
+               <% end %>
                   <td style="max-width:60px"><div class="truncate"><%= link_to s.owner.name, user_path(s.owner) %></div></td>
                   <td style="max-width:200px"><div class="truncate" title="Created <%=s.created_at.strftime("%B %d, %Y")%>"><%= link_to s.title, "#{params[:id]}/data_sets/#{s.id}" %></div></td>
-                  <!--                  <td style="max-width: 110px"><div class="truncate"><%= link_to s.owner.name, user_path(s.owner) %></div></td>
--                 <td style="max-width: 140px"><div class="truncate" title="Created <%=s.created_at.strftime("%B %d, %Y")%>"><%= link_to s.title, "#{params[:id]}/data_sets/#{s.id}" %></div></td>
--                 <% unless @project.contrib_keys.nil? %>
-          -        <td class="key_icon"> <%= image_tag("key.png") %> </td>
-          -      <%end%>-->
                  <td>
-                 <div class="controls" style="">
-                  
-          <!--      <% end %>
-                  <td style="max-width: 60px"><div class="truncate"><%= link_to s.owner.name, user_path(s.owner) %></div></td>
-                  <td style="max-width: 200px"><div class="truncate" title="Created <%=s.created_at.strftime("%B %d, %Y")%>"><%= link_to s.title, "#{params[:id]}/data_sets/#{s.id}" %></div></td>
-		              <td>
-		              <div class="controls" style="">-->
+                 <div class="controls" style="">                  
                       <% if can_edit? s %>
                          &nbsp;<a class="data_set_edit" href="<%= edit_data_set_path s %>">Edit</a>
                       <% end %>

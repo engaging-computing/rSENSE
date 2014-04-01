@@ -4,6 +4,7 @@ one:
   project: one
   media_type: MyString
   name: MyString
+  file: MyString
   data_set: one
   user: kate
   store_key: aaa
@@ -12,6 +13,7 @@ two:
   project: one
   media_type: MyString
   name: MyString
+  file: MyString
   data_set: one
   user: kate
   store_key: bbb
@@ -20,5 +22,6 @@ three:
   project: one
   media_type: MyString
   name: MyProjectString
+  file: MyProjectString
   user: kate
   store_key: ccc
