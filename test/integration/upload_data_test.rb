@@ -33,7 +33,7 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     all('select')[0].find(:xpath, 'option[4]').select_option
     all('select')[1].find(:xpath, 'option[5]').select_option
     click_on 'Submit'
-    assert page.has_content?('Dataset #1')
+    assert page.has_content?('Dataset #1'), 'Failed CSV'
     click_on 'File Types'
     assert page.has_content?('Contribute Data')
 
@@ -46,7 +46,7 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     all('select')[0].find(:xpath, 'option[1]').select_option
     all('select')[1].find(:xpath, 'option[1]').select_option
     click_on 'Submit'
-    assert page.has_content?('Dataset #2')
+    assert page.has_content?('Dataset #2'), 'Failed GPX'
     click_on 'File Types'
     assert page.has_content?('Contribute Data')
 
@@ -57,7 +57,7 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     page.execute_script %Q{$('#datafile_form').submit()}
     assert page.has_content?('Match Quality')
     click_on 'Submit'
-    assert page.has_content?('Dataset #3')
+    assert page.has_content?('Dataset #3'), 'Failed ODS'
     click_on 'File Types'
     assert page.has_content?('Contribute Data')
 
@@ -68,7 +68,7 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     page.execute_script %Q{$('#datafile_form').submit()}
     assert page.has_content?('Match Quality')
     click_on 'Submit'
-    assert page.has_content?('Dataset #4')
+    assert page.has_content?('Dataset #4'), 'Failed XLS'
     click_on 'File Types'
     assert page.has_content?('Contribute Data')
 
@@ -79,7 +79,18 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     page.execute_script %Q{$('#datafile_form').submit()}
     assert page.has_content?('Match Quality')
     click_on 'Submit'
-    assert page.has_content?('Dataset #5')
+    assert page.has_content?('Dataset #5'), 'Failed XLSX'
+    click_on 'File Types'
+    assert page.has_content?('Contribute Data')
+
+    # Test linking a google doc
+    click_on 'Google Doc'
+    assert page.has_content? 'Please enter the Google Drive link to share below:'
+    find('#doc_url').set('https://docs.google.com/spreadsheet/pub?key=0Aos8U59XvkPkdHI5bmJJaE5tc2xoRVJoaWRNSUp6Q2c&single=true&gid=0&output=csv')
+    click_on 'Save'
+    assert page.has_content?('Match Quality')
+    click_on 'Submit'
+    assert page.has_content?('Dataset #6'), 'Failed GDOC'
     click_on 'File Types'
     assert page.has_content?('Contribute Data')
 
@@ -109,6 +120,7 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     visit ds_url + '?embed=true'
     assert page.has_no_content?('Saved Vis - File Types')
     assert page.has_content?('Groups')
+
     # Tests visual modes for saved vis
     visit ds_url
     click_on 'Histogram'
@@ -123,6 +135,7 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     assert page.has_no_content?('Saved Vis - File Types')
     assert page.has_content?('Groups')
     visit vis_url
+
     # Tests deleting vises
     click_on 'Visualizations'
     assert page.has_content?('Saved Vis - File Types')
