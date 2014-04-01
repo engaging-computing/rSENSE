@@ -37,6 +37,7 @@ module Api
 
         @mo = MediaObject.new
         @mo.name = file_name
+        @mo.file = file_name
         @mo.media_type = file_type
 
         # Build media object params based on what we are doing

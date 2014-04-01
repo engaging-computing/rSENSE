@@ -16,7 +16,7 @@ class FileUploader
     end
 
     data_obj[:file] =  write_temp_file(CSV.parse(spreadsheet.to_csv))
-
+#     data_obj[:original_filename] = file.original_filename
     data_obj
   end
 
@@ -139,6 +139,25 @@ class FileUploader
     end
 
     results
+  end
+
+  def get_probable_types(data_obj)
+    data_set = data_obj['data']
+
+    types = {}
+    types['text'] = []
+    types['timestamp'] = []
+
+    regex = %r{.(?<year>\d{4})(-|\/)(?<month>\d{1,2})(-|\/)(?<day>\d{1,2})}
+
+    data_set.each do |column|
+      if (column[1]).map { |dp| (regex =~ dp) }.reduce(:&)
+        types['timestamp'].push column[0]
+      elsif !(column[1]).map { |dp| valid_float?(dp) }.reduce(:&)
+        types['text'].push column[0]
+      end
+    end
+    types
   end
 
   def sanitize_data(data_obj, matches = nil)
@@ -320,8 +339,9 @@ class FileUploader
     delim[0][:file]
   end
 
-  def valid_float?(num)
-    Float(num)
+  def valid_float?(dp)
+    return true if dp.nil?
+    Float(dp)
     true
   rescue
     false

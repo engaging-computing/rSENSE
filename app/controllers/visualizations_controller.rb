@@ -97,6 +97,7 @@ class VisualizationsController < ApplicationController
     mo = MediaObject.new
     mo.media_type = 'image'
     mo.name = 'image.png'
+    mo.file = 'image.png'
     mo.check_store!
 
     if params[:visualization].try(:[], :svg)
@@ -282,7 +283,7 @@ class VisualizationsController < ApplicationController
       rel_vis.push 'Scatter'
     end
 
-    if field_count[NUMBER_TYPE] > 0 and format_data.count > 0
+    if format_data.count > 0
       rel_vis.push 'Bar'
       rel_vis.push 'Histogram'
     end

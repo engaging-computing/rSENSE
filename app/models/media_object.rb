@@ -16,6 +16,8 @@ class MediaObject < ActiveRecord::Base
   validates_presence_of :media_type, :store_key
   validates :name, length: { maximum: 128 }
 
+  validates_presence_of :name, :file
+
   before_save :sanitize_media
   before_save :check_store!
 
@@ -38,26 +40,26 @@ class MediaObject < ActiveRecord::Base
 
   def file_name
     uudir = store_uudir(store_key)
-    "#{uudir}/#{name}"
+    "#{uudir}/#{file}"
   end
 
   def tn_file_name
     uudir = store_uudir(store_key)
-    "#{uudir}/tn_#{name}"
+    "#{uudir}/tn_#{file}"
   end
 
   def src
     Rails.logger.error('-------------------')
     return '' if store_key.nil?
     uupath = store_uupath(store_key)
-    Rails.logger.error name
-    ename  = URI.escape(name)
+    Rails.logger.error file
+    ename  = URI.escape(file)
     "#{uupath}/#{ename}"
   end
 
   def tn_src
     uupath = store_uupath(store_key)
-    ename  = URI.escape(name)
+    ename  = URI.escape(file)
     "#{uupath}/tn_#{ename}"
   end
 
