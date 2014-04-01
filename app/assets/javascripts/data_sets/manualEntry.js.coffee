@@ -36,11 +36,11 @@ $ ->
                     input_options += "<option value='#{p_val}' selected>#{p_val}</option>"
                   else
                     input_options += "<option value='#{p_val}'>#{p_val}</option>"
-                ($ '#manualTable tr').eq(row_i).find('td').eq(col_i).replaceWith("""<td><div class='center'><select 
+                ($ '#manualTable tr').eq(row_i).find('td').eq(col_i).replaceWith("""<td><div class='center'><select
                     class='form-control'>#{input_options}</select></div></td>""")
             else
               ($ '#manualTable').find('tr').each (row_i, row) ->
-                ($ row).find('td').eq(col_i).replaceWith("""<td><div class='center'><input type='text' 
+                ($ row).find('td').eq(col_i).replaceWith("""<td><div class='center'><input type='text'
                     class='form-control' value='#{ ($ '#manualTable tr').eq(row_i).find('td').eq(col_i).text() }'>
                     </div></td>""")
 
