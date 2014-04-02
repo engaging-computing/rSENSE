@@ -12,6 +12,7 @@
 //
 //
 //= require constants
+//= require image_path
 //= require jquery
 //= require helpers
 //= require dateParse
@@ -46,6 +47,7 @@
 //= require jquery.prettyPhoto
 //= require markerclustererplus
 //= require oms
+//= require bootstrap-colorpicker
 //
 //= require highvis/savedVis
 //= require highvis/visUtils
