@@ -255,7 +255,7 @@ $ ->
                 </div>"""
               ($ row).children().eq(col).find('.datepicker').unbind().datetimepicker()
 
-        row_num = 0 
+        row_num = 0
         add_row = (tab) ->
           row_num = row_num + 1
           # create a string of the new row
