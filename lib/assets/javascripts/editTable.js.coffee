@@ -469,6 +469,7 @@ $ ->
         ### SAVE TABLE ###
 
         ($ '#edit_table_save').click ->
+          console.log(($ table).children(':first'))
           console.log(($ '#data_set_name').val())
           if !($ '#edit_table_save').hasClass 'disabled'
 
