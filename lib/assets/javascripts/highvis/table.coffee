@@ -177,7 +177,6 @@ $ ->
         # Restore the search filters
         # Save the table filters
         #@table.getGridParam('postData').filters =  { 'rules': @searchParams }
-        #@table.reloadGrid()
 
         regexEscape = (str) ->
           return str.replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\-]', 'g'), '\\$&')
@@ -187,6 +186,11 @@ $ ->
             inputId = regexEscape('gs_' + column.field)
             console.log column
             $('#' + inputId).val(column.data)
+
+            $('#' + inputId).parent().parent().children().first().children().first().attr('soper', column.op)
+            $('#' + inputId).parent().parent().children().first().children().first().text(column.op)
+
+
 
         @table[0].triggerToolbar()
 
@@ -203,6 +207,8 @@ $ ->
           # Save the table filters
           if @table.getGridParam('postData').filters?
             @searchParams = jQuery.parseJSON(@table.getGridParam('postData').filters).rules
+
+
 
           console.log @searchParams
 
