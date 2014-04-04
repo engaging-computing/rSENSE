@@ -166,10 +166,12 @@ $ ->
         me = this
         ($ '.color-picker').each (_, ee) ->
           $(ee).click () ->
+            console.log('click')
             $(ee).colorpicker().on 'changeColor', (ev) ->
               cid = $(ee).attr('data-color-id')
               globals.colors[cid] = ev.color.toHex()
               me.delayedUpdate()
+            $(ee).colorpicker('show')
 
             # Make group select handler
         ($ '#groupSelector').change (e) =>
