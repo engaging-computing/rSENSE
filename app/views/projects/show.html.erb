@@ -105,7 +105,7 @@
                     <% @sort_keys = {}%>
                     <% @dataset_keys = []%>
                     <% @symbol_hash = {} %>
-                    <% if can_edit? (@project) %>
+                    
                       <% @data_sets.each do |d| %>
                         <% if !d.key.nil? and d.key != "" %>
                           <% if @dataset_keys.include? d.key %>
@@ -130,7 +130,7 @@
                       
                         
                       <% end %>
-                    <%end%>
+                    
                    
                   </ul>
             </div>  
@@ -138,9 +138,8 @@
           
           <table id="dataset_table">
             <tbody>
-              <% unless @project.contrib_keys.nil? %>
-                <% used_keys = {} %> 
-              <% end %>
+              
+              <% used_keys = {} %>               
               <% counter = 0 %>
               <% key_label = 'A' %>
               <% for e in 0...@dataset_keys.length%>
@@ -149,7 +148,7 @@
               <% end %>
               <% @data_sets.each do |s| %>
                 <tr class="<%= cycle('feed-even', 'feed-odd')%> dataset" style="position:relative">
-                <% if( not (s.key.nil?) and can_edit?( @project) )%>
+                <% if( not (s.key.nil?) ) %>
                   <% if used_keys[s.key].nil? %> 
                     <% used_keys[s.key] = @dataset_keys[counter] %>
                     <% counter = counter + 1 %>
