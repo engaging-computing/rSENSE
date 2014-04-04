@@ -170,6 +170,7 @@ $ ->
               cid = $(ee).attr('data-color-id')
               globals.colors[cid] = ev.color.toHex()
               me.delayedUpdate()
+            $(ee).colorpicker('show')
 
             # Make group select handler
         ($ '#groupSelector').change (e) =>
