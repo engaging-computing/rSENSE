@@ -136,7 +136,7 @@ $ ->
         # Add the nav bar
         ($ '#table_canvas').append '<div id="toolbar_bottom"></div>'
 
-        # Prepare the table to grid parameters
+        # Build the grid
         # Height - 71 for reasons
         @table = jQuery("#data_table").jqGrid({
           colNames: headers
@@ -164,7 +164,7 @@ $ ->
 
         # Add a refresh button and enable the search bar
         @table.jqGrid('navGrid','#toolbar_bottom',{ del:false, add:false, edit:false, search:false })
-        @table.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false, searchOperators: true })
+        @table.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false, searchOperators: true, operandTitle: "Select Search Operation"})
 
         # Set the time column formatters
         timePair = {}
@@ -175,10 +175,18 @@ $ ->
         @table.sortGrid(@sortName, true, @sortType)
 
         # Restore the search filters
+        # Save the table filters
+        #@table.getGridParam('postData').filters =  { 'rules': @searchParams }
+        #@table.reloadGrid()
+
+        regexEscape = (str) ->
+          return str.replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\-]', 'g'), '\\$&')
+
         if @searchParams?
           for column in @searchParams
-            inputId = "gs_" + column.field
-            ($ '#' + inputId).val(column.data)
+            inputId = regexEscape('gs_' + column.field)
+            console.log column
+            $('#' + inputId).val(column.data)
 
         @table[0].triggerToolbar()
 
@@ -191,10 +199,6 @@ $ ->
           # Save the sort state
           @sortName = @table.getGridParam('sortname')
           @sortType = @table.getGridParam('sortorder')
-
-          # Get the column data
-          @columnModel = @table.getGridParam('colModel')
-          console.log @columnModel
 
           # Save the table filters
           if @table.getGridParam('postData').filters?
