@@ -469,10 +469,11 @@ $ ->
         ### SAVE TABLE ###
 
         ($ '#edit_table_save').click ->
-          console.log(($ table).children(':first'))
-          console.log(($ '#data_set_name').val())
+          console.log('Hey')
+          temp_table = table.clone(true)          
+          console.log($ temp_table)
+          console.log(($ temp_table).find('tr').find('td:first'))
           if !($ '#edit_table_save').hasClass 'disabled'
-
             if ($ '#data_set_name').val() == "" and settings.page_name == "manualEntry"
               ($ '.mainContent').prepend """<div class='alert alert-danger alert-dismissable'>
                 <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>
@@ -480,14 +481,13 @@ $ ->
                 Please enter a name for your Data Set.</div>"""
             else
 
-              if table_validates(table)
-
+              if table_validates(temp_table)
                 #($ '#edit_table_save').unbind()
 
                 if settings.upload.ajaxify is true
-
+                  console.log('Am I ajax')
+                  console.log(submit_form())
                   submit_form()
-
 
                 else
                   ## I guess I'm not gonna write this part because we only use ajax to submit data
