@@ -255,13 +255,13 @@ $ ->
                 </div>"""
               ($ row).children().eq(col).find('.datepicker').unbind().datetimepicker()
 
-
+        row_num = 0
         add_row = (tab) ->
-
+          row_num = row_num + 1
           # create a string of the new row
           new_row = "<tr class='new_row'>"
-
-          ($ tab).find('th:not(:last-child)').each (index) ->
+          new_row += "<td><div class='text-center'><a style='color:black'> " + row_num + "</a> </div> </td>"
+          ($ tab).find('th:not(:last-child):not(:first-child)').each (index) ->
             if restrictions[index] == undefined
               new_row += "<td><div class='text-center'><input type='text' class=' form-control'/></div></td>"
             else
@@ -280,8 +280,13 @@ $ ->
 
           # bind row removal
           ($ '.new_row').find('.close').click ->
+            row_num = row_num - 1
             remove_row(@)
-
+            removed = parseInt(($ this).closest('tr').find('td:first').text())
+            ($ '#manualTable').find('tr').each (i,j) ->
+              if(parseInt(($ j).children(':first').text()) > removed)
+                temp = parseInt(($ j).children(':first').text() - 1)
+                ($ j).children(':first').text(temp).css('text-align','center')
           # bind map button
           ($ '.new_row').find('.map_picker').click ->
             ($ @).closest("tr").addClass('target')
@@ -438,6 +443,7 @@ $ ->
         ($ table).find('td .close').each ->
           ($ @).click ->
             remove_row(@)
+            
 
         # bind map button
         ($ 'td').find('.map_picker').click ->
