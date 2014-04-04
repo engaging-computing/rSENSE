@@ -43,7 +43,7 @@ $ ->
         @HEATMAP_MARKERS = -1
 
         @visibleMarkers = 1
-        @visibleLines = 1
+        @visibleLines = 0
         @visibleClusters = if data.dataPoints.length > 100 then 1 else 0
         @heatmapSelection = @HEATMAP_NONE
 
