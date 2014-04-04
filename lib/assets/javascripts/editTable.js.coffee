@@ -469,7 +469,7 @@ $ ->
         ### SAVE TABLE ###
 
         ($ '#edit_table_save').click ->
-
+          console.log(($ '#data_set_name').val())
           if !($ '#edit_table_save').hasClass 'disabled'
 
             if ($ '#data_set_name').val() == "" and settings.page_name == "manualEntry"
