@@ -164,8 +164,10 @@ $ ->
 
         # Add a refresh button and enable the search bar
         @table.jqGrid('navGrid','#toolbar_bottom',{ del:false, add:false, edit:false, search:false })
-        @table.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false, searchOperators: true, operandTitle: "Select Search Operation"})
-        @table.jqGrid('filterToolbar', 'operands')
+        @table.jqGrid('filterToolbar',  { stringResult:     true,\
+                                          searchOnEnter:    false,\
+                                          searchOperators:  true,\
+                                          operandTitle:     "Select Search Operation" })
 
         # Set the time column formatters
         timePair = {}
@@ -188,22 +190,11 @@ $ ->
             # Restore the search filter type and operator symbol
             operator = $('#' + inputId).closest('tr').find('.soptclass')
             $(operator).attr('soper', column.op)
-            operands = {  "eq":"==",
-                          "ne":"!",
-                          "lt":"<",
-                          "le":"<=",
-                          "gt":">",
-                          "ge":">=",
-                          "bw":"^",
-                          "bn":"!^",
-                          "in":"=",
-                          "ni":"!=",
-                          "ew":"|",
-                          "en":"!@",
-                          "cn":"~",
-                          "nc":"!~",
-                          "nu":"#",
-                          "nn":"!#" }
+            operands = { "eq": "==", "ne": "!", "lt": "<", \
+                         "le": "<=", "gt": ">", "ge": ">=",\
+                         "bw": "^",  "bn": "!^","in": "=", \
+                         "ni": "!=", "ew": "|", "en": "!@",\
+                         "cn": "~",  "nc": "!~","nu": "#", "nn": "!#" }
             $(operator).text(operands[column.op])
 
         @table[0].triggerToolbar()
