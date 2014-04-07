@@ -165,6 +165,7 @@ $ ->
         # Add a refresh button and enable the search bar
         @table.jqGrid('navGrid','#toolbar_bottom',{ del:false, add:false, edit:false, search:false })
         @table.jqGrid('filterToolbar', { stringResult: true, searchOnEnter: false, searchOperators: true, operandTitle: "Select Search Operation"})
+        @table.jqGrid('filterToolbar', 'operands')
 
         # Set the time column formatters
         timePair = {}
@@ -174,23 +175,36 @@ $ ->
         # Set the sort parameters
         @table.sortGrid(@sortName, true, @sortType)
 
-        # Restore the search filters
-        # Save the table filters
-        #@table.getGridParam('postData').filters =  { 'rules': @searchParams }
-
         regexEscape = (str) ->
           return str.replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\-]', 'g'), '\\$&')
 
+        # Restore the search filters
         if @searchParams?
           for column in @searchParams
+            # Restore the search input string
             inputId = regexEscape('gs_' + column.field)
-            console.log column
             $('#' + inputId).val(column.data)
 
-            $('#' + inputId).parent().parent().children().first().children().first().attr('soper', column.op)
-            $('#' + inputId).parent().parent().children().first().children().first().text(column.op)
-
-
+            # Restore the search filter type and operator symbol
+            operator = $('#' + inputId).closest('tr').find('.soptclass')
+            $(operator).attr('soper', column.op)
+            operands = {  "eq":"==",
+                          "ne":"!",
+                          "lt":"<",
+                          "le":"<=",
+                          "gt":">",
+                          "ge":">=",
+                          "bw":"^",
+                          "bn":"!^",
+                          "in":"=",
+                          "ni":"!=",
+                          "ew":"|",
+                          "en":"!@",
+                          "cn":"~",
+                          "nc":"!~",
+                          "nu":"#",
+                          "nn":"!#" }
+            $(operator).text(operands[column.op])
 
         @table[0].triggerToolbar()
 
@@ -207,10 +221,6 @@ $ ->
           # Save the table filters
           if @table.getGridParam('postData').filters?
             @searchParams = jQuery.parseJSON(@table.getGridParam('postData').filters).rules
-
-
-
-          console.log @searchParams
 
       resize: (newWidth, newHeight, aniLength) ->
         foo = () ->
