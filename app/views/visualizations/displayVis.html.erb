@@ -43,70 +43,27 @@
   </div>
 <%end%>
 
-<div style="margin: 0px 10px;">
-  
-    <div id="viscontainer" style="height:500px;">
+<div style="margin: 0px 10px 10px;">
+  <div id="viscontainer" style="height:500px;">
+      <ul id='visTabList'>
+        <div class="pull-right"><button class="btn btn-default" id="fullscreen-viz" title="Maximize"><i class="fa fa-arrows-alt"></i></button></div>
+      </ul><div class="clear"></div>
+      
+      <div id="map_canvas" class="vis_canvas"></div>
+      <div id="table_canvas" class="vis_canvas"></div>
+      <div id="timeline_canvas" class="vis_canvas"></div>
+      <div id="scatter_canvas" class="vis_canvas"></div>
+      <div id="bar_canvas" class="vis_canvas"></div>
+      <div id="histogram_canvas" class="vis_canvas"></div>
+      <div id="photos_canvas" class="vis_canvas"></div>
 
-        <ul id='visTabList'>
-          <div class="pull-right"><button class="btn btn-default" id="fullscreen-viz" title="Maximize"><i class="fa fa-arrows-alt"></i></button></div>
-        </ul><div class="clear"></div>
-        
-        <div id="map_canvas" class="vis_canvas"></div>
-        <div id="table_canvas" class="vis_canvas"></div>
-        <div id="timeline_canvas" class="vis_canvas"></div>
-        <div id="scatter_canvas" class="vis_canvas"></div>
-        <div id="bar_canvas" class="vis_canvas"></div>
-        <div id="histogram_canvas" class="vis_canvas"></div>
-        <div id="photos_canvas" class="vis_canvas"></div>
-
-        <div id='controlhider'>
-            <button id="control_hide_button" type="button" style="margin:5px;"> > </button>
-        </div>
-        <div id="controldiv"></div>
-    </div>
-  
+      <div id='controlhider'>
+          <button id="control_hide_button" type="button" style="margin:5px;"> > </button>
+      </div>
+      <div id="controldiv"></div>
+  </div>
 </div>
 <div class="row">
-  <% if @datasets.count == 1 %>
-  <div class="col-md-8">
-  <% else %>
-  <div class="col-md-12">
-  <% end %>
-    <div id="dataset_info">
-      <% if @datasets.count > 1 %>
-        <div id="contentCarousel" class="carousel slide">
-          <ol class="carousel-indicators">
-            <% @datasets.each_with_index do |s,i| %>
-              <a href="#" <%if s == @datasets.first()%>class="active"<%end%>>
-                <li data-target="#contentCarousel" data-slide-to="<%=i%>"></li>
-              </a>
-            <%end%>
-          </ol>
-          <!-- Carousel items -->
-          <div class="carousel-inner" >
-            <% @datasets.each do |s| %>
-              <%@data_set = s%>
-              <div class="item <%if s == @datasets.first()%>active<%end%>" style="padding:10px">
-                <span style="font-size:1.5em">Dataset: <%= data_set_edit_helper 'title', can_edit?(s), make_link = false %></span>
-                <%= raw s.content %>
-              </div>
-            <%end%>
-          </div>
-          <!-- Carousel nav -->
-          <a class="carousel-control left" href="#contentCarousel" data-slide="prev">&lsaquo;</a>
-          <a class="carousel-control right" href="#contentCarousel" data-slide="next">&rsaquo;</a>
-        </div>
-      <% elsif @datasets.count == 1%>
-
-        <div class="well" style="margin-top:10px">
-          <%@data_set = @datasets.first()%>
-          <div class="full_width_edit" style="font-size:1.5em"><%=@data_set.title%></div>
-          <%= data_set_content_helper @data_set, can_edit?(@data_set) %>
-        </div>
-
-      <%end%>
-    </div>
-  </div>
   <% if @datasets.count == 1 %>
     <div class="col-md-4">
       <%@data_set = @datasets.first%>

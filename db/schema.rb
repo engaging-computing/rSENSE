@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140328182659) do
+ActiveRecord::Schema.define(version: 20140407170755) do
 
   create_table "contrib_keys", force: true do |t|
     t.string   "name",       null: false
@@ -23,7 +23,6 @@ ActiveRecord::Schema.define(version: 20140328182659) do
 
   create_table "data_sets", force: true do |t|
     t.string   "title"
-    t.text     "content"
     t.integer  "user_id"
     t.integer  "project_id"
     t.datetime "created_at",                 null: false
