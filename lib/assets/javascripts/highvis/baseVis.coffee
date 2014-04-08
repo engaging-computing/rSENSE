@@ -141,7 +141,7 @@ $ ->
           color_id = counter % globals.colors.length
           color = globals.colors[color_id]
           controls += "<tr><td>"
-          controls += "<div class='inner_control_div' "
+          controls += "<div class='inner_control_div' id='label-color-#{color_id}'"
           controls += "style=\"color:#{color};\">"
           controls += "<div class='checkbox'><label><input class='group_input' type='checkbox'"
           controls += " value='#{gIndex}' "
@@ -169,7 +169,13 @@ $ ->
             $(ee).colorpicker().on 'changeColor', (ev) ->
               cid = $(ee).attr('data-color-id')
               globals.colors[cid] = ev.color.toHex()
+              $("#label-color-#{cid}").css('color', ev.color.toHex())
               me.delayedUpdate()
+              if me.canvas == 'map_canvas'
+                setTimeout (() -> me.start()), 1
+                $(ee).colorpicker('hide')
+            $(ee).colorpicker().on 'show', (ev) ->
+              $('.dropdown-menu').position(my: 'right', at: 'right', of: '#controldiv')
             $(ee).colorpicker('show')
 
             # Make group select handler
