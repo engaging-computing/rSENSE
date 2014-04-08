@@ -178,9 +178,6 @@ class ProjectsController < ApplicationController
               nmo.user_id = @cur_user.id
 
               nmo.save!
-              unless nds.content.nil?
-                nds.content.gsub! mo.src, nmo.src
-              end
             end
 
             nds.save!

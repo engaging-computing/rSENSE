@@ -8,11 +8,6 @@ class DataSetTest < ActiveSupport::TestCase
     @data_set = DataSet.new
   end
 
-  # Passes if content is nil
-  test 'content is nil' do
-    assert_default_nil(@data_set, @data_set.content)
-  end
-
   # Passes if hidden is false
   test 'hidden is false' do
     assert_default_false(@data_set, @data_set.hidden)
@@ -31,9 +26,5 @@ class DataSetTest < ActiveSupport::TestCase
 
   test 'project_id' do
     assert_equal projects(:one).id, data_sets(:one).project_id
-  end
-
-  test 'project content' do
-    assert_nil data_sets(:one).content, 'Expected content is not nil.'
   end
 end
