@@ -45,7 +45,7 @@ $ ->
         else @displayField = data.normalFields[0]
 
       ###
-      Build options relevent to timeline
+      Build options relevant to timeline
       ###
       buildOptions: ->
         super()
@@ -107,6 +107,12 @@ $ ->
       ###
       drawXAxisControls: ->
         super (fieldIndex) -> fieldIndex in data.timeFields
+        
+      ###
+      Clips an array of data to include only bounded points
+      ###
+      clip: (arr) ->
+        super(arr)
 
     if "Timeline" in data.relVis
       globals.timeline = new Timeline 'timeline_canvas'
