@@ -34,7 +34,7 @@ $ ->
       hydrate = new Hydrate()
       globals.extendObject data, (hydrate.parse data.savedData)
 
-        # Check for motion reference and remove
+      # Check for motion reference and remove
       index = ($.inArray 'Motion', data.allVis)
       if index isnt -1
         data.allVis.splice index, 1
@@ -63,8 +63,7 @@ $ ->
     Selects data in an x,y object format of the given group.
     ###
     data.xySelector = (xIndex, yIndex, groupIndex) ->
-   
-      rawData = @dataPoints.filter (dp) =>
+      rawData = globals.CLIPPING.getData(@dataPoints).filter (dp) =>
         group = (String dp[@groupingFieldIndex]).toLowerCase() == @groups[groupIndex]
         notNull = (dp[xIndex] isnt null) and (dp[yIndex] isnt null)
         notNaN = (not isNaN(dp[xIndex])) and (not isNaN(dp[yIndex]))
@@ -107,7 +106,7 @@ $ ->
       else
         (dp) -> (filterFunc dp) and (not isNaN dp[fieldIndex]) and (dp[fieldIndex] isnt null)
 
-      rawData = @dataPoints.filter newFilterFunc
+      rawData = globals.CLIPPING.getData(@dataPoints).filter newFilterFunc
 
       rawData.map (dp) -> dp[fieldIndex]
 
@@ -292,7 +291,7 @@ $ ->
       for dp in data.dataPoints
         for field, fIndex in data.fields
           if (typeof dp[fIndex] == "string")
-                    # Strip all quote characters
+            # Strip all quote characters
             dp[fIndex] = dp[fIndex].replace /"/g, ""
             dp[fIndex] = dp[fIndex].replace /'/g, ""
             dp[fIndex] = dp[fIndex].trim()
@@ -321,9 +320,9 @@ $ ->
       1
 
 
-    #Preprocess
+    # Preprocess
     data.preprocessData()
-    #Field index of grouping field
+    # Field index of grouping field
     data.groupingFieldIndex ?= data.DATASET_NAME_FIELD
-    #Array of current groups
+    # Array of current groups
     data.groups ?= data.makeGroups()
