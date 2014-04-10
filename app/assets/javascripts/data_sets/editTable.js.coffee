@@ -24,7 +24,6 @@ $ ->
     removedRow = 0 
     ($ 'a.close').click ->
       rowNum -= 1
-      console.log(rowNum)
       removedRow = parseInt(($ this).closest('tr').find('td:first').text())
       ($ '#editTable').find('tbody').find('tr').each (i,j) ->
         if(removedRow < parseInt(($ j).closest('tr').find('td:first').text())) 
