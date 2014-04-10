@@ -200,8 +200,7 @@ $ ->
 
         remove_row = (row) ->
           ($ row).closest('tr').remove()
-          if namespace.controller is "data_sets" and namespace.action is "edit"
-            rowNum -= 1
+          rowNum -= 1
         add_validators = (row) ->
           row = ($ row).closest('tr')
 
@@ -281,7 +280,6 @@ $ ->
 
           # bind row removal
           ($ '.new_row').find('.close').click ->
-            rowNum = rowNum - 1
             remove_row(@)
             removed = parseInt(($ this).closest('tr').find('td:first').text())
             ($ '#manualTable').find('tr').each (i,j) ->
