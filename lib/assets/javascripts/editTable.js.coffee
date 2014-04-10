@@ -200,7 +200,8 @@ $ ->
 
         remove_row = (row) ->
           ($ row).closest('tr').remove()
-
+          if namespace.controller is "data_sets" and namespace.action is "edit"
+            rowNum -= 1
         add_validators = (row) ->
           row = ($ row).closest('tr')
 
@@ -255,38 +256,43 @@ $ ->
                 </div>"""
               ($ row).children().eq(col).find('.datepicker').unbind().datetimepicker()
 
-        row_num = 0
+        rowNum = ($ '#editTable').find('tbody').find('tr').length
         add_row = (tab) ->
-          row_num = row_num + 1
+          rowNum += 1
           # create a string of the new row
-          new_row = "<tr class='new_row'>"
-          new_row += "<td><div class='text-center'><a style='color:black'> " + row_num + "</a> </div> </td>"
+          newRow = "<tr class='new_row'>"
+          newRow += "<td><div class='text-center'><a style='color:black'> " + rowNum + "</a> </div> </td>"
           ($ tab).find('th:not(:last-child):not(:first-child)').each (index) ->
             if restrictions[index] == undefined
-              new_row += "<td><div class='text-center'><input type='text' class=' form-control'/></div></td>"
+              newRow += "<td><div class='text-center'><input type='text' class=' form-control'/></div></td>"
             else
-              new_row += "<td><div clastables='text-center'><select class='form-control'><option>Select One</option>"
+              newRow += "<td><div clastables='text-center'><select class='form-control'><option>Select One</option>"
               ($ restrictions[index]).each (r_index) ->
-                new_row += "<option value='#{restrictions[index][r_index]}'>#{restrictions[index][r_index]}</option>"
-              new_row += "</select></div></td>"
+                newRow += "<option value='#{restrictions[index][r_index]}'>#{restrictions[index][r_index]}</option>"
+              newRow += "</select></div></td>"
 
-          new_row += "<td><div class='text-center'><a class='close' style='float:none;'>&times;</a></div></td></tr>"
+          newRow += "<td><div class='text-center'><a class='close' style='float:none;'>&times;</a></div></td></tr>"
 
           # and attach it to our table
-          ($ tab).append new_row
+          ($ tab).append newRow
 
           # attach validators
           add_validators ($ '.new_row')
 
           # bind row removal
           ($ '.new_row').find('.close').click ->
-            row_num = row_num - 1
+            rowNum = rowNum - 1
             remove_row(@)
             removed = parseInt(($ this).closest('tr').find('td:first').text())
             ($ '#manualTable').find('tr').each (i,j) ->
               if(parseInt(($ j).children(':first').text()) > removed)
                 temp = parseInt(($ j).children(':first').text() - 1)
                 ($ j).children(':first').text(temp).css('text-align','center')
+            ($ '#editTable').find('tr').each (i,j) ->
+              if(parseInt(($ j).children(':first').text()) > removed)
+                temp = parseInt(($ j).children(':first').text() - 1)
+                ($ j).children(':first').text(temp).css('text-align','center')
+                
           # bind map button
           ($ '.new_row').find('.map_picker').click ->
             ($ @).closest("tr").addClass('target')
@@ -377,7 +383,8 @@ $ ->
 
         # does it pass?
         table_validates = (tab) ->
-
+          tab.find('tr').each (i,j) ->
+            ($ j).children(':first').remove()
           #Check for zero rows
           if (($ tab).find('td').has('input').length == 0 and ($ tab).find('td').has('select').length == 0)
             alert "You must enter at least one row of data."
@@ -469,10 +476,6 @@ $ ->
         ### SAVE TABLE ###
 
         ($ '#edit_table_save').click ->
-          console.log('Hey')
-          temp_table = table.clone(true)          
-          console.log($ temp_table)
-          console.log(($ temp_table).find('tr').find('td:first'))
           if !($ '#edit_table_save').hasClass 'disabled'
             if ($ '#data_set_name').val() == "" and settings.page_name == "manualEntry"
               ($ '.mainContent').prepend """<div class='alert alert-danger alert-dismissable'>
@@ -480,13 +483,10 @@ $ ->
                 &times;</button><strong>An error occurred: </strong>
                 Please enter a name for your Data Set.</div>"""
             else
-
-              if table_validates(temp_table)
+              if table_validates(table)
                 #($ '#edit_table_save').unbind()
 
                 if settings.upload.ajaxify is true
-                  console.log('Am I ajax')
-                  console.log(submit_form())
                   submit_form()
 
                 else
