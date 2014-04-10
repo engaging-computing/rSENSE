@@ -162,9 +162,9 @@ $ ->
 
         me = this
         ($ '.color-picker').each (_, ee) ->
+          cid = $(ee).attr('data-color-id')
           $(ee).click () ->
             $(ee).colorpicker().on 'changeColor', (ev) ->
-              cid = $(ee).attr('data-color-id')
               globals.colors[cid] = ev.color.toHex()
               $("#label-color-#{cid}").css('color', ev.color.toHex())
               me.delayedUpdate()
@@ -172,7 +172,7 @@ $ ->
                 setTimeout (() -> me.start()), 1
                 $(ee).colorpicker('hide')
             $(ee).colorpicker().on 'show', (ev) ->
-              $('.dropdown-menu').position(my: 'right', at: 'right', of: '#controldiv')
+              $('.dropdown-menu').position(my: 'right top', at: 'right bottom', of: "#label-color-#{cid}")
             $(ee).colorpicker('show')
 
             # Make group select handler
