@@ -97,7 +97,6 @@ $ ->
           @chart.series[@chart.series.length - 1].remove false
 
         ### --- ###
-
         tempGroupIDValuePairs = for groupName, groupIndex in data.groups when groupIndex in globals.groupSelection
           switch @analysisType
             when @ANALYSISTYPE_TOTAL    then [groupIndex, (data.getTotal     @sortField, groupIndex)]
@@ -116,7 +115,7 @@ $ ->
         else
           fieldSortedGroupIDs = for groupName, groupID in data.groups
             groupID
-            ### --- ###
+        ### --- ###
 
         for groupIndex, order in fieldSortedGroupIDs when groupIndex in globals.groupSelection
 
@@ -217,7 +216,6 @@ $ ->
         controls += '</div></div>'
 
         ### --- ###
-
         # Write HTML
         ($ '#controldiv').append controls
 
@@ -233,7 +231,7 @@ $ ->
           globals.logY = (globals.logY + 1) % 2
           @start()
 
-            #Set up accordion
+        # Set up accordion
         globals.toolsOpen ?= 0
 
         ($ '#toolControl').accordion

@@ -33,14 +33,14 @@ $ ->
       constructor: (@canvas) ->
 
       start: ->
-            #Make table visible? (or somthing)
+        # Make table visible? (or somthing)
         ($ '#' + @canvas).show()
 
         @hideControls()
 
         dt = new google.visualization.DataTable()
 
-            #Generate a list of fieldIndexes (incase we need to shuffle)
+        # Generate a list of fieldIndexes (incase we need to shuffle)
         fieldIndexes = for field,fieldIndex in data.fields
           fieldIndex
 
@@ -48,7 +48,7 @@ $ ->
         fieldIndexes[0] = data.groupingFieldIndex
         fieldIndexes[data.groupingFieldIndex] = 0
 
-            # Check to see if we should shuffle a time field to the front.
+        # Check to see if we should shuffle a time field to the front.
         if ( data.timeFields.length > 0 )
           if ( data.timeFields[0] != 1)
             tmp = fieldIndexes[1]
@@ -78,7 +78,7 @@ $ ->
         chart.draw(dt, {width: '100%', height: '100%'})
         super()
 
-        #Gets called when the controls are clicked and at start
+      # Gets called when the controls are clicked and at start
       update: ->
         super()
 
