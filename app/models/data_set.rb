@@ -28,13 +28,6 @@ class DataSet < ActiveRecord::Base
 
   def sanitize_data_set
     self.title = sanitize title, tags: %w()
-    self.content = sanitize content
-
-    # Check to see if there is any valid content left
-    html = Nokogiri.HTML(content)
-    if html.text.blank? and html.at_css('img').nil?
-      self.content = nil
-    end
   end
 
   def self.search(search, include_hidden = false)

@@ -33,7 +33,7 @@ $ ->
 
     globals.logY ?= 0
 
-    #Only init selections if this is not a saved vis
+    # Only init selections if this is not a saved vis
     if not data.savedGlobals?
       globals.groupSelection ?= for vals, keys in data.groups
         Number keys
@@ -45,38 +45,37 @@ $ ->
     class window.BaseVis
       constructor: (@canvas) ->
 
-        ###
+      ###
       Start sequence used by runtime
-        ###
+      ###
       start: ->
         @drawControls()
         @update()
 
-        ###
+      ###
       Update minor state
-        Redraws html controls
-
-        Derrived classes should overload to reload content.
-        ###
+      Redraws html controls
+      Derrived classes should overload to reload content.
+      ###
       update: ->
 
-        ###
+      ###
       Default delayed update simply updates
-        ###
+      ###
       delayedUpdate: ->
         @update()
 
-        ###
+      ###
       Method called when vis resize has begun
-        Defaults to doing nothing.
-        ###
+      Defaults to doing nothing.
+      ###
       resize: (newWidth, newHeight) ->
 
-        ###
+      ###
       End sequence used by runtime
-        This is called when the user switches away from this vis.
-        Should destroy the chart, hide its canvas and remove controls.
-        ###
+      This is called when the user switches away from this vis.
+      Should destroy the chart, hide its canvas and remove controls.
+      ###
       end: ->
         console.log console.trace()
         alert   """
@@ -87,25 +86,25 @@ $ ->
           See logged stack trace in console.
           """
 
-        ###
+      ###
       Draws controls
-        Derived classes should write control HTML and bind handlers using the method such as drawGroupControls.
-        ###
+      Derived classes should write control HTML and bind handlers using the method such as drawGroupControls.
+      ###
       drawControls: ->
         @clearControls()
 
-        ###
+      ###
       Clear the controls
-        Unbinds control handlers and clears the HTML elements.
-        ###
+      Unbinds control handlers and clears the HTML elements.
+      ###
       clearControls: ->
         ($ '#controldiv').empty()
 
-        ###
+      ###
       Draws group selection controls
-        This includes a series of checkboxes and a selector for the grouping field.
-        The checkbox text color should correspond to the graph color.
-        ###
+      This includes a series of checkboxes and a selector for the grouping field.
+      The checkbox text color should correspond to the graph color.
+      ###
       drawGroupControls: (startOnGroup = false) ->
 
         controls = '<div id="groupControl" class="vis_controls">'
@@ -141,7 +140,7 @@ $ ->
           color_id = counter % globals.colors.length
           color = globals.colors[color_id]
           controls += "<tr><td>"
-          controls += "<div class='inner_control_div' "
+          controls += "<div class='inner_control_div' id='label-color-#{color_id}'"
           controls += "style=\"color:#{color};\">"
           controls += "<div class='checkbox'><label><input class='group_input' type='checkbox'"
           controls += " value='#{gIndex}' "
@@ -158,9 +157,7 @@ $ ->
         
         controls += '</div></div>'
 
-
-
-            # Write HTML
+        # Write HTML
         ($ '#controldiv').append controls
 
         me = this
@@ -169,7 +166,13 @@ $ ->
             $(ee).colorpicker().on 'changeColor', (ev) ->
               cid = $(ee).attr('data-color-id')
               globals.colors[cid] = ev.color.toHex()
+              $("#label-color-#{cid}").css('color', ev.color.toHex())
               me.delayedUpdate()
+              if me.canvas == 'map_canvas'
+                setTimeout (() -> me.start()), 1
+                $(ee).colorpicker('hide')
+            $(ee).colorpicker().on 'show', (ev) ->
+              $('.dropdown-menu').position(my: 'right', at: 'right', of: '#controldiv')
             $(ee).colorpicker('show')
 
             # Make group select handler
@@ -186,7 +189,7 @@ $ ->
 
           @drawControls()
 
-            # Make group checkbox handler
+        # Make group checkbox handler
         ($ '.group_input').click (e) =>
           selection = []
           ($ '.group_input').each () ->
@@ -207,7 +210,7 @@ $ ->
 
           @delayedUpdate()
 
-            # Make group checkbox for all groups
+        # Make group checkbox for all groups
         ($ '.group_input_all').click (e) =>
           if e.target.checked
             globals.groupSelection = for vals, keys in data.groups
@@ -220,7 +223,7 @@ $ ->
           @delayedUpdate()
 
 
-            #Set up accordion
+        # Set up accordion
         globals.groupOpen ?= 0
 
         ($ '#groupControl').accordion
@@ -230,9 +233,9 @@ $ ->
         ($ '#groupControl > h3').click ->
           globals.groupOpen = (globals.groupOpen + 1) % 2
 
-        ###
+      ###
       Draws vis saving controls
-        ###
+      ###
       drawSaveControls: (e) ->
 
         if (globals.options? and globals.options.isEmbed?) and not @chart?
@@ -263,7 +266,7 @@ $ ->
 
         controls += '</div></div>'
 
-            # Write HTML
+        # Write HTML
         ($ '#controldiv').append controls
 
         ($ "#saveControl button").button()
@@ -334,7 +337,6 @@ $ ->
           chart:
             renderTo: @canvas
             reflow: false
-                #colors:
           credits:
             enabled: false
           exporting:
@@ -342,31 +344,25 @@ $ ->
           legend:
             itemHoverStyle: ''
             backgroundColor: 'white'
-            symbolWidth:60
+            symbolWidth: 60
             itemWidth: 200
             useHTML: true
             itemStyle:
               width: 140
               cursor: 'default'
               whiteSpace: 'prewrap'
-                #loading: {}
           plotOptions:
             series:
-              stickyTracking:false
+              stickyTracking: false
               turboThreshold: 0
               marker:
-                lineWidth:0
-                radius:5
+                lineWidth: 0
+                radius: 5
               events:
                 legendItemClick: (event) ->
                   false
-                #point: {}
           series: []
-                #subtitle: {}
-                #symbols:
           title: {}
-                #tooltop: {}
-                #xAxis: {}
           yAxis:
             minorTickInterval: 'auto'
             title:
@@ -395,15 +391,16 @@ $ ->
 
           See logged stack trace in console.
           """
-        ###
+      ###
       Start sequence used by runtime
-        This is called when the user switched to this vis.
-        Should re-build options and the chart itself to ensure sync with global settings.
-        This method should also be usable as a 'full update' in that it
-        should destroy the current chart if it exists before generating a fresh one.
 
-        TODO: Update comment
-        ###
+      This is called when the user switched to this vis.
+      Should re-build options and the chart itself to ensure sync with global settings.
+      This method should also be usable as a 'full update' in that it
+      should destroy the current chart if it exists before generating a fresh one.
+
+      TODO: Update comment
+      ###
       start: ->
         @buildOptions()
 
@@ -413,14 +410,13 @@ $ ->
 
         super()
 
-        ###
+      ###
       Update minor state
-        Clears current series and re-loads the legend.
-
-        Derrived classes should overload to add data drawing.
-        ###
+      Clears current series and re-loads the legend.
+      Derrived classes should overload to add data drawing.
+      ###
       update: ->
-            #Name Y Axis
+        # Name Y Axis
         title = if globals.fieldSelection.length isnt 1
           temp =
             text: 'Y-Values'
@@ -434,33 +430,33 @@ $ ->
 
         @chart.yAxis[0].setTitle title, false
 
-            #Remove curent data
+        # Remove curent data
         while @chart.series.length > 0
           @chart.series[0].remove(false)
 
-            #Draw legend
+        # Draw legend
         for options in @buildLegendSeries()
           options.name = options.name.replace(/(.{1})/g,"$1&#8203;") + " "
           @chart.addSeries options, false
 
-        ###
+      ###
       Performs an update while displaying the loading text
-        ###
+      ###
       delayedUpdate: ->
         @chart.showLoading 'Loading...'
 
-            #Save context
+        # Save context
         mySelf = this
         update = -> mySelf.update()
         setTimeout update, 1
 
         @chart.hideLoading()
 
-        ###
+      ###
       Draws y axis controls
-        This includes a series of checkboxes or radio buttons for selecting
-        the active y axis field(s).
-        ###
+      This includes a series of checkboxes or radio buttons for selecting
+      the active y axis field(s).
+      ###
       drawYAxisControls: (radio = false) ->
 
         controls = '<div id="yAxisControl" class="vis_controls">'
@@ -472,7 +468,7 @@ $ ->
 
         controls += "<div class='outer_control_div'>"
 
-            # Populate choices
+        # Populate choices
         for fIndex in data.normalFields
           controls += "<div class='inner_control_div' >"
 
@@ -489,12 +485,12 @@ $ ->
 
         controls += '</div></div>'
 
-            # Write HTML
+        # Write HTML
         ($ '#controldiv').append controls
 
-            # Make y axis checkbox/radio handler
+        # Make y axis checkbox/radio handler
         if radio
-                # Currently specific to histogram - TODO: decouple
+          # Currently specific to histogram - TODO: decouple
           ($ '.y_axis_input').click (e) =>
             @displayField = Number e.target.value
             @binSize = @defaultBinSize()
@@ -510,7 +506,7 @@ $ ->
               globals.fieldSelection.push(index)
             @delayedUpdate()
 
-            #Set up accordion
+        # Set up accordion
         globals.yAxisOpen ?= 0
 
         ($ '#yAxisControl').accordion
@@ -520,18 +516,18 @@ $ ->
         ($ '#yAxisControl > h3').click ->
           globals.yAxisOpen = (globals.yAxisOpen + 1) % 2
 
-        ###
+      ###
       Method called when vis resize has begun
-        Resize highcharts to match
-        ###
+      Resize highcharts to match
+      ###
       resize: (newWidth, newHeight, duration) ->
         @chart.setSize(newWidth, newHeight, {duration: duration, easing:'linear'})
 
-        ###
+      ###
       End sequence used by runtime
-        This is called when the user switches away from this vis.
-        Should destroy the chart, hide its canvas and remove controls.
-        ###
+      This is called when the user switches away from this vis.
+      Should destroy the chart, hide its canvas and remove controls.
+      ###
       end: ->
         if @chart?
           @chart.destroy()
@@ -539,9 +535,9 @@ $ ->
 
         ($ '#' + @canvas).hide()
 
-        ###
+      ###
       Remove the chart and chart options object
-        ###
+      ###
       serializationCleanup: ->
         delete @chart
         delete @chartOptions
