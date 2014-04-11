@@ -385,6 +385,11 @@ $ ->
             ($ j).children(':first').remove()
           #Check for zero rows
           if (($ tab).find('td').has('input').length == 0 and ($ tab).find('td').has('select').length == 0)
+            renumber = 1
+            ($ tab).find('thead').find('tr').prepend("<th style='width:10%'> Row Number </th>")
+            ($ tab).find('tbody').find('tr').each (i,j) ->
+              ($ j).prepend("<td style='width:10%;text-align:center'>" + renumber + " </td> ")
+              renumber += 1
             alert "You must enter at least one row of data."
             return false
 
@@ -393,6 +398,11 @@ $ ->
           ($ tab).find('td').has('input, select').each ->
             noInput = noInput and ((($ @).find('input').val() == "") or ($ @).find('select').val() == "Select One")
           if noInput
+            renumber = 1
+            ($ tab).find('thead').find('tr').prepend("<th style='width:10%'> Row Number </th>")
+            ($ tab).find('tbody').find('tr').each (i,j) ->
+              ($ j).prepend("<td style='width:10%;text-align:center'>" + renumber + " </td> ")
+              renumber += 1
             alert "You must enter at least one item of data."
             return false
 
