@@ -4,7 +4,7 @@ $ ->
 
   # Only allows the plugin to run on certain pages. Probably not the right place to do this.
   if (namespace.controller is "data_sets") and (namespace.action is "manualEntry" or namespace.action is "edit")
-
+    
     #-----------------------------------------------------------------------
     # Map Specific Code
     #-----------------------------------------------------------------------
@@ -199,8 +199,14 @@ $ ->
         update_headers()
 
         remove_row = (row) ->
+          rowNum = 1
           ($ row).closest('tr').remove()
-          rowNum -= 1
+          ($ '#manualTable').find('tbody').find('tr').each (i,j) ->
+            ($ j).find('td:first').text(rowNum)
+            rowNum += 1
+          ($ '#editTable').find('tbody').find('tr').each (i,j) ->
+            ($ j).find('td:first').text(rowNum)
+            rowNum += 1
         add_validators = (row) ->
           row = ($ row).closest('tr')
 
@@ -208,15 +214,15 @@ $ ->
           # attach validators
           for col in num_cols
             do (col) ->
-              ($ row).children().eq(col).find('input').addClass 'validate_number'
+              ($ row).children().eq(col-1).find('input').addClass 'validate_number'
 
           for col in lat_cols
             do (col) ->
-              ($ row).children().eq(col).find('input').addClass 'validate_latitude'
+              ($ row).children().eq(col-1).find('input').addClass 'validate_latitude'
 
           for col in lon_cols
             do (col) ->
-              ($ row).children().eq(col).find('input').replaceWith """
+              ($ row).children().eq(col-1).find('input').replaceWith """
                 <div class='input-group'>
                   <input class='validate_longitude form-control ' id='appendedInput' type='text'
                     value='#{ ($ row).find('input').eq(col).val() }' />
@@ -226,7 +232,9 @@ $ ->
                     </a>
                   </span>
                 </div>"""
-              ($ row).children().eq(col).find('.map_picker').unbind().click ->
+                
+              #value='#{ ($ row).find('input').eq(col).val() }'  
+              ($ row).children().eq(col-1).find('.map_picker').unbind().click ->
                 ($ this).closest("tr").addClass('target')
                 previous_lon = ($ this).closest('tr').find('.validate_longitude').val()
                 previous_lat = ($ this).closest('tr').find('.validate_latitude').val()
@@ -239,11 +247,11 @@ $ ->
 
           for col in text_cols
             do (col) ->
-              ($ row).children().eq(col).find('input').addClass 'validate_text'
+              ($ row).children().eq(col-1).find('input').addClass 'validate_text'
 
           for col in time_cols
             do (col) ->
-              ($ row).children().eq(col).find('input').replaceWith """
+              ($ row).children().eq(col-1).find('input').replaceWith """
                 <div class='input-group datepicker'>
                   <input class='validate_timestamp  form-control' type='text'
                     data-format='yyyy/MM/dd hh:mm:ss' value='#{ ($ row).find('input').eq(col).val() }' />
@@ -253,25 +261,22 @@ $ ->
                     </a>
                   </span>
                 </div>"""
-              ($ row).children().eq(col).find('.datepicker').unbind().datetimepicker()
+              ($ row).children().eq(col-1).find('.datepicker').unbind().datetimepicker()
 
-        rowNum = ($ '#editTable').find('tbody').find('tr').length
         add_row = (tab) ->
-          rowNum += 1
           # create a string of the new row
           newRow = "<tr class='new_row'>"
-          newRow += "<td><div class='text-center'><a style='color:black'> " + rowNum + "</a> </div> </td>"
           ($ tab).find('th:not(:last-child):not(:first-child)').each (index) ->
             if restrictions[index] == undefined
               newRow += "<td><div class='text-center'><input type='text' class=' form-control'/></div></td>"
             else
               newRow += "<td><div clastables='text-center'><select class='form-control'><option>Select One</option>"
-              ($ restrictions[index]).each (r_index) ->
+              ($ restrictions[index-(namespace.action is "edit")]).each (r_index) ->
                 newRow += "<option value='#{restrictions[index][r_index]}'>#{restrictions[index][r_index]}</option>"
               newRow += "</select></div></td>"
 
           newRow += "<td><div class='text-center'><a class='close' style='float:none;'>&times;</a></div></td></tr>"
-
+          
           # and attach it to our table
           ($ tab).append newRow
 
@@ -280,16 +285,7 @@ $ ->
 
           # bind row removal
           ($ '.new_row').find('.close').click ->
-            remove_row(@)
-            removed = parseInt(($ this).closest('tr').find('td:first').text())
-            ($ '#manualTable').find('tr').each (i,j) ->
-              if(parseInt(($ j).children(':first').text()) > removed)
-                temp = parseInt(($ j).children(':first').text() - 1)
-                ($ j).children(':first').text(temp).css('text-align','center')
-            ($ '#editTable').find('tr').each (i,j) ->
-              if(parseInt(($ j).children(':first').text()) > removed)
-                temp = parseInt(($ j).children(':first').text() - 1)
-                ($ j).children(':first').text(temp).css('text-align','center')
+            remove_row(@)            
                 
           # bind map button
           ($ '.new_row').find('.map_picker').click ->
@@ -385,11 +381,9 @@ $ ->
             ($ j).children(':first').remove()
           #Check for zero rows
           if (($ tab).find('td').has('input').length == 0 and ($ tab).find('td').has('select').length == 0)
-            renumber = 1
-            ($ tab).find('thead').find('tr').prepend("<th style='width:10%'> Row Number </th>")
+            ($ tab).find('thead').find('tr').prepend("<th style='width:10%;text-align:center'> Row Number </th>")
             ($ tab).find('tbody').find('tr').each (i,j) ->
-              ($ j).prepend("<td style='width:10%;text-align:center'>" + renumber + " </td> ")
-              renumber += 1
+              ($ j).prepend("<td style='text-align:center;width:10%'>" + i+1 + "</td>")
             alert "You must enter at least one row of data."
             return false
 
@@ -398,11 +392,11 @@ $ ->
           ($ tab).find('td').has('input, select').each ->
             noInput = noInput and ((($ @).find('input').val() == "") or ($ @).find('select').val() == "Select One")
           if noInput
-            renumber = 1
-            ($ tab).find('thead').find('tr').prepend("<th style='width:10%'> Row Number </th>")
+            rowNum = 1
+            ($ tab).find('thead').find('tr').prepend("<th style='width:10%;text-align:center'> Row Number </th>")
             ($ tab).find('tbody').find('tr').each (i,j) ->
-              ($ j).prepend("<td style='width:10%;text-align:center'>" + renumber + " </td> ")
-              renumber += 1
+              ($ j).prepend("<td style='text-align:center;width:10%'>" + rowNum + "</td>")
+              rowNum += 1
             alert "You must enter at least one item of data."
             return false
 
@@ -500,3 +494,4 @@ $ ->
                 else
                   ## I guess I'm not gonna write this part because we only use ajax to submit data
                   ($ table).wrap "<form action='#{settings.upload.url}' method='#{settings.upload.method}' />"
+        
