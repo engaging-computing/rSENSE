@@ -1,9 +1,10 @@
 $ ->
   if namespace.controller is "data_sets" and namespace.action is "manualEntry"
-  
+    
     ($ document).ready () ->
+      ($ '#manualTable').find('thead').find('tr').prepend("<th style='width:10%;text-align:center'> Row Number </th>")      
       ($ '#edit_table_add').click()
-  
+      
     #setTimeout (-> ($ '#edit_table_add').click()), 200
   
     settings =
@@ -20,7 +21,12 @@ $ ->
             "<div class='alert alert-danger alert-dismissable'><strong>An error occured: </strong>" +
             "Data set names must be unique to their project.</div>"
           )
-
+          ($ '#manualTable').find('thead').find('tr').prepend("<th style='width:10%;text-align:center'> Row Number </th>")
+          rowNum = 1
+          ($ '#manualTable').find('tbody').find('tr').each (i,j) ->
+            ($ j).prepend("<td style='text-align:center;width:10%'>" + rowNum + "</td>")
+            rowNum += 1
+          
           ($ '#manualTable th').each (header_i, header) ->
             ($ header).wrapInner "<div class='center'></div>"
             
@@ -137,4 +143,7 @@ $ ->
           when "Latitude" then lat_cols.push index
           when "Latitude" then add_map()
           when "Longitude" then lon_cols.push index
-
+    
+    ($ '#edit_table_add').click ->
+      ($ '#manualTable').find('tbody').find('tr:last').prepend("<td style='width:10%;text-align:center'>" + ($ '#manualTable').find('tbody').find('tr').length + "</td>")
+            
