@@ -175,7 +175,7 @@ $ ->
             if cur_index == last_index
               add_row(table)
               ($ '#manualTable').find('tbody').find('tr:last').prepend(
-                "<td style='width:10%;text-align:center'>" + 
+                "<td style='width:10%;text-align:center'>" +
                 (($ '#manualTable').find('tbody').find('tr').length) + "</td>"
               )
             table.find("tr:nth-child(#{cur_index+1})").find('input:first').select()
@@ -226,7 +226,7 @@ $ ->
 
           for col in lon_cols
             val = ($ row).find('input').eq(col - 1).val()
-            if namespace.action is "manualEntry" 
+            if namespace.action is "manualEntry"
               val = ''
               
             do (col) ->
@@ -241,7 +241,7 @@ $ ->
                   </span>
                 </div>"""
                 
-              #value='#{ ($ row).find('input').eq(col).val() }'  
+              #value='#{ ($ row).find('input').eq(col).val() }'
               ($ row).children().eq(col - offset).find('.map_picker').unbind().click ->
                 ($ this).closest("tr").addClass('target')
                 previous_lon = ($ this).closest('tr').find('.validate_longitude').val()
