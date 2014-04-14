@@ -174,7 +174,10 @@ $ ->
             last_index = table.find('tr:last')[0].rowIndex
             if cur_index == last_index
               add_row(table)
-              ($ '#manualTable').find('tbody').find('tr:last').prepend("<td style='width:10%;text-align:center'>" + (($ '#manualTable').find('tbody').find('tr').length) + "</td>")
+              ($ '#manualTable').find('tbody').find('tr:last').prepend(
+                "<td style='width:10%;text-align:center'>" + 
+                (($ '#manualTable').find('tbody').find('tr').length) + "</td>"
+              )
             table.find("tr:nth-child(#{cur_index+1})").find('input:first').select()
 
 
@@ -215,19 +218,19 @@ $ ->
           # attach validators
           for col in num_cols
             do (col) ->
-              ($ row).children().eq(col-offset).find('input').addClass 'validate_number'
+              ($ row).children().eq(col - offset).find('input').addClass 'validate_number'
 
           for col in lat_cols
             do (col) ->
-              ($ row).children().eq(col-offset).find('input').addClass 'validate_latitude'
+              ($ row).children().eq(col - offset).find('input').addClass 'validate_latitude'
 
           for col in lon_cols
-            val = ($ row).find('input').eq(col-1).val()
+            val = ($ row).find('input').eq(col - 1).val()
             if namespace.action is "manualEntry" 
               val = ''
               
             do (col) ->
-              ($ row).children().eq(col-offset).find('input').replaceWith """
+              ($ row).children().eq(col - offset ).find('input').replaceWith """
                 <div class='input-group'>
                   <input class='validate_longitude form-control ' id='appendedInput' type='text'
                     value="#{ val }" />
@@ -239,7 +242,7 @@ $ ->
                 </div>"""
                 
               #value='#{ ($ row).find('input').eq(col).val() }'  
-              ($ row).children().eq(col-offset).find('.map_picker').unbind().click ->
+              ($ row).children().eq(col - offset).find('.map_picker').unbind().click ->
                 ($ this).closest("tr").addClass('target')
                 previous_lon = ($ this).closest('tr').find('.validate_longitude').val()
                 previous_lat = ($ this).closest('tr').find('.validate_latitude').val()
@@ -252,21 +255,21 @@ $ ->
 
           for col in text_cols
             do (col) ->
-              ($ row).children().eq(col-offset).find('input').addClass 'validate_text'
+              ($ row).children().eq(col - offset).find('input').addClass 'validate_text'
 
           for col in time_cols
             do (col) ->
-              ($ row).children().eq(col-offset).find('input').replaceWith """
+              ($ row).children().eq(col - offset).find('input').replaceWith """
                 <div class='input-group datepicker'>
                   <input class='validate_timestamp  form-control' type='text'
-                    data-format='yyyy/MM/dd hh:mm:ss' value='#{ ($ row).find('input').eq(col-offset).val() }' />
+                    data-format='yyyy/MM/dd hh:mm:ss' value='#{ ($ row).find('input').eq(col - offset).val() }' />
                   <span class='input-group-btn'>
                     <a href='#' tabindex='32767' class="btn btn-default">
                       <i class='fa fa-calendar'></i>
                     </a>
                   </span>
                 </div>"""
-              ($ row).children().eq(col-offset).find('.datepicker').unbind().datetimepicker()
+              ($ row).children().eq(col - offset).find('.datepicker').unbind().datetimepicker()
 
         add_row = (tab) ->
           # create a string of the new row
@@ -294,8 +297,7 @@ $ ->
 
           # bind row removal
           ($ '.new_row').find('.close').click ->
-            remove_row(@)            
-                
+            remove_row(@)
           # bind map button
           ($ '.new_row').find('.map_picker').click ->
             ($ @).closest("tr").addClass('target')
@@ -390,19 +392,26 @@ $ ->
             ($ j).children(':first').remove()
           #Check for zero rows
           if (($ tab).find('td').has('input').length == 0 and ($ tab).find('td').has('select').length == 0)
-            ($ '#manualEntry').find('thead').find('tr').prepend("<th style='width:10%;text-align:center'> Row Number </th>")
+            ($ '#manualEntry').find('thead').find('tr').prepend(
+              "<th style='width:10%;text-align:center'> Row Number </th>"
+            )
+            rowNum = 1
             ($ '#manualEntry').find('tbody').find('tr').each (i,j) ->
-              ($ j).prepend("<td style='text-align:center;width:10%'>" + i+1 + "</td>")
+              ($ j).prepend("<td style='text-align:center;width:10%'>" + rowNum + "</td>")
+              rowNum += 1
             alert "You must enter at least one row of data."
             return false
 
           # Check that there is at least one value
           noInput = true
           ($ tab).find('td').has('input, select').each ->
-            noInput = noInput and ((($ @).find('input').val() == "") or ($ @).find('select').val() == "Select One")
+            noInput = noInput and ((($ @).find('input').val() == "") or
+            ($ @).find('select').val() == "Select One")
           if noInput
             rowNum = 1
-            ($ '#manualTable').find('thead').find('tr').prepend("<th style='width:10%;text-align:center'> Row Number </th>")
+            ($ '#manualTable').find('thead').find('tr').prepend(
+              "<th style='width:10%;text-align:center'> Row Number </th>"
+            )
             ($ '#manualTable').find('tbody').find('tr').each (i,j) ->
               ($ j).prepend("<td style='text-align:center;width:10%'>" + rowNum + "</td>")
               rowNum += 1
