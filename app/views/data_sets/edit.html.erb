@@ -14,7 +14,6 @@
         <table id="editTable" class="table" data-project-id="<%= @project.id %>">
           <thead>
             <tr>
-              <th style="width: 10%"> Row Number: </th>
               <% @project.fields.each do |f| %>
                 <th data-field-type="<%= get_field_name(f.field_type) %>" data-field-id="<%= f.id %>" data-field-restrictions="<%= f.restrictions %>" data-field-name="<%= f.name %>"><%= f.name %>
                 <% if f.unit != "" and !f.unit.nil?%>
