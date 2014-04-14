@@ -14,7 +14,7 @@ $ ->
           
     ($ '#editTable').editTable(settings)
     
-    field_count = ($ '#editTable').find('tr').eq(0).find('th').size()-1
+    field_count = ($ '#editTable').find('tr').eq(0).find('th').size() - 1
     
     ($ '#editTable').find('tr').slice(1).each () ->
       ($ @).find('td:not(:last)').each () ->

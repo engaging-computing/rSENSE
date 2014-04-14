@@ -4,7 +4,7 @@ $ ->
     ($ document).ready () ->
       ($ '#manualTable').find('thead').find('tr').prepend(
         "<th style='width:10%;text-align:center'> Row Number </th>"
-      )      
+      )
       ($ '#edit_table_add').click()
       
     #setTimeout (-> ($ '#edit_table_add').click()), 200
@@ -158,7 +158,7 @@ $ ->
       #)
   ($ '#edit_table_add').click () ->
     ($ '#manualTable').find('tbody').find('tr:last').prepend(
-      "<td style='width:10%;text-align:center'>" + 
+      "<td style='width:10%;text-align:center'>" +
       ($ '#manualTable').find('tbody').find('tr').length + "</td>"
     )
   ($ '#manualTable').find('.close').click ->
