@@ -1,6 +1,6 @@
 $ ->
   if namespace.controller is "data_sets" and namespace.action is "edit"
-     settings =
+    settings =
       buttons: ['close', 'add', 'save']
       bootstrapify: true
       upload:
@@ -23,7 +23,7 @@ $ ->
       ($ @).find('td:not(:last)').each () ->
         ($ @).attr 'width', "#{95 / (field_count)}%"
     #remove = ($ '#editTable').find('thead').find('tr').find('th').length
-    #console.log(remove)    
+    #console.log(remove)
     #($ '#editTable').find('tbody').find('tr').each (i,j) ->
       #temp = ($ j).find(":nth-child(#{remove})").text()
       #($ j).find(":nth-child(#{remove})").remove()

@@ -2,7 +2,9 @@ $ ->
   if namespace.controller is "data_sets" and namespace.action is "manualEntry"
     
     ($ document).ready () ->
-      ($ '#manualTable').find('thead').find('tr').prepend("<th style='width:10%;text-align:center'> Row Number </th>")      
+      ($ '#manualTable').find('thead').find('tr').prepend(
+        "<th style='width:10%;text-align:center'> Row Number </th>"
+      )      
       ($ '#edit_table_add').click()
       
     #setTimeout (-> ($ '#edit_table_add').click()), 200
@@ -107,7 +109,9 @@ $ ->
                     </span>
                   </div>"""
                 ($ row).children().eq(col).find('.datepicker').unbind().datetimepicker()
-           ($ '#manualTable').find('thead').find('tr').prepend("<th style='width:10%;text-align:center'> Row Number </th>")
+           ($ '#manualTable').find('thead').find('tr').prepend(
+             "<th style='width:10%;text-align:center'> Row Number </th>"
+           )
            rowNum = 1
            ($ '#manualTable').find('tbody').find('tr').each (i,j) ->
              ($ j).prepend("<td style='text-align:center;width:10%'>" + rowNum + "</td>")
@@ -153,7 +157,10 @@ $ ->
         #e.preventDefault()
       #)
   ($ '#edit_table_add').click () ->
-    ($ '#manualTable').find('tbody').find('tr:last').prepend("<td style='width:10%;text-align:center'>" + ($ '#manualTable').find('tbody').find('tr').length + "</td>")
+    ($ '#manualTable').find('tbody').find('tr:last').prepend(
+      "<td style='width:10%;text-align:center'>" + 
+      ($ '#manualTable').find('tbody').find('tr').length + "</td>"
+    )
   ($ '#manualTable').find('.close').click ->
     rowNum = 1
     ($ '#manualTable').find('tbody').find('tr').each (i,j) ->
