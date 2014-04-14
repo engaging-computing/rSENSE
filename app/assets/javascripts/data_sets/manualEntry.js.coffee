@@ -21,11 +21,6 @@ $ ->
             "<div class='alert alert-danger alert-dismissable'><strong>An error occured: </strong>" +
             "Data set names must be unique to their project.</div>"
           )
-          ($ '#manualTable').find('thead').find('tr').prepend("<th style='width:10%;text-align:center'> Row Number </th>")
-          rowNum = 1
-          ($ '#manualTable').find('tbody').find('tr').each (i,j) ->
-            ($ j).prepend("<td style='text-align:center;width:10%'>" + rowNum + "</td>")
-            rowNum += 1
           
           ($ '#manualTable th').each (header_i, header) ->
             ($ header).wrapInner "<div class='center'></div>"
@@ -49,12 +44,15 @@ $ ->
                 ($ row).find('td').eq(col_i).replaceWith("""<td><div class='center'><input type='text'
                     class='form-control' value='#{ ($ '#manualTable tr').eq(row_i).find('td').eq(col_i).text() }'>
                     </div></td>""")
-
+         
           ($ '#manualTable tr').slice(1).each (row_i, row) ->
             ($ row).append "<td><div class='center'><a class='close' style='float:none;'>&times;</a></div></td>"
             ($ row).find('.close').click ->
               ($ ($ @).closest('tr')).remove()
-            
+              rowNum = 1
+              ($ '#manualTable').find('tbody').find('tr').each (i,j) ->
+                ($ j).find('td:first').text(rowNum)
+                rowNum += 1
           ($ '#edit_table_add').removeClass 'disabled'
           ($ '#edit_table_save').button 'reset'
           
@@ -74,7 +72,7 @@ $ ->
                 ($ row).children().eq(col).find('input').replaceWith """
                   <div class='input-group'>
                     <input class='validate_longitude form-control ' id='appendedInput'
-                      type='text' value='#{ ($ row).find('input').eq(col).val() }' />
+                      type='text' value='#{ ($ row).find('input').eq(col-1).val() }' />
                     <span class='input-group-btn'>
                       <a href='#' tabindex='32767' class="btn btn-default map_picker">
                         <i class='fa fa-globe'></i>
@@ -109,12 +107,18 @@ $ ->
                     </span>
                   </div>"""
                 ($ row).children().eq(col).find('.datepicker').unbind().datetimepicker()
+           ($ '#manualTable').find('thead').find('tr').prepend("<th style='width:10%;text-align:center'> Row Number </th>")
+           rowNum = 1
+           ($ '#manualTable').find('tbody').find('tr').each (i,j) ->
+             ($ j).prepend("<td style='text-align:center;width:10%'>" + rowNum + "</td>")
+             rowNum += 1
+          
       
         success: (data, textStatus, jqXHR) ->
           window.location = data["displayURL"]
 
             
-            
+             
       debug: false
     ($ '#manualTable').editTable(settings)
     
@@ -144,6 +148,15 @@ $ ->
           when "Latitude" then add_map()
           when "Longitude" then lon_cols.push index
     
-    ($ '#edit_table_add').click ->
-      ($ '#manualTable').find('tbody').find('tr:last').prepend("<td style='width:10%;text-align:center'>" + ($ '#manualTable').find('tbody').find('tr').length + "</td>")
-            
+    #$('#manualTable').keypress( (e) ->
+      #if( e.which == 13 )
+        #e.preventDefault()
+      #)
+  ($ '#edit_table_add').click () ->
+    ($ '#manualTable').find('tbody').find('tr:last').prepend("<td style='width:10%;text-align:center'>" + ($ '#manualTable').find('tbody').find('tr').length + "</td>")
+  ($ '#manualTable').find('.close').click ->
+    rowNum = 1
+    ($ '#manualTable').find('tbody').find('tr').each (i,j) ->
+      console.log('GETTING CALLED')
+      ($ j).find('td:first').text(rowNum)
+      rowNum += 1

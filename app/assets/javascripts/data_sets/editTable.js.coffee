@@ -18,8 +18,10 @@ $ ->
     
     ($ '#editTable').find('tr').slice(1).each () ->
       ($ @).find('td:not(:last)').each () ->
-        ($ @).attr 'width', "#{85 / (field_count)}%"
-      
+        ($ @).attr 'width', "#{95 / (field_count)}%"
+    ($ '#edit_table_add').click ->
+      ($ @).find('td:not(:last)').each () ->
+        ($ @).attr 'width', "#{95 / (field_count)}%"
     #remove = ($ '#editTable').find('thead').find('tr').find('th').length
     #console.log(remove)    
     #($ '#editTable').find('tbody').find('tr').each (i,j) ->

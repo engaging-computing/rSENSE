@@ -174,6 +174,7 @@ $ ->
             last_index = table.find('tr:last')[0].rowIndex
             if cur_index == last_index
               add_row(table)
+              ($ '#manualTable').find('tbody').find('tr:last').prepend("<td style='width:10%;text-align:center'>" + (($ '#manualTable').find('tbody').find('tr').length) + "</td>")
             table.find("tr:nth-child(#{cur_index+1})").find('input:first').select()
 
 
@@ -269,6 +270,7 @@ $ ->
 
         add_row = (tab) ->
           # create a string of the new row
+          rowNum = ($ 'manualTable').find('tbody').find('tr').size + 1
           newRow = "<tr class='new_row'>"
           bounds = ($ tab).find('th:not(:last-child)')
           if namespace.action is "manualEntry"
@@ -384,7 +386,7 @@ $ ->
 
         # does it pass?
         table_validates = (tab) ->
-          tab.find('tr').each (i,j) ->
+          ($ '#manualTable').find('tr').each (i,j) ->
             ($ j).children(':first').remove()
           #Check for zero rows
           if (($ tab).find('td').has('input').length == 0 and ($ tab).find('td').has('select').length == 0)
@@ -502,4 +504,3 @@ $ ->
                 else
                   ## I guess I'm not gonna write this part because we only use ajax to submit data
                   ($ table).wrap "<form action='#{settings.upload.url}' method='#{settings.upload.method}' />"
-        
