@@ -4,7 +4,10 @@ $ ->
 
   # Only allows the plugin to run on certain pages. Probably not the right place to do this.
   if (namespace.controller is "data_sets") and (namespace.action is "manualEntry" or namespace.action is "edit")
-    
+    offset = 0
+    if namespace.action is "manualEntry"
+      offset = 1
+    console.log(offset)
     #-----------------------------------------------------------------------
     # Map Specific Code
     #-----------------------------------------------------------------------
@@ -204,9 +207,6 @@ $ ->
           ($ '#manualTable').find('tbody').find('tr').each (i,j) ->
             ($ j).find('td:first').text(rowNum)
             rowNum += 1
-          ($ '#editTable').find('tbody').find('tr').each (i,j) ->
-            ($ j).find('td:first').text(rowNum)
-            rowNum += 1
         add_validators = (row) ->
           row = ($ row).closest('tr')
 
@@ -214,18 +214,22 @@ $ ->
           # attach validators
           for col in num_cols
             do (col) ->
-              ($ row).children().eq(col-1).find('input').addClass 'validate_number'
+              ($ row).children().eq(col-offset).find('input').addClass 'validate_number'
 
           for col in lat_cols
             do (col) ->
-              ($ row).children().eq(col-1).find('input').addClass 'validate_latitude'
+              ($ row).children().eq(col-offset).find('input').addClass 'validate_latitude'
 
           for col in lon_cols
+            val = ($ row).find('input').eq(col-1).val()
+            if namespace.action is "manualEntry" 
+              val = ''
+              
             do (col) ->
-              ($ row).children().eq(col-1).find('input').replaceWith """
+              ($ row).children().eq(col-offset).find('input').replaceWith """
                 <div class='input-group'>
                   <input class='validate_longitude form-control ' id='appendedInput' type='text'
-                    value='#{ ($ row).find('input').eq(col).val() }' />
+                    value="#{ val }" />
                   <span class='input-group-btn'>
                     <a href='#' tabindex='32767' class="btn btn-default map_picker">
                       <i class='fa fa-globe'></i>
@@ -234,7 +238,7 @@ $ ->
                 </div>"""
                 
               #value='#{ ($ row).find('input').eq(col).val() }'  
-              ($ row).children().eq(col-1).find('.map_picker').unbind().click ->
+              ($ row).children().eq(col-offset).find('.map_picker').unbind().click ->
                 ($ this).closest("tr").addClass('target')
                 previous_lon = ($ this).closest('tr').find('.validate_longitude').val()
                 previous_lat = ($ this).closest('tr').find('.validate_latitude').val()
@@ -247,31 +251,34 @@ $ ->
 
           for col in text_cols
             do (col) ->
-              ($ row).children().eq(col-1).find('input').addClass 'validate_text'
+              ($ row).children().eq(col-offset).find('input').addClass 'validate_text'
 
           for col in time_cols
             do (col) ->
-              ($ row).children().eq(col-1).find('input').replaceWith """
+              ($ row).children().eq(col-offset).find('input').replaceWith """
                 <div class='input-group datepicker'>
                   <input class='validate_timestamp  form-control' type='text'
-                    data-format='yyyy/MM/dd hh:mm:ss' value='#{ ($ row).find('input').eq(col).val() }' />
+                    data-format='yyyy/MM/dd hh:mm:ss' value='#{ ($ row).find('input').eq(col-offset).val() }' />
                   <span class='input-group-btn'>
                     <a href='#' tabindex='32767' class="btn btn-default">
                       <i class='fa fa-calendar'></i>
                     </a>
                   </span>
                 </div>"""
-              ($ row).children().eq(col-1).find('.datepicker').unbind().datetimepicker()
+              ($ row).children().eq(col-offset).find('.datepicker').unbind().datetimepicker()
 
         add_row = (tab) ->
           # create a string of the new row
           newRow = "<tr class='new_row'>"
-          ($ tab).find('th:not(:last-child):not(:first-child)').each (index) ->
+          bounds = ($ tab).find('th:not(:last-child)')
+          if namespace.action is "manualEntry"
+            bounds = ($ tab).find('th:not(:last-child):not(:first-child)')
+          ($ bounds).each (index) ->
             if restrictions[index] == undefined
               newRow += "<td><div class='text-center'><input type='text' class=' form-control'/></div></td>"
             else
               newRow += "<td><div clastables='text-center'><select class='form-control'><option>Select One</option>"
-              ($ restrictions[index-(namespace.action is "edit")]).each (r_index) ->
+              ($ restrictions[index]).each (r_index) ->
                 newRow += "<option value='#{restrictions[index][r_index]}'>#{restrictions[index][r_index]}</option>"
               newRow += "</select></div></td>"
 
@@ -381,8 +388,8 @@ $ ->
             ($ j).children(':first').remove()
           #Check for zero rows
           if (($ tab).find('td').has('input').length == 0 and ($ tab).find('td').has('select').length == 0)
-            ($ tab).find('thead').find('tr').prepend("<th style='width:10%;text-align:center'> Row Number </th>")
-            ($ tab).find('tbody').find('tr').each (i,j) ->
+            ($ '#manualEntry').find('thead').find('tr').prepend("<th style='width:10%;text-align:center'> Row Number </th>")
+            ($ '#manualEntry').find('tbody').find('tr').each (i,j) ->
               ($ j).prepend("<td style='text-align:center;width:10%'>" + i+1 + "</td>")
             alert "You must enter at least one row of data."
             return false
@@ -393,9 +400,9 @@ $ ->
             noInput = noInput and ((($ @).find('input').val() == "") or ($ @).find('select').val() == "Select One")
           if noInput
             rowNum = 1
-            ($ tab).find('thead').find('tr').prepend("<th style='width:10%;text-align:center'> Row Number </th>")
+            ($ '#manualTable').find('thead').find('tr').prepend("<th style='width:10%;text-align:center'> Row Number </th>")
             ($ tab).find('tbody').find('tr').each (i,j) ->
-              ($ j).prepend("<td style='text-align:center;width:10%'>" + rowNum + "</td>")
+              ($ '#manualTable').prepend("<td style='text-align:center;width:10%'>" + rowNum + "</td>")
               rowNum += 1
             alert "You must enter at least one item of data."
             return false
@@ -473,6 +480,7 @@ $ ->
 
         # add row functionality
         ($ '#edit_table_add').click ->
+          console.log(namespace.action is 'manualEntry')
           add_row(table)
 
         ### SAVE TABLE ###
