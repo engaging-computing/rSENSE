@@ -109,13 +109,13 @@ $ ->
                     </span>
                   </div>"""
                 ($ row).children().eq(col).find('.datepicker').unbind().datetimepicker()
-           ($ '#manualTable').find('thead').find('tr').prepend(
-             "<th style='width:10%;text-align:center'> Row Number </th>"
-           )
-           rowNum = 1
-           ($ '#manualTable').find('tbody').find('tr').each (i,j) ->
-             ($ j).prepend("<td style='text-align:center;width:10%'>" + rowNum + "</td>")
-             rowNum += 1
+            ($ '#manualTable').find('thead').find('tr').prepend(
+              "<th style='width:10%;text-align:center'> Row Number </th>"
+            )
+            rowNum = 1
+            ($ '#manualTable').find('tbody').find('tr').each (i,j) ->
+              ($ j).prepend("<td style='text-align:center;width:10%'>" + rowNum + "</td>")
+              rowNum += 1
           
       
         success: (data, textStatus, jqXHR) ->
