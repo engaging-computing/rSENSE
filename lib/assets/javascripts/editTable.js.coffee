@@ -401,8 +401,8 @@ $ ->
           if noInput
             rowNum = 1
             ($ '#manualTable').find('thead').find('tr').prepend("<th style='width:10%;text-align:center'> Row Number </th>")
-            ($ tab).find('tbody').find('tr').each (i,j) ->
-              ($ '#manualTable').prepend("<td style='text-align:center;width:10%'>" + rowNum + "</td>")
+            ($ '#manualTable').find('tbody').find('tr').each (i,j) ->
+              ($ j).prepend("<td style='text-align:center;width:10%'>" + rowNum + "</td>")
               rowNum += 1
             alert "You must enter at least one item of data."
             return false
