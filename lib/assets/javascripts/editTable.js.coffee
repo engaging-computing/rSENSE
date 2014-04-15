@@ -7,7 +7,6 @@ $ ->
     offset = 0
     if namespace.action is "manualEntry"
       offset = 1
-    console.log(offset)
     #-----------------------------------------------------------------------
     # Map Specific Code
     #-----------------------------------------------------------------------
@@ -491,7 +490,6 @@ $ ->
 
         # add row functionality
         ($ '#edit_table_add').click ->
-          console.log(namespace.action is 'manualEntry')
           add_row(table)
 
         ### SAVE TABLE ###
