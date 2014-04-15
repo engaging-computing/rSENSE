@@ -164,6 +164,5 @@ $ ->
   ($ '#manualTable').find('.close').click ->
     rowNum = 1
     ($ '#manualTable').find('tbody').find('tr').each (i,j) ->
-      console.log('GETTING CALLED')
       ($ j).find('td:first').text(rowNum)
       rowNum += 1
