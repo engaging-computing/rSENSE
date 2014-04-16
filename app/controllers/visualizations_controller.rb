@@ -4,6 +4,8 @@ class VisualizationsController < ApplicationController
 
   skip_before_filter :authorize, only: [:show, :displayVis, :index, :embedVis]
 
+  after_action :allow_iframe, only: [:show]
+
   # GET /visualizations
   # GET /visualizations.json
   def index
@@ -339,5 +341,9 @@ class VisualizationsController < ApplicationController
       params[:visualization].permit(:content, :data, :project_id, :globals, :title, :user_id,
                                     :tn_src, :tn_file_key, :summary, :thumb_id)
     end
+  end
+
+  def allow_iframe
+    response.headers.except! 'X-Frame-Options'
   end
 end
