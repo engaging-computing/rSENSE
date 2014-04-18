@@ -45,7 +45,7 @@ $ ->
       BOTTOM = 4
       TOP    = 8
 
-        # Encode an xy coordinate to one of the 9 clipping rects
+      # Encode an xy coordinate to one of the 9 clipping rects
       coder = (x, y) ->
         code = 0
 
@@ -61,7 +61,7 @@ $ ->
 
         code
 
-        # Test to see if a line segment passes through the visible rect
+      # Test to see if a line segment passes through the visible rect
       test = (x1, y1, x2, y2) ->
 
         code1 = coder x1, y1
@@ -100,7 +100,7 @@ $ ->
               y2 = y
               code2 = coder x2, y2
 
-        #Remove points that are not connected to any valid line segments
+      # Remove points that are not connected to any valid line segments
       prev = false
       for index in [1...arr.length]
 

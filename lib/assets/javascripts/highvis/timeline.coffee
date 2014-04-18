@@ -39,9 +39,13 @@ $ ->
 
         @mode = @LINES_MODE
         @xAxis = data.timeFields[0]
+        
+        if data.normalFields.length > 1
+          @displayField = data.normalFields[1]
+        else @displayField = data.normalFields[0]
 
       ###
-      Build options relevent to timeline
+      Build options relevant to timeline
       ###
       buildOptions: ->
         super()
@@ -94,15 +98,21 @@ $ ->
       ###
       drawRegressionControls: () ->
         super()
-        #For now we are supporting only linear and quadratic on timelines
+        # For now we are supporting only linear and quadratic on timelines
         for child, index in ($ "#regressionSelector").children() when index >= 2
-          child.remove()
+          ($ child).remove()
 
       ###
       Overwrite xAxis controls to only allow time fields
       ###
       drawXAxisControls: ->
         super (fieldIndex) -> fieldIndex in data.timeFields
+        
+      ###
+      Clips an array of data to include only bounded points
+      ###
+      clip: (arr) ->
+        super(arr)
 
     if "Timeline" in data.relVis
       globals.timeline = new Timeline 'timeline_canvas'

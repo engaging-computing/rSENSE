@@ -23,7 +23,7 @@ class DataSetsControllerTest < ActionController::TestCase
 
   test 'should create data_set' do
     assert_difference('DataSet.count') do
-      post :create, { data_set: { content: @data_set.content, project_id: @data_set.project_id,
+      post :create, { data_set: { project_id: @data_set.project_id,
         title: "#{@data_set.title}#{Time.now}", user_id: @data_set.user_id } },  user_id: @kate
     end
 
@@ -32,7 +32,7 @@ class DataSetsControllerTest < ActionController::TestCase
 
   test 'should not create data_set in locked project' do
     assert_difference('DataSet.count', 0) do
-      post :create, { data_set: { content: @data_set.content, project_id: @tgd.project_id,
+      post :create, { data_set: { project_id: @tgd.project_id,
         title: "#{@tgd.title}#{Time.now}" } },  user_id: @crunch
     end
 
@@ -42,7 +42,7 @@ class DataSetsControllerTest < ActionController::TestCase
 
   test 'should create data_set with contrib key' do
     assert_difference('DataSet.count') do
-      post :create, { data_set: { content: @tgd.content, project_id: @tgd.project_id,
+      post :create, { data_set: { project_id: @tgd.project_id,
         title: "#{@tgd.title}#{Time.now}" } },
          user_id: @crunch, contrib_access: @tgd.project.id
     end
@@ -52,7 +52,7 @@ class DataSetsControllerTest < ActionController::TestCase
 
   test 'should create data_set with contrib key when not logged in' do
     assert_difference('DataSet.count') do
-      post :create, { data_set: { content: @tgd.content, project_id: @tgd.project_id,
+      post :create, { data_set: { project_id: @tgd.project_id,
         title: "#{@tgd.title}#{Time.now}" } },  contrib_access: @tgd.project.id
     end
 
@@ -62,7 +62,7 @@ class DataSetsControllerTest < ActionController::TestCase
   test 'should create data_set and get JSON response' do
     title = "#{@data_set.title}#{Time.now}"
     assert_difference('DataSet.count') do
-      post :create, { format: 'json', data_set: { content: @data_set.content,
+      post :create, { format: 'json', data_set: {
         project_id: @data_set.project_id, title: title,
         user_id: @data_set.user_id } },  user_id: @kate
     end
@@ -80,7 +80,7 @@ class DataSetsControllerTest < ActionController::TestCase
   end
 
   test 'should update data_set' do
-    put :update, { id: @data_set, data_set: { content: @data_set.content, project_id: @data_set.project_id,
+    put :update, { id: @data_set, data_set: { project_id: @data_set.project_id,
       title: @data_set.title, user_id: @data_set.user_id } },  user_id: @kate
     assert_redirected_to data_set_path(assigns(:data_set))
   end
@@ -185,5 +185,12 @@ class DataSetsControllerTest < ActionController::TestCase
     ds = JSON.parse(@response.body)
     assert ds['data'] != original_data, 'Data has not changed after editing'
     assert ds['data'].length != original_row_count, 'Data same length as before editing'
+  end
+
+  test 'should fail to edit dataset in locked project' do
+    dataset = data_sets(:kates_dataset_in_locked_project)
+    new_data = { '26' => ['1', '2', '3'] }
+    post :edit, { id: dataset.id, format: 'json', data: new_data }, user_id: @kate
+    assert_redirected_to dataset.project, 'Should have failed to edit and get redirected to project page'
   end
 end

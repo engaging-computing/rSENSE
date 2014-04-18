@@ -33,11 +33,14 @@ $ ->
       constructor: (@canvas) ->
         @MAX_NUM_BINS = 1000
 
-        @displayField = data.normalFields[0]
+        if data.normalFields.length > 1
+          @displayField = data.normalFields[1]
+        else @displayField = data.normalFields[0]
+        
         @binNumSug = 1
 
 
-        #Wait for global objects to be constructed before getting bin size
+      # Wait for global objects to be constructed before getting bin size
       start: ->
         @binSize ?= @defaultBinSize()
         super()
@@ -75,9 +78,9 @@ $ ->
                 legendItemClick: (event) ->
                   false
 
-        ###
+      ###
       Returns a rough default 'human-like' bin size selection
-        ###
+      ###
       defaultBinSize: ->
 
         min = Number.MAX_VALUE
@@ -95,7 +98,7 @@ $ ->
 
         range = max - min
 
-            # No data
+        # No data
         if max < min
           return 1
 
@@ -129,13 +132,10 @@ $ ->
 
         bestSize
 
-
-
-
       update: ->
         super()
 
-            #Name Axis
+        # Name Axis
         @chart.yAxis[0].setTitle {text: "Quantity"}, false
         @chart.xAxis[0].setTitle {text: fieldTitle data.fields[@displayField]}, false
 
@@ -146,7 +146,6 @@ $ ->
           @chart.series[@chart.series.length - 1].remove false
 
         ### --- ###
-
         @globalmin = Number.MAX_VALUE
         @globalmax = Number.MIN_VALUE
 
@@ -160,7 +159,7 @@ $ ->
           max = Math.round(max / @binSize) * @binSize
           @globalmax = Math.max @globalmax, max
 
-            #### Make 'fake' data to ensure proper bar spacing ###
+        #### Make 'fake' data to ensure proper bar spacing ###
         fakeDat = for i in [@globalmin...@globalmax] by @binSize
           [i, 0]
 
@@ -176,9 +175,9 @@ $ ->
 
         for groupIndex in globals.groupSelection
 
-          selecteddata = data.selector @displayField, groupIndex
+          selectedData = data.selector @displayField, groupIndex
 
-          binArr = for i in selecteddata
+          binArr = for i in selectedData
             Math.round(i / @binSize) * @binSize
 
           binObjs[groupIndex] = {}
@@ -187,14 +186,14 @@ $ ->
             binObjs[groupIndex][bin] ?= 0
             binObjs[groupIndex][bin]++
 
-            # Convert bin data into series data
+        # Convert bin data into series data
         for groupIndex in globals.groupSelection
 
           finalData = for number, occurences of binObjs[groupIndex]
 
             sum = 0
 
-                    # Get total for this bin
+            # Get total for this bin
             for dc, groupData of binObjs
               if groupData[number]
                 sum += groupData[number]
@@ -203,9 +202,8 @@ $ ->
               x: (Number number)
               y: occurences
               total: sum
-
-                ### --- ###
-
+            ### --- ###
+            
           options =
             showInLegend: false
             color: globals.colors[groupIndex % globals.colors.length]
@@ -235,8 +233,7 @@ $ ->
 
         controls = ""
 
-            # --- #
-
+        # --- #
         controls +=  '<div id="toolControl" class="vis_controls">'
 
         controls += "<h3 class='clean_shrink'><a href='#'>Tools:</a></h3>"
@@ -254,10 +251,10 @@ $ ->
         controls += '</div></div></div>'
 
 
-            # Write HTML
+        # Write HTML
         ($ '#controldiv').append controls
 
-            #Set up slider
+        # Set up slider
         ($ '#binSizeSlider').slider
           range: 'min'
           value: @binNumSug
@@ -274,7 +271,7 @@ $ ->
               ($ '#binSizeInput').val "#{@binSize}"
               @delayedUpdate()
 
-            #Set up accordion
+        # Set up accordion
         globals.toolsOpen ?= 0
 
         ($ '#toolControl').accordion

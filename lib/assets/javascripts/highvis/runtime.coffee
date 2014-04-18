@@ -41,7 +41,6 @@ $ ->
     ###
 
     ### Fix height ###
-
     if globals.options? and globals.options.isEmbed?
       ($ "#viscontainer").height
     else
@@ -51,9 +50,6 @@ $ ->
       h += globals.VIS_MARGIN_HEIGHT
 
       ($ "#viscontainer").height(($ window).height() - h)
-
-    #Number($("div.mainContent").css("padding-top").replace("px", ""))
-    #$(".navbar").height() + $("#title_row").height()
 
     ### hide all vis canvases to start ###
     ($ can).hide() for can in ['#map_canvas', '#timeline_canvas', '#scatter_canvas',
@@ -93,11 +89,9 @@ $ ->
     ### Pick vis ###
     if not (data.defaultVis in data.relVis)
       globals.curVis = (eval 'globals.' + data.relVis[0].toLowerCase())
-        #($ '#viscontainer').tabs('select', "##{data.relVis[0].toLowerCase()}_canvas")
       ($ '#viscontainer').tabs('option', 'active', data.allVis.indexOf(data.relVis[0]))
     else
       globals.curVis = (eval 'globals.' + data.defaultVis.toLowerCase())
-        #($ '#viscontainer').tabs('select', "##{data.defaultVis.toLowerCase()}_canvas")
       ($ '#viscontainer').tabs('option', 'active', data.allVis.indexOf(data.defaultVis))
 
     ### Change vis click handler ###
@@ -120,7 +114,7 @@ $ ->
       oldVis.end() if oldVis?
       globals.curVis.start()
 
-    #Set initial div sizes
+    # Set initial div sizes
     containerSize = ($ '#viscontainer').width()
     hiderSize     = ($ '#controlhider').outerWidth()
     controlSize =  if globals.options? and globals.options.startCollapsed?
@@ -140,8 +134,6 @@ $ ->
       ($ '.vis_canvas').width  visWidth
       ($ '.vis_canvas').height visHeight
 
-#     ($ '#controlhider').height visHeight
-#
     ($ '#controldiv').width 0
     ($ '#controldiv').height visHeight
 
@@ -149,10 +141,10 @@ $ ->
     ($ '.vis_canvas').css('margin', 0)
 
 
-    #Start up vis
+    # Start up vis
     globals.curVis.start()
 
-    #Toggle control panel
+    # Toggle control panel
     resizeVis = (toggleControls = true, aniLength = 600) ->
 
       if (globals.fullscreen? and globals.fullscreen)

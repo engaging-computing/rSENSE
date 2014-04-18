@@ -2,19 +2,16 @@
 
 one:
   title: Sample Title
-  content: 
   user: kate
   project: one
 
 two:
   title: MyString
-  content: MyText
   user: kate
   project: one
 
 thanksgiving:
   title: Thanksgiving Dinner
-  content: List of Desserts
   user: kate
   project: dessert
   data: "[{\"20\": 1, \"21\": 2, \"22\": 3},{\"20\": 1, \"21\": 2, \"22\": 3}]"
@@ -22,7 +19,12 @@ thanksgiving:
   
 needs_media:
   title: Needs Media
-  content: MyText
   user: nixon
   project: one
   id: 1
+
+kates_dataset_in_locked_project:
+  title: Shouldnt be editable
+  user: kate
+  data: "[{\"26\": 1}]"
+  project: locked_project
