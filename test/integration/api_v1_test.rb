@@ -11,6 +11,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     @thanksgiving_dataset = data_sets(:thanksgiving)
     @media_object_keys = ['id', 'mediaType', 'name', 'url', 'createdAt', 'src', 'tn_src']
     @media_object_keys_extended = @media_object_keys + ['project', 'owner']
+    @user_keys = ['gravatar', 'name']
   end
 
   # Get projects listing using defaults
@@ -453,8 +454,9 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     get '/api/v1/users/myInfo',
         email: 'kcarcia@cs.uml.edu',
         password: '12345'
-
+    
     assert_response :success
+    assert keys_match(response,@user_keys), 'Keys are missing'
   end
 
   test 'fail get user info' do
