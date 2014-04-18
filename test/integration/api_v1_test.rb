@@ -454,9 +454,9 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     get '/api/v1/users/myInfo',
         email: 'kcarcia@cs.uml.edu',
         password: '12345'
-    
+
     assert_response :success
-    assert keys_match(response,@user_keys), 'Keys are missing'
+    assert keys_match(response, @user_keys), 'Keys are missing'
   end
 
   test 'fail get user info' do
