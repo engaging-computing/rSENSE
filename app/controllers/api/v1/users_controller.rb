@@ -8,7 +8,7 @@ module Api
         gravatar = Gravatar.new.url(@cur_user, 80)
 
         respond_to do |format|
-          format.json { render json: { gravatar: gravatar, username: @cur_user.name }, status: :ok }
+          format.json { render json: { gravatar: gravatar, name: @cur_user.name }, status: :ok }
         end
       end
     end
