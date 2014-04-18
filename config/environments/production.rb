@@ -69,4 +69,8 @@ Rsense::Application.configure do
 
   config.action_mailer.default_url_options = { host: `hostname`.chomp }
 
+
+  config.action_dispatch.default_headers = {
+    'X-Frame-Options' => ''
+  } 
 end
