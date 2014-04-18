@@ -91,8 +91,9 @@ $ ->
         #if @chart.series.length == 1
           #@chart.xAxis[0].setCategories [data.fields[data.groupingFieldIndex].fieldName], false
         #else
-        @chart.xAxis[0].setCategories visibleCategories, false
         
+        @chart.xAxis[0].setCategories visibleCategories, false
+        @chart.yAxis[0].sort
         while @chart.series.length > data.normalFields.length
           @chart.series[@chart.series.length - 1].remove false
 
@@ -131,6 +132,7 @@ $ ->
                 ret =
                   y:      data.getTotal fieldIndex, groupIndex
                   name:   data.groups[groupIndex]
+                  
               when @ANALYSISTYPE_MAX
                 ret =
                   y:      data.getMax fieldIndex, groupIndex
