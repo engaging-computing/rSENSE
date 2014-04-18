@@ -146,8 +146,6 @@ $ ->
           tx = (Math.sin 2 * Math.PI * i / modpoints + offset) * magnitudes[i % magnitudes.length]
           ty = (Math.cos 2 * Math.PI * i / modpoints + offset) * magnitudes[i % magnitudes.length]
 
-                #console.log [tx, ty, magnitudes[i % magnitudes.length]]
-
           tx = tx / 2 + 0.5
           ty = ty / 2 + 0.5
 
@@ -217,25 +215,25 @@ $ ->
     Add all the custom symbols for the symbolList.
     ###
 
-    #Make the blank icon
+    # Make the blank icon
     addRadialMarkerStyle "blank", 1, 0, [0]
 
-    #Make default diamond as large as a square
+    # Make default diamond as large as a square
     addRadialMarkerStyle "diamond", 4, 0, diamondMagList
 
-    #Make the 5 and 6 pointed stars
+    # Make the 5 and 6 pointed stars
     for i in [5,6]
       addRadialMarkerStyle "#{i}-star", i, 0.5, starMagList
 
-    #Make the various 2, 3, and 4 pointed fans
+    # Make the various 2, 3, and 4 pointed fans
     for i in [2,3,4]
       addRadialMarkerStyle "#{i}-fan", i, 0, fanMagList
 
-    #Make the triangles of different orientation
+    # Make the triangles of different orientation
     for [phase, direction] in [[0, "down"],[1 / 4, "right"],[2 / 4, "up"],[3 / 4, "left"]]
       addRadialMarkerStyle "#{direction}-tri", 3, phase, [Math.sqrt(2)]
 
-    #Make the 2, 3, 4, and 5 sliced pies
+    # Make the 2, 3, 4, and 5 sliced pies
     for i in [2,3,4,5]
       addRadialMarkerStyle "#{i}-pie", i, 0, pieMagList
 

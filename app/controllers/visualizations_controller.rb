@@ -4,6 +4,8 @@ class VisualizationsController < ApplicationController
 
   skip_before_filter :authorize, only: [:show, :displayVis, :index, :embedVis]
 
+  after_action :allow_iframe, only: [:show]
+
   # GET /visualizations
   # GET /visualizations.json
   def index
@@ -97,6 +99,7 @@ class VisualizationsController < ApplicationController
     mo = MediaObject.new
     mo.media_type = 'image'
     mo.name = 'image.png'
+    mo.file = 'image.png'
     mo.check_store!
 
     if params[:visualization].try(:[], :svg)
@@ -282,7 +285,7 @@ class VisualizationsController < ApplicationController
       rel_vis.push 'Scatter'
     end
 
-    if field_count[NUMBER_TYPE] > 0 and format_data.count > 0
+    if format_data.count > 0
       rel_vis.push 'Bar'
       rel_vis.push 'Histogram'
     end
@@ -338,5 +341,9 @@ class VisualizationsController < ApplicationController
       params[:visualization].permit(:content, :data, :project_id, :globals, :title, :user_id,
                                     :tn_src, :tn_file_key, :summary, :thumb_id)
     end
+  end
+
+  def allow_iframe
+    response.headers.except! 'X-Frame-Options'
   end
 end

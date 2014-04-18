@@ -97,9 +97,10 @@ class MediaObjectsController < ApplicationController
         fix_rot.write ff
       end
     end
-
+    adjust_file_name = file_name.gsub ' ', '_'
     @mo = MediaObject.new
-    @mo.name = file_name
+    @mo.name = adjust_file_name
+    @mo.file = adjust_file_name
     @mo.media_type = file_type
 
     # Build media object params based on what we are doing

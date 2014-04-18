@@ -20,7 +20,7 @@ $ ->
     if Boolean(can_edit)
       editor = CKEDITOR.replace elem,
         startupFocus: true
-        filebrowserImageUploadUrl:  "/media_objects/saveMedia/#{path}"
+        #filebrowserImageUploadUrl:  "/media_objects/saveMedia/#{path}"
       # Save previous value
       root.attr('saved-data',  root.find('div.content').html())
        

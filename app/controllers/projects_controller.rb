@@ -178,9 +178,6 @@ class ProjectsController < ApplicationController
               nmo.user_id = @cur_user.id
 
               nmo.save!
-              unless nds.content.nil?
-                nds.content.gsub! mo.src, nmo.src
-              end
             end
 
             nds.save!
@@ -375,9 +372,10 @@ class ProjectsController < ApplicationController
   def templateUpload
     @project = Project.find(params[:id])
     @options = [['Timestamp', get_field_type('Timestamp')], ['Number', get_field_type('Number')], ['Text', get_field_type('Text')], ['Latitude', get_field_type('Latitude')], ['Longitude', get_field_type('Longitude')]]
-
     uploader = FileUploader.new
     data_obj = uploader.generateObject(params[:file])
+    @original_filename = data_obj[:original_filename]
+    @types = uploader.get_probable_types(data_obj)
     @tmp_file = data_obj[:file]
     @headers = data_obj['data'].keys
 

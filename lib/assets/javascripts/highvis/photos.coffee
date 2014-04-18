@@ -35,14 +35,14 @@ $ ->
       start: ->
         ($ '#' + @canvas).show()
 
-            #Hide the controls
+        # Hide the controls
         @hideControls()
 
         super()
 
-        #Gets called when the controls are clicked and at start
+      # Gets called when the controls are clicked and at start
       update: ->
-            #clear the old canvas
+        # Clear the old canvas
         ($ '#' + @canvas).html('')
 
         ($ '#' + @canvas).append '<div id="polaroid"></div>'
