@@ -418,6 +418,12 @@ $ ->
             return false
 
           if ($ 'input').hasClass 'invalid'
+            ($ '#manualTable').find('thead').find('tr').prepend(
+              "<th style='width:10%;text-align:center'> Row Number </th>")
+            rowNum = 1
+            ($ '#manualTable').find('tbody').find('tr').each (i,j) ->
+              ($ j).prepend("<td style='width:10%;text-align:center'>" + rowNum + "</td>")
+              rowNum += 1
             false
           else
             true
