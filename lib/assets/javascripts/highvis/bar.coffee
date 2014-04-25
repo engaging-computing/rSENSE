@@ -73,6 +73,31 @@ $ ->
 
       update: ->
         super()
+        console.log('UPDATE CALLED!')
+        ($ '#ui-accordion-yAxisControl-panel-0').find('.inner_control_div').find('.checkbox').find('.y_axis_input').each (i,j) ->
+          #console.log(($ j).closest(':parent').text())
+          #console.log( ($ j).attr('value') )
+          #console.log(($ j).is(':checked'))
+          if ($ j).is(':checked') is true
+            ($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField').find('option').each (idx,val) ->
+              #console.log($ val)
+              ($ val).removeAttr('selected')
+            console.log(($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField [value=' + ($ j).attr('value') + ']').text())
+            ($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField [value=' + ($ j).attr('value') + ']').attr('selected',true)
+            ($ j).trigger('change', ($ j))
+            #($ j).trigger('changed')
+            #($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField').find('option').each (idx,val) ->
+              #console.log(($ j))
+              #console.log(($ val))
+              #console.log(($ j).attr('value'))
+              #console.log(($ val).attr('value'))
+              
+              #console.log('DEBUG:  @sortField in for loop' + sorter)
+              #console.log(($ j).attr('value'))
+              #if ($ val).attr('value') == ($ j).attr('value')
+                
+                #($ val).attr("selected", true)
+                
         visibleCategories = for selection in data.normalFields when selection in globals.fieldSelection
           fieldTitle data.fields[selection]
           
@@ -106,25 +131,35 @@ $ ->
             when @ANALYSISTYPE_COUNT    then [groupIndex, (data.getCount     @sortField, groupIndex)]
         #@sortField == NULL
         sorter = 0
-        console.log('before reset:  sort field = ' + @sortField)    
+        #console.log('before reset:  sort field = ' + @sortField)    
         if @sortField == null or @sortField
           temp = 0          
-          console.log(($ '#ui-accordion-yAxisControl-panel-0').find($ '.inner_control_div'))
+          #console.log(($ '#ui-accordion-yAxisControl-panel-0').find($ '.inner_control_div'))
           ($ '#ui-accordion-yAxisControl-panel-0').find($ '.inner_control_div').find('.checkbox').find('.y_axis_input').each (i,j) ->
-            if (($ j).is(':checked') and !temp ) #.find('checkbox').is(':checked')
+            if (($ j).is(':checked') ) #and temp  #.find('checkbox').is(':checked')
               temp = 1
-              console.log('($ j).attr(value) = ' + ($ j).attr('value'))
+              #console.log('($ j).attr(value) = ' + ($ j).attr('value'))
               sorter = ($ j).attr('value')
               @sortField = ($ j).attr('value')
-              console.log('After search, sortfield = ? ' + @sortField)
-        console.log('outside sorter ' + sorter )
+              #console.log('After search, sortfield = ? ' + @sortField)
+        #console.log('outside sorter ' + sorter )
         @sortField = sorter
-        console.log("OUTSIDE:  " + @sortField)
-        console.log(($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField').text())
-        
+        #console.log("OUTSIDE:  " + @sortField)
+        ($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField').find('option').each (i,j) ->
+          ($ j).removeAttr('selected')
+        ($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField').find('option').each (i,j) ->
+          #console.log('DEBUG:  @sortField in for loop' + sorter)
+          #console.log(($ j).attr('value'))
+          if ($ j).attr('value') == sorter
+            ($ j).attr('selected',true)
+            
+            #($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField').trigger("change")
+            #@delayedUpdate()
+            
         #($ '.sortField').attr('value', @sortField)
+        
         if @sortField != null
-          console.log('@sortfield != NULL ')
+          #console.log('@sortfield != NULL ')
           fieldSortedGroupIDValuePairs = tempGroupIDValuePairs.sort (a,b) ->
             a[ 1] - b[1]
 
@@ -256,6 +291,7 @@ $ ->
           @delayedUpdate()
 
         ($ '.sortField').change (e) =>
+          console.log(e.target.value)
           console.log('Printing E in sortField.change():  ' + e)
           @sortField = Number e.target.value
           @delayedUpdate()
