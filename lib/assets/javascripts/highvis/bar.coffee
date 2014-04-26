@@ -104,16 +104,16 @@ $ ->
             when @ANALYSISTYPE_COUNT    then [groupIndex, (data.getCount     @sortField, groupIndex)]
         sorter = 0
         if !autoSorted
-          temp = 0          
-          ($ '#ui-accordion-yAxisControl-panel-0').find($ '.inner_control_div').find('.checkbox').find('.y_axis_input').each (i,j) ->
+          temp = 0
+          ($ '#ui-accordion-yAxisControl-panel-0').find($ '.inner_control_div').find('.y_axis_input').each (i,j) ->
             if (($ j).is(':checked') and temp == 0) #and temp  #.find('checkbox').is(':checked')
               temp = 1
               sorter = ($ j).attr('value')
               @sortField = ($ j).attr('value')
           if !autoSorted
-            ($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField').find('option').each (i,j) ->
+            ($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('option').each (i,j) ->
               ($ j).removeAttr('selected')
-            ($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField').find('option').each (i,j) ->
+            ($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('option').each (i,j) ->
               if ($ j).attr('value') == sorter
                 ($ j).attr('selected',true)
             if( !autoSorted )
@@ -236,8 +236,8 @@ $ ->
 
         ($ '.analysisType').change (e) =>
           @analysisType = Number e.target.value
-          temp = 0          
-          ($ '#ui-accordion-yAxisControl-panel-0').find($ '.inner_control_div').find('.checkbox').find('.y_axis_input').each (i,j) ->
+          temp = 0
+          ($ '#ui-accordion-yAxisControl-panel-0').find($ '.inner_control_div').find('.y_axis_input').each (i,j) ->
             if (($ j).is(':checked') and !temp ) #.find('checkbox').is(':checked')
               temp = 1
               sorter = ($ j).attr('value')
@@ -252,10 +252,10 @@ $ ->
           @start()
         
         sorter = 0
-        ($ '#ui-accordion-yAxisControl-panel-0').find($ '.inner_control_div').find($ '.checkbox').find($ '.y_axis_input').click (e) =>  
-          temp = 0          
+        ($ '#ui-accordion-yAxisControl-panel-0').find($ '.inner_control_div').find($ '.y_axis_input').click (e) =>
+          temp = 0
           count = 0
-          ($ '#ui-accordion-yAxisControl-panel-0').find($ '.inner_control_div').find('.checkbox').find('.y_axis_input').each (i,j) ->
+          ($ '#ui-accordion-yAxisControl-panel-0').find($ '.inner_control_div').find('.y_axis_input').each (i,j) ->
             if (($ j).is(':checked') and temp == 0 ) #and temp  #.find('checkbox').is(':checked')
               temp = 1
               count += 1
@@ -263,9 +263,9 @@ $ ->
           if count == 1
             autoSorted = 0
           @sortField = sorter
-        ($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField').find('option').each (i,j) ->
+        ($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField:option').each (i,j) ->
           ($ j).removeAttr('selected')
-        ($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField').find('option').each (i,j) ->
+        ($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField:option').each (i,j) ->
           if ($ j).attr('value') == sorter
             ($ j).attr('selected',true)
             if( !autoSorted )
