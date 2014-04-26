@@ -28,6 +28,8 @@
 ###
 $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+    autoSorted = 0
+    
     class window.Bar extends BaseHighVis
       constructor: (@canvas) ->
         if data.normalFields.length > 1
@@ -73,18 +75,18 @@ $ ->
 
       update: ->
         super()
-        console.log('UPDATE CALLED!')
-        ($ '#ui-accordion-yAxisControl-panel-0').find('.inner_control_div').find('.checkbox').find('.y_axis_input').each (i,j) ->
+        #console.log('UPDATE CALLED!')
+        #($ '#ui-accordion-yAxisControl-panel-0').find('.inner_control_div').find('.checkbox').find('.y_axis_input').each (i,j) ->
           #console.log(($ j).closest(':parent').text())
           #console.log( ($ j).attr('value') )
           #console.log(($ j).is(':checked'))
-          if ($ j).is(':checked') is true
-            ($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField').find('option').each (idx,val) ->
+          #if ($ j).is(':checked') is true
+            #($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField').find('option').each (idx,val) ->
               #console.log($ val)
-              ($ val).removeAttr('selected')
-            console.log(($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField [value=' + ($ j).attr('value') + ']').text())
-            ($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField [value=' + ($ j).attr('value') + ']').attr('selected',true)
-            ($ j).trigger('change', ($ j))
+              #($ val).removeAttr('selected')
+            #console.log(($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField [value=' + ($ j).attr('value') + ']').text())
+            #($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField [value=' + ($ j).attr('value') + ']').attr('selected',true)
+            #($ j).trigger('change', ($ j))
             #($ j).trigger('changed')
             #($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField').find('option').each (idx,val) ->
               #console.log(($ j))
@@ -131,28 +133,34 @@ $ ->
             when @ANALYSISTYPE_COUNT    then [groupIndex, (data.getCount     @sortField, groupIndex)]
         #@sortField == NULL
         sorter = 0
+        
         #console.log('before reset:  sort field = ' + @sortField)    
-        if @sortField == null or @sortField
+        #if @sortField == null || @sortField
+        if !autoSorted
           temp = 0          
           #console.log(($ '#ui-accordion-yAxisControl-panel-0').find($ '.inner_control_div'))
           ($ '#ui-accordion-yAxisControl-panel-0').find($ '.inner_control_div').find('.checkbox').find('.y_axis_input').each (i,j) ->
-            if (($ j).is(':checked') ) #and temp  #.find('checkbox').is(':checked')
+            if (($ j).is(':checked') and temp == 0) #and temp  #.find('checkbox').is(':checked')
               temp = 1
               #console.log('($ j).attr(value) = ' + ($ j).attr('value'))
               sorter = ($ j).attr('value')
               @sortField = ($ j).attr('value')
               #console.log('After search, sortfield = ? ' + @sortField)
-        #console.log('outside sorter ' + sorter )
-        @sortField = sorter
+        #console.log('sorter = ' + sorter )
+        #@sortField = sorter
         #console.log("OUTSIDE:  " + @sortField)
-        ($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField').find('option').each (i,j) ->
-          ($ j).removeAttr('selected')
-        ($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField').find('option').each (i,j) ->
-          #console.log('DEBUG:  @sortField in for loop' + sorter)
-          #console.log(($ j).attr('value'))
-          if ($ j).attr('value') == sorter
-            ($ j).attr('selected',true)
-            
+        if !autoSorted
+          ($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField').find('option').each (i,j) ->
+            ($ j).removeAttr('selected')
+          ($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField').find('option').each (i,j) ->
+            console.log('MAIN:DEBUG:  @sorter in for loop' + @sortField)
+            console.log('MAIN:Comparing to:  ' + ($ j).attr('value'))
+            if ($ j).attr('value') == sorter
+              ($ j).attr('selected',true)
+          if( !autoSorted )
+            autoSorted = 1
+            ($ '.sortField').change()
+              #autoSorted = 1
             #($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField').trigger("change")
             #@delayedUpdate()
             
@@ -274,6 +282,7 @@ $ ->
         ($ '#controldiv').append controls
 
         ($ '.analysisType').change (e) =>
+          #console.log('e.data.clicked)
           @analysisType = Number e.target.value
           temp = 0          
           console.log(($ '#ui-accordion-yAxisControl-panel-0').find($ '.inner_control_div'))
@@ -289,17 +298,54 @@ $ ->
           #@sortField = ($ '.sortField').attr('value')
           console.log('@sortField = ? ' + @sortField)
           @delayedUpdate()
-
+        
         ($ '.sortField').change (e) =>
-          console.log(e.target.value)
-          console.log('Printing E in sortField.change():  ' + e)
+          console.log(Number e.target.value)
           @sortField = Number e.target.value
+          console.log('@sortField = ' + @sortField)
           @delayedUpdate()
-
+          #($ '.sortField').find('option').each (i,j) ->
+            #console.log(($ j).attr('selected',true))
         ($ '.logY_box').click (e) =>
           globals.logY = (globals.logY + 1) % 2
           @start()
-
+        sorter = 0
+        ($ '#ui-accordion-yAxisControl-panel-0').find($ '.inner_control_div').find($ '.checkbox').find($ '.y_axis_input').click (e) =>  
+          console.log('Hitting')
+          temp = 0          
+          count = 0
+          console.log(($ '#ui-accordion-yAxisControl-panel-0').find($ '.inner_control_div'))
+          ($ '#ui-accordion-yAxisControl-panel-0').find($ '.inner_control_div').find('.checkbox').find('.y_axis_input').each (i,j) ->
+            if (($ j).is(':checked') and temp == 0 ) #and temp  #.find('checkbox').is(':checked')
+              temp = 1
+              count += 1
+              sorter = ($ j).attr('value')
+              console.log('($ j).attr(value) = ' + ($ j).attr('value'))
+              #sorter = ($ j).attr('value')
+              #@sortField = e.target.value
+              console.log('After search, sortfield = ? ' + @sortField)
+          console.log('outside sorter ' + sorter )
+          if count == 1
+            autoSorted = 0
+          @sortField = sorter
+          console.log("OUTSIDE:  " + @sortField)
+          
+          #($ '#ui-accordion-toolControl-panel-0').find($ '.inner_control_div').find($ '.sortField').find('option').each (i,j) ->
+            #if ($ j).attr('value') == @sortField 
+              #($ j).prop('selected',true)
+          #($ '.sortField').change()
+        
+        ($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField').find('option').each (i,j) ->
+          ($ j).removeAttr('selected')
+        ($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField').find('option').each (i,j) ->
+          console.log('DEBUG:  @sortField in for loop' + sorter)
+          console.log(($ j).attr('value'))
+          if ($ j).attr('value') == sorter
+            ($ j).attr('selected',true)
+            if( !autoSorted )
+              autoSorted = 1
+              ($ '.sortField').change()
+            
         # Set up accordion
         globals.toolsOpen ?= 0
 
