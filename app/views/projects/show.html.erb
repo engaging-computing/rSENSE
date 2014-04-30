@@ -78,10 +78,10 @@
         <div id="dataset_list">
           
         <span>
-          <input type="button" class="btn btn-info" style="margin-bottom: 10px;" value="Visualize" id="vis_button" href="/projects/<%=@project.id%>/data_sets/"/>
+          <button type="button" class="btn btn-info" style="margin-bottom: 10px;" id="vis_button" href="/projects/<%=@project.id%>/data_sets/">Visualize</button>
         </span>
         <span>
-          <input type="button" class="btn btn-default" style="margin-bottom: 10px;" value="Export" id="export_button" href="/projects/<%=@project.id%>/export/data_sets/">
+          <button type="button" class="btn btn-default" style="margin-bottom: 10px;" id="export_button" >Export</button>
         </span>
         
           <div class="pull-right">
@@ -355,6 +355,28 @@
   <%= form_tag "/projects/#{@project.id}/templateUpload", method: 'post',multipart: true, id: 'template_file_form' do %>
     <%= file_field_tag 'file', id: 'template_file_input' %>
   <% end %>
+</div>
+
+<div class="modal fade" id="export_modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<h3 class="modal-title">Export Data Sets</h3>
+      </div>
+      <div class="modal-body">
+	<div class="row">
+	  <div class="col-md-12"><b>How would you like to export your data?</b></div>
+	  <div class="col-md-4 col-md-offset-1">
+	    <button type="button" class="btn btn-default col-md-12" style="margin: 10px;" id="export_individual_button" href="/projects/<%=@project.id%>/export/data_sets/">Individual Files</button>
+	  </div>
+	  <div class="col-md-4 col-md-offset-1">
+	    <button type="button" class="btn btn-default col-md-12" style="margin: 10px;" id="export_individual_button" href="/projects/<%=@project.id%>/export/data_sets/">Single File</button>
+	  </div>
+	</div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <%= render "print"%>
