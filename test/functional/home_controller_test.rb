@@ -20,4 +20,9 @@ class HomeControllerTest < ActionController::TestCase
     get :privacy_policy
     assert_response :success
   end
+  
+  test 'should get api page' do
+    get :api_v1
+    assert_response :success
+  end
 end
