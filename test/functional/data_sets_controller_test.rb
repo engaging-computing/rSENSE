@@ -129,6 +129,12 @@ class DataSetsControllerTest < ActionController::TestCase
     assert(@response['Content-Type'] == 'file/zip')
   end
 
+  test 'should get data as csv string' do
+    get :export_concatenated, { id: @proj.id, datasets: @tgd.id.to_s },  user_id: @kate
+    assert response.body.include?('cookie,cake,pie'), 'Response was not correct string'
+    assert_response :success
+  end
+
   test 'should upload CSV' do
     csv_path = Rails.root.join('test', 'CSVs', 'dinner.csv')
     file = Rack::Test::UploadedFile.new(csv_path, 'text/csv')

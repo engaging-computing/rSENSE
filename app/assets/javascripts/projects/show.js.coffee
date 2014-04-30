@@ -112,6 +112,16 @@ $ ->
       else
         window.location = ($ this).attr("href") + ds_list
 
+    ($ '#export_concatenated_button').click (e) ->
+      ($ '#export_modal').modal('hide')
+      targets = ($ document).find(".dataset .ds_selector input:checked")
+      ds_list = (get_ds_id t for t in targets)
+            
+      if ds_list.length is 0
+        alert "No data sets selected for Export. Select at least 1 and try again."
+      else
+        window.location = ($ this).attr("href") + ds_list
+
     # get the session number for viewing vises
     get_ds_id = (t) ->
       ds_id = ($ t).attr 'id'
