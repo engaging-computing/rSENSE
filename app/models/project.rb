@@ -149,6 +149,28 @@ class Project < ActiveRecord::Base
     h
   end
 
+  def export_concatenated(datasets)
+    require 'fileutils'
+    random_hex = SecureRandom.hex
+    folder_name = title.parameterize
+    tmpdir = "/tmp/rsense/#{random_hex}/#{folder_name}"
+
+    begin
+      FileUtils.mkdir_p(tmpdir)
+      tmp_file = File.new("#{tmpdir}/#{title.gsub(' ', '_')}_selected_data_sets.csv", 'w+')
+      tmp_file.write(fields.map { |f| f.name }.join(',') + "\n")
+      datasets.split(',').each do |d|
+        dataset = DataSet.find(d.to_i)
+        tmp_file.write(dataset.data_as_csv_string)
+      end
+      tmp_file.close
+      csv_file = "/tmp/rsense/#{random_hex}/#{folder_name}/#{title.gsub(' ', '_')}_selected_data_sets.csv"
+    rescue
+      raise 'Failed to export'
+    end
+    csv_file
+  end
+
   def export_data_sets(datasets)
     require 'fileutils'
     random_hex = SecureRandom.hex
