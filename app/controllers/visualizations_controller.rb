@@ -291,13 +291,14 @@ class VisualizationsController < ApplicationController
     end
 
     rel_vis.push 'Table'
+    rel_vis.push 'Summary'
 
     if has_pics
       rel_vis.push 'Photos'
     end
 
     # A list of all current visualizations
-    all_vis =  ['Map', 'Timeline', 'Scatter', 'Bar', 'Histogram', 'Table', 'Photos']
+    all_vis =  ['Map', 'Timeline', 'Scatter', 'Bar', 'Histogram', 'Table', 'Summary', 'Photos']
 
     # Defaut vis if one exists for the project
     default_vis = @project.default_vis.nil? ? 'none' : @project.default_vis
