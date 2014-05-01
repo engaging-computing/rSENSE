@@ -39,15 +39,15 @@ $ ->
 				super()
 				
 			update: ->
-				tempGroupIDValuePairs = for groupName, groupIndex in data.groups when groupIndex in globals.groupSelection
-          switch @analysisType
-            when @ANALYSISTYPE_TOTAL    then [groupIndex, (data.getTotal     @sortField, groupIndex)]
-            when @ANALYSISTYPE_MAX      then [groupIndex, (data.getMax       @sortField, groupIndex)]
-            when @ANALYSISTYPE_MIN      then [groupIndex, (data.getMin       @sortField, groupIndex)]
-            when @ANALYSISTYPE_MEAN     then [groupIndex, (data.getMean      @sortField, groupIndex)]
-            when @ANALYSISTYPE_MEDIAN   then [groupIndex, (data.getMedian    @sortField, groupIndex)]
-            when @ANALYSISTYPE_COUNT    then [groupIndex, (data.getCount     @sortField, groupIndex)]
-			
+				analysis = for groupName, groupIndex in data.groups when groupIndex in globals.groupSelection
+					analysis = 
+						'total':  (data.getTotal     	@displayField, groupIndex)
+						'min':  	(data.getMin     		@displayField, groupIndex)
+						'max':  	(data.getMax     		@displayField, groupIndex)
+						'median': (data.getMedian     @displayField, groupIndex)
+						'count':  (data.getCount     	@displayField, groupIndex)
+						'mean':  	(data.getMean     	@displayField, groupIndex)
+					analysis
 				($ '#' + @canvas).html('')
 				html = """ 
 					<div class="container">
@@ -55,37 +55,37 @@ $ ->
 							<div class="col-md-4">
 								<div class='panel panel-default'>
 									<div class='panel-heading'>Mean/Average</div>
-									<div class='panel-body'>#{data.getMean @displayField, data.groupingFieldIndex}</div>
+									<div class='panel-body'>#{analysis[0].mean}</div>
 								</div>
 							</div>
 							<div class="col-md-4">
 								<div class='panel panel-default'>
 									<div class='panel-heading'>Max</div>
-									<div class='panel-body'>#{data.getMax @displayField, data.groupingFieldIndex}</div>
+									<div class='panel-body'>#{analysis[0].max}</div>
 								</div>
 							</div>
 							<div class="col-md-4">
 								<div class='panel panel-default'>
 									<div class='panel-heading'>Total</div>
-									<div class='panel-body'>#{data.getTotal @displayField, data.groupingFieldIndex}</div>
+									<div class='panel-body'>#{analysis[0].total}</div>
 								</div>
 							</div>
 							<div class="col-md-4">
 								<div class='panel panel-default'>
 									<div class='panel-heading'>Median</div>
-									<div class='panel-body'>#{data.getMedian @displayField, data.groupingFieldIndex}</div>
+									<div class='panel-body'>#{analysis[0].median}</div>
 								</div>
 							</div>
 							<div class="col-md-4">
 								<div class='panel panel-default'>
 									<div class='panel-heading'>Min</div>
-									<div class='panel-body'>#{data.getMin @displayField, data.groupingFieldIndex}</div>
+									<div class='panel-body'>#{analysis[0].min}</div>
 								</div>
 							</div>
 							<div class="col-md-4">
 								<div class='panel panel-default'>
 									<div class='panel-heading'>Data Point Count</div>
-									<div class='panel-body'>#{data.getCount @displayField, data.groupingFieldIndex}</div>
+									<div class='panel-body'>#{analysis[0].count}</div>
 								</div>
 							</div>
 						</div>
@@ -138,9 +138,11 @@ $ ->
 					# Currently specific to histogram - TODO: decouple
 					($ '.y_axis_input').click (e) =>
 						@displayField = Number e.target.value
+						this.update()
 				else
 					($ '.y_axis_input').click (e) =>
 						index = Number e.target.value
+						this.update()
 
 						if index in globals.fieldSelection
 							arrayRemove(globals.fieldSelection, index)
@@ -156,12 +158,11 @@ $ ->
 
 				($ '#yAxisControl > h3').click ->
 					globals.yAxisOpen = (globals.yAxisOpen + 1) % 2
-
+				
 			drawControls: ->
 				super()
 				@drawGroupControls(true)
 				@drawYAxisControls(true)
-				@drawSaveControls()
 		
 			globals.summary = new Summary "summary_canvas"
 
