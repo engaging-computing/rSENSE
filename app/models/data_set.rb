@@ -94,6 +94,17 @@ class DataSet < ActiveRecord::Base
     fname
   end
 
+  def data_as_csv_string
+    project = Project.find(project_id)
+    fields = project.fields
+    dstring = ''
+    data.each do |datapoint|
+      dstring += (fields.map { |f| datapoint["#{f.id}"] }.join(',') + "\n")
+    end
+
+    dstring
+  end
+
   def self.get_next_name(project)
     highest = 0
     base = 'Dataset #'

@@ -28,6 +28,8 @@
 ###
 $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+    autoSorted = 0
+    
     class window.Bar extends BaseHighVis
       constructor: (@canvas) ->
         if data.normalFields.length > 1
@@ -73,7 +75,6 @@ $ ->
 
       update: ->
         super()
-
         visibleCategories = for selection in data.normalFields when selection in globals.fieldSelection
           fieldTitle data.fields[selection]
           
@@ -87,12 +88,8 @@ $ ->
           @analysisType = @ANALYSISTYPE_COUNT
         else ($ '#analysis_types').children().show()
 
-        # If there is only one series, show the groupby text. else show the diffent y field titles.
-        if @chart.series.length == 1
-          @chart.xAxis[0].setCategories [data.fields[data.groupingFieldIndex].fieldName], false
-        else
-          @chart.xAxis[0].setCategories visibleCategories, false
-        
+        @chart.xAxis[0].setCategories visibleCategories, false
+        @chart.yAxis[0].sort
         while @chart.series.length > data.normalFields.length
           @chart.series[@chart.series.length - 1].remove false
 
@@ -105,10 +102,27 @@ $ ->
             when @ANALYSISTYPE_MEAN     then [groupIndex, (data.getMean      @sortField, groupIndex)]
             when @ANALYSISTYPE_MEDIAN   then [groupIndex, (data.getMedian    @sortField, groupIndex)]
             when @ANALYSISTYPE_COUNT    then [groupIndex, (data.getCount     @sortField, groupIndex)]
-
+        sorter = 0
+        if !autoSorted
+          temp = 0
+          ($ '#ui-accordion-yAxisControl-panel-0').find($ '.inner_control_div').find('.y_axis_input').each (i,j) ->
+            if (($ j).is(':checked') and temp == 0) #and temp  #.find('checkbox').is(':checked')
+              temp = 1
+              sorter = ($ j).attr('value')
+              @sortField = ($ j).attr('value')
+          if !autoSorted
+            ($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('option').each (i,j) ->
+              ($ j).removeAttr('selected')
+            ($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('option').each (i,j) ->
+              if ($ j).attr('value') == sorter
+                ($ j).attr('selected',true)
+            if( !autoSorted )
+              autoSorted = 1
+              ($ '.sortField').change()
+        
         if @sortField != null
           fieldSortedGroupIDValuePairs = tempGroupIDValuePairs.sort (a,b) ->
-            a[1] - b[1]
+            a[ 1] - b[1]
 
           fieldSortedGroupIDs = for [groupID, groupValue] in fieldSortedGroupIDValuePairs
             groupID
@@ -131,6 +145,7 @@ $ ->
                 ret =
                   y:      data.getTotal fieldIndex, groupIndex
                   name:   data.groups[groupIndex]
+                  
               when @ANALYSISTYPE_MAX
                 ret =
                   y:      data.getMax fieldIndex, groupIndex
@@ -221,16 +236,42 @@ $ ->
 
         ($ '.analysisType').change (e) =>
           @analysisType = Number e.target.value
+          temp = 0
+          ($ '#ui-accordion-yAxisControl-panel-0').find($ '.inner_control_div').find('.y_axis_input').each (i,j) ->
+            if (($ j).is(':checked') and !temp ) #.find('checkbox').is(':checked')
+              temp = 1
+              sorter = ($ j).attr('value')
+              @sortField = ($ j).attr('value')
           @delayedUpdate()
-
+        
         ($ '.sortField').change (e) =>
           @sortField = Number e.target.value
           @delayedUpdate()
-
         ($ '.logY_box').click (e) =>
           globals.logY = (globals.logY + 1) % 2
           @start()
-
+        
+        sorter = 0
+        ($ '#ui-accordion-yAxisControl-panel-0').find($ '.inner_control_div').find($ '.y_axis_input').click (e) =>
+          temp = 0
+          count = 0
+          ($ '#ui-accordion-yAxisControl-panel-0').find($ '.inner_control_div').find('.y_axis_input').each (i,j) ->
+            if (($ j).is(':checked') and temp == 0 ) #and temp  #.find('checkbox').is(':checked')
+              temp = 1
+              count += 1
+              sorter = ($ j).attr('value')
+          if count == 1
+            autoSorted = 0
+          @sortField = sorter
+        ($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField:option').each (i,j) ->
+          ($ j).removeAttr('selected')
+        ($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('.sortField:option').each (i,j) ->
+          if ($ j).attr('value') == sorter
+            ($ j).attr('selected',true)
+            if( !autoSorted )
+              autoSorted = 1
+              ($ '.sortField').change()
+            
         # Set up accordion
         globals.toolsOpen ?= 0
 
