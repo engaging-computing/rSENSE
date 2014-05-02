@@ -64,7 +64,7 @@
 //= require highvis/bar
 //= require highvis/table
 //= require highvis/map
-//          highvis/motion
+//= require highvis/summary
 //= require highvis/photos
 //= require highvis/runtime
 //
