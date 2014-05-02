@@ -53,7 +53,7 @@ $ ->
 
     ### hide all vis canvases to start ###
     ($ can).hide() for can in ['#map_canvas', '#timeline_canvas', '#scatter_canvas',
-      '#bar_canvas', '#histogram_canvas', '#table_canvas', '#viscanvas','#photos_canvas']
+      '#bar_canvas', '#histogram_canvas', '#table_canvas', '#summary_canvas','#viscanvas','#photos_canvas']
 
     ### Load saved data if there ###
     if data.savedGlobals?
@@ -105,7 +105,7 @@ $ ->
       start = start + 1
 
       link = href.substr(start, end - start)
-
+   
       globals.curVis = (eval 'globals.' + link)
 
       if oldVis is globals.curVis
