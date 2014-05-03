@@ -45,7 +45,7 @@ $ ->
       rowFormatter = (cellvalue, options, rowObject) ->
         cellvalue = "" if $.type(cellvalue) is 'number' and isNaN(cellvalue) or cellvalue is null
 
-        colorIndex = data.groups.indexOf(String(cellvalue).toLowerCase())
+        colorIndex = data.groups.indexOf(String(cellvalue).toLowerCase()) % globals.colors.length
         if (colorIndex isnt -1)
           return "<font color='#{globals.colors[colorIndex]}'>#{cellvalue}<font>"
 
