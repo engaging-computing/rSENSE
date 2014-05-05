@@ -37,6 +37,8 @@ $ ->
     if not data.savedGlobals?
       globals.groupSelection ?= for vals, keys in data.groups
         Number keys
+      globals.selectedGroup ?= 0
+
       if data.normalFields.length > 1
         globals.fieldSelection ?= data.normalFields[1..1]
       else
@@ -100,12 +102,74 @@ $ ->
       clearControls: ->
         ($ '#controldiv').empty()
 
+
+      ###
+      Draws y axis controls
+      This includes a series of checkboxes or radio buttons for selecting
+      the active y axis field(s).
+      ###
+      drawYAxisControls: (radio = false) ->
+
+        controls = '<div id="yAxisControl" class="vis_controls">'
+
+        if radio
+          controls += "<h3 class='clean_shrink'><a href='#'>Field:</a></h3>"
+        else
+          controls += "<h3 class='clean_shrink'><a href='#'>Y Axis:</a></h3>"
+
+        controls += "<div class='outer_control_div'>"
+
+        # Populate choices
+        for fIndex in data.normalFields
+          controls += "<div class='inner_control_div' >"
+
+          if radio
+            controls += """<div class='radio'><label><input class='y_axis_input' name='y_axis_group'
+              type='radio' value='#{fIndex}'
+              #{if (Number fIndex) is @displayField then "checked" else ""}>
+              #{data.fields[fIndex].fieldName}</label></div>"""
+          else
+            controls += """<div class='checkbox'><label><input class='y_axis_input' type='checkbox'
+              value='#{fIndex}' #{if (Number fIndex) in globals.fieldSelection then "checked" else ""}
+              />#{data.fields[fIndex].fieldName}</label></div>"""
+          controls += "</div>"
+
+        controls += '</div></div>'
+
+        # Write HTML
+        ($ '#controldiv').append controls
+
+        # Make y axis checkbox/radio handler
+        if radio
+          ($ '.y_axis_input').click (e) =>
+            @displayField = Number e.target.value
+            @delayedUpdate()
+        else
+          ($ '.y_axis_input').click (e) =>
+            index = Number e.target.value
+
+            if index in globals.fieldSelection
+              arrayRemove(globals.fieldSelection, index)
+            else
+              globals.fieldSelection.push(index)
+            @delayedUpdate()
+
+        # Set up accordion
+        globals.yAxisOpen ?= 0
+
+        ($ '#yAxisControl').accordion
+          collapsible:true
+          active:globals.yAxisOpen
+
+        ($ '#yAxisControl > h3').click ->
+          globals.yAxisOpen = (globals.yAxisOpen + 1) % 2
+
       ###
       Draws group selection controls
       This includes a series of checkboxes and a selector for the grouping field.
       The checkbox text color should correspond to the graph color.
       ###
-      drawGroupControls: (startOnGroup = false) ->
+      drawGroupControls: (startOnGroup = false, radio = false) ->
 
         controls = '<div id="groupControl" class="vis_controls">'
 
@@ -130,11 +194,13 @@ $ ->
         if data.groups.length > 1
           controls += "<tr><td>"
           controls += "<div class='inner_control_div'>"
-          controls += """<div class='checkbox'><label><input id='checkbox_all'
-            class='group_input_all' type='checkbox' value='#{gIndex}'
-            #{if globals.groupSelection.length == data.groups.length then "checked" else ""}>
-            #Check All</label></div>"""
-          controls += "</td><td>Color</td></tr>"
+
+          if not radio
+            controls += """<div class='checkbox'><label><input id='checkbox_all'
+              class='group_input_all' type='checkbox' value='#{gIndex}'
+              #{if globals.groupSelection.length == data.groups.length then "checked" else ""}>
+              #Check All</label></div>"""
+            controls += "</td><td>Color</td></tr>"
 
         for group, gIndex in data.groups
           color_id = counter % globals.colors.length
@@ -142,19 +208,27 @@ $ ->
           controls += "<tr><td>"
           controls += "<div class='inner_control_div' id='label-color-#{color_id}'"
           controls += "style=\"color:#{color};\">"
-          controls += "<div class='checkbox'><label><input class='group_input' type='checkbox'"
-          controls += " value='#{gIndex}' "
-          controls += "#{if (Number gIndex) in globals.groupSelection then "checked" else ""}/>"
-          controls += "#{group}</label>"
+
+          if radio
+            controls += "<div class='radio'><label><input class='group_input' type='radio' name='groups'"
+            controls += " value='#{gIndex}' "
+            controls += "#{if (Number gIndex) is globals.selectedGroup then "checked" else ""}/>"
+            controls += "#{group}</label>"
+          else
+            controls += "<div class='checkbox'><label><input class='group_input' type='checkbox'"
+            controls += " value='#{gIndex}' "
+            controls += "#{if (Number gIndex) in globals.groupSelection then "checked" else ""}/>"
+            controls += "#{group}</label>"
+
           controls += "</div></div>"
           controls += "</td><td>"
           controls += """<a href="#" class="color-picker" data-color="#{color}" data-color-id="#{color_id}">
                          <img src=\"#{image_path('color-wheel.png')}\"></a>"""
           controls += "</td></tr>"
           counter += 1
-        
+
         controls += "</table>"
-        
+
         controls += '</div></div>'
 
         # Write HTML
@@ -175,10 +249,13 @@ $ ->
               $('.dropdown-menu').position(my: 'right top', at: 'right bottom', of: "#label-color-#{cid}")
             $(ee).colorpicker('show')
 
-            # Make group select handler
+        # Make group select handler
         ($ '#groupSelector').change (e) =>
           element = e.target or e.srcElement
           data.setGroupIndex (Number element.value)
+
+          globals.selectedGroup = 0
+
           globals.groupSelection = for vals, keys in data.groups
             Number keys
 
@@ -189,39 +266,48 @@ $ ->
 
           @drawControls()
 
-        # Make group checkbox handler
-        ($ '.group_input').click (e) =>
-          selection = []
-          ($ '.group_input').each () ->
-            if @checked
-              selection.push Number @value
+        if radio
+          # Make group checkbox handler
+          ($ '.group_input').click (e) =>
+            ($ '.group_input').each () ->
+              if @checked
+                globals.selectedGroup = Number @value
+
+            @delayedUpdate()
+
+        else
+          # Make group checkbox handler
+          ($ '.group_input').click (e) =>
+            selection = []
+            ($ '.group_input').each () ->
+              if @checked
+                selection.push Number @value
+              else
+            globals.groupSelection = selection
+
+            if globals.groupSelection.length == data.groups.length
+              ($ '#checkbox_all').prop("checked", true)
+              ($ '#checkbox_all').prop("indeterminate", false)
+            else if globals.groupSelection.length > 0
+              ($ '#checkbox_all').prop("checked", false)
+              ($ '#checkbox_all').prop("indeterminate", true)
             else
-          globals.groupSelection = selection
+              ($ '#checkbox_all').prop("checked", false)
+              ($ '#checkbox_all').prop("indeterminate", false)
 
-          if globals.groupSelection.length == data.groups.length
-            ($ '#checkbox_all').prop("checked", true)
-            ($ '#checkbox_all').prop("indeterminate", false)
-          else if globals.groupSelection.length > 0
-            ($ '#checkbox_all').prop("checked", false)
-            ($ '#checkbox_all').prop("indeterminate", true)
-          else
-            ($ '#checkbox_all').prop("checked", false)
-            ($ '#checkbox_all').prop("indeterminate", false)
+            @delayedUpdate()
 
-          @delayedUpdate()
+          # Make group checkbox for all groups
+          ($ '.group_input_all').click (e) =>
+            if e.target.checked
+              globals.groupSelection = for vals, keys in data.groups
+                Number keys
+              ($ '.group_input').prop 'checked', true
+            else
+              globals.groupSelection = []
+              ($ '.group_input').prop 'checked', false
 
-        # Make group checkbox for all groups
-        ($ '.group_input_all').click (e) =>
-          if e.target.checked
-            globals.groupSelection = for vals, keys in data.groups
-              Number keys
-            ($ '.group_input').prop 'checked', true
-          else
-            globals.groupSelection = []
-            ($ '.group_input').prop 'checked', false
-
-          @delayedUpdate()
-
+            @delayedUpdate()
 
         # Set up accordion
         globals.groupOpen ?= 0
@@ -451,70 +537,6 @@ $ ->
         setTimeout update, 1
 
         @chart.hideLoading()
-
-      ###
-      Draws y axis controls
-      This includes a series of checkboxes or radio buttons for selecting
-      the active y axis field(s).
-      ###
-      drawYAxisControls: (radio = false) ->
-
-        controls = '<div id="yAxisControl" class="vis_controls">'
-
-        if radio
-          controls += "<h3 class='clean_shrink'><a href='#'>Field:</a></h3>"
-        else
-          controls += "<h3 class='clean_shrink'><a href='#'>Y Axis:</a></h3>"
-
-        controls += "<div class='outer_control_div'>"
-
-        # Populate choices
-        for fIndex in data.normalFields
-          controls += "<div class='inner_control_div' >"
-
-          if radio
-            controls += """<div class='radio'><label><input class='y_axis_input' name='y_axis_group'
-              type='radio' value='#{fIndex}'
-              #{if (Number fIndex) is @displayField then "checked" else ""}>
-              #{data.fields[fIndex].fieldName}</label></div>"""
-          else
-            controls += """<div class='checkbox'><label><input class='y_axis_input' type='checkbox'
-              value='#{fIndex}' #{if (Number fIndex) in globals.fieldSelection then "checked" else ""}
-              />#{data.fields[fIndex].fieldName}</label></div>"""
-          controls += "</div>"
-
-        controls += '</div></div>'
-
-        # Write HTML
-        ($ '#controldiv').append controls
-
-        # Make y axis checkbox/radio handler
-        if radio
-          # Currently specific to histogram - TODO: decouple
-          ($ '.y_axis_input').click (e) =>
-            @displayField = Number e.target.value
-            @binSize = @defaultBinSize()
-            ($ "#binSizeInput").attr('value', @binSize)
-            @delayedUpdate()
-        else
-          ($ '.y_axis_input').click (e) =>
-            index = Number e.target.value
-
-            if index in globals.fieldSelection
-              arrayRemove(globals.fieldSelection, index)
-            else
-              globals.fieldSelection.push(index)
-            @delayedUpdate()
-
-        # Set up accordion
-        globals.yAxisOpen ?= 0
-
-        ($ '#yAxisControl').accordion
-          collapsible:true
-          active:globals.yAxisOpen
-
-        ($ '#yAxisControl > h3').click ->
-          globals.yAxisOpen = (globals.yAxisOpen + 1) % 2
 
       ###
       Method called when vis resize has begun
