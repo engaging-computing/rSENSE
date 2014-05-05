@@ -27,142 +27,81 @@
   *
 ###
 $ ->
-	if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
-		class window.Summary extends BaseVis
-			constructor: (@canvas) ->
-				if data.normalFields.length > 1
+  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+    class window.Summary extends BaseVis
+      constructor: (@canvas) ->
+        if data.normalFields.length > 1
           @displayField = data.normalFields[1]
-        else @displayField = data.normalFields[0]	
-        
-			start: ->
-				($ '#' + @canvas).show()
-				super()
-				
-			update: ->
-				analysis = for groupName, groupIndex in data.groups when groupIndex in globals.groupSelection
-					analysis = 
-						'total':  (data.getTotal     	@displayField, groupIndex)
-						'min':  	(data.getMin     		@displayField, groupIndex)
-						'max':  	(data.getMax     		@displayField, groupIndex)
-						'median': (data.getMedian     @displayField, groupIndex)
-						'count':  (data.getCount     	@displayField, groupIndex)
-						'mean':  	(data.getMean     	@displayField, groupIndex)
-					analysis
-				($ '#' + @canvas).html('')
-				html = """ 
-					<div class="container">
-						<div class="row" style="margin-top:15px;">
-							<div class="col-md-4">
-								<div class='panel panel-default'>
-									<div class='panel-heading'>Mean/Average</div>
-									<div class='panel-body'>#{analysis[0].mean}</div>
-								</div>
-							</div>
-							<div class="col-md-4">
-								<div class='panel panel-default'>
-									<div class='panel-heading'>Max</div>
-									<div class='panel-body'>#{analysis[0].max}</div>
-								</div>
-							</div>
-							<div class="col-md-4">
-								<div class='panel panel-default'>
-									<div class='panel-heading'>Total</div>
-									<div class='panel-body'>#{analysis[0].total}</div>
-								</div>
-							</div>
-							<div class="col-md-4">
-								<div class='panel panel-default'>
-									<div class='panel-heading'>Median</div>
-									<div class='panel-body'>#{analysis[0].median}</div>
-								</div>
-							</div>
-							<div class="col-md-4">
-								<div class='panel panel-default'>
-									<div class='panel-heading'>Min</div>
-									<div class='panel-body'>#{analysis[0].min}</div>
-								</div>
-							</div>
-							<div class="col-md-4">
-								<div class='panel panel-default'>
-									<div class='panel-heading'>Data Point Count</div>
-									<div class='panel-body'>#{analysis[0].count}</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				"""
-				($ '#' + @canvas).append(html)
-				super()
+        else @displayField = data.normalFields[0]
 
-			end: ->
-				($ '#' + @canvas).hide()
+      start: ->
+        ($ '#' + @canvas).show()
+        super()
 
-			###
-			Draws y axis controls
-			This includes a series of checkboxes or radio buttons for selecting
-			the active y axis field(s).
-			###
-			drawYAxisControls: (radio = false) ->
+      update: ->
+        analysis = for groupName, groupIndex in data.groups when groupIndex is globals.selectedGroup
+          analysis =
+            'total':  (data.getTotal       @displayField, groupIndex)
+            'min':    (data.getMin         @displayField, groupIndex)
+            'max':    (data.getMax         @displayField, groupIndex)
+            'median': (data.getMedian      @displayField, groupIndex)
+            'count':  (data.getCount       @displayField, groupIndex)
+            'mean':   (data.getMean        @displayField, groupIndex)
+          analysis
+        ($ '#' + @canvas).html('')
+        noData = "No #{data.fields[@displayField].fieldName} Data"
+        html = """
+          <div class="container">
+            <div class="row" style="margin-top:15px;">
+              <div class="col-md-4">
+                <div class='panel panel-default'>
+                  <div class='panel-heading'>Mean/Average</div>
+                  <div class='panel-body'>#{if analysis[0].mean? then analysis[0].mean else noData}</div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class='panel panel-default'>
+                  <div class='panel-heading'>Max</div>
+                  <div class='panel-body'>#{if analysis[0].max? then analysis[0].max else noData}</div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class='panel panel-default'>
+                  <div class='panel-heading'>Total</div>
+                  <div class='panel-body'>#{if analysis[0].total? then analysis[0].total else noData}</div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class='panel panel-default'>
+                  <div class='panel-heading'>Median</div>
+                  <div class='panel-body'>#{if analysis[0].median? then analysis[0].median else noData}</div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class='panel panel-default'>
+                  <div class='panel-heading'>Min</div>
+                  <div class='panel-body'>#{if analysis[0].min? then analysis[0].min else noData}</div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class='panel panel-default'>
+                  <div class='panel-heading'>Data Point Count</div>
+                  <div class='panel-body'>#{if analysis[0].count? then analysis[0].count else noData}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        """
+        ($ '#' + @canvas).append(html)
+        super()
 
-				controls = '<div id="yAxisControl" class="vis_controls">'
+      end: ->
+        ($ '#' + @canvas).hide()
 
-				if radio
-					controls += "<h3 class='clean_shrink'><a href='#'>Field:</a></h3>"
-				else
-					controls += "<h3 class='clean_shrink'><a href='#'>Y Axis:</a></h3>"
+      drawControls: ->
+        super()
+        @drawGroupControls(true, true)
+        @drawYAxisControls(true)
 
-				controls += "<div class='outer_control_div'>"
-
-				# Populate choices
-				for fIndex in data.normalFields
-					controls += "<div class='inner_control_div' >"
-
-					if radio
-						controls += """<div class='radio'><label><input class='y_axis_input' name='y_axis_group'
-							type='radio' value='#{fIndex}'
-							#{if (Number fIndex) is @displayField then "checked" else ""}>
-							#{data.fields[fIndex].fieldName}</label></div>"""
-					else
-						controls += """<div class='checkbox'><label><input class='y_axis_input' type='checkbox'
-							value='#{fIndex}' #{if (Number fIndex) in globals.fieldSelection then "checked" else ""}
-							/>#{data.fields[fIndex].fieldName}</label></div>"""
-					controls += "</div>"
-
-				controls += '</div></div>'
-
-				# Write HTML
-				($ '#controldiv').append controls
-
-				# Make y axis checkbox/radio handler
-				if radio
-					# Currently specific to histogram - TODO: decouple
-					($ '.y_axis_input').click (e) =>
-						@displayField = Number e.target.value
-						this.update()
-				else
-					($ '.y_axis_input').click (e) =>
-						index = Number e.target.value
-						this.update()
-
-						if index in globals.fieldSelection
-							arrayRemove(globals.fieldSelection, index)
-						else
-							globals.fieldSelection.push(index)
-
-				# Set up accordion
-				globals.yAxisOpen ?= 0
-
-				($ '#yAxisControl').accordion
-					collapsible:true
-					active:globals.yAxisOpen
-
-				($ '#yAxisControl > h3').click ->
-					globals.yAxisOpen = (globals.yAxisOpen + 1) % 2
-				
-			drawControls: ->
-				super()
-				@drawGroupControls(true)
-				@drawYAxisControls(true)
-		
-			globals.summary = new Summary "summary_canvas"
+      globals.summary = new Summary "summary_canvas"
 
