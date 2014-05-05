@@ -194,6 +194,18 @@ class DataSetsController < ApplicationController
   end
 
   # GET /projects/1/export
+  def export_concatenated
+    require 'uri'
+    require 'tempfile'
+
+    csv = Project.find(params[:id]).export_concatenated(params[:datasets])
+
+    respond_to do |format|
+      format.html { send_file csv, type: 'file/text', x_sendfile: true }
+    end
+  end
+
+  # GET /projects/1/export
   def export
     require 'uri'
     require 'tempfile'
