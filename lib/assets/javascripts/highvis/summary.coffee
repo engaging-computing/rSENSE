@@ -49,10 +49,16 @@ $ ->
             'mean':   (data.getMean        @displayField, groupIndex)
           analysis
         ($ '#' + @canvas).html('')
-        noData = "No #{data.fields[@displayField].fieldName} Data"
+        field = data.fields[@displayField]
+        noData = "No #{field.fieldName} Data"
+        units = if field.unitName then "(#{field.unitName})" else ''
         html = """
           <div class="container">
-            <div class="row" style="margin-top:15px;">
+						<div class="row" style="margin-top:15px;">
+							<div class="col-md-12 center"><h2>#{field.fieldName} #{units}</h2></div>
+						</div>
+						<hr/>
+            <div class="row">
               <div class="col-md-4">
                 <div class='panel panel-default'>
                   <div class='panel-heading'>Mean/Average</div>
