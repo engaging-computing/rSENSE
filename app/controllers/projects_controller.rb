@@ -108,7 +108,7 @@ class ProjectsController < ApplicationController
       cloned_from = Project.find(params[:project_id])
       @project = cloned_from.clone(params, @cur_user.id)
     else
-      @project = Project.new project_params
+      @project = Project.new params[:projects]
       @project.user_id = @cur_user.id
     end
     respond_to do |format|
