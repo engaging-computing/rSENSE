@@ -108,13 +108,13 @@ class ProjectsController < ApplicationController
       cloned_from = Project.find(params[:project_id])
       @project = cloned_from.clone(params, @cur_user.id)
     else
-      @project = Project.new params[:projects]
+      @project = Project.new project_params
       @project.user_id = @cur_user.id
     end
     respond_to do |format|
       if @project.save
         format.html { redirect_to @project, notice: 'Project was successfully created.' }
-        format.json { render :show, status: :created, location: @project }
+        format.json { render json: @project.to_hash(false), status: :created, location: @project }
       else
         flash[:error] = @project.errors.full_messages
         format.html { render :new }

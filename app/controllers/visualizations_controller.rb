@@ -9,7 +9,7 @@ class VisualizationsController < ApplicationController
   # GET /visualizations
   # GET /visualizations.json
   def index
-        # Main List
+    # Main List
     @params = params
 
     if !params[:sort].nil?

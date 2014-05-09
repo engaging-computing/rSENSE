@@ -221,10 +221,10 @@ class Project < ActiveRecord::Base
       if mo.data_set_id.nil?
         nmo = mo.cloneMedia
         nmo.project_id = new_project.id
-        nmo.user_id = @cur_user.id
+        nmo.user_id = user_id
         nmo.save!
 
-        unless rcontent.nil?
+        unless content.nil?
           content.gsub! mo.src, nmo.src
         end
 
@@ -259,7 +259,7 @@ class Project < ActiveRecord::Base
           nmo = mo.cloneMedia
           nmo.data_set_id = nds.id
           nmo.project_id = new_project.id
-          nmo.user_id = @cur_user.id
+          nmo.user_id = user_id
 
           nmo.save!
         end
