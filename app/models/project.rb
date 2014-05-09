@@ -39,25 +39,26 @@ class Project < ActiveRecord::Base
   end
 
   def self.search(search, include_hidden = false)
-    res = if search
-            Project.joins(
-              'LEFT OUTER JOIN "likes" ON "likes"."project_id" = "projects"."id"
-               LEFT OUTER JOIN "view_counts" ON "view_counts"."project_id" = "projects"."id"'
-            ).select(
-              'projects.*, count(likes.id) as like_count, view_counts.count as views'
-            ).group(
-              'projects.id, view_counts.count'
-            ).where(
-              '(lower(projects.title) LIKE lower(?)) OR (projects.id = ?) OR
-               (lower(projects.content) LIKE lower(?))', "%#{search}%", search.to_i, "%#{search}%")
-          else
-            Project.joins(
-              'LEFT OUTER JOIN "likes" ON "likes"."project_id" = "projects"."id"
-               LEFT OUTER JOIN "view_counts" ON "view_counts"."project_id" = "projects"."id"'
-            ).select(
-              'projects.*, count(likes.id) as like_count, view_counts.count as views'
-            ).group('projects.id, view_counts.count')
-          end
+    res =
+    if search
+      Project.joins(
+        'LEFT OUTER JOIN "likes" ON "likes"."project_id" = "projects"."id"
+      LEFT OUTER JOIN "view_counts" ON "view_counts"."project_id" = "projects"."id"'
+      ).select(
+        'projects.*, count(likes.id) as like_count, view_counts.count as views'
+      ).group(
+        'projects.id, view_counts.count'
+      ).where(
+        '(lower(projects.title) LIKE lower(?)) OR (projects.id = ?) OR
+      (lower(projects.content) LIKE lower(?))', "%#{search}%", search.to_i, "%#{search}%")
+    else
+      Project.joins(
+        'LEFT OUTER JOIN "likes" ON "likes"."project_id" = "projects"."id"
+      LEFT OUTER JOIN "view_counts" ON "view_counts"."project_id" = "projects"."id"'
+      ).select(
+        'projects.*, count(likes.id) as like_count, view_counts.count as views'
+      ).group('projects.id, view_counts.count')
+    end
 
     if include_hidden
       res
@@ -189,6 +190,84 @@ class Project < ActiveRecord::Base
       raise 'Failed to export'
     end
     zip_file
+  end
+
+  def clone(params, user_id)
+    # Create project
+    new_project = Project.new
+    new_project.user_id = user_id
+    new_project.cloned_from = id
+
+    # Determine Name
+    if params[:project_name].nil?
+      new_project.title = "#{title} (clone)"
+    else
+      new_project.title = params[:project_name]
+    end
+
+    new_project.save
+
+    # Clone fields
+    field_map = {}
+    fields.each do |f|
+      nf = f.dup
+      nf.project_id = new_project.id
+      nf.save
+      field_map[f.id.to_s] = nf.id.to_s
+    end
+
+    # Clone Media Objects
+    media_objects.each do |mo|
+      if mo.data_set_id.nil?
+        nmo = mo.cloneMedia
+        nmo.project_id = new_project.id
+        nmo.user_id = @cur_user.id
+        nmo.save!
+
+        unless rcontent.nil?
+          content.gsub! mo.src, nmo.src
+        end
+
+        if new_project.featured_media_id == mo.id
+          new_project.featured_media_id = nmo.id
+        end
+      end
+    end
+
+    # Clone datasets
+    if params[:clone_datasets]
+      data_sets.each do |ds|
+        nds = ds.dup
+        nds.project_id = new_project.id
+        nds.user_id = user_id
+
+        # Fix data fields
+        data = nds.data
+        new_data = []
+        data.each do |row|
+          field_map.each do |old_key, new_key|
+            row[new_key] = row[old_key]
+            row.delete old_key
+          end
+          new_data.push row
+        end
+        nds.data = new_data
+        nds.save!
+
+        # Clone dataset media
+        ds.media_objects.each do |mo|
+          nmo = mo.cloneMedia
+          nmo.data_set_id = nds.id
+          nmo.project_id = new_project.id
+          nmo.user_id = @cur_user.id
+
+          nmo.save!
+        end
+
+        nds.save!
+      end
+    end
+    new_project
   end
 end
 
