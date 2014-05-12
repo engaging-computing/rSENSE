@@ -108,7 +108,7 @@ $ ->
 
         binNumTarget = Math.pow 10, @binNumSug
 
-        tryNewSize = (size) =>
+        tryNewSize = (size) ->
           if (Math.abs (binNumTarget - (range / size))) < (Math.abs (binNumTarget - bestNum))
             bestSize = size
             bestNum  = range / size
