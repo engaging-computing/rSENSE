@@ -110,7 +110,7 @@ $ ->
         @oms.addListener 'click', (marker, ev) =>
           info.setContent marker.desc
           info.open @gmap, marker
-        @oms.addListener 'unspiderfy', () =>
+        @oms.addListener 'unspiderfy', () ->
           info.close()
 
         # Clusterer
@@ -544,7 +544,7 @@ $ ->
         viewBounds = @gmap.getBounds()
         if viewBounds?
 
-          filterFunc = (row) =>
+          filterFunc = (row) ->
             lat = lng = null
             
             # Scan for lat and long
