@@ -417,7 +417,7 @@ $ ->
           @start()
 
         ($ '#elaspedTimeButton').button()
-        ($ '#elaspedTimeButton').click (e) =>
+        ($ '#elaspedTimeButton').click (e) ->
           globals.generateElapsedTimeDialog()
 
         # Set up accordion
@@ -773,7 +773,7 @@ $ ->
           @xBounds = savedReg.bounds[0]
           @yBounds = savedReg.bounds[1]
 
-          ($ '.xAxis_input').each (i, input)=>
+          ($ '.xAxis_input').each (i, input) ->
             if Number(input.value) == savedReg.fieldIndices[0]
               input.checked = true
 
