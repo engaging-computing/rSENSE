@@ -57,7 +57,7 @@ $ ->
         url: '/projects/' + root.attr('project_id') + '/updateLikedStatus'
         type: 'POST'
         dataType: 'json'
-        success: (resp) =>
+        success: (resp) ->
           root.find('.like_display').html resp['update']
         error: (resp) =>
           ($ @).errorFlash()
@@ -131,23 +131,23 @@ $ ->
     #Select all/none check box in the data sets box
     ($ "a#check_all").click ->
       root = ($ '#dataset_table')
-      root.find("[id^=ds_]").each (i,j) =>
+      root.find("[id^=ds_]").each (i,j) ->
         ($ j).prop("checked",true)
       ($ '#vis_button').prop("disabled",false)
       ($ '#export_button').prop("disabled",false)
 
     ($ "a#uncheck_all").click ->
       root = ($ '#dataset_table')
-      root.find("[id^=ds_]").each (i,j) =>
+      root.find("[id^=ds_]").each (i,j) ->
         ($ j).prop("checked",false)
       ($ '#vis_button').prop("disabled",true)
       ($ '#export_button').prop("disabled",true)
 
     ($ "a#check_mine").click ->
       root = ($ '#dataset_table')
-      root.find("[id^=ds_]").each (i,j) =>
+      root.find("[id^=ds_]").each (i,j) ->
         ($ j).prop("checked",false)
-      root.find(".mine").each (i,j) =>
+      root.find(".mine").each (i,j) ->
         ($ j).prop("checked",true)
       if root.find(".mine").length isnt 0
         ($ '#vis_button').prop("disabled",false)
@@ -159,7 +159,7 @@ $ ->
       root = ($ '#dataset_table')
       ($ '#vis_button').prop("disabled",true)
       ($ '#export_button').prop("disabled",true)
-      root.find("[id^=ds_]").each (i,j) =>
+      root.find("[id^=ds_]").each (i,j) ->
         ($ j).prop("checked",false)
       root.find('tr').each (i,j) =>
         if ($ j).find('.key').attr('title') is ($ this).attr('m-title')
@@ -167,9 +167,9 @@ $ ->
           ($ '#vis_button').prop("disabled",false)
           ($ '#export_button').prop("disabled",false)
     #Turn off visualize button on page load, and when nothings checked
-    check_for_selection = =>
+    check_for_selection = ->
       should_disable = true
-      ($ document).find("[id^=ds_]").each (i,j) =>
+      ($ document).find("[id^=ds_]").each (i,j) ->
         if(($ j).is(":checked"))
           should_disable = false
         else
@@ -181,7 +181,7 @@ $ ->
     check_for_selection()
 
     #Add click events to all check boxes in the data_sets box
-    ($ document).find("[id^=ds_]").each (i,j) =>
+    ($ document).find("[id^=ds_]").each (i,j) ->
       ($ j).click check_for_selection
 
     ###
@@ -202,7 +202,7 @@ $ ->
           recolored = false
           row = ($ @).parents('tr')
           tbody = row.parents('tbody')
-          row.delete_row =>
+          row.delete_row ->
             row.remove()
             tbody.recolor_rows(recolored)
             recolored = true
@@ -219,7 +219,7 @@ $ ->
             recolored = false
             row = ($ @).parents('tr')
             tbody = row.parents('tbody')
-            row.delete_row =>
+            row.delete_row ->
               row.remove()
               tbody.recolor_rows(recolored)
               recolored = true
@@ -241,7 +241,7 @@ $ ->
           recolored = false
           row = ($ @).parents('tr')
           tbody = row.parents('tbody')
-          row.delete_row =>
+          row.delete_row ->
             row.remove()
             tbody.recolor_rows(recolored)
             recolored = true
@@ -258,7 +258,7 @@ $ ->
             recolored = false
             row = ($ @).parents('tr')
             tbody = row.parents('tbody')
-            row.delete_row =>
+            row.delete_row ->
               row.remove()
               tbody.recolor_rows(recolored)
               recolored = true
