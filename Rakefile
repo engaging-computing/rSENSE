@@ -12,7 +12,7 @@ namespace :ckeditor do
     fingerprint = /\-[0-9a-f]{32}\./
     for file in Dir['public/assets/ckeditor/contents-*.css', 'public/assets/ckeditor/skins/moono/*.png', 'public/assets/vis/*.png']
       next unless file =~ fingerprint
-      nondigest = file.sub fingerprint, '.' 
+      nondigest = file.sub fingerprint, '.'
       FileUtils.cp file, nondigest, verbose: true
     end
   end
@@ -29,32 +29,32 @@ namespace :db do
       puts "Switching db config to #{ENV['DB']}"
       system("cp config/database.#{ENV['DB']}.yml config/database.yml")
     else
-      puts "No DB variable set"
+      puts 'No DB variable set'
     end
   end
 end
 
 namespace :test do
   task :pg do
-    system("DB=postgres rake db:preprep")
-    system("rake test")
-    system("DB=default rake db:preprep")
+    system('DB=postgres rake db:preprep')
+    system('rake test')
+    system('DB=default rake db:preprep')
   end
 end
 
 task :dump do
-  system("rake db:data:dump")
-  system("mv db/data.yml public/media")
-  system("tar czvf /tmp/dump.tar.gz public/media")
-  system("mv /tmp/dump.tar.gz public")
+  system('rake db:data:dump')
+  system('mv db/data.yml public/media')
+  system('tar czvf /tmp/dump.tar.gz public/media')
+  system('mv /tmp/dump.tar.gz public')
 end
 
 task :load do
-  system("mkdir /tmp/#{$$}")
-  system("mv public/media /tmp/#{$$}")
-  system("tar xzvf public/dump.tar.gz")
-  system("mv public/media/data.yml db")
-  system("rake db:data:load")
+  system("mkdir /tmp/#{$PROCESS_ID}")
+  system("mv public/media /tmp/#{$PROCESS_ID}")
+  system('tar xzvf public/dump.tar.gz')
+  system('mv public/media/data.yml db')
+  system('rake db:data:load')
 end
 
 if %w(development test).include? Rails.env
@@ -71,13 +71,13 @@ if %w(development test).include? Rails.env
     ['app', 'lib'].each do |dd|
       success &&= Coffeelint.run_test_suite(dd, config_file: conf.to_s)
     end
-    fail "Goats!" unless success
+    fail 'Goats!' unless success
   end
 
   task(:default).clear
   task :default do
-    Rake::Task["coffeelint"].invoke
-    Rake::Task["rubocop"].invoke
-    Rake::Task["test"].invoke
+    Rake::Task['coffeelint'].invoke
+    Rake::Task['rubocop'].invoke
+    Rake::Task['test'].invoke
   end
 end

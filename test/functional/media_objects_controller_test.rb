@@ -26,7 +26,7 @@ class MediaObjectsControllerTest < ActionController::TestCase
     end
 
     get :show, format: 'json', id: MediaObject.last.id, recur: true
-    assert  !JSON.parse(response.body)['owner'].nil?, 'Should have included user hash'
+    assert !JSON.parse(response.body)['owner'].nil?, 'Should have included user hash'
   end
 
   test 'should upload media to visualization' do
@@ -37,7 +37,7 @@ class MediaObjectsControllerTest < ActionController::TestCase
     end
 
     get :show, format: 'json', id: MediaObject.last.id, recur: true
-    assert  !JSON.parse(response.body)['visualization'].nil?, 'Should have included visualization hash'
+    assert !JSON.parse(response.body)['visualization'].nil?, 'Should have included visualization hash'
   end
 
   test 'should upload media to data_set' do
@@ -48,7 +48,7 @@ class MediaObjectsControllerTest < ActionController::TestCase
     end
 
     get :show, format: 'json', id: MediaObject.last.id, recur: true
-    assert  !JSON.parse(response.body)['dataSet'].nil?, 'Should have included data_set hash'
+    assert !JSON.parse(response.body)['dataSet'].nil?, 'Should have included data_set hash'
   end
 
   test 'should upload media to tutorial' do
@@ -59,7 +59,7 @@ class MediaObjectsControllerTest < ActionController::TestCase
     end
 
     get :show, format: 'json', id: MediaObject.last.id, recur: true
-    assert  !JSON.parse(response.body)['tutorial'].nil?, 'Should have included tutorial hash'
+    assert !JSON.parse(response.body)['tutorial'].nil?, 'Should have included tutorial hash'
   end
 
   test 'should upload media to news' do
@@ -70,7 +70,7 @@ class MediaObjectsControllerTest < ActionController::TestCase
     end
 
     get :show, format: 'json', id: MediaObject.last.id, recur: true
-    assert  !JSON.parse(response.body)['news'].nil?, 'Should have included news hash'
+    assert !JSON.parse(response.body)['news'].nil?, 'Should have included news hash'
   end
 
   test 'should destroy media_object' do

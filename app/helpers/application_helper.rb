@@ -93,7 +93,7 @@ module ApplicationHelper
     end
   end
 
-  def can_admin?(obj)
+  def can_admin?(_obj)
     if @cur_user.nil?
       return false
     end

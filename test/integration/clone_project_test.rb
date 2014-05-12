@@ -22,10 +22,10 @@ class CloneProjectTest < ActionDispatch::IntegrationTest
     login('kcarcia@cs.uml.edu', '12345')
 
     click_on 'Projects'
-    find('#addProjectButton').click
-    wait_for_id('new_name')
-    find('#new_name').set('Das Cloning Projekt')
-    click_on 'Finish'
+
+    click_on 'Create Project'
+    find('#project_title').set('Das Cloning Projekt')
+    click_on 'Create'
 
     find('#manual_fields').click
     find('#new_field').find(:xpath, 'option[2]').select_option
