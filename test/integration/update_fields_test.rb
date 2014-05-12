@@ -15,10 +15,10 @@ class UploadFieldsTest < ActionDispatch::IntegrationTest
   test 'edit fields' do
     login('kcarcia@cs.uml.edu', '12345')
     click_on 'Projects'
-    find('#addProjectButton').click
-    wait_for_id('new_name')
-    find('#new_name').set('Fields Test')
-    click_on 'Finish'
+    click_on 'Create Project'
+    assert page.has_content?('What would you like to name your project?')
+    find('#project_title').set('Fields Test')
+    click_on 'Create'
 
     assert page.has_content?('Fields'), "Project page should have 'Fields'"
 
@@ -54,10 +54,10 @@ class UploadFieldsTest < ActionDispatch::IntegrationTest
   test 'template fields with dataset' do
     login('kcarcia@cs.uml.edu', '12345')
     click_on 'Projects'
-    find('#addProjectButton').click
-    wait_for_id('new_name')
-    find('#new_name').set('Template Fields Test')
-    click_on 'Finish'
+    click_on 'Create Project'
+    assert page.has_content?('What would you like to name your project?')
+    find('#project_title').set('Template Fields Test')
+    click_on 'Create'
 
     assert page.has_content?('Fields'), "Project page should have 'Fields'"
 
@@ -78,10 +78,10 @@ class UploadFieldsTest < ActionDispatch::IntegrationTest
   test 'teplate fields without dataset' do
     login('kcarcia@cs.uml.edu', '12345')
     click_on 'Projects'
-    find('#addProjectButton').click
-    wait_for_id('new_name')
-    find('#new_name').set('Template Fields Test 2')
-    click_on 'Finish'
+    click_on 'Create Project'
+    assert page.has_content?('What would you like to name your project?')
+    find('#project_title').set('Template Fields Test 2')
+    click_on 'Create'
 
     assert page.has_content?('Fields'), "Project page should have 'Fields'"
 
