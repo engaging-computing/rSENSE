@@ -224,7 +224,7 @@ $ ->
               ($ row).children().eq(col - offset).find('input').addClass 'validate_latitude'
 
           for col in lon_cols
-            val = ($ row).find('input').eq(col - 1).val()
+            val = ($ row).find('input').eq(col).val()
             if namespace.action is "manualEntry"
               val = ''
               
