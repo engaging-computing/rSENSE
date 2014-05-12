@@ -123,13 +123,23 @@ input[type="checkbox"]
 // Customization for modal footer
 .modal
 {
- padding-top:50px; 
+  padding-top: 50px; 
 
- .modal-footer
- {
-  padding: 5px 10px 15px; 
-  margin-top: 0px;
- }
+  .modal-footer
+  {
+    padding: 5px 10px 15px; 
+    margin-top: 0px;
+  }
+}
+
+.wide-item
+{
+  height: 198px;
+}
+
+.item-block
+{
+  height: 240px;
 }
 
 //"item" style for isotope blocks
@@ -215,17 +225,6 @@ input[type="checkbox"]
       overflow: hidden;
       height: 2.4em;
     }
-  }
-}
-
-// style for dimming clickable items on hover
-.clickable_item:hover
-{
-  background-color: #cfcfcf;
-  
-  div.item_image
-  {
-    opacity:0.6;
   }
 }
 

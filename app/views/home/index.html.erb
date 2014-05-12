@@ -31,13 +31,8 @@
         </div>
         
         <% @featured_projects.each do |i| %>
-          
-          <div class="col-md-3">
-            <% @box_project = i %>
-            <% @box_project_font_page = true %>
-            <%= render "shared/project_box" %>
-          </div>
-          
+          <% @box_project = i %>
+          <%= render "shared/project_box" %>
         <% end %> 
       </div>
     
@@ -46,13 +41,8 @@
           <h3>Curated Projects</h3>
         </div>
         <% @curated_projects.each do |i| %>
-        
-          <div class="col-md-3">
-            <% @box_project = i %>
-            <% @box_project_font_page = true %>
-            <%= render "shared/project_box" %>
-          </div>
-          
+          <% @box_project = i %>
+          <%= render "shared/project_box" %>
         <% end %>
       </div>
     

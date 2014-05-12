@@ -1,20 +1,19 @@
-<div class='item clickable_item <%= (defined? @box_project_font_page) ? "front_page_item" : "" %>'>
+<div class="col-sm-3">
+<div class='item item-block <%= (defined? @box_project_font_page) ? "front_page_item" : "" %>'>
         
-  <!--<a href='<%=project_path @box_project%>'>
-    <%= image_tag "blank.png", {class: "area_link", alt: ""} %>
-  </a> -->
-  
+  <% bg_image = image_path('generic_project.jpg') %>
   <% if @box_project.featured_media_id != nil %>
-    <a href='<%=project_path @box_project%>'>
-      <div class="item_image" style='background-image:url(<%=MediaObject.find(@box_project.featured_media_id).src%>)'>
-      </div>
-    </a>
+    <% bg_image = MediaObject.find(@box_project.featured_media_id).src %>
   <% end %>
+  <a href='<%=project_path @box_project%>'>
+    <div class="item_image" style='background-image:url(<%= bg_image %>)'>
+    </div>
+  </a>
   
   <div class="item_desc">
     
     <div class="item_title word_wrap">
-      <%=link_to @box_project.name, @box_project%>
+      <%=link_to truncate(@box_project.name, length: 50), @box_project %>
       <% if @box_project.featured and !(defined? @box_project_font_page) %> 
         <span> (featured) </span>
       <% end %>
@@ -35,4 +34,5 @@
     </div>
     
   </div>
+</div>
 </div>

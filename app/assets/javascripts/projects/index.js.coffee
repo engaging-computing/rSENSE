@@ -24,12 +24,6 @@ $ ->
       cb.prop("checked", not cb.prop("checked"))
       ($ '#projects_search').submit()
 
-    # Setup isotope
-    helpers.isotope_layout('#projects')
-    
-    $(window).smartresize () ->
-      helpers.isotope_layout('#projects')
-    
     # Setup add project button
     ($ '#addProjectButton').click ->
       $.ajax
