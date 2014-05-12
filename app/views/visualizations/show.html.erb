@@ -33,8 +33,8 @@
   <span class="viz_title">Name: <%= @visualization.owner.name %></span><br/><br/>
 </div>
 
-<div id="title_row" class="row visualization_title" style="margin-left: 0px; margin-top:20px; ">  
-  <div style="margin-left:12px;">  
+<div id="title_row" class="row visualization_title" style="margin-left: 0px; margin-top:20px; ">
+  <div style="margin-left:12px;">
     <span class="full_width_edit" id="title_span" style="font-size:2em">
       <%=visualization_edit_menu_helper false %>
     </span>
@@ -56,14 +56,14 @@
        <div class="pull-right"><button class="btn btn-default" id="fullscreen-viz" title="Min/Max"><i class="fa fa-arrows-alt"></i></button></div>
     </ul>
     <div class="clear"></div>
-    
+
     <div id="map_canvas" class="vis_canvas"></div>
     <div id="table_canvas" class="vis_canvas"></div>
     <div id="timeline_canvas" class="vis_canvas"></div>
     <div id="scatter_canvas" class="vis_canvas"></div>
     <div id="bar_canvas" class="vis_canvas"></div>
     <div id="histogram_canvas" class="vis_canvas"></div>
-<!--     <div id="motion_canvas" class="vis_canvas"></div> -->
+    <div id="summary_canvas" class="vis_canvas"></div>
     <div id="photos_canvas" class="vis_canvas"></div>
 
     <div id='controlhider'>
@@ -73,15 +73,15 @@
 
   </div>
 
-  
+
   <div class="row">
     <div class="col-md-8">
       <div class="well" style="margin-top:10px" id="dataset_info">
 
         <div class="full_width_edit" style="font-size:1.5em;"><%= visualization_edit_helper 'title', @visualization.owner.id == @cur_user.try(:id), make_link = false %></div>
-        
+
         <%= visualization_content_helper (@visualization.owner.id == @cur_user.try(:id)) %>
-        
+
       </div>
     </div>
     <div class="col-md-4">
@@ -89,5 +89,5 @@
         <%=render "shared/media_objects_view", {type: 'visualization', object: @visualization} %>
       <%end%>
     </div>
-  </div>  
+  </div>
 </div>

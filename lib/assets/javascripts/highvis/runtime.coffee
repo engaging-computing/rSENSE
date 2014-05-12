@@ -105,7 +105,7 @@ $ ->
       start = start + 1
 
       link = href.substr(start, end - start)
-   
+
       globals.curVis = (eval 'globals.' + link)
 
       if oldVis is globals.curVis
