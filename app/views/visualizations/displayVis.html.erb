@@ -30,14 +30,14 @@
 <% if @datasets.count == 1%>
   <div id="title_row" style="padding-left:10px">
     <div style="font-size:1.75em">
-      <%= link_to @project.title, project_path(@project)%> 
+      <%= link_to @project.title, project_path(@project)%>
       <div class="half_width_edit"><%= data_set_edit_helper 'title', (can_edit? @data_set), false %></div>
     </div>
   </div>
 <%else%>
   <div id="title_row" style="padding-left:10px">
     <div style="font-size:1.75em">
-      <%= link_to @project.title, project_path(@project)%> 
+      <%= link_to @project.title, project_path(@project)%>
       <div class="half_width_edit">Showing Multiple Data Sets</div>
     </div>
   </div>
@@ -48,7 +48,7 @@
       <ul id='visTabList'>
         <div class="pull-right"><button class="btn btn-default" id="fullscreen-viz" title="Maximize"><i class="fa fa-arrows-alt"></i></button></div>
       </ul><div class="clear"></div>
-      
+
       <div id="map_canvas" class="vis_canvas"></div>
       <div id="table_canvas" class="vis_canvas"></div>
       <div id="timeline_canvas" class="vis_canvas"></div>
