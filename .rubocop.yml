@@ -8,7 +8,7 @@
 AllCops:
   Excludes:
     - db/schema.rb
-    - vendor/**
+    - vendor/**/*
 
 # Offence count: 1
 # Cop supports --auto-correct.
@@ -113,17 +113,17 @@ EndAlignment:
   Enabled: true
 
 # Offence count: 16
-FavorUnlessOverNegatedIf:
+NegatedIf:
   Enabled: true
 
 # Offence count: 1
-FavorUntilOverNegatedWhile:
+NegatedWhile:
   Enabled: true
 
 # Offence count: 23
-# Cop supports --auto-correct.
-FinalNewline:
-  Enabled: true
+## Cop supports --auto-correct.
+#FinalNewline:
+  #Enabled: true
 
 # Offence count: 7
 HandleExceptions:
@@ -131,7 +131,7 @@ HandleExceptions:
 
 # Offence count: 30
 # Cop supports --auto-correct.
-HashMethods:
+DeprecatedHashMethods:
   Enabled: true
 
 # Offence count: 89
@@ -272,8 +272,11 @@ SpaceAfterMethodName:
 # Offence count: 96
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles, EnforcedStyleForEmptyBraces, SpaceBeforeBlockParameters.
-SpaceAroundBlockBraces:
+SpaceBeforeBlockBraces:
   Enabled: true
+  
+SpaceInsideBlockBraces:
+  Enabled: ture
 
 # Offence count: 2
 # Cop supports --auto-correct.
@@ -315,7 +318,7 @@ Tab:
 # Cop supports --auto-correct.
 TrailingBlankLines:
   Enabled: false
-
+  
 # Offence count: 1
 # Configuration parameters: EnforcedStyleForMultiline, SupportedStyles.
 TrailingComma:
@@ -352,3 +355,22 @@ WhileUntilModifier:
 # Cop supports --auto-correct.
 WordArray:
   MinSize: 16
+
+Next:
+  Enabled: false
+  
+GuardClause:
+  Enabled: false
+
+EachWithObject:
+  Enabled: false
+  
+UnusedBlockArgument:
+  Enabled: false
+  
+ClassAndModuleChildren:
+  Enabled: false
+
+For:
+  Enabled: false
+  

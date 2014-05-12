@@ -30,11 +30,3 @@ $ ->
     $(window).smartresize () ->
       helpers.isotope_layout('#projects')
     
-    # Setup add project button
-    ($ '#addProjectButton').click ->
-      $.ajax
-        url: "/projects/create"
-        data: {}
-        dataType: "json"
-        success: (data, textStatus) ->
-          helpers.name_popup data, "Project", "project"
