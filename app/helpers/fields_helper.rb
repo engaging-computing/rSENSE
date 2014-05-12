@@ -1,5 +1,4 @@
 module FieldsHelper
-
   def get_field_name(field)
     case field
     when 1
