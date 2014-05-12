@@ -53,7 +53,7 @@ $ ->
 
     ### hide all vis canvases to start ###
     ($ can).hide() for can in ['#map_canvas', '#timeline_canvas', '#scatter_canvas',
-      '#bar_canvas', '#histogram_canvas', '#table_canvas', '#viscanvas','#photos_canvas']
+      '#bar_canvas', '#histogram_canvas', '#table_canvas', '#summary_canvas','#viscanvas','#photos_canvas']
 
     ### Load saved data if there ###
     if data.savedGlobals?
@@ -62,7 +62,7 @@ $ ->
       delete data.savedGlobals
 
     ### Generate tabs ###
-    for vis of data.allVis
+    for vis of data.allVis #when vis isnt 'Summary'
       dark = "#{data.allVis[vis]}_dark"
       light = "#{data.allVis[vis]}_light"
       if data.allVis[vis] in data.relVis
