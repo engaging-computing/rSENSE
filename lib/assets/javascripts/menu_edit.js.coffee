@@ -69,7 +69,7 @@ $ ->
             info_box.html("<a href='#{($ @).attr('href')}'>#{value}</a>")
           else if root.attr('make_link') == 'false'
             info_box.html(value)
-        error: (j, s, t) =>
+        error: (j, s, t) ->
           edit_box.errorFlash()
           errors = JSON.parse j.responseText
           edit_box.popover
@@ -99,7 +99,7 @@ $ ->
       dataType: "json"
       data:
         data
-      success: =>
+      success: ->
         root.find('li.menu_hider').show()
         root.find('li.menu_unhider').hide()
         ($ '#hidden_notice').hide()
@@ -120,7 +120,7 @@ $ ->
       dataType: "json"
       data:
         data
-      success: =>
+      success: ->
         window.location = root.attr("escape_link")
         
   ($ 'a.menu_delete').click (e) ->
@@ -136,7 +136,7 @@ $ ->
         url: ($ @).attr('href')
         type: 'DELETE'
         dataType: "json"
-        success: =>
+        success: ->
           window.location = root.attr("escape_link")
 
   ### Curate Project ###
@@ -150,14 +150,14 @@ $ ->
       data:
         project:
           curated: true
-      success: =>
+      success: ->
         root.find('li.menu_unlock').show()
         root.find('li.menu_lock').hide()
         ($ '#lock_notice').show()
         ($ '#id_notice').hide()
         root.find('li.menu_curate').hide()
         root.find('li.menu_uncurate').show()
-      error: (msg) =>
+      error: (msg) ->
         console.log msg
         
   ### Uncurate Project ###
@@ -171,10 +171,10 @@ $ ->
       data:
         project:
           curated: false
-      success: =>
+      success: ->
         root.find('li.menu_curate').show()
         root.find('li.menu_uncurate').hide()
-      error: (msg) =>
+      error: (msg) ->
         console.log msg
         
   ### LOCK PROJECT ###
@@ -188,12 +188,12 @@ $ ->
       data:
         project:
           lock: true
-      success: =>
+      success: ->
         root.find('li.menu_unlock').show()
         root.find('li.menu_lock').hide()
         ($ '#lock_notice').show()
         ($ '#id_notice').hide()
-      error: (msg) =>
+      error: (msg) ->
         console.log msg
         
   ### UNLOCK PROJECT ###
@@ -207,11 +207,11 @@ $ ->
       data:
         project:
           lock: false
-      success: =>
+      success: ->
         root.find('li.menu_lock').show()
         root.find('li.menu_unlock').hide()
         ($ '#lock_notice').hide()
-      error: (msg) =>
+      error: (msg) ->
         console.log msg
         
   ($ 'a.summary_edit').click (e) ->
@@ -249,5 +249,5 @@ $ ->
         data: data
         success: =>
           ($ @).parents('.summary').html(txt)
-        error: (msg) =>
+        error: (msg) ->
           console.log msg

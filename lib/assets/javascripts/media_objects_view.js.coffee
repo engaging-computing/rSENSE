@@ -26,7 +26,7 @@ $ ->
       dataType: "json"
       data:
         data
-      success: =>
+      success: ->
         root.find('.img_selector').each ->
           if ($ this).attr("mo_id") != mo
             ($ this).prop("checked", false)
@@ -41,11 +41,11 @@ $ ->
         url: obj.attr("href")
         type: 'DELETE'
         dataType: "json"
-        success: =>
+        success: ->
           recolored = false
           row = obj.parents('tr')
           tbody = row.parents('tbody')
-          row.delete_row =>
+          row.delete_row ->
             row.remove()
             tbody.recolor_rows(recolored)
             recolored = true

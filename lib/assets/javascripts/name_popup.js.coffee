@@ -61,7 +61,7 @@ $ ->
         success: ->
           ($ "#new_name_box").modal("hide")
           window.location = obj.url
-        error: (j, s, t) =>
+        error: (j, s, t) ->
           edit_box.errorFlash()
           
           errors = JSON.parse j.responseText

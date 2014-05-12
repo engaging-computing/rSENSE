@@ -17,7 +17,7 @@ $ ->
         ajaxify: true
         url: window.location.pathname.substr(0, window.location.pathname.lastIndexOf("/")) + "/jsonDataUpload"
         method: 'POST'
-        error: (j, s, t) =>
+        error: (j, s, t) ->
           
           ($ '.mainContent').prepend(
             "<div class='alert alert-danger alert-dismissable'><strong>An error occured: </strong>" +
