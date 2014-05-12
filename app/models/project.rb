@@ -218,19 +218,19 @@ class Project < ActiveRecord::Base
 
     # Clone Media Objects
     media_objects.each do |mo|
-      if mo.data_set_id.nil?
-        nmo = mo.cloneMedia
-        nmo.project_id = new_project.id
-        nmo.user_id = user_id
-        nmo.save!
+      next unless mo.data_set_id.nil?
 
-        unless content.nil?
-          content.gsub! mo.src, nmo.src
-        end
+      nmo = mo.cloneMedia
+      nmo.project_id = new_project.id
+      nmo.user_id = user_id
+      nmo.save!
 
-        if new_project.featured_media_id == mo.id
-          new_project.featured_media_id = nmo.id
-        end
+      unless content.nil?
+        content.gsub! mo.src, nmo.src
+      end
+
+      if new_project.featured_media_id == mo.id
+        new_project.featured_media_id = nmo.id
       end
     end
 

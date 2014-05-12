@@ -72,7 +72,7 @@ $ ->
             info_box.html("<a href='#{($ @).attr('href')}'>#{value}</a>")
           else if root.attr('make_link') == 'false'
             info_box.html(value)
-        error: (j, s, t) =>
+        error: (j, s, t) ->
           edit_box.errorFlash()
           errors = JSON.parse j.responseText
           console.log errors
@@ -88,7 +88,7 @@ $ ->
           root.find('span.btn').button 'toggle'
     
     #Enter key should cause a save
-    info_box.find('.info_edit_box').keypress (e) =>
+    info_box.find('.info_edit_box').keypress (e) ->
       if(e.keyCode == 13)
         root.find('a.info_save_link').trigger "click"
     

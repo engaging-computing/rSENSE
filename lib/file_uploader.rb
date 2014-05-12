@@ -329,11 +329,12 @@ class FileUploader
     end
 
     possible_separators.each_with_index do |sep, index|
-      if  delim[index][:data].first.count == delim[index][:avg] and delim[index][:data].last.count == delim[index][:avg] and delim[index][:avg] > 1
+      next unless  delim[index][:data].first.count == delim[index][:avg] and
+          delim[index][:data].last.count == delim[index][:avg] and
+          delim[index][:avg] > 1
 
-        return delim[index][:file]
+      return delim[index][:file]
 
-      end
     end
 
     delim[0][:file]
