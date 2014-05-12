@@ -104,111 +104,28 @@ class ProjectsController < ApplicationController
   # POST /projects
   # POST /projects.json
   def create
-    # @project = Project.new(params[:project])
     if params[:project_id]
-      # Clone
-      @cloned = Project.find(params[:project_id])
-      @project = @cloned.dup
-      @project.user_id = @cur_user.id
-      @project.cloned_from = @cloned.id
-      @project.featured = false
-      @project.curated = false
-      @project.lock = false
-      if params[:project_name].nil?
-        @project.title = "#{@cloned.title} (clone)"
-      else
-        @project.title = params[:project_name]
-      end
-
-      success = @project.save
-      if success
-
-        # Clone fields
-        field_map = {}
-        @cloned.fields.each do |f|
-          nf = f.dup
-          nf.project_id = @project.id
-          nf.save
-          field_map[f.id.to_s] = nf.id.to_s
-        end
-
-        # Clone project media
-        @cloned.media_objects.each do |mo|
-          if mo.data_set_id.nil?
-            nmo = mo.cloneMedia
-            nmo.project_id = @project.id
-            nmo.user_id = @cur_user.id
-            nmo.save!
-
-            unless @cloned.content.nil?
-              @cloned.content.gsub! mo.src, nmo.src
-            end
-
-            if @project.featured_media_id == mo.id
-              @project.featured_media_id = nmo.id
-            end
-          end
-        end
-
-        if params[:clone_datasets]
-          # Clone datasets
-          @cloned.data_sets.each do |ds|
-            nds = ds.dup
-            nds.project_id = @project.id
-            nds.user_id = @cur_user.id
-
-            # Fix data fields
-            data = nds.data
-            new_data = []
-            data.each do |row|
-              field_map.each do |old_key, new_key|
-                row[new_key] = row[old_key]
-                row.delete old_key
-              end
-              new_data.push row
-            end
-            nds.data = new_data
-            nds.save!
-
-            # Clone dataset media
-            ds.media_objects.each do |mo|
-              nmo = mo.cloneMedia
-              nmo.data_set_id = nds.id
-              nmo.project_id = @project.id
-              nmo.user_id = @cur_user.id
-
-              nmo.save!
-            end
-
-            nds.save!
-          end
-        end
-      end
-
-      success &= @project.save
+      cloned_from = Project.find(params[:project_id])
+      @project = cloned_from.clone(params, @cur_user.id)
     else
-      if params[:project_name].nil?
-        if @cur_user.name[-1].downcase == 's'
-          title = "#{@cur_user.name}' Project"
-        else
-          title = "#{@cur_user.name}'s Project"
-        end
-        @project = Project.new(user_id: @cur_user.id, title: title)
-      else
-        @project = Project.new(user_id: @cur_user.id, title: params[:project_name])
-      end
-      success = @project.save
+      @project = Project.new project_params
+      @project.user_id = @cur_user.id
     end
-
     respond_to do |format|
-      if success
+      if @project.save
         format.html { redirect_to @project, notice: 'Project was successfully created.' }
         format.json { render json: @project.to_hash(false), status: :created, location: @project }
       else
-        format.html { render action: 'new' }
+        flash[:error] = @project.errors.full_messages
+        format.html { render :new }
         format.json { render json: @project.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  # GET /projects
+  def new
+    @project = Project.new
   end
 
   # PUT /projects/1s
@@ -436,11 +353,11 @@ class ProjectsController < ApplicationController
   def project_params
     if @cur_user.try(:admin)
       return params[:project].permit(:content, :title, :user_id, :filter, :cloned_from, :has_fields,
-         :featured, :is_template, :featured_media_id, :hidden, :featured_at, :lock, :curated,
-         :curated_at, :updated_at, :default_vis)
+                                     :featured, :is_template, :featured_media_id, :hidden, :featured_at, :lock, :curated,
+                                     :curated_at, :updated_at, :default_vis)
     end
 
     params[:project].permit(:content, :title, :user_id, :filter, :cloned_from, :has_fields,
-      :featured_media_id, :lock, :updated_at, :default_vis)
+                            :featured_media_id, :lock, :updated_at, :default_vis)
   end
 end
