@@ -321,7 +321,7 @@ $ ->
 
       selectedTime = data.timeFields[0]
 
-      ($ '#groupSelector').change (e) =>
+      ($ '#groupSelector').change (e) ->
         element = e.target or e.srcElement
         selectedTime = (Number element.value)
 
@@ -335,7 +335,7 @@ $ ->
         width: 'auto'
         modal: true
         buttons:
-          Generate: =>
+          Generate: ->
             name  = 'Elapsed Time [from '
             name += data.fields[selectedTime].fieldName + ']'
             data.generateElapsedTime name, selectedTime

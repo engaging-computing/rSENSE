@@ -18,7 +18,7 @@ $ ->
         type: 'DELETE'
         data:
           field: ($ @).attr('fid')
-        success: (msg) =>
+        success: (msg) ->
           if root.hasClass('location')
             root.parents('table').find('tr.location').each ->
               ($ this).remove()
