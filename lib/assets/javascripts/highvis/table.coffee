@@ -180,7 +180,8 @@ $ ->
         @table.jqGrid('filterToolbar',  { stringResult:     true,\
                                           searchOnEnter:    false,\
                                           searchOperators:  true,\
-                                          operandTitle:     "Select Search Operation" })
+                                          operandTitle:     'Select Search Operation',\
+                                          resetIcon: '<i class="fa fa-times-circle"></i>' })
 
         # Set the time column formatters
         timePair = {}
