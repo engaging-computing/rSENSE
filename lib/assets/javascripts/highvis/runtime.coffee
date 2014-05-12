@@ -62,7 +62,7 @@ $ ->
       delete data.savedGlobals
 
     ### Generate tabs ###
-    for vis of data.allVis
+    for vis of data.allVis when vis isnt 'Summary'
       dark = "#{data.allVis[vis]}_dark"
       light = "#{data.allVis[vis]}_light"
       if data.allVis[vis] in data.relVis
