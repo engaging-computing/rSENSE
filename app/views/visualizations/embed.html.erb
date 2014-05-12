@@ -11,6 +11,8 @@
                    'Bar_light': "<%= path_to_image('vis_bar_light.png')%>",
                    'Histogram_dark': "<%= path_to_image('vis_histogram_dark.png')%>",
                    'Histogram_light': "<%= path_to_image('vis_histogram_light.png')%>",
+                   'Summary_dark': "<%= path_to_image('vis_table_dark.png')%>",
+                   'Summary_light': "<%= path_to_image('vis_table_light.png')%>",
                    'Table_dark': "<%= path_to_image('vis_table_dark.png')%>",
                    'Table_light': "<%= path_to_image('vis_table_light.png')%>",
                    'Photos_dark': "<%= path_to_image('vis_photos_dark.png')%>",
@@ -36,11 +38,11 @@
     <div id="scatter_canvas" class="vis_canvas"></div>
     <div id="bar_canvas" class="vis_canvas"></div>
     <div id="histogram_canvas" class="vis_canvas"></div>
-<!--     <div id="motion_canvas" class="vis_canvas"></div> -->
+    <div id="summary_canvas" class="vis_canvas"></div>
     <div id="photos_canvas" class="vis_canvas"></div>
     <div id='controlhider' <%if @presentation%> style="display:none" <%end%>>
         <button id="control_hide_button" type="button" style="margin:5px;"> > </button>
     </div>
     <div id="controldiv"></div>
 </div>
-    
+

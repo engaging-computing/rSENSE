@@ -4,6 +4,6 @@ class RenameExperimentSessionsToDataSets < ActiveRecord::Migration
   end
 
   def down
-    rename_table  :data_sets, :experiment_sessions
+    rename_table :data_sets, :experiment_sessions
   end
 end

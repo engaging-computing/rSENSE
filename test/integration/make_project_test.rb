@@ -17,12 +17,12 @@ class MakeProjectTest < ActionDispatch::IntegrationTest
 
     # Add a project
     click_on 'Projects'
-    find('#addProjectButton').click
+    click_on 'Create Project'
 
-    wait_for_id('new_name')
+    assert page.has_content?('What would you like to name your project?'), 'Should have gone to project/new'
 
-    find('#new_name').set('Das Projekt')
-    click_on 'Finish'
+    find('#project_title').set('Das Projekt')
+    click_on 'Create'
 
     assert page.has_content?('Visualizations'),
       "Project page should have 'Visualizations'"
@@ -30,22 +30,10 @@ class MakeProjectTest < ActionDispatch::IntegrationTest
     assert page.has_content?('Logout'),
       'Should be logged in here'
 
-    # Get futher with ckEditor than redactor.
-    # find('.add_content_link img').click
-    # find('.content_holder .content').click
-    # find('.cke_button__image_icon').click
-    # find('.cke_dialog_tabs [title=Upload]').click
-
-    # Can't get to form in iFrame, so give up on
-    # uploading from editor.
-    # find('.cke_dialog').click_on "Cancel"
-
     click_on 'Projects'
     assert page.has_content?('Templates'), 'Should be on Projects page'
     assert page.has_content?('Das Projekt'), 'New project should be in list'
 
-    # click_on "Das Projekt"
-    # assert page.has_content?("All your base..."), "Update should have been saved"
   end
 
   test 'search in projects' do
@@ -55,7 +43,23 @@ class MakeProjectTest < ActionDispatch::IntegrationTest
     fill_in 'search', with: 'Empty'
     click_on 'Search'
 
-    assert page.has_content?('Empty Project'), 'Search finds project'
+    assert page.has_content?('Empty Project'),
+        'Search finds project'
+
     assert page.has_no_content?('Breaking Things')
+  end
+
+  test 'cancel create project' do
+    login('kcarcia@cs.uml.edu', '12345')
+
+    visit '/projects'
+    click_on 'Create Project'
+
+    assert page.has_content?('What would you like to name your project?'),
+        'Should have gone to project/new'
+
+    click_on 'Cancel'
+    assert page.has_content?('Create Project'),
+        'Should have returned to /projects'
   end
 end

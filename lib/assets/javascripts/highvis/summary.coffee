@@ -28,6 +28,7 @@
 ###
 $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+  
     class window.Summary extends BaseVis
       constructor: (@canvas) ->
         if data.normalFields.length > 1
