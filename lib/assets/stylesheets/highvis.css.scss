@@ -31,6 +31,16 @@
     overflow:hidden;
 }
 
+#summary_canvas{
+	text-align:center;
+	.panel-heading{
+			font-size:2em;
+			font-weight:bold;
+	}
+	.panel-body{
+			font-size:1.5em
+	}
+}
 //------UNVERIFIED CSS BELOW----------
 
 #controlcontainer {
