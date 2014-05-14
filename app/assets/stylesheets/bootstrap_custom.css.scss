@@ -142,6 +142,15 @@ input[type="checkbox"]
   height: 240px;
 }
 
+#projects, #visualizations
+{
+ .col-sm-3
+ {
+  padding-left: 3px;
+  padding-right: 3px;
+ }
+}
+
 //"item" style for isotope blocks
 .item
 {
