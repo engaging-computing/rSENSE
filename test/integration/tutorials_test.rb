@@ -19,7 +19,6 @@ class TutorialsTest < ActionDispatch::IntegrationTest
     assert page.has_no_content?('Create Tutorial'), 'Non-Admin should not be able to create a tutorial'
     logout
 
-
     login('nixon@whitehouse.gov', '12345')
     visit '/tutorials'
     assert page.has_content?('Create Tutorial'), 'Admin should be able to create a tutorial'
