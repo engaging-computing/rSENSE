@@ -4,7 +4,7 @@ class UploadDataTest < ActionDispatch::IntegrationTest
   include CapyHelper
 
   setup do
-    Capybara.current_driver = Capybara.javascript_driver
+    Capybara.current_driver = :webkit
     Capybara.default_wait_time = 15
   end
 
@@ -136,13 +136,16 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     assert page.has_content?('Groups')
     visit vis_url
 
+    page.execute_script 'window.confirm = function () { return true }'
+
     # Tests deleting vises
     click_on 'Visualizations'
     assert page.has_content?('Saved Vis - File Types')
     visit vis_url
     find('.menu_edit_link').click
     click_on 'Delete Visualization'
-    page.driver.browser.switch_to.alert.accept
+    # Capybara-webkit needs the window.confirm hack instead
+    # page.driver.browser.switch_to.alert.accept
     assert page.has_no_content?('Saved Vis - File Types')
     visit proj_url
     assert page.has_no_content?('Saved Vis - File Types')

@@ -4,7 +4,7 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
   include CapyHelper
 
   setup do
-    Capybara.current_driver = Capybara.javascript_driver
+    Capybara.current_driver = :webkit
     Capybara.default_wait_time = 15
   end
 
@@ -25,6 +25,8 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
     find('.media_edit').click
     assert page.has_content?('nerdboy.jpg'), 'Should have gone to edit page'
 
+    page.execute_script 'window.confirm = function () { return true }'
+
     # Upload media to news
     visit '/news/1'
     assert page.has_content? 'Media'
@@ -37,7 +39,8 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
     visit '/news/1'
     find('.menu_edit_link').click
     find('.menu_delete').click
-    page.driver.browser.switch_to.alert.accept
+    # Capybara-webkit needs the window.confirm hack instead.
+    # page.driver.browser.switch_to.alert.accept
 
     # Upload media to project
     visit '/projects/1'

@@ -4,7 +4,7 @@
 image_asset_paths = {
   <% Find.find(Rails.root.join('app/assets/images').to_s) do |path| %>
     <% if path =~ /png$/i %>
-      <% iname = File.basename(path) %>
+      <% iname = path.sub(/.*app\/assets\/images/, '') %>
       "<%= iname %>" : "<%= image_path iname %>",
     <% end %>
   <% end %>
