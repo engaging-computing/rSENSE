@@ -26,12 +26,6 @@ $ ->
       cb.prop("checked", not cb.prop("checked"))
       ($ '#tutorials_search').submit()
 
-    # Setup isotope
-    helpers.isotope_layout('#tutorials')
-    
-    $(window).smartresize () ->
-      helpers.isotope_layout('#tutorials')
-    
     # Setup add tutorial button
     ($ '#addTutorialButton').click ->
       $.ajax
