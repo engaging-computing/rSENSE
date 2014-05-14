@@ -4,7 +4,7 @@ class UploadFieldsTest < ActionDispatch::IntegrationTest
   include CapyHelper
 
   setup do
-    Capybara.current_driver = Capybara.javascript_driver
+    Capybara.current_driver = :webkit
     Capybara.default_wait_time = 15
   end
 

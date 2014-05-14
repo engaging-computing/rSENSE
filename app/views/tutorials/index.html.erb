@@ -62,11 +62,6 @@
     
       <% @tutorials.each do |tut| %>
         <div class='item clickable_item'>
-          
-          <a href='<%=tutorial_path tut%>'>
-            <%= image_tag "blank.png", {class: "area_link", alt: ""} %>
-          </a>
-          
           <% if tut.featured_media_id != nil %>
             <div class='item_image' style='background-image:url(<%=tut.media_objects.find(tut.featured_media_id).src%>)'></div>
           <% end %>

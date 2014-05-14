@@ -4,7 +4,7 @@ class MakeProjectTest < ActionDispatch::IntegrationTest
   include CapyHelper
 
   setup do
-    Capybara.current_driver = Capybara.javascript_driver
+    Capybara.current_driver = :webkit
     Capybara.default_wait_time = 15
   end
 
@@ -44,9 +44,10 @@ class MakeProjectTest < ActionDispatch::IntegrationTest
     click_on 'Search'
 
     assert page.has_content?('Empty Project'),
-        'Search finds project'
+      'Search does not find project'
 
-    assert page.has_no_content?('Breaking Things')
+    assert page.has_no_content?('Breaking Things'),
+      'Search finds non-matching project.'
   end
 
   test 'cancel create project' do

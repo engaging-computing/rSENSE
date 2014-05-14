@@ -27,6 +27,7 @@ group :development, :test do
   gem "turn"
   gem "rubocop", git: 'https://github.com/bbatsov/rubocop'
   gem "coffeelint"
+  gem 'capybara-webkit'
 end
 
 # Jquery stuff
