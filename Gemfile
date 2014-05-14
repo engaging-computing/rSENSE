@@ -1,11 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.1.1'
-
 gem 'rails', '~> 4.0'
-
-# Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'sqlite3'
 gem 'pg'
@@ -15,6 +10,7 @@ gem 'coffee-rails'
 gem 'coffee-rails-source-maps'
 gem 'uglifier'
 gem 'modernizr-rails'
+gem 'handlebars_assets'
 
 gem 'therubyracer', :platforms => :ruby
 
@@ -31,11 +27,7 @@ group :development, :test do
 end
 
 # Jquery stuff
-#gem 'less'
-#gem 'less-rails'
-#gem 'less-rails-bootstrap'
 gem 'bootstrap-colorpicker-rails'
-
 gem 'jquery-rails'
 
 # To use ActiveModel has_secure_password
@@ -73,6 +65,3 @@ gem 'yaml_db', github: 'jetthoughts/yaml_db'
 gem 'multi_json'
 
 gem 'roo'
-
-# Rails 4 migration
-#gem 'protected_attributes'
