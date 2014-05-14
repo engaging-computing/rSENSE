@@ -20,8 +20,10 @@ class SmallPageTest < ActionDispatch::IntegrationTest
 
     visit '/projects/1'
     find('#content_edit').click
+  end
 
-    sleep 8
+  test 'small page CKEDITOR' do
+    skip
 
     page.execute_script <<-SCRIPT
       CKEDITOR.instances["editor1"].setData("");
