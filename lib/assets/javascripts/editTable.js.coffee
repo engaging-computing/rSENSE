@@ -348,7 +348,7 @@ $ ->
 
           ($ tab).find("td:first").find("input").focus()
 
-        submit_form = () =>
+        submit_form = () ->
 
           strip_table(table)
 

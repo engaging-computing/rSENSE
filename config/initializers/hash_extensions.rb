@@ -5,10 +5,9 @@ class Hash
     res = self.class.new
 
     ls.each do |k|
-      if self.include? k
-        res[k] = self[k]
-        delete k
-      end
+      next unless self.include? k
+      res[k] = self[k]
+      delete k
     end
 
     res

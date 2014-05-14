@@ -36,9 +36,8 @@ $ ->
         if data.normalFields.length > 1
           @displayField = data.normalFields[1]
         else @displayField = data.normalFields[0]
-        
-        @binNumSug = 1
 
+        @binNumSug = 1
 
       # Wait for global objects to be constructed before getting bin size
       start: ->
@@ -109,7 +108,7 @@ $ ->
 
         binNumTarget = Math.pow 10, @binNumSug
 
-        tryNewSize = (size) =>
+        tryNewSize = (size) ->
           if (Math.abs (binNumTarget - (range / size))) < (Math.abs (binNumTarget - bestNum))
             bestSize = size
             bestNum  = range / size
@@ -166,7 +165,7 @@ $ ->
         options =
           showInLegend: false
           data: fakeDat
-        
+
         @chart.addSeries options, false
         ### ###
 
@@ -203,7 +202,7 @@ $ ->
               y: occurences
               total: sum
             ### --- ###
-            
+
           options =
             showInLegend: false
             color: globals.colors[groupIndex % globals.colors.length]
@@ -306,6 +305,16 @@ $ ->
         @drawYAxisControls(true)
         @drawToolControls()
         @drawSaveControls()
+
+      drawYAxisControls: (radio = true) ->
+        super(radio)
+
+        # Currently specific to histogram
+        ($ '.y_axis_input').click (e) =>
+          @displayField = Number e.target.value
+          @binSize = @defaultBinSize()
+          ($ "#binSizeInput").attr('value', @binSize)
+          @delayedUpdate()
 
     if "Histogram" in data.relVis
       globals.histogram = new Histogram 'histogram_canvas'

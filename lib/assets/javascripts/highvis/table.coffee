@@ -31,10 +31,24 @@ $ ->
 
     class window.Table extends BaseVis
       constructor: (@canvas) ->
+        @tableFields ?=
+          fIndex for f, fIndex in data.fields when fIndex isnt data.COMBINED_FIELD
 
-      # Removes nulls from the table
-      nullFormatter = (cellvalue, options, rowObject) ->
-        cellvalue = "" if isNaN(cellvalue) or cellvalue is null
+        # Set sort state to default none existed
+        @sortName ?= ''
+        @sortType ?= ''
+
+        # Set default search to empty string
+        @searchParams ?= {}
+
+      # Removes nulls from the table and colors the groupByRow
+      rowFormatter = (cellvalue, options, rowObject) ->
+        cellvalue = "" if $.type(cellvalue) is 'number' and isNaN(cellvalue) or cellvalue is null
+
+        colorIndex = data.groups.indexOf(String(cellvalue).toLowerCase()) % globals.colors.length
+        if (colorIndex isnt -1)
+          return "<font color='#{globals.colors[colorIndex]}'>#{cellvalue}<font>"
+
         cellvalue
 
       # Formats tables dates properly
@@ -83,8 +97,9 @@ $ ->
           fieldTitle(field)
 
         # Make valid id's for the colModel
-        colIds = for header in headers
-          header.replace(/\s+/g, '_').toLowerCase()
+        colIds = for header, index in headers
+          id = header.replace(/\s+/g, '_').toLowerCase()
+          if index is data.groupingFieldIndex then @groupingId = id else id
 
         # Build the data for the table
         visibleGroups = for group, groupIndex in data.groups when groupIndex in globals.groupSelection
@@ -106,6 +121,7 @@ $ ->
               name:           colId
               id:             colId
               sorttype:       'text'
+              formatter:      rowFormatter
               searchoptions:  { sopt:['cn','nc','bw','bn','ew','en','in','ni'] }
             }
           else if (data.fields[colIndex].typeID is data.types.TIME)
@@ -122,16 +138,9 @@ $ ->
               name:           colId
               id:             colId
               sorttype:       'number'
-              formatter:      nullFormatter
+              formatter:      rowFormatter
               searchoptions:  { sopt:['eq','ne','lt','le','gt','ge'] }
             }
-
-        # Set sort state to default none existed
-        @sortName ?= ''
-        @sortType ?= ''
-
-        # Set default search to empty string
-        @searchParams ?= {}
 
         # Add the nav bar
         ($ '#table_canvas').append '<div id="toolbar_bottom"></div>'
@@ -156,9 +165,13 @@ $ ->
           pager: '#toolbar_bottom'
         })
 
-        # Hide the combined dataset column
-        combinedCol = @table.jqGrid('getGridParam','colModel')[data.COMBINED_FIELD]
-        @table.hideCol(combinedCol.name)
+        # Show only the checked columns
+        for f, fIndex in data.fields when fIndex
+          col = @table.jqGrid('getGridParam','colModel')[fIndex]
+          if $.inArray(fIndex, @tableFields) is -1
+            @table.hideCol(col.name)
+          else
+            @table.showCol(col.name)
 
         ($ '#data_table').setGridWidth(($ '#' + @canvas).width())
 
@@ -226,6 +239,7 @@ $ ->
       drawControls: ->
         super()
         @drawGroupControls()
+        @drawYAxisControls()
         @drawSaveControls()
 
       serializationCleanup: ->
@@ -277,5 +291,53 @@ $ ->
 
       clip: (arr) -> arr
 
+      ###
+      Draws y axis controls
+      This includes a series of checkboxes or radio buttons for selecting
+      the active y axis field(s).
+      ###
+      drawYAxisControls: (radio = false) ->
+
+        controls = '<div id="yAxisControl" class="vis_controls">'
+
+        controls += "<h3 class='clean_shrink'><a href='#'>Visible Columns:</a></h3>"
+
+        controls += "<div class='outer_control_div'>"
+
+        # Populate choices
+        for f, fIndex in data.fields when fIndex isnt data.COMBINED_FIELD
+          controls += "<div class='inner_control_div' >"
+
+          controls += """
+                      <div class='checkbox'><label><input class='y_axis_input' type='checkbox'
+                      value='#{fIndex}' #{if (Number fIndex) in @tableFields then "checked" else ""}
+                      />#{data.fields[fIndex].fieldName}</label></div>
+                      """
+          controls += "</div>"
+
+        controls += '</div></div>'
+
+        # Write HTML
+        ($ '#controldiv').append controls
+
+        # Make y axis checkbox/radio handler
+        ($ '.y_axis_input').click (e) =>
+          index = Number e.target.value
+
+          if index in @tableFields
+            arrayRemove(@tableFields, index)
+          else
+            @tableFields.push(index)
+          @delayedUpdate()
+
+        # Set up accordion
+        globals.yAxisOpen ?= 0
+
+        ($ '#yAxisControl').accordion
+          collapsible:true
+          active:globals.yAxisOpen
+
+        ($ '#yAxisControl > h3').click ->
+          globals.yAxisOpen = (globals.yAxisOpen + 1) % 2
 
     globals.table = new Table "table_canvas"

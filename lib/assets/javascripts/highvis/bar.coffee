@@ -115,7 +115,7 @@ $ ->
               ($ j).removeAttr('selected')
             ($ '#ui-accordion-toolControl-panel-0').find('.inner_control_div').find('option').each (i,j) ->
               if ($ j).attr('value') == sorter
-                ($ j).attr('selected',true)
+                ($ j).prop('selected',true)
             if( !autoSorted )
               autoSorted = 1
               ($ '.sortField').change()
