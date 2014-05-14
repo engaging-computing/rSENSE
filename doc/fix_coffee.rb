@@ -42,11 +42,10 @@ File.open(coffee_file) do |ff|
       # outdent
 
       stops.each_index do |ii|
-        if stops[ii] == pre
-          indent = ii
-          stops = stops[0..ii]
-          break
-        end
+        next unless stops[ii] == pre
+        indent = ii
+        stops = stops[0..ii]
+        break
       end
     end
 

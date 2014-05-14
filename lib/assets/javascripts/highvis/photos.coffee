@@ -53,13 +53,13 @@ $ ->
             for pic of data.metadata[ds].photos
               tmp = data.metadata[ds].photos[pic]
               dset = data.metadata[ds]
-              do(tmp, dset) =>
+              do(tmp, dset) ->
                 figure = """<div class='p_item'>
                   <img id='pic_#{i}' src="#{tmp.tn_src}" class='caroucell'/>
                   <span class="caption">Data Set: #{dset.name}(#{dset.dataset_id})</span>
                   </div>"""
                 ($ "#polaroid").append figure
-                ($ '#pic_' + i).click =>
+                ($ '#pic_' + i).click ->
                   ($ '#polaroid').append("""
                     <div class="modal fade" id="target_img" tabindex='-1'>
                       <div class="modal-dialog">

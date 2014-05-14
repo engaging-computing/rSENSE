@@ -4,7 +4,7 @@ $ ->
   csrf_token = $('meta[name=csrf-token]').attr('content')
   csrf_param = $('meta[name=csrf-param]').attr('content')
   
-  turn_on_ck = (elem) =>
+  turn_on_ck = (elem) ->
     root = ($ elem).parents('div.content_holder')
     root.parent().css('padding',"0px")
     row_id = ($ elem).attr('row_id')
@@ -30,7 +30,7 @@ $ ->
       saveButton.show()
       cancelButton.show()
       
-      cancelButton.click =>
+      cancelButton.click ->
         root.find('#content_edit').show()
         root.parent().css('padding',"20px")
         editor.destroy()
@@ -38,7 +38,7 @@ $ ->
         saveButton.hide()
         cancelButton.hide()
       
-      saveButton.click =>
+      saveButton.click ->
         root.find('#content_edit').show()
         root.parent().css('padding',"20px")
         value = editor.getData()
@@ -56,7 +56,7 @@ $ ->
           type: "PUT"
           dataType: "json"
           data: data
-          success: =>
+          success: ->
             # Save previous value now that it has updated
             root.attr('saved-data',  editor.getData())
             saveButton.hide()
