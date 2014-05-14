@@ -27,9 +27,3 @@ $ ->
       cb = ($ ($ e.target).children()[0])
       cb.prop("checked", not cb.prop("checked"))
       ($ '#visualizations_search').submit()
-
-    # Setup isotope
-    helpers.isotope_layout('#visualizations')
-    
-    $(window).smartresize () ->
-      helpers.isotope_layout('#visualizations')
