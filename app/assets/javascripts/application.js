@@ -14,6 +14,8 @@
 //= require constants
 //= require image_path
 //= require jquery
+//= require handlebars
+//= require isense
 //= require helpers
 //= require dateParse
 //= require name_popup

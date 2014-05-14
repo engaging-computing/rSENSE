@@ -30,7 +30,8 @@ class TutorialsTest < ActionDispatch::IntegrationTest
     assert page.has_content?('Awesome Tutorial'), 'Should have ended up on tutorials show page'
 
     find('#publish_tutorial').click
-    sleep 2
+
+    assert page.has_content?('Saved.'), 'Tutorial was not saved.'
 
     visit '/tutorials'
     assert page.has_content?('Awesome Tutorial'), 'Tutorial should have been published'
