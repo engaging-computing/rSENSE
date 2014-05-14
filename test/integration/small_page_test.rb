@@ -21,7 +21,7 @@ class SmallPageTest < ActionDispatch::IntegrationTest
     visit '/projects/1'
     find('#content_edit').click
 
-    sleep 2
+    sleep 8
 
     page.execute_script <<-SCRIPT
       CKEDITOR.instances["editor1"].setData("");
