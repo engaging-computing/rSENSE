@@ -66,6 +66,9 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
+    capybara-webkit (1.1.0)
+      capybara (~> 2.0, >= 2.0.2)
+      json
     childprocess (0.5.3)
       ffi (~> 1.0, >= 1.0.11)
     coffee-rails (4.0.1)
@@ -90,6 +93,11 @@ GEM
     ffi (1.9.3)
     font-awesome-rails (4.0.3.2)
       railties (>= 3.2, < 5.0)
+    handlebars_assets (0.15)
+      execjs (>= 1.2.9)
+      multi_json
+      sprockets (>= 2.0.3)
+      tilt
     hike (1.2.3)
     httparty (0.13.1)
       json (~> 1.8)
@@ -211,6 +219,7 @@ DEPENDENCIES
   bcrypt-ruby
   bootstrap-colorpicker-rails
   capybara
+  capybara-webkit
   ckeditor!
   coffee-rails
   coffee-rails-source-maps
@@ -218,6 +227,7 @@ DEPENDENCIES
   coffeelint
   execjs
   font-awesome-rails
+  handlebars_assets
   httparty
   jquery-rails
   jquery-ui-rails
