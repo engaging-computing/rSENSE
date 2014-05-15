@@ -37,7 +37,7 @@
 //= require jcarousellite.min.js
 //= require titlebar.js.coffee
 //= require mobile_slider
-//= require content_edit_pane.js.coffee
+//  require content_edit_pane.js.coffee
 //
 // Visualization stuff follows
 //
@@ -70,7 +70,8 @@
 //= require highvis/photos
 //= require highvis/runtime
 //
-//= require ckeditor/override
-//= require ckeditor/init
+//  require ckeditor/override
+//  require ckeditor/init
+//= require nicEdit
 //
 //= require_tree .

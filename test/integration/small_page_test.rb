@@ -19,6 +19,7 @@ class SmallPageTest < ActionDispatch::IntegrationTest
     assert page.has_no_content?('Second Paragraph'), 'Second paragraph should not be shown.'
 
     visit '/projects/1'
+
     find('#content_edit').click
   end
 
