@@ -39,8 +39,8 @@ module ApplicationHelper
     proj && session[:contrib_access].to_i == proj.id
   end
 
-  def key_name(proj,key)
-    first_key = ContribKey.where('project_id=? AND key=?',proj,key).first
+  def key_name(proj, key)
+    first_key = ContribKey.where('project_id=? AND key=?', proj, key).first
     if first_key.nil?
       nil
     else
@@ -48,7 +48,6 @@ module ApplicationHelper
     end
   end
 
-  
   # Begin permissions stuff
   def can_edit?(obj)
     return false if @cur_user.nil?
