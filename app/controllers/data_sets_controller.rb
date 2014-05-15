@@ -176,7 +176,7 @@ class DataSetsController < ApplicationController
         d.project_id = project.id
         d.data = data
         unless can_edit? @project
-          d.key = key_name(project.id,params[:contribution_key])
+          d.key = key_name(project.id, params[:contribution_key])
         end
       end
 
@@ -232,7 +232,7 @@ class DataSetsController < ApplicationController
         d.project_id = project.id
         d.data = data
         unless can_edit? @project
-          d.key = key_name(project.id,params[:contribution_key])
+          d.key = key_name(project.id, params[:contribution_key])
         end
       end
 
