@@ -7,8 +7,9 @@ require 'simplecov_rsense'
 SimpleCov.start 'rsense'
 
 require 'capybara/rails'
+Capybara.javascript_driver = :none
 # Capybara.javascript_driver = :webkit
-Capybara.javascript_driver = :selenium
+# Capybara.javascript_driver = :selenium
 
 require 'selenium-webdriver'
 
@@ -75,16 +76,28 @@ module CapyHelper
       # don't care
     end
 
-    Capybara.reset_sessions!
+    begin
+      Capybara.reset_sessions!
+    rescue Exception
+      # don't care
+    end
+  end
+
+  def wait_for_css(selector)
+    unless page.has_css?("#{selector}")
+      fail Exception.new("No such selector #{selector}")
+    end
   end
 
   def wait_for_id(id)
-    wait = Selenium::WebDriver::Wait.new(timeout: 20)
-    wait.until { page.driver.browser.find_element(id: id).displayed? }
+    wait_for_css("##{id}")
+    # wait = Selenium::WebDriver::Wait.new(timeout: 20)
+    # wait.until { page.driver.browser.find_element(id: id).displayed? }
   end
 
   def wait_for_class(cl)
-    wait = Selenium::WebDriver::Wait.new(timeout: 20)
-    wait.until { page.driver.browser.find_element(class: cl).displayed? }
+    wait_for_css(".#{cl}")
+    # wait = Selenium::WebDriver::Wait.new(timeout: 20)
+    # wait.until { page.driver.browser.find_element(class: cl).displayed? }
   end
 end
