@@ -26,7 +26,7 @@
 //= require object_hider
 //= require collapse_link_flipper
 //= require validator
-//= require isotope/jquery.isotope.js
+//  require isotope/jquery.isotope.js
 //= require jquery.form.js
 //= require jquery.qrcode.min.js
 //= require bootstrap-datetimepicker.js
