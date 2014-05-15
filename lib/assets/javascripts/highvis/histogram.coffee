@@ -57,11 +57,13 @@ $ ->
             enabled: false
           title:
             text: ""
+          x_axis_text = ($ '.highcharts-xaxis-title').find('tspan').attr('text')
+          console.log(x_axis_text)
           tooltip:
             formatter: ->
               str  = "<table>"
-              str += "<tr><td>Bin Location:</td><td>#{@x}<td></tr>"
-              str += "<tr><td>Bin Total:</td><td>#{@total}<td></tr>"
+              str += "<tr><td>TEST:</td><td>#{@x}<td></tr>"
+              str += "<tr><td>Count:</td><td>#{@total}<td></tr>"
               if @y isnt 0
                 str += "<tr><td><div style='color:#{@series.color};'> #{@series.name}:</div></td>"
                 str += "<td>#{@y}</td></tr>"
