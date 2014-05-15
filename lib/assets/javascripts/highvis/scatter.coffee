@@ -52,7 +52,6 @@ $ ->
 
         # Do the cool existential operator thing
         @savedRegressions ?= []
-
         @xBounds =
           dataMax: undefined
           dataMin: undefined
@@ -77,7 +76,7 @@ $ ->
 
       storeYBounds: (bounds) ->
         @yBounds = bounds
-
+        
       ###
       Build up the chart options specific to scatter chart
       The only complex thing here is the html-formatted tooltip.
@@ -107,6 +106,11 @@ $ ->
                     ele = ($ @.graphic.element)
                     root = ele.parent()
                     root.append ele
+                    
+          group_by = ''
+          ($ '#groupSelector').find('option').each (i,j) ->
+            if ($ j).is(':selected')
+              group_by = ($ j).text()
           title:
             text: ""
           tooltip:
@@ -118,7 +122,8 @@ $ ->
                   str  = "<div style='width:100%;text-align:center;color:#{@series.color};'> "
                   str += "#{@series.name.group}</div><br>"
                   str += "<table>"
-
+                  str += "<tr><td>Group by: </td>" + "\t" + "<td>#{group_by} </td> </tr>"
+                  
                   for field, fieldIndex in data.fields when @point.datapoint[fieldIndex] isnt null
                     dat = if (Number field.typeID) is data.types.TIME
                       (globals.dateFormatter @point.datapoint[fieldIndex])
@@ -214,7 +219,11 @@ $ ->
       update: () ->
         # Remove all series and draw legend
         super()
-
+        group_by = ''
+        ($ '#groupSelector').find('option').each (i,j) ->
+          if ($ j).is(':selected')
+            group_by = ($ j).text()
+        
         # Set axis title
         title =
           text: fieldTitle data.fields[@xAxis]
@@ -252,7 +261,7 @@ $ ->
         # Draw series
         for fieldIndex, symbolIndex in data.normalFields when fieldIndex in globals.fieldSelection
           for group, groupIndex in data.groups when groupIndex in globals.groupSelection
-            dat = if not @fullDetail
+            dat = if not @fullDetail             
               sel = data.xySelector(@xAxis, fieldIndex, groupIndex)
               globals.dataReduce sel, @xBounds, @yBounds, @xGridSize, @yGridSize, @MAX_SERIES_SIZE
             else
@@ -265,7 +274,6 @@ $ ->
               name:
                 group: data.groups[groupIndex]
                 field: data.fields[fieldIndex].fieldName
-
             switch
               when @mode is @SYMBOLS_LINES_MODE
                 options.marker =
@@ -415,7 +423,8 @@ $ ->
         ($ '.logY_box').click (e) =>
           globals.logY = (globals.logY + 1) % 2
           @start()
-
+        ($ '#groupSelector').change (e) =>
+          @start()
         ($ '#elaspedTimeButton').button()
         ($ '#elaspedTimeButton').click (e) ->
           globals.generateElapsedTimeDialog()
@@ -856,3 +865,5 @@ $ ->
       globals.scatter = new Scatter "scatter_canvas"
     else
       globals.scatter = new DisabledVis "scatter_canvas"
+    
+      
