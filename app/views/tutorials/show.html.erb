@@ -3,15 +3,34 @@
 </div>
 
 <% if is_admin? %>
+
+  <script data-template-name="pub-status-none" type="text/x-handlebars">
+    &nbsp;
+  </script>
+  <script data-template-name="pub-status-wait" type="text/x-handlebars">
+    <p>Saving...</p>
+  </script>
+  <script data-template-name="pub-status-saved" type="text/x-handlebars">
+    <p>Saved.</p>
+  </script>
+  <script data-template-name="pub-status-error" type="text/x-handlebars">
+    <p>Error saving: {{ message }}</p>
+  </script>
+
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-3">
       <div class="checkbox">
         <label>
-          <input type="checkbox" id="publish_tutorial" <%= @tutorial.hidden ?  "" : "checked"%>> Publish
+          <input type="checkbox" id="publish_tutorial" 
+            <%= @tutorial.hidden ?  "" : "checked"%>> Publish
         </label>
       </div>
     </div>
+    <div class="col-md-3" id="pub-status">
+      &nbsp;
+    </div>
   </div>
+
 <% end %>
 
 <div class="row">

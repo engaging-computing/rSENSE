@@ -4,7 +4,7 @@ class TutorialsTest < ActionDispatch::IntegrationTest
   include CapyHelper
 
   setup do
-    Capybara.current_driver = Capybara.javascript_driver
+    Capybara.current_driver = :webkit
     Capybara.default_wait_time = 15
   end
 
@@ -17,8 +17,8 @@ class TutorialsTest < ActionDispatch::IntegrationTest
     click_on 'Tutorials'
     click_on 'See All Tutorials'
     assert page.has_no_content?('Create Tutorial'), 'Non-Admin should not be able to create a tutorial'
-
     logout
+
     login('nixon@whitehouse.gov', '12345')
     visit '/tutorials'
     assert page.has_content?('Create Tutorial'), 'Admin should be able to create a tutorial'
@@ -30,13 +30,18 @@ class TutorialsTest < ActionDispatch::IntegrationTest
     assert page.has_content?('Awesome Tutorial'), 'Should have ended up on tutorials show page'
 
     find('#publish_tutorial').click
+
+    assert page.has_content?('Saved.'), 'Tutorial was not saved.'
+
     visit '/tutorials'
     assert page.has_content?('Awesome Tutorial'), 'Tutorial should have been published'
     click_on 'Awesome Tutorial'
     assert page.has_content?('Publish'), 'Should have ended up on tutorials show page'
     find('#publish_tutorial').click
+
+    assert page.has_content?('Saved.'), 'Tutorial was not saved.'
+
     visit '/tutorials'
     assert page.has_no_content?('Awesome Tutorial'), 'Tutorial should have been unpublished'
-
   end
 end

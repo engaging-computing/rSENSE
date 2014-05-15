@@ -1,15 +1,36 @@
 <div class="row">
   <div class="col-md-8 news_title"><%= news_edit_menu_helper false%></div>
 </div>
-<div class="row">
-  <% if is_admin? %>
-    <div class="col-md-12">
+
+<% if is_admin? %>
+
+  <script data-template-name="pub-status-none" type="text/x-handlebars">
+    &nbsp;
+  </script>
+  <script data-template-name="pub-status-wait" type="text/x-handlebars">
+    <p>Saving...</p>
+  </script>
+  <script data-template-name="pub-status-saved" type="text/x-handlebars">
+    <p>Saved.</p>
+  </script>
+  <script data-template-name="pub-status-error" type="text/x-handlebars">
+    <p>Error saving: {{ message }}</p>
+  </script>
+
+  <div class="row">
+    <div class="col-md-3">
       <label for="hide_news_checkbox"> Publish
-        <input id="hide_news_checkbox" type="checkbox" href='' <%= @news.hidden ? "" : "checked"%>/>
+        <input id="hide_news_checkbox" type="checkbox" href='' 
+          <%= @news.hidden ? "" : "checked"%>/>
       </label>
     </div>
-  <%end%>
-</div>  
+    <div class="col-md-3" id="pub-status">
+      &nbsp;
+    </div>
+  </div>  
+
+<%end%>
+
 <div class="row">
   <%=render layout: "shared/box", locals: {title: 'Content', width: '12', unique_id: 'content', should_hide: false} do %>
     <%= news_content_helper (can_edit? @news) %>
