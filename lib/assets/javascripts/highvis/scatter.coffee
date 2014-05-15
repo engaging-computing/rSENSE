@@ -219,12 +219,6 @@ $ ->
       update: () ->
         # Remove all series and draw legend
         super()
-        group_by = ''
-        ($ '#groupSelector').find('option').each (i,j) ->
-          if ($ j).is(':selected')
-            group_by = ($ j).text()
-        
-        # Set axis title
         title =
           text: fieldTitle data.fields[@xAxis]
         @chart.xAxis[0].setTitle title, false
@@ -413,6 +407,7 @@ $ ->
 
         ($ '.tooltip_box').click (e) =>
           @advancedTooltips = (@advancedTooltips + 1) % 2
+          @start()
           true
 
         ($ '.full_detail_box').click (e) =>
