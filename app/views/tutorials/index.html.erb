@@ -1,51 +1,3 @@
-<div class="row">
-  <div class="col-lg-12">
-    <div class="row padded-row">
-      <%=form_tag tutorials_path, method: 'get', id: 'tutorials_search' do%>
-            
-        <div class="isotope-top">
-          <div class="col-md-12">
-            <h1><i class="fa fa-info-circle"></i> Tutorials</h1>
-          </div>
-          
-          <div class='row'>
-            <div class="padded-col col-sm-10" title="Enter keyword(s)to search for a tutorial">
-              <%= text_field_tag :search, @params[:search], class: "form-control" %>
-            </div>
-            <div class="padded-col col-sm-2">
-              <%= submit_tag "Search", name: nil, class:'btn btn-default'%>
-            </div>
-          </div>
-          
-          <div class='row'>
-            <div class="padded-col col-md-3 col-sm-6" title="Sort by">
-            
-              <%= select_tag(:sort, 
-                options_for_select([["Sort by Modified", "updated_at"],
-                                    ["Sort by Created", "created_at"]], @params["sort"]),
-                class: "tutorials_sort_select form-control") 
-              %>
-            </div>
-            
-            <div class="padded-col col-md-3 col-sm-6" title="Sort order">
-            
-              <%= select_tag(:order, 
-                options_for_select([["Descending", "DESC"],
-                                    ["Ascending", "ASC"]], @params["order"]),
-                class: "tutorials_order_select form-control") 
-              %>
-            </div>
-            
-            
-          </div>
-          
-          <div class='clear'></div>
-          
-        </div>
-      <%end%>
-    </div>
-  </div>
-</div>
 <% if is_admin? %>
   <div class="row">
     <div class='col-lg-12 center'>
@@ -56,34 +8,33 @@
   </div>
 <% end %>
 
-<div class="row">
-  <div id="tutorials" class="col-xs-12 isotope_container" >
-    <div class="isotope_pane">
-    
-      <% @tutorials.each do |tut| %>
-        <div class='item clickable_item'>
-          <% if tut.featured_media_id != nil %>
-            <div class='item_image' style='background-image:url(<%=tut.media_objects.find(tut.featured_media_id).src%>)'></div>
-          <% end %>
-          
-          <div class="item_desc">
-            <div class="item_title">
-              <%= link_to tut.name, tut %> 
-              <% if tut.featured %> 
-                <span > (featured)</span>
-              <% end %>
+<% @tutorials.each do |tut| %>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="item wide-item">
+        <% left_image = image_path('missing_tutorial.jpg') %>
+        <% if tut.featured_media_id != nil %>
+          <% left_image = tut.media_objects.find(tut.featured_media_id).src %>
+        <% end %>
+        
+        <div class="news_picture_image">
+          <a href="<%= tutorial_path(tut) %>">
+            <div class="news_featured_image_2" style="background-image:url('<%= left_image %>')">
             </div>
-            
-            by <a href='<%=user_url(tut.owner)%>'> <%=tut.owner.name%> </a><br/>
-            on <%=tut.created_at.strftime("%B %d, %Y")%> <br/>
-            
-          </div>
+          </a>
         </div>
-      <% end %>
-    </div>
+        
+        <div class="news_with_image">
+          <span class="news_page_title"><%= link_to tut.name, tut %></span><br/>
+          <span style="font-size:0.8em">
+            Written on <%= tut.created_at.strftime("%B %d, %Y")%>
+            by <%= tut.owner.name %>.
+          </span><br/><br/>
+          <%= link_to "Read More", tut %>
+        </div>
+      </div>      
+    </div>  
   </div>
-</div>
+<% end %>  
 
-<div class='text-center'>
-<%= will_paginate @tutorials, renderer: BootstrapPagination::Rails, inner_window: 1, outer_window: 0, previous_label: "<<", next_label: ">>" %>
-</div>
+
