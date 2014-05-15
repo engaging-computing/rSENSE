@@ -866,4 +866,6 @@ $ ->
     else
       globals.scatter = new DisabledVis "scatter_canvas"
     
+    ($ '#ui-accordion-yAxisControl-panel-0').find('.inner_control_div').find('.y_axis_input').each (i,j) ->
+      console.log(($ j).text())
       
