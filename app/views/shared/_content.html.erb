@@ -1,0 +1,22 @@
+<div>
+  <% if can_edit?(obj) %>
+    <%= form_for obj do |ff| %>
+      <div>
+        <% if obj.class == User %>
+          <%= ff.text_area :bio, id: 'content-area', class: 'rich-text' %>
+        <% else %>
+          <%= ff.text_area :content, id: 'content-area', class: 'rich-text' %>
+        <% end %>
+      </div>
+      <p style="text-align: right; margin-top: 1em;">
+        <button type="submit" class="btn btn-primary">Save</button>
+      </p>
+    <% end %>
+  <% else %>
+    <% if obj.class == User %>
+      <%= raw obj.bio %>
+    <% else %>
+      <%= raw obj.content %>
+    <% end %>
+  <% end %>
+</div>

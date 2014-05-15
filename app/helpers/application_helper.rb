@@ -1,4 +1,8 @@
 module ApplicationHelper
+  def content_helper(obj)
+    render 'shared/content', obj: obj
+  end
+
   def get_field_name(field)
     if field == 1
       'Timestamp'
