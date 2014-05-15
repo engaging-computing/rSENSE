@@ -51,7 +51,16 @@ $ ->
         super()
 
         self = this
-
+        group_by = ''
+        console.log(($ '#groupSelector').length)
+        console.log(($ '#groupSelector'))
+        ($ '#groupSelector').find('option').each (i,j) ->
+          console.log(($ j).text())
+          if ($ j).is(':selected')
+            group_by = ($ j).text()
+        if group_by is ''
+          group_by = "Dataset Name (id)"
+        console.log(group_by)
         $.extend true, @chartOptions,
           title:
             text: ''
@@ -64,7 +73,7 @@ $ ->
                   str  = "<div style='width:100%;text-align:center;color:#{@series.color};'>"
                   str += "#{@series.name.group}</div><br>"
                   str += "<table>"
-
+                  str += "<tr><td>Group by: </td>" + "\t" + "<td>#{group_by} </td> </tr>"
                   for field, fieldIndex in data.fields when @point.datapoint[fieldIndex] isnt null
                     dat = if (Number field.typeID) is data.types.TIME
                       (globals.dateFormatter @point.datapoint[fieldIndex])
