@@ -46,19 +46,18 @@
 </div>
 
 <div class="row">
-  <div id="visualizations" class="col-xs-12 isotope_container" >
+  <div id="visualizations" class="isotope_container" >
     <div class="isotope_pane">
     
       <% @visualizations.each do |vi| %>
-        <div class='item clickable_item'>
-          
-          <a href='<%=visualization_path vi%>'>
-            <%= image_tag "blank.png", {class: "area_link", alt: ""} %>
-          </a>
-          
+        <div class="col-sm-3">
+        <div class='item item-block'>
+          <% thumb = image_path('olde_map.jpg') %>
           <% if vi.thumb_id != nil %>
-            <div class='item_image' style='background-image:url(<%=vi.media_objects.find(vi.thumb_id).src%>)'></div>
+            <% thumb = vi.tn_src unless vi.tn_src.empty? %>
           <% end %>
+          <div class='item_image' style='background-image:url(<%= thumb %>)'>
+          </div>
           
           <div class="item_desc">
             <div class="item_title">
@@ -72,6 +71,7 @@
             on <%=vi.created_at.strftime("%B %d, %Y")%> <br/>
             
           </div>
+        </div>
         </div>
       <% end %>
     </div>

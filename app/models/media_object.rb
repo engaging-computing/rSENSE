@@ -49,13 +49,14 @@ class MediaObject < ActiveRecord::Base
   end
 
   def src
-    return '' if store_key.nil?
+    return '' if store_key.nil? || file.nil?
     uupath = store_uupath(store_key)
     ename  = URI.escape(file)
     "#{uupath}/#{ename}"
   end
 
   def tn_src
+    return '' if store_key.nil? || file.nil?
     uupath = store_uupath(store_key)
     ename  = URI.escape(file)
     "#{uupath}/tn_#{ename}"
