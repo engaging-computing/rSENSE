@@ -40,6 +40,7 @@ $ ->
         @binNumSug = 1
 
       # Wait for global objects to be constructed before getting bin size
+      @updatedTooltips = false
       start: ->
         @binSize ?= @defaultBinSize()
         super()
@@ -57,12 +58,11 @@ $ ->
             enabled: false
           title:
             text: ""
-          x_axis_text = ($ '.highcharts-xaxis-title').find('tspan').attr('text')
-          console.log(x_axis_text)
+          tooltipXAxis = @displayField
           tooltip:
             formatter: ->
               str  = "<table>"
-              str += "<tr><td>TEST:</td><td>#{@x}<td></tr>"
+              str += "<tr><td>#{fieldTitle data.fields[tooltipXAxis]}:</td><td>#{@x}<td></tr>"
               str += "<tr><td>Count:</td><td>#{@total}<td></tr>"
               if @y isnt 0
                 str += "<tr><td><div style='color:#{@series.color};'> #{@series.name}:</div></td>"
@@ -134,12 +134,15 @@ $ ->
         bestSize
 
       update: ->
+        if !@updatedTooltips
+          @updatedTooltips = true
+          @start()
+        @updatedTooltips = false
         super()
-
         # Name Axis
         @chart.yAxis[0].setTitle {text: "Quantity"}, false
         @chart.xAxis[0].setTitle {text: fieldTitle data.fields[@displayField]}, false
-
+        tooltipXAxis = @displayField
         if globals.groupSelection.length is 0
           return
 
