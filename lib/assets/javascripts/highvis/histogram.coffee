@@ -63,7 +63,7 @@ $ ->
             formatter: ->
               str  = "<table>"
               str += "<tr><td>#{fieldTitle data.fields[tooltipXAxis]}:</td><td>#{@x}<td></tr>"
-              str += "<tr><td>Count:</td><td>#{@total}<td></tr>"
+              str += "<tr><td># Occurrences:</td><td>#{@total}<td></tr>"
               if @y isnt 0
                 str += "<tr><td><div style='color:#{@series.color};'> #{@series.name}:</div></td>"
                 str += "<td>#{@y}</td></tr>"
