@@ -45,6 +45,10 @@ gem 'execjs'
 # Font-awesome
 gem 'font-awesome-rails'
 
+# Rich Editor
+#gem 'simple_form'
+gem 'summernote-rails'
+
 # Include Will Paginate
 gem 'will_paginate'
 gem 'will_paginate-bootstrap'
