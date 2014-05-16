@@ -176,63 +176,14 @@ class DataSetsController < ApplicationController
         d.project_id = project.id
         d.data = data
         unless can_edit? @project
-          logger.info key_name project.id, params[:contribution_key]
           if session[:key]
+            logger.error('Thinks it has a key and is wrong')
             d.key = session[:key]
-          else 
+          else
+            logger.error('In here looking up keyname')
             d.key = key_name(project.id, params[:contribution_key])
           end
-                                
-          #project not locked and @cur_user.try(:id)
-          #have session[key]
-          #dont have session[key]
-          
-          
-          
-        #unless owner
-        #unless can_edit? @project
-          #logger.info 'Cannot edit project!'
-          #logger.info 'Session[:key] is:'
-          #logger.info session[:key]
-          #logger.info 'Params[:contribution_key]'
-          #logger.info params[:contribution_key]
-          #if not locked and logged in
-          #if (!project.lock?) and d.user_id == @cur_user.try(:id)
-            #logger.info '#if not locked and logged in'
-            #d.key = nil
-          #if not locked and not logged in
-          #els if !project.lock? and d.user_id != @cur_user.try(:id)
-            #logger.info '#if not locked and not logged in'
-            #if !session[:key].nil?
-              #logger.info 'session[:key] not nil'
-              #logger.info session[:key]
-              #d.key = session[:key]
-            #els if !key_name( project.id, params[:contribution_key] ).nil?
-              #logger.info 'params[:contribution_key] is not nil'
-              #logger.info 'params[:contribution_key]'
-              #d.key = key_name( project.id, params[:contribution_key] )
-            #else 
-              #logger.info 'project isnt locked, but no key'
-              #d.key = nil
-            #end inner else if
-            #end 
-          #els if project.lock?
-            #logger.info 'Project locked!'
-            #unless session[:key].nil?
-              #logger.info 'Setting d.key := session[:key]'
-              #d.key = session[:key]
-            #els if !key_name( project.id, params[:contribution_key]).nil?
-              #logger.info 'Setting d.key := key_name project.id, params[:contribution_key]'
-              #d.key = key_name( project.id, params[:contribution_key] )
-            #else
-              #'Nothing happened'
-              #d.key = nil
-            #end
-          #end
-        #end unless can_edit?
         end
-      
-      #endif
       end
 
       respond_to do |format|
