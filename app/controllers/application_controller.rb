@@ -71,6 +71,24 @@ class ApplicationController < ActionController::Base
         end
       end
 
+    elsif (params.key? :contribution_key) && (['jsonDataUpload', 'saveMedia'].include? params[:action]) &&
+        (params[:type] == 'data_set')
+      data_set = DataSet.find(params[:id])
+      project = Project.find_by_id(data_set.project_id)
+      key = project.contrib_keys.find_by_key(params[:contribution_key])
+      if project && !key.nil? && data_set.key == key.name
+        if params.key? :contributor_name
+          @cur_user = User.find_by_id(project.owner.id)
+        else
+          respond_to do |format|
+            format.json { render json: { msg: 'Missing contributor name' }, status: :unprocessable_entity }
+          end
+        end
+      else
+        respond_to do |format|
+          format.json { render json: { msg: 'Contribution key not valid' }, status: :unauthorized }
+        end
+      end
     # The API call came with a contribution key and they are trying to access a project
     elsif (params.key? :contribution_key) && (['jsonDataUpload', 'saveMedia'].include? params[:action])
       project = Project.find_by_id(params[:id] || params[:pid])
