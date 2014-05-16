@@ -11,8 +11,8 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
   teardown do
     finish
   end
-  
-  test "website_and_API" do
+
+  test 'website_and_API' do
     login('kcarcia@cs.uml.edu', '12345')
     visit '/'
     click_on 'Projects'
@@ -47,7 +47,7 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     find('#key').set('test2')
     click_on 'Submit Key'
     click_on 'Manual Entry'
-    list = page.all( :css, 'th')
+    list = page.all(:css, 'th')
     field_id =  list[1]['data-field-id']
     find('#data_set_name').set('Data1')
     find('#contrib_name').set('Jake')
@@ -69,30 +69,29 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     assert page.has_content? 'Visualizations'
     click_on 'Contributor Key Test Project'
     assert page.has_content? 'Data Sets'
-    assert page.has_content? 'Contribute Data'    
-    temp = page.all( :css, '.key')
+    assert page.has_content? 'Contribute Data'
+    temp = page.all(:css, '.key')
     assert_equal temp[0][:title], 'test1'
     assert_equal temp[1][:title], 'test2'
-    assert_not_equal( temp[0].find('a').text , temp[1].find('a').text )
+    assert_not_equal(temp[0].find('a').text , temp[1].find('a').text)
     visit '/contrib_keys/clear'
-    id = page.all( :css, '.item_title')[0].find('a')[:href].split('/').last
+    id = page.all(:css, '.item_title')[0].find('a')[:href].split('/').last
     post "/api/v1/projects/#{id}/jsonDataUpload",
 
           title: 'Anonymous Data',
           contribution_key: 'test1',
           contributor_name: 'Jake',
           data:
-            {
+          {
             "#{field_id}" => [5]
-            }
+          }
 
     assert_response :success
     visit "/projects/#{id}"
     assert page.has_content? 'Contributor Key Test Project'
     assert page.has_no_css? '.gravatar'
-    keys = page.all( :css, '.key' )
+    keys = page.all(:css, '.key')
     assert_equal keys[0][:title], 'test1'
     assert_equal keys[0].find('a').text, 'B'
-
-  end  
+  end
 end
