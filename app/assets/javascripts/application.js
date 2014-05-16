@@ -32,12 +32,11 @@
 //= require jquery.form.js
 //= require jquery.qrcode.min.js
 //= require bootstrap-datetimepicker.js
-//= require editTable
 //= require media_objects_view
-//= require jcarousellite.min.js
+//  require jcarousellite.min.js
 //= require titlebar.js.coffee
-//= require mobile_slider
-//= require content_edit_pane.js.coffee
+//  require mobile_slider
+//  require content_edit_pane.js.coffee
 //
 // Visualization stuff follows
 //

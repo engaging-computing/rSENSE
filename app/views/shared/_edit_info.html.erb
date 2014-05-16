@@ -7,11 +7,12 @@
       <% else %>
         <%= value %>
       <% end %> 
+  
+      <%if can_edit %>
+        <span class="info_edit_link" href=<%="/#{type.pluralize}/#{row_id}"%>><i style="font-size:0.8em" class="fa fa-edit"  title="Click to edit <%=field%>" ></i></span>
+      <%end%>
     </div>
   
-    <%if can_edit %>
-        <span class="info_edit_link" href=<%="/#{type.pluralize}/#{row_id}"%>><i style="font-size:0.8em" class="fa fa-edit"  title="Click to edit <%=field%>" ></i></span>
-    <%end%>
-  </div>
+ </div>
 
 </span>
