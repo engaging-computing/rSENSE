@@ -55,7 +55,9 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     click_on 'Save'
     assert page.has_content? 'Visualizations'
     click_on 'Contributor Key Test Project'
-    puts page.body
+    visit '/'
+    visit '/projects'
+    click_on 'Contributor Key Test Project'
     assert page.has_css?('.key')
     visit '/contrib_keys/clear'
     click_on 'Projects'
@@ -68,6 +70,7 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     find('.validate_number').set('5')
     click_on 'Save'
     assert page.has_content? 'Visualizations'
+    visit '/projects'
     click_on 'Contributor Key Test Project'
     assert page.has_content? 'Data Sets'
     assert page.has_content? 'Contribute Data'
