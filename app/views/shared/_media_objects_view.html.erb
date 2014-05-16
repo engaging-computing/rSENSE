@@ -8,7 +8,7 @@
         <th style="max-width:60%">Name</th>
         <th style="max-width:10%"> </th>
         <% if can_edit?( @project ) %> 
-          <th class="featured-title"">Featured Image</th>
+          <th class="featured-title">Featured Image</th>
         <% end %>
         <% if ["Project","News","Tutorial"].include? object.class%><th style="max-width:10%">Display</th><%end%>
       </tr>
@@ -52,7 +52,9 @@
   <% if can_edit? object%>
     <div class="upload_media">
       <%= form_tag({controller: :media_objects ,action: :saveMedia, keys: "#{type}/#{object.id}"}, multipart: true) do %>
-        <div class="center"><button class='btn btn-success center' id="filechooser" style="margin-top:15px">Add File</button></div>
+        <div class="center">
+          <button class='btn btn-success center' id="filechooser" style="margin-top:15px">Add File</button>
+        </div>
         <input type="file" name="upload" id="upload" style="display:none;"/>
         <input name="non_wys" type="hidden" value="<%= request.url %>"/>
       <% end %>
