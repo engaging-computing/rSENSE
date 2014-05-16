@@ -91,8 +91,6 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     visit "/projects/#{id}"
     assert page.has_content? 'Contributor Key Test Project'
     assert page.has_no_css? '.gravatar'
-    keys = page.all(:css, '.key')
-    assert_equal keys[0][:title], 'test1'
-    assert_equal keys[0].find('a').text, 'B'
+    
   end
 end
