@@ -90,6 +90,6 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     assert_response :success
     visit "/projects/#{id}"
     assert page.has_content? 'Contributor Key Test Project'
-    assert page.has_no_css? '.gravatar'
+    assert page.has_no_css? '.gravatar' 
   end
 end
