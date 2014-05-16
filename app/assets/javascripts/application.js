@@ -14,6 +14,8 @@
 //= require constants
 //= require image_path
 //= require jquery
+//= require handlebars
+//= require isense
 //= require helpers
 //= require dateParse
 //= require name_popup
@@ -26,7 +28,7 @@
 //= require object_hider
 //= require collapse_link_flipper
 //= require validator
-//= require isotope/jquery.isotope.js
+//  require isotope/jquery.isotope.js
 //= require jquery.form.js
 //= require jquery.qrcode.min.js
 //= require bootstrap-datetimepicker.js
@@ -64,7 +66,7 @@
 //= require highvis/bar
 //= require highvis/table
 //= require highvis/map
-//          highvis/motion
+//= require highvis/summary
 //= require highvis/photos
 //= require highvis/runtime
 //

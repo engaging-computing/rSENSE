@@ -36,11 +36,11 @@ $ ->
         if data.normalFields.length > 1
           @displayField = data.normalFields[1]
         else @displayField = data.normalFields[0]
-        
+
         @binNumSug = 1
 
-
       # Wait for global objects to be constructed before getting bin size
+      @updatedTooltips = false
       start: ->
         @binSize ?= @defaultBinSize()
         super()
@@ -58,11 +58,12 @@ $ ->
             enabled: false
           title:
             text: ""
+          tooltipXAxis = @displayField
           tooltip:
             formatter: ->
               str  = "<table>"
-              str += "<tr><td>Bin Location:</td><td>#{@x}<td></tr>"
-              str += "<tr><td>Bin Total:</td><td>#{@total}<td></tr>"
+              str += "<tr><td>#{fieldTitle data.fields[tooltipXAxis]}:</td><td>#{@x}<td></tr>"
+              str += "<tr><td># Occurrences:</td><td>#{@total}<td></tr>"
               if @y isnt 0
                 str += "<tr><td><div style='color:#{@series.color};'> #{@series.name}:</div></td>"
                 str += "<td>#{@y}</td></tr>"
@@ -109,7 +110,7 @@ $ ->
 
         binNumTarget = Math.pow 10, @binNumSug
 
-        tryNewSize = (size) =>
+        tryNewSize = (size) ->
           if (Math.abs (binNumTarget - (range / size))) < (Math.abs (binNumTarget - bestNum))
             bestSize = size
             bestNum  = range / size
@@ -133,12 +134,15 @@ $ ->
         bestSize
 
       update: ->
+        if !@updatedTooltips
+          @updatedTooltips = true
+          @start()
+        @updatedTooltips = false
         super()
-
         # Name Axis
         @chart.yAxis[0].setTitle {text: "Quantity"}, false
         @chart.xAxis[0].setTitle {text: fieldTitle data.fields[@displayField]}, false
-
+        tooltipXAxis = @displayField
         if globals.groupSelection.length is 0
           return
 
@@ -166,7 +170,7 @@ $ ->
         options =
           showInLegend: false
           data: fakeDat
-        
+
         @chart.addSeries options, false
         ### ###
 
@@ -203,7 +207,7 @@ $ ->
               y: occurences
               total: sum
             ### --- ###
-            
+
           options =
             showInLegend: false
             color: globals.colors[groupIndex % globals.colors.length]
@@ -306,6 +310,16 @@ $ ->
         @drawYAxisControls(true)
         @drawToolControls()
         @drawSaveControls()
+
+      drawYAxisControls: (radio = true) ->
+        super(radio)
+
+        # Currently specific to histogram
+        ($ '.y_axis_input').click (e) =>
+          @displayField = Number e.target.value
+          @binSize = @defaultBinSize()
+          ($ "#binSizeInput").attr('value', @binSize)
+          @delayedUpdate()
 
     if "Histogram" in data.relVis
       globals.histogram = new Histogram 'histogram_canvas'
