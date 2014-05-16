@@ -18,7 +18,7 @@ class UsersTest < ActionDispatch::IntegrationTest
     visit '/projects/1'
     click_on 'Like'
 
-    assert find(".like_display").has_content?("1"), "Like updated"
+    assert find('.like_display').has_content?('1'), 'Like updated'
 
     @nixon = users(:nixon)
 
