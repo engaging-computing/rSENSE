@@ -1,4 +1,5 @@
 require 'test_helper'
+
 class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
   include CapyHelper
 
@@ -11,27 +12,13 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     finish
   end
   
-  test "setup" do
+  test "website_and_API" do
     login('kcarcia@cs.uml.edu', '12345')
     visit '/'
     click_on 'Projects'
     click_on 'Create Project'
     find('#project_title').set('Contributor Key Test Project')
     click_on 'Create'
-    #post '/api/v1/projects',
-
-   #       project_name: 'Contributor Key Test Project',
-   #       email: 'kcarcia@cs.uml.edu',
-   #       password: '12345'
-    
-    #assert_response :success
-    #puts response
-    #assert page.has_content? 'Login'
-    #assert page.has_content? 'Register'
-    #login('kcarcia@cs.uml.edu', '12345')
-    #visit '/'
-    #click_on 'Projects'
-    #click_on 'Contributor Key Test Project'
     find('#manual_fields').click
     find('#new_field').find(:xpath, 'option[2]').select_option
     assert page.has_content? 'Field added'
@@ -60,6 +47,8 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     find('#key').set('test2')
     click_on 'Submit Key'
     click_on 'Manual Entry'
+    list = page.all( :css, 'th')
+    field_id =  list[1]['data-field-id']
     find('#data_set_name').set('Data1')
     find('#contrib_name').set('Jake')
     find('.validate_number').set('5')
@@ -80,13 +69,30 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     assert page.has_content? 'Visualizations'
     click_on 'Contributor Key Test Project'
     assert page.has_content? 'Data Sets'
-    assert page.has_content? 'Contribute Data'
-    assert_equal page.all( :css, '.key')[0][:title], 'test1'
-    assert_equal page.all( :css, '.key')[1][:title], 'test2'
+    assert page.has_content? 'Contribute Data'    
     temp = page.all( :css, '.key')
+    assert_equal temp[0][:title], 'test1'
+    assert_equal temp[1][:title], 'test2'
     assert_not_equal( temp[0].find('a').text , temp[1].find('a').text )
-    visit '/contrib_keys/clear'  
+    visit '/contrib_keys/clear'
+    id = page.all( :css, '.item_title')[0].find('a')[:href].split('/').last
+    post "/api/v1/projects/#{id}/jsonDataUpload",
 
-  end
+          title: 'Anonymous Data',
+          contribution_key: 'test1',
+          contributor_name: 'Jake',
+          data:
+            {
+            "#{field_id}" => [5]
+            }
 
+    assert_response :success
+    visit "/projects/#{id}"
+    assert page.has_content? 'Contributor Key Test Project'
+    assert page.has_no_css? '.gravatar'
+    keys = page.all( :css, '.key' )
+    assert_equal keys[0][:title], 'test1'
+    assert_equal keys[0].find('a').text, 'B'
+
+  end  
 end

@@ -177,10 +177,8 @@ class DataSetsController < ApplicationController
         d.data = data
         unless can_edit? @project
           if session[:key]
-            logger.error('Thinks it has a key and is wrong')
             d.key = session[:key]
           else
-            logger.error('In here looking up keyname')
             d.key = key_name(project.id, params[:contribution_key])
           end
         end
