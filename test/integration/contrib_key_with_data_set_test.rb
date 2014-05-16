@@ -55,6 +55,7 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     click_on 'Save'
     assert page.has_content? 'Visualizations'
     click_on 'Contributor Key Test Project'
+    puts page.body
     assert page.has_css?('.key')
     visit '/contrib_keys/clear'
     click_on 'Projects'
