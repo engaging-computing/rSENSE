@@ -55,7 +55,7 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     click_on 'Save'
     assert page.has_content? 'Visualizations'
     click_on 'Contributor Key Test Project'
-    assert page.has_css? '.key', 'Key should have been displayed.'
+    assert page.has_css?('.key')
     visit '/contrib_keys/clear'
     click_on 'Projects'
     click_on 'Contributor Key Test Project'
@@ -90,6 +90,6 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     assert_response :success
     visit "/projects/#{id}"
     assert page.has_content? 'Contributor Key Test Project'
-    assert page.has_no_css? '.gravatar'
+    assert page.has_no_css?('.gravatar')
   end
 end
