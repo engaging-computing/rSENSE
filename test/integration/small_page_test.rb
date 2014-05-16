@@ -20,22 +20,15 @@ class SmallPageTest < ActionDispatch::IntegrationTest
 
     visit '/projects/1'
 
-    find('#content_edit').click
-  end
+    find('#content-edit-btn').click
+    fill_in_content('')
+    find('#content-save-btn').click
 
-  test 'small page CKEDITOR' do
-    skip
-
-    page.execute_script <<-SCRIPT
-      CKEDITOR.instances["editor1"].setData("");
-    SCRIPT
-
-    wait_for_id('content_save_button')
-    find('#content_save_button').click
+    assert page.has_content?('Project was successfully updated.'), 'Flash text'
 
     visit '/'
 
-    assert page.has_no_content? 'First Paragraph'
+    assert page.has_no_content?('First Paragraph'), 'First paragraph should have been deleted.'
     page.driver.resize_window(1100, 800)
   end
 end
