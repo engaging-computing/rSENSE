@@ -82,7 +82,7 @@
 
         <div class="full_width_edit" style="font-size:1.5em;"><%= visualization_edit_helper 'title', @visualization.owner.id == @cur_user.try(:id), make_link = false %></div>
 
-        <%= visualization_content_helper (@visualization.owner.id == @cur_user.try(:id)) %>
+        <%= content_helper(@visualization) %>
 
       </div>
     </div>
