@@ -28,15 +28,10 @@
 //= require object_hider
 //= require collapse_link_flipper
 //= require validator
-//  require isotope/jquery.isotope.js
 //= require jquery.form.js
 //= require jquery.qrcode.min.js
 //= require bootstrap-datetimepicker.js
-//= require media_objects_view
-//  require jcarousellite.min.js
 //= require titlebar.js.coffee
-//  require mobile_slider
-//  require content_edit_pane.js.coffee
 //
 // Visualization stuff follows
 //
