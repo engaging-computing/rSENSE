@@ -28,7 +28,7 @@
 ###
 $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
-  
+
     class window.Summary extends BaseVis
       constructor: (@canvas) ->
         if data.normalFields.length > 1
@@ -54,51 +54,49 @@ $ ->
         noData = "No #{field.fieldName} Data"
         units = if field.unitName then "(#{field.unitName})" else ''
         html = """
-          <div class="container">
-            <div class="row" style="margin-top:15px;">
-              <div class="col-md-12 center"><h2>#{field.fieldName} #{units}</h2></div>
-            </div>
-            <hr/>
-            <div class="row">
-              <div class="col-md-4">
-                <div class='panel panel-default'>
-                  <div class='panel-heading'>Mean/Average</div>
-                  <div class='panel-body'>#{if analysis[0].mean? then analysis[0].mean else noData}</div>
+                <div class="row" style="margin-top:15px;">
+                  <div class="col-md-12 center"><h2>#{field.fieldName} #{units}</h2></div>
                 </div>
-              </div>
-              <div class="col-md-4">
-                <div class='panel panel-default'>
-                  <div class='panel-heading'>Max</div>
-                  <div class='panel-body'>#{if analysis[0].max? then analysis[0].max else noData}</div>
+                <hr/>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class='panel panel-default'>
+                      <div class='panel-heading'>Mean</div>
+                      <div class='panel-body'>#{if analysis[0].mean? then analysis[0].mean else noData}</div>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class='panel panel-default'>
+                      <div class='panel-heading'>Max</div>
+                      <div class='panel-body'>#{if analysis[0].max? then analysis[0].max else noData}</div>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class='panel panel-default'>
+                      <div class='panel-heading'>Total</div>
+                      <div class='panel-body'>#{if analysis[0].total? then analysis[0].total else noData}</div>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class='panel panel-default'>
+                      <div class='panel-heading'>Median</div>
+                      <div class='panel-body'>#{if analysis[0].median? then analysis[0].median else noData}</div>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class='panel panel-default'>
+                      <div class='panel-heading'>Min</div>
+                      <div class='panel-body'>#{if analysis[0].min? then analysis[0].min else noData}</div>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class='panel panel-default'>
+                      <div class='panel-heading'>Data Point Count</div>
+                      <div class='panel-body'>#{if analysis[0].count? then analysis[0].count else noData}</div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div class="col-md-4">
-                <div class='panel panel-default'>
-                  <div class='panel-heading'>Total</div>
-                  <div class='panel-body'>#{if analysis[0].total? then analysis[0].total else noData}</div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class='panel panel-default'>
-                  <div class='panel-heading'>Median</div>
-                  <div class='panel-body'>#{if analysis[0].median? then analysis[0].median else noData}</div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class='panel panel-default'>
-                  <div class='panel-heading'>Min</div>
-                  <div class='panel-body'>#{if analysis[0].min? then analysis[0].min else noData}</div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class='panel panel-default'>
-                  <div class='panel-heading'>Data Point Count</div>
-                  <div class='panel-body'>#{if analysis[0].count? then analysis[0].count else noData}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        """
+                """
         ($ '#' + @canvas).append(html)
         super()
 
