@@ -57,7 +57,6 @@ $ ->
         if((imgWidth + defMargins) * numPhotos + defMargins < divWidth )
           defMargins = 20
         else
-          console.log('Overflow!')
           imgsPerLine = Math.floor(divWidth / (imgWidth + defMargins))
           if imgsPerLine * (imgWidth + defMargins) + defMargins >= divWidth
             imgsPerLine -= 1
