@@ -30,8 +30,8 @@ $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
 
     class window.Photos extends BaseVis
+      numPhotos = 0
       constructor: (@canvas) ->
-
       start: ->
         ($ '#' + @canvas).show()
 
@@ -48,6 +48,21 @@ $ ->
         ($ '#' + @canvas).append '<div id="polaroid"></div>'
 
         i = 0
+        imgWidth = 200
+        defMargins = 20
+        excess = 0
+        for ds of data.metadata
+          numPhotos += data.metadata[ds].photos.length
+        divWidth = ($ '#polaroid').width()
+        if((imgWidth + defMargins) * numPhotos + defMargins < divWidth )
+          defMargins = 20
+        else
+          imgsPerLine = Math.floor(divWidth/(imgWidth + defMargins))
+          if imgsPerLine * (imgWidth + defMargins) + defMargins >= divWidth
+            imgsPerLine -= 1
+            excess = divWidth - (imgsPerLine * (defMargins + imgWidth) + 20)
+        ($ '#polaroid').css( 'margin': "#{defMargins/2}px" )
+        ($ '#polaroid').css( 'margin-left': "#{(defMargins/2) + (excess/2)}px", 'margin-right': "#{(defMargins/2) + (excess/2)}px" )
         for ds of data.metadata
           if data.metadata[ds].photos.length > 0
             for pic of data.metadata[ds].photos
@@ -55,10 +70,11 @@ $ ->
               dset = data.metadata[ds]
               do(tmp, dset) ->
                 figure = """<div class='p_item'>
-                  <img id='pic_#{i}' src="#{tmp.tn_src}" class='caroucell'/>
-                  <span class="caption">Data Set: #{dset.name}(#{dset.dataset_id})</span>
+                  <img id='pic_#{i}' src="#{tmp.tn_src}" class='caroucell'/> <br>
+                   <div class="caption_wrap"><span class="caption">Data Set: #{dset.name}(#{dset.dataset_id}) </span></div> <br>
                   </div>"""
                 ($ "#polaroid").append figure
+                ($ '#pic_' + i).css( cursor: "pointer")
                 ($ '#pic_' + i).click ->
                   ($ '#polaroid').append("""
                     <div class="modal fade" id="target_img" tabindex='-1'>
@@ -81,13 +97,13 @@ $ ->
                   ($ '#target_img').on "hidden.bs.modal", ->
                     ($ '#target_img').remove()
               i++
+              ($ '.p_item').css('margin': "#{defMargins/2}px")
       end: ->
         ($ '#' + @canvas).hide()
         @unhideControls()
 
       drawControls: ->
         super()
-
     if "Photos" in data.relVis
       globals.photos = new Photos "photos_canvas"
     else
