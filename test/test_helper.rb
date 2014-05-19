@@ -100,4 +100,10 @@ module CapyHelper
     # wait = Selenium::WebDriver::Wait.new(timeout: 20)
     # wait.until { page.driver.browser.find_element(class: cl).displayed? }
   end
+
+  def fill_in_content(text)
+    page.execute_script <<-SCRIPT
+      $('#content-area').code("#{text}");
+    SCRIPT
+  end
 end

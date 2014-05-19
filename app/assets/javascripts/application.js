@@ -63,7 +63,6 @@
 //= require highvis/photos
 //= require highvis/runtime
 //
-//= require ckeditor/override
-//= require ckeditor/init
+//= require summernote
 //
 //= require_tree .

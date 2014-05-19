@@ -15,7 +15,7 @@
  
   </head>
 
-  <body style="margin:0;padding:0;height:100%;background-color:#ddd;" data-page-name="<%= params[:controller] %>/<%= params[:action] %>">
+  <body data-page-name="<%= params[:controller] %>/<%= params[:action] %>">
   
     <% if !@cur_user.nil? and @cur_user.email.blank? %>
       <div class="alert">
