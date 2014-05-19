@@ -25,7 +25,6 @@
 //= require unsupported
 //= require info_edit
 //= require menu_edit
-//= require object_hider
 //= require collapse_link_flipper
 //= require validator
 //= require jquery.form.js
