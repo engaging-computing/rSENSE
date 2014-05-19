@@ -9,12 +9,6 @@ module ProjectsHelper
       row_id: @project.id, can_edit: can_edit, make_link: make_link
   end
 
-  def project_content_helper(can_edit = false)
-    render 'shared/newcontent', type: 'project', field: 'content',
-      content: @project.content, row_id: @project.id,
-      has_content: !@project.content.blank?, can_edit: can_edit
-  end
-
   def can_contribute?(project)
     session[:contrib_access] == project.id ||
       (@cur_user.try(:id) && !project.lock?)

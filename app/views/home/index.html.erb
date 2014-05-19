@@ -16,7 +16,7 @@
               <b>Created: </b><%= time_ago_in_words(@featured_vis.created_at)%> ago, on <%=@featured_vis.created_at.strftime("%B %d, %Y")%><br />
               <b>From Project: </b><%= link_to @featured_vis.project.title, project_path(@featured_vis.project)%><br />
               <b>By: </b><%= link_to @featured_vis.owner.name, user_path(@featured_vis.owner)%>
-              <%= render 'shared/newcontent', {type: 'visualization', field: "content", content: @featured_vis.content, row_id: @featured_vis.id, has_content: !@featured_vis.content.blank?, can_edit: false} %>
+              <%= raw @featured_vis.content %>
               <br />
               <a href="visualizations" class="btn btn-primary">See More Visualizations</a>
             </div>

@@ -35,7 +35,7 @@
 
 <div class="row">
   <%=render layout: "shared/box", locals: {title: 'Description', width: '12', unique_id: 'description', should_hide: false} do %>
-    <%= tutorial_content_helper (can_edit? @tutorial) %>
+    <%= content_helper(@tutorial) %>
   <%end%>
 
   <!-- media objects -->
