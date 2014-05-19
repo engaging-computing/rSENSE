@@ -28,8 +28,6 @@ class UsersTest < ActionDispatch::IntegrationTest
     click_on 'My Projects'
     assert page.has_content?('Media Test'), 'View projects list'
 
-    puts `tail -80 #{Rails.root}/log/test.log`
-
     click_on 'Data Sets'
     assert page.has_content?('Needs Media'), 'View data sets list'
 
