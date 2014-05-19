@@ -1709,7 +1709,7 @@ button.ui-corner-right,
   -webkit-border-radius: 0px;
   -moz-border-radius: 0px;
   background: none;
-  padding: 1em 2.2em;
+  padding: 2px;
   border-top: 0;
   margin-top: 0px;
   position: relative;
@@ -3154,7 +3154,6 @@ button::-moz-focus-inner {
 .ui-tabs .ui-tabs-panel {
   display: block;
   border-width: 0px;
-  padding: 1em 1.4em;
   border-radius: 0px;
   -webkit-border-radius: 0px;
   -moz-border-radius: 0px;
