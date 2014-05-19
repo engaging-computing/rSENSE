@@ -223,7 +223,7 @@ $ ->
           controls += "</div></div>"
           controls += "</td><td>"
           controls += """<a href="#" class="color-picker" data-color="#{color}" data-color-id="#{color_id}">
-                         <img height="20px" width="20px" src=\"#{image_path('color-wheel.png')}\"></a>"""
+                         <img height="20px" width="20px" src="<%= image_path('color-wheel.png') %>"></a>"""
           controls += "</td></tr>"
           counter += 1
 
