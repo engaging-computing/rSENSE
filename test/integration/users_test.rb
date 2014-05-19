@@ -23,15 +23,15 @@ class UsersTest < ActionDispatch::IntegrationTest
     @nixon = users(:nixon)
 
     visit "/users/#{@nixon.id}"
-    assert page.has_content? 'Media Test'
+    assert page.has_content?('Media Test'), 'View admin user'
 
     click_on 'My Projects'
-    assert page.has_content? 'Media Test'
+    assert page.has_content?('Media Test'), 'View projects page'
 
     click_on 'Data Sets'
-    assert page.has_content? 'Needs Media'
+    assert page.has_content?('Needs Media'), 'View project'
 
     find('.nav-tabs').click_on 'Visualizations'
-    assert page.has_content? 'Needs Media'
+    assert page.has_content?('Needs Media'), 'View viz'
   end
 end
