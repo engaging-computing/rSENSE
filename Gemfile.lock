@@ -188,6 +188,8 @@ GEM
       sprockets (~> 2.8)
     sqlite3 (1.3.9)
     subexec (0.2.3)
+    summernote-rails (0.4.0)
+      railties (>= 3.1)
     therubyracer (0.12.1)
       libv8 (~> 3.16.14.0)
       ref
@@ -244,6 +246,7 @@ DEPENDENCIES
   selenium-webdriver
   simplecov
   sqlite3
+  summernote-rails
   therubyracer
   turn
   uglifier
