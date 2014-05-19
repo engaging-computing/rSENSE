@@ -29,6 +29,8 @@ class TutorialsController < ApplicationController
       pagesize = 50
     end
 
+    @new_tutorial = Tutorial.new
+
     @tutorials = Tutorial.search(params[:search]).paginate(page: params[:page], per_page: pagesize)
 
     @tutorials = @tutorials.order("#{sort} #{order}")
@@ -55,7 +57,9 @@ class TutorialsController < ApplicationController
   # POST /tutorials
   # POST /tutorials.json
   def create
-    @tutorial = Tutorial.new(user_id: @cur_user.id, title: "#{@cur_user.name}'s Tutorial")
+    @tutorial = Tutorial.new(tutorial_params)
+    @tutorial.user_id = @cur_user.id
+
     respond_to do |format|
       if @tutorial.save
         format.html { redirect_to @tutorial, notice: 'Tutorial was successfully created.' }
