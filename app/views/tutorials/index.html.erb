@@ -1,10 +1,14 @@
+
 <% if is_admin? %>
   <div class="row">
-    <div class='col-lg-12 center'>
-      <div id="addTutorialButton">
-        <button id="addTutorialButton" class="btn btn-success"><h4>Create Tutorial</h4></button>
+    <%= form_for @new_tutorial do |ff| %>
+      <div class="col-md-6 text-center">
+        <%= ff.text_field :title, placeholder: "Title for Tutorial", class: "stretch-width" %>
       </div>
-    </div>
+      <div class="col-md-6 text-center">
+        <button type="submit" class="btn btn-success stretch-width">Create Tutorial</button>
+      </div>
+    <% end %>
   </div>
 <% end %>
 

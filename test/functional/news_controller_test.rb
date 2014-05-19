@@ -35,7 +35,7 @@ class NewsControllerTest < ActionController::TestCase
 
   test 'should create news' do
     assert_difference('News.count') do
-      post :create, {},  user_id: @nixon
+      post :create, { news: { title: 'News' } },  user_id: @nixon
     end
 
     assert_redirected_to news_path(assigns(:news))
@@ -43,7 +43,7 @@ class NewsControllerTest < ActionController::TestCase
 
   test 'should create news (json)' do
     assert_difference('News.count') do
-      post :create, { format: 'json' },  user_id: @nixon
+      post :create, { news: { title: 'News' }, format: 'json' },  user_id: @nixon
     end
 
     assert_response :success
