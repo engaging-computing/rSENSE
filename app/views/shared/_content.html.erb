@@ -1,0 +1,44 @@
+<div id="content-partial">
+  <% if can_edit?(obj) %>
+    <div id="content-editor">
+      <%= form_for obj do |ff| %>
+        <div>
+          <% if obj.class == User %>
+            <%= ff.text_area :bio, id: 'content-area', class: 'summernote' %>
+          <% else %>
+            <%= ff.text_area :content, id: 'content-area', class: 'summernote' %>
+          <% end %>
+        </div>
+        <p style="text-align: right; margin-top: 1em;">
+          <button id="content-cancel-btn" class="btn btn-danger">Cancel</button>
+          <button id="content-save-btn" type="submit" class="btn btn-primary">Save</button>
+        </p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div id="content-viewer">
+    <% content = nil %>
+    <% if obj.class == User %>
+      <% content = obj.bio %>
+    <% else %>
+      <% content = obj.content %>
+    <% end %>
+
+    <div>
+      <% if can_edit?(obj) && (content.nil? || content.empty?) %>
+        <p style="text-align: center">
+          <%= link_to(image_tag("green_plus_icon.png"), "#", id: 'add-content-image') %>
+        </p>
+      <% else %>
+        <%= raw content %>
+      <% end %>
+    </div>
+
+    <% if can_edit?(obj) %>
+      <p style="text-align: right; margin-top: 1em;">
+        <button id="content-edit-btn" class="btn btn-primary">Edit</button>
+      </p>
+    <% end %>
+  </div>
+</div>

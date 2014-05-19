@@ -31,7 +31,7 @@
     <div class="row">
       <div class="col-lg-12">
         <%= render layout: "shared/box", locals: {title: 'Bio', width: '12', unique_id: 'box', should_hide: false } do %>
-          <%= user_content_helper(can_edit?(@user), "bio", false, true)%>
+          <%= content_helper(@user) %>
         <%end%>
       </div>
     </div>
