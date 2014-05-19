@@ -1,14 +1,15 @@
 <% require 'find' %>
-<% require 'pathname' %>
+
+window.IS ||= {}
 
 image_asset_paths = {
   <% Find.find(Rails.root.join('app/assets/images').to_s) do |path| %>
-    <% if path =~ /png$/i %>
-      <% iname = path.sub(/.*app\/assets\/images/, '') %>
+    <% if path =~ /(png|gif|jpg)$/i %>
+      <% iname = path.sub(/.*app\/assets\/images\//, '') %>
       "<%= iname %>" : "<%= image_path iname %>",
     <% end %>
   <% end %>
 }
 
-window.image_path = (name) ->
+IS.imagePath = (name) ->
   image_asset_paths[name]
