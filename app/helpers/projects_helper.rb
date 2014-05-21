@@ -21,7 +21,7 @@ module ProjectsHelper
     imgs = []
 
     Find.find Rails.root.join('app/assets/images/placeholders').to_s do |img|
-      imgs << image_path("placeholders/" + Pathname.new(img).basename.to_s) if img =~ /\.jpg$/
+      imgs << image_path('placeholders/' + Pathname.new(img).basename.to_s) if img =~ /\.jpg$/
     end
 
     imgs[id % imgs.size]
