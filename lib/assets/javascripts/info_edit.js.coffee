@@ -60,7 +60,6 @@ $ ->
         data:
           data
         success: =>
-          
           #Swap save and edit links
           root.find('.info_edit_link').show()
           ($ @).hide()
@@ -72,6 +71,8 @@ $ ->
             info_box.html("<a href='#{($ @).attr('href')}'>#{value}</a>")
           else if root.attr('make_link') == 'false'
             info_box.html(value)
+
+          $('#ajax-status').html('value saved')
         error: (j, s, t) ->
           edit_box.errorFlash()
           errors = JSON.parse j.responseText

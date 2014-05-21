@@ -1,8 +1,20 @@
+
+<script data-template-name="inline-edit-text" type="text/x-handlebars">
+  <div>
+  
+  </div>
+</script>
+
+<script data-template-name="inline-edit-form" type="text/x-handlebars">
+
+</script>
+
+
 <span class="edit_info" field='<%=field%>' type='<%=type%>' value='<%=value%>' make_link='<%=make_link%>'>
 
   <div class="info_text">
     <div class='info_val word_wrap'>
-      <% if make_link %>
+      <% if false # make_link %>
         <%= link_to value, "/#{type.pluralize}/#{row_id}" %>
       <% else %>
         <%= value %>
