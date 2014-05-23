@@ -176,13 +176,19 @@ class DataSetsController < ApplicationController
         d.project_id = project.id
         d.data = data
         unless can_edit? @project
-          d.key = session[:key]
+          if session[:key]
+            d.key = session[:key]
+          else
+            d.key = key_name(project.id, params[:contribution_key])
+          end
         end
       end
 
-      if dataset.save
-        respond_to do |format|
+      respond_to do |format|
+        if dataset.save
           format.json { render json: dataset.to_hash(false), status: :ok }
+        else
+          format.json { render json: { msg: dataset.errors.full_messages }, status: :unprocessable_entity }
         end
       end
     else
@@ -232,7 +238,7 @@ class DataSetsController < ApplicationController
         d.project_id = project.id
         d.data = data
         unless can_edit? @project
-          d.key = session[:key]
+          d.key = key_name(project.id, session[:key])
         end
       end
 

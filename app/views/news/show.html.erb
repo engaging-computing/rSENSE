@@ -33,7 +33,7 @@
 
 <div class="row">
   <%=render layout: "shared/box", locals: {title: 'Content', width: '12', unique_id: 'content', should_hide: false} do %>
-    <%= news_content_helper (can_edit? @news) %>
+    <%= content_helper(@news) %>
   <%end%>
 </div>  
 <div class="row">

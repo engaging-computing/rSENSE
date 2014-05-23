@@ -26,30 +26,23 @@
  * DAMAGE.
  */
 
-.clean_shrink{
+.clean_shrink
+{
     white-space:nowrap;
     overflow:hidden;
 }
 
-#summary_canvas{
-	text-align:center;
-	.panel-heading{
-			font-size:2em;
-			font-weight:bold;
-	}
-	.panel-body{
-			font-size:1.5em
-	}
-}
 //------UNVERIFIED CSS BELOW----------
 
-#controlcontainer {
+#controlcontainer
+{
     float: right;
     max-width: 20%;
     height: 100%;
 }
 
-#controldiv {
+#controldiv
+{
     width:210px;
     height:100%;
 
@@ -58,22 +51,26 @@
     overflow-y:auto;
 }
 
-#controlhider {
+#controlhider
+{
     float: right;
     height:100%;
 }
 
-.vis_controls {
+.vis_controls
+{
     float: right;
     width:100%;
 }
 
-.ui-accordion .ui-accordion-content {
+.ui-accordion .ui-accordion-content
+{
     padding: 0.5em 0.5em;
     overflow-y:hidden;
 }
 
-.outer_control_div {
+.outer_control_div
+{
     font-size: 12px;
     font-family: Arial;
     color: #000000;
@@ -82,7 +79,8 @@
     white-space:nowrap;
 }
 
-.inner_control_div {
+.inner_control_div
+{
     font-size: 12px;
     font-family: Arial;
     color: #000000;
@@ -91,27 +89,48 @@
     white-space:nowrap;
 }
 
-.vis_canvas {
+.vis_canvas
+{
     float:left;
     overflow: none;
-    padding:2px;
+    padding: 0px;
+    margin: 0px;
 }
 
-#viscontainer {
-
+#viscontainer
+{
     width: 100%;
     height: 98%;
     font-size:14px;
     min-height:500px;
 }
 
-.vis_tab {
+#summary_canvas
+{
+  text-align:center;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0px 5px;
+
+  .panel-heading
+  {
+      font-size:2em;
+      font-weight:bold;
+  }
+
+  .panel-body
+  {
+    font-size:1.5em
+  }
+}
+
+.vis_tab
+{
     font-size:1.2em;
 }
 
-
-
-.hint {
+.hint
+{
   margin-left: 40px;
   margin-bottom: 10px;
   margin-top: 10px;
@@ -119,42 +138,49 @@
   color: #888888;
 }
 
-.save_button {
+.save_button
+{
     width: 160px;
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
-.regression_table {
+.regression_table
+{
   margin-top: 5px;
   width: 100%;
   text-align: left;
 }
 
-.regression_rowdata {
+.regression_rowdata
+{
   border-bottom:solid #ddd;
   border-width: thin;
   text-align: left;
 }
 
-.regression_row {
+.regression_row
+{
   border-bottom:solid transparent;
   border-width: thin;
   cursor: pointer;
 }
 
-.regression_row_disabled {
+.regression_row_disabled
+{
   background-color: #eee;
   color: #555;
 }
 
-.regression_row:hover {
+.regression_row:hover
+{
   background-color: #ddd;
   border-bottom:solid #ddd;
   border-width: thin;
 }
 
-.regression_remove {
+.regression_remove
+{
   width: 10%;
   text-align: center;
 }
@@ -162,13 +188,15 @@
 table.fixed { table-layout:fixed; }
 table.fixed td { overflow: hidden; }
 
-.dataTables_scroll {
+.dataTables_scroll
+{
     overflow:auto;
 }
 
-.novis_message{
-  padding: 25px; 
-  text-align: center; 
+.novis_message
+{
+  padding: 25px;
+  text-align: center;
   font-size: 15pt;
   font-weight: bold;
   line-height: 25pt;
@@ -177,7 +205,7 @@ table.fixed td { overflow: hidden; }
 
 #photos_canvas
 {
- overflow-y:scroll; 
+ overflow-y:scroll;
 }
 
 #radiusText
@@ -192,19 +220,20 @@ table.fixed td { overflow: hidden; }
   white-space: normal;
 }
 
-figure, figurecaption{
+figure, figurecaption
+{
   display:block
 }
 
 
 #polaroid{
   margin: 10px;
-  overflow:scroll;
+
   div.p_item
   {
     .caption
     {
-     padding: 0px 10px 10px 10px; 
+     padding: 0px 10px 10px 10px;
     }
     img
     {
@@ -217,7 +246,7 @@ figure, figurecaption{
 
     -moz-box-shadow: 0 2px 3px 1px #9E9E9E;
     -webkit-box-shadow: 0 2px 3px 1px #9E9E9E;
-    box-shadow: 0 2px 3px 1px #9E9E9E;  
+    box-shadow: 0 2px 3px 1px #9E9E9E;
   }
 }
 
