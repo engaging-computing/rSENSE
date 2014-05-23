@@ -81,9 +81,6 @@ $ ->
                   ($ '#target_img').on "hidden.bs.modal", ->
                     ($ '#target_img').remove()
               i++
-        helpers.isotope_layout("#polaroid",200,0,8,".p_item")
-        ($ window).smartresize () ->
-          helpers.isotope_layout("#polaroid",200,0,8,".p_item")
       end: ->
         ($ '#' + @canvas).hide()
         @unhideControls()
