@@ -137,8 +137,8 @@ $ ->
     ($ '#controldiv').width 0
     ($ '#controldiv').height visHeight
 
-    ($ '.vis_canvas').css('padding', 0)
-    ($ '.vis_canvas').css('margin', 0)
+    #($ '.vis_canvas').css('padding', 0)
+    #($ '.vis_canvas').css('margin', 0)
 
 
     # Start up vis

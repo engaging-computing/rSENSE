@@ -265,7 +265,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert keys_match(response, @data_keys_extended), 'Keys are missing'
   end
 
-  test 'failed create data set with contribution_key no name' do
+  test 'failed create data set same name' do
     pid = @dessert_project.id
     post "/api/v1/projects/#{pid}/jsonDataUpload",
 
@@ -277,6 +277,21 @@ class ApiV1Test < ActionDispatch::IntegrationTest
             }
 
     assert_response :unprocessable_entity
+  end
+
+  test 'failed create data set with contribution_key no name' do
+    post "/api/v1/projects/#{@dessert_project.id}/jsonDataUpload",
+
+          title: @dessert_project.data_sets.first.title,
+          contribution_key: 'apple',
+          contributor_name: 'Studnet 2',
+          data:
+            {
+              '20' => ['1', '2', '3', '4', '5']
+            }
+    assert_response :unprocessable_entity
+    assert parse(response)['msg'][0] == 'Title has already been taken',
+        'Message should have been: Title has already been taken'
 
   end
 
@@ -430,6 +445,34 @@ class ApiV1Test < ActionDispatch::IntegrationTest
          type: 'project',
          id: @dessert_project.id
 
+    assert_response :success
+    assert keys_match(response, @media_object_keys), 'Keys are missing.'
+  end
+
+  test 'create media object for dataset with key' do
+    pid = @dessert_project.id
+    post "/api/v1/projects/#{pid}/jsonDataUpload",
+
+          title: 'Data Set for Media Object',
+          contribution_key: 'apple',
+          contributor_name: 'Student 1',
+          data:
+            {
+              '20' => ['1', '2', '3', '4', '5']
+            }
+
+    id = parse(response)['id']
+    get "/api/v1/data_sets/#{id}"
+    img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
+    file = Rack::Test::UploadedFile.new(img_path, 'image/jpeg')
+
+    # Create a media object for a project
+    post '/api/v1/media_objects',
+         upload: file,
+         contribution_key: 'apple',
+         contributor_name: 'Student 1',
+         type: 'data_set',
+         id: id
     assert_response :success
     assert keys_match(response, @media_object_keys), 'Keys are missing.'
   end
