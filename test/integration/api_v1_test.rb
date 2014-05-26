@@ -10,7 +10,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     @dessert_project = projects(:dessert)
     @thanksgiving_dataset = data_sets(:thanksgiving)
     @media_object_keys = ['id', 'mediaType', 'name', 'url', 'createdAt', 'src', 'tn_src']
-    @media_object_keys_extended = @media_object_keys + ['project', 'owner']
+    @media_object_keys_extended = @media_object_keys + ['project', 'owner', 'dataSet']
     @user_keys = ['gravatar', 'name']
   end
 
@@ -362,7 +362,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert new_data == old_data, 'Data didnt get updated'
   end
 
-  test 'create_media_object' do
+  test 'create_media_object for project' do
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
     file = Rack::Test::UploadedFile.new(img_path, 'image/jpeg')
 
@@ -374,6 +374,34 @@ class ApiV1Test < ActionDispatch::IntegrationTest
          password: '12345',
          type: 'project',
          id: @dessert_project.id
+
+    assert_response :success
+    assert keys_match(response, @media_object_keys), 'Keys are missing.'
+
+    # Get non recursive
+    id = parse(response)['id']
+    get "/api/v1/media_objects/#{id}"
+    assert_response :success
+    assert keys_match(response, @media_object_keys), 'Keys are missing'
+
+    # Get recursive
+    get "/api/v1/media_objects/#{id}?recur=true"
+    assert_response :success
+    assert keys_match(response, @media_object_keys_extended), 'Keys are missing'
+  end
+  
+  test 'create_media_object for data_set' do
+    img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
+    file = Rack::Test::UploadedFile.new(img_path, 'image/jpeg')
+
+    # Create a media object for a data_set
+    post '/api/v1/media_objects',
+
+         upload: file,
+         email: 'kcarcia@cs.uml.edu',
+         password: '12345',
+         type: 'data_set',
+         id: @dessert_project.data_sets.first.id
 
     assert_response :success
     assert keys_match(response, @media_object_keys), 'Keys are missing.'
@@ -403,7 +431,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert_response :unauthorized
   end
 
-  test 'failed create media bad id' do
+  test 'failed create media bad id (project)' do
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
     file = Rack::Test::UploadedFile.new(img_path, 'image/jpeg')
 
@@ -413,12 +441,12 @@ class ApiV1Test < ActionDispatch::IntegrationTest
          email: 'kcarcia@cs.uml.edu',
          password: '12345',
          type: 'project',
-         id: 3
+         id: -1
 
     assert_response :unprocessable_entity
   end
 
-  test 'failed create media bad type' do
+  test 'failed create media bad id (data_set)' do
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
     file = Rack::Test::UploadedFile.new(img_path, 'image/jpeg')
 
@@ -427,10 +455,45 @@ class ApiV1Test < ActionDispatch::IntegrationTest
          upload: file,
          email: 'kcarcia@cs.uml.edu',
          password: '12345',
-         type: 'user',
-         id: 3
+         type: 'data_set',
+         id: -1
 
     assert_response :unprocessable_entity
+    assert parse(response)['msg'] == 'Either you do not have access to this data set, or it does not exist.',
+        'msg should have been: Either you do not have access to this data set, or it does not exist.'
+  end
+
+  
+  test 'failed create media bad type of file (data_set)' do
+    img_path = Rails.root.join('test', 'CSVs', 'test.csv')
+    file = Rack::Test::UploadedFile.new(img_path, 'text/csv')
+
+    # Failed due to bad type
+    post '/api/v1/media_objects',
+         upload: file,
+         email: 'kcarcia@cs.uml.edu',
+         password: '12345',
+         type: 'data_set',
+         id: 3
+    assert_response :unprocessable_entity
+    assert parse(response)['msg'] == 'API only supports images', 
+        'Should have said: API only supports images'
+  end
+  
+  test 'failed create media bad type' do
+    img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
+    file = Rack::Test::UploadedFile.new(img_path, 'image/jpeg')
+
+    # Failed due to bad type
+    post '/api/v1/media_objects',
+         upload: file,
+         email: 'kcarcia@cs.uml.edu',
+         password: '12345',
+         type: 'user',
+         id: 3
+    assert_response :unprocessable_entity
+    assert parse(response)['msg'].include?('is not a correct type.'), 
+        'Should have included: "* is not a correct type.'
   end
 
   test 'create_media_object contribution_key' do
@@ -574,6 +637,20 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     post '/api/v1/data_sets/append',
         id: @dessert_project.data_sets.first.id,
         contribution_key: 'blueberry',
+        data:
+          {
+            '20' => ['1000'],
+            '21' => ['1001'],
+            '22' => ['1002']
+          }
+    assert_response :unauthorized
+  end
+  
+  test 'fail append to data set (wrong user)' do
+    post '/api/v1/data_sets/append',
+        id: @dessert_project.data_sets.first.id,
+        email: 'captncrunch@example.com',
+        password: '12345',
         data:
           {
             '20' => ['1000'],
