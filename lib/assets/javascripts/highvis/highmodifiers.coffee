@@ -155,7 +155,7 @@ $ ->
       rawData = @selector(fieldIndex, groupIndex)
 
       if rawData.length > 0
-        Math.round(((rawData.reduce (a,b) -> a + b) / rawData.length)*10000)/10000
+        Math.round(((rawData.reduce (a,b) -> a + b) / rawData.length) * 10000) / 10000
       else
         null
 
