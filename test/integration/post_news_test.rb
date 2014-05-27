@@ -27,8 +27,8 @@ class MakeNewsTest < ActionDispatch::IntegrationTest
 
     find('.menu_edit_link').click
     click_on('Edit Title')
-    find('.info_edit_box').set('The Quick Brown Fox')
-    all('.menu_save_link').first.click
+    find('#news_title').set('The Quick Brown Fox')
+    all('.btn-success').first.click
 
     sleep 1
 
