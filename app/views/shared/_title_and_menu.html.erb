@@ -34,7 +34,7 @@
               
           <% if can_delete?(obj) %>
             <li role="presentation">
-              <%= link_to obj, confirm: "Are you sure?", method: :delete do %>
+              <%= link_to obj, data: { confirm: "Are you sure?" }, method: :delete, class: 'menu_delete' do %>
                 <i style="color:red" class="fa fa-times-circle"></i> 
                 Delete <%= typeName %>
               <% end %>
