@@ -41,7 +41,8 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
     find('.menu_delete').click
     # Capybara-webkit needs the window.confirm hack instead.
     # page.driver.browser.switch_to.alert.accept
-
+    # No more Selenium, use this instead
+    page.driver.browser.accept_js_confirms
     # Upload media to project
     visit '/projects/1'
     assert page.has_content? 'Media'
