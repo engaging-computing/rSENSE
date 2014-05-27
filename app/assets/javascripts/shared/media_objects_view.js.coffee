@@ -1,6 +1,4 @@
 setupMediaObjectsView = () ->
-  console.log("Hi")
-
   ($ '.upload_media').find('input:file').change (event) ->
     event.preventDefault()
     ($ this).parents('form').submit()
