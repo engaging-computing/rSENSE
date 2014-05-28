@@ -40,6 +40,7 @@ $ ->
           ($ "#new_name_box").modal("hide")
           ($ "#new_name_box").on('hidden.bs.modal', -> ($ "#new_name_box").remove())
           window.location = escape_location
+          $('#ajax-status').html('save cancelled')
       
     ($ ".new_name_button").click (e) ->
       edit_box = ($ "#new_name")
@@ -61,6 +62,7 @@ $ ->
         success: ->
           ($ "#new_name_box").modal("hide")
           window.location = obj.url
+          $('#ajax-status').html('name set')
         error: (j, s, t) ->
           edit_box.errorFlash()
           
