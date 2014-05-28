@@ -18,6 +18,9 @@ class RenameVizTest < ActionDispatch::IntegrationTest
     click_on 'Projects'
     click_on 'Dessert is Delicious'
     click_on 'Visualize'
+
+    assert page.has_content?('Save Visualization')
+
     click_on 'Save Visualization'
 
     assert page.has_content?('Please enter a name for this Visualization:'), 'Name modal'
