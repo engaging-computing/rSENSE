@@ -17,7 +17,7 @@ $ ->
       ($ @).addClass "active"
       
       filter_selection = ($ @).text()
-            
+      
       # compares the filter you clicked on to the list of filters
       # to see if its "your" page or a filter
       if( nav_list.some (word) -> ~filter_selection.indexOf(word) )
@@ -50,6 +50,9 @@ $ ->
               $(".pagefwd").hide()
             else
               $(".pagefwd").show()
+            
+            $('#ajax-status').html("showing tab: #{filter_selection}")
+
 
 
 
