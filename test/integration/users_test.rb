@@ -13,8 +13,6 @@ class UsersTest < ActionDispatch::IntegrationTest
   end
 
   test 'contributions' do
-    skip
-
     login('nixon@whitehouse.gov', '12345')
 
     visit '/projects/1'
@@ -26,6 +24,8 @@ class UsersTest < ActionDispatch::IntegrationTest
 
     visit "/users/#{@nixon.id}"
     assert page.has_content?('Media Test'), 'View admin user'
+
+    sleep 5
 
     click_on 'My Projects'
     assert page.has_content?('Media Test'), 'View projects list'
