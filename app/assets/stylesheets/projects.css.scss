@@ -2,6 +2,15 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+.project_buttons
+{
+  .btn
+  {
+    margin-top:5px;
+  }
+}
+
+
 .contrib-keys-box th {
   min-width: 30%; text-align: center;
 }
@@ -108,10 +117,6 @@
 .fields_edit_menu
 {
   margin-top:15px;
-}
-.likes
-{
-  margin-top:5px;
 }
 
 .add_content
