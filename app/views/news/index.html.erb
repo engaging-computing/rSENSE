@@ -5,9 +5,14 @@
 
 <% if is_admin? %>
   <div class="row">
-    <div class="col-md-12 text-center">
-      <%= link_to "Add News Item", '/news/add', class: "btn btn-success" %>
-    </div>
+    <%= form_for @new_news do |ff| %>
+      <div class="col-md-6 text-center">
+        <%= ff.text_field :title, placeholder: "Title for News Item", class: "stretch-width" %>
+      </div>
+      <div class="col-md-6 text-center">
+        <button type="submit" class="btn btn-success stretch-width">Add News Item</button>
+      </div>
+    <% end %>
   </div>
 <% end %>
 

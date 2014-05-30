@@ -26,6 +26,10 @@ class MediaObject < ActiveRecord::Base
   alias_attribute :owner, :user
   alias_attribute :dataSet, :data_set
 
+  def parent
+    project || data_set || tutorial || visualization || news || user
+  end
+
   def sanitize_media
     self.title = sanitize title, tags: %w()
   end
