@@ -1,7 +1,4 @@
-$ = jQuery
-
-$ ->
-
+window.setupEditTable = () ->
   # Only allows the plugin to run on certain pages. Probably not the right place to do this.
   if (namespace.controller is "data_sets") and (namespace.action is "manualEntry" or namespace.action is "edit")
     offset = 0

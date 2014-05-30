@@ -23,10 +23,9 @@ class TutorialsTest < ActionDispatch::IntegrationTest
     visit '/tutorials'
     assert page.has_content?('Create Tutorial'), 'Admin should be able to create a tutorial'
 
+    find('#tutorial_title').set('Awesome Tutorial')
     click_on 'Create Tutorial'
-    wait_for_id('new_name')
-    find('#new_name').set('Awesome Tutorial')
-    click_on 'Finish'
+
     assert page.has_content?('Awesome Tutorial'), 'Should have ended up on tutorials show page'
 
     find('#publish_tutorial').click

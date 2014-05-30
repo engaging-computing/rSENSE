@@ -1,4 +1,4 @@
-$ ->
+setupMediaObjectsView = () ->
   ($ '.upload_media').find('input:file').change (event) ->
     event.preventDefault()
     ($ this).parents('form').submit()
@@ -9,7 +9,7 @@ $ ->
     ($ @).parents('div').find('#upload').click()
     false
   
-  #selection of featured image
+  # Selection of featured image
   img_selector_click = (obj) ->
     root = ($ '#media_object_list')
     type_id = obj.attr("obj_id")
@@ -26,6 +26,10 @@ $ ->
       dataType: "json"
       data:
         data
+      error: ->
+        root.find('.img_selector').each ->
+          $(this).errorFlash()
+          ($ this).prop("checked", false)
       success: ->
         root.find('.img_selector').each ->
           if ($ this).attr("mo_id") != mo
@@ -34,13 +38,18 @@ $ ->
   ($ '.img_selector').click ->
     img_selector_click ($ @)
     
-  #Delete Media Object
+  # Delete Media Object
   delete_media_object = (obj) ->
     if helpers.confirm_delete obj.attr('name')
       $.ajax
         url: obj.attr("href")
         type: 'DELETE'
         dataType: "json"
+        error: (_, e0, e1) ->
+          $(obj).errorFlash()
+          console.log('Delete failed:')
+          console.log(e0)
+          console.log(e1)
         success: ->
           recolored = false
           row = obj.parents('tr')
@@ -49,7 +58,6 @@ $ ->
             row.remove()
             tbody.recolor_rows(recolored)
             recolored = true
-          
     
   ($ 'a.media_object_delete').click (e) ->
     e.preventDefault()
@@ -64,4 +72,7 @@ $ ->
   ($ '#mo_image_modal').on "shown.bs.modal", () ->
     ($ '.modal-dialog',this).css
       width: "#{($ @).find("#test_img").width()+55}px"
-  
+
+$ ->
+  if $('.upload_media')?
+    setupMediaObjectsView()
