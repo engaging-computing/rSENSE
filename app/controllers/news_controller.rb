@@ -12,6 +12,8 @@ class NewsController < ApplicationController
       @news = News.where(hidden: false).order('created_at DESC').limit(10)
     end
 
+    @new_news = News.new
+
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @news.map { |p| p.to_hash } }
@@ -34,7 +36,9 @@ class NewsController < ApplicationController
   # POST /news
   # POST /news.json
   def create
-    @news = News.new(user_id: @cur_user.id, title: 'New Blog Entry')
+    @news = News.new(news_params)
+    @news.user_id = @cur_user.id
+
     respond_to do |format|
       if @news.save
         format.html { redirect_to @news, notice: 'News entry was successfully created.' }

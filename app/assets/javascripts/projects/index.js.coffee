@@ -23,12 +23,3 @@ $ ->
       cb = ($ ($ e.target).children()[0])
       cb.prop("checked", not cb.prop("checked"))
       ($ '#projects_search').submit()
-
-    # Setup add project button
-    ($ '#addProjectButton').click ->
-      $.ajax
-        url: "/projects/create"
-        data: {}
-        dataType: "json"
-        success: (data, textStatus) ->
-          helpers.name_popup data, "Project", "project"

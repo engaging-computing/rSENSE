@@ -77,7 +77,7 @@ class MediaObjectsControllerTest < ActionController::TestCase
     assert_difference('MediaObject.count', -1) do
       delete :destroy, { id: @media_object },  user_id: @nixon
     end
-    assert_redirected_to media_objects_path
+    assert_redirected_to @media_object.project
   end
 
   # No test for saveMedia

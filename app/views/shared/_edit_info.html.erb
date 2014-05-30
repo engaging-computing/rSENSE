@@ -1,17 +1,25 @@
-<span class="edit_info" field='<%=field%>' type='<%=type%>' value='<%=value%>' make_link='<%=make_link%>'>
 
-  <div class="info_text">
-    <div class='info_val word_wrap'>
-      <% if make_link %>
-        <%= link_to value, "/#{type.pluralize}/#{row_id}" %>
-      <% else %>
-        <%= value %>
-      <% end %> 
-    </div>
+<span class="edit_info" field='<%= field %>' type='<%= type %>' value='<%= value %>'>
+  <div class='info-show-text'>
+    <div class='info_val word_wrap' style="font-weight: bold">
+      <span class='info-show-value'><%= value %></span>
   
-    <%if can_edit %>
-        <span class="info_edit_link" href=<%="/#{type.pluralize}/#{row_id}"%>><i style="font-size:0.8em" class="fa fa-edit"  title="Click to edit <%=field%>" ></i></span>
-    <%end%>
+      <% if can_edit %>
+        <a class="info_edit_link" href="#" style="color:black">
+          <i style="font-size:0.8em" class="fa fa-edit" title="Click to edit <%= field %>"></i>&nbsp;
+        </a>
+      <% end %>
+    </div>
   </div>
 
+  <% if can_edit %>
+    <div class='input-group info-edit-form'>
+      <input type='text' class='info_edit_box form-control' name='info_edit_value' value='<%= value %>'>
+      <span class='input-group-btn info_save_link'>
+        <button class="btn btn-success info-save-button" type="button">
+          <i class='fa fa-floppy-o icon-white'></i>
+        </button>
+      </span>
+    </div>
+  <% end %>
 </span>
