@@ -1,5 +1,6 @@
 $ ->
   if namespace.controller is "data_sets" and namespace.action is "manualEntry"
+    setupEditTable()
     
     ($ document).ready () ->
       ($ '#manualTable').find('thead').find('tr').prepend(
@@ -124,6 +125,7 @@ $ ->
             
              
       debug: false
+    
     ($ '#manualTable').editTable(settings)
     
     num_cols = []

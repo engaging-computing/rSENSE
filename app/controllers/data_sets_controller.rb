@@ -176,7 +176,11 @@ class DataSetsController < ApplicationController
         d.project_id = project.id
         d.data = data
         unless can_edit? @project
-          d.key = key_name(project.id, session[:key])
+          if session[:key]
+            d.key = session[:key]
+          else
+            d.key = key_name(project.id, params[:contribution_key])
+          end
         end
       end
 
