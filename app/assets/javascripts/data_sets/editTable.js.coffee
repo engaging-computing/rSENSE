@@ -1,4 +1,6 @@
-$ ->
+IS.onReady "data_sets/edit", ->
+  setupEditTable()
+
   if namespace.controller is "data_sets" and namespace.action is "edit"
     settings =
       buttons: ['close', 'add', 'save']
@@ -22,10 +24,6 @@ $ ->
     ($ '#edit_table_add').click ->
       ($ @).find('td:not(:last)').each () ->
         ($ @).attr 'width', "#{95 / (field_count)}%"
-    #remove = ($ '#editTable').find('thead').find('tr').find('th').length
-    #console.log(remove)
-    #($ '#editTable').find('tbody').find('tr').each (i,j) ->
-      #temp = ($ j).find(":nth-child(#{remove})").text()
-      #($ j).find(":nth-child(#{remove})").remove()
-      #($ j).find(":nth-child(#{remove})").text(temp)
-    
+
+IS.onReady "data_sets/manualEntry", ->
+  setupEditTable()

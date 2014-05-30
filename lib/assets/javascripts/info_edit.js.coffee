@@ -1,42 +1,36 @@
 $ ->
+  $('.info-edit-form').hide()
+
   ($ '.info_edit_link').click (e) ->
     e.preventDefault()
     
-    #Root div that everything should be in.
+    # Root div that everything should be in.
     root = ($ @).parents('.edit_info')
    
-    #value should be the current value of the info box
-    val = root.attr('value')
+    # value should be the current value of the info box
+    val = root.find('info-show-value').text()
     val = val.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;")
 
-    #href should be /type/id e.g. /users/jim
+    # href should be /type/id e.g. /users/jim
     href = ($ @).attr('href')
 
-    #The thing that will become a input box
-    info_box = root.find('.info_val')
-    info_box.html("""
-      <div class='input-group'>
-        <input type='text' class='info_edit_box form-control' value='#{val}'>
-        <span class='input-group-btn info_save_link' href='#{href}'>
-          <button class="btn btn-success" type="button"><i class='fa fa-floppy-o icon-white'></i></button>
-        </span>
-      </div>""")
+    # Show and focus the edit box.
+    root.find('.info-show-text').hide()
+    root.find('.info-edit-form').show()
     root.find('.info_edit_box').focus()
     
-    #Hide the edit link
-    ($ @).hide()
-
-    #Save on enter
-    info_box.on 'keypress', (event) ->
-      code = if event.keyCode then event.keyCode else event.which
-      if code == 13
-        ($ this).find('.info_save_link').trigger 'click'
+    # Enter key should cause a save
+    root.find('.info_edit_box').keypress (e) ->
+      if (e.keyCode == 13)
+        root.find('.info_save_link').trigger "click"
     
-    #Save button
-    info_box.find('.info_save_link').click (e) ->
+    # Save button
+    root.find('.info-save-button').click (e) ->
       e.preventDefault()
-     
-      #Build the data object to send to the controller
+    
+      $('#ajax-status').html("saving...")
+
+      # Build the data object to send to the controller
       type = root.attr('type')
       field_name = root.attr('field')
       edit_box = root.find('.info_edit_box')
@@ -52,27 +46,26 @@ $ ->
 
       edit_box.popover "destroy"
       
-      #Make the request to update
+      # Make the request to update
       $.ajax
         url: href
         type: "PUT"
         dataType: "json"
         data:
           data
-        success: =>
-          
-          #Swap save and edit links
-          root.find('.info_edit_link').show()
-          ($ @).hide()
+        success: ->
+          # Update text
+          val = root.find('.info_edit_box').val()
+          root.find('.info-show-value').text(val)
 
-          root.attr 'value', value
-          
-          #Make it a link or not
-          if root.attr('make_link') == 'true'
-            info_box.html("<a href='#{($ @).attr('href')}'>#{value}</a>")
-          else if root.attr('make_link') == 'false'
-            info_box.html(value)
+          # Swap save and edit links
+          root.find('.info-show-text').show()
+          root.find('.info-edit-form').hide()
+
+          $('#ajax-status').html('value saved')
         error: (j, s, t) ->
+          $('#ajax-status').html(j.responseText)
+
           edit_box.errorFlash()
           errors = JSON.parse j.responseText
           console.log errors
@@ -87,8 +80,4 @@ $ ->
           root.find('span.btn').removeClass 'disabled'
           root.find('span.btn').button 'toggle'
     
-    #Enter key should cause a save
-    info_box.find('.info_edit_box').keypress (e) ->
-      if(e.keyCode == 13)
-        root.find('a.info_save_link').trigger "click"
-    
+   
