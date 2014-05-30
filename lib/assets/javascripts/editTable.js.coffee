@@ -17,8 +17,7 @@ $ ->
 
         #If there is location add the map picker modal dialog
         ($ ".mainContent").append """
-          <div id="map_picker" class="modal fade" role="dialog" aria-hidden="true">
-            
+          <div id="map_picker" class="modal fade" role="dialog" aria-hidden="true"> 
               <div class="modal-content">
                 <div class="modal-body">
                   <div id="map_canvas" style="width:100%; height:300px"></div><br/>
@@ -37,7 +36,6 @@ $ ->
                   </div>
                 </div>
               </div>
-            
           </div>"""
 
         #Set up the Map and geocoder
