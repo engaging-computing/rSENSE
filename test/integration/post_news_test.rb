@@ -19,13 +19,16 @@ class MakeNewsTest < ActionDispatch::IntegrationTest
     click_on 'News'
     assert page.has_no_content?('The Quick Brown Fox')
 
+    find('#news_title').set('The Quick Green Fox')
+
     click_on 'Add News Item'
     assert page.has_content?('News entry was successfully created.')
+    assert page.has_content?('The Quick Green Fox')
 
     find('.menu_edit_link').click
     click_on('Edit Title')
-    find('.info_edit_box').set('The Quick Brown Fox')
-    all('.menu_save_link').first.click
+    find('#news_title').set('The Quick Brown Fox')
+    all('.btn-success').first.click
 
     sleep 1
 
