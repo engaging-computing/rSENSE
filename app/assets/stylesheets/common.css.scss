@@ -8,7 +8,7 @@ body {
 
 .rich-text {
   width: 605px;
-  height: 400px;
+  max-height: 400px;
 }
 
 .stretch-width {
@@ -18,12 +18,15 @@ body {
 
 #content-partial {
 
-  overflow:  scroll;
+  overflow:  auto;
   overflow-x:  hidden;
   word-wrap:  break-word;
+  #content-viewer{
+  max-height:  400px;
+  }
   img{
     max-width:  100%;
     max-height:  90%;
   }
-  //max-height:  400px;
+  
 }
