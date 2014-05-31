@@ -1,5 +1,7 @@
 <div class="row">
-  <div class="col-md-8 news_title"><%= news_edit_menu_helper false%></div>
+  <div class="col-md-8 news_title" id="object_title">
+      <%= title_and_edit_menu(@news) %>
+  </div>
 </div>
 
 <% if is_admin? %>
