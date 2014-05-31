@@ -32,3 +32,20 @@ $ ->
       $('#add-content-image').click(showEditor)
     $('#content-cancel-btn').click(hideEditor)
 
+  $('.summernote').summernote(
+    height: 200,
+    onImageUpload: (files, editor, w) ->
+      sendFile(files[0], editor, w)
+  )
+  sendFile( file, editor, w) ->
+    data = new FormData
+    data.append("file", file)
+    $.ajax 
+      data: data,
+      type: "POST"
+      url: ""
+      cache: false,
+      contentType: false,
+      processData,
+      success: (url) ->
+        editor.insertImage(w, url)

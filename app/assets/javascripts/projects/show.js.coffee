@@ -268,4 +268,9 @@ IS.onReady "projects/show", ->
   ($ '#print').click (e) ->
     e.preventDefault()
     window.print()
-    
+  ($ '#content-edit-btn').click (e) ->
+    ($ '#content-partial').css('overflow-y': 'hidden')
+  ($ '#content-cancel-btn').click (e) ->
+    ($ '#content-partial').css('overflow-y': 'scroll')
+  ($ '#content-save-btn').click (e) ->
+    ($ '#content-partial').css('overflow-y': 'scroll')
