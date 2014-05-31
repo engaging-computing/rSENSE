@@ -28,7 +28,6 @@ class Project < ActiveRecord::Base
 
   def sanitize_project
     self.content = sanitize content
-
     # Check to see if there is any valid content left
     html = Nokogiri.HTML(content)
     if html.text.blank? and html.at_css('img').nil?
