@@ -77,18 +77,22 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
 
     # Test for media objects helpers
     visit '/projects/1'
+    assert page.has_css?('.media_edit')
     all('.media_edit')[0].click
-    assert page.has_content? 'nerdboy.jpg'
+    assert page.has_content?('nerdboy.jpg')
 
     visit '/projects/1'
+    assert page.has_css?('.media_edit')
     all('.media_edit')[1].click
     assert page.has_content? 'Warning'
 
     visit '/projects/1'
+    assert page.has_css?('.media_edit')
     all('.media_edit')[2].click
     assert page.has_content? 'Warning'
 
     visit '/projects/1'
+    assert page.has_css?('.media_edit')
     all('.media_edit')[2].click
     assert page.has_content? 'Warning'
 
