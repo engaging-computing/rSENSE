@@ -3,63 +3,71 @@
   <!-- Left hand column -->
   <div class="col-md-7">
     <div class="row">
-      <!-- qr code  -->
-      <div class="col-md-3">
-        <div id="exp_qr_tag"></div>
-      </div>
 
       <!-- project title -->
-      <div class="col-md-9" style="margin-left:0px">
+      <div class="col-sm-12" style="margin-left:0px">
         <div class="project_info_box" >
-          <span id="title_span" class="word-break" style="font-size:1.5em"><%= project_edit_helper "title", (can_edit? @project), false%></span><br>
-          <span class="info_label" style="font-size:1.1em">by: <%= link_to @project.owner.name, user_path(@project.owner) %> (<%=time_ago_in_words(@project.created_at)%> ago)</span><br/>
-          <div id="notices">
-            <span id="lock_notice" <%if !@project.lock%>style="display:none"<%end%>><i class="icon-lock"> This project is locked</i></span> 
-            <span id="hidden_notice" <%if !@project.hidden%>style="display:none"<%end%>><i class="icon-eye-close"> This project is hidden</i></span> 
-           <span id="id_notice" <% if @project.hidden || @project.lock%>style="display:none"<% end %>>
-              Project #: <%= @project.id %>
-            </span>
+        <div class="row"> 
+          <div class="col-sm-12">
+            <span id="title_span" class="word-break" style="font-size:1.5em"><%= project_edit_helper "title", (can_edit? @project), false%></span><br>
           </div>
-          <%if !@cloned_project.nil? %>
-            <span class="info_label" style="font-size:1.1em">Cloned From:</span>
-            <%=link_to @cloned_project.title, project_path(@cloned_project.id)%><br>
-          <%end%>
-          <div class="btn-group likes" project_id="<%= @project.id%>">
-            <%if @cur_user.try(:id)%>
-              <button type="button" class="btn btn-default liked_status <% if @liked_by_cur_user%>active<%end%>" href="#" data-toggle="button"><i class="fa fa-thumbs-up"></i> Like</button>
-              <button type="button" class="btn btn-default like_display" disabled> <%= @project.likes.count %></button>
+          <div class="col-sm-12">
+            <span class="info_label" style="font-size:1.1em">by: <%= link_to @project.owner.name, user_path(@project.owner) %> (<%=time_ago_in_words(@project.created_at)%> ago)</span><br/>
+          </div>
+          <div class="col-sm-12">
+            <div id="notices">
+              <span id="lock_notice" <%if !@project.lock%>style="display:none"<%end%>><i class="icon-lock"> This project is locked</i></span> 
+              <span id="hidden_notice" <%if !@project.hidden%>style="display:none"<%end%>><i class="icon-eye-close"> This project is hidden</i></span> 
+            <span id="id_notice" <% if @project.hidden || @project.lock%>style="display:none"<% end %>>
+                Project #: <%= @project.id %>
+              </span>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <%if !@cloned_project.nil? %>
+              <span class="info_label" style="font-size:1.1em">Cloned From:</span>
+              <%=link_to @cloned_project.title, project_path(@cloned_project.id)%><br>
             <%end%>
-            
-            <span style="padding-left: 1em">
+          </div>
+          </div>
+          <div class="row project_buttons">
+            <div class="col-sm-3">
               <button type="button" class="btn btn-default" disabled>
-                <i class="fa fa-eye"></i> <%= @project.views %>
+                <i class="fa fa-eye"> Views | </i> <%= @project.views %>
               </button>
-            </span>
-            
-            <span style="padding-left: 1em">
+            </div>
+            <div class="col-sm-3">
+              <div class="btn-group likes" project_id="<%= @project.id%>">
+                <%if @cur_user.try(:id)%>
+                  <button type="button" class="btn btn-default liked_status <% if @liked_by_cur_user%>active<%end%>" href="#" data-toggle="button"><i class="fa fa-thumbs-up"></i> Like</button>
+                  <button type="button" class="btn btn-default like_display" disabled> <%= @project.likes.count %></button>
+                <%end%>
+              </div>
+            </div>
+          
+            <div class="col-sm-2" hidden-xs>
               <button type="button" class="btn btn-default" id="print">
                 <i class="fa fa-print"></i> Print
               </button>
-            </span>
-            
-            <% if can_edit? @project %>
-              <span style="padding-left: 1em">
-                <a href = "/projects/<%=@project.id%>/edit">
-                <button type="button" class="btn btn-primary" id="edit-project-button">
-                  <i class="fa fa-cog"></i> Edit
-                </button>
+            </div>
+            <%if @cur_user.try(:id)%>
+              <div class="col-xs-2">
+                <a href = "/projects/<%=@project.id%>/clone">
+                  <button type="button" class="btn btn-success">
+                    <i class="fa fa-copy"></i> Clone
+                  </button>
                 </a>
-              </span>
+              </div>
             <% end %>
-            
-            <span style="padding-left: 1em">
-              <a href = "/projects/<%=@project.id%>/clone">
-                <button type="button" class="btn btn-success">
-                  <i class="fa fa-copy"></i> Clone
-                </button>
-              </a>
-            </span>
-            
+            <% if can_edit? @project %>
+              <div class="col-xs-2">
+                <a href = "/projects/<%=@project.id%>/edit">
+                  <button type="button" class="btn btn-primary" id="edit-project-button">
+                    <i class="fa fa-cog"></i> Edit
+                  </button>
+                </a>
+              </div>
+            <% end %>
           </div>
         </div>
       </div>
