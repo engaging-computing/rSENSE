@@ -3,6 +3,7 @@ module Api
     class UsersController < ActionController::UsersController
       skip_before_filter :authorize
       before_filter :set_user
+      before_filter :allow_cross_site_requests
 
       def my_info
         gravatar = Gravatar.new.url(@cur_user, 80)
