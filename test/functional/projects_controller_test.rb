@@ -7,6 +7,7 @@ class ProjectsControllerTest < ActionController::TestCase
     @crunch  = users(:crunch)
     @project_one = projects(:one)
     @project_three = projects(:three)
+    @delete_me = projects(:delete_me)
   end
 
   test 'should get index' do
@@ -68,10 +69,10 @@ class ProjectsControllerTest < ActionController::TestCase
 
   test 'should destroy project' do
     assert_difference('Project.count', 0) do
-      delete :destroy, { id: @project_one },  user_id: @nixon
+      delete :destroy, { id: @delete_me },  user_id: @nixon
     end
 
-    @p0 = Project.find(@project_one.id)
+    @p0 = Project.find(@delete_me.id)
     assert @p0.hidden, 'Project Got Hidden'
 
     assert_redirected_to projects_path
@@ -79,10 +80,10 @@ class ProjectsControllerTest < ActionController::TestCase
 
   test 'should destroy project (json)' do
     assert_difference('Project.count', 0) do
-      delete :destroy, { format: 'json', id: @project_one },  user_id: @nixon
+      delete :destroy, { format: 'json', id: @delete_me },  user_id: @nixon
     end
 
-    @p0 = Project.find(@project_one.id)
+    @p0 = Project.find(@delete_me.id)
     assert @p0.hidden, 'Project Got Hidden'
 
     assert_response :success

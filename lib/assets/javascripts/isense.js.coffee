@@ -24,6 +24,8 @@ runPageReady = () ->
   if code?
     fn() for fn in code
 
+  $.ajaxSetup({dataType: 'json'})
+
 $(document).on("ready page:load", runPageReady)
 
 #

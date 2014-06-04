@@ -128,3 +128,6 @@ class ApplicationController < ActionController::Base
     end
   end
 end
+
+class UserError < RuntimeError
+end

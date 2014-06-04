@@ -31,6 +31,17 @@ class ShowUserTest < ActionDispatch::IntegrationTest
     assert page.has_content?('showing tab: My Projects'), 'Switched tab'
     assert page.has_content?('Media Test'), 'View projects list'
 
+    assert page.has_content?('Delete This Project'), 'Delete project should exist'
+    page.all('tr').each do |tr|
+      if tr.text =~ /Delete This Project/
+        tr.click_on('Delete')
+        page.driver.browser.accept_js_confirms
+      end
+    end
+
+    assert page.has_content?('Delete succeeded'), 'Ajax complete'
+    assert page.has_no_content?('Delete This Project'), 'Project removed from list'
+
     click_on 'Data Sets'
     assert page.has_content?('showing tab: Data Sets'), 'Switched tab'
     assert page.has_content?('Needs Media'), 'View data sets list'
