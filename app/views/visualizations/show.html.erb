@@ -37,9 +37,8 @@
 
 <div id="title_row" class="row visualization_title" style="margin-left: 0px; margin-top:20px; ">
   <div style="margin-left:12px;">
-    <span class="full_width_edit" id="title_span" style="font-size:2em">
-      <%=visualization_edit_menu_helper false %>
-    </span>
+    <%= title_and_edit_menu(@visualization) %>
+
     <div>
       <b>Project:</b> <%=link_to @visualization.project.title, project_path(@visualization.project)%>
     </div>

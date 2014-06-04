@@ -3,6 +3,7 @@ module Api
     class ProjectsController < ActionController::ProjectsController
       skip_before_filter :authorize
       before_filter :set_user, only: [:create]
+      before_filter :allow_cross_site_requests
 
       def index
         super

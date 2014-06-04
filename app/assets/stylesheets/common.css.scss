@@ -8,6 +8,25 @@ body {
 
 .rich-text {
   width: 605px;
-  height: 400px;
+  max-height: 400px;
 }
 
+.stretch-width {
+  width: 100%;
+  min-width: 500px; 
+}
+
+#content-partial {
+
+  overflow:  auto;
+  overflow-x:  hidden;
+  word-wrap:  break-word;
+  #content-viewer{
+  max-height:  400px;
+  }
+  img{
+    max-width:  100%;
+    max-height:  90%;
+  }
+  
+}

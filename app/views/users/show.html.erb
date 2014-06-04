@@ -6,21 +6,24 @@
         <%= image_tag Gravatar.new.url(@user), style: "border-radius: 3px", class: "gravatar_img" %>
       </div>
       <div class="col-lg-12" style="padding-top:10px;">
-        <span class="info_label" style="line-height: 30px;">Display Name:</span><br/>
+        <span class="info_label" style="line-height: 30px;">Display Name:</span><br>
         <span class="full_width_edit" style="font-style:italic">
           <%= user_edit_helper 'name', can_edit?(@user), false %>
         </span>
-        <br />
+
+        <br>
         
         <% if @cur_user.admin? or @cur_user.id == @user.id %>
-          <span class="info_label" style="line-height: 30px;">Email:</span>
-          <span class="full_width_edit" style="font-style:italic">
-            <%= user_edit_helper 'email', false, false %>
+          <br>
+
+          <span class="info_label" style="line-height: 30px;">Email:</span><br>
+          <span class="full_width_edit" style="font-style: italic; font-weight: bold">
+            <%= @user.email %>
           </span>
-          <br />
+
+          <br>
         
-          <p><%= link_to "Change Email or Password", 
-            edit_user_path(@user) %></p>
+          <p style="margin-top: 8px"><%= link_to "Change Email or Password", edit_user_path(@user) %></p>
         <% end %>
 
         <i>Joined <%= time_ago_in_words(@user.created_at)%> ago</i>
@@ -61,9 +64,9 @@
         <div id="contributions">
         </div>
         <div style="text-align: center; padding: 5px">
-          <a href="#" class="pagebck"><<</a>
+          <a href="#" class="pagebck">&lt;&lt;</a>
           <span id="pageLabel">Page 1 of 1</span>
-          <a href="#" class="pagefwd">>></a>
+          <a href="#" class="pagefwd">&gt;&gt;</a>
         </div>
       </div>
     <% end %>

@@ -17,6 +17,8 @@ class SessionsController < ApplicationController
   end
 
   def create
+    session[:key] = nil
+    session[:contrib_access] = nil
     login_email = params[:email].downcase
 
     @user = User.where('lower(email) = ?', login_email).first
@@ -41,6 +43,8 @@ class SessionsController < ApplicationController
 
   def destroy
     session[:user_id] = nil
+    session[:key] = nil
+    session[:contrib_access] = nil
     respond_to do |format|
       format.html { redirect_to :back, notice: 'Logged out' }
       format.json { render json: {}, status: :ok }

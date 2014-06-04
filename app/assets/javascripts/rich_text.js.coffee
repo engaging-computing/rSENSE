@@ -10,9 +10,9 @@ showEditor = () ->
       ['para', ['ul', 'ol', 'paragraph']],
       ['misc', ['codeview']],
       ['insert', ['picture', 'link']],
-    ],
+    ]
   })
-
+  
   $('#content-area').code($('#content-area').val())
 
   $('#content-area').closest('form').submit ->
@@ -31,4 +31,3 @@ $ ->
     if $('#add-content-image')?
       $('#add-content-image').click(showEditor)
     $('#content-cancel-btn').click(hideEditor)
-

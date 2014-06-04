@@ -4,6 +4,13 @@ class ApplicationController < ActionController::Base
   before_filter :find_user
   before_filter :authorize
 
+  def allow_cross_site_requests
+    headers['Access-Control-Allow-Origin'] = '*'
+    headers['Access-Control-Allow-Methods'] = 'POST, PUT, DELETE, GET, OPTIONS'
+    headers['Access-Control-Request-Method'] = '*'
+    headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+  end
+
   def find_user
     @cur_user = User.find_by_id(session[:user_id])
     @namespace = { action: params[:action], controller: params[:controller] }
@@ -127,4 +134,7 @@ class ApplicationController < ActionController::Base
       end
     end
   end
+end
+
+class UserError < RuntimeError
 end

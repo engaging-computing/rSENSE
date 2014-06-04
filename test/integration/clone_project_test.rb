@@ -68,10 +68,13 @@ class CloneProjectTest < ActionDispatch::IntegrationTest
     assert page.has_content?('test.pdf'), 'File should be in list'
     assert page.has_content?('I Like Clones'), 'Dataset should be in list'
 
-    page.find('.likes').find_button('Edit').click
+    page.find('.dataset').click_on 'Delete'
+    page.driver.browser.accept_js_confirms
+
+    page.find('#edit-project-button').click
     click_on 'Delete Project'
     click_on 'Das Cloning Projekt'
-    page.find('.likes').find_button('Edit').click
+    page.find('#edit-project-button').click
     click_on 'Delete Project'
 
     assert page.has_no_content?('Das Cloning Projekt')

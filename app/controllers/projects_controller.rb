@@ -171,31 +171,33 @@ class ProjectsController < ApplicationController
   def destroy
     @project = Project.find(params[:id])
 
-    if can_delete?(@project)
-
-      @project.data_sets.each do |d|
-        d.hidden = true
-        d.user_id = -1
-        d.save
-      end
-
-      @project.media_objects.each do |m|
-        m.destroy
-      end
-
-      @project.user_id = -1
-      @project.hidden = true
-      @project.save
-
-      respond_to do |format|
-        format.html { redirect_to projects_url }
-        format.json { render json: {}, status: :ok }
-      end
-    else
+    unless can_delete?(@project)
       respond_to do |format|
         format.html { redirect_to '/401.html' }
         format.json { render json: {}, status: :forbidden }
       end
+      return
+    end
+
+    if @project.data_sets.length > 0
+      respond_to do |format|
+        format.html { redirect_to '/401.html' }
+        format.json { render json: {}, status: :forbidden }
+      end
+      return
+    end
+
+    @project.media_objects.each do |m|
+      m.destroy
+    end
+
+    @project.user_id = -1
+    @project.hidden = true
+    @project.save
+
+    respond_to do |format|
+      format.html { redirect_to projects_url, notice: "Project deleted: #{@project.title}" }
+      format.json { render json: {}, status: :ok }
     end
   end
 
