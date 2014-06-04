@@ -34,7 +34,10 @@
         </td>
         <td class="delete">
           <% if can_delete? contribution %>
-            <a class="contribution_delete" type="<%= ActiveModel::Naming::param_key(contribution) %>" href="<%= url_for(contribution) %>"><i class="fa fa-times-circle"></i> Delete</a>
+            <%= link_to contribution, method: :delete, remote: true, 
+                        data: {confirm: "Are you sure?"}, class: "contrib-delete-link" do %>
+              <i class="fa fa-times-circle"></i> Delete
+            <% end %>
           <% end %>
         </td>
       </tr>      
