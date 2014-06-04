@@ -57,3 +57,7 @@ locked_project:
   title: Locked Project
   user: nixon
   lock: true
+
+delete_me:
+  title: Delete This Project
+  user: nixon
