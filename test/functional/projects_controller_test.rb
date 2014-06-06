@@ -68,9 +68,9 @@ class ProjectsControllerTest < ActionController::TestCase
   end
 
   test 'should hide project' do
-    put :update, { format: 'json', id: @project_one, project: { hidden: true }},  user_id: @kate
+    put :update, { format: 'json', id: @project_one, project: { hidden: true } },  user_id: @kate
     assert_response :success
-    assert Project.find(@project_one.id).hidden?, "Project got hidden"
+    assert Project.find(@project_one.id).hidden?, 'Project got hidden'
   end
 
   test 'should destroy project' do
