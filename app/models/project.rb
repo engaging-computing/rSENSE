@@ -239,7 +239,7 @@ class Project < ActiveRecord::Base
         nds = ds.dup
         nds.project_id = new_project.id
         nds.user_id = user_id
-
+        nds.created_at = ds.created_at
         # Fix data fields
         data = nds.data
         new_data = []
