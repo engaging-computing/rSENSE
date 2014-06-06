@@ -9,7 +9,6 @@ $ ->
       ($ '.footer').hide()
       ($ '.mainContent').data('padding',  ($ '.mainContent').parent().css('padding'))
       ($ '.mainContent').parent().css('padding',"")
-      ($ '#fullscreen-viz').prop('title', 'Minimize')
 
     ### Minimize event ###
     unfullscreen = () ->
