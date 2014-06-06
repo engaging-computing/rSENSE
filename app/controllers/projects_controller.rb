@@ -53,7 +53,6 @@ class ProjectsController < ApplicationController
   # GET /projects/1.json
   def show
     @project = Project.find(params[:id])
-    puts @project.data_sets
     # Update view count
     session[:viewed] ||= {}
     session[:viewed][:projects] ||= {}
@@ -110,10 +109,6 @@ class ProjectsController < ApplicationController
     if params[:project_id]
       cloned_from = Project.find(params[:project_id])
       @project = cloned_from.clone(params, @cur_user.id)
-      #puts 'PRINTING FROM CREATE before reverse: '
-      #puts @project.data_sets
-      #puts 'PRINTING FROM CREATE after reverse: ' 
-      #puts @project.data_sets.reverse!
     else
       @cloned_project = nil
       @project = Project.new project_params
