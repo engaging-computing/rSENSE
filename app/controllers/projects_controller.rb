@@ -359,7 +359,7 @@ class ProjectsController < ApplicationController
                                      :curated_at, :updated_at, :default_vis)
     end
 
-    params[:project].permit(:content, :title, :user_id, :filter, :cloned_from, :has_fields,
+    params[:project].permit(:content, :title, :user_id, :filter, :hidden, :cloned_from, :has_fields,
                             :featured_media_id, :lock, :updated_at, :default_vis)
   end
 end
