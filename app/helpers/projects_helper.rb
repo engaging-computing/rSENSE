@@ -23,7 +23,15 @@ module ProjectsHelper
     Find.find Rails.root.join('app/assets/images/placeholders').to_s do |img|
       imgs << image_path('placeholders/' + Pathname.new(img).basename.to_s) if img =~ /\.jpg$/
     end
-
+    
+  def is_deleted?(project)
+    if project.user_id == -1
+      true
+    else
+      false
+    end
+  end
+  
     imgs[id % imgs.size]
   end
 end
