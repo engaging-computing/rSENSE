@@ -67,6 +67,12 @@ class ProjectsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  test 'should hide project' do
+    put :update, { format: 'json', id: @project_one, project: { hidden: true }},  user_id: @kate
+    assert_response :success
+    assert Project.find(@project_one.id).hidden?, "Project got hidden"
+  end
+
   test 'should destroy project' do
     assert_difference('Project.count', 0) do
       delete :destroy, { id: @delete_me },  user_id: @nixon
