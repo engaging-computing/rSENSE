@@ -7,6 +7,8 @@ $ ->
       ($ '#dataset_info').hide()
       ($ '#title_row').hide()
       ($ '.footer').hide()
+      console.log ($ '.mainContent').data('padding',  ($ '.mainContent').parent().css('padding'))
+      ($ '#viscontainer').css( 'height', Math.floor(($ document).height *.1))
       ($ '.mainContent').data('padding',  ($ '.mainContent').parent().css('padding'))
       ($ '.mainContent').parent().css('padding',"")
 
