@@ -214,8 +214,6 @@ $ ->
 
           controls += "<div class='radio'><label><input type='radio' class='analysisType' "
           controls += "name='analysisTypeSelector' value='"
-          console.log('type = ' + type)
-          console.log 'typestring = ' + typestring
           controls += "#{type}' #{if type is @analysisType then 'checked' else ''}> "
           
           switch typestring
