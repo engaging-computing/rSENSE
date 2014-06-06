@@ -83,9 +83,6 @@ class ProjectsController < ApplicationController
     if @data_sets.nil?
       @data_sets = []
     end
-    #if !@cloned_project.nil? and !@data_sets.nil?
-      #@data_sets.reverse!
-    #end
 
     recur = params.key?(:recur) ? params[:recur] == 'true' : false
 
