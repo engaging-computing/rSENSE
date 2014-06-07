@@ -7,9 +7,9 @@ module ProjectsHelper
       make_link: make_link, escape_link: projects_url
   end
 
-  def project_edit_helper(field, can_edit = false, make_link = true)
+  def project_edit_helper(field, can_edit = false, make_link = true, url = '#')
     render 'shared/edit_info', type: 'project', field: field, value: @project[field],
-      row_id: @project.id, can_edit: can_edit, make_link: make_link
+      row_id: @project.id, can_edit: can_edit, make_link: make_link, href: url
   end
 
   def can_contribute?(project)
