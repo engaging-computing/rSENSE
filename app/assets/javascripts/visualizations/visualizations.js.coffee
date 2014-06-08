@@ -1,16 +1,19 @@
 $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis","show"]
   
-    ($ '#fullscreen-viz').click (e) ->  
-      fullscreenEnabled = document.fullscreenEnabled || document.mozFullScreenEnabled || document.webkitFullscreenEnabled
-      fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement  
+    ($ '#fullscreen-viz').click (e) ->
+      fullscreenEnabled = document.fullscreenEnabled || document.mozFullScreenEnabled ||
+      document.webkitFullscreenEnabled
+      fullscreenElement = document.fullscreenElement || document.mozFullScreenElement ||
+      document.webkitFullscreenElement
       icon = ($ '#fullscreen-viz').find('i')
       if !fullscreenElement
         window.globals.fullscreen = true
         icon.removeClass('icon-resize-full')
         icon.addClass('icon-resize-small')
         fullscreenVis = ($ '#viscontainer')[0]
-        browserFullscreenMethod = fullscreenVis.webkitRequestFullScreen || fullscreenVis.mozRequestFullScreen || fullscreenVis.requestFullScreen || fullscreenVis.msRequestFullscreen  
+        browserFullscreenMethod = fullscreenVis.webkitRequestFullScreen || fullscreenVis.mozRequestFullScreen ||
+        fullscreenVis.requestFullScreen || fullscreenVis.msRequestFullscreen
         browserFullscreenMethod.call(fullscreenVis)
       else
         window.globals.fullscreen = false
@@ -19,7 +22,7 @@ $ ->
         if document.webkitExitFullscreen
           document.webkitExitFullscreen()
         else if document.mozCancelFullScreen
-          document.mozCancelFullScreen()  
+          document.mozCancelFullScreen()
         else if (document.cancelFullScreen)
           document.cancelFullScreen()
         else if (document.msExitFullscreen)
