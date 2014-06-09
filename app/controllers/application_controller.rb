@@ -11,6 +11,11 @@ class ApplicationController < ActionController::Base
     headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
   end
 
+  def options_req
+    allow_cross_site_requests
+    head(:ok)
+  end
+
   def find_user
     @cur_user = User.find_by_id(session[:user_id])
     @namespace = { action: params[:action], controller: params[:controller] }
