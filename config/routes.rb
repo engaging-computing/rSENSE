@@ -99,8 +99,7 @@ Rsense::Application.routes.draw do
 
   namespace :api, defaults: { format: 'json' }, except: :destroy do
     namespace :v1 do
-      match '*', :controller => 'application', :action => 'options_req', 
-        :constraints => { :method => 'OPTIONS' }
+      match '*', :via => 'OPTIONS', :controller => 'application', :action => 'options_req'
 
       post '/projects/:id/jsonDataUpload' => 'data_sets#jsonDataUpload'
       post '/data_sets/append' => 'data_sets#append'
