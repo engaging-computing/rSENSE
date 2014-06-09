@@ -20,6 +20,19 @@
  *= require_self
  */
 
+.flash {
+  background-color: red;
+  td {
+    background-color: red !important;
+  }
+}
+
+.fade {
+  opacity: 0;
+  -webkit-transition: opacity .01s linear .1s;
+  transition: opacity .01s linear .1s;
+}
+
 #addProjectButton, #addTutorialButton
 {
   margin:0px 7px 0px 7px;

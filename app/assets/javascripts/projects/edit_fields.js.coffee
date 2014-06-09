@@ -21,8 +21,12 @@ $ ->
         success: (msg) ->
           if root.hasClass('location')
             root.parents('table').find('tr.location').each ->
-              ($ this).remove()
+              #($ this).remove()
+              ($ this).addClass 'flash'
+              ($ this).addClass 'fade'
           else
-            root.remove()
+            #root.remove()
+            root.addClass 'flash'
+            root.addClass 'fade'
         error:(msg) ->
           console.log msg
