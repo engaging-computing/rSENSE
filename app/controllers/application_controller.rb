@@ -4,6 +4,10 @@ class ApplicationController < ActionController::Base
   before_filter :find_user
   before_filter :authorize
 
+  skip_before_filter :verify_authenticity_token, only: [:options_req]
+  skip_before_filter :find_user, only: [:options_req]
+  skip_before_filter :authorize, only: [:options_req]
+
   def allow_cross_site_requests
     headers['Access-Control-Allow-Origin'] = '*'
     headers['Access-Control-Allow-Methods'] = 'POST, PUT, DELETE, GET, OPTIONS'
