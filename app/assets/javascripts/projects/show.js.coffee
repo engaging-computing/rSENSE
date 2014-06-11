@@ -206,21 +206,54 @@ IS.onReady "projects/show", ->
           recolored = true
             
   ($ 'a.data_set_delete').click (e) ->
+    
+    url = ($ @).attr('href')
+    row = ($ @).parents('tr')
  
     e.preventDefault()
     if helpers.confirm_delete ($ @).attr('name')
       $.ajax
-        url: ($ @).attr('href')
+        url: url
         type: 'DELETE'
         dataType: "json"
         success: =>
           recolored = false
-          row = ($ @).parents('tr')
           tbody = row.parents('tbody')
           row.delete_row ->
             row.remove()
             tbody.recolor_rows(recolored)
             recolored = true
+        error: (msg) =>
+          response = $.parseJSON msg['responseText']
+          error_message = response.errors.join "</p><p>"
+          
+          ($ '.container.mainContent').find('p').before """
+            <div class="alert alert-danger fade in">
+              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+              <h4>Error Deleting Data Set:</h4>
+              <p>#{error_message}</p>
+              <p>
+                <button type="button" class="btn btn-danger error_bind" data-retry-text"Retrying...">Retry</button>
+                <button type="button" class="btn btn-default error_dismiss">Or Dismiss</button>
+              </p>
+            </div>"""
+          
+          ($ '.error_dismiss').click ->
+            ($ '.alert').alert 'close'
+          
+          ($ '.error_bind').click ->
+            $.ajax
+              url: url
+              type: 'DELETE'
+              dataType: "json"
+              success: =>
+                ($ '.alert').alert 'close'
+                recolored = false
+                tbody = row.parents('tbody')
+                row.delete_row ->
+                  row.remove()
+                  tbody.recolor_rows(recolored)
+                  recolored = true
             
   ###
   # Hide and delete for visualizations
