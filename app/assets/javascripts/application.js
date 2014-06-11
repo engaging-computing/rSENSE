@@ -21,7 +21,6 @@
 //= require name_popup
 //= require jquery_ujs
 //= require jquery.ui.all
-//= require bootstrap/bootstrap
 //= require unsupported
 //= require info_edit
 //= require menu_edit
@@ -29,8 +28,8 @@
 //= require validator
 //= require jquery.form.js
 //= require jquery.qrcode.min.js
-//= require bootstrap-datetimepicker.js
 //= require titlebar.js.coffee
+//= require bootstrap
 //
 // Visualization stuff follows
 //
