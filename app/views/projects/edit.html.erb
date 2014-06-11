@@ -8,10 +8,9 @@
 
 <!-- not admin section -->
 <% if can_edit? @project %>
-    <div class="col-xs-12 col-md-8 col-md-offset-2">
-      <%= render 'form' %>
-    </div>
-
+  <div class="col-xs-12 col-md-8 col-md-offset-2">
+    <%= render 'form' %>
+  </div>
 <% else %>
   You are not authorized to view this page.
 <% end %>

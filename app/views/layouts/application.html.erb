@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html style="height:100%;">
+<html>
   <head>
     <title> <%= render_title %> </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,7 +24,7 @@
       </div>
     <% end %>
 
-    <div style="min-height:100%;position:relative;">
+    <div>
       <!-- The title bar -->
       <nav class="navbar navbar-default navbar-static-top" role="navigation">
         <div class="container"><!-- Brand and toggle get grouped for better mobile display -->
@@ -35,8 +35,8 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand full" href="/"><%= image_tag("isense-logo.png", height: "35") %></a>
-          <a class="navbar-brand small" href="/"><%= image_tag("isense-logo-small.png", height: "35") %></a>
+          <a class="navbar-brand hidden-xs" href="/"><%= image_tag("isense-logo.png", height: "35") %></a>
+          <a class="navbar-brand visible-xs" href="/"><%= image_tag("isense-logo-small.png", height: "35") %></a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -76,7 +76,7 @@
       </nav>
       
       <!-- Main Container -->
-      <div id="outer" style="padding:0px 0px 70px 0px; margin:0; min-height:100%;">
+      <div id="outer">
         <div class="container mainContent <%= @layout_wide ? 'mc-wide' : '' %>" data-role="page">
           <p><%= flash[:alert] %></p>
           <%= bootstrap_flash %>
