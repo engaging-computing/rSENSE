@@ -115,6 +115,7 @@ class DataSetsController < ApplicationController
   def destroy
     @data_set = DataSet.find(params[:id])
     @project  = @data_set.project
+    @errors = []
 
     if @project.lock? and !can_edit?(@project)
       redirect_to @project, alert: 'Project is locked'
@@ -137,9 +138,11 @@ class DataSetsController < ApplicationController
         end
       end
     else
+      @errors.push 'User Not Authorized.'
+      
       respond_to do |format|
         format.html { redirect_to 'public/403.html', status: :forbidden }
-        format.json { render json: {}, status: :forbidden }
+        format.json { render json: {errors: @errors}, status: :forbidden }
       end
     end
   end
