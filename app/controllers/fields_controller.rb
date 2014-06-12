@@ -67,7 +67,7 @@ class FieldsController < ApplicationController
   def destroy
     @field = Field.find(params[:id])
     @project = Project.find(@field.project_id)
-    if can_delete?(@field) && (@project.data_sets.count == 0)
+    if can_delete?(@field) && (@project.data_sets.count == 0) && false
       if (@field.field_type == get_field_type('Latitude')) || (@field.field_type == get_field_type('Longitude'))
         @project.fields.where('field_type = ?', get_field_type('Latitude')).first.destroy
         @project.fields.where('field_type = ?', get_field_type('Longitude')).first.destroy

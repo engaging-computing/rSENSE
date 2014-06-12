@@ -1,3 +1,5 @@
+IS.onReady "projects/show", ->
+
   # Initializes the dropdown lightbox for google drive upload
   ($ '#google_doc').click ->
     ($ '#doc_box').modal()
