@@ -20,8 +20,8 @@ $ ->
           field: ($ @).attr('fid')
         success: (msg) ->
           if root.hasClass('location')
-            root.parents('table').find('tr.location').each ->
-            ($ this).remove()
+            ($ 'tr.location').each ->
+              ($ this).remove()
           else
             root.remove()
             

@@ -1,38 +1,3 @@
-IS.onReady "projects/show", ->
-  # Loads a QR code for the page
-  ($ '#exp_qr_tag').qrcode {
-    text: window.location.href,
-    height: ($ '#exp_qr_tag').width(),
-    width: ($ '#exp_qr_tag').width()
-  }
-
-  # Control code for name popup box, Only for manual entry at the moment.
-  if ($ '#name_box') isnt []
-    ($ '#name_box').modal()
-    selectFunc = ->
-      ($ '#name_name').select()
-    setTimeout selectFunc, 300
-
-    ($ '#name_name').keyup (e) ->
-      if (e.keyCode == 13)
-        ($ '.name_button').click()
-
-    ($ '.name_button').click ->
-      name = ($ '#name_name').val()
-      data =
-        project:
-          title: name
-
-      $.ajax
-        url: ($ 'span.edit_menu .menu_save_link').attr 'href'
-        type: 'PUT'
-        dataType: 'json'
-        data: data
-        success: ->
-          ($ 'span.edit_menu span.info_text').text(name)
-          ($ '#name_box').modal('hide')
-
-
   # Initializes the dropdown lightbox for google drive upload
   ($ '#google_doc').click ->
     ($ '#doc_box').modal()
@@ -52,12 +17,16 @@ IS.onReady "projects/show", ->
     was_liked = ($ @).hasClass('active')
 
     $.ajax
-      url: '/projects/' + root.attr('project_id') + '/updateLikedStatus'
+      url: "/projects/#{ root.attr 'project_id' }/updateLikedStatus"
       type: 'POST'
       dataType: 'json'
+      beforeSend: ->
+        ($ '#ajax-status').html "liking project: #{ root.attr 'project_id'  }"
       success: (resp) ->
+        ($ '#ajax-status').html "liked project: #{ root.attr 'project_id'  }"
         root.find('.like_display').html resp['update']
       error: (resp) =>
+        ($ '#ajax-status').html " error liking project: #{ root.attr 'project_id'  }"
         ($ @).errorFlash()
         if was_liked
           ($ @).addClass('active')
@@ -182,41 +151,27 @@ IS.onReady "projects/show", ->
   ($ document).find("[id^=ds_]").each (i,j) ->
     ($ j).click check_for_selection
 
-  ###
-  # Hide and delete for datasets
-  ###
-  ($ 'a.data_set_hide').click (e) ->
-  
+  # delete data sets
+
+  ($ 'a.data_set_delete').click (e) ->
     e.preventDefault()
     
-    $.ajax
-      url: ($ @).attr('href')
-      type: 'PUT'
-      dataType: "json"
-      data:
-        data_set:
-          hidden: true
-      success: =>
-        recolored = false
-        row = ($ @).parents('tr')
-        tbody = row.parents('tbody')
-        row.delete_row ->
-          row.remove()
-          tbody.recolor_rows(recolored)
-          recolored = true
-            
-  ($ 'a.data_set_delete').click (e) ->
-    
+    alert('tacos')
+
     url = ($ @).attr('href')
     row = ($ @).parents('tr')
+    p_id = url.split '/'
+    p_id = p_id[ p_id.length - 1 ]
  
-    e.preventDefault()
     if helpers.confirm_delete ($ @).attr('name')
       $.ajax
         url: url
-        type: 'DELETE'
+        type: "delete"
         dataType: "json"
+        beforeSend: ->
+          ($ '#ajax-status').html "deleting data set: #{ p_id }"
         success: =>
+          ($ '#ajax-status').html "deleted data set: #{ p_id }"
           recolored = false
           tbody = row.parents('tbody')
           row.delete_row ->
@@ -224,6 +179,7 @@ IS.onReady "projects/show", ->
             tbody.recolor_rows(recolored)
             recolored = true
         error: (msg) =>
+          ($ '#ajax-status').html "error deleting data set: #{ p_id }"
           response = $.parseJSON msg['responseText']
           error_message = response.errors.join "</p><p>"
           
@@ -247,6 +203,7 @@ IS.onReady "projects/show", ->
               type: 'DELETE'
               dataType: "json"
               success: =>
+                ($ '#ajax-status').html "deleted data set: #{ p_id }"
                 ($ '.alert').alert 'close'
                 recolored = false
                 tbody = row.parents('tbody')
@@ -255,37 +212,23 @@ IS.onReady "projects/show", ->
                   tbody.recolor_rows(recolored)
                   recolored = true
             
-  ###
-  # Hide and delete for visualizations
-  ###
-  ($ 'a.viz_hide').click (e) ->
-    e.preventDefault()
-    
-    $.ajax
-      url: ($ @).attr('href')
-      type: 'PUT'
-      dataType: "json"
-      data:
-        visualization:
-          hidden: true
-      success: =>
-        recolored = false
-        row = ($ @).parents('tr')
-        tbody = row.parents('tbody')
-        row.delete_row ->
-          row.remove()
-          tbody.recolor_rows(recolored)
-          recolored = true
-            
+  # delete visualizations
+
   ($ 'a.viz_delete').click (e) ->
     e.preventDefault()
+    
+    p_id = url.split '/'
+    p_id = p_id[ p_id.length - 1 ]
     
     if helpers.confirm_delete ($ @).attr('name')
       $.ajax
         url: ($ @).attr('href')
         type: 'DELETE'
         dataType: "json"
+        beforeSend: ->
+          ($ '#ajax-status').html "deleting vis: #{ p_id }"
         success: =>
+          ($ '#ajax-status').html "deleted vis: #{ p_id }"
           recolored = false
           row = ($ @).parents('tr')
           tbody = row.parents('tbody')
@@ -293,7 +236,39 @@ IS.onReady "projects/show", ->
             row.remove()
             tbody.recolor_rows(recolored)
             recolored = true
-            
+        error: (msg) ->
+          ($ '#ajax-status').html "error deleting vis: #{ p_id }"
+          response = $.parseJSON msg['responseText']
+          error_message = response.errors.join "</p><p>"
+          
+          ($ '.container.mainContent').find('p').before """
+            <div class="alert alert-danger fade in">
+              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+              <h4>Error Deleting Vis:</h4>
+              <p>#{error_message}</p>
+              <p>
+                <button type="button" class="btn btn-danger error_bind" data-retry-text"Retrying...">Retry</button>
+                <button type="button" class="btn btn-default error_dismiss">Or Dismiss</button>
+              </p>
+            </div>"""
+          
+          ($ '.error_dismiss').click ->
+            ($ '.alert').alert 'close'
+          
+          ($ '.error_bind').click ->
+            $.ajax
+              url: url
+              type: 'DELETE'
+              dataType: "json"
+              success: =>
+                ($ '#ajax-status').html "deleted vis: #{ p_id }"
+                recolored = false
+                row = ($ @).parents('tr')
+                tbody = row.parents('tbody')
+                row.delete_row ->
+                  row.remove()
+                  tbody.recolor_rows(recolored)
+                  recolored = true
             
   ###
   # Print for page

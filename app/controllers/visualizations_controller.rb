@@ -190,7 +190,7 @@ class VisualizationsController < ApplicationController
     else
       respond_to do |format|
         format.html { redirect_to '/public/401.html' }
-        format.json { render json: {}, status: :forbidden }
+        format.json { render json: { errors: ['User Not Authorized.']}, status: :forbidden }
       end
     end
   end
