@@ -1,11 +1,11 @@
 # Place all the behaviors and hooks related to the users show page here.
 setupCallbacks = () ->
-  $("a.contrib-delete-link").on "ajax:success", (ee, data, status, xhr) ->
-    $('#ajax-status').html("Delete succeeded")
-    $(ee.target).closest('tr').hide()
+  ($ "a.contrib-delete-link").on "ajax:success", (ee, data, status, xhr) ->
+    ($ '#ajax-status').html("Delete succeeded")
+    ($ ee.target).closest('tr').hide()
 
-  $("a.contrib-delete-link").on "ajax:error", (ee, data, status, xhr) ->
-    $('#ajax-status').html("Delete failed: #{status} #{data}")
+  ($ "a.contrib-delete-link").on "ajax:error", (ee, data, status, xhr) ->
+    ($ '#ajax-status').html("Delete failed: #{status} #{data}")
 
 IS.onReady "users/show", ->
   # Start recent 3
@@ -29,7 +29,7 @@ IS.onReady "users/show", ->
     if( nav_list.some (word) -> ~filter_selection.indexOf(word) )
       ($ "#contributions_content").show()
       
-      $("#page").val("0")
+      ($ "#page").val("0")
 
       filter_ajax_params = ($ '#contribution_search').serialize()
       filter_ajax_params += "&filters=#{filter_selection}"
@@ -41,32 +41,32 @@ IS.onReady "users/show", ->
         data: filter_ajax_params
         dataType: "html"
         success: (filtered_html) ->
-          $("#contributions").html filtered_html
+          ($ "#contributions").html filtered_html
           if (parseInt($("#mparams").attr("totalPages")) > 0)
-            $("#pageLabel").html "Page " + (parseInt( $("#page").val(), 10 ) +
+            ($ "#pageLabel").html "Page " + (parseInt( $("#page").val(), 10 ) +
               1) + " of " + $("#mparams").attr("totalPages")
           else
-            $("#pageLabel").html "No Contributions"
+            ($ "#pageLabel").html "No Contributions"
           if (parseInt( $("#page").val(), 10 ) == 0)
-            $(".pagebck").hide()
+            ($ ".pagebck").hide()
           else
-            $(".pagebck").show()
-          if($("#mparams").attr("lastPage") == "true" || parseInt($("#mparams").attr("totalPages")) == 0)
-            $(".pagefwd").hide()
+            ($ ".pagebck").show()
+          if(($ "#mparams").attr("lastPage") == "true" || parseInt($("#mparams").attr("totalPages")) == 0)
+            ($ ".pagefwd").hide()
           else
-            $(".pagefwd").show()
+            ($ ".pagefwd").show()
          
           setupCallbacks()
-          $('#ajax-status').html("showing tab: #{filter_selection}")
+          ($ '#ajax-status').html "showing tab: #{filter_selection}"
 
 
   window.globals = {}
   globals.arrowsClicked = false
 
-  $(".contribution_sort_select").change ->
-    $("#contribution_search").submit()
+  ($ ".contribution_sort_select").change ->
+    ($ "#contribution_search").submit()
     
-  $("#contribution_search").submit ->
+  ($ "#contribution_search").submit ->
     ajax_params = ($ '#contribution_search').serialize()
     ajax_params += "&filters=#{($ '#user_filter .active').text()}"
       
@@ -77,39 +77,39 @@ IS.onReady "users/show", ->
       data: ajax_params
       dataType: "html"
       success: (dat) ->
-        $("#contributions").html dat
+        ($ "#contributions").html dat
         if (parseInt($("#mparams").attr("totalPages")) > 0)
-          $("#pageLabel").html "Page " + (parseInt( $("#page").val(), 10 ) + 1) +
+          ($ "#pageLabel").html "Page " + (parseInt( $("#page").val(), 10 ) + 1) +
             " of " + $("#mparams").attr("totalPages")
         else
-          $("#pageLabel").html "No Contributions"
+          ($ "#pageLabel").html "No Contributions"
         if (parseInt( $("#page").val(), 10 ) == 0)
-          $(".pagebck").hide()
+          ($ ".pagebck").hide()
         else
-          $(".pagebck").show()
+          ($ ".pagebck").show()
         if($("#mparams").attr("lastPage") == "true" || parseInt($("#mparams").attr("totalPages")) == 0)
-          $(".pagefwd").hide()
+          ($ ".pagefwd").hide()
         else
-          $(".pagefwd").show()
+          ($ ".pagefwd").show()
         
     return false
       
   ($ "#contribution_search_btn").click ->
     ($ "#contribution_search").submit()
     
-  $("#contribution_search").submit()
+  ($ "#contribution_search").submit()
   
-  $(".pagefwd").click ->
+  ($ ".pagefwd").click ->
     globals.arrowsClicked = true
     pageNum = parseInt( $("#page").val(), 10 )
     $("#page").val("" + (pageNum + 1))
     $("#contribution_search").submit()
     
-  $(".pagebck").click ->
+  ($ ".pagebck").click ->
     globals.arrowsClicked = true
-    pageNum = parseInt( $("#page").val(), 10 )
-    $("#page").val("" + (pageNum - 1))
-    $("#contribution_search").submit()
+    pageNum = parseInt(($ "#page").val(), 10 )
+    ($ "#page").val("" + (pageNum - 1))
+    ($ "#contribution_search").submit()
       
   ###
   Links for Contributions
