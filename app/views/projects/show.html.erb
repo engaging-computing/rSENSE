@@ -24,7 +24,7 @@
             </div>
           </div>
           <div class="col-sm-12">
-            <%if !@cloned_project.nil? %>
+            <% if !@cloned_project.nil? and !is_deleted?(@cloned_project) %>
               <span class="info_label" style="font-size:1.1em">Cloned From:</span>
               <%=link_to @cloned_project.title, project_path(@cloned_project.id)%><br>
             <%end%>
