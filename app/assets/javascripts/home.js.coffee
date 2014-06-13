@@ -5,3 +5,6 @@
 $ ->
   ($ '.mainContent').on 'click', 'div.clickableItem', (event) ->
     window.location = ($ event.currentTarget).children('a').attr 'href'
+  ($ 'li.dropdown.navbtn').click () ->
+    ($ 'li.dropdown.navbtn').find('a:first').css 'color', 'white'
+    ($ 'li.dropdown.navbtn').removeAttr 'disabled'

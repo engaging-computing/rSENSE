@@ -17,7 +17,6 @@ $ ->
       ($ '#title_row').show()
       ($ '.footer').show()
       ($ '.mainContent').parent().css('padding',($ '.mainContent').data('padding'))
-    
     ### What to do on min/max button click ###
     ($ '#fullscreen-viz').click ->
       icon = ($ this).find('i')
@@ -26,11 +25,10 @@ $ ->
         icon.removeClass('icon-resize-small')
         icon.addClass('icon-resize-full')
         unfullscreen()
+        
       else
         window.globals.fullscreen = true
         icon.removeClass('icon-resize-full')
         icon.addClass('icon-resize-small')
         fullscreen()
       ($ window).trigger('resize')
-    
-    
