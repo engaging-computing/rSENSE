@@ -15,8 +15,6 @@ $ ->
     href = window.location.pathname.split('/')
     href.pop()
     href = href.join '/'
-    
-    console.log href
 
     # Show and focus the edit box.
     root.find('.info-show-text').hide()
