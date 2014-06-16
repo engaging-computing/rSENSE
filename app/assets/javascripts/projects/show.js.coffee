@@ -200,11 +200,14 @@ IS.onReady "projects/show", ->
             ($ '.alert').alert 'close'
           
           ($ '.error_bind').click ->
+            ($ '.error_bind').button 'loading'
             $.ajax
               url: url
               type: 'DELETE'
               dataType: "json"
               success: =>
+                ($ '.error_bind').button 'reset'
+                ($ '.alert').alert 'close'
                 ($ '#ajax-status').html "deleted data set: #{ p_id }"
                 ($ '.alert').alert 'close'
                 recolored = false
@@ -213,6 +216,8 @@ IS.onReady "projects/show", ->
                   row.remove()
                   tbody.recolor_rows(recolored)
                   recolored = true
+              error: (msg) ->
+                ($ '.error_bind').button 'reset'
             
   # delete visualizations
 
@@ -258,11 +263,15 @@ IS.onReady "projects/show", ->
             ($ '.alert').alert 'close'
           
           ($ '.error_bind').click ->
+            ($ '.error_bind').button 'loading'
+
             $.ajax
               url: url
               type: 'DELETE'
               dataType: "json"
               success: =>
+                ($ '.error_bind').button 'reset'
+                ($ '.alert').alert 'close'
                 ($ '#ajax-status').html "deleted vis: #{ p_id }"
                 recolored = false
                 row = ($ @).parents('tr')
@@ -271,6 +280,9 @@ IS.onReady "projects/show", ->
                   row.remove()
                   tbody.recolor_rows(recolored)
                   recolored = true
+              error: (msg) ->
+                ($ '.error_bind').button 'reset'
+
             
   ###
   # Print for page
