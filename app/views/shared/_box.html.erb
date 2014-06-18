@@ -1,9 +1,10 @@
-<div class="col-lg-<%=width%> box-container" id="<%=unique_id%>" <%if should_hide == true %> style="display:none"<%end%> >
+<div class="col-lg-<%=width%> box-container">
   <div class="box-header text-center">
     <%= title %>
   </div>
   <div class="box-content">
     <%= yield %>
+    <div class="clearfix"></div>
   </div>
   <div class="box-slider text-center">
     <i class="icon-chevron-up"></i>

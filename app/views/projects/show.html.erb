@@ -144,7 +144,7 @@
             </div>  
           </div>
           
-          <table id="dataset_table">
+          <table id="dataset_table" class="table table-striped">
             <tbody>
               
               <% used_keys = {} %>               
@@ -222,7 +222,7 @@
           </div> 
           <div class="clear"></div>
         <% elsif @project.fields.count != 0 %>
-          <table class="fields_table" project="<%=@project.id%>" can_delete_fields="<%if @project.data_sets.count>0%>false<%else%>true<%end%>" data-num_fields="<%=@project.fields.count%>">
+          <table class="table table-striped" project="<%=@project.id%>" can_delete_fields="<%if @project.data_sets.count>0%>false<%else%>true<%end%>" data-num_fields="<%=@project.fields.count%>">
             <thead>
               <tr>
                 <th style="max-width:30%">Name</th>
