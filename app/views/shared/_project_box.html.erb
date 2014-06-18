@@ -1,38 +1,41 @@
 <div class="col-sm-3">
-<div class='item item-block <%= (defined? @box_project_font_page) ? "front_page_item" : "" %>'>
+  <div class='item item-block <%= (defined? @box_project_front_page) ? "front_page_item" : "" %>'>
         
-  <% bg_image = generic_project_image(@box_project.id) %>
-  <% if @box_project.featured_media_id != nil %>
-    <% bg_image = MediaObject.find(@box_project.featured_media_id).src %>
-  <% end %>
-  <a href='<%=project_path @box_project%>'>
-    <div class="item_image" style='background-image:url(<%= bg_image %>)'>
-    </div>
-  </a>
+    <% bg_image = generic_project_image(@box_project.id) %>
+    <% if @box_project.featured_media_id != nil %>
+      <% bg_image = MediaObject.find(@box_project.featured_media_id).src %>
+    <% end %>
+    <a href='<%=project_path @box_project%>'>
+      <div class="item-image" style='background-image:url(<%= bg_image %>)'>
+      </div>
+    </a>
   
-  <div class="item_desc">
+    <div class="item-desc">
+      <div class="item-title word_wrap">
+        <%=link_to truncate(@box_project.name, length: 50), @box_project %>
+        <% if @box_project.featured and !(defined? @box_project_front_page) %> 
+          <span> (featured) </span>
+        <% end %>
+      </div>
     
-    <div class="item_title word_wrap">
-      <%=link_to truncate(@box_project.name, length: 50), @box_project %>
-      <% if @box_project.featured and !(defined? @box_project_font_page) %> 
-        <span> (featured) </span>
-      <% end %>
+      by <%=@box_project.owner.name%> <br/>
+      on <%=@box_project.created_at.strftime("%B %d, %Y")%> <br/>
     </div>
     
-    by <%=@box_project.owner.name%> <br/>
-    on <%=@box_project.created_at.strftime("%B %d, %Y")%> <br/>
-    <div class="item_badges">
+    <div class="item-badges">
       <div>
-        <span class='badge' title="Data Sets"><i class="fa fa-flask">&nbsp;</i><%=@box_project.data_sets.count%></span>
+        <span class='badge' title="Data Sets">
+          <i class="fa fa-flask">&nbsp;</i><%=@box_project.data_sets.count%>
+        </span>
       </div>
       <div>
         <span class='badge' title="Views" ><i class="fa fa-eye">&nbsp;</i><%=@box_project.views%></span>
       </div>
       <div>
-        <span class='badge' title="Likes" ><i class="fa fa-thumbs-up">&nbsp;</i><%=@box_project.like_count%></span>
+        <span class='badge' title="Likes" >
+          <i class="fa fa-thumbs-up">&nbsp;</i><%=@box_project.like_count%>
+        </span>
       </div>
     </div>
-    
   </div>
-</div>
 </div>

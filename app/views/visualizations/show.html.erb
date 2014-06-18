@@ -35,8 +35,8 @@
   <span class="viz_title">Name: <%= @visualization.owner.name %></span><br/><br/>
 </div>
 
-<div id="title_row" class="row visualization_title" style="margin-left: 0px; margin-top:20px; ">
-  <div style="margin-left:12px;">
+<div id="title_row" class="row visualization_title">
+  <div class="col-sm-12">
     <%= title_and_edit_menu(@visualization) %>
 
     <div>
@@ -49,10 +49,8 @@
   </div>
 </div>
 
-<div style="margin: 0px 10px;" >
-
-  <div id="viscontainer" style="height:500px;">
-
+<div>
+  <div id="viscontainer">
     <ul id='visTabList'>
        <div class="pull-right"><button class="btn btn-default" id="fullscreen-viz" title="Min/Max"><i class="fa fa-arrows-alt"></i></button></div>
     </ul>

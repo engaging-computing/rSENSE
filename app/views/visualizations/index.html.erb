@@ -1,9 +1,9 @@
 <div class="row">
   <div class="col-lg-12">
-    <div class="row padded-row">
+    <div class="search-box">
       <%=form_tag visualizations_path, method: 'get', id: 'visualizations_search' do%>
             
-        <div class="isotope-top">
+        <div class="row">
           <div class="col-md-12">
             <h1><i class='fa fa-picture-o'></i> Visualizations</h1>
           </div>
@@ -56,11 +56,11 @@
           <% if vi.thumb_id != nil %>
             <% thumb = vi.tn_src unless vi.tn_src.empty? %>
           <% end %>
-          <div class='item_image' style='background-image:url(<%= thumb %>)'>
+          <div class='item-image' style='background-image:url(<%= thumb %>)'>
           </div>
           
-          <div class="item_desc">
-            <div class="item_title">
+          <div class="item-desc">
+            <div class="item-title">
               <%=link_to vi.name, vi%> 
               <% if vi.featured %> 
                 <span> (featured)</span>
