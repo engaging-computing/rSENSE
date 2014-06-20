@@ -4,7 +4,11 @@
 
 .visualizations-controller {
   #viscontainer {
-    height: 500px;
+    height: 550px;
+    border: thin solid grey;
+    border-radius: 4px 4px 0px 0px;
+    padding: 1ex;
+    padding-bottom: 50px;
   }
 
   .vis_tab {
@@ -20,4 +24,14 @@
     text-align: center;
   }
 
+  .inner_control_div {
+    .checkbox, .radio {
+      min-height: 0px;
+      margin: 2px;
+    }
+  }
+
+  #controldiv {
+    overflow-x: scroll;
+  }
 }

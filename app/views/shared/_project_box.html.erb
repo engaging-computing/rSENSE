@@ -11,8 +11,8 @@
     </a>
   
     <div class="item-desc">
-      <div class="item-title word_wrap">
-        <%=link_to truncate(@box_project.name, length: 50), @box_project %>
+      <div class="item-title word-wrap">
+        <%=link_to truncate(@box_project.name, length: 40), @box_project %>
         <% if @box_project.featured and !(defined? @box_project_front_page) %> 
           <span> (featured) </span>
         <% end %>
