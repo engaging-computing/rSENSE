@@ -122,7 +122,7 @@ module ApplicationHelper
   end
 
   def render_title
-    if @namespace[:controller] != "projects"
+    if @namespace[:controller] != 'projects' or params[:id].is_a? NilClass
       "iSENSE - #{@namespace[:controller].capitalize}"
     else
       title_proj = Project.find(params[:id]).name
