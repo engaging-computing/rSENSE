@@ -35,8 +35,7 @@ class TutorialsTest < ActionDispatch::IntegrationTest
     visit '/tutorials'
     assert page.has_content?('Awesome Tutorial'), 'Tutorial should have been published'
 
-    page.execute_script('$($("span:contains(Awesome Tutorial)").closest("div.item-desc").find("a"))[0].click()')
-    # click_on 'Awesome Tutorial'
+    click_on 'Awesome Tutorial'
     assert page.has_content?('Publish'), 'Should have ended up on tutorials show page'
     find('#publish_tutorial').click
 
