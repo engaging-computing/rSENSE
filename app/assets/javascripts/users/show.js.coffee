@@ -132,6 +132,43 @@ IS.onReady "users/show", ->
         ($ @).addClass 'contribution_unhide'
         ($ @).html('Unhide')
         
+      error:(msg) ->
+          response = $.parseJSON msg['responseText']
+          error_message = response.errors.join "</p><p>"
+
+          ($ '.container.mainContent').find('p').before """
+            <div class="alert alert-danger fade in">
+              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+              <h4>Error Hiding Contribution</h4>
+              <p>#{error_message}</p>
+              <p>
+                <button type="button" class="btn btn-danger error_bind" data-retry-text"Retrying...">Retry</button>
+                <button type="button" class="btn btn-default error_dismiss">Or Dismiss</button>
+              </p>
+            </div>"""
+          
+          ($ '.error_dismiss').click ->
+            ($ '.alert').alert 'close'
+          
+          ($ '.error_bind').click ->
+            
+            ($ '.error_bind').button 'loading'
+            
+            $.ajax
+              url: ($ @).attr('href')
+              type: 'PUT'
+              dataType: "json"
+              data: data
+              success: =>
+                ($ @).removeClass 'contribution_hide'
+                ($ @).addClass 'contribution_unhide'
+                ($ @).html('Unhide')
+                
+                ($ '.alert').alert 'close'
+                
+              error: (msg) ->
+                ($ '.error_bind').button 'reset'
+        
   ($ '.mainContent').on 'click', 'a.contribution_unhide', (e) ->
   
     e.preventDefault()
@@ -149,6 +186,43 @@ IS.onReady "users/show", ->
         ($ @).addClass 'contribution_hide'
         ($ @).removeClass 'contribution_unhide'
         ($ @).html('Hide')
+        
+      error:(msg) ->
+          response = $.parseJSON msg['responseText']
+          error_message = response.errors.join "</p><p>"
+
+          ($ '.container.mainContent').find('p').before """
+            <div class="alert alert-danger fade in">
+              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+              <h4>Error Unhiding Contribution</h4>
+              <p>#{error_message}</p>
+              <p>
+                <button type="button" class="btn btn-danger error_bind" data-retry-text"Retrying...">Retry</button>
+                <button type="button" class="btn btn-default error_dismiss">Or Dismiss</button>
+              </p>
+            </div>"""
+          
+          ($ '.error_dismiss').click ->
+            ($ '.alert').alert 'close'
+          
+          ($ '.error_bind').click ->
+            
+            ($ '.error_bind').button 'loading'
+            
+            $.ajax
+              url: ($ @).attr('href')
+              type: 'PUT'
+              dataType: "json"
+              data: data
+              success: =>
+                ($ @).addClass 'contribution_hide'
+                ($ @).removeClass 'contribution_unhide'
+                ($ @).html('Hide')
+                
+                ($ '.alert').alert 'close'
+                
+              error: (msg) ->
+                ($ '.error_bind').button 'reset'
         
   ($ '.mainContent').on 'click', 'a.contribution_delete', (e) ->
 
@@ -168,6 +242,48 @@ IS.onReady "users/show", ->
               else
                 ($ @).removeClass 'feed-even'
                 ($ @).addClass 'feed-odd'
+        
+        error:(msg) ->
+          response = $.parseJSON msg['responseText']
+          error_message = response.errors.join "</p><p>"
+
+          ($ '.container.mainContent').find('p').before """
+            <div class="alert alert-danger fade in">
+              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+              <h4>Error Unhiding Contribution</h4>
+              <p>#{error_message}</p>
+              <p>
+                <button type="button" class="btn btn-danger error_bind" data-retry-text"Retrying...">Retry</button>
+                <button type="button" class="btn btn-default error_dismiss">Or Dismiss</button>
+              </p>
+            </div>"""
+          
+          ($ '.error_dismiss').click ->
+            ($ '.alert').alert 'close'
+          
+          ($ '.error_bind').click ->
+            
+            ($ '.error_bind').button 'loading'
+            
+            $.ajax
+              url: ($ @).attr('href')
+              type: 'DELETE'
+              dataType: "json"
+              success: =>
+                ($ @).parents('div.contribution').hide_row () ->
+                  ($ 'div#contributions div.contribution').filter(':visible').each (idx) ->
+                    if idx % 2 is 0
+                      ($ @).addClass 'feed-even'
+                      ($ @).removeClass 'feed-odd'
+                    else
+                      ($ @).removeClass 'feed-even'
+                      ($ @).addClass 'feed-odd'
+            
+                ($ '.alert').alert 'close'
+                
+              error: (msg) ->
+                ($ '.error_bind').button 'reset'
+            
   ($ '.gravatar_img').tooltip
     title: "Go to www.gravatar.com to change your avatar"
 
