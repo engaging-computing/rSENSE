@@ -33,7 +33,7 @@
   <div id="title_row" style="padding-left:10px">
     <div style="font-size:1.75em">
       <%= link_to @project.title, project_path(@project)%>
-      <div class="half_width_edit"><%= data_set_edit_helper 'title', (can_edit? @data_set), false %></div>
+      <div class="half_width_edit"><%= data_set_edit_helper 'title', (can_edit? @data_set), false, "/data_sets/#{@data_set.id}" %></div>
     </div>
   </div>
 <%else%>
