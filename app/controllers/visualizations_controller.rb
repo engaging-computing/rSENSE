@@ -318,7 +318,7 @@ class VisualizationsController < ApplicationController
     end
 
     @data_set = @datasets.first
-    
+
     respond_to do |format|
       format.html do
         if params.try(:[], :embed) and params[:embed]
