@@ -152,6 +152,15 @@ body {
   margin-bottom: 1ex;
 }
 
+.word-wrap {
+   word-wrap: break-word;
+}
+
+.box-content {
+  overflow: auto;
+}
+
 .print {
   display: none;
 }
+

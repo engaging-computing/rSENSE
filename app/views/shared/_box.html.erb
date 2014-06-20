@@ -1,6 +1,6 @@
 <div class="col-lg-<%=width%> box-container">
   <div class="box-header text-center">
-    <%= title %>
+    <%= truncate(title, length: 20) %>
   </div>
   <div class="box-content">
     <%= yield %>

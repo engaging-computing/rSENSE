@@ -39,7 +39,7 @@ class CloneProjectTest < ActionDispatch::IntegrationTest
     set_cell(0, 47)
     click_on 'Save'
 
-    assert page.has_content?('I Like Clones')
+    assert page.has_content?('I Like Clones'), 'Save should succeed'
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
     page.execute_script %Q{$('#upload').show()}
     find('.upload_media form').attach_file('upload', img_path)

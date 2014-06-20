@@ -301,7 +301,7 @@
       <!-- ##### SAVED VISUALIZATIONS MENU ##### -->
       <%=render layout: "shared/box", locals: {title: 'Visualizations', width: '12', unique_id: 'visualizations', should_hide: false} do %>
         <div id="viz_list" <% if @project.visualizations.count == 0 %> style="display:none;" <% end %> >
-          <table id="viz_table">
+          <table id="viz_table" class="table table-striped">
             <thead>
               <tr><th>Name</th><th></th></tr>
             </thead>
