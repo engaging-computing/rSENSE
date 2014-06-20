@@ -31,7 +31,7 @@
         </a>
         
         <div class="item-desc">
-          <span class="news_page_title"><%= tut.name %></span><br/>
+          <span class="news_page_title"><%= link_to tut.name, tut %></span><br/>
           <span style="font-size:0.8em">
             Written on <%= tut.created_at.strftime("%B %d, %Y")%>
             by <%= tut.owner.name %>.
