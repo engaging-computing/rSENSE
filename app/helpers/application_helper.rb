@@ -122,7 +122,12 @@ module ApplicationHelper
   end
 
   def render_title
-    "iSENSE - #{@namespace[:controller].capitalize}"
+    if @namespace[:controller] != "projects"
+      "iSENSE - #{@namespace[:controller].capitalize}"
+    else
+      title_proj = Project.find(params[:id]).name
+      "iSENSE - #{title_proj}"
+    end
   end
 
   def is_admin?
