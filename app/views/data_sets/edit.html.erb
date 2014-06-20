@@ -6,7 +6,7 @@
 
 <% if can_edit?(@data_set) %>
 
-  <div class="full_width_edit" style="font-size:2em;"><%= data_set_edit_helper 'title', can_edit?(@data_set), false %></div>
+  <div class="full_width_edit" style="font-size:2em;"><%= data_set_edit_helper 'title', can_edit?(@data_set), false, "/data_sets/#{@data_set.id}" %></div>
   <div><b>Project: </b><%= link_to @data_set.project.title, project_path(@data_set.project.id)%></div><br>
   <div class="row">
     <div class="span12">
