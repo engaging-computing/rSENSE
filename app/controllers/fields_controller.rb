@@ -67,7 +67,7 @@ class FieldsController < ApplicationController
   def destroy
     @field = Field.find(params[:id])
     @project = Project.find(@field.project_id)
-    if can_delete?(@field) && (@project.data_sets.count == 0) && false
+    if can_delete?(@field) && (@project.data_sets.count == 0)
       if (@field.field_type == get_field_type('Latitude')) || (@field.field_type == get_field_type('Longitude'))
         @project.fields.where('field_type = ?', get_field_type('Latitude')).first.destroy
         @project.fields.where('field_type = ?', get_field_type('Longitude')).first.destroy
@@ -75,19 +75,19 @@ class FieldsController < ApplicationController
         @field.destroy
       end
       respond_to do |format|
-        format.json { render json: {errors: ['Project Not Empty', 'User Not Authorized']}, status: :ok }
+        format.json { render json: { errors: ['Project Not Empty', 'User Not Authorized']}, status: :ok }
         format.html { redirect_to @field.project, notice: 'Field was successfuly deleted.' }
       end
     else
       @errors = []
-      #if @project.data_sets.count > 0
+      if @project.data_sets.count > 0
         @errors.push 'Project Not Empty.'
-      #end
-      #if !can_delete?(@field)
+      end
+      if !can_delete?(@field)
         @errors.push 'User Not Authorized.'
-      #end
+      end
       respond_to do |format|
-        format.json { render json: {errors: @errors}, status: :forbidden }
+        format.json { render json: { errors: @errors }, status: :forbidden }
         format.html { redirect_to @field.project, alert: 'Field could not be destroyed' }
       end
     end
