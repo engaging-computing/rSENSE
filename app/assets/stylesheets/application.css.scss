@@ -8,84 +8,133 @@
  * You're free to add application-wide styles to this file and they'll appear at the top of the
  * compiled file, but it's generally better to create a new file per style scope.
  *
-
- *= require bootstrap/bootstrap
  *= require font-awesome
  *= require highvis.css.scss
  *= require ui.jqgrid.css
- *= require bootstrap-datetimepicker.css
- *= require bootstrap-colorpicker
  *= require summernote
  *= require_tree .
  *= require_self
  */
 
-#addProjectButton, #addTutorialButton
-{
-  margin:0px 7px 0px 7px;
-  button{
-    width:100%;
+$navbar-default-bg: #111133;
+$navbar-default-color: white;
+$navbar-default-link-color: white;
+$navbar-default-link-hover-color: #DDDDDD;
+@import "bootstrap";
+
+body {
+  background-color: #ddd;
+}
+
+.navbar {
+  @media screen and (min-width: 1150px) {
+    font-size: 12pt;
+  }
+
+  box-shadow: 0px 0px 10px black;
+  border-bottom: 1px solid black;
+  margin-bottom: 0px;
+  background-color: #113;
+  height: 55px;
+
+  .navbtn a {
+    padding-top: 20px;
+  }
+
+  .navbar-brand {
+    padding-top: 8px;
   }
 }
 
-.word-break { word-wrap: break-word; }
+#outer {
+  min-height: 100%;
+  margin: 0px;
+  padding: 0px 0px 70px 0px;
+}
 
-//Top for all index search boxes
-.isotope-top
-{
-  padding: 2px 20px 2px 20px;
-  background-color: #e8e8e8;
-  color: #000000;
+.mainContent {
+  background-color: #fff;
+  box-shadow: 0px 0px 20px grey;
+  padding: 18px 20px 18px 20px;
+  min-height: 100%;
+}
 
-   box-shadow: 0 2px 3px 1px #9E9E9E;  
-  -moz-box-shadow: 0 2px 3px 1px #9E9E9E;
-  -webkit-box-shadow: 0 2px 3px 1px #9E9E9E;
-  
-  h1
-  {
-    font-weight:bold; 
+.footer {
+  text-align: center;
+  font-size: smaller;
+}
+
+.panel-heading {
+  font-size: 20pt;
+}
+
+.item {
+  background-color: #ddd;
+  margin: auto;
+  box-shadow: 2px 3px 1px grey;
+  min-width:266px;
+
+  .item-image {
+    width: 268px;
+    height: 120px;
   }
-  input[type="submit"]
-  {
-    margin-top:2px;
+
+  .item-desc {
+    min-height: 88px;
+    margin: 8px;
+  }
+
+  .badge {
+    float: left;
+    margin-right: 15px;
+    margin-left: 15px;
   }
 }
 
-.padded-row
-{
-  margin: 0px 8px 8px 8px;
+.item-block {
+  height: 250px;
+  width: 233px;
+  margin-bottom: 2em;
+
+  overflow: hidden;
 }
 
-.padded-col
-{
-  margin: 8px 0px 8px 0px;
-}
-::-webkit-input-placeholder {
-   font-style: italic;
+.wide-item {
+  background-color: #ddd;
+  box-shadow: 2px 3px 1px grey;
+  min-height: 210px;
+  margin-bottom: 1ex;
+
+  .item-image {
+    width: 256px;
+    height: 210px;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    float: left;
+  }
+
+  .item-desc {
+    padding: 1ex;
+    padding-left: 268px;
+  }
 }
 
-:-moz-placeholder { /* Firefox 18- */
-   font-style: italic;  
+.item-title {
+  font-size: larger;
 }
 
-::-moz-placeholder {  /* Firefox 19+ */
-   font-style: italic;  
+.search-box {
+  background-color: #ddd;
+  box-shadow: 2px 3px 1px grey;
+  padding: 2em;
+  margin-bottom: 2ex;
 }
 
-:-ms-input-placeholder {  
-   font-style: italic;  
+.create-button {
+  margin-bottom: 2ex;
 }
 
-.ckeditor
-{
- img
- {
-  max-width:100%; 
- }
-}
-
-.box-header 
-{
+.box-header {
   background-image: linear-gradient(#fafafa, #eaeaea);
   background-repeat: repeat-x;
   border: 1px solid #b5b5b5;
@@ -93,468 +142,25 @@
   font-size: x-large;
   padding-top: 10px;
   padding-bottom: 10px;
-
+  margin-top: 1ex;
 }
 
-.box-content
-{
+.box-content {
   border: 1px solid #b5b5b5;
   border-top: 0px;
   padding: 20px;
+  margin-bottom: 1ex;
 }
 
-td.delete
-{
-  i,a{
-    color:red;
-  }
+.word-wrap {
+   word-wrap: break-word;
 }
 
-.truncate 
-{
-  white-space: nowrap;
-  overflow-x: hidden;
-  text-overflow: ellipsis;
+.box-content {
+  overflow: auto;
 }
 
-//=======UNVERIFIED CSS====================================================
-body
-{
-  line-height:normal !important;
+.print {
+  display: none;
 }
 
-div.info_text
-{
-  display: inline-block;
-}
-
-.full_width_edit div.info_text
-{
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  
-  max-width: 90%;
-}
-
-.half_width_edit div.info_text
-{
-  white-space: nowrap;
-  overflow-x: hidden;
-  text-overflow: ellipsis;
-  
-  max-width: 45%;
-}
-
-.invalid
-{
-  background-color: rgba(255, 0, 0, 0.6) !important;
-}
-
-.vcenter {
-    vertical-align: middle;
-}
-
-#header
-{
-    background-color : #fff;
-    padding: 0px 0px 5px 0px;
-}
-
-
-
-label[for=login_user], [for=login_password] {
-  float: left;
-}
-
-input.login_field
-{
-    float: right;
-}
-
-button.login_button
-{
-    float: right;
-    margin: 15px 0px 0px 10px;
-}
-
-button.cancel_login_button
-{
-    margin: 15px 0px 0px 0px;
-}
-
-div.clear
-{
-    clear: both;
-}
-
-#home
-{
-    display: inline-block;
-}
-
-#home img
-{
-    height: 5em;
-}
-
-.header_links
-{
-    height:30px;
-    position:relative;
-    top: 5px;
-}
-
-#user
-{
-    display: inline-block;
-    padding: 30px 0px 0px 0px;
-}
-
-#user a
-{
-    padding-left: 10px;
-}
-
-#controls
-{
-    display: inline-block;
-    padding-left: 80px;
-}
-
-#controls img
-{
-    margin-top: 1em;
-    height: 3em;
-    width: 3em;
-}
-
-#controls form
-{
-    display: inline-block;
-    padding-top: 1.5em;
-    padding-left: 20px;
-}
-
-#controls form input
-{
-    width: 100px;
-}
-
-#page_title
-{
-    padding-top: 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid black;
-}
-
-#content table
-{
-    width: 100%;
-    text-align: center;
-}
-
-
-
-.info_label
-{
-    font-size:1.2em;
-    font-weight:bold;
-    padding-right:5px;
-}
-
-
-.info_text
-{
-	font-weight: bold;
-}
-
-.type_content
-{
-    -webkit-border-radius: 10px 10px 10px 10px;
-    -moz-border-radius: 10px 10px 10px 10px;
-    border-radius: 10px 10px 10px 10px;
-    border-style: groove;
-	  border-color: #ffffff;
-	  border-width: 3px;
-    background-color: #eee;
-    padding: -1px;
-    margin: 0px 0px;
-}
-
-.icon_content
-{
-  margin-right: 5px;
-}
-
-.content_well
-{
-  margin-bottom: 20px;
-}
-
-li.dataset_tab
-{
-  margin: 0;
-  font-size:14px;
-  height:40px;
-}
-
-input.object_hidden_checkbox
-{
- margin-top: 0px;
-}
-
-form
-{
-  .feed-even, .feed-odd
-  {
-    border-right-width: 2px;
-    border-left-width: 2px;
-  }
-}
-
-.mainContent
-{
-  background-color:#fff;
-  box-shadow:0px 0px 20px grey;
-  padding:18px 20px 18px 20px;
-  min-height:100%;
-}
-
-.footer
-{
-  p
-  {
-    color:#5c5c5c;
-    font-size: .9em;
-    padding-bottom:10px;
-    line-height:1.6em;
-  }
-  
-  position:absolute;
-  bottom:0;
-  width:100%;
-  height:35px;
-}
-
-.visible-tablet, .visible-desktop, .visible-phone
-{  
-
-  a.white, button.white{
-   color: white; 
-  }
-
-  
-  .pillbox{
-    line-height:15px;
-    font-size:15px;
-    float:right;
-    
-    .phone{
-      margin-right:10px;
-      text-align:right;
-    }
-    .desktop-tablet{
-      margin-right:-20px;
-    }
-  }
-}
-
-
-.isotope_container{
-  overflow:visible;
-  z-index:0;
-
-  .isotop_pane{
-    width:100%;
-    height:100%;
-    border:0px solid grey;
-    overflow:visible;
-    padding:10px;
-  }
-}
-
-.mc-wide{
-  background-color:#fff;
-  box-shadow:0px 0px 20px grey;
-  min-height:100%; 
-  width:100%
-}
-
-.popover-content
-{
-  font-size:12px;
-  font-weight:normal;
-}
-
-.projectsCarousel
-{
-  display:inline-block;
-  overflow-x: hidden;
-  height:220px;
-  
-  @media screen and (min-width: 300px) {
-    width: 170px !important;
-  }
-  @media screen and (min-width: 600px) {
-    width: 400px !important;
-  }
-  @media screen and (min-width: 800px) {
-    width: 600px !important;
-  }
-  @media screen and (min-width: 980px) {
-    width: 800px !important;
-  }
-  @media screen and (min-width: 1200px) {
-    width: 1020px !important;
-  }
-}
-
-.carousel-cell
-{
-  width: 240px;
-}
-
-.carousel-arrow
-{
-  font-size: 20pt;
-  text-align:center;
-  color: white;
-  background: #888;
-  border-color: #fff;
-  border-radius: 23px;
-  width:35px;
-  height:35px;
-  display: inline-block;
-  position: relative;
-  top: -100px;
-}
-.carousel-arrow:hover
-{
-  color: white;
-  background: #555;
-}
-
-.navbar-btn
-{
-  line-height:50px;
-  display:inline-block;
-  color: white;
-  position: relative;
-  @media screen and (max-width: 449px) {
-    font-size: 7pt;
-    padding: 1px 5px 0px 5px;
-  }
-  @media screen and (min-width: 450px) {
-    font-size: 9pt;
-    padding: 1px 7px 0px 7px;
-  }
-  @media screen and (min-width: 980px) {
-    font-size: 11pt;
-    padding: 1px 14px 0px 14px;
-  }
-   @media screen and (min-width: 1200px) {
-    font-size: 12pt;
-    padding: 1px 17px 0px 17px;
-  }
-}
-.navbar-btn:hover
-{
-  color:white;
-  background:#649ce5;
-}
-
-.navbar-btn:hover + .ddmenu
-{
-  display: block;
-  position: relative;
-  z-index: -10;
-  @media screen and (max-width: 979px) {
-    font-size: 9pt;
-    left:284px;
-  }
-  @media screen and (min-width: 980px) {
-    font-size: 10pt;
-    left:401px;
-  }
-   @media screen and (min-width: 1200px) {
-    font-size: 11pt;
-    left:447px;
-  }
-}
-
-.item_title
-{
-  @media screen and (max-width: 980px) {
-    font-size:1em;
-  }
-  @media screen and (min-width: 1200px) {
-    font-size:1.2em;
-  }
-}
-
-.ddmenu
-{
-  display:none;
-  background: white;
-  color:black;
-  box-shadow:0px 5px 20px black;
-  width:250px;
-  li
-  { 
-    width:100%;
-    list-style-type: none;
-    a
-    {
-      margin: 0px;
-      color: black;
-      -webkit-box-sizing: border-box;
-      -moz-box-sizing: border-box;
-      box-sizing: border-box; 
-      display: block;
-      padding: 20px;
-    }
-    a:hover
-    {
-      color: white;
-      background:#649ce5;
-    }
-  }
-}
-.ddmenu:hover
-{
-  display: block;
-  position: relative;
-  z-index: -10;
-  @media screen and (max-width: 979px) {
-    font-size: 9pt;
-    left:284px;
-  }
-  @media screen and (min-width: 980px) {
-    font-size: 10pt;
-    left:401px;
-  }
-   @media screen and (min-width: 1200px) {
-    font-size: 11pt;
-    left:447px;
-  }
-}
-
-.full-image
-{
-  max-width:100%;
-  margin:0px;
-  padding:0px;
-}
-
-/* Source: http://stackoverflow.com/questions/3247358/css-how-do-i-wrap-text-with-no-whitespace-inside-a-td */
-.word_wrap
-{
-  display:inline;
-  white-space: -moz-pre-wrap !important; 
-  white-space: -pre-wrap;      
-  white-space: -o-pre-wrap;    
-  white-space: pre-wrap;      
-  word-wrap: break-word;   
-  word-break: break-all;
-  white-space: normal;
-}

@@ -3,32 +3,34 @@
   <div class="row">
     <%= form_for @new_tutorial do |ff| %>
       <div class="col-md-6 text-center">
-        <%= ff.text_field :title, placeholder: "Title for Tutorial", class: "stretch-width" %>
+        <div class="form-group">
+          <%= ff.text_field :title, placeholder: "Title for Tutorial", class: "form-control" %>
+        </div>
       </div>
       <div class="col-md-6 text-center">
-        <button type="submit" class="btn btn-success stretch-width">Create Tutorial</button>
+        <div class="form-group">
+          <button type="submit" class="btn btn-success form-control">Create Tutorial</button>
+        </div>
       </div>
     <% end %>
   </div>
 <% end %>
 
-<% @tutorials.each do |tut| %>
-  <div class="row">
+<div class="row">
+  <% @tutorials.each do |tut| %>
     <div class="col-md-12">
-      <div class="item wide-item">
+      <div class="wide-item">
         <% left_image = image_path('missing_tutorial.jpg') %>
         <% if tut.featured_media_id != nil %>
           <% left_image = tut.media_objects.find(tut.featured_media_id).src %>
         <% end %>
         
-        <div class="news_picture_image">
-          <a href="<%= tutorial_path(tut) %>">
-            <div class="news_featured_image_2" style="background-image:url('<%= left_image %>')">
-            </div>
-          </a>
-        </div>
+        <a href="<%= tutorial_path(tut) %>">
+          <div class="item-image" style="background-image:url('<%= left_image %>')">
+          </div>
+        </a>
         
-        <div class="news_with_image">
+        <div class="item-desc">
           <span class="news_page_title"><%= link_to tut.name, tut %></span><br/>
           <span style="font-size:0.8em">
             Written on <%= tut.created_at.strftime("%B %d, %Y")%>
@@ -38,7 +40,5 @@
         </div>
       </div>      
     </div>  
-  </div>
-<% end %>  
-
-
+  <% end %>  
+</div>
