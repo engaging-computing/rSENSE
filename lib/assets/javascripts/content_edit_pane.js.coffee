@@ -82,6 +82,9 @@ $ ->
               ($ '.alert').alert 'close'
 
             ($ '.error_bind').click ->
+            
+              ($ '.error_bind').button 'loading'
+              
               $.ajax
                 url: url
                 type: "PUT"
@@ -93,6 +96,11 @@ $ ->
                   saveButton.hide()
                   cancelButton.hide()
                   editor.destroy()
+                  ($ '.alert').alert 'close'
+                  
+                error: (msg) ->
+                  ($ '.error_bind').button 'reset'
+                
       return editor
   
   ($ '#content_edit').click () ->
