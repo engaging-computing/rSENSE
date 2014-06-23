@@ -83,7 +83,7 @@ class FieldsController < ApplicationController
       if @project.data_sets.count > 0
         @errors.push 'Project Not Empty.'
       end
-      if( can_delete?(@field) == false )
+      if (can_delete?(@field) == false)
         @errors.push 'User Not Authorized.'
       end
       respond_to do |format|
