@@ -95,7 +95,9 @@ Rsense::Application.routes.draw do
   get '/contrib_keys/clear' => 'contrib_keys#clear'
 
   get '/api/v1/docs' => 'home#api_v1'
+
   # API routes
+  match '*any', via: 'OPTIONS', controller: 'application', action: 'options_req'
 
   namespace :api, defaults: { format: 'json' }, except: :destroy do
     namespace :v1 do
