@@ -5,7 +5,6 @@ gem 'rails', '~> 4.0'
 gem 'sqlite3'
 gem 'pg'
 
-gem 'sass-rails'
 gem 'coffee-rails'
 gem 'coffee-rails-source-maps'
 gem 'uglifier'
@@ -13,6 +12,9 @@ gem 'modernizr-rails'
 gem 'handlebars_assets'
 
 gem 'therubyracer', :platforms => :ruby
+
+gem 'bootstrap-sass'
+gem 'sprockets', '~> 2.12'
 
 # Integration testing stuff
 group :development, :test do
@@ -24,6 +26,7 @@ group :development, :test do
   gem "rubocop", git: 'https://github.com/bbatsov/rubocop'
   gem "coffeelint"
   gem 'capybara-webkit'
+  gem 'minitest', '~> 4.0'
 end
 
 # Jquery stuff
