@@ -60,7 +60,7 @@ end
 if %w(development test).include? Rails.env
   require 'rubocop/rake_task'
 
-  Rubocop::RakeTask.new do |task|
+  RuboCop::RakeTask.new do |task|
     task.formatters = ['fuubar']
   end
 
