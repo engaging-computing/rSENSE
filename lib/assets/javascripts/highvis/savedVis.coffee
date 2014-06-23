@@ -117,6 +117,11 @@ $ ->
               success: (msg) ->
                 ($ "#loadModal").modal('hide')
                 helpers.name_popup msg, "Visualization", "visualization"
+                ($ '.alert').alert 'close'
+
+              error: (msg) ->
+                ($ '.error_bind').button 'reset'
+
 
     ###
     Ajax call to check if the user is logged in. Calls the appropriate
