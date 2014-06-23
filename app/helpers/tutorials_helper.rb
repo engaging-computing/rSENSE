@@ -4,8 +4,8 @@ module TutorialsHelper
       make_link: make_link, escape_link: tutorials_url
   end
 
-  def tutorial_edit_helper(field, can_edit = false, make_link = true)
+  def tutorial_edit_helper(field, can_edit = false, make_link = true, url = '#')
     render 'shared/edit_info', type: 'tutorial', field: field, value: @tutorial[field],
-      row_id: @tutorial.id, can_edit: can_edit, make_link: make_link
+      row_id: @tutorial.id, can_edit: can_edit, make_link: make_link, href: url
   end
 end

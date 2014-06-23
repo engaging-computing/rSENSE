@@ -2,6 +2,7 @@ module Api
   module V1
     class UsersController < ActionController::UsersController
       skip_before_filter :authorize
+      skip_before_filter :verify_authenticity_token
       before_filter :set_user
       before_filter :allow_cross_site_requests
 
