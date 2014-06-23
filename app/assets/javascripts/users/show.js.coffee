@@ -133,41 +133,41 @@ IS.onReady "users/show", ->
         ($ @).html('Unhide')
         
       error:(msg) ->
-          response = $.parseJSON msg['responseText']
-          error_message = response.errors.join "</p><p>"
+        response = $.parseJSON msg['responseText']
+        error_message = response.errors.join "</p><p>"
 
-          ($ '.container.mainContent').find('p').before """
-            <div class="alert alert-danger fade in">
-              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-              <h4>Error Hiding Contribution</h4>
-              <p>#{error_message}</p>
-              <p>
-                <button type="button" class="btn btn-danger error_bind" data-retry-text"Retrying...">Retry</button>
-                <button type="button" class="btn btn-default error_dismiss">Or Dismiss</button>
-              </p>
-            </div>"""
-          
-          ($ '.error_dismiss').click ->
-            ($ '.alert').alert 'close'
-          
-          ($ '.error_bind').click ->
-            
-            ($ '.error_bind').button 'loading'
-            
-            $.ajax
-              url: ($ @).attr('href')
-              type: 'PUT'
-              dataType: "json"
-              data: data
-              success: =>
-                ($ @).removeClass 'contribution_hide'
-                ($ @).addClass 'contribution_unhide'
-                ($ @).html('Unhide')
-                
-                ($ '.alert').alert 'close'
-                
-              error: (msg) ->
-                ($ '.error_bind').button 'reset'
+        ($ '.container.mainContent').find('p').before """
+          <div class="alert alert-danger fade in">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h4>Error Hiding Contribution</h4>
+            <p>#{error_message}</p>
+            <p>
+              <button type="button" class="btn btn-danger error_bind" data-retry-text"Retrying...">Retry</button>
+              <button type="button" class="btn btn-default error_dismiss">Or Dismiss</button>
+            </p>
+          </div>"""
+
+        ($ '.error_dismiss').click ->
+          ($ '.alert').alert 'close'
+
+        ($ '.error_bind').click ->
+
+          ($ '.error_bind').button 'loading'
+
+          $.ajax
+            url: ($ @).attr('href')
+            type: 'PUT'
+            dataType: "json"
+            data: data
+            success: =>
+              ($ @).removeClass 'contribution_hide'
+              ($ @).addClass 'contribution_unhide'
+              ($ @).html('Unhide')
+
+              ($ '.alert').alert 'close'
+
+            error: (msg) ->
+              ($ '.error_bind').button 'reset'
         
   ($ '.mainContent').on 'click', 'a.contribution_unhide', (e) ->
   
@@ -182,47 +182,47 @@ IS.onReady "users/show", ->
       type: 'PUT'
       dataType: "json"
       data: data
-      success: =>
+      success: ->
         ($ @).addClass 'contribution_hide'
         ($ @).removeClass 'contribution_unhide'
         ($ @).html('Hide')
         
       error:(msg) ->
-          response = $.parseJSON msg['responseText']
-          error_message = response.errors.join "</p><p>"
+        response = $.parseJSON msg['responseText']
+        error_message = response.errors.join "</p><p>"
 
-          ($ '.container.mainContent').find('p').before """
-            <div class="alert alert-danger fade in">
-              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-              <h4>Error Unhiding Contribution</h4>
-              <p>#{error_message}</p>
-              <p>
-                <button type="button" class="btn btn-danger error_bind" data-retry-text"Retrying...">Retry</button>
-                <button type="button" class="btn btn-default error_dismiss">Or Dismiss</button>
-              </p>
-            </div>"""
-          
-          ($ '.error_dismiss').click ->
-            ($ '.alert').alert 'close'
-          
-          ($ '.error_bind').click ->
-            
-            ($ '.error_bind').button 'loading'
-            
-            $.ajax
-              url: ($ @).attr('href')
-              type: 'PUT'
-              dataType: "json"
-              data: data
-              success: =>
-                ($ @).addClass 'contribution_hide'
-                ($ @).removeClass 'contribution_unhide'
-                ($ @).html('Hide')
-                
-                ($ '.alert').alert 'close'
-                
-              error: (msg) ->
-                ($ '.error_bind').button 'reset'
+        ($ '.container.mainContent').find('p').before """
+          <div class="alert alert-danger fade in">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h4>Error Unhiding Contribution</h4>
+            <p>#{error_message}</p>
+            <p>
+              <button type="button" class="btn btn-danger error_bind" data-retry-text"Retrying...">Retry</button>
+              <button type="button" class="btn btn-default error_dismiss">Or Dismiss</button>
+            </p>
+          </div>"""
+
+        ($ '.error_dismiss').click ->
+          ($ '.alert').alert 'close'
+
+        ($ '.error_bind').click ->
+
+          ($ '.error_bind').button 'loading'
+
+          $.ajax
+            url: ($ @).attr('href')
+            type: 'PUT'
+            dataType: "json"
+            data: data
+            success: =>
+              ($ @).addClass 'contribution_hide'
+              ($ @).removeClass 'contribution_unhide'
+              ($ @).html('Hide')
+
+              ($ '.alert').alert 'close'
+
+            error: (msg) ->
+              ($ '.error_bind').button 'reset'
         
   ($ '.mainContent').on 'click', 'a.contribution_delete', (e) ->
 
