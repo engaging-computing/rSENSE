@@ -139,10 +139,10 @@ class DataSetsController < ApplicationController
       end
     else
       @errors.push 'User Not Authorized.'
-      
+
       respond_to do |format|
         format.html { redirect_to 'public/403.html', status: :forbidden }
-        format.json { render json: {errors: @errors}, status: :forbidden }
+        format.json { render json: { errors: @errors }, status: :forbidden }
       end
     end
   end
