@@ -1,6 +1,6 @@
 module Api
   module V1
-    class DataSetsController < ActionController::DataSetsController
+    class DataSetsController < ::DataSetsController
       skip_before_filter :authorize
       skip_before_filter :authorize_allow_key
       skip_before_filter :verify_authenticity_token

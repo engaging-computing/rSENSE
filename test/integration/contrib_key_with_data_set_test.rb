@@ -80,7 +80,7 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     assert_not_equal(temp[0].find('a').text , temp[1].find('a').text)
     visit '/contrib_keys/clear'
     visit '/projects'
-    id = page.all(:css, '.item_title')[0].find('a')[:href].split('/').last
+    id = page.all(:css, '.item-title')[0].find('a')[:href].split('/').last
     post "/api/v1/projects/#{id}/jsonDataUpload",
 
           title: 'Anonymous Data',
