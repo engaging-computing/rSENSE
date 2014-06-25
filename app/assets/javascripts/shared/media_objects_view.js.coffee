@@ -27,10 +27,12 @@ setupMediaObjectsView = () ->
       data:
         data
       error: ->
+        ($ '#ajax-status').html "error selecting media objects"
         root.find('.img_selector').each ->
           $(this).errorFlash()
           ($ this).prop("checked", false)
       success: ->
+        ($ '#ajax-status').html "selecting media objects"
         root.find('.img_selector').each ->
           if ($ this).attr("mo_id") != mo
             ($ this).prop("checked", false)
@@ -46,11 +48,13 @@ setupMediaObjectsView = () ->
         type: 'DELETE'
         dataType: "json"
         error: (_, e0, e1) ->
+          ($ '#ajax-status').html "error deleting media objects"
           $(obj).errorFlash()
           console.log('Delete failed:')
           console.log(e0)
           console.log(e1)
         success: ->
+          ($ '#ajax-status').html "deleting media objects"
           recolored = false
           row = obj.parents('tr')
           tbody = row.parents('tbody')
