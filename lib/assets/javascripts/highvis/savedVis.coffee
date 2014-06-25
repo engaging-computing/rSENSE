@@ -83,9 +83,45 @@ $ ->
         success: (msg) ->
           ($ "#loadModal").modal('hide')
           helpers.name_popup msg, "Visualization", "visualization"
-        error: (jqxhr, status, error) ->
-          alert "AJAX Error: " + error
-          console.log [jqxhr, status, error]
+        error: (jqxhr, status, msg) ->
+          ($ '#ajax-status').html "error saving visualization: #{ Number data.projectID }"
+          response = $.parseJSON msg['responseText']
+          error_message = response.errors.join "</p><p>"
+
+          ($ '.container.mainContent').find('p').before """
+            <div class="alert alert-danger fade in">
+              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+              <h4>Error Saving Visualization:</h4>
+              <p>#{error_message}</p>
+              <p>
+                <button type="button" class="btn btn-danger error_bind" data-retry-text"Retrying...">Retry</button>
+                <button type="button" class="btn btn-default error_dismiss">Or Dismiss</button>
+              </p>
+            </div>"""
+
+          ($ '.error_dismiss').click ->
+            ($ '.alert').alert 'close'
+
+          ($ '.error_bind').click ->
+            req = $.ajax
+              type: 'POST'
+              url: "/visualizations"
+              dataType: 'json'
+              data:
+                visualization:
+                  project_id: Number data.projectID
+                  title: name
+                  data: savedData.data
+                  globals: savedData.globals
+                  svg: svg
+              success: (msg) ->
+                ($ "#loadModal").modal('hide')
+                helpers.name_popup msg, "Visualization", "visualization"
+                ($ '.alert').alert 'close'
+
+              error: (msg) ->
+                ($ '.error_bind').button 'reset'
+
 
     ###
     Ajax call to check if the user is logged in. Calls the appropriate
