@@ -341,8 +341,10 @@ $ ->
         for axis in axes
           controls += "<option value='#{axis}'>#{axis}</option>"
         controls += "</select>"
-        controls += "<button id='zoomOutButton' class='zoom_button btn btn-default'>Out</button>"
-        controls += "<button id='zoomResetButton' class='zoom_button btn btn-default'>Fit</button>"
+        controls += "<div class='btn-group btn-group-justified'>"
+        controls += "<div class='btn-group'><button id='zoomOutButton' class='zoom_button btn btn-default'>Out</button></div>"
+        controls += "<div class='btn-group'><button id='zoomResetButton' class='zoom_button btn btn-default'>Fit</button></div>"
+        controls += "</div>"
 
         controls += "<h4 class='clean_shrink'>Display Mode</h4>"
 
@@ -378,7 +380,7 @@ $ ->
 
         if elaspedTimeButton
           controls += "<div class='inner_control_div' style='text-align:center'>"
-          controls += "<button id='elaspedTimeButton' class='save_button btn btn-default'>"
+          controls += "<button id='elaspedTimeButton' class='save_button btn btn-default btn-sm'>"
           controls += "Generate Elapsed Time </button>"
           controls += "</div>"
 
