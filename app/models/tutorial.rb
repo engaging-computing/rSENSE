@@ -18,6 +18,8 @@ class Tutorial < ActiveRecord::Base
 
   alias_attribute :owner, :user
 
+  before_save :summernote_media_objects
+
   def self.search(search, include_hidden = false)
     res = if search
             where('lower(title) LIKE lower(?)', "%#{search}%")
@@ -58,5 +60,26 @@ class Tutorial < ActiveRecord::Base
     end
 
     h
+  end
+
+  def summernote_media_objects
+    text = Nokogiri.HTML(content)
+    text.search('img').each do |picture|
+      if picture['src'].include?('data:image')
+        data = Base64.decode64(picture['src'].partition('/')[2].split('base64,')[1])
+        params = {}
+        if picture['src'].partition('/')[2].split('base64,')[0].include? 'png'
+          params[:file_type] = '.png'
+        else params[:file_type] = '.jpg'
+        end
+        params[:image_data] = data
+        params[:tutorial_id] = id
+        summernote_mo = MediaObject.new
+        summernote_mo.summernote_image(params)
+        summernote_mo.save!
+        picture['src'] = summernote_mo.src
+      end
+    end
+    self.content = text.to_html
   end
 end

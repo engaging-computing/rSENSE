@@ -141,6 +141,9 @@ class MediaObject < ActiveRecord::Base
     elsif params[:viz_id]
       self.user_id = Visualization.find(params[:viz_id]).user_id
       self.visualization_id = params[:viz_id]
+    elsif params[:tutorial_id]
+      self.tutorial_id = params[:tutorial_id]
+      self.user_id = Tutorial.find(params[:tutorial_id]).user_id
     else
       self.user_id = params[:user_id]
     end
