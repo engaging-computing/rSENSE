@@ -155,18 +155,23 @@ $ ->
       containerSize = ($ '#viscontainer').width()
       hiderSize     = ($ '#controlhider').outerWidth()
       controlSize   = ($ '#controldiv').width()
+      controlVisibility = ($ '#controldiv').css 'opacity'
 
       if toggleControls
         controlSize = if ($ '#controldiv').width() <= 0
           globals.CONTROL_SIZE
         else
           0
+        controlVisibility = if ($ '#controldiv').width() <= 0
+          1.0
+        else
+          0.0
 
       newWidth = containerSize - (hiderSize + controlSize + 10)
       newHeight = ($ '#viscontainer').height() - ($ '#visTabList').outerHeight()
 
       ($ '#controldiv').height newHeight
-      ($ '#controldiv').animate {width: controlSize}, aniLength, 'linear'
+      ($ '#controldiv').animate {width: controlSize, opacity: controlVisibility}, aniLength, 'linear'
 
       ($ '.vis_canvas').height newHeight
       ($ '.vis_canvas').animate {width: newWidth}, aniLength, 'linear'
