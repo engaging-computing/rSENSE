@@ -11,7 +11,7 @@ class Project < ActiveRecord::Base
   validates :title, length: { maximum: 128 }
 
   before_save :sanitize_project
-
+  before_save :summernote_media_objects
   has_many :fields
   has_many :data_sets, -> { order('created_at desc') }
   has_many :media_objects
@@ -267,6 +267,27 @@ class Project < ActiveRecord::Base
       end
     end
     new_project
+  end
+
+  def summernote_media_objects
+    text = Nokogiri.HTML(content)
+    text.search('img').each do |picture|
+      if picture['src'].include?('data:image')
+        data = Base64.decode64(picture['src'].partition('/')[2].split('base64,')[1])
+        params = {}
+        if picture['src'].partition('/')[2].split('base64,')[0].include? 'png'
+          params[:file_type] = '.png'
+        else params[:file_type] = '.jpg'
+        end
+        params[:image_data] = data
+        params[:proj_id] = id
+        summernote_mo = MediaObject.new
+        summernote_mo.summernote_image(params)
+        summernote_mo.save!
+        picture['src'] = summernote_mo.src
+      end
+    end
+    self.content = text.to_html
   end
 end
 

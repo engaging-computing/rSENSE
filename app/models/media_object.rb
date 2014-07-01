@@ -131,6 +131,32 @@ class MediaObject < ActiveRecord::Base
     nmo
   end
 
+  def summernote_image(params)
+    if params[:proj_id]
+      self.project_id = params[:proj_id]
+      self.user_id = Project.find(params[:proj_id]).user_id
+    elsif params[:news_id]
+      self.news_id = params[:news_id]
+      self.user_id = News.find(params[:news_id]).user_id
+    elsif params[:viz_id]
+      self.user_id = Visualization.find(params[:viz_id]).user_id
+      self.visualization_id = params[:viz_id]
+    else
+      self.user_id = params[:user_id]
+    end
+    self.media_type = 'image'
+    self.name = 'Uploaded Image ' + SecureRandom.hex[0...5] + "#{params[:file_type]}"
+    self.file = name.split('.')[0] + SecureRandom.hex + '.' + name.split('.')[1]
+    sanitize_media
+    self.store_key = nil
+    self.check_store!
+    File.open("#{file_name}", 'wb+') do |f|
+      f.write params[:image_data]
+      f.chmod(0644)
+    end
+    add_tn
+  end
+
   private
 
   def remove_data!
