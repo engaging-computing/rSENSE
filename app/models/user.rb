@@ -91,7 +91,9 @@ class User < ActiveRecord::Base
         picture['src'] = summernote_mo.src
       end
     end
-    self.bio = text.to_html
+    unless self.bio.nil?
+      self.bio = text.to_html
+    end
   end
 end
 
