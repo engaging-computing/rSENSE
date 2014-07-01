@@ -54,6 +54,8 @@ class News < ActiveRecord::Base
         picture['src'] = summernote_mo.src
       end
     end
-    self.content = text.to_html
+    unless self.content.nil?
+      self.content = text.to_html
+    end
   end
 end
