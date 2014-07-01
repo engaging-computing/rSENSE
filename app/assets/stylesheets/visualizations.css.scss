@@ -9,6 +9,7 @@
   $light-bkg-inv: linear-gradient(#D7D7D7, #F6F6F6);
   $dark-bkg: linear-gradient(#E4E4E4, #C4C4C4);
   $dark-bkg-inv: linear-gradient(#C4C4C4, #E4E4E4);
+  $select-bkg: linear-gradient(#49A7DB, #268AC1);
   $border-color: #ABABAB;
   $border: thin solid $border-color;
 
@@ -29,7 +30,7 @@
   // just used for the border around the vis window
   #viscontainer {
     background-color: #FFF; // firefox - control menu turns black otherwise
-    border: thin solid #ABABAB;
+    border: $border;
   }
 
   // the bar at the top of the vis window
@@ -44,7 +45,7 @@
   .vis_tab {
     @include unselectable;
     display: inline-block;
-    list-style: none;
+    //list-style: none;
     border-right: $border; // borders are only on the right - tab list and vis window cover the other sides
     .ui-tabs-anchor {
       display: block; // so vertical padding works
@@ -72,22 +73,15 @@
     // the entire header box
     .ui-jqgrid-hbox {
       background-image: $light-bkg;
-      padding-right: 17px;
       border-bottom: $border;
     }
     .ui-jqgrid-hbox table > thead > tr > th {
       border-top: none !important; // because inline styles (jQuery UI - can't fix)
       border-right: $border;
     }
-    // this has an annoying border and looks bad but needs to be there
-    .jqgfirstrow {
-      visibility: hidden;
-    }
     #first_toolbar_bottom, #prev_toolbar_bottom, #next_toolbar_bottom, #last_toolbar_bottom {
       background-image: url(/assets/vis/ui-icons_222222_256x240.png);
       width: 19px; // height set as !important to 19px elsewhere
-      margin: 0 3px;
-      padding: 0;
     }
     #first_toolbar_bottom {
       background-position: -78px -158px;
@@ -111,25 +105,28 @@
   #controlhider {
     #control_hide_button { // eventually put this next to #fullscreen-viz?
       @include unselectable;
+      background-image: $light-bkg;
+      border: $border;
+      border-radius: 3px;
+      outline: none;
       margin: 10px 5px 5px;
+      padding: 8px 6px;
     }
-    float: none;
-    margin: 0;
-    padding: 0;
-    width: 24px;
+    float: none; // this moves the control hider to the left of the controls div
     display: inline-block;
   }
 
   #controldiv {
     padding-right: 10px;
+    // puts spacing between some boostrap buttons
     .form-control { // this styles bootstrap stuff and IS VERY BAD
       margin-bottom: 5px;
     }
-    table td:first-child {
-      padding-right: 5px;
-    }
     .ui-accordion {
-      margin: 10px 0 0;
+      margin: 10px 0 0; // add some space between accordions
+    }
+    .ui-accordion table td:first-child {
+      padding-right: 5px; // adds some space between bootstrap buttons and their labels
     }
     .ui-accordion-header {
       @include unselectable;
@@ -152,7 +149,6 @@
       height: 11px;
       background-image: url(/assets/vis/ui-icons_222222_256x240.png);
       display: inline-block;
-      vertical-align: middle;
     }
     // button for shrunken accordion dropdown
     .ui-icon-triangle-1-e { // can't figure out what e, s, or 1 stand for
@@ -163,7 +159,8 @@
       background-position: -67px -18px; // uses image @ (3, 2) on /assets/vis/ui-icons_222222_256x240.png
     }
     #ui-accordion-groupControl-panel-0 {
-      padding-bottom: 20px;
+      min-height: 120px; // fixed height fixes weird sizing bug in firefox
+      max-height: 160px;
       overflow-x: auto; // moves the scrollbar inside the panel
     }
     // any input button inside this class isn't lined up with the text to its right - this fixes that
@@ -187,7 +184,7 @@
     .ui-slider-range {
       position: absolute;
       height: 8px;
-      background-image: $dark-bkg;
+      background-image: $select-bkg;
       border-radius: 3px;
     }
     .ui-slider-handle {
@@ -201,7 +198,7 @@
       background-image: $dark-bkg;
       outline: none;
     }
-  } // end .controldiv
+  }
 }
 
 // the dropdown menu for the table vis is located as a direct child of the body, so this has to go here
