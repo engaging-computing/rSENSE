@@ -1,4 +1,4 @@
-
+require 'base64'
 require 'store_file'
 
 class MediaObject < ActiveRecord::Base

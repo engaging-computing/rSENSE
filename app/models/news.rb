@@ -1,3 +1,5 @@
+require 'nokogiri'
+
 class News < ActiveRecord::Base
   include ActionView::Helpers::DateHelper
 
