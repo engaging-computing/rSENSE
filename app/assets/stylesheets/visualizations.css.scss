@@ -55,7 +55,7 @@
       display: block; // so vertical padding works
       padding: 6px 10px; // so the entire box is clickable
       color: #222;
-      outline: 0;
+      outline: none;
     }
   }
 
@@ -221,6 +221,7 @@
       border-radius: 8px;
       border: $border;
       background-image: $dark-bkg;
+      outline: none;
     }
   } // end .controldiv
 }
