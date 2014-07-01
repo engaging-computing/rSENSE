@@ -15,7 +15,7 @@ class User < ActiveRecord::Base
   has_secure_password
 
   before_save :sanitize_user
-
+  before_save :summernote_media_objects
   has_many :projects
   has_many :data_sets
   has_many :media_objects
@@ -71,6 +71,27 @@ class User < ActiveRecord::Base
     key = SecureRandom.hex(16)
     self.validation_key = SecureRandom.hex(16)
     key
+  end
+
+  def summernote_media_objects
+    text = Nokogiri.HTML(bio)
+    text.search('img').each do |picture|
+      if picture['src'].include?('data:image')
+        data = Base64.decode64(picture['src'].partition('/')[2].split('base64,')[1])
+        params = {}
+        if picture['src'].partition('/')[2].split('base64,')[0].include? 'png'
+          params[:file_type] = '.png'
+        else params[:file_type] = '.jpg'
+        end
+        params[:image_data] = data
+        params[:user_id] = id
+        summernote_mo = MediaObject.new
+        summernote_mo.summernote_image(params)
+        summernote_mo.save!
+        picture['src'] = summernote_mo.src
+      end
+    end
+    self.bio = text.to_html
   end
 end
 
