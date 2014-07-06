@@ -79,9 +79,6 @@ $ ->
         # Make table visible? (or something)
         ($ '#' + @canvas).show()
 
-        ($ "##{@canvas}").css 'padding-top', 2
-        ($ "##{@canvas}").css 'padding-bottom', 2
-
         # Calls update
         super()
 
