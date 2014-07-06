@@ -8,6 +8,7 @@
  * You're free to add application-wide styles to this file and they'll appear at the top of the
  * compiled file, but it's generally better to create a new file per style scope.
  *
+ *= require bootstrap-colorpicker
  *= require font-awesome
  *= require highvis.css.scss
  *= require ui.jqgrid.css
@@ -20,6 +21,8 @@ $navbar-default-bg: #111133;
 $navbar-default-color: white;
 $navbar-default-link-color: white;
 $navbar-default-link-hover-color: #DDDDDD;
+$table-bg-accent: #E8E8E8;
+
 @import "bootstrap";
 
 body {
