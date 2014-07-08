@@ -75,16 +75,22 @@ body {
   background-color: #ddd;
   margin: auto;
   box-shadow: 2px 3px 1px grey;
-  min-width:266px;
 
   .item-image {
-    width: 268px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100%;
     height: 120px;
   }
 
   .item-desc {
     min-height: 88px;
     margin: 8px;
+    font-size: 0.9em;
+  }
+
+  .item-title {
+    font-size: 1em;
   }
 
   .badge {
@@ -96,7 +102,6 @@ body {
 
 .item-block {
   height: 250px;
-  width: 233px;
   margin-bottom: 2em;
 
   overflow: hidden;

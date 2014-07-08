@@ -2,13 +2,15 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+$a: 991px;
+
 .projects-controller {
   .hoverimage {
     width: 75px;
     height: 75px;
   }
 
-  #searchProjRow {
+  .search-box .padded-col {
   	margin-bottom: 12px;
   }
 
