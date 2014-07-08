@@ -1,4 +1,4 @@
-class SessionsController < ApplicationController
+lass SessionsController < ApplicationController
   skip_before_filter :authorize, only: ['create', 'new', 'verify']
 
   protect_from_forgery except: :create
@@ -39,6 +39,13 @@ class SessionsController < ApplicationController
         format.json { render json: {}, status: :unauthorized }
       end
     end
+  end
+
+  # GET /auth/github/callback
+  def extern_auth
+    #auth = request.env["omniauth.auth"]
+    #@user.auth_with_omniauth(auth)
+    #session[:redirect_to] = '/home/index'
   end
 
   def destroy
