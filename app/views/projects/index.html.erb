@@ -8,12 +8,12 @@
           </div>
         </div>
 
-        <div class="row">
+        <div id="searchRow" class="row">
           <div class="padded-col col-sm-10" title="Enter keyword(s) or project number to search for a project">
             <%= text_field_tag :search, @params[:search], class: "form-control" %>
           </div>
           <div class="padded-col col-sm-2">
-            <%= submit_tag "Search", name: nil, class:'btn btn-default'%>
+            <%= submit_tag "Search", name: nil, class:'btn btn-default btn-group-justified'%>
           </div>
         </div>
           
@@ -36,23 +36,25 @@
             %>
           </div>
             
-          <div class="padded-col col-md-6 col-xs-12 btn-group binary-filters" data-toggle="checkbox"> 
-            <label class='btn btn-primary' title="Projects that can be cloned and repopulated with new data">
-              <%= check_box_tag 'templates_only', 'yes', @params['templates_only'] %>
-              Templates
-            </label>
-            <label class='btn btn-primary' title="Projects populated with professionally collected data">
-              <%= check_box_tag 'curated_only', 'yes', @params['curated_only'] %>
-              Curated
-            </label>
-            <label class='btn btn-primary' title="Projects that have been featured by the iSENSE team">
-              <%= check_box_tag 'featured_only', 'yes', @params['featured_only'] %>
-              Featured
-            </label>
-            <label class='btn btn-primary' title="Non-empty projects populated with data">
-              <%= check_box_tag 'has_data', 'yes', @params['has_data'] %>
-              Has Data
-            </label>
+          <div class="padded-col col-md-6 col-xs-12 binary-filters" data-toggle="checkbox">
+            <div class="btn-group btn-group-justified">
+              <label class='btn btn-primary' title="Projects that can be cloned and repopulated with new data">
+                <%= check_box_tag 'templates_only', 'yes', @params['templates_only'] %>
+                Templates
+              </label>
+              <label class='btn btn-primary' title="Projects populated with professionally collected data">
+                <%= check_box_tag 'curated_only', 'yes', @params['curated_only'] %>
+                Curated
+              </label>
+              <label class='btn btn-primary' title="Projects that have been featured by the iSENSE team">
+                <%= check_box_tag 'featured_only', 'yes', @params['featured_only'] %>
+                Featured
+              </label>
+              <label class='btn btn-primary' title="Non-empty projects populated with data">
+                <%= check_box_tag 'has_data', 'yes', @params['has_data'] %>
+                Has Data
+              </label>
+            </div>
           </div>
         </div>
           
