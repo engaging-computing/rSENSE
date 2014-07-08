@@ -3,6 +3,13 @@
 // You can use Sass (SCSS) here: http: //sass-lang.com/
 
 .visualizations-controller {
+  #searchVisRow {
+    margin-bottom: 12px;
+  }
+}
+
+// because displaying a vis is in the same div class as view all vises
+body[data-page-name='visualizations/displayVis'] .visualizations-controller {
 
   // colors
   $light-bkg: linear-gradient(#F6F6F6, #D7D7D7);
