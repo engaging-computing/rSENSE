@@ -8,12 +8,12 @@
             <h1><i class='fa fa-picture-o'></i> Visualizations</h1>
           </div>
           
-          <div class='row'>
+          <div id='searchVisRow' class='row'>
             <div class="padded-col col-sm-10" title="Enter keyword(s) to search for a visualization">
               <%= text_field_tag :search, @params[:search], class: "form-control" %>
             </div>
             <div class="padded-col col-sm-2">
-              <%= submit_tag "Search", name: nil, class:'btn btn-default'%>
+              <%= submit_tag "Search", name: nil, class:'btn btn-default btn-group-justified'%>
             </div>
           </div>
           

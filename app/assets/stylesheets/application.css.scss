@@ -67,7 +67,7 @@ body {
   font-size: smaller;
 }
 
-.panel-heading {
+.panel-heading h1 {
   font-size: 20pt;
 }
 
@@ -167,3 +167,7 @@ body {
   display: none;
 }
 
+.center {
+  margin: 0 auto;
+  text-align: center;
+}
