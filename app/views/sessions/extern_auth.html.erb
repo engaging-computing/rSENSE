@@ -1,28 +1,71 @@
-<div class="row">
-  <div class="col-lg-6 col-lg-offset-3">
-    <div class="panel panel-default">
-      <%= form_tag("/login", method: "post") do %>
-    
-        <div class="panel-heading">
-          <h1> Log in to iSENSE </h1>
-        </div>
+<%= form_tag("/submit_issue", method: "post") do %>
 
-        <div class="panel-body">
-          <div class="form-group">
-            <%= label_tag(:email, "Email:") %>
-            <%= text_field_tag(:email, flash[:email], class: "form-control", placeholder: "user@email.com", autofocus: true) %>
-          </div>
-        
-          <div class="form-group">
-            <%= label_tag(:password, "Password #{(link_to "(forgot password)", '/users/pw_request', tabindex: -1)}:".html_safe) %>
-            <%= password_field_tag(:password,nil ,class: "form-control") %>
-          </div>
-        </div>  
-        
-        <div class="panel-footer">
-          <%= submit_tag("Login", class: "btn btn-primary") %>
+  <div class="panel panel-default">
+
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-md-9">Please fill out the following form:</div>
+        <div class="form-group col-md-3">
+          <%= select_tag(:issue_type, options_for_select([['Report a Bug', 0],['Suggest a Feature', 1]], 0)) %>
         </div>
-      <% end %>
+      </div>
+    </div>
+
+    <div id="bug_form" class="panel-body">
+      <div class="form-group title">
+          <%= label_tag(:title, "Title:") %>
+          <%= text_field_tag(:title, nil, placeholder: 'My very important issue') %>
+      </div>
+
+      <h4>Please enter a brief description of the bug:</h4>
+      <%= text_area_tag(:description, nil,  placeholder: 'e.g. iSENSE issue reporting is not yet complete.', rows: 4) %>
+      <br/>
+
+      <h4>Please verify the following:</h4>
+      <div class="row">
+        <div class="form-group col-md-4">
+          <%= label_tag(:browser, "Browser:") %>
+          <%= text_field_tag(:browser, browser.name) %>
+        </div>
+        <div class="form-group col-md-4">
+          <%= label_tag(:version, "Version:") %>
+          <%= text_field_tag(:version, browser.full_version) %>
+        </div>
+        <div class="form-group col-md-4">
+          <%= label_tag(:isense_version, "iSENSE Version") %>
+          <%= text_field_tag(:isense_version, @version) %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-4">
+          <%= label_tag(:logged_in, "Logged in:") %>
+          <%= select_tag(:logged_in, options_for_select([['Yes', 1],['No', 0]], 1)) %>
+        </div>
+        <div class="form-group col-md-4">
+          <%= label_tag(:is_admin, "Admin") %>
+          <%= select_tag(:is_admin, options_for_select([['Yes', 1],['No', 0]], 0)) %>
+        </div>
+      </div>
+
+      <h4>Please give step by step instructions on how to reproduce the bug:</h4>
+      <%= text_area_tag(:instructions, nil,
+          placeholder: 'e.g. 1. Click on \'Projects.\' 2. Hover over the create project buttons. 3. Click on \'Tutorials\' 4 times.', rows: 4) %>
+      <br/>
+    </div>
+
+    <div id="feature_form" class="panel-body" style="display:none">
+      <div class="form-group title">
+          <%= label_tag(:title, "Title:") %>
+          <%= text_field_tag(:title, nil, placeholder: 'My very exciting feature') %>
+      </div>
+
+      <h4>Please enter a brief description of your glorious idea:</h4>
+      <%= text_area_tag(:description, nil,  placeholder: 'e.g. iSENSE issue reporting is not yet complete.', rows: 4) %>
+      <br/>
+    </div>
+
+    <div class="panel-footer">
+      <%= submit_tag("Submit", class: "btn btn-success") %>
     </div>
   </div>
-</div>
+<% end %>
