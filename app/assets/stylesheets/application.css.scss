@@ -36,16 +36,13 @@ body {
   background-color: #113;
   height: 55px;
 
+  // larger font sizes cause weird overflow errors on some names
   @media screen and (max-width: 991px) {
     font-size: 0.9em;
   }
 
   .navbtn a {
     padding-top: 20px;
-  }
-
-  .navbtn a:focus {
-    background-color: #FFF;
   }
 
   .navbar-brand {
@@ -123,21 +120,11 @@ body {
   margin-bottom: 1ex;
 
   .item-image {
-    width: 256px;
     height: 210px;
     background-size: 100% 100%;
     background-repeat: no-repeat;
     float: left;
   }
-
-  .item-desc {
-    padding: 1ex;
-    padding-left: 268px;
-  }
-}
-
-.item-title {
-  font-size: larger;
 }
 
 .search-box {
