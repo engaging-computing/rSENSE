@@ -73,5 +73,6 @@ gem 'multi_json'
 
 gem 'roo'
 
-# Github Auth
+# Github Auth and Bug Report
 gem 'omniauth-github'
+gem 'browser'
