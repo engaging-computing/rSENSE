@@ -8,17 +8,17 @@
             <h1><i class='fa fa-picture-o'></i> Visualizations</h1>
           </div>
           
-          <div class='row'>
-            <div class="padded-col col-sm-10" title="Enter keyword(s) to search for a visualization">
+          <div id='searchVisRow' class='row'>
+            <div class="padded-col col-sm-10 col-xs-9" title="Enter keyword(s) to search for a visualization">
               <%= text_field_tag :search, @params[:search], class: "form-control" %>
             </div>
-            <div class="padded-col col-sm-2">
-              <%= submit_tag "Search", name: nil, class:'btn btn-default'%>
+            <div class="padded-col col-sm-2 col-xs-3">
+              <%= submit_tag "Search", name: nil, class:'btn btn-default btn-group-justified'%>
             </div>
           </div>
           
           <div class='row'>
-            <div class="padded-col col-md-3 col-sm-6" title="Sort by">
+            <div class="padded-col col-md-3 col-xs-6" title="Sort by">
             
               <%= select_tag(:sort, 
                 options_for_select([["Sort by Modified Date", "updated_at"],
@@ -27,7 +27,7 @@
               %>
             </div>
             
-            <div class="padded-col col-md-3 col-sm-6" title="Sort order">
+            <div class="padded-col col-md-3 col-xs-6" title="Sort order">
             
               <%= select_tag(:order, 
                 options_for_select([["Descending", "DESC"],
@@ -50,7 +50,7 @@
     <div class="isotope_pane">
     
       <% @visualizations.each do |vi| %>
-        <div class="col-sm-3">
+        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
         <div class='item item-block'>
           <% thumb = image_path('olde_map.jpg') %>
           <% if vi.thumb_id != nil %>
