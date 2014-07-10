@@ -3,12 +3,12 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 .users-controller {
-	#searchUserRow {
-		margin-top: 12px;
-	}
-
 	.pageControls {
 		text-align: center;
 		padding: 5px;
+	}
+
+	#searchUserRow {
+		margin-top: 12px;
 	}
 }

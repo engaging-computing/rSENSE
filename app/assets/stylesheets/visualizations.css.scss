@@ -2,12 +2,6 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http: //sass-lang.com/
 
-.visualizations-controller {
-  #searchVisRow {
-    margin-bottom: 12px;
-  }
-}
-
 // because displaying a vis is in the same div class as view all vises
 body[data-page-name='visualizations/displayVis'] .visualizations-controller,
 body[data-page-name='visualizations/show'] .visualizations-controller {
@@ -31,8 +25,175 @@ body[data-page-name='visualizations/show'] .visualizations-controller {
     user-select: none;
   }
 
+  #controlhider {
+    float: none; // this moves the control hider to the left of the controls div
+    display: inline-block;
+
+    #control_hide_button { // eventually put this next to #fullscreen-viz?
+      @include unselectable;
+      background-image: $light-bkg;
+      border: $border;
+      border-radius: 3px;
+      outline: none;
+      margin: 10px 5px 5px;
+      padding: 8px 6px;
+    }
+  }
+
+  #controldiv {
+    padding-right: 10px;
+
+    // puts spacing between some boostrap buttons
+    .form-control { // this styles bootstrap stuff and IS VERY BAD
+      margin-bottom: 5px;
+    }
+
+    // any input button inside this class isn't lined up with the text to its right - this fixes that
+    .inner_control_div {
+      .checkbox, .radio {
+        margin: 1px 0;
+        input {
+          margin-top: 2px;
+        }
+      }
+    }
+
+    .ui-accordion {
+      margin: 10px 0 0; // add some space between accordions
+    }
+
+    .ui-accordion table td:first-child {
+      padding-right: 5px; // adds some space between bootstrap buttons and their labels
+    }
+
+    #ui-accordion-groupControl-panel-0 {
+      min-height: 120px; // fixed height fixes weird sizing bug in firefox
+      max-height: 160px;
+      overflow-x: auto; // moves the scrollbar inside the panel
+    }
+
+    .ui-accordion-header {
+      @include unselectable;
+      outline: none;
+      margin: 0;
+      padding: 3px 0 7px 5px;
+      border: thin solid #ABABAB;
+      border-radius: 3px;
+      background-image: $light-bkg;
+    }
+
+    // this is the little arrow button next to every accordion header
+    .ui-accordion-header-icon {
+      width: 11px;
+      height: 11px;
+      background-image: url(/assets/vis/ui-icons_222222_256x240.png);
+      display: inline-block;
+    }
+
+    // the text on the dropdown header
+    .ui-accordion-header a {
+      padding-left: 10px;
+      color: #222;
+      font-size: 12pt;
+    }
+
+    // button for shrunken accordion dropdown
+    .ui-icon-triangle-1-e { // can't figure out what e, s, or 1 stand for
+      background-position: -34px -18px; // uses image @ (5, 2) on /assets/vis/ui-icons_222222_256x240.png
+    }
+
+    // button for expanded accordion dropdown
+    .ui-icon-triangle-1-s {
+      background-position: -67px -18px; // uses image @ (3, 2) on /assets/vis/ui-icons_222222_256x240.png
+    }
+
+    // because sliders need styling now that jQuery UI CSS is gone
+    .ui-slider {
+      position: relative;
+      margin: 10px 5px;
+      height: 10px;
+      background-image: $light-bkg-inv;
+      border: thin solid #ABABAB;
+      border-radius: 3px;
+    }
+
+    .ui-slider-handle {
+      display: inline-block;
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      margin: -4px 0 0 -8px;
+      border-radius: 8px;
+      border: $border;
+      background-image: $dark-bkg;
+      outline: none;
+    }
+
+    .ui-slider-range {
+      position: absolute;
+      height: 8px;
+      background-image: $select-bkg;
+      border-radius: 3px;
+    }
+  }
+
+  // button that enables fullscreen vis, not the fullscreen viz itself
+  #fullscreen-viz {
+    margin: 1px;
+  }
+
   .mainContent {
     width: 100%; // makes page body fill the screen instead of having a fixed width
+  }
+
+  // table vis needs additional love to make it look right
+  #table_canvas {
+
+    #first_toolbar_bottom, #last_toolbar_bottom, #next_toolbar_bottom, #prev_toolbar_bottom {
+      background-image: url(/assets/vis/ui-icons_222222_256x240.png);
+      width: 19px; // height set as !important to 19px elsewhere
+    }
+
+    #first_toolbar_bottom {
+      background-position: -78px -158px;
+    }
+
+    #last_toolbar_bottom {
+      background-position: -63px -158px;
+    }
+
+    #next_toolbar_bottom {
+      background-position: -30px -158px;
+    }
+
+    #prev_toolbar_bottom {
+      background-position: -47px -158px;
+    }
+    
+    table {
+      border-color: $border-color;
+    }
+
+    // the entire header box
+    .ui-jqgrid-hbox {
+      background-image: $light-bkg;
+      border-bottom: $border;
+    }
+
+    .ui-jqgrid-hbox table > thead > tr > th {
+      border-top: none !important; // because inline styles (jQuery UI - can't fix)
+      border-right: $border;
+    }
+  }
+
+  // an active tab has a different looking gradient
+  .ui-tabs-active {
+    background-image: $dark-bkg-inv;
+  }
+
+  .vis_canvas {
+    border-right: $border; // this makes it look like the control div has a border
+    overflow: hidden; // because something inside vis_canvas is overflowing on every non-map vis
   }
 
   // just used for the border around the vis window
@@ -53,157 +214,12 @@ body[data-page-name='visualizations/show'] .visualizations-controller {
   .vis_tab {
     @include unselectable;
     display: inline-block;
-    //list-style: none;
     border-right: $border; // borders are only on the right - tab list and vis window cover the other sides
+
     .ui-tabs-anchor {
       display: block; // so vertical padding works
       padding: 6px 10px; // so the entire box is clickable
       color: #222;
-      outline: none;
-    }
-  }
-
-  // an active tab has a different looking gradient
-  .ui-tabs-active {
-    background-image: $dark-bkg-inv;
-  }
-
-  // button that enables fullscreen vis, not the fullscreen viz itself
-  #fullscreen-viz {
-    margin: 1px;
-  }
-
-  // table vis needs additional love to make it look right
-  #table_canvas {
-    table {
-      border-color: $border-color;
-    }
-    // the entire header box
-    .ui-jqgrid-hbox {
-      background-image: $light-bkg;
-      border-bottom: $border;
-    }
-    .ui-jqgrid-hbox table > thead > tr > th {
-      border-top: none !important; // because inline styles (jQuery UI - can't fix)
-      border-right: $border;
-    }
-    #first_toolbar_bottom, #prev_toolbar_bottom, #next_toolbar_bottom, #last_toolbar_bottom {
-      background-image: url(/assets/vis/ui-icons_222222_256x240.png);
-      width: 19px; // height set as !important to 19px elsewhere
-    }
-    #first_toolbar_bottom {
-      background-position: -78px -158px;
-    }
-    #prev_toolbar_bottom {
-      background-position: -47px -158px;
-    }
-    #next_toolbar_bottom {
-      background-position: -30px -158px;
-    }
-    #last_toolbar_bottom {
-      background-position: -63px -158px;
-    }
-  }
-
-  .vis_canvas {
-    border-right: $border; // this makes it look like the control div has a border
-    overflow: hidden; // because something inside vis_canvas is overflowing on every non-map vis
-  }
-
-  #controlhider {
-    #control_hide_button { // eventually put this next to #fullscreen-viz?
-      @include unselectable;
-      background-image: $light-bkg;
-      border: $border;
-      border-radius: 3px;
-      outline: none;
-      margin: 10px 5px 5px;
-      padding: 8px 6px;
-    }
-    float: none; // this moves the control hider to the left of the controls div
-    display: inline-block;
-  }
-
-  #controldiv {
-    padding-right: 10px;
-    // puts spacing between some boostrap buttons
-    .form-control { // this styles bootstrap stuff and IS VERY BAD
-      margin-bottom: 5px;
-    }
-    .ui-accordion {
-      margin: 10px 0 0; // add some space between accordions
-    }
-    .ui-accordion table td:first-child {
-      padding-right: 5px; // adds some space between bootstrap buttons and their labels
-    }
-    .ui-accordion-header {
-      @include unselectable;
-      outline: none;
-      margin: 0;
-      padding: 3px 0 7px 5px;
-      border: thin solid #ABABAB;
-      border-radius: 3px;
-      background-image: $light-bkg;
-    }
-    // the text on the dropdown header
-    .ui-accordion-header a {
-      padding-left: 10px;
-      color: #222;
-      font-size: 12pt;
-    }
-    // this is the little arrow button next to every accordion header
-    .ui-accordion-header-icon {
-      width: 11px;
-      height: 11px;
-      background-image: url(/assets/vis/ui-icons_222222_256x240.png);
-      display: inline-block;
-    }
-    // button for shrunken accordion dropdown
-    .ui-icon-triangle-1-e { // can't figure out what e, s, or 1 stand for
-      background-position: -34px -18px; // uses image @ (5, 2) on /assets/vis/ui-icons_222222_256x240.png
-    }
-    // button for expanded accordion dropdown
-    .ui-icon-triangle-1-s {
-      background-position: -67px -18px; // uses image @ (3, 2) on /assets/vis/ui-icons_222222_256x240.png
-    }
-    #ui-accordion-groupControl-panel-0 {
-      min-height: 120px; // fixed height fixes weird sizing bug in firefox
-      max-height: 160px;
-      overflow-x: auto; // moves the scrollbar inside the panel
-    }
-    // any input button inside this class isn't lined up with the text to its right - this fixes that
-    .inner_control_div {
-      .checkbox, .radio {
-        margin: 1px 0;
-        input {
-          margin-top: 2px;
-        }
-      }
-    }
-    // because sliders need styling now that jQuery UI CSS is gone
-    .ui-slider {
-      position: relative;
-      margin: 10px 5px;
-      height: 10px;
-      background-image: $light-bkg-inv;
-      border: thin solid #ABABAB;
-      border-radius: 3px;
-    }
-    .ui-slider-range {
-      position: absolute;
-      height: 8px;
-      background-image: $select-bkg;
-      border-radius: 3px;
-    }
-    .ui-slider-handle {
-      display: inline-block;
-      position: absolute;
-      width: 16px;
-      height: 16px;
-      margin: -4px 0 0 -8px;
-      border-radius: 8px;
-      border: $border;
-      background-image: $dark-bkg;
       outline: none;
     }
   }
@@ -231,5 +247,11 @@ ul#sopt_menu {
     a > table > tbody > tr > td { // this is gross
       color: #FFF;
     }
+  }
+}
+
+.visualizations-controller {
+  #searchVisRow {
+    margin-bottom: 12px;
   }
 }
