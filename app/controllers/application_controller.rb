@@ -143,6 +143,27 @@ class ApplicationController < ActionController::Base
       end
     end
   end
+
+  def submit_issue
+    render nothing: true
+    new_params = {}
+    new_params['title'] = params[:bug_title]
+    new_params['body'] = '** Description: **' + params[:bug_description]
+    logger.info 'cats'
+
+    url = URI.parse('https://api.github.com/repos/jaypoulz/rSENSE/issues')
+    print '\nStarting POST '
+    puts url
+
+    req = Net::HTTP::Post.new(url.request_uri)
+    req.set_form_data(new_params)
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = (url.scheme == "https")
+    response = http.request(req)
+
+    puts new_params
+    puts response.body
+  end
 end
 
 class UserError < RuntimeError

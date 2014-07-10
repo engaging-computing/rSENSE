@@ -36,11 +36,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.auth_with_omniauth(auth)
-    user.auth_uid = auth["uid"]
-    user.auth_username = auth["info"]["name"]
-  end
-
   def self.search(search)
     if search
       where('lower(name) LIKE lower(?)', "%#{search}%")

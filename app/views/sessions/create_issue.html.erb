@@ -13,12 +13,12 @@
 
     <div id="bug_form" class="panel-body">
       <div class="form-group title">
-          <%= label_tag(:title, "Title:") %>
-          <%= text_field_tag(:title, nil, placeholder: 'My very important issue') %>
+          <%= label_tag(:bug_title, "Title:") %>
+          <%= text_field_tag(:bug_title, nil, placeholder: 'My very important issue') %>
       </div>
 
       <h4>Please enter a brief description of the bug:</h4>
-      <%= text_area_tag(:description, nil,  placeholder: 'e.g. iSENSE issue reporting is not yet complete.', rows: 4) %>
+      <%= text_area_tag(:bug_description, nil,  placeholder: 'e.g. iSENSE issue reporting is not yet complete.', rows: 4) %>
       <br/>
 
       <h4>Please verify the following:</h4>
@@ -65,7 +65,7 @@
     </div>
 
     <div class="panel-footer">
-      <%= submit_tag("Submit", class: "btn btn-success") %>
+      <%= submit_tag("Submit", class: "btn btn-primary") %>
     </div>
   </div>
 <% end %>
