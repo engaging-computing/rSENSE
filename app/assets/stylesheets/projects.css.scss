@@ -3,8 +3,16 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 .projects-controller {
+  #addProjectButton {
+    margin-bottom: 12px;
+  }
+
   .hoverimage {
     width: 75px;
     height: 75px;
-  } 
+  }
+
+  .search-box .padded-col {
+  	margin-bottom: 12px;
+  }
 }
