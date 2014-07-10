@@ -98,7 +98,9 @@ Rsense::Application.routes.draw do
   get '/api/v1/docs' => 'home#api_v1'
 
   # Github Authentication Routes
-  get '/auth/github/callback' => 'sessions#extern_auth'
+  get '/auth/github' => 'sessions#github_authorize'
+  get '/auth/github/callback' => 'sessions#github_authenticate'
+  post '/submit_issue' => 'application#submit_issue'
 
   # API routes
   match '*any', via: 'OPTIONS', controller: 'application', action: 'options_req'

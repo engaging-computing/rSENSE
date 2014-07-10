@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140708045600) do
+ActiveRecord::Schema.define(version: 20140423185700) do
 
   create_table "contrib_keys", force: true do |t|
     t.string   "name",       null: false
@@ -124,8 +124,6 @@ ActiveRecord::Schema.define(version: 20140708045600) do
     t.integer  "news_id"
     t.datetime "last_login",      default: '2013-08-16 12:00:00'
     t.string   "name"
-    t.string   "auth_username"
-    t.string   "auth_uid"
   end
 
   create_table "view_counts", force: true do |t|

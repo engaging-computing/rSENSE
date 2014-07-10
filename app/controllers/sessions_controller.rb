@@ -41,21 +41,46 @@ class SessionsController < ApplicationController
     end
   end
 
-  # GET /auth/github/callback
-  def extern_auth
-    auth = request.env["omniauth.auth"]
-    if @user
-      @user.auth_with_omniauth(auth)
-    else
-      @user = User.find_by_auth_uid(auth["auth_uid"]) ||
-        User.auth_with_omniauth(auth)
-    end
+  # GET /auth/github
+  def github_authorize
+    base_url = 'https://github.com/login/oauth/authorize'
+
+    client_id = ENV['GITHUB_KEY']
+    redirect_uri = 'http://localhost:3000/auth/github/callback'
+    scope = 'repo'
+    state = get_state()
+
+    auth_url = base_url + '?client_id=' + client_id
+    auth_url += '&redirect_uri=' + redirect_uri
+    auth_url += '&scope=' + scope
+    auth_url += '&state=' + state
+
+    redirect_to auth_url
   end
+
+  # GET /auth/github/callback
+  def github_authenticate
+    base_url = 'https://github.com/login/oauth/access_token'
+
+    client_id = ENV['GITHUB_KEY']
+    client_secret = ENV['GITHUB_SECRET']
+    code = params[:code]
+    redirect_uri = 'http://localhost:3000/create_issue'
+
+    auth_url = base_url + '?client_id=' + client_id
+    auth_url += '&client_secret=' + client_secret
+    auth_url += '&code=' + code
+    auth_url += '&redirect_uri=' + redirect_uri
+
+    redirect_to auth_url
+  end
+
 
   def destroy
     session[:user_id] = nil
     session[:key] = nil
     session[:contrib_access] = nil
+    session[:state] = nil
     respond_to do |format|
       format.html { redirect_to :back, notice: 'Logged out' }
       format.json { render json: {}, status: :ok }
@@ -70,6 +95,15 @@ class SessionsController < ApplicationController
       else
         format.json { render json: '{}', status: :ok }
       end
+    end
+  end
+
+  private
+  def get_state
+    if session[:state]
+      session[:state]
+    else session[:state] = SecureRandom.hex
+      session[:state]
     end
   end
 end
