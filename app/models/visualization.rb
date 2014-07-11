@@ -111,6 +111,8 @@ class Visualization < ActiveRecord::Base
         picture['src'] = summernote_mo.src
       end
     end
-    self.content = text.to_html
+    unless content.nil?
+      self.content = text.to_html
+    end
   end
 end

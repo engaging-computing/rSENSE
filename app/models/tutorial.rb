@@ -80,7 +80,7 @@ class Tutorial < ActiveRecord::Base
         picture['src'] = summernote_mo.src
       end
     end
-    unless self.content.nil?
+    unless content.nil?
       self.content = text.to_html
     end
   end
