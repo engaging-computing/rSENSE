@@ -9,7 +9,7 @@
   height: 100%;    
 }
 #stats-div{
-  background-color: yellow;
+  text-align: left;
 }
 .secondary-main-content{
   height: 100%;    
@@ -48,7 +48,7 @@
 
 .featurette-divider {
   margin-top: 40px;
-  margin-bottom: 40px;/* Space out the Bootstrap <hr> more */
+  margin-bottom: 20px;/* Space out the Bootstrap <hr> more */
 }
 
 /* Thin out the marketing headings */
@@ -108,7 +108,71 @@
     height:500%;
   }    
 }
+.slogan{
+  text-align: center;  
+}
+#news-feed{
+  height: 70%;
+  overflow-y: hidden;
+  width: 100%;
+  hr{
+    color: black;  
+  }
+  div{
+    width:100%;
+    border-radius: 6px;
+    background-color: white !important;
+    
+  }    
+}
 
+#stats-row{
+  .item_title{
+    text-align: center;  
+  }
+  border-radius: 6px;
+  height:25%;
+  vertical-align:bottom;
+  .featurette-divider{
+    color: black;  
+  }
+  div{
+    width: 90% ;
+    background-color: white !important;  
+    -moz-box-shadow: 0 0px 0px 0px #9E9E9E !important;
+  -webkit-box-shadow: 0 0px 0px 0px #9E9E9E !important;
+  box-shadow: 0 0px 0px 0px #9E9E9E !important;  
+    
+  }
+  
+}
+.container.marketing{
+  text-align: center;  
+}
+.featurette-image{
+  width: 100%; 
+  height: 100%;
+  //border: 1px solid black;
+}
+.row.featurette{
+  .col-md-8{
+    height:100%;  
+  }
+}
+.featured-header.text-muted{
+  text-align: center;
+  vertical-align: top;
+}
+.img-rounded{
+  -moz-box-shadow: 0 2px 3px 1px #9E9E9E;
+  -webkit-box-shadow: 0 2px 3px 1px #9E9E9E;
+  box-shadow: 0 2px 3px 1px #9E9E9E;  
+}
+#news-feed{
+  min-height:0px;
+  max-height:200px;
+  text-align: left;
+}
 /* GLOBAL STYLES
 -------------------------------------------------- */
 /* Padding below the footer and lighter body text */

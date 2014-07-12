@@ -8,3 +8,11 @@ $ ->
   ($ 'li.dropdown.navbtn').click () ->
     ($ 'li.dropdown.navbtn').find('a:first').css 'color', 'white'
     ($ 'li.dropdown.navbtn').removeAttr 'disabled'
+  ($ '#news-feed').on( 'mouseenter', () ->
+    ($ '#news-feed').css('overflow-y', 'scroll')
+  )
+  
+  ($ '#news-feed').on( 'mouseleave', () ->
+    ($ '#news-feed').css('overflow-y', 'hidden')
+    ($ '#news-feed').scrollTop = 0
+  )
