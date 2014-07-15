@@ -54,7 +54,8 @@ class DataSet < ActiveRecord::Base
       createdAt: created_at.strftime('%B %d, %Y'),
       fieldCount: project.fields.length,
       datapointCount: data.length,
-      displayURL: "/projects/#{project.id}/data_sets/#{id}"
+      displayURL: "/projects/#{project.id}/data_sets/#{id}",
+      data: data,
     }
 
     if recurse
