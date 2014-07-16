@@ -149,17 +149,22 @@ class DataSetsControllerTest < ActionController::TestCase
     @new_dataset_id = JSON.parse(response.body)['id']
   end
 
+  test 'should fail to upload through jsonDataUpload with empty dataset' do
+    post :jsonDataUpload, { format: 'json', id: @proj.id, title: 'JSON Upload',
+      data: {} },  user_id: @kate
+    assert_response 422
+  end
+
   test 'should not upload through jsonDataUpload for locked project' do
     post :jsonDataUpload, { format: 'json', id: @proj.id, title: 'JSON Upload',
       data: { '20' => ['1', '2', '3'], '21' => ['4', '5', '6'], '22' => ['14', '13', '12'] } },  user_id: @crunch
-
     assert_response 401
   end
 
   test 'should upload through jsonDataUpload for locked project with key' do
     post :jsonDataUpload, { format: 'json', id: @proj.id, title: 'JSON Upload',
       data: { '20' => ['1', '2', '3'], '21' => ['4', '5', '6'], '22' => ['14', '13', '12'] } },
-       user_id: @crunch, contrib_access: @proj.id
+      user_id: @crunch, contrib_access: @proj.id
     assert_response :success
     @new_dataset_id = JSON.parse(response.body)['id']
   end
