@@ -15,18 +15,6 @@ class ApplicationController < ActionController::Base
     headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
   end
 
-  def options_req
-    allow_cross_site_requests
-    head(:ok)
-  end
-
-  def find_user
-    @cur_user = User.find_by_id(session[:user_id])
-    @namespace = { action: params[:action], controller: params[:controller] }
-    @version = `(git describe --tags) 2>&1`
-    @version = 'Development Version' if @version == '' || @version =~ /fatal:/
-  end
-
   def authorize
     unless User.find_by_id(session[:user_id])
       redirect_to '/login'
@@ -60,6 +48,49 @@ class ApplicationController < ActionController::Base
       end
       format.any  { head :forbidden }
     end
+  end
+
+  def create_issue
+    auth_info = github_authenticate
+    print 'auth_info = '
+    puts auth_info
+    print 'access_token = '
+    puts auth_info['access_token']
+    params['access_token'] = auth_info['access_token']
+    render '/home/create_issue'
+  end
+
+  def find_user
+    @cur_user = User.find_by_id(session[:user_id])
+    @namespace = { action: params[:action], controller: params[:controller] }
+    @version = `(git describe --tags) 2>&1`
+    @version = 'Development Version' if @version == '' || @version =~ /fatal:/
+  end
+
+  def github_authenticate
+    new_params = Hash.new
+    new_params[:client_id] = ENV['GITHUB_KEY']
+    new_params[:client_secret] = ENV['GITHUB_SECRET']
+    new_params[:code] = params[:code]
+
+    url = URI.parse('https://github.com/login/oauth/access_token')
+    print 'Starting POST '
+    puts url
+
+    req = Net::HTTP::Post.new(url.request_uri)
+    req.set_form_data(new_params)
+    req['accept'] = 'application/json'
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = (url.scheme == "https")
+
+    response = http.request(req)
+
+    JSON.parse(response.body)
+  end
+
+  def options_req
+    allow_cross_site_requests
+    head(:ok)
   end
 
   def render_404
@@ -145,14 +176,13 @@ class ApplicationController < ActionController::Base
   end
 
   def submit_issue
-    render nothing: true
     new_params = {}
     new_params['title'] = params[:bug_title]
     new_params['body'] = '** Description: **' + params[:bug_description]
-    logger.info 'cats'
+    new_params['access_token'] = params[:access_token]
 
     url = URI.parse('https://api.github.com/repos/jaypoulz/rSENSE/issues')
-    print '\nStarting POST '
+    print 'Starting POST '
     puts url
 
     req = Net::HTTP::Post.new(url.request_uri)
@@ -163,6 +193,12 @@ class ApplicationController < ActionController::Base
 
     puts new_params
     puts response.body
+
+    if response.code == '201'
+      redirect_to root_path, :flash => { :success => "Issue submitted successfully." }
+    else
+      redirect_to root_path, :flash => { :error => response.body['message'] }
+    end
   end
 end
 
