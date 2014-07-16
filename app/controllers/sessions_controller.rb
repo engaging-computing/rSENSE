@@ -58,24 +58,6 @@ class SessionsController < ApplicationController
     redirect_to auth_url
   end
 
-  # GET /auth/github/callback
-  def github_authenticate
-    base_url = 'https://github.com/login/oauth/access_token'
-
-    client_id = ENV['GITHUB_KEY']
-    client_secret = ENV['GITHUB_SECRET']
-    code = params[:code]
-    redirect_uri = 'http://localhost:3000/create_issue'
-
-    auth_url = base_url + '?client_id=' + client_id
-    auth_url += '&client_secret=' + client_secret
-    auth_url += '&code=' + code
-    auth_url += '&redirect_uri=' + redirect_uri
-
-    redirect_to auth_url
-  end
-
-
   def destroy
     session[:user_id] = nil
     session[:key] = nil
