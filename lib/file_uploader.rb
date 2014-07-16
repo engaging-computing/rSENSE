@@ -173,6 +173,10 @@ class FileUploader
       data = data_obj
     end
 
+    if data == {}
+      return { status: false, msg: 'Empty Dataset' }
+    end
+
     data_obj = remove_empty_lines(data_obj)
 
     data.each do |(key, value)|
