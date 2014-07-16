@@ -55,7 +55,7 @@ class DataSet < ActiveRecord::Base
       fieldCount: project.fields.length,
       datapointCount: data.length,
       displayURL: "/projects/#{project.id}/data_sets/#{id}",
-      data: data,
+      data: data
     }
 
     if recurse
