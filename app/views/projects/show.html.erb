@@ -275,7 +275,8 @@
             <p>Enter contributor key to submit data.</p>
             <%= form_tag '/contrib_keys/enter', method: 'post' do %>
               <%= hidden_field_tag :project_id, @project.id %>
-              <%= text_field_tag :key %>
+              <%= text_field_tag :key,"",placeholder:"Key" %>
+              <%= text_field_tag :key,"",placeholder:"Contributor Name" %>
               <%= submit_tag "Submit Key", class: "btn btn-success" %>
             <% end %>
           <% else %>
