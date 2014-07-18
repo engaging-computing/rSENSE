@@ -114,5 +114,6 @@ class Visualization < ActiveRecord::Base
     unless content.nil?
       self.content = text.to_html
     end
+    ''
   end
 end
