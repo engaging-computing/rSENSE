@@ -36,7 +36,7 @@ class SummernoteMoTest < ActionDispatch::IntegrationTest
     page.find('.fa-code').click
     page.find('.note-codable').set('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" </img>')
     page.find('#content-save-btn').click
-    page.should have_css '.mo_image' 
+    assert page.find '.mo_image' != nil
     #assert page.has_content? '.mo_image'
     #visit '/tutorials'
     #page.find('#tutorial_title').set('Tutorial MO test')
