@@ -307,7 +307,7 @@ $ ->
       drawControls: ->
         super()
         @drawGroupControls()
-        @drawYAxisControls(true)
+        @drawYAxisControls true
         @drawToolControls()
         @drawSaveControls()
 

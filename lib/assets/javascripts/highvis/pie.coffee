@@ -42,6 +42,7 @@ $ ->
         
       update: () ->
         @rel_data = []
+        @selected_field = @displayField
 
         for dp in data.dataPoints
           do =>
@@ -61,6 +62,8 @@ $ ->
           @select_name = data.textFields[2]
         else
           @select_name = 'Percent'
+          
+        console.log @select_name
 
         if @use_value is true
           @display_data = []
@@ -75,7 +78,6 @@ $ ->
 
         else
           @display_data = []
-          console.log globals.groupSelection
           #select name could be group by
           @display_data.push [data.dataPoints[0][@select_name], 1]
 
@@ -137,23 +139,17 @@ $ ->
               [['Firefox', 50], ['Other', 50]]
             }]
 
-      bindControls: ->
-        ($ '#groupSelector').change (e) =>
-          element = e.target or e.srcElement
-          data.setGroupIndex (Number element.value)
+      drawLabelControls: ->
+        controls = '<div id="labelControl" class="vis_controls">'
+        controls += "<h3 class='clean_shrink'><a href='#'>Label:</a></h3>"
+        controls += "<div class='outer_control_div'>"
 
-          globals.selectedGroup = 0
-
-          globals.groupSelection = for vals, keys in data.groups
-            Number keys
 
       drawControls: ->
         super()
-        @drawGroupControls()
-        @bindControls()
+        @drawYAxisControls true #horrible name for what im doing here
+        @drawLabelControl()
 
-      #drawGroupControls: ->
-        #controls = ""
 
     if "Pie" in data.relVis
       globals.pie = new Pie 'pie_canvas'
