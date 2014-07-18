@@ -70,8 +70,7 @@ class DataSet < ActiveRecord::Base
       h.merge!(
         owner: owner.to_hash(false),
         project: project.to_hash(false),
-        fields: fields,
-        data: data
+        fields: fields
       )
     end
 
