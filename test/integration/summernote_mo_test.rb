@@ -9,7 +9,7 @@ class SummernoteMoTest < ActionDispatch::IntegrationTest
   teardown do
     finish
   end
-  
+
   test 'project_image_upload' do
     login('kcarcia@cs.uml.edu', '12345')
     visit '/'
@@ -26,11 +26,11 @@ class SummernoteMoTest < ActionDispatch::IntegrationTest
     assert page.has_css? '.mo_image'
     click_on 'Logout'
     assert page.has_css? '.mo_image'
-   
+
   end
-  
+
   test 'tutorial_image_upload' do
-    login 'nixon@whitehouse.gov', '12345' 
+    login 'nixon@whitehouse.gov', '12345'
     visit '/tutorials'
     find('#tutorial_title').set('Test Tutorial')
     click_on 'Create Tutorial'
@@ -42,10 +42,10 @@ class SummernoteMoTest < ActionDispatch::IntegrationTest
     assert page.has_css? '.mo_image'
     click_on 'Logout'
   end
-#   
+
   test 'user_image_upload' do
-    login 'nixon@whitehouse.gov', '12345' 
-    click_on 'Richard N.' 
+    login 'nixon@whitehouse.gov', '12345'
+    click_on 'Richard N.'
     assert page.has_css? '.gravatar_img', 'Not on profile page.'
     find('#content-edit-btn').click
     find('.fa-code').click
@@ -64,5 +64,4 @@ class SummernoteMoTest < ActionDispatch::IntegrationTest
     assert page.has_css? '.mo_image'
     click_on 'Logout'
   end
-  
 end
