@@ -78,7 +78,6 @@
       <!-- Main Container -->
       <div id="outer" class="<%= params[:controller] %>-controller <%= params[:action] %>-action">
         <div class="container mainContent <%= @layout_wide ? 'mc-wide' : '' %>" data-role="page">
-          <p><%= flash[:alert] %></p>
           <%= bootstrap_flash %>
           <%= yield %>
         </div>

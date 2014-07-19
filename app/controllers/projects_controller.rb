@@ -53,14 +53,6 @@ class ProjectsController < ApplicationController
   # GET /projects/1.json
   def show
     @project = Project.find(params[:id])
-    # Update view count
-    session[:viewed] ||= {}
-    session[:viewed][:projects] ||= {}
-
-    unless session[:viewed][:projects][@project.id]
-      session[:viewed][:projects][@project.id] = true
-      @project.add_view!
-    end
 
     # Determine if the project is cloned
     @cloned_project = nil
@@ -79,7 +71,7 @@ class ProjectsController < ApplicationController
       @has_fields = true
     end
 
-    @data_sets = @project.data_sets.where(hidden: false)
+    @data_sets = @project.data_sets
     if @data_sets.nil?
       @data_sets = []
     end
@@ -87,7 +79,18 @@ class ProjectsController < ApplicationController
     recur = params.key?(:recur) ? params[:recur] == 'true' : false
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html do
+        # Update view count
+        session[:viewed] ||= {}
+        session[:viewed][:projects] ||= {}
+
+        unless session[:viewed][:projects][@project.id]
+          session[:viewed][:projects][@project.id] = true
+          @project.add_view!
+        end
+
+        # render show.html.erb
+      end
       format.json { render json: @project.to_hash(recur) }
     end
   end
@@ -181,7 +184,7 @@ class ProjectsController < ApplicationController
 
     if @project.data_sets.length > 0
       respond_to do |format|
-        format.html { redirect_to '/401.html' }
+        format.html { redirect_to [:edit, @project], alert: "Can't delete project with data sets" }
         format.json { render json: {}, status: :forbidden }
       end
       return
@@ -344,6 +347,7 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
     @clone = Project.new
     @clone.title = @project.title + ' (clone)'
+    @clone.content = @project.content
     @cloned_project = @project
     respond_to do |format|
       format.html
