@@ -54,9 +54,13 @@ class SummernoteMoTest < ActionDispatch::IntegrationTest
     assert !(page.find('#content-viewer').find('img')[:src].include? 'data:image')
     click_on 'Logout'
   end
-  test 'visualization_image_uplaod' do
+  test 'news_image_uplaod' do
     login 'nixon@whitehouse.gov', '12345'
-    visit '/visualizations/1'
+    visit '/news'
+    page.find('#news_title').set('Test News Article')
+    click_on 'Add News Item'
+    assert page.has_content? 'News entry was successfully created.'
+    assert page.has_no_css? '.mo_image'
     find('#content-edit-btn').click
     find('.fa-code').click
     find('.note-codable').set('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" </img>')
