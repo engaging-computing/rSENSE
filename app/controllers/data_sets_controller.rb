@@ -300,6 +300,6 @@ class DataSetsController < ApplicationController
   private
 
   def data_set_params
-    params[:data_set].permit(:project_id, :title, :user_id, :hidden, :key, :data)
+    params[:data_set].permit(:project_id, :title, :user_id, :key, :data)
   end
 end
