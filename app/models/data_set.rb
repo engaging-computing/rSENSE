@@ -54,7 +54,8 @@ class DataSet < ActiveRecord::Base
       createdAt: created_at.strftime('%B %d, %Y'),
       fieldCount: project.fields.length,
       datapointCount: data.length,
-      displayURL: "/projects/#{project.id}/data_sets/#{id}"
+      displayURL: "/projects/#{project.id}/data_sets/#{id}",
+      data: data
     }
 
     if recurse
@@ -69,8 +70,7 @@ class DataSet < ActiveRecord::Base
       h.merge!(
         owner: owner.to_hash(false),
         project: project.to_hash(false),
-        fields: fields,
-        data: data
+        fields: fields
       )
     end
 
