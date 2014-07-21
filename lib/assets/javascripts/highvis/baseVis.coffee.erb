@@ -236,18 +236,15 @@ $ ->
 
         me = this
         ($ '.color-picker').each (_, ee) ->
-          cid = $(ee).attr('data-color-id')
-          $(ee).click () ->
-            $(ee).colorpicker().on 'changeColor', (ev) ->
-              globals.colors[cid] = ev.color.toHex()
-              $("#label-color-#{cid}").css('color', ev.color.toHex())
+          cid = $(ee).attr 'data-color-id'
+          $(ee).colorpicker 'create',
+            outputType: 'hex'
+            onSubmit: (color) ->
+              globals.colors[cid] = color
+              $("label-color-#{cid}").css 'color', color
               me.delayedUpdate()
-              if me.canvas == 'map_canvas'
-                setTimeout (() -> me.start()), 1
-                $(ee).colorpicker('hide')
-            $(ee).colorpicker().on 'show', (ev) ->
-              $('.dropdown-menu').position(my: 'right top', at: 'right bottom', of: "#label-color-#{cid}")
-            $(ee).colorpicker('show')
+              setTimeout (() -> me.start()), 1
+          $(ee).colorpicker 'setcolor', globals.colors[cid]
 
         # Make group select handler
         ($ '#groupSelector').change (e) =>
