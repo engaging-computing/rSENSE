@@ -3,7 +3,6 @@ class ApplicationController < ActionController::Base
 
   before_filter :find_user
   before_filter :authorize
-  before_filter :fix_alert_flash
 
   skip_before_filter :verify_authenticity_token, only: [:options_req]
   skip_before_filter :find_user, only: [:options_req]
@@ -142,12 +141,6 @@ class ApplicationController < ActionController::Base
       respond_to do |format|
         format.json { render json: { msg: 'Must send Email & Password with this request' }, status: :unauthorized }
       end
-    end
-  end
-
-  def fix_alert_flash
-    if flash[:alert]
-      flash[:error] ||= flash[:alert]
     end
   end
 end
