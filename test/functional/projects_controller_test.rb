@@ -35,7 +35,7 @@ class ProjectsControllerTest < ActionController::TestCase
     views_before = @project_one.views
     get :show,  format: 'json', id: @project_one
     assert_response :success
-    
+
     @pp = Project.find(@project_one.id)
     assert @pp.views == views_before, 'View count not incremented'
   end
