@@ -53,14 +53,6 @@ class ProjectsController < ApplicationController
   # GET /projects/1.json
   def show
     @project = Project.find(params[:id])
-    # Update view count
-    session[:viewed] ||= {}
-    session[:viewed][:projects] ||= {}
-
-    unless session[:viewed][:projects][@project.id]
-      session[:viewed][:projects][@project.id] = true
-      @project.add_view!
-    end
 
     # Determine if the project is cloned
     @cloned_project = nil
@@ -87,7 +79,18 @@ class ProjectsController < ApplicationController
     recur = params.key?(:recur) ? params[:recur] == 'true' : false
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html do
+        # Update view count
+        session[:viewed] ||= {}
+        session[:viewed][:projects] ||= {}
+
+        unless session[:viewed][:projects][@project.id]
+          session[:viewed][:projects][@project.id] = true
+          @project.add_view!
+        end
+
+        # render show.html.erb
+      end
       format.json { render json: @project.to_hash(recur) }
     end
   end
