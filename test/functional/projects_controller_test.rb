@@ -28,7 +28,7 @@ class ProjectsControllerTest < ActionController::TestCase
     assert_response :success
 
     @pp = Project.find(@project_one.id)
-    assert @pp.views == views_before + 1, "View count incremented"
+    assert @pp.views == views_before + 1, 'View count incremented'
   end
 
   test 'should show project (json)' do
@@ -37,7 +37,7 @@ class ProjectsControllerTest < ActionController::TestCase
     assert_response :success
     
     @pp = Project.find(@project_one.id)
-    assert @pp.views == views_before, "View count not incremented"
+    assert @pp.views == views_before, 'View count not incremented'
   end
 
   test 'should create project' do
