@@ -41,7 +41,7 @@
 //= require jquery.prettyPhoto
 //= require markerclustererplus
 //= require oms
-//= require bootstrap-colorpicker
+//= require isense-colorpicker
 //
 //= require highvis/savedVis
 //= require highvis/visUtils
