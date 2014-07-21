@@ -173,7 +173,11 @@
                     </div>
                   </td>
                <% end %>
-                  <td style="max-width:60px"><div class="truncate"><%= link_to s.owner.name, user_path(s.owner) %></div></td>
+               <% if s.contributor_name? %>
+               	<td style="max-width:60px"><div class="truncate"><%= s.contributor_name %></div></td>
+               <% else %>
+               	<td style="max-width:60px"><div class="truncate"><%= link_to s.owner.name, user_path(s.owner) %></div></td>
+               <% end %>
                   <td style="max-width:200px"><div class="truncate" title="Created <%=s.created_at.strftime("%B %d, %Y")%>"><%= link_to s.title, "#{params[:id]}/data_sets/#{s.id}" %></div></td>
                  <td>
                  <div class="controls" style="">                  
@@ -267,6 +271,12 @@
                 Google Doc
               </a>
             </div>
+            <% if !(session[:contrib_access].nil?) %>
+              <%= form_tag '/contrib_keys/clear', method: 'get' do %>
+                <%= hidden_field_tag :project_id, @project.id %>
+                <%= submit_tag "Clear Key", class: "btn btn-success" %>
+              <% end %>
+            <% end %>
             <div class="clear">
             </div>
           </div>
@@ -276,7 +286,7 @@
             <%= form_tag '/contrib_keys/enter', method: 'post' do %>
               <%= hidden_field_tag :project_id, @project.id %>
               <%= text_field_tag :key,"",placeholder:"Key" %>
-              <%= text_field_tag :key,"",placeholder:"Contributor Name" %>
+              <%= text_field_tag :contributor_name,"",placeholder:"Contributor Name" %>
               <%= submit_tag "Submit Key", class: "btn btn-success" %>
             <% end %>
           <% else %>

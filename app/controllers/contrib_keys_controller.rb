@@ -35,22 +35,29 @@ class ContribKeysController < ApplicationController
   def enter
     @project = Project.find(params[:project_id])
     keys = @project.contrib_keys.where(key: params[:key])
+    contributor_name = params[:contributor_name]
 
-    if keys.count > 0
+    if keys.count > 0 && !contributor_name.empty?
       session[:key] = keys.first.name
       session[:contrib_access] = @project.id
+      session[:contributor_name] = params[:contributor_name]
       flash[:notice] = 'You have entered a valid contributor key.'
-      redirect_to @project
-    else
+    elsif !(keys.count > 0) && contributor_name.empty?
+      flash[:error] = 'Invalid contributor key.', 'Enter a contributor Name.'
+    elsif !(keys.count > 0)
       flash[:error] = 'Invalid contributor key.'
-      redirect_to @project
+    elsif contributor_name.empty?
+      flash[:error] = 'Enter a contributor Name.'
     end
+
+    redirect_to @project
   end
 
   def clear
+    @project = Project.find(params[:project_id])
     session[:contrib_access] = nil
     flash[:notice] = 'Your have cleared your contributor key.'
-    redirect_to projects_path
+    redirect_to @project
   end
 
   private
