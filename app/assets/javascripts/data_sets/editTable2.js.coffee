@@ -305,9 +305,12 @@ window.setupEditTable = () ->
             ($ '#map_picker').modal()
 
           # bind time to input
-          ($ '.new_row').find('.datepicker').datetimepicker()
-          ($ '.new_row').find('.datepicker').on 'changeDate', (e) ->
-            ($ e.target).find('input').trigger 'change'
+          dtp = ($ '.new_row').find('.datepicker')
+          if dtp?
+            $(dtp).each (item) ->
+              item.datetimepicker()
+              item.on 'changeDate', (e) ->
+                ($ e.target).find('input').trigger 'change'
 
           # remove token
           ($ '.new_row').removeClass('new_row')
@@ -485,9 +488,10 @@ window.setupEditTable = () ->
           ($ '#map_picker').modal()
 
         #bind time button
-        ($ 'td').find('.datepicker').datetimepicker()
-        ($ 'td').find('.datepicker').on 'changeDate', (e) ->
-          ($ e.target).find('input').trigger 'change'
+        ($ '.datepicker').each (item) ->
+          item.datetimepicker()
+          item.on 'changeDate', (e) ->
+            ($ e.target).find('input').trigger 'change'
 
         # add row functionality
         ($ '#edit_table_add').click ->

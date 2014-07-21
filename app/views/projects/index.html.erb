@@ -1,44 +1,43 @@
 <div class="row">
   <div class="col-lg-12">
-    <div class="row padded-row">
+    <div class="search-box">
       <%=form_tag projects_path, method: 'get', id: 'projects_search' do%>
-            
-        <div class="isotope-top">
+        <div class="row">
           <div class="col-md-12">
             <h1><i class='fa fa-folder-open'></i> Projects</h1>
           </div>
-          
-          <div class='row'>
-            <div class="padded-col col-sm-10" title="Enter keyword(s) or project number to search for a project">
-              <%= text_field_tag :search, @params[:search], class: "form-control" %>
-            </div>
-            <div class="padded-col col-sm-2">
-              <%= submit_tag "Search", name: nil, class:'btn btn-default'%>
-            </div>
+        </div>
+
+        <div id="searchProjRow" class="row">
+          <div class="padded-col col-sm-10 col-xs-9" title="Enter keyword(s) or project number to search for a project">
+            <%= text_field_tag :search, @params[:search], class: "form-control" %>
           </div>
+          <div class="padded-col col-sm-2 col-xs-3">
+            <%= submit_tag "Search", name: nil, class:'btn btn-default btn-group-justified'%>
+          </div>
+        </div>
           
-          <div class='row'>
-            <div class="padded-col col-md-3 col-sm-6" title="Sort by">
-            
-              <%= select_tag(:sort, 
+        <div class='row'>
+          <div class="padded-col col-md-3 col-xs-6" title="Sort by">
+            <%= select_tag(:sort, 
                 options_for_select([["Sort by Modified", "updated_at"],
                                     ["Sort by Created", "created_at"],
                                     ["Sort by View Count","views"],
                                     ["Sort by Rating", "like_count"]], @params["sort"]),
                 class: "projects_sort_select form-control") 
-              %>
-            </div>
+            %>
+          </div>
             
-            <div class="padded-col col-md-3 col-sm-6">
-            
-              <%= select_tag(:order, 
+          <div class="padded-col col-md-3 col-xs-6">  
+            <%= select_tag(:order, 
                 options_for_select([["Descending", "DESC"],
                                     ["Ascending", "ASC"]], @params["order"]),
                 class: "projects_order_select form-control") 
-              %>
-            </div>
+            %>
+          </div>
             
-            <div class="padded-col col-md-6 col-xs-12 btn-group binary-filters" data-toggle="checkbox"> 
+          <div class="padded-col col-md-6 col-xs-12 binary-filters" data-toggle="checkbox">
+            <div class="btn-group btn-group-justified">
               <label class='btn btn-primary' title="Projects that can be cloned and repopulated with new data">
                 <%= check_box_tag 'templates_only', 'yes', @params['templates_only'] %>
                 Templates
@@ -57,18 +56,18 @@
               </label>
             </div>
           </div>
-          
-          <div class='clear'></div>
-          
         </div>
+          
+        <div class='clear'></div>
       <%end%>
     </div>
   </div>
 </div>
+
 <% if @cur_user.try(:id) %>
   <div class="row">
-    <div class='col-lg-12 center'>
-      <div id="addProjectButton">
+    <div class="col-xs-12 center create-button">
+      <div id="addProjectButton" class="btn-group btn-group-justified">
         <a href="/projects/new" class="btn btn-success col-md-12"><h4>Create Project</h4></a>
       </div>
     </div>

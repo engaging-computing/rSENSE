@@ -62,6 +62,45 @@ $ ->
             saveButton.hide()
             cancelButton.hide()
             editor.destroy()
+          error: (msg) ->
+            ($ '#ajax-status').html "error saving content"
+            response = $.parseJSON msg['responseText']
+            error_message = response.errors.join "</p><p>"
+
+            ($ '.container.mainContent').find('p').before """
+              <div class="alert alert-danger fade in">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h4>Error Saving Content:</h4>
+                <p>#{error_message}</p>
+                <p>
+                  <button type="button" class="btn btn-danger error_bind" data-retry-text"Retrying...">Retry</button>
+                  <button type="button" class="btn btn-default error_dismiss">Or Dismiss</button>
+                </p>
+              </div>"""
+
+            ($ '.error_dismiss').click ->
+              ($ '.alert').alert 'close'
+
+            ($ '.error_bind').click ->
+            
+              ($ '.error_bind').button 'loading'
+              
+              $.ajax
+                url: url
+                type: "PUT"
+                dataType: "json"
+                data: data
+                success: ->
+                  # Save previous value now that it has updated
+                  root.attr('saved-data',  editor.getData())
+                  saveButton.hide()
+                  cancelButton.hide()
+                  editor.destroy()
+                  ($ '.alert').alert 'close'
+                  
+                error: (msg) ->
+                  ($ '.error_bind').button 'reset'
+                
       return editor
   
   ($ '#content_edit').click () ->

@@ -51,7 +51,7 @@
       </ul>
       
       <div id="contributions_content">
-        <div class="row">
+        <div id="searchUserRow" class="row">
           <div class="col-lg-9">
             <input class="form-search form-control" id="contribution_search" name="search" type="text" x-webkit-speech>
           </div>
@@ -63,7 +63,7 @@
         <%= hidden_field_tag "page", params[:page].to_i %>
         <div id="contributions">
         </div>
-        <div style="text-align: center; padding: 5px">
+        <div class="pageControls">
           <a href="#" class="pagebck">&lt;&lt;</a>
           <span id="pageLabel">Page 1 of 1</span>
           <a href="#" class="pagefwd">&gt;&gt;</a>

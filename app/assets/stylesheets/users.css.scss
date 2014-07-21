@@ -2,37 +2,13 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-#contributions_content
-{       
-  padding-top:1em;
-}
+.users-controller {
+	.pageControls {
+		text-align: center;
+		padding: 5px;
+	}
 
-//-------UNVERIFIED CSS---------------------
-
-.user_info
-{
-    padding: 5px 6px;
-}
-
-.field_top
-{
-  width:8em;
-  float:left;
-  margin-top:20px;
-}
-
-#users_search
-{
-  width: 100%;
-}
-
-.field
-{
-  width:8em;
-  float:left;
-}
-
-#user_long_bio
-{
-  margin-bottom:20px;
+	#searchUserRow {
+		margin-top: 12px;
+	}
 }
