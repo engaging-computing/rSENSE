@@ -172,7 +172,7 @@ IS.onReady "projects/show", ->
         dataType: "json"
         beforeSend: ->
           ($ '#ajax-status').html "deleting data set: #{ p_id }"
-        success: =>
+        success: ->
           ($ '#ajax-status').html "deleted data set: #{ p_id }"
           recolored = false
           tbody = row.parents('tbody')
@@ -180,7 +180,7 @@ IS.onReady "projects/show", ->
             row.remove()
             tbody.recolor_rows(recolored)
             recolored = true
-        error: (msg) =>
+        error: (msg) ->
           ($ '#ajax-status').html "error deleting data set: #{ p_id }"
           response = $.parseJSON msg['responseText']
           error_message = response.errors.join "</p><p>"
@@ -205,7 +205,7 @@ IS.onReady "projects/show", ->
               url: url
               type: 'DELETE'
               dataType: "json"
-              success: =>
+              success: ->
                 ($ '.error_bind').button 'reset'
                 ($ '.alert').alert 'close'
                 ($ '#ajax-status').html "deleted data set: #{ p_id }"
