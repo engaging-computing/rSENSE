@@ -8,11 +8,6 @@ class DataSetTest < ActiveSupport::TestCase
     @data_set = DataSet.new
   end
 
-  # Passes if hidden is false
-  test 'hidden is false' do
-    assert_default_false(@data_set, @data_set.hidden)
-  end
-
   # ---------------------------------------------------
   # Testing with fixtures
 
