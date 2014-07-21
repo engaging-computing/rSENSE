@@ -344,6 +344,7 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
     @clone = Project.new
     @clone.title = @project.title + ' (clone)'
+    @clone.content = @project.content
     @cloned_project = @project
     respond_to do |format|
       format.html
