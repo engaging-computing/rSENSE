@@ -196,6 +196,7 @@ class Project < ActiveRecord::Base
     new_project = Project.new
     new_project.user_id = user_id
     new_project.cloned_from = id
+    new_project.content = content
 
     # Determine Name
     if params[:project_name].nil?
