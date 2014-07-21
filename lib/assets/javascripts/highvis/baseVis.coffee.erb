@@ -238,9 +238,13 @@ $ ->
           cid = $(cpicker).attr 'data-color-id'
           $(cpicker).colorpicker 'create',
             outputType: 'hex'
+            onOpen: () ->
+              $("#label-color-#{cid}").parent().parent().css 'background-color', '#EEE'
+            onClose: () ->
+              $("#label-color-#{cid}").parent().parent().css 'background-color', '#FFF'
             onSubmit: (color) =>
               globals.colors[cid] = color
-              $("label-color-#{cid}").css 'color', color
+              $("#label-color-#{cid}").css 'color', color
               @delayedUpdate()
               setTimeout (() => @start()), 1
           ($ cpicker).colorpicker 'setcolor', globals.colors[cid]
