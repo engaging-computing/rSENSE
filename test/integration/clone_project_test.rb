@@ -73,12 +73,9 @@ class CloneProjectTest < ActionDispatch::IntegrationTest
 
     page.find('#edit-project-button').click
     click_on 'Delete Project'
-    click_on 'Das Cloning Projekt'
-    page.find('#edit-project-button').click
-    click_on 'Delete Project'
+    page.driver.browser.accept_js_confirms
 
-    assert page.has_no_content?('Das Cloning Projekt')
-    assert page.has_no_content?('Cloned with Data')
-
+    click_on 'Projects'
+    assert page.has_no_content?('Cloned with Data'), 'Project Removed from List'
   end
 end
