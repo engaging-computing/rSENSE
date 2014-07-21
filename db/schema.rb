@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140407170755) do
+ActiveRecord::Schema.define(version: 20140718162048) do
 
   create_table "contrib_keys", force: true do |t|
     t.string   "name",       null: false
@@ -28,9 +28,10 @@ ActiveRecord::Schema.define(version: 20140407170755) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "googleDoc"
-    t.boolean  "hidden",     default: false
-    t.text     "data",       default: "[]",  null: false
+    t.boolean  "hidden",           default: false
+    t.text     "data",             default: "[]",  null: false
     t.string   "key"
+    t.string   "contributor_name"
   end
 
   create_table "fields", force: true do |t|

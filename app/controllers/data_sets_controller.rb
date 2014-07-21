@@ -175,9 +175,11 @@ class DataSetsController < ApplicationController
       data = uploader.swap_columns(data_obj, project)
       dataset = DataSet.new do |d|
         d.user_id = @cur_user.try(:id) || project.owner.id
+        puts params[:contribution_key]
         d.title = params[:title]
         d.project_id = project.id
         d.data = data
+        d.contributor_name = params[:contributor_name]
         unless can_edit? @project
           if session[:key]
             d.key = session[:key]
@@ -249,7 +251,7 @@ class DataSetsController < ApplicationController
         if params[:contrib_name].empty?
           dataset.errors[:base] << 'Must enter contributor name'
         else
-          dataset.title += " - #{params[:contrib_name]}"
+          dataset.contributor_name = params[:contrib_name]
         end
       end
 
@@ -300,6 +302,6 @@ class DataSetsController < ApplicationController
   private
 
   def data_set_params
-    params[:data_set].permit(:project_id, :title, :user_id, :hidden, :key, :data)
+    params[:data_set].permit(:project_id, :title, :user_id, :hidden, :key, :data, :contributor_name)
   end
 end
