@@ -34,6 +34,7 @@ class TutorialsTest < ActionDispatch::IntegrationTest
 
     visit '/tutorials'
     assert page.has_content?('Awesome Tutorial'), 'Tutorial should have been published'
+
     click_on 'Awesome Tutorial'
     assert page.has_content?('Publish'), 'Should have ended up on tutorials show page'
     find('#publish_tutorial').click
