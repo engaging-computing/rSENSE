@@ -37,7 +37,7 @@ class ContribKeysController < ApplicationController
     keys = @project.contrib_keys.where(key: params[:key])
     contributor_name = params[:contributor_name]
 
-    if keys.count > 0 && !contributor_name.empty?
+    if keys.count > 0
       session[:key] = keys.first.name
       session[:contrib_access] = @project.id
       session[:contributor_name] = params[:contributor_name]
