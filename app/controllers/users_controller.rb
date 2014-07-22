@@ -78,7 +78,7 @@ class UsersController < ApplicationController
     when 'my projects'
       @contributions = @user.projects.search(params[:search], show_hidden)
     when 'data sets'
-      @contributions = @user.data_sets.search(params[:search], show_hidden)
+      @contributions = @user.data_sets.search(params[:search])
     when 'visualizations'
       @contributions = @user.visualizations.search(params[:search], show_hidden)
     when 'liked projects'
@@ -212,8 +212,7 @@ class UsersController < ApplicationController
         v.save
       end
       @user.data_sets.each do |d|
-        d.hidden = true
-        d.save
+        d.destroy
       end
       @user.tutorials.each do |t|
         t.hidden = true
