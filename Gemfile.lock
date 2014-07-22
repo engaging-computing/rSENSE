@@ -5,10 +5,10 @@ GIT
     yaml_db (0.2.3)
 
 GIT
-  remote: https://github.com/asalani93/isense-colorpicker
-  revision: 959f87503fe063b79585259488cfbf51a93e691c
+  remote: https://github.com/asalani93/bestest-colorpicker
+  revision: 8af4d637a5dd972d1b6ca6d3bb7d9e6e8513301e
   specs:
-    isense-colorpicker (0.0.1)
+    bestest-colorpicker (0.0.1)
       rails (~> 4.0)
 
 GIT
@@ -222,6 +222,7 @@ PLATFORMS
 
 DEPENDENCIES
   bcrypt-ruby
+  bestest-colorpicker!
   bootstrap-sass
   capybara
   capybara-webkit
@@ -234,7 +235,6 @@ DEPENDENCIES
   font-awesome-rails
   handlebars_assets
   httparty
-  isense-colorpicker!
   jquery-rails
   jquery-ui-rails
   launchy
