@@ -175,7 +175,6 @@ class DataSetsController < ApplicationController
       data = uploader.swap_columns(data_obj, project)
       dataset = DataSet.new do |d|
         d.user_id = @cur_user.try(:id) || project.owner.id
-        puts params[:contribution_key]
         d.title = params[:title]
         d.project_id = project.id
         d.data = data
