@@ -178,7 +178,9 @@ class DataSetsController < ApplicationController
         d.title = params[:title]
         d.project_id = project.id
         d.data = data
-        d.contributor_name = params[:contributor_name]
+        if @cur_user.nil?
+          d.contributor_name = params[:contributor_name]
+        end
         unless can_edit? @project
           if session[:key]
             d.key = session[:key]

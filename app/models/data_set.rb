@@ -3,7 +3,7 @@ class DataSet < ActiveRecord::Base
 
   serialize :data, JSON
 
-  validates_presence_of :project_id, :user_id, :title, :contributor_name
+  validates_presence_of :project_id, :user_id, :title
 
   validates_uniqueness_of :title, scope: [:project_id]
 
