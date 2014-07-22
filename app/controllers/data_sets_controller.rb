@@ -242,15 +242,8 @@ class DataSetsController < ApplicationController
         d.project_id = project.id
         d.data = data
         unless can_edit? @project
+          d.contributor_name = params[:contrib_name]
           d.key = key_name(project.id, session[:key])
-        end
-      end
-
-      if @cur_user.nil?
-        if params[:contrib_name].empty?
-          dataset.errors[:base] << 'Must enter contributor name'
-        else
-          dataset.contributor_name = params[:contrib_name]
         end
       end
 
@@ -260,6 +253,7 @@ class DataSetsController < ApplicationController
         @results = params[:results]
         @default_name = params[:title]
         respond_to do |format|
+          logger.error dataset.errors.inspect
           flash[:error] = dataset.errors.full_messages
           format.html { render action: 'dataFileUpload' }
         end
