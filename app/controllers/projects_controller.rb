@@ -71,7 +71,7 @@ class ProjectsController < ApplicationController
       @has_fields = true
     end
 
-    @data_sets = @project.data_sets.where(hidden: false)
+    @data_sets = @project.data_sets
     if @data_sets.nil?
       @data_sets = []
     end
@@ -347,6 +347,7 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
     @clone = Project.new
     @clone.title = @project.title + ' (clone)'
+    @clone.content = @project.content
     @cloned_project = @project
     respond_to do |format|
       format.html
