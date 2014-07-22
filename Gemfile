@@ -30,7 +30,7 @@ group :development, :test do
 end
 
 # Jquery stuff
-gem 'isense-colorpicker', git: 'https://github.com/asalani93/isense-colorpicker'
+gem 'bestest-colorpicker', git: 'https://github.com/asalani93/bestest-colorpicker'
 gem 'jquery-rails'
 
 # To use ActiveModel has_secure_password
