@@ -160,6 +160,38 @@ class MediaObject < ActiveRecord::Base
     add_tn
   end
 
+  def self.create_media_objects(description, type, elementID)
+    text = Nokogiri.HTML(description)
+    text.search('img').each do |picture|
+      if picture['src'].include?('data:image')
+        data = Base64.decode64(picture['src'].partition('/')[2].split('base64,')[1])
+        params = {}
+        if picture['src'].partition('/')[2].split('base64,')[0].include? 'png'
+          params[:file_type] = '.png'
+        else params[:file_type] = '.jpg'
+        end
+        params[:image_data] = data
+        case type
+        when 'Project'
+          params[:proj_id] = elementID
+        when 'News'
+          params[:news_id] = elementID
+        when 'Tutorial'
+          params[:tutorial_id] = elementID
+        when 'Visualization'
+          params[:viz_id] = elementID
+        when 'User'
+          params[:user_id] = elementID
+        end
+        summernote_mo = MediaObject.new
+        summernote_mo.summernote_image(params)
+        summernote_mo.save!
+        picture['src'] = summernote_mo.src
+      end
+    end
+    text.to_html
+  end
+
   private
 
   def remove_data!
