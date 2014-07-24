@@ -62,37 +62,49 @@ $ ->
                   <div class="col-md-4">
                     <div class='panel panel-default'>
                       <div class='panel-heading'>Mean</div>
-                      <div class='panel-body'>#{if analysis[0].mean? then analysis[0].mean else noData}</div>
+                      <div class='panel-body'>
+                        #{if analysis[0].mean? then roundOutput(analysis[0].mean, 3) else noData}
+                      </div>
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class='panel panel-default'>
                       <div class='panel-heading'>Max</div>
-                      <div class='panel-body'>#{if analysis[0].max? then analysis[0].max else noData}</div>
+                      <div class='panel-body'>
+                        #{if analysis[0].max? then roundOutput(analysis[0].max, 3) else noData}
+                      </div>
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class='panel panel-default'>
                       <div class='panel-heading'>Total</div>
-                      <div class='panel-body'>#{if analysis[0].total? then analysis[0].total else noData}</div>
+                      <div class='panel-body'>
+                        #{if analysis[0].total? then roundOutput(analysis[0].total, 3) else noData}
+                      </div>
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class='panel panel-default'>
                       <div class='panel-heading'>Median</div>
-                      <div class='panel-body'>#{if analysis[0].median? then analysis[0].median else noData}</div>
+                      <div class='panel-body'>
+                        #{if analysis[0].median? then roundOutput(analysis[0].median, 3) else noData}
+                      </div>
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class='panel panel-default'>
                       <div class='panel-heading'>Min</div>
-                      <div class='panel-body'>#{if analysis[0].min? then analysis[0].min else noData}</div>
+                      <div class='panel-body'>
+                        #{if analysis[0].min? then roundOutput(analysis[0].min, 3) else noData}
+                      </div>
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class='panel panel-default'>
                       <div class='panel-heading'>Data Point Count</div>
-                      <div class='panel-body'>#{if analysis[0].count? then analysis[0].count else noData}</div>
+                      <div class='panel-body'>
+                        #{if analysis[0].count? then roundOutput(analysis[0].count, 3) else noData}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -107,6 +119,8 @@ $ ->
         super()
         @drawGroupControls(true, true)
         @drawYAxisControls(true)
-
+        
+      #Rounds arg to "digits" number of decimal places only if necessary
+      roundOutput = (arg, digits) ->
+        +(Math.round(arg + "e+#{digits}")  + "e-#{digits}")
       globals.summary = new Summary "summary_canvas"
-
