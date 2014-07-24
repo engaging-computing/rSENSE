@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 4.0'
+gem 'rails', '~> 4.1.4'
 
 gem 'sqlite3'
 gem 'pg'
@@ -22,11 +22,12 @@ group :development, :test do
   gem "selenium-webdriver"
   gem "launchy"
   gem "simplecov"
-  gem "turn"
+#  gem "turn"
+  gem "turn", path: '~/Documents/ecg/turn'
   gem "rubocop", git: 'https://github.com/bbatsov/rubocop'
   gem "coffeelint"
   gem 'capybara-webkit'
-  gem 'minitest', '~> 4.0'
+  gem 'minitest', '~> 5.1'
 end
 
 # Jquery stuff
