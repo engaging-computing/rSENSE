@@ -1,6 +1,6 @@
 $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis","show"]
-  
+    originalWidth = ($ '#controldiv').width
     ($ '#fullscreen-viz').click (e) ->
       fullscreenEnabled = document.fullscreenEnabled || document.mozFullScreenEnabled ||
       document.webkitFullscreenEnabled
@@ -29,8 +29,10 @@ $ ->
           document.msExitFullscreen()
           
     ($ document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange', ->
-      #Deal with Safari resizing peculiarities
-      if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1)
+      ($ '#controldiv').width(originalWidth)
+      #Deal with Safari and Firefox resizing peculiarities
+      if ((navigator.userAgent.search("Safari") >= 0 && navigator.userAgent.search("Chrome") < 0) or
+         navigator.userAgent.indexOf('Firefox') > -1)
         ($ window).trigger('resize')
       if ($ '#fullscreen-viz').attr('title') == 'Maximize'
         ($ '#fullscreen-viz').attr('title', 'Minimize')
