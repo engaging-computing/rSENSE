@@ -160,7 +160,7 @@ class MediaObject < ActiveRecord::Base
     add_tn
   end
 
-  def self.create_media_objects(description, type, elementID)
+  def self.create_media_objects(description, type)
     text = Nokogiri.HTML(description)
     text.search('img').each do |picture|
       if picture['src'].include?('data:image')
@@ -171,18 +171,7 @@ class MediaObject < ActiveRecord::Base
         else params[:file_type] = '.jpg'
         end
         params[:image_data] = data
-        case type
-        when 'Project'
-          params[:proj_id] = elementID
-        when 'News'
-          params[:news_id] = elementID
-        when 'Tutorial'
-          params[:tutorial_id] = elementID
-        when 'Visualization'
-          params[:viz_id] = elementID
-        when 'User'
-          params[:user_id] = elementID
-        end
+        params.merge! type
         summernote_mo = MediaObject.new
         summernote_mo.summernote_image(params)
         summernote_mo.save!

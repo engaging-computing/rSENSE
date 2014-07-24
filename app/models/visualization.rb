@@ -94,6 +94,6 @@ class Visualization < ActiveRecord::Base
   end
 
   def summernote_media_objects
-    self.content = MediaObject.create_media_objects(content, 'Visualization', id)
+    self.content = MediaObject.create_media_objects(content, viz_id: id)
   end
 end

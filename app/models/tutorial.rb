@@ -63,6 +63,6 @@ class Tutorial < ActiveRecord::Base
   end
 
   def summernote_media_objects
-    self.content = MediaObject.create_media_objects(content, 'Tutorial', id)
+    self.content = MediaObject.create_media_objects(content, tutorial_id: id)
   end
 end
