@@ -39,31 +39,34 @@ $ ->
 
       start: () ->
         super()
+        @update()
         
       update: () ->
         @rel_data = []
         @selected_field = @displayField
-
+        
         for dp in data.dataPoints
           do =>
             @rel_data.push dp[@selected_field]
 
         sum = @rel_data.reduce (x, y) -> x + y
 
-        if (sum > 95 and sum <= 100) or (sum > .95 and sum <= 1)
-          @use_value = true
-        else
-          @use_value = false
-
+        #if (sum > 95 and sum <= 100) or (sum > .95 and sum <= 1)
+        #  @use_value = true
+        #else
+        #  @use_value = false
+        
+        @use_value = true
+        
         while @chart.series.length > 0
           @chart.series[@chart.series.length - 1].remove false
 
-        if data.textFields.length > 2
-          @select_name = data.textFields[2]
-        else
-          @select_name = 'Percent'
+        if !@select_name?
           
-        console.log @select_name
+          if data.textFields.length > 2
+            @select_name = data.textFields[2]
+          else
+            @select_name = 'Percent'
 
         if @use_value is true
           @display_data = []
@@ -72,30 +75,35 @@ $ ->
 
           for dp in @rel_data
             do =>
-              if @select_name != 'Percent'
-                @display_data.push [data.dataPoints[row_index][@select_name], dp]
-                row_index++
+              @display_data.push [data.dataPoints[row_index][@select_name], dp]
+              row_index++
 
         else
           @display_data = []
           #select name could be group by
-          @display_data.push [data.dataPoints[0][@select_name], 1]
-
+          @display_data.push ["#{data.dataPoints[0][@selected_field]}", 1]
+          
           for dp in data.dataPoints[1..]
             do =>
-              if dp[@select_name] in @display_data
+              exist = []
+              for existence in @display_data
+                do =>
+                  exist.push existence[0]
+              if "#{dp[@selected_field]}" in exist
                 for find_name in @display_data
                   do =>
-                    if find_name[0] = dp[@select_name]
+                    if find_name[0] == "#{dp[@selected_field]}"
                       find_name[1] += 1
               else
-                @display_data.push [dp[@select_name], 1]
+                @display_data.push ["#{dp[@selected_field]}", 1]
 
           @normalize()
 
         options =
           showInLegend: false
           data: @display_data
+          
+        @chart.setTitle { text: "#{data.fields[@select_name].fieldName} by #{data.fields[@selected_field].fieldName}" }
 
         @chart.addSeries options, false
         @chart.redraw()
@@ -143,15 +151,95 @@ $ ->
         controls = '<div id="labelControl" class="vis_controls">'
         controls += "<h3 class='clean_shrink'><a href='#'>Label:</a></h3>"
         controls += "<div class='outer_control_div'>"
+        for fields, f_index in data.textFields[2..]
+          do =>
+            controls += "<div class='inner_control_div'><div class='radio'><label>#{data.fields[fields].fieldName}"
+            controls += "<input class='label_input' type='radio' name='labels' value='#{fields}'"
+            if f_index == 0
+              controls += "checked"
+            controls += "></label></div></div>"
+
+        controls += '</div></div>'
+        ($ '#controldiv').append controls
+        
+        ($ '.label_input').click (e) =>
+          @select_name = Number e.target.value
+          @delayedUpdate()
+        
+        globals.labelOpen ?= 0
+        ($ '#labelControl').accordion
+          collapsible: true
+          active: globals.labelOpen
+          
+        ($ '#labelControl > h3').click ->
+          globals.labelOpen = (globals.labelOpen + 1) % 2
+          
+      drawYAxisControls: (radio = false) ->
+
+        controls = '<div id="yAxisControl" class="vis_controls">'
+
+        if radio
+          controls += "<h3 class='clean_shrink'><a href='#'>Field:</a></h3>"
+        else
+          controls += "<h3 class='clean_shrink'><a href='#'>Y Axis:</a></h3>"
+
+        controls += "<div class='outer_control_div'>"
+
+        # Populate choices
+        for fIndex in data.normalFields[1..]
+          controls += "<div class='inner_control_div' >"
+
+          if radio
+            controls += """<div class='radio'><label><input class='y_axis_input' name='y_axis_group'
+              type='radio' value='#{fIndex}'
+              #{if (Number fIndex) is @displayField then "checked" else ""}>
+              #{data.fields[fIndex].fieldName}</label></div>"""
+          else
+            controls += """<div class='checkbox'><label><input class='y_axis_input' type='checkbox'
+              value='#{fIndex}' #{if (Number fIndex) in globals.fieldSelection then "checked" else ""}
+              />#{data.fields[fIndex].fieldName}</label></div>"""
+          controls += "</div>"
+
+        controls += '</div></div>'
+
+        # Write HTML
+        ($ '#controldiv').append controls
+
+        # Make y axis checkbox/radio handler
+        if radio
+          ($ '.y_axis_input').click (e) =>
+            @displayField = Number e.target.value
+            @delayedUpdate()
+        else
+          ($ '.y_axis_input').click (e) =>
+            index = Number e.target.value
+
+            if index in globals.fieldSelection
+              arrayRemove(globals.fieldSelection, index)
+            else
+              globals.fieldSelection.push(index)
+            @delayedUpdate()
+
+        # Set up accordion
+        globals.yAxisOpen ?= 0
+
+        ($ '#yAxisControl').accordion
+          collapsible:true
+          active:globals.yAxisOpen
+
+        ($ '#yAxisControl > h3').click ->
+          globals.yAxisOpen = (globals.yAxisOpen + 1) % 2
 
 
       drawControls: ->
         super()
         @drawYAxisControls true #horrible name for what im doing here
-        @drawLabelControl()
+        @drawLabelControls()
+        @drawSaveControls()
 
 
     if "Pie" in data.relVis
       globals.pie = new Pie 'pie_canvas'
+      #globals.percentage = new Bar 'percentage_canvas'
     else
       globals.pie = new DisabledVis 'pie_canvas'
