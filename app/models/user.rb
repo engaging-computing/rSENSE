@@ -74,7 +74,7 @@ class User < ActiveRecord::Base
   end
 
   def summernote_media_objects
-    self.bio = MediaObject.create_media_objects(bio, user_id: id)
+    self.bio = MediaObject.create_media_objects(bio, 'user_id', id)
   end
 end
 
