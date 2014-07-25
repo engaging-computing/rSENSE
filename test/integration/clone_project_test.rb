@@ -13,7 +13,7 @@ class CloneProjectTest < ActionDispatch::IntegrationTest
   end
 
   def set_cell(ii, val)
-    page.execute_script %Q{$($('#manualTable input')[#{ii}]).val(#{val})}
+    page.execute_script "$($('#manualTable input')[#{ii}]).val(#{val})"
   end
 
   # Note, currectly does not verify data is cloned correct, just that the sets are cloned
@@ -41,13 +41,13 @@ class CloneProjectTest < ActionDispatch::IntegrationTest
 
     assert page.has_content?('I Like Clones'), 'Save should succeed'
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
-    page.execute_script %Q{$('#upload').show()}
+    page.execute_script "$('#upload').show()"
     find('.upload_media form').attach_file('upload', img_path)
     assert page.has_content?('nerdboy.jpg'), 'File should be in list'
 
     click_on 'Das Cloning Projekt'
     img_path = Rails.root.join('test', 'CSVs', 'test.pdf')
-    page.execute_script %Q{$('#upload').show()}
+    page.execute_script "$('#upload').show()"
     find('.upload_media form').attach_file('upload', img_path)
     assert page.has_content?('test.pdf'), 'File should be in list'
 
