@@ -54,10 +54,13 @@ class ContribKeysController < ApplicationController
   end
 
   def clear
-    @project = Project.find(params[:project_id])
     session[:contrib_access] = nil
     flash[:notice] = 'Your have cleared your contributor key.'
-    redirect_to @project
+    if params[:project_id]
+      redirect_to Project.find(params[:project_id])
+    else
+      redirect_to projects_path
+    end
   end
 
   private
