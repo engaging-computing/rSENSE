@@ -23,13 +23,21 @@ class ProjectsControllerTest < ActionController::TestCase
   end
 
   test 'should show project' do
+    views_before = @project_one.views
     get :show,  id: @project_one
     assert_response :success
+
+    @pp = Project.find(@project_one.id)
+    assert @pp.views == views_before + 1, 'View count incremented'
   end
 
   test 'should show project (json)' do
+    views_before = @project_one.views
     get :show,  format: 'json', id: @project_one
     assert_response :success
+
+    @pp = Project.find(@project_one.id)
+    assert @pp.views == views_before, 'View count not incremented'
   end
 
   test 'should create project' do
