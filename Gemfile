@@ -23,7 +23,7 @@ group :development, :test do
   gem "launchy"
   gem "simplecov"
 #  gem "turn"
-  gem "turn", path: '~/Documents/ecg/turn'
+  gem "turn", git: 'https://github.com/asalani93/turn'
   gem "rubocop", git: 'https://github.com/bbatsov/rubocop'
   gem "coffeelint"
   gem 'capybara-webkit'
@@ -31,7 +31,7 @@ group :development, :test do
 end
 
 # Jquery stuff
-gem 'better_colorpicker', path: '~/Documents/ecg/better_colorpicker'
+gem 'better_colorpicker', git: 'https://github.com/asalani93/better-colorpicker'
 gem 'jquery-rails'
 
 # To use ActiveModel has_secure_password
