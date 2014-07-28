@@ -220,7 +220,7 @@ class VisualizationsController < ApplicationController
         end
       end
     else
-      @datasets = DataSet.where(hidden: false, project_id: params[:id])
+      @datasets = DataSet.where(project_id: params[:id])
     end
 
     # create special row identifier field for all datasets

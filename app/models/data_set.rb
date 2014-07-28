@@ -30,31 +30,27 @@ class DataSet < ActiveRecord::Base
     self.title = sanitize title, tags: %w()
   end
 
-  def self.search(search, include_hidden = false)
+  def self.search(search)
     res = if search
             where('title LIKE ?', "%#{search}%").order('created_at DESC')
           else
             all.order('created_at DESC')
           end
 
-    if include_hidden
-      res
-    else
-      res.where(hidden: false)
-    end
+    res
   end
 
   def to_hash(recurse = true)
     h = {
       id: id,
       name: title,
-      hidden: hidden,
       url: UrlGenerator.new.data_set_url(self),
       path: UrlGenerator.new.data_set_path(self),
       createdAt: created_at.strftime('%B %d, %Y'),
       fieldCount: project.fields.length,
       datapointCount: data.length,
-      displayURL: "/projects/#{project.id}/data_sets/#{id}"
+      displayURL: "/projects/#{project.id}/data_sets/#{id}",
+      data: data
     }
 
     if recurse
@@ -69,8 +65,7 @@ class DataSet < ActiveRecord::Base
       h.merge!(
         owner: owner.to_hash(false),
         project: project.to_hash(false),
-        fields: fields,
-        data: data
+        fields: fields
       )
     end
 
