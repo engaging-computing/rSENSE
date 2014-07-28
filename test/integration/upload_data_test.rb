@@ -41,7 +41,7 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     gpx_path = Rails.root.join('test', 'CSVs', 'test.gpx')
     page.execute_script "$('#datafile_form').parent().show()"
     find('#datafile_form').attach_file('file', gpx_path)
-    page.execute_script "$('#datafile_form').submit()}"
+    page.execute_script "$('#datafile_form').submit()"
     assert page.has_content?('Match Quality')
     all('select')[0].find(:xpath, 'option[1]').select_option
     all('select')[1].find(:xpath, 'option[1]').select_option
