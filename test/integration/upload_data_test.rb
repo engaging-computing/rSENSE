@@ -162,6 +162,7 @@ class UploadDataTest < ActionDispatch::IntegrationTest
 
     # Upload File With Key
     find('#key').set('grande')
+    find('#contributor_name').set('Bobby D.')
     click_on 'Submit Key'
 
     csv_path = Rails.root.join('test', 'CSVs', 'test.csv')
@@ -170,9 +171,8 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     page.execute_script %Q{$('#datafile_form').submit()}
     assert page.has_content?('Match Quality'), "Data wasn't submitted"
     fill_in 'Title', with: 'Bad Data'
-    fill_in 'Your Name', with: 'Jim D.'
     click_on 'Submit'
-    assert page.has_content?('Bad Data - Jim D.')
+    assert page.has_content?('Bad Data')
     click_on 'File Types'
     assert page.has_content?('Contribute Data')
   end
