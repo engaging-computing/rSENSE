@@ -132,11 +132,19 @@ $ ->
         for dp in data.dataPoints
           do =>
             tmp[dp[data.groupingFieldIndex].toLowerCase()] += dp[@selected_field]
-            
+
         @display_data = []
+        values = (value for key, value of tmp)
+        keys = (key for key, value of tmp)
+        
+        for val in values
+          do =>
+            for key in keys
+              do =>
+                @display_data.push [key, val] unless tmp[key] isnt val
             
-        for key, value of tmp
-          @display_data.push [key, value]
+        #for key, value of tmp
+        #  @display_data.push [key, value]
           
         console.log @display_data
             
