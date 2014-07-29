@@ -2,8 +2,8 @@ require 'nokogiri'
 
 module HomeHelper
   def mobileParse(i)
-    if !i.content.nil?
-      first_paragraph = Nokogiri::HTML.parse(i.content).css('p').first
+    if Nokogiri.HTML(i.content).search('p').length != 0
+      first_paragraph = Nokogiri.HTML(i.content).search('p').first
       raw(first_paragraph.text)
     else
       ''

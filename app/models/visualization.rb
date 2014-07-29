@@ -1,4 +1,3 @@
-
 require 'nokogiri'
 require 'store_file'
 
@@ -22,6 +21,7 @@ class Visualization < ActiveRecord::Base
   alias_attribute :name, :title
 
   before_save :sanitize_viz
+  before_save :summernote_media_objects
 
   belongs_to :user
   belongs_to :project
@@ -91,5 +91,9 @@ class Visualization < ActiveRecord::Base
       )
     end
     h
+  end
+
+  def summernote_media_objects
+    self.content = MediaObject.create_media_objects(content, 'visualization_id', id, user_id)
   end
 end
