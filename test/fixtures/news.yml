@@ -16,7 +16,7 @@ one:
 two: {}
 #  column: value
 
-news_three:
+three:
   title: I'm a news guy
   content: I am content for news
   summary: This contains content

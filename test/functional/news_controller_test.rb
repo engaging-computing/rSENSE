@@ -5,7 +5,7 @@ class NewsControllerTest < ActionController::TestCase
     @nixon = users(:nixon)
     @kate  = users(:kate)
     @news  = news(:one)
-    @news_three = news(:news_three)
+    @three = news(:three)
   end
 
   test 'should get index' do
@@ -26,10 +26,10 @@ class NewsControllerTest < ActionController::TestCase
   end
 
   test 'should show news (json)' do
-    get :show,  format: 'json', id: @news_three
+    get :show,  format: 'json', id: @three
     assert_response :success
 
-    get :show, format: 'json', id: @news_three, recur: true
+    get :show, format: 'json', id: @three, recur: true
     assert JSON.parse(response.body).key?('content'), 'Should have included content in to_hash'
   end
 
