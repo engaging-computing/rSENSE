@@ -144,6 +144,7 @@ class MediaObjectsController < ApplicationController
     when 'news'
       @news = News.find_by_id(id) || nil
       if can_edit?(@news)
+        puts @news.owner.id
         @mo.user_id = @news.owner.id
         @mo.news_id = @news.id
       else
