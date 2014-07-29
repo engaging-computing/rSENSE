@@ -14,5 +14,9 @@ $ ->
   
   ($ '#news-feed').on( 'mouseleave', () ->
     ($ '#news-feed').css('overflow-y', 'hidden')
-    ($ '#news-feed').scrollTop = 0
+  )
+  ($ window).on('resize', ->
+    if ($ window).outerWidth() <= 992
+      ($ '.invisible').removeClass('invisible').addClass('visible-divide')
+    else ($ '.visible-divide').removeClass('visible-divide').addClass('invisible')
   )
