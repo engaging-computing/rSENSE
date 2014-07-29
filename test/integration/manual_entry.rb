@@ -9,6 +9,7 @@ class SmallPageTest < ActionDispatch::IntegrationTest
   end
 
   teardown do
+    finish
   end
 
   def set_cell(ii, val)
