@@ -44,8 +44,9 @@ $ ->
       update: () ->
         @rel_data = []
         @selected_field = @displayField
-        
-        for dp in data.dataPoints
+        @getGroupedData()
+
+        ###for dp in data.dataPoints
           do =>
             @rel_data.push dp[@selected_field]
 
@@ -56,7 +57,7 @@ $ ->
         #else
         #  @use_value = false
         
-        @use_value = true
+        @use_value = true###
         
         while @chart.series.length > 0
           @chart.series[@chart.series.length - 1].remove false
@@ -68,15 +69,18 @@ $ ->
           else
             @select_name = 'Percent'
 
-        if @use_value is true
+        ###if @use_value is true
           @display_data = []
 
-          row_index = 0
+          if data.groupingFieldIndex is 1 or data.groupingFieldIndex is 2
+            row_index = 0
 
-          for dp in @rel_data
-            do =>
-              @display_data.push [data.dataPoints[row_index][@select_name], dp]
-              row_index++
+            for dp in @rel_data
+              do =>
+                @display_data.push [data.dataPoints[row_index][@select_name], dp]
+                row_index++
+          else
+            
 
         else
           @display_data = []
@@ -97,7 +101,7 @@ $ ->
               else
                 @display_data.push ["#{dp[@selected_field]}", 1]
 
-          @normalize()
+          @normalize()###
 
         options =
           showInLegend: false
@@ -119,6 +123,23 @@ $ ->
           do =>
             dp[1] = ( dp[1] / sum ) *100
 
+      getGroupedData: ->
+        tmp = {}
+        for group in data.groups
+          do =>
+            tmp[group.toLowerCase()] = 0
+            
+        for dp in data.dataPoints
+          do =>
+            tmp[dp[data.groupingFieldIndex].toLowerCase()] += dp[@selected_field]
+            
+        @display_data = []
+            
+        for key, value of tmp
+          @display_data.push [key, value]
+          
+        console.log @display_data
+            
       buildOptions: ->
         super()
 
@@ -174,7 +195,7 @@ $ ->
         ($ '#labelControl > h3').click ->
           globals.labelOpen = (globals.labelOpen + 1) % 2
           
-      drawYAxisControls: (radio = false) ->
+      ###drawYAxisControls: (radio = false) ->
 
         controls = '<div id="yAxisControl" class="vis_controls">'
 
@@ -228,13 +249,14 @@ $ ->
           active:globals.yAxisOpen
 
         ($ '#yAxisControl > h3').click ->
-          globals.yAxisOpen = (globals.yAxisOpen + 1) % 2
+          globals.yAxisOpen = (globals.yAxisOpen + 1) % 2###
 
 
       drawControls: ->
         super()
+        @drawGroupControls()
         @drawYAxisControls true #horrible name for what im doing here
-        @drawLabelControls()
+        #@drawLabelControls()
         @drawSaveControls()
 
 
