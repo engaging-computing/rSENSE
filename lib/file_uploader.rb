@@ -147,6 +147,8 @@ class FileUploader
     types = {}
     types['text'] = []
     types['timestamp'] = []
+    types['latitude'] = []
+    types['longitude'] = []
 
     regex = %r{.(?<year>\d{4})(-|\/)(?<month>\d{1,2})(-|\/)(?<day>\d{1,2})}
 
@@ -155,6 +157,10 @@ class FileUploader
         types['timestamp'].push column[0]
       elsif !(column[1]).map { |dp| valid_float?(dp) }.reduce(:&)
         types['text'].push column[0]
+      elsif column[0].casecmp("LATITUDE") == 0
+        types['latitude'].push column[0]
+      elsif column[0].casecmp("LONGITUDE") == 0
+        types['longitude'].push column[0]
       end
     end
     types
