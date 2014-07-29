@@ -11,7 +11,7 @@ class Project < ActiveRecord::Base
   validates :title, length: { maximum: 128 }
 
   before_save :sanitize_project
-
+  before_save :summernote_media_objects
   has_many :fields
   has_many :data_sets, -> { order('created_at desc') }
   has_many :media_objects
@@ -268,6 +268,10 @@ class Project < ActiveRecord::Base
       end
     end
     new_project
+  end
+
+  def summernote_media_objects
+    self.content = MediaObject.create_media_objects(content, 'project_id', id, user_id)
   end
 end
 
