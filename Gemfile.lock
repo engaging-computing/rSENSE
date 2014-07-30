@@ -60,6 +60,7 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
     addressable (2.3.6)
+    ansi (1.4.3)
     arel (5.0.1.20140414130214)
     ast (2.0.0)
     bcrypt (3.1.7)
@@ -128,6 +129,11 @@ GEM
       subexec (~> 0.2.1)
     mini_portile (0.6.0)
     minitest (5.4.0)
+    minitest-reporters (1.0.5)
+      ansi
+      builder
+      minitest (>= 5.0)
+      ruby-progressbar
     modernizr-rails (2.7.1)
     multi_json (1.10.1)
     multi_xml (0.5.5)
@@ -241,6 +247,7 @@ DEPENDENCIES
   launchy
   mini_magick
   minitest (~> 5.1)
+  minitest-reporters
   modernizr-rails
   multi_json
   pg
