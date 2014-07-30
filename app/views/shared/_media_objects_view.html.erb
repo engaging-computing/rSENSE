@@ -1,4 +1,4 @@
-<div id="media_object_list" type="<%=type%>" obj_id="<%=object.id%>">
+<div id="media_object_list">
   <table id="media_table" class="table table-striped">
     <thead>
      <% object.media_objects.to_a.each_with_index do |mo, i| %>
@@ -14,7 +14,6 @@
       </tr>
     </thead>
     <% end %>
-    <tbody>
         <% if !mo.owner.nil? %>
           <tr class="<%= cycle('feed-even','feed-odd') %> media">
             <% if !(mo.media_type == 'image') %>
@@ -46,7 +45,6 @@
           </tr>
         <%end%>
       <% end %>
-    </tbody>
   </table>
  
   <% if can_edit? object%>
