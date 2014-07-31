@@ -157,7 +157,7 @@ IS.onReady "projects/show", ->
 
   ($ 'a.data_set_delete').click (e) ->
     e.preventDefault()
-    
+
     url = ($ @).attr('href')
     row = ($ @).parents('tr')
     p_id = url.split '/'
