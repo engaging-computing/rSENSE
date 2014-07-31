@@ -152,6 +152,11 @@ body {
   margin-bottom: 2ex;
 }
 
+.truncate {
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+
 .wide-item {
   background-color: #ddd;
   box-shadow: 2px 3px 1px grey;
