@@ -31,7 +31,6 @@ $ ->
   ###
   window.resizeCarousel = () ->
     width = (($ window).width() * ((($ window).height() - ($ '.navbar').height()) / ($ window).width())).toFixed(2)
-    if (($ window).height() 
     ($ '#myCarousel').height(width)
     ($ '#carousel-container').height(width)
     ($ '.carousel').height(width)
