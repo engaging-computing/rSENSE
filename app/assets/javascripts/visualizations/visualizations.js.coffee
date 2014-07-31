@@ -43,7 +43,5 @@ $ ->
     )
     
   ($ '#control_hide_button').on('click', () ->
-    console.log 'hello'
     hidden = !hidden
-    console.log hidden
   )
