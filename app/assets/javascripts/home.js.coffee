@@ -19,8 +19,6 @@ $ ->
     if ($ window).outerWidth() <= 992
       ($ '.invisible').removeClass('invisible').addClass('visible-divide')
     else ($ '.visible-divide').removeClass('visible-divide').addClass('invisible')
-    console.log ($ '.collaborate-img')
-    ($ '.collaborate-img').width(($ '#play-store-button').width * 2)
   )
   ($ document).ready( ->
     window.resizeCarousel()
@@ -32,7 +30,8 @@ $ ->
   Draw Carousel for appropriate screen size
   ###
   window.resizeCarousel = () ->
-    width = ($ window).width()*(9/16)
+    width = (($ window).width() * ((($ window).height() - ($ '.navbar').height()) / ($ window).width())).toFixed(2)
+    if (($ window).height() 
     ($ '#myCarousel').height(width)
     ($ '#carousel-container').height(width)
     ($ '.carousel').height(width)
@@ -41,4 +40,4 @@ $ ->
     ($ '.carousel-inner').height(width)
     ($ '.carousel-img').height(width)
     ($ '#main-image-featurette').height(($ '.isense-desc').height())
-    ($ window).trigger('resize')
+    #($ window).trigger('resize')
