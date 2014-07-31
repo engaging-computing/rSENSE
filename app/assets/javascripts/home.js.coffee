@@ -20,9 +20,11 @@ $ ->
       ($ '.invisible').removeClass('invisible').addClass('visible-divide')
     else ($ '.visible-divide').removeClass('visible-divide').addClass('invisible')
   )
-  ($ document).ready( ->
+
+  ($ document).ready( () ->
     window.resizeCarousel()
   )
+
   ($ window).on('resize', () ->
     window.resizeCarousel()
   )
@@ -39,4 +41,3 @@ $ ->
     ($ '.carousel-inner').height(width)
     ($ '.carousel-img').height(width)
     ($ '#main-image-featurette').height(($ '.isense-desc').height())
-    #($ window).trigger('resize')
