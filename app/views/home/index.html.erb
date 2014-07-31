@@ -17,7 +17,7 @@
       
       <!---First Slide--->
       <div class="item active">
-        <img src="<%= image_path 'create.jpg'%>" alt="First slide">
+        <img src="<%= image_path 'create.jpg'%>" class="carousel-img" alt="First slide">
         <div class="container">
           <div class="carousel-caption">
             <h1>Collect</h1>
@@ -29,9 +29,9 @@
       
       <!---Second Slide--->
       <div class="item">
-        <img src="<%= image_path 'Share.jpg'%>" alt="Second slide">
+        <img src="<%= image_path 'Share.jpg'%>" class="carousel-img" alt="Second slide">
         <div class="container">
-          <div class="carousel-caption" style="background-color:black;opacity:0.6;">
+          <div class="carousel-caption">
             <h1>Share</h1>
             <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
           </div>
@@ -40,9 +40,9 @@
       <!---End Second Slide Content--->
       <!---Last Slide--->
       <div class="item">
-        <img src="<%= image_path 'Visualize.png'%>" alt="Third slide">
+        <img src="<%= image_path 'Visualize.png'%>" class="carousel-img" alt="Third slide">
         <div class="container">
-          <div class="carousel-caption" style="background-color:black;opacity: 0.6;">
+          <div class="carousel-caption">
             <h1>Visualize</h1>
             <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
           </div>
@@ -101,17 +101,17 @@
   
     <!--- First Column --->
     <div class="col-md-4 first-column col-lg-4">
-      <img class="img-rounded collaborate-img" src="<%= image_path 'collaborate.jpg'%>" alt="Generic placeholder image">
+      <img class="img-rounded collaborate-img" src="<%= image_path 'collaborate.jpg'%>" alt="Generic placeholder image"> </img>
       <h2>Get Involved with iSENSE</h2>
       <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh. </p>
-      
+      <hr class="featurette-divider invisible"> </hr>
     </div>
     <!--- End First Column --->
     
     <!---Second Column --->
     <div class="col-md-4 col-lg-4">
       <a href="https://play.google.com/store/apps/developer?id=Engaging+Computing+Group,+UML" class="btn btn-primary img-rounded">
-        <%= image_tag "icon-android.png", id: 'play-store-button' %> </a>
+        <%= image_tag "icon-android.png", id: 'play-store-button'%> </a>
       <a class="btn btn-primary disabled img-rounded">
         <%= image_tag "icon-apple.png", id: 'app-store-button' %> </a>
       <h2>Collect Data Anywhere with Mobile Apps</h2>

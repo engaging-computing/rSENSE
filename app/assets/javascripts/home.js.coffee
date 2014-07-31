@@ -19,5 +19,26 @@ $ ->
     if ($ window).outerWidth() <= 992
       ($ '.invisible').removeClass('invisible').addClass('visible-divide')
     else ($ '.visible-divide').removeClass('visible-divide').addClass('invisible')
-    ($ '.collaborate-img').width(($ '#play-store-button').width() + ($ '#app-store-button').width())
+    console.log ($ '.collaborate-img')
+    ($ '.collaborate-img').width(($ '#play-store-button').width * 2)
   )
+  ($ document).ready( ->
+    window.resizeCarousel()
+  )
+  ($ window).on('resize', () ->
+    window.resizeCarousel()
+  )
+  ###
+  Draw Carousel for appropriate screen size
+  ###
+  window.resizeCarousel = () ->
+    width = ($ window).width()*(9/16)
+    ($ '#myCarousel').height(width)
+    ($ '#carousel-container').height(width)
+    ($ '.carousel').height(width)
+    ($ '.carousel').find('.item').each (i,j) ->
+      ($ j).height(width)
+    ($ '.carousel-inner').height(width)
+    ($ '.carousel-img').height(width)
+    ($ '#main-image-featurette').height(($ '.isense-desc').height())
+    ($ window).trigger('resize')
