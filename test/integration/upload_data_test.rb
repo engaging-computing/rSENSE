@@ -26,9 +26,9 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     # Test CSV upload by creating fields
     # find('#template_file_upload').click
     csv_path = Rails.root.join('test', 'CSVs', 'test.csv')
-    page.execute_script %Q{$('#template_file_form').parent().show()}
+    page.execute_script "$('#template_file_form').parent().show()"
     find('#template_file_form').attach_file('file', csv_path)
-    page.execute_script %Q{$('#template_file_form').submit()}
+    page.execute_script "$('#template_file_form').submit()"
     assert page.has_content?('Please select types for each field below.')
     all('select')[0].find(:xpath, 'option[4]').select_option
     all('select')[1].find(:xpath, 'option[5]').select_option
@@ -39,9 +39,9 @@ class UploadDataTest < ActionDispatch::IntegrationTest
 
     # Test GPX upload
     gpx_path = Rails.root.join('test', 'CSVs', 'test.gpx')
-    page.execute_script %Q{$('#datafile_form').parent().show()}
+    page.execute_script "$('#datafile_form').parent().show()"
     find('#datafile_form').attach_file('file', gpx_path)
-    page.execute_script %Q{$('#datafile_form').submit()}
+    page.execute_script "$('#datafile_form').submit()"
     assert page.has_content?('Match Quality')
     all('select')[0].find(:xpath, 'option[1]').select_option
     all('select')[1].find(:xpath, 'option[1]').select_option
@@ -52,9 +52,9 @@ class UploadDataTest < ActionDispatch::IntegrationTest
 
     # Test ODS upload
     ods_path = Rails.root.join('test', 'CSVs', 'test.ods')
-    page.execute_script %Q{$('#datafile_form').parent().show()}
+    page.execute_script "$('#datafile_form').parent().show()"
     find('#datafile_form').attach_file('file', ods_path)
-    page.execute_script %Q{$('#datafile_form').submit()}
+    page.execute_script "$('#datafile_form').submit()"
     assert page.has_content?('Match Quality')
     click_on 'Submit'
     assert page.has_content?('Dataset #3'), 'Failed ODS'
@@ -63,9 +63,9 @@ class UploadDataTest < ActionDispatch::IntegrationTest
 
     # Test XLS upload
     xls_path = Rails.root.join('test', 'CSVs', 'test.xls')
-    page.execute_script %Q{$('#datafile_form').parent().show()}
+    page.execute_script "$('#datafile_form').parent().show()"
     find('#datafile_form').attach_file('file', xls_path)
-    page.execute_script %Q{$('#datafile_form').submit()}
+    page.execute_script "$('#datafile_form').submit()"
     assert page.has_content?('Match Quality')
     click_on 'Submit'
     assert page.has_content?('Dataset #4'), 'Failed XLS'
@@ -74,9 +74,9 @@ class UploadDataTest < ActionDispatch::IntegrationTest
 
     # Test XLSX upload
     xlsx_path = Rails.root.join('test', 'CSVs', 'test.xlsx')
-    page.execute_script %Q{$('#datafile_form').parent().show()}
+    page.execute_script "$('#datafile_form').parent().show()"
     find('#datafile_form').attach_file('file', xlsx_path)
-    page.execute_script %Q{$('#datafile_form').submit()}
+    page.execute_script "$('#datafile_form').submit()"
     assert page.has_content?('Match Quality')
     click_on 'Submit'
     assert page.has_content?('Dataset #5'), 'Failed XLSX'
@@ -96,7 +96,7 @@ class UploadDataTest < ActionDispatch::IntegrationTest
 
     # Test upload non-readable
     jpg_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
-    page.execute_script %Q{$('#datafile_form').parent().show()}
+    page.execute_script "$('#datafile_form').parent().show()"
     find('#datafile_form').attach_file('file', jpg_path)
     assert page.has_content?('File could not be read')
 
@@ -165,9 +165,9 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     click_on 'Submit Key'
 
     csv_path = Rails.root.join('test', 'CSVs', 'test.csv')
-    page.execute_script %Q{$('#datafile_form').parent().show()}
+    page.execute_script "$('#datafile_form').parent().show()"
     find('#datafile_form').attach_file('file', csv_path)
-    page.execute_script %Q{$('#datafile_form').submit()}
+    page.execute_script "$('#datafile_form').submit()"
     assert page.has_content?('Match Quality'), "Data wasn't submitted"
     fill_in 'Title', with: 'Bad Data'
     fill_in 'Your Name', with: 'Jim D.'
