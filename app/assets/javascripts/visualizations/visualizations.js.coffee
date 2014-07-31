@@ -1,7 +1,7 @@
 $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis","show"]
     hidden = false
-    originalWidth = ($ '#controldiv').width
+    originalWidth = 210#
     ($ '#fullscreen-viz').click (e) ->
       fullscreenEnabled = document.fullscreenEnabled || document.mozFullScreenEnabled ||
       document.webkitFullscreenEnabled
@@ -31,7 +31,7 @@ $ ->
           
     ($ document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange', ->
       if !hidden
-        ($ '#controldiv').innerWidth(originalWidth)
+        ($ '#controldiv').width(originalWidth)
       #Deal with Safari and Firefox resizing peculiarities
       if ((navigator.userAgent.search("Safari") >= 0 && navigator.userAgent.search("Chrome") < 0) or
          navigator.userAgent.indexOf('Firefox') > -1)
@@ -41,7 +41,7 @@ $ ->
       else if ($ '#fullscreen-viz').attr('title') == 'Minimize'
         ($ '#fullscreen-viz').attr('title', 'Maximize')
     )
-    
-  ($ '#control_hide_button').on('click', () ->
-    hidden = !hidden
-  )
+
+    ($ '#control_hide_button').on('click', () ->
+      hidden = !hidden
+    )
