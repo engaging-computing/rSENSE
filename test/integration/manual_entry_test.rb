@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class SmallPageTest < ActionDispatch::IntegrationTest
+class ManualEntryTest < ActionDispatch::IntegrationTest
   include CapyHelper
 
   setup do
