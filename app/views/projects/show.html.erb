@@ -219,7 +219,7 @@
    
     <div class="row">
       <%= render layout: "shared/box", locals: {title: 'Fields', width: '12', unique_id: 'fields', should_hide: false} do%>
-        <% if (@project.fields.count == 0) && (can_edit?(@project)) %>
+        <% if (@project.fields.count == 0) && can_edit?(@project) %>
           <div class="col-md-12 center"> 
             <a href="/projects/<%=@project.id%>/edit_fields"><button class="btn btn-success" id="manual_fields"><i class="fa fa-keyboard-o" style="margin:5px"></i>Setup Manually</button></a>
             <button class="btn btn-success" id="template_file_upload"><i class="fa fa-file-o" style="margin:5px"></i>Upload File</button>
@@ -251,7 +251,7 @@
     
     <div class="row">
       <%=render layout: "shared/box", locals: {title: 'Contribute Data', width:'12', unique_id: 'create_data_set', should_hide: !(@project.fields.count() > 0)} do %>
-        <% if can_edit?(@project) || can_contribute?(@project) %>
+        <% if ((can_edit?(@project) || can_contribute?(@project)) and @project.fields.count > 0) %>
           <div class="row-fluid">
             <div class="col-md-4 center">
             <%= link_to :controller => :data_sets, :action => :manualEntry do %>
@@ -293,7 +293,9 @@
             </div>
             <% end %>
           <% else %>
-            <% if @cur_user.try(:id) %>
+            <% if (@project.fields.count == 0) %>
+              <h4 class="center">Fields must be set up to contribute data</h4>
+            <% elsif @cur_user.try(:id) %>
               <h2 class="center"><i class="icon-lock"></i></h2>
               <h4 class="center">This project has been locked</h4>
             <% else %>
