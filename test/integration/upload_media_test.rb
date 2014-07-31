@@ -79,6 +79,7 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
     visit '/projects/1'
     assert page.has_css?('.media_edit')
     all('.media_edit')[0].click
+    puts page.html
     assert page.has_content?('nerdboy.jpg')
 
     visit '/projects/1'
