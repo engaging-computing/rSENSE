@@ -1,7 +1,7 @@
 $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis","show"]
     hidden = false
-    originalWidth = 210#
+    originalWidth = 210
     ($ '#fullscreen-viz').click (e) ->
       fullscreenEnabled = document.fullscreenEnabled || document.mozFullScreenEnabled ||
       document.webkitFullscreenEnabled
