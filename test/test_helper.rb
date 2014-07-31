@@ -12,7 +12,7 @@ Capybara.javascript_driver = :none
 # Capybara.javascript_driver = :selenium
 
 require 'minitest/reporters'
-Minitest::Reporters.use! Minitest::Reporters::SpecReporter.new
+Minitest::Reporters.use! [Minitest::Reporters::SpecReporter.new, Minitest::Reporters::DefaultReporter.new]
 
 require 'selenium-webdriver'
 
