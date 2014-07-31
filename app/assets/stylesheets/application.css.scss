@@ -152,7 +152,7 @@ body {
   margin-bottom: 2ex;
 }
 
-.truncate, .truncate * {
+.truncate {
   overflow-x: hidden;
   text-overflow: ellipsis;
 }
