@@ -254,16 +254,11 @@ window.setupEditTable = () ->
           for col in time_cols
             do (col) ->
               ($ row).children().eq(col - offset).find('input').replaceWith """
-                <div class='input-group datepicker'>
+                <div class='datepicker'>
                   <input class='validate_timestamp  form-control' type='text'
                     data-format='yyyy/MM/dd hh:mm:ss' value='#{ ($ row).find('input').eq(col - offset).val() }' />
-                  <span class='input-group-btn'>
-                    <a href='#' tabindex='32767' class="btn btn-default">
-                      <i class='fa fa-calendar'></i>
-                    </a>
-                  </span>
                 </div>"""
-              ($ row).children().eq(col - offset).find('.datepicker').unbind().datetimepicker()
+#               ($ row).children().eq(col - offset).find('.datepicker').unbind().datetimepicker()
 
         add_row = (tab) ->
           # create a string of the new row
@@ -305,12 +300,12 @@ window.setupEditTable = () ->
             ($ '#map_picker').modal()
 
           # bind time to input
-          dtp = ($ '.new_row').find('.datepicker')
-          if dtp?
-            $(dtp).each (item) ->
-              item.datetimepicker()
-              item.on 'changeDate', (e) ->
-                ($ e.target).find('input').trigger 'change'
+#           dtp = ($ '.new_row').find('.datepicker')
+#           if dtp?
+#             $(dtp).each (item) ->
+#               item.datetimepicker()
+#               item.on 'changeDate', (e) ->
+#                 ($ e.target).find('input').trigger 'change'
 
           # remove token
           ($ '.new_row').removeClass('new_row')
@@ -488,10 +483,10 @@ window.setupEditTable = () ->
           ($ '#map_picker').modal()
 
         #bind time button
-        ($ '.datepicker').each (item) ->
-          item.datetimepicker()
-          item.on 'changeDate', (e) ->
-            ($ e.target).find('input').trigger 'change'
+#         ($ '.datepicker').each (item) ->
+#           item.datetimepicker()
+#           item.on 'changeDate', (e) ->
+#             ($ e.target).find('input').trigger 'change'
 
         # add row functionality
         ($ '#edit_table_add').click ->
