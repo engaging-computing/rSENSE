@@ -151,7 +151,7 @@ class MediaObject < ActiveRecord::Base
   end
 
   def self.create_media_objects(description, type, item_id, owner_id = nil)
-    text = Nokogiri.HTML(description)
+    text = Nokogiri::HTML.fragment(description)
     text.search('img').each do |picture|
       if picture['src'].include?('data:image')
         data = Base64.decode64(picture['src'].partition('/')[2].split('base64,')[1])
@@ -164,7 +164,7 @@ class MediaObject < ActiveRecord::Base
         picture['src'] = summernote_mo.src
       end
     end
-    text.to_html
+    text.to_s
   end
 
   private
