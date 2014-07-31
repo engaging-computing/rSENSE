@@ -10,10 +10,11 @@ one:
   summary: This contains content
   hidden: false
   user: nixon
+  id: 2
 
 # column: value
 #
-two: {}
+#two: {}
 #  column: value
 
 news_three:

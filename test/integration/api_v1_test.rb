@@ -327,7 +327,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
 
     get "/api/v1/data_sets/#{dset_id}/edit",
 
-        email: 'kcarcia@cs.uml.edu' ,
+        email: 'kcarcia@cs.uml.edu',
         password: '12345',
         data:
           {

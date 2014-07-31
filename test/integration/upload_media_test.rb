@@ -19,7 +19,7 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
     visit '/tutorials/1'
     assert page.has_content? 'Media'
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
-    page.execute_script %Q{$('#upload').show()}
+    page.execute_script "$('#upload').show()"
     find('.upload_media form').attach_file('upload', img_path)
     assert page.has_content?('nerdboy.jpg'), 'File should be in list'
     find('.media_edit').click
@@ -31,7 +31,7 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
     visit '/news/1'
     assert page.has_content? 'Media'
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
-    page.execute_script %Q{$('#upload').show()}
+    page.execute_script "$('#upload').show()"
     find('.upload_media form').attach_file('upload', img_path)
     assert page.has_content?('nerdboy.jpg'), 'File should be in list'
     find('.media_edit').click
@@ -47,7 +47,7 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
     visit '/projects/1'
     assert page.has_content? 'Media'
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
-    page.execute_script %Q{$('#upload').show()}
+    page.execute_script "$('#upload').show()"
     find('.upload_media form').attach_file('upload', img_path)
     assert page.has_content?('nerdboy.jpg'), 'File should be in list'
 
@@ -55,7 +55,7 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
     visit '/projects/1'
     assert page.has_content? 'Media'
     text_path = Rails.root.join('test', 'CSVs', 'test.txt')
-    page.execute_script %Q{$('#upload').show()}
+    page.execute_script "$('#upload').show()"
     find('.upload_media form').attach_file('upload', text_path)
     assert page.has_content?('test.txt'), 'File should be in list'
 
@@ -63,7 +63,7 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
     visit '/projects/1'
     assert page.has_content? 'Media'
     pdf_path = Rails.root.join('test', 'CSVs', 'test.pdf')
-    page.execute_script %Q{$('#upload').show()}
+    page.execute_script "$('#upload').show()"
     find('.upload_media form').attach_file('upload', pdf_path)
     assert page.has_content?('test.pdf'), 'File should be in list'
 
@@ -71,7 +71,7 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
     visit '/projects/1'
     assert page.has_content? 'Media'
     ods_path = Rails.root.join('test', 'CSVs', 'test.ods')
-    page.execute_script %Q{$('#upload').show()}
+    page.execute_script "$('#upload').show()"
     find('.upload_media form').attach_file('upload', ods_path)
     assert page.has_content?('test.ods'), 'File should be in list'
 
