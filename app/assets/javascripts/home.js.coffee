@@ -19,4 +19,5 @@ $ ->
     if ($ window).outerWidth() <= 992
       ($ '.invisible').removeClass('invisible').addClass('visible-divide')
     else ($ '.visible-divide').removeClass('visible-divide').addClass('invisible')
+    ($ '.collaborate-img').width(($ '#play-store-button').width() + ($ '#app-store-button').width())
   )

@@ -100,7 +100,7 @@
   <div class="container marketing three-col">
   
     <!--- First Column --->
-    <div class="col-md-4 first-column">
+    <div class="col-md-4 first-column col-lg-4">
       <img class="img-rounded collaborate-img" src="<%= image_path 'collaborate.jpg'%>" alt="Generic placeholder image">
       <h2>Get Involved with iSENSE</h2>
       <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh. </p>
@@ -109,11 +109,11 @@
     <!--- End First Column --->
     
     <!---Second Column --->
-    <div class="col-md-4">
+    <div class="col-md-4 col-lg-4">
       <a href="https://play.google.com/store/apps/developer?id=Engaging+Computing+Group,+UML" class="btn btn-primary img-rounded">
-        <%= image_tag "icon-android.png" %> </a>
+        <%= image_tag "icon-android.png", id: 'play-store-button' %> </a>
       <a class="btn btn-primary disabled img-rounded">
-        <%= image_tag "icon-apple.png" %> </a>
+        <%= image_tag "icon-apple.png", id: 'app-store-button' %> </a>
       <h2>Collect Data Anywhere with Mobile Apps</h2>
       <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>
       <hr class="featurette-divider">
@@ -133,7 +133,7 @@
     <!---End Second Column --->
     
     <!---Third Column--->
-    <div class="col-md-4">
+    <div class="col-md-4 col-lg-4">
       <div class="col-md-12">
         <hr class="featurette-divider invisible"> </hr>
         <h2>What's New</h2>
