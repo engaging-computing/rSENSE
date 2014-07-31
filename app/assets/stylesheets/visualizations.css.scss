@@ -70,6 +70,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller {
       min-height: 120px; // fixed height fixes weird sizing bug in firefox
       max-height: 160px;
       overflow-x: auto; // moves the scrollbar inside the panel
+      overflow-y: auto;
     }
 
     .ui-accordion-header {
