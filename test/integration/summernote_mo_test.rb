@@ -3,6 +3,8 @@ require 'test_helper'
 class SummernoteMoTest < ActionDispatch::IntegrationTest
   include CapyHelper
 
+  fixtures :all
+
   setup do
     Capybara.current_driver = :webkit
   end
