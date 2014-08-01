@@ -21,7 +21,7 @@ class RenameVizTest < ActionDispatch::IntegrationTest
 
     assert page.has_content?('Save Visualization')
 
-    page.execute_script %Q{$('#saveVisButton').click()}
+    page.execute_script "$('#saveVisButton').click()"
 
     assert page.has_content?('Please enter a name for this Visualization:'), 'Name modal'
 

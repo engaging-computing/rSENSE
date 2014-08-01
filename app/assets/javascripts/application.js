@@ -19,8 +19,9 @@
 //= require helpers
 //= require dateParse
 //= require name_popup
+//= require jquery-ui
 //= require jquery_ujs
-//= require jquery.ui.all
+//  require jquery.ui.all
 //= require unsupported
 //= require info_edit
 //= require menu_edit
@@ -41,7 +42,7 @@
 //= require jquery.prettyPhoto
 //= require markerclustererplus
 //= require oms
-//= require bootstrap-colorpicker
+//= require better_colorpicker
 //
 //= require highvis/savedVis
 //= require highvis/visUtils
