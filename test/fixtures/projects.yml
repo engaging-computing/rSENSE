@@ -29,7 +29,7 @@ three:
   is_template: false
   filter: ""
   featured_media_id: 
-  
+
 dessert:
   title: Dessert is Delicious
   user: kate

@@ -8,7 +8,7 @@
  * You're free to add application-wide styles to this file and they'll appear at the top of the
  * compiled file, but it's generally better to create a new file per style scope.
  *
- *= require bootstrap-colorpicker
+ *= require better_colorpicker
  *= require font-awesome
  *= require highvis.css.scss
  *= require ui.jqgrid.css
@@ -55,6 +55,10 @@ body {
 
 .create-button {
   margin-bottom: 2ex;
+}
+
+.data_set_delete, .delete a, .media_delete {
+  color: red;
 }
 
 .footer {
@@ -150,6 +154,11 @@ body {
   box-shadow: 2px 3px 1px grey;
   padding: 2em;
   margin-bottom: 2ex;
+}
+
+.truncate {
+  overflow-x: hidden;
+  text-overflow: ellipsis;
 }
 
 .wide-item {
