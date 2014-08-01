@@ -12,6 +12,8 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     @media_object_keys = ['id', 'mediaType', 'name', 'url', 'createdAt', 'src', 'tn_src']
     @media_object_keys_extended = @media_object_keys + ['project', 'owner']
     @user_keys = ['gravatar', 'name']
+
+    @test_proj = projects(:media_test)
   end
 
   # Get projects listing using defaults
@@ -52,18 +54,19 @@ class ApiV1Test < ActionDispatch::IntegrationTest
 
   # Get project
   test 'get project' do
-    get '/api/v1/projects/1'
+
+    get "/api/v1/projects/#{@test_proj.id}"
     assert_response :success
     assert keys_match(response, @project_keys), 'Keys are missing'
-    assert parse(response)['id'] == 1, 'Should have returned project 1'
+    assert parse(response)['id'] == @test_proj.id, "Should have returned project #{@test_proj.id}"
   end
 
   # Get project with owner/dataSets/mediaObjects
   test 'get project full' do
-    get '/api/v1/projects/1?recur=true'
+    get "/api/v1/projects/#{@test_proj.id}?recur=true"
     assert_response :success
     assert keys_match(response, @project_keys_extended), 'Keys are missing'
-    assert parse(response)['id'] == 1, 'Should have returned project 1'
+    assert parse(response)['id'] == @test_proj.id, "Should have returned project #{@test_proj.id}"
   end
 
   # Create project without giving a name

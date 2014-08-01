@@ -3,6 +3,8 @@ require 'test_helper'
 class SmallPageTest < ActionDispatch::IntegrationTest
   include CapyHelper
 
+  self.use_transactional_fixtures = false
+
   setup do
     Capybara.current_driver = :webkit
     Capybara.default_wait_time = 15
@@ -18,7 +20,8 @@ class SmallPageTest < ActionDispatch::IntegrationTest
     visit '/'
     assert page.has_no_content?('Second Paragraph'), 'Second paragraph should not be shown.'
 
-    visit '/projects/1'
+    proj_id = projects(:media_test).id
+    visit "/projects/#{proj_id}"
 
     find('#content-edit-btn').click
     fill_in_content('')

@@ -8,6 +8,7 @@ class ShowUserTest < ActionDispatch::IntegrationTest
   setup do
     Capybara.current_driver = :webkit
     Capybara.default_wait_time = 15
+
   end
 
   teardown do
@@ -17,7 +18,8 @@ class ShowUserTest < ActionDispatch::IntegrationTest
   test 'contributions' do
     login('nixon@whitehouse.gov', '12345')
 
-    visit '/projects/1'
+    pid = projects(:media_test).id
+    visit "/projects/#{pid}"
     click_on 'Like'
 
     assert find('.like_display').has_content?('1'), 'Like updated'
