@@ -26,9 +26,9 @@ class FileUploader
       # Rails.logger.info "-=-=-=#{file.path}"
       case File.extname(file.original_filename)
       when '.csv' then convert(file.path)
-      when '.xls' then Roo::Excel.new(file.path, nil, :ignore)
-      when '.xlsx' then Roo::Excelx.new(file.path, nil, :ignore)
-      when '.ods' then Roo::OpenOffice.new(file.path, false, :ignore)
+      when '.xls' then Roo::Excel.new(file.path, packed: nil, file_warning: :ignore)
+      when '.xlsx' then Roo::Excelx.new(file.path, packed: nil, file_warning: :ignore)
+      when '.ods' then Roo::OpenOffice.new(file.path, packed: false, file_warning: :ignore)
       when '.gpx' then GpxParser.new.convert(file.path)
       when '.qmbl' then VernierParser.new.convert(file.path)
       else fail "Unknown file type: #{file.original_filename}"

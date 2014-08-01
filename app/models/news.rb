@@ -1,3 +1,5 @@
+require 'nokogiri'
+
 class News < ActiveRecord::Base
   include ActionView::Helpers::DateHelper
 
@@ -9,6 +11,7 @@ class News < ActiveRecord::Base
   alias_attribute :owner, :user
 
   validates_presence_of :title
+  before_save :summernote_media_objects
 
   def to_hash(recurse = false)
     h = {
@@ -31,5 +34,9 @@ class News < ActiveRecord::Base
     end
 
     h
+  end
+
+  def summernote_media_objects
+    self.content = MediaObject.create_media_objects(content, 'news_id', id, user_id)
   end
 end

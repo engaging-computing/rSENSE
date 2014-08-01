@@ -1,4 +1,4 @@
-
+require 'base64'
 require 'store_file'
 
 class MediaObject < ActiveRecord::Base
@@ -129,6 +129,42 @@ class MediaObject < ActiveRecord::Base
     nmo.add_tn
     nmo.save!
     nmo
+  end
+
+  def summernote_image(image_data, file_type, type, item_id, owner_id)
+    send("#{type}=", item_id)
+    unless owner_id.nil?
+      self.user_id = owner_id
+    end
+    self.media_type = 'image'
+    self.name = 'Uploaded Image ' + SecureRandom.hex[0...5] + "#{file_type}"
+    self.file = name.split('.')[0] + SecureRandom.hex + '.' + name.split('.')[1]
+    sanitize_media
+    self.store_key = nil
+    self.check_store!
+    File.open("#{file_name}", 'wb+') do |f|
+      f.write image_data
+      f.chmod(0644)
+    end
+    add_tn
+    self.save!
+  end
+
+  def self.create_media_objects(description, type, item_id, owner_id = nil)
+    text = Nokogiri::HTML.fragment(description)
+    text.search('img').each do |picture|
+      if picture['src'].include?('data:image')
+        data = Base64.decode64(picture['src'].partition('/')[2].split('base64,')[1])
+        if picture['src'].partition('/')[2].split('base64,')[0].include? 'png'
+          file_type = '.png'
+        else file_type = '.jpg'
+        end
+        summernote_mo = MediaObject.new
+        summernote_mo.summernote_image(data, file_type, type, item_id, owner_id)
+        picture['src'] = summernote_mo.src
+      end
+    end
+    text.to_s
   end
 
   private
