@@ -1,43 +1,45 @@
-.POST
-{
-  background-color: green;
-  color: white;
-  width: 5em;
-  text-align: center;
-}
-
-.GET
-{
-  background-color: blue;
-  color: white;
-  width: 5em;
-  text-align: center;
-}
-
-.method
-{
-  text-align: center;
-  width: 10em;
-}
-
-.args
-{
-  width: 30em;
-}
-
-.code
-{
-  font-family:"Courier New", Courier, monospace;
-}
-
-.api
-{
-  .def
+body[data-page-name="home/api_v1"] {
+  .POST
   {
+    background-color: green;
+    color: white;
+    width: 5em;
+    text-align: center;
   }
 
-  .more
+  .GET
   {
-    display: none;
+    background-color: blue;
+    color: white;
+    width: 5em;
+    text-align: center;
+  }
+
+  .method
+  {
+    text-align: center;
+    width: 10em;
+  }
+
+  .args
+  {
+    width: 30em;
+  }
+
+  .code
+  {
+    font-family:"Courier New", Courier, monospace;
+  }
+
+  .api
+  {
+    .def
+    {
+    }
+
+    .more
+    {
+      display: none;
+    }
   }
 }
