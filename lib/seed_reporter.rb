@@ -1,7 +1,6 @@
 module Minitest
   module Reporters
     class SeedReporter < BaseReporter
-
       def initialize(options = {})
         super
         @options = options
@@ -32,7 +31,6 @@ module Minitest
       def report
         super
       end
-
     end
   end
 end
