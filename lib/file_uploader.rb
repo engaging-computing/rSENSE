@@ -159,7 +159,7 @@ class FileUploader
         types['text'].push column[0]
       elsif column[0].casecmp('LATITUDE') == 0 or column[0].casecmp('LAT') == 0
         types['latitude'].push column[0]
-      elsif column[0].casecmp('LONGITUDE') == 0 or column[0].casecmp('LONG') == 0
+      elsif column[0].casecmp('LONGITUDE') == 0 or column[0].casecmp('LON') == 0
         types['longitude'].push column[0]
       end
     end
