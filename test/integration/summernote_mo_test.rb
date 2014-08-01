@@ -3,6 +3,8 @@ require 'test_helper'
 class SummernoteMoTest < ActionDispatch::IntegrationTest
   include CapyHelper
 
+  fixtures :all
+
   setup do
     Capybara.current_driver = :webkit
   end
@@ -54,7 +56,8 @@ class SummernoteMoTest < ActionDispatch::IntegrationTest
     assert !(page.find('#content-viewer').find('img')[:src].include? 'data:image')
     click_on 'Logout'
   end
-  test 'news_image_uplaod' do
+
+  test 'news_image_upload' do
     login 'nixon@whitehouse.gov', '12345'
     visit '/news'
     page.find('#news_title').set('Test News Article')

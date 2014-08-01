@@ -4,97 +4,7 @@ window.setupEditTable = () ->
     offset = 0
     if namespace.action is "manualEntry"
       offset = 1
-    #-----------------------------------------------------------------------
-    # Map Specific Code
-    #-----------------------------------------------------------------------
-    for x in window.fields
-
-      #Check if there is location in the experiment
-      if x["name"] == "Latitude"
-
-        #If there is location add the map picker modal dialog
-        ($ ".mainContent").append """
-          <div id="map_picker" class="modal fade" role="dialog" aria-hidden="true">
-              <div class="modal-content">
-                <div class="modal-body">
-                  <div id="map_canvas" style="width:100%; height:300px"></div><br/>
-                </div>
-                <div class="modal-footer">
-                  <div class="row">
-                    <div class="col-md-2">
-                      <label for="address class="control-label">Address: </label>
-                    </div>
-                    <div class="col-md-7">
-                      <input id="address" class="form-control" type="text"/>
-                    </div>
-                    <div class="col-md-3">
-                      <button class="btn btn-primary pull-right" id="apply_location">Apply</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-          </div>"""
-
-        #Set up the Map and geocoder
-        latlng = new google.maps.LatLng(42.6333,-71.3167)
-        options =
-          zoom: 16
-          center: latlng
-        window.map = new google.maps.Map(document.getElementById("map_canvas"), options)
-
-        window.geocoder = new google.maps.Geocoder()
-
-        marker_options =
-          map: window.map
-          draggable: true
-
-        window.marker = new google.maps.Marker marker_options
-
-        #Event to grab lat/lon when the marker is released on the map
-        google.maps.event.addListener window.marker, 'dragend', ->
-          window.geocoder.geocode {'latLng': window.marker.getPosition()},(results, status) ->
-            if (status == google.maps.GeocoderStatus.OK)
-              if (results[0])
-                $('#address').val(results[0].formatted_address)
-
-        #Add autocomplete to the dialog with responses from the geocoder.
-        ($ "#address").autocomplete
-          #This bit uses the geocoder to fetch address values
-          source: (request, response) ->
-            window.geocoder.geocode {'address': request.term }, (results, status) ->
-              response $.map results, (item) ->
-                x =
-                  label:  item.formatted_address
-                  value: item.formatted_address
-                  latitude: item.geometry.location.lat()
-                  longitude: item.geometry.location.lng()
-          #This bit is executed upon selection of an address
-          select: (event, ui) ->
-            location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude)
-            window.marker.setPosition(location)
-            window.map.setCenter(location)
-
-        ($ "#address").autocomplete("option","appendTo","#map_picker")
-
-        #Maps are dumb and need to be resized if shown in a dynamicly sized window
-        ($ '#map_picker').on 'shown.bs.modal', () ->
-          google.maps.event.trigger window.map, "resize"
-
-        #What to do when a location is picked
-        ($ "#apply_location").click ->
-          ($ "#map_picker").modal('hide')
-          location = window.marker.getPosition()
-
-          ($ '.target').find('.validate_longitude').val(location.lng())
-          ($ '.target').find('.validate_latitude').val(location.lat())
-          ($ '.target').removeClass('target')
-
-        ($ "#map_picker").on "hidden", ->
-          ($ '.target').removeClass('target')
-    #-----------------------------------------------------------------------
-    # End of Map Specific Code
-    #-----------------------------------------------------------------------
-
+     
   $.fn.extend
     editTable: (options) ->
       settings =
@@ -225,27 +135,11 @@ window.setupEditTable = () ->
               
             do (col) ->
               ($ row).children().eq(col - offset ).find('input').replaceWith """
-                <div class='input-group'>
+                <div class=''>
                   <input class='validate_longitude form-control ' id='appendedInput' type='text'
                     value="#{ val }" />
-                  <span class='input-group-btn'>
-                    <a href='#' tabindex='32767' class="btn btn-default map_picker">
-                      <i class='fa fa-globe'></i>
-                    </a>
-                  </span>
                 </div>"""
-                
-              #value='#{ ($ row).find('input').eq(col).val() }'
-              ($ row).children().eq(col - offset).find('.map_picker').unbind().click ->
-                ($ this).closest("tr").addClass('target')
-                previous_lon = ($ this).closest('tr').find('.validate_longitude').val()
-                previous_lat = ($ this).closest('tr').find('.validate_latitude').val()
-                if (previous_lat != "") and (previous_lon != "")
-                  location = new google.maps.LatLng(previous_lat, previous_lon)
-                  window.marker.setPosition(location)
-                  window.map.setCenter(location)
-                  ($ '#address').val("")
-                ($ '#map_picker').modal()
+              
 
           for col in text_cols
             do (col) ->
@@ -254,16 +148,11 @@ window.setupEditTable = () ->
           for col in time_cols
             do (col) ->
               ($ row).children().eq(col - offset).find('input').replaceWith """
-                <div class='input-group datepicker'>
+                <div class='datepicker'>
                   <input class='validate_timestamp  form-control' type='text'
                     data-format='yyyy/MM/dd hh:mm:ss' value='#{ ($ row).find('input').eq(col - offset).val() }' />
-                  <span class='input-group-btn'>
-                    <a href='#' tabindex='32767' class="btn btn-default">
-                      <i class='fa fa-calendar'></i>
-                    </a>
-                  </span>
                 </div>"""
-              ($ row).children().eq(col - offset).find('.datepicker').unbind().datetimepicker()
+#               ($ row).children().eq(col - offset).find('.datepicker').unbind().datetimepicker()
 
         add_row = (tab) ->
           # create a string of the new row
@@ -292,26 +181,7 @@ window.setupEditTable = () ->
           # bind row removal
           ($ '.new_row').find('.close').click ->
             remove_row(@)
-          # bind map button
-          ($ '.new_row').find('.map_picker').click ->
-            ($ @).closest("tr").addClass('target')
-            previous_lon = ($ this).closest('tr').find('.validate_longitude').val()
-            previous_lat = ($ this).closest('tr').find('.validate_latitude').val()
-            if (previous_lat != "") and (previous_lon != "")
-              location = new google.maps.LatLng(previous_lat, previous_lon)
-              window.marker.setPosition(location)
-              window.map.setCenter(location)
-              ($ '#address').val("")
-            ($ '#map_picker').modal()
-
-          # bind time to input
-          dtp = ($ '.new_row').find('.datepicker')
-          if dtp?
-            $(dtp).each (item) ->
-              item.datetimepicker()
-              item.on 'changeDate', (e) ->
-                ($ e.target).find('input').trigger 'change'
-
+         
           # remove token
           ($ '.new_row').removeClass('new_row')
 
@@ -474,24 +344,6 @@ window.setupEditTable = () ->
           ($ @).click ->
             remove_row(@)
             
-
-        # bind map button
-        ($ 'td').find('.map_picker').click ->
-          ($ this).closest("tr").addClass('target')
-          previous_lon = ($ this).closest('tr').find('.validate_longitude').val()
-          previous_lat = ($ this).closest('tr').find('.validate_latitude').val()
-          if (previous_lat != "") and (previous_lon != "")
-            location = new google.maps.LatLng(previous_lat, previous_lon)
-            window.marker.setPosition(location)
-            window.map.setCenter(location)
-            ($ '#address').val("")
-          ($ '#map_picker').modal()
-
-        #bind time button
-        ($ '.datepicker').each (item) ->
-          item.datetimepicker()
-          item.on 'changeDate', (e) ->
-            ($ e.target).find('input').trigger 'change'
 
         # add row functionality
         ($ '#edit_table_add').click ->

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class SmallPageTest < ActionDispatch::IntegrationTest
+class ManualEntryTest < ActionDispatch::IntegrationTest
   include CapyHelper
 
   setup do
@@ -9,10 +9,11 @@ class SmallPageTest < ActionDispatch::IntegrationTest
   end
 
   teardown do
+    finish
   end
 
   def set_cell(ii, val)
-    page.execute_script %Q{$($('#manualTable input')[#{ii}]).val(#{val})}
+    page.execute_script "$($('#manualTable input')[#{ii}]).val(#{val})"
   end
 
   test 'manual entry of datasets' do
