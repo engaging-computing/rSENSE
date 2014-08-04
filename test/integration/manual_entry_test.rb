@@ -56,7 +56,6 @@ class ManualEntryTest < ActionDispatch::IntegrationTest
     click_on 'Manual Entry'
 
     fill_in 'Dataset Name', with: 'I Like Pies'
-    fill_in 'Your Name', with: 'Strong Mad'
     click_on 'Add Row'
 
     set_cell(0, 1)
@@ -68,6 +67,6 @@ class ManualEntryTest < ActionDispatch::IntegrationTest
 
     click_on 'Save'
 
-    assert page.has_content?('I Like Pies - Strong Mad'), 'Dataset Name'
+    assert page.has_content?('I Like Pies'), 'Dataset Name'
   end
 end
