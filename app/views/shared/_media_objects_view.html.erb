@@ -1,8 +1,8 @@
-<div id="media_object_list" type="<%=type%>" obj_id="<%=object.id%>">
+<div id="media_object_list">
   <table id="media_table" class="table table-striped">
-    <thead>
      <% object.media_objects.to_a.each_with_index do |mo, i| %>
-      <% if !mo.media_type.nil? and i == 0 %>
+      <% if !mo.media_type.nil? && i == 0 %>
+       <thead>
        <tr>
         <th style="max-width:10%">File</th>
         <th style="max-width:60%">Name</th>
@@ -12,9 +12,8 @@
         <% end %>
         <% if ["Project","News","Tutorial"].include? object.class%><th style="max-width:10%">Display</th><%end%>
       </tr>
-    </thead>
+      </thead>
     <% end %>
-    <tbody>
         <% if !mo.owner.nil? %>
           <tr class="<%= cycle('feed-even','feed-odd') %> media">
             <% if !(mo.media_type == 'image') %>
@@ -46,7 +45,6 @@
           </tr>
         <%end%>
       <% end %>
-    </tbody>
   </table>
  
   <% if can_edit? object%>

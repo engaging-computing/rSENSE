@@ -14,6 +14,7 @@ class ProjectsControllerTest < ActionController::TestCase
     get :index
     assert_response :success
     assert_not_nil assigns(:projects)
+    assert_valid_html response.body
   end
 
   test 'should get index (json)' do
@@ -26,6 +27,8 @@ class ProjectsControllerTest < ActionController::TestCase
     views_before = @project_one.views
     get :show,  id: @project_one
     assert_response :success
+    # FIXME
+    # assert_valid_html response.body
 
     @pp = Project.find(@project_one.id)
     assert @pp.views == views_before + 1, 'View count incremented'
@@ -61,6 +64,7 @@ class ProjectsControllerTest < ActionController::TestCase
   test 'should get edit' do
     get :edit, { id: @project_one },  user_id: @nixon
     assert_response :success
+    assert_valid_html response.body
   end
 
   test 'should update project' do
