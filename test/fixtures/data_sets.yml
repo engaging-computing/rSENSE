@@ -21,7 +21,11 @@ needs_media:
   title: Needs Media
   user: nixon
   project: one
-  id: 1
+
+media_test:
+  title: Needs Media
+  user: nixon
+  project: one
 
 kates_dataset_in_locked_project:
   title: Shouldnt be editable

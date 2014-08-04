@@ -3,6 +3,8 @@ require 'test_helper'
 class UploadMediaTest < ActionDispatch::IntegrationTest
   include CapyHelper
 
+  self.use_transactional_fixtures = false
+
   setup do
     Capybara.current_driver = :webkit
     Capybara.default_wait_time = 15
@@ -16,7 +18,8 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
     login('nixon@whitehouse.gov', '12345')
 
     # Upload media to tutorial
-    visit '/tutorials/1'
+    tut_id = tutorials(:media_test).id
+    visit "/tutorials/#{tut_id}"
     assert page.has_content? 'Media'
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
     page.execute_script "$('#upload').show()"
@@ -28,7 +31,9 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
     page.execute_script 'window.confirm = function () { return true }'
 
     # Upload media to news
-    visit '/news/1'
+    proj_id = projects(:media_test).id
+    news_id = news(:media_test).id
+    visit "/news/#{news_id}"
     assert page.has_content? 'Media'
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
     page.execute_script "$('#upload').show()"
@@ -36,7 +41,7 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
     assert page.has_content?('nerdboy.jpg'), 'File should be in list'
     find('.media_edit').click
     assert page.has_content?('nerdboy.jpg'), 'Should have gone to edit page'
-    visit '/news/1'
+    visit "/news/#{news_id}"
     find('.menu_edit_link').click
     find('.menu_delete').click
     # Capybara-webkit needs the window.confirm hack instead.
@@ -44,7 +49,7 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
     # No more Selenium, use this instead
     page.driver.browser.accept_js_confirms
     # Upload media to project
-    visit '/projects/1'
+    visit "/projects/#{proj_id}"
     assert page.has_content? 'Media'
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
     page.execute_script "$('#upload').show()"
@@ -52,7 +57,7 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
     assert page.has_content?('nerdboy.jpg'), 'File should be in list'
 
     # Upload media to project
-    visit '/projects/1'
+    visit "/projects/#{proj_id}"
     assert page.has_content? 'Media'
     text_path = Rails.root.join('test', 'CSVs', 'test.txt')
     page.execute_script "$('#upload').show()"
@@ -60,7 +65,7 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
     assert page.has_content?('test.txt'), 'File should be in list'
 
     # Upload media to project
-    visit '/projects/1'
+    visit "/projects/#{proj_id}"
     assert page.has_content? 'Media'
     pdf_path = Rails.root.join('test', 'CSVs', 'test.pdf')
     page.execute_script "$('#upload').show()"
@@ -68,7 +73,7 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
     assert page.has_content?('test.pdf'), 'File should be in list'
 
     # Upload media to project
-    visit '/projects/1'
+    visit "/projects/#{proj_id}"
     assert page.has_content? 'Media'
     ods_path = Rails.root.join('test', 'CSVs', 'test.ods')
     page.execute_script "$('#upload').show()"
@@ -76,22 +81,22 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
     assert page.has_content?('test.ods'), 'File should be in list'
 
     # Test for media objects helpers
-    visit '/projects/1'
+    visit "/projects/#{proj_id}"
     assert page.has_css?('.media_edit')
     all('.media_edit')[0].click
     assert page.has_content?('nerdboy.jpg')
 
-    visit '/projects/1'
+    visit "/projects/#{proj_id}"
     assert page.has_css?('.media_edit')
     all('.media_edit')[1].click
     assert page.has_content? 'Warning'
 
-    visit '/projects/1'
+    visit "/projects/#{proj_id}"
     assert page.has_css?('.media_edit')
     all('.media_edit')[2].click
     assert page.has_content? 'Warning'
 
-    visit '/projects/1'
+    visit "/projects/#{proj_id}"
     assert page.has_css?('.media_edit')
     all('.media_edit')[2].click
     assert page.has_content? 'Warning'

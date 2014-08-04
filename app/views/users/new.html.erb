@@ -21,22 +21,22 @@
         </div>
         <div class="panel-body">
           <div class="form-group">
-            <%= label_tag(:name, "Real Name:") %>
+            <%= ff.label(:name, "Real Name:") %>
             <%= ff.text_field :name, class: "form-control", placeholder: "Bob D.", autofocus: true %>
           </div>
           
           <div class="form-group">
-            <%= label_tag(:email, "Email:") %>
+            <%= ff.label(:email, "Email:") %>
             <%= ff.text_field :email, class: "form-control", placeholder: "Required, allows you to reset your password." %>
           </div>
           
           <div class="form-group">
-            <%= label_tag(:password, "Password:") %>
+            <%= ff.label(:password, "Password:") %>
             <%= ff.password_field :password, class: "form-control", placeholder: "Can contain any letters, number, and punctuation." %>
           </div>
           
           <div class="form-group">
-            <%= label_tag(:password_confirmation, "Password Confirmation:") %>
+            <%= ff.label(:password_confirmation, "Password Confirmation:") %>
             <%= ff.password_field :password_confirmation, class: "form-control", placeholder: "Retype your password." %>
           </div>
         </div>
