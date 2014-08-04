@@ -23,9 +23,8 @@ class CloneProjectTest < ActionDispatch::IntegrationTest
 
     click_on 'Projects'
 
-    click_on 'Create Project'
     find('#project_title').set('Das Cloning Projekt')
-    click_on 'Create'
+    click_on 'Create Project'
 
     find('#manual_fields').click
     find('#new_field').find(:xpath, 'option[2]').select_option

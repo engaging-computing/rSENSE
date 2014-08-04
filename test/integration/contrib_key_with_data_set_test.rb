@@ -16,9 +16,8 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     login('kcarcia@cs.uml.edu', '12345')
     visit '/'
     click_on 'Projects'
-    click_on 'Create Project'
     find('#project_title').set('Contributor Key Test Project')
-    click_on 'Create'
+    click_on 'Create Project'
     find('#manual_fields').click
     find('#new_field').find(:xpath, 'option[2]').select_option
     assert page.has_content? 'Field added'
