@@ -51,6 +51,21 @@ class ActiveSupport::TestCase
     assert_nil long.to_s.index(short.to_s),
       "String contains #{short}"
   end
+
+  def assert_valid_html(text)
+    temp = Tempfile.new(['foo', '.html'])
+    begin
+      temp.write(text)
+      temp.close
+
+      script = Rails.root.join('test', 'html5check.py')
+      result = `(python "#{script}" --encoding=utf-8 "#{temp.path}") 2>&1`
+
+      assert result =~ /^The document is valid HTML5/, "HTML invalid:\n#{result}"
+    ensure
+      temp.unlink
+    end
+  end
 end
 
 class ActionDispatch::IntegrationTest

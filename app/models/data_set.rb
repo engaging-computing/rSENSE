@@ -31,13 +31,11 @@ class DataSet < ActiveRecord::Base
   end
 
   def self.search(search)
-    res = if search
-            where('title LIKE ?', "%#{search}%").order('created_at DESC')
-          else
-            all.order('created_at DESC')
-          end
-
-    res
+    if search
+      where('title LIKE ?', "%#{search}%").order('created_at DESC')
+    else
+      all.order('created_at DESC')
+    end
   end
 
   def to_hash(recurse = true)
