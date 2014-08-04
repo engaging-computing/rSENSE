@@ -17,10 +17,8 @@ class UploadDataTest < ActionDispatch::IntegrationTest
 
     # Add a project
     click_on 'Projects'
-    click_on 'Create Project'
-    assert page.has_content?('What would you like to name your project?')
     find('#project_title').set('File Types')
-    click_on 'Create'
+    click_on 'Create Project'
     assert page.has_content?('Fields'), "Project page should have 'Fields'"
 
     # Test CSV upload by creating fields

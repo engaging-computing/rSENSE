@@ -1,3 +1,20 @@
+<% if @cur_user.try(:id) %>
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-default create-form">
+      <h4><i class="fa fa-plus-circle"></i> Create a New Project</h4>
+      <%= form_for(@project, html: { class: "form-inline" }) do |f| %>
+        <div class="form-group">
+          <%= f.label :name, "Project Name" %>
+          <%= f.text_field :title, class: "form-control wide-input", placeholder: "My Awesome Experiment"%>
+        </div>
+        <%= button_tag 'Create Project', type: 'submit', class: 'btn btn-success'%>
+      <% end %>
+    </div>
+	</div>
+</div> 
+<% end %>
+
 <div class="row">
   <div class="col-lg-12">
     <div class="search-box">
@@ -64,20 +81,9 @@
   </div>
 </div>
 
-<% if @cur_user.try(:id) %>
-  <div class="row">
-    <div class="col-xs-12 center create-button">
-      <div id="addProjectButton" class="btn-group btn-group-justified">
-        <a href="/projects/new" class="btn btn-success col-md-12"><h4>Create Project</h4></a>
-      </div>
-    </div>
-  </div>
-<% end %>
-
 <div class="row">
   <div id="projects" class="isotope_container" >
     <div class="isotope_pane">
-    
       <% @projects.each do |pr| %>
         <% @box_project = pr %>
         <%= render "shared/project_box" %>

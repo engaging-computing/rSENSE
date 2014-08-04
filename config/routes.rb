@@ -25,7 +25,7 @@ Rsense::Application.routes.draw do
 
   get 'projects/create' => 'projects#create'
   post 'projects/create' => 'projects#create'
-  resources :projects
+  resources :projects, except: [:new]
 
   # match "tutorials/create" => "tutorials#create"
   post '/tutorials/switch/' => 'tutorials#switch'
