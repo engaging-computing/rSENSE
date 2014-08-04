@@ -45,19 +45,6 @@ $ ->
         @rel_data = []
         @selected_field = @displayField
         @getGroupedData()
-
-        ###for dp in data.dataPoints
-          do =>
-            @rel_data.push dp[@selected_field]
-
-        sum = @rel_data.reduce (x, y) -> x + y
-
-        #if (sum > 95 and sum <= 100) or (sum > .95 and sum <= 1)
-        #  @use_value = true
-        #else
-        #  @use_value = false
-        
-        @use_value = true###
         
         while @chart.series.length > 0
           @chart.series[@chart.series.length - 1].remove false
@@ -68,40 +55,6 @@ $ ->
             @select_name = data.textFields[2]
           else
             @select_name = 'Percent'
-
-        ###if @use_value is true
-          @display_data = []
-
-          if data.groupingFieldIndex is 1 or data.groupingFieldIndex is 2
-            row_index = 0
-
-            for dp in @rel_data
-              do =>
-                @display_data.push [data.dataPoints[row_index][@select_name], dp]
-                row_index++
-          else
-            
-
-        else
-          @display_data = []
-          #select name could be group by
-          @display_data.push ["#{data.dataPoints[0][@selected_field]}", 1]
-          
-          for dp in data.dataPoints[1..]
-            do =>
-              exist = []
-              for existence in @display_data
-                do =>
-                  exist.push existence[0]
-              if "#{dp[@selected_field]}" in exist
-                for find_name in @display_data
-                  do =>
-                    if find_name[0] == "#{dp[@selected_field]}"
-                      find_name[1] += 1
-              else
-                @display_data.push ["#{dp[@selected_field]}", 1]
-
-          @normalize()###
 
         options =
           showInLegend: false
@@ -134,20 +87,10 @@ $ ->
             tmp[dp[data.groupingFieldIndex].toLowerCase()] += dp[@selected_field]
 
         @display_data = []
-        values = (value for key, value of tmp)
-        keys = (key for key, value of tmp)
-        
-        for val in values
+        for dp of tmp
           do =>
-            for key in keys
-              do =>
-                @display_data.push [key, val] unless tmp[key] isnt val
-            
-        #for key, value of tmp
-        #  @display_data.push [key, value]
-          
-        console.log @display_data
-            
+            @display_data.push [dp, tmp[dp]]
+
       buildOptions: ->
         super()
 
