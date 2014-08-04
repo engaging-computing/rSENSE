@@ -69,17 +69,17 @@ $ ->
         sum = 0
 
         for dp in @display_data
-          do =>
+          do ->
             sum += dp[1]
 
         for dp in @display_data
-          do =>
-            dp[1] = ( dp[1] / sum ) *100
+          do ->
+            dp[1] = ( dp[1] / sum ) * 100
 
       getGroupedData: ->
         tmp = {}
         for group in data.groups
-          do =>
+          do ->
             tmp[group.toLowerCase()] = 0
             
         for dp in data.dataPoints
@@ -115,7 +115,7 @@ $ ->
                   color: 'black'
           series: [{
             type: 'pie'
-            data: 
+            data:
               [['Firefox', 50], ['Other', 50]]
             }]
 
@@ -124,7 +124,7 @@ $ ->
         controls += "<h3 class='clean_shrink'><a href='#'>Label:</a></h3>"
         controls += "<div class='outer_control_div'>"
         for fields, f_index in data.textFields[2..]
-          do =>
+          do ->
             controls += "<div class='inner_control_div'><div class='radio'><label>#{data.fields[fields].fieldName}"
             controls += "<input class='label_input' type='radio' name='labels' value='#{fields}'"
             if f_index == 0
