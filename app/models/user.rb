@@ -15,7 +15,7 @@ class User < ActiveRecord::Base
   has_secure_password
 
   before_save :sanitize_user
-
+  before_save :summernote_media_objects
   has_many :projects
   has_many :data_sets
   has_many :media_objects
@@ -57,8 +57,8 @@ class User < ActiveRecord::Base
 
     if recurse
       h.merge!(
-        dataSets:       data_sets.search(false, show_hidden).map      { |o| o.to_hash false },
-        mediaObjects:   media_objects.map  { |o| o.to_hash false },
+        dataSets:       data_sets.search(false).map                   { |o| o.to_hash false },
+        mediaObjects:   media_objects.map                             { |o| o.to_hash false },
         projects:       projects.search(false, show_hidden).map       { |o| o.to_hash false },
         tutorials:      tutorials.search(false, show_hidden).map      { |o| o.to_hash false },
         visualizations: visualizations.search(false, show_hidden).map { |o| o.to_hash false }
@@ -71,6 +71,10 @@ class User < ActiveRecord::Base
     key = SecureRandom.hex(16)
     self.validation_key = SecureRandom.hex(16)
     key
+  end
+
+  def summernote_media_objects
+    self.bio = MediaObject.create_media_objects(bio, 'user_id', id)
   end
 end
 

@@ -15,6 +15,7 @@ class UsersControllerTest < ActionController::TestCase
     get :index, {},  user_id: @admin
     assert_response :success
     assert_not_nil assigns(:users)
+    assert_valid_html response.body
   end
 
   test 'should get index paged' do
@@ -38,6 +39,7 @@ class UsersControllerTest < ActionController::TestCase
   test 'should get new' do
     get :new
     assert_response :success
+    assert_valid_html response.body
   end
 
   test 'should create user' do
@@ -63,15 +65,17 @@ class UsersControllerTest < ActionController::TestCase
     end
 
     assert_response :success
+    assert_valid_html response.body
 
     john = User.find_by_email('johnf@example.com')
-
     assert_nil john
   end
 
   test 'should show user' do
     get :show, { id: @user },  user_id: @user
     assert_response :success
+    # FIXME
+    # assert_valid_html response.body
   end
 
   test 'should show user with contributions' do
@@ -97,6 +101,7 @@ class UsersControllerTest < ActionController::TestCase
   test 'should get edit' do
     get :edit, { id: @user },  user_id: @user
     assert_response :success
+    assert_valid_html response.body
   end
 
   test 'should update user' do
@@ -172,6 +177,7 @@ class UsersControllerTest < ActionController::TestCase
   test 'should show password reset request form' do
     get :pw_request
     assert_response :success
+    assert_valid_html response.body
   end
 
   test 'should send password reset email for email' do
@@ -219,6 +225,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :success
     assert_contains 'New Password', response.body
     assert_not_contains 'Current Password', response.body
+    assert_valid_html response.body
   end
 
   test 'password change form should fail for other user' do

@@ -26,9 +26,9 @@ class FileUploader
       # Rails.logger.info "-=-=-=#{file.path}"
       case File.extname(file.original_filename)
       when '.csv' then convert(file.path)
-      when '.xls' then Roo::Excel.new(file.path, nil, :ignore)
-      when '.xlsx' then Roo::Excelx.new(file.path, nil, :ignore)
-      when '.ods' then Roo::OpenOffice.new(file.path, false, :ignore)
+      when '.xls' then Roo::Excel.new(file.path, packed: nil, file_warning: :ignore)
+      when '.xlsx' then Roo::Excelx.new(file.path, packed: nil, file_warning: :ignore)
+      when '.ods' then Roo::OpenOffice.new(file.path, packed: false, file_warning: :ignore)
       when '.gpx' then GpxParser.new.convert(file.path)
       when '.qmbl' then VernierParser.new.convert(file.path)
       else fail "Unknown file type: #{file.original_filename}"
@@ -147,6 +147,8 @@ class FileUploader
     types = {}
     types['text'] = []
     types['timestamp'] = []
+    types['latitude'] = []
+    types['longitude'] = []
 
     regex = %r{.(?<year>\d{4})(-|\/)(?<month>\d{1,2})(-|\/)(?<day>\d{1,2})}
 
@@ -155,6 +157,10 @@ class FileUploader
         types['timestamp'].push column[0]
       elsif !(column[1]).map { |dp| valid_float?(dp) }.reduce(:&)
         types['text'].push column[0]
+      elsif column[0].casecmp('LATITUDE') == 0 or column[0].casecmp('LAT') == 0
+        types['latitude'].push column[0]
+      elsif column[0].casecmp('LONGITUDE') == 0 or column[0].casecmp('LON') == 0
+        types['longitude'].push column[0]
       end
     end
     types

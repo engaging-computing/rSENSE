@@ -40,7 +40,12 @@
     <%= title_and_edit_menu(@visualization) %>
 
     <div>
-      <b>Project:</b> <%=link_to @visualization.project.title, project_path(@visualization.project)%>
+      <b>Project:</b> 
+      <% if @project.nil? || @project.hidden? %>
+        deleted
+      <% else %>
+        <%= link_to @visualization.project.title, project_path(@visualization.project) %>
+      <% end %>
     </div>
     <div>
       <b>Owner:</b> <%= link_to @visualization.owner.name, user_path(@visualization.owner)%>

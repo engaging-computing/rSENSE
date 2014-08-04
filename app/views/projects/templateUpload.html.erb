@@ -25,6 +25,14 @@
                   <select name="headers[<%=header%>]", class="form-control">
                     <%=options_for_select(@options,get_field_type('Timestamp'))%>
                   </select>
+                <%elsif @types['latitude'].include? header%>
+                  <select name="headers[<%=header%>]", class="form-control">
+                    <%=options_for_select(@options,get_field_type('Latitude'))%>
+                  </select>
+                <%elsif @types['longitude'].include? header%>
+                  <select name="headers[<%=header%>]", class="form-control">
+                    <%=options_for_select(@options,get_field_type('Longitude'))%>
+                  </select>
                 <%else%>
                   <select name="headers[<%=header%>]", class="form-control">
                     <%=options_for_select(@options,get_field_type('Number'))%>

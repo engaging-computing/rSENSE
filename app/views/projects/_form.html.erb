@@ -83,7 +83,7 @@
           <% if can_delete? @project %>
             <%= link_to raw(
               '<div class="btn btn-danger"><i class="fa fa-times-circle"></i>  Delete Project </div>'),
-              @project, method: :delete %>
+              @project, method: :delete, data: { confirm: "Really delete project?" } %>
           <% else %>
             <div class="btn btn-danger disabled">
               <i class="fa fa-times-circle"></i>  Delete Project
@@ -98,7 +98,7 @@
     </div>
     
     <div class="panel-footer text-center">
-      <a href='<%= url_for @project %>'> <button type="button" class="btn btn-danger"> Cancel </button></a>
+      <a href='<%= url_for @project %>' class="btn btn-danger"> Cancel </a>
       <button type="submit" name="commit" class="btn btn-primary"> Submit </button>
     </div>
   </div>
@@ -162,5 +162,4 @@
     </table>
   </div>
 </div>
-  </div>
 </div>

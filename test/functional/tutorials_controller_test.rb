@@ -11,6 +11,7 @@ class TutorialsControllerTest < ActionController::TestCase
     get :index
     assert_response :success
     assert_not_nil assigns(:tutorials)
+    assert_valid_html response.body
   end
 
   test 'should get index sorted' do
@@ -26,7 +27,6 @@ class TutorialsControllerTest < ActionController::TestCase
   test 'should get index paged' do
     get :index, format: 'json', per_page: '1'
     assert JSON.parse(response.body).length == 1, 'Should have only had one tutorial returned'
-    assert_response :success
   end
 
   test 'should get index searched' do
@@ -55,11 +55,13 @@ class TutorialsControllerTest < ActionController::TestCase
   test 'should show tutorial' do
     get :show, id: @tutorial
     assert_response :success
+    assert_valid_html response.body
   end
 
   test 'should get edit' do
     get :edit, { id: @tutorial },  user_id: @nixon
     assert_response :success
+    assert_valid_html response.body
   end
 
   test 'should update tutorial' do
