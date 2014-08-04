@@ -284,8 +284,7 @@ class DataSetsController < ApplicationController
       uploader = FileUploader.new
       data_obj = uploader.generateObject(params[:file])
       @results = uploader.match_headers(project, data_obj)
-
-      @default_name = DataSet.get_next_name(project)
+      @filename = params[:file].original.split('.')[0]
 
       respond_to do |format|
         format.html
