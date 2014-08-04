@@ -17,6 +17,7 @@ class VisualizationsControllerTest < ActionController::TestCase
     get :index
     assert_response :success
     assert_not_nil assigns(:visualizations)
+    assert_valid_html response.body
   end
 
   test 'should create visualization' do
@@ -31,16 +32,21 @@ class VisualizationsControllerTest < ActionController::TestCase
   test 'should show visualization' do
     get :show, { id: @vis2.id },  user_id: @kate.id
     assert_response :success
+
+    # FIXME
+    # assert_valid_html response.body
   end
 
   test 'should show thanksgiving dinner data' do
     get :displayVis,  id: @tgd.project_id, datasets: [@tgd.id]
     assert_response :success
+    assert_valid_html response.body
   end
 
   test 'should get edit' do
     get :edit, { id: @vis2 },  user_id: @admin
     assert_response :success
+    assert_valid_html response.body
   end
 
   test 'should update visualization' do
@@ -61,5 +67,8 @@ class VisualizationsControllerTest < ActionController::TestCase
   test 'should for realz show viz' do
     get :displayVis,  id: @vis2.project.id
     assert_response :success
+
+    # FIXME
+    # assert_valid_html response.body
   end
 end
