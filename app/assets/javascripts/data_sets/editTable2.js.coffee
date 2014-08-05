@@ -238,7 +238,8 @@ window.setupEditTable = () ->
           cname = ($ '#contrib_name').val()
 
           ajax_data =
-            title: if cname == "" then dname else "#{dname} - #{cname}"
+            title: dname
+            contributor_name: cname
             data: table_data
 
           ($ '#edit_table_add').addClass 'disabled'
