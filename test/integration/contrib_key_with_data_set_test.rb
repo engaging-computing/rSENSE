@@ -41,16 +41,13 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     click_on 'Back to Project'
     click_on 'Logout'
     assert page.has_content? 'Login'
-    visit '/contrib_keys/clear'
-    click_on 'Projects'
-    click_on 'Contributor Key Test Project'
     find('#key').set('test2')
+    find('#contributor_name').set('Jake')
     click_on 'Submit Key'
     click_on 'Manual Entry'
     list = page.all(:css, 'th')
     field_id =  list[1]['data-field-id']
     find('#data_set_name').set('Data1')
-    find('#contrib_name').set('Jake')
     find('.validate_number').set('5')
     click_on 'Save'
     assert page.has_content? 'Visualizations'
@@ -59,14 +56,13 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     visit '/projects'
     click_on 'Contributor Key Test Project'
     assert page.has_css?('.key')
-    visit '/contrib_keys/clear'
-    click_on 'Projects'
-    click_on 'Contributor Key Test Project'
+    click_on 'Clear Key'
+    assert page.has_content? 'Login'
     find('#key').set('test1')
+    find('#contributor_name').set('Jake')
     click_on 'Submit Key'
     click_on 'Manual Entry'
     find('#data_set_name').set('Data2')
-    find('#contrib_name').set('Jake')
     find('.validate_number').set('5')
     click_on 'Save'
     assert page.has_content? 'Visualizations'
@@ -78,7 +74,7 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     assert_equal temp[0][:title], 'test1'
     assert_equal temp[1][:title], 'test2'
     assert_not_equal(temp[0].find('a').text, temp[1].find('a').text)
-    visit '/contrib_keys/clear'
+    click_on 'Clear Key'
     visit '/projects'
     id = page.all(:css, '.item-title')[0].find('a')[:href].split('/').last
     post "/api/v1/projects/#{id}/jsonDataUpload",

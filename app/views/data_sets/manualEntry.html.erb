@@ -14,10 +14,11 @@
       <input id="data_set_name" name="data_set_name" class="form-control" 
         type="text" placeholder="Boston, MA Snowfall Total">
   </div>
-  <div class="col-lg-6" <% unless @cur_user.nil? %>style="display: none"<% end %>>
-    <strong><label for="contrib_name">Your Name:</label></strong>
-    <input id="contrib_name" name="contrib_name" class="form-control" type="text">
-  </div>
+  <% if @cur_user.nil? %>
+    <div class="col-lg-6" <% unless @cur_user.nil? %>style="display: none"<% end %>>
+      <input type="hidden" id="contrib_name" name="contrib_name" value="<%=session[:contributor_name]%>">
+    </div>
+  <% end %>
 </div>
 
 <div class="row">
