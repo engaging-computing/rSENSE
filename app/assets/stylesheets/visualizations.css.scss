@@ -4,7 +4,8 @@
 
 // because displaying a vis is in the same div class as view all vises
 body[data-page-name='visualizations/displayVis'] .visualizations-controller,
-body[data-page-name='visualizations/show'] .visualizations-controller {
+body[data-page-name='visualizations/show'] .visualizations-controller,
+.embeded {
 
   // colors
   $light-bkg: linear-gradient(#F6F6F6, #D7D7D7);
@@ -74,6 +75,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller {
 
     .ui-accordion-header {
       @include unselectable;
+      height: 38px;
       outline: none;
       margin: 0;
       padding: 3px 0 7px 5px;
