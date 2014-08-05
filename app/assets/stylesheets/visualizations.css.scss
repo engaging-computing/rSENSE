@@ -78,7 +78,9 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
       height: 38px;
       outline: none;
       margin: 0;
-      padding: 3px 0 7px 5px;
+      padding-right: 0;
+      padding-bottom: 7px;
+      padding-left: 5px;
       border: thin solid #ABABAB;
       border-radius: 3px;
       background-image: $light-bkg;
@@ -249,6 +251,21 @@ ul#sopt_menu {
     a > table > tbody > tr > td { // this is gross
       color: #FFF;
     }
+  }
+}
+
+body[data-page-name='visualizations/displayVis'] .visualizations-controller,
+body[data-page-name='visualizations/show'] .visualizations-controller {
+  .ui-accordion-header {
+    padding-top: 3px;
+    height: 100px;
+  }
+}
+
+.embeded {
+  .ui-accordion-header {
+    padding-top: 10px;
+    height: 200px;
   }
 }
 

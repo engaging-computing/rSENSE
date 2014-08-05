@@ -34,8 +34,8 @@
 //
 // Visualization stuff follows
 //
-//= require highstock/highstock
-//= require highstock/modules/exporting
+//= require highcharts/highcharts
+//= require highcharts/modules/exporting
 //= require Hydrate
 //= require jquery.jqGrid.src.js
 //= require grid.locale-en.js

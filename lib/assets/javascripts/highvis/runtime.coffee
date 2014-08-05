@@ -69,8 +69,8 @@ $ ->
         ($ '#visTabList').append """<li class='vis_tab'>
           <a href='##{data.allVis[vis].toLowerCase()}_canvas'>
             <span class='hidden-sm hidden-xs'>#{data.allVis[vis]}</span>
-            <img class='visible-xs visible-sm' height='32px' width='32'
-              src='#{window.icons[dark]}' data-disable-src='/assets/vis_#{window.icons[light]}' >
+            <span class='visible-sm visible-xs'><img height='32px' width='32px'
+              src='#{window.icons[dark]}' data-disable-src='/assets/vis_#{window.icons[light]}' ></span>
           </a>
           </li>"""
       else
@@ -78,8 +78,8 @@ $ ->
           <a href='##{data.allVis[vis].toLowerCase()}_canvas'>
             <span class='hidden-sm hidden-xs' style='text-decoration:line-through'>
               #{data.allVis[vis]}</span>
-            <img class='visible-xs visible-sm' height='32px' width='32'
-              src='#{window.icons[light]}' data-enable-src='#{window.icons[dark]}' />
+            <span class='visible-sm visible-xs'><img height='32px' width='32'
+              src='#{window.icons[light]}' data-enable-src='#{window.icons[dark]}' /></span>
           </a></li>"""
 
     ### Jquery up the tabs ###
