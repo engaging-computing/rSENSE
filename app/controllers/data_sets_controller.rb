@@ -247,8 +247,14 @@ class DataSetsController < ApplicationController
         d.title = params[:title]
         d.project_id = project.id
         d.data = data
+        if @cur_user.nil?
+          if !(params[:contributor_name].nil?)
+            d.contributor_name = params[:contributor_name]
+          else
+            d.contributor_name = 'Contributed via Key'
+          end
+        end
         unless can_edit? @project
-          d.contributor_name = params[:contrib_name]
           d.key = key_name(project.id, session[:key])
         end
       end
