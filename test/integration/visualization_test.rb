@@ -19,15 +19,18 @@ class VisualizationTest < ActionDispatch::IntegrationTest
 
   test 'embedded vis page' do
     visit "/projects/#{@project_id}/data_sets/#{@dataset_id}?embed=true"
+    assert page.has_no_css?('#title_row'), 'vis should be fullscreen'
     assert page.has_css?('#controldiv'), 'vis controls should be present'
-    assert page.has_css?('#visTabList'), 'vis tabs should be present'
     assert page.has_no_css?('#saveVisButton'), 'save vis button should not be present'
+    assert page.has_css?('#visTabList'), 'vis tabs should be present'
+    assert page.has_no_css?('#fullscreen-viz'), 'fullscreen button should not be present'
 
     puts (page.find '#controldiv').inspect
   end
 
   test 'presentation vis page' do
     visit "/projects/#{@project_id}/data_sets/#{@dataset_id}?presentation=true"
+    assert page.has_no_css?('#title_row'), 'vis should be fullscreen'
     assert page.has_no_css?('#controldiv'), 'vis controls should not be present'
     assert page.has_no_css?('#visTabList'), 'vis tabs should not be present'
   end
