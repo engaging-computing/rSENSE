@@ -28,16 +28,7 @@
 ###
 $ ->
   if namespace.controller is "visualizations" and
-  namespace.action in ["displayVis", "embedVis", "show"] and
-  "Map" in data.relVis
-
-    class CanvasProjectionOverlay extends google.maps.OverlayView
-      constructor: ->
-      onAdd: ->
-      draw: ->
-      onRemove: ->
-      projectPixels: (latlng) ->
-        @getProjection().fromLatLngToContainerPixel(latlng)
+  namespace.action in ["displayVis", "embedVis", "show"]
 
     class window.Map extends BaseVis
       constructor: (@canvas) ->
@@ -283,7 +274,7 @@ $ ->
             if @heatmapSelection isnt @HEATMAP_NONE
               if @getHeatmapScale() isnt @heatmapPixelRadius
                 @delayedUpdate()
-  
+
         checkProj = =>
           if @projOverlay.getProjection() is undefined
             google.maps.event.addListenerOnce @gmap, "idle", checkProj
@@ -548,7 +539,7 @@ $ ->
 
           filterFunc = (row) ->
             lat = lng = null
-            
+
             # Scan for lat and long
             for field, fieldIndex in data.fields
               if (Number field.typeID) in data.types.LOCATION
@@ -556,17 +547,25 @@ $ ->
                   lat = row[fieldIndex]
                 else if (Number field.typeID) is data.units.LOCATION.LONGITUDE
                   lng = row[fieldIndex]
-                  
+
             # If points are valid, check if they are visible
             if (lat is null) or (lng is null)
               return false
             else return viewBounds.contains(new google.maps.LatLng(lat, lng))
-            
-          arr.filter filterFunc
-        
-        else arr
 
+          arr.filter filterFunc
+
+        else arr
     if "Map" in data.relVis
       globals.map = new Map "map_canvas"
+
+      class CanvasProjectionOverlay extends google.maps.OverlayView
+        constructor: ->
+        onAdd: ->
+        draw: ->
+        onRemove: ->
+        projectPixels: (latlng) ->
+          @getProjection().fromLatLngToContainerPixel(latlng)
+
     else
       globals.map = new DisabledVis "map_canvas"
