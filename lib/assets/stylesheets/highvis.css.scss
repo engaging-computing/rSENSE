@@ -32,51 +32,31 @@
     overflow:hidden;
 }
 
-//------UNVERIFIED CSS BELOW----------
-
-#controlcontainer
+div.regressionTooltip
 {
-    float: right;
-    max-width: 20%;
-    height: 100%;
+  width: 100%;
+  text-align: center;
+  color: #000;
 }
 
-#controldiv
+figure, figurecaption
 {
-    width:210px;
-    height:100%;
-
-    float:right;
-    overflow-x:hidden;
-    overflow-y:auto;
+  display:block
 }
 
-#controlhider
+#heatmapErrorText
 {
-    float: right;
-    height:100%;
+  color:red;
+  white-space: normal;
 }
 
-.vis_controls
+.hint
 {
-    float: right;
-    width:100%;
-}
-
-.ui-accordion .ui-accordion-content
-{
-    padding: 0.5em 0.5em;
-    overflow-y:hidden;
-}
-
-.outer_control_div
-{
-    font-size: 12px;
-    font-family: Arial;
-    color: #000000;
-
-    overflow-x:hidden;
-    white-space:nowrap;
+  margin-left: 40px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  font-size: 90%;
+  color: #888888;
 }
 
 .inner_control_div
@@ -89,110 +69,6 @@
     white-space:nowrap;
 }
 
-.vis_canvas
-{
-    float:left;
-    overflow: none;
-    padding: 0px;
-    margin: 0px;
-}
-
-#viscontainer
-{
-    width: 100%;
-    height: 98%;
-    font-size:14px;
-    min-height:500px;
-}
-
-#summary_canvas
-{
-  text-align:center;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 0px 5px;
-
-  .panel-heading
-  {
-      font-size:2em;
-      font-weight:bold;
-  }
-
-  .panel-body
-  {
-    font-size:1.5em
-  }
-}
-
-.vis_tab
-{
-    font-size:1.2em;
-}
-
-.hint
-{
-  margin-left: 40px;
-  margin-bottom: 10px;
-  margin-top: 10px;
-  font-size: 90%;
-  color: #888888;
-}
-
-.save_button
-{
-    width: 160px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-.regression_table
-{
-  margin-top: 5px;
-  width: 100%;
-  text-align: left;
-}
-
-.regression_rowdata
-{
-  border-bottom:solid #ddd;
-  border-width: thin;
-  text-align: left;
-}
-
-.regression_row
-{
-  border-bottom:solid transparent;
-  border-width: thin;
-  cursor: pointer;
-}
-
-.regression_row_disabled
-{
-  background-color: #eee;
-  color: #555;
-}
-
-.regression_row:hover
-{
-  background-color: #ddd;
-  border-bottom:solid #ddd;
-  border-width: thin;
-}
-
-.regression_remove
-{
-  width: 10%;
-  text-align: center;
-}
-
-table.fixed { table-layout:fixed; }
-table.fixed td { overflow: hidden; }
-
-.dataTables_scroll
-{
-    overflow:auto;
-}
-
 .novis_message
 {
   padding: 25px;
@@ -203,31 +79,23 @@ table.fixed td { overflow: hidden; }
   color: #8e8e8e
 }
 
+.outer_control_div
+{
+    font-size: 12px;
+    font-family: Arial;
+    color: #000000;
+
+    overflow-x:hidden;
+    white-space:nowrap;
+}
+
 #photos_canvas
 {
- overflow-y:scroll;
+ overflow-y: auto;
 }
 
-#radiusText
+#polaroid
 {
-  width: 75px;
-  text-align:right;
-}
-
-#heatmapErrorText
-{
-  color:red;
-  white-space: normal;
-}
-
-figure, figurecaption
-{
-  display:block
-}
-
-
-#polaroid{
-  
   div.p_item
   {
     font-size: 12px;
@@ -237,7 +105,7 @@ figure, figurecaption
     word-wrap: break-word;
     overflow: hidden;
     zoom: 1;
-    *display: inline; 
+    *display: inline;
     .caption_wrap
      {
        padding: 0px 10px 10px 10px;
@@ -264,9 +132,116 @@ figure, figurecaption
   }
 }
 
-div.regressionTooltip
+//table.fixed { table-layout:fixed; }
+//table.fixed td { overflow: hidden; }
+
+#radiusText
 {
-  width:100%;
+  width: 75px;
+  text-align:right;
+}
+
+.regression_row
+{
+  border-bottom:solid transparent;
+  border-width: thin;
+  cursor: pointer;
+}
+
+.regression_row:hover
+{
+  background-color: #ddd;
+  border-bottom:solid #ddd;
+  border-width: thin;
+}
+
+.regression_rowdata
+{
+  border-bottom:solid #ddd;
+  border-width: thin;
+  text-align: left;
+}
+
+.regression_row_disabled
+{
+  background-color: #eee;
+  color: #555;
+}
+
+.regression_table
+{
+  margin-top: 5px;
+  width: 100%;
+  text-align: left;
+}
+
+.save_button
+{
+    width: 160px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#summary_canvas
+{
   text-align:center;
-  color:#000;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0px 5px;
+
+  .panel-heading
+  {
+      font-size:2em;
+      font-weight:bold;
+  }
+
+  .panel-body
+  {
+    font-size:1.5em
+  }
+}
+
+.ui-accordion .ui-accordion-content
+{
+    padding: 0.5em 0.5em;
+    overflow-y:hidden;
+}
+
+.vis_canvas
+{
+    float:left;
+    overflow: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+.vis_controls
+{
+    float: right;
+    width:100%;
+}
+
+#viscontainer
+{
+    width: 100%;
+    height: 98%;
+    font-size:14px;
+    min-height:500px;
+}
+
+
+#vis-disabled
+{
+  overflow: none;
+}
+
+.vis_tab
+{
+    font-size:1.2em;
+}
+
+w.regression_remove
+{
+  width: 10%;
+  text-align: center;
 }
