@@ -184,13 +184,17 @@ $ ->
 
       for visName in data.allVis
         vis  = eval "globals.#{visName.toLowerCase()}"
-        vis.end()
-        vis.serializationCleanup()
+        console.log vis
+        if vis?
+          vis.end()
+          vis.serializationCleanup()
 
       globalsCpy = stripFunctions globals
       dataCpy = stripFunctions data
 
       delete globalsCpy.curVis
+
+      console.log globalsCpy, dataCpy
 
       ret =
         globals: (hydrate.stringify globalsCpy)
