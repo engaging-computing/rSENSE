@@ -60,3 +60,7 @@ locked_project:
 delete_me:
   title: Delete This Project
   user: nixon
+
+upload_test:
+  title: Upload Test
+  user: kate
