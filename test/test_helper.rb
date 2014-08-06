@@ -11,6 +11,11 @@ Capybara.javascript_driver = :none
 # Capybara.javascript_driver = :webkit
 # Capybara.javascript_driver = :selenium
 
+require 'minitest/reporters'
+require 'seed_reporter'
+
+Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new, Minitest::Reporters::SpecReporter.new, Minitest::Reporters::SeedReporter.new]
+
 require 'selenium-webdriver'
 
 class ActiveSupport::TestCase
@@ -45,6 +50,21 @@ class ActiveSupport::TestCase
   def assert_not_contains(short, long)
     assert_nil long.to_s.index(short.to_s),
       "String contains #{short}"
+  end
+
+  def assert_valid_html(text)
+    temp = Tempfile.new(['foo', '.html'])
+    begin
+      temp.write(text)
+      temp.close
+
+      script = Rails.root.join('test', 'html5check.py')
+      result = `(python "#{script}" --encoding=utf-8 "#{temp.path}") 2>&1`
+
+      assert result =~ /^The document is valid HTML5/, "HTML invalid:\n#{result}"
+    ensure
+      temp.unlink
+    end
   end
 end
 

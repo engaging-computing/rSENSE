@@ -1,7 +1,7 @@
 <div class="">
   <div class="col-lg-6">
     <div class="panel panel-default">
-      <%= form_for(@user) do |ff| %>
+      <%= form_for(@user, html: {id: 'edit_password_form'}) do |ff| %>
         <div class="panel-heading">
           <h2>Change Password for <%= @user.name %></h2>
         </div>
@@ -12,7 +12,7 @@
             <% unless @cur_user.admin? or session[:pw_change] %>
               <p>
               <%= label_tag :current_password, "Current Password:" %>
-              <%= password_field_tag :current_password, @cur_pw, class: "form-control" %>
+              <%= password_field_tag :current_password, @cur_pw, class: "form-control", id: 'curpass' %>
               </p>
             <% end %>
             <% if session[:pw_change] %>
@@ -44,7 +44,7 @@
   <div class="">
     <div class="col-lg-6">
       <div class="panel panel-default">
-        <%= form_for(@user) do |ff| %>
+        <%= form_for(@user, html: {id: 'edit_email_form'}) do |ff| %>
           <div class="panel-heading">
             <h2>Change Email Address for <%= @user.name %></h2>
           </div>

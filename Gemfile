@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 4.0'
+gem 'rails', '~> 4.1.4'
 
 gem 'sqlite3'
 gem 'pg'
@@ -22,15 +22,15 @@ group :development, :test do
   gem "selenium-webdriver"
   gem "launchy"
   gem "simplecov"
-  gem "turn"
+  gem "minitest-reporters"
   gem "rubocop", git: 'https://github.com/bbatsov/rubocop'
   gem "coffeelint"
   gem 'capybara-webkit'
-  gem 'minitest', '~> 4.0'
+  gem 'minitest', '~> 5.1'
 end
 
 # Jquery stuff
-gem 'bootstrap-colorpicker-rails'
+gem 'better_colorpicker', git: 'https://github.com/asalani93/better-colorpicker'
 gem 'jquery-rails'
 
 # To use ActiveModel has_secure_password

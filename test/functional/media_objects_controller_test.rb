@@ -30,10 +30,12 @@ class MediaObjectsControllerTest < ActionController::TestCase
   end
 
   test 'should upload media to visualization' do
+    viz_id = visualizations(:media_test).id
+
     assert_difference('MediaObject.count') do
       img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
       file = Rack::Test::UploadedFile.new(img_path, 'image/jpeg')
-      post :saveMedia, { keys: 'visualization/1', upload: file }, user_id: @nixon
+      post :saveMedia, { keys: "visualization/#{viz_id}", upload: file }, user_id: @nixon
     end
 
     get :show, format: 'json', id: MediaObject.last.id, recur: true
@@ -41,10 +43,12 @@ class MediaObjectsControllerTest < ActionController::TestCase
   end
 
   test 'should upload media to data_set' do
+    dset_id = visualizations(:media_test).id
+
     assert_difference('MediaObject.count') do
       img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
       file = Rack::Test::UploadedFile.new(img_path, 'image/jpeg')
-      post :saveMedia, { keys: 'data_set/1', upload: file }, user_id: @nixon
+      post :saveMedia, { keys: "data_set/#{dset_id}", upload: file }, user_id: @nixon
     end
 
     get :show, format: 'json', id: MediaObject.last.id, recur: true
@@ -52,10 +56,12 @@ class MediaObjectsControllerTest < ActionController::TestCase
   end
 
   test 'should upload media to tutorial' do
+    tut_id = tutorials(:media_test).id
+
     assert_difference('MediaObject.count') do
       img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
       file = Rack::Test::UploadedFile.new(img_path, 'image/jpeg')
-      post :saveMedia, { keys: 'tutorial/1', upload: file }, user_id: @nixon
+      post :saveMedia, { keys: "tutorial/#{tut_id}", upload: file }, user_id: @nixon
     end
 
     get :show, format: 'json', id: MediaObject.last.id, recur: true
@@ -63,10 +69,12 @@ class MediaObjectsControllerTest < ActionController::TestCase
   end
 
   test 'should upload media to news' do
+    news_id = news(:media_test).id
+
     assert_difference('MediaObject.count') do
       img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
       file = Rack::Test::UploadedFile.new(img_path, 'image/jpeg')
-      post :saveMedia, { keys: 'news/1', upload: file }, user_id: @nixon
+      post :saveMedia, { keys: "news/#{news_id}", upload: file }, user_id: @nixon
     end
 
     get :show, format: 'json', id: MediaObject.last.id, recur: true

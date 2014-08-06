@@ -10,16 +10,23 @@ one:
   summary: This contains content
   hidden: false
   user: nixon
+  id: 2
 
 # column: value
 #
-two: {}
+#two: {}
 #  column: value
 
-news_three:
-  title: I'm a news guy
+media_test:
+  title: I'm another news guy media
   content: I am content for news
   summary: This contains content
   hidden: false
   user: nixon
-  id: 1
+
+news_three:
+  title: I'm another news guy
+  content: I am content for news
+  summary: This contains content
+  hidden: false
+  user: nixon

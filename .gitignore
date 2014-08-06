@@ -29,3 +29,5 @@ coverage/*
 db/test.sqlite3-journal
 node_modules/
 
+#a studio
+.project

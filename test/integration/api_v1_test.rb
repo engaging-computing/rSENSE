@@ -5,13 +5,15 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     @project_keys = ['id', 'featuredMediaId', 'name', 'url', 'path', 'hidden', 'featured', 'likeCount', 'content', 'timeAgoInWords', 'createdAt', 'ownerName', 'ownerUrl', 'dataSetCount', 'fieldCount', 'fields']
     @project_keys_extended = @project_keys + ['dataSets', 'mediaObjects', 'owner']
     @field_keys = ['id', 'name', 'type', 'unit', 'restrictions']
-    @data_keys = ['id', 'name', 'hidden', 'url', 'path', 'createdAt', 'fieldCount', 'datapointCount', 'displayURL']
-    @data_keys_extended = @data_keys + ['owner', 'project', 'fields', 'data']
+    @data_keys = ['id', 'name', 'url', 'path', 'createdAt', 'fieldCount', 'datapointCount', 'displayURL', 'data']
+    @data_keys_extended = @data_keys + ['owner', 'project', 'fields']
     @dessert_project = projects(:dessert)
     @thanksgiving_dataset = data_sets(:thanksgiving)
     @media_object_keys = ['id', 'mediaType', 'name', 'url', 'createdAt', 'src', 'tn_src']
     @media_object_keys_extended = @media_object_keys + ['project', 'owner']
     @user_keys = ['gravatar', 'name']
+
+    @test_proj = projects(:media_test)
   end
 
   # Get projects listing using defaults
@@ -52,18 +54,19 @@ class ApiV1Test < ActionDispatch::IntegrationTest
 
   # Get project
   test 'get project' do
-    get '/api/v1/projects/1'
+
+    get "/api/v1/projects/#{@test_proj.id}"
     assert_response :success
     assert keys_match(response, @project_keys), 'Keys are missing'
-    assert parse(response)['id'] == 1, 'Should have returned project 1'
+    assert parse(response)['id'] == @test_proj.id, "Should have returned project #{@test_proj.id}"
   end
 
   # Get project with owner/dataSets/mediaObjects
   test 'get project full' do
-    get '/api/v1/projects/1?recur=true'
+    get "/api/v1/projects/#{@test_proj.id}?recur=true"
     assert_response :success
     assert keys_match(response, @project_keys_extended), 'Keys are missing'
-    assert parse(response)['id'] == 1, 'Should have returned project 1'
+    assert parse(response)['id'] == @test_proj.id, "Should have returned project #{@test_proj.id}"
   end
 
   # Create project without giving a name
@@ -327,7 +330,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
 
     get "/api/v1/data_sets/#{dset_id}/edit",
 
-        email: 'kcarcia@cs.uml.edu' ,
+        email: 'kcarcia@cs.uml.edu',
         password: '12345',
         data:
           {
