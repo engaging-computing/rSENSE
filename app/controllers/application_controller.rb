@@ -94,7 +94,7 @@ class ApplicationController < ActionController::Base
       key = project.contrib_keys.find_by_key(params[:contribution_key])
       if project && !key.nil? && data_set.key == key.name
         if params.key? :contributor_name
-          @cur_user = User.find_by_id(project.owner.id)
+          @cur_user = nil
         else
           respond_to do |format|
             format.json { render json: { msg: 'Missing contributor name' }, status: :unprocessable_entity }
@@ -110,7 +110,7 @@ class ApplicationController < ActionController::Base
       project = Project.find_by_id(params[:id] || params[:pid])
       if project && !project.contrib_keys.find_by_key(params[:contribution_key]).nil?
         if params.key? :contributor_name
-          @cur_user = User.find_by_id(project.owner.id)
+          @cur_user = nil
         else
           respond_to do |format|
             format.json { render json: { msg: 'Missing contributor name' }, status: :unprocessable_entity }

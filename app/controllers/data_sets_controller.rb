@@ -160,12 +160,15 @@ class DataSetsController < ApplicationController
   # POST /projects/1/jsonDataUpload
   # {data => { "20"=>[1,2,3,4,5], "21"=>[6,7,8,9,10], "22"=>['v','w','x','y','z'] }}
   def jsonDataUpload
+    puts("\n\n\n\n" + "here" + "\n\n\n\n\n")
     project = Project.find(params['id'])
 
     if project.lock? and !can_edit?(project) and !key?(project)
       render text: 'Project is locked', status: 401
       return
     end
+    
+    puts("\n\n\n\n" + "here" + "\n\n\n\n\n")
 
     uploader = FileUploader.new
     sane = uploader.sanitize_data(params[:data])
@@ -179,12 +182,17 @@ class DataSetsController < ApplicationController
         d.project_id = project.id
         d.data = data
         if @cur_user.nil?
-          if params[:contributor_name].nil?
+          if params[:contributor_name].nil? || params[:contributor_name].length == 0
             d.contributor_name = 'Contributed via Key'
+            puts("\n\n\n\n" + @cur_user.nil?.to_s + "\n\n\n\n\n")
           else
             d.contributor_name = params[:contributor_name]
+            puts("\n\n\n\n" + @cur_user.nil?.to_s + "\n\n\n\n\n")
           end
+          
+          @cur_user = User.find_by_id(project.owner.id)
         end
+        puts("\n\n\n\n" + @cur_user.nil?.to_s + "\n\n\n\n\n")
         unless can_edit? @project
           if session[:key]
             d.key = session[:key]
@@ -248,11 +256,12 @@ class DataSetsController < ApplicationController
         d.project_id = project.id
         d.data = data
         if @cur_user.nil?
-          if params[:contributor_name].nil?
+          if params[:contributor_name].nil? || params[:contributor_name].length == 0
             d.contributor_name = 'Contributed via Key'
           else
             d.contributor_name = params[:contributor_name]
           end
+          @cur_user = User.find_by_id(project.owner.id)
         end
         unless can_edit? @project
           d.key = key_name(project.id, session[:key])
