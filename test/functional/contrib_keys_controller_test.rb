@@ -37,7 +37,7 @@ class ContribKeysControllerTest < ActionController::TestCase
   end
 
   test 'should enter key' do
-    post :enter,  project_id: @proj.id, key: @skey.key
+    post :enter,  project_id: @proj.id, key: @skey.key, contributor_name: @kate.name
     assert_response :redirect
     assert_equal @proj.id, session[:contrib_access]
   end

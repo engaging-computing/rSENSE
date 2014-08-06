@@ -68,7 +68,7 @@ class UpdateFieldsTest < ActionDispatch::IntegrationTest
 
     click_on 'Submit'
 
-    assert page.has_content?('Dataset #1')
+    assert page.has_content?('dessert')
   end
 
   test 'teplate fields without dataset' do
