@@ -25,9 +25,16 @@ body[data-page-name='visualizations/show'] .visualizations-controller {
     user-select: none;
   }
 
+  #controlcontainer {
+    float: right;
+    max-width: 20%;
+    height: 100%;
+  }
+
   #controlhider {
-    float: none; // this moves the control hider to the left of the controls div
+    float: left;
     display: inline-block;
+    height: 100%;
 
     #control_hide_button { // eventually put this next to #fullscreen-viz?
       @include unselectable;
@@ -41,7 +48,12 @@ body[data-page-name='visualizations/show'] .visualizations-controller {
   }
 
   #controldiv {
-    padding-right: 10px;
+    width: 220px;
+    height: 100%;
+
+    float: right;
+    overflow-x: hidden;
+    overflow-y: auto;
 
     // puts spacing between some boostrap buttons
     .form-control { // this styles bootstrap stuff and IS VERY BAD
@@ -169,7 +181,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller {
     #prev_toolbar_bottom {
       background-position: -47px -158px;
     }
-    
+
     table {
       border-color: $border-color;
     }
