@@ -93,9 +93,7 @@ class ApplicationController < ActionController::Base
       project = Project.find_by_id(data_set.project_id)
       key = project.contrib_keys.find_by_key(params[:contribution_key])
       if project && !key.nil? && data_set.key == key.name
-        if params.key? :contributor_name
-          @cur_user = User.find_by_id(project.owner.id)
-        else
+        unless params.key? :contributor_name
           respond_to do |format|
             format.json { render json: { msg: 'Missing contributor name' }, status: :unprocessable_entity }
           end
@@ -109,9 +107,7 @@ class ApplicationController < ActionController::Base
     elsif (params.key? :contribution_key) && (['jsonDataUpload', 'saveMedia'].include? params[:action])
       project = Project.find_by_id(params[:id] || params[:pid])
       if project && !project.contrib_keys.find_by_key(params[:contribution_key]).nil?
-        if params.key? :contributor_name
-          @cur_user = User.find_by_id(project.owner.id)
-        else
+        unless params.key? :contributor_name
           respond_to do |format|
             format.json { render json: { msg: 'Missing contributor name' }, status: :unprocessable_entity }
           end
