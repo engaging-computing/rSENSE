@@ -123,10 +123,7 @@ $ ->
     else
       $("#control_hide_button").html('>')
       globals.CONTROL_SIZE
-    contrContSize = if true
-      hiderSize + containerSize
-    else
-      0
+    contrContSize = hiderSize + containerSize
 
     visWidth = containerSize - contrContSize
     visHeight = ($ '#viscontainer').height() - ($ '#visTabList').outerHeight()
@@ -141,6 +138,8 @@ $ ->
     ($ '#controlcontainer').width contrContSize
     ($ '#controlcontainer').height visHeight
 
+    ($ '#controldiv').width controlSize
+
     # Start up vis
     globals.curVis.start()
 
@@ -154,7 +153,6 @@ $ ->
       containerSize = ($ '#viscontainer').width()
       hiderSize     = ($ '#controlhider').outerWidth()
       controlSize   = ($ '#controldiv').outerWidth()
-      contrContSize = hiderSize + controlSize
       controlVisibility = ($ '#controldiv').css 'opacity'
 
       if toggleControls
@@ -165,11 +163,13 @@ $ ->
           controlSize = 0
           controlVisibility = 0.0
 
+      contrContSize = hiderSize + controlSize
+
       newWidth = containerSize - contrContSize
       newHeight = ($ '#viscontainer').height() - ($ '#visTabList').outerHeight()
 
       ($ '#controlcontainer').height newHeight
-      ($ '#controlcontainer').width contrContSize
+      ($ '#controlcontainer').animate {width: contrContSize}, aniLength, 'linear'
 
       ($ '#controldiv').height newHeight
       ($ '#controldiv').animate {width: controlSize, opacity: controlVisibility}, aniLength, 'linear'
@@ -183,7 +183,7 @@ $ ->
     if globals.options? and globals.options.presentation?
       1
     else
-      setTimeout resizeVis, 0
+      resizeVis false, 0
 
     # Resize vis on page resize
     ($ window).resize () ->
