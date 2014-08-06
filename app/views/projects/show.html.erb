@@ -175,7 +175,7 @@
                <% end %>
                <% if s.contributor_name? %>
                	<td style="max-width:60px"><div class="truncate"><%= s.contributor_name %></div></td>
-               <% elsif !(s.owner.nil?) %>
+               <% else %>
                	<td style="max-width:60px"><div class="truncate"><%= link_to s.owner.name, user_path(s.owner) %></div></td>
                <% end %>
                   <td style="max-width:200px"><div class="truncate" title="Created <%=s.created_at.strftime("%B %d, %Y")%>"><%= link_to s.title, "#{params[:id]}/data_sets/#{s.id}" %></div></td>
