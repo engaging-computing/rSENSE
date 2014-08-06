@@ -40,9 +40,9 @@
     <div id="histogram_canvas" class="vis_canvas"></div>
     <div id="summary_canvas" class="vis_canvas"></div>
     <div id="photos_canvas" class="vis_canvas"></div>
-    <div id='controlhider' <%if @presentation%> style="display:none" <%end%>>
+    <div id='controlhider' <%if @presentation %> style="display:none" <%end%>>
         <button id="control_hide_button" type="button"> &gt; </button>
     </div>
-    <div id="controldiv"></div>
+    <div id="controldiv" <%if @presentation %> style="display:none" <%end%>></div>
 </div>
 
