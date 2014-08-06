@@ -7,14 +7,14 @@
       <div class="row form-group">
         <div class="col-lg-3 col-lg-offset-3">
           <label for="title"><b>Title</b></label>
-          <input type="text" id="title" name="title" value="<%=@default_name%>" class="form-control" autofocus>
+          <input type="text" id="title" name="title" value="<%=@filename%>" class="form-control" autofocus>
         </div>
         <% if @cur_user.nil? %>
           <div class="col-lg-3">
-            <label for="contrib_name"><b>Your Name</b></label>
-            <input type="text" id="contrib_name" name="contrib_name" value="" class="form-control">
+            <input type="hidden" id="contrib_name" name="contrib_name" value="<%=session[:contributor_name]%>">
           </div>
         <% end %>
+      </div>
       </div>
       <div class="row">
         <div class="col-lg-6 col-lg-offset-3">
@@ -65,3 +65,4 @@
     <% end %>
   </div>  
 </div>
+
