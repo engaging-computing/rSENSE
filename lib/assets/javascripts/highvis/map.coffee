@@ -557,8 +557,6 @@ $ ->
 
         else arr
     if "Map" in data.relVis
-      globals.map = new Map "map_canvas"
-
       class CanvasProjectionOverlay extends google.maps.OverlayView
         constructor: ->
         onAdd: ->
@@ -567,5 +565,6 @@ $ ->
         projectPixels: (latlng) ->
           @getProjection().fromLatLngToContainerPixel(latlng)
 
+      globals.map = new Map "map_canvas"
     else
       globals.map = new DisabledVis "map_canvas"
