@@ -250,10 +250,8 @@ class DataSetsController < ApplicationController
         unless params[:contributor_name].nil?
           if params[:contributor_name].length == 0
             d.contributor_name = 'Contributed via Key'
-            puts("\n\n\n\n" + @cur_user.nil?.to_s + "\n\n\n\n\n")
           else
             d.contributor_name = params[:contributor_name]
-            puts("\n\n\n\n" + @cur_user.nil?.to_s + "\n\n\n\n\n")
           end
         end
         unless can_edit? @project
