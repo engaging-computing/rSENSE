@@ -18,6 +18,8 @@ class Tutorial < ActiveRecord::Base
 
   alias_attribute :owner, :user
 
+  before_save :summernote_media_objects
+
   def self.search(search, include_hidden = false)
     res = if search
             where('lower(title) LIKE lower(?)', "%#{search}%")
@@ -58,5 +60,9 @@ class Tutorial < ActiveRecord::Base
     end
 
     h
+  end
+
+  def summernote_media_objects
+    self.content = MediaObject.create_media_objects(content, 'tutorial_id', id, user_id)
   end
 end

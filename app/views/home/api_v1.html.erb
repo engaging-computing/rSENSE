@@ -3,7 +3,7 @@
     <h1>API V1 Documentation</h1>
   </div>
   <div class="col-md-1">
-    <img src="https://travis-ci.org/isenseDev/rSENSE.png"/>
+    <img alt="[iSENSE]" src="https://travis-ci.org/isenseDev/rSENSE.png"/>
   </div>
 </div>
 
@@ -21,8 +21,10 @@
       <tr class="more" style="">
         <td colspan="4">
           <b>Response Codes</b>
-          <li>Success: 200 Ok</li>
-          <li>Fail: 404 Not Found</li>
+          <ul>
+            <li>Success: 200 Ok</li>
+            <li>Fail: 404 Not Found</li>
+          </ul>
           <b>Response</b>
           <pre>
     {
@@ -45,8 +47,10 @@
     }
           </pre>
           <b>Notes</b>
-          <li>XX should be replaced with the ID for the project. Or set id as a GET variable</li>
-          <li>If recur is set to true, the function will also return 'dataSets', 'mediaObjects', and 'owner' objects</li>
+          <ul>
+            <li>XX should be replaced with the ID for the project. Or set id as a GET variable</li>
+            <li>If recur is set to true, the function will also return 'dataSets', 'mediaObjects', and 'owner' objects</li>
+          </ul>
         </td>
       </tr>
     </table>
@@ -65,17 +69,21 @@
       <tr class="more" style="">
         <td colspan="4">
           <b>Response Codes</b>
-          <li>Success: 200 Ok</li>
+          <ul>
+            <li>Success: 200 Ok</li>
+          </ul>
           <b>Response</b>
           <pre>
   Projects (array)
           </pre>
           <b>Notes</b>
-          <li>search - id or string</li>
-          <li>sort - "like_count", "views, "created_at", "updated_at" (default updated_at)</li>
-          <li>order - "ASC", "DESC" (default "DESC")</li>
-          <li>per_page - integer (default 50)</li>
-          <li>page - integer (default 1)</li>
+          <ul>
+            <li>search - id or string</li>
+            <li>sort - "like_count", "views, "created_at", "updated_at" (default updated_at)</li>
+            <li>order - "ASC", "DESC" (default "DESC")</li>
+            <li>per_page - integer (default 50)</li>
+            <li>page - integer (default 1)</li>
+          </ul>
         </td>
       </tr>
     </table>
@@ -94,9 +102,11 @@
       <tr class="more" style="">
         <td colspan="4">
           <b>Response Codes</b>
-          <li>Success: 200 Ok</li>
-          <li>Fail: 422 Unprocessable Entity </li>
-          <li>Fail: 401 Unauthorized</li>
+          <ul>
+            <li>Success: 200 Ok</li>
+            <li>Fail: 422 Unprocessable Entity </li>
+            <li>Fail: 401 Unauthorized</li>
+          </ul>
           <b>Data</b>
           <pre>
   {
@@ -127,7 +137,9 @@
   }
           </pre>
           <b>Notes</b>
-          <li>If a name is not given, one will be generated based on the user's name.</li>
+          <ul>
+            <li>If a name is not given, one will be generated based on the user's name.</li>
+          </ul>
         </td>
       </tr>
     </table>
@@ -148,9 +160,11 @@
       <tr class="more" style="">
         <td colspan="4">
           <b>Response Codes</b>
-          <li>Success: 200 Ok</li>
-          <li>Fail: 422 Unprocessable Entity (will contain message why) </li>
-          <li>Fail: 401 Unauthorized</li>
+          <ul>
+            <li>Success: 200 Ok</li>
+            <li>Fail: 422 Unprocessable Entity (will contain message why) </li>
+            <li>Fail: 401 Unauthorized</li>
+          </ul>
           <b>Data</b>
           <pre>
   {
@@ -179,10 +193,12 @@
 
           </pre>
           <b>Notes</b>
-          <li>Names - Must be unique per project. If name is not set one will be given based on type.</li>
-          <li>Units - e.g. meters, lumens (ignored for timestamp and text)</li>
-          <li>type - 1=Timestamp 2=Number 3=Text 4=Latitude 5=Longitude (lat/lon are created together)</li>
-          <li>restrictions - Currently text fields only. Defines accepted values "blue,green,red" will force the project to accept only those values</li>
+          <ul>
+            <li>Names - Must be unique per project. If name is not set one will be given based on type.</li>
+            <li>Units - e.g. meters, lumens (ignored for timestamp and text)</li>
+            <li>type - 1=Timestamp 2=Number 3=Text 4=Latitude 5=Longitude (lat/lon are created together)</li>
+            <li>restrictions - Currently text fields only. Defines accepted values "blue,green,red" will force the project to accept only those values</li>
+          </ul>
         </td>
       </tr>
     </table>
@@ -201,8 +217,10 @@
       <tr class="more" style="">
         <td colspan="4">
           <b>Response Codes</b>
-          <li>Success: 200 Ok</li>
-          <li>Fail: 404 Not Found</li>
+          <ul>
+            <li>Success: 200 Ok</li>
+            <li>Fail: 404 Not Found</li>
+          </ul>
           <b>Response</b>
           <pre>
   {
@@ -214,7 +232,9 @@
   }
           </pre>
           <b>Notes</b>
-          <li>XX should be replaced with the ID for the field. Or set id as a GET variable</li>
+          <ul>
+            <li>XX should be replaced with the ID for the field. Or set id as a GET variable</li>
+          </ul>
         </td>
       </tr>
     </table>
@@ -235,9 +255,11 @@
       <tr class="more" style="">
         <td colspan="4">
           <b>Response Codes</b>
-          <li>Success: 200 Ok</li>
-          <li>Fail: 422 Unprocessable Entity </li>
-          <li>Fail: 401 Unauthorized</li>
+          <ul>
+            <li>Success: 200 Ok</li>
+            <li>Fail: 422 Unprocessable Entity </li>
+            <li>Fail: 401 Unauthorized</li>
+          </ul>
           <b>Data</b>
           <pre>
   {
@@ -267,8 +289,10 @@
   }
           </pre>
           <b>Notes</b>
-          <li>XX should be replaced with the ID for the project.</li>
-          <li>Data is a hash of field_id -> data array pairs. FIELD_ID and FIELD_ID_2 would be replaced with ids for their respective filds.</li>
+          <ul>
+            <li>XX should be replaced with the ID for the project.</li>
+            <li>Data is a hash of field_id -> data array pairs. FIELD_ID and FIELD_ID_2 would be replaced with ids for their respective filds.</li>
+          </ul>
         </td>
       </tr>
     </table>
@@ -287,9 +311,11 @@
       <tr class="more" style="">
         <td colspan="4">
           <b>Response Codes</b>
-          <li>Success: 200 Ok</li>
-          <li>Fail: 422 Unprocessable Entity </li>
-          <li>Fail: 401 Unauthorized</li>
+          <ul>
+            <li>Success: 200 Ok</li>
+            <li>Fail: 422 Unprocessable Entity </li>
+            <li>Fail: 401 Unauthorized</li>
+          </ul>
           <b>Data</b>
           <pre>
   {
@@ -319,8 +345,10 @@
   }
           </pre>
           <b>Notes</b>
-          <li>XX should be replaced with the ID for the project.</li>
-          <li>Data is a hash of field_id -> data array pairs. FIELD_ID and FIELD_ID_2 would be replaced with ids for their respective filds.</li>
+          <ul>
+            <li>XX should be replaced with the ID for the project.</li>
+            <li>Data is a hash of field_id -> data array pairs. FIELD_ID and FIELD_ID_2 would be replaced with ids for their respective filds.</li>
+          </ul>
         </td>
       </tr>
     </table>
@@ -339,10 +367,12 @@
       <tr class="more" style="">
         <td colspan="4">
           <b>Response Codes</b>
-          <li>Success: 200 Ok</li>
-          <li>Fail: 422 Unprocessable</li>
-          <li>Fail: 404 Not Found</li>
-          <li>Fail: 401:Unauthorized</li>
+          <ul>
+            <li>Success: 200 Ok</li>
+            <li>Fail: 422 Unprocessable</li>
+            <li>Fail: 404 Not Found</li>
+            <li>Fail: 401:Unauthorized</li>
+          </ul>
           <b>Data</b>
           <pre>
   {
@@ -371,8 +401,10 @@
   }
           </pre>
           <b>Notes</b>
-          <li>XX should be replaced with the ID for the project.</li>
-          <li>Setting recur=true as a get variable will return the associated Project(hash), Fields(hash), Data(hash) </li>
+          <ul>
+            <li>XX should be replaced with the ID for the project.</li>
+            <li>Setting recur=true as a get variable will return the associated Project(hash), Fields(hash), Data(hash) </li>
+          </ul>
         </td>
       </tr>
     </table>
@@ -391,10 +423,12 @@
       <tr class="more" style="">
         <td colspan="4">
           <b>Response Codes</b>
-          <li>Success: 200 Ok</li>
-          <li>Fail: 422 Unprocessable</li>
-          <li>Fail: 404 Not Found</li>
-          <li>Fail: 401:Unauthorized</li>
+          <ul>
+            <li>Success: 200 Ok</li>
+            <li>Fail: 422 Unprocessable</li>
+            <li>Fail: 404 Not Found</li>
+            <li>Fail: 401:Unauthorized</li>
+          </ul>
           <b>Data</b>
           <pre>
   {
@@ -422,8 +456,10 @@
   }
           </pre>
           <b>Notes</b>
-          <li>XX should be replaced with the ID for the project.</li>
-          <li>Setting recur=true as a get variable will return the associated Project(hash), Fields(hash), Data(hash) </li>
+          <ul>
+            <li>XX should be replaced with the ID for the project.</li>
+            <li>Setting recur=true as a get variable will return the associated Project(hash), Fields(hash), Data(hash) </li>
+          </ul>
         </td>
       </tr>
     </table>
@@ -442,10 +478,12 @@
       <tr class="more" style="">
         <td colspan="4">
           <b>Response Codes</b>
-          <li>Success: 200 Ok</li>
-          <li>Fail: 422 Unprocessable</li>
-          <li>Fail: 404 Not Found</li>
-          <li>Fail: 401:Unauthorized</li>
+          <ul>
+            <li>Success: 200 Ok</li>
+            <li>Fail: 422 Unprocessable</li>
+            <li>Fail: 404 Not Found</li>
+            <li>Fail: 401:Unauthorized</li>
+          </ul>
           <b>Data</b>
           <pre>
   {
@@ -475,8 +513,6 @@
   }
           </pre>
           <b>Notes</b>
-          <li></li>
-          <li></li>
         </td>
       </tr>
     </table>
@@ -495,10 +531,12 @@
       <tr class="more" style="">
         <td colspan="4">
           <b>Response Codes</b>
-          <li>Success: 200 Ok</li>
-          <li>Fail: 422 Unprocessable</li>
-          <li>Fail: 404 Not Found</li>
-          <li>Fail: 401:Unauthorized</li>
+          <ul>
+            <li>Success: 200 Ok</li>
+            <li>Fail: 422 Unprocessable</li>
+            <li>Fail: 404 Not Found</li>
+            <li>Fail: 401:Unauthorized</li>
+          </ul>
           <b>Data</b>
           <pre>
   {
@@ -528,8 +566,6 @@
   }
           </pre>
           <b>Notes</b>
-          <li></li>
-          <li></li>
         </td>
       </tr>
     </table>
@@ -550,9 +586,11 @@
       <tr class="more" style="">
         <td colspan="4">
           <b>Response Codes</b>
-          <li>Success: 200 Ok</li>
-          <li>Fail: 422 Unprocessable Entity (with message why)</li>
-          <li>Fail: 401 Unauthorized</li>
+          <ul>
+            <li>Success: 200 Ok</li>
+            <li>Fail: 422 Unprocessable Entity (with message why)</li>
+            <li>Fail: 401 Unauthorized</li>
+          </ul>
           <b>Data</b>
           <pre>
   {
@@ -577,8 +615,9 @@
   }
           </pre>
           <b>Notes</b>
-          <li>type - either "project", or "data_set"</li>
-          <li></li>
+          <ul>
+            <li>type - either "project", or "data_sets"</li>
+          </ul>
         </td>
       </tr>
     </table>
@@ -597,9 +636,11 @@
       <tr class="more" style="">
         <td colspan="4">
           <b>Response Codes</b>
-          <li>Success: 200 Ok</li>
-          <li>Fail: 422 Unprocessable Entity (with message why)</li>
-          <li>Fail: 401 Unauthorized</li>
+          <ul>
+            <li>Success: 200 Ok</li>
+            <li>Fail: 422 Unprocessable Entity (with message why)</li>
+            <li>Fail: 401 Unauthorized</li>
+          </ul>
           <b>Data</b>
           <pre>
   {
@@ -624,8 +665,9 @@
   }
           </pre>
           <b>Notes</b>
-          <li>type - either "project", or "data_set"</li>
-          <li></li>
+          <ul>
+            <li>type - either "project", or "data_set"</li>
+          </ul>
         </td>
       </tr>
     </table>
@@ -646,8 +688,10 @@
       <tr class="more" style="">
         <td colspan="4">
           <b>Response Codes</b>
-          <li>Success: 200 Ok</li>
-          <li>Fail: 401 Unauthorized</li>
+          <ul>
+            <li>Success: 200 Ok</li>
+            <li>Fail: 401 Unauthorized</li>
+          </ul>
           <b>Response</b>
           <pre>
     {

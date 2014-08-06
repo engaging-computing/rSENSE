@@ -71,7 +71,7 @@ module ApplicationHelper
     when User
       obj.id == @cur_user.try(:id)
     when Project, Visualization, MediaObject
-      obj.owner.id == @cur_user.try(:id)
+      obj.try(:owner).try(:id) == @cur_user.try(:id)
     when Field
       obj.try(:owner).try(:owner).try(:id) == @cur_user.try(:id)
     else

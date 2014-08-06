@@ -29,7 +29,7 @@ three:
   is_template: false
   filter: ""
   featured_media_id: 
-  
+
 dessert:
   title: Dessert is Delicious
   user: kate
@@ -41,7 +41,7 @@ dessert:
   featured_media_id: 
   lock: true
 
-project_five:
+media_test:
   title: Media Test
   user: nixon
   content: <p>First Paragraph</p><p>Second Paragraph</p>
@@ -50,7 +50,6 @@ project_five:
   is_template: false
   filter: ""
   featured_media_id: 
-  id: 1
   created_at: <%= 7.day.ago.to_s(:db) %>
 
 locked_project:
