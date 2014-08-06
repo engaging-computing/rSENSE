@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 20140721174027) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "googleDoc"
-    t.text     "data",       default: "[]", null: false
+    t.text     "data",             default: "[]", null: false
     t.string   "key"
     t.string   "contributor_name"
   end
