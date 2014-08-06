@@ -3,7 +3,10 @@ require 'test_helper'
 class UploadDataTest < ActionDispatch::IntegrationTest
   include CapyHelper
 
+  self.use_transactional_fixtures = false
+
   setup do
+    @project = projects(:upload_test)
     Capybara.current_driver = :webkit
     Capybara.default_wait_time = 15
   end
@@ -12,30 +15,24 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     finish
   end
 
-  test 'upload all filetypes' do
+  test 'upload csv' do
     login('kcarcia@cs.uml.edu', '12345')
+    visit project_path(@project)
+    assert page.has_content?('Upload Test'), 'Not on project page.'
 
-    # Add a project
-    click_on 'Projects'
-    click_on 'Create Project'
-    assert page.has_content?('What would you like to name your project?')
-    find('#project_title').set('File Types')
-    click_on 'Create'
-    assert page.has_content?('Fields'), "Project page should have 'Fields'"
-
-    # Test CSV upload by creating fields
-    # find('#template_file_upload').click
     csv_path = Rails.root.join('test', 'CSVs', 'test.csv')
-    page.execute_script "$('#template_file_form').parent().show()"
-    find('#template_file_form').attach_file('file', csv_path)
-    page.execute_script "$('#template_file_form').submit()"
-    assert page.has_content?('Please select types for each field below.')
-    all('select')[0].find(:xpath, 'option[4]').select_option
-    all('select')[1].find(:xpath, 'option[5]').select_option
+    page.execute_script "$('#datafile_form').parent().show()"
+    find('#datafile_form').attach_file('file', csv_path)
+    page.execute_script "$('#datafile_form').submit()"
+    assert page.has_content?('Match Quality')
     click_on 'Submit'
-    assert page.has_content?('Dataset #1'), 'Failed CSV'
-    click_on 'File Types'
-    assert page.has_content?('Contribute Data')
+    assert page.has_css?('#viscontainer'), 'Failed CSV'
+  end
+
+  test 'upload gpx' do
+    login('kcarcia@cs.uml.edu', '12345')
+    visit project_path(@project)
+    assert page.has_content?('Upload Test'), 'Not on project page.'
 
     # Test GPX upload
     gpx_path = Rails.root.join('test', 'CSVs', 'test.gpx')
@@ -46,9 +43,13 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     all('select')[0].find(:xpath, 'option[1]').select_option
     all('select')[1].find(:xpath, 'option[1]').select_option
     click_on 'Submit'
-    assert page.has_content?('Dataset #2'), 'Failed GPX'
-    click_on 'File Types'
-    assert page.has_content?('Contribute Data')
+    assert page.has_css?('#viscontainer'), 'Failed GPX'
+  end
+
+  test 'upload ods' do
+    login('kcarcia@cs.uml.edu', '12345')
+    visit project_path(@project)
+    assert page.has_content?('Upload Test'), 'Not on project page.'
 
     # Test ODS upload
     ods_path = Rails.root.join('test', 'CSVs', 'test.ods')
@@ -57,9 +58,13 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     page.execute_script "$('#datafile_form').submit()"
     assert page.has_content?('Match Quality')
     click_on 'Submit'
-    assert page.has_content?('Dataset #3'), 'Failed ODS'
-    click_on 'File Types'
-    assert page.has_content?('Contribute Data')
+    assert page.has_css?('#viscontainer'), 'Failed ODS'
+  end
+
+  test 'upload xls' do
+    login('kcarcia@cs.uml.edu', '12345')
+    visit project_path(@project)
+    assert page.has_content?('Upload Test'), 'Not on project page.'
 
     # Test XLS upload
     xls_path = Rails.root.join('test', 'CSVs', 'test.xls')
@@ -68,9 +73,13 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     page.execute_script "$('#datafile_form').submit()"
     assert page.has_content?('Match Quality')
     click_on 'Submit'
-    assert page.has_content?('Dataset #4'), 'Failed XLS'
-    click_on 'File Types'
-    assert page.has_content?('Contribute Data')
+    assert page.has_css?('#viscontainer'), 'Failed XLS'
+  end
+
+  test 'upload xlsx' do
+    login('kcarcia@cs.uml.edu', '12345')
+    visit project_path(@project)
+    assert page.has_content?('Upload Test'), 'Not on project page.'
 
     # Test XLSX upload
     xlsx_path = Rails.root.join('test', 'CSVs', 'test.xlsx')
@@ -79,78 +88,60 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     page.execute_script "$('#datafile_form').submit()"
     assert page.has_content?('Match Quality')
     click_on 'Submit'
-    assert page.has_content?('Dataset #5'), 'Failed XLSX'
-    click_on 'File Types'
-    assert page.has_content?('Contribute Data')
+    assert page.has_css?('#viscontainer'), 'Failed XLSX'
+  end
+
+  test 'link google doc' do
+    login('kcarcia@cs.uml.edu', '12345')
+    visit project_path(@project)
+    assert page.has_content?('Upload Test'), 'Not on project page.'
 
     # Test linking a google doc
     click_on 'Google Doc'
-    assert page.has_content? 'Please enter the Google Drive link to share below:'
+    assert page.has_content? 'Please enter the Google Drive link (or key) to share below:'
     find('#doc_url').set('https://docs.google.com/spreadsheet/pub?key=0Aos8U59XvkPkdHI5bmJJaE5tc2xoRVJoaWRNSUp6Q2c&single=true&gid=0&output=csv')
     click_on 'Save'
     assert page.has_content?('Match Quality')
     click_on 'Submit'
-    assert page.has_content?('Dataset #6'), 'Failed GDOC'
-    click_on 'File Types'
-    assert page.has_content?('Contribute Data')
+    assert page.has_css?('#viscontainer'), 'Failed GDOC'
+  end
+
+  test 'unreadable file' do
+    login('kcarcia@cs.uml.edu', '12345')
+    visit project_path(@project)
+    assert page.has_content?('Upload Test'), 'Not on project page.'
 
     # Test upload non-readable
     jpg_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
     page.execute_script "$('#datafile_form').parent().show()"
     find('#datafile_form').attach_file('file', jpg_path)
     assert page.has_content?('File could not be read')
+  end
 
-    # Test edit data set
+  test 'edit data set' do
+    login('kcarcia@cs.uml.edu', '12345')
+    visit project_path(@project)
+    assert page.has_content?('Upload Test'), 'Not on project page.'
+
+    ods_path = Rails.root.join('test', 'CSVs', 'test.ods')
+    page.execute_script "$('#datafile_form').parent().show()"
+    find('#datafile_form').attach_file('file', ods_path)
+    page.execute_script "$('#datafile_form').submit()"
+    assert page.has_content?('Match Quality')
+    click_on 'Submit'
+    assert page.has_css?('#viscontainer'), 'Failed ODS'
+
+    visit project_path(@project)
+
     all('.data_set_edit')[0].click
     assert page.has_content? 'Project:'
     find('#edit_table_save').click
-    assert page.has_content?('Save Visualization'), 'Save Viz Button'
+    assert page.has_content?('Save Visualization'), 'Data didnt save'
+  end
 
-    click_on 'File Types'
-    assert page.has_content?('Contribute Data')
-
-    # Test Saved Vis
-    proj_url = current_url
-    click_on 'Dataset #1'
-    ds_url = current_url
-    # Tests visual modes for dataset viewing
-    visit ds_url + '?presentation=true'
-    assert page.has_no_content?('Saved Vis - File Types')
-    assert page.has_no_content?('Groups')
-    visit ds_url + '?embed=true'
-    assert page.has_no_content?('Saved Vis - File Types')
-    assert page.has_content?('Groups')
-
-    # Tests visual modes for saved vis
-    visit ds_url
-    click_on 'Histogram'
-    click_on 'Save Visualization'
-    click_on 'Finish'
-    assert page.has_content?('Saved Vis - File Types')
-    vis_url = current_url
-    visit vis_url + '?presentation=true'
-    assert page.has_no_content?('Saved Vis - File Types')
-    assert page.has_no_content?('Groups')
-    visit vis_url + '?embed=true'
-    assert page.has_no_content?('Saved Vis - File Types')
-    assert page.has_content?('Groups')
-    visit vis_url
-
-    page.execute_script 'window.confirm = function () { return true }'
-
-    # Tests deleting vises
-    click_on 'Visualizations'
-    assert page.has_content?('Saved Vis - File Types')
-    visit vis_url
-    find('.menu_edit_link').click
-    click_on 'Delete Visualization'
-    # Capybara-webkit needs the window.confirm hack instead
-    # page.driver.browser.switch_to.alert.accept
-    assert page.has_no_content?('Saved Vis - File Types')
-    visit proj_url
-    assert page.has_no_content?('Saved Vis - File Types')
-    assert page.has_content?('Contribute Data')
-
+  test 'upload with key' do
+    login('kcarcia@cs.uml.edu', '12345')
+    visit project_path(@project)
     # Add a student key
     find('#edit-project-button').click
     fill_in 'Label', with: 'Starbucks'
@@ -171,9 +162,9 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     page.execute_script "$('#datafile_form').submit()"
     assert page.has_content?('Match Quality'), "Data wasn't submitted"
     fill_in 'Title', with: 'Bad Data'
+
     click_on 'Submit'
     assert page.has_content?('Bad Data')
-    click_on 'File Types'
-    assert page.has_content?('Contribute Data')
+
   end
 end
