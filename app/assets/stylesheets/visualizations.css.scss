@@ -5,7 +5,7 @@
 // because displaying a vis is in the same div class as view all vises
 body[data-page-name='visualizations/displayVis'] .visualizations-controller,
 body[data-page-name='visualizations/show'] .visualizations-controller,
-.embeded {
+.embedded {
 
   // colors
   $light-bkg: linear-gradient(#F6F6F6, #D7D7D7);
@@ -261,7 +261,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller {
   }
 }
 
-.embeded {
+.embedded {
   .ui-accordion-header {
     padding-top: 10px;
   }
