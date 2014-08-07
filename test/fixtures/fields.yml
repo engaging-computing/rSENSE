@@ -61,3 +61,18 @@ locked_projet_field:
   unit:
   project: locked_project
   
+lat_field:
+  field_type: 4
+  project: upload_test
+  name: lat
+  
+lon_field:
+  field_type: 5
+  project: upload_test
+  name: lon
+
+altitude_field:
+  field_type: 2
+  project: upload_test
+  name: altitude
+  
