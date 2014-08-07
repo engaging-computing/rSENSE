@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class VisualizationTest < ActionDispatch::IntegrationTest
+class EmbeddedVizTest < ActionDispatch::IntegrationTest
   include CapyHelper
 
   self.use_transactional_fixtures = false
