@@ -41,27 +41,27 @@
 //= require grid.locale-en.js
 //= require jquery.prettyPhoto
 //= require markerclustererplus
+//= require numeric.min
 //= require oms
 //= require better_colorpicker
 //
-//= require highvis/savedVis
-//= require highvis/visUtils
-//= require highvis/dataReduction
-//= require highvis/highmodifiers
-//= require numeric.min
-//= require highvis/regression
-//= require highvis/dataClipping
-//= require highvis/baseVis
-//= require highvis/disabledVis
-//= require highvis/scatter
-//= require highvis/timeline
-//= require highvis/histogram
-//= require highvis/bar
-//= require highvis/table
-//= require highvis/map
-//= require highvis/summary
-//= require highvis/photos
-//= require highvis/runtime
+//= require visualizations/highvis/savedVis
+//= require visualizations/highvis/visUtils
+//= require visualizations/highvis/dataReduction
+//= require visualizations/highvis/highmodifiers
+//= require visualizations/highvis/regression
+//= require visualizations/highvis/dataClipping
+//= require visualizations/highvis/baseVis
+//= require visualizations/highvis/disabledVis
+//= require visualizations/highvis/scatter
+//= require visualizations/highvis/timeline
+//= require visualizations/highvis/histogram
+//= require visualizations/highvis/bar
+//= require visualizations/highvis/table
+//= require visualizations/highvis/map
+//= require visualizations/highvis/summary
+//= require visualizations/highvis/photos
+//= require visualizations/highvis/runtime
 //
 //= require summernote
 //
