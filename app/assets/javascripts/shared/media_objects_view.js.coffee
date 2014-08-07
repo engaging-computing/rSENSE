@@ -29,7 +29,6 @@ setupMediaObjectsView = () ->
       error: ->
         ($ '#ajax-status').html "error selecting media objects"
         root.find('.img_selector').each ->
-          $(this).errorFlash()
           ($ this).prop("checked", false)
       success: ->
         ($ '#ajax-status').html "selecting media objects"
