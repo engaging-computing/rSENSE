@@ -55,7 +55,7 @@ $ ->
     addSelectAllY = (id) ->
       ($ "##{id}").prepend(
         "<div class='inner_control_div'>
-          <div class='checkbox'>
+          <div class='checkbox all-y-fields'>
             <label class='all-y'>
               <input id='select-all-y' type='checkbox'> #Select All </input>
             </label>
@@ -71,7 +71,7 @@ $ ->
         return false
     
     bindYAxisEventHandlers = () ->
-      ($ '.all-y').on('click', () ->
+      ($ '.all-y-fields').on('click', () ->
         window.allYAxes = !window.allYAxes
         if window.allYAxes
           ($ "#yAxisControl").find('.y_axis_input').each (i,j) ->
