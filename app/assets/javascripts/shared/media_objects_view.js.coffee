@@ -13,7 +13,7 @@ setupMediaObjectsView = () ->
   img_selector_click = (obj) ->
     root = ($ '#media_object_list')
     type_id = obj.attr("obj_id")
-    type = root.attr("type")
+    type = root.attr("data-type")
     mo = if obj.prop("checked") == false then null else obj.attr("mo_id")
 
     data = {}
