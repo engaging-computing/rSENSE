@@ -31,11 +31,13 @@ class DataSet < ActiveRecord::Base
   end
 
   def self.search(search)
-    if search
-      where('title LIKE ?', "%#{search}%").order('created_at DESC')
-    else
-      all.order('created_at DESC')
-    end
+    res = if search
+            where('title LIKE ?', "%#{search}%").order('created_at DESC')
+          else
+            all.order('created_at DESC')
+          end
+
+    res
   end
 
   def to_hash(recurse = true)
@@ -98,19 +100,21 @@ class DataSet < ActiveRecord::Base
     dstring
   end
 
-  def self.get_next_name(project)
+  def self.get_next_name(project, fname)
     highest = 0
-    base = 'Dataset #'
+    base = fname
     project.data_sets.each do |dset|
       title = dset.title
       if title.include? base
-        val = title.split(base)[1].to_i || nil
+        highest += 1
+        val = title[/\d+/].to_i || nil
         next if val.nil?
         if val.to_i > highest
           highest = val.to_i
         end
       end
     end
-    "#{base}#{highest + 1}"
+
+    highest == 0 ? fname : "#{fname}(#{highest})"
   end
 end
