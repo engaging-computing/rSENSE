@@ -53,8 +53,6 @@ $ ->
     Add Select All Options for Y Axis to Timeline, Bar Chart, and Scatter Plot
     ###
     window.addSelectAllY = (id) ->
-      console.log("#{id}")
-      console.log('window.addSelectAllY')
       ($ "##{id}").prepend(
         "<div class='inner_control_div'>
           <div class='checkbox'>
@@ -74,81 +72,123 @@ $ ->
       
     ($ document).ready () ->
       window.tempFields = data.normalFields
-      console.log 'window.tempFields = ' + window.tempFields
-      #originalWidth = 210
-      #($ '#controldiv').width(210)
-      console.log window.globals.curVis.canvas
       if globals.curVis.canvas == 'timeline_canvas'
-        console.log 'timeline_canvas'
         id = ($ '#controldiv').find('.outer_control_div:eq(1)').attr('id')
         window.allYAxes = areAllFieldsSelected()
         window.addSelectAllY(id)
       else if globals.curVis.canvas == 'scatter_canvas'
-        console.log 'scatter_canvas'
         id = ($ '#controldiv').find('.outer_control_div:eq(2)').attr('id')
         window.addSelectAllY(id)
       else if globals.curVis.canvas == 'bar_canvas'
-        console.log('hello')
         id = ($ '#controldiv').find('.outer_control_div:eq(1)').attr('id')
         window.addSelectAllY(id)
       if window.allYAxes
-        ($ '#select-all-y').prop('checked', true)
+        ($ '#select-all-y').attr('checked', true)
       window.globals.curVis.update()
       
-      ($ '.all-y').on('click', () ->
-        console.log('hello')
+      ($ '.all-y').on('click', () ->               
         window.allYAxes = !window.allYAxes
-        if window.allYAxes == true
-          console.log globals.fieldSelection
-          console.log data.normalFields
-          globals.fieldSelection = data.normalFields
+        if window.allYAxes
           ($ "#yAxisControl").find('.y_axis_input').each (i,j) ->
-            ($ j).prop('checked', true)
+            if ($ j).prop('checked') == false
+              ($ j).trigger('click')
+          window.allYaxes = true
         else
-          globals.fieldSelection = []
+          window.allYAxes = false
           ($ "#yAxisControl").find('.y_axis_input').each (i,j) ->
-            ($ j).prop('checked', false)
-        window.globals.curVis.update()
+            if ($ j).prop('checked') == true
+              ($ j).trigger('click')
       )
       ($ '.y_axis_input').on('click', () ->
-        console.log("yAxisControl.length = #{($ '#yAxisControl').find('.y_axis_input').length}")
-        if ($ '#yAxisControl').find('.y_axis_input').length == globals.fieldSelection.length
+        if data.normalFields.length == globals.fieldSelection.length
           window.allYAxes = true
           ($ '#select-all-y').prop('checked', true)
         else
           window.allYAxes = false
           ($ '#select-all-y').prop('checked', false)
-        #data.normalFields = window.tempFields
-        #data.normalFields = data.normalFields
-    )
-  
-   
+      )
       
     ($ '#ui-id-2').on('click', () ->
-        #window.globals.curVis.start()
         window.allYAxes = window.areAllFieldsSelected()
         addSelectAllY(($ '#controldiv').find('.outer_control_div:eq(1)').attr('id'))
         if window.allYAxes
           ($ '#select-all-y').prop('checked', true)
+        ($ '.all-y').on('click', () ->               
+          window.allYAxes = !window.allYAxes
+          if window.allYAxes
+            ($ "#yAxisControl").find('.y_axis_input').each (i,j) ->
+              if ($ j).prop('checked') == false
+                ($ j).trigger('click')
+            window.allYaxes = true
+          else
+            window.allYAxes = false
+            ($ "#yAxisControl").find('.y_axis_input').each (i,j) ->
+              if ($ j).prop('checked') == true
+                ($ j).trigger('click')
+        )
+        ($ '.y_axis_input').on('click', () ->
+          if data.normalFields.length == globals.fieldSelection.length
+            window.allYAxes = true
+            ($ '#select-all-y').prop('checked', true)
+          else
+            window.allYAxes = false
+            ($ '#select-all-y').prop('checked', false)
       )
+    )
       
     ($ '#ui-id-3').on('click', () -> 
-      #window.globals.curVis.start()
       addSelectAllY(($ '#yAxisControl').find('.outer_control_div:first').attr('id'))
       window.allYAxes = window.areAllFieldsSelected()
       if window.allYAxes
         ($ '#select-all-y').prop('checked', true)
+      ($ '.all-y').on('click', () ->               
+        window.allYAxes = !window.allYAxes
+        if window.allYAxes
+          ($ "#yAxisControl").find('.y_axis_input').each (i,j) ->
+            if ($ j).prop('checked') == false
+              ($ j).trigger('click')
+          window.allYaxes = true
+        else
+          window.allYAxes = false
+          ($ "#yAxisControl").find('.y_axis_input').each (i,j) ->
+            if ($ j).prop('checked') == true
+              ($ j).trigger('click')
+      )
+      ($ '.y_axis_input').on('click', () ->
+        if data.normalFields.length == globals.fieldSelection.length
+          window.allYAxes = true
+          ($ '#select-all-y').prop('checked', true)
+        else
+          window.allYAxes = false
+          ($ '#select-all-y').prop('checked', false)
+      )
     )
        
     ($ '#ui-id-4').on('click', () ->
-      #window.globals.curVis.start()
       addSelectAllY(($ '#controldiv').find('.outer_control_div:eq(1)').attr('id'))
       window.allYAxes = window.areAllFieldsSelected()
       if window.allYAxes
         ($ '#select-all-y').prop('checked', true)
-    )  
-    
-    ($ window).resize () -> 
-      ($ '#controldiv').innerWidth(210)
-      
+      ($ '.all-y').on('click', () ->               
+        window.allYAxes = !window.allYAxes
+        if window.allYAxes
+          ($ "#yAxisControl").find('.y_axis_input').each (i,j) ->
+            if ($ j).prop('checked') == false
+              ($ j).trigger('click')
+          window.allYaxes = true
+        else
+          window.allYAxes = false
+          ($ "#yAxisControl").find('.y_axis_input').each (i,j) ->
+            if ($ j).prop('checked') == true
+              ($ j).trigger('click')
+      )
+      ($ '.y_axis_input').on('click', () ->
+        if data.normalFields.length == globals.fieldSelection.length
+          window.allYAxes = true
+          ($ '#select-all-y').prop('checked', true)
+        else
+          window.allYAxes = false
+          ($ '#select-all-y').prop('checked', false)
+      )
+    )
       
