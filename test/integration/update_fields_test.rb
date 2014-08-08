@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class UploadFieldsTest < ActionDispatch::IntegrationTest
+class UpdateFieldsTest < ActionDispatch::IntegrationTest
   include CapyHelper
 
   setup do
@@ -15,10 +15,8 @@ class UploadFieldsTest < ActionDispatch::IntegrationTest
   test 'edit fields' do
     login('kcarcia@cs.uml.edu', '12345')
     click_on 'Projects'
-    click_on 'Create Project'
-    assert page.has_content?('What would you like to name your project?')
     find('#project_title').set('Fields Test')
-    click_on 'Create'
+    click_on 'Create Project'
 
     assert page.has_content?('Fields'), "Project page should have 'Fields'"
 
@@ -54,10 +52,8 @@ class UploadFieldsTest < ActionDispatch::IntegrationTest
   test 'template fields with dataset' do
     login('kcarcia@cs.uml.edu', '12345')
     click_on 'Projects'
-    click_on 'Create Project'
-    assert page.has_content?('What would you like to name your project?')
     find('#project_title').set('Template Fields Test')
-    click_on 'Create'
+    click_on 'Create Project'
 
     assert page.has_content?('Fields'), "Project page should have 'Fields'"
 
@@ -78,10 +74,8 @@ class UploadFieldsTest < ActionDispatch::IntegrationTest
   test 'teplate fields without dataset' do
     login('kcarcia@cs.uml.edu', '12345')
     click_on 'Projects'
-    click_on 'Create Project'
-    assert page.has_content?('What would you like to name your project?')
     find('#project_title').set('Template Fields Test 2')
-    click_on 'Create'
+    click_on 'Create Project'
 
     assert page.has_content?('Fields'), "Project page should have 'Fields'"
 
