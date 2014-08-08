@@ -4,7 +4,8 @@
 
 // because displaying a vis is in the same div class as view all vises
 body[data-page-name='visualizations/displayVis'] .visualizations-controller,
-body[data-page-name='visualizations/show'] .visualizations-controller {
+body[data-page-name='visualizations/show'] .visualizations-controller,
+.embedded {
 
   // colors
   $border-color: #ABABAB;
@@ -111,6 +112,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller {
 
     .ui-accordion-header {
       @include unselectable;
+      height: 38px;
       outline: none;
       margin: 0 5px 0 0; // see #controldiv above for explanation
       padding: 3px 0 7px 5px;
@@ -447,6 +449,19 @@ ul#sopt_menu {
     a > table > tbody > tr > td { // this is gross
       color: #FFF;
     }
+  }
+}
+
+body[data-page-name='visualizations/displayVis'] .visualizations-controller,
+body[data-page-name='visualizations/show'] .visualizations-controller {
+  .ui-accordion-header {
+    padding-top: 3px;
+  }
+}
+
+.embedded {
+  .ui-accordion-header {
+    padding-top: 10px;
   }
 }
 
