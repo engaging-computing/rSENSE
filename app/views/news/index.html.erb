@@ -29,16 +29,14 @@
           <% left_image = MediaObject.find(n.featured_media_id).src %>
         <% end %>
 
-        <a href="<%= news_path(n) %>">
-          <%= image_tag left_image, alt: 'test', class: 'item-image news_page_image hidden-xs' %>
-        </a>
+        <a class="item-image-link hidden-xs" href="<%= news_path(n) %>" style="background-image: url(<%= left_image %>)"></a>
 
         <div class="item-desc">
           <div class="news_page_title truncate"><%= link_to n.title, n %></div>
           <div class="news_page_subtitle truncate"><%= n.summary %></div>
           <div class="news_page_date">Written on <%=n.created_at.strftime("%B %d, %Y")%></div>
           <div class="news_page_content truncate">
-            <%= n.content %>
+            <%= n.content.html_safe %>
             <div class="news_page_link"><%= link_to "Read More", news_path(n) %></div>
           </div>
         </div>

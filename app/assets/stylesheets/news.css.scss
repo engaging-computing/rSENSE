@@ -4,10 +4,6 @@
 
 
 .news-controller {
-	.item-image {
-		margin-right: 5px;
-	}
-
 	.item-desc {
 		margin-left: 5px;
 
@@ -20,21 +16,18 @@
 			font-size:0.8em;
 			margin-bottom: 20px;
 		}
-		.new_page_image {
-
-		}
 		.news_page_link {
 			position: absolute;
 			bottom: 0;
-			padding-top: 40px;
+			padding-top: 10px;
 			text-align: center;
 			width: 100%;
 			background: linear-gradient(rgba(221, 221, 211, 0),
-				rgba(221, 221, 221, 1) 65%,
+				rgba(221, 221, 221, 1) 45%,
 				rgba(221, 221, 221, 1));
 		}
 		.news_page_subtitle {
-			height: 16px;
+			height: 20px;
 			white-space: nowrap;
 			overflow: hidden;
 		}
@@ -42,5 +35,13 @@
 			white-space: nowrap;
 			font-size: 20px;
 		}
+	}
+	.item-image-link {
+		float: left;
+		display: block;
+		width: 210px;
+		height: 210px;
+		background-size: cover;
+		margin-right: 5px;
 	}
 }
