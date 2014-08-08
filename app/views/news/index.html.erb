@@ -36,7 +36,7 @@
           <div class="news_page_subtitle truncate"><%= n.summary %></div>
           <div class="news_page_date">Written on <%=n.created_at.strftime("%B %d, %Y")%></div>
           <div class="news_page_content truncate">
-            <%= CGI.unescapeHTML(n.content).html_safe %>
+            <%= n.content.html_safe %>
             <div class="news_page_link"><%= link_to "Read More", news_path(n) %></div>
           </div>
         </div>
