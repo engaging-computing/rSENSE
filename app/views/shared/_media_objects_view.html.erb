@@ -1,4 +1,4 @@
-<div id="media_object_list">
+<div id="media_object_list" data-type="<%= type %>">
   <table id="media_table" class="table table-striped">
      <% object.media_objects.to_a.each_with_index do |mo, i| %>
       <% if !mo.media_type.nil? && i == 0 %>

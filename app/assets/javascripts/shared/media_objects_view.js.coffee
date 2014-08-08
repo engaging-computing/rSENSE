@@ -13,7 +13,7 @@ setupMediaObjectsView = () ->
   img_selector_click = (obj) ->
     root = ($ '#media_object_list')
     type_id = obj.attr("obj_id")
-    type = root.attr("type")
+    type = root.attr("data-type")
     mo = if obj.prop("checked") == false then null else obj.attr("mo_id")
 
     data = {}
@@ -29,7 +29,6 @@ setupMediaObjectsView = () ->
       error: ->
         ($ '#ajax-status').html "error selecting media objects"
         root.find('.img_selector').each ->
-          $(this).errorFlash()
           ($ this).prop("checked", false)
       success: ->
         ($ '#ajax-status').html "selecting media objects"

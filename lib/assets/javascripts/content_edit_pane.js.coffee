@@ -103,7 +103,8 @@ $ ->
                 
       return editor
   
-  ($ '#content_edit').click () ->
+  ($ '#content_edit').click (e) ->
+    e.preventDefault()
     ck = ($ document).find('.content:visible')[0]
     ($ @).hide()
     turn_on_ck(ck)

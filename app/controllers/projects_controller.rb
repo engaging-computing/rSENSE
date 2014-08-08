@@ -131,7 +131,7 @@ class ProjectsController < ApplicationController
     @project = Project.new
   end
 
-  # PUT /projects/1s
+  # PUT /projects/1
   # PUT /projects/1.json
   def update
     @project = Project.find(params[:id])

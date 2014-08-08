@@ -98,7 +98,7 @@
                   <i class="fa fa-check-square-o"></i>
                   <span class="caret"></span>
                 </a>
-                <ul class="dropdown-menu" role="menu">
+                <ul class="dropdown-menu" role="menu" style="left:-200%;">
                     <li role="presentation">
                       <a role="menuitem" href="javascript:void(0);" id="check_all"><i class="fa fa-check-square-o"></i> All</a>
                     </li>
@@ -178,7 +178,7 @@
                <% else %>
                	<td style="max-width:60px"><div class="truncate"><%= link_to s.owner.name, user_path(s.owner) %></div></td>
                <% end %>
-                  <td style="max-width:200px"><div class="truncate dset" title="Created <%=s.created_at.strftime("%B %d, %Y")%>"><%= link_to s.title, "#{params[:id]}/data_sets/#{s.id}" %></div></td>
+                 <td style="max-width:200px"><div class="truncate dset" title="Created <%=s.created_at.strftime("%B %d, %Y")%>"><%= link_to s.title, "/projects/#{params[:id]}/data_sets/#{s.id}" %></div></td>
                  <td>
                  <div class="controls" style="">                  
                       <% if can_edit? s %>
