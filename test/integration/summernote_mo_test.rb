@@ -16,9 +16,8 @@ class SummernoteMoTest < ActionDispatch::IntegrationTest
     login('kcarcia@cs.uml.edu', '12345')
     visit '/'
     click_on 'Projects'
-    click_on 'Create Project'
     find('#project_title').set('Upload Images SNMO')
-    click_on 'Create'
+    click_on 'Create Project'
     assert page.has_content? 'Fields must be set up to contribute data'
     assert page.has_no_css? '.mo_image'
 

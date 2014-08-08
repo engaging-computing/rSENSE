@@ -43,6 +43,8 @@ class ProjectsController < ApplicationController
 
     @projects = @projects.paginate(page: params[:page], per_page: pagesize, total_entries: count)
 
+    @project = Project.new
+
     respond_to do |format|
       format.html
       format.json { render json: @projects.map { |p| p.to_hash(false) } }
@@ -120,15 +122,10 @@ class ProjectsController < ApplicationController
         format.json { render json: @project.to_hash(false), status: :created, location: @project }
       else
         flash[:error] = @project.errors.full_messages
-        format.html { render :new }
+        format.html { redirect_to projects_path }
         format.json { render json: @project.errors, status: :unprocessable_entity }
       end
     end
-  end
-
-  # GET /projects
-  def new
-    @project = Project.new
   end
 
   # PUT /projects/1
