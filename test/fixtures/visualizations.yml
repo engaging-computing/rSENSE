@@ -25,4 +25,11 @@ needs_media:
   content: MyText
   data: MyText
   globals: MyText
-  id: 1
+
+media_test:
+  title: Needs Media
+  user: nixon
+  project: one
+  content: MyText
+  data: MyText
+  globals: MyText

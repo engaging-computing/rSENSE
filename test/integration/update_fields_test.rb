@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class UploadFieldsTest < ActionDispatch::IntegrationTest
+class UpdateFieldsTest < ActionDispatch::IntegrationTest
   include CapyHelper
 
   setup do
@@ -15,10 +15,8 @@ class UploadFieldsTest < ActionDispatch::IntegrationTest
   test 'edit fields' do
     login('kcarcia@cs.uml.edu', '12345')
     click_on 'Projects'
-    click_on 'Create Project'
-    assert page.has_content?('What would you like to name your project?')
     find('#project_title').set('Fields Test')
-    click_on 'Create'
+    click_on 'Create Project'
 
     assert page.has_content?('Fields'), "Project page should have 'Fields'"
 
@@ -54,43 +52,39 @@ class UploadFieldsTest < ActionDispatch::IntegrationTest
   test 'template fields with dataset' do
     login('kcarcia@cs.uml.edu', '12345')
     click_on 'Projects'
-    click_on 'Create Project'
-    assert page.has_content?('What would you like to name your project?')
     find('#project_title').set('Template Fields Test')
-    click_on 'Create'
+    click_on 'Create Project'
 
     assert page.has_content?('Fields'), "Project page should have 'Fields'"
 
     # find('#template_file_upload').click
 
     csv_path = Rails.root.join('test', 'CSVs', 'dessert.csv')
-    page.execute_script %Q{$('#template_file_form').parent().show()}
+    page.execute_script "$('#template_file_form').parent().show()"
     find('#template_file_form').attach_file('file', csv_path)
-    page.execute_script %Q{$('#template_file_form').submit()}
+    page.execute_script "$('#template_file_form').submit()"
 
     assert page.has_content?('Please select types for each field below.')
 
     click_on 'Submit'
 
-    assert page.has_content?('Dataset #1')
+    assert page.has_content?('dessert')
   end
 
   test 'teplate fields without dataset' do
     login('kcarcia@cs.uml.edu', '12345')
     click_on 'Projects'
-    click_on 'Create Project'
-    assert page.has_content?('What would you like to name your project?')
     find('#project_title').set('Template Fields Test 2')
-    click_on 'Create'
+    click_on 'Create Project'
 
     assert page.has_content?('Fields'), "Project page should have 'Fields'"
 
     # find('#template_file_upload').click
 
     csv_path = Rails.root.join('test', 'CSVs', 'dessert.csv')
-    page.execute_script %Q{$('#template_file_form').parent().show()}
+    page.execute_script "$('#template_file_form').parent().show()"
     find('#template_file_form').attach_file('file', csv_path)
-    page.execute_script %Q{$('#template_file_form').submit()}
+    page.execute_script "$('#template_file_form').submit()"
 
     assert page.has_content?('Please select types for each field below.')
     find('#create_dataset').click

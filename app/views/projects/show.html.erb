@@ -98,7 +98,7 @@
                   <i class="fa fa-check-square-o"></i>
                   <span class="caret"></span>
                 </a>
-                <ul class="dropdown-menu" role="menu">
+                <ul class="dropdown-menu" role="menu" style="left:-200%;">
                     <li role="presentation">
                       <a role="menuitem" href="javascript:void(0);" id="check_all"><i class="fa fa-check-square-o"></i> All</a>
                     </li>
@@ -173,8 +173,12 @@
                     </div>
                   </td>
                <% end %>
-                  <td style="max-width:60px"><div class="truncate"><%= link_to s.owner.name, user_path(s.owner) %></div></td>
-                  <td style="max-width:200px"><div class="truncate" title="Created <%=s.created_at.strftime("%B %d, %Y")%>"><%= link_to s.title, "#{params[:id]}/data_sets/#{s.id}" %></div></td>
+               <% if s.contributor_name? %>
+               	<td style="max-width:60px"><div class="truncate"><%= s.contributor_name %></div></td>
+               <% else %>
+               	<td style="max-width:60px"><div class="truncate"><%= link_to s.owner.name, user_path(s.owner) %></div></td>
+               <% end %>
+                 <td style="max-width:200px"><div class="truncate dset" title="Created <%=s.created_at.strftime("%B %d, %Y")%>"><%= link_to s.title, "/projects/#{params[:id]}/data_sets/#{s.id}" %></div></td>
                  <td>
                  <div class="controls" style="">                  
                       <% if can_edit? s %>
@@ -186,7 +190,7 @@
                       <% end %>
 
                       <% if can_delete? s %>
-                         &nbsp;<a class="data_set_delete" href="<%= data_set_url s %>" name="<%= s.title %>" style="color:red">Delete</a>
+                         &nbsp;<a class="data_set_delete" href="<%= data_set_url s %>" name="<%= s.title %>">Delete</a>
                       <% end %>
                     </div>
                   </td>
@@ -267,16 +271,26 @@
                 Google Doc
               </a>
             </div>
-            <div class="clear">
-            </div>
           </div>
+            <% if !(session[:contrib_access].nil?) %>
+	            <div class="row" align="center" style="margin-top: 110px;">
+	              <%= form_tag '/contrib_keys/clear', method: 'get' do %>
+	                <%= hidden_field_tag :project_id, @project.id %>
+	                <%= submit_tag "Clear Key", class: "btn btn-success" %>
+	              <% end %>
+	            </div>
+            <% end %>
+          
         <% else %>
           <% if @project.has_contrib_key? %>
             <p>Enter contributor key to submit data.</p>
             <%= form_tag '/contrib_keys/enter', method: 'post' do %>
+            <div class="row" style="margin-left: 0px;" >
               <%= hidden_field_tag :project_id, @project.id %>
-              <%= text_field_tag :key %>
+              <%= text_field_tag :key,"",placeholder:"Key" %>
+              <%= text_field_tag :contributor_name,"",placeholder:"Contributor Name" %>
               <%= submit_tag "Submit Key", class: "btn btn-success" %>
+            </div>
             <% end %>
           <% else %>
             <% if (@project.fields.count == 0) %>
@@ -346,11 +360,11 @@
       <%= form_tag "/data_sets/dataFileUpload", method: 'post', multipart: true do %>
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title">Please enter the Google Drive link to share below:</h4>
+          <h4 class="modal-title">Please enter the Google Drive link (or key) to share below:</h4>
         </div>
         <div class="modal-body">
           <input name="pid" value="<%=@project.id%>" type="hidden">
-          <input name="file" id="doc_url" class="form-control" type="text" style="width:95%"></input>
+          <input name="gdoc" id="doc_url" class="form-control" type="text" style="width:95%"></input>
         </div>
         <div class="modal-footer">
           <button id="save_doc" type="submit" class="login_button btn btn-success">Save</button>

@@ -31,8 +31,8 @@ $ ->
       $('#ajax-status').html("saving...")
 
       # Build the data object to send to the controller
-      type = root.attr('type')
-      field_name = root.attr('field')
+      type = root.attr('data-type')
+      field_name = root.attr('data-field')
       edit_box = root.find('.info_edit_box')
       value = edit_box.val()
       data = {}

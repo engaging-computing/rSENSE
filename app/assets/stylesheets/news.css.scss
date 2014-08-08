@@ -2,3 +2,46 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+
+.news-controller {
+	.item-desc {
+		margin-left: 5px;
+
+		.news_page_content {
+			height: 110px;
+			overflow-y: hidden;
+			position: relative;
+		}
+		.news_page_date {
+			font-size:0.8em;
+			margin-bottom: 20px;
+		}
+		.news_page_link {
+			position: absolute;
+			bottom: 0;
+			padding-top: 10px;
+			text-align: center;
+			width: 100%;
+			background: linear-gradient(rgba(221, 221, 211, 0),
+				rgba(221, 221, 221, 1) 45%,
+				rgba(221, 221, 221, 1));
+		}
+		.news_page_subtitle {
+			height: 20px;
+			white-space: nowrap;
+			overflow: hidden;
+		}
+		.news_page_title {
+			white-space: nowrap;
+			font-size: 20px;
+		}
+	}
+	.item-image-link {
+		float: left;
+		display: block;
+		width: 210px;
+		height: 210px;
+		background-size: cover;
+		margin-right: 5px;
+	}
+}

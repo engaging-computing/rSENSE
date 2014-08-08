@@ -14,10 +14,9 @@ two:
   user: nixon
   hidden: false
   
-tutorial_three:
+media_test:
   content: MyText
   title: Tutorial Three
   featured: false
   user: nixon
-  id: 1
   hidden: false
