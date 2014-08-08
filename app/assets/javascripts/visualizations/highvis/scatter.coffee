@@ -319,9 +319,9 @@ $ ->
               ($ 'tr#row_' + regression.series.name.id).addClass('regression_row_disabled')
 
         # Display the table header if necessary
-        if ($ '#regressionTableBody > tr').length > 0
-          ($ 'tr#regressionTableHeader').show()
-        else ($ 'tr#regressionTableHeader').hide()
+        if ($ '#regression-table-body > tr').length > 0
+          ($ 'tr#regression-table-header').show()
+        else ($ 'tr#regression-table-header').hide()
 
       ###
       Draws radio buttons for changing symbol/line mode.
@@ -608,12 +608,12 @@ $ ->
           </select></td></tr>
           </table>
           <button id='regressionButton' class='save_button btn btn-default'>Draw Best Fit Line</button>
-          <table id='regressionTable' class='regression_table fixed' >
+          <table id='regression-table'>
           <col width='55%' />
           <col width='35%' />
           <col width='10%' />
-          <tr id='regressionTableHeader'><td><strong>f(x)<strong></td><td><strong>Type<strong></td></tr>
-          <tbody id='regressionTableBody'></tbody></table>
+          <tr id='regression-table-header'><td><strong>f(x)<strong></td><td><strong>Type<strong></td></tr>
+          <tbody id='regression-table-body'></tbody></table>
           </div></div>
           """
 
@@ -757,19 +757,19 @@ $ ->
           <tr id = 'row_#{savedReg.series.name.id}' class='regression_row'>
           <td class='regression_rowdata truncate'>#{savedReg.fieldNames[1]}(#{savedReg.fieldNames[0]})</td>
           <td class='regression_rowdata'>#{regressions[savedReg.type]}#{savedReg.regressionId}</td>
-          <td id='#{savedReg.series.name.id}' class='delete regression_remove'><i class='fa fa-times-circle'></i></td>
+          <td id='#{savedReg.series.name.id}' class='regression_remove'><i class='fa fa-times-circle'></i></td>
           </tr>
           """
 
         # Added a info relating to this regression
-        ($ '#regressionTableBody').append(regressionRow)
+        ($ '#regression-table-body').append(regressionRow)
 
         # Add the disabled style if necessary
         if !enabled
           ($ 'tr#row_' + savedReg.series.name.id).addClass('regression_row_disabled')
 
         # Display the table header
-        ($ 'tr#regressionTableHeader').show()
+        ($ 'tr#regression-table-header').show()
 
         # Make each row a link to its view
         ($ 'tr#row_' + savedReg.series.name.id).click =>
@@ -794,9 +794,9 @@ $ ->
           ($ 'td#' + savedReg.series.name.id).parent().remove()
 
           # Display the table header if necessary
-          if ($ '#regressionTableBody > tr').length > 0
-            ($ 'tr#regressionTableHeader').show()
-          else ($ 'tr#regressionTableHeader').hide()
+          if ($ '#regression-table-body > tr').length > 0
+            ($ 'tr#regression-table-header').show()
+          else ($ 'tr#regression-table-header').hide()
 
           # Remove regression from the savedRegressions array.
           id = savedReg.series.name.id
