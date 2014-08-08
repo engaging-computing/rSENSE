@@ -45,7 +45,7 @@
   left: 0;
   width: 100%;
   height: 500px;
-  //height:100% !important ;
+  height:100% !important ;
 }
 
 /* Featurettes
@@ -146,7 +146,7 @@
 }
 .featurette-image{
   width: 100%; 
-  height: 80%;
+  height: 100%;
   display:block;
   //border: 1px solid black;
 }
@@ -168,7 +168,7 @@
   max-height: 500px;
   text-align: left;
   .item{
-    height: 100% !important;  
+    //height: 100% !important;  
   }
   
 }

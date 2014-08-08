@@ -22,16 +22,20 @@ $ ->
   )
 
   ($ document).ready( () ->
-    window.resizeCarousel()
+    window.resizePage()
   )
 
   ($ window).on('resize', () ->
-    window.resizeCarousel()
+    window.resizePage()
   )
   ###
-  Draw Carousel for appropriate screen size
+  Draw UI Components for appropriate screen size
   ###
-  window.resizeCarousel = () ->
+  window.resizePage = () ->
+    console.log "xs = #{screenSize 'xs'}"
+    console.log "sm = #{screenSize 'sm'}"
+    console.log "md = #{screenSize 'md'}"
+    console.log "lg = #{screenSize 'lg'}"
     width = (($ window).width() * ((($ window).height() - ($ '.navbar').height()) / ($ window).width())).toFixed(2)
     ($ '#myCarousel').height(width)
     ($ '#carousel-container').height(width)
@@ -40,4 +44,20 @@ $ ->
       ($ j).height(width)
     ($ '.carousel-inner').height(width)
     ($ '.carousel-img').height(width)
-    ($ '#main-image-featurette').height(($ '.isense-desc').height())
+    if(screenSize('lg') or screenSize('md'))
+      console.log 'hello'
+      ($ '.isense-desc').height(width)
+      ($ '#main-image-featurette').height(width)
+    else
+      ($ '.isense-desc').height( ($ '#myCarousel').height() / 2 )
+      ($ '#main-image-featurette').height(($ '#myCarousel').height() - ($ '.isense-desc').height())
+    ($ '.secondary-content').height(($ '#myCarousel').height())
+    ($ '#stats-div').height( (($ '#myCarousel').height() - ($ '#app-description').height()))
+    #($ '.ternary-content').height((width - ($ '#csv-footer').height()))
+    ($ '.ternary-content').find('.col-md-4').height((width - ($ '#csv-footer').height()))
+    ($ '.three-col').height((width - ($ '#csv-footer').height()))
+    ($ '#news-feed').height((width - ($ '#csv-footer').height()) - 120)
+  
+  screenSize = (size) ->
+    return ($ ".device-#{size}").is(':visible')
+  
