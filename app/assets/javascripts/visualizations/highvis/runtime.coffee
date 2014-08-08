@@ -115,7 +115,7 @@ $ ->
       globals.curVis.start()
 
     # Set initial div sizes
-    containerSize = ($ '#viscontainer').outerWidth()
+    containerSize = ($ '#viscontainer').innerWidth()
     hiderSize     = ($ '#controlhider').outerWidth()
     controlSize   = if globals.options? and globals.options.startCollapsed?
       $("#control_hide_button").html('<')
@@ -150,7 +150,7 @@ $ ->
       else
         ($ "#viscontainer").height(($ window).height() - h)
 
-      containerSize = ($ '#viscontainer').width()
+      containerSize = ($ '#viscontainer').innerWidth()
       hiderSize     = ($ '#controlhider').outerWidth()
       controlSize   = ($ '#controldiv').outerWidth()
       controlVisibility = ($ '#controldiv').css 'opacity'

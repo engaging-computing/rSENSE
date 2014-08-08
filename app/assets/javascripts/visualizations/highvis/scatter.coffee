@@ -76,7 +76,7 @@ $ ->
 
       storeYBounds: (bounds) ->
         @yBounds = bounds
-        
+
       ###
       Build up the chart options specific to scatter chart
       The only complex thing here is the html-formatted tooltip.
@@ -106,7 +106,7 @@ $ ->
                     ele = ($ @.graphic.element)
                     root = ele.parent()
                     root.append ele
-                    
+
           group_by = ''
           ($ '#groupSelector').find('option').each (i,j) ->
             if ($ j).is(':selected')
@@ -123,7 +123,7 @@ $ ->
                   str += "#{@series.name.group}</div><br>"
                   str += "<table>"
                   str += "<tr><td>Group by: </td>" + "\t" + "<td>#{group_by} </td> </tr>"
-                  
+
                   for field, fieldIndex in data.fields when @point.datapoint[fieldIndex] isnt null
                     dat = if (Number field.typeID) is data.types.TIME
                       (globals.dateFormatter @point.datapoint[fieldIndex])
@@ -166,7 +166,6 @@ $ ->
                 else
                   @updateOnZoom = 1
 
-
       ###
       Build the dummy series for the legend.
       ###
@@ -199,7 +198,6 @@ $ ->
               options.lineWidth = 2
 
           options
-
 
       ###
       Call control drawing methods in order of apperance
@@ -242,8 +240,8 @@ $ ->
                 @xBounds.max = (new Date(@xBounds.max)).getUTCFullYear()
 
         # Calculate grid spacing for data reduction
-        width = ($ '#' + @canvas).width()
-        height = ($ '#' + @canvas).height()
+        width = ($ '#' + @canvas).innerWidth()
+        height = ($ '#' + @canvas).innerHeight()
 
         @xGridSize = @yGridSize = @INITIAL_GRID_SIZE
 
@@ -496,7 +494,6 @@ $ ->
         super(radio)
         @yAxis = globals.fieldSelection
 
-
       ###
       Checks if the user has requested a specific zoom
       ###
@@ -582,10 +579,10 @@ $ ->
           <div class='outer_control_div' style='text-align:center'>
 
           <table><tr>
-          <td style='text-align:left'>X Axis: </td>
-          <td id='regressionXAxis' style='text-align:left'>#{data.fields[@xAxis].fieldName}</td></tr>
+          <td>X Axis: </td>
+          <td id='regressionXAxis'>#{data.fields[@xAxis].fieldName}</td></tr>
 
-          <tr><td style='text-align:left'>Y Axis: </td>
+          <tr><td>Y Axis: </td>
           <td><select id='regressionYAxisSelector' class='form-control'>
           """
 
@@ -595,7 +592,7 @@ $ ->
         controls +=
           """
           </select></td></tr>
-          <tr><td style='text-align:left'>Type: </td>
+          <tr><td>Type: </td>
           <td><select id="regressionSelector" class="form-control">
           """
 
