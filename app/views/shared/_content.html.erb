@@ -28,7 +28,7 @@
     <div>
       <% if can_edit?(obj) && (content.nil? || content.empty?) %>
         <p style="text-align: center">
-          <%= link_to(image_tag("green_plus_icon.png"), "#", id: 'add-content-image') %>
+          <%= link_to(image_tag('green_plus_icon.png'), '#', id: 'add-content-image') %>
         </p>
       <% else %>
         <%= raw content %>
