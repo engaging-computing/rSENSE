@@ -45,23 +45,7 @@
 //= require oms
 //= require better_colorpicker
 //
-//= require visualizations/highvis/savedVis
-//= require visualizations/highvis/visUtils
-//= require visualizations/highvis/dataReduction
-//= require visualizations/highvis/highmodifiers
-//= require visualizations/highvis/regression
-//= require visualizations/highvis/dataClipping
-//= require visualizations/highvis/baseVis
-//= require visualizations/highvis/disabledVis
-//= require visualizations/highvis/scatter
-//= require visualizations/highvis/timeline
-//= require visualizations/highvis/histogram
-//= require visualizations/highvis/bar
-//= require visualizations/highvis/table
-//= require visualizations/highvis/map
-//= require visualizations/highvis/summary
-//= require visualizations/highvis/photos
-//= require visualizations/highvis/runtime
+//= require visualizations/highvis/index
 //
 //= require summernote
 //
