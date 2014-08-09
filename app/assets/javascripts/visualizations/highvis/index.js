@@ -12,11 +12,13 @@
 // BaseVis holds up the other vises
 //= require ./baseVis
 //
+// Any vises that are unabled to load rely on disabledVis
+//= require ./disabledVis
+//
 // Scatter is the basis for Timeline
 //= require ./scatter
 //
 // All other vises must be included before runtime
-//= require ./disabledVis
 //= require ./map
 //= require ./timeline
 //= require ./bar
