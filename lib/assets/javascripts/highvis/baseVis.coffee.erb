@@ -386,16 +386,17 @@ $ ->
       hideControls: ->
         @controlWidth = ($ '#controldiv').width()
         ($ '#controldiv').width 0
-        ($ '#controlcontainer').hide()
+        ($ '#controlhider').hide()
         ($ '#' + @canvas).css
-          width: ($ "#viscontainer").width()
+          width: ($ "#viscontainer").innerWidth() - (($ "#controlhider").outerWidth() +
+            globals.VIS_MARGIN_WIDTH)
 
       ###
       Returns the control div with its previous size intact.
       ###
       unhideControls: ->
         ($ '#controldiv').width @controlWidth
-        ($ '#controlcontainer').show()
+        ($ '#controlhider').show()
 
       ###
       Do any nessisary cleanup work before serialization.
