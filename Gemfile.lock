@@ -6,29 +6,20 @@ GIT
 
 GIT
   remote: https://github.com/asalani93/better-colorpicker
-  revision: 1946b9645e8b8593010b779b54c00a2b282282d2
+  revision: 80a17d5554ec64954beb87a6459a59c418f8096e
   specs:
     better_colorpicker (0.0.1)
       rails (~> 4.1.4)
 
 GIT
   remote: https://github.com/bbatsov/rubocop
-  revision: bb7d9a058ec940fead2768b672bbd5c3a2371830
+  revision: 5d1bf0ff64d8254b33cf0a10ad7a4b19c4de6b1e
   specs:
     rubocop (0.24.1)
-      json (>= 1.7.7, < 2)
-      parser (>= 2.2.0.pre.3, < 3.0)
+      parser (>= 2.2.0.pre.4, < 3.0)
       powerpack (~> 0.0.6)
       rainbow (>= 1.99.1, < 3.0)
       ruby-progressbar (~> 1.4)
-
-GIT
-  remote: https://github.com/galetahub/ckeditor.git
-  revision: 6d8032b87595c3ffa8e9dfd7d86721ecdc53a3e3
-  specs:
-    ckeditor (4.1.0)
-      mime-types
-      orm_adapter (~> 0.5.0)
 
 GEM
   remote: https://rubygems.org/
@@ -66,7 +57,7 @@ GEM
     bcrypt (3.1.7)
     bcrypt-ruby (3.1.5)
       bcrypt (>= 3.1.3)
-    bootstrap-sass (3.2.0.0)
+    bootstrap-sass (3.2.0.1)
       sass (~> 3.2)
     builder (3.2.2)
     capybara (2.4.1)
@@ -139,8 +130,7 @@ GEM
     multi_xml (0.5.5)
     nokogiri (1.6.3.1)
       mini_portile (= 0.6.0)
-    orm_adapter (0.5.0)
-    parser (2.2.0.pre.3)
+    parser (2.2.0.pre.4)
       ast (>= 1.1, < 3.0)
       slop (~> 3.4, >= 3.4.5)
     pg (0.17.1)
@@ -175,7 +165,7 @@ GEM
     ruby-ole (1.2.11.7)
     ruby-progressbar (1.5.1)
     rubyzip (1.1.6)
-    sass (3.3.10)
+    sass (3.3.14)
     selenium-webdriver (2.42.0)
       childprocess (>= 0.5.0)
       multi_json (~> 1.0)
@@ -211,7 +201,7 @@ GEM
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
-    tzinfo (1.2.1)
+    tzinfo (1.2.2)
       thread_safe (~> 0.1)
     uglifier (2.5.3)
       execjs (>= 0.3.0)
@@ -233,7 +223,6 @@ DEPENDENCIES
   bootstrap-sass
   capybara
   capybara-webkit
-  ckeditor!
   coffee-rails
   coffee-rails-source-maps
   coffeebeans
