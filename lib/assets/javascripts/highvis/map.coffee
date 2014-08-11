@@ -376,8 +376,8 @@ $ ->
         # Heatmap slider
         controls += "<br>"
         controls += "<div class='inner_control_div'> Heatmap Radius: "
-        controls += "<input id='radius-text' value='#{@heatmapRadius}'></input>m</div>"
-        controls += "<div class='inner_control_div'> <div id='heatmap-error-text'> </div></div>"
+        controls += "<input id='radiusText' value='#{@heatmapRadius}'></input>m</div>"
+        controls += "<div class='inner_control_div'> <div id='heatmapErrorText'> </div></div>"
         controls += "<div id='heatmapSlider' style='width:95%'></div>"
 
         # Other
@@ -430,11 +430,11 @@ $ ->
           @delayedUpdate()
 
         # Set up heatmap entry
-        ($ '#radius-text').keydown (e) =>
+        ($ '#radiusText').keydown (e) =>
           if e.which == 13
-            newRadius = Number ($ '#radius-text').val()
+            newRadius = Number ($ '#radiusText').val()
             if isNaN newRadius
-              ($ '#radius-text').errorFlash()
+              ($ '#radiusText').errorFlash()
               return
             # Guess new pixel radius
             @heatmapPixelRadius = Math.ceil(@heatmapPixelRadius * newRadius / @heatmapRadius)
@@ -454,7 +454,7 @@ $ ->
             # Guess new pixel radius
             @heatmapPixelRadius = Math.ceil(@heatmapPixelRadius * newRadius / @heatmapRadius)
             @heatmapRadius = newRadius
-            ($ '#radius-text').val("#{@heatmapRadius}")
+            ($ '#radiusText').val("#{@heatmapRadius}")
             @delayedUpdate()
 
         # Set up accordion
@@ -521,11 +521,11 @@ $ ->
             newRad = Math.ceil(@heatmapRadius * (@getPixelDiag() / @getDiag()))
 
           if newRad <= maxRad
-            ($ '#heatmap-error-text').html ''
+            ($ '#heatmapErrorText').html ''
             return newRad
           else
             act = Math.ceil(maxRad * (@getDiag() / @getPixelDiag()))
-            ($ '#heatmap-error-text').html(
+            ($ '#heatmapErrorText').html(
               "The radius had to be decreased to #{act}m for performance reasons. " +
               "It will restore to your selection as the map is zoomed out."
             )
