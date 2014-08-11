@@ -76,7 +76,7 @@ $ ->
 
       storeYBounds: (bounds) ->
         @yBounds = bounds
-
+        
       ###
       Build up the chart options specific to scatter chart
       The only complex thing here is the html-formatted tooltip.
@@ -106,7 +106,7 @@ $ ->
                     ele = ($ @.graphic.element)
                     root = ele.parent()
                     root.append ele
-
+                    
           group_by = ''
           ($ '#groupSelector').find('option').each (i,j) ->
             if ($ j).is(':selected')
@@ -123,7 +123,7 @@ $ ->
                   str += "#{@series.name.group}</div><br>"
                   str += "<table>"
                   str += "<tr><td>Group by: </td>" + "\t" + "<td>#{group_by} </td> </tr>"
-
+                  
                   for field, fieldIndex in data.fields when @point.datapoint[fieldIndex] isnt null
                     dat = if (Number field.typeID) is data.types.TIME
                       (globals.dateFormatter @point.datapoint[fieldIndex])
@@ -166,6 +166,7 @@ $ ->
                 else
                   @updateOnZoom = 1
 
+
       ###
       Build the dummy series for the legend.
       ###
@@ -198,6 +199,7 @@ $ ->
               options.lineWidth = 2
 
           options
+
 
       ###
       Call control drawing methods in order of apperance
@@ -240,8 +242,8 @@ $ ->
                 @xBounds.max = (new Date(@xBounds.max)).getUTCFullYear()
 
         # Calculate grid spacing for data reduction
-        width = ($ '#' + @canvas).innerWidth()
-        height = ($ '#' + @canvas).innerHeight()
+        width = ($ '#' + @canvas).width()
+        height = ($ '#' + @canvas).height()
 
         @xGridSize = @yGridSize = @INITIAL_GRID_SIZE
 
@@ -317,9 +319,9 @@ $ ->
               ($ 'tr#row_' + regression.series.name.id).addClass('regression_row_disabled')
 
         # Display the table header if necessary
-        if ($ '#regression-table-body > tr').length > 0
-          ($ 'tr#regression-table-header').show()
-        else ($ 'tr#regression-table-header').hide()
+        if ($ '#regressionTableBody > tr').length > 0
+          ($ 'tr#regressionTableHeader').show()
+        else ($ 'tr#regressionTableHeader').hide()
 
       ###
       Draws radio buttons for changing symbol/line mode.
@@ -494,6 +496,7 @@ $ ->
         super(radio)
         @yAxis = globals.fieldSelection
 
+
       ###
       Checks if the user has requested a specific zoom
       ###
@@ -579,10 +582,10 @@ $ ->
           <div class='outer_control_div' style='text-align:center'>
 
           <table><tr>
-          <td>X Axis: </td>
-          <td id='regressionXAxis'>#{data.fields[@xAxis].fieldName}</td></tr>
+          <td style='text-align:left'>X Axis: </td>
+          <td id='regressionXAxis' style='text-align:left'>#{data.fields[@xAxis].fieldName}</td></tr>
 
-          <tr><td>Y Axis: </td>
+          <tr><td style='text-align:left'>Y Axis: </td>
           <td><select id='regressionYAxisSelector' class='form-control'>
           """
 
@@ -592,7 +595,7 @@ $ ->
         controls +=
           """
           </select></td></tr>
-          <tr><td>Type: </td>
+          <tr><td style='text-align:left'>Type: </td>
           <td><select id="regressionSelector" class="form-control">
           """
 
@@ -605,12 +608,12 @@ $ ->
           </select></td></tr>
           </table>
           <button id='regressionButton' class='save_button btn btn-default'>Draw Best Fit Line</button>
-          <table id='regression-table'>
+          <table id='regressionTable' class='regression_table fixed' >
           <col width='55%' />
           <col width='35%' />
           <col width='10%' />
-          <tr id='regression-table-header'><td><strong>f(x)<strong></td><td><strong>Type<strong></td></tr>
-          <tbody id='regression-table-body'></tbody></table>
+          <tr id='regressionTableHeader'><td><strong>f(x)<strong></td><td><strong>Type<strong></td></tr>
+          <tbody id='regressionTableBody'></tbody></table>
           </div></div>
           """
 
@@ -754,19 +757,19 @@ $ ->
           <tr id = 'row_#{savedReg.series.name.id}' class='regression_row'>
           <td class='regression_rowdata truncate'>#{savedReg.fieldNames[1]}(#{savedReg.fieldNames[0]})</td>
           <td class='regression_rowdata'>#{regressions[savedReg.type]}#{savedReg.regressionId}</td>
-          <td id='#{savedReg.series.name.id}' class='regression_remove'><i class='fa fa-times-circle'></i></td>
+          <td id='#{savedReg.series.name.id}' class='delete regression_remove'><i class='fa fa-times-circle'></i></td>
           </tr>
           """
 
         # Added a info relating to this regression
-        ($ '#regression-table-body').append(regressionRow)
+        ($ '#regressionTableBody').append(regressionRow)
 
         # Add the disabled style if necessary
         if !enabled
           ($ 'tr#row_' + savedReg.series.name.id).addClass('regression_row_disabled')
 
         # Display the table header
-        ($ 'tr#regression-table-header').show()
+        ($ 'tr#regressionTableHeader').show()
 
         # Make each row a link to its view
         ($ 'tr#row_' + savedReg.series.name.id).click =>
@@ -791,9 +794,9 @@ $ ->
           ($ 'td#' + savedReg.series.name.id).parent().remove()
 
           # Display the table header if necessary
-          if ($ '#regression-table-body > tr').length > 0
-            ($ 'tr#regression-table-header').show()
-          else ($ 'tr#regression-table-header').hide()
+          if ($ '#regressionTableBody > tr').length > 0
+            ($ 'tr#regressionTableHeader').show()
+          else ($ 'tr#regressionTableHeader').hide()
 
           # Remove regression from the savedRegressions array.
           id = savedReg.series.name.id
