@@ -9,7 +9,7 @@
         <div class="project_info_box" >
         <div class="row"> 
           <div class="col-sm-12">
-            <span id="title_span" class="word-break" style="font-size:1.5em"><%= project_edit_helper "title", (can_edit? @project), false%></span><br>
+            <span id="title_span" class="word-break" style="font-size:1.5em"><%= project_edit_helper "title", (can_edit? @project), false%></span>
           </div>
           <div class="col-sm-12">
             <span class="info_label" style="font-size:1.1em">by: <%= link_to @project.owner.name, user_path(@project.owner) %> (<%=time_ago_in_words(@project.created_at)%> ago)</span><br/>
