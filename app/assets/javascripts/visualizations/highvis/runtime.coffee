@@ -123,7 +123,7 @@ $ ->
     else
       $("#control_hide_button").html('>')
       globals.CONTROL_SIZE
-    contrContSize = hiderSize + containerSize
+    contrContSize = hiderSize + controlSize
 
     visWidth = containerSize - contrContSize
     visHeight = ($ '#viscontainer').height() - ($ '#visTabList').outerHeight()
