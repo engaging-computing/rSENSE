@@ -1,13 +1,25 @@
 <h1>Review Issues</h1>
-<%= form_tag("/testing/publish", method: :post) do %>
-    <% @issues.each do |issue| %>
-        <% if issue[1][:passed] != "NA" %>
-            <%= hidden_field("issue[#{issue[0]}", :number, :value => issue[0]) %>
-            <%= hidden_field("issue[#{issue[0]}", :message, :value => issue[0]) %>
-            <%= hidden_field("issue[#{issue[0]}", :passed, :value => issue[0]) %>
-            <%= link_to(issue[0],issue[1][:html_url]) %>: <%= issue[1][:title] %><br>
-            <%= if issue[1][:passed] == "true" then "Passed" else "Failed" end%><%= if issue[1][:message] != "" then ": #{issue[1][:message]}" end %><br>
+<div>
+    <%= form_tag("/testing/publish", method: :post) do %>
+        <div id="userinfo">
+            <%= hidden_field("userinfo",:auth_token, :value => @userinfo[:auth_token]) %>
+        </div>
+        <% @issues.each do |issue| %>
+            <% if issue[1][:passed] != "NA" %>
+                <div id="issue_<%= issue[0] %>">
+                    <div id="title_<%= issue[0] %>">
+                        <%= link_to(issue[0],issue[1][:html_url]) %>: <%= issue[1][:title] %><br>
+                        <%= hidden_field("issues[#{issue[0]}", :number, :value => issue[0]) %>
+                    </div>
+                    <div id="body_<%= issue[0] %>">
+                        <%= text_area("issues[#{issue[0]}", :message, :value => "#{if issue[1][:passed] == "true" then "PASSED" else "FAILED" end} testing on #{@userinfo[:broswer_version]} (#{@userinfo[:os_version]}).\n#{issue[1][:message]}") %>
+                        <br><br>
+                    </div>
+                </div>
+            <% end %>
         <% end %>
+        <div>
+            <%= submit_tag("Publish to GitHub") %>
+        </div>
     <% end %>
-    <%= submit_tag("Publish to GitHub") %>
-<% end %>
+</div>

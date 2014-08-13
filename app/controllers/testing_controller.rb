@@ -7,16 +7,27 @@ class TestingController < ApplicationController
       @issues.push(Hash["number",json_issue["number"],"html_url",json_issue["html_url"],"title",json_issue["title"]])
     end
     @issues.inspect() 
-
-    #JSON.parse HTTParty.post('https://api.github.com/repos/AlanRosenthal/rSENSE/issues/1/comments', :headers => {"User-Agent" => "rSENSE","Authorization" => "token 6b04ab36543bbdf5a656eca1d5cf165cc1912752"},:body => { "body" => "test123" }.to_json).response.body
   end
+  
   # POST /testing/review
   def review
     @issues = params[:issues]
+    @userinfo = params[:userinfo]
   end
 
   # POST /testing/publish
   def publish
-    @params = params
+    issues = params[:issues]
+    github_auth_token = params[:userinfo][:auth_token]
+    
+    issues.each do |issue|
+        api_url = "https://api.github.com/repos/isenseDev/rSENSE/issues/#{issue[0]}/comments"
+        response = HTTParty.post(api_url,:headers => {"User-Agent" => "rSENSE","Authorization" => "token #{github_auth_token}"},:body => { "body" => issue[1][:message] }.to_json).response
+        puts response.code
+        puts response.body
+        if response.code == 201
+            puts "Issue #{issue[0]} Successfully Posted to GitHub"
+        end
+    end 
   end
 end
