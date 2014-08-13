@@ -1,0 +1,26 @@
+<h1>Manual Testing</h1>
+
+<%= form_tag("/testing/review", method: :post) do %>
+    <% @issues.each do |issue| %>
+       <% number = issue['number'] %>
+        <div id='issue_<%= number %>'>
+            <div id='title_<%= number %>'>
+                <%= link_to(number,issue['html_url']) %>: <%= issue['title'] %><br>
+                <%= hidden_field("issues[#{number}]", :title, :value => issue['title']) %>
+                <%= hidden_field("issues[#{number}]", :html_url, :value => issue['html_url']) %>
+            </div>
+            <div id='radio_<%= number %>'>
+                <%= radio_button("issues[#{number}]", :passed, :true) %>
+                <%= label_tag("issues[#{number}][passed]_true","Passed") %>
+                <%= radio_button("issues[#{number}]", :passed, :false) %>
+                <%= label_tag("issues[#{number}][passed]_false","Failed") %>
+                <%= radio_button("issues[#{number}]", :passed, :NA, :checked => true) %>
+                <%= label_tag("issues[#{number}][passed]_na","Not Checked") %>
+            </div>
+            <div id='text_<%= number %>'>
+                <%= text_area("issues[#{number}]",:message) %>
+            </div>
+        </div>
+    <% end %>
+    <%= submit_tag("Submit") %>
+<% end %>

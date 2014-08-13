@@ -1,4 +1,6 @@
 Rsense::Application.routes.draw do
+  get 'testing/index'
+
   # See how all your routes lay out with "rake routes"
   mount Ckeditor::Engine => '/ckeditor'
 
@@ -112,4 +114,7 @@ Rsense::Application.routes.draw do
       resources :data_sets, only: [:show, :edit, :jsonDataUpload]
     end
   end
+  get '/testing' => 'testing#index'
+  post '/testing/review' => 'testing#review'
+  post '/testing/publish' => 'testing#publish'
 end
