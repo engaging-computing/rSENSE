@@ -181,7 +181,6 @@ $ ->
 
         ($ '#select-all-y').on('click', () ->
           if data.normalFields.length != globals.fieldSelection.length
-            console.log 'should be checking...'
             ($ '#yAxisControl').find('.y_axis_input').each (i,j) ->
               ($ j).prop('checked', true)
             globals.fieldSelection = data.normalFields.slice(0)
