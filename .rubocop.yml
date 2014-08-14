@@ -374,3 +374,6 @@ ClassAndModuleChildren:
 For:
   Enabled: true
   
+PerceivedComplexity:
+  Enabled: false
+  

@@ -1,7 +1,5 @@
 Rsense::Application.routes.draw do
   # See how all your routes lay out with "rake routes"
-  mount Ckeditor::Engine => '/ckeditor'
-
   post '/data_sets/dataFileUpload', to: 'data_sets#dataFileUpload'
   put '/data_sets/field_matching', to: 'data_sets#field_matching'
 
