@@ -40,7 +40,6 @@ gem 'bcrypt-ruby'
 # Include JQuery UI
 gem 'jquery-ui-rails'
 
-gem "ckeditor", :git => "https://github.com/galetahub/ckeditor.git"
 gem 'httparty'
 
 gem 'execjs'
