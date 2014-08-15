@@ -48,15 +48,16 @@
 <div class="row">
   <div id="visualizations" class="isotope_container" >
     <div class="isotope_pane">
-    
       <% @visualizations.each do |vi| %>
         <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
         <div class='item item-block'>
           <% thumb = image_path('world-map-2.png') %>
           <% if vi.thumb_id != nil %>
             <% thumb = vi.tn_src unless vi.tn_src.empty? %>
+          <% elsif vi.data.include? 'defaultVis":"Table'%>
+            <% thumb = image_path('table.png')%>
           <% end %>
-          <div class='item-image' style='background-image:url(<%= thumb %>)'>
+          <div class='item-image' style='background-image:url(<%= thumb %>);background-size: 100% 100%'>
           </div>
           
           <div class="item-desc">
