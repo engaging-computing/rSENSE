@@ -297,10 +297,12 @@ class ProjectsController < ApplicationController
     @types = uploader.get_probable_types(data_obj)
     @tmp_file = data_obj[:file]
     @headers = data_obj['data'].keys
-
     respond_to do |format|
       format.html
     end
+  rescue Exception => e
+    flash[:error] = "Error reading file: #{e}"
+    redirect_to project_path(@project)
   end
 
   def finishTemplateUpload
