@@ -18,7 +18,7 @@ class FileUploader
     end
 
     data_obj[:file] =  write_temp_file(CSV.parse(spreadsheet.to_csv))
-    #     data_obj[:original_filename] = file.original_filename
+
     data_obj
   end
 
@@ -28,7 +28,7 @@ class FileUploader
       case File.extname(file.original_filename)
       when '.csv', '.txt', '.text' then convert(file.path)
       when '.xls', '.xlsx', '.ods'
-        system "libreoffice --calc --headless --nologo --convert-to csv #{file.path} --outdir /tmp/rsense"
+        system "libreoffice --calc --headless --nologo --convert-to csv #{file.path} --outdir /tmp/rsense > /dev/null 2>&1"
         @converted_csv = "/tmp/rsense/#{file.path.gsub('/tmp/', '')}.csv"
         convert(@converted_csv)
       when '.gpx' then GpxParser.new.convert(file.path)
@@ -338,9 +338,6 @@ class FileUploader
 
       delim[index][:avg] = delim[index][:avg] / delim[index][:data].count
 
-    end
-
-    possible_separators.each_with_index do |sep, index|
       next unless  delim[index][:data].first.count == delim[index][:avg] and
           delim[index][:data].last.count == delim[index][:avg] and
           delim[index][:avg] > 1
@@ -350,9 +347,17 @@ class FileUploader
         File.delete(@converted_csv)
       end
 
-      return delim[index][:file]
+      headers = delim[index][:file].row(1).map { |x| x.downcase }
+      overlap = headers.uniq.map { | e | [headers.count(e), e] }.select { |c, _| c > 1 }.map { | c, e | "found #{c} #{e} column(s) " }
+
+      if headers.map { |h| h.downcase }.uniq.count == headers.count
+        return delim[index][:file]
+      else
+        fail overlap.to_s
+      end
 
     end
+
     delim[0][:file]
   end
 
