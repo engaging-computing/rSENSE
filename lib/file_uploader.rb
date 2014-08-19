@@ -5,6 +5,8 @@ require 'open-uri'
 require 'fileutils'
 
 class FileUploader
+  @converted_csv = nil
+
   ### Generates the object that will be acted on
   def generateObject(file)
     spreadsheet = open_spreadsheet(file)
@@ -23,12 +25,12 @@ class FileUploader
   ### Simply opens the file as the correct type and returns the Roo object.
   def open_spreadsheet(file)
     if file.class == ActionDispatch::Http::UploadedFile
-      # Rails.logger.info "-=-=-=#{file.path}"
       case File.extname(file.original_filename)
-      when '.csv' then convert(file.path)
-      when '.xls' then Roo::Excel.new(file.path, packed: nil, file_warning: :ignore)
-      when '.xlsx' then Roo::Excelx.new(file.path, packed: nil, file_warning: :ignore)
-      when '.ods' then Roo::OpenOffice.new(file.path, packed: false, file_warning: :ignore)
+      when '.csv', '.txt', '.text' then convert(file.path)
+      when '.xls', '.xlsx', '.ods'
+        system "libreoffice --calc --headless --nologo --convert-to csv #{file.path} --outdir /tmp/rsense"
+        @converted_csv = "/tmp/rsense/#{file.path.gsub('/tmp/', '')}.csv"
+        convert(@converted_csv)
       when '.gpx' then GpxParser.new.convert(file.path)
       when '.qmbl' then VernierParser.new.convert(file.path)
       else fail "Unknown file type: #{file.original_filename}"
@@ -88,7 +90,7 @@ class FileUploader
 
   ### Match headers should return a match_matrix for mismatches or continue
   def match_headers(project, data_obj)
-    fields = project.fields.map { |fi| fi.to_hash }
+    fields = project.fields.map { |fi| fi.to_hash(false) }
 
     if data_obj.key?('data')
       headers = data_obj['data'].keys
@@ -236,7 +238,7 @@ class FileUploader
 
     # Save file so we can grab it again
     base = '/tmp/rsense/dataset'
-    fname = base + "#{Time.now.to_i}.csv"
+    fname = base + "#{SecureRandom.hex}.csv"
     f = File.new(fname, 'w')
 
     y = ''
@@ -343,10 +345,14 @@ class FileUploader
           delim[index][:data].last.count == delim[index][:avg] and
           delim[index][:avg] > 1
 
+      # Delete the files now since we are done with them.
+      if @converted_csv
+        File.delete(@converted_csv)
+      end
+
       return delim[index][:file]
 
     end
-
     delim[0][:file]
   end
 
