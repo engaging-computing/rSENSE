@@ -67,7 +67,10 @@ $ ->
           showInLegend: false
           data: @display_data
           
-        @chart.setTitle { text: "#{data.fields[@select_name].fieldName} by #{data.fields[@selected_field].fieldName}" }
+        if typeof(@select_name) is "string"
+          @chart.setTitle { text: "#{@select_name} by #{data.fields[@selected_field].fieldName}" }
+        else
+          @chart.setTitle { text: "#{data.fields[@select_name].fieldName} by #{data.fields[@selected_field].fieldName}" }
 
         @chart.addSeries options, false
         @chart.redraw()
