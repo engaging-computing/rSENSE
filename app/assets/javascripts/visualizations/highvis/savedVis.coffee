@@ -68,7 +68,6 @@ $ ->
         sessionNames = (sessionNames.slice 0, 27) + '...'
 
       name = 'Saved Vis - ' + data.projectName
-
       req = $.ajax
         type: 'POST'
         url: "/visualizations"
