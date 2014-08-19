@@ -34,6 +34,13 @@ $ ->
         if data.normalFields.length > 1
           @displayField = data.normalFields[1]
         else @displayField = data.normalFields[0]
+          
+        if !@select_name?
+          
+          if data.textFields.length > 2
+            @select_name = data.textFields[2]
+          else
+            @select_name = 'Percent'
 
         @selected_field = 3
 
