@@ -288,6 +288,7 @@ class VisualizationsController < ApplicationController
     if format_data.count > 0
       rel_vis.push 'Bar'
       rel_vis.push 'Histogram'
+      rel_vis.push 'Pie'
     end
 
     rel_vis.push 'Table'
@@ -298,7 +299,7 @@ class VisualizationsController < ApplicationController
     end
 
     # A list of all current visualizations
-    all_vis =  ['Map', 'Timeline', 'Scatter', 'Bar', 'Histogram', 'Table', 'Summary', 'Photos']
+    all_vis =  ['Map', 'Timeline', 'Scatter', 'Bar', 'Histogram', 'Table', 'Pie', 'Summary', 'Photos']
 
     # Defaut vis if one exists for the project
     default_vis = @project.default_vis.nil? ? 'none' : @project.default_vis

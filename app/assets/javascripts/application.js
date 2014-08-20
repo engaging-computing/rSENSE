@@ -57,6 +57,7 @@
 //= require highvis/timeline
 //= require highvis/histogram
 //= require highvis/bar
+//= require highvis/pie
 //= require highvis/table
 //= require highvis/map
 //= require highvis/summary
