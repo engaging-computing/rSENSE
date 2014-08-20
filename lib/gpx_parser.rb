@@ -20,11 +20,14 @@ class GpxParser
     elements = []
     trkpts.first.traverse do |node|
       if node.children.count == 0
-        csv += node.parent.name + ','
-        elements << node.parent.name
+        unless csv.downcase.include?(node.parent.name)
+          csv += node.parent.name + ','
+          elements << node.parent.name
+        end
       end
     end
     csv = csv.chomp(',')
+
     csv += "\n"
 
     trkpts.each do |pt|
