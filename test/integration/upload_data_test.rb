@@ -91,6 +91,19 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     assert page.has_css?('#viscontainer'), 'Failed XLSX'
   end
 
+  test 'invalid csv (two lat fields)' do
+    login('kcarcia@cs.uml.edu', '12345')
+    visit project_path(@project)
+    assert page.has_content?('Upload Test'), 'Not on project page.'
+
+    csv_path = Rails.root.join('test', 'CSVs', 'invalid_test.csv')
+    page.execute_script "$('#datafile_form').parent().show()"
+    find('#datafile_form').attach_file('file', csv_path)
+    page.execute_script "$('#datafile_form').submit()"
+
+    assert page.has_content?('Error reading file:')
+  end
+
   test 'link google doc' do
     login('kcarcia@cs.uml.edu', '12345')
     visit project_path(@project)
@@ -115,7 +128,7 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     jpg_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
     page.execute_script "$('#datafile_form').parent().show()"
     find('#datafile_form').attach_file('file', jpg_path)
-    assert page.has_content?('File could not be read')
+    assert page.has_content?('Error reading file:')
   end
 
   test 'edit data set' do
