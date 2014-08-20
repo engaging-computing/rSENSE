@@ -87,14 +87,20 @@ $ ->
             dp[1] = ( dp[1] / sum ) * 100
 
       getGroupedData: ->
-        tmp = {}
-        for group in data.groups
-          do ->
-            tmp[group.toLowerCase()] = 0
-            
+        tmp = []
+        #for group in data.groups
+          #do ->
+            #tmp[group.toLowerCase()] = 0
+        
+        console.log @select_name
+        console.log data.fields[@selected_field]
+        
         for dp in data.dataPoints
           do =>
-            tmp[dp[data.groupingFieldIndex].toLowerCase()] += dp[@selected_field]
+            tmp[tmp.length] = dp[@selected_field]
+            #console.log dp[@selected_field]
+            #if !dp[@selected_field]?
+            #tmp[dp[data.groupingFieldIndex].toLowerCase()] += dp[@selected_field]
 
         @display_data = []
         for dp of tmp
