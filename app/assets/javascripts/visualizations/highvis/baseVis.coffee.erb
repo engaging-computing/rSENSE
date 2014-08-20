@@ -109,16 +109,26 @@ $ ->
       the active y axis field(s).
       ###
       drawYAxisControls: (radio = false) ->
-
+        checked = false
         controls = '<div id="yAxisControl" class="vis_controls">'
 
         if radio
           controls += "<h3 class='clean_shrink'><a href='#'>Field:</a></h3>"
+          controls += "<div class='outer_control_div'>"
         else
           controls += "<h3 class='clean_shrink'><a href='#'>Y Axis:</a></h3>"
-
-        controls += "<div class='outer_control_div'>"
-
+          controls += "<div class='outer_control_div'>"
+          controls +=
+            "<div class='inner_control_div'>
+              <div class='checkbox all-y-fields'>
+                <label class='all-y'>
+                  <input id='select-all-y' type='checkbox'> #Select All </input>
+                </label>
+              </div>
+            </div>"
+          if data.normalFields.length == globals.fieldSelection.length
+            checked = true
+        
         # Populate choices
         for fIndex in data.normalFields
           controls += "<div class='inner_control_div' >"
@@ -138,7 +148,8 @@ $ ->
 
         # Write HTML
         ($ '#controldiv').append controls
-
+        if checked
+          ($ '#select-all-y').prop('checked', true)
         # Make y axis checkbox/radio handler
         if radio
           ($ '.y_axis_input').click (e) =>
@@ -147,11 +158,15 @@ $ ->
         else
           ($ '.y_axis_input').click (e) =>
             index = Number e.target.value
-
             if index in globals.fieldSelection
               arrayRemove(globals.fieldSelection, index)
             else
               globals.fieldSelection.push(index)
+            if data.normalFields.length == globals.fieldSelection.length
+              ($ '#select-all-y').prop('checked', true)
+            else
+              ($ '#select-all-y').prop('checked', false)
+            
             @delayedUpdate()
 
         # Set up accordion
@@ -164,6 +179,18 @@ $ ->
         ($ '#yAxisControl > h3').click ->
           globals.yAxisOpen = (globals.yAxisOpen + 1) % 2
 
+        ($ '#select-all-y').on('click', () ->
+          if data.normalFields.length != globals.fieldSelection.length
+            ($ '#yAxisControl').find('.y_axis_input').each (i,j) ->
+              ($ j).prop('checked', true)
+            globals.fieldSelection = data.normalFields.slice(0)
+          else
+            for element in data.normalFields
+              arrayRemove(globals.fieldSelection, element)
+            ($ '#yAxisControl').find('.y_axis_input').each (i,j) ->
+              ($ j).prop('checked', false)
+          window.globals.curVis.delayedUpdate()
+        )
       ###
       Draws group selection controls
       This includes a series of checkboxes and a selector for the grouping field.
