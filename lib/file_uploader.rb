@@ -17,7 +17,9 @@ class FileUploader
       data_obj['data'][header[i]] = spreadsheet.column(i + 1)[1, spreadsheet.last_row]
     end
 
-    data_obj[:file] =  write_temp_file(CSV.parse(spreadsheet.to_csv))
+    csv = spreadsheet.to_csv
+    parsed = CSV.parse(csv)
+    data_obj[:file] =  write_temp_file(parsed)
 
     data_obj
   end
@@ -231,6 +233,7 @@ class FileUploader
 
   def write_temp_file(data)
     # Create a tmp directory if it does not exist
+
     begin
       Dir.mkdir('/tmp/rsense')
     rescue
@@ -240,13 +243,8 @@ class FileUploader
     base = '/tmp/rsense/dataset'
     fname = base + "#{SecureRandom.hex}.csv"
     f = File.new(fname, 'w')
-
-    y = ''
-    data.each do |x|
-      y += x.join(',') + "\n"
-    end
-    f.write(y)
-
+    as_csv = data.map { |y| y.join(',') }.join("\n")
+    f.write(as_csv)
     f.close
 
     fname
