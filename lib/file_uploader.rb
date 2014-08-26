@@ -10,17 +10,15 @@ class FileUploader
   ### Generates the object that will be acted on
   def generateObject(file)
     spreadsheet = open_spreadsheet(file)
-    header = spreadsheet.row(1)
+    header = spreadsheet[0]
     data_obj = {}
     data_obj['data'] = {}
-    (0..spreadsheet.last_column - 1).each do |i|
-      data_obj['data'][header[i]] = spreadsheet.column(i + 1)[1, spreadsheet.last_row]
+    (0..header.length-1).each do |i|
+      data_obj['data'][header[i]] = ''
     end
 
-    csv = spreadsheet.to_csv
-    parsed = CSV.parse(csv)
-    data_obj[:file] =  write_temp_file(parsed)
-
+    data_obj[:file] =  write_temp_file(spreadsheet)
+    
     data_obj
   end
 
@@ -48,14 +46,12 @@ class FileUploader
   ### Retrieve Object
   def retrieve_obj(file)
     spreadsheet = convert(file)
-    header = spreadsheet.row(1) ## BANG BANG! Arrays start at 1 here.
-
+    header = spreadsheet.shift
     data_obj = {}
-
-    (0..spreadsheet.last_column - 1).each do |i|
-      data_obj[header[i]] = spreadsheet.column(i + 1)[1, spreadsheet.last_row]
+    spreadsheet = spreadsheet.transpose
+    (0..(header.length - 1)).each do |i|
+      data_obj[header[i]] = spreadsheet[i]
     end
-
     data_obj
   end
 
@@ -317,46 +313,10 @@ class FileUploader
   end
 
   def convert(filepath)
-    possible_separators = [',', "\t", ';']
-
-    # delimters
-    delim = []
-
-    possible_separators.each_with_index do |sep, index|
-
-      delim[index] = Hash.new
-      delim[index][:input] = filepath
-      delim[index][:file] = Roo::CSV.new(filepath, csv_options: { col_sep: sep, quote_char: "\'" })
-      delim[index][:data] = delim[index][:file].parse
-      delim[index][:avg] = 0
-
-      delim[index][:data].each do |row|
-        delim[index][:avg] = delim[index][:avg] + row.count
-      end
-
-      delim[index][:avg] = delim[index][:avg] / delim[index][:data].count
-
-      next unless  delim[index][:data].first.count == delim[index][:avg] and
-          delim[index][:data].last.count == delim[index][:avg] and
-          delim[index][:avg] > 1
-
-      # Delete the files now since we are done with them.
-      if @converted_csv
-        File.delete(@converted_csv)
-      end
-
-      headers = delim[index][:file].row(1).map { |x| x.downcase }
-      overlap = headers.uniq.map { | e | [headers.count(e), e] }.select { |c, _| c > 1 }.map { | c, e | "found #{c} #{e} column(s) " }
-
-      if headers.map { |h| h.downcase }.uniq.count == headers.count
-        return delim[index][:file]
-      else
-        fail overlap.to_s
-      end
-
-    end
-
-    delim[0][:file]
+    
+    data = CSV.parse(File.read(filepath))
+    
+    return data
   end
 
   def valid_float?(dp)
