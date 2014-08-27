@@ -82,98 +82,96 @@
     <div class="row">
       <%=render layout: "shared/box", locals: {title: 'Data Sets', width: '12', unique_id: 'data_sets', should_hide: false} do %>
         <% if @data_sets.count != 0 %>
-
-        <div id="dataset_list">
+          <div id="dataset_list">
+            
+            <span>
+              <button type="button" class="btn btn-info" style="margin-bottom: 10px;" id="vis_button" href="/projects/<%=@project.id%>/data_sets/">Visualize</button>
+            </span>
+            <span>
+              <button type="button" class="btn btn-default" style="margin-bottom: 10px;" id="export_button" >Export</button>
+            </span>
           
-          <span>
-            <button type="button" class="btn btn-info" style="margin-bottom: 10px;" id="vis_button" href="/projects/<%=@project.id%>/data_sets/">Visualize</button>
-          </span>
-          <span>
-            <button type="button" class="btn btn-default" style="margin-bottom: 10px;" id="export_button" >Export</button>
-          </span>
-        
-          <div class="pull-right">
-            <div class="btn-group">
-              <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
-                <i class="fa fa-check-square-o"></i>
-                <span class="caret"></span>
-              </a>
-              <ul class="dropdown-menu" role="menu" style="left:-200%;">
-                <li role="presentation">
-                  <a role="menuitem" href="javascript:void(0);" id="check_all"><i class="fa fa-check-square-o"></i> All</a>
-                </li>
-                <li role="presentation">
-                  <a role="menuitem" href="javascript:void(0);" id="uncheck_all"><i class="fa fa-square-o"></i> None</a>
-                </li>
-                <% if @cur_user.try(:id) %>
+            <div class="pull-right">
+              <div class="btn-group">
+                <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
+                  <i class="fa fa-check-square-o"></i>
+                  <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu" style="left:-200%;">
                   <li role="presentation">
-                    <a role="menuitem" href="javascript:void(0);" id="check_mine"><i class="fa fa-user"></i> Mine</a>
+                    <a role="menuitem" href="javascript:void(0);" id="check_all"><i class="fa fa-check-square-o"></i> All</a>
                   </li>
-                <% end %>
-                <% data_set_keys = @data_sets.map { |x| x.key }.uniq.reject { |x| x.nil? } %>
-                <% data_set_keys.each do |key| %>
                   <li role="presentation">
-                    <a role="menuitem" m-title="<%= key %>" href="javascript:void(0);" class="check_id"><i class="fa fa-square-o"></i> <%= key %></a>
+                    <a role="menuitem" href="javascript:void(0);" id="uncheck_all"><i class="fa fa-square-o"></i> None</a>
                   </li>
-                <% end %>
-              </ul>
-            </div>  
-          </div>
-          
-          <table id="dataset_table" class="table table-striped">
-            <tbody>
-              
-              <% @data_sets.each do |s| %>
-                <tr class="<%= cycle('feed-even', 'feed-odd')%> dataset" style="position:relative">
-                <% if( not (s.key.nil?) ) %>
-                  <td class="key_icon">
-                    <div class="key" title="<%= s.key %>"> <%= image_tag("Key.png", :size => "32x32") %> <%= s.key %></div> 
-                  </td>
-                <% else %>
-                  <td class="gravatar">
-                    <div class="gravatar">
-                      <%if Gravatar.new.url(s.owner, 32) != nil%>
-                        <%= image_tag Gravatar.new.url(s.owner, 32), :size => "32x32"%>
-                      <%end%>
-                    </div>
-                  </td>
-               <% end %>
-               <% if s.contributor_name? %>
-               	<td style="max-width:60px"><div class="truncate"><%= s.contributor_name %></div></td>
-               <% else %>
-               	<td style="max-width:60px"><div class="truncate"><%= link_to s.owner.name, user_path(s.owner) %></div></td>
-               <% end %>
-                 <td style="max-width:200px"><div class="truncate dset" title="Created <%=s.created_at.strftime("%B %d, %Y")%>"><%= link_to s.title, "/projects/#{params[:id]}/data_sets/#{s.id}" %></div></td>
-                 <td>
-                 <div class="controls" style="">                  
-                      <% if can_edit? s %>
-                         &nbsp;<a class="data_set_edit" href="<%= edit_data_set_path s %>">Edit</a>
-                      <% end %>
-
-                      <% if can_hide? s %>
-                          &nbsp;<a class="data_set_hide" href="<%= data_set_url s %>">Hide</a>
-                      <% end %>
-
-                      <% if can_delete? s %>
-                         &nbsp;<a class="data_set_delete" href="<%= data_set_url s %>" name="<%= s.title %>">Delete</a>
-                      <% end %>
-                    </div>
-                  </td>
-                  <td><div class="ds_selector"><input type="checkbox" class="pull-right <%if s.user_id == @cur_user.try(:id)%> mine<%end%>" id="ds_<%=s.id%>" checked/></div></td>
-                </tr>
-              <% end %> 
-            </tbody>
-          
-          </table>
+                  <% if @cur_user.try(:id) %>
+                    <li role="presentation">
+                      <a role="menuitem" href="javascript:void(0);" id="check_mine"><i class="fa fa-user"></i> Mine</a>
+                    </li>
+                  <% end %>
+                  <% data_set_keys = @data_sets.map { |x| x.key }.uniq.reject { |x| x.nil? } %>
+                  <% data_set_keys.each do |key| %>
+                    <li role="presentation">
+                      <a role="menuitem" m-title="<%= key %>" href="javascript:void(0);" class="check_id"><i class="fa fa-square-o"></i> <%= key %></a>
+                    </li>
+                  <% end %>
+                </ul>
+              </div>  
             </div>
-          <% else %>
-            <% if can_edit?(@project) || can_contribute?(@project) %>
-              <p>This project has no data yet. Use the Contribute Data panel to add some.</p>
-            <% else %>
-              <p>This project has no data yet. Sign in or enter a Contributor Key to add some.</p>
-            <% end %>
-          <%end%>
+            
+            <table id="dataset_table" class="table table-striped">
+              <tbody>
+                <% @data_sets.each do |s| %>
+                  <tr class="<%= cycle('feed-even', 'feed-odd')%> dataset" style="position:relative">
+                    <% if( not (s.key.nil?) ) %>
+                      <td class="key_icon">
+                        <div class="key" title="<%= s.key %>"> <%= image_tag("Key.png", :size => "32x32") %> <%= s.key %></div> 
+                      </td>
+                    <% else %>
+                      <td class="gravatar">
+                        <div class="gravatar">
+                          <%if Gravatar.new.url(s.owner, 32) != nil%>
+                            <%= image_tag Gravatar.new.url(s.owner, 32), :size => "32x32"%>
+                          <%end%>
+                        </div>
+                      </td>
+                    <% end %>
+                    <% if s.contributor_name? %>
+                      <td style="max-width:60px"><div class="truncate"><%= s.contributor_name %></div></td>
+                    <% else %>
+                      <td style="max-width:60px"><div class="truncate"><%= link_to s.owner.name, user_path(s.owner) %></div></td>
+                    <% end %>
+                    <td style="max-width:200px">
+                      <div class="truncate dset" title="Created <%=s.created_at.strftime("%B %d, %Y")%>"><%= link_to s.title, "/projects/#{params[:id]}/data_sets/#{s.id}" %></div>
+                    </td>
+                    <td>
+                      <div class="controls" style="">                  
+                        <% if can_edit? s %>
+                           &nbsp;<a class="data_set_edit" href="<%= edit_data_set_path s %>">Edit</a>
+                        <% end %>
 
+                        <% if can_hide? s %>
+                            &nbsp;<a class="data_set_hide" href="<%= data_set_url s %>">Hide</a>
+                        <% end %>
+
+                        <% if can_delete? s %>
+                           &nbsp;<a class="data_set_delete" href="<%= data_set_url s %>" name="<%= s.title %>">Delete</a>
+                        <% end %>
+                      </div>
+                    </td>
+                    <td><div class="ds_selector"><input type="checkbox" class="pull-right <%if s.user_id == @cur_user.try(:id)%> mine<%end%>" id="ds_<%=s.id%>" checked/></div></td>
+                  </tr>
+                <% end %> 
+              </tbody>
+            </table>
+          </div>
+        <% else %>
+          <% if can_edit?(@project) || can_contribute?(@project) %>
+            <p>This project has no data yet. Use the Contribute Data panel to add some.</p>
+          <% else %>
+            <p>This project has no data yet. Sign in or enter a Contributor Key to add some.</p>
+          <% end %>
+        <%end%>
       <%end%>
     </div> 
   </div>
