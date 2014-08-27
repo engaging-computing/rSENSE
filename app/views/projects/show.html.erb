@@ -147,22 +147,11 @@
           <table id="dataset_table" class="table table-striped">
             <tbody>
               
-              <% used_keys = {} %>               
-              <% counter = 0 %>
-              <% key_label = 'A' %>
-              <% for e in 0...@dataset_keys.length%>
-                <% used_keys[@dataset_keys[@dataset_keys.length - 1 - e ] ] = key_label %> 
-                <%key_label = key_label.next%>
-              <% end %>
               <% @data_sets.each do |s| %>
                 <tr class="<%= cycle('feed-even', 'feed-odd')%> dataset" style="position:relative">
                 <% if( not (s.key.nil?) ) %>
-                  <% if used_keys[s.key].nil? %> 
-                    <% used_keys[s.key] = @dataset_keys[counter] %>
-                    <% counter = counter + 1 %>
-                  <% end %>
                   <td class="key_icon">
-                    <div class="key" title="<%= s.key %>"> <%= image_tag("Key.png", :size => "32x32") %> <a class = "key-letter-id"> <%= used_keys[s.key] %></a></div> 
+                    <div class="key" title="<%= s.key %>"> <%= image_tag("Key.png", :size => "32x32") %> <%= s.key %></div> 
                   </td>
                 <% else %>
                   <td class="gravatar">
