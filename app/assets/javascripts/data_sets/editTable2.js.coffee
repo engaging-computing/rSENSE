@@ -152,7 +152,12 @@ window.setupEditTable = () ->
                   <input class='validate_timestamp  form-control' type='text'
                     data-format='yyyy/MM/dd hh:mm:ss' value='#{ ($ row).find('input').eq(col - offset).val() }' />
                 </div>"""
-#               ($ row).children().eq(col - offset).find('.datepicker').unbind().datetimepicker()
+              ($ row).children().eq(col - offset).find('.datepicker').unbind().datetimepicker
+                input: () ->
+                  new Date()
+                output: (str) ->
+                  console.log str
+                position: 'center'
 
         add_row = (tab) ->
           # create a string of the new row

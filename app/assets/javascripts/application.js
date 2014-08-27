@@ -43,6 +43,7 @@
 //= require markerclustererplus
 //= require oms
 //= require better_colorpicker
+//= require better_datetimepicker
 //
 //= require highvis/savedVis
 //= require highvis/visUtils
