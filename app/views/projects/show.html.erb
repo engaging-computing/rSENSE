@@ -94,53 +94,29 @@
         
           <div class="pull-right">
             <div class="btn-group">
-                <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
-                  <i class="fa fa-check-square-o"></i>
-                  <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu" role="menu" style="left:-200%;">
-                    <li role="presentation">
-                      <a role="menuitem" href="javascript:void(0);" id="check_all"><i class="fa fa-check-square-o"></i> All</a>
-                    </li>
-                    <li role="presentation">
-                      <a role="menuitem" href="javascript:void(0);" id="uncheck_all"><i class="fa fa-square-o"></i> None</a>
-                    </li>
-                    <% if @cur_user.try(:id) %>
-                        <li role="presentation">
-                          <a role="menuitem" href="javascript:void(0);" id="check_mine"><i class="fa fa-user"></i> Mine</a>
-                        </li>
-                    <% end %>
-                    <% @sort_keys = {}%>
-                    <% @dataset_keys = []%>
-                    <% @symbol_hash = {} %>
-                    
-                      <% @data_sets.each do |d| %>
-                        <% if !d.key.nil? and d.key != "" %>
-                          <% if @dataset_keys.include? d.key %>
-                            <% @dataset_keys.delete d.key %>
-                            <% @dataset_keys = @dataset_keys.select {|x| !x.nil?} %>
-                            <% @dataset_keys.append d.key %>
-                          <% else %>
-                            <%  @dataset_keys.append d.key %>
-                          <% end %>
-                        <%end%>
-                      <% end %> 
-                      <% label = 'A' %>
-                      <% for ele in 0...@dataset_keys.size %>
-                        <% @symbol_hash[@dataset_keys[ele]] = label %>
-                        <% label = label.next %>
-                      <% end %> 
-                      
-                      <% for ele in 0...@dataset_keys.length do %>
-                        <li role="presentation">
-                          <a role="menuitem" m-title="<%= @dataset_keys[@dataset_keys.length - ele - 1] %>" href="javascript:void(0);" class="check_id"><i class="fa fa-square-o"></i> <%= @dataset_keys[@dataset_keys.length - ele - 1]  + ' (' + @symbol_hash[@dataset_keys[ele]] + ')' %> </a> 
-                        </li>
-                      
-                        
-                      <% end %>
-                    
-                   
-                  </ul>
+              <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
+                <i class="fa fa-check-square-o"></i>
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu" style="left:-200%;">
+                <li role="presentation">
+                  <a role="menuitem" href="javascript:void(0);" id="check_all"><i class="fa fa-check-square-o"></i> All</a>
+                </li>
+                <li role="presentation">
+                  <a role="menuitem" href="javascript:void(0);" id="uncheck_all"><i class="fa fa-square-o"></i> None</a>
+                </li>
+                <% if @cur_user.try(:id) %>
+                  <li role="presentation">
+                    <a role="menuitem" href="javascript:void(0);" id="check_mine"><i class="fa fa-user"></i> Mine</a>
+                  </li>
+                <% end %>
+                <% data_set_keys = @data_sets.map { |x| x.key }.uniq.reject { |x| x.nil? } %>
+                <% data_set_keys.each do |key| %>
+                  <li role="presentation">
+                    <a role="menuitem" m-title="<%= key %>" href="javascript:void(0);" class="check_id"><i class="fa fa-square-o"></i> <%= key %></a>
+                  </li>
+                <% end %>
+              </ul>
             </div>  
           </div>
           
