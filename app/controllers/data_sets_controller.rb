@@ -235,7 +235,6 @@ class DataSetsController < ApplicationController
 
   # PUT /data_sets/field_matching
   def field_matching
-    stime = Time.now
     project = Project.find(params[:pid])
     uploader = FileUploader.new
     data_obj = uploader.retrieve_obj(params[:file])
@@ -276,7 +275,6 @@ class DataSetsController < ApplicationController
         format.html { redirect_to project }
       end
     end
-    logger.info "----------#{Time.now-stime}s "
   end
 
   # POST /data_sets/dataFileUpload

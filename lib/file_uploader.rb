@@ -13,12 +13,30 @@ class FileUploader
     header = spreadsheet[0]
     data_obj = {}
     data_obj['data'] = {}
-    (0..header.length-1).each do |i|
+    (0..header.length - 1).each do |i|
       data_obj['data'][header[i]] = ''
     end
 
     data_obj[:file] =  write_temp_file(spreadsheet)
-    
+
+    data_obj
+  end
+
+  def generateObjectForTemplateUpload(file)
+    row_major = open_spreadsheet(file)
+    headers = row_major[0]
+    column_major = row_major[1..row_major.length].transpose
+
+    data_obj = {}
+    data = {}
+
+    (0..headers.length - 1).each do |i|
+      data[headers[i]] = column_major[i]
+    end
+
+    data_obj[:types] = get_probable_types(data)
+    data_obj[:file] =  write_temp_file(row_major)
+    data_obj[:headers] = headers
     data_obj
   end
 
@@ -28,7 +46,7 @@ class FileUploader
       case File.extname(file.original_filename)
       when '.csv', '.txt', '.text' then convert(file.path)
       when '.xls', '.xlsx', '.ods'
-        system "libreoffice --calc --headless --nologo --convert-to csv #{file.path} --outdir /tmp/rsense > /dev/null 2>&1"
+        system "libreoffice --calc --headless --nologo --invisible --convert-to csv #{file.path} --outdir /tmp/rsense > /dev/null 2>&1"
         @converted_csv = "/tmp/rsense/#{file.path.gsub('/tmp/', '')}.csv"
         convert(@converted_csv)
       when '.gpx' then GpxParser.new.convert(file.path)
@@ -141,9 +159,7 @@ class FileUploader
     results
   end
 
-  def get_probable_types(data_obj)
-    data_set = data_obj['data']
-
+  def get_probable_types(data_set)
     types = {}
     types['text'] = []
     types['timestamp'] = []
@@ -313,10 +329,16 @@ class FileUploader
   end
 
   def convert(filepath)
-    
     data = CSV.parse(File.read(filepath))
-    
-    return data
+
+    headers = data[0].map { |x| x.downcase }
+    overlap = headers.uniq.map { | e | [headers.count(e), e] }.select { |c, _| c > 1 }.map { | c, e | "found #{c} #{e} column(s) " }
+
+    if headers.map { |h| h.downcase }.uniq.count == headers.count
+      data
+    else
+      fail overlap.to_s
+    end
   end
 
   def valid_float?(dp)
