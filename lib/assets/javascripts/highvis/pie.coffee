@@ -92,9 +92,6 @@ $ ->
           #do ->
             #tmp[group.toLowerCase()] = 0
         
-        console.log @select_name
-        console.log data.fields[@selected_field]
-        
         for dp in data.dataPoints
           do =>
             tmp[tmp.length] = dp[@selected_field]
