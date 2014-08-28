@@ -21,27 +21,27 @@
 <% end %>
 
 <div class="row">
-  <div class="col-md-12">
-    <% @news.each do |n| %>
-      <div class="wide-item">
-        <% left_image = image_path('missing_tutorial.jpg') %>
-        <% if n.featured_media_id != nil %>
-          <% left_image = MediaObject.find(n.featured_media_id).src %>
-        <% end %>
+  <% @news.each do |n| %>
+    <%= render 'shared/article_box', {image_id: n.featured_media_id, path: news_path(n), title: n.title,
+      brief: n.summary, content: n.content, date: n.created_at.strftime("%B %d %Y")} %>
+    <!--<div class="wide-item">
+      <% left_image = image_path('missing_tutorial.jpg') %>
+      <% if n.featured_media_id != nil %>
+        <% left_image = MediaObject.find(n.featured_media_id).src %>
+      <% end %>
 
-        <a class="item-image-link hidden-xs" href="<%= news_path(n) %>" style="background-image: url(<%= left_image %>)"></a>
+      <a class="item-image-link hidden-xs" href="<%= news_path(n) %>" style="background-image: url(<%= left_image %>)"></a>
 
-        <div class="item-desc">
-          <div class="news_page_title truncate"><%= link_to n.title, n %></div>
-          <div class="news_page_subtitle truncate"><%= n.summary %></div>
-          <div class="news_page_date">Written on <%=n.created_at.strftime("%B %d, %Y")%></div>
-          <div class="news_page_content truncate">
-            <%= n.content.html_safe %>
-            <div class="news_page_link"><%= link_to "Read More", news_path(n) %></div>
-          </div>
+      <div class="item-desc">
+        <div class="news_page_title truncate"><%= link_to n.title, n %></div>
+        <div class="news_page_subtitle truncate"><%= n.summary %></div>
+        <div class="news_page_date">Written on <%=n.created_at.strftime("%B %d, %Y")%></div>
+        <div class="news_page_content truncate">
+          <%= n.content.html_safe %>
+          <div class="news_page_link"><%= link_to "Read More", news_path(n) %></div>
         </div>
       </div>
-    <% end %>  
-  </div>  
+    </div>
+  <% end %>-->
 </div>
 
