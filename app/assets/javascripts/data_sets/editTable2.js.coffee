@@ -154,9 +154,16 @@ window.setupEditTable = () ->
                 </div>"""
               ($ row).children().eq(col - offset).find('.datepicker').unbind().datetimepicker
                 input: () ->
-                  new Date()
+                  unix = /\ *u\ (\d+)\ */
+                  val = ($ @).children('input').val()
+                  if val == ''
+                    new Date()
+                  else if (match = unix.exec(val)) != null
+                    new Date parseInt match[1]
+                  else
+                    new Date val
                 output: (str) ->
-                  console.log str
+                  ($ @).children('input').val str.toISOString()
                 position: 'center'
 
         add_row = (tab) ->
