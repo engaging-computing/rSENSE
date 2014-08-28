@@ -1,0 +1,18 @@
+<h1>Publish Issues</h1>
+<div id='issues'>
+  <% @issues.each do |issue| %>
+    <div id="issues_<%= issue[0] %>">
+      <% api_url = "https://api.github.com/repos/isenseDev/rSENSE/issues/#{issue[0]}/comments" %>
+      <% response = HTTParty.post(api_url,:headers => {"User-Agent" => "rSENSE","Authorization" => "token #{@github_auth_token}"},:body => { "body" => issue[1][:message] }.to_json).response %>
+      <% if response.code == "201" %>
+        <% json_response = JSON.parse(response.body) %>
+        <% puts json_response %>
+        <% puts json_response["url"] %>
+        <h3>Issue <%= issue[0] %> successfully posted to <%= link_to("GitHub",json_response["html_url"]) %></h3>
+      <% elsif response.code == "401" %>
+        <%= "Issue #{issue[0]} did not post to GitHub: Bad credentials" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+

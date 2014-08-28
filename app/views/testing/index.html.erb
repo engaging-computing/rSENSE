@@ -1,0 +1,40 @@
+<h1>Manual Testing</h1>
+<div>
+  <%= form_tag("/testing/review", method: :post) do %>
+    <div id='userinfo'>
+      Broswer Version 
+      <%= text_field_tag("userinfo[broswer_version]", "",:placeholder => "Chrome 36.0.1985.125", class: "form-control label-padding") %>
+      OS Version 
+      <%= text_field_tag("userinfo[os_version]", "",:placeholder => "Ubuntu 12.04 x64", class: "form-control label-padding") %>
+      <%= link_to("GitHub Personal Access Token", "https://github.com/settings/applications") %>:
+      <%= text_field_tag("userinfo[auth_token]", "", class: "form-control label-padding") %>
+    </div>
+    <div id='issues' style="margin-bottom: 20px">
+      <% @issues.each do |issue| %>
+        <% number = issue['number'] %>
+        <div id='issue_<%= number %>'>
+          <div id='title_<%= number %>'>
+            <h3><%= link_to(number,issue['html_url']) %>: <%= issue['title'] %></h3>
+            <%= hidden_field("issues[#{number}]", :title, :value => issue['title']) %>
+            <%= hidden_field("issues[#{number}]", :html_url, :value => issue['html_url']) %>
+          </div>
+          <div id='radio_<%= number %>'>
+            <%= radio_button("issues[#{number}]", :passed, :true) %>
+            <%= label_tag("issues[#{number}][passed]_true","Passed") %>
+            <%= radio_button("issues[#{number}]", :passed, :false) %>
+            <%= label_tag("issues[#{number}][passed]_false","Failed") %>
+            <%= radio_button("issues[#{number}]", :passed, :NA, :checked => true) %>
+            <%= label_tag("issues[#{number}][passed]_na","Not Checked") %>
+          </div>
+          <div id='text_<%= number %>'>
+            <%= text_area("issues[#{number}]",:message, class: "form-control", rows: 4) %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <div id='submit'>
+      <%= submit_tag("Submit", class: "form-control btn btn-primary") %>
+    </div>
+  <% end %>
+</div>
+

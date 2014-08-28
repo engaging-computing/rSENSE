@@ -11,6 +11,11 @@ class MetaTest < ActiveSupport::TestCase
 
   test 'imagemagick is installed' do
     iv = `identify --version`
-    assert iv =~ /Version/, 'imagemagick is installed'
+    assert iv =~ /Version/, 'imagemagick is not installed'
+  end
+
+  test 'zip is installed' do
+    zip = `zip --version`
+    assert zip =~ /This is Zip/, 'zip is not installed'
   end
 end
