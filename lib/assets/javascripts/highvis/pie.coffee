@@ -76,34 +76,34 @@ $ ->
         @chart.redraw()
 
       normalize: ->
-        sum = 0
-
-        for dp in @display_data
-          do ->
-            sum += dp[1]
-
-        for dp in @display_data
-          do ->
-            dp[1] = ( dp[1] / sum ) * 100
+        sum = @display_data.reduce (prev, cur) -> prev + cur
+        
+        @display_data = @display_data.map (prev, cur) ->
+          cur[1] = (cur[1] / sum) * 100
+          cur
+        , []
 
       getGroupedData: ->
-        tmp = []
-        #for group in data.groups
-          #do ->
-            #tmp[group.toLowerCase()] = 0
         
-        for dp in data.dataPoints
-          do =>
-            tmp[tmp.length] = dp[@selected_field]
-            #console.log dp[@selected_field]
-            #if !dp[@selected_field]?
-            #tmp[dp[data.groupingFieldIndex].toLowerCase()] += dp[@selected_field]
+        if data.groupingFieldIndex is 0 or data.groupingFieldIndex is 1
+          @display_data = data.dataPoints.reduce (prev,  next) =>
+            prev.push [ prev.length, next[@selected_field]]
+            prev
+          , []
+        else
+          @display_data = data.dataPoints.reduce (prev, next) =>
+            if prev[data.groupingFieldIndex]?
+              prev[next[data.groupingFieldIndex]] += next[@selected_field]
+            else
+              prev[next[data.groupingFieldIndex]] = next[@selected_field]
+            prev
+          , {}
 
-        @display_data = []
-        for dp of tmp
-          do =>
-            @display_data.push [dp, tmp[dp]]
-
+          @display_data = Object.keys(@display_data).reduce (prev, key) =>
+            prev.push [key, @display_data[key]]
+            prev
+          , []
+        
       buildOptions: ->
         super()
 
@@ -158,68 +158,11 @@ $ ->
           
         ($ '#labelControl > h3').click ->
           globals.labelOpen = (globals.labelOpen + 1) % 2
-          
-      ###drawYAxisControls: (radio = false) ->
-
-        controls = '<div id="yAxisControl" class="vis_controls">'
-
-        if radio
-          controls += "<h3 class='clean_shrink'><a href='#'>Field:</a></h3>"
-        else
-          controls += "<h3 class='clean_shrink'><a href='#'>Y Axis:</a></h3>"
-
-        controls += "<div class='outer_control_div'>"
-
-        # Populate choices
-        for fIndex in data.normalFields[1..]
-          controls += "<div class='inner_control_div' >"
-
-          if radio
-            controls += """<div class='radio'><label><input class='y_axis_input' name='y_axis_group'
-              type='radio' value='#{fIndex}'
-              #{if (Number fIndex) is @displayField then "checked" else ""}>
-              #{data.fields[fIndex].fieldName}</label></div>"""
-          else
-            controls += """<div class='checkbox'><label><input class='y_axis_input' type='checkbox'
-              value='#{fIndex}' #{if (Number fIndex) in globals.fieldSelection then "checked" else ""}
-              />#{data.fields[fIndex].fieldName}</label></div>"""
-          controls += "</div>"
-
-        controls += '</div></div>'
-
-        # Write HTML
-        ($ '#controldiv').append controls
-
-        # Make y axis checkbox/radio handler
-        if radio
-          ($ '.y_axis_input').click (e) =>
-            @displayField = Number e.target.value
-            @delayedUpdate()
-        else
-          ($ '.y_axis_input').click (e) =>
-            index = Number e.target.value
-
-            if index in globals.fieldSelection
-              arrayRemove(globals.fieldSelection, index)
-            else
-              globals.fieldSelection.push(index)
-            @delayedUpdate()
-
-        # Set up accordion
-        globals.yAxisOpen ?= 0
-
-        ($ '#yAxisControl').accordion
-          collapsible:true
-          active:globals.yAxisOpen
-
-        ($ '#yAxisControl > h3').click ->
-          globals.yAxisOpen = (globals.yAxisOpen + 1) % 2###
-
 
       drawControls: ->
         super()
-        @drawGroupControls()
-        @drawYAxisControls true #horrible name for what im doing here
+        @drawGroupControls false, false, true
+        @drawYAxisControls true, false #horrible name for what im doing here
         #@drawLabelControls()
         @drawSaveControls()
 
