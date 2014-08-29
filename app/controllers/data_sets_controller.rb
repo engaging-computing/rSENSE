@@ -265,7 +265,6 @@ class DataSetsController < ApplicationController
         @results = params[:results]
         @default_name = params[:title]
         respond_to do |format|
-          logger.error dataset.errors.inspect
           flash[:error] = dataset.errors.full_messages
           format.html { render action: 'dataFileUpload' }
         end
@@ -278,7 +277,7 @@ class DataSetsController < ApplicationController
     end
   end
 
-  # POST /data_sets/uploadCSV2
+  # POST /data_sets/dataFileUpload
   def dataFileUpload
     project = Project.find(params[:pid])
 
