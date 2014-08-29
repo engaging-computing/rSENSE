@@ -18,27 +18,7 @@
 
 <div class="row">
   <% @tutorials.each do |tut| %>
-    <div class="col-md-12">
-      <div class="wide-item">
-        <% left_image = image_path('missing_tutorial.jpg') %>
-        <% if tut.featured_media_id != nil %>
-          <% left_image = tut.media_objects.find(tut.featured_media_id).src %>
-        <% end %>
-        
-        <a href="<%= tutorial_path(tut) %>">
-          <div class="item-image" style="background-image:url('<%= left_image %>')">
-          </div>
-        </a>
-        
-        <div class="item-desc">
-          <span class="news_page_title"><%= link_to tut.name, tut %></span><br/>
-          <span style="font-size:0.8em">
-            Written on <%= tut.created_at.strftime("%B %d, %Y")%>
-            by <%= tut.owner.name %>.
-          </span><br/><br/>
-          <%= link_to "Read More", tut %>
-        </div>
-      </div>      
-    </div>  
+    <%= render 'shared/article_box', {image_id: nil, path: tutorial_path(tut), title: tut.name,
+      brief: '', content: tut.content, date: tut.created_at.strftime("%B %d %Y"), width: 6} %>
   <% end %>  
 </div>
