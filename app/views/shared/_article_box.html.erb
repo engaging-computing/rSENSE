@@ -5,9 +5,10 @@
   brief = a subtitle more or less
   date = the date it was written on
   content = a preview of what is in the article
+  width = size of bootstrap column
 -->
 
-<div class='col-md-6'>
+<div class="col-md-<%= width %>">
   <div class="wide-item">
     <% left_image = image_path('missing_tutorial.jpg') %>
     <% if image_id != nil %>
