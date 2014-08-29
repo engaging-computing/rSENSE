@@ -18,7 +18,7 @@
 
 <div class="row">
   <% @tutorials.each do |tut| %>
-    <%= render 'shared/article_box', {image_id: nil, path: tutorial_path(tut), title: tut.name,
+    <%= render 'shared/article_box', {image_id: tut.featured_media_id, path: tutorial_path(tut), title: tut.name,
       brief: '', content: tut.content, date: tut.created_at.strftime("%B %d %Y"), width: 6} %>
   <% end %>  
 </div>
