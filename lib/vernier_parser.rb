@@ -29,11 +29,9 @@ class VernierParser
 
     rotate
 
-    filename = write_temp_file(to_csv)
+    data = CSV.parse(csv)
 
-    roo = Roo::CSV.new(filename)
-
-    roo
+    data
   end
 
   def data
