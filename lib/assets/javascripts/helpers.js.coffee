@@ -1,6 +1,12 @@
 $ ->
 
   window.helpers ?= {}
+  
+  helpers.qsort = ([head, tail...]) ->
+    return [] if typeof head is 'undefined'
+    smaller_sorted = helpers.qsort (e for e in tail when e <= head)
+    larger_sorted = helpers.qsort (e for e in tail when e > head)
+    smaller_sorted.concat([head]).concat(larger_sorted)
 
   helpers.truncate = (str, length) ->
     if str.length > length
