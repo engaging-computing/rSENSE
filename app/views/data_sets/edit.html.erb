@@ -10,43 +10,7 @@
   <div><b>Project: </b><%= link_to @data_set.project.title, project_path(@data_set.project.id)%></div><br>
   <div class="row">
     <div class="span12">
-      <div style="overflow-x: auto;">
-        <table id="editTable" class="table" data-project-id="<%= @project.id %>">
-          <thead>
-            <tr>
-              <% @project.fields.each do |f| %>
-                <th data-field-type="<%= get_field_name(f.field_type) %>" data-field-id="<%= f.id %>" data-field-restrictions="<%= f.restrictions %>" data-field-name="<%= f.name %>"><%= f.name %>
-                <% if f.unit != "" and !f.unit.nil?%>
-                  (<%=f.unit%>)
-                <% end %></th>
-              <% end %>
-            </tr>
-          </thead>
-          <tbody>
-            <% @data_set.data.each_with_index do |row, r_index| %>
-              <tr>
-                <% @project.fields.each_with_index do |field| %>
-                  <% if field.restrictions.nil? %>
-                    <td><% if !row["#{field.id}"].nil? %><%= row["#{field.id}"] %><% end %></td>
-                  <% else %>
-                    <td>
-                      <select class="form-control">
-                        <option>Select One</option>
-                        <% field.restrictions.each do |r| %>
-                          <% if row[field.id.to_s] == r %>
-                            <option selected value="<%= r %>"><%= r %></option>
-                          <% else %>
-                            <option value="<%= r %>"><%= r %></option>
-                          <% end %>
-                        <% end %>
-                      </select>
-                    </td>
-                  <% end %>
-                <% end %>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
+      <div id='slickgrid-container'>
 				<i>*Timestamps must be in the form "yyyy/MM/dd hh:mm:ss" or a unix timestamp</i>
       </div>
       <div class="edit_table_control pull-right">

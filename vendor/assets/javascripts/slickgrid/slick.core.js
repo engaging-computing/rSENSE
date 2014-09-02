@@ -348,8 +348,7 @@
   Group.prototype.equals = function (group) {
     return this.value === group.value &&
         this.count === group.count &&
-        this.collapsed === group.collapsed &&
-        this.title === group.title;
+        this.collapsed === group.collapsed;
   };
 
   /***
@@ -370,14 +369,6 @@
      * @type {Group}
      */
     this.group = null;
-
-    /***
-     * Whether the totals have been fully initialized / calculated.
-     * Will be set to false for lazy-calculated group totals.
-     * @param initialized
-     * @type {Boolean}
-     */
-    this.initialized = false;
   }
 
   GroupTotals.prototype = new NonDataItem();
