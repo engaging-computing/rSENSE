@@ -54,11 +54,9 @@ class GpxParser
       csv += line
     end
 
-    filename = write_temp_file(csv)
+    data = CSV.parse(csv)
 
-    roo = Roo::CSV.new(filename)
-
-    roo
+    data
   end
 
   private
