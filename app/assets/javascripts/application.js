@@ -65,4 +65,10 @@
 //
 //= require summernote
 //
+//= require jquery.event.drag
+//= require jquery.event.drag.live
+//
+//= require slickgrid/slick.core
+//= require slickgrid/slick.grid
+//
 //= require_tree .

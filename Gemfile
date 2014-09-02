@@ -37,6 +37,9 @@ gem 'jquery-rails'
 #gem 'bcrypt' # Can't use the new name yet.
 gem 'bcrypt-ruby'
 
+# jQuery plugins
+gem 'jquery-drag-rails'
+
 # Include JQuery UI
 gem 'jquery-ui-rails'
 
