@@ -30,12 +30,14 @@ $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
 
     window.globals ?= {}
+    window.globals.constants ?= {}
+    window.globals.configs ?= {}
 
-    globals.logY ?= 0
+    globals.configurations.logY ?= 0
 
-    # Only init selections if this is not a saved vis
+    # Only init selections if this is not a saved/default vis
     if not data.savedGlobals?
-      globals.groupSelection ?= for vals, keys in data.groups
+      globals.config.groupSelection ?= for vals, keys in data.groups
         Number keys
       globals.selectedGroup ?= 0
 
@@ -46,6 +48,8 @@ $ ->
 
     class window.BaseVis
       constructor: (@canvas) ->
+        @constants ?= {}
+        @configurations ?= {}
 
       ###
       Start sequence used by runtime
