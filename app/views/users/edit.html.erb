@@ -3,7 +3,11 @@
     <div class="panel panel-default">
       <%= form_for(@user, html: {id: 'edit_password_form'}) do |ff| %>
         <div class="panel-heading">
-          <h2>Change Password for <%= @user.name %></h2>
+          <% if @cur_user.admin? and not @cur_user == @user %>
+            <h2>Change Password for <%= @user.name %></h2>
+          <% else %>
+            <h2>Change Password</h2>
+          <% end %>
         </div>
         
         <div class="panel-body">
@@ -46,7 +50,11 @@
       <div class="panel panel-default">
         <%= form_for(@user, html: {id: 'edit_email_form'}) do |ff| %>
           <div class="panel-heading">
-            <h2>Change Email Address for <%= @user.name %></h2>
+            <% if @cur_user.admin? and not @cur_user == @user %>
+              <h2>Change Email Address for <%= @user.name %></h2>
+            <% else %>
+              <h2>Change Email Address</h2>
+            <% end %>
           </div>
           
           <div class="panel-body">
@@ -61,7 +69,7 @@
             <div class="form-group">
               <p>
                 <%= ff.label :email, "New Email:" %>
-                <%= ff.text_field(:email, class: "form-control")%>
+                <%= ff.text_field(:email, class: "form-control", value: "")%>
               </p>
             </div>  
             <div class="form-group">

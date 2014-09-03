@@ -291,16 +291,21 @@ class ProjectsController < ApplicationController
   def templateUpload
     @project = Project.find(params[:id])
     @options = [['Timestamp', get_field_type('Timestamp')], ['Number', get_field_type('Number')], ['Text', get_field_type('Text')], ['Latitude', get_field_type('Latitude')], ['Longitude', get_field_type('Longitude')]]
+
     uploader = FileUploader.new
-    data_obj = uploader.generateObject(params[:file])
+    data_obj = uploader.generateObjectForTemplateUpload(params[:file])
+
+    @types = data_obj[:types]
     @original_filename = params[:file].original_filename.split('.')[0]
-    @types = uploader.get_probable_types(data_obj)
     @tmp_file = data_obj[:file]
-    @headers = data_obj['data'].keys
+    @headers = data_obj[:headers]
 
     respond_to do |format|
       format.html
     end
+  rescue Exception => e
+    flash[:error] = "Error reading file: #{e}"
+    redirect_to project_path(@project)
   end
 
   def finishTemplateUpload

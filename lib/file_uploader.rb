@@ -5,30 +5,50 @@ require 'open-uri'
 require 'fileutils'
 
 class FileUploader
+  @converted_csv = nil
+
   ### Generates the object that will be acted on
   def generateObject(file)
     spreadsheet = open_spreadsheet(file)
-    header = spreadsheet.row(1)
+    header = spreadsheet[0]
     data_obj = {}
     data_obj['data'] = {}
-    (0..spreadsheet.last_column - 1).each do |i|
-      data_obj['data'][header[i]] = spreadsheet.column(i + 1)[1, spreadsheet.last_row]
+    (0..header.length - 1).each do |i|
+      data_obj['data'][header[i]] = ''
     end
 
-    data_obj[:file] =  write_temp_file(CSV.parse(spreadsheet.to_csv))
-    #     data_obj[:original_filename] = file.original_filename
+    data_obj[:file] =  write_temp_file(spreadsheet)
+
+    data_obj
+  end
+
+  def generateObjectForTemplateUpload(file)
+    row_major = open_spreadsheet(file)
+    headers = row_major[0]
+    column_major = row_major[1..row_major.length].transpose
+
+    data_obj = {}
+    data = {}
+
+    (0..headers.length - 1).each do |i|
+      data[headers[i]] = column_major[i]
+    end
+
+    data_obj[:types] = get_probable_types(data)
+    data_obj[:file] =  write_temp_file(row_major)
+    data_obj[:headers] = headers
     data_obj
   end
 
   ### Simply opens the file as the correct type and returns the Roo object.
   def open_spreadsheet(file)
     if file.class == ActionDispatch::Http::UploadedFile
-      # Rails.logger.info "-=-=-=#{file.path}"
       case File.extname(file.original_filename)
-      when '.csv' then convert(file.path)
-      when '.xls' then Roo::Excel.new(file.path, packed: nil, file_warning: :ignore)
-      when '.xlsx' then Roo::Excelx.new(file.path, packed: nil, file_warning: :ignore)
-      when '.ods' then Roo::OpenOffice.new(file.path, packed: false, file_warning: :ignore)
+      when '.csv', '.txt', '.text' then convert(file.path)
+      when '.xls', '.xlsx', '.ods'
+        system "libreoffice --calc --headless --nologo --invisible --convert-to csv #{file.path} --outdir /tmp/rsense > /dev/null 2>&1"
+        @converted_csv = "/tmp/rsense/#{file.path.gsub('/tmp/', '')}.csv"
+        convert(@converted_csv)
       when '.gpx' then GpxParser.new.convert(file.path)
       when '.qmbl' then VernierParser.new.convert(file.path)
       else fail "Unknown file type: #{file.original_filename}"
@@ -44,14 +64,12 @@ class FileUploader
   ### Retrieve Object
   def retrieve_obj(file)
     spreadsheet = convert(file)
-    header = spreadsheet.row(1) ## BANG BANG! Arrays start at 1 here.
-
+    header = spreadsheet.shift
     data_obj = {}
-
-    (0..spreadsheet.last_column - 1).each do |i|
-      data_obj[header[i]] = spreadsheet.column(i + 1)[1, spreadsheet.last_row]
+    spreadsheet = spreadsheet.transpose
+    (0..(header.length - 1)).each do |i|
+      data_obj[header[i]] = spreadsheet[i]
     end
-
     data_obj
   end
 
@@ -88,7 +106,7 @@ class FileUploader
 
   ### Match headers should return a match_matrix for mismatches or continue
   def match_headers(project, data_obj)
-    fields = project.fields.map { |fi| fi.to_hash }
+    fields = project.fields.map { |fi| fi.to_hash(false) }
 
     if data_obj.key?('data')
       headers = data_obj['data'].keys
@@ -141,9 +159,7 @@ class FileUploader
     results
   end
 
-  def get_probable_types(data_obj)
-    data_set = data_obj['data']
-
+  def get_probable_types(data_set)
     types = {}
     types['text'] = []
     types['timestamp'] = []
@@ -229,6 +245,7 @@ class FileUploader
 
   def write_temp_file(data)
     # Create a tmp directory if it does not exist
+
     begin
       Dir.mkdir('/tmp/rsense')
     rescue
@@ -236,15 +253,10 @@ class FileUploader
 
     # Save file so we can grab it again
     base = '/tmp/rsense/dataset'
-    fname = base + "#{Time.now.to_i}.csv"
+    fname = base + "#{SecureRandom.hex}.csv"
     f = File.new(fname, 'w')
-
-    y = ''
-    data.each do |x|
-      y += x.join(',') + "\n"
-    end
-    f.write(y)
-
+    as_csv = data.map { |y| y.join(',') }.join("\n")
+    f.write(as_csv)
     f.close
 
     fname
@@ -317,37 +329,16 @@ class FileUploader
   end
 
   def convert(filepath)
-    possible_separators = [',', "\t", ';']
+    data = CSV.parse(File.read(filepath))
 
-    # delimters
-    delim = []
+    headers = data[0].map { |x| x.downcase }
+    overlap = headers.uniq.map { | e | [headers.count(e), e] }.select { |c, _| c > 1 }.map { | c, e | "found #{c} #{e} column(s) " }
 
-    possible_separators.each_with_index do |sep, index|
-
-      delim[index] = Hash.new
-      delim[index][:input] = filepath
-      delim[index][:file] = Roo::CSV.new(filepath, csv_options: { col_sep: sep, quote_char: "\'" })
-      delim[index][:data] = delim[index][:file].parse
-      delim[index][:avg] = 0
-
-      delim[index][:data].each do |row|
-        delim[index][:avg] = delim[index][:avg] + row.count
-      end
-
-      delim[index][:avg] = delim[index][:avg] / delim[index][:data].count
-
+    if headers.map { |h| h.downcase }.uniq.count == headers.count
+      data
+    else
+      fail overlap.to_s
     end
-
-    possible_separators.each_with_index do |sep, index|
-      next unless  delim[index][:data].first.count == delim[index][:avg] and
-          delim[index][:data].last.count == delim[index][:avg] and
-          delim[index][:avg] > 1
-
-      return delim[index][:file]
-
-    end
-
-    delim[0][:file]
   end
 
   def valid_float?(dp)

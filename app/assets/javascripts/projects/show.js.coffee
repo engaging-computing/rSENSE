@@ -221,7 +221,9 @@ IS.onReady "projects/show", ->
 
   ($ 'a.viz_delete').click (e) ->
     e.preventDefault()
-    
+
+    url = e.target.href
+
     p_id = url.split '/'
     p_id = p_id[ p_id.length - 1 ]
     
