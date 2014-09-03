@@ -32,7 +32,9 @@ $ ->
 
     class window.Map extends BaseVis
       constructor: (@canvas) ->
-        @HEATMAP_NONE = -2
+        @super
+
+        @contants.HEATMAP_NONE = -2
         @HEATMAP_MARKERS = -1
 
         @visibleMarkers = 1
