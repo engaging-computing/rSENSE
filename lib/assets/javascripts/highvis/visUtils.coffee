@@ -180,6 +180,9 @@ $ ->
       '#B18347', '#944B70', '#9F7FBC', '#C77967', '#914C2A', '#396B43', '#625744', '#C25562',
       '#735521', '#7D9080', '#715365', '#8A9044', '#C573B2', '#788AA2', '#EC5D7A']
 
+    globals.configs ?= {}
+    globals.configs.colors = globals.colors
+
     ###
     Generate a list of dashes
     ###
