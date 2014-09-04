@@ -34,7 +34,7 @@ $ ->
       constructor: (@canvas) ->
         super()
 
-        console.log 'map'
+        console.log 'map', @canvas
         @HEATMAP_NONE = -2
         @HEATMAP_MARKERS = -1
 
@@ -43,6 +43,8 @@ $ ->
         @configs.visibleClusters = if data.dataPoints.length > 100 then 1 else 0
         @configs.heatmapSelection = @HEATMAP_NONE
         @configs.mapTypeId ?= google.maps.MapTypeId.ROADMAP
+
+        console.log @configs.mapTypeId
 
       serializationCleanup: ->
         delete @gmap
@@ -56,6 +58,7 @@ $ ->
           delete @timeLines
 
       start: ->
+        console.log 'start'
         ($ '#' + @canvas).show()
 
         # Remove old handlers if they exist
@@ -84,6 +87,7 @@ $ ->
           for group in data.groups
             @heatPoints[index].push []
         ################ PLUGIN INIT ###############
+        console.log 'init gmaps'
         # Gmaps
         latlngbounds = new google.maps.LatLngBounds()
 
@@ -93,9 +97,13 @@ $ ->
           mapTypeId: @configs.mapTypeId
           scaleControl: true
 
-        @gmap =
-          new google.maps.Map(document.getElementById(@canvas), mapOptions)
+        console.log latlngbounds, mapOptions, "map ready for init", @canvas
+
+        @gmap = new google.maps.Map(document.getElementById(@canvas), mapOptions)
+        console.log @gmap
         info = new google.maps.InfoWindow()
+
+        console.log 'created new maps', mapOptions
 
         # Projection Helper
         @projOverlay = new CanvasProjectionOverlay()
@@ -145,6 +153,7 @@ $ ->
           styles: clusterStyles
         ################################################
 
+        console.log 'back to start'
         for dataPoint in globals.CLIPPING.getData(data.dataPoints)
           lat = lon = null
           do =>
@@ -256,6 +265,7 @@ $ ->
         else
           @gmap.fitBounds(latlngbounds)
 
+        console.log 'drawing controls'
         @drawControls()
 
         finalInit = =>
@@ -290,6 +300,7 @@ $ ->
         checkProj()
 
       update: ->
+        console.log 'update'
         # Disable old heatmap (if there)
         if @heatmap?
           @heatmap.setMap null
