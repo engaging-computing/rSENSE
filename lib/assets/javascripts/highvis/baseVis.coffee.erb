@@ -33,11 +33,11 @@ $ ->
     window.globals.constants ?= {}
     window.globals.configs ?= {}
 
-    globals.configurations.logY ?= 0
+    globals.logY ?= 0
 
     # Only init selections if this is not a saved/default vis
     if not data.savedGlobals?
-      globals.config.groupSelection ?= for vals, keys in data.groups
+      globals.groupSelection ?= for vals, keys in data.groups
         Number keys
       globals.selectedGroup ?= 0
 
@@ -48,8 +48,8 @@ $ ->
 
     class window.BaseVis
       constructor: (@canvas) ->
-        @constants ?= {}
-        @configurations ?= {}
+        console.log 'base'
+        @configs ?= {}
 
       ###
       Start sequence used by runtime
