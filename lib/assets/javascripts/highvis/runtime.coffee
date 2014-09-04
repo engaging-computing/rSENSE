@@ -30,6 +30,7 @@ $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
 
     window.globals ?= {}
+    window.globals.configs ?= {}
     globals.curVis = null
 
     globals.CONTROL_SIZE = 210
@@ -41,7 +42,7 @@ $ ->
     ###
 
     ### Fix height ###
-    if globals.options? and globals.options.isEmbed?
+    if globals.configs.options? and globals.configs.options.isEmbed?
       ($ "#viscontainer").height
     else
       h = (Number ($ "div.mainContent").css("padding-top").replace("px", ""))
@@ -88,11 +89,14 @@ $ ->
 
     ### Pick vis ###
     if not (data.defaultVis in data.relVis)
-      globals.curVis = (eval 'globals.' + data.relVis[0].toLowerCase())
+      globals.configs.curVis = 'globals.' + data.relVis[0].toLowerCase()
       ($ '#viscontainer').tabs('option', 'active', data.allVis.indexOf(data.relVis[0]))
     else
-      globals.curVis = (eval 'globals.' + data.defaultVis.toLowerCase())
+      globals.configs.curVis = 'globals.' + data.defaultVis.toLowerCase()
       ($ '#viscontainer').tabs('option', 'active', data.allVis.indexOf(data.defaultVis))
+
+    # Pointer to the actual vis
+    globals.curVis = (eval globals.configs.curVis)
 
     ### Change vis click handler ###
     ($ '#visTabList a').click ->
@@ -106,7 +110,8 @@ $ ->
 
       link = href.substr(start, end - start)
 
-      globals.curVis = (eval 'globals.' + link)
+      globals.configs.curVis = 'globals.' + link
+      globals.curVis = (eval globals.configs.curVis)
 
       if oldVis is globals.curVis
         return
@@ -117,7 +122,7 @@ $ ->
     # Set initial div sizes
     containerSize = ($ '#viscontainer').width()
     hiderSize     = ($ '#controlhider').outerWidth()
-    controlSize =  if globals.options? and globals.options.startCollapsed?
+    controlSize =  if globals.configs.options? and globals.configs.options.startCollapsed?
       $("#control_hide_button").html('<')
       0
     else
@@ -127,7 +132,7 @@ $ ->
     visWidth = containerSize - (hiderSize + controlSize + 10)
     visHeight = ($ '#viscontainer').height() - ($ '#visTabList').outerHeight()
 
-    if globals.options? and globals.options.presentation?
+    if globals.configs.options? and globals.configs.options.presentation?
       ($ '.vis_canvas').css width:"100%"
       ($ '.vis_canvas').css height:"100%"
     else
@@ -147,7 +152,7 @@ $ ->
     # Toggle control panel
     resizeVis = (toggleControls = true, aniLength = 600) ->
 
-      if (globals.fullscreen? and globals.fullscreen)
+      if (globals.configs.fullscreen? and globals.configs.fullscreen)
         ($ "#viscontainer").height(($ window).height())
       else
         ($ "#viscontainer").height(($ window).height() - h)
@@ -179,7 +184,7 @@ $ ->
       globals.curVis.resize newWidth, newHeight, aniLength
 
     # Set initial size if not in presentation mode
-    if globals.options? and globals.options.presentation?
+    if globals.configs.options? and globals.configs.options.presentation?
       1
     else
       setTimeout resizeVis, 0
@@ -195,6 +200,3 @@ $ ->
       else
         $("##{@id}").html('<')
       resizeVis()
-
-
-

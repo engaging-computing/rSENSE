@@ -32,9 +32,8 @@ $ ->
 
     class window.Map extends BaseVis
       constructor: (@canvas) ->
-        super()
+        super(@canvas)
 
-        console.log 'map', @canvas
         @HEATMAP_NONE = -2
         @HEATMAP_MARKERS = -1
 
@@ -43,8 +42,6 @@ $ ->
         @configs.visibleClusters = if data.dataPoints.length > 100 then 1 else 0
         @configs.heatmapSelection = @HEATMAP_NONE
         @configs.mapTypeId ?= google.maps.MapTypeId.ROADMAP
-
-        console.log @configs.mapTypeId
 
       serializationCleanup: ->
         delete @gmap
@@ -58,7 +55,6 @@ $ ->
           delete @timeLines
 
       start: ->
-        console.log 'start'
         ($ '#' + @canvas).show()
 
         # Remove old handlers if they exist
@@ -87,7 +83,6 @@ $ ->
           for group in data.groups
             @heatPoints[index].push []
         ################ PLUGIN INIT ###############
-        console.log 'init gmaps'
         # Gmaps
         latlngbounds = new google.maps.LatLngBounds()
 
@@ -97,13 +92,8 @@ $ ->
           mapTypeId: @configs.mapTypeId
           scaleControl: true
 
-        console.log latlngbounds, mapOptions, "map ready for init", @canvas
-
         @gmap = new google.maps.Map(document.getElementById(@canvas), mapOptions)
-        console.log @gmap
         info = new google.maps.InfoWindow()
-
-        console.log 'created new maps', mapOptions
 
         # Projection Helper
         @projOverlay = new CanvasProjectionOverlay()
@@ -153,7 +143,6 @@ $ ->
           styles: clusterStyles
         ################################################
 
-        console.log 'back to start'
         for dataPoint in globals.CLIPPING.getData(data.dataPoints)
           lat = lon = null
           do =>
@@ -170,7 +159,7 @@ $ ->
               return
 
             groupIndex = data.groups.indexOf dataPoint[data.groupingFieldIndex].toLowerCase()
-            color = globals.colors[groupIndex % globals.colors.length]
+            color = globals.configs.colors[groupIndex % globals.configs.colors.length]
 
             latlng = new google.maps.LatLng(lat, lon)
 
@@ -197,7 +186,7 @@ $ ->
 
             label += "</table></div>"
 
-            if groupIndex in globals.groupSelection
+            if groupIndex in globals.configs.groupSelection
               latlngbounds.extend latlng
 
             pinSym =
@@ -212,7 +201,7 @@ $ ->
               position: latlng
               icon: pinSym
               desc: label
-              visible: ((groupIndex in globals.groupSelection) and @configs.visibleMarkers is 1)
+              visible: ((groupIndex in globals.configs.groupSelection) and @configs.visibleMarkers is 1)
 
             @oms.addMarker newMarker
 
@@ -237,10 +226,10 @@ $ ->
             @timeLines[index] = new google.maps.Polyline
               path: @timeLines[index]
               geodesic: true
-              strokeColor: globals.colors[index]
+              strokeColor: globals.configs.colors[index]
               strokeOpacity: 1.0
               strokeWeight: 2
-              visible: ((index in globals.groupSelection) and @configs.visibleLines is 1)
+              visible: ((index in globals.configs.groupSelection) and @configs.visibleLines is 1)
 
             @timeLines[index].setMap(@gmap)
 
@@ -265,7 +254,6 @@ $ ->
         else
           @gmap.fitBounds(latlngbounds)
 
-        console.log 'drawing controls'
         @drawControls()
 
         finalInit = =>
@@ -300,7 +288,6 @@ $ ->
         checkProj()
 
       update: ->
-        console.log 'update'
         # Disable old heatmap (if there)
         if @heatmap?
           @heatmap.setMap null
@@ -313,7 +300,7 @@ $ ->
 
           heats = []
           for index, heatArray of @heatPoints when (Number index) is @configs.heatmapSelection
-            for groupArray, groupIndex in heatArray when groupIndex in globals.groupSelection
+            for groupArray, groupIndex in heatArray when groupIndex in globals.configs.groupSelection
               heats = heats.concat groupArray
 
           if @configs.heatmapSelection >= 0
@@ -345,10 +332,10 @@ $ ->
         # Set marker visibility
         for markGroup, index in @markers
           for mark in markGroup
-            mark.setVisible ((index in globals.groupSelection) and @configs.visibleMarkers is 1)
+            mark.setVisible ((index in globals.configs.groupSelection) and @configs.visibleMarkers is 1)
 
           if @timeLines?
-            @timeLines[index].setVisible ((index in globals.groupSelection) and @configs.visibleLines is 1)
+            @timeLines[index].setVisible ((index in globals.configs.groupSelection) and @configs.visibleLines is 1)
 
         @clusterer.repaint()
 
@@ -392,7 +379,7 @@ $ ->
         # End TODO
 
         for fieldIndex in data.normalFields
-          sel = if @config.heatmapSelection is fieldIndex then 'selected' else ''
+          sel = if @configs.heatmapSelection is fieldIndex then 'selected' else ''
           controls += "<option value=\"#{Number fieldIndex}\" #{sel}>#{data.fields[fieldIndex].fieldName}</option>"
 
         controls += "</select></div>"
@@ -482,14 +469,14 @@ $ ->
             @delayedUpdate()
 
         # Set up accordion
-        globals.toolsOpen ?= 0
+        globals.configs.toolsOpen ?= 0
 
         ($ '#toolControl').accordion
           collapsible:true
-          active:globals.toolsOpen
+          active:globals.configs.toolsOpen
 
         ($ '#toolControl > h3').click ->
-          globals.toolsOpen = (globals.toolsOpen + 1) % 2
+          globals.configs.toolsOpen = (globals.configs.toolsOpen + 1) % 2
 
       resize: (newWidth, newHeight, duration) ->
         func = =>
@@ -522,7 +509,7 @@ $ ->
         viewBounds = new google.maps.LatLngBounds(sw, ne)
         heatBounds = new google.maps.LatLngBounds()
 
-        for markGroup, index in @markers when index in globals.groupSelection
+        for markGroup, index in @markers when index in globals.configs.groupSelection
           for mark in markGroup
             if viewBounds.contains mark.getPosition()
               heatBounds.extend mark.getPosition()
