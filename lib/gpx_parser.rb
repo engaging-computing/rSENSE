@@ -20,11 +20,14 @@ class GpxParser
     elements = []
     trkpts.first.traverse do |node|
       if node.children.count == 0
-        csv += node.parent.name + ','
-        elements << node.parent.name
+        unless csv.downcase.include?(node.parent.name)
+          csv += node.parent.name + ','
+          elements << node.parent.name
+        end
       end
     end
     csv = csv.chomp(',')
+
     csv += "\n"
 
     trkpts.each do |pt|
@@ -51,11 +54,9 @@ class GpxParser
       csv += line
     end
 
-    filename = write_temp_file(csv)
+    data = CSV.parse(csv)
 
-    roo = Roo::CSV.new(filename)
-
-    roo
+    data
   end
 
   private

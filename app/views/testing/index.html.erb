@@ -3,9 +3,9 @@
   <%= form_tag("/testing/review", method: :post) do %>
     <div id='userinfo'>
       Broswer Version 
-      <%= text_field_tag("userinfo[broswer_version]", "",:placeholder => "Chrome 36.0.1985.125", class: "form-control label-padding") %>
+      <%= text_field_tag("userinfo[broswer_version]", "#{@browser.name} #{@browser.full_version}", class: "form-control label-padding") %>
       OS Version 
-      <%= text_field_tag("userinfo[os_version]", "",:placeholder => "Ubuntu 12.04 x64", class: "form-control label-padding") %>
+      <%= text_field_tag("userinfo[os_version]", "#{@browser.platform}", class: "form-control label-padding") %>
       <%= link_to("GitHub Personal Access Token", "https://github.com/settings/applications") %>:
       <%= text_field_tag("userinfo[auth_token]", "", class: "form-control label-padding") %>
     </div>
