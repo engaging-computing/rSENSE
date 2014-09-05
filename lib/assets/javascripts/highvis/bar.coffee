@@ -35,7 +35,7 @@ $ ->
         if data.normalFields.length > 1
           @displayField = data.normalFields[1]
         else @displayField = data.normalFields[0]
-        
+        console.log data.groupingFieldIndex
       ANALYSISTYPE_TOTAL:     0
       ANALYSISTYPE_MAX:       1
       ANALYSISTYPE_MIN:       2
@@ -47,12 +47,12 @@ $ ->
 
       analysisType:   0
       sortField:      null
-
+      defaultGroupBy = false
       buildOptions: ->
         super()
-
         self = this
-
+        if data.textFields.length > 2
+          defaultGroupBy = true
         @chartOptions
         $.extend true, @chartOptions,
           chart:
@@ -72,8 +72,13 @@ $ ->
             useHTML: true
           yAxis:
             type: if globals.logY is 1 then 'logarithmic' else 'linear'
-
+          grouping: ->
+            if defaultGroupBy
+              console.log 'running'
+              data.setGroupIndex(data.textFields[2])
+              #($ '#checkbox_all').trigger('click')
       update: ->
+        console.log defaultGroupBy
         super()
         visibleCategories = for selection in data.normalFields when selection in globals.fieldSelection
           fieldTitle data.fields[selection]
