@@ -1,22 +1,18 @@
 setupTable = () ->
-  data = for i in [0..200]
-    a: i * 3
-    b: i * 3 + 1
-    c: i * 3 + 2
+  cols = ($ '#slickgrid-container').data 'cols'
+  data = ($ '#slickgrid-container').data 'data'
 
-  columns = [
-    {id: 'a', field: 'a', name: 'a', editor: Slick.Editors.Text}
-    {id: 'b', field: 'b', name: 'b', editor: Slick.Editors.Integer}
-    {id: 'c', field: 'c', name: 'c', editor: Slick.Editors.Text}
-  ]
+  console.log cols
+  console.log data
 
   options =
-    autoEdit: false
+    #autoEdit: false
     editable: true
     enableCellNavigation: true
     enableColumnReorder: false
+    forceFitColumns: true
 
-  grid = new Slick.Grid '#slickgrid-container', data, columns, options
+  grid = new Slick.Grid '#slickgrid-container', data, cols, options
 
 IS.onReady "data_sets/edit", ->
   setupTable()
