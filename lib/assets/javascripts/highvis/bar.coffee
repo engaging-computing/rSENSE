@@ -72,7 +72,6 @@ $ ->
           yAxis:
             type: if globals.logY is 1 then 'logarithmic' else 'linear'
         if defaultGroupBy
-          console.log 'running'
           data.setGroupIndex(data.textFields[2])
           globals.groupSelection = for vals, keys in data.groups
             Number keys
