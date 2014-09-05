@@ -68,12 +68,7 @@
 //= require jquery.event.drag
 //= require jquery.event.drag.live
 //
-//= require slickgrid/slick.core
-//= require slickgrid/slick.grid
-//= require slickgrid/slick.dataview
-//= require slickgrid/slick.editors
-//= require slickgrid/slick.formatters
-//= require slickgrid/slick.groupitemmetadataprovider
-//= require slickgrid/slick.remotemodel
+//= require slickgrid/slickgrid
+//  require slickgrid-editors/editors
 //
 //= require_tree .

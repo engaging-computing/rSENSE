@@ -16,9 +16,15 @@
       <div class="edit_table_control pull-right">
       </div>
     </div>
+    <script type="text/javascript">
+      $('#slickgrid-container').data('cols',<%= @cols.html_safe %>);
+      $('#slickgrid-container').data('data',<%= @data.html_safe %>);
+    </script
   </div>
 
-  <% link_to 'Show', @data_set %>
+  <script type="text/javascript">
+  </script>
+
 <%else%>
   You are not authorized to view this page.
 <%end%>
