@@ -136,7 +136,7 @@ $ ->
         controls = '<div id="labelControl" class="vis_controls">'
         controls += "<h3 class='clean_shrink'><a href='#'>Label:</a></h3>"
         controls += "<div class='outer_control_div'>"
-        for fields, f_index in data.textFields[2..]
+        for fields, f_index in data.fields
           do ->
             controls += "<div class='inner_control_div'><div class='radio'><label>#{data.fields[fields].fieldName}"
             controls += "<input class='label_input' type='radio' name='labels' value='#{fields}'"
@@ -161,7 +161,7 @@ $ ->
 
       drawControls: ->
         super()
-        @drawGroupControls false, false, true
+        @drawGroupControls false, false, false
         @drawYAxisControls true, false #horrible name for what im doing here
         #@drawLabelControls()
         @drawSaveControls()
