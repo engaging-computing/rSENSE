@@ -42,12 +42,16 @@ $ ->
           else
             @select_name = 'Percent'
 
-        @selected_field = 3
-
+        @selected_field = @displayField
+            
       start: () ->
+        if data.textFields.length > 2 and namespace.action is 'displayVis'
+          data.setGroupIndex(data.textFields[2])
+          globals.groupSelection = for vals, keys in data.groups
+            Number keys
         super()
         @update()
-        
+        console.log globals.fieldSelection
       update: () ->
         @rel_data = []
         @selected_field = @displayField
