@@ -74,13 +74,13 @@ $ ->
         , []
 
       getGroupedData: ->
-        
-        if data.groupingFieldIndex is 0 or data.groupingFieldIndex is 1
-          @display_data = data.dataPoints.reduce (prev,  next) =>
-            prev.push [ prev.length, next[@selected_field]]
-            prev
-          , []
-        else
+          #@display_data = data.multiGroupSelector(window.globals.curVis.selected_field, data.groupingFieldIndex)
+#         if data.groupingFieldIndex is 0 or data.groupingFieldIndex is 1
+#           @display_data = data.dataPoints.reduce (prev,  next) =>
+#             prev.push [ prev.length, next[@selected_field]]
+#             prev
+#           , []
+#         else
           @display_data = data.dataPoints.reduce (prev, next) =>
             if prev[data.groupingFieldIndex]?
               prev[next[data.groupingFieldIndex]] += next[@selected_field]
