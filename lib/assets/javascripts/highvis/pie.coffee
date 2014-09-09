@@ -52,25 +52,15 @@ $ ->
         @rel_data = []
         @selected_field = @displayField
         @getGroupedData()
-        
         while @chart.series.length > 0
           @chart.series[@chart.series.length - 1].remove false
 
-        if !@select_name?
-          
-          if data.textFields.length > 2
-            @select_name = data.textFields[2]
-          else
-            @select_name = 'Percent'
-
+        @select_name = data.fields[data.groupingFieldIndex].fieldName
         options =
           showInLegend: false
           data: @display_data
           
-        if typeof(@select_name) is "string"
-          @chart.setTitle { text: "#{@select_name} by #{data.fields[@selected_field].fieldName}" }
-        else
-          @chart.setTitle {text: "#{data.fields[@select_name].fieldName} by #{data.fields[@selected_field].fieldName}"}
+        @chart.setTitle { text: "#{@select_name} by #{data.fields[@selected_field].fieldName}" }
 
         @chart.addSeries options, false
         @chart.redraw()
