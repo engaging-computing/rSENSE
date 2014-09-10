@@ -1,6 +1,14 @@
 class ContribKey < ActiveRecord::Base
   belongs_to :project
 
+  def name=(val)
+    write_attribute(:name, val.downcase)
+  end
+
+  def key=(val)
+    write_attribute(:key, val.downcase)
+  end
+
   validates :name, length: {
     minimum: 1,
     too_short:  ' is too short (Minimum is one character)',
