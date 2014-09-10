@@ -1,7 +1,7 @@
 include ApplicationHelper
 class Field < ActiveRecord::Base
   validates_presence_of :project_id, :field_type, :name
-  validates_uniqueness_of :name, scope: :project_id
+  validates_uniqueness_of :name, scope: :project_id, :case_sensitive => false
   belongs_to :project
   serialize :restrictions, JSON
   alias_attribute :owner, :project
