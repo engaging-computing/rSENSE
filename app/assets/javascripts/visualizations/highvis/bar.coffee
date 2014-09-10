@@ -95,7 +95,7 @@ $ ->
             @restoreAnalysisType = false
           ($ '#analysis_types').children().show()
 
-        $('#sortField option[value=' + @sortField + ']').prop('selected', true);
+        $('#sortField option[value=' + @sortField + ']').prop('selected', true)
         $('input:radio[name=analysisTypeSelector][value=' + @analysisType + ']').prop('checked', true)
 
         visibleCategories = for selection in data.normalFields when selection in globals.fieldSelection
