@@ -387,8 +387,8 @@ $ ->
         # Heatmap slider
         controls += "<br>"
         controls += "<div class='inner_control_div'> Heatmap Radius: "
-        controls += "<input id='radiusText' value='#{@configs.heatmapRadius}'></input>m</div>"
-        controls += "<div class='inner_control_div'> <div id='heatmapErrorText'> </div></div>"
+        controls += "<input id='radius-text' value='#{@configs.heatmapRadius}'></input>m</div>"
+        controls += "<div class='inner_control_div'> <div id='heatmap-error-text'> </div></div>"
         controls += "<div id='heatmapSlider' style='width:95%'></div>"
 
         # Other
@@ -441,11 +441,11 @@ $ ->
           @delayedUpdate()
 
         # Set up heatmap entry
-        ($ '#radiusText').keydown (e) =>
+        ($ '#radius-text').keydown (e) =>
           if e.which == 13
-            newRadius = Number ($ '#radiusText').val()
+            newRadius = Number ($ '#radius-text').val()
             if isNaN newRadius
-              ($ '#radiusText').errorFlash()
+              ($ '#radius-text').errorFlash()
               return
             # Guess new pixel radius
             @heatmapPixelRadius = Math.ceil(@heatmapPixelRadius * newRadius / @configs.heatmapRadius)
@@ -465,7 +465,7 @@ $ ->
             # Guess new pixel radius
             @heatmapPixelRadius = Math.ceil(@heatmapPixelRadius * newRadius / @configs.heatmapRadius)
             @configs.heatmapRadius = newRadius
-            ($ '#radiusText').val("#{@configs.heatmapRadius}")
+            ($ '#radius-text').val("#{@configs.heatmapRadius}")
             @delayedUpdate()
 
         # Set up accordion
@@ -532,11 +532,11 @@ $ ->
             newRad = Math.ceil(@configs.heatmapRadius * (@getPixelDiag() / @getDiag()))
 
           if newRad <= maxRad
-            ($ '#heatmapErrorText').html ''
+            ($ '#heatmap-error-text').html ''
             return newRad
           else
             act = Math.ceil(maxRad * (@getDiag() / @getPixelDiag()))
-            ($ '#heatmapErrorText').html(
+            ($ '#heatmap-error-text').html(
               "The radius had to be decreased to #{act}m for performance reasons. " +
               "It will restore to your selection as the map is zoomed out."
             )
