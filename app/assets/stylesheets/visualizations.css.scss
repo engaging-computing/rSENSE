@@ -92,7 +92,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     }
 
     .ui-accordion {
-      margin: 10px 0 0; // add some space between accordions
+      margin: 5px 0 0; // add some space between accordions
     }
 
     .ui-accordion .ui-accordion-content {
@@ -229,7 +229,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
       word-wrap: break-word;
       overflow: hidden;
       zoom: 1;
-      *display: inline;
+      display: inline;
 
       .caption_wrap {
          padding: 0px 10px 10px 10px;
@@ -288,7 +288,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     }
 
     .regression_row_disabled {
-      background-color: regr-dis-bkg;
+      background-color: $regr-dis-bkg;
       color: $regr-dis-font;
     }
 
@@ -399,7 +399,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   }
 
   #vis-disabled {
-    overflow: none;
+    overflow: hidden;
   }
 
   // the bar at the top of the vis window
