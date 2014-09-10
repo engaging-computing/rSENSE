@@ -42,10 +42,13 @@ $ ->
       ANALYSISTYPE_MEDIAN:    4
       ANALYSISTYPE_COUNT:     5
 
+      SORT_DEFAULT:          -1
+
       analysisTypeNames: ["Total","Max","Min","Mean","Median","Row Count"]
 
-      analysisType:   0
-      sortField:      null
+      analysisType:         0
+      restoreAnalysisType:  false
+      savedAnalysisType:    0
 
       buildOptions: ->
         super()
@@ -73,21 +76,30 @@ $ ->
             type: if globals.logY is 1 then 'logarithmic' else 'linear'
 
       update: ->
-        console.log 'update called'
-        console.trace()
         super()
-        visibleCategories = for selection in data.normalFields when selection in globals.fieldSelection
-          fieldTitle data.fields[selection]
+
+        # Default Sort
+        @sortField ?= if globals.fieldSelection? then globals.fieldSelection[0] else @SORT_DEFAULT
 
         # Restrict analysis type to only row count if the y field is "Data Point"
         if (globals.fieldSelection[0] is data.DATA_POINT_ID_FIELD and globals.fieldSelection.length is 1)
           for option, row in ($ '#analysis_types').children()
-            if row isnt @ANALYSISTYPE_COUNT
-              $(option).hide()
-            else
-              $(option).find('> > >').prop("checked", true)
+            if row isnt @ANALYSISTYPE_COUNT then $(option).hide()
+
+          @savedAnalysisType = @analysisType
+          @restoreAnalysisType = true
           @analysisType = @ANALYSISTYPE_COUNT
-        else ($ '#analysis_types').children().show()
+        else
+          if @restoreAnalysisType
+            @analysisType = @savedAnalysisType
+            @restoreAnalysisType = false
+          ($ '#analysis_types').children().show()
+
+        $('#sortField option[value=' + @sortField + ']').prop('selected', true);
+        $('input:radio[name=analysisTypeSelector][value=' + @analysisType + ']').prop('checked', true)
+
+        visibleCategories = for selection in data.normalFields when selection in globals.fieldSelection
+          fieldTitle data.fields[selection]
 
         @chart.xAxis[0].setCategories visibleCategories, false
         @chart.yAxis[0].sort
@@ -104,7 +116,7 @@ $ ->
             when @ANALYSISTYPE_MEDIAN   then [groupIndex, (data.getMedian    @sortField, groupIndex)]
             when @ANALYSISTYPE_COUNT    then [groupIndex, (data.getCount     @sortField, groupIndex)]
 
-        if @sortField != null
+        if @sortField != @SORT_DEFAULT
           fieldSortedGroupIDValuePairs = tempGroupIDValuePairs.sort (a,b) ->
             a[1] - b[1]
 
@@ -177,12 +189,12 @@ $ ->
         controls += "<div class='outer_control_div'>"
 
         controls += "<div class='inner_control_div'>"
-        controls += 'Sort by: <select class="sortField form-control">'
+        controls += 'Sort by: <select id="sortField" class="sortField form-control">'
 
         tempFields = for fieldID in data.normalFields
           [fieldID, data.fields[fieldID].fieldName]
 
-        tempFields = [].concat [[null, 'Group Name']], tempFields
+        tempFields = [].concat [[@SORT_DEFAULT, 'Group Name']], tempFields
 
         for [fieldID, fieldName] in tempFields
           selected = if @sortField is fieldID then 'selected' else ''
@@ -225,12 +237,10 @@ $ ->
 
         ($ '.analysisType').change (e) =>
           @analysisType = Number e.target.value
-          console.log 'analysis type', @analysisType
           @delayedUpdate()
 
-        ($ '.sortField').change (e) =>
+        ($ '#sortField').change (e) =>
           @sortField = Number e.target.value
-          console.log 'sort field', @sortField
           @delayedUpdate()
 
         ($ '.logY_box').click (e) =>
