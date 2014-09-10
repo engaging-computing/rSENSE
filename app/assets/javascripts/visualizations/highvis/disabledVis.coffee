@@ -64,7 +64,7 @@ $ ->
         @hideControls()
 
       clip: (arr) -> arr
-      
+
       end: ->
         ($ '#' + @canvas).hide()
         @unhideControls(@controlWidth)
