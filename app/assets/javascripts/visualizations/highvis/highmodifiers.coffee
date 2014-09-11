@@ -59,6 +59,10 @@ $ ->
     data.NORM_TIME ?= 0
     data.timeType  ?= data.NORM_TIME
 
+    window.globals ?= {}
+    globals.DEFAULT_PRECISION = 4
+    globals.precision ?= globals.DEFAULT_PRECISION
+
     ###
     Selects data in an x,y object format of the given group.
     ###
@@ -67,9 +71,9 @@ $ ->
         group = (String dp[@groupingFieldIndex]).toLowerCase() == @groups[groupIndex]
         notNull = (dp[xIndex] isnt null) and (dp[yIndex] isnt null)
         notNaN = (not isNaN(dp[xIndex])) and (not isNaN(dp[yIndex]))
-        
+
         group and notNull and notNaN
-      
+
       mapFunc = (dp) ->
         obj =
           x: dp[xIndex]
@@ -209,21 +213,21 @@ $ ->
       @groupingFieldIndex = index
       @groups = @makeGroups()
       @dataPoints = @setIndexFromGroups()
-        
+
     ###
     Sets the value of the Data Point (id) field to its index within the selected group.
     ###
     data.setIndexFromGroups = () ->
       filterFunc = (dp) =>
         (String dp[@groupingFieldIndex]).toLowerCase() == @groups[groupIndex]
-        
+
       rawData = for group, groupIndex in @groups
         selectedPoints = @dataPoints.filter filterFunc
-            
+
         for dp, dpIndex in selectedPoints
           dp[data.DATA_POINT_ID_FIELD] = dpIndex + 1
           dp
-                
+
       merged = []
       merged = merged.concat.apply(merged, rawData)
 
@@ -326,3 +330,10 @@ $ ->
     data.groupingFieldIndex ?= data.DATASET_NAME_FIELD
     # Array of current groups
     data.groups ?= data.makeGroups()
+
+    ###
+    Rounds to precision set by globals.precision (defaults to 4 decimal places)
+    ###
+    data.precisionFilter = (value, index, arr) ->
+      precision = globals.precision * 10
+      Math.round(value * precision) / precision
