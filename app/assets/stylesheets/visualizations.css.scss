@@ -42,7 +42,8 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   }
 
   #controlcontainer {
-    float: right;
+    position: absolute;
+    //right: 30px;
     max-width: 20%;
     height: 100%;
   }
@@ -52,7 +53,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     display: inline-block;
     height: 100%;
 
-    #control_hide_button { // eventually put this next to #fullscreen-viz?
+    #control_hide_button { // eventually put this next to #fullscreen-vis?
       @include unselectable;
       background-image: $light-bkg;
       border: $border;
@@ -67,7 +68,8 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   #controldiv {
     width: 220px;
     height: 100%;
-    float: right;
+    position: absolute;
+    right: 0px;
     overflow-x: hidden;
     overflow-y: auto;
     // This would be the correct place to add padding-right, but it break the
@@ -92,11 +94,11 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     }
 
     .ui-accordion {
-      margin: 10px 0 0; // add some space between accordions
+      margin: 5px 0 0; // add some space between accordions
     }
 
     .ui-accordion .ui-accordion-content {
-      padding: 0.5em 0.5em;
+      padding: 3px;
       overflow-y: hidden;
     }
 
@@ -112,10 +114,10 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
 
     .ui-accordion-header {
       @include unselectable;
-      height: 38px;
+      vertical-align: middle;
+      height: 34px;
       outline: none;
       margin: 0 5px 0 0; // see #controldiv above for explanation
-      padding: 3px 0 7px 5px;
       border: thin solid #ABABAB;
       border-radius: 3px;
       background-image: $light-bkg;
@@ -183,7 +185,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   }
 
   // button that enables fullscreen vis, not the fullscreen viz itself
-  #fullscreen-viz {
+  #fullscreen-vis {
     margin: 1px;
   }
 
@@ -307,7 +309,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   }
 
   #summary_canvas {
-    text-align:center;
+    text-align: center;
     overflow-y: auto;
     overflow-x: hidden;
     padding: 0px 5px;
