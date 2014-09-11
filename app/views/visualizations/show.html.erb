@@ -43,7 +43,7 @@
     <%= title_and_edit_menu(@visualization) %>
 
     <div>
-      <b>Project:</b> 
+      <b>Project:</b>
       <% if @project.nil? || @project.hidden? %>
         deleted
       <% else %>
@@ -59,9 +59,8 @@
 
 <div>
   <div id="viscontainer">
-    <ul id='visTabList'>
-       <div class="pull-right"><button class="btn btn-default" id="fullscreen-viz" title="Min/Max"><i class="fa fa-arrows-alt"></i></button></div>
-    </ul>
+    <div class="pull-right"><button class="btn btn-default" id="fullscreen-vis" title="Maximize"><i class="fa fa-arrows-alt"></i></button></div>
+    <ul id='visTabList'></ul>
     <div class="clear"></div>
 
     <div id="map_canvas" class="vis_canvas"></div>
@@ -74,14 +73,13 @@
     <div id="summary_canvas" class="vis_canvas"></div>
     <div id="photos_canvas" class="vis_canvas"></div>
 
-    <div id='controlhider'>
-      <button id="control_hide_button" type="button" style="margin:5px;"> </button>
+    <div id="controlcontainer">
+      <div id="controlhider">
+        <button id="control_hide_button" type="button"> &gt; </button>
+      </div>
+      <div id="controldiv"></div>
     </div>
-    <div id="controldiv"></div>
-
-    <div class="clearfix"></div>
   </div>
-
 
   <div class="row">
     <div class="col-md-8">
