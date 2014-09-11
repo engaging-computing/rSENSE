@@ -110,4 +110,3 @@ $ ->
       globals.photos = new Photos "photos_canvas"
     else
       globals.photos = new DisabledVis "photos_canvas"
-
