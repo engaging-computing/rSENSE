@@ -152,7 +152,27 @@ window.setupEditTable = () ->
                   <input class='validate_timestamp  form-control' type='text'
                     data-format='yyyy/MM/dd hh:mm:ss' value='#{ ($ row).find('input').eq(col - offset).val() }' />
                 </div>"""
-#               ($ row).children().eq(col - offset).find('.datepicker').unbind().datetimepicker()
+              ($ row).children().eq(col - offset).find('.datepicker').unbind().datetimepicker
+                input: () ->
+                  unix = /\ *u\ (\d+)\ */
+                  ymdh = /\ *(\d+)\/(\d+)\/(\d+)\ +(\d+):(\d+):(\d+) */
+                  val = ($ @).children('input').val()
+                  if val == ''
+                    new Date()
+                  else if (match = unix.exec(val)) != null
+                    new Date parseInt match[1]
+                  else if (match = ymdh.exec(val)) != null
+                    new Date parseInt(match[1], 10),
+                             parseInt(match[2], 10),
+                             parseInt(match[3], 10),
+                             parseInt(match[4], 10),
+                             parseInt(match[5], 10),
+                             parseInt(match[6], 10)
+                  else
+                    new Date val
+                output: (str) ->
+                  ($ @).children('input').val str.toISOString()
+                position: 'center'
 
         add_row = (tab) ->
           # create a string of the new row
