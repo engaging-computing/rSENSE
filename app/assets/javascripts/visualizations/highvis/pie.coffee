@@ -46,6 +46,7 @@ $ ->
             
       start: () ->
         super()
+
       update: () ->
         @rel_data = []
         @selected_field = @displayField
@@ -54,12 +55,11 @@ $ ->
           @chart.series[@chart.series.length - 1].remove false
 
         @select_name = data.fields[data.groupingFieldIndex].fieldName
-
+        
         options =
           showInLegend: false
           data: @display_data
-            
-          
+          colors:  globals.colors
         @chart.setTitle { text: "#{@select_name} by #{data.fields[@selected_field].fieldName}" }
         @chart.addSeries options, false
 
@@ -105,8 +105,6 @@ $ ->
               dataLabels:
                 enabled: true
                 format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-                style:
-                  color: globals.colors
           series: [{
             type: 'pie'
             data:
