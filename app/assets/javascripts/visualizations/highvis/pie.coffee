@@ -51,7 +51,7 @@ $ ->
             Number keys
         super()
         @update()
-        console.log globals.fieldSelection
+        #console.log globals.fieldSelection
       update: () ->
         @rel_data = []
         @selected_field = @displayField
@@ -63,7 +63,7 @@ $ ->
 #         fieldSortedGroupIDs = for groupName, groupID in data.groups
 #           groupID
 #         for groupIndex, order in fieldSortedGroupIDs when groupIndex in globals.groupSelection
-        console.log @display_data
+        #console.log @display_data
         options =
           showInLegend: false
           data: @display_data
@@ -85,29 +85,21 @@ $ ->
 
       getGroupedData: ->
         #options.data = for fieldIndex in data.normalFields when fieldIndex in globals.fieldSelection
-        @display_data = 
-        [
-	  ["a",0],
-	  ["b",0],
-	  ["c",0]
-	]  
-#         @display_data = data.dataPoints.reduce (prev, next) =>
-#           #console.log prev
-#           #console.log next
-#           if prev[data.groupingFieldIndex]?
-#             #console.log '#truuuu'
-#             prev[next[data.groupingFieldIndex]] += next[@selected_field]
-#           else
-#             #console.log '#false'
-#             prev[next[data.groupingFieldIndex]] = next[@selected_field]
-#           prev
-#         , {}
-# 
-#         @display_data = Object.keys(@display_data).reduce (prev, key) =>
-#           prev.push [key, @display_data[key]]
-#           prev
-#           
-#         , []
+        @display_data = data.dataPoints.reduce (prev, next) =>
+          console.log prev
+          console.log next
+          #console.log '#false'
+          prev[next[data.groupingFieldIndex]] = next[@selected_field]
+          prev
+        , {}
+
+        @display_data = Object.keys(@display_data).reduce (prev, key) =>
+          console.log key
+          if data.groups.indexOf(key) in globals.groupSelection
+            prev.push [key, @display_data[key]]
+          prev
+          
+        , []
         
       buildOptions: ->
         super()
