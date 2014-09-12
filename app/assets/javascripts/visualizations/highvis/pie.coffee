@@ -86,16 +86,19 @@ $ ->
       getGroupedData: ->
         #options.data = for fieldIndex in data.normalFields when fieldIndex in globals.fieldSelection
         @display_data = data.dataPoints.reduce (prev, next) =>
-          console.log prev
-          console.log next
+          #console.log prev
+          #console.log next
           #console.log '#false'
           prev[next[data.groupingFieldIndex]] = next[@selected_field]
           prev
         , {}
-
+        #console.log @display_data
         @display_data = Object.keys(@display_data).reduce (prev, key) =>
-          console.log key
-          if data.groups.indexOf(key) in globals.groupSelection
+          if data.groupingFieldIndex == 1
+            console.log "index of #{key} in data.groups is #{data.groups.indexOf(key)}"
+            console.log "globals.groupSelection is #{globals.groupSelection}"
+          if data.groups.indexOf(key.toLowerCase()) in globals.groupSelection
+            #console.log "#{key} in globals.groupSelection"
             prev.push [key, @display_data[key]]
           prev
           
@@ -122,7 +125,7 @@ $ ->
                 enabled: true
                 format: '<b>{point.name}</b>: {point.percentage:.1f} %'
                 style:
-                  color: 'black'
+                  color: globals.colors
           series: [{
             type: 'pie'
             data:
