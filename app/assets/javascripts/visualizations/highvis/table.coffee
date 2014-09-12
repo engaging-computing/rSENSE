@@ -41,9 +41,13 @@ $ ->
         # Set default search to empty string
         @searchParams ?= {}
 
-      # Removes nulls from the table and colors the groupByRow
+      # Removes nulls from the table, rounds to user set precision,
+      # and colors the groupByRow
       rowFormatter = (cellvalue, options, rowObject) ->
-        cellvalue = "" if $.type(cellvalue) is 'number' and isNaN(cellvalue) or cellvalue is null
+        if $.type(cellvalue) is 'number' and isNaN(cellvalue) or cellvalue is null
+          cellvalue = ""
+        else if $.type(cellvalue) is 'number'
+          cellvalue = data.precisionFilter(cellvalue)
 
         colorIndex = data.groups.indexOf(String(cellvalue).toLowerCase()) % globals.colors.length
         if (colorIndex isnt -1)

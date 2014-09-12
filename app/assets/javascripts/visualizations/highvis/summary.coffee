@@ -48,13 +48,8 @@ $ ->
             'median': (data.getMedian      @displayField, groupIndex)
             'count':  (data.getCount       @displayField, groupIndex)
             'mean':   (data.getMean        @displayField, groupIndex)
-          console.log analysis
-          for key, index in analysis
-            console.log 'hi'
-            analysis[key] = data.precisionFilter(analysis[key], index)
           analysis
-        console.log analysis
-
+          
         ($ '#' + @canvas).html('')
         field = data.fields[@displayField]
         noData = "No #{field.fieldName} Data"

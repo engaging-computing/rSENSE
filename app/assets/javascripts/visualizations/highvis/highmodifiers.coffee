@@ -135,7 +135,8 @@ $ ->
       rawData = @selector(fieldIndex, groupIndex)
 
       if rawData.length > 0
-        rawData.reduce (a,b) -> Math.max(a, b)
+        result = rawData.reduce (a,b) -> Math.max(a, b)
+        data.precisionFilter(result)
       else
         null
 
@@ -147,7 +148,8 @@ $ ->
       rawData = @selector(fieldIndex, groupIndex)
 
       if rawData.length > 0
-        rawData.reduce (a,b) -> Math.min(a, b)
+        result = rawData.reduce (a,b) -> Math.min(a, b)
+        data.precisionFilter(result)
       else
         null
 
@@ -159,7 +161,8 @@ $ ->
       rawData = @selector(fieldIndex, groupIndex)
 
       if rawData.length > 0
-        Math.round(((rawData.reduce (a,b) -> a + b) / rawData.length) * 10000) / 10000
+        result = (rawData.reduce (a,b) -> a + b) / rawData.length
+        data.precisionFilter(result)
       else
         null
 
@@ -175,9 +178,9 @@ $ ->
 
       if rawData.length > 0
         if rawData.length % 2
-          return rawData[mid]
+          return data.precisionFilter(rawData[mid])
         else
-          return (rawData[mid - 1] + rawData[mid]) / 2.0
+          return data.precisionFilter((rawData[mid - 1] + rawData[mid]) / 2.0)
       else
         null
 
@@ -201,7 +204,7 @@ $ ->
         total = 0
         for value in rawData
           total = total + value
-        return total
+        return data.precisionFilter(total)
       else
         null
 
@@ -335,5 +338,5 @@ $ ->
     Rounds to precision set by globals.precision (defaults to 4 decimal places)
     ###
     data.precisionFilter = (value, index, arr) ->
-      precision = globals.precision * 10
+      precision = Math.pow(10, globals.precision)
       Math.round(value * precision) / precision
