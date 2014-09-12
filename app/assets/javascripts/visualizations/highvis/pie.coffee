@@ -55,11 +55,13 @@ $ ->
           @chart.series[@chart.series.length - 1].remove false
 
         @select_name = data.fields[data.groupingFieldIndex].fieldName
-        
+        @displayColors = []
+        for number in globals.groupSelection
+          @displayColors.push(globals.colors[number])
         options =
           showInLegend: false
           data: @display_data
-          colors:  globals.colors
+          colors:  @displayColors
         @chart.setTitle { text: "#{@select_name} by #{data.fields[@selected_field].fieldName}" }
         @chart.addSeries options, false
 
