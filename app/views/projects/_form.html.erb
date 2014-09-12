@@ -24,6 +24,7 @@
       <div class="form-group">
         <strong><i class="fa fa-calculator"></i> Precision</strong>
         <div>
+          <%= f.number_field(:precision, value: "4", min: "0") %>
         </div>
         <span class="help-block">Sets the maximum number of decimal points for the project when visualizing 
          data sets.</span>
