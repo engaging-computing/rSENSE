@@ -45,13 +45,7 @@ $ ->
         @selected_field = @displayField
             
       start: () ->
-        if data.textFields.length > 2 and namespace.action is 'displayVis'
-          data.setGroupIndex(data.textFields[2])
-          globals.groupSelection = for vals, keys in data.groups
-            Number keys
         super()
-        @update()
-        #console.log globals.fieldSelection
       update: () ->
         @rel_data = []
         @selected_field = @displayField
@@ -60,19 +54,15 @@ $ ->
           @chart.series[@chart.series.length - 1].remove false
 
         @select_name = data.fields[data.groupingFieldIndex].fieldName
-#         fieldSortedGroupIDs = for groupName, groupID in data.groups
-#           groupID
-#         for groupIndex, order in fieldSortedGroupIDs when groupIndex in globals.groupSelection
-        #console.log @display_data
+
         options =
           showInLegend: false
           data: @display_data
             
           
         @chart.setTitle { text: "#{@select_name} by #{data.fields[@selected_field].fieldName}" }
-
         @chart.addSeries options, false
-        #@chart.series = globals.colors
+
         @chart.redraw()
 
       normalize: ->
@@ -84,21 +74,12 @@ $ ->
         , []
 
       getGroupedData: ->
-        #options.data = for fieldIndex in data.normalFields when fieldIndex in globals.fieldSelection
         @display_data = data.dataPoints.reduce (prev, next) =>
-          #console.log prev
-          #console.log next
-          #console.log '#false'
           prev[next[data.groupingFieldIndex]] = next[@selected_field]
           prev
         , {}
-        #console.log @display_data
         @display_data = Object.keys(@display_data).reduce (prev, key) =>
-          if data.groupingFieldIndex == 1
-            console.log "index of #{key} in data.groups is #{data.groups.indexOf(key)}"
-            console.log "globals.groupSelection is #{globals.groupSelection}"
           if data.groups.indexOf(key.toLowerCase()) in globals.groupSelection
-            #console.log "#{key} in globals.groupSelection"
             prev.push [key, @display_data[key]]
           prev
           
@@ -169,6 +150,5 @@ $ ->
 
     if "Pie" in data.relVis
       globals.pie = new Pie 'pie_canvas'
-      #globals.percentage = new Bar 'percentage_canvas'
     else
       globals.pie = new DisabledVis 'pie_canvas'
