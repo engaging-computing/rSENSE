@@ -59,9 +59,8 @@ $ ->
     data.NORM_TIME ?= 0
     data.timeType  ?= data.NORM_TIME
 
-    window.globals ?= {}
-    globals.DEFAULT_PRECISION = 4
-    globals.precision ?= globals.DEFAULT_PRECISION
+    data.DEFAULT_PRECISION = 4
+    data.precision ?= data.DEFAULT_PRECISION
 
     ###
     Selects data in an x,y object format of the given group.
@@ -335,8 +334,8 @@ $ ->
     data.groups ?= data.makeGroups()
 
     ###
-    Rounds to precision set by globals.precision (defaults to 4 decimal places)
+    Rounds to precision set by data.precision (defaults to 4 decimal places)
     ###
     data.precisionFilter = (value, index, arr) ->
-      precision = Math.pow(10, globals.precision)
+      precision = Math.pow(10, data.precision)
       Math.round(value * precision) / precision
