@@ -305,14 +305,10 @@ class VisualizationsController < ApplicationController
 
     # The finalized data object
     @data = {
-      projectName: @project.title,
-      projectID: @project.id,
-      fields: data_fields,
-      dataPoints: format_data,
-      metadata: metadata,
-      relVis: rel_vis,
-      allVis: all_vis,
-      defaultVis: default_vis,
+      projectName: @project.title,   projectID: @project.id,
+      fields: data_fields,           dataPoints: format_data,
+      metadata: metadata,            relVis: rel_vis,
+      allVis: all_vis,               defaultVis: default_vis,
       precision: @project.precision
     }
 
