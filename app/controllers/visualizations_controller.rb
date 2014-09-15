@@ -207,7 +207,6 @@ class VisualizationsController < ApplicationController
 
     # build list of datasets
     if  !params[:datasets].nil?
-
       dsets = params[:datasets].split(',')
       dsets.each do |id|
         begin
@@ -304,13 +303,11 @@ class VisualizationsController < ApplicationController
     default_vis = @project.default_vis.nil? ? 'none' : @project.default_vis
 
     # The finalized data object
-    @data = {
-      projectName: @project.title,   projectID: @project.id,
-      fields: data_fields,           dataPoints: format_data,
-      metadata: metadata,            relVis: rel_vis,
-      allVis: all_vis,               defaultVis: default_vis,
-      precision: @project.precision
-    }
+    @data = { projectName: @project.title,   projectID: @project.id,
+              fields: data_fields,           dataPoints: format_data,
+              metadata: metadata,            relVis: rel_vis,
+              allVis: all_vis,               defaultVis: default_vis,
+              precision: @project.precision  }
 
     options = {}
 
