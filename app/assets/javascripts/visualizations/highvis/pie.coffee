@@ -70,7 +70,7 @@ $ ->
             prev[next[data.groupingFieldIndex]] = next[@displayField]
           prev
         , {}
-        @displayData = Object.keys(@displayData).reduce (prev, key) =>          
+        @displayData = Object.keys(@displayData).reduce (prev, key) =>
           if data.groups.indexOf(key.toLowerCase()) in globals.groupSelection
             if (grouping[0] for grouping in prev).indexOf(key.toLowerCase()) isnt -1
               prev.indexOf(grouping)[1] = @displayData[key] + prev.indexOf(grouping)[1]
