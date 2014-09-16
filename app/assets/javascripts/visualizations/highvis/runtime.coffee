@@ -150,10 +150,18 @@ $ ->
 
     # Toggle control panel
     resizeVis = (toggleControls = true, aniLength = 600) ->
+      # Adjust height
       if (globals.fullscreen? and globals.fullscreen)
         ($ "#viscontainer").height(($ window).height())
       else
         ($ "#viscontainer").height(($ window).height() - h)
+
+      # Adjust tool position
+      if (globals.fullscreen? and globals.fullscreen or
+      globals.options? and globals.options.isEmbed? and globals.options.isEmbed)
+        ($ "#controlcontainer").css("right", "0px")
+      else
+        ($ "#controlcontainer").css("right", "30px")
 
       containerSize = ($ '#viscontainer').innerWidth()
       hiderSize     = ($ '#controlhider').outerWidth()
