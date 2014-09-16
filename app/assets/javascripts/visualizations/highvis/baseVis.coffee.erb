@@ -137,7 +137,7 @@ $ ->
           if radio
             controls += """<div class='radio'><label><input class='y_axis_input' name='y_axis_group'
               type='radio' value='#{fIndex}'
-              #{if (Number fIndex) is @displayField then "checked" else ""}>
+              #{if (Number fIndex) is @configs.displayField then "checked" else ""}>
               #{data.fields[fIndex].fieldName}</label></div>"""
           else
             controls += """<div class='checkbox'><label><input class='y_axis_input' type='checkbox'
@@ -154,7 +154,7 @@ $ ->
         # Make y axis checkbox/radio handler
         if radio
           ($ '.y_axis_input').click (e) =>
-            @displayField = Number e.target.value
+            @configs.displayField = Number e.target.value
             @delayedUpdate()
         else
           ($ '.y_axis_input').click (e) =>

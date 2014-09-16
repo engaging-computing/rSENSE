@@ -31,26 +31,28 @@ $ ->
 
     class window.Summary extends BaseVis
       constructor: (@canvas) ->
+        super(@canvas)
+
         if data.normalFields.length > 1
-          @displayField = data.normalFields[1]
-        else @displayField = data.normalFields[0]
+          @configs.displayField = data.normalFields[1]
+        else @configs.displayField = data.normalFields[0]
 
       start: ->
         ($ '#' + @canvas).show()
         super()
 
       update: ->
-        analysis = for groupName, groupIndex in data.groups when groupIndex is globals.selectedGroup
+        analysis = for groupName, groupIndex in data.groups when groupIndex is globals.configs.selectedGroup
           analysis =
-            'total':  (data.getTotal       @displayField, groupIndex)
-            'min':    (data.getMin         @displayField, groupIndex)
-            'max':    (data.getMax         @displayField, groupIndex)
-            'median': (data.getMedian      @displayField, groupIndex)
-            'count':  (data.getCount       @displayField, groupIndex)
-            'mean':   (data.getMean        @displayField, groupIndex)
+            'total':  (data.getTotal       @configs.displayField, groupIndex)
+            'min':    (data.getMin         @configs.displayField, groupIndex)
+            'max':    (data.getMax         @configs.displayField, groupIndex)
+            'median': (data.getMedian      @configs.displayField, groupIndex)
+            'count':  (data.getCount       @configs.displayField, groupIndex)
+            'mean':   (data.getMean        @configs.displayField, groupIndex)
           analysis
         ($ '#' + @canvas).html('')
-        field = data.fields[@displayField]
+        field = data.fields[@configs.displayField]
         noData = "No #{field.fieldName} Data"
         units = if field.unitName then "(#{field.unitName})" else ''
         html = """
@@ -109,4 +111,3 @@ $ ->
         @drawYAxisControls(true)
 
       globals.summary = new Summary "summary_canvas"
-
