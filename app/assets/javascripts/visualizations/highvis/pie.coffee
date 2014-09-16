@@ -75,8 +75,6 @@ $ ->
             if (grouping[0] for grouping in prev).indexOf(key.toLowerCase()) isnt -1
               prev.indexOf(grouping)[1] = @displayData[key] + prev.indexOf(grouping)[1]
             else prev.push [key.toLowerCase() or "No #{@selectName}", @displayData[key]]
-          console.log prev
-          prev.sort (a,b) -> a[0] - b[0]
           prev
         , []
 
