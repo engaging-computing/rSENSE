@@ -34,6 +34,8 @@ $ ->
       Initialize constants for scatter display mode.
       ###
       constructor: (@canvas) ->
+        super(@canvas)
+
         @SYMBOLS_LINES_MODE = 3
         @LINES_MODE = 2
         @SYMBOLS_MODE = 1
@@ -43,16 +45,16 @@ $ ->
 
         @xGridSize = @yGridSize = @INITIAL_GRID_SIZE
 
-        @mode = @SYMBOLS_MODE
+        @configs.mode = @SYMBOLS_MODE
 
-        @xAxis = data.normalFields[0]
-        @yAxis = globals.fieldSelection
+        @configs.xAxis = data.normalFields[0]
+        @configs.yAxis = globals.configs.fieldSelection
 
-        @advancedTooltips = 0
+        @configs.advancedTooltips = 0
 
         # Do the cool existential operator thing
-        @savedRegressions ?= []
-        @xBounds =
+        @configs.savedRegressions ?= []
+        @configs.xBounds =
           dataMax: undefined
           dataMin: undefined
           max: undefined
@@ -60,7 +62,7 @@ $ ->
           userMax: undefined
           userMin: undefined
 
-        @yBounds =
+        @configs.yBounds =
           dataMax: undefined
           dataMin: undefined
           max: undefined
@@ -68,14 +70,16 @@ $ ->
           userMax: undefined
           userMin: undefined
 
-        @fullDetail = 0
+        @configs.fullDetail = 0
+
+        # Used for data reduction triggering
         @updateOnZoom = 1
 
       storeXBounds: (bounds) ->
-        @xBounds = bounds
+        @configs.xBounds = bounds
 
       storeYBounds: (bounds) ->
-        @yBounds = bounds
+        @configs.yBounds = bounds
 
       ###
       Build up the chart options specific to scatter chart
@@ -88,7 +92,7 @@ $ ->
 
         $.extend true, @chartOptions,
           chart:
-            type: if @mode is @LINES_MODE then "line" else "scatter"
+            type: if @configs.mode is @LINES_MODE then "line" else "scatter"
             zoomType: "xy"
             resetZoomButton:
               theme:
@@ -151,7 +155,7 @@ $ ->
             minorTickInterval: 'auto'
             }]
           yAxis:
-            type: if globals.logY is 1 then 'logarithmic' else 'linear'
+            type: if globals.configs.logY is 1 then 'logarithmic' else 'linear'
             events:
               afterSetExtremes: (e) =>
                 @storeXBounds @chart.xAxis[0].getExtremes()
@@ -177,21 +181,21 @@ $ ->
             legendIndex: fieldIndex
             data: []
             color: '#000'
-            showInLegend: if fieldIndex in globals.fieldSelection then true else false
+            showInLegend: if fieldIndex in globals.configs.fieldSelection then true else false
             name: field.fieldName
 
           switch
-            when @mode is @SYMBOLS_LINES_MODE
+            when @configs.mode is @SYMBOLS_LINES_MODE
               options.marker =
                 symbol: globals.symbols[count % globals.symbols.length]
               options.lineWidth = 2
 
-            when @mode is @SYMBOLS_MODE
+            when @configs.mode is @SYMBOLS_MODE
               options.marker =
                 symbol: globals.symbols[count % globals.symbols.length]
               options.lineWidth = 0
 
-            when @mode is @LINES_MODE
+            when @configs.mode is @LINES_MODE
               options.marker =
                 symbol: 'blank'
               options.dashStyle = globals.dashes[count % globals.dashes.length]
@@ -218,26 +222,26 @@ $ ->
         # Remove all series and draw legend
         super()
         title =
-          text: fieldTitle data.fields[@xAxis]
+          text: fieldTitle data.fields[@configs.xAxis]
         @chart.xAxis[0].setTitle title, false
 
         # Compute max bounds if there is no user zoom
         if not @isZoomLocked()
 
-          @yBounds.min = @xBounds.min =  Number.MAX_VALUE
-          @yBounds.max = @xBounds.max = -Number.MAX_VALUE
+          @configs.yBounds.min = @configs.xBounds.min =  Number.MAX_VALUE
+          @configs.yBounds.max = @configs.xBounds.max = -Number.MAX_VALUE
 
-          for fieldIndex, symbolIndex in data.normalFields when fieldIndex in globals.fieldSelection
-            for group, groupIndex in data.groups when groupIndex in globals.groupSelection
-              @yBounds.min = Math.min @yBounds.min, (data.getMin fieldIndex, groupIndex)
-              @yBounds.max = Math.max @yBounds.max, (data.getMax fieldIndex, groupIndex)
+          for fieldIndex, symbolIndex in data.normalFields when fieldIndex in globals.configs.fieldSelection
+            for group, groupIndex in data.groups when groupIndex in globals.configs.groupSelection
+              @configs.yBounds.min = Math.min @configs.yBounds.min, (data.getMin fieldIndex, groupIndex)
+              @configs.yBounds.max = Math.max @configs.yBounds.max, (data.getMax fieldIndex, groupIndex)
 
-              @xBounds.min = Math.min @xBounds.min, (data.getMin @xAxis, groupIndex)
-              @xBounds.max = Math.max @xBounds.max, (data.getMax @xAxis, groupIndex)
+              @configs.xBounds.min = Math.min @configs.xBounds.min, (data.getMin @configs.xAxis, groupIndex)
+              @configs.xBounds.max = Math.max @configs.xBounds.max, (data.getMax @configs.xAxis, groupIndex)
 
               if (@timeMode isnt undefined) and (@timeMode is @GEO_TIME_MODE)
-                @xBounds.min = (new Date(@xBounds.min)).getUTCFullYear()
-                @xBounds.max = (new Date(@xBounds.max)).getUTCFullYear()
+                @configs.xBounds.min = (new Date(@configs.xBounds.min)).getUTCFullYear()
+                @configs.xBounds.max = (new Date(@configs.xBounds.max)).getUTCFullYear()
 
         # Calculate grid spacing for data reduction
         width = ($ '#' + @canvas).innerWidth()
@@ -251,33 +255,33 @@ $ ->
           @xGridSize = Math.round (width / height * @INITIAL_GRID_SIZE)
 
         # Draw series
-        for fieldIndex, symbolIndex in data.normalFields when fieldIndex in globals.fieldSelection
-          for group, groupIndex in data.groups when groupIndex in globals.groupSelection
-            dat = if not @fullDetail
-              sel = data.xySelector(@xAxis, fieldIndex, groupIndex)
-              globals.dataReduce sel, @xBounds, @yBounds, @xGridSize, @yGridSize, @MAX_SERIES_SIZE
+        for fieldIndex, symbolIndex in data.normalFields when fieldIndex in globals.configs.fieldSelection
+          for group, groupIndex in data.groups when groupIndex in globals.configs.groupSelection
+            dat = if not @configs.fullDetail
+              sel = data.xySelector(@configs.xAxis, fieldIndex, groupIndex)
+              globals.dataReduce sel, @configs.xBounds, @configs.yBounds, @xGridSize, @yGridSize, @MAX_SERIES_SIZE
             else
-              data.xySelector(@xAxis, fieldIndex, groupIndex)
+              data.xySelector(@configs.xAxis, fieldIndex, groupIndex)
 
             options =
               data: dat
               showInLegend: false
-              color: globals.colors[groupIndex % globals.colors.length]
+              color: globals.configs.colors[groupIndex % globals.configs.colors.length]
               name:
                 group: data.groups[groupIndex]
                 field: data.fields[fieldIndex].fieldName
             switch
-              when @mode is @SYMBOLS_LINES_MODE
+              when @configs.mode is @SYMBOLS_LINES_MODE
                 options.marker =
                   symbol: globals.symbols[symbolIndex % globals.symbols.length]
                 options.lineWidth = 2
 
-              when @mode is @SYMBOLS_MODE
+              when @configs.mode is @SYMBOLS_MODE
                 options.marker =
                   symbol: globals.symbols[symbolIndex % globals.symbols.length]
                 options.lineWidth = 0
 
-              when @mode is @LINES_MODE
+              when @configs.mode is @LINES_MODE
                 options.marker =
                   symbol: 'blank'
                 options.lineWidth = 2
@@ -299,14 +303,14 @@ $ ->
         @storeYBounds @chart.yAxis[0].getExtremes()
 
         # Disable/enable all of the saved regressions as necessary
-        for regression in @savedRegressions
+        for regression in @configs.savedRegressions
           # Filter out the ones that should be enabled.
           # - X indices must match.
           # - Compare the arrays without comparing them.
           # - Y axis must be present.
-          if regression.fieldIndices[0] == @xAxis \
-          && "#{regression.fieldIndices[2]}" == "#{globals.groupSelection}" \
-          && globals.fieldSelection.indexOf(regression.fieldIndices[1]) != -1
+          if regression.fieldIndices[0] == @configs.xAxis \
+          && "#{regression.fieldIndices[2]}" == "#{globals.configs.groupSelection}" \
+          && globals.configs.fieldSelection.indexOf(regression.fieldIndices[1]) != -1
             # Add the regression to the chart
             @chart.addSeries(regression.series)
             # Enabled the class by removing the disabled class
@@ -353,7 +357,7 @@ $ ->
           [@SYMBOLS_MODE,       "Symbols Only"]]
           controls += '<div class="inner_control_div">'
           controls += "<div class='radio'><label><input class='mode_radio' type='radio' "
-          controls += "name='mode_selector' value='#{mode}' #{if @mode is mode then 'checked' else ''}/>"
+          controls += "name='mode_selector' value='#{mode}' #{if @configs.mode is mode then 'checked' else ''}/>"
           controls += modeText + "</label></div></div>"
 
         controls += "<br>"
@@ -361,20 +365,20 @@ $ ->
 
         controls += '<div class="inner_control_div">'
         controls += "<div class='checkbox'><label><input class='tooltip_box' type='checkbox' "
-        controls += "name='tooltip_selector' #{if @advancedTooltips then 'checked' else ''}/>"
+        controls += "name='tooltip_selector' #{if @configs.advancedTooltips then 'checked' else ''}/>"
         controls += "Detailed Tooltips</label></div> "
         controls += "</div>"
 
         controls += '<div class="inner_control_div">'
         controls += "<div class='checkbox'><label><input class='full_detail_box' type='checkbox' "
-        controls += "name='full_detail_selector' #{if @fullDetail then 'checked' else ''}/>"
+        controls += "name='full_detail_selector' #{if @configs.fullDetail then 'checked' else ''}/>"
         controls += "Show All Data</label></div>"
         controls += "</div>"
 
         if data.logSafe is 1
           controls += '<div class="inner_control_div">'
           controls += "<div class='checkbox'><label><input class='logY_box' type='checkbox' "
-          controls += "name='log_selector' #{if globals.logY is 1 then 'checked' else ''}/> "
+          controls += "name='log_selector' #{if globals.configs.logY is 1 then 'checked' else ''}/> "
           controls += "Logarithmic Y Axis </label></div>"
           controls += "</div>"
 
@@ -404,21 +408,21 @@ $ ->
           @zoomOutExtremes(($ '#zoomSelector').val())
 
         ($ '.mode_radio').click (e) =>
-          @mode = Number e.target.value
+          @configs.mode = Number e.target.value
           @start()
 
         ($ '.tooltip_box').click (e) =>
-          @advancedTooltips = (@advancedTooltips + 1) % 2
+          @configs.advancedTooltips = (@configs.advancedTooltips + 1) % 2
           @start()
           true
 
         ($ '.full_detail_box').click (e) =>
-          @fullDetail = (@fullDetail + 1) % 2
+          @configs.fullDetail = (@configs.fullDetail + 1) % 2
           @delayedUpdate()
           true
 
         ($ '.logY_box').click (e) =>
-          globals.logY = (globals.logY + 1) % 2
+          globals.configs.logY = (globals.configs.logY + 1) % 2
           @start()
         ($ '#groupSelector').change (e) =>
           @start()
@@ -427,14 +431,14 @@ $ ->
           globals.generateElapsedTimeDialog()
 
         # Set up accordion
-        globals.toolsOpen ?= 0
+        globals.configs.toolsOpen ?= 0
 
         ($ '#toolControl').accordion
           collapsible:true
-          active:globals.toolsOpen
+          active:globals.configs.toolsOpen
 
         ($ '#toolControl > h3').click ->
-          globals.toolsOpen = (globals.toolsOpen + 1) % 2
+          globals.configs.toolsOpen = (globals.configs.toolsOpen + 1) % 2
 
       ###
       Draws x axis selection controls
@@ -457,7 +461,7 @@ $ ->
           controls += '<div class="inner_control_div">'
 
           controls += "<div class='radio'><label><input class='xAxis_input' type='radio' name='xaxis' "
-          controls += "value='#{fieldIndex}' #{if (Number fieldIndex) == @xAxis then "checked" else ""}>"
+          controls += "value='#{fieldIndex}' #{if (Number fieldIndex) == @configs.xAxis then "checked" else ""}>"
           controls += "#{data.fields[fieldIndex].fieldName}</label></div>"
           controls += "</div>"
 
@@ -472,33 +476,33 @@ $ ->
           ($ '.xAxis_input').each () ->
             if @checked
               selection = @value
-          @xAxis = Number selection
+          @configs.xAxis = Number selection
 
           @resetExtremes()
           @update()
 
         # Set up accordion
-        globals.xAxisOpen ?= 0
+        globals.configs.xAxisOpen ?= 0
 
         ($ '#xAxisControl').accordion
           collapsible:true
-          active:globals.xAxisOpen
+          active:globals.configs.xAxisOpen
 
         ($ '#xAxisControl > h3').click ->
-          globals.xAxisOpen = (globals.xAxisOpen + 1) % 2
+          globals.configs.xAxisOpen = (globals.configs.xAxisOpen + 1) % 2
 
       ###
       Save the Y-axis selection for clipping purposes
       ###
       drawYAxisControls: (radio = false) ->
         super(radio)
-        @yAxis = globals.fieldSelection
+        @configs.yAxis = globals.configs.fieldSelection
 
       ###
       Checks if the user has requested a specific zoom
       ###
       isZoomLocked: ->
-        not (undefined in [@xBounds.userMin, @xBounds.userMax])
+        not (undefined in [@configs.xBounds.userMin, @configs.xBounds.userMax])
 
       resetExtremes: (whichAxis) ->
         if @chart isnt undefined
@@ -509,27 +513,27 @@ $ ->
 
       setExtremes: ->
         if (@chart isnt undefined)
-          if(@xBounds.min? and @yBounds.min?)
-            @chart.xAxis[0].setExtremes(@xBounds.min,@xBounds.max,true)
-            @chart.yAxis[0].setExtremes(@yBounds.min,@yBounds.max,true)
+          if(@configs.xBounds.min? and @configs.yBounds.min?)
+            @chart.xAxis[0].setExtremes(@configs.xBounds.min,@configs.xBounds.max,true)
+            @chart.yAxis[0].setExtremes(@configs.yBounds.min,@configs.yBounds.max,true)
           else @resetExtremes()
 
       zoomOutExtremes: (whichAxis) ->
 
-        xRange = @xBounds.max - @xBounds.min
-        yRange = @yBounds.max - @yBounds.min
+        xRange = @configs.xBounds.max - @configs.xBounds.min
+        yRange = @configs.yBounds.max - @configs.yBounds.min
 
         if whichAxis in ['Both', 'X']
-          @xBounds.max += xRange * 0.1
-          @xBounds.min -= xRange * 0.1
+          @configs.xBounds.max += xRange * 0.1
+          @configs.xBounds.min -= xRange * 0.1
 
         if whichAxis in ['Both', 'Y']
-          if globals.logY is 1
-            @yBounds.max *= 10.0
-            @yBounds.min /= 10.0
+          if globals.configs.logY is 1
+            @configs.yBounds.max *= 10.0
+            @configs.yBounds.min /= 10.0
           else
-            @yBounds.max += yRange * 0.1
-            @yBounds.min -= yRange * 0.1
+            @configs.yBounds.max += yRange * 0.1
+            @configs.yBounds.min -= yRange * 0.1
 
         @setExtremes()
 
@@ -554,7 +558,7 @@ $ ->
       Updates x axis for regression.
       ###
       updateXRegression:() ->
-        $('#regressionXAxis').text("#{data.fields[@xAxis].fieldName}")
+        $('#regressionXAxis').text("#{data.fields[@configs.xAxis].fieldName}")
 
       ###
       Updates y axis for regression.
@@ -562,7 +566,7 @@ $ ->
       updateYRegression:() ->
         if $('#regressionYAxisSelector')?
           $('#regressionYAxisSelector').empty()
-          for fieldIndex in globals.fieldSelection
+          for fieldIndex in globals.configs.fieldSelection
             $('#regressionYAxisSelector').append($("<option/>", {
               value: fieldIndex,
               text: data.fields[fieldIndex].fieldName
@@ -580,13 +584,13 @@ $ ->
 
           <table><tr>
           <td>X Axis: </td>
-          <td id='regressionXAxis'>#{data.fields[@xAxis].fieldName}</td></tr>
+          <td id='regressionXAxis'>#{data.fields[@configs.xAxis].fieldName}</td></tr>
 
           <tr><td>Y Axis: </td>
           <td><select id='regressionYAxisSelector' class='form-control'>
           """
 
-        for fieldIndex in globals.fieldSelection
+        for fieldIndex in globals.configs.fieldSelection
           controls += "<option value='#{fieldIndex}'>#{data.fields[fieldIndex].fieldName}</option>"
 
         controls +=
@@ -619,14 +623,14 @@ $ ->
         ($ "#regressionControl button").button()
 
         # Add all the saved regressions correctly
-        for regression in @savedRegressions
+        for regression in @configs.savedRegressions
           # Filter out the ones that should be enabled.
           # - X indices must match.
           # - Compare the arrays without comparing them.
           # - Y axis must be present.
-          if regression.fieldIndices[0] == @xAxis \
-          && "#{regression.fieldIndices[2]}" == "#{globals.groupSelection}" \
-          && globals.fieldSelection.indexOf(regression.fieldIndices[1]) != -1
+          if regression.fieldIndices[0] == @configs.xAxis \
+          && "#{regression.fieldIndices[2]}" == "#{globals.configs.groupSelection}" \
+          && globals.configs.fieldSelection.indexOf(regression.fieldIndices[1]) != -1
             @chart.addSeries(regression.series)
             @addRegressionToTable(regression, true)
           else
@@ -643,7 +647,7 @@ $ ->
         ($ "#regressionButton").click =>
 
           # Make the title for the tooltip
-          xAxisName = data.fields[@xAxis].fieldName
+          xAxisName = data.fields[@configs.xAxis].fieldName
           yAxisName = ($ '#regressionYAxisSelector option:selected').text()
           name = "<strong>#{yAxisName}</strong> as a "
           name += "#{($ '#regressionSelector option:selected').text().toLowerCase()} "
@@ -652,7 +656,7 @@ $ ->
           # Get the current selected y index, the regression type, and the current group index
           yAxisIndex = Number(($ '#regressionYAxisSelector').val())
           regressionType = Number(($ '#regressionSelector').val())
-          groupIndex = globals.groupSelection
+          groupIndex = globals.configs.groupSelection
 
           # Get the full data so as to be clippable
           fullData = data.dataPoints
@@ -662,7 +666,7 @@ $ ->
 
           # Separate the x and y data
           xData =
-            point[@xAxis] for point in fullData
+            point[@configs.xAxis] for point in fullData
           yData =
             point[yAxisIndex] for point in fullData
 
@@ -677,7 +681,7 @@ $ ->
               xData,
               yData,
               regressionType,
-              @xBounds,
+              @configs.xBounds,
               name,
               dashStyle
             )
@@ -692,7 +696,7 @@ $ ->
             # Get a unique identifier (last highest count plus one)
             regressionIdentifier = ''
             count = 0
-            for regression in @savedRegressions
+            for regression in @configs.savedRegressions
               if regression.type == regressionType \
               and regression.fieldIndices[1] == yAxisIndex \
               and count <= regression.typeCount
@@ -712,7 +716,7 @@ $ ->
             typeCount:
               count
             fieldIndices:
-              [@xAxis, yAxisIndex, groupIndex]
+              [@configs.xAxis, yAxisIndex, groupIndex]
             fieldNames:
               [xAxisName, yAxisName]
             series:
@@ -720,24 +724,24 @@ $ ->
             regressionId:
               regressionIdentifier
             bounds:
-              [@xBounds, @yBounds]
+              [@configs.xBounds, @configs.yBounds]
 
           # Save a regression
-          @savedRegressions.push(savedRegression)
+          @configs.savedRegressions.push(savedRegression)
 
           # Actually add the regression to the table
           @addRegressionToTable(savedRegression, true)
 
         # Set up accordion
-        globals.regressionOpen ?= 0
+        globals.configs.regressionOpen ?= 0
 
         ($ '#regressionControl').accordion
           collapsible:true
-          active:globals.regressionOpen
+          active:globals.configs.regressionOpen
           heightStyle:"content"
 
         ($ '#regressionControl > h3').click ->
-          globals.regressionOpen = (globals.regressionOpen + 1) % 2
+          globals.configs.regressionOpen = (globals.configs.regressionOpen + 1) % 2
 
       # Adds a regression row to our table, with styling for enabled or disabled
       addRegressionToTable: (savedReg, enabled) ->
@@ -771,12 +775,12 @@ $ ->
         # Make each row a link to its view
         ($ 'tr#row_' + savedReg.series.name.id).click =>
           # Reset the state of when you saved
-          @xAxis = savedReg.fieldIndices[0]
-          globals.fieldSelection = [savedReg.fieldIndices[1]]
-          globals.groupSelection = savedReg.fieldIndices[2]
+          @configs.xAxis = savedReg.fieldIndices[0]
+          globals.configs.fieldSelection = [savedReg.fieldIndices[1]]
+          globals.configs.groupSelection = savedReg.fieldIndices[2]
 
-          @xBounds = savedReg.bounds[0]
-          @yBounds = savedReg.bounds[1]
+          @configs.xBounds = savedReg.bounds[0]
+          @configs.yBounds = savedReg.bounds[1]
 
           ($ '.xAxis_input').each (i, input) ->
             if Number(input.value) == savedReg.fieldIndices[0]
@@ -797,9 +801,10 @@ $ ->
 
           # Remove regression from the savedRegressions array.
           id = savedReg.series.name.id
-          for regression in @savedRegressions
+          for regression in @configs.savedRegressions
             if (regression.series.name.id == id)
-              @savedRegressions = @savedRegressions.filterOutValue(regression)
+              @configs.savedRegressions =
+                @configs.savedRegressions.filterOutValue(regression)
               break
 
           # Remove regression from the chart
@@ -839,11 +844,11 @@ $ ->
         clipped = (point, xBounds, yBounds) =>
 
           # Check x axis
-          if (point[@xAxis] isnt null) && (not isNaN point[@xAxis]) \
-          && point[@xAxis] >= xBounds.min && point[@xAxis] <= xBounds.max
+          if (point[@configs.xAxis] isnt null) && (not isNaN point[@configs.xAxis]) \
+          && point[@configs.xAxis] >= xBounds.min && point[@configs.xAxis] <= xBounds.max
 
             # Check all y axes
-            for yAxis in @yAxis
+            for yAxis in @configs.yAxis
               if !((point[yAxis] isnt null) && (not isNaN point[yAxis]) \
               && point[yAxis] >= yBounds.min && point[yAxis] <= yBounds.max)
                 return false
@@ -852,8 +857,8 @@ $ ->
           else return false
 
         # Do the actual clipping
-        if @xBounds.min? and @xBounds.max? and @yBounds.min? and @yBounds.max?
-          point for point in arr when clipped(point, @xBounds, @yBounds)
+        if @configs.xBounds.min? and @configs.xBounds.max? and @configs.yBounds.min? and @configs.yBounds.max?
+          point for point in arr when clipped(point, @configs.xBounds, @configs.yBounds)
         else
           arr
 
@@ -861,4 +866,3 @@ $ ->
       globals.scatter = new Scatter "scatter_canvas"
     else
       globals.scatter = new DisabledVis "scatter_canvas"
-      

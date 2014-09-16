@@ -62,8 +62,6 @@ $ ->
         # Make table visible? (or something)
         ($ '#' + @canvas).show()
 
-        console.log this
-
         # Calls update
         super()
 
