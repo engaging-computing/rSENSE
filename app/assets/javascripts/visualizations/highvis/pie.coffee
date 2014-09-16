@@ -50,11 +50,11 @@ $ ->
       update: () ->
         @rel_data = []
         @selected_field = @displayField
+        @select_name = data.fields[data.groupingFieldIndex].fieldName
         @getGroupedData()
         while @chart.series.length > 0
           @chart.series[@chart.series.length - 1].remove false
 
-        @select_name = data.fields[data.groupingFieldIndex].fieldName
         @displayColors = []
         for number in globals.groupSelection
           @displayColors.push(globals.colors[number])
@@ -67,24 +67,18 @@ $ ->
 
         @chart.redraw()
 
-      normalize: ->
-        sum = @display_data.reduce (prev, cur) -> prev + cur
-        
-        @display_data = @display_data.map (prev, cur) ->
-          cur[1] = (cur[1] / sum) * 100
-          cur
-        , []
-
       getGroupedData: ->
         @display_data = data.dataPoints.reduce (prev, next) =>
-          prev[next[data.groupingFieldIndex]] = next[@selected_field]
+          if typeof prev[next[data.groupingFieldIndex]] != "undefined"
+            prev[next[data.groupingFieldIndex]] = prev[next[data.groupingFieldIndex]] + next[@selected_field]
+          else
+            prev[next[data.groupingFieldIndex]] = next[@selected_field]
           prev
         , {}
         @display_data = Object.keys(@display_data).reduce (prev, key) =>
           if data.groups.indexOf(key.toLowerCase()) in globals.groupSelection
-            prev.push [key, @display_data[key]]
+            prev.push [key or "No #{@select_name}", @display_data[key]]
           prev
-          
         , []
         
       buildOptions: ->
