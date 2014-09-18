@@ -59,7 +59,17 @@ $ ->
     ### Load saved data if there ###
     if data.savedGlobals?
       hydrate = new Hydrate()
-      globals.extendObject globals, (hydrate.parse data.savedGlobals)
+      savedConfigs = hydrate.parse(data.savedGlobals)
+
+      # Restore global configs
+      globals.extendObject globals.configs, savedConfigs['globals']
+
+      # Restore vis specific configs
+      for visName in data.allVis
+        vis  = eval "globals.#{visName.toLowerCase()}"
+        if vis? and savedConfigs[vis]?
+          vis.configs = savedConfigs[vis]
+
       delete data.savedGlobals
 
     ### Generate tabs ###

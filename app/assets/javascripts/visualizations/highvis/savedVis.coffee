@@ -181,16 +181,21 @@ $ ->
 
               cpy
 
+      savedConfig = {}
+
+      # Grab the global configs
+      savedConfig['globals'] = globals.configs
+
+      # Grab the vis specific configs
       for visName in data.allVis
         vis  = eval "globals.#{visName.toLowerCase()}"
         if vis?
-          vis.end()
-          vis.serializationCleanup()
+          #  vis.end()
+          #  vis.serializationCleanup()
+          savedConfig[visName] = vis.configs
 
-      globalsCpy = stripFunctions globals
+      globalsCpy = stripFunctions savedConfig
       dataCpy = stripFunctions data
-
-      delete globalsCpy.curVis
 
       ret =
         globals: (hydrate.stringify globalsCpy)
