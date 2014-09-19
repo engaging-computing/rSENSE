@@ -191,7 +191,8 @@ $ ->
         vis  = eval "globals.#{visName.toLowerCase()}"
         if vis?
           #  vis.end()
-          #  vis.serializationCleanup()
+          vis.serializationCleanup()
+          console.log vis.configs
           savedConfig[visName] = vis.configs
 
       globalsCpy = stripFunctions savedConfig

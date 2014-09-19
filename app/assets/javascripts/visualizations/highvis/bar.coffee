@@ -33,11 +33,11 @@ $ ->
       constructor: (@canvas) ->
         super(@canvas)
 
+        console.log @configs
+
         if data.normalFields.length > 1
           @configs.displayField = data.normalFields[1]
         else @configs.displayField = data.normalFields[0]
-
-        @configs.analysisType ?= 0
 
       ANALYSISTYPE_TOTAL:     0
       ANALYSISTYPE_MAX:       1
@@ -54,6 +54,10 @@ $ ->
       # the analysis gets force set to row count, and this should be undone).
       restoreAnalysisType:  false
       savedAnalysisType:    0
+
+      start: ->
+        @configs.analysisType ?= @ANALYSISTYPE_TOTAL
+        super()
 
       buildOptions: ->
         super()
@@ -73,7 +77,7 @@ $ ->
               str  = "<div style='width:100%;text-align:center;color:#{@series.color};"
               str += "margin-bottom:5px'> #{@point.name}</div>"
               str += "<table>"
-              str += "<tr><td>#{@x} (#{self.analysisTypeNames[self.analysisType]}):"
+              str += "<tr><td>#{@x} (#{self.analysisTypeNames[self.configs.analysisType]}):"
               str += "</td><td><strong>#{@y}</strong></td></tr>"
               str += "</table>"
             useHTML: true
