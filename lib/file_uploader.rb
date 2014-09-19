@@ -166,7 +166,7 @@ class FileUploader
     types['latitude'] = []
     types['longitude'] = []
 
-    regex = %r{.(?<year>\d{4})(-|\/)(?<month>\d{1,2})(-|\/)(?<day>\d{1,2})}
+    regex = %r{((?<year>\d{4})(-|\/)(?<month>\d{1,2})(-|\/)(?<day>\d{1,2})|([uU]\s\d+))}
 
     data_set.each do |column|
       if (column[1]).map { |dp| (regex =~ dp) }.reduce(:&)
