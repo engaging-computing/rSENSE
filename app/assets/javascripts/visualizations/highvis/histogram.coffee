@@ -286,9 +286,7 @@ $ ->
           globals.toolsOpen = (globals.toolsOpen + 1) % 2
 
         ($ "#binSizeInput").keydown (e) =>
-          console.log 
           if e.keyCode == 13
-            console.log 'b'
 
             newBinSize = Number ($ '#binSizeInput').val()
 
@@ -300,8 +298,6 @@ $ ->
               ($ "#binSizeInput").errorFlash()
               return
 
-            console.log "MAX_NUM_BINS: #{@MAX_NUM_BINS}"
-            console.log "Bin Count:    #{((@globalmax - @globalmin)/newBinSize)}"
             if ((@globalmax - @globalmin) / newBinSize) < @MAX_NUM_BINS
               @binSize = newBinSize
               @update()
