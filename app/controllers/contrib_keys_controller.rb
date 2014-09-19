@@ -34,7 +34,7 @@ class ContribKeysController < ApplicationController
 
   def enter
     @project = Project.find(params[:project_id])
-    keys = @project.contrib_keys.where(key: params[:key])
+    keys = @project.contrib_keys.where(key: params[:key].downcase)
     contributor_name = params[:contributor_name]
 
     if keys.count > 0 && !(contributor_name.nil?)
