@@ -29,10 +29,10 @@
 $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
 
+    console.log data
     # Restored saved data
     if data.savedData?
-      hydrate = new Hydrate()
-      globals.extendObject data, (hydrate.parse data.savedData)
+      $.extend(data, JSON.parse(data.savedData))
 
       # Check for motion reference and remove
       index = ($.inArray 'Motion', data.allVis)
@@ -67,9 +67,9 @@ $ ->
         group = (String dp[@groupingFieldIndex]).toLowerCase() == @groups[groupIndex]
         notNull = (dp[xIndex] isnt null) and (dp[yIndex] isnt null)
         notNaN = (not isNaN(dp[xIndex])) and (not isNaN(dp[yIndex]))
-        
+
         group and notNull and notNaN
-      
+
       mapFunc = (dp) ->
         obj =
           x: dp[xIndex]
