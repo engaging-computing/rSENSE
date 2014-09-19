@@ -109,7 +109,8 @@ $ ->
       This includes a series of checkboxes or radio buttons for selecting
       the active y axis field(s).
       ###
-      drawYAxisControls: (radio = false) ->
+      drawYAxisControls: (radio = false, enableDataPoint = true) ->
+
         checked = false
         controls = '<div id="yAxisControl" class="vis_controls">'
 
@@ -131,7 +132,13 @@ $ ->
             checked = true
 
         # Populate choices
-        for fIndex in data.normalFields
+
+        if enableDataPoint
+          fieldList = data.normalFields
+        else
+          fieldList = data.normalFields[1..data.normalFields.length]
+
+        for fIndex in fieldList
           controls += "<div class='inner_control_div' >"
 
           if radio
@@ -197,7 +204,7 @@ $ ->
       This includes a series of checkboxes and a selector for the grouping field.
       The checkbox text color should correspond to the graph color.
       ###
-      drawGroupControls: (startOnGroup = false, radio = false) ->
+      drawGroupControls: (startOnGroup = false, radio = false, excludeNameAndCombined = false) ->
 
         controls = '<div id="groupControl" class="vis_controls">'
 
@@ -209,7 +216,12 @@ $ ->
         controls += '<div class="inner_control_div"> Group By: '
         controls += '<select id="groupSelector" class="form-control">'
 
-        for fieldIndex in data.textFields
+        if data.textFields.length > 2 and excludeNameAndCombined
+          fieldList = data.textFields[2..data.textFields.length]
+        else
+          fieldList = data.textFields
+
+        for fieldIndex in fieldList
           sel = if fieldIndex is data.groupingFieldIndex then 'selected' else ''
           controls += "<option value='#{Number fieldIndex}' #{sel}>#{data.fields[fieldIndex].fieldName}</option>"
 
