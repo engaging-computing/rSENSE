@@ -261,12 +261,12 @@ $ ->
         # Set up slider
         ($ '#binSizeSlider').slider
           range: 'min'
-          value: @binNumSug
+          value: 2.7 - @binNumSug
           min: .5
           max: 2.2
           step: .1
           slide: (event, ui) =>
-            @binNumSug = Number ui.value
+            @binNumSug = 2.7 - Number ui.value
 
             newBinSize = @defaultBinSize()
 
