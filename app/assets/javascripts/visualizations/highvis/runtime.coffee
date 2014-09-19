@@ -58,17 +58,19 @@ $ ->
 
     ### Load saved data if there ###
     if data.savedGlobals?
-      hydrate = new Hydrate()
-      savedConfigs = hydrate.parse(data.savedGlobals)
+      savedConfigs = JSON.parse(data.savedGlobals)
+
+      console.log('savedGlobals', savedConfigs)
 
       # Restore global configs
-      globals.extendObject globals.configs, savedConfigs['globals']
+      $.extend(globals.configs, savedConfigs['globals'])
 
       # Restore vis specific configs
       for visName in data.allVis
         vis  = eval "globals.#{visName.toLowerCase()}"
         if vis? and savedConfigs[visName]?
-          vis.configs = savedConfigs[visName]
+          $.extend(vis.configs, savedConfigs[visName])
+          console.log visName, vis.configs
 
       delete data.savedGlobals
 

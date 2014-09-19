@@ -366,6 +366,11 @@ $ ->
           controls += "Save Visualization </button>"
           controls += "</div>"
 
+          controls += "<div class='inner_control_div'>"
+          controls += "<button id='defaultVisButton' class='save_button btn btn-sm btn-default'>"
+          controls += "Make Default </button>"
+          controls += "</div>"
+
         if @chart?
 
           controls += "<div class='inner_control_div'>"
@@ -587,5 +592,5 @@ $ ->
       Remove the chart and chart options object
       ###
       serializationCleanup: ->
-        delete @chart
-        delete @chartOptions
+        #delete @chart
+        #delete @chartOptions

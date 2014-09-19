@@ -36,7 +36,6 @@
 //
 //= require highcharts/highcharts
 //= require highcharts/modules/exporting
-//= require Hydrate
 //= require jquery.jqGrid.src.js
 //= require grid.locale-en.js
 //= require jquery.prettyPhoto

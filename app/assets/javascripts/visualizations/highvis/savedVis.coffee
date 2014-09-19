@@ -141,12 +141,10 @@ $ ->
     ###
     Serializes all vis data. Strips functions from the objects bfire serializing
     since they cannot be serialized.
-
-    NOTE: Booleans cannot be serialized properly (Hydrate.js issue)
     ###
-    globals.serializeVis = ->
+    globals.serializeVis = (includeData = true) ->
 
-      # set current vis to default
+      # Set current vis to default
       current = (globals.curVis.canvas.match /([A-z]*)_canvas/)[1]
       current = current[0].toUpperCase() + current.slice 1
       data.defaultVis = current
@@ -157,30 +155,6 @@ $ ->
           for fieldIndex in data.timeFields
             data.dataPoints[dIndex][fieldIndex] = "U #{dp[fieldIndex]}"
 
-      hydrate = new Hydrate()
-
-      stripFunctions = (obj) ->
-
-        switch typeof obj
-          when 'number'
-            obj
-          when 'string'
-            obj
-          when 'function'
-            undefined
-          when 'object'
-
-            if obj is null
-              null
-            else
-              cpy = if $.isArray obj then [] else {}
-              for key, val of obj
-                stripped = stripFunctions val
-                if stripped isnt undefined
-                  cpy[key] = stripped
-
-              cpy
-
       savedConfig = {}
 
       # Grab the global configs
@@ -190,41 +164,15 @@ $ ->
       for visName in data.allVis
         vis  = eval "globals.#{visName.toLowerCase()}"
         if vis?
-          #  vis.end()
           vis.serializationCleanup()
           console.log vis.configs
           savedConfig[visName] = vis.configs
 
-      globalsCpy = stripFunctions savedConfig
-      dataCpy = stripFunctions data
+      # Default vises don't save data
+      dataCpy = {}
+      $.extend(dataCpy, data)
+      if !includeData then delete dataCpy.dataPoints
 
       ret =
-        globals: (hydrate.stringify globalsCpy)
-        data: (hydrate.stringify dataCpy)
-
-    ###
-    Does a deep copy extend operation similar to $.extend
-    ###
-    globals.extendObject = (obj1, obj2) ->
-      switch typeof obj2
-        when 'boolean'
-          obj2
-        when 'number'
-          obj2
-        when 'string'
-          obj2
-        when 'function'
-          obj2
-        when 'object'
-
-          if obj2 is null
-            obj2
-          else
-            if $.isArray obj2
-              obj1 ?= []
-            else
-              obj1 ?= {}
-
-            for key, val of obj2 when key isnt '__hydrate_id'
-              obj1[key] = globals.extendObject obj1[key], obj2[key]
-            obj1
+        globals: (JSON.stringify savedConfig)
+        data: (JSON.stringify dataCpy)

@@ -45,16 +45,22 @@ $ ->
 
         @xGridSize = @yGridSize = @INITIAL_GRID_SIZE
 
-        @configs.mode = @SYMBOLS_MODE
+        # Used for data reduction triggering
+        @updateOnZoom = 1
 
-        @configs.xAxis = data.normalFields[0]
-        @configs.yAxis = globals.configs.fieldSelection
+      start: ->
+        console.log 'start', @configs.savedRegressions
+        @configs.mode ?= @SYMBOLS_MODE
 
-        @configs.advancedTooltips = 0
+        @configs.xAxis ?= data.normalFields[0]
+        @configs.yAxis ?= globals.configs.fieldSelection
+
+        @configs.advancedTooltips ?= 0
 
         # Do the cool existential operator thing
         @configs.savedRegressions ?= []
-        @configs.xBounds =
+
+        @configs.xBounds ?=
           dataMax: undefined
           dataMin: undefined
           max: undefined
@@ -62,7 +68,7 @@ $ ->
           userMax: undefined
           userMin: undefined
 
-        @configs.yBounds =
+        @configs.yBounds ?=
           dataMax: undefined
           dataMin: undefined
           max: undefined
@@ -70,10 +76,11 @@ $ ->
           userMax: undefined
           userMin: undefined
 
-        @configs.fullDetail = 0
+        @configs.fullDetail ?= 0
 
-        # Used for data reduction triggering
-        @updateOnZoom = 1
+        console.log 'end start', @configs.savedRegressions
+
+        super()
 
       storeXBounds: (bounds) ->
         @configs.xBounds = bounds
@@ -219,6 +226,8 @@ $ ->
       Update the chart by removing all current series and recreating them
       ###
       update: () ->
+        console.log 'update', @configs.savedRegressions
+
         # Remove all series and draw legend
         super()
         title =
@@ -541,17 +550,17 @@ $ ->
       Saves the current zoom level
       ###
       end: ->
-
-        if chart?
-          @storeXBounds @chart.xAxis[0].getExtremes()
-          @storeYBounds @chart.yAxis[0].getExtremes()
-
         super()
 
       ###
       Saves the zoom level before cleanup
       ###
       serializationCleanup: ->
+        if chart?
+          @storeXBounds @chart.xAxis[0].getExtremes()
+          @storeYBounds @chart.yAxis[0].getExtremes()
+
+        console.log 'ser cleanup', @configs
         super()
 
       ###
@@ -576,6 +585,7 @@ $ ->
       Adds the regression tools to the control bar.
       ###
       drawRegressionControls: () ->
+        console.log 'draw regressions controls', @configs.savedRegressions
 
         controls = """
           <div id="regressionControl" class="vis_controls">
@@ -728,6 +738,7 @@ $ ->
 
           # Save a regression
           @configs.savedRegressions.push(savedRegression)
+          console.log @configs.savedRegressions, 'saving regression'
 
           # Actually add the regression to the table
           @addRegressionToTable(savedRegression, true)
@@ -803,8 +814,8 @@ $ ->
           id = savedReg.series.name.id
           for regression in @configs.savedRegressions
             if (regression.series.name.id == id)
-              @configs.savedRegressions =
-                @configs.savedRegressions.filterOutValue(regression)
+              #@configs.savedRegressions =
+              #  @configs.savedRegressions.filterOutValue(regression)
               break
 
           # Remove regression from the chart
