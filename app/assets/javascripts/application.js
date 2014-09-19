@@ -41,27 +41,11 @@
 //= require grid.locale-en.js
 //= require jquery.prettyPhoto
 //= require markerclustererplus
+//= require numeric.min
 //= require oms
 //= require better_colorpicker
 //
-//= require highvis/savedVis
-//= require highvis/visUtils
-//= require highvis/dataReduction
-//= require highvis/highmodifiers
-//= require numeric.min
-//= require highvis/regression
-//= require highvis/dataClipping
-//= require highvis/baseVis
-//= require highvis/disabledVis
-//= require highvis/scatter
-//= require highvis/timeline
-//= require highvis/histogram
-//= require highvis/bar
-//= require highvis/table
-//= require highvis/map
-//= require highvis/summary
-//= require highvis/photos
-//= require highvis/runtime
+//= require visualizations/highvis/index
 //
 //= require summernote
 //

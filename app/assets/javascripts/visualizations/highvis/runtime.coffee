@@ -32,7 +32,7 @@ $ ->
     window.globals ?= {}
     globals.curVis = null
 
-    globals.CONTROL_SIZE = 210
+    globals.CONTROL_SIZE = 220
     globals.VIS_MARGIN_WIDTH = 20
     globals.VIS_MARGIN_HEIGHT = 70
 
@@ -62,15 +62,15 @@ $ ->
       delete data.savedGlobals
 
     ### Generate tabs ###
-    for vis of data.allVis #when vis isnt 'Summary'
+    for vis of data.allVis
       dark = "#{data.allVis[vis]}_dark"
       light = "#{data.allVis[vis]}_light"
       if data.allVis[vis] in data.relVis
         ($ '#visTabList').append """<li class='vis_tab'>
           <a href='##{data.allVis[vis].toLowerCase()}_canvas'>
             <span class='hidden-sm hidden-xs'>#{data.allVis[vis]}</span>
-            <img class='visible-xs visible-sm' height='32px' width='32'
-              src='#{window.icons[dark]}' data-disable-src='/assets/vis_#{window.icons[light]}' >
+            <span class='visible-sm visible-xs'><img height='32px' width='32px'
+              src='#{window.icons[dark]}' data-disable-src='/assets/vis_#{window.icons[light]}' ></span>
           </a>
           </li>"""
       else
@@ -78,8 +78,8 @@ $ ->
           <a href='##{data.allVis[vis].toLowerCase()}_canvas'>
             <span class='hidden-sm hidden-xs' style='text-decoration:line-through'>
               #{data.allVis[vis]}</span>
-            <img class='visible-xs visible-sm' height='32px' width='32'
-              src='#{window.icons[light]}' data-enable-src='#{window.icons[dark]}' />
+            <span class='visible-sm visible-xs'><img height='32px' width='32'
+              src='#{window.icons[light]}' data-enable-src='#{window.icons[dark]}' /></span>
           </a></li>"""
 
     ### Jquery up the tabs ###
@@ -115,16 +115,17 @@ $ ->
       globals.curVis.start()
 
     # Set initial div sizes
-    containerSize = ($ '#viscontainer').width()
+    containerSize = ($ '#viscontainer').innerWidth()
     hiderSize     = ($ '#controlhider').outerWidth()
-    controlSize =  if globals.options? and globals.options.startCollapsed?
+    controlSize   = if globals.options? and globals.options.startCollapsed?
       $("#control_hide_button").html('<')
       0
     else
       $("#control_hide_button").html('>')
       globals.CONTROL_SIZE
+    contrContSize = hiderSize + controlSize
 
-    visWidth = containerSize - (hiderSize + controlSize + 10)
+    visWidth = containerSize - contrContSize
     visHeight = ($ '#viscontainer').height() - ($ '#visTabList').outerHeight()
 
     if globals.options? and globals.options.presentation?
@@ -134,41 +135,49 @@ $ ->
       ($ '.vis_canvas').width  visWidth
       ($ '.vis_canvas').height visHeight
 
-    ($ '#controldiv').width 0
-    ($ '#controldiv').height visHeight
+    ($ '#controlcontainer').width contrContSize
+    ($ '#controlcontainer').height visHeight
 
-    #($ '.vis_canvas').css('padding', 0)
-    #($ '.vis_canvas').css('margin', 0)
-
+    ($ '#controldiv').width controlSize
 
     # Start up vis
     globals.curVis.start()
 
     # Toggle control panel
     resizeVis = (toggleControls = true, aniLength = 600) ->
-
+      # Adjust height
       if (globals.fullscreen? and globals.fullscreen)
         ($ "#viscontainer").height(($ window).height())
       else
         ($ "#viscontainer").height(($ window).height() - h)
 
-      containerSize = ($ '#viscontainer').width()
+      # Adjust tool position
+      if (globals.fullscreen? and globals.fullscreen or
+      globals.options? and globals.options.isEmbed? and globals.options.isEmbed)
+        ($ "#controlcontainer").css("right", "0px")
+      else
+        ($ "#controlcontainer").css("right", "30px")
+
+      containerSize = ($ '#viscontainer').innerWidth()
       hiderSize     = ($ '#controlhider').outerWidth()
-      controlSize   = ($ '#controldiv').width()
+      controlSize   = ($ '#controldiv').outerWidth()
       controlVisibility = ($ '#controldiv').css 'opacity'
 
       if toggleControls
-        controlSize = if ($ '#controldiv').width() <= 0
-          globals.CONTROL_SIZE
+        if ($ '#controlcontainer').width() <= hiderSize
+          controlSize = globals.CONTROL_SIZE
+          controlVisibility = 1.0
         else
-          0
-        controlVisibility = if ($ '#controldiv').width() <= 0
-          1.0
-        else
-          0.0
+          controlSize = 0
+          controlVisibility = 0.0
 
-      newWidth = containerSize - (hiderSize + controlSize + 10)
+      contrContSize = hiderSize + controlSize
+
+      newWidth = containerSize - contrContSize
       newHeight = ($ '#viscontainer').height() - ($ '#visTabList').outerHeight()
+
+      ($ '#controlcontainer').height newHeight
+      ($ '#controlcontainer').animate {width: contrContSize}, aniLength, 'linear'
 
       ($ '#controldiv').height newHeight
       ($ '#controldiv').animate {width: controlSize, opacity: controlVisibility}, aniLength, 'linear'
@@ -182,19 +191,15 @@ $ ->
     if globals.options? and globals.options.presentation?
       1
     else
-      setTimeout resizeVis, 0
+      resizeVis false, 0
 
     # Resize vis on page resize
     ($ window).resize () ->
       resizeVis(false, 0)
 
     ($ '#control_hide_button').click ->
-
-      if ($ '#controldiv').width() is 0
+      if ($ '#controlcontainer').width() is hiderSize
         $("##{@id}").html('>')
       else
         $("##{@id}").html('<')
       resizeVis()
-
-
-
