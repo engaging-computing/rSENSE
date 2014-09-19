@@ -351,6 +351,23 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
       border-color: $border-color;
     }
 
+    .ui-icon {
+      width: 16px;
+      height: 16px;
+      background-image: url(/assets/vis/ui-icons_222222_256x240.png);
+    }
+
+    // Flips the bottom sort icon down and moves it down a bit
+    .ui-icon-triangle-1-s {
+      margin-top: 5px;
+      -moz-transform: scaleY(-1);
+      -o-transform: scaleY(-1);
+      -webkit-transform: scaleY(-1);
+      transform: scaleY(-1);
+      filter: FlipV;
+      -ms-filter: "FlipV";
+    }
+
     // the entire header box
     .ui-jqgrid-hbox {
       background-image: $light-bkg;
@@ -360,6 +377,11 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     .ui-jqgrid-hbox table > thead > tr > th {
       border-top: none !important; // because inline styles (jQuery UI - can't fix)
       border-right: $border;
+    }
+
+    // hide inactive sort icon
+    .searchResults .ui-jqgrid .ui-icon-asc, .searchResults .ui-jqgrid .ui-icon-desc {
+        color: black;
     }
 
     // The clear icon

@@ -67,8 +67,8 @@ $ ->
       # Restore vis specific configs
       for visName in data.allVis
         vis  = eval "globals.#{visName.toLowerCase()}"
-        if vis? and savedConfigs[vis]?
-          vis.configs = savedConfigs[vis]
+        if vis? and savedConfigs[visName]?
+          vis.configs = savedConfigs[visName]
 
       delete data.savedGlobals
 

@@ -31,11 +31,12 @@ $ ->
 
     class window.Table extends BaseVis
       constructor: (@canvas) ->
+        super(@canvas)
         @TOOLBAR_HEIGHT_OFFSET = 70
 
-        @configs ?= {}
-        @configs.tableFields ?=
+        fieldList =
           fIndex for f, fIndex in data.fields when fIndex isnt data.COMBINED_FIELD
+        @configs.tableFields ?= fieldList[0..7]
 
         # Set sort state to default none existed
         @configs.sortName ?= ''
@@ -147,7 +148,8 @@ $ ->
         })
 
         # Show only the checked columns
-        for f, fIndex in data.fields when fIndex
+        for f, fIndex in data.fields
+          console.log f, fIndex
           col = @table.jqGrid('getGridParam','colModel')[fIndex]
           if $.inArray(fIndex, @configs.tableFields) is -1
             @table.hideCol(col.name)
@@ -199,15 +201,6 @@ $ ->
       end: ->
         ($ '#' + @canvas).hide()
 
-        if @table?
-          # Save the sort state
-          @configs.sortName = @table.getGridParam('sortname')
-          @configs.sortType = @table.getGridParam('sortorder')
-
-          # Save the table filters
-          if @table.getGridParam('postData').filters?
-            @configs.searchParams = jQuery.parseJSON(@table.getGridParam('postData').filters).rules
-
       resize: (newWidth, newHeight, aniLength) ->
         # In the case that this was called by the hide button, this gets called a second time
         # needlessly, but doesn't effect the overall performance
@@ -220,7 +213,14 @@ $ ->
         @drawSaveControls()
 
       serializationCleanup: ->
-        delete @table
+        if @table?
+          # Save the sort state
+          @configs.sortName = @table.getGridParam('sortname')
+          @configs.sortType = @table.getGridParam('sortorder')
+
+          # Save the table filters
+          if @table.getGridParam('postData').filters?
+            @configs.searchParams = jQuery.parseJSON(@table.getGridParam('postData').filters).rules
 
       ###
       JQGrid time formatting (to implement search post formatting)
@@ -300,6 +300,7 @@ $ ->
         # Make y axis checkbox/radio handler
         ($ '.y_axis_input').click (e) =>
           index = Number e.target.value
+          console.log @configs.tableFields, index
 
           if index in @configs.tableFields
             arrayRemove(@configs.tableFields, index)
