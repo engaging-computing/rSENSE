@@ -59,6 +59,9 @@ $ ->
     data.NORM_TIME ?= 0
     data.timeType  ?= data.NORM_TIME
 
+    data.DEFAULT_PRECISION = 4
+    data.precision ?= data.DEFAULT_PRECISION
+
     ###
     Selects data in an x,y object format of the given group.
     ###
@@ -67,9 +70,9 @@ $ ->
         group = (String dp[@groupingFieldIndex]).toLowerCase() == @groups[groupIndex]
         notNull = (dp[xIndex] isnt null) and (dp[yIndex] isnt null)
         notNaN = (not isNaN(dp[xIndex])) and (not isNaN(dp[yIndex]))
-        
+
         group and notNull and notNaN
-      
+
       mapFunc = (dp) ->
         obj =
           x: dp[xIndex]
@@ -131,7 +134,8 @@ $ ->
       rawData = @selector(fieldIndex, groupIndex)
 
       if rawData.length > 0
-        rawData.reduce (a,b) -> Math.max(a, b)
+        result = rawData.reduce (a,b) -> Math.max(a, b)
+        data.precisionFilter(result)
       else
         null
 
@@ -143,7 +147,8 @@ $ ->
       rawData = @selector(fieldIndex, groupIndex)
 
       if rawData.length > 0
-        rawData.reduce (a,b) -> Math.min(a, b)
+        result = rawData.reduce (a,b) -> Math.min(a, b)
+        data.precisionFilter(result)
       else
         null
 
@@ -155,7 +160,8 @@ $ ->
       rawData = @selector(fieldIndex, groupIndex)
 
       if rawData.length > 0
-        Math.round(((rawData.reduce (a,b) -> a + b) / rawData.length) * 10000) / 10000
+        result = (rawData.reduce (a,b) -> a + b) / rawData.length
+        data.precisionFilter(result)
       else
         null
 
@@ -171,9 +177,9 @@ $ ->
 
       if rawData.length > 0
         if rawData.length % 2
-          return rawData[mid]
+          return data.precisionFilter(rawData[mid])
         else
-          return (rawData[mid - 1] + rawData[mid]) / 2.0
+          return data.precisionFilter((rawData[mid - 1] + rawData[mid]) / 2.0)
       else
         null
 
@@ -197,7 +203,7 @@ $ ->
         total = 0
         for value in rawData
           total = total + value
-        return total
+        return data.precisionFilter(total)
       else
         null
 
@@ -209,21 +215,21 @@ $ ->
       @groupingFieldIndex = index
       @groups = @makeGroups()
       @dataPoints = @setIndexFromGroups()
-        
+
     ###
     Sets the value of the Data Point (id) field to its index within the selected group.
     ###
     data.setIndexFromGroups = () ->
       filterFunc = (dp) =>
         (String dp[@groupingFieldIndex]).toLowerCase() == @groups[groupIndex]
-        
+
       rawData = for group, groupIndex in @groups
         selectedPoints = @dataPoints.filter filterFunc
-            
+
         for dp, dpIndex in selectedPoints
           dp[data.DATA_POINT_ID_FIELD] = dpIndex + 1
           dp
-                
+
       merged = []
       merged = merged.concat.apply(merged, rawData)
 
@@ -326,3 +332,10 @@ $ ->
     data.groupingFieldIndex ?= data.DATASET_NAME_FIELD
     # Array of current groups
     data.groups ?= data.makeGroups()
+
+    ###
+    Rounds to precision set by data.precision (defaults to 4 decimal places)
+    ###
+    data.precisionFilter = (value, index, arr) ->
+      precision = Math.pow(10, data.precision)
+      Math.round(value * precision) / precision
