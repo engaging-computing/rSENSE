@@ -37,7 +37,9 @@
 
     <% if can_edit?(obj) %>
       <p style="text-align: right; margin-top: 1em;">
-        <button id="content-edit-btn" class="btn btn-primary">Edit</button>
+      	<% if !(content.nil?|| content.empty?) %>
+        	<button id="content-edit-btn" class="btn btn-primary">Edit</button>
+        <% end %>
       </p>
     <% end %>
   </div>
