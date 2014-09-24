@@ -654,11 +654,6 @@ $ ->
           regressionType = Number(($ '#regressionSelector').val())
           groupIndex = globals.groupSelection
 
-          # Get the full data so as to be clippable
-          fullData = data.dataPoints
-          # Clip the data so they only include the visible points
-          fullData = @clip(fullData)
-          
           #list of (x,y) points to be used in calculating regression
           xyData = data.multiGroupXYSelector(@xAxis, @yAxis, globals.groupSelection)
 
