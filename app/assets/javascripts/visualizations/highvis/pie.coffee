@@ -71,8 +71,10 @@ $ ->
           prev
         , {}
         @displayData = Object.keys(@displayData).reduce (prev, key) =>
+          console.log key
           if data.groups.indexOf(key.toLowerCase()) in globals.groupSelection
-            prev.push [key or "No #{@selectName}", @displayData[key]]
+            prev.push [key.toLowerCase() or "No #{@selectName}", @displayData[key]]
+            console.log prev
           prev
         , []
 
