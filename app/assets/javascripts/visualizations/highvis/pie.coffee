@@ -53,9 +53,8 @@ $ ->
           @chart.series[@chart.series.length - 1].remove false
 
         @displayColors = []
-        for c, i in globals.configs.colors when i in globals.configs.groupSelection
-          @displayColors.push c
-
+        for number in globals.groupSelection
+          @displayColors.push(globals.colors[number])
         options =
           showInLegend: false
           data: @displayData
@@ -101,9 +100,8 @@ $ ->
       drawControls: ->
         super()
         @drawGroupControls false, false, false
-        @drawYAxisControls true, false # Horrible name for what I'm doing here
+        @drawYAxisControls true, false # Naming here is less than ideal
         @drawSaveControls()
-
 
     if "Pie" in data.relVis
       globals.pie = new Pie 'pie_canvas'
