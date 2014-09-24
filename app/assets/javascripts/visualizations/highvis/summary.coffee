@@ -49,6 +49,7 @@ $ ->
             'count':  (data.getCount       @displayField, groupIndex)
             'mean':   (data.getMean        @displayField, groupIndex)
           analysis
+
         ($ '#' + @canvas).html('')
         field = data.fields[@displayField]
         noData = "No #{field.fieldName} Data"
@@ -109,4 +110,3 @@ $ ->
         @drawYAxisControls(true)
 
       globals.summary = new Summary "summary_canvas"
-
