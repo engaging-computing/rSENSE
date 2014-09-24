@@ -73,7 +73,14 @@ $ ->
         @displayData = Object.keys(@displayData).reduce (prev, key) =>
           console.log key
           if data.groups.indexOf(key.toLowerCase()) in globals.groupSelection
-            prev.push [key.toLowerCase() or "No #{@selectName}", @displayData[key]]
+            console.log [grouping[0] for grouping in prev]
+            if key.toLowerCase() in grouping[0] for grouping in prev
+              for grouping in prev
+                if grouping[0] is key.toLowerCase()
+                  console.log 'runnin'
+                  prev.indexOf(grouping).y = prev.indexOf(grouping).y + @displayData[key] 
+            else
+              prev.push [key.toLowerCase() or "No #{@selectName}", @displayData[key]]
             console.log prev
           prev
         , []
