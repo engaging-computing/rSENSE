@@ -31,56 +31,54 @@ $ ->
 
     class window.Pie extends BaseHighVis
       constructor: (@canvas) ->
-        if data.normalFields.length > 1
-          @displayField = data.normalFields[1]
-        else @displayField = data.normalFields[0]
-          
-        if !@select_name?
-          
-          if data.textFields.length > 2
-            @select_name = data.textFields[2]
-          else
-            @select_name = 'Percent'
+        super(@canvas)
 
-        @selected_field = @displayField
-            
+        if data.normalFields.length > 1
+          @configs.displayField = data.normalFields[1]
+        else @configs.displayField = data.normalFields[0]
+
+        @configs.selectName ?=
+          if data.textFields.length > 2
+            data.textFields[2]
+          else
+            'Percent'
+
       start: () ->
         super()
 
       update: () ->
-        @rel_data = []
-        @selected_field = @displayField
-        @select_name = data.fields[data.groupingFieldIndex].fieldName
+        @configs.selectName = data.fields[data.groupingFieldIndex].fieldName
         @getGroupedData()
         while @chart.series.length > 0
           @chart.series[@chart.series.length - 1].remove false
 
         @displayColors = []
-        for number in globals.groupSelection
-          @displayColors.push(globals.colors[number])
+        for c, i in globals.configs.colors when i in globals.configs.groupSelection
+          @displayColors.push c
+
         options =
           showInLegend: false
-          data: @display_data
-          colors:  @displayColors
-        @chart.setTitle { text: "#{@select_name} by #{data.fields[@selected_field].fieldName}" }
+          data: @displayData
+          colors: @displayColors
+        @chart.setTitle { text: "#{@configs.selectName} by #{data.fields[@configs.displayField].fieldName}" }
         @chart.addSeries options, false
 
         @chart.redraw()
 
       getGroupedData: ->
-        @display_data = data.dataPoints.reduce (prev, next) =>
+        @displayData = data.dataPoints.reduce (prev, next) =>
           if typeof prev[next[data.groupingFieldIndex]] != "undefined"
-            prev[next[data.groupingFieldIndex]] = prev[next[data.groupingFieldIndex]] + next[@selected_field]
+            prev[next[data.groupingFieldIndex]] = prev[next[data.groupingFieldIndex]] + next[@configs.displayField]
           else
-            prev[next[data.groupingFieldIndex]] = next[@selected_field]
+            prev[next[data.groupingFieldIndex]] = next[@configs.displayField]
           prev
         , {}
-        @display_data = Object.keys(@display_data).reduce (prev, key) =>
-          if data.groups.indexOf(key.toLowerCase()) in globals.groupSelection
-            prev.push [key or "No #{@select_name}", @display_data[key]]
+        @displayData = Object.keys(@displayData).reduce (prev, key) =>
+          if data.groups.indexOf(key.toLowerCase()) in globals.configs.groupSelection
+            prev.push [key or "No #{@configs.selectName}", @displayData[key]]
           prev
         , []
-        
+
       buildOptions: ->
         super()
 
@@ -90,8 +88,6 @@ $ ->
         $.extend true, @chartOptions,
           chart:
             type: "pie"
-          title:
-            text: "#{data.fields[@selected_field].fieldName}"
           tooltip:
             pointFormat: '{point.name}: <b>{point.percentage:.1f}%</b>'
           plotOptions:
@@ -101,44 +97,11 @@ $ ->
               dataLabels:
                 enabled: true
                 format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-          series: [{
-            type: 'pie'
-            data:
-              [['Firefox', 50], ['Other', 50]]
-            }]
-
-      drawLabelControls: ->
-        controls = '<div id="labelControl" class="vis_controls">'
-        controls += "<h3 class='clean_shrink'><a href='#'>Label:</a></h3>"
-        controls += "<div class='outer_control_div'>"
-        for fields, f_index in data.fields
-          do ->
-            controls += "<div class='inner_control_div'><div class='radio'><label>#{data.fields[fields].fieldName}"
-            controls += "<input class='label_input' type='radio' name='labels' value='#{fields}'"
-            if f_index == 0
-              controls += "checked"
-            controls += "></label></div></div>"
-
-        controls += '</div></div>'
-        ($ '#controldiv').append controls
-        
-        ($ '.label_input').click (e) =>
-          @select_name = Number e.target.value
-          @delayedUpdate()
-        
-        globals.labelOpen ?= 0
-        ($ '#labelControl').accordion
-          collapsible: true
-          active: globals.labelOpen
-          
-        ($ '#labelControl > h3').click ->
-          globals.labelOpen = (globals.labelOpen + 1) % 2
 
       drawControls: ->
         super()
         @drawGroupControls false, false, false
-        @drawYAxisControls true, false #horrible name for what im doing here
-        #@drawLabelControls()
+        @drawYAxisControls true, false # Horrible name for what I'm doing here
         @drawSaveControls()
 
 
