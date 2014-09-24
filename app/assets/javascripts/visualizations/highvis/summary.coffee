@@ -51,6 +51,7 @@ $ ->
             'count':  (data.getCount       @configs.displayField, groupIndex)
             'mean':   (data.getMean        @configs.displayField, groupIndex)
           analysis
+
         ($ '#' + @canvas).html('')
         field = data.fields[@configs.displayField]
         noData = "No #{field.fieldName} Data"
