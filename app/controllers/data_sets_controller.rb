@@ -1,5 +1,6 @@
 class DataSetsController < ApplicationController
   include ApplicationHelper
+  include DataSetsHelper
 
   # Allow for export without authentication
   skip_before_filter :authorize, only: [:export, :manualEntry, :manualUpload, :update, :show, :dataFileUpload, :field_matching, :jsonDataUpload, :create]
@@ -31,37 +32,7 @@ class DataSetsController < ApplicationController
     @fields = @project.fields
 
     if can_edit? @data_set
-      # create json columns for slickgrid
-      @cols = '['
-      @fields.each.with_index do |x, i|
-        puts x.inspect
-        editor = case x.field_type
-          when 1 then 'Slick.Editors.Text'
-          when 2 then 'Slick.Editors.Integer'
-          when 3 then 'Slick.Editors.Text'
-          when 4 then 'Slick.Editors.Integer'
-          when 5 then 'Slick.Editors.Integer'
-          else 'Slick.Editors.Text'
-        end
-        field = "slickgrid-#{x.id}"
-        name = x.name
-        @cols << (i == 0 ? '{' : ',{')
-        @cols << "id:\"#{field}\",name:\"#{name}\",field:\"#{field}\",editor:#{editor}"
-        @cols << '}'
-      end
-      @cols << ']'
-
-      # create json data for slickgrid
-      @data = '['
-      @data_set.data.each.with_index do |x, i|
-        @data << (i == 0 ? '{' : ',{')
-        x.to_a.each.with_index do |y, i|
-          @data << (i == 0 ? ''  : ',')
-          @data << "\"slickgrid-#{y[0]}\": \"#{y[1]}\""
-        end
-        @data << '}'
-      end
-      @data << ']'
+      @cols, @data = format_slickgrid @fields, @data_set
     end
 
     unless params['data'].nil?
