@@ -92,7 +92,7 @@ GEM
     erubis (2.7.0)
     execjs (2.2.1)
     ffi (1.9.3)
-    font-awesome-rails (4.1.0.0)
+    font-awesome-rails (4.2.0.0)
       railties (>= 3.2, < 5.0)
     handlebars_assets (0.17.1)
       execjs (>= 1.2.9)
@@ -225,7 +225,7 @@ DEPENDENCIES
   coffeebeans
   coffeelint
   execjs
-  font-awesome-rails
+  font-awesome-rails (~> 4.2.0.0)
   handlebars_assets
   httparty
   jquery-rails
