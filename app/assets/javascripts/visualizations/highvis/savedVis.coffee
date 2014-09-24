@@ -176,3 +176,22 @@ $ ->
       ret =
         globals: (JSON.stringify savedConfig)
         data: (JSON.stringify dataCpy)
+
+
+    ###
+    Ajax call to update the project's default vis with the current settings.
+    ###
+    globals.defaultVis = ->
+
+      savedData = globals.serializeVis(false)
+
+      req = $.ajax
+        type: 'POST'
+        url: '/projects'
+        dataType: 'json'
+        data:
+          data: savedData.data
+          globals: savedData.globals
+
+        success: ->
+          alert 'Project defaults updated successfully.'
