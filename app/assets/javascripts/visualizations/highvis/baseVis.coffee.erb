@@ -59,7 +59,7 @@ $ ->
       ###
       Update minor state
       Redraws html controls
-      Derrived classes should overload to reload content.
+      Derived classes should overload to reload content.
       ###
       update: ->
 
@@ -379,7 +379,7 @@ $ ->
           controls += "</div>"
 
           controls += "<div class='inner_control_div'>"
-          controls += "<button id='defaultVisButton' class='save_button btn btn-sm btn-default'>"
+          controls += "<button id='defaultVisButton' class='save_button btn btn-sm btn-primary'>"
           controls += "Make Default </button>"
           controls += "</div>"
 
@@ -405,6 +405,11 @@ $ ->
         ($ "#saveVisButton").click ->
           globals.verifyUser (-> globals.saveVis()), (->
             alert 'You must be logged in to save a visualization.')
+
+        ($ "#defaultVisButton").click ->
+          globals.verifyUser (-> globals.defaultVis()), (->
+            alert 'You must be logged in as the project owner to set a
+            default visualization.')
 
         ($ '#downloadVisButton').click =>
           @chart.exportChart
