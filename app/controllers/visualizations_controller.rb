@@ -308,8 +308,7 @@ class VisualizationsController < ApplicationController
               fields: data_fields,           dataPoints: format_data,
               metadata: metadata,            relVis: rel_vis,
               allVis: all_vis,               defaultVis: default_vis,
-              precision: @project.precision, savedData: @project.data,
-              savedGlobals: @project.globals }
+              precision: @project.precision, savedGlobals: @project.globals }
 
     options = {}
 
