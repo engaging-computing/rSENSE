@@ -779,7 +779,7 @@ $ ->
             if Number(input.value) == savedReg.fieldIndices[0]
               input.checked = true
 
-          @update()
+          @start()
 
         # Add a make the delete button remove the regression object
         ($ 'td#' + savedReg.series.name.id).click =>
