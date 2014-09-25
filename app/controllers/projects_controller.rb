@@ -134,6 +134,9 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
     update = project_params
 
+    logger.info('\n\n\n HELLO \n\n\n')
+    logger.info(project_params)
+
     # ADMIN REQUEST
     if @cur_user.try(:admin)
       if update.key?(:featured)
@@ -362,10 +365,10 @@ class ProjectsController < ApplicationController
     if @cur_user.try(:admin)
       return params[:project].permit(:content, :title, :user_id, :filter, :cloned_from, :has_fields,
                                      :featured, :is_template, :featured_media_id, :hidden, :featured_at, :lock, :curated,
-                                     :curated_at, :updated_at, :default_vis, :precision)
+                                     :curated_at, :updated_at, :default_vis, :precision, :data, :globals)
     end
 
     params[:project].permit(:content, :title, :user_id, :filter, :hidden, :cloned_from, :has_fields,
-                            :featured_media_id, :lock, :updated_at, :default_vis, :precision)
+                            :featured_media_id, :lock, :updated_at, :default_vis, :precision, :data, :globals)
   end
 end
