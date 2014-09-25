@@ -170,8 +170,7 @@ $ ->
 
       # Default vises don't save data
       dataCpy = {}
-      $.extend(dataCpy, data)
-      if !includeData then delete dataCpy.dataPoints
+      if includeData then $.extend(dataCpy, data)
 
       ret =
         globals: (JSON.stringify savedConfig)
