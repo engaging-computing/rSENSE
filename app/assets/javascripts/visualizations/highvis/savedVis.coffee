@@ -186,12 +186,13 @@ $ ->
       savedData = globals.serializeVis(false)
 
       req = $.ajax
-        type: 'POST'
-        url: '/projects'
+        type: 'PUT'
+        url: '/projects/' + data.projectID
         dataType: 'json'
         data:
-          data: savedData.data
-          globals: savedData.globals
-
+          project:
+            data: savedData.data
+            globals: savedData.globals
+            defaultVis: savedData.data.defaultVis
         success: ->
           alert 'Project defaults updated successfully.'

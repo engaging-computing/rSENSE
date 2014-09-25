@@ -53,8 +53,8 @@ $ ->
           @chart.series[@chart.series.length - 1].remove false
 
         @displayColors = []
-        for number in globals.groupSelection
-          @displayColors.push(globals.colors[number])
+        for number in globals.configs.groupSelection
+          @displayColors.push(globals.configs.colors[number])
         options =
           showInLegend: false
           data: @displayData
