@@ -61,8 +61,6 @@ $ ->
     if data.savedGlobals?
       savedConfigs = JSON.parse(data.savedGlobals)
 
-      console.log('savedGlobals', savedConfigs)
-
       # Restore global configs
       $.extend(globals.configs, savedConfigs['globals'])
 
