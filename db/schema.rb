@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140721174027) do
+ActiveRecord::Schema.define(version: 20140915154158) do
 
   create_table "contrib_keys", force: true do |t|
     t.string   "name",       null: false
@@ -25,8 +25,8 @@ ActiveRecord::Schema.define(version: 20140721174027) do
     t.string   "title"
     t.integer  "user_id"
     t.integer  "project_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
     t.string   "googleDoc"
     t.text     "data",             default: "[]", null: false
     t.string   "key"
@@ -38,16 +38,16 @@ ActiveRecord::Schema.define(version: 20140721174027) do
     t.integer  "field_type"
     t.text     "unit",         limit: 255, default: ""
     t.integer  "project_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
     t.text     "restrictions"
   end
 
   create_table "likes", force: true do |t|
     t.integer  "user_id"
     t.integer  "project_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "media_objects", force: true do |t|
@@ -56,8 +56,8 @@ ActiveRecord::Schema.define(version: 20140721174027) do
     t.string   "name"
     t.integer  "data_set_id"
     t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
     t.integer  "tutorial_id"
     t.boolean  "hidden",           default: false
     t.integer  "visualization_id"
@@ -71,8 +71,8 @@ ActiveRecord::Schema.define(version: 20140721174027) do
     t.text     "content"
     t.text     "summary"
     t.boolean  "hidden",            default: true
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
     t.integer  "user_id"
     t.integer  "featured_media_id"
   end
@@ -81,8 +81,8 @@ ActiveRecord::Schema.define(version: 20140721174027) do
     t.string   "title"
     t.integer  "user_id"
     t.text     "content"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
     t.boolean  "featured",                      default: false
     t.text     "filter",            limit: 255, default: ""
     t.integer  "cloned_from"
@@ -94,13 +94,14 @@ ActiveRecord::Schema.define(version: 20140721174027) do
     t.boolean  "curated",                       default: false
     t.datetime "curated_at"
     t.text     "default_vis"
+    t.integer  "precision",                     default: 4
   end
 
   create_table "tutorials", force: true do |t|
     t.text     "content"
     t.string   "title"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
     t.integer  "user_id"
     t.boolean  "hidden",            default: true
     t.integer  "featured_media_id"
@@ -115,8 +116,8 @@ ActiveRecord::Schema.define(version: 20140721174027) do
     t.integer  "group_id"
     t.boolean  "validated",       default: false
     t.string   "password_digest"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
     t.string   "validation_key"
     t.boolean  "admin",           default: false
     t.boolean  "hidden",          default: false
@@ -140,8 +141,8 @@ ActiveRecord::Schema.define(version: 20140721174027) do
     t.text     "content"
     t.text     "data"
     t.text     "globals"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
     t.boolean  "hidden",      default: false
     t.boolean  "featured",    default: false
     t.datetime "featured_at"
