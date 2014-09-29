@@ -38,7 +38,7 @@ class Project < ActiveRecord::Base
   end
 
   def self.search(search, include_hidden = false)
-    regex = /[[:digit:]]/
+    regex = /^[0-9]+$/
     search_query = Project.joins(
       'LEFT OUTER JOIN "likes" ON "likes"."project_id" = "projects"."id"
       LEFT OUTER JOIN "view_counts" ON "view_counts"."project_id" = "projects"."id"'
