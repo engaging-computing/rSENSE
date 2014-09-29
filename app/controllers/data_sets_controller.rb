@@ -33,7 +33,6 @@ class DataSetsController < ApplicationController
 
     if can_edit? @data_set
       @cols, @data = format_slickgrid @fields, @data_set
-      puts @cols.to_json
     end
 
     unless params['data'].nil?

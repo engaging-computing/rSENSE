@@ -8,8 +8,8 @@ module DataSetsHelper
     cols, data = [fields, data_set.data]
     cols, data = format_slickgrid_merge cols, data
     cols, data = format_slickgrid_editors cols, data
-    #cols, data = format_slickgrid_json cols, data
-    [cols.to_json, data.to_json]
+    cols, data = format_slickgrid_json cols, data
+    [cols, data]
   end
 
   def format_slickgrid_merge(cols, data)
@@ -65,11 +65,15 @@ module DataSetsHelper
       {id: "#{field}", name: "#{x[:name]}", field: "#{x[:id]}", editor: editor}
     end
 
-    [cols_editors, data]
+    [cols_editors, data.to_json]
   end
 
   def format_slickgrid_json(cols, data)
-    cols_json = ''
+    cols_json = cols.map do |x|
+      "{\"id\":\"#{x[:id]}\",\"name\":\"#{x[:name]}\",\"field\":\"#{x[:field]}\",\"editor\":#{x[:editor]}}"
+    end.join ','
 
+    puts "#{cols_json} \n"
+    ["[#{cols_json}]", data]
   end
 end
