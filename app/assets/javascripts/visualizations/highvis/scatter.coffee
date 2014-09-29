@@ -654,17 +654,14 @@ $ ->
           regressionType = Number(($ '#regressionSelector').val())
           groupIndex = globals.groupSelection
 
-          # Get the full data so as to be clippable
-          fullData = data.dataPoints
-
-          # Clip the data so they only include the visible points
-          fullData = @clip(fullData)
+          #list of (x,y) points to be used in calculating regression
+          xyData = data.multiGroupXYSelector(@xAxis, @yAxis, globals.groupSelection)
 
           # Separate the x and y data
           xData =
-            point[@xAxis] for point in fullData
+            point.x for point in xyData
           yData =
-            point[yAxisIndex] for point in fullData
+            point.y for point in xyData
 
           # Get dash index
           dashIndex = data.normalFields.indexOf(yAxisIndex)
@@ -782,7 +779,7 @@ $ ->
             if Number(input.value) == savedReg.fieldIndices[0]
               input.checked = true
 
-          @update()
+          @start()
 
         # Add a make the delete button remove the regression object
         ($ 'td#' + savedReg.series.name.id).click =>
