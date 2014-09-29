@@ -190,8 +190,7 @@ $ ->
         dataType: 'json'
         data:
           project:
-            data: savedData.data
             globals: savedData.globals
-            defaultVis: savedData.data.defaultVis
+            default_vis: data.defaultVis
         success: ->
           alert 'Project defaults updated successfully.'
