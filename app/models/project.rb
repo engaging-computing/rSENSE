@@ -38,18 +38,22 @@ class Project < ActiveRecord::Base
   end
 
   def self.search(search, include_hidden = false)
-    res =
-    if search
-      Project.joins(
-        'LEFT OUTER JOIN "likes" ON "likes"."project_id" = "projects"."id"
+    regex = /[[:digit:]]/
+    search_query = Project.joins(
+      'LEFT OUTER JOIN "likes" ON "likes"."project_id" = "projects"."id"
       LEFT OUTER JOIN "view_counts" ON "view_counts"."project_id" = "projects"."id"'
       ).select(
-        'projects.*, count(likes.id) as like_count, view_counts.count as views'
+      'projects.*, count(likes.id) as like_count, view_counts.count as views'
       ).group(
-        'projects.id, view_counts.count'
-      ).where(
-        '(lower(projects.title) LIKE lower(?)) OR (projects.id = ?) OR
-      (lower(projects.content) LIKE lower(?))', "%#{search}%", search.to_i, "%#{search}%")
+     'projects.id, view_counts.count')
+    res =
+    if search =~ regex
+      search_query.where(
+      '(projects.id = ?)', search.to_i)
+    elsif search
+      search_query.where(
+     '(lower(projects.title) LIKE lower(?)) OR
+     (lower(projects.content) LIKE lower(?))', "%#{search}%", "%#{search}%")
     else
       Project.joins(
         'LEFT OUTER JOIN "likes" ON "likes"."project_id" = "projects"."id"
