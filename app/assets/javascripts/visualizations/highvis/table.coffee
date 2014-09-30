@@ -80,17 +80,17 @@ $ ->
         # Make valid id's for the colModel
         colIds = for header, index in headers
           id = header.replace(/\s+/g, '_').toLowerCase()
-          if index is data.groupingFieldIndex
+          if index is globals.configs.groupById
             @configs.groupingId = id
           else id
 
         # Build the data for the table
-        visibleGroups = for group, groupIndex in data.groups when groupIndex in globals.configs.groupSelection
+        visibleGroups = for group, groupIndex in data.groups when groupIndex in data.groupSelection
           group
 
         rows = []
         for dataPoint in globals.CLIPPING.getData(data.dataPoints) \
-        when (String dataPoint[data.groupingFieldIndex]).toLowerCase() in visibleGroups
+        when (String dataPoint[globals.configs.groupById]).toLowerCase() in visibleGroups
           line = {}
           for dat, fieldIndex in dataPoint
             line[colIds[fieldIndex]] = dat

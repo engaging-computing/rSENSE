@@ -29,7 +29,6 @@
 $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
 
-    console.log data
     # Restored saved data
     if data.savedData?
       $.extend(data, JSON.parse(data.savedData))
@@ -67,7 +66,7 @@ $ ->
     ###
     data.xySelector = (xIndex, yIndex, groupIndex) ->
       rawData = globals.CLIPPING.getData(@dataPoints).filter (dp) =>
-        group = (String dp[@groupingFieldIndex]).toLowerCase() == @groups[groupIndex]
+        group = (String dp[globals.configs.groupById]).toLowerCase() == @groups[groupIndex]
         notNull = (dp[xIndex] isnt null) and (dp[yIndex] isnt null)
         notNaN = (not isNaN(dp[xIndex])) and (not isNaN(dp[yIndex]))
 
@@ -102,7 +101,7 @@ $ ->
     ###
     data.selector = (fieldIndex, groupIndex, nans = false) ->
       filterFunc = (dp) =>
-        (String dp[@groupingFieldIndex]).toLowerCase() == @groups[groupIndex]
+        (String dp[globals.configs.groupById]).toLowerCase() == @groups[groupIndex]
 
       newFilterFunc = if nans
         filterFunc
@@ -211,17 +210,16 @@ $ ->
     Gets a list of unique, non-null, stringified vals from the given field index.
     All included datapoints must pass the given filter (defaults to all datapoints).
     ###
-    data.setGroupIndex = (index) ->
-      @groupingFieldIndex = index
-      @groups = @makeGroups()
-      @dataPoints = @setIndexFromGroups()
+    data.setGroupIndex = (gIndex) ->
+      @groups = @makeGroups(gIndex)
+      @dataPoints = @setIndexFromGroups(gIndex)
 
     ###
     Sets the value of the Data Point (id) field to its index within the selected group.
     ###
-    data.setIndexFromGroups = () ->
+    data.setIndexFromGroups = (gIndex) ->
       filterFunc = (dp) =>
-        (String dp[@groupingFieldIndex]).toLowerCase() == @groups[groupIndex]
+        (String dp[gIndex]).toLowerCase() == @groups[groupIndex]
 
       rawData = for group, groupIndex in @groups
         selectedPoints = @dataPoints.filter filterFunc
@@ -236,17 +234,18 @@ $ ->
     ###
     Gets a list of unique, non-null, stringified vals from the group field index.
     ###
-    data.makeGroups = ->
+    data.makeGroups = (gIndex) ->
 
       result = {}
 
       for dp in @dataPoints
-        if dp[@groupingFieldIndex] isnt null
-          result[String(dp[@groupingFieldIndex]).toLowerCase()] = true
+        if dp[gIndex] isnt null
+          result[String(dp[gIndex]).toLowerCase()] = true
 
       groups = for keys of result
         keys
 
+      console.log 'making groups', groups
       groups.sort()
 
     ###
@@ -328,10 +327,6 @@ $ ->
 
     # Preprocess
     data.preprocessData()
-    # Field index of grouping field
-    data.groupingFieldIndex ?= data.DATASET_NAME_FIELD
-    # Array of current groups
-    data.groups ?= data.makeGroups()
 
     ###
     Rounds to precision set by data.precision (defaults to 4 decimal places)

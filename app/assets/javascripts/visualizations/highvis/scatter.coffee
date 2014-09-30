@@ -78,8 +78,6 @@ $ ->
 
         @configs.fullDetail ?= 0
 
-        console.log 'end start', @configs.savedRegressions
-
         super()
 
       storeXBounds: (bounds) ->
@@ -226,8 +224,6 @@ $ ->
       Update the chart by removing all current series and recreating them
       ###
       update: () ->
-        console.log 'update', @configs.savedRegressions
-
         # Remove all series and draw legend
         super()
         title =
@@ -241,7 +237,7 @@ $ ->
           @configs.yBounds.max = @configs.xBounds.max = -Number.MAX_VALUE
 
           for fieldIndex, symbolIndex in data.normalFields when fieldIndex in globals.configs.fieldSelection
-            for group, groupIndex in data.groups when groupIndex in globals.configs.groupSelection
+            for group, groupIndex in data.groups when groupIndex in data.groupSelection
               @configs.yBounds.min = Math.min @configs.yBounds.min, (data.getMin fieldIndex, groupIndex)
               @configs.yBounds.max = Math.max @configs.yBounds.max, (data.getMax fieldIndex, groupIndex)
 
@@ -265,7 +261,7 @@ $ ->
 
         # Draw series
         for fieldIndex, symbolIndex in data.normalFields when fieldIndex in globals.configs.fieldSelection
-          for group, groupIndex in data.groups when groupIndex in globals.configs.groupSelection
+          for group, groupIndex in data.groups when groupIndex in data.groupSelection
             dat = if not @configs.fullDetail
               sel = data.xySelector(@configs.xAxis, fieldIndex, groupIndex)
               globals.dataReduce sel, @configs.xBounds, @configs.yBounds, @xGridSize, @yGridSize, @MAX_SERIES_SIZE
@@ -318,7 +314,7 @@ $ ->
           # - Compare the arrays without comparing them.
           # - Y axis must be present.
           if regression.fieldIndices[0] == @configs.xAxis \
-          && "#{regression.fieldIndices[2]}" == "#{globals.configs.groupSelection}" \
+          && "#{regression.fieldIndices[2]}" == "#{data.groupSelection}" \
           && globals.configs.fieldSelection.indexOf(regression.fieldIndices[1]) != -1
             # Add the regression to the chart
             @chart.addSeries(regression.series)
@@ -639,7 +635,7 @@ $ ->
           # - Compare the arrays without comparing them.
           # - Y axis must be present.
           if regression.fieldIndices[0] == @configs.xAxis \
-          && "#{regression.fieldIndices[2]}" == "#{globals.configs.groupSelection}" \
+          && "#{regression.fieldIndices[2]}" == "#{data.groupSelection}" \
           && globals.configs.fieldSelection.indexOf(regression.fieldIndices[1]) != -1
             @chart.addSeries(regression.series)
             @addRegressionToTable(regression, true)
@@ -663,10 +659,10 @@ $ ->
           name += "#{($ '#regressionSelector option:selected').text().toLowerCase()} "
           name += "function of <strong>#{xAxisName}</strong>"
 
-          # Get the current selected y index, the regression type, and the current group index
+          # Get the current selected y index, the regression type, and the current group indices
           yAxisIndex = Number(($ '#regressionYAxisSelector').val())
           regressionType = Number(($ '#regressionSelector').val())
-          groupIndex = globals.configs.groupSelection
+          groupIndices = data.groupSelection
 
           # Get the full data so as to be clippable
           fullData = data.dataPoints
@@ -726,7 +722,7 @@ $ ->
             typeCount:
               count
             fieldIndices:
-              [@configs.xAxis, yAxisIndex, groupIndex]
+              [@configs.xAxis, yAxisIndex, groupIndices]
             fieldNames:
               [xAxisName, yAxisName]
             series:
@@ -788,7 +784,7 @@ $ ->
           # Reset the state of when you saved
           @configs.xAxis = savedReg.fieldIndices[0]
           globals.configs.fieldSelection = [savedReg.fieldIndices[1]]
-          globals.configs.groupSelection = savedReg.fieldIndices[2]
+          data.groupSelection = savedReg.fieldIndices[2]
 
           @configs.xBounds = savedReg.bounds[0]
           @configs.yBounds = savedReg.bounds[1]
@@ -814,8 +810,8 @@ $ ->
           id = savedReg.series.name.id
           for regression in @configs.savedRegressions
             if (regression.series.name.id == id)
-              #@configs.savedRegressions =
-              #  @configs.savedRegressions.filterOutValue(regression)
+              @configs.savedRegressions =
+                @configs.savedRegressions.filterOutValue(regression)
               break
 
           # Remove regression from the chart

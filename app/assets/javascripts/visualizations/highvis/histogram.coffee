@@ -89,7 +89,7 @@ $ ->
         min = Number.MAX_VALUE
         max = Number.MIN_VALUE
 
-        for groupIndex in globals.configs.groupSelection
+        for groupIndex in data.groupSelection
 
           localMin = data.getMin @configs.displayField, groupIndex
           if localMin isnt null
@@ -145,7 +145,7 @@ $ ->
         @chart.yAxis[0].setTitle {text: "Quantity"}, false
         @chart.xAxis[0].setTitle {text: fieldTitle data.fields[@configs.displayField]}, false
         tooltipXAxis = @configs.displayField
-        if globals.configs.groupSelection.length is 0
+        if data.groupSelection.length is 0
           return
 
         while @chart.series.length > data.normalFields.length
@@ -155,7 +155,7 @@ $ ->
         @globalmin = Number.MAX_VALUE
         @globalmax = Number.MIN_VALUE
 
-        for groupIndex in globals.configs.groupSelection
+        for groupIndex in data.groupSelection
 
           min = data.getMin @configs.displayField, groupIndex
           min = Math.round(min / @configs.binSize) * @configs.binSize
@@ -179,7 +179,7 @@ $ ->
         # Generate all bin data
         binObjs = {}
 
-        for groupIndex in globals.configs.groupSelection
+        for groupIndex in data.groupSelection
 
           selectedData = data.selector @configs.displayField, groupIndex
 
@@ -193,7 +193,7 @@ $ ->
             binObjs[groupIndex][bin]++
 
         # Convert bin data into series data
-        for groupIndex in globals.configs.groupSelection
+        for groupIndex in data.groupSelection
 
           finalData = for number, occurences of binObjs[groupIndex]
 
