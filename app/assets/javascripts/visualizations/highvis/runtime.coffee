@@ -73,6 +73,12 @@ $ ->
 
       delete data.savedGlobals
 
+    ### Restore Grouping ###
+    globals.configs.groupById ?= data.DATASET_NAME_FIELD
+    data.setGroupIndex(globals.configs.groupById)
+    data.groupSelection ?= for vals, keys in data.groups
+      Number keys
+
     ### Generate tabs ###
     for vis of data.allVis
       dark = "#{data.allVis[vis]}_dark"

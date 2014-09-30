@@ -158,7 +158,7 @@ $ ->
             if (lat is null) or (lon is null)
               return
 
-            groupIndex = data.groups.indexOf dataPoint[data.groupingFieldIndex].toLowerCase()
+            groupIndex = data.groups.indexOf dataPoint[globals.configs.groupById].toLowerCase()
             color = globals.configs.colors[groupIndex % globals.configs.colors.length]
 
             latlng = new google.maps.LatLng(lat, lon)
@@ -172,7 +172,7 @@ $ ->
             # Build info window content
             label  = "<div style='font-size:9pt;overflow-x:none;'>"
             label += "<div style='width:100%;text-align:center;color:#{color};'> " +
-              "#{dataPoint[data.groupingFieldIndex]}</div>"#<br>"
+              "#{dataPoint[globals.configs.groupById]}</div>"#<br>"
             label += "<table>"
 
             for field, fieldIndex in data.fields when dataPoint[fieldIndex] isnt null
@@ -186,7 +186,7 @@ $ ->
 
             label += "</table></div>"
 
-            if groupIndex in globals.configs.groupSelection
+            if groupIndex in data.groupSelection
               latlngbounds.extend latlng
 
             pinSym =
@@ -201,7 +201,7 @@ $ ->
               position: latlng
               icon: pinSym
               desc: label
-              visible: ((groupIndex in globals.configs.groupSelection) and @configs.visibleMarkers is 1)
+              visible: ((groupIndex in data.groupSelection) and @configs.visibleMarkers is 1)
 
             @oms.addMarker newMarker
 
@@ -229,7 +229,7 @@ $ ->
               strokeColor: globals.configs.colors[index]
               strokeOpacity: 1.0
               strokeWeight: 2
-              visible: ((index in globals.configs.groupSelection) and @configs.visibleLines is 1)
+              visible: ((index in data.groupSelection) and @configs.visibleLines is 1)
 
             @timeLines[index].setMap(@gmap)
 
@@ -300,7 +300,7 @@ $ ->
 
           heats = []
           for index, heatArray of @heatPoints when (Number index) is @configs.heatmapSelection
-            for groupArray, groupIndex in heatArray when groupIndex in globals.configs.groupSelection
+            for groupArray, groupIndex in heatArray when groupIndex in data.groupSelection
               heats = heats.concat groupArray
 
           if @configs.heatmapSelection >= 0
@@ -332,10 +332,10 @@ $ ->
         # Set marker visibility
         for markGroup, index in @markers
           for mark in markGroup
-            mark.setVisible ((index in globals.configs.groupSelection) and @configs.visibleMarkers is 1)
+            mark.setVisible ((index in data.groupSelection) and @configs.visibleMarkers is 1)
 
           if @timeLines?
-            @timeLines[index].setVisible ((index in globals.configs.groupSelection) and @configs.visibleLines is 1)
+            @timeLines[index].setVisible ((index in data.groupSelection) and @configs.visibleLines is 1)
 
         @clusterer.repaint()
 
@@ -509,7 +509,7 @@ $ ->
         viewBounds = new google.maps.LatLngBounds(sw, ne)
         heatBounds = new google.maps.LatLngBounds()
 
-        for markGroup, index in @markers when index in globals.configs.groupSelection
+        for markGroup, index in @markers when index in data.groupSelection
           for mark in markGroup
             if viewBounds.contains mark.getPosition()
               heatBounds.extend mark.getPosition()

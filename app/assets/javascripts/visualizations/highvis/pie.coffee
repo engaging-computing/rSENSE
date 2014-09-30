@@ -47,13 +47,13 @@ $ ->
         super()
 
       update: () ->
-        @configs.selectName = data.fields[data.groupingFieldIndex].fieldName
+        @configs.selectName = data.fields[globals.configs.groupById].fieldName
         @getGroupedData()
         while @chart.series.length > 0
           @chart.series[@chart.series.length - 1].remove false
 
         @displayColors = []
-        for number in globals.configs.groupSelection
+        for number in data.groupSelection
           @displayColors.push(globals.configs.colors[number])
         options =
           showInLegend: false
@@ -66,14 +66,14 @@ $ ->
 
       getGroupedData: ->
         @displayData = data.dataPoints.reduce (prev, next) =>
-          if typeof prev[next[data.groupingFieldIndex]] != "undefined"
-            prev[next[data.groupingFieldIndex]] = prev[next[data.groupingFieldIndex]] + next[@configs.displayField]
+          if typeof prev[next[globals.configs.groupById]] != "undefined"
+            prev[next[globals.configs.groupById]] = prev[next[globals.configs.groupById]] + next[@configs.displayField]
           else
-            prev[next[data.groupingFieldIndex]] = next[@configs.displayField]
+            prev[next[globals.configs.groupById]] = next[@configs.displayField]
           prev
         , {}
         @displayData = Object.keys(@displayData).reduce (prev, key) =>
-          if data.groups.indexOf(key.toLowerCase()) in globals.configs.groupSelection
+          if data.groups.indexOf(key.toLowerCase()) in data.groupSelection
             prev.push [key or "No #{@configs.selectName}", @displayData[key]]
           prev
         , []

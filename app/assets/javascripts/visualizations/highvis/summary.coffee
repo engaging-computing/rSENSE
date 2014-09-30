@@ -42,7 +42,7 @@ $ ->
         super()
 
       update: ->
-        analysis = for groupName, groupIndex in data.groups when groupIndex is globals.configs.selectedGroup
+        analysis = for groupName, groupIndex in data.groups when groupIndex is globals.configs.groupById
           analysis =
             'total':  (data.getTotal       @configs.displayField, groupIndex)
             'min':    (data.getMin         @configs.displayField, groupIndex)

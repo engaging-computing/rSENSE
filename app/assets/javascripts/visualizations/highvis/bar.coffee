@@ -116,7 +116,7 @@ $ ->
           @chart.series[@chart.series.length - 1].remove false
 
         ### --- ###
-        tempGroupIDValuePairs = for groupName, groupIndex in data.groups when groupIndex in globals.configs.groupSelection
+        tempGroupIDValuePairs = for groupName, groupIndex in data.groups when groupIndex in data.groupSelection
           switch @configs.analysisType
             when @ANALYSISTYPE_TOTAL    then [groupIndex, (data.getTotal     @configs.sortField, groupIndex)]
             when @ANALYSISTYPE_MAX      then [groupIndex, (data.getMax       @configs.sortField, groupIndex)]
@@ -136,7 +136,7 @@ $ ->
             groupID
         ### --- ###
 
-        for groupIndex, order in fieldSortedGroupIDs when groupIndex in globals.configs.groupSelection
+        for groupIndex, order in fieldSortedGroupIDs when groupIndex in data.groupSelection
 
           options =
             showInLegend: false

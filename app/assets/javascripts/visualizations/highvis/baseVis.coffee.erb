@@ -32,12 +32,9 @@ $ ->
     window.globals ?= {}
     window.globals.configs ?= {}
 
+    # Set defaults for logY and grouping
     globals.configs.logY ?= 0
-
-    # The selections are only init if not set by data.savedGlobals
-    globals.configs.groupSelection ?= for vals, keys in data.groups
-      Number keys
-    globals.configs.selectedGroup ?= 0
+    globals.configs.groupById ?= 0
 
     if data.normalFields.length > 1
       globals.configs.fieldSelection ?= data.normalFields[1..1]
@@ -221,7 +218,7 @@ $ ->
           fieldList = data.textFields
 
         for fieldIndex in fieldList
-          sel = if fieldIndex is data.groupingFieldIndex then 'selected' else ''
+          sel = if fieldIndex is globals.configs.groupById then 'selected' else ''
           controls += "<option value='#{Number fieldIndex}' #{sel}>#{data.fields[fieldIndex].fieldName}</option>"
 
         controls += "</select></div>"
@@ -237,7 +234,7 @@ $ ->
           if not radio
             controls += """<div class='checkbox'><label><input id='checkbox_all'
               class='group_input_all' type='checkbox' value='#{gIndex}'
-              #{if globals.configs.groupSelection.length == data.groups.length then "checked" else ""}>
+              #{if data.groupSelection.length == data.groups.length then "checked" else ""}>
               #Check All</label></div>"""
             controls += "</td><td>Color</td></tr>"
 
@@ -251,12 +248,12 @@ $ ->
           if radio
             controls += "<div class='radio'><label><input class='group_input' type='radio' name='groups'"
             controls += " value='#{gIndex}' "
-            controls += "#{if (Number gIndex) is globals.configs.selectedGroup then "checked" else ""}/>"
+            controls += "#{if (Number gIndex) is globals.configs.groupById then "checked" else ""}/>"
             controls += "#{group}</label>"
           else
             controls += "<div class='checkbox'><label><input class='group_input' type='checkbox'"
             controls += " value='#{gIndex}' "
-            controls += "#{if (Number gIndex) in globals.configs.groupSelection then "checked" else ""}/>"
+            controls += "#{if (Number gIndex) in data.groupSelection then "checked" else ""}/>"
             controls += "#{group}</label>"
 
           controls += "</div></div>"
@@ -293,9 +290,9 @@ $ ->
           element = e.target or e.srcElement
           data.setGroupIndex (Number element.value)
 
-          globals.configs.selectedGroup = Number(element.value)
+          globals.configs.groupById = Number(element.value)
 
-          globals.configs.groupSelection = for vals, keys in data.groups
+          data.groupSelection = for vals, keys in data.groups
             Number keys
 
           if startOnGroup
@@ -310,7 +307,7 @@ $ ->
           ($ '.group_input').click (e) =>
             ($ '.group_input').each () ->
               if @checked
-                globals.configs.selectedGroup = Number @value
+                globals.configs.groupById = Number @value
 
             @delayedUpdate()
 
@@ -322,12 +319,12 @@ $ ->
               if @checked
                 selection.push Number @value
               else
-            globals.configs.groupSelection = selection
+            data.groupSelection = selection
 
-            if globals.configs.groupSelection.length == data.groups.length
+            if data.groupSelection.length == data.groups.length
               ($ '#checkbox_all').prop("checked", true)
               ($ '#checkbox_all').prop("indeterminate", false)
-            else if globals.configs.groupSelection.length > 0
+            else if data.groupSelection.length > 0
               ($ '#checkbox_all').prop("checked", false)
               ($ '#checkbox_all').prop("indeterminate", true)
             else
@@ -339,11 +336,11 @@ $ ->
           # Make group checkbox for all groups
           ($ '.group_input_all').click (e) =>
             if e.target.checked
-              globals.configs.groupSelection = for vals, keys in data.groups
+              data.groupSelection = for vals, keys in data.groups
                 Number keys
               ($ '.group_input').prop 'checked', true
             else
-              globals.configs.groupSelection = []
+              data.groupSelection = []
               ($ '.group_input').prop 'checked', false
 
             @delayedUpdate()
