@@ -291,10 +291,10 @@
                   <td>
                     <div class="controls" style="float:right">
                       <% if can_hide? vis %>
-                        <a class="viz_hide" href="<%= visualization_url vis %>">Hide</a>
+                        <a class="viz_hide" href="<%= visualization_url vis %>">Hide</a> | 
                       <% end %>
                       <% if can_delete? vis %>
-                         | <a class="viz_delete" href="<%= visualization_url vis %>" name="<%= vis.title %>">Delete</a>
+                         <a class="viz_delete" href="<%= visualization_url vis %>" name="<%= vis.title %>">Delete</a>
                       <% end %>
                     </div>
                   </td>
