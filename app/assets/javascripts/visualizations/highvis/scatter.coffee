@@ -658,19 +658,15 @@ $ ->
           # Get the current selected y index, the regression type, and the current group indices
           yAxisIndex = Number(($ '#regressionYAxisSelector').val())
           regressionType = Number(($ '#regressionSelector').val())
-          groupIndices = data.groupSelection
 
-          # Get the full data so as to be clippable
-          fullData = data.dataPoints
-
-          # Clip the data so they only include the visible points
-          fullData = @clip(fullData)
+          #list of (x,y) points to be used in calculating regression
+          xyData = data.multiGroupXYSelector(@configs.xAxis, @configs.yAxis, data.groupSelection)
 
           # Separate the x and y data
           xData =
-            point[@configs.xAxis] for point in fullData
+            point.x for point in xyData
           yData =
-            point[yAxisIndex] for point in fullData
+            point.y for point in xyData
 
           # Get dash index
           dashIndex = data.normalFields.indexOf(yAxisIndex)
@@ -718,7 +714,7 @@ $ ->
             typeCount:
               count
             fieldIndices:
-              [@configs.xAxis, yAxisIndex, groupIndices]
+              [@configs.xAxis, yAxisIndex, data.groupSelection]
             fieldNames:
               [xAxisName, yAxisName]
             series:
@@ -788,7 +784,7 @@ $ ->
             if Number(input.value) == savedReg.fieldIndices[0]
               input.checked = true
 
-          @update()
+          @start()
 
         # Add a make the delete button remove the regression object
         ($ 'td#' + savedReg.series.name.id).click =>
