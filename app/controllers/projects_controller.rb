@@ -134,9 +134,6 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
     update = project_params
 
-    logger.info('\n\n\n HELLO \n\n\n')
-    logger.info(project_params)
-
     # ADMIN REQUEST
     if @cur_user.try(:admin)
       if update.key?(:featured)
