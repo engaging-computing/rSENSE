@@ -88,6 +88,8 @@ $ ->
     ###
     data.multiGroupXYSelector = (xIndex, yIndex, groupIndices) ->
 
+      console.log groupIndices
+
       allData =
         data.xySelector(xIndex, yIndex, group) for group in groupIndices
 
