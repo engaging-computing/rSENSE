@@ -48,8 +48,6 @@ $ ->
         # Used for data reduction triggering
         @updateOnZoom = 1
 
-      start: ->
-        console.log 'start', @configs.savedRegressions
         @configs.mode ?= @SYMBOLS_MODE
 
         @configs.xAxis ?= data.normalFields[0]
@@ -78,6 +76,7 @@ $ ->
 
         @configs.fullDetail ?= 0
 
+      start: ->
         super()
 
       storeXBounds: (bounds) ->
@@ -556,7 +555,6 @@ $ ->
           @storeXBounds @chart.xAxis[0].getExtremes()
           @storeYBounds @chart.yAxis[0].getExtremes()
 
-        console.log 'ser cleanup', @configs
         super()
 
       ###
@@ -581,8 +579,6 @@ $ ->
       Adds the regression tools to the control bar.
       ###
       drawRegressionControls: () ->
-        console.log 'draw regressions controls', @configs.savedRegressions
-
         controls = """
           <div id="regressionControl" class="vis_controls">
           <h3 class='clean_shrink'><a href='#'>Analysis Tools:</a></h3>
@@ -734,7 +730,6 @@ $ ->
 
           # Save a regression
           @configs.savedRegressions.push(savedRegression)
-          console.log @configs.savedRegressions, 'saving regression'
 
           # Actually add the regression to the table
           @addRegressionToTable(savedRegression, true)

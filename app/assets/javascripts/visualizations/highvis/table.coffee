@@ -149,7 +149,6 @@ $ ->
 
         # Show only the checked columns
         for f, fIndex in data.fields
-          console.log f, fIndex
           col = @table.jqGrid('getGridParam','colModel')[fIndex]
           if $.inArray(fIndex, @configs.tableFields) is -1
             @table.hideCol(col.name)
@@ -300,8 +299,7 @@ $ ->
         # Make y axis checkbox/radio handler
         ($ '.y_axis_input').click (e) =>
           index = Number e.target.value
-          console.log @configs.tableFields, index
-
+          
           if index in @configs.tableFields
             arrayRemove(@configs.tableFields, index)
           else

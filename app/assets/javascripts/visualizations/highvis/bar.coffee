@@ -33,8 +33,6 @@ $ ->
       constructor: (@canvas) ->
         super(@canvas)
 
-        console.log @configs
-
         if data.normalFields.length > 1
           @configs.displayField = data.normalFields[1]
         else @configs.displayField = data.normalFields[0]
