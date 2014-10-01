@@ -69,15 +69,24 @@ $ ->
         vis  = eval "globals.#{visName.toLowerCase()}"
         if vis? and savedConfigs[visName]?
           $.extend(vis.configs, savedConfigs[visName])
-          console.log visName, vis.configs
-
+          
       delete data.savedGlobals
 
-    ### Restore Grouping ###
+    ### Set Defaults ###
+    # Set defaults for grouping
     globals.configs.groupById ?= data.DATASET_NAME_FIELD
     data.setGroupIndex(globals.configs.groupById)
     data.groupSelection ?= for vals, keys in data.groups
       Number keys
+
+    # Set default for logY
+    globals.configs.logY ?= 0
+
+    # Set default field selection (we use [..] syntax to indicate array)
+    if data.normalFields.length > 1
+      globals.configs.fieldSelection ?= data.normalFields[1..1]
+    else
+      globals.configs.fieldSelection ?= data.normalFields[0..0]
 
     ### Generate tabs ###
     for vis of data.allVis

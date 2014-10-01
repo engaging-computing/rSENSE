@@ -32,15 +32,6 @@ $ ->
     window.globals ?= {}
     window.globals.configs ?= {}
 
-    # Set defaults for logY and grouping
-    globals.configs.logY ?= 0
-    globals.configs.groupById ?= 0
-
-    if data.normalFields.length > 1
-      globals.configs.fieldSelection ?= data.normalFields[1..1]
-    else
-      globals.configs.fieldSelection ?= data.normalFields[0..0]
-
     class window.BaseVis
       constructor: (@canvas) ->
         @configs ?= {}
@@ -183,7 +174,7 @@ $ ->
         ($ '#yAxisControl > h3').click ->
           globals.configs.yAxisOpen = (globals.configs.yAxisOpen + 1) % 2
 
-        ($ '#select-all-y').on('click', () ->
+        ($ '#select-all-y').click =>
           if data.normalFields.length != globals.configs.fieldSelection.length
             ($ '#yAxisControl').find('.y_axis_input').each (i,j) ->
               ($ j).prop('checked', true)
@@ -193,8 +184,8 @@ $ ->
               arrayRemove(globals.configs.fieldSelection, element)
             ($ '#yAxisControl').find('.y_axis_input').each (i,j) ->
               ($ j).prop('checked', false)
-          window.globals.configs.curVis.delayedUpdate()
-        )
+          @delayedUpdate()
+
       ###
       Draws group selection controls
       This includes a series of checkboxes and a selector for the grouping field.
@@ -246,9 +237,14 @@ $ ->
           controls += "style=\"color:#{color};\">"
 
           if radio
+            # Radio groups can only have on group selected
+            groupSelection = [ data.groupSelection.reduce (a, b) -> Math.min(a,b) ]
+            data.groupSelection = groupSelection
+
+            selectedGroup = data.groupSelection[0]
             controls += "<div class='radio'><label><input class='group_input' type='radio' name='groups'"
             controls += " value='#{gIndex}' "
-            controls += "#{if (Number gIndex) is globals.configs.groupById then "checked" else ""}/>"
+            controls += "#{if (Number gIndex) is selectedGroup then "checked" else ""}/>"
             controls += "#{group}</label>"
           else
             controls += "<div class='checkbox'><label><input class='group_input' type='checkbox'"
@@ -307,8 +303,7 @@ $ ->
           ($ '.group_input').click (e) =>
             ($ '.group_input').each () ->
               if @checked
-                globals.configs.groupById = Number @value
-
+                data.groupSelection = [ Number @value ]
             @delayedUpdate()
 
         else

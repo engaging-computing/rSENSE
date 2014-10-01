@@ -100,8 +100,10 @@ $ ->
     'filterFunc' is a boolean filter that must be passed (true) for a datapoint to be included.
     ###
     data.selector = (fieldIndex, groupIndex, nans = false) ->
+      groupById = globals.configs.groupById
+
       filterFunc = (dp) =>
-        (String dp[globals.configs.groupById]).toLowerCase() == @groups[groupIndex]
+        (String dp[groupById]).toLowerCase() == @groups[groupIndex]
 
       newFilterFunc = if nans
         filterFunc
@@ -245,7 +247,6 @@ $ ->
       groups = for keys of result
         keys
 
-      console.log 'making groups', groups
       groups.sort()
 
     ###

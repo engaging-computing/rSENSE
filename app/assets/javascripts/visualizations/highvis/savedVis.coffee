@@ -165,7 +165,6 @@ $ ->
         vis  = eval "globals.#{visName.toLowerCase()}"
         if vis?
           vis.serializationCleanup()
-          console.log vis.configs
           savedConfig[visName] = vis.configs
 
       # Default vises don't save data
