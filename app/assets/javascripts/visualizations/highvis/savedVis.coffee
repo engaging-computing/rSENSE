@@ -126,13 +126,15 @@ $ ->
     Ajax call to check if the user is logged in. Calls the appropriate
     given callback when completed.
     ###
-    globals.verifyUser = (succCallback, failCallback) ->
+    globals.verifyUser = (succCallback, failCallback, checkOwner) ->
 
       req = $.ajax
         type: 'GET'
         url: "/sessions/verify"
         dataType: 'json'
-        data: {}
+        data:
+          project_id: data.projectID
+          verify_owner: checkOwner
         success: (msg, status, details) ->
           succCallback()
         error: (msg, status, details) ->

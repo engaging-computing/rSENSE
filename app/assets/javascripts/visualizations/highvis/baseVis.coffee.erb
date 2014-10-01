@@ -354,7 +354,6 @@ $ ->
       Draws vis saving controls
       ###
       drawSaveControls: (e) ->
-
         if (globals.configs.options? and globals.configs.options.isEmbed?) and not @chart?
           return
 
@@ -369,10 +368,17 @@ $ ->
           controls += "Save Visualization </button>"
           controls += "</div>"
 
-          controls += "<div class='inner_control_div'>"
-          controls += "<button id='defaultVisButton' class='save_button btn btn-sm btn-primary'>"
-          controls += "Make Default </button>"
-          controls += "</div>"
+          # Default vises only apply to project vises
+          if namespace.action is 'displayVis'
+            controls += "<div class='inner_control_div'>"
+            controls += "<button id='defaultVisButton' class='save_button btn btn-sm btn-primary'>"
+            controls += "Make Default </button>"
+            controls += "</div>"
+
+        globals.verifyUser ( -> ), ( ->
+          $('#saveVisButton').attr('disabled', 'disabled')), false
+        globals.verifyUser ( -> ), (->
+          $('#defaultVisButton').remove()), true
 
         if @chart?
 
@@ -395,12 +401,12 @@ $ ->
 
         ($ "#saveVisButton").click ->
           globals.verifyUser (-> globals.saveVis()), (->
-            alert 'You must be logged in to save a visualization.')
+            alert 'You must be logged in to save a visualization.'), false
 
         ($ "#defaultVisButton").click ->
           globals.verifyUser (-> globals.defaultVis()), (->
             alert 'You must be logged in as the project owner to set a
-            default visualization.')
+            default visualization.'), true
 
         ($ '#downloadVisButton').click =>
           @chart.exportChart
