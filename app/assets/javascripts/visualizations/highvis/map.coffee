@@ -278,6 +278,10 @@ $ ->
               if @getHeatmapScale() isnt @heatmapPixelRadius
                 @delayedUpdate()
 
+          # Calls update to draw heatmap on start
+          if @configs.heatmapSelection isnt @HEATMAP_NONE
+            @delayedUpdate()
+
         checkProj = =>
           if @projOverlay.getProjection() is undefined
             google.maps.event.addListenerOnce @gmap, "idle", checkProj
