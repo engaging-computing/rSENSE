@@ -9,25 +9,25 @@
   <div class="full_width_edit" style="font-size:2em;"><%= data_set_edit_helper 'title', can_edit?(@data_set), false, "/data_sets/#{@data_set.id}" %></div>
   <div><b>Project: </b><%= link_to @data_set.project.title, project_path(@data_set.project.id)%></div><br>
   <div class="row">
+    <div id='slickgrid-container'>
+    </div>
+  </div>
+  <div class="row">*Timestamps must be in the form "yyyy/MM/dd hh:mm:ss" or a unix timestamp</div>
+  <div class="row">
     <div class="span12">
-      <div id='slickgrid-container'>
-				<i>*Timestamps must be in the form "yyyy/MM/dd hh:mm:ss" or a unix timestamp</i>
-      </div>
       <div class="edit_table_control pull-right">
+        <button id="edit_table_add" class="btn btn-success">Add Row</button>
+        <button id="edit_table_save" class="btn btn-primary">Save</button>
       </div>
     </div>
-    <script type="text/javascript">
-      $('#slickgrid-container').data('cols',<%= "#{@cols}".html_safe %>);
-      $('#slickgrid-container').data('data',<%= "#{@data}".html_safe %>);
-
-      console.log($('#slickgrid-container').data('cols'));
-      console.log($('#slickgrid-container').data('data'));
-    </script
   </div>
-
   <script type="text/javascript">
+    $('#slickgrid-container').data('cols',<%= "#{@cols}".html_safe %>);
+    $('#slickgrid-container').data('data',<%= "#{@data}".html_safe %>);
   </script>
 
 <%else%>
+
   You are not authorized to view this page.
+  
 <%end%>
