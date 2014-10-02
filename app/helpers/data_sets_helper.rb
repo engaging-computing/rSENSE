@@ -5,8 +5,9 @@ module DataSetsHelper
   end
 
   def format_slickgrid(fields, data_set)
-    cols, data = [fields, data_set.data]
+    cols, data = [fields, data_set]
     cols, data = format_slickgrid_merge cols, data
+    cols, data = format_slickgrid_populate cols, data
     cols, data = format_slickgrid_editors cols, data
     cols, data = format_slickgrid_json cols, data
     [cols, data]
@@ -51,14 +52,25 @@ module DataSetsHelper
     end
   end
 
+  def format_slickgrid_populate(cols, data)
+    new_data = nil
+    if data != []
+      [cols, data]
+    elsif
+      data = {id: 0}
+      cols.each {|x| data[x[:id]] = ''}
+      [cols, [data]]
+    end      
+  end
+
   def format_slickgrid_editors(cols, data)
     cols_editors = cols.map.with_index do |x, i|
       editor = case x[:field_type]
         when 1 then 'Slick.Editors.Text'
         when 2 then 'Slick.Editors.Integer'
         when 3 then 'Slick.Editors.Text'
-        when 4 then 'Slick.Editors.Integer'
-        when 5 then 'Slick.Editors.Integer'
+        when 4 then 'Slick.Editors.Text'
+        when 5 then 'Slick.Editors.Text'
         else 'Slick.Editors.Text'
       end
       field = "slickgrid-#{x[:id]}"
@@ -73,7 +85,6 @@ module DataSetsHelper
       "{\"id\":\"#{x[:id]}\",\"name\":\"#{x[:name]}\",\"field\":\"#{x[:field]}\",\"editor\":#{x[:editor]}}"
     end.join ','
 
-    puts "#{cols_json} \n"
     ["[#{cols_json}]", data]
   end
 end

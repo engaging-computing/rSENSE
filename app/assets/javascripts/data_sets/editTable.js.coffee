@@ -1,14 +1,18 @@
 uploadSettings =
   dataType: 'JSON'
-  location: '#'
-  method: 'PUT'
+  urlEdit: '#'
+  urlEntry: window.location.pathname.substr(0, window.location.pathname.lastIndexOf("/")) + "/jsonDataUpload"
+  methodEdit: 'PUT'
+  methodEntry: 'POST'
   error: (jqXHR, textStatus, errorThrown) ->
     ($ '#edit_table_add').removeClass 'disabled'
     ($ '#edit_table_save').button 'reset'
     console.log [textStatus, errorThrown]
     alert "An upload error occurred."
-  success: (data, textStatus, jqXHR) ->
+  successEdit: (data, textStatus, jqXHR) ->
     window.location = data.redirect
+  successEntry: (data, textStatus, jqXHR) ->
+    window.location = data['displayURL']
 
 setupTable = (cols, data) ->
   options =
@@ -63,6 +67,7 @@ ajaxifyGrid = (view) ->
 IS.onReady 'data_sets/edit', ->
   cols = ($ '#slickgrid-container').data 'cols'
   data = ($ '#slickgrid-container').data 'data'
+
   rets = setupTable cols, data
   grid = rets[0]
   view = rets[1]
@@ -84,13 +89,45 @@ IS.onReady 'data_sets/edit', ->
       data: ajaxifyGrid view
 
     $.ajax
-      url: "#{uploadSettings.location}"
-      type: "#{uploadSettings.method}"
+      url: "#{uploadSettings.urlEdit}"
+      type: "#{uploadSettings.methodEdit}"
       dataType: "#{uploadSettings.dataType}"
       data: ajaxData
       error: uploadSettings.error
-      success: uploadSettings.success
+      success: uploadSettings.successEdit
 
 IS.onReady 'data_sets/manualEntry', ->
   cols = ($ '#slickgrid-container').data 'cols'
-  grid = setupTable cols, []
+  data = ($ '#slickgrid-container').data 'data'
+
+  rets = setupTable cols, data
+  grid = rets[0]
+  view = rets[1]
+
+  ($ '#edit_table_add').click ->
+    fields = {id: view.getLength()}
+    for x in cols
+      fields[x.field] = ''
+    view.addItem fields
+
+  ($ '#edit_table_save').click ->
+    if ($ '#edit_table_save').hasClass 'disabled'
+      return
+
+    ($ '#edit_table_add').addClass 'disabled'
+    ($ '#edit_table_save').addClass 'disabled'
+    ($ '#edit_table_save').text 'Saving...'
+
+    ajaxData =
+      data: ajaxifyGrid view
+      title: ($ '#data_set_name').val()
+
+    console.log ajaxData
+
+    $.ajax
+      url: "#{uploadSettings.urlEntry}"
+      type: "#{uploadSettings.methodEntry}"
+      dataType: "#{uploadSettings.dataType}"
+      data: ajaxData
+      error: uploadSettings.error
+      success: uploadSettings.successEntry
