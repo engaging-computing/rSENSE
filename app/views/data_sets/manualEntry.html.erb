@@ -22,26 +22,22 @@
 </div>
 
 <div class="row">
-  <div style="margin-bottom:20px" class="col-lg-12">
-    <div style="overflow-x: auto;">
-      <table id="manualTable" data-project-id="<%= @project.id %>" class="table table-bordered table-striped">
-        <thead>
-          <tr>
-          <% for field in @project.fields %>
-            <th data-field-type="<%= get_field_name(field.field_type) %>" data-field-id="<%= field.id %>" data-field-restrictions="<%= field.restrictions %>" data-field-name="<%= field.name %>" ><%= field.name %>
-            <% if field.unit != "" and !field.unit.nil? %>
-              (<%=field.unit%>)
-            <% end %></th>
-          <% end %>
-          </tr>
-        </thead>
-  
-        <tbody>
-        </tbody>
-      </table>
-      <i>*Timestamps must be in the form "yyyy/MM/dd hh:mm:ss" or a unix timestamp</i>
-    </div>
+  <div id='slickgrid-container'>
+  </div>
+</div>
+
+<div class="row">*Timestamps must be in the form "yyyy/MM/dd hh:mm:ss" or a unix timestamp</div>
+
+<div class="row">
+  <div class="span12">
     <div class="edit_table_control pull-right">
+      <button id="edit_table_add" class="btn btn-success">Add Row</button>
+      <button id="edit_table_save" class="btn btn-primary">Save</button>
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+  $('#slickgrid-container').data('cols',<%= "#{@cols}".html_safe %>);
+  $('#slickgrid-container').data('data',<%= "#{@data}".html_safe %>);
+</script>
