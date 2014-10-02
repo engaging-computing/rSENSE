@@ -15,6 +15,5 @@ class SaveRecords < ActiveRecord::Migration
     Visualization.all.each do |v|
       v.save!
     end
-
   end
 end
