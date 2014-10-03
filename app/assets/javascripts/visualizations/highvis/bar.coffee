@@ -107,14 +107,7 @@ $ ->
           @chart.series[@chart.series.length - 1].remove false
 
         ### --- ###
-        tempGroupIDValuePairs = for groupName, groupIndex in data.groups when groupIndex in globals.groupSelection
-          switch @analysisType
-            when @ANALYSISTYPE_TOTAL    then [groupIndex, (data.getTotal     @sortField, groupIndex)]
-            when @ANALYSISTYPE_MAX      then [groupIndex, (data.getMax       @sortField, groupIndex)]
-            when @ANALYSISTYPE_MIN      then [groupIndex, (data.getMin       @sortField, groupIndex)]
-            when @ANALYSISTYPE_MEAN     then [groupIndex, (data.getMean      @sortField, groupIndex)]
-            when @ANALYSISTYPE_MEDIAN   then [groupIndex, (data.getMedian    @sortField, groupIndex)]
-            when @ANALYSISTYPE_COUNT    then [groupIndex, (data.getCount     @sortField, groupIndex)]
+        tempGroupIDValuePairs = @getGroupedData(@displayField, @sortField)
 
         if @sortField != @SORT_DEFAULT
           fieldSortedGroupIDValuePairs = tempGroupIDValuePairs.sort (a,b) ->
@@ -181,81 +174,7 @@ $ ->
             type: 'area'
             xAxis: 1
 
-      drawToolControls: ->
-
-        controls =  '<div id="toolControl" class="vis_controls">'
-
-        controls += "<h3 class='clean_shrink'><a href='#'>Tools:</a></h3>"
-        controls += "<div class='outer_control_div'>"
-
-        controls += "<div class='inner_control_div'>"
-        controls += 'Sort by: <select id="sortField" class="sortField form-control">'
-
-        tempFields = for fieldID in data.normalFields
-          [fieldID, data.fields[fieldID].fieldName]
-
-        tempFields = [].concat [[@SORT_DEFAULT, 'Group Name']], tempFields
-
-        for [fieldID, fieldName] in tempFields
-          selected = if @sortField is fieldID then 'selected' else ''
-          controls += "<option value='#{fieldID}' #{selected}>#{fieldName}</option>"
-
-        controls += '</select></div><br>'
-
-        controls += "<h4 class='clean_shrink'>Analysis Type</h4><div id='analysis_types'>"
-
-        for typestring, type in @analysisTypeNames
-
-          controls += "<div class='inner_control_div'>"
-
-          controls += "<div class='radio'><label><input type='radio' class='analysisType' "
-          controls += "name='analysisTypeSelector' value='"
-          controls += "#{type}' #{if type is @analysisType then 'checked' else ''}> "
-
-          switch typestring
-            when 'Max' then controls += 'Maximum </label> </div>'
-            when 'Min' then controls += 'Minimum </label> </div>'
-            when 'Mean' then controls += 'Mean (Average)</label></div>'
-            else controls += "#{typestring} </label></div>"
-
-          controls += '</div>'
-
-        controls += "</div><h4 class='clean_shrink'>Other</h4>"
-
-        if data.logSafe is 1
-          controls += '<div class="inner_control_div">'
-          controls += "<div class='checkbox'><label><input class='logY_box' type='checkbox' "
-          controls += "name='tooltip_selector' #{if globals.logY is 1 then 'checked' else ''}/> "
-          controls += "Logarithmic Y Axis</label></div>"
-          controls += "</div>"
-
-        controls += '</div></div>'
-
-        ### --- ###
-        # Write HTML
-        ($ '#controldiv').append controls
-
-        ($ '.analysisType').change (e) =>
-          @analysisType = Number e.target.value
-          @delayedUpdate()
-
-        ($ '#sortField').change (e) =>
-          @sortField = Number e.target.value
-          @delayedUpdate()
-
-        ($ '.logY_box').click (e) =>
-          globals.logY = (globals.logY + 1) % 2
-          @start()
-
-        # Set up accordion
-        globals.toolsOpen ?= 0
-
-        ($ '#toolControl').accordion
-          collapsible:true
-          active:globals.toolsOpen
-
-        ($ '#toolControl > h3').click ->
-          globals.toolsOpen = (globals.toolsOpen + 1) % 2
+      
 
       drawYAxisControls: ->
         super()
@@ -264,7 +183,7 @@ $ ->
         super()
         @drawGroupControls()
         @drawYAxisControls()
-        @drawToolControls()
+        @drawToolControls(true, true)
         @drawSaveControls()
 
 

@@ -87,7 +87,32 @@ $ ->
 
           See logged stack trace in console.
           """
-
+      ###
+      Calculate grouped data with a specific analysis yype for Bar Chart and Pie Chart.
+      ###
+      getGroupedData: (display, sort = null) ->
+        
+        # Pie Chart data format
+        if sort is null
+          for groupName, groupIndex in data.groups when groupIndex in globals.groupSelection
+            switch @analysisType
+              when @ANALYSISTYPE_TOTAL    then [groupName, (data.getTotal     display, groupIndex)]
+              when @ANALYSISTYPE_MAX      then [groupName, (data.getMax       display, groupIndex)]
+              when @ANALYSISTYPE_MIN      then [groupName, (data.getMin       display, groupIndex)]
+              when @ANALYSISTYPE_MEAN     then [groupName, (data.getMean      display, groupIndex)]
+              when @ANALYSISTYPE_MEDIAN   then [groupName, (data.getMedian    display, groupIndex)]
+              when @ANALYSISTYPE_COUNT    then [groupName, (data.getCount     display, groupIndex)]
+        
+        # Bar Chart data format
+        else
+          for groupName, groupIndex in data.groups when groupIndex in globals.groupSelection
+            switch @analysisType
+              when @ANALYSISTYPE_TOTAL    then [groupIndex, (data.getTotal     sort, groupIndex)]
+              when @ANALYSISTYPE_MAX      then [groupIndex, (data.getMax       sort, groupIndex)]
+              when @ANALYSISTYPE_MIN      then [groupIndex, (data.getMin       sort, groupIndex)]
+              when @ANALYSISTYPE_MEAN     then [groupIndex, (data.getMean      sort, groupIndex)]
+              when @ANALYSISTYPE_MEDIAN   then [groupIndex, (data.getMedian    sort, groupIndex)]
+              when @ANALYSISTYPE_COUNT    then [groupIndex, (data.getCount     sort, groupIndex)]
       ###
       Draws controls
       Derived classes should write control HTML and bind handlers using the method such as drawGroupControls.
@@ -418,7 +443,82 @@ $ ->
 
         ($ '#saveControl > h3').click ->
           globals.saveOpen = (globals.saveOpen + 1) % 2
+      ###
+      Draws the Tool Controls for Bar Chart and Pie Chart:
+      ###
+      drawToolControls: (sortBy = false, logYAxis = false) ->
 
+        controls =  '<div id="toolControl" class="vis_controls">'
+
+        controls += "<h3 class='clean_shrink'><a href='#'>Tools:</a></h3>"
+        controls += "<div class='outer_control_div'>"
+        if sortBy
+          controls += "<div class='inner_control_div'>"
+          controls += 'Sort by: <select id="sortField" class="sortField form-control">'
+
+          tempFields = for fieldID in data.normalFields
+            [fieldID, data.fields[fieldID].fieldName]
+
+          tempFields = [].concat [[@SORT_DEFAULT, 'Group Name']], tempFields
+
+          for [fieldID, fieldName] in tempFields
+            selected = if @sortField is fieldID then 'selected' else ''
+            controls += "<option value='#{fieldID}' #{selected}>#{fieldName}</option>"
+
+          controls += '</select></div><br>'
+
+        controls += "<h4 class='clean_shrink'>Analysis Type</h4><div id='analysis_types'>"
+        for typestring, type in @analysisTypeNames
+
+          controls += "<div class='inner_control_div'>"
+
+          controls += "<div class='radio'><label><input type='radio' class='analysisType' "
+          controls += "name='analysisTypeSelector' value='"
+          controls += "#{type}' #{if type is @analysisType then 'checked' else ''}> "
+
+          switch typestring
+            when 'Max' then controls += 'Maximum </label> </div>'
+            when 'Min' then controls += 'Minimum </label> </div>'
+            when 'Mean' then controls += 'Mean (Average)</label></div>'
+            else controls += "#{typestring} </label></div>"
+
+          controls += '</div>'
+
+        if data.logSafe is 1 and logYAxis
+          controls += "</div><h4 class='clean_shrink'>Other</h4>"
+          controls += '<div class="inner_control_div">'
+          controls += "<div class='checkbox'><label><input class='logY_box' type='checkbox' "
+          controls += "name='tooltip_selector' #{if globals.logY is 1 then 'checked' else ''}/> "
+          controls += "Logarithmic Y Axis</label></div>"
+          controls += "</div>"
+
+        controls += '</div></div>'
+
+        ### --- ###
+        # Write HTML
+        ($ '#controldiv').append controls
+
+        ($ '.analysisType').change (e) =>
+          @analysisType = Number e.target.value
+          @delayedUpdate()
+
+        ($ '#sortField').change (e) =>
+          @sortField = Number e.target.value
+          @delayedUpdate()
+
+        ($ '.logY_box').click (e) =>
+          globals.logY = (globals.logY + 1) % 2
+          @start()
+
+        # Set up accordion
+        globals.toolsOpen ?= 0
+
+        ($ '#toolControl').accordion
+          collapsible:true
+          active:globals.toolsOpen
+
+        ($ '#toolControl > h3').click ->
+          globals.toolsOpen = (globals.toolsOpen + 1) % 2
       ###
       Hides the control div and remembers its previous size.
       ###
