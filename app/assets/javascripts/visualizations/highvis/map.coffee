@@ -346,10 +346,11 @@ $ ->
         super()
 
       end: ->
-        ($ '#' + @canvas).hide()
         @heatmap = undefined
         if @gmap?
           @configs.mapType = @gmap.getMapTypeId()
+
+        super()
 
       drawControls: ->
         super()
