@@ -177,7 +177,6 @@ $ ->
         globals: (JSON.stringify savedConfig)
         data: (JSON.stringify dataCpy)
 
-
     ###
     Ajax call to update the project's default vis with the current settings.
     ###

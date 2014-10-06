@@ -68,15 +68,8 @@ $ ->
       Should destroy the chart, hide its canvas and remove controls.
       ###
       end: ->
-        console.log console.trace()
-        alert   """
-          BAD IMPLEMENTATION ALERT!
-
-          Called: 'BaseVis.end'
-
-          See logged stack trace in console.
-          """
-
+        ($ '#' + @canvas).hide()
+        
       ###
       Draws controls
       Derived classes should write control HTML and bind handlers using the method such as drawGroupControls.
@@ -600,11 +593,10 @@ $ ->
           @chart.destroy()
           @chart = undefined
 
-        ($ '#' + @canvas).hide()
+        super()
 
       ###
       Remove the chart and chart options object
       ###
       serializationCleanup: ->
-        #delete @chart
-        #delete @chartOptions
+        # Projects no longer get destroyed on serialize

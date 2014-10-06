@@ -105,8 +105,8 @@ $ ->
         super()
 
       end: ->
-        ($ '#' + @canvas).hide()
-
+        super()
+        
       drawControls: ->
         super()
         @drawGroupControls(true, true)

@@ -68,7 +68,6 @@ $ ->
 
       # Gets called when the controls are clicked and at start
       update: ->
-
         # Updates controls by default
         ($ '#' + @canvas).html('')
         ($ '#' + @canvas).append '<table id="data_table" class="table table-striped"></table>'
@@ -198,7 +197,7 @@ $ ->
         super()
 
       end: ->
-        ($ '#' + @canvas).hide()
+        @saveSort()
 
       resize: (newWidth, newHeight, aniLength) ->
         # In the case that this was called by the hide button, this gets called a second time
@@ -212,6 +211,9 @@ $ ->
         @drawSaveControls()
 
       serializationCleanup: ->
+        @saveSort()
+
+      saveSort: ->
         if @table?
           # Save the sort state
           @configs.sortName = @table.getGridParam('sortname')
@@ -220,6 +222,7 @@ $ ->
           # Save the table filters
           if @table.getGridParam('postData').filters?
             @configs.searchParams = jQuery.parseJSON(@table.getGridParam('postData').filters).rules
+
 
       ###
       JQGrid time formatting (to implement search post formatting)
