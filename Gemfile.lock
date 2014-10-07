@@ -215,7 +215,7 @@ PLATFORMS
 
 DEPENDENCIES
   bcrypt-ruby
-  better_colorpicker!
+  better_colorpicker (~> 0.0.2)!
   bootstrap-sass
   browser
   capybara
