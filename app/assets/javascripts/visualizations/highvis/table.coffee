@@ -198,6 +198,7 @@ $ ->
 
       end: ->
         @saveSort()
+        super()
 
       resize: (newWidth, newHeight, aniLength) ->
         # In the case that this was called by the hide button, this gets called a second time
@@ -302,7 +303,7 @@ $ ->
         # Make y axis checkbox/radio handler
         ($ '.y_axis_input').click (e) =>
           index = Number e.target.value
-          
+
           if index in @configs.tableFields
             arrayRemove(@configs.tableFields, index)
           else

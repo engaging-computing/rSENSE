@@ -106,7 +106,7 @@ $ ->
 
       end: ->
         super()
-        
+
       drawControls: ->
         super()
         @drawGroupControls(true, true)

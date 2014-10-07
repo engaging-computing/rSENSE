@@ -69,7 +69,7 @@ $ ->
         vis  = eval "globals.#{visName.toLowerCase()}"
         if vis? and savedConfigs[visName]?
           $.extend(vis.configs, savedConfigs[visName])
-          
+
       delete data.savedGlobals
 
     ### Set Defaults ###

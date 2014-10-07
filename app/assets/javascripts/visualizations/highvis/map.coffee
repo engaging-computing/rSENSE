@@ -370,18 +370,11 @@ $ ->
         controls += '<div class="inner_control_div"> Map By: '
         controls += '<select id="heatmapSelector" class="form-control">'
 
-        # TODO Please fix me I'm terrible
-        sel =
-          if @configs.heatmapSelection is @HEATMAP_NONE then 'selected'
-          else ''
+        sel = if @configs.heatmapSelection is @HEATMAP_NONE then 'selected' else ''
         controls += "<option value=\"#{@HEATMAP_NONE}\" #{sel}>None</option>"
 
-        sel =
-          if @configs.heatmapSelection is @HEATMAP_MARKERS then 'selected'
-          else ''
-        controls +=
-          "<option value=\"#{@HEATMAP_MARKERS}\" #{sel}>Marker Density</option>"
-        # End TODO
+        sel = if @configs.heatmapSelection is @HEATMAP_MARKERS then 'selected' else ''
+        controls += "<option value=\"#{@HEATMAP_MARKERS}\" #{sel}>Marker Density</option>"
 
         for fieldIndex in data.normalFields
           sel = if @configs.heatmapSelection is fieldIndex then 'selected' else ''
