@@ -57,7 +57,7 @@ class SessionsController < ApplicationController
       id = Project.find(params[:project_id]).user_id
       verify = params[:verify_owner] == 'true'
       permission = (verify && id == session[:user_id]) || !verify
-      
+
       if session[:user_id].nil? || !permission
         format.json { render json: '{}', status: :unauthorized }
       else
