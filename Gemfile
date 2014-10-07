@@ -30,7 +30,7 @@ group :development, :test do
 end
 
 # Jquery stuff
-gem 'better_colorpicker', git: 'https://github.com/asalani93/better-colorpicker'
+gem 'better_colorpicker', '~> 0.0.2', git: 'https://github.com/asalani93/better-colorpicker'
 gem 'jquery-rails'
 
 # To use ActiveModel has_secure_password
