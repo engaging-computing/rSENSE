@@ -4,6 +4,7 @@ require 'store_file'
 class Visualization < ActiveRecord::Base
   include ActionView::Helpers::DateHelper
   include ActionView::Helpers::SanitizeHelper
+  include AutoHtml
 
   # attr_accessible :content, :data, :project_id, :globals, :title, :user_id, :hidden, :featured,
   #  :featured_at, :tn_src, :tn_file_key, :summary, :thumb_id
@@ -94,6 +95,8 @@ class Visualization < ActiveRecord::Base
   end
 
   def summernote_media_objects
-    self.content = MediaObject.create_media_objects(content, 'visualization_id', id, user_id)
+    self.content = auto_html MediaObject.create_media_objects(content, 'visualization_id', id, user_id) do
+      youtube(:autoplay => false)
+    end
   end
 end

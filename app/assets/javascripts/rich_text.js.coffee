@@ -9,7 +9,7 @@ showEditor = () ->
       ['style', ['style', 'bold', 'italic']],
       ['para', ['ul', 'ol', 'paragraph']],
       ['misc', ['codeview']],
-      ['insert', ['picture', 'link', 'video']],
+      ['insert', ['picture', 'link']],
     ]
   )
   

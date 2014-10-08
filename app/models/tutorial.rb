@@ -3,6 +3,7 @@ require 'nokogiri'
 class Tutorial < ActiveRecord::Base
   include ActionView::Helpers::DateHelper
   include ActionView::Helpers::SanitizeHelper
+  include AutoHtml
 
   has_many :media_objects
 
@@ -63,6 +64,8 @@ class Tutorial < ActiveRecord::Base
   end
 
   def summernote_media_objects
-    self.content = MediaObject.create_media_objects(content, 'tutorial_id', id, user_id)
+    self.content = auto_html MediaObject.create_media_objects(content, 'tutorial_id', id, user_id) do
+      youtube(:autoplay => false)
+    end
   end
 end
