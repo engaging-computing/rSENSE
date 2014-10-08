@@ -1,6 +1,6 @@
 require 'nokogiri'
-
 class Project < ActiveRecord::Base
+  include AutoHtml
   include ApplicationHelper
   include ActionView::Helpers::DateHelper
   include ActionView::Helpers::SanitizeHelper
@@ -275,8 +275,9 @@ class Project < ActiveRecord::Base
   end
 
   def summernote_media_objects
-    self.content = auto_html MediaObject.create_media_objects(content, 'project_id', id, user_id)
-  end
+    self.content = MediaObject.create_media_objects(content, 'project_id', id, user_id)
+      #youtube(:width => 400, :height => 250, :autoplay => false)
+  end 
 end
 
 # where filter like filters[0] AND filter like filters[1]
