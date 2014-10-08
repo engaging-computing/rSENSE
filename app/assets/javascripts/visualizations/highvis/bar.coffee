@@ -86,10 +86,14 @@ $ ->
         super()
 
         # Default Sort
-        @configs.sortField ?= if globals.configs.fieldSelection? then globals.configs.fieldSelection[0] else @SORT_DEFAULT
+        @configs.sortField ?=
+          if globals.configs.fieldSelection?
+            globals.configs.fieldSelection[0]
+          else @SORT_DEFAULT
 
         # Restrict analysis type to only row count if the y field is "Data Point"
-        if (globals.configs.fieldSelection[0] is data.DATA_POINT_ID_FIELD and globals.configs.fieldSelection.length is 1)
+        if (globals.configs.fieldSelection[0] is data.DATA_POINT_ID_FIELD and
+        globals.configs.fieldSelection.length is 1)
           for option, row in ($ '#analysis_types').children()
             if row isnt @ANALYSISTYPE_COUNT then $(option).hide()
 
