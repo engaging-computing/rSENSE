@@ -276,9 +276,9 @@ class Project < ActiveRecord::Base
 
   def summernote_media_objects
     self.content = auto_html MediaObject.create_media_objects(content, 'project_id', id, user_id) do
-      youtube(:autoplay => false)
+      youtube(autoplay: false)
     end
-  end 
+  end
 end
 
 # where filter like filters[0] AND filter like filters[1]
