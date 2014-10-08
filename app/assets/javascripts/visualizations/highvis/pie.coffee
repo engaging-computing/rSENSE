@@ -40,16 +40,28 @@ $ ->
             data.textFields[2]
           else
             'Percent'
+      ANALYSISTYPE_TOTAL:     0
+      ANALYSISTYPE_MAX:       1
+      ANALYSISTYPE_MIN:       2
+      ANALYSISTYPE_MEAN:      3
+      ANALYSISTYPE_MEDIAN:    4
+      ANALYSISTYPE_COUNT:     5
 
+
+      analysisTypeNames: ["Total","Max","Min","Mean","Median","Row Count"]
+
+      analysisType:         0
+      restoreAnalysisType:  false
+      savedAnalysisType:    0
+      
       start: () ->
         super()
 
       update: () ->
         @selectName = data.fields[data.groupingFieldIndex].fieldName
-        @getGroupedData()
+        @displayData = @getGroupedData(@displayField)
         while @chart.series.length > 0
           @chart.series[@chart.series.length - 1].remove false
-
         @displayColors = []
         for number in globals.groupSelection
           @displayColors.push(globals.colors[number])
@@ -59,31 +71,12 @@ $ ->
           colors: @displayColors
         @chart.setTitle { text: "#{@selectName} by #{data.fields[@displayField].fieldName}" }
         @chart.addSeries options, false
-
         @chart.redraw()
-
-      getGroupedData: ->
-        @displayData = data.dataPoints.reduce (prev, next) =>
-          if typeof prev[next[data.groupingFieldIndex]] != "undefined"
-            prev[next[data.groupingFieldIndex]] = prev[next[data.groupingFieldIndex]] + next[@displayField]
-          else
-            prev[next[data.groupingFieldIndex]] = next[@displayField]
-          prev
-        , {}
-        @displayData = Object.keys(@displayData).reduce (prev, key) =>
-          if data.groups.indexOf(key.toLowerCase()) in globals.groupSelection
-            if (grouping[0] for grouping in prev).indexOf(key.toLowerCase()) isnt -1
-              prev.indexOf(grouping)[1] = @displayData[key] + prev.indexOf(grouping)[1]
-            else prev.push [key.toLowerCase() or "No #{@selectName}", @displayData[key]]
-          prev
-        , []
 
       buildOptions: ->
         super()
-
         self = this
         @chartOptions
-
         $.extend true, @chartOptions,
           chart:
             type: "pie"
@@ -101,6 +94,7 @@ $ ->
         super()
         @drawGroupControls false, false, false
         @drawYAxisControls true, false # Naming here is less than ideal
+        @drawToolControls()
         @drawSaveControls()
 
     if "Pie" in data.relVis
