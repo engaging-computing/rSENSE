@@ -230,7 +230,7 @@ $ ->
           controls += "style=\"color:#{color};\">"
 
           if radio
-            # Radio groups can only have on group selected
+            # Radio groups can only have one group selected
             groupSelection = [ data.groupSelection.reduce (a, b) -> Math.min(a,b) ]
             data.groupSelection = groupSelection
 
