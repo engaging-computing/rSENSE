@@ -54,9 +54,12 @@ class SessionsController < ApplicationController
   # GET /sessions/verify
   def verify
     respond_to do |format|
-      id = Project.find(params[:project_id]).user_id
-      verify = params[:verify_owner] == 'true'
-      permission = (verify && id == session[:user_id]) || !verify
+      permission = true
+      unless params[:project_id].nil? || params[:verify_owner].nil?
+        id = Project.find(params[:project_id]).user_id
+        verify = params[:verify_owner] == 'true'
+        permission = (verify && id == session[:user_id]) || !verify
+      end
 
       if session[:user_id].nil? || !permission
         format.json { render json: '{}', status: :unauthorized }
