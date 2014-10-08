@@ -2,6 +2,7 @@ require 'nokogiri'
 
 class News < ActiveRecord::Base
   include ActionView::Helpers::DateHelper
+  include AutoHtml
 
   validates :title, length: { maximum: 128 }
   validates :summary, length: { maximum: 256 }
@@ -37,6 +38,8 @@ class News < ActiveRecord::Base
   end
 
   def summernote_media_objects
-    self.content = MediaObject.create_media_objects(content, 'news_id', id, user_id)
+    self.content = auto_html MediaObject.create_media_objects(content, 'news_id', id, user_id) do
+      youtube(:autoplay => false)
+    end
   end
 end
