@@ -104,12 +104,13 @@ class RefactorSavedVises < ActiveRecord::Migration
 
       # Revert back to the previous configurations
       temp = globals['globals']
-      globals.delete('globals')
       for key in temp.keys
         undo_extract_globals(key, globals, temp)
       end
       undo_move_vars(globals, data)
       undo_refactor_names(globals)
+
+      globals.delete('globals')
 
       # Update the globals
       v.globals = JSON.dump(globals)
