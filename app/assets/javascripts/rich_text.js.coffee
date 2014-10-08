@@ -3,15 +3,15 @@ showEditor = () ->
   $('#content-viewer').hide()
   $('#content-editor').show()
 
-  $('#content-area').summernote({
+  $('#content-area').summernote(
     height: 400,
     toolbar: [
       ['style', ['style', 'bold', 'italic']],
       ['para', ['ul', 'ol', 'paragraph']],
       ['misc', ['codeview']],
-      ['insert', ['picture', 'link']],
+      ['insert', ['picture', 'link', 'video', 'table']],
     ]
-  })
+  )
   
   $('#content-area').code($('#content-area').val())
 

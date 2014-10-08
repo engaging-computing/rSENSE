@@ -275,7 +275,7 @@ class Project < ActiveRecord::Base
   end
 
   def summernote_media_objects
-    self.content = MediaObject.create_media_objects(content, 'project_id', id, user_id)
+    self.content = auto_html MediaObject.create_media_objects(content, 'project_id', id, user_id)
   end
 end
 
