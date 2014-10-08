@@ -81,8 +81,8 @@ class RefactorSavedVises < ActiveRecord::Migration
 
       # Pull out anything that's not in vises into a globals object
       temp = {}
-      for key in globals.keys
-        if !vises.include?(key)
+      globals.keys.each do | key |
+        unless vises.include?(key)
           extract_globals(key, globals, temp)
         end
       end
@@ -104,7 +104,7 @@ class RefactorSavedVises < ActiveRecord::Migration
 
       # Revert back to the previous configurations
       temp = globals['globals']
-      for key in temp.keys
+      temp.keys.each do | key |
         undo_extract_globals(key, globals, temp)
       end
       undo_move_vars(globals, data)
