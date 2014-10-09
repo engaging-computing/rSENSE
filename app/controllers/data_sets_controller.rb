@@ -290,8 +290,11 @@ class DataSetsController < ApplicationController
       value = params[:gdoc]
       if value.include?('key=')
         value = value.split('key=')[1].split('&')[0]
+        gcsv = "https://docs.google.com/spreadsheet/pub?key=#{value}&single=true&gid=0&output=csv"
+      elsif value.include?('spreadsheets/d/')
+        value = value.split('spreadsheets/d/')[1].split('/')[0]
+        gcsv = "https://docs.google.com/spreadsheets/d/#{value}/export?gid=0&format=csv"
       end
-      gcsv = "https://docs.google.com/spreadsheet/pub?key=#{value}&single=true&gid=0&output=csv"
     end
 
     if params[:file]
