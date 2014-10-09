@@ -111,7 +111,7 @@ class UploadDataTest < ActionDispatch::IntegrationTest
 
     # Test linking a google doc
     click_on 'Google Doc'
-    assert page.has_content? 'Please enter the Google Drive link (or key) to share below:'
+    assert page.has_content? 'Please enter the Google Spreadsheet \'Share\' link below:'
     find('#doc_url').set('https://docs.google.com/spreadsheet/pub?key=0Aos8U59XvkPkdHI5bmJJaE5tc2xoRVJoaWRNSUp6Q2c&single=true&gid=0&output=csv')
     click_on 'Save'
     assert page.has_content?('Match Quality')
