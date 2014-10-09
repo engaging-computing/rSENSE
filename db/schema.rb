@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140915154158) do
+ActiveRecord::Schema.define(version: 20141006155607) do
 
   create_table "contrib_keys", force: true do |t|
     t.string   "name",       null: false
@@ -95,6 +95,7 @@ ActiveRecord::Schema.define(version: 20140915154158) do
     t.datetime "curated_at"
     t.text     "default_vis"
     t.integer  "precision",                     default: 4
+    t.string   "globals"
   end
 
   create_table "tutorials", force: true do |t|
