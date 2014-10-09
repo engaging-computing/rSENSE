@@ -193,4 +193,6 @@ $ ->
             globals: savedData.globals
             default_vis: data.defaultVis
         success: ->
-          alert 'Project defaults updated successfully.'
+          quickFlash('Project defaults updated successfully', 'success')
+        error: ->
+          quickFlash('Failed to update project defaults', 'error')
