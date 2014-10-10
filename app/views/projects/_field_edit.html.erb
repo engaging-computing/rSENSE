@@ -1,7 +1,9 @@
-<tr class="<%= cycle('feed-even', 'feed-odd')%> fields" >
-  <td style="max-width:95px" class="field_name" field_id="<%=field.id%>"> <div class="truncate"><%=field.name%></div></td>
-  <td style="max-width:95px" class="field_unit"> <div class="truncate">
-    <%=field.unit%>
-  </div></td>
-  <td class="field_type" value="<%=get_field_name(field.field_type)%>"><div><%=get_field_name(field.field_type)%></div></td>
-</tr>
+<% @project.fields.each do |field|%>
+  <tr class="<%= cycle('feed-even', 'feed-odd')%> fields" >
+    <td style="max-width:95px" class="field_name" field_id="<%=field.id%>"> <div class="truncate"><%=field.name%></div></td>
+    <td style="max-width:95px" class="field_unit"> <div class="truncate">
+      <%=field.unit%>
+    </div></td>
+    <td class="field_type" value="<%=get_field_name(field.field_type)%>"><div><%=get_field_name(field.field_type)%></div></td>
+  </tr>
+<% end %>

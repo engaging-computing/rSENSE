@@ -1,5 +1,4 @@
 <div class="row">
-  <% logger.info @results %>
   <% if ((@results.class) == String) %><%@results =  eval(@results)  %><%end%>
   <% matches = @results[:partial_matches]%>
   <div class="col-lg-12">
@@ -7,8 +6,8 @@
       <div class="row form-group">
         <div class="col-lg-3 col-lg-offset-3">
           <label for="title"><b>Title</b></label>
-          <input type="text" id="title" name="title" value="<%=@default_name%>" class="form-control" autofocus>
-  		</div>
+          <input type="text" id="title" name="title" value="<%=@filename%>" class="form-control" autofocus>
+        </div>
         <% if @cur_user.nil? %>
           <div class="col-lg-3">
             <input type="hidden" id="contrib_name" name="contrib_name" value="<%=session[:contributor_name]%>">
@@ -65,3 +64,4 @@
     <% end %>
   </div>  
 </div>
+

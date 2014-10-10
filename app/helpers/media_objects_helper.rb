@@ -1,26 +1,4 @@
 module MediaObjectsHelper
-  def media_object_edit_menu_helper(make_link = false)
-    url = case
-          when !@media_object.data_set_id.nil?
-            project_url @media_object.project
-          when !@media_object.visualization.nil?
-            visualization_url @media_object.visualization
-          when !@media_object.tutorial.nil?
-            tutorial_url @media_object.tutorial
-          when !@media_object.news_id.nil?
-            news_url @media_object.news
-          when !@media_object.user_id.nil?
-            user_url @media_object.owner
-          when !@media_object.project_id.nil?
-            project_url @media_object.data_set.project
-          else
-            '/'
-          end
-
-    render 'shared/edit_menu', type: 'media_object', typeName: 'Media Object',
-      obj: @media_object, make_link: make_link, escape_link: url
-  end
-
   def media_object_thumbnail_helper(mo, size = nil, download = false)
     if size.nil?
       img_size = '32x32'

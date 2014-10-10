@@ -41,7 +41,9 @@
   <%end%>
 
   <!-- media objects -->
+  <% if is_admin? %>
   <%=render layout: "shared/box", locals: {title: 'Media', width: '5', unique_id: 'media', should_hide: false} do %>
     <%=render "shared/media_objects_view", {type: 'tutorial', object: @tutorial} %>
   <%end%>
+  <% end %>
 </div>

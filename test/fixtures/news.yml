@@ -4,29 +4,49 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
+
+unpublished_news:
+  title: Unpublished News
+  content: Some content
+  hidden: true
+  user: nixon
+
+rename_this_news:
+  title: To be renamed
+  content: Some content
+  hidden: false
+  user: nixon
+  
+delete_this_news:
+  title: To be deleted
+  content: Some content
+  hidden: false
+  user: nixon
+
+update_this_news:
+  title: To be updated
+  content: Some ontent
+  hidden: false
+  user: nixon
+  
+media_test:
+  title: To get media
+  content: Some content
+  summary: This contains content
+  hidden: false
+  user: nixon
+  
+news_three:
+  title: Functional test 3
+  content: Some content
+  summary: This contains content
+  hidden: false
+  user: nixon
+  
 one: 
-  title: I'm a news guy
-  content: I am content for news
+  title: Functional test 1
+  content: Some content
   summary: This contains content
   hidden: false
   user: nixon
   id: 2
-
-# column: value
-#
-#two: {}
-#  column: value
-
-media_test:
-  title: I'm another news guy media
-  content: I am content for news
-  summary: This contains content
-  hidden: false
-  user: nixon
-
-news_three:
-  title: I'm another news guy
-  content: I am content for news
-  summary: This contains content
-  hidden: false
-  user: nixon

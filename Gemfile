@@ -30,7 +30,7 @@ group :development, :test do
 end
 
 # Jquery stuff
-gem 'better_colorpicker', git: 'https://github.com/asalani93/better-colorpicker'
+gem 'better_colorpicker', '~> 0.0.2', git: 'https://github.com/asalani93/better-colorpicker'
 gem 'jquery-rails'
 
 # To use ActiveModel has_secure_password
@@ -40,17 +40,17 @@ gem 'bcrypt-ruby'
 # Include JQuery UI
 gem 'jquery-ui-rails'
 
-gem "ckeditor", :git => "https://github.com/galetahub/ckeditor.git"
 gem 'httparty'
 
 gem 'execjs'
 
 # Font-awesome
-gem 'font-awesome-rails'
+gem 'font-awesome-rails', '~> 4.2.0.0'
 
 # Rich Editor
 #gem 'simple_form'
 gem 'summernote-rails'
+gem 'auto_html'
 
 # Include Will Paginate
 gem 'will_paginate'
@@ -73,7 +73,7 @@ gem 'multi_json'
 
 gem 'roo'
 
-# Github Auth and Bug Report
+# Github Auth, Testing and Bug Report
 gem 'octokit'
 gem 'browser'
 gem 'galetahub-simple_captcha'

@@ -1,7 +1,7 @@
 Rsense::Application.routes.draw do
-  # See how all your routes lay out with "rake routes"
-  mount Ckeditor::Engine => '/ckeditor'
+  get 'testing/index'
 
+  # See how all your routes lay out with "rake routes"
   post '/data_sets/dataFileUpload', to: 'data_sets#dataFileUpload'
   put '/data_sets/field_matching', to: 'data_sets#field_matching'
 
@@ -25,7 +25,7 @@ Rsense::Application.routes.draw do
 
   get 'projects/create' => 'projects#create'
   post 'projects/create' => 'projects#create'
-  resources :projects
+  resources :projects, except: [:new]
 
   # match "tutorials/create" => "tutorials#create"
   post '/tutorials/switch/' => 'tutorials#switch'
@@ -118,4 +118,7 @@ Rsense::Application.routes.draw do
       resources :data_sets, only: [:show, :edit, :jsonDataUpload]
     end
   end
+  get '/testing' => 'testing#index'
+  post '/testing/review' => 'testing#review'
+  post '/testing/publish' => 'testing#publish'
 end

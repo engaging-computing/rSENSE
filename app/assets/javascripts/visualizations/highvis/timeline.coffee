@@ -37,9 +37,9 @@ $ ->
       constructor: (@canvas) ->
         super @canvas
 
-        @mode = @LINES_MODE
-        @xAxis = data.timeFields[0]
-        
+        @configs.mode = @LINES_MODE
+        @configs.xAxis = data.timeFields[0]
+
         if data.normalFields.length > 1
           @displayField = data.normalFields[1]
         else @displayField = data.normalFields[0]
@@ -112,7 +112,7 @@ $ ->
       ###
       drawXAxisControls: ->
         super (fieldIndex) -> fieldIndex in data.timeFields
-        
+
       ###
       Clips an array of data to include only bounded points
       ###

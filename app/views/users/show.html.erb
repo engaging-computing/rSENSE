@@ -5,27 +5,23 @@
       <div class="col-lg-12 center">
         <%= image_tag Gravatar.new.url(@user), style: "border-radius: 3px", class: "gravatar_img" %>
       </div>
-      <div class="col-lg-12" style="padding-top:10px;">
+      <div class="col-lg-12" style="padding-top:25px;">
         <span class="info_label" style="line-height: 30px;">Display Name:</span><br>
         <span class="full_width_edit" style="font-style:italic">
           <%= user_edit_helper 'name', can_edit?(@user), false %>
         </span>
-
-        <br>
         
         <% if @cur_user.admin? or @cur_user.id == @user.id %>
-          <br>
-
+          <br />
           <span class="info_label" style="line-height: 30px;">Email:</span><br>
           <span class="full_width_edit" style="font-style: italic; font-weight: bold">
             <%= @user.email %>
           </span>
-
-          <br>
         
           <p style="margin-top: 8px"><%= link_to "Change Email or Password", edit_user_path(@user) %></p>
         <% end %>
 
+        <br />
         <i>Joined <%= time_ago_in_words(@user.created_at)%> ago</i>
         <br /> 
       </div>

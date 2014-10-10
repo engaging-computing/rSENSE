@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140721174027) do
+ActiveRecord::Schema.define(version: 20141010131030) do
 
   create_table "contrib_keys", force: true do |t|
     t.string   "name",       null: false
@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 20140721174027) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "googleDoc"
-    t.text     "data",       default: "[]", null: false
+    t.text     "data",             default: "[]", null: false
     t.string   "key"
     t.string   "contributor_name"
   end
@@ -94,6 +94,8 @@ ActiveRecord::Schema.define(version: 20140721174027) do
     t.boolean  "curated",                       default: false
     t.datetime "curated_at"
     t.text     "default_vis"
+    t.integer  "precision",                     default: 4
+    t.text     "globals"
   end
 
   create_table "tutorials", force: true do |t|
