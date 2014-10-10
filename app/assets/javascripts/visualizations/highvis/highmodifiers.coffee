@@ -130,8 +130,8 @@ $ ->
     Gets the maximum (numeric) value for the given field index.
     All included datapoints must pass the given filter (defaults to all datapoints).
     ###
-    data.getMax = (fieldIndex, groupIndex) ->
-      rawData = @selector(fieldIndex, groupIndex)
+    data.getMax = (fieldIndex, groupIndices) ->
+      rawData = @multiGroupSelector(fieldIndex, groupIndices)
 
       if rawData.length > 0
         result = rawData.reduce (a,b) -> Math.max(a, b)
@@ -143,8 +143,8 @@ $ ->
     Gets the minimum (numeric) value for the given field index.
     All included datapoints must pass the given filter (defaults to all datapoints).
     ###
-    data.getMin = (fieldIndex, groupIndex) ->
-      rawData = @selector(fieldIndex, groupIndex)
+    data.getMin = (fieldIndex, groupIndices) ->
+      rawData = @multiGroupSelector(fieldIndex, groupIndices)
 
       if rawData.length > 0
         result = rawData.reduce (a,b) -> Math.min(a, b)
@@ -156,8 +156,8 @@ $ ->
     Gets the mean (numeric) value for the given field index.
     All included datapoints must pass the given filter (defaults to all datapoints).
     ###
-    data.getMean = (fieldIndex, groupIndex) ->
-      rawData = @selector(fieldIndex, groupIndex)
+    data.getMean = (fieldIndex, groupIndices) ->
+      rawData = @multiGroupSelector(fieldIndex, groupIndices)
 
       if rawData.length > 0
         result = (rawData.reduce (a,b) -> a + b) / rawData.length
@@ -169,8 +169,8 @@ $ ->
     Gets the median (numeric) value for the given field index.
     All included datapoints must pass the given filter (defaults to all datapoints).
     ###
-    data.getMedian = (fieldIndex, groupIndex) ->
-      rawData = @selector(fieldIndex, groupIndex)
+    data.getMedian = (fieldIndex, groupIndices) ->
+      rawData = @multiGroupSelector(fieldIndex, groupIndices)
       rawData.sort()
 
       mid = Math.floor (rawData.length / 2)
@@ -187,8 +187,8 @@ $ ->
     Gets the number of points belonging to fieldIndex and groupIndex
     All included datapoints must pass the given filter (defaults to all datapoints).
     ###
-    data.getCount = (fieldIndex, groupIndex) ->
-      dataCount = @selector(fieldIndex, groupIndex).length
+    data.getCount = (fieldIndex, groupIndices) ->
+      dataCount = @selector(fieldIndex, groupIndices).length
 
       return dataCount
 
@@ -196,8 +196,8 @@ $ ->
     Gets the sum of the points belonging to fieldIndex and groupIndex
     All included datapoints must pass the given filter (defaults to all datapoints).
     ###
-    data.getTotal = (fieldIndex, groupIndex) ->
-      rawData = @selector(fieldIndex, groupIndex)
+    data.getTotal = (fieldIndex, groupIndices) ->
+      rawData = @selector(fieldIndex, groupIndices)
 
       if rawData.length > 0
         total = 0
