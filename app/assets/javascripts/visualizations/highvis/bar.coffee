@@ -31,9 +31,11 @@ $ ->
 
     class window.Bar extends BaseHighVis
       constructor: (@canvas) ->
+        super(@canvas)
+
         if data.normalFields.length > 1
-          @displayField = data.normalFields[1]
-        else @displayField = data.normalFields[0]
+          @configs.displayField = data.normalFields[1]
+        else @configs.displayField = data.normalFields[0]
 
       ANALYSISTYPE_TOTAL:     0
       ANALYSISTYPE_MAX:       1
@@ -46,9 +48,14 @@ $ ->
 
       analysisTypeNames: ["Total","Max","Min","Mean","Median","Row Count"]
 
-      analysisType:         0
+      # Used to restore previous analysis type (when user switches to data point
+      # the analysis gets force set to row count, and this should be undone).
       restoreAnalysisType:  false
       savedAnalysisType:    0
+
+      start: ->
+        @configs.analysisType ?= @ANALYSISTYPE_TOTAL
+        super()
 
       buildOptions: ->
         super()
@@ -68,37 +75,41 @@ $ ->
               str  = "<div style='width:100%;text-align:center;color:#{@series.color};"
               str += "margin-bottom:5px'> #{@point.name}</div>"
               str += "<table>"
-              str += "<tr><td>#{@x} (#{self.analysisTypeNames[self.analysisType]}):"
+              str += "<tr><td>#{@x} (#{self.analysisTypeNames[self.configs.analysisType]}):"
               str += "</td><td><strong>#{@y}</strong></td></tr>"
               str += "</table>"
             useHTML: true
           yAxis:
-            type: if globals.logY is 1 then 'logarithmic' else 'linear'
+            type: if globals.configs.logY is 1 then 'logarithmic' else 'linear'
 
       update: ->
         super()
 
         # Default Sort
-        @sortField ?= if globals.fieldSelection? then globals.fieldSelection[0] else @SORT_DEFAULT
+        @configs.sortField ?=
+          if globals.configs.fieldSelection?
+            globals.configs.fieldSelection[0]
+          else @SORT_DEFAULT
 
         # Restrict analysis type to only row count if the y field is "Data Point"
-        if (globals.fieldSelection[0] is data.DATA_POINT_ID_FIELD and globals.fieldSelection.length is 1)
+        if (globals.configs.fieldSelection[0] is data.DATA_POINT_ID_FIELD and
+        globals.configs.fieldSelection.length is 1)
           for option, row in ($ '#analysis_types').children()
             if row isnt @ANALYSISTYPE_COUNT then $(option).hide()
 
-          @savedAnalysisType = @analysisType
+          @savedAnalysisType = @configs.analysisType
           @restoreAnalysisType = true
-          @analysisType = @ANALYSISTYPE_COUNT
+          @configs.analysisType = @ANALYSISTYPE_COUNT
         else
           if @restoreAnalysisType
-            @analysisType = @savedAnalysisType
+            @configs.analysisType = @savedAnalysisType
             @restoreAnalysisType = false
           ($ '#analysis_types').children().show()
 
-        $('#sortField option[value=' + @sortField + ']').prop('selected', true)
-        $('input:radio[name=analysisTypeSelector][value=' + @analysisType + ']').prop('checked', true)
+        $('#sortField option[value=' + @configs.sortField + ']').prop('selected', true)
+        $('input:radio[name=analysisTypeSelector][value=' + @configs.analysisType + ']').prop('checked', true)
 
-        visibleCategories = for selection in data.normalFields when selection in globals.fieldSelection
+        visibleCategories = for selection in data.normalFields when selection in globals.configs.fieldSelection
           fieldTitle data.fields[selection]
 
         @chart.xAxis[0].setCategories visibleCategories, false
@@ -107,16 +118,16 @@ $ ->
           @chart.series[@chart.series.length - 1].remove false
 
         ### --- ###
-        tempGroupIDValuePairs = for groupName, groupIndex in data.groups when groupIndex in globals.groupSelection
-          switch @analysisType
-            when @ANALYSISTYPE_TOTAL    then [groupIndex, (data.getTotal     @sortField, groupIndex)]
-            when @ANALYSISTYPE_MAX      then [groupIndex, (data.getMax       @sortField, groupIndex)]
-            when @ANALYSISTYPE_MIN      then [groupIndex, (data.getMin       @sortField, groupIndex)]
-            when @ANALYSISTYPE_MEAN     then [groupIndex, (data.getMean      @sortField, groupIndex)]
-            when @ANALYSISTYPE_MEDIAN   then [groupIndex, (data.getMedian    @sortField, groupIndex)]
-            when @ANALYSISTYPE_COUNT    then [groupIndex, (data.getCount     @sortField, groupIndex)]
+        tempGroupIDValuePairs = for groupName, groupIndex in data.groups when groupIndex in data.groupSelection
+          switch @configs.analysisType
+            when @ANALYSISTYPE_TOTAL    then [groupIndex, (data.getTotal     @configs.sortField, groupIndex)]
+            when @ANALYSISTYPE_MAX      then [groupIndex, (data.getMax       @configs.sortField, groupIndex)]
+            when @ANALYSISTYPE_MIN      then [groupIndex, (data.getMin       @configs.sortField, groupIndex)]
+            when @ANALYSISTYPE_MEAN     then [groupIndex, (data.getMean      @configs.sortField, groupIndex)]
+            when @ANALYSISTYPE_MEDIAN   then [groupIndex, (data.getMedian    @configs.sortField, groupIndex)]
+            when @ANALYSISTYPE_COUNT    then [groupIndex, (data.getCount     @configs.sortField, groupIndex)]
 
-        if @sortField != @SORT_DEFAULT
+        if @configs.sortField != @SORT_DEFAULT
           fieldSortedGroupIDValuePairs = tempGroupIDValuePairs.sort (a,b) ->
             a[1] - b[1]
 
@@ -127,16 +138,16 @@ $ ->
             groupID
         ### --- ###
 
-        for groupIndex, order in fieldSortedGroupIDs when groupIndex in globals.groupSelection
+        for groupIndex, order in fieldSortedGroupIDs when groupIndex in data.groupSelection
 
           options =
             showInLegend: false
-            color: globals.colors[groupIndex % globals.colors.length]
+            color: globals.configs.colors[groupIndex % globals.configs.colors.length]
             name: data.groups[groupIndex]
             index: order
 
-          options.data = for fieldIndex in data.normalFields when fieldIndex in globals.fieldSelection
-            switch @analysisType
+          options.data = for fieldIndex in data.normalFields when fieldIndex in globals.configs.fieldSelection
+            switch @configs.analysisType
               when @ANALYSISTYPE_TOTAL
                 ret =
                   y:      data.getTotal fieldIndex, groupIndex
@@ -170,7 +181,7 @@ $ ->
       buildLegendSeries: ->
         count = -1
         for field, fieldIndex in data.fields when (
-          fieldIndex in data.normalFields and fieldIndex in globals.fieldSelection)
+          fieldIndex in data.normalFields and fieldIndex in globals.configs.fieldSelection)
 
           count += 1
           dummy =
@@ -197,7 +208,7 @@ $ ->
         tempFields = [].concat [[@SORT_DEFAULT, 'Group Name']], tempFields
 
         for [fieldID, fieldName] in tempFields
-          selected = if @sortField is fieldID then 'selected' else ''
+          selected = if @configs.sortField is fieldID then 'selected' else ''
           controls += "<option value='#{fieldID}' #{selected}>#{fieldName}</option>"
 
         controls += '</select></div><br>'
@@ -210,7 +221,7 @@ $ ->
 
           controls += "<div class='radio'><label><input type='radio' class='analysisType' "
           controls += "name='analysisTypeSelector' value='"
-          controls += "#{type}' #{if type is @analysisType then 'checked' else ''}> "
+          controls += "#{type}' #{if type is @configs.analysisType then 'checked' else ''}> "
 
           switch typestring
             when 'Max' then controls += 'Maximum </label> </div>'
@@ -225,7 +236,7 @@ $ ->
         if data.logSafe is 1
           controls += '<div class="inner_control_div">'
           controls += "<div class='checkbox'><label><input class='logY_box' type='checkbox' "
-          controls += "name='tooltip_selector' #{if globals.logY is 1 then 'checked' else ''}/> "
+          controls += "name='tooltip_selector' #{if globals.configs.logY is 1 then 'checked' else ''}/> "
           controls += "Logarithmic Y Axis</label></div>"
           controls += "</div>"
 
@@ -236,26 +247,26 @@ $ ->
         ($ '#controldiv').append controls
 
         ($ '.analysisType').change (e) =>
-          @analysisType = Number e.target.value
+          @configs.analysisType = Number e.target.value
           @delayedUpdate()
 
         ($ '#sortField').change (e) =>
-          @sortField = Number e.target.value
+          @configs.sortField = Number e.target.value
           @delayedUpdate()
 
         ($ '.logY_box').click (e) =>
-          globals.logY = (globals.logY + 1) % 2
+          globals.configs.logY = (globals.configs.logY + 1) % 2
           @start()
 
         # Set up accordion
-        globals.toolsOpen ?= 0
+        globals.configs.toolsOpen ?= 0
 
         ($ '#toolControl').accordion
           collapsible:true
-          active:globals.toolsOpen
+          active:globals.configs.toolsOpen
 
         ($ '#toolControl > h3').click ->
-          globals.toolsOpen = (globals.toolsOpen + 1) % 2
+          globals.configs.toolsOpen = (globals.configs.toolsOpen + 1) % 2
 
       drawYAxisControls: ->
         super()

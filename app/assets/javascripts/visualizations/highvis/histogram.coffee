@@ -31,18 +31,20 @@ $ ->
 
     class window.Histogram extends BaseHighVis
       constructor: (@canvas) ->
-        @MAX_NUM_BINS = 1000
+        super(@canvas)
 
         if data.normalFields.length > 1
-          @displayField = data.normalFields[1]
-        else @displayField = data.normalFields[0]
+          @configs.displayField = data.normalFields[1]
+        else @configs.displayField = data.normalFields[0]
 
-        @binNumSug = 1
+      MAX_NUM_BINS:        1000
+      binNumSug:              1
 
       # Wait for global objects to be constructed before getting bin size
-      @updatedTooltips = false
+      updatedTooltips:    false
+
       start: ->
-        @binSize ?= @defaultBinSize()
+        @configs.binSize ?= @defaultBinSize()
         super()
 
       buildOptions: ->
@@ -58,7 +60,7 @@ $ ->
             enabled: false
           title:
             text: ""
-          tooltipXAxis = @displayField
+          tooltipXAxis = @configs.displayField
           tooltip:
             formatter: ->
               str  = "<table>"
@@ -87,13 +89,13 @@ $ ->
         min = Number.MAX_VALUE
         max = Number.MIN_VALUE
 
-        for groupIndex in globals.groupSelection
+        for groupIndex in data.groupSelection
 
-          localMin = data.getMin @displayField, groupIndex
+          localMin = data.getMin @configs.displayField, groupIndex
           if localMin isnt null
             min = Math.min min, localMin
 
-          localMax = data.getMax @displayField, groupIndex
+          localMax = data.getMax @configs.displayField, groupIndex
           if localMax isnt null
             max = Math.max max, localMax
 
@@ -141,9 +143,9 @@ $ ->
         super()
         # Name Axis
         @chart.yAxis[0].setTitle {text: "Quantity"}, false
-        @chart.xAxis[0].setTitle {text: fieldTitle data.fields[@displayField]}, false
-        tooltipXAxis = @displayField
-        if globals.groupSelection.length is 0
+        @chart.xAxis[0].setTitle {text: fieldTitle data.fields[@configs.displayField]}, false
+        tooltipXAxis = @configs.displayField
+        if data.groupSelection.length is 0
           return
 
         while @chart.series.length > data.normalFields.length
@@ -153,18 +155,18 @@ $ ->
         @globalmin = Number.MAX_VALUE
         @globalmax = Number.MIN_VALUE
 
-        for groupIndex in globals.groupSelection
+        for groupIndex in data.groupSelection
 
-          min = data.getMin @displayField, groupIndex
-          min = Math.round(min / @binSize) * @binSize
+          min = data.getMin @configs.displayField, groupIndex
+          min = Math.round(min / @configs.binSize) * @configs.binSize
           @globalmin = Math.min @globalmin, min
 
-          max = data.getMax @displayField, groupIndex
-          max = Math.round(max / @binSize) * @binSize
+          max = data.getMax @configs.displayField, groupIndex
+          max = Math.round(max / @configs.binSize) * @configs.binSize
           @globalmax = Math.max @globalmax, max
 
         #### Make 'fake' data to ensure proper bar spacing ###
-        fakeDat = for i in [@globalmin...@globalmax] by @binSize
+        fakeDat = for i in [@globalmin...@globalmax] by @configs.binSize
           [i, 0]
 
         options =
@@ -177,12 +179,12 @@ $ ->
         # Generate all bin data
         binObjs = {}
 
-        for groupIndex in globals.groupSelection
+        for groupIndex in data.groupSelection
 
-          selectedData = data.selector @displayField, groupIndex
+          selectedData = data.selector @configs.displayField, groupIndex
 
           binArr = for i in selectedData
-            Math.round(i / @binSize) * @binSize
+            Math.round(i / @configs.binSize) * @configs.binSize
 
           binObjs[groupIndex] = {}
 
@@ -191,7 +193,7 @@ $ ->
             binObjs[groupIndex][bin]++
 
         # Convert bin data into series data
-        for groupIndex in globals.groupSelection
+        for groupIndex in data.groupSelection
 
           finalData = for number, occurences of binObjs[groupIndex]
 
@@ -210,13 +212,13 @@ $ ->
 
           options =
             showInLegend: false
-            color: globals.colors[groupIndex % globals.colors.length]
+            color: globals.configs.colors[groupIndex % globals.configs.colors.length]
             name: data.groups[groupIndex]
             data: finalData
 
           @chart.addSeries options, false
 
-        @chart.xAxis[0].setExtremes @globalmin - (@binSize / 2), @globalmax + (@binSize / 2), false
+        @chart.xAxis[0].setExtremes @globalmin - (@configs.binSize / 2), @globalmax + (@configs.binSize / 2), false
 
         @chart.redraw()
 
@@ -227,7 +229,7 @@ $ ->
           dummy =
             data: []
             color: '#000'
-            visible: @displayField is fieldIndex
+            visible: @configs.displayField is fieldIndex
             name: field.fieldName
             type: 'area'
             xAxis: 1
@@ -250,7 +252,7 @@ $ ->
         controls += "<div id='binSizeSlider' style='width:90%;margin-left:5%'></div><br>"
 
 
-        controls += "Manual: <input id='binSizeInput' class='form-control' value='#{@binSize}'></input>"
+        controls += "Manual: <input id='binSizeInput' class='form-control' value='#{@configs.binSize}'></input>"
 
         controls += '</div></div></div>'
 
@@ -270,20 +272,20 @@ $ ->
 
             newBinSize = @defaultBinSize()
 
-            if not fpEq newBinSize, @binSize
-              @binSize = newBinSize
-              ($ '#binSizeInput').val "#{@binSize}"
+            if not fpEq newBinSize, @configs.binSize
+              @configs.binSize = newBinSize
+              ($ '#binSizeInput').val "#{@configs.binSize}"
               @delayedUpdate()
 
         # Set up accordion
-        globals.toolsOpen ?= 0
+        globals.configs.toolsOpen ?= 0
 
         ($ '#toolControl').accordion
           collapsible:true
-          active:globals.toolsOpen
+          active:globals.configs.toolsOpen
 
         ($ '#toolControl > h3').click ->
-          globals.toolsOpen = (globals.toolsOpen + 1) % 2
+          globals.configs.toolsOpen = (globals.configs.toolsOpen + 1) % 2
 
         ($ "#binSizeInput").keydown (e) =>
           if e.keyCode == 13
@@ -299,7 +301,7 @@ $ ->
               return
 
             if ((@globalmax - @globalmin) / newBinSize) < @MAX_NUM_BINS
-              @binSize = newBinSize
+              @configs.binSize = newBinSize
               @update()
             else
               alert "Entered bin size would result in too many bins."
@@ -317,9 +319,9 @@ $ ->
 
         # Currently specific to histogram
         ($ '.y_axis_input').click (e) =>
-          @displayField = Number e.target.value
-          @binSize = @defaultBinSize()
-          ($ "#binSizeInput").attr('value', @binSize)
+          @configs.displayField = Number e.target.value
+          @configs.binSize = @defaultBinSize()
+          ($ "#binSizeInput").attr('value', @configs.binSize)
           @delayedUpdate()
 
     if "Histogram" in data.relVis

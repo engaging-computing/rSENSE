@@ -31,11 +31,13 @@ $ ->
 
     class window.Pie extends BaseHighVis
       constructor: (@canvas) ->
-        if data.normalFields.length > 1
-          @displayField = data.normalFields[1]
-        else @displayField = data.normalFields[0]
+        super(@canvas)
 
-        @selectName ?=
+        if data.normalFields.length > 1
+          @configs.displayField = data.normalFields[1]
+        else @configs.displayField = data.normalFields[0]
+
+        @configs.selectName ?=
           if data.textFields.length > 2
             data.textFields[2]
           else
@@ -45,36 +47,36 @@ $ ->
         super()
 
       update: () ->
-        @selectName = data.fields[data.groupingFieldIndex].fieldName
+        @configs.selectName = data.fields[globals.configs.groupById].fieldName
         @getGroupedData()
         while @chart.series.length > 0
           @chart.series[@chart.series.length - 1].remove false
 
         @displayColors = []
-        for number in globals.groupSelection
-          @displayColors.push(globals.colors[number])
+        for number in data.groupSelection
+          @displayColors.push(globals.configs.colors[number])
         options =
           showInLegend: false
           data: @displayData
           colors: @displayColors
-        @chart.setTitle { text: "#{@selectName} by #{data.fields[@displayField].fieldName}" }
+        @chart.setTitle { text: "#{@configs.selectName} by #{data.fields[@configs.displayField].fieldName}" }
         @chart.addSeries options, false
 
         @chart.redraw()
 
       getGroupedData: ->
         @displayData = data.dataPoints.reduce (prev, next) =>
-          if typeof prev[next[data.groupingFieldIndex]] != "undefined"
-            prev[next[data.groupingFieldIndex]] = prev[next[data.groupingFieldIndex]] + next[@displayField]
+          if typeof prev[next[globals.configs.groupById]] != "undefined"
+            prev[next[globals.configs.groupById]] = prev[next[globals.configs.groupById]] + next[@configs.displayField]
           else
-            prev[next[data.groupingFieldIndex]] = next[@displayField]
+            prev[next[globals.configs.groupById]] = next[@configs.displayField]
           prev
         , {}
         @displayData = Object.keys(@displayData).reduce (prev, key) =>
-          if data.groups.indexOf(key.toLowerCase()) in globals.groupSelection
+          if data.groups.indexOf(key.toLowerCase()) in data.groupSelection
             if (grouping[0] for grouping in prev).indexOf(key.toLowerCase()) isnt -1
               prev.indexOf(grouping)[1] = @displayData[key] + prev.indexOf(grouping)[1]
-            else prev.push [key.toLowerCase() or "No #{@selectName}", @displayData[key]]
+            else prev.push [key.toLowerCase() or "No #{@configs.selectName}", @displayData[key]]
           prev
         , []
 
