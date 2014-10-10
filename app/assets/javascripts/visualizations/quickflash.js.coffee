@@ -20,6 +20,7 @@ $ ->
         #{msg}
       </div>
       """
+      
     # Scroll so you can see the flash message
     scrollTo(0, 0)
 
