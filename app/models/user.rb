@@ -2,6 +2,7 @@ require 'nokogiri'
 
 class User < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
+  include AutoHtml
 
   validates_uniqueness_of :email, case_sensitive: false
   validates :name, length: { minimum: 4, maximum: 70 }, format: {
@@ -74,7 +75,9 @@ class User < ActiveRecord::Base
   end
 
   def summernote_media_objects
-    self.bio = MediaObject.create_media_objects(bio, 'user_id', id)
+    self.bio = auto_html MediaObject.create_media_objects(bio, 'user_id', id).html_safe do
+      youtube(width: 300, height: 250, autoplay: false)
+    end
   end
 end
 
