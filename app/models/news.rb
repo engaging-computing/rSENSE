@@ -38,7 +38,7 @@ class News < ActiveRecord::Base
   end
 
   def summernote_media_objects
-    self.content = auto_html MediaObject.create_media_objects(content, 'news_id', id, user_id) do
+    self.content = auto_html MediaObject.create_media_objects(content, 'news_id', id, user_id).html_safe do
       youtube(autoplay: false)
     end
   end

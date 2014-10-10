@@ -75,7 +75,7 @@ class User < ActiveRecord::Base
   end
 
   def summernote_media_objects
-    self.bio = auto_html MediaObject.create_media_objects(bio, 'user_id', id) do
+    self.bio = auto_html MediaObject.create_media_objects(bio, 'user_id', id).html_safe do
       youtube(width: 300, height: 250, autoplay: false)
     end
   end
