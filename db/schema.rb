@@ -95,7 +95,7 @@ ActiveRecord::Schema.define(version: 20141010131030) do
     t.datetime "curated_at"
     t.text     "default_vis"
     t.integer  "precision",                     default: 4
-    t.text     "globals",           limit: 255
+    t.text     "globals"
   end
 
   create_table "tutorials", force: true do |t|
