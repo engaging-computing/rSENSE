@@ -2,6 +2,14 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+.create-form {
+  margin: auto;
+  padding: 1em;
+
+  .wide-input { min-width: 850px } 
+  
+}
+
 .projects-controller {
   #addProjectButton {
     margin-bottom: 12px;
@@ -10,6 +18,10 @@
   .hoverimage {
     width: 75px;
     height: 75px;
+  }
+
+  .project_buttons {
+    margin-top: 40px;
   }
 
   .search-box .padded-col {

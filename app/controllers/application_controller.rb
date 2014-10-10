@@ -139,7 +139,7 @@ class ApplicationController < ActionController::Base
     # The API call came with a contribution key and they are trying to access a project
     elsif (params.key? :contribution_key) && (['jsonDataUpload', 'saveMedia'].include? params[:action])
       project = Project.find_by_id(params[:id] || params[:pid])
-      if project && !project.contrib_keys.find_by_key(params[:contribution_key]).nil?
+      if project && !project.contrib_keys.find_by_key(params[:contribution_key].downcase).nil?
         if params.key? :contributor_name
           @cur_user = User.find_by_id(project.owner.id)
         else
@@ -159,8 +159,8 @@ class ApplicationController < ActionController::Base
         params[:controller].include?('data_sets')
       data_set = DataSet.find_by_id(params[:id])
       if data_set &&
-          data_set.key == params[:contribution_key] &&
-          !data_set.project.contrib_keys.find_by_key(params[:contribution_key]).nil?
+          data_set.key == params[:contribution_key].downcase &&
+          !data_set.project.contrib_keys.find_by_key(params[:contribution_key].downcase).nil?
         @cur_user = User.find_by_id(data_set.owner.id)
       else
         respond_to do |format|

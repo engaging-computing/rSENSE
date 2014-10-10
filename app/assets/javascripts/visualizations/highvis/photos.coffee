@@ -101,8 +101,8 @@ $ ->
               i++
               ($ '.p_item').css('margin': "#{defMargins / 2}px")
       end: ->
-        ($ '#' + @canvas).hide()
         @unhideControls()
+        super()
 
       drawControls: ->
         super()
@@ -110,4 +110,3 @@ $ ->
       globals.photos = new Photos "photos_canvas"
     else
       globals.photos = new DisabledVis "photos_canvas"
-

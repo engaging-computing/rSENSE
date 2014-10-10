@@ -178,11 +178,11 @@ class DataSetsController < ApplicationController
         d.title = params[:title]
         d.project_id = project.id
         d.data = data
-        if @cur_user.nil?
-          if !(params[:contributor_name].nil?)
-            d.contributor_name = params[:contributor_name]
-          else
+        unless params[:contributor_name].nil?
+          if params[:contributor_name].length == 0
             d.contributor_name = 'Contributed via Key'
+          else
+            d.contributor_name = params[:contributor_name]
           end
         end
         unless can_edit? @project
@@ -247,8 +247,14 @@ class DataSetsController < ApplicationController
         d.title = params[:title]
         d.project_id = project.id
         d.data = data
+        unless params[:contributor_name].nil?
+          if params[:contributor_name].length == 0
+            d.contributor_name = 'Contributed via Key'
+          else
+            d.contributor_name = params[:contributor_name]
+          end
+        end
         unless can_edit? @project
-          d.contributor_name = params[:contrib_name]
           d.key = key_name(project.id, session[:key])
         end
       end
@@ -259,7 +265,6 @@ class DataSetsController < ApplicationController
         @results = params[:results]
         @default_name = params[:title]
         respond_to do |format|
-          logger.error dataset.errors.inspect
           flash[:error] = dataset.errors.full_messages
           format.html { render action: 'dataFileUpload' }
         end
@@ -272,28 +277,42 @@ class DataSetsController < ApplicationController
     end
   end
 
-  # POST /data_sets/uploadCSV2
+  # POST /data_sets/dataFileUpload
   def dataFileUpload
     project = Project.find(params[:pid])
 
     if project.lock? and !can_edit?(project) and !key?(project)
-      redirect_to @project, alert: 'Project is locked'
+      redirect_to project, alert: 'Project is locked'
       return
+    end
+
+    if params[:gdoc]
+      value = params[:gdoc]
+      if value.include?('key=')
+        value = value.split('key=')[1].split('&')[0]
+        gcsv = "https://docs.google.com/spreadsheet/pub?key=#{value}&single=true&gid=0&output=csv"
+      elsif value.include?('spreadsheets/d/')
+        value = value.split('spreadsheets/d/')[1].split('/')[0]
+        gcsv = "https://docs.google.com/spreadsheets/d/#{value}/export?gid=0&format=csv"
+      end
+    end
+
+    if params[:file]
+      @filename = DataSet.get_next_name(project, params[:file].original_filename.split('.')[0])
+    else
+      @filename = DataSet.get_next_name(project, 'Google docs')
     end
 
     begin
       uploader = FileUploader.new
-      data_obj = uploader.generateObject(params[:file])
+      data_obj = uploader.generateObject(params[:file] ? params[:file] : gcsv)
       @results = uploader.match_headers(project, data_obj)
-
-      @default_name = DataSet.get_next_name(project)
 
       respond_to do |format|
         format.html
       end
     rescue Exception => e
-      logger.info "File could not be read: #{e}"
-      flash[:error] = 'File could not be read'
+      flash[:error] = "Error reading file: #{e}"
       redirect_to project_path(project)
     end
   end

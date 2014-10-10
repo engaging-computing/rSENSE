@@ -16,13 +16,12 @@ class SummernoteMoTest < ActionDispatch::IntegrationTest
     login('kcarcia@cs.uml.edu', '12345')
     visit '/'
     click_on 'Projects'
-    click_on 'Create Project'
     find('#project_title').set('Upload Images SNMO')
-    click_on 'Create'
+    click_on 'Create Project'
     assert page.has_content? 'Fields must be set up to contribute data'
     assert page.has_no_css? '.mo_image'
 
-    find('#content-edit-btn').click
+    find('#add-content-image').click
     find('.fa-code').find(:xpath, '..').click
     find('.note-codable').set('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" </img>')
     click_on 'Save'
@@ -38,7 +37,7 @@ class SummernoteMoTest < ActionDispatch::IntegrationTest
     find('#tutorial_title').set('Test Tutorial SNMO')
     click_on 'Create Tutorial'
     assert page.has_no_css? '.mo_image'
-    find('#content-edit-btn').click
+    find('#add-content-image').click
     find('.fa-code').find(:xpath, '..').click
     find('.note-codable').set('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" </img>')
     click_on 'Save'
@@ -50,7 +49,7 @@ class SummernoteMoTest < ActionDispatch::IntegrationTest
     login 'nixon@whitehouse.gov', '12345'
     click_on 'Richard N.'
     assert page.has_css? '.gravatar_img', 'Not on profile page.'
-    find('#content-edit-btn').click
+    find('#add-content-image').click
     find('.fa-code').find(:xpath, '..').click
     find('.note-codable').set('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" </img>')
     click_on 'Save'
@@ -65,7 +64,7 @@ class SummernoteMoTest < ActionDispatch::IntegrationTest
     click_on 'Add News Item'
     assert page.has_content? 'News entry was successfully created.'
     assert page.has_no_css? '.mo_image'
-    find('#content-edit-btn').click
+    find('#add-content-image').click
     find('.fa-code').find(:xpath, '..').click
     find('.note-codable').set('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" </img>')
     click_on 'Save'
