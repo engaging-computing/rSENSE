@@ -50,6 +50,7 @@ gem 'font-awesome-rails', '~> 4.2.0.0'
 # Rich Editor
 #gem 'simple_form'
 gem 'summernote-rails'
+gem 'auto_html'
 
 # Include Will Paginate
 gem 'will_paginate'
