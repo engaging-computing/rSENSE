@@ -3,6 +3,7 @@ require 'test_helper'
 class SessionsControllerTest < ActionController::TestCase
   setup do
     @kate = users(:kate)
+    @project_three = projects(:three)
   end
 
   test 'should log in' do
@@ -23,13 +24,23 @@ class SessionsControllerTest < ActionController::TestCase
     assert_response :redirect
   end
 
+  test 'verify user is logged in' do
+    get :verify, { format: 'json' },  user_id: @kate.id
+    assert_response :success
+  end
+
   test 'verify user is not logged in' do
     get :verify,  format: 'json'
     assert_response :unauthorized
   end
 
-  test 'verify user is logged in' do
-    get :verify, { format: 'json' },  user_id: @kate
+  test 'verify user is logged in as project owner' do
+    get :verify,
+    {
+      format: 'json',
+      project_id: @project_three.id,
+      verify_owner: 'true'
+    }, user_id: @kate.id
     assert_response :success
   end
 
