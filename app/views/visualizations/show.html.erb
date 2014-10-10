@@ -10,10 +10,10 @@
                    'Bar_light': "<%= path_to_image('vis_bar_light.png')%>",
                    'Histogram_dark': "<%= path_to_image('vis_histogram_dark.png')%>",
                    'Histogram_light': "<%= path_to_image('vis_histogram_light.png')%>",
-                   'Summary_dark': "<%= path_to_image('vis_table_dark.png')%>",
-                   'Summary_light': "<%= path_to_image('vis_table_light.png')%>",
-                   'Table_dark': "<%= path_to_image('vis_summary_dark.png')%>",
-                   'Table_light': "<%= path_to_image('vis_summary_light.png')%>",
+                   'Summary_dark': "<%= path_to_image('vis_summary_dark.png')%>",
+                   'Summary_light': "<%= path_to_image('vis_summary_light.png')%>",
+                   'Table_dark': "<%= path_to_image('vis_table_dark.png')%>",
+                   'Table_light': "<%= path_to_image('vis_table_light.png')%>",
                    'Photos_dark': "<%= path_to_image('vis_photos_dark.png')%>",
                    'Photos_light': "<%= path_to_image('vis_photos_light.png')%>",
                    'Pie_dark': "<%= path_to_image('vis_pie_dark.png')%> ",
@@ -57,8 +57,9 @@
   </div>
 </div>
 
-<div>
-  <div id="viscontainer">
+
+<div style="margin: 0px 10px 10px;">
+  <div id="viscontainer" style="height:500px;">
     <div class="pull-right"><button class="btn btn-default" id="fullscreen-vis" title="Maximize"><i class="fa fa-arrows-alt"></i></button></div>
     <ul id='visTabList'></ul>
     <div class="clear"></div>
@@ -80,7 +81,7 @@
       <div id="controldiv"></div>
     </div>
   </div>
-
+</div>
   <div class="row">
     <div class="col-md-8">
       <div class="well" style="margin-top:10px" id="dataset_info">
