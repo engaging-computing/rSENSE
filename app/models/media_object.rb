@@ -1,6 +1,6 @@
 require 'base64'
 require 'store_file'
-require 'auto_html'
+
 class MediaObject < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
   include AutoHtml
