@@ -224,6 +224,12 @@ body {
     text-align: right; 
     margin-top: 1em;
   }
+  #add-content-image{
+    img{
+      height:390px;
+      width:100%;
+    }
+  }
   overflow:hidden !important;
   iframe{
     width: 100%; 
