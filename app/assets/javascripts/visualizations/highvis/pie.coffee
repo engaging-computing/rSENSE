@@ -42,19 +42,27 @@ $ ->
             data.textFields[2]
           else
             'Percent'
+      ANALYSISTYPE_TOTAL:     0
+      ANALYSISTYPE_MAX:       1
+      ANALYSISTYPE_MIN:       2
+      ANALYSISTYPE_MEAN:      3
+      ANALYSISTYPE_MEDIAN:    4
+      ANALYSISTYPE_COUNT:     5
+
+      analysisTypeNames: ["Total","Max","Min","Mean","Median","Row Count"]
 
       start: () ->
         super()
 
       update: () ->
         @configs.selectName = data.fields[globals.configs.groupById].fieldName
-        @getGroupedData()
+        @displayData = @getGroupedData(window.globals.configs.displayField)
         while @chart.series.length > 0
           @chart.series[@chart.series.length - 1].remove false
 
         @displayColors = []
         for number in data.groupSelection
-          @displayColors.push(globals.configs.colors[number])
+          @displayColors.push(globals.configs.colors[number % globals.configs.colors.length])
         options =
           showInLegend: false
           data: @displayData
@@ -63,22 +71,6 @@ $ ->
         @chart.addSeries options, false
 
         @chart.redraw()
-
-      getGroupedData: ->
-        @displayData = data.dataPoints.reduce (prev, next) =>
-          if typeof prev[next[globals.configs.groupById]] != "undefined"
-            prev[next[globals.configs.groupById]] = prev[next[globals.configs.groupById]] + next[@configs.displayField]
-          else
-            prev[next[globals.configs.groupById]] = next[@configs.displayField]
-          prev
-        , {}
-        @displayData = Object.keys(@displayData).reduce (prev, key) =>
-          if data.groups.indexOf(key.toLowerCase()) in data.groupSelection
-            if (grouping[0] for grouping in prev).indexOf(key.toLowerCase()) isnt -1
-              prev.indexOf(grouping)[1] = @displayData[key] + prev.indexOf(grouping)[1]
-            else prev.push [key.toLowerCase() or "No #{@configs.selectName}", @displayData[key]]
-          prev
-        , []
 
       buildOptions: ->
         super()
@@ -103,6 +95,7 @@ $ ->
         super()
         @drawGroupControls false, false, false
         @drawYAxisControls true, false # Naming here is less than ideal
+        @drawToolControls()
         @drawSaveControls()
 
     if "Pie" in data.relVis
