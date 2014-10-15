@@ -30,8 +30,14 @@ $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
     # Restore saved data
     if data.savedData?
+      # Don't extend the globals yet
+      savedGlobals = data.savedGlobals
+
       savedData = JSON.parse(data.savedData)
       $.extend(data, savedData)
+
+      # Restore globals string
+      data.savedGlobals = savedGlobals
 
       # Check for motion reference and remove
       index = ($.inArray 'Motion', data.allVis)
