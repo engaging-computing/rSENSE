@@ -28,10 +28,10 @@
 ###
 $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
-
-    # Restored saved data
+    # Restore saved data
     if data.savedData?
-      $.extend(data, JSON.parse(data.savedData))
+      savedData = JSON.parse(data.savedData)
+      $.extend(data, savedData)
 
       # Check for motion reference and remove
       index = ($.inArray 'Motion', data.allVis)
