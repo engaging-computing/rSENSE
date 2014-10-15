@@ -213,6 +213,7 @@ $ ->
 
       serializationCleanup: ->
         @saveSort()
+        super()
 
       saveSort: ->
         if @table?
