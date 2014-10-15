@@ -44,12 +44,10 @@ class VisualizationsController < ApplicationController
   # GET /visualizations/1.json
   def show
     @visualization = Visualization.find(params[:id])
-    logger.info @visualization
     @project = Project.find_by_id(@visualization.project_id)
 
     # The finalized data object
     @data = { savedData: @visualization.data, savedGlobals: @visualization.globals }
-    logger.info @data
 
     recur = params.key?(:recur) ? params[:recur] == 'true' : false
 
