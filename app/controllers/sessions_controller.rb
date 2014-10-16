@@ -56,10 +56,11 @@ class SessionsController < ApplicationController
     respond_to do |format|
       permission = true
       unless params[:project_id].nil? || params[:verify_owner].nil?
-        id = Project.find(params[:project_id]).user_id
+        owner_id = Project.find(params[:project_id]).user_id
         verify = params[:verify_owner] == 'true'
-        user = User.find(session[:user_id])
-        permission = (verify && id == user.id) || !verify || user.admin
+        session_destroyed = session[:user_id].nil?
+        is_admin = (!session_destroyed and User.find(session[:user_id]).admin)
+        permission = (verify && owner_id == session[:user_id]) || !verify || is_admin
       end
 
       if session[:user_id].nil? || !permission
