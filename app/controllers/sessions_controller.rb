@@ -58,7 +58,8 @@ class SessionsController < ApplicationController
       unless params[:project_id].nil? || params[:verify_owner].nil?
         id = Project.find(params[:project_id]).user_id
         verify = params[:verify_owner] == 'true'
-        permission = (verify && id == session[:user_id]) || !verify
+        user = User.find(session[:user_id])
+        permission = (verify && id == user.id) || !verify || user.admin
       end
 
       if session[:user_id].nil? || !permission
