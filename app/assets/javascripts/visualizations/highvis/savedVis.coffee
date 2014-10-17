@@ -126,13 +126,15 @@ $ ->
     Ajax call to check if the user is logged in. Calls the appropriate
     given callback when completed.
     ###
-    globals.verifyUser = (succCallback, failCallback) ->
+    globals.verifyUser = (succCallback, failCallback, checkOwner) ->
 
       req = $.ajax
         type: 'GET'
         url: "/sessions/verify"
         dataType: 'json'
-        data: {}
+        data:
+          project_id: data.projectID
+          verify_owner: checkOwner
         success: (msg, status, details) ->
           succCallback()
         error: (msg, status, details) ->
@@ -141,12 +143,10 @@ $ ->
     ###
     Serializes all vis data. Strips functions from the objects bfire serializing
     since they cannot be serialized.
-
-    NOTE: Booleans cannot be serialized properly (Hydrate.js issue)
     ###
-    globals.serializeVis = ->
+    globals.serializeVis = (includeData = true) ->
 
-      # set current vis to default
+      # Set current vis to default
       current = (globals.curVis.canvas.match /([A-z]*)_canvas/)[1]
       current = current[0].toUpperCase() + current.slice 1
       data.defaultVis = current
@@ -157,68 +157,42 @@ $ ->
           for fieldIndex in data.timeFields
             data.dataPoints[dIndex][fieldIndex] = "U #{dp[fieldIndex]}"
 
-      hydrate = new Hydrate()
+      savedConfig = {}
 
-      stripFunctions = (obj) ->
+      # Grab the global configs
+      savedConfig['globals'] = globals.configs
 
-        switch typeof obj
-          when 'number'
-            obj
-          when 'string'
-            obj
-          when 'function'
-            undefined
-          when 'object'
-
-            if obj is null
-              null
-            else
-              cpy = if $.isArray obj then [] else {}
-              for key, val of obj
-                stripped = stripFunctions val
-                if stripped isnt undefined
-                  cpy[key] = stripped
-
-              cpy
-
+      # Grab the vis specific configs
       for visName in data.allVis
         vis  = eval "globals.#{visName.toLowerCase()}"
         if vis?
-          vis.end()
           vis.serializationCleanup()
+          savedConfig[visName] = vis.configs
 
-      globalsCpy = stripFunctions globals
-      dataCpy = stripFunctions data
-
-      delete globalsCpy.curVis
+      # Default vises don't save data
+      dataCpy = {}
+      if includeData then $.extend(dataCpy, data)
 
       ret =
-        globals: (hydrate.stringify globalsCpy)
-        data: (hydrate.stringify dataCpy)
+        globals: (JSON.stringify savedConfig)
+        data: (JSON.stringify dataCpy)
 
     ###
-    Does a deep copy extend operation similar to $.extend
+    Ajax call to update the project's default vis with the current settings.
     ###
-    globals.extendObject = (obj1, obj2) ->
-      switch typeof obj2
-        when 'boolean'
-          obj2
-        when 'number'
-          obj2
-        when 'string'
-          obj2
-        when 'function'
-          obj2
-        when 'object'
+    globals.defaultVis = ->
 
-          if obj2 is null
-            obj2
-          else
-            if $.isArray obj2
-              obj1 ?= []
-            else
-              obj1 ?= {}
+      savedData = globals.serializeVis(false)
 
-            for key, val of obj2 when key isnt '__hydrate_id'
-              obj1[key] = globals.extendObject obj1[key], obj2[key]
-            obj1
+      req = $.ajax
+        type: 'PUT'
+        url: '/projects/' + data.projectID
+        dataType: 'json'
+        data:
+          project:
+            globals: savedData.globals
+            default_vis: data.defaultVis
+        success: ->
+          quickFlash('Project defaults updated successfully', 'success')
+        error: ->
+          quickFlash('Failed to update project defaults', 'error')

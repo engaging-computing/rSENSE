@@ -9,7 +9,6 @@ class Project < ActiveRecord::Base
   validates_presence_of :user_id
 
   validates :title, length: { maximum: 128 }
-
   before_save :sanitize_project
   before_save :summernote_media_objects
   has_many :fields
@@ -29,8 +28,8 @@ class Project < ActiveRecord::Base
   def sanitize_project
     self.content = sanitize content
     # Check to see if there is any valid content left
-    html = Nokogiri.HTML(content)
-    if html.text.blank? and html.at_css('img').nil?
+    html = Nokogiri.HTML content
+    if html.text.nil? and html.at_css('img').nil? and html.css('iframe').nil?
       self.content = nil
     end
 
@@ -38,18 +37,22 @@ class Project < ActiveRecord::Base
   end
 
   def self.search(search, include_hidden = false)
-    res =
-    if search
-      Project.joins(
-        'LEFT OUTER JOIN "likes" ON "likes"."project_id" = "projects"."id"
+    regex = /^[0-9]+$/
+    search_query = Project.joins(
+      'LEFT OUTER JOIN "likes" ON "likes"."project_id" = "projects"."id"
       LEFT OUTER JOIN "view_counts" ON "view_counts"."project_id" = "projects"."id"'
       ).select(
-        'projects.*, count(likes.id) as like_count, view_counts.count as views'
+      'projects.*, count(likes.id) as like_count, view_counts.count as views'
       ).group(
-        'projects.id, view_counts.count'
-      ).where(
-        '(lower(projects.title) LIKE lower(?)) OR (projects.id = ?) OR
-      (lower(projects.content) LIKE lower(?))', "%#{search}%", search.to_i, "%#{search}%")
+     'projects.id, view_counts.count')
+    res =
+    if search =~ regex
+      search_query.where(
+      '(projects.id = ?)', search.to_i)
+    elsif search
+      search_query.where(
+     '(lower(projects.title) LIKE lower(?)) OR
+     (lower(projects.content) LIKE lower(?))', "%#{search}%", "%#{search}%")
     else
       Project.joins(
         'LEFT OUTER JOIN "likes" ON "likes"."project_id" = "projects"."id"

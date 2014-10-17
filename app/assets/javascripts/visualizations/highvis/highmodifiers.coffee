@@ -28,11 +28,16 @@
 ###
 $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
-
-    # Restored saved data
+    # Restore saved data
     if data.savedData?
-      hydrate = new Hydrate()
-      globals.extendObject data, (hydrate.parse data.savedData)
+      # Don't extend the globals yet
+      savedGlobals = data.savedGlobals
+
+      savedData = JSON.parse(data.savedData)
+      $.extend(data, savedData)
+
+      # Restore globals string
+      data.savedGlobals = savedGlobals
 
       # Check for motion reference and remove
       index = ($.inArray 'Motion', data.allVis)
@@ -59,17 +64,20 @@ $ ->
     data.NORM_TIME ?= 0
     data.timeType  ?= data.NORM_TIME
 
+    data.DEFAULT_PRECISION = 4
+    data.precision ?= data.DEFAULT_PRECISION
+
     ###
     Selects data in an x,y object format of the given group.
     ###
     data.xySelector = (xIndex, yIndex, groupIndex) ->
       rawData = globals.CLIPPING.getData(@dataPoints).filter (dp) =>
-        group = (String dp[@groupingFieldIndex]).toLowerCase() == @groups[groupIndex]
+        group = (String dp[globals.configs.groupById]).toLowerCase() == @groups[groupIndex]
         notNull = (dp[xIndex] isnt null) and (dp[yIndex] isnt null)
         notNaN = (not isNaN(dp[xIndex])) and (not isNaN(dp[yIndex]))
-        
+
         group and notNull and notNaN
-      
+
       mapFunc = (dp) ->
         obj =
           x: dp[xIndex]
@@ -85,7 +93,6 @@ $ ->
     Selects data in an x,y object format of the given groups.
     ###
     data.multiGroupXYSelector = (xIndex, yIndex, groupIndices) ->
-
       allData =
         data.xySelector(xIndex, yIndex, group) for group in groupIndices
 
@@ -98,8 +105,10 @@ $ ->
     'filterFunc' is a boolean filter that must be passed (true) for a datapoint to be included.
     ###
     data.selector = (fieldIndex, groupIndex, nans = false) ->
+      groupById = globals.configs.groupById
+
       filterFunc = (dp) =>
-        (String dp[@groupingFieldIndex]).toLowerCase() == @groups[groupIndex]
+        (String dp[groupById]).toLowerCase() == @groups[groupIndex]
 
       newFilterFunc = if nans
         filterFunc
@@ -131,7 +140,8 @@ $ ->
       rawData = @selector(fieldIndex, groupIndex)
 
       if rawData.length > 0
-        rawData.reduce (a,b) -> Math.max(a, b)
+        result = rawData.reduce (a,b) -> Math.max(a, b)
+        data.precisionFilter(result)
       else
         null
 
@@ -143,7 +153,8 @@ $ ->
       rawData = @selector(fieldIndex, groupIndex)
 
       if rawData.length > 0
-        rawData.reduce (a,b) -> Math.min(a, b)
+        result = rawData.reduce (a,b) -> Math.min(a, b)
+        data.precisionFilter(result)
       else
         null
 
@@ -155,7 +166,8 @@ $ ->
       rawData = @selector(fieldIndex, groupIndex)
 
       if rawData.length > 0
-        Math.round(((rawData.reduce (a,b) -> a + b) / rawData.length) * 10000) / 10000
+        result = (rawData.reduce (a,b) -> a + b) / rawData.length
+        data.precisionFilter(result)
       else
         null
 
@@ -171,9 +183,9 @@ $ ->
 
       if rawData.length > 0
         if rawData.length % 2
-          return rawData[mid]
+          return data.precisionFilter(rawData[mid])
         else
-          return (rawData[mid - 1] + rawData[mid]) / 2.0
+          return data.precisionFilter((rawData[mid - 1] + rawData[mid]) / 2.0)
       else
         null
 
@@ -197,7 +209,7 @@ $ ->
         total = 0
         for value in rawData
           total = total + value
-        return total
+        return data.precisionFilter(total)
       else
         null
 
@@ -205,38 +217,37 @@ $ ->
     Gets a list of unique, non-null, stringified vals from the given field index.
     All included datapoints must pass the given filter (defaults to all datapoints).
     ###
-    data.setGroupIndex = (index) ->
-      @groupingFieldIndex = index
-      @groups = @makeGroups()
-      @dataPoints = @setIndexFromGroups()
-        
+    data.setGroupIndex = (gIndex) ->
+      @groups = @makeGroups(gIndex)
+      @dataPoints = @setIndexFromGroups(gIndex)
+
     ###
     Sets the value of the Data Point (id) field to its index within the selected group.
     ###
-    data.setIndexFromGroups = () ->
+    data.setIndexFromGroups = (gIndex) ->
       filterFunc = (dp) =>
-        (String dp[@groupingFieldIndex]).toLowerCase() == @groups[groupIndex]
-        
+        (String dp[gIndex]).toLowerCase() == @groups[groupIndex]
+
       rawData = for group, groupIndex in @groups
         selectedPoints = @dataPoints.filter filterFunc
-            
+
         for dp, dpIndex in selectedPoints
           dp[data.DATA_POINT_ID_FIELD] = dpIndex + 1
           dp
-                
+
       merged = []
       merged = merged.concat.apply(merged, rawData)
 
     ###
     Gets a list of unique, non-null, stringified vals from the group field index.
     ###
-    data.makeGroups = ->
+    data.makeGroups = (gIndex) ->
 
       result = {}
 
       for dp in @dataPoints
-        if dp[@groupingFieldIndex] isnt null
-          result[String(dp[@groupingFieldIndex]).toLowerCase()] = true
+        if dp[gIndex] isnt null
+          result[String(dp[gIndex]).toLowerCase()] = true
 
       groups = for keys of result
         keys
@@ -322,7 +333,10 @@ $ ->
 
     # Preprocess
     data.preprocessData()
-    # Field index of grouping field
-    data.groupingFieldIndex ?= data.DATASET_NAME_FIELD
-    # Array of current groups
-    data.groups ?= data.makeGroups()
+
+    ###
+    Rounds to precision set by data.precision (defaults to 4 decimal places)
+    ###
+    data.precisionFilter = (value, index, arr) ->
+      precision = Math.pow(10, data.precision)
+      Math.round(value * precision) / precision

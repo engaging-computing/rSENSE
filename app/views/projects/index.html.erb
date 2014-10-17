@@ -27,7 +27,7 @@
 
         <div id="searchProjRow" class="row">
           <div class="padded-col col-sm-10 col-xs-9" title="Enter keyword(s) or project number to search for a project">
-            <%= text_field_tag :search, @params[:search], class: "form-control" %>
+            <%= text_field_tag :search, @params[:search], class: "form-control", placeholder: "Enter keyword(s) or project number to search for a project" %>
           </div>
           <div class="padded-col col-sm-2 col-xs-3">
             <%= submit_tag "Search", name: nil, class:'btn btn-default btn-group-justified'%>

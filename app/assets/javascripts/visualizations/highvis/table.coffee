@@ -31,49 +31,33 @@ $ ->
 
     class window.Table extends BaseVis
       constructor: (@canvas) ->
-        @tableFields ?=
+        super(@canvas)
+        @TOOLBAR_HEIGHT_OFFSET = 70
+
+        fieldList =
           fIndex for f, fIndex in data.fields when fIndex isnt data.COMBINED_FIELD
+        @configs.tableFields ?= fieldList[0..7]
 
         # Set sort state to default none existed
-        @sortName ?= ''
-        @sortType ?= ''
+        @configs.sortName ?= ''
+        @configs.sortType ?= ''
 
         # Set default search to empty string
-        @searchParams ?= {}
+        @configs.searchParams ?= {}
 
       # Removes nulls from the table and colors the groupByRow
       rowFormatter = (cellvalue, options, rowObject) ->
         cellvalue = "" if $.type(cellvalue) is 'number' and isNaN(cellvalue) or cellvalue is null
 
-        colorIndex = data.groups.indexOf(String(cellvalue).toLowerCase()) % globals.colors.length
+        colorIndex = data.groups.indexOf(String(cellvalue).toLowerCase()) % globals.configs.colors.length
         if (colorIndex isnt -1)
-          return "<font color='#{globals.colors[colorIndex]}'>#{cellvalue}<font>"
+          return "<font color='#{globals.configs.colors[colorIndex]}'>#{cellvalue}<font>"
 
         cellvalue
 
       # Formats tables dates properly
       dateFormatter = (cellvalue, options, rowObject) ->
         globals.dateFormatter cellvalue
-
-      # Resizes the table properly
-      ($ '#control_hide_button').click ->
-        # Calulate the new width from these parameters
-        containerSize = ($ '#viscontainer').width()
-        hiderSize     = ($ '#controlhider').outerWidth()
-        controlSize   = ($ '#controldiv').width()
-
-        # Check if you are opening or closing the controls
-        controlSize = if ($ '#controldiv').width() <= 0
-          globals.CONTROL_SIZE
-        else
-          0
-
-        # Set the grid to the correct size so the animation is smooth
-        newWidth = containerSize - (hiderSize + controlSize + 10)
-        newHeight = ($ '#viscontainer').height() - ($ '#visTabList').outerHeight()
-        if ($ "#data_table")?
-          ($ '#table_canvas').height(newHeight - 5)
-          ($ "#data_table").setGridWidth(newWidth).setGridHeight(newHeight - 75)
 
       start: ->
         # Make table visible? (or something)
@@ -84,7 +68,6 @@ $ ->
 
       # Gets called when the controls are clicked and at start
       update: ->
-
         # Updates controls by default
         ($ '#' + @canvas).html('')
         ($ '#' + @canvas).append '<table id="data_table" class="table table-striped"></table>'
@@ -96,15 +79,17 @@ $ ->
         # Make valid id's for the colModel
         colIds = for header, index in headers
           id = header.replace(/\s+/g, '_').toLowerCase()
-          if index is data.groupingFieldIndex then @groupingId = id else id
+          if index is globals.configs.groupById
+            @configs.groupingId = id
+          else id
 
         # Build the data for the table
-        visibleGroups = for group, groupIndex in data.groups when groupIndex in globals.groupSelection
+        visibleGroups = for group, groupIndex in data.groups when groupIndex in data.groupSelection
           group
 
         rows = []
         for dataPoint in globals.CLIPPING.getData(data.dataPoints) \
-        when (String dataPoint[data.groupingFieldIndex]).toLowerCase() in visibleGroups
+        when (String dataPoint[globals.configs.groupById]).toLowerCase() in visibleGroups
           line = {}
           for dat, fieldIndex in dataPoint
             line[colIds[fieldIndex]] = dat
@@ -143,12 +128,11 @@ $ ->
         ($ '#table_canvas').append '<div id="toolbar_bottom"></div>'
 
         # Build the grid
-        # Height - 71 for reasons
         @table = jQuery("#data_table").jqGrid({
           colNames: headers
           colModel: columns
           datatype: 'local'
-          height: ($ '#' + @canvas).height() - 71
+          height: ($ '#' + @canvas).height() - @TOOLBAR_HEIGHT_OFFSET
           width: ($ '#' + @canvas).width()
           gridview: true
           caption: ""
@@ -163,9 +147,9 @@ $ ->
         })
 
         # Show only the checked columns
-        for f, fIndex in data.fields when fIndex
+        for f, fIndex in data.fields
           col = @table.jqGrid('getGridParam','colModel')[fIndex]
-          if $.inArray(fIndex, @tableFields) is -1
+          if $.inArray(fIndex, @configs.tableFields) is -1
             @table.hideCol(col.name)
           else
             @table.showCol(col.name)
@@ -186,14 +170,14 @@ $ ->
         setFilterFormatters(timePair)
 
         # Set the sort parameters
-        @table.sortGrid(@sortName, true, @sortType)
+        @table.sortGrid(@configs.sortName, true, @configs.sortType)
 
         regexEscape = (str) ->
           return str.replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\-]', 'g'), '\\$&')
 
         # Restore the search filters
-        if @searchParams?
-          for column in @searchParams
+        if @configs.searchParams?
+          for column in @configs.searchParams
             # Restore the search input string
             inputId = regexEscape('gs_' + column.field)
             $('#' + inputId).val(column.data)
@@ -213,25 +197,13 @@ $ ->
         super()
 
       end: ->
-        ($ '#' + @canvas).hide()
-
-        if @table?
-          # Save the sort state
-          @sortName = @table.getGridParam('sortname')
-          @sortType = @table.getGridParam('sortorder')
-
-          # Save the table filters
-          if @table.getGridParam('postData').filters?
-            @searchParams = jQuery.parseJSON(@table.getGridParam('postData').filters).rules
+        @saveSort()
+        super()
 
       resize: (newWidth, newHeight, aniLength) ->
-        foo = () ->
-          # In the case that this was called by the hide button, this gets called a second time
-          # needlessly, but doesn't effect the overall performance
-          ($ '#table_canvas').height(newHeight - 5)
-          ($ '#data_table').setGridWidth(newWidth).setGridHeight(newHeight - 75)
-
-        setTimeout foo, aniLength
+        # In the case that this was called by the hide button, this gets called a second time
+        # needlessly, but doesn't effect the overall performance
+        ($ '#data_table').setGridWidth(newWidth)
 
       drawControls: ->
         super()
@@ -240,7 +212,19 @@ $ ->
         @drawSaveControls()
 
       serializationCleanup: ->
-        delete @table
+        @saveSort()
+        super()
+
+      saveSort: ->
+        if @table?
+          # Save the sort state
+          @configs.sortName = @table.getGridParam('sortname')
+          @configs.sortType = @table.getGridParam('sortorder')
+
+          # Save the table filters
+          if @table.getGridParam('postData').filters?
+            @configs.searchParams = jQuery.parseJSON(@table.getGridParam('postData').filters).rules
+
 
       ###
       JQGrid time formatting (to implement search post formatting)
@@ -307,7 +291,7 @@ $ ->
 
           controls += """
                       <div class='checkbox'><label><input class='y_axis_input' type='checkbox'
-                      value='#{fIndex}' #{if (Number fIndex) in @tableFields then "checked" else ""}
+                      value='#{fIndex}' #{if (Number fIndex) in @configs.tableFields then "checked" else ""}
                       />#{data.fields[fIndex].fieldName}</label></div>
                       """
           controls += "</div>"
@@ -321,20 +305,20 @@ $ ->
         ($ '.y_axis_input').click (e) =>
           index = Number e.target.value
 
-          if index in @tableFields
-            arrayRemove(@tableFields, index)
+          if index in @configs.tableFields
+            arrayRemove(@configs.tableFields, index)
           else
-            @tableFields.push(index)
+            @configs.tableFields.push(index)
           @delayedUpdate()
 
         # Set up accordion
-        globals.yAxisOpen ?= 0
+        globals.configs.yAxisOpen ?= 0
 
         ($ '#yAxisControl').accordion
           collapsible:true
-          active:globals.yAxisOpen
+          active:globals.configs.yAxisOpen
 
         ($ '#yAxisControl > h3').click ->
-          globals.yAxisOpen = (globals.yAxisOpen + 1) % 2
+          globals.configs.yAxisOpen = (globals.configs.yAxisOpen + 1) % 2
 
     globals.table = new Table "table_canvas"

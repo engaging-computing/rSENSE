@@ -362,10 +362,10 @@ class ProjectsController < ApplicationController
     if @cur_user.try(:admin)
       return params[:project].permit(:content, :title, :user_id, :filter, :cloned_from, :has_fields,
                                      :featured, :is_template, :featured_media_id, :hidden, :featured_at, :lock, :curated,
-                                     :curated_at, :updated_at, :default_vis)
+                                     :curated_at, :updated_at, :default_vis, :precision, :globals)
     end
 
     params[:project].permit(:content, :title, :user_id, :filter, :hidden, :cloned_from, :has_fields,
-                            :featured_media_id, :lock, :updated_at, :default_vis)
+                            :featured_media_id, :lock, :updated_at, :default_vis, :precision, :globals)
   end
 end

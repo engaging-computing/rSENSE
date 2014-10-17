@@ -30,7 +30,7 @@ group :development, :test do
 end
 
 # Jquery stuff
-gem 'better_colorpicker', git: 'https://github.com/asalani93/better-colorpicker'
+gem 'better_colorpicker', '~> 0.0.2', git: 'https://github.com/asalani93/better-colorpicker'
 gem 'jquery-rails'
 
 # To use ActiveModel has_secure_password
@@ -45,11 +45,12 @@ gem 'httparty'
 gem 'execjs'
 
 # Font-awesome
-gem 'font-awesome-rails'
+gem 'font-awesome-rails', '~> 4.2.0.0'
 
 # Rich Editor
 #gem 'simple_form'
 gem 'summernote-rails'
+gem 'auto_html'
 
 # Include Will Paginate
 gem 'will_paginate'

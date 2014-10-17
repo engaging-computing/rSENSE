@@ -3,6 +3,7 @@ require 'store_file'
 
 class MediaObject < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
+  include AutoHtml
 
   belongs_to :user
   belongs_to :project
@@ -153,7 +154,7 @@ class MediaObject < ActiveRecord::Base
   def self.create_media_objects(description, type, item_id, owner_id = nil)
     text = Nokogiri::HTML.fragment(description)
     text.search('img').each do |picture|
-      if picture['src'].include?('data:image')
+      if picture['src'] && picture['src'].include?('data:image')
         data = Base64.decode64(picture['src'].partition('/')[2].split('base64,')[1])
         if picture['src'].partition('/')[2].split('base64,')[0].include? 'png'
           file_type = '.png'
@@ -164,7 +165,21 @@ class MediaObject < ActiveRecord::Base
         picture['src'] = summernote_mo.src
       end
     end
-    text.to_s
+    text.search('iframe').each do |video|
+      video['allowfullscreen'] = true
+    end
+    text.search('a').each do |link|
+      if !link['href'].nil? and link['href'].include? 'www.youtube.com'
+        external_link = link['href']
+        link['href'] = '#'
+        unless link.content.include? 'www.youtube.com'
+          link.content = link.text + " #{external_link}"
+        end
+      end
+    end
+    AutoHtml.auto_html(text.to_s) do
+      youtube(autoplay: false, allowfullscreen: true)
+    end
   end
 
   private
