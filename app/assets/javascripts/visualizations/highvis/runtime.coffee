@@ -28,9 +28,9 @@
 ###
 $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
-
     window.globals ?= {}
-    window.globals.configs ?= {}
+    globals.configs ?= {}
+
     globals.curVis = null
 
     globals.CONTROL_SIZE = 220
@@ -57,18 +57,17 @@ $ ->
       '#bar_canvas', '#histogram_canvas', '#pie_canvas', '#table_canvas',
       '#summary_canvas','#viscanvas','#photos_canvas']
 
-    ### Load saved data if there ###
+    # Restore saved globals
     if data.savedGlobals?
-      savedConfigs = JSON.parse(data.savedGlobals)
-
-      # Restore global configs
-      $.extend(globals.configs, savedConfigs['globals'])
+      savedGlobals = JSON.parse(data.savedGlobals)
+      savedConfigs = savedGlobals['globals']
+      $.extend(globals.configs, savedConfigs)
 
       # Restore vis specific configs
       for visName in data.allVis
         vis  = eval "globals.#{visName.toLowerCase()}"
-        if vis? and savedConfigs[visName]?
-          $.extend(vis.configs, savedConfigs[visName])
+        if vis? and savedGlobals[visName]?
+          $.extend(vis.configs, savedGlobals[visName])
 
       delete data.savedGlobals
 
