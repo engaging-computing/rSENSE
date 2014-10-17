@@ -87,32 +87,15 @@ $ ->
       ###
       Calculate data to be displayed subject to analysis type (Bar Chart and Pie Chart)
       ###
-      getGroupedData: (display, sort = null) ->
-        # Pie Chart data format
-        console.log @configs.analysisType
-        console.log data.groupSelection
-        if sort is null
-          for groupName, groupIndex in data.groups when groupIndex in data.groupSelection
-            console.log groupName
-            console.log groupIndex
-            switch @configs.analysisType
-              when @ANALYSISTYPE_TOTAL    then [groupName, (data.getTotal     display, groupIndex)]
-              when @ANALYSISTYPE_MAX      then [groupName, (data.getMax       display, groupIndex)]
-              when @ANALYSISTYPE_MIN      then [groupName, (data.getMin       display, groupIndex)]
-              when @ANALYSISTYPE_MEAN     then [groupName, (data.getMean      display, groupIndex)]
-              when @ANALYSISTYPE_MEDIAN   then [groupName, (data.getMedian    display, groupIndex)]
-              when @ANALYSISTYPE_COUNT    then [groupName, (data.getCount     display, groupIndex)]
-        
-        # Bar Chart data format
-        else
-          for groupName, groupIndex in data.groups when groupIndex in data.groupSelection
-            switch @configs.analysisType
-              when @ANALYSISTYPE_TOTAL    then [groupIndex, (data.getTotal     sort, groupIndex)]
-              when @ANALYSISTYPE_MAX      then [groupIndex, (data.getMax       sort, groupIndex)]
-              when @ANALYSISTYPE_MIN      then [groupIndex, (data.getMin       sort, groupIndex)]
-              when @ANALYSISTYPE_MEAN     then [groupIndex, (data.getMean      sort, groupIndex)]
-              when @ANALYSISTYPE_MEDIAN   then [groupIndex, (data.getMedian    sort, groupIndex)]
-              when @ANALYSISTYPE_COUNT    then [groupIndex, (data.getCount     sort, groupIndex)] 
+      getGroupedData: (display) ->
+        for groupName, groupIndex in data.groups when groupIndex in data.groupSelection
+          switch @configs.analysisType
+            when @ANALYSISTYPE_TOTAL    then [groupIndex, (data.getTotal     display, groupIndex)]
+            when @ANALYSISTYPE_MAX      then [groupIndex, (data.getMax       display, groupIndex)]
+            when @ANALYSISTYPE_MIN      then [groupIndex, (data.getMin       display, groupIndex)]
+            when @ANALYSISTYPE_MEAN     then [groupIndex, (data.getMean      display, groupIndex)]
+            when @ANALYSISTYPE_MEDIAN   then [groupIndex, (data.getMedian    display, groupIndex)]
+            when @ANALYSISTYPE_COUNT    then [groupIndex, (data.getCount     display, groupIndex)] 
 
       ###
       Draws y axis controls

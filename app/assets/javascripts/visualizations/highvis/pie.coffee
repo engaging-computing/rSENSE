@@ -52,11 +52,12 @@ $ ->
       analysisTypeNames: ["Total","Max","Min","Mean","Median","Row Count"]
 
       start: () ->
+        @configs.analysisType ?= @ANALYSISTYPE_TOTAL
         super()
 
       update: () ->
         @configs.selectName = data.fields[globals.configs.groupById].fieldName
-        @displayData = @getGroupedData(window.globals.configs.displayField)
+        @displayData = @getGroupedData(@configs.displayField)
         while @chart.series.length > 0
           @chart.series[@chart.series.length - 1].remove false
 

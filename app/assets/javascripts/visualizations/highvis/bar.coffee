@@ -118,11 +118,8 @@ $ ->
           @chart.series[@chart.series.length - 1].remove false
 
         ### --- ###
-        console.log @configs.displayField
-        console.log @configs.sortField
-        tempGroupIDValuePairs = @getGroupedData(@configs.displayField, @configs.sortField)
-        console.log tempGroupIDValuePairs
-
+        tempGroupIDValuePairs = @getGroupedData(@configs.displayField)
+        
         if @configs.sortField != @SORT_DEFAULT
           fieldSortedGroupIDValuePairs = tempGroupIDValuePairs.sort (a,b) ->
             a[1] - b[1]
