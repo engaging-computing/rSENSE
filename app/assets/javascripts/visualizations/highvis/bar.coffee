@@ -118,7 +118,7 @@ $ ->
           @chart.series[@chart.series.length - 1].remove false
 
         ### --- ###
-        tempGroupIDValuePairs = @getGroupedData(@configs.displayField)
+        tempGroupIDValuePairs = @getGroupedData()
         
         if @configs.sortField != @SORT_DEFAULT
           fieldSortedGroupIDValuePairs = tempGroupIDValuePairs.sort (a,b) ->
@@ -168,7 +168,7 @@ $ ->
                   name:   data.groups[groupIndex]
 
           @chart.addSeries options, false
-
+        console.log options.data
         @chart.redraw()
 
       buildLegendSeries: ->
