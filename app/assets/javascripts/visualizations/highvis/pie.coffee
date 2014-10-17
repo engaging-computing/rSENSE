@@ -57,10 +57,14 @@ $ ->
 
       update: () ->
         @configs.selectName = data.fields[globals.configs.groupById].fieldName
-        @displayData = @getGroupedData(@configs.displayField)
+        @displayData = @getGroupedData()
         while @chart.series.length > 0
           @chart.series[@chart.series.length - 1].remove false
-
+        temp = for dp, index in @displayData
+          ret = 
+            y: dp
+            name: data.groups[index]
+        console.log temp 
         @displayColors = []
         for number in data.groupSelection
           @displayColors.push(globals.configs.colors[number % globals.configs.colors.length])
@@ -68,6 +72,7 @@ $ ->
           showInLegend: false
           data: @displayData
           colors: @displayColors
+        console.log @displayData
         @chart.setTitle { text: "#{@configs.selectName} by #{data.fields[@configs.displayField].fieldName}" }
         @chart.addSeries options, false
 

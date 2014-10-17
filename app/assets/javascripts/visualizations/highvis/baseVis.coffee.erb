@@ -87,8 +87,9 @@ $ ->
       ###
       Calculate data to be displayed subject to analysis type (Bar Chart and Pie Chart)
       ###
-      getGroupedData: (display) ->
+      getGroupedData: ->
         for groupName, groupIndex in data.groups when groupIndex in data.groupSelection
+          display = @configs.displayField
           switch @configs.analysisType
             when @ANALYSISTYPE_TOTAL    then [groupIndex, (data.getTotal     display, groupIndex)]
             when @ANALYSISTYPE_MAX      then [groupIndex, (data.getMax       display, groupIndex)]
