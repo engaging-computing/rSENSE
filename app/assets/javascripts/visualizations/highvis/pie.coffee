@@ -42,14 +42,6 @@ $ ->
             data.textFields[2]
           else
             'Percent'
-      ANALYSISTYPE_TOTAL:     0
-      ANALYSISTYPE_MAX:       1
-      ANALYSISTYPE_MIN:       2
-      ANALYSISTYPE_MEAN:      3
-      ANALYSISTYPE_MEDIAN:    4
-      ANALYSISTYPE_COUNT:     5
-
-      analysisTypeNames: ["Total","Max","Min","Mean","Median","Row Count"]
 
       start: () ->
         @configs.analysisType ?= @ANALYSISTYPE_TOTAL
@@ -58,21 +50,23 @@ $ ->
       update: () ->
         @configs.selectName = data.fields[globals.configs.groupById].fieldName
         @displayData = @getGroupedData()
+        
         while @chart.series.length > 0
           @chart.series[@chart.series.length - 1].remove false
-        temp = for dp, index in @displayData
+        
+        @displayData = for dp, index in @displayData
           ret = 
-            y: dp
-            name: data.groups[index]
-        console.log temp 
+            y: dp[1]
+            name: data.groups[data.groupSelection[index]] or "No #{data.fields[globals.configs.groupById].fieldName}"
+        
         @displayColors = []
         for number in data.groupSelection
           @displayColors.push(globals.configs.colors[number % globals.configs.colors.length])
+        
         options =
           showInLegend: false
           data: @displayData
           colors: @displayColors
-        console.log @displayData
         @chart.setTitle { text: "#{@configs.selectName} by #{data.fields[@configs.displayField].fieldName}" }
         @chart.addSeries options, false
 
@@ -88,7 +82,14 @@ $ ->
           chart:
             type: "pie"
           tooltip:
-            pointFormat: '{point.name}: <b>{point.percentage:.1f}%</b>'
+            formatter: ->
+              str  = "<div style='width:100%;text-align:center;color:#{@series.color};"
+              str += "margin-bottom:5px'> #{@point.name}</div>"
+              str += "<table>"
+              str += "<tr><td>#{data.fields[self.configs.displayField].fieldName} (#{self.analysisTypeNames[self.configs.analysisType]}):"
+              str += "</td><td><strong>#{@y}</strong></td></tr>"
+              str += "</table>"
+            useHTML: true
           plotOptions:
             pie:
               allowPointSelect: true

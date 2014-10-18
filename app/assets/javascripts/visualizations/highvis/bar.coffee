@@ -37,17 +37,6 @@ $ ->
           @configs.displayField = data.normalFields[1]
         else @configs.displayField = data.normalFields[0]
 
-      ANALYSISTYPE_TOTAL:     0
-      ANALYSISTYPE_MAX:       1
-      ANALYSISTYPE_MIN:       2
-      ANALYSISTYPE_MEAN:      3
-      ANALYSISTYPE_MEDIAN:    4
-      ANALYSISTYPE_COUNT:     5
-
-      SORT_DEFAULT:          -1
-
-      analysisTypeNames: ["Total","Max","Min","Mean","Median","Row Count"]
-
       # Used to restore previous analysis type (when user switches to data point
       # the analysis gets force set to row count, and this should be undone).
       restoreAnalysisType:  false
@@ -168,7 +157,6 @@ $ ->
                   name:   data.groups[groupIndex]
 
           @chart.addSeries options, false
-        console.log options.data
         @chart.redraw()
 
       buildLegendSeries: ->
