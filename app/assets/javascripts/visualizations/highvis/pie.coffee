@@ -55,7 +55,7 @@ $ ->
           @chart.series[@chart.series.length - 1].remove false
         
         @displayData = for dp, index in @displayData
-          ret = 
+          ret =
             y: dp[1]
             name: data.groups[data.groupSelection[index]] or "No #{data.fields[globals.configs.groupById].fieldName}"
         
@@ -86,7 +86,8 @@ $ ->
               str  = "<div style='width:100%;text-align:center;color:#{@series.color};"
               str += "margin-bottom:5px'> #{@point.name}</div>"
               str += "<table>"
-              str += "<tr><td>#{data.fields[self.configs.displayField].fieldName} (#{self.analysisTypeNames[self.configs.analysisType]}):"
+              str += "<tr><td>#{data.fields[self.configs.displayField].fieldName}
+                 (#{self.analysisTypeNames[self.configs.analysisType]}): "
               str += "</td><td><strong>#{@y}</strong></td></tr>"
               str += "</table>"
             useHTML: true
