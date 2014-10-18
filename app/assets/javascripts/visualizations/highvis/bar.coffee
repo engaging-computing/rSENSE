@@ -133,28 +133,28 @@ $ ->
               when @ANALYSISTYPE_TOTAL
                 ret =
                   y:      data.getTotal fieldIndex, groupIndex
-                  name:   data.groups[groupIndex]
+                  name:   data.groups[groupIndex] or "No #{data.fields[globals.configs.groupById].fieldName}"
 
               when @ANALYSISTYPE_MAX
                 ret =
                   y:      data.getMax fieldIndex, groupIndex
-                  name:   data.groups[groupIndex]
+                  name:   data.groups[groupIndex] or "No #{data.fields[globals.configs.groupById].fieldName}"
               when @ANALYSISTYPE_MIN
                 ret =
                   y:      data.getMin fieldIndex, groupIndex
-                  name:   data.groups[groupIndex]
+                  name:   data.groups[groupIndex] or "No #{data.fields[globals.configs.groupById].fieldName}"
               when @ANALYSISTYPE_MEAN
                 ret =
                   y:      data.getMean fieldIndex, groupIndex
-                  name:   data.groups[groupIndex]
+                  name:   data.groups[groupIndex] or "No #{data.fields[globals.configs.groupById].fieldName}"
               when @ANALYSISTYPE_MEDIAN
                 ret =
                   y:      data.getMedian fieldIndex, groupIndex
-                  name:   data.groups[groupIndex]
+                  name:   data.groups[groupIndex] or "No #{data.fields[globals.configs.groupById].fieldName}"
               when @ANALYSISTYPE_COUNT
                 ret =
                   y:      data.getCount fieldIndex, groupIndex
-                  name:   data.groups[groupIndex]
+                  name:   data.groups[groupIndex] or "No #{data.fields[globals.configs.groupById].fieldName}"
 
           @chart.addSeries options, false
         @chart.redraw()
