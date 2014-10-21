@@ -35,6 +35,7 @@ $ ->
     class window.BaseVis
       constructor: (@canvas) ->
         @configs ?= {}
+
       ANALYSISTYPE_TOTAL:     0
       ANALYSISTYPE_MAX:       1
       ANALYSISTYPE_MIN:       2
@@ -451,7 +452,6 @@ $ ->
       drawToolControls: (sortBy = false, logYAxis = false) ->
 
         controls =  '<div id="toolControl" class="vis_controls">'
-
         controls += "<h3 class='clean_shrink'><a href='#'>Tools:</a></h3>"
         controls += "<div class='outer_control_div'>"
         if sortBy
@@ -459,7 +459,6 @@ $ ->
           controls += 'Sort by: <select id="sortField" class="sortField form-control">'
           tempFields = for fieldID in data.normalFields
             [fieldID, data.fields[fieldID].fieldName]
-
           tempFields = [].concat [[@SORT_DEFAULT, 'Group Name']], tempFields
 
           for [fieldID, fieldName] in tempFields
@@ -467,13 +466,10 @@ $ ->
             controls += "<option value='#{fieldID}' #{selected}>#{fieldName}</option>"
 
           controls += '</select></div><br>'
-
           controls += "<h4 class='clean_shrink'>Analysis Type</h4><div id='analysis_types'>"
 
         for typestring, type in @analysisTypeNames
-
           controls += "<div class='inner_control_div'>"
-
           controls += "<div class='radio'><label><input type='radio' class='analysisType' "
           controls += "name='analysisTypeSelector' value='"
           controls += "#{type}' #{if type is @configs.analysisType then 'checked' else ''}> "
@@ -485,7 +481,6 @@ $ ->
             else controls += "#{typestring} </label></div>"
 
           controls += '</div>'
-
         controls += "</div>"
 
         if data.logSafe is 1 and logYAxis

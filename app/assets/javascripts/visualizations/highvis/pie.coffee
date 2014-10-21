@@ -49,24 +49,23 @@ $ ->
 
       update: () ->
         @configs.selectName = data.fields[globals.configs.groupById].fieldName
-        @displayData = @getGroupedData()
-        
+        displayData = @getGroupedData()        
         while @chart.series.length > 0
           @chart.series[@chart.series.length - 1].remove false
         
-        @displayData = for dp, index in @displayData
+        displayData = for dp, index in displayData
           ret =
             y: dp[1]
-            name: data.groups[data.groupSelection[index]] or "No #{data.fields[globals.configs.groupById].fieldName}"
+            name: data.groups[data.groupSelection[index]] or data.noField()
         
-        @displayColors = []
+        displayColors = []
         for number in data.groupSelection
-          @displayColors.push(globals.configs.colors[number % globals.configs.colors.length])
+          displayColors.push(globals.configs.colors[number % globals.configs.colors.length])
         
         options =
           showInLegend: false
-          data: @displayData
-          colors: @displayColors
+          data: displayData
+          colors: displayColors
         @chart.setTitle { text: "#{@configs.selectName} by #{data.fields[@configs.displayField].fieldName}" }
         @chart.addSeries options, false
 
