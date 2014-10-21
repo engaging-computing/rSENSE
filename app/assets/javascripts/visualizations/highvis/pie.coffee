@@ -49,7 +49,7 @@ $ ->
 
       update: () ->
         @configs.selectName = data.fields[globals.configs.groupById].fieldName
-        displayData = @getGroupedData()        
+        displayData = @getGroupedData()
         while @chart.series.length > 0
           @chart.series[@chart.series.length - 1].remove false
         
