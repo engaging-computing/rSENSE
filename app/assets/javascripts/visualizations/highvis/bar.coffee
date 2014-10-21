@@ -133,28 +133,25 @@ $ ->
               when @ANALYSISTYPE_TOTAL
                 ret =
                   y:      data.getTotal fieldIndex, groupIndex
-                  name:   data.groups[groupIndex] or "No #{data.fields[globals.configs.groupById].fieldName}"
-
+                  name:   data.groups[groupIndex] or data.noField()
               when @ANALYSISTYPE_MAX
                 ret =
                   y:      data.getMax fieldIndex, groupIndex
-                  name:   data.groups[groupIndex] or "No #{data.fields[globals.configs.groupById].fieldName}"
+                  name:   data.groups[groupIndex] or data.noField()
               when @ANALYSISTYPE_MIN
                 ret =
                   y:      data.getMin fieldIndex, groupIndex
-                  name:   data.groups[groupIndex] or "No #{data.fields[globals.configs.groupById].fieldName}"
-              when @ANALYSISTYPE_MEAN
+                  name:   data.groups[groupIndex] or data.noField()
                 ret =
                   y:      data.getMean fieldIndex, groupIndex
-                  name:   data.groups[groupIndex] or "No #{data.fields[globals.configs.groupById].fieldName}"
-              when @ANALYSISTYPE_MEDIAN
+                  name:   data.groups[groupIndex] or data.noField()
                 ret =
                   y:      data.getMedian fieldIndex, groupIndex
-                  name:   data.groups[groupIndex] or "No #{data.fields[globals.configs.groupById].fieldName}"
+                  name:   data.groups[groupIndex] or data.noField()
               when @ANALYSISTYPE_COUNT
                 ret =
                   y:      data.getCount fieldIndex, groupIndex
-                  name:   data.groups[groupIndex] or "No #{data.fields[globals.configs.groupById].fieldName}"
+                  name:   data.groups[groupIndex] or data.noField()
 
           @chart.addSeries options, false
         @chart.redraw()
@@ -172,7 +169,6 @@ $ ->
             name: fieldTitle field
             type: 'area'
             xAxis: 1
-
       
       drawYAxisControls: ->
         super()
@@ -183,7 +179,6 @@ $ ->
         @drawYAxisControls()
         @drawToolControls()
         @drawSaveControls()
-
 
     if "Bar" in data.relVis
       globals.bar = new Bar 'bar_canvas'
