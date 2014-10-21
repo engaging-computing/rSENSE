@@ -169,7 +169,7 @@ $ ->
             name: fieldTitle field
             type: 'area'
             xAxis: 1
-      
+
       drawYAxisControls: ->
         super()
 
