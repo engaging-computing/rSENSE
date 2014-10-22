@@ -54,7 +54,7 @@ $ ->
 
         @displayColors = []
         for number in data.groupSelection
-          @displayColors.push(globals.configs.colors[number])
+          @displayColors.push(globals.configs.colors[number % globals.configs.colors.length])
         options =
           showInLegend: false
           data: @displayData
