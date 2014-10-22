@@ -108,8 +108,9 @@ class MediaObject < ActiveRecord::Base
     if media_type == 'image'
       # make the thumbnail
       image = MiniMagick::Image.open(file_name)
-      image.resize '180'
-
+      unless file_name.include? '.svg'
+        image.resize '180'
+      end
       # finish up
       File.open(tn_file_name, 'wb') do |oo|
         oo.write image.to_blob
@@ -158,7 +159,10 @@ class MediaObject < ActiveRecord::Base
         data = Base64.decode64(picture['src'].partition('/')[2].split('base64,')[1])
         if picture['src'].partition('/')[2].split('base64,')[0].include? 'png'
           file_type = '.png'
-        else file_type = '.jpg'
+        elsif picture['src'].partition('/')[2].split('base64,')[0].include? 'svg'
+          file_type = '.svg'
+        else
+          file_type = '.jpg'
         end
         summernote_mo = MediaObject.new
         summernote_mo.summernote_image(data, file_type, type, item_id, owner_id)
