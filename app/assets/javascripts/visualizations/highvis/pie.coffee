@@ -44,41 +44,32 @@ $ ->
             'Percent'
 
       start: () ->
+        @configs.analysisType ?= @ANALYSISTYPE_TOTAL
         super()
 
       update: () ->
         @configs.selectName = data.fields[globals.configs.groupById].fieldName
-        @getGroupedData()
+        displayData = @getGroupedData()
         while @chart.series.length > 0
           @chart.series[@chart.series.length - 1].remove false
-
-        @displayColors = []
+        
+        displayData = for dp, index in displayData
+          ret =
+            y: dp[1]
+            name: data.groups[data.groupSelection[index]] or data.noField()
+        
+        displayColors = []
         for number in data.groupSelection
-          @displayColors.push(globals.configs.colors[number % globals.configs.colors.length])
+          displayColors.push(globals.configs.colors[number % globals.configs.colors.length])
+        
         options =
           showInLegend: false
-          data: @displayData
-          colors: @displayColors
+          data: displayData
+          colors: displayColors
         @chart.setTitle { text: "#{@configs.selectName} by #{data.fields[@configs.displayField].fieldName}" }
         @chart.addSeries options, false
 
         @chart.redraw()
-
-      getGroupedData: ->
-        @displayData = data.dataPoints.reduce (prev, next) =>
-          if typeof prev[next[globals.configs.groupById]] != "undefined"
-            prev[next[globals.configs.groupById]] = prev[next[globals.configs.groupById]] + next[@configs.displayField]
-          else
-            prev[next[globals.configs.groupById]] = next[@configs.displayField]
-          prev
-        , {}
-        @displayData = Object.keys(@displayData).reduce (prev, key) =>
-          if data.groups.indexOf(key.toLowerCase()) in data.groupSelection
-            if (grouping[0] for grouping in prev).indexOf(key.toLowerCase()) isnt -1
-              prev.indexOf(grouping)[1] = @displayData[key] + prev.indexOf(grouping)[1]
-            else prev.push [key.toLowerCase() or "No #{@configs.selectName}", @displayData[key]]
-          prev
-        , []
 
       buildOptions: ->
         super()
@@ -90,7 +81,15 @@ $ ->
           chart:
             type: "pie"
           tooltip:
-            pointFormat: '{point.name}: <b>{point.percentage:.1f}%</b>'
+            formatter: ->
+              str  = "<div style='width:100%;text-align:center;color:#{@series.color};"
+              str += "margin-bottom:5px'> #{@point.name}</div>"
+              str += "<table>"
+              str += "<tr><td>#{data.fields[self.configs.displayField].fieldName}
+                 (#{self.analysisTypeNames[self.configs.analysisType]}): "
+              str += "</td><td><strong>#{@y}</strong></td></tr>"
+              str += "</table>"
+            useHTML: true
           plotOptions:
             pie:
               allowPointSelect: true
@@ -103,6 +102,7 @@ $ ->
         super()
         @drawGroupControls false, false, false
         @drawYAxisControls true, false # Naming here is less than ideal
+        @drawToolControls()
         @drawSaveControls()
 
     if "Pie" in data.relVis
