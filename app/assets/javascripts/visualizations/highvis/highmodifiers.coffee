@@ -137,6 +137,7 @@ $ ->
     All included datapoints must pass the given filter (defaults to all datapoints).
     ###
     data.getMax = (fieldIndex, groupIndices) ->
+      if typeof groupIndices is 'number' then groupIndices = [ groupIndices ]
       rawData = @multiGroupSelector(fieldIndex, groupIndices)
 
       if rawData.length > 0
@@ -150,6 +151,7 @@ $ ->
     All included datapoints must pass the given filter (defaults to all datapoints).
     ###
     data.getMin = (fieldIndex, groupIndices) ->
+      if typeof groupIndices is 'number' then groupIndices = [ groupIndices ]
       rawData = @multiGroupSelector(fieldIndex, groupIndices)
 
       if rawData.length > 0
@@ -163,6 +165,7 @@ $ ->
     All included datapoints must pass the given filter (defaults to all datapoints).
     ###
     data.getMean = (fieldIndex, groupIndices) ->
+      if typeof groupIndices is 'number' then groupIndices = [ groupIndices ]
       rawData = @multiGroupSelector(fieldIndex, groupIndices)
 
       if rawData.length > 0
@@ -176,6 +179,7 @@ $ ->
     All included datapoints must pass the given filter (defaults to all datapoints).
     ###
     data.getMedian = (fieldIndex, groupIndices) ->
+      if typeof groupIndices is 'number' then groupIndices = [ groupIndices ]
       rawData = @multiGroupSelector(fieldIndex, groupIndices)
       rawData.sort()
 
@@ -194,7 +198,8 @@ $ ->
     All included datapoints must pass the given filter (defaults to all datapoints).
     ###
     data.getCount = (fieldIndex, groupIndices) ->
-      dataCount = @selector(fieldIndex, groupIndices).length
+      if typeof groupIndices is 'number' then groupIndices = [ groupIndices ]
+      dataCount = @multiGroupSelector(fieldIndex, groupIndices).length
 
       return dataCount
 
@@ -203,7 +208,8 @@ $ ->
     All included datapoints must pass the given filter (defaults to all datapoints).
     ###
     data.getTotal = (fieldIndex, groupIndices) ->
-      rawData = @selector(fieldIndex, groupIndices)
+      if typeof groupIndices is 'number' then groupIndices = [ groupIndices ]
+      rawData = @multiGroupSelector(fieldIndex, groupIndices)
 
       if rawData.length > 0
         total = 0
