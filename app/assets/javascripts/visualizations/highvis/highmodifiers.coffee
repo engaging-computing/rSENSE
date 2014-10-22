@@ -340,3 +340,6 @@ $ ->
     data.precisionFilter = (value, index, arr) ->
       precision = Math.pow(10, data.precision)
       Math.round(value * precision) / precision
+
+    data.noField = () ->
+      "No #{data.fields[globals.configs.groupById].fieldName}"
