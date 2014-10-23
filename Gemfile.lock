@@ -94,8 +94,6 @@ GEM
     docile (1.1.5)
     erubis (2.7.0)
     execjs (2.2.1)
-    faraday (0.9.0)
-      multipart-post (>= 1.2, < 3)
     ffi (1.9.3)
     font-awesome-rails (4.2.0.0)
       railties (>= 3.2, < 5.0)
@@ -134,11 +132,8 @@ GEM
     modernizr-rails (2.7.1)
     multi_json (1.10.1)
     multi_xml (0.5.5)
-    multipart-post (2.0.0)
     nokogiri (1.6.3.1)
       mini_portile (= 0.6.0)
-    octokit (3.4.0)
-      sawyer (~> 0.5.3)
     parser (2.2.0.pre.4)
       ast (>= 1.1, < 3.0)
       slop (~> 3.4, >= 3.4.5)
@@ -176,9 +171,6 @@ GEM
     ruby-progressbar (1.5.1)
     rubyzip (1.1.6)
     sass (3.3.14)
-    sawyer (0.5.5)
-      addressable (~> 2.3.5)
-      faraday (~> 0.8, < 0.10)
     selenium-webdriver (2.42.0)
       childprocess (>= 0.5.0)
       multi_json (~> 1.0)
@@ -252,7 +244,6 @@ DEPENDENCIES
   minitest-reporters
   modernizr-rails
   multi_json
-  octokit
   pg
   rails (~> 4.1.4)
   remotipart
