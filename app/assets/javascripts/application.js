@@ -44,6 +44,7 @@
 //= require numeric.min
 //= require oms
 //= require better_colorpicker
+//= require better_datetimepicker
 //
 //= require visualizations/highvis/index
 //
@@ -53,6 +54,6 @@
 //= require jquery.event.drag.live
 //
 //= require slickgrid/slickgrid
-//  require slickgrid-editors/editors
+//= require slickgrid-editors/editors
 //
 //= require_tree .

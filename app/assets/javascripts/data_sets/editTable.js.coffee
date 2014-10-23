@@ -122,8 +122,6 @@ IS.onReady 'data_sets/manualEntry', ->
       data: ajaxifyGrid view
       title: ($ '#data_set_name').val()
 
-    console.log ajaxData
-
     $.ajax
       url: "#{uploadSettings.urlEntry}"
       type: "#{uploadSettings.methodEntry}"
