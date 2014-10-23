@@ -6,6 +6,8 @@ class Field < ActiveRecord::Base
   serialize :restrictions, JSON
   alias_attribute :owner, :project
 
+  before_validation :trim_restrictions
+
   default_scope { order('field_type ASC, created_at ASC') }
 
   def to_hash(recurse = true)
@@ -63,6 +65,15 @@ class Field < ActiveRecord::Base
       @project = Project.find_by_id(params['project_id']) || nil
       if @project.nil?
         fail 'Project not found'
+      end
+    end
+  end
+
+  def trim_restrictions
+    if not restrictions.nil?
+      restrictions.map! do |x|
+        x.strip!
+        x
       end
     end
   end

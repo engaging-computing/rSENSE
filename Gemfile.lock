@@ -21,6 +21,15 @@ GIT
       rainbow (>= 1.99.1, < 3.0)
       ruby-progressbar (~> 1.4)
 
+PATH
+  remote: ~/Documents/ecg/better_datetimepicker
+  specs:
+    better_datetimepicker (0.0.1)
+      coffee-rails
+      coffee-rails-source-maps
+      rails (~> 4.1.4)
+      sass
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -222,6 +231,7 @@ PLATFORMS
 DEPENDENCIES
   bcrypt-ruby
   better_colorpicker!
+  better_datetimepicker!
   bootstrap-sass
   browser
   capybara

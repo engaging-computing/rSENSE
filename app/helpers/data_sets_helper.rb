@@ -15,28 +15,38 @@ module DataSetsHelper
 
   def format_slickgrid_merge(cols, data)
     cols_merge = cols.map do |x|
-      {field_type: x.field_type,
+      restrictions =
+        if x.restrictions.nil?
+          '""'
+        else
+          x.restrictions
+        end
+      {
+        field_type: x.field_type,
         id: "#{x.id}",
         name: x.name,
-        restrictions: x.restrictions,
-        units: x.unit}
+        restrictions: restrictions,
+        units: x.unit
+      }
     end
 
-    coords = cols_merge.select {|x| x[:field_type] == 4 or x[:field_type] == 5}
+    coords = cols_merge.select { |x| x[:field_type] == 4 or x[:field_type] == 5 }
 
     if coords.empty?
       [cols_merge, data]
     else
-      lat = coords.select {|x| x[:field_type] == 4}[0]
-      lon = coords.select {|x| x[:field_type] == 5}[0]
+      lat = coords.select { |x| x[:field_type] == 4 }[0]
+      lon = coords.select { |x| x[:field_type] == 5 }[0]
 
       # merge longitude column into latitude column
-      cols_merge.select! {|x| x[:id] != lat[:id] and x[:id] != lon[:id]}
-      cols_merge << {field_type: 4,
+      cols_merge.select! { |x| x[:id] != lat[:id] and x[:id] != lon[:id] }
+      cols_merge << {
+        field_type: 4,
         id: "#{lat[:id]}-#{lon[:id]}",
         name: "#{lat[:name]} & #{lon[:name]}",
-        restrictions: '',
-        units: ''}
+        restrictions: '""',
+        units: ''
+      }
 
       # copy longitude data into latitude data
       lat_sym = lat[:id]
@@ -53,28 +63,40 @@ module DataSetsHelper
   end
 
   def format_slickgrid_populate(cols, data)
-    new_data = nil
     if data != []
       [cols, data]
-    elsif
-      data = {id: 0}
-      cols.each {|x| data[x[:id]] = ''}
+    else
+      data = { id: 0 }
+      cols.each { |x| data[x[:id]] = '' }
       [cols, [data]]
-    end      
+    end
   end
 
   def format_slickgrid_editors(cols, data)
     cols_editors = cols.map.with_index do |x, i|
-      editor = case x[:field_type]
-        when 1 then 'Slick.Editors.Text'
-        when 2 then 'Slick.Editors.Integer'
-        when 3 then 'Slick.Editors.Text'
-        when 4 then 'Slick.Editors.Text'
-        when 5 then 'Slick.Editors.Text'
-        else 'Slick.Editors.Text'
-      end
+      editor =
+        case x[:field_type]
+        when 1
+          'TimestampEditor'
+        when 2
+          'NumberEditor'
+        when 3
+          'TextEditor'
+        when 4
+          'LocationEditor'
+        else
+          'Slick.Editors.Text'
+        end
+
       field = "slickgrid-#{x[:id]}"
-      {id: "#{field}", name: "#{x[:name]}", field: "#{x[:id]}", editor: editor}
+
+      {
+        id: "\"#{field}\"",
+        name: "\"#{x[:name]}\"",
+        field: "\"#{x[:id]}\"",
+        editor: editor,
+        restrictions: "#{x[:restrictions]}"
+      }
     end
 
     [cols_editors, data.to_json]
@@ -82,8 +104,14 @@ module DataSetsHelper
 
   def format_slickgrid_json(cols, data)
     cols_json = cols.map do |x|
-      "{\"id\":\"#{x[:id]}\",\"name\":\"#{x[:name]}\",\"field\":\"#{x[:field]}\",\"editor\":#{x[:editor]}}"
+      strs = []
+      x.each do |key, value|
+        strs << "\"#{key}\":#{value}"
+      end
+      "{#{strs.join ','}}"
     end.join ','
+
+    puts cols_json
 
     ["[#{cols_json}]", data]
   end

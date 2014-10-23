@@ -1,23 +1,29 @@
-console.log 'JDAJDLAK'
+###
+	Timestamp Editor for Slickgrid
+	Will use the datetime picker to allow the user to enter a date/time combination
+###
 
 @TimestampEditor = (args) ->
+  form = null
+  loadValue = null
 
-	destroy: () ->
-		console.log 'destroy'
-	focus: () ->
-		console.log 'focus'
-	isValueChanged: () ->
-		console.log 'isValueChanged'
-		true
-	serializeValue: () ->
-		console.log 'serialize'
-		''
-	loadValue: (item) ->
-		console.log 'loadValue'
-		console.log "  args: #{item}"
-	applyValue: (item, state) ->
-		console.log 'applyValue'
-		console.log "  args: #{item} {state}"
-	validate: () ->
-		console.log 'validate'
-		true
+  form = ($ '<div></div>')
+  form.datetimepicker()
+  form.appendTo args.container
+  form.focus()
+
+  destroy: () ->
+    form.remove()
+  focus: () ->
+    form.focus()
+  isValueChanged: () =>
+    form.val() != loadValue
+  serializeValue: () ->
+    form.val()
+  loadValue: (item) ->
+    loadValue = item[args.column.field] || ''
+    form.val loadValue
+  applyValue: (item, state) ->
+    item[args.column.field] = state
+  validate: () ->
+    {valid: true, msg: null}
