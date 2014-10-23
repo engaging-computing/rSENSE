@@ -74,6 +74,5 @@ gem 'multi_json'
 gem 'roo'
 
 # Github Auth, Testing and Bug Report
-gem 'octokit'
 gem 'browser'
 gem 'galetahub-simple_captcha'
