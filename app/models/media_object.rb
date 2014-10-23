@@ -154,6 +154,7 @@ class MediaObject < ActiveRecord::Base
 
   def self.create_media_objects(description, type, item_id, owner_id = nil)
     text = Nokogiri::HTML.fragment(description)
+    links = Array.new
     text.search('img').each do |picture|
       if picture['src'] && picture['src'].include?('data:image')
         data = Base64.decode64(picture['src'].partition('/')[2].split('base64,')[1])
@@ -175,15 +176,25 @@ class MediaObject < ActiveRecord::Base
     text.search('a').each do |link|
       if !link['href'].nil? and link['href'].include? 'www.youtube.com'
         external_link = link['href']
+        links.push external_link
         link['href'] = '#'
         unless link.content.include? 'www.youtube.com'
           link.content = link.text + " #{external_link}"
         end
       end
     end
-    AutoHtml.auto_html(text.to_s) do
+    text = Nokogiri::HTML.fragment AutoHtml.auto_html(text.to_s) {
       youtube(autoplay: false, allowfullscreen: true)
+    }
+    replacements = 0
+    text.search('a') do |link|
+      if link['href'] == '#'
+        link['href'] = links[replacements]
+        link.content = links[replacements]
+        replacements += 1
+      end
     end
+    text.to_s
   end
 
   private
