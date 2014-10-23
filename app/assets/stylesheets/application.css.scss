@@ -215,3 +215,31 @@ body {
 .word-wrap {
    word-wrap: break-word;
 }
+#content-partial{
+  .summernote-controls{
+    text-align: right; 
+    margin-top: 1em;
+  }
+  overflow:hidden !important;
+  iframe{
+    width: 100%; 
+    height: 390px;
+  }
+}
+#content-viewer {
+  max-height: 400px;
+  overflow: auto;
+  word-wrap: break-word;
+  img{
+    width: 100%;
+    height: auto;
+  }
+  #add-content-image{
+    img{
+      height: 250px !important;
+      width: 250px !important;
+    }
+  }
+}
+
+
