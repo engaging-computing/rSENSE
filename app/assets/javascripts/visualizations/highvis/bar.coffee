@@ -37,17 +37,6 @@ $ ->
           @configs.displayField = data.normalFields[1]
         else @configs.displayField = data.normalFields[0]
 
-      ANALYSISTYPE_TOTAL:     0
-      ANALYSISTYPE_MAX:       1
-      ANALYSISTYPE_MIN:       2
-      ANALYSISTYPE_MEAN:      3
-      ANALYSISTYPE_MEDIAN:    4
-      ANALYSISTYPE_COUNT:     5
-
-      SORT_DEFAULT:          -1
-
-      analysisTypeNames: ["Total","Max","Min","Mean","Median","Row Count"]
-
       # Used to restore previous analysis type (when user switches to data point
       # the analysis gets force set to row count, and this should be undone).
       restoreAnalysisType:  false
@@ -118,15 +107,8 @@ $ ->
           @chart.series[@chart.series.length - 1].remove false
 
         ### --- ###
-        tempGroupIDValuePairs = for groupName, groupIndex in data.groups when groupIndex in data.groupSelection
-          switch @configs.analysisType
-            when @ANALYSISTYPE_TOTAL    then [groupIndex, (data.getTotal     @configs.sortField, groupIndex)]
-            when @ANALYSISTYPE_MAX      then [groupIndex, (data.getMax       @configs.sortField, groupIndex)]
-            when @ANALYSISTYPE_MIN      then [groupIndex, (data.getMin       @configs.sortField, groupIndex)]
-            when @ANALYSISTYPE_MEAN     then [groupIndex, (data.getMean      @configs.sortField, groupIndex)]
-            when @ANALYSISTYPE_MEDIAN   then [groupIndex, (data.getMedian    @configs.sortField, groupIndex)]
-            when @ANALYSISTYPE_COUNT    then [groupIndex, (data.getCount     @configs.sortField, groupIndex)]
-
+        tempGroupIDValuePairs = @getGroupedData()
+        
         if @configs.sortField != @SORT_DEFAULT
           fieldSortedGroupIDValuePairs = tempGroupIDValuePairs.sort (a,b) ->
             a[1] - b[1]
@@ -151,31 +133,27 @@ $ ->
               when @ANALYSISTYPE_TOTAL
                 ret =
                   y:      data.getTotal fieldIndex, groupIndex
-                  name:   data.groups[groupIndex]
-
+                  name:   data.groups[groupIndex] or data.noField()
               when @ANALYSISTYPE_MAX
                 ret =
                   y:      data.getMax fieldIndex, groupIndex
-                  name:   data.groups[groupIndex]
+                  name:   data.groups[groupIndex] or data.noField()
               when @ANALYSISTYPE_MIN
                 ret =
                   y:      data.getMin fieldIndex, groupIndex
-                  name:   data.groups[groupIndex]
-              when @ANALYSISTYPE_MEAN
+                  name:   data.groups[groupIndex] or data.noField()
                 ret =
                   y:      data.getMean fieldIndex, groupIndex
-                  name:   data.groups[groupIndex]
-              when @ANALYSISTYPE_MEDIAN
+                  name:   data.groups[groupIndex] or data.noField()
                 ret =
                   y:      data.getMedian fieldIndex, groupIndex
-                  name:   data.groups[groupIndex]
+                  name:   data.groups[groupIndex] or data.noField()
               when @ANALYSISTYPE_COUNT
                 ret =
                   y:      data.getCount fieldIndex, groupIndex
-                  name:   data.groups[groupIndex]
+                  name:   data.groups[groupIndex] or data.noField()
 
           @chart.addSeries options, false
-
         @chart.redraw()
 
       buildLegendSeries: ->
@@ -192,82 +170,6 @@ $ ->
             type: 'area'
             xAxis: 1
 
-      drawToolControls: ->
-
-        controls =  '<div id="toolControl" class="vis_controls">'
-
-        controls += "<h3 class='clean_shrink'><a href='#'>Tools:</a></h3>"
-        controls += "<div class='outer_control_div'>"
-
-        controls += "<div class='inner_control_div'>"
-        controls += 'Sort by: <select id="sortField" class="sortField form-control">'
-
-        tempFields = for fieldID in data.normalFields
-          [fieldID, data.fields[fieldID].fieldName]
-
-        tempFields = [].concat [[@SORT_DEFAULT, 'Group Name']], tempFields
-
-        for [fieldID, fieldName] in tempFields
-          selected = if @configs.sortField is fieldID then 'selected' else ''
-          controls += "<option value='#{fieldID}' #{selected}>#{fieldName}</option>"
-
-        controls += '</select></div><br>'
-
-        controls += "<h4 class='clean_shrink'>Analysis Type</h4><div id='analysis_types'>"
-
-        for typestring, type in @analysisTypeNames
-
-          controls += "<div class='inner_control_div'>"
-
-          controls += "<div class='radio'><label><input type='radio' class='analysisType' "
-          controls += "name='analysisTypeSelector' value='"
-          controls += "#{type}' #{if type is @configs.analysisType then 'checked' else ''}> "
-
-          switch typestring
-            when 'Max' then controls += 'Maximum </label> </div>'
-            when 'Min' then controls += 'Minimum </label> </div>'
-            when 'Mean' then controls += 'Mean (Average)</label></div>'
-            else controls += "#{typestring} </label></div>"
-
-          controls += '</div>'
-
-        controls += "</div><h4 class='clean_shrink'>Other</h4>"
-
-        if data.logSafe is 1
-          controls += '<div class="inner_control_div">'
-          controls += "<div class='checkbox'><label><input class='logY_box' type='checkbox' "
-          controls += "name='tooltip_selector' #{if globals.configs.logY is 1 then 'checked' else ''}/> "
-          controls += "Logarithmic Y Axis</label></div>"
-          controls += "</div>"
-
-        controls += '</div></div>'
-
-        ### --- ###
-        # Write HTML
-        ($ '#controldiv').append controls
-
-        ($ '.analysisType').change (e) =>
-          @configs.analysisType = Number e.target.value
-          @delayedUpdate()
-
-        ($ '#sortField').change (e) =>
-          @configs.sortField = Number e.target.value
-          @delayedUpdate()
-
-        ($ '.logY_box').click (e) =>
-          globals.configs.logY = (globals.configs.logY + 1) % 2
-          @start()
-
-        # Set up accordion
-        globals.configs.toolsOpen ?= 0
-
-        ($ '#toolControl').accordion
-          collapsible:true
-          active:globals.configs.toolsOpen
-
-        ($ '#toolControl > h3').click ->
-          globals.configs.toolsOpen = (globals.configs.toolsOpen + 1) % 2
-
       drawYAxisControls: ->
         super()
 
@@ -277,7 +179,6 @@ $ ->
         @drawYAxisControls()
         @drawToolControls()
         @drawSaveControls()
-
 
     if "Bar" in data.relVis
       globals.bar = new Bar 'bar_canvas'
