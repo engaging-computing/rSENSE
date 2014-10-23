@@ -69,6 +69,8 @@ class ApplicationController < ActionController::Base
 
   def github_authenticate
     new_params = Hash.new
+    # IMPORTANT #
+    # These variables need to be set on the machine that is running the server
     new_params[:client_id] = ENV['GITHUB_KEY']
     new_params[:client_secret] = ENV['GITHUB_SECRET']
     new_params[:code] = params[:code]
@@ -176,28 +178,47 @@ class ApplicationController < ActionController::Base
   end
 
   def submit_issue
-    new_params = {}
-    new_params['title'] = params[:bug_title]
-    new_params['body'] = '** Description: **' + params[:bug_description]
-    new_params['access_token'] = params[:access_token]
+    # TODO add support for feature submission
+    # TODO logged_in and is_admin should submit Y or N
+    b =  "**General description:** #{params[:description]}\n\n"\
+         "**live/dev/localhost:** #{params[:type]}\n"\
+         "**iSENSE Version:** #{params[:isense_version]}\n"\
+         "**Logged in (Y or N):** #{params[:logged_in]}\n"\
+         "**Admin (Y or N):** #{params[:is_admin]}\n\n"\
+         "**OS:** #{params[:os]}\n"\
+         "**Browser/Version:** #{params[:browser]}/#{params[:version]}\n\n"\
+         "**Steps to Reproduce:** #{params[:browser]}\n\n"
 
-    url = URI.parse('https://api.github.com/repos/jaypoulz/rSENSE/issues')
-    print 'Starting POST '
+    # TODO add images
+    #b += "**Associated Image(s):** "
+
+    # TODO add labels
+    new_params = {}
+    new_params['title'] = params[:title]
+    new_params['body'] = b
+
+    base_url = 'https://api.github.com/repos/jaypoulz/rSENSE/issues'
+    token = '?access_token=' + params[:access_token]
+    url = URI.parse(base_url + token)
+    print 'Starting POST to url: '
     puts url
 
     req = Net::HTTP::Post.new(url.request_uri)
-    req.set_form_data(new_params)
+    req.body = new_params.to_json
     http = Net::HTTP.new(url.host, url.port)
     http.use_ssl = (url.scheme == "https")
     response = http.request(req)
 
+    print 'With params: '
     puts new_params
+
+    print 'Received response: '
     puts response.body
 
     if response.code == '201'
       redirect_to root_path, :flash => { :success => "Issue submitted successfully." }
     else
-      redirect_to root_path, :flash => { :error => response.body['message'] }
+      redirect_to root_path, :flash => { :error => JSON.parse(response.body)['message'] }
     end
   end
 end

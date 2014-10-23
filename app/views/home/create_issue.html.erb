@@ -1,7 +1,5 @@
-<%= form_tag("/submit_issue", method: "post") do %>
-
+<%= form_tag('/submit_issue', method: 'post') do %>
   <div class="panel panel-default">
-
     <div class="panel-heading">
       <div class="row">
         <div class="col-md-9 h1">Please fill out the following form:</div>
@@ -10,17 +8,15 @@
         </div>
       </div>
     </div>
-
+    <!-- Both forms should be fragments. You can render fragments with 'render fragmentname' -->
     <div id="bug_form" class="panel-body">
       <div class="form-group title">
-          <%= label_tag(:bug_title, "Title:") %>
-          <%= text_field_tag(:bug_title, nil, placeholder: 'My very important issue') %>
+          <%= label_tag(:title, "Title:") %>
+          <%= text_field_tag(:title, nil, placeholder: 'My very important issue') %>
       </div>
-
       <h4>Please enter a brief description of the bug:</h4>
-      <%= text_area_tag(:bug_description, nil,  placeholder: 'e.g. iSENSE issue reporting is not yet complete.', rows: 4) %>
+      <%= text_area_tag(:description, nil,  placeholder: 'e.g. iSENSE issue reporting is not yet complete.', rows: 4) %>
       <br/>
-
       <h4>Please verify the following:</h4>
       <div class="row">
         <div class="form-group col-md-4">
@@ -45,30 +41,36 @@
           <%= label_tag(:is_admin, "Admin") %>
           <%= select_tag(:is_admin, options_for_select([['Yes', 1],['No', 0]], 0)) %>
         </div>
+        <div class="form-group col-md-4">
+          <%= label_tag(:os, "Operating System") %>
+          <%= text_field_tag(:os, 'use useragent gem') %>
+        </div>
       </div>
-
       <h4>Please give step by step instructions on how to reproduce the bug:</h4>
       <%= text_area_tag(:instructions, nil,
-          placeholder: 'e.g. 1. Click on \'Projects.\' 2. Hover over the create project buttons. 3. Click on \'Tutorials\' 4 times.', rows: 4) %>
+          placeholder: 'e.g. Start by clicking on \'Projects.\' Then, '\
+          'hover over the create project buttons. Finally, click on '\
+          '\'Tutorials\' 4 times.', rows: 4) %>
       <br/>
+      <!-- TODO UI for labels e.g. only UI or Vis -->
+      <!-- TODO add ability to set a milestone -->
+      <!-- TODO enabled image uploading -->
     </div>
-
+    <!-- TODO This form should have :title and :description like above. Hence the need for a fragment. -->
     <div id="feature_form" class="panel-body" style="display:none">
       <div class="form-group title">
-          <%= label_tag(:title, "Title:") %>
-          <%= text_field_tag(:title, nil, placeholder: 'My very exciting feature') %>
+          <%= label_tag(:ftitle, "Title:") %>
+          <%= text_field_tag(:ftitle, nil, placeholder: 'My very exciting feature') %>
       </div>
-
       <h4>Please enter a brief description of your glorious idea:</h4>
-      <%= text_area_tag(:description, nil,  placeholder: 'e.g. iSENSE issue reporting is not yet complete.', rows: 4) %>
+      <%= text_area_tag(:fdescription, nil,  placeholder: 'e.g. iSENSE issue reporting would be awesome!', rows: 4) %>
       <br/>
+      <!-- TODO add ability to set a milestone -->
+      <!-- TODO enabled image uploading -->
     </div>
-
     <div class="panel-footer">
       <%= submit_tag("Submit", class: "btn btn-primary") %>
     </div>
   </div>
-
-  <%= hidden_field(:access_token, params[:access_token]) =%>
-
+  <%= hidden_field_tag(:access_token, params[:access_token]) %>
 <% end %>
