@@ -65,7 +65,7 @@ $ ->
               if @series.name.regression?
                 str  = @series.name.regression.tooltip
               else
-                if self.advancedTooltips
+                if self.configs.advancedTooltips
                   str  = "<div style='width:100%;text-align:center;color:#{@series.color};'>"
                   str += "#{@series.name.group}</div><br>"
                   str += "<table>"
