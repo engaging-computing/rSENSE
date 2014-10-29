@@ -4,6 +4,9 @@
 
 .row.secondary-content{
   display: inline-block;
+  .col-md-8{
+    height: 90vh;
+  }
 }
 .secondary-side-content{
   height: 100%;    
@@ -17,13 +20,10 @@
 .project-description{
   text-align: center;
 }
-#carousel-container{
-  height: 500px;
-}
 /* Carousel base class */
 .carousel {
-  height: 500px;
-  margin-bottom: 60px;
+  height: 90vh;
+  margin-bottom: 50px;
 }
 /* Since positioning the image, we need to help out the caption */
 .carousel-caption {
@@ -32,11 +32,11 @@
   opacity:0.6;
 }
 .carousel-img{
-  height:100% !important;  
+  height:90vh;  
 }
 /* Declare heights because of positioning of img element */
 .carousel .item {
-  height: 500px;
+  height: 90vh;
   background-color: #777;
 }
 .carousel-inner > .item > img {
@@ -44,16 +44,20 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 500px;
-  height:100% !important ;
+  height: 90vh;
 }
-
+.carousel-divider{
+  margin-top: 0px !important;
+  margin-bottom: 40px !important;
+}
 /* Featurettes
 ------------------------- */
 
 .featurette-divider {
+  clear: both;
   margin-top: 40px;
-  margin-bottom: 20px;/* Space out the Bootstrap <hr> more */
+  margin-bottom: 20px;
+  /* Space out the Bootstrap <hr> more */
 }
 
 /* Thin out the marketing headings */
@@ -61,6 +65,10 @@
   font-weight: 300;
   line-height: 1;
   letter-spacing: -1px;
+}
+.featured-header.text-muted{
+  margin-top: 0px;
+  padding-top: 0px;
 }
 
 /* RESPONSIVE CSS
@@ -173,7 +181,7 @@
   
 }
 .second-footer{
-  width: 95%;
+  //width: 95%;
   //text-align: center;
 }
 .home-controller.index-action{
@@ -193,12 +201,23 @@
 .three-col{
   clear: both;  
   width:100% !important;
+  .collaborate-img{
+    width: 310px !important;
+  }
 }
 .isense-desc{
   overflow: auto;  
 }
+.ternary-upper{
+  margin-bottom: 40px !important;
+}
 .ternary-content{
   display:block;
+  height:85vh;
+  .news-prev-wrapper{
+  height: 60vh;
+  overflow-y:auto
+  }
 }
 /* GLOBAL STYLES
 -------------------------------------------------- */
