@@ -176,14 +176,13 @@ class MediaObject < ActiveRecord::Base
       if !link['href'].nil? and link['href'].include? 'www.youtube.com'
         external_link = link['href']
         link['href'] = '#'
-        unless link.content.include? 'www.youtube.com'
-          link.content = link.text + " #{external_link}"
-        end
+        link.content = external_link
       end
     end
-    AutoHtml.auto_html(text.to_s) do
+    text = Nokogiri::HTML.fragment AutoHtml.auto_html(text){
       youtube(autoplay: false, allowfullscreen: true)
-    end
+    }
+    text.to_s
   end
 
   private

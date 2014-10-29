@@ -12,7 +12,12 @@ showEditor = () ->
       ['insert', ['picture', 'link', 'video']],
     ]
   )
-  
+  ($ '.btn.btn-default.btn-sm.btn-small').on 'click', (e) ->
+    if e.currentTarget.firstChild.className.search 'icon-link' isnt -1
+      if ($ '.note-link-url').val() is '' and ($ '.note-link-text').val() is ''
+        ($ '.note-link-btn').removeClass('disabled')
+        ($ '.note-link-btn').removeAttr('disabled')
+
   ($ '#content-area').code($('#content-area').val())
 
   ($ '#content-area').closest('form').submit ->
