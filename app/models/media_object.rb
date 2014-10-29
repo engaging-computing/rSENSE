@@ -179,7 +179,7 @@ class MediaObject < ActiveRecord::Base
         link.content = external_link
       end
     end
-    text = Nokogiri::HTML.fragment AutoHtml.auto_html(text){
+    text = Nokogiri::HTML.fragment AutoHtml.auto_html(text) {
       youtube(autoplay: false, allowfullscreen: true)
     }
     text.to_s
