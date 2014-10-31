@@ -48,20 +48,19 @@ $ ->
         super()
 
       update: () ->
+        super()
+
         @configs.selectName = data.fields[globals.configs.groupById].fieldName
-        displayData = @getGroupedData()
-        while @chart.series.length > 0
-          @chart.series[@chart.series.length - 1].remove false
-        
-        displayData = for dp, index in displayData
+
+        displayData = for gid, val of @getGroupedData(@configs.displayField)
           ret =
-            y: dp[1]
-            name: data.groups[data.groupSelection[index]] or data.noField()
-        
+            y: val
+            name: data.groups[gid] or data.noField()
+
         displayColors = []
         for number in data.groupSelection
           displayColors.push(globals.configs.colors[number % globals.configs.colors.length])
-        
+
         options =
           showInLegend: false
           data: displayData
@@ -70,6 +69,9 @@ $ ->
         @chart.addSeries options, false
 
         @chart.redraw()
+
+      buildLegendSeries: ->
+        []
 
       buildOptions: ->
         super()
