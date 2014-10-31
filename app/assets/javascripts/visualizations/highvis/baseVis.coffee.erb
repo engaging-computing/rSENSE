@@ -119,11 +119,9 @@ $ ->
       ###
       drawYAxisControls: (radio = false, enableDataPoint = false) ->
         # Populate choices
-        fieldList = []
-        if enableDataPoint
-          fieldList = data.normalFields
-        else
-          fieldList = data.normalFields[1..data.normalFields.length]
+        yFields =
+          if enableDataPoint then data.normalFields
+          else data.normalFields[1..data.normalFields.length]
 
         checked = false
         controls = '<div id="yAxisControl" class="vis_controls">'
@@ -142,21 +140,27 @@ $ ->
                 </label>
               </div>
             </div>"
-          if fieldList.length == globals.configs.fieldSelection.length
+          if yFields.length == globals.configs.fieldSelection.length
             checked = true
 
-        for fIndex in fieldList
+        for f in yFields
           controls += "<div class='inner_control_div' >"
-
           if radio
-            controls += """<div class='radio'><label><input class='y_axis_input' name='y_axis_group'
-              type='radio' value='#{fIndex}'
-              #{if (Number fIndex) is @configs.displayField then "checked" else ""}>
-              #{data.fields[fIndex].fieldName}</label></div>"""
+            controls +=
+              """
+              <div class='radio'><label><input class='y_axis_input'
+               name='y_axis_group' type='radio' value='#{f}'
+               #{if (Number f) is @configs.displayField then "checked" else ""}>
+               #{data.fields[f].fieldName}</label></div>
+              """
           else
-            controls += """<div class='checkbox'><label><input class='y_axis_input' type='checkbox'
-              value='#{fIndex}' #{if (Number fIndex) in globals.configs.fieldSelection then "checked" else ""}
-              />#{data.fields[fIndex].fieldName}</label></div>"""
+            controls +=
+              """
+              <div class='checkbox'><label><input class='y_axis_input'
+               type='checkbox' value='#{f}'
+               #{if (Number f) in globals.configs.fieldSelection then "checked" else ""}
+               />#{data.fields[f].fieldName}</label></div>
+              """
           controls += "</div>"
 
         controls += '</div></div>'
@@ -179,7 +183,7 @@ $ ->
               arrayRemove(globals.configs.fieldSelection, index)
             else
               globals.configs.fieldSelection.push(index)
-            if fieldList.length == globals.configs.fieldSelection.length
+            if yFields.length == globals.configs.fieldSelection.length
               ($ '#select-all-y').prop('checked', true)
             else
               ($ '#select-all-y').prop('checked', false)
@@ -197,10 +201,14 @@ $ ->
           globals.configs.yAxisOpen = (globals.configs.yAxisOpen + 1) % 2
 
         ($ '#select-all-y').click =>
-          if fieldList.length != globals.configs.fieldSelection.length
+          yFields =
+            if enableDataPoint then data.normalFields
+            else data.normalFields[1..data.normalFields.length]
+
+          if yFields.length != globals.configs.fieldSelection.length
             ($ '#yAxisControl').find('.y_axis_input').each (i,j) ->
               ($ j).prop('checked', true)
-            globals.configs.fieldSelection = data.normalFields.slice(1)
+            globals.configs.fieldSelection = yFields
           else
             for element in data.normalFields
               arrayRemove(globals.configs.fieldSelection, element)
@@ -226,11 +234,11 @@ $ ->
         controls += '<select id="groupSelector" class="form-control">'
 
         if data.textFields.length > 2 and excludeNameAndCombined
-          fieldList = data.textFields[2..data.textFields.length]
+          yFields = data.textFields[2..data.textFields.length]
         else
-          fieldList = data.textFields
+          yFields = data.textFields
 
-        for fieldIndex in fieldList
+        for fieldIndex in yFields
           sel = if fieldIndex is globals.configs.groupById then 'selected' else ''
           controls += "<option value='#{Number fieldIndex}' #{sel}>#{data.fields[fieldIndex].fieldName}</option>"
 
