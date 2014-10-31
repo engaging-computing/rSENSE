@@ -56,8 +56,6 @@ $ ->
             type: "column"
           title:
             text: ""
-          legend:
-            enabled: false
           tooltip:
             formatter: ->
               str  = "<div style='width:100%;text-align:center;"
@@ -71,17 +69,13 @@ $ ->
             useHTML: true
           yAxis:
             type: if globals.configs.logY is 1 then 'logarithmic' else 'linear'
+          xAxis:
+            type: 'category'
 
       update: ->
         super()
 
         fieldSelection = globals.configs.fieldSelection
-
-        # Push X-Axis Labels
-        xLabels = []
-        for f in fieldSelection
-          xLabels.push fieldTitle(data.fields[f])
-        @chart.xAxis[0].categories = xLabels
 
         # Get the column data
         groupedData = {}
@@ -101,15 +95,13 @@ $ ->
             Number k for [k, v] in sortable
 
         # Draw the series
-        for gid, idx in sortedGroupIDs when gid in data.groupSelection
+        for gid in sortedGroupIDs when gid in data.groupSelection
           options =
-            showInLegend: false
             color: globals.configs.colors[gid % globals.configs.colors.length]
             name:  data.groups[gid] or data.noField()
-            index: idx
 
-          options.data = for fid in fieldSelection when fid in data.normalFields
-            groupedData[fid][gid]
+          options.data = for fid in data.normalFields when fid in fieldSelection
+            [fieldTitle(data.fields[fid]), groupedData[fid][gid]]
 
           @chart.addSeries options, false
         @chart.redraw()

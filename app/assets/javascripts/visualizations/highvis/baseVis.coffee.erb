@@ -565,7 +565,7 @@ $ ->
       ###
       Builds Highcharts options object
       Builds up the options common to all vis types.
-      Subsequent derrived classes should use $.extend to expand upon these agter calling super()
+      Subsequent derived classes should use $.extend to expand upon these after calling super()
       ###
       buildOptions: ->
 
@@ -582,20 +582,14 @@ $ ->
           legend:
             itemHoverStyle: ''
             backgroundColor: 'white'
-            symbolWidth: 60
-            itemWidth: 200
             useHTML: true
+            itemWidth: 125
             itemStyle:
-              width: 140
               cursor: 'default'
-              whiteSpace: 'prewrap'
           plotOptions:
             series:
               stickyTracking: false
               turboThreshold: 0
-              marker:
-                lineWidth: 0
-                radius: 5
               events:
                 legendItemClick: (event) ->
                   false
@@ -608,13 +602,6 @@ $ ->
                 'Y-Values'
               else
                 data.fields[globals.configs.fieldSelection[0]].fieldName
-
-
-        @chartOptions.xAxis = []
-        @chartOptions.xAxis.push {}
-        @chartOptions.xAxis.push
-          lineWidth: 0
-          categories: ['']
 
       ###
       Builds the 'fake series' for legend controls.
@@ -674,7 +661,7 @@ $ ->
 
         # Draw legend
         for options in @buildLegendSeries()
-          options.name = options.name.replace(/(.{1})/g,"$1&#8203;") + " "
+          #options.name = options.name.replace(/(.{1})/g,"$1&#8203;") + " "
           @chart.addSeries options, false
 
       ###
