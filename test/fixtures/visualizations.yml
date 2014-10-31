@@ -7,7 +7,7 @@ visualization1:
   user: kate
   project: one
   content: MyText
-  data: MyText
+  data: '{"defaultVis":"Map"}'
   globals: MyText
 
 tasty_viz:
@@ -15,15 +15,15 @@ tasty_viz:
   user: kate
   project: dessert
   content: MyText
-  data: MyText
+  data: '{"defaultVis":"Summary"}'
   globals: MyText
-  
+
 needs_media:
   title: Needs Media
   user: nixon
   project: one
   content: MyText
-  data: MyText
+  data: '{"defaultVis":"Scatter"}'
   globals: MyText
 
 media_test:
@@ -31,5 +31,5 @@ media_test:
   user: nixon
   project: one
   content: MyText
-  data: MyText
+  data: '{"defaultVis":"Table"}'
   globals: MyText

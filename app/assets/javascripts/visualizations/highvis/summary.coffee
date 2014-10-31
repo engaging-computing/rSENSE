@@ -41,17 +41,14 @@ $ ->
         super()
 
       update: ->
-        analysis = for group, groupIndex in data.groups when groupIndex in data.groupSelection
-          analysis =
-            'total':  (data.getTotal       @configs.displayField, groupIndex)
-            'min':    (data.getMin         @configs.displayField, groupIndex)
-            'max':    (data.getMax         @configs.displayField, groupIndex)
-            'median': (data.getMedian      @configs.displayField, groupIndex)
-            'count':  (data.getCount       @configs.displayField, groupIndex)
-            'mean':   (data.getMean        @configs.displayField, groupIndex)
-          analysis
-
-        analysis = analysis[0]
+        groupSel = data.groupSelection
+        analysis =
+          'total':  (data.getTotal       @configs.displayField, groupSel)
+          'min':    (data.getMin         @configs.displayField, groupSel)
+          'max':    (data.getMax         @configs.displayField, groupSel)
+          'median': (data.getMedian      @configs.displayField, groupSel)
+          'count':  (data.getCount       @configs.displayField, groupSel)
+          'mean':   (data.getMean        @configs.displayField, groupSel)
 
         ($ '#' + @canvas).html('')
         field = data.fields[@configs.displayField]
@@ -109,7 +106,8 @@ $ ->
 
       drawControls: ->
         super()
-        @drawGroupControls(true, true)
+        @drawGroupControls(true, false)
         @drawYAxisControls(true)
+        @drawSaveControls()
 
       globals.summary = new Summary "summary_canvas"
