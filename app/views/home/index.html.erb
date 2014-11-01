@@ -70,7 +70,7 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
     <div class="featurette">
       
       <!---Begin iSENSE Project Description-->
-      <div class="col-md-4 col-sm-6 col-xs-12 isense-desc">
+      <div class=" col-lg-4 col-md-4 col-sm-12 col-xs-12 isense-desc">
         <h2 class="featured-header text-muted">Welcome to the iSENSE Project.</h2>
         <br>
         <p class="lead">
@@ -80,16 +80,18 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
         <p class="lead"><span class="text-success featured-list">&nbsp; Collect </span> experimental data. </p>
         <p class="lead"><span class="text-info featured-list">&nbsp; Share </span> data with the world. </p>
         <p class="lead"><span class="text-primary featured-list">&nbsp; Visualize </span>data with robust analysis tools.</p>
-        <hr class="featurette-devider"> </hr>
+        <hr class="featurette-devider welcome-two"> </hr>
+        <div class="visible-lg">
         <h2 class="featured-header text-muted center"> Teachers love iSENSE:</h2>
         <br>
         <p class="lead">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
         <p class="lead">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+        </div>
       </div>
       <!---End Project Description-->
       
       <!---Featured image -->
-      <div class="col-md-8 col-sm-6 col-xs-12">
+      <div class=" col-lg-8 col-md-8 col-sm-12 col-xs-12">
         <img src="<%= image_path 'feature-histogram.png'%>" id="main-image-featurette" class="featurette-image"> </img>
       </div>
       <!---End Featured Image-->
@@ -104,38 +106,57 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
   <div class="container marketing three-col">
     
     <!--- First Column -->
-    <div class="col-md-4 first-column col-lg-4 visible-lg">
-      <img class="img-rounded collaborate-img" src="<%= image_path 'collaborate.jpg'%>" alt="Generic placeholder image"> </img>
-      <h2>Get Involved with iSENSE</h2>
-      <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh. </p>
-      <hr class="featurette-divider invisible"> </hr>
+    <div class=" first-column col-lg-4">
+      <h2>What's New</h2> </br>
+      <img class="img-rounded collaborate-img" src="<%= image_path 'ihead.png'%>" alt="Generic placeholder image"> </img>
+        <hr class="featurette-divider"> </hr>
+          <div class="news-prev-wrapper">
+          <% News.last(5).reverse.each do |n| %>
+            <div class="wide-item">
+            <div class="item-desc">
+            <div class="article_page_title truncate"><%= link_to n.title, news_path(n) %></div>
+            <% if not n.summary.nil? %>
+              <div class="article_page_subtitle truncate"><%= n.summary %></div>
+            <% end %>
+            <div class="article_page_date">Written on <%= n.created_at.strftime("%B #%d %Y")%>
+            </div>
+            <div class="article_page_content truncate">
+              <% if n.content != nil %>
+                <%= n.content.html_safe %>
+              <% end %>
+              <div class="article_page_link"><%= link_to "Read More", news_path(n) %></div>
+            </div>
+            </div>
+            </div>
+            <% end %>
+        </div>
+
     </div>
     <!--- End First Column -->
     
     <!---Second Column -->
-    <div class="col-md-12 col-lg-4">
-      <div class="col-md-12">
-        <hr class="featurette-divider invisible"> </hr>
-        <h2>What's New</h2>
-        <hr class="featurette-divider"> </hr>
-          <div class="news-prev-wrapper">
-          <% News.last(5).reverse.each do |n| %>
-            <%= render 'shared/article_box', {image_id: n.featured_media_id, path: news_path(n), title: n.title,
-            brief: n.summary, content: n.content, date: n.created_at.strftime("%B %d %Y"), width: 12} %>
-          <% end %>
-          </div>
+    <div class="col-md-12 col-lg-4 visible-lg">
+      <h2>Get Involved with iSENSE</h2> </br>
+      <img class="img-rounded collaborate-img" src="<%= image_path 'collaborate.jpg'%>" alt="Generic placeholder image"> </img>
+      
+      <hr class="featurette-divider"> </hr>
+      <div>
+      <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh. </p>
+        
       </div>
-    </div>  
+    </div>
     <!---End Second Column -->
 
     <!---Third Column-->
     <div class="col-md-4 col-lg-4 visible-lg">
+      <h2>Collect Data Anywhere with Mobile Apps</h2> </br>
       <div id = "app-description">
         <a href="https://play.google.com/store/apps/developer?id=Engaging+Computing+Group,+UML" class="btn btn-primary img-rounded">
         <%= image_tag "icon-android.png", id: 'play-store-button'%> </a>
         <a class="btn btn-primary disabled img-rounded">
         <%= image_tag "icon-apple.png", id: 'app-store-button' %> </a>
-        <h2>Collect Data Anywhere with Mobile Apps</h2>
+        
+        <hr class="featurette-divider"> </hr>
         <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>
         <hr class="featurette-divider">
       </div>

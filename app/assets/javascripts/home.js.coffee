@@ -10,20 +10,13 @@ $ ->
     ($ 'li.dropdown.navbtn').removeAttr 'disabled'
   ###
   Homepage News Feed
-  ###
-  ($ '.news-prev-wrapper').on 'mouseenter', () ->
-    ($ '.news-prev-wrapper').css('overflow-y', 'scroll')
-  
-  ($ '.news-prev-wrapper').on 'mouseleave', () ->
-    ($ '.news-prev-wrapper').scroll(0)
-    ($ '.news-prev-wrapper').css('overflow-y', 'hidden')
-    
-  ($ window).on('resize', () ->
+  ### 
+  ($ window).on 'resize', () ->
     console.log "xs = #{screenSize 'xs'}"
     console.log "sm = #{screenSize 'sm'}"
     console.log "md = #{screenSize 'md'}"
     console.log "lg = #{screenSize 'lg'}"
-  )
+
   screenSize = (size) ->
     return ($ ".device-#{size}").is(':visible')
   

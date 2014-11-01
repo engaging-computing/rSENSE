@@ -8,6 +8,7 @@
     height: 90vh;
   }
 }
+
 .secondary-side-content{
   height: 100%;    
 }
@@ -207,17 +208,20 @@
 }
 .isense-desc{
   overflow: auto;  
+  .welcome-two{
+    margin-bottom: 20px !important;
+  }
 }
 .ternary-upper{
-  margin-bottom: 40px !important;
+  margin-bottom: 20px !important;
 }
 .ternary-content{
   display:block;
   height:85vh;
   .news-prev-wrapper{
   height: 60vh;
-  overflow-y: hidden;
-  
+  overflow-y: scroll;
+  background-color: white !important;
   }
 }
 /* GLOBAL STYLES
