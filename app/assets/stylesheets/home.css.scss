@@ -213,13 +213,14 @@
   }
 }
 .ternary-upper{
+  margin-top: 40px !important;
   margin-bottom: 20px !important;
 }
 .ternary-content{
   display:block;
-  height:85vh;
+  height: 70vh;
   .news-prev-wrapper{
-  height: 60vh;
+  height: 40vh;
   overflow-y: scroll;
   background-color: white !important;
   }

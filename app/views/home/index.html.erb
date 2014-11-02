@@ -13,7 +13,7 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
       <li data-target="#myCarousel" data-slide-to="2"></li>
     </ol>
     <!---Carousel Content-->
-    <div class="carousel-inner">
+    <div class="carousel-inner" id="scroll-0">
       
       <!---First Slide-->
       <div class="item active">
@@ -53,8 +53,8 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
     <!---End Carousel Content-->
     
     <!---Carousel Controls-->
-    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
-    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev"><!--<span class="glyphicon glyphicon-chevron-left"></span>--></a>
+    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next"><!--<span class="glyphicon glyphicon-chevron-right"></span>--></a>
     <!---End Carousel Controls-->
     
   </div>
@@ -63,14 +63,14 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
 <!---End Carousel Container-->
 
 <!---End Carousel Container-->
-<hr class="featurette-divider carousel-divider">
+<hr class="featurette-divider carousel-divider invisible" id="scroll-1">
 <!---Begin Featurette-->
 <div class="row secondary-content" scroll-value="2">
   <div class="col-md-12 secondary-main-content">
     <div class="featurette">
       
       <!---Begin iSENSE Project Description-->
-      <div class=" col-lg-4 col-md-4 col-sm-12 col-xs-12 isense-desc">
+      <div class=" col-lg-4 col-md-4 col-sm-6 col-xs-6 isense-desc">
         <h2 class="featured-header text-muted">Welcome to the iSENSE Project.</h2>
         <br>
         <p class="lead">
@@ -80,7 +80,7 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
         <p class="lead"><span class="text-success featured-list">&nbsp; Collect </span> experimental data. </p>
         <p class="lead"><span class="text-info featured-list">&nbsp; Share </span> data with the world. </p>
         <p class="lead"><span class="text-primary featured-list">&nbsp; Visualize </span>data with robust analysis tools.</p>
-        <hr class="featurette-devider welcome-two"> </hr>
+        <hr class="featurette-devider welcome-two visible-lg"> </hr>
         <div class="visible-lg">
         <h2 class="featured-header text-muted center"> Teachers love iSENSE:</h2>
         <br>
@@ -91,7 +91,7 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
       <!---End Project Description-->
       
       <!---Featured image -->
-      <div class=" col-lg-8 col-md-8 col-sm-12 col-xs-12">
+      <div class=" col-lg-8 col-md-8 col-sm-6 col-xs-6">
         <img src="<%= image_path 'feature-histogram.png'%>" id="main-image-featurette" class="featurette-image"> </img>
       </div>
       <!---End Featured Image-->
@@ -100,7 +100,7 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
   </div>
 </div>
 <!---End Featurette-->
-<hr class="featurette-divider ternary-upper">
+<hr class="featurette-divider ternary-upper invisible" id="scroll-2">
 <!---Begin three-column layout-->
 <div class="row ternary-content" scroll-value="3">
   <div class="container marketing three-col">
@@ -185,13 +185,13 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
 <div class="row">  
   <!---Logo Footer-->
   <div class="col-md-12" id="csv-footer">    
-    <div class="col-md-4">
+    <div class="col-xs-4">
       <p class="lead slogan text-muted"> Collect </p>
     </div>
-    <div class="col-md-4">
+    <div class="col-xs-4">
       <p class="lead text-muted slogan"> Share </p>
     </div>
-    <div class="col-md-4">
+    <div class="col-xs-4">
       <p class="lead slogan text-muted"> Visualize </h2>
     </div>
   </div>
