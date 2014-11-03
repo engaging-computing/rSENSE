@@ -244,12 +244,12 @@ $ ->
               class='group_input_all' type='checkbox' value='#{gIndex}'
               #{if data.groupSelection.length == data.groups.length then "checked" else ""}>
               #Check All</label></div>"""
-            controls += "</td><td>Color</td></tr>"
+            controls += "</td><td></td></tr>"
 
         for group, gIndex in data.groups
           color_id = counter % globals.configs.colors.length
           color = globals.configs.colors[color_id]
-          controls += "<tr><td>"
+          controls += "<tr><td class='label-dataset-name'>"
           controls += "<div class='inner_control_div' id='label-color-#{color_id}'"
           controls += "style=\"color:#{color};\">"
 
@@ -275,7 +275,7 @@ $ ->
             else
               controls +="No #{data.fields[globals.configs.groupById].fieldName}</label>"
           controls += "</div></div>"
-          controls += "</td><td>"
+          controls += "</td><td class='label-dataset-color'>"
           controls += """<a href="#" class="color-picker" data-color="#{color}" data-color-id="#{color_id}">
                          <img height="20px" width="20px" src="<%= image_path('color-wheel.png') %>"></a>"""
           controls += "</td></tr>"
