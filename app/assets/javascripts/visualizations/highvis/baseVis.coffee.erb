@@ -276,7 +276,7 @@ $ ->
               controls +="No #{data.fields[globals.configs.groupById].fieldName}</label>"
           controls += "</div></div>"
           controls += "</td><td class='label-dataset-color'>"
-          controls += """<a href="#" class="color-picker" data-color="#{color}" data-color-id="#{color_id}">
+          controls += """<a href="javascript:void;" class="color-picker" data-color="#{color}" data-color-id="#{color_id}">
                          <img height="20px" width="20px" src="<%= image_path('color-wheel.png') %>"></a>"""
           controls += "</td></tr>"
           counter += 1
