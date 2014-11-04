@@ -27,7 +27,8 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is "visualizations" and
+  namespace.action in ["displayVis", "embedVis", "show"]
 
     class window.Pie extends BaseHighVis
       constructor: (@canvas) ->
@@ -38,10 +39,8 @@ $ ->
         else @configs.displayField = data.normalFields[0]
 
         @configs.selectName ?=
-          if data.textFields.length > 2
-            data.textFields[2]
-          else
-            'Percent'
+          if data.textFields.length > 2 then data.textFields[2]
+          else 'Percent'
 
       start: () ->
         @configs.analysisType ?= @ANALYSISTYPE_TOTAL

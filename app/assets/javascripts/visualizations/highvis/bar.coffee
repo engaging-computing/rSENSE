@@ -38,10 +38,8 @@ $ ->
         @configs.analysisType ?= @ANALYSISTYPE_TOTAL
 
         # Default Sort
-        fieldSelection = globals.configs.fieldSelection
-        @configs.sortField ?=
-          if fieldSelection? then fieldSelection[0]
-          else @SORT_DEFAULT
+        fs = globals.configs.fieldSelection
+        @configs.sortField ?= if fs? then fs[0] else @SORT_DEFAULT
 
         super()
 
@@ -62,7 +60,7 @@ $ ->
               str += "color:#{@series.color};margin-bottom:5px'> "
               str += "#{@series.name}</div>"
               str += "<table>"
-              str += "<tr><td>#{@x} "
+              str += "<tr><td>#{@key} "
               str += "(#{self.analysisTypeNames[self.configs.analysisType]}):"
               str += "</td><td><strong>#{@y}</strong></td></tr>"
               str += "</table>"
@@ -113,7 +111,7 @@ $ ->
         super()
         @drawGroupControls()
         @drawYAxisControls()
-        @drawToolControls(true)
+        @drawToolControls(true, true)
         @drawSaveControls()
 
     if "Bar" in data.relVis
