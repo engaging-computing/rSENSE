@@ -12,11 +12,10 @@
     <%= javascript_tag do %>
       window.namespace = <%= raw @namespace.to_json %>
     <% end %>
- 
+
   </head>
 
   <body data-page-name="<%= params[:controller] %>/<%= params[:action] %>">
-  
     <% if !@cur_user.nil? and @cur_user.email.blank? %>
       <div class="alert">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -52,7 +51,7 @@
                 <% @featured_tutorials = Tutorial.where("featured = ? and hidden = ?",  true, false).order("title ASC").limit(10) %>
                 <% @featured_tutorials.each do |tutorial| %>
                   <li><%= link_to tutorial.title, tutorial_path(tutorial)%></li>
-                <% end %> 
+                <% end %>
               </ul>
             </li>
             <li class="navbtn" title="Check out the latest iSENSE news and updates"><%=link_to news_index_path do %><i class='fa fa-book'></i> News<%end%></li>
