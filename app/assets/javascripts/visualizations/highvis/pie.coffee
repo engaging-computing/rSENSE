@@ -35,10 +35,8 @@ $ ->
         super(@canvas)
 
         @configs.selectName ?=
-          if data.textFields.length > 2
-            data.textFields[2]
-          else
-            'Percent'
+          if data.textFields.length > 2 then data.textFields[2]
+          else 'Percent'
 
       start: () ->
         @configs.displayField = Math.min globals.configs.fieldSelection...
@@ -46,15 +44,14 @@ $ ->
         super()
 
       update: () ->
-        @configs.selectName = data.fields[globals.configs.groupById].fieldName
-        displayData = @getGroupedData()
-        while @chart.series.length > 0
-          @chart.series[@chart.series.length - 1].remove false
+        super()
 
-        displayData = for dp, index in displayData
+        @configs.selectName = data.fields[globals.configs.groupById].fieldName
+
+        displayData = for gid, val of @getGroupedData(@configs.displayField)
           ret =
-            y: dp[1]
-            name: data.groups[data.groupSelection[index]] or data.noField()
+            y: val
+            name: data.groups[gid] or data.noField()
 
         displayColors = []
         for number in data.groupSelection
@@ -68,6 +65,9 @@ $ ->
         @chart.addSeries options, false
 
         @chart.redraw()
+
+      buildLegendSeries: ->
+        []
 
       buildOptions: ->
         super()

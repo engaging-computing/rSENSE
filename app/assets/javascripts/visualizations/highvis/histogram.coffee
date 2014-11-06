@@ -79,6 +79,13 @@ $ ->
                 legendItemClick: (event) ->
                   false
 
+        # For Histogram
+        @chartOptions.xAxis = []
+        @chartOptions.xAxis.push {}
+        @chartOptions.xAxis.push
+          lineWidth: 0
+          categories: ['']
+
       ###
       Returns a rough default 'human-like' bin size selection
       ###

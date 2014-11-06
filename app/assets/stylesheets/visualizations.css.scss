@@ -193,6 +193,14 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     white-space: normal;
   }
 
+  .highcharts-legend-item span {
+    display: inline-block;
+    width: 100px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: default;
+  }
+
   .hint {
     margin-left: 40px;
     margin-bottom: 10px;
@@ -213,6 +221,14 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     font-weight: bold;
     line-height: 25pt;
     color: $hint;
+  }
+
+  .outer_control_div table {
+    width: 100%;
+    .label-dataset-color {
+      float: right;
+      width: 20px;
+    }
   }
 
   // photos sometimes needs a scrollbar
