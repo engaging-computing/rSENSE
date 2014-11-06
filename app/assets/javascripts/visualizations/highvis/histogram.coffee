@@ -27,7 +27,8 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is "visualizations" and
+  namespace.action in ["displayVis", "embedVis", "show"]
 
     class window.Histogram extends BaseHighVis
       constructor: (@canvas) ->
@@ -80,6 +81,13 @@ $ ->
               events:
                 legendItemClick: (event) ->
                   false
+
+        # For Histogram
+        @chartOptions.xAxis = []
+        @chartOptions.xAxis.push {}
+        @chartOptions.xAxis.push
+          lineWidth: 0
+          categories: ['']
 
       ###
       Returns a rough default 'human-like' bin size selection
