@@ -223,6 +223,14 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     color: $hint;
   }
 
+  .outer_control_div table {
+    width: 100%;
+    .label-dataset-color {
+      float: right;
+      width: 20px;
+    }
+  }
+
   // photos sometimes needs a scrollbar
   #photos_canvas {
     overflow-y: auto;
