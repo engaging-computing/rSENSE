@@ -27,7 +27,8 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is "visualizations" and
+  namespace.action in ["displayVis", "embedVis", "show"]
 
     window.globals ?= {}
     window.globals.configs ?= {}
@@ -106,7 +107,7 @@ $ ->
             when @ANALYSISTYPE_MIN      then [groupIndex, (data.getMin       display, groupIndex)]
             when @ANALYSISTYPE_MEAN     then [groupIndex, (data.getMean      display, groupIndex)]
             when @ANALYSISTYPE_MEDIAN   then [groupIndex, (data.getMedian    display, groupIndex)]
-            when @ANALYSISTYPE_COUNT    then [groupIndex, (data.getCount     display, groupIndex)] 
+            when @ANALYSISTYPE_COUNT    then [groupIndex, (data.getCount     display, groupIndex)]
 
       ###
       Draws y axis controls
@@ -166,6 +167,7 @@ $ ->
         if radio
           ($ '.y_axis_input').click (e) =>
             @configs.displayField = Number e.target.value
+            globals.configs.fieldSelection = [ @configs.displayField ]
             @delayedUpdate()
         else
           ($ '.y_axis_input').click (e) =>
@@ -552,7 +554,8 @@ $ ->
       ###
       Builds Highcharts options object
       Builds up the options common to all vis types.
-      Subsequent derrived classes should use $.extend to expand upon these agter calling super()
+      Subsequent derrived classes should use $.extend
+      to expand upon these after calling super()
       ###
       buildOptions: ->
 

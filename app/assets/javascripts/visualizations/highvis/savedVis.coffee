@@ -27,7 +27,8 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is "visualizations" and
+  namespace.action in ["displayVis", "embedVis", "show"]
 
     window.globals ?= {}
 
@@ -150,6 +151,11 @@ $ ->
       current = (globals.curVis.canvas.match /([A-z]*)_canvas/)[1]
       current = current[0].toUpperCase() + current.slice 1
       data.defaultVis = current
+
+      # Set fieldSelection if curVis has radio button for y-axis
+      # This ensures that @configs.display defaults correctly
+      if globals.curVis.configs.displayField
+        globals.configs.fieldSelection = [ globals.curVis.configs.displayField ]
 
       # Check for and note LT dates
       if data.timeType is data.NORM_TIME
