@@ -71,7 +71,7 @@ $ ->
       name = 'Saved Vis - ' + data.projectName
       req = $.ajax
         type: 'POST'
-        url: "/visualizations"
+        url: '/visualizations'
         dataType: 'json'
         data:
           visualization:
