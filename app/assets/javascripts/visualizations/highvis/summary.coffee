@@ -27,17 +27,15 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is "visualizations" and
+  namespace.action in ["displayVis", "embedVis", "show"]
 
     class window.Summary extends BaseVis
       constructor: (@canvas) ->
         super(@canvas)
 
-        if data.normalFields.length > 1
-          @configs.displayField = data.normalFields[1]
-        else @configs.displayField = data.normalFields[0]
-
       start: ->
+        @configs.displayField = Math.min globals.configs.fieldSelection...
         super()
 
       update: ->

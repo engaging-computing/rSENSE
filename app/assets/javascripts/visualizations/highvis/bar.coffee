@@ -27,15 +27,12 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is "visualizations" and
+  namespace.action in ["displayVis", "embedVis", "show"]
 
     class window.Bar extends BaseHighVis
       constructor: (@canvas) ->
         super(@canvas)
-
-        if data.normalFields.length > 1
-          @configs.displayField = data.normalFields[1]
-        else @configs.displayField = data.normalFields[0]
 
       # Used to restore previous analysis type (when user switches to data point
       # the analysis gets force set to row count, and this should be undone).
@@ -108,7 +105,7 @@ $ ->
 
         ### --- ###
         tempGroupIDValuePairs = @getGroupedData()
-        
+
         if @configs.sortField != @SORT_DEFAULT
           fieldSortedGroupIDValuePairs = tempGroupIDValuePairs.sort (a,b) ->
             a[1] - b[1]

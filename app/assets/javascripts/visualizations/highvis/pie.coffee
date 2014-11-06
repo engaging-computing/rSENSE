@@ -27,15 +27,12 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is "visualizations" and
+  namespace.action in ["displayVis", "embedVis", "show"]
 
     class window.Pie extends BaseHighVis
       constructor: (@canvas) ->
         super(@canvas)
-
-        if data.normalFields.length > 1
-          @configs.displayField = data.normalFields[1]
-        else @configs.displayField = data.normalFields[0]
 
         @configs.selectName ?=
           if data.textFields.length > 2
@@ -44,6 +41,7 @@ $ ->
             'Percent'
 
       start: () ->
+        @configs.displayField = Math.min globals.configs.fieldSelection...
         @configs.analysisType ?= @ANALYSISTYPE_TOTAL
         super()
 
@@ -52,16 +50,16 @@ $ ->
         displayData = @getGroupedData()
         while @chart.series.length > 0
           @chart.series[@chart.series.length - 1].remove false
-        
+
         displayData = for dp, index in displayData
           ret =
             y: dp[1]
             name: data.groups[data.groupSelection[index]] or data.noField()
-        
+
         displayColors = []
         for number in data.groupSelection
           displayColors.push(globals.configs.colors[number % globals.configs.colors.length])
-        
+
         options =
           showInLegend: false
           data: displayData
