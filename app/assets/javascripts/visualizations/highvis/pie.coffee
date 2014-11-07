@@ -34,15 +34,12 @@ $ ->
       constructor: (@canvas) ->
         super(@canvas)
 
-        if data.normalFields.length > 1
-          @configs.displayField = data.normalFields[1]
-        else @configs.displayField = data.normalFields[0]
-
         @configs.selectName ?=
           if data.textFields.length > 2 then data.textFields[2]
           else 'Percent'
 
       start: () ->
+        @configs.displayField = Math.min globals.configs.fieldSelection...
         @configs.analysisType ?= @ANALYSISTYPE_TOTAL
         super()
 
