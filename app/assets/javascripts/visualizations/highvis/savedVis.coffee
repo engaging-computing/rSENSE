@@ -155,7 +155,7 @@ $ ->
       # Set fieldSelection if curVis has radio button for y-axis
       # This ensures that @configs.display defaults correctly
       if globals.curVis.configs.displayField
-        globals.configs.fieldSelection = [ globals.curVis.configs.displayField ]
+        globals.configs.fieldSelection = [globals.curVis.configs.displayField]
 
       # Check for and note LT dates
       if data.timeType is data.NORM_TIME

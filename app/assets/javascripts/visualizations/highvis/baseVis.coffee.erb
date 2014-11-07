@@ -176,7 +176,7 @@ $ ->
         if radio
           ($ '.y_axis_input').click (e) =>
             @configs.displayField = Number e.target.value
-            globals.configs.fieldSelection = [ @configs.displayField ]
+            globals.configs.fieldSelection = [@configs.displayField]
             @delayedUpdate()
         else
           ($ '.y_axis_input').click (e) =>
@@ -270,7 +270,7 @@ $ ->
 
           if radio
             # Radio groups can only have one group selected
-            groupSelection = [ data.groupSelection.reduce (a, b) -> Math.min(a,b) ]
+            groupSelection = [data.groupSelection.reduce (a, b) -> Math.min(a,b)]
             data.groupSelection = groupSelection
 
             selectedGroup = data.groupSelection[0]
@@ -340,7 +340,7 @@ $ ->
           ($ '.group_input').click (e) =>
             ($ '.group_input').each () ->
               if @checked
-                data.groupSelection = [ Number @value ]
+                data.groupSelection = [Number @value]
             @delayedUpdate()
 
         else
