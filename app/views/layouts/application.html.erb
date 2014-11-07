@@ -62,11 +62,7 @@
           <ul class="nav navbar-nav navbar-right">
             <% if @cur_user.try(:id) %>
               <li class="navbtn" title="Click to view <%= @cur_user.name %>'s profile page">
-              <% if @cur_user.name.length < 50 %>
-                <%= link_to @cur_user.name, user_path(@cur_user) %>
-              <% else %>
-                <%= link_to "My Account", user_path(@cur_user) %>
-              <% end %>
+              <li class="navbtn" title="Click to view <%= @cur_user.name %>'s profile page"><%= link_to @cur_user.name, user_path(@cur_user)%></li>
               </li>
               <li class="divider"></li>
               <li class="navbtn"><%= link_to "Logout", login_path, method: :delete%></li>
