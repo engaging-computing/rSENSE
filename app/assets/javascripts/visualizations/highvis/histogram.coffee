@@ -325,7 +325,7 @@ $ ->
         # Currently specific to histogram
         ($ '.y_axis_input').click (e) =>
           @configs.displayField = Number e.target.value
-          globals.configs.fieldSelection = [ @configs.displayField ]
+          globals.configs.fieldSelection = [@configs.displayField]
           @configs.binSize = @defaultBinSize()
           ($ "#binSizeInput").attr('value', @configs.binSize)
           @delayedUpdate()
