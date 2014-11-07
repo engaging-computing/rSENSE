@@ -27,7 +27,8 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is "visualizations" and
+  namespace.action in ["displayVis", "embedVis", "show"]
 
     class window.Timeline extends Scatter
       ###
@@ -39,10 +40,6 @@ $ ->
 
         @configs.mode = @LINES_MODE
         @configs.xAxis = data.timeFields[0]
-
-        if data.normalFields.length > 1
-          @displayField = data.normalFields[1]
-        else @displayField = data.normalFields[0]
 
       ###
       Build options relevant to timeline
