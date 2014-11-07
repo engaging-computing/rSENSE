@@ -27,23 +27,20 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is "visualizations" and
+  namespace.action in ["displayVis", "embedVis", "show"]
 
     class window.Bar extends BaseHighVis
       constructor: (@canvas) ->
         super(@canvas)
 
-        if data.normalFields.length > 1
-          @configs.displayField = data.normalFields[1]
-        else @configs.displayField = data.normalFields[0]
-
-      # Used to restore previous analysis type (when user switches to data point
-      # the analysis gets force set to row count, and this should be undone).
-      restoreAnalysisType:  false
-      savedAnalysisType:    0
-
       start: ->
         @configs.analysisType ?= @ANALYSISTYPE_TOTAL
+
+        # Default Sort
+        fs = globals.configs.fieldSelection
+        @configs.sortField ?= if fs? then fs[0] else @SORT_DEFAULT
+
         super()
 
       buildOptions: ->
@@ -57,127 +54,64 @@ $ ->
             type: "column"
           title:
             text: ""
-          legend:
-            enabled: false
           tooltip:
             formatter: ->
-              str  = "<div style='width:100%;text-align:center;color:#{@series.color};"
-              str += "margin-bottom:5px'> #{@point.name}</div>"
+              str  = "<div style='width:100%;text-align:center;"
+              str += "color:#{@series.color};margin-bottom:5px'> "
+              str += "#{@series.name}</div>"
               str += "<table>"
-              str += "<tr><td>#{@x} (#{self.analysisTypeNames[self.configs.analysisType]}):"
+              str += "<tr><td>#{@key} "
+              str += "(#{self.analysisTypeNames[self.configs.analysisType]}):"
               str += "</td><td><strong>#{@y}</strong></td></tr>"
               str += "</table>"
             useHTML: true
           yAxis:
             type: if globals.configs.logY is 1 then 'logarithmic' else 'linear'
+          xAxis:
+            type: 'category'
 
       update: ->
         super()
 
-        # Default Sort
-        @configs.sortField ?=
-          if globals.configs.fieldSelection?
-            globals.configs.fieldSelection[0]
-          else @SORT_DEFAULT
+        fieldSelection = globals.configs.fieldSelection
 
-        # Restrict analysis type to only row count if the y field is "Data Point"
-        if (globals.configs.fieldSelection[0] is data.DATA_POINT_ID_FIELD and
-        globals.configs.fieldSelection.length is 1)
-          for option, row in ($ '#analysis_types').children()
-            if row isnt @ANALYSISTYPE_COUNT then $(option).hide()
+        # Get the column data
+        groupedData = {}
+        for f in data.normalFields
+          groupedData[f] = @getGroupedData(f)
 
-          @savedAnalysisType = @configs.analysisType
-          @restoreAnalysisType = true
-          @configs.analysisType = @ANALYSISTYPE_COUNT
-        else
-          if @restoreAnalysisType
-            @configs.analysisType = @savedAnalysisType
-            @restoreAnalysisType = false
-          ($ '#analysis_types').children().show()
+        # Sort the sort-by field
+        # The default sort is just the group order
+        # Otherwise, make sortable key-pairs and sort by the sortField array
+        sortedGroupIDs =
+          if @configs.sortField is @SORT_DEFAULT
+            i for n, i in data.groups when i in data.groupSelection
+          else
+            sortable = []
+            sortable.push [k, v] for k, v of groupedData[@configs.sortField]
+            sortable.sort (a,b) -> a[1] - b[1]
+            Number k for [k, v] in sortable
 
-        $('#sortField option[value=' + @configs.sortField + ']').prop('selected', true)
-        $('input:radio[name=analysisTypeSelector][value=' + @configs.analysisType + ']').prop('checked', true)
-
-        visibleCategories = for selection in data.normalFields when selection in globals.configs.fieldSelection
-          fieldTitle data.fields[selection]
-
-        @chart.xAxis[0].setCategories visibleCategories, false
-        @chart.yAxis[0].sort
-        while @chart.series.length > data.normalFields.length
-          @chart.series[@chart.series.length - 1].remove false
-
-        ### --- ###
-        tempGroupIDValuePairs = @getGroupedData()
-        
-        if @configs.sortField != @SORT_DEFAULT
-          fieldSortedGroupIDValuePairs = tempGroupIDValuePairs.sort (a,b) ->
-            a[1] - b[1]
-
-          fieldSortedGroupIDs = for [groupID, groupValue] in fieldSortedGroupIDValuePairs
-            groupID
-        else
-          fieldSortedGroupIDs = for groupName, groupID in data.groups
-            groupID
-        ### --- ###
-
-        for groupIndex, order in fieldSortedGroupIDs when groupIndex in data.groupSelection
-
+        # Draw the series
+        for gid in sortedGroupIDs when gid in data.groupSelection
           options =
-            showInLegend: false
-            color: globals.configs.colors[groupIndex % globals.configs.colors.length]
-            name: data.groups[groupIndex]
-            index: order
+            color: globals.configs.colors[gid % globals.configs.colors.length]
+            name:  data.groups[gid] or data.noField()
 
-          options.data = for fieldIndex in data.normalFields when fieldIndex in globals.configs.fieldSelection
-            switch @configs.analysisType
-              when @ANALYSISTYPE_TOTAL
-                ret =
-                  y:      data.getTotal fieldIndex, groupIndex
-                  name:   data.groups[groupIndex] or data.noField()
-              when @ANALYSISTYPE_MAX
-                ret =
-                  y:      data.getMax fieldIndex, groupIndex
-                  name:   data.groups[groupIndex] or data.noField()
-              when @ANALYSISTYPE_MIN
-                ret =
-                  y:      data.getMin fieldIndex, groupIndex
-                  name:   data.groups[groupIndex] or data.noField()
-                ret =
-                  y:      data.getMean fieldIndex, groupIndex
-                  name:   data.groups[groupIndex] or data.noField()
-                ret =
-                  y:      data.getMedian fieldIndex, groupIndex
-                  name:   data.groups[groupIndex] or data.noField()
-              when @ANALYSISTYPE_COUNT
-                ret =
-                  y:      data.getCount fieldIndex, groupIndex
-                  name:   data.groups[groupIndex] or data.noField()
+          options.data = for fid in data.normalFields when fid in fieldSelection
+            [fieldTitle(data.fields[fid]), groupedData[fid][gid]]
 
           @chart.addSeries options, false
         @chart.redraw()
 
       buildLegendSeries: ->
-        count = -1
-        for field, fieldIndex in data.fields when (
-          fieldIndex in data.normalFields and fieldIndex in globals.configs.fieldSelection)
-
-          count += 1
-          dummy =
-            legendIndex: fieldIndex
-            data: []
-            color: '#000'
-            name: fieldTitle field
-            type: 'area'
-            xAxis: 1
-
-      drawYAxisControls: ->
-        super()
+        []
 
       drawControls: ->
         super()
         @drawGroupControls()
         @drawYAxisControls()
-        @drawToolControls()
+        @drawToolControls(true, true)
         @drawSaveControls()
 
     if "Bar" in data.relVis
