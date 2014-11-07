@@ -73,6 +73,7 @@
           <div class="item item-block text-center create-project-inner-block"> 
             <h4><i class="fa fa-plus-circle"></i> Create a New Project</h4>
             <%= form_for(@project, html: { class: "form-inline" }) do |f| %>
+              <%= f.label :project_name, "Project Name", class:"hidden" %>
               <%= f.text_field :title, class: "form-control wide-input", placeholder: "Project Name" %>
               <%= button_tag 'Create Project', type: 'submit', class: 'btn btn-success create-project-btn'%>
             <% end %>

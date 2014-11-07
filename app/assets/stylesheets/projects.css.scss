@@ -22,6 +22,15 @@
     margin-bottom: 2em;
   } 
    
+  .hidden {
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
   .hoverimage {
     width: 75px;
     height: 75px;
