@@ -20,6 +20,8 @@ $ ->
       ($ '.news-prev-wrapper').css('height', "#{.2 * ($ window).height()}px")
     else
       ($ '.news-prev-wrapper').css('height', "#{.4 * ($ window).height()}px")
+    #($ '#column-one').find('.article_page_content.truncate').each (i,j) ->
+    #  ($ j).css('height',"150px")
 
   screenSize = (size) ->
     return ($ ".device-#{size}").is(':visible')
