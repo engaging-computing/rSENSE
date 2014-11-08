@@ -3,7 +3,15 @@
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
 $ ->
-  ($ window).scrollTop(0)
+  screenSize = (size) ->
+    return ($ ".device-#{size}").is(':visible')
+  ($ '.ternary-content').css('height', "#{($ window).height() - ($ '.footer').height() - 110 - ($ '#csv-footer').height()}px")
+  console.log "xs = #{screenSize 'xs'}"
+  console.log "sm = #{screenSize 'sm'}"
+  console.log "md = #{screenSize 'md'}"
+  console.log "lg = #{screenSize 'lg'}"
+    
+  ($ '#main-image-featurette').popover(title: "wat?", placement: 'bottom', content: "HELLLLLLLLLLLLOOOOOOOOOOOooo")
   lastView = 0
   ($ '.mainContent').on 'click', 'div.clickableItem', (event) ->
     window.location = ($ event.currentTarget).children('a').attr 'href'
@@ -11,22 +19,30 @@ $ ->
     ($ 'li.dropdown.navbtn').find('a:first').css 'color', 'white'
     ($ 'li.dropdown.navbtn').removeAttr 'disabled'
   
+  ($ '.item-image-link').addClass('hidden-sm')
+  ($ '.item-image-link').addClass('hidden-md')
+
   ($ window).on 'resize', () ->
     console.log "xs = #{screenSize 'xs'}"
     console.log "sm = #{screenSize 'sm'}"
     console.log "md = #{screenSize 'md'}"
     console.log "lg = #{screenSize 'lg'}"
-    if screenSize 'xs' or screenSize 'sm'
-      ($ '.news-prev-wrapper').css('height', "#{.2 * ($ window).height()}px")
-    else
-      ($ '.news-prev-wrapper').css('height', "#{.4 * ($ window).height()}px")
-    #($ '#column-one').find('.article_page_content.truncate').each (i,j) ->
-    #  ($ j).css('height',"150px")
-
-  screenSize = (size) ->
-    return ($ ".device-#{size}").is(':visible')
+    ($ '.ternary-content').css('height', "#{($ window).height() - ($ '.footer').height() - 110 - ($ '#csv-footer').height()}px")
+    #- (1.0 * ($ '.ternary-content').offset().top - ($ '.ternary-upper').offset().top)}px")
   ($ '.news-prev-wrapper').on 'mousewheel DOMMouseScroll', (event) ->
     event.stopPropagation()
+  
+  ###
+  Popover for Welcome to iSENSE featurette
+  ###
+  ($ '#main-image-featurette').on 'mouseenter', () ->
+    console.log '2chainz!'
+    ($ '#main-image-featurette').popover('toggle')
+  ($ '#main-image-featurette').on 'mouseleave', () ->
+    ($ '#main-image-featurette').popover('toggle')
+  
+  #($ '#main-image-featurette').css('height', "#{($ '.isense-desc').height()}px")
+  #console.log "#{($ '.isense-desc').height()}px"
   ###
   Scroll animation effects
   ###
