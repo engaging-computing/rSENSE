@@ -43,6 +43,7 @@
 //= require numeric.min
 //= require oms
 //= require better_colorpicker
+//= require underscore
 //
 //= require visualizations/highvis/index
 //

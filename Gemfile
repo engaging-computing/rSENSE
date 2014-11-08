@@ -51,6 +51,7 @@ gem 'font-awesome-rails', '~> 4.2.0.0'
 #gem 'simple_form'
 gem 'summernote-rails'
 gem 'auto_html'
+gem 'underscore-rails'
 
 # Include Will Paginate
 gem 'will_paginate'

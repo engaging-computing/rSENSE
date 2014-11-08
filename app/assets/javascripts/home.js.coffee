@@ -46,7 +46,8 @@ $ ->
   ###
   Scroll animation effects
   ###
-  ($ document).on 'mousewheel DOMMouseScroll', (event) ->
+  
+  magicScroll = (event) -> 
     event.stopPropagation()
     event.preventDefault()
     direction = 
@@ -80,3 +81,6 @@ $ ->
       lastView = (lastView - 1) % 3
       if lastView < 0
         lastView = 2
+  throttled = _.throttle(magicScroll, 1000, trailing: false)
+  ($ document).on 'mousewheel DOMMouseScroll', (event) ->
+    throttled(event)
