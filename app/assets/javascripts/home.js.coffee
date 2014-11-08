@@ -48,8 +48,6 @@ $ ->
   ###
   
   magicScroll = (event) -> 
-    event.stopPropagation()
-    event.preventDefault()
     direction = 
       if event.originalEvent.wheelDelta / 120 > 0
         1
@@ -83,4 +81,6 @@ $ ->
         lastView = 2
   throttled = _.throttle(magicScroll, 1000, trailing: false)
   ($ document).on 'mousewheel DOMMouseScroll', (event) ->
+    event.stopPropagation()
+    event.preventDefault()
     throttled(event)
