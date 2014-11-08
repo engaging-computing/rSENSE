@@ -115,7 +115,7 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
       <h2>What's New</h2>
       <hr class="featurette-divider"> </hr>
       <div class="news-prev-wrapper">
-        <% News.last(5).reverse.each do |n| %>
+        <% News.where(hidden: false).last(5).reverse.each do |n| %>
           <%= render 'shared/article_box', {
             image_id: n.featured_media_id, path: news_path(n), title: n.title,
             brief: n.summary, content: n.content, date: n.created_at.strftime("%B %d %Y"),
