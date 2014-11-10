@@ -1,10 +1,10 @@
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h1>Report a Bug/Suggest a Feature</h1>
+    <h1>Report a Bug or Suggest a Feature</h1>
   </div>
 
   <div class="panel-body">
-    <p>If you have a github account, please select 'Github Login' below. Otherwise, please selected 'Anonymous User'</p>
+    <p>If you have a GitHub account, please select Github Login; otherwise, please select Anonymous User.</p>
     <br/>
     <div class="row-fluid">
       <div class="col-md-6">
@@ -18,12 +18,13 @@
         </a>
       </div>
       <div class="col-md-6">
-        <div class="btn btn-default btn-block">
-          <div class="center">
-            <h3>Anonymous User</h3>
-            <%= image_tag("noavatar.png", height: "250") %>
+        <a href="/auth/anon_github">
+          <button class="btn btn-default btn-block" type="button">
+            <div class="center">
+              <h3>Anonymous User</h3>
+              <%= image_tag("noavatar.png", height: "250") %>
+            </div>
           </div>
-        </div>
       </div>
     </div>
   </div>
