@@ -27,15 +27,12 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is "visualizations" and
+  namespace.action in ["displayVis", "embedVis", "show"]
 
     class window.Histogram extends BaseHighVis
       constructor: (@canvas) ->
         super(@canvas)
-
-        if data.normalFields.length > 1
-          @configs.displayField = data.normalFields[1]
-        else @configs.displayField = data.normalFields[0]
 
       MAX_NUM_BINS:        1000
       binNumSug:              1
@@ -44,6 +41,7 @@ $ ->
       updatedTooltips:    false
 
       start: ->
+        @configs.displayField = Math.min globals.configs.fieldSelection...
         @configs.binSize ?= @defaultBinSize()
         super()
 
@@ -80,6 +78,13 @@ $ ->
               events:
                 legendItemClick: (event) ->
                   false
+
+        # For Histogram
+        @chartOptions.xAxis = []
+        @chartOptions.xAxis.push {}
+        @chartOptions.xAxis.push
+          lineWidth: 0
+          categories: ['']
 
       ###
       Returns a rough default 'human-like' bin size selection
@@ -320,6 +325,7 @@ $ ->
         # Currently specific to histogram
         ($ '.y_axis_input').click (e) =>
           @configs.displayField = Number e.target.value
+          globals.configs.fieldSelection = [@configs.displayField]
           @configs.binSize = @defaultBinSize()
           ($ "#binSizeInput").attr('value', @configs.binSize)
           @delayedUpdate()

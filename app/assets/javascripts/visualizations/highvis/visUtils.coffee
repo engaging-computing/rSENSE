@@ -168,17 +168,14 @@ $ ->
       Highcharts.extend Highcharts.Renderer.prototype.symbols, extension
 
     ###
-    Generated using http://tools.medialab.sciences-po.fr/iwanthue/
-    Colors: 30
-    Hue:       0.0 - 360.00
-    Chroma:    0.0 -   1.70
-    Lightness: 0.3 -   0.95
-    K-means
+    Colors taken from Google Charts defaults:
+      http://there4development.com/blog/2012/05/02/google-chart-color-list/
     ###
-    globals.colors = ['#5E5A83', '#609B36', '#DC644F', '#9A8867', '#DA6694', '#40938C', '#A78E20',
-      '#884646', '#546222', '#688CCF', '#529F69', '#415B62', '#AE8188', '#D1762F', '#408FB2',
-      '#B18347', '#944B70', '#9F7FBC', '#C77967', '#914C2A', '#396B43', '#625744', '#C25562',
-      '#735521', '#7D9080', '#715365', '#8A9044', '#C573B2', '#788AA2', '#EC5D7A']
+    globals.colors =
+      ['#3366CC','#DC3912','#FF9900','#109618','#990099',
+       '#3B3EAC','#0099C6','#DD4477','#66AA00','#B82E2E',
+       '#316395','#994499','#22AA99','#AAAA11','#6633CC',
+       '#E67300','#8B0707','#329262','#5574A6','#3B3EAC']
 
     globals.configs ?= {}
     globals.configs.colors = globals.colors
@@ -203,7 +200,7 @@ $ ->
     Generate a list of symbols and symbol rendering routines and then add them
     in an order that is clear and easy to read.
     ###
-    
+
     fanMagList           = [1, 1, 15 / 16, 7 / 8, 3 / 4, 1 / 4, 1 / 4, 3 / 4, 7 / 8, 15 / 16, 1]
     pieMagList           = [1,1,1,1,1,1,1,1,1,1,1,1,1,0]
     halfmoonMagList      = [1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0]

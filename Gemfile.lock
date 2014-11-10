@@ -6,9 +6,9 @@ GIT
 
 GIT
   remote: https://github.com/asalani93/better-colorpicker
-  revision: c6944c28749ca114ddee3eed4f98754fc2cd07f9
+  revision: 6e05792fdd4415d9bcc66c627650dc9da1b95adb
   specs:
-    better_colorpicker (0.0.2)
+    better_colorpicker (0.0.3)
       rails (~> 4.1.4)
 
 GIT
@@ -222,7 +222,7 @@ PLATFORMS
 DEPENDENCIES
   auto_html
   bcrypt-ruby
-  better_colorpicker (~> 0.0.2)!
+  better_colorpicker (~> 0.0.3)!
   bootstrap-sass
   browser
   capybara

@@ -27,7 +27,8 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is "visualizations" and
+  namespace.action in ["displayVis", "embedVis", "show"]
 
     window.globals ?= {}
     window.globals.configs ?= {}
@@ -82,7 +83,8 @@ $ ->
 
       ###
       Draws controls
-      Derived classes should write control HTML and bind handlers using the method such as drawGroupControls.
+      Derived classes should write control HTML and bind handlers using
+      the method such as drawGroupControls.
       ###
       drawControls: ->
         @clearControls()
@@ -95,25 +97,31 @@ $ ->
         ($ '#controldiv').empty()
 
       ###
-      Calculate data to be displayed subject to analysis type (Bar Chart and Pie Chart)
+      Calculate data to be displayed subject to analysis type
+      Returns an object of key-value pairs of the form { groupId, value }
       ###
-      getGroupedData: ->
-        for groupName, groupIndex in data.groups when groupIndex in data.groupSelection
-          display = @configs.displayField
+      getGroupedData: (field) ->
+        gData = {}
+        for name, i in data.groups when i in data.groupSelection
           switch @configs.analysisType
-            when @ANALYSISTYPE_TOTAL    then [groupIndex, (data.getTotal     display, groupIndex)]
-            when @ANALYSISTYPE_MAX      then [groupIndex, (data.getMax       display, groupIndex)]
-            when @ANALYSISTYPE_MIN      then [groupIndex, (data.getMin       display, groupIndex)]
-            when @ANALYSISTYPE_MEAN     then [groupIndex, (data.getMean      display, groupIndex)]
-            when @ANALYSISTYPE_MEDIAN   then [groupIndex, (data.getMedian    display, groupIndex)]
-            when @ANALYSISTYPE_COUNT    then [groupIndex, (data.getCount     display, groupIndex)] 
+            when @ANALYSISTYPE_TOTAL  then gData[i] = (data.getTotal  field, i)
+            when @ANALYSISTYPE_MAX    then gData[i] = (data.getMax    field, i)
+            when @ANALYSISTYPE_MIN    then gData[i] = (data.getMin    field, i)
+            when @ANALYSISTYPE_MEAN   then gData[i] = (data.getMean   field, i)
+            when @ANALYSISTYPE_MEDIAN then gData[i] = (data.getMedian field, i)
+            when @ANALYSISTYPE_COUNT  then gData[i] = (data.getCount  field, i)
+        gData
 
       ###
       Draws y axis controls
       This includes a series of checkboxes or radio buttons for selecting
       the active y axis field(s).
       ###
-      drawYAxisControls: (radio = false, enableDataPoint = true) ->
+      drawYAxisControls: (radio = false, enableDataPoint = false) ->
+        # Populate choices
+        yFields =
+          if enableDataPoint then data.normalFields
+          else data.normalFields[1..data.normalFields.length]
 
         checked = false
         controls = '<div id="yAxisControl" class="vis_controls">'
@@ -132,40 +140,43 @@ $ ->
                 </label>
               </div>
             </div>"
-          if data.normalFields.length == globals.configs.fieldSelection.length
+          if yFields.length == globals.configs.fieldSelection.length
             checked = true
 
-        # Populate choices
-
-        if enableDataPoint
-          fieldList = data.normalFields
-        else
-          fieldList = data.normalFields[1..data.normalFields.length]
-
-        for fIndex in fieldList
+        for f in yFields
           controls += "<div class='inner_control_div' >"
 
           if radio
-            controls += """<div class='radio'><label><input class='y_axis_input' name='y_axis_group'
-              type='radio' value='#{fIndex}'
-              #{if (Number fIndex) is @configs.displayField then "checked" else ""}>
-              #{data.fields[fIndex].fieldName}</label></div>"""
+            controls +=
+              """
+              <div class='radio'><label><input class='y_axis_input'
+               name='y_axis_group' type='radio' value='#{f}'
+               #{if (Number f) is @configs.displayField then "checked" else ""}>
+               #{data.fields[f].fieldName}</label></div>
+              """
           else
-            controls += """<div class='checkbox'><label><input class='y_axis_input' type='checkbox'
-              value='#{fIndex}' #{if (Number fIndex) in globals.configs.fieldSelection then "checked" else ""}
-              />#{data.fields[fIndex].fieldName}</label></div>"""
+            controls +=
+              """
+              <div class='checkbox'><label><input class='y_axis_input'
+               type='checkbox' value='#{f}'
+               #{if (Number f) in globals.configs.fieldSelection then "checked" else ""}
+               />#{data.fields[f].fieldName}</label></div>
+              """
           controls += "</div>"
 
         controls += '</div></div>'
 
         # Write HTML
         ($ '#controldiv').append controls
+
         if checked
           ($ '#select-all-y').prop('checked', true)
+
         # Make y axis checkbox/radio handler
         if radio
           ($ '.y_axis_input').click (e) =>
             @configs.displayField = Number e.target.value
+            globals.configs.fieldSelection = [@configs.displayField]
             @delayedUpdate()
         else
           ($ '.y_axis_input').click (e) =>
@@ -174,7 +185,7 @@ $ ->
               arrayRemove(globals.configs.fieldSelection, index)
             else
               globals.configs.fieldSelection.push(index)
-            if data.normalFields.length == globals.configs.fieldSelection.length
+            if yFields.length == globals.configs.fieldSelection.length
               ($ '#select-all-y').prop('checked', true)
             else
               ($ '#select-all-y').prop('checked', false)
@@ -192,10 +203,14 @@ $ ->
           globals.configs.yAxisOpen = (globals.configs.yAxisOpen + 1) % 2
 
         ($ '#select-all-y').click =>
-          if data.normalFields.length != globals.configs.fieldSelection.length
+          yFields =
+            if enableDataPoint then data.normalFields
+            else data.normalFields[1..data.normalFields.length]
+
+          if yFields.length != globals.configs.fieldSelection.length
             ($ '#yAxisControl').find('.y_axis_input').each (i,j) ->
               ($ j).prop('checked', true)
-            globals.configs.fieldSelection = data.normalFields.slice(0)
+            globals.configs.fieldSelection = yFields
           else
             for element in data.normalFields
               arrayRemove(globals.configs.fieldSelection, element)
@@ -221,11 +236,11 @@ $ ->
         controls += '<select id="groupSelector" class="form-control">'
 
         if data.textFields.length > 2 and excludeNameAndCombined
-          fieldList = data.textFields[2..data.textFields.length]
+          yFields = data.textFields[2..data.textFields.length]
         else
-          fieldList = data.textFields
+          yFields = data.textFields
 
-        for fieldIndex in fieldList
+        for fieldIndex in yFields
           sel = if fieldIndex is globals.configs.groupById then 'selected' else ''
           controls += "<option value='#{Number fieldIndex}' #{sel}>#{data.fields[fieldIndex].fieldName}</option>"
 
@@ -244,18 +259,18 @@ $ ->
               class='group_input_all' type='checkbox' value='#{gIndex}'
               #{if data.groupSelection.length == data.groups.length then "checked" else ""}>
               #Check All</label></div>"""
-            controls += "</td><td>Color</td></tr>"
+            controls += "</td><td></td></tr>"
 
         for group, gIndex in data.groups
           color_id = counter % globals.configs.colors.length
           color = globals.configs.colors[color_id]
-          controls += "<tr><td>"
+          controls += "<tr><td class='label-dataset-name'>"
           controls += "<div class='inner_control_div' id='label-color-#{color_id}'"
           controls += "style=\"color:#{color};\">"
 
           if radio
             # Radio groups can only have one group selected
-            groupSelection = [ data.groupSelection.reduce (a, b) -> Math.min(a,b) ]
+            groupSelection = [data.groupSelection.reduce (a, b) -> Math.min(a,b)]
             data.groupSelection = groupSelection
 
             selectedGroup = data.groupSelection[0]
@@ -275,8 +290,8 @@ $ ->
             else
               controls +="No #{data.fields[globals.configs.groupById].fieldName}</label>"
           controls += "</div></div>"
-          controls += "</td><td>"
-          controls += """<a href="#" class="color-picker" data-color="#{color}" data-color-id="#{color_id}">
+          controls += "</td><td class='label-dataset-color'>"
+          controls += """<a href="javascript:void;" class="color-picker" data-color="#{color}" data-color-id="#{color_id}">
                          <img height="20px" width="20px" src="<%= image_path('color-wheel.png') %>"></a>"""
           controls += "</td></tr>"
           counter += 1
@@ -325,7 +340,7 @@ $ ->
           ($ '.group_input').click (e) =>
             ($ '.group_input').each () ->
               if @checked
-                data.groupSelection = [ Number @value ]
+                data.groupSelection = [Number @value]
             @delayedUpdate()
 
         else
@@ -552,7 +567,8 @@ $ ->
       ###
       Builds Highcharts options object
       Builds up the options common to all vis types.
-      Subsequent derrived classes should use $.extend to expand upon these agter calling super()
+      Subsequent derived classes should use $.extend
+      to expand upon these after calling super()
       ###
       buildOptions: ->
 
@@ -569,20 +585,14 @@ $ ->
           legend:
             itemHoverStyle: ''
             backgroundColor: 'white'
-            symbolWidth: 60
-            itemWidth: 200
             useHTML: true
+            itemWidth: 125
             itemStyle:
-              width: 140
               cursor: 'default'
-              whiteSpace: 'prewrap'
           plotOptions:
             series:
               stickyTracking: false
               turboThreshold: 0
-              marker:
-                lineWidth: 0
-                radius: 5
               events:
                 legendItemClick: (event) ->
                   false
@@ -595,13 +605,6 @@ $ ->
                 'Y-Values'
               else
                 data.fields[globals.configs.fieldSelection[0]].fieldName
-
-
-        @chartOptions.xAxis = []
-        @chartOptions.xAxis.push {}
-        @chartOptions.xAxis.push
-          lineWidth: 0
-          categories: ['']
 
       ###
       Builds the 'fake series' for legend controls.
@@ -661,7 +664,6 @@ $ ->
 
         # Draw legend
         for options in @buildLegendSeries()
-          options.name = options.name.replace(/(.{1})/g,"$1&#8203;") + " "
           @chart.addSeries options, false
 
       ###

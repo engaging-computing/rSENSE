@@ -27,7 +27,8 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is "visualizations" and
+  namespace.action in ["displayVis", "embedVis", "show"]
 
     class window.Timeline extends Scatter
       ###
@@ -39,10 +40,6 @@ $ ->
 
         @configs.mode = @LINES_MODE
         @configs.xAxis = data.timeFields[0]
-
-        if data.normalFields.length > 1
-          @displayField = data.normalFields[1]
-        else @displayField = data.normalFields[0]
 
       ###
       Build options relevant to timeline
@@ -65,7 +62,7 @@ $ ->
               if @series.name.regression?
                 str  = @series.name.regression.tooltip
               else
-                if self.advancedTooltips
+                if self.configs.advancedTooltips
                   str  = "<div style='width:100%;text-align:center;color:#{@series.color};'>"
                   str += "#{@series.name.group}</div><br>"
                   str += "<table>"
