@@ -59,6 +59,15 @@ class ApplicationController < ActionController::Base
     params['access_token'] = auth_info['access_token']
     render '/home/create_issue'
   end
+    
+  def create_issue_anon
+#     print 'auth_info = '
+#     puts auth_info
+#     print 'access_token = '
+#     puts auth_info['access_token']
+    params['access_token'] = ENV['GITHUB_SECRET_ANON']
+    render '/home/create_issue'
+  end
 
   def find_user
     @cur_user = User.find_by_id(session[:user_id])
@@ -197,7 +206,7 @@ class ApplicationController < ActionController::Base
     new_params['title'] = params[:title]
     new_params['body'] = b
 
-    base_url = 'https://api.github.com/repos/jaypoulz/rSENSE/issues'
+    base_url = 'https://api.github.com/repos/kcarcia/rSENSE/issues'
     token = '?access_token=' + params[:access_token]
     url = URI.parse(base_url + token)
     print 'Starting POST to url: '
