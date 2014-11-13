@@ -37,10 +37,11 @@ text-align: left !important;
   opacity:0.6;
   width: 40%;
   margin: 0 auto;
-  text-align: left !important;
+  text-align: left;
+  padding: 10px;
 }
 .carousel-img{
-  height:90vh;  
+  height:90vh !important;  
 }
 /* Declare heights because of positioning of img element */
 .carousel .item {

@@ -10,7 +10,10 @@ $ ->
   console.log "sm = #{screenSize 'sm'}"
   console.log "md = #{screenSize 'md'}"
   console.log "lg = #{screenSize 'lg'}"
-    
+  if screenSize 'sm' or screenSize 'xs'
+    ($ '.carousel-caption').width '80%'
+  else
+    ($ '.carousel-caption').width '40%'
   ($ '#main-image-featurette').popover(title: "wat?", placement: 'bottom', content: "HELLLLLLLLLLLLOOOOOOOOOOOooo")
   lastView = 0
   ($ '.mainContent').on 'click', 'div.clickableItem', (event) ->
@@ -39,6 +42,10 @@ $ ->
       ($ '.item-image-link').addClass('hidden-xs')
     else
       ($ '.item-image-link').removeClass('hidden-xs')
+    if screenSize 'sm' or screenSize 'xs'
+      ($ '.carousel-caption').width '80%'
+    else
+      ($ '.carousel-caption').width '40%'
   ($ '.news-prev-wrapper').on 'mousewheel DOMMouseScroll', (event) ->
     event.stopPropagation()
   
