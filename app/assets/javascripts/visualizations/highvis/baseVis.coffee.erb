@@ -74,6 +74,12 @@ $ ->
       resize: (newWidth, newHeight) ->
 
       ###
+      Vises that can clip data should override this function
+      Defaults to doing nothing.
+      ###
+      clip: ->
+
+      ###
       End sequence used by runtime
       This is called when the user switches away from this vis.
       Should destroy the chart, hide its canvas and remove controls.
@@ -100,16 +106,17 @@ $ ->
       Calculate data to be displayed subject to analysis type
       Returns an object of key-value pairs of the form { groupId, value }
       ###
-      getGroupedData: (field) ->
+      getGroupedData: (f) ->
+        dp = globals.clipping.getData(true, globals.clipping.ALL_VIS)
         gData = {}
         for name, i in data.groups when i in data.groupSelection
           switch @configs.analysisType
-            when @ANALYSISTYPE_TOTAL  then gData[i] = (data.getTotal  field, i)
-            when @ANALYSISTYPE_MAX    then gData[i] = (data.getMax    field, i)
-            when @ANALYSISTYPE_MIN    then gData[i] = (data.getMin    field, i)
-            when @ANALYSISTYPE_MEAN   then gData[i] = (data.getMean   field, i)
-            when @ANALYSISTYPE_MEDIAN then gData[i] = (data.getMedian field, i)
-            when @ANALYSISTYPE_COUNT  then gData[i] = (data.getCount  field, i)
+            when @ANALYSISTYPE_TOTAL  then gData[i] =  data.getTotal(f, i, dp)
+            when @ANALYSISTYPE_MAX    then gData[i] =    data.getMax(f, i, dp)
+            when @ANALYSISTYPE_MIN    then gData[i] =    data.getMin(f, i, dp)
+            when @ANALYSISTYPE_MEAN   then gData[i] =   data.getMean(f, i, dp)
+            when @ANALYSISTYPE_MEDIAN then gData[i] = data.getMedian(f, i, dp)
+            when @ANALYSISTYPE_COUNT  then gData[i] =  data.getCount(f, i, dp)
         gData
 
       ###

@@ -143,7 +143,7 @@ $ ->
           styles: clusterStyles
         ################################################
 
-        for dataPoint in globals.CLIPPING.getData(data.dataPoints)
+        for dp in globals.clipping.getData(true, globals.clipping.ALL_VIS)
           lat = lon = null
           do =>
             # Grab geospatial
@@ -151,35 +151,35 @@ $ ->
 
               if (Number field.typeID) in data.types.LOCATION
                 if (Number field.typeID) is data.units.LOCATION.LATITUDE
-                  lat = dataPoint[fieldIndex]
+                  lat = dp[fieldIndex]
                 else if (Number field.typeID) is data.units.LOCATION.LONGITUDE
-                  lon = dataPoint[fieldIndex]
+                  lon = dp[fieldIndex]
 
             if (lat is null) or (lon is null)
               return
 
-            groupIndex = data.groups.indexOf dataPoint[globals.configs.groupById].toLowerCase()
+            groupIndex = data.groups.indexOf dp[globals.configs.groupById].toLowerCase()
             color = globals.configs.colors[groupIndex % globals.configs.colors.length]
 
             latlng = new google.maps.LatLng(lat, lon)
 
             # Put aside line info if necessary
-            if @timeLines? and dataPoint[data.timeFields[0]] isnt null and not(isNaN dataPoint[data.timeFields[0]])
+            if @timeLines? and dp[data.timeFields[0]] isnt null and not(isNaN dp[data.timeFields[0]])
               @timeLines[groupIndex].push
-                time: dataPoint[data.timeFields[0]]
+                time: dp[data.timeFields[0]]
                 latlng: latlng
 
             # Build info window content
             label  = "<div style='font-size:9pt;overflow-x:none;'>"
             label += "<div style='width:100%;text-align:center;color:#{color};'> " +
-              "#{dataPoint[globals.configs.groupById]}</div>"#<br>"
+              "#{dp[globals.configs.groupById]}</div>"#<br>"
             label += "<table>"
 
-            for field, fieldIndex in data.fields when dataPoint[fieldIndex] isnt null
+            for field, fieldIndex in data.fields when dp[fieldIndex] isnt null
               dat = if (Number field.typeID) is data.types.TIME
-                (globals.dateFormatter dataPoint[fieldIndex])
+                (globals.dateFormatter dp[fieldIndex])
               else
-                dataPoint[fieldIndex]
+                dp[fieldIndex]
 
               label += "<tr><td>#{field.fieldName}</td>"
               label += "<td><strong>#{dat}</strong></td></tr>"
@@ -207,10 +207,10 @@ $ ->
 
             @markers[groupIndex].push newMarker
 
-            for index in data.normalFields when dataPoint[index] isnt null
+            for index in data.normalFields when dp[index] isnt null
               @heatPoints[index][groupIndex].push
-                weight: dataPoint[index]
-                val: dataPoint[index]
+                weight: dp[index]
+                val: dp[index]
                 location: latlng
 
             @heatPoints[@HEATMAP_MARKERS][groupIndex].push latlng

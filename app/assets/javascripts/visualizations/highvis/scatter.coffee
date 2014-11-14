@@ -27,7 +27,8 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is "visualizations" and
+  namespace.action in ["displayVis", "embedVis", "show"]
 
     class window.Scatter extends BaseHighVis
       ###
@@ -229,6 +230,9 @@ $ ->
           text: fieldTitle data.fields[@configs.xAxis]
         @chart.xAxis[0].setTitle title, false
 
+        dp = globals.clipping.getData(true, globals.clipping.ALL_VIS)
+        console.log 'Clipping returned data', dp
+
         # Compute max bounds if there is no user zoom
         if not @isZoomLocked()
 
@@ -237,11 +241,11 @@ $ ->
 
           for fieldIndex, symbolIndex in data.normalFields when fieldIndex in globals.configs.fieldSelection
             for group, groupIndex in data.groups when groupIndex in data.groupSelection
-              @configs.yBounds.min = Math.min @configs.yBounds.min, (data.getMin fieldIndex, groupIndex)
-              @configs.yBounds.max = Math.max @configs.yBounds.max, (data.getMax fieldIndex, groupIndex)
+              @configs.yBounds.min = Math.min @configs.yBounds.min, data.getMin(fieldIndex, groupIndex, dp)
+              @configs.yBounds.max = Math.max @configs.yBounds.max, data.getMax(fieldIndex, groupIndex, dp)
 
-              @configs.xBounds.min = Math.min @configs.xBounds.min, (data.getMin @configs.xAxis, groupIndex)
-              @configs.xBounds.max = Math.max @configs.xBounds.max, (data.getMax @configs.xAxis, groupIndex)
+              @configs.xBounds.min = Math.min @configs.xBounds.min, data.getMin(@configs.xAxis, groupIndex, dp)
+              @configs.xBounds.max = Math.max @configs.xBounds.max, data.getMax(@configs.xAxis, groupIndex, dp)
 
               if (@timeMode isnt undefined) and (@timeMode is @GEO_TIME_MODE)
                 @configs.xBounds.min = (new Date(@configs.xBounds.min)).getUTCFullYear()
@@ -261,14 +265,13 @@ $ ->
         # Draw series
         for fieldIndex, symbolIndex in data.normalFields when fieldIndex in globals.configs.fieldSelection
           for group, groupIndex in data.groups when groupIndex in data.groupSelection
-            dat = if not @configs.fullDetail
-              sel = data.xySelector(@configs.xAxis, fieldIndex, groupIndex)
-              globals.dataReduce sel, @configs.xBounds, @configs.yBounds, @xGridSize, @yGridSize, @MAX_SERIES_SIZE
-            else
-              data.xySelector(@configs.xAxis, fieldIndex, groupIndex)
+            xy = data.xySelector(@configs.xAxis, fieldIndex, groupIndex, dp)
+            sel =
+              if @configs.fullDetail then xy
+              else globals.dataReduce(xy, @configs.xBounds, @configs.yBounds, @xGridSize, @yGridSize, @MAX_SERIES_SIZE)
 
             options =
-              data: dat
+              data: sel
               showInLegend: false
               color: globals.configs.colors[groupIndex % globals.configs.colors.length]
               name:
@@ -659,8 +662,9 @@ $ ->
           yAxisIndex = Number(($ '#regressionYAxisSelector').val())
           regressionType = Number(($ '#regressionSelector').val())
 
-          #list of (x,y) points to be used in calculating regression
-          xyData = data.multiGroupXYSelector(@configs.xAxis, @configs.yAxis, data.groupSelection)
+          # List of (x,y) points to be used in calculating regression
+          d = globals.clipping.getData(true, globals.clipping.ALL_VIS)
+          xyData = data.multiGroupXYSelector(@configs.xAxis, @configs.yAxis, data.groupSelection, d)
 
           # Separate the x and y data
           xData =
@@ -842,21 +846,26 @@ $ ->
         clipped = (point, xBounds, yBounds) =>
 
           # Check x axis
-          if (point[@configs.xAxis] isnt null) && (not isNaN point[@configs.xAxis]) \
-          && point[@configs.xAxis] >= xBounds.min && point[@configs.xAxis] <= xBounds.max
+          if (point[@configs.xAxis] is null) or
+          (isNaN point[@configs.xAxis]) or
+          point[@configs.xAxis] < xBounds.min or
+          point[@configs.xAxis] > xBounds.max
+            return false
 
-            # Check all y axes
-            for yAxis in @configs.yAxis
-              if !((point[yAxis] isnt null) && (not isNaN point[yAxis]) \
-              && point[yAxis] >= yBounds.min && point[yAxis] <= yBounds.max)
-                return false
+          # Check all y axes
+          for yAxis in @configs.yAxis
+            if ((point[yAxis] is null) or (isNaN point[yAxis]) or
+            point[yAxis] < yBounds.min or point[yAxis] > yBounds.max)
+              return false
 
-            return true
-          else return false
+          return true
+
+        console.log @configs.xBounds, @configs.yBounds
 
         # Do the actual clipping
-        if @configs.xBounds.min? and @configs.xBounds.max? and @configs.yBounds.min? and @configs.yBounds.max?
-          point for point in arr when clipped(point, @configs.xBounds, @configs.yBounds)
+        if @configs.xBounds.min? and @configs.xBounds.max? and
+        @configs.yBounds.min? and @configs.yBounds.max?
+          (p for p in arr when clipped(p, @configs.xBounds, @configs.yBounds))
         else
           arr
 

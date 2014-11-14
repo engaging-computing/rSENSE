@@ -27,7 +27,8 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is "visualizations" and
+  namespace.action in ["displayVis", "embedVis", "show"]
 
     class window.Table extends BaseVis
       constructor: (@canvas) ->
@@ -35,7 +36,7 @@ $ ->
         @TOOLBAR_HEIGHT_OFFSET = 70
 
         fieldList =
-          fIndex for f, fIndex in data.fields when fIndex isnt data.COMBINED_FIELD
+          i for f, i in data.fields when i isnt data.COMBINED_FIELD
         @configs.tableFields ?= fieldList[0..7]
 
         # Set sort state to default none existed
@@ -84,18 +85,19 @@ $ ->
           else id
 
         # Build the data for the table
-        visibleGroups = for group, groupIndex in data.groups when groupIndex in data.groupSelection
-          group
+        visGroups = (g for g, i in data.groups when i in data.groupSelection)
 
         rows = []
-        for dataPoint in globals.CLIPPING.getData(data.dataPoints) \
-        when (String dataPoint[globals.configs.groupById]).toLowerCase() in visibleGroups
-          line = {}
-          for dat, fieldIndex in dataPoint
-            line[colIds[fieldIndex]] = dat
-          rows.push(line)
+        dp = globals.clipping.getData(true, globals.clipping.ALL_VIS)
+        gbid = globals.configs.groupById
+        for p in dp when String(p[gbid]).toLowerCase() in visGroups
+          row = {}
+          for d, f in p
+            row[colIds[f]] = d
+          rows.push(row)
 
-        # Make sure the sort type for each column is appropriate, and save the time column
+        # Make sure the sort type for each column is appropriate, and save the
+        # time column
         timeCol = ""
         columns = for colId, colIndex in colIds
           if (data.fields[colIndex].typeID is data.types.TEXT)

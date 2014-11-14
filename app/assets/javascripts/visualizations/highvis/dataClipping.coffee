@@ -27,28 +27,33 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is "visualizations" and
+  namespace.action in ["displayVis", "embedVis", "show"]
 
-    # Use this to save vis state
+    # Captures vis state
     window.globals ?= {}
-    globals.CLIPPING ?= {}
-    globals.CLIPPING.CLIPPING_MODE ?= 0
+    globals.configs ?= {}
+    globals.configs.clippingMode ?= 1
+
+    globals.clipping ?= {}
+    globals.clipping.ALL_VIS ?= ['map', 'timeline', 'scatter', 'table']
 
     # Retrieve the correct data depending on whether you are clipping or not
-    globals.CLIPPING.getData = (curData, clip = 1) ->
+    globals.clipping.getData = (clip = false, visList = null, curVis = false) ->
+      # Select all the data
+      dp = data.dataPoints
+      unless clip and globals.configs.clippingMode then return dp
 
-      # Prepare to loop through selected visualizations
-      clippableVises = ["map", "timeline", "scatter", "table"]
-      dataArray = curData
+      # Get the curVis name
+      if visList is null then visList = globals.curVis.canvas.split('_')[0]
 
-      # Only clip if mode is on and clipping is requested
-      if globals.CLIPPING.CLIPPING_MODE and clip
+      # Ensure visList is a list
+      if typeof(visList) is 'string' then visList = [visList]
 
-        # Take the intersection of the clipping visualizations
-        for vis in clippableVises
-          curVis = (eval "globals.#{vis}")
-          if curVis? and curVis isnt globals.curVis
-            dataArray = curVis.clip(dataArray)
-            # console.log(vis, dataArray.length)
-
-      dataArray
+      # Take the intersection of the clipping visualizations
+      for vis in visList
+        cv = eval("globals.#{vis}")
+        if cv? and (curVis or cv isnt globals.curVis)
+          dataArray = cv.clip(dp)
+          console.log(vis, dp.length)
+      dp
