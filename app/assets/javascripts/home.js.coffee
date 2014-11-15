@@ -120,7 +120,7 @@ $ ->
     timer = 0
     
     ($ document).on 'scrollstop', latency: 1500, () ->
-      #magicScroll()
+      magicScroll()
       
     #($ document).on 'mousewheel DOMMouseScroll', (event) ->
     #  #window.clearInterval(timer)
