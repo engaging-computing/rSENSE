@@ -186,6 +186,7 @@ text-align: left !important;
 .second-footer{
   //width: 95%;
   //text-align: center;
+  margin-top: 0px !important;
 }
 .home-controller.index-action{
   div.container.mainContent {
@@ -228,7 +229,7 @@ text-align: left !important;
   .news-prev-wrapper{
   text-align: left !important;
   height: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
   background-color: white !important;
   .wide-item{
     padding-bottom: 0px !important;
@@ -260,12 +261,20 @@ body {
   div{
     background-color: white;
   }
+  a.item-image-link{
+    height: 170px !important;
+    width: 170px !important;
+  }
   .wide-item{
     box-shadow: 2px 3px 1px white;
     text-align: left !important;
+    height: 170px !important;
+  }
+  .col-md-12{
+    height: 170px;
   }
   .article_page_content.truncate{
-    height: 140px !important;
+    //height: 140px !important;
     word-wrap: break-word;
     text-align: left !important;
   }
@@ -277,6 +286,10 @@ body {
   }
   .wide-item {
     text-align: center;
+  }
+  .featurette-divider{
+  margin-top: 20px !important;
+  margin-bottom: 20px !important;
   }
 }
 #outer{
