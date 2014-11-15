@@ -7,11 +7,11 @@ $ ->
 
     screenSize = (size) ->
       return ($ ".device-#{size}").is(':visible')
-    ($ '.ternary-content').css('height', "#{($ window).height() - ($ '.footer').height() - 150 - ($ '#csv-footer').height()}px" - ($ '#column-one').find('.homepage-header').height())
-    #console.log "xs = #{screenSize 'xs'}"
-    #console.log "sm = #{screenSize 'sm'}"
-    #console.log "md = #{screenSize 'md'}"
-    #console.log "lg = #{screenSize 'lg'}"
+    #($ '.ternary-content').css('height', "#{($ window).height() - ($ '.footer').height() - 150 - ($ '#csv-footer').height()}px" - ($ '#column-one').find('.homepage-header').height())
+    console.log "xs = #{screenSize 'xs'}"
+    console.log "sm = #{screenSize 'sm'}"
+    console.log "md = #{screenSize 'md'}"
+    console.log "lg = #{screenSize 'lg'}"
     if screenSize 'sm' or screenSize 'xs'
       ($ '.carousel-caption').width '80%'
     else
@@ -28,26 +28,26 @@ $ ->
     #($ '.item-image-link').addClass('hidden-xs')
     $( '.item-image-link').removeClass('hidden-xs')
     ($ window).on 'resize', () ->
-      #console.log "xs = #{screenSize 'xs'}"
-      #console.log "sm = #{screenSize 'sm'}"
-      #console.log "md = #{screenSize 'md'}"
-      #console.log "lg = #{screenSize 'lg'}"
-      ($ '.ternary-content').css('height', "#{Math.min(($ window).height() - ($ '.footer').height() - 110 - ($ '#csv-footer').height(), ($ '#column-one').height())}px")
+      console.log "xs = #{screenSize 'xs'}"
+      console.log "sm = #{screenSize 'sm'}"
+      console.log "md = #{screenSize 'md'}"
+      console.log "lg = #{screenSize 'lg'}"
+      #($ '.ternary-content').css('height', "#{Math.min(($ window).height() - ($ '.footer').height() - 110 - ($ '#csv-footer').height(), ($ '#column-one').height())}px")
       #- (1.0 * ($ '.ternary-content').offset().top - ($ '.ternary-upper').offset().top)}px")
       #if ($ window).height() <= 500
       #  console.log 'too small!'
       #  ($ '.three-col').hide()
       #else
       #  ($ '.three-col').show()
-      ($ '.news-prev-wrapper').css('height', "#{Math.max(200, ($ '.ternary-content').height() * .8)}")
+      ($ '.news-prev-wrapper').css('height', "#{Math.max(200, ($ '.ternary-content').height() * .8)}px")
       if ($ window).width() <= 530
         ($ '.item-image-link').addClass('hidden-xs')
       else
         ($ '.item-image-link').removeClass('hidden-xs')
-      if screenSize 'sm' or screenSize 'xs'
-        ($ '.carousel-caption').width '80%'
-      else
-        ($ '.carousel-caption').width '40%'
+      # if screenSize 'sm' or screenSize 'xs'
+      #   ($ '.carousel-caption').width '80%'
+      # else
+      #   ($ '.carousel-caption').width '40%'
     ($ '.news-prev-wrapper').on 'mousewheel DOMMouseScroll', (event) ->
       event.stopPropagation()
     

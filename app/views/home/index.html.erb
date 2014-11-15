@@ -75,18 +75,20 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
     <div class="featurette">
       
       <!---Begin iSENSE Project Description-->
-      <div class=" col-lg-4 col-md-6 col-sm-6 col-xs-6 isense-desc">
+      <div class=" col-lg-4 col-md-12 col-sm-12 col-xs-12 isense-desc">
+        <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
         <h2 class="homepage-header">What is iSENSE?</h2>
-        <br>
-        <p class="lead">
+        <br>        
+        <p class="featurette-text">
           iSENSE is a data collection and visualization tool for teachers and students to engage and interact with data in meaningful new ways.
         </p>
         <p class="featurette-text"> iSENSE is an easy and convenient platform for users to: </p>
-        <p class="featurette-text"><span class="text-success featured-list">&nbsp; Collect </span> experimental data. </p>
-        <p class="featurette-text"><span class="text-info featured-list">&nbsp; Share </span> data with the world. </p>
-        <p class="featurette-text"><span class="text-primary featured-list">&nbsp; Visualize </span>data with robust analysis tools.</p>
+        <p class="featurette-text"><span class="text-success featured-list">Collect </span> experimental data. </p>
+        <p class="featurette-text"><span class="text-info featured-list">Share </span> data with the world. </p>
+        <p class="featurette-text"><span class="text-primary featured-list">Visualize </span>data with robust analysis tools.</p>
         <hr class="featurette-devider welcome-two hidden-xs hidden-sm"> </hr>
-        <div class="hidden-xs hidden-sm">
+        </div>
+        <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
         <h2 class="homepage-header"> Teachers Love iSENSE</h2>
         <br>
         <p class="featurette-text">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
@@ -96,7 +98,7 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
       <!---End Project Description-->
       
       <!---Featured image -->
-      <div class=" col-lg-8 col-md-6 col-sm-6 col-xs-6">
+      <div class=" col-lg-8 col-md-12 col-sm-12 col-xs-12">
         <img src="<%= image_path 'feature-histogram.png'%>" id="main-image-featurette" class="featurette-image"> </img>
       </div>
       <!---End Featured Image-->
@@ -136,13 +138,17 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
     <!---Third Column-->
     <div class="col-md-4 col-lg-6 visible-lg" id = "column-three">
       <h2 class="homepage-header">Download iSENSE Mobile Apps</h2> <br/>
-      <div id = "app-description">
+      <div id ="app-description">
         <!--<hr class="featurette-divider invisible"> </hr>-->
-        <p>Android and iOS mobile applications are free and available for download in the Google Play Store and Apple App Store. These mobile applications make it easy to collect data sets using your mobile device’s built-in sensors and upload them directly to iSENSE.</p> <br />
+        <div class="col-lg-4">
+        <p>Android and iOS mobile applications are free and available for download in the Google Play Store and Apple App Store. These mobile applications make it easy to collect data sets using your mobile device’s built-in sensors and upload them directly to iSENSE.</p> <br/>
+        </div>
+        <div class="col-lg-8">
         <a href="https://play.google.com/store/apps/developer?id=Engaging+Computing+Group,+UML" class="btn btn-primary img-rounded">
         <%= image_tag "icon-android.png", id: 'play-store-button'%> </a>
         <a class="btn btn-primary disabled img-rounded">
-        <%= image_tag "icon-apple.png", id: 'app-store-button' %> </a> 
+        <%= image_tag "icon-apple.png", id: 'app-store-button' %> </a>
+        </div> 
         <hr class="featurette-divider"> </hr>
         <h2 class="homepage-header">Get Involved with iSENSE</h2> <br/>
       <!--<hr class="featurette-divider invisible"> </hr>-->
