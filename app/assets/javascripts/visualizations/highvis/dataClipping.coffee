@@ -54,6 +54,5 @@ $ ->
       for vis in visList
         cv = eval("globals.#{vis}")
         if cv? and (curVis or cv isnt globals.curVis)
-          dataArray = cv.clip(dp)
-          console.log(vis, dp.length)
+          dp = cv.clip(dp)
       dp

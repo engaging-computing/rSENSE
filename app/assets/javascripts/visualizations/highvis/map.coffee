@@ -544,26 +544,24 @@ $ ->
 
       clip: (arr) ->
         viewBounds = @gmap.getBounds()
-        if viewBounds?
-          filterFunc = (row) ->
-            lat = lng = null
+        latIdx = lngIdx = null
+        for f, i in data.fields
+          if (Number f.typeID) is data.units.LOCATION.LATITUDE  then latIdx = i
+          if (Number f.typeID) is data.units.LOCATION.LONGITUDE then lngIdx = i
 
-            # Scan for lat and long
-            for field, fieldIndex in data.fields
-              if (Number field.typeID) in data.types.LOCATION
-                if (Number field.typeID) is data.units.LOCATION.LATITUDE
-                  lat = row[fieldIndex]
-                else if (Number field.typeID) is data.units.LOCATION.LONGITUDE
-                  lng = row[fieldIndex]
+        unless viewBounds? and latIdx? and lngIdx?
+          return arr
 
-            # If points are valid, check if they are visible
-            if (lat is null) or (lng is null)
-              return false
-            else return viewBounds.contains(new google.maps.LatLng(lat, lng))
+        filterFunc = (row) ->
+          lat = row[latIdx]
+          lng = row[lngIdx]
 
-          arr.filter filterFunc
+          # If points are valid, check if they are visible
+          if (lat is null) or (lng is null) then return false
 
-        else arr
+          return viewBounds.contains(new google.maps.LatLng(lat, lng))
+
+        arr.filter filterFunc
 
     if "Map" in data.relVis
       class CanvasProjectionOverlay extends google.maps.OverlayView

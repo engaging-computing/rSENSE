@@ -180,14 +180,14 @@ $ ->
       ###
       buildLegendSeries: ->
         count = -1
-        for field, fieldIndex in data.fields when fieldIndex in data.normalFields
+        for f, i in data.fields when i in data.normalFields
           count += 1
           options =
-            legendIndex: fieldIndex
+            legendIndex: i
             data: []
             color: '#000'
-            showInLegend: if fieldIndex in globals.configs.fieldSelection then true else false
-            name: field.fieldName
+            showInLegend: i in globals.configs.fieldSelection
+            name: f.fieldName
 
           switch
             when @configs.mode is @SYMBOLS_LINES_MODE
@@ -841,6 +841,10 @@ $ ->
       Clips an array of data to include only bounded points
       ###
       clip: (arr) ->
+        # Verify parameters
+        unless @configs.xBounds.min? and @configs.xBounds.max? and
+        @configs.yBounds.min? and @configs.yBounds.max?
+          return arr
 
         # Checks if a point is visible on screen
         clipped = (point, xBounds, yBounds) =>
@@ -854,20 +858,14 @@ $ ->
 
           # Check all y axes
           for yAxis in @configs.yAxis
-            if ((point[yAxis] is null) or (isNaN point[yAxis]) or
-            point[yAxis] < yBounds.min or point[yAxis] > yBounds.max)
-              return false
+            if ((point[yAxis] isnt null) and (not isNaN point[yAxis]) and
+            point[yAxis] >= yBounds.min and point[yAxis] <= yBounds.max)
+              return true
 
-          return true
-
-        console.log @configs.xBounds, @configs.yBounds
+          return false
 
         # Do the actual clipping
-        if @configs.xBounds.min? and @configs.xBounds.max? and
-        @configs.yBounds.min? and @configs.yBounds.max?
-          (p for p in arr when clipped(p, @configs.xBounds, @configs.yBounds))
-        else
-          arr
+        (p for p in arr when clipped(p, @configs.xBounds, @configs.yBounds))
 
     if "Scatter" in data.relVis
       globals.scatter = new Scatter "scatter_canvas"
