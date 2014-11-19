@@ -130,7 +130,7 @@ $ ->
         ($ '#table_canvas').append '<div id="toolbar_bottom"></div>'
 
         # Build the grid
-        @table = jQuery("#data_table").jqGrid({
+        @table = $("#data_table").jqGrid({
           colNames: headers
           colModel: columns
           datatype: 'local'
@@ -225,8 +225,7 @@ $ ->
 
           # Save the table filters
           if @table.getGridParam('postData').filters?
-            @configs.searchParams = jQuery.parseJSON(@table.getGridParam('postData').filters).rules
-
+            @configs.searchParams = $.parseJSON(@table.getGridParam('postData').filters).rules
 
       ###
       JQGrid time formatting (to implement search post formatting)
@@ -262,7 +261,7 @@ $ ->
 
             phrase = []
             if (this._trim)
-              phrase.push("jQuery.trim(")
+              phrase.push("$.trim(")
             phrase.push(column_formatter + "(" + s + ")")
             if (this._trim)
               phrase.push(")")
@@ -272,7 +271,20 @@ $ ->
 
           return result
 
-      clip: (arr) -> arr
+      clip: (arr) ->
+        for p in @configs.searchParams
+          if arr.length is 0 then break
+
+          # Get the field index to sort
+          fields = for f in @table.getGridParam('colNames')
+            f.replace(/\s+/g, '_').toLowerCase()
+          i = fields.indexOf(p.field)
+
+          # Create and clip with the sort filter
+          filter = eval('globals.' + p.op)(p.data, i)
+          arr = arr.filter(filter)
+
+        arr
 
       ###
       Draws y axis controls
