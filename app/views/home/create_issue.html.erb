@@ -16,16 +16,19 @@
       </div>
       <h4>Please enter a brief description of the bug:</h4>
       <%= text_area_tag(:description, nil,  placeholder: 'e.g. iSENSE issue reporting is not yet complete.', rows: 4) %>
+      <h4>Your Email:</h4>
+      <%= text_field_tag(:description, @cur_user.email) %>
       <br/>
       <h4>Please verify the following:</h4>
+	  <% user_agent = UserAgent.parse(request.env['HTTP_USER_AGENT']) %>
       <div class="row">
         <div class="form-group col-md-4">
-          <%= label_tag(:browser, "Browser:") %>
-          <%= text_field_tag(:browser, browser.name) %>
+          <%= label_tag(:browser, "Browswer:") %>
+          <%= text_field_tag(:browser, user_agent.browser) %>
         </div>
         <div class="form-group col-md-4">
           <%= label_tag(:version, "Version:") %>
-          <%= text_field_tag(:version, browser.full_version) %>
+          <%= text_field_tag(:version, user_agent.version) %>
         </div>
         <div class="form-group col-md-4">
           <%= label_tag(:isense_version, "iSENSE Version") %>
@@ -43,7 +46,7 @@
         </div>
         <div class="form-group col-md-4">
           <%= label_tag(:os, "Operating System") %>
-          <%= text_field_tag(:os, 'use useragent gem') %>
+          <%= text_field_tag(:os, user_agent.platform) %>
         </div>
       </div>
       <h4>Please give step by step instructions on how to reproduce the bug:</h4>
