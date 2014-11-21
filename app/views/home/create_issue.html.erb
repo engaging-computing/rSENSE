@@ -2,72 +2,48 @@
   <div class="panel panel-default">
     <div class="panel-heading">
       <div class="row">
-        <div class="col-md-9 h1">Please fill out the following form:</div>
-        <div class="form-group col-md-3 h3">
-          <%= select_tag(:issue_type, options_for_select([['Report a Bug', 0],['Suggest a Feature', 1]], 0)) %>
-        </div>
+        <div class="col-md-9 h1">Report a Bug</div>
       </div>
     </div>
     <!-- Both forms should be fragments. You can render fragments with 'render fragmentname' -->
     <div id="bug_form" class="panel-body">
-      <div class="form-group title">
-          <%= label_tag(:title, "Title:") %>
-          <%= text_field_tag(:title, nil, placeholder: 'My very important issue') %>
+      <div class="form-group" style="display:none">
+          <%= label_tag(:email, "User ID:") %>
+          <%= text_field_tag(:email, @cur_user.id) %>
       </div>
-      <h4>Please enter a brief description of the bug:</h4>
-      <%= text_area_tag(:description, nil,  placeholder: 'e.g. iSENSE issue reporting is not yet complete.', rows: 4) %>
-      <h4>Your Email:</h4>
-      <%= text_field_tag(:description, @cur_user.email) %>
-      <br/>
-      <h4>Please verify the following:</h4>
+      <div class="form-group">
+          <%= label_tag(:description, "Describe the problem:") %>
+          <%= text_area_tag(:description, nil, placeholder: 'e.g. When I click the submit button on the login page, nothing happens.', class: "form-control", rows: 4) %>
+      </div>
+      <div class="form-group">
+          <%= label_tag(:instructions, "What were you doing when you encountered this problem?") %>
+          <%= text_area_tag(:instructions, nil,
+          placeholder: 'e.g. Go the the login page. Click the submit button.', rows: 4, class: "form-control") %>
+      </div>      
 	  <% user_agent = UserAgent.parse(request.env['HTTP_USER_AGENT']) %>
-      <div class="row">
+      <div class="row" style="display:none">
         <div class="form-group col-md-4">
-          <%= label_tag(:browser, "Browswer:") %>
-          <%= text_field_tag(:browser, user_agent.browser) %>
+          <%= label_tag(:browser, "Your Browser:") %>
+          <%= text_field_tag(:browser, user_agent.browser + " " + user_agent.version, class: "form-control") %>
         </div>
         <div class="form-group col-md-4">
-          <%= label_tag(:version, "Version:") %>
-          <%= text_field_tag(:version, user_agent.version) %>
+          <%= label_tag(:os, "Your Operating System:") %>
+          <%= text_field_tag(:os, user_agent.platform, class: "form-control") %>
         </div>
         <div class="form-group col-md-4">
-          <%= label_tag(:isense_version, "iSENSE Version") %>
-          <%= text_field_tag(:isense_version, @version) %>
-        </div>
-      </div>
-      <div class="row">
-        <div class="form-group col-md-4">
-          <%= label_tag(:logged_in, "Logged in:") %>
-          <%= select_tag(:logged_in, options_for_select([['Yes', 1],['No', 0]], 1)) %>
-        </div>
-        <div class="form-group col-md-4">
-          <%= label_tag(:is_admin, "Admin") %>
-          <%= select_tag(:is_admin, options_for_select([['Yes', 1],['No', 0]], 0)) %>
-        </div>
-        <div class="form-group col-md-4">
-          <%= label_tag(:os, "Operating System") %>
-          <%= text_field_tag(:os, user_agent.platform) %>
+          <%= label_tag(:isense_version, "iSENSE Version:") %>
+          <%= text_field_tag(:isense_version, @version, class: "form-control") %>
         </div>
       </div>
-      <h4>Please give step by step instructions on how to reproduce the bug:</h4>
-      <%= text_area_tag(:instructions, nil,
-          placeholder: 'e.g. Start by clicking on \'Projects.\' Then, '\
-          'hover over the create project buttons. Finally, click on '\
-          '\'Tutorials\' 4 times.', rows: 4) %>
-      <br/>
+      <div class="form-group">
+        <%= label_tag(:logged_in, "Were you logged into iSENSE when you discovered this problem?") %>
+        <%= select_tag(:logged_in, options_for_select([['Yes', 1],['No', 0]], 1), class: "form-control", style: "width:100px;") %>
+      </div>
+      <div class="form-group">
+        <%= label_tag(:is_admin, "Were you logged into an iSENSE admin account when you discovered this problem?") %>
+        <%= select_tag(:is_admin, options_for_select([['Yes', 1],['No', 0]], 0), class: "form-control", style: "width:100px;") %>
+      </div>
       <!-- TODO UI for labels e.g. only UI or Vis -->
-      <!-- TODO add ability to set a milestone -->
-      <!-- TODO enabled image uploading -->
-    </div>
-    <!-- TODO This form should have :title and :description like above. Hence the need for a fragment. -->
-    <div id="feature_form" class="panel-body" style="display:none">
-      <div class="form-group title">
-          <%= label_tag(:ftitle, "Title:") %>
-          <%= text_field_tag(:ftitle, nil, placeholder: 'My very exciting feature') %>
-      </div>
-      <h4>Please enter a brief description of your glorious idea:</h4>
-      <%= text_area_tag(:fdescription, nil,  placeholder: 'e.g. iSENSE issue reporting would be awesome!', rows: 4) %>
-      <br/>
       <!-- TODO add ability to set a milestone -->
       <!-- TODO enabled image uploading -->
     </div>

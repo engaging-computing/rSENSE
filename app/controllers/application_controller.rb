@@ -190,20 +190,20 @@ class ApplicationController < ActionController::Base
     # TODO add support for feature submission
     # TODO logged_in and is_admin should submit Y or N
     b =  "**General description:** #{params[:description]}\n\n"\
-         "**live/dev/localhost:** #{params[:type]}\n"\
+         "**live/dev/localhost:** live\n"\
          "**iSENSE Version:** #{params[:isense_version]}\n"\
          "**Logged in (Y or N):** #{params[:logged_in]}\n"\
          "**Admin (Y or N):** #{params[:is_admin]}\n\n"\
          "**OS:** #{params[:os]}\n"\
-         "**Browser/Version:** #{params[:browser]}/#{params[:version]}\n\n"\
-         "**Steps to Reproduce:** #{params[:browser]}\n\n"
+         "**Browser/Version:** #{params[:browser]}\n\n"\
+         "**Steps to Reproduce:** #{params[:instructions]}\n\n"
 
     # TODO add images
     #b += "**Associated Image(s):** "
 
     # TODO add labels
     new_params = {}
-    new_params['title'] = params[:title]
+    new_params['title'] = "User Submitted Issue"
     new_params['body'] = b
 
     base_url = 'https://api.github.com/repos/kcarcia/rSENSE/issues'
