@@ -107,6 +107,7 @@ $ ->
         super()
         @drawGroupControls(true, false)
         @drawYAxisControls(true)
+        @drawClippingControls()
         @drawSaveControls()
 
       globals.summary = new Summary "summary_canvas"

@@ -356,6 +356,7 @@ $ ->
         super()
         @drawGroupControls(true)
         @drawToolControls()
+        @drawClippingControls(true)
         @drawSaveControls()
 
       drawToolControls: ->

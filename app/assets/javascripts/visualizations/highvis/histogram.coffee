@@ -324,6 +324,7 @@ $ ->
         @drawGroupControls()
         @drawYAxisControls(true)
         @drawToolControls()
+        @drawClippingControls()
         @drawSaveControls()
 
       drawYAxisControls: (radio = true) ->

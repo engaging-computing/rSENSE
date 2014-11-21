@@ -121,6 +121,53 @@ $ ->
         gData
 
       ###
+      Draw clipping controls
+      ###
+      drawClippingControls: (enableClipping = false) ->
+        # Build the new control pane
+        c =  '<div id="clipping_controls" class="vis_controls">'
+        c += '<h4 class="clean_shrink"><a href="#">Filtering Controls:</a></h4>'
+        c += '<div class="outer_control_div">'
+        c += '<div class="inner_control_div">'
+
+        # Clip and Reset
+        c += '<div class="btn-group btn-group-justified" role="group">'
+
+        c += '<div class="btn-group" role="group">'
+        btnClass = if enableClipping then '' else ' disabled'
+        c += '<button id="clip_btn" class="btn btn-default' + btnClass + '">'
+        c += 'Clip</button></div>'
+
+        c += '<div class="btn-group" role="group">'
+        c += '<button id="clip_reset_btn" class="btn btn-default">'
+        c += 'Reset</button></div>'
+
+        c += '</div>'
+
+        # Clipping toggles
+        c += '<div class="container-fluid"><div class="row">'
+        for vis in globals.clipping.ALL_VIS
+          thumbnail = globals.clipping.thumbnails.dark[vis]
+          c += "<img src='#{thumbnail}' alt='#{vis}'"
+          c += ' class="col-xs-6 col-md-3 btn btn-default">'
+        c += '</div></div>'
+
+        c += '</div></div></div>'
+
+        # Write HTML
+        ($ '#controldiv').append c
+
+        # Set up accordion
+        globals.configs.clippingOpen ?= 1
+
+        ($ '#clipping_controls').accordion
+          collapsible:true
+          active:globals.configs.clippingOpen
+
+        ($ '#clipping_controls > h3').click ->
+          globals.configs.clippingOpen = (globals.configs.clippingOpen + 1) % 2
+
+      ###
       Draws y axis controls
       This includes a series of checkboxes or radio buttons for selecting
       the active y axis field(s).

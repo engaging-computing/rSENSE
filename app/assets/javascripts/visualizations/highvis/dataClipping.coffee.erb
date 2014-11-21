@@ -33,10 +33,22 @@ $ ->
     # Captures vis state
     window.globals ?= {}
     globals.configs ?= {}
-    globals.configs.clippingMode ?= 1
+    globals.configs.clippingMode ?= 0
 
     globals.clipping ?= {}
     globals.clipping.ALL_VIS ?= ['map', 'timeline', 'scatter', 'table']
+
+    globals.clipping.thumbnails = {}
+    globals.clipping.thumbnails.dark =
+      'map':      '<%= image_path('vis_map_dark.png') %>'
+      'timeline': '<%= image_path('vis_timeline_dark.png') %>'
+      'scatter':  '<%= image_path('vis_scatter_dark.png') %>'
+      'table':    '<%= image_path('vis_table_dark.png') %>'
+    globals.clipping.thumbnails.light =
+      'map':      '<%= image_path('vis_map_light.png') %>'
+      'timeline': '<%= image_path('vis_timeline_light.png') %>'
+      'scatter':  '<%= image_path('vis_scatter_light.png') %>'
+      'table':    '<%= image_path('vis_table_light.png') %>'
 
     # Retrieve the correct data depending on whether you are clipping or not
     globals.clipping.getData = (clip = false, visList = null, curVis = false) ->

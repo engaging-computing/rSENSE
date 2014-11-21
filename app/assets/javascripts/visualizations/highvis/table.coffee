@@ -211,6 +211,7 @@ $ ->
         super()
         @drawGroupControls()
         @drawYAxisControls()
+        @drawClippingControls(true)
         @drawSaveControls()
 
       serializationCleanup: ->

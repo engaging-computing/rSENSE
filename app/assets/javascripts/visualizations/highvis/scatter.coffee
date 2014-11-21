@@ -217,6 +217,7 @@ $ ->
         @drawXAxisControls()
         @drawYAxisControls()
         @drawToolControls()
+        @drawClippingControls(true)
         @drawRegressionControls()
         @drawSaveControls()
 
