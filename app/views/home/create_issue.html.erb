@@ -8,17 +8,17 @@
     <!-- Both forms should be fragments. You can render fragments with 'render fragmentname' -->
     <div id="bug_form" class="panel-body">
       <div class="form-group" style="display:none">
-          <%= label_tag(:email, "User ID:") %>
-          <%= text_field_tag(:email, @cur_user.id) %>
+          <%= label_tag(:user_id, "User ID:") %>
+          <%= text_field_tag(:user_id, @cur_user.id) %>
       </div>
       <div class="form-group">
           <%= label_tag(:description, "Describe the problem:") %>
-          <%= text_area_tag(:description, nil, placeholder: 'e.g. When I click the submit button on the login page, nothing happens.', class: "form-control", rows: 4) %>
+          <%= text_area_tag(:description, nil, placeholder: 'e.g. When I click the submit button on the login page, nothing happens.', class: "form-control", rows: 4, required: "true") %>
       </div>
       <div class="form-group">
           <%= label_tag(:instructions, "What were you doing when you encountered this problem?") %>
           <%= text_area_tag(:instructions, nil,
-          placeholder: 'e.g. Go the the login page. Click the submit button.', rows: 4, class: "form-control") %>
+          placeholder: 'e.g. Go the the login page. Click the submit button.', rows: 4, class: "form-control", required: "true") %>
       </div>      
 	  <% user_agent = UserAgent.parse(request.env['HTTP_USER_AGENT']) %>
       <div class="row" style="display:none">
