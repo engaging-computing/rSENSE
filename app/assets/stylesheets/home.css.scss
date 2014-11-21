@@ -37,7 +37,7 @@ color: black;
   z-index: 10;
   background-color: #F2F2F2;
   opacity:0.6;
-  width: 40%;
+  //width: 80% !important;
   margin: 0 auto;
   text-align: left;
   padding: 10px;
@@ -243,6 +243,9 @@ color: black;
   overflow-y: auto;
   //background-color: white !important;
   padding: 0px;
+  div{
+    margin: 0px !important;
+  }
 }
 }
 /* GLOBAL STYLES
@@ -279,15 +282,13 @@ body {
   .app-desc{
     margin-bottom: 20px !important;
   }
-  .homepage-text{
   
-  //background-color: #F2F2F2 !important; 
-  }
 }
 #column-one{
   .item-desc{
     //background-color: white !important;
     height: 170px !important;
+    margin-bottom: 5px !important;
   }
   
   a.item-image-link{
@@ -297,11 +298,12 @@ body {
   
   .col-md-12{
     height: 170px;
-    margin-bottom: 5px;
+    margin-bottom: 5px !important;
     margin-left: 0px;
     margin-right: 0px;
     padding: 0px;
     
+    }
     .wide-item{
       background-color: #F2F2F2;
       text-align: center;
@@ -309,7 +311,7 @@ body {
       text-align: left !important;
       min-height: 170px !important;
       max-height: 170px !important;
-    }  
+      margin-bottom: 5px !important;  
   }
   .article_page_content.truncate{
     height: 100px !important;
