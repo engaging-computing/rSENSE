@@ -12,6 +12,14 @@ $ ->
     console.log "sm = #{screenSize 'sm'}"
     console.log "md = #{screenSize 'md'}"
     console.log "lg = #{screenSize 'lg'}"
+    if screenSize 'md' is true  or screenSize 'sm' is true 
+      console.log 'RUNNING'
+      ($ '.isense-desc').height("10px")
+      ($ '.isense-desc').find('div').each (i,j) ->
+        console.log ($ j)
+        ($ j).css('overflow', 'auto') 
+    else
+      ($ '.isense-desc').height('80vh')
     if screenSize 'sm' or screenSize 'xs'
       ($ '.carousel-caption').width '80%'
     else
