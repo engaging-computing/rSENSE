@@ -61,10 +61,6 @@ class ApplicationController < ActionController::Base
   end
     
   def create_issue_anon
-#     print 'auth_info = '
-#     puts auth_info
-#     print 'access_token = '
-#     puts auth_info['access_token']
     params['access_token'] = ENV['GITHUB_SECRET_ANON']
     render '/home/create_issue'
   end
@@ -189,14 +185,16 @@ class ApplicationController < ActionController::Base
   def submit_issue
     # TODO add support for feature submission
     # TODO logged_in and is_admin should submit Y or N
+    
     b =  "**General description:** #{params[:description]}\n\n"\
          "**live/dev/localhost:** live\n"\
          "**iSENSE Version:** #{params[:isense_version]}\n"\
-         "**Logged in (Y or N):** #{params[:logged_in]}\n"\
-         "**Admin (Y or N):** #{params[:is_admin]}\n\n"\
+         "**Logged in (Y or N):** #{params[:logged_in] ? "Y" : "N"}\n"\
+         "**Admin (Y or N):** #{params[:is_admin] ? "Y" : "N"}\n\n"\
          "**OS:** #{params[:os]}\n"\
          "**Browser/Version:** #{params[:browser]}\n\n"\
-         "**Steps to Reproduce:** #{params[:instructions]}\n\n"
+         "**Steps to Reproduce:** #{params[:instructions]}\n\n"\
+         "#{params[:user_id]}";
 
     # TODO add images
     #b += "**Associated Image(s):** "
