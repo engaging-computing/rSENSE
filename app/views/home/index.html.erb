@@ -68,7 +68,7 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
 <!---End Carousel Container-->
 
 <!---End Carousel Container-->
-<hr class="featurette-divider carousel-divider invisible" id="scroll-1">
+<hr class="featurette-divider carousel-divider" id="scroll-1">
 <!---Begin Featurette-->
 <div class="row secondary-content" scroll-value="2">
   <div class="col-md-12 secondary-main-content">
@@ -76,21 +76,21 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
       
       <!---Begin iSENSE Project Description-->
       <div class=" col-lg-4 col-md-12 col-sm-12 col-xs-12 isense-desc">
-        <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
+        <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12 what-is-isense">
         <h2 class="homepage-header">What is iSENSE?</h2>
         <br class="line"/> 
         <div class="homepage-text">
-        <p class="featurette-text">
-          iSENSE is a data collection and visualization tool for teachers and students to engage and interact with data in meaningful new ways.
-        </p>
-        <p class="featurette-text"> iSENSE is an easy and convenient platform for users to: </p>
-        <p class="featurette-text"><span class="text-success featured-list">Collect </span> experimental data. </p>
-        <p class="featurette-text"><span class="text-info featured-list">Share </span> data with the world. </p>
-        <p class="featurette-text"><span class="text-primary featured-list">Visualize </span>data with robust analysis tools.</p>
+          <p class="featurette-text">
+            iSENSE is a data collection and visualization tool for teachers and students to engage and interact with data in meaningful new ways.
+          </p>
+          <p class="featurette-text"> iSENSE is an easy and convenient platform for users to: </p>
+          <p class="featurette-text"><span class="text-success featured-list">Collect </span> experimental data. </p>
+          <p class="featurette-text"><span class="text-info featured-list">Share </span> data with the world. </p>
+          <p class="featurette-text"><span class="text-primary featured-list">Visualize </span>data with robust analysis tools.</p> <br/>
         </div>
-        <hr class="featurette-divider welcome-two hidden-md hidden-sm"> </hr>
+        <hr class="featurette-divider hidden-md hidden-sm"> </hr>
         </div>
-        <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12">
+        <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12 teachers-love-isense">
         <h2 class="homepage-header"> Teachers Love iSENSE</h2>
         <br>
         <div class="homepage-text">
@@ -98,8 +98,9 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
         <br />- Elaine G., Math Teacher
         </p> <br />
         <p class="featurette-text">“Using the iSENSE Data Walk Android application with the seventh grade students was one of the most engaging and authentic learning activities of the year. Students used technology to learn about the physical science standard for graphing and interpreting distance and time."
-        <br />-Barbara K., Science Teacher
-        </p>
+        <br />-Barbara K., Science Teacher 
+        </p><br />
+        <hr class="featurette-divider invisible">
         </div> 
         </div>
       </div>
@@ -107,19 +108,18 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
       
       <!---Featured image -->
       <div class=" col-lg-8 col-md-12 col-sm-12 col-xs-12">
+        <hr class="featurette-divider teachers-love-isense-seperator hidden-lg" id="scroll-4"></hr>
         <img src="<%= image_path 'feature-histogram.png'%>" id="main-image-featurette" class="featurette-image"> </img>
+        <hr class="featurette-divider teachers-love-isense-seperator hidden-lg hidden-md hidden-sm"></hr>
       </div>
       <!---End Featured Image-->
-      
     </div>
   </div>
 </div>
 <!---End Featurette-->
-<hr class="featurette-divider ternary-upper invisible">
 <!---Begin three-column layout-->
-<div class="row ternary-content" scroll-value="3" id="scroll-2">
+<div class="row ternary-content" id="scroll-2" scroll-value="3" >
   <div class="container marketing three-col">
-    
     <!--- First Column -->
     <div class=" first-column col-lg-6" id="column-one">
       <h2 class="homepage-header">What's New</h2><br/>
@@ -136,6 +136,7 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
         <% end %>
       </div>
     </div>
+    <!-- <hr class="featurette-divider invisible"> </hr> -->
     <!--- End First Column -->
     
     <!---Second Column -->
