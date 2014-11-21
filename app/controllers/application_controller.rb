@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   skip_before_filter :verify_authenticity_token, only: [:options_req]
   skip_before_filter :find_user, only: [:options_req]
   skip_before_filter :authorize, only: [:options_req]
- 
+
   def allow_cross_site_requests
     headers['Access-Control-Allow-Origin'] = '*'
     headers['Access-Control-Allow-Methods'] = 'POST, PUT, DELETE, GET, OPTIONS'
@@ -59,7 +59,7 @@ class ApplicationController < ActionController::Base
     params['access_token'] = auth_info['access_token']
     render '/home/create_issue'
   end
-    
+
   def create_issue_anon
     params['access_token'] = ENV['GITHUB_SECRET_ANON']
     render '/home/create_issue'
@@ -108,7 +108,7 @@ class ApplicationController < ActionController::Base
       format.any  { head :not_found }
     end
   end
-  
+
   def set_user
     # The API call came with an email and password
     if (params.key? :email) & (params.key? :password)
@@ -185,23 +185,23 @@ class ApplicationController < ActionController::Base
   def submit_issue
     # TODO add support for feature submission
     # TODO logged_in and is_admin should submit Y or N
-    
+
     b =  "**General description:** #{params[:description]}\n\n"\
          "**live/dev/localhost:** live\n"\
          "**iSENSE Version:** #{params[:isense_version]}\n"\
-         "**Logged in (Y or N):** #{params[:logged_in] ? "Y" : "N"}\n"\
-         "**Admin (Y or N):** #{params[:is_admin] ? "Y" : "N"}\n\n"\
+         "**Logged in (Y or N):** #{params[:logged_in] ? 'Y' : 'N'}\n"\
+         "**Admin (Y or N):** #{params[:is_admin] ? 'Y' : 'N'}\n\n"\
          "**OS:** #{params[:os]}\n"\
          "**Browser/Version:** #{params[:browser]}\n\n"\
          "**Steps to Reproduce:** #{params[:instructions]}\n\n"\
-         "#{params[:user_id]}";
+         "#{params[:user_id]}"
 
     # TODO add images
     #b += "**Associated Image(s):** "
 
     # TODO add labels
     new_params = {}
-    new_params['title'] = "User Submitted Issue"
+    new_params['title'] = 'User Submitted Issue'
     new_params['body'] = b
 
     base_url = 'https://api.github.com/repos/kcarcia/rSENSE/issues'
