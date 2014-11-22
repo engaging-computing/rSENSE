@@ -129,7 +129,9 @@ color: black;
     
   }    
 }
-
+#main-image-featurette{
+  clear: both;
+}
 #stats-row{
   .item{
     background-color: white !important;
@@ -141,6 +143,7 @@ color: black;
     color: black;  
   }
   .homepage-text{
+    //overflow-y: hidden;
     text-align: center;
     p{
       text-align: center;
@@ -221,7 +224,9 @@ color: black;
   }
 }
 .isense-desc{
-  height:80vh;  
+  height:80vh;
+  display: block;
+  overflow: hidden;  
   .welcome-two{
     margin-bottom: 20px !important;
   }
@@ -333,6 +338,7 @@ body {
   padding-bottom: 10px !important;
 }
 .ternary-content{
+  margin-top: 60px;
   height:70vh;
   //overflow: hidden;
   #play-store-button{
@@ -348,4 +354,8 @@ body {
   color:#3366CC;
   font-size:2.5em;
   text-align: center;margin: 0 auto;
+}
+.teachers-love-isense-seperator{
+  margin-top: 40px;
+  margin-bottom: 20px;
 }

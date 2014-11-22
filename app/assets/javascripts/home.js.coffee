@@ -5,6 +5,43 @@
 $ ->
   if namespace.controller is 'home' and namespace.action is 'index'
 
+    resizeUI = () ->
+      if screenSize('md') or screenSize('sm')
+        console.log 'RUNNING'
+        ($ '.isense-desc').height("40vh")
+        ($ '.featurette-image').height("40vh")
+        ($ '.isense-desc').find('.col-lg-12').each (i,j) ->
+          console.log ($ j)
+          ($ j).height("40vh")
+          ($ '#column-one').css('height', '50vh')
+          ($ '.news-prev-wrapper').css('height', '70vh')
+
+        ($ '.secondary-content').find('.homepage-text').each (i,j) ->
+          ($ j).height("25vh")
+          ($ j).css('overflow-y', 'auto')
+      else if screenSize('lg')
+        console.log 'NP-Large'
+        ($ '.isense-desc').height("95vh")
+        ($ '#main-image-featurette').css('height', ($ '.what-is-isense').height() + ($ '.teachers-love-isense').height())
+        ($ '.ternary-content').height('60vh')
+        ($ '.isense-desc').css('height', ($ '#main-image-featurette').height())
+      else 
+        console.log "NP-Extra-Small"
+        ($ '#column-one').css('height', '50vh')
+        ($ '#main-image-featurette').height("90vh")
+        ($ '.ternary-content').height('60vh')
+        ($ '.news-prev-wrapper').css('height', '50vh')
+
+    
+      ($ '#main-image-featurette').popover(title: "wat?", placement: 'bottom', content: "HELLLLLLLLLLLLOOOOOOOOOOOooo")
+      lastView = 0
+      ($ '.mainContent').on 'click', 'div.clickableItem', (event) ->
+        window.location = ($ event.currentTarget).children('a').attr 'href'
+      ($ 'li.dropdown.navbtn').click () ->
+        ($ 'li.dropdown.navbtn').find('a:first').css 'color', 'white'
+        ($ 'li.dropdown.navbtn').removeAttr 'disabled'
+      $( '.item-image-link').removeClass('hidden-xs')
+
     screenSize = (size) ->
       return ($ ".device-#{size}").is(':visible')
     #($ '.ternary-content').css('height', "#{($ window).height() - ($ '.footer').height() - 150 - ($ '#csv-footer').height()}px" - ($ '#column-one').find('.homepage-header').height())
@@ -12,68 +49,25 @@ $ ->
     console.log "sm = #{screenSize 'sm'}"
     console.log "md = #{screenSize 'md'}"
     console.log "lg = #{screenSize 'lg'}"
-    if screenSize 'md' is true  or screenSize 'sm' is true 
-      console.log 'RUNNING'
-      ($ '.isense-desc').height("10px")
-      ($ '.isense-desc').find('div').each (i,j) ->
-        console.log ($ j)
-        ($ j).css('overflow', 'auto') 
-    else
-      ($ '.isense-desc').height('80vh')
-    if screenSize 'sm' or screenSize 'xs'
-      ($ '.carousel-caption').width '80%'
-    else
-      ($ '.carousel-caption').width '40%'
-    ($ '#main-image-featurette').popover(title: "wat?", placement: 'bottom', content: "HELLLLLLLLLLLLOOOOOOOOOOOooo")
-    lastView = 0
-    ($ '.mainContent').on 'click', 'div.clickableItem', (event) ->
-      window.location = ($ event.currentTarget).children('a').attr 'href'
-    ($ 'li.dropdown.navbtn').click () ->
-      ($ 'li.dropdown.navbtn').find('a:first').css 'color', 'white'
-      ($ 'li.dropdown.navbtn').removeAttr 'disabled'
+    resizeUI()
     
-    #($ '.item-image-link').addClass('hidden-sm')
-    #($ '.item-image-link').addClass('hidden-xs')
-    $( '.item-image-link').removeClass('hidden-xs')
     ($ window).on 'resize', () ->
-      console.log "xs = #{screenSize 'xs'}"
-      console.log "sm = #{screenSize 'sm'}"
-      console.log "md = #{screenSize 'md'}"
-      console.log "lg = #{screenSize 'lg'}"
-      #($ '.ternary-content').css('height', "#{Math.min(($ window).height() - ($ '.footer').height() - 110 - ($ '#csv-footer').height(), ($ '#column-one').height())}px")
-      #- (1.0 * ($ '.ternary-content').offset().top - ($ '.ternary-upper').offset().top)}px")
-      #if ($ window).height() <= 500
-      #  console.log 'too small!'
-      #  ($ '.three-col').hide()
-      #else
-      #  ($ '.three-col').show()
-      ($ '.news-prev-wrapper').css('height', "#{Math.max(200, ($ '.ternary-content').height() * .8)}px")
-      if ($ window).width() <= 530
-        ($ '.item-image-link').addClass('hidden-xs')
-      else
-        ($ '.item-image-link').removeClass('hidden-xs')
-      # if screenSize 'sm' or screenSize 'xs'
-      #   ($ '.carousel-caption').width '80%'
-      # else
-      #   ($ '.carousel-caption').width '40%'
-    ($ '.news-prev-wrapper').on 'mousewheel DOMMouseScroll', (event) ->
-      event.stopPropagation()
     
-    ###
-    Popover for Welcome to iSENSE featurette
-    ###
-    ($ '#main-image-featurette').on 'mouseenter', () ->
-      console.log '2chainz!'
-      ($ '#main-image-featurette').popover('toggle')
-    ($ '#main-image-featurette').on 'mouseleave', () ->
-      ($ '#main-image-featurette').popover('toggle')
+      resizeUI()
+      #  ($ '.news-prev-wrapper').css('height', "#{Math.max(200, ($ '.ternary-content').height() * .9)}px")
+
+      #($ '.news-prev-wrapper').on 'mousewheel DOMMouseScroll', (event) ->
+      #event.stopPropagation()
+
     
     ###
     Scroll animation effects
     ###
     
     magicScroll = () -> 
+      console.log (($ window).scrollTop() + ($ window).height()) - ($ document).height()
       flag = false
+      show = true
       #console.log ($ window).scrollTop()
       location = 0
       if ($ window).scrollTop() < Math.abs(($ window).scrollTop() - ($ '#scroll-1').offset().top) and ($ window).scrollTop() < Math.abs(($ window).scrollTop() - ($ '#scroll-2').offset().top)
@@ -84,12 +78,20 @@ $ ->
         bottom = false
       else
         location = ($ '#scroll-2').offset().top
-        flag = true 
+        flag = true
+        if screenSize('lg')
+          show = false 
       if not bottom
         if flag
           bottom = true
+      if screenSize('xs')
+        if Math.abs(($ window).scrollTop() - ($ '#scroll-4').offset().top) < Math.min(($ window).scrollTop(), Math.abs(($ window).scrollTop() - ($ '#scroll-1').offset().top), Math.abs(($ window).scrollTop() - ($ '#scroll-2').offset().top)) 
+          location = ($ '#scroll-4').offset().top
+          bottom = false
+      unless Math.abs(($ window).scrollTop() - location) > (($ window).height() * .2)
         ($ 'html, body').animate
           scrollTop: location, 500
+      show
         #bottom = true
       ###
       direction = 
@@ -126,10 +128,16 @@ $ ->
       ###
     throttled = _.throttle(magicScroll, 1000, leading: false)
     timer = 0
-    
-    ($ document).on 'scrollstop', latency: 1500, () ->
-      magicScroll()
+    ($ document).on('scroll', () ->
       
+      ($ '.secondary-main-content').removeClass('hidden-lg')
+    )
+    ($ document).on 'scrollstop', latency: 1500, () ->
+      visible = magicScroll()
+      if visible
+        ($ '.secondary-main-content').show() 
+      else
+        ($ '.secondary-main-content').addClass('hidden-lg')
     #($ document).on 'mousewheel DOMMouseScroll', (event) ->
     #  #window.clearInterval(timer)
     #  timer = window.setInterval(throttled(), 2500)
