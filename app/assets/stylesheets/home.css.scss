@@ -229,7 +229,7 @@ color: black;
 .isense-desc{
   .homepage-text{
     min-height: 170px !important;
-    background-color: white !important;
+    overflow-y: auto;
   }
   //min-height: 500px !important;
   height:80vh;
@@ -250,17 +250,19 @@ color: black;
   display:block;
   //height: 70vh;
   .news-prev-wrapper{
-  text-align: left !important;
-  //background-color: red;
-  min-height: 200px !important;
-  //height: 100%;
-  //overflow-y: auto;
-  //background-color: white !important;
-  padding: 0px;
+    text-align: left !important;
+    //background-color: red;
+    min-height: 300px !important;
+    //height: 100%;
+    //overflow-y: auto;
+    //background-color: white !important;
+    padding: 0px;
+    overflow-y: auto;
+    font-size: 1.25em;
+  }
   div{
     margin: 0px !important;
   }
-}
 }
 /* GLOBAL STYLES
 -------------------------------------------------- */
@@ -275,6 +277,7 @@ body {
   background-color: #F2F2F2 !important;
   text-align: left;
   margin-bottom: 10px;
+  font-size: 1.25em;
 }
 .slide-header{
   font-size: 1.5em;
@@ -299,26 +302,34 @@ body {
 }
 
 #column-three{
-  min-height: 500px !important;
+  min-height: 600px !important;
   //overflow-y: auto;
 }
 
 #column-one{
-  min-height: 500px !important;
+  .featurette-divider{
+    margin-top: 10px !important;
+    margin-bottom: !important;
+  }
+  min-height: 600px !important;
   //overflow-y: auto;
   .item-desc{
     //background-color: white !important;
-    height: 170px !important;
+    min-height: 300px !important;
+    max-height: 300px !important;
     margin-bottom: 5px !important;
   }
   
   a.item-image-link{
-    height: 170px !important;
-    width: 170px !important;
+    min-height: 300px !important;
+    min-width: 300px !important;
+    //max-height: 300px !important;
+    //max-width: 300px !important;
   }
   
   .col-md-12{
-    height: 170px;
+    min-height: 300px;
+    //max-height: 300px !important;
     margin-bottom: 5px !important;
     margin-left: 0px;
     margin-right: 0px;
@@ -330,14 +341,17 @@ body {
       text-align: center;
       box-shadow: 2px 3px 1px white;
       text-align: left !important;
-      min-height: 170px !important;
-      max-height: 170px !important;
+      min-height: 300px !important;
+      //max-height: 300px !important;
       margin-bottom: 5px !important;  
   }
   .article_page_content.truncate{
-    height: 100px !important;
+    min-height: 227px !important;
     word-wrap: break-word;
     text-align: left !important;
+  }
+  .article_page_subtitle.truncate{
+  min-height: 25px;
   }
   .article_page_date{
     margin-bottom: 0px;
@@ -354,9 +368,17 @@ body {
   padding-bottom: 10px !important;
 }
 .ternary-content{
+  #column-three{
+    p{
+      font-size: 1.25em;
+    }
+    //.homepage-stats{
+    //  font-size: 1.25em;
+    // }
+  }
   margin-top: 60px;
   height:70vh;
-  overflow-y: auto;
+  overflow-y: hidden;
   #play-store-button{
     height: 90px !important;
     width: 90px !important;
@@ -377,4 +399,7 @@ body {
 }
 .teachers-love-isense{
   float: left;
+}
+.app-whats-new{
+  margin-top: 100px;  
 }

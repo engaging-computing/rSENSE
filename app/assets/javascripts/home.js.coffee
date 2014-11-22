@@ -18,16 +18,17 @@ $ ->
       if screenSize('md') or screenSize('sm')
         console.log 'NP Medium or NP Small'
         ($ '.isense-desc').css('min-height', '170px')
-        ($ '.isense-desc').height("40vh")
+        ($ '.isense-desc').height("45vh")
         ($ '.featurette-image').height("40vh")
         ($ '#main-image-featurette').css('min-height', '200px')
-        ($ '#main-image-featurette').height('40vh')
+        ($ '#main-image-featurette').height('45vh')
         #($ '.isense-desc').find('.col-lg-12').each (i,j) ->
           #  ($ j).height("40vh")
-        ($ '#column-one').css('height', '50vh')
-        ($ '.news-prev-wrapper').css('height', '20vh')
+        ($ '.ternary-content').height('90vh')
+        ($ '#column-one').css('height', '80vh')
+        ($ '.news-prev-wrapper').css('height', '45vh')
         ($ '.news-prev-wrapper').css('overflow-y', 'scroll')
-        #($ '.ternary-content').css('overflow-y', 'hidden')
+        ($ '.ternary-content').css('overflow-y', 'hidden')
         ($ '.secondary-content').find('.homepage-text').each (i,j) ->
           ($ j).height("20vh")
           ($ j).css('overflow-y', 'auto')
@@ -36,30 +37,45 @@ $ ->
         ($ '.isense-desc').css('min-height', '500px')
         ($ '.isense-desc').height("90vh")
         ($ '#main-image-featurette').css('min-height', '500px')
-        ($ '#main-image-featurette').css('height', '90vh')
-        ($ '.ternary-content').height('70vh')
+        ($ '#main-image-featurette').css('height', '95vh')
+        ($ '.ternary-content').height(Math.max((($ window).height() * .8), ($ '#column-one').height()))
         #($ '.news-prev-wrapper').height('70vh')
-        ($ '.ternary-content').css('overflow-y', 'auto')
+        ($ '.ternary-content').css('overflow-y', 'visible')
         #($ '.isense-desc').find('.col-lg-12').each (i,j) ->
         #  ($ j).height("35vh")
-        ($ '#column-one').height('70vh')
-        ($ '#column-three').height('70vh')
+        ($ '.news-prev-wrapper').height('75vh')
+        ($ '#column-one').height('80vh')
+        ($ '#column-three').height('80vh')
         ($ '.secondary-content').find('.homepage-text').each (i,j) ->
           console.log ($ j)
-          ($ j).height("25vh")
+          ($ j).height(Math.max(($ j).height(), (($ window).height() * .25)))
           ($ j).css('overflow-y', 'auto')
         #($ '.isense-desc').css('height', "#{($ '#main-image-featurette').height()}px")
       else 
         console.log "NP-Extra-Small"
+        ($ '.secondary-content').find('.homepage-text').each (i,j) ->
+          console.log ($ j)
+          unless i is 0
+            ($ j).height(Math.min((($ window).height() * .5), ($ j).height()))
+          ($ j).css('overflow-y', 'auto')
         ($ '.isense-desc').css('min-height', '500px')
-        ($ '#column-one').css('height', '50vh')
+        ($ '.isense-desc').css('height', '95vh')
+        ($ '#column-one').css('height', '95vh')
         ($ '#main-image-featurette').css('min-height', '500px')
         ($ '#main-image-featurette').height("90vh")
-        ($ '.ternary-content').height('50vh')
+        ($ '.ternary-content').height('95vh')
         #($ '.news-prev-wrapper').css('height', '50vh')
+        ($ '.news-prev-wrapper').css('height', '40vh')
         ($ '.news-prev-wrapper').css('overflow-y', 'scroll')
         #($ '.ternary-content').css('overflow-y', 'hidden')
-        
+
+      if ($ '#column-one').height() < 900
+        #($ '#column-one').css('overflow-y', 'scroll')
+        ($ '#column-three').height( ($ '#column-one').height())
+        #($ '#column-three').css('overflow-y', 'scroll')
+        ($ '.ternary-content').height( ($ '#column-one').height())
+        ($ '#app-description').height( ($ '#column-three').height() - ($ '#column-three').find('.homepage-header').height() - 20)
+        ($ '#app-description').css('overflow-y', 'auto')
 
     ($ '.mainContent').on 'click', 'div.clickableItem', (event) ->
       window.location = ($ event.currentTarget).children('a').attr 'href'
@@ -81,7 +97,8 @@ $ ->
     Scroll animation effects
     ###    
     magicScroll = () -> 
-      #console.log (($ window).scrollTop() + ($ window).height()) - ($ document).height()
+      console.log Math.abs((($ window).scrollTop() + ($ window).height()) - ($ document).height())
+      console.log ($ window).height() * .1
       flag = false
       show = true
       #console.log ($ window).scrollTop()
