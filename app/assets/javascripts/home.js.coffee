@@ -17,23 +17,33 @@ $ ->
       console.log 'resizeUI loading' 
       if screenSize('md') or screenSize('sm')
         console.log 'NP Medium or NP Small'
+        ($ '.isense-desc').css('min-height', '170px')
         ($ '.isense-desc').height("40vh")
         ($ '.featurette-image').height("40vh")
-        ($ '.isense-desc').find('.col-lg-12').each (i,j) ->
+        ($ '#main-image-featurette').css('min-height', '200px')
+        ($ '#main-image-featurette').height('40vh')
+        #($ '.isense-desc').find('.col-lg-12').each (i,j) ->
           #  ($ j).height("40vh")
-          ($ '#column-one').css('height', '60vh')
-          ($ '.news-prev-wrapper').css('height', '60vh')
-
+        ($ '#column-one').css('height', '50vh')
+        ($ '.news-prev-wrapper').css('height', '20vh')
+        ($ '.news-prev-wrapper').css('overflow-y', 'scroll')
+        #($ '.ternary-content').css('overflow-y', 'hidden')
         ($ '.secondary-content').find('.homepage-text').each (i,j) ->
           ($ j).height("20vh")
           ($ j).css('overflow-y', 'auto')
       else if screenSize('lg')
         console.log 'NP-Large'
+        ($ '.isense-desc').css('min-height', '500px')
         ($ '.isense-desc').height("90vh")
+        ($ '#main-image-featurette').css('min-height', '500px')
         ($ '#main-image-featurette').css('height', '90vh')
-        ($ '.ternary-content').height('50vh')
+        ($ '.ternary-content').height('70vh')
+        #($ '.news-prev-wrapper').height('70vh')
+        ($ '.ternary-content').css('overflow-y', 'auto')
         #($ '.isense-desc').find('.col-lg-12').each (i,j) ->
         #  ($ j).height("35vh")
+        ($ '#column-one').height('70vh')
+        ($ '#column-three').height('70vh')
         ($ '.secondary-content').find('.homepage-text').each (i,j) ->
           console.log ($ j)
           ($ j).height("25vh")
@@ -41,10 +51,15 @@ $ ->
         #($ '.isense-desc').css('height', "#{($ '#main-image-featurette').height()}px")
       else 
         console.log "NP-Extra-Small"
+        ($ '.isense-desc').css('min-height', '500px')
         ($ '#column-one').css('height', '50vh')
+        ($ '#main-image-featurette').css('min-height', '500px')
         ($ '#main-image-featurette').height("90vh")
         ($ '.ternary-content').height('50vh')
-        ($ '.news-prev-wrapper').css('height', '50vh')
+        #($ '.news-prev-wrapper').css('height', '50vh')
+        ($ '.news-prev-wrapper').css('overflow-y', 'scroll')
+        #($ '.ternary-content').css('overflow-y', 'hidden')
+        
 
     ($ '.mainContent').on 'click', 'div.clickableItem', (event) ->
       window.location = ($ event.currentTarget).children('a').attr 'href'
@@ -56,11 +71,15 @@ $ ->
 
     ($ window).on 'resize', () ->    
       resizeUI()
-      
+    
+    #($ '.homepage-text').on 'scroll', (e) ->
+      #e.stopPropagation()
+    #($ '#column-three').on 'scroll', (e) ->
+    #  e.stopPropagation()
+
     ###
     Scroll animation effects
-    ###
-    
+    ###    
     magicScroll = () -> 
       #console.log (($ window).scrollTop() + ($ window).height()) - ($ document).height()
       flag = false
@@ -85,10 +104,10 @@ $ ->
         if Math.abs(($ window).scrollTop() - ($ '#scroll-4').offset().top) < Math.min(($ window).scrollTop(), Math.abs(($ window).scrollTop() - ($ '#scroll-1').offset().top), Math.abs(($ window).scrollTop() - ($ '#scroll-2').offset().top)) 
           location = ($ '#scroll-4').offset().top
           bottom = false
-      unless Math.abs(($ window).scrollTop() - location) > (($ window).height() * .2)
+      unless Math.abs(($ window).scrollTop() - location) > (($ window).height() * .25)
         ($ 'html, body').animate
           scrollTop: location, 500
       show
 
     ($ document).on 'scrollstop', latency: 1500, () ->
-      visible = magicScroll()
+      magicScroll()

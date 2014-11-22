@@ -110,7 +110,7 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
       <div class=" col-lg-8 col-md-12 col-sm-12 col-xs-12">
         <hr class="featurette-divider teachers-love-isense-seperator hidden-lg" id="scroll-4"></hr>
         <img src="<%= image_path 'feature-histogram.png'%>" id="main-image-featurette" class="featurette-image"> </img>
-        <hr class="featurette-divider teachers-love-isense-seperator hidden-lg hidden-md hidden-sm"></hr>
+        <hr class="featurette-divider teachers-love-isense-seperator hidden-lg hidden-md hidden-sm hidden-xs"></hr>
       </div>
       <!---End Featured Image-->
     </div>
@@ -122,6 +122,24 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
   <div class="container marketing three-col">
     <!--- First Column -->
     <div class=" first-column col-lg-6" id="column-one">
+      <div class="hidden-lg">
+        <h2 class="homepage-header">Download iSENSE Mobile Apps</h2> <br/>
+        <div>
+          <!--<hr class="featurette-divider invisible"> </hr>-->
+          <div class="col-md-6 col-sm-6 col-xs-6 app-desc">
+            <div class="homepage-text">
+            <p>Android and iOS mobile applications are free and available for download in the Google Play Store and Apple App Store. These mobile applications make it easy to collect data sets using your mobile device’s built-in sensors and upload them directly to iSENSE.</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-6 app-desc">
+            <a href="https://play.google.com/store/apps/developer?id=Engaging+Computing+Group,+UML" class="btn btn-primary img-rounded">
+              <%= image_tag "icon-android.png", id: 'play-store-button'%> </a>
+            <a class="btn btn-primary disabled img-rounded">
+            <%= image_tag "icon-apple.png", id: 'app-store-button' %> </a>
+          </div>
+          <hr class="featurette-divider"> </hr>
+        </div>
+      </div>
       <h2 class="homepage-header">What's New</h2><br/>
       <!--<hr class="featurette-divider invisible"> </hr>-->
       <div class="news-prev-wrapper">
@@ -176,13 +194,13 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
               <h2 class="homepage-header">Statistics</h2> 
               <br/>
               <div class="col-xs-4">               
-                <div class="homepage-text"><b><%=User.count%> users</b> registered</div>
+                <div class="homepage-stats"><b><%=User.count%> users</b> registered</div>
               </div>
               <div class="col-xs-4">
-              <div class="homepage-text"><b><%=DataSet.count%> datasets</b> contributed</div>
+              <div class="homepage-stats"><b><%=DataSet.count%> datasets</b> contributed</div>
               </div>
               <div class="col-xs-4">
-              <div class="homepage-text"><b><%=Project.count%> projects</b> created</div>
+              <div class="homepage-stats"><b><%=Project.count%> projects</b> created</div>
               </div>
       </div>
       </div>
@@ -194,8 +212,8 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
     <!---End Third Column-->
   </div>
 </div>
+<br />
 <!---End Three Column Layout-->
-<hr class="featurette-divider invisible"> </hr>
 <hr class="featurette-divider second-footer"> </hr>
 
 <!--- Begin CSV footer -->
