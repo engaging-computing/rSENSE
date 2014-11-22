@@ -5,7 +5,7 @@
 .row.secondary-content{
   display: inline-block;
   .col-md-8{
-    height: 90vh;
+    //height: 90vh;
   }
 }
 
@@ -131,6 +131,7 @@ color: black;
 }
 #main-image-featurette{
   clear: both;
+  //height: 90vh;
 }
 #stats-row{
   .item{
@@ -143,7 +144,7 @@ color: black;
     color: black;  
   }
   .homepage-text{
-    //overflow-y: hidden;
+    overflow-y: auto;
     text-align: center;
     p{
       text-align: center;
@@ -174,9 +175,9 @@ color: black;
 }
 .featurette{
   .col-lg-8{
-    height:100%;  
+    //height:100%;  
     img{
-    height: 90vh;
+    //height: 90vh;
     }
   }
 }
@@ -219,10 +220,8 @@ color: black;
 .three-col{
   clear: both;  
   width:100% !important;
-  .collaborate-img{
-    width: 310px !important;
-  }
 }
+
 .isense-desc{
   height:80vh;
   display: block;
