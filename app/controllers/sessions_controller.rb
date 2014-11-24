@@ -48,7 +48,7 @@ class SessionsController < ApplicationController
     client_id = ENV['GITHUB_KEY']
     redirect_uri = 'http://localhost:3000/auth/github/callback'
     scope = 'repo'
-    state = get_state()
+    state = current_state
 
     auth_url = base_url + '?client_id=' + client_id
     auth_url += '&redirect_uri=' + redirect_uri
@@ -57,7 +57,7 @@ class SessionsController < ApplicationController
 
     redirect_to auth_url
   end
-  
+
   def destroy
     session[:user_id] = nil
     session[:key] = nil
@@ -90,10 +90,11 @@ class SessionsController < ApplicationController
   end
 
   private
-  def get_state
+
+  def current_state
     if session[:state]
       session[:state]
-    else session[:state] = SecureRandom.hex
+    elsif session[:state] = SecureRandom.hex
       session[:state]
     end
   end

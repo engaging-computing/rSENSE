@@ -73,7 +73,7 @@ class ApplicationController < ActionController::Base
   end
 
   def github_authenticate
-    new_params = Hash.new
+    new_params = {}
     # IMPORTANT #
     # These variables need to be set on the machine that is running the server
     new_params[:client_id] = ENV['GITHUB_KEY']
@@ -88,7 +88,7 @@ class ApplicationController < ActionController::Base
     req.set_form_data(new_params)
     req['accept'] = 'application/json'
     http = Net::HTTP.new(url.host, url.port)
-    http.use_ssl = (url.scheme == "https")
+    http.use_ssl = (url.scheme == 'https')
 
     response = http.request(req)
 
@@ -183,8 +183,8 @@ class ApplicationController < ActionController::Base
   end
 
   def submit_issue
-    # TODO add support for feature submission
-    # TODO logged_in and is_admin should submit Y or N
+    # TODO: add support for feature submission
+    # TODO: logged_in and is_admin should submit Y or N
 
     b =  "**General description:** #{params[:description]}\n\n"\
          "**live/dev/localhost:** live\n"\
@@ -196,10 +196,10 @@ class ApplicationController < ActionController::Base
          "**Steps to Reproduce:** #{params[:instructions]}\n\n"\
          "#{params[:user_id]}"
 
-    # TODO add images
-    #b += "**Associated Image(s):** "
+    # TODO: add images
+    # b += "**Associated Image(s):** "
 
-    # TODO add labels
+    # TODO: add labels
     new_params = {}
     new_params['title'] = 'User Submitted Issue'
     new_params['body'] = b
@@ -213,7 +213,7 @@ class ApplicationController < ActionController::Base
     req = Net::HTTP::Post.new(url.request_uri)
     req.body = new_params.to_json
     http = Net::HTTP.new(url.host, url.port)
-    http.use_ssl = (url.scheme == "https")
+    http.use_ssl = (url.scheme == 'https')
     response = http.request(req)
 
     print 'With params: '
@@ -223,9 +223,9 @@ class ApplicationController < ActionController::Base
     puts response.body
 
     if response.code == '201'
-      redirect_to root_path, :flash => { :success => "Issue submitted successfully." }
+      redirect_to root_path, flash: { success: 'Issue submitted successfully.' }
     else
-      redirect_to root_path, :flash => { :error => JSON.parse(response.body)['message'] }
+      redirect_to root_path, flash: { error: JSON.parse(response.body)['message'] }
     end
   end
 end
