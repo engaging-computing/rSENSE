@@ -186,6 +186,10 @@ class ApplicationController < ActionController::Base
     # TODO: add support for feature submission
     # TODO: logged_in and is_admin should submit Y or N
 
+	if params[:description] == ''
+		redirect_to :back
+		flash[:error] = 'Please fill out all required fields.'
+	else
     b =  "**General description:** #{params[:description]}\n\n"\
          "**live/dev/localhost:** live\n"\
          "**iSENSE Version:** #{params[:isense_version]}\n"\
@@ -226,6 +230,7 @@ class ApplicationController < ActionController::Base
       redirect_to root_path, flash: { success: 'Issue submitted successfully.' }
     else
       redirect_to root_path, flash: { error: JSON.parse(response.body)['message'] }
+    end
     end
   end
 end
