@@ -189,8 +189,8 @@ class ApplicationController < ActionController::Base
     b =  "**General description:** #{params[:description]}\n\n"\
          "**live/dev/localhost:** live\n"\
          "**iSENSE Version:** #{params[:isense_version]}\n"\
-         "**Logged in (Y or N):** #{params[:logged_in] ? 'Y' : 'N'}\n"\
-         "**Admin (Y or N):** #{params[:is_admin] ? 'Y' : 'N'}\n\n"\
+         "**Logged in (Y or N):** #{params[:logged_in] == '1' ? 'Y' : 'N'}\n"\
+         "**Admin (Y or N):** #{params[:is_admin] == '1' ? 'Y' : 'N'}\n\n"\
          "**OS:** #{params[:os]}\n"\
          "**Browser/Version:** #{params[:browser]}\n\n"\
          "**Steps to Reproduce:** #{params[:instructions]}\n\n"\
