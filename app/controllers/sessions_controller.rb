@@ -45,7 +45,7 @@ class SessionsController < ApplicationController
   def github_authorize
     base_url = 'https://github.com/login/oauth/authorize'
 
-    client_id = ENV['GITHUB_KEY']
+    client_id = ENV['GITHUB_ID']
     redirect_uri = 'http://localhost:3000/auth/github/callback'
     scope = 'repo'
     state = current_state

@@ -76,7 +76,7 @@ class ApplicationController < ActionController::Base
     new_params = {}
     # IMPORTANT #
     # These variables need to be set on the machine that is running the server
-    new_params[:client_id] = ENV['GITHUB_KEY']
+    new_params[:client_id] = ENV['GITHUB_ID']
     new_params[:client_secret] = ENV['GITHUB_SECRET']
     new_params[:code] = params[:code]
 
