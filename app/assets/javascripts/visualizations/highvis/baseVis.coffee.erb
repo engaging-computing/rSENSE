@@ -108,7 +108,7 @@ $ ->
       Returns an object of key-value pairs of the form { groupId, value }
       ###
       getGroupedData: (f) ->
-        dp = globals.clipping.getData(true, globals.clipping.ALL_VIS)
+        dp = globals.clipping.getData(true, globals.configs.clippingVises)
         gData = {}
         for name, i in data.groups when i in data.groupSelection
           switch @configs.analysisType
@@ -126,7 +126,7 @@ $ ->
       drawClippingControls: (enableClipping = false) ->
         # Build the new control pane
         c =  '<div id="clipping_controls" class="vis_controls">'
-        c += '<h4 class="clean_shrink"><a href="#">Filtering Controls:</a></h4>'
+        c += '<h3 class="clean_shrink"><a href="#">Filtering Controls:</a></h3>'
         c += '<div class="outer_control_div">'
         c += '<div class="inner_control_div">'
 
@@ -148,8 +148,11 @@ $ ->
         c += '<div class="container-fluid"><div class="row">'
         for vis in globals.clipping.ALL_VIS
           thumbnail = globals.clipping.thumbnails.dark[vis]
-          c += "<img src='#{thumbnail}' alt='#{vis}'"
-          c += ' class="col-xs-6 col-md-3 btn btn-default">'
+          c += "<img name='#{vis}' src='#{thumbnail}' alt='#{vis}' "
+          isOn =
+            if (globals.configs.clippingVises.indexOf(vis) is -1) then ''
+            else ' active'
+          c += 'class="col-xs-6 col-md-3 btn btn-default clip-btn' + isOn + '">'
         c += '</div></div>'
 
         c += '</div></div></div>'
@@ -158,7 +161,7 @@ $ ->
         ($ '#controldiv').append c
 
         # Set up accordion
-        globals.configs.clippingOpen ?= 1
+        globals.configs.clippingOpen ?= 0
 
         ($ '#clipping_controls').accordion
           collapsible:true
@@ -166,6 +169,14 @@ $ ->
 
         ($ '#clipping_controls > h3').click ->
           globals.configs.clippingOpen = (globals.configs.clippingOpen + 1) % 2
+
+        ($ '.clip-btn').click ->
+          ($ this).toggleClass('active')
+          name = ($ this).attr('name')
+          if (globals.configs.clippingVises.indexOf(name) is -1)
+            globals.configs.clippingVises.push name
+          else
+            arrayRemove(globals.configs.clippingVises, name)
 
       ###
       Draws y axis controls

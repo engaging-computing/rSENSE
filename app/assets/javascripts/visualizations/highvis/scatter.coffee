@@ -231,8 +231,7 @@ $ ->
           text: fieldTitle data.fields[@configs.xAxis]
         @chart.xAxis[0].setTitle title, false
 
-        dp = globals.clipping.getData(true, globals.clipping.ALL_VIS)
-        console.log 'Clipping returned data', dp
+        dp = globals.clipping.getData(true, globals.configs.clippingVises)
 
         # Compute max bounds if there is no user zoom
         if not @isZoomLocked()
@@ -664,7 +663,7 @@ $ ->
           regressionType = Number(($ '#regressionSelector').val())
 
           # List of (x,y) points to be used in calculating regression
-          d = globals.clipping.getData(true, globals.clipping.ALL_VIS)
+          d = globals.clipping.getData(true, globals.configs.clippingVises)
           xyData = data.multiGroupXYSelector(@configs.xAxis, @configs.yAxis, data.groupSelection, d)
 
           # Separate the x and y data

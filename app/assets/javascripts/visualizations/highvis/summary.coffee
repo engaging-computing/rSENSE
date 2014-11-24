@@ -39,7 +39,7 @@ $ ->
         super()
 
       update: ->
-        dp = globals.clipping.getData(true, globals.clipping.ALL_VIS)
+        dp = globals.clipping.getData(true, globals.configs.clippingVises)
         groupSel = data.groupSelection
         analysis =
           'total':   data.getTotal(@configs.displayField, groupSel, dp)

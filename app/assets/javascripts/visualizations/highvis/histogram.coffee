@@ -94,7 +94,7 @@ $ ->
         min = Number.MAX_VALUE
         max = Number.MIN_VALUE
 
-        dp = globals.clipping.getData(true, globals.clipping.ALL_VIS)
+        dp = globals.clipping.getData(true, globals.configs.clippingVises)
 
         for groupIndex in data.groupSelection
 
@@ -163,7 +163,7 @@ $ ->
         @globalmax = Number.MIN_VALUE
 
 
-        dp = globals.clipping.getData(true, globals.clipping.ALL_VIS)
+        dp = globals.clipping.getData(true, globals.configs.clippingVises)
 
         for groupIndex in data.groupSelection
 
@@ -189,7 +189,7 @@ $ ->
         # Generate all bin data
         binObjs = {}
 
-        dp = globals.clipping.getData(true, globals.clipping.ALL_VIS)
+        dp = globals.clipping.getData(true, globals.configs.clippingVises)
 
         for groupIndex in data.groupSelection
 

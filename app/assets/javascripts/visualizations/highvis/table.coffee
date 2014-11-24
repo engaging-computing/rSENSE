@@ -88,7 +88,7 @@ $ ->
         visGroups = (g for g, i in data.groups when i in data.groupSelection)
 
         rows = []
-        dp = globals.clipping.getData(true, globals.clipping.ALL_VIS)
+        dp = globals.clipping.getData(true, globals.configs.clippingVises)
         gbid = globals.configs.groupById
         for p in dp when String(p[gbid]).toLowerCase() in visGroups
           row = {}

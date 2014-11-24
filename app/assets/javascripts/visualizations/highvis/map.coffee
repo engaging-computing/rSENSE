@@ -143,7 +143,7 @@ $ ->
           styles: clusterStyles
         ################################################
 
-        for dp in globals.clipping.getData(true, globals.clipping.ALL_VIS)
+        for dp in globals.clipping.getData(true, globals.configs.clippingVises)
           lat = lon = null
           do =>
             # Grab geospatial

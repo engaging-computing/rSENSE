@@ -33,10 +33,13 @@ $ ->
     # Captures vis state
     window.globals ?= {}
     globals.configs ?= {}
-    globals.configs.clippingMode ?= 0
+    globals.configs.clippingMode ?= 1
 
     globals.clipping ?= {}
     globals.clipping.ALL_VIS ?= ['map', 'timeline', 'scatter', 'table']
+
+    globals.configs ?= {}
+    globals.configs.clippingVises ?= []
 
     globals.clipping.thumbnails = {}
     globals.clipping.thumbnails.dark =
