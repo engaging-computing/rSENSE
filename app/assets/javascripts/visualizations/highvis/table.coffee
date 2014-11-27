@@ -69,6 +69,9 @@ $ ->
 
       # Gets called when the controls are clicked and at start
       update: ->
+        # try to save the current sort
+        @saveSort()
+
         # Updates controls by default
         ($ '#' + @canvas).html('')
         ($ '#' + @canvas).append '<table id="data_table" class="table table-striped"></table>'
@@ -211,7 +214,7 @@ $ ->
         super()
         @drawGroupControls()
         @drawYAxisControls()
-        @drawClippingControls(true)
+        @drawClippingControls()
         @drawSaveControls()
 
       serializationCleanup: ->

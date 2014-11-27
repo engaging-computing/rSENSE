@@ -123,60 +123,80 @@ $ ->
       ###
       Draw clipping controls
       ###
-      drawClippingControls: (enableClipping = false) ->
+      drawClippingControls: ->
         # Build the new control pane
         c =  '<div id="clipping_controls" class="vis_controls">'
-        c += '<h3 class="clean_shrink"><a href="#">Filtering Controls:</a></h3>'
+        c += '<h3 class="clean_shrink"><a href="#">Filtering:</a></h3>'
         c += '<div class="outer_control_div">'
         c += '<div class="inner_control_div">'
 
-        # Clip and Reset
+        # Reset btn
         c += '<div class="btn-group btn-group-justified" role="group">'
-
-        c += '<div class="btn-group" role="group">'
-        btnClass = if enableClipping then '' else ' disabled'
-        c += '<button id="clip_btn" class="btn btn-default' + btnClass + '">'
-        c += 'Clip</button></div>'
-
         c += '<div class="btn-group" role="group">'
         c += '<button id="clip_reset_btn" class="btn btn-default">'
         c += 'Reset</button></div>'
-
         c += '</div>'
 
         # Clipping toggles
         c += '<div class="container-fluid"><div class="row">'
         for vis in globals.clipping.ALL_VIS
+          isOn = ''
           thumbnail = globals.clipping.thumbnails.dark[vis]
+          if (globals.configs.clippingVises.indexOf(vis) isnt -1)
+            thumbnail = globals.clipping.thumbnails.dark[vis]
+            isOn = ' clip-active'
+
           c += "<img name='#{vis}' src='#{thumbnail}' alt='#{vis}' "
-          isOn =
-            if (globals.configs.clippingVises.indexOf(vis) is -1) then ''
-            else ' active'
           c += 'class="col-xs-6 col-md-3 btn btn-default clip-btn' + isOn + '">'
         c += '</div></div>'
-
+        # Text Divs
+        c += '<div id="clip_descriptors"></div>'
         c += '</div></div></div>'
 
         # Write HTML
-        ($ '#controldiv').append c
+        $('#controldiv').append c
 
         # Set up accordion
         globals.configs.clippingOpen ?= 0
 
-        ($ '#clipping_controls').accordion
+        # Flash if data is filtered
+        if globals.configs.clippingVises.length > 0
+          quickFlash('You are currently viewing filtered data. To see the all of
+            the data, press \'Reset\' in the \'Filtering\' control panel.',
+            'warning')
+
+        $('#clipping_controls').accordion
           collapsible:true
           active:globals.configs.clippingOpen
 
-        ($ '#clipping_controls > h3').click ->
+        $('#clipping_controls > h3').click ->
           globals.configs.clippingOpen = (globals.configs.clippingOpen + 1) % 2
 
-        ($ '.clip-btn').click ->
-          ($ this).toggleClass('active')
-          name = ($ this).attr('name')
+        $('.clip-btn').click ->
+          $(this).toggleClass('clip-active')
+          name = $(this).attr('name')
           if (globals.configs.clippingVises.indexOf(name) is -1)
             globals.configs.clippingVises.push name
+            $(this).attr('src', globals.clipping.thumbnails.light[name])
           else
             arrayRemove(globals.configs.clippingVises, name)
+            $(this).attr('src', globals.clipping.thumbnails.dark[name])
+
+          if globals.configs.clippingVises.length is 0
+            # Remove warning flash
+            $('.alert').remove()
+
+          globals.curVis.update()
+
+        ($ '#clip_reset_btn').click ->
+          globals.configs.clippingVises = []
+          globals.curVis.update()
+          for child in ($ '.clip-btn')
+            $(child).removeClass('clip-active')
+            name = $(child).attr('name')
+            $(child).attr('src', globals.clipping.thumbnails.dark[name])
+          # Remove warning flash
+          $('.alert').remove()
 
       ###
       Draws y axis controls

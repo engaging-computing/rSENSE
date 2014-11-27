@@ -44,6 +44,7 @@
 //= require oms
 //= require better_colorpicker
 //
+//= require visualizations/quickflash
 //= require visualizations/highvis/index
 //
 //= require summernote
