@@ -577,7 +577,7 @@ $ ->
         sw = vb.getSouthWest()
         lat = ne.lat() + ' to ' + sw.lat()
         lng = ne.lng() + ' to ' + sw.lng()
-        d += '<table>'
+        d += '<table class="small">'
         d += '<tr><td>Latitude</td>' + '<td>' + lat + '</td></tr>'
         d += '<tr><td>Longitude</td>' + '<td>' + lng + '</td></tr>'
         d += '</table>'

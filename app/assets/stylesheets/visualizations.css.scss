@@ -81,6 +81,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     // jquery animation for some reason, so we add it instead to
     // .ui-accordion-header
 
+    // clipping descriptors styling
     .clip-descriptor {
       display: hidden;
 
@@ -88,12 +89,8 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
         font-size: 10px;
       }
 
-      table {
-        font-size: 10px;
-
-        td {
-           padding: 2px;
-        }
+      td {
+        padding: 2px;
       }
     }
 

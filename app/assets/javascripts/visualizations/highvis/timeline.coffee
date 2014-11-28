@@ -134,7 +134,7 @@ $ ->
           d += '<div class="small">Timeline has no active filters.</div>'
           return d
 
-        d += '<table>'
+        d += '<table class="small">'
         d += "<tr><td>#{xt}</td><td>#{xr}</td></tr>"
         d += "<tr><td>#{yt}</td><td>#{yr}</td></tr>"
         d += '</table>'
