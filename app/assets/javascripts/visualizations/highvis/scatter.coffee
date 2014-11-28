@@ -867,6 +867,30 @@ $ ->
         # Do the actual clipping
         (p for p in arr when clipped(p, @configs.xBounds, @configs.yBounds))
 
+      clipDescriptor: ->
+        t = 'Scatter:'
+        xt = data.fields[@configs.xAxis].fieldName
+        yt =
+          if globals.configs.fieldSelection.length isnt 1 then 'Y-Values'
+          else data.fields[globals.configs.fieldSelection[0]].fieldName
+
+        x = @configs.xBounds
+        y = @configs.yBounds
+
+        xr = x.min + ' to ' + x.max
+        yr = y.min + ' to ' + y.max
+        d = '<b>' + t + '</b>'
+
+        unless (x.min? and x.max? and y.min? and y.max?)
+          d += '<div class="small">Scatter has no active filters.</div>'
+          return d
+
+        d += '<table>'
+        d += "<tr><td>#{xt}</td><td>#{xr}</td></tr>"
+        d += "<tr><td>#{yt}</td><td>#{yr}</td></tr>"
+        d += '</table>'
+        return d
+
     if "Scatter" in data.relVis
       globals.scatter = new Scatter "scatter_canvas"
     else

@@ -130,8 +130,12 @@ $ ->
         c += '<div class="outer_control_div">'
         c += '<div class="inner_control_div">'
 
-        # Reset btn
+        # Select All and Reset btns
         c += '<div class="btn-group btn-group-justified" role="group">'
+        c += '<div class="btn-group" role="group">'
+        c += '<button id="clip_select_all_btn" class="btn btn-default">'
+        c += 'Select All</button></div>'
+
         c += '<div class="btn-group" role="group">'
         c += '<button id="clip_reset_btn" class="btn btn-default">'
         c += 'Reset</button></div>'
@@ -140,21 +144,39 @@ $ ->
         # Clipping toggles
         c += '<div class="container-fluid"><div class="row">'
         for vis in globals.clipping.ALL_VIS
-          isOn = ''
           thumbnail = globals.clipping.thumbnails.dark[vis]
-          if (globals.configs.clippingVises.indexOf(vis) isnt -1)
-            thumbnail = globals.clipping.thumbnails.dark[vis]
-            isOn = ' clip-active'
-
           c += "<img name='#{vis}' src='#{thumbnail}' alt='#{vis}' "
-          c += 'class="col-xs-6 col-md-3 btn btn-default clip-btn' + isOn + '">'
+          c += 'class="col-xs-6 col-md-3 btn btn-default clip-btn">'
         c += '</div></div>'
+
         # Text Divs
-        c += '<div id="clip_descriptors"></div>'
+        c += '<div id="clip_descriptors">'
+        for vis in globals.clipping.ALL_VIS
+          c += "<div id='#{vis}_descriptor' class='clip-descriptor'></div>"
+        c += '</div>'
         c += '</div></div></div>'
 
         # Write HTML
-        $('#controldiv').append c
+        $('#controldiv').append(c)
+
+        setClipVis = (v, state) ->
+          vis = eval("globals.#{v}")
+          visQ = $(".clip_btn, [name='#{v}']")
+          img = ''
+
+          if (state)
+            img = globals.clipping.thumbnails.light[v]
+            visQ.addClass('clip-active')
+            $("##{v}_descriptor").html(vis.clipDescriptor()).show()
+          else
+            img = globals.clipping.thumbnails.dark[v]
+            visQ.removeClass('clip-active')
+            $("##{v}_descriptor").hide()
+
+          visQ.attr('src', img)
+
+        for v in globals.configs.clippingVises
+          setClipVis(v, true)
 
         # Set up accordion
         globals.configs.clippingOpen ?= 0
@@ -172,31 +194,45 @@ $ ->
         $('#clipping_controls > h3').click ->
           globals.configs.clippingOpen = (globals.configs.clippingOpen + 1) % 2
 
-        $('.clip-btn').click ->
-          $(this).toggleClass('clip-active')
-          name = $(this).attr('name')
-          if (globals.configs.clippingVises.indexOf(name) is -1)
-            globals.configs.clippingVises.push name
-            $(this).attr('src', globals.clipping.thumbnails.light[name])
-          else
-            arrayRemove(globals.configs.clippingVises, name)
-            $(this).attr('src', globals.clipping.thumbnails.dark[name])
+        $('.clip-btn').click (e) =>
+          v = e.target.name
+          if globals.configs.clippingVises.indexOf(v) is -1
+              globals.configs.clippingVises.push(v)
+          else arrayRemove(globals.configs.clippingVises, v)
+
+          state = globals.configs.clippingVises.indexOf(v) isnt -1
+          setClipVis(v, state)
 
           if globals.configs.clippingVises.length is 0
             # Remove warning flash
             $('.alert').remove()
 
-          globals.curVis.update()
+          $('#clipping_controls').accordion('refresh')
+          @update()
 
-        ($ '#clip_reset_btn').click ->
+        ($ '#clip_select_all_btn').click =>
           globals.configs.clippingVises = []
-          globals.curVis.update()
-          for child in ($ '.clip-btn')
-            $(child).removeClass('clip-active')
-            name = $(child).attr('name')
-            $(child).attr('src', globals.clipping.thumbnails.dark[name])
-          # Remove warning flash
-          $('.alert').remove()
+          globals.configs.clippingVises.push v for v in globals.clipping.ALL_VIS
+          for v in globals.clipping.ALL_VIS
+            setClipVis(v, true)
+
+          $('#clipping_controls').accordion('refresh')
+          @update()
+
+        ($ '#clip_reset_btn').click =>
+          for v in globals.configs.clippingVises
+            setClipVis(v, false)
+
+          globals.configs.clippingVises = []
+          $('#clipping_controls').accordion('refresh')
+          @update()
+
+      ###
+      Generates html describing how the vis is filtering the data
+      Defaults to empty string
+      ###
+      clipDescriptor: ->
+        return ""
 
       ###
       Draws y axis controls

@@ -356,7 +356,7 @@ $ ->
         super()
         @drawGroupControls(true)
         @drawToolControls()
-        @drawClippingControls(true)
+        @drawClippingControls()
         @drawSaveControls()
 
       drawToolControls: ->
@@ -563,6 +563,26 @@ $ ->
           return viewBounds.contains(new google.maps.LatLng(lat, lng))
 
         arr.filter filterFunc
+
+      clipDescriptor: ->
+        t = 'Map:'
+        d = "<b>#{t}</b>"
+        vb = undefined
+
+        unless @gmap? and (vb = @gmap.getBounds())?
+          d += '<div class="small">Map has no active filters.</div>'
+          return d
+
+        ne = vb.getNorthEast()
+        sw = vb.getSouthWest()
+        lat = ne.lat() + ' to ' + sw.lat()
+        lng = ne.lng() + ' to ' + sw.lng()
+        d += '<table>'
+        d += '<tr><td>Latitude</td>' + '<td>' + lat + '</td></tr>'
+        d += '<tr><td>Longitude</td>' + '<td>' + lng + '</td></tr>'
+        d += '</table>'
+        return d
+
 
     if "Map" in data.relVis
       class CanvasProjectionOverlay extends google.maps.OverlayView

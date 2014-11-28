@@ -116,6 +116,31 @@ $ ->
       clip: (arr) ->
         super(arr)
 
+      clipDescriptor: ->
+        t = 'Timeline:'
+        xt = data.fields[@configs.xAxis].fieldName
+        yt =
+          if globals.configs.fieldSelection.length isnt 1 then 'Y-Values'
+          else data.fields[globals.configs.fieldSelection[0]].fieldName
+
+        x = @configs.xBounds
+        y = @configs.yBounds
+
+        xr = x.min + ' to ' + x.max
+        yr = y.min + ' to ' + y.max
+        d = '<b>' + t + '</b>'
+
+        unless (x.min? and x.max? and y.min? and y.max?)
+          d += '<div class="small">Timeline has no active filters.</div>'
+          return d
+
+        d += '<table>'
+        d += "<tr><td>#{xt}</td><td>#{xr}</td></tr>"
+        d += "<tr><td>#{yt}</td><td>#{yr}</td></tr>"
+        d += '</table>'
+        return d
+
+
     if "Timeline" in data.relVis
       globals.timeline = new Timeline 'timeline_canvas'
     else
