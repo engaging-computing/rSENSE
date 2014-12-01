@@ -30,8 +30,9 @@ $ ->
         ($ '.news-prev-wrapper').css('overflow-y', 'scroll')
         ($ '.ternary-content').css('overflow-y', 'hidden')
         ($ '.secondary-content').find('.homepage-text').each (i,j) ->
-          ($ j).height("20vh")
+          ($ j).height(Math.min(($ j).height(), (($ window).height() * .45)))
           ($ j).css('overflow-y', 'auto')
+        ($ '.teachers-love-isense').find('homepage-text').height(Math.min(($ '.secondary-content').find('.homepage-text').height(), (($ window).height() * .45)))
       else if screenSize('lg')
         console.log 'NP-Large'
         ($ '.isense-desc').css('min-height', '500px')
@@ -48,25 +49,28 @@ $ ->
         ($ '#column-three').height('80vh')
         ($ '.secondary-content').find('.homepage-text').each (i,j) ->
           console.log ($ j)
-          ($ j).height(Math.max(($ j).height(), (($ window).height() * .25)))
+          ($ j).height(Math.min(($ j).height(), (($ window).height() * .45)))
           ($ j).css('overflow-y', 'auto')
+        ($ '.teachers-love-isense').find('homepage-text').css('overflow-y', 'auto')
         #($ '.isense-desc').css('height', "#{($ '#main-image-featurette').height()}px")
       else 
         console.log "NP-Extra-Small"
         ($ '.secondary-content').find('.homepage-text').each (i,j) ->
           console.log ($ j)
-          unless i is 0
-            ($ j).height(Math.min((($ window).height() * .5), ($ j).height()))
+          
+          ($ j).height(Math.min((($ window).height() * .5), ($ j).height()))
           ($ j).css('overflow-y', 'auto')
         ($ '.isense-desc').css('min-height', '500px')
         ($ '.isense-desc').css('height', '95vh')
-        ($ '#column-one').css('height', '95vh')
+        ($ '#column-one').css('height', '85vh')
         ($ '#main-image-featurette').css('min-height', '500px')
         ($ '#main-image-featurette').height("90vh")
         ($ '.ternary-content').height('95vh')
         #($ '.news-prev-wrapper').css('height', '50vh')
         ($ '.news-prev-wrapper').css('height', '40vh')
         ($ '.news-prev-wrapper').css('overflow-y', 'scroll')
+        ($ '.teachers-love-isense').find('.homepage-text').css('height', '40vh')
+        ($ '.teachers-love-isense').css('overflow-y', 'scroll')
         #($ '.ternary-content').css('overflow-y', 'hidden')
 
       if ($ '#column-one').height() < 900
