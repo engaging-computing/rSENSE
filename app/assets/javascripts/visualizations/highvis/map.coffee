@@ -263,20 +263,18 @@ $ ->
             if @configs.heatmapSelection isnt @HEATMAP_NONE
               # Guess new radius
               @heatmapPixelRadius = Math.ceil(@heatmapPixelRadius * Math.pow(2, newZoom - @configs.zoomLevel))
-              @delayedUpdate()
             @configs.zoomLevel = newZoom
+            @delayedUpdate()
 
           google.maps.event.addListener @gmap, "bounds_changed", =>
             cen = @gmap.getCenter()
             @configs.savedCenter =
               lat: cen.lat()
               lng: cen.lng()
+            @delayedUpdate()
 
           google.maps.event.addListener @gmap, "dragend", =>
-            # Update if the projection has changed enough to disturb the heatmap
-            if @configs.heatmapSelection isnt @HEATMAP_NONE
-              if @getHeatmapScale() isnt @heatmapPixelRadius
-                @delayedUpdate()
+            @delayedUpdate()
 
           # Calls update to draw heatmap on start
           if @configs.heatmapSelection isnt @HEATMAP_NONE
@@ -564,6 +562,10 @@ $ ->
 
         arr.filter filterFunc
 
+      ###
+      Updates a div describing the filtered scope of the visible data as
+      affected by that vis
+      ###
       clipDescriptor: ->
         t = 'Map:'
         d = "<b>#{t}</b>"
@@ -571,7 +573,7 @@ $ ->
 
         unless @gmap? and (vb = @gmap.getBounds())?
           d += '<div class="small">Map has no active filters.</div>'
-          return d
+          return $('#map_descriptor').html(d)
 
         ne = vb.getNorthEast()
         sw = vb.getSouthWest()
@@ -581,8 +583,8 @@ $ ->
         d += '<tr><td>Latitude</td>' + '<td>' + lat + '</td></tr>'
         d += '<tr><td>Longitude</td>' + '<td>' + lng + '</td></tr>'
         d += '</table>'
-        return d
 
+        $('#map_descriptor').html(d)
 
     if "Map" in data.relVis
       class CanvasProjectionOverlay extends google.maps.OverlayView

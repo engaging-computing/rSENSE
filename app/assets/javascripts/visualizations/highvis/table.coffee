@@ -44,7 +44,7 @@ $ ->
         @configs.sortType ?= ''
 
         # Set default search to empty string
-        @configs.searchParams ?= {}
+        @configs.searchParams ?= []
 
       # Removes nulls from the table and colors the groupByRow
       rowFormatter = (cellvalue, options, rowObject) ->
@@ -69,9 +69,6 @@ $ ->
 
       # Gets called when the controls are clicked and at start
       update: ->
-        # try to save the current sort
-        @saveSort()
-
         # Updates controls by default
         ($ '#' + @canvas).html('')
         ($ '#' + @canvas).append '<table id="data_table" class="table table-striped"></table>'
@@ -149,6 +146,7 @@ $ ->
           viewrecords: true
           loadui: 'block'
           pager: '#toolbar_bottom'
+          gridComplete: @saveSort
         })
 
         # Show only the checked columns
@@ -221,7 +219,7 @@ $ ->
         @saveSort()
         super()
 
-      saveSort: ->
+      saveSort: =>
         if @table?
           # Save the sort state
           @configs.sortName = @table.getGridParam('sortname')
@@ -230,6 +228,9 @@ $ ->
           # Save the table filters
           if @table.getGridParam('postData').filters?
             @configs.searchParams = $.parseJSON(@table.getGridParam('postData').filters).rules
+
+        @clipDescriptor()
+        $('#clipping_controls').accordion('refresh')
 
       ###
       JQGrid time formatting (to implement search post formatting)
@@ -289,6 +290,28 @@ $ ->
           arr = arr.filter(filter)
 
         arr
+
+      ###
+      Updates a div describing the filtered scope of the visible data as
+      affected by that vis
+      ###
+      clipDescriptor: ->
+        t = 'Table:'
+        d = "<b>#{t}</b>"
+
+        unless @configs.searchParams? and @configs.searchParams.length > 0
+          d += '<div class="small">Table has no active filters.</div>'
+          return $('#table_descriptor').html(d)
+
+        d += '<table class="small">'
+        for sp in @configs.searchParams
+          name = sp.field.replace(/_/g, ' ')
+          name = name.charAt(0).toUpperCase() + name.slice(1)
+          d += "<tr><td>#{name}</td>"
+          d += "<td>#{globals.filterNames[sp.op]} #{sp.data}</td></tr>"
+        d += '</table>'
+
+        $('#table_descriptor').html(d)
 
       ###
       Draws y axis controls

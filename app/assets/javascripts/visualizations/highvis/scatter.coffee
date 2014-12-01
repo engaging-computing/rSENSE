@@ -332,6 +332,10 @@ $ ->
           ($ 'tr#regression-table-header').show()
         else ($ 'tr#regression-table-header').hide()
 
+        # Refresh the clipping accordion so it sizes correctly
+        @clipDescriptor()
+        $('#clipping_controls').accordion('refresh')
+
       ###
       Draws radio buttons for changing symbol/line mode.
       ###
@@ -867,6 +871,10 @@ $ ->
         # Do the actual clipping
         (p for p in arr when clipped(p, @configs.xBounds, @configs.yBounds))
 
+      ###
+      Updates a div describing the filtered scope of the visible data as
+      affected by that vis
+      ###
       clipDescriptor: ->
         t = 'Scatter:'
         xt = data.fields[@configs.xAxis].fieldName
@@ -883,13 +891,14 @@ $ ->
 
         unless (x.min? and x.max? and y.min? and y.max?)
           d += '<div class="small">Scatter has no active filters.</div>'
-          return d
+          return $('#scatter_descriptor').html(d)
 
         d += '<table class="small">'
         d += "<tr><td>#{xt}</td><td>#{xr}</td></tr>"
         d += "<tr><td>#{yt}</td><td>#{yr}</td></tr>"
         d += '</table>'
-        return d
+
+        $('#scatter_descriptor').html(d)
 
     if "Scatter" in data.relVis
       globals.scatter = new Scatter "scatter_canvas"

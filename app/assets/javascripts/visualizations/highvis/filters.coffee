@@ -113,3 +113,20 @@ $ ->
   # Does not contain
   globals.nc = (s, i) ->
     (a) -> not String(a[i]).contains(String(s))
+
+  # Filter names
+  globals.filterNames =
+    lt: 'is less than'
+    le: 'is less than or equal to'
+    gt: 'is greater than'
+    ge: 'is greater than or equal to'
+    eq: 'is equal to'
+    ne: 'is not equal to'
+    bw: 'begins with'
+    bn: 'does not begin with'
+    in: 'is in'
+    ni: 'is not in'
+    ew: 'ends with'
+    en: 'does not end with'
+    cn: 'contains'
+    nc: 'does not contain'

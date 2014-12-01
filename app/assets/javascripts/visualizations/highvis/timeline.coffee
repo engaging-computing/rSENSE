@@ -116,6 +116,10 @@ $ ->
       clip: (arr) ->
         super(arr)
 
+      ###
+      Updates a div describing the filtered scope of the visible data as
+      affected by that vis
+      ###
       clipDescriptor: ->
         t = 'Timeline:'
         xt = data.fields[@configs.xAxis].fieldName
@@ -126,20 +130,21 @@ $ ->
         x = @configs.xBounds
         y = @configs.yBounds
 
-        xr = x.min + ' to ' + x.max
-        yr = y.min + ' to ' + y.max
-        d = '<b>' + t + '</b>'
+        xr  = globals.dateFormatter(x.min) + ' to '
+        xr += globals.dateFormatter(x.max)
+        yr  = y.min + ' to ' + y.max
+        d   = '<b>' + t + '</b>'
 
         unless (x.min? and x.max? and y.min? and y.max?)
           d += '<div class="small">Timeline has no active filters.</div>'
-          return d
+          return $('#timeline_descriptor').html(d)
 
         d += '<table class="small">'
         d += "<tr><td>#{xt}</td><td>#{xr}</td></tr>"
         d += "<tr><td>#{yt}</td><td>#{yr}</td></tr>"
         d += '</table>'
-        return d
 
+        $('#timeline_descriptor').html(d)
 
     if "Timeline" in data.relVis
       globals.timeline = new Timeline 'timeline_canvas'

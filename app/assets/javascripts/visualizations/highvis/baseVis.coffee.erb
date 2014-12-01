@@ -60,6 +60,8 @@ $ ->
       Derived classes should overload to reload content.
       ###
       update: ->
+        @clipDescriptor()
+        $('#clipping_controls').accordion('refresh')
 
       ###
       Default delayed update simply updates
@@ -142,11 +144,14 @@ $ ->
         c += '</div>'
 
         # Clipping toggles
+        relVis = (v.toLowerCase() for v in data.relVis)
         c += '<div class="container-fluid"><div class="row">'
         for vis in globals.clipping.ALL_VIS
           thumbnail = globals.clipping.thumbnails.dark[vis]
+          btnClass = 'col-xs-6 col-md-3 btn btn-default clip-btn'
+          if vis not in relVis then btnClass += ' disabled'
           c += "<img name='#{vis}' src='#{thumbnail}' alt='#{vis}' "
-          c += 'class="col-xs-6 col-md-3 btn btn-default clip-btn">'
+          c += "class='#{btnClass}'>"
         c += '</div></div>'
 
         # Text Divs
@@ -167,7 +172,8 @@ $ ->
           if (state)
             img = globals.clipping.thumbnails.light[v]
             visQ.addClass('clip-active')
-            $("##{v}_descriptor").html(vis.clipDescriptor()).show()
+            vis.clipDescriptor()
+            $("##{v}_descriptor").show()
           else
             img = globals.clipping.thumbnails.dark[v]
             visQ.removeClass('clip-active')
@@ -207,32 +213,34 @@ $ ->
             # Remove warning flash
             $('.alert').remove()
 
-          $('#clipping_controls').accordion('refresh')
           @update()
 
         ($ '#clip_select_all_btn').click =>
           globals.configs.clippingVises = []
-          globals.configs.clippingVises.push v for v in globals.clipping.ALL_VIS
-          for v in globals.clipping.ALL_VIS
+          relClipVis = (v for v in globals.clipping.ALL_VIS when v in relVis)
+          globals.configs.clippingVises.push v for v in relClipVis
+          for v in relClipVis
             setClipVis(v, true)
 
-          $('#clipping_controls').accordion('refresh')
           @update()
 
         ($ '#clip_reset_btn').click =>
-          for v in globals.configs.clippingVises
+          for v in globals.configs.clippingVises when v in relVis
             setClipVis(v, false)
 
+          # Remove warning flash
+            $('.alert').remove()
+
           globals.configs.clippingVises = []
-          $('#clipping_controls').accordion('refresh')
           @update()
 
       ###
-      Generates html describing how the vis is filtering the data
-      Defaults to empty string
+      Updates a div describing the filtered scope of the visible data as
+      affected by that vis
+
+      Default does nothing
       ###
       clipDescriptor: ->
-        return ""
 
       ###
       Draws y axis controls
@@ -787,6 +795,8 @@ $ ->
         # Draw legend
         for options in @buildLegendSeries()
           @chart.addSeries options, false
+
+        super()
 
       ###
       Performs an update while displaying the loading text
