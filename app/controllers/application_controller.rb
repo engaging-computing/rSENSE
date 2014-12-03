@@ -183,8 +183,21 @@ class ApplicationController < ActionController::Base
   end
 
   def submit_issue
-    # TODO: add support for feature submission
-    # TODO: logged_in and is_admin should submit Y or N
+	if params[:logged_in] == '1'
+		logged_in = 'Y'
+	elsif params[:logged_in] == '0'
+		logged_in = 'N'
+	else
+		logged_in = 'N/A'
+	end
+	
+	if params[:is_admin] == '1'
+		admin = 'Y'
+	elsif params[:is_admin] == '0'
+		admin = 'N'
+	else
+		admin = 'N/A'
+	end
 
 	if params[:description] == ''
 		redirect_to :back
@@ -193,8 +206,8 @@ class ApplicationController < ActionController::Base
     b =  "**General description:** #{params[:description]}\n\n"\
          "**live/dev/localhost:** live\n"\
          "**iSENSE Version:** #{params[:isense_version]}\n"\
-         "**Logged in (Y or N):** #{params[:logged_in] == '1' ? 'Y' : 'N'}\n"\
-         "**Admin (Y or N):** #{params[:is_admin] == '1' ? 'Y' : 'N'}\n\n"\
+         "**Logged in (Y or N):** #{logged_in}\n"\
+         "**Admin (Y or N):** #{admin}\n\n"\
          "**OS:** #{params[:os]}\n"\
          "**Browser/Version:** #{params[:browser]}\n\n"\
          "**Steps to Reproduce:** #{params[:instructions]}\n\n"\
