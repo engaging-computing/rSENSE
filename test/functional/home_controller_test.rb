@@ -30,7 +30,7 @@ class HomeControllerTest < ActionController::TestCase
     assert_response :success
     assert_valid_html response.body
   end
-  
+
   test 'should get bug report page' do
     get :report_a_bug
     assert_response :success
