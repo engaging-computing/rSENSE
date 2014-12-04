@@ -181,8 +181,9 @@ $ ->
     data.getMedian = (fieldIndex, groupIndices) ->
       if typeof groupIndices is 'number' then groupIndices = [groupIndices]
       rawData = @multiGroupSelector(fieldIndex, groupIndices)
-      rawData.sort()
-
+      console.log rawData
+      rawData.sort((a, b) -> a > b)
+      console.log rawData
       mid = Math.floor (rawData.length / 2)
 
       if rawData.length > 0
