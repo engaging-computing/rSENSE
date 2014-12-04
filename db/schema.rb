@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141015152508) do
+ActiveRecord::Schema.define(version: 20141010131030) do
 
   create_table "contrib_keys", force: true do |t|
     t.string   "name",       null: false
