@@ -5,97 +5,65 @@
 $ ->
   if namespace.controller is 'home' and namespace.action is 'index'
 
+    # Determines the current Bootstrap screen size being used to resize UI elements
     screenSize = (size) ->
       return ($ ".device-#{size}").is(':visible')
-      #($ '.ternary-content').css('height', "#{($ window).height() - ($ '.footer').height() - 150 - ($ '#csv-footer').height()}px" - ($ '#column-one').find('.homepage-header').height())
-      console.log "xs = #{screenSize 'xs'}"
-      console.log "sm = #{screenSize 'sm'}"
-      console.log "md = #{screenSize 'md'}"
-      console.log "lg = #{screenSize 'lg'}"
 
+    ###
+    #Resize UI components based upon Bootstrap and screen size
+    ###
     resizeUI = () ->
-      console.log 'resizeUI loading' 
       if screenSize('md') or screenSize('sm')
-        console.log 'NP Medium or NP Small'
         ($ '.isense-desc').css('min-height', '170px')
         ($ '.isense-desc').height("45vh")
         ($ '.featurette-image').height("40vh")
         ($ '#main-image-featurette').css('min-height', '200px')
         ($ '#main-image-featurette').height('45vh')
-        #($ '.isense-desc').find('.col-lg-12').each (i,j) ->
-          #  ($ j).height("40vh")
         ($ '.ternary-content').height('90vh')
         ($ '#column-one').css('height', '80vh')
         ($ '.news-prev-wrapper').css('height', '45vh')
         ($ '.news-prev-wrapper').css('overflow-y', 'scroll')
         ($ '.ternary-content').css('overflow-y', 'hidden')
-        ($ '.secondary-content').find('.homepage-text').each (i,j) ->
-          ($ j).height(Math.min(($ j).height(), (($ window).height() * .45)))
-          ($ j).css('overflow-y', 'auto')
-        ($ '.teachers-love-isense').find('homepage-text').height(Math.min(($ '.secondary-content').find('.homepage-text').height(), (($ window).height() * .45)))
+        ($ '.what-is-isense').height(($ '.isense-desc').height() * .4)
+        ($ '.teachers-love-isense').height(($ '.isense-desc').height() * .4)
       else if screenSize('lg')
-        console.log 'NP-Large'
         ($ '.isense-desc').css('min-height', '500px')
         ($ '.isense-desc').height("90vh")
         ($ '#main-image-featurette').css('min-height', '500px')
         ($ '#main-image-featurette').css('height', '95vh')
         ($ '.ternary-content').height(Math.max((($ window).height() * .8), ($ '#column-one').height()))
-        #($ '.news-prev-wrapper').height('70vh')
         ($ '.ternary-content').css('overflow-y', 'visible')
-        #($ '.isense-desc').find('.col-lg-12').each (i,j) ->
-        #  ($ j).height("35vh")
         ($ '.news-prev-wrapper').height('75vh')
         ($ '#column-one').height('80vh')
-        ($ '#column-three').height('80vh')
-        ($ '.secondary-content').find('.homepage-text').each (i,j) ->
-          console.log ($ j)
-          ($ j).height(Math.min(($ j).height(), (($ window).height() * .45)))
-          ($ j).css('overflow-y', 'auto')
-        ($ '.teachers-love-isense').find('homepage-text').css('overflow-y', 'auto')
-        #($ '.isense-desc').css('height', "#{($ '#main-image-featurette').height()}px")
+        ($ '#column-two').height('80vh')
+        ($ '.what-is-isense').height(($ '.isense-desc').height() * .4)
+        ($ '.teachers-love-isense').height(($ '.isense-desc').height() * .4)
       else 
-        console.log "NP-Extra-Small"
         ($ '.secondary-content').find('.homepage-text').each (i,j) ->
-          console.log ($ j)
-          
           ($ j).height(Math.min((($ window).height() * .5), ($ j).height()))
-          ($ j).css('overflow-y', 'auto')
         ($ '.isense-desc').css('min-height', '500px')
         ($ '.isense-desc').css('height', '95vh')
         ($ '#column-one').css('height', '85vh')
         ($ '#main-image-featurette').css('min-height', '500px')
         ($ '#main-image-featurette').height("90vh")
         ($ '.ternary-content').height('95vh')
-        #($ '.news-prev-wrapper').css('height', '50vh')
         ($ '.news-prev-wrapper').css('height', '40vh')
         ($ '.news-prev-wrapper').css('overflow-y', 'scroll')
         ($ '.teachers-love-isense').find('.homepage-text').css('height', '40vh')
         ($ '.teachers-love-isense').css('overflow-y', 'scroll')
-        #($ '.ternary-content').css('overflow-y', 'hidden')
+        ($ '.what-is-isense').height(($ '.isense-desc').height() * .4)
+        ($ '.teachers-love-isense').height(($ '.isense-desc').height() * .4)
 
       if ($ '#column-one').height() < 900
-        #($ '#column-one').css('overflow-y', 'scroll')
-        ($ '#column-three').height( ($ '#column-one').height())
-        #($ '#column-three').css('overflow-y', 'scroll')
+        ($ '#column-two').height( ($ '#column-one').height())
         ($ '.ternary-content').height( ($ '#column-one').height())
-        ($ '#app-description').height( ($ '#column-three').height() - ($ '#column-three').find('.homepage-header').height() - 20)
+        ($ '#app-description').height( ($ '#column-two').height() - ($ '#column-two').find('.homepage-header').height() - 20)
         ($ '#app-description').css('overflow-y', 'auto')
 
-    ($ '.mainContent').on 'click', 'div.clickableItem', (event) ->
-      window.location = ($ event.currentTarget).children('a').attr 'href'
-    ($ 'li.dropdown.navbtn').click () ->
-      ($ 'li.dropdown.navbtn').find('a:first').css 'color', 'white'
-      ($ 'li.dropdown.navbtn').removeAttr 'disabled'
-    
     resizeUI()
 
     ($ window).on 'resize', () ->    
       resizeUI()
-    
-    #($ '.homepage-text').on 'scroll', (e) ->
-      #e.stopPropagation()
-    #($ '#column-three').on 'scroll', (e) ->
-    #  e.stopPropagation()
 
     ###
     Scroll animation effects
@@ -105,7 +73,6 @@ $ ->
       console.log ($ window).height() * .1
       flag = false
       show = true
-      #console.log ($ window).scrollTop()
       location = 0
       if ($ window).scrollTop() < Math.abs(($ window).scrollTop() - ($ '#scroll-1').offset().top) and ($ window).scrollTop() < Math.abs(($ window).scrollTop() - ($ '#scroll-2').offset().top)
         location = 0
@@ -126,9 +93,21 @@ $ ->
           location = ($ '#scroll-4').offset().top
           bottom = false
       unless Math.abs(($ window).scrollTop() - location) > (($ window).height() * .25)
-        ($ 'html, body').animate
-          scrollTop: location, 500
+        if not(($ window).scrollTop() + ($ window).height() == ($ document).height())
+          ($ 'html, body').animate
+            scrollTop: location, 500
       show
 
     ($ document).on 'scrollstop', latency: 1500, () ->
       magicScroll()
+
+  ###
+  #Other stuff
+  ###
+    
+  ($ '.mainContent').on 'click', 'div.clickableItem', (event) ->
+    window.location = ($ event.currentTarget).children('a').attr 'href'
+  ($ 'li.dropdown.navbtn').click () ->
+    ($ 'li.dropdown.navbtn').find('a:first').css 'color', 'white'
+    ($ 'li.dropdown.navbtn').removeAttr 'disabled'
+

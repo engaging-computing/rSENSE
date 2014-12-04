@@ -221,11 +221,15 @@ color: black;
 .invisible{
   visibility: hidden;  
 }
-.three-col{
+.two-col{
   clear: both;  
   width:100% !important;
 }
-
+.secondary-content{
+  .homepage-text{
+    overflow-y: auto;
+  }
+}
 .isense-desc{
   .homepage-text{
     min-height: 170px !important;
@@ -239,7 +243,7 @@ color: black;
     margin-bottom: 20px !important;
   }
   .featurette-text{
-    font-size: 1.2em !important;
+    font-size: 1.1em !important;
   }
 }
 .ternary-upper{
@@ -273,11 +277,12 @@ body {
   color: #5a5a5a;
 }
 .homepage-text{
-  padding: 5px;
+  padding: 10px;
+  padding-bottom: 15px;
   background-color: #F2F2F2 !important;
   text-align: left;
   margin-bottom: 10px;
-  font-size: 1.25em;
+  font-size: 1.1em;
 }
 .slide-header{
   font-size: 1.5em;
@@ -290,18 +295,8 @@ body {
   font-size:1.25em;
   //font-weight: bold;
 }
+
 #column-two{
-
-  div{
-  text-align:left !important;
-  
-  }
-  .app-desc{
-    margin-bottom: 20px !important;
-  }
-}
-
-#column-three{
   min-height: 600px !important;
   //overflow-y: auto;
 }
@@ -368,13 +363,10 @@ body {
   padding-bottom: 10px !important;
 }
 .ternary-content{
-  #column-three{
+  #column-two{
     p{
-      font-size: 1.25em;
+      font-size: 1.1em;
     }
-    //.homepage-stats{
-    //  font-size: 1.25em;
-    // }
   }
   margin-top: 60px;
   height:70vh;
@@ -402,4 +394,10 @@ body {
 }
 .app-whats-new{
   margin-top: 100px;  
+}
+.what-is-isense{
+  overflow-y: auto;
+}
+.teachers-love-isense{
+  overflow-y: auto;
 }
