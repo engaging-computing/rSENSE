@@ -179,9 +179,10 @@ $ ->
     ###
     data.getMedian = (fieldIndex, groupIndices, dp) ->
       if typeof groupIndices is 'number' then groupIndices = [groupIndices]
-      rawData = @multiGroupSelector(fieldIndex, groupIndices, dp)
-      rawData.sort()
 
+      rawData = @multiGroupSelector(fieldIndex, groupIndices, dp)
+      rawData.sort (a, b) ->
+        if a < b then -1 else 1
       mid = Math.floor (rawData.length / 2)
 
       if rawData.length > 0
