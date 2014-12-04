@@ -100,7 +100,9 @@ class VisualizationsController < ApplicationController
     mo.media_type = 'image'
     mo.name = 'image.png'
     mo.file = 'image.png'
+    mo.user_id = @cur_user.id
     mo.check_store!
+    
 
     if params[:visualization].try(:[], :svg)
       begin

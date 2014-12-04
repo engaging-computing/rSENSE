@@ -47,8 +47,13 @@ class MediaObjectsController < ApplicationController
         @media_object.project.save
       end
 
+      if !@media_object.visualization_id.nil? && @media_object.visualization.featured_media_id == @media_object.id
+        @media_object.visualization.featured_media_id = nil
+        @media_object.visualization.save
+      end
+      
       @media_object.destroy
-
+      
       respond_to do |format|
         format.html do
           redirect_to @media_object.parent, notice: "Deleted #{@media_object.name}"

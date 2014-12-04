@@ -55,13 +55,16 @@
           <% if vi.thumb_id != nil %>
             <% thumb = vi.tn_src unless vi.tn_src.empty? %>
           <% else %>
-            <% case JSON.parse(vi.data)['defaultVis'] %>
+            <% type = JSON.parse(vi.data)['defaultVis'] %>
+            <% case type %>
             <% when 'Map' %>
               <% thumb = image_path('vis_map.png') %>
             <% when 'Table' %>
               <% thumb = image_path('vis_table.png') %>
             <% when 'Summary' %>
               <% thumb = image_path('vis_summary.png') %>
+            <% else %>
+              <% thumb = image_path("vis_#{type.downcase}_light.png")%>
             <% end %>
           <% end %>
           <div class='item-image' style='background-image:url(<%= thumb %>);background-size: 100% 100%'>
