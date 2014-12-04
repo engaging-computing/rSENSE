@@ -35,11 +35,11 @@ $ ->
       name = edit_box.val()
 
       ($ '#nname_box').modal('hide')
-      onSuccess(name)
+      if onSuccess? then onSuccess(name)
 
     ($ "#nname_cancel_btn").one 'click', (e) ->
       ($ '#nname_box').modal('hide')
-      onDismiss()
+      if onDismiss? then onDismiss()
 
     selectFunc = ->
       ($ "#nname").select()

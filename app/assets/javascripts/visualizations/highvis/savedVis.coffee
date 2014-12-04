@@ -106,9 +106,8 @@ $ ->
     ###
     globals.saveVis = (title, desc, succCallback, failCallback) ->
       name = 'Saved Vis - ' + data.projectName
-      cancel = ->
       helpers.name_popup(name, 'visualization', '#viscontainer',
-        createVis, cancel)
+        createVis, null)
 
     ###
     Ajax call to check if the user is logged in. Calls the appropriate
