@@ -182,7 +182,8 @@ $ ->
       if typeof groupIndices is 'number' then groupIndices = [groupIndices]
       rawData = @multiGroupSelector(fieldIndex, groupIndices)
       console.log rawData
-      rawData.sort((a, b) -> a > b)
+      rawData = rawData.sort((a, b) ->
+        if a < b then -1 else 1)
       console.log rawData
       mid = Math.floor (rawData.length / 2)
 
