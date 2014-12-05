@@ -256,7 +256,7 @@ color: black;
   .news-prev-wrapper{
     text-align: left !important;
     //background-color: red;
-    min-height: 310px !important;
+    min-height: 320px !important;
     //height: 100%;
     //overflow-y: auto;
     //background-color: white !important;
@@ -297,7 +297,7 @@ body {
 }
 
 #column-two{
-  min-height: 600px !important;
+  min-height: 650px !important;
   //overflow-y: auto;
 }
 
@@ -391,13 +391,20 @@ body {
 }
 .teachers-love-isense{
   float: left;
+  overflow-y: hidden;
+  .homepage-text{
+    overflow-y: auto;
+  }
 }
 .app-whats-new{
   margin-top: 100px;  
 }
 .what-is-isense{
-  overflow-y: auto;
+  overflow-y: hidden;
+  .homepage-text{
+    overflow-y: auto;
+  }
 }
 .teachers-love-isense{
-  overflow-y: auto;
+  overflow-y: hidden;
 }
