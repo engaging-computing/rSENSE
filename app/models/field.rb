@@ -70,11 +70,13 @@ class Field < ActiveRecord::Base
   end
 
   def trim_restrictions
-    if not restrictions.nil?
-      restrictions.map! do |x|
+    unless restrictions.nil?
+      m = restrictions.split(',')
+      m.map! do |x|
         x.strip!
         x
       end
+      restrictions = m
     end
   end
 end
