@@ -83,7 +83,7 @@ module DataSetsHelper
         when 3
           'TextEditor'
         when 4
-          'LocationEditor'
+          'Slick.Editors.Text'
         else
           'Slick.Editors.Text'
         end

@@ -45,7 +45,10 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     click_on 'Submit Key'
     click_on 'Manual Entry'
     list = page.all(:css, 'th')
-    field_id =  list[1]['data-field-id']
+    puts "A: #{list}"
+    puts "B: #{list[1]}"
+    puts "C: #{list[1]['data-field-id']}"
+    field_id = list[1]['data-field-id']
     find('#data_set_name').set('Data1')
     find('.validate_number').set('5')
     click_on 'Save'

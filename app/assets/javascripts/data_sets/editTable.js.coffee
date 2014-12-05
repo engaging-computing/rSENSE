@@ -15,12 +15,25 @@ uploadSettings =
     window.location = data['displayURL']
 
 setupTable = (cols, data) ->
+  cols.push
+    id: 'del'
+    field: 'del'
+    name: ''
+    width: 0
+    formatter: (row, cell, value, columnDef, dataContext) ->
+      "<i class='fa fa-close slick-delete' data-row='#{dataContext.id}'></i>"
+
+  ($ 'body').on 'click', '.slick-delete', () ->
+    view.deleteItem ($ @).attr 'data-row'
+    grid.invalidate()
+
   options =
     autoEdit: false
     editable: true
     enableCellNavigation: true
     enableColumnReorder: false
     forceFitColumns: true
+    syncColumnCellResize: true
   for x, i in data
     data[i]['id'] = i
 
@@ -45,7 +58,7 @@ ajaxifyGrid = (view) ->
   for i in [0..(view.getLength() - 1)]
     x = view.getItem i
     for j of x
-      if j == 'id'
+      if j == 'id' or j == 'del'
         continue
 
       idTest = posHeadRegex.exec j
