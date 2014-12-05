@@ -32,7 +32,7 @@ class HomeControllerTest < ActionController::TestCase
   end
 
   test 'should get bug report page' do
-    get :report_a_bug
+    get :report_bug
     assert_response :success
     assert_valid_html response.body
   end
