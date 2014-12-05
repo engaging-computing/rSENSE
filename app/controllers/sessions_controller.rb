@@ -50,7 +50,7 @@ class SessionsController < ApplicationController
     scope = 'repo'
     state = current_state
 
-    auth_url = base_url + '?client_id='
+    auth_url = base_url + '?client_id=' + client_id
     auth_url += '&redirect_uri=' + redirect_uri
     auth_url += '&scope=' + scope
     auth_url += '&state=' + state
