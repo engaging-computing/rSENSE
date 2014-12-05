@@ -20,8 +20,7 @@
       </div>
       <div class="form-group">
           <%= label_tag(:instructions, "What were you doing when you discovered this problem?") %>
-          <%= text_area_tag(:instructions, nil,
-          placeholder: 'e.g. I was on the login page trying to click the login button.', rows: 4, class: "form-control") %>
+          <%= text_area_tag(:instructions, nil, placeholder: 'e.g. I was on the login page trying to click the login button.', class: "form-control", rows: 4) %>
       </div>      
 	  <% user_agent = UserAgent.parse(request.env['HTTP_USER_AGENT']) %>
       <div class="row" style="display:none">
