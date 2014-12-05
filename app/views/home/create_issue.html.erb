@@ -45,9 +45,6 @@
         <%= label_tag(:is_admin, "Were you logged into an iSENSE admin account?") %>
         <%= select_tag(:is_admin, options_for_select([['Select one', -1], ['Yes', 1],['No', 0]], -1), class: "form-control", style: "width:115px;") %>
       </div>
-      <!-- TODO UI for labels e.g. only UI or Vis -->
-      <!-- TODO add ability to set a milestone -->
-      <!-- TODO enabled image uploading -->
     </div>
     <div class="panel-footer">
       <%= submit_tag("Submit", class: "btn btn-primary") %>
