@@ -75,5 +75,4 @@ gem 'roo'
 
 # Github Auth, Testing and Bug Report
 gem 'browser'
-gem 'galetahub-simple_captcha'
 gem 'useragent', '~> 0.10.0'
