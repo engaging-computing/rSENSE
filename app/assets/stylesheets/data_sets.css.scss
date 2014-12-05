@@ -8,4 +8,15 @@
 	div {
 		box-sizing: content-box;
 	}
+
+	.slick-cell {
+		padding: 0;
+	}
+
+	input.editor-text {
+		border: none;
+		height: 100%;
+		outline: none;
+		width: 100%;
+	}
 }
