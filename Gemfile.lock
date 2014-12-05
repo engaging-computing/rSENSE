@@ -97,7 +97,6 @@ GEM
     ffi (1.9.3)
     font-awesome-rails (4.2.0.0)
       railties (>= 3.2, < 5.0)
-    galetahub-simple_captcha (0.1.5)
     handlebars_assets (0.17.1)
       execjs (>= 1.2.9)
       multi_json
@@ -234,7 +233,6 @@ DEPENDENCIES
   coffeelint
   execjs
   font-awesome-rails (~> 4.2.0.0)
-  galetahub-simple_captcha
   handlebars_assets
   httparty
   jquery-rails
