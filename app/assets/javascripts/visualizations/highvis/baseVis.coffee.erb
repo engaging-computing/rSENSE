@@ -27,26 +27,26 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is "visualizations" and
+  namespace.action in ["displayVis", "embedVis", "show"]
 
     window.globals ?= {}
-
-    globals.logY ?= 0
-
-    # Only init selections if this is not a saved vis
-    if not data.savedGlobals?
-      globals.groupSelection ?= for vals, keys in data.groups
-        Number keys
-      globals.selectedGroup ?= 0
-
-      if data.normalFields.length > 1
-        globals.fieldSelection ?= data.normalFields[1..1]
-      else
-        globals.fieldSelection ?= data.normalFields[0..0]
+    window.globals.configs ?= {}
 
     class window.BaseVis
       constructor: (@canvas) ->
+        @configs ?= {}
 
+      ANALYSISTYPE_TOTAL:     0
+      ANALYSISTYPE_MAX:       1
+      ANALYSISTYPE_MIN:       2
+      ANALYSISTYPE_MEAN:      3
+      ANALYSISTYPE_MEDIAN:    4
+      ANALYSISTYPE_COUNT:     5
+
+      SORT_DEFAULT:          -1
+
+      analysisTypeNames: ["Total","Max","Min","Mean","Median","Row Count"]
       ###
       Start sequence used by runtime
       ###
@@ -57,7 +57,7 @@ $ ->
       ###
       Update minor state
       Redraws html controls
-      Derrived classes should overload to reload content.
+      Derived classes should overload to reload content.
       ###
       update: ->
 
@@ -79,18 +79,12 @@ $ ->
       Should destroy the chart, hide its canvas and remove controls.
       ###
       end: ->
-        console.log console.trace()
-        alert   """
-          BAD IMPLEMENTATION ALERT!
-
-          Called: 'BaseVis.end'
-
-          See logged stack trace in console.
-          """
+        ($ '#' + @canvas).hide()
 
       ###
       Draws controls
-      Derived classes should write control HTML and bind handlers using the method such as drawGroupControls.
+      Derived classes should write control HTML and bind handlers using
+      the method such as drawGroupControls.
       ###
       drawControls: ->
         @clearControls()
@@ -102,13 +96,32 @@ $ ->
       clearControls: ->
         ($ '#controldiv').empty()
 
+      ###
+      Calculate data to be displayed subject to analysis type
+      Returns an object of key-value pairs of the form { groupId, value }
+      ###
+      getGroupedData: (field) ->
+        gData = {}
+        for name, i in data.groups when i in data.groupSelection
+          switch @configs.analysisType
+            when @ANALYSISTYPE_TOTAL  then gData[i] = (data.getTotal  field, i)
+            when @ANALYSISTYPE_MAX    then gData[i] = (data.getMax    field, i)
+            when @ANALYSISTYPE_MIN    then gData[i] = (data.getMin    field, i)
+            when @ANALYSISTYPE_MEAN   then gData[i] = (data.getMean   field, i)
+            when @ANALYSISTYPE_MEDIAN then gData[i] = (data.getMedian field, i)
+            when @ANALYSISTYPE_COUNT  then gData[i] = (data.getCount  field, i)
+        gData
 
       ###
       Draws y axis controls
       This includes a series of checkboxes or radio buttons for selecting
       the active y axis field(s).
       ###
-      drawYAxisControls: (radio = false, enableDataPoint = true) ->
+      drawYAxisControls: (radio = false, enableDataPoint = false) ->
+        # Populate choices
+        yFields =
+          if enableDataPoint then data.normalFields
+          else data.normalFields[1..data.normalFields.length]
 
         checked = false
         controls = '<div id="yAxisControl" class="vis_controls">'
@@ -127,77 +140,84 @@ $ ->
                 </label>
               </div>
             </div>"
-          if data.normalFields.length == globals.fieldSelection.length
+          if yFields.length == globals.configs.fieldSelection.length
             checked = true
-        
-        # Populate choices
 
-        if enableDataPoint
-          fieldList = data.normalFields
-        else
-          fieldList = data.normalFields[1..data.normalFields.length]
-
-        for fIndex in fieldList
+        for f in yFields
           controls += "<div class='inner_control_div' >"
 
           if radio
-            controls += """<div class='radio'><label><input class='y_axis_input' name='y_axis_group'
-              type='radio' value='#{fIndex}'
-              #{if (Number fIndex) is @displayField then "checked" else ""}>
-              #{data.fields[fIndex].fieldName}</label></div>"""
+            controls +=
+              """
+              <div class='radio'><label><input class='y_axis_input'
+               name='y_axis_group' type='radio' value='#{f}'
+               #{if (Number f) is @configs.displayField then "checked" else ""}>
+               #{data.fields[f].fieldName}</label></div>
+              """
           else
-            controls += """<div class='checkbox'><label><input class='y_axis_input' type='checkbox'
-              value='#{fIndex}' #{if (Number fIndex) in globals.fieldSelection then "checked" else ""}
-              />#{data.fields[fIndex].fieldName}</label></div>"""
+            controls +=
+              """
+              <div class='checkbox'><label><input class='y_axis_input'
+               type='checkbox' value='#{f}'
+               #{if (Number f) in globals.configs.fieldSelection then "checked" else ""}
+               />#{data.fields[f].fieldName}</label></div>
+              """
           controls += "</div>"
 
         controls += '</div></div>'
 
         # Write HTML
         ($ '#controldiv').append controls
+
         if checked
           ($ '#select-all-y').prop('checked', true)
+
         # Make y axis checkbox/radio handler
         if radio
           ($ '.y_axis_input').click (e) =>
-            @displayField = Number e.target.value
+            @configs.displayField = Number e.target.value
+            globals.configs.fieldSelection = [@configs.displayField]
             @delayedUpdate()
         else
           ($ '.y_axis_input').click (e) =>
             index = Number e.target.value
-            if index in globals.fieldSelection
-              arrayRemove(globals.fieldSelection, index)
+            if index in globals.configs.fieldSelection
+              arrayRemove(globals.configs.fieldSelection, index)
             else
-              globals.fieldSelection.push(index)
-            if data.normalFields.length == globals.fieldSelection.length
+              globals.configs.fieldSelection.push(index)
+            if yFields.length == globals.configs.fieldSelection.length
               ($ '#select-all-y').prop('checked', true)
             else
               ($ '#select-all-y').prop('checked', false)
-            
+
             @delayedUpdate()
 
         # Set up accordion
-        globals.yAxisOpen ?= 0
+        globals.configs.yAxisOpen ?= 0
 
         ($ '#yAxisControl').accordion
           collapsible:true
-          active:globals.yAxisOpen
+          active:globals.configs.yAxisOpen
 
         ($ '#yAxisControl > h3').click ->
-          globals.yAxisOpen = (globals.yAxisOpen + 1) % 2
+          globals.configs.yAxisOpen = (globals.configs.yAxisOpen + 1) % 2
 
-        ($ '#select-all-y').on('click', () ->
-          if data.normalFields.length != globals.fieldSelection.length
+        ($ '#select-all-y').click =>
+          yFields =
+            if enableDataPoint then data.normalFields
+            else data.normalFields[1..data.normalFields.length]
+
+          if yFields.length != globals.configs.fieldSelection.length
             ($ '#yAxisControl').find('.y_axis_input').each (i,j) ->
               ($ j).prop('checked', true)
-            globals.fieldSelection = data.normalFields.slice(0)
+            globals.configs.fieldSelection = yFields
           else
             for element in data.normalFields
-              arrayRemove(globals.fieldSelection, element)
+              arrayRemove(globals.configs.fieldSelection, element)
             ($ '#yAxisControl').find('.y_axis_input').each (i,j) ->
               ($ j).prop('checked', false)
-          window.globals.curVis.delayedUpdate()
-        )
+          @delayedUpdate()
+
       ###
       Draws group selection controls
       This includes a series of checkboxes and a selector for the grouping field.
@@ -216,12 +236,12 @@ $ ->
         controls += '<select id="groupSelector" class="form-control">'
 
         if data.textFields.length > 2 and excludeNameAndCombined
-          fieldList = data.textFields[2..data.textFields.length]
+          yFields = data.textFields[2..data.textFields.length]
         else
-          fieldList = data.textFields
+          yFields = data.textFields
 
-        for fieldIndex in fieldList
-          sel = if fieldIndex is data.groupingFieldIndex then 'selected' else ''
+        for fieldIndex in yFields
+          sel = if fieldIndex is globals.configs.groupById then 'selected' else ''
           controls += "<option value='#{Number fieldIndex}' #{sel}>#{data.fields[fieldIndex].fieldName}</option>"
 
         controls += "</select></div>"
@@ -237,31 +257,41 @@ $ ->
           if not radio
             controls += """<div class='checkbox'><label><input id='checkbox_all'
               class='group_input_all' type='checkbox' value='#{gIndex}'
-              #{if globals.groupSelection.length == data.groups.length then "checked" else ""}>
+              #{if data.groupSelection.length == data.groups.length then "checked" else ""}>
               #Check All</label></div>"""
-            controls += "</td><td>Color</td></tr>"
+            controls += "</td><td></td></tr>"
 
         for group, gIndex in data.groups
-          color_id = counter % globals.colors.length
-          color = globals.colors[color_id]
-          controls += "<tr><td>"
+          color_id = counter % globals.configs.colors.length
+          color = globals.configs.colors[color_id]
+          controls += "<tr><td class='label-dataset-name'>"
           controls += "<div class='inner_control_div' id='label-color-#{color_id}'"
           controls += "style=\"color:#{color};\">"
 
           if radio
+            # Radio groups can only have one group selected
+            groupSelection = [data.groupSelection.reduce (a, b) -> Math.min(a,b)]
+            data.groupSelection = groupSelection
+
+            selectedGroup = data.groupSelection[0]
             controls += "<div class='radio'><label><input class='group_input' type='radio' name='groups'"
             controls += " value='#{gIndex}' "
-            controls += "#{if (Number gIndex) is globals.selectedGroup then "checked" else ""}/>"
-            controls += "#{group}</label>"
+            controls += "#{if (Number gIndex) is selectedGroup then "checked" else ""}/>"
+            if group isnt ''
+              controls += "#{group}</label>"
+            else
+              controls +="No #{data.fields[globals.configs.groupById].fieldName}</label>"
           else
             controls += "<div class='checkbox'><label><input class='group_input' type='checkbox'"
             controls += " value='#{gIndex}' "
-            controls += "#{if (Number gIndex) in globals.groupSelection then "checked" else ""}/>"
-            controls += "#{group}</label>"
-
+            controls += "#{if (Number gIndex) in data.groupSelection then "checked" else ""}/>"
+            if group isnt ''
+              controls += "#{group}</label>"
+            else
+              controls +="No #{data.fields[globals.configs.groupById].fieldName}</label>"
           controls += "</div></div>"
-          controls += "</td><td>"
-          controls += """<a href="#" class="color-picker" data-color="#{color}" data-color-id="#{color_id}">
+          controls += "</td><td class='label-dataset-color'>"
+          controls += """<a href="javascript:void;" class="color-picker" data-color="#{color}" data-color-id="#{color_id}">
                          <img height="20px" width="20px" src="<%= image_path('color-wheel.png') %>"></a>"""
           controls += "</td></tr>"
           counter += 1
@@ -282,20 +312,20 @@ $ ->
             onClose: () ->
               $("#label-color-#{cid}").parent().parent().css 'background-color', '#FFF'
             onSubmit: (color) =>
-              globals.colors[cid] = color
+              globals.configs.colors[cid] = color
               $("#label-color-#{cid}").css 'color', color
               @delayedUpdate()
               setTimeout (() => @start()), 1
-          ($ cpicker).colorpicker 'setcolor', globals.colors[cid]
+          ($ cpicker).colorpicker 'setcolor', globals.configs.colors[cid]
 
         # Make group select handler
         ($ '#groupSelector').change (e) =>
           element = e.target or e.srcElement
           data.setGroupIndex (Number element.value)
 
-          globals.selectedGroup = 0
+          globals.configs.groupById = Number(element.value)
 
-          globals.groupSelection = for vals, keys in data.groups
+          data.groupSelection = for vals, keys in data.groups
             Number keys
 
           if startOnGroup
@@ -310,8 +340,7 @@ $ ->
           ($ '.group_input').click (e) =>
             ($ '.group_input').each () ->
               if @checked
-                globals.selectedGroup = Number @value
-
+                data.groupSelection = [Number @value]
             @delayedUpdate()
 
         else
@@ -322,12 +351,12 @@ $ ->
               if @checked
                 selection.push Number @value
               else
-            globals.groupSelection = selection
+            data.groupSelection = selection
 
-            if globals.groupSelection.length == data.groups.length
+            if data.groupSelection.length == data.groups.length
               ($ '#checkbox_all').prop("checked", true)
               ($ '#checkbox_all').prop("indeterminate", false)
-            else if globals.groupSelection.length > 0
+            else if data.groupSelection.length > 0
               ($ '#checkbox_all').prop("checked", false)
               ($ '#checkbox_all').prop("indeterminate", true)
             else
@@ -339,30 +368,29 @@ $ ->
           # Make group checkbox for all groups
           ($ '.group_input_all').click (e) =>
             if e.target.checked
-              globals.groupSelection = for vals, keys in data.groups
+              data.groupSelection = for vals, keys in data.groups
                 Number keys
               ($ '.group_input').prop 'checked', true
             else
-              globals.groupSelection = []
+              data.groupSelection = []
               ($ '.group_input').prop 'checked', false
 
             @delayedUpdate()
 
         # Set up accordion
-        globals.groupOpen ?= 0
+        globals.configs.groupOpen ?= 0
 
         ($ '#groupControl').accordion
           collapsible:true
-          active:globals.groupOpen
+          active:globals.configs.groupOpen
 
         ($ '#groupControl > h3').click ->
-          globals.groupOpen = (globals.groupOpen + 1) % 2
+          globals.configs.groupOpen = (globals.configs.groupOpen + 1) % 2
 
       ###
       Draws vis saving controls
       ###
       drawSaveControls: (e) ->
-
         if (globals.options? and globals.options.isEmbed?) and not @chart?
           return
 
@@ -376,6 +404,18 @@ $ ->
           controls += "<button id='saveVisButton' class='save_button btn btn-sm btn-default btn-success'>"
           controls += "Save Visualization </button>"
           controls += "</div>"
+
+          # Default vises only apply to project vises
+          if namespace.action is 'displayVis'
+            controls += "<div class='inner_control_div'>"
+            controls += "<button id='defaultVisButton' class='save_button btn btn-sm btn-primary'>"
+            controls += "Make Default </button>"
+            controls += "</div>"
+
+        globals.verifyUser ( -> ), ( ->
+          $('#saveVisButton').attr('disabled', 'disabled')), false
+        globals.verifyUser ( -> ), (->
+          $('#defaultVisButton').remove()), true
 
         if @chart?
 
@@ -398,26 +438,101 @@ $ ->
 
         ($ "#saveVisButton").click ->
           globals.verifyUser (-> globals.saveVis()), (->
-            alert 'You must be logged in to save a visualization.')
+            alert 'You must be logged in to save a visualization.'), false
 
+        ($ "#defaultVisButton").click ->
+          globals.verifyUser (-> globals.defaultVis()), (->
+            alert 'You must be logged in as the project owner to set a
+            default visualization.'), true
 
         ($ '#downloadVisButton').click =>
           @chart.exportChart
             type: "image/svg+xml"
 
-
         ($ '#printVisButton').click =>
           @chart.print()
 
         #Set up accordion
-        globals.saveOpen ?= 0
+        globals.configs.saveOpen ?= 0
 
         ($ '#saveControl').accordion
           collapsible:true
-          active:globals.saveOpen
+          active:globals.configs.saveOpen
 
         ($ '#saveControl > h3').click ->
-          globals.saveOpen = (globals.saveOpen + 1) % 2
+          globals.configs.saveOpen = (globals.configs.saveOpen + 1) % 2
+      ###
+      Draw tool controls (Analysis Type, Log Y Axis, etc.) for Pie Chart and Bar Chart
+      ###
+      drawToolControls: (sortBy = false, logYAxis = false) ->
+
+        controls =  '<div id="toolControl" class="vis_controls">'
+        controls += "<h3 class='clean_shrink'><a href='#'>Tools:</a></h3>"
+        controls += "<div class='outer_control_div'>"
+        if sortBy
+          controls += "<div class='inner_control_div'>"
+          controls += 'Sort by: <select id="sortField" class="sortField form-control">'
+          tempFields = for fieldID in data.normalFields
+            [fieldID, data.fields[fieldID].fieldName]
+          tempFields = [].concat [[@SORT_DEFAULT, 'Group Name']], tempFields
+
+          for [fieldID, fieldName] in tempFields
+            selected = if @configs.sortField is fieldID then 'selected' else ''
+            controls += "<option value='#{fieldID}' #{selected}>#{fieldName}</option>"
+
+          controls += '</select></div><br>'
+          controls += "<h4 class='clean_shrink'>Analysis Type</h4><div id='analysis_types'>"
+
+        for typestring, type in @analysisTypeNames
+          controls += "<div class='inner_control_div'>"
+          controls += "<div class='radio'><label><input type='radio' class='analysisType' "
+          controls += "name='analysisTypeSelector' value='"
+          controls += "#{type}' #{if type is @configs.analysisType then 'checked' else ''}> "
+
+          switch typestring
+            when 'Max' then controls += 'Maximum </label> </div>'
+            when 'Min' then controls += 'Minimum </label> </div>'
+            when 'Mean' then controls += 'Mean (Average)</label></div>'
+            else controls += "#{typestring} </label></div>"
+
+          controls += '</div>'
+        controls += "</div>"
+
+        if data.logSafe is 1 and logYAxis
+          controls += "<h4 class='clean_shrink'>Other</h4>"
+          controls += '<div class="inner_control_div">'
+          controls += "<div class='checkbox'><label><input class='logY_box' type='checkbox' "
+          controls += "name='tooltip_selector' #{if globals.configs.logY is 1 then 'checked' else ''}/> "
+          controls += "Logarithmic Y Axis</label></div>"
+          controls += "</div>"
+
+        controls += '</div></div>'
+
+        ### --- ###
+        # Write HTML
+        ($ '#controldiv').append controls
+
+        ($ '.analysisType').change (e) =>
+          @configs.analysisType = Number e.target.value
+          @delayedUpdate()
+
+        ($ '#sortField').change (e) =>
+          @configs.sortField = Number e.target.value
+          @delayedUpdate()
+
+        ($ '.logY_box').click (e) =>
+          globals.configs.logY = (globals.configs.logY + 1) % 2
+          @start()
+
+        # Set up accordion
+        globals.configs.toolsOpen ?= 0
+
+        ($ '#toolControl').accordion
+          collapsible:true
+          active:globals.configs.toolsOpen
+
+        ($ '#toolControl > h3').click ->
+          globals.configs.toolsOpen = (globals.configs.toolsOpen + 1) % 2
 
       ###
       Hides the control div and remembers its previous size.
@@ -437,7 +552,7 @@ $ ->
         ($ '#controlcontainer').show()
 
       ###
-      Do any nessisary cleanup work before serialization.
+      Do any necessary cleanup work before serialization.
       ###
       serializationCleanup: ->
 
@@ -447,11 +562,13 @@ $ ->
       Assigns target canvas name
       ###
       constructor: (@canvas) ->
+        super(@canvas)
 
       ###
       Builds Highcharts options object
       Builds up the options common to all vis types.
-      Subsequent derrived classes should use $.extend to expand upon these agter calling super()
+      Subsequent derived classes should use $.extend
+      to expand upon these after calling super()
       ###
       buildOptions: ->
 
@@ -468,20 +585,14 @@ $ ->
           legend:
             itemHoverStyle: ''
             backgroundColor: 'white'
-            symbolWidth: 60
-            itemWidth: 200
             useHTML: true
+            itemWidth: 125
             itemStyle:
-              width: 140
               cursor: 'default'
-              whiteSpace: 'prewrap'
           plotOptions:
             series:
               stickyTracking: false
               turboThreshold: 0
-              marker:
-                lineWidth: 0
-                radius: 5
               events:
                 legendItemClick: (event) ->
                   false
@@ -490,17 +601,10 @@ $ ->
           yAxis:
             minorTickInterval: 'auto'
             title:
-              text: if globals.fieldSelection.length isnt 1
+              text: if globals.configs.fieldSelection.length isnt 1
                 'Y-Values'
               else
-                data.fields[globals.fieldSelection[0]].fieldName
-
-
-        @chartOptions.xAxis = []
-        @chartOptions.xAxis.push {}
-        @chartOptions.xAxis.push
-          lineWidth: 0
-          categories: ['']
+                data.fields[globals.configs.fieldSelection[0]].fieldName
 
       ###
       Builds the 'fake series' for legend controls.
@@ -541,16 +645,16 @@ $ ->
       ###
       update: ->
         # Name Y Axis
-        title = if globals.fieldSelection.length isnt 1
+        title = if globals.configs.fieldSelection.length isnt 1
           temp =
             text: 'Y-Values'
         else
-          if "#{data.fields[globals.fieldSelection[0]].unitName}" == ""
-            temp = text: "#{data.fields[globals.fieldSelection[0]].fieldName}"
+          if "#{data.fields[globals.configs.fieldSelection[0]].unitName}" == ""
+            temp = text: "#{data.fields[globals.configs.fieldSelection[0]].fieldName}"
           else
             temp =
-              text: "#{data.fields[globals.fieldSelection[0]].fieldName} " +
-                "(#{data.fields[globals.fieldSelection[0]].unitName})"
+              text: "#{data.fields[globals.configs.fieldSelection[0]].fieldName} " +
+                "(#{data.fields[globals.configs.fieldSelection[0]].unitName})"
 
         @chart.yAxis[0].setTitle title, false
 
@@ -560,7 +664,6 @@ $ ->
 
         # Draw legend
         for options in @buildLegendSeries()
-          options.name = options.name.replace(/(.{1})/g,"$1&#8203;") + " "
           @chart.addSeries options, false
 
       ###
@@ -593,11 +696,10 @@ $ ->
           @chart.destroy()
           @chart = undefined
 
-        ($ '#' + @canvas).hide()
+        super()
 
       ###
       Remove the chart and chart options object
       ###
       serializationCleanup: ->
-        delete @chart
-        delete @chartOptions
+        # Projects no longer get destroyed on serialize

@@ -27,56 +27,47 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is "visualizations" and
+  namespace.action in ["displayVis", "embedVis", "show"]
 
     class window.Pie extends BaseHighVis
       constructor: (@canvas) ->
-        if data.normalFields.length > 1
-          @displayField = data.normalFields[1]
-        else @displayField = data.normalFields[0]
+        super(@canvas)
 
-        @selectName ?=
-          if data.textFields.length > 2
-            data.textFields[2]
-          else
-            'Percent'
+        @configs.selectName ?=
+          if data.textFields.length > 2 then data.textFields[2]
+          else 'Percent'
 
       start: () ->
+        @configs.displayField = Math.min globals.configs.fieldSelection...
+        @configs.analysisType ?= @ANALYSISTYPE_TOTAL
         super()
 
       update: () ->
-        @selectName = data.fields[data.groupingFieldIndex].fieldName
-        @getGroupedData()
-        while @chart.series.length > 0
-          @chart.series[@chart.series.length - 1].remove false
+        super()
 
-        @displayColors = []
-        for number in globals.groupSelection
-          @displayColors.push(globals.colors[number])
+        @configs.selectName = data.fields[globals.configs.groupById].fieldName
+
+        displayData = for gid, val of @getGroupedData(@configs.displayField)
+          ret =
+            y: val
+            name: data.groups[gid] or data.noField()
+
+        displayColors = []
+        for number in data.groupSelection
+          displayColors.push(globals.configs.colors[number % globals.configs.colors.length])
+
         options =
           showInLegend: false
-          data: @displayData
-          colors: @displayColors
-        @chart.setTitle { text: "#{@selectName} by #{data.fields[@displayField].fieldName}" }
+          data: displayData
+          colors: displayColors
+        @chart.setTitle { text: "#{@configs.selectName} by #{data.fields[@configs.displayField].fieldName}" }
         @chart.addSeries options, false
 
         @chart.redraw()
 
-      getGroupedData: ->
-        @displayData = data.dataPoints.reduce (prev, next) =>
-          if typeof prev[next[data.groupingFieldIndex]] != "undefined"
-            prev[next[data.groupingFieldIndex]] = prev[next[data.groupingFieldIndex]] + next[@displayField]
-          else
-            prev[next[data.groupingFieldIndex]] = next[@displayField]
-          prev
-        , {}
-        @displayData = Object.keys(@displayData).reduce (prev, key) =>
-          if data.groups.indexOf(key.toLowerCase()) in globals.groupSelection
-            if (grouping[0] for grouping in prev).indexOf(key.toLowerCase()) isnt -1
-              prev.indexOf(grouping)[1] = @displayData[key] + prev.indexOf(grouping)[1]
-            else prev.push [key.toLowerCase() or "No #{@selectName}", @displayData[key]]
-          prev
-        , []
+      buildLegendSeries: ->
+        []
 
       buildOptions: ->
         super()
@@ -88,7 +79,15 @@ $ ->
           chart:
             type: "pie"
           tooltip:
-            pointFormat: '{point.name}: <b>{point.percentage:.1f}%</b>'
+            formatter: ->
+              str  = "<div style='width:100%;text-align:center;color:#{@series.color};"
+              str += "margin-bottom:5px'> #{@point.name}</div>"
+              str += "<table>"
+              str += "<tr><td>#{data.fields[self.configs.displayField].fieldName}
+                 (#{self.analysisTypeNames[self.configs.analysisType]}): "
+              str += "</td><td><strong>#{@y}</strong></td></tr>"
+              str += "</table>"
+            useHTML: true
           plotOptions:
             pie:
               allowPointSelect: true
@@ -101,6 +100,7 @@ $ ->
         super()
         @drawGroupControls false, false, false
         @drawYAxisControls true, false # Naming here is less than ideal
+        @drawToolControls()
         @drawSaveControls()
 
     if "Pie" in data.relVis
