@@ -27,31 +27,29 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is "visualizations" and
+  namespace.action in ["displayVis", "embedVis", "show"]
 
     class window.Summary extends BaseVis
       constructor: (@canvas) ->
-        if data.normalFields.length > 1
-          @displayField = data.normalFields[1]
-        else @displayField = data.normalFields[0]
+        super(@canvas)
 
       start: ->
-        ($ '#' + @canvas).show()
+        @configs.displayField = Math.min globals.configs.fieldSelection...
         super()
 
       update: ->
-        analysis = for groupName, groupIndex in data.groups when groupIndex is globals.selectedGroup
-          analysis =
-            'total':  (data.getTotal       @displayField, groupIndex)
-            'min':    (data.getMin         @displayField, groupIndex)
-            'max':    (data.getMax         @displayField, groupIndex)
-            'median': (data.getMedian      @displayField, groupIndex)
-            'count':  (data.getCount       @displayField, groupIndex)
-            'mean':   (data.getMean        @displayField, groupIndex)
-          analysis
+        groupSel = data.groupSelection
+        analysis =
+          'total':  (data.getTotal       @configs.displayField, groupSel)
+          'min':    (data.getMin         @configs.displayField, groupSel)
+          'max':    (data.getMax         @configs.displayField, groupSel)
+          'median': (data.getMedian      @configs.displayField, groupSel)
+          'count':  (data.getCount       @configs.displayField, groupSel)
+          'mean':   (data.getMean        @configs.displayField, groupSel)
 
         ($ '#' + @canvas).html('')
-        field = data.fields[@displayField]
+        field = data.fields[@configs.displayField]
         noData = "No #{field.fieldName} Data"
         units = if field.unitName then "(#{field.unitName})" else ''
         html = """
@@ -63,37 +61,37 @@ $ ->
                   <div class="col-md-4">
                     <div class='panel panel-default'>
                       <div class='panel-heading'>Mean</div>
-                      <div class='panel-body'>#{if analysis[0].mean? then analysis[0].mean else noData}</div>
+                      <div class='panel-body'>#{if analysis.mean? then analysis.mean else noData}</div>
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class='panel panel-default'>
                       <div class='panel-heading'>Max</div>
-                      <div class='panel-body'>#{if analysis[0].max? then analysis[0].max else noData}</div>
+                      <div class='panel-body'>#{if analysis.max? then analysis.max else noData}</div>
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class='panel panel-default'>
                       <div class='panel-heading'>Total</div>
-                      <div class='panel-body'>#{if analysis[0].total? then analysis[0].total else noData}</div>
+                      <div class='panel-body'>#{if analysis.total? then analysis.total else noData}</div>
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class='panel panel-default'>
                       <div class='panel-heading'>Median</div>
-                      <div class='panel-body'>#{if analysis[0].median? then analysis[0].median else noData}</div>
+                      <div class='panel-body'>#{if analysis.median? then analysis.median else noData}</div>
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class='panel panel-default'>
                       <div class='panel-heading'>Min</div>
-                      <div class='panel-body'>#{if analysis[0].min? then analysis[0].min else noData}</div>
+                      <div class='panel-body'>#{if analysis.min? then analysis.min else noData}</div>
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class='panel panel-default'>
                       <div class='panel-heading'>Data Point Count</div>
-                      <div class='panel-body'>#{if analysis[0].count? then analysis[0].count else noData}</div>
+                      <div class='panel-body'>#{if analysis.count? then analysis.count else noData}</div>
                     </div>
                   </div>
                 </div>
@@ -102,11 +100,12 @@ $ ->
         super()
 
       end: ->
-        ($ '#' + @canvas).hide()
+        super()
 
       drawControls: ->
         super()
-        @drawGroupControls(true, true)
+        @drawGroupControls(true, false)
         @drawYAxisControls(true)
+        @drawSaveControls()
 
       globals.summary = new Summary "summary_canvas"

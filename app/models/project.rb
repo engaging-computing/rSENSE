@@ -9,7 +9,6 @@ class Project < ActiveRecord::Base
   validates_presence_of :user_id
 
   validates :title, length: { maximum: 128 }
-
   before_save :sanitize_project
   before_save :summernote_media_objects
   has_many :fields
@@ -29,8 +28,8 @@ class Project < ActiveRecord::Base
   def sanitize_project
     self.content = sanitize content
     # Check to see if there is any valid content left
-    html = Nokogiri.HTML(content)
-    if html.text.blank? and html.at_css('img').nil?
+    html = Nokogiri.HTML content
+    if html.text.nil? and html.at_css('img').nil? and html.css('iframe').nil?
       self.content = nil
     end
 

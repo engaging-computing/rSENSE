@@ -23,9 +23,9 @@ class RenameVizTest < ActionDispatch::IntegrationTest
 
     page.execute_script "$('#saveVisButton').click()"
 
-    assert page.has_content?('Please enter a name for this Visualization:'), 'Name modal'
+    assert page.has_content?('Please enter a name for this visualization:'), 'Name modal'
 
-    find('#new_name').set('This is a viz')
+    find('#nname').set('This is a viz')
     click_on 'Finish'
 
     assert page.has_content?('Visualization was successfully created.'), 'Create worked'

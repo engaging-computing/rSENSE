@@ -3,6 +3,7 @@ require 'store_file'
 
 class MediaObject < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
+  include AutoHtml
 
   belongs_to :user
   belongs_to :project
@@ -107,8 +108,9 @@ class MediaObject < ActiveRecord::Base
     if media_type == 'image'
       # make the thumbnail
       image = MiniMagick::Image.open(file_name)
-      image.resize '180'
-
+      unless file_name.include? '.svg'
+        image.resize '180'
+      end
       # finish up
       File.open(tn_file_name, 'wb') do |oo|
         oo.write image.to_blob
@@ -153,17 +155,33 @@ class MediaObject < ActiveRecord::Base
   def self.create_media_objects(description, type, item_id, owner_id = nil)
     text = Nokogiri::HTML.fragment(description)
     text.search('img').each do |picture|
-      if picture['src'].include?('data:image')
+      if picture['src'] && picture['src'].include?('data:image')
         data = Base64.decode64(picture['src'].partition('/')[2].split('base64,')[1])
         if picture['src'].partition('/')[2].split('base64,')[0].include? 'png'
           file_type = '.png'
-        else file_type = '.jpg'
+        elsif picture['src'].partition('/')[2].split('base64,')[0].include? 'svg'
+          file_type = '.svg'
+        else
+          file_type = '.jpg'
         end
         summernote_mo = MediaObject.new
         summernote_mo.summernote_image(data, file_type, type, item_id, owner_id)
         picture['src'] = summernote_mo.src
       end
     end
+    text.search('iframe').each do |video|
+      video['allowfullscreen'] = true
+    end
+    text.search('a').each do |link|
+      if !link['href'].nil? and link['href'].include? 'www.youtube.com'
+        external_link = link['href']
+        link['href'] = '#'
+        link.content = external_link
+      end
+    end
+    text = Nokogiri::HTML.fragment AutoHtml.auto_html(text) {
+      youtube(autoplay: false, allowfullscreen: true)
+    }
     text.to_s
   end
 

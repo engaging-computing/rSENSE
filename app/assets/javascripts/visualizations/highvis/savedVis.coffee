@@ -27,7 +27,8 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is "visualizations" and
+  namespace.action in ["displayVis", "embedVis", "show"]
 
     window.globals ?= {}
 
@@ -37,16 +38,15 @@ $ ->
     will pass the callback an error string, a success will pass the callback
     a string with the new VID.
     ###
-    globals.saveVis = (title, desc, succCallback, failCallback) ->
-
+    createVis = (name) ->
       modal = """
-      <div id="loadModal" class="modal fade well">
-        <div class="center">
-          <img src="/assets/spinner.gif" />
-        </div>
-      </div>
-      """
-      ($ 'body').append modal
+              <div id="loadModal" class="modal fade well">
+                <div class="center">
+                  <img src="/assets/spinner.gif" />
+                </div>
+              </div>
+              """
+      ($ '#viscontainer').append modal
       ($ "#loadModal").modal
         backdrop: 'static'
         keyboard: 'false'
@@ -58,19 +58,9 @@ $ ->
 
       savedData = globals.serializeVis()
 
-      # Construct default name
-      sessionNames = for index, ses of data.metadata
-        ses.name
-
-      sessionNames = sessionNames.join ', '
-
-      if sessionNames.length >= 30
-        sessionNames = (sessionNames.slice 0, 27) + '...'
-
-      name = 'Saved Vis - ' + data.projectName
       req = $.ajax
         type: 'POST'
-        url: "/visualizations"
+        url: '/visualizations'
         dataType: 'json'
         data:
           visualization:
@@ -81,58 +71,57 @@ $ ->
             svg: svg
         success: (msg) ->
           ($ "#loadModal").modal('hide')
-          helpers.name_popup msg, "Visualization", "visualization"
+          window.location = msg.url
         error: (jqxhr, status, msg) ->
-          ($ '#ajax-status').html "error saving visualization: #{ Number data.projectID }"
+          err = "Error saving visualization: #{Number(data.projectID)}"
+          ($ '#ajax-status').html err
+
           response = $.parseJSON msg['responseText']
           error_message = response.errors.join "</p><p>"
 
           ($ '.container.mainContent').find('p').before """
-            <div class="alert alert-danger fade in">
-              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-              <h4>Error Saving Visualization:</h4>
-              <p>#{error_message}</p>
-              <p>
-                <button type="button" class="btn btn-danger error_bind" data-retry-text"Retrying...">Retry</button>
-                <button type="button" class="btn btn-default error_dismiss">Or Dismiss</button>
-              </p>
-            </div>"""
+          <div class="alert alert-danger fade in">
+            <button type="button" class="close" data-dismiss="alert"
+              aria-hidden="true">×</button>
+            <h4>Error Saving Visualization:</h4>
+            <p>#{error_message}</p>
+            <p>
+              <button type="button" class="btn btn-danger error_bind"
+                data-retry-text"Retrying...">Retry</button>
+              <button type="button" class="btn btn-default error_dismiss">
+                Or Dismiss</button>
+            </p>
+          </div>"""
 
+          # Dismiss
           ($ '.error_dismiss').click ->
             ($ '.alert').alert 'close'
 
+          # Retry
           ($ '.error_bind').click ->
-            req = $.ajax
-              type: 'POST'
-              url: "/visualizations"
-              dataType: 'json'
-              data:
-                visualization:
-                  project_id: Number data.projectID
-                  title: name
-                  data: savedData.data
-                  globals: savedData.globals
-                  svg: svg
-              success: (msg) ->
-                ($ "#loadModal").modal('hide')
-                helpers.name_popup msg, "Visualization", "visualization"
-                ($ '.alert').alert 'close'
+            createVis(name)
 
-              error: (msg) ->
-                ($ '.error_bind').button 'reset'
-
+    ###
+    Creates a new vis upon name submission
+    ###
+    globals.saveVis = (title, desc, succCallback, failCallback) ->
+      name = 'Saved Vis - ' + data.projectName
+      helpers.name_popup(name, 'visualization', '#viscontainer',
+        createVis, null)
 
     ###
     Ajax call to check if the user is logged in. Calls the appropriate
     given callback when completed.
     ###
-    globals.verifyUser = (succCallback, failCallback) ->
+    globals.verifyUser = (succCallback, failCallback, checkOwner) ->
 
       req = $.ajax
         type: 'GET'
         url: "/sessions/verify"
         dataType: 'json'
-        data: {}
+        data:
+          project_id: data.projectID
+          verify_owner: checkOwner
         success: (msg, status, details) ->
           succCallback()
         error: (msg, status, details) ->
@@ -141,15 +130,18 @@ $ ->
     ###
     Serializes all vis data. Strips functions from the objects bfire serializing
     since they cannot be serialized.
-
-    NOTE: Booleans cannot be serialized properly (Hydrate.js issue)
     ###
-    globals.serializeVis = ->
+    globals.serializeVis = (includeData = true) ->
 
-      # set current vis to default
+      # Set current vis to default
       current = (globals.curVis.canvas.match /([A-z]*)_canvas/)[1]
       current = current[0].toUpperCase() + current.slice 1
       data.defaultVis = current
+
+      # Set fieldSelection if curVis has radio button for y-axis
+      # This ensures that @configs.display defaults correctly
+      if globals.curVis.configs.displayField
+        globals.configs.fieldSelection = [globals.curVis.configs.displayField]
 
       # Check for and note LT dates
       if data.timeType is data.NORM_TIME
@@ -157,68 +149,42 @@ $ ->
           for fieldIndex in data.timeFields
             data.dataPoints[dIndex][fieldIndex] = "U #{dp[fieldIndex]}"
 
-      hydrate = new Hydrate()
+      savedConfig = {}
 
-      stripFunctions = (obj) ->
+      # Grab the global configs
+      savedConfig['globals'] = globals.configs
 
-        switch typeof obj
-          when 'number'
-            obj
-          when 'string'
-            obj
-          when 'function'
-            undefined
-          when 'object'
-
-            if obj is null
-              null
-            else
-              cpy = if $.isArray obj then [] else {}
-              for key, val of obj
-                stripped = stripFunctions val
-                if stripped isnt undefined
-                  cpy[key] = stripped
-
-              cpy
-
+      # Grab the vis specific configs
       for visName in data.allVis
         vis  = eval "globals.#{visName.toLowerCase()}"
         if vis?
-          vis.end()
           vis.serializationCleanup()
+          savedConfig[visName] = vis.configs
 
-      globalsCpy = stripFunctions globals
-      dataCpy = stripFunctions data
-
-      delete globalsCpy.curVis
+      # Default vises don't save data
+      dataCpy = {}
+      if includeData then $.extend(dataCpy, data)
 
       ret =
-        globals: (hydrate.stringify globalsCpy)
-        data: (hydrate.stringify dataCpy)
+        globals: (JSON.stringify savedConfig)
+        data: (JSON.stringify dataCpy)
 
     ###
-    Does a deep copy extend operation similar to $.extend
+    Ajax call to update the project's default vis with the current settings.
     ###
-    globals.extendObject = (obj1, obj2) ->
-      switch typeof obj2
-        when 'boolean'
-          obj2
-        when 'number'
-          obj2
-        when 'string'
-          obj2
-        when 'function'
-          obj2
-        when 'object'
+    globals.defaultVis = ->
 
-          if obj2 is null
-            obj2
-          else
-            if $.isArray obj2
-              obj1 ?= []
-            else
-              obj1 ?= {}
+      savedData = globals.serializeVis(false)
 
-            for key, val of obj2 when key isnt '__hydrate_id'
-              obj1[key] = globals.extendObject obj1[key], obj2[key]
-            obj1
+      req = $.ajax
+        type: 'PUT'
+        url: '/projects/' + data.projectID
+        dataType: 'json'
+        data:
+          project:
+            globals: savedData.globals
+            default_vis: data.defaultVis
+        success: ->
+          quickFlash('Project defaults updated successfully', 'success')
+        error: ->
+          quickFlash('Failed to update project defaults', 'error')

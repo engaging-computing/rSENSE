@@ -28,8 +28,9 @@
 ###
 $ ->
   if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
-
     window.globals ?= {}
+    globals.configs ?= {}
+
     globals.curVis = null
 
     globals.CONTROL_SIZE = 220
@@ -56,11 +57,35 @@ $ ->
       '#bar_canvas', '#histogram_canvas', '#pie_canvas', '#table_canvas',
       '#summary_canvas','#viscanvas','#photos_canvas']
 
-    ### Load saved data if there ###
+    # Restore saved globals
     if data.savedGlobals?
-      hydrate = new Hydrate()
-      globals.extendObject globals, (hydrate.parse data.savedGlobals)
+      savedGlobals = JSON.parse(data.savedGlobals)
+      savedConfigs = savedGlobals['globals']
+      $.extend(globals.configs, savedConfigs)
+
+      # Restore vis specific configs
+      for visName in data.allVis
+        vis  = eval "globals.#{visName.toLowerCase()}"
+        if vis? and savedGlobals[visName]?
+          $.extend(vis.configs, savedGlobals[visName])
+
       delete data.savedGlobals
+
+    ### Set Defaults ###
+    # Set defaults for grouping
+    globals.configs.groupById ?= data.DATASET_NAME_FIELD
+    data.setGroupIndex(globals.configs.groupById)
+    data.groupSelection ?= for vals, keys in data.groups
+      Number keys
+
+    # Set default for logY
+    globals.configs.logY ?= 0
+
+    # Set default field selection (we use [..] syntax to indicate array)
+    if data.normalFields.length > 1
+      globals.configs.fieldSelection ?= data.normalFields[1..1]
+    else
+      globals.configs.fieldSelection ?= data.normalFields[0..0]
 
     ### Generate tabs ###
     for vis of data.allVis
@@ -89,11 +114,14 @@ $ ->
 
     ### Pick vis ###
     if not (data.defaultVis in data.relVis)
-      globals.curVis = (eval 'globals.' + data.relVis[0].toLowerCase())
+      globals.configs.curVis = 'globals.' + data.relVis[0].toLowerCase()
       ($ '#viscontainer').tabs('option', 'active', data.allVis.indexOf(data.relVis[0]))
     else
-      globals.curVis = (eval 'globals.' + data.defaultVis.toLowerCase())
+      globals.configs.curVis = 'globals.' + data.defaultVis.toLowerCase()
       ($ '#viscontainer').tabs('option', 'active', data.allVis.indexOf(data.defaultVis))
+
+    # Pointer to the actual vis
+    globals.curVis = (eval globals.configs.curVis)
 
     ### Change vis click handler ###
     ($ '#visTabList a').click ->
@@ -107,7 +135,8 @@ $ ->
 
       link = href.substr(start, end - start)
 
-      globals.curVis = (eval 'globals.' + link)
+      globals.configs.curVis = 'globals.' + link
+      globals.curVis = (eval globals.configs.curVis)
 
       if oldVis is globals.curVis
         return
