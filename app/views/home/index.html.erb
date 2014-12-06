@@ -94,9 +94,9 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
             <p class="featurette-text"><span class="text-primary featured-list">Visualize </span>data with robust analysis tools.</p> 
             <br />
           </div>
-          <hr class="featurette-divider hidden-md hidden-sm visible-lg visible-xs"></hr>
         </div>
         <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12 teachers-love-isense">
+          <hr class="featurette-divider hidden-md hidden-sm visible-lg visible-xs"></hr>
           <h2 class="homepage-header"> Teachers Love iSENSE</h2>
           <br class="line"/> 
           <div class="homepage-text">
@@ -140,25 +140,22 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
     <!--- First Column -->
     <div class=" first-column col-lg-6" id="column-one">
       <div class="hidden-lg">
+        <hr class="featurette-divider"> </hr>
         <h2 class="homepage-header">Download iSENSE Mobile Apps</h2> <br/>
-        <div>
-          <div class="col-md-8 col-sm-8 col-xs-12 app-desc">
+          <div class="col-md-8 col-sm-6 col-xs-12 app-desc">
             <div class="homepage-text">
               <p>Android and iOS mobile applications are free and available for download in the Google Play Store and Apple App Store. These mobile applications make it easy to collect data sets using your mobile device’s built-in sensors and upload them directly to iSENSE.</p>
             </div> <br />
           </div>
-          <div class="col-md-4 col-sm-4 col-xs-12 app-desc">
+          <div class="col-md-4 col-sm-6 col-xs-12 app-desc">
             <a href="https://play.google.com/store/apps/developer?id=Engaging+Computing+Group,+UML" class="btn btn-primary img-rounded">
               <%= image_tag "icon-android.png", id: 'play-store-button'%> </a>
             <a class="btn btn-primary disabled img-rounded">
             <%= image_tag "icon-apple.png", id: 'app-store-button' %> </a>
-          </div>
+          </div> <br />
         </div>
-        <hr class="featurette-divider invisible"></hr>
-      </div>
-      <hr class="featurette-divider app-whats-new hidden-lg"> </hr>
+      <hr class="featurette-divider under-hid hidden-lg"> </hr>
       <h2 class="homepage-header">What's New</h2><br/>
-      <!--<hr class="featurette-divider invisible"> </hr>-->
       <div class="news-prev-wrapper">
         <% News.where(hidden: false).last(3).reverse.each do |n| %>
           <%= render 'shared/article_box', {
@@ -173,8 +170,7 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
     <!---Second Column-->
     <div class="col-md-4 col-lg-6 visible-lg" id = "column-two">
       <h2 class="homepage-header">Download iSENSE Mobile Apps</h2> <br/>
-      <div id ="app-description">
-        <!--<hr class="featurette-divider invisible"> </hr>-->
+      <div id="app-description">
         <div class="col-lg-8 col-md-8 app-desc">
           <div class="homepage-text">
             <p>Android and iOS mobile applications are free and available for download in the Google Play Store and Apple App Store. These mobile applications make it easy to collect data sets using your mobile device’s built-in sensors and upload them directly to iSENSE.</p>
@@ -186,10 +182,12 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
           <a class="btn btn-primary disabled img-rounded">
             <%= image_tag "icon-apple.png", id: 'app-store-button' %> </a>
         </div>
-        <hr class="featurette-divider invisible"> </hr>
-        <hr class="featurette-divider" id="apps-get-involved"> </hr>
-        <h2 class="homepage-header">Get Involved with iSENSE</h2> <br/>
-        <div>
+        <hr class="featurette-divider"> </hr>
+      </div>
+      <!--<hr class="featurette-divider" id="apps-get-involved"> </hr> <br />-->
+      <div>
+          <hr class="featurette-divider"> </hr>
+          <h2 class="homepage-header">Get Involved with iSENSE</h2> <br />
           <div class="homepage-text">
             <p class="involvement">
               For more information, please contact Fred Martin (<a href="mailto:fredm@cs.uml.edu">fredm@cs.uml.edu</a>) and Samantha Michalka (<a href="mailto:samantha@machinescience.org">samantha@machinescience.org</a>) We hold workshops for teachers to learn how to use iSENSE in the classroom, and for students to learn about scientific data collection and analysis. We will also come to your school with the tools and resources necessary to use iSENSE.
@@ -214,7 +212,6 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
     <!---End Second Column-->
 
   </div>
-</div>
 <br />
 <!---End Three Column Layout-->
 

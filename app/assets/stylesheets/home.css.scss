@@ -2,6 +2,7 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+/*
 .row.secondary-content{
   display: inline-block;
   .col-md-8{
@@ -22,7 +23,6 @@
 .project-description{
   text-align: center;
 }
-/* Carousel base class */
 .carousel {
   min-height: 500px;
   height: 90vh;
@@ -33,7 +33,6 @@
 text-align: left !important;  
 color: black;
 }
-/* Since positioning the image, we need to help out the caption */
 .carousel-caption {
   z-index: 10;
   background-color: #F2F2F2;
@@ -47,7 +46,6 @@ color: black;
   min-height: 500px;
   height:90vh !important;  
 }
-/* Declare heights because of positioning of img element */
 .carousel .item {
   min-height: 500px;
   height: 90vh;
@@ -65,25 +63,18 @@ color: black;
   margin-top: 0px !important;
   margin-bottom: 40px !important;
 }
-/* Featurettes
-------------------------- */
 
 .featurette-divider {
   clear: both;
   margin-top: 40px;
   margin-bottom: 20px;
-  /* Space out the Bootstrap <hr> more */
 }
 
-/* Thin out the marketing headings */
 .featurette-heading {
   font-weight: 300;
   line-height: 1;
   letter-spacing: -1px;
 }
-
-/* RESPONSIVE CSS
--------------------------------------------------- */
 
 @media (min-width: 768px) {
 
@@ -268,9 +259,6 @@ color: black;
     margin: 0px !important;
   }
 }
-/* GLOBAL STYLES
--------------------------------------------------- */
-/* Padding below the footer and lighter body text */
 
 body {
   padding-bottom: 40px;
@@ -383,7 +371,8 @@ body {
 .homepage-header{
   color:#3366CC;
   font-size:2.5em;
-  text-align: center;margin: 0 auto;
+  text-align: center;
+  margin: 0 auto;
 }
 .teachers-love-isense-seperator{
   margin-top: 40px;
@@ -407,4 +396,265 @@ body {
 }
 .teachers-love-isense{
   overflow-y: hidden;
+}
+*/
+
+#outer{
+  padding-bottom: 10px !important;
+}
+.home-controller.index-action{
+  
+  div.container.mainContent {
+    width:100% !important ; 
+    body {
+      padding-bottom: 40px;
+      color: #5a5a5a;
+    }
+    .invisible{
+      visibility: hidden;  
+    }
+    .homepage-text{
+      padding: 10px;
+      padding-bottom: 15px;
+      background-color: #F2F2F2 !important;
+      text-align: left;
+      margin-bottom: 10px;
+      font-size: 1.1em;
+    }
+    .homepage-header{
+      clear: both;
+      color:#3366CC;
+      font-size:2.5em;
+      text-align: center;
+      margin: 0 auto;
+    }
+    .carousel {
+      min-height: 500px;
+      height: 90vh;
+      margin-bottom: 50px;
+      display:block;
+    }
+    .carousel-slide-text{
+      text-align: left;  
+      color: black;
+    }
+    .slide-header{
+      font-size: 1.5em;
+      font-weight: bolder;
+    }
+    .carousel-caption {
+      z-index: 10;
+      background-color: #F2F2F2;
+      opacity:0.6;
+      margin: 0 auto;
+      text-align: left;
+      padding: 10px;
+    }
+    .carousel-img{
+      min-height: 500px;
+      height:90vh;
+    }
+    .carousel .item {
+      min-height: 500px;
+      height: 90vh;
+      background-color: #777;
+    }
+    .carousel-inner > .item > img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      min-height: 500px;
+      height: 90vh;
+    }
+    .carousel-divider{
+      margin-top: 0px;
+      margin-bottom: 40px;
+    }    
+  
+    .ternary-content{
+      margin-top: 60px;
+      height:70vh;
+      overflow-y: hidden;
+      display:block;
+      div{
+        margin: 0px !important;
+      }
+      .two-col{
+        clear: both;  
+        width:100%;
+      }
+      .news-prev-wrapper{
+        text-align: left !important;
+        min-height: 320px !important;
+        padding: 0px;
+        overflow-y: auto;
+        font-size: 1.25em;
+      }
+      .first-column{
+        clear:both;  
+      }
+      #column-one{
+        min-height: 600px ;
+        .featurette-divider{
+          margin-top: 10px !important;
+          overflow-y: hidden;
+        }
+        .item-desc{
+          min-height: 300px !important;
+          max-height: 300px !important;
+          margin-bottom: 5px !important;
+        }
+        .app-desc{
+          text-align: center;
+          a{
+            margin-bottom: 30px;
+          }
+        }
+        a.item-image-link{
+          min-height: 300px !important;
+          min-width: 300px !important;
+        }
+      .col-md-12{
+        min-height: 300px;
+        margin-bottom: 5px !important;
+        margin-left: 0px;
+        margin-right: 0px;
+        padding: 0px;
+        .wide-item{
+          background-color: #F2F2F2;
+          text-align: center;
+          box-shadow: 2px 3px 1px white;
+          text-align: left !important;
+          min-height: 300px !important;
+          margin-bottom: 5px !important;  
+        }
+        .article_page_content.truncate{
+          min-height: 227px !important;
+          word-wrap: break-word;
+          text-align: left !important;
+        }
+        .article_page_subtitle.truncate{
+          min-height: 25px;
+        }
+        .article_page_date{
+          margin-bottom: 0px;
+        }
+        .article_page_link{
+          background: linear-gradient(to bottom, rgba(242,242,242,0) 0%,rgba(242,242,242,0) 10%,rgba(242,242,242,0) 20%,rgba(242,242,242,.5) 30%,rgba(242,242,242,0.75) 40%,rgba(242,242,242,1)50%,rgba(242,242,242,1) 60%,rgba(242,242,242,1) 70%,rgba(242,242,242,1) 80%,rgba(242,242,242,1) 90%,rgba(242,242,242,1) 100%);
+        }
+      }
+      .under-hid{
+        clear: both;
+      }
+      }
+      #column-two{
+        min-height: 650px ;
+        #stats-row{
+          border-radius: 6px;
+          height:25%;
+          vertical-align:bottom;
+          .item{
+            background-color: white;
+          }
+          .featurette-divider{
+            color: black;  
+          }
+          .homepage-stats{
+            padding: 5px;
+            background-color: #F2F2F2 !important;
+            overflow-y: auto;
+            text-align: center;
+          }
+          .col-xs-4{
+            text-align: center;
+          }
+        }
+      }
+      #play-store-button{
+        height: 90px;
+        width: 90px;
+      }
+      #app-store-button{
+        height: 90px;
+        width: 90px;
+      }
+      .img-rounded{
+        -moz-box-shadow: 0 2px 3px 1px #9E9E9E;
+        -webkit-box-shadow: 0 2px 3px 1px #9E9E9E;
+        box-shadow: 0 2px 3px 1px #9E9E9E;
+      }
+    }
+    .slogan{
+      text-align: center;  
+    }
+  
+
+  @media (min-width: 768px) {
+    .carousel-caption p {
+      margin-bottom: 20px;
+      font-size: 21px;
+      line-height: 1.4;
+      color: black;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .featurette-heading {
+      margin-top: 120px;
+    }
+  }
+}
+.row.secondary-content{
+  height:90vh;
+  display: block;
+  overflow: hidden;
+  .featurette-divider {
+    clear: both;
+    margin-top: 40px;
+    margin-bottom: 20px;
+  }
+}
+.teachers-love-isense-seperator{
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+.isense-desc{
+  .homepage-text{
+    min-height: 170px !important;
+    overflow-y: auto;
+  }
+  .teachers-love-isense{
+    float: left;
+    overflow-y: hidden;
+    .homepage-text{
+      overflow-y: auto;
+    }
+    .what-is-isense{
+      overflow-y: hidden;
+      .homepage-text{
+        overflow-y: auto;
+      }
+    }
+  .teachers-love-isense{
+    overflow-y: hidden;
+    .homepage-text{
+      overflow-y: auto;
+    } 
+  }
+  .homepage-text{
+    overflow-y: auto;
+  }  
+  .welcome-two{
+    margin-bottom: 20px !important;
+  }
+  .featurette-text{
+    font-size: 1.1em !important;
+  }
+}    
+}
+}
+
+.featurette-image{
+  width: 100%; 
 }
