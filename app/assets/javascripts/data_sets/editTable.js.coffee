@@ -62,17 +62,21 @@ ajaxifyGrid = (view) ->
         continue
 
       idTest = posHeadRegex.exec j
-      if idTest != null
+      if idTest?
         latId = idTest[1]
         lonId = idTest[2]
-        if buckets[latId] == undefined then buckets[latId] = []
-        if buckets[lonId] == undefined then buckets[lonId] = []
+        unless buckets[latId]? then buckets[latId] = []
+        unless buckets[lonId]? then buckets[lonId] = []
 
         fieldTest = posDataRegex.exec x[j]
-        buckets[latId].push fieldTest[1]
-        buckets[lonId].push fieldTest[2]
+        if fieldTest?
+          buckets[latId].push fieldTest[1]
+          buckets[lonId].push fieldTest[2]
+        else
+          buckets[latId].push ''
+          buckets[lonId].push ''
       else
-        if buckets[j] == undefined then buckets[j] = []
+        unless buckets[j]? then buckets[j] = []
         buckets[j].push x[j]
 
   buckets
@@ -90,6 +94,7 @@ IS.onReady 'data_sets/edit', ->
     for x in cols
       fields[x.field] = ''
     view.addItem fields
+    grid.scrollRowIntoView view.getLength()
 
   ($ '#edit_table_save').click ->
     if ($ '#edit_table_save').hasClass 'disabled'
@@ -122,6 +127,7 @@ IS.onReady 'data_sets/manualEntry', ->
     for x in cols
       fields[x.field] = ''
     view.addItem fields
+    grid.scrollRowIntoView view.getLength()
 
   ($ '#edit_table_save').click ->
     if ($ '#edit_table_save').hasClass 'disabled'
