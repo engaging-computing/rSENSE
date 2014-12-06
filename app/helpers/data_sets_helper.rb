@@ -112,8 +112,6 @@ module DataSetsHelper
       "{#{strs.join ','}}"
     end.join ','
 
-    puts cols_json
-
     ["[#{cols_json}]", data]
   end
 end
