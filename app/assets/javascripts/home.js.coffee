@@ -16,12 +16,13 @@ $ ->
       if screenSize('md') or screenSize('sm')
         ($ '.isense-desc').css('min-height', '170px')
         ($ '.isense-desc').height("45vh")
+        ($ '.row.secondary-content').height('100vh')
         ($ '.featurette-image').height("40vh")
-        ($ '#main-image-featurette').css('min-height', '200px')
-        ($ '#main-image-featurette').height('45vh')
+        ($ '#main-image-featurette').css('min-height', '300px')
+        #($ '#main-image-featurette').height('45vh')
         ($ '.ternary-content').height('90vh')
-        ($ '#column-one').css('height', '80vh')
-        ($ '.news-prev-wrapper').css('height', '45vh')
+        ($ '#column-one').css('height', '90vh')
+        ($ '.news-prev-wrapper').css('height', '60vh')
         ($ '.news-prev-wrapper').css('overflow-y', 'scroll')
         ($ '.ternary-content').css('overflow-y', 'hidden')
         ($ '.what-is-isense').height(($ '.isense-desc').height())
@@ -32,9 +33,10 @@ $ ->
         ($ '.what-is-isense').find('.homepage-text').height(($ '.what-is-isense').height() - ($ '.what-is-isense').find('.homepage-header').height()- 60)
         ($ '#column-one').height('auto')
         ($ '.ternary-content').height('auto')
+        ($ '#main-image-featurette').css('height', '60vh')
       else if screenSize('lg')
         ($ '.isense-desc').css('min-height', '500px')
-        ($ '.isense-desc').height("90vh")
+        ($ '.isense-desc').height("95vh")
         ($ '#main-image-featurette').css('min-height', '500px')
         ($ '#main-image-featurette').css('height', '95vh')
         ($ '.ternary-content').height(Math.max((($ window).height() * .8), ($ '#column-one').height()))
@@ -43,30 +45,31 @@ $ ->
         ($ '#column-one').height('80vh')
         ($ '#column-two').height('80vh')
         ($ '.what-is-isense').height(($ '.isense-desc').height() * .3)
+        ($ '.teachers-love-isense').css('margin-top', '60')
         ($ '.teachers-love-isense').height(($ '.isense-desc').height() - ($ '.what-is-isense').height())
         ($ '.teachers-love-isense').find('.homepage-text').height(($ '.teachers-love-isense').height() - ($ '.teachers-love-isense').find('.homepage-header').height() - 60)
         ($ '.what-is-isense').find('.homepage-text').height(($ '.what-is-isense').height() - ($ '.what-is-isense').find('.homepage-header').height())
+        ($ '.row.secondary-content').find('.col-lg-8').css('clear', '')
       else 
-        ($ '.secondary-content').find('.homepage-text').each (i,j) ->
-          ($ j).height(Math.min((($ window).height() * .5), ($ j).height()))
+        #($ '.secondary-content').find('.homepage-text').each (i,j) ->
+        #  ($ j).height(Math.min((($ window).height() * .5), ($ j).height()))
         ($ '.isense-desc').css('min-height', '500px')
         ($ '.isense-desc').css('height', '100vh')
         ($ '#column-one').css('height', '95vh')
+        ($ '.row.secondary-content').css('height', 'auto')
         ($ '#main-image-featurette').css('min-height', '500px')
         ($ '#main-image-featurette').height("95vh")
+        ($ '.row.secondary-content').find('.col-lg-8').css('clear', 'both')
+        ($ '#main-image-featurette').css('clear', 'both')
         ($ '.ternary-content').height('95vh')
-        ($ '.news-prev-wrapper').css('height', '25vh')
+        ($ '.news-prev-wrapper').css('height', '45vh')
         ($ '.news-prev-wrapper').css('overflow-y', 'scroll')
-        ($ '.what-is-isense').height(($ '.isense-desc').height() * .4)
-        ($ '.teachers-love-isense').height(($ '.isense-desc').height() * .55)
-        ($ '.teachers-love-isense').find('.homepage-text').height(($ '.teachers-love-isense').height() - ($ '.teachers-love-isense').find('.homepage-header').height() - 60)
-        ($ '.what-is-isense').find('.homepage-text').height(($ '.what-is-isense').height() - ($ '.what-is-isense').find('.homepage-header').height() - 60)
+        ($ '.what-is-isense').height(($ '.isense-desc').height() * .3)
+        ($ '.teachers-love-isense').height(($ '.isense-desc').height() * .65)
+        ($ '.teachers-love-isense').find('.homepage-text').height(($ '.teachers-love-isense').height() - ($ '.teachers-love-isense').find('.homepage-header').height() - 120)
+        ($ '.what-is-isense').find('.homepage-text').height(($ '.what-is-isense').height() - ($ '.what-is-isense').find('.homepage-header').height() - 80)
         ($ '#column-one').height('auto')
         ($ '.ternary-content').height('auto')
-        if ($ '.news-prev-wrapper').height() < 350
-          #($ '#column-one').css('overflow-y', 'scroll')
-          ($ '#column-one').height('auto')
-          ($ '.ternary-content').height('auto')
 
       if ($ '#column-one').height() < 900
         ($ '#column-two').height( ($ '#column-one').height())
@@ -106,8 +109,9 @@ $ ->
           bottom = false
       unless Math.abs(($ window).scrollTop() - location) > (($ window).height() * .25)
         if not(($ window).scrollTop() + ($ window).height() == ($ document).height())
-          ($ 'html, body').animate
-            scrollTop: location, 500
+          if ($ window).scrollTop() < ($ '#scroll-2').offset().top
+            ($ 'html, body').animate
+              scrollTop: location, 500
       show
 
     ($ document).on 'scrollstop', latency: 1500, () ->
