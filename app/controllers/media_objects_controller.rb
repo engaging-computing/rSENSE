@@ -87,7 +87,9 @@ class MediaObjectsController < ApplicationController
     # Rotate based on EXIF data, then strip it out.
     if file_type == 'image'
       fix_rot = MiniMagick::Image.read(file_path)
-      fix_rot.auto_orient
+      unless file_name.include? 'svg'
+        fix_rot.auto_orient
+      end
       file_path = '/tmp/' + SecureRandom.hex
       File.open(file_path, 'wb') do |ff|
         fix_rot.write ff
