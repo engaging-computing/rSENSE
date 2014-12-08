@@ -7,7 +7,6 @@ uploadSettings =
   error: (jqXHR, textStatus, errorThrown) ->
     ($ '#edit_table_add').removeClass 'disabled'
     ($ '#edit_table_save').button 'reset'
-    console.log [textStatus, errorThrown]
     alert "An upload error occurred."
   successEdit: (data, textStatus, jqXHR) ->
     window.location = data.redirect

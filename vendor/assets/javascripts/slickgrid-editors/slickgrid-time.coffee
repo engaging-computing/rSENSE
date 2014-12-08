@@ -34,7 +34,6 @@
         #args.position.left + args.gridPosition.left + 2
         args.position.left + 2
       vPosition: (w, h) ->
-        console.log args
         #args.position.top + args.gridPosition.top + 2
         args.position.bottom + 2
     form.open()
