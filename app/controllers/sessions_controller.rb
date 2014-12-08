@@ -41,10 +41,28 @@ class SessionsController < ApplicationController
     end
   end
 
+  # GET /auth/github
+  def github_authorize
+    base_url = 'https://github.com/login/oauth/authorize'
+
+    client_id = ENV['GITHUB_ID']
+    redirect_uri = 'http://rsense-dev.cs.uml.edu/auth/github/callback'
+    scope = 'repo'
+    state = current_state
+
+    auth_url = base_url + '?client_id=' + client_id
+    auth_url += '&redirect_uri=' + redirect_uri
+    auth_url += '&scope=' + scope
+    auth_url += '&state=' + state
+
+    redirect_to auth_url
+  end
+
   def destroy
     session[:user_id] = nil
     session[:key] = nil
     session[:contrib_access] = nil
+    session[:state] = nil
     respond_to do |format|
       format.html { redirect_to :back, notice: 'Logged out' }
       format.json { render json: {}, status: :ok }
@@ -68,6 +86,16 @@ class SessionsController < ApplicationController
       else
         format.json { render json: '{}', status: :ok }
       end
+    end
+  end
+
+  private
+
+  def current_state
+    if session[:state]
+      session[:state]
+    elsif session[:state] = SecureRandom.hex
+      session[:state]
     end
   end
 end
