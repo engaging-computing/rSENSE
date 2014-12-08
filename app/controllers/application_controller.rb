@@ -52,10 +52,6 @@ class ApplicationController < ActionController::Base
 
   def create_issue
     auth_info = github_authenticate
-    print 'auth_info = '
-    puts auth_info
-    print 'access_token = '
-    puts auth_info['access_token']
     params['access_token'] = auth_info['access_token']
     render '/home/create_issue'
   end
@@ -81,8 +77,6 @@ class ApplicationController < ActionController::Base
     new_params[:code] = params[:code]
 
     url = URI.parse('https://github.com/login/oauth/access_token')
-    print 'Starting POST '
-    puts url
 
     req = Net::HTTP::Post.new(url.request_uri)
     req.set_form_data(new_params)
@@ -220,20 +214,12 @@ class ApplicationController < ActionController::Base
       base_url = 'https://api.github.com/repos/kcarcia/rSENSE/issues'
       token = '?access_token=' + params[:access_token]
       url = URI.parse(base_url + token)
-      print 'Starting POST to url: '
-      puts url
 
       req = Net::HTTP::Post.new(url.request_uri)
       req.body = new_params.to_json
       http = Net::HTTP.new(url.host, url.port)
       http.use_ssl = (url.scheme == 'https')
       response = http.request(req)
-
-      print 'With params: '
-      puts new_params
-
-      print 'Received response: '
-      puts response.body
 
       if response.code == '201'
         redirect_to root_path, flash: { success: 'Issue submitted successfully.' }
