@@ -26,7 +26,6 @@
   isValueChanged: () =>
     form.val() != loadValue
   serializeValue: () ->
-    console.log "result: #{form.val()}"
     form.val()
   loadValue: (item) ->
     loadValue = item[args.column.field] || ''
