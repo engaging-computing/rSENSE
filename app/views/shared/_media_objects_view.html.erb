@@ -35,7 +35,7 @@
                 <% end %>
               </div>
             </td>
-            <% if ["Project","News","Tutorial"].include? object.class.name%>
+            <% if ["Project","News","Tutorial", "Visualization"].include? object.class.name%>
               <td>
                 <div class="center">
                   <% if ((mo.media_type == "image") && (can_edit? object))%>
