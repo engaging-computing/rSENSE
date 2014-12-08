@@ -77,5 +77,3 @@ class User < ActiveRecord::Base
     self.bio = MediaObject.create_media_objects(bio, 'user_id', id)
   end
 end
-
-

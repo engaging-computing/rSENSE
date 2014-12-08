@@ -1,10 +1,9 @@
-<div class="row">
-  <div class="col-lg-6 col-lg-offset-3">
-    <div class="panel panel-default">
-      <%= form_tag("/login", method: "post") do %>
-    
+<%= form_tag("/login", method: "post") do %>
+  <div class="row">
+    <div class="col-lg-6 col-lg-offset-3">
+      <div class="panel panel-default">
         <div class="panel-heading">
-          <h1> Log in to iSENSE </h1>
+          <h1>Log in to iSENSE</h1>
         </div>
 
         <div class="panel-body">
@@ -12,17 +11,17 @@
             <%= label_tag(:email, "Email:") %>
             <%= text_field_tag(:email, flash[:email], class: "form-control", placeholder: "user@email.com", autofocus: true) %>
           </div>
-        
+
           <div class="form-group">
             <%= label_tag(:password, "Password #{(link_to "(forgot password)", '/users/pw_request', tabindex: -1)}:".html_safe) %>
             <%= password_field_tag(:password,nil ,class: "form-control") %>
           </div>
-        </div>  
-        
+        </div>
+
         <div class="panel-footer">
           <%= submit_tag("Login", class: "btn btn-primary") %>
         </div>
-      <% end %>
+      </div>
     </div>
   </div>
-</div>
+<% end %>

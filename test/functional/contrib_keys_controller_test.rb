@@ -47,4 +47,10 @@ class ContribKeysControllerTest < ActionController::TestCase
     assert_response :redirect
     assert_not_nil flash[:error]
   end
+
+  test 'missing key should fail' do
+    post :enter,  project_id: @proj.id, key: ''
+    assert_response :redirect
+    assert_not_nil flash[:error]
+  end
 end
