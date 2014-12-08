@@ -4,13 +4,13 @@
 ###
 
 @LocationEditor = (args) ->
-	destroy: () ->
-	focus: () ->
-	isValueChanged: () ->
+	destroy: ->
+	focus: ->
+	isValueChanged: ->
 		true
-	serializeValue: () ->
+	serializeValue: ->
 		''
 	loadValue: (item) ->
 	applyValue: (item, state) ->
-	validate: () ->
+	validate: ->
 		true

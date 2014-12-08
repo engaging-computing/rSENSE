@@ -13,20 +13,20 @@
   form.appendTo args.container
   form.focus()
 
-  destroy: () ->
+  destroy: ->
     form.remove()
-  focus: () ->
+  focus: ->
     form.focus()
-  isValueChanged: () =>
+  isValueChanged: =>
     form.val() != loadValue
-  serializeValue: () ->
+  serializeValue: ->
     form.val()
   loadValue: (item) ->
     loadValue = item[args.column.field] || ''
     form.val loadValue
   applyValue: (item, state) ->
     item[args.column.field] = state
-  validate: () ->
+  validate: ->
     isNumber = /^(?:\+|-)?(?:\d*\.\d+|\d+)$/
     if isNumber.test form.val()
       {valid: true, msg: null}

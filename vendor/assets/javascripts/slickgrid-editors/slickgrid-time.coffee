@@ -8,13 +8,13 @@
   loadValue = null
   currValue = null
 
-  destroy: () ->
+  destroy: ->
     # no need to do anything, datetimepicker is designed well enough to handle this
-  focus: () ->
+  focus: ->
     # see above
-  isValueChanged: () =>
+  isValueChanged: =>
     currValue != loadValue
-  serializeValue: () ->
+  serializeValue: ->
     currValue
   loadValue: (item) ->
     time = item[args.column.field]
@@ -22,7 +22,7 @@
     loadValue = time
     ($ args.container).text currValue
     form = ($ args.container).parent().datetimepicker
-      onOpen: () ->
+      onOpen: ->
         time
       onChange: (val) ->
         currValue = val.format('MM/DD/YYYY HH:mm:ss')
@@ -39,5 +39,5 @@
     form.open()
   applyValue: (item, state) ->
     item[args.column.field] = state
-  validate: () ->
+  validate: ->
     {valid: true, msg: null}
