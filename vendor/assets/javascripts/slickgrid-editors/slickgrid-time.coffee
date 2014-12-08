@@ -28,13 +28,10 @@
         currValue = val.format('MM/DD/YYYY HH:mm:ss')
         ($ args.container).text currValue
       onClose: (val) ->
-        args.commitChanges()
-      #anchor: ($ args.container).closest '#slickgrid-container > .slick-viewport'
+        args.commitChanges(
       hPosition: (w, h) ->
-        #args.position.left + args.gridPosition.left + 2
         args.position.left + 2
       vPosition: (w, h) ->
-        #args.position.top + args.gridPosition.top + 2
         args.position.bottom + 2
     form.open()
   applyValue: (item, state) ->
