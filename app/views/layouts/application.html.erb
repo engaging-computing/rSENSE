@@ -61,7 +61,13 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <% if @cur_user.try(:id) %>
-              <li class="navbtn" title="Click to view <%= @cur_user.name %>'s profile page"><%= link_to @cur_user.name, user_path(@cur_user)%></li>
+              <li class="navbtn" title="Click to view <%= @cur_user.name %>'s profile page">
+              <% if @cur_user.name.length < 30 %>
+                <%= link_to @cur_user.name, user_path(@cur_user) %>
+              <% else %>
+                <%= link_to "My Account", user_path(@cur_user) %>
+              <% end %>
+              </li>
               <li class="divider"></li>
               <li class="navbtn"><%= link_to "Logout", login_path, method: :delete%></li>
             <% else %>
@@ -84,7 +90,7 @@
             
       <!-- Footer -->      
       <div class="footer">
-        <p>The iSENSE project is a collaborative effort of the University of Massachusetts Lowell and Machine Science Inc. <a href="/about">About</a> | <a href="/contact">Contact</a> | <a href="/api/v1/docs">Developers</a> | <a href="/privacy_policy">Privacy Policy</a><br>
+        <p>The iSENSE project is a collaborative effort of the University of Massachusetts Lowell and Machine Science Inc. <a href="/about">About</a> | <a href="/contact">Contact</a> | <a href="/api/v1/docs">Developer API</a> | <a href="/report_bug">Report a Bug</a> | <a href="/privacy_policy">Privacy Policy</a><br>
         Our work is supported by grants <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0735597">DRL-0735597</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0735592">DRL-0735592</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0546513">DRL-0546513</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=1123998">IIS-1123998</a>, and <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=1123972">IIS-1123972</a> from the National Science Foundation and a gift from Google Inc.<br>
         <%= @version %></p>
         <p id="ajax-status">

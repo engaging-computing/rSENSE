@@ -1,0 +1,31 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h1>Report a Bug: Do you have a GitHub account?</h1>
+  </div>
+
+  <div class="panel-body">
+    <p>You can use your GitHub account to report bugs. Don't have a GitHub account? No problem. You can also report bugs as an anonymous user.</p>
+    <br/>
+    <div class="row-fluid">
+      <div class="col-md-6">
+        <a href="/auth/github">
+          <button class="btn btn-default btn-block" type="button">
+            <div class="center">
+              <h3>Yes, I have a GitHub account</h3>
+              <%= image_tag("Octocat/Octocat.png", height: "250") %>
+            </div>
+          </button>
+        </a>
+      </div>
+      <div class="col-md-6">
+        <a href="/auth/anon_github">
+          <button class="btn btn-default btn-block" type="button">
+            <div class="center">
+              <h3>No, I don't have a GitHub account</h3>
+              <%= image_tag("noavatar.png", height: "250") %>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
