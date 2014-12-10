@@ -27,7 +27,8 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is "visualizations" and
+  namespace.action in ["displayVis", "embedVis", "show"]
 
     class window.Table extends BaseVis
       constructor: (@canvas) ->
@@ -144,6 +145,7 @@ $ ->
           viewrecords: true
           loadui: 'block'
           pager: '#toolbar_bottom'
+          gridComplete: @saveSort
         })
 
         # Show only the checked columns
@@ -196,10 +198,6 @@ $ ->
 
         super()
 
-      end: ->
-        @saveSort()
-        super()
-
       resize: (newWidth, newHeight, aniLength) ->
         # In the case that this was called by the hide button, this gets called a second time
         # needlessly, but doesn't effect the overall performance
@@ -211,11 +209,7 @@ $ ->
         @drawYAxisControls()
         @drawSaveControls()
 
-      serializationCleanup: ->
-        @saveSort()
-        super()
-
-      saveSort: ->
+      saveSort: =>
         if @table?
           # Save the sort state
           @configs.sortName = @table.getGridParam('sortname')
@@ -224,7 +218,6 @@ $ ->
           # Save the table filters
           if @table.getGridParam('postData').filters?
             @configs.searchParams = jQuery.parseJSON(@table.getGridParam('postData').filters).rules
-
 
       ###
       JQGrid time formatting (to implement search post formatting)
