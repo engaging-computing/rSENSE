@@ -35,8 +35,7 @@ $ ->
         super(@canvas)
         @TOOLBAR_HEIGHT_OFFSET = 70
 
-        fieldList =
-          fIndex for f, fIndex in data.fields when fIndex isnt data.COMBINED_FIELD
+        fieldList = (i for f, i in data.fields when i isnt data.COMBINED_FIELD)
         @configs.tableFields ?= fieldList[0..7]
 
         # Set sort state to default none existed
@@ -270,38 +269,56 @@ $ ->
       This includes a series of checkboxes or radio buttons for selecting
       the active y axis field(s).
       ###
-      drawYAxisControls: (radio = false) ->
-
-        controls = '<div id="yAxisControl" class="vis_controls">'
-
-        controls += "<h3 class='clean_shrink'><a href='#'>Visible Columns:</a></h3>"
-
-        controls += "<div class='outer_control_div'>"
-
+      drawYAxisControls: ->
         # Populate choices
-        for f, fIndex in data.fields when fIndex isnt data.COMBINED_FIELD
-          controls += "<div class='inner_control_div' >"
+        yFields = (i for f, i in data.fields when i isnt data.COMBINED_FIELD)
+        checked = false
 
-          controls += """
-                      <div class='checkbox'><label><input class='y_axis_input' type='checkbox'
-                      value='#{fIndex}' #{if (Number fIndex) in @configs.tableFields then "checked" else ""}
-                      />#{data.fields[fIndex].fieldName}</label></div>
-                      """
-          controls += "</div>"
+        c = '<div id="yAxisControl" class="vis_controls">'
+        c += "<h3 class='clean_shrink'><a href='#'>Visible Fields:</a></h3>"
+        c += "<div class='outer_control_div'>"
+        c +=
+          """
+          <div class='inner_control_div'>
+            <div class='checkbox all-y-fields'>
+              <label class='all-y'>
+                <input id='select-all-y' type='checkbox'> #Select All </input>
+              </label>
+            </div>
+          </div>
+          """
+        if @configs.tableFields.length == data.fields.length - 1
+          checked = true
 
-        controls += '</div></div>'
+        for f in yFields
+          c +=
+            """
+            <div class='inner_control_div' >
+              <div class='checkbox'><label><input class='y_axis_input'
+              type='checkbox' value='#{f}'
+              #{if Number(f) in @configs.tableFields then "checked" else ""}
+              />#{data.fields[f].fieldName}</label></div></div>
+            """
+
+        c += '</div></div>'
 
         # Write HTML
-        ($ '#controldiv').append controls
+        ($ '#controldiv').append c
 
-        # Make y axis checkbox/radio handler
+        if checked
+          ($ '#select-all-y').prop('checked', true)
+
         ($ '.y_axis_input').click (e) =>
           index = Number e.target.value
-
           if index in @configs.tableFields
             arrayRemove(@configs.tableFields, index)
           else
             @configs.tableFields.push(index)
+          if yFields.length == @configs.tableField
+            ($ '#select-all-y').prop('checked', true)
+          else
+            ($ '#select-all-y').prop('checked', false)
+
           @delayedUpdate()
 
         # Set up accordion
@@ -313,5 +330,18 @@ $ ->
 
         ($ '#yAxisControl > h3').click ->
           globals.configs.yAxisOpen = (globals.configs.yAxisOpen + 1) % 2
+
+        ($ '#select-all-y').click =>
+          yFields = (i for f, i in data.fields when i isnt data.COMBINED_FIELD)
+
+          if yFields.length != @configs.tableFields.length
+            ($ '#yAxisControl').find('.y_axis_input').each (i,j) ->
+              ($ j).prop('checked', true)
+            @configs.tableFields = yFields
+          else
+            @configs.tableFields = []
+            ($ '#yAxisControl').find('.y_axis_input').each (i,j) ->
+              ($ j).prop('checked', false)
+          @delayedUpdate()
 
     globals.table = new Table "table_canvas"
