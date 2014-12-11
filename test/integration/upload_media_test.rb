@@ -80,6 +80,15 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
     find('.upload_media form').attach_file('upload', ods_path)
     assert page.has_content?('test.ods'), 'File should be in list'
 
+    # Failed Upload media to project
+    visit "/projects/#{proj_id}"
+    assert page.has_content? 'Media'
+    ods_path = Rails.root.join('test', 'CSVs', 'test.html')
+    page.execute_script "$('#upload').show()"
+    find('.upload_media form').attach_file('upload', ods_path)
+    assert page.has_no_content?('test.html'), 'File should be in list'
+    assert page.has_content?('Sorry, html is not a supported file type.'), 'Unsupported file type failed.'
+
     # Test for media objects helpers
     visit "/projects/#{proj_id}"
     assert page.has_css?('.media_edit')
