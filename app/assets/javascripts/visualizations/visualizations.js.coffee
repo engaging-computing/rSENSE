@@ -1,18 +1,19 @@
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis","show"]
+  if namespace.controller is "visualizations" and
+  namespace.action in ["displayVis","show"]
     hidden = false
     originalWidth = 220
-    ($ '#fullscreen-vis').click (e) ->
+    $('#fullscreen-vis').click (e) ->
       fullscreenEnabled = document.fullscreenEnabled || document.mozFullScreenEnabled ||
       document.webkitFullscreenEnabled
       fullscreenElement = document.fullscreenElement || document.mozFullScreenElement ||
       document.webkitFullscreenElement
-      icon = ($ '#fullscreen-vis').find('i')
+      icon = $('#fullscreen-vis').find('i')
       if !fullscreenElement
         window.globals.fullscreen = true
         icon.removeClass('icon-resize-full')
         icon.addClass('icon-resize-small')
-        fullscreenVis = ($ '#viscontainer')[0]
+        fullscreenVis = $('#viscontainer')[0]
         browserFullscreenMethod = fullscreenVis.webkitRequestFullScreen || fullscreenVis.mozRequestFullScreen ||
         fullscreenVis.requestFullScreen || fullscreenVis.msRequestFullscreen
         browserFullscreenMethod.call(fullscreenVis)
@@ -29,19 +30,17 @@ $ ->
         else if (document.msExitFullscreen)
           document.msExitFullscreen()
 
-    ($ document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange', ->
+    $(document).on 'webkitfullscreenchange mozfullscreenchange fullscreenchange', ->
       if !hidden
-        ($ '#controldiv').width(originalWidth)
-      # Deal with Safari and Firefox resizing peculiarities
-      if ((navigator.userAgent.search("Safari") >= 0 && navigator.userAgent.search("Chrome") < 0) or
-         navigator.userAgent.indexOf('Firefox') > -1)
-        ($ window).trigger('resize')
-      if ($ '#fullscreen-vis').attr('title') == 'Maximize'
-        ($ '#fullscreen-vis').attr('title', 'Minimize')
-      else if ($ '#fullscreen-vis').attr('title') == 'Minimize'
-        ($ '#fullscreen-vis').attr('title', 'Maximize')
-    )
+        $('#controldiv').width(originalWidth)
 
-    ($ '#control_hide_button').on('click', () ->
+      if $('#fullscreen-vis').attr('title') == 'Maximize'
+        $('#fullscreen-vis').attr('title', 'Minimize')
+      else if $('#fullscreen-vis').attr('title') == 'Minimize'
+        $('#fullscreen-vis').attr('title', 'Maximize')
+        window.globals.fullscreen = false
+
+      $(window).trigger('resize')
+
+    $('#control_hide_button').on 'click', () ->
       hidden = !hidden
-    )
