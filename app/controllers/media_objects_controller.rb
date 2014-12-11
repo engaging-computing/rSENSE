@@ -70,6 +70,17 @@ class MediaObjectsController < ApplicationController
 
   # POST /media_object/saveMedia
   def saveMedia
+    extension = params[:upload].original_filename.split('.')[1]
+    unless FileUploader.upload_whitelist.include? extension
+      if params.key?(:non_wys)
+        redirect_to :back, flash: { error: "Sorry, #{extension} is not a supported file type." }
+        return
+      else
+        render text: "Sorry, #{extension} is not a supported file type."
+        return
+      end
+    end
+
     # Figure out where we are uploading data to
     data = params[:keys].split('/')
     target = data[0]
@@ -180,8 +191,6 @@ class MediaObjectsController < ApplicationController
         end
       else
         render text: 'File upload failed'
-        logger.info 'Error saving Media Object'
-        logger.info @mo.errors.inspect
       end
 
     else
