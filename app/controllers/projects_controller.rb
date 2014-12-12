@@ -116,6 +116,7 @@ class ProjectsController < ApplicationController
       @project = Project.new project_params
       @project.user_id = @cur_user.id
     end
+
     respond_to do |format|
       if @project.save
         format.html { redirect_to @project, notice: 'Project was successfully created.' }

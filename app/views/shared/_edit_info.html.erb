@@ -1,9 +1,8 @@
-
 <div class="edit_info" data-type="<%= type %>" data-field="<%= field %>" data-value="<%= value %>">
   <div class='info-show-text'>
     <div class='info_val word-wrap' style="font-weight: bold">
-      <span class='info-show-value'><%= value %></span>
-  
+      <span class='info-show-value'><%= raw(value) %></span>
+
       <% if can_edit %>
         <a class="info_edit_link" href="<%= href %>" style="color:black">
           <i style="font-size:0.8em" class="fa fa-edit" title="Click to edit <%= field %>"></i>&nbsp;
