@@ -1,7 +1,7 @@
 class GithubInterface
   class << self; attr_accessor :test end
 
-  #Authenticate against github with generated codes.
+  # Authenticate against github with generated codes.
   def self.authenticate(code)
     new_params = {}
     # IMPORTANT #
@@ -23,7 +23,7 @@ class GithubInterface
     JSON.parse(response.body)
   end
 
-  #Sends a formatted issue to iSENSE
+  # Sends a formatted issue to iSENSE
   def self.send_issue(params)
     if params[:description] == ''
       redirect_to :back
