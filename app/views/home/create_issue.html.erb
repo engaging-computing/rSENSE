@@ -39,11 +39,11 @@
       </div>
       <div class="form-group">
         <%= label_tag(:logged_in, "Were you logged into iSENSE?") %>
-        <%= select_tag(:logged_in, options_for_select([['Select one', -1], ['Yes', 1],['No', 0]], -1), class: "form-control", style: "width:115px;") %>
+        <%= select_tag(:logged_in, options_for_select([['Select one', 'N/A'], ['Yes', 'Y'],['No', 'N']], 'N/A'), class: "form-control", style: "width:115px;") %>
       </div>
       <div class="form-group">
         <%= label_tag(:is_admin, "Were you logged into an iSENSE admin account?") %>
-        <%= select_tag(:is_admin, options_for_select([['Select one', -1], ['Yes', 1],['No', 0]], -1), class: "form-control", style: "width:115px;") %>
+        <%= select_tag(:is_admin, options_for_select([['Select one', 'N/A'], ['Yes', 'Y'],['No', 'N']], 'N/A'), class: "form-control", style: "width:115px;") %>
       </div>
     </div>
     <div class="panel-footer">

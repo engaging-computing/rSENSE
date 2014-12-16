@@ -51,7 +51,7 @@ class ApplicationController < ActionController::Base
   end
 
   def create_issue
-    auth_info = github_authenticate
+    auth_info = GithubInterface.authenticate(params[:code])
     params['access_token'] = auth_info['access_token']
     render '/home/create_issue'
   end
@@ -66,27 +66,6 @@ class ApplicationController < ActionController::Base
     @namespace = { action: params[:action], controller: params[:controller] }
     @version = `(git describe --tags) 2>&1`
     @version = 'Development Version' if @version == '' || @version =~ /fatal:/
-  end
-
-  def github_authenticate
-    new_params = {}
-    # IMPORTANT #
-    # These variables need to be set on the machine that is running the server
-    new_params[:client_id] = ENV['GITHUB_ID']
-    new_params[:client_secret] = ENV['GITHUB_SECRET']
-    new_params[:code] = params[:code]
-
-    url = URI.parse('https://github.com/login/oauth/access_token')
-
-    req = Net::HTTP::Post.new(url.request_uri)
-    req.set_form_data(new_params)
-    req['accept'] = 'application/json'
-    http = Net::HTTP.new(url.host, url.port)
-    http.use_ssl = (url.scheme == 'https')
-
-    response = http.request(req)
-
-    JSON.parse(response.body)
   end
 
   def options_req
@@ -176,51 +155,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # Submission of issue to Github
   def submit_issue
-    if params[:logged_in] == '1'
-      logged_in = 'Y'
-    elsif params[:logged_in] == '0'
-      logged_in = 'N'
-    else
-      logged_in = 'N/A'
-    end
-
-    if params[:is_admin] == '1'
-      admin = 'Y'
-    elsif params[:is_admin] == '0'
-      admin = 'N'
-    else
-      admin = 'N/A'
-    end
-
     if params[:description] == ''
-      redirect_to :back
-      flash[:error] = 'Please fill out all required fields.'
+      redirect_to :back, flash: { error: 'Please fill out all required fields.' }
     else
-      b =  "**General description:** #{params[:description]}\n\n"\
-           "**live/dev/localhost:** live\n"\
-           "**iSENSE Version:** #{params[:isense_version]}\n"\
-           "**Logged in (Y or N):** #{logged_in}\n"\
-           "**Admin (Y or N):** #{admin}\n\n"\
-           "**OS:** #{params[:os]}\n"\
-           "**Browser/Version:** #{params[:browser]}\n\n"\
-           "**Steps to Reproduce:** #{params[:instructions]}\n\n"\
-           "#{params[:user_id]}"
-
-      new_params = {}
-      new_params['title'] = 'User Submitted Issue'
-      new_params['body'] = b
-
-      base_url = 'https://api.github.com/repos/isenseDev/rSENSE/issues'
-      token = '?access_token=' + params[:access_token]
-      url = URI.parse(base_url + token)
-
-      req = Net::HTTP::Post.new(url.request_uri)
-      req.body = new_params.to_json
-      http = Net::HTTP.new(url.host, url.port)
-      http.use_ssl = (url.scheme == 'https')
-      response = http.request(req)
-
+      response = GithubInterface.send_issue(params)
       if response.code == '201'
         redirect_to root_path, flash: { success: 'Issue submitted successfully.' }
       else
