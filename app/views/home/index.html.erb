@@ -10,9 +10,9 @@
     <% if @featured_vis != nil%>
       <div class="visible-desktop">
         <div class="col-md-4">
-          <h2><%= link_to @featured_vis.title, visualization_path(@featured_vis)%></h2>
+          <h2><%= link_to raw(@featured_vis.title), visualization_path(@featured_vis)%></h2>
           <b>Created: </b><%= time_ago_in_words(@featured_vis.created_at)%> ago, on <%=@featured_vis.created_at.strftime("%B %d, %Y")%><br />
-          <b>From Project: </b><%= link_to @featured_vis.project.title, project_path(@featured_vis.project)%><br />
+          <b>From Project: </b><%= link_to raw(@featured_vis.project.title), project_path(@featured_vis.project)%><br />
           <b>By: </b><%= link_to @featured_vis.owner.name, user_path(@featured_vis.owner)%>
           <%= raw @featured_vis.content %>
           <br />
@@ -24,18 +24,18 @@
       </div>
     <%end%>
   </div>
-    
+
   <div class="row">
     <div class="col-md-12">
       <h3>Featured Projects</h3>
     </div>
-        
+
     <% @featured_projects.each do |i| %>
       <% @box_project = i %>
       <%= render "shared/project_box" %>
-    <% end %> 
+    <% end %>
   </div>
-    
+
   <div class="row">
     <div class="col-md-12">
       <h3>Curated Projects</h3>
@@ -45,7 +45,7 @@
       <%= render "shared/project_box" %>
     <% end %>
   </div>
-    
+
   <div class="row">
     <div class="col-md-12">
       <h3>What's New</h3>
@@ -54,18 +54,18 @@
       <% if @news.first != nil %>
         <div class="wide-item">
           <% n = @news.first %>
-              
+
           <% if n.featured_media_id != nil %>
             <a href='<%= news_path n %>'>
               <div class="news_featured_image">
-                <% mo = MediaObject.find(n.featured_media_id) %> 
+                <% mo = MediaObject.find(n.featured_media_id) %>
                 <div class="item-image" style="<%= "background-image:url(#{mo.src})"%>"></div>
               </div>
             </a>
           <% end %>
-              
+
           <div class="item-desc">
-            <span class="item_title"><%= n.title %></span><br/>
+            <span class="item_title"><%= raw(n.title) %></span><br/>
             <span style="font-size:0.8em">Written on <%=n.created_at.strftime("%B %d, %Y")%></span><br/><br/>
             <div class="news_description"><%= n.summary%><br/> </div>
             <div class="article_link"> <%= link_to "Read More", news_path(n) %> </div>
@@ -73,7 +73,7 @@
         </div>
       <% end %>
     </div>
-   
+
     <div class="col-md-3">
       <div class="item">
         <div class="item-desc">
@@ -94,13 +94,13 @@
       <%if i.featured_media_id != nil%>
         <%= link_to image_tag(MediaObject.find(i.featured_media_id).src, :style=>'max-height:150px; float:right; padding: 5px;'), project_path(i) %>
       <% end %>
-      <h4><%= link_to i.title, project_path(i) %></h4>
+      <h4><%= link_to raw(i.title), project_path(i) %></h4>
       <span style="font-weight:bold">Owner:</span> <%= link_to i.owner.name, user_path(i.owner) %><br/>
       <span style="font-weight:bold">Created:</span> <%= i.to_hash(false)[:timeAgoInWords] %> ago
       <div style="margin-top:20px;"><%= mobileParse(i) %></div>
       <br><a href="projects" class="btn btn-primary">See More Projects</a>
     </div>
-  <%end%>  
+  <%end%>
     <div style="margin-top:20px;">
       <h4>iSENSE Mobile Apps</h4>
       <p>Download official apps to use with iSENSE.</p>

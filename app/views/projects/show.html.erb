@@ -7,7 +7,7 @@
       <!-- project title -->
       <div class="col-sm-12" style="margin-left:0px">
         <div class="project_info_box" >
-        <div class="row"> 
+        <div class="row">
           <div class="col-sm-12">
             <span id="title_span" class="word-break" style="font-size:1.5em"><%= project_edit_helper "title", (can_edit? @project), false%></span>
           </div>
@@ -16,8 +16,8 @@
           </div>
           <div class="col-sm-12">
             <div id="notices">
-              <span id="lock_notice" <%if !@project.lock%>style="display:none"<%end%>><i class="icon-lock"> This project is locked</i></span> 
-              <span id="hidden_notice" <%if !@project.hidden%>style="display:none"<%end%>><i class="icon-eye-close"> This project is hidden</i></span> 
+              <span id="lock_notice" <%if !@project.lock%>style="display:none"<%end%>><i class="icon-lock"> This project is locked</i></span>
+              <span id="hidden_notice" <%if !@project.hidden%>style="display:none"<%end%>><i class="icon-eye-close"> This project is hidden</i></span>
             <span id="id_notice" <% if @project.hidden || @project.lock%>style="display:none"<% end %>>
                 Project #: <%= @project.id %>
               </span>
@@ -44,7 +44,7 @@
                 <%end%>
               </div>
             </div>
-          
+
             <div class="col-sm-2" hidden-xs>
               <button type="button" class="btn btn-default" id="print">
                 <i class="fa fa-print"></i> Print
@@ -72,25 +72,25 @@
         </div>
       </div>
     </div>
-    
+
     <div class= "row">
       <%=render layout: "shared/box", locals: {title: 'Description', width: '12', unique_id: 'description', should_hide: false} do %>
         <%= content_helper(@project) %>
       <%end%>
     </div>
-    
+
     <div class="row">
       <%=render layout: "shared/box", locals: {title: 'Data Sets', width: '12', unique_id: 'data_sets', should_hide: false} do %>
         <% if @data_sets.count != 0 %>
           <div id="dataset_list">
-            
+
             <span>
               <button type="button" class="btn btn-info" style="margin-bottom: 10px;" id="vis_button" href="/projects/<%=@project.id%>/data_sets/">Visualize</button>
             </span>
             <span>
               <button type="button" class="btn btn-default" style="margin-bottom: 10px;" id="export_button" >Export</button>
             </span>
-          
+
             <div class="pull-right">
               <div class="btn-group">
                 <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
@@ -116,16 +116,16 @@
                     </li>
                   <% end %>
                 </ul>
-              </div>  
+              </div>
             </div>
-            
+
             <table id="dataset_table" class="table table-striped">
               <tbody>
                 <% @data_sets.each do |s| %>
                   <tr class="<%= cycle('feed-even', 'feed-odd')%> dataset" style="position:relative">
                     <% if( not (s.key.nil?) ) %>
                       <td class="key_icon">
-                        <div class="key" title="<%= s.key %>"> <%= image_tag("Key.png", :size => "32x32") %> <%= s.key %></div> 
+                        <div class="key" title="<%= s.key %>"> <%= image_tag("Key.png", :size => "32x32") %> <%= s.key %></div>
                       </td>
                     <% else %>
                       <td class="gravatar">
@@ -142,10 +142,10 @@
                       <td style="max-width:60px"><div class="truncate"><%= link_to s.owner.name, user_path(s.owner) %></div></td>
                     <% end %>
                     <td style="max-width:200px">
-                      <div class="truncate dset" title="Created <%=s.created_at.strftime("%B %d, %Y")%>"><%= link_to s.title, "/projects/#{params[:id]}/data_sets/#{s.id}" %></div>
+                      <div class="truncate dset" title="Created <%=s.created_at.strftime("%B %d, %Y")%>"><%= link_to raw(s.title), "/projects/#{params[:id]}/data_sets/#{s.id}" %></div>
                     </td>
                     <td>
-                      <div class="controls" style="">                  
+                      <div class="controls" style="">
                         <% if can_edit? s %>
                            &nbsp;<a class="data_set_edit" href="<%= edit_data_set_path s %>">Edit</a>
                         <% end %>
@@ -161,7 +161,7 @@
                     </td>
                     <td><div class="ds_selector"><input type="checkbox" class="pull-right <%if s.user_id == @cur_user.try(:id)%> mine<%end%>" id="ds_<%=s.id%>" checked/></div></td>
                   </tr>
-                <% end %> 
+                <% end %>
               </tbody>
             </table>
           </div>
@@ -173,20 +173,20 @@
           <% end %>
         <%end%>
       <%end%>
-    </div> 
+    </div>
   </div>
-  
+
   <!--   Right hand column -->
   <div class="col-md-5">
 
-   
+
     <div class="row">
       <%= render layout: "shared/box", locals: {title: 'Fields', width: '12', unique_id: 'fields', should_hide: false} do%>
         <% if (@project.fields.count == 0) && can_edit?(@project) %>
-          <div class="col-md-12 center"> 
+          <div class="col-md-12 center">
             <a href="/projects/<%=@project.id%>/edit_fields"><button class="btn btn-success" id="manual_fields"><i class="fa fa-keyboard-o" style="margin:5px"></i>Setup Manually</button></a>
             <button class="btn btn-success" id="template_file_upload"><i class="fa fa-file-o" style="margin:5px"></i>Upload File</button>
-          </div> 
+          </div>
           <div class="clear"></div>
         <% elsif @project.fields.count != 0 %>
           <table class="table table-striped" project="<%=@project.id%>" can_delete_fields="<%if @project.data_sets.count>0%>false<%else%>true<%end%>" data-num_fields="<%=@project.fields.count%>">
@@ -204,12 +204,12 @@
           <% if can_edit?(@project) %>
             <div class="center">
               <a href="/projects/<%=@project.id%>/edit_fields"><button class="btn btn-primary" id="field_edit">Edit</button></a>
-            </div>  
+            </div>
           <% end %>
         <% end %>
       <% end %>
     </div>
-    
+
     <div class="row">
       <%=render layout: "shared/box", locals: {title: 'Contribute Data', width:'12', unique_id: 'create_data_set', should_hide: !(@project.fields.count() > 0)} do %>
         <% if ((can_edit?(@project) || can_contribute?(@project)) and @project.fields.count > 0) %>
@@ -241,7 +241,7 @@
 	              <% end %>
 	            </div>
             <% end %>
-          
+
         <% else %>
           <% if @project.has_contrib_key? %>
             <p>Enter contributor key to submit data.</p>
@@ -264,16 +264,16 @@
             <% end %>
           <% end %>
         <% end %>
-      <% end %>  
+      <% end %>
     </div>
-    
+
     <div class="row">
       <!-- ##### MEDIA OBJECTS MENU ##### -->
       <%=render layout: "shared/box", locals: {title: 'Media', width: '12', unique_id: 'media', should_hide: false} do %>
         <%=render "shared/media_objects_view", {type: 'project', object: @project}%>
       <%end%>
     </div>
-    
+
     <div class="row">
       <!-- ##### SAVED VISUALIZATIONS MENU ##### -->
       <%=render layout: "shared/box", locals: {title: 'Visualizations', width: '12', unique_id: 'visualizations', should_hide: false} do %>
@@ -291,7 +291,7 @@
                   <td>
                     <div class="controls" style="float:right">
                       <% if can_hide? vis %>
-                        <a class="viz_hide" href="<%= visualization_url vis %>">Hide</a> | 
+                        <a class="viz_hide" href="<%= visualization_url vis %>">Hide</a> |
                       <% end %>
                       <% if can_delete? vis %>
                          <a class="viz_delete" href="<%= visualization_url vis %>" name="<%= vis.title %>">Delete</a>
@@ -301,11 +301,11 @@
                 </tr>
               <% end %>
             </tbody>
-          </table>  
+          </table>
         </div>
-      <%end%>  
+      <%end%>
     </div>
-    
+
   </div>
 </div>
 <div style="display:none">
