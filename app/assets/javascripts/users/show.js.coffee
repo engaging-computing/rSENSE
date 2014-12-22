@@ -1,11 +1,10 @@
 # Place all the behaviors and hooks related to the users show page here.
 setupCallbacks = () ->
   ($ "a.contrib-delete-link").on "ajax:success", (ee, data, status, xhr) ->
-    ($ '#ajax-status').html("Delete succeeded")
     ($ ee.target).closest('tr').hide()
 
   ($ "a.contrib-delete-link").on "ajax:error", (ee, data, status, xhr) ->
-    ($ '#ajax-status').html("Delete failed: #{status} #{data}")
+    # TODO Handle Error
 
 IS.onReady "users/show", ->
   # Start recent 3
@@ -57,8 +56,6 @@ IS.onReady "users/show", ->
             ($ ".pagefwd").show()
 
           setupCallbacks()
-          ($ '#ajax-status').html "showing tab: #{filter_selection}"
-
 
   window.globals ?= {}
   globals.arrowsClicked = false
@@ -286,4 +283,3 @@ IS.onReady "users/show", ->
 
   ($ '.gravatar_img').tooltip
     title: "Go to www.gravatar.com to change your avatar"
-
