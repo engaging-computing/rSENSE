@@ -1,19 +1,19 @@
 <div>
   <h1 id="title-and-menu-title">
-    <%= obj.title %>
+    <%= raw(obj.title) %>
 
-    <span class="edit_menu" field='title' value='<%=obj.title%>'>
+    <span class="edit_menu" field='title' value='<%= raw(obj.title) %>'>
       <div class="btn-group" style="font-size:14px; vertical-align: middle;">
-        <a class="btn btn-default btn-small dropdown-toggle menu_edit_link" data-toggle="dropdown" href="#"> 
+        <a class="btn btn-default btn-small dropdown-toggle menu_edit_link" data-toggle="dropdown" href="#">
           <i class="fa fa-cog fa fa-content"></i>
           <span class="caret"></span>
         </a>
         <ul class="dropdown-menu" role="menu">
-          
+
           <% if obj.is_a?(MediaObject) %>
             <li role="presentation">
               <a class="menu_rename" role="menuitem" href="#">
-                <i class="fa fa-edit"></i> Rename File 
+                <i class="fa fa-edit"></i> Rename File
               </a>
             </li>
           <% else %>
@@ -23,7 +23,7 @@
               </a>
             </li>
           <%end%>
-              
+
           <% if obj.is_a?(News) || obj.is_a?(Visualization) %>
             <li role="presentation">
               <a class="summary_edit" role="menuitem" href="<%=url_for obj%>">
@@ -31,16 +31,16 @@
               </a>
             </li>
           <% end %>
-              
+
           <% if can_delete?(obj) %>
             <li role="presentation">
               <%= link_to obj, data: { confirm: "Are you sure?" }, method: :delete, class: 'menu_delete' do %>
-                <i style="color:red" class="fa fa-times-circle"></i> 
+                <i style="color:red" class="fa fa-times-circle"></i>
                 Delete <%= typeName %>
               <% end %>
             </li>
           <%end%>
-              
+
         </ul>
       </div>
     </span>
@@ -48,7 +48,7 @@
 
   <div id="title-and-menu-edit" style="font-size: 2em">
     <%= form_for obj do |ff| %>
-      <%= ff.text_field :title, style: 'width: 35%' %>
+      <%= ff.text_field :title, style: 'width: 35%', :value => raw(obj.title) %>
       <button class="btn btn-success" type="submit"><i class='fa fa-floppy-o icon-white'></i></button>
     <% end %>
   </div>

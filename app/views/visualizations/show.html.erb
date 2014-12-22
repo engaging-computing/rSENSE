@@ -33,8 +33,8 @@
 </script>
 
 <div class="row print" id="print_title">
-  <span class="viz_title">Title: <%= @visualization.title %></span><br/>
-  <span class="viz_title">Project: <%= @visualization.project.title %></span><br/>
+  <span class="viz_title">Title: <%= raw(@visualization.title) %></span><br/>
+  <span class="viz_title">Project: <%= raw(@visualization.project.title) %></span><br/>
   <span class="viz_title">Name: <%= @visualization.owner.name %></span><br/><br/>
 </div>
 
@@ -47,7 +47,7 @@
       <% if @project.nil? || @project.hidden? %>
         deleted
       <% else %>
-        <%= link_to @visualization.project.title, project_path(@visualization.project) %>
+        <%= link_to raw(@visualization.project.title), project_path(@visualization.project) %>
       <% end %>
     </div>
     <div>
