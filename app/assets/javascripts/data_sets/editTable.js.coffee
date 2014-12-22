@@ -20,11 +20,7 @@ setupTable = (cols, data) ->
     name: ''
     width: 0
     formatter: (row, cell, value, columnDef, dataContext) ->
-      "<i class='fa fa-close slick-delete' data-row='#{dataContext.id}'></i>"
-
-  ($ 'body').on 'click', '.slick-delete', () ->
-    view.deleteItem ($ @).attr 'data-row'
-    grid.invalidate()
+      "<i class='fa fa-close slick-delete'></i>"
 
   options =
     autoEdit: false
@@ -38,6 +34,13 @@ setupTable = (cols, data) ->
 
   view = new Slick.Data.DataView()
   grid = new Slick.Grid '#slickgrid-container', view, cols, options
+
+  grid.onClick.subscribe (e, args) ->
+    cell = grid.getCellFromEvent e
+    if cell.cell == grid.getColumns().length - 1
+      item = view.getItem cell.row
+      view.deleteItem item.id
+      grid.invalidate()
 
   view.onRowCountChanged.subscribe (e, args) ->
     grid.updateRowCount()
@@ -88,8 +91,11 @@ IS.onReady 'data_sets/edit', ->
   grid = rets[0]
   view = rets[1]
 
+  currId = data.length
+
   ($ '#edit_table_add').click ->
-    fields = {id: view.getLength()}
+    fields = {id: currId}
+    currId += 1
     for x in cols
       fields[x.field] = ''
     view.addItem fields
