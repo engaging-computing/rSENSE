@@ -37,4 +37,6 @@
   applyValue: (item, state) ->
     item[args.column.field] = state
   validate: ->
+    # it's impossible for an invalid date to be entered via normal means
+    # therefore, I don't care to actually validate that
     {valid: true, msg: null}

@@ -23,7 +23,7 @@
     form.remove()
   focus: ->
     form.focus()
-  isValueChanged: =>
+  isValueChanged: ->
     form.val() != loadValue
   serializeValue: ->
     form.val()
@@ -38,9 +38,6 @@
   applyValue: (item, state) ->
     item[args.column.field] = state
   validate: ->
-    if args.column.restrictions == ''
-      {valid: true, msg: null}
-    else if form.val() in args.column.restrictions
-      {valid: true, msg: null}
-    else
-      {valid: false, msg: "Value \"#{form.val()}\" is not a permitted string"}
+    # values are entered either through a dropdown, or an anything-goes text field
+    # therefore, there cannot be any invalid values entered unless console is used
+    {valid: true, msg: null}

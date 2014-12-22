@@ -13,7 +13,14 @@
   form.appendTo args.container
   form.focus()
 
+  form.popover
+    container: 'body'
+    content: 'Please enter a valid number.'
+    placement: 'bottom'
+    trigger: 'manual'
+
   destroy: ->
+    form.popover 'destroy'
     form.remove()
   focus: ->
     form.focus()
@@ -29,6 +36,8 @@
   validate: ->
     isNumber = /^(?:\+|-)?(?:\d*\.\d+|\d+)$/
     if isNumber.test form.val()
+      form.popover 'hide'
       {valid: true, msg: null}
     else
-      {valid: false, msg: 'Please enter a number'}
+      form.popover 'show'
+      {valid: false, msg: 'Please enter a valid number'}
