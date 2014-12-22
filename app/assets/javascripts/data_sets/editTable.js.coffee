@@ -23,7 +23,7 @@ setupTable = (cols, data) ->
       "<i class='fa fa-close slick-delete'></i>"
 
   options =
-    autoEdit: false
+    autoEdit: true
     editable: true
     enableCellNavigation: true
     enableColumnReorder: false

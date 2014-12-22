@@ -8,8 +8,25 @@
   loadValue = null
   currValue = null
 
+  form = ($ args.container).parent().datetimepicker
+    onOpen: ->
+      currValue
+    onChange: (val) ->
+      currValue = val.format('MM/DD/YYYY HH:mm:ss')
+      ($ args.container).text currValue
+    onClose: (val) ->
+      args.commitChanges()
+    hPosition: (w, h) ->
+      args.position.left + 2
+    vPosition: (w, h) ->
+      args.position.bottom + 2
+
   destroy: ->
-    # no need to do anything, datetimepicker is designed well enough to handle this
+    # avoiding those stack overflows
+    if form?
+      temp = form
+      form = null
+      temp.close()
   focus: ->
     # see above
   isValueChanged: =>
@@ -21,18 +38,6 @@
     currValue = time
     loadValue = time
     ($ args.container).text currValue
-    form = ($ args.container).parent().datetimepicker
-      onOpen: ->
-        time
-      onChange: (val) ->
-        currValue = val.format('MM/DD/YYYY HH:mm:ss')
-        ($ args.container).text currValue
-      onClose: (val) ->
-        args.commitChanges()
-      hPosition: (w, h) ->
-        args.position.left + 2
-      vPosition: (w, h) ->
-        args.position.bottom + 2
     form.open()
   applyValue: (item, state) ->
     item[args.column.field] = state
