@@ -30,8 +30,8 @@ group :development, :test do
 end
 
 # Jquery stuff
-gem 'better_datetimepicker', '~> 0.0.2', git: 'https://github.com/asalani93/better_datetimepicker'
-#gem 'better_datetimepicker', path: '~/Documents/ecg/better_datetimepicker'
+#gem 'better_datetimepicker', '~> 0.0.2', git: 'https://github.com/asalani93/better_datetimepicker'
+gem 'better_datetimepicker', path: '~/Documents/ecg/better_datetimepicker'
 gem 'better_colorpicker', '~> 0.0.3', git: 'https://github.com/asalani93/better-colorpicker'
 gem 'jquery-rails'
 
