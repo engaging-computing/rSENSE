@@ -7,15 +7,18 @@
   form = null
   loadValue = null
   currValue = null
+  canClose = false
 
   form = ($ args.container).parent().datetimepicker
+    autoClose: false
     onOpen: ->
       currValue
     onChange: (val) ->
       currValue = val.format('MM/DD/YYYY HH:mm:ss')
       ($ args.container).text currValue
     onClose: (val) ->
-      args.commitChanges()
+      if canClose
+        args.grid.getEditorLock().commitCurrentEdit()
     hPosition: (w, h) ->
       args.position.left + 2
     vPosition: (w, h) ->
@@ -28,7 +31,7 @@
       form = null
       temp.close()
   focus: ->
-    # see above
+    # doesn't do anything
   isValueChanged: =>
     currValue != loadValue
   serializeValue: ->
