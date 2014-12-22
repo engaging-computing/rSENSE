@@ -73,9 +73,6 @@ $ ->
           ($ "#loadModal").modal('hide')
           window.location = msg.url
         error: (jqxhr, status, msg) ->
-          err = "Error saving visualization: #{Number(data.projectID)}"
-          ($ '#ajax-status').html err
-
           response = $.parseJSON msg['responseText']
           error_message = response.errors.join "</p><p>"
 

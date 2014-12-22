@@ -30,7 +30,6 @@ class ShowUserTest < ActionDispatch::IntegrationTest
     assert page.has_content?('Media Test'), 'View admin user'
 
     click_on 'My Projects'
-    assert page.has_content?('showing tab: My Projects'), 'Switched tab'
     assert page.has_content?('Media Test'), 'View projects list'
 
     assert page.has_content?('Delete This Project'), 'Delete project should exist'
@@ -41,28 +40,19 @@ class ShowUserTest < ActionDispatch::IntegrationTest
       end
     end
 
-    assert page.has_content?('Delete succeeded'), 'Ajax complete'
     assert page.has_no_content?('Delete This Project'), 'Project removed from list'
 
     click_on 'Data Sets'
-    assert page.has_content?('showing tab: Data Sets'), 'Switched tab'
     assert page.has_content?('Needs Media'), 'View data sets list'
 
     find('.nav-tabs').click_on 'Visualizations'
-    assert page.has_content?('showing tab: Visualizations'), 'Switched tab'
     assert page.has_content?('Needs Media'), 'View viz list'
 
     find('.info_edit_link').click
-
     assert page.has_css?('.info_edit_box'), 'showed text box'
 
     fill_in 'info_edit_value', with: 'George Bush'
-
     find('.info-save-button').click
-
-    assert page.has_content?('saving...'), 'click event'
-
-    assert page.has_content?('value saved'), 'saved name'
     assert find('.info-show-value').has_content?('George Bush'), 'name updated'
   end
 end
