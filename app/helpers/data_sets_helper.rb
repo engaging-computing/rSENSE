@@ -82,6 +82,8 @@ module DataSetsHelper
           'NumberEditor'
         when 3
           'TextEditor'
+        when 4
+          'LocationEditor'
         else
           'Slick.Editors.Text'
         end

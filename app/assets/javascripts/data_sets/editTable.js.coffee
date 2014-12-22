@@ -41,13 +41,13 @@ setupTable = (cols, data) ->
       item = view.getItem cell.row
       view.deleteItem item.id
       grid.invalidate()
-
   view.onRowCountChanged.subscribe (e, args) ->
     grid.updateRowCount()
     grid.render()
   view.onRowsChanged.subscribe (e, args) ->
     grid.invalidateRow args.rows
     grid.render()
+
   view.setItems data
 
   [grid, view]
@@ -55,13 +55,16 @@ setupTable = (cols, data) ->
 ajaxifyGrid = (view) ->
   buckets = {}
   posHeadRegex = /(\d+)-(\d+)/
-  posDataRegex = /(-?\d+\.?\d*), (-?\d+\.?\d*)/
+  posDataRegex = /^((?:\+|-)?\d+\.?\d*), ((?:\+|-)?\d+\.?\d*)$/
 
   for i in [0..(view.getLength() - 1)]
     x = view.getItem i
     for j of x
       if j == 'id' or j == 'del'
         continue
+
+      unless x[j]?
+        x[j] = ''
 
       idTest = posHeadRegex.exec j
       if idTest?
@@ -71,12 +74,8 @@ ajaxifyGrid = (view) ->
         unless buckets[lonId]? then buckets[lonId] = []
 
         fieldTest = posDataRegex.exec x[j]
-        if fieldTest?
-          buckets[latId].push fieldTest[1]
-          buckets[lonId].push fieldTest[2]
-        else
-          buckets[latId].push ''
-          buckets[lonId].push ''
+        buckets[latId].push fieldTest[1]
+        buckets[lonId].push fieldTest[2]
       else
         unless buckets[j]? then buckets[j] = []
         buckets[j].push x[j]
