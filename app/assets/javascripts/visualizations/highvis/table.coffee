@@ -27,8 +27,8 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and
-  namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is 'visualizations' and
+  namespace.action in ['displayVis', 'embedVis', 'show']
 
     class window.Table extends BaseVis
       constructor: (@canvas) ->
@@ -274,7 +274,7 @@ $ ->
         yFields = (i for f, i in data.fields when i isnt data.COMBINED_FIELD)
         checked = false
 
-        c = '<div id="yAxisControl" class="vis_controls">'
+        c =  "<div id='yAxisControl' class='vis_controls'>"
         c += "<h3 class='clean_shrink'><a href='#'>Visible Fields:</a></h3>"
         c += "<div class='outer_control_div'>"
         c +=
@@ -300,7 +300,7 @@ $ ->
               />#{data.fields[f].fieldName}</label></div></div>
             """
 
-        c += '</div></div>'
+        c += "</div></div>"
 
         # Write HTML
         ($ '#controldiv').append c
