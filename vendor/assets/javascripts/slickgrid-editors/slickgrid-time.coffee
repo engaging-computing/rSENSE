@@ -28,7 +28,7 @@
         currValue = val.format('MM/DD/YYYY HH:mm:ss')
         ($ args.container).text currValue
       onClose: (val) ->
-        args.commitChanges(
+        args.commitChanges()
       hPosition: (w, h) ->
         args.position.left + 2
       vPosition: (w, h) ->
