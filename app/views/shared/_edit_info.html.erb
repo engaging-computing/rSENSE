@@ -5,7 +5,7 @@
 
       <% if can_edit %>
         <a class="info_edit_link" href="<%= href %>" style="color:black">
-          <i style="font-size:0.8em" class="fa fa-edit" title="Click to edit <%= field %>"></i>&nbsp;
+          <i style="font-size:0.8em" class="fa fa-edit" title="Click to edit <%= field %>"></i>
         </a>
       <% end %>
     </div>
@@ -13,7 +13,7 @@
 
   <% if can_edit %>
     <div class='input-group info-edit-form'>
-      <input type='text' class='info_edit_box form-control' name='info_edit_value' value='<%= value %>'>
+      <input type='text' class='info_edit_box form-control' name='info_edit_value' value='<%= raw(value) %>'>
       <span class='input-group-btn info_save_link'>
         <button class="btn btn-success info-save-button" type="button">
           <i class='fa fa-floppy-o icon-white'></i>
