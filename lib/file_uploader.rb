@@ -5,6 +5,37 @@ require 'open-uri'
 require 'fileutils'
 
 class FileUploader
+  class << self; attr_accessor :upload_whitelist end
+
+  @upload_whitelist = [
+    # Text
+    'txt', 'rtf', 'xml', 'pdf', 'csv', 'tsv', 'ltsv', 'yaml', 'tab', 'json', 'log', 'xps', 'ps', 'asc',
+    # Word
+    'doc', 'docx', 'dot', 'docm',
+    # Excel
+    'xls', 'xlsx', 'xlt', 'dif', 'dfb', 'slk', 'xlsm', 'xlk', 'xlsb', 'xlr', 'xltm', 'xlw',
+    # Powerpoint
+    'ppt', 'pptx', 'ppsx', 'potm', 'pps', 'pot', 'pptm',
+    # LibreOffice Word
+    'odt', 'fodt', 'uot',
+    # LibreOffice Excel
+    'ods', 'ots', 'fods', 'uos',
+    # LibreOffice Powerpoint
+    'odp', 'otp', 'odg', 'fodp', 'uop',
+    # LibreOffice Draw
+    'otg', 'fodg',
+    # Math
+    'odf', 'mml',
+    # Images
+    'png', 'svg', 'jpg', 'jpeg', 'bmp', 'tif', 'psd', 'pdd', 'ico', 'jng',
+    # Web
+    'xml',
+    # Presentation
+    'pez', 'sti', 'sxi',
+    # Google
+    'gdoc', 'gsheet'
+  ]
+
   @converted_csv = nil
 
   ### Generates the object that will be acted on
