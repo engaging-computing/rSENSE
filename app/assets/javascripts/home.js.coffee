@@ -29,8 +29,10 @@ $ ->
         ($ '.teachers-love-isense').height(($ '.isense-desc').height())
         #($ '.what-is-isense').height(($ '.isense-desc').height() * .45)
         #($ '.teachers-love-isense').height(($ '.isense-desc').height() * .45)
-        ($ '.teachers-love-isense').find('.homepage-text').height(($ '.teachers-love-isense').height() - ($ '.teachers-love-isense').find('.homepage-header').height())
-        ($ '.what-is-isense').find('.homepage-text').height(($ '.what-is-isense').height() - ($ '.what-is-isense').find('.homepage-header').height()- 60)
+        ($ '.teachers-love-isense').find('.homepage-text').height(
+          ($ '.teachers-love-isense').height() - ($ '.teachers-love-isense').find('.homepage-header').height())
+        ($ '.what-is-isense').find('.homepage-text').height(
+          ($ '.what-is-isense').height() - ($ '.what-is-isense').find('.homepage-header').height()- 60)
         ($ '#column-one').height('auto')
         ($ '.ternary-content').height('auto')
         ($ '#main-image-featurette').css('height', '60vh')
@@ -47,10 +49,12 @@ $ ->
         ($ '.what-is-isense').height(($ '.isense-desc').height() * .3)
         ($ '.teachers-love-isense').css('margin-top', '60')
         ($ '.teachers-love-isense').height(($ '.isense-desc').height() - ($ '.what-is-isense').height())
-        ($ '.teachers-love-isense').find('.homepage-text').height(($ '.teachers-love-isense').height() - ($ '.teachers-love-isense').find('.homepage-header').height() - 100)
-        ($ '.what-is-isense').find('.homepage-text').height(($ '.what-is-isense').height() - ($ '.what-is-isense').find('.homepage-header').height())
+        ($ '.teachers-love-isense').find('.homepage-text').height(
+          ($ '.teachers-love-isense').height() - ($ '.teachers-love-isense').find('.homepage-header').height() - 100)
+        ($ '.what-is-isense').find('.homepage-text').height(
+          ($ '.what-is-isense').height() - ($ '.what-is-isense').find('.homepage-header').height())
         ($ '.row.secondary-content').find('.col-lg-8').css('clear', '')
-      else 
+      else
         ($ '.isense-desc').css('min-height', '500px')
         ($ '.isense-desc').css('height', '100vh')
         ($ '#column-one').css('height', '95vh')
@@ -64,8 +68,10 @@ $ ->
         ($ '.news-prev-wrapper').css('overflow-y', 'scroll')
         ($ '.what-is-isense').height(($ '.isense-desc').height() * .3)
         ($ '.teachers-love-isense').height(($ '.isense-desc').height() * .65)
-        ($ '.teachers-love-isense').find('.homepage-text').height(($ '.teachers-love-isense').height() - ($ '.teachers-love-isense').find('.homepage-header').height() - 120)
-        ($ '.what-is-isense').find('.homepage-text').height(($ '.what-is-isense').height() - ($ '.what-is-isense').find('.homepage-header').height() - 80)
+        ($ '.teachers-love-isense').find('.homepage-text').height(
+          ($ '.teachers-love-isense').height() - ($ '.teachers-love-isense').find('.homepage-header').height() - 120)
+        ($ '.what-is-isense').find('.homepage-text').height(
+          ($ '.what-is-isense').height() - ($ '.what-is-isense').find('.homepage-header').height() - 80)
         ($ '#column-one').height('auto')
         ($ '.ternary-content').height('auto')
 
@@ -75,34 +81,36 @@ $ ->
 
     resizeUI()
 
-    ($ window).on 'resize', () ->    
+    ($ window).on 'resize', () ->
       resizeUI()
 
     ###
     Scroll animation effects
-    ###    
-    magicScroll = () -> 
-      console.log Math.abs((($ window).scrollTop() + ($ window).height()) - ($ document).height())
-      console.log ($ window).height() * .1
+    ###
+    magicScroll = () ->
       flag = false
       show = true
       location = 0
-      if ($ window).scrollTop() < Math.abs(($ window).scrollTop() - ($ '#scroll-1').offset().top) and ($ window).scrollTop() < Math.abs(($ window).scrollTop() - ($ '#scroll-2').offset().top)
+      if(($ window).scrollTop() < Math.abs(($ window).scrollTop() - ($ '#scroll-1').offset().top) and
+      ($ window).scrollTop() < Math.abs(($ window).scrollTop() - ($ '#scroll-2').offset().top))
         location = 0
         bottom = false
-      else if Math.abs ($ window).scrollTop() - ($ '#scroll-1').offset().top < Math.abs ($ window).scrollTop() - ($ '#scroll-2').offset().top
+      else if Math.abs ($ window).scrollTop() - ($ '#scroll-1').offset().top <
+      Math.abs ($ window).scrollTop() - ($ '#scroll-2').offset().top
         location = ($ '#scroll-1').offset().top
         bottom = false
       else
         location = ($ '#scroll-2').offset().top
         flag = true
         if screenSize('lg')
-          show = false 
+          show = false
       if not bottom
         if flag
           bottom = true
       if screenSize('xs')
-        if Math.abs(($ window).scrollTop() - ($ '#scroll-4').offset().top) < Math.min(($ window).scrollTop(), Math.abs(($ window).scrollTop() - ($ '#scroll-1').offset().top), Math.abs(($ window).scrollTop() - ($ '#scroll-2').offset().top)) 
+        if Math.abs(($ window).scrollTop() - ($ '#scroll-4').offset().top) <
+        Math.min(($ window).scrollTop(), Math.abs(($ window).scrollTop() -
+        ($ '#scroll-1').offset().top), Math.abs(($ window).scrollTop() - ($ '#scroll-2').offset().top))
           location = ($ '#scroll-4').offset().top
           bottom = false
       unless Math.abs(($ window).scrollTop() - location) > (($ window).height() * .25)
