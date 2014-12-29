@@ -74,5 +74,6 @@ gem 'multi_json'
 
 gem 'roo'
 
-# testing 
+# GitHub Bug Reporting and Testing
 gem 'browser'
+gem 'useragent', '~> 0.10.0'
