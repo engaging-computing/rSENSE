@@ -47,12 +47,10 @@ $ ->
         ($ '.what-is-isense').height(($ '.isense-desc').height() * .3)
         ($ '.teachers-love-isense').css('margin-top', '60')
         ($ '.teachers-love-isense').height(($ '.isense-desc').height() - ($ '.what-is-isense').height())
-        ($ '.teachers-love-isense').find('.homepage-text').height(($ '.teachers-love-isense').height() - ($ '.teachers-love-isense').find('.homepage-header').height() - 60)
+        ($ '.teachers-love-isense').find('.homepage-text').height(($ '.teachers-love-isense').height() - ($ '.teachers-love-isense').find('.homepage-header').height() - 100)
         ($ '.what-is-isense').find('.homepage-text').height(($ '.what-is-isense').height() - ($ '.what-is-isense').find('.homepage-header').height())
         ($ '.row.secondary-content').find('.col-lg-8').css('clear', '')
       else 
-        #($ '.secondary-content').find('.homepage-text').each (i,j) ->
-        #  ($ j).height(Math.min((($ window).height() * .5), ($ j).height()))
         ($ '.isense-desc').css('min-height', '500px')
         ($ '.isense-desc').css('height', '100vh')
         ($ '#column-one').css('height', '95vh')
