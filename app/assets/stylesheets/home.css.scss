@@ -2,409 +2,11 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-/*
-.row.secondary-content{
-  display: inline-block;
-  .col-md-8{
-    //height: 90vh;
-  }
-}
-
-.secondary-side-content{
-  height: 100%;    
-}
-#stats-div{
-  text-align: left;
-  width: 100% !important;
-}
-.secondary-main-content{
-  //height: 100%;    
-}
-.project-description{
-  text-align: center;
-}
-.carousel {
-  min-height: 500px;
-  height: 90vh;
-  margin-bottom: 50px;
-  display:block;
-}
-.carousel-slide-text{
-text-align: left !important;  
-color: black;
-}
-.carousel-caption {
-  z-index: 10;
-  background-color: #F2F2F2;
-  opacity:0.6;
-  //width: 80% !important;
-  margin: 0 auto;
-  text-align: left;
-  padding: 10px;
-}
-.carousel-img{
-  min-height: 500px;
-  height:90vh !important;  
-}
-.carousel .item {
-  min-height: 500px;
-  height: 90vh;
-  background-color: #777;
-}
-.carousel-inner > .item > img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  min-height: 500px;
-  height: 90vh;
-}
-.carousel-divider{
-  margin-top: 0px !important;
-  margin-bottom: 40px !important;
-}
-
-.featurette-divider {
-  clear: both;
-  margin-top: 40px;
-  margin-bottom: 20px;
-}
-
-.featurette-heading {
-  font-weight: 300;
-  line-height: 1;
-  letter-spacing: -1px;
-}
-
-@media (min-width: 768px) {
-
-  .carousel-caption p {
-    margin-bottom: 20px;
-    font-size: 21px;
-    line-height: 1.4;
-    color: black;
-  }
-
-  .featurette-heading {
-    font-size: 50px;
-  }
-}
-
-@media (min-width: 992px) {
-  .featurette-heading {
-    margin-top: 120px;
-  }
-}
-  
-// .row.featurette{
-//   img.col-md-5{
-//     background-color: black;  
-//     display: inline-block;
-//     vertical-align: middle;
-//     float: none;
-//     height:500%;
-// 
-//     
-//   }    
-//}
-.slogan{
-  text-align: center;  
-}
-#news-feed{
-  height: 70%;
-  overflow-y: hidden;
-  width: 100%;
-//   hr{
-//     color: black;  
-//   }
-  div{
-    width:100%;
-    border-radius: 6px;
-    //background-color: white !important;
-    
-  }    
-}
-#main-image-featurette{
-  clear: both;
-  //min-height: 500px;
-  //height: 90vh;
-}
-#stats-row{
-  .item{
-    background-color: white !important;
-  }
-  border-radius: 6px;
-  height:25%;
-  vertical-align:bottom;
-  .featurette-divider{
-    color: black;  
-  }
-  .homepage-stats{
-    padding: 5px;
-    background-color: #F2F2F2 !important;
-    overflow-y: auto;
-    text-align: center;
-  }
-  div{
-    //width: 90% ;
-    //background-color: white !important;  
-    -moz-box-shadow: 0 0px 0px 0px #9E9E9E !important;
-    -webkit-box-shadow: 0 0px 0px 0px #9E9E9E !important;
-    box-shadow: 0 0px 0px 0px #9E9E9E !important;  
-    
-  }
-  .col-xs-4{
-    text-align: center !important;
-  }
-}
-.container.marketing{
-  text-align: center;
-  .col-md-4{
-    p{
-      text-align:left;  
-    }  
-  }
-}
-.featurette-image{
-  width: 100%; 
-}
-.featurette{
-  .col-lg-8{
-    //height:100%;  
-    img{
-    //height: 90vh;
-    }
-  }
-}
-.featured-header.text-muted{
-  text-align: center;
-  vertical-align: top;
-}
-.img-rounded{
-  -moz-box-shadow: 0 2px 3px 1px #9E9E9E;
-  -webkit-box-shadow: 0 2px 3px 1px #9E9E9E;
-  box-shadow: 0 2px 3px 1px #9E9E9E;  
-}
-#news-feed{
-  max-height: 500px;
-  text-align: left;
-  .item{
-    //height: 100% !important;  
-  }
-  
-}
-.second-footer{
-  //width: 95%;
-  //text-align: center;
-  margin-top: 0px !important;
-}
-.home-controller.index-action{
-  div.container.mainContent {
-    width:100% !important ; 
-  }
-}
-.collaborate-img{
-  height:140px;  
-}
-.first-column{
-  clear:both;  
-}
-.invisible{
-  visibility: hidden;  
-}
-.two-col{
-  clear: both;  
-  width:100% !important;
-}
-.secondary-content{
-  .homepage-text{
-    overflow-y: auto;
-  }
-}
-.isense-desc{
-  .homepage-text{
-    min-height: 170px !important;
-    overflow-y: auto;
-  }
-  //min-height: 500px !important;
-  height:80vh;
-  display: block;
-  overflow: hidden;  
-  .welcome-two{
-    margin-bottom: 20px !important;
-  }
-  .featurette-text{
-    font-size: 1.1em !important;
-  }
-}
-.ternary-upper{
-  margin-top: 40px !important;
-  margin-bottom: 20px !important;
-}
-.ternary-content{
-  display:block;
-  //height: 70vh;
-  .news-prev-wrapper{
-    text-align: left !important;
-    //background-color: red;
-    min-height: 320px !important;
-    //height: 100%;
-    //overflow-y: auto;
-    //background-color: white !important;
-    padding: 0px;
-    overflow-y: auto;
-    font-size: 1.25em;
-  }
-  div{
-    margin: 0px !important;
-  }
-}
-
-body {
-  padding-bottom: 40px;
-  color: #5a5a5a;
-}
-.homepage-text{
-  padding: 10px;
-  padding-bottom: 15px;
-  background-color: #F2F2F2 !important;
-  text-align: left;
-  margin-bottom: 10px;
-  font-size: 1.1em;
-}
-.slide-header{
-  font-size: 1.5em;
-  font-weight: bolder;
-}
-#apps-get-involved{
-  margin-top: 30px;
-}  
-.para-indent{
-  font-size:1.25em;
-  //font-weight: bold;
-}
-
-#column-two{
-  min-height: 650px !important;
-  //overflow-y: auto;
-}
-
-#column-one{
-  .featurette-divider{
-    margin-top: 10px !important;
-    margin-bottom: !important;
-  }
-  min-height: 600px !important;
-  //overflow-y: auto;
-  .item-desc{
-    //background-color: white !important;
-    min-height: 300px !important;
-    max-height: 300px !important;
-    margin-bottom: 5px !important;
-  }
-  
-  a.item-image-link{
-    min-height: 300px !important;
-    min-width: 300px !important;
-    //max-height: 300px !important;
-    //max-width: 300px !important;
-  }
-  
-  .col-md-12{
-    min-height: 300px;
-    //max-height: 300px !important;
-    margin-bottom: 5px !important;
-    margin-left: 0px;
-    margin-right: 0px;
-    padding: 0px;
-    
-    }
-    .wide-item{
-      background-color: #F2F2F2;
-      text-align: center;
-      box-shadow: 2px 3px 1px white;
-      text-align: left !important;
-      min-height: 300px !important;
-      //max-height: 300px !important;
-      margin-bottom: 5px !important;  
-  }
-  .article_page_content.truncate{
-    min-height: 227px !important;
-    word-wrap: break-word;
-    text-align: left !important;
-  }
-  .article_page_subtitle.truncate{
-  min-height: 25px;
-  }
-  .article_page_date{
-    margin-bottom: 0px;
-  }
-  .article_page_link{
-    background: linear-gradient(to bottom, rgba(242,242,242,0) 0%,rgba(242,242,242,0) 10%,rgba(242,242,242,0) 20%,rgba(242,242,242,.5) 30%,rgba(242,242,242,0.75) 40%,rgba(242,242,242,1) 50%,rgba(242,242,242,1) 60%,rgba(242,242,242,1) 70%,rgba(242,242,242,1) 80%,rgba(242,242,242,1) 90%,rgba(242,242,242,1) 100%);
-  }
-  .featurette-divider{
-  //margin-top: 20px !important;
-  //margin-bottom: 20px !important;
-  }
-}
 #outer{
   padding-bottom: 10px !important;
 }
-.ternary-content{
-  #column-two{
-    p{
-      font-size: 1.1em;
-    }
-  }
-  margin-top: 60px;
-  height:70vh;
-  overflow-y: hidden;
-  #play-store-button{
-    height: 90px !important;
-    width: 90px !important;
-  }
-  #app-store-button{
-    height: 90px !important;
-    width: 90px !important;
-  }
-}
-.homepage-header{
-  color:#3366CC;
-  font-size:2.5em;
-  text-align: center;
-  margin: 0 auto;
-}
-.teachers-love-isense-seperator{
-  margin-top: 40px;
-  margin-bottom: 20px;
-}
-.teachers-love-isense{
-  float: left;
-  overflow-y: hidden;
-  .homepage-text{
-    overflow-y: auto;
-  }
-}
-.app-whats-new{
-  margin-top: 100px;  
-}
-.what-is-isense{
-  overflow-y: hidden;
-  .homepage-text{
-    overflow-y: auto;
-  }
-}
-.teachers-love-isense{
-  overflow-y: hidden;
-}
-*/
-
-#outer{
-  padding-bottom: 10px !important;
-}
-.home-controller.index-action{
-  
-  div.container.mainContent {
+.home-controller.index-action{  
+  div.container.mainContent{
     width:100% !important ; 
     body {
       padding-bottom: 40px;
@@ -419,7 +21,7 @@ body {
       background-color: #F2F2F2 !important;
       text-align: left;
       margin-bottom: 10px;
-      font-size: 1.1em;
+      font-size: 1.2em;
     }
     .homepage-header{
       clear: both;
@@ -470,8 +72,7 @@ body {
     .carousel-divider{
       margin-top: 0px;
       margin-bottom: 40px;
-    }    
-  
+    }      
     .ternary-content{
       margin-top: 60px;
       height:70vh;
@@ -500,6 +101,9 @@ body {
           margin-top: 10px !important;
           overflow-y: hidden;
         }
+        .hidden-lg{
+          clear: both;
+        }
         .item-desc{
           min-height: 300px !important;
           max-height: 300px !important;
@@ -515,38 +119,38 @@ body {
           min-height: 300px !important;
           min-width: 300px !important;
         }
-      .col-md-12{
-        min-height: 300px;
-        margin-bottom: 5px !important;
-        margin-left: 0px;
-        margin-right: 0px;
-        padding: 0px;
-        .wide-item{
-          background-color: #F2F2F2;
-          text-align: center;
-          box-shadow: 2px 3px 1px white;
-          text-align: left !important;
-          min-height: 300px !important;
-          margin-bottom: 5px !important;  
+        .col-md-12{
+          min-height: 300px;
+          margin-bottom: 5px !important;
+          margin-left: 0px;
+          margin-right: 0px;
+          padding: 0px;
+          .wide-item{
+            background-color: #F2F2F2;
+            text-align: center;
+            box-shadow: 2px 3px 1px white;
+            text-align: left !important;
+            min-height: 300px !important;
+            margin-bottom: 5px !important;  
+          }
+          .article_page_content.truncate{
+            min-height: 227px !important;
+            word-wrap: break-word;
+            text-align: left !important;
+          }
+          .article_page_subtitle.truncate{
+            min-height: 25px;
+          }
+          .article_page_date{
+            margin-bottom: 0px;
+          }
+          .article_page_link{
+            background: linear-gradient(to bottom, rgba(242,242,242,0) 0%,rgba(242,242,242,0) 10%,rgba(242,242,242,0) 20%,rgba(242,242,242,.5) 30%,rgba(242,242,242,0.75) 40%,rgba(242,242,242,1)50%,rgba(242,242,242,1) 60%,rgba(242,242,242,1) 70%,rgba(242,242,242,1) 80%,rgba(242,242,242,1) 90%,rgba(242,242,242,1) 100%);
+          }
         }
-        .article_page_content.truncate{
-          min-height: 227px !important;
-          word-wrap: break-word;
-          text-align: left !important;
+        .under-hid{
+          clear: both;
         }
-        .article_page_subtitle.truncate{
-          min-height: 25px;
-        }
-        .article_page_date{
-          margin-bottom: 0px;
-        }
-        .article_page_link{
-          background: linear-gradient(to bottom, rgba(242,242,242,0) 0%,rgba(242,242,242,0) 10%,rgba(242,242,242,0) 20%,rgba(242,242,242,.5) 30%,rgba(242,242,242,0.75) 40%,rgba(242,242,242,1)50%,rgba(242,242,242,1) 60%,rgba(242,242,242,1) 70%,rgba(242,242,242,1) 80%,rgba(242,242,242,1) 90%,rgba(242,242,242,1) 100%);
-        }
-      }
-      .under-hid{
-        clear: both;
-      }
       }
       #column-two{
         min-height: 650px ;
@@ -557,19 +161,23 @@ body {
           .item{
             background-color: white;
           }
-          .featurette-divider{
-            color: black;  
-          }
-          .homepage-stats{
-            padding: 5px;
-            background-color: #F2F2F2 !important;
-            overflow-y: auto;
-            text-align: center;
-          }
-          .col-xs-4{
-            text-align: center;
-          }
         }
+        .featurette-divider{
+          color: black;  
+        }
+        .homepage-stats{
+          padding: 5px;
+          background-color: #F2F2F2 !important;
+          overflow-y: auto;
+          text-align: center;
+        }
+        .col-xs-4{
+          text-align: center;
+        }
+      }
+      .under-apps{
+        clear: both;
+        margin-top: 30px;
       }
       #play-store-button{
         height: 90px;
@@ -587,71 +195,67 @@ body {
     }
     .slogan{
       text-align: center;  
+    }  
+    @media (min-width: 768px) {
+      .carousel-caption p {
+        margin-bottom: 20px;
+        font-size: 21px;
+        line-height: 1.4;
+        color: black;
+      }
     }
-  
 
-  @media (min-width: 768px) {
-    .carousel-caption p {
+    @media (min-width: 992px) {
+      .featurette-heading {
+        margin-top: 120px;
+      }
+    }
+  }
+  .row.secondary-content{
+    height: 90vh;
+    display: block;
+    overflow: hidden;
+    .featurette-divider{
+      clear: both;
+      margin-top: 40px;
       margin-bottom: 20px;
-      font-size: 21px;
-      line-height: 1.4;
-      color: black;
     }
   }
-
-  @media (min-width: 992px) {
-    .featurette-heading {
-      margin-top: 120px;
-    }
-  }
-}
-.row.secondary-content{
-  height:90vh;
-  display: block;
-  overflow: hidden;
-  .featurette-divider {
-    clear: both;
+  .teachers-love-isense-seperator{
     margin-top: 40px;
     margin-bottom: 20px;
+    clear: both;
   }
-}
-.teachers-love-isense-seperator{
-  margin-top: 40px;
-  margin-bottom: 20px;
-}
-.isense-desc{
-  .homepage-text{
-    min-height: 170px !important;
-    overflow-y: auto;
-  }
-  .teachers-love-isense{
-    float: left;
-    overflow-y: hidden;
+  .isense-desc{
     .homepage-text{
+      min-height: 170px !important;
       overflow-y: auto;
     }
-    .what-is-isense{
+    .teachers-love-isense{
+      float: left;
       overflow-y: hidden;
       .homepage-text{
         overflow-y: auto;
       }
+      .what-is-isense{
+        overflow-y: hidden;
+        .homepage-text{
+          overflow-y: auto;
+        }
+      }
+    .teachers-love-isense{
+      overflow-y: hidden;
+      .homepage-text{
+        overflow-y: auto;
+      } 
     }
-  .teachers-love-isense{
-    overflow-y: hidden;
-    .homepage-text{
-      overflow-y: auto;
-    } 
-  }
-  .homepage-text{
-    overflow-y: auto;
-  }  
-  .welcome-two{
-    margin-bottom: 20px !important;
-  }
-  .featurette-text{
-    font-size: 1.1em !important;
-  }
-}    
+    .welcome-two{
+      margin-bottom: 20px !important;
+    }
+    .featurette-text{
+      font-size: 1.1em !important;
+    }
+  }    
 }
 }
 
