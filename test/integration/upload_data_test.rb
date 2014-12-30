@@ -5,13 +5,15 @@ class UploadDataTest < ActionDispatch::IntegrationTest
 
   self.use_transactional_fixtures = false
 
-  setup do
+  #setup do
+  def setup
     @project = projects(:upload_test)
     Capybara.current_driver = :webkit
     Capybara.default_wait_time = 15
   end
 
-  teardown do
+  #teardown do
+  def teardown
     finish
   end
 
@@ -56,6 +58,7 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     page.execute_script "$('#datafile_form').parent().show()"
     find('#datafile_form').attach_file('file', ods_path)
     page.execute_script "$('#datafile_form').submit()"
+    puts page.html
     assert page.has_content?('Match Quality')
     click_on 'Submit'
     assert page.has_css?('#viscontainer'), 'Failed ODS'
