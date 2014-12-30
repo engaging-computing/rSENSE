@@ -10,6 +10,7 @@ gem 'coffee-rails-source-maps'
 gem 'uglifier'
 gem 'modernizr-rails'
 gem 'handlebars_assets'
+gem 'handlebars'
 
 gem 'therubyracer', :platforms => :ruby
 
@@ -38,7 +39,7 @@ gem 'jquery-rails'
 gem 'bcrypt-ruby'
 
 # Include JQuery UI
-gem 'jquery-ui-rails'
+#gem 'jquery-ui-rails'
 
 gem 'httparty'
 

@@ -42,17 +42,17 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   }
 
   #controlcontainer {
-    position: absolute;
+    display: inline-block;
+    width: 20%;
     height: 100%;
   }
 
   #controlhider {
-    float: left;
-    left: 0;
+    float: right;
     display: inline-block;
     height: 100%;
 
-    #control_hide_button { // eventually put this next to #fullscreen-vis?
+    #control_hide_button {
       @include unselectable;
       background-image: $light-bkg;
       border: $border;
@@ -65,12 +65,13 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
 
   // this is where all the div controls get added
   #controldiv {
-    width: 220px;
     height: 100%;
-    position: absolute;
-    right: 0px;
     overflow-x: hidden;
     overflow-y: auto;
+
+    display: inline-block;
+    float: left;
+
     // This would be the correct place to add padding-right, but it break the
     // jquery animation for some reason, so we add it instead to
     // .ui-accordion-header
@@ -210,6 +211,8 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   }
 
   .mainContent {
+    margin: 0px; // flushes border
+    padding: 20px 0px;
     width: 100%; // makes page body fill the screen instead of having a fixed width
   }
 
@@ -317,6 +320,10 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     }
   }
 
+  .row {
+    margin: 0;
+  }
+
   .save_button {
     width: 160px;
     margin-top: 10px;
@@ -417,19 +424,21 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   }
 
   .vis_canvas {
-    float: left;
-    border-right: $border; // this makes it look like the control div has a border
     overflow: hidden; // because something inside vis_canvas is overflowing on every non-map vis
   }
 
-  // just used for the border around the vis window
+  // floats the actual vis to the right
   #viscontainer {
-    width: 100%;
-    height: 98%;
-    font-size:14px;
-    min-height:500px;
-    background-color: #FFF; // firefox - control menu turns black otherwise
+    display: inline-block;
+    float: right;
+    width: 80%;
     border: $border;
+  }
+
+  #viswrapper {
+    padding: 0px 10px;
+    width: 100%;
+    height: 100%;
   }
 
   .vis_controls {

@@ -27,13 +27,12 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is 'visualizations' and
+  namespace.action in ['displayVis', 'embedVis', 'show']
     window.globals ?= {}
     globals.configs ?= {}
 
     globals.curVis = null
-
-    globals.CONTROL_SIZE = 220
     globals.VIS_MARGIN_WIDTH = 20
     globals.VIS_MARGIN_HEIGHT = 70
 
@@ -110,7 +109,6 @@ $ ->
 
     ### Jquery up the tabs ###
     ($ '#viscontainer').tabs()
-    ($ '#tabcontainer').tabs()
 
     ### Pick vis ###
     if not (data.defaultVis in data.relVis)
@@ -136,7 +134,7 @@ $ ->
       link = href.substr(start, end - start)
 
       globals.configs.curVis = 'globals.' + link
-      globals.curVis = (eval globals.configs.curVis)
+      globals.curVis = eval(globals.configs.curVis)
 
       if oldVis is globals.curVis
         return
@@ -145,14 +143,14 @@ $ ->
       globals.curVis.start()
 
     # Set initial div sizes
-    containerSize = ($ '#viscontainer').innerWidth()
+    containerSize = ($ '#viswrapper').innerWidth()
     hiderSize     = ($ '#controlhider').outerWidth()
     controlSize   = if globals.options? and globals.options.startCollapsed?
-      $("#control_hide_button").html('<')
+      $("#control_hide_button").html('>')
       0
     else
-      $("#control_hide_button").html('>')
-      globals.CONTROL_SIZE
+      $("#control_hide_button").html('<')
+      containerSize * .2 - hiderSize
     contrContSize = hiderSize + controlSize
 
     visWidth = containerSize - contrContSize
@@ -165,10 +163,12 @@ $ ->
       ($ '.vis_canvas').width  visWidth
       ($ '.vis_canvas').height visHeight
 
+
     ($ '#controlcontainer').width contrContSize
     ($ '#controlcontainer').height visHeight
 
     ($ '#controldiv').width controlSize
+
 
     # Start up vis
     globals.curVis.start()
@@ -181,21 +181,14 @@ $ ->
       else
         ($ "#viscontainer").height(($ window).height() - h)
 
-      # Adjust tool position
-      if (globals.fullscreen? and globals.fullscreen or
-      globals.options? and globals.options.isEmbed? and globals.options.isEmbed)
-        ($ "#controlcontainer").css("right", "0px")
-      else
-        ($ "#controlcontainer").css("right", "30px")
-
-      containerSize = ($ '#viscontainer').innerWidth()
+      containerSize = ($ '#viswrapper').innerWidth()
       hiderSize     = ($ '#controlhider').outerWidth()
       controlSize   = ($ '#controldiv').outerWidth()
       controlVisibility = ($ '#controldiv').css 'opacity'
 
       if toggleControls
         if ($ '#controlcontainer').width() <= hiderSize
-          controlSize = globals.CONTROL_SIZE
+          controlSize = containerSize * .2 - hiderSize
           controlVisibility = 1.0
         else
           controlSize = 0
@@ -229,7 +222,7 @@ $ ->
 
     ($ '#control_hide_button').click ->
       if ($ '#controlcontainer').width() is hiderSize
-        $("##{@id}").html('>')
-      else
         $("##{@id}").html('<')
+      else
+        $("##{@id}").html('>')
       resizeVis()
