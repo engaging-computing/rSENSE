@@ -392,7 +392,7 @@ $ ->
           controls += "Generate Elapsed Time </button>"
           controls += "</div>"
 
-        controls+= "</div></div>"
+        controls += "</div></div>"
 
         # Write HTML
         ($ '#controldiv').append controls
