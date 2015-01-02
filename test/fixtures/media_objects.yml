@@ -17,11 +17,19 @@ two:
   data_set: one
   user: kate
   store_key: bbb
-  
+
 three:
   project: one
   media_type: MyString
   name: MyProjectString
   file: MyProjectString
   user: kate
+  store_key: ccc
+
+mo_test:
+  project: media_test
+  media_type: MyString
+  name: MyString
+  file: MyString
+  user: nixon
   store_key: ccc

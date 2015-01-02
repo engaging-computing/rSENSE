@@ -59,8 +59,9 @@ class ProjectsControllerTest < ActionController::TestCase
   end
 
   test 'shouldnt create project' do
-    post :create, { project: { title: "", user_id: @kate } },
+    post :create, { format: 'json', project: { title: "", user_id: @kate } },
          user_id: @kate
+    assert_response :unprocessable_entity
   end
 
   test 'should create project (json)' do
@@ -109,12 +110,11 @@ class ProjectsControllerTest < ActionController::TestCase
   test 'shouldnt destroy project' do
     @num_projects = Project.count
     delete :destroy, { format: 'json', id: @media_test }, user_id: @kate
-    assert_equal @num_projects, Project.count
-    puts Project.find(@project_one).data_sets.length
+    assert_response :forbidden, "Kate shouldn't be able to delete this project"
     delete :destroy, { format: 'json', id: @project_one }, user_id: @kate
-    assert_response :forbidden
+    assert_response :forbidden, "Kate shouldn't be able to delete this project."
     delete :destroy, {format: 'json', id: @dessert }, user_id: @nixon
-    assert_response :forbidden
+    assert_response :forbidden, "Kate shouldn't be able to delete this project."
   end
 
 
