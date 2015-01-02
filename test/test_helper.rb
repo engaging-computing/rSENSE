@@ -17,7 +17,7 @@ require 'seed_reporter'
 Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new, Minitest::Reporters::SpecReporter.new, Minitest::Reporters::SeedReporter.new]
 
 require 'selenium-webdriver'
-
+include ActionDispatch::TestProcess
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.
   #
@@ -37,7 +37,7 @@ class ActiveSupport::TestCase
     assert_equal false, field, "Expected #{model.class} #{field} does not have the correct default field."
   end
 
-  # Method tests if a given field is equal to false
+  # Method tests if a given field is equal to true
   def assert_default_true(model, field)
     assert_equal true, field, "Expected #{model.class} #{field} does not have the correct default field."
   end
