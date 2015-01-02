@@ -66,8 +66,8 @@ class VisualizationTest < ActiveSupport::TestCase
 
   # Passes if summary of a visualization is set properly
   test 'set visualization summary' do
-    @visualization.summary = "Summary"
-    assert_equal(@visualization.summary, "Summary")
+    @visualization.summary = 'Summary'
+    assert_equal(@visualization.summary, 'Summary')
     @copy = @visualization
     assert_equal(@visualization.summary, @copy.summary)
   end
