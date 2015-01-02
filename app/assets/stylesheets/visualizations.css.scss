@@ -138,7 +138,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     }
 
     // button for shrunken accordion dropdown
-    .ui-icon-triangle-1-e { // can't figure out what e, s, or 1 stand for
+    .ui-icon-triangle-1-e {
       background-position: -34px -18px; // uses image @ (5, 2) on /assets/vis/ui-icons_222222_256x240.png
     }
 
@@ -408,6 +408,11 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
       a:hover {
         color: $error-hover;
       }
+    }
+
+    .ui-state-disabled {
+      opacity: 0.5;
+      filter: alpha(opacity=50); /* For IE8 and earlier */
     }
   }
 
