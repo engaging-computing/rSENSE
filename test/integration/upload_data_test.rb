@@ -1,5 +1,6 @@
 require 'test_helper'
-
+require 'uri'
+require 'net/http'
 class UploadDataTest < ActionDispatch::IntegrationTest
   include CapyHelper
 
@@ -135,12 +136,19 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     login('kcarcia@cs.uml.edu', '12345')
     visit project_path(@project)
     assert page.has_content?('Upload Test'), 'Not on project page.'
-
     ods_path = Rails.root.join('test', 'CSVs', 'test.ods')
+    puts ods_path
+    puts ods_path.class
     page.execute_script "$('#datafile_form').parent().show()"
     find('#datafile_form').attach_file('file', ods_path)
+    attach_file('file', ods_path)
     page.execute_script "$('#datafile_form').submit()"
-    assert page.has_content?('Match Quality')
+    #file = TestUploadedFile.new(ods_path, 'text/ods')
+    #file = File.new(ods_path)
+    #@image = Image.new(:file => UploadedFile.new(:tempfile => file, :filename => File.basename(file)))
+    #post :dataFileUpload, file: Rack::Test::UploadedFile.new(ods_path, 'text/ods')
+    #page.driver.browser.accept_js_confirms
+    assert page.has_content?('Submit')
     click_on 'Submit'
     assert page.has_css?('#viscontainer'), 'Failed ODS'
 

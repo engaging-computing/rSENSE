@@ -32,7 +32,7 @@ $ ->
         ($ '.teachers-love-isense').find('.homepage-text').height(
           ($ '.teachers-love-isense').height() - ($ '.teachers-love-isense').find('.homepage-header').height())
         ($ '.what-is-isense').find('.homepage-text').height(
-          ($ '.what-is-isense').height() - ($ '.what-is-isense').find('.homepage-header').height()- 60)
+          ($ '.what-is-isense').height() - ($ '.what-is-isense').find('.homepage-header').height() - 60)
         ($ '#column-one').height('auto')
         ($ '.ternary-content').height('auto')
         ($ '#main-image-featurette').css('height', '60vh')
