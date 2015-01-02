@@ -8,6 +8,10 @@ class ProjectsControllerTest < ActionController::TestCase
     @project_one = projects(:one)
     @project_three = projects(:three)
     @delete_me = projects(:delete_me)
+    @contrib_key_test = projects(:contributor_key_project)
+    @key = contrib_keys(:contributor_key_test)
+    @media_test = projects(:media_test)
+    @dessert = projects(:dessert)
   end
 
   test 'should get index' do
@@ -32,6 +36,8 @@ class ProjectsControllerTest < ActionController::TestCase
 
     @pp = Project.find(@project_one.id)
     assert @pp.views == views_before + 1, 'View count incremented'
+    get :show, id: @contrib_key_test
+    assert_response :success
   end
 
   test 'should show project (json)' do
@@ -50,6 +56,11 @@ class ProjectsControllerTest < ActionController::TestCase
     end
 
     assert_redirected_to project_path(assigns(:project))
+  end
+
+  test 'shouldnt create project' do
+    post :create, { project: { title: "", user_id: @kate } },
+         user_id: @kate
   end
 
   test 'should create project (json)' do
@@ -92,9 +103,20 @@ class ProjectsControllerTest < ActionController::TestCase
 
     @p0 = Project.find(@delete_me.id)
     assert @p0.hidden, 'Project Got Hidden'
-
     assert_redirected_to projects_path
   end
+
+  test 'shouldnt destroy project' do
+    @num_projects = Project.count
+    delete :destroy, { format: 'json', id: @media_test }, user_id: @kate
+    assert_equal @num_projects, Project.count
+    puts Project.find(@project_one).data_sets.length
+    delete :destroy, { format: 'json', id: @project_one }, user_id: @kate
+    assert_response :forbidden
+    delete :destroy, {format: 'json', id: @dessert }, user_id: @nixon
+    assert_response :forbidden
+  end
+
 
   test 'should destroy project (json)' do
     assert_difference('Project.count', 0) do
@@ -117,6 +139,8 @@ class ProjectsControllerTest < ActionController::TestCase
     post :updateLikedStatus, { format: 'json', id: @project_one },  user_id: @kate
     assert_response :success
     assert Project.find(@project_one).likes.count == before, 'Like count should have decreased by 1'
+    get :show,  format: 'json', id: @project_one
+    assert_response :success
   end
 
   test 'should feature project (json)' do
@@ -127,6 +151,9 @@ class ProjectsControllerTest < ActionController::TestCase
     put :update, { format: 'json', id: @project_three, project: { featured: 'false' } },  user_id: @kate
     assert_response :ok
     assert Project.find(@project_three).featured == true, 'Kate should not have been able to unfeature the project.'
+    
+    put :update, { format: 'json', id: @project_three, project: { featured: 'false' } },  user_id: @nixon
+    assert Project.find(@project_three).featured == false, 'Nixon should have unfeatured the project.'
   end
 
   test 'should curate project (json)' do
