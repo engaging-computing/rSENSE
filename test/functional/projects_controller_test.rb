@@ -59,7 +59,7 @@ class ProjectsControllerTest < ActionController::TestCase
   end
 
   test 'shouldnt create project' do
-    post :create, { format: 'json', project: { title: "", user_id: @kate } },
+    post :create, { format: 'json', project: { title: '', user_id: @kate } },
          user_id: @kate
     assert_response :unprocessable_entity
   end
@@ -113,10 +113,9 @@ class ProjectsControllerTest < ActionController::TestCase
     assert_response :forbidden, "Kate shouldn't be able to delete this project"
     delete :destroy, { format: 'json', id: @project_one }, user_id: @kate
     assert_response :forbidden, "Kate shouldn't be able to delete this project."
-    delete :destroy, {format: 'json', id: @dessert }, user_id: @nixon
+    delete :destroy, { format: 'json', id: @dessert }, user_id: @nixon
     assert_response :forbidden, "Kate shouldn't be able to delete this project."
   end
-
 
   test 'should destroy project (json)' do
     assert_difference('Project.count', 0) do
@@ -151,8 +150,7 @@ class ProjectsControllerTest < ActionController::TestCase
     put :update, { format: 'json', id: @project_three, project: { featured: 'false' } },  user_id: @kate
     assert_response :ok
     assert Project.find(@project_three).featured == true, 'Kate should not have been able to unfeature the project.'
-    
-    put :update, { format: 'json', id: @project_three, project: { featured: 'false' } },  user_id: @nixon
+    put :update, { format: 'json', id: @project_three, project: { featured: 'false' } }, user_id: @nixon
     assert Project.find(@project_three).featured == false, 'Nixon should have unfeatured the project.'
   end
 
