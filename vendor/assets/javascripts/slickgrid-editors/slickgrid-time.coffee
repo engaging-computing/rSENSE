@@ -11,7 +11,11 @@
 
   form = ($ args.container).parent().datetimepicker
     autoClose: false
+    onKeys: {}
     onOpen: ->
+      args.grid.focus()
+      ($ 'body').on 'click.slickgrid-time', '#dt-picker', ->
+        args.grid.focus()
       currValue
     onChange: (val) ->
       currValue = val.format('MM/DD/YYYY HH:mm:ss')
@@ -19,6 +23,7 @@
     onClose: (val) ->
       if canClose
         args.grid.getEditorLock().commitCurrentEdit()
+        ($ 'body').off 'click.slickgrid-time'
     hPosition: (w, h) ->
       args.position.left + 2
     vPosition: (w, h) ->
