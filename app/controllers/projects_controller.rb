@@ -236,6 +236,7 @@ class ProjectsController < ApplicationController
   end
 
   def save_fields
+    puts "CALLED SAVE FIELDS!"
     @project = Project.find(params[:id])
 
     # Save all the fields

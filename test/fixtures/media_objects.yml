@@ -32,4 +32,4 @@ mo_test:
   name: MyString
   file: MyString
   user: nixon
-  store_key: ccc
+  store_key: ddd

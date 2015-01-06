@@ -6,6 +6,7 @@ class ProjectsControllerTest < ActionController::TestCase
     @kate    = users(:kate)
     @crunch  = users(:crunch)
     @project_one = projects(:one)
+    @project_two = projects(:two)
     @project_three = projects(:three)
     @delete_me = projects(:delete_me)
     @contrib_key_test = projects(:contributor_key_project)
@@ -30,6 +31,8 @@ class ProjectsControllerTest < ActionController::TestCase
   test 'should show project' do
     views_before = @project_one.views
     get :show,  id: @project_one
+    assert_response :success
+    get :show, { id: @project_two, format: 'json' }
     assert_response :success
     # FIXME
     # assert_valid_html response.body
@@ -69,8 +72,8 @@ class ProjectsControllerTest < ActionController::TestCase
       post :create, { format: 'json', project: { content: @project_one.content, title: @project_one.title,
         user_id: @project_one.user_id } },  user_id: @nixon
     end
-
-    assert_response :success
+    post :create, { format: 'json', project_id: @project_two, project: { title: "P2clone" } },  user_id: @nixon
+    assert_response :created
   end
 
   test 'should get edit' do
@@ -101,6 +104,9 @@ class ProjectsControllerTest < ActionController::TestCase
     assert_difference('Project.count', 0) do
       delete :destroy, { id: @delete_me },  user_id: @nixon
     end
+    assert_difference('Project.count', 0) do
+      delete :destroy, { id: @project_two }, user_id: @kate
+    end
 
     @p0 = Project.find(@delete_me.id)
     assert @p0.hidden, 'Project Got Hidden'
@@ -114,7 +120,7 @@ class ProjectsControllerTest < ActionController::TestCase
     delete :destroy, { format: 'json', id: @project_one }, user_id: @kate
     assert_response :forbidden, "Kate shouldn't be able to delete this project."
     delete :destroy, { format: 'json', id: @dessert }, user_id: @nixon
-    assert_response :forbidden, "Kate shouldn't be able to delete this project."
+    assert_response :forbidden, "Nixon shouldn't be able to delete this project."
   end
 
   test 'should destroy project (json)' do
@@ -138,6 +144,8 @@ class ProjectsControllerTest < ActionController::TestCase
     post :updateLikedStatus, { format: 'json', id: @project_one },  user_id: @kate
     assert_response :success
     assert Project.find(@project_one).likes.count == before, 'Like count should have decreased by 1'
+    post :updateLikedStatus, { format: 'json', id: @project_one },  user_id: 7
+    assert_response 302, "Shouldn't be able to like a project if you aren't logged in"
     get :show,  format: 'json', id: @project_one
     assert_response :success
   end
@@ -187,5 +195,24 @@ class ProjectsControllerTest < ActionController::TestCase
     put :update, { format: 'json', id: @project_three, project: { lock: 'true' } },  user_id: @crunch
     assert_response :unprocessable_entity
     assert Project.find(@project_three).lock == false, 'Crunch should not have locked the project'
+  end
+  test 'should edit fields' do
+    put :edit_fields, { id: @project_one }, user_id: @kate
+    assert_response :success
+  end
+  test 'should save fields' do
+    a = {id: @project_one}
+    puts a.class
+    parameters = Hash.new
+    @dessert.fields.each do |field|
+      parameters["#{field.id}_name"] = field.name
+      parameters["#{field.id}_unit"] = field.unit
+    end
+    parameters['new_field'] = 'Location'
+    parameters['user_id'] = @kate.id    
+    puts "\nparameters = \n", parameters
+    puts @dessert.fields[0].inspect
+    post :save_fields, parameters, user_id: @kate.id
+    assert_response :success
   end
 end

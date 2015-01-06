@@ -68,9 +68,17 @@ class VisualizationsControllerTest < ActionController::TestCase
   end
 
   test 'should update visualization' do
-    put :update, { id: @vis2, visualization: { content: @vis1.content, data: @vis1.data,
-      project_id: @vis1.project_id, globals: @vis1.globals, title: @vis1.title, user_id: @vis1.user_id } },
+    put :update, { id: @vis1, visualization: { content: @vis1.content, data: @vis1.data,
+      project_id: @vis1.project_id, globals: @vis1.globals, title: @vis1.title, user_id: @kate.id } },
        user_id: @kate.id
+    assert_redirected_to visualization_path(assigns(:visualization))
+    put :update, { id: @vis1, visualization: { featured: '1', content: @vis1.content, data: @vis1.data,
+      project_id: @vis1.project_id, globals: @vis1.globals, title: @vis1.title, user_id: @kate.id } },
+       user_id: @admin.id
+    assert_redirected_to visualization_path(assigns(:visualization))
+    put :update, { id: @vis1, visualization: { featured: '0', content: @vis1.content, data: @vis1.data,
+      project_id: @vis1.project_id, globals: @vis1.globals, title: @vis1.title, user_id: @kate.id } },
+       user_id: @admin.id
     assert_redirected_to visualization_path(assigns(:visualization))
   end
 
