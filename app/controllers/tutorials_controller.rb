@@ -31,7 +31,8 @@ class TutorialsController < ApplicationController
 
     @new_tutorial = Tutorial.new
 
-    @tutorials = Tutorial.search(params[:search]).paginate(page: params[:page], per_page: pagesize)
+    @tutorials = Tutorial.search(params[:search]).paginate(page: params[:page],
+                                                           per_page: pagesize)
 
     @tutorials = @tutorials.order("#{sort} #{order}")
 
@@ -62,11 +63,21 @@ class TutorialsController < ApplicationController
 
     respond_to do |format|
       if @tutorial.save
-        format.html { redirect_to @tutorial, notice: 'Tutorial was successfully created.' }
-        format.json { render json: @tutorial.to_hash(false), status: :created, location: @tutorial }
+        format.html do
+          redirect_to @tutorial,
+          notice: 'Tutorial was successfully created.'
+        end
+        format.json do
+          render json: @tutorial.to_hash(false),
+                 status: :created, location: @tutorial
+        end
       else
-        format.html { render status: 404 }
-        format.json { render json: @tutorial.errors, status: :unprocessable_entity }
+        flash[:error] = @tutorial.errors.full_messages
+        format.html { redirect_to tutorials_path }
+        format.json do
+          render json: @tutorial.errors,
+                 status: :unprocessable_entity
+        end
       end
     end
   end
@@ -92,11 +103,17 @@ class TutorialsController < ApplicationController
 
     respond_to do |format|
       if @tutorial.update_attributes(update)
-        format.html { redirect_to @tutorial, notice: 'Tutorial was successfully updated.' }
+        format.html do
+          redirect_to @tutorial,
+          notice: 'Tutorial was successfully updated.'
+        end
         format.json { render json: {}, status: :ok }
       else
         format.html { render action: 'edit' }
-        format.json { render json: @tutorial.errors.full_messages, status: :unprocessable_entity }
+        format.json do
+          render json: @tutorial.errors.full_messages,
+                 status: :unprocessable_entity
+        end
       end
     end
   end
@@ -123,6 +140,7 @@ class TutorialsController < ApplicationController
   private
 
   def tutorial_params
-    params[:tutorial].permit(:content, :title, :featured, :user_id, :hidden, :featured_media_id, :featured_at)
+    params[:tutorial].permit(:content, :title, :featured, :user_id, :hidden,
+                             :featured_media_id, :featured_at)
   end
 end
