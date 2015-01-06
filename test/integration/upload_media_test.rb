@@ -83,9 +83,9 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
     # Failed Upload media to project
     visit "/projects/#{proj_id}"
     assert page.has_content? 'Media'
-    ods_path = Rails.root.join('test', 'CSVs', 'test.html')
+    html_path = Rails.root.join('test', 'CSVs', 'test.html')
     page.execute_script "$('#upload').show()"
-    find('.upload_media form').attach_file('upload', ods_path)
+    find('.upload_media form').attach_file('upload', html_path)
     assert page.has_no_content?('test.html'), 'File should be in list'
     assert page.has_content?('Sorry, html is not a supported file type.'), 'Unsupported file type failed.'
 
@@ -93,22 +93,28 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
     visit "/projects/#{proj_id}"
     assert page.has_css?('.media_edit')
     all('.media_edit')[0].click
-    assert page.has_content?('nerdboy.jpg')
+    assert page.has_content? 'Warning'
+    assert page.has_content? 'Owner:'
+    assert page.has_content? 'Project:'
 
     visit "/projects/#{proj_id}"
     assert page.has_css?('.media_edit')
     all('.media_edit')[1].click
-    assert page.has_content? 'Warning'
+    assert page.has_content? 'nerdboy.jpg'
 
     visit "/projects/#{proj_id}"
     assert page.has_css?('.media_edit')
     all('.media_edit')[2].click
     assert page.has_content? 'Warning'
+    assert page.has_content? 'Owner:'
+    assert page.has_content? 'Project:'
 
     visit "/projects/#{proj_id}"
     assert page.has_css?('.media_edit')
-    all('.media_edit')[2].click
+    all('.media_edit')[3].click
     assert page.has_content? 'Warning'
+    assert page.has_content? 'Owner:'
+    assert page.has_content? 'Project:'
 
   end
 end
