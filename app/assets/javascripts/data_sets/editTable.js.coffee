@@ -28,6 +28,7 @@ setupTable = (cols, data) ->
     enableCellNavigation: true
     enableColumnReorder: false
     forceFitColumns: true
+    rowHeight: 35
     syncColumnCellResize: true
   for x, i in data
     data[i]['id'] = i

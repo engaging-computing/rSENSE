@@ -2,27 +2,48 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-#slickgrid-container {
-	height: 600px;
-
-	div {
-		box-sizing: content-box;
+.data_sets-controller {
+	.edit_table_control {
+		margin-bottom: 10px;
 	}
 
-	.slick-cell {
-		padding: 0;
-	}
+	#slickgrid-container {
+		border: 1px solid #C0C0C0;
+		height: 600px;
 
-	input.editor-text {
-		border: none;
-		height: 100%;
-		outline: none;
-		width: 100%;
-	}
+		div {
+			box-sizing: content-box;
+		}
 
-	.slick-delete {
-		display: block;
-		margin: 5px auto 0;
-		width: 11px;
+		input.editor-text {
+			border: none;
+			height: 100%;
+			outline: none;
+			width: 100%;
+		}
+
+		.slick-cell {
+			padding: 5px;
+		}
+
+		.slick-delete {
+			display: block;
+			margin: 5px auto 0;
+			width: 11px;
+		}
+
+		.slick-header-column {
+			font-weight: bold;
+			padding: 8px 0;
+		}
+
+		.slick-header-columns {
+			border-bottom: 1px solid #C0C0C0;
+			text-align: center;
+		}
+
+		.slick-row.even {
+			background-color: #EEE;
+		}
 	}
 }
