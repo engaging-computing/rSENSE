@@ -41,11 +41,21 @@ class NewsController < ApplicationController
 
     respond_to do |format|
       if @news.save
-        format.html { redirect_to @news, notice: 'News entry was successfully created.' }
-        format.json { render json: @news.to_hash(false), status: :created, location: @news }
+        format.html do
+          redirect_to @news,
+          notice: 'News entry was successfully created.'
+        end
+        format.json do
+          render json: @news.to_hash(false),
+                 status: :created, location: @news
+        end
       else
-        format.html { render status: 404 }
-        format.json { render json: @news.errors, status: :unprocessable_entity }
+        flash[:error] = @news.errors.full_messages
+        format.html { redirect_to @news }
+        format.json do
+          render json: @news.errors,
+                 status: :unprocessable_entity
+        end
       end
     end
   end
@@ -57,7 +67,10 @@ class NewsController < ApplicationController
 
     respond_to do |format|
       if @news.update_attributes(news_params)
-        format.html { redirect_to @news, notice: 'News was successfully updated.' }
+        format.html do
+          redirect_to @news,
+          notice: 'News was successfully updated.'
+        end
         format.json { render json: {}, status: :ok }
       else
         format.html { render action: 'show' }
@@ -86,6 +99,7 @@ class NewsController < ApplicationController
   private
 
   def news_params
-    params[:news].permit(:title, :content, :summary, :featured_media_id, :user_id, :hidden)
+    params[:news].permit(:title, :content, :summary, :featured_media_id,
+                         :user_id, :hidden)
   end
 end

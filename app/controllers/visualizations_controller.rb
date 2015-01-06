@@ -100,6 +100,7 @@ class VisualizationsController < ApplicationController
     mo.media_type = 'image'
     mo.name = 'image.png'
     mo.file = 'image.png'
+    mo.user_id = @cur_user.id
     mo.check_store!
 
     if params[:visualization].try(:[], :svg)
@@ -343,10 +344,10 @@ class VisualizationsController < ApplicationController
   def visualization_params
     if @cur_user.try(:admin)
       params[:visualization].permit(:content, :data, :project_id, :globals, :title, :user_id, :featured,
-                                    :featured_at, :tn_src, :tn_file_key, :summary, :thumb_id)
+                                    :featured_at, :tn_src, :tn_file_key, :summary, :thumb_id, :featured_media_id)
     else
       params[:visualization].permit(:content, :data, :project_id, :globals, :title, :user_id,
-                                    :tn_src, :tn_file_key, :summary, :thumb_id)
+                                    :tn_src, :tn_file_key, :summary, :thumb_id, :featured_media_id)
     end
   end
 

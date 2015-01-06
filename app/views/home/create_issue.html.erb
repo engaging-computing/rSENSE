@@ -1,0 +1,54 @@
+<%= form_tag('/submit_issue', method: 'post') do %>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-md-9 h1">Report a Bug</div>
+      </div>
+    </div>
+    <div class="col-md-12">
+	    <div style="float:right; margin-top: 15px;">* denotes a required field</div>
+    </div>
+	</div>
+    <div id="bug_form" class="panel-body">
+      <div class="form-group" style="display:none">
+          <%= label_tag(:user_id, "User ID:") %>
+          <%= text_field_tag(:user_id, @cur_user.id) %>
+      </div>
+      <div class="form-group">
+          <%= label_tag(:description, "Describe the problem:*") %>
+          <%= text_area_tag(:description, nil, placeholder: 'e.g. When I click the login button on the login page, nothing happens.', class: "form-control", rows: 4) %>
+      </div>
+      <div class="form-group">
+          <%= label_tag(:instructions, "What were you doing when you discovered this problem?") %>
+          <%= text_area_tag(:instructions, nil, placeholder: 'e.g. I was on the login page trying to click the login button.', class: "form-control", rows: 4) %>
+      </div>      
+	  <% user_agent = UserAgent.parse(request.env['HTTP_USER_AGENT']) %>
+      <div class="row" style="display:none">
+        <div class="form-group col-md-4">
+          <%= label_tag(:browser, "Your Browser:") %>
+          <%= text_field_tag(:browser, user_agent.browser + " " + user_agent.version, class: "form-control") %>
+        </div>
+        <div class="form-group col-md-4">
+          <%= label_tag(:os, "Your Operating System:") %>
+          <%= text_field_tag(:os, user_agent.platform, class: "form-control") %>
+        </div>
+        <div class="form-group col-md-4">
+          <%= label_tag(:isense_version, "iSENSE Version:") %>
+          <%= text_field_tag(:isense_version, @version, class: "form-control") %>
+        </div>
+      </div>
+      <div class="form-group">
+        <%= label_tag(:logged_in, "Were you logged into iSENSE?") %>
+        <%= select_tag(:logged_in, options_for_select([['Select one', -1], ['Yes', 1],['No', 0]], -1), class: "form-control", style: "width:115px;") %>
+      </div>
+      <div class="form-group">
+        <%= label_tag(:is_admin, "Were you logged into an iSENSE admin account?") %>
+        <%= select_tag(:is_admin, options_for_select([['Select one', -1], ['Yes', 1],['No', 0]], -1), class: "form-control", style: "width:115px;") %>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <%= submit_tag("Submit", class: "btn btn-primary") %>
+    </div>
+  </div>
+  <%= hidden_field_tag(:access_token, params[:access_token]) %>
+<% end %>

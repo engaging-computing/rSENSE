@@ -47,6 +47,11 @@ class MediaObjectsController < ApplicationController
         @media_object.project.save
       end
 
+      if !@media_object.visualization_id.nil? && @media_object.visualization.featured_media_id == @media_object.id
+        @media_object.visualization.featured_media_id = nil
+        @media_object.visualization.save
+      end
+
       @media_object.destroy
 
       respond_to do |format|
@@ -65,6 +70,17 @@ class MediaObjectsController < ApplicationController
 
   # POST /media_object/saveMedia
   def saveMedia
+    extension = params[:upload].original_filename.split('.')[1]
+    unless FileUploader.upload_whitelist.include? extension
+      if params.key?(:non_wys)
+        redirect_to :back, flash: { error: "Sorry, #{extension} is not a supported file type." }
+        return
+      else
+        render text: "Sorry, #{extension} is not a supported file type."
+        return
+      end
+    end
+
     # Figure out where we are uploading data to
     data = params[:keys].split('/')
     target = data[0]
@@ -87,7 +103,9 @@ class MediaObjectsController < ApplicationController
     # Rotate based on EXIF data, then strip it out.
     if file_type == 'image'
       fix_rot = MiniMagick::Image.read(file_path)
-      fix_rot.auto_orient
+      unless file_name.include? 'svg'
+        fix_rot.auto_orient
+      end
       file_path = '/tmp/' + SecureRandom.hex
       File.open(file_path, 'wb') do |ff|
         fix_rot.write ff
@@ -173,8 +191,6 @@ class MediaObjectsController < ApplicationController
         end
       else
         render text: 'File upload failed'
-        logger.info 'Error saving Media Object'
-        logger.info @mo.errors.inspect
       end
 
     else
