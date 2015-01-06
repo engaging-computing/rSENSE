@@ -195,10 +195,6 @@ $ ->
         # Set up accordion
         globals.configs.yAxisOpen ?= 0
 
-        ($ '#yAxisControl').accordion
-          collapsible:true
-          active:globals.configs.yAxisOpen
-
         ($ '#yAxisControl > h3').click ->
           globals.configs.yAxisOpen = (globals.configs.yAxisOpen + 1) % 2
 
@@ -380,10 +376,6 @@ $ ->
         # Set up accordion
         globals.configs.groupOpen ?= 0
 
-        ($ '#groupControl').accordion
-          collapsible:true
-          active:globals.configs.groupOpen
-
         ($ '#groupControl > h3').click ->
           globals.configs.groupOpen = (globals.configs.groupOpen + 1) % 2
 
@@ -455,10 +447,6 @@ $ ->
         #Set up accordion
         globals.configs.saveOpen ?= 0
 
-        ($ '#saveControl').accordion
-          collapsible:true
-          active:globals.configs.saveOpen
-
         ($ '#saveControl > h3').click ->
           globals.configs.saveOpen = (globals.configs.saveOpen + 1) % 2
       ###
@@ -526,10 +514,6 @@ $ ->
 
         # Set up accordion
         globals.configs.toolsOpen ?= 0
-
-        ($ '#toolControl').accordion
-          collapsible:true
-          active:globals.configs.toolsOpen
 
         ($ '#toolControl > h3').click ->
           globals.configs.toolsOpen = (globals.configs.toolsOpen + 1) % 2

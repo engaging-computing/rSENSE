@@ -40,21 +40,10 @@ $ ->
     CoffeeScript version of runtime.
     ###
 
-    ### Fix height ###
-    if globals.options? and globals.options.isEmbed?
-      $("#viscontainer").height
-    else
-      h = (Number $("div.mainContent").css("padding-top").replace("px", ""))
-      h += $(".navbar").height()
-      h += $("#title_row").outerHeight(true)
-      h += globals.VIS_MARGIN_HEIGHT
-
-      $("#viscontainer").height($(window).height() - h)
-
     ### hide all vis canvases to start ###
-    $(can).hide() for can in ['#map_canvas', '#timeline_canvas', '#scatter_canvas',
-      '#bar_canvas', '#histogram_canvas', '#pie_canvas', '#table_canvas',
-      '#summary_canvas','#viscanvas','#photos_canvas']
+    $(can).hide() for can in ['#map_canvas', '#timeline_canvas',
+      '#scatter_canvas', '#bar_canvas', '#histogram_canvas', '#pie_canvas',
+      '#table_canvas', '#summary_canvas','#viscanvas','#photos_canvas']
 
     # Restore saved globals
     if data.savedGlobals?
@@ -91,38 +80,50 @@ $ ->
       dark = "#{data.allVis[vis]}_dark"
       light = "#{data.allVis[vis]}_light"
       if data.allVis[vis] in data.relVis
-        $('#visTabList').append """<li class='vis_tab'>
-          <a href='##{data.allVis[vis].toLowerCase()}_canvas'>
-            <span class='hidden-sm hidden-xs'>#{data.allVis[vis]}</span>
-            <span class='visible-sm visible-xs'><img height='32px' width='32px'
-              src='#{window.icons[dark]}' data-disable-src='/assets/vis_#{window.icons[light]}' ></span>
-          </a>
-          </li>"""
+        $('#vistablist').append """
+          <li role='presentation'>
+            <a href='##{data.allVis[vis].toLowerCase()}_canvas' role='tab'
+              aria-controls='#{data.allVis[vis].toLowerCase()}_canvas'
+              data-toggle='tab'>
+              <span class='hidden-sm hidden-xs'>#{data.allVis[vis]}</span>
+              <span class='visible-sm visible-xs'>
+                <img height='32px' width='32px'
+                  src='#{window.icons[dark]}'
+                  data-disable-src='/assets/vis_#{window.icons[light]}'/>
+              </span>
+            </a>
+          </li>
+          """
       else
-        $('#visTabList').append """<li class='vis_tab' >
-          <a href='##{data.allVis[vis].toLowerCase()}_canvas'>
-            <span class='hidden-sm hidden-xs' style='text-decoration:line-through'>
-              #{data.allVis[vis]}</span>
-            <span class='visible-sm visible-xs'><img height='32px' width='32'
-              src='#{window.icons[light]}' data-enable-src='#{window.icons[dark]}' /></span>
-          </a></li>"""
-
-    ### Jquery up the tabs ###
-    ($ '#viscontainer').tabs()
+        $('#vistablist').append """
+          <li role='presentation'>
+            <a href='##{data.allVis[vis].toLowerCase()}_canvas' role='tab'
+              aria-controls='#{data.allVis[vis].toLowerCase()}_canvas'
+              data-toggle='tab'>
+              <span class='hidden-sm hidden-xs'
+                style='text-decoration:line-through'>
+                #{data.allVis[vis]}
+              </span>
+              <span class='visible-sm visible-xs'>
+                <img height='32px' width='32'
+                  src='#{window.icons[light]}'
+                  data-enable-src='#{window.icons[dark]}'/>
+              </span>
+            </a>
+          </li>
+          """
 
     ### Pick vis ###
     if not (data.defaultVis in data.relVis)
       globals.configs.curVis = 'globals.' + data.relVis[0].toLowerCase()
-      $('#viscontainer').tabs('option', 'active', data.allVis.indexOf(data.relVis[0]))
     else
       globals.configs.curVis = 'globals.' + data.defaultVis.toLowerCase()
-      $('#viscontainer').tabs('option', 'active', data.allVis.indexOf(data.defaultVis))
 
     # Pointer to the actual vis
-    globals.curVis = (eval globals.configs.curVis)
+    globals.curVis = eval(globals.configs.curVis)
 
     ### Change vis click handler ###
-    $('#visTabList a').click ->
+    $('#vistablist a').click ->
       oldVis = globals.curVis
 
       href = $(this).attr 'href'
@@ -141,86 +142,64 @@ $ ->
 
       oldVis.end() if oldVis?
       globals.curVis.start()
-
-    # Set initial div sizes
-    containerSize = $('#viswrapper').innerWidth()
-    hiderSize     = $('#controlhider').outerWidth()
-    controlSize   = if globals.options? and globals.options.startCollapsed?
-      $("#control_hide_button").html('>')
-      0
-    else
-      $("#control_hide_button").html('<')
-      containerSize * .2 - hiderSize
-    contrContSize = hiderSize + controlSize
-
-    visWidth = containerSize - contrContSize
-    visHeight = $('#viscontainer').height() - $('#visTabList').outerHeight()
-
-    if globals.options? and globals.options.presentation?
-      $('.vis_canvas').css width:"100%"
-      $('.vis_canvas').css height:"100%"
-    else
-      $('.vis_canvas').width  visWidth
-      $('.vis_canvas').height visHeight
-
-    $('#controlcontainer').width contrContSize
-    $('#controlcontainer').height visHeight
-
-    $('#controldiv').width controlSize
+      resizeVis(false, 0, true)
 
     # Start up vis
     globals.curVis.start()
 
     # Toggle control panel
-    resizeVis = (toggleControls = true, aniLength = 600) ->
-      # Adjust height
-      if (globals.fullscreen? and globals.fullscreen)
-        $("#viscontainer").height($(window).height())
-      else
-        $("#viscontainer").height($(window).height() - h)
+    resizeVis = (toggleControls = true, aniLength = 600, init = false) ->
+      newHeight = $(window).height()
+      unless globals.options? and globals.options.isEmbed?
+        newHeight -= $(".navbar").height()
 
-      containerSize = $('#viswrapper').innerWidth()
+      $("#viswrapper").height(newHeight)
+
+      visWrapperSize = $('#viswrapper').innerWidth()
+      visWrapperHeight = $('#viswrapper').outerHeight()
+      visTitleBarHeight = $('#vistitlebar').outerHeight() + $('#vistablist').outerHeight()
       hiderSize     = $('#controlhider').outerWidth()
       controlSize   = $('#controldiv').outerWidth()
-      controlVisibility = $('#controldiv').css 'opacity'
+      controlOpac = $('#controldiv').css 'opacity'
 
-      if toggleControls
-        if ($ '#controlcontainer').width() <= hiderSize
-          controlSize = containerSize * .2 - hiderSize
-          controlVisibility = 1.0
-        else
-          controlSize = 0
-          controlVisibility = 0.0
+      controlSize = visWrapperSize * .2 - hiderSize
+      controlOpac = 1.0
+      $("#control_hide_button").html('<')
+
+      $("#viscontainer").height(visWrapperHeight - visTitleBarHeight)
+
+      if toggleControls and ($ '#controlcontainer').width() > hiderSize or
+      (init and globals.options? and globals.options.startCollapsed?)
+        controlSize = 0
+        controlOpac = 0.0
+        $("#control_hide_button").html('>')
 
       contrContSize = hiderSize + controlSize
 
-      newWidth = containerSize - contrContSize
-      newHeight = $('#viscontainer').height() - $('#visTabList').outerHeight()
+      newWidth = visWrapperSize - contrContSize
+      newHeight = $('#viscontainer').height() - $('#vistablist').outerHeight()
 
-      $('#controlcontainer').height newHeight
+      $('#controlcontainer').height $('#viswrapper').height()
       $('#controlcontainer').animate {width: contrContSize}, aniLength, 'linear'
 
-      $('#controldiv').height newHeight
-      $('#controldiv').animate {width: controlSize, opacity: controlVisibility}, aniLength, 'linear'
+      # Animate the collapsing controls and the expanding vis
+      $('#controldiv').animate {width: controlSize, opacity: controlOpac},
+        aniLength, 'linear'
+      $('#viscontainer').animate {width: newWidth}, aniLength, 'linear'
 
-      $('.vis_canvas').height newHeight
-      $('.vis_canvas').animate {width: newWidth}, aniLength, 'linear'
-
-      globals.curVis.resize newWidth, newHeight, aniLength
-
-    # Set initial size if not in presentation mode
-    if globals.options? and globals.options.presentation?
-      1
-    else
-      resizeVis false, 0
+      globals.curVis.resize(newWidth, newHeight, aniLength)
 
     # Resize vis on page resize
     $(window).resize () ->
       resizeVis(false, 0)
 
     $('#control_hide_button').click ->
-      if $('#controlcontainer').width() is hiderSize
-        $("##{@id}").html('<')
-      else
-        $("##{@id}").html('>')
       resizeVis()
+
+    # Initialize Tabs
+    $('#vistablist a').click (e) ->
+      e.preventDefault()
+      $(this).tab('show')
+
+    # Initialize View
+    resizeVis(false, 0, true)

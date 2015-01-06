@@ -24,6 +24,8 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   $select-bkg: linear-gradient(#49A7DB, #268AC1);
   $shadow-color: #9E9E9E;
   $shadow: 0 2px 3px 1px $shadow-color;
+  $vis-bkg-dark: #E3E3E3;
+  $vis-bkg-light: #EEE;
 
   // some stuff on the page (buttons mostly) shouldn't have selectable text
   @mixin unselectable {
@@ -43,6 +45,8 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
 
   #controlcontainer {
     display: inline-block;
+    float: left;
+    background-color: $vis-bkg-dark;
     width: 20%;
     height: 100%;
   }
@@ -68,13 +72,8 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
-
     display: inline-block;
     float: left;
-
-    // This would be the correct place to add padding-right, but it break the
-    // jquery animation for some reason, so we add it instead to
-    // .ui-accordion-header
 
     // puts spacing between some boostrap buttons
     .form-control { // this styles bootstrap stuff and IS VERY BAD
@@ -210,10 +209,21 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     color: $hint;
   }
 
+  .inline-left {
+    display: block-inline;
+    float: left;
+  }
+
+  .inline-right {
+    display: block-incline;
+    float: right;
+  }
+
   .mainContent {
+    padding: 0;  // Removes all the extra padding
     margin: 0px; // flushes border
-    padding: 20px 0px;
-    width: 100%; // makes page body fill the screen instead of having a fixed width
+    width: 100%; // makes page body fill the screen
+                 // instead of having a fixed width
   }
 
   // the display text for a disabled vis
@@ -428,27 +438,31 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     background-image: $dark-bkg-inv;
   }
 
+  .tab-content {
+    height: inherit;
+    width: inherit;
+  }
+
   .vis_canvas {
+    height: inherit;
+    width: inherit;
     overflow: hidden; // because something inside vis_canvas is overflowing on every non-map vis
   }
 
   // floats the actual vis to the right
   #viscontainer {
-    display: inline-block;
-    float: right;
+    position: absolute;
+    right: 0px;
     width: 80%;
-    border: $border;
   }
 
   #viswrapper {
-    padding: 0px 10px;
     width: 100%;
     height: 100%;
   }
 
   .vis_controls {
-    float: right;
-    width:100%;
+    width: 100%;
   }
 
   #vis-disabled {
@@ -456,11 +470,19 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   }
 
   // the bar at the top of the vis window
-  #visTabList {
-    background-image: $light-bkg;
-    border-bottom: $border; // puts a border only on the bottom of the tab list, #viscontainer does top and sides
+  #vistablist {
     padding: 0; // removes padding that shouldn't be there to begin with
     margin: 0;
+    background-color: $vis-bkg-dark;
+
+    li .active {
+      background-color: $vis-bkg-light;
+    }
+  }
+
+  #vistitlebar {
+    height: 50px;
+    background-color: $vis-bkg-dark;
   }
 
   // an individual tab

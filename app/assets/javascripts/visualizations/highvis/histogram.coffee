@@ -265,6 +265,7 @@ $ ->
         # Write HTML
         ($ '#controldiv').append controls
 
+        ###
         # Set up slider
         ($ '#binSizeSlider').slider
           range: 'min'
@@ -281,13 +282,10 @@ $ ->
               @configs.binSize = newBinSize
               ($ '#binSizeInput').val "#{@configs.binSize}"
               @delayedUpdate()
+        ###
 
         # Set up accordion
         globals.configs.toolsOpen ?= 0
-
-        ($ '#toolControl').accordion
-          collapsible:true
-          active:globals.configs.toolsOpen
 
         ($ '#toolControl > h3').click ->
           globals.configs.toolsOpen = (globals.configs.toolsOpen + 1) % 2

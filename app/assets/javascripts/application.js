@@ -19,7 +19,6 @@
 //= require helpers
 //= require dateParse
 //= require name_popup
-//= require jquery-ui
 //= require jquery_ujs
 //  require jquery.ui.all
 //= require unsupported

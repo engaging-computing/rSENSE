@@ -448,9 +448,10 @@ $ ->
             # Guess new pixel radius
             @heatmapPixelRadius = Math.ceil(@heatmapPixelRadius * newRadius / @configs.heatmapRadius)
             @configs.heatmapRadius = newRadius
-            ($ '#heatmapSlider').slider "value", (Math.log @configs.heatmapRadius) / (Math.log 10)
+            #($ '#heatmapSlider').slider "value", (Math.log @configs.heatmapRadius) / (Math.log 10)
             @delayedUpdate()
 
+        ###
         # Set up heatmap slider
         ($ '#heatmapSlider').slider
           range: 'min'
@@ -465,13 +466,10 @@ $ ->
             @configs.heatmapRadius = newRadius
             ($ '#radius-text').val("#{@configs.heatmapRadius}")
             @delayedUpdate()
+        ###
 
         # Set up accordion
         globals.configs.toolsOpen ?= 0
-
-        ($ '#toolControl').accordion
-          collapsible:true
-          active:globals.configs.toolsOpen
 
         ($ '#toolControl > h3').click ->
           globals.configs.toolsOpen = (globals.configs.toolsOpen + 1) % 2
@@ -483,7 +481,7 @@ $ ->
 
       getPixelDiag: () ->
         ww = ($ "##{@canvas}").width()
-        hh = ($ "##{@canvas}").height()
+        hh = ($ "##{@canvas}").height
         Math.sqrt(ww * ww + hh * hh)
 
       getDiag: (latlngbounds = @gmap.getBounds()) ->

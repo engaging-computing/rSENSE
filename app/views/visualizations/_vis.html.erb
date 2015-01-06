@@ -1,21 +1,36 @@
 <div id="viswrapper">
-  <div id="controlcontainer" <%if @presentation%> style="display:none" <%end%>>
+  <div id="controlcontainer"
+    <% if @presentation %> style="display:none" <% end %>>
     <div id="controldiv">
     </div>
     <div id="controlhider">
       <button id="control_hide_button" type="button"> &gt; </button>
     </div>
   </div>
-  <div id="viscontainer">
-    <ul id='visTabList' <%if @presentation%> style="display:none" <%end%>></ul>
-    <div id="map_canvas" class="vis_canvas"></div>
-    <div id="table_canvas" class="vis_canvas"></div>
-    <div id="timeline_canvas" class="vis_canvas"></div>
-    <div id="scatter_canvas" class="vis_canvas"></div>
-    <div id="bar_canvas" class="vis_canvas"></div>
-    <div id="histogram_canvas" class="vis_canvas"></div>
-    <div id="pie_canvas" class="vis_canvas"></div>
-    <div id="summary_canvas" class="vis_canvas"></div>
-    <div id="photos_canvas" class="vis_canvas"></div>
+  <div id="vistitlebar">
+    <div id="visname" class="inline-left">
+      <h2>Hello, my name is</h2>
+    </div>
+    <div id="visowner" class="inline-right">
+      <h5>by Slim Shady</h5>
+    </div>
+  </div>
+  <div id="viscontainer" role="tabpanel">
+    <ul id="vistablist" role="tablist" class="nav nav-tabs"
+      data-tabs="tabs"
+      <% if @presentation %> style="display:none" <% end %>>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" id="map_canvas" class="vis_canvas"></div>
+      <div role="tabpanel" id="table_canvas" class="vis_canvas"></div>
+      <div role="tabpanel" id="timeline_canvas" class="vis_canvas"></div>
+      <div role="tabpanel" id="scatter_canvas" class="vis_canvas"></div>
+      <div role="tabpanel" id="bar_canvas" class="vis_canvas"></div>
+      <div role="tabpanel" id="histogram_canvas" class="vis_canvas"></div>
+      <div role="tabpanel" id="pie_canvas" class="vis_canvas"></div>
+      <div role="tabpanel" id="summary_canvas" class="vis_canvas"></div>
+      <div role="tabpanel" id="photos_canvas" class="vis_canvas"></div>
+    </div>
   </div>
 </div>

@@ -437,10 +437,6 @@ $ ->
         # Set up accordion
         globals.configs.toolsOpen ?= 0
 
-        ($ '#toolControl').accordion
-          collapsible:true
-          active:globals.configs.toolsOpen
-
         ($ '#toolControl > h3').click ->
           globals.configs.toolsOpen = (globals.configs.toolsOpen + 1) % 2
 
@@ -487,10 +483,6 @@ $ ->
 
         # Set up accordion
         globals.configs.xAxisOpen ?= 0
-
-        ($ '#xAxisControl').accordion
-          collapsible:true
-          active:globals.configs.xAxisOpen
 
         ($ '#xAxisControl > h3').click ->
           globals.configs.xAxisOpen = (globals.configs.xAxisOpen + 1) % 2
@@ -732,11 +724,6 @@ $ ->
 
         # Set up accordion
         globals.configs.regressionOpen ?= 0
-
-        ($ '#regressionControl').accordion
-          collapsible:true
-          active:globals.configs.regressionOpen
-          heightStyle:"content"
 
         ($ '#regressionControl > h3').click ->
           globals.configs.regressionOpen = (globals.configs.regressionOpen + 1) % 2

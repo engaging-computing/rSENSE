@@ -324,10 +324,6 @@ $ ->
         # Set up accordion
         globals.configs.yAxisOpen ?= 0
 
-        ($ '#yAxisControl').accordion
-          collapsible:true
-          active:globals.configs.yAxisOpen
-
         ($ '#yAxisControl > h3').click ->
           globals.configs.yAxisOpen = (globals.configs.yAxisOpen + 1) % 2
 

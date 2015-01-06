@@ -278,12 +278,12 @@ $ ->
       if globals.scatter instanceof DisabledVis
         delete globals.scatter
         globals.scatter = new Scatter "scatter_canvas"
-        ($ "#visTabList li[aria-controls='scatter_canvas'] a span").css "text-decoration", ""
-        ($ "#visTabList li[aria-controls='scatter_canvas'] a img").attr('src',
-          ($ "#visTabList li[aria-controls='scatter_canvas'] a img").data('enable-src'))
+        ($ "#vistablist li[aria-controls='scatter_canvas'] a span").css "text-decoration", ""
+        ($ "#vistablist li[aria-controls='scatter_canvas'] a img").attr('src',
+          ($ "#vistablist li[aria-controls='scatter_canvas'] a img").data('enable-src'))
 
       globals.scatter.xAxis = data.normalFields[data.normalFields.length - 1]
-      ($ "#visTabList li[aria-controls='scatter_canvas'] a").click()
+      ($ "#vistablist li[aria-controls='scatter_canvas'] a").click()
 
     ###
     If there is only one time field, generates an appropriate
