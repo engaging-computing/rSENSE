@@ -33,6 +33,7 @@ Rsense::Application.routes.draw do
 
   get 'about' => 'home#about'
   get 'contact' => 'home#contact'
+  get 'report_bug' => 'home#report_bug'
   get 'privacy_policy' => 'home#privacy_policy'
 
   get 'home/index'
@@ -95,6 +96,12 @@ Rsense::Application.routes.draw do
   get '/contrib_keys/clear' => 'contrib_keys#clear'
 
   get '/api/v1/docs' => 'home#api_v1'
+
+  # Github Authentication Routes
+  get '/auth/github' => 'sessions#github_authorize'
+  get '/auth/anon_github' => 'sessions#create_issue_anon'
+  get '/auth/github/callback' => 'application#create_issue'
+  post '/submit_issue' => 'application#submit_issue'
 
   # API routes
   match '*any', via: 'OPTIONS', controller: 'application', action: 'options_req'

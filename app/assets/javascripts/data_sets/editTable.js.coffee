@@ -5,8 +5,8 @@ uploadSettings =
   methodEdit: 'PUT'
   methodEntry: 'POST'
   error: (jqXHR, textStatus, errorThrown) ->
-    ($ '#edit_table_add').removeClass 'disabled'
-    ($ '#edit_table_save').button 'reset'
+    ($ '.edit_table_add').removeClass 'disabled'
+    ($ '.edit_table_save').button 'reset'
     alert "An upload error occurred."
   successEdit: (data, textStatus, jqXHR) ->
     window.location = data.redirect
@@ -93,7 +93,7 @@ IS.onReady 'data_sets/edit', ->
 
   currId = data.length
 
-  ($ '#edit_table_add').click ->
+  ($ '.edit_table_add').click ->
     fields = {id: currId}
     currId += 1
     for x in cols
@@ -101,12 +101,12 @@ IS.onReady 'data_sets/edit', ->
     view.addItem fields
     grid.scrollRowIntoView view.getLength()
 
-  ($ '#edit_table_save').click ->
-    if ($ '#edit_table_save').hasClass 'disabled'
+  ($ '.edit_table_save').click ->
+    if ($ '#edit_table_save_1').hasClass 'disabled'
       return
-    ($ '#edit_table_add').addClass 'disabled'
-    ($ '#edit_table_save').addClass 'disabled'
-    ($ '#edit_table_save').text 'Saving...'
+    ($ '.edit_table_add_1').addClass 'disabled'
+    ($ '.edit_table_save_1').addClass 'disabled'
+    ($ '.edit_table_save_1').text 'Saving...'
 
     ajaxData =
       data: ajaxifyGrid view
@@ -127,20 +127,20 @@ IS.onReady 'data_sets/manualEntry', ->
   grid = rets[0]
   view = rets[1]
 
-  ($ '#edit_table_add').click ->
+  ($ '.edit_table_add').click ->
     fields = {id: view.getLength()}
     for x in cols
       fields[x.field] = ''
     view.addItem fields
     grid.scrollRowIntoView view.getLength()
 
-  ($ '#edit_table_save').click ->
-    if ($ '#edit_table_save').hasClass 'disabled'
+  ($ '.edit_table_save').click ->
+    if ($ '#edit_table_save_1').hasClass 'disabled'
       return
 
-    ($ '#edit_table_add').addClass 'disabled'
-    ($ '#edit_table_save').addClass 'disabled'
-    ($ '#edit_table_save').text 'Saving...'
+    ($ '.edit_table_add').addClass 'disabled'
+    ($ '.edit_table_save').addClass 'disabled'
+    ($ '.edit_table_save').text 'Saving...'
 
     ajaxData =
       data: ajaxifyGrid view

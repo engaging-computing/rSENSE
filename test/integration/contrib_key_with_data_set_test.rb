@@ -51,7 +51,7 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     find('#data_set_name').set('Data1')
     find('.slick-cell.l0.r0').double_click
     find('.editor-text').set('5')
-    click_on 'Save'
+    find('#edit_table_save_2').click
     assert page.has_content? 'Visualizations'
     click_on 'Contributor Key Test Project'
     visit '/'
@@ -67,7 +67,7 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     find('#data_set_name').set('Data2')
     find('.slick-cell.l0.r0').double_click
     find('.editor-text').set('5')
-    click_on 'Save'
+    find('#edit_table_save_2').click
     assert page.has_content? 'Visualizations'
     visit '/projects'
     click_on 'Contributor Key Test Project'
