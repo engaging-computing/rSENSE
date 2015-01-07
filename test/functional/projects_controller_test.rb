@@ -32,7 +32,7 @@ class ProjectsControllerTest < ActionController::TestCase
     views_before = @project_one.views
     get :show,  id: @project_one
     assert_response :success
-    get :show, { id: @project_two, format: 'json' }
+    get :show, id: @project_two, format: 'json'
     assert_response :success
     # FIXME
     # assert_valid_html response.body
@@ -72,7 +72,7 @@ class ProjectsControllerTest < ActionController::TestCase
       post :create, { format: 'json', project: { content: @project_one.content, title: @project_one.title,
         user_id: @project_one.user_id } },  user_id: @nixon
     end
-    post :create, { format: 'json', project_id: @project_two, project: { title: "P2clone" } },  user_id: @nixon
+    post :create, { format: 'json', project_id: @project_two, project: { title: 'P2clone' } },  user_id: @nixon
     assert_response :created
   end
 
@@ -200,19 +200,56 @@ class ProjectsControllerTest < ActionController::TestCase
     put :edit_fields, { id: @project_one }, user_id: @kate
     assert_response :success
   end
-  test 'should save fields' do
-    a = {id: @project_one}
-    puts a.class
+  test 'save fields' do
     parameters = Hash.new
     @dessert.fields.each do |field|
       parameters["#{field.id}_name"] = field.name
       parameters["#{field.id}_unit"] = field.unit
     end
     parameters['new_field'] = 'Location'
-    parameters['user_id'] = @kate.id    
-    puts "\nparameters = \n", parameters
-    puts @dessert.fields[0].inspect
-    post :save_fields, parameters, user_id: @kate.id
-    assert_response :success
+    parameters['user_id'] = @kate.id
+    parameters.keys.each do |k|
+      k = k.to_s
+    end
+    
+    #Adds a Latitude and Longitude field to determine where the dinner was eaten!
+    post :save_fields, { id: @dessert.id, field: { id: 23, project_id: @dessert.id, field_type: 4, name: "Location of Foods" }, 
+                        "20_name" => parameters["20_name"], "20_unit" => parameters["20_unit"], "21_name" => parameters["21_name"], 
+                        "21_unit" => parameters["21_unit"], "22_name" => parameters["22_name"], "22_unit" => parameters["22_unit"], 
+                        "23_name" => "Location of Foods", "23_unit" => '', new_field: 'Location' }, user_id: @kate.id
+    assert_redirected_to "/projects/#{@dessert.id}/edit_fields"
+    
+    #No field added, cannot have two Lat fields, even with different names.
+    assert_difference('Project.find(@dessert.id).fields.length', 0) do
+      post :save_fields, { id: @dessert.id, field: { id: 24, project_id: @dessert.id, field_type: 4, name: "Location of Foodss" }, 
+                          "20_name" => parameters["20_name"], "20_unit" => parameters["20_unit"], "21_name" => parameters["21_name"], 
+                          "21_unit" => parameters["21_unit"], "22_name" => parameters["22_name"], "22_unit" => parameters["22_unit"],
+                          "24_name" => "Location of Foodss", "24_unit" => '', new_field: 'Location' }, user_id: @kate.id
+    end
+
+    @project = Project.find(@dessert.id)
+    num_fields = @project.fields.length
+    new_lat_field_id = @project.fields[num_fields - 2].id
+    new_long_field_id = @project.fields[num_fields - 1].id
+
+    #modifies the saved latitude and longitude field, and redirects to project page.
+    post :save_fields, { id: @dessert.id, field: { id: 25, project_id: @dessert.id, field_type: 3, name: "Location of Foodz" }, 
+                      "20_name" => parameters["20_name"], "20_unit" => parameters["20_unit"], "21_name" => parameters["21_name"], 
+                      "21_unit" => parameters["21_unit"], "22_name" => parameters["22_name"], "22_unit" => parameters["22_unit"],
+                      "#{new_lat_field_id}_name" => @project.fields[num_fields - 2].name, "#{new_lat_field_id}_unit" => @project.fields[num_fields - 2].unit,
+                      "#{new_long_field_id}_name" => @project.fields[num_fields - 1].name, "#{new_long_field_id}_unit" => @project.fields[num_fields - 1].unit, 
+                      "20_restrictions" => 'a,b,c',
+                      "25_name" => "Location of Foodz", "25_unit" => '', new_field: '' }, user_id: @kate.id
+    assert_redirected_to "/projects/#{@dessert.id}"
+
+    #Tests empty value in restrictions hash
+    post :save_fields, { id: @dessert.id, field: { id: 25, project_id: @dessert.id, field_type: 3, name: "Location of Foodz" }, 
+                      "20_name" => parameters["20_name"], "20_unit" => parameters["20_unit"], "21_name" => parameters["21_name"], 
+                      "21_unit" => parameters["21_unit"], "22_name" => parameters["22_name"], "22_unit" => parameters["22_unit"],
+                      "#{new_lat_field_id}_name" => @project.fields[num_fields - 2].name, "#{new_lat_field_id}_unit" => @project.fields[num_fields - 2].unit,
+                      "#{new_long_field_id}_name" => @project.fields[num_fields - 1].name, "#{new_long_field_id}_unit" => @project.fields[num_fields - 1].unit, 
+                      "20_restrictions" => '',
+                      "25_name" => "Location of Foodz", "25_unit" => '', new_field: 'Latitude' }, user_id: @kate.id
+    assert_redirected_to "/projects/#{@dessert.id}/edit_fields"
   end
 end
