@@ -16,7 +16,8 @@ class SmallPageTest < ActionDispatch::IntegrationTest
 
   test 'only first paragraph' do
     login('nixon@whitehouse.gov', '12345')
-    page.driver.resize_window(900, 500)
+    page.driver.browser.window_resize(page.driver.browser.get_window_handle,
+                                      900, 500)
     visit '/'
     assert page.has_no_content?('Second Paragraph'), 'Second paragraph should not be shown.'
 
@@ -32,6 +33,7 @@ class SmallPageTest < ActionDispatch::IntegrationTest
     visit '/'
 
     assert page.has_no_content?('First Paragraph'), 'First paragraph should have been deleted.'
-    page.driver.resize_window(1100, 800)
+    page.driver.browser.window_resize(page.driver.browser.get_window_handle,
+                                      1100, 800)
   end
 end
