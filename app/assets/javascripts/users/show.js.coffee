@@ -11,8 +11,7 @@ IS.onReady "users/show", ->
   nav_list = []
 
   ($ '#user_filter li').each (index) ->
-    if index != 0
-      nav_list.push ($ @).text()
+    nav_list.push ($ @).text()
 
   nav_list.push "All"
 
@@ -36,7 +35,8 @@ IS.onReady "users/show", ->
       globals.arrowsClicked = false
 
       $.ajax
-        url: "/users/#{($ '#contribution_search').attr('data-user-id')}/contributions"
+        url: "/users/#{($ '#contribution_search')
+          .attr('data-user-id')}/contributions"
         data: filter_ajax_params
         dataType: "html"
         success: (filtered_html) ->
@@ -50,7 +50,8 @@ IS.onReady "users/show", ->
             ($ ".pagebck").hide()
           else
             ($ ".pagebck").show()
-          if(($ "#mparams").attr("lastPage") == "true" || parseInt($("#mparams").attr("totalPages")) == 0)
+          if(($ "#mparams").attr("lastPage") == "true" ||
+          parseInt($("#mparams").attr("totalPages")) == 0)
             ($ ".pagefwd").hide()
           else
             ($ ".pagefwd").show()
@@ -70,13 +71,15 @@ IS.onReady "users/show", ->
     globals.arrowsClicked = false
 
     $.ajax
-      url: "/users/#{($ '#contribution_search').attr('data-user-id')}/contributions"
+      url: "/users/#{($ '#contribution_search')
+        .attr('data-user-id')}/contributions"
       data: ajax_params
       dataType: "html"
       success: (dat) ->
         ($ "#contributions").html dat
         if (parseInt($("#mparams").attr("totalPages")) > 0)
-          ($ "#pageLabel").html "Page " + (parseInt( $("#page").val(), 10 ) + 1) +
+          ($ "#pageLabel").html "Page " +
+            (parseInt( $("#page").val(), 10 ) + 1) +
             " of " + $("#mparams").attr("totalPages")
         else
           ($ "#pageLabel").html "No Contributions"
@@ -84,7 +87,8 @@ IS.onReady "users/show", ->
           ($ ".pagebck").hide()
         else
           ($ ".pagebck").show()
-        if($("#mparams").attr("lastPage") == "true" || parseInt($("#mparams").attr("totalPages")) == 0)
+        if($("#mparams").attr("lastPage") == "true" ||
+        parseInt($("#mparams").attr("totalPages")) == 0)
           ($ ".pagefwd").hide()
         else
           ($ ".pagefwd").show()
