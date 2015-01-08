@@ -25,7 +25,8 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   $shadow-color: #9E9E9E;
   $shadow: 0 2px 3px 1px $shadow-color;
   $vis-bkg-dark: #E3E3E3;
-  $vis-bkg-light: #EEE;
+  $vis-bkg-mid: #EEE;
+  $vis-bkg-light: #F5F5F5;
 
   // some stuff on the page (buttons mostly) shouldn't have selectable text
   @mixin unselectable {
@@ -473,7 +474,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   #vistablist {
     padding: 0; // removes padding that shouldn't be there to begin with
     margin: 0;
-    background-color: $vis-bkg-dark;
+    background-color: $vis-bkg-light;
 
     li .active {
       background-color: $vis-bkg-light;
