@@ -9,7 +9,7 @@ class DataSetsControllerTest < ActionController::TestCase
     @crunch = users(:crunch)
   end
 
-  test 'redirect to viz for show data set' do
+  test 'redirect to vis for show data set' do
     get :show,  id: @tgd.id
     assert_response :redirect
   end
