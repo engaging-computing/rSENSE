@@ -3,7 +3,9 @@ require 'test_helper'
 class MediaObjectsControllerTest < ActionController::TestCase
   setup do
     @nixon = users(:nixon)
+    @kate = users(:kate)
     @media_object = media_objects(:one)
+    @nixons_mo = media_objects(:mo_test)
   end
 
   test 'should show media_object' do
@@ -16,6 +18,13 @@ class MediaObjectsControllerTest < ActionController::TestCase
       media_type: @media_object.media_type, name: @media_object.name, data_set_id: @media_object.data_set_id,
       user_id: @media_object.user_id } },  user_id: @nixon
     assert_redirected_to media_object_path(assigns(:media_object))
+  end
+
+  test 'shouldnt update media_object' do
+    put :update, { format: 'json', id: @nixons_mo, media_object: { project_id: @nixons_mo.project_id,
+      media_type: @nixons_mo.media_type, name: @nixons_mo.name, data_set_id: @nixons_mo.data_set_id,
+      user_id: @nixons_mo.user_id } },  user_id: @kate
+    assert_response :unprocessable_entity, "Kate shouldn't be able to edit Nixon's Media Object"
   end
 
   test 'should upload media to user' do
@@ -88,6 +97,10 @@ class MediaObjectsControllerTest < ActionController::TestCase
     assert_redirected_to @media_object.project
   end
 
+  test 'shouldnt destroy media_object' do
+    delete :destroy, { format: 'json', id: @nixons_mo },  user_id: @kate
+    assert_response :forbidden, "Kate shouldn't be able to delete Nixon's Media Object"
+  end
   # No test for saveMedia
   # Uploading to amazon in tests seems hard.
 end
