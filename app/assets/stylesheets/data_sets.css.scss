@@ -3,13 +3,19 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 .data_sets-controller {
+	$slick-border-color: #C0C0C0;
+	$slick-border: thin solid $slick-border-color;
+	$slick-height: 600px;
+	$slick-row-odd: #FFFFFF;
+	$slick-row-even: #EEEEEE;
+
 	.edit_table_control {
 		margin-bottom: 10px;
 	}
 
 	#slickgrid-container {
-		border: 1px solid #C0C0C0;
-		height: 600px;
+		border: $slick-border;
+		height: $slick-height;
 
 		div {
 			box-sizing: content-box;
@@ -38,12 +44,16 @@
 		}
 
 		.slick-header-columns {
-			border-bottom: 1px solid #C0C0C0;
+			border-bottom: $slick-border;
 			text-align: center;
 		}
 
 		.slick-row.even {
-			background-color: #EEE;
+			background-color: $slick-row-even;
+		}
+
+		.slick-row.odd {
+			background-color: $slick-row-odd;
 		}
 	}
 }

@@ -9,7 +9,7 @@
   form = null
   loadValue = null
 
-  form = ($ '<input type="text" class="editor-text" />')
+  form = $('<input type="text" class="editor-text" />')
   form.appendTo args.container
   form.focus()
 

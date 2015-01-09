@@ -9,21 +9,21 @@
   currValue = null
   canClose = false
 
-  form = ($ args.container).parent().datetimepicker
+  form = $(args.container).parent().datetimepicker
     autoClose: false
     onKeys: {}
     onOpen: ->
       args.grid.focus()
-      ($ 'body').on 'click.slickgrid-time', '#dt-picker', ->
+      $('body').on 'click.slickgrid-time', '#dt-picker', ->
         args.grid.focus()
       currValue
     onChange: (val) ->
       currValue = val.format('MM/DD/YYYY HH:mm:ss')
-      ($ args.container).text currValue
+      $(args.container).text currValue
     onClose: (val) ->
       if canClose
         args.grid.getEditorLock().commitCurrentEdit()
-        ($ 'body').off 'click.slickgrid-time'
+        $('body').off 'click.slickgrid-time'
     hPosition: (w, h) ->
       args.position.left + 2
     vPosition: (w, h) ->
@@ -45,7 +45,7 @@
     time = item[args.column.field]
     currValue = time
     loadValue = time
-    ($ args.container).text currValue
+    $(args.container).text currValue
     form.open()
   applyValue: (item, state) ->
     item[args.column.field] = state
