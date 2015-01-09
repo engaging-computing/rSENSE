@@ -8,14 +8,14 @@
   loadValue = null
 
   if args.column.restrictions == ''
-    form = ($ '<input type="text" class="editor-text" />')
+    form = $('<input type="text" class="editor-text" />')
     form.appendTo args.container
     form.focus()
   else
     formStr = ''
     for x in args.column.restrictions
       formStr += "<option value=\"#{x}\">#{x}</option>"
-    form = ($ "<select>#{formStr}</select>")
+    form = $("<select>#{formStr}</select>")
     form.appendTo args.container
     form.focus()
 
