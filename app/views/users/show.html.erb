@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-lg-4">
-    
+
     <div class="row well" style="margin: 19px;">
       <div class="col-lg-12 center">
         <%= image_tag Gravatar.new.url(@user), style: "border-radius: 3px", class: "gravatar_img" %>
@@ -10,23 +10,23 @@
         <span class="full_width_edit" style="font-style:italic">
           <%= user_edit_helper 'name', can_edit?(@user), false %>
         </span>
-        
+
         <% if @cur_user.admin? or @cur_user.id == @user.id %>
           <br />
           <span class="info_label" style="line-height: 30px;">Email:</span><br>
           <span class="full_width_edit" style="font-style: italic; font-weight: bold">
             <%= @user.email %>
           </span>
-        
+
           <p style="margin-top: 8px"><%= link_to "Change Email or Password", edit_user_path(@user) %></p>
         <% end %>
 
         <br />
         <i>Joined <%= time_ago_in_words(@user.created_at)%> ago</i>
-        <br /> 
+        <br />
       </div>
     </div>
-    
+
     <div class="row">
       <div class="col-lg-12">
         <%= render layout: "shared/box", locals: {title: 'Bio', width: '12', unique_id: 'box', should_hide: false } do %>
@@ -34,18 +34,18 @@
         <%end%>
       </div>
     </div>
-    
-  </div> 
- 
+
+  </div>
+
   <div class="col-lg-8">
     <%= form_tag users_path, method: 'get', id: 'contribution_search', "data-user-id" => @user.id do%>
       <ul class="nav nav-tabs" id="user_filter">
-        <li class="active" title="Search through projects liked by <%=@user.name%>"><a href="#">Liked Projects</a></li>
+        <li class="active"><a href="#" title="Search through projects liked by <%=@user.name%>">Liked Projects</a></li>
         <li><a href="#" title="Search through <%=@user.name%>'s projects">My Projects</a></li>
         <li><a href="#" title="Search through <%=@user.name%>'s data sets">Data Sets</a></li>
         <li><a href="#" title="Search through <%=@user.name%>'s visualizations">Visualizations</a></li>
       </ul>
-      
+
       <div id="contributions_content">
         <div id="searchUserRow" class="row">
           <div class="col-lg-9">
@@ -55,7 +55,7 @@
             <input type="button" class="btn btn-success" value="Search" id="contribution_search_btn" style="margin-left: 7px; margin-bottom: 10px;"/>
           </div>
         </div>
-        
+
         <%= hidden_field_tag "page", params[:page].to_i %>
         <div id="contributions">
         </div>
@@ -66,6 +66,5 @@
         </div>
       </div>
     <% end %>
-  </div>  
+  </div>
 </div>
-
