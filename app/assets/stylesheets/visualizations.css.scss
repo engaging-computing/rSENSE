@@ -38,24 +38,40 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     user-select: none;
   }
 
-  // Used in tool controls
-  .clean_shrink {
-    white-space: nowrap;
-    overflow: hidden;
-  }
-
   #controlcontainer {
     display: inline-block;
     float: left;
     background-color: $vis-bkg-dark;
     width: 20%;
     height: 100%;
+
+    // Used in tool controls
+    .control_header {
+      padding: 0 20px;
+      white-space: nowrap;
+      overflow: hidden;
+      cursor: pointer;
+      width: 100%;
+      background: $dark-bkg;
+    }
+
+    .control_outer {
+      width: 100%;
+      padding: 5px 20px;
+      background-color: $vis-bkg-light;
+
+      .label-dataset-color {
+        float: right;
+        width: 20px;
+      }
+    }
   }
 
   #controlhider {
     float: right;
     display: inline-block;
     height: 100%;
+    background-color: $vis-bkg-dark;
 
     #control_hide_button {
       @include unselectable;
@@ -235,14 +251,6 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     font-weight: bold;
     line-height: 25pt;
     color: $hint;
-  }
-
-  .outer_control_div table {
-    width: 100%;
-    .label-dataset-color {
-      float: right;
-      width: 20px;
-    }
   }
 
   // photos sometimes needs a scrollbar
@@ -475,10 +483,6 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     padding: 0; // removes padding that shouldn't be there to begin with
     margin: 0;
     background-color: $vis-bkg-light;
-
-    li .active {
-      background-color: $vis-bkg-light;
-    }
   }
 
   #vistitlebar {

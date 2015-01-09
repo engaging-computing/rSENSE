@@ -361,8 +361,8 @@ $ ->
       drawToolControls: ->
         controls =  '<div id="toolControl" class="vis_controls">'
 
-        controls += "<h3 class='clean_shrink'><a href='#'>Tools:</a></h3>"
-        controls += "<div class='outer_control_div'>"
+        controls += "<div class='control_header'><h3><a href='#'>Tools</a></h3></div>"
+        controls += "<div class='control_outer'>"
 
         controls += "<h4 class='clean_shrink'>Heat Maps</h4>"
 

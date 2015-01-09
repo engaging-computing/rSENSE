@@ -124,14 +124,13 @@ $ ->
           else data.normalFields[1..data.normalFields.length]
 
         checked = false
-        controls = '<div id="yAxisControl" class="vis_controls">'
+        controls = "<div id='yAxisControl' class='vis_controls'>"
+        controls += "<div class='control_header'><h3><a href='#'>"
 
         if radio
-          controls += "<h3 class='clean_shrink'><a href='#'>Field:</a></h3>"
-          controls += "<div class='outer_control_div'>"
+          controls += "Field</a></h3></div><div class='control_outer'>"
         else
-          controls += "<h3 class='clean_shrink'><a href='#'>Y Axis:</a></h3>"
-          controls += "<div class='outer_control_div'>"
+          controls += "Y Axis</a></h3></div><div class='control_outer'>"
           controls +=
             "<div class='inner_control_div'>
               <div class='checkbox all-y-fields'>
@@ -222,10 +221,9 @@ $ ->
       drawGroupControls: (startOnGroup = false, radio = false, excludeNameAndCombined = false) ->
 
         controls = '<div id="groupControl" class="vis_controls">'
-
-        controls += "<h3 class='clean_shrink'><a href='#'>Groups:</a></h3>"
-
-        controls += "<div class='outer_control_div'>"
+        controls += '<div class="control_header">'
+        controls += "<h3><a href='#'>Groups</a></h3></div>"
+        controls += "<div class='control_outer'>"
 
         # Add grouping selector
         controls += '<div class="inner_control_div"> Group By: '
@@ -387,9 +385,8 @@ $ ->
           return
 
         controls = '<div id="saveControl" class="vis_controls">'
-
-        controls += "<h3 class='clean_shrink'><a href='#'>Saving:</a></h3>"
-        controls += "<div class='outer_control_div' style='text-align:center'>"
+        controls += "<div class='control_header'><h3><a href='#'>Saving</a></h3></div>"
+        controls += "<div class='control_outer' style='text-align:center'>"
 
         if not (globals.options? and globals.options.isEmbed?)
           controls += "<div class='inner_control_div'>"
@@ -455,8 +452,8 @@ $ ->
       drawToolControls: (sortBy = false, logYAxis = false) ->
 
         controls =  '<div id="toolControl" class="vis_controls">'
-        controls += "<h3 class='clean_shrink'><a href='#'>Tools:</a></h3>"
-        controls += "<div class='outer_control_div'>"
+        controls += "<div class='control_header' <h3><a href='#'>Tools</a></h3></div>"
+        controls += "<div class='control_outer'>"
         if sortBy
           controls += "<div class='inner_control_div'>"
           controls += 'Sort by: <select id="sortField" class="sortField form-control">'

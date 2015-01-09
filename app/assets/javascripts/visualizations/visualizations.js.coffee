@@ -44,3 +44,6 @@ $ ->
 
     $('#control_hide_button').on 'click', () ->
       hidden = !hidden
+
+    $('.control_header').click (e) ->
+      $(@).siblings('.control_outer').slideToggle()
