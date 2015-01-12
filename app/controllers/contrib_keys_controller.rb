@@ -2,7 +2,6 @@ class ContribKeysController < ApplicationController
   skip_before_filter :authorize, only: [:enter, :clear]
 
   def create
-    puts "\n\n\nABCD #{params}"
     @key = ContribKey.new(contrib_key_params)
 
     unless can_edit?(@key.project)
