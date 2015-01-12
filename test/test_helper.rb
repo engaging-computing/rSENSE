@@ -57,6 +57,7 @@ class ActiveSupport::TestCase
   end
 
   def assert_valid_html(text)
+    puts text
     # assert_is_html5_valid text
   end
 end
