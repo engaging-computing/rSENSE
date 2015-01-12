@@ -109,7 +109,7 @@ Rsense::Application.routes.draw do
   namespace :api, defaults: { format: 'json' }, except: :destroy do
     namespace :v1 do
       post '/projects/:id/jsonDataUpload' => 'data_sets#jsonDataUpload'
-      post '/projects/:id/key' => 'projects#key' #TODO
+      post '/projects/:id/key' => 'projects#key'
       post '/data_sets/append' => 'data_sets#append'
       post '/media_objects' => 'media_objects#saveMedia'
       get '/media_objects/:id' => 'media_objects#show'
