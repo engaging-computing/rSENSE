@@ -13,3 +13,8 @@ two:
   project: dessert
   name: Pies
   key: apple
+
+contributor_key_test:
+  project: contributor_key_project
+  name: name
+  key: key

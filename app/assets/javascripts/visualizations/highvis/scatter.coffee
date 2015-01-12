@@ -660,7 +660,7 @@ $ ->
           regressionType = Number(($ '#regressionSelector').val())
 
           #list of (x,y) points to be used in calculating regression
-          xyData = data.multiGroupXYSelector(@configs.xAxis, @configs.yAxis, data.groupSelection)
+          xyData = data.multiGroupXYSelector(@configs.xAxis, yAxisIndex, data.groupSelection)
 
           # Separate the x and y data
           xData =
