@@ -51,8 +51,8 @@ module Api
         end
 
         respond_to do |format|
-          if key != nil
-            format.json { render json: { msg: 'Success'}, status: :created }
+          if !key.nil?
+            format.json { render json: { msg: 'Success' }, status: :created }
           elsif @cur_user.id != @project.user_id
             format.json { render json: { msg: errors }, status: :unauthorized }
           else
