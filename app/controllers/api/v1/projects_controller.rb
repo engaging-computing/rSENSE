@@ -47,16 +47,16 @@ module Api
           key = ContribKey.new(contrib_key_params)
           key.save
         else
-          errors = "User does not own the project."
+          errors = 'User does not own the project.'
         end
 
         respond_to do |format|
           if key != nil
-            format.json { render json: { msg: "Success"}, status: :created }
+            format.json { render json: { msg: 'Success'}, status: :created }
           elsif @cur_user.id != @project.user_id
             format.json { render json: { msg: errors }, status: :unauthorized }
           else
-            @errors = "Unprocessable Entity."
+            @errors = 'Unprocessable Entity.'
             format.json { render json: { error: errors }, status: :unprocessable_entity }
           end
         end
