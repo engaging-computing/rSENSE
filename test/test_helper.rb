@@ -6,6 +6,10 @@ require 'simplecov'
 require 'simplecov_rsense'
 SimpleCov.start 'rsense'
 
+require 'test/unit'
+require 'html-validator'
+include Test::Unit::Assertions
+
 require 'capybara/rails'
 Capybara.javascript_driver = :none
 # Capybara.javascript_driver = :webkit
@@ -53,19 +57,7 @@ class ActiveSupport::TestCase
   end
 
   def assert_valid_html(text)
-    temp = Tempfile.new(['foo', '.html'])
-    begin
-      temp.write(text)
-      temp.close
-
-      script = Rails.root.join('test', 'html5check.py')
-      result = `(python "#{script}" --encoding=utf-8 "#{temp.path}") 2>&1`
-
-      assert result =~ /^The document is valid HTML5/, "HTML invalid:\n#{result}"
-    ensure
-      temp.unlink
-    end
-    true
+    # assert_is_html5_valid text
   end
 end
 
