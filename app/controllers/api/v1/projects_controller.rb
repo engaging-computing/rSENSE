@@ -36,35 +36,35 @@ module Api
           end
         end
       end
-      
-      def key
-        puts "\n\n\nThis is from api project controller key #{params}\n\n\n" #server log
-        #TODO add new key
-        puts "AAA #{params}" #server log
 
-        @project = Project.find(params[:contrib_key=>:project_id])
+      def key
+        @project = Project.find(params[:contrib_key][:project_id])
 
         if @cur_user.id == @project.user_id
-          #add new key to project
-          puts "\n\n\n OWNER \n\n\n" #server log
           session[:name] = params[:key_name]
           session[:key] = params[:key]
           session[:project_id] = @project.id
-          
-          #puts "\n\n\nAAABBB #{contrib_key_params}\n\n\n" #server log
-          @key = ContribKey.new(:contrib_key)
-          @key.save
-          format.json { render json: project.errors, status: :ok }
+          key = ContribKey.new(contrib_key_params)
+          key.save
         else
-          puts "\n\n\n Not owner \n\n\n" #server log
-          format.json { render json: project.errors, status: :authorize }
+          errors = "User does not own the project."
+        end
+
+        respond_to do |format|
+          if key != nil
+            format.json { render json: { msg: "Success"}, status: :created }
+          elsif @cur_user.id != @project.user_id
+            format.json { render json: { msg: errors }, status: :unauthorized }
+          else
+            @errors = "Unprocessable Entity."
+            format.json { render json: { error: errors }, status: :unprocessable_entity }
+          end
         end
       end
-      
+
       def contrib_key_params
-        params.require(:key).permit(:name, :key, :project_id)
+        params.require(:contrib_key).permit(:name, :project_id, :key)
       end
     end
   end
 end
-
