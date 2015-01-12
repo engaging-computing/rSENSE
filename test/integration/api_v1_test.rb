@@ -585,6 +585,27 @@ class ApiV1Test < ActionDispatch::IntegrationTest
           }
     assert_response :unauthorized
   end
+  
+  test 'add a key to a project' do
+    post '/api/v1/projects',
+
+    email: 'kcarcia@cs.uml.edu',
+    password: '12345'
+
+    assert_response :success
+    id = parse(response)['id']
+    
+    post '/api/v1/projects/3/key',
+        email: 'kcarcia@cs.uml.edu',
+        password: "12345",
+        contrib_key:
+          {
+             "name"=>"key_name",
+             "project_id"=>id,
+             "key"=>"key"
+          }
+    assert_response :created
+  end
 
   private
 
