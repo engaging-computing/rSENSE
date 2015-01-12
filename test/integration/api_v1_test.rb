@@ -597,12 +597,12 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     
     post '/api/v1/projects/3/key',
         email: 'kcarcia@cs.uml.edu',
-        password: "12345",
+        password: '12345',
         contrib_key:
           {
-             "name"=>"key_name",
-             "project_id"=>id,
-             "key"=>"key"
+             'name' => "key_name",
+             'project_id' => id,
+             'key' => 'key'
           }
     assert_response :created
   end
