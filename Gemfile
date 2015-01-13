@@ -27,6 +27,9 @@ group :development, :test do
   gem "coffeelint"
   gem 'capybara-webkit'
   gem 'minitest', '~> 5.1'
+
+  # HTML Validation
+  gem 'w3c_validators', '~> 1.2'
 end
 
 # Jquery stuff
@@ -76,6 +79,3 @@ gem 'roo'
 # GitHub Bug Reporting and Testing
 gem 'browser'
 gem 'useragent', '~> 0.10.0'
-
-# HTML Validation
-gem 'html-validator', '~> 0.1.1'

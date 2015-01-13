@@ -51,8 +51,7 @@ class VisualizationsControllerTest < ActionController::TestCase
     assert_response :success
     get :show, { id: @vis2.id, presentation: true },  user_id: @kate.id
     assert_response :success
-    # FIXME
-    # assert_valid_html response.body
+    assert_valid_html response.body
   end
 
   test 'should show thanksgiving dinner data' do
@@ -93,8 +92,6 @@ class VisualizationsControllerTest < ActionController::TestCase
   test 'should for realz show viz' do
     get :displayVis,  id: @vis2.project.id
     assert_response :success
-
-    # FIXME
-    # assert_valid_html response.body
+    assert_valid_html response.body
   end
 end
