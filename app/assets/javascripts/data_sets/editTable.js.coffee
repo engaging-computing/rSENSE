@@ -65,7 +65,6 @@ setupResizer = (grid) ->
     a = getHeight()
     cont.height a
     grid.resizeCanvas()
-    console.log "#{a} -> #{cont.height()}"
 
   $(window).trigger 'resize'
 
