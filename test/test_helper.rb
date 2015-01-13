@@ -6,9 +6,9 @@ require 'simplecov'
 require 'simplecov_rsense'
 SimpleCov.start 'rsense'
 
-require 'test/unit'
-require 'html-validator'
-include Test::Unit::Assertions
+#require 'test/unit'
+require 'w3c_validators'
+include W3CValidators
 
 require 'capybara/rails'
 Capybara.javascript_driver = :none
@@ -57,8 +57,17 @@ class ActiveSupport::TestCase
   end
 
   def assert_valid_html(text)
-    puts text
-    # assert_is_html5_valid text
+    if @validator.nil?
+      @validator = MarkupValidator.new
+
+      # override the DOCTYPE
+      @validator.set_doctype!(:html5)
+
+      # turn on debugging messages
+      @validator.set_debug!(true)
+    end
+
+    @validator.validate_text(text)
   end
 end
 
