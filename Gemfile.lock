@@ -12,6 +12,16 @@ GIT
       rails (~> 4.1.4)
 
 GIT
+  remote: https://github.com/asalani93/better-datetimepicker
+  revision: 9011c1f5e5e8e2b119c2afe3985e1892295c5772
+  specs:
+    better_datetimepicker (0.0.3)
+      coffee-rails
+      coffee-rails-source-maps
+      rails (~> 4.1.4)
+      sass
+
+GIT
   remote: https://github.com/bbatsov/rubocop
   revision: 5d1bf0ff64d8254b33cf0a10ad7a4b19c4de6b1e
   specs:
@@ -107,6 +117,7 @@ GEM
       json (~> 1.8)
       multi_xml (>= 0.5.2)
     i18n (0.7.0)
+    jquery-drag-rails (2.2.0)
     jquery-rails (3.1.2)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
@@ -224,6 +235,7 @@ DEPENDENCIES
   auto_html
   bcrypt-ruby
   better_colorpicker (~> 0.0.3)!
+  better_datetimepicker (~> 0.0.3)!
   bootstrap-sass
   browser
   capybara
@@ -236,6 +248,7 @@ DEPENDENCIES
   font-awesome-rails (~> 4.2.0.0)
   handlebars_assets
   httparty
+  jquery-drag-rails
   jquery-rails
   jquery-ui-rails
   launchy
