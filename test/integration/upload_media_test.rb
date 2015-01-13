@@ -88,33 +88,16 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
     find('.upload_media form').attach_file('upload', html_path)
     assert page.has_no_content?('test.html'), 'File should be in list'
     assert page.has_content?('Sorry, html is not a supported file type.'), 'Unsupported file type failed.'
-
-    # Test for media objects helpers
-    visit "/projects/#{proj_id}"
-    assert page.has_css?('.media_edit')
-    all('.media_edit')[0].click
-    assert page.has_content? 'Warning'
-    assert page.has_content? 'Owner:'
-    assert page.has_content? 'Project:'
-
-    visit "/projects/#{proj_id}"
-    assert page.has_css?('.media_edit')
-    all('.media_edit')[1].click
-    assert page.has_content? 'nerdboy.jpg'
-
-    visit "/projects/#{proj_id}"
-    assert page.has_css?('.media_edit')
-    all('.media_edit')[2].click
-    assert page.has_content? 'Warning'
-    assert page.has_content? 'Owner:'
-    assert page.has_content? 'Project:'
-
-    visit "/projects/#{proj_id}"
-    assert page.has_css?('.media_edit')
-    all('.media_edit')[3].click
-    assert page.has_content? 'Warning'
-    assert page.has_content? 'Owner:'
-    assert page.has_content? 'Project:'
-
+    nerdboy_found = 0
+    @project = Project.find(proj_id)
+    @project.media_objects.length.times do |i|
+      visit "/projects/#{proj_id}"
+      all('.media_edit')[i].click
+      if page.html.include? 'nerdboy.jpg'
+        nerdboy_found += 1
+      end
+      assert page.html.include? "data-page-name=\"media_objects/show\""
+    end
+    assert nerdboy_found == 1, 'Nerdboy was not displayed exactly once on the media objects view.'
   end
 end
