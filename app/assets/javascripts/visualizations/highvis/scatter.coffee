@@ -684,11 +684,14 @@ $ ->
               dashStyle
             )
           catch error
+            console.log error
+            console.log newRegression
             regressionMade = false
             if regressionType is 3
               alert "Unable to calculate an #{regressions[regressionType]} regression for this data."
             else
               alert "Unable to calculate a #{regressions[regressionType]} regression for this data."
+            return
 
           if regressionMade
             # Get a unique identifier (last highest count plus one)
