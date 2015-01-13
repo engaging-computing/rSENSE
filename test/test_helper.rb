@@ -6,14 +6,11 @@ require 'simplecov'
 require 'simplecov_rsense'
 SimpleCov.start 'rsense'
 
-#require 'test/unit'
 require 'w3c_validators'
 include W3CValidators
 
 require 'capybara/rails'
 Capybara.javascript_driver = :none
-# Capybara.javascript_driver = :webkit
-# Capybara.javascript_driver = :selenium
 
 require 'minitest/reporters'
 require 'seed_reporter'
