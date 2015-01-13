@@ -34,9 +34,9 @@ class CloneProjectTest < ActionDispatch::IntegrationTest
 
     click_on 'Manual Entry'
     fill_in 'Dataset Name', with: 'I Like Clones'
-    click_on 'Add Row'
+    find('#edit_table_add_2').click
     set_cell(0, 47)
-    click_on 'Save'
+    find('#edit_table_save_2').click
 
     assert page.has_content?('I Like Clones'), 'Save should succeed'
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')

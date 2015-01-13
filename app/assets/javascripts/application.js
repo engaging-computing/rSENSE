@@ -42,9 +42,16 @@
 //= require numeric.min
 //= require oms
 //= require better_colorpicker
+//= require better_datetimepicker
 //
 //= require visualizations/highvis/index
 //
 //= require summernote
+//
+//= require jquery.event.drag
+//= require jquery.event.drag.live
+//
+//= require slickgrid/slickgrid
+//= require slickgrid-editors/editors
 //
 //= require_tree .
