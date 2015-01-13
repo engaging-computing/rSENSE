@@ -668,7 +668,7 @@ $ ->
 
           # List of (x,y) points to be used in calculating regression
           d = globals.clipping.getData(true, globals.configs.clippingVises)
-          xyData = data.multiGroupXYSelector(@configs.xAxis, @configs.yAxis, data.groupSelection, d)
+          xyData = data.multiGroupXYSelector(@configs.xAxis, yAxisIndex, data.groupSelection, d)
 
           # Separate the x and y data
           xData =
