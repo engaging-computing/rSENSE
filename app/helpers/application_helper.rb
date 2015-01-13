@@ -124,26 +124,23 @@ module ApplicationHelper
   def render_title
     if @namespace[:controller] == 'projects' and params.key?(:id)
       # viewing a project
-      title_proj = Project.find(params[:id]).name
-      "iSENSE - #{title_proj}"
+      Project.find(params[:id]).name.capitalize
     elsif @namespace[:controller] == 'visualizations' and params.key?(:id)
       if @namespace[:action] == 'displayVis'
         # viewing data sets
         if @datasets.count == 1
           # viewing a single data set
-          title_data = @datasets[0].title
-          "iSENSE - #{title_data}"
+          @datasets[0].title.capitalize
         else
           # viewing multiple data sets
-          "iSENSE - Showing Multiple Data Sets"
+          'Multiple Data Sets'
         end
       else
         # viewing a saved vis
-        title_vis = Visualization.find(params[:id]).name
-        "iSENSE - #{title_vis}"
+        Visualization.find(params[:id]).name.capitalize
       end
     else
-      "iSENSE - #{@namespace[:controller].capitalize}"
+      @namespace[:controller].capitalize
     end
   end
 
