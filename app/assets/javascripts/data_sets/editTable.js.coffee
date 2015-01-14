@@ -53,6 +53,21 @@ setupTable = (cols, data) ->
 
   [grid, view]
 
+setupResizer = (grid) ->
+  cont = $('#slickgrid-container')
+  row1 = $('#row-slickgrid-1')
+  row2 = $('#row-slickgrid-2')
+
+  getHeight = ->
+    $(window).height() - row1.outerHeight() - row2.outerHeight()
+
+  $(window).resize ->
+    a = getHeight()
+    cont.height a
+    grid.resizeCanvas()
+
+  $(window).trigger 'resize'
+
 ajaxifyGrid = (view) ->
   buckets = {}
   posHeadRegex = /(\d+)-(\d+)/
@@ -91,6 +106,8 @@ IS.onReady 'data_sets/edit', ->
   grid = rets[0]
   view = rets[1]
 
+  setupResizer grid
+
   currId = data.length
 
   $('.edit_table_add').click ->
@@ -126,6 +143,8 @@ IS.onReady 'data_sets/manualEntry', ->
   rets = setupTable cols, data
   grid = rets[0]
   view = rets[1]
+
+  setupResizer grid
 
   $('.edit_table_add').click ->
     fields = {id: view.getLength()}
