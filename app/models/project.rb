@@ -208,8 +208,6 @@ class Project < ActiveRecord::Base
       new_project.title = params[:project_name]
     end
 
-    new_project.save
-
     # Clone fields
     field_map = {}
     fields.each do |f|
@@ -228,14 +226,21 @@ class Project < ActiveRecord::Base
       nmo.user_id = user_id
       nmo.save!
 
+      new_project.media_objects << nmo
+
+      # Replace old the old mo's path with the new mo's path whenever it
+      # occurs in the project's description
       unless content.nil?
-        content.gsub! mo.src, nmo.src
+        new_project.content.gsub! mo.src, nmo.src
       end
 
       if new_project.featured_media_id == mo.id
         new_project.featured_media_id = nmo.id
       end
     end
+
+    # Save the project now that all meta data is cloned
+    new_project.save
 
     # Clone datasets
     if params[:clone_datasets]
@@ -270,6 +275,7 @@ class Project < ActiveRecord::Base
         nds.save!
       end
     end
+
     new_project
   end
 
