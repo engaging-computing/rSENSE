@@ -76,3 +76,7 @@ slickgrid_project:
 slickgrid_project_no_latlon:
   title: slickgrid_project_no_latlon
   user: nixon
+
+slickgrid_oops:
+  title: slickgrid_oops
+  user: nixon
