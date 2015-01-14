@@ -52,3 +52,9 @@ slickgrid_dataset_3:
   user: nixon
   project: slickgrid_project_no_latlon
   data: "[]"
+
+slickgrid_dataset_oops:
+  title: Slickgrid Dataset Ooops I Messed Up
+  user: nixon
+  project: slickgrid_oops
+  data: "[{\"107\": \"SOMEBODY ONCE TOLD ME THE WORLD IS GONNA ROLL ME\"}]"

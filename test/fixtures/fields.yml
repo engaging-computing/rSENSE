@@ -118,3 +118,9 @@ slickgrid_something:
   field_type: 3
   project: slickgrid_project_no_latlon
   name: something
+
+slickgrid_not_a_field:
+  id: 107
+  field_type: -1
+  project: slickgrid_oops
+  name: oops
