@@ -80,3 +80,6 @@ gem 'roo'
 # GitHub Bug Reporting and Testing
 gem 'browser'
 gem 'useragent', '~> 0.10.0'
+
+# HTML Validation
+gem 'html-validator', '~> 0.1.1'
