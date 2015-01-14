@@ -30,12 +30,16 @@ group :development, :test do
 end
 
 # Jquery stuff
+gem 'better_datetimepicker', '~> 0.0.3', git: 'https://github.com/asalani93/better-datetimepicker'
 gem 'better_colorpicker', '~> 0.0.3', git: 'https://github.com/asalani93/better-colorpicker'
 gem 'jquery-rails'
 
 # To use ActiveModel has_secure_password
 #gem 'bcrypt' # Can't use the new name yet.
 gem 'bcrypt-ruby'
+
+# jQuery plugins
+gem 'jquery-drag-rails'
 
 # Include JQuery UI
 gem 'jquery-ui-rails'
@@ -76,3 +80,6 @@ gem 'roo'
 # GitHub Bug Reporting and Testing
 gem 'browser'
 gem 'useragent', '~> 0.10.0'
+
+# HTML Validation
+gem 'html-validator', '~> 0.1.1'
