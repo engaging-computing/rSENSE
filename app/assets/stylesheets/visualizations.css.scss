@@ -247,6 +247,9 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
       overflow: hidden;
       zoom: 1;
       display: inline;
+      float: left;
+      width: 200px;
+      text-align: center;
 
       .caption_wrap {
          padding: 0px 10px 10px 10px;
@@ -261,9 +264,10 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
 
       img {
         padding: 9px;
+        max-height: 160px;
       }
 
-      width: 200px !important;
+      height: 200px !important;
       border: $border;
       margin-bottom: 10px;
       background-color: $panel-bkg;
