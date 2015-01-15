@@ -684,10 +684,6 @@ $ ->
               dashStyle
             )
           catch error
-            console.log error
-            console.log newRegression
-            console.trace
-            error.get_stack
             regressionMade = false
             if regressionType is 3
               alert "Unable to calculate an #{regressions[regressionType]} regression for this data."

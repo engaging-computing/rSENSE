@@ -52,12 +52,10 @@ $ ->
       (x, P) -> 1
       (x, P) -> x
       (x, P) -> x * x]
-    hypothesis = (x, P) -> 
-      #console.log "P[3]x^3 + P[2]x^2 + P[1]x + P[0] = #{(x * x * x) * P[3] + (x * x) * P[2] + P[1] * x + P[0]}"
-      P[0] + (x * P[1]) + (x * x * P[2]) + (x * x * x * P[3])
+
     globals.REGRESSION.CUBIC = globals.REGRESSION.FUNCS.length
     globals.REGRESSION.FUNCS.push [
-      hypothesis, #(x, P) -> P[0] + (x * P[1]) + (x * x * P[2]) + (x * x * x * P[3]),
+      (x, P) -> P[0] + (x * P[1]) + (x * x * P[2]) + (x * x * x * P[3]),
       (x, P) -> 1,
       (x, P) -> x,
       (x, P) -> x * x,
@@ -79,23 +77,15 @@ $ ->
       (x, P) -> P[1] / (P[2] * x + P[3])
     ]
 
-
-    #[
-    #  (x, P) -> P[0] + P[1] * Math.log(P[2] + x),
-    #  (x, P) -> 1,
-    #  (x, P) -> Math.log(x + P[2]),
-    #  (x, P) -> P[1] / (P[2] + x)]
-
     globals.REGRESSION.NUM_POINTS = 200
 
     ###
     Calculates a regression and returns it as a highcharts series.
     ###
     globals.getRegression = (xs, ys, type, xBounds, seriesName, dashStyle) ->
-      #console.log xs, ys, type, xBounds, seriesName, dashStyle
       Ps = []
       func = globals.REGRESSION.FUNCS[type]
-      console.log 'func'
+      
       # Make an initial Estimate
       switch type
 
@@ -114,45 +104,21 @@ $ ->
         when globals.REGRESSION.LOGARITHMIC
           # We want to avoid starting with a guess that takes the log of a negative number
           Ps = [1,1,Math.min.apply(null, xs) + 1, 1]
-      #console.log Ps
-      # Calculate the regression, and return a highcharts series object
-      #mean = calculateMean(xs)
-      #sigma = calculateStandardDev(xs, mean)
-
+      
       # Get the new Ps
-      console.log 'normalizedData:'
-      console.log normalizeData(xs)
       [Ps, R2] = NLLS(func, normalizeData(xs), ys, Ps)
-      #console.log 'done'
-      #denormFunc = globals.REGRESSION.DENORM_FUNCS[type]
-      #Ps =
-      #  func(Ps, mean, sigma) for func in denormFunc
-
+      # Create the highcharts series
       generateHighchartsSeries(Ps, R2, type, xBounds, seriesName, dashStyle)
 
     ###
     Returns a series object to draw on the chart canvas.
     ###
     generateHighchartsSeries = (Ps, R2, type, xBounds, seriesName, dashStyle) ->
-      console.log Ps, R2, type, xBounds, seriesName, dashStyle
       str = makeToolTip(Ps, R2, type, seriesName)
-      #console.log Ps, R2, type, xBounds, seriesName, dashStyle
-      # Left shift the input values to zero and adjust the Ps for the left shift
-      #denormFunc = globals.REGRESSION.DENORM_FUNCS[type]
-      #Ps =
-      #  func(Ps, -1 * xBounds.dataMin, 1) for func in denormFunc
-      #console.log data
-      #console.log 'getting called'
-      y = 0
-      regData = []
-      for i in [0..globals.REGRESSION.NUM_POINTS]
-        #console.log 'running'
+      regData = for i in [0..globals.REGRESSION.NUM_POINTS]
         xv = (i / globals.REGRESSION.NUM_POINTS) #* ((normalizeData(xBounds.dataMax) - normalizeData(xBounds.dataMin)) + normalizeData(xBounds.dataMin))
-        #console.log 'done'
         yv = calculateRegressionPoint(Ps, xv, type)
-        #console.log 'wat'
-        regData.push {x: xv * (xBounds.dataMax - xBounds.dataMin) + xBounds.dataMin, y: yv}
-      #console.log "regdata is: #{regData}"
+        {x: xv * (xBounds.dataMax - xBounds.dataMin) + xBounds.dataMin, y: yv}
       ret =
         name:
           id: ''
@@ -170,16 +136,11 @@ $ ->
         states:
           hover:
             lineWidth: 4
-      #console.log ret
-      return ret
-
+      
     ###
     Uses the regression matrix to calculate the y value given an x value.
     ###
     calculateRegressionPoint = (Ps, x, type) ->
-      #console.log "vis space value is: #{globals.REGRESSION.FUNCS[type][0](x, Ps)}"
-      #console.log globals.REGRESSION.FUNCS[type][0]
-      
       globals.REGRESSION.FUNCS[type][0](x, Ps)
 
     ###
@@ -275,14 +236,11 @@ $ ->
     NLLS_SHIFT_CUT_UP = 1.1
     NLLS_THRESH = 1e-10
     NLLS = (func, xs, ys, Ps) ->
-      console.log "NLLS!"
       prevErr = Infinity
       shiftCut = 1
-      #console.log("TRAINING: x is #{xs}")
       for iter in [1..NLLS_MAX_ITER]
         # Iterate
         dPs = iterateNLLS(func, xs, ys, Ps)
-        console.log 'back'
         nextPs = numeric.add(Ps, numeric.mul(dPs, shiftCut))
         nextErr = sqe(func, xs, ys, nextPs)
 
@@ -293,9 +251,7 @@ $ ->
             # If we line search too long and can't find a valid value
             # Then we declare the regression to have failed and throw.
             lsIters += 1
-            #console.log 'could error'
             if lsIters > 500
-              console.log 'throwing error'
               throw new Error()
 
             shiftCut *= NLLS_SHIFT_CUT_DOWN
@@ -324,27 +280,14 @@ $ ->
     Inner loop of Newton-gauss method
     ###
     iterateNLLS = (func, xs, ys, Ps) ->
-      console.log "Ps is #{Ps}"
-      console.log 'iterate NLLS:'
-      console.log func, xs, ys, Ps
       residuals = numeric.sub(ys, xs.map((x) -> func[0](x, Ps)))
-      #console.log 'residuals'
       jac = jacobian(func, xs, Ps)
-      #console.log 'jacobian'
       jacT = numeric.transpose jac
-      console.log 'lulz'
-      console.log "jacobian = #{jac}"
-      console.log "jacobianT = #{jacT}"
-      #console.log "Residuals = #{residuals}"
+      
       # dP = (JT*J)^-1 * JT * r
-      console.log numeric.dot(jacT, jac)
-      console.log numeric.inv(numeric.dot(jacT, jac))
-      console.log numeric.dot(numeric.inv(numeric.dot(jacT, jac)), jacT)
-      console.log numeric.dot(numeric.dot(numeric.inv(numeric.dot(jacT, jac)), jacT), residuals)
       deltaPs = numeric.dot(numeric.dot(numeric.inv(numeric.dot(jacT, jac)),
         jacT),
         residuals)
-      console.log 'deltaPs'
       deltaPs
 
     ###
@@ -406,15 +349,10 @@ $ ->
 
     # Normalize
     normalizeData = (points) ->
-      #(point - mean) / sigma for point in points
       max = Math.max.apply(null, points)
       min = Math.min.apply(null, points)
-      #console.log "points is: #{points}"
-      #console.log "max = #{max}, min = #{min}"
-      #console.log (point - min) / (max - min) for point in points
-      #console.log points.map((y) -> (y - min) / (max - min))
-      #points.map((y) -> (1 / (1 + Math.pow(Math.E, -1 * y))) + 1)
       points.map((y) -> (y - min) / (max - min))
+    
     # Calculate the standard deviation
     calculateStandardDev = (points, mean) ->
       sigma = 0
