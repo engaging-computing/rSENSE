@@ -9,21 +9,29 @@
   currValue = null
   canClose = false
 
+  closeForm = =>
+    args.grid.getEditorLock().commitCurrentEdit()
+    $('body').off 'click.slickgrid-time'
+    args.grid.resetActiveCell()
+
   form = $(args.container).parent().datetimepicker
     autoClose: false
     onKeys: {}
     onOpen: ->
       args.grid.focus()
-      $('body').on 'click.slickgrid-time', '#dt-picker', ->
-        args.grid.focus()
+      $('body').on 'click.slickgrid-time1', (e) =>
+        if $(e.target).closest('#dt-picker, .slick-cell.active').length == 0
+          closeForm()
+      $('body').on 'click.slickgrid-time2', '#dt-picker', (e) ->
+        unless $(e.target).is 'input'
+          args.grid.focus()
       currValue
     onChange: (val) ->
       currValue = val.format('MM/DD/YYYY HH:mm:ss')
       $(args.container).text currValue
     onClose: (val) ->
       if canClose
-        args.grid.getEditorLock().commitCurrentEdit()
-        $('body').off 'click.slickgrid-time'
+        closeForm()
     hPosition: (w, h) ->
       args.position.left + 2
     vPosition: (w, h) ->

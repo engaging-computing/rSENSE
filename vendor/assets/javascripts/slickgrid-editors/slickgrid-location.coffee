@@ -11,6 +11,15 @@
   form.appendTo args.container
   form.focus()
 
+  closeForm = =>
+    args.grid.getEditorLock().commitCurrentEdit()
+    $('body').off 'click.slickgrid-time'
+    args.grid.resetActiveCell()
+    
+  $('body').on 'click.slickgrid-number', (e) =>
+    if $(e.target).closest('.slick-cell.active').length == 0
+      closeForm()
+
   form.popover
     container: 'body'
     content: 'Please enter a valid latitude and longitude.'
