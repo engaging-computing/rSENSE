@@ -114,18 +114,20 @@ $ ->
     Returns a series object to draw on the chart canvas.
     ###
     generateHighchartsSeries = (Ps, R2, type, xBounds, seriesName, dashStyle) ->
-      str = makeToolTip(Ps, R2, type, seriesName)
-      regData = for i in [0..globals.REGRESSION.NUM_POINTS]
+      data = for i in [0..globals.REGRESSION.NUM_POINTS]
         xv = (i / globals.REGRESSION.NUM_POINTS) #* ((normalizeData(xBounds.dataMax) - normalizeData(xBounds.dataMin)) + normalizeData(xBounds.dataMin))
         yv = calculateRegressionPoint(Ps, xv, type)
         {x: xv * (xBounds.dataMax - xBounds.dataMin) + xBounds.dataMin, y: yv}
+      #Ps = visSpaceParameters(Ps, xBounds, type)
+      str = makeToolTip(Ps, R2, type, seriesName)
+
       ret =
         name:
           id: ''
           group: seriesName
           regression:
             tooltip: str
-        data: regData
+        data: data
         type: 'line'
         color: '#000'
         lineWidth: 2
@@ -359,3 +361,6 @@ $ ->
       for point in points
         sigma += Math.pow(point - mean, 2)
       Math.sqrt( sigma / points.length )
+
+    visSpaceParameters = (Ps, xBounds, type) ->
+      console.log 'called'
