@@ -374,7 +374,7 @@ $ ->
     normalizeData = (points) ->
       max = Math.max.apply(null, points)
       min = Math.min.apply(null, points)
-      points.map((y) -> ((y - min) / (max - min)) + 1)
+      points.map((y) -> (y - min) / (max - min) + 1)
     
     # Calculate the standard deviation
     calculateStandardDev = (points, mean) ->
@@ -384,4 +384,15 @@ $ ->
       Math.sqrt( sigma / points.length )
 
     visSpaceParameters = (Ps, xBounds, type) ->
-      console.log 'called'
+      PPrimes = Ps
+      ret = switch type
+
+        when globals.REGRESSION.LINEAR
+
+        when globals.REGRESSION.QUADRATIC
+
+        when globals.REGRESSION.CUBIC
+
+        when globals.REGRESSION.EXPONENTIAL
+
+        when globals.REGRESSION.LOGARITHMIC
