@@ -11,6 +11,8 @@ class VisualizationsControllerTest < ActionController::TestCase
     @vis2.save
 
     @tgd = data_sets(:thanksgiving)
+
+    @svg = Rails.root.join('test', 'CSVs', 'Konqi.svg')
   end
 
   test 'should get index' do
@@ -25,14 +27,30 @@ class VisualizationsControllerTest < ActionController::TestCase
       post :create, { visualization: { content: @vis1.content, data: @vis1.data, project_id: @vis1.project_id,
         globals: @vis1.globals, title: @vis1.title, user_id: @vis1.user_id } },  user_id: @kate.id
     end
-
     assert_redirected_to visualization_path(assigns(:visualization))
+    assert_difference('Visualization.count') do
+      post :create, { visualization: { content: @vis1.content, data: @vis1.data, project_id: @vis1.project_id,
+        globals: @vis1.globals, title: @vis1.title, user_id: @vis1.user_id, tn_file_key: 'abcd', tn_src: 'image' } },  user_id: @kate.id
+    end
+    assert_difference('Visualization.count') do
+      post :create, { visualization: { content: @vis1.content, data: @vis1.data, project_id: @vis1.project_id,
+        globals: @vis1.globals, title: @vis1.title, user_id: @vis1.user_id, svg: @svg } },  user_id: @kate.id
+    end
+    @svg = File.read(@svg)
+    assert_difference('Visualization.count') do
+      post :create, { visualization: { content: @vis1.content, data: @vis1.data, project_id: @vis1.project_id,
+        globals: @vis1.globals, title: @vis1.title, user_id: @vis1.user_id, svg: @svg } },  user_id: @kate.id
+    end
+    post :create, { format: 'json', visualization: { content: @vis1.content, data: @vis1.data, project_id: @vis1.project_id,
+        globals: @vis1.globals, user_id: @vis1.user_id, svg: @svg } },  user_id: @kate.id
+    assert_response :unprocessable_entity
   end
 
   test 'should show visualization' do
     get :show, { id: @vis2.id },  user_id: @kate.id
     assert_response :success
-
+    get :show, { id: @vis2.id, presentation: true },  user_id: @kate.id
+    assert_response :success
     # FIXME
     # assert_valid_html response.body
   end
@@ -50,9 +68,17 @@ class VisualizationsControllerTest < ActionController::TestCase
   end
 
   test 'should update visualization' do
-    put :update, { id: @vis2, visualization: { content: @vis1.content, data: @vis1.data,
-      project_id: @vis1.project_id, globals: @vis1.globals, title: @vis1.title, user_id: @vis1.user_id } },
+    put :update, { id: @vis1, visualization: { content: @vis1.content, data: @vis1.data,
+      project_id: @vis1.project_id, globals: @vis1.globals, title: @vis1.title, user_id: @kate.id } },
        user_id: @kate.id
+    assert_redirected_to visualization_path(assigns(:visualization))
+    put :update, { id: @vis1, visualization: { featured: '1', content: @vis1.content, data: @vis1.data,
+      project_id: @vis1.project_id, globals: @vis1.globals, title: @vis1.title, user_id: @kate.id } },
+       user_id: @admin.id
+    assert_redirected_to visualization_path(assigns(:visualization))
+    put :update, { id: @vis1, visualization: { featured: '0', content: @vis1.content, data: @vis1.data,
+      project_id: @vis1.project_id, globals: @vis1.globals, title: @vis1.title, user_id: @kate.id } },
+       user_id: @admin.id
     assert_redirected_to visualization_path(assigns(:visualization))
   end
 

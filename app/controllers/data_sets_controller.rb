@@ -1,5 +1,6 @@
 class DataSetsController < ApplicationController
   include ApplicationHelper
+  include DataSetsHelper
 
   # Allow for export without authentication
   skip_before_filter :authorize, only: [:export, :manualEntry, :manualUpload, :update, :show, :dataFileUpload, :field_matching, :jsonDataUpload, :create]
@@ -29,6 +30,10 @@ class DataSetsController < ApplicationController
     end
 
     @fields = @project.fields
+
+    if can_edit? @data_set
+      @cols, @data = format_slickgrid @fields, @data_set.data
+    end
 
     unless params['data'].nil?
       uploader = FileUploader.new
@@ -150,11 +155,14 @@ class DataSetsController < ApplicationController
   # GET /projects/1/manualEntry
   def manualEntry
     @project = Project.find(params[:id])
+    @fields = @project.fields
 
     if @project.lock? and !can_edit?(@project) and !key?(@project)
       redirect_to @project, alert: 'Project is locked'
       return
     end
+
+    @cols, @data = format_slickgrid @fields, []
   end
 
   # POST /projects/1/jsonDataUpload
