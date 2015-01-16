@@ -13,10 +13,9 @@
 
   closeForm = =>
     args.grid.getEditorLock().commitCurrentEdit()
-    $('body').off 'click.slickgrid-time'
     args.grid.resetActiveCell()
     
-  $('body').on 'click.slickgrid-number', (e) =>
+  $('body').on 'click.slickgrid-location', (e) =>
     if $(e.target).closest('.slick-cell.active').length == 0
       closeForm()
 
@@ -27,6 +26,7 @@
     trigger: 'manual'
 
   destroy: ->
+    $('body').off 'click.slickgrid-location'
     form.popover 'destroy'
     form.remove()
   focus: ->

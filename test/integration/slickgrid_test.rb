@@ -25,9 +25,12 @@ class SlickgridTest < ActionDispatch::IntegrationTest
 
   def slickgrid_set_date(row, col, yr, mo, dy, hr, mi, se)
     find(:css, ".slick-row:nth-child(#{row + 1})>.slick-cell.l#{col}").click
-    find(:css, '#dt-year-textbox').set "#{yr}"
+    find(:css, '#dt-year-textbox').set "#{yr}\n"
     find(:css, '#dt-month-textbox').click
     find(:css, "#dt-month-select>option:nth-child(#{mo})").select_option
+    td = all(:css, '#dt-date-group td')
+    td.select { |x| x['data-date'.to_sym] == "#{dy}" and x['data-month'.to_sym] == "#{mo - 1}" }.first.click
+    find(:css, '#dt-time-textbox').set "#{hr}:#{mi}:#{se}\n"
   end
 
   test 'slickgrid manual entry' do
@@ -90,9 +93,10 @@ class SlickgridTest < ActionDispatch::IntegrationTest
     slickgrid_enter_value 5, field_map['105'], '5, 5'
     slickgrid_enter_value 6, field_map['105'], '6, 6'
 
-    # assert presence of new data
-
     # delete some rows
+    find(:css, '.slick-row:nth-child(3) .slick-delete').click
+    find(:css, '.slick-row:nth-child(2) .slick-delete').click
+    find(:css, '.slick-row:nth-child(1) .slick-delete').click
 
     # assert correct rows were deleted
 

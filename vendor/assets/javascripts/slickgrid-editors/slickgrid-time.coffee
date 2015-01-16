@@ -11,7 +11,6 @@
 
   closeForm = =>
     args.grid.getEditorLock().commitCurrentEdit()
-    $('body').off 'click.slickgrid-time'
     args.grid.resetActiveCell()
 
   form = $(args.container).parent().datetimepicker
@@ -38,6 +37,8 @@
       args.position.bottom + 2
 
   destroy: ->
+    $('body').off 'click.slickgrid-time1'
+    $('body').off 'click.slickgrid-time2'
     # avoiding those stack overflows
     if form?
       temp = form
