@@ -67,14 +67,13 @@ $ ->
       (x, P) -> 1,
       (x, P) -> x * Math.exp(P[1] * x + P[2]),
       (x, P) -> Math.exp(P[1] * x + P[2])]
+    
     globals.REGRESSION.LOGARITHMIC = globals.REGRESSION.FUNCS.length
     globals.REGRESSION.FUNCS.push [
-      (x, P) -> P[0] + P[1] * Math.log(P[2] * x + P[3])
-      (x, P) -> 1
-      (x, P) -> Math.log(P[2] * x + P[3])
-      (x, P) -> (P[1] * x) / (P[2] * x + P[3])
-      (x, P) -> P[1] / (P[2] * x + P[3])
-    ]
+      (x, P) -> P[0] + Math.log(P[1] * x + P[2]),
+      (x, P) -> 1,
+      (x, P) -> x / (P[1] * x + P[2]),
+      (x, P) -> 1 / (P[1] * x + P[2])]
 
     globals.REGRESSION.NUM_POINTS = 200
 
@@ -102,11 +101,17 @@ $ ->
 
         when globals.REGRESSION.LOGARITHMIC
           # We want to avoid starting with a guess that takes the log of a negative number
-          Ps = [1,1,Math.min.apply(null, xs) + 1, 1]
+          Ps = [1,1,Math.min.apply(null, xs) + 1]
       
       # Get the new Ps
-      console.log normalizeData(xs)
-      [Ps, R2] = NLLS(func, normalizeData(xs), ys, Ps)
+      #console.log normalizeData(xs)
+      if type == globals.REGRESSION.LOGARITHMIC
+        console.log 'no normalization'
+        [Ps, R2] = NLLS(func, xs, ys, Ps)
+      else
+        console.log 'never runs'
+        [Ps, R2] = NLLS(func, normalizeData(xs), ys, Ps)
+      console.log "Ps are #{Ps}"
       # Create the highcharts series
       generateHighchartsSeries(Ps, R2, type, xBounds, seriesName, dashStyle)
 
@@ -115,8 +120,14 @@ $ ->
     ###
     generateHighchartsSeries = (Ps, R2, type, xBounds, seriesName, dashStyle) ->
       data = for i in [0..globals.REGRESSION.NUM_POINTS]
-        xv = 1 + (i / globals.REGRESSION.NUM_POINTS) #* ((normalizeData(xBounds.dataMax) - normalizeData(xBounds.dataMin)) + normalizeData(xBounds.dataMin))
-        yv = calculateRegressionPoint(Ps, xv, type)
+        xv = (i / globals.REGRESSION.NUM_POINTS) #* ((normalizeData(xBounds.dataMax) - normalizeData(xBounds.dataMin)) + normalizeData(xBounds.dataMin))
+        yv = 0
+        if type == globals.REGRESSION.LOGARITHMIC
+          console.log 'unnormalized reg pt'
+          #yv = calculateRegressionPoint(Ps, xv + 1, type)
+          yv = calculateRegressionPoint(Ps, xv * (xBounds.dataMax - xBounds.dataMin) + xBounds.dataMin, type)
+        else
+          yv = calculateRegressionPoint(Ps, xv + 1, type)
         {x: xv * (xBounds.dataMax - xBounds.dataMin) + xBounds.dataMin, y: yv}
       #Ps = visSpaceParameters(Ps, xBounds, type)
       str = makeToolTip(Ps, R2, type, seriesName)
@@ -143,7 +154,12 @@ $ ->
     Uses the regression matrix to calculate the y value given an x value.
     ###
     calculateRegressionPoint = (Ps, x, type) ->
+      console.log "x is #{x}"
+      #console.log "Ps are #{Ps}"
+      #console.log "hypothesis is #{globals.REGRESSION.FUNCS[type][0](x, Ps)}"
       globals.REGRESSION.FUNCS[type][0](x, Ps)
+      #a = Ps[0] + Ps[1] * Math.log(Ps[2] + x)
+      #a
 
     ###
     Returns tooltip description of the regression.
@@ -193,7 +209,7 @@ $ ->
           <div class="regressionTooltip"> #{seriesName} </div>
           <br>
           <strong>
-            f(x) = #{Ps[1]} * ln(#{Ps[2]}x + #{Ps[3]}) + #{Ps[0]}
+            f(x) = #{Ps[1]} * ln(x + #{Ps[2]}) + #{Ps[0]}
           </strong>
           """
 
@@ -238,6 +254,7 @@ $ ->
     NLLS_SHIFT_CUT_UP = 1.1
     NLLS_THRESH = 1e-10
     NLLS = (func, xs, ys, Ps) ->
+      console.log 'learning on data:', xs
       prevErr = Infinity
       shiftCut = 1
       for iter in [1..NLLS_MAX_ITER]
@@ -357,7 +374,7 @@ $ ->
     normalizeData = (points) ->
       max = Math.max.apply(null, points)
       min = Math.min.apply(null, points)
-      points.map((y) -> (y - min) / (max - min) + 1)
+      points.map((y) -> ((y - min) / (max - min)) + 1)
     
     # Calculate the standard deviation
     calculateStandardDev = (points, mean) ->
