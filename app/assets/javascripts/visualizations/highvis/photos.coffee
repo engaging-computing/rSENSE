@@ -83,7 +83,7 @@ $ ->
                   <img id='pic_#{i}' src="#{tmp.tn_src}"/> <br>
                   <div class="caption_wrap">
                     <span class="caption">
-                      Data Set: #{dset.name}(#{dset.dataset_id})
+                      Data Set: #{dset.name} (#{dset.dataset_id})
                     </span>
                   </div> <br>
                 </div>"""
