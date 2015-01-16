@@ -65,9 +65,8 @@ $ ->
     globals.REGRESSION.FUNCS.push [
       (x, P) -> P[0] + Math.exp(P[1] * x + P[2]),
       (x, P) -> 1,
-      (x, P) -> (x * x) * Math.exp(P[1] * x + P[2]),
-      (x, P) -> x * Math.exp(P[1] * x + P[2])]
-
+      (x, P) -> x * Math.exp(P[1] * x + P[2]),
+      (x, P) -> Math.exp(P[1] * x + P[2])]
     globals.REGRESSION.LOGARITHMIC = globals.REGRESSION.FUNCS.length
     globals.REGRESSION.FUNCS.push [
       (x, P) -> P[0] + P[1] * Math.log(P[2] * x + P[3])
@@ -106,6 +105,7 @@ $ ->
           Ps = [1,1,Math.min.apply(null, xs) + 1, 1]
       
       # Get the new Ps
+      console.log normalizeData(xs)
       [Ps, R2] = NLLS(func, normalizeData(xs), ys, Ps)
       # Create the highcharts series
       generateHighchartsSeries(Ps, R2, type, xBounds, seriesName, dashStyle)
@@ -115,7 +115,7 @@ $ ->
     ###
     generateHighchartsSeries = (Ps, R2, type, xBounds, seriesName, dashStyle) ->
       data = for i in [0..globals.REGRESSION.NUM_POINTS]
-        xv = (i / globals.REGRESSION.NUM_POINTS) #* ((normalizeData(xBounds.dataMax) - normalizeData(xBounds.dataMin)) + normalizeData(xBounds.dataMin))
+        xv = 1 + (i / globals.REGRESSION.NUM_POINTS) #* ((normalizeData(xBounds.dataMax) - normalizeData(xBounds.dataMin)) + normalizeData(xBounds.dataMin))
         yv = calculateRegressionPoint(Ps, xv, type)
         {x: xv * (xBounds.dataMax - xBounds.dataMin) + xBounds.dataMin, y: yv}
       #Ps = visSpaceParameters(Ps, xBounds, type)
@@ -252,8 +252,11 @@ $ ->
           while prevErr < nextErr or isNaN(nextErr)
             # If we line search too long and can't find a valid value
             # Then we declare the regression to have failed and throw.
+            #console.log prevErr
+            #console.log nextErr
             lsIters += 1
             if lsIters > 500
+              #console.log 'throwing error'
               throw new Error()
 
             shiftCut *= NLLS_SHIFT_CUT_DOWN
@@ -290,6 +293,7 @@ $ ->
       deltaPs = numeric.dot(numeric.dot(numeric.inv(numeric.dot(jacT, jac)),
         jacT),
         residuals)
+      #console.log 'invertible'
       deltaPs
 
     ###
@@ -353,7 +357,7 @@ $ ->
     normalizeData = (points) ->
       max = Math.max.apply(null, points)
       min = Math.min.apply(null, points)
-      points.map((y) -> (y - min) / (max - min))
+      points.map((y) -> (y - min) / (max - min) + 1)
     
     # Calculate the standard deviation
     calculateStandardDev = (points, mean) ->
