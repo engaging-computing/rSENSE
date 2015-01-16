@@ -385,14 +385,3 @@ $ ->
 
     visSpaceParameters = (Ps, xBounds, type) ->
       PPrimes = Ps
-      ret = switch type
-
-        when globals.REGRESSION.LINEAR
-
-        when globals.REGRESSION.QUADRATIC
-
-        when globals.REGRESSION.CUBIC
-
-        when globals.REGRESSION.EXPONENTIAL
-
-        when globals.REGRESSION.LOGARITHMIC
