@@ -6,9 +6,6 @@ require 'simplecov'
 require 'simplecov_rsense'
 SimpleCov.start 'rsense'
 
-require 'w3c_validators'
-include W3CValidators
-
 require 'capybara/rails'
 Capybara.javascript_driver = :none
 
@@ -18,7 +15,7 @@ require 'seed_reporter'
 Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new, Minitest::Reporters::SpecReporter.new, Minitest::Reporters::SeedReporter.new]
 
 require 'selenium-webdriver'
-include ActionDispatch::TestProcess
+
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.
   #
@@ -38,7 +35,7 @@ class ActiveSupport::TestCase
     assert_equal false, field, "Expected #{model.class} #{field} does not have the correct default field."
   end
 
-  # Method tests if a given field is equal to true
+  # Method tests if a given field is equal to false
   def assert_default_true(model, field)
     assert_equal true, field, "Expected #{model.class} #{field} does not have the correct default field."
   end
@@ -54,17 +51,21 @@ class ActiveSupport::TestCase
   end
 
   def assert_valid_html(text)
-    if @validator.nil?
-      @validator = MarkupValidator.new
+    temp = Tempfile.new(['foo', '.html'])
+    begin
+      temp.write(text)
+      temp.close
 
-      # override the DOCTYPE
-      @validator.set_doctype!(:html5)
+      script = Rails.root.join('test', 'html5check.py')
+      result = `(python "#{script}" --encoding=utf-8 "#{temp.path}") 2>&1`
+      status = result.split(/\r?\n/)[0]
 
-      # turn on debugging messages
-      @validator.set_debug!(true)
+      puts status
+      assert (status == 200 || status == 503), "HTML invalid:\n#{result}"
+    ensure
+      temp.unlink
     end
-
-    @validator.validate_text(text)
+    true
   end
 end
 
