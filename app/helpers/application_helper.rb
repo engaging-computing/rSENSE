@@ -99,7 +99,8 @@ module ApplicationHelper
 
     case obj
     when Project
-      @cur_user.try(:admin) || (obj.owner == @cur_user && obj.data_sets.count == 0)
+      (@cur_user.try(:admin) || obj.owner == @cur_user) &&
+        obj.data_sets.count == 0
     when User, Tutorial, News
       @cur_user.try(:admin)
     when DataSet, Visualization
