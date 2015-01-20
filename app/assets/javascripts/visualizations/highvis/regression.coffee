@@ -105,7 +105,6 @@ $ ->
       
       # Get the new Ps
       [Ps, R2] = NLLS(func, normalizeData(xs, type), ys, Ps)
-      console.log "Ps are #{Ps}"
       
       # Create the highcharts series
       generateHighchartsSeries(Ps, R2, type, xBounds, seriesName, dashStyle)
@@ -125,7 +124,7 @@ $ ->
         else
           yv = calculateRegressionPoint(Ps, xv + 1, type)
         {x: xv * (xBounds.dataMax - xBounds.dataMin) + xBounds.dataMin, y: yv}
-      #Ps = visSpaceParameters(Ps, xBounds, type)
+      Ps = visSpaceParameters(Ps, xBounds, type)
       str = makeToolTip(Ps, R2, type, seriesName)
 
       ret =
@@ -150,13 +149,8 @@ $ ->
     Uses the regression matrix to calculate the y value given an x value.
     ###
     calculateRegressionPoint = (Ps, x, type) ->
-      console.log "x is #{x}"
-      #console.log "Ps are #{Ps}"
-      #console.log "hypothesis is #{globals.REGRESSION.FUNCS[type][0](x, Ps)}"
       globals.REGRESSION.FUNCS[type][0](x, Ps)
-      #a = Ps[0] + Ps[1] * Math.log(Ps[2] + x)
-      #a
-
+      
     ###
     Returns tooltip description of the regression.
     ###
@@ -205,7 +199,7 @@ $ ->
           <div class="regressionTooltip"> #{seriesName} </div>
           <br>
           <strong>
-            f(x) = #{Ps[1]} * ln(x + #{Ps[2]}) + #{Ps[0]}
+            f(x) = ln(#{Ps[1]}x + #{Ps[2]}) + #{Ps[0]}
           </strong>
           """
 
@@ -250,7 +244,6 @@ $ ->
     NLLS_SHIFT_CUT_UP = 1.1
     NLLS_THRESH = 1e-10
     NLLS = (func, xs, ys, Ps) ->
-      console.log 'learning on data:', xs
       prevErr = Infinity
       shiftCut = 1
       for iter in [1..NLLS_MAX_ITER]
@@ -265,11 +258,8 @@ $ ->
           while prevErr < nextErr or isNaN(nextErr)
             # If we line search too long and can't find a valid value
             # Then we declare the regression to have failed and throw.
-            #console.log prevErr
-            #console.log nextErr
             lsIters += 1
             if lsIters > 500
-              #console.log 'throwing error'
               throw new Error()
 
             shiftCut *= NLLS_SHIFT_CUT_DOWN
@@ -306,8 +296,6 @@ $ ->
       deltaPs = numeric.dot(numeric.dot(numeric.inv(numeric.dot(jacT, jac)),
         jacT),
         residuals)
-      #console.log 'invertible'
-      deltaPs
 
     ###
     Calculates the current squared error for the given function, parameters and ground truth.
@@ -385,5 +373,66 @@ $ ->
         sigma += Math.pow(point - mean, 2)
       Math.sqrt( sigma / points.length )
 
+    ###
+    # Map the parameters of the learned feature space to the visualization space
+    # (done by Gauss-Jordan elimination)
+    ###
     visSpaceParameters = (Ps, xBounds, type) ->
-      PPrimes = Ps
+      linEqnSystem = []
+      max = xBounds.dataMax
+      min = xBounds.dataMin
+      for i in [0..globals.REGRESSION.NUM_POINTS]
+        xv = (i / globals.REGRESSION.NUM_POINTS)
+        
+        # Calculate hypothesis of each input over the data range
+        hypothesis = if type != globals.REGRESSION.LOGARITHMIC
+          globals.REGRESSION.FUNCS[type][0](xv + 1, Ps)
+        else
+          if globals.curVis.canvas == 'scatter_canvas'
+            globals.REGRESSION.FUNCS[type][0](xv * (max - min) + min, Ps)
+          else
+            globals.REGRESSION.FUNCS[type][0](xv, Ps)
+        
+        switch type
+          when globals.REGRESSION.LINEAR
+            x = (xv - 1) * (max - min) + min
+            linEqnSystem.push [1, x, hypothesis]
+          when globals.REGRESSION.QUADRATIC
+            x = (xv - 1) * (max - min) + min
+            x2 = Math.pow((xv - 1) * (max - min) + min, 2)
+            linEqnSystem.push [1, x, x2, hypothesis]
+          when globals.REGRESSION.CUBIC
+            x = (xv - 1) * (max - min) + min
+            x2 = Math.pow((xv - 1) * (max - min) + min, 2)
+            x3 = Math.pow((xv - 1) * (max - min) + min, 3)
+            linEqnSystem.push [1, x, x2, x3, hypothesis]
+          when globals.REGRESSION.EXPONENTIAL
+            x = (xv - 1) * (max - min) + min
+            
+          when globals.REGRESSION.LOGARITHMIC          
+      # PPrimes = Ps
+      # P = []
+      # max = xBounds.dataMax
+      # min = xBounds.dataMin
+      # switch type
+
+      #   when globals.REGRESSION.LINEAR
+      #     nx1 = 0
+      #     nx2 = 1
+
+      #     P[0] = 0
+      #     P[1] = PPrimes[1] / (max - min)
+        
+      #   when globals.REGRESSION.QUADRATIC
+      #     [1,1,1]
+        
+      #   when globals.REGRESSION.CUBIC
+      #     [1,1,1,1]
+        
+      #   when globals.REGRESSION.EXPONENTIAL
+      #     [1,1,1]
+        
+      #   when globals.REGRESSION.LOGARITHMIC
+      #     #The hard case
+      #     [1,1,1]
+      # P
