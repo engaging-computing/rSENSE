@@ -104,14 +104,9 @@ $ ->
           Ps = [1,1,Math.min.apply(null, xs) + 1]
       
       # Get the new Ps
-      #console.log normalizeData(xs)
-      if type == globals.REGRESSION.LOGARITHMIC
-        console.log 'no normalization'
-        [Ps, R2] = NLLS(func, xs, ys, Ps)
-      else
-        console.log 'never runs'
-        [Ps, R2] = NLLS(func, normalizeData(xs), ys, Ps)
+      [Ps, R2] = NLLS(func, normalizeData(xs, type), ys, Ps)
       console.log "Ps are #{Ps}"
+      
       # Create the highcharts series
       generateHighchartsSeries(Ps, R2, type, xBounds, seriesName, dashStyle)
 
@@ -123,9 +118,10 @@ $ ->
         xv = (i / globals.REGRESSION.NUM_POINTS) #* ((normalizeData(xBounds.dataMax) - normalizeData(xBounds.dataMin)) + normalizeData(xBounds.dataMin))
         yv = 0
         if type == globals.REGRESSION.LOGARITHMIC
-          console.log 'unnormalized reg pt'
-          #yv = calculateRegressionPoint(Ps, xv + 1, type)
-          yv = calculateRegressionPoint(Ps, xv * (xBounds.dataMax - xBounds.dataMin) + xBounds.dataMin, type)
+          if globals.curVis.canvas == 'timeline_canvas'
+            yv = calculateRegressionPoint(Ps, xv, type)
+          else
+            yv = calculateRegressionPoint(Ps, xv * (xBounds.dataMax - xBounds.dataMin) + xBounds.dataMin, type)
         else
           yv = calculateRegressionPoint(Ps, xv + 1, type)
         {x: xv * (xBounds.dataMax - xBounds.dataMin) + xBounds.dataMin, y: yv}
@@ -371,10 +367,16 @@ $ ->
       mean
 
     # Normalize
-    normalizeData = (points) ->
+    normalizeData = (points, type) ->
       max = Math.max.apply(null, points)
       min = Math.min.apply(null, points)
-      points.map((y) -> (y - min) / (max - min) + 1)
+      ret = if type == globals.REGRESSION.LOGARITHMIC
+        if globals.curVis.canvas == 'timeline_canvas'
+          points.map((y) -> (y - min) / (max - min))
+        else
+          points
+      else
+        points.map((y) -> ((y - min) / (max - min)) + 1)
     
     # Calculate the standard deviation
     calculateStandardDev = (points, mean) ->
