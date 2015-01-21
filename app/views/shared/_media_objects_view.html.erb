@@ -7,11 +7,11 @@
         <th style="max-width:10%">File</th>
         <th style="max-width:60%">Name</th>
         <th style="max-width:10%"> </th>
-        <% if ["Project","News","Tutorial"].include? object.class%>
+        <% if can_edit?( @project ) %>
+          <th class="featured-title">Featured Image</th>
+        <% end %>
+        <% if ["Project","News","Tutorial"].include? object.class %>
           <th style="max-width:10%">Display</th>
-          <% if can_edit?( @project ) %> 
-            <th class="featured-title">Featured Image</th>
-          <% end %>
         <% end %>
       </tr>
       </thead>
@@ -48,7 +48,7 @@
         <%end%>
       <% end %>
   </table>
- 
+
   <% if can_edit? object%>
     <div class="upload_media">
       <%= form_tag({controller: :media_objects ,action: :saveMedia, keys: "#{type}/#{object.id}"}, multipart: true) do %>

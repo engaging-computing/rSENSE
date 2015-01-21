@@ -99,7 +99,8 @@ module ApplicationHelper
 
     case obj
     when Project
-      @cur_user.try(:admin) || (obj.owner == @cur_user && obj.data_sets.count == 0)
+      (@cur_user.try(:admin) || obj.owner == @cur_user) &&
+        obj.data_sets.count == 0
     when User, Tutorial, News
       @cur_user.try(:admin)
     when DataSet, Visualization
@@ -122,11 +123,25 @@ module ApplicationHelper
   end
 
   def render_title
-    if @namespace[:controller] != 'projects' or !params.key?(:id)
-      "iSENSE - #{@namespace[:controller].capitalize}"
+    if @namespace[:controller] == 'projects' and params.key?(:id)
+      # viewing a project
+      Project.find(params[:id]).name.capitalize
+    elsif @namespace[:controller] == 'visualizations' and params.key?(:id)
+      if @namespace[:action] == 'displayVis'
+        # viewing data sets
+        if @datasets.count == 1
+          # viewing a single data set
+          @datasets[0].title.capitalize
+        else
+          # viewing multiple data sets
+          'Multiple Data Sets'
+        end
+      else
+        # viewing a saved vis
+        Visualization.find(params[:id]).name.capitalize
+      end
     else
-      title_proj = Project.find(params[:id]).name
-      "iSENSE - #{title_proj}"
+      @namespace[:controller].capitalize
     end
   end
 

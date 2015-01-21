@@ -6,6 +6,10 @@ require 'simplecov'
 require 'simplecov_rsense'
 SimpleCov.start 'rsense'
 
+require 'test/unit'
+require 'html-validator'
+include Test::Unit::Assertions
+
 require 'capybara/rails'
 Capybara.javascript_driver = :none
 # Capybara.javascript_driver = :webkit
@@ -17,7 +21,7 @@ require 'seed_reporter'
 Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new, Minitest::Reporters::SpecReporter.new, Minitest::Reporters::SeedReporter.new]
 
 require 'selenium-webdriver'
-
+include ActionDispatch::TestProcess
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.
   #
@@ -37,7 +41,7 @@ class ActiveSupport::TestCase
     assert_equal false, field, "Expected #{model.class} #{field} does not have the correct default field."
   end
 
-  # Method tests if a given field is equal to false
+  # Method tests if a given field is equal to true
   def assert_default_true(model, field)
     assert_equal true, field, "Expected #{model.class} #{field} does not have the correct default field."
   end
@@ -52,20 +56,9 @@ class ActiveSupport::TestCase
       "String contains #{short}"
   end
 
-  def assert_valid_html(_text)
-    #     temp = Tempfile.new(['foo', '.html'])
-    #     begin
-    #       temp.write(text)
-    #       temp.close
-    #
-    #       script = Rails.root.join('test', 'html5check.py')
-    #       result = `(python "#{script}" --encoding=utf-8 "#{temp.path}") 2>&1`
-    #
-    #       assert result =~ /^The document is valid HTML5/, "HTML invalid:\n#{result}"
-    #     ensure
-    #       temp.unlink
-    #     end
-    true
+  def assert_valid_html(text)
+    puts text
+    # assert_is_html5_valid text
   end
 end
 
