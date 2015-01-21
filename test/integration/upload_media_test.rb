@@ -80,26 +80,24 @@ class UploadMediaTest < ActionDispatch::IntegrationTest
     find('.upload_media form').attach_file('upload', ods_path)
     assert page.has_content?('test.ods'), 'File should be in list'
 
-    # Test for media objects helpers
+    # Failed Upload media to project
     visit "/projects/#{proj_id}"
-    assert page.has_css?('.media_edit')
-    all('.media_edit')[0].click
-    assert page.has_content?('nerdboy.jpg')
-
-    visit "/projects/#{proj_id}"
-    assert page.has_css?('.media_edit')
-    all('.media_edit')[1].click
-    assert page.has_content? 'Warning'
-
-    visit "/projects/#{proj_id}"
-    assert page.has_css?('.media_edit')
-    all('.media_edit')[2].click
-    assert page.has_content? 'Warning'
-
-    visit "/projects/#{proj_id}"
-    assert page.has_css?('.media_edit')
-    all('.media_edit')[2].click
-    assert page.has_content? 'Warning'
-
+    assert page.has_content? 'Media'
+    html_path = Rails.root.join('test', 'CSVs', 'test.html')
+    page.execute_script "$('#upload').show()"
+    find('.upload_media form').attach_file('upload', html_path)
+    assert page.has_no_content?('test.html'), 'File should be in list'
+    assert page.has_content?('Sorry, html is not a supported file type.'), 'Unsupported file type failed.'
+    nerdboy_found = 0
+    @project = Project.find(proj_id)
+    @project.media_objects.length.times do |i|
+      visit "/projects/#{proj_id}"
+      all('.media_edit')[i].click
+      if page.html.include? 'nerdboy.jpg'
+        nerdboy_found += 1
+      end
+      assert page.html.include? "data-page-name=\"media_objects/show\""
+    end
+    assert nerdboy_found == 1, 'Nerdboy was not displayed exactly once on the media objects view.'
   end
 end

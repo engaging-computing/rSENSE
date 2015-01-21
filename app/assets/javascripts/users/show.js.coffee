@@ -1,19 +1,17 @@
 # Place all the behaviors and hooks related to the users show page here.
 setupCallbacks = () ->
   ($ "a.contrib-delete-link").on "ajax:success", (ee, data, status, xhr) ->
-    ($ '#ajax-status').html("Delete succeeded")
     ($ ee.target).closest('tr').hide()
 
   ($ "a.contrib-delete-link").on "ajax:error", (ee, data, status, xhr) ->
-    ($ '#ajax-status').html("Delete failed: #{status} #{data}")
+    # TODO Handle Error
 
 IS.onReady "users/show", ->
   # Start recent 3
   nav_list = []
 
   ($ '#user_filter li').each (index) ->
-    if index != 0
-      nav_list.push ($ @).text()
+    nav_list.push ($ @).text()
 
   nav_list.push "All"
 
@@ -37,7 +35,8 @@ IS.onReady "users/show", ->
       globals.arrowsClicked = false
 
       $.ajax
-        url: "/users/#{($ '#contribution_search').attr('data-user-id')}/contributions"
+        url: "/users/#{($ '#contribution_search')
+          .attr('data-user-id')}/contributions"
         data: filter_ajax_params
         dataType: "html"
         success: (filtered_html) ->
@@ -51,14 +50,13 @@ IS.onReady "users/show", ->
             ($ ".pagebck").hide()
           else
             ($ ".pagebck").show()
-          if(($ "#mparams").attr("lastPage") == "true" || parseInt($("#mparams").attr("totalPages")) == 0)
+          if(($ "#mparams").attr("lastPage") == "true" ||
+          parseInt($("#mparams").attr("totalPages")) == 0)
             ($ ".pagefwd").hide()
           else
             ($ ".pagefwd").show()
 
           setupCallbacks()
-          ($ '#ajax-status').html "showing tab: #{filter_selection}"
-
 
   window.globals ?= {}
   globals.arrowsClicked = false
@@ -73,13 +71,15 @@ IS.onReady "users/show", ->
     globals.arrowsClicked = false
 
     $.ajax
-      url: "/users/#{($ '#contribution_search').attr('data-user-id')}/contributions"
+      url: "/users/#{($ '#contribution_search')
+        .attr('data-user-id')}/contributions"
       data: ajax_params
       dataType: "html"
       success: (dat) ->
         ($ "#contributions").html dat
         if (parseInt($("#mparams").attr("totalPages")) > 0)
-          ($ "#pageLabel").html "Page " + (parseInt( $("#page").val(), 10 ) + 1) +
+          ($ "#pageLabel").html "Page " +
+            (parseInt( $("#page").val(), 10 ) + 1) +
             " of " + $("#mparams").attr("totalPages")
         else
           ($ "#pageLabel").html "No Contributions"
@@ -87,7 +87,8 @@ IS.onReady "users/show", ->
           ($ ".pagebck").hide()
         else
           ($ ".pagebck").show()
-        if($("#mparams").attr("lastPage") == "true" || parseInt($("#mparams").attr("totalPages")) == 0)
+        if($("#mparams").attr("lastPage") == "true" ||
+        parseInt($("#mparams").attr("totalPages")) == 0)
           ($ ".pagefwd").hide()
         else
           ($ ".pagefwd").show()
@@ -286,4 +287,3 @@ IS.onReady "users/show", ->
 
   ($ '.gravatar_img').tooltip
     title: "Go to www.gravatar.com to change your avatar"
-
