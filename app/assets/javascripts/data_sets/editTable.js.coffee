@@ -54,7 +54,11 @@ setupTable = (cols, data) ->
       grid.invalidate()
 
       if grid.getDataLength() == 0
-        toido thing
+        fields = {id: currId}
+        currId += 1
+        for x in cols
+          fields[x.field] = ''
+        view.addItem fields
 
   view.onRowCountChanged.subscribe (e, args) ->
     grid.updateRowCount()
@@ -115,6 +119,7 @@ setupTable = (cols, data) ->
     $('.edit_table_save').text 'Saving...'
 
     if uploadSettings.pageName == 'edit'
+      console.log formattedData
       $.ajax
         url: "#{uploadSettings["urlEdit"]}"
         type: "#{uploadSettings["methodEdit"]}"
