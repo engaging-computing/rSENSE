@@ -67,54 +67,52 @@ $ ->
           excess = divWidth - (imgsPerLine * (defMargins + imgWidth) + 20)
 
         $('#polaroid').css(
-          'margin-left': "#{(defMargins / 2) + (excess / 2)}px",
-          'margin-right': "#{(defMargins / 2) + (excess / 2)}px",
-          'margin-top': "#{defMargins / 2}px",
+          'margin-left':   "#{(defMargins / 2) + (excess / 2)}px",
+          'margin-right':  "#{(defMargins / 2) + (excess / 2)}px",
+          'margin-top':    "#{defMargins / 2}px",
           'margin-bottom': "#{defMargins / 2}px"
         )
 
+        # prepare the handlebars html templates
+        source = $("#photo-template").html();
+        photo_template = Handlebars.compile(source);
+
+        source = $("#modal-template").html();
+        modal_template = Handlebars.compile(source);
+
         for ds of data.metadata
-          if data.metadata[ds].photos.length > 0
-            for pic of data.metadata[ds].photos
-              tmp = data.metadata[ds].photos[pic]
-              dset = data.metadata[ds]
-              do(tmp, dset) ->
-                figure = """<div class='p_item'>
-                  <img id='pic_#{i}' src="#{tmp.tn_src}"/> <br>
-                  <div class="caption_wrap">
-                    <span class="caption">
-                      Data Set: #{dset.name} (#{dset.dataset_id})
-                    </span>
-                  </div> <br>
-                </div>"""
-                $("#polaroid").append figure
+
+          dset = data.metadata[ds]
+          if dset.photos.length > 0
+            for pic of dset.photos
+
+              photo = dset.photos[pic]
+              do(photo, dset) ->
+
+                figure = {
+                  index:  i
+                  tn_src: photo.tn_src
+                  src:    photo.src
+                  name:   dset.name
+                  id:     dset.dataset_id
+                };
+
+                $("#polaroid").append photo_template(figure)
                 $('#pic_' + i).css(
                   'cursor': 'pointer'
                 )
                 $('#pic_' + i).click ->
-                  $('#polaroid').append("""
-                    <div class="modal fade" id="target_img" tabindex='-1'>
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <button type="button" class="close"
-                              data-dismiss="modal"aria-hidden="true">
-                            <i class="fa fa-times"></i> Close</button>
-                          </div>
-                          <div class="modal-body">
-                            <img src='#{tmp.src}' style='width:100%'/>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    """)
+                  $('#polaroid').append modal_template(figure)
 
                   $('#target_img').modal
                     keyboard: true
                   $('#target_img').on "hidden.bs.modal", ->
                     $('#target_img').remove()
+
               i++
-              $('.p_item').css('margin': "#{defMargins / 2}px")
+              $('.p_item').css(
+                'margin': "#{defMargins / 2}px"
+              )
       end: ->
         @unhideControls()
         super()

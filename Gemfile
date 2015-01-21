@@ -83,3 +83,6 @@ gem 'useragent', '~> 0.10.0'
 
 # HTML Validation
 gem 'html-validator', '~> 0.1.1'
+
+# Handlebars for HTML templates
+gem 'handlebars', '~> 0.6.0'
