@@ -375,7 +375,7 @@ $ ->
 
     ###
     # Map the parameters of the learned feature space to the visualization space
-    # (done by Gauss-Jordan elimination on an overdetermined system)
+    # (done by Gauss-Jordan elimination on a system of linear equations)
     ###
     visSpaceParameters = (Ps, xBounds, type) ->
       coeffMatrix = []
@@ -384,47 +384,48 @@ $ ->
       min = xBounds.dataMin
       if globals.curVis.canvas == 'scatter_canvas' and type == globals.REGRESSION.LOGARITHMIC
         return Ps
-      console.log Ps.length
-      for i in [0...Ps.length]
-        xv = (i / Ps.length)
+      # for i in [0...Ps.length]
+      #   xv = (i / Ps.length)
         
-        # Calculate hypothesis of each input over the data range
-        hypothesis = if type != globals.REGRESSION.LOGARITHMIC
-          globals.REGRESSION.FUNCS[type][0](xv + 1, Ps)
-        else
-          if globals.curVis.canvas == 'scatter_canvas'
-            globals.REGRESSION.FUNCS[type][0](xv * (max - min) + min, Ps)
-          else
-            globals.REGRESSION.FUNCS[type][0](xv, Ps)
-        
-        switch type
-          when globals.REGRESSION.LINEAR
-            x = (xv) * (max - min) + min
-            coeffMatrix.push [1, x]
-            solutionMatrix.push hypothesis
-          when globals.REGRESSION.QUADRATIC
-            x = (xv) * (max - min) + min
-            x2 = Math.pow((xv) * (max - min) + min, 2)
-            coeffMatrix.push [1, x, x2]
-            solutionMatrix.push hypothesis
-          when globals.REGRESSION.CUBIC
-            x = (xv + 1) * (max - min) + min
-            x2 = Math.pow((xv - 1) * (max - min) + min, 2)
-            x3 = Math.pow((xv - 1) * (max - min) + min, 3)
-            coeffMatrix.push [1, x, x2, x3]
-            solutionMatrix.push hypothesis
-          when globals.REGRESSION.EXPONENTIAL
-            x = (xv + 1) * (max - min) + min
-            coeffMatrix.push [x, 1]
-            solutionMatrix.push Math.log(hypothesis - Ps[0])
-          when globals.REGRESSION.LOGARITHMIC
-            x = xv * (max - min) + min
-            coeffMatrix.push [x, 1]
-            solutionMatrix.push Math.exp(hypothesis - Ps[0])
-      console.log coeffMatrix, solutionMatrix
+      #   # Calculate hypothesis of each input over the data range
+      #   hypothesis = if type != globals.REGRESSION.LOGARITHMIC
+      #     globals.REGRESSION.FUNCS[type][0](xv + 1, Ps)
+      #   else
+      #     if globals.curVis.canvas == 'scatter_canvas'
+      #       globals.REGRESSION.FUNCS[type][0](xv * (max - min) + min, Ps)
+      #     else
+      #       globals.REGRESSION.FUNCS[type][0](xv, Ps)
+      newPs = []  
+      switch type
+        when globals.REGRESSION.LINEAR
+          coeffMatrix.push [1, min]
+          coeffMatrix.push [1, max]
+          solutionMatrix.push globals.REGRESSION.FUNCS[globals.REGRESSION.LINEAR][0](1, Ps)
+          solutionMatrix.push globals.REGRESSION.FUNCS[globals.REGRESSION.LINEAR][0](2, Ps)
+          newPs = numeric.solve(coeffMatrix, solutionMatrix)
+        when globals.REGRESSION.QUADRATIC
+          coeffMatrix.push [1, min]
+          coeffMatrix.push [1, max]
+          solutionMatrix.push globals.REGRESSION.FUNCS[globals.REGRESSION.LINEAR][0](1, Ps)
+          solutionMatrix.push globals.REGRESSION.FUNCS[globals.REGRESSION.LINEAR][0](2, Ps)
+          newPs = numeric.solve(coeffMatrix, solutionMatrix)
+          Ps.push
+        when globals.REGRESSION.CUBIC
+          x = (xv + 1) * (max - min) + min
+          x2 = Math.pow((xv - 1) * (max - min) + min, 2)
+          x3 = Math.pow((xv - 1) * (max - min) + min, 3)
+          coeffMatrix.push [1, x, x2, x3]
+          solutionMatrix.push hypothesis
+        when globals.REGRESSION.EXPONENTIAL
+          x = (xv + 1) * (max - min) + min
+          coeffMatrix.push [x, 1]
+          solutionMatrix.push Math.log(hypothesis - Ps[0])
+        when globals.REGRESSION.LOGARITHMIC
+          x = xv * (max - min) + min
+          coeffMatrix.push [x, 1]
+          solutionMatrix.push Math.exp(hypothesis - Ps[0])
       newPs = numeric.solve(coeffMatrix, solutionMatrix)
-      console.log "newPs are #{newPs}"
-      console.log(numeric.solve([[1, 1], [1, 2.5], [1, 4]], [2, 5, 8]))
+      console.log numeric.solve([ [1,2,1],[1,3,1], [1,4,1]], [6, 8, 10])
       newPs
       # PPrimes = Ps
       # P = []
