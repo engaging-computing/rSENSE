@@ -617,7 +617,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     id = parse(response)['id']
 
     post '/api/v1/projects/3/add_key',
-        email: 'kcarcia@cs.uml.edu',
+        email: 'nixon@whitehouse.gov',
         password: '12345',
         contrib_key:
           {
