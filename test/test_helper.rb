@@ -61,7 +61,7 @@ class ActiveSupport::TestCase
       status = result.split(/\r?\n/)[0]
 
       test = (status == '200' && result =~ /^The document is valid HTML5/)
-      assert (test || status == '503'), "HTML invalid:\n#{result}"
+      assert test || status == '503', "HTML invalid:\n#{result}"
     ensure
       temp.unlink
     end
