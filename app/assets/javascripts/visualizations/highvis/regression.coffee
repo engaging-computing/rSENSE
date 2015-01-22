@@ -375,14 +375,18 @@ $ ->
 
     ###
     # Map the parameters of the learned feature space to the visualization space
-    # (done by Gauss-Jordan elimination)
+    # (done by Gauss-Jordan elimination on an overdetermined system)
     ###
     visSpaceParameters = (Ps, xBounds, type) ->
-      linEqnSystem = []
+      coeffMatrix = []
+      solutionMatrix = []
       max = xBounds.dataMax
       min = xBounds.dataMin
-      for i in [0..globals.REGRESSION.NUM_POINTS]
-        xv = (i / globals.REGRESSION.NUM_POINTS)
+      if globals.curVis.canvas == 'scatter_canvas' and type == globals.REGRESSION.LOGARITHMIC
+        return Ps
+      console.log Ps.length
+      for i in [0...Ps.length]
+        xv = (i / Ps.length)
         
         # Calculate hypothesis of each input over the data range
         hypothesis = if type != globals.REGRESSION.LOGARITHMIC
@@ -395,21 +399,33 @@ $ ->
         
         switch type
           when globals.REGRESSION.LINEAR
-            x = (xv - 1) * (max - min) + min
-            linEqnSystem.push [1, x, hypothesis]
+            x = (xv) * (max - min) + min
+            coeffMatrix.push [1, x]
+            solutionMatrix.push hypothesis
           when globals.REGRESSION.QUADRATIC
-            x = (xv - 1) * (max - min) + min
-            x2 = Math.pow((xv - 1) * (max - min) + min, 2)
-            linEqnSystem.push [1, x, x2, hypothesis]
+            x = (xv) * (max - min) + min
+            x2 = Math.pow((xv) * (max - min) + min, 2)
+            coeffMatrix.push [1, x, x2]
+            solutionMatrix.push hypothesis
           when globals.REGRESSION.CUBIC
-            x = (xv - 1) * (max - min) + min
+            x = (xv + 1) * (max - min) + min
             x2 = Math.pow((xv - 1) * (max - min) + min, 2)
             x3 = Math.pow((xv - 1) * (max - min) + min, 3)
-            linEqnSystem.push [1, x, x2, x3, hypothesis]
+            coeffMatrix.push [1, x, x2, x3]
+            solutionMatrix.push hypothesis
           when globals.REGRESSION.EXPONENTIAL
-            x = (xv - 1) * (max - min) + min
-            
-          when globals.REGRESSION.LOGARITHMIC          
+            x = (xv + 1) * (max - min) + min
+            coeffMatrix.push [x, 1]
+            solutionMatrix.push Math.log(hypothesis - Ps[0])
+          when globals.REGRESSION.LOGARITHMIC
+            x = xv * (max - min) + min
+            coeffMatrix.push [x, 1]
+            solutionMatrix.push Math.exp(hypothesis - Ps[0])
+      console.log coeffMatrix, solutionMatrix
+      newPs = numeric.solve(coeffMatrix, solutionMatrix)
+      console.log "newPs are #{newPs}"
+      console.log(numeric.solve([[1, 1], [1, 2.5], [1, 4]], [2, 5, 8]))
+      newPs
       # PPrimes = Ps
       # P = []
       # max = xBounds.dataMax
