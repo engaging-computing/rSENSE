@@ -148,7 +148,7 @@ class UploadDataTest < ActionDispatch::IntegrationTest
 
     all('.data_set_edit')[0].click
     assert page.has_content? 'Project:'
-    find('#edit_table_save').click
+    find('#edit_table_save_2').click
     assert page.has_content?('Save Visualization'), 'Data didnt save'
   end
 

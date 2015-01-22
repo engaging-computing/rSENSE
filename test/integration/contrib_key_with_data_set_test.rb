@@ -44,11 +44,14 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     find('#contributor_name').set('Jake')
     click_on 'Submit Key'
     click_on 'Manual Entry'
-    list = page.all(:css, 'th')
-    field_id =  list[1]['data-field-id']
+    list = page.all(:css, '.slick-header-column')
+    field_id_long = list[0]['id']
+    field_id_pos = field_id_long.rindex(/-/)
+    field_id = field_id_long[field_id_pos + 1 .. -1]
     find('#data_set_name').set('Data1')
-    find('.validate_number').set('5')
-    click_on 'Save'
+    find('.slick-cell.l0.r0').double_click
+    find('.editor-text').set('5')
+    find('#edit_table_save_2').click
     assert page.has_content? 'Visualizations'
     click_on 'Contributor Key Test Project'
     visit '/'
@@ -62,8 +65,9 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     click_on 'Submit Key'
     click_on 'Manual Entry'
     find('#data_set_name').set('Data2')
-    find('.validate_number').set('5')
-    click_on 'Save'
+    find('.slick-cell.l0.r0').double_click
+    find('.editor-text').set('5')
+    find('#edit_table_save_2').click
     assert page.has_content? 'Visualizations'
     visit '/projects'
     click_on 'Contributor Key Test Project'
