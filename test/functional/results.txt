@@ -1,0 +1,353 @@
+
+# Running tests with run options --seed 11908:
+
+Started with run options --seed 11908
+
+Initializing RNG with seed 11908
+
+TutorialsControllerTest
+.  test_should_create_tutorial                                    [32m PASS[0m (0.10s)
+.  test_should_destroy_tutorial                                   [32m PASS[0m (0.03s)
+.  test_should_feature_tutorial                                   [32m PASS[0m (0.04s)
+.  test_should_get_edit                                           [32m PASS[0m (0.48s)
+.  test_should_get_index                                          [32m PASS[0m (0.35s)
+.  test_should_get_index_ordered                                  [32m PASS[0m (0.03s)
+.  test_should_get_index_paged                                    [32m PASS[0m (0.02s)
+.  test_should_get_index_searched                                 [32m PASS[0m (0.02s)
+.  test_should_get_index_sorted                                   [32m PASS[0m (0.02s)
+.  test_should_not_create_tutorial_as_non-admin                   [32m PASS[0m (0.02s)
+.  test_should_not_destroy_tutorial_as_non-admin                  [32m PASS[0m (0.02s)
+.  test_should_show_tutorial                                      [32m PASS[0m (0.66s)
+.  test_should_update_tutorial                                    [32m PASS[0m (0.02s)
+
+ContribKeysControllerTest
+.  test_bad_key_should_fail                                       [32m PASS[0m (0.03s)
+.  test_missing_key_should_fail                                   [32m PASS[0m (0.02s)
+.  test_should_create_contrib_key                                 [32m PASS[0m (0.03s)
+.  test_should_destroy_key                                        [32m PASS[0m (0.02s)
+.  test_should_enter_key                                          [32m PASS[0m (0.02s)
+.  test_should_not_create_contrib_key                             [32m PASS[0m (0.02s)
+.  test_should_not_destroy_key                                    [32m PASS[0m (0.02s)
+
+VisualizationTest
+.  test_content_is_nil                                            [32m PASS[0m (0.00s)
+.  test_created_at_is_nil                                         [32m PASS[0m (0.00s)
+.  test_featured_at_is_nil                                        [32m PASS[0m (0.00s)
+.  test_featured_is_false                                         [32m PASS[0m (0.00s)
+.  test_hidden_is_false                                           [32m PASS[0m (0.00s)
+.  test_project_id_is_nil                                         [32m PASS[0m (0.00s)
+.  test_set_visualization_summary                                 [32m PASS[0m (0.00s)
+.  test_summary_is_nil                                            [32m PASS[0m (0.00s)
+.  test_thumb_id_is_nil                                           [32m PASS[0m (0.00s)
+.  test_title_is_nil                                              [32m PASS[0m (0.00s)
+.  test_user_id_is_nil                                            [32m PASS[0m (0.00s)
+.  test_vis_id_is_nil                                             [32m PASS[0m (0.00s)
+
+UploadDataTest
+.  test_edit_data_set                                             [32m PASS[0m (4.01s)
+.  test_invalid_csv_(two_lat_fields)                              [32m PASS[0m (1.49s)
+.  test_link_google_doc                                           [32m PASS[0m (2.62s)
+.  test_unreadable_file                                           [32m PASS[0m (1.23s)
+.  test_upload_csv                                                [32m PASS[0m (1.76s)
+.  test_upload_gpx                                                [32m PASS[0m (1.95s)
+.  test_upload_ods                                                [32m PASS[0m (2.21s)
+.  test_upload_with_key                                           [32m PASS[0m (17.42s)
+.  test_upload_xls                                                [32m PASS[0m (2.03s)
+.  test_upload_xlsx                                               [32m PASS[0m (2.14s)
+
+MetaTest
+.  test_imagemagick_is_installed                                  [32m PASS[0m (0.08s)
+.  test_minimum_ruby_version                                      [32m PASS[0m (0.00s)
+.  test_zip_is_installed                                          [32m PASS[0m (0.00s)
+
+HomeControllerTest
+.  test_should_get_about                                          [32m PASS[0m (0.41s)
+.  test_should_get_api_page                                       [32m PASS[0m (0.35s)
+.  test_should_get_bug_report_page                                [32m PASS[0m (0.35s)
+.  test_should_get_contact                                        [32m PASS[0m (0.35s)
+.  test_should_get_index                                          [32m PASS[0m (0.35s)
+.  test_should_get_privacy_policy                                 [32m PASS[0m (0.35s)
+
+UploadMediaTest
+.  test_upload_media                                              [32m PASS[0m (5.65s)
+
+ApiV1Test
+.  test_append_to_data_set                                        [32m PASS[0m (0.15s)
+.  test_append_to_data_set_(contribution_key)                     [32m PASS[0m (0.03s)
+.  test_create_data_set                                           [32m PASS[0m (0.11s)
+.  test_create_data_set_with_contribution_key                     [32m PASS[0m (0.06s)
+.  test_create_fields                                             [32m PASS[0m (0.18s)
+.  test_create_fields_named                                       [32m PASS[0m (0.17s)
+.  test_create_fields_with_restrictions                           [32m PASS[0m (0.17s)
+.  test_create_media_object                                       [32m PASS[0m (0.18s)
+.  test_create_media_object_contribution_key                      [32m PASS[0m (0.08s)
+.  test_create_media_object_for_dataset_with_key                  [32m PASS[0m (0.13s)
+.  test_create_project                                            [32m PASS[0m (0.08s)
+.  test_create_project_named                                      [32m PASS[0m (0.09s)
+.  test_edit_data_set                                             [32m PASS[0m (0.15s)
+.  test_fail_append_to_data_set_(bad_contribution_key)            [32m PASS[0m (0.02s)
+.  test_fail_append_to_data_set_(failed_sanitization)             [32m PASS[0m (0.08s)
+.  test_fail_append_to_data_set_(not_found)                       [32m PASS[0m (0.08s)
+.  test_fail_get_user_info                                        [32m PASS[0m (0.08s)
+.  test_failed_create_data_set                                    [32m PASS[0m (0.02s)
+.  test_failed_create_data_set_same_name                          [32m PASS[0m (0.02s)
+.  test_failed_create_data_set_with_bad_contribution_key          [32m PASS[0m (0.02s)
+.  test_failed_create_data_set_with_contribution_key_no_name      [32m PASS[0m (0.03s)
+.  test_failed_create_fields                                      [32m PASS[0m (0.31s)
+.  test_failed_create_media_bad_auth                              [32m PASS[0m (0.02s)
+.  test_failed_create_media_bad_id                                [32m PASS[0m (0.10s)
+.  test_failed_create_media_bad_type                              [32m PASS[0m (0.10s)
+.  test_failed_create_media_object_contribution_key               [32m PASS[0m (0.02s)
+.  test_failed_create_project                                     [32m PASS[0m (0.02s)
+.  test_failed_edit_data_set                                      [32m PASS[0m (0.08s)
+.  test_get_field                                                 [32m PASS[0m (0.02s)
+.  test_get_project                                               [32m PASS[0m (0.03s)
+.  test_get_project_full                                          [32m PASS[0m (0.03s)
+.  test_get_projects_index                                        [32m PASS[0m (0.05s)
+.  test_get_projects_index_paged                                  [32m PASS[0m (0.03s)
+.  test_get_projects_index_searched                               [32m PASS[0m (0.03s)
+.  test_get_projects_sorted_and_ordered                           [32m PASS[0m (0.05s)
+.  test_get_user_info                                             [32m PASS[0m (0.08s)
+
+TutorialsTest
+.  test_create_a_tutorial                                         [32m PASS[0m (2.84s)
+
+SmallPageTest
+.  test_only_first_paragraph                                      [32m PASS[0m (1.61s)
+
+PostNewsTest
+.  test_add_a_news_item                                           [32m PASS[0m (2.24s)
+.  test_add_summary_to_news                                       [32m PASS[0m (1.16s)
+.  test_delete_news                                               [32m PASS[0m (1.20s)
+.  test_publish_news                                              [32m PASS[0m (4.02s)
+.  test_rename_news                                               [32m PASS[0m (1.12s)
+
+NewsControllerTest
+.  test_should_create_news                                        [32m PASS[0m (0.10s)
+.  test_should_create_news_(json)                                 [32m PASS[0m (0.02s)
+.  test_should_destroy_news                                       [32m PASS[0m (0.02s)
+.  test_should_destroy_news_(json)                                [32m PASS[0m (0.03s)
+.  test_should_get_index                                          [32m PASS[0m (0.65s)
+.  test_should_get_index_(json)                                   [32m PASS[0m (0.02s)
+.  test_should_not_create_news_as_non-admin_(json)                [32m PASS[0m (0.02s)
+.  test_should_show_news                                          [32m PASS[0m (0.35s)
+.  test_should_show_news_(json)                                   [32m PASS[0m (0.04s)
+.  test_should_update_news                                        [32m PASS[0m (0.02s)
+.  test_should_update_news_(json)                                 [32m PASS[0m (0.02s)
+
+RenameVizTest
+.  test_create,_modify,_and_delete_a_viz                          [32m PASS[0m (3.79s)
+
+MediaObjectsControllerTest
+.  test_should_destroy_media_object                               [32m PASS[0m (0.10s)
+.  test_should_show_media_object                                  [32m PASS[0m (0.03s)
+.  test_should_update_media_object                                [32m PASS[0m (0.02s)
+.  test_should_upload_media_to_data_set                           [32m PASS[0m (0.11s)
+.  test_should_upload_media_to_news                               [32m PASS[0m (0.10s)
+.  test_should_upload_media_to_tutorial                           [32m PASS[0m (0.10s)
+.  test_should_upload_media_to_user                               [32m PASS[0m (0.10s)
+.  test_should_upload_media_to_visualization                      [32m PASS[0m (0.10s)
+.  test_shouldnt_destroy_media_object                             [32m PASS[0m (0.02s)
+.  test_shouldnt_update_media_object                              [32m PASS[0m (0.02s)
+
+MediaObjectTest
+.  test_data_set_id_is_nil                                        [32m PASS[0m (0.00s)
+.  test_hidden_is_false                                           [32m PASS[0m (0.00s)
+.  test_project_id_is_nil                                         [32m PASS[0m (0.00s)
+.  test_tutorial_id_is_nil                                        [32m PASS[0m (0.00s)
+.  test_user_id_is_nil                                            [32m PASS[0m (0.00s)
+.  test_visualization_id_is_nil                                   [32m PASS[0m (0.00s)
+
+DataSetTest
+.  test_data_set_title                                            [32m PASS[0m (0.00s)
+.  test_project_id                                                [32m PASS[0m (0.00s)
+.  test_user_id                                                   [32m PASS[0m (0.00s)
+
+CloneProjectTest
+E  test_nixon_clones_kates_project                                [31mERROR[0m (20.50s)
+Capybara::ElementNotFound:         Capybara::ElementNotFound: Unable to find link or button "Delete Project"
+            /var/lib/gems/2.1.0/gems/capybara-2.4.4/lib/capybara/node/finders.rb:41:in `block in find'
+            /var/lib/gems/2.1.0/gems/capybara-2.4.4/lib/capybara/node/base.rb:84:in `synchronize'
+            /var/lib/gems/2.1.0/gems/capybara-2.4.4/lib/capybara/node/finders.rb:30:in `find'
+            /var/lib/gems/2.1.0/gems/capybara-2.4.4/lib/capybara/node/actions.rb:13:in `click_link_or_button'
+            /var/lib/gems/2.1.0/gems/capybara-2.4.4/lib/capybara/session.rb:676:in `block (2 levels) in <class:Session>'
+            /var/lib/gems/2.1.0/gems/capybara-2.4.4/lib/capybara/dsl.rb:51:in `block (2 levels) in <module:DSL>'
+            /home/jpoulin/Documents/iSENSE/rSENSE/test/integration/clone_project_test.rb:74:in `block in <class:CloneProjectTest>'
+        /var/lib/gems/2.1.0/gems/capybara-2.4.4/lib/capybara/node/finders.rb:41:in `block in find'
+        /var/lib/gems/2.1.0/gems/capybara-2.4.4/lib/capybara/node/base.rb:84:in `synchronize'
+        /var/lib/gems/2.1.0/gems/capybara-2.4.4/lib/capybara/node/finders.rb:30:in `find'
+        /var/lib/gems/2.1.0/gems/capybara-2.4.4/lib/capybara/node/actions.rb:13:in `click_link_or_button'
+        /var/lib/gems/2.1.0/gems/capybara-2.4.4/lib/capybara/session.rb:676:in `block (2 levels) in <class:Session>'
+        /var/lib/gems/2.1.0/gems/capybara-2.4.4/lib/capybara/dsl.rb:51:in `block (2 levels) in <module:DSL>'
+        /home/jpoulin/Documents/iSENSE/rSENSE/test/integration/clone_project_test.rb:74:in `block in <class:CloneProjectTest>'
+
+
+ManualEntryTest
+.  test_manual_entry_of_datasets                                  [32m PASS[0m (18.89s)
+
+VisualizationsControllerTest
+.  test_should_create_visualization                               [32m PASS[0m (0.98s)
+.  test_should_destroy_visualization                              [32m PASS[0m (0.04s)
+.  test_should_for_realz_show_viz                                 [32m PASS[0m (0.36s)
+.  test_should_get_edit                                           [32m PASS[0m (0.36s)
+.  test_should_get_index                                          [32m PASS[0m (0.36s)
+.  test_should_show_thanksgiving_dinner_data                      [32m PASS[0m (0.35s)
+F  test_should_show_visualization                                 [31m FAIL[0m (0.37s)
+Minitest::Assertion:         HTML invalid:
+        200
+        Error: Start tag seen without seeing a doctype first. Expected “<!DOCTYPE html>”.
+        From line 1, column 1; to line 1, column 68
+        Error: Element “head” is missing a required instance of child element “title”.
+        From line 13, column 1; to line 13, column 22
+        Error: Stray end tag “div”.
+        From line 69, column 1; to line 69, column 6
+        There were errors. (Tried in the text/html mode.)
+        /home/jpoulin/Documents/iSENSE/rSENSE/test/test_helper.rb:64:in `assert_valid_html'
+        /home/jpoulin/Documents/iSENSE/rSENSE/test/functional/visualizations_controller_test.rb:54:in `block in <class:VisualizationsControllerTest>'
+
+.  test_should_update_visualization                               [32m PASS[0m (0.07s)
+
+FieldTest
+.  test_unit_is_an_empty_string                                   [32m PASS[0m (0.06s)
+
+UpdateFieldsTest
+.  test_edit_fields                                               [32m PASS[0m (3.01s)
+.  test_template_fields_with_dataset                              [32m PASS[0m (2.09s)
+.  test_teplate_fields_without_dataset                            [32m PASS[0m (1.87s)
+
+DataSetsControllerTest
+.  test_create_data_set                                           [32m PASS[0m (0.03s)
+.  test_create_data_set_and_get_JSON_response                     [32m PASS[0m (0.03s)
+.  test_create_data_set_with_contrib_key                          [32m PASS[0m (0.03s)
+.  test_create_data_set_with_contrib_key_when_not_logged_in       [32m PASS[0m (0.03s)
+.  test_destroy_data_set                                          [32m PASS[0m (0.03s)
+.  test_edit_data_set                                             [32m PASS[0m (0.09s)
+.  test_export_data                                               [32m PASS[0m (0.09s)
+.  test_get_data_as_csv_string                                    [32m PASS[0m (0.03s)
+.  test_get_dataset_data                                          [32m PASS[0m (0.03s)
+.  test_get_manual_entry_page                                     [32m PASS[0m (0.03s)
+.  test_get_manual_entry_page_for_locked_project_with_key         [32m PASS[0m (0.02s)
+.  test_jsonDataUpload_locked_project_with_key                    [32m PASS[0m (0.03s)
+.  test_jsonDataUpload_locked_project_with_key_not_logged_in      [32m PASS[0m (0.03s)
+.  test_redirect_to_vis_for_show_data_set                         [32m PASS[0m (0.02s)
+.  test_should_fail_jsonDataUpload_with_empty_dataset             [32m PASS[0m (0.02s)
+.  test_should_fail_to_edit_dataset_in_locked_project             [32m PASS[0m (0.02s)
+.  test_should_not_create_data_set_in_locked_project              [32m PASS[0m (0.02s)
+.  test_should_not_destroy_data_set                               [32m PASS[0m (0.02s)
+.  test_should_not_destroy_data_set_(json)_                       [32m PASS[0m (0.02s)
+.  test_should_not_get_manual_entry_page_for_locked_project       [32m PASS[0m (0.02s)
+.  test_should_not_jsonDataUpload_for_locked_project              [32m PASS[0m (0.02s)
+.  test_show_data_set_edit_page                                   [32m PASS[0m (0.03s)
+.  test_update_data_set                                           [32m PASS[0m (0.02s)
+.  test_upload_CSV                                                [32m PASS[0m (0.03s)
+.  test_upload_through_jsonDataUpload                             [32m PASS[0m (0.03s)
+
+FieldsControllerTest
+.  test_should_add_restrictions_to_text_field                     [32m PASS[0m (0.02s)
+.  test_should_create_field                                       [32m PASS[0m (0.02s)
+.  test_should_create_field_without_name                          [32m PASS[0m (0.07s)
+.  test_should_destroy_field                                      [32m PASS[0m (0.02s)
+.  test_should_destroy_field_from_api                             [32m PASS[0m (0.03s)
+.  test_should_get_fields_as_json                                 [32m PASS[0m (0.05s)
+.  test_should_not_create_field                                   [32m PASS[0m (0.02s)
+.  test_should_not_destroy_field                                  [32m PASS[0m (0.07s)
+.  test_should_not_update_field                                   [32m PASS[0m (0.05s)
+.  test_should_show_field                                         [32m PASS[0m (0.02s)
+.  test_should_update_field                                       [32m PASS[0m (0.03s)
+.  test_should_update_field_and_return_json                       [32m PASS[0m (0.03s)
+
+MakeProjectTest
+.  test_kate_makes_a_new_project                                  [32m PASS[0m (1.44s)
+.  test_search_in_projects                                        [32m PASS[0m (15.59s)
+
+ProjectsControllerTest
+.  test_save_fields                                               [32m PASS[0m (0.11s)
+.  test_should_create_project                                     [32m PASS[0m (0.03s)
+.  test_should_create_project_(json)                              [32m PASS[0m (0.06s)
+.  test_should_curate_project_(json)                              [32m PASS[0m (0.09s)
+.  test_should_destroy_project                                    [32m PASS[0m (0.05s)
+.  test_should_destroy_project_(json)                             [32m PASS[0m (0.03s)
+.  test_should_edit_fields                                        [32m PASS[0m (0.03s)
+.  test_should_feature_project_(json)                             [32m PASS[0m (0.07s)
+.  test_should_get_edit                                           [32m PASS[0m (0.37s)
+.  test_should_get_index                                          [32m PASS[0m (0.43s)
+.  test_should_get_index_(json)                                   [32m PASS[0m (0.06s)
+.  test_should_hide_project                                       [32m PASS[0m (0.03s)
+.  test_should_like_project                                       [32m PASS[0m (0.10s)
+.  test_should_lock_project_(json)                                [32m PASS[0m (0.07s)
+F  test_should_show_project                                       [31m FAIL[0m (0.43s)
+Minitest::Assertion:         HTML invalid:
+        200
+        Error: Non-space characters found without seeing a doctype first. Expected “<!DOCTYPE html>”.
+        From line 1, column 1; to line 1, column 623
+        Error: Element “head” is missing a required instance of child element “title”.
+        From line 1, column 1; to line 1, column 623
+        There were errors. (Tried in the text/html mode.)
+        /home/jpoulin/Documents/iSENSE/rSENSE/test/test_helper.rb:64:in `assert_valid_html'
+        /home/jpoulin/Documents/iSENSE/rSENSE/test/functional/projects_controller_test.rb:37:in `block in <class:ProjectsControllerTest>'
+
+.  test_should_show_project_(json)                                [32m PASS[0m (0.03s)
+.  test_should_update_project                                     [32m PASS[0m (0.03s)
+.  test_should_update_project_(json)                              [32m PASS[0m (0.03s)
+.  test_shouldnt_create_project                                   [32m PASS[0m (0.03s)
+.  test_shouldnt_destroy_project                                  [32m PASS[0m (0.07s)
+
+SummernoteMoTest
+.  test_news_image_upload                                         [32m PASS[0m (16.69s)
+E  test_project_image_upload                                      [31mERROR[0m (15.12s)
+ActiveRecord::StatementInvalid:         ActiveRecord::StatementInvalid: SQLite3::BusyException: database is locked: DELETE FROM "tutorials"
+            /var/lib/gems/2.1.0/gems/sqlite3-1.3.10/lib/sqlite3/statement.rb:108:in `step'
+            /var/lib/gems/2.1.0/gems/sqlite3-1.3.10/lib/sqlite3/statement.rb:108:in `block in each'
+            /var/lib/gems/2.1.0/gems/sqlite3-1.3.10/lib/sqlite3/statement.rb:107:in `loop'
+            /var/lib/gems/2.1.0/gems/sqlite3-1.3.10/lib/sqlite3/statement.rb:107:in `each'
+            /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/connection_adapters/sqlite3_adapter.rb:304:in `to_a'
+            /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/connection_adapters/sqlite3_adapter.rb:304:in `block in exec_query'
+            /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/connection_adapters/abstract_adapter.rb:373:in `block in log'
+            /var/lib/gems/2.1.0/gems/activesupport-4.1.8/lib/active_support/notifications/instrumenter.rb:20:in `instrument'
+            /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/connection_adapters/abstract_adapter.rb:367:in `log'
+            /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/connection_adapters/sqlite3_adapter.rb:298:in `exec_query'
+            /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/connection_adapters/sqlite3_adapter.rb:324:in `exec_delete'
+            /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/connection_adapters/abstract/database_statements.rb:106:in `delete'
+            /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/connection_adapters/abstract/query_cache.rb:14:in `delete'
+            /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/fixtures.rb:527:in `block (4 levels) in create_fixtures'
+            /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/fixtures.rb:526:in `each'
+            /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/fixtures.rb:526:in `block (3 levels) in create_fixtures'
+            /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/fixtures.rb:522:in `each'
+            /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/fixtures.rb:522:in `block (2 levels) in create_fixtures'
+            /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/connection_adapters/abstract/database_statements.rb:201:in `block in transaction'
+            /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/connection_adapters/abstract/database_statements.rb:209:in `within_new_transaction'
+            /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/connection_adapters/abstract/database_statements.rb:201:in `transaction'
+            /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/fixtures.rb:521:in `block in create_fixtures'
+            /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/connection_adapters/abstract_adapter.rb:254:in `disable_referential_integrity'
+            /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/fixtures.rb:506:in `create_fixtures'
+            /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/fixtures.rb:984:in `load_fixtures'
+            /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/fixtures.rb:957:in `setup_fixtures'
+            /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/fixtures.rb:806:in `before_setup'
+        /var/lib/gems/2.1.0/gems/sqlite3-1.3.10/lib/sqlite3/statement.rb:108:in `step'
+        /var/lib/gems/2.1.0/gems/sqlite3-1.3.10/lib/sqlite3/statement.rb:108:in `block in each'
+        /var/lib/gems/2.1.0/gems/sqlite3-1.3.10/lib/sqlite3/statement.rb:107:in `loop'
+        /var/lib/gems/2.1.0/gems/sqlite3-1.3.10/lib/sqlite3/statement.rb:107:in `each'
+        /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/connection_adapters/sqlite3_adapter.rb:304:in `to_a'
+        /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/connection_adapters/sqlite3_adapter.rb:304:in `block in exec_query'
+        /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/connection_adapters/abstract_adapter.rb:373:in `block in log'
+        /var/lib/gems/2.1.0/gems/activesupport-4.1.8/lib/active_support/notifications/instrumenter.rb:20:in `instrument'
+        /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/connection_adapters/abstract_adapter.rb:367:in `log'
+        /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/connection_adapters/sqlite3_adapter.rb:298:in `exec_query'
+        /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/connection_adapters/sqlite3_adapter.rb:324:in `exec_delete'
+        /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/connection_adapters/abstract/database_statements.rb:106:in `delete'
+        /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/connection_adapters/abstract/query_cache.rb:14:in `delete'
+        /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/fixtures.rb:527:in `block (4 levels) in create_fixtures'
+        /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/fixtures.rb:526:in `each'
+        /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/fixtures.rb:526:in `block (3 levels) in create_fixtures'
+        /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/fixtures.rb:522:in `each'
+        /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/fixtures.rb:522:in `block (2 levels) in create_fixtures'
+        /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/connection_adapters/abstract/database_statements.rb:201:in `block in transaction'
+        /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/connection_adapters/abstract/database_statements.rb:209:in `within_new_transaction'
+        /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/connection_adapters/abstract/database_statements.rb:201:in `transaction'
+        /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/fixtures.rb:521:in `block in create_fixtures'
+        /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/connection_adapters/abstract_adapter.rb:254:in `disable_referential_integrity'
+        /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/fixtures.rb:506:in `create_fixtures'
+        /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/fixtures.rb:984:in `load_fixtures'
+        /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/fixtures.rb:957:in `setup_fixtures'
+        /var/lib/gems/2.1.0/gems/activerecord-4.1.8/lib/active_record/fixtures.rb:806:in `before_setup'
+
