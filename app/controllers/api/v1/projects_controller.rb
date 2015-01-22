@@ -3,7 +3,7 @@ module Api
     class ProjectsController < ::ProjectsController
       skip_before_filter :authorize
       skip_before_filter :verify_authenticity_token
-      before_filter :set_user, only: [:create, :key]
+      before_filter :set_user, only: [:create, :add_key]
       before_filter :allow_cross_site_requests
 
       def index
@@ -37,7 +37,7 @@ module Api
         end
       end
 
-      def key
+      def add_key
         @project = Project.find(params[:contrib_key][:project_id])
 
         if @cur_user.id == @project.user_id
@@ -46,17 +46,16 @@ module Api
           session[:project_id] = @project.id
           key = ContribKey.new(contrib_key_params)
           key.save
-        else
-          errors = "User does not own the project."
         end
 
         respond_to do |format|
-          if key != nil
-            format.json { render json: { msg: "Success"}, status: :created }
+          if !key.nil?
+            format.json { render json: { msg: 'Success' }, status: :created }
           elsif @cur_user.id != @project.user_id
+            errors = 'User does not own the project.'
             format.json { render json: { msg: errors }, status: :unauthorized }
           else
-            @errors = "Unprocessable Entity."
+            @errors = 'Unprocessable Entity.'
             format.json { render json: { error: errors }, status: :unprocessable_entity }
           end
         end
