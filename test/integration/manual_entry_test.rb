@@ -24,7 +24,7 @@ class ManualEntryTest < ActionDispatch::IntegrationTest
     click_on 'Manual Entry'
 
     fill_in 'Dataset Name', with: 'I Like Cookies'
-    click_on 'Add Row'
+    find('#edit_table_add_1').click
 
     set_cell(0, 29)
     set_cell(1, 0)
@@ -33,7 +33,7 @@ class ManualEntryTest < ActionDispatch::IntegrationTest
     set_cell(4, 0)
     set_cell(5, 1)
 
-    click_on 'Save'
+    find('#edit_table_save_1').click
 
     assert page.has_content?('I Like Cookies'), 'Dataset Name'
 
@@ -56,7 +56,7 @@ class ManualEntryTest < ActionDispatch::IntegrationTest
     click_on 'Manual Entry'
 
     fill_in 'Dataset Name', with: 'I Like Pies'
-    click_on 'Add Row'
+    find('#edit_table_add_2').click
 
     set_cell(0, 1)
     set_cell(1, 3)
@@ -65,7 +65,7 @@ class ManualEntryTest < ActionDispatch::IntegrationTest
     set_cell(4, 0)
     set_cell(5, 1027)
 
-    click_on 'Save'
+    find('#edit_table_save_2').click
 
     assert page.has_content?('I Like Pies'), 'Dataset Name'
   end
