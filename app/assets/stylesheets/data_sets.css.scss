@@ -2,3 +2,68 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+.data_sets-controller {
+	$slick-border-color: #C0C0C0;
+	$slick-border: thin solid $slick-border-color;
+	$slick-minheight: 400px;
+	$slick-maxheight: 2000px;
+	$slick-defheight: 100%;
+	$slick-row-odd: #FFFFFF;
+	$slick-row-even: #EEEEEE;
+
+	.edit_table_control {
+		margin-bottom: 10px;
+	}
+
+	#slickgrid-container {
+		border: $slick-border;
+		min-height: $slick-minheight;
+		max-height: $slick-maxheight;
+
+		div {
+			box-sizing: content-box;
+		}
+
+		input.editor-text {
+			border: none;
+			height: 100%;
+			outline: none;
+			width: 100%;
+		}
+
+		.slick-cell {
+			padding: 5px;
+		}
+
+		.slick-delete {
+			color: #F00;
+			display: block;
+			margin: 5px auto 0;
+			width: 11px;
+		}
+
+		.slick-header-column {
+			font-weight: bold;
+			padding: 8px 0;
+		}
+
+		.slick-header-columns {
+			border-bottom: $slick-border;
+			text-align: center;
+		}
+
+		.slick-row.even {
+			background-color: $slick-row-even;
+		}
+
+		.slick-row.odd {
+			background-color: $slick-row-odd;
+		}
+	}
+
+	#slickgrid-resizer {
+		background-color: #F00;
+		border-top: $slick-border;
+		height: 15px;
+	}
+}
