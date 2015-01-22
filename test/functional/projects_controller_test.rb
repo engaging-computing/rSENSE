@@ -32,9 +32,10 @@ class ProjectsControllerTest < ActionController::TestCase
     views_before = @project_one.views
     get :show,  id: @project_one
     assert_response :success
+    assert_valid_html response.body
+
     get :show, id: @project_two, format: 'json'
     assert_response :success
-    assert_valid_html response.body
 
     @pp = Project.find(@project_one.id)
     assert @pp.views == views_before + 1, 'View count incremented'
