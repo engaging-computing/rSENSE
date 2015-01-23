@@ -7,14 +7,13 @@ class SlickgridTest < ActionDispatch::IntegrationTest
 
   compare_data = [
     { '100' => 'D', '101' => 'A', '102' => '4', '103' => '01/01/1991 01:01:01', '104' => '3', '105' => '3' },
-    { '100' => 'E', '101' => 'B', '102' => '5', '103' => '02/02/1992 02:02:02', '104' => '4', '105' => '4' },
-    { '100' => 'F', '101' => 'C', '102' => '6', '103' => '03/03/1993 03:03:03', '104' => '5', '105' => '5' },
-    { '100' => 'G', '101' => 'A', '102' => '7', '103' => '04/04/1994 04:04:04', '104' => '6', '105' => '6' }
+    { '100' => 'E', '101' => 'B', '102' => '5', '103' => '01/02/1992 02:02:02', '104' => '4', '105' => '4' },
+    { '100' => 'F', '101' => 'C', '102' => '6', '103' => '01/03/1993 03:03:03', '104' => '5', '105' => '5' },
+    { '100' => 'G', '101' => 'A', '102' => '7', '103' => '01/04/1994 04:04:04', '104' => '6', '105' => '6' }
   ]
 
-
   setup do
-    Capybara.current_driver = :selenium
+    Capybara.current_driver = :webkit
   end
 
   teardown do
@@ -38,14 +37,16 @@ class SlickgridTest < ActionDispatch::IntegrationTest
     find(:css, ".slick-row:nth-child(#{row + 1})>.slick-cell.l#{col}>select>option:nth-child(#{option + 1})").select_option
   end
 
-  def slickgrid_set_date(row, col, yr, mo, dy, hr, mi, se)
+  def slickgrid_set_date(row, col, options)
+    yr = options[:year]
+    dy = options[:day]
+    time = options[:time]
+
     find(:css, ".slick-row:nth-child(#{row + 1})>.slick-cell.l#{col}").click
     find(:css, '#dt-year-textbox').set "#{yr}\n"
-    find(:css, '#dt-month-textbox').click
-    find(:css, "#dt-month-select>option:nth-child(#{mo})").select_option
     td = all(:css, '#dt-date-group td')
-    td.select { |x| x['data-date'.to_sym] == "#{dy}" and x['data-month'.to_sym] == "#{mo - 1}" }.first.click
-    find(:css, '#dt-time-textbox').set "#{hr}:#{mi}:#{se}\n"
+    td.select { |x| x['data-date'.to_sym] == "#{dy}" and x['data-month'.to_sym] == '0' }.first.click
+    find(:css, '#dt-time-textbox').set "#{time}\n"
   end
 
   def slickgrid_add_data(start, field_map)
@@ -64,10 +65,25 @@ class SlickgridTest < ActionDispatch::IntegrationTest
     slickgrid_enter_value start + 2, field_map['102'], '6'
     slickgrid_enter_value start + 3, field_map['102'], '7'
 
-    slickgrid_set_date start, field_map['103'], 1991, 1, 1, 1, 1, 1
-    slickgrid_set_date start + 1, field_map['103'], 1992, 2, 2, 2, 2, 2
-    slickgrid_set_date start + 2, field_map['103'], 1993, 3, 3, 3, 3, 3
-    slickgrid_set_date start + 3, field_map['103'], 1994, 4, 4, 4, 4, 4
+    slickgrid_set_date start + 3, field_map['103'],
+      year: 1994,
+      day: 4,
+      time: '04:04:04'
+
+    slickgrid_set_date start + 2, field_map['103'],
+      year: 1993,
+      day: 3,
+      time: '03:03:03'
+
+    slickgrid_set_date start + 1, field_map['103'],
+      year: 1992,
+      day: 2,
+      time: '02:02:02'
+
+    slickgrid_set_date start, field_map['103'],
+      year: 1991,
+      day: 1,
+      time: '01:01:01'
 
     slickgrid_enter_value start, field_map['105'], '3, 3'
     slickgrid_enter_value start + 1, field_map['105'], '4, 4'
@@ -80,7 +96,7 @@ class SlickgridTest < ActionDispatch::IntegrationTest
 
     project = Project.find_by_name 'slickgrid_project'
     visit "/projects/#{project.id}/manualEntry"
-    dataset_title = "ABCDEFGH"
+    dataset_title = 'ABCDEFGH'
 
     # enter a valid project title
     find(:css, '#data_set_name').set dataset_title
@@ -112,12 +128,6 @@ class SlickgridTest < ActionDispatch::IntegrationTest
     assert page.current_path == "/projects/#{project.id}/data_sets/#{dataset.id}"
 
     # assert that the data that we saved is there
-    compare_data = [
-      { '100' => 'D', '101' => 'A', '102' => '4', '103' => '01/01/1991 01:01:01', '104' => '3', '105' => '3' },
-      { '100' => 'E', '101' => 'B', '102' => '5', '103' => '02/02/1992 02:02:02', '104' => '4', '105' => '4' },
-      { '100' => 'F', '101' => 'C', '102' => '6', '103' => '03/03/1993 03:03:03', '104' => '5', '105' => '5' },
-      { '100' => 'G', '101' => 'A', '102' => '7', '103' => '04/04/1994 04:04:04', '104' => '6', '105' => '6' }
-    ]
     assert_similar_arrays compare_data, dataset.data
   end
 
@@ -174,13 +184,6 @@ class SlickgridTest < ActionDispatch::IntegrationTest
 
     # assert that the data that we saved is there
     dataset = DataSet.find_by_name 'Slickgrid Dataset 1'
-    compare_data = [
-      { '100' => 'D', '101' => 'A', '102' => '4', '103' => '01/01/1991 01:01:01', '104' => '3', '105' => '3' },
-      { '100' => 'E', '101' => 'B', '102' => '5', '103' => '02/02/1992 02:02:02', '104' => '4', '105' => '4' },
-      { '100' => 'F', '101' => 'C', '102' => '6', '103' => '03/03/1993 03:03:03', '104' => '5', '105' => '5' },
-      { '100' => 'G', '101' => 'A', '102' => '7', '103' => '04/04/1994 04:04:04', '104' => '6', '105' => '6' }
-    ]
     assert_similar_arrays compare_data, dataset.data
   end
-
 end

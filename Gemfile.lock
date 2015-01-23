@@ -13,7 +13,7 @@ GIT
 
 GIT
   remote: https://github.com/asalani93/better-datetimepicker
-  revision: 03500c23e62aa8d27620e4227c8c4bfaeab5609c
+  revision: 3fb79e82b093059acf99d611a736ef23680fa43a
   specs:
     better_datetimepicker (0.0.4)
       coffee-rails
