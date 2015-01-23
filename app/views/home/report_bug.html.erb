@@ -9,17 +9,17 @@
     <div class="row-fluid">
       <div class="col-md-6">
         <a href="/auth/github">
-          <button class="btn btn-default btn-block" type="button" id="github_account">
+          <div class="btn btn-default btn-block" id="github_account">
             <div class="center">
               <h3>Yes, I have a GitHub account</h3>
               <%= image_tag("Octocat/Octocat.png", height: "250") %>
             </div>
-          </button>
+          </div>
         </a>
       </div>
       <div class="col-md-6">
         <a href="/auth/anon_github">
-          <button class="btn btn-default btn-block" type="button" id="no_github_account">
+          <div class="btn btn-default btn-block" id="no_github_account">
             <div class="center">
               <h3>No, I don't have a GitHub account</h3>
               <%= image_tag("noavatar.png", height: "250") %>
@@ -30,4 +30,3 @@
     </div>
   </div>
 </div>
-*
