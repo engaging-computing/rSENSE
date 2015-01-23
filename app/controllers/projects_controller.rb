@@ -69,7 +69,7 @@ class ProjectsController < ApplicationController
 
     # checks for fields
     @has_fields = false
-    if  @project.fields.count > 0
+    if @project.fields.count > 0
       @has_fields = true
     end
 
