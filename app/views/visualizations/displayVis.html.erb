@@ -72,13 +72,3 @@
     </div>
   </div>
 </div>
-<div class="row">
-  <% if @datasets.count == 1 %>
-    <div class="col-md-4">
-      <%@data_set = @datasets.first%>
-      <%=render layout: "shared/box", locals: {title: 'Media', width: '12', unique_id: 'media', should_hide: false} do %>
-        <%=render "shared/media_objects_view", {type: 'data_set', object: @data_set} %>
-      <%end%>
-    </div>
-  <%end%>
-</div>

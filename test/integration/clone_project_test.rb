@@ -38,12 +38,6 @@ class CloneProjectTest < ActionDispatch::IntegrationTest
     set_cell(0, 47)
     find('#edit_table_save_2').click
 
-    assert page.has_content?('I Like Clones'), 'Save should succeed'
-    img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
-    page.execute_script "$('#upload').show()"
-    find('.upload_media form').attach_file('upload', img_path)
-    assert page.has_content?('nerdboy.jpg'), 'File should be in list'
-
     click_on 'Das Cloning Projekt'
     img_path = Rails.root.join('test', 'CSVs', 'test.pdf')
     page.execute_script "$('#upload').show()"
@@ -63,7 +57,6 @@ class CloneProjectTest < ActionDispatch::IntegrationTest
     find('#project_name').set('Cloned with Data')
     click_on 'Clone Project'
 
-    assert page.has_content?('nerdboy.jpg'), 'File should be in list'
     assert page.has_content?('test.pdf'), 'File should be in list'
     assert page.has_content?('I Like Clones'), 'Dataset should be in list'
 
