@@ -67,13 +67,13 @@ $ ->
       (x, P) -> 1,
       (x, P) -> x * Math.exp(P[1] * x + P[2]),
       (x, P) -> Math.exp(P[1] * x + P[2])]
-
+    
     globals.REGRESSION.LOGARITHMIC = globals.REGRESSION.FUNCS.length
     globals.REGRESSION.FUNCS.push [
-      (x, P) -> P[0] + P[1] * Math.log(P[2] + x),
+      (x, P) -> P[0] + Math.log(P[1] * x + P[2]),
       (x, P) -> 1,
-      (x, P) -> Math.log(x + P[2]),
-      (x, P) -> P[1] / (P[2] + x)]
+      (x, P) -> x / (P[1] * x + P[2]),
+      (x, P) -> 1 / (P[1] * x + P[2])]
 
     globals.REGRESSION.NUM_POINTS = 200
 
@@ -81,10 +81,9 @@ $ ->
     Calculates a regression and returns it as a highcharts series.
     ###
     globals.getRegression = (xs, ys, type, xBounds, seriesName, dashStyle) ->
-
       Ps = []
       func = globals.REGRESSION.FUNCS[type]
-
+      
       # Make an initial Estimate
       switch type
 
@@ -103,35 +102,30 @@ $ ->
         when globals.REGRESSION.LOGARITHMIC
           # We want to avoid starting with a guess that takes the log of a negative number
           Ps = [1,1,Math.min.apply(null, xs) + 1]
-
-      # Calculate the regression, and return a highcharts series object
-      mean = calculateMean(xs)
-      sigma = calculateStandardDev(xs, mean)
-
+      
       # Get the new Ps
-      [Ps, R2] = NLLS(func, normalizeData(xs, mean, sigma), ys, Ps)
-      denormFunc = globals.REGRESSION.DENORM_FUNCS[type]
-      Ps =
-        func(Ps, mean, sigma) for func in denormFunc
-
+      [Ps, R2] = NLLS(func, normalizeData(xs, type), ys, Ps)
+      
+      # Create the highcharts series
       generateHighchartsSeries(Ps, R2, type, xBounds, seriesName, dashStyle)
 
     ###
     Returns a series object to draw on the chart canvas.
     ###
     generateHighchartsSeries = (Ps, R2, type, xBounds, seriesName, dashStyle) ->
-      str = makeToolTip(Ps, R2, type, seriesName)
-
-      # Left shift the input values to zero and adjust the Ps for the left shift
-      denormFunc = globals.REGRESSION.DENORM_FUNCS[type]
-      Ps =
-        func(Ps, -1 * xBounds.dataMin, 1) for func in denormFunc
-
-      y = 0
       data = for i in [0..globals.REGRESSION.NUM_POINTS]
-        x = (i / globals.REGRESSION.NUM_POINTS) * (xBounds.dataMax - xBounds.dataMin) + xBounds.dataMin
-        y = calculateRegressionPoint(Ps, x - xBounds.dataMin, type)
-        {x: x, y: y}
+        xv = (i / globals.REGRESSION.NUM_POINTS) #* ((normalizeData(xBounds.dataMax) - normalizeData(xBounds.dataMin)) + normalizeData(xBounds.dataMin))
+        yv = 0
+        if type == globals.REGRESSION.LOGARITHMIC
+          if globals.curVis.canvas == 'timeline_canvas'
+            yv = calculateRegressionPoint(Ps, xv, type)
+          else
+            yv = calculateRegressionPoint(Ps, xv * (xBounds.dataMax - xBounds.dataMin) + xBounds.dataMin, type)
+        else
+          yv = calculateRegressionPoint(Ps, xv + 1, type)
+        {x: xv * (xBounds.dataMax - xBounds.dataMin) + xBounds.dataMin, y: yv}
+      Ps = visSpaceParameters(Ps, xBounds, type)
+      str = makeToolTip(Ps, R2, type, seriesName)
 
       ret =
         name:
@@ -150,13 +144,13 @@ $ ->
         states:
           hover:
             lineWidth: 4
-
+      
     ###
     Uses the regression matrix to calculate the y value given an x value.
     ###
     calculateRegressionPoint = (Ps, x, type) ->
       globals.REGRESSION.FUNCS[type][0](x, Ps)
-
+      
     ###
     Returns tooltip description of the regression.
     ###
@@ -205,7 +199,7 @@ $ ->
           <div class="regressionTooltip"> #{seriesName} </div>
           <br>
           <strong>
-            f(x) = #{Ps[1]} ln(x + #{Ps[2]}) + #{Ps[0]}
+            f(x) = ln(#{Ps[1]}x + #{Ps[2]}) + #{Ps[0]}
           </strong>
           """
 
@@ -252,7 +246,6 @@ $ ->
     NLLS = (func, xs, ys, Ps) ->
       prevErr = Infinity
       shiftCut = 1
-
       for iter in [1..NLLS_MAX_ITER]
         # Iterate
         dPs = iterateNLLS(func, xs, ys, Ps)
@@ -295,16 +288,14 @@ $ ->
     Inner loop of Newton-gauss method
     ###
     iterateNLLS = (func, xs, ys, Ps) ->
-
       residuals = numeric.sub(ys, xs.map((x) -> func[0](x, Ps)))
       jac = jacobian(func, xs, Ps)
       jacT = numeric.transpose jac
-
+      
       # dP = (JT*J)^-1 * JT * r
       deltaPs = numeric.dot(numeric.dot(numeric.inv(numeric.dot(jacT, jac)),
         jacT),
         residuals)
-      deltaPs
 
     ###
     Calculates the current squared error for the given function, parameters and ground truth.
@@ -364,12 +355,101 @@ $ ->
       mean
 
     # Normalize
-    normalizeData = (points, mean, sigma) ->
-      (point - mean) / sigma for point in points
-
+    normalizeData = (points, type) ->
+      max = Math.max.apply(null, points)
+      min = Math.min.apply(null, points)
+      ret = if type == globals.REGRESSION.LOGARITHMIC
+        if globals.curVis.canvas == 'timeline_canvas'
+          points.map((y) -> (y - min) / (max - min))
+        else
+          points
+      else
+        points.map((y) -> ((y - min) / (max - min)) + 1)
+    
     # Calculate the standard deviation
     calculateStandardDev = (points, mean) ->
       sigma = 0
       for point in points
         sigma += Math.pow(point - mean, 2)
       Math.sqrt( sigma / points.length )
+
+    ###
+    # Map the parameters of the learned feature space to the visualization space
+    # (done by Gauss-Jordan elimination on a system of linear equations)
+    ###
+    visSpaceParameters = (Ps, xBounds, type) ->
+      coeffMatrix = []
+      solutionMatrix = []
+      max = xBounds.dataMax
+      min = xBounds.dataMin
+      if globals.curVis.canvas == 'scatter_canvas' and type == globals.REGRESSION.LOGARITHMIC
+        return Ps
+      # for i in [0...Ps.length]
+      #   xv = (i / Ps.length)
+        
+      #   # Calculate hypothesis of each input over the data range
+      #   hypothesis = if type != globals.REGRESSION.LOGARITHMIC
+      #     globals.REGRESSION.FUNCS[type][0](xv + 1, Ps)
+      #   else
+      #     if globals.curVis.canvas == 'scatter_canvas'
+      #       globals.REGRESSION.FUNCS[type][0](xv * (max - min) + min, Ps)
+      #     else
+      #       globals.REGRESSION.FUNCS[type][0](xv, Ps)
+      newPs = []  
+      switch type
+        when globals.REGRESSION.LINEAR
+          coeffMatrix.push [1, min]
+          coeffMatrix.push [1, max]
+          solutionMatrix.push globals.REGRESSION.FUNCS[globals.REGRESSION.LINEAR][0](1, Ps)
+          solutionMatrix.push globals.REGRESSION.FUNCS[globals.REGRESSION.LINEAR][0](2, Ps)
+          newPs = numeric.solve(coeffMatrix, solutionMatrix)
+        when globals.REGRESSION.QUADRATIC
+          coeffMatrix.push [1, min]
+          coeffMatrix.push [1, max]
+          solutionMatrix.push globals.REGRESSION.FUNCS[globals.REGRESSION.LINEAR][0](1, Ps)
+          solutionMatrix.push globals.REGRESSION.FUNCS[globals.REGRESSION.LINEAR][0](2, Ps)
+          newPs = numeric.solve(coeffMatrix, solutionMatrix)
+          Ps.push
+        when globals.REGRESSION.CUBIC
+          x = (xv + 1) * (max - min) + min
+          x2 = Math.pow((xv - 1) * (max - min) + min, 2)
+          x3 = Math.pow((xv - 1) * (max - min) + min, 3)
+          coeffMatrix.push [1, x, x2, x3]
+          solutionMatrix.push hypothesis
+        when globals.REGRESSION.EXPONENTIAL
+          x = (xv + 1) * (max - min) + min
+          coeffMatrix.push [x, 1]
+          solutionMatrix.push Math.log(hypothesis - Ps[0])
+        when globals.REGRESSION.LOGARITHMIC
+          x = xv * (max - min) + min
+          coeffMatrix.push [x, 1]
+          solutionMatrix.push Math.exp(hypothesis - Ps[0])
+      newPs = numeric.solve(coeffMatrix, solutionMatrix)
+      console.log numeric.solve([ [1,2,1],[1,3,1], [1,4,1]], [6, 8, 10])
+      newPs
+      # PPrimes = Ps
+      # P = []
+      # max = xBounds.dataMax
+      # min = xBounds.dataMin
+      # switch type
+
+      #   when globals.REGRESSION.LINEAR
+      #     nx1 = 0
+      #     nx2 = 1
+
+      #     P[0] = 0
+      #     P[1] = PPrimes[1] / (max - min)
+        
+      #   when globals.REGRESSION.QUADRATIC
+      #     [1,1,1]
+        
+      #   when globals.REGRESSION.CUBIC
+      #     [1,1,1,1]
+        
+      #   when globals.REGRESSION.EXPONENTIAL
+      #     [1,1,1]
+        
+      #   when globals.REGRESSION.LOGARITHMIC
+      #     #The hard case
+      #     [1,1,1]
+      # P
