@@ -63,7 +63,6 @@ class CloneProjectTest < ActionDispatch::IntegrationTest
     find('#project_name').set('Cloned with Data')
     click_on 'Clone Project'
 
-    assert page.has_content?('nerdboy.jpg'), 'File should be in list'
     assert page.has_content?('test.pdf'), 'File should be in list'
     assert page.has_content?('I Like Clones'), 'Dataset should be in list'
 
