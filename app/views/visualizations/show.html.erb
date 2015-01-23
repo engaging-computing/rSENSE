@@ -29,41 +29,41 @@
   };
 </script>
 <script type="text/javascript"
-      src="https://maps-api-ssl.google.com/maps/api/js?key=AIzaSyBxtPK1_mxwVdl1NRu7ZEiSNvmCekFSZAw&amp;sensor=false&amp;libraries=visualization,geometry&amp;v=3.9">
+        src="https://maps-api-ssl.google.com/maps/api/js?key=AIzaSyBxtPK1_mxwVdl1NRu7ZEiSNvmCekFSZAw&amp;sensor=false&amp;libraries=visualization,geometry&amp;v=3.9">
 </script>
-
 <div class="row print" id="print_title">
   <span class="viz_title">Title: <%= @visualization.title %></span><br/>
   <span class="viz_title">Project: <%= @visualization.project.title %></span><br/>
   <span class="viz_title">Name: <%= @visualization.owner.name %></span><br/><br/>
 </div>
-
 <div id="title_row" class="row visualization_title">
   <div class="col-sm-12">
     <%= title_and_edit_menu(@visualization) %>
-
     <div>
       <b>Project:</b>
       <% if @project.nil? || @project.hidden? %>
         deleted
       <% else %>
-        <%= link_to @visualization.project.title, project_path(@visualization.project) %>
+        <%= link_to @visualization.project.title,
+            project_path(@visualization.project) %>
       <% end %>
     </div>
     <div>
-      <b>Owner:</b> <%= link_to @visualization.owner.name, user_path(@visualization.owner)%>
+      <b>Owner: </b>
+      <%= link_to @visualization.owner.name, user_path(@visualization.owner) %>
     </div>
     <br>
   </div>
 </div>
-
-
 <div style="margin: 0px 10px 10px;">
   <div id="viscontainer" style="height:500px;">
-    <div class="pull-right"><button class="btn btn-default" id="fullscreen-vis" title="Maximize"><i class="fa fa-arrows-alt"></i></button></div>
+    <div class="pull-right">
+      <button class="btn btn-default" id="fullscreen-vis" title="Maximize">
+        <i class="fa fa-arrows-alt"></i>
+      </button>
+    </div>
     <ul id='visTabList'></ul>
     <div class="clear"></div>
-
     <div id="map_canvas" class="vis_canvas"></div>
     <div id="table_canvas" class="vis_canvas"></div>
     <div id="timeline_canvas" class="vis_canvas"></div>
@@ -73,7 +73,6 @@
     <div id="pie_canvas" class="vis_canvas"></div>
     <div id="summary_canvas" class="vis_canvas"></div>
     <div id="photos_canvas" class="vis_canvas"></div>
-
     <div id="controlcontainer">
       <div id="controlhider">
         <button id="control_hide_button" type="button"> &gt; </button>
@@ -81,21 +80,23 @@
       <div id="controldiv"></div>
     </div>
   </div>
-</div>
   <div class="row">
     <div class="col-md-8">
       <div class="well" style="margin-top:10px" id="dataset_info">
-
-        <div class="full_width_edit" style="font-size:1.5em;"><%= visualization_edit_helper 'title', @visualization.owner.id == @cur_user.try(:id), make_link = false %></div>
-
+        <div class="full_width_edit" style="font-size:1.5em;">
+          <%= visualization_edit_helper 'title',
+              @visualization.owner.id == @cur_user.try(:id),
+              make_link = false %>
+        </div>
         <%= content_helper(@visualization) %>
-
       </div>
     </div>
     <div class="col-md-4">
-      <%=render layout: "shared/box", locals: {title: 'Media', width: '12', unique_id: 'media', should_hide: false} do %>
-        <%=render "shared/media_objects_view", {type: 'visualization', object: @visualization} %>
-      <%end%>
+      <%= render layout: "shared/box", locals: {title: 'Media', width: '12',
+          unique_id: 'media', should_hide: false} do %>
+      <%= render "shared/media_objects_view", {type: 'visualization',
+          object: @visualization} %>
+      <% end %>
     </div>
   </div>
 </div>
