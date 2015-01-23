@@ -71,7 +71,7 @@ if %w(development test).include? Rails.env
     ['app', 'lib'].each do |dd|
       success &&= Coffeelint.run_test_suite(dd, config_file: conf.to_s)
     end
-    fail 'Goats!' unless success
+    fail 'Goats! (you probably failed coffeelint)' unless success
   end
 
   task(:default).clear

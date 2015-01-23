@@ -74,11 +74,11 @@ $ ->
         )
 
         # prepare the handlebars html templates
-        source = $("#photo-template").html();
-        photo_template = Handlebars.compile(source);
+        source = $("#photo-template").html()
+        photo_template = Handlebars.compile(source)
 
-        source = $("#modal-template").html();
-        modal_template = Handlebars.compile(source);
+        source = $("#modal-template").html()
+        modal_template = Handlebars.compile(source)
 
         for ds of data.metadata
 
@@ -95,7 +95,7 @@ $ ->
                   src:    photo.src
                   name:   dset.name
                   id:     dset.dataset_id
-                };
+                }
 
                 $("#polaroid").append photo_template(figure)
                 $('#pic_' + i).css(
