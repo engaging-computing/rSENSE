@@ -1,34 +1,38 @@
 <div class="row hidden-print">
-
   <!-- Left hand column -->
   <div class="col-md-7">
     <div class="row">
-
-      <!-- project title -->
+      <!-- Project title -->
       <div class="col-sm-12" style="margin-left:0px">
         <div class="project_info_box" >
-        <div class="row"> 
-          <div class="col-sm-12">
-            <span id="title_span" class="word-break" style="font-size:1.5em"><%= project_edit_helper "title", (can_edit? @project), false%></span>
-          </div>
-          <div class="col-sm-12">
-            <span class="info_label" style="font-size:1.1em">by: <%= link_to @project.owner.name, user_path(@project.owner) %> (<%=time_ago_in_words(@project.created_at)%> ago)</span><br/>
-          </div>
-          <div class="col-sm-12">
-            <div id="notices">
-              <span id="lock_notice" <%if !@project.lock%>style="display:none"<%end%>><i class="icon-lock"> This project is locked</i></span> 
-              <span id="hidden_notice" <%if !@project.hidden%>style="display:none"<%end%>><i class="icon-eye-close"> This project is hidden</i></span> 
-            <span id="id_notice" <% if @project.hidden || @project.lock%>style="display:none"<% end %>>
-                Project #: <%= @project.id %>
-              </span>
+          <div class="row">
+            <div class="col-sm-12">
+              <div id="title_div" class="word-break" style="font-size:1.5em">
+                <%= project_edit_helper "title", (can_edit? @project), false %>
+              </div>
             </div>
-          </div>
-          <div class="col-sm-12">
-            <% if !@cloned_project.nil? and !is_deleted?(@cloned_project) %>
-              <span class="info_label" style="font-size:1.1em">Cloned From:</span>
-              <%=link_to @cloned_project.title, project_path(@cloned_project.id)%><br>
-            <%end%>
-          </div>
+            <div class="col-sm-12">
+              <div class="info_label" style="font-size:1.1em">
+                by: <%= link_to @project.owner.name, user_path(@project.owner) %>
+                (<%=time_ago_in_words(@project.created_at)%> ago)
+              </div>
+              <br/>
+            </div>
+            <div class="col-sm-12">
+              <div id="notices">
+                <span id="lock_notice" <%if !@project.lock%>style="display:none"<%end%>><i class="icon-lock"> This project is locked</i></span>
+                <span id="hidden_notice" <%if !@project.hidden%>style="display:none"<%end%>><i class="icon-eye-close"> This project is hidden</i></span>
+                <span id="id_notice" <% if @project.hidden || @project.lock%>style="display:none"<% end %>>
+                  Project #: <%= @project.id %>
+                </span>
+              </div>
+            </div>
+            <div class="col-sm-12">
+              <% if !@cloned_project.nil? and !is_deleted?(@cloned_project) %>
+                <span class="info_label" style="font-size:1.1em">Cloned From:</span>
+                <%= link_to @cloned_project.title, project_path(@cloned_project.id) %><br>
+              <% end %>
+            </div>
           </div>
           <div class="row project_buttons">
             <div class="col-sm-3">
@@ -37,20 +41,19 @@
               </button>
             </div>
             <div class="col-sm-3">
-              <div class="btn-group likes" project_id="<%= @project.id%>">
-                <%if @cur_user.try(:id)%>
-                  <button type="button" class="btn btn-default liked_status <% if @liked_by_cur_user%>active<%end%>" href="#" data-toggle="button"><i class="fa fa-thumbs-up"></i> Like</button>
+              <div class="btn-group likes" data-project_id="<%= @project.id%>">
+                <% if @cur_user.try(:id) %>
+                  <button type="button" class="btn btn-default liked_status <% if @liked_by_cur_user%>active<%end%>" data-toggle="button"><i class="fa fa-thumbs-up"></i> Like</button>
                   <button type="button" class="btn btn-default like_display" disabled> <%= @project.likes.count %></button>
-                <%end%>
+                <% end %>
               </div>
             </div>
-          
-            <div class="col-sm-2" hidden-xs>
+            <div class="col-sm-2">
               <button type="button" class="btn btn-default" id="print">
                 <i class="fa fa-print"></i> Print
               </button>
             </div>
-            <%if @cur_user.try(:id)%>
+            <% if @cur_user.try(:id) %>
               <div class="col-xs-2">
                 <a href = "/projects/<%=@project.id%>/clone">
                   <button type="button" class="btn btn-success">
@@ -72,25 +75,21 @@
         </div>
       </div>
     </div>
-    
     <div class= "row">
       <%=render layout: "shared/box", locals: {title: 'Description', width: '12', unique_id: 'description', should_hide: false} do %>
         <%= content_helper(@project) %>
-      <%end%>
+      <% end %>
     </div>
-    
     <div class="row">
-      <%=render layout: "shared/box", locals: {title: 'Data Sets', width: '12', unique_id: 'data_sets', should_hide: false} do %>
+      <%= render layout: "shared/box", locals: {title: 'Data Sets', width: '12', unique_id: 'data_sets', should_hide: false} do %>
         <% if @data_sets.count != 0 %>
           <div id="dataset_list">
-            
             <span>
-              <button type="button" class="btn btn-info" style="margin-bottom: 10px;" id="vis_button" href="/projects/<%=@project.id%>/data_sets/">Visualize</button>
+              <button type="button" class="btn btn-info" style="margin-bottom: 10px;" id="vis_button" data-href="/projects/<%=@project.id%>/data_sets/">Visualize</button>
             </span>
             <span>
               <button type="button" class="btn btn-default" style="margin-bottom: 10px;" id="export_button" >Export</button>
             </span>
-          
             <div class="pull-right">
               <div class="btn-group">
                 <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
@@ -116,80 +115,80 @@
                     </li>
                   <% end %>
                 </ul>
-              </div>  
+              </div>
             </div>
-            
             <table id="dataset_table" class="table table-striped">
               <tbody>
                 <% @data_sets.each do |s| %>
                   <tr class="<%= cycle('feed-even', 'feed-odd')%> dataset" style="position:relative">
                     <% if( not (s.key.nil?) ) %>
                       <td class="key_icon">
-                        <div class="key" title="<%= s.key %>"> <%= image_tag("Key.png", :size => "32x32") %> <%= s.key %></div> 
+                        <div class="key" title="<%= s.key %>"> <%= image_tag("Key.png", :size => "32x32") %> <%= s.key %></div>
                       </td>
                     <% else %>
-                      <td class="gravatar">
-                        <div class="gravatar">
-                          <%if Gravatar.new.url(s.owner, 32) != nil%>
-                            <%= image_tag Gravatar.new.url(s.owner, 32), :size => "32x32"%>
-                          <%end%>
-                        </div>
-                      </td>
-                    <% end %>
-                    <% if s.contributor_name? %>
-                      <td style="max-width:60px"><div class="truncate"><%= s.contributor_name %></div></td>
-                    <% else %>
-                      <td style="max-width:60px"><div class="truncate"><%= link_to s.owner.name, user_path(s.owner) %></div></td>
-                    <% end %>
+                    <td class="gravatar">
+                      <div class="gravatar">
+                        <% if Gravatar.new.url(s.owner, 32) != nil %>
+                          <%= image_tag Gravatar.new.url(s.owner, 32), :size => "32x32"%>
+                        <% end %>
+                      </div>
+                    </td>
+                  <% end %>
+                  <% if s.contributor_name? %>
+                    <td style="max-width:60px"><div class="truncate"><%= s.contributor_name %></div></td>
+                  <% else %>
+                    <td style="max-width:60px"><div class="truncate"><%= link_to s.owner.name, user_path(s.owner) %></div></td>
+                  <% end %>
                     <td style="max-width:200px">
                       <div class="truncate dset" title="Created <%=s.created_at.strftime("%B %d, %Y")%>"><%= link_to s.title, "/projects/#{params[:id]}/data_sets/#{s.id}" %></div>
                     </td>
                     <td>
-                      <div class="controls" style="">                  
+                      <div class="controls" style="">
                         <% if can_edit? s %>
-                           &nbsp;<a class="data_set_edit" href="<%= edit_data_set_path s %>">Edit</a>
+                          &nbsp;<a class="data_set_edit" href="<%= edit_data_set_path s %>">Edit</a>
                         <% end %>
-
                         <% if can_hide? s %>
-                            &nbsp;<a class="data_set_hide" href="<%= data_set_url s %>">Hide</a>
+                          &nbsp;<a class="data_set_hide" href="<%= data_set_url s %>">Hide</a>
                         <% end %>
-
                         <% if can_delete? s %>
-                           &nbsp;<a class="data_set_delete" href="<%= data_set_url s %>" name="<%= s.title %>">Delete</a>
+                          &nbsp;<a class="data_set_delete" href="<%= data_set_url s %>" name="<%= s.title %>">Delete</a>
                         <% end %>
                       </div>
                     </td>
-                    <td><div class="ds_selector"><input type="checkbox" class="pull-right <%if s.user_id == @cur_user.try(:id)%> mine<%end%>" id="ds_<%=s.id%>" checked/></div></td>
+                    <td>
+                      <div class="ds_selector">
+                        <input type="checkbox" class="pull-right <%if s.user_id == @cur_user.try(:id)%> mine<%end%>" id="ds_<%=s.id%>" checked/>
+                      </div>
+                    </td>
                   </tr>
-                <% end %> 
+                <% end %>
               </tbody>
             </table>
           </div>
         <% else %>
           <% if can_edit?(@project) || can_contribute?(@project) %>
-            <p>This project has no data yet. Use the Contribute Data panel to add some.</p>
+           <p>This project has no data yet. Use the Contribute Data panel to add some.</p>
           <% else %>
-            <p>This project has no data yet. Sign in or enter a Contributor Key to add some.</p>
+           <p>This project has no data yet. Sign in or enter a Contributor Key to add some.</p>
           <% end %>
-        <%end%>
-      <%end%>
-    </div> 
+        <% end %>
+      <% end %>
+    </div>
   </div>
-  
-  <!--   Right hand column -->
+  <!-- Right hand column -->
   <div class="col-md-5">
-
-   
     <div class="row">
-      <%= render layout: "shared/box", locals: {title: 'Fields', width: '12', unique_id: 'fields', should_hide: false} do%>
+      <%= render layout: "shared/box", locals: {title: 'Fields', width: '12', unique_id: 'fields', should_hide: false} do %>
         <% if (@project.fields.count == 0) && can_edit?(@project) %>
-          <div class="col-md-12 center"> 
+          <div class="col-md-12 center">
             <a href="/projects/<%=@project.id%>/edit_fields"><button class="btn btn-success" id="manual_fields"><i class="fa fa-keyboard-o" style="margin:5px"></i>Setup Manually</button></a>
             <button class="btn btn-success" id="template_file_upload"><i class="fa fa-file-o" style="margin:5px"></i>Upload File</button>
-          </div> 
+          </div>
           <div class="clear"></div>
         <% elsif @project.fields.count != 0 %>
-          <table class="table table-striped" project="<%=@project.id%>" can_delete_fields="<%if @project.data_sets.count>0%>false<%else%>true<%end%>" data-num_fields="<%=@project.fields.count%>">
+          <table class="table table-striped" data-project="<%=@project.id%>"
+                 data-can_delete_fields="<% @project.data_sets.count == 0 %>"
+                 data-num_fields="<%=@project.fields.count%>">
             <thead>
               <tr>
                 <th style="max-width:30%">Name</th>
@@ -204,21 +203,20 @@
           <% if can_edit?(@project) %>
             <div class="center">
               <a href="/projects/<%=@project.id%>/edit_fields"><button class="btn btn-primary" id="field_edit">Edit</button></a>
-            </div>  
+            </div>
           <% end %>
         <% end %>
       <% end %>
     </div>
-    
     <div class="row">
       <%=render layout: "shared/box", locals: {title: 'Contribute Data', width:'12', unique_id: 'create_data_set', should_hide: !(@project.fields.count() > 0)} do %>
         <% if ((can_edit?(@project) || can_contribute?(@project)) and @project.fields.count > 0) %>
           <div class="row-fluid">
             <div class="col-md-4 center">
-            <%= link_to :controller => :data_sets, :action => :manualEntry do %>
-                <%= image_tag "manual.png", class: "hoverimage" %><br/>
-                Manual Entry
-            <% end %>
+              <%= link_to :controller => :data_sets, :action => :manualEntry do %>
+              <%= image_tag "manual.png", class: "hoverimage" %><br/>
+              Manual Entry
+              <% end %>
             </div>
             <div class="col-md-4 center" title="Supports - CSV,XLS,XLSX,ODS">
               <a id="upload_datafile" href="">
@@ -233,25 +231,24 @@
               </a>
             </div>
           </div>
-            <% if !(session[:contrib_access].nil?) %>
-	            <div class="row" align="center" style="margin-top: 110px;">
-	              <%= form_tag '/contrib_keys/clear', method: 'get' do %>
-	                <%= hidden_field_tag :project_id, @project.id %>
-	                <%= submit_tag "Clear Key", class: "btn btn-success" %>
-	              <% end %>
-	            </div>
-            <% end %>
-          
+          <% if !(session[:contrib_access].nil?) %>
+            <div class="row" align="center" style="margin-top: 110px;">
+              <%= form_tag '/contrib_keys/clear', method: 'get' do %>
+                <%= hidden_field_tag :project_id, @project.id %>
+                <%= submit_tag "Clear Key", class: "btn btn-success" %>
+              <% end %>
+            </div>
+          <% end %>
         <% else %>
           <% if @project.has_contrib_key? %>
             <p>Enter contributor key to submit data.</p>
             <%= form_tag '/contrib_keys/enter', method: 'post' do %>
-            <div class="row" style="margin-left: 0px;" >
-              <%= hidden_field_tag :project_id, @project.id %>
-              <%= text_field_tag :key,"",placeholder:"Key" %>
-              <%= text_field_tag :contributor_name,"",placeholder:"Contributor Name" %>
-              <%= submit_tag "Submit Key", class: "btn btn-success" %>
-            </div>
+              <div class="row" style="margin-left: 0px;" >
+                <%= hidden_field_tag :project_id, @project.id %>
+                <%= text_field_tag :key,"",placeholder:"Key" %>
+                <%= text_field_tag :contributor_name,"",placeholder:"Contributor Name" %>
+                <%= submit_tag "Submit Key", class: "btn btn-success" %>
+              </div>
             <% end %>
           <% else %>
             <% if (@project.fields.count == 0) %>
@@ -264,16 +261,14 @@
             <% end %>
           <% end %>
         <% end %>
-      <% end %>  
+      <% end %>
     </div>
-    
     <div class="row">
       <!-- ##### MEDIA OBJECTS MENU ##### -->
-      <%=render layout: "shared/box", locals: {title: 'Media', width: '12', unique_id: 'media', should_hide: false} do %>
-        <%=render "shared/media_objects_view", {type: 'project', object: @project}%>
-      <%end%>
+      <%= render layout: "shared/box", locals: {title: 'Media', width: '12', unique_id: 'media', should_hide: false} do %>
+        <%= render "shared/media_objects_view", {type: 'project', object: @project} %>
+      <% end %>
     </div>
-    
     <div class="row">
       <!-- ##### SAVED VISUALIZATIONS MENU ##### -->
       <%=render layout: "shared/box", locals: {title: 'Visualizations', width: '12', unique_id: 'visualizations', should_hide: false} do %>
@@ -291,30 +286,28 @@
                   <td>
                     <div class="controls" style="float:right">
                       <% if can_hide? vis %>
-                        <a class="viz_hide" href="<%= visualization_url vis %>">Hide</a> | 
+                        <a class="viz_hide" href="<%= visualization_url vis %>">Hide</a> |
                       <% end %>
                       <% if can_delete? vis %>
-                         <a class="viz_delete" href="<%= visualization_url vis %>" name="<%= vis.title %>">Delete</a>
+                        <a class="viz_delete" href="<%= visualization_url vis %>" name="<%= vis.title %>">Delete</a>
                       <% end %>
                     </div>
                   </td>
                 </tr>
               <% end %>
             </tbody>
-          </table>  
+          </table>
         </div>
-      <%end%>  
+      <% end %>
     </div>
-    
   </div>
 </div>
 <div style="display:none">
   <%= form_tag "/data_sets/dataFileUpload", method: 'post',multipart: true, id: 'datafile_form' do %>
-    <%= file_field_tag 'file', { id: 'datafile_input', autocomplete: 'off' } %>
+    <%= file_field_tag 'file', { id: 'datafile_input' } %>
     <input type="hidden" name="pid" value="<%=@project.id%>">
   <% end %>
 </div>
-
 <div id="doc_box" class="modal fade" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -325,44 +318,41 @@
         </div>
         <div class="modal-body">
           <input name="pid" value="<%=@project.id%>" type="hidden">
-          <input name="gdoc" id="doc_url" class="form-control" type="text" style="width:95%"></input>
+          <input name="gdoc" id="doc_url" class="form-control" type="text" style="width:95%">
         </div>
         <i style="padding-left:15px;">*This can be generated by clicking 'File->Publish to the web' or 'File->Share' on your spreadsheet.</i>
         <div class="modal-footer">
-              <button id="save_doc" type="submit" class="login_button btn btn-success">Save</button>
-              <button id="cancel_doc" class="cancel_login_button btn btn-danger">Cancel</button>
+          <button id="save_doc" type="submit" class="login_button btn btn-success">Save</button>
+          <button id="cancel_doc" class="cancel_login_button btn btn-danger">Cancel</button>
         </div>
       <% end %>
     </div>
   </div>
 </div>
-
 <div style="display:none">
   <%= form_tag "/projects/#{@project.id}/templateUpload", method: 'post',multipart: true, id: 'template_file_form' do %>
     <%= file_field_tag 'file', id: 'template_file_input' %>
   <% end %>
 </div>
-
 <div class="modal fade" id="export_modal">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-	<h3 class="modal-title">Export Data Sets</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3 class="modal-title">Export Data Sets</h3>
       </div>
       <div class="modal-body">
-	<div class="row">
-	  <div class="col-md-12"><b>How would you like to export your data?</b></div>
-	  <div class="col-md-4 col-md-offset-1">
-	    <button type="button" class="btn btn-default col-md-12" style="margin: 10px;" id="export_individual_button" href="/projects/<%=@project.id%>/export/data_sets/">Individual Files</button>
-	  </div>
-	  <div class="col-md-4 col-md-offset-1">
-	    <button type="button" class="btn btn-default col-md-12" style="margin: 10px;" id="export_concatenated_button" href="/projects/<%=@project.id%>/export_concatenated/data_sets/">Single File</button>
-	  </div>
-	</div>
+        <div class="row">
+          <div class="col-md-12"><b>How would you like to export your data?</b></div>
+          <div class="col-md-4 col-md-offset-1">
+            <button type="button" class="btn btn-default col-md-12" style="margin: 10px;" id="export_individual_button" data-href="/projects/<%=@project.id%>/export/data_sets/">Individual Files</button>
+          </div>
+          <div class="col-md-4 col-md-offset-1">
+            <button type="button" class="btn btn-default col-md-12" style="margin: 10px;" id="export_concatenated_button" data-href="/projects/<%=@project.id%>/export_concatenated/data_sets/">Single File</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
-
-<%= render "print"%>
+<%= render "print" %>
