@@ -19,7 +19,7 @@ IS.onReady "projects/show", ->
     was_liked = ($ @).hasClass('active')
 
     $.ajax
-      url: "/projects/#{ root.attr 'project_id' }/updateLikedStatus"
+      url: "/projects/#{ root.attr 'data-project_id' }/updateLikedStatus"
       type: 'POST'
       dataType: 'json'
       success: (resp) ->
@@ -30,7 +30,6 @@ IS.onReady "projects/show", ->
           ($ @).addClass('active')
         else
           ($ @).removeClass('active')
-
 
   ###
   # Controls for uploading a file.
@@ -62,7 +61,7 @@ IS.onReady "projects/show", ->
   ($ '#vis_button').click (e) ->
     targets = ($ document).find(".dataset .ds_selector input:checked")
     ds_list = (get_ds_id t for t in targets)
-    window.location = ($ this).attr("href") + ds_list
+    window.location = ($ this).attr("data-href") + ds_list
 
   ($ '#export_button').click (e) ->
     ($ '#export_modal').modal('show')
@@ -75,7 +74,7 @@ IS.onReady "projects/show", ->
     if ds_list.length is 0
       alert "No data sets selected for Export. Select at least 1 and try again."
     else
-      window.location = ($ this).attr("href") + ds_list
+      window.location = ($ this).attr("data-href") + ds_list
 
   ($ '#export_concatenated_button').click (e) ->
     ($ '#export_modal').modal('hide')
@@ -85,7 +84,7 @@ IS.onReady "projects/show", ->
     if ds_list.length is 0
       alert "No data sets selected for Export. Select at least 1 and try again."
     else
-      window.location = ($ this).attr("href") + ds_list
+      window.location = ($ this).attr("data-href") + ds_list
 
   # get the session number for viewing vises
   get_ds_id = (t) ->

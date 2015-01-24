@@ -17,7 +17,7 @@
                                 ["Bar","Bar"],["Histogram","Histogram"],["Table","Table"],["Photos","Photos"]],
               (@project.default_vis.nil? ? "none" : @project.default_vis)),{},{class: "form-control"}) %>
         </div>
-        <span class="help-block">Sets the default visualization for the project when visualizing 
+        <span class="help-block">Sets the default visualization for the project when visualizing
          data sets.</span>
       </div>
 
@@ -26,7 +26,7 @@
         <div>
           <%= f.number_field(:precision, value: @project.precision, min: "0") %>
         </div>
-        <span class="help-block">Sets the maximum number of decimal points for the project when visualizing 
+        <span class="help-block">Sets the maximum number of decimal points for the project when visualizing
          data sets.</span>
       </div>
 
@@ -35,7 +35,7 @@
           <div class="checkbox checkbox-inner">
             <%= f.check_box :lock %><strong> <i class="fa fa-lock"></i> Lock Project</strong>
           </div>
-          <span class="help-block">Locking a project will stop public contribution to your project. 
+          <span class="help-block">Locking a project will stop public contribution to your project.
             You and any users with "contribution keys" will still be able to contribute. </span>
         </div>
       </div>
@@ -57,7 +57,7 @@
             <div class="checkbox checkbox-inner">
               <%= f.check_box :featured %><strong> Feature Project</strong>
             </div>
-            <span class="help-block">Featuring a project will put it in the running to be on the front page. 
+            <span class="help-block">Featuring a project will put it in the running to be on the front page.
               Featured projects are shown based on when they are featured. Please make sure the project has a
               featured image before featuring.</span>
           </div>
@@ -68,7 +68,7 @@
             <div class="checkbox checkbox-inner">
               <%= f.check_box :is_template %><strong> Make Project A Template</strong>
             </div>
-            <span class="help-block">Making a project a template will promote it on the index page as a 
+            <span class="help-block">Making a project a template will promote it on the index page as a
               filter. Projects should only be made a template if it is complete and has a good description
               describing how to run the project.</span>
           </div>
@@ -80,23 +80,18 @@
               <%= f.check_box :curated %><strong> Curate Project</strong>
             </div>
             <span class="help-block">Curated projects are professionally recorded data imported into iSENSE.
-              Please make sure the project has a featured image before curating.</span>  
+              Please make sure the project has a featured image before curating.</span>
           </div>
         </div>
       <% end %>
 
       <div class="form-group">
         <div class="checkbox">
-
-          <% if can_delete? @project %>
-            <%= link_to raw(
-              '<div class="btn btn-danger"><i class="fa fa-times-circle"></i>  Delete Project </div>'),
-              @project, method: :delete, data: { confirm: "Really delete project?" } %>
-          <% else %>
-            <div class="btn btn-danger disabled">
-              <i class="fa fa-times-circle"></i>  Delete Project
-            </div>
-          <% end %>
+          <% del = '<i class="fa fa-times-circle"></i>  Delete Project ' %>
+          <%= link_to raw(del),
+              @project,
+              { method: :delete, data: { confirm: "Really delete project?" },
+              class: 'btn btn-danger' } %>
 
           <span class="help-block">A project may only be deleted if it does not contain data sets.</span>
         </div>
