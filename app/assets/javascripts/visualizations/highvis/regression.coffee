@@ -364,6 +364,7 @@ $ ->
         else
           points
       else
+        console.log points.map((y) -> ((y - min) / (max - min)) + 1)
         points.map((y) -> ((y - min) / (max - min)) + 1)
     
     # Calculate the standard deviation
@@ -379,7 +380,7 @@ $ ->
     ###
     visSpaceParameters = (Ps, xBounds, type) ->
       coeffMatrix = []
-      solutionMatrix = []
+      solutionVector = []
       max = xBounds.dataMax
       min = xBounds.dataMin
       if globals.curVis.canvas == 'scatter_canvas' and type == globals.REGRESSION.LOGARITHMIC
@@ -400,32 +401,40 @@ $ ->
         when globals.REGRESSION.LINEAR
           coeffMatrix.push [1, min]
           coeffMatrix.push [1, max]
-          solutionMatrix.push globals.REGRESSION.FUNCS[globals.REGRESSION.LINEAR][0](1, Ps)
-          solutionMatrix.push globals.REGRESSION.FUNCS[globals.REGRESSION.LINEAR][0](2, Ps)
-          newPs = numeric.solve(coeffMatrix, solutionMatrix)
+          solutionVector.push globals.REGRESSION.FUNCS[globals.REGRESSION.LINEAR][0](1, Ps)
+          solutionVector.push globals.REGRESSION.FUNCS[globals.REGRESSION.LINEAR][0](2, Ps)
+          newPs = numeric.solve(coeffMatrix, solutionVector)
         when globals.REGRESSION.QUADRATIC
-          coeffMatrix.push [1, min]
-          coeffMatrix.push [1, max]
-          solutionMatrix.push globals.REGRESSION.FUNCS[globals.REGRESSION.LINEAR][0](1, Ps)
-          solutionMatrix.push globals.REGRESSION.FUNCS[globals.REGRESSION.LINEAR][0](2, Ps)
-          newPs = numeric.solve(coeffMatrix, solutionMatrix)
-          Ps.push
+          coeffMatrix.push [1, min, min * min]
+          coeffMatrix.push [1, (max + min) / 2, ((max + min) / 2) * ((max + min) / 2)]
+          coeffMatrix.push [1, max, max * max]
+          solutionVector.push globals.REGRESSION.FUNCS[globals.REGRESSION.QUADRATIC][0](1, Ps)
+          solutionVector.push globals.REGRESSION.FUNCS[globals.REGRESSION.QUADRATIC][0](1.5, Ps)
+          solutionVector.push globals.REGRESSION.FUNCS[globals.REGRESSION.QUADRATIC][0](2, Ps)
+          newPs = numeric.solve(coeffMatrix, solutionVector)
         when globals.REGRESSION.CUBIC
-          x = (xv + 1) * (max - min) + min
-          x2 = Math.pow((xv - 1) * (max - min) + min, 2)
-          x3 = Math.pow((xv - 1) * (max - min) + min, 3)
-          coeffMatrix.push [1, x, x2, x3]
-          solutionMatrix.push hypothesis
+          projection = 2 * (max - min) + min
+          coeffMatrix.push [1, min, min * min, min * min * min]
+          coeffMatrix.push [1, (max + min) / 2, Math.pow((max + min) / 2, 2), Math.pow((max + min) / 2, 3)]
+          coeffMatrix.push [1, max, max * max, max * max * max]
+          coeffMatrix.push [1, projection, projection * projection, projection * projection * projection]
+          solutionVector.push globals.REGRESSION.FUNCS[globals.REGRESSION.CUBIC][0](1, Ps)
+          solutionVector.push globals.REGRESSION.FUNCS[globals.REGRESSION.CUBIC][0](1.5, Ps)
+          solutionVector.push globals.REGRESSION.FUNCS[globals.REGRESSION.CUBIC][0](2, Ps)
+          solutionVector.push globals.REGRESSION.FUNCS[globals.REGRESSION.CUBIC][0](3, Ps)
+          console.log "coeffMatrix is #{coeffMatrix}"
+          console.log "solutionVector is #{solutionVector}"
+          newPs = numeric.solve(coeffMatrix, solutionVector)
         when globals.REGRESSION.EXPONENTIAL
           x = (xv + 1) * (max - min) + min
           coeffMatrix.push [x, 1]
-          solutionMatrix.push Math.log(hypothesis - Ps[0])
+          solutionVector.push Math.log(hypothesis - Ps[0])
         when globals.REGRESSION.LOGARITHMIC
           x = xv * (max - min) + min
           coeffMatrix.push [x, 1]
-          solutionMatrix.push Math.exp(hypothesis - Ps[0])
-      newPs = numeric.solve(coeffMatrix, solutionMatrix)
-      console.log numeric.solve([ [1,2,1],[1,3,1], [1,4,1]], [6, 8, 10])
+          solutionVector.push Math.exp(hypothesis - Ps[0])
+      #newPs = numeric.solve(coeffMatrix, solutionVector)
+      #console.log normalizeData([(max + min) / 4],3)
       newPs
       # PPrimes = Ps
       # P = []
