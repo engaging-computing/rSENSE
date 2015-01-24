@@ -303,50 +303,6 @@ $ ->
     sqe = (func, xs, ys, Ps) ->
       numeric.sum(numeric.sub(ys, xs.map((x) -> func[0](x, Ps))).map (x) -> x * x)
 
-    ###
-    Denormalize functions given Ps, the mean and sigma.
-    ###
-    # Linear
-    globals.REGRESSION.DENORM_FUNCS.push [
-      (Ps, mean, sigma) -> Ps[0] - Ps[1] * mean / sigma,
-      (Ps, mean, sigma) -> Ps[1] / sigma
-    ]
-    # Quadratic
-    globals.REGRESSION.DENORM_FUNCS.push [
-      (Ps, mean, sigma) ->
-        globals.REGRESSION.DENORM_FUNCS[globals.REGRESSION.LINEAR][0](Ps, mean, sigma) \
-        + (Ps[2] * Math.pow(mean, 2)) / Math.pow(sigma, 2)
-      (Ps, mean, sigma) ->
-        globals.REGRESSION.DENORM_FUNCS[globals.REGRESSION.LINEAR][1](Ps, mean, sigma) \
-        - (Ps[2] * 2 * mean) / Math.pow(sigma, 2)
-      (Ps, mean, sigma) -> (Ps[2] / Math.pow(sigma, 2))
-    ]
-    # Cubic
-    globals.REGRESSION.DENORM_FUNCS.push [
-      (Ps, mean, sigma) ->
-        globals.REGRESSION.DENORM_FUNCS[globals.REGRESSION.QUADRATIC][0](Ps, mean, sigma) \
-        - Ps[3] * Math.pow(mean, 3) / Math.pow(sigma, 3)
-      (Ps, mean, sigma) ->
-        globals.REGRESSION.DENORM_FUNCS[globals.REGRESSION.QUADRATIC][1](Ps, mean, sigma) \
-        + Ps[3] * 3 * Math.pow(mean, 2) / Math.pow(sigma, 3)
-      (Ps, mean, sigma) ->
-        globals.REGRESSION.DENORM_FUNCS[globals.REGRESSION.QUADRATIC][2](Ps, mean, sigma) \
-        - Ps[3] * 3 * mean / Math.pow(sigma, 3)
-      (Ps, mean, sigma) -> Ps[3] / Math.pow(sigma, 3)
-    ]
-    # Exponential
-    globals.REGRESSION.DENORM_FUNCS.push [
-      (Ps, mean, sigma) -> Ps[0],
-      (Ps, mean, sigma) -> Ps[1] / sigma,
-      (Ps, mean, sigma) -> Ps[2] - (Ps[1] * mean) / sigma
-    ]
-    # Logarithmic
-    globals.REGRESSION.DENORM_FUNCS.push [
-      (Ps, mean, sigma) -> Ps[0] + Ps[1] * Math.log(1 / sigma),
-      (Ps, mean, sigma) -> Ps[1],
-      (Ps, mean, sigma) -> Ps[2] * sigma - mean
-    ]
-
     # Calculate the average
     calculateMean = (points) ->
       mean = 0
@@ -426,39 +382,9 @@ $ ->
           console.log "solutionVector is #{solutionVector}"
           newPs = numeric.solve(coeffMatrix, solutionVector)
         when globals.REGRESSION.EXPONENTIAL
-          x = (xv + 1) * (max - min) + min
-          coeffMatrix.push [x, 1]
-          solutionVector.push Math.log(hypothesis - Ps[0])
+          
         when globals.REGRESSION.LOGARITHMIC
-          x = xv * (max - min) + min
-          coeffMatrix.push [x, 1]
-          solutionVector.push Math.exp(hypothesis - Ps[0])
+          
       #newPs = numeric.solve(coeffMatrix, solutionVector)
       #console.log normalizeData([(max + min) / 4],3)
       newPs
-      # PPrimes = Ps
-      # P = []
-      # max = xBounds.dataMax
-      # min = xBounds.dataMin
-      # switch type
-
-      #   when globals.REGRESSION.LINEAR
-      #     nx1 = 0
-      #     nx2 = 1
-
-      #     P[0] = 0
-      #     P[1] = PPrimes[1] / (max - min)
-        
-      #   when globals.REGRESSION.QUADRATIC
-      #     [1,1,1]
-        
-      #   when globals.REGRESSION.CUBIC
-      #     [1,1,1,1]
-        
-      #   when globals.REGRESSION.EXPONENTIAL
-      #     [1,1,1]
-        
-      #   when globals.REGRESSION.LOGARITHMIC
-      #     #The hard case
-      #     [1,1,1]
-      # P
