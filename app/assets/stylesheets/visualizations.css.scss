@@ -200,6 +200,10 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     color: #000;
   }
 
+  .edit_menu {
+    display: inline-block;
+  }
+
   // button that enables fullscreen vis, not the fullscreen viz itself
   #fullscreen-vis {
     margin: 1px;
@@ -347,6 +351,12 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     width: 160px;
     margin-top: 10px;
     margin-bottom: 10px;
+  }
+
+  .summary {
+    padding: 5px 0px 5px 0px;
+    font-style: italic;
+    color: $hint;
   }
 
   #summary_canvas {
