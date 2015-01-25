@@ -125,6 +125,7 @@ $ ->
           yv = calculateRegressionPoint(Ps, xv + 1, type)
         {x: xv * (xBounds.dataMax - xBounds.dataMin) + xBounds.dataMin, y: yv}
       Ps = visSpaceParameters(Ps, xBounds, type)
+      console.log "Ps are #{Ps}"
       str = makeToolTip(Ps, R2, type, seriesName)
 
       ret =
@@ -340,6 +341,7 @@ $ ->
       max = xBounds.dataMax
       min = xBounds.dataMin
       if globals.curVis.canvas == 'scatter_canvas' and type == globals.REGRESSION.LOGARITHMIC
+        console.log 'demenshuns'
         return Ps
       # for i in [0...Ps.length]
       #   xv = (i / Ps.length)
@@ -382,9 +384,37 @@ $ ->
           console.log "solutionVector is #{solutionVector}"
           newPs = numeric.solve(coeffMatrix, solutionVector)
         when globals.REGRESSION.EXPONENTIAL
-          
+          projection = 2 * (max - min) + min
+          coeffMatrix.push [min, 1]
+          coeffMatrix.push [max, 1]
+          solutionVector.push Math.log(globals.REGRESSION.FUNCS[globals.REGRESSION.EXPONENTIAL][0](1, Ps) - Ps[0])
+          solutionVector.push Math.log(globals.REGRESSION.FUNCS[globals.REGRESSION.EXPONENTIAL][0](2, Ps) - Ps[0])
+          ans = numeric.solve(coeffMatrix, solutionVector)
+          p3 = globals.REGRESSION.FUNCS[globals.REGRESSION.EXPONENTIAL][0](1, Ps) - (Math.exp((ans[0] * min) + ans[1]))
+          console.log ans[0], ans[1], p3
+          newPs.push p3
+          newPs.push ans[0]
+          newPs.push ans[1]
+          console.log newPs
+          # coeffMatrix.push [1, min, 1]
+          # coeffMatrix.push [1, (max + min) / 2, 1]
+          # coeffMatrix.push [1, max, 1]
+          # solutionVector.push globals.REGRESSION.FUNCS[globals.REGRESSION.EXPONENTIAL][0](1, Ps)
+          # solutionVector.push globals.REGRESSION.FUNCS[globals.REGRESSION.EXPONENTIAL][0](1.5, Ps)
+          # solutionVector.push globals.REGRESSION.FUNCS[globals.REGRESSION.EXPONENTIAL][0](2, Ps)
+          #newPs = numeric.solve(coeffMatrix, solutionVector)
         when globals.REGRESSION.LOGARITHMIC
-          
+          coeffMatrix.push [min, 1]
+          coeffMatrix.push [max, 1]
+          solutionVector.push Math.exp(globals.REGRESSION.FUNCS[globals.REGRESSION.LOGARITHMIC][0](0, Ps) - Ps[0])
+          solutionVector.push Math.exp(globals.REGRESSION.FUNCS[globals.REGRESSION.LOGARITHMIC][0](1, Ps) - Ps[0])
+          ans = numeric.solve(coeffMatrix, solutionVector)
+          p3 = globals.REGRESSION.FUNCS[globals.REGRESSION.LOGARITHMIC][0](0, Ps) - (Math.log((ans[0] * min) + ans[1]))
+          console.log ans[0], ans[1], p3
+          newPs.push p3
+          newPs.push ans[0]
+          newPs.push ans[1]
+          console.log newPs
       #newPs = numeric.solve(coeffMatrix, solutionVector)
       #console.log normalizeData([(max + min) / 4],3)
       newPs
