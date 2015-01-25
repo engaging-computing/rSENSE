@@ -9,7 +9,7 @@
   currValue = null
   canClose = false
 
-  closeForm = =>
+  tryCloseForm = ->
     args.grid.getEditorLock().commitCurrentEdit()
     args.grid.resetActiveCell()
 
@@ -20,7 +20,7 @@
       args.grid.focus()
       $('body').on 'click.slickgrid-time1', (e) =>
         if $(e.target).closest('#dt-picker, .slick-cell.active').length == 0
-          closeForm()
+          tryCloseForm()
       $('body').on 'click.slickgrid-time2', '#dt-picker', (e) ->
         unless $(e.target).is 'input'
           args.grid.focus()
@@ -30,7 +30,7 @@
       $(args.container).text currValue
     onClose: (val) ->
       if canClose
-        closeForm()
+        tryCloseForm()
     hPosition: (w, h) ->
       args.position.left + 2
     vPosition: (w, h) ->

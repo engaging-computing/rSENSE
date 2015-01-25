@@ -9,13 +9,26 @@
   form = null
   loadValue = null
 
-  closeForm = =>
-    args.grid.getEditorLock().commitCurrentEdit()
-    args.grid.resetActiveCell()
+  tryValidate = ->
+    isNumber = /^(?:\+|-)?(?:\d*\.\d+|\d+)$/
+    if isNumber.test form.val()
+      form.popover 'hide'
+      {valid: true, msg: null}
+    else
+      form.popover 'show'
+      {valid: false, msg: 'Please enter a valid number'}
+
+  tryCloseForm = ->
+    if form.val() != loadValue and tryValidate().valid
+      args.grid.getEditorLock().commitCurrentEdit()
+      args.grid.resetActiveCell()
+    else if form.val() == loadValue
+      args.grid.getEditorLock().commitCurrentEdit()
+      args.grid.resetActiveCell()
     
   $('body').on 'click.slickgrid-number', (e) =>
     if $(e.target).closest('.slick-cell.active').length == 0
-      closeForm()
+      tryCloseForm()
 
   form = $('<input type="text" class="editor-text" />')
   form.appendTo args.container
@@ -42,11 +55,4 @@
     form.val loadValue
   applyValue: (item, state) ->
     item[args.column.field] = state
-  validate: ->
-    isNumber = /^(?:\+|-)?(?:\d*\.\d+|\d+)$/
-    if isNumber.test form.val()
-      form.popover 'hide'
-      {valid: true, msg: null}
-    else
-      form.popover 'show'
-      {valid: false, msg: 'Please enter a valid number'}
+  validate: tryValidate
