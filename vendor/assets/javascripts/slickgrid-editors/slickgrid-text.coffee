@@ -7,13 +7,13 @@
   form = null
   loadValue = null
 
-  closeForm = =>
+  tryCloseForm = =>
     args.grid.getEditorLock().commitCurrentEdit()
     args.grid.resetActiveCell()
     
   $('body').on 'click.slickgrid-text', (e) =>
     if $(e.target).closest('.slick-cell.active').length == 0
-      closeForm()
+      tryCloseForm()
 
   if args.column.restrictions == ''
     form = $('<input type="text" class="editor-text" />')

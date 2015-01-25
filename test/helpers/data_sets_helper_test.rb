@@ -3,12 +3,6 @@ require 'test_helper'
 class DataSetsHelperTest < ActionView::TestCase
   include DataSetsHelper
 
-  def assert_similar_arrays(a, b)
-    c = a - b
-    d = b - a
-    assert c.length + d.length == 0, "Arrays\n\n#{a}\n\nand\n\n#{b}\n\ndo not have the same contents"
-  end
-
   test 'slickgrid data formatting - merge lat and lon' do
     project = Project.find_by_name 'slickgrid_project'
     dataset = DataSet.find_by_name 'Slickgrid Dataset 1'

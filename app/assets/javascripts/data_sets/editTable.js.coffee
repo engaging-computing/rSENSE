@@ -45,6 +45,7 @@ setupTable = (cols, data) ->
   view.setItems data
 
   grid.onClick.subscribe (e, args) ->
+    console.log 'a'
     cell = grid.getCellFromEvent e
     if cell.cell == grid.getColumns().length - 1
       grid.getEditorLock().commitCurrentEdit()
@@ -69,7 +70,7 @@ setupTable = (cols, data) ->
     grid.render()
 
   $('.edit_table_add').click ->
-    if $('#edit_table_save_1').hasClass 'disabled'
+    if $('.edit_table_save').hasClass 'disabled'
       return
 
     grid.getEditorLock().commitCurrentEdit()
@@ -89,11 +90,11 @@ setupTable = (cols, data) ->
     grid.resetActiveCell()
 
     # check if we've already started saving
-    if $('#edit_table_save_1').hasClass 'disabled'
+    if $('.edit_table_save').hasClass 'disabled'
       return
 
     # get title and grid contents
-    title = if uploadSettings.pageName == 'entry' then $('#data_set_name').val() else null
+    title = if uploadSettings.pageName == 'entry' then $('#data_set_name').val() else ''
     formattedData = ajaxifyGrid view
 
     # validate presence of data
@@ -119,7 +120,6 @@ setupTable = (cols, data) ->
     $('.edit_table_save').text 'Saving...'
 
     if uploadSettings.pageName == 'edit'
-      console.log formattedData
       $.ajax
         url: "#{uploadSettings["urlEdit"]}"
         type: "#{uploadSettings["methodEdit"]}"
@@ -138,6 +138,11 @@ setupTable = (cols, data) ->
           title: title
         error: uploadSettings.error
         success: uploadSettings.successEntry
+
+  # this is needed because slickgrid opens after this function completes
+  setTimeout ->
+    $('.slick-cell.l0.r0').trigger 'click'
+  , 1
 
   [grid, view]
 

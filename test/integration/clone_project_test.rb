@@ -13,7 +13,6 @@ class CloneProjectTest < ActionDispatch::IntegrationTest
   end
 
   def set_cell(row, col, val)
-    # page.execute_script "$($('#manualTable input')[#{ii}]).val(#{val})"
     find(:css, ".slick-row:nth-child(#{row + 1})>.slick-cell.l#{col}").click
     find(:css, ".slick-row:nth-child(#{row + 1})>.slick-cell.l#{col}>input").set val
   end
