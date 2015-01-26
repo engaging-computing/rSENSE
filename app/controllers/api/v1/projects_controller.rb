@@ -38,7 +38,7 @@ module Api
       end
 
       def add_key
-        if params[:contrib_key].nil? 
+        if params[:contrib_key].nil?
           respond_to do |format|
             format.json { render json: { msg: 'contrib_key is nil' }, status: :unprocessable_entity }
           end
@@ -54,7 +54,7 @@ module Api
           respond_to do |format|
             format.json { render json: { msg: 'key is nil' }, status: :unprocessable_entity }
           end
-        else        
+        else
           @project = Project.find(params[:contrib_key][:project_id])
 
           if @cur_user.id == @project.user_id
@@ -64,7 +64,7 @@ module Api
             key = ContribKey.new(contrib_key_params)
             key.save
           end
-  
+
           respond_to do |format|
             if !key.nil?
               format.json { render json: { msg: 'Success' }, status: :created }
