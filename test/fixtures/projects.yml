@@ -76,3 +76,15 @@ upload_test:
 contributor_key_project:
   title: contributor_key_project
   user: kate
+
+slickgrid_project:
+  title: slickgrid_project
+  user: nixon
+
+slickgrid_project_no_latlon:
+  title: slickgrid_project_no_latlon
+  user: nixon
+
+slickgrid_oops:
+  title: slickgrid_oops
+  user: nixon
