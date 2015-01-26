@@ -627,8 +627,8 @@ class ApiV1Test < ActionDispatch::IntegrationTest
           }
     assert_response :unauthorized
   end
-  
-  test 'fail add a key to a project unprocessable' do
+
+  test 'add a key to a project unprocessable' do
     post '/api/v1/projects',
 
     email: 'kcarcia@cs.uml.edu',
