@@ -8,8 +8,6 @@ SimpleCov.start 'rsense'
 
 require 'capybara/rails'
 Capybara.javascript_driver = :none
-# Capybara.javascript_driver = :webkit
-# Capybara.javascript_driver = :selenium
 
 require 'minitest/reporters'
 require 'seed_reporter'
@@ -60,8 +58,10 @@ class ActiveSupport::TestCase
 
       script = Rails.root.join('test', 'html5check.py')
       result = `(python "#{script}" --encoding=utf-8 "#{temp.path}") 2>&1`
+      status = result.split(/\r?\n/)[0]
 
-      assert result =~ /^The document is valid HTML5/, "HTML invalid:\n#{result}"
+      test = (status == '200' && result =~ /^The document is valid HTML5/)
+      assert test || status == '503', "HTML invalid:\n#{result}"
     ensure
       temp.unlink
     end
@@ -127,4 +127,10 @@ module CapyHelper
       $('#content-area').code("#{text}");
     SCRIPT
   end
+end
+
+def assert_similar_arrays(a, b)
+  c = a - b
+  d = b - a
+  assert c.length + d.length == 0, "Arrays\n\n#{a}\n\nand\n\n#{b}\n\ndo not have the same contents: #{c + d}"
 end

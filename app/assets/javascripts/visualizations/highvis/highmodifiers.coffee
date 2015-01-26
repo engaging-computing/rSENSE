@@ -183,7 +183,6 @@ $ ->
       rawData = @multiGroupSelector(fieldIndex, groupIndices)
       rawData = rawData.sort (a, b) ->
         if a < b then -1 else 1
-      console.log rawData
       mid = Math.floor (rawData.length / 2)
 
       if rawData.length > 0
