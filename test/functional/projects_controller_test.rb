@@ -9,6 +9,8 @@ class ProjectsControllerTest < ActionController::TestCase
     @project_two = projects(:two)
     @project_three = projects(:three)
     @delete_me = projects(:delete_me)
+    @delete_me_two = projects(:delete_me2)
+    @delete_me_three = projects(:delete_me3)
     @contrib_key_test = projects(:contributor_key_project)
     @key = contrib_keys(:contributor_key_test)
     @media_test = projects(:media_test)
@@ -101,15 +103,17 @@ class ProjectsControllerTest < ActionController::TestCase
   end
 
   test 'should destroy project' do
-    assert_difference('Project.count', 0) do
+    assert_difference('Project.count', -1) do
       delete :destroy, { id: @delete_me },  user_id: @nixon
     end
-    assert_difference('Project.count', 0) do
-      delete :destroy, { id: @project_two }, user_id: @kate
+    assert_difference('Project.count', -1) do
+      delete :destroy, { id: @delete_me_two }, user_id: @kate
     end
 
-    @p0 = Project.find(@delete_me.id)
-    assert @p0.hidden, 'Project Got Hidden'
+    assert_raises(ActiveRecord::RecordNotFound) do
+      Project.find(@delete_me.id)
+    end
+
     assert_redirected_to projects_path
   end
 
@@ -124,12 +128,13 @@ class ProjectsControllerTest < ActionController::TestCase
   end
 
   test 'should destroy project (json)' do
-    assert_difference('Project.count', 0) do
-      delete :destroy, { format: 'json', id: @delete_me },  user_id: @nixon
+    assert_difference('Project.count', -1) do
+      delete :destroy, { format: 'json', id: @delete_me_three },  user_id: @nixon
     end
 
-    @p0 = Project.find(@delete_me.id)
-    assert @p0.hidden, 'Project Got Hidden'
+    assert_raises(ActiveRecord::RecordNotFound) do
+      Project.find(@delete_me_three.id)
+    end
 
     assert_response :success
   end

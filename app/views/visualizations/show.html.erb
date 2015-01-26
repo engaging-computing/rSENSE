@@ -33,7 +33,14 @@
 </script>
 <div class="row print" id="print_title">
   <span class="viz_title">Title: <%= @visualization.title %></span><br/>
-  <span class="viz_title">Project: <%= @visualization.project.title %></span><br/>
+  <span class="viz_title">
+    Project:
+    <% if @visualization.project.nil? || @visualization.project.hidden? %>
+      deleted
+    <% else %>
+      <%= @visualization.project.title %>
+    <% end %>
+  </span><br/>
   <span class="viz_title">Name: <%= @visualization.owner.name %></span><br/><br/>
 </div>
 <div id="title_row" class="row visualization_title">
