@@ -6,6 +6,7 @@ class VisualizationTest < ActiveSupport::TestCase
   # Declares a new visualization
   def setup
     @visualization = Visualization.new
+    @owner = users(:nixon)
   end
 
   # Passes if hidden is false
@@ -26,5 +27,48 @@ class VisualizationTest < ActiveSupport::TestCase
   # Passes if featured_at is nil
   test 'featured_at is nil' do
     assert_default_nil(@visualization, @visualization.featured_at)
+  end
+
+  # Passes if Visualization ID is nil
+  test 'vis_id is nil' do
+    assert_default_nil(@visualization, @visualization.id)
+  end
+
+  # Passes if title is nil
+  test 'title is nil' do
+    assert_default_nil(@visualization, @visualization.title)
+  end
+
+  # Passes if summary is nil
+  test 'summary is nil' do
+    assert_default_nil(@visualization, @visualization.summary)
+  end
+
+  # Passes if thumb_id is nil
+  test 'thumb_id is nil' do
+    assert_default_nil(@visualization, @visualization.thumb_id)
+  end
+
+  # Passes if created_at is nil
+  test 'created_at is nil' do
+    assert_default_nil(@visualization, @visualization.created_at)
+  end
+
+  # Passes if project_id is nil
+  test 'project_id is nil' do
+    assert_default_nil(@visualization, @visualization.project_id)
+  end
+
+  # Passes if user_id is nil
+  test 'user_id is nil' do
+    assert_default_nil(@visualization, @visualization.user_id)
+  end
+
+  # Passes if summary of a visualization is set properly
+  test 'set visualization summary' do
+    @visualization.summary = 'Summary'
+    assert_equal(@visualization.summary, 'Summary')
+    @copy = @visualization
+    assert_equal(@visualization.summary, @copy.summary)
   end
 end

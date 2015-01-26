@@ -74,8 +74,7 @@ class UsersControllerTest < ActionController::TestCase
   test 'should show user' do
     get :show, { id: @user },  user_id: @user
     assert_response :success
-    # FIXME
-    # assert_valid_html response.body
+    assert_valid_html response.body
   end
 
   test 'should show user with contributions' do
