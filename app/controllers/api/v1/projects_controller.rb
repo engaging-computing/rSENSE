@@ -38,25 +38,41 @@ module Api
       end
 
       def add_key
-        @project = Project.find(params[:contrib_key][:project_id])
+        if params[:contrib_key].nil? 
+          respond_to do |format|
+            format.json { render json: { msg: 'contrib_key is nil' }, status: :unprocessable_entity }
+          end
+        elsif params[:contrib_key][:name].nil?
+          respond_to do |format|
+            format.json { render json: { msg: 'name is nil' }, status: :unprocessable_entity }
+          end
+        elsif params[:contrib_key][:project_id].nil?
+          respond_to do |format|
+            format.json { render json: { msg: 'project id is nil' }, status: :unprocessable_entity }
+          end
+        elsif params[:contrib_key][:key].nil?
+          respond_to do |format|
+            format.json { render json: { msg: 'key is nil' }, status: :unprocessable_entity }
+          end
+        else        
+          @project = Project.find(params[:contrib_key][:project_id])
 
-        if @cur_user.id == @project.user_id
-          session[:name] = params[:key_name]
-          session[:key] = params[:key]
-          session[:project_id] = @project.id
-          key = ContribKey.new(contrib_key_params)
-          key.save
-        end
-
-        respond_to do |format|
-          if !key.nil?
-            format.json { render json: { msg: 'Success' }, status: :created }
-          elsif @cur_user.id != @project.user_id
-            errors = 'User does not own the project.'
-            format.json { render json: { msg: errors }, status: :unauthorized }
-          else
-            @errors = 'Unprocessable Entity.'
-            format.json { render json: { error: errors }, status: :unprocessable_entity }
+          if @cur_user.id == @project.user_id
+            session[:name] = params[:key_name]
+            session[:key] = params[:key]
+            session[:project_id] = @project.id
+            key = ContribKey.new(contrib_key_params)
+            key.save
+          end
+  
+          respond_to do |format|
+            if !key.nil?
+              format.json { render json: { msg: 'Success' }, status: :created }
+            elsif @cur_user.id != @project.user_id
+              format.json { render json: { msg: 'User does not own the project.' }, status: :unauthorized }
+            else
+              format.json { render json: { msg: 'Unprocessable Entity.' }, status: :unprocessable_entity }
+            end
           end
         end
       end

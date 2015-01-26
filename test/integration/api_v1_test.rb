@@ -627,6 +627,27 @@ class ApiV1Test < ActionDispatch::IntegrationTest
           }
     assert_response :unauthorized
   end
+  
+  test 'fail add a key to a project unprocessable' do
+    post '/api/v1/projects',
+
+    email: 'kcarcia@cs.uml.edu',
+    password: '12345'
+
+    assert_response :success
+    id = parse(response)['id']
+
+    post '/api/v1/projects/3/add_key',
+        email: 'kcarcia@cs.uml.edu',
+        password: '12345',
+        wrong_name:
+          {
+            'wrong_name2' => 'key_name',
+            'project_id' => id,
+            'key' => 'key'
+          }
+    assert_response :unprocessable_entity
+  end
 
   private
 
