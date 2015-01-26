@@ -129,7 +129,6 @@ module CapyHelper
   end
 end
 
-
 def assert_similar_arrays(a, b)
   c = a - b
   d = b - a
