@@ -247,6 +247,28 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert keys_match(response, @data_keys_extended), 'Keys are missing'
   end
 
+  test 'test second fields data is not trucated if longer than first fields' do
+    pid = @dessert_project.id
+    post "/api/v1/projects/#{pid}/jsonDataUpload",
+
+          title: 'Awesome Data',
+          email: 'kcarcia@cs.uml.edu',
+          password: '12345',
+          data:
+            {
+              '20' => ['1'],
+              '21' => ['1', '2', '3', '4', '5']
+            }
+    assert_response :success
+    data_uploaded = parse(response)['data']
+
+    assert data_uploaded[0]['21'] == '1', 'First point should be 1'
+    assert data_uploaded[1]['21'] == '2', 'First point should be 2'
+    assert data_uploaded[2]['21'] == '3', 'First point should be 3'
+    assert data_uploaded[3]['21'] == '4', 'First point should be 4'
+    assert data_uploaded[4]['21'] == '5', 'First point should be 5'
+  end
+
   test 'create data set with contribution_key' do
     pid = @dessert_project.id
     post "/api/v1/projects/#{pid}/jsonDataUpload",

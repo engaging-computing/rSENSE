@@ -109,8 +109,6 @@ class FileUploader
     data = []
 
     largest = data_obj.to_a.reduce [] do |a, b|
-      puts a.length
-      puts b[1].length
       a.length > b[1].length ? a : b[1]
     end
     size = largest.length
