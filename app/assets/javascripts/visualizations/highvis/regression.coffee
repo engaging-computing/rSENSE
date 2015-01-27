@@ -117,10 +117,7 @@ $ ->
         xv = (i / globals.REGRESSION.NUM_POINTS) #* ((normalizeData(xBounds.dataMax) - normalizeData(xBounds.dataMin)) + normalizeData(xBounds.dataMin))
         yv = 0
         if type == globals.REGRESSION.LOGARITHMIC
-          if globals.curVis.canvas == 'timeline_canvas'
-            yv = calculateRegressionPoint(Ps, xv, type)
-          else
-            yv = calculateRegressionPoint(Ps, xv * (xBounds.dataMax - xBounds.dataMin) + xBounds.dataMin, type)
+          yv = calculateRegressionPoint(Ps, xv * (xBounds.dataMax - xBounds.dataMin) + xBounds.dataMin, type)
         else
           yv = calculateRegressionPoint(Ps, xv + 1, type)
         {x: xv * (xBounds.dataMax - xBounds.dataMin) + xBounds.dataMin, y: yv}
@@ -147,18 +144,29 @@ $ ->
             lineWidth: 4
       
     ###
-    Uses the regression matrix to calculate the y value given an x value.
+    # Uses the regression matrix to calculate the y value given an x value.
     ###
     calculateRegressionPoint = (Ps, x, type) ->
       globals.REGRESSION.FUNCS[type][0](x, Ps)
       
+    ###
+    # Linear Equation solver creates trivial roundoff error for parameters
+    # that are equal to zero.
+    ###
+    roundOffError = (p) ->
+      if Math.abs(p) < Math.sqrt numeric.epsilon
+        0
+      else
+        p
+
     ###
     Returns tooltip description of the regression.
     ###
     makeToolTip = (Ps, R2, type, seriesName) ->
 
       # Format parameters for output
-      Ps = Ps.map roundToFourSigFigs
+      
+      Ps = Ps.map(roundToFourSigFigs).map(roundOffError)
 
       ret = switch type
 
@@ -316,105 +324,74 @@ $ ->
       max = Math.max.apply(null, points)
       min = Math.min.apply(null, points)
       ret = if type == globals.REGRESSION.LOGARITHMIC
-        if globals.curVis.canvas == 'timeline_canvas'
-          points.map((y) -> (y - min) / (max - min))
-        else
-          points
+        points
       else
         console.log points.map((y) -> ((y - min) / (max - min)) + 1)
         points.map((y) -> ((y - min) / (max - min)) + 1)
     
-    # Calculate the standard deviation
-    calculateStandardDev = (points, mean) ->
-      sigma = 0
-      for point in points
-        sigma += Math.pow(point - mean, 2)
-      Math.sqrt( sigma / points.length )
-
     ###
     # Map the parameters of the learned feature space to the visualization space
     # (done by Gauss-Jordan elimination on a system of linear equations)
     ###
     visSpaceParameters = (Ps, xBounds, type) ->
-      coeffMatrix = []
-      solutionVector = []
-      max = xBounds.dataMax
-      min = xBounds.dataMin
-      if globals.curVis.canvas == 'scatter_canvas' and type == globals.REGRESSION.LOGARITHMIC
-        console.log 'demenshuns'
-        return Ps
-      # for i in [0...Ps.length]
-      #   xv = (i / Ps.length)
-        
-      #   # Calculate hypothesis of each input over the data range
-      #   hypothesis = if type != globals.REGRESSION.LOGARITHMIC
-      #     globals.REGRESSION.FUNCS[type][0](xv + 1, Ps)
-      #   else
-      #     if globals.curVis.canvas == 'scatter_canvas'
-      #       globals.REGRESSION.FUNCS[type][0](xv * (max - min) + min, Ps)
-      #     else
-      #       globals.REGRESSION.FUNCS[type][0](xv, Ps)
-      newPs = []  
+      [coeffMatrix, solutionVector, newPs] = [[], [], []]
+      [max, min] = [xBounds.dataMax, xBounds.dataMin]
+      projection = 2 * (max - min) + min
+      
+      if type == globals.REGRESSION.LOGARITHMIC
+        return Ps  
+      
       switch type
         when globals.REGRESSION.LINEAR
-          coeffMatrix.push [1, min]
-          coeffMatrix.push [1, max]
-          solutionVector.push globals.REGRESSION.FUNCS[globals.REGRESSION.LINEAR][0](1, Ps)
-          solutionVector.push globals.REGRESSION.FUNCS[globals.REGRESSION.LINEAR][0](2, Ps)
+          coeffMatrix = [
+            [1, min],
+            [1, max]
+          ]
+          solutionVector = [
+            globals.REGRESSION.FUNCS[globals.REGRESSION.LINEAR][0](1, Ps),
+            globals.REGRESSION.FUNCS[globals.REGRESSION.LINEAR][0](2, Ps)
+          ]
           newPs = numeric.solve(coeffMatrix, solutionVector)
+
         when globals.REGRESSION.QUADRATIC
-          coeffMatrix.push [1, min, min * min]
-          coeffMatrix.push [1, (max + min) / 2, ((max + min) / 2) * ((max + min) / 2)]
-          coeffMatrix.push [1, max, max * max]
-          solutionVector.push globals.REGRESSION.FUNCS[globals.REGRESSION.QUADRATIC][0](1, Ps)
-          solutionVector.push globals.REGRESSION.FUNCS[globals.REGRESSION.QUADRATIC][0](1.5, Ps)
-          solutionVector.push globals.REGRESSION.FUNCS[globals.REGRESSION.QUADRATIC][0](2, Ps)
+          coeffMatrix = [
+            [1, min, min * min],
+            [1, (max + min) / 2, ((max + min) / 2) * ((max + min) / 2)],
+            [1, max, max * max]
+          ]
+          solutionVector = [
+            globals.REGRESSION.FUNCS[globals.REGRESSION.QUADRATIC][0](1, Ps),
+            globals.REGRESSION.FUNCS[globals.REGRESSION.QUADRATIC][0](1.5, Ps),
+            globals.REGRESSION.FUNCS[globals.REGRESSION.QUADRATIC][0](2, Ps) 
+          ]
           newPs = numeric.solve(coeffMatrix, solutionVector)
+
         when globals.REGRESSION.CUBIC
-          projection = 2 * (max - min) + min
-          coeffMatrix.push [1, min, min * min, min * min * min]
-          coeffMatrix.push [1, (max + min) / 2, Math.pow((max + min) / 2, 2), Math.pow((max + min) / 2, 3)]
-          coeffMatrix.push [1, max, max * max, max * max * max]
-          coeffMatrix.push [1, projection, projection * projection, projection * projection * projection]
-          solutionVector.push globals.REGRESSION.FUNCS[globals.REGRESSION.CUBIC][0](1, Ps)
-          solutionVector.push globals.REGRESSION.FUNCS[globals.REGRESSION.CUBIC][0](1.5, Ps)
-          solutionVector.push globals.REGRESSION.FUNCS[globals.REGRESSION.CUBIC][0](2, Ps)
-          solutionVector.push globals.REGRESSION.FUNCS[globals.REGRESSION.CUBIC][0](3, Ps)
-          console.log "coeffMatrix is #{coeffMatrix}"
-          console.log "solutionVector is #{solutionVector}"
+          coeffMatrix = [
+            [1, min, min * min, min * min * min],
+            [1, (max + min) / 2, Math.pow((max + min) / 2, 2), Math.pow((max + min) / 2, 3)],
+            [1, max, max * max, max * max * max],
+            [1, projection, projection * projection, projection * projection * projection]
+          ]
+          solutionVector = [
+            globals.REGRESSION.FUNCS[globals.REGRESSION.CUBIC][0](1, Ps),
+            globals.REGRESSION.FUNCS[globals.REGRESSION.CUBIC][0](1.5, Ps),
+            globals.REGRESSION.FUNCS[globals.REGRESSION.CUBIC][0](2, Ps),
+            globals.REGRESSION.FUNCS[globals.REGRESSION.CUBIC][0](3, Ps)
+          ]
           newPs = numeric.solve(coeffMatrix, solutionVector)
+
         when globals.REGRESSION.EXPONENTIAL
-          projection = 2 * (max - min) + min
-          coeffMatrix.push [min, 1]
-          coeffMatrix.push [max, 1]
+          coeffMatrix = [
+            [min, 1],
+            [max, 1]
+          ]
+          solutionVector = [
+            Math.log(globals.REGRESSION.FUNCS[globals.REGRESSION.EXPONENTIAL][0](1, Ps) - Ps[0]),
+            Math.log(globals.REGRESSION.FUNCS[globals.REGRESSION.EXPONENTIAL][0](2, Ps) - Ps[0])
+          ]
           solutionVector.push Math.log(globals.REGRESSION.FUNCS[globals.REGRESSION.EXPONENTIAL][0](1, Ps) - Ps[0])
           solutionVector.push Math.log(globals.REGRESSION.FUNCS[globals.REGRESSION.EXPONENTIAL][0](2, Ps) - Ps[0])
-          ans = numeric.solve(coeffMatrix, solutionVector)
-          p3 = globals.REGRESSION.FUNCS[globals.REGRESSION.EXPONENTIAL][0](1, Ps) - (Math.exp((ans[0] * min) + ans[1]))
-          console.log ans[0], ans[1], p3
-          newPs.push p3
-          newPs.push ans[0]
-          newPs.push ans[1]
-          console.log newPs
-          # coeffMatrix.push [1, min, 1]
-          # coeffMatrix.push [1, (max + min) / 2, 1]
-          # coeffMatrix.push [1, max, 1]
-          # solutionVector.push globals.REGRESSION.FUNCS[globals.REGRESSION.EXPONENTIAL][0](1, Ps)
-          # solutionVector.push globals.REGRESSION.FUNCS[globals.REGRESSION.EXPONENTIAL][0](1.5, Ps)
-          # solutionVector.push globals.REGRESSION.FUNCS[globals.REGRESSION.EXPONENTIAL][0](2, Ps)
-          #newPs = numeric.solve(coeffMatrix, solutionVector)
-        when globals.REGRESSION.LOGARITHMIC
-          coeffMatrix.push [min, 1]
-          coeffMatrix.push [max, 1]
-          solutionVector.push Math.exp(globals.REGRESSION.FUNCS[globals.REGRESSION.LOGARITHMIC][0](0, Ps) - Ps[0])
-          solutionVector.push Math.exp(globals.REGRESSION.FUNCS[globals.REGRESSION.LOGARITHMIC][0](1, Ps) - Ps[0])
-          ans = numeric.solve(coeffMatrix, solutionVector)
-          p3 = globals.REGRESSION.FUNCS[globals.REGRESSION.LOGARITHMIC][0](0, Ps) - (Math.log((ans[0] * min) + ans[1]))
-          console.log ans[0], ans[1], p3
-          newPs.push p3
-          newPs.push ans[0]
-          newPs.push ans[1]
-          console.log newPs
-      #newPs = numeric.solve(coeffMatrix, solutionVector)
-      #console.log normalizeData([(max + min) / 4],3)
+          newPs = numeric.solve(coeffMatrix, solutionVector)
+          newPs.push globals.REGRESSION.FUNCS[globals.REGRESSION.EXPONENTIAL][0](1, Ps) - (Math.exp((newPs[0] * min) + newPs[1]))
       newPs
