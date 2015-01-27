@@ -27,6 +27,7 @@ class VisualizationsControllerTest < ActionController::TestCase
       post :create, { visualization: { content: @vis1.content, data: @vis1.data, project_id: @vis1.project_id,
         globals: @vis1.globals, title: @vis1.title, user_id: @vis1.user_id } },  user_id: @kate.id
     end
+
     assert_redirected_to visualization_path(assigns(:visualization))
     assert_difference('Visualization.count') do
       post :create, { visualization: { content: @vis1.content, data: @vis1.data, project_id: @vis1.project_id,
@@ -53,6 +54,8 @@ class VisualizationsControllerTest < ActionController::TestCase
 
     get :show, { id: @vis2.id, presentation: true },  user_id: @kate.id
     assert_response :success
+    # FIXME
+    # assert_valid_html response.body
   end
 
   test 'should show thanksgiving dinner data' do

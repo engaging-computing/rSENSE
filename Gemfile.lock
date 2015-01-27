@@ -216,6 +216,7 @@ GEM
     uglifier (2.6.1)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
+    underscore-rails (1.7.0)
     useragent (0.10.0)
     webrick (1.3.1)
     websocket (1.2.1)
@@ -266,6 +267,7 @@ DEPENDENCIES
   summernote-rails
   therubyracer
   uglifier
+  underscore-rails
   useragent (~> 0.10.0)
   webrick
   will_paginate

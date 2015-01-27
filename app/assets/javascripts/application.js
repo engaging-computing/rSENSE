@@ -30,6 +30,7 @@
 //= require jquery.form.js
 //= require jquery.qrcode.min.js
 //= require titlebar.js.coffee
+//= require jquery.scrollstop.js
 //= require bootstrap
 //
 // Visualization stuff follows

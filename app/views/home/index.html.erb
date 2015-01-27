@@ -1,120 +1,240 @@
 <!--[if lte IE 9]>
 <span style="color: red;">
-   <strong> ATTENTION USERS:</strong>
-   iSENSE does not support browsers IE9 and below. (It is recommended to install the latest version of Internet Explorer or switch browsers for optimal compatibility.)
+<strong> ATTENTION USERS:</strong>
+iSENSE does not support browsers IE9 and below. (It is recommended to install the latest version of Internet Explorer or switch browsers for optimal compatibility.)
 </span>
 <![endif]-->
-
-<div class="visible-lg visible-md">
-  <div class="row">
-    <% if @featured_vis != nil%>
-      <div class="visible-desktop">
-        <div class="col-md-4">
-          <h2><%= link_to @featured_vis.title, visualization_path(@featured_vis)%></h2>
-          <b>Created: </b><%= time_ago_in_words(@featured_vis.created_at)%> ago, on <%=@featured_vis.created_at.strftime("%B %d, %Y")%><br />
-          <b>From Project: </b><%= link_to @featured_vis.project.title, project_path(@featured_vis.project)%><br />
-          <b>By: </b><%= link_to @featured_vis.owner.name, user_path(@featured_vis.owner)%>
-          <%= raw @featured_vis.content %>
-          <br />
-          <a href="visualizations" class="btn btn-primary">See More Visualizations</a>
-        </div>
-        <div class="col-md-8">
-          <iframe scrolling="no" style="width:100%;height:400px;border:0px;" src="/visualizations/<%=@featured_vis.id%>?presentation=true"></iframe>
-        </div>
-      </div>
-    <%end%>
-  </div>
+<!-- Begin Homepage -->
+<div id ="carousel-container" class="row">
+  <div id="myCarousel" class="carousel slide" data-ride="carousel">
     
-  <div class="row">
-    <div class="col-md-12">
-      <h3>Featured Projects</h3>
-    </div>
-        
-    <% @featured_projects.each do |i| %>
-      <% @box_project = i %>
-      <%= render "shared/project_box" %>
-    <% end %> 
-  </div>
+    <!-- Carousel Controllers -->
+    <ol class="carousel-indicators">
+      <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+      <li data-target="#myCarousel" data-slide-to="1"></li>
+      <li data-target="#myCarousel" data-slide-to="2"></li>
+    </ol>
     
-  <div class="row">
-    <div class="col-md-12">
-      <h3>Curated Projects</h3>
-    </div>
-    <% @curated_projects.each do |i| %>
-      <% @box_project = i %>
-      <%= render "shared/project_box" %>
-    <% end %>
-  </div>
-    
-  <div class="row">
-    <div class="col-md-12">
-      <h3>What's New</h3>
-    </div>
-    <div class="col-md-6">
-      <% if @news.first != nil %>
-        <div class="wide-item">
-          <% n = @news.first %>
-              
-          <% if n.featured_media_id != nil %>
-            <a href='<%= news_path n %>'>
-              <div class="news_featured_image">
-                <% mo = MediaObject.find(n.featured_media_id) %> 
-                <div class="item-image" style="<%= "background-image:url(#{mo.src})"%>"></div>
-              </div>
-            </a>
-          <% end %>
-              
-          <div class="item-desc">
-            <span class="item_title"><%= n.title %></span><br/>
-            <span style="font-size:0.8em">Written on <%=n.created_at.strftime("%B %d, %Y")%></span><br/><br/>
-            <div class="news_description"><%= n.summary%><br/> </div>
-            <div class="article_link"> <%= link_to "Read More", news_path(n) %> </div>
+    <!---Carousel Content-->
+    <div class="carousel-inner" id="scroll-0">
+      
+      <!---First Slide-->
+      <div class="item active">
+        <img src="<%= image_path 'create.jpg'%>" class="carousel-img" alt="First slide">
+        <div class="container">
+          <div class="carousel-caption">
+            <h2 class="homepage-header"><span class="slide-header">Collect</span>, Share, and Visualize</h2>
+            <p class="carousel-slide-text">Collect data from classroom experiments, online resources, or probeware systems, and manually upload your data to iSENSE. Use iSENSE Android or iOS mobile applications to automatically gather and upload data directly to iSENSE.
+            </p>
           </div>
         </div>
-      <% end %>
-    </div>
-   
-    <div class="col-md-3">
+      </div>
+      <!---End First Slide Content-->
+      
+      <!---Second Slide-->
       <div class="item">
-        <div class="item-desc">
-          <span class="item_title">Statistics</span><br/><br/>
-          <b><%=User.count%> users</b> registered<br/>
-          <b><%=DataSet.count%> datasets</b> contributed<br/>
-          <b><%=Project.count%> projects</b> created<br/>
+        <img src="<%= image_path 'Share.jpg'%>" class="carousel-img" alt="Second slide">
+        <div class="container">
+          <div class="carousel-caption">
+            <h2 class="homepage-header">Collect, <span class="slide-header">Share</span>, and Visualize</h2>
+            <p class="carousel-slide-text">
+              Share data on iSENSE to facilitate collaboration and conduct meaningful conversations. Upload data to iSENSE via the website or mobile applications and access it from anywhere.
+            </p>
+          </div>
         </div>
       </div>
+      <!---End Second Slide Content-->
+    
+      <!---Last Slide-->
+      <div class="item">
+        <img src="<%= image_path 'Visualize.png'%>" class="carousel-img" alt="Third slide">
+        <div class="container">
+          <div class="carousel-caption">
+            <h2 class="homepage-header">Collect, Share, and <span class="slide-header">Visualize</span> </h2>
+            <p class="carousel-slide-text">
+              Analyze and visualize data on a map, timeline, scatter plot, bar graph, histogram, pie chart, table, and more. Configure visualizations to best suit displaying your data, and save them to revisit your work at a later time.
+            </p>
+          </div>
+        </div>
+      </div>
+      <!---End Last Slide-->
+    </div>
+    <!---End Carousel Content-->
+    
+    <!---Carousel Controls-->
+    
+    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
+    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+    <!---End Carousel Controls-->
+    
+  </div>
+  <!---End Carousel-->
+</div>
+<!---End Carousel Container-->
+
+<hr class="featurette-divider carousel-divider">
+
+<!---Begin Featurette-->
+<div class="row secondary-content">
+  <div class="col-md-12 secondary-main-content">
+    <div class="featurette">
+      
+      <!---Begin iSENSE Project Description-->
+      <div class=" col-lg-4 col-md-12 col-sm-12 col-xs-12 isense-desc" id="scroll-1">
+        <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12 what-is-isense">
+          <h2 class="homepage-header">What is iSENSE?</h2>
+          <br class="line"/> 
+          <div class="homepage-text">
+            <p class="featurette-text">
+              iSENSE is a data collection and visualization tool for teachers and students to engage and interact with data in meaningful new ways.
+            </p>
+            <p class="featurette-text"> iSENSE is an easy and convenient platform for users to: </p>
+            <p class="featurette-text"><span class="text-success featured-list">Collect </span> experimental data. </p>
+            <p class="featurette-text"><span class="text-info featured-list">Share </span> data with the world. </p>
+            <p class="featurette-text"><span class="text-primary featured-list">Visualize </span>data with robust analysis tools.</p> 
+            <br />
+          </div>
+        </div>
+        <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12 teachers-love-isense">
+          <hr class="featurette-divider hidden-md hidden-sm visible-lg visible-xs" />
+          <h2 class="homepage-header"> Teachers Love iSENSE</h2>
+          <br class="line"/> 
+          <div class="homepage-text">
+            <p class="featurette-text">
+              "Students are able to make connections between mathematics and real life using iSENSE. For example, students are able to observe the linear relationship between a length of a forearm and height of a person. Students can also discover that coffee cooling is modeled by an exponential function by trying to determine which type of coffee cup keeps coffee hot a longest."
+              <br />- Elaine G., Math Teacher
+            </p>
+            <p class="featurette-text">
+              “Using a iSENSE Data Walk Android application with a seventh grade students was one of a most engaging and authentic learning activities of a year. Students used technology to learn about a physical science standard for graphing and interpreting distance and time."
+              <br />-Barbara K., Science Teacher 
+            </p> 
+            <p class="featurette-text">
+              "After attending a professional development workshop on using tablets in a classroom, I brought a Ticker Tape motion lab into the 21st century. Using the iSENSE DataWalk application on Android tablets with GPS, over 300 Physics students created accurate plots of their motion on a football field and analyzed the results on iSENSE. I called this lesson the Human Ticker Tape lab and used it to reinforce prior activities on motion concepts."
+              <br />
+              -Steve C., Physics Teacher
+            </p>
+            <hr class="featurette-divider">
+          </div> 
+        </div>
+      </div>
+      <!---End Project Description-->
+      
+      <!---Featured image -->
+      <div class=" col-lg-8 col-md-12 col-sm-12 col-xs-12">
+        <hr class="featurette-divider teachers-love-isense-seperator hidden-lg" id="scroll-4" />
+        <img src="<%= image_path 'feature-histogram.png'%>" id="main-image-featurette" class="featurette-image" alt="Featured Histogram">
+        <hr class="featurette-divider teachers-love-isense-seperator hidden-lg hidden-md hidden-sm hidden-xs" />
+      </div>
+      <!---End Featured Image-->
+
     </div>
   </div>
 </div>
+<hr class="featurette-divider teachers-love-isense-seperator hidden-md hidden-sm hidden-xs" />
+<!---End Featurette-->
 
-<div class="visible-xs visible-sm">
-  <%if @featured_projects.first != nil%>
-    <% i = @featured_projects.first %>
-    <div>
-      <%if i.featured_media_id != nil%>
-        <%= link_to image_tag(MediaObject.find(i.featured_media_id).src, :style=>'max-height:150px; float:right; padding: 5px;'), project_path(i) %>
-      <% end %>
-      <h4><%= link_to i.title, project_path(i) %></h4>
-      <span style="font-weight:bold">Owner:</span> <%= link_to i.owner.name, user_path(i.owner) %><br/>
-      <span style="font-weight:bold">Created:</span> <%= i.to_hash(false)[:timeAgoInWords] %> ago
-      <div style="margin-top:20px;"><%= mobileParse(i) %></div>
-      <br><a href="projects" class="btn btn-primary">See More Projects</a>
-    </div>
-  <%end%>  
-    <div style="margin-top:20px;">
-      <h4>iSENSE Mobile Apps</h4>
-      <p>Download official apps to use with iSENSE.</p>
-      <div class="mobileButtonTable">
-        <div class="mobileButtonCell">
-          <a href="https://play.google.com/store/apps/developer?id=Engaging+Computing+Group,+UML" class="btn btn-primary">
-            <%= image_tag "icon-android.png" %>
-          </a>
+<!---Begin Two-column layout-->
+<div class="row ternary-content" id="scroll-2">
+  <div class="container marketing two-col">
+    
+    <!--- First Column -->
+    <div class=" first-column col-lg-6" id="column-one">
+      <div class="hidden-lg">
+        <hr class="featurette-divider" />
+        <h2 class="homepage-header">Download iSENSE Mobile Apps</h2> <br/>
+          <div class="col-md-8 col-sm-6 col-xs-12 app-desc">
+            <div class="homepage-text">
+              <p>Android and iOS mobile applications are free and available for download in the Google Play Store and Apple App Store. These mobile applications make it easy to collect data sets using your mobile device’s built-in sensors and upload them directly to iSENSE.</p>
+            </div> <br />
+          </div>
+          <div class="col-md-4 col-sm-6 col-xs-12 app-desc">
+            <a href="https://play.google.com/store/apps/developer?id=Engaging+Computing+Group,+UML" class="btn btn-primary img-rounded">
+              <%= image_tag "icon-android.png", class: 'play-store-button'%> </a>
+            <a class="btn btn-primary disabled img-rounded">
+            <%= image_tag "icon-apple.png", class: 'app-store-button' %> </a>
+          </div> <br />
         </div>
-        <div class="mobileButtonCell">
-          <a class="btn btn-primary disabled">
-            <%= image_tag "icon-apple.png" %>
-          </a>
-        </div>
+      <hr class="featurette-divider under-hid hidden-lg" />
+      <h2 class="homepage-header">What's New</h2><br/>
+      <div class="news-prev-wrapper">
+        <% News.where(hidden: false).last(3).reverse.each do |n| %>
+          <%= render 'shared/article_box', {
+            image_id: n.featured_media_id, path: news_path(n), title: n.title,
+            brief: n.summary, content: n.content, date: n.created_at.strftime("%B %d %Y"),
+            width: 12
+          } %>
+        <% end %>
       </div>
     </div>
+
+    <!---Second Column-->
+    <div class="col-md-4 col-lg-6 visible-lg" id="column-two">
+      <h2 class="homepage-header">Download iSENSE Mobile Apps</h2> <br/>
+      <div id="app-description">
+        <div class="col-lg-8 col-md-8 app-desc">
+          <div class="homepage-text">
+            <p>Android and iOS mobile applications are free and available for download in the Google Play Store and Apple App Store. These mobile applications make it easy to collect data sets using your mobile device’s built-in sensors and upload them directly to iSENSE.</p>
+          </div> <br /> <br />
+        </div>
+        <div class="col-lg-4 col-md-8 app-desc">
+          <a href="https://play.google.com/store/apps/developer?id=Engaging+Computing+Group,+UML" class="btn btn-primary img-rounded">
+            <%= image_tag "icon-android.png", class: 'play-store-button'%> </a>
+          <a class="btn btn-primary disabled img-rounded">
+            <%= image_tag "icon-apple.png", class: 'app-store-button' %> </a> <br /> <br />
+        </div> <br />
+        <hr class="featurette-divider"> />
+      </div>
+        <hr class="featurette-divider" />
+      <div class="under-apps">
+          <hr class="featurette-divider" />
+          <h2 class="homepage-header">Get Involved with iSENSE</h2> <br />
+          <div class="homepage-text">
+            <p class="involvement">
+              For more information, please contact Fred Martin (<a href="mailto:fredm@cs.uml.edu">fredm@cs.uml.edu</a>) and Samantha Michalka (<a href="mailto:samantha@machinescience.org">samantha@machinescience.org</a>) We hold workshops for teachers to learn how to use iSENSE in the classroom, and for students to learn about scientific data collection and analysis. We will also come to your school with the tools and resources necessary to use iSENSE.
+            </p> <br />
+          </div> <br />
+          <hr class="featurette-divider" />
+          <div id="stats-row" class="row">
+            <h2 class="homepage-header">Statistics</h2> <br/>
+              <div class="col-xs-4">               
+                <div class="homepage-stats"><b><%=User.count%> users</b> registered </div>
+              </div>
+              <div class="col-xs-4">
+                <div class="homepage-stats"><b><%=DataSet.count%> datasets</b> contributed </div>
+              </div>
+              <div class="col-xs-4">
+                <div class="homepage-stats"><b><%=Project.count%> projects</b> created </div>
+              </div>
+          </div>
+        </div>  
+      </div>
+    </div>
+    <!---End Second Column-->
+
+  </div>
+<br />
+<!---End Three Column Layout-->
+
+<hr class="featurette-divider second-footer" />
+
+<!--- Begin CSV footer -->
+<div class="row">  
+  <div class="col-md-12" id="csv-footer">    
+    <div class="col-xs-4">
+      <p class="lead slogan text-muted"> Collect </p>
+    </div>
+    <div class="col-xs-4">
+      <p class="lead text-muted slogan"> Share </p>
+    </div>
+    <div class="col-xs-4">
+      <p class="lead slogan text-muted"> Visualize </p>
+    </div>
+  </div>  
 </div>
+<!--- End CSV footer -->
+
+<!--- invisible, determines current "Bootstrap size" being displayed on window resize for element resizing -->
+<div class="device-xs visible-xs"></div>
+<div class="device-sm visible-sm"></div>
+<div class="device-md visible-md"></div>
+<div class="device-lg visible-lg"></div>
