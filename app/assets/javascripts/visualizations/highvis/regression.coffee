@@ -67,7 +67,7 @@ $ ->
       (x, P) -> 1,
       (x, P) -> x * Math.exp(P[1] * x + P[2]),
       (x, P) -> Math.exp(P[1] * x + P[2])]
-    
+
     globals.REGRESSION.LOGARITHMIC = globals.REGRESSION.FUNCS.length
     globals.REGRESSION.FUNCS.push [
       (x, P) -> P[0] + Math.log(P[1] * x + P[2]),
@@ -83,7 +83,7 @@ $ ->
     globals.getRegression = (xs, ys, type, xBounds, seriesName, dashStyle) ->
       Ps = []
       func = globals.REGRESSION.FUNCS[type]
-      
+
       # Make an initial Estimate
       switch type
 
@@ -114,7 +114,7 @@ $ ->
     ###
     generateHighchartsSeries = (Ps, R2, type, xBounds, seriesName, dashStyle) ->
       data = for i in [0..globals.REGRESSION.NUM_POINTS]
-        xv = (i / globals.REGRESSION.NUM_POINTS) #* ((normalizeData(xBounds.dataMax) - normalizeData(xBounds.dataMin)) + normalizeData(xBounds.dataMin))
+        xv = (i / globals.REGRESSION.NUM_POINTS)
         yv = 0
         if type == globals.REGRESSION.LOGARITHMIC
           yv = calculateRegressionPoint(Ps, xv * (xBounds.dataMax - xBounds.dataMin) + xBounds.dataMin, type)
@@ -122,7 +122,6 @@ $ ->
           yv = calculateRegressionPoint(Ps, xv + 1, type)
         {x: xv * (xBounds.dataMax - xBounds.dataMin) + xBounds.dataMin, y: yv}
       Ps = visSpaceParameters(Ps, xBounds, type)
-      console.log "Ps are #{Ps}"
       str = makeToolTip(Ps, R2, type, seriesName)
 
       ret =
@@ -142,7 +141,7 @@ $ ->
         states:
           hover:
             lineWidth: 4
-      
+
     ###
     # Uses the regression matrix to calculate the y value given an x value.
     ###
@@ -300,7 +299,7 @@ $ ->
       residuals = numeric.sub(ys, xs.map((x) -> func[0](x, Ps)))
       jac = jacobian(func, xs, Ps)
       jacT = numeric.transpose jac
-      
+
       # dP = (JT*J)^-1 * JT * r
       deltaPs = numeric.dot(numeric.dot(numeric.inv(numeric.dot(jacT, jac)),
         jacT),
@@ -326,11 +325,10 @@ $ ->
       ret = if type == globals.REGRESSION.LOGARITHMIC
         points
       else
-        console.log points.map((y) -> ((y - min) / (max - min)) + 1)
         points.map((y) -> ((y - min) / (max - min)) + 1)
     
     ###
-    # Map the parameters of the learned feature space to the visualization space
+    # Map the parameters of the normalized features to the visualization space
     # (done by Gauss-Jordan elimination on a system of linear equations)
     ###
     visSpaceParameters = (Ps, xBounds, type) ->
@@ -339,7 +337,7 @@ $ ->
       projection = 2 * (max - min) + min
       
       if type == globals.REGRESSION.LOGARITHMIC
-        return Ps  
+        return Ps
       
       switch type
         when globals.REGRESSION.LINEAR
@@ -362,7 +360,7 @@ $ ->
           solutionVector = [
             globals.REGRESSION.FUNCS[globals.REGRESSION.QUADRATIC][0](1, Ps),
             globals.REGRESSION.FUNCS[globals.REGRESSION.QUADRATIC][0](1.5, Ps),
-            globals.REGRESSION.FUNCS[globals.REGRESSION.QUADRATIC][0](2, Ps) 
+            globals.REGRESSION.FUNCS[globals.REGRESSION.QUADRATIC][0](2, Ps)
           ]
           newPs = numeric.solve(coeffMatrix, solutionVector)
 
@@ -393,5 +391,6 @@ $ ->
           solutionVector.push Math.log(globals.REGRESSION.FUNCS[globals.REGRESSION.EXPONENTIAL][0](1, Ps) - Ps[0])
           solutionVector.push Math.log(globals.REGRESSION.FUNCS[globals.REGRESSION.EXPONENTIAL][0](2, Ps) - Ps[0])
           newPs = numeric.solve(coeffMatrix, solutionVector)
-          newPs.push globals.REGRESSION.FUNCS[globals.REGRESSION.EXPONENTIAL][0](1, Ps) - (Math.exp((newPs[0] * min) + newPs[1]))
+          newPs.push globals.REGRESSION.FUNCS[globals.REGRESSION.EXPONENTIAL][0](1, Ps) - \
+            (Math.exp((newPs[0] * min) + newPs[1]))
       newPs
