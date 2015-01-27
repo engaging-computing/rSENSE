@@ -44,8 +44,8 @@
     </div>
   </div>
   <div class="col-md-4">
-    <%=render layout: "shared/box", locals: {title: 'Media', width: '12', unique_id: 'media', should_hide: false} do %>
-    <%=render "shared/media_objects_view", {type: 'visualization', object: @visualization} %>
-    <%end%>
+    <%= render layout: "shared/box", locals: {title: 'Media', width: '12', unique_id: 'media', should_hide: false} do %>
+      <%= render "shared/media_objects_view", {type: 'visualization', object: @visualization} %>
+    <% end %>
   </div>
 </div>
