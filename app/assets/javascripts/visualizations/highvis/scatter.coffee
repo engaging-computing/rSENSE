@@ -27,7 +27,8 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is "visualizations" and
+  namespace.action in ["displayVis", "embedVis", "show"]
 
     class window.Scatter extends BaseHighVis
       ###
@@ -433,12 +434,6 @@ $ ->
         ($ '#elaspedTimeButton').button()
         ($ '#elaspedTimeButton').click (e) ->
           globals.generateElapsedTimeDialog()
-
-        # Set up accordion
-        globals.configs.toolsOpen ?= 0
-
-        ($ '#toolControl > h3').click ->
-          globals.configs.toolsOpen = (globals.configs.toolsOpen + 1) % 2
 
       ###
       Draws x axis selection controls

@@ -509,12 +509,6 @@ $ ->
           globals.configs.logY = (globals.configs.logY + 1) % 2
           @start()
 
-        # Set up accordion
-        globals.configs.toolsOpen ?= 0
-
-        ($ '#toolControl > h3').click ->
-          globals.configs.toolsOpen = (globals.configs.toolsOpen + 1) % 2
-
       ###
       Hides the control div and remembers its previous size.
       ###

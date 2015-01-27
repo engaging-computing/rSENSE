@@ -468,12 +468,6 @@ $ ->
             @delayedUpdate()
         ###
 
-        # Set up accordion
-        globals.configs.toolsOpen ?= 0
-
-        ($ '#toolControl > h3').click ->
-          globals.configs.toolsOpen = (globals.configs.toolsOpen + 1) % 2
-
       resize: (newWidth, newHeight, duration) ->
         func = =>
           google.maps.event.trigger @gmap, 'resize'
