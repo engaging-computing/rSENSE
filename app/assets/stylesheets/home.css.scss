@@ -2,6 +2,10 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+$sm-screen: 768px;
+$md-screen: 992px;
+$lg-screen: 1200px;
+
 #outer{
   padding-bottom: 10px !important;
 }
@@ -261,4 +265,9 @@
 
 .featurette-image{
   width: 100%; 
+}
+
+/* Responseive CSS for Homepage */
+.home-controller.index-action{
+  @media (min-width: $)
 }
