@@ -32,3 +32,29 @@ kates_dataset_in_locked_project:
   user: kate
   data: "[{\"26\": 1}]"
   project: locked_project
+
+slickgrid_dataset_1:
+  title: Slickgrid Dataset 1
+  user: nixon
+  project: slickgrid_project
+  data: "[{\"100\": \"A\", \"101\": \"A\", \"102\": \"1\", \"103\": \"11\", \"104\": \"0\", \"105\": \"0\"},\
+    {\"100\": \"B\", \"101\": \"B\", \"102\": \"2\", \"103\": \"22\", \"104\": \"1\", \"105\": \"1\"},\
+    {\"100\": \"C\", \"101\": \"C\", \"102\": \"3\", \"103\": \"33\", \"104\": \"2\", \"105\": \"2\"}]"
+
+slickgrid_dataset_2:
+  title: Slickgrid Dataset 2
+  user: nixon
+  project: slickgrid_project_no_latlon
+  data: "[{\"106\": \"A\"}, {\"106\": \"B\"}, {\"106\": \"C\"}]"
+
+slickgrid_dataset_3:
+  title: Slickgrid Dataset 3
+  user: nixon
+  project: slickgrid_project_no_latlon
+  data: "[]"
+
+slickgrid_dataset_oops:
+  title: Slickgrid Dataset Ooops I Messed Up
+  user: nixon
+  project: slickgrid_oops
+  data: "[{\"107\": \"SOMEBODY ONCE TOLD ME THE WORLD IS GONNA ROLL ME\"}]"
