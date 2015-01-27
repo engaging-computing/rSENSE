@@ -322,10 +322,11 @@ $ ->
     normalizeData = (points, type) ->
       max = Math.max.apply(null, points)
       min = Math.min.apply(null, points)
-      ret = if type == globals.REGRESSION.LOGARITHMIC
-        points
-      else
-        points.map((y) -> ((y - min) / (max - min)) + 1)
+      ret = 
+        if type == globals.REGRESSION.LOGARITHMIC
+          points
+        else
+          points.map((y) -> ((y - min) / (max - min)) + 1)
     
     ###
     # Map the parameters of the normalized features to the visualization space
