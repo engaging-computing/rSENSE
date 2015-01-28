@@ -264,12 +264,16 @@
   width: 100%; 
 }
 
-/* Responseive CSS for Homepage */
+/* Responsive CSS for Homepage */
 .home-controller.index-action{
   @media(max-width:767px){
     .isense-desc{
       min-height: 500px;
       height: 100vh;
+    .teachers-love-isense{
+      margin-top: 0px;
+      height: 40vh;
+    }
     }
     #column-one{
       height: auto;
@@ -325,17 +329,16 @@
       height: 60vh;
     }
     .ternary-content{
-      height: auto;
+      height: 90vh !important;
     }
     #column-one{
-      height: auto;
+      height: 100vh;
     }
     .news-prev-wrapper{
       height: 60vh;
       overflow-y: scroll;
     }
     .ternary-content{
-      overflow-y: hidden;
     }
     /*
     $('.isense-desc').css('min-height', '170px')
