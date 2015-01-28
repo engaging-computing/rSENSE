@@ -2,10 +2,6 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-$sm-screen: 768px;
-$md-screen: 992px;
-$lg-screen: 1200px;
-
 #outer{
   padding-bottom: 10px !important;
 }
@@ -43,6 +39,7 @@ $lg-screen: 1200px;
     .carousel-slide-text{
       text-align: left;  
       color: black;
+      font-size: 2em !important;
     }
     .slide-header{
       font-size: 1.5em;
@@ -269,5 +266,134 @@ $lg-screen: 1200px;
 
 /* Responseive CSS for Homepage */
 .home-controller.index-action{
-  @media (min-width: $)
+  @media(max-width:767px){
+    .isense-desc{
+      min-height: 500px;
+      height: 100vh;
+    }
+    #column-one{
+      height: auto;
+    }
+    .row.secondary-content{
+      height: auto;
+      .col-lg-8{
+        clear: both;
+      }
+    }
+    #main-image-featurette{
+      min-height: 500px;
+      height: 95vh;
+      clear: both;
+    }
+    .ternary-content{
+      height: auto;
+    }
+    .news-prev-wrapper{
+      height: 45vh;
+      overflow-y: scroll;
+    }
+    /*
+    $('.isense-desc').css('min-height', '500px')
+    $('.isense-desc').css('height', '100vh')
+    $('#column-one').css('height', '95vh')
+    $('.row.secondary-content').css('height', 'auto')
+    $('#main-image-featurette').css('min-height', '500px')
+    $('#main-image-featurette').height("95vh")
+    $('.row.secondary-content').find('.col-lg-8').css('clear', 'both')
+    $('#main-image-featurette').css('clear', 'both')
+    $('.ternary-content').height('95vh')
+    $('.news-prev-wrapper').css('height', '45vh')
+    $('.news-prev-wrapper').css('overflow-y', 'scroll')
+    $('#column-one').height('auto')
+    $('.ternary-content').height('auto')
+    */  
+  }
+  @media(min-width:768px) and (max-width: 1199px){
+    
+    .isense-desc{
+      min-height: 170px;
+      height: 45vh;
+    }
+    .row.secondary-content{
+      height: 100vh;
+    }
+    .featurette-image{
+      height: 100vh;
+    }
+    #main-image-featurette{
+      min-height: 300px;
+      height: 60vh;
+    }
+    .ternary-content{
+      height: auto;
+    }
+    #column-one{
+      height: auto;
+    }
+    .news-prev-wrapper{
+      height: 60vh;
+      overflow-y: scroll;
+    }
+    .ternary-content{
+      overflow-y: hidden;
+    }
+    /*
+    $('.isense-desc').css('min-height', '170px')
+    $('.isense-desc').height("45vh")
+    $('.row.secondary-content').height('100vh')
+    $('.featurette-image').height("40vh")
+    $('#main-image-featurette').css('min-height', '300px')
+    $('.ternary-content').height('90vh')
+    $('#column-one').css('height', '90vh')
+    $('.news-prev-wrapper').css('height', '60vh')
+    $('.news-prev-wrapper').css('overflow-y', 'scroll')
+    $('.ternary-content').css('overflow-y', 'hidden')
+    $('#column-one').height('auto')
+    $('.ternary-content').height('auto')
+    $('#main-image-featurette').css('height', '60vh')
+    */
+  }
+  @media(min-width:1200px){
+    .isense-desc{
+      min-height: 500px;
+      height: 95vh;
+    }
+    #main-image-featurette{
+      min-height: 500px;
+      height: 95vh;
+    }
+    .ternary-content{
+      overflow-y: visible;
+    }
+    .news-prev-wrapper{
+      height: 75vh;
+    }
+    #column-one{
+      height: 80vh;
+    }
+    #column-two{
+      height: 80vh;
+    }
+    .teachers-love-isense{
+      margin-top: 60px;
+      overflow-y: scroll;
+    }
+    .row.secondary-content{
+      .col-lg-8{
+        clear: '';
+      }
+    }
+    /*
+    $('.isense-desc').css('min-height', '500px')
+    $('.isense-desc').height("95vh")
+    $('#main-image-featurette').css('min-height', '500px')
+    $('#main-image-featurette').css('height', '95vh')
+    $('.ternary-content').css('overflow-y', 'visible')
+    $('.news-prev-wrapper').height('75vh')
+    $('#column-one').height('80vh')
+    $('#column-two').height('80vh')
+    $('.teachers-love-isense').css('margin-top', '60')
+    $('.row.secondary-content').find('.col-lg-8').css('clear', '')
+    */
+  }
 }

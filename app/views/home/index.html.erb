@@ -101,7 +101,7 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
           <br class="line"/> 
           <div class="homepage-text">
             <p class="featurette-text">
-              "Students are able to make connections between mathematics and real life using iSENSE. For example, students are able to observe the linear relationship between a length of a forearm and height of a person. Students can also discover that coffee cooling is modeled by an exponential function by trying to determine which type of coffee cup keeps coffee hot a longest."
+              "Students are able to make connections between mathematics and real life using iSENSE. For example, students are able to observe the linear relationship between a length of a forearm and height of a person. Students can also discover that coffee cooling is modeled by an exponential function by trying to determine which type of coffee cup keeps coffee hot the longest."
               <br />- Elaine G., Math Teacher
             </p>
             <p class="featurette-text">
@@ -154,7 +154,7 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
             <%= image_tag "icon-apple.png", class: 'app-store-button' %> </a>
           </div> <br />
         </div>
-      <hr class="featurette-divider under-hid hidden-lg" />
+      <hr class="featurette-divider under-hid hidden-lg"> </hr>
       <h2 class="homepage-header">What's New</h2><br/>
       <div class="news-prev-wrapper">
         <% News.where(hidden: false).last(3).reverse.each do |n| %>
@@ -180,11 +180,12 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
           <a href="https://play.google.com/store/apps/developer?id=Engaging+Computing+Group,+UML" class="btn btn-primary img-rounded">
             <%= image_tag "icon-android.png", class: 'play-store-button'%> </a>
           <a class="btn btn-primary disabled img-rounded">
-            <%= image_tag "icon-apple.png", class: 'app-store-button' %> </a> <br /> <br />
+            <%= image_tag "icon-apple.png", class: 'app-store-button' %> </a> 
+            <br /> <br />
         </div> <br />
-        <hr class="featurette-divider"> />
+        <hr class="featurette-divider"></hr>
       </div>
-        <hr class="featurette-divider" />
+        <hr class="featurette-divider"></hr>
       <div class="under-apps">
           <hr class="featurette-divider" />
           <h2 class="homepage-header">Get Involved with iSENSE</h2> <br />
