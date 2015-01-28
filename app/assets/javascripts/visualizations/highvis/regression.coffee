@@ -322,7 +322,7 @@ $ ->
     normalizeData = (points, type) ->
       max = Math.max.apply(null, points)
       min = Math.min.apply(null, points)
-      ret = 
+      ret =
         if type == globals.REGRESSION.LOGARITHMIC
           points
         else
