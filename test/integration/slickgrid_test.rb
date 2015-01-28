@@ -137,7 +137,7 @@ class SlickgridTest < ActionDispatch::IntegrationTest
     assert page.has_content? 'restrictions_field'
     assert page.has_content? 'number_field'
     assert page.has_content? 'timestamp_field'
-    assert page.has_content? 'latitude_field & longitude_field'
+    assert page.has_content? 'latitude_field, longitude_field'
 
     # assert presence of data
     page.assert_selector '.slick-row', count: 3

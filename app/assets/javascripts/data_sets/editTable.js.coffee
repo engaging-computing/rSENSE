@@ -45,7 +45,6 @@ setupTable = (cols, data) ->
   view.setItems data
 
   grid.onClick.subscribe (e, args) ->
-    console.log 'a'
     cell = grid.getCellFromEvent e
     if cell.cell == grid.getColumns().length - 1
       grid.getEditorLock().commitCurrentEdit()

@@ -43,7 +43,7 @@ module DataSetsHelper
       cols_merge << {
         field_type: 4,
         id: "#{lat[:id]}-#{lon[:id]}",
-        name: "#{lat[:name]} & #{lon[:name]}",
+        name: "#{lat[:name]}, #{lon[:name]}",
         restrictions: '""',
         units: ''
       }
