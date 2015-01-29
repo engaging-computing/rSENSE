@@ -196,37 +196,40 @@ $ ->
           for bin in binArr
             binObjs[groupIndex][bin] ?= 0
             binObjs[groupIndex][bin]++
-
+        debug = []
+        
         # Convert bin data into series data
         for groupIndex in data.groupSelection
-
-          finalData = for number, occurences of binObjs[groupIndex]
-
-            sum = 0
-
+          finalData = []
+          for number, occurences of binObjs[groupIndex]
             # Get total for this bin
+            sum = 0
             for dc, groupData of binObjs
               if groupData[number]
                 sum += groupData[number]
+            
+            ret = []
+            for i in [1..occurences]
+              ret.push {x:(Number number), y:1, total: sum}
+              #console.log 'a is', a
+              #finalData.concat(a)
+              #debug.concat(finalData)
+            console.log 'ret is', ret
+            #console.log 'debug is', debug
+            finalData = finalData.concat(ret)
+            console.log 'finalData:', finalData
+            options =
+              showInLegend: false
+              color: globals.configs.colors[groupIndex % globals.configs.colors.length]
+              name: data.groups[groupIndex]
+              data: finalData
 
-            ret =
-              x: (Number number)
-              y: occurences
-              total: sum
-            ### --- ###
-
-          options =
-            showInLegend: false
-            color: globals.configs.colors[groupIndex % globals.configs.colors.length]
-            name: data.groups[groupIndex]
-            data: finalData
-
-          @chart.addSeries options, false
+            @chart.addSeries options, false
 
         @chart.xAxis[0].setExtremes @globalmin - (@configs.binSize / 2), @globalmax + (@configs.binSize / 2), false
-
         @chart.redraw()
-
+        #
+        console.log "debug is:", debug
       buildLegendSeries: ->
         count = -1
         for field, fieldIndex in data.fields when fieldIndex in data.normalFields
