@@ -20,7 +20,7 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
       
       <!---First Slide-->
       <div class="item active">
-        <img src="<%= image_path 'create.jpg'%>" class="carousel-img" alt="First slide">
+        <img src="<%= image_path 'create.jpg' %>" class="carousel-img" alt="First slide">
         <div class="container">
           <div class="carousel-caption">
             <h2 class="homepage-header"><span class="slide-header">Collect</span>, Share, and Visualize</h2>
@@ -33,7 +33,7 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
       
       <!---Second Slide-->
       <div class="item">
-        <img src="<%= image_path 'Share.jpg'%>" class="carousel-img" alt="Second slide">
+        <img src="<%= image_path 'Share.jpg' %>" class="carousel-img" alt="Second slide">
         <div class="container">
           <div class="carousel-caption">
             <h2 class="homepage-header">Collect, <span class="slide-header">Share</span>, and Visualize</h2>
@@ -47,7 +47,7 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
     
       <!---Last Slide-->
       <div class="item">
-        <img src="<%= image_path 'Visualize.png'%>" class="carousel-img" alt="Third slide">
+        <img src="<%= image_path 'Visualize.png' %>" class="carousel-img" alt="Third slide">
         <div class="container">
           <div class="carousel-caption">
             <h2 class="homepage-header">Collect, Share, and <span class="slide-header">Visualize</span> </h2>
@@ -122,7 +122,7 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
       <!---Featured image -->
       <div class=" col-lg-8 col-md-12 col-sm-12 col-xs-12">
         <hr class="featurette-divider teachers-love-isense-seperator hidden-lg" id="scroll-4" />
-        <img src="<%= image_path 'feature-histogram.png'%>" id="main-image-featurette" class="featurette-image" alt="Featured Histogram">
+        <img src="<%= image_path 'feature-histogram.png' %>" id="main-image-featurette" class="featurette-image" alt="Featured Histogram">
         <hr class="featurette-divider teachers-love-isense-seperator hidden-lg hidden-md hidden-sm hidden-xs" />
       </div>
       <!---End Featured Image-->
@@ -149,21 +149,21 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
           </div>
           <div class="col-md-4 col-sm-6 col-xs-12 app-desc">
             <a href="https://play.google.com/store/apps/developer?id=Engaging+Computing+Group,+UML" class="btn btn-primary img-rounded">
-              <%= image_tag "icon-android.png", class: 'play-store-button'%> </a>
+              <%= image_tag "icon-android.png", class: 'play-store-button' %> </a>
             <a class="btn btn-primary disabled img-rounded">
-            <%= image_tag "icon-apple.png", class: 'app-store-button' %> </a>
+            <%= image_tag "icon-apple.png", class: 'app-store-button'  %> </a>
           </div> <br />
         </div>
       <hr class="featurette-divider under-hid hidden-lg"> </hr>
       <h2 class="homepage-header">What's New</h2><br/>
       <div class="news-prev-wrapper">
-        <% News.where(hidden: false).last(3).reverse.each do |n| %>
+        <% News.where(hidden: false).last(3).reverse.each do |n|  %>
           <%= render 'shared/article_box', {
             image_id: n.featured_media_id, path: news_path(n), title: n.title,
             brief: n.summary, content: n.content, date: n.created_at.strftime("%B %d %Y"),
             width: 12
-          } %>
-        <% end %>
+          }  %>
+        <% end  %>
         <br />
         <br />
       </div>
@@ -180,9 +180,9 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
         </div>
         <div class="col-lg-4 col-md-8 app-desc">
           <a href="https://play.google.com/store/apps/developer?id=Engaging+Computing+Group,+UML" class="btn btn-primary img-rounded">
-            <%= image_tag "icon-android.png", class: 'play-store-button'%> </a>
+            <%= image_tag "icon-android.png", class: 'play-store-button' %> </a>
           <a class="btn btn-primary disabled img-rounded">
-            <%= image_tag "icon-apple.png", class: 'app-store-button' %> </a> 
+            <%= image_tag "icon-apple.png", class: 'app-store-button'  %> </a> 
             <br /> <br />
         </div> <br />
         <hr class="featurette-divider"></hr>
@@ -200,13 +200,13 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
           <div id="stats-row" class="row">
             <h2 class="homepage-header">Statistics</h2> <br/>
               <div class="col-xs-4">               
-                <div class="homepage-stats"><b><%=User.count%> users</b> registered </div>
+                <div class="homepage-stats"><b><%=User.count %> users</b> registered </div>
               </div>
               <div class="col-xs-4">
-                <div class="homepage-stats"><b><%=DataSet.count%> datasets</b> contributed </div>
+                <div class="homepage-stats"><b><%=DataSet.count %> datasets</b> contributed </div>
               </div>
               <div class="col-xs-4">
-                <div class="homepage-stats"><b><%=Project.count%> projects</b> created </div>
+                <div class="homepage-stats"><b><%=Project.count %> projects</b> created </div>
               </div>
           </div>
         </div>  

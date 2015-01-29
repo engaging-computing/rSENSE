@@ -54,8 +54,7 @@ class VisualizationsControllerTest < ActionController::TestCase
 
     get :show, { id: @vis2.id, presentation: true },  user_id: @kate.id
     assert_response :success
-    # FIXME
-    # assert_valid_html response.body
+    assert_valid_html response.body
   end
 
   test 'should show thanksgiving dinner data' do

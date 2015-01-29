@@ -295,22 +295,7 @@
     .news-prev-wrapper{
       height: 45vh;
       overflow-y: scroll;
-    }
-    /*
-    $('.isense-desc').css('min-height', '500px')
-    $('.isense-desc').css('height', '100vh')
-    $('#column-one').css('height', '95vh')
-    $('.row.secondary-content').css('height', 'auto')
-    $('#main-image-featurette').css('min-height', '500px')
-    $('#main-image-featurette').height("95vh")
-    $('.row.secondary-content').find('.col-lg-8').css('clear', 'both')
-    $('#main-image-featurette').css('clear', 'both')
-    $('.ternary-content').height('95vh')
-    $('.news-prev-wrapper').css('height', '45vh')
-    $('.news-prev-wrapper').css('overflow-y', 'scroll')
-    $('#column-one').height('auto')
-    $('.ternary-content').height('auto')
-    */  
+    }  
   }
   @media(min-width:768px) and (max-width: 1199px){
     
@@ -340,21 +325,6 @@
     }
     .ternary-content{
     }
-    /*
-    $('.isense-desc').css('min-height', '170px')
-    $('.isense-desc').height("45vh")
-    $('.row.secondary-content').height('100vh')
-    $('.featurette-image').height("40vh")
-    $('#main-image-featurette').css('min-height', '300px')
-    $('.ternary-content').height('90vh')
-    $('#column-one').css('height', '90vh')
-    $('.news-prev-wrapper').css('height', '60vh')
-    $('.news-prev-wrapper').css('overflow-y', 'scroll')
-    $('.ternary-content').css('overflow-y', 'hidden')
-    $('#column-one').height('auto')
-    $('.ternary-content').height('auto')
-    $('#main-image-featurette').css('height', '60vh')
-    */
   }
   @media(min-width:1200px){
     .isense-desc{
