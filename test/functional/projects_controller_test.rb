@@ -36,7 +36,7 @@ class ProjectsControllerTest < ActionController::TestCase
     assert_response :success
     assert_valid_html response.body
 
-    get :show, id: @project_two, format: 'json'
+    get :show, id: @project_two
     assert_response :success
     assert_valid_html response.body
 
