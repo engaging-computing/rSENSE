@@ -16,7 +16,7 @@ GIT
 
 GIT
   remote: https://github.com/isenseDev/better-colorpicker
-  revision: 6e05792fdd4415d9bcc66c627650dc9da1b95adb
+  revision: 72f3f116a383218287fce45401088d940e2cddb2
   specs:
     better_colorpicker (0.0.3)
       rails (~> 4.1.4)
