@@ -52,10 +52,10 @@ module DataSetsHelper
       lat_sym = lat[:id]
       lon_sym = lon[:id]
       data.map! do |x|
-        x["#{lat_sym}-#{lon_sym}"] = if x[lat_sym] == '' and x[lon_sym] == ''
-          ''
+        if x[lat_sym] == '' and x[lon_sym] == ''
+          x["#{lat_sym}-#{lon_sym}"] = ''
         else
-          "#{x[lat_sym]}, #{x[lon_sym]}"
+          x["#{lat_sym}-#{lon_sym}"] = "#{x[lat_sym]}, #{x[lon_sym]}"
         end
 
         x.delete lat_sym
