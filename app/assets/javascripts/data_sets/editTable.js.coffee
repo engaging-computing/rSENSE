@@ -175,7 +175,7 @@ showError = (error) ->
 ajaxifyGrid = (view) ->
   buckets = {}
   posHeadRegex = /(\d+)-(\d+)/
-  posDataRegex = /^((?:\+|-)?\d+\.?\d*), ((?:\+|-)?\d+\.?\d*)$/
+  posDataRegex = /^ *((?:\+|-)?\d+\.?\d*), *((?:\+|-)?\d+\.?\d*) *$/
 
   for i in [0..(view.getLength() - 1)]
     x = view.getItem i
