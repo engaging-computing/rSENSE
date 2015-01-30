@@ -127,8 +127,14 @@ class VisualizationsController < ApplicationController
 
     respond_to do |format|
       if @visualization.save
-        mo.visualization_id = @visualization.id
-        mo.save!
+        puts "\n\n\n\n\n\n\n\n\n\n here"
+        puts mo.file
+        puts File.file?(mo.file)
+        puts "\n\n\n\n\n\n\n\n\n"
+        if File.file?(mo.file)
+          mo.visualization_id = @visualization.id
+          mo.save!
+        end
 
         flash[:notice] = 'Visualization was successfully created.'
         format.html { redirect_to @visualization }
