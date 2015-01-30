@@ -157,11 +157,10 @@ $ ->
         tooltipXAxis = @configs.displayField
         if data.groupSelection.length is 0
           return
-
-        while @chart.series.length > data.normalFields.length
-          @chart.series[@chart.series.length - 1].remove false
-
-        ### --- ###
+        console.log 'build series'
+        histogramBins = {}
+        visibleGroups = for group, index in data.groups when index in data.groupSelection
+          group
         @globalmin = Number.MAX_VALUE
         @globalmax = Number.MIN_VALUE
 
@@ -175,63 +174,119 @@ $ ->
           max = Math.round(max / @configs.binSize) * @configs.binSize
           @globalmax = Math.max @globalmax, max
 
-        #### Make 'fake' data to ensure proper bar spacing ###
-        fakeDat = for i in [@globalmin...@globalmax] by @configs.binSize
-          [i, 0]
-
-        options =
-          showInLegend: false
-          data: fakeDat
-
-        @chart.addSeries options, false
-        ### ###
-
         # Generate all bin data
         binObjs = {}
-        a = 0
         for groupIndex in data.groupSelection
-          a = 10
-        #   selectedData = data.selector @configs.displayField, groupIndex
+        
+          selectedData = data.selector @configs.displayField, groupIndex
 
-        #   binArr = for i in selectedData
-        #     Math.round(i / @configs.binSize) * @configs.binSize
+          binArr = for i in selectedData
+            Math.round(i / @configs.binSize) * @configs.binSize
 
-        #   binObjs[groupIndex] = {}
+          binObjs[groupIndex] = {}
 
-        #   for bin in binArr
-        #     binObjs[groupIndex][bin] ?= 0
-        #     binObjs[groupIndex][bin]++
+          for bin in binArr
+            binObjs[groupIndex][bin] ?= 0
+            binObjs[groupIndex][bin]++
 
-        # # Convert bin data into series data
-        # for groupIndex in data.groupSelection
-
-        #   finalData = for number, occurences of binObjs[groupIndex]
-
-        #     sum = 0
-
-        #     # Get total for this bin
-        #     for dc, groupData of binObjs
-        #       if groupData[number]
-        #         sum += groupData[number]
-
-        #     ret =
-        #       x: (Number number)
-        #       y: occurences
-        #       total: sum
-        #     ### --- ###
-          finalData = 
-            [{x: a, y: 1, total: 2}]
+        console.log visibleGroups
+        for point in data.dataPoints
+          console.log point[globals.configs.groupById]
+        for point in data.dataPoints when point[globals.configs.groupById] in visibleGroups
+          console.log point[globals.configs.groupById]
+          seriesColor = globals.configs.colors[data.groups.indexOf(point[globals.configs.groupById]) % globals.configs.colors.length]
+          seriesName = point[globals.configs.groupById]
+          pData = [
+            x: Math.round(point[globals.configs.fieldSelection[0]] / @configs.binSize) * @configs.binSize
+            y: 1
+            total: 7
+          ]
+          console.log pData
           options =
             showInLegend: false
-            color: globals.configs.colors[groupIndex % globals.configs.colors.length]
-            name: data.groups[groupIndex]
-            data: finalData
+            color: seriesColor
+            name: seriesName
+            data: pData
 
           @chart.addSeries options, false
-          console.log 'finalData', finalData
         @chart.xAxis[0].setExtremes @globalmin - (@configs.binSize / 2), @globalmax + (@configs.binSize / 2), false
 
         @chart.redraw()
+
+        # while @chart.series.length > data.normalFields.length
+        #   @chart.series[@chart.series.length - 1].remove false
+
+        # ### --- ###
+        # @globalmin = Number.MAX_VALUE
+        # @globalmax = Number.MIN_VALUE
+
+        # for groupIndex in data.groupSelection
+
+        #   min = data.getMin @configs.displayField, groupIndex
+        #   min = Math.round(min / @configs.binSize) * @configs.binSize
+        #   @globalmin = Math.min @globalmin, min
+
+        #   max = data.getMax @configs.displayField, groupIndex
+        #   max = Math.round(max / @configs.binSize) * @configs.binSize
+        #   @globalmax = Math.max @globalmax, max
+
+        # #### Make 'fake' data to ensure proper bar spacing ###
+        # fakeDat = for i in [@globalmin...@globalmax] by @configs.binSize
+        #   [i, 0]
+
+        # options =
+        #   showInLegend: false
+        #   data: fakeDat
+
+        # @chart.addSeries options, false
+        # ### ###
+
+        # # Generate all bin data
+        # binObjs = {}
+        # a = 0
+        # for groupIndex in data.groupSelection
+        #   a = 10
+        # #   selectedData = data.selector @configs.displayField, groupIndex
+
+        # #   binArr = for i in selectedData
+        # #     Math.round(i / @configs.binSize) * @configs.binSize
+
+        # #   binObjs[groupIndex] = {}
+
+        # #   for bin in binArr
+        # #     binObjs[groupIndex][bin] ?= 0
+        # #     binObjs[groupIndex][bin]++
+
+        # # # Convert bin data into series data
+        # # for groupIndex in data.groupSelection
+
+        # #   finalData = for number, occurences of binObjs[groupIndex]
+
+        # #     sum = 0
+
+        # #     # Get total for this bin
+        # #     for dc, groupData of binObjs
+        # #       if groupData[number]
+        # #         sum += groupData[number]
+
+        # #     ret =
+        # #       x: (Number number)
+        # #       y: occurences
+        # #       total: sum
+        # #     ### --- ###
+        #   finalData = 
+        #     [{x: a, y: 1, total: 2}]
+        #   options =
+        #     showInLegend: false
+        #     color: globals.configs.colors[groupIndex % globals.configs.colors.length]
+        #     name: data.groups[groupIndex]
+        #     data: finalData
+
+        #   @chart.addSeries options, false
+        #   console.log 'finalData', finalData
+        # @chart.xAxis[0].setExtremes @globalmin - (@configs.binSize / 2), @globalmax + (@configs.binSize / 2), false
+
+        # @chart.redraw()
 
       buildLegendSeries: ->
         count = -1
