@@ -18,7 +18,7 @@ class VisualizationsController < ApplicationController
       sort = 'updated_at'
     end
 
-    if !params[:order].nil?
+    if !params[:order].nil?puts
       order = params[:order]
     else
       order = 'DESC'
@@ -127,11 +127,7 @@ class VisualizationsController < ApplicationController
 
     respond_to do |format|
       if @visualization.save
-        puts "\n\n\n\n\n\n\n\n\n\n here"
-        puts mo.file
-        puts File.file?(mo.file)
-        puts "\n\n\n\n\n\n\n\n\n"
-        if File.file?(mo.file)
+        if !mo.id.nil?
           mo.visualization_id = @visualization.id
           mo.save!
         end
