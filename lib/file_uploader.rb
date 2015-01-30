@@ -108,7 +108,10 @@ class FileUploader
   def swap_columns(data_obj, project)
     data = []
 
-    size = data_obj.first[1].length
+    largest = data_obj.to_a.reduce [] do |a, b|
+      a.length > b[1].length ? a : b[1]
+    end
+    size = largest.length
 
     (0..size - 1).each do |i|
       x = {}

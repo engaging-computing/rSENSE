@@ -6,10 +6,10 @@ class SlickgridTest < ActionDispatch::IntegrationTest
   self.use_transactional_fixtures = false
 
   compare_data = [
-    { '100' => 'D', '101' => 'A', '102' => '4', '103' => '01/01/1991 01:01:01', '104' => '3', '105' => '3' },
-    { '100' => 'E', '101' => 'B', '102' => '5', '103' => '01/02/1992 02:02:02', '104' => '4', '105' => '4' },
-    { '100' => 'F', '101' => 'C', '102' => '6', '103' => '01/03/1993 03:03:03', '104' => '5', '105' => '5' },
-    { '100' => 'G', '101' => 'A', '102' => '7', '103' => '01/04/1994 04:04:04', '104' => '6', '105' => '6' }
+    { '100' => 'D', '101' => 'A', '102' => '4', '103' => '1991/01/01 01:01:01', '104' => '3', '105' => '3' },
+    { '100' => 'E', '101' => 'B', '102' => '5', '103' => '1992/01/02 02:02:02', '104' => '4', '105' => '4' },
+    { '100' => 'F', '101' => 'C', '102' => '6', '103' => '1993/01/03 03:03:03', '104' => '5', '105' => '5' },
+    { '100' => 'G', '101' => 'A', '102' => '7', '103' => '1994/01/04 04:04:04', '104' => '6', '105' => '6' }
   ]
 
   setup do
@@ -137,7 +137,7 @@ class SlickgridTest < ActionDispatch::IntegrationTest
     assert page.has_content? 'restrictions_field'
     assert page.has_content? 'number_field'
     assert page.has_content? 'timestamp_field'
-    assert page.has_content? 'latitude_field & longitude_field'
+    assert page.has_content? 'latitude_field, longitude_field'
 
     # assert presence of data
     page.assert_selector '.slick-row', count: 3
