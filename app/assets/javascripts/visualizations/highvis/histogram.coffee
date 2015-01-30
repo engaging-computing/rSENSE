@@ -190,7 +190,7 @@ $ ->
         binObjs = {}
         a = 0
         for groupIndex in data.groupSelection
-          a += 10
+          a = 10
         #   selectedData = data.selector @configs.displayField, groupIndex
 
         #   binArr = for i in selectedData
@@ -220,7 +220,7 @@ $ ->
         #       total: sum
         #     ### --- ###
           finalData = 
-            [{x: a, y: 1, total: 2}, {x: a, y:1, total:2}]
+            [{x: a, y: 1, total: 2}]
           options =
             showInLegend: false
             color: globals.configs.colors[groupIndex % globals.configs.colors.length]
