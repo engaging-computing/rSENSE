@@ -92,7 +92,8 @@ $ ->
           mapTypeId: @configs.mapTypeId
           scaleControl: true
 
-        @gmap = new google.maps.Map(document.getElementById(@canvas), mapOptions)
+        @gmap = new google.maps.Map(document.getElementById(@canvas),
+          mapOptions)
         info = new google.maps.InfoWindow()
 
         # Projection Helper
@@ -158,21 +159,25 @@ $ ->
             if (lat is null) or (lon is null)
               return
 
-            groupIndex = data.groups.indexOf dataPoint[globals.configs.groupById].toLowerCase()
-            color = globals.configs.colors[groupIndex % globals.configs.colors.length]
+            groupIndex = data.groups.indexOf(
+              dataPoint[globals.configs.groupById].toLowerCase())
+            color = globals.configs.colors[groupIndex %
+              globals.configs.colors.length]
 
             latlng = new google.maps.LatLng(lat, lon)
 
             # Put aside line info if necessary
-            if @timeLines? and dataPoint[data.timeFields[0]] isnt null and not(isNaN dataPoint[data.timeFields[0]])
+            if @timeLines? and dataPoint[data.timeFields[0]] isnt null and
+            not (isNaN dataPoint[data.timeFields[0]])
               @timeLines[groupIndex].push
                 time: dataPoint[data.timeFields[0]]
                 latlng: latlng
 
             # Build info window content
             label  = "<div style='font-size:9pt;overflow-x:none;'>"
-            label += "<div style='width:100%;text-align:center;color:#{color};'> " +
-              "#{dataPoint[globals.configs.groupById]}</div>"#<br>"
+            label += "<div style='width:100%;text-align:center;" +
+              "color:#{color};'> #{dataPoint[globals.configs.groupById]}"
+              "</div>"#<br>"
             label += "<table>"
 
             for field, fieldIndex in data.fields when dataPoint[fieldIndex] isnt null
@@ -254,8 +259,6 @@ $ ->
         else
           @gmap.fitBounds(latlngbounds)
 
-        @drawControls()
-
         finalInit = =>
           @configs.zoomLevel = @gmap.getZoom()
           google.maps.event.addListener @gmap, "zoom_changed", =>
@@ -278,6 +281,8 @@ $ ->
               if @getHeatmapScale() isnt @heatmapPixelRadius
                 @delayedUpdate()
 
+          super()
+
           # Calls update to draw heatmap on start
           if @configs.heatmapSelection isnt @HEATMAP_NONE
             @delayedUpdate()
@@ -297,9 +302,9 @@ $ ->
           @heatmap.setMap null
           delete @heatmap
 
+        ###
         # Build heatmap points from pre-computed data
         if @configs.heatmapSelection isnt @HEATMAP_NONE
-
           @heatmapPixelRadius = @getHeatmapScale()
 
           heats = []
@@ -326,12 +331,14 @@ $ ->
               add = (a,b) -> a + b
               heats[hIndex].weight = heat.val / neighbors.reduce(add, 0)
 
+
           # Draw heatmap
           @heatmap = new google.maps.visualization.HeatmapLayer
             data: heats
             radius: @heatmapPixelRadius
             dissipating:true
           @heatmap.setMap @gmap
+        ###
 
         # Set marker visibility
         for markGroup, index in @markers
@@ -385,9 +392,9 @@ $ ->
         # Heatmap slider
         controls += "<br>"
         controls += "<div class='inner_control_div'> Heatmap Radius: "
-        controls += "<input id='radius-text' value='#{@configs.heatmapRadius}'></input>m</div>"
+        controls += "<input id='radius-text' value='#{@configs.heatmapRadius}'>m</div>"
         controls += "<div class='inner_control_div'> <div id='heatmap-error-text'> </div></div>"
-        controls += "<div id='heatmapSlider' style='width:95%'></div>"
+        controls += "<input id='heatmapSlider' type='range' style='width:95%'>"
 
         # Other
         controls += "<br>"
@@ -411,8 +418,6 @@ $ ->
         controls += "<input id='clusterBox' type='checkbox' name='cluster_selector' "
         controls += "#{if @configs.visibleClusters is 1 then 'checked' else ''}/> Cluster Markers "
         controls += "</div>"
-
-
         controls += "</div></div>"
 
         # Write HTML
@@ -448,25 +453,23 @@ $ ->
             # Guess new pixel radius
             @heatmapPixelRadius = Math.ceil(@heatmapPixelRadius * newRadius / @configs.heatmapRadius)
             @configs.heatmapRadius = newRadius
-            #($ '#heatmapSlider').slider "value", (Math.log @configs.heatmapRadius) / (Math.log 10)
+            $('#heatmapSlider')[0].value =
+              Math.log(@configs.heatmapRadius) / (Math.log 10)
             @delayedUpdate()
 
-        ###
         # Set up heatmap slider
-        ($ '#heatmapSlider').slider
-          range: 'min'
-          value: (Math.log @configs.heatmapRadius) / (Math.log 10)
-          min: 0
-          max: 6
-          values: 0
-          slide: (event, ui) =>
-            newRadius = Math.pow(10, Number ui.value)
-            # Guess new pixel radius
-            @heatmapPixelRadius = Math.ceil(@heatmapPixelRadius * newRadius / @configs.heatmapRadius)
-            @configs.heatmapRadius = newRadius
-            ($ '#radius-text').val("#{@configs.heatmapRadius}")
-            @delayedUpdate()
-        ###
+        slider = $('#heatmapSlider')[0]
+        slider.min = 0
+        slider.max = Math.ceil(@getPixelDiag() / 4)
+        console.log slider.min, slider.max
+        slider.value = Math.log(@configs.heatmapRadius) / Math.log(10)
+        $('#heatmapSlider')[0].onchange = (e) =>
+          newRadius = Math.pow(10, Number(e.target.value))
+          # Guess new pixel radius
+          @heatmapPixelRadius = Math.ceil(@heatmapPixelRadius * newRadius / @configs.heatmapRadius)
+          @configs.heatmapRadius = newRadius
+          ($ '#radius-text').val("#{@configs.heatmapRadius}")
+          @delayedUpdate()
 
       resize: (newWidth, newHeight, duration) ->
         func = =>
@@ -482,7 +485,7 @@ $ ->
         google.maps.geometry.spherical.computeDistanceBetween(
           latlngbounds.getNorthEast(), latlngbounds.getSouthWest())
 
-      getHeatmapScale: () ->
+      getHeatmapScale: ->
         viewBounds = @gmap.getBounds()
         # Extends bounds by radius of heatmap
         # There are 111,329 meters per degree of longitude at the equator
@@ -521,6 +524,7 @@ $ ->
           if pixelDist is 0
             newRad = Math.ceil(@configs.heatmapRadius * (@getPixelDiag() / @getDiag()))
 
+          console.log newRad, maxRad
           if newRad <= maxRad
             ($ '#heatmap-error-text').html ''
             return newRad

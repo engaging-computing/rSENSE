@@ -41,6 +41,52 @@ $ ->
     ###
     CoffeeScript version of runtime.
     ###
+    # Toggle control panel
+    resizeVis = (toggleControls = true, aniLength = 600, init = false) ->
+      newHeight = $(window).height()
+      unless globals.options? and globals.options.isEmbed?
+        newHeight -= $(".navbar").height()
+
+      $("#viswrapper").height(newHeight)
+
+      visWrapperSize = $('#viswrapper').innerWidth()
+      visWrapperHeight = $('#viswrapper').outerHeight()
+      visTitleBarHeight = $('#vistitlebar').outerHeight() + $('#vistablist').outerHeight()
+      hiderSize     = $('#controlhider').outerWidth()
+      controlSize   = $('#controldiv').outerWidth()
+      controlOpac = $('#controldiv').css 'opacity'
+
+      controlSize = visWrapperSize * .2 - hiderSize
+      controlOpac = 1.0
+      $("#control_hide_button").html('<')
+
+      $("#viscontainer").height(visWrapperHeight - visTitleBarHeight)
+
+      if toggleControls and ($ '#controlcontainer').width() > hiderSize or
+      (init and globals.options.startCollapsed?) or !globals.configs.toolsOpen
+        controlSize = 0
+        controlOpac = 0.0
+        $("#control_hide_button").html('>')
+
+      contrContSize = hiderSize + controlSize
+
+      newWidth = visWrapperSize - contrContSize
+      newHeight = $('#viscontainer').height() - $('#vistablist').outerHeight()
+
+      $('#controlcontainer').height $('#viswrapper').height()
+      $('#controlcontainer').animate {width: contrContSize}, aniLength, 'linear'
+
+      # Animate the collapsing controls and the expanding vis
+      $('#controldiv').animate {width: controlSize, opacity: controlOpac},
+        aniLength, 'linear'
+      $('#viscontainer').animate {width: newWidth}, aniLength, 'linear'
+
+      globals.curVis.resize(newWidth, newHeight, aniLength)
+
+    # Resize vis on page resize
+    $(window).resize () ->
+      resizeVis(false, 0)
+
 
     ### hide all vis canvases to start ###
     $(can).hide() for can in ['#map_canvas', '#timeline_canvas',
@@ -116,16 +162,31 @@ $ ->
           """
 
     ### Pick vis ###
-    if not (data.defaultVis in data.relVis)
-      globals.configs.curVis = 'globals.' + data.relVis[0].toLowerCase()
-    else
-      globals.configs.curVis = 'globals.' + data.defaultVis.toLowerCase()
+    cvis =
+      if not (data.defaultVis in data.relVis)
+        data.relVis[0].toLowerCase()
+      else data.defaultVis.toLowerCase()
+
+    globals.configs.curVis = 'globals.' + cvis
+    ccanvas = cvis + '_canvas'
 
     # Pointer to the actual vis
     globals.curVis = eval(globals.configs.curVis)
 
+    # Start up vis
+    globals.curVis.start()
+
+    # Highlight the starting tab
+    $('#' + ccanvas).addClass('active')
+
+    # Initialize View
+    resizeVis(false, 0, true)
+
     ### Change vis click handler ###
-    $('#vistablist a').click ->
+    $('#vistablist a').click (e) ->
+      e.preventDefault()
+      $(this).tab('show')
+
       oldVis = globals.curVis
 
       href = $(this).attr 'href'
@@ -146,69 +207,9 @@ $ ->
       globals.curVis.start()
       resizeVis(false, 0, true)
 
-    # Start up vis
-    globals.curVis.start()
-
-    # Toggle control panel
-    resizeVis = (toggleControls = true, aniLength = 600, init = false) ->
-      newHeight = $(window).height()
-      unless globals.options? and globals.options.isEmbed?
-        newHeight -= $(".navbar").height()
-
-      $("#viswrapper").height(newHeight)
-
-      visWrapperSize = $('#viswrapper').innerWidth()
-      visWrapperHeight = $('#viswrapper').outerHeight()
-      visTitleBarHeight = $('#vistitlebar').outerHeight() + $('#vistablist').outerHeight()
-      hiderSize     = $('#controlhider').outerWidth()
-      controlSize   = $('#controldiv').outerWidth()
-      controlOpac = $('#controldiv').css 'opacity'
-
-      controlSize = visWrapperSize * .2 - hiderSize
-      controlOpac = 1.0
-      $("#control_hide_button").html('<')
-
-      $("#viscontainer").height(visWrapperHeight - visTitleBarHeight)
-
-      if toggleControls and ($ '#controlcontainer').width() > hiderSize or
-      (init and globals.options.startCollapsed?) or !globals.configs.toolsOpen
-        controlSize = 0
-        controlOpac = 0.0
-        $("#control_hide_button").html('>')
-
-      contrContSize = hiderSize + controlSize
-
-      newWidth = visWrapperSize - contrContSize
-      newHeight = $('#viscontainer').height() - $('#vistablist').outerHeight()
-
-      $('#controlcontainer').height $('#viswrapper').height()
-      $('#controlcontainer').animate {width: contrContSize}, aniLength, 'linear'
-
-      # Animate the collapsing controls and the expanding vis
-      $('#controldiv').animate {width: controlSize, opacity: controlOpac},
-        aniLength, 'linear'
-      $('#viscontainer').animate {width: newWidth}, aniLength, 'linear'
-
-      globals.curVis.resize(newWidth, newHeight, aniLength)
-
-    # Resize vis on page resize
-    $(window).resize () ->
-      resizeVis(false, 0)
-
     $('#control_hide_button').click ->
       globals.configs.toolsOpen = !globals.configs.toolsOpen
       resizeVis()
-
-    # Initialize Tabs
-    $('#vistablist a').click (e) ->
-      e.preventDefault()
-      $(this).tab('show')
-
-      $('.control_header').click (e) ->
-        $(@).siblings('.control_outer').slideToggle()
-
-    # Initialize View
-    resizeVis(false, 0, true)
 
     # Deal with full screen
     $('#fullscreen-vis').click (e) ->

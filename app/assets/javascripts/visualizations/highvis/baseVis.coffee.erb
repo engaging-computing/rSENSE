@@ -450,7 +450,6 @@ $ ->
       Draw tool controls (Analysis Type, Log Y Axis, etc.) for Pie Chart and Bar Chart
       ###
       drawToolControls: (sortBy = false, logYAxis = false) ->
-
         controls =  '<div id="toolControl" class="vis_controls">'
         controls += "<div class='control_header' <h3><a href='#'>Tools</a></h3></div>"
         controls += "<div class='control_outer'>"
@@ -508,6 +507,10 @@ $ ->
         ($ '.logY_box').click (e) =>
           globals.configs.logY = (globals.configs.logY + 1) % 2
           @start()
+
+        # Make the controls collapsible
+        $('.control_header').click (e) ->
+          $(@).siblings('.control_outer').slideToggle()
 
       ###
       Hides the control div and remembers its previous size.
