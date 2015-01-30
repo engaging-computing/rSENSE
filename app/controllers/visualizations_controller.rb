@@ -18,7 +18,7 @@ class VisualizationsController < ApplicationController
       sort = 'updated_at'
     end
 
-    if !params[:order].nil?puts
+    if !params[:order].nil?
       order = params[:order]
     else
       order = 'DESC'
