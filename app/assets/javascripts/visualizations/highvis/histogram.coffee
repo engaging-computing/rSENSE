@@ -69,11 +69,16 @@ $ ->
                 str += "<td>#{@y}</td></tr>"
               str += "</table>"
             useHTML: true
+          yAxis:
+            min: 0
+            stackLabels:
+              enabled: true
           plotOptions:
             column:
               stacking: 'normal'
               groupPadding: 0
               pointPadding: 0
+              #borderWidth: 0
             series:
               events:
                 legendItemClick: (event) ->
@@ -183,53 +188,51 @@ $ ->
 
         # Generate all bin data
         binObjs = {}
-
+        a = 0
         for groupIndex in data.groupSelection
+          a += 10
+        #   selectedData = data.selector @configs.displayField, groupIndex
 
-          selectedData = data.selector @configs.displayField, groupIndex
+        #   binArr = for i in selectedData
+        #     Math.round(i / @configs.binSize) * @configs.binSize
 
-          binArr = for i in selectedData
-            Math.round(i / @configs.binSize) * @configs.binSize
+        #   binObjs[groupIndex] = {}
 
-          binObjs[groupIndex] = {}
+        #   for bin in binArr
+        #     binObjs[groupIndex][bin] ?= 0
+        #     binObjs[groupIndex][bin]++
 
-          for bin in binArr
-            binObjs[groupIndex][bin] ?= 0
-            binObjs[groupIndex][bin]++
-        debug = []
-        
-        # Convert bin data into series data
-        for groupIndex in data.groupSelection
-          finalData = []
-          for number, occurences of binObjs[groupIndex]
-            # Get total for this bin
-            sum = 0
-            for dc, groupData of binObjs
-              if groupData[number]
-                sum += groupData[number]
-            
-            ret = []
-            for i in [1..occurences]
-              ret.push {x:(Number number), y:1, total: sum}
-              #console.log 'a is', a
-              #finalData.concat(a)
-              #debug.concat(finalData)
-            console.log 'ret is', ret
-            #console.log 'debug is', debug
-            finalData = finalData.concat(ret)
-            console.log 'finalData:', finalData
-            options =
-              showInLegend: false
-              color: globals.configs.colors[groupIndex % globals.configs.colors.length]
-              name: data.groups[groupIndex]
-              data: finalData
+        # # Convert bin data into series data
+        # for groupIndex in data.groupSelection
 
-            @chart.addSeries options, false
+        #   finalData = for number, occurences of binObjs[groupIndex]
 
+        #     sum = 0
+
+        #     # Get total for this bin
+        #     for dc, groupData of binObjs
+        #       if groupData[number]
+        #         sum += groupData[number]
+
+        #     ret =
+        #       x: (Number number)
+        #       y: occurences
+        #       total: sum
+        #     ### --- ###
+          finalData = 
+            [{x: a, y: 1, total: 2}, {x: a, y:1, total:2}]
+          options =
+            showInLegend: false
+            color: globals.configs.colors[groupIndex % globals.configs.colors.length]
+            name: data.groups[groupIndex]
+            data: finalData
+
+          @chart.addSeries options, false
+          console.log 'finalData', finalData
         @chart.xAxis[0].setExtremes @globalmin - (@configs.binSize / 2), @globalmax + (@configs.binSize / 2), false
+
         @chart.redraw()
-        #
-        console.log "debug is:", debug
+
       buildLegendSeries: ->
         count = -1
         for field, fieldIndex in data.fields when fieldIndex in data.normalFields
