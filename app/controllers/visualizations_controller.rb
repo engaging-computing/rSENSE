@@ -127,7 +127,7 @@ class VisualizationsController < ApplicationController
 
     respond_to do |format|
       if @visualization.save
-        if !mo.id.nil?
+        unless mo.id.nil?
           mo.visualization_id = @visualization.id
           mo.save!
         end
