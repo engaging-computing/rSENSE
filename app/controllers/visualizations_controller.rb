@@ -127,8 +127,10 @@ class VisualizationsController < ApplicationController
 
     respond_to do |format|
       if @visualization.save
-        mo.visualization_id = @visualization.id
-        mo.save!
+        unless mo.id.nil?
+          mo.visualization_id = @visualization.id
+          mo.save!
+        end
 
         flash[:notice] = 'Visualization was successfully created.'
         format.html { redirect_to @visualization }
