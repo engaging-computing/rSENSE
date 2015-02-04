@@ -242,7 +242,7 @@ $ ->
         if @configs.zoomLevel?
           @gmap.setZoom @configs.zoomLevel
 
-        # Figure default heatmap
+        # Configure default heatmap
         if not @configs.heatmapRadius?
           @configs.heatmapRadius = 1
           dist = @getDiag(latlngbounds)
@@ -302,7 +302,6 @@ $ ->
           @heatmap.setMap null
           delete @heatmap
 
-        ###
         # Build heatmap points from pre-computed data
         if @configs.heatmapSelection isnt @HEATMAP_NONE
           @heatmapPixelRadius = @getHeatmapScale()
@@ -331,14 +330,12 @@ $ ->
               add = (a,b) -> a + b
               heats[hIndex].weight = heat.val / neighbors.reduce(add, 0)
 
-
           # Draw heatmap
           @heatmap = new google.maps.visualization.HeatmapLayer
             data: heats
             radius: @heatmapPixelRadius
             dissipating:true
           @heatmap.setMap @gmap
-        ###
 
         # Set marker visibility
         for markGroup, index in @markers
@@ -451,7 +448,8 @@ $ ->
               ($ '#radius-text').errorFlash()
               return
             # Guess new pixel radius
-            @heatmapPixelRadius = Math.ceil(@heatmapPixelRadius * newRadius / @configs.heatmapRadius)
+            @heatmapPixelRadius = Math.ceil(@heatmapPixelRadius * newRadius /
+              @configs.heatmapRadius)
             @configs.heatmapRadius = newRadius
             $('#heatmapSlider')[0].value =
               Math.log(@configs.heatmapRadius) / (Math.log 10)
@@ -460,13 +458,13 @@ $ ->
         # Set up heatmap slider
         slider = $('#heatmapSlider')[0]
         slider.min = 0
-        slider.max = Math.ceil(@getPixelDiag() / 4)
-        console.log slider.min, slider.max
+        slider.max = 6
         slider.value = Math.log(@configs.heatmapRadius) / Math.log(10)
-        $('#heatmapSlider')[0].onchange = (e) =>
+        $('#heatmapSlider').change (e) =>
           newRadius = Math.pow(10, Number(e.target.value))
           # Guess new pixel radius
-          @heatmapPixelRadius = Math.ceil(@heatmapPixelRadius * newRadius / @configs.heatmapRadius)
+          @heatmapPixelRadius =
+            Math.ceil(@heatmapPixelRadius * newRadius / @configs.heatmapRadius)
           @configs.heatmapRadius = newRadius
           ($ '#radius-text').val("#{@configs.heatmapRadius}")
           @delayedUpdate()
@@ -478,7 +476,7 @@ $ ->
 
       getPixelDiag: () ->
         ww = ($ "##{@canvas}").width()
-        hh = ($ "##{@canvas}").height
+        hh = ($ "##{@canvas}").height()
         Math.sqrt(ww * ww + hh * hh)
 
       getDiag: (latlngbounds = @gmap.getBounds()) ->
@@ -508,8 +506,7 @@ $ ->
               heatBounds.extend mark.getPosition()
 
         if not heatBounds.isEmpty()
-          dist = google.maps.geometry.spherical.computeDistanceBetween(
-            heatBounds.getNorthEast(), heatBounds.getSouthWest())
+          dist = @getDiag()
 
           a = @projOverlay.projectPixels(heatBounds.getNorthEast())
           b = @projOverlay.projectPixels(heatBounds.getSouthWest())
@@ -522,14 +519,13 @@ $ ->
 
           # Single point check
           if pixelDist is 0
-            newRad = Math.ceil(@configs.heatmapRadius * (@getPixelDiag() / @getDiag()))
+            newRad = Math.ceil(@getPixelDiag() / dist * @configs.heatmapRadius)
 
-          console.log newRad, maxRad
           if newRad <= maxRad
             ($ '#heatmap-error-text').html ''
             return newRad
           else
-            act = Math.ceil(maxRad * (@getDiag() / @getPixelDiag()))
+            act = Math.ceil(dist / @getPixelDiag() * maxRad)
             ($ '#heatmap-error-text').html(
               "The radius had to be decreased to #{act}m for performance reasons. " +
               "It will restore to your selection as the map is zoomed out."

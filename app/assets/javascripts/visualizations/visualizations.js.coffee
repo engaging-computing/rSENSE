@@ -177,7 +177,8 @@ $ ->
     globals.curVis.start()
 
     # Highlight the starting tab
-    $('#' + ccanvas).addClass('active')
+    $('#vistablist a[href="#' + ccanvas + '"]').tab('show')
+    $('#' + ccanvas).addClass('active in')
 
     # Initialize View
     resizeVis(false, 0, true)

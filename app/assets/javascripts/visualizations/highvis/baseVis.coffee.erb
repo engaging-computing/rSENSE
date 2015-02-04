@@ -51,8 +51,13 @@ $ ->
       Start sequence used by runtime
       ###
       start: ->
+        ($ '#' + @canvas).show()
         @drawControls()
         @update()
+
+        # Make the controls collapsible
+        $('.control_header').click (e) ->
+          $(@).siblings('.control_outer').slideToggle()
 
       ###
       Update minor state
@@ -508,10 +513,6 @@ $ ->
           globals.configs.logY = (globals.configs.logY + 1) % 2
           @start()
 
-        # Make the controls collapsible
-        $('.control_header').click (e) ->
-          $(@).siblings('.control_outer').slideToggle()
-
       ###
       Hides the control div and remembers its previous size.
       ###
@@ -601,19 +602,15 @@ $ ->
       Start sequence used by runtime
 
       This is called when the user switched to this vis.
-      Should re-build options and the chart itself to ensure sync with global settings.
+      Should re-build options and the chart itself to ensure sync with global
+      settings.
       This method should also be usable as a 'full update' in that it
-      should destroy the current chart if it exists before generating a fresh one.
-
-      TODO: Update comment
+      should destroy the current chart if it exists before generating a fresh
+      one.
       ###
       start: ->
         @buildOptions()
-
         @chart = new Highcharts.Chart @chartOptions
-
-        ($ '#' + @canvas).show()
-
         super()
 
       ###
