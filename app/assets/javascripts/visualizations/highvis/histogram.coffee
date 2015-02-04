@@ -90,7 +90,6 @@ $ ->
       Returns a rough default 'human-like' bin size selection
       ###
       defaultBinSize: ->
-
         min = Number.MAX_VALUE
         max = Number.MIN_VALUE
 
@@ -141,10 +140,10 @@ $ ->
         bestSize
 
       update: ->
-        if !@updatedTooltips
-          @updatedTooltips = true
-          @start()
-        @updatedTooltips = false
+        #if !@updatedTooltips
+        #  @updatedTooltips = true
+        #  @start()
+        #@updatedTooltips = false
         super()
         # Name Axis
         @chart.yAxis[0].setTitle {text: "Quantity"}, false
@@ -242,28 +241,20 @@ $ ->
 
       drawToolControls: ->
 
-        controls = ""
+        c = ""
 
         # --- #
-        controls +=  '<div id="toolControl" class="vis_controls">'
-
-        controls += "<h3 class='clean_shrink'><a href='#'>Tools:</a></h3>"
-
-        controls += "<div class='outer_control_div'>"
-
-        controls += "<h4 class='clean_shrink'>Bin Size</h4>"
-
-        controls += "Automatic : <br>"
-        controls += "<div id='binSizeSlider' style='width:90%;margin-left:5%'></div><br>"
-
-
-        controls += "Manual: <input id='binSizeInput' class='form-control' value='#{@configs.binSize}'></input>"
-
-        controls += '</div></div></div>'
-
+        c += '<div id="toolControl" class="vis_controls">'
+        c += "<div class='control_header'><h3><a href='#'>Tools:</a></h3></div>"
+        c += "<div class='control_outer'>"
+        c += "<h4 class='clean_shrink'>Bin Size</h4>"
+        c += "Automatic : <br>"
+        c += "<div id='binSizeSlider' style='width:90%;margin-left:5%'></div><br>"
+        c += "Manual: <input id='binSizeInput' class='form-control' value='#{@configs.binSize}'>"
+        c += '</div></div></div>'
 
         # Write HTML
-        ($ '#controldiv').append controls
+        ($ '#controldiv').append c
 
         ###
         # Set up slider
