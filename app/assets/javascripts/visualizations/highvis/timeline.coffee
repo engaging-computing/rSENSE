@@ -100,7 +100,7 @@ $ ->
       ###
       drawRegressionControls: () ->
         super()
-        
+
       ###
       Overwrite xAxis controls to only allow time fields
       ###

@@ -268,6 +268,11 @@ $ ->
             else
               data.xySelector(@configs.xAxis, fieldIndex, groupIndex)
 
+            if dat.length < 2 and @configs.mode is @LINES_MODE
+              @configs.mode = @SYMBOLS_LINES_MODE
+              quickFlash('Mode has been changed to symbols and lines because
+                there were too few points to generate a line', 'warning')
+
             options =
               data: dat
               showInLegend: false

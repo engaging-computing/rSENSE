@@ -279,7 +279,8 @@ class VisualizationsController < ApplicationController
       rel_vis.push 'Map'
     end
 
-    if field_count[TIME_TYPE] > 0 and field_count[NUMBER_TYPE] > 0 and format_data.count > 1
+    if field_count[TIME_TYPE] > 0 and field_count[NUMBER_TYPE] > 0 and
+        format_data.count > 2
       rel_vis.push 'Timeline'
     end
 
