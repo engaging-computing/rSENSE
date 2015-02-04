@@ -72,7 +72,7 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
 </div>
 <!---End Carousel Container-->
 
-<hr class="featurette-divider carousel-divider">
+<hr class="featurette-divider carousel-divider" id="scroll-1">
 
 <!---Begin Featurette-->
 <div class="row secondary-content">
@@ -80,7 +80,7 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
     <div class="featurette">
       
       <!---Begin iSENSE Project Description-->
-      <div class=" col-lg-4 col-md-12 col-sm-12 col-xs-12 isense-desc" id="scroll-1">
+      <div class=" col-lg-4 col-md-12 col-sm-12 col-xs-12 isense-desc">
         <div class="col-lg-12 col-md-6 col-sm-6 col-xs-12 what-is-isense">
           <h2 class="homepage-header">What is iSENSE?</h2>
           <br class="line"/> 
@@ -193,9 +193,12 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
           <h2 class="homepage-header">Get Involved with iSENSE</h2> <br />
           <div class="homepage-text">
             <p class="involvement">
-              For more information, please contact Fred Martin (<a href="mailto:fredm@cs.uml.edu">fredm@cs.uml.edu</a>) and Samantha Michalka (<a href="mailto:samantha@machinescience.org">samantha@machinescience.org</a>) We hold workshops for teachers to learn how to use iSENSE in the classroom, and for students to learn about scientific data collection and analysis. We will also come to your school with the tools and resources necessary to use iSENSE.
-            </p> <br />
-          </div> <br />
+              For more information, please contact Fred Martin (<a href="mailto:fredm@cs.uml.edu">fredm@cs.uml.edu</a>) and Samantha Michalka (<a href="mailto:samantha@machinescience.org">samantha@machinescience.org</a>). We hold workshops for teachers to learn how to use iSENSE in the classroom, and for students to learn about scientific data collection and analysis. We will also come to your school with the tools and resources necessary to use iSENSE.
+            </p> 
+            <p class="involvement">
+              For technical inquiries related to the iSENSE website, please contact one of the developers listed on our 
+              <a href="/contact">iSENSE contact page.</a></p><br />
+          </div><br />
           <hr class="featurette-divider" />
           <div id="stats-row" class="row">
             <h2 class="homepage-header">Statistics</h2> <br/>
@@ -203,10 +206,10 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
                 <div class="homepage-stats"><b><%=User.count %> users</b> registered </div>
               </div>
               <div class="col-xs-4">
-                <div class="homepage-stats"><b><%=DataSet.count %> datasets</b> contributed </div>
+                <div class="homepage-stats"><b><%=Project.count %> projects</b> created </div>
               </div>
               <div class="col-xs-4">
-                <div class="homepage-stats"><b><%=Project.count %> projects</b> created </div>
+                <div class="homepage-stats"><b><%=DataSet.count %> datasets</b> contributed </div>
               </div>
           </div>
         </div>  
@@ -224,10 +227,10 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
 <div class="row">  
   <div class="col-md-12" id="csv-footer">    
     <div class="col-xs-4">
-      <p class="lead slogan text-muted"> Collect </p>
+      <p class="lead slogan text-success"> Collect </p>
     </div>
     <div class="col-xs-4">
-      <p class="lead text-muted slogan"> Share </p>
+      <p class="lead text-info slogan"> Share </p>
     </div>
     <div class="col-xs-4">
       <p class="lead slogan text-muted"> Visualize </p>

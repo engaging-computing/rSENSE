@@ -19,7 +19,7 @@ $ ->
         $('.teachers-love-isense').find('.homepage-text').height(
           $('.teachers-love-isense').height() - $('.teachers-love-isense').find('.homepage-header').height())
         $('.what-is-isense').find('.homepage-text').height(
-          $('.what-is-isense').height() - $('.what-is-isense').find('.homepage-header').height() - 60)
+          $('.what-is-isense').height() - $('.what-is-isense').find('.homepage-header').height() - 45)
       else if screenSize('lg')
         $('.ternary-content').height(Math.max(($(window).height() * .8), $('#column-one').height()))
         $('.what-is-isense').height($('.isense-desc').height() * .3)

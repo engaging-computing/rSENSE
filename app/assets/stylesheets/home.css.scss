@@ -22,6 +22,9 @@
       text-align: left;
       margin-bottom: 10px;
       font-size: 1.2em;
+      .featured-list{
+        font-weight: bold;
+      }
     }
     .homepage-header{
       clear: both;
@@ -39,7 +42,7 @@
     .carousel-slide-text{
       text-align: left;  
       color: black;
-      font-size: 2em !important;
+      font-size: 1.5em !important;
     }
     .slide-header{
       font-size: 1.5em;
@@ -106,8 +109,9 @@
           clear: both;
         }
         .item-desc{
-          min-height: 300px !important;
-          max-height: 300px !important;
+          min-height: 315px !important;
+          height: auto;
+          //max-height: 315px !important;
           margin-bottom: 5px !important;
         }
         .app-desc{
@@ -117,8 +121,9 @@
           }
         }
         a.item-image-link{
-          min-height: 300px !important;
-          min-width: 300px !important;
+          min-height: 315px !important;
+          min-width: 315px !important;
+          background-size: 315px 315px;
         }
         .col-md-12{
           min-height: 300px;
@@ -135,9 +140,10 @@
             margin-bottom: 5px !important;  
           }
           .article_page_content.truncate{
-            min-height: 227px !important;
+            min-height: 242px !important;
             word-wrap: break-word;
             text-align: left !important;
+            background: linear-gradient(to bottom, rgba(242,242,242,1) 0%,rgba(242,242,242,1) 10%,rgba(242,242,242,1) 20%,rgba(242,242,242,1) 30%,rgba(242,242,242,1) 40%,rgba(242,242,242,1)50%,rgba(242,242,242,1) 60%,rgba(242,242,242,1) 70%,rgba(242,242,242,1) 80%,rgba(242,242,242,1) 90%,rgba(242,242,242,1) 100%);
           }
           .article_page_subtitle.truncate{
             min-height: 25px;
@@ -146,7 +152,7 @@
             margin-bottom: 0px;
           }
           .article_page_link{
-            background: linear-gradient(to bottom, rgba(242,242,242,0) 0%,rgba(242,242,242,0) 10%,rgba(242,242,242,0) 20%,rgba(242,242,242,.5) 30%,rgba(242,242,242,0.75) 40%,rgba(242,242,242,1)50%,rgba(242,242,242,1) 60%,rgba(242,242,242,1) 70%,rgba(242,242,242,1) 80%,rgba(242,242,242,1) 90%,rgba(242,242,242,1) 100%);
+            //background: linear-gradient(to bottom, rgba(242,242,242,0) 0%,rgba(242,242,242,0) 10%,rgba(242,242,242,0) 20%,rgba(242,242,242,.5) 30%,rgba(242,242,242,0.75) 40%,rgba(242,242,242,1)50%,rgba(242,242,242,1) 60%,rgba(242,242,242,1) 70%,rgba(242,242,242,1) 80%,rgba(242,242,242,1) 90%,rgba(242,242,242,1) 100%);
           }
         }
         .under-hid{
@@ -253,9 +259,9 @@
     .welcome-two{
       margin-bottom: 20px !important;
     }
-    .featurette-text{
-      font-size: 1.1em !important;
-    }
+    //.featurette-text{
+    //  font-size: 1.1em !important;
+    //}
   }    
 }
 }
@@ -269,11 +275,16 @@
   @media(max-width:767px){
     .isense-desc{
       min-height: 500px;
-      height: 100vh;
+      height: auto;
+    }
+    .what-is-isense{
+      min-height: 250px;
+      height: 35vh !important;
+    }
     .teachers-love-isense{
       margin-top: 0px;
-      height: 40vh;
-    }
+      min-height: 250px;
+      height: 60vh !important;
     }
     #column-one{
       height: auto;
@@ -290,10 +301,11 @@
       clear: both;
     }
     .ternary-content{
-      height: auto;
+      height: 90vh !important;
     }
     .news-prev-wrapper{
-      height: 45vh;
+      min-height: 100px !important;
+      height: 40vh !important;
       overflow-y: scroll;
     }  
   }
@@ -301,7 +313,7 @@
     
     .isense-desc{
       min-height: 170px;
-      height: 45vh;
+      height: 50vh;
     }
     .row.secondary-content{
       height: 100vh;
@@ -311,10 +323,11 @@
     }
     #main-image-featurette{
       min-height: 300px;
-      height: 60vh;
+      height: 40vh;
     }
     .ternary-content{
       height: 90vh !important;
+      margin-top: -40px !important;
     }
     #column-one{
       height: 100vh;
@@ -322,8 +335,6 @@
     .news-prev-wrapper{
       height: 60vh;
       overflow-y: scroll;
-    }
-    .ternary-content{
     }
   }
   @media(min-width:1200px){
@@ -333,7 +344,7 @@
     }
     #main-image-featurette{
       min-height: 500px;
-      height: 95vh;
+      height: 90vh;
     }
     .ternary-content{
       overflow-y: visible;
@@ -356,17 +367,5 @@
         clear: '';
       }
     }
-    /*
-    $('.isense-desc').css('min-height', '500px')
-    $('.isense-desc').height("95vh")
-    $('#main-image-featurette').css('min-height', '500px')
-    $('#main-image-featurette').css('height', '95vh')
-    $('.ternary-content').css('overflow-y', 'visible')
-    $('.news-prev-wrapper').height('75vh')
-    $('#column-one').height('80vh')
-    $('#column-two').height('80vh')
-    $('.teachers-love-isense').css('margin-top', '60')
-    $('.row.secondary-content').find('.col-lg-8').css('clear', '')
-    */
   }
 }
