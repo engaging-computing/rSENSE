@@ -140,6 +140,10 @@ module ApplicationHelper
         # viewing a saved vis
         Visualization.find(params[:id]).name.capitalize
       end
+    elsif @namespace[:controller] == 'data_sets' and @namespace[:action] == 'manualEntry'
+      "Manual Entry"
+    elsif @namespace[:controller] == 'data_sets' and @namespace[:action] == 'edit'
+      'Editing a Data Set'
     else
       @namespace[:controller].capitalize
     end
