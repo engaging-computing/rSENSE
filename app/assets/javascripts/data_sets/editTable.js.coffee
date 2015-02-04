@@ -18,6 +18,7 @@ uploadSettings =
     window.location = data['displayURL']
 
 setupTable = (cols, data) ->
+  # add the delete button to each row
   cols.push
     id: 'del'
     field: 'del'
@@ -26,6 +27,7 @@ setupTable = (cols, data) ->
     formatter: (row, cell, value, columnDef, dataContext) ->
       "<i class='fa fa-close slick-delete'></i>"
 
+  # slickgrid's grid options
   options =
     autoEdit: true
     editable: true
@@ -35,15 +37,16 @@ setupTable = (cols, data) ->
     rowHeight: 35
     syncColumnCellResize: true
 
+  # associate IDs with each row in the table
   for x, i in data
     data[i]['id'] = i
+  currId = data.length
 
   view = new Slick.Data.DataView()
   grid = new Slick.Grid '#slickgrid-container', view, cols, options
-  currId = data.length
-
   view.setItems data
 
+  # subscribing to events
   grid.onClick.subscribe (e, args) ->
     cell = grid.getCellFromEvent e
     if cell.cell == grid.getColumns().length - 1
@@ -212,9 +215,9 @@ IS.onReady 'data_sets/edit', ->
   cols = $('#slickgrid-container').data 'cols'
   data = $('#slickgrid-container').data 'data'
 
-  rets = setupTable cols, data
-  grid = rets[0]
-  view = rets[1]
+  [grid, view] = setupTable cols, data
+  console.log grid
+  console.log view
 
   setupResizer grid
 
@@ -224,8 +227,8 @@ IS.onReady 'data_sets/manualEntry', ->
   cols = $('#slickgrid-container').data 'cols'
   data = $('#slickgrid-container').data 'data'
 
-  rets = setupTable cols, data
-  grid = rets[0]
-  view = rets[1]
+  [grid, view] = setupTable cols, data
+  console.log grid
+  console.log view
 
   setupResizer grid
