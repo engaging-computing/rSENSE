@@ -13,6 +13,9 @@ $ ->
     #Resize UI components based upon Bootstrap and screen size
     ###
     resizeUI = () ->
+      console.log Modernizr.touch
+      #if window.orientation != undefined and Modernizr.
+      #  alert(1)
       if screenSize('md') or screenSize('sm')
         $('.what-is-isense').height($('.isense-desc').height())
         $('.teachers-love-isense').height($('.isense-desc').height())
