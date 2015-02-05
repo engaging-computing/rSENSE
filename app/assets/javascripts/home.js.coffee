@@ -14,7 +14,9 @@ $ ->
     ###
     resizeUI = () ->
       console.log Modernizr.touch
-      if Modernizr.touch
+      console.log Modernizr.hasEvent('deviceOrientation')
+      console.log Modernizr
+      if Modernizr.Modernizr.hasEvent('deviceOrientation')
         alert(1)
       #if window.orientation != undefined and Modernizr.
       #  alert(1)
