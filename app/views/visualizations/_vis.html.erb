@@ -9,10 +9,11 @@
   </div>
   <div id="vistitlebar">
     <div id="visname" class="inline-left">
-      <h2>Hello, my name is</h2>
+      <%= link_to title, project, class: "h2" %>
     </div>
     <div id="visowner" class="inline-right">
-      <h5>by Slim Shady</h5>
+      <%= link_to project.title, project, class: "link" %>
+      <%= link_to "by #{owner.name}", owner, class: "link" %>
     </div>
   </div>
   <div id="viscontainer" role="tabpanel">
