@@ -14,6 +14,8 @@ $ ->
     ###
     resizeUI = () ->
       console.log Modernizr.touch
+      if Modernizr.touch
+        alert(1)
       #if window.orientation != undefined and Modernizr.
       #  alert(1)
       if screenSize('md') or screenSize('sm')
