@@ -16,7 +16,7 @@ $ ->
       console.log Modernizr.touch
       console.log Modernizr.hasEvent('deviceOrientation')
       console.log Modernizr
-      alert(1)
+      #alert(1)
       alert("Modernizr.touch is #{Modernizr.touch}")
       alert("Modernizr.deviceOrientation is #{Modernizr.hasEvent('deviceOrientation')}")
       if Modernizr.hasEvent('deviceOrientation')

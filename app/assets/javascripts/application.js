@@ -55,6 +55,5 @@
 //
 //= require slickgrid/slickgrid
 //= require slickgrid-editors/editors
-//= require modernizr.js
 //
 //= require_tree .
