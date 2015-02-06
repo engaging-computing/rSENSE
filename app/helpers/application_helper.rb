@@ -86,6 +86,9 @@ module ApplicationHelper
 
     case obj
     when Project, Tutorial
+      if obj.owner.nil?
+        return false
+      end
       (obj.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin)
     else
       false
