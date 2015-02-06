@@ -7,21 +7,22 @@
       <button id="control_hide_button" type="button"> &gt; </button>
     </div>
   </div>
-  <div id="vistitlebar">
-    <div id="visname" class="inline-left">
-      <%= link_to title, project, class: "h2" %>
-    </div>
-    <div id="visowner" class="inline-right">
-      <%= link_to project.title, project, class: "link" %>
-      <%= link_to "by #{owner.name}", owner, class: "link" %>
-    </div>
-  </div>
   <div id="viscontainer" role="tabpanel">
+    <div id="vistitlebar">
+      <div class="inline-left">
+        <%= title %>
+        <span class="subtitle">
+          of <%= link_to project.title, project, class: "i" %>
+        </span>
+      </div>
+      <div id="visowner" class="subtitle inline-right">
+        by <%= link_to "#{owner.name}", owner, class: "link" %>
+      </div>
+    </div>
     <ul id="vistablist" role="tablist" class="nav nav-tabs"
-      data-tabs="tabs"
-      <% if @presentation %> style="display:none" <% end %>>
+        data-tabs="tabs"
+        <% if @presentation %> style="display:none" <% end %>>
     </ul>
-
     <div class="tab-content">
       <div role="tabpanel" id="map_canvas"
            class="vis_canvas tab-pane fade">

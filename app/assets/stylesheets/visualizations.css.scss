@@ -230,6 +230,10 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     color: $hint;
   }
 
+  .i {
+    font-style: italic;
+  }
+
   .inline-left {
     display: block-inline;
     float: left;
@@ -452,14 +456,18 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     }
   }
 
-  // an active tab has a different looking gradient
-  .ui-tabs-active {
-    background-image: $dark-bkg-inv;
+  .subtitle {
+    font-size: 18px;
   }
 
   .tab-content {
     height: inherit;
     width: inherit;
+  }
+
+  // an active tab has a different looking gradient
+  .ui-tabs-active {
+    background-image: $dark-bkg-inv;
   }
 
   .vis_canvas {
@@ -497,7 +505,10 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
 
   #vistitlebar {
     height: 50px;
-    background-color: $vis-bkg-dark;
+    background-color: $vis-bkg-light;
+    font-size: 24px;
+    text-align: center;
+    padding: 10px;
   }
 
   // an individual tab
