@@ -1,5 +1,23 @@
+                <% if !(@project.fields.any? {|f| f.field_type == LONGITUDE_TYPE or f.field_type == LATITUDE_TYPE}) %>
+                  <option value="Location">Location</option>
+                <% end %>
+
 <% if can_edit?(@project) %>
   <%= form_tag "/projects/#{@project.id}/save_fields", id: 'fields_table' do %>
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="center">
+          <div class="col-sm-6">
+      	    <button value="Number" class="btn btn-success center" style="width: 125px; margin-top:15px; margin-right: 60px;" form="fields_table" name="new_field" id="new_field">Add Number</button>
+      	    <button value="Text" class="btn btn-success center" style="width: 125px; margin-top:15px;" form="fields_table" name="new_field" id="new_field">Add Text</button>
+      	  </div>
+      	  <div class="col-md-6">
+      	    <button value="Location" class="btn btn-success center" style="width: 125px;margin-top:15px; margin-right: 60px;" form="fields_table" name="new_field" id="new_field">Add Location</button>
+      	    <button value="Timestamp" class="btn btn-success center" style="width: 125px;margin-top:15px;" form="fields_table" name="new_field" id="new_field">Add Timestamp</button>
+      	  </div>
+        </div>
+      </div>
+	</div>
     <div class="row">
       <div class="col-lg-8 col-lg-offset-2">
         <table class="fields_table table table-striped table-bordered">
@@ -51,29 +69,8 @@
         <i>** Fields can't be deleted if the project contains data sets. </i>
       </div>
     </div>
-    <div class="row">
-      <hr class="col-lg-8 col-lg-offset-2">
+    <div class="col-lg-3 col-lg-offset-6">
+      <%= submit_tag "Save and Return", class: 'btn btn-default', id: 'fields_form_submit' %>
     </div>
-    
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2">
-        <div class="row">
-          <div class="col-lg-3">
-              <select form="fields_table" name="new_field" id="new_field" class="form-control">
-                <option value="">Add Field</option>
-                <option value="Number">Number</option>
-                <option value="Text">Text</option>
-                <option value="Timestamp">Timestamp</option>
-                <% if !(@project.fields.any? {|f| f.field_type == LONGITUDE_TYPE or f.field_type == LATITUDE_TYPE}) %>
-                  <option value="Location">Location</option>
-                <% end %>  
-              </select>
-          </div>
-          <div class="col-lg-3 col-lg-offset-6">
-            <%= submit_tag "Save and Return", class: 'btn btn-default', id: 'fields_form_submit' %>
-          </div>
-        </div>
-      </div>
-    </div> 
   <% end %>  
 <% end %>  
