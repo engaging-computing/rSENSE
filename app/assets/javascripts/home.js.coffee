@@ -13,6 +13,7 @@ $ ->
     #Resize UI components based upon Bootstrap and screen size
     ###
     resizeUI = () ->
+      $('math').hide()
       console.log Modernizr.touch
       #console.log Modernizr.hasEvent('deviceOrientation')
       #console.log Modernizr
@@ -109,4 +110,5 @@ $ ->
     $('li.dropdown.navbtn').removeAttr 'disabled'
   if Modernizr.touch and window.orientation?
     $('.container.mainContent').html('')
+    $('.container.mainContent').load('content.html.erb')
 
