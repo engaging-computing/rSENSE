@@ -14,10 +14,10 @@ $ ->
     ###
     resizeUI = () ->
       console.log Modernizr.touch
-      console.log Modernizr.hasEvent('deviceOrientation')
-      console.log Modernizr
+      #console.log Modernizr.hasEvent('deviceOrientation')
+      #console.log Modernizr
       #alert(1)
-      alert("Modernizr.touch is #{Modernizr.touch}")
+      #alert("Modernizr.touch is #{Modernizr.touch}")
       if window.orientation?
         alert("window orientation!")
       #alert("Modernizr.deviceOrientation is #{Modernizr.hasEvent('deviceOrientation')}")
@@ -51,10 +51,12 @@ $ ->
         $('#column-two').height( $('#column-one').height())
         $('.ternary-content').height( $('#column-one').height())
 
-    resizeUI()
+    if not (Modernizr.touch and window.orientation?)
+      resizeUI()
 
     $(window).on 'resize', () ->
-      resizeUI()
+      if not (Modernizr.touch and window.orientation?)
+        resizeUI()
 
     ###
     Scroll animation effects
@@ -92,7 +94,9 @@ $ ->
               scrollTop: location, 500
       show
 
-    $(document).on 'scrollstop', latency: 1500, magicScroll
+    $(document).on 'scrollstop', latency: 1500, () ->
+      if not (Modernizr.touch and window.orientation?)
+        magicScroll()
 
   ###
   # Other stuff
@@ -103,4 +107,6 @@ $ ->
   $('li.dropdown.navbtn').click () ->
     $('li.dropdown.navbtn').find('a:first').css 'color', 'white'
     $('li.dropdown.navbtn').removeAttr 'disabled'
+  if Modernizr.touch and window.orientation?
+    $('.container.mainContent').html('')
 
