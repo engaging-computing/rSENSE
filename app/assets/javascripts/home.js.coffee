@@ -18,7 +18,9 @@ $ ->
       console.log Modernizr
       #alert(1)
       alert("Modernizr.touch is #{Modernizr.touch}")
-      alert("Modernizr.deviceOrientation is #{Modernizr.hasEvent('deviceOrientation')}")
+      if window.orientation?
+        alert("window orientation!")
+      #alert("Modernizr.deviceOrientation is #{Modernizr.hasEvent('deviceOrientation')}")
       if Modernizr.hasEvent('deviceOrientation')
         alert(100)
       #if window.orientation != undefined and Modernizr.
