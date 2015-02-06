@@ -17,7 +17,7 @@ $ ->
       console.log Modernizr.hasEvent('deviceOrientation')
       console.log Modernizr
       if Modernizr.Modernizr.hasEvent('deviceOrientation')
-        alert(1)
+        alert(100)
       #if window.orientation != undefined and Modernizr.
       #  alert(1)
       if screenSize('md') or screenSize('sm')
