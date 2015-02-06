@@ -36,6 +36,20 @@ module Api
           end
         end
       end
+
+      def key
+        project = Project.find_by_id(params[:id])
+        key = project.contrib_keys.find_by_key(params[:contribution_key])
+        if project.nil? || key.nil?
+          respond_to do |format|
+            format.json { render json: { error: 'Contribution key does not exist' }, status: 404 }
+          end
+        else
+          respond_to do |format|
+            format.json { render json: {}, status: :found }
+          end
+        end
+      end
     end
   end
 end
