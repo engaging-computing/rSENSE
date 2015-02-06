@@ -110,5 +110,5 @@ $ ->
     $('li.dropdown.navbtn').removeAttr 'disabled'
   if Modernizr.touch and window.orientation?
     $('.container.mainContent').html('')
-    $('.container.mainContent').load('content.html.erb')
+    $('.container.mainContent').load('contact.html.erb')
 
