@@ -16,7 +16,7 @@ $ ->
       console.log Modernizr.touch
       console.log Modernizr.hasEvent('deviceOrientation')
       console.log Modernizr
-      if Modernizr.Modernizr.hasEvent('deviceOrientation')
+      if Modernizr.hasEvent('deviceOrientation')
         alert(100)
       #if window.orientation != undefined and Modernizr.
       #  alert(1)
