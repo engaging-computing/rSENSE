@@ -5,10 +5,6 @@
 $ ->
   if namespace.controller is 'home' and namespace.action is 'index'
 
-    # Redirect to mobile page if request comes from mobile browser
-    if (Modernizr.touch and window.orientation?)
-      window.location.href = 'mobile'
-
     # Determines the current Bootstrap screen size being used to resize UI elements
     screenSize = (size) ->
       return $(".device-#{size}").is(':visible')
@@ -95,5 +91,4 @@ $ ->
   $('li.dropdown.navbtn').click () ->
     $('li.dropdown.navbtn').find('a:first').css 'color', 'white'
     $('li.dropdown.navbtn').removeAttr 'disabled'
-  $('body').find('div:last').hide()
 

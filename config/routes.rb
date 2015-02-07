@@ -35,7 +35,6 @@ Rsense::Application.routes.draw do
   get 'contact' => 'home#contact'
   get 'report_bug' => 'home#report_bug'
   get 'privacy_policy' => 'home#privacy_policy'
-  get 'mobile' => 'home#mobile'
 
   get 'home/index'
   root to: 'home#index'

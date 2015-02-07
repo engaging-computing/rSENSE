@@ -21,7 +21,4 @@ class HomeController < ApplicationController
 
   def privacy_policy
   end
-
-  def mobile
-  end
 end
