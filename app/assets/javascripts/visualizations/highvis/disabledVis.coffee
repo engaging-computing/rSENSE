@@ -27,7 +27,8 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is "visualizations" and
+  namespace.action in ["displayVis", "embedVis", "show"]
 
     class window.DisabledVis extends BaseVis
       constructor: (@canvas) ->
@@ -53,20 +54,28 @@ $ ->
         Cannot display Pie Chart Visualization</div>"""
 
       start: ->
-        ($ '#' + @canvas).show()
+        $('#' + @canvas).show()
+        $('#controlcontainer').hide()
 
         switch @canvas
-          when "map_canvas" then ($ '#' + @canvas).html("<div id='vis_disabled'>#{map_err}</div>")
-          when "bar_canvas" then ($ '#' + @canvas).html("<div id='vis_disabled'>#{bar_err}</div>")
-          when "histogram_canvas" then ($ '#' + @canvas).html("<div id='vis_disabled'>#{histogram_err}</div>")
-          when "timeline_canvas" then ($ '#' + @canvas).html("<div id='vis_disabled'>#{time_err}</div>")
-          when "scatter_canvas" then ($ '#' + @canvas).html("<div id='vis_disabled'>#{scatter_err}</div>")
-          when "photos_canvas" then ($ '#' + @canvas).html("<div id='vis_disabled'>#{photos_err}</div>")
-          when "pie_canvas" then ($ '#' + @canvas).html("<div id='vis_disabled'>#{pie_err}</div>")
-        @hideControls()
+          when 'map_canvas'
+            $('#' + @canvas).html("<div id='vis_disabled'>#{map_err}</div>")
+          when "bar_canvas"
+            $('#' + @canvas).html("<div id='vis_disabled'>#{bar_err}</div>")
+          when "histogram_canvas"
+            $('#' + @canvas).html "<div id='vis_disabled'>#{histogram_err}" +
+              "</div>"
+          when "timeline_canvas"
+            $('#' + @canvas).html("<div id='vis_disabled'>#{time_err}</div>")
+          when "scatter_canvas"
+            $('#' + @canvas).html("<div id='vis_disabled'>#{scatter_err}</div>")
+          when "photos_canvas"
+            $('#' + @canvas).html("<div id='vis_disabled'>#{photos_err}</div>")
+          when "pie_canvas"
+            $('#' + @canvas).html("<div id='vis_disabled'>#{pie_err}</div>")
 
       clip: (arr) -> arr
 
       end: ->
-        ($ '#' + @canvas).hide()
-        @unhideControls(@controlWidth)
+        $('#' + @canvas).hide()
+        $('#controlcontainer').show()

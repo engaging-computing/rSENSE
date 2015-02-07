@@ -514,23 +514,6 @@ $ ->
           @start()
 
       ###
-      Hides the control div and remembers its previous size.
-      ###
-      hideControls: ->
-        @controlWidth = ($ '#controldiv').width()
-        ($ '#controldiv').width 0
-        ($ '#controlcontainer').hide()
-        ($ '#' + @canvas).css
-          width: ($ "#viscontainer").width()
-
-      ###
-      Returns the control div with its previous size intact.
-      ###
-      unhideControls: ->
-        ($ '#controldiv').width @controlWidth
-        ($ '#controlcontainer').show()
-
-      ###
       Do any necessary cleanup work before serialization.
       ###
       serializationCleanup: ->

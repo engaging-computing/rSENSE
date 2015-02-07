@@ -12,6 +12,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   $border: thin solid $border-color;
   $dark-bkg: linear-gradient(#E4E4E4, #C4C4C4);
   $dark-bkg-inv: linear-gradient(#C4C4C4, #E4E4E4);
+  $dark-bkg-ltr: linear-gradient(to right, #E4E4E4, #C4C4C4);
   $error: #F00;
   $error-hover: #C00;
   $hint: #888;
@@ -38,7 +39,16 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     user-select: none;
   }
 
+  .circle-img {
+    height: 30px;
+    width: 30px;
+    border-radius: 15px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+  }
+
   #controlcontainer {
+    position: relative;
     display: inline-block;
     float: left;
     background-color: $vis-bkg-dark;
@@ -68,19 +78,19 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   }
 
   #controlhider {
+    position: relative;
     float: right;
     display: inline-block;
     height: 100%;
-    background-color: $vis-bkg-dark;
+    width: 26px;
+    cursor: pointer;
+    background: $dark-bkg-ltr;
 
-    #control_hide_button {
+    #hiderbtn {
       @include unselectable;
-      background-image: $light-bkg;
-      border: $border;
-      border-radius: 3px;
-      outline: none;
-      margin: 5px 5px 5px;
-      padding: 8px 6px;
+      padding: 0 8px;
+      position: absolute;
+      top: 48%;
     }
   }
 
@@ -309,7 +319,6 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   }
 
   #regression-table {
-
     #regression-table-body {
       text-align: left;
       font-size: 10px;
@@ -381,7 +390,6 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
 
   // table vis needs additional love to make it look right
   #table_canvas {
-
     #first_toolbar_bottom, #last_toolbar_bottom, #next_toolbar_bottom, #prev_toolbar_bottom {
       background-image: url(/assets/vis/ui-icons_222222_256x240.png);
       width: 19px; // height set as !important to 19px elsewhere
@@ -431,12 +439,14 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     }
 
     .ui-jqgrid-hbox table > thead > tr > th {
-      border-top: none !important; // because inline styles (jQuery UI - can't fix)
+      border-top: none !important; // because inline styles
+                                   // (jQuery UI - can't fix)
       border-right: $border;
     }
 
     // hide inactive sort icon
-    .searchResults .ui-jqgrid .ui-icon-asc, .searchResults .ui-jqgrid .ui-icon-desc {
+    .searchResults .ui-jqgrid .ui-icon-asc,
+    .searchResults .ui-jqgrid .ui-icon-desc {
         color: black;
     }
 
@@ -473,7 +483,8 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   .vis_canvas {
     height: inherit;
     width: inherit;
-    overflow: hidden; // because something inside vis_canvas is overflowing on every non-map vis
+    overflow: hidden; // because something inside vis_canvas
+                      // is overflowing on every non-map vis
   }
 
   // floats the actual vis to the right

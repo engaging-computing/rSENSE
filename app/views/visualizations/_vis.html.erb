@@ -4,7 +4,7 @@
     <div id="controldiv">
     </div>
     <div id="controlhider">
-      <button id="control_hide_button" type="button"> &gt; </button>
+      <i id="hiderbtn" class="fa fa-chevron-circle-left"></i>
     </div>
   </div>
   <div id="viscontainer" role="tabpanel">
@@ -17,6 +17,8 @@
       </div>
       <div id="visowner" class="subtitle inline-right">
         by <%= link_to "#{owner.name}", owner, class: "link" %>
+        <%= link_to image_tag(Gravatar.new.url(owner),
+            class: "circle-img"), owner %>
       </div>
     </div>
     <ul id="vistablist" role="tablist" class="nav nav-tabs"

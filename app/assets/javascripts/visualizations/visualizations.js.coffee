@@ -51,14 +51,15 @@ $ ->
 
       visWrapperSize = $('#viswrapper').innerWidth()
       visWrapperHeight = $('#viswrapper').outerHeight()
-      visTitleBarHeight = $('#vistitlebar').outerHeight() + $('#vistablist').outerHeight()
+      visTitleBarHeight = $('#vistitlebar').outerHeight() +
+        $('#vistablist').outerHeight()
       hiderSize     = $('#controlhider').outerWidth()
       controlSize   = $('#controldiv').outerWidth()
       controlOpac = $('#controldiv').css 'opacity'
 
       controlSize = visWrapperSize * .2 - hiderSize
       controlOpac = 1.0
-      $("#control_hide_button").html('<')
+      $("#hiderbtn").attr('class', 'fa fa-chevron-circle-left')
 
       $("#viscontainer").height(visWrapperHeight - visTitleBarHeight)
 
@@ -66,11 +67,13 @@ $ ->
       (init and globals.options.startCollapsed?) or !globals.configs.toolsOpen
         controlSize = 0
         controlOpac = 0.0
-        $("#control_hide_button").html('>')
+        $("#hiderbtn").attr('class', 'fa fa-chevron-circle-right')
 
       contrContSize = hiderSize + controlSize
 
-      newWidth = visWrapperSize - contrContSize
+      # New width should take into account visibility of tools
+      newWidth = visWrapperSize
+      if $('#controlcontainer').is(':visible') then newWidth -= contrContSize
       newHeight = $('#viscontainer').height() - $('#vistablist').outerHeight()
 
       $('#controlcontainer').height $('#viswrapper').height()
@@ -79,14 +82,14 @@ $ ->
       # Animate the collapsing controls and the expanding vis
       $('#controldiv').animate {width: controlSize, opacity: controlOpac},
         aniLength, 'linear'
-      $('#viscontainer').animate {width: newWidth}, aniLength, 'linear'
 
+      # Only adjust with tools are visible
+      $('#viscontainer').animate {width: newWidth}, aniLength, 'linear'
       globals.curVis.resize(newWidth, newHeight, aniLength)
 
     # Resize vis on page resize
     $(window).resize () ->
       resizeVis(false, 0)
-
 
     ### hide all vis canvases to start ###
     $(can).hide() for can in ['#map_canvas', '#timeline_canvas',
@@ -208,7 +211,7 @@ $ ->
       globals.curVis.start()
       resizeVis(false, 0, true)
 
-    $('#control_hide_button').click ->
+    $('#controlhider').click ->
       globals.configs.toolsOpen = !globals.configs.toolsOpen
       resizeVis()
 
