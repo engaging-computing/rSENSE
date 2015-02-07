@@ -20,7 +20,15 @@
         You are currently logged into an account that has no linked email address. In the near future accounts on iSENSE will require email addresses to log in; we recomend you go to your  <%= link_to("user edit page", edit_user_path(@cur_user)) %> and add an email address for this account.
       </div>
     <% end %>
-
+    <% if request.original_url.include? 'mobile' %>
+    <nav class="navbar navbar-default navbar-static-top" role="navigation">
+      <div class="container"><!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/"><%= image_tag("isense-logo-small.png", height: "35") %></a>
+        </div>
+      </div>
+    </nav>
+    <% else %>
     <!-- The title bar -->
     <nav class="navbar navbar-default navbar-static-top" role="navigation">
       <div class="container"><!-- Brand and toggle get grouped for better mobile display -->
@@ -76,7 +84,7 @@
         </div><!-- /.navbar-collapse -->
       </div>
     </nav>
-
+    <% end %>
     <!-- Main Container -->
     <div id="outer" class="<%= params[:controller] %>-controller <%= params[:action] %>-action">
       <div class="container mainContent <%= @layout_wide ? 'mc-wide' : '' %>" data-role="page">

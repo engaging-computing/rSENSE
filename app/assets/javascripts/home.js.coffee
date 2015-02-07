@@ -17,19 +17,6 @@ $ ->
     #Resize UI components based upon Bootstrap and screen size
     ###
     resizeUI = () ->
-      $('math').hide()
-      console.log Modernizr.touch
-      #console.log Modernizr.hasEvent('deviceOrientation')
-      #console.log Modernizr
-      #alert(1)
-      #alert("Modernizr.touch is #{Modernizr.touch}")
-      if window.orientation?
-        alert("window orientation!")
-      #alert("Modernizr.deviceOrientation is #{Modernizr.hasEvent('deviceOrientation')}")
-      if Modernizr.hasEvent('deviceOrientation')
-        alert(100)
-      #if window.orientation != undefined and Modernizr.
-      #  alert(1)
       if screenSize('md') or screenSize('sm')
         $('.what-is-isense').height($('.isense-desc').height())
         $('.teachers-love-isense').height($('.isense-desc').height())
@@ -56,12 +43,10 @@ $ ->
         $('#column-two').height( $('#column-one').height())
         $('.ternary-content').height( $('#column-one').height())
 
-    if not (Modernizr.touch and window.orientation?)
-      resizeUI()
+    resizeUI()
 
     $(window).on 'resize', () ->
-      if not (Modernizr.touch and window.orientation?)
-        resizeUI()
+      resizeUI()
 
     ###
     Scroll animation effects
@@ -99,10 +84,7 @@ $ ->
               scrollTop: location, 500
       show
 
-    $(document).on 'scrollstop', latency: 1500, () ->
-      if not (Modernizr.touch and window.orientation?)
-        magicScroll()
-    console.log window.location
+    $(document).on 'scrollstop', latency: 1500, magicScroll
 
   ###
   # Other stuff
@@ -113,4 +95,5 @@ $ ->
   $('li.dropdown.navbtn').click () ->
     $('li.dropdown.navbtn').find('a:first').css 'color', 'white'
     $('li.dropdown.navbtn').removeAttr 'disabled'
+  $('body').find('div:last').hide()
 

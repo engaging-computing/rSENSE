@@ -6,8 +6,27 @@
 }
 
 .home-controller.mobile-action{
-  .test{
-    color: blue;
+  .navbar{
+    position: fixed !important;
+  }
+  div.container.mainContent{
+    width: 100% !important;
+    .row{
+      margin-bottom: 10vh;
+    }
+    .featured-list{
+      font-weight: bold;
+    }
+    .col-xs-12{
+      .mobile-header{
+        text-align: center;
+        font-size: 2em;
+      }
+    }
+    .story-image{
+    width:100%;
+    height: auto;
+    }
   }
 }
 
