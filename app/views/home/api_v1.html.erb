@@ -152,6 +152,48 @@
   <div class="col-md-12">
     <table class="table table-bordered api">
       <tr>
+        <td class="GET def">GET</td>
+        <td class="method">Key</td>
+        <td class="code">/api/v1/projects/XX/key/</td>
+        <td class="args">contribution_key(req)</td>
+      </tr>
+      <tr class="more" style="">
+        <td colspan="4">
+          <b>Response Codes</b>
+          <ul>
+            <li>Success: 302 Found</li>
+          </ul>
+          <ul>
+            <li>Fail: 404 Not Found</li>
+          </ul>
+           <b>Data</b>
+          <pre>
+  {
+    "contribution_key" => "contribution key (string)"
+  }
+          </pre>
+          <b>Response</b>
+          <pre>
+  {
+    "contribution_key": "(string)"
+  }
+          </pre>
+          <b>Notes</b>
+          <ul>
+			<li>XX should be replaced with the ID for the project.</li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<hr>
+
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-bordered api">
+      <tr>
         <td class="POST def">POST</td>
         <td class="method"> Fields </td>
         <td class="code">/api/v1/fields</td>
@@ -179,7 +221,7 @@
         "restrictions" => string
       }
   }
-                  
+
           </pre>
           <b>Response</b>
           <pre>
@@ -271,7 +313,7 @@
         "FIELD_ID" => [1,2,3,4,5],
         "FIELD_ID_2" => ["blue","red",,,"green"]
       }
-    
+
   }
           </pre>
           <b>Response</b>

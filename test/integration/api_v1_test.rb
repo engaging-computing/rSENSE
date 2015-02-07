@@ -586,6 +586,20 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert_response :unauthorized
   end
 
+  test 'check if key exists' do
+    pid = @dessert_project.id
+    get "/api/v1/projects/#{pid}/key",
+        contribution_key: 'apple'
+    assert_response 302
+  end
+
+  test 'check if key exists (does not exist)' do
+    pid = @dessert_project.id
+    get "/api/v1/projects/#{pid}/key",
+        contribution_key: 'not real'
+    assert_response 404
+  end
+
   private
 
   def parse(x)
