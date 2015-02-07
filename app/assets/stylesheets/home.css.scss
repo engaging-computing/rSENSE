@@ -1,10 +1,16 @@
 // Place all the styles related to the Home controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
-
 #outer{
   padding-bottom: 10px !important;
 }
+
+.home-controller.mobile-action{
+  .test{
+    color: blue;
+  }
+}
+
 .home-controller.index-action{  
   div.container.mainContent{
     width:100% !important ; 

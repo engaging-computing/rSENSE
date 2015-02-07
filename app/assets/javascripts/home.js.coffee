@@ -5,6 +5,10 @@
 $ ->
   if namespace.controller is 'home' and namespace.action is 'index'
 
+    # Redirect to mobile page if request comes from mobile browser
+    if (Modernizr.touch and window.orientation?)
+      window.location.href = 'mobile'
+
     # Determines the current Bootstrap screen size being used to resize UI elements
     screenSize = (size) ->
       return $(".device-#{size}").is(':visible')
@@ -98,6 +102,7 @@ $ ->
     $(document).on 'scrollstop', latency: 1500, () ->
       if not (Modernizr.touch and window.orientation?)
         magicScroll()
+    console.log window.location
 
   ###
   # Other stuff
@@ -108,7 +113,4 @@ $ ->
   $('li.dropdown.navbtn').click () ->
     $('li.dropdown.navbtn').find('a:first').css 'color', 'white'
     $('li.dropdown.navbtn').removeAttr 'disabled'
-  if Modernizr.touch and window.orientation?
-    $('.container.mainContent').html('')
-    $('.container.mainContent').load('contact.html.erb')
 
