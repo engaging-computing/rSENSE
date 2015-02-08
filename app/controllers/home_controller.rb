@@ -1,6 +1,6 @@
 class HomeController < ApplicationController
   skip_before_filter :authorize
-
+  before_filter :is_mobile?, only: :index
   def index
     @news = News.where('hidden = ?', false).order('created_at DESC').limit(2)
     @featured_projects = Project.search(false).where('featured = ? and hidden = ?',  true, false).order('featured_at DESC').limit(4)
@@ -20,5 +20,11 @@ class HomeController < ApplicationController
   end
 
   def privacy_policy
+  end
+
+  private
+  
+  def is_mobile?
+    request.format = :mobile if request.user_agent =~ /Mobile|webOS/
   end
 end

@@ -3,7 +3,6 @@ class ApplicationController < ActionController::Base
 
   before_filter :find_user
   before_filter :authorize
-  before_filter :is_mobile?
   skip_before_filter :verify_authenticity_token, only: [:options_req]
   skip_before_filter :find_user, only: [:options_req]
   skip_before_filter :authorize, only: [:options_req]
@@ -168,21 +167,6 @@ class ApplicationController < ActionController::Base
       end
     end
   end
-  
-  private
-  def is_mobile?
-    session[:mobile_param] = params[:mobile] if params[:mobile]
-    request.format = :mobile if mobile_device?
-  end
-  def mobile_device?
-    if session[:mobile_param]
-      session[:mobile_param] == "1"
-    else
-      request.user_agent =~ /Mobile|webOS/
-    end
-  end
-  helper_method :mobile_device?
-
 end
 
 class UserError < RuntimeError
