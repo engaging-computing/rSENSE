@@ -6,4 +6,7 @@ module HomeHelper
 	    false
 	  end		
 	end
+	def current_url(p)
+	  url_for params: params.merge(p)
+	end
 end
