@@ -4,7 +4,54 @@
 #outer{
   padding-bottom: 20px !important;
 }
-
+.ios-desc{
+  width: 100% !important;
+  clear:both;
+  position:fixed !important;
+  z-index: 100;
+  margin-top: 55px;
+  margin-left: 15px;
+  text-align: center;
+  
+  div{
+    color: white;
+    text-align: center;
+    background-color:rgba(39,135,245,0.5);
+    width: 100% !important;
+    i{
+      color: white;
+      font-size: 2em;
+      float: right;
+      vertical-align: center;
+      z-index: 1000 !important;
+    }
+  }
+}
+.android-button:hover{
+  background-color:rgba(39,135,245,0.5) !important;
+}
+.android-desc{
+  width: 100% !important;
+  clear:both;
+  position:fixed !important;
+  z-index: 100;
+  margin-top: 55px;
+  text-align: center;
+  
+  a{
+    color: white;
+    text-align: center;
+    background-color:rgba(39,135,245,0.5);
+    width: 100% !important;
+    i{
+      color: white;
+      font-size: 2em;
+      float: right;
+      vertical-align: center;
+      z-index: 1000;
+    }
+  }
+}
 .mobile-nav{
   width:100%;
   .row{
@@ -29,7 +76,7 @@
       width: 100% !important;
       .navbar-category{
         text-align: center;
-        width: 24%;
+        width: 25%;
         display: inline-block;
         vertical-align: top;
         margin-top: 10px;

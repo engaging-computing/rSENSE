@@ -13,7 +13,6 @@
       window.namespace = <%= raw @namespace.to_json %>
     <% end %>
   </head>
-
   <body data-page-name="<%= params[:controller] %>/<%= params[:action] %>">
     <% if !@cur_user.nil? and @cur_user.email.blank? %>
       <div class="alert">
@@ -21,6 +20,16 @@
         You are currently logged into an account that has no linked email address. In the near future accounts on iSENSE will require email addresses to log in; we recomend you go to your  <%= link_to("user edit page", edit_user_path(@cur_user)) %> and add an email address for this account.
       </div>
     <% end %>
+
+    <!-- Display proper app -->
+      <!--<div class="col-xs-12 app-desc">
+        <a href="https://play.google.com/store/apps/developer?id=Engaging+Computing+Group,+UML" class="btn btn-primary img-rounded"> 
+        <%= image_tag "icon-android.png", class: 'play-store-button' %> Download iSENSE Android apps</a> 
+        <a class="btn btn-primary disabled img-rounded">
+        <%= image_tag "icon-apple.png", class: 'app-store-button'  %> </a> 
+      </div>
+    </div>-->
+
 
     <!-- The title bar -->
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -116,6 +125,21 @@
     </nav>
 
     <!-- Main Container -->
+      <% if ios_device? %>
+      <div class="row" id="app-banner">
+        <div class="col-xs-12 ios-desc">
+          <div>
+          <%= image_tag "icon-apple.png", class: 'app-store-button'  %> iSENSE apps will soon be available for free on the App Store. <i class="fa fa-times"></i></div> 
+        </div>
+      </div>
+    <% else %>
+      <div clas="row" id="app-banner">
+        <div class="col-xs-12 android-desc">
+          <a href="https://play.google.com/store/apps/developer?id=Engaging+Computing+Group,+UML" class="btn btn-primary android-button"> 
+          <%= image_tag "icon-android.png", class: 'play-store-button' %> iSENSE apps are available for free on the Google Play Store. <i class="fa fa-times"></i></a>
+        </div>
+      </div>
+    <% end %>
     <div id="mobile-outer" class="<%= params[:controller] %>-controller <%= params[:action] %>-action">
       <div class="container mainContent <%= @layout_wide ? 'mc-wide' : '' %>" data-role="page">
         <%= bootstrap_flash %>
