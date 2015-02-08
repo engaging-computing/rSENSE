@@ -123,7 +123,7 @@
   div.container.mainContent{
     width: 100% !important;
     .row{
-      margin-bottom: 10vh;
+      margin-bottom: 5vh;
     }
     .featured-list{
       font-weight: bold;
@@ -140,6 +140,10 @@
         max-height: 256px !important;
         height: auto;
       }
+      .story-separator{
+        position: absolute;
+        bottom: 0;
+      }
       .splash-title{
         margin-top: 10vh;
         font-size: 2em;
@@ -155,6 +159,11 @@
     .col-xs-12{
       .first{
         margin-top: 5vh;
+      }
+      .testimonials{
+        .left{
+          text-align: left !important;
+        }
       }
       .mobile-header{
         text-align: center;
