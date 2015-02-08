@@ -204,17 +204,14 @@
           text-align: center !important;
           .mobile-news-article{
               margin: 5vh auto;
-              background-color: #F2F2F2 !important;
+              background-color: #F2F2F2;
               border: 1px solid gray;
               width: 100%;
               max-width: 512px;
               text-align: center !important;
               .item-desc{
                 .article_page_content.truncate{
-                  height: 300px;
-                }
-                .article_page_content.truncate:before{
-                  background: linear-gradient(to bottom, rgba(242,242,242,0) 50%, rgba(242,242,242,1) 70%);
+                  height: 360px;
                 }
                 .article_page_link{
                   background: #F2F2F2 !important;
