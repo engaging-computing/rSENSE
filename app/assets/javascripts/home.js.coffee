@@ -14,6 +14,8 @@ $ ->
     ###
     resizeUI = () ->
       $('#mobile-menu').css('width', $(window).width())
+      $('#mobile-splash').css('height', $(window).height() - 75)
+      $('.fa-sort-desc').css('margin-left', -32)
       if screenSize('md') or screenSize('sm')
         $('.what-is-isense').height($('.isense-desc').height())
         $('.teachers-love-isense').height($('.isense-desc').height())

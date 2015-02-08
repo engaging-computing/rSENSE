@@ -128,10 +128,39 @@
     .featured-list{
       font-weight: bold;
     }
+    #mobile-splash{
+      /*height: 90vh !important;*/
+      display:inline-block;
+      position: relative;
+      text-align: center;
+      .globe{
+        margin-top: 20vh;
+        width: 30%;
+        max-width: 256px !important;
+        max-height: 256px !important;
+        height: auto;
+      }
+      .splash-title{
+        margin-top: 10vh;
+        font-size: 2em;
+      }
+      .fa-sort-desc{
+        position: absolute;
+        bottom: 0;
+        left:50;
+        font-size: 64px;
+
+      }
+    }
     .col-xs-12{
       .mobile-header{
         text-align: center;
         font-size: 2em;
+      }
+      .mobile-text{
+        font-size: 1.25em;
+        text-align: center;
+        margin-top: 1vh;
       }
     }
     .story-image{
