@@ -41,7 +41,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>-->
-          <div class="navbar-category"><a class="navbar-brand" href="/"><%= image_tag("isense-logo.png", height: "35") %></a>
+          <div class="navbar-category"><a class="navbar-brand" href="/"><%= image_tag("isense-logo-small.png", height: "35") %></a>
           </div>
           <!--<a class="navbar-brand visible-xs visible-sm" href="/"><%= image_tag("isense-logo-small.png", height: "35") %></a>-->
           <!--<div class="col-xs-6">
@@ -72,6 +72,14 @@
             <li class="navbtn" title="Explore data visualizations built by iSENSE users"><%=link_to visualizations_path do %><i class='fa fa-picture-o'></i> Visualizations<%end%></li>
             <li class="navbtn" title="Learn how to use iSENSE"><%=link_to tutorials_path do %><i class='fa fa-info-circle'></i> Tutorials<%end%></li>
             <li class="navbtn" title="Check out the latest iSENSE news and updates"><%=link_to news_index_path do %><i class='fa fa-book'></i> News<%end%></li>
+            <% if @cur_user.try(:id) %>
+              <li class="navbtn" title="Click to view <%= @cur_user.name %>'s profile page">
+                <%=link_to user_path(@cur_user.id) do %>
+                  <i class="fa fa-user"></i> 
+                  <%= @cur_user.name %></li>
+                <% end %>
+              <li class="navbtn"> <%= link_to "Logout", login_path, method: :delete %></li>
+            <% end %>
             <% if is_admin? %>
             <li class="navbtn"><%= link_to users_path do%><i class="fa fa-users"></i> Users<%end%></li>
             <% end %>
@@ -128,15 +136,19 @@
       <% if ios_device? %>
       <div class="row" id="app-banner">
         <div class="col-xs-12 ios-desc">
-          <div>
-          <%= image_tag "icon-apple.png", class: 'app-store-button'  %> iSENSE apps will soon be available for free on the App Store. <i class="fa fa-times"></i></div> 
+          <div class="col-xs-6">
+          <i class="fa fa-times"></i>
+          <%= image_tag "icon-apple.png", class: 'app-store-button'  %>
+          </div>
+          <div class="col-xs-6">
+           <p>iSENSE apps will soon be available for free on the App Store.</p></div> 
         </div>
       </div>
     <% else %>
       <div clas="row" id="app-banner">
         <div class="col-xs-12 android-desc">
-          <a href="https://play.google.com/store/apps/developer?id=Engaging+Computing+Group,+UML" class="btn btn-primary android-button"> 
-          <%= image_tag "icon-android.png", class: 'play-store-button' %> iSENSE apps are available for free on the Google Play Store. <i class="fa fa-times"></i></a>
+          <a href="https://play.google.com/store/apps/developer?id=Engaging+Computing+Group,+UML" class="btn btn-primary android-button"><i class="fa fa-times"></i>
+          <%= image_tag "icon-android.png", class: 'play-store-button' %><br /> <p>iSENSE apps are available for <br />free on the Google Play Store.</p> </a>
         </div>
       </div>
     <% end %>

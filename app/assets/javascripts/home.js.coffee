@@ -99,4 +99,7 @@ $ ->
   $('li.dropdown.navbtn').click () ->
     $('li.dropdown.navbtn').find('a:first').css 'color', 'white'
     $('li.dropdown.navbtn').removeAttr 'disabled'
+  if $('.fa.fa-user').length > 0
+    $('.lr').hide()
+  #$('.globe').css('margin-top', 0)
 

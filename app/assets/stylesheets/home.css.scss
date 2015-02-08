@@ -27,6 +27,14 @@
     }
   }
 }
+@media (orientation : landscape) and (max-height : 640px){
+  .globe{
+    margin-top: 0px !important;
+  }
+  #mobile-splash{
+    height: 120vh !important;
+  }
+}
 .android-button:hover{
   background-color:rgba(39,135,245,0.5) !important;
 }
@@ -37,18 +45,20 @@
   z-index: 100;
   margin-top: 55px;
   text-align: center;
-  
-  a{
-    color: white;
     text-align: center;
-    background-color:rgba(39,135,245,0.5);
-    width: 100% !important;
-    i{
+    a{
+      word-wrap: break-word;
+      width: 100% !important;
+      color: white;
+      text-align: center;
+      background-color:rgba(39,135,245,0.5);
+      width: 100% !important;
+      i{
       color: white;
       font-size: 2em;
       float: right;
       vertical-align: center;
-      z-index: 1000;
+      z-index: 1000 !important;
     }
   }
 }
@@ -85,6 +95,7 @@
           color: white;
         }
         .navbar-brand{
+          max-width: 25% !important;
           margin-top: 0px !important;
           padding-top: 0px !important;
         }
@@ -187,6 +198,49 @@
       }
     }
       .mobile-news{
+        text-align: center !important;
+        .col-xs-12{
+          clear: both !important;
+          text-align: center !important;
+          .mobile-news-article{
+              margin: 5vh auto;
+              background-color: #F2F2F2 !important;
+              border: 1px solid gray;
+              width: 100%;
+              max-width: 512px;
+              text-align: center !important;
+              .item-desc{
+                .article_page_content.truncate{
+                  height: 300px;
+                }
+                .article_page_content.truncate:before{
+                  background: linear-gradient(to bottom, rgba(242,242,242,0) 50%, rgba(242,242,242,1) 70%);
+                }
+                .article_page_link{
+                  background: #F2F2F2 !important;
+                }
+              }
+              .item-image-link{
+                text-align: center;
+                width: 100% !important;
+                /*max-width: 512px;*/
+                height: auto;
+                /*display: inline-block;*/
+                margin: 0 auto;
+                img{
+                  width: 100%;
+                  max-width: 512px;
+                  height: auto;
+                  display:inline-block;
+                }
+              }
+            .item-desc{
+              clear: both;
+            }
+          }
+        }
+      }
+      /*.mobile-news{
         .col-xs-12{
           min-height: 256px;
           margin-bottom: 5px !important;
@@ -201,14 +255,14 @@
             min-height: 256 !important;
             margin-bottom: 10vh;
             /*margin-bottom: 5px !important;*/
-            border: 1px solid gray;
+            /*border: 1px solid gray;
             .item-desc{
               min-height: 256px !important;
               height: auto;
               //max-height: 256px !important;
               /*margin-bottom: 5px !important;
               margin*/
-        }
+        /*}
           }
           .article_page_content.truncate{
             min-height: 200px !important;
@@ -219,7 +273,7 @@
             background-image: -ms-linear-gradient(bottom, rgba(242, 242, 242, 1), rgba(242, 242, 242, 0));
             background-image: -o-linear-gradient(bottom, rgba(242, 242, 242, 1), rgba(242, 242, 242, 0));
             background-image: linear-gradient(to bottom, rgba(242, 242, 242, 1), rgba(242, 242, 255, 0));*/
-          }
+          /*}
           .article_page_content.truncate:before{
             position: absolute;
             content: '';
@@ -236,18 +290,20 @@
           }
           .article_page_link{
             /*background:'' !important;*/
-            background: #F2F2F2 !important;
+            /*background: #F2F2F2 !important;
           }
         }
         a.item-image-link{
           min-height: 269px !important;
           min-width: 256px !important;
           background-size: 256px 269px;
+          display: block;
         }
-      }
+      }*/
     .story-image{
-        height: 50vh;
-        width: auto;
+        height: auto;
+        width: 100%;
+        max-width: 100%;
         max-width: 512px !important;
         max-height: 512px !important;
         height: auto;
