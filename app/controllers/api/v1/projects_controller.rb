@@ -38,14 +38,14 @@ module Api
       end
 
       def key
-          if params[:id].nil? || params[:contribution_key].nil?
-            respond_to do |format|
-              format.json { render json: { error: 'Neither Project ID nor Contribution Key can be empty.' }, status: :unprocessable_entity }
-            end
-            return
+        if params[:id].nil? || params[:contribution_key].nil?
+          respond_to do |format|
+            format.json { render json: { error: 'Neither Project ID nor Contribution Key can be empty.' }, status: :unprocessable_entity }
           end
+          return
+        end
 
-          project = Project.find_by_id(params[:id])
+        project = Project.find_by_id(params[:id])
 
         respond_to do |format|
           if project.nil?
