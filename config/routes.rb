@@ -110,11 +110,12 @@ Rsense::Application.routes.draw do
     namespace :v1 do
       get '/projects/:id/key/' => 'projects#key'
       post '/projects/:id/jsonDataUpload' => 'data_sets#jsonDataUpload'
+      post '/projects/:id/add_key' => 'projects#add_key'
       post '/data_sets/append' => 'data_sets#append'
       post '/media_objects' => 'media_objects#saveMedia'
       get '/media_objects/:id' => 'media_objects#show'
       get '/users/myInfo' => 'users#my_info'
-      resources :projects, only: [:show, :index, :create]
+      resources :projects, only: [:show, :index, :create, :add_key]
       resources :fields, only: [:create, :show]
       resources :visualizations, only: [:show]
       resources :data_sets, only: [:show, :edit, :jsonDataUpload]

@@ -26,7 +26,8 @@
           args.grid.focus()
       currValue
     onChange: (val) ->
-      currValue = val.format('MM/DD/YYYY HH:mm:ss')
+      console.log currValue
+      currValue = val.format('YYYY/MM/DD HH:mm:ss')
       $(args.container).text currValue
     onClose: (val) ->
       if canClose
