@@ -314,10 +314,16 @@ $ ->
             arrayRemove(@configs.tableFields, index)
           else
             @configs.tableFields.push(index)
-          if yFields.length == @configs.tableField
-            $('#select-all-y').prop('checked', true)
+
+          if yFields.length == @configs.tableFields.length
+            $('#select-all-y').prop("checked", true)
+            $('#select-all-y').prop("indeterminate", false)
+          else if @configs.tableFields.length > 0
+            $('#select-all-y').prop("checked", false)
+            $('#select-all-y').prop("indeterminate", true)
           else
-            $('#select-all-y').prop('checked', false)
+            $('#select-all-y').prop("checked", false)
+            $('#select-all-y').prop("indeterminate", false)
 
           @delayedUpdate()
 
@@ -332,16 +338,18 @@ $ ->
           globals.configs.yAxisOpen = (globals.configs.yAxisOpen + 1) % 2
 
         $('#select-all-y').click =>
-          yFields = (i for f, i in data.fields when i isnt data.COMBINED_FIELD)
+          selFields =
+            (i for f, i in data.fields when i isnt data.COMBINED_FIELD)
 
           if $('#select-all-y').is(":checked")
             $('#yAxisControl').find('.y_axis_input').each (i,j) ->
               $(j).prop('checked', true)
-            @configs.tableFields = yFields
+            @configs.tableFields = selFields
           else
             @configs.tableFields = []
             $('#yAxisControl').find('.y_axis_input').each (i,j) ->
               $(j).prop('checked', false)
+
           @delayedUpdate()
 
     globals.table = new Table "table_canvas"
