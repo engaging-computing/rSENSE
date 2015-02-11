@@ -4,7 +4,7 @@ class VisualizationsController < ApplicationController
 
   skip_before_filter :authorize, only: [:show, :displayVis, :index, :embedVis]
 
-  after_action :allow_iframe, only: [:show]
+  after_action :allow_iframe, only: [:show, :displayVis]
 
   # GET /visualizations
   # GET /visualizations.json
