@@ -48,17 +48,73 @@ $ ->
     class window.binaryTree
 
       constructor: (parent = null) ->
-
         @data = null
         @right = null
         @left = null
         @parent = parent
+      
+      # Returns deep copy of binary tree object
+      @clone: (tree, parent = null) ->
+        console.log tree
+        return tree if tree is null or typeof tree isnt 'object'
+        temp = new binaryTree(parent)
+        for key of tree when (typeof tree[key] isnt 'function' and key isnt 'parent')
+          temp[key] = @clone(tree[key], tree)
+        temp
+
+      # Returns true if a and b are equivalent objects 
+      # (not necessarily references to the same object in memory).
+      @is_equal: (a, b) ->
+        recur = false
+        if a is null and b is null
+          return true
+        if Object.keys(a).length == Object.keys(b).length
+          for key of a when key isnt 'parent'
+            console.log a[key], b[key]
+            if typeof(a[key]) is 'object'
+              recur = @is_equal(a[key], b[key])
+            else if a[key] != b[key]
+              return false
+        recur
+
+      # Checks if the tree is terminal (i.e., no children)
+      is_terminal: ->
+        @left is null and @right is null
+
       # Returns number of nodes in the tree
       treeSize: ->
-        if @data is null
-          0
+        if this.is_terminal() is true
+          if @data isnt null 
+            return 1
+          else
+            return 0
+        else if @left is null and @right isnt null
+          1 + @right.treeSize()
+        else if @left isnt null and @right is null
+          1 + @left.treeSize()
         else
-          1 + @left.treeSize + @right.treeSize
+          1 + @left.treeSize() + @right.treeSize()
+
+      # Returns the maximum depth of the tree
+      maxDepth: (curDepth = 0) ->
+        [a, b, c, d] = [0, 0, 0, 0]
+        if @data is null
+          a = curDepth
+          console.log this
+          console.log 0
+        else if @data isnt null and this.is_terminal
+          console.log this
+          console.log 1
+          b = curDepth + 1
+        else if @right is null
+          console.log this
+          console.log 1 + @left.maxDepth
+          c = @left.maxDepth(curDepth + 1)
+        else if @left is null
+          console.log this
+          console.log 1 + @right.maxDepth
+          d = @right.maxDepth(curDepth + 1)
+        return Math.max(a, b, c, d)
 
       # Inserts a single datum in the tree at @data, 
       # or the @data member of the tree located at 
@@ -72,6 +128,7 @@ $ ->
             if @left is null
               @left = new binaryTree(this)
               @left.data = data
+
           else
             console.log "Error inserting #{data} into left child of tree."
         else if pos is 'right'
@@ -106,9 +163,13 @@ $ ->
             @data = null
           else
             console.log "Error deleting #{@data}, results in invalid binary tree."
-      
-      # Checks if the tree is terminal (i.e., no children)
-      is_terminal: ->
-        @left is null and @right is null
 
+    # Insert a new tree starting at the location specified, or at pos = 'right' or pos = 'left'
+    # insertTree: (tree, pos = null) ->
+    #   if pos is 'right'
+    #     @right = @clone(tree)
+    #   else if pos is 'left'
+    #     @left = @clone(tree)
+    #   else
+    #     this = @clone(tree)
 
