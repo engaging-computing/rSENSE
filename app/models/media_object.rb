@@ -19,7 +19,7 @@ class MediaObject < ActiveRecord::Base
 
   validates_presence_of :name, :file
 
-  before_save :sanitize_media
+  before_validation :sanitize_media
   before_save :check_store!
 
   after_destroy :remove_data!
