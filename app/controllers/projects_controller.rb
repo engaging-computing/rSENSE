@@ -289,14 +289,14 @@ class ProjectsController < ApplicationController
                             field_type: get_field_type('Longitude'),
                             name: 'Longitude',
                             unit: 'deg')
-
+    
       unless latitude.save && longitude.save
         flash[:error] = "#{latitude.errors.full_messages}\n"\
           "\n#{longitude.errors.full_messages}"
         redirect_to "/projects/#{@project.id}/edit_fields"
         return
       end
-    elsif field_type != ''
+    elsif !field_type.nil?
       next_name = Field.get_next_name(@project,
                                       get_field_type(params[:new_field]))
       field = Field.new(project_id: @project.id,
@@ -309,7 +309,7 @@ class ProjectsController < ApplicationController
       end
     end
 
-    if field_type == ''
+    if field_type.nil?
       redirect_to project_path(@project), notice: 'Changes to fields saved.'
     else
       redirect_to "/projects/#{@project.id}/edit_fields", notice: 'Field added'

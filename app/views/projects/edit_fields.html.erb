@@ -1,20 +1,25 @@
-                <% if !(@project.fields.any? {|f| f.field_type == LONGITUDE_TYPE or f.field_type == LATITUDE_TYPE}) %>
-                  <option value="Location">Location</option>
-                <% end %>
-
 <% if can_edit?(@project) %>
   <%= form_tag "/projects/#{@project.id}/save_fields", id: 'fields_table' do %>
-    <div class="row">
+    <div class="row" id="selection" data-project_id="<%= @project.id%>">
       <div class="col-md-8 col-md-offset-2">
-        <div class="center">
-          <div class="col-sm-6">
-      	    <button value="Number" class="btn btn-success center" style="width: 125px; margin-top:15px; margin-right: 60px;" form="fields_table" name="new_field" id="new_field">Add Number</button>
-      	    <button value="Text" class="btn btn-success center" style="width: 125px; margin-top:15px;" form="fields_table" name="new_field" id="new_field">Add Text</button>
+        <h1>Setup Fields Manually</h1>
+        <div class="center" id="options">
+          <div class="col-sm-3 col-xs-6">
+      	    <button value="Number" class="btn btn-success center new_field" form="fields_table" name="new_field">Add Number</button>
+      	  	<p class="description">Any number value. "Units" specifies how the value is expressed. e.g. 'Temperature' could have a unit of 'C'</p>
       	  </div>
-      	  <div class="col-md-6">
-      	    <button value="Location" class="btn btn-success center" style="width: 125px;margin-top:15px; margin-right: 60px;" form="fields_table" name="new_field" id="new_field">Add Location</button>
-      	    <button value="Timestamp" class="btn btn-success center" style="width: 125px;margin-top:15px;" form="fields_table" name="new_field" id="new_field">Add Timestamp</button>
+      	  <div class="col-sm-3 col-xs-6">
+      	    <button value="Text" class="btn btn-success center new_field" form="fields_table" name="new_field">Add Text</button>
+      	    <p class="description">Any string value. "Restrictions" are a comma separated list of values that limit input to only predefined values.</p>
       	  </div>
+      	  <div class="col-sm-3 col-xs-6">
+   	        <button value="Timestamp" class="btn btn-success center new_field" form="fields_table" name="new_field" <%= (@project.fields.any? {|f| f.field_type == TIME_TYPE}) ? "disabled" : ""%>>Add Timestamp</button>
+      	    <p class="description">Data and time values in the form yyyy/mm/dd hh:mm:ss. Limit 1 per project.</p>
+      	  </div>
+      	  <div class="col-sm-3 col-xs-6">
+      	      <button value="Location" id="location" class="btn btn-success center new_field" form="fields_table" name="new_field" <%= (@project.fields.any? {|f| f.field_type == LONGITUDE_TYPE or f.field_type == LATITUDE_TYPE}) ? "disabled" : ""%>>Add Location</button>
+      	      <p class="description">Latitude and longitude values in the form 'latitude, longitude' between -90 and 90. Limit 1 per project.</p>
+          </div>
         </div>
       </div>
 	</div>
@@ -25,9 +30,9 @@
             <tr>
               <th>Name</th>
               <th>Type</th>
-              <th>Units</th>
-              <th>Restrictions *</th>
-              <th>Delete Field **</th>
+              <th class="units">Units</th>
+              <th class="restrictions">Restrictions</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -35,42 +40,31 @@
               <tr class="<%= (field.field_type == get_field_type("Latitude") || field.field_type == get_field_type("Longitude")) ? "location" : ""%>">
                 <td><input class="form-control" type="text" name="<%=field.id%>_name" value="<%= (defined?(@tmp_save) && @tmp_save.has_key?("#{field.id}_name")) ? @tmp_save["#{field.id}_name"] : field.name%>"></td>
                 <td><%=get_field_name(field.field_type)%></td>
-                <td>
-                  <% if field.field_type == get_field_type("Number")%>
+                <td class="units">
+                  <%if field.field_type == get_field_type("Number")%>
                     <input class="input-small form-control" type="text" name="<%=field.id%>_unit" value="<%=field.unit%>">
-                  <% else %>
-                    <input class="input-small form-control" type="text" name="<%=field.id%>_unit" value="<%=field.unit%>" readonly disabled>
                   <% end %>
                 </td>
-                <td>
+                <td class="restrictions">
                   <%if field.field_type == get_field_type("Text")%>
                     <input class="input-small form-control" type="text" name="<%=field.id%>_restrictions" value="<%=field.restrictions.nil? ? "" : field.restrictions.join(',')%>">
                   <% end %>
                 </td>
-                <td class="center">
-                  <button class="btn btn-danger field_delete" href="/fields/<%=field.id%>" fid="<%=field.id%>" <%= @project.data_sets.count > 0 ? "disabled" : ""%>>
-                    <i class="fa fa-times"></i> Delete
-                  </button>
+                <td>
+                  <a class="field_delete" href="/fields/<%=field.id%>" fid="<%=field.id%>" <%= @project.data_sets.count > 0 ? "disabled" : ""%>>
+                    <i class="fa fa-close slick-delete"></i>
+                  </a>
                 </td>
               </tr>
             <% end %>
           </tbody>
-        </table>  
+        </table>
       </div>
     </div>
     <div class="row">
-      <div class="col-md-8 col-md-offset-2">
-        <i>* Restrictions are a comma separated list of values that limit user input to only the predefined values.</i><br/>
-        <i>&nbsp;&nbsp;e.g. High School, Middle School, Elementary School, College</i><br/><br/>
+      <div class="col-lg-3 col-lg-offset-6" style="float: right;">
+        <%= submit_tag 'Save', class: 'btn btn-primary', id: 'fields_form_submit' %>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-md-8 col-md-offset-2">
-        <i>** Fields can't be deleted if the project contains data sets. </i>
-      </div>
-    </div>
-    <div class="col-lg-3 col-lg-offset-6">
-      <%= submit_tag "Save and Return", class: 'btn btn-default', id: 'fields_form_submit' %>
-    </div>
+    </div> 
   <% end %>  
-<% end %>  
+<% end %>

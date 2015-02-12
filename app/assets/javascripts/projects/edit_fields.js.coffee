@@ -1,14 +1,5 @@
 $ ->
-  if namespace.controller is "projects" and namespace.action is "edit_fields"
-    ($ '#new_field').change ->
-      ($ '#fields_form_submit').click()
-
-    ($ '#fields_table').keypress (e) ->
-      code = e.keyCode || e.which
-      if code == 13
-        e.preventDefault()
-        ($ '#fields_form_submit').click()
-      
+  if namespace.controller is "projects" and namespace.action is "edit_fields"   
     ($ '.field_delete').click (e) ->
       e.preventDefault()
       root = ($ @).parents('tr')
@@ -24,6 +15,8 @@ $ ->
               ($ this).remove()
           else
             root.remove()
+          
+          $('#option').load(document.URL +  ' #option')
             
 
         error:(msg) ->

@@ -12,7 +12,7 @@ class FieldsController < ApplicationController
 
     respond_to do |format|
       format.html { render text: @field.to_json }
-      format.json { render json: @field.to_hash(recur) }
+      format.json { render json: @field.to_hash(recur) }      
     end
   end
 

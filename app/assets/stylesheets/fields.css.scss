@@ -1,3 +1,31 @@
 // Place all the styles related to the Fields controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.field_delete {
+  color: #F00;
+  display: block;
+  margin: 5px auto 0;
+  width: 30px;
+  text-align: center;
+}
+
+.save-and-return {
+  float: right;
+}
+
+@media (max-width: 770px) {
+  .description, .units, .restrictions {
+    display: none;
+  }
+}
+
+.description {
+  text-align: left;
+}
+
+.new_field {
+  width: 125px;
+  margin-top:15px !important;
+  margin-bottom: 10px !important;
+}
