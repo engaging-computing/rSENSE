@@ -1,33 +1,37 @@
 <div class="row-fluid">
   <% @contributions.each do |contribution| %>
-  
-      <div class="span4">
-        <div class="well">
-        
-          <% case contribution %>
-          <% when DataSet, Visualization %>
-                  
-            <h3><%= link_to contribution.title, url_for(contribution) %></h3>
-            <b>Created: </b><%= time_ago_in_words(contribution.created_at)%> ago, on <%= contribution.created_at.strftime("%B %d, %Y")%>
-          
-          <% when Project %>
-                  
-            <%if contribution.featured_media_id.nil? == false %><img src=<%=MediaObject.find(contribution.featured_media_id).src%>></img><%end%>
-            <h3><%= link_to contribution.title, url_for(contribution) %></h3>
-            <b>Created: </b><%= time_ago_in_words(contribution.created_at)%> ago, on <%= contribution.created_at.strftime("%B %d, %Y")%>
-          
-          <% when MediaObject %>
-          
-            <h3><%= link_to contribution.title, url_for(contribution) %></h3>
-            <b>Created: </b><%= time_ago_in_words(contribution.created_at)%> ago, on <%= contribution.created_at.strftime("%B %d, %Y")%>
-          
-          <% when Tutorial %>
-  
-            <h3><%= link_to contribution.title, url_for(contribution) %></h3>
-            <b>Created: </b><%= time_ago_in_words(contribution.created_at)%> ago, on <%= contribution.created_at.strftime("%B %d, %Y")%>
-          
-          <%end%>
-        </div>
+    <div class="span4">
+      <div class="well">
+        <% case contribution %>
+        <% when DataSet, Visualization %>
+          <h3>
+            <%= link_to contribution.title.html_safe, url_for(contribution) %>
+          </h3>
+          <b>Created: </b>
+          <%= time_ago_in_words(contribution.created_at)%> ago, on <%= contribution.created_at.strftime("%B %d, %Y") %>
+        <% when Project %>
+          <% if contribution.featured_media_id.nil? == false %>
+            <img src="<%= MediaObject.find(contribution.featured_media_id).src" %>/>
+          <% end %>
+          <h3>
+            <%= link_to contribution.title.html_safe, url_for(contribution) %>
+          </h3>
+          <b>Created: </b>
+          <%= time_ago_in_words(contribution.created_at)%> ago, on <%= contribution.created_at.strftime("%B %d, %Y")%>
+        <% when MediaObject %>
+          <h3>
+            <%= link_to contribution.title.html_safe, url_for(contribution) %>
+          </h3>
+          <b>Created: </b>
+          <%= time_ago_in_words(contribution.created_at)%> ago, on <%= contribution.created_at.strftime("%B %d, %Y")%>
+        <% when Tutorial %>
+          <h3>
+            <%= link_to contribution.title.html_safe, url_for(contribution) %>
+          </h3>
+          <b>Created: </b>
+          <%= time_ago_in_words(contribution.created_at)%> ago, on <%= contribution.created_at.strftime("%B %d, %Y")%>
+        <% end %>
       </div>
+    </div>
   <% end %>
 </div>

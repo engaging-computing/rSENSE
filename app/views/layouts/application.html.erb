@@ -48,7 +48,7 @@
                 <li class="divider"></li>
                 <% @featured_tutorials = Tutorial.where("featured = ? and hidden = ?",  true, false).order("title ASC").limit(10) %>
                 <% @featured_tutorials.each do |tutorial| %>
-                <li><%= link_to tutorial.title, tutorial_path(tutorial)%></li>
+                <li><%= link_to tutorial.title.html_safe, tutorial_path(tutorial)%></li>
                 <% end %>
               </ul>
             </li>

@@ -1,18 +1,14 @@
-
 <% if !@featured_3.empty? %>
   <h4 style="text-align:center;margin-top:50px;">Featured Experiments</h4>
 <% end %>
-
-<% @featured_3.all.each do |f|%>
-
+<% @featured_3.all.each do |f| %>
   <div class="hero-unit">
-    <h5><%=link_to f.title, project_path(f)%></h5>
-    <% if f.media_objects.length > 0%>
+    <h5><%= link_to f.title.html_safe, project_path(f) %></h5>
+    <% if f.media_objects.length > 0 %>
       <image src="<%=f.media_objects[0].src%>">
-    <%else%>
+    <% else %>
       Owner: <%=link_to f.owner.name, user_path(f)%> <br>
       Data Sets: <%=f.data_sets.count%>
-    <%end%>
+    <% end %>
   </div>
-  
 <% end %>

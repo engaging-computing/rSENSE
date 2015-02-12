@@ -8,7 +8,7 @@
 <% if can_edit?(@data_set) %>
 
   <div class="full_width_edit" style="font-size:2em;"><%= data_set_edit_helper 'title', can_edit?(@data_set), false, "/data_sets/#{@data_set.id}" %></div>
-  <div><strong>Project:</strong> <%= link_to @project.title, project_path(@project.id)%></div>
+  <div><strong>Project:</strong> <%= link_to @project.title.html_safe, project_path(@project.id)%></div>
 
   <div class="row">
     <div class="span12 edit_table_control pull-right">
@@ -38,5 +38,5 @@
 <%else%>
 
   You are not authorized to view this page.
-  
+
 <%end%>
