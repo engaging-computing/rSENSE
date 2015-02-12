@@ -247,6 +247,28 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert keys_match(response, @data_keys_extended), 'Keys are missing'
   end
 
+  test 'test second fields data is not trucated if longer than first fields' do
+    pid = @dessert_project.id
+    post "/api/v1/projects/#{pid}/jsonDataUpload",
+
+          title: 'Awesome Data',
+          email: 'kcarcia@cs.uml.edu',
+          password: '12345',
+          data:
+            {
+              '20' => ['1'],
+              '21' => ['1', '2', '3', '4', '5']
+            }
+    assert_response :success
+    data_uploaded = parse(response)['data']
+
+    assert data_uploaded[0]['21'] == '1', 'First point should be 1'
+    assert data_uploaded[1]['21'] == '2', 'First point should be 2'
+    assert data_uploaded[2]['21'] == '3', 'First point should be 3'
+    assert data_uploaded[3]['21'] == '4', 'First point should be 4'
+    assert data_uploaded[4]['21'] == '5', 'First point should be 5'
+  end
+
   test 'create data set with contribution_key' do
     pid = @dessert_project.id
     post "/api/v1/projects/#{pid}/jsonDataUpload",
@@ -584,6 +606,69 @@ class ApiV1Test < ActionDispatch::IntegrationTest
             '22' => ['1002']
           }
     assert_response :unauthorized
+  end
+
+  test 'add a key to a project' do
+    post '/api/v1/projects',
+
+    email: 'kcarcia@cs.uml.edu',
+    password: '12345'
+
+    assert_response :success
+    id = parse(response)['id']
+
+    post '/api/v1/projects/3/add_key',
+        email: 'kcarcia@cs.uml.edu',
+        password: '12345',
+        contrib_key:
+          {
+            'name' => 'key_name',
+            'project_id' => id,
+            'key' => 'key'
+          }
+    assert_response :created
+  end
+
+  test 'add a key to a project unauthorized' do
+    post '/api/v1/projects',
+
+    email: 'kcarcia@cs.uml.edu',
+    password: '12345'
+
+    assert_response :success
+    id = parse(response)['id']
+
+    post '/api/v1/projects/3/add_key',
+        email: 'nixon@whitehouse.gov',
+        password: '12345',
+        contrib_key:
+          {
+            'name' => 'key_name',
+            'project_id' => id,
+            'key' => 'key'
+          }
+    assert_response :unauthorized
+  end
+
+  test 'add a key to a project unprocessable' do
+    post '/api/v1/projects',
+
+    email: 'kcarcia@cs.uml.edu',
+    password: '12345'
+
+    assert_response :success
+    id = parse(response)['id']
+
+    post '/api/v1/projects/3/add_key',
+        email: 'kcarcia@cs.uml.edu',
+        password: '12345',
+        wrong_name:
+          {
+            'wrong_name2' => 'key_name',
+            'project_id' => id,
+            'key' => 'key'
+          }
+    assert_response :unprocessable_entity
   end
 
   private
