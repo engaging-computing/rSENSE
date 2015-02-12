@@ -20,7 +20,7 @@ class Visualization < ActiveRecord::Base
 
   alias_attribute :name, :title
 
-  before_save :sanitize_viz
+  before_validation :sanitize_viz
   before_save :summernote_media_objects
 
   belongs_to :user

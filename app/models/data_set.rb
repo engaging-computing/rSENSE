@@ -17,7 +17,7 @@ class DataSet < ActiveRecord::Base
   alias_attribute :name, :title
   alias_attribute :owner, :user
 
-  before_save :sanitize_data_set
+  before_validation :sanitize_data_set
 
   after_create :update_project
 
