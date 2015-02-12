@@ -13,14 +13,20 @@ uploadSettings =
     else
       showError 'An unknown error has occured'
   successEdit: (data, textStatus, jqXHR) ->
+    console.log data
+    console.log textStatus
+    console.log jqXHR
     window.location = data.redirect
   successEntry: (data, textStatus, jqXHR) ->
     window.location = data['displayURL']
 
-Grid = (cols, data) ->
+Grid = (cols, data, submit) ->
   view = null
   grid = null
+  popover = null
+  popoverMsg = 'hi'
   currID = 0
+  actions = []
 
   initialize = ->
     # add the delete button to each row
@@ -53,53 +59,55 @@ Grid = (cols, data) ->
     view.setItems data
 
   subscribe_events = ->
-    $(window).resize on_window_resize()
-    $('.edit_table_add').click on_add_row_click()
-    $('.edit_table_save').click on_save_click()
-    view.onRowsChanged.subscribe on_rows_changed()
-    view.onRowCountChanged.subscribe on_row_count_changed()
+    $(window).resize resize_window
 
-    setTimeout on_start(), 1
-    $(window).trigger 'resize'
+    $(document).click (e) ->
+      if $(e.target).closest('.slick-row').length == 0
+        grid.getEditorLock().commitCurrentEdit()
 
-  on_start = ->
-    ->
-      $('.slick-cell.l0.r0').first().trigger 'click'
-
-  on_window_resize = ->
-    cont = $('#slickgrid-container')
-    row1 = $('#row-slickgrid-1').outerHeight()
-    row2 = $('#row-slickgrid-2').outerHeight()
-    ->
-      newHeight = $(window).height() - row1 - row2
-      cont.height newHeight
-      grid.resizeCanvas()
-
-  on_add_row_click = ->
-    ->
+    $('.edit_table_add').click ->
       if $('.edit_table_save').hasClass 'disabled'
         return
       add_row()
 
-  on_save_click = ->
+    $('.edit_table_save').click queue_save_grid
 
-  on_cell_click = ->
-    (e, args) ->
-      cell = grid.getCellFromEvent e
-      if cell.cell == grid.getColumns.length - 1
-        delete_row()
-        if grid.getDataLength() == 0
-          add_row()
+    view.onRowsChanged.subscribe (e, args) ->
+      grid.invalidateRow args.rows
+      grid.render()
 
-  on_row_count_changed = ->
-    (e, args) ->
+    view.onRowCountChanged.subscribe (e, args) ->
       grid.updateRowCount()
       grid.render()
 
-  on_rows_changed = ->
-    (e, args) ->
-      grid.invalidateRow args.rows
-      grid.render()
+    grid.onClick.subscribe (e, args) ->
+      cell = grid.getCellFromEvent e
+      if cell.cell == grid.getColumns().length - 1
+        queue_delete_row(cell.row)
+        if grid.getDataLength() == 0
+          add_row()
+
+    grid.onAfterCellEditorDestroy.subscribe ->
+      hide_popover()
+      process_actions()
+
+    grid.onValidationError.subscribe (e, args) ->
+      show_popover $(args.cellNode), args.validationResults.msg
+      actions = []
+
+    $(window).trigger 'resize'
+
+    setTimeout ->
+      $('.slick-cell.l0.r0').first().trigger 'click'
+    , 1
+
+  resize_window = ->
+    cont = $('#slickgrid-container')
+    row1 = $('#row-slickgrid-1').outerHeight()
+    row2 = $('#row-slickgrid-2').outerHeight()
+    newHeight = $(window).height() - row1 - row2
+    cont.height newHeight
+    grid.resizeCanvas()
 
   get_json = ->
     buckets = {}
@@ -134,95 +142,85 @@ Grid = (cols, data) ->
           buckets[j].push x[j]
     buckets
 
+  process_actions = ->
+    temp = actions
+    actions = []
+    for x in temp
+      x()    
+
   add_row = ->
     newRow = {id: currID}
     currID += 1
     for x in cols
       newRow[x.field] = ''
-
     view.addItem newRow
     grid.scrollRowIntoView view.getLength()
 
-  delete_row = (row) ->
-    item = view.getItem row
-    view.deleteItem item.id
-    grid.invalidate()
-
-
-  # subscribing to events
-  '''
-  grid.onClick.subscribe (e, args) ->
-    cell = grid.getCellFromEvent e
-    if cell.cell == grid.getColumns().length - 1
-      grid.getEditorLock().commitCurrentEdit()
-      grid.resetActiveCell()
-      item = view.getItem cell.row
+  queue_delete_row = (row) ->
+    delete_row = () ->
+      item = view.getItem row
       view.deleteItem item.id
       grid.invalidate()
+      if view.getLength() == 0
+        add_row()
 
-      if grid.getDataLength() == 0
-        fields = {id: currId}
-        currId += 1
-        for x in cols
-          fields[x.field] = ''
-        view.addItem fields
+    if grid.getCellEditor() != null
+      actions.push delete_row
+    else
+      delete_row()
 
-  $('.edit_table_save').click ->
+  queue_save_grid = ->
+    save_grid = ->
+      # check if we've already started saving
+      if $('.edit_table_save').hasClass 'disabled'
+        return
 
-    # commit the current edit regardless of whether or not we can actually upload
-    grid.getEditorLock().commitCurrentEdit()
-    grid.resetActiveCell()
+      # get title and grid contents
+      submit['data'] =
+        data: get_json()
+        title: if uploadSettings.pageName == 'entry' then $('#data_set_name').val()
 
-    # check if we've already started saving
-    if $('.edit_table_save').hasClass 'disabled'
-      return
+      hasData = Object.keys(submit['data']['data']).reduce (l, r) ->
+        nonEmpty = submit['data']['data'][r].filter (i) -> i != ''
+        nonEmpty.length != 0 or l
+      , false
 
-    # get title and grid contents
-    title = if uploadSettings.pageName == 'entry' then $('#data_set_name').val() else ''
-    formattedData = ajaxifyGrid view
+      # validate presence of data
+      unless hasData
+        showError 'Datasets require data'
+        return
 
-    # validate presence of data
-    for i of formattedData
-      for j in formattedData[i]
-        unless j == ''
-          hasData = true
-          break
-      if hasData
-        break
-          
-    unless hasData
-      showError 'Datasets require data'
-      return
+      # validate presence of title
+      if uploadSettings.pageName == 'entry' and title == ''
+        showError 'Datasets require a title'
+        return
 
-    # validate presence of title
-    if uploadSettings.pageName == 'entry' and title == ''
-      showError 'Datasets require a title'
-      return
+      # if we've got this far, we have a valid upload, so turn off the buttons
+      $('.edit_table_add, .edit_table_save').addClass 'disabled'
+      $('.edit_table_save').text 'Saving...'
 
-    # if we've got this far, we have a valid upload, so turn off the buttons
-    $('.edit_table_add, .edit_table_save').addClass 'disabled'
-    $('.edit_table_save').text 'Saving...'
+      $.ajax submit
 
-    if uploadSettings.pageName == 'edit'
-      $.ajax
-        url: "#{uploadSettings["urlEdit"]}"
-        type: "#{uploadSettings["methodEdit"]}"
-        dataType: "#{uploadSettings.dataType}"
-        data:
-          data: formattedData
-        error: uploadSettings.error
-        success: uploadSettings.successEdit
-    else if uploadSettings.pageName == 'entry'
-      $.ajax
-        url: "#{uploadSettings["urlEntry"]}"
-        type: "#{uploadSettings["methodEntry"]}"
-        dataType: "#{uploadSettings.dataType}"
-        data:
-          data: formattedData
-          title: title
-        error: uploadSettings.error
-        success: uploadSettings.successEntry
-  '''
+    if grid.getCellEditor() != null
+      actions.push save_grid
+    else
+      save_grid()
+
+  show_popover = (form, msg) =>
+    popoverMsg = msg
+    unless popover?
+      popover = form.popover
+        container: 'body'
+        content: -> popoverMsg
+        html: true
+        placement: 'bottom'
+        trigger: 'manual'
+    popover.data('bs.popover').setContent()
+    popover.popover 'show'
+
+  hide_popover = ->
+    if popover?
+      popover.popover 'hide'
 
   # this is needed because slickgrid opens after this function completes
   initialize()
@@ -240,16 +238,24 @@ showError = (error) ->
       #{error}
     </div>"""
 
-ajaxifyGrid = (view) ->
-
 IS.onReady 'data_sets/edit', ->
   uploadSettings.pageName = 'edit'
   cols = $('#slickgrid-container').data 'cols'
   data = $('#slickgrid-container').data 'data'
-  grid = new Grid cols, data
+  grid = new Grid cols, data,
+    url: "#{uploadSettings["urlEdit"]}"
+    type: "#{uploadSettings["methodEdit"]}"
+    dataType: "#{uploadSettings.dataType}"
+    error: uploadSettings.error
+    success: uploadSettings.successEdit
 
 IS.onReady 'data_sets/manualEntry', ->
   uploadSettings.pageName = 'entry'
   cols = $('#slickgrid-container').data 'cols'
   data = $('#slickgrid-container').data 'data'
-  grid = new Grid cols, data
+  grid = new Grid cols, data,
+    url: "#{uploadSettings["urlEntry"]}"
+    type: "#{uploadSettings["methodEntry"]}"
+    dataType: "#{uploadSettings.dataType}"
+    error: uploadSettings.error
+    success: uploadSettings.successEntry
