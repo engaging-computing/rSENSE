@@ -2,7 +2,7 @@
      data-value="<%= value %>">
   <div class='info-show-text'>
     <div class='info_val word-wrap' style="font-weight: bold">
-      <span class='info-show-value'><%= raw(value) %></span>
+      <span class='info-show-value'><%= value.html_safe %></span>
       <% if can_edit %>
       <a class="info_edit_link" href="<%= href %>" style="color:black">
         <i style="font-size:0.8em" class="fa fa-edit"
@@ -14,7 +14,7 @@
   <% if can_edit %>
   <div class='input-group info-edit-form'>
     <input type='text' class='info_edit_box form-control'
-           name='info_edit_value' value='<%= raw(value) %>'>
+           name='info_edit_value' value='<%= value.html_safe %>'>
     <span class='input-group-btn info_save_link'>
       <button class="btn btn-success info-save-button" type="button">
         <i class='fa fa-floppy-o icon-white'></i>
