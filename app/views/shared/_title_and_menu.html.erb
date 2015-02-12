@@ -1,6 +1,7 @@
 <div id="title-and-menu-title" class="h1">
-  <%= raw(obj.title) %>
-  <div class="edit_menu" data-field='title' data-value='<%= raw(obj.title) %>'>
+  <%= obj.title.html_safe %>
+  <div class="edit_menu" data-field='title'
+       data-value='<%= obj.title.html_safe %>'>
     <div class="btn-group" style="font-size:14px; vertical-align: middle;">
       <a class="btn btn-default btn-small dropdown-toggle menu_edit_link"
          data-toggle="dropdown" href="#">
@@ -44,7 +45,8 @@
 </div>
 <%= form_for obj do |ff| %>
   <div id="title-and-menu-edit" style="font-size: 2em">
-    <%= ff.text_field :title, style: 'width: 35%', :value => raw(obj.title) %>
+    <%= ff.text_field :title, style: 'width: 35%',
+        :value => obj.title.html_safe %>
     <button class="btn btn-success" type="submit">
       <i class='fa fa-floppy-o icon-white'></i>
     </button>
