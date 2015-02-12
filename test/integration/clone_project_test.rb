@@ -12,8 +12,9 @@ class CloneProjectTest < ActionDispatch::IntegrationTest
     finish
   end
 
-  def set_cell(ii, val)
-    page.execute_script "$($('#manualTable input')[#{ii}]).val(#{val})"
+  def set_cell(row, col, val)
+    find(:css, ".slick-row:nth-child(#{row + 1})>.slick-cell.l#{col}").click
+    find(:css, ".slick-row:nth-child(#{row + 1})>.slick-cell.l#{col}>input").set val
   end
 
   # Note, currectly does not verify data is cloned correct, just that the sets are cloned
@@ -35,7 +36,7 @@ class CloneProjectTest < ActionDispatch::IntegrationTest
     click_on 'Manual Entry'
     fill_in 'Dataset Name', with: 'I Like Clones'
     find('#edit_table_add_2').click
-    set_cell(0, 47)
+    set_cell(0, 0, 47)
     find('#edit_table_save_2').click
 
     assert page.has_content?('I Like Clones'), 'Save should succeed'

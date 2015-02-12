@@ -4,7 +4,7 @@ class VisualizationsController < ApplicationController
 
   skip_before_filter :authorize, only: [:show, :displayVis, :index, :embedVis]
 
-  after_action :allow_iframe, only: [:show]
+  after_action :allow_iframe, only: [:show, :displayVis]
 
   # GET /visualizations
   # GET /visualizations.json
@@ -127,8 +127,10 @@ class VisualizationsController < ApplicationController
 
     respond_to do |format|
       if @visualization.save
-        mo.visualization_id = @visualization.id
-        mo.save!
+        unless mo.id.nil?
+          mo.visualization_id = @visualization.id
+          mo.save!
+        end
 
         flash[:notice] = 'Visualization was successfully created.'
         format.html { redirect_to @visualization }
