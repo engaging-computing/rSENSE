@@ -317,13 +317,8 @@ $ ->
 
           if yFields.length == @configs.tableFields.length
             $('#select-all-y').prop("checked", true)
-            $('#select-all-y').prop("indeterminate", false)
-          else if @configs.tableFields.length > 0
-            $('#select-all-y').prop("checked", false)
-            $('#select-all-y').prop("indeterminate", true)
           else
             $('#select-all-y').prop("checked", false)
-            $('#select-all-y').prop("indeterminate", false)
 
           @delayedUpdate()
 
