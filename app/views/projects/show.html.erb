@@ -140,7 +140,7 @@
                     <td style="max-width:60px"><div class="truncate"><%= link_to s.owner.name, user_path(s.owner) %></div></td>
                   <% end %>
                     <td style="max-width:200px">
-                      <div class="truncate dset" title="Created <%=s.created_at.strftime("%B %d, %Y")%>"><%= link_to raw(s.title), "/projects/#{params[:id]}/data_sets/#{s.id}" %></div>
+                      <div class="truncate dset" title="Created <%=s.created_at.strftime("%B %d, %Y")%>"><%= link_to s.title.html_safe, "/projects/#{params[:id]}/data_sets/#{s.id}" %></div>
                     </td>
                     <td>
                       <div class="controls" style="">
