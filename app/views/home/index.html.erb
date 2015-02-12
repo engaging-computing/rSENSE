@@ -10,19 +10,34 @@
     <% if @featured_vis != nil%>
       <div class="visible-desktop">
         <div class="col-md-4">
-          <h2><%= link_to raw(@featured_vis.title), visualization_path(@featured_vis)%></h2>
-          <b>Created: </b><%= time_ago_in_words(@featured_vis.created_at)%> ago, on <%=@featured_vis.created_at.strftime("%B %d, %Y")%><br />
-          <b>From Project: </b><%= link_to raw(@featured_vis.project.title), project_path(@featured_vis.project)%><br />
-          <b>By: </b><%= link_to @featured_vis.owner.name, user_path(@featured_vis.owner)%>
+          <h2>
+            <%= link_to @featured_vis.title.html_safe,
+                visualization_path(@featured_vis)%>
+          </h2>
+          <b>Created: </b>
+          <%= time_ago_in_words(@featured_vis.created_at) + ' ' %>
+          ago, on <%=@featured_vis.created_at.strftime("%B %d, %Y") %>
+          <br/>
+          <b>From Project: </b>
+          <%= link_to @featured_vis.project.title.html_safe,
+              project_path(@featured_vis.project)%>
+          <br/>
+          <b>By: </b>
+          <%= link_to @featured_vis.owner.name,
+              user_path(@featured_vis.owner) %>
           <%= raw @featured_vis.content %>
-          <br />
-          <a href="visualizations" class="btn btn-primary">See More Visualizations</a>
+          <br/>
+          <a href="visualizations" class="btn btn-primary">
+            See More Visualizations
+          </a>
         </div>
         <div class="col-md-8">
-          <iframe scrolling="no" style="width:100%;height:400px;border:0px;" src="/visualizations/<%=@featured_vis.id%>?presentation=true"></iframe>
+          <iframe scrolling="no" style="width:100%;height:400px;border:0px;"
+                  src="/visualizations/<%=@featured_vis.id%>?presentation=true">
+          </iframe>
         </div>
       </div>
-    <%end%>
+    <% end %>
   </div>
 
   <div class="row">
@@ -59,21 +74,33 @@
             <a href='<%= news_path n %>'>
               <div class="news_featured_image">
                 <% mo = MediaObject.find(n.featured_media_id) %>
-                <div class="item-image" style="<%= "background-image:url(#{mo.src})"%>"></div>
+                <div class="item-image"
+                     style="<%= "background-image:url(#{mo.src})"%>">
+                </div>
               </div>
             </a>
           <% end %>
-
           <div class="item-desc">
-            <span class="item_title"><%= raw(n.title) %></span><br/>
-            <span style="font-size:0.8em">Written on <%=n.created_at.strftime("%B %d, %Y")%></span><br/><br/>
-            <div class="news_description"><%= n.summary%><br/> </div>
-            <div class="article_link"> <%= link_to "Read More", news_path(n) %> </div>
+            <span class="item_title">
+              <%= n.title.html_safe %>
+            </span>
+            <br/>
+            <span style="font-size:0.8em">
+              Written on <%=n.created_at.strftime("%B %d, %Y")%>
+            </span>
+            <br/>
+            <br/>
+            <div class="news_description">
+              <%= n.summary%>
+              <br/>
+            </div>
+            <div class="article_link">
+              <%= link_to "Read More", news_path(n) %>
+            </div>
           </div>
         </div>
       <% end %>
     </div>
-
     <div class="col-md-3">
       <div class="item">
         <div class="item-desc">
@@ -86,35 +113,38 @@
     </div>
   </div>
 </div>
-
 <div class="visible-xs visible-sm">
-  <%if @featured_projects.first != nil%>
+  <% if @featured_projects.first != nil %>
     <% i = @featured_projects.first %>
     <div>
-      <%if i.featured_media_id != nil%>
-        <%= link_to image_tag(MediaObject.find(i.featured_media_id).src, :style=>'max-height:150px; float:right; padding: 5px;'), project_path(i) %>
+      <% if i.featured_media_id != nil %>
+        <%= link_to image_tag(MediaObject.find(i.featured_media_id).src,
+            style: 'max-height:150px; float:right; padding: 5px;'),
+            project_path(i) %>
       <% end %>
-      <h4><%= link_to raw(i.title), project_path(i) %></h4>
-      <span style="font-weight:bold">Owner:</span> <%= link_to i.owner.name, user_path(i.owner) %><br/>
-      <span style="font-weight:bold">Created:</span> <%= i.to_hash(false)[:timeAgoInWords] %> ago
+      <h4><%= link_to i.title.html_safe, project_path(i) %></h4>
+      <span style="font-weight:bold">Owner: </span>
+      <%= link_to i.owner.name, user_path(i.owner) %><br/>
+      <span style="font-weight:bold">Created: </span>
+      <%= i.to_hash(false)[:timeAgoInWords] %> ago
       <div style="margin-top:20px;"><%= mobileParse(i) %></div>
       <br><a href="projects" class="btn btn-primary">See More Projects</a>
     </div>
-  <%end%>
-    <div style="margin-top:20px;">
-      <h4>iSENSE Mobile Apps</h4>
-      <p>Download official apps to use with iSENSE.</p>
-      <div class="mobileButtonTable">
-        <div class="mobileButtonCell">
-          <a href="https://play.google.com/store/apps/developer?id=Engaging+Computing+Group,+UML" class="btn btn-primary">
-            <%= image_tag "icon-android.png" %>
-          </a>
-        </div>
-        <div class="mobileButtonCell">
-          <a class="btn btn-primary disabled">
-            <%= image_tag "icon-apple.png" %>
-          </a>
-        </div>
+  <% end %>
+  <div style="margin-top:20px;">
+    <h4>iSENSE Mobile Apps</h4>
+    <p>Download official apps to use with iSENSE.</p>
+    <div class="mobileButtonTable">
+      <div class="mobileButtonCell">
+        <a href="https://play.google.com/store/apps/developer?id=Engaging+Computing+Group,+UML" class="btn btn-primary">
+          <%= image_tag "icon-android.png" %>
+        </a>
+      </div>
+      <div class="mobileButtonCell">
+        <a class="btn btn-primary disabled">
+          <%= image_tag "icon-apple.png" %>
+        </a>
       </div>
     </div>
+  </div>
 </div>

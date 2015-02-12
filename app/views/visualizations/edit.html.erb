@@ -1,7 +1,7 @@
 <% if @cur_user.admin%>
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h1>Editing: <%= raw(@visualization.title) %></h1>
+      <h1>Editing: <%= @visualization.title.html_safe %></h1>
     </div>
     <div class="panel-body">
       <%= render 'form' %>
