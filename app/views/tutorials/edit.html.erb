@@ -1,11 +1,11 @@
 <% if @cur_user.admin%>
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h1>Editing: <%=@tutorial.title%></h1>
+      <h1>Editing: <%= @tutorial.title.html_safe %></h1>
     </div>
     <div class="panel-body">
       <%= render 'form' %>
-    </div>  
+    </div>
   </div>
 
   <div class="panel panel-default panel-danger">
@@ -26,13 +26,7 @@
         <span class="help-block">If you delete a tutorial it will be gone forever.</span>
       </div>
     </div>
-  </div>  
+  </div>
 <%else%>
   You are not authorized to view this page.
-<%end%> 
-
-
-
-
-
-
+<%end%>
