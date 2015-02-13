@@ -18,13 +18,14 @@
       <div class="panel panel-default">
 
         <div class="panel-heading">
-          <h1>Cloning: <%= @project.title %></h1>
+          <h1>Cloning: <%= @project.title.html_safe %></h1>
         </div>
 
         <div class="panel-body">
           <div class="form-group">
             <%= label_tag(:name, "Title:") %>
-            <%= text_field_tag :project_name, @project.title + " (clone)",
+            <%= text_field_tag :project_name,
+                @project.title.html_safe + " (clone)",
                 class: "form-control", autofocus: true %>
           </div>
 

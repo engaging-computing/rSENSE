@@ -22,8 +22,7 @@
 
 <div class="row">
   <% @news.each do |n| %>
-    <%= render 'shared/article_box', {image_id: n.featured_media_id, path: news_path(n), title: n.title,
+    <%= render 'shared/article_box', {image_id: n.featured_media_id, path: news_path(n), title: n.title.html_safe,
       brief: n.summary, content: n.content, date: n.created_at.strftime("%B %d %Y"), width: 12} %>
   <% end %>
 </div>
-

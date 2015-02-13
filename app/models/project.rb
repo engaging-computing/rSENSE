@@ -9,7 +9,7 @@ class Project < ActiveRecord::Base
   validates_presence_of :user_id
 
   validates :title, length: { maximum: 128 }
-  before_save :sanitize_project
+  before_validation :sanitize_project
   before_save :summernote_media_objects
   has_many :fields
   has_many :data_sets, -> { order('created_at desc') }
