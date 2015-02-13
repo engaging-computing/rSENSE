@@ -5,7 +5,6 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
 </span>
 <![endif]-->
 <!-- Begin Homepage -->
-<% require 'execjs'%>
 
 <div id ="carousel-container" class="row">
   <div id="myCarousel" class="carousel slide" data-ride="carousel">
@@ -124,7 +123,7 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
       <!---Featured image -->
       <div class=" col-lg-8 col-md-12 col-sm-12 col-xs-12">
         <hr class="featurette-divider teachers-love-isense-seperator hidden-lg" id="scroll-4" />
-        <img src="<%= image_path 'feature-histogram.png' %>" id="main-image-featurette" class="featurette-image" alt="Featured Histogram">
+        <img src="<%= image_path 'feature-histogram.png' %>" id="main-image-featurette" class="featurette-image hidden-xs" alt="Featured Histogram">
         <hr class="featurette-divider teachers-love-isense-seperator hidden-lg hidden-md hidden-sm hidden-xs" />
       </div>
       <!---End Featured Image-->

@@ -311,7 +311,8 @@
 
 .home-controller.index-action{  
   div.container.mainContent{
-    width:100% !important ; 
+    width:100%;
+    min-width:738px; 
     body {
       padding-bottom: 40px;
       color: #5a5a5a;
@@ -339,8 +340,9 @@
       margin: 0 auto;
     }
     .carousel {
-      min-height: 500px;
-      height: 90vh;
+      min-height: 718px !important;
+      min-width: 718px !important;
+      height: auto;
       margin-bottom: 50px;
       display:block;
     }
@@ -363,11 +365,12 @@
       border: 1px solid gray;
     }
     .carousel-img{
-      min-height: 500px;
-      height:90vh;
+      min-height: 359px !important;
+      height: 50% !important;
     }
     .carousel .item {
-      min-height: 500px;
+      min-height: 718px !important;
+      min-width: 718px !important;
       height: 90vh;
       background-color: #777;
     }
@@ -375,9 +378,10 @@
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
-      min-height: 500px;
-      height: 90vh;
+      width: 50%;
+      min-width: 359px;
+      min-height: 359 !important;
+      height: 50%;
     }
     .carousel-divider{
       margin-top: 0px;
@@ -386,6 +390,7 @@
     .ternary-content{
       margin-top: 60px;
       height:70vh;
+      min-width: 718px !important;
       overflow-y: hidden;
       display:block;
       div{
@@ -542,8 +547,9 @@
   }
   .row.secondary-content{
     height: 90vh;
+    min-width: 718px !important;
     display: block;
-    overflow: hidden;
+    overflow-y: hidden;
     .featurette-divider{
       clear: both;
       margin-top: 40px;
@@ -591,8 +597,7 @@
 .featurette-image{
   width: 100%; 
 }
-
-/* Responsive CSS for Homepage */
+/* Responsive CSS for Desktop Homepage */
 .home-controller.index-action{
   @media(max-width:767px){
     .isense-desc{

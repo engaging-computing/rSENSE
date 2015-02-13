@@ -90,10 +90,13 @@ $ ->
     $('.android-button').on 'hover', (e) ->
       console.log 'wat'
       $('.android-button').css('background-color', 'rgba(39,135,245,0.5)')
+
+    $('.navbar').css('min-width', 738)
+    $('.item-image-link').removeClass('hidden-xs')
+    $('.footer').css('min-width', 738)
   ###
   # Other stuff
-  ###
-    
+  ###  
   $('.mainContent').on 'click', 'div.clickableItem', (event) ->
     window.location = $(event.currentTarget).children('a').attr 'href'
   $('li.dropdown.navbtn').click () ->
