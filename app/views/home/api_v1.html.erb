@@ -146,6 +146,50 @@
   </div>
 </div>
 
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-bordered api">
+      <tr>
+        <td class="POST def">POST</td>
+        <td class="method"> Projects </td>
+        <td class="code">/api/v1/projects/XX/add_key</td>
+        <td class="args">email(req), password(req), project_name(opt)</td>
+      </tr>
+      <tr class="more" style="">
+        <td colspan="4">
+          <b>Response Codes</b>
+          <ul>
+            <li>Success: 201 Created</li>
+            <li>Fail: 422 Unprocessable Entity </li>
+            <li>Fail: 401 Unauthorized</li>
+          </ul>
+          <b>Data</b>
+          <pre>
+    {
+        "email" => "email address (string)",
+        "password" => "password (string)",
+        "contrib_key" => {  'name' => "Key's Name(string)",
+                            'project_id' => "Project ID (integer)",
+                            'key' => "Key (string)"
+                         }
+    }
+          </pre>
+          <b>Response</b>
+          <pre>
+    {
+        "msg" => "Success or error message. (String)"
+    }
+          </pre>
+          <b>Notes</b>
+          <ul>
+            <li>The user must be the owner of the project.</li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
 <hr>
 
 <div class="row">
@@ -179,7 +223,7 @@
         "restrictions" => string
       }
   }
-                  
+
           </pre>
           <b>Response</b>
           <pre>
@@ -271,7 +315,7 @@
         "FIELD_ID" => [1,2,3,4,5],
         "FIELD_ID_2" => ["blue","red",,,"green"]
       }
-    
+
   }
           </pre>
           <b>Response</b>
@@ -291,7 +335,7 @@
           <b>Notes</b>
           <ul>
             <li>XX should be replaced with the ID for the project.</li>
-            <li>Data is a hash of field_id -> data array pairs. FIELD_ID and FIELD_ID_2 would be replaced with ids for their respective filds.</li>
+            <li>Data is a hash of field_id -> data array pairs. FIELD_ID and FIELD_ID_2 would be replaced with ids for their respective fields.</li>
           </ul>
         </td>
       </tr>
@@ -347,7 +391,7 @@
           <b>Notes</b>
           <ul>
             <li>XX should be replaced with the ID for the project.</li>
-            <li>Data is a hash of field_id -> data array pairs. FIELD_ID and FIELD_ID_2 would be replaced with ids for their respective filds.</li>
+            <li>Data is a hash of field_id -> data array pairs. FIELD_ID and FIELD_ID_2 would be replaced with ids for their respective fields.</li>
           </ul>
         </td>
       </tr>
@@ -526,7 +570,7 @@
         <td class="POST def">POST</td>
         <td class="method"> Data Sets </td>
         <td class="code">/api/v1/data_sets/append</td>
-        <td class="args"> contribution_key(req), id(req), title(req)</td>
+        <td class="args"> contribution_key(req), id(req)</td>
       </tr>
       <tr class="more" style="">
         <td colspan="4">
@@ -541,7 +585,6 @@
           <pre>
   {
     "contribution_key" => "a contribution key (string)",
-    "title" => "A title for the data set (string)"
     "id" => "dataset id (integer)"
     "data" =>
       {

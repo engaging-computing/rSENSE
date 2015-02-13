@@ -128,3 +128,9 @@ module CapyHelper
     SCRIPT
   end
 end
+
+def assert_similar_arrays(a, b)
+  c = a - b
+  d = b - a
+  assert c.length + d.length == 0, "Arrays\n\n#{a}\n\nand\n\n#{b}\n\ndo not have the same contents: #{c + d}"
+end

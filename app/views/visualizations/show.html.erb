@@ -32,8 +32,17 @@
         src="https://maps-api-ssl.google.com/maps/api/js?key=AIzaSyBxtPK1_mxwVdl1NRu7ZEiSNvmCekFSZAw&amp;sensor=false&amp;libraries=visualization,geometry&amp;v=3.9">
 </script>
 <div class="row print" id="print_title">
-  <span class="viz_title">Title: <%= @visualization.title %></span><br/>
-  <span class="viz_title">Project: <%= @visualization.project.title %></span><br/>
+  <span class="viz_title">Title: <%= @visualization.title.html_safe %>
+  </span>
+  <br/>
+  <span class="viz_title">
+    Project:
+    <% if @visualization.project.nil? || @visualization.project.hidden? %>
+      deleted
+    <% else %>
+      <%= @visualization.project.title.html_safe %>
+    <% end %>
+  </span><br/>
   <span class="viz_title">Name: <%= @visualization.owner.name %></span><br/><br/>
 </div>
 <div id="title_row" class="row visualization_title">
@@ -44,7 +53,7 @@
       <% if @project.nil? || @project.hidden? %>
         deleted
       <% else %>
-        <%= link_to @visualization.project.title,
+        <%= link_to @visualization.project.title.html_safe,
             project_path(@visualization.project) %>
       <% end %>
     </div>

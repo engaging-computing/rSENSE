@@ -34,14 +34,14 @@
 <% if @datasets.count == 1%>
   <div id="title_row" style="padding-left:10px">
     <div style="font-size:1.75em">
-      <%= link_to @project.title, project_path(@project)%>
+      <%= link_to @project.title.html_safe, project_path(@project)%>
       <div class="half_width_edit"><%= data_set_edit_helper 'title', (can_edit? @datasets.first), false, "/data_sets/#{@datasets.first.id}" %></div>
     </div>
   </div>
 <%else%>
   <div id="title_row" style="padding-left:10px">
     <div style="font-size:1.75em">
-      <%= link_to @project.title, project_path(@project)%>
+      <%= link_to @project.title.html_safe, project_path(@project) %>
       <div class="half_width_edit">Showing Multiple Data Sets</div>
     </div>
   </div>

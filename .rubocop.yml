@@ -72,7 +72,7 @@ CaseIndentation:
 # Offence count: 13
 # Configuration parameters: CountComments.
 ClassLength:
-  Max: 500
+  Max: 600
 
 # Offence count: 3
 # Cop supports --auto-correct.

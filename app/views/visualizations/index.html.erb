@@ -67,20 +67,18 @@
               <% thumb = image_path("vis_#{type.downcase}_light.png")%>
             <% end %>
           <% end %>
-          <div class='item-image' style='background-image:url(<%= thumb %>);background-size: 100% 100%'>
+          <div class='item-image'
+               style='background-image:url(<%= thumb %>);background-size: 100% 100%'>
           </div>
-
           <div class="item-desc">
             <div class="item-title">
-              <%=link_to vi.name, vi%>
+              <%= link_to vi.name.html_safe, vi %>
               <% if vi.featured %>
                 <span> (featured)</span>
               <% end %>
             </div>
-
             by <a href='<%=user_url(vi.owner)%>'> <%=vi.owner.name%> </a><br/>
             on <%=vi.created_at.strftime("%B %d, %Y")%> <br/>
-
           </div>
         </div>
         </div>

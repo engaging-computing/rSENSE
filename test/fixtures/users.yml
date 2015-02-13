@@ -8,7 +8,7 @@ nixon:
   password_digest: $2a$10$aK2OsTVTnWuPVmDthm9pj.vDApO9VGNgRwvwHmwzVQ0ScmW3BOPjC
   admin: true
   created_at: <%= 5.day.ago.to_s(:db) %>
-  
+
 kate:
   name: Kate C.
   email: kcarcia@cs.uml.edu 
@@ -17,7 +17,7 @@ kate:
   password_digest: $2a$10$aK2OsTVTnWuPVmDthm9pj.vDApO9VGNgRwvwHmwzVQ0ScmW3BOPjC
   admin: false
   created_at: <%= 6.day.ago.to_s(:db) %>
-  
+
 crunch:
   name: Captain C.
   email: captncrunch@example.com

@@ -4,22 +4,26 @@
   </div>
 
   <div class="panel-body">
-    <p>You can use your GitHub account to report bugs. Don't have a GitHub account? No problem. You can also report bugs as an anonymous user.</p>
+    <p>All bug reports will be posted to our public issue repository on GitHub. Don't have a GitHub account? No problem! You can still report bugs.</p>
     <br/>
     <div class="row-fluid">
       <div class="col-md-6">
-        <a class="btn btn-default btn-block" href="/auth/github">
-          <div class="center">
-            <h3>Yes, I have a GitHub account</h3>
-            <%= image_tag("Octocat/Octocat.png", height: "250") %>
+        <a href="/auth/github">
+          <div class="btn btn-default btn-block" id="github_account">
+            <div class="center">
+              <h3>Yes, I have a GitHub account</h3>
+              <%= image_tag("Octocat/Octocat.png", height: "250") %>
+            </div>
           </div>
         </a>
       </div>
       <div class="col-md-6">
-        <a class="btn btn-default btn-block" href="/auth/anon_github">
-          <div class="center">
-            <h3>No, I don't have a GitHub account</h3>
-            <%= image_tag("noavatar.png", height: "250") %>
+        <a href="/auth/anon_github">
+          <div class="btn btn-default btn-block" id="no_github_account">
+            <div class="center">
+              <h3>No, I don't have a GitHub account</h3>
+              <%= image_tag("noavatar.png", height: "250") %>
+            </div>
           </div>
         </a>
       </div>

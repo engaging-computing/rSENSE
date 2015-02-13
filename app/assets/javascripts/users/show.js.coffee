@@ -45,7 +45,7 @@ IS.onReady "users/show", ->
             ($ "#pageLabel").html "Page " + (parseInt( $("#page").val(), 10 ) +
               1) + " of " + $("#mparams").attr("totalPages")
           else
-            ($ "#pageLabel").html "No Contributions"
+          ($ "#pageLabel").html "No Results"
           if (parseInt( $("#page").val(), 10 ) == 0)
             ($ ".pagebck").hide()
           else
@@ -82,7 +82,7 @@ IS.onReady "users/show", ->
             (parseInt( $("#page").val(), 10 ) + 1) +
             " of " + $("#mparams").attr("totalPages")
         else
-          ($ "#pageLabel").html "No Contributions"
+          ($ "#pageLabel").html "No Results"
         if (parseInt( $("#page").val(), 10 ) == 0)
           ($ ".pagebck").hide()
         else

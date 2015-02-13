@@ -2,7 +2,7 @@
   <div class="panel panel-default">
     <div class="panel-heading">
       Edit Project <br>
-      <%= @project.title%>
+      <%= @project.title.html_safe %>
     </div>
 
     <div class="panel-body">
@@ -87,12 +87,12 @@
 
       <div class="form-group">
         <div class="checkbox">
-          <% del = '<i class="fa fa-times-circle"></i>  Delete Project ' %>
+          <% del = '<i class="fa fa-times-circle"></i> Delete Project ' %>
+          <% cls = 'btn btn-danger'; if !can_delete? @project then cls += ' disabled' end %>
           <%= link_to raw(del),
               @project,
-              { method: :delete, data: { confirm: "Really delete project?" },
-              class: 'btn btn-danger' } %>
-
+              { method: :delete, data: { confirm: 'Really delete project?' },
+              class: cls } %>
           <span class="help-block">A project may only be deleted if it does not contain data sets.</span>
         </div>
       </div>

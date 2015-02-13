@@ -4,52 +4,52 @@ one:
   title: Measuring Things
   user: kate
   content: Sample Content
-  cloned_from: 
+  cloned_from:
   featured: false
   is_template: false
   filter: ""
-  featured_media_id: 
+  featured_media_id:
 
 two:
   title: Breaking Things
   user: kate
   content:
-  cloned_from: 
+  cloned_from:
   featured: false
   is_template: false
   filter: ""
-  featured_media_id: 
+  featured_media_id:
 
 three:
   title: Empty Project
   user: kate
   content:
-  cloned_from: 
+  cloned_from:
   featured: false
   is_template: false
   filter: ""
-  featured_media_id: 
+  featured_media_id:
 
 dessert:
   title: Dessert is Delicious
   user: kate
   content:
-  cloned_from: 
+  cloned_from:
   featured: false
   is_template: false
   filter: ""
-  featured_media_id: 
+  featured_media_id:
   lock: true
 
 media_test:
   title: Media Test
   user: nixon
   content: <p>First Paragraph</p><p>Second Paragraph</p>
-  cloned_from: 
+  cloned_from:
   featured: true
   is_template: false
   filter: ""
-  featured_media_id: 
+  featured_media_id:
   created_at: <%= 7.day.ago.to_s(:db) %>
 
 locked_project:
@@ -61,6 +61,14 @@ delete_me:
   title: Delete This Project
   user: nixon
 
+delete_me2:
+  title: Delete This Project Also
+  user: kate
+
+delete_me3:
+  title: Delete This Project Wow
+  user: nixon
+
 upload_test:
   title: Upload Test
   user: kate
@@ -68,3 +76,15 @@ upload_test:
 contributor_key_project:
   title: contributor_key_project
   user: kate
+
+slickgrid_project:
+  title: slickgrid_project
+  user: nixon
+
+slickgrid_project_no_latlon:
+  title: slickgrid_project_no_latlon
+  user: nixon
+
+slickgrid_oops:
+  title: slickgrid_oops
+  user: nixon

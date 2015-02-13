@@ -10,7 +10,8 @@ class ProjectsController < ApplicationController
     @params = params
 
     # Main List
-    if !params[:sort].nil? and ['like_count', 'views', 'created_at', 'updated_at'].include? params[:sort]
+    if !params[:sort].nil? and ['like_count', 'views', 'created_at',
+                                'updated_at'].include? params[:sort]
       sort = params[:sort]
     else
       sort = 'updated_at'
@@ -37,11 +38,13 @@ class ProjectsController < ApplicationController
 
     @projects = @projects.order("#{sort} #{order}")
 
-    @projects = @projects.only_templates(templates).only_curated(curated).only_featured(featured).has_data(has_data)
+    @projects = @projects.only_templates(templates).only_curated(curated)
+      .only_featured(featured).has_data(has_data)
 
     count = @projects.length
 
-    @projects = @projects.paginate(page: params[:page], per_page: pagesize, total_entries: count)
+    @projects = @projects.paginate(page: params[:page], per_page: pagesize,
+                                   total_entries: count)
 
     @project = Project.new
 
@@ -116,14 +119,22 @@ class ProjectsController < ApplicationController
       @project = Project.new project_params
       @project.user_id = @cur_user.id
     end
+
     respond_to do |format|
       if @project.save
-        format.html { redirect_to @project, notice: 'Project was successfully created.' }
-        format.json { render json: @project.to_hash(false), status: :created, location: @project }
+        format.html do
+          redirect_to @project, notice: 'Project was successfully created.'
+        end
+        format.json do
+          render json: @project.to_hash(false),
+          status: :created, location: @project
+        end
       else
         flash[:error] = @project.errors.full_messages
         format.html { redirect_to projects_path }
-        format.json { render json: @project.errors, status: :unprocessable_entity }
+        format.json do
+          render json: @project.errors, status: :unprocessable_entity
+        end
       end
     end
   end
@@ -156,12 +167,17 @@ class ProjectsController < ApplicationController
 
     respond_to do |format|
       if can_edit?(@project) && @project.update_attributes(update)
-        format.html { redirect_to @project, notice: 'Project was successfully updated.' }
+        format.html do
+          redirect_to @project, notice: 'Project was successfully updated.'
+        end
         format.json { render json: {}, status: :ok }
       else
         @project.errors[:base] << 'Permission denied' unless can_edit?(@project)
         format.html { render action: 'edit' }
-        format.json { render json: @project.errors.full_messages, status: :unprocessable_entity }
+        format.json do
+          render json: @project.errors.full_messages,
+          status: :unprocessable_entity
+        end
       end
     end
   end
@@ -181,7 +197,10 @@ class ProjectsController < ApplicationController
 
     if @project.data_sets.length > 0
       respond_to do |format|
-        format.html { redirect_to [:edit, @project], alert: "Can't delete project with data sets" }
+        format.html do
+          redirect_to [:edit, @project],
+          alert: "Can't delete project with data sets"
+        end
         format.json { render json: {}, status: :forbidden }
       end
       return
@@ -191,12 +210,12 @@ class ProjectsController < ApplicationController
       m.destroy
     end
 
-    @project.user_id = -1
-    @project.hidden = true
-    @project.save
+    @project.destroy
 
     respond_to do |format|
-      format.html { redirect_to projects_url, notice: "Project deleted: #{@project.title}" }
+      format.html do
+        redirect_to projects_url, notice: "Project deleted: #{@project.title}"
+      end
       format.json { render json: {}, status: :ok }
     end
   end
@@ -248,7 +267,8 @@ class ProjectsController < ApplicationController
         end
       end
 
-      unless field.update_attributes(name: params["#{field.id}_name"], unit: params["#{field.id}_unit"],
+      unless field.update_attributes(name: params["#{field.id}_name"],
+                                     unit: params["#{field.id}_unit"],
                                      restrictions: restrictions)
         respond_to do |format|
           flash[:error] = 'Field names must be unique'
@@ -262,17 +282,26 @@ class ProjectsController < ApplicationController
     field_type = params[:new_field]
 
     if field_type == 'Location'
-      latitude  = Field.new(project_id: @project.id, field_type: get_field_type('Latitude'), name: 'Latitude', unit: 'deg')
-      longitude = Field.new(project_id: @project.id, field_type: get_field_type('Longitude'), name: 'Longitude', unit: 'deg')
+      latitude  = Field.new(project_id: @project.id,
+                            field_type: get_field_type('Latitude'),
+                            name: 'Latitude',
+                            unit: 'deg')
+      longitude = Field.new(project_id: @project.id,
+                            field_type: get_field_type('Longitude'),
+                            name: 'Longitude',
+                            unit: 'deg')
 
       unless latitude.save && longitude.save
-        flash[:error] = "#{latitude.errors.full_messages}\n\n#{longitude.errors.full_messages}"
+        flash[:error] = "#{latitude.errors.full_messages}\n"\
+          "\n#{longitude.errors.full_messages}"
         redirect_to "/projects/#{@project.id}/edit_fields"
         return
       end
     elsif field_type != ''
-      next_name = Field.get_next_name(@project, get_field_type(params[:new_field]))
-      field = Field.new(project_id: @project.id, field_type: get_field_type(field_type), name: next_name)
+      next_name = Field.get_next_name(@project,
+                                      get_field_type(params[:new_field]))
+      field = Field.new(project_id: @project.id,
+                        field_type: get_field_type(field_type), name: next_name)
 
       unless field.save
         flash[:error] = field.errors.full_messages
@@ -290,7 +319,11 @@ class ProjectsController < ApplicationController
 
   def templateUpload
     @project = Project.find(params[:id])
-    @options = [['Timestamp', get_field_type('Timestamp')], ['Number', get_field_type('Number')], ['Text', get_field_type('Text')], ['Latitude', get_field_type('Latitude')], ['Longitude', get_field_type('Longitude')]]
+    @options = [['Timestamp', get_field_type('Timestamp')],
+                ['Number', get_field_type('Number')],
+                ['Text', get_field_type('Text')],
+                ['Latitude', get_field_type('Latitude')],
+                ['Longitude', get_field_type('Longitude')]]
 
     uploader = FileUploader.new
     data_obj = uploader.generateObjectForTemplateUpload(params[:file])
@@ -313,7 +346,8 @@ class ProjectsController < ApplicationController
     @matches = params[:headers]
     @project = Project.find(params[:id])
     @matches.each do |header|
-      field = Field.new(project_id: @project.id, field_type: header[1].to_i, name: header[0])
+      field = Field.new(project_id: @project.id,
+                        field_type: header[1].to_i, name: header[0])
 
       unless field.save
         respond_to do |format|
@@ -360,12 +394,17 @@ class ProjectsController < ApplicationController
 
   def project_params
     if @cur_user.try(:admin)
-      return params[:project].permit(:content, :title, :user_id, :filter, :cloned_from, :has_fields,
-                                     :featured, :is_template, :featured_media_id, :hidden, :featured_at, :lock, :curated,
-                                     :curated_at, :updated_at, :default_vis, :precision, :globals)
+      return params[:project].permit(:content, :title, :user_id, :filter,
+                                     :cloned_from, :has_fields, :featured,
+                                     :is_template, :featured_media_id, :hidden,
+                                     :featured_at, :lock, :curated,
+                                     :curated_at, :updated_at, :default_vis,
+                                     :precision, :globals)
     end
 
-    params[:project].permit(:content, :title, :user_id, :filter, :hidden, :cloned_from, :has_fields,
-                            :featured_media_id, :lock, :updated_at, :default_vis, :precision, :globals)
+    params[:project].permit(:content, :title, :user_id, :filter, :hidden,
+                            :cloned_from, :has_fields, :featured_media_id,
+                            :lock, :updated_at, :default_vis, :precision,
+                            :globals)
   end
 end

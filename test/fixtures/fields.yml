@@ -32,21 +32,21 @@ pie:
   name: pie
   unit: Pies
   project: dessert
-  
+
 number_one:
   id: 23
   field_type: 2
   name: Number_1
   unit: nums
   project: one
-  
+
 number_two:
   id: 24
   field_type: 2
   name: Number_2
   unit: nums
   project: one
-  
+
 text_field:
   id: 25
   field_type: 3
@@ -60,12 +60,12 @@ locked_projet_field:
   name: Some name
   unit:
   project: locked_project
-  
+
 lat_field:
   field_type: 4
   project: upload_test
   name: lat
-  
+
 lon_field:
   field_type: 5
   project: upload_test
@@ -75,4 +75,52 @@ altitude_field:
   field_type: 2
   project: upload_test
   name: altitude
-  
+
+slick_text:
+  id: 100
+  field_type: 3
+  project: slickgrid_project
+  name: text_field
+
+slick_restrict:
+  id: 101
+  field_type: 3
+  project: slickgrid_project
+  name: restrictions_field
+  restrictions: "[\"A\", \"B\", \"C\"]"
+
+slick_num:
+  id: 102
+  field_type: 2
+  project: slickgrid_project
+  name: number_field
+
+slick_time:
+  id: 103
+  field_type: 1
+  project: slickgrid_project
+  name: timestamp_field
+
+slick_lat:
+  id: 104
+  field_type: 4
+  project: slickgrid_project
+  name: latitude_field
+
+slick_lon:
+  id: 105
+  field_type: 5
+  project: slickgrid_project
+  name: longitude_field
+
+slickgrid_something:
+  id: 106
+  field_type: 3
+  project: slickgrid_project_no_latlon
+  name: something
+
+slickgrid_not_a_field:
+  id: 107
+  field_type: -1
+  project: slickgrid_oops
+  name: oops
