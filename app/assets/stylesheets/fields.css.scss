@@ -15,17 +15,22 @@
 }
 
 @media (max-width: 770px) {
-  .description, .units, .restrictions {
+  .description, .units, .restrictions, .num_picker {
     display: none;
   }
 }
 
 .description {
   text-align: left;
+  margin-top: 10px;
 }
 
 .new_field {
-  width: 125px;
-  margin-top:15px !important;
-  margin-bottom: 10px !important;
+  width: 115px;
+  text-align: center;
+}
+
+.num_picker {
+  width: 35px;
+  height: 33px;
 }

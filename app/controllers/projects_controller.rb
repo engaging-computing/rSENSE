@@ -279,37 +279,42 @@ class ProjectsController < ApplicationController
     end
 
     # If there's a new field, add it.
-    field_type = params[:new_field]
-
-    if field_type == 'Location'
-      latitude  = Field.new(project_id: @project.id,
-                            field_type: get_field_type('Latitude'),
-                            name: 'Latitude',
-                            unit: 'deg')
-      longitude = Field.new(project_id: @project.id,
-                            field_type: get_field_type('Longitude'),
-                            name: 'Longitude',
-                            unit: 'deg')
     
-      unless latitude.save && longitude.save
-        flash[:error] = "#{latitude.errors.full_messages}\n"\
-          "\n#{longitude.errors.full_messages}"
-        redirect_to "/projects/#{@project.id}/edit_fields"
-        return
-      end
-    elsif !field_type.nil?
-      next_name = Field.get_next_name(@project,
-                                      get_field_type(params[:new_field]))
-      field = Field.new(project_id: @project.id,
-                        field_type: get_field_type(field_type), name: next_name)
+    $i = 0
+    
+    while $i < ((params[:num_fields].to_i > params[:text_fields].to_i)? params[:num_fields].to_i : params[:text_fields].to_i)  do
+      field_type = params[:new_field]
 
-      unless field.save
-        flash[:error] = field.errors.full_messages
-        redirect_to "/projects/#{@project.id}/edit_fields"
-        return
+      if field_type == 'Location'
+        latitude  = Field.new(project_id: @project.id,
+                              field_type: get_field_type('Latitude'),
+                              name: 'Latitude',
+                              unit: 'deg')
+        longitude = Field.new(project_id: @project.id,
+                              field_type: get_field_type('Longitude'),
+                              name: 'Longitude',
+                              unit: 'deg')
+    
+        unless latitude.save && longitude.save
+          flash[:error] = "#{latitude.errors.full_messages}\n"\
+            "\n#{longitude.errors.full_messages}"
+          redirect_to "/projects/#{@project.id}/edit_fields"
+          return
+        end
+      elsif !field_type.nil?
+        next_name = Field.get_next_name(@project,
+                                        get_field_type(params[:new_field]))
+        field = Field.new(project_id: @project.id,
+                          field_type: get_field_type(field_type), name: next_name)
+
+        unless field.save
+          flash[:error] = field.errors.full_messages
+          redirect_to "/projects/#{@project.id}/edit_fields"
+          return
+        end
       end
+      $i += 1
     end
-
     if field_type.nil?
       redirect_to project_path(@project), notice: 'Changes to fields saved.'
     else

@@ -1,5 +1,11 @@
 $ ->
-  if namespace.controller is "projects" and namespace.action is "edit_fields"   
+  if namespace.controller is "projects" and namespace.action is "edit_fields"
+    ($ '#number').click ->
+      ($ '#text_fields').val('0')
+      
+    ($ '#text').click ->
+      ($ '#num_fields').val('0')
+      
     ($ '.field_delete').click (e) ->
       e.preventDefault()
       root = ($ @).parents('tr')
@@ -16,7 +22,7 @@ $ ->
           else
             root.remove()
           
-          $('#option').load(document.URL +  ' #option')
+          $('#options').load(document.URL +  ' #options')
             
 
         error:(msg) ->
