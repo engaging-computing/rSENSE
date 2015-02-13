@@ -61,7 +61,7 @@ $ ->
 
       start: ->
         # Make table visible? (or something)
-        ($ '#' + @canvas).show()
+        $('#' + @canvas).show()
 
         # Calls update
         super()
@@ -69,8 +69,8 @@ $ ->
       # Gets called when the controls are clicked and at start
       update: ->
         # Updates controls by default
-        ($ '#' + @canvas).html('')
-        ($ '#' + @canvas).append '<table id="data_table" class="table table-striped"></table>'
+        $('#' + @canvas).html('')
+        $('#' + @canvas).append '<table id="data_table" class="table table-striped"></table>'
 
         # Build the headers for the table
         headers = for field in data.fields
@@ -125,15 +125,15 @@ $ ->
             }
 
         # Add the nav bar
-        ($ '#table_canvas').append '<div id="toolbar_bottom"></div>'
+        $('#table_canvas').append '<div id="toolbar_bottom"></div>'
 
         # Build the grid
         @table = jQuery("#data_table").jqGrid({
           colNames: headers
           colModel: columns
           datatype: 'local'
-          height: ($ '#' + @canvas).height() - @TOOLBAR_HEIGHT_OFFSET
-          width: ($ '#' + @canvas).width()
+          height: $('#' + @canvas).height() - @TOOLBAR_HEIGHT_OFFSET
+          width: $('#' + @canvas).width()
           gridview: true
           caption: ""
           data: rows
@@ -155,7 +155,7 @@ $ ->
           else
             @table.showCol(col.name)
 
-        ($ '#data_table').setGridWidth(($ '#' + @canvas).width())
+        $('#data_table').setGridWidth($('#' + @canvas).width())
 
         # Add a refresh button and enable the search bar
         @table.jqGrid('navGrid','#toolbar_bottom',{ del:false, add:false, edit:false, search:false })
@@ -200,7 +200,7 @@ $ ->
       resize: (newWidth, newHeight, aniLength) ->
         # In the case that this was called by the hide button, this gets called a second time
         # needlessly, but doesn't effect the overall performance
-        ($ '#data_table').setGridWidth(newWidth)
+        $('#data_table').setGridWidth(newWidth)
 
       drawControls: ->
         super()
@@ -282,7 +282,7 @@ $ ->
           <div class='inner_control_div'>
             <div class='checkbox all-y-fields'>
               <label class='all-y'>
-                <input id='select-all-y' type='checkbox'> #Select All </input>
+                <input id='select-all-y' type='checkbox'> #Check All </input>
               </label>
             </div>
           </div>
@@ -303,45 +303,48 @@ $ ->
         c += "</div></div>"
 
         # Write HTML
-        ($ '#controldiv').append c
+        $('#controldiv').append c
 
         if checked
-          ($ '#select-all-y').prop('checked', true)
+          $('#select-all-y').prop('checked', true)
 
-        ($ '.y_axis_input').click (e) =>
+        $('.y_axis_input').click (e) =>
           index = Number e.target.value
           if index in @configs.tableFields
             arrayRemove(@configs.tableFields, index)
           else
             @configs.tableFields.push(index)
-          if yFields.length == @configs.tableField
-            ($ '#select-all-y').prop('checked', true)
+
+          if yFields.length == @configs.tableFields.length
+            $('#select-all-y').prop("checked", true)
           else
-            ($ '#select-all-y').prop('checked', false)
+            $('#select-all-y').prop("checked", false)
 
           @delayedUpdate()
 
         # Set up accordion
         globals.configs.yAxisOpen ?= 0
 
-        ($ '#yAxisControl').accordion
+        $('#yAxisControl').accordion
           collapsible:true
           active:globals.configs.yAxisOpen
 
-        ($ '#yAxisControl > h3').click ->
+        $('#yAxisControl > h3').click ->
           globals.configs.yAxisOpen = (globals.configs.yAxisOpen + 1) % 2
 
-        ($ '#select-all-y').click =>
-          yFields = (i for f, i in data.fields when i isnt data.COMBINED_FIELD)
+        $('#select-all-y').click =>
+          selFields =
+            (i for f, i in data.fields when i isnt data.COMBINED_FIELD)
 
-          if yFields.length != @configs.tableFields.length
-            ($ '#yAxisControl').find('.y_axis_input').each (i,j) ->
-              ($ j).prop('checked', true)
-            @configs.tableFields = yFields
+          if $('#select-all-y').is(":checked")
+            $('#yAxisControl').find('.y_axis_input').each (i,j) ->
+              $(j).prop('checked', true)
+            @configs.tableFields = selFields
           else
             @configs.tableFields = []
-            ($ '#yAxisControl').find('.y_axis_input').each (i,j) ->
-              ($ j).prop('checked', false)
+            $('#yAxisControl').find('.y_axis_input').each (i,j) ->
+              $(j).prop('checked', false)
+
           @delayedUpdate()
 
     globals.table = new Table "table_canvas"
