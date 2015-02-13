@@ -14,7 +14,6 @@
 //= require constants
 //= require image_path
 //= require jquery
-//= require handlebars
 //= require isense
 //= require helpers
 //= require dateParse
@@ -31,8 +30,11 @@
 //= require titlebar.js.coffee
 //= require bootstrap
 //
-// Visualization stuff follows
+//  -- Handlebars --
+//= require handlebars
+//= require_tree ./templates
 //
+//  -- Visualization stuff follows --
 //= require highcharts/highcharts
 //= require highcharts/modules/exporting
 //= require jquery.jqGrid.src.js
@@ -43,7 +45,6 @@
 //= require oms
 //= require better_colorpicker
 //= require better_datetimepicker
-//
 //= require visualizations/highvis/index
 //
 //= require summernote

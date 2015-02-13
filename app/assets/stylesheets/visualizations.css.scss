@@ -55,24 +55,65 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     width: 20%;
     height: 100%;
 
-    // Used in tool controls
-    .control_header {
-      padding: 0 20px;
-      white-space: nowrap;
-      overflow: hidden;
-      cursor: pointer;
-      width: 100%;
-      background: $dark-bkg;
-    }
+    // this is where all the div controls get added
+    #controldiv {
+      height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+      display: inline-block;
+      float: left;
 
-    .control_outer {
-      width: 100%;
-      padding: 5px 20px;
-      background-color: $vis-bkg-light;
+      // puts spacing between some boostrap buttons
+      .form-control { // this styles bootstrap stuff and IS VERY BAD
+        margin-bottom: 5px;
+      }
 
-      .label-dataset-color {
-        float: right;
-        width: 20px;
+      .save-btn {
+        width: 160px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+
+      // button for shrunken accordion dropdown
+      .ui-icon-triangle-1-e {
+        background-position: -34px -18px; // uses image @ (5, 2) on /assets/vis/ui-icons_222222_256x240.png
+      }
+
+      // button for expanded accordion dropdown
+      .ui-icon-triangle-1-s {
+        background-position: -67px -18px; // uses image @ (3, 2) on /assets/vis/ui-icons_222222_256x240.png
+      }
+
+      // any input button inside this class isn't lined up with the
+      // text to its right - this fixes that
+      .vis-ctrl-body {
+        font-size: 12px;
+        width: 100%;
+        padding: 5px 20px;
+        align: center;
+        background-color: $vis-bkg-light;
+
+        .label-dataset-color {
+          float: right;
+          width: 20px;
+        }
+
+        .checkbox, .radio {
+          margin: 1px 0;
+          input {
+            margin-top: 2px;
+          }
+        }
+      }
+
+      .vis-ctrl-header {
+        padding: 10px 20px;
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        cursor: pointer;
+        width: 100%;
+        background: $dark-bkg;
       }
     }
   }
@@ -91,116 +132,6 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
       padding: 0 8px;
       position: absolute;
       top: 48%;
-    }
-  }
-
-  // this is where all the div controls get added
-  #controldiv {
-    height: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
-    display: inline-block;
-    float: left;
-
-    // puts spacing between some boostrap buttons
-    .form-control { // this styles bootstrap stuff and IS VERY BAD
-      margin-bottom: 5px;
-    }
-
-    // any input button inside this class isn't lined up with the text to its right - this fixes that
-    .inner_control_div {
-      font-size: 12px;
-
-      .checkbox, .radio {
-        margin: 1px 0;
-        input {
-          margin-top: 2px;
-        }
-      }
-    }
-
-    .ui-accordion {
-      margin: 5px 0 0; // add some space between accordions
-    }
-
-    .ui-accordion .ui-accordion-content {
-      padding: 3px;
-      overflow-y: hidden;
-    }
-
-    .ui-accordion table td:first-child {
-      padding-right: 5px; // adds some space between bootstrap buttons and their labels
-    }
-
-    #ui-accordion-groupControl-panel-0 {
-      min-height: 120px; // fixed height fixes weird sizing bug in firefox
-      max-height: 160px;
-      overflow: auto;
-    }
-
-    .ui-accordion-header {
-      @include unselectable;
-      vertical-align: middle;
-      height: 34px;
-      outline: none;
-      margin: 0 5px 0 0; // see #controldiv above for explanation
-      border: thin solid #ABABAB;
-      border-radius: 3px;
-      background-image: $light-bkg;
-    }
-
-    // this is the little arrow button next to every accordion header
-    .ui-accordion-header-icon {
-      width: 11px;
-      height: 11px;
-      background-image: url(/assets/vis/ui-icons_222222_256x240.png);
-      display: inline-block;
-    }
-
-    // the text on the dropdown header
-    .ui-accordion-header a {
-      padding-left: 10px;
-      color: #222;
-      font-size: 12pt;
-    }
-
-    // button for shrunken accordion dropdown
-    .ui-icon-triangle-1-e {
-      background-position: -34px -18px; // uses image @ (5, 2) on /assets/vis/ui-icons_222222_256x240.png
-    }
-
-    // button for expanded accordion dropdown
-    .ui-icon-triangle-1-s {
-      background-position: -67px -18px; // uses image @ (3, 2) on /assets/vis/ui-icons_222222_256x240.png
-    }
-
-    // because sliders need styling now that jQuery UI CSS is gone
-    .ui-slider {
-      position: relative;
-      margin: 10px 5px;
-      height: 10px;
-      background-image: $light-bkg-inv;
-      border: thin solid #ABABAB;
-      border-radius: 3px;
-    }
-
-    .ui-slider-handle {
-      display: inline-block;
-      position: absolute;
-      width: 16px;
-      height: 16px;
-      margin: -4px 0 0 -8px;
-      border-radius: 8px;
-      border: $border;
-      background-image: $dark-bkg;
-      outline: none;
-    }
-
-    .ui-slider-range {
-      position: absolute;
-      height: 8px;
-      background-image: $select-bkg;
-      border-radius: 3px;
     }
   }
 
@@ -360,12 +291,6 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     margin: 0;
   }
 
-  .save_button {
-    width: 160px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-  }
-
   .summary {
     padding: 5px 0px 5px 0px;
     font-style: italic;
@@ -499,7 +424,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     height: 100%;
   }
 
-  .vis_controls {
+  .vis-ctrls {
     width: 100%;
   }
 

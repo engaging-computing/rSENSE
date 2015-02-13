@@ -9,6 +9,8 @@ gem 'coffee-rails'
 gem 'coffee-rails-source-maps'
 gem 'uglifier'
 gem 'modernizr-rails'
+
+# Handlebars
 gem 'handlebars_assets'
 gem 'handlebars'
 

@@ -389,68 +389,44 @@ $ ->
         if (globals.options? and globals.options.isEmbed?) and not @chart?
           return
 
-        controls = '<div id="saveControl" class="vis_controls">'
-        controls += "<div class='control_header'><h3><a href='#'>Saving</a></h3></div>"
-        controls += "<div class='control_outer' style='text-align:center'>"
+        context = {}
+        context.id = 'save-ctrls'
+        context.title = 'Save'
+        context.body = HandlebarsTemplates['visualizations/controls/save'](context);
 
-        if not (globals.options? and globals.options.isEmbed?)
-          controls += "<div class='inner_control_div'>"
-          controls += "<button id='saveVisButton' class='save_button btn btn-sm btn-default btn-success'>"
-          controls += "Save Visualization </button>"
-          controls += "</div>"
-
-          # Default vises only apply to project vises
-          if namespace.action is 'displayVis'
-            controls += "<div class='inner_control_div'>"
-            controls += "<button id='defaultVisButton' class='save_button btn btn-sm btn-primary'>"
-            controls += "Make Default </button>"
-            controls += "</div>"
-
+        snarf = HandlebarsTemplates['visualizations/controls/body'](context);
+        $('#controldiv').append snarf
+b
         globals.verifyUser ( -> ), ( ->
           $('#saveVisButton').attr('disabled', 'disabled')), false
         globals.verifyUser ( -> ), (->
           $('#defaultVisButton').remove()), true
 
         if @chart?
+          console.log 'print and download'
 
-          controls += "<div class='inner_control_div'>"
-          controls += "<button id='downloadVisButton' class='save_button btn btn-sm btn-default'>"
-          controls += "Download Visualization </button>"
-          controls += "</div>"
-
-          controls += "<div class='inner_control_div'>"
-          controls += "<button id='printVisButton' class='save_button btn btn-sm btn-default'>"
-          controls += "Print Visualization </button>"
-          controls += "</div>"
-
-        controls += '</div></div>'
-
-        # Write HTML
-        ($ '#controldiv').append controls
-
-        ($ "#saveControl button").button()
-
-        ($ "#saveVisButton").click ->
+        ($ '#save-vis-btn').click ->
           globals.verifyUser (-> globals.saveVis()), (->
             alert 'You must be logged in to save a visualization.'), false
 
-        ($ "#defaultVisButton").click ->
+        ($ '#default-vis-btn').click ->
           globals.verifyUser (-> globals.defaultVis()), (->
             alert 'You must be logged in as the project owner to set a
             default visualization.'), true
 
-        ($ '#downloadVisButton').click =>
+        ($ '#download-vis-btn').click =>
           @chart.exportChart
             type: "image/svg+xml"
 
-        ($ '#printVisButton').click =>
+        ($ '#print-vis-btn').click =>
           @chart.print()
 
-        #Set up accordion
+        # Set up accordion
         globals.configs.saveOpen ?= 0
 
         ($ '#saveControl > h3').click ->
           globals.configs.saveOpen = (globals.configs.saveOpen + 1) % 2
+
       ###
       Draw tool controls (Analysis Type, Log Y Axis, etc.) for Pie Chart and Bar Chart
       ###
