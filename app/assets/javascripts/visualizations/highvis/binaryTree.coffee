@@ -83,38 +83,23 @@ $ ->
 
       # Returns number of nodes in the tree
       treeSize: ->
-        if this.is_terminal() is true
-          if @data isnt null 
-            return 1
-          else
-            return 0
-        else if @left is null and @right isnt null
-          1 + @right.treeSize()
-        else if @left isnt null and @right is null
-          1 + @left.treeSize()
-        else
-          1 + @left.treeSize() + @right.treeSize()
+        depth = if @data is null then 0 else 1
+        rest = 0
+        if @right isnt null
+          rest += @right.treeSize()
+        if @left isnt null
+          rest += @left.treeSize()
+        depth + rest
 
       # Returns the maximum depth of the tree
-      maxDepth: (curDepth = 0) ->
-        [a, b, c, d] = [0, 0, 0, 0]
-        if @data is null
-          a = curDepth
-          console.log this
-          console.log 0
-        else if @data isnt null and this.is_terminal
-          console.log this
-          console.log 1
-          b = curDepth + 1
-        else if @right is null
-          console.log this
-          console.log 1 + @left.maxDepth
-          c = @left.maxDepth(curDepth + 1)
-        else if @left is null
-          console.log this
-          console.log 1 + @right.maxDepth
-          d = @right.maxDepth(curDepth + 1)
-        return Math.max(a, b, c, d)
+      maxDepth: ->
+        depth = if @data is null then 0 else 1
+        rest = 0
+        if @left isnt null
+          rest = Math.max(rest, @left.treeSize())
+        if @right isnt null
+          rest = Math.max(rest, @right.treeSize())
+        depth + rest
 
       # Inserts a single datum in the tree at @data, 
       # or the @data member of the tree located at 
@@ -149,27 +134,32 @@ $ ->
       ###
       deleteData: (pos = null) ->
         if pos is 'right'
-          if @right.is_terminal
+          if @right.is_terminal()
             @right = null 
           else
             console.log "Error deleting #{@right.data}, results in invalid binary tree."
         else if pos is 'left'
-          if @left.is_terminal
+          if @left.is_terminal()
             @left = null
           else
             console.log "Error deleting #{@left.data}, results in invalid binary tree."
         else
-          if this.is_terminal
+          if this.is_terminal()
             @data = null
           else
             console.log "Error deleting #{@data}, results in invalid binary tree."
 
-    # Insert a new tree starting at the location specified, or at pos = 'right' or pos = 'left'
-    # insertTree: (tree, pos = null) ->
-    #   if pos is 'right'
-    #     @right = @clone(tree)
-    #   else if pos is 'left'
-    #     @left = @clone(tree)
-    #   else
-    #     this = @clone(tree)
+      # Allows the user to index into the tree, following inorder traversal:
+      # left, ROOT, right
+      index: (i) ->
+
+
+      ###
+      # TODO:
+      #   1.  Random access (indexing)
+      #   2.  Inorder traversal
+      #   3.  Crossover tree
+      ###
+
+
 
