@@ -14,7 +14,7 @@ class User < ActiveRecord::Base
 
   has_secure_password
 
-  before_save :sanitize_user
+  before_validation :sanitize_user
   before_save :summernote_media_objects
   has_many :projects
   has_many :data_sets

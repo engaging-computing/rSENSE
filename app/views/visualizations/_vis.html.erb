@@ -10,9 +10,9 @@
   <div id="viscontainer" role="tabpanel">
     <div id="vistitlebar">
       <div class="inline-left">
-        <%= title %>
+        <%= title.html_safe %>
         <span class="subtitle">
-          of <%= link_to project.title, project, class: "i" %>
+          of <%= link_to project.title.html_safe, project, class: "i" %>
         </span>
       </div>
       <div id="visowner" class="subtitle inline-right">

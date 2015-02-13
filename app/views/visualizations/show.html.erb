@@ -34,7 +34,7 @@
 
 <%= render partial: 'vis', locals: { project: @visualization.project,
     owner: @visualization.owner,
-    title: @visualization.title } %>
+    title: @visualization.title.html_safe } %>
 
 <div class="row" style="display:block; float:left">
   <div class="col-md-8">

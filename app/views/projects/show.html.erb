@@ -29,8 +29,12 @@
             </div>
             <div class="col-sm-12">
               <% if !@cloned_project.nil? and !is_deleted?(@cloned_project) %>
-                <span class="info_label" style="font-size:1.1em">Cloned From:</span>
-                <%= link_to @cloned_project.title, project_path(@cloned_project.id) %><br>
+                <span class="info_label" style="font-size:1.1em">
+                  <%= 'Cloned From: ' %>
+                </span>
+                <%= link_to @cloned_project.title.html_safe,
+                    project_path(@cloned_project.id) %>
+                <br/>
               <% end %>
             </div>
           </div>
@@ -140,7 +144,7 @@
                     <td style="max-width:60px"><div class="truncate"><%= link_to s.owner.name, user_path(s.owner) %></div></td>
                   <% end %>
                     <td style="max-width:200px">
-                      <div class="truncate dset" title="Created <%=s.created_at.strftime("%B %d, %Y")%>"><%= link_to s.title, "/projects/#{params[:id]}/data_sets/#{s.id}" %></div>
+                      <div class="truncate dset" title="Created <%=s.created_at.strftime("%B %d, %Y")%>"><%= link_to s.title.html_safe, "/projects/#{params[:id]}/data_sets/#{s.id}" %></div>
                     </td>
                     <td>
                       <div class="controls" style="">
@@ -151,7 +155,7 @@
                           &nbsp;<a class="data_set_hide" href="<%= data_set_url s %>">Hide</a>
                         <% end %>
                         <% if can_delete? s %>
-                          &nbsp;<a class="data_set_delete" href="<%= data_set_url s %>" name="<%= s.title %>">Delete</a>
+                          &nbsp;<a class="data_set_delete" href="<%= data_set_url s %>" name="<%= s.title.html_safe %>">Delete</a>
                         <% end %>
                       </div>
                     </td>
@@ -214,8 +218,8 @@
           <div class="row-fluid">
             <div class="col-md-4 center">
               <%= link_to :controller => :data_sets, :action => :manualEntry do %>
-              <%= image_tag "manual.png", class: "hoverimage" %><br/>
-              Manual Entry
+                <%= image_tag "manual.png", class: "hoverimage" %><br/>
+                Manual Entry
               <% end %>
             </div>
             <div class="col-md-4 center" title="Supports - CSV,XLS,XLSX,ODS">
@@ -281,15 +285,23 @@
               <% @project.visualizations.search(false).each do |vis|%>
                 <tr class="<%= cycle('feed-even', 'feed-odd')%> vis">
                   <td style="max-width:200px" >
-                    <div class="truncate"><%= link_to vis.title, visualization_url(vis) %></div>
+                    <div class="truncate">
+                      <%= link_to vis.title.html_safe, visualization_url(vis) %>
+                    </div>
                   </td>
                   <td>
                     <div class="controls" style="float:right">
                       <% if can_hide? vis %>
-                        <a class="viz_hide" href="<%= visualization_url vis %>">Hide</a> |
+                        <a class="viz_hide" href="<%= visualization_url vis %>">
+                          Hide
+                        </a> |
                       <% end %>
                       <% if can_delete? vis %>
-                        <a class="viz_delete" href="<%= visualization_url vis %>" name="<%= vis.title %>">Delete</a>
+                        <a class="viz_delete"
+                           href="<%= visualization_url vis %>"
+                           name="<%= vis.title.html_safe %>">
+                          Delete
+                        </a>
                       <% end %>
                     </div>
                   </td>
