@@ -311,8 +311,10 @@
 
 .home-controller.index-action{  
   div.container.mainContent{
-    width:100% !important ; 
+    width:100%;
+    min-width: 718px !important; 
     body {
+      min-width: 718px !important;
       padding-bottom: 40px;
       color: #5a5a5a;
     }
@@ -339,10 +341,11 @@
       margin: 0 auto;
     }
     .carousel {
+      min-width: 698px !important;
       min-height: 500px;
-      height: 90vh;
       margin-bottom: 50px;
       display:block;
+      min-height: 0px !important;
     }
     .carousel-slide-text{
       text-align: left;  
@@ -364,20 +367,22 @@
     }
     .carousel-img{
       min-height: 500px;
-      height:90vh;
+      height:auto;
+      min-width: 349px !important;
+      width: 50%;
     }
     .carousel .item {
-      min-height: 500px;
-      height: 90vh;
+      min-width: 698px !important;
+      min-height: auto;
+      height: auto;
       background-color: #777;
     }
     .carousel-inner > .item > img {
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
-      min-height: 500px;
-      height: 90vh;
+      width: 50%;
+      min-width: 349 !important;
     }
     .carousel-divider{
       margin-top: 0px;
