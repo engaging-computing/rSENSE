@@ -128,23 +128,23 @@ module ApplicationHelper
   def render_title
     if @namespace[:controller] == 'projects' and params.key?(:id)
       # viewing a project
-      Project.find(params[:id]).name.capitalize
+      Project.find(params[:id]).name.capitalize.html_safe
     elsif @namespace[:controller] == 'visualizations' and params.key?(:id)
       if @namespace[:action] == 'displayVis'
         # viewing data sets
         if @datasets.count == 1
           # viewing a single data set
-          @datasets[0].title.capitalize
+          @datasets[0].title.capitalize.html_safe
         else
           # viewing multiple data sets
           'Multiple Data Sets'
         end
       else
         # viewing a saved vis
-        Visualization.find(params[:id]).name.capitalize
+        Visualization.find(params[:id]).name.capitalize.html_safe
       end
     else
-      @namespace[:controller].capitalize
+      @namespace[:controller].capitalize.html_safe
     end
   end
 
