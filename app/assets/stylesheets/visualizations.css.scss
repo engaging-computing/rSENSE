@@ -18,9 +18,10 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   $hint: #888;
   $light-bkg: linear-gradient(#F6F6F6, #D7D7D7);
   $light-bkg-inv: linear-gradient(#D7D7D7, #F6F6F6);
-  $panel-bkg: #e8e8e8;
-  $regr-bkg: #ddd;
-  $regr-dis-bkg: #eee;
+  $link: #337AB7;
+  $panel-bkg: #E8E8E8;
+  $regr-bkg: #DDD;
+  $regr-dis-bkg: #EEE;
   $regr-dis-font: #666;
   $select-bkg: linear-gradient(#49A7DB, #268AC1);
   $shadow-color: #9E9E9E;
@@ -47,7 +48,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     -moz-border-radius: 15px;
   }
 
-  #controlcontainer {
+  #vis-ctrl-container {
     position: relative;
     display: inline-block;
     float: left;
@@ -56,10 +57,11 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     height: 100%;
 
     // this is where all the div controls get added
-    #controldiv {
+    #vis-ctrls {
       height: 100%;
       overflow-x: hidden;
       overflow-y: auto;
+      position: relative;
       display: inline-block;
       float: left;
 
@@ -69,9 +71,9 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
       }
 
       .save-btn {
-        width: 160px;
-        margin-top: 10px;
-        margin-bottom: 10px;
+        display: inline-block;
+        width: 80%;
+        margin: 10px auto;
       }
 
       // button for shrunken accordion dropdown
@@ -89,8 +91,8 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
       .vis-ctrl-body {
         font-size: 12px;
         width: 100%;
+        text-align: center;
         padding: 5px 20px;
-        align: center;
         background-color: $vis-bkg-light;
 
         .label-dataset-color {
@@ -109,6 +111,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
       .vis-ctrl-header {
         padding: 10px 20px;
         margin: 0;
+        color: #337AB7;
         white-space: nowrap;
         overflow: hidden;
         cursor: pointer;

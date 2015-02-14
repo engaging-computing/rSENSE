@@ -339,69 +339,9 @@ $ ->
       Draws radio buttons for changing symbol/line mode.
       ###
       drawToolControls: (elaspedTimeButton = true) ->
-        controls =  '<div id="toolControl" class="vis_controls">'
-
-        controls += "<h3 class='clean_shrink'><a href='#'>Tools:</a></h3>"
-        controls += "<div class='outer_control_div'>"
-
-        controls += "<h4 class='clean_shrink'>Zoom</h4>"
-        controls += '<div class="inner_control_div">'
-
-        controls += "<select id='zoomSelector' class='form-control'>"
-
-        axes = ['Both', 'X', 'Y']
-        for axis in axes
-          controls += "<option value='#{axis}'>#{axis}</option>"
-        controls += "</select>"
-        controls += "<div class='btn-group btn-group-justified'>"
-        controls += "<div class='btn-group'><button id='zoomOutButton' \
-          class='zoom_button btn btn-default'>Out</button></div>"
-        controls += "<div class='btn-group'><button id='zoomResetButton' \
-          class='zoom_button btn btn-default'>Fit</button></div>"
-        controls += "</div>"
-
-        controls += "<h4 class='clean_shrink'>Display Mode</h4>"
-
-        for [mode, modeText] in [[@SYMBOLS_LINES_MODE, "Symbols and Lines"],
-          [@LINES_MODE,         "Lines Only"],
-          [@SYMBOLS_MODE,       "Symbols Only"]]
-          controls += '<div class="inner_control_div">'
-          controls += "<div class='radio'><label><input class='mode_radio' type='radio' "
-          controls += "name='mode_selector' value='#{mode}' #{if @configs.mode is mode then 'checked' else ''}/>"
-          controls += modeText + "</label></div></div>"
-
-        controls += "<br>"
-        controls += "<h4 class='clean_shrink'>Other</h4>"
-
-        controls += '<div class="inner_control_div">'
-        controls += "<div class='checkbox'><label><input class='tooltip_box' type='checkbox' "
-        controls += "name='tooltip_selector' #{if @configs.advancedTooltips then 'checked' else ''}/>"
-        controls += "Detailed Tooltips</label></div> "
-        controls += "</div>"
-
-        controls += '<div class="inner_control_div">'
-        controls += "<div class='checkbox'><label><input class='full_detail_box' type='checkbox' "
-        controls += "name='full_detail_selector' #{if @configs.fullDetail then 'checked' else ''}/>"
-        controls += "Show All Data</label></div>"
-        controls += "</div>"
-
-        if data.logSafe is 1
-          controls += '<div class="inner_control_div">'
-          controls += "<div class='checkbox'><label><input class='logY_box' type='checkbox' "
-          controls += "name='log_selector' #{if globals.configs.logY is 1 then 'checked' else ''}/> "
-          controls += "Logarithmic Y Axis </label></div>"
-          controls += "</div>"
-
-        if elaspedTimeButton
-          controls += "<div class='inner_control_div' style='text-align:center'>"
-          controls += "<button id='elaspedTimeButton' class='save_button btn btn-default btn-sm'>"
-          controls += "Generate Elapsed Time </button>"
-          controls += "</div>"
-
-        controls += "</div></div>"
 
         # Write HTML
-        ($ '#controldiv').append controls
+        ($ '#vis-ctrls').append controls
 
         ($ '#zoomResetButton').button()
         ($ '#zoomResetButton').click (e) =>
@@ -468,7 +408,7 @@ $ ->
         controls += '</div></div>'
 
         # Write HTML
-        ($ '#controldiv').append controls
+        ($ '#vis-ctrls').append controls
 
         # Make xAxis radio handler
         ($ '.xAxis_input').change (e) =>
@@ -613,7 +553,7 @@ $ ->
           """
 
         # Write HTML
-        ($ '#controldiv').append controls
+        ($ '#vis-ctrls').append controls
         ($ "#regressionControl button").button()
 
         # Add all the saved regressions correctly

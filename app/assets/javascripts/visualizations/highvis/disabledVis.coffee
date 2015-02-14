@@ -114,7 +114,7 @@ $ ->
 
       start: ->
         $('#' + @canvas).show()
-        $('#controlcontainer').hide()
+        $('#vis-ctrl-container').hide()
 
         switch @canvas
           when 'map_canvas'
@@ -137,4 +137,4 @@ $ ->
 
       end: ->
         $('#' + @canvas).hide()
-        $('#controlcontainer').show()
+        $('#vis-ctrl-container').show()

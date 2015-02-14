@@ -54,8 +54,8 @@ $ ->
       visTitleBarHeight = $('#vistitlebar').outerHeight() +
         $('#vistablist').outerHeight()
       hiderSize     = $('#controlhider').outerWidth()
-      controlSize   = $('#controldiv').outerWidth()
-      controlOpac = $('#controldiv').css 'opacity'
+      controlSize   = $('#vis-ctrls').outerWidth()
+      controlOpac = $('#vis-ctrls').css 'opacity'
 
       controlSize = visWrapperSize * .2 - hiderSize
       controlOpac = 1.0
@@ -63,7 +63,7 @@ $ ->
 
       $("#viscontainer").height(visWrapperHeight - visTitleBarHeight)
 
-      if toggleControls and ($ '#controlcontainer').width() > hiderSize or
+      if toggleControls and ($ '#vis-ctrl-container').width() > hiderSize or
       (init and globals.options.startCollapsed?) or !globals.configs.toolsOpen
         controlSize = 0
         controlOpac = 0.0
@@ -73,14 +73,14 @@ $ ->
 
       # New width should take into account visibility of tools
       newWidth = visWrapperSize
-      if $('#controlcontainer').is(':visible') then newWidth -= contrContSize
+      if $('#vis-ctrl-container').is(':visible') then newWidth -= contrContSize
       newHeight = $('#viscontainer').height() - $('#vistablist').outerHeight()
 
-      $('#controlcontainer').height $('#viswrapper').height()
-      $('#controlcontainer').animate {width: contrContSize}, aniLength, 'linear'
+      $('#vis-ctrl-container').height $('#viswrapper').height()
+      $('#vis-ctrl-container').animate {width: contrContSize}, aniLength, 'linear'
 
       # Animate the collapsing controls and the expanding vis
-      $('#controldiv').animate {width: controlSize, opacity: controlOpac},
+      $('#vis-ctrls').animate {width: controlSize, opacity: controlOpac},
         aniLength, 'linear'
 
       # Only adjust with tools are visible

@@ -57,8 +57,9 @@ $ ->
         @update()
 
         # Make the controls collapsible
-        $('.control_header').click (e) ->
-          $(@).siblings('.control_outer').slideToggle()
+        $('.vis-ctrl-header').click (e) ->
+          console.log 'sup'
+          $(@).siblings('.vis-ctrl-body').slideToggle()
 
       ###
       Update minor state
@@ -100,7 +101,7 @@ $ ->
       Unbinds control handlers and clears the HTML elements.
       ###
       clearControls: ->
-        ($ '#controldiv').empty()
+        ($ '#vis-ctrls').empty()
 
       ###
       Calculate data to be displayed subject to analysis type
@@ -172,7 +173,7 @@ $ ->
         controls += '</div></div>'
 
         # Write HTML
-        ($ '#controldiv').append controls
+        ($ '#vis-ctrls').append controls
 
         if checked
           ($ '#select-all-y').prop('checked', true)
@@ -301,7 +302,7 @@ $ ->
         controls += '</div></div>'
 
         # Write HTML
-        ($ '#controldiv').append controls
+        ($ '#vis-ctrls').append controls
 
         ($ '.color-picker').each (_, cpicker) =>
           cid = $(cpicker).attr 'data-color-id'
@@ -390,21 +391,24 @@ $ ->
         if (globals.options? and globals.options.isEmbed?) and not @chart?
           return
 
-        context = {}
-        context.id = 'save-ctrls'
-        context.title = 'Save'
-        context.body = HandlebarsTemplates['visualizations/controls/save'](context);
-
-        snarf = HandlebarsTemplates['visualizations/controls/body'](context);
-        $('#controldiv').append snarf
+        # Draw the Save Controls
+        ctx = {}
+        ctx.id = 'save-ctrls'
+        ctx.title = 'Save'
+        ctx.body = HandlebarsTemplates['visualizations/controls/save'](ctx);
+        save = HandlebarsTemplates['visualizations/controls/body'](ctx);
+        $('#vis-ctrls').append save
 
         globals.verifyUser ( -> ), ( ->
           $('#saveVisButton').attr('disabled', 'disabled')), false
         globals.verifyUser ( -> ), (->
           $('#defaultVisButton').remove()), true
 
-        if @chart?
-          console.log 'print and download'
+        # Only Highcharts vises can be printed and downloaded
+        # TODO - implement these for non-Highchart vises
+        unless @chart?
+          $('#print-vis-btn').hide()
+          $('#download-vis-btn').hide()
 
         ($ '#save-vis-btn').click ->
           globals.verifyUser (-> globals.saveVis()), (->
@@ -422,10 +426,9 @@ $ ->
         ($ '#print-vis-btn').click =>
           @chart.print()
 
-        # Set up accordion
+        # Track the status of this control panel
         globals.configs.saveOpen ?= 0
-
-        ($ '#saveControl > h3').click ->
+        ($ '#save-ctrls > h3').click ->
           globals.configs.saveOpen = (globals.configs.saveOpen + 1) % 2
 
       ###
@@ -476,7 +479,7 @@ $ ->
 
         ### --- ###
         # Write HTML
-        ($ '#controldiv').append controls
+        ($ '#vis-ctrls').append controls
 
         ($ '.analysisType').change (e) =>
           @configs.analysisType = Number e.target.value

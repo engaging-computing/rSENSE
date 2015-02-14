@@ -303,7 +303,7 @@ $ ->
         c += "</div></div>"
 
         # Write HTML
-        $('#controldiv').append c
+        $('#vis-ctrls').append c
 
         if checked
           $('#select-all-y').prop('checked', true)

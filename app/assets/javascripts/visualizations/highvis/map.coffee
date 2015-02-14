@@ -418,7 +418,7 @@ $ ->
         controls += "</div></div>"
 
         # Write HTML
-        ($ '#controldiv').append controls
+        ($ '#vis-ctrls').append controls
 
         ($ '#markerBox').click (e) =>
           @configs.visibleMarkers = if e.target.checked then 1 else 0
