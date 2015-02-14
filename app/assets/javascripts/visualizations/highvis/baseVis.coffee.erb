@@ -47,6 +47,7 @@ $ ->
       SORT_DEFAULT:          -1
 
       analysisTypeNames: ["Total","Max","Min","Mean","Median","Row Count"]
+
       ###
       Start sequence used by runtime
       ###
@@ -396,7 +397,7 @@ $ ->
 
         snarf = HandlebarsTemplates['visualizations/controls/body'](context);
         $('#controldiv').append snarf
-b
+
         globals.verifyUser ( -> ), ( ->
           $('#saveVisButton').attr('disabled', 'disabled')), false
         globals.verifyUser ( -> ), (->
