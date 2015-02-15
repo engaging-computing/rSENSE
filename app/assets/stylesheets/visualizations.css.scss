@@ -91,20 +91,34 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
       .vis-ctrl-body {
         font-size: 12px;
         width: 100%;
-        text-align: center;
         padding: 5px 20px;
         background-color: $vis-bkg-light;
+
+        .centered {
+          text-align: center;
+        }
+
+        .checkbox, .radio {
+          text-align: left;
+          margin: 1px 0;
+
+          input {
+            margin-top: 2px;
+            margin-left: 0;
+          }
+        }
 
         .label-dataset-color {
           float: right;
           width: 20px;
         }
 
-        .checkbox, .radio {
-          margin: 1px 0;
-          input {
-            margin-top: 2px;
-          }
+        .vis-ctrl-subblock {
+          margin-bottom: 5px;
+        }
+
+        .vis-ctrl-subtitle {
+          text-align: left;
         }
       }
 
@@ -318,27 +332,6 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
 
   // table vis needs additional love to make it look right
   #table_canvas {
-    #first_toolbar_bottom, #last_toolbar_bottom, #next_toolbar_bottom, #prev_toolbar_bottom {
-      background-image: url(/assets/vis/ui-icons_222222_256x240.png);
-      width: 19px; // height set as !important to 19px elsewhere
-    }
-
-    #first_toolbar_bottom {
-      background-position: -78px -158px;
-    }
-
-    #last_toolbar_bottom {
-      background-position: -63px -158px;
-    }
-
-    #next_toolbar_bottom {
-      background-position: -30px -158px;
-    }
-
-    #prev_toolbar_bottom {
-      background-position: -47px -158px;
-    }
-
     table {
       border-color: $border-color;
     }

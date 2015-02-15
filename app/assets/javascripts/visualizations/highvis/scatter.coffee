@@ -112,14 +112,14 @@ $ ->
                 events:
                   mouseOver: () ->
                     # Push elements to bottom to draw over others in series
-                    ele = ($ @.graphic.element)
+                    ele = $(@.graphic.element)
                     root = ele.parent()
                     root.append ele
 
           group_by = ''
-          ($ '#groupSelector').find('option').each (i,j) ->
-            if ($ j).is(':selected')
-              group_by = ($ j).text()
+          $('#groupSelector').find('option').each (i,j) ->
+            if $(j).is(':selected')
+              group_by = $(j).text()
           title:
             text: ""
           tooltip:
@@ -249,8 +249,8 @@ $ ->
                 @configs.xBounds.max = (new Date(@configs.xBounds.max)).getUTCFullYear()
 
         # Calculate grid spacing for data reduction
-        width = ($ '#' + @canvas).innerWidth()
-        height = ($ '#' + @canvas).innerHeight()
+        width = $('#' + @canvas).innerWidth()
+        height = $('#' + @canvas).innerHeight()
 
         @xGridSize = @yGridSize = @INITIAL_GRID_SIZE
 
@@ -270,6 +270,8 @@ $ ->
 
             if dat.length < 2 and @configs.mode is @LINES_MODE
               @configs.mode = @SYMBOLS_LINES_MODE
+              query = "input[name='mode'][value='#{@configs.mode}']"
+              $(query).prop('checked', true);
               quickFlash('Mode has been changed to symbols and lines because
                 there were too few points to generate a line', 'warning')
 
@@ -302,10 +304,10 @@ $ ->
         if @isZoomLocked()
           @updateOnZoom = 0
           @setExtremes()
-          ($ '#zoomResetButton').removeClass("disabled")
+          $('#zoomResetButton').removeClass("disabled")
         else
           @resetExtremes
-          ($ '#zoomResetButton').addClass("disabled")
+          $('#zoomResetButton').addClass("disabled")
 
         @chart.redraw()
 
@@ -324,60 +326,76 @@ $ ->
             # Add the regression to the chart
             @chart.addSeries(regression.series)
             # Enabled the class by removing the disabled class
-            ($ 'tr#row_' + regression.series.name.id).removeClass('regression_row_disabled')
+            $('tr#row_' + regression.series.name.id).removeClass('regression_row_disabled')
           else
             # Prevent duplicate add classes
-            if ($ 'tr#row_' + regression.series.name.id).hasClass('regression_row_disabled') is false
-              ($ 'tr#row_' + regression.series.name.id).addClass('regression_row_disabled')
+            if $('tr#row_' + regression.series.name.id).hasClass('regression_row_disabled') is false
+              $('tr#row_' + regression.series.name.id).addClass('regression_row_disabled')
 
         # Display the table header if necessary
-        if ($ '#regression-table-body > tr').length > 0
-          ($ 'tr#regression-table-header').show()
-        else ($ 'tr#regression-table-header').hide()
+        if $('#regression-table-body > tr').length > 0
+          $('tr#regression-table-header').show()
+        else $('tr#regression-table-header').hide()
 
       ###
       Draws radio buttons for changing symbol/line mode.
       ###
-      drawToolControls: (elaspedTimeButton = true) ->
+      drawToolControls: (elapsedTime = true) ->
+        # Configure the tool controls
+        con = {}
+        con.axes = ["Both", "X", "Y"]
+        con.logSafe = data.logSafe
+        con.elapsedTime = elapsedTime
+        con.modes = [
+          { mode: @SYMBOLS_LINES_MODE, text: "Symbols and Lines" }
+          { mode: @LINES_MODE,         text: "Lines Only" }
+          { mode: @SYMBOLS_MODE,       text: "Symbols Only" }
+        ]
 
-        # Write HTML
-        ($ '#vis-ctrls').append controls
+        # Draw the Tool controls
+        ctx = {}
+        ctx.id = 'tool-ctrls'
+        ctx.title = 'Tools'
+        ctx.body = HandlebarsTemplates['visualizations/controls/scatter'](con);
+        tools = HandlebarsTemplates['visualizations/controls/body'](ctx);
+        $('#vis-ctrls').append tools
 
-        ($ '#zoomResetButton').button()
-        ($ '#zoomResetButton').click (e) =>
-          @resetExtremes(($ '#zoomSelector').val())
+        # Check off the right boxes
+        if @configs.advancedTooltips
+          $('#ckbx-tooltips').prop('checked', true)
+        if @configs.fullDetail then $('#ckbx-fulldetail').prop('checked', true)
+        if globals.configs.logY then $('#ckbx-log-y').prop('checked', true)
+        $("input[name='mode'][value='#{@configs.mode}']").prop('checked', true)
 
         # Set initial state of zoom reset
-        if not @isZoomLocked()
-          ($ '#zoomResetButton').addClass("disabled")
-        else
-          ($ '#zoomResetButton').addClass("enabled")
+        if not @isZoomLocked() then $('#zoomResetButton').addClass("disabled")
+        else $('#zoomResetButton').addClass("enabled")
 
-        ($ '#zoomOutButton').button()
-        ($ '#zoomOutButton').click (e) =>
-          @zoomOutExtremes(($ '#zoomSelector').val())
+        $('#zoom-reset-btn').click (e) =>
+          @resetExtremes($('#zoom-axis-list').val())
 
-        ($ '.mode_radio').click (e) =>
+        $('#zoom-out-btn').click (e) =>
+          @zoomOutExtremes($('#zoom-axis-list').val())
+
+        $('input[name="mode"]').click (e) =>
           @configs.mode = Number e.target.value
           @start()
 
-        ($ '.tooltip_box').click (e) =>
+        $('#ckbx-tooltips').click (e) =>
           @configs.advancedTooltips = (@configs.advancedTooltips + 1) % 2
           @start()
           true
 
-        ($ '.full_detail_box').click (e) =>
+        $('#ckbx-fulldetail').click (e) =>
           @configs.fullDetail = (@configs.fullDetail + 1) % 2
           @delayedUpdate()
           true
 
-        ($ '.logY_box').click (e) =>
+        $('#ckbx-log-y').click (e) =>
           globals.configs.logY = (globals.configs.logY + 1) % 2
           @start()
-        ($ '#groupSelector').change (e) =>
-          @start()
-        ($ '#elaspedTimeButton').button()
-        ($ '#elaspedTimeButton').click (e) ->
+
+        $('#elasped-time-btn').click (e) ->
           globals.generateElapsedTimeDialog()
 
       ###
@@ -408,12 +426,12 @@ $ ->
         controls += '</div></div>'
 
         # Write HTML
-        ($ '#vis-ctrls').append controls
+        $('#vis-ctrls').append controls
 
         # Make xAxis radio handler
-        ($ '.xAxis_input').change (e) =>
+        $('.xAxis_input').change (e) =>
           selection = null
-          ($ '.xAxis_input').each () ->
+          $('.xAxis_input').each () ->
             if @checked
               selection = @value
           @configs.xAxis = Number selection
@@ -424,7 +442,7 @@ $ ->
         # Set up accordion
         globals.configs.xAxisOpen ?= 0
 
-        ($ '#xAxisControl > h3').click ->
+        $('#xAxisControl > h3').click ->
           globals.configs.xAxisOpen = (globals.configs.xAxisOpen + 1) % 2
 
       ###
@@ -553,8 +571,7 @@ $ ->
           """
 
         # Write HTML
-        ($ '#vis-ctrls').append controls
-        ($ "#regressionControl button").button()
+        $('#vis-ctrls').append controls
 
         # Add all the saved regressions correctly
         for regression in @configs.savedRegressions
@@ -571,25 +588,25 @@ $ ->
             @addRegressionToTable(regression, false)
 
         # Catches change in y axis
-        ($ '.y_axis_input').click (e) =>
+        $('.y_axis_input').click (e) =>
           @updateYRegression()
 
         # Catches change in x axis
-        ($ '.xAxis_input').change (e) =>
+        $('.xAxis_input').change (e) =>
           @updateXRegression()
 
-        ($ "#regressionButton").click =>
+        $("#regressionButton").click =>
 
           # Make the title for the tooltip
           xAxisName = data.fields[@configs.xAxis].fieldName
-          yAxisName = ($ '#regressionYAxisSelector option:selected').text()
+          yAxisName = $('#regressionYAxisSelector option:selected').text()
           name = "<strong>#{yAxisName}</strong> as a "
-          name += "#{($ '#regressionSelector option:selected').text().toLowerCase()} "
+          name += "#{$('#regressionSelector option:selected').text().toLowerCase()} "
           name += "function of <strong>#{xAxisName}</strong>"
 
           # Get the current selected y index, the regression type, and the current group indices
-          yAxisIndex = Number(($ '#regressionYAxisSelector').val())
-          regressionType = Number(($ '#regressionSelector').val())
+          yAxisIndex = Number($('#regressionYAxisSelector').val())
+          regressionType = Number($('#regressionSelector').val())
 
           #list of (x,y) points to be used in calculating regression
           xyData = data.multiGroupXYSelector(@configs.xAxis, yAxisIndex, data.groupSelection)
@@ -666,7 +683,7 @@ $ ->
         # Set up accordion
         globals.configs.regressionOpen ?= 0
 
-        ($ '#regressionControl > h3').click ->
+        $('#regressionControl > h3').click ->
           globals.configs.regressionOpen = (globals.configs.regressionOpen + 1) % 2
 
       # Adds a regression row to our table, with styling for enabled or disabled
@@ -689,17 +706,17 @@ $ ->
           """
 
         # Added a info relating to this regression
-        ($ '#regression-table-body').append(regressionRow)
+        $('#regression-table-body').append(regressionRow)
 
         # Add the disabled style if necessary
         if !enabled
-          ($ 'tr#row_' + savedReg.series.name.id).addClass('regression_row_disabled')
+          $('tr#row_' + savedReg.series.name.id).addClass('regression_row_disabled')
 
         # Display the table header
-        ($ 'tr#regression-table-header').show()
+        $('tr#regression-table-header').show()
 
         # Make each row a link to its view
-        ($ 'tr#row_' + savedReg.series.name.id).click =>
+        $('tr#row_' + savedReg.series.name.id).click =>
           # Reset the state of when you saved
           @configs.xAxis = savedReg.fieldIndices[0]
           globals.configs.fieldSelection = [savedReg.fieldIndices[1]]
@@ -708,22 +725,22 @@ $ ->
           @configs.xBounds = savedReg.bounds[0]
           @configs.yBounds = savedReg.bounds[1]
 
-          ($ '.xAxis_input').each (i, input) ->
+          $('.xAxis_input').each (i, input) ->
             if Number(input.value) == savedReg.fieldIndices[0]
               input.checked = true
 
           @start()
 
         # Add a make the delete button remove the regression object
-        ($ 'td#' + savedReg.series.name.id).click =>
+        $('td#' + savedReg.series.name.id).click =>
 
           # Remove regression view from the screen.
-          ($ 'td#' + savedReg.series.name.id).parent().remove()
+          $('td#' + savedReg.series.name.id).parent().remove()
 
           # Display the table header if necessary
-          if ($ '#regression-table-body > tr').length > 0
-            ($ 'tr#regression-table-header').show()
-          else ($ 'tr#regression-table-header').hide()
+          if $('#regression-table-body > tr').length > 0
+            $('tr#regression-table-header').show()
+          else $('tr#regression-table-header').hide()
 
           # Remove regression from the savedRegressions array.
           id = savedReg.series.name.id
@@ -740,7 +757,7 @@ $ ->
               break
 
         # Make the hovering highlight the correct regression
-        ($ 'tr#row_' + savedReg.series.name.id).mouseover =>
+        $('tr#row_' + savedReg.series.name.id).mouseover =>
 
           # Remove regression from the chart
           id = savedReg.series.name.id
@@ -751,7 +768,7 @@ $ ->
               break
 
         # When the mouse leaves, don't highlight anymore
-        ($ 'tr#row_' + savedReg.series.name.id).mouseout =>
+        $('tr#row_' + savedReg.series.name.id).mouseout =>
 
           # Remove regression from the chart
           id = savedReg.series.name.id
