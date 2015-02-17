@@ -33,24 +33,6 @@
       src="https://maps-api-ssl.google.com/maps/api/js?key=AIzaSyBxtPK1_mxwVdl1NRu7ZEiSNvmCekFSZAw&amp;sensor=false&amp;libraries=visualization,geometry&amp;v=3.9">
 </script>
 
-<!-- Handlebars template for the modal lightbox to display photos -->
-<script id="modal-template" type="text/x-handlebars-template">
-  <div class="modal fade" id="target_img" tabindex='-1'>
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close"
-                  data-dismiss="modal"aria-hidden="true">
-            <i class="fa fa-times"></i> Close</button>
-        </div>
-        <div class="modal-body">
-          <img src='{{src}}' style='width:100%'/>
-        </div>
-      </div>
-    </div>
-  </div>
-</script>
-
 <% if @datasets.count == 1%>
   <div id="title_row" style="padding-left:10px">
     <div style="font-size:1.75em">
