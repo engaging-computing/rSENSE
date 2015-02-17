@@ -314,6 +314,7 @@
     width:100%;
     min-width:738px; 
     body {
+      min-width: 718px !important;
       padding-bottom: 40px;
       color: #5a5a5a;
     }
@@ -345,6 +346,7 @@
       height: auto;
       margin-bottom: 50px;
       display:block;
+      /*min-height: 0px !important;*/
     }
     .carousel-slide-text{
       text-align: left;  
