@@ -73,12 +73,9 @@ $ ->
           'margin-bottom': "#{defMargins / 2}px"
         )
 
-        # prepare the handlebars html templates
-        #source = $("#photo-template").html()
-        #photo_template = Handlebars.compile(source)
-
-        source = $("#modal-template").html()
-        modal_template = Handlebars.compile(source)
+        # load the Handlebars templates
+        picTemp = HandlebarsTemplates['vis/photo/pic']
+        lbTemp = HandlebarsTemplates['vis/photo/lightbox']
 
         for ds of data.metadata
 
@@ -97,12 +94,12 @@ $ ->
                   id:     dset.dataset_id
                 }
 
-                $("#polaroid").append HandlebarsTemplates['vis/photo/pic'](figure)
+                $("#polaroid").append picTemp(figure)
                 $('#pic_' + i).css(
                   'cursor': 'pointer'
                 )
                 $('#pic_' + i).click ->
-                  $('#polaroid').append modal_template(figure)
+                  $('#polaroid').append lbTemp(figure)
 
                   $('#target_img').modal
                     keyboard: true
