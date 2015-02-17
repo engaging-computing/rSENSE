@@ -19,7 +19,7 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     find('#project_title').set('Contributor Key Test Project')
     click_on 'Create Project'
     find('#manual_fields').click
-    find('#new_field').find(:xpath, 'option[2]').select_option
+    find('#number').find(:xpath, 'option[2]').select_option
     assert page.has_content? 'Field added'
     assert page.has_content? 'Number'
     click_on 'Save and Return'

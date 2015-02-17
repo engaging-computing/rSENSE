@@ -22,26 +22,22 @@ class UpdateFieldsTest < ActionDispatch::IntegrationTest
 
     find('#manual_fields').click
 
-    find('#new_field').find(:xpath, 'option[2]').select_option
+    click_on 'Add Number'
     assert page.has_content?('Field added'), 'Flash happened'
     assert page.has_content?('Number'), 'Number field is there'
-    find('#new_field').find(:xpath, 'option[2]').select_option
+    click_on 'Add Text'
     assert page.has_content?('Field added'), 'Flash happened'
     page.assert_selector('tr', count: 3)
     first(:css, '.field_delete').click
     find('.field_delete').click
 
-    find('#new_field').find(:xpath, 'option[3]').select_option
+    click_on 'Add Timestamp'
     assert page.has_content?('Field added'), 'Flash happened'
     find('.field_delete').click
 
-    find('#new_field').find(:xpath, 'option[4]').select_option
+    click_on 'Add Location'
     assert page.has_content?('Field added'), 'Flash happened'
     find('.field_delete').click
-
-    find('#new_field').find(:xpath, 'option[5]').select_option
-    assert page.has_content?('Field added'), 'Flash happened'
-    first(:css, '.field_delete').click
 
     find('#fields_form_submit').click
 

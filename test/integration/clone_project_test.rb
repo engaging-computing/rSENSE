@@ -28,7 +28,7 @@ class CloneProjectTest < ActionDispatch::IntegrationTest
     click_on 'Create Project'
 
     find('#manual_fields').click
-    find('#new_field').find(:xpath, 'option[2]').select_option
+    find('#number').find(:xpath, 'option[2]').select_option
     assert page.has_content?('Field added'), 'Flash happened'
     assert page.has_content?('Number'), 'Number field is there'
     find('#fields_form_submit').click
