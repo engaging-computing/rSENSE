@@ -15,7 +15,13 @@
 }
 
 @media (max-width: 770px) {
-  .description, .units, .restrictions, .num_picker {
+  .description, .units, .restrictions {
+    display: none;
+  }
+}
+
+@media (max-width: 1200px) {
+  .num_picker {
     display: none;
   }
 }
@@ -31,6 +37,7 @@
 }
 
 .num_picker {
-  width: 35px;
+  width: 36px;
   height: 33px;
+  padding-left: 2px;
 }
