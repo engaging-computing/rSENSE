@@ -278,11 +278,10 @@ class ProjectsController < ApplicationController
       end
     end
 
-    # If there's a new field, add it.
-    
-    $i = 0
-    
-    while $i < ((params[:num_fields].to_i > params[:text_fields].to_i)? params[:num_fields].to_i : params[:text_fields].to_i)  do
+    # If there's a new field, add it the number of times specified.
+    i = 0
+
+    while i < ((params[:num_fields].to_i > params[:text_fields].to_i) ? params[:num_fields].to_i : params[:text_fields].to_i)
       field_type = params[:new_field]
 
       if field_type == 'Location'
@@ -294,7 +293,7 @@ class ProjectsController < ApplicationController
                               field_type: get_field_type('Longitude'),
                               name: 'Longitude',
                               unit: 'deg')
-    
+
         unless latitude.save && longitude.save
           flash[:error] = "#{latitude.errors.full_messages}\n"\
             "\n#{longitude.errors.full_messages}"
@@ -313,7 +312,7 @@ class ProjectsController < ApplicationController
           return
         end
       end
-      $i += 1
+      i += 1
     end
     if field_type.nil?
       redirect_to project_path(@project), notice: 'Changes to fields saved.'
