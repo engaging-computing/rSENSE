@@ -35,7 +35,7 @@
 # File:         Binary Tree                                              #
 #                                                                        #
 # Description:  This file defines a modified binary tree that            #
-#               will be used to represent infix expressions in my        #
+#               will be used to represent prefix expressions in my       #
 #               symbolic regression implementation.                      #
 ##########################################################################
 
@@ -63,19 +63,20 @@ $ ->
         (a)    -> Math.log(Math.abs(a))
         (a)    -> Math.sqrt(Math.abs(a))
       ]
+
       constructor: (parent = null) ->
         @data = null
         @right = null
         @left = null
         @parent = parent
-      
+
       # Returns deep copy of binary tree object
       @clone: (tree, parent = null) ->
-        console.log tree
         return tree if tree is null or typeof tree isnt 'object'
         temp = new binaryTree(parent)
         for key of tree when (typeof tree[key] isnt 'function' and key isnt 'parent')
           temp[key] = @clone(tree[key], temp)
+        temp['data'] = tree.data
         temp
 
       # Returns true if a and b are equivalent objects 
@@ -86,7 +87,6 @@ $ ->
           return true
         if Object.keys(a).length == Object.keys(b).length
           for key of a when key isnt 'parent'
-            console.log a[key], b[key]
             if typeof(a[key]) is 'object'
               recur = @is_equal(a[key], b[key])
             else if a[key] != b[key]
@@ -99,7 +99,7 @@ $ ->
 
       # Returns number of nodes in the tree
       treeSize: ->
-        depth = if @data is null then 0 else 1
+        depth = 1
         rest = 0
         if @right isnt null
           rest += @right.treeSize()
@@ -109,7 +109,7 @@ $ ->
 
       # Returns the maximum depth of the tree
       maxDepth: ->
-        depth = if @data is null then 0 else 1
+        depth = 1
         rest = 0
         if @left isnt null
           rest = Math.max(rest, @left.maxDepth())
@@ -172,7 +172,7 @@ $ ->
       # ROOT, left, right
       index: (i) ->
         if i is 0
-          return @data
+          return this
         leftSize = 
           if @left is null
             0
@@ -203,21 +203,11 @@ $ ->
           else if i <= leftSize
             @left.index(i - 1)
 
-      # Given two parent trees, return a pair of child trees.  The first child is 
-      # the portion of the first tree before its crossover point,
-      # and the portion of the second tree after its crossover point.
-      # The second tree is the portion of the first tree after its
-      # crossover point, and the portion of the second tree before
-      # its crossover point.
-      @crossover: (tree1, tree2) ->
-        1
-
       # Given a tree, replace it with a randomly-generated tree whose maximum depth is given by maxDepth. 
       ###
       # WARNING:  MUTATES THE BINARY TREE
       ###
-      generate: (maxDepth = 5, curDepth = 1) ->
-        console.log "curDepth is #{curDepth}"
+      generate: (maxDepth = 10, curDepth = 1) ->
         terminal = window.binaryTree.terminals[Math.floor(Math.random() * window.binaryTree.terminals.length)]
         operator = window.binaryTree.operators[Math.floor(Math.random() * window.binaryTree.operators.length)]
         if curDepth is maxDepth
@@ -235,7 +225,6 @@ $ ->
 
       # Evaluate the Binary tree numerically for a given input value
       evaluate: (x) ->
-        console.log "@data is #{@data}"
         if @data is 'x'
           return x
         else if typeof(@data) is 'number'
@@ -246,17 +235,85 @@ $ ->
           else
             return @data(this.left.evaluate(x), this.right.evaluate(x))
 
+      # Insert the binaryTree object 'tree' at the location of the binaryTree 
+      # specified by index
+      ###
+      # WARNING:  MUTATES THE BINARY TREE 'THIS', DOES NOT MUTATE ARGUMENT TREE
+      ###
+      insertTree: (tree, index = 0) ->
+        replacementPoint = this.index(index)
+        if index is null
+          console.log "Error inserting #{tree} at location specified.  Index does not exist in the tree."
+          null
+        else
+          start = replacementPoint.parent
+          if start isnt null
+            if start.left isnt null and window.binaryTree.is_equal(replacementPoint, start.left)
+              start.left = window.binaryTree.clone(tree)
+            else
+              if start.right isnt null and window.binaryTree.is_equal(replacementPoint, start.right)
+                start.right = window.binaryTree.clone(tree)
+            start.__updateParents()
+          else
+            this.data = tree.data
+            this.right = binaryTree.clone(tree.right)
+            this.left = binaryTree.clone(tree.left)
+            this.parent = null
+            this.__updateParents()
+
+
+
+      # Updates binary tree element's parents to reflect the result of
+      # an insertTree merger to parent.right or parent.left
+      ###
+      # WARNING:  MUTATES THE BINARY TREE
+      ###
+      ###
+      # WARNING:  INTERNAL METHOD.  DO NOT CALL.
+      ###
+      __updateParents: ->
+        if this.right isnt null
+          this.right = window.binaryTree.clone(this.right, this)
+          this.right.__updateParents()
+        if this.left isnt null
+          this.left = window.binaryTree.clone(this.left, this)
+          this.left.__updateParents()
+
+      # Given two parent trees, create two new child trees by crossover.
+      # Both parent trees are given a randomly-selected crossover point.
+      # The first child is the part of the first parent before its crossover
+      # point, and the section of the second parent after its crossover point.
+      # The second child is the part of the first parent after its crossover
+      # point, and the part of the second parent before its crossover point.
+
+      @crossover: (tree1, tree2) ->
+        [tree1a, tree1b] = [window.binaryTree.clone(tree1), window.binaryTree.clone(tree1)]
+        [tree2a, tree2b] = [window.binaryTree.clone(tree2), window.binaryTree.clone(tree2)]
+        
+        [crossoverPointOne, crossoverPointTwo] = \
+        [Math.floor(Math.random() * tree1.treeSize()), Math.floor(Math.random() * tree2.treeSize())]
+        
+        [childOne, childTwo] = [window.binaryTree.clone(tree1a), window.binaryTree.clone(tree2a)]
+        childOne.insertTree(childTwo.index(crossoverPointTwo), crossoverPointOne)
+        childTwo.insertTree(tree1b.index(crossoverPointOne), crossoverPointTwo)
+        return [childOne, childTwo]
 
       ###
       # TODO:
       #   1.  Random access (indexing) DONE!
-      #   2.  preorder traversal (for eval)
-      #   3.  Crossover tree
+      #   2.  preorder traversal (for eval) DONE!
+      #   3.  Crossover tree (DONE)
       #   4.  Generate random tree (DONE)
+      #   5.  Insert tree (DONE)
       ###
     window.testTree = new binaryTree
     testTree.insertData((a, b) -> a * b)
     testTree.insertData(3, 'left')
     testTree.insertData(2, 'right')
+    window.testTree2 = new binaryTree
+    testTree2.insertData((a, b) -> a * b)
+    testTree2.insertData('x', 'left')
+    testTree2.insertData('x', 'right')
+    window.result = window.binaryTree.crossover(testTree, testTree2)
 
 
