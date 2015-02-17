@@ -2,6 +2,10 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+.add_fields {
+  margin: 10px 0 15px 0;
+}
+
 .description {
   text-align: left;
   margin-top: 10px;
@@ -13,10 +17,6 @@
   margin: 5px auto 0;
   width: 30px;
   text-align: center;
-}
-
-.fields_table {
-	margin-top: 10px;
 }
 
 @media (max-width: 770px) {
