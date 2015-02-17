@@ -1,5 +1,6 @@
-<div style="display: none" id="mparams" lastPage="<%= @last_page %>" totalPages="<%= @total_pages %>"></div>
-
+<div style="display: none" id="mparams" lastPage="<%= @last_page %>"
+     totalPages="<%= @total_pages %>">
+</div>
 <table class="table table-default table-striped">
   <thead >
     <tr>
@@ -11,12 +12,17 @@
   <tbody>
     <% @contributions.each do |contribution|%>
       <tr>
-        <td><span class='word-wrap'><%= link_to contribution.title, url_for(contribution) %></span></td>
+        <td>
+          <span class='word-wrap'>
+            <%= link_to contribution.title.html_safe, url_for(contribution) %>
+          </span>
+        </td>
         <td><%= contribution.created_at.strftime("%B %d, %Y")%></td>
         <td>
           <% if contribution.kind_of? DataSet %>
-            <a href="/projects/<%= contribution.project.id %>/export/data_sets/<%= contribution.id %>">Export</a>
-          <% end %>  
+            <a href="/projects/<%= contribution.project.id %>/export/data_sets/<%= contribution.id %>">Export
+            </a>
+          <% end %>
         </td>
         <td>
           <% if (can_edit? contribution) && (contribution.kind_of? DataSet) %>
@@ -26,21 +32,25 @@
         <td>
           <% if can_hide? contribution %>
             <% if contribution.hidden %>
-              <a class="contribution_unhide" type="<%= ActiveModel::Naming::param_key(contribution) %>" href="<%= url_for(contribution) %>">Unhide</a>
+              <a class="contribution_unhide" type="<%= ActiveModel::Naming::param_key(contribution) %>" href="<%= url_for(contribution) %>">
+                Unhide
+              </a>
             <% else %>
-              <a class="contribution_hide" type="<%= ActiveModel::Naming::param_key(contribution) %>" href="<%= url_for(contribution) %>">Hide</a>
+              <a class="contribution_hide" type="<%= ActiveModel::Naming::param_key(contribution) %>" href="<%= url_for(contribution) %>">
+                Hide
+              </a>
             <% end %>
           <% end %>
         </td>
         <td class="delete">
           <% if can_delete? contribution %>
-            <%= link_to contribution, method: :delete, remote: true, 
+            <%= link_to contribution, method: :delete, remote: true,
                         data: {confirm: "Are you sure?"}, class: "contrib-delete-link" do %>
               <i class="fa fa-times-circle"></i> Delete
             <% end %>
           <% end %>
         </td>
-      </tr>      
-    <%end%>
+      </tr>
+    <% end %>
   </tbody>
-</table>  
+</table>
