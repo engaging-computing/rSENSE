@@ -315,5 +315,3 @@ $ ->
     testTree2.insertData('x', 'left')
     testTree2.insertData('x', 'right')
     window.result = window.binaryTree.crossover(testTree, testTree2)
-
-

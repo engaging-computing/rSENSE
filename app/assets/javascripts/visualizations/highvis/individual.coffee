@@ -50,9 +50,13 @@ $ ->
     class window.individual
       
       # Create a a binary tree to represent a random mathematical function
-      constructor: (maxDepth = 10) ->
-        @tree = new binaryTree
-        @tree.generate(maxDepth)
+      constructor: (tree = null, maxDepth = 10) ->
+        if tree is null
+          @tree = new binaryTree
+          @tree.generate(maxDepth)
+          @depth = maxDepth
+        else
+          @tree = binaryTree.clone(tree)
 
       # Numerically evaluate the individual function at the value n
       evaluate: (n) ->
@@ -60,11 +64,36 @@ $ ->
 
       # Point mutation genetic operator
       @mutate: (individual) -> 
-        1
-      
+        length = individual.tree.treeSize()
+        mutationSite = Math.floor(Math.random() * length)
+        mutant = binaryTree.clone(individual.tree)
+        value = individual.tree.index(mutationSite).data
+        mutation = null
+        if typeof(individual.tree.index(mutationSite).data) is 'function'
+          if individual.tree.index(mutationSite).data.length is 1
+            candidates = 
+              binaryTree.operators.filter (func) ->
+                '' + func != '' + value and func.length is 1
+            mutation = candidates[Math.floor(Math.random() * candidates.length)]
+          else
+            candidates = 
+              binaryTree.operators.filter (func) ->
+                '' + func != '' + value and func.length is 2
+            mutation = candidates[Math.floor(Math.random() * candidates.length)]
+        else
+          candidates = 
+            binaryTree.terminals.filter (term) ->
+              term != value
+          mutation = candidates[Math.floor(Math.random() * candidates.length)]
+        mutant.index(mutationSite).data = mutation
+        depth = individual.tree.depth
+        ret = new window.individual(mutant, depth)
+        ret
+
       # Crossover genetic operator
       @crossover: (individual1, individual2) ->
-        1
+        [childOne, childTwo] = binaryTree.crossover(individual1.tree, individual2.tree)
+        [new individual(childOne), new individual(childTwo)]
 
       # Fitness-proportional reproduction genetic operator
       @fpReproduce: (individuals) ->
