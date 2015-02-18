@@ -300,7 +300,7 @@ class ProjectsController < ApplicationController
           redirect_to "/projects/#{@project.id}/edit_fields"
           return
         end
-      elsif !field_type.nil?
+      elsif !field_type.nil? or field_type != ''
         next_name = Field.get_next_name(@project,
                                         get_field_type(params[:new_field]))
         field = Field.new(project_id: @project.id,
@@ -314,7 +314,7 @@ class ProjectsController < ApplicationController
       end
       i += 1
     end
-    if field_type.nil?
+    if field_type.nil? or field_type == ''
       redirect_to project_path(@project), notice: 'Changes to fields saved.'
     else
       redirect_to "/projects/#{@project.id}/edit_fields", notice: 'Field added'
