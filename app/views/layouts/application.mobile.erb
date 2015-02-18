@@ -21,115 +21,41 @@
       </div>
     <% end %>
 
-    <!-- Display proper app -->
-      <!--<div class="col-xs-12 app-desc">
-        <a href="https://play.google.com/store/apps/developer?id=Engaging+Computing+Group,+UML" class="btn btn-primary img-rounded"> 
-        <%= image_tag "icon-android.png", class: 'play-store-button' %> Download iSENSE Android apps</a> 
-        <a class="btn btn-primary disabled img-rounded">
-        <%= image_tag "icon-apple.png", class: 'app-store-button'  %> </a> 
-      </div>
-    </div>-->
-
-
     <!-- The title bar -->
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="row"><!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header col-xs-12">
-          <!--<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>-->
           <div class="navbar-category"><a class="navbar-brand" href="/"><%= image_tag("isense-logo-small.png", height: "35") %></a>
           </div>
-          <!--<a class="navbar-brand visible-xs visible-sm" href="/"><%= image_tag("isense-logo-small.png", height: "35") %></a>-->
-          <!--<div class="col-xs-6">
-            <ul>
-              <li class="navbtn"><%= link_to "Login", login_path(), method: :get %></li>
-              <li class="divider"></li>
-              <li class="navbtn" title="Register now to start using iSENSE"><%= link_to "Register", new_user_path %></li>-->
           <div class="navbar-category"> 
             <%= link_to "Login", login_path(), method: :get, class: 'lr' %> 
           </div>
           <div class="navbar-category">
             <%= link_to "Register", new_user_path, class: 'lr' %>
-          </div>
-          <!--<div class="dropdown mobile-dropdown navbar-category"> </div>-->
-          
-</div>
-
-<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true" style="background-color: black">
-            <!--<span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>-->
-            <b><i class="fa fa-bars" style="color:white"></i></b>
-            <!--<span class="icon-bar" style="color:black"> </span>-->
-          </button>
-
-  <ul class="dropdown-menu" id="mobile-menu" role="menu" aria-labelledby="dropdownMenu1">
-            <li class="navbtn" title="Browse through projects created by iSENSE users"><%=link_to projects_path do %><i class='fa fa-folder-open'></i> Projects<%end%></li>
-            <li class="navbtn" title="Explore data visualizations built by iSENSE users"><%=link_to visualizations_path do %><i class='fa fa-picture-o'></i> Visualizations<%end%></li>
-            <li class="navbtn" title="Learn how to use iSENSE"><%=link_to tutorials_path do %><i class='fa fa-info-circle'></i> Tutorials<%end%></li>
-            <li class="navbtn" title="Check out the latest iSENSE news and updates"><%=link_to news_index_path do %><i class='fa fa-book'></i> News<%end%></li>
-            <% if @cur_user.try(:id) %>
-              <li class="navbtn" title="Click to view <%= @cur_user.name %>'s profile page">
-                <%=link_to user_path(@cur_user.id) do %>
-                  <i class="fa fa-user"></i> 
-                  <%= @cur_user.name %></li>
-                <% end %>
-              <li class="navbtn"> <%= link_to "Logout", login_path, method: :delete %></li>
-            <% end %>
-            <% if is_admin? %>
-            <li class="navbtn"><%= link_to users_path do%><i class="fa fa-users"></i> Users<%end%></li>
-            <% end %>
-          </ul>
-
-</div>
-
+          </div>  
         </div>
-        
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <!--<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-            <li class="navbtn" title="Browse through projects created by iSENSE users"><%=link_to projects_path do %><i class='fa fa-folder-open'></i> Projects<%end%></li>
-            <li class="navbtn" title="Explore data visualizations built by iSENSE users"><%=link_to visualizations_path do %><i class='fa fa-picture-o'></i> Visualizations<%end%></li>
-            <li class="dropdown navbtn">
-              <a href="#" class="dropdown-toggle" title="Learn how to use iSENSE" data-toggle="dropdown"><i class="fa fa-info-circle"></i> Tutorials <b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><%= link_to "See All Tutorials", tutorials_path%></li>
-                <li class="divider"></li>
-                <% @featured_tutorials = Tutorial.where("featured = ? and hidden = ?",  true, false).order("title ASC").limit(10) %>
-                <% @featured_tutorials.each do |tutorial| %>
-                <li><%= link_to tutorial.title, tutorial_path(tutorial)%></li>
-                <% end %>
-              </ul>
-            </li>
-            <li class="navbtn" title="Check out the latest iSENSE news and updates"><%=link_to news_index_path do %><i class='fa fa-book'></i> News<%end%></li>
-            <% if is_admin? %>
-            <li class="navbtn"><%= link_to users_path do%><i class="fa fa-users"></i> Users<%end%></li>
-            <% end %>
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
-            <% if @cur_user.try(:id) %>
-              <li class="navbtn" title="Click to view <%= @cur_user.name %>'s profile page">
-              <% if @cur_user.name.length < 30 %>
-                 <%= link_to @cur_user.name, user_path(@cur_user) %>
-              <% else %>
-                 <%= link_to "My Account", user_path(@cur_user) %>
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true" style="background-color: black">
+          <b><i class="fa fa-bars" style="color:white"></i></b>
+        </button>
+        <ul class="dropdown-menu" id="mobile-menu" role="menu" aria-labelledby="dropdownMenu1">
+          <li class="navbtn" title="Browse through projects created by iSENSE users"><%=link_to projects_path do %><i class='fa fa-folder-open'></i> Projects<%end%>
+          </li>
+          <li class="navbtn" title="Explore data visualizations built by iSENSE users"><%=link_to visualizations_path do %><i class='fa fa-picture-o'></i> Visualizations<%end%></li>
+          <li class="navbtn" title="Learn how to use iSENSE"><%=link_to tutorials_path do %><i class='fa fa-info-circle'></i> Tutorials<%end%></li>
+          <li class="navbtn" title="Check out the latest iSENSE news and updates"><%=link_to news_index_path do %><i class='fa fa-book'></i> News<%end%></li>
+          <% if @cur_user.try(:id) %>
+            <li class="navbtn" title="Click to view <%= @cur_user.name %>'s profile page">
+              <%=link_to user_path(@cur_user.id) do %>
+                <i class="fa fa-user"></i> 
+                <%= @cur_user.name %></li>
               <% end %>
-              </li>
-              <li class="divider"></li>
-              <li class="navbtn"><%= link_to "Logout", login_path, method: :delete%></li>
-            <% else %>
-              <li class="navbtn"><%= link_to "Login", login_path(), method: :get%></li>
-              <li class="divider"></li>
-              <li class="navbtn" title="Register now to start using iSENSE"><%= link_to "Register", new_user_path %></li>
-            <% end %>
+            <li class="navbtn"> <%= link_to "Logout", login_path, method: :delete %></li>
+          <% end %>
+          <% if is_admin? %>
+            <li class="navbtn"><%= link_to users_path do%><i class="fa fa-users"></i> Users<%end%></li>
+          <% end %>
           </ul>
-        </div><!-- /.navbar-collapse -->
-      </div>
+        </div>
     </nav>
 
     <!-- Main Container -->
@@ -153,14 +79,14 @@
       </div>
     <% end %>
     <div id="mobile-outer" class="<%= params[:controller] %>-controller <%= params[:action] %>-action">
-      <div class="container main_content <%= @layout_wide ? 'mc-wide' : '' %>" data-role="page">
+      <div class="container main_content<%= @layout_wide ? 'mc-wide' : '' %>" data-role="page">
         <%= bootstrap_flash %>
         <%= yield %>
       </div>
     </div>
 
     <!-- Footer -->
-    <div class="footer">
+    <div class="mobile-footer footer">
       <p>The iSENSE project is a collaborative effort of the University of Massachusetts Lowell and Machine Science Inc. <a href="/about">About</a> | <a href="/contact">Contact</a> | <a href="/api/v1/docs">Developer API</a> | <a href="/report_bug">Report a Bug</a> | <a href="/privacy_policy">Privacy Policy</a><br>
         Our work is supported by grants <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0735597">DRL-0735597</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0735592">DRL-0735592</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=0546513">DRL-0546513</a>, <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=1123998">IIS-1123998</a>, and <a href="http://nsf.gov/awardsearch/showAward.do?AwardNumber=1123972">IIS-1123972</a> from the National Science Foundation and a gift from Google Inc.<br>
         <%= @version %></p>

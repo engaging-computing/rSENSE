@@ -13,6 +13,7 @@ $ ->
     #Resize UI components based upon Bootstrap and screen size
     ###
     resizeUI = () ->
+      $('.navbar-fixed-top').css('min-width')
       console.log 'something'
       #$('.carousel').find('.item').each (i,j) ->
       #  if $(j).find('.carousel-img').offset().top > $('.carousel-inner').offset().top
@@ -94,9 +95,9 @@ $ ->
       console.log 'wat'
       $('.android-button').css('background-color', 'rgba(39,135,245,0.5)')
 
-    $('.navbar').css('min-width', 994)
+    $('.navbar-static-top').css('min-width', 994)
     $('.item-image-link').removeClass('hidden-xs')
-    $('.footer').css('min-width', 994)
+    $('.desktop-footer').css('min-width', 994)
 
     # $carousel = $('#myCarousel')
     # $carousel.carousel()
