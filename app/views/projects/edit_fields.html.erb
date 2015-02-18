@@ -3,8 +3,25 @@
     <div class="row" id="selection" data-project_id="<%= @project.id %>">
       <div class="col-md-8 col-md-offset-2">
         <h1>Setup Fields Manually</h1>
-        <div style="float: right; margin-bottom: 15px;">
-          <%= submit_tag 'Save', class: 'btn btn-success', id: 'fields_form_submit' %>
+        <div class="center" id="options">
+          <div class="col-sm-3 col-xs-6 add_fields">
+            <button value="Number" class="btn btn-primary center new_field number" form="fields_table" name="new_field">Add Number</button>
+            <input type="number" min="1" max="20" value="1" name="num_fields" class="num_picker" required>
+            <p class="description">Any number value. "Units" specifies how the value is expressed. e.g. 'Temperature' could have a unit of 'C'</p>
+      	  </div>
+      	  <div class="col-sm-3 col-xs-6 add_fields">
+            <button value="Text" class="btn btn-primary center new_field text" form="fields_table" name="new_field">Add Text</button>
+            <input type="number" min="1" max="20" value="1" name="text_fields" class="num_picker" required>
+            <p class="description">Any string value. "Restrictions" are a comma separated list of values that limit input to only predefined values.</p>
+      	  </div>
+      	  <div class="col-sm-3 col-xs-6 add_fields">
+            <button value="Timestamp"class="btn btn-primary center new_field timestamp" form="fields_table" name="new_field" style="padding: 6px 0px;" <%= (@project.fields.any? {|f| f.field_type == TIME_TYPE}) ? "disabled" : "" %>>Add Timestamp</button>
+            <p class="description">Data and time values in the form yyyy/mm/dd hh:mm:ss. Limit 1 per project.</p>
+      	  </div>
+      	  <div class="col-sm-3 col-xs-6 add_fields">
+            <button value="Location" class="btn btn-primary center new_field location" form="fields_table" name="new_field" <%= (@project.fields.any? {|f| f.field_type == LONGITUDE_TYPE or f.field_type == LATITUDE_TYPE}) ? "disabled" : "" %>>Add Location</button>
+            <p class="description">Latitude and longitude values in the form 'latitude, longitude' between -90 and 90. Limit 1 per project.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -47,28 +64,11 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-8 col-md-offset-2">
-        <div class="center" id="options">
-          <div class="col-sm-3 col-xs-6 add_fields">
-            <button value="Number" class="btn btn-primary center new_field number" form="fields_table" name="new_field">Add Number</button>
-            <input type="number" min="1" max="20" value="1" name="num_fields" class="num_picker" required>
-            <p class="description">Any number value. "Units" specifies how the value is expressed. e.g. 'Temperature' could have a unit of 'C'</p>
-      	  </div>
-      	  <div class="col-sm-3 col-xs-6 add_fields">
-            <button value="Text" class="btn btn-primary center new_field text" form="fields_table" name="new_field">Add Text</button>
-            <input type="number" min="1" max="20" value="1" name="text_fields" class="num_picker" required>
-            <p class="description">Any string value. "Restrictions" are a comma separated list of values that limit input to only predefined values.</p>
-      	  </div>
-      	  <div class="col-sm-3 col-xs-6 add_fields">
-            <button value="Timestamp"class="btn btn-primary center new_field timestamp" form="fields_table" name="new_field" style="padding: 6px 0px;" <%= (@project.fields.any? {|f| f.field_type == TIME_TYPE}) ? "disabled" : "" %>>Add Timestamp</button>
-            <p class="description">Data and time values in the form yyyy/mm/dd hh:mm:ss. Limit 1 per project.</p>
-      	  </div>
-      	  <div class="col-sm-3 col-xs-6 add_fields">
-            <button value="Location" class="btn btn-primary center new_field location" form="fields_table" name="new_field" <%= (@project.fields.any? {|f| f.field_type == LONGITUDE_TYPE or f.field_type == LATITUDE_TYPE}) ? "disabled" : "" %>>Add Location</button>
-            <p class="description">Latitude and longitude values in the form 'latitude, longitude' between -90 and 90. Limit 1 per project.</p>
-          </div>
+      <div class="col-lg-8 col-lg-offset-2">
+        <div style="float: right">
+          <%= submit_tag "Save and Return", class: 'btn btn-success', id: 'fields_form_submit' %>
         </div>
       </div>
-    </div> 
+    </div>
   <% end %>  
 <% end %>
