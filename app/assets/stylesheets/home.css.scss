@@ -76,7 +76,11 @@
   background-color: black;
 }
 .navbar-fixed-top{
+  min-width: 0px !important;
   width: 100% !important;
+  .navbar-header{
+    min-width: 0px !important;
+  }
   .row{
     margin: 0px !important;
     padding: 0px !important;
