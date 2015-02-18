@@ -1,5 +1,5 @@
 $ ->
-  if namespace.controller is "projects" and namespace.action is "edit_fields"
+  if namespace.controller is "projects" and namespace.action is "edit_fields"    
     ($ '#number').click ->
       ($ '#text_fields').val('0')
       
