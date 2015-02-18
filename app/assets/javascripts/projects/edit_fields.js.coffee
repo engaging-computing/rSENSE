@@ -29,7 +29,7 @@ $ ->
           response = $.parseJSON msg['responseText']
           error_message = response.errors.join "</p><p>"
 
-          ($ '.container.mainContent').find('p').before """
+          ($ '.container.mainContent').find('form').before """
             <div class="alert alert-danger fade in">
               <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
               <h4>Error Removing Field:</h4>

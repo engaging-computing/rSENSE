@@ -23,6 +23,9 @@
             <p class="description">Latitude and longitude values in the form 'latitude, longitude' between -90 and 90. Limit 1 per project.</p>
           </div>
         </div>
+        <% if @project.data_sets.count > 0 %>
+          <p style="color: #F00;"><strong>Note:</strong> You cannot delete fields from a project with data.</p>
+        <% end %>
       </div>
     </div>
     <div class="row">
@@ -53,7 +56,7 @@
                   <% end %>
                 </td>
                 <td>
-                  <a class="field_delete" href="/fields/<%= field.id %>" fid="<%= field.id %>" <%= @project.data_sets.count > 0 ? "disabled" : "" %>>
+                  <a class="field_delete <%= @project.data_sets.count > 0 ? "not-active" : "" %>" href="/fields/<%= field.id %>" fid="<%= field.id %>">
                     <i class="fa fa-close slick-delete"></i>
                   </a>
                 </td>
