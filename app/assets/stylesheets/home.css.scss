@@ -140,6 +140,7 @@
   
   div.container.mainContent{
     width: 100% !important;
+    min-width: 0px!important;
     .row{
       margin-bottom: 5vh;
     }
@@ -325,11 +326,6 @@
     .ternary-content{
       min-height: 738px !important;
     }
-    /*body {
-      min-width: 974px !important;
-      padding-bottom: 40px;
-      color: #5a5a5a;
-    }*/
     .invisible{
       visibility: hidden;  
     }
