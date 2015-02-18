@@ -141,7 +141,7 @@ module ApplicationHelper
         Visualization.find(params[:id]).name.capitalize
       end
     elsif @namespace[:controller] == 'data_sets' and @namespace[:action] == 'manualEntry'
-      "Manual Entry"
+      'Manual Entry'
     elsif @namespace[:controller] == 'data_sets' and @namespace[:action] == 'edit'
       'Editing a Data Set'
     else

@@ -21,11 +21,20 @@ uploadSettings =
     window.location = data['displayURL']
 
 Grid = (cols, data, submit) ->
+  # slickgrid objects
   view = null
   grid = null
-  popover = null
-  popoverMsg = 'hi'
+
+  # objects relevant to popovers
+  validationPop = null
+  validationPopMsg = null
+  deletionPop = null
+  deletionPopTimer = null
+
+  # ID counter for rows
   currID = 0
+
+  # queue of save and delete row actions to execute on validation
   actions = []
 
   initialize = ->
@@ -102,11 +111,10 @@ Grid = (cols, data, submit) ->
     , 1
 
   resize_window = ->
-    cont = $('#slickgrid-container')
-    row1 = $('#row-slickgrid-1').outerHeight()
-    row2 = $('#row-slickgrid-2').outerHeight()
-    newHeight = $(window).height() - row1 - row2
-    cont.height newHeight
+    newHeight = $(window).height()-
+      $('#row-slickgrid-1').outerHeight() -
+      $('#row-slickgrid-2').outerHeight()
+    $('#slickgrid-container').height newHeight
     grid.resizeCanvas()
 
   get_json = ->
@@ -114,39 +122,29 @@ Grid = (cols, data, submit) ->
     posHeadRegex = /(\d+)-(\d+)/
     posDataRegex = /^ *((?:\+|-)?\d+\.?\d*), *((?:\+|-)?\d+\.?\d*) *$/
 
-    for i in [0..(view.getLength() - 1)]
-      x = view.getItem i
-      for j of x
-        if j == 'id' or j == 'del'
-          continue
+    view.getItems().forEach (row) ->
+      row = Object.keys(row).reduce (curr, prev) ->
+        idTest = posHeadRegex.exec prev
+        dataTest = posDataRegex.exec row[prev]
+        if idTest? and dataTest?
+          curr = curr.concat [[idTest[1], dataTest[1]], [idTest[2], dataTest[2]]]
+        else if idTest?
+          curr = curr.concat [[idTest[1], ''], [idTest[2], '']]
+        else unless prev == 'id' or prev == 'del'
+          curr.push [prev, row[prev]]
+        curr
+      , []
+      row.forEach (pair) ->
+        unless buckets[pair[0]]? then buckets[pair[0]] = []
+        buckets[pair[0]].push pair[1]
 
-        unless x[j]?
-          x[j] = ''
-
-        idTest = posHeadRegex.exec j
-        if idTest?
-          latId = idTest[1]
-          lonId = idTest[2]
-          unless buckets[latId]? then buckets[latId] = []
-          unless buckets[lonId]? then buckets[lonId] = []
-
-          fieldTest = posDataRegex.exec x[j]
-          if fieldTest?
-            buckets[latId].push fieldTest[1]
-            buckets[lonId].push fieldTest[2]
-          else
-            buckets[latId].push ''
-            buckets[lonId].push ''
-        else
-          unless buckets[j]? then buckets[j] = []
-          buckets[j].push x[j]
     buckets
 
   process_actions = ->
     temp = actions
     actions = []
     for x in temp
-      x()    
+      x()
 
   add_row = ->
     newRow = {id: currID}
@@ -163,6 +161,23 @@ Grid = (cols, data, submit) ->
       grid.invalidate()
       if view.getLength() == 0
         add_row()
+        unless deletionPop?
+          deletionPop = $('.slick-delete').popover
+            container: 'body'
+            content: 'There must be at least one row of data'
+            placement: 'bottom'
+            trigger: 'manual'
+          deletionPop.popover 'show'
+          deletionPopTimer = setTimeout ->
+            deletionPop.popover 'destroy'
+            deletionPop = null
+          , 1000
+        else
+          clearTimeout deletionPopTimer
+          deletionPopTimer = setTimeout ->
+            deletionPop.popover 'destroy'
+            deletionPop = null
+          , 1000
 
     if grid.getCellEditor() != null
       actions.push delete_row
@@ -206,7 +221,7 @@ Grid = (cols, data, submit) ->
     else
       save_grid()
 
-  show_popover = (form, msg) =>
+  show_popover = (form, msg) ->
     popoverMsg = msg
     unless popover?
       popover = form.popover
