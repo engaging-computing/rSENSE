@@ -13,7 +13,7 @@
       window.namespace = <%= raw @namespace.to_json %>
     <% end %>
   </head>
-  <body>
+  <body data-page-name="<%= params[:controller] %>/<%= params[:action] %>">
     <% if !@cur_user.nil? and @cur_user.email.blank? %>
       <div class="alert">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
