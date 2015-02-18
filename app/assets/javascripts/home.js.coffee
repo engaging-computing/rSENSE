@@ -13,6 +13,7 @@ $ ->
     #Resize UI components based upon Bootstrap and screen size
     ###
     resizeUI = () ->
+      console.log 'something'
       #$('.carousel').find('.item').each (i,j) ->
       #  if $(j).find('.carousel-img').offset().top > $('.carousel-inner').offset().top
       #    $(j).find('.carousel-caption').css('margin-top', $(j).find('.carousel-img').offset().top - $('.carousel-inner').offset().top)
