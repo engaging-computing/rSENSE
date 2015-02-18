@@ -37,7 +37,7 @@ class UpdateFieldsTest < ActionDispatch::IntegrationTest
 
     click_on 'Add Location'
     assert page.has_content?('Field added'), 'Flash happened'
-    find('.field_delete').click
+    find('.slick_delete').click
 
     find('#fields_form_submit').click
 
