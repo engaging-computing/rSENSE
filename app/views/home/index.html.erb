@@ -24,9 +24,11 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
         <img src="<%= image_path 'create.jpg' %>" class="carousel-img" alt="First slide">
         <div class="container">
           <div class="carousel-caption">
-            <h2 class="homepage-header"><span class="slide-header">Collect</span>, Share, and Visualize</h2>
+            <div class="header-wrapper">
+            <h2 class="homepage-header"><span class="slide-header">Collect</span></h2> <br />
             <p class="carousel-slide-text">Collect data from classroom experiments, online resources, or probeware systems, and manually upload your data to iSENSE. Use iSENSE Android or iOS mobile applications to automatically gather and upload data directly to iSENSE.
             </p>
+            </div>
           </div>
         </div>
       </div>
@@ -37,10 +39,12 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
         <img src="<%= image_path 'Share.jpg' %>" class="carousel-img" alt="Second slide">
         <div class="container">
           <div class="carousel-caption">
-            <h2 class="homepage-header">Collect, <span class="slide-header">Share</span>, and Visualize</h2>
+            <div class="header-wrapper">
+            <h2 class="homepage-header"><span class="slide-header">Share</span></h2> <br />
             <p class="carousel-slide-text">
               Share data on iSENSE to facilitate collaboration and conduct meaningful conversations. Upload data to iSENSE via the website or mobile applications and access it from anywhere.
             </p>
+            </div>
           </div>
         </div>
       </div>
@@ -51,10 +55,12 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
         <img src="<%= image_path 'Visualize.png' %>" class="carousel-img" alt="Third slide">
         <div class="container">
           <div class="carousel-caption">
-            <h2 class="homepage-header">Collect, Share, and <span class="slide-header">Visualize</span> </h2>
+            <div class="header-wrapper">
+            <h2 class="homepage-header"><span class="slide-header">Visualize</span> </h2> <br />
             <p class="carousel-slide-text">
               Analyze and visualize data on a map, timeline, scatter plot, bar graph, histogram, pie chart, table, and more. Configure visualizations to best suit displaying your data, and save them to revisit your work at a later time.
             </p>
+            </div>
           </div>
         </div>
       </div>
@@ -124,7 +130,8 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
       <div class=" col-lg-8 col-md-12 col-sm-12 col-xs-12">
         <hr class="featurette-divider teachers-love-isense-seperator hidden-lg" id="scroll-4" />
         <img src="<%= image_path 'feature-histogram.png' %>" id="main-image-featurette" class="featurette-image hidden-xs" alt="Featured Histogram">
-        <hr class="featurette-divider teachers-love-isense-seperator hidden-lg hidden-md hidden-sm hidden-xs" />
+        <hr class="featurette-divider mid-display-sep hidden-xs hidden-lg">
+
       </div>
       <!---End Featured Image-->
 
@@ -133,15 +140,14 @@ iSENSE does not support browsers IE9 and below. (It is recommended to install th
 </div>
 <hr class="featurette-divider teachers-love-isense-seperator hidden-md hidden-sm hidden-xs" />
 <!---End Featurette-->
-
 <!---Begin Two-column layout-->
-<div class="row ternary-content" id="scroll-2">
-  <div class="container marketing two-col">
+<div class="row ternary-content">
+  <div class="container marketing two-col" id="scroll-2">
     
     <!--- First Column -->
     <div class=" first-column col-lg-6" id="column-one">
       <div class="hidden-lg">
-        <hr class="featurette-divider" />
+        <!--<hr class="featurette-divider hidden-xs" />-->
         <h2 class="homepage-header">Download iSENSE Mobile Apps</h2> <br/>
           <div class="col-md-8 col-sm-6 col-xs-12 app-desc">
             <div class="homepage-text">

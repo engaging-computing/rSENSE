@@ -13,9 +13,12 @@ $ ->
     #Resize UI components based upon Bootstrap and screen size
     ###
     resizeUI = () ->
+      #$('.carousel').find('.item').each (i,j) ->
+      #  if $(j).find('.carousel-img').offset().top > $('.carousel-inner').offset().top
+      #    $(j).find('.carousel-caption').css('margin-top', $(j).find('.carousel-img').offset().top - $('.carousel-inner').offset().top)
       $('#mobile-menu').css('width', $(window).width())
       $('#mobile-splash').css('height', $(window).height() - 75)
-      $('.fa-sort-desc').css('margin-left', -32)
+      #$('.fa-sort-desc').css('margin-left', -32)
       if screenSize('md') or screenSize('sm')
         $('.what-is-isense').height($('.isense-desc').height())
         $('.teachers-love-isense').height($('.isense-desc').height())
@@ -37,7 +40,6 @@ $ ->
           $('.teachers-love-isense').height() - $('.teachers-love-isense').find('.homepage-header').height() - 120)
         $('.what-is-isense').find('.homepage-text').height(
           $('.what-is-isense').height() - $('.what-is-isense').find('.homepage-header').height() - 80)
-
       if $('#column-one').height() < 900
         $('#column-two').height( $('#column-one').height())
         $('.ternary-content').height( $('#column-one').height())
@@ -91,9 +93,23 @@ $ ->
       console.log 'wat'
       $('.android-button').css('background-color', 'rgba(39,135,245,0.5)')
 
-    $('.navbar').css('min-width', 738)
+    $('.navbar').css('min-width', 994)
     $('.item-image-link').removeClass('hidden-xs')
-    $('.footer').css('min-width', 738)
+    $('.footer').css('min-width', 994)
+
+    # $carousel = $('#myCarousel')
+    # $carousel.carousel()
+    # $carousel.on('slid.bs.carousel', () ->
+    #   console.log 'running'
+    #   if $('.item.active').find('.carousel-img').offset().top > $('.carousel-inner').offset().top
+    #     $('.item.active').find('.carousel-caption').css('margin-top', $('.item.active').find('.carousel-img').offset().top - $('.carousel-inner').offset().top))
+    #   #$('.item.active').find('header-wrapper').show())
+    # $carousel.on('slid.bs.carousel', () ->
+    #   console.log 'running'
+    #   if $('.item.active').find('.carousel-img').offset().top > $('.carousel-inner').offset().top
+    #     $('.item.active').find('.carousel-caption').css('margin-top', $('.item.active').find('.carousel-img').offset().top - $('.carousel-inner').offset().top))
+    #   #$('.item.active').find('header-wrapper').show())
+
   ###
   # Other stuff
   ###  

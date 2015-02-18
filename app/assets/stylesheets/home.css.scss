@@ -34,6 +34,9 @@
   #mobile-splash{
     height: 120vh !important;
   }
+  div > p {
+    /* immediate child */
+  }
 }
 .android-button:hover{
   background-color:rgba(39,135,245,0.5) !important;
@@ -312,9 +315,18 @@
 .home-controller.index-action{  
   div.container.mainContent{
     width:100%;
-    min-width:738px; 
+    min-width: 994px; 
+    #carousel-container{
+      min-height:738px !important;
+    }
+    .secondary-content{
+      min-height: 738px !important;
+    }
+    .ternary-content{
+      min-height: 738px !important;
+    }
     body {
-      min-width: 718px !important;
+      min-width: 974px !important;
       padding-bottom: 40px;
       color: #5a5a5a;
     }
@@ -341,8 +353,14 @@
       margin: 0 auto;
     }
     .carousel {
-      min-height: 718px !important;
-      min-width: 718px !important;
+      ol li{
+        border: 1px solid black;
+      }
+      ol .active{
+        background-color: black !important;
+      }
+      min-width: 974px !important;
+      min-height: 738px !important;
       height: auto;
       margin-bottom: 50px;
       display:block;
@@ -350,40 +368,58 @@
     }
     .carousel-slide-text{
       text-align: left;  
-      color: black;
       font-size: 1.5em !important;
+      background-color: #F2F2F2;
     }
     .slide-header{
       font-size: 1.5em;
       font-weight: bolder;
     }
     .carousel-caption {
+      position:absolute;
+      left: 70%;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 30%;
       z-index: 10;
-      background-color: #F2F2F2;
-      opacity:0.6;
       margin: 0 auto;
       text-align: left;
       padding: 10px;
-      border: 1px solid gray;
+      padding-top: 0px !important;
+      .header-wrapper{
+        color: black !important;
+        display: table-cell;
+        position: absolute;
+        top: 25%;
+      }
     }
-    .carousel-img{
+    /*.carousel-img{
       min-height: 359px !important;
       height: 50% !important;
-    }
+    }*/
     .carousel .item {
-      min-height: 718px !important;
-      min-width: 718px !important;
-      height: 90vh;
-      background-color: #777;
+      min-width: 974px !important;
+      min-height: 738px !important;
+      height: 738px !important;
+      background-color: #F2F2F2 !important;
+      text-align: center;
+    }
+    .carousel-inner{
+      background-color: #F2F2F2 !important;
+      border: 1px solid gray;
     }
     .carousel-inner > .item > img {
       position: absolute;
+      margin-top: auto;
+      margin-bottom: auto;
       top: 0;
       left: 0;
-      width: 50%;
-      min-width: 359px;
-      min-height: 359 !important;
-      height: 50%;
+      bottom: 0;
+      right: 0;
+      width: 70%;
+      min-width: 682px !important;
+      height: auto
     }
     .carousel-divider{
       margin-top: 0px;
@@ -392,9 +428,10 @@
     .ternary-content{
       margin-top: 60px;
       height:70vh;
-      min-width: 718px !important;
+      min-width: 974px !important;
       overflow-y: hidden;
       display:block;
+      clear: both;
       div{
         margin: 0px !important;
       }
@@ -414,6 +451,12 @@
       }
       #column-one{
         min-height: 600px ;
+        .hidden-lg{
+          hr{
+            margin-top: 40px !important;
+            margin-bottom: 20px !important;
+          }
+        }
         .featurette-divider{
           margin-top: 10px !important;
           overflow-y: hidden;
@@ -487,7 +530,9 @@
         }
       }
       #column-two{
-        min-height: 650px ;
+        /*min-height: 650px ;*/
+        height: auto;
+        overflow-y: scroll !important;
         #stats-row{
           border-radius: 6px;
           height:25%;
@@ -549,7 +594,7 @@
   }
   .row.secondary-content{
     height: 90vh;
-    min-width: 718px !important;
+    min-width: 974px !important;
     display: block;
     overflow-y: hidden;
     .featurette-divider{
@@ -630,12 +675,15 @@
       clear: both;
     }
     .ternary-content{
-      height: 90vh !important;
+      height: auto;
+      margin-top: 0px !important;
+      min-height: 315px !important;
     }
     .news-prev-wrapper{
-      min-height: 100px !important;
-      height: 40vh !important;
-      overflow-y: scroll;
+      min-height: 300px !important;
+      height: 300px;
+      overflow-y: scroll !important;
+      padding: 0;
     }  
   }
   @media(min-width:768px) and (max-width: 1199px){
@@ -646,6 +694,7 @@
     }
     .row.secondary-content{
       height: 100vh;
+      margin-bottom: 60px;
     }
     .featurette-image{
       height: 100vh;
@@ -653,16 +702,19 @@
     #main-image-featurette{
       min-height: 300px;
       height: 40vh;
+      display: block;
+      clear: both;
     }
     .ternary-content{
-      height: 90vh !important;
+      height: auto;
       margin-top: -40px !important;
     }
     #column-one{
       height: 100vh;
     }
     .news-prev-wrapper{
-      height: 55vh;
+      height: 315px;
+      min-height: 315px !important;
       overflow-y: scroll;
     }
   }
@@ -680,6 +732,7 @@
     }
     .news-prev-wrapper{
       height: 75vh;
+      min-height: 315px !important;
     }
     #column-one{
       height: 80vh;
