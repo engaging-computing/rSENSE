@@ -38,7 +38,7 @@
             </tr>
           </thead>
           <tbody>
-            <% @project.fields.reorder(:created_at).each do |field| %>
+            <% @project.fields.order(:created_at).each do |field| %>
               <tr class="<%= (field.field_type == get_field_type("Latitude") || field.field_type == get_field_type("Longitude")) ? "location " : "" %>">
                 <td><input class="form-control" type="text" name="<%= field.id %>_name" value="<%= (defined?(@tmp_save) && @tmp_save.has_key?("#{field.id}_name")) ? @tmp_save["#{field.id}_name"] : field.name %>"></td>
                 <td><%= get_field_name(field.field_type) %></td>
