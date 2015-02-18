@@ -1,7 +1,7 @@
 <% if can_edit?(@project) %>
   <%= form_tag "/projects/#{@project.id}/save_fields", id: 'fields_table' do %>
     <div class="row" id="selection" data-project_id="<%= @project.id %>">
-      <div class="col-md-8 col-md-offset-2">
+      <div class="col-lg-8 col-lg-offset-2">
         <h1>Setup Fields Manually</h1>
         <div class="center" id="options">
           <div class="col-sm-3 col-xs-6 add_fields">

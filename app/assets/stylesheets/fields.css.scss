@@ -20,12 +20,12 @@
 }
 
 @media (max-width: 770px) {
-  .description, .units, .restrictions {
+  .description, .restrictions, .units {
     display: none;
   }
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1000px) {
   .num_picker {
     display: none;
   }
