@@ -1,4 +1,4 @@
-###
+###!
   * Copyright (c) 2011, iSENSE Project. All rights reserved.
   *
   * Redistribution and use in source and binary forms, with or without
@@ -27,8 +27,8 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
-
+  if namespace.controller is "visualizations" and
+  namespace.action in ["displayVis", "embedVis", "show"]
     window.globals ?= {}
 
     ###
@@ -278,12 +278,10 @@ $ ->
       if globals.scatter instanceof DisabledVis
         delete globals.scatter
         globals.scatter = new Scatter "scatter_canvas"
-        ($ "#vistablist li[aria-controls='scatter_canvas'] a span").css "text-decoration", ""
-        ($ "#vistablist li[aria-controls='scatter_canvas'] a img").attr('src',
-          ($ "#vistablist li[aria-controls='scatter_canvas'] a img").data('enable-src'))
+        # TODO deal with header restoration
 
       globals.scatter.xAxis = data.normalFields[data.normalFields.length - 1]
-      ($ "#vistablist li[aria-controls='scatter_canvas'] a").click()
+      $("#vistablist li[aria-controls='scatter_canvas'] a").click()
 
     ###
     If there is only one time field, generates an appropriate
@@ -321,13 +319,13 @@ $ ->
 
       selectedTime = data.timeFields[0]
 
-      ($ '#groupSelector').change (e) ->
+      $('#groupSelector').change (e) ->
         element = e.target or e.srcElement
         selectedTime = (Number element.value)
 
-      ($ "#container").append(formText)
+      $("#container").append(formText)
 
-      ($ "#dialog-form" ).dialog
+      $("#dialog-form" ).dialog
         resizable: false
         draggable: false
         autoOpen: true
@@ -341,9 +339,9 @@ $ ->
             data.generateElapsedTime name, selectedTime
             globals.curVis.end()
             globals.curVis.start()
-            ($ "#dialog-form").dialog 'close'
+            $("#dialog-form").dialog 'close'
         close: ->
-          ($ "#dialog-form").remove()
+          $("#dialog-form").remove()
 
     globals.identity = (i) -> i
 

@@ -308,6 +308,10 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     margin: 0;
   }
 
+  .strikethrough {
+    text-decoration: line-through;
+  }
+
   .summary {
     padding: 5px 0px 5px 0px;
     font-style: italic;

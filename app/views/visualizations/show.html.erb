@@ -1,53 +1,22 @@
-<script>
-  window.data = <%= raw @data.to_json %>;
-  window.icons = { 'Map_dark': "<%= path_to_image('vis_map_dark.png')%>",
-                   'Map_light': "<%= path_to_image('vis_map_light.png')%>",
-                   'Timeline_dark': "<%= path_to_image('vis_timeline_dark.png')%>",
-                   'Timeline_light': "<%= path_to_image('vis_timeline_light.png')%>",
-                   'Scatter_dark': "<%= path_to_image('vis_scatter_dark.png')%>",
-                   'Scatter_light': "<%= path_to_image('vis_scatter_light.png')%>",
-                   'Bar_dark': "<%= path_to_image('vis_bar_dark.png')%>",
-                   'Bar_light': "<%= path_to_image('vis_bar_light.png')%>",
-                   'Histogram_dark': "<%= path_to_image('vis_histogram_dark.png')%>",
-                   'Histogram_light': "<%= path_to_image('vis_histogram_light.png')%>",
-                   'Summary_dark': "<%= path_to_image('vis_summary_dark.png')%>",
-                   'Summary_light': "<%= path_to_image('vis_summary_light.png')%>",
-                   'Table_dark': "<%= path_to_image('vis_table_dark.png')%>",
-                   'Table_light': "<%= path_to_image('vis_table_light.png')%>",
-                   'Photos_dark': "<%= path_to_image('vis_photos_dark.png')%>",
-                   'Photos_light': "<%= path_to_image('vis_photos_light.png')%>",
-                   'Pie_dark': "<%= path_to_image('vis_pie_dark.png')%> ",
-                   'Pie_light': "<%= path_to_image('vis_pie_light.png') %>",
-                   'novis_pie': "<%= path_to_image('novis_pie.png') %>",
-                   'novis_map': "<%= path_to_image('novis_map.png')%>",
-                   'novis_timeline': "<%= path_to_image('novis_timeline.png')%>",
-                   'novis_scatter': "<%= path_to_image('novis_scatter.png')%>",
-                   'novis_bar': "<%= path_to_image('novis_bar.png')%>",
-                   'novis_histogram': "<%= path_to_image('novis_histogram.png')%>",
-                   'novis_table': "<%= path_to_image('novis_table.png')%>",
-                   'novis_photos': "<%= path_to_image('novis_photos.png')%>"
-  };
-</script>
-<script type="text/javascript"
-        src="https://maps-api-ssl.google.com/maps/api/js?key=AIzaSyBxtPK1_mxwVdl1NRu7ZEiSNvmCekFSZAw&amp;sensor=false&amp;libraries=visualization,geometry&amp;v=3.9">
-</script>
-
 <%= render partial: 'vis', locals: { project: @visualization.project,
     owner: @visualization.owner,
     title: @visualization.title.html_safe } %>
-
 <div class="row" style="display:block; float:left">
   <div class="col-md-8">
     <div class="well" style="margin-top:10px" id="dataset_info">
       <div class="full_width_edit" style="font-size:1.5em;">
-        <%= visualization_edit_helper 'title', @visualization.owner.id == @cur_user.try(:id), make_link = false %>
+        <%= visualization_edit_helper 'title',
+            @visualization.owner.id == @cur_user.try(:id), make_link = false %>
       </div>
       <%= content_helper(@visualization) %>
     </div>
   </div>
   <div class="col-md-4">
-    <%= render layout: "shared/box", locals: {title: 'Media', width: '12', unique_id: 'media', should_hide: false} do %>
-      <%= render "shared/media_objects_view", {type: 'visualization', object: @visualization} %>
+    <%= render layout: "shared/box",
+        locals: {title: 'Media', width: '12',
+        unique_id: 'media', should_hide: false} do %>
+      <%= render "shared/media_objects_view",
+          {type: 'visualization', object: @visualization} %>
     <% end %>
   </div>
 </div>

@@ -128,41 +128,22 @@ $ ->
 
     ### Generate tabs ###
     for vis of data.allVis
+      ctx = {}
       dark = "#{data.allVis[vis]}_dark"
       light = "#{data.allVis[vis]}_light"
-      if data.allVis[vis] in data.relVis
-        $('#vistablist').append """
-          <li role='presentation'>
-            <a href='##{data.allVis[vis].toLowerCase()}_canvas' role='tab'
-              aria-controls='#{data.allVis[vis].toLowerCase()}_canvas'
-              data-toggle='tab'>
-              <span class='hidden-sm hidden-xs'>#{data.allVis[vis]}</span>
-              <span class='visible-sm visible-xs'>
-                <img height='32px' width='32px'
-                  src='#{window.icons[dark]}'
-                  data-disable-src='/assets/vis_#{window.icons[light]}'/>
-              </span>
-            </a>
-          </li>
-          """
-      else
-        $('#vistablist').append """
-          <li role='presentation'>
-            <a href='##{data.allVis[vis].toLowerCase()}_canvas' role='tab'
-              aria-controls='#{data.allVis[vis].toLowerCase()}_canvas'
-              data-toggle='tab'>
-              <span class='hidden-sm hidden-xs'
-                style='text-decoration:line-through'>
-                #{data.allVis[vis]}
-              </span>
-              <span class='visible-sm visible-xs'>
-                <img height='32px' width='32'
-                  src='#{window.icons[light]}'
-                  data-enable-src='#{window.icons[dark]}'/>
-              </span>
-            </a>
-          </li>
-          """
+
+      enabled = data.allVis[vis] in data.relVis
+      lower = data.allVis[vis].toLowerCase()
+      ctx.id = 'vis-tab-' + lower
+      ctx.name = data.allVis[vis]
+      ctx.canvas = lower + '_canvas'
+      ctx.icon = if enabled then window.icons[dark] else window.icons[light]
+
+      tab = HandlebarsTemplates['visualizations/vis-tab'](ctx)
+      $('#vistablist').append tab
+
+      unless enabled
+        $("#vis-tab-#{ctx.name.toLowerCase()}").addClass('strikethrough')
 
     ### Pick vis ###
     cvis =
