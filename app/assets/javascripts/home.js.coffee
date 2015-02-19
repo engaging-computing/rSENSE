@@ -4,24 +4,23 @@
 
 $ ->
   if namespace.controller is 'home' and namespace.action is 'index'
-
+    ###
     # Determines the current Bootstrap screen size being used to resize UI elements
     screenSize = (size) ->
       return $(".device-#{size}").is(':visible')
-
+    ###
     ###
     #Resize UI components based upon Bootstrap and screen size
     ###
     resizeUI = () ->
-      $('.navbar-fixed-top').css('min-width')
-      console.log 'something'
+      #$('.navbar-fixed-top').css('min-width')
       #$('.carousel').find('.item').each (i,j) ->
       #  if $(j).find('.carousel-img').offset().top > $('.carousel-inner').offset().top
       #    $(j).find('.carousel-caption').css('margin-top', $(j).find('.carousel-img').offset().top - $('.carousel-inner').offset().top)
       $('#mobile-menu').css('width', $(window).width())
       $('#mobile-splash').css('height', $(window).height() - 75)
       #$('.fa-sort-desc').css('margin-left', -32)
-      if screenSize('md') or screenSize('sm')
+      ###if screenSize('md') or screenSize('sm')
         $('.what-is-isense').height($('.isense-desc').height())
         $('.teachers-love-isense').height($('.isense-desc').height())
         $('.teachers-love-isense').find('.homepage-text').height(
@@ -45,7 +44,7 @@ $ ->
       if $('#column-one').height() < 900
         $('#column-two').height( $('#column-one').height())
         $('.ternary-content').height( $('#column-one').height())
-
+      ###
     resizeUI()
 
     $(window).on 'resize', () ->
@@ -53,6 +52,7 @@ $ ->
 
     ###
     Scroll animation effects
+    ###
     ###
     magicScroll = () ->
       flag = false
@@ -94,7 +94,7 @@ $ ->
     $('.android-button').on 'hover', (e) ->
       console.log 'wat'
       $('.android-button').css('background-color', 'rgba(39,135,245,0.5)')
-
+    ###
     $('.navbar-static-top').css('min-width', 994)
     $('.item-image-link').removeClass('hidden-xs')
     $('.desktop-footer').css('min-width', 994)
@@ -122,5 +122,5 @@ $ ->
     $('li.dropdown.navbtn').removeAttr 'disabled'
   if $('.fa.fa-user').length > 0
     $('.lr').hide()
-  #$('.globe').css('margin-top', 0)
+    $('.globe').css('margin-top', 0)
 
