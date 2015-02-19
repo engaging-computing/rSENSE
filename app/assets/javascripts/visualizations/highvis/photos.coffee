@@ -57,11 +57,14 @@ $ ->
           if dset.photos.length > 0
             for picKey,pic of dset.photos
 
+              console.log pic
+
               context = {
                 p_id:   'pic-' + id
                 tn_src: pic.tn_src
                 src:    pic.src
-                name:   dset.name
+                p_name: pic.name
+                d_name: dset.name
                 d_id:   dset.dataset_id
               }
 
