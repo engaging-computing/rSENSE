@@ -123,6 +123,18 @@
         <br />-Steve C., Physics Teacher
       </p>
     </div>
+    <div class="stats">
+  <h2 class="homepage-header">Statistics</h2> <br/>
+  <div class="left homepage-text">
+    <p><%=User.count %> users registered</p> 
+  </div>
+  <div class="center homepage-text">
+    <p><%=Project.count %> projects created</p>
+  </div>
+  <div class="right homepage-text">
+    <p><%=DataSet.count %> datasets contributed</p>
+  </div>
+</div>
   </div>
   <div class="right-content-wrapper">
     <h2 class="homepage-header">Get Involved with iSENSE</h2> <br />
@@ -132,7 +144,7 @@
       </p> 
       <p class="involvement">
         For technical inquiries related to the iSENSE website, please contact one of the developers listed on our <a href="/contact">iSENSE contact page.</a>
-      </p><br />
+      </p>
     </div><br />
 
     <h2 class="homepage-header">Download iSENSE Mobile Apps</h2>
@@ -141,24 +153,37 @@
       <%= image_tag "icon-android.png", class: 'play-store-button' %> </a>
     <a class="btn btn-primary disabled">
       <%= image_tag "icon-apple.png", class: 'app-store-button'  %> </a>
-    <br /><br />
+    <br /><br /> <br />
     <div class="homepage-text">
       <p>Android applications are free and available for download in the Google Play Store.  iOS applications are also free, and will be available on the Apple App Store shortly. These mobile applications make it easy to collect data sets using your mobile device’s built-in sensors and upload them directly to iSENSE.</p>
     </div>
-    <hr />
-    <div class="stats">
-      <h2 class="homepage-header">Statistics</h2> <br/>
-      <div class="left homepage-text">
-      <p><%=User.count %> users registered</p> 
-      </div>
-      <div class="center homepage-text">
-      <p><%=Project.count %> projects created</p>
-      </div>
-      <div class="right homepage-text">
-      <p><%=DataSet.count %> datasets contributed</p>
-      </div>
-    </div>
-    <hr />
-
   </div>
-</div> 
+</div>
+<div class="desktop-content-wrapper">
+<div class="news-prev-wrapper">
+  <hr />
+  <h2 class="homepage-header">What's New?</h2>
+  <% News.where(hidden: false).last(3).reverse.each do |n|  %>
+    <%= render 'shared/article_box', {
+      image_id: n.featured_media_id, path: news_path(n), title: n.title,
+      brief: n.summary, content: n.content, date: n.created_at.strftime("%B %d %Y"),
+      width: 12
+    }  %>
+  <% end  %>
+</div>
+</div>
+<br />
+<div class="csvfooter">
+  <hr class="hidden">
+  <hr />
+  <div class="left">
+    <p class="text-success"> Collect </p>
+  </div>
+  <div class="center">
+    <p class="text-info"> Share </p>
+  </div>
+  <div class="right">
+    <p class="text-primary"> Visualize </p>
+  </div>
+ 
+</div>
