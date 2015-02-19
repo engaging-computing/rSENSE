@@ -87,11 +87,11 @@ $ ->
               scrollTop: location, 500
       show
 
-    $(document).on 'scrollstop', latency: 1500, magicScroll
+    $(document).on 'scrollstop', latency: 1500, magicScroll###
     $('.fa-times').on 'click', (e) ->
       e.preventDefault()
       $('#app-banner').hide()
-    $('.android-button').on 'hover', (e) ->
+    ###$('.android-button').on 'hover', (e) ->
       console.log 'wat'
       $('.android-button').css('background-color', 'rgba(39,135,245,0.5)')
     ###
