@@ -31,7 +31,6 @@ $ ->
   namespace.action in ["displayVis", "embedVis", "show"]
 
     class window.Photos extends BaseVis
-      numPhotos = 0
       constructor: (@canvas) ->
       start: ->
         $('#' + @canvas).show()
@@ -44,72 +43,42 @@ $ ->
       # Gets called when the controls are clicked and at start
       update: ->
         # Clear the old canvas
-        $('#' + @canvas).html('')
-
-        $('#' + @canvas).append '<div id="polaroid"></div>'
-
-        i = 0
-        imgWidth = 200
-        defMargins = 20
-        excess = 0
-
-        for ds of data.metadata
-          numPhotos += data.metadata[ds].photos.length
-
-        divWidth = $('#polaroid').width()
-
-        if((imgWidth + defMargins) * numPhotos + defMargins < divWidth)
-          defMargins = 20
-        else
-          imgsPerLine = Math.floor(divWidth / (imgWidth + defMargins))
-          if imgsPerLine * (imgWidth + defMargins) + defMargins >= divWidth
-            imgsPerLine -= 1
-          excess = divWidth - (imgsPerLine * (defMargins + imgWidth) + 20)
-
-        $('#polaroid').css(
-          'margin-left':   "#{(defMargins / 2) + (excess / 2)}px",
-          'margin-right':  "#{(defMargins / 2) + (excess / 2)}px",
-          'margin-top':    "#{defMargins / 2}px",
-          'margin-bottom': "#{defMargins / 2}px"
-        )
+        canvas = '#' + @canvas
+        $(canvas).html('<br/>')
 
         # load the Handlebars templates
         picTemp = HandlebarsTemplates['vis/photo/pic']
         lbTemp = HandlebarsTemplates['vis/photo/lightbox']
 
-        for ds of data.metadata
+        id = 0
 
-          dset = data.metadata[ds]
+        for dsKey,dset of data.metadata
+
           if dset.photos.length > 0
-            for pic of dset.photos
+            for picKey,pic of dset.photos
 
-              photo = dset.photos[pic]
-              do(photo, dset) ->
+              context = {
+                p_id:   'pic_' + id
+                tn_src: pic.tn_src
+                src:    pic.src
+                name:   dset.name
+                d_id:   dset.dataset_id
+              }
 
-                figure = {
-                  index:  i
-                  tn_src: photo.tn_src
-                  src:    photo.src
-                  name:   dset.name
-                  id:     dset.dataset_id
-                }
+              $(canvas).append picTemp(context)
 
-                $("#polaroid").append picTemp(figure)
-                $('#pic_' + i).css(
-                  'cursor': 'pointer'
-                )
-                $('#pic_' + i).click ->
-                  $('#polaroid').append lbTemp(figure)
+              $('#pic_' + id).data('context', context)
+              $('#pic_' + id).click ->
+                ctx = $(this).data('context')
+                $(canvas).append lbTemp(ctx)
 
-                  $('#target_img').modal
-                    keyboard: true
-                  $('#target_img').on "hidden.bs.modal", ->
-                    $('#target_img').remove()
+                $('#target_img').modal
+                  keyboard: true
+                $('#target_img').on "hidden.bs.modal", ->
+                  $('#target_img').remove()
 
-              i++
-              $('.p_item').css(
-                'margin': "#{defMargins / 2}px"
-              )
+              id++
+
       end: ->
         @unhideControls()
         super()
