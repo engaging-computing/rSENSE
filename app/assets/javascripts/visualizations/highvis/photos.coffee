@@ -58,7 +58,7 @@ $ ->
             for picKey,pic of dset.photos
 
               context = {
-                p_id:   'pic_' + id
+                p_id:   'pic-' + id
                 tn_src: pic.tn_src
                 src:    pic.src
                 name:   dset.name
@@ -67,15 +67,15 @@ $ ->
 
               $(canvas).append picTemp(context)
 
-              $('#pic_' + id).data('context', context)
-              $('#pic_' + id).click ->
+              $('#pic-' + id).data('context', context)
+              $('#pic-' + id).click ->
                 ctx = $(this).data('context')
                 $(canvas).append lbTemp(ctx)
 
-                $('#target_img').modal
+                $('#target-img').modal
                   keyboard: true
-                $('#target_img').on "hidden.bs.modal", ->
-                  $('#target_img').remove()
+                $('#target-img').on "hidden.bs.modal", ->
+                  $('#target-img').remove()
 
               id++
 
