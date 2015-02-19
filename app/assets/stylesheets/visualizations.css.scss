@@ -240,47 +240,6 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     overflow-y: auto;
   }
 
-  #polaroid {
-
-    div.p_item {
-      font-size: 12px;
-      border-radius: 0px;
-      vertical-align: top;
-      display: inline-block;
-      word-wrap: break-word;
-      overflow: hidden;
-      zoom: 1;
-      display: inline;
-      float: left;
-      width: 200px;
-      text-align: center;
-
-      .caption_wrap {
-         padding: 0px 10px 10px 10px;
-         word-wrap: break-all;
-         width: 95%;
-         text-align: left;
-
-         .caption {
-           text-align: left;
-         }
-      }
-
-      img {
-        padding: 8px;
-        max-height: 160px;
-      }
-
-      height: 200px !important;
-      border: $border;
-      margin-bottom: 10px;
-      background-color: $panel-bkg;
-      -moz-box-shadow: $shadow;
-      -webkit-box-shadow: $shadow;
-      box-shadow: $shadow;
-    }
-  }
-
   #radius-text {
     width: 75px;
     text-align:right;

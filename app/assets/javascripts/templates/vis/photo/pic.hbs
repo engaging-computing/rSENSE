@@ -1,9 +1,15 @@
-<!-- Handlebars template for photos in the photo vis -->
-<div class='p_item'>
-  <img id='pic_{{index}}' src="{{tn_src}}"/> <br>
-  <div class="caption_wrap">
-    <span class="caption">
-      Data Set: {{name}} ({{id}})
-    </span>
-  </div> <br>
+<div class="col-xs-6 col-lg-3">
+  <div id='{{p_id}}'
+       class='item item-block clickable'>
+
+    <div class="item-image item-photo-image"
+         style='background-image:url({{tn_src}})'>
+    </div>
+
+    <div class="item-desc item-photo-desc">
+      <div class="item-title word-wrap">
+        Data Set: {{name}} ({{d_id}})
+      </div>
+    </div>
+  </div>
 </div>
