@@ -125,6 +125,16 @@
     </div>
   </div>
   <div class="right-content-wrapper">
+    <h2 class="homepage-header">Get Involved with iSENSE</h2> <br />
+    <div class="homepage-text">
+      <p class="involvement">
+        For more information, please contact Fred Martin (<a href="mailto:fredm@cs.uml.edu">fredm@cs.uml.edu</a>) and Samantha Michalka (<a href="mailto:samantha@machinescience.org">samantha@machinescience.org</a>). We hold workshops for teachers to learn how to use iSENSE in the classroom, and for students to learn about scientific data collection and analysis. We will also come to your school with the tools and resources necessary to use iSENSE.
+      </p> 
+      <p class="involvement">
+        For technical inquiries related to the iSENSE website, please contact one of the developers listed on our <a href="/contact">iSENSE contact page.</a>
+      </p><br />
+    </div><br />
+
     <h2 class="homepage-header">Download iSENSE Mobile Apps</h2>
     <br />
     <a href="https://play.google.com/store/apps/developer?id=Engaging+Computing+Group,+UML" class="btn btn-primary">
@@ -136,7 +146,19 @@
       <p>Android applications are free and available for download in the Google Play Store.  iOS applications are also free, and will be available on the Apple App Store shortly. These mobile applications make it easy to collect data sets using your mobile device’s built-in sensors and upload them directly to iSENSE.</p>
     </div>
     <hr />
-
+    <div class="stats">
+      <h2 class="homepage-header">Statistics</h2> <br/>
+      <div class="left homepage-text">
+      <p><%=User.count %> users registered</p> 
+      </div>
+      <div class="center homepage-text">
+      <p><%=Project.count %> projects created</p>
+      </div>
+      <div class="right homepage-text">
+      <p><%=DataSet.count %> datasets contributed</p>
+      </div>
+    </div>
+    <hr />
 
   </div>
 </div> 
