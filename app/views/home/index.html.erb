@@ -33,7 +33,7 @@
         </div>
           <div class="carousel-caption">
             <div class="header-wrapper">
-            <h2 class="homepage-header"><span class="slide-header">Let's learn together</span></h2> <br />
+            <h2 class="homepage-header"><span class="slide-header">Let's Learn Together</span></h2> <br />
             <p class="carousel-slide-text"> iSENSE is an easy and convenient platform for users to: </p>
             <p class="carousel-slide-text"><span class="text-success featured-list">Collect </span> experimental data. </p>
             <p class="carousel-slide-text"><span class="text-info featured-list">Share </span> data with the world. </p>
@@ -160,8 +160,9 @@
   </div>
 </div>
 <div class="desktop-content-wrapper">
-<div class="news-prev-wrapper">
   <hr />
+<div class="news-prev-wrapper">
+
   <h2 class="homepage-header">What's New?</h2>
   <% News.where(hidden: false).last(3).reverse.each do |n|  %>
     <%= render 'shared/article_box', {
