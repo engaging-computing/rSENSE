@@ -25,10 +25,14 @@ class UpdateFieldsTest < ActionDispatch::IntegrationTest
     click_on 'Add Number'
     assert page.has_content?('Field added'), 'Flash happened'
     assert page.has_content?('Number'), 'Number field is there'
-    click_on 'Add Text'
+    click_on 'Add Number'
     assert page.has_content?('Field added'), 'Flash happened'
     page.assert_selector('tr', count: 3)
     first(:css, '.field_delete').click
+    find('.field_delete').click
+
+    click_on 'Add Text'
+    assert page.has_content?('Field added'), 'Flash happened'
     find('.field_delete').click
 
     click_on 'Add Timestamp'

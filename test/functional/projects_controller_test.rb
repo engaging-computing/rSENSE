@@ -216,7 +216,7 @@ class ProjectsControllerTest < ActionController::TestCase
     parameters['user_id'] = @kate.id
 
     # Adds a Latitude and Longitude field to determine where the dinner was eaten!
-    post :save_fields, { id: @dessert.id,  field: { id: 23, project_id: @dessert.id, field_type: 4, name: 'Location of Foods' },
+    post :save_fields, { id: @dessert.id, field: { id: 23, project_id: @dessert.id, field_type: 4, name: 'Location of Foods' },
                         '20_name' => parameters['20_name'], '20_unit' => parameters['20_unit'], '21_name' => parameters['21_name'],
                         '21_unit' => parameters['21_unit'], '22_name' => parameters['22_name'], '22_unit' => parameters['22_unit'],
                         '23_name' => 'Location of Foods', '23_unit' => '', new_field: 'Location' }, user_id: @kate.id

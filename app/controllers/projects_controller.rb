@@ -318,7 +318,7 @@ class ProjectsController < ApplicationController
     if field_type.nil?
       redirect_to project_path(@project), notice: 'Changes to fields saved.'
     else
-      redirect_to "/projects/#{@project.id}/edit_fields", notice: 'Field added'
+      redirect_to "/projects/#{@project.id}/edit_fields", notice: "#{field_type} field added."
     end
   end
 
