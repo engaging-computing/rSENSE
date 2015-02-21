@@ -1,4 +1,4 @@
-###!
+###
   * Copyright (c) 2011, iSENSE Project. All rights reserved.
   *
   * Redistribution and use in source and binary forms, with or without
@@ -34,16 +34,16 @@ $ ->
     ###
     Initializes and tracks the open / collapsed status of a control panel
       id   The id of the control panel
-      gvar A global variable to track the status
+      gvar The key of the tracking variable in globals.configs
     ###
     window.initCtrlPanel = (id, gvar) ->
       # Determines whether it should start hidden
-      if !gvar
+      unless eval("globals.configs.#{gvar}")
         $("##{id} > .vis-ctrl-body").hide()
 
       # Tracks if open / collapsed
       $("##{id} > .vis-ctrl-header").click ->
-        gvar = !gvar
+        eval("globals.configs.#{gvar} = !globals.configs.#{gvar}")
 
     ###
     Makes a title with appropriate units for a field

@@ -169,7 +169,7 @@ $ ->
 
         # Initialize and track the status of this control panel
         globals.configs.yAxisOpen ?= false
-        initCtrlPanel('y-axis-ctrls', globals.configs.yAxisOpen)
+        initCtrlPanel('y-axis-ctrls', 'yAxisOpen')
 
         # Initialize checked and make y axis checkbox/radio handler
         if radio
@@ -419,7 +419,7 @@ $ ->
 
         # Initialize and track the status of this control panel
         globals.configs.saveOpen ?= false
-        initCtrlPanel('save-ctrls', globals.configs.saveOpen)
+        initCtrlPanel('save-ctrls', 'saveOpen')
 
       ###
       Draw tool controls (Analysis Type, Log Y Axis, etc.) for Pie Chart and Bar Chart
