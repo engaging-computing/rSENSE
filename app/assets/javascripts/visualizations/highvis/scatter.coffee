@@ -342,22 +342,23 @@ $ ->
       ###
       drawToolControls: (elapsedTime = true) ->
         # Configure the tool controls
-        con = {}
-        con.axes = ["Both", "X", "Y"]
-        con.logSafe = data.logSafe
-        con.elapsedTime = elapsedTime
-        con.modes = [
+        ictx = {}
+        ictx.axes = ["Both", "X", "Y"]
+        ictx.logSafe = data.logSafe
+        ictx.elapsedTime = elapsedTime
+        ictx.modes = [
           { mode: @SYMBOLS_LINES_MODE, text: "Symbols and Lines" }
           { mode: @LINES_MODE,         text: "Lines Only" }
           { mode: @SYMBOLS_MODE,       text: "Symbols Only" }
         ]
 
         # Draw the Tool controls
-        ctx = {}
-        ctx.id = 'tool-ctrls'
-        ctx.title = 'Tools'
-        ctx.body = HandlebarsTemplates['visualizations/controls/scatter'](con);
-        tools = HandlebarsTemplates['visualizations/controls/body'](ctx);
+        octx = {}
+        octx.id = 'tool-ctrls'
+        octx.title = 'Tools'
+        octx.body =
+          HandlebarsTemplates['visualizations/controls/scatter'](ictx);
+        tools = HandlebarsTemplates['visualizations/controls/body'](octx);
         $('#vis-ctrls').append tools
 
         # Check off the right boxes
@@ -397,6 +398,10 @@ $ ->
 
         $('#elasped-time-btn').click (e) ->
           globals.generateElapsedTimeDialog()
+
+        # Initialize and track the status of this control panel
+        globals.configs.toolsOpen ?= false
+        initCtrlPanel('tools-ctrls', globals.configs.toolsOpen)
 
       ###
       Draws x axis selection controls

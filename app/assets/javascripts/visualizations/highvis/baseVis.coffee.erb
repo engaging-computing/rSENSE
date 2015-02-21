@@ -52,13 +52,12 @@ $ ->
       Start sequence used by runtime
       ###
       start: ->
-        ($ '#' + @canvas).show()
+        $('#' + @canvas).show()
         @drawControls()
         @update()
 
         # Make the controls collapsible
         $('.vis-ctrl-header').click (e) ->
-          console.log 'sup'
           $(@).siblings('.vis-ctrl-body').slideToggle()
 
       ###
@@ -86,7 +85,7 @@ $ ->
       Should destroy the chart, hide its canvas and remove controls.
       ###
       end: ->
-        ($ '#' + @canvas).hide()
+        $('#' + @canvas).hide()
 
       ###
       Draws controls
@@ -101,7 +100,7 @@ $ ->
       Unbinds control handlers and clears the HTML elements.
       ###
       clearControls: ->
-        ($ '#vis-ctrls').empty()
+        $('#vis-ctrls').empty()
 
       ###
       Calculate data to be displayed subject to analysis type
@@ -125,99 +124,91 @@ $ ->
       the active y axis field(s).
       ###
       drawYAxisControls: (radio = false, enableDataPoint = false) ->
-        # Populate choices
-        yFields =
+        getYFields = ->
           if enableDataPoint then data.normalFields
           else data.normalFields[1..data.normalFields.length]
 
-        checked = false
-        controls = "<div id='yAxisControl' class='vis_controls'>"
-        controls += "<div class='control_header'><h3><a href='#'>"
+        # Configure the y-axis controls
+        yFields = getYFields()
+        ictx = {}
+        ictx.fields = for f in yFields
+          id: 'yaxis-field-' + f
+          label: data.fields[f].fieldName
+          value: f
+          logid: 'yaxis-field-' + f
+          name: 'y-axis'
 
         if radio
-          controls += "Field</a></h3></div><div class='control_outer'>"
+          title = 'Field'
+          body  = 'visualizations/controls/yaxis-radio'
         else
-          controls += "Y Axis</a></h3></div><div class='control_outer'>"
-          controls +=
-            "<div class='inner_control_div'>
-              <div class='checkbox all-y-fields'>
-                <label class='all-y'>
-                  <input id='select-all-y' type='checkbox'> #Select All </input>
-                </label>
-              </div>
-            </div>"
-          if yFields.length == globals.configs.fieldSelection.length
-            checked = true
+          title = 'Y Axis'
+          body  = 'visualizations/controls/yaxis-check'
+          ictx.checkall =
+            id: 'ckall-yaxis'
+            label: '#Select All'
+            logid: 'check-all-y-axis'
 
-        for f in yFields
-          controls += "<div class='inner_control_div' >"
+        # Draw the y-axis controls
+        octx = {}
+        octx.id = 'y-axis-ctrls'
+        octx.title = title
+        octx.body = HandlebarsTemplates[body](ictx);
+        yaxis = HandlebarsTemplates['visualizations/controls/body'](octx);
+        $('#vis-ctrls').append yaxis
 
-          if radio
-            controls +=
-              """
-              <div class='radio'><label><input class='y_axis_input'
-               name='y_axis_group' type='radio' value='#{f}'
-               #{if (Number f) is @configs.displayField then "checked" else ""}>
-               #{data.fields[f].fieldName}</label></div>
-              """
-          else
-            controls +=
-              """
-              <div class='checkbox'><label><input class='y_axis_input'
-               type='checkbox' value='#{f}'
-               #{if (Number f) in globals.configs.fieldSelection then "checked" else ""}
-               />#{data.fields[f].fieldName}</label></div>
-              """
-          controls += "</div>"
+        # Initialize
+        updateCheckAll = ->
+          numY = getYFields().length
+          numSel = globals.configs.fieldSelection.length
+          indeterminate = numSel > 0 and numSel < numY
+          $('#ckbx-ckall-yaxis').prop('checked', numSel is numY)
+          $('#ckbx-ckall-yaxis').prop('indeterminate', indeterminate)
 
-        controls += '</div></div>'
+        updateCheckAll()
 
-        # Write HTML
-        ($ '#vis-ctrls').append controls
+        # Initialize and track the status of this control panel
+        globals.configs.yAxisOpen ?= false
+        initCtrlPanel('y-axis-ctrls', globals.configs.yAxisOpen)
 
-        if checked
-          ($ '#select-all-y').prop('checked', true)
-
-        # Make y axis checkbox/radio handler
+        # Initialize checked and make y axis checkbox/radio handler
         if radio
-          ($ '.y_axis_input').click (e) =>
-            @configs.displayField = Number e.target.value
+          # Set the current display field
+          query = "input[name='y-axis'][value='#{@configs.displayField}']"
+          $(query).prop('checked', 'true')
+
+          # Record any changes to the display field
+          $('input[name="y-axis"]').click (e) =>
+            @configs.displayField = Number(e.target.value)
             globals.configs.fieldSelection = [@configs.displayField]
             @delayedUpdate()
-        else
-          ($ '.y_axis_input').click (e) =>
-            index = Number e.target.value
-            if index in globals.configs.fieldSelection
-              arrayRemove(globals.configs.fieldSelection, index)
-            else
-              globals.configs.fieldSelection.push(index)
-            if yFields.length == globals.configs.fieldSelection.length
-              ($ '#select-all-y').prop('checked', true)
-            else
-              ($ '#select-all-y').prop('checked', false)
 
-            @delayedUpdate()
+          return
 
-        # Set up accordion
-        globals.configs.yAxisOpen ?= 0
+        # Else initialize the checkboxes to the field selection
+        $('input[name="y-axis"]').each (key, elem) ->
+          if Number(elem.value) in globals.configs.fieldSelection
+            $(elem).prop('checked', true)
 
-        ($ '#yAxisControl > h3').click ->
-          globals.configs.yAxisOpen = (globals.configs.yAxisOpen + 1) % 2
+        # Set handler for the field checkboxes
+        $('input[name="y-axis"]').click (e) =>
+          index = Number(e.target.value)
+          if index in globals.configs.fieldSelection
+            arrayRemove(globals.configs.fieldSelection, index)
+          else globals.configs.fieldSelection.push(index)
 
-        ($ '#select-all-y').click =>
-          yFields =
-            if enableDataPoint then data.normalFields
-            else data.normalFields[1..data.normalFields.length]
+          updateCheckAll()
+          @delayedUpdate()
 
-          if yFields.length != globals.configs.fieldSelection.length
-            ($ '#yAxisControl').find('.y_axis_input').each (i,j) ->
-              ($ j).prop('checked', true)
-            globals.configs.fieldSelection = yFields
-          else
-            for element in data.normalFields
-              arrayRemove(globals.configs.fieldSelection, element)
-            ($ '#yAxisControl').find('.y_axis_input').each (i,j) ->
-              ($ j).prop('checked', false)
+        # Set handler for the check all box
+        $('#ckbx-ckall-yaxis').click =>
+          yFields = getYFields()
+          checked = yFields.length isnt globals.configs.fieldSelection.length
+          globals.configs.fieldSelection = if checked then yFields else []
+          $('input[name="y-axis"]').each (key, elem) ->
+            $(elem).prop('checked', checked)
+
+          updateCheckAll()
           @delayedUpdate()
 
       ###
@@ -302,9 +293,9 @@ $ ->
         controls += '</div></div>'
 
         # Write HTML
-        ($ '#vis-ctrls').append controls
+        $('#vis-ctrls').append controls
 
-        ($ '.color-picker').each (_, cpicker) =>
+        $('.color-picker').each (_, cpicker) =>
           cid = $(cpicker).attr 'data-color-id'
           $(cpicker).colorpicker 'create',
             outputType: 'hex'
@@ -317,10 +308,10 @@ $ ->
               $("#label-color-#{cid}").css 'color', color
               @delayedUpdate()
               setTimeout (() => @start()), 1
-          ($ cpicker).colorpicker 'setcolor', globals.configs.colors[cid]
+          $(cpicker).colorpicker 'setcolor', globals.configs.colors[cid]
 
         # Make group select handler
-        ($ '#groupSelector').change (e) =>
+        $('#groupSelector').change (e) =>
           element = e.target or e.srcElement
           data.setGroupIndex (Number element.value)
 
@@ -338,50 +329,50 @@ $ ->
 
         if radio
           # Make group checkbox handler
-          ($ '.group_input').click (e) =>
-            ($ '.group_input').each () ->
+          $('.group_input').click (e) =>
+            $('.group_input').each () ->
               if @checked
                 data.groupSelection = [Number @value]
             @delayedUpdate()
 
         else
           # Make group checkbox handler
-          ($ '.group_input').click (e) =>
+          $('.group_input').click (e) =>
             selection = []
-            ($ '.group_input').each () ->
+            $('.group_input').each () ->
               if @checked
                 selection.push Number @value
               else
             data.groupSelection = selection
 
             if data.groupSelection.length == data.groups.length
-              ($ '#checkbox_all').prop("checked", true)
-              ($ '#checkbox_all').prop("indeterminate", false)
+              $('#checkbox_all').prop("checked", true)
+              $('#checkbox_all').prop("indeterminate", false)
             else if data.groupSelection.length > 0
-              ($ '#checkbox_all').prop("checked", false)
-              ($ '#checkbox_all').prop("indeterminate", true)
+              $('#checkbox_all').prop("checked", false)
+              $('#checkbox_all').prop("indeterminate", true)
             else
-              ($ '#checkbox_all').prop("checked", false)
-              ($ '#checkbox_all').prop("indeterminate", false)
+              $('#checkbox_all').prop("checked", false)
+              $('#checkbox_all').prop("indeterminate", false)
 
             @delayedUpdate()
 
           # Make group checkbox for all groups
-          ($ '.group_input_all').click (e) =>
+          $('.group_input_all').click (e) =>
             if e.target.checked
               data.groupSelection = for vals, keys in data.groups
                 Number keys
-              ($ '.group_input').prop 'checked', true
+              $('.group_input').prop 'checked', true
             else
               data.groupSelection = []
-              ($ '.group_input').prop 'checked', false
+              $('.group_input').prop 'checked', false
 
             @delayedUpdate()
 
         # Set up accordion
         globals.configs.groupOpen ?= 0
 
-        ($ '#groupControl > h3').click ->
+        $('#groupControl > h3').click ->
           globals.configs.groupOpen = (globals.configs.groupOpen + 1) % 2
 
       ###
@@ -410,26 +401,25 @@ $ ->
           $('#print-vis-btn').hide()
           $('#download-vis-btn').hide()
 
-        ($ '#save-vis-btn').click ->
+        $('#save-vis-btn').click ->
           globals.verifyUser (-> globals.saveVis()), (->
             alert 'You must be logged in to save a visualization.'), false
 
-        ($ '#default-vis-btn').click ->
+        $('#default-vis-btn').click ->
           globals.verifyUser (-> globals.defaultVis()), (->
             alert 'You must be logged in as the project owner to set a
             default visualization.'), true
 
-        ($ '#download-vis-btn').click =>
+        $('#download-vis-btn').click =>
           @chart.exportChart
             type: "image/svg+xml"
 
-        ($ '#print-vis-btn').click =>
+        $('#print-vis-btn').click =>
           @chart.print()
 
-        # Track the status of this control panel
-        globals.configs.saveOpen ?= 0
-        ($ '#save-ctrls > h3').click ->
-          globals.configs.saveOpen = (globals.configs.saveOpen + 1) % 2
+        # Initialize and track the status of this control panel
+        globals.configs.saveOpen ?= false
+        initCtrlPanel('save-ctrls', globals.configs.saveOpen)
 
       ###
       Draw tool controls (Analysis Type, Log Y Axis, etc.) for Pie Chart and Bar Chart
@@ -479,17 +469,17 @@ $ ->
 
         ### --- ###
         # Write HTML
-        ($ '#vis-ctrls').append controls
+        $('#vis-ctrls').append controls
 
-        ($ '.analysisType').change (e) =>
+        $('.analysisType').change (e) =>
           @configs.analysisType = Number e.target.value
           @delayedUpdate()
 
-        ($ '#sortField').change (e) =>
+        $('#sortField').change (e) =>
           @configs.sortField = Number e.target.value
           @delayedUpdate()
 
-        ($ '.logY_box').click (e) =>
+        $('.logY_box').click (e) =>
           globals.configs.logY = (globals.configs.logY + 1) % 2
           @start()
 

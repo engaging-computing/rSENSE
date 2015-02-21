@@ -32,7 +32,21 @@ $ ->
     window.globals ?= {}
 
     ###
-    Makes a title with apropriate units for a field
+    Initializes and tracks the open / collapsed status of a control panel
+      id   The id of the control panel
+      gvar A global variable to track the status
+    ###
+    window.initCtrlPanel = (id, gvar) ->
+      # Determines whether it should start hidden
+      if !gvar
+        $("##{id} > .vis-ctrl-body").hide()
+
+      # Tracks if open / collapsed
+      $("##{id} > .vis-ctrl-header").click ->
+        gvar = !gvar
+
+    ###
+    Makes a title with appropriate units for a field
     ###
     window.fieldTitle = (field) ->
       if field.unitName isnt "" and field.unitName isnt null
