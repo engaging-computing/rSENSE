@@ -20,7 +20,7 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     click_on 'Create Project'
     find('#manual_fields').click
     click_on 'Add Number'
-    assert page.has_content? 'Field added'
+    assert page.has_content? 'field added'
     assert page.has_content? 'Number'
     click_on 'Save'
     assert page.has_content? 'Changes to fields saved.'
