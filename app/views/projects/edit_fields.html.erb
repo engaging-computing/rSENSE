@@ -2,6 +2,9 @@
   <%= form_tag "/projects/#{@project.id}/save_fields", id: 'fields_table' do %>
     <div class="row">
       <div class="col-lg-8 col-lg-offset-2">
+        <div style="float: right; margin-bottom: 10px;">
+          <a href="/report_bug"><i class="fa fa-exclamation-triangle"></i> Report an Issue</a>
+        </div>
         <table class="fields_table table table-striped table-bordered">
           <thead>
             <tr>
