@@ -54,9 +54,9 @@ $ ->
         if tree is null
           @tree = new binaryTree
           @tree.generate(maxDepth)
-          @depth = maxDepth
         else
           @tree = binaryTree.clone(tree)
+        @depth = @tree.maxDepth()
 
       # Numerically evaluate the individual function at the value n
       evaluate: (n) ->
@@ -93,24 +93,44 @@ $ ->
       # Crossover genetic operator
       @crossover: (individual1, individual2) ->
         [childOne, childTwo] = binaryTree.crossover(individual1.tree, individual2.tree)
-        [new individual(childOne), new individual(childTwo)]
+        [new individual(childOne, childOne.maxDepth()), new individual(childTwo, childTwo.maxDepth())]
 
       # Fitness-proportional reproduction genetic operator
-      @fpReproduce: (individuals) ->
-        1
+      @fpReproduce: (individuals, points) ->
+        sumFitnesses = 0
+        individualFitnesses = []
+        for individual in individuals
+          individualFitness = individual.sseFitness(points)
+          sumFitnesses = sumFitnesses + individualFitness
+          individualFitnesses.push individualFitness
+        distribution = for number, index in individualFitnesses
+          cumulativeFitness = individualFitnesses[0..index].reduce (pv, cv, index, array) -> 
+            pv + cv
+          cumulativeFitness / sumFitnesses
+        rand = Math.random()
+        for probability, i in distribution
+          if rand < probability
+            individual = individuals[i]
+            ret = new window.individual(individual.tree, individual.depth)
+            return ret  
 
       # Tournament reproduction genetic operator
-      @tournamentReproduce: (individuals) ->
-        1
+      @tournamentReproduce: (individuals, points, tournamentSize, probability) ->
+        tournament = for i in [0..tournamentSize]
+          participant = Math.floor(Math.random() * individuals.length)
+          individuals[participant]
+        tournament
 
       # Calculates an individual's fitness by its sum of squared-error over points 
       sseFitness: (points) ->
         fitnessAtPoints = for point in points
-          console.log this.evaluate(point.x)
           Math.pow(point.y - this.evaluate(point.x), 2)
         sseFitness = fitnessAtPoints.reduce (pv, cv, index, array) ->
           pv + cv
-        sseFitness
+        if isNaN(sseFitness)
+          0
+        else
+          1 / (1 + sseFitness)
 
       # Calculates an individual's fitness by its mean squared-error over points
       mseFitness: (points) ->
@@ -169,9 +189,17 @@ $ ->
           pv + cv
         
         scaledFitness = (1 / points.length) * sumScaledResiduals
-        scaledFitness
+        if isNaN(scaledFitness)
+          0
+        else
+          1 / (1 + scaledFitness)
 
     window.points = for i in [0...20]
       x: i
       y: Math.pow(i, 2)
+
+    ###
+    # Todo: Fix Mutation (replace mutation site with subtree, involves maintaining tree's maxDepth)
+    # Finish Tournament Selection :)
+    ###
 
