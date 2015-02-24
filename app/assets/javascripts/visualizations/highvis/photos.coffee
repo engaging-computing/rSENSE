@@ -27,86 +27,64 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is 'visualizations' and
+  namespace.action in ['displayVis', 'embedVis', 'show']
 
     class window.Photos extends BaseVis
-      numPhotos = 0
       constructor: (@canvas) ->
       start: ->
-        ($ '#' + @canvas).show()
+        $('#' + @canvas).show()
 
         # Hide the controls
         @hideControls()
-
         super()
 
       # Gets called when the controls are clicked and at start
       update: ->
         # Clear the old canvas
-        ($ '#' + @canvas).html('')
+        canvas = '#' + @canvas
+        $(canvas).html("")
 
-        ($ '#' + @canvas).append '<div id="polaroid"></div>'
+        # load the Handlebars templates
+        picTemp = HandlebarsTemplates['visualizations/photo/pic']
+        lbTemp = HandlebarsTemplates['visualizations/photo/lightbox']
 
-        i = 0
-        imgWidth = 200
-        defMargins = 20
-        excess = 0
-        for ds of data.metadata
-          numPhotos += data.metadata[ds].photos.length
-        divWidth = ($ '#polaroid').width()
-        if((imgWidth + defMargins) * numPhotos + defMargins < divWidth )
-          defMargins = 20
-        else
-          imgsPerLine = Math.floor(divWidth / (imgWidth + defMargins))
-          if imgsPerLine * (imgWidth + defMargins) + defMargins >= divWidth
-            imgsPerLine -= 1
-          excess = divWidth - (imgsPerLine * (defMargins + imgWidth) + 20)
-        ($ '#polaroid').css( 'margin-left': "#{(defMargins / 2) + (excess / 2)}px",
-          'margin-right': "#{(defMargins / 2) + (excess / 2)}px",
-          'margin-top': "#{defMargins / 2}px", 'margin-bottom': "#{defMargins / 2}px")
-        for ds of data.metadata
-          if data.metadata[ds].photos.length > 0
-            for pic of data.metadata[ds].photos
-              tmp = data.metadata[ds].photos[pic]
-              dset = data.metadata[ds]
-              do(tmp, dset) ->
-                figure = """<div class='p_item'>
-                  <img id='pic_#{i}' src="#{tmp.tn_src}" class='caroucell'/> <br>
-                  <div class="caption_wrap"><span class="caption">Data Set: #{dset.name}(#{dset.dataset_id})
-                  </span></div> <br>
-                </div>"""
-                ($ "#polaroid").append figure
-                ($ '#pic_' + i).css( cursor: "pointer")
-                ($ '#pic_' + i).click ->
-                  ($ '#polaroid').append("""
-                    <div class="modal fade" id="target_img" tabindex='-1'>
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal"
-                              aria-hidden="true"><i class="fa fa-times"></i> Close</button>
-                          </div>
-                          <div class="modal-body">
-                            <img src='#{tmp.src}' style='width:100%'/>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    """)
+        # add each photo to the canvas
+        id = 0
+        for dsKey,dset of data.metadata
+          if dset.photos.length > 0
+            for picKey,pic of dset.photos
+              context = {
+                p_id:   'pic-' + id
+                tn_src: pic.tn_src
+                src:    pic.src
+                p_name: pic.name
+                d_name: dset.name
+                d_id:   dset.dataset_id
+              }
 
-                  ($ '#target_img').modal
-                    keyboard: true
-                  ($ '#target_img').on "hidden.bs.modal", ->
-                    ($ '#target_img').remove()
-              i++
-              ($ '.p_item').css('margin': "#{defMargins / 2}px")
+              $(canvas).append picTemp(context)
+
+              $('#pic-' + id).data('context', context)
+              $('#pic-' + id).click ->
+                ctx = $(this).data('context')
+                $(canvas).append lbTemp(ctx)
+
+                $('#target-img').modal
+                  keyboard: true
+                $('#target-img').on 'hidden.bs.modal', ->
+                  $('#target-img').remove()
+
+              id++
+
       end: ->
         @unhideControls()
         super()
 
       drawControls: ->
         super()
-    if "Photos" in data.relVis
-      globals.photos = new Photos "photos_canvas"
+
+    if 'Photos' in data.relVis
+      globals.photos = new Photos 'photos_canvas'
     else
-      globals.photos = new DisabledVis "photos_canvas"
+      globals.photos = new DisabledVis 'photos_canvas'
