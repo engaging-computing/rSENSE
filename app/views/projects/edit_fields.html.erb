@@ -5,13 +5,13 @@
         <h1>Setup Fields Manually</h1>
         <div class="center" id="options">
           <div class="col-sm-3 col-xs-6 add_fields">
-            <button value="Number" class="btn btn-primary center new_field number" form="fields_table" name="new_field">Add Number</button>
-            <input type="number" min="1" max="20" value="1" name="num_fields" class="num_picker" required>
+            <button value="Number" class="btn btn-primary center new_field number" form="fields_table" name="new_field" id="number">Add Number</button>
+            <input type="number" min="1" max="20" value="1" name="num_fields" class="num_picker" id="num_fields" required>
             <p class="description">Any number value. "Units" specifies how the value is expressed. e.g. 'Temperature' could have a unit of 'C'</p>
       	  </div>
       	  <div class="col-sm-3 col-xs-6 add_fields">
-            <button value="Text" class="btn btn-primary center new_field text" form="fields_table" name="new_field">Add Text</button>
-            <input type="number" min="1" max="20" value="1" name="text_fields" class="num_picker" required>
+            <button value="Text" class="btn btn-primary center new_field text" form="fields_table" name="new_field" id="text">Add Text</button>
+            <input type="number" min="1" max="20" value="1" name="text_fields"  class="num_picker" id="text_fields" required>
             <p class="description">Any string value. "Restrictions" are a comma separated list of values that limit input to only predefined values.</p>
       	  </div>
       	  <div class="col-sm-3 col-xs-6 add_fields">

@@ -279,8 +279,6 @@ class ProjectsController < ApplicationController
     end
 
     # If there's a new field, add it the number of times specified.
-    i = 0
-
     field_type = params[:new_field]
 
     if field_type == 'Location'
@@ -300,7 +298,7 @@ class ProjectsController < ApplicationController
         return
       end
     elsif !field_type.nil?
-      while i < ((params[:num_fields].to_i > params[:text_fields].to_i) ? params[:num_fields].to_i : params[:text_fields].to_i)
+      ((params[:num_fields].to_i > params[:text_fields].to_i) ? params[:num_fields].to_i : params[:text_fields].to_i).times do
 
         next_name = Field.get_next_name(@project,
                                         get_field_type(params[:new_field]))
@@ -312,7 +310,6 @@ class ProjectsController < ApplicationController
           redirect_to "/projects/#{@project.id}/edit_fields"
           return
         end
-        i += 1
       end
     end
     if field_type.nil?
