@@ -32,6 +32,10 @@
 //= require titlebar.js.coffee
 //= require bootstrap
 //
+// Handlebars templates
+//= require handlebars
+//= require_tree ./templates
+//
 // Visualization stuff follows
 //
 //= require highcharts/highcharts
