@@ -105,13 +105,73 @@ $ ->
 
       # Calculates an individual's fitness by its sum of squared-error over points 
       sseFitness: (points) ->
-        1
+        fitnessAtPoints = for point in points
+          console.log this.evaluate(point.x)
+          Math.pow(point.y - this.evaluate(point.x), 2)
+        sseFitness = fitnessAtPoints.reduce (pv, cv, index, array) ->
+          pv + cv
+        sseFitness
 
       # Calculates an individual's fitness by its mean squared-error over points
       mseFitness: (points) ->
-        1
-      
+        mseFitness = (1 / points.length) * this.sseFitness(points)
+        mseFitness      
+
       # Calculates an individual's fitness by scaled fitness 
       # (technique employed in the scaled symbolic regression paper by Keijzer)
       scaledFitness: (points) ->
-        1
+        xs = for point in points
+          point.x
+        ys = for point in points
+          this.evaluate(point.x)
+        ts = for point in points
+          point.y
+
+        xSum = xs.reduce (pv, cv, index, array) ->
+          pv + cv
+        ySum = ys.reduce (pv, cv, index, array) ->
+          pv + cv
+        tSum = ts.reduce (pv, cv, index, array) ->
+          pv + cv
+
+        xAvg = xSum / xs.length
+        yAvg = ySum / ys.length
+        tAvg = tSum / ts.length
+        
+        xMeanDiffs = for x in xs
+          x - xAvg
+        yMeanDiffs = for y in ys
+          y - yAvg
+        tMeanDiffs = for t in ts
+          t - tAvg
+        
+        ytCovTerms = for i in [0...ys.length]
+          (yMeanDiffs[i] * tMeanDiffs[i])
+        ytCov = ytCovTerms.reduce (pv, cv, index, array) ->
+          pv + cv
+
+        yVarTerms = for ydiff in yMeanDiffs
+          Math.pow(ydiff, 2)
+        yVar = yVarTerms.reduce (pv, cv, index, array) ->
+          pv + cv
+        
+        b = 
+          if yVar is 0
+            1
+          else
+            ytCov / yVar
+
+        a = tAvg - b * yAvg
+        
+        scaledResiduals = for i in [0...points.length]
+          Math.pow(ts[i] - (a + b * ys[i]), 2)
+        sumScaledResiduals = scaledResiduals.reduce (pv, cv, index, array) ->
+          pv + cv
+        
+        scaledFitness = (1 / points.length) * sumScaledResiduals
+        scaledFitness
+
+    window.points = for i in [0...20]
+      x: i
+      y: Math.pow(i, 2)
+
