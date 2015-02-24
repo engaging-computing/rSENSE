@@ -33,10 +33,6 @@ $ ->
     class window.Photos extends BaseVis
       constructor: (@canvas) ->
       start: ->
-        $('#' + @canvas).show()
-
-        # Hide the controls
-        @hideControls()
         super()
 
       # Gets called when the controls are clicked and at start
@@ -76,10 +72,6 @@ $ ->
                   $('#target-img').remove()
 
               id++
-
-      end: ->
-        @unhideControls()
-        super()
 
       drawControls: ->
         super()

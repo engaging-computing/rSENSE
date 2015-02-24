@@ -293,7 +293,6 @@ $ ->
             else
               alert "Entered bin size would result in too many bins."
 
-
       drawControls: ->
         super()
         @drawGroupControls()

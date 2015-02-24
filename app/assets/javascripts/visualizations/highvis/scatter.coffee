@@ -402,52 +402,23 @@ $ ->
         globals.configs.toolsOpen ?= false
         initCtrlPanel('tools-ctrls', globals.configs.toolsOpen)
 
+
       ###
-      Draws x axis selection controls
-      This includes a series of radio buttons.
+      A wrapper for making x-axis controls
       ###
-      drawXAxisControls: (filter = (fieldIndex) -> (fieldIndex in data.normalFields)) ->
-        # Don't draw if there's only one possible selection
-        possible = for field, fieldIndex in data.fields when filter fieldIndex
-          true
-        if possible.length <= 1
-          return
-
-        controls =  '<div id="xAxisControl" class="vis_controls">'
-
-        controls += "<h3 class='clean_shrink'><a href='#'>X Axis:</a></h3>"
-        controls += "<div class='outer_control_div'>"
-
-        # Populate choices (not text)
-        for field, fieldIndex in data.fields when filter fieldIndex
-          controls += '<div class="inner_control_div">'
-
-          controls += "<div class='radio'><label><input class='xAxis_input' type='radio' name='xaxis' "
-          controls += "value='#{fieldIndex}' #{if (Number fieldIndex) == @configs.xAxis then "checked" else ""}>"
-          controls += "#{data.fields[fieldIndex].fieldName}</label></div>"
-          controls += "</div>"
-
-        controls += '</div></div>'
-
-        # Write HTML
-        $('#vis-ctrls').append controls
-
-        # Make xAxis radio handler
-        $('.xAxis_input').change (e) =>
-          selection = null
-          $('.xAxis_input').each () ->
-            if @checked
-              selection = @value
-          @configs.xAxis = Number selection
-
+      drawXAxisControls: ->
+        $('input[name="x-axis"]').click (e) =>
+          # This next line will be carried out again in the parent, but
+          # it needs to run to correctly update the x axis extremes
+          @configs.xAxis = Number(e.target.value)
           @resetExtremes()
-          @update()
 
-        # Set up accordion
-        globals.configs.xAxisOpen ?= 0
+        @drawAxisControls('X Axis', data.normalFields, null, 'x-axis', true,
+          @configs.xAxis)
 
-        $('#xAxisControl > h3').click ->
-          globals.configs.xAxisOpen = (globals.configs.xAxisOpen + 1) % 2
+        # Initialize and track the status of this control panel
+        globals.configs.xAxisOpen ?= false
+        initCtrlPanel('x-axis-ctrls', 'xAxisOpen')
 
       ###
       Checks if the user has requested a specific zoom
