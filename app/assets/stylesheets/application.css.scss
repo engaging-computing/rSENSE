@@ -55,6 +55,10 @@ body {
   text-align: center;
 }
 
+.clickable {
+  cursor: pointer;
+}
+
 .create-button {
   margin-bottom: 2ex;
 }
@@ -85,11 +89,19 @@ body {
     font-size: 0.9em;
   }
 
+  .item-desc.item-photo-desc {
+    min-height: 30px;
+  }
+
   .item-image {
     background-position: center;
     background-repeat: no-repeat;
     background-size: 100%;
     height: 120px;
+  }
+
+  .item-image.item-photo-image {
+    height: 200px;
   }
 
   .item-title {
@@ -220,12 +232,12 @@ body {
 }
 #content-partial{
   .summernote-controls{
-    text-align: right; 
+    text-align: right;
     margin-top: 1em;
   }
   overflow:hidden !important;
   iframe{
-    width: 100%; 
+    width: 100%;
     height: 390px;
   }
 }
@@ -244,5 +256,3 @@ body {
     }
   }
 }
-
-

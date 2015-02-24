@@ -235,46 +235,10 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     }
   }
 
-  // photos sometimes needs a scrollbar
+  // photos may require scrollbar; margin so photos do not touch top of canvas
   #photos_canvas {
     overflow-y: auto;
-  }
-
-  #polaroid {
-
-    div.p_item {
-      font-size: 12px;
-      border-radius: 5px;
-      vertical-align: top;
-      display: inline-block;
-      word-wrap: break-word;
-      overflow: hidden;
-      zoom: 1;
-      display: inline;
-
-      .caption_wrap {
-         padding: 0px 10px 10px 10px;
-         word-wrap: break-all;
-         width: 95%;
-         text-align: left;
-
-         .caption {
-           text-align: left;
-         }
-      }
-
-      img {
-        padding: 9px;
-      }
-
-      width: 200px !important;
-      border: $border;
-      margin-bottom: 10px;
-      background-color: $panel-bkg;
-      -moz-box-shadow: $shadow;
-      -webkit-box-shadow: $shadow;
-      box-shadow: $shadow;
-    }
+    margin-top: 20px;
   }
 
   #radius-text {
@@ -424,6 +388,11 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
       opacity: 0.5;
       filter: alpha(opacity=50); /* For IE8 and earlier */
     }
+  }
+
+  #target-img h4 {
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 
   // an active tab has a different looking gradient
