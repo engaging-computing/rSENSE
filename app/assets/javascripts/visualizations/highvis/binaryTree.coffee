@@ -55,7 +55,7 @@ $ ->
         (a, b) -> a + b,
         (a, b) -> a - b,
         (a, b) -> a * b,
-        (a, b) -> if b is 0 then 0 else a / b,
+        (a, b) -> if b is 0 then 1 else a / b,
         (a, b) -> Math.pow(a,b),
         (a)    -> Math.exp(a), 
         (a)    -> Math.cos(a),
