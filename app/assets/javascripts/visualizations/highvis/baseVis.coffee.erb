@@ -123,12 +123,12 @@ $ ->
       This includes a series of checkboxes or radio buttons for selecting
       the active y axis field(s).
       ###
-      drawYAxisControls: (title, fields, radio = false) ->
+      drawYAxisControls: (title, fields, selFields, radio) ->
         # Configure the y-axis controls
         ictx = {}
         ictx.fields = for f in fields
           id: 'yaxis-field-' + f
-          label: data.fields[f].fieldName
+          label: fieldTitle(data.fields[f])
           value: f
           logid: 'yaxis-field-' + f
           name: 'y-axis'
@@ -150,16 +150,6 @@ $ ->
         yaxis = HandlebarsTemplates['visualizations/controls/body'](octx);
         $('#vis-ctrls').append yaxis
 
-        # Initialize
-        updateCheckAll = (fields) ->
-          numY = fields.length
-          numSel = globals.configs.fieldSelection.length
-          indeterminate = numSel > 0 and numSel < numY
-          $('#ckbx-ckall-yaxis').prop('checked', numSel is numY)
-          $('#ckbx-ckall-yaxis').prop('indeterminate', indeterminate)
-
-        updateCheckAll(fields)
-
         # Initialize and track the status of this control panel
         globals.configs.yAxisOpen ?= false
         initCtrlPanel('y-axis-ctrls', 'yAxisOpen')
@@ -173,34 +163,54 @@ $ ->
           # Record any changes to the display field
           $('input[name="y-axis"]').click (e) =>
             @configs.displayField = Number(e.target.value)
-            globals.configs.fieldSelection = [@configs.displayField]
+
+            # Repopulate the selection array without changing memory address
+            selFields.splice(0, selFields.length)
+            selFields.push @configs.displayField
+
             @delayedUpdate()
 
           return
 
+        # Initialize
+        updateCheckAll = ->
+          numFields = fields.length
+          numSel = selFields.length
+          indeterminate = numSel > 0 and numSel < numFields
+          $('#ckbx-ckall-yaxis').prop('checked', numSel is numFields)
+          $('#ckbx-ckall-yaxis').prop('indeterminate', indeterminate)
+
+        # Update the check all box
+        updateCheckAll()
+
         # Else initialize the checkboxes to the field selection
         $('input[name="y-axis"]').each (key, elem) ->
-          if Number(elem.value) in globals.configs.fieldSelection
+          if Number(elem.value) in selFields
             $(elem).prop('checked', true)
 
         # Set handler for the field checkboxes
         $('input[name="y-axis"]').click (e) =>
           index = Number(e.target.value)
-          if index in globals.configs.fieldSelection
-            arrayRemove(globals.configs.fieldSelection, index)
-          else globals.configs.fieldSelection.push(index)
+          if index in selFields then arrayRemove(selFields, index)
+          else selFields.push(index)
 
-          updateCheckAll(fields)
+          updateCheckAll()
           @delayedUpdate()
 
         # Set handler for the check all box
         $('#ckbx-ckall-yaxis').click =>
-          checked = fields.length isnt globals.configs.fieldSelection.length
-          globals.configs.fieldSelection = if checked then fields else []
+          checked = selFields.length isnt fields.length
+
+          # Empty the array without changing the memory address
+          selFields.splice(0, selFields.length)
+
+          # Repopulate the array if necessary
+          if checked then selFields.push(f) for f in fields
+
           $('input[name="y-axis"]').each (key, elem) ->
             $(elem).prop('checked', checked)
 
-          updateCheckAll(fields)
+          updateCheckAll()
           @delayedUpdate()
 
       ###

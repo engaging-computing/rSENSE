@@ -205,7 +205,10 @@ $ ->
       drawControls: ->
         super()
         @drawGroupControls()
-        @drawYAxisControls()
+        fields = (i for f, i in data.fields when i isnt data.COMBINED_FIELD)
+        @drawYAxisControls('Visible Fields',
+          (i for f, i in data.fields when i isnt data.COMBINED_FIELD),
+          @configs.tableFields, false)
         @drawSaveControls()
 
       saveSort: =>
@@ -263,84 +266,5 @@ $ ->
           return result
 
       clip: (arr) -> arr
-
-      ###
-      Draws y axis controls
-      This includes a series of checkboxes or radio buttons for selecting
-      the active y axis field(s).
-      ###
-      drawYAxisControls: ->
-        # Populate choices
-        yFields = (i for f, i in data.fields when i isnt data.COMBINED_FIELD)
-        checked = false
-
-        c =  "<div id='yAxisControl' class='vis_controls'>"
-        c += "<h3 class='clean_shrink'><a href='#'>Visible Fields:</a></h3>"
-        c += "<div class='outer_control_div'>"
-        c +=
-          """
-          <div class='inner_control_div'>
-            <div class='checkbox all-y-fields'>
-              <label class='all-y'>
-                <input id='select-all-y' type='checkbox'> #Check All </input>
-              </label>
-            </div>
-          </div>
-          """
-        if @configs.tableFields.length == data.fields.length - 1
-          checked = true
-
-        for f in yFields
-          c +=
-            """
-            <div class='inner_control_div' >
-              <div class='checkbox'><label><input class='y_axis_input'
-              type='checkbox' value='#{f}'
-              #{if Number(f) in @configs.tableFields then "checked" else ""}
-              />#{data.fields[f].fieldName}</label></div></div>
-            """
-
-        c += "</div></div>"
-
-        # Write HTML
-        $('#vis-ctrls').append c
-
-        if checked
-          $('#select-all-y').prop('checked', true)
-
-        $('.y_axis_input').click (e) =>
-          index = Number e.target.value
-          if index in @configs.tableFields
-            arrayRemove(@configs.tableFields, index)
-          else
-            @configs.tableFields.push(index)
-
-          if yFields.length == @configs.tableFields.length
-            $('#select-all-y').prop("checked", true)
-          else
-            $('#select-all-y').prop("checked", false)
-
-          @delayedUpdate()
-
-        # Set up accordion
-        globals.configs.yAxisOpen ?= 0
-
-        $('#yAxisControl > h3').click ->
-          globals.configs.yAxisOpen = (globals.configs.yAxisOpen + 1) % 2
-
-        $('#select-all-y').click =>
-          selFields =
-            (i for f, i in data.fields when i isnt data.COMBINED_FIELD)
-
-          if $('#select-all-y').is(":checked")
-            $('#yAxisControl').find('.y_axis_input').each (i,j) ->
-              $(j).prop('checked', true)
-            @configs.tableFields = selFields
-          else
-            @configs.tableFields = []
-            $('#yAxisControl').find('.y_axis_input').each (i,j) ->
-              $(j).prop('checked', false)
-
-          @delayedUpdate()
 
     globals.table = new Table "table_canvas"

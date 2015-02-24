@@ -99,7 +99,8 @@ $ ->
       drawControls: ->
         super()
         @drawGroupControls false, false, false
-        @drawYAxisControls('Fields', data.normalFields.splice(1), true)
+        @drawYAxisControls('Fields', data.normalFields.slice(1),
+          globals.configs.fieldSelection, true)
         @drawToolControls()
         @drawSaveControls()
 

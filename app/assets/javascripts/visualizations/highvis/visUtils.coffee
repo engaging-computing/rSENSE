@@ -59,9 +59,9 @@ $ ->
     Returns the modified (or unmodified) arr.
     ###
     window.arrayRemove = (arr, item) ->
-      index = arr.indexOf item
+      index = arr.indexOf(item)
       if index isnt -1
-        arr.splice index, 1
+        arr.splice(index, 1)
       arr
 
     ###

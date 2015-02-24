@@ -47,13 +47,12 @@ $ ->
         @xGridSize = @yGridSize = @INITIAL_GRID_SIZE
 
         # Used for data reduction triggering
-        @updateOnZoom = 1
+        @updateOnZoom = true
 
         @configs.mode ?= @SYMBOLS_MODE
-
         @configs.xAxis ?= data.normalFields[0]
-        @configs.yAxis ?= globals.configs.fieldSelection
-
+        #  TODO
+        #  Write a migration to nuke @configs.yAxis
         @configs.advancedTooltips ?= 0
 
         # Do the cool existential operator thing
@@ -167,27 +166,26 @@ $ ->
                 @storeYBounds @chart.yAxis[0].getExtremes()
 
                 ###
-                If we actually zoomed, we want to update so the data reduction can trigger.
-                Otherwise this zoom was triggered by an update, so don't recurse!
+                If we actually zoomed, we want to update so the data reduction
+                can trigger. Otherwise this zoom was triggered by an update, so
+                don't recurse!
                 ###
-                if @updateOnZoom is 1
-                  @delayedUpdate()
-                else
-                  @updateOnZoom = 1
+                if @updateOnZoom then @delayedUpdate()
+                else @updateOnZoom = true
 
       ###
       Build the dummy series for the legend.
       ###
       buildLegendSeries: ->
         count = -1
-        for field, fieldIndex in data.fields when fieldIndex in data.normalFields
+        for f, i in data.fields when i in data.normalFields
           count += 1
           options =
-            legendIndex: fieldIndex
+            legendIndex: i
             data: []
             color: '#000'
-            showInLegend: if fieldIndex in globals.configs.fieldSelection then true else false
-            name: field.fieldName
+            showInLegend: i in globals.configs.fieldSelection
+            name: f.fieldName
 
           switch
             when @configs.mode is @SYMBOLS_LINES_MODE
@@ -215,8 +213,8 @@ $ ->
         super()
         @drawGroupControls()
         @drawXAxisControls()
-        yFields = data.normalFields[1..data.normalFields.length]
-        @drawYAxisControls('Y Axis', yFields.splice(1))
+        @drawYAxisControls('Y Axis', data.normalFields.slice(1),
+          globals.configs.fieldSelection, false)
         @drawToolControls()
         @drawRegressionControls()
         @drawSaveControls()
@@ -303,7 +301,7 @@ $ ->
             @chart.addSeries options, false
 
         if @isZoomLocked()
-          @updateOnZoom = 0
+          @updateOnZoom = false
           @setExtremes()
           $('#zoomResetButton').removeClass("disabled")
         else
@@ -450,13 +448,6 @@ $ ->
 
         $('#xAxisControl > h3').click ->
           globals.configs.xAxisOpen = (globals.configs.xAxisOpen + 1) % 2
-
-      ###
-      Save the Y-axis selection for clipping purposes
-      ###
-      drawYAxisControls: (radio = false) ->
-        super(radio)
-        @configs.yAxis = globals.configs.fieldSelection
 
       ###
       Checks if the user has requested a specific zoom
@@ -797,7 +788,7 @@ $ ->
           && point[@configs.xAxis] >= xBounds.min && point[@configs.xAxis] <= xBounds.max
 
             # Check all y axes
-            for yAxis in @configs.yAxis
+            for yAxis in globals.configs.fieldSelection
               if !((point[yAxis] isnt null) && (not isNaN point[yAxis]) \
               && point[yAxis] >= yBounds.min && point[yAxis] <= yBounds.max)
                 return false
