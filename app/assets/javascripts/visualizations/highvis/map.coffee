@@ -184,7 +184,10 @@ $ ->
               label += "<tr><td>#{field.fieldName}</td>"
               label += "<td><strong>#{dat}</strong></td></tr>"
 
-            label += "</table></div>"
+            label += '</table></div>'
+            img = data.metadata[0].photos[0]
+            if img
+              label += "<img src=#{img.src} style='width:100%'> "
 
             if groupIndex in data.groupSelection
               latlngbounds.extend latlng
