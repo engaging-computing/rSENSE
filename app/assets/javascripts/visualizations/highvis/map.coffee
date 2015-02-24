@@ -187,7 +187,7 @@ $ ->
             label += '</table></div>'
             img = data.metadata[0].photos[0]
             if img
-              label += "<img src=#{img.src} style='width:100%'> "
+              label += "<img src=#{img.src} style='width:90%; height: auto;'> "
 
             if groupIndex in data.groupSelection
               latlngbounds.extend latlng
