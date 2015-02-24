@@ -235,9 +235,10 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     }
   }
 
-  // photos sometimes needs a scrollbar
+  // photos may require scrollbar; margin so photos do not touch top of canvas
   #photos_canvas {
     overflow-y: auto;
+    margin-top: 20px;
   }
 
   #radius-text {

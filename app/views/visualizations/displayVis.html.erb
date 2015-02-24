@@ -28,11 +28,9 @@
                    'novis_photos': "<%= path_to_image('novis_photos.png')%>"
   };
 </script>
-
 <script type="text/javascript"
       src="https://maps-api-ssl.google.com/maps/api/js?key=AIzaSyBxtPK1_mxwVdl1NRu7ZEiSNvmCekFSZAw&amp;sensor=false&amp;libraries=visualization,geometry&amp;v=3.9">
 </script>
-
 <% if @datasets.count == 1%>
   <div id="title_row" style="padding-left:10px">
     <div style="font-size:1.75em">
@@ -48,14 +46,11 @@
     </div>
   </div>
 <%end%>
-
 <div style="margin: 0px 10px 10px;">
   <div id="viscontainer" style="height:500px;">
     <div class="pull-right"><button class="btn btn-default" id="fullscreen-vis" title="Maximize"><i class="fa fa-arrows-alt"></i></button></div>
     <ul id='visTabList'></ul>
     <div class="clear"></div>
-
-
       <div id="map_canvas" class="vis_canvas"></div>
       <div id="table_canvas" class="vis_canvas"></div>
       <div id="timeline_canvas" class="vis_canvas"></div>
@@ -65,7 +60,6 @@
       <div id="pie_canvas" class="vis_canvas"></div>
       <div id="summary_canvas" class="vis_canvas"></div>
       <div id="photos_canvas" class="vis_canvas"></div>
-
     <div id="controlcontainer">
       <div id="controlhider">
         <button id="control_hide_button" type="button"> &gt; </button>
