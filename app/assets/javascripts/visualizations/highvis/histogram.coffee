@@ -254,11 +254,11 @@ $ ->
         c += '</div></div></div>'
 
         # Write HTML
-        ($ '#controldiv').append c
+        $('#controldiv').append c
 
         ###
         # Set up slider
-        ($ '#binSizeSlider').slider
+        $('#binSizeSlider').slider
           range: 'min'
           value: 2.7 - @binNumSug
           min: .5
@@ -271,20 +271,20 @@ $ ->
 
             if not fpEq newBinSize, @configs.binSize
               @configs.binSize = newBinSize
-              ($ '#binSizeInput').val "#{@configs.binSize}"
+              $('#binSizeInput').val "#{@configs.binSize}"
               @delayedUpdate()
         ###
-        ($ "#binSizeInput").keydown (e) =>
+        $("#binSizeInput").keydown (e) =>
           if e.keyCode == 13
 
-            newBinSize = Number ($ '#binSizeInput').val()
+            newBinSize = Number $('#binSizeInput').val()
 
             if isNaN newBinSize
-              ($ "#binSizeInput").errorFlash()
+              $("#binSizeInput").errorFlash()
               return
 
             if newBinSize <= 0
-              ($ "#binSizeInput").errorFlash()
+              $("#binSizeInput").errorFlash()
               return
 
             if ((@globalmax - @globalmin) / newBinSize) < @MAX_NUM_BINS
@@ -297,20 +297,19 @@ $ ->
       drawControls: ->
         super()
         @drawGroupControls()
-        @drawYAxisControls(true)
+        @drawYAxisControls('Fields', data.normalFields.splice(1))
         @drawToolControls()
         @drawSaveControls()
 
-      drawYAxisControls: (radio = true) ->
-        super(radio)
-
+      drawYAxisControls: (title, fields, radio = true) ->
         # Currently specific to histogram
-        ($ '.y_axis_input').click (e) =>
-          @configs.displayField = Number e.target.value
-          globals.configs.fieldSelection = [@configs.displayField]
+        # (should occur before parent handler's update)
+        $('input[name="y-axis"]').click (e) =>
           @configs.binSize = @defaultBinSize()
-          ($ "#binSizeInput").attr('value', @configs.binSize)
-          @delayedUpdate()
+          $("#binSizeInput").attr('value', @configs.binSize)
+
+        super(title, fields, radio)
+
 
     if "Histogram" in data.relVis
       globals.histogram = new Histogram 'histogram_canvas'

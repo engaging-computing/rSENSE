@@ -215,7 +215,8 @@ $ ->
         super()
         @drawGroupControls()
         @drawXAxisControls()
-        @drawYAxisControls()
+        yFields = data.normalFields[1..data.normalFields.length]
+        @drawYAxisControls('Y Axis', yFields.splice(1))
         @drawToolControls()
         @drawRegressionControls()
         @drawSaveControls()

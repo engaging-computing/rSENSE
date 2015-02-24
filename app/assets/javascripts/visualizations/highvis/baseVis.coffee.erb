@@ -123,15 +123,10 @@ $ ->
       This includes a series of checkboxes or radio buttons for selecting
       the active y axis field(s).
       ###
-      drawYAxisControls: (radio = false, enableDataPoint = false) ->
-        getYFields = ->
-          if enableDataPoint then data.normalFields
-          else data.normalFields[1..data.normalFields.length]
-
+      drawYAxisControls: (title, fields, radio = false) ->
         # Configure the y-axis controls
-        yFields = getYFields()
         ictx = {}
-        ictx.fields = for f in yFields
+        ictx.fields = for f in fields
           id: 'yaxis-field-' + f
           label: data.fields[f].fieldName
           value: f
@@ -139,13 +134,11 @@ $ ->
           name: 'y-axis'
 
         if radio
-          title = 'Field'
-          body  = 'visualizations/controls/yaxis-radio'
+          body  = 'visualizations/controls/axis-radio'
         else
-          title = 'Y Axis'
-          body  = 'visualizations/controls/yaxis-check'
+          body  = 'visualizations/controls/axis-check'
           ictx.checkall =
-            id: 'ckall-yaxis'
+            id:    'ckall-yaxis'
             label: '#Select All'
             logid: 'check-all-y-axis'
 
@@ -158,14 +151,14 @@ $ ->
         $('#vis-ctrls').append yaxis
 
         # Initialize
-        updateCheckAll = ->
-          numY = getYFields().length
+        updateCheckAll = (fields) ->
+          numY = fields.length
           numSel = globals.configs.fieldSelection.length
           indeterminate = numSel > 0 and numSel < numY
           $('#ckbx-ckall-yaxis').prop('checked', numSel is numY)
           $('#ckbx-ckall-yaxis').prop('indeterminate', indeterminate)
 
-        updateCheckAll()
+        updateCheckAll(fields)
 
         # Initialize and track the status of this control panel
         globals.configs.yAxisOpen ?= false
@@ -197,18 +190,17 @@ $ ->
             arrayRemove(globals.configs.fieldSelection, index)
           else globals.configs.fieldSelection.push(index)
 
-          updateCheckAll()
+          updateCheckAll(fields)
           @delayedUpdate()
 
         # Set handler for the check all box
         $('#ckbx-ckall-yaxis').click =>
-          yFields = getYFields()
-          checked = yFields.length isnt globals.configs.fieldSelection.length
-          globals.configs.fieldSelection = if checked then yFields else []
+          checked = fields.length isnt globals.configs.fieldSelection.length
+          globals.configs.fieldSelection = if checked then fields else []
           $('input[name="y-axis"]').each (key, elem) ->
             $(elem).prop('checked', checked)
 
-          updateCheckAll()
+          updateCheckAll(fields)
           @delayedUpdate()
 
       ###
