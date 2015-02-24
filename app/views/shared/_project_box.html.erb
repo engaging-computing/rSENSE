@@ -5,11 +5,10 @@
     <% if @box_project.featured_media_id != nil %>
       <% bg_image = MediaObject.find(@box_project.featured_media_id).src %>
     <% end %>
-    <a href='<%= project_path @box_project %>'>
-      <div class="item-image" style='background-image:url(<%= bg_image %>)'>
+    <a href="<%= project_path @box_project %>">
+      <div class="item-image" style="background-image:url(<%= bg_image %>)">
       </div>
     </a>
-  
     <div class="item-desc">
       <div class="item-title word-wrap">
         <%= link_to truncate(@box_project.name.html_safe, length: 40),
@@ -23,21 +22,20 @@
       on <%= @box_project.created_at.strftime("%B %d, %Y")%>
       <br/>
     </div>
-    
     <div class="item-badges">
       <div>
-        <span class='badge' title="Data Sets">
+        <span class="badge" title="Data Sets">
           <i class="fa fa-flask">&nbsp;</i><%=@box_project.data_sets.count%>
         </span>
       </div>
       <div>
-        <span class='badge' title="Views" >
+        <span class="badge" title="Views" >
           <i class="fa fa-eye">&nbsp;</i>
           <%=@box_project.views%>
         </span>
       </div>
       <div>
-        <span class='badge' title="Likes" >
+        <span class="badge" title="Likes" >
           <i class="fa fa-thumbs-up">&nbsp;</i>
           <%= @box_project.like_count %>
         </span>

@@ -27,8 +27,8 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and
-  namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is 'visualizations' and
+  namespace.action in ['displayVis', 'embedVis', 'show']
 
     class window.Photos extends BaseVis
       constructor: (@canvas) ->
@@ -37,28 +37,23 @@ $ ->
 
         # Hide the controls
         @hideControls()
-
         super()
 
       # Gets called when the controls are clicked and at start
       update: ->
         # Clear the old canvas
         canvas = '#' + @canvas
-        $(canvas).html('<br/>')
+        $(canvas).html("")
 
         # load the Handlebars templates
-        picTemp = HandlebarsTemplates['vis/photo/pic']
-        lbTemp = HandlebarsTemplates['vis/photo/lightbox']
+        picTemp = HandlebarsTemplates['visualizations/photo/pic']
+        lbTemp = HandlebarsTemplates['visualizations/photo/lightbox']
 
+        # add each photo to the canvas
         id = 0
-
         for dsKey,dset of data.metadata
-
           if dset.photos.length > 0
             for picKey,pic of dset.photos
-
-              console.log pic
-
               context = {
                 p_id:   'pic-' + id
                 tn_src: pic.tn_src
@@ -77,7 +72,7 @@ $ ->
 
                 $('#target-img').modal
                   keyboard: true
-                $('#target-img').on "hidden.bs.modal", ->
+                $('#target-img').on 'hidden.bs.modal', ->
                   $('#target-img').remove()
 
               id++
@@ -88,7 +83,8 @@ $ ->
 
       drawControls: ->
         super()
-    if "Photos" in data.relVis
-      globals.photos = new Photos "photos_canvas"
+
+    if 'Photos' in data.relVis
+      globals.photos = new Photos 'photos_canvas'
     else
-      globals.photos = new DisabledVis "photos_canvas"
+      globals.photos = new DisabledVis 'photos_canvas'
