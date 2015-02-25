@@ -80,4 +80,3 @@ gem 'roo'
 # GitHub Bug Reporting and Testing
 gem 'browser'
 gem 'useragent', '~> 0.10.0'
-

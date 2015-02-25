@@ -173,6 +173,31 @@ $ ->
             label  = "<div style='font-size:9pt;overflow-x:none;'>"
             label += "<div style='width:100%;text-align:center;color:#{color};'> " +
               "#{dataPoint[globals.configs.groupById]}</div>"#<br>"
+
+            if data.metadata[0].photos.length > 0
+              # label += "<img src=#{img.src} style='width:100%; height: auto;'> "
+              label += "<div id='mapCarousel' class='carousel slide' data-ride='carousel'>
+                          <div class='carousel-inner' id='scroll-0'>"
+
+              firstPhoto = data.metadata[0].photos[0]
+              label += "<div class='item active'>
+                          <div class='image-wrapper'>
+                            <img src=#{firstPhoto.src} style='width: 100%;'>
+                          </div>
+                        </div>"
+
+              for i in [1...data.metadata[0].photos.length]
+                label +=     "<div class='item'>
+                                <div class='image-wrapper'>
+                                  <img src=#{data.metadata[0].photos[i].src} style='width: 100%;'>
+                                </div>
+                              </div>"
+
+              label +=   "</div>
+                          <a class='left carousel-control' href='#mapCarousel' role='button' data-slide='prev'><span class='glyphicon glyphicon-chevron-left'></span></a>
+                          <a class='right carousel-control' href='#mapCarousel' role='button' data-slide='next'><span class='glyphicon glyphicon-chevron-right'></span></a>
+                        </div>"
+
             label += "<table>"
 
             for field, fieldIndex in data.fields when dataPoint[fieldIndex] isnt null
@@ -183,10 +208,6 @@ $ ->
 
               label += "<tr><td>#{field.fieldName}</td>"
               label += "<td><strong>#{dat}</strong></td></tr>"
-
-            img = data.metadata[0].photos[0]
-            if img
-              label += "<img src=#{img.src} style='width:100%; height: auto;'> "
 
             label += '</table></div>'
 
