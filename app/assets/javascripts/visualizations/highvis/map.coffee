@@ -193,9 +193,9 @@ $ ->
                           </div>"
 
               label +=  "</div>
-                          <a class='left carousel-control' href='#mapCarousel' role='button' 
+                          <a class='left carousel-control' href='#mapCarousel' role='button'
                           	data-slide='prev'><span class='glyphicon glyphicon-chevron-left'></span></a>
-                          <a class='right carousel-control' href='#mapCarousel' role='button' 
+                          <a class='right carousel-control' href='#mapCarousel' role='button'
                           	data-slide='next'><span class='glyphicon glyphicon-chevron-right'></span></a>
                         </div>"
 
