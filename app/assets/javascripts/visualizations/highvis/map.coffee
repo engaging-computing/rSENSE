@@ -179,7 +179,7 @@ $ ->
               label += "<img src=#{photo.src} style='width:100%; height:300px;'>"
 
             else if data.metadata[0].photos.length > 0
-              label += "<div id='mapCarousel' class='carousel slide' data-ride='carousel'>
+              label += "<div id='mapCarousel' class='carousel slide' data-ride='carousel' data-interval='false'>
                         <div class='carousel-inner' role='listbox'>"
 
               firstPhoto = data.metadata[0].photos[0]
