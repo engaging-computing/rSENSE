@@ -174,26 +174,25 @@ $ ->
             label += "<div style='width:100%;text-align:center;color:#{color};'> " +
               "#{dataPoint[globals.configs.groupById]}</div>"#<br>"
 
-            if data.metadata[0].photos.length > 0
-              # label += "<img src=#{img.src} style='width:100%; height: auto;'> "
+            if data.metadata[0].photos.length == 1
+              photo = data.metadata[0].photos[0]
+              label += "<img src=#{photo.src} style='width:100%; height:300px;'>"
+
+            else if data.metadata[0].photos.length > 0
               label += "<div id='mapCarousel' class='carousel slide' data-ride='carousel'>
-                          <div class='carousel-inner' id='scroll-0'>"
+                        <div class='carousel-inner' role='listbox'>"
 
               firstPhoto = data.metadata[0].photos[0]
               label += "<div class='item active'>
-                          <div class='image-wrapper'>
-                            <img src=#{firstPhoto.src} style='width: 100%;'>
-                          </div>
+                          <img src=#{firstPhoto.src} style='width:100%; height:300px;'>
                         </div>"
 
               for i in [1...data.metadata[0].photos.length]
-                label +=     "<div class='item'>
-                                <div class='image-wrapper'>
-                                  <img src=#{data.metadata[0].photos[i].src} style='width: 100%;'>
-                                </div>
-                              </div>"
+                label +=  "<div class='item'>
+                            <img src=#{data.metadata[0].photos[i].src} style='width:100%; height:300px;'>
+                          </div>"
 
-              label +=   "</div>
+              label +=  "</div>
                           <a class='left carousel-control' href='#mapCarousel' role='button' data-slide='prev'><span class='glyphicon glyphicon-chevron-left'></span></a>
                           <a class='right carousel-control' href='#mapCarousel' role='button' data-slide='next'><span class='glyphicon glyphicon-chevron-right'></span></a>
                         </div>"
