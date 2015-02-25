@@ -5,7 +5,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     @project_keys = ['id', 'featuredMediaId', 'name', 'url', 'path', 'hidden', 'featured', 'likeCount', 'content', 'timeAgoInWords', 'createdAt', 'ownerName', 'ownerUrl', 'dataSetCount', 'fieldCount', 'fields']
     @project_keys_extended = @project_keys + ['dataSets', 'mediaObjects', 'owner']
     @field_keys = ['id', 'name', 'type', 'unit', 'restrictions']
-    @data_keys = ['id', 'name', 'url', 'path', 'createdAt', 'fieldCount', 'datapointCount', 'displayURL', 'data']
+    @data_keys = ['id', 'name','ownersUserId', 'contribKey', 'url', 'path', 'createdAt', 'fieldCount', 'datapointCount', 'displayURL', 'data']
     @data_keys_extended = @data_keys + ['owner', 'project', 'fields']
     @dessert_project = projects(:dessert)
     @thanksgiving_dataset = data_sets(:thanksgiving)
