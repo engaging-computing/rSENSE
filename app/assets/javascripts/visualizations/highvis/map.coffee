@@ -391,7 +391,7 @@ $ ->
         controls += "<div class='inner_control_div'> Heatmap Radius: "
         controls += "<input id='radius-text' value='#{@configs.heatmapRadius}'>m</div>"
         controls += "<div class='inner_control_div'> <div id='heatmap-error-text'> </div></div>"
-        controls += "<input id='heatmapSlider' type='range' style='width:95%'>"
+        controls += "<input id='heatmapSlider' type='range' style='width:95%' data-show-value='true'>"
 
         # Other
         controls += "<br>"

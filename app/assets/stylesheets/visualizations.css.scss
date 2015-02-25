@@ -76,19 +76,10 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
         margin: 10px auto;
       }
 
-      // button for shrunken accordion dropdown
-      .ui-icon-triangle-1-e {
-        background-position: -34px -18px; // uses image @ (5, 2) on /assets/vis/ui-icons_222222_256x240.png
-      }
-
-      // button for expanded accordion dropdown
-      .ui-icon-triangle-1-s {
-        background-position: -67px -18px; // uses image @ (3, 2) on /assets/vis/ui-icons_222222_256x240.png
-      }
-
       // any input button inside this class isn't lined up with the
       // text to its right - this fixes that
       .vis-ctrl-body {
+        display: none;
         font-size: 12px;
         width: 100%;
         padding: 5px 20px;
@@ -132,6 +123,14 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
         cursor: pointer;
         width: 100%;
         background: $dark-bkg;
+
+        .vis-ctrl-title {
+          float: left;
+        }
+
+        .vis-ctrl-icon {
+          float: right;
+        }
       }
     }
   }

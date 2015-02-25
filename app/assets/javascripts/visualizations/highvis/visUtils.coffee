@@ -38,12 +38,19 @@ $ ->
     ###
     window.initCtrlPanel = (id, gvar) ->
       # Determines whether it should start hidden
-      unless eval("globals.configs.#{gvar}")
-        $("##{id} > .vis-ctrl-body").hide()
+      if globals.configs[gvar]
+        $("##{id} > .vis-ctrl-body").show()
+        $("##{id}").find('.vis-ctrl-icon > i').attr('class',
+          'fa fa-chevron-down')
 
       # Tracks if open / collapsed
       $("##{id} > .vis-ctrl-header").click ->
-        eval("globals.configs.#{gvar} = !globals.configs.#{gvar}")
+        globals.configs[gvar] = !globals.configs[gvar]
+
+        # Toggle collapsed/open
+        $(@).siblings('.vis-ctrl-body').slideToggle()
+        icon = $(@).find('.vis-ctrl-icon > i')
+        icon.toggleClass('fa-chevron-left').toggleClass('fa-chevron-down')
 
     ###
     Makes a title with appropriate units for a field
