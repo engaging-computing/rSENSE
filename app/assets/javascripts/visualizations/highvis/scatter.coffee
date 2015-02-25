@@ -303,10 +303,10 @@ $ ->
         if @isZoomLocked()
           @updateOnZoom = false
           @setExtremes()
-          $('#zoomResetButton').removeClass("disabled")
+          $('#zoom-reset-btn').removeClass("disabled")
         else
           @resetExtremes
-          $('#zoomResetButton').addClass("disabled")
+          $('#zoom-reset-btn').addClass("disabled")
 
         @chart.redraw()
 
@@ -353,7 +353,7 @@ $ ->
 
         # Draw the Tool controls
         octx = {}
-        octx.id = 'tool-ctrls'
+        octx.id = 'scatter-ctrls'
         octx.title = 'Tools'
         octx.body =
           HandlebarsTemplates['visualizations/controls/scatter'](ictx);
@@ -368,8 +368,8 @@ $ ->
         $("input[name='mode'][value='#{@configs.mode}']").prop('checked', true)
 
         # Set initial state of zoom reset
-        if not @isZoomLocked() then $('#zoomResetButton').addClass("disabled")
-        else $('#zoomResetButton').addClass("enabled")
+        if not @isZoomLocked() then $('#zoom-reset-btn').addClass("disabled")
+        else $('#zoom-reset-btn').addClass("enabled")
 
         $('#zoom-reset-btn').click (e) =>
           @resetExtremes($('#zoom-axis-list').val())
@@ -400,21 +400,14 @@ $ ->
 
         # Initialize and track the status of this control panel
         globals.configs.toolsOpen ?= false
-        initCtrlPanel('tools-ctrls', globals.configs.toolsOpen)
-
+        initCtrlPanel('scatter-ctrls', 'toolsOpen')
 
       ###
       A wrapper for making x-axis controls
       ###
       drawXAxisControls: ->
-        $('input[name="x-axis"]').click (e) =>
-          # This next line will be carried out again in the parent, but
-          # it needs to run to correctly update the x axis extremes
-          @configs.xAxis = Number(e.target.value)
-          @resetExtremes()
-
         @drawAxisControls('X Axis', data.normalFields, null, 'x-axis', true,
-          @configs.xAxis)
+          'xAxis', @resetExtremes)
 
         # Initialize and track the status of this control panel
         globals.configs.xAxisOpen ?= false
@@ -426,22 +419,27 @@ $ ->
       isZoomLocked: ->
         not (undefined in [@configs.xBounds.userMin, @configs.xBounds.userMax])
 
-      resetExtremes: (whichAxis) ->
+      resetExtremes: (whichAxis = 'Both') =>
         if @chart isnt undefined
           if whichAxis in ['Both', 'X']
+            @configs.xBounds.userMin = undefined
+            @configs.xBounds.userMax = undefined
             @chart.xAxis[0].setExtremes()
           if whichAxis in ['Both', 'Y']
+            @configs.yBounds.userMin = undefined
+            @configs.yBounds.userMax = undefined
             @chart.yAxis[0].setExtremes()
 
       setExtremes: ->
-        if (@chart isnt undefined)
+        if @chart?
           if(@configs.xBounds.min? and @configs.yBounds.min?)
-            @chart.xAxis[0].setExtremes(@configs.xBounds.min,@configs.xBounds.max,true)
-            @chart.yAxis[0].setExtremes(@configs.yBounds.min,@configs.yBounds.max,true)
+            @chart.xAxis[0].setExtremes(@configs.xBounds.min,
+              @configs.xBounds.max, true)
+            @chart.yAxis[0].setExtremes(@configs.yBounds.min,
+              @configs.yBounds.max, true)
           else @resetExtremes()
 
       zoomOutExtremes: (whichAxis) ->
-
         xRange = @configs.xBounds.max - @configs.xBounds.min
         yRange = @configs.yBounds.max - @configs.yBounds.min
 
@@ -458,12 +456,6 @@ $ ->
             @configs.yBounds.min -= yRange * 0.1
 
         @setExtremes()
-
-      ###
-      Saves the current zoom level
-      ###
-      end: ->
-        super()
 
       ###
       Saves the zoom level before cleanup
