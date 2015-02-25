@@ -23,10 +23,12 @@
         <div class="article_page_subtitle truncate"><%= brief %></div>
           <div class="article_page_date">Written on <%= date %></div>
             <div class="article_page_content truncate">
+              
               <% if content != nil %>
                 <%= content.html_safe %>
               <% end %>
-              <div class="article_page_link"><%= link_to "Read More", path %></div>
+              <div class="article_page_link"><%= link_to "Read More", path %>
+              </div>
             </div>
     </div>
   </div>

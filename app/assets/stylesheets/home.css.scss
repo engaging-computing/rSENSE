@@ -34,9 +34,6 @@
   #mobile-splash{
     height: 120vh !important;
   }
-  div > p {
-    /* immediate child */
-  }
 }
 .android-button:hover{
   background-color:rgba(39,135,245,0.5) !important;
@@ -122,7 +119,7 @@
   margin-right: 1%;
   margin-top: 10px;
 }
-.dropdown-menu{
+.navbar-fixed-top .dropdown-menu{
   background-color: #113 !important;
   i{
     color: white;
@@ -236,7 +233,6 @@
                 /*max-width: 512px;*/
                 height: auto;
                 /*display: inline-block;*/
-                margin: 0 auto;
                 img{
                   width: 100%;
                   max-width: 512px;
@@ -342,56 +338,63 @@
   height: 738px;
   /*min-width: 974px;*/
   width: 100%;
+  background-color: white;
+  border: 1px solid gray;
 }
 .carousel-control{
   height: 738px;
   width: 49px !important;
   position: absolute;
+  background: white !important;
+}
+
+.carousel-control span{
+  color: black !important;
+  opacity: 1;
 }
 .carousel-inner > .item {
   height: 738px;
-  background-color: #F2F2F2;
+  background-color: white !important;
   text-align: center;
 }
 .carousel-inner > .item > .image-wrapper {
-  min-width: 584px;
+  min-width: 487px;
   width: 50%;
   height: 100%;
   text-align: center;
   position: relative;
 }
 .carousel-inner > .item > .image-wrapper > img {
-  width:590px;
+  width:413px;
   height: auto;
   top: 0;
-  left: 0;
+  left: auto;
   bottom: 0;
-  right: 0;
-  margin: auto;
+  right: 25px;
   position: absolute;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 .item .carousel-caption {
   position: absolute;
   top: 0;
-  left: auto;
-  right: 49px;
+  left: calc(50% + 25px);
+  right: 0;
   bottom: 0;
-  width: 30%;
-  min-width: 292px;
+  width: 413px;
   padding: 10px;
   padding-top: 0px !important;
   text-align: center;
   .header-wrapper{
     color: black !important;
     position: absolute;
-    top: 20%;
+    top: 30%;
   }
 }
 .item .carousel-caption .header-wrapper{
-  min-width: 195px;
   width: 100%;
   position: absolute;
-  top: 20%;
+  top: 30%;
   left: 0;
   right: 0;
   bottom: 0;
@@ -401,17 +404,17 @@
 .carousel-slide-text{
   text-align: left;  
   font-size: 1.5em !important;
-  background-color: #F2F2F2;
+  background-color: white;
 }
 .slide-header{
   font-size: 1.5em;
 }
 
 .carousel ol li{
-  border: 1px solid black;
+  border: 1px solid gray;
 }
 .carousel ol .active{
-  background-color: black !important;
+  background-color: gray !important;
 }
 
 .homepage-header{
@@ -481,14 +484,15 @@
   margin-bottom: 40px;
   display: block !important;
 }
-.news-prev-wrapper > div{
+/*.news-prev-wrapper > div{
   padding: 0;
   margin: 10px 0px 10px 0px;
   height: 315px;
   width: 100%;
+  box-shadow: 0px 0px 0px !important;
 }
 .news-prev-wrapper div{
-  background-color: #F2F2F2;
+  background-color: #F2F2F2 !important;
 }
 .news-prev-wrapper .item-image-link{
   width: 315px;
@@ -496,6 +500,7 @@
 }
 .news-prev-wrapper .wide-item{
   height: 315px !important;
+  box-shadow: 0px 0px 0px white;
 }
 .news-prev-wrapper .item-desc{
   height: 315px !important;
@@ -518,12 +523,15 @@
 .news-prev-wrapper .article_page_link{
   background: #F2F2F2 !important;
 }
+.news-prev-wrapper .col-md-12{
+  border: 1px solid black;
+}
 .hidden{
   visibility: hidden;
 }
 .desktop-footer{
   padding: 10px;
-}
+}*/
 /*.stats{
   min-width: 487px;
   width: 100%;

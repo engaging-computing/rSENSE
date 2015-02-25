@@ -100,7 +100,8 @@ $ ->
     ###
     $('.navbar-static-top').css('min-width', 994)
     $('.item-image-link').removeClass('hidden-xs')
-    $('.desktop-footer').css('min-width', 994)
+    if $('#mobile-splash').length is 0
+      $('.desktop-footer').css('min-width', 994)
 
     # $carousel = $('#myCarousel')
     # $carousel.carousel()

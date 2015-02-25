@@ -1,0 +1,23 @@
+<!--
+  image_id = the image to use on the left side
+  path = what to link to
+  title = title of the article
+  brief = a subtitle more or less
+  date = the date it was written on
+  content = a preview of what is in the article
+  width = size of bootstrap column
+-->
+<% left_image = image_path('missing_tutorial.jpg') %>
+<% if image_id != nil %>
+  <% left_image = MediaObject.find(image_id).src %>
+<% end %>
+
+  <div class="news-item">
+    <div class="image">
+      <a class="item-image-link hidden-xs" href="<%= path %>" style="background-image: url(<%= left_image %>)"></a>
+
+    </div>
+    <div class="description">
+    YELLLLO
+    </div>
+  </div>
