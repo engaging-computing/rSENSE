@@ -14,12 +14,11 @@
 //= require constants
 //= require image_path
 //= require jquery
+//= require jquery_ujs
 //= require isense
 //= require helpers
 //= require dateParse
 //= require name_popup
-//= require jquery_ujs
-//  require jquery.ui.all
 //= require unsupported
 //= require info_edit
 //= require menu_edit
