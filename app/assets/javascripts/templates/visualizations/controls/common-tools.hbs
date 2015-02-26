@@ -1,0 +1,40 @@
+{{#if sortFields}}
+  <div class="vis-ctrl-sublock">
+    <label for="vis-ctrl-sort-by">Sort by:</label>
+    <select id="vis-ctrl-sort-by" class="form-control">
+      {{#each sortFields}}
+        <option value="{{value}}" data-log-id="{{logId}}">{{name}}</option>
+      {{/each}}
+    </select>
+  </div>
+{{/if}}
+{{#if analysisTypes}}
+  <div class="vis-ctrl-subblock">
+    <h4 class="vis-ctrl-subtitle">Analysis Type</h4>
+    <div>
+      {{#each analysisTypes}}
+        {{> visualizations/controls/_radio this}}
+      {{/each}}
+    </div>
+  </div>
+{{/if}}
+<!--
+          switch typestring
+            when 'Max' then controls += 'Maximum </label> </div>'
+            when 'Min' then controls += 'Minimum </label> </div>'
+            when 'Mean' then controls += 'Mean (Average)</label></div>'
+            else controls += "#{typestring} </label></div>"
+
+          controls += '</div>'
+        controls += "</div>"
+
+        if data.logSafe is 1 and logYAxis
+          controls += "<h4 class='clean_shrink'>Other</h4>"
+          controls += '<div class="inner_control_div">'
+          controls += "<div class='checkbox'><label><input class='logY_box' type='checkbox' "
+          controls += "name='tooltip_selector' #{if globals.configs.logY is 1 then 'checked' else ''}/> "
+          controls += "Logarithmic Y Axis</label></div>"
+          controls += "</div>"
+
+        controls += '</div></div>'
+-->
