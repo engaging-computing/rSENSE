@@ -33,8 +33,8 @@ $ ->
 
     ###
     Initializes and tracks the open / collapsed status of a control panel
-      id   The id of the control panel
-      gvar The key of the tracking variable in globals.configs
+      id    The id of the control panel
+      gvar  The key of the tracking variable in globals.configs
     ###
     window.initCtrlPanel = (id, gvar) ->
       # Determines whether it should start hidden
@@ -51,6 +51,13 @@ $ ->
         $(@).siblings('.vis-ctrl-body').slideToggle()
         icon = $(@).find('.vis-ctrl-icon > i')
         icon.toggleClass('fa-chevron-left').toggleClass('fa-chevron-down')
+
+    ###
+    Returns the full path to a handlebars template
+      template  Name of the handlebars template
+    ###
+    window.hbCtrl = (template) ->
+      return 'visualizations/controls/' + template
 
     ###
     Makes a title with appropriate units for a field
@@ -310,7 +317,6 @@ $ ->
     which time field to use.
     ###
     globals.generateElapsedTimeDialog = ->
-
       if data.timeFields.length is 1
         name  = 'Elapsed Time [from '
         name += data.fields[data.timeFields[0]].fieldName + ']'

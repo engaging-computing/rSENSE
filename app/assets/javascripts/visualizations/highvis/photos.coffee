@@ -34,6 +34,11 @@ $ ->
       constructor: (@canvas) ->
       start: ->
         super()
+        $('#vis-ctrl-container').hide()
+
+      end: ->
+        super()
+        $('#vis-ctrl-container').show()
 
       # Gets called when the controls are clicked and at start
       update: ->
@@ -50,20 +55,19 @@ $ ->
         for dsKey,dset of data.metadata
           if dset.photos.length > 0
             for picKey,pic of dset.photos
-              context = {
+              context =
                 p_id:   'pic-' + id
                 tn_src: pic.tn_src
                 src:    pic.src
                 p_name: pic.name
                 d_name: dset.name
                 d_id:   dset.dataset_id
-              }
 
               $(canvas).append picTemp(context)
 
               $('#pic-' + id).data('context', context)
               $('#pic-' + id).click ->
-                ctx = $(this).data('context')
+                ctx = $(@).data('context')
                 $(canvas).append lbTemp(ctx)
 
                 $('#target-img').modal

@@ -131,7 +131,7 @@ $ ->
       the active axis field(s).
       ###
       drawAxisControls: (title, fields, selFields, id, radio, selRadio, init = ->) ->
-        # If there is only one option, than no radio button interaction is
+        # If there is only one option, then no radio button interaction is
         # possible
         if radio and fields <= 1 then return
 
@@ -144,10 +144,8 @@ $ ->
           logid: id + '-field-' + f
           name:  id
 
-        if radio
-          body  = 'visualizations/controls/axis-radio'
-        else
-          body  = 'visualizations/controls/axis-check'
+        template =  if radio then 'axis-radio' else 'axis-check'
+        unless radio
           ictx.checkall =
             id:    'ckall-' + id
             label: '#Select All'
@@ -157,8 +155,8 @@ $ ->
         octx = {}
         octx.id = id + '-ctrls'
         octx.title = title
-        octx.body = HandlebarsTemplates[body](ictx);
-        axisTools = HandlebarsTemplates['visualizations/controls/body'](octx);
+        octx.body = HandlebarsTemplates[hbCtrl(template)](ictx);
+        axisTools = HandlebarsTemplates[hbCtrl('body')](octx);
         $('#vis-ctrls').append axisTools
 
         # Initialize checked and make y axis checkbox/radio handler
@@ -399,8 +397,8 @@ $ ->
         ctx = {}
         ctx.id = 'save-ctrls'
         ctx.title = 'Save'
-        ctx.body = HandlebarsTemplates['visualizations/controls/save'](ctx);
-        save = HandlebarsTemplates['visualizations/controls/body'](ctx);
+        ctx.body = HandlebarsTemplates[hbCtrl('save')](ctx);
+        save = HandlebarsTemplates[hbCtrl('body')](ctx);
         $('#vis-ctrls').append save
 
         globals.verifyUser ( -> ), ( ->
@@ -435,55 +433,46 @@ $ ->
         initCtrlPanel('save-ctrls', 'saveOpen')
 
       ###
-      Draw tool controls (Analysis Type, Log Y Axis, etc.) for Pie Chart and Bar Chart
+      Draw tool controls (Analysis Type, Log Y Axis, etc.) for Pie Chart and
+      Bar Charts
       ###
       drawToolControls: (sortBy = false, logYAxis = false) ->
-        controls =  '<div id="toolControl" class="vis_controls">'
-        controls += "<div class='control_header' <h3><a href='#'>Tools</a></h3></div>"
-        controls += "<div class='control_outer'>"
+        ictx = {}
+
+        # Populate sort fields
         if sortBy
-          controls += "<div class='inner_control_div'>"
-          controls += 'Sort by: <select id="sortField" class="sortField form-control">'
-          tempFields = for fieldID in data.normalFields
-            [fieldID, data.fields[fieldID].fieldName]
-          tempFields = [].concat [[@SORT_DEFAULT, 'Group Name']], tempFields
+          ictx.sortFields =
+            for id in data.normalFields
+              name: fieldTitle(data.fields[id])
+              logid: "cat"
+              value: id
 
-          for [fieldID, fieldName] in tempFields
-            selected = if @configs.sortField is fieldID then 'selected' else ''
-            controls += "<option value='#{fieldID}' #{selected}>#{fieldName}</option>"
+          ictx.sortFields.unshift
+            name: 'Group Name'
+            value: @SORT_DEFAULT
+            logId: "default-cat"
 
-          controls += '</select></div><br>'
-          controls += "<h4 class='clean_shrink'>Analysis Type</h4><div id='analysis_types'>"
+        # Note the analysis types
+        ictx.analysisTypes =
+          value:
+          id:
+          logid:
+          name:
+          label:
 
-        for typestring, type in @analysisTypeNames
-          controls += "<div class='inner_control_div'>"
-          controls += "<div class='radio'><label><input type='radio' class='analysisType' "
-          controls += "name='analysisTypeSelector' value='"
-          controls += "#{type}' #{if type is @configs.analysisType then 'checked' else ''}> "
+        octx =
+          id: 'common-ctrls'
+          title: 'Tools'
+          body: HandlebarsTemplates[hbCtrl('common-tools')](ictx);
 
-          switch typestring
-            when 'Max' then controls += 'Maximum </label> </div>'
-            when 'Min' then controls += 'Minimum </label> </div>'
-            when 'Mean' then controls += 'Mean (Average)</label></div>'
-            else controls += "#{typestring} </label></div>"
+        tools = HandlebarsTemplates[hbCtrl('body')](octx);
+        $('#vis-ctrls').append tools
 
-          controls += '</div>'
-        controls += "</div>"
+        # Initialize and track the status of this control panel
+        globals.configs.saveOpen ?= false
+        initCtrlPanel('common-ctrls', 'toolsOpen')
 
-        if data.logSafe is 1 and logYAxis
-          controls += "<h4 class='clean_shrink'>Other</h4>"
-          controls += '<div class="inner_control_div">'
-          controls += "<div class='checkbox'><label><input class='logY_box' type='checkbox' "
-          controls += "name='tooltip_selector' #{if globals.configs.logY is 1 then 'checked' else ''}/> "
-          controls += "Logarithmic Y Axis</label></div>"
-          controls += "</div>"
-
-        controls += '</div></div>'
-
-        ### --- ###
-        # Write HTML
-        $('#vis-ctrls').append controls
-
+        ###
         $('.analysisType').change (e) =>
           @configs.analysisType = Number e.target.value
           @delayedUpdate()
@@ -495,6 +484,7 @@ $ ->
         $('.logY_box').click (e) =>
           globals.configs.logY = (globals.configs.logY + 1) % 2
           @start()
+        ###
 
       ###
       Do any necessary cleanup work before serialization.

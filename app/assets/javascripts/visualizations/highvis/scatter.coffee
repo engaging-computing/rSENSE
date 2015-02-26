@@ -355,9 +355,8 @@ $ ->
         octx = {}
         octx.id = 'scatter-ctrls'
         octx.title = 'Tools'
-        octx.body =
-          HandlebarsTemplates['visualizations/controls/scatter'](ictx);
-        tools = HandlebarsTemplates['visualizations/controls/body'](octx);
+        octx.body = HandlebarsTemplates[hbCtrl('scatter')](ictx);
+        tools = HandlebarsTemplates[hbCtrl('body')](octx);
         $('#vis-ctrls').append tools
 
         # Check off the right boxes
