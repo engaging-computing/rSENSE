@@ -44,7 +44,8 @@ class DataSet < ActiveRecord::Base
     h = {
       id: id,
       name: title,
-      ownersUserId: user.id,
+      ownerId: user.id,
+      ownerName: user.name,
       contribKey: key,
       url: UrlGenerator.new.data_set_url(self),
       path: UrlGenerator.new.data_set_path(self),
