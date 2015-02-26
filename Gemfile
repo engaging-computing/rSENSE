@@ -81,3 +81,4 @@ gem 'roo'
 gem 'browser'
 gem 'useragent', '~> 0.10.0'
 
+gem 'recaptcha', '~> 0.3.5'

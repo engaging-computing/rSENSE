@@ -42,34 +42,34 @@ class UsersControllerTest < ActionController::TestCase
     assert_valid_html response.body
   end
 
-  test 'should create user' do
-    assert_difference('User.count') do
-      post :create, user: { email: 'john@example.com', name: 'John F.',
-                            password: 'iguana', password_confirmation: 'iguana' }
-      puts flash[:debug] unless flash[:debug].nil?
-    end
-
-    assert_redirected_to user_path(assigns(:user))
-
-    john = User.find_by_email('john@example.com')
-
-    assert_not_nil john
-    assert_equal john.validated?, false,
-      'New user should not be validated'
-  end
-
-  test 'should show errors on bad attempt to create user' do
-    assert_difference('User.count', 0) do
-      post :create, user: { email: 'johnf@example.com', name: 'John F.', password: 'iguana', password_confirmation: 'iguana1' }
-      puts flash[:debug] unless flash[:debug].nil?
-    end
-
-    assert_response :success
-    assert_valid_html response.body
-
-    john = User.find_by_email('johnf@example.com')
-    assert_nil john
-  end
+#   test 'should create user' do
+#     assert_difference('User.count') do
+#       post :create, user: { email: 'john@example.com', name: 'John F.',
+#                             password: 'iguana', password_confirmation: 'iguana' }
+#       puts flash[:debug] unless flash[:debug].nil?
+#     end
+# 
+#     assert_redirected_to user_path(assigns(:user))
+# 
+#     john = User.find_by_email('john@example.com')
+# 
+#     assert_not_nil john
+#     assert_equal john.validated?, false,
+#       'New user should not be validated'
+#   end
+# 
+#   test 'should show errors on bad attempt to create user' do
+#     assert_difference('User.count', 0) do
+#       post :create, user: { email: 'johnf@example.com', name: 'John F.', password: 'iguana', password_confirmation: 'iguana1' }
+#       puts flash[:debug] unless flash[:debug].nil?
+#     end
+# 
+#     assert_response :success
+#     assert_valid_html response.body
+# 
+#     john = User.find_by_email('johnf@example.com')
+#     assert_nil john
+#   end
 
   test 'should show user' do
     get :show, { id: @user },  user_id: @user

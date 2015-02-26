@@ -168,6 +168,7 @@ GEM
       thor (>= 0.18.1, < 2.0)
     rainbow (2.0.0)
     rake (10.4.2)
+    recaptcha (0.3.6)
     redcarpet (3.2.2)
     ref (1.0.5)
     remotipart (1.2.1)
@@ -256,6 +257,7 @@ DEPENDENCIES
   multi_json
   pg
   rails (~> 4.1.4)
+  recaptcha (~> 0.3.5)
   remotipart
   roo
   rubocop!

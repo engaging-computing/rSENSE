@@ -134,7 +134,7 @@ class UsersController < ApplicationController
     @user.reset_validation!
 
     respond_to do |format|
-      if @user.save
+      if verify_recaptcha(model: @user, message: captcha_message) && @user.save
         session[:user_id] = @user.id
 
         UserMailer.validation_email(@user)
