@@ -617,7 +617,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert_response :success
     id = parse(response)['id']
 
-    post '/api/v1/projects/3/add_key',
+    post "/api/v1/projects/#{id}/add_key",
         email: 'kcarcia@cs.uml.edu',
         password: '12345',
         contrib_key:
@@ -638,13 +638,12 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert_response :success
     id = parse(response)['id']
 
-    post '/api/v1/projects/3/add_key',
+    post "/api/v1/projects/#{id}/add_key",
         email: 'nixon@whitehouse.gov',
         password: '12345',
         contrib_key:
           {
             'name' => 'key_name',
-            'project_id' => id,
             'key' => 'key'
           }
     assert_response :unauthorized
@@ -659,13 +658,12 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert_response :success
     id = parse(response)['id']
 
-    post '/api/v1/projects/3/add_key',
+    post "/api/v1/projects/#{id}/add_key",
         email: 'kcarcia@cs.uml.edu',
         password: '12345',
         wrong_name:
           {
             'wrong_name2' => 'key_name',
-            'project_id' => id,
             'key' => 'key'
           }
     assert_response :unprocessable_entity
