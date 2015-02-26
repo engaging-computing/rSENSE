@@ -40,11 +40,8 @@
             <%= ff.password_field :password_confirmation, class: "form-control", placeholder: "Retype your password." %>
           </div>
         </div>
-        <div class="form-group">
-	    <%= recaptcha_tags %>
-        </div>
         <div class="panel-footer">
-          <%= ff.submit("Create User", class: "btn btn-primary", id: "create_user") %>
+          <%= ff.submit("Create User", class: "btn btn-primary") %>
           <div class="pull-right"><a href="#" onclick="$('#privacy_policy').toggle()">Privacy Policy</a></div>
           <div class="clear"></div>
         </div>

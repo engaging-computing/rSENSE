@@ -12,8 +12,6 @@
     <%= javascript_tag do %>
       window.namespace = <%= raw @namespace.to_json %>
     <% end %>
-    
-    <script src='https://www.google.com/recaptcha/api.js'></script>
   </head>
 
   <body data-page-name="<%= params[:controller] %>/<%= params[:action] %>">

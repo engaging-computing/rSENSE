@@ -22,6 +22,7 @@ class UsersControllerTest < ActionController::TestCase
     get :index, { format: 'json', per_page: 1 },  user_id: @admin
     assert_response :success
     assert JSON.parse(response.body).count == 1, 'Should only have got one user back'
+<<<<<<< HEAD
   end
 
   test 'should get index sorted' do
@@ -36,12 +37,29 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+=======
+  end
+
+  test 'should get index sorted' do
+    get :index, { format: 'json', sort: 'ASC' },  user_id: @admin
+    assert_response :success
+    body = JSON.parse(response.body)
+    assert Date.parse(body[0]['createdAt']) < Date.parse(body[1]['createdAt']), 'Was not in ascending order'
+  end
+
+  test 'should get index searched' do
+    get :index, { format: 'json', search: 'kate', sort: 'ASC' },  user_id: @admin
+    assert_response :success
+  end
+
+>>>>>>> 969094f35e45d3a38bde7196c48860d71c2b35ce
   test 'should get new' do
     get :new
     assert_response :success
     assert_valid_html response.body
   end
 
+<<<<<<< HEAD
   #   test 'should create user' do
   #     assert_difference('User.count') do
   #       post :create, user: { email: 'john@example.com', name: 'John F.',
@@ -84,9 +102,71 @@ class UsersControllerTest < ActionController::TestCase
     assert body.key?('dataSets'), 'Recur should show dataSets'
     assert body.key?('mediaObjects'), 'Recur should show mediaObjects'
     assert body.key?('projects'), 'Recur should show projects'
-    assert_response :success
+=======
+  test 'should create user' do
+    assert_difference('User.count') do
+      post :create, user: { email: 'john@example.com', name: 'John F.',
+                            password: 'iguana', password_confirmation: 'iguana' }
+      puts flash[:debug] unless flash[:debug].nil?
+    end
+
+    assert_redirected_to user_path(assigns(:user))
+
+    john = User.find_by_email('john@example.com')
+
+    assert_not_nil john
+    assert_equal john.validated?, false,
+      'New user should not be validated'
   end
 
+  test 'should show errors on bad attempt to create user' do
+    assert_difference('User.count', 0) do
+      post :create, user: { email: 'johnf@example.com', name: 'John F.', password: 'iguana', password_confirmation: 'iguana1' }
+      puts flash[:debug] unless flash[:debug].nil?
+    end
+
+    assert_response :success
+    assert_valid_html response.body
+
+    john = User.find_by_email('johnf@example.com')
+    assert_nil john
+  end
+
+  test 'should show user' do
+    get :show, { id: @user },  user_id: @user
+>>>>>>> 969094f35e45d3a38bde7196c48860d71c2b35ce
+    assert_response :success
+    assert_valid_html response.body
+  end
+
+<<<<<<< HEAD
+  test 'should not show user (html)' do
+    get :show, { id: 'GreenGoblin' }, user_id: @admin
+    assert_response :not_found
+  end
+
+  test 'should not show user (json)' do
+    get :show, { format: 'json', id: 'GreenGoblin' }, user_id: @admin
+    assert_response :unprocessable_entity
+  end
+
+  test 'should get edit' do
+    get :edit, { id: @user },  user_id: @user
+=======
+  test 'should show user with contributions' do
+    get :show, { format: 'json', id: @user, recur: 'true' },  user_id: @user
+    body = JSON.parse(response.body)
+    assert body.key?('visualizations'), 'Recur should show visualizations'
+    assert body.key?('dataSets'), 'Recur should show dataSets'
+    assert body.key?('mediaObjects'), 'Recur should show mediaObjects'
+    assert body.key?('projects'), 'Recur should show projects'
+>>>>>>> 969094f35e45d3a38bde7196c48860d71c2b35ce
+    assert_response :success
+    assert_valid_html response.body
+  end
+
+<<<<<<< HEAD
+=======
   test 'should not show user (html)' do
     get :show, { id: 'GreenGoblin' }, user_id: @admin
     assert_response :not_found
@@ -103,6 +183,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_valid_html response.body
   end
 
+>>>>>>> 969094f35e45d3a38bde7196c48860d71c2b35ce
   test 'should update user' do
     put :update, { id: @user, user: { email: @user.email, name: @user.name,
                                      validated: @user.validated } },  user_id: @admin
