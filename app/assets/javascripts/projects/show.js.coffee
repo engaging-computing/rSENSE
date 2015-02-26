@@ -12,8 +12,24 @@ IS.onReady "projects/show", ->
   ($ '#doc_box').on 'hidden', ->
     ($ '#doc_box').hide()
 
+  ###
+  # Track whether the user is leaving the page with unsaved content
+  ###
 
+  # Keep track of the current desciption content
+  desc_on_load = ($ '#content-viewer').text().trim()
+
+  # Pop-up a warning if the project description has changed
+  ($ window).on 'beforeunload', ->
+    desc_on_unload = ($ '.summernote').code().trim()
+    if (desc_on_unload != desc_on_load)
+      return "You have attempted to leave this page.  If you have made any " +
+        "changes to the description without clicking the Save button, your " +
+        "changes will be lost."
+
+  ##
   # Does the liking and unliking when the thumbs-up icon is clicked
+  ##
   ($ '.liked_status').click ->
     root = ($ ".likes")
     was_liked = ($ @).hasClass('active')
@@ -34,7 +50,7 @@ IS.onReady "projects/show", ->
   ###
   # Controls for uploading a file.
   ###
-  # This is black magic that displays the upload csv and upload google doc lightboxes
+  # Displays the upload csv and upload google doc lightboxes
   ($ '#upload_datafile').click ->
     ($ '#datafile_input').click()
     false
