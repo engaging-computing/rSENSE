@@ -133,6 +133,8 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     @user.reset_validation!
 
+    captcha_message = 'Sorry, your reCaptcha was incorrect.'
+
     respond_to do |format|
       if verify_recaptcha(model: @user, message: captcha_message) && @user.save
         session[:user_id] = @user.id
