@@ -17,9 +17,9 @@ $ ->
       #$('.carousel').find('.item').each (i,j) ->
       #  if $(j).find('.carousel-img').offset().top > $('.carousel-inner').offset().top
       #    $(j).find('.carousel-caption').css('margin-top', $(j).find('.carousel-img').offset().top - $('.carousel-inner').offset().top)
-      if $('.desktop-footer').length is 1
-        $('.item-image-link').each (i,j) ->
-          ($ j).css('margin-top', (315 - $(j).height()) / 2)
+      #if $('.desktop-footer').length is 1
+        #$('.news-prev-wrapper').find('img').each (i,j) ->
+        #  ($ j).css('margin-top', "#{(400 - $(j).height()) / 2)}px")
       $('#mobile-menu').css('width', $(window).width())
       $('#mobile-splash').css('height', $(window).height() - 75)
       #$('.fa-sort-desc').css('margin-left', -32)

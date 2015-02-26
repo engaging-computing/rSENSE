@@ -14,10 +14,26 @@
 
   <div class="news-item">
     <div class="image">
-      <a class="item-image-link hidden-xs" href="<%= path %>" style="background-image: url(<%= left_image %>)"></a>
-
+      <a href="<%= path %>"><img class="news-featured-image" src="<%= left_image %>"></img></a>
     </div>
     <div class="description">
-    YELLLLO
+      <div class="news-title truncate">
+        <p class="news-feed-text"><%= link_to title, path %></p>
+      </div>
+      <div class="news-brief truncate">
+        <p class="news-feed-text"><%= brief %></p>
+      </div>
+      <div class="news-date">
+        <p class="news-feed-text">Written on <%= date %></p>
+      </div>
+      <div class="news-body">
+        <% if content != nil %>
+          <p class="news-feed-text"><%= content.html_safe %></p>
+        <% end %>
+      </div>
+      <div class="news-link">
+        <p class="news-feed-text"><%= link_to "Read More", path %></p>
+      </div>
     </div>
   </div>
+  <br />

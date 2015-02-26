@@ -163,7 +163,7 @@
   <hr />
 <div class="news-prev-wrapper">
 
-  <h2 class="homepage-header">What's New?</h2>
+  <h2 class="homepage-header">What's New?</h2><br />
   <% News.where(hidden: false).last(3).reverse.each do |n|  %>
     <%= render 'shared/article_box_alt', {
       image_id: n.featured_media_id, path: news_path(n), title: n.title,
