@@ -46,7 +46,7 @@ module Api
           respond_to do |format|
             format.json { render json: { msg: 'name is nil' }, status: :unprocessable_entity }
           end
-        elsif params[:contrib_key][:project_id].nil?
+        elsif params[:id].nil?
           respond_to do |format|
             format.json { render json: { msg: 'project id is nil' }, status: :unprocessable_entity }
           end
@@ -55,7 +55,7 @@ module Api
             format.json { render json: { msg: 'key is nil' }, status: :unprocessable_entity }
           end
         else
-          @project = Project.find(params[:contrib_key][:project_id])
+          @project = Project.find(params[:id])
 
           if @cur_user.id == @project.user_id
             session[:name] = params[:key_name]

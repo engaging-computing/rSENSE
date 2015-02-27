@@ -3,19 +3,6 @@
     <div class="panel panel-default">
       <%= form_for @user, url: {action: 'create'} do |ff| %>
       
-        <% if @user.errors.size > 0 %>
-        <div class="alert alert-error">
-          <button type="button" class="close" data-dismiss="alert">&times;</button>
-          <h3><%= pluralize(@user.errors.count, "error") %> <%= @user.errors.count == 1 ? "was" : "were" %> encountered:</h3>
-          
-          <ul>
-            <% @user.errors.full_messages.each do |msg| %>
-              <li><%= msg %></li>
-            <% end %>
-          </ul>
-        </div>
-        <% end %>
-      
         <div class="panel-heading">
           <h1>Register for iSENSE</h1>
         </div>
@@ -39,6 +26,10 @@
             <%= ff.label(:password_confirmation, "Password Confirmation:") %>
             <%= ff.password_field :password_confirmation, class: "form-control", placeholder: "Retype your password." %>
           </div>
+          
+           <div class="form-group">
+	      <%= recaptcha_tags noscript: false %>
+	   </div> 
         </div>
         <div class="panel-footer">
           <%= ff.submit("Create User", class: "btn btn-primary") %>

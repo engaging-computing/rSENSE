@@ -255,6 +255,9 @@ $ ->
           @gmap.fitBounds(latlngbounds)
 
         @drawControls()
+        
+        ctaLayer = new google.maps.KmlLayer({url: window.kml})
+        ctaLayer.setMap(@gmap)
 
         finalInit = =>
           @configs.zoomLevel = @gmap.getZoom()

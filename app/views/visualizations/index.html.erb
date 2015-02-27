@@ -67,9 +67,12 @@
               <% thumb = image_path("vis_#{type.downcase}_light.png")%>
             <% end %>
           <% end %>
-          <div class='item-image'
-               style='background-image:url(<%= thumb %>);background-size: 100% 100%'>
-          </div>
+          <a href='<%= visualization_path vi %>'>
+            <div class='item-image'
+                 style='background-image:url(<%= thumb %>);
+                 background-size: 100% 100%'>
+            </div>
+          </a>
           <div class="item-desc">
             <div class="item-title">
               <%= link_to vi.name.html_safe, vi %>
@@ -88,5 +91,7 @@
 </div>
 
 <div class='text-center'>
-<%= will_paginate @visualizations, renderer: BootstrapPagination::Rails, inner_window: 1, outer_window: 0, previous_label: "<<", next_label: ">>" %>
+  <%= will_paginate @visualizations, renderer: BootstrapPagination::Rails,
+      inner_window: 1, outer_window: 0, previous_label: "<<",
+      next_label: ">>" %>
 </div>
