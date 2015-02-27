@@ -5,6 +5,12 @@ GIT
     yaml_db (0.2.3)
 
 GIT
+  remote: https://github.com/ambethia/recaptcha
+  revision: 76c2f58ee906ed591662d552c6be383024af11d6
+  specs:
+    recaptcha (0.3.6)
+
+GIT
   remote: https://github.com/bbatsov/rubocop
   revision: 5d1bf0ff64d8254b33cf0a10ad7a4b19c4de6b1e
   specs:
@@ -262,6 +268,7 @@ DEPENDENCIES
   multi_json
   pg
   rails (~> 4.1.4)
+  recaptcha!
   remotipart
   roo
   rubocop!

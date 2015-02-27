@@ -259,6 +259,11 @@ $ ->
         else
           @gmap.fitBounds(latlngbounds)
 
+        @drawControls()
+        
+        ctaLayer = new google.maps.KmlLayer({url: window.kml})
+        ctaLayer.setMap(@gmap)
+
         finalInit = =>
           @configs.zoomLevel = @gmap.getZoom()
           google.maps.event.addListener @gmap, "zoom_changed", =>
