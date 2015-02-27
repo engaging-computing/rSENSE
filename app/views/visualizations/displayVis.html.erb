@@ -1,4 +1,5 @@
 <script>
+  window.kml = "<%= @project.kml_metadata %>";
   window.data = <%= raw @data.to_json %>;
   window.icons = { 'Map_dark': "<%= path_to_image('vis_map_dark.png')%>",
                    'Map_light': "<%= path_to_image('vis_map_light.png')%>",

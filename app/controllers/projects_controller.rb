@@ -401,12 +401,12 @@ class ProjectsController < ApplicationController
                                      :is_template, :featured_media_id, :hidden,
                                      :featured_at, :lock, :curated,
                                      :curated_at, :updated_at, :default_vis,
-                                     :precision, :globals)
+                                     :precision, :globals, :kml_metadata)
     end
 
     params[:project].permit(:content, :title, :user_id, :filter, :hidden,
                             :cloned_from, :has_fields, :featured_media_id,
                             :lock, :updated_at, :default_vis, :precision,
-                            :globals)
+                            :globals, :kml_metadata)
   end
 end
