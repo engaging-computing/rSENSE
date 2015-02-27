@@ -133,8 +133,10 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     @user.reset_validation!
 
+    captcha_message = 'Sorry, but the reCAPTCHA was incorrect.'
+
     respond_to do |format|
-      if @user.save
+      if verify_recaptcha(model: @user, message: captcha_message) && @user.save
         session[:user_id] = @user.id
 
         UserMailer.validation_email(@user)
@@ -142,9 +144,9 @@ class UsersController < ApplicationController
         format.html { redirect_to @user, notice: 'User was successfully created.' }
         format.json { render json: @user.to_hash(false), status: :created, location: @user }
       else
-        # flash[:debug] = @user.errors.inspect
+        flash[:error] = @user.errors.full_messages
         format.html { render action: 'new' }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
+
       end
     end
   end
