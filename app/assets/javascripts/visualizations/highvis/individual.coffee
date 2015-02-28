@@ -57,6 +57,7 @@ $ ->
         else
           @tree = binaryTree.clone(tree)
         @depth = @tree.maxDepth()
+        @maxDepth = maxDepth
 
       # Numerically evaluate the individual function at the value n
       evaluate: (n) ->
@@ -67,70 +68,56 @@ $ ->
         length = individual.tree.treeSize()
         mutationSite = Math.floor(Math.random() * length)
         mutant = binaryTree.clone(individual.tree)
-        value = individual.tree.index(mutationSite).data
-        mutation = null
-        if typeof(individual.tree.index(mutationSite).data) is 'function'
-          if individual.tree.index(mutationSite).data.length is 1
-            candidates = 
-              binaryTree.operators.filter (func) ->
-                '' + func != '' + value and func.length is 1
-            mutation = candidates[Math.floor(Math.random() * candidates.length)]
-          else
-            candidates = 
-              binaryTree.operators.filter (func) ->
-                '' + func != '' + value and func.length is 2
-            mutation = candidates[Math.floor(Math.random() * candidates.length)]
-        else
-          candidates = 
-            binaryTree.terminals.filter (term) ->
-              term != value
-          mutation = candidates[Math.floor(Math.random() * candidates.length)]
-        mutant.index(mutationSite).data = mutation
-        depth = individual.tree.depth
-        ret = new window.individual(mutant, depth)
-        ret
+        depthAtMutationSite = mutant.depthAtPoint(mutationSite)
+        mutation = new binaryTree
+        mutation.generate(individual.maxDepth - depthAtMutationSite + 1)
+        mutant.insertTree(mutation, mutationSite)
+        ret = new window.individual(mutant, mutant.maxDepth())
 
-      # Crossover genetic operator
+      # Crossover genetic operator (cut and splice approach)
       @crossover: (individual1, individual2) ->
         [childOne, childTwo] = binaryTree.crossover(individual1.tree, individual2.tree)
         [new individual(childOne, childOne.maxDepth()), new individual(childTwo, childTwo.maxDepth())]
 
       # Fitness-proportional reproduction genetic operator
-      @fpReproduce: (individuals, points) ->
+      @fpReproduce: (individuals, points, func) ->
         sumFitnesses = 0
         individualFitnesses = []
         for individual in individuals
-          individualFitness = individual.sseFitness(points)
+          individualFitness = eval "individual.#{func}(points)"
           sumFitnesses = sumFitnesses + individualFitness
           individualFitnesses.push individualFitness
         distribution = for number, index in individualFitnesses
-          cumulativeFitness = individualFitnesses[0..index].reduce (pv, cv, index, array) -> 
-            pv + cv
+          cumulativeFitness = individualFitnesses[0..index].reduce (pv, cv, index, array) -> pv + cv
           cumulativeFitness / sumFitnesses
         rand = Math.random()
         for probability, i in distribution
           if rand < probability
             individual = individuals[i]
-            ret = new window.individual(individual.tree, individual.depth)
+            ret = new window.individual(individual.tree, individual.maxDepth)
             return ret  
 
       # Tournament reproduction genetic operator
-      @tournamentReproduce: (individuals, points, tournamentSize, probability) ->
-        tournament = for i in [0..tournamentSize]
+      @tournamentReproduce: (individuals, points, func, tournamentSize = 10, probability = 0.8) ->
+        tournament = for i in [0...tournamentSize]
           participant = Math.floor(Math.random() * individuals.length)
-          individuals[participant]
-        tournament
+          {individual: individuals[participant], index: i} 
+        for participant in tournament
+          participant.fitness = eval "participant.individual.#{func}(points)"
+        tournament.sort (a, b) -> Number(b.fitness) - Number(a.fitness)
+        console.log tournament
+        for participant, ind in tournament
+          rand = Math.random()
+          if rand < probability * Math.pow(1 - probability, ind)
+            return new individual(participant.individual.tree, participant.individual.maxDepth)
+        return new individual(tournament[0].individual.tree, tournament[0].individual.maxDepth)
 
       # Calculates an individual's fitness by its sum of squared-error over points 
       sseFitness: (points) ->
         fitnessAtPoints = for point in points
           Math.pow(point.y - this.evaluate(point.x), 2)
-        sseFitness = fitnessAtPoints.reduce (pv, cv, index, array) ->
-          pv + cv
-        if isNaN(sseFitness)
-          0
-        else
-          1 / (1 + sseFitness)
+        sseFitness = fitnessAtPoints.reduce (pv, cv, index, array) -> pv + cv
+        if isNaN(sseFitness) then 0 else 1 / (1 + sseFitness)
 
       # Calculates an individual's fitness by its mean squared-error over points
       mseFitness: (points) ->
@@ -140,66 +127,66 @@ $ ->
       # Calculates an individual's fitness by scaled fitness 
       # (technique employed in the scaled symbolic regression paper by Keijzer)
       scaledFitness: (points) ->
-        xs = for point in points
-          point.x
-        ys = for point in points
-          this.evaluate(point.x)
-        ts = for point in points
-          point.y
+        # define inputs (xs), targets (ts), and outputs (ys)
+        xs = (point.x for point in points)
+        ys = (this.evaluate(point.x) for point in points)
+        ts = (point.y for point in points)
 
-        xSum = xs.reduce (pv, cv, index, array) ->
-          pv + cv
-        ySum = ys.reduce (pv, cv, index, array) ->
-          pv + cv
-        tSum = ts.reduce (pv, cv, index, array) ->
-          pv + cv
+        # calculate sum of inputs, targets, and outputs
+        xSum = xs.reduce (pv, cv, index, array) -> pv + cv
+        ySum = ys.reduce (pv, cv, index, array) -> pv + cv
+        tSum = ts.reduce (pv, cv, index, array) -> pv + cv
 
+        # calculate average of inputs, targets, and outputs
         xAvg = xSum / xs.length
         yAvg = ySum / ys.length
         tAvg = tSum / ts.length
         
-        xMeanDiffs = for x in xs
-          x - xAvg
-        yMeanDiffs = for y in ys
-          y - yAvg
-        tMeanDiffs = for t in ts
-          t - tAvg
+        # calculate each input's distance from the mean, xAvg
+        xMeanDiffs = (x - xAvg for x in xs)
+        # calculate each output's distance from the mena, yAvg
+        yMeanDiffs = (y - yAvg for y in ys)
+        # calculate each target's distance from the mean, tAvg
+        tMeanDiffs = (t - tAvg for t in ts)
         
+        # calculate the pair-wise terms of cov(y,t)
         ytCovTerms = for i in [0...ys.length]
           (yMeanDiffs[i] * tMeanDiffs[i])
-        ytCov = ytCovTerms.reduce (pv, cv, index, array) ->
-          pv + cv
+        # calculate the covariance of t and y
+        ytCov = ytCovTerms.reduce (pv, cv, index, array) -> pv + cv
 
+        # calculate the pair-wise terms of var(y)
         yVarTerms = for ydiff in yMeanDiffs
           Math.pow(ydiff, 2)
+        # calculate the variance of y
         yVar = yVarTerms.reduce (pv, cv, index, array) ->
           pv + cv
         
-        b = 
-          if yVar is 0
-            1
-          else
-            ytCov / yVar
-
+        # b = cov(y,t) / var(y)
+        b = if yVar is 0 then 1 else ytCov / yVar
+        # a = tAvg - b * yAvg
         a = tAvg - b * yAvg
         
+        # calculate scaled residuals (target[i] - (a + b * output[i])) ^ 2
         scaledResiduals = for i in [0...points.length]
           Math.pow(ts[i] - (a + b * ys[i]), 2)
-        sumScaledResiduals = scaledResiduals.reduce (pv, cv, index, array) ->
-          pv + cv
+        # calculate sum of scaled residuals
+        sumScaledResiduals = scaledResiduals.reduce (pv, cv, index, array) -> pv + cv
         
+        # Calculate scaled fitness
         scaledFitness = (1 / points.length) * sumScaledResiduals
-        if isNaN(scaledFitness)
-          0
-        else
-          1 / (1 + scaledFitness)
+        return if isNaN(scaledFitness) then 0 else 1 / (1 + scaledFitness)
 
     window.points = for i in [0...20]
       x: i
       y: Math.pow(i, 2)
 
-    ###
-    # Todo: Fix Mutation (replace mutation site with subtree, involves maintaining tree's maxDepth)
-    # Finish Tournament Selection :)
-    ###
-
+  ###
+  # TODO: 
+  # 1.  Selection (just use reproduction operators)
+  # 2.  New Crossover techniques (ew)
+  # 3.  New mutation techniques
+  # 4.  New Reproduction techniques (maybe) 
+  # 5.  Pareto fitness (think about this one)
+  # 6.  TEST EVERYTHING!
+  ###

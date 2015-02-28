@@ -99,23 +99,21 @@ $ ->
 
       # Returns number of nodes in the tree
       treeSize: ->
-        depth = 1
         rest = 0
         if @right isnt null
           rest += @right.treeSize()
         if @left isnt null
           rest += @left.treeSize()
-        depth + rest
+        1 + rest
 
       # Returns the maximum depth of the tree
       maxDepth: ->
-        depth = 1
         rest = 0
         if @left isnt null
           rest = Math.max(rest, @left.maxDepth())
         if @right isnt null
           rest = Math.max(rest, @right.maxDepth())
-        depth + rest
+        1 + rest
 
       # Inserts a single datum in the tree at @data, 
       # or the @data member of the tree located at 
@@ -170,70 +168,65 @@ $ ->
 
       # Allows the user to index into the tree, following Preorder traversal:
       # ROOT, left, right
-      index: (i) ->
-        if i is 0
-          return this
-        leftSize = 
-          if @left is null
-            0
-          else
-            @left.treeSize()
-        rightSize = 
-          if @right is null
-            0
-          else
-            @right.treeSize()
-        if leftSize is 0 and rightSize isnt 0
-          if i > rightSize
-            null
-          else
-            @right.index(i - 1)
-        else if leftSize isnt 0 and rightSize is 0
-          if i > leftSize
-            null
-          else
-            @left.index(i - 1)
-        else if leftSize is 0 and rightSize is 0
-          null
-        else
-          if i > leftSize + rightSize
-            null
-          else if i > leftSize
-            @right.index(i - leftSize - 1)
-          else if i <= leftSize
-            @left.index(i - 1)
+      index: (index) ->
+        this.__access(index)
 
-      # Given a tree, replace it with a randomly-generated tree whose maximum depth is given by maxDepth. 
+      # Determine how far away the node at position 'index' is from the root
+      # of the binary tree.  This is used to determine how long the mutation
+      # tree at a given point can be to maintain the maximum depth of the
+      # tree during the point mutation genetic operation.
+      depthAtPoint: (index, curDepth = 1) ->
+        this.__access(index, false, curDepth)
+      
+      # Internal method used to abstract the index and depth at point member
+      # functions.
+      ###
+      # WARNING:  INTERNAL METHOD.  DO NOT CALL
+      ###
+      __access: (index, value = true, curDepth = 1) ->
+        if index is 0
+          return if value is true then this else curDepth
+        leftSize = if @left is null then 0 else @left.treeSize()
+        rightSize = if @right is null then 0 else @right.treeSize()
+        if index > leftSize + rightSize
+          -1
+        else if index > leftSize
+          @right.__access(index - leftSize - 1, value, curDepth + 1)
+        else
+          @left.__access(index - 1, value, curDepth + 1)
+      
+      # Given a tree, replace it with a randomly-generated tree whose maximum 
+      # depth is given by maxDepth. 
       ###
       # WARNING:  MUTATES THE BINARY TREE
       ###
       generate: (maxDepth = 10, curDepth = 1) ->
-        terminal = window.binaryTree.terminals[Math.floor(Math.random() * window.binaryTree.terminals.length)]
-        operator = window.binaryTree.operators[Math.floor(Math.random() * window.binaryTree.operators.length)]
         if curDepth is maxDepth
-          this.insertData(terminal)
+          this.insertData(window.binaryTree.terminals[Math.floor(Math.random() * window.binaryTree.terminals.length)])
         else
-          if Math.random() < .2
-            this.insertData(terminal)
+          randomGene = Math.floor(Math.random() * (binaryTree.terminals.length + binaryTree.operators.length))
+          if randomGene < binaryTree.terminals.length
+            this.insertData(binaryTree.terminals[randomGene])
           else
-            this.insertData(operator)
+            gene = binaryTree.operators[randomGene - binaryTree.terminals.length]
+            this.insertData(gene)
             this.left = new binaryTree(this)
             this.left.generate(maxDepth, curDepth + 1)
-            if operator.length isnt 1
+            if gene.length isnt 1
               this.right = new binaryTree(this)
               this.right.generate(maxDepth, curDepth + 1)
 
       # Evaluate the Binary tree numerically for a given input value
       evaluate: (x) ->
         if @data is 'x'
-          return x
+          x
         else if typeof(@data) is 'number'
-          return @data
+          @data
         else
           if @data.length is 1
-            return @data(this.left.evaluate(x))
+            @data(this.left.evaluate(x))
           else
-            return @data(this.left.evaluate(x), this.right.evaluate(x))
+            @data(this.left.evaluate(x), this.right.evaluate(x))
 
       # Insert the binaryTree object 'tree' at the location of the binaryTree 
       # specified by index
@@ -298,14 +291,6 @@ $ ->
         childTwo.insertTree(tree1b.index(crossoverPointOne), crossoverPointTwo)
         return [childOne, childTwo]
 
-      ###
-      # TODO:
-      #   1.  Random access (indexing) DONE!
-      #   2.  preorder traversal (for eval) DONE!
-      #   3.  Crossover tree (DONE)
-      #   4.  Generate random tree (DONE)
-      #   5.  Insert tree (DONE)
-      ###
     window.testTree = new binaryTree
     testTree.insertData((a, b) -> a * b)
     testTree.insertData(3, 'left')
