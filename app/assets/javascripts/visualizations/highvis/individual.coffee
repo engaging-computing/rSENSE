@@ -47,7 +47,7 @@ $ ->
   if namespace.controller is "visualizations" and
   namespace.action in ["displayVis", "embedVis", "show"]
 
-    class window.individual
+    class window.individual extends Object
       
       # Create a a binary tree to represent a random mathematical function
       constructor: (tree = null, maxDepth = 10) ->
@@ -68,15 +68,38 @@ $ ->
         length = individual.tree.treeSize()
         mutationSite = Math.floor(Math.random() * length)
         mutant = binaryTree.clone(individual.tree)
-        depthAtMutationSite = mutant.depthAtPoint(mutationSite)
         mutation = new binaryTree
-        mutation.generate(individual.maxDepth - depthAtMutationSite + 1)
+        mutation.generate(individual.maxDepth)
         mutant.insertTree(mutation, mutationSite)
         ret = new window.individual(mutant, mutant.maxDepth())
 
       # Crossover genetic operator (cut and splice approach)
       @crossover: (individual1, individual2) ->
         [childOne, childTwo] = binaryTree.crossover(individual1.tree, individual2.tree)
+        [new individual(childOne, childOne.maxDepth()), new individual(childTwo, childTwo.maxDepth())]
+
+      # Crossover genetic operator (single-point approach)
+      @onePointCrossover: (individual1, individual2) ->
+        [treeOne, treeTwo] = [binaryTree.clone(individual1.tree), binaryTree.clone(individual2.tree)]
+        mutationSite = Math.floor(Math.random() * Math.min(treeOne.treeSize(), treeTwo.treeSize()))
+        [childOne, childTwo] = [binaryTree.clone(treeOne), binaryTree.clone(treeTwo)]
+        childOne.insertTree(treeTwo.index(mutationSite), mutationSite)
+        childTwo.insertTree(treeOne.index(mutationSite), mutationSite)
+        [new individual(childOne, childOne.maxDepth()), new individual(childTwo, childTwo.maxDepth())]
+
+      # Crossover genetic operator (two-point approach)
+      @twoPointCrossover: (individual1, individual2) ->
+        [tree1a, tree1b] = [binaryTree.clone(individual1.tree), binaryTree.clone(individual1.tree)]
+        [tree2a, tree2b] = [binaryTree.clone(individual2.tree), binaryTree.clone(individual2.tree)]
+        [tree1c, tree2c] = [binaryTree.clone(individual1.tree), binaryTree.clone(individual2.tree)]
+        mutationSite1 = Math.floor(Math.random() * Math.min(tree1a.treeSize(), tree2a.treeSize()))
+        mutationSite2 = Math.floor(Math.random() * Math.min(tree1a.treeSize() - mutationSite1, tree2a.treeSize() - mutationSite1)) + mutationSite1
+        [childOne, childTwo] = [binaryTree.clone(tree1a), binaryTree.clone(tree2a)]
+        [childOneTail, childTwoTail] = [binaryTree.clone(tree1a.index(mutationSite2)), binaryTree.clone(tree2a.index(mutationSite2))]
+        childOne.insertTree(tree2a.index(mutationSite1), mutationSite1)
+        childTwo.insertTree(tree1a.index(mutationSite1), mutationSite1)
+        childOne.insertTree(childOneTail, Math.min(mutationSite2, childOne.treeSize()))
+        childTwo.insertTree(childTwoTail, Math.min(mutationSite2, childTwo.treeSize()))
         [new individual(childOne, childOne.maxDepth()), new individual(childTwo, childTwo.maxDepth())]
 
       # Fitness-proportional reproduction genetic operator
@@ -97,6 +120,10 @@ $ ->
             ret = new window.individual(individual.tree, individual.maxDepth)
             return ret  
 
+      # Fitness-proportional selection genetic operator
+      @fpSelection: (individuals, points, func) ->
+        @fpReproduce(individuals, points, func)
+
       # Tournament reproduction genetic operator
       @tournamentReproduce: (individuals, points, func, tournamentSize = 10, probability = 0.8) ->
         tournament = for i in [0...tournamentSize]
@@ -112,16 +139,20 @@ $ ->
             return new individual(participant.individual.tree, participant.individual.maxDepth)
         return new individual(tournament[0].individual.tree, tournament[0].individual.maxDepth)
 
+      # Tournament selection genetic operator
+      @tournamentSelection: (individuals, points, func, tournamentSize = 10, probability = 0.8) ->
+        @tournamentReproduce(individuals, points, func, tournamentSize, probability)
+
       # Calculates an individual's fitness by its sum of squared-error over points 
-      sseFitness: (points) ->
+      sseFitness: (points, raw = false) ->
         fitnessAtPoints = for point in points
           Math.pow(point.y - this.evaluate(point.x), 2)
         sseFitness = fitnessAtPoints.reduce (pv, cv, index, array) -> pv + cv
-        if isNaN(sseFitness) then 0 else 1 / (1 + sseFitness)
+        if isNaN(sseFitness) then 0 else if raw is true then sseFitness else 1 / (1 + sseFitness)
 
       # Calculates an individual's fitness by its mean squared-error over points
       mseFitness: (points) ->
-        mseFitness = (1 / points.length) * this.sseFitness(points)
+        mseFitness = 1 / (1 + (1 / points.length) * this.sseFitness(points, true))
         mseFitness      
 
       # Calculates an individual's fitness by scaled fitness 
@@ -144,7 +175,7 @@ $ ->
         
         # calculate each input's distance from the mean, xAvg
         xMeanDiffs = (x - xAvg for x in xs)
-        # calculate each output's distance from the mena, yAvg
+        # calculate each output's distance from the mean, yAvg
         yMeanDiffs = (y - yAvg for y in ys)
         # calculate each target's distance from the mean, tAvg
         tMeanDiffs = (t - tAvg for t in ts)
@@ -183,10 +214,11 @@ $ ->
 
   ###
   # TODO: 
-  # 1.  Selection (just use reproduction operators)
-  # 2.  New Crossover techniques (ew)
-  # 3.  New mutation techniques
+  # 1.  Selection (just use reproduction operators) (DONE)
+  # 2.  New Crossover techniques (two-point)
+  # 3.  New mutation techniques (DONE)
   # 4.  New Reproduction techniques (maybe) 
   # 5.  Pareto fitness (think about this one)
-  # 6.  TEST EVERYTHING!
+  # 6.  TEST EVERYTHING! (DONE)
+  # 7.  Selection techniques (Reward-based, stochastic universal sampling, truncation)
   ###

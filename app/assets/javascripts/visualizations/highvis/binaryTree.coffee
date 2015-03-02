@@ -45,7 +45,7 @@ $ ->
   if namespace.controller is "visualizations" and
   namespace.action in ["displayVis", "embedVis", "show"]
     
-    class window.binaryTree
+    class window.binaryTree extends Object
 
       @terminals = [
         'x', Math.E, Math.PI
@@ -56,7 +56,7 @@ $ ->
         (a, b) -> a - b,
         (a, b) -> a * b,
         (a, b) -> if b is 0 then 1 else a / b,
-        (a, b) -> Math.pow(a,b),
+        (a, b) -> Math.pow(a, b),
         (a)    -> Math.exp(a), 
         (a)    -> Math.cos(a),
         (a)    -> Math.sin(a),
@@ -74,7 +74,7 @@ $ ->
       @clone: (tree, parent = null) ->
         return tree if tree is null or typeof tree isnt 'object'
         temp = new binaryTree(parent)
-        for key of tree when (typeof tree[key] isnt 'function' and key isnt 'parent')
+        for key of tree when (typeof(tree[key]) isnt 'function' and key isnt 'parent')
           temp[key] = @clone(tree[key], temp)
         temp['data'] = tree.data
         temp
@@ -82,16 +82,18 @@ $ ->
       # Returns true if a and b are equivalent objects 
       # (not necessarily references to the same object in memory).
       @is_equal: (a, b) ->
-        recur = false
-        if a is null and b is null
+        [leftEq, rightEq] = [true, true]
+        if a is null and b isnt null or a isnt null and b is null
+          return false
+        if (a.is_terminal() and b.is_terminal()) is true and a.data is b.data
           return true
-        if Object.keys(a).length == Object.keys(b).length
-          for key of a when key isnt 'parent'
-            if typeof(a[key]) is 'object'
-              recur = @is_equal(a[key], b[key])
-            else if a[key] != b[key]
-              return false
-        recur
+        if '' + a.data isnt '' + b.data or a.treeSize() isnt b.treeSize() or a.maxDepth() isnt b.maxDepth()
+          return false
+        if a.left isnt null and b.left isnt null
+          leftEq = binaryTree.is_equal(a.left, b.left)
+        if a.right isnt null and b.right isnt null
+          rightEq = binaryTree.is_equal(a.right, b.right)
+        leftEq and rightEq
 
       # Checks if the tree is terminal (i.e., no children)
       is_terminal: ->
@@ -99,22 +101,25 @@ $ ->
 
       # Returns number of nodes in the tree
       treeSize: ->
-        rest = 0
-        if @right isnt null
-          rest += @right.treeSize()
-        if @left isnt null
-          rest += @left.treeSize()
-        1 + rest
+        this.__query((a, b) -> a + b)
 
       # Returns the maximum depth of the tree
       maxDepth: ->
+        this.__query(Math.max)
+
+      # Internal method used to abstract the treeSize() and maxDepth()
+      # member functions
+      ###
+      # WARNING:  INTERNAL METHOD.  DO NOT CALL.
+      ###
+      __query: (combiner) ->
         rest = 0
         if @left isnt null
-          rest = Math.max(rest, @left.maxDepth())
+          rest = combiner(rest, @left.__query(combiner))
         if @right isnt null
-          rest = Math.max(rest, @right.maxDepth())
+          rest = combiner(rest, @right.__query(combiner))
         1 + rest
-
+      
       # Inserts a single datum in the tree at @data, 
       # or the @data member of the tree located at 
       # pos = 'left' or pos = 'right'
@@ -126,7 +131,7 @@ $ ->
           if @data isnt null
             if @left is null
               @left = new binaryTree(this)
-              @left.data = data
+            @left.data = data
 
           else
             console.log "Error inserting #{data} into left child of tree."
@@ -134,7 +139,7 @@ $ ->
           if @data isnt null
             if @right is null
               @right = new binaryTree(this)
-              @right.data = data
+            @right.data = data
           else
             console.log "Error inserting #{data} into right child of tree."
         else
@@ -185,15 +190,15 @@ $ ->
       ###
       __access: (index, value = true, curDepth = 1) ->
         if index is 0
-          return if value is true then this else curDepth
+          return if value is true then this else curDepth 
         leftSize = if @left is null then 0 else @left.treeSize()
         rightSize = if @right is null then 0 else @right.treeSize()
-        if index > leftSize + rightSize
+        if index > leftSize + rightSize 
           -1
         else if index > leftSize
-          @right.__access(index - leftSize - 1, value, curDepth + 1)
+          if @right isnt null then @right.__access(index - leftSize - 1, value, curDepth + 1) else -1
         else
-          @left.__access(index - 1, value, curDepth + 1)
+          if @left isnt null then @left.__access(index - 1, value, curDepth + 1) else -1
       
       # Given a tree, replace it with a randomly-generated tree whose maximum 
       # depth is given by maxDepth. 
@@ -235,7 +240,7 @@ $ ->
       ###
       insertTree: (tree, index = 0) ->
         replacementPoint = this.index(index)
-        if index is null
+        if index is null or replacementPoint is -1
           console.log "Error inserting #{tree} at location specified.  Index does not exist in the tree."
           null
         else
@@ -253,8 +258,6 @@ $ ->
             this.left = binaryTree.clone(tree.left)
             this.parent = null
             this.__updateParents()
-
-
 
       # Updates binary tree element's parents to reflect the result of
       # an insertTree merger to parent.right or parent.left
@@ -285,7 +288,6 @@ $ ->
         
         [crossoverPointOne, crossoverPointTwo] = \
         [Math.floor(Math.random() * tree1.treeSize()), Math.floor(Math.random() * tree2.treeSize())]
-        
         [childOne, childTwo] = [window.binaryTree.clone(tree1a), window.binaryTree.clone(tree2a)]
         childOne.insertTree(childTwo.index(crossoverPointTwo), crossoverPointOne)
         childTwo.insertTree(tree1b.index(crossoverPointOne), crossoverPointTwo)
