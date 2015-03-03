@@ -201,24 +201,22 @@ $ ->
         i = 0
         binSizes = {}
         binTotals = {}
-        (key for key of binObjs).map((y) -> ({x: Number(value), y: binObjs[y][value]} for value of binObjs[y])).map (a) -> 
+        (key for key of binObjs).map((y) -> 
+          ({x: Number(value), y: binObjs[y][value]} for value of binObjs[y])).map (a) -> 
           a.map (b) -> 
             binSizes[b['x']] ?= 0
             binSizes[b['x']] = Math.max(binSizes[b['x']], b['y'])
             binTotals[b['x']] ?= 0
             binTotals[b['x']] += b['y']
           
-        console.log binTotals
-        largestBin = (binTotals[key] for key of binTotals).reduce (pv, cv, index, array) ->
-          Math.max pv, cv
-        smallestBin = (binTotals[key] for key of binTotals).reduce (pv, cv, index, array) ->
-          Math.min pv, cv
-        console.log "largest bin", largestBin
-        maxValue = (binSizes[key] for key of binSizes).reduce (pv, cv, index, array) -> Math.max(pv, cv)
-        if largestBin < 100 and ((largestBin - smallestBin) / largestBin) > 0.3
-          console.log 'stacked histogram!'
+        largestBin = (binTotals[key] for key of binTotals).reduce (pv, cv, index, array) -> Math.max(pv, cv)
+        smallestBin = (binTotals[key] for key of binTotals).reduce (pv, cv, index, array) -> Math.min(pv, cv)
+        maxValueAnyGroupAnyBin = (binSizes[key] for key of binSizes).reduce (pv, cv, index, array) -> Math.max(pv, cv)
+        console.log binSizes
+        if maxValueAnyGroupAnyBin < 50
           for group of binObjs
-            while i < maxValue
+            maxValueOneGroupAnyBin = (binObjs[group][key] for key of binObjs[group]).reduce (pv, cv, index, array) -> Math.max(pv, cv)
+            while i < maxValueOneGroupAnyBin
               binData = []
               for bin of binObjs[group]
                 if binObjs[group][bin] > i
