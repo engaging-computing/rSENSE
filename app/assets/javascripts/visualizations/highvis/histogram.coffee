@@ -215,7 +215,8 @@ $ ->
           Math.min pv, cv
         console.log "largest bin", largestBin
         maxValue = (binSizes[key] for key of binSizes).reduce (pv, cv, index, array) -> Math.max(pv, cv)
-        if largestBin < 50 and ((largestBin - smallestBin) / largestBin) < 0.5
+        if largestBin < 100 and ((largestBin - smallestBin) / largestBin) > 0.3
+          console.log 'stacked histogram!'
           for group of binObjs
             while i < maxValue
               binData = []
