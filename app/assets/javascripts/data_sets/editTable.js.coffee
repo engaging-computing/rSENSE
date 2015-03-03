@@ -13,9 +13,6 @@ uploadSettings =
     else
       showError 'An unknown error has occured'
   successEdit: (data, textStatus, jqXHR) ->
-    console.log data
-    console.log textStatus
-    console.log jqXHR
     window.location = data.redirect
   successEntry: (data, textStatus, jqXHR) ->
     window.location = data['displayURL']
@@ -67,19 +64,23 @@ Grid = (cols, data, submit) ->
     grid = new Slick.Grid '#slickgrid-container', view, cols, options
     view.setItems data
 
-  subscribe_events = ->
-    $(window).resize resize_window
+  subscribeEvents = ->
+    $(window).resize resizeWindow
 
     $(document).click (e) ->
-      if $(e.target).closest('.slick-row').length == 0
+      if $(e.target).closest('.slick-row, #dt-picker').length == 0
         grid.getEditorLock().commitCurrentEdit()
 
     $('.edit_table_add').click ->
       if $('.edit_table_save').hasClass 'disabled'
         return
-      add_row()
+      addRow()
 
-    $('.edit_table_save').click queue_save_grid
+    $('.edit_table_cancel').click ->
+      projectID = $(document).data 'project'
+      window.location = "/projects/#{projectID}"
+
+    $('.edit_table_save').click queueSaveGrid
 
     view.onRowsChanged.subscribe (e, args) ->
       grid.invalidateRow args.rows
@@ -92,17 +93,21 @@ Grid = (cols, data, submit) ->
     grid.onClick.subscribe (e, args) ->
       cell = grid.getCellFromEvent e
       if cell.cell == grid.getColumns().length - 1
-        queue_delete_row(cell.row)
+        queueDeleteRow(cell.row)
         if grid.getDataLength() == 0
-          add_row()
+          addRow()
 
     grid.onAfterCellEditorDestroy.subscribe ->
-      hide_popover()
-      process_actions()
+      hidePopover()
+      processActions()
 
     grid.onValidationError.subscribe (e, args) ->
-      show_popover $(args.cellNode), args.validationResults.msg
+      showPopover $(args.cellNode), args.validationResults.msg
       actions = []
+
+    grid.onKeyDown.subscribe (e, args) ->
+      if e.keyCode == 13 and grid.getDataLength() - 1 == grid.getActiveCell().row
+        addRow()
 
     $(window).trigger 'resize'
 
@@ -110,14 +115,14 @@ Grid = (cols, data, submit) ->
       $('.slick-cell.l0.r0').first().trigger 'click'
     , 1
 
-  resize_window = ->
+  resizeWindow = ->
     newHeight = $(window).height()-
       $('#row-slickgrid-1').outerHeight() -
       $('#row-slickgrid-2').outerHeight()
     $('#slickgrid-container').height newHeight
     grid.resizeCanvas()
 
-  get_json = ->
+  getJSON = ->
     buckets = {}
     posHeadRegex = /(\d+)-(\d+)/
     posDataRegex = /^ *((?:\+|-)?\d+\.?\d*), *((?:\+|-)?\d+\.?\d*) *$/
@@ -140,13 +145,13 @@ Grid = (cols, data, submit) ->
 
     buckets
 
-  process_actions = ->
+  processActions = ->
     temp = actions
     actions = []
     for x in temp
       x()
 
-  add_row = ->
+  addRow = ->
     newRow = {id: currID}
     currID += 1
     for x in cols
@@ -154,13 +159,13 @@ Grid = (cols, data, submit) ->
     view.addItem newRow
     grid.scrollRowIntoView view.getLength()
 
-  queue_delete_row = (row) ->
-    delete_row = () ->
+  queueDeleteRow = (row) ->
+    deleteRow = () ->
       item = view.getItem row
       view.deleteItem item.id
       grid.invalidate()
       if view.getLength() == 0
-        add_row()
+        addRow()
         unless deletionPop?
           deletionPop = $('.slick-delete').popover
             container: 'body'
@@ -180,19 +185,19 @@ Grid = (cols, data, submit) ->
           , 1000
 
     if grid.getCellEditor() != null
-      actions.push delete_row
+      actions.push deleteRow
     else
-      delete_row()
+      deleteRow()
 
-  queue_save_grid = ->
-    save_grid = ->
+  queueSaveGrid = ->
+    saveGrid = ->
       # check if we've already started saving
       if $('.edit_table_save').hasClass 'disabled'
         return
 
       # get title and grid contents
       submit['data'] =
-        data: get_json()
+        data: getJSON()
         title: if uploadSettings.pageName == 'entry' then $('#data_set_name').val()
 
       hasData = Object.keys(submit['data']['data']).reduce (l, r) ->
@@ -206,7 +211,7 @@ Grid = (cols, data, submit) ->
         return
 
       # validate presence of title
-      if uploadSettings.pageName == 'entry' and title == ''
+      if uploadSettings.pageName == 'entry' and submit['data'].title == ''
         showError 'Datasets require a title'
         return
 
@@ -217,29 +222,34 @@ Grid = (cols, data, submit) ->
       $.ajax submit
 
     if grid.getCellEditor() != null
-      actions.push save_grid
+      actions.push saveGrid
     else
-      save_grid()
+      saveGrid()
 
-  show_popover = (form, msg) ->
-    popoverMsg = msg
-    unless popover?
-      popover = form.popover
+  showPopover = (form, msg) ->
+    validationPopMsg = msg
+    unless validationPopo?
+      validationPop = form.popover
         container: 'body'
-        content: -> popoverMsg
+        content: -> validationPopMsg
         html: true
         placement: 'bottom'
         trigger: 'manual'
-    popover.data('bs.popover').setContent()
-    popover.popover 'show'
+    validationPop.data('bs.popover').setContent()
+    validationPop.popover 'show'
 
-  hide_popover = ->
-    if popover?
-      popover.popover 'hide'
+  hidePopover = ->
+    if validationPop?
+      validationPop.popover 'hide'
+
+  @addRow = addRow
+
+  @length = ->
+    grid.getDataLength()
 
   # this is needed because slickgrid opens after this function completes
   initialize()
-  subscribe_events()
+  subscribeEvents()
 
 showError = (error) ->
   $('.mainContent').children('.alert-danger').remove()
@@ -263,6 +273,11 @@ IS.onReady 'data_sets/edit', ->
     dataType: "#{uploadSettings.dataType}"
     error: uploadSettings.error
     success: uploadSettings.successEdit
+  newRows = 10 - grid.length()
+
+  # ensure a minimum of ten rows per dataset
+  for i in [1 .. newRows]
+    grid.addRow()
 
 IS.onReady 'data_sets/manualEntry', ->
   uploadSettings.pageName = 'entry'
@@ -274,3 +289,7 @@ IS.onReady 'data_sets/manualEntry', ->
     dataType: "#{uploadSettings.dataType}"
     error: uploadSettings.error
     success: uploadSettings.successEntry
+
+  # we get one row for free in slickgrid, so just add 9 more
+  for i in [1 .. 9]
+    grid.addRow()
