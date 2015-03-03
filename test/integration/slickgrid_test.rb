@@ -37,7 +37,7 @@ class SlickgridTest < ActionDispatch::IntegrationTest
     time = options[:time]
 
     find(:css, ".slick-row:nth-child(#{row + 1})>.slick-cell.l#{col}").click
-    find(:css, ".editor-button").click
+    find(:css, '.editor-button').click
     find(:css, '#dt-year-textbox').set "#{yr}\n"
     td = all(:css, '#dt-date-group td')
     date_cell = td.select { |x| x['data-date'.to_sym] == "#{dy}" and x['data-month'.to_sym] == '0' }.first
