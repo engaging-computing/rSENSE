@@ -20,7 +20,7 @@
       	  </div>
       	  <div class="col-sm-3 col-xs-6 add_fields">
             <button value="Location" class="btn btn-success center new_field location" form="fields_table" name="new_field" <%= (@project.fields.any? {|f| f.field_type == LONGITUDE_TYPE or f.field_type == LATITUDE_TYPE}) ? "disabled" : "" %>>Add Location</button>
-            <p class="description">Latitude and longitude values in the form 'latitude, longitude' between -90 and 90. Limit 1 per project.</p>
+            <p class="description">Latitude (between -90 and 90) and longitude (between -180 and 180) values in the form 'latitude, longitude'. Limit 1 per project.</p>
           </div>
         </div>
         <% if @project.data_sets.count > 0 %>
