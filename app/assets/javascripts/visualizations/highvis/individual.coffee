@@ -208,17 +208,15 @@ $ ->
         scaledFitness = (1 / points.length) * sumScaledResiduals
         return if isNaN(scaledFitness) then 0 else 1 / (1 + scaledFitness)
 
+      paretoFitness: (points) -> 
+        1
     window.points = for i in [0...20]
       x: i
       y: Math.pow(i, 2)
 
   ###
-  # TODO: 
-  # 1.  Selection (just use reproduction operators) (DONE)
-  # 2.  New Crossover techniques (two-point)
-  # 3.  New mutation techniques (DONE)
-  # 4.  New Reproduction techniques (maybe) 
-  # 5.  Pareto fitness (think about this one)
-  # 6.  TEST EVERYTHING! (DONE)
-  # 7.  Selection techniques (Reward-based, stochastic universal sampling, truncation)
+  # TODO:
+  # 1.  New Selection strategies (stochastic universal sampling, reward-based selection)
+  # 2.  Pareto Fitness
+  # 3.  
   ###
