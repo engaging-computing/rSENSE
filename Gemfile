@@ -81,3 +81,5 @@ gem 'roo'
 # GitHub Bug Reporting and Testing
 gem 'browser'
 gem 'useragent', '~> 0.10.0'
+
+gem 'recaptcha', git: 'https://github.com/ambethia/recaptcha'

@@ -1,4 +1,5 @@
 <script>
+  window.kml = "<%= @project.kml_metadata %>";
   window.data = <%= raw @data.to_json %>;
   window.icons = { 'Map_dark': "<%= path_to_image('vis_map_dark.png')%>",
                    'Map_light': "<%= path_to_image('vis_map_light.png')%>",
@@ -34,26 +35,23 @@
 <% if @datasets.count == 1%>
   <div id="title_row" style="padding-left:10px">
     <div style="font-size:1.75em">
-      <%= link_to @project.title, project_path(@project)%>
+      <%= link_to @project.title.html_safe, project_path(@project)%>
       <div class="half_width_edit"><%= data_set_edit_helper 'title', (can_edit? @datasets.first), false, "/data_sets/#{@datasets.first.id}" %></div>
     </div>
   </div>
 <%else%>
   <div id="title_row" style="padding-left:10px">
     <div style="font-size:1.75em">
-      <%= link_to @project.title, project_path(@project)%>
+      <%= link_to @project.title.html_safe, project_path(@project) %>
       <div class="half_width_edit">Showing Multiple Data Sets</div>
     </div>
   </div>
 <%end%>
-
 <div style="margin: 0px 10px 10px;">
   <div id="viscontainer" style="height:500px;">
     <div class="pull-right"><button class="btn btn-default" id="fullscreen-vis" title="Maximize"><i class="fa fa-arrows-alt"></i></button></div>
     <ul id='visTabList'></ul>
     <div class="clear"></div>
-
-
       <div id="map_canvas" class="vis_canvas"></div>
       <div id="table_canvas" class="vis_canvas"></div>
       <div id="timeline_canvas" class="vis_canvas"></div>
@@ -63,7 +61,6 @@
       <div id="pie_canvas" class="vis_canvas"></div>
       <div id="summary_canvas" class="vis_canvas"></div>
       <div id="photos_canvas" class="vis_canvas"></div>
-
     <div id="controlcontainer">
       <div id="controlhider">
         <button id="control_hide_button" type="button"> &gt; </button>

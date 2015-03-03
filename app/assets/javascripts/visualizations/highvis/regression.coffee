@@ -70,10 +70,10 @@ $ ->
 
     globals.REGRESSION.LOGARITHMIC = globals.REGRESSION.FUNCS.length
     globals.REGRESSION.FUNCS.push [
-      (x, P) -> P[0] + P[1] * Math.log(P[2] + x),
+      (x, P) -> P[0] + Math.log(P[1] * x + P[2]),
       (x, P) -> 1,
-      (x, P) -> Math.log(x + P[2]),
-      (x, P) -> P[1] / (P[2] + x)]
+      (x, P) -> x / (P[1] * x + P[2]),
+      (x, P) -> 1 / (P[1] * x + P[2])]
 
     globals.REGRESSION.NUM_POINTS = 200
 
@@ -81,7 +81,6 @@ $ ->
     Calculates a regression and returns it as a highcharts series.
     ###
     globals.getRegression = (xs, ys, type, xBounds, seriesName, dashStyle) ->
-
       Ps = []
       func = globals.REGRESSION.FUNCS[type]
 
@@ -103,35 +102,27 @@ $ ->
         when globals.REGRESSION.LOGARITHMIC
           # We want to avoid starting with a guess that takes the log of a negative number
           Ps = [1,1,Math.min.apply(null, xs) + 1]
-
-      # Calculate the regression, and return a highcharts series object
-      mean = calculateMean(xs)
-      sigma = calculateStandardDev(xs, mean)
-
+      
       # Get the new Ps
-      [Ps, R2] = NLLS(func, normalizeData(xs, mean, sigma), ys, Ps)
-      denormFunc = globals.REGRESSION.DENORM_FUNCS[type]
-      Ps =
-        func(Ps, mean, sigma) for func in denormFunc
-
+      [Ps, R2] = NLLS(func, normalizeData(xs, type), ys, Ps)
+      
+      # Create the highcharts series
       generateHighchartsSeries(Ps, R2, type, xBounds, seriesName, dashStyle)
 
     ###
     Returns a series object to draw on the chart canvas.
     ###
     generateHighchartsSeries = (Ps, R2, type, xBounds, seriesName, dashStyle) ->
-      str = makeToolTip(Ps, R2, type, seriesName)
-
-      # Left shift the input values to zero and adjust the Ps for the left shift
-      denormFunc = globals.REGRESSION.DENORM_FUNCS[type]
-      Ps =
-        func(Ps, -1 * xBounds.dataMin, 1) for func in denormFunc
-
-      y = 0
       data = for i in [0..globals.REGRESSION.NUM_POINTS]
-        x = (i / globals.REGRESSION.NUM_POINTS) * (xBounds.dataMax - xBounds.dataMin) + xBounds.dataMin
-        y = calculateRegressionPoint(Ps, x - xBounds.dataMin, type)
-        {x: x, y: y}
+        xv = (i / globals.REGRESSION.NUM_POINTS)
+        yv = 0
+        if type == globals.REGRESSION.LOGARITHMIC
+          yv = calculateRegressionPoint(Ps, xv * (xBounds.dataMax - xBounds.dataMin) + xBounds.dataMin, type)
+        else
+          yv = calculateRegressionPoint(Ps, xv + 1, type)
+        {x: xv * (xBounds.dataMax - xBounds.dataMin) + xBounds.dataMin, y: yv}
+      Ps = visSpaceParameters(Ps, xBounds, type)
+      str = makeToolTip(Ps, R2, type, seriesName)
 
       ret =
         name:
@@ -152,10 +143,20 @@ $ ->
             lineWidth: 4
 
     ###
-    Uses the regression matrix to calculate the y value given an x value.
+    # Uses the regression matrix to calculate the y value given an x value.
     ###
     calculateRegressionPoint = (Ps, x, type) ->
       globals.REGRESSION.FUNCS[type][0](x, Ps)
+      
+    ###
+    # Linear Equation solver creates trivial roundoff error for parameters
+    # that are equal to zero.
+    ###
+    roundOffError = (p) ->
+      if Math.abs(p) < Math.sqrt numeric.epsilon
+        0
+      else
+        p
 
     ###
     Returns tooltip description of the regression.
@@ -163,7 +164,8 @@ $ ->
     makeToolTip = (Ps, R2, type, seriesName) ->
 
       # Format parameters for output
-      Ps = Ps.map roundToFourSigFigs
+      
+      Ps = Ps.map(roundToFourSigFigs).map(roundOffError)
 
       ret = switch type
 
@@ -205,7 +207,7 @@ $ ->
           <div class="regressionTooltip"> #{seriesName} </div>
           <br>
           <strong>
-            f(x) = #{Ps[1]} ln(x + #{Ps[2]}) + #{Ps[0]}
+            f(x) = ln(#{Ps[1]}x + #{Ps[2]}) + #{Ps[0]}
           </strong>
           """
 
@@ -252,7 +254,6 @@ $ ->
     NLLS = (func, xs, ys, Ps) ->
       prevErr = Infinity
       shiftCut = 1
-
       for iter in [1..NLLS_MAX_ITER]
         # Iterate
         dPs = iterateNLLS(func, xs, ys, Ps)
@@ -295,7 +296,6 @@ $ ->
     Inner loop of Newton-gauss method
     ###
     iterateNLLS = (func, xs, ys, Ps) ->
-
       residuals = numeric.sub(ys, xs.map((x) -> func[0](x, Ps)))
       jac = jacobian(func, xs, Ps)
       jacT = numeric.transpose jac
@@ -304,57 +304,12 @@ $ ->
       deltaPs = numeric.dot(numeric.dot(numeric.inv(numeric.dot(jacT, jac)),
         jacT),
         residuals)
-      deltaPs
 
     ###
     Calculates the current squared error for the given function, parameters and ground truth.
     ###
     sqe = (func, xs, ys, Ps) ->
       numeric.sum(numeric.sub(ys, xs.map((x) -> func[0](x, Ps))).map (x) -> x * x)
-
-    ###
-    Denormalize functions given Ps, the mean and sigma.
-    ###
-    # Linear
-    globals.REGRESSION.DENORM_FUNCS.push [
-      (Ps, mean, sigma) -> Ps[0] - Ps[1] * mean / sigma,
-      (Ps, mean, sigma) -> Ps[1] / sigma
-    ]
-    # Quadratic
-    globals.REGRESSION.DENORM_FUNCS.push [
-      (Ps, mean, sigma) ->
-        globals.REGRESSION.DENORM_FUNCS[globals.REGRESSION.LINEAR][0](Ps, mean, sigma) \
-        + (Ps[2] * Math.pow(mean, 2)) / Math.pow(sigma, 2)
-      (Ps, mean, sigma) ->
-        globals.REGRESSION.DENORM_FUNCS[globals.REGRESSION.LINEAR][1](Ps, mean, sigma) \
-        - (Ps[2] * 2 * mean) / Math.pow(sigma, 2)
-      (Ps, mean, sigma) -> (Ps[2] / Math.pow(sigma, 2))
-    ]
-    # Cubic
-    globals.REGRESSION.DENORM_FUNCS.push [
-      (Ps, mean, sigma) ->
-        globals.REGRESSION.DENORM_FUNCS[globals.REGRESSION.QUADRATIC][0](Ps, mean, sigma) \
-        - Ps[3] * Math.pow(mean, 3) / Math.pow(sigma, 3)
-      (Ps, mean, sigma) ->
-        globals.REGRESSION.DENORM_FUNCS[globals.REGRESSION.QUADRATIC][1](Ps, mean, sigma) \
-        + Ps[3] * 3 * Math.pow(mean, 2) / Math.pow(sigma, 3)
-      (Ps, mean, sigma) ->
-        globals.REGRESSION.DENORM_FUNCS[globals.REGRESSION.QUADRATIC][2](Ps, mean, sigma) \
-        - Ps[3] * 3 * mean / Math.pow(sigma, 3)
-      (Ps, mean, sigma) -> Ps[3] / Math.pow(sigma, 3)
-    ]
-    # Exponential
-    globals.REGRESSION.DENORM_FUNCS.push [
-      (Ps, mean, sigma) -> Ps[0],
-      (Ps, mean, sigma) -> Ps[1] / sigma,
-      (Ps, mean, sigma) -> Ps[2] - (Ps[1] * mean) / sigma
-    ]
-    # Logarithmic
-    globals.REGRESSION.DENORM_FUNCS.push [
-      (Ps, mean, sigma) -> Ps[0] + Ps[1] * Math.log(1 / sigma),
-      (Ps, mean, sigma) -> Ps[1],
-      (Ps, mean, sigma) -> Ps[2] * sigma - mean
-    ]
 
     # Calculate the average
     calculateMean = (points) ->
@@ -364,12 +319,79 @@ $ ->
       mean
 
     # Normalize
-    normalizeData = (points, mean, sigma) ->
-      (point - mean) / sigma for point in points
+    normalizeData = (points, type) ->
+      max = Math.max.apply(null, points)
+      min = Math.min.apply(null, points)
+      ret =
+        if type == globals.REGRESSION.LOGARITHMIC
+          points
+        else
+          points.map((y) -> ((y - min) / (max - min)) + 1)
+    
+    ###
+    # Map the parameters of the normalized features to the visualization space
+    # (done by Gauss-Jordan elimination on a system of linear equations)
+    ###
+    visSpaceParameters = (Ps, xBounds, type) ->
+      [coeffMatrix, solutionVector, newPs] = [[], [], []]
+      [max, min] = [xBounds.dataMax, xBounds.dataMin]
+      projection = 2 * (max - min) + min
+      
+      if type == globals.REGRESSION.LOGARITHMIC
+        return Ps
+      
+      switch type
+        when globals.REGRESSION.LINEAR
+          coeffMatrix = [
+            [1, min],
+            [1, max]
+          ]
+          solutionVector = [
+            globals.REGRESSION.FUNCS[globals.REGRESSION.LINEAR][0](1, Ps),
+            globals.REGRESSION.FUNCS[globals.REGRESSION.LINEAR][0](2, Ps)
+          ]
+          newPs = numeric.solve(coeffMatrix, solutionVector)
 
-    # Calculate the standard deviation
-    calculateStandardDev = (points, mean) ->
-      sigma = 0
-      for point in points
-        sigma += Math.pow(point - mean, 2)
-      Math.sqrt( sigma / points.length )
+        when globals.REGRESSION.QUADRATIC
+          coeffMatrix = [
+            [1, min, min * min],
+            [1, (max + min) / 2, ((max + min) / 2) * ((max + min) / 2)],
+            [1, max, max * max]
+          ]
+          solutionVector = [
+            globals.REGRESSION.FUNCS[globals.REGRESSION.QUADRATIC][0](1, Ps),
+            globals.REGRESSION.FUNCS[globals.REGRESSION.QUADRATIC][0](1.5, Ps),
+            globals.REGRESSION.FUNCS[globals.REGRESSION.QUADRATIC][0](2, Ps)
+          ]
+          newPs = numeric.solve(coeffMatrix, solutionVector)
+
+        when globals.REGRESSION.CUBIC
+          coeffMatrix = [
+            [1, min, min * min, min * min * min],
+            [1, (max + min) / 2, Math.pow((max + min) / 2, 2), Math.pow((max + min) / 2, 3)],
+            [1, max, max * max, max * max * max],
+            [1, projection, projection * projection, projection * projection * projection]
+          ]
+          solutionVector = [
+            globals.REGRESSION.FUNCS[globals.REGRESSION.CUBIC][0](1, Ps),
+            globals.REGRESSION.FUNCS[globals.REGRESSION.CUBIC][0](1.5, Ps),
+            globals.REGRESSION.FUNCS[globals.REGRESSION.CUBIC][0](2, Ps),
+            globals.REGRESSION.FUNCS[globals.REGRESSION.CUBIC][0](3, Ps)
+          ]
+          newPs = numeric.solve(coeffMatrix, solutionVector)
+
+        when globals.REGRESSION.EXPONENTIAL
+          coeffMatrix = [
+            [min, 1],
+            [max, 1]
+          ]
+          solutionVector = [
+            Math.log(globals.REGRESSION.FUNCS[globals.REGRESSION.EXPONENTIAL][0](1, Ps) - Ps[0]),
+            Math.log(globals.REGRESSION.FUNCS[globals.REGRESSION.EXPONENTIAL][0](2, Ps) - Ps[0])
+          ]
+          solutionVector.push Math.log(globals.REGRESSION.FUNCS[globals.REGRESSION.EXPONENTIAL][0](1, Ps) - Ps[0])
+          solutionVector.push Math.log(globals.REGRESSION.FUNCS[globals.REGRESSION.EXPONENTIAL][0](2, Ps) - Ps[0])
+          newPs = numeric.solve(coeffMatrix, solutionVector)
+          newPs.push globals.REGRESSION.FUNCS[globals.REGRESSION.EXPONENTIAL][0](1, Ps) - \
+            (Math.exp((newPs[0] * min) + newPs[1]))
+      newPs

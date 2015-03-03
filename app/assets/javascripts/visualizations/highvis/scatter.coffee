@@ -689,6 +689,7 @@ $ ->
               alert "Unable to calculate an #{regressions[regressionType]} regression for this data."
             else
               alert "Unable to calculate a #{regressions[regressionType]} regression for this data."
+            return
 
           if regressionMade
             # Get a unique identifier (last highest count plus one)

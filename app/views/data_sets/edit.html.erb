@@ -8,11 +8,11 @@
 <% if can_edit?(@data_set) %>
 
   <div class="full_width_edit" style="font-size:2em;"><%= data_set_edit_helper 'title', can_edit?(@data_set), false, "/data_sets/#{@data_set.id}" %></div>
-  <div><strong>Project:</strong> <%= link_to @project.title, project_path(@project.id)%></div>
+  <div><strong>Project:</strong> <%= link_to @project.title.html_safe, project_path(@project.id)%></div>
 
   <div class="row">
     <div class="span12 edit_table_control pull-right">
-    <button class="btn btn-primary edit_table_cancel">Cancel</button>
+      <button class="btn btn-primary edit_table_cancel">Cancel</button>
       <button id="edit_table_add_1" class="btn btn-primary edit_table_add">Add Row</button>
       <button id="edit_table_save_1" class="btn btn-success edit_table_save">Save</button>
     </div>
@@ -26,7 +26,7 @@
 
   <div id="row-slickgrid-2" class="row">
     <div class="span12 edit_table_control pull-right">
-    <button class="btn btn-primary edit_table_cancel">Cancel</button>
+      <button class="btn btn-primary edit_table_cancel">Cancel</button>
       <button id="edit_table_add_2" class="btn btn-primary edit_table_add">Add Row</button>
       <button id="edit_table_save_2" class="btn btn-success edit_table_save">Save</button>
     </div>
@@ -41,5 +41,5 @@
 <%else%>
 
   You are not authorized to view this page.
-  
+
 <%end%>
