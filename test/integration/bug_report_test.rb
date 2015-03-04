@@ -15,7 +15,7 @@ class BugReportTest < ActionDispatch::IntegrationTest
 
   test 'get issue report page' do
     visit '/'
-    click_on 'Report Issue'
+    find('.issue').click
 
     assert page.has_content?('Report Issue: Do you have a GitHub account?'), 'Did not get to report issue page.'
   end

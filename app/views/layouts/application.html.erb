@@ -53,7 +53,7 @@
               </ul>
             </li>
             <li class="navbtn" title="Check out the latest iSENSE news and updates"><%=link_to news_index_path do %><i class='fa fa-book'></i> News<%end%></li>
-            <li class="navbtn" title="Report an issue"><%=link_to report_bug_path do %><i class="fa fa-exclamation-triangle"></i> Report Issue<%end%></li>
+            <li class="navbtn issue" title="Report an issue"><%=link_to report_bug_path do %><i class="fa fa-exclamation-triangle"></i> Report Issue<%end%></li>
             <% if is_admin? %>
             <li class="navbtn"><%= link_to users_path do%><i class="fa fa-users"></i> Users<%end%></li>
             <% end %>
