@@ -234,7 +234,6 @@ $ ->
         else
           for groupIndex in data.groupSelection
             finalData = for number, occurences of binObjs[groupIndex]
-
               sum = 0
 
               # Get total for this bin
@@ -246,7 +245,6 @@ $ ->
                 x: (Number number)
                 y: occurences
                 total: sum
-          ## --- ###
 
             options =
               showInLegend: false
