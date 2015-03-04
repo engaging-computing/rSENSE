@@ -201,9 +201,9 @@ $ ->
         i = 0
         binSizes = {}
         binTotals = {}
-        (key for key of binObjs).map((y) -> 
-          ({x: Number(value), y: binObjs[y][value]} for value of binObjs[y])).map (a) -> 
-          a.map (b) -> 
+        
+        (key for key of binObjs).map((y) -> ({x: Number(val), y: binObjs[y][val]} for val of binObjs[y])).map (a) ->
+          a.map (b) ->
             binSizes[b['x']] ?= 0
             binSizes[b['x']] = Math.max(binSizes[b['x']], b['y'])
             binTotals[b['x']] ?= 0
@@ -212,18 +212,18 @@ $ ->
         largestBin = (binTotals[key] for key of binTotals).reduce (pv, cv, index, array) -> Math.max(pv, cv)
         smallestBin = (binTotals[key] for key of binTotals).reduce (pv, cv, index, array) -> Math.min(pv, cv)
         maxValueAnyGroupAnyBin = (binSizes[key] for key of binSizes).reduce (pv, cv, index, array) -> Math.max(pv, cv)
-        console.log binSizes
-        if maxValueAnyGroupAnyBin < 50
+
+        if largestBin < 100 and maxValueAnyGroupAnyBin < 50
           for group of binObjs
-            maxValueOneGroupAnyBin = (binObjs[group][key] for key of binObjs[group]).reduce (pv, cv, index, array) -> Math.max(pv, cv)
+            maxValueOneGroupAnyBin = \
+            (binObjs[group][key] for key of binObjs[group]).reduce (pv, cv, index, array) -> Math.max(pv, cv)
             while i < maxValueOneGroupAnyBin
               binData = []
               for bin of binObjs[group]
                 if binObjs[group][bin] > i
                   binData.push {x: Number(bin), y: 1, total: binObjs[group][bin]}
-              #console.log binData
               binData.sort (a, b) -> Number(a['x']) - Number(b['x'])
-              options = 
+              options =
                 showInLegend: false,
                 color: globals.configs.colors[Number(group) % globals.configs.colors.length],
                 name: data.groups[Number(group)]
