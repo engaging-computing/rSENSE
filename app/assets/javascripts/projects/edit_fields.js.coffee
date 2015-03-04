@@ -1,13 +1,12 @@
 $ ->
   if namespace.controller is "projects" and namespace.action is "edit_fields"
-    ($ '#new_field').change ->
-      ($ '#fields_form_submit').click()
-
-    ($ '#fields_table').keypress (e) ->
-      code = e.keyCode || e.which
-      if code == 13
-        e.preventDefault()
-        ($ '#fields_form_submit').click()
+    ($ '#number').click ->
+      ($ '#text_fields').val('1')
+      ($ '#fields_table').submit
+      
+    ($ '#text').click ->
+      ($ '#num_fields').val('1')
+      ($ '#fields_table').submit
       
     ($ '.field_delete').click (e) ->
       e.preventDefault()
@@ -24,13 +23,15 @@ $ ->
               ($ this).remove()
           else
             root.remove()
+          
+          $('#options').load(document.URL +  ' #options')
             
 
         error:(msg) ->
           response = $.parseJSON msg['responseText']
           error_message = response.errors.join "</p><p>"
 
-          ($ '.container.mainContent').find('p').before """
+          ($ '.container.mainContent').find('form').before """
             <div class="alert alert-danger fade in">
               <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
               <h4>Error Removing Field:</h4>
