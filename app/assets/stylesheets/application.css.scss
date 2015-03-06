@@ -24,7 +24,7 @@ $navbar-default-color: white;
 $navbar-default-link-color: white;
 $navbar-default-link-hover-color: #DDDDDD;
 $table-bg-accent: #E8E8E8;
-
+@import "bootstrap-sprockets";
 @import "bootstrap";
 
 body {
@@ -102,6 +102,7 @@ body {
 
   .item-image.item-photo-image {
     height: 200px;
+    margin: auto;
   }
 
   .item-title {
