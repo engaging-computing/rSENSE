@@ -284,7 +284,10 @@ IS.onReady "projects/show", ->
   # for confirmation to leave the page, and keep track of the
   # current description content
   confirm_nav = false
-  desc = $('.summernote').code().trim()
+  if $('.summernote').code()
+    desc = $('.summernote').code().trim()
+  else
+    desc = ''
 
   # Disable the navigation pop-up if the user is saving or canceling
   $('#content-save-btn').click ->
@@ -299,7 +302,10 @@ IS.onReady "projects/show", ->
 
   # Pop up a warning if the project description has changed
   $(window).on 'beforeunload', ->
-    desc_new = $('.summernote').code().trim()
+    if $('.summernote').code()
+      desc_new = $('.summernote').code().trim()
+    else
+      desc_new = ''
     if (confirm_nav && (desc_new != desc))
       return "You have attempted to leave this page.  If you have made any " +
         "changes to the project description without clicking the Save " +
