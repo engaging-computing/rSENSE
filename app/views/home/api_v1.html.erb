@@ -134,7 +134,7 @@
       </tr>
       <tr class="more" style="">
         <td colspan="4">
-          <p>Create a new Project.</p>
+          <p>Create a new project.</p>
           <b>Response Codes</b>
           <ul>
             <li>Success: 200 Ok</li>
@@ -203,7 +203,7 @@
       </tr>
       <tr class="more" style="">
         <td colspan="4">
-          <p>Create a new key for an existing project. You must own the project.</p>
+          <p>Create a new key for an existing project.</p>
           <b>Response Codes</b>
           <ul>
             <li>Success: 201 Created</li>
@@ -265,7 +265,7 @@
       </tr>
       <tr class="more" style="">
         <td colspan="4">
-          <p>Add a new field to a project. You must own the project.</p>
+          <p>Add a new field to a project.</p>
           <b>Response Codes</b>
           <ul>
             <li>Success: 200 Ok</li>
@@ -317,6 +317,7 @@
           </pre>
           <b>Notes</b>
           <ul>
+            <li>The user must be the owner of the project.</li>
             <li>Names - Must be unique per project. If name is not set one will be given based on type.</li>
             <li>Units - e.g. meters, lumens (ignored for timestamp and text)</li>
             <li>type - 1=Timestamp 2=Number 3=Text 4=Latitude 5=Longitude (lat/lon are created together)</li>
@@ -374,6 +375,7 @@
           </pre>
           <b>Notes</b>
           <ul>
+            <li>The user must be the owner of the project.</li>
             <li>XX should be replaced with the ID for the field.</li>
           </ul>
         </td>
@@ -388,6 +390,56 @@
   <div class="col-md-12">
     <table class="table table-bordered api">
       <tr>
+        <td class="GET def">GET</td>
+        <td class="method"> Data Sets </td>
+        <td class="code">/api/v1/data_sets/XX/</td>
+        <td class="args">id(req)</td>
+      </tr>
+      <tr class="more" style="">
+        <td colspan="4">
+          <p>Get properties of a data set.</p>
+          <b>Response Codes</b>
+          <ul>
+            <li>Success: 200 Ok</li>
+            <li>Fail: 404 Unprocessable Entity </li>
+          </ul>
+          </pre>
+          <b>Example (Javascript)</b>
+          <pre>
+  Needs Example.
+          </pre>
+          <b>Response</b>
+          <pre>
+   {
+    "id"=> Data Set ID (integer),
+    "name"=> Data Set Title (string),
+    "url"=> Visualization URL (string),
+    "path"=> Data Set Path (string),
+    "createdAt"=>"January 28, 2014",
+    "fieldCount"=> Number of fields (integer),
+    "datapointCount"=> Number of data points (integer),
+    "displayURL"=> Display URL (string)
+    "data" =>
+      {
+        "FIELD_ID" => [1,2,3,4,5],
+        "FIELD_ID_2" => ["blue","red",,,"green"]
+      }
+    }
+          </pre>
+          <b>Notes</b>
+          <ul>
+            <li>XX should be replaced with the ID for the project.</li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-bordered api">
+      <tr>
         <td class="POST def">POST</td>
         <td class="method"> Data Sets </td>
         <td class="code">/api/v1/projects/XX/jsonDataUpload</td>
@@ -395,7 +447,7 @@
       </tr>
       <tr class="more" style="">
         <td colspan="4">
-          <p>Upload a data set in the form of json with a username and password. You can upload data to any project.</p>
+          <p>Upload a data set in the form of json with a username and password.</p>
           <b>Response Codes</b>
           <ul>
             <li>Success: 200 Ok</li>
@@ -448,6 +500,7 @@
           </pre>
           <b>Notes</b>
           <ul>
+            <li>A user can upload data to any unlocked project.</li>
             <li>XX should be replaced with the ID for the project.</li>
             <li>Data is a hash of field_id -> data array pairs. FIELD_ID and FIELD_ID_2 would be replaced with ids for their respective fields.</li>
           </ul>
@@ -540,7 +593,7 @@
       </tr>
       <tr class="more" style="">
         <td colspan="4">
-          <p>Edit an existing data set with a username and password. You can edit any data set that you have uploaded or any data set that is on a project that you own.</p>
+          <p>Edit an existing data set with a username and password.</p>
           <b>Response Codes</b>
           <ul>
             <li>Success: 200 Ok</li>
@@ -591,6 +644,7 @@
           </pre>
           <b>Notes</b>
           <ul>
+            <li>A user can edit any data set that they have uploaded or any data set that is on a project that they own.</li>
             <li>XX should be replaced with the ID for the project.</li>
             <li>Setting recur=true as a get variable will return the associated Project(hash), Fields(hash), Data(hash) </li>
           </ul>
@@ -679,7 +733,7 @@
       </tr>
       <tr class="more" style="">
         <td colspan="4">
-          <p>Append new data to an existing data set with a username and password. You can append to any data set that you have created or any data set that is on a project that you own.</p>
+          <p>Append new data to an existing data set with a username and password. </p>
           <b>Response Codes</b>
           <ul>
             <li>Success: 200 Ok</li>
@@ -732,7 +786,7 @@
           </pre>
           <b>Notes</b>
           <ul>
-            <li>N/A</li>
+            <li>A user can append to any data set that they have created or any data set that is on a project that they own.</li>
           </ul>
         </td>
       </tr>
@@ -751,7 +805,7 @@
       </tr>
       <tr class="more" style="">
         <td colspan="4">
-          <p>Append new data to an existing data set with a contribution key. You can only append data sets that were uploaded with the same key.</p>
+          <p>Append new data to an existing data set with a contribution key. </p>
           <b>Response Codes</b>
           <ul>
             <li>Success: 200 Ok</li>
@@ -802,7 +856,7 @@
           </pre>
           <b>Notes</b>
           <ul>
-            <li>N/A</li>
+            <li>You can only append data sets that were uploaded with the same key.</li>
           </ul>
         </td>
       </tr>
