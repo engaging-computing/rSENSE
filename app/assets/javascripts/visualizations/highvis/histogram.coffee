@@ -198,30 +198,61 @@ $ ->
             binObjs[groupIndex][bin]++
 
         # Convert bin data into series data
-        for groupIndex in data.groupSelection
+        i = 0
+        binSizes = {}
+        binTotals = {}
+        
+        (key for key of binObjs).map((y) -> ({x: Number(val), y: binObjs[y][val]} for val of binObjs[y])).map (a) ->
+          a.map (b) ->
+            binSizes[b['x']] ?= 0
+            binSizes[b['x']] = Math.max(binSizes[b['x']], b['y'])
+            binTotals[b['x']] ?= 0
+            binTotals[b['x']] += b['y']
+          
+        largestBin = (binTotals[key] for key of binTotals).reduce (pv, cv, index, array) -> Math.max(pv, cv)
+        smallestBin = (binTotals[key] for key of binTotals).reduce (pv, cv, index, array) -> Math.min(pv, cv)
+        maxValueAnyGroupAnyBin = (binSizes[key] for key of binSizes).reduce (pv, cv, index, array) -> Math.max(pv, cv)
 
-          finalData = for number, occurences of binObjs[groupIndex]
+        if largestBin < 100 and maxValueAnyGroupAnyBin < 50
+          for group of binObjs
+            maxValueOneGroupAnyBin = \
+            (binObjs[group][key] for key of binObjs[group]).reduce (pv, cv, index, array) -> Math.max(pv, cv)
+            while i < maxValueOneGroupAnyBin
+              binData = []
+              for bin of binObjs[group]
+                if binObjs[group][bin] > i
+                  binData.push {x: Number(bin), y: 1, total: binObjs[group][bin]}
+              binData.sort (a, b) -> Number(a['x']) - Number(b['x'])
+              options =
+                showInLegend: false,
+                color: globals.configs.colors[Number(group) % globals.configs.colors.length],
+                name: data.groups[Number(group)]
+                data: binData
+              @chart.addSeries options, false
+              i += 1
+            i = 0
+        else
+          for groupIndex in data.groupSelection
+            finalData = for number, occurences of binObjs[groupIndex]
+              sum = 0
 
-            sum = 0
+              # Get total for this bin
+              for dc, groupData of binObjs
+                if groupData[number]
+                  sum += groupData[number]
 
-            # Get total for this bin
-            for dc, groupData of binObjs
-              if groupData[number]
-                sum += groupData[number]
+              ret =
+                x: (Number number)
+                y: occurences
+                total: sum
 
-            ret =
-              x: (Number number)
-              y: occurences
-              total: sum
-            ### --- ###
+            options =
+              showInLegend: false
+              color: globals.configs.colors[groupIndex % globals.configs.colors.length]
+              name: data.groups[groupIndex]
+              data: finalData
 
-          options =
-            showInLegend: false
-            color: globals.configs.colors[groupIndex % globals.configs.colors.length]
-            name: data.groups[groupIndex]
-            data: finalData
-
-          @chart.addSeries options, false
+            @chart.addSeries options, false
 
         @chart.xAxis[0].setExtremes @globalmin - (@configs.binSize / 2), @globalmax + (@configs.binSize / 2), false
 
