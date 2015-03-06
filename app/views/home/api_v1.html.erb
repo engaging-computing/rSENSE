@@ -82,7 +82,8 @@
         <td class="GET def">GET</td>
         <td class="method"> Projects </td>
         <td class="code">/api/v1/projects</td>
-        <td class="args">search(opt), sort(opt), order(opt), per_page(opt), page(opt)</td>
+        <td class="args">search(opt), sort(opt), order(opt), per_page(opt), page(opt), search(opt),
+        templates_only(opt), curated_only(opt), featured_only(opt), has_data(opt)</td>
       </tr>
       <tr class="more" style="">
         <td colspan="4">
@@ -116,6 +117,7 @@
             <li>order - "ASC", "DESC" (default "DESC")</li>
             <li>per_page - integer (default 50)</li>
             <li>page - integer (default 1)</li>
+            <li>templates_only, curated_only, featured_only, has_data - Including any of the preceding keys will filter the results accordingly. The value passed along with the key is irrelevant.</li>
           </ul>
         </td>
       </tr>
@@ -406,7 +408,16 @@
           </pre>
           <b>Example (Javascript)</b>
           <pre>
-  Needs Example.
+
+  var url = 'http://rsense-dev.cs.uml.edu/api/v1/data_sets/<b>(data set id)</b>';
+  var response = $.ajax({ type: "GET",
+                          url: url,
+                          async: false,
+                          dataType: "JSON"
+  }).responseText;
+
+  var parsedResponse = JSON.parse(response);
+  console.log(parsedResponse);
           </pre>
           <b>Response</b>
           <pre>
