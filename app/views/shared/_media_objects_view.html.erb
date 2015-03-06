@@ -7,6 +7,7 @@
         <th style="max-width:10%">File</th>
         <th style="max-width:60%">Name</th>
         <th style="max-width:10%"></th>
+        <th style="max-width:10%"></th>
         <% if can_edit?( @project ) %>
           <th class="featured-title">Featured Image</th>
         <% end %>
@@ -25,15 +26,15 @@
               <td class="media_icon mo_image"><div class="media_icon"><%= link_to (media_object_thumbnail_helper mo), mo.src %></div></td>
               <td class="mo_image" style="max-width:140px;"><div class="truncate"><%= link_to mo.name, mo.src%></div></td>
             <% end %>
-            <td>
-              <div class="controls">
+            <td style="padding-right: 0px; text-align: right;">
                 <% if can_edit? mo %>
                   <a class="media_edit" href="<%= media_object_path mo %>">Edit</a>
                 <% end %>
+            </td>
+            <td style="padding-left: 0px;">
                 <% if can_delete? mo %>
-                  | <%= link_to "Delete", mo, method: 'delete', class: "media_delete", data: { confirm: "Are you sure?" } %>
+                &nbsp;|&nbsp;<%= link_to "Delete", mo, method: 'delete', class: "media_delete", data: { confirm: "Are you sure?" } %>
                 <% end %>
-              </div>
             </td>
             <% if ["Project","News","Tutorial", "Visualization"].include? object.class.name%>
               <td>
