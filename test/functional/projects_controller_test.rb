@@ -235,16 +235,6 @@ class ProjectsControllerTest < ActionController::TestCase
     new_lat_field_id = @project.fields[num_fields - 2].id
     new_long_field_id = @project.fields[num_fields - 1].id
 
-    # Modifies the saved latitude and longitude field, and redirects to project page.
-    post :save_fields, { id: @dessert.id, field: { id: 25, project_id: @dessert.id, field_type: 3, name: 'Location of Foodz' },
-                      '20_name' => parameters['20_name'], '20_unit' => parameters['20_unit'], '21_name' => parameters['21_name'],
-                      '21_unit' => parameters['21_unit'], '22_name' => parameters['22_name'], '22_unit' => parameters['22_unit'],
-                      "#{new_lat_field_id}_name" => @project.fields[num_fields - 2].name, "#{new_lat_field_id}_unit" => @project.fields[num_fields - 2].unit,
-                      "#{new_long_field_id}_name" => @project.fields[num_fields - 1].name, "#{new_long_field_id}_unit" => @project.fields[num_fields - 1].unit,
-                      '20_restrictions' => 'a,b,c',
-                      '25_name' => 'Location of Foodz', '25_unit' => '', new_field: '' }, user_id: @kate.id
-    assert_redirected_to "/projects/#{@dessert.id}"
-
     # Tests empty value in restrictions hash
     post :save_fields, { id: @dessert.id, field: { id: 25, project_id: @dessert.id, field_type: 3, name: 'Location of Foodz' },
                       '20_name' => parameters['20_name'], '20_unit' => parameters['20_unit'], '21_name' => parameters['21_name'],

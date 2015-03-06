@@ -24,7 +24,7 @@ $navbar-default-color: white;
 $navbar-default-link-color: white;
 $navbar-default-link-hover-color: #DDDDDD;
 $table-bg-accent: #E8E8E8;
-
+@import "bootstrap-sprockets";
 @import "bootstrap";
 
 body {
@@ -53,6 +53,10 @@ body {
 .center {
   margin: 0 auto;
   text-align: center;
+}
+
+.clickable {
+  cursor: pointer;
 }
 
 .create-button {
@@ -85,11 +89,20 @@ body {
     font-size: 0.9em;
   }
 
+  .item-desc.item-photo-desc {
+    min-height: 30px;
+  }
+
   .item-image {
     background-position: center;
     background-repeat: no-repeat;
     background-size: 100%;
     height: 120px;
+  }
+
+  .item-image.item-photo-image {
+    height: 200px;
+    margin: auto;
   }
 
   .item-title {
@@ -220,12 +233,12 @@ body {
 }
 #content-partial{
   .summernote-controls{
-    text-align: right; 
+    text-align: right;
     margin-top: 1em;
   }
   overflow:hidden !important;
   iframe{
-    width: 100%; 
+    width: 100%;
     height: 390px;
   }
 }
@@ -244,5 +257,3 @@ body {
     }
   }
 }
-
-
