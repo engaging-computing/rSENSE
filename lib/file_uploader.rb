@@ -125,7 +125,7 @@ class FileUploader
   end
 
   def swap_with_field_names(data_obj, project)
-    if (data_obj.first[1].nil?)
+    if data_obj.first[1].nil?
       return []
     end
 
