@@ -105,7 +105,8 @@ $ ->
       Overwrite xAxis controls to only allow time fields
       ###
       drawXAxisControls: ->
-        super (fieldIndex) -> fieldIndex in data.timeFields
+        fieldIndex = data.timeFields[0]
+        super(fieldIndex, data.timeFields)
 
       ###
       Clips an array of data to include only bounded points

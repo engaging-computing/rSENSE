@@ -18,6 +18,7 @@
     </div>
   </div>
 {{/if}}
+
 <!--
           switch typestring
             when 'Max' then controls += 'Maximum </label> </div>'
@@ -29,7 +30,7 @@
         controls += "</div>"
 
         if data.logSafe is 1 and logYAxis
-          controls += "<h4 class='clean_shrink'>Other</h4>"
+          cnotrols += "<h4 class='clean_shrink'>Other</h4>"
           controls += '<div class="inner_control_div">'
           controls += "<div class='checkbox'><label><input class='logY_box' type='checkbox' "
           controls += "name='tooltip_selector' #{if globals.configs.logY is 1 then 'checked' else ''}/> "

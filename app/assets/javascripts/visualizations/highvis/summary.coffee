@@ -105,8 +105,9 @@ $ ->
       drawControls: ->
         super()
         @drawGroupControls(true, false)
-        @drawYAxisControls('Fields', data.normalFields.slice(1),
-          globals.configs.fieldSelection, true)
+        @drawYAxisControls('Fields', globals.configs.fieldSelection,
+          data.normalFields.slice(1), true, @configs.displayField,
+          @yAxisRadioHandler)
         @drawSaveControls()
 
       globals.summary = new Summary "summary_canvas"

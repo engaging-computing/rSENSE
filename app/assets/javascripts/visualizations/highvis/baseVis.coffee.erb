@@ -46,7 +46,8 @@ $ ->
 
       SORT_DEFAULT:          -1
 
-      analysisTypeNames: ["Total","Max","Min","Mean","Median","Row Count"]
+      analysisTypeNames: ["Total", "Maximum", "Mininum", "Mean (Average)",
+        "Median", "Row Count"]
 
       ###
       Start sequence used by runtime
@@ -116,10 +117,12 @@ $ ->
 
       ###
       A wrapper for making y-axis controls
+      See drawAxisControls for more detail
       ###
-      drawYAxisControls: (title, fields, selFields, radio) ->
-        @drawAxisControls(title, fields, selFields, 'y-axis', radio,
-          'displayField')
+      drawYAxisControls: (title, selFields, allFields, radio, iniRadio = 0,
+        handler = ->) ->
+        @drawAxisControls('y-axis', title, selFields, allFields, radio,
+          iniRadio, handler)
 
         # Initialize and track the status of this control panel
         globals.configs.yAxisOpen ?= false
@@ -129,21 +132,29 @@ $ ->
       Draws axis controls
       This includes a series of checkboxes or radio buttons for selecting
       the active axis field(s).
+        id         Identifier prefix for the control panel
+        title      Title for the control panel
+        selFields  Object that tracks the current field selection
+        allFields  Listing of valid fields
+        radio      Boolean to draw radio buttons instead of checkboxes
+        iniRadio   Initial value of radio if radio == true (optional)
+        handler    A function of two parameters to handle selection events
+                   Takes the form: (selected, selFields) ->
       ###
-      drawAxisControls: (title, fields, selFields, id, radio, selRadio, init = ->) ->
+      drawAxisControls: (id, title, selFields, allFields, radio, iniRadio = 0,
+        handler = ->) ->
         # If there is only one option, then no radio button interaction is
         # possible
-        if radio and fields <= 1 then return
+        if radio and allFields.length <= 1 then return
 
         # Configure the y-axis controls
         ictx = {}
-        ictx.fields = for f in fields
+        ictx.fields = for f in allFields
           id:    id + '-field-' + f
           label: fieldTitle(data.fields[f])
           value: f
           logid: id + '-field-' + f
           name:  id
-
         template =  if radio then 'axis-radio' else 'axis-check'
         unless radio
           ictx.checkall =
@@ -162,26 +173,23 @@ $ ->
         # Initialize checked and make y axis checkbox/radio handler
         if radio
           # Set the current display field
-          query = "input[name='#{id}'][value='#{@configs[selRadio]}']"
+          query = "input[name='#{id}'][value='#{iniRadio}']"
           $(query).prop('checked', 'true')
 
           # Record any changes to the display field
           $("input[name='#{id}']").click (e) =>
-            @configs[selRadio] = Number(e.target.value)
+            index = Number(e.target.value)
+            query = "input[name='#{id}'][value='#{index}']"
+            $(query).prop('checked', 'true')
 
-            # Repopulate the selection array without changing memory address
-            if selFields
-              selFields.splice(0, selFields.length)
-              selFields.push @configs[selRadio]
-
-            init()
+            handler(index, selFields)
             @delayedUpdate()
 
           return
 
         # Initialize
         updateCheckAll = ->
-          numFields = fields.length
+          numFields = allFields.length
           numSel = selFields.length
           indeterminate = numSel > 0 and numSel < numFields
           $('#ckbx-ckall-' + id).prop('checked', numSel is numFields)
@@ -192,8 +200,7 @@ $ ->
 
         # Else initialize the checkboxes to the field selection
         $("input[name='#{id}']").each (key, elem) ->
-          if Number(elem.value) in selFields
-            $(elem).prop('checked', true)
+          if Number(elem.value) in selFields then $(elem).prop('checked', true)
 
         # Set handler for the field checkboxes
         $("input[name='#{id}']").click (e) =>
@@ -202,25 +209,39 @@ $ ->
           else selFields.push(index)
 
           updateCheckAll()
-          init()
+          handler(index, selFields)
           @delayedUpdate()
 
         # Set handler for the check all box
         $('#ckbx-ckall-' + id).click =>
-          checked = selFields.length isnt fields.length
+          checked = selFields.length isnt allFields.length
 
           # Empty the array without changing the memory address
           selFields.splice(0, selFields.length)
 
           # Repopulate the array if necessary
-          if checked then selFields.push(f) for f in fields
+          if checked then selFields.push(f) for f in allFields
 
           $("input[name='#{id}']").each (key, elem) ->
             $(elem).prop('checked', checked)
 
           updateCheckAll()
-          init()
+          selected = if checked then allFields else []
+          handler(selected, selFields)
           @delayedUpdate()
+
+      ###
+      Default handler for radio button yAxis events
+        selected  The new value for the y axis
+        selFields A reference to the object responsible for tracking y selection
+      ###
+      yAxisRadioHandler: (selected, selFields) =>
+        @configs.displayField = selected
+
+        # Repopulate the selection array without changing memory address
+        if selFields
+          selFields.splice(0, selFields.length)
+          selFields.push(selected)
 
       ###
       Draws group selection controls
@@ -444,21 +465,22 @@ $ ->
           ictx.sortFields =
             for id in data.normalFields
               name: fieldTitle(data.fields[id])
-              logid: "cat"
+              logid: 'sort-by-' + 'id'
               value: id
 
           ictx.sortFields.unshift
             name: 'Group Name'
+            logId: 'sort-by-' + @SORT_DEFAULT
             value: @SORT_DEFAULT
-            logId: "default-cat"
 
         # Note the analysis types
         ictx.analysisTypes =
-          value: y
-          id: x
-          logid: z
-          name: h
-          label: i
+          for name, i in @analysisTypeNames
+            value: i
+            id:    'analysis-type-' + i
+            logid: 'analysis-type-' + i
+            name:  'analysis-type'
+            label:  name
 
         octx =
           id: 'common-ctrls'
@@ -472,13 +494,13 @@ $ ->
         globals.configs.saveOpen ?= false
         initCtrlPanel('common-ctrls', 'toolsOpen')
 
+        $('#vis-ctrl-sort-by').change (e) =>
+          @configs.sortField = Number e.target.value
+          @delayedUpdate()
+
         ###
         $('.analysisType').change (e) =>
           @configs.analysisType = Number e.target.value
-          @delayedUpdate()
-
-        $('#sortField').change (e) =>
-          @configs.sortField = Number e.target.value
           @delayedUpdate()
 
         $('.logY_box').click (e) =>

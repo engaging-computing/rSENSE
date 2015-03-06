@@ -296,24 +296,16 @@ $ ->
       drawControls: ->
         super()
         @drawGroupControls()
-        @drawYAxisControls('Fields', data.normalFields.slice(1),
-          globals.configs.fieldSelection, true)
-        @drawToolControls()
-        @drawSaveControls()
 
-      drawYAxisControls: (title, fields, selFields, radio) ->
-        # Currently specific to histogram
-        # (should occur before parent handler's update)
-        $('input[name="y-axis"]').click (e) =>
-          # These two lines will be carried out again in the parent, but
-          # they need to run to correctly update the bin size
-          @configs.displayField = Number(e.target.value)
-          selFields = [@configs.displayField]
+        handler = (selected, selFields) =>
+          @yAxisRadioHandler(selected, selFields)
           @configs.binSize = @defaultBinSize()
           $("#binSizeInput").attr('value', @configs.binSize)
 
-        super(title, fields, selFields, radio)
-
+        @drawYAxisControls('Fields', globals.configs.fieldSelection,
+          data.normalFields.slice(1), true, @configs.displayField, handler)
+        @drawToolControls()
+        @drawSaveControls()
 
     if "Histogram" in data.relVis
       globals.histogram = new Histogram 'histogram_canvas'

@@ -158,12 +158,20 @@ $ ->
         $('#data_table').setGridWidth($('#' + @canvas).width())
 
         # Add a refresh button and enable the search bar
-        @table.jqGrid('navGrid','#toolbar_bottom',{ del:false, add:false, edit:false, search:false })
-        @table.jqGrid('filterToolbar',  { stringResult:     true,\
-                                          searchOnEnter:    false,\
-                                          searchOperators:  true,\
-                                          operandTitle:     'Select Search Operation',\
-                                          resetIcon: '<i class="fa fa-times-circle"></i>' })
+        params =
+          del:    false
+          add:    false
+          edit:   false
+          search: false
+        @table.jqGrid('navGrid','#toolbar_bottom', params)
+
+        params =
+          stringResult:    true
+          searchOnEnter:   false
+          searchOperators: true
+          operandTitle:    'Select Search Operation'
+          resetIcon:       '<i class="fa fa-times-circle"></i>'
+        @table.jqGrid('filterToolbar', params)
 
         # Set the time column formatters
         timePair = {}
@@ -186,11 +194,10 @@ $ ->
             # Restore the search filter type and operator symbol
             operator = $('#' + inputId).closest('tr').find('.soptclass')
             $(operator).attr('soper', column.op)
-            operands = { "eq": "==", "ne": "!", "lt": "<", \
-                         "le": "<=", "gt": ">", "ge": ">=",\
-                         "bw": "^",  "bn": "!^","in": "=", \
-                         "ni": "!=", "ew": "|", "en": "!@",\
-                         "cn": "~",  "nc": "!~","nu": "#", "nn": "!#" }
+            operands = { "eq": "==", "ne": "!",  "lt": "<",  "le": "<=", \
+                         "gt": ">",  "ge": ">=", "bw": "^",  "bn": "!^", \
+                         "in": "=",  "ni": "!=", "ew": "|",  "en": "!@", \
+                         "cn": "~",  "nc": "!~", "nu": "#",  "nn": "!#" }
             $(operator).text(operands[column.op])
 
         @table[0].triggerToolbar()
@@ -206,9 +213,8 @@ $ ->
         super()
         @drawGroupControls()
         fields = (i for f, i in data.fields when i isnt data.COMBINED_FIELD)
-        @drawYAxisControls('Visible Fields',
-          (i for f, i in data.fields when i isnt data.COMBINED_FIELD),
-          @configs.tableFields, false)
+        @drawYAxisControls('Visible Fields', @configs.tableFields,
+          (i for f, i in data.fields when i isnt data.COMBINED_FIELD), false)
         @drawSaveControls()
 
       saveSort: =>

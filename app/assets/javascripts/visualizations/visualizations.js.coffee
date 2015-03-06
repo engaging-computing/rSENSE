@@ -161,7 +161,7 @@ $ ->
     globals.curVis.start()
 
     # Highlight the starting tab
-    $('#vistablist a[href="#' + ccanvas + '"]').tab('show')
+    $("#vistablist a[href='##{ccanvas}']").tab('show')
     $('#' + ccanvas).addClass('active in')
 
     # Initialize View
@@ -174,7 +174,7 @@ $ ->
 
       oldVis = globals.curVis
 
-      href = $(this).attr 'href'
+      href = $(this).attr('href')
 
       start = href.indexOf('#')
       end = href.indexOf('_canvas')

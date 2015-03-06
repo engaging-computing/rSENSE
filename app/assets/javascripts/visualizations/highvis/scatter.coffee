@@ -213,8 +213,8 @@ $ ->
         super()
         @drawGroupControls()
         @drawXAxisControls()
-        @drawYAxisControls('Y Axis', data.normalFields.slice(1),
-          globals.configs.fieldSelection, false)
+        @drawYAxisControls('Y Axis', globals.configs.fieldSelection,
+          data.normalFields.slice(1), false)
         @drawToolControls()
         @drawRegressionControls()
         @drawSaveControls()
@@ -404,9 +404,14 @@ $ ->
       ###
       A wrapper for making x-axis controls
       ###
-      drawXAxisControls: ->
-        @drawAxisControls('X Axis', data.normalFields, null, 'x-axis', true,
-          'xAxis', @resetExtremes)
+      drawXAxisControls: (iniRadio = @configs.xAxis,
+        allFields = data.normalFields) ->
+        handler = (selection, selFields) =>
+          @configs.xAxis = selection
+          @resetExtremes()
+
+        @drawAxisControls('x-axis', 'X Axis', null, allFields, true,
+          iniRadio, handler)
 
         # Initialize and track the status of this control panel
         globals.configs.xAxisOpen ?= false
