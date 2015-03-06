@@ -299,6 +299,8 @@ IS.onReady "projects/show", ->
   # Enable the navigation pop-up if the user is editing the description
   $('#content-edit-btn').click ->
     confirm_nav = true
+  $('#add-content-image').click ->
+    confirm_nav = true
 
   # Pop up a warning if the project description has changed
   $(window).on 'beforeunload', ->
