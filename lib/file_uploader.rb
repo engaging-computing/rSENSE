@@ -125,6 +125,10 @@ class FileUploader
   end
 
   def swap_with_field_names(data_obj, project)
+    if (data_obj.first[1].nil?)
+      return []
+    end
+
     data = []
     size = data_obj.first[1].length
 
@@ -203,14 +207,18 @@ class FileUploader
     regex = %r{((?<year>\d{4})(-|\/)(?<month>\d{1,2})(-|\/)(?<day>\d{1,2})|([uU]\s\d+))}
 
     data_set.each do |column|
+      if column[0].casecmp('LATITUDE') == 0 or column[0].casecmp('LAT') == 0
+        types['latitude'].push column[0]
+        next
+      elsif column[0].casecmp('LONGITUDE') == 0 or column[0].casecmp('LON') == 0
+        types['longitude'].push column[0]
+        next
+      end
+      next if column[1].nil?
       if (column[1]).map { |dp| (regex =~ dp) }.reduce(:&)
         types['timestamp'].push column[0]
       elsif !(column[1]).map { |dp| valid_float?(dp) }.reduce(:&)
         types['text'].push column[0]
-      elsif column[0].casecmp('LATITUDE') == 0 or column[0].casecmp('LAT') == 0
-        types['latitude'].push column[0]
-      elsif column[0].casecmp('LONGITUDE') == 0 or column[0].casecmp('LON') == 0
-        types['longitude'].push column[0]
       end
     end
     types

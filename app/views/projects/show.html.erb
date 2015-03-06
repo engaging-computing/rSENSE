@@ -185,8 +185,16 @@
       <%= render layout: "shared/box", locals: {title: 'Fields', width: '12', unique_id: 'fields', should_hide: false} do %>
         <% if (@project.fields.count == 0) && can_edit?(@project) %>
           <div class="col-md-12 center">
-            <a href="/projects/<%=@project.id%>/edit_fields"><button class="btn btn-success" id="manual_fields"><i class="fa fa-keyboard-o" style="margin:5px"></i>Setup Manually</button></a>
-            <button class="btn btn-success" id="template_file_upload"><i class="fa fa-file-o" style="margin:5px"></i>Upload File</button>
+            <a href="/projects/<%=@project.id%>/edit_fields">
+              <button class="btn btn-success" id="manual_fields">
+                <i class="fa fa-keyboard-o" style="margin:5px"></i>
+                Setup Manually
+              </button>
+            </a>
+            <button class="btn btn-success" id="template_file_upload">
+              <i class="fa fa-file-o" style="margin:5px"></i>
+              Upload File
+            </button>
           </div>
           <div class="clear"></div>
         <% elsif @project.fields.count != 0 %>
