@@ -675,7 +675,9 @@ $ ->
           regressionMade = true
           try
             # Get the new regression
-            newRegression = globals.getRegression(
+            #xMax = @chart.xAxis[0].max
+            #xMin = @chart.xAxis[0].min
+            [func, result] = globals.getRegression(
               xData,
               yData,
               regressionType,
@@ -690,46 +692,34 @@ $ ->
             else
               alert "Unable to calculate a #{regressions[regressionType]} regression for this data."
             return
-
+          Ps = result[0]
+          newRegression = result[1]
           if regressionMade
             # Get a unique identifier (last highest count plus one)
-            regressionIdentifier = ''
-            count = 0
-            for regression in @configs.savedRegressions
-              if regression.type == regressionType \
-              and regression.fieldIndices[1] == yAxisIndex \
-              and count <= regression.typeCount
-                count = regression.typeCount + 1
+            regressionId = "regression_#{@configs.xAxis}_#{yAxisIndex}_#{regressionType}"
+            fn = (pv, cv, index, array) -> (pv and cv)
+            unique = (regression.id isnt regressionId for regression in @configs.savedRegressions).reduce(fn, true)
+            console.log unique
+            if unique
+              # Add the series
+              @chart.addSeries(newRegression)
 
-          if count
-            regressionIdentifier = '(' + (count + 1) + ')'
+              # Prepare to save regression fields
+              savedRegression =
+                type: regressionType
+                xAxis: @configs.xAxis
+                yAxis: yAxisIndex
+                groups: data.groupSelection
+                parameters: Ps
+                function: func
+                id: regressionId
+                calculate: (x, Ps) -> @function(x, Ps)
+      
+              # Save a regression
+              @configs.savedRegressions.push(savedRegression)
 
-          # Add the series
-          newRegression.name.id = 'regression_' + yAxisIndex + '_' + regressionType + '_' + count
-          @chart.addSeries(newRegression)
-
-          # Prepare to save regression fields
-          savedRegression =
-            type:
-              regressionType
-            typeCount:
-              count
-            fieldIndices:
-              [@configs.xAxis, yAxisIndex, data.groupSelection]
-            fieldNames:
-              [xAxisName, yAxisName]
-            series:
-              newRegression
-            regressionId:
-              regressionIdentifier
-            bounds:
-              [@configs.xBounds, @configs.yBounds]
-
-          # Save a regression
-          @configs.savedRegressions.push(savedRegression)
-
-          # Actually add the regression to the table
-          @addRegressionToTable(savedRegression, true)
+              # Actually add the regression to the table
+              @addRegressionToTable(savedRegression, true)
 
         # Set up accordion
         globals.configs.regressionOpen ?= 0
@@ -744,7 +734,8 @@ $ ->
 
       # Adds a regression row to our table, with styling for enabled or disabled
       addRegressionToTable: (savedReg, enabled) ->
-
+        console.log 'td#row_' + savedReg.id
+        console.log "td#row_#{savedReg.id}"
         # Remove object from an array
         Array::filterOutValue = (v) -> x for x in @ when x != v
 
@@ -754,10 +745,10 @@ $ ->
         # Add the entry used the passed regression
         regressionRow =
           """
-          <tr id = 'row_#{savedReg.series.name.id}' class='regression_row'>
-          <td class='regression_rowdata truncate'>#{savedReg.fieldNames[1]}(#{savedReg.fieldNames[0]})</td>
-          <td class='regression_rowdata'>#{regressions[savedReg.type]}#{savedReg.regressionId}</td>
-          <td id='#{savedReg.series.name.id}' class='regression_remove'><i class='fa fa-times-circle'></i></td>
+          <tr id ='row_#{savedReg.id}' class='regression_row'>
+          <td class='regression_rowdata truncate'>#{data.fields[savedReg.yAxis].fieldName}(#{data.fields[savedReg.xAxis].fieldName})</td>
+          <td class='regression_rowdata'>#{regressions[savedReg.type]}</td>
+          <td id='#{savedReg.id}' class='regression_remove'><i class='fa fa-times-circle'></i></td>
           </tr>
           """
 
@@ -766,32 +757,32 @@ $ ->
 
         # Add the disabled style if necessary
         if !enabled
-          ($ 'tr#row_' + savedReg.series.name.id).addClass('regression_row_disabled')
+          ($ 'tr#row_' + savedReg.id).addClass('regression_row_disabled')
 
         # Display the table header
         ($ 'tr#regression-table-header').show()
 
         # Make each row a link to its view
-        ($ 'tr#row_' + savedReg.series.name.id).click =>
+        ($ 'tr#row_' + savedReg.id).click =>
           # Reset the state of when you saved
-          @configs.xAxis = savedReg.fieldIndices[0]
-          globals.configs.fieldSelection = [savedReg.fieldIndices[1]]
-          data.groupSelection = savedReg.fieldIndices[2]
+          @configs.xAxis = savedReg.xAxis
+          globals.configs.fieldSelection = [savedReg.yAxis]
+          data.groupSelection = savedReg.groups
 
-          @configs.xBounds = savedReg.bounds[0]
-          @configs.yBounds = savedReg.bounds[1]
+          #@configs.xBounds = savedReg.bounds[0]
+          #@configs.yBounds = savedReg.bounds[1]
 
           ($ '.xAxis_input').each (i, input) ->
-            if Number(input.value) == savedReg.fieldIndices[0]
+            if Number(input.value) == savedReg.xAxis
               input.checked = true
 
           @start()
 
         # Add a make the delete button remove the regression object
-        ($ 'td#' + savedReg.series.name.id).click =>
-
+        ($ 'td#' + savedReg.id).click =>
+          console.log 'wat'
           # Remove regression view from the screen.
-          ($ 'td#' + savedReg.series.name.id).parent().remove()
+          ($ 'td#' + savedReg.id).parent().remove()
 
           # Display the table header if necessary
           if ($ '#regression-table-body > tr').length > 0
@@ -799,9 +790,9 @@ $ ->
           else ($ 'tr#regression-table-header').hide()
 
           # Remove regression from the savedRegressions array.
-          id = savedReg.series.name.id
+          id = savedReg.id
           for regression in @configs.savedRegressions
-            if (regression.series.name.id == id)
+            if (regression.id == id)
               @configs.savedRegressions =
                 @configs.savedRegressions.filterOutValue(regression)
               break
@@ -813,21 +804,22 @@ $ ->
               break
 
         # Make the hovering highlight the correct regression
-        ($ 'tr#row_' + savedReg.series.name.id).mouseover =>
+        ($ 'tr#row_' + savedReg.id).mouseover =>
 
           # Remove regression from the chart
-          id = savedReg.series.name.id
+          id = savedReg.id
           for series, i in @chart.series
+            console.log series
             if (series.name.id == id)
               @chart.series[i].setState('hover')
               @chart.tooltip.refresh(@chart.series[i].points[@chart.series[i].points.length - 1])
               break
 
         # When the mouse leaves, don't highlight anymore
-        ($ 'tr#row_' + savedReg.series.name.id).mouseout =>
+        ($ 'tr#row_' + savedReg.id).mouseout =>
 
           # Remove regression from the chart
-          id = savedReg.series.name.id
+          id = savedReg.id
           for series, i in @chart.series
             if (series.name.id == id)
               @chart.series[i].setState()

@@ -107,7 +107,7 @@ $ ->
       [Ps, R2] = NLLS(func, normalizeData(xs, type), ys, Ps)
       
       # Create the highcharts series
-      generateHighchartsSeries(Ps, R2, type, xBounds, seriesName, dashStyle)
+      [func, generateHighchartsSeries(Ps, R2, type, xBounds, seriesName, dashStyle)]
 
     ###
     Returns a series object to draw on the chart canvas.
@@ -124,7 +124,7 @@ $ ->
       Ps = visSpaceParameters(Ps, xBounds, type)
       str = makeToolTip(Ps, R2, type, seriesName)
 
-      ret =
+      retSeries =
         name:
           id: ''
           group: seriesName
@@ -141,6 +141,7 @@ $ ->
         states:
           hover:
             lineWidth: 4
+      [Ps, retSeries]
 
     ###
     # Uses the regression matrix to calculate the y value given an x value.
