@@ -278,7 +278,7 @@ class ProjectsController < ApplicationController
       end
     end
 
-    # If there's a new field, add it.
+    # If there's a new field, add it the number of times specified.
     field_type = params[:new_field]
 
     if field_type == 'Location'
@@ -297,23 +297,25 @@ class ProjectsController < ApplicationController
         redirect_to "/projects/#{@project.id}/edit_fields"
         return
       end
-    elsif field_type != ''
-      next_name = Field.get_next_name(@project,
-                                      get_field_type(params[:new_field]))
-      field = Field.new(project_id: @project.id,
-                        field_type: get_field_type(field_type), name: next_name)
+    elsif !field_type.nil?
+      ((params[:num_fields].to_i > params[:text_fields].to_i) ? params[:num_fields].to_i : params[:text_fields].to_i).times do
 
-      unless field.save
-        flash[:error] = field.errors.full_messages
-        redirect_to "/projects/#{@project.id}/edit_fields"
-        return
+        next_name = Field.get_next_name(@project,
+                                        get_field_type(params[:new_field]))
+        field = Field.new(project_id: @project.id,
+                          field_type: get_field_type(field_type), name: next_name)
+
+        unless field.save
+          flash[:error] = field.errors.full_messages
+          redirect_to "/projects/#{@project.id}/edit_fields"
+          return
+        end
       end
     end
-
-    if field_type == ''
+    if field_type.nil?
       redirect_to project_path(@project), notice: 'Changes to fields saved.'
     else
-      redirect_to "/projects/#{@project.id}/edit_fields", notice: 'Field added'
+      redirect_to "/projects/#{@project.id}/edit_fields", notice: "#{field_type} field added."
     end
   end
 
@@ -399,12 +401,12 @@ class ProjectsController < ApplicationController
                                      :is_template, :featured_media_id, :hidden,
                                      :featured_at, :lock, :curated,
                                      :curated_at, :updated_at, :default_vis,
-                                     :precision, :globals)
+                                     :precision, :globals, :kml_metadata)
     end
 
     params[:project].permit(:content, :title, :user_id, :filter, :hidden,
                             :cloned_from, :has_fields, :featured_media_id,
                             :lock, :updated_at, :default_vis, :precision,
-                            :globals)
+                            :globals, :kml_metadata)
   end
 end

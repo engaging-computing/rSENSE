@@ -5,7 +5,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     @project_keys = ['id', 'featuredMediaId', 'name', 'url', 'path', 'hidden', 'featured', 'likeCount', 'content', 'timeAgoInWords', 'createdAt', 'ownerName', 'ownerUrl', 'dataSetCount', 'fieldCount', 'fields']
     @project_keys_extended = @project_keys + ['dataSets', 'mediaObjects', 'owner']
     @field_keys = ['id', 'name', 'type', 'unit', 'restrictions']
-    @data_keys = ['id', 'name', 'url', 'path', 'createdAt', 'fieldCount', 'datapointCount', 'displayURL', 'data']
+    @data_keys = ['id', 'name', 'ownerId', 'ownerName', 'contribKey', 'url', 'path', 'createdAt', 'fieldCount', 'datapointCount', 'displayURL', 'data']
     @data_keys_extended = @data_keys + ['owner', 'project', 'fields']
     @dessert_project = projects(:dessert)
     @thanksgiving_dataset = data_sets(:thanksgiving)
@@ -617,7 +617,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert_response :success
     id = parse(response)['id']
 
-    post '/api/v1/projects/3/add_key',
+    post "/api/v1/projects/#{id}/add_key",
         email: 'kcarcia@cs.uml.edu',
         password: '12345',
         contrib_key:
@@ -638,13 +638,12 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert_response :success
     id = parse(response)['id']
 
-    post '/api/v1/projects/3/add_key',
+    post "/api/v1/projects/#{id}/add_key",
         email: 'nixon@whitehouse.gov',
         password: '12345',
         contrib_key:
           {
             'name' => 'key_name',
-            'project_id' => id,
             'key' => 'key'
           }
     assert_response :unauthorized
@@ -659,13 +658,12 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert_response :success
     id = parse(response)['id']
 
-    post '/api/v1/projects/3/add_key',
+    post "/api/v1/projects/#{id}/add_key",
         email: 'kcarcia@cs.uml.edu',
         password: '12345',
         wrong_name:
           {
             'wrong_name2' => 'key_name',
-            'project_id' => id,
             'key' => 'key'
           }
     assert_response :unprocessable_entity

@@ -27,12 +27,13 @@ class ShowUserTest < ActionDispatch::IntegrationTest
     @nixon = users(:nixon)
 
     visit "/users/#{@nixon.id}"
+    click_on 'Liked Projects'
     assert page.has_content?('Media Test'), 'View admin user'
 
     click_on 'My Projects'
     assert page.has_content?('Media Test'), 'View projects list'
 
-    assert page.has_content?('Delete This Project'), 'Delete project should exist'
+    assert page.has_content?('Delete'), 'Delete project should exist'
     page.all('tr').each do |tr|
       if tr.text =~ /Delete This Project/
         tr.click_on('Delete')

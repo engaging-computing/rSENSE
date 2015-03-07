@@ -40,10 +40,10 @@
   <div class="col-lg-8">
     <%= form_tag users_path, method: 'get', id: 'contribution_search', "data-user-id" => @user.id do%>
       <ul class="nav nav-tabs" id="user_filter">
-        <li class="active"><a href="#" title="Search through projects liked by <%=@user.name%>">Liked Projects</a></li>
-        <li><a href="#" title="Search through <%=@user.name%>'s projects">My Projects</a></li>
+        <li class="active"><a href="#" title="Search through <%=@user.name%>'s projects">My Projects</a></li>
         <li><a href="#" title="Search through <%=@user.name%>'s data sets">Data Sets</a></li>
         <li><a href="#" title="Search through <%=@user.name%>'s visualizations">Visualizations</a></li>
+        <li><a href="#" title="Search through projects liked by <%=@user.name%>">Liked Projects</a></li>
       </ul>
 
       <div id="contributions_content">
