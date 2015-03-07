@@ -80,7 +80,7 @@ $ ->
     ###
     Calculates a regression and returns it as a highcharts series.
     ###
-    globals.getRegression = (xs, ys, type, xBounds, seriesName, dashStyle) ->
+    globals.getRegression = (xs, ys, type, xBounds, seriesName, dashStyle, id) ->
       Ps = []
       func = globals.REGRESSION.FUNCS[type]
 
@@ -107,12 +107,12 @@ $ ->
       [Ps, R2] = NLLS(func, normalizeData(xs, type), ys, Ps)
       
       # Create the highcharts series
-      [func, generateHighchartsSeries(Ps, R2, type, xBounds, seriesName, dashStyle)]
+      [func, generateHighchartsSeries(Ps, R2, type, xBounds, seriesName, dashStyle, id)]
 
     ###
     Returns a series object to draw on the chart canvas.
     ###
-    generateHighchartsSeries = (Ps, R2, type, xBounds, seriesName, dashStyle) ->
+    generateHighchartsSeries = (Ps, R2, type, xBounds, seriesName, dashStyle, id) ->
       data = for i in [0..globals.REGRESSION.NUM_POINTS]
         xv = (i / globals.REGRESSION.NUM_POINTS)
         yv = 0
@@ -123,10 +123,15 @@ $ ->
         {x: xv * (xBounds.dataMax - xBounds.dataMin) + xBounds.dataMin, y: yv}
       Ps = visSpaceParameters(Ps, xBounds, type)
       str = makeToolTip(Ps, R2, type, seriesName)
-
+      #console.log @configs.xAxis
+      #console.log yAxisIndex
+      #console.log type
+      #regressionId = "regression_#{@configs.xAxis}_#{yAxisIndex}_#{type}"
+      #console.log "regression id is: #{regressionId}"
+            
       retSeries =
         name:
-          id: ''
+          id: id
           group: seriesName
           regression:
             tooltip: str
@@ -141,7 +146,8 @@ $ ->
         states:
           hover:
             lineWidth: 4
-      [Ps, retSeries]
+
+      [Ps, R2, retSeries]
 
     ###
     # Uses the regression matrix to calculate the y value given an x value.
@@ -396,3 +402,7 @@ $ ->
           newPs.push globals.REGRESSION.FUNCS[globals.REGRESSION.EXPONENTIAL][0](1, Ps) - \
             (Math.exp((newPs[0] * min) + newPs[1]))
       newPs
+
+    globals.getRegressionSeries = (func, params, type, ,name, dashStyle, id) ->
+      #generateHighchartsSeries()
+
