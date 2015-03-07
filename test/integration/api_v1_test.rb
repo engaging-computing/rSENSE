@@ -247,7 +247,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert keys_match(response, @data_keys_extended), 'Keys are missing'
   end
 
-  test 'test second fields data is not trucated if longer than first fields' do
+  test 'data does not get truncated' do
     pid = @dessert_project.id
     post "/api/v1/projects/#{pid}/jsonDataUpload",
 
