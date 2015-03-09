@@ -7,6 +7,7 @@ module DataSetsHelper
   def format_slickgrid(fields, data_set)
     cols, data = [fields, data_set]
     cols, data = format_slickgrid_merge cols, data
+    cols, data = format_slickgrid_units cols, data
     cols, data = format_slickgrid_populate cols, data
     cols, data = format_slickgrid_editors cols, data
     cols, data = format_slickgrid_json cols, data
@@ -15,18 +16,15 @@ module DataSetsHelper
 
   def format_slickgrid_merge(cols, data)
     cols_merge = cols.map do |x|
-      restrictions =
-        if x.restrictions.nil?
-          '""'
-        else
-          x.restrictions
-        end
+      restrictions = if x.restrictions.nil? then '""' else x.restrictions end
+      units = if x.unit.nil? then '' else x.unit end
+
       {
         field_type: x.field_type,
         id: "#{x.id}",
         name: x.name,
         restrictions: restrictions,
-        units: x.unit
+        units: units
       }
     end
 
@@ -65,6 +63,20 @@ module DataSetsHelper
 
       [cols_merge, data]
     end
+  end
+
+  def format_slickgrid_units(cols, data)
+    cols.map! do |x|
+      x[:name] =
+        if x[:units] == ''
+          "#{x[:name]}<br>"
+        else
+          "#{x[:name]}<br>(#{x[:units]})"
+        end
+      x
+    end
+
+    [cols, data]
   end
 
   def format_slickgrid_populate(cols, data)
