@@ -276,39 +276,3 @@ IS.onReady "projects/show", ->
   $('#print').click (e) ->
     e.preventDefault()
     window.print()
-
-  ###
-  # Track whether the user is leaving the page with unsaved content
-  ###
-  # Initialize a variable that determines whether or not to ask
-  # for confirmation to leave the page, and keep track of the
-  # current description content
-  confirm_nav = false
-  if $('.summernote').code()
-    desc = $('.summernote').code().trim()
-  else
-    desc = ''
-
-  # Disable the navigation pop-up if the user is saving or canceling
-  $('#content-save-btn').click ->
-    confirm_nav = false
-    true
-  $('#content-cancel-btn').click ->
-    confirm_nav = false
-    true
-  # Enable the navigation pop-up if the user is editing the description
-  $('#content-edit-btn').click ->
-    confirm_nav = true
-  $('#add-content-image').click ->
-    confirm_nav = true
-
-  # Pop up a warning if the project description has changed
-  $(window).on 'beforeunload', ->
-    if $('.summernote').code()
-      desc_new = $('.summernote').code().trim()
-    else
-      desc_new = ''
-    if (confirm_nav && (desc_new != desc))
-      return "You have attempted to leave this page.  If you have made any " +
-        "changes to the project description without clicking the Save " +
-        "button, your changes will be lost."
