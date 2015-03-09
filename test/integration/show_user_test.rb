@@ -41,7 +41,7 @@ class ShowUserTest < ActionDispatch::IntegrationTest
       end
     end
 
-    assert page.has_no_content?('Delete This Project'), 'Project removed from list'
+    assert page.has_no_content?('Delete'), 'Project removed from list'
 
     click_on 'Data Sets'
     assert page.has_content?('Needs Media'), 'View data sets list'
