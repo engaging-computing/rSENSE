@@ -17,7 +17,7 @@ uploadSettings =
   successEntry: (data, textStatus, jqXHR) ->
     window.location = data['displayURL']
 
-Grid = (cols, data, submit) ->
+grid = (cols, data, submit) ->
   # slickgrid objects
   view = null
   grid = null
@@ -90,6 +90,10 @@ Grid = (cols, data, submit) ->
       grid.updateRowCount()
       grid.render()
 
+    grid.onActiveCellChanged.subscribe (e, args) ->
+      if args.cell? and args.cell == grid.getColumns().length - 1
+        grid.gotoCell (args.row + 1) % grid.getDataLength(), 0, true
+
     grid.onClick.subscribe (e, args) ->
       cell = grid.getCellFromEvent e
       if cell.cell == grid.getColumns().length - 1
@@ -108,6 +112,12 @@ Grid = (cols, data, submit) ->
     grid.onKeyDown.subscribe (e, args) ->
       if e.keyCode == 13 and grid.getDataLength() - 1 == grid.getActiveCell().row
         addRow()
+      if e.keyCode == 37 and args.cell? and args.cell == 0
+        nextRow = (args.row - 1) % grid.getDataLength()
+        nextRow += grid.getDataLength() if nextRow < 0
+        nextCol = grid.getColumns().length - 2
+        grid.gotoCell nextRow, nextCol, true
+        e.stopImmediatePropagation()
 
     $(window).trigger 'resize'
 
@@ -267,29 +277,29 @@ IS.onReady 'data_sets/edit', ->
   uploadSettings.pageName = 'edit'
   cols = $('#slickgrid-container').data 'cols'
   data = $('#slickgrid-container').data 'data'
-  grid = new Grid cols, data,
+  g = new grid cols, data,
     url: "#{uploadSettings["urlEdit"]}"
     type: "#{uploadSettings["methodEdit"]}"
     dataType: "#{uploadSettings.dataType}"
     error: uploadSettings.error
     success: uploadSettings.successEdit
-  newRows = 10 - grid.length()
 
-  # ensure a minimum of ten rows per dataset
+  # ensure a minimum of ten rows per dataset    
+  newRows = 10 - g.length()
   for i in [1 .. newRows]
-    grid.addRow()
+    g.addRow()
 
 IS.onReady 'data_sets/manualEntry', ->
   uploadSettings.pageName = 'entry'
   cols = $('#slickgrid-container').data 'cols'
   data = $('#slickgrid-container').data 'data'
-  grid = new Grid cols, data,
-    url: "#{uploadSettings["urlEntry"]}"
-    type: "#{uploadSettings["methodEntry"]}"
+  g = new grid cols, data,
+    url: "#{uploadSettings['urlEntry']}"
+    type: "#{uploadSettings['methodEntry']}"
     dataType: "#{uploadSettings.dataType}"
     error: uploadSettings.error
     success: uploadSettings.successEntry
 
   # we get one row for free in slickgrid, so just add 9 more
   for i in [1 .. 9]
-    grid.addRow()
+    g.addRow()
