@@ -284,7 +284,7 @@ IS.onReady 'data_sets/edit', ->
     error: uploadSettings.error
     success: uploadSettings.successEdit
 
-  # ensure a minimum of ten rows per dataset    
+  # ensure a minimum of ten rows per dataset
   newRows = 10 - g.length()
   for i in [1 .. newRows]
     g.addRow()

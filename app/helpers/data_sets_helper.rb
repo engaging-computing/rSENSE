@@ -16,8 +16,8 @@ module DataSetsHelper
 
   def format_slickgrid_merge(cols, data)
     cols_merge = cols.map do |x|
-      restrictions = if x.restrictions.nil? then '""' else x.restrictions end
-      units = if x.unit.nil? then '' else x.unit end
+      restrictions = x.restrictions.nil? ? '""' : x.restrictions
+      units = x.unit.nil? ? '' : x.unit
 
       {
         field_type: x.field_type,
