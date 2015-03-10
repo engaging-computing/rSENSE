@@ -1,10 +1,11 @@
 # Place all the behaviors and hooks related to the users show page here.
-setupCallbacks = () ->
-  $("a.contrib-delete-link").on "ajax:success", (ee, data, status, xhr) ->
-    $(ee.target).closest('tr').hide()
+$(document).ajaxSuccess (event, request, settings) ->
+  query = $(event.target.activeElement)
+  if (query.data('method') is 'delete')
+    query.closest('tr').hide()
 
-  $("a.contrib-delete-link").on "ajax:error", (ee, data, status, xhr) ->
-    # TODO Handle Error
+$(document).ajaxError (event, xhr, settings, error) ->
+  quickFlash(error, 'error')
 
 IS.onReady "users/show", ->
   # Start recent 3
@@ -55,8 +56,6 @@ IS.onReady "users/show", ->
             $(".pagefwd").hide()
           else
             $(".pagefwd").show()
-
-          setupCallbacks()
 
   window.globals ?= {}
   globals.arrowsClicked = false
@@ -131,7 +130,6 @@ IS.onReady "users/show", ->
         $(@).removeClass 'contribution_hide'
         $(@).addClass 'contribution_unhide'
         $(@).html('Unhide')
-        quickFlash('Hidden', 'success')
 
       error: (msg) ->
         response = $.parseJSON(msg['responseText']).errors
@@ -153,33 +151,10 @@ IS.onReady "users/show", ->
         $(@).addClass 'contribution_hide'
         $(@).removeClass 'contribution_unhide'
         $(@).html('Hide')
-        quickFlash('unhidden', 'success')
 
       error: (msg) ->
         response = $.parseJSON(msg['responseText']).errors
         quickFlash(response, 'error')
-
-  $('.mainContent').on 'click', 'a.contrib-delete-link', (e) ->
-    e.preventDefault()
-
-    if helpers.confirm_delete $(@).parents('div.contribution').find('h4 a').html()
-      $.ajax
-        url: $(@).attr('href')
-        type: 'DELETE'
-        dataType: "json"
-        success: =>
-          $(@).parents('div.contribution').hide_row () ->
-            $('div#contributions div.contribution').filter(':visible').each (idx) ->
-              if idx % 2 is 0
-                $(@).addClass 'feed-even'
-                $(@).removeClass 'feed-odd'
-              else
-                $(@).removeClass 'feed-even'
-                $(@).addClass 'feed-odd'
-
-        error: (msg) ->
-          response = $.parseJSON(msg['responseText']).errors
-          quickFlash(response, 'error')
 
   $('.gravatar_img').tooltip
     title: "Go to www.gravatar.com to change your avatar"
