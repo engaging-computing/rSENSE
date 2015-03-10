@@ -46,9 +46,6 @@ setupMediaObjectsView = () ->
         dataType: "json"
         error: (_, e0, e1) ->
           $(obj).errorFlash()
-          console.log('Delete failed:')
-          console.log(e0)
-          console.log(e1)
         success: ->
           recolored = false
           row = obj.parents('tr')
