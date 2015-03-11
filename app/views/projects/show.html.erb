@@ -260,7 +260,7 @@
             </div>
           <% end %>
         <% else %>
-          <% if @project.has_contrib_key? %>
+          <% if @project.has_contrib_key? and @cur_user.nil? and @has_fields %>
             <p>Enter contributor key to submit data.</p>
             <%= form_tag '/contrib_keys/enter', method: 'post' do %>
               <div class="row" style="margin-left: 0px;" >
