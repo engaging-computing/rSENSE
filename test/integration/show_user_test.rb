@@ -40,7 +40,7 @@ class ShowUserTest < ActionDispatch::IntegrationTest
     page.first(:css, '.contrib-delete-link').click
 
     # Verify that there is one less project
-    assert page.has_css?('.contrib-delete-link', :count => (count - 1)),
+    assert page.has_css?('.contrib-delete-link', count: (count - 1)),
     'Deleted project should be hidden'
 
     click_on 'Data Sets'

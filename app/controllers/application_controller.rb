@@ -78,8 +78,6 @@ class ApplicationController < ActionController::Base
       format.html do
         render file: "#{Rails.root}/public/404", layout: false, status: :not_found
       end
-      format.json { render json: { errors: "Request not found" },
-        status: :not_found }
       format.any  { head :not_found }
     end
   end
