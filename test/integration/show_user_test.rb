@@ -8,7 +8,6 @@ class ShowUserTest < ActionDispatch::IntegrationTest
   setup do
     Capybara.current_driver = :webkit
     Capybara.default_wait_time = 15
-    Capybara.ignore_hidden_elements = true
   end
 
   teardown do
@@ -33,15 +32,21 @@ class ShowUserTest < ActionDispatch::IntegrationTest
     click_on 'My Projects'
     assert page.has_content?('Media Test'), 'View projects list'
 
-    # Count deletes and delete the first project
+    # Count deletes and verify that they exist
     count = page.all(:css, '.contrib-delete-link').length
     assert page.has_css?('.contrib-delete-link'), 'Delete project should exist'
+
     page.driver.browser.accept_js_confirms
-    page.first(:css, '.contrib-delete-link').click
+    page.all(:css, '.contrib-delete-link').each do |e|
+      e.click
+      page.has_css?('.contrib-delete-link',
+                    count: (count - 1), visible: true)
+      count -= 1
+    end
 
     # Verify that there is one less project
-    assert page.has_css?('.contrib-delete-link', count: (count - 1)),
-    'Deleted project should be hidden'
+    assert page.has_no_css?('.contrib-delete-link', visible: true),
+    'Deleted projects should be hidden'
 
     click_on 'Data Sets'
     assert page.has_content?('Needs Media'), 'View data sets list'
