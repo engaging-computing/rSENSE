@@ -51,7 +51,7 @@ class Grid
       name: ''
       width: 0
       formatter: (row, cell, value, columnDef, dataContext) ->
-        "<i class='fa fa-close slick-delete'></i>"
+        '<i class="fa fa-close slick-delete"></i>'
 
     # slickgrid's grid options
     options =
@@ -221,7 +221,6 @@ class Grid
         data: @getJSON()
         title: if uploadSettings.pageName == 'entry' then $('#data_set_name').val()
 
-      console.log @submit
       hasData = Object.keys(@submit['data']['data']).reduce (l, r) =>
         nonEmpty = @submit['data']['data'][r].filter (i) -> i != ''
         nonEmpty.length != 0 or l
@@ -250,13 +249,16 @@ class Grid
 
   showPopover: (form, msg) ->
     @validationPopMsg = msg
-    unless @validationPop?
-      @validationPop = form.popover
-        container: 'body'
-        content: => @validationPopMsg
-        html: true
-        placement: 'bottom'
-        trigger: 'manual'
+    if @validationPop?
+      @validationPop.popover 'destroy'
+
+    @validationPop = form.popover
+      container: 'body'
+      content: => @validationPopMsg
+      html: true
+      placement: 'bottom'
+      trigger: 'manual'
+
     @validationPop.data('bs.popover').setContent()
     @validationPop.popover 'show'
 
@@ -270,22 +272,22 @@ class Grid
 showError = (error) ->
   $('.mainContent').children('.alert-danger').remove()
 
-  $('.mainContent').prepend """
+  $('.mainContent').prepend "
     <div class='alert alert-danger alert-dismissable'>
       <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>
         &times;
       </button>
       <strong>An error occurred: </strong>
       #{error}
-    </div>"""
+    </div>"
 
 IS.onReady 'data_sets/edit', ->
   uploadSettings.pageName = 'edit'
   cols = $('#slickgrid-container').data 'cols'
   data = $('#slickgrid-container').data 'data'
   grid = new Grid cols, data,
-    url: "#{uploadSettings["urlEdit"]}"
-    type: "#{uploadSettings["methodEdit"]}"
+    url: "#{uploadSettings.urlEdit}"
+    type: "#{uploadSettings.methodEdit}"
     dataType: "#{uploadSettings.dataType}"
     error: uploadSettings.error
     success: uploadSettings.successEdit
@@ -300,8 +302,8 @@ IS.onReady 'data_sets/manualEntry', ->
   cols = $('#slickgrid-container').data 'cols'
   data = $('#slickgrid-container').data 'data'
   grid = new Grid cols, data,
-    url: "#{uploadSettings['urlEntry']}"
-    type: "#{uploadSettings['methodEntry']}"
+    url: "#{uploadSettings.urlEntry}"
+    type: "#{uploadSettings.methodEntry}"
     dataType: "#{uploadSettings.dataType}"
     error: uploadSettings.error
     success: uploadSettings.successEntry

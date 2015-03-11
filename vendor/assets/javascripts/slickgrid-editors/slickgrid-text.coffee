@@ -13,7 +13,7 @@
     formStr = ''
     for x in args.column.restrictions
       formStr += "<option value=\"#{x}\">#{x}</option>"
-    form = $("<select>#{formStr}</select>")
+    form = $("<select class='editor-dropdown'>#{formStr}</select>")
   
   form.appendTo args.container
   form.focus()
