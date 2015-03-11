@@ -249,8 +249,10 @@ class Grid
 
   showPopover: (form, msg) ->
     @validationPopMsg = msg
-    if @validationPop?
+
+    if @validationPop? and @validationPop.get(0) != form.get(0)
       @validationPop.popover 'destroy'
+      @validationPop = null
 
     @validationPop = form.popover
       container: 'body'
