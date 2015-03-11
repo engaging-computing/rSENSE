@@ -68,6 +68,7 @@ class FileUploader
     data_obj[:types] = get_probable_types(data)
     data_obj[:file] =  write_temp_file(row_major)
     data_obj[:headers] = headers
+    data_obj[:has_data] = !data.first[1].nil?
     data_obj
   end
 
