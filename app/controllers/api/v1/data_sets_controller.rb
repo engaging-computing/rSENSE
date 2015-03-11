@@ -44,7 +44,7 @@ module Api
               end
             else
               respond_to do |format|
-                format.json { render json: { msg: sane[:msg] }, status: :unprocessable_entity }
+                format.json { render json: { error: sane[:msg], msg: sane[:msg] }, status: :unprocessable_entity }
               end
             end
           end
