@@ -125,11 +125,18 @@ class FileUploader
   end
 
   def swap_with_field_names(data_obj, project)
+    # data_obj is a JSON object where the keys are the names of the
+    # fields and the values are the data in the column underneath
+    # the field names
+    data = []
+
+    # data_obj.first gets the first key-value pair, and [1]
+    # looks at the data (the value) of the pair - if there is
+    # no data, return the empty array
     if data_obj.first[1].nil?
-      return []
+      return data
     end
 
-    data = []
     size = data_obj.first[1].length
 
     (0..size - 1).each do |i|
@@ -214,7 +221,7 @@ class FileUploader
         types['longitude'].push column[0]
         next
       end
-      next if column[1].nil?
+      next if column[1].nil? # no data case
       if (column[1]).map { |dp| (regex =~ dp) }.reduce(:&)
         types['timestamp'].push column[0]
       elsif !(column[1]).map { |dp| valid_float?(dp) }.reduce(:&)
