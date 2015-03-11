@@ -2,7 +2,7 @@
 $(document).ajaxSuccess (event, request, settings) ->
   query = $(event.target.activeElement)
   if (query.data('method') is 'delete')
-    query.closest('tr').hide()
+    query.closest('tr').after('<tr></tr>').hide()
 
 $(document).ajaxError (event, xhr, settings, error) ->
   quickFlash(error, 'error')
