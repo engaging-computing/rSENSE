@@ -6,13 +6,11 @@
        <tr>
         <th style="max-width:10%">File</th>
         <th style="max-width:60%">Name</th>
+                <% if can_edit?( @project ) %>
         <th style="max-width:10%"></th>
         <th style="max-width:10%"></th>
-        <% if can_edit?( @project ) %>
+
           <th class="featured-title">Featured Image</th>
-        <% end %>
-        <% if ["Project","News","Tutorial"].include? object.class %>
-          <th style="max-width:10%">Display</th>
         <% end %>
       </tr>
       </thead>
@@ -36,7 +34,7 @@
                 &nbsp;|&nbsp;<%= link_to "Delete", mo, method: 'delete', class: "media_delete", data: { confirm: "Are you sure?" } %>
                 <% end %>
             </td>
-            <% if ["Project","News","Tutorial", "Visualization"].include? object.class.name%>
+            <% if can_edit?( @project ) %>
               <td>
                 <div class="center">
                   <% if ((mo.media_type == "image") && (can_edit? object))%>
