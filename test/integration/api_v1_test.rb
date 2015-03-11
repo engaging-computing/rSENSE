@@ -608,6 +608,33 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert_response :unauthorized
   end
 
+  test 'check if key exists through API' do
+    pid = @dessert_project.id
+    get "/api/v1/projects/#{pid}/key",
+        contribution_key: 'apple'
+    assert_response 302
+  end
+
+  test 'check if key exists through API (key not found)' do
+    pid = @dessert_project.id
+    get "/api/v1/projects/#{pid}/key",
+        contribution_key: 'not real'
+    assert_response 404
+  end
+
+  test 'check if key exists through API (bad params)' do
+    pid = @dessert_project.id
+    get "/api/v1/projects/#{pid}/key"
+    assert_response :unprocessable_entity
+  end
+
+  test 'check if key exists through API (project does not exist)' do
+    pid = 123454321
+    get "/api/v1/projects/#{pid}/key",
+      contribution_key: 'apple'
+    assert_response :not_found
+  end
+
   test 'add a key to a project' do
     post '/api/v1/projects',
 
