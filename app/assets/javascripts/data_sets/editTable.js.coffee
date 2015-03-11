@@ -86,7 +86,7 @@ class Grid
         return
       @addRow()
 
-    $('.edit_table_cancel').click =>
+    $('.edit_table_cancel').click ->
       projectID = $(document).data 'project'
       window.location = "/projects/#{projectID}"
 
@@ -263,6 +263,9 @@ class Grid
   hidePopover: ->
     if @validationPop?
       @validationPop.popover 'hide'
+
+  length: ->
+    @grid.getDataLength()
 
 showError = (error) ->
   $('.mainContent').children('.alert-danger').remove()
