@@ -15,10 +15,14 @@ class EditProjDescTest < ActionDispatch::IntegrationTest
     finish
   end
 
-  test 'nav on no desc edit' do
+  def login_and_nav_to_project
     login('kcarcia@cs.uml.edu', '12345')
     visit project_path(@project)
     assert page.has_content?('Goat'), 'Not on project page.'
+  end
+
+  test 'nav on no desc edit' do
+    login_and_nav_to_project
 
     # confirm you can leave the project page
     find('#edit-project-button').click
@@ -26,9 +30,7 @@ class EditProjDescTest < ActionDispatch::IntegrationTest
   end
 
   test 'nav on edit desc no changes' do
-    login('kcarcia@cs.uml.edu', '12345')
-    visit project_path(@project)
-    assert page.has_content?('Goat'), 'Not on project page.'
+    login_and_nav_to_project
 
     # click the description but do not add text to it
     find('#content-edit-btn').click
@@ -39,9 +41,7 @@ class EditProjDescTest < ActionDispatch::IntegrationTest
   end
 
   test 'nav on edit desc and cancel' do
-    login('kcarcia@cs.uml.edu', '12345')
-    visit project_path(@project)
-    assert page.has_content?('Goat'), 'Not on project page.'
+    login_and_nav_to_project
 
     # start typing a description and confirm the text exists
     find('#content-edit-btn').click
@@ -56,9 +56,7 @@ class EditProjDescTest < ActionDispatch::IntegrationTest
   end
 
   test 'nav on edit desc and save' do
-    login('kcarcia@cs.uml.edu', '12345')
-    visit project_path(@project)
-    assert page.has_content?('Goat'), 'Not on project page.'
+    login_and_nav_to_project
 
     # start typing a description and confirm the text exists
     find('#content-edit-btn').click
@@ -76,9 +74,7 @@ class EditProjDescTest < ActionDispatch::IntegrationTest
   end
 
   test 'shouldnt nav on edit desc and leave' do
-    login('kcarcia@cs.uml.edu', '12345')
-    visit project_path(@project)
-    assert page.has_content?('Goat'), 'Not on project page.'
+    login_and_nav_to_project
 
     # start typing a description and confirm the text exists
     find('#content-edit-btn').click
