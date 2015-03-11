@@ -63,7 +63,6 @@ $ ->
         error: (j, s, t) ->
           edit_box.errorFlash()
           errors = JSON.parse j.responseText
-          console.log errors
           edit_box.popover
             content: errors[0]
             placement: "bottom"
