@@ -17,26 +17,35 @@ uploadSettings =
   successEntry: (data, textStatus, jqXHR) ->
     window.location = data['displayURL']
 
-grid = (cols, data, submit) ->
+class Grid
+  cols: null
+  data: null
+  submit: {}
+
   # slickgrid objects
-  view = null
-  grid = null
+  view: null
+  grid: null
 
   # objects relevant to popovers
-  validationPop = null
-  validationPopMsg = null
-  deletionPop = null
-  deletionPopTimer = null
+  validationPop: null
+  validationPopMsg: null
+  deletionPop: null
+  deletionPopTimer: null
 
   # ID counter for rows
-  currID = 0
+  currID: 0
 
   # queue of save and delete row actions to execute on validation
-  actions = []
+  actions: []
 
-  initialize = ->
+  constructor: (@cols, @data, @submit) ->
+    # this is needed because slickgrid opens after this function completes
+    @initialize()
+    @subscribeEvents()
+
+  initialize: ->
     # add the delete button to each row
-    cols.push
+    @cols.push
       id: 'del'
       field: 'del'
       name: ''
@@ -55,68 +64,70 @@ grid = (cols, data, submit) ->
       syncColumnCellResize: true
 
     # associate IDs with each row in the table
-    for _, i in data
-      data[i]['id'] = currID
-      currID += 1
+    for _, i in @data
+      @data[i]['id'] = @currID
+      @currID += 1
 
     # create the required slickgrid objects, give slickgrid the data
-    view = new Slick.Data.DataView()
-    grid = new Slick.Grid '#slickgrid-container', view, cols, options
-    view.setItems data
+    @view = new Slick.Data.DataView()
+    @grid = new Slick.Grid '#slickgrid-container', @view, @cols, options
+    @view.setItems @data
 
-  subscribeEvents = ->
-    $(window).resize resizeWindow
+  subscribeEvents: ->
+    $(window).resize =>
+      @resizeWindow()
 
-    $(document).click (e) ->
+    $(document).click (e) =>
       if $(e.target).closest('.slick-row, #dt-picker').length == 0
-        grid.getEditorLock().commitCurrentEdit()
+        @grid.getEditorLock().commitCurrentEdit()
 
-    $('.edit_table_add').click ->
+    $('.edit_table_add').click =>
       if $('.edit_table_save').hasClass 'disabled'
         return
-      addRow()
+      @addRow()
 
-    $('.edit_table_cancel').click ->
+    $('.edit_table_cancel').click =>
       projectID = $(document).data 'project'
       window.location = "/projects/#{projectID}"
 
-    $('.edit_table_save').click queueSaveGrid
+    $('.edit_table_save').click =>
+      @queueSaveGrid()
 
-    view.onRowsChanged.subscribe (e, args) ->
-      grid.invalidateRow args.rows
-      grid.render()
+    @view.onRowsChanged.subscribe (e, args) =>
+      @grid.invalidateRow args.rows
+      @grid.render()
 
-    view.onRowCountChanged.subscribe (e, args) ->
-      grid.updateRowCount()
-      grid.render()
+    @view.onRowCountChanged.subscribe (e, args) =>
+      @grid.updateRowCount()
+      @grid.render()
 
-    grid.onActiveCellChanged.subscribe (e, args) ->
-      if args.cell? and args.cell == grid.getColumns().length - 1
-        grid.gotoCell (args.row + 1) % grid.getDataLength(), 0, true
+    @grid.onActiveCellChanged.subscribe (e, args) =>
+      if args.cell? and args.cell == @grid.getColumns().length - 1
+        @grid.gotoCell (args.row + 1) % @grid.getDataLength(), 0, true
 
-    grid.onClick.subscribe (e, args) ->
-      cell = grid.getCellFromEvent e
-      if cell.cell == grid.getColumns().length - 1
-        queueDeleteRow(cell.row)
-        if grid.getDataLength() == 0
-          addRow()
+    @grid.onClick.subscribe (e, args) =>
+      cell = @grid.getCellFromEvent e
+      if cell.cell == @grid.getColumns().length - 1
+        @queueDeleteRow(cell.row)
+        if @grid.getDataLength() == 0
+          @addRow()
 
-    grid.onAfterCellEditorDestroy.subscribe ->
-      hidePopover()
-      processActions()
+    @grid.onAfterCellEditorDestroy.subscribe =>
+      @hidePopover()
+      @processActions()
 
-    grid.onValidationError.subscribe (e, args) ->
-      showPopover $(args.cellNode), args.validationResults.msg
-      actions = []
+    @grid.onValidationError.subscribe (e, args) =>
+      @showPopover $(args.cellNode), args.validationResults.msg
+      @actions = []
 
-    grid.onKeyDown.subscribe (e, args) ->
-      if e.keyCode == 13 and grid.getDataLength() - 1 == grid.getActiveCell().row
-        addRow()
+    @grid.onKeyDown.subscribe (e, args) =>
+      if e.keyCode == 13 and @grid.getDataLength() - 1 == @grid.getActiveCell().row
+        @addRow()
       if e.keyCode == 37 and args.cell? and args.cell == 0
-        nextRow = (args.row - 1) % grid.getDataLength()
-        nextRow += grid.getDataLength() if nextRow < 0
-        nextCol = grid.getColumns().length - 2
-        grid.gotoCell nextRow, nextCol, true
+        nextRow = (args.row - 1) % @grid.getDataLength()
+        nextRow += @grid.getDataLength() if nextRow < 0
+        nextCol = @grid.getColumns().length - 2
+        @grid.gotoCell nextRow, nextCol, true
         e.stopImmediatePropagation()
 
     $(window).trigger 'resize'
@@ -125,19 +136,19 @@ grid = (cols, data, submit) ->
       $('.slick-cell.l0.r0').first().trigger 'click'
     , 1
 
-  resizeWindow = ->
+  resizeWindow: ->
     newHeight = $(window).height()-
       $('#row-slickgrid-1').outerHeight() -
       $('#row-slickgrid-2').outerHeight()
     $('#slickgrid-container').height newHeight
-    grid.resizeCanvas()
+    @grid.resizeCanvas()
 
-  getJSON = ->
+  getJSON: ->
     buckets = {}
     posHeadRegex = /(\d+)-(\d+)/
     posDataRegex = /^ *((?:\+|-)?\d+\.?\d*), *((?:\+|-)?\d+\.?\d*) *$/
 
-    view.getItems().forEach (row) ->
+    @view.getItems().forEach (row) ->
       row = Object.keys(row).reduce (curr, prev) ->
         idTest = posHeadRegex.exec prev
         dataTest = posDataRegex.exec row[prev]
@@ -155,63 +166,64 @@ grid = (cols, data, submit) ->
 
     buckets
 
-  processActions = ->
-    temp = actions
-    actions = []
+  processActions: ->
+    temp = @actions
+    @actions = []
     for x in temp
       x()
 
-  addRow = ->
-    newRow = {id: currID}
-    currID += 1
-    for x in cols
+  addRow: ->
+    newRow = {id: @currID}
+    @currID += 1
+    for x in @cols
       newRow[x.field] = ''
-    view.addItem newRow
-    grid.scrollRowIntoView view.getLength()
+    @view.addItem newRow
+    @grid.scrollRowIntoView @view.getLength()
 
-  queueDeleteRow = (row) ->
-    deleteRow = () ->
-      item = view.getItem row
-      view.deleteItem item.id
-      grid.invalidate()
-      if view.getLength() == 0
-        addRow()
-        unless deletionPop?
-          deletionPop = $('.slick-delete').popover
+  queueDeleteRow: (row) ->
+    deleteRow = () =>
+      item = @view.getItem row
+      @view.deleteItem item.id
+      @grid.invalidate()
+      if @view.getLength() == 0
+        @addRow()
+        unless @deletionPop?
+          @deletionPop = $('.slick-delete').popover
             container: 'body'
             content: 'There must be at least one row of data'
             placement: 'bottom'
             trigger: 'manual'
-          deletionPop.popover 'show'
-          deletionPopTimer = setTimeout ->
-            deletionPop.popover 'destroy'
-            deletionPop = null
+          @deletionPop.popover 'show'
+          @deletionPopTimer = setTimeout =>
+            @deletionPop.popover 'destroy'
+            @deletionPop = null
           , 1000
         else
-          clearTimeout deletionPopTimer
-          deletionPopTimer = setTimeout ->
-            deletionPop.popover 'destroy'
-            deletionPop = null
+          clearTimeout @deletionPopTimer
+          @deletionPopTimer = setTimeout =>
+            @deletionPop.popover 'destroy'
+            @deletionPop = null
           , 1000
 
-    if grid.getCellEditor() != null
-      actions.push deleteRow
+    if @grid.getCellEditor() != null
+      @actions.push deleteRow
     else
       deleteRow()
 
-  queueSaveGrid = ->
-    saveGrid = ->
+  queueSaveGrid: ->
+    saveGrid = =>
       # check if we've already started saving
       if $('.edit_table_save').hasClass 'disabled'
         return
 
       # get title and grid contents
-      submit['data'] =
-        data: getJSON()
+      @submit['data'] =
+        data: @getJSON()
         title: if uploadSettings.pageName == 'entry' then $('#data_set_name').val()
 
-      hasData = Object.keys(submit['data']['data']).reduce (l, r) ->
-        nonEmpty = submit['data']['data'][r].filter (i) -> i != ''
+      console.log @submit
+      hasData = Object.keys(@submit['data']['data']).reduce (l, r) =>
+        nonEmpty = @submit['data']['data'][r].filter (i) -> i != ''
         nonEmpty.length != 0 or l
       , false
 
@@ -221,7 +233,7 @@ grid = (cols, data, submit) ->
         return
 
       # validate presence of title
-      if uploadSettings.pageName == 'entry' and submit['data'].title == ''
+      if uploadSettings.pageName == 'entry' and @submit['data'].title == ''
         showError 'Datasets require a title'
         return
 
@@ -229,37 +241,28 @@ grid = (cols, data, submit) ->
       $('.edit_table_add, .edit_table_save').addClass 'disabled'
       $('.edit_table_save').text 'Saving...'
 
-      $.ajax submit
+      $.ajax @submit
 
-    if grid.getCellEditor() != null
-      actions.push saveGrid
+    if @grid.getCellEditor() != null
+      @actions.push saveGrid
     else
       saveGrid()
 
-  showPopover = (form, msg) ->
-    validationPopMsg = msg
-    unless validationPopo?
-      validationPop = form.popover
+  showPopover: (form, msg) ->
+    @validationPopMsg = msg
+    unless @validationPop?
+      @validationPop = form.popover
         container: 'body'
-        content: -> validationPopMsg
+        content: => @validationPopMsg
         html: true
         placement: 'bottom'
         trigger: 'manual'
-    validationPop.data('bs.popover').setContent()
-    validationPop.popover 'show'
+    @validationPop.data('bs.popover').setContent()
+    @validationPop.popover 'show'
 
-  hidePopover = ->
-    if validationPop?
-      validationPop.popover 'hide'
-
-  @addRow = addRow
-
-  @length = ->
-    grid.getDataLength()
-
-  # this is needed because slickgrid opens after this function completes
-  initialize()
-  subscribeEvents()
+  hidePopover: ->
+    if @validationPop?
+      @validationPop.popover 'hide'
 
 showError = (error) ->
   $('.mainContent').children('.alert-danger').remove()
@@ -277,7 +280,7 @@ IS.onReady 'data_sets/edit', ->
   uploadSettings.pageName = 'edit'
   cols = $('#slickgrid-container').data 'cols'
   data = $('#slickgrid-container').data 'data'
-  g = new grid cols, data,
+  grid = new Grid cols, data,
     url: "#{uploadSettings["urlEdit"]}"
     type: "#{uploadSettings["methodEdit"]}"
     dataType: "#{uploadSettings.dataType}"
@@ -285,15 +288,15 @@ IS.onReady 'data_sets/edit', ->
     success: uploadSettings.successEdit
 
   # ensure a minimum of ten rows per dataset
-  newRows = 10 - g.length()
+  newRows = 10 - grid.length()
   for i in [1 .. newRows]
-    g.addRow()
+    grid.addRow()
 
 IS.onReady 'data_sets/manualEntry', ->
   uploadSettings.pageName = 'entry'
   cols = $('#slickgrid-container').data 'cols'
   data = $('#slickgrid-container').data 'data'
-  g = new grid cols, data,
+  grid = new Grid cols, data,
     url: "#{uploadSettings['urlEntry']}"
     type: "#{uploadSettings['methodEntry']}"
     dataType: "#{uploadSettings.dataType}"
@@ -302,4 +305,4 @@ IS.onReady 'data_sets/manualEntry', ->
 
   # we get one row for free in slickgrid, so just add 9 more
   for i in [1 .. 9]
-    g.addRow()
+    grid.addRow()
