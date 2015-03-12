@@ -403,6 +403,6 @@ $ ->
             (Math.exp((newPs[0] * min) + newPs[1]))
       newPs
 
-    globals.getRegressionSeries = (func, params, type, ,name, dashStyle, id) ->
+    globals.getRegressionSeries = (R2, func, params, type, name, xBounds, dashStyle, id) ->
       #generateHighchartsSeries()
 

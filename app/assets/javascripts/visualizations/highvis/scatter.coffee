@@ -319,7 +319,7 @@ $ ->
           && "#{regression.groups}" == "#{data.groupSelection}" \
           && globals.configs.fieldSelection.indexOf(regression.yAxis) != -1
             # Calculate the series
-            series = globals.getRegressionSeries(regression.func, regression.parameters, regression.type, ,regression.name, regression.dashStyle, regression.id)
+            series = globals.getRegressionSeries(regression.r2, regression.func, regression.parameters, regression.type, regression.name, regression.dashStyle, regression.id)
             # Add the regression to the chart
             @chart.addSeries(series)
             # Enabled the class by removing the disabled class
@@ -638,11 +638,10 @@ $ ->
           if regression.xAxis == @configs.xAxis \
           && "#{regression.groups}" == "#{data.groupSelection}" \
           && globals.configs.fieldSelection.indexOf(regression.yAxis) != -1
-            #
-            series = ###
-
-            ####
-            @chart.addSeries(regression.series)
+            # Calculate the series
+            series = globals.getRegressionSeries(regression.r2, regression.func, regression.parameters, regression.type, regression.name, regression.dashStyle, regression.id)
+            # Add the regression to the chart
+            @chart.addSeries(series)
             @addRegressionToTable(regression, true)
           else
             @addRegressionToTable(regression, false)
