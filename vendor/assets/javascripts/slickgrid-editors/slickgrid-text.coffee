@@ -7,28 +7,18 @@
   form = null
   loadValue = null
 
-  tryCloseForm = =>
-    args.grid.getEditorLock().commitCurrentEdit()
-    args.grid.resetActiveCell()
-    
-  $('body').on 'click.slickgrid-text', (e) =>
-    if $(e.target).closest('.slick-cell.active').length == 0
-      tryCloseForm()
-
   if args.column.restrictions == ''
     form = $('<input type="text" class="editor-text" />')
-    form.appendTo args.container
-    form.focus()
   else
     formStr = ''
     for x in args.column.restrictions
       formStr += "<option value=\"#{x}\">#{x}</option>"
-    form = $("<select>#{formStr}</select>")
-    form.appendTo args.container
-    form.focus()
+    form = $("<select class='editor-dropdown'>#{formStr}</select>")
+  
+  form.appendTo args.container
+  form.focus()
 
   destroy: ->
-    $('body').off 'click.slickgrid-text'
     form.remove()
   focus: ->
     form.focus()

@@ -12,9 +12,9 @@ class CloneProjectTest < ActionDispatch::IntegrationTest
     finish
   end
 
-  def set_cell(row, col, val)
-    find(:css, ".slick-row:nth-child(#{row + 1})>.slick-cell.l#{col}").click
-    find(:css, ".slick-row:nth-child(#{row + 1})>.slick-cell.l#{col}>input").set val
+  def set_cell(row, col, value)
+    find(:css, ".slick-row:nth-child(#{row + 1})>.slick-cell.l#{col}").double_click
+    find(:css, ".slick-row:nth-child(#{row + 1})>.slick-cell.l#{col}>input").set value
   end
 
   # Note, currectly does not verify data is cloned correct, just that the sets are cloned
