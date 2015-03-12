@@ -83,7 +83,9 @@ $ ->
                   str += "<table>"
                   str += "<tr><td>#{@series.xAxis.options.title.text}:</td><td><strong> "
                   str += "#{globals.dateFormatter @x}</strong></td></tr>"
-                  str += "<tr><td>#{@series.name.field}:</td><td><strong>#{@y}</strong></td></tr>"
+                  index = data.fields.map((y) -> y.fieldName).indexOf(@series.name.field)
+                  str += "<tr><td>#{@series.name.field}:</td><td><strong>#{@y} \
+                  #{window.fieldUnit(data.fields[index], false)}</strong></td></tr>"
                   str += "</table>"
             useHTML: true
 
