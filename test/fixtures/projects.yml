@@ -88,3 +88,8 @@ slickgrid_project_no_latlon:
 slickgrid_oops:
   title: slickgrid_oops
   user: nixon
+
+description_test:
+  title: Goat
+  user: kate
+  content: Description Test
