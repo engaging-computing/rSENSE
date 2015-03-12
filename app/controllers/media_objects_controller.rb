@@ -56,7 +56,7 @@ class MediaObjectsController < ApplicationController
 
       respond_to do |format|
         format.html do
-          redirect_to @media_object.parent, notice: "Deleted #{@media_object.name}"
+          redirect_to request.referer, notice: "Deleted #{@media_object.name}"
         end
         format.json { render json: {}, status: :ok }
       end
