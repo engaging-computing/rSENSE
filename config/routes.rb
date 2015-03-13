@@ -78,7 +78,7 @@ Rsense::Application.routes.draw do
     post 'login' => :create
     delete 'login' => :destroy
   end
-  get '/sessions/verify' => 'sessions#verify'
+  get '/sessions/permissions' => 'sessions#permissions'
 
   get '/users/pw_request' => 'users#pw_request'
   post '/users/pw_send_key' => 'users#pw_send_key'

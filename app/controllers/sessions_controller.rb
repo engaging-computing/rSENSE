@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  skip_before_filter :authorize, only: ['create', 'new', 'verify']
+  skip_before_filter :authorize, only: ['create', 'new', 'permissions']
 
   protect_from_forgery except: :create
 
@@ -69,23 +69,35 @@ class SessionsController < ApplicationController
     end
   end
 
-  # GET /sessions/verify
-  def verify
+  # GET /sessions/permissions
+  def permissions
     respond_to do |format|
-      permission = true
-      unless params[:project_id].nil? || params[:verify_owner].nil?
-        owner_id = Project.find(params[:project_id]).user_id
-        verify = params[:verify_owner] == 'true'
-        session_destroyed = session[:user_id].nil?
-        is_admin = (!session_destroyed and User.find(session[:user_id]).admin)
-        permission = (verify && owner_id == session[:user_id]) || !verify || is_admin
+      @permissions = []
+
+      # Session is null
+      if session[:user_id].nil?
+        format.json { head :unauthorized }
+        format.js {}
+        return
       end
 
-      if session[:user_id].nil? || !permission
-        format.json { render json: '{}', status: :unauthorized }
-      else
-        format.json { render json: '{}', status: :ok }
+      is_admin = User.find(session[:user_id]).admin
+      @permissions.push 'save'
+
+      # Not admin, and you don't own or didn't specify a project
+      unless is_admin
+        if params[:project_id].nil? or
+            Project.find(params[:project_id]).user_id != session[:user_id]
+          format.json { render json: { permissions: @permissions }, status: :ok }
+          format.js {}
+          return
+        end
       end
+
+      # You're the admin or you own the project (or both)
+      @permission.push 'project'
+      format.json { render json: { permissions: @permissions }, status: :ok }
+      format.js {}
     end
   end
 
