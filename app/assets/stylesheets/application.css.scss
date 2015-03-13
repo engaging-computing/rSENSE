@@ -24,7 +24,7 @@ $navbar-default-color: white;
 $navbar-default-link-color: white;
 $navbar-default-link-hover-color: #DDDDDD;
 $table-bg-accent: #E8E8E8;
-@import "bootstrap-sprockets";
+
 @import "bootstrap";
 
 body {
@@ -103,7 +103,6 @@ body {
 
   .item-image.item-photo-image {
     height: 200px;
-    margin: auto;
   }
 
   .item-title {
@@ -257,4 +256,13 @@ body {
       width: 250px !important;
     }
   }
+}
+
+.half_width_edit
+{
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  padding-bottom: 2px; 
+  max-width: 45%;
 }
