@@ -334,6 +334,7 @@ class ProjectsController < ApplicationController
     @original_filename = params[:file].original_filename.split('.')[0]
     @tmp_file = data_obj[:file]
     @headers = data_obj[:headers]
+    @has_data = data_obj[:has_data]
 
     respond_to do |format|
       format.html

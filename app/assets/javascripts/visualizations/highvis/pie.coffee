@@ -61,7 +61,7 @@ $ ->
           showInLegend: false
           data: displayData
           colors: displayColors
-        @chart.setTitle { text: "#{@configs.selectName} by #{data.fields[@configs.displayField].fieldName}" }
+        @chart.setTitle { text: "#{data.fields[@configs.displayField].fieldName} grouped by #{@configs.selectName}" }
         @chart.addSeries options, false
 
         @chart.redraw()
@@ -85,7 +85,8 @@ $ ->
               str += "<table>"
               str += "<tr><td>#{data.fields[self.configs.displayField].fieldName}
                  (#{self.analysisTypeNames[self.configs.analysisType]}): "
-              str += "</td><td><strong>#{@y}</strong></td></tr>"
+              str += "</td><td><strong>#{@y} \
+              #{fieldUnit(data.fields[self.configs.displayField], false)}</strong></td></tr>"
               str += "</table>"
             useHTML: true
           plotOptions:

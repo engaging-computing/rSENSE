@@ -62,11 +62,21 @@ $ ->
     ###
     Makes a title with appropriate units for a field
     ###
-    window.fieldTitle = (field) ->
+    window.fieldTitle = (field, parens = true) ->
       if field.unitName isnt "" and field.unitName isnt null
-        "#{field.fieldName} (#{field.unitName})"
+        if parens is true
+          "#{field.fieldName} (#{field.unitName})"
+        else
+          "#{field.fieldName} #{field.unitName}"
       else
         field.fieldName
+
+    ###
+    Returns the units for a field
+    ###
+    window.fieldUnit = (field, parens = true) ->
+      if field.unitName isnt null
+        if parens is true then "(#{field.unitName})" else "#{field.unitName}"
 
     ###
     Removes 'item' from the array 'arr'

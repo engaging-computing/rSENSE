@@ -30,10 +30,11 @@ group :development, :test do
   gem "coffeelint"
   gem 'capybara-webkit'
   gem 'minitest', '~> 5.1'
+  gem 'capybara-screenshot'
 end
 
 # Jquery stuff
-gem 'better_datetimepicker', '~> 0.0.5', git: 'https://github.com/isenseDev/better-datetimepicker'
+gem 'better_datetimepicker', '~> 0.0.7', git: 'https://github.com/isenseDev/better-datetimepicker'
 gem 'better_colorpicker', '~> 0.0.3', git: 'https://github.com/isenseDev/better-colorpicker'
 gem 'jquery-rails'
 

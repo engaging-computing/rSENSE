@@ -73,6 +73,14 @@ body {
   font-size: smaller;
 }
 
+.half_width_edit {
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  padding-bottom: 2px; 
+  max-width: 45%;
+}
+
 .item {
   background-color: #ddd;
   margin: auto;

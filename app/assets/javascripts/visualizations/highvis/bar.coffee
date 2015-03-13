@@ -60,9 +60,10 @@ $ ->
               str += "color:#{@series.color};margin-bottom:5px'> "
               str += "#{@series.name}</div>"
               str += "<table>"
-              str += "<tr><td>#{@key} "
+              str += "<tr><td>#{data.fields[globals.configs.fieldSelection[@x]].fieldName} "
               str += "(#{self.analysisTypeNames[self.configs.analysisType]}):"
-              str += "</td><td><strong>#{@y}</strong></td></tr>"
+              str += "</td><td><strong>#{@y} \
+              #{fieldUnit(data.fields[globals.configs.fieldSelection[@x]], false)}</strong></td></tr>"
               str += "</table>"
             useHTML: true
           yAxis:

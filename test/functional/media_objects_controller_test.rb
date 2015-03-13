@@ -91,10 +91,12 @@ class MediaObjectsControllerTest < ActionController::TestCase
   end
 
   test 'should destroy media_object' do
+    request.env['HTTP_REFERER'] = request.path
+
     assert_difference('MediaObject.count', -1) do
       delete :destroy, { id: @media_object },  user_id: @nixon
+      assert_redirected_to request.env['HTTP_REFERER']
     end
-    assert_redirected_to @media_object.project
   end
 
   test 'shouldnt destroy media_object' do
