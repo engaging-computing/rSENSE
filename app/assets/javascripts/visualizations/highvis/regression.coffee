@@ -123,11 +123,6 @@ $ ->
         {x: xv * (xBounds.dataMax - xBounds.dataMin) + xBounds.dataMin, y: yv}
       Ps = visSpaceParameters(Ps, xBounds, type)
       str = makeToolTip(Ps, R2, type, seriesName)
-      #console.log @configs.xAxis
-      #console.log yAxisIndex
-      #console.log type
-      #regressionId = "regression_#{@configs.xAxis}_#{yAxisIndex}_#{type}"
-      #console.log "regression id is: #{regressionId}"
             
       retSeries =
         name:
@@ -404,5 +399,25 @@ $ ->
       newPs
 
     globals.getRegressionSeries = (R2, func, params, type, name, xBounds, dashStyle, id) ->
-      #generateHighchartsSeries()
-
+      data = for i in [0...globals.REGRESSION.NUM_POINTS]
+        x = (i / globals.REGRESSION.NUM_POINTS) * (xBounds[1] - xBounds[0]) + xBounds[0]
+        {x: x, y: func(x, params)}
+      str = makeToolTip(params, R2, type, name)
+      retSeries =
+        name:
+          id: id
+          group: name
+          regression:
+            tooltip: str
+        data: data
+        type: 'line'
+        color: '#000'
+        lineWidth: 2
+        dashStyle: dashStyle
+        showInLegend: 0
+        marker:
+          symbol: 'blank'
+        states:
+          hover:
+            lineWidth: 4
+      retSeries

@@ -321,7 +321,8 @@ $ ->
           && "#{regression.groups}" == "#{data.groupSelection}" \
           && globals.configs.fieldSelection.indexOf(regression.yAxis) != -1
             # Calculate the series
-            series = globals.getRegressionSeries(regression.r2, regression.func, regression.parameters, regression.type, regression.name, regression.dashStyle, regression.id)
+            console.log regression.function
+            series = globals.getRegressionSeries(regression.r2, regression.function, regression.parameters, regression.type, regression.name, [@chart.xAxis[0].min, @chart.xAxis[0].max],regression.dashStyle, regression.id)
             # Add the regression to the chart
             @chart.addSeries(series)
             # Enabled the class by removing the disabled class
@@ -641,7 +642,8 @@ $ ->
           && "#{regression.groups}" == "#{data.groupSelection}" \
           && globals.configs.fieldSelection.indexOf(regression.yAxis) != -1
             # Calculate the series
-            series = globals.getRegressionSeries(regression.r2, regression.func, regression.parameters, regression.type, regression.name, regression.dashStyle, regression.id)
+            console.log regression.function
+            series = globals.getRegressionSeries(regression.r2, regression.function, regression.parameters, regression.type, regression.name, [@chart.xAxis[0].min, @chart.xAxis[0].max],regression.dashStyle, regression.id)
             # Add the regression to the chart
             @chart.addSeries(series)
             @addRegressionToTable(regression, true)
@@ -725,7 +727,7 @@ $ ->
                 yAxis: yAxisIndex
                 groups: data.groupSelection
                 parameters: Ps
-                function: func
+                function: func[0]
                 id: regressionId
                 r2: r2
                 name: name
