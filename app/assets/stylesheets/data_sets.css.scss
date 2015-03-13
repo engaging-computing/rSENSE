@@ -24,11 +24,28 @@
 			box-sizing: content-box;
 		}
 
-		input.editor-text {
+		.editor-button {
+			cursor: pointer;
+			font-size: 17px;
+			padding: 3px;
+		}
+
+		select.editor-dropdown {
+			width: 100%;
+		}
+
+		.editor-text, .editor-text-with-button {
 			border: none;
 			height: 100%;
 			outline: none;
+		}
+
+		.editor-text {
 			width: 100%;
+		}
+
+		.editor-text-with-button {
+			width: calc(100% - 30px);
 		}
 
 		.slick-cell {
@@ -44,6 +61,8 @@
 
 		.slick-header-column {
 			font-weight: bold;
+			height: 5ex;
+			line-height: 2.5ex;
 			padding: 8px 0;
 		}
 
