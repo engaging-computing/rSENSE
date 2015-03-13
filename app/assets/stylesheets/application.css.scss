@@ -258,3 +258,12 @@ body {
     }
   }
 }
+
+.half_width_edit
+{
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  padding-bottom: 2px; 
+  max-width: 45%;
+}
