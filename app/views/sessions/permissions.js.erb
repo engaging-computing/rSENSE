@@ -3,9 +3,9 @@
  * See app/assets/visualizations/highvis/baseVis.coffee.erb
  * See app/assets/visualizations/highvis/savedVis.coffee.erb
  */
-<% unless @permissions.include? 'save' %>
+<% unless @permiss.include? 'save' %>
   $('#saveVisButton').attr('disabled', 'disabled');
 <% end %>
-<% unless @permissions.include? 'project' %>
+<% unless @permiss.include? 'project' %>
   $('#defaultVisButton').remove();
 <% end %>

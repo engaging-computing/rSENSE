@@ -71,35 +71,36 @@ class SessionsController < ApplicationController
 
   # GET /sessions/permissions
   def permissions
-    respond_to do |format|
-      @permissions = []
-
-      # Session is null
-      if session[:user_id].nil?
+    @permiss = []
+    # Session is null
+    if session[:user_id].nil?
+      respond_to do |format|
         format.js {}
-        formal.all { head :unauthorized }
+        format.json { head :unauthorized }
+      end
+      return
+    end
+
+    is_admin = User.find(session[:user_id]).admin
+    @permiss.push 'save'
+
+    # Not admin, and you don't own or didn't specify a project
+    unless is_admin
+      if params[:project_id].nil? or
+          Project.find(params[:project_id]).user_id != session[:user_id]
+        respond_to do |format|
+          format.json { render json: { permissions: @permiss }, status: :ok }
+          format.js {}
+        end
         return
       end
+    end
 
-      is_admin = User.find(session[:user_id]).admin
-      @permissions.push 'save'
-
-      # Not admin, and you don't own or didn't specify a project
-      unless is_admin
-        if params[:project_id].nil? or
-            Project.find(params[:project_id]).user_id != session[:user_id]
-          format.json { render json: { permissions: @permissions }, status: :ok }
-          format.js {}
-          format.all { head :ok }
-          return
-        end
-      end
-
-      # You're the admin or you own the project (or both)
-      @permission.push 'project'
-      format.json { render json: { permissions: @permissions }, status: :ok }
+    # You're the admin or you own the project (or both)
+    @permiss.push 'project'
+    respond_to do |format|
+      format.json { render json: { permissions: @permiss }, status: :ok }
       format.js {}
-      format.all { head :ok }
     end
   end
 
