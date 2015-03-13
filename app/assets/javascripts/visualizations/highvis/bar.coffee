@@ -63,7 +63,7 @@ $ ->
               str += "<tr><td>#{data.fields[globals.configs.fieldSelection[@x]].fieldName} "
               str += "(#{self.analysisTypeNames[self.configs.analysisType]}):"
               str += "</td><td><strong>#{@y} \
-              #{window.fieldUnit(data.fields[globals.configs.fieldSelection[@x]], false)}</strong></td></tr>"
+              #{fieldUnit(data.fields[globals.configs.fieldSelection[@x]], false)}</strong></td></tr>"
               str += "</table>"
             useHTML: true
           yAxis:

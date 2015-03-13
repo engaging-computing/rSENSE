@@ -86,7 +86,7 @@ $ ->
               str += "<tr><td>#{data.fields[self.configs.displayField].fieldName}
                  (#{self.analysisTypeNames[self.configs.analysisType]}): "
               str += "</td><td><strong>#{@y} \
-              #{window.fieldUnit(data.fields[self.configs.displayField], false)}</strong></td></tr>"
+              #{fieldUnit(data.fields[self.configs.displayField], false)}</strong></td></tr>"
               str += "</table>"
             useHTML: true
           plotOptions:

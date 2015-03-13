@@ -48,10 +48,7 @@ $ ->
     ###
     window.fieldUnit = (field, parens = true) ->
       if field.unitName isnt null
-        if parens is true
-          "(#{field.unitName})"
-        else
-          "#{field.unitName}"
+        if parens is true then "(#{field.unitName})" else "#{field.unitName}"
 
     ###
     Removes 'item' from the array 'arr'

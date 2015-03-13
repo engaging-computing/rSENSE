@@ -211,9 +211,9 @@ $ ->
 
               label += "<tr><td>#{field.fieldName}</td>"
               label += "<td><strong>#{dat}</strong></td>"
-              unit = window.fieldUnit(field, false)
-              if unit isnt undefined and fieldIndex > 2
-                label += "<td>#{window.fieldUnit(field, false)}</td></tr>"
+              unit = fieldUnit(field, false)
+              if unit? and fieldIndex > 2
+                label += "<td>#{unit}</td></tr>"
               else
                 label += "</tr>"
 

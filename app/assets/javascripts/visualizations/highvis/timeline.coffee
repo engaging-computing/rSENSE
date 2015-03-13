@@ -85,7 +85,7 @@ $ ->
                   str += "#{globals.dateFormatter @x}</strong></td></tr>"
                   index = data.fields.map((y) -> y.fieldName).indexOf(@series.name.field)
                   str += "<tr><td>#{@series.name.field}:</td><td><strong>#{@y} \
-                  #{window.fieldUnit(data.fields[index], false)}</strong></td></tr>"
+                  #{fieldUnit(data.fields[index], false)}</strong></td></tr>"
                   str += "</table>"
             useHTML: true
 
