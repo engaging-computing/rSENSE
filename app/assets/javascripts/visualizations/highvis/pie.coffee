@@ -61,7 +61,7 @@ $ ->
           showInLegend: false
           data: displayData
           colors: displayColors
-        @chart.setTitle { text: "#{data.fields[@configs.displayField].fieldName} by #{@configs.selectName}" }
+        @chart.setTitle { text: "#{data.fields[@configs.displayField].fieldName} grouped by #{@configs.selectName}" }
         @chart.addSeries options, false
 
         @chart.redraw()
