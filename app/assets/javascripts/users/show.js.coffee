@@ -4,8 +4,8 @@ $(document).ajaxSuccess (event, request, settings) ->
   if (query.data('method') is 'delete')
     query.closest('tr').after('<tr></tr>').hide()
 
-$(document).ajaxError (event, xhr, settings, error) ->
-  quickFlash(error, 'error')
+  $(document).ajaxError (event, xhr, settings, error) ->
+    quickFlash(error, 'error')
 
 IS.onReady "users/show", ->
   # Start recent 3
