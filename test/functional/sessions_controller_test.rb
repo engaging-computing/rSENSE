@@ -39,7 +39,7 @@ class SessionsControllerTest < ActionController::TestCase
     get :permissions,
     {
       format: 'json',
-      project_id: @project_three.id,
+      project_id: @project_three.id
     }, user_id: @kate.id
     assert_response :success
     assert JSON.parse(response.body)['permissions'].include? 'project'
