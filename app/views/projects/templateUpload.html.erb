@@ -40,9 +40,9 @@
                 <%end%>
               </td>
             </tr>
-          <% end %> 
+          <% end %>
         </tbody>
-       
+
       </table>
     </div>
   </div>
@@ -50,8 +50,11 @@
   <br/>
   <div class="row">
     <div class="col-lg-4 col-lg-offset-3">
-      <b> Check to save data set.  </b><input type="checkbox" name="create_dataset" id="create_dataset" style="margin:5px 5px" checked><br/>
-    </div>  
+      <b> Check to save data set.  </b>
+      <input type="checkbox" name="create_dataset" id="create_dataset"
+             style="margin:5px 5px"
+             <% if @has_data %> checked <% end %>><br/>
+    </div>
   </div>
   <div class="row">
     <div class="col-lg-4 col-lg-offset-3">
@@ -61,6 +64,6 @@
       <button type="submit" class="btn btn-primary">Submit</button>
     </div>
   </div>
-  
+
   <input type="hidden" name="file" value="<%=@tmp_file%>">
-<% end %> 
+<% end %>

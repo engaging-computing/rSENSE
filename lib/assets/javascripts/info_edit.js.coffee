@@ -12,7 +12,7 @@ $ ->
     val = val.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;")
 
     # href should be /type/id e.g. /users/jim
-    href = location.pathname
+    href = if ($ @).attr('href')? then ($ @).attr('href') else location.pathname
 
     # Show and focus the edit box.
     root.find('.info-show-text').hide()
