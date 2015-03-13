@@ -68,6 +68,7 @@ class FileUploader
     data_obj[:types] = get_probable_types(data)
     data_obj[:file] =  write_temp_file(row_major)
     data_obj[:headers] = headers
+    data_obj[:has_data] = !data.first[1].nil?
     data_obj
   end
 
@@ -125,7 +126,18 @@ class FileUploader
   end
 
   def swap_with_field_names(data_obj, project)
+    # data_obj is a JSON object where the keys are the names of the
+    # fields and the values are the data in the column underneath
+    # the field names
     data = []
+
+    # data_obj.first gets the first key-value pair, and [1]
+    # looks at the data (the value) of the pair - if there is
+    # no data, return the empty array
+    if data_obj.first[1].nil?
+      return data
+    end
+
     size = data_obj.first[1].length
 
     (0..size - 1).each do |i|
@@ -203,14 +215,18 @@ class FileUploader
     regex = %r{((?<year>\d{4})(-|\/)(?<month>\d{1,2})(-|\/)(?<day>\d{1,2})|([uU]\s\d+))}
 
     data_set.each do |column|
+      if column[0].casecmp('LATITUDE') == 0 or column[0].casecmp('LAT') == 0
+        types['latitude'].push column[0]
+        next
+      elsif column[0].casecmp('LONGITUDE') == 0 or column[0].casecmp('LON') == 0
+        types['longitude'].push column[0]
+        next
+      end
+      next if column[1].nil? # no data case
       if (column[1]).map { |dp| (regex =~ dp) }.reduce(:&)
         types['timestamp'].push column[0]
       elsif !(column[1]).map { |dp| valid_float?(dp) }.reduce(:&)
         types['text'].push column[0]
-      elsif column[0].casecmp('LATITUDE') == 0 or column[0].casecmp('LAT') == 0
-        types['latitude'].push column[0]
-      elsif column[0].casecmp('LONGITUDE') == 0 or column[0].casecmp('LON') == 0
-        types['longitude'].push column[0]
       end
     end
     types
