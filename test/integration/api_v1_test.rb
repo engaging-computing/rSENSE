@@ -474,7 +474,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert keys_match(response, @media_object_keys), 'Keys are missing.'
   end
 
-  test 'create media object for dataset with key' do
+  test 'create media object for data set with key' do
     pid = @dessert_project.id
     post "/api/v1/projects/#{pid}/jsonDataUpload",
 

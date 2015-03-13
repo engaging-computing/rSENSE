@@ -19,7 +19,7 @@
         </td>
         <td><%= contribution.created_at.strftime("%B %d, %Y")%></td>
         <td>
-          <% if contribution.kind_of? DataSet %>
+          <% if contribution.kind_of? Data Set %>
             <a href="/projects/<%= contribution.project.id %>/export/data_sets/<%= contribution.id %>">Export
             </a>
           <% end %>
