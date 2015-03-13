@@ -76,8 +76,8 @@ class SessionsController < ApplicationController
 
       # Session is null
       if session[:user_id].nil?
-        format.json { head :unauthorized }
         format.js {}
+        formal.all { head :unauthorized }
         return
       end
 
@@ -90,6 +90,7 @@ class SessionsController < ApplicationController
             Project.find(params[:project_id]).user_id != session[:user_id]
           format.json { render json: { permissions: @permissions }, status: :ok }
           format.js {}
+          format.all { head :ok }
           return
         end
       end
@@ -98,6 +99,7 @@ class SessionsController < ApplicationController
       @permission.push 'project'
       format.json { render json: { permissions: @permissions }, status: :ok }
       format.js {}
+      format.all { head :ok }
     end
   end
 
