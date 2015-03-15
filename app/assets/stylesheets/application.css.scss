@@ -44,6 +44,7 @@ body {
   background-repeat: repeat-x;
   border: 1px solid #b5b5b5;
   border-radius: 4px 4px 0px 0px;
+  cursor: pointer;
   font-size: x-large;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -255,4 +256,13 @@ body {
       width: 250px !important;
     }
   }
+}
+
+.half_width_edit
+{
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  padding-bottom: 2px; 
+  max-width: 45%;
 }

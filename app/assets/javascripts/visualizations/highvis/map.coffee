@@ -174,7 +174,6 @@ $ ->
             label += "<div style='width:100%;text-align:center;color:#{color};'> " +
               "#{dataPoint[globals.configs.groupById]}</div>"#<br>"
             label += "<table>"
-
             for field, fieldIndex in data.fields when dataPoint[fieldIndex] isnt null
               dat = if (Number field.typeID) is data.types.TIME
                 (globals.dateFormatter dataPoint[fieldIndex])
@@ -182,7 +181,12 @@ $ ->
                 dataPoint[fieldIndex]
 
               label += "<tr><td>#{field.fieldName}</td>"
-              label += "<td><strong>#{dat}</strong></td></tr>"
+              label += "<td><strong>#{dat}</strong></td>"
+              unit = fieldUnit(field, false)
+              if unit? and fieldIndex > 2
+                label += "<td>#{unit}</td></tr>"
+              else
+                label += "</tr>"
 
             label += "</table></div>"
 
