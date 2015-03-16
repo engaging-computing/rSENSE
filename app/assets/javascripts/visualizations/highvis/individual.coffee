@@ -128,7 +128,8 @@ $ ->
       @tournamentReproduce: (individuals, points, func, tournamentSize = 10, probability = 0.8) ->
         tournament = for i in [0...tournamentSize]
           participant = Math.floor(Math.random() * individuals.length)
-          {individual: individuals[participant], index: i} 
+          [tree, maxDepth] = [participant.tree, participant.maxDepth]
+          {individual: new window.individual(tree, maxDepth), index: i} 
         for participant in tournament
           participant.fitness = eval "participant.individual.#{func}(points)"
         tournament.sort (a, b) -> Number(b.fitness) - Number(a.fitness)
@@ -142,6 +143,39 @@ $ ->
       # Tournament selection genetic operator
       @tournamentSelection: (individuals, points, func, tournamentSize = 10, probability = 0.8) ->
         @tournamentReproduce(individuals, points, func, tournamentSize, probability)
+
+      # Stochastic Universal Sampling reproduction genetic operator
+      ###
+      # WARNING:  PERFORMS REPRODUCTION/SELECTION ALL AT ONCE
+      ###
+      @susReproduce: (individuals, points, func, offspring) ->
+        fitnesses = []
+        children = []
+        fitnesses = for individual in individuals
+          eval "individual.#{func}(points)"
+        sumFitnesses = fitnesses.map((y) -> if isNaN(y) then 0 else y).reduce((pv, cv, index, array) -> pv + cv)
+        for i in [1...fitnesses.length]
+          fitnesses[i] = fitnesses[i] + fitnesses[i - 1]
+        fitnesses = fitnesses.map((y) -> y / sumFitnesses)
+        distance = 1 / offspring
+        pointer = Math.random() * distance
+        [lastChild, numChildren] = [0, 0]
+        for i in [0...offspring]
+          for j in [lastChild...fitnesses.length]
+            if fitnesses[j] > (pointer * (numChildren + 1))
+              lastChild = j
+              numChildren = numChildren + 1
+              child = new window.individual(individuals[j].tree, individuals[j].maxDepth)
+              children.push(child)
+              break
+        children
+        
+      # Stochastic Universal Sampling selection genetic operator
+      ###
+      # WARNING:  PERFORMS REPRODUCTION/SELECTION ALL AT ONCE
+      ###
+      @susSelection: (individuals, points, func, offspring) ->
+        @susReproduce(individuals, points, func, offspring)
 
       # Calculates an individual's fitness by its sum of squared-error over points 
       sseFitness: (points, raw = false) ->
@@ -208,15 +242,26 @@ $ ->
         scaledFitness = (1 / points.length) * sumScaledResiduals
         return if isNaN(scaledFitness) then 0 else 1 / (1 + scaledFitness)
 
+      # Calculate's an individual's scaled fitness via pareto genetic 
+      # programming. Nonlinearity is concurrently minimized alongside 
+      # the fitness function specified. 
       paretoFitness: (points) -> 
         1
     window.points = for i in [0...20]
       x: i
       y: Math.pow(i, 2)
 
+    window.a = new individual(null, 7)
+    window.b = new individual(null, 7)
+    window.c = new individual(null, 7)
+    window.d = new individual(null, 7)
+    window.kids = individual.susReproduce([window.a,window.b,window.c,window.d], window.points, 'scaledFitness', 2)
+    for ele in [window.a, window.b, window.c, window.d]
+      console.log ele.scaledFitness(window.points)
+    console.log "kids[0] fitness: ", window.kids[0].scaledFitness(window.points)
+    console.log "kids[1] fitness: ", window.kids[1].scaledFitness(window.points)
+
   ###
   # TODO:
-  # 1.  New Selection strategies (stochastic universal sampling, reward-based selection)
-  # 2.  Pareto Fitness
-  # 3.  
+  # 1.  Pareto Fitness
   ###
