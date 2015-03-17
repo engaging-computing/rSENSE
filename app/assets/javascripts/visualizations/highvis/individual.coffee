@@ -110,6 +110,7 @@ $ ->
           individualFitness = eval "individual.#{func}(points)"
           sumFitnesses = sumFitnesses + individualFitness
           individualFitnesses.push individualFitness
+        individualFitnesses = individualFitnesses.map((y) -> if isNaN y then 0 else y)
         distribution = for number, index in individualFitnesses
           cumulativeFitness = individualFitnesses[0..index].reduce (pv, cv, index, array) -> pv + cv
           cumulativeFitness / sumFitnesses
@@ -132,6 +133,7 @@ $ ->
           {individual: new window.individual(tree, maxDepth), index: i} 
         for participant in tournament
           participant.fitness = eval "participant.individual.#{func}(points)"
+        tournament.map((participant) -> if isNaN participant.fitness then 0 else participant.fitness)
         tournament.sort (a, b) -> Number(b.fitness) - Number(a.fitness)
         console.log tournament
         for participant, ind in tournament
@@ -182,7 +184,7 @@ $ ->
         fitnessAtPoints = for point in points
           Math.pow(point.y - this.evaluate(point.x), 2)
         sseFitness = fitnessAtPoints.reduce (pv, cv, index, array) -> pv + cv
-        if isNaN(sseFitness) then 0 else if raw is true then sseFitness else 1 / (1 + sseFitness)
+        if isNaN(sseFitness) or sseFitness is Infinity then 0 else if raw is true then sseFitness else 1 / (1 + sseFitness)
 
       # Calculates an individual's fitness by its mean squared-error over points
       mseFitness: (points) ->
@@ -239,7 +241,7 @@ $ ->
         
         # Calculate scaled fitness
         scaledFitness = (1 / points.length) * sumScaledResiduals
-        return if isNaN(scaledFitness) then 0 else 1 / (1 + scaledFitness)
+        return if isNaN(scaledFitness) or scaledFitness is Infinity then 0 else 1 / (1 + scaledFitness)
 
       # Calculate an individual's fitness by its normalized mean-squared 
       # error over points
@@ -250,7 +252,7 @@ $ ->
         averageTarget = targets.reduce((pv, cv, index, array) -> pv + cv) / targets.length
         fitness = (Math.pow(targets[i] - values[i], 2) / (averageTarget * averageValue) for i in [0...values.length]).reduce((pv, cv, index, array) -> pv + cv) / points.length
         console.log averageValue, averageTarget, fitness
-        if isNaN(fitness) then 0 else 1 / (1 + fitness)
+        if isNaN(fitness) or isNaN(fitness) then 0 else 1 / (1 + fitness)
 
       # Calculate's an individual's scaled fitness via pareto genetic 
       # programming. Nonlinearity is concurrently minimized alongside 
@@ -262,4 +264,4 @@ $ ->
       paretoFitness: (points, func = 'nmseFitness') -> 
         fitness = eval "this.#{func}(points)"
         nonlinearity = (this.tree.depthAtPoint(i) for i in [0...this.tree.treeSize()]).reduce((pv, cv, index, array) -> pv + cv) + this.tree.treeSize()
-        fitness + 1 / (1 + nonlinearity)
+        ret = if isNaN(fitness + nonlinearity) or (fitness + nonlinearity) is Infinity then 0 else fitness + 1 / (1 + nonlinearity)
