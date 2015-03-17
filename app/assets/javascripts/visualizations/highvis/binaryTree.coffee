@@ -44,7 +44,16 @@ $ ->
 
   if namespace.controller is "visualizations" and
   namespace.action in ["displayVis", "embedVis", "show"]
-    
+    window.add = (a, b) -> a + b
+    window.subtract = (a, b) -> a - b
+    window.multiply = (a, b) -> a * b
+    window.safeDiv = (a, b) -> if b is 0 then 1 else a / b
+    window.pow = (a, b) -> Math.pow(a, b)
+    window.exp = (a) -> Math.exp(a)
+    window.cos = (a) -> Math.cos(a)
+    window.sin = (a) -> Math.sin(a)
+    window.safeLog = (a) -> Math.log(Math.abs(a))
+    window.safeSqrt = (a) -> Math.sqrt(Math.abs(a))
     class window.binaryTree extends Object
 
       @terminals = [
@@ -52,16 +61,7 @@ $ ->
       ]
 
       @operators = [
-        (a, b) -> a + b,
-        (a, b) -> a - b,
-        (a, b) -> a * b,
-        (a, b) -> if b is 0 then 1 else a / b,
-        (a, b) -> Math.pow(a, b),
-        (a)    -> Math.exp(a), 
-        (a)    -> Math.cos(a),
-        (a)    -> Math.sin(a),
-        (a)    -> Math.log(Math.abs(a))
-        (a)    -> Math.sqrt(Math.abs(a))
+        add, subtract, multiply, safeDiv, pow, exp, cos, sin, safeLog, safeSqrt
       ]
 
       constructor: (parent = null) ->
@@ -222,9 +222,9 @@ $ ->
               this.right.generate(maxDepth, curDepth + 1)
 
       # Evaluate the Binary tree numerically for a given input value
-      evaluate: (x) ->
+      evaluate: (x, val = null) ->
         if @data is 'x'
-          x
+          if val isnt null then val else x
         else if typeof(@data) is 'number'
           @data
         else

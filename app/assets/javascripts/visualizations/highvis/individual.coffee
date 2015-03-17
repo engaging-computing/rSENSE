@@ -224,8 +224,7 @@ $ ->
         yVarTerms = for ydiff in yMeanDiffs
           Math.pow(ydiff, 2)
         # calculate the variance of y
-        yVar = yVarTerms.reduce (pv, cv, index, array) ->
-          pv + cv
+        yVar = yVarTerms.reduce (pv, cv, index, array) -> pv + cv
         
         # b = cov(y,t) / var(y)
         b = if yVar is 0 then 1 else ytCov / yVar
@@ -242,26 +241,25 @@ $ ->
         scaledFitness = (1 / points.length) * sumScaledResiduals
         return if isNaN(scaledFitness) then 0 else 1 / (1 + scaledFitness)
 
+      # Calculate an individual's fitness by its normalized mean-squared 
+      # error over points
+      nmseFitness: (points) ->
+        values = (this.evaluate(point.x) for point in points)
+        averageValue = values.reduce((pv, cv, index, array) -> pv + cv) / values.length
+        targets = (point.y for point in points)
+        averageTarget = targets.reduce((pv, cv, index, array) -> pv + cv) / targets.length
+        fitness = (Math.pow(targets[i] - values[i], 2) / (averageTarget * averageValue) for i in [0...values.length]).reduce((pv, cv, index, array) -> pv + cv) / points.length
+        console.log averageValue, averageTarget, fitness
+        if isNaN(fitness) then 0 else 1 / (1 + fitness)
+
       # Calculate's an individual's scaled fitness via pareto genetic 
       # programming. Nonlinearity is concurrently minimized alongside 
-      # the fitness function specified. 
-      paretoFitness: (points) -> 
-        1
-    window.points = for i in [0...20]
-      x: i
-      y: Math.pow(i, 2)
-
-    window.a = new individual(null, 7)
-    window.b = new individual(null, 7)
-    window.c = new individual(null, 7)
-    window.d = new individual(null, 7)
-    window.kids = individual.susReproduce([window.a,window.b,window.c,window.d], window.points, 'scaledFitness', 2)
-    for ele in [window.a, window.b, window.c, window.d]
-      console.log ele.scaledFitness(window.points)
-    console.log "kids[0] fitness: ", window.kids[0].scaledFitness(window.points)
-    console.log "kids[1] fitness: ", window.kids[1].scaledFitness(window.points)
-
-  ###
-  # TODO:
-  # 1.  Pareto Fitness
-  ###
+      # the maximization of the fitness function specified.
+      # 
+      # Goodness of fit is (by default) calculated via Normalized Mean-Squared Error,
+      # and non-linearity is calculated through a visitation-length heuristic
+      # as specified in the M. Keijzer and J. Foster paper. 
+      paretoFitness: (points, func = 'nmseFitness') -> 
+        fitness = eval "this.#{func}(points)"
+        nonlinearity = (this.tree.depthAtPoint(i) for i in [0...this.tree.treeSize()]).reduce((pv, cv, index, array) -> pv + cv) + this.tree.treeSize()
+        fitness + 1 / (1 + nonlinearity)
