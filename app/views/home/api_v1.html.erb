@@ -904,9 +904,41 @@
 
   }
           </pre>
-          <b>Example (Javascript)</b>
+          <b>Example (HTML) originial code by Scott Cytacki</b>
           <pre>
-          Needs Example.
+          <xmp>
+  <html>
+    <head>
+      <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script type="text/javascript" src="example.js"></script>
+    </head>
+    <body>
+      <input type="file" id="file-select"/>
+      <button onclick="run();">Get</button>
+    </body>
+  </html>
+          </xmp>
+          </pre>
+          <b>Example (Javascript) originial code by Scott Cytacki</b>
+            <pre>
+// MEDIA OBJECT POST WITH USERNAME AND PASSWORD DATASET
+
+    var apiUrl = 'http://isenseproject.org/api/v1/media_objects';
+    var fileSelect = document.getElementById('file-select');
+    var files = fileSelect.files;
+    var formData = new FormData();
+    var file = files[0];
+
+    formData.append('upload', file, file.name);
+    formData.append('email', '<b>(EMAIL)</b>');
+    formData.append('password', '<b>(PASSWORD)</b>');
+    formData.append('type', '<b>(data_set or project)</b>');
+    formData.append('id', <b>(DATASET ID or PROJECT ID)</b>);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', apiUrl, true);
+    xhr.send(formData);
+
           </pre>
           <b>Response</b>
           <pre>
@@ -959,9 +991,41 @@
 
   }
           </pre>
-          <b>Example (Javascript)</b>
+          <b>Example (HTML) originial code by Scott Cytacki</b>
           <pre>
-          Needs Example.
+          <xmp>
+  <html>
+    <head>
+      <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script type="text/javascript" src="example.js"></script>
+    </head>
+    <body>
+      <input type="file" id="file-select"/>
+      <button onclick="run();">Get</button>
+    </body>
+  </html>
+          </xmp>
+          </pre>
+          <b>Example (Javascript) originial code by Scott Cytacki</b>
+            <pre>
+// MEDIA OBJECT POST WITH USERNAME AND PASSWORD DATASET
+
+    var apiUrl = 'http://isenseproject.org/api/v1/media_objects';
+    var fileSelect = document.getElementById('file-select');
+    var files = fileSelect.files;
+    var formData = new FormData();
+    var file = files[0];
+
+    formData.append('upload', file, file.name);
+    formData.append('contribution_key', '<b>(KEY)</b>');
+    formData.append('contributor_name', '<b>(CONTRIBUTOR'S NAME)</b>');
+    formData.append('type', '<b>(data_set or project)</b>');
+    formData.append('id', <b>(DATASET ID or PROJECT ID)</b>);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', apiUrl, true);
+    xhr.send(formData);
+
           </pre>
           <b>Response</b>
           <pre>
