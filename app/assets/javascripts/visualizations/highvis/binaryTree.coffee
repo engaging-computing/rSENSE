@@ -293,4 +293,4 @@ $ ->
         [childOne, childTwo] = [window.binaryTree.clone(tree1a), window.binaryTree.clone(tree2a)]
         childOne.insertTree(childTwo.index(crossoverPointTwo), crossoverPointOne)
         childTwo.insertTree(tree1b.index(crossoverPointOne), crossoverPointTwo)
-        return [childOne, childTwo]
+        [childOne, childTwo]

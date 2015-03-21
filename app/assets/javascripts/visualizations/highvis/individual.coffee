@@ -53,7 +53,7 @@ $ ->
       constructor: (tree = null, maxDepth = 10) ->
         if tree is null
           @tree = new binaryTree
-          @tree.generate(maxDepth)
+          @tree.generate(Math.floor(Math.random() * (maxDepth - 1)) + 2)
         else
           @tree = binaryTree.clone(tree)
         @depth = @tree.maxDepth()
@@ -69,7 +69,7 @@ $ ->
         mutationSite = Math.floor(Math.random() * length)
         mutant = binaryTree.clone(individual.tree)
         mutation = new binaryTree
-        mutation.generate(individual.maxDepth)
+        mutation.generate(Math.floor(Math.random() * (individual.maxDepth - 1)) + 2)
         mutant.insertTree(mutation, mutationSite)
         ret = new window.individual(mutant, mutant.maxDepth())
 
@@ -103,17 +103,18 @@ $ ->
         [new individual(childOne, childOne.maxDepth()), new individual(childTwo, childTwo.maxDepth())]
 
       # Fitness-proportional reproduction genetic operator
-      @fpReproduce: (individuals, points, func) ->
-        sumFitnesses = 0
-        individualFitnesses = []
-        for individual in individuals
-          individualFitness = eval "individual.#{func}(points)"
-          sumFitnesses = sumFitnesses + individualFitness
-          individualFitnesses.push individualFitness
-        individualFitnesses = individualFitnesses.map((y) -> if isNaN y then 0 else y)
-        distribution = for number, index in individualFitnesses
-          cumulativeFitness = individualFitnesses[0..index].reduce (pv, cv, index, array) -> pv + cv
-          cumulativeFitness / sumFitnesses
+      @fpReproduce: (individuals, points, func, distribution = null) ->
+        if distribution is null
+          sumFitnesses = 0
+          individualFitnesses = []
+          for individual in individuals
+            individualFitness = eval "individual.#{func}(points)"
+            sumFitnesses = sumFitnesses + individualFitness
+            individualFitnesses.push individualFitness
+          individualFitnesses = individualFitnesses.map((y) -> if isNaN y then 0 else y)
+          distribution = for number, index in individualFitnesses
+            cumulativeFitness = individualFitnesses[0..index].reduce (pv, cv, index, array) -> pv + cv
+            cumulativeFitness / sumFitnesses
         rand = Math.random()
         for probability, i in distribution
           if rand < probability
@@ -121,8 +122,8 @@ $ ->
             return new window.individual(individual.tree, individual.maxDepth)
 
       # Fitness-proportional selection genetic operator
-      @fpSelection: (individuals, points, func) ->
-        @fpReproduce(individuals, points, func)
+      @fpSelection: (individuals, points, func, distribution = null) ->
+        @fpReproduce(individuals, points, func, distribution)
 
       # Tournament reproduction genetic operator
       @tournamentReproduce: (individuals, points, func, tournamentSize = 10, probability = 0.8) ->
@@ -148,21 +149,22 @@ $ ->
       ###
       # WARNING:  PERFORMS REPRODUCTION/SELECTION ALL AT ONCE
       ###
-      @susReproduce: (individuals, points, func, offspring) ->
+      @susReproduce: (individuals, points, func, offspring, distribution = null) ->
         fitnesses = []
         children = []
-        fitnesses = for individual in individuals
-          eval "individual.#{func}(points)"
-        sumFitnesses = fitnesses.map((y) -> if isNaN(y) then 0 else y).reduce((pv, cv, index, array) -> pv + cv)
-        for i in [1...fitnesses.length]
-          fitnesses[i] = fitnesses[i] + fitnesses[i - 1]
-        fitnesses = fitnesses.map((y) -> y / sumFitnesses)
+        if distribution is null
+          fitnesses = for individual in individuals
+            eval "individual.#{func}(points)"
+          sumFitnesses = fitnesses.map((y) -> if isNaN(y) then 0 else y).reduce((pv, cv, index, array) -> pv + cv)
+          distribution = for number, index in fitnesses
+            cumulativeFitness = fitnesses[0..index].reduce (pv, cv, index, array) -> pv + cv
+            cumulativeFitness / sumFitnesses
         distance = 1 / offspring
         pointer = Math.random() * distance
         [lastChild, numChildren] = [0, 0]
         for i in [0...offspring]
-          for j in [lastChild...fitnesses.length]
-            if fitnesses[j] > (pointer * (numChildren + 1))
+          for j in [lastChild...distribution.length]
+            if distribution[j] > (pointer * (numChildren + 1))
               lastChild = j
               numChildren = numChildren + 1
               child = new window.individual(individuals[j].tree, individuals[j].maxDepth)
@@ -174,8 +176,8 @@ $ ->
       ###
       # WARNING:  PERFORMS REPRODUCTION/SELECTION ALL AT ONCE
       ###
-      @susSelection: (individuals, points, func, offspring) ->
-        @susReproduce(individuals, points, func, offspring)
+      @susSelection: (individuals, points, func, offspring, distribution = null) ->
+        @susReproduce(individuals, points, func, offspring, distribution)
 
       # Calculates an individual's fitness by its sum of squared-error over points 
       sseFitness: (points, raw = false) ->
@@ -248,13 +250,15 @@ $ ->
 
       # Calculate an individual's fitness by its normalized mean-squared 
       # error over points
-      nmseFitness: (points) ->
+      nmseFitness: (points, raw = false) ->
         values = (this.evaluate(point.x) for point in points)
         averageValue = values.reduce((pv, cv, index, array) -> pv + cv) / values.length
         targets = (point.y for point in points)
         averageTarget = targets.reduce((pv, cv, index, array) -> pv + cv) / targets.length
         fitness = (Math.pow(targets[i] - values[i], 2) / (averageTarget * averageValue) for i in [0...values.length]).reduce((pv, cv, index, array) -> pv + cv) / points.length
-        if isNaN(fitness) or isNaN(fitness) then 0 else 1 / (1 + fitness)
+        if isNaN(fitness)
+          fitness = 0
+        if raw then fitness else 1 / (1 + fitness)
 
       # Calculate's an individual's scaled fitness via pareto genetic 
       # programming. Nonlinearity is concurrently minimized alongside 
@@ -264,6 +268,8 @@ $ ->
       # and non-linearity is calculated through a visitation-length heuristic
       # as specified in the M. Keijzer and J. Foster paper. 
       paretoFitness: (points, func = 'nmseFitness') -> 
-        fitness = eval "this.#{func}(points)"
+        fitness = if func in ['nmseFitness', 'sseFitness']
+          eval "this.#{func}(points, true)"
+        else eval "this.#{func}(points)"
         nonlinearity = (this.tree.depthAtPoint(i) for i in [0...this.tree.treeSize()]).reduce((pv, cv, index, array) -> pv + cv) + this.tree.treeSize()
-        ret = if isNaN(fitness + nonlinearity) or (fitness + nonlinearity) is Infinity then 0 else fitness + 1 / (1 + nonlinearity)
+        ret = if isNaN(fitness + nonlinearity) or (fitness + nonlinearity) is Infinity then 0 else (1 / (1 + fitness + nonlinearity))
