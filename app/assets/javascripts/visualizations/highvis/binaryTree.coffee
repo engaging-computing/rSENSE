@@ -57,7 +57,7 @@ $ ->
     class window.binaryTree extends Object
 
       @terminals = [
-        'x', Math.E, Math.PI
+        'x'
       ]
 
       @operators = [
@@ -114,9 +114,9 @@ $ ->
       ###
       __query: (combiner) ->
         rest = 0
-        if @left isnt null
+        if @left? and @left isnt null
           rest = combiner(rest, @left.__query(combiner))
-        if @right isnt null
+        if @right? and @right isnt null
           rest = combiner(rest, @right.__query(combiner))
         1 + rest
       
@@ -238,6 +238,7 @@ $ ->
       ###
       # WARNING:  MUTATES THE BINARY TREE 'THIS', DOES NOT MUTATE ARGUMENT TREE
       ###
+      ### I think this needs to go!###
       insertTree: (tree, index = 0) ->
         replacementPoint = this.index(index)
         if index is null or replacementPoint is -1
@@ -253,6 +254,7 @@ $ ->
                 start.right = window.binaryTree.clone(tree)
             start.__updateParents()
           else
+
             this.data = tree.data
             this.right = binaryTree.clone(tree.right)
             this.left = binaryTree.clone(tree.left)
@@ -292,13 +294,3 @@ $ ->
         childOne.insertTree(childTwo.index(crossoverPointTwo), crossoverPointOne)
         childTwo.insertTree(tree1b.index(crossoverPointOne), crossoverPointTwo)
         return [childOne, childTwo]
-
-    window.testTree = new binaryTree
-    testTree.insertData((a, b) -> a * b)
-    testTree.insertData(3, 'left')
-    testTree.insertData(2, 'right')
-    window.testTree2 = new binaryTree
-    testTree2.insertData((a, b) -> a * b)
-    testTree2.insertData('x', 'left')
-    testTree2.insertData('x', 'right')
-    window.result = window.binaryTree.crossover(testTree, testTree2)

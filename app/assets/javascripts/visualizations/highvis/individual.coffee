@@ -118,8 +118,7 @@ $ ->
         for probability, i in distribution
           if rand < probability
             individual = individuals[i]
-            ret = new window.individual(individual.tree, individual.maxDepth)
-            return ret  
+            return new window.individual(individual.tree, individual.maxDepth)
 
       # Fitness-proportional selection genetic operator
       @fpSelection: (individuals, points, func) ->
@@ -135,7 +134,6 @@ $ ->
           participant.fitness = eval "participant.individual.#{func}(points)"
         tournament.map((participant) -> if isNaN participant.fitness then 0 else participant.fitness)
         tournament.sort (a, b) -> Number(b.fitness) - Number(a.fitness)
-        console.log tournament
         for participant, ind in tournament
           rand = Math.random()
           if rand < probability * Math.pow(1 - probability, ind)
@@ -183,17 +181,19 @@ $ ->
       sseFitness: (points, raw = false) ->
         fitnessAtPoints = for point in points
           Math.pow(point.y - this.evaluate(point.x), 2)
-        sseFitness = fitnessAtPoints.reduce (pv, cv, index, array) -> pv + cv
-        if isNaN(sseFitness) or sseFitness is Infinity then 0 else if raw is true then sseFitness else 1 / (1 + sseFitness)
+        fitness = fitnessAtPoints.reduce (pv, cv, index, array) -> pv + cv
+        if isNaN(fitness)
+          fitness = Infinity
+        return if raw then fitness else 1 / (1 + fitness)
 
       # Calculates an individual's fitness by its mean squared-error over points
       mseFitness: (points) ->
-        mseFitness = 1 / (1 + (1 / points.length) * this.sseFitness(points, true))
-        mseFitness      
+        fitness = 1 / (1 + (1 / points.length) * this.sseFitness(points, true))
+        fitness      
 
       # Calculates an individual's fitness by scaled fitness 
       # (technique employed in the scaled symbolic regression paper by Keijzer)
-      scaledFitness: (points) ->
+      scaledFitness: (points, params = false) ->
         # define inputs (xs), targets (ts), and outputs (ys)
         xs = (point.x for point in points)
         ys = (this.evaluate(point.x) for point in points)
@@ -232,6 +232,9 @@ $ ->
         b = if yVar is 0 then 1 else ytCov / yVar
         # a = tAvg - b * yAvg
         a = tAvg - b * yAvg
+
+        # If we need a and b (params = true), return them
+        if params then return [a, b]
         
         # calculate scaled residuals (target[i] - (a + b * output[i])) ^ 2
         scaledResiduals = for i in [0...points.length]
@@ -240,8 +243,8 @@ $ ->
         sumScaledResiduals = scaledResiduals.reduce (pv, cv, index, array) -> pv + cv
         
         # Calculate scaled fitness
-        scaledFitness = (1 / points.length) * sumScaledResiduals
-        return if isNaN(scaledFitness) or scaledFitness is Infinity then 0 else 1 / (1 + scaledFitness)
+        fitness = (1 / points.length) * sumScaledResiduals
+        return if isNaN(fitness) or fitness is Infinity then 0 else 1 / (1 + fitness)
 
       # Calculate an individual's fitness by its normalized mean-squared 
       # error over points
@@ -251,7 +254,6 @@ $ ->
         targets = (point.y for point in points)
         averageTarget = targets.reduce((pv, cv, index, array) -> pv + cv) / targets.length
         fitness = (Math.pow(targets[i] - values[i], 2) / (averageTarget * averageValue) for i in [0...values.length]).reduce((pv, cv, index, array) -> pv + cv) / points.length
-        console.log averageValue, averageTarget, fitness
         if isNaN(fitness) or isNaN(fitness) then 0 else 1 / (1 + fitness)
 
       # Calculate's an individual's scaled fitness via pareto genetic 
