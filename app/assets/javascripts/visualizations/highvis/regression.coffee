@@ -80,7 +80,7 @@ $ ->
     ###
     Calculates a regression and returns it as a highcharts series.
     ###
-    globals.getRegression = (xs, ys, type, xBounds, seriesName, dashStyle) ->
+    globals.getRegression = (xs, ys, type, xBounds, seriesName, dashStyle, id) ->
       Ps = []
       func = globals.REGRESSION.FUNCS[type]
 
@@ -107,12 +107,12 @@ $ ->
       [Ps, R2] = NLLS(func, normalizeData(xs, type), ys, Ps)
       
       # Create the highcharts series
-      generateHighchartsSeries(Ps, R2, type, xBounds, seriesName, dashStyle)
+      [func, generateHighchartsSeries(Ps, R2, type, xBounds, seriesName, dashStyle, id)]
 
     ###
     Returns a series object to draw on the chart canvas.
     ###
-    generateHighchartsSeries = (Ps, R2, type, xBounds, seriesName, dashStyle) ->
+    generateHighchartsSeries = (Ps, R2, type, xBounds, seriesName, dashStyle, id) ->
       data = for i in [0..globals.REGRESSION.NUM_POINTS]
         xv = (i / globals.REGRESSION.NUM_POINTS)
         yv = 0
@@ -123,10 +123,10 @@ $ ->
         {x: xv * (xBounds.dataMax - xBounds.dataMin) + xBounds.dataMin, y: yv}
       Ps = visSpaceParameters(Ps, xBounds, type)
       str = makeToolTip(Ps, R2, type, seriesName)
-
-      ret =
+            
+      retSeries =
         name:
-          id: ''
+          id: id
           group: seriesName
           regression:
             tooltip: str
@@ -141,6 +141,8 @@ $ ->
         states:
           hover:
             lineWidth: 4
+
+      [Ps, R2, retSeries]
 
     ###
     # Uses the regression matrix to calculate the y value given an x value.
@@ -395,3 +397,27 @@ $ ->
           newPs.push globals.REGRESSION.FUNCS[globals.REGRESSION.EXPONENTIAL][0](1, Ps) - \
             (Math.exp((newPs[0] * min) + newPs[1]))
       newPs
+
+    globals.getRegressionSeries = (R2, func, params, type, name, xBounds, dashStyle, id) ->
+      data = for i in [0...globals.REGRESSION.NUM_POINTS]
+        x = (i / globals.REGRESSION.NUM_POINTS) * (xBounds[1] - xBounds[0]) + xBounds[0]
+        {x: x, y: func(x, params)}
+      str = makeToolTip(params, R2, type, name)
+      retSeries =
+        name:
+          id: id
+          group: name
+          regression:
+            tooltip: str
+        data: data
+        type: 'line'
+        color: '#000'
+        lineWidth: 2
+        dashStyle: dashStyle
+        showInLegend: 0
+        marker:
+          symbol: 'blank'
+        states:
+          hover:
+            lineWidth: 4
+      retSeries
