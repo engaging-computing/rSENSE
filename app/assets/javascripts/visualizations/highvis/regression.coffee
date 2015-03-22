@@ -447,7 +447,7 @@ $ ->
     parenthesize = (string) ->
       if not isNaN(Number(string)) or string is 'x' then string else "(#{string})"
     stringify = (tree) ->
-      console.log 'called stringify'
+      #console.log 'called stringify'
       switch tree.data
         when window.add
           "#{parenthesize(stringify(tree.left))} + #{parenthesize(stringify(tree.right))}"
@@ -477,7 +477,7 @@ $ ->
         when 'x'
           'x'
         else 
-          console.log tree.data
+          #console.log tree.data
           "#{roundToFourSigFigs(tree.data)}"
 
 

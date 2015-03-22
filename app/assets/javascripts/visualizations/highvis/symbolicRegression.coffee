@@ -59,11 +59,11 @@ $ ->
     # Mutation operator to be used (point mutation)
     window.MUTATION = 'mutate'
     # Maximum depth of an individual's expression tree
-    window.INDIVIDUALDEPTH = 10
+    window.INDIVIDUALDEPTH = 5
     # Number of individuals in a population at any given time
     # NOTE:  MUST BE A MULTIPLE OF EIGHT TO USE THE 
     #        OPTIMIZED VERSION OF THE ALGORITHM CORRECTLY.
-    window.POPULATIONSIZE = 20
+    window.POPULATIONSIZE = 200
     # Probability that a child individual is produced through
     # reproduction, and inserted (unmodified) into the next 
     # generation of the population
@@ -77,7 +77,7 @@ $ ->
     # Maximum number of iterations (simulated generations) to 
     # be performed while searching for an adequately-fit
     # candidate solution (termination criteria)
-    window.MAXITERS = 10
+    window.MAXITERS = 100
     # Any individuals with fitness greater than MAXFITNESS
     # will be immediately returned as a candidate solution
     # (termination criteria)
