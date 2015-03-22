@@ -63,7 +63,7 @@ $ ->
     # Number of individuals in a population at any given time
     # NOTE:  MUST BE A MULTIPLE OF EIGHT TO USE THE 
     #        OPTIMIZED VERSION OF THE ALGORITHM CORRECTLY.
-    window.POPULATIONSIZE = 200
+    window.POPULATIONSIZE = 20
     # Probability that a child individual is produced through
     # reproduction, and inserted (unmodified) into the next 
     # generation of the population
@@ -77,7 +77,7 @@ $ ->
     # Maximum number of iterations (simulated generations) to 
     # be performed while searching for an adequately-fit
     # candidate solution (termination criteria)
-    window.MAXITERS = 100
+    window.MAXITERS = 10
     # Any individuals with fitness greater than MAXFITNESS
     # will be immediately returned as a candidate solution
     # (termination criteria)
@@ -359,5 +359,5 @@ $ ->
 
     window.points = for i in [0...20]
       {x: i, y: Math.sqrt(i)}
-    window.result = window.optimizedSymbolicRegression(points)
+    #window.result = window.optimizedSymbolicRegression(points)
 

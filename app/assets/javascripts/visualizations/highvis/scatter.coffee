@@ -314,15 +314,11 @@ $ ->
           # - X indices must match.
           # - Compare the arrays without comparing them.
           # - Y axis must be present.
-          console.log regression.xAxis is @configs.xAxis
-          console.log "#{regression.groups}" == "#{data.groupSelection}"
-          console.log globals.configs.fieldSelection.indexOf(regression.yAxis)
           if regression.xAxis is @configs.xAxis \
-          && "#{regression.groups}" == "#{data.groupSelection}" \
-          && globals.configs.fieldSelection.indexOf(regression.yAxis) != -1
+          and "#{regression.groups}" is "#{data.groupSelection}" \
+          and globals.configs.fieldSelection.indexOf(regression.yAxis) != -1
             # Calculate the series
-            console.log regression.function
-            series = globals.getRegressionSeries(regression.r2, regression.function, regression.parameters, regression.type, regression.name, [@chart.xAxis[0].min, @chart.xAxis[0].max],regression.dashStyle, regression.id)
+            series = globals.getRegressionSeries(regression.func, regression.parameters, regression.r2, regression.type, [@configs.xBounds.min, @configs.xBounds.max], regression.name, regression.dashStyle, regression.id, false)[3]
             # Add the regression to the chart
             @chart.addSeries(series)
             # Enabled the class by removing the disabled class
@@ -610,7 +606,7 @@ $ ->
           <td><select id="regressionSelector" class="form-control">
           """
 
-        regressions = ['Linear', 'Quadratic', 'Cubic', 'Exponential', 'Logarithmic']
+        regressions = ['Linear', 'Quadratic', 'Cubic', 'Exponential', 'Logarithmic', 'Automatic']
         for regressionType in regressions
           controls += "<option value='#{regressions.indexOf(regressionType)}'>#{regressionType}</option>"
 
@@ -639,11 +635,10 @@ $ ->
           # - Compare the arrays without comparing them.
           # - Y axis must be present.
           if regression.xAxis == @configs.xAxis \
-          && "#{regression.groups}" == "#{data.groupSelection}" \
-          && globals.configs.fieldSelection.indexOf(regression.yAxis) != -1
+          and "#{regression.groups}" is "#{data.groupSelection}" \
+          and globals.configs.fieldSelection.indexOf(regression.yAxis) != -1
             # Calculate the series
-            console.log regression.function
-            series = globals.getRegressionSeries(regression.r2, regression.function, regression.parameters, regression.type, regression.name, [@chart.xAxis[0].min, @chart.xAxis[0].max],regression.dashStyle, regression.id)
+            series = globals.getRegressionSeries(regression.func, regression.parameters, regression.r2, regression.type, [@configs.xBounds.min, @configs.xBounds.max], regression.name, regression.dashStyle, regression.id)[3]
             # Add the regression to the chart
             @chart.addSeries(series)
             @addRegressionToTable(regression, true)
@@ -660,86 +655,77 @@ $ ->
 
         $("#regressionButton").click =>
 
-          # Make the title for the tooltip
-          xAxisName = data.fields[@configs.xAxis].fieldName
-          yAxisName = $('#regressionYAxisSelector option:selected').text()
-          name = "<strong>#{yAxisName}</strong> as a "
-          name += "#{$('#regressionSelector option:selected').text().toLowerCase()} "
-          name += "function of <strong>#{xAxisName}</strong>"
-
           # Get the current selected y index, the regression type, and the current group indices
           yAxisIndex = Number($('#regressionYAxisSelector').val())
           regressionType = Number($('#regressionSelector').val())
 
+          # Make the title for the tooltip
+          xAxisName = data.fields[@configs.xAxis].fieldName
+          yAxisName = $('#regressionYAxisSelector option:selected').text()
+          name = "<strong>#{yAxisName}</strong> as a "
+          funcDesc = if regressionType isnt globals.REGRESSION.SYMBOLIC 
+            "#{$('#regressionSelector option:selected').text().toLowerCase()} "
+          else ''
+          name += funcDesc
+          name += "function of <strong>#{xAxisName}</strong>"
+
           #list of (x,y) points to be used in calculating regression
           xyData = data.multiGroupXYSelector(@configs.xAxis, yAxisIndex, data.groupSelection)
-
-          # Separate the x and y data
-          xData =
-            point.x for point in xyData
-          yData =
-            point.y for point in xyData
-
+          xMax = window.globals.curVis.configs.xBounds.max
+          xMin = window.globals.curVis.configs.xBounds.min
+          points = ({x: point.x, y: point.y} for point in xyData)
+          fn = (pv, cv, index, array) -> (pv and cv)
           # Create a unique identifier for the regression
-          regressionId = "regression_#{@configs.xAxis}_#{yAxisIndex}_#{regressionType}"
-            
+          regressionId = "regression_#{@configs.xAxis}_#{yAxisIndex}_#{regressionType}_" + data.groupSelection.toString()
+          regressionId = regressionId.replace(',', '_') while regressionId.indexOf(',') isnt -1
+          return unless (regression.id isnt regressionId for regression in @configs.savedRegressions).reduce(fn, true)  
+          
           # Get dash index
           dashIndex = data.normalFields.indexOf(yAxisIndex)
           dashStyle = globals.dashes[dashIndex % globals.dashes.length]
 
-          regressionMade = true
-          try
-            # Get the new regression
-            #xMax = @chart.xAxis[0].max
-            #xMin = @chart.xAxis[0].min
-            [func, result] = globals.getRegression(
-              xData,
-              yData,
-              regressionType,
-              @configs.xBounds,
-              name,
-              dashStyle,
-              regressionId
-            )
-          catch error
-            regressionMade = false
-            if regressionType is 3
-              alert "Unable to calculate an #{regressions[regressionType]} regression for this data."
-            else
-              alert "Unable to calculate a #{regressions[regressionType]} regression for this data."
-            return
-          Ps = result[0]
-          r2 = result[1]
-          newRegression = result[2]
-          if regressionMade
-            # Get a unique identifier (last highest count plus one)
-            #regressionId = "regression_#{@configs.xAxis}_#{yAxisIndex}_#{regressionType}"
-            fn = (pv, cv, index, array) -> (pv and cv)
-            unique = (regression.id isnt regressionId for regression in @configs.savedRegressions).reduce(fn, true)
-            if unique
-              # Add the series
-              @chart.addSeries(newRegression)
+          [func, Ps, r2, newRegression] = [null, null, null, null]
+          #try
+          [func, Ps, r2, newRegression] = globals.getRegression(
+            points,
+            regressionType,
+            [xMin, xMax],
+            name,
+            dashStyle,
+            regressionId
+          )
+          #catch error
+          #console.log error
+          #if regressionType is 3
+          #  alert "Unable to calculate an #{regressions[regressionType]} regression for this data."
+          #else
+          #  alert "Unable to calculate a #{regressions[regressionType]} regression for this data."
+          #return
 
-              # Prepare to save regression fields
-              savedRegression =
-                type: regressionType
-                xAxis: @configs.xAxis
-                yAxis: yAxisIndex
-                groups: data.groupSelection
-                parameters: Ps
-                function: func[0]
-                id: regressionId
-                r2: r2
-                name: name
-                dashStyle: dashStyle
-                #calculate: (x, Ps) -> @function(x, Ps)
+          # Add the series
+          @chart.addSeries(newRegression)
+
+          # Prepare to save regression fields
+
+          savedRegression =
+            type: regressionType
+            xAxis: @configs.xAxis
+            yAxis: yAxisIndex
+            groups: data.groupSelection
+            parameters: Ps
+            func: func
+            id: regressionId
+            r2: r2
+            name: name
+            dashStyle: dashStyle
       
-              # Save a regression
-              @configs.savedRegressions.push(savedRegression)
+          # Save a regression
+          @configs.savedRegressions.push(savedRegression)
 
-              # Actually add the regression to the table
-              @addRegressionToTable(savedRegression, true)
-
+          # Actually add the regression to the table
+          @addRegressionToTable(savedRegression, true)
+          if regressionType is globals.REGRESSION.SYMBOLIC
+            globals.curVis.update()
         # Set up accordion
         globals.configs.regressionOpen ?= 0
 
@@ -757,7 +743,7 @@ $ ->
         Array::filterOutValue = (v) -> x for x in @ when x != v
 
         # Here have a list of regressions
-        regressions = ['Linear', 'Quad', 'Cubic', 'Exp', 'Log']
+        regressions = ['Linear', 'Quad', 'Cubic', 'Exp', 'Log', 'Auto']
 
         # Add the entry used the passed regression
         regressionRow =
@@ -769,7 +755,7 @@ $ ->
           </tr>
           """
 
-        # Added a info relating to this regression
+        # Added info relating to this regression
         $('#regression-table-body').append(regressionRow)
 
         # Add the disabled style if necessary
@@ -797,7 +783,6 @@ $ ->
 
         # Add a make the delete button remove the regression object
         $('td#' + savedReg.id).click =>
-          console.log 'wat'
           # Remove regression view from the screen.
           $('td#' + savedReg.id).parent().remove()
 
