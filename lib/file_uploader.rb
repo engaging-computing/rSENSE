@@ -219,7 +219,7 @@ class FileUploader
       # is nil but the header contains "time," classify as a timestamp
       if (!column[1].nil? and
            (column[1]).map { |dp| (regex =~ dp) }.reduce(:&)) or
-           (column[1].nil? and column[0].upcase().include?('TIME'))
+           (column[1].nil? and column[0].upcase.include?('TIME'))
         types['timestamp'].push column[0]
         next
       end
