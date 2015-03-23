@@ -53,7 +53,7 @@ $ ->
           if ($ j).is(':selected')
             group_by = ($ j).text()
         if group_by is ''
-          group_by = "Dataset Name (id)"
+          group_by = "Data set Name (id)"
         $.extend true, @chartOptions,
           title:
             text: ''

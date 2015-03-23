@@ -9,7 +9,7 @@ uploadSettings =
     $('.edit_table_save').text 'Save'
 
     if uploadSettings.pageName == 'entry'
-      showError 'Dataset titles must be unique to the project'
+      showError 'Data set titles must be unique to the project'
     else
       showError 'An unknown error has occured'
   successEdit: (data, textStatus, jqXHR) ->
@@ -228,12 +228,12 @@ class Grid
 
       # validate presence of data
       unless hasData
-        showError 'Datasets require data'
+        showError 'Data sets require data'
         return
 
       # validate presence of title
       if uploadSettings.pageName == 'entry' and @submit['data'].title == ''
-        showError 'Datasets require a title'
+        showError 'Data sets require a title'
         return
 
       # if we've got this far, we have a valid upload, so turn off the buttons
