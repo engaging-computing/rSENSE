@@ -215,19 +215,30 @@ class FileUploader
     regex = %r{((?<year>\d{4})(-|\/)(?<month>\d{1,2})(-|\/)(?<day>\d{1,2})|([uU]\s\d+))}
 
     data_set.each do |column|
+      # if the data is not nil and matches the timestamp regex, or if the data
+      # is nil but the header contains "time," classify as a timestamp
+      if (!column[1].nil? and
+           (column[1]).map { |dp| (regex =~ dp) }.reduce(:&)) or
+           (column[1].nil? and column[0].upcase().include?('TIME'))
+        types['timestamp'].push column[0]
+        next
+      end
+      # try a header match for latitude and longitude
       if column[0].casecmp('LATITUDE') == 0 or column[0].casecmp('LAT') == 0
         types['latitude'].push column[0]
         next
-      elsif column[0].casecmp('LONGITUDE') == 0 or column[0].casecmp('LON') == 0
+      end
+      if column[0].casecmp('LONGITUDE') == 0 or column[0].casecmp('LON') == 0
         types['longitude'].push column[0]
         next
       end
-      next if column[1].nil? # no data case
-      if (column[1]).map { |dp| (regex =~ dp) }.reduce(:&)
-        types['timestamp'].push column[0]
-      elsif !(column[1]).map { |dp| valid_float?(dp) }.reduce(:&)
+      # if there is either no data or the data is not a valid float,
+      # classify as text
+      if column[1].nil? || # case in which there is no data for this header
+          !(column[1]).map { |dp| valid_float?(dp) }.reduce(:&)
         types['text'].push column[0]
       end
+      # if no match was found above, this defaults to number
     end
     types
   end
