@@ -260,7 +260,7 @@ $ ->
           fitness = 0
         if raw then fitness else 1 / (1 + fitness)
 
-      # Calculate's an individual's scaled fitness via pareto genetic 
+      # Calculate's an individual's fitness via pareto genetic 
       # programming. Nonlinearity is concurrently minimized alongside 
       # the maximization of the fitness function specified.
       # 
@@ -273,3 +273,19 @@ $ ->
         else eval "this.#{func}(points)"
         nonlinearity = (this.tree.depthAtPoint(i) for i in [0...this.tree.treeSize()]).reduce((pv, cv, index, array) -> pv + cv) + this.tree.treeSize()
         ret = if isNaN(fitness + nonlinearity) or (fitness + nonlinearity) is Infinity then 0 else (1 / (1 + fitness + nonlinearity))
+
+      ###
+      # Particle Swarm Optimization is a nonlinear optimization strategy used to enhance
+      # the performance of symbolic regression.  The terminal set consists of the 
+      # dependent variable, x, and a single constant referred to in the literature as the 
+      # ephemeral constant.  PSO finds a near-optimal value of these ephemeral constants 
+      # to maximize the individual's fitness, separating the task of identifying the correct
+      # function, and the constant values it contains.
+      ###
+      ###
+      # WARNING:  MUTATES THE INDIVIDUAL
+      ###
+      @particleSwarmOptimization: (individual, points, fitness) ->
+        1
+
+

@@ -56,8 +56,11 @@ $ ->
     window.safeSqrt = (a) -> Math.sqrt(Math.abs(a))
     class window.binaryTree extends Object
 
+      # Initial ephemeral constant value on the interval [-1, 1)
+      @ephemeralConstant:  Math.random() * 2 - 1
+
       @terminals = [
-        'x'
+        'x', 'ec'
       ]
 
       @operators = [
@@ -225,6 +228,8 @@ $ ->
       evaluate: (x, val = null) ->
         if @data is 'x'
           if val isnt null then val else x
+        else if @data is 'ec'
+          binaryTree.ephemeralConstant
         else if typeof(@data) is 'number'
           @data
         else
