@@ -33,7 +33,7 @@
                 &nbsp;|&nbsp;<%= link_to "Delete", mo, method: 'delete', class: "media_delete", data: { confirm: "Are you sure?" } %>
                 <% end %>
             </td>
-            <% if can_edit?( @project ) %>
+            <% if ["Project","News","Tutorial","Visualization"].include? object.class.name %>
               <td>
                 <div class="center">
                   <% if ((mo.media_type == "image") && (can_edit? object))%>
