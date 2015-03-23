@@ -130,10 +130,10 @@ class SlickgridTest < ActionDispatch::IntegrationTest
     assert_similar_arrays compare_data, dataset.data
   end
 
-  test 'slickgrid edit dataset' do
+  test 'slickgrid edit data set' do
     login 'nixon@whitehouse.gov', '12345'
 
-    dataset = DataSet.find_by_name 'Slickgrid Dataset 1'
+    dataset = DataSet.find_by_name 'Slickgrid Data set 1'
     dataset_id = dataset.id
     project_id = dataset.project_id
     visit "/data_sets/#{dataset_id}/edit"
@@ -182,7 +182,7 @@ class SlickgridTest < ActionDispatch::IntegrationTest
     assert page.current_path == "/projects/#{project_id}/data_sets/#{dataset_id}"
 
     # assert that the data that we saved is there
-    dataset = DataSet.find_by_name 'Slickgrid Dataset 1'
+    dataset = DataSet.find_by_name 'Slickgrid Data set 1'
     assert_similar_arrays compare_data, dataset.data
   end
 end

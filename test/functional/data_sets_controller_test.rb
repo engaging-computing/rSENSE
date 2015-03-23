@@ -14,7 +14,7 @@ class DataSetsControllerTest < ActionController::TestCase
     assert_response :redirect
   end
 
-  test 'get dataset data' do
+  test 'get data set data' do
     get :show, { id: @tgd.id, format: 'json', recur: 'true' },  user_id: @kate
     assert_response :success
     ds = JSON.parse(@response.body)
@@ -149,7 +149,7 @@ class DataSetsControllerTest < ActionController::TestCase
     @new_dataset_id = JSON.parse(response.body)['id']
   end
 
-  test 'should fail jsonDataUpload with empty dataset' do
+  test 'should fail jsonDataUpload with empty data set' do
     post :jsonDataUpload, { format: 'json', id: @proj.id, title: 'JSON Upload',
       data: {} },  user_id: @kate
     assert_response 422
@@ -199,7 +199,7 @@ class DataSetsControllerTest < ActionController::TestCase
     assert ds['data'].length != original_row_count, 'Data same length as before editing'
   end
 
-  test 'should fail to edit dataset in locked project' do
+  test 'should fail to edit data set in locked project' do
     dataset = data_sets(:kates_dataset_in_locked_project)
     new_data = { '26' => ['1', '2', '3'] }
     post :edit, { id: dataset.id, format: 'json', data: new_data }, user_id: @kate

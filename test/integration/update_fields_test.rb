@@ -49,7 +49,7 @@ class UpdateFieldsTest < ActionDispatch::IntegrationTest
 
   end
 
-  test 'template fields with dataset' do
+  test 'template fields with data set' do
     login('kcarcia@cs.uml.edu', '12345')
     click_on 'Projects'
     find('#project_title').set('Template Fields Test')
@@ -71,7 +71,7 @@ class UpdateFieldsTest < ActionDispatch::IntegrationTest
     assert page.has_content?('dessert')
   end
 
-  test 'teplate fields without dataset' do
+  test 'teplate fields without data set' do
     login('kcarcia@cs.uml.edu', '12345')
     click_on 'Projects'
     find('#project_title').set('Template Fields Test 2')
