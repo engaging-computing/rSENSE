@@ -294,3 +294,43 @@ $ ->
         childOne.insertTree(childTwo.index(crossoverPointTwo), crossoverPointOne)
         childTwo.insertTree(tree1b.index(crossoverPointOne), crossoverPointTwo)
         [childOne, childTwo]
+
+      # Given a tree, construct a string representation of the mathematical
+      # function the tree describes
+      @stringify: (tree) ->
+        
+        # Helper method to properly parenthesize nested terms
+        parenthesize = (string) -> 
+          if not isNaN(Number(string)) or string is 'x' then string else "(#{string})"
+        
+        switch tree.data
+          when window.add
+            "#{parenthesize(@stringify(tree.left))} + #{parenthesize(@stringify(tree.right))}"
+
+          when window.subtract
+            "#{parenthesize(@stringify(tree.left))} - #{parenthesize(@stringify(tree.right))}"
+
+          when window.multiply
+            "#{parenthesize(@stringify(tree.left))} * #{parenthesize(@stringify(tree.right))}"
+
+          when window.safeDiv
+            "#{parenthesize(@stringify(tree.left))} / #{parenthesize(@stringify(tree.right))}"
+
+          when window.pow
+            "#{parenthesize(@stringify(tree.left))} <sup>#{parenthesize(@stringify(tree.right))}</sup>"
+
+          when window.exp
+            "e <sup>#{parenthesize(@stringify(tree.left))}</sup>"
+          when window.cos
+            "cos(#{parenthesize(@stringify(tree.left))})"
+          when window.sin
+            "sin(#{parenthesize(@stringify(tree.left))})"
+          when window.safeLog
+            "log(|#{parenthesize(@stringify(tree.left))}|)"
+          when window.safeSqrt
+            "sqrt(|#{parenthesize(@stringify(tree.left))}|)"
+          when 'x'
+            'x'
+          else 
+            #console.log tree.data
+            "#{window.roundToFourSigFigs(tree.data)}"

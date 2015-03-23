@@ -231,7 +231,7 @@ $ ->
           <strong>
             f(x) = 
           """
-          tooltip += stringify(func.tree)
+          tooltip += binaryTree.stringify(func.tree)
           tooltip += """
           </strong>
           """
@@ -244,7 +244,7 @@ $ ->
     Round the current float value to 4 significant figures.
     I keep this in a separate function because we weren't sure this was the best implemenation.
     ###
-    roundToFourSigFigs = (float) ->
+    window.roundToFourSigFigs = (float) ->
       return float.toPrecision(4)
 
     ###
@@ -443,42 +443,7 @@ $ ->
 
     globals.getRegressionSeries = (func, Ps, R2, type, xBounds, seriesName, dashStyle, id, normalized = false) ->
       generateHighchartsSeries(func, Ps, R2, type, xBounds, seriesName, dashStyle, id, normalized)
-    
-    parenthesize = (string) ->
-      if not isNaN(Number(string)) or string is 'x' then string else "(#{string})"
-    stringify = (tree) ->
-      #console.log 'called stringify'
-      switch tree.data
-        when window.add
-          "#{parenthesize(stringify(tree.left))} + #{parenthesize(stringify(tree.right))}"
 
-        when window.subtract
-          "#{parenthesize(stringify(tree.left))} - #{parenthesize(stringify(tree.right))}"
-
-        when window.multiply
-          "#{parenthesize(stringify(tree.left))} * #{parenthesize(stringify(tree.right))}"
-
-        when window.safeDiv
-          "#{parenthesize(stringify(tree.left))} / #{parenthesize(stringify(tree.right))}"
-
-        when window.pow
-          "#{parenthesize(stringify(tree.left))} <sup>#{parenthesize(stringify(tree.right))}</sup>"
-
-        when window.exp
-          "e <sup>#{parenthesize(stringify(tree.left))}</sup>"
-        when window.cos
-          "cos(#{parenthesize(stringify(tree.left))})"
-        when window.sin
-          "sin(#{parenthesize(stringify(tree.left))})"
-        when window.safeLog
-          "log(|#{parenthesize(stringify(tree.left))}|)"
-        when window.safeSqrt
-          "sqrt(|#{parenthesize(stringify(tree.left))}|)"
-        when 'x'
-          'x'
-        else 
-          #console.log tree.data
-          "#{roundToFourSigFigs(tree.data)}"
 
 
 
