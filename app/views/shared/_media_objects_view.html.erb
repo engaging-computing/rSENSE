@@ -8,7 +8,7 @@
         <th style="max-width:60%">Name</th>
         <th style="max-width:10%"></th>
         <th style="max-width:10%"></th>
-        <% if can_edit?( @project ) %>
+        <% if ["Project","News","Tutorial","Visualization"].include? object.class.name && can_edit? object %>
           <th class="featured-title">Featured Image</th>
         <% end %>
       </tr>
