@@ -135,7 +135,7 @@
                   <tr class="<%= cycle('feed-even', 'feed-odd')%> dataset" style="position:relative">
                     <% if( not (s.key.nil?) ) %>
                       <td class="key_icon">
-                        <div class="key" title="<%= s.key %>"> <%= image_tag("Key.png", :size => "32x32") %> <%= s.key %></div>
+                        <div class="key" title="<%= s.key %>"> <%= image_tag("Key.png", :style => "width: 40px; height: auto;") %> <%= s.key %></div>
                       </td>
                     <% else %>
                     <td class="gravatar">
