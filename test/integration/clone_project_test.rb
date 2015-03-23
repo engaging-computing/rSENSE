@@ -34,7 +34,7 @@ class CloneProjectTest < ActionDispatch::IntegrationTest
     find('#fields_form_submit').click
 
     click_on 'Manual Entry'
-    fill_in 'Data set Name', with: 'I Like Clones'
+    fill_in 'Data Set Name', with: 'I Like Clones'
     find('#edit_table_add_2').click
     set_cell(0, 0, 47)
     find('#edit_table_save_2').click
