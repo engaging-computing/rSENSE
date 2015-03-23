@@ -232,10 +232,9 @@ class FileUploader
         types['longitude'].push column[0]
         next
       end
-      # if there is either no data or the data is not a valid float,
-      # classify as text
+      # if there is data and the data is a valid float, classify as text
       if !column[1].nil? &&
-          !(column[1]).map { |dp| valid_float?(dp) }.reduce(:&)
+           !(column[1]).map { |dp| valid_float?(dp) }.reduce(:&)
         types['text'].push column[0]
       end
       # if no match was found above, this defaults to number
