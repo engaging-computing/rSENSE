@@ -209,15 +209,16 @@ $ ->
             binSizes[b['x']] = Math.max(binSizes[b['x']], b['y'])
             binTotals[b['x']] ?= 0
             binTotals[b['x']] += b['y']
-          
-        largestBin = (binTotals[key] for key of binTotals).reduce (pv, cv, index, array) -> Math.max(pv, cv)
-        smallestBin = (binTotals[key] for key of binTotals).reduce (pv, cv, index, array) -> Math.min(pv, cv)
-        maxValueAnyGroupAnyBin = (binSizes[key] for key of binSizes).reduce (pv, cv, index, array) -> Math.max(pv, cv)
+        max = (pv, cv, index, array) -> Math.max(pv, cv)
+        min = (pv, cv, index, array) -> Math.min(pv, cv)
+        largestBin = (binTotals[key] for key of binTotals).reduce max, 0
+        smallestBin = (binTotals[key] for key of binTotals).reduce min, 0
+        maxValueAnyGroupAnyBin = (binSizes[key] for key of binSizes).reduce max, 0
 
         if largestBin < 100 and maxValueAnyGroupAnyBin < 50
           for group of binObjs
             maxValueOneGroupAnyBin = \
-            (binObjs[group][key] for key of binObjs[group]).reduce (pv, cv, index, array) -> Math.max(pv, cv)
+            (binObjs[group][key] for key of binObjs[group]).reduce max, 0
             while i < maxValueOneGroupAnyBin
               binData = []
               for bin of binObjs[group]
