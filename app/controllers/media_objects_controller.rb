@@ -70,8 +70,9 @@ class MediaObjectsController < ApplicationController
 
   # POST /media_object/saveMedia
   def saveMedia
-    extension = params[:upload].original_filename.split('.')[1]
-    unless FileUploader.upload_whitelist.include? extension
+    extensions = params[:upload].original_filename.split('.')
+    extension = extensions[extensions.length - 1]
+    unless FileUploader.upload_whitelist.include? extension.downcase
       if params.key?(:non_wys)
         redirect_to :back, flash: { error: "Sorry, #{extension} is not a supported file type." }
         return
