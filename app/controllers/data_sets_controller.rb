@@ -105,7 +105,7 @@ class DataSetsController < ApplicationController
 
     respond_to do |format|
       if can_edit?(@data_set) && @data_set.update_attributes(data_set_params)
-        format.html { redirect_to @data_set, notice: 'DataSet was successfully updated.' }
+        format.html { redirect_to @data_set, notice: 'Data set was successfully updated.' }
         format.json { render json: {}, status: :ok }
       else
         @data_set.errors[:base] << 'Permission denied' unless can_edit?(@data_set)

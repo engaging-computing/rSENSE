@@ -246,7 +246,7 @@ class FileUploader
     end
 
     if data == {}
-      return { status: false, msg: 'Empty Dataset' }
+      return { status: false, msg: 'Empty Data Set' }
     end
 
     data_obj = remove_empty_lines(data_obj)
