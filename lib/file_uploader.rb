@@ -234,7 +234,7 @@ class FileUploader
       end
       # if there is either no data or the data is not a valid float,
       # classify as text
-      if column[1].nil? || # case in which there is no data for this header
+      if !column[1].nil? &&
           !(column[1]).map { |dp| valid_float?(dp) }.reduce(:&)
         types['text'].push column[0]
       end
