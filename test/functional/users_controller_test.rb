@@ -81,7 +81,7 @@ class UsersControllerTest < ActionController::TestCase
     get :show, { format: 'json', id: @user, recur: 'true' },  user_id: @user
     body = JSON.parse(response.body)
     assert body.key?('visualizations'), 'Recur should show visualizations'
-    assert body.key?('dataSets'), 'Recur should show dataSets'
+    assert body.key?('dataSets'), 'Recur should show data sets'
     assert body.key?('mediaObjects'), 'Recur should show mediaObjects'
     assert body.key?('projects'), 'Recur should show projects'
     assert_response :success
