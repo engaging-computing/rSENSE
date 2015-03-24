@@ -70,8 +70,8 @@ class MediaObjectsController < ApplicationController
 
   # POST /media_object/saveMedia
   def saveMedia
-    extension = params[:upload].original_filename.split('.')[1]
-    unless FileUploader.upload_whitelist.include? extension
+    extension = params[:upload].original_filename.split('.')[-1]
+    unless FileUploader.upload_whitelist.include? extension.downcase
       if params.key?(:non_wys)
         redirect_to :back, flash: { error: "Sorry, #{extension} is not a supported file type." }
         return
@@ -113,8 +113,7 @@ class MediaObjectsController < ApplicationController
     end
     adjust_file_name = file_name.gsub ' ', '_'
     @mo = MediaObject.new
-    @mo.name = adjust_file_name
-    @mo.file = adjust_file_name
+    @mo.name = @mo.file = adjust_file_name
     @mo.media_type = file_type
 
     # Build media object params based on what we are doing
@@ -173,10 +172,8 @@ class MediaObjectsController < ApplicationController
     if !@mo.user_id.nil?
       # Save the file
       @mo.check_store!
-
       FileUtils.cp(file_path, @mo.file_name)
       File.chmod(0644, @mo.file_name)
-
       @mo.add_tn
 
       # Generate a media object with the calculated params
@@ -192,12 +189,10 @@ class MediaObjectsController < ApplicationController
       else
         render text: 'File upload failed'
       end
-
     else
       # Tell the user there is a problem with uploading their image.
       respond_to do |format|
         format.json { render json: { filelink: '/assets/noimage.png', msg: @errors }, status: :unprocessable_entity }
-
       end
     end
   end
