@@ -12,7 +12,7 @@ $ ->
     val = val.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;")
 
     # href should be /type/id e.g. /users/jim
-    href = location.pathname
+    href = if ($ @).attr('href')? then ($ @).attr('href') else location.pathname
 
     # Show and focus the edit box.
     root.find('.info-show-text').hide()
@@ -63,7 +63,6 @@ $ ->
         error: (j, s, t) ->
           edit_box.errorFlash()
           errors = JSON.parse j.responseText
-          console.log errors
           edit_box.popover
             content: errors[0]
             placement: "bottom"

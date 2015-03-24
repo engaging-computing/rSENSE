@@ -315,7 +315,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
               '20' => ['1', '2', '3', '4', '5']
             }
     assert_response :unprocessable_entity
-    assert parse(response)['msg'][0] == 'Title has already been taken',
+    assert parse(response)['error'][0] == 'Title has already been taken',
         'Message should have been: Title has already been taken'
 
   end
@@ -474,7 +474,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert keys_match(response, @media_object_keys), 'Keys are missing.'
   end
 
-  test 'create media object for dataset with key' do
+  test 'create media object for data set with key' do
     pid = @dessert_project.id
     post "/api/v1/projects/#{pid}/jsonDataUpload",
 
@@ -574,7 +574,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
             '22' => ['105', '106', '107']
           }
     assert_response :unprocessable_entity
-    assert !parse(response)['msg'].nil?
+    assert !parse(response)['error'].nil?
   end
 
   test 'append to data set (contribution_key)' do
@@ -606,6 +606,33 @@ class ApiV1Test < ActionDispatch::IntegrationTest
             '22' => ['1002']
           }
     assert_response :unauthorized
+  end
+
+  test 'check if key exists through API' do
+    pid = @dessert_project.id
+    get "/api/v1/projects/#{pid}/key",
+        contribution_key: 'apple'
+    assert_response 302
+  end
+
+  test 'check if key exists through API (key not found)' do
+    pid = @dessert_project.id
+    get "/api/v1/projects/#{pid}/key",
+        contribution_key: 'not real'
+    assert_response 404
+  end
+
+  test 'check if key exists through API (bad params)' do
+    pid = @dessert_project.id
+    get "/api/v1/projects/#{pid}/key"
+    assert_response :unprocessable_entity
+  end
+
+  test 'check if key exists through API (project does not exist)' do
+    pid = 123454321
+    get "/api/v1/projects/#{pid}/key",
+      contribution_key: 'apple'
+    assert_response :not_found
   end
 
   test 'add a key to a project' do

@@ -17,7 +17,6 @@ class TestingController < ApplicationController
   def review
     @issues = params[:issues]
     @userinfo = params[:userinfo]
-    puts params.class
   end
 
   # POST /testing/publish

@@ -148,7 +148,9 @@ $ ->
                   str += "<table>"
                   str += "<tr><td>#{@series.xAxis.options.title.text}:</td><td><strong>#{@x}"
                   str += "</strong></td></tr>"
-                  str += "<tr><td>#{@series.name.field}:</td><td><strong>#{@y}</strong></td></tr>"
+                  index = data.fields.map((y) -> y.fieldName).indexOf(@series.name.field)
+                  str += "<tr><td>#{@series.name.field}:</td><td><strong>#{@y} \
+                  #{fieldUnit(data.fields[index], false)}</strong></td></tr>"
                   str += "</table>"
             useHTML: true
             hideDelay: 0

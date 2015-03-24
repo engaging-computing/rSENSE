@@ -49,7 +49,7 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     field_id_pos = field_id_long.rindex(/-/)
     field_id = field_id_long[field_id_pos + 1 .. -1]
     find('#data_set_name').set('Data1')
-    find('.slick-cell.l0.r0').double_click
+    find(:css, '.slick-row:nth-child(1)>.slick-cell.l0.r0').double_click
     find('.editor-text').set('5')
     find('#edit_table_save_2').click
     assert page.has_content? 'Visualizations'
@@ -65,7 +65,7 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     click_on 'Submit Key'
     click_on 'Manual Entry'
     find('#data_set_name').set('Data2')
-    find('.slick-cell.l0.r0').double_click
+    find(:css, '.slick-row:nth-child(1)>.slick-cell.l0.r0').double_click
     find('.editor-text').set('5')
     find('#edit_table_save_2').click
     assert page.has_content? 'Visualizations'

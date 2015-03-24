@@ -45,12 +45,12 @@ class DataSetsController < ApplicationController
         if @data_set.save!
           ret = { status: :success, redirect: "/projects/#{@project.id}/data_sets/#{@data_set.id}" }
         else
-          ret = { status: :unprocessable_entity, msg: @data_set.errors.full_messages }
+          ret = { status: :unprocessable_entity, error: @data_set.errors.full_messages, msg: @data_set.errors.full_messages }
         end
       else
         err_msg = sane[:status] ? dataset.errors.full_messages : sane[:msg]
         respond_to do |format|
-          format.json { render json: { data: sane[:data_obj], msg: err_msg }, status: :unprocessable_entity }
+          format.json { render json: { data: sane[:data_obj], error: err_msg, msg: err_msg }, status: :unprocessable_entity }
         end
       end
     end
@@ -105,7 +105,7 @@ class DataSetsController < ApplicationController
 
     respond_to do |format|
       if can_edit?(@data_set) && @data_set.update_attributes(data_set_params)
-        format.html { redirect_to @data_set, notice: 'DataSet was successfully updated.' }
+        format.html { redirect_to @data_set, notice: 'Data set was successfully updated.' }
         format.json { render json: {}, status: :ok }
       else
         @data_set.errors[:base] << 'Permission denied' unless can_edit?(@data_set)
@@ -206,13 +206,13 @@ class DataSetsController < ApplicationController
         if dataset.save
           format.json { render json: dataset.to_hash(false), status: :ok }
         else
-          format.json { render json: { msg: dataset.errors.full_messages }, status: :unprocessable_entity }
+          format.json { render json: { error: dataset.errors.full_messages, msg: dataset.errors.full_messages }, status: :unprocessable_entity }
         end
       end
     else
       err_msg = sane[:status] ? dataset.errors.full_messages : sane[:msg]
       respond_to do |format|
-        format.json { render json: { data: sane[:data_obj], msg: err_msg }, status: :unprocessable_entity }
+        format.json { render json: { data: sane[:data_obj], error: err_msg, msg: err_msg }, status: :unprocessable_entity }
       end
     end
   end

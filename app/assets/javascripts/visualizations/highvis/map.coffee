@@ -172,38 +172,8 @@ $ ->
             # Build info window content
             label  = "<div style='font-size:9pt;overflow-x:none;'>"
             label += "<div style='width:100%;text-align:center;color:#{color};'> " +
-              "#{dataPoint[globals.configs.groupById]}</div><br>"
-
-            if data.metadata[groupIndex].photos.length == 1
-              photo = data.metadata[groupIndex].photos[0]
-              label += "<div class='item'>
-                          <img class='item-image item-photo-image' src=#{photo.src} >
-                        </div>
-                        </br>"
-
-            else if data.metadata[groupIndex].photos.length > 0
-              label += "<div id='mapCarousel' class='carousel slide' data-ride='carousel' data-interval='false'>
-                        <div class='carousel-inner' role='listbox'>"
-
-              firstPhoto = data.metadata[groupIndex].photos[0]
-              label += "<div class='item active'>
-                          <img class='item-image item-photo-image' src=#{firstPhoto.src} >
-                        </div>"
-
-              for i in [1...data.metadata[groupIndex].photos.length]
-                label +=  "<div class='item'>
-                            <img class='item-image item-photo-image' src = #{data.metadata[groupIndex].photos[i].src} >
-                          </div>"
-
-              label +=  "</div>
-                          <a class='left carousel-control' href='#mapCarousel' role='button'
-                          	data-slide='prev'><span class='glyphicon glyphicon-chevron-left'></span></a>
-                          <a class='right carousel-control' href='#mapCarousel' role='button'
-                          	data-slide='next'><span class='glyphicon glyphicon-chevron-right'></span></a>
-                        </div> </br>"
-
+              "#{dataPoint[globals.configs.groupById]}</div>"#<br>"
             label += "<table>"
-
             for field, fieldIndex in data.fields when dataPoint[fieldIndex] isnt null
               dat = if (Number field.typeID) is data.types.TIME
                 (globals.dateFormatter dataPoint[fieldIndex])
@@ -211,7 +181,12 @@ $ ->
                 dataPoint[fieldIndex]
 
               label += "<tr><td>#{field.fieldName}</td>"
-              label += "<td><strong>#{dat}</strong></td></tr>"
+              label += "<td><strong>#{dat}</strong></td>"
+              unit = fieldUnit(field, false)
+              if unit? and fieldIndex > 2
+                label += "<td>#{unit}</td></tr>"
+              else
+                label += "</tr>"
 
             label += "</table></div>"
 

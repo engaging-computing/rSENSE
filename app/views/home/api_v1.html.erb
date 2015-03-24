@@ -21,7 +21,7 @@
         <td class="code">/api/v1/projects/XX</td>
         <td class="args">id(req) recur(opt boolean)</td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
           <p>Get properties of a project.</p>
           <b>Response Codes</b>
@@ -85,7 +85,7 @@
         <td class="args">search(opt), sort(opt), order(opt), per_page(opt), page(opt), search(opt),
         templates_only(opt), curated_only(opt), featured_only(opt), has_data(opt)</td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
           <p>Get an array of all the projects.</p>
           <b>Response Codes</b>
@@ -134,7 +134,7 @@
         <td class="code">/api/v1/projects</td>
         <td class="args">email(req), password(req), project_name(opt)</td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
           <p>Create a new project.</p>
           <b>Response Codes</b>
@@ -203,7 +203,7 @@
         <td class="code">/api/v1/projects/XX/add_key</td>
         <td class="args">email(req), password(req), project_name(opt)</td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
           <p>Create a new key for an existing project.</p>
           <b>Response Codes</b>
@@ -259,12 +259,54 @@
   <div class="col-md-12">
     <table class="table table-bordered api">
       <tr>
+        <td class="GET def">GET</td>
+        <td class="method">Key</td>
+        <td class="code">/api/v1/projects/XX/key/</td>
+        <td class="args">contribution_key(req)</td>
+      </tr>
+      <tr class="more">
+        <td colspan="4">
+          <b>Response Codes</b>
+          <ul>
+            <li>Success: 302 Found</li>
+          </ul>
+          <ul>
+            <li>Fail: 404 Not Found</li>
+          </ul>
+          <b>Data</b>
+          <pre>
+  {
+    "contribution_key" => "contribution key (string)"
+  }
+          </pre>
+          <b>Response</b>
+          <pre>
+  {
+    "contribution_key": "(string)"
+  }
+          </pre>
+          <b>Notes</b>
+          <ul>
+            <li>XX should be replaced with the ID for the project.</li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<hr>
+
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-bordered api">
+      <tr>
         <td class="POST def">POST</td>
         <td class="method"> Fields </td>
         <td class="code">/api/v1/fields</td>
         <td class="args">email(req), password(req), project_id(req), field_type(req), name(opt), units(opt), restrictions(opt)</td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
           <p>Add a new field to a project.</p>
           <b>Response Codes</b>
@@ -339,7 +381,7 @@
         <td class="code">/api/v1/fields/XX</td>
         <td class="args"> id(req)</td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
           <p>Get properties of a field.</p>
           <b>Response Codes</b>
@@ -454,7 +496,7 @@
         <td class="code">/api/v1/projects/XX/jsonDataUpload</td>
         <td class="args">email(req), password(req), title(req), data(req)</td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
           <p>Upload a data set in the form of json with a username and password.</p>
           <b>Response Codes</b>
@@ -528,7 +570,7 @@
         <td class="code">/api/v1/projects/XX/jsonDataUpload</td>
         <td class="args">contribution_key(req), contributor_name(req), data(req)</td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
           <p>Upload a data set in the form of json with a contribution key. Keys can be added to a project by the owner.</p>
           <b>Response Codes</b>
@@ -600,7 +642,7 @@
         <td class="code">/api/v1/data_sets/XX/edit</td>
         <td class="args"> email(req), password(req), id(req)</td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
           <p>Edit an existing data set with a username and password.</p>
           <b>Response Codes</b>
@@ -672,7 +714,7 @@
         <td class="code">/api/v1/data_sets/XX/edit</td>
         <td class="args"> contribution_key(req), id(req)</td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
           <p>Edit an existing data set with a contribution key. The data set must have been uploaded with the same contribution key.</p>
           <b>Response Codes</b>
@@ -740,7 +782,7 @@
         <td class="code">/api/v1/data_sets/append</td>
         <td class="args"> email(req), password(req), id(req)</td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
           <p>Append new data to an existing data set with a username and password. </p>
           <b>Response Codes</b>
@@ -812,7 +854,7 @@
         <td class="code">/api/v1/data_sets/append</td>
         <td class="args"> contribution_key(req), id(req)</td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
           <p>Append new data to an existing data set with a contribution key. </p>
           <b>Response Codes</b>
@@ -884,7 +926,7 @@
         <td class="code">/api/v1/media_objects</td>
         <td class="args">email(req), password(req), upload(req), type(req), id(req)</td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
           <p>Upload a media object to either a project or a data set. You can upload media objects to any project. You can upload media objects to any data set on a project that you own or any data sets that you have uploaded.</p>
           <b>Response Codes</b>
@@ -969,7 +1011,7 @@
         <td class="code">/api/v1/media_objects</td>
         <td class="args">contribution_key(req),contributor_name(req), upload(req), type(req), id(req)</td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
           <p>Upload a media object to either a project or a data set. With a contribution key, you can upload a media object to the project or any data set that was uploaded with that key.</p>
           <b>Response Codes</b>
@@ -1056,7 +1098,7 @@
         <td class="code">/api/v1/users/myInfo</td>
         <td class="args">email(req),password(req)</td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
           <p>Get your gravitar and full name.</p>
           <b>Response Codes</b>

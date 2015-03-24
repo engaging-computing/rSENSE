@@ -5,61 +5,79 @@
 
 @TimestampEditor = (args) ->
   form = null
-  loadValue = null
   currValue = null
-  canClose = false
+  loadValue = null
+  pickerOpen = false
 
-  tryCloseForm = ->
-    args.grid.getEditorLock().commitCurrentEdit()
-    args.grid.resetActiveCell()
+  form = $('<div>
+    <input type="text" class="editor-text-with-button" />
+    <i class="editor-button fa fa-calendar"></i>
+  </div>')
+  form.appendTo args.container
 
-  form = $(args.container).parent().datetimepicker
+  formInput = form.children 'input'
+  formInput.focus()
+
+  formButton = form.children 'i'
+  formButton.click ->
+    unless pickerOpen
+      dtPicker.open()
+
+  keyDownFunc = (e) ->
+
+  dtPicker = formButton.datetimepicker
     autoClose: false
-    onKeys: {}
+    keyEventOn: (e) ->
+      args.grid.onKeyDown.subscribe e
+    keyEventOff: (e) ->
+      args.grid.onKeyDown.unsubscribe e
+    keyPress: (e) ->
+      e.stopImmediatePropagation()
+      e.keyCode
     onOpen: ->
-      args.grid.focus()
-      $('body').on 'click.slickgrid-time1', (e) =>
-        if $(e.target).closest('#dt-picker, .slick-cell.active').length == 0
-          tryCloseForm()
-      $('body').on 'click.slickgrid-time2', '#dt-picker', (e) ->
-        unless $(e.target).is 'input'
-          args.grid.focus()
+      pickerOpen = true
+      formInput.focus()
       currValue
     onChange: (val) ->
-      console.log currValue
       currValue = val.format('YYYY/MM/DD HH:mm:ss')
-      $(args.container).text currValue
+      formInput.val currValue
+    onKeys:
+      13: -> #enter
+        dtPicker.close()
+      27: -> #escape
+        dtPicker.close()
     onClose: (val) ->
-      if canClose
-        tryCloseForm()
+      pickerOpen = false
     hPosition: (w, h) ->
       args.position.left + 2
     vPosition: (w, h) ->
       args.position.bottom + 2
 
   destroy: ->
-    $('body').off 'click.slickgrid-time1'
-    $('body').off 'click.slickgrid-time2'
-    # avoiding those stack overflows
-    if form?
-      temp = form
-      form = null
-      temp.close()
+    form.remove()
+    if pickerOpen
+      dtPicker.close()
+
   focus: ->
-    # doesn't do anything
-  isValueChanged: =>
-    currValue != loadValue
+    formInput.focus()
+
+  isValueChanged: ->
+    formInput.val() != loadValue
+
   serializeValue: ->
-    currValue
+    formInput.val()
+
   loadValue: (item) ->
-    time = item[args.column.field]
-    currValue = time
-    loadValue = time
-    $(args.container).text currValue
-    form.open()
+    loadValue = item[args.column.field] || ''
+    formInput.val loadValue
+    currValue = loadValue
+
   applyValue: (item, state) ->
     item[args.column.field] = state
+
   validate: ->
-    # it's impossible for an invalid date to be entered via normal means
-    # therefore, I don't care to actually validate that
-    {valid: true, msg: null}
+    isDate = moment(formInput.val()).isValid()
+    if isDate
+      {valid: true, msg: null}
+    else
+      {valid: false, msg: 'Please enter a valid date'}

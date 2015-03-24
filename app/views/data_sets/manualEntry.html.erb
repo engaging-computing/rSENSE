@@ -11,7 +11,7 @@
 
 <div class="row" style="padding-bottom: 2em">
   <div class="col-lg-6">
-    <strong><label for="data_set_name">Dataset Name:</label></strong>
+    <strong><label for="data_set_name">Data Set Name:</label></strong>
       <input id="data_set_name" name="data_set_name" class="form-control" 
         type="text" placeholder="Boston, MA Snowfall Total">
   </div>
@@ -24,8 +24,9 @@
 
 <div class="row">
   <div class="span12 edit_table_control pull-right">
-    <button id="edit_table_add_1" class="btn btn-default edit_table_add">Add Row</button>
-    <button id="edit_table_save_1" class="btn btn-success edit_table_save">Save</button>
+    <button class="btn btn-danger edit_table_cancel">Cancel</button>
+    <button id="edit_table_add_1" class="btn btn-success edit_table_add">Add Row</button>
+    <button id="edit_table_save_1" class="btn btn-primary edit_table_save">Save</button>
   </div>
 </div>
 
@@ -38,12 +39,14 @@
 
 <div id="row-slickgrid-2" class="row">
   <div class="span12 edit_table_control pull-right">
-    <button id="edit_table_add_2" class="btn btn-default edit_table_add">Add Row</button>
-    <button id="edit_table_save_2" class="btn btn-success edit_table_save">Save</button>
+    <button class="btn btn-danger edit_table_cancel">Cancel</button>
+    <button id="edit_table_add_2" class="btn btn-success edit_table_add">Add Row</button>
+    <button id="edit_table_save_2" class="btn btn-primary edit_table_save">Save</button>
   </div>
 </div>
 
 <script type="text/javascript">
-  $('#slickgrid-container').data('cols',<%= "#{@cols}".html_safe %>);
-  $('#slickgrid-container').data('data',<%= "#{@data}".html_safe %>);
+  $(document).data('project', <%= @project.id %>);
+  $('#slickgrid-container').data('cols', <%= "#{@cols}".html_safe %>);
+  $('#slickgrid-container').data('data', <%= "#{@data}".html_safe %>);
 </script>

@@ -53,7 +53,7 @@ $ ->
           if ($ j).is(':selected')
             group_by = ($ j).text()
         if group_by is ''
-          group_by = "Dataset Name (id)"
+          group_by = "Data set Name (id)"
         $.extend true, @chartOptions,
           title:
             text: ''
@@ -83,7 +83,9 @@ $ ->
                   str += "<table>"
                   str += "<tr><td>#{@series.xAxis.options.title.text}:</td><td><strong> "
                   str += "#{globals.dateFormatter @x}</strong></td></tr>"
-                  str += "<tr><td>#{@series.name.field}:</td><td><strong>#{@y}</strong></td></tr>"
+                  index = data.fields.map((y) -> y.fieldName).indexOf(@series.name.field)
+                  str += "<tr><td>#{@series.name.field}:</td><td><strong>#{@y} \
+                  #{fieldUnit(data.fields[index], false)}</strong></td></tr>"
                   str += "</table>"
             useHTML: true
 
