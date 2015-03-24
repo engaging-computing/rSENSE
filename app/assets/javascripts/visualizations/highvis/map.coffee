@@ -168,31 +168,40 @@ $ ->
               @timeLines[groupIndex].push
                 time: dataPoint[data.timeFields[0]]
                 latlng: latlng
+            res = dataPoint[globals.configs.groupById]
+            idString = new String(dataPoint[1].match(/\((\d+)\)$/g))
+            dataSetID = parseInt(idString.match(/(\d+)/g))
+
+            metaIndex = 0
+            for i in [1...Object.keys(data.metadata).length]
+              if data.metadata[i].dataset_id == dataSetID
+                metaIndex = i
+                break
 
             # Build info window content
             label  = "<div style='font-size:9pt;overflow-x:none;'>"
             label += "<div style='width:100%;text-align:center;color:#{color};'> " +
               "#{dataPoint[globals.configs.groupById]}</div><br>"
 
-            if data.metadata[groupIndex].photos.length == 1
-              photo = data.metadata[groupIndex].photos[0]
+            if data.metadata[metaIndex].photos.length == 1
+              photo = data.metadata[metaIndex].photos[0]
               label += "<div class='item'>
                           <img class='item-image item-photo-image' src=#{photo.src} >
                         </div>
                         </br>"
 
-            else if data.metadata[groupIndex].photos.length > 0
+            else if data.metadata[metaIndex].photos.length > 0
               label += "<div id='mapCarousel' class='carousel slide' data-ride='carousel' data-interval='false'>
                         <div class='carousel-inner' role='listbox'>"
 
-              firstPhoto = data.metadata[groupIndex].photos[0]
+              firstPhoto = data.metadata[metaIndex].photos[0]
               label += "<div class='item active'>
                           <img class='item-image item-photo-image' src=#{firstPhoto.src} >
                         </div>"
 
-              for i in [1...data.metadata[groupIndex].photos.length]
+              for i in [1...data.metadata[metaIndex].photos.length]
                 label +=  "<div class='item'>
-                            <img class='item-image item-photo-image' src = #{data.metadata[groupIndex].photos[i].src} >
+                            <img class='item-image item-photo-image' src = #{data.metadata[metaIndex].photos[i].src} >
                           </div>"
 
               label +=  "</div>

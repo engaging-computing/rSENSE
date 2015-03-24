@@ -103,7 +103,9 @@ body {
 
   .item-image.item-photo-image {
     height: 200px;
-    margin: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .item-title {
