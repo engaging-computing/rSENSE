@@ -83,11 +83,18 @@ module Api
           @project = Project.find(params[:id])
 
           if @cur_user.id == @project.user_id
-            session[:name] = params[:key_name]
-            session[:key] = params[:key]
-            session[:project_id] = @project.id
-            key = ContribKey.new(contrib_key_params)
-            key.save
+            key = @project.contrib_keys.find_by_key(params[:contribution_key])
+            if key.nil?
+              session[:name] = params[:key_name]
+              session[:key] = params[:key]
+              session[:project_id] = @project.id
+              key = ContribKey.new(contrib_key_params)
+              key.save
+            else
+              respond_to do |format|
+                format.json { render json: { msg: 'key already exists.' }, status: :unprocessable_entity }
+              end
+            end
           end
 
           respond_to do |format|
