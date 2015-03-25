@@ -685,22 +685,22 @@ $ ->
           dashStyle = globals.dashes[dashIndex % globals.dashes.length]
 
           [func, Ps, r2, newRegression] = [null, null, null, null]
-          #try
-          [func, Ps, r2, newRegression] = globals.getRegression(
-            points,
-            regressionType,
-            [xMin, xMax],
-            name,
-            dashStyle,
-            regressionId
-          )
-          #catch error
-          #console.log error
-          #if regressionType is 3
-          #  alert "Unable to calculate an #{regressions[regressionType]} regression for this data."
-          #else
-          #  alert "Unable to calculate a #{regressions[regressionType]} regression for this data."
-          #return
+          try
+            [func, Ps, r2, newRegression] = globals.getRegression(
+              points,
+              regressionType,
+              [xMin, xMax],
+              name,
+              dashStyle,
+              regressionId
+            )
+          catch error
+          console.log error
+          if regressionType is 3
+            alert "Unable to calculate an #{regressions[regressionType]} regression for this data."
+          else
+            alert "Unable to calculate a #{regressions[regressionType]} regression for this data."
+          return
 
           # Add the series
           @chart.addSeries(newRegression)

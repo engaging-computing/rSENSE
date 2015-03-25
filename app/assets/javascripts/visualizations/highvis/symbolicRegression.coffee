@@ -364,4 +364,10 @@ $ ->
     window.points = for i in [0...20]
       {x: i, y: Math.sqrt(i)}
     #window.result = window.optimizedSymbolicRegression(points)
-
+    
+    ###
+    # TODO:  PSO NOW RETURNS A NEW INDIVIDUAL BRO
+    # FIX 'CANNOT CALCULATE REGRESSION ERROR'
+    # OPTIMIZE TOOLTIP DISPLAYS (FEWER PARENS ARE GOODLY)
+    # DONE?
+    ###
