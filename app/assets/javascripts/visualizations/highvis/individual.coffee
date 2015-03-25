@@ -285,7 +285,79 @@ $ ->
       ###
       # WARNING:  MUTATES THE INDIVIDUAL
       ###
-      @particleSwarmOptimization: (individual, points, fitness) ->
-        1
+      @particleSwarmOptimization: (populant, points, fitness = 'scaledFitness', maxFitness = 1, numParticles = 50, maxPosition = 1000, minPosition = -1000, maxVelocity = 50, minVelocity = -50, maxIterations = 250, numNeighborhoods = 5, c1 = 1, c2 = 3) ->
+        
+        tree = populant.tree
+        treeValues = for i in [0...tree.treeSize()]
+          value = tree.index(i)
+          if value.data is 'ec' or typeof(value.data) is 'number' then value.data else null
+        console.log treeValues
+        constants = []
+        for value, index in treeValues
+          if value isnt null then constants.push {value: value, index, index}
+        return populant if constants.length is 0
+        console.log  constants
+        particles = []
+        for i in [0...numParticles]
+          dimensions = for j in [0...constants.length]
+            index = constants[j].index
+            velocity = Math.random() * (maxVelocity - minVelocity) + minVelocity
+            position = Math.random() * (maxPosition - minPosition) + minPosition
+            {velocity: velocity, position: position, personalBest: position, index: index}
+          particles.push {neighborhood: i % numNeighborhoods, dimensions: dimensions}
+        #console.log particles
+        neighborhoodBests = (-Infinity for i in [0...numNeighborhoods])
+        dimensionBests = (-Infinity for i in [0...numNeighborhoods])
+        for particle in particles
+          evaluationPoint = new individual(tree)
+          for dimension in particle.dimensions
+            evaluationPoint.tree.index(dimension.index).insertData(dimension.position)
+          #console.log evaluationPoint
+          currentFitness = eval "evaluationPoint.#{fitness}(points)"
+          particle.bestFitness = currentFitness
+          if currentFitness >= maxFitness
+            return evaluationPoint
+          #console.log "particle.neighborhood: #{particle.neighborhood}"
+          #console.log "current Fitness: #{currentFitness}", "neighborhoodBests[particle.neighborhood]: #{neighborhoodBests[particle.neighborhood]}"
+          if currentFitness >= neighborhoodBests[particle.neighborhood]
+            neighborhoodBests[particle.neighborhood] = currentFitness
+            dimensionBests[particle.neighborhood] = (dim.position for dim in particle.dimensions)
+        #console.log neighborhoodBests        
+        for i in [0...maxIterations]
+          for particle in particles
+            evaluationPoint = new individual(tree, populant.maxDepth)
+            for dimension, index in particle.dimensions
+              dimension.velocity = Math.min(Math.max(dimension.velocity + Math.random() * c1 * (dimension.personalBest - dimension.position) + Math.random() * c2 * (dimensionBests[particle.neighborhood][index] - dimension.position), minVelocity), maxVelocity)
+              dimension.position = Math.max(Math.min(dimension.position + dimension.velocity, maxVelocity), minVelocity)
+              #console.log "DIMENSION POSITION: #{dimension.position}"
+              evaluationPoint.tree.index(dimension.index).insertData(dimension.position)
+            currentFitness = eval "evaluationPoint.#{fitness}(points)"
+            if currentFitness > particle.bestFitness
+              particle.bestFitness = currentFitness
+              for dimension, index in particle.dimensions
+                dimension.personalBest = dimension.position
+            if currentFitness >= maxFitness              
+              return new individual(evaluationPoint.tree, populant.maxDepth)
+            if currentFitness > neighborhoodBests[particle.neighborhood]
+              neighborhoodBests[particle.neighborhood] = currentFitness
+              dimensionBests[particle.neighborhood] = (dim.position for dim in particle.dimensions)
+        [bestIndex, bestFitness] = [0, 0]
+        for fitness, index in neighborhoodBests
+          if neighborhoodBests[i] >= bestFitness
+            bestIndex = index
+            bestFitness = fitness
+        result = new individual(tree, populant.maxDepth)
+        for constant, index in constants
+          result.tree.index(constant.index).insertData(dimensionBests[bestIndex][index])
+        result
+
+
+
+
+
+
+
+
+
 
 

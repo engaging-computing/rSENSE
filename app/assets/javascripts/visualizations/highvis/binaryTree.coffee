@@ -243,7 +243,6 @@ $ ->
       ###
       # WARNING:  MUTATES THE BINARY TREE 'THIS', DOES NOT MUTATE ARGUMENT TREE
       ###
-      ### I think this needs to go!###
       insertTree: (tree, index = 0) ->
         replacementPoint = this.index(index)
         if index is null or replacementPoint is -1
@@ -336,6 +335,8 @@ $ ->
             "sqrt(|#{parenthesize(@stringify(tree.left))}|)"
           when 'x'
             'x'
-          else 
+          when 'ec'
+            "#{window.roundToFourSigFigs(binaryTree.ephemeralConstant)}"
+          else
             #console.log tree.data
             "#{window.roundToFourSigFigs(tree.data)}"

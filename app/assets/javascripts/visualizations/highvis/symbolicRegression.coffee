@@ -77,7 +77,7 @@ $ ->
     # Maximum number of iterations (simulated generations) to 
     # be performed while searching for an adequately-fit
     # candidate solution (termination criteria)
-    window.MAXITERS = 100
+    window.MAXITERS = 200
     # Any individuals with fitness greater than MAXFITNESS
     # will be immediately returned as a candidate solution
     # (termination criteria)
@@ -106,16 +106,20 @@ $ ->
     ###
     # Return the scaled expression tree calculated by scaled fitness
     ###
-    scaledIndividual = (individual, points, individualDepth) ->
-      [a, b] = individual.scaledFitness(points, true)
+    scaledIndividual = (populant, points, individualDepth) ->
+      populant = individual.particleSwarmOptimization(populant, points)
+      for i in [0...populant.tree.treeSize()]
+        if populant.tree.index(i).data is 'ec'
+          console.log 'done goofd'
+      [a, b] = populant.scaledFitness(points, true)
       scaledTree = new binaryTree
       scaledTree.insertData(add)
       scaledTree.insertData(multiply, 'right')
       scaledTree.insertData(a, 'left')
       scaledTree.right.insertData(b, 'left')
       scaledTree.right.insertData(1, 'right')
-      scaledTree.insertTree(individual.tree, 4)
-      return new window.individual(scaledTree, Math.max(individualDepth, scaledTree.maxDepth()))
+      scaledTree.insertTree(populant.tree, 4)
+      return new individual(scaledTree, Math.max(individualDepth, scaledTree.maxDepth()))
 
     window.symbolicRegression = (points, fitness = null, selection = null, reproduction = null, crossover = null, mutation = null, individualDepth = null, populationSize = null, reproductionProbability = null, crossoverProbability = null, mutationProbability = null, maxIters = null, maxFitness = null, tournamentSize = null, tournamentProbability = null) ->
       
@@ -165,9 +169,9 @@ $ ->
       # initial population is sufficiently fit 
       if mostFit >= maxFitness
         return if fitness isnt 'scaledFitness' 
-          bestIndividual
+          individual.particleSwarmOptimization(bestIndividual, points)
         else
-          scaledIndividual(population[maxIndex], points, individualDepth)
+          scaledIndividual(individual.particleSwarmOptimization(population[maxIndex]), points, individualDepth)
   
       newPopulation = []
 
@@ -221,7 +225,7 @@ $ ->
 
         # Set current population to the next generation
         population = newPopulation
-
+        #population = population.map((y) -> individual.particleSwarmOptimization(y, points))
         # Calculate fitness of the next generation
         fitnesses = for populant in population
           eval "populant.#{fitness}(points)"
@@ -231,9 +235,9 @@ $ ->
         # Test primary termination condition
         if bestFitnessInPopulation >= maxFitness
           return if fitness isnt 'scaledFitness' 
-            population[maxIndex]
+            individual.particleSwarmOptimization(population[maxIndex], points)
           else
-            scaledIndividual(population[maxIndex], points, individualDepth)
+            scaledIndividual(individual.particleSwarmOptimization(population[maxIndex], points), points, individualDepth)
         
         # Update the fittest individual found if the fittest individual
         # from this generation is more fit than the fittest individual found
@@ -244,9 +248,9 @@ $ ->
       # The maximum number of iterations have been performed, so we
       # return the fittest individual that has been found. 
       if fitness isnt 'scaledFitness'
-        bestIndividual
+        individual.particleSwarmOptimization(bestIndividual, points)
       else
-        scaledIndividual(bestIndividual, points, individualDepth)
+        scaledIndividual(individual.particleSwarmOptimization(bestIndividual, points), points, individualDepth)
 
     # Optimized symbolic regression implementation with deterministic population
     # ratios and batch selection and reproduction.  Comments omitted for brevity.
@@ -275,7 +279,7 @@ $ ->
         Math.max(pv, cv)
 
       population = (new individual(null, individualDepth) for i in [0...populationSize])
-      dbg = population
+      #population = population.map((y) -> individual.particleSwarmOptimization(y, points))
       fitnesses = for populant in population
         eval "populant.#{fitness}(points)"
       
