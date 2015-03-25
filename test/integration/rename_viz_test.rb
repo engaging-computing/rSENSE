@@ -12,7 +12,7 @@ class RenameVizTest < ActionDispatch::IntegrationTest
     finish
   end
 
-  test 'create, modify, and delete a viz' do
+  test 'create modify and delete a viz' do
     login('kcarcia@cs.uml.edu', '12345')
 
     click_on 'Projects'

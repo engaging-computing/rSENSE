@@ -247,7 +247,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert keys_match(response, @data_keys_extended), 'Keys are missing'
   end
 
-  test 'test second fields data is not trucated if longer than first fields' do
+  test 'field data not truncated if longer than first field' do
     pid = @dessert_project.id
     post "/api/v1/projects/#{pid}/jsonDataUpload",
 
@@ -474,7 +474,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert keys_match(response, @media_object_keys), 'Keys are missing.'
   end
 
-  test 'create media object for dataset with key' do
+  test 'create media object for data set with key' do
     pid = @dessert_project.id
     post "/api/v1/projects/#{pid}/jsonDataUpload",
 
