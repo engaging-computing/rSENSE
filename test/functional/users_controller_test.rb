@@ -121,7 +121,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_not_nil flash[:error]
   end
 
-  test "user can't delete themselves" do
+  test 'user cannot delete themselves' do
     assert_difference('User.count', 0) do
       delete :destroy, { id: @user },  user_id: @user
     end
