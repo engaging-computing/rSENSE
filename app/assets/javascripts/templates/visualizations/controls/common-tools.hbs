@@ -1,7 +1,7 @@
 {{#if sortFields}}
   <div class="vis-ctrl-sublock">
-    <label for="vis-ctrl-sort-by">Sort by:</label>
-    <select id="vis-ctrl-sort-by" class="form-control">
+    <label for="sort-by">Sort by:</label>
+    <select id="sort-by" class="form-control">
       {{#each sortFields}}
         <option value="{{value}}" data-log-id="{{logId}}">{{name}}</option>
       {{/each}}
@@ -18,17 +18,16 @@
     </div>
   </div>
 {{/if}}
+{{#if logYAxis}}
+  <div class="vis-ctrl-subblock">
+    <h4 class="vis-ctrl-subtitle">Other</h4>
+    <div>
+      {{> visualizations/controls/_checkbox logYAxis}}
+    </div>
+  </div>
+{{/if}}
 
 <!--
-          switch typestring
-            when 'Max' then controls += 'Maximum </label> </div>'
-            when 'Min' then controls += 'Minimum </label> </div>'
-            when 'Mean' then controls += 'Mean (Average)</label></div>'
-            else controls += "#{typestring} </label></div>"
-
-          controls += '</div>'
-        controls += "</div>"
-
         if data.logSafe is 1 and logYAxis
           cnotrols += "<h4 class='clean_shrink'>Other</h4>"
           controls += '<div class="inner_control_div">'

@@ -493,16 +493,24 @@ $ ->
         # Initialize and track the status of this control panel
         globals.configs.saveOpen ?= false
         initCtrlPanel('common-ctrls', 'toolsOpen')
+        query = "input[name='analysis-type'][value='#{@configs.analysisType}']"
+        $(query).prop('checked', 'true')
 
-        $('#vis-ctrl-sort-by').change (e) =>
+        $('#sort-by').val(@configs.sortField)
+        console.log @configs.sortField
+
+        $('input[name="analysis-type"]').value = @configs.analysisType
+
+        $('#sort-by').change (e) =>
           @configs.sortField = Number e.target.value
           @delayedUpdate()
 
-        ###
-        $('.analysisType').change (e) =>
-          @configs.analysisType = Number e.target.value
+        $('input[name="analysis-type"]').click (e) =>
+          @configs.analysisType = Number(e.target.value)
+          console.log 'sup', @configs.analysisType
           @delayedUpdate()
 
+        ###
         $('.logY_box').click (e) =>
           globals.configs.logY = (globals.configs.logY + 1) % 2
           @start()
