@@ -181,7 +181,7 @@ $ ->
             # Build info window content
             label  = "<div style='font-size:9pt;overflow-x:none;'>"
             label += "<div style='width:100%;text-align:center;color:#{color};'> " +
-              "#{dataPoint[globals.configs.groupById]}</div><br>"
+              "#{dataPoint[globals.configs.groupById]}</div></br>"
 
             if data.metadata[metaIndex].photos.length == 1
               photo = data.metadata[metaIndex].photos[0]
