@@ -17,7 +17,7 @@
           <span> (featured) </span>
         <% end %>
       </div>
-      by <a href="<% =user_url(@box_project.owner) %>">
+      by <a href="<%= user_url(@box_project.owner) %>">
          <%= @box_project.owner.name %> </a><br/>
       on <%= @box_project.created_at.strftime("%B %d, %Y") %>
       <br/>
