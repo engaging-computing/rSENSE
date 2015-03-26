@@ -209,7 +209,7 @@ class Project < ActiveRecord::Base
     end
 
     new_project.save
-    
+
     # Clone fields
     field_map = {}
     fields.each do |f|
