@@ -83,12 +83,9 @@ module Api
           @project = Project.find(params[:id])
 
           if @cur_user.id == @project.user_id
-            key = @project.contrib_keys.find_by_key(params[:key])
+            key = @project.contrib_keys.find_by_key(params[:contrib_key][:key])
             if key.nil?
-              session[:name] = params[:name]
-              session[:key] = params[:key]
-              session[:project_id] = @project.id
-              key = ContribKey.new(contrib_key_params)
+              key = ContribKey.new(name: params[:contrib_key][:name], project_id: @project.id, key: params[:contrib_key][:key])
               respond_to do |format|
                 if key.save
                   format.json { render json: { msg: 'Success' }, status: :created }
@@ -108,10 +105,6 @@ module Api
             end
           end
         end
-      end
-
-      def contrib_key_params
-        params.require(:contrib_key).permit(:name, :key, :project_id)
       end
     end
   end
