@@ -7,79 +7,88 @@
             <h1><i class='fa fa-folder-open'></i> Projects</h1>
           </div>
         </div>
-
         <div id="searchProjRow" class="row">
-          <div class="padded-col col-sm-10 col-xs-9" title="Enter keyword(s) or project number to search for a project">
-            <%= text_field_tag :search, @params[:search], class: "form-control", placeholder: "Enter keyword(s) or project number to search for a project" %>
+          <div class="padded-col col-sm-10 col-xs-9"
+               title="Enter keyword(s) or project number to search for a project">
+            <%= text_field_tag :search, @params[:search],
+                class: "form-control",
+                placeholder: "Enter keyword(s) or project number to search for a project" %>
           </div>
           <div class="padded-col col-sm-2 col-xs-3">
-            <%= submit_tag "Search", name: nil, class:'btn btn-default btn-group-justified'%>
+            <%= submit_tag "Search", name: nil,
+                class:'btn btn-default btn-group-justified'%>
           </div>
         </div>
-          
         <div class='row'>
           <div class="padded-col col-md-3 col-xs-6" title="Sort by">
-            <%= select_tag(:sort, 
+            <%= select_tag(:sort,
                 options_for_select([["Sort by Modified", "updated_at"],
                                     ["Sort by Created", "created_at"],
                                     ["Sort by View Count","views"],
-                                    ["Sort by Rating", "like_count"]], @params["sort"]),
-                class: "projects_sort_select form-control") 
+                                    ["Sort by Rating", "like_count"]],
+                                   @params["sort"]),
+                class: "projects_sort_select form-control")
             %>
           </div>
-            
-          <div class="padded-col col-md-3 col-xs-6">  
-            <%= select_tag(:order, 
+          <div class="padded-col col-md-3 col-xs-6">
+            <%= select_tag(:order,
                 options_for_select([["Descending", "DESC"],
                                     ["Ascending", "ASC"]], @params["order"]),
-                class: "projects_order_select form-control") 
+                class: "projects_order_select form-control")
             %>
           </div>
-            
-          <div class="padded-col col-md-6 col-xs-12 binary-filters" data-toggle="checkbox">
+          <div class="padded-col col-md-6 col-xs-12 binary-filters"
+               data-toggle="checkbox">
             <div class="btn-group btn-group-justified">
-              <label class='btn btn-primary' title="Projects that can be cloned and repopulated with new data">
-                <%= check_box_tag 'templates_only', 'yes', @params['templates_only'] %>
+              <label class='btn btn-primary'
+                     title="Projects that can be cloned and repopulated with new data">
+                <%= check_box_tag 'templates_only', 'yes',
+                    @params['templates_only'] %>
                 Templates
               </label>
-              <label class='btn btn-primary' title="Projects populated with professionally collected data">
-                <%= check_box_tag 'curated_only', 'yes', @params['curated_only'] %>
+              <label class='btn btn-primary'
+                     title="Projects populated with professionally collected data">
+                <%= check_box_tag 'curated_only', 'yes',
+                    @params['curated_only'] %>
                 Curated
               </label>
-              <label class='btn btn-primary' title="Projects that have been featured by the iSENSE team">
-                <%= check_box_tag 'featured_only', 'yes', @params['featured_only'] %>
+              <label class='btn btn-primary'
+                     title="Projects that have been featured by the iSENSE team">
+                <%= check_box_tag 'featured_only', 'yes',
+                    @params['featured_only'] %>
                 Featured
               </label>
-              <label class='btn btn-primary' title="Non-empty projects populated with data">
+              <label class='btn btn-primary'
+                     title="Non-empty projects populated with data">
                 <%= check_box_tag 'has_data', 'yes', @params['has_data'] %>
                 Has Data
               </label>
             </div>
           </div>
         </div>
-          
         <div class='clear'></div>
       <%end%>
     </div>
   </div>
 </div>
-
 <div class="row">
-  <div id="projects" class="isotope_container"> 
+  <div id="projects" class="isotope_container">
     <div class="isotope_pane">
       <!-- Create Project -->
       <% if @cur_user.try(:id) %>
         <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 create-project-outer-block">
-          <div class="item item-block text-center create-project-inner-block"> 
+          <div class="item item-block text-center create-project-inner-block">
             <h4><i class="fa fa-plus-circle"></i> Create a New Project</h4>
             <%= form_for(@project, html: { class: "form-inline" }) do |f| %>
               <%= f.label :project_name, "Project Name", class:"hidden" %>
-              <%= f.text_field :title, class: "form-control wide-input", placeholder: "Project Name" %>
-              <%= button_tag 'Create Project', type: 'submit', class: 'btn btn-success create-project-btn'%>
+              <%= f.text_field :title, class: "form-control wide-input",
+                  placeholder: "Project Name" %>
+              <%= button_tag 'Create Project', type: 'submit',
+                  class: 'btn btn-success create-project-btn'%>
             <% end %>
           </div>
         </div>
-      <% end %>    
+      <% end %>
       <% @projects.each do |pr| %>
         <% @box_project = pr %>
         <%= render "shared/project_box" %>
@@ -87,7 +96,8 @@
     </div>
   </div>
 </div>
-
 <div class='text-center'>
-<%= will_paginate @projects, renderer: BootstrapPagination::Rails, inner_window: 1, outer_window: 0, previous_label: "<<", next_label: ">>" %>
+  <%= will_paginate @projects, renderer: BootstrapPagination::Rails,
+      inner_window: 1, outer_window: 0, previous_label: "<<",
+      next_label: ">>" %>
 </div>
