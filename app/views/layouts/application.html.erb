@@ -59,7 +59,8 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <% if @cur_user.try(:id) %>
-              <li class="navbtn" title="Click to view <%= @cur_user.name %>'s profile page">
+              <li id="username" class="navbtn"
+                  title="Click to view <%= @cur_user.name %>'s profile page">
               <% if @cur_user.name.length < 30 %>
                  <%= link_to @cur_user.name, user_path(@cur_user) %>
               <% else %>

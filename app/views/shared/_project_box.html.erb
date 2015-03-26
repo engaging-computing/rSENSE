@@ -17,21 +17,21 @@
           <span> (featured) </span>
         <% end %>
       </div>
-      by <%= @box_project.owner.name %>
-      <br/>
-      on <%= @box_project.created_at.strftime("%B %d, %Y")%>
+      by <a href="<%= user_url(@box_project.owner) %>">
+         <%= @box_project.owner.name %> </a><br/>
+      on <%= @box_project.created_at.strftime("%B %d, %Y") %>
       <br/>
     </div>
     <div class="item-badges">
       <div>
         <span class="badge" title="Data Sets">
-          <i class="fa fa-flask">&nbsp;</i><%=@box_project.data_sets.count%>
+          <i class="fa fa-flask">&nbsp;</i><%= @box_project.data_sets.count %>
         </span>
       </div>
       <div>
         <span class="badge" title="Views" >
           <i class="fa fa-eye">&nbsp;</i>
-          <%=@box_project.views%>
+          <%= @box_project.views %>
         </span>
       </div>
       <div>

@@ -135,7 +135,7 @@
                   <tr class="<%= cycle('feed-even', 'feed-odd')%> dataset" style="position:relative">
                     <% if( not (s.key.nil?) ) %>
                       <td class="key_icon">
-                        <div class="key" title="<%= s.key %>"> <%= image_tag("Key.png", :size => "32x32") %> <%= s.key %></div>
+                        <div class="key" title="<%= s.key %>"> <%= image_tag("Key.png", :style => "width: 40px; height: auto;") %> <%= s.key %></div>
                       </td>
                     <% else %>
                     <td class="gravatar">
@@ -265,8 +265,8 @@
             <%= form_tag '/contrib_keys/enter', method: 'post' do %>
               <div class="row" style="margin-left: 0px;" >
                 <%= hidden_field_tag :project_id, @project.id %>
-                <%= text_field_tag :key,"",placeholder:"Key" %>
-                <%= text_field_tag :contributor_name,"",placeholder:"Contributor Name" %>
+                <%= text_field_tag :key,"", placeholder:"Key", style:"margin-bottom: 10px;" %>
+                <%= text_field_tag :contributor_name,"", placeholder:"Contributor Name" %>
                 <%= submit_tag "Submit Key", class: "btn btn-success" %>
               </div>
             <% end %>

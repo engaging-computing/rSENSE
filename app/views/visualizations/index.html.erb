@@ -1,34 +1,33 @@
 <div class="row">
   <div class="col-lg-12">
     <div class="search-box">
-      <%=form_tag visualizations_path, method: 'get', id: 'visualizations_search' do%>
-
+      <%= form_tag visualizations_path, method: "get",
+                  id: "visualizations_search" do %>
         <div class="row">
           <div class="col-md-12">
-            <h1><i class='fa fa-picture-o'></i> Visualizations</h1>
+            <h1><i class="fa fa-picture-o"></i> Visualizations</h1>
           </div>
-
-          <div id='searchVisRow' class='row'>
-            <div class="padded-col col-sm-10 col-xs-9" title="Enter keyword(s) to search for a visualization">
-              <%= text_field_tag :search, @params[:search], class: "form-control" %>
+          <div id="searchVisRow" class="row">
+            <div class="padded-col col-sm-10 col-xs-9"
+                 title="Enter keyword(s) to search for a visualization">
+              <%= text_field_tag :search, @params[:search],
+                  class: "form-control" %>
             </div>
             <div class="padded-col col-sm-2 col-xs-3">
-              <%= submit_tag "Search", name: nil, class:'btn btn-default btn-group-justified'%>
+              <%= submit_tag "Search", name: nil,
+                  class:"btn btn-default btn-group-justified" %>
             </div>
           </div>
-
-          <div class='row'>
+          <div class="row">
             <div class="padded-col col-md-3 col-xs-6" title="Sort by">
-
               <%= select_tag(:sort,
                 options_for_select([["Sort by Modified Date", "updated_at"],
-                                    ["Sort by Created Date", "created_at"]], @params["sort"]),
+                                    ["Sort by Created Date", "created_at"]],
+                                   @params["sort"]),
                 class: "visualizations_sort_select form-control")
               %>
             </div>
-
             <div class="padded-col col-md-3 col-xs-6" title="Sort order">
-
               <%= select_tag(:order,
                 options_for_select([["Descending", "DESC"],
                                     ["Ascending", "ASC"]], @params["order"]),
@@ -36,61 +35,23 @@
               %>
             </div>
           </div>
-
-          <div class='clear'></div>
-
-        </div>
-      <%end%>
-    </div>
-  </div>
-</div>
-
-<div class="row">
-  <div id="visualizations" class="isotope_container" >
-    <div class="isotope_pane">
-      <% @visualizations.each do |vi| %>
-        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
-        <div class='item item-block'>
-          <% thumb = nil %>
-          <% if vi.thumb_id != nil %>
-            <% thumb = vi.tn_src unless vi.tn_src.empty? %>
-          <% else %>
-            <% type = JSON.parse(vi.data)['defaultVis'] %>
-            <% case type %>
-            <% when 'Map' %>
-              <% thumb = image_path('vis_map.png') %>
-            <% when 'Table' %>
-              <% thumb = image_path('vis_table.png') %>
-            <% when 'Summary' %>
-              <% thumb = image_path('vis_summary.png') %>
-            <% else %>
-              <% thumb = image_path("vis_#{type.downcase}_light.png")%>
-            <% end %>
-          <% end %>
-          <a href='<%= visualization_path vi %>'>
-            <div class='item-image'
-                 style='background-image:url(<%= thumb %>);
-                 background-size: 100% 100%'>
-            </div>
-          </a>
-          <div class="item-desc">
-            <div class="item-title">
-              <%= link_to vi.name.html_safe, vi %>
-              <% if vi.featured %>
-                <span> (featured)</span>
-              <% end %>
-            </div>
-            by <a href='<%=user_url(vi.owner)%>'> <%=vi.owner.name%> </a><br/>
-            on <%=vi.created_at.strftime("%B %d, %Y")%> <br/>
-          </div>
-        </div>
+          <div class="clear"></div>
         </div>
       <% end %>
     </div>
   </div>
 </div>
-
-<div class='text-center'>
+<div class="row">
+  <div id="visualizations" class="isotope_container" >
+    <div class="isotope_pane">
+      <% @visualizations.each do |vi| %>
+        <% @box_vis = vi %>
+        <%= render "shared/vis_box" %>
+      <% end %>
+    </div>
+  </div>
+</div>
+<div class="text-center">
   <%= will_paginate @visualizations, renderer: BootstrapPagination::Rails,
       inner_window: 1, outer_window: 0, previous_label: "<<",
       next_label: ">>" %>
