@@ -260,7 +260,7 @@
       <tr class="titleGet">
         <td class="GET def">GET</td>
         <td class="method def">Key</td>
-        <td class="code def">/api/v1/projects/XX/key/</td>
+        <td class="code def">/api/v1/projects/<b>(project id)</b>/key/</td>
         <td class="args def">contribution_key(req)</td>
       </tr>
       <tr class="more">
@@ -278,6 +278,19 @@
     "contribution_key" => "contribution key (string)"
   }
           </pre>
+          <b>Example (Javascript)</b>
+          <pre>
+    var url = 'http://rsense-dev.cs.uml.edu/api/v1/projects/<b>(project id)</b>/key';
+    var response = $.ajax({ type: "GET",
+                             url: url,
+                           async: false,
+                        dataType: "JSON",
+                           data : {"contribution_key":"<b>(key)</b>"}
+    }).responseText;
+
+    var parsedResponse = JSON.parse(response);
+    console.log(parsedResponse);
+          </pre>
           <b>Response</b>
           <pre>
   {
@@ -286,7 +299,7 @@
           </pre>
           <b>Notes</b>
           <ul>
-            <li>XX should be replaced with the ID for the project.</li>
+            <li>N/A</li>
           </ul>
         </td>
       </tr>
@@ -964,10 +977,10 @@
     var file = files[0];
 
     formData.append('upload', file, file.name);
-    formData.append('email', '<b>(EMAIL)</b>');
-    formData.append('password', '<b>(PASSWORD)</b>');
-    formData.append('type', '<b>(data_set or project)</b>');
-    formData.append('id', <b>(DATASET ID or PROJECT ID)</b>);
+    formData.append('email', '<b>(email)</b>');
+    formData.append('password', '<b>(password)</b>');
+    formData.append('type', '<b>("data_set" or "project")</b>');
+    formData.append('id', <b>(dataset id or project id)</b>);
 
     var xhr = new XMLHttpRequest();
     xhr.open('POST', apiUrl, true);
@@ -1049,10 +1062,10 @@
     var file = files[0];
 
     formData.append('upload', file, file.name);
-    formData.append('contribution_key', '<b>(KEY)</b>');
-    formData.append('contributor_name', '<b>(CONTRIBUTOR'S NAME)</b>');
-    formData.append('type', '<b>(data_set or project)</b>');
-    formData.append('id', <b>(DATASET ID or PROJECT ID)</b>);
+    formData.append('contribution_key', '<b>(key)</b>');
+    formData.append('contributor_name', '<b>(contributor's name)</b>');
+    formData.append('type', '<b>("data_set" or "project")</b>');
+    formData.append('id', <b>(data set id or project id)</b>);
 
     var xhr = new XMLHttpRequest();
     xhr.open('POST', apiUrl, true);
