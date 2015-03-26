@@ -1,8 +1,8 @@
 <div class="row">
   <div class="col-lg-12">
     <div class="search-box">
-      <%=form_tag visualizations_path, method: "get",
-                  id: "visualizations_search" do%>
+      <%= form_tag visualizations_path, method: "get",
+                  id: "visualizations_search" do %>
         <div class="row">
           <div class="col-md-12">
             <h1><i class="fa fa-picture-o"></i> Visualizations</h1>
@@ -15,7 +15,7 @@
             </div>
             <div class="padded-col col-sm-2 col-xs-3">
               <%= submit_tag "Search", name: nil,
-                  class:"btn btn-default btn-group-justified"%>
+                  class:"btn btn-default btn-group-justified" %>
             </div>
           </div>
           <div class="row">
@@ -37,7 +37,7 @@
           </div>
           <div class="clear"></div>
         </div>
-      <%end%>
+      <% end %>
     </div>
   </div>
 </div>

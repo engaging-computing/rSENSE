@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-lg-12">
     <div class="search-box">
-      <%=form_tag projects_path, method: "get", id: "projects_search" do%>
+      <%= form_tag projects_path, method: "get", id: "projects_search" do %>
         <div class="row">
           <div class="col-md-12">
             <h1><i class="fa fa-folder-open"></i> Projects</h1>
@@ -67,7 +67,7 @@
           </div>
         </div>
         <div class="clear"></div>
-      <%end%>
+      <% end %>
     </div>
   </div>
 </div>
@@ -84,7 +84,7 @@
               <%= f.text_field :title, class: "form-control wide-input",
                   placeholder: "Project Name" %>
               <%= button_tag "Create Project", type: "submit",
-                  class: "btn btn-success create-project-btn"%>
+                  class: "btn btn-success create-project-btn" %>
             <% end %>
           </div>
         </div>

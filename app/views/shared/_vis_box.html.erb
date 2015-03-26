@@ -13,7 +13,7 @@
        <% when "Summary" %>
          <% thumb = image_path("vis_summary.png") %>
        <% else %>
-         <% thumb = image_path("vis_#{type.downcase}_light.png")%>
+         <% thumb = image_path("vis_#{type.downcase}_light.png") %>
        <% end %>
      <% end %>
      <a href="<%= visualization_path @box_vis %>">
@@ -28,9 +28,9 @@
            <span> (featured)</span>
          <% end %>
        </div>
-       by <a href="<%=user_url(@box_vis.owner)%>">
-          <%=@box_vis.owner.name%> </a><br/>
-       on <%=@box_vis.created_at.strftime("%B %d, %Y")%><br/>
+       by <a href="<%= user_url(@box_vis.owner) %>">
+          <%= @box_vis.owner.name %> </a><br/>
+       on <%= @box_vis.created_at.strftime("%B %d, %Y") %><br/>
      </div>
    </div>
  </div>
