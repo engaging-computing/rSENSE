@@ -705,6 +705,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
         contrib_key:
           {
             'name' => 'Pies',
+            'project_id' => @dessert_project.id,
             'key' => 'apple'
           }
 
