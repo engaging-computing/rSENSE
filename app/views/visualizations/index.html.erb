@@ -45,41 +45,8 @@
   <div id="visualizations" class="isotope_container" >
     <div class="isotope_pane">
       <% @visualizations.each do |vi| %>
-        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
-        <div class="item item-block">
-          <% thumb = nil %>
-          <% if vi.thumb_id != nil %>
-            <% thumb = vi.tn_src unless vi.tn_src.empty? %>
-          <% else %>
-            <% type = JSON.parse(vi.data)["defaultVis"] %>
-            <% case type %>
-            <% when "Map" %>
-              <% thumb = image_path("vis_map.png") %>
-            <% when "Table" %>
-              <% thumb = image_path("vis_table.png") %>
-            <% when "Summary" %>
-              <% thumb = image_path("vis_summary.png") %>
-            <% else %>
-              <% thumb = image_path("vis_#{type.downcase}_light.png")%>
-            <% end %>
-          <% end %>
-          <a href="<%= visualization_path vi %>">
-            <div class="item-image"
-                 style="background-image:url(<%= thumb %>);">
-            </div>
-          </a>
-          <div class="item-desc">
-            <div class="item-title">
-              <%= link_to vi.name.html_safe, vi %>
-              <% if vi.featured %>
-                <span> (featured)</span>
-              <% end %>
-            </div>
-            by <a href="<%=user_url(vi.owner)%>"> <%=vi.owner.name%> </a><br/>
-            on <%=vi.created_at.strftime("%B %d, %Y")%> <br/>
-          </div>
-        </div>
-        </div>
+        <% @box_vis = vi %>
+        <%= render "shared/vis_box" %>
       <% end %>
     </div>
   </div>
