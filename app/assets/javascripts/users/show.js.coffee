@@ -9,45 +9,45 @@ $ ->
     $(document).ajaxError (event, xhr, settings, error) ->
       quickFlash(error, 'error')
 
-    # Start recent 3
-    nav_list = []
+    navList = []
 
     $('#user_filter li').each (index) ->
-      nav_list.push $(@).text()
+      navList.push $(@).text()
 
-    nav_list.push "All"
+    navList.push "All"
 
     $('#user_filter li').click ->
       $("#user_filter .active").removeClass "active"
       $(@).addClass "active"
 
-      filter_selection = $(@).text()
+      filterSelection = $(@).text()
 
       # compares the filter you clicked on to the list of filters
       # to see if its "your" page or a filter
-      if( nav_list.some (word) -> ~filter_selection.indexOf(word) )
+      if(navList.some (word) -> ~filterSelection.indexOf(word))
         $("#contributions_content").show()
 
         $("#page").val("0")
 
-        filter_ajax_params = $('#contribution_search').serialize()
-        filter_ajax_params += "&filters=#{filter_selection}"
+        filterAjaxParams = $('#contribution_search').serialize()
+        filterAjaxParams += "&filters=#{filterSelection}"
 
         globals.arrowsClicked = false
 
         $.ajax
           url: "/users/#{$('#contribution_search')
             .attr('data-user-id')}/contributions"
-          data: filter_ajax_params
+          data: filterAjaxParams
           dataType: "html"
           success: (filtered_html) ->
             $("#contributions").html filtered_html
             if (parseInt($("#mparams").attr("totalPages")) > 0)
-              $("#pageLabel").html "Page " + (parseInt( $("#page").val(), 10 ) +
-                1) + " of " + $("#mparams").attr("totalPages")
+              pageNum = parseInt($("#page").val(), 10) + 1
+              $("#pageLabel").html "Page " + pageNum +
+                " of " + $("#mparams").attr("totalPages")
             else
               $("#pageLabel").html "No Results"
-            if (parseInt( $("#page").val(), 10 ) == 0)
+            if (parseInt($("#page").val(), 10) == 0)
               $(".pagebck").hide()
             else
               $(".pagebck").show()
@@ -64,25 +64,25 @@ $ ->
       $("#contribution_search").submit()
 
     $("#contribution_search").submit ->
-      ajax_params = $('#contribution_search').serialize()
-      ajax_params += "&filters=#{$('#user_filter .active').text()}"
+      ajaxParams = $('#contribution_search').serialize()
+      ajaxParams += "&filters=#{$('#user_filter .active').text()}"
 
       globals.arrowsClicked = false
 
       $.ajax
         url: "/users/#{$('#contribution_search')
           .attr('data-user-id')}/contributions"
-        data: ajax_params
+        data: ajaxParams
         dataType: "html"
         success: (dat) ->
           $("#contributions").html dat
           if (parseInt($("#mparams").attr("totalPages")) > 0)
-            $("#pageLabel").html "Page " +
-              (parseInt( $("#page").val(), 10 ) + 1) +
+            pageNum = parseInt($("#page").val(), 10) + 1
+            $("#pageLabel").html "Page " + pageNum +
               " of " + $("#mparams").attr("totalPages")
           else
             $("#pageLabel").html "No Results"
-          if (parseInt( $("#page").val(), 10 ) == 0)
+          if (parseInt($("#page").val(), 10) == 0)
             $(".pagebck").hide()
           else
             $(".pagebck").show()
@@ -101,13 +101,13 @@ $ ->
 
     $(".pagefwd").click ->
       globals.arrowsClicked = true
-      pageNum = parseInt( $("#page").val(), 10 )
+      pageNum = parseInt($("#page").val(), 10)
       $("#page").val("" + (pageNum + 1))
       $("#contribution_search").submit()
 
     $(".pagebck").click ->
       globals.arrowsClicked = true
-      pageNum = parseInt($("#page").val(), 10 )
+      pageNum = parseInt($("#page").val(), 10)
       $("#page").val("" + (pageNum - 1))
       $("#contribution_search").submit()
 
