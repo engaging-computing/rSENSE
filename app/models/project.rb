@@ -208,6 +208,8 @@ class Project < ActiveRecord::Base
       new_project.title = params[:project_name]
     end
 
+    new_project.save
+    
     # Clone fields
     field_map = {}
     fields.each do |f|

@@ -68,6 +68,8 @@ class CloneProjectTest < ActionDispatch::IntegrationTest
     assert page.has_content?('test.pdf'), 'File should be in list'
     assert page.has_content?('I Like Clones'), 'Data set should be in list'
 
+    assert page.has_no_content?('Setup Manually'), 'Fields were not created'
+    
     page.find('.dataset').click_on 'Delete'
     page.driver.browser.accept_js_confirms
 
