@@ -83,34 +83,35 @@ module Api
           @project = Project.find(params[:id])
 
           if @cur_user.id == @project.user_id
-            key = @project.contrib_keys.find_by_key(params[:contribution_key])
+            key = @project.contrib_keys.find_by_key(params[:key])
             if key.nil?
-              session[:name] = params[:key_name]
+              session[:name] = params[:name]
               session[:key] = params[:key]
               session[:project_id] = @project.id
               key = ContribKey.new(contrib_key_params)
-              key.save
+              respond_to do |format|
+                if key.save
+                  format.json { render json: { msg: 'Success' }, status: :created }
+                else
+                  format.json { render json: { msg: 'Unprocessable Entity.' }, status: :unprocessable_entity }
+                end
+              end
             else
               respond_to do |format|
                 format.json { render json: { msg: 'key already exists.' }, status: :unprocessable_entity }
               end
+              return
             end
-          end
-
-          respond_to do |format|
-            if !key.nil?
-              format.json { render json: { msg: 'Success' }, status: :created }
-            elsif @cur_user.id != @project.user_id
+          else
+            respond_to do |format|
               format.json { render json: { msg: 'User does not own the project.' }, status: :unauthorized }
-            else
-              format.json { render json: { msg: 'Unprocessable Entity.' }, status: :unprocessable_entity }
             end
           end
         end
       end
 
       def contrib_key_params
-        params.require(:contrib_key).permit(:name, :project_id, :key)
+        params.require(:contrib_key).permit(:name, :key, :project_id)
       end
     end
   end

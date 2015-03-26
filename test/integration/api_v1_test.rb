@@ -671,6 +671,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
         contrib_key:
           {
             'name' => 'key_name',
+            'project_id' => id,
             'key' => 'key'
           }
     assert_response :unauthorized
@@ -697,35 +698,19 @@ class ApiV1Test < ActionDispatch::IntegrationTest
   end
 
   test 'add a key that already exists' do
-    post '/api/v1/projects',
 
-    email: 'kcarcia@cs.uml.edu',
-    password: '12345'
-
-    assert_response :success
-    id = parse(response)['id']
-
-    post "/api/v1/projects/#{id}/add_key",
+    post "/api/v1/projects/#{@dessert_project.id}/add_key",
         email: 'kcarcia@cs.uml.edu',
         password: '12345',
         contrib_key:
           {
-            'name' => 'key_name',
-            'project_id' => id,
-            'key' => 'key'
+            'name' => 'Pies',
+            'key' => 'apple'
           }
-    assert_response :created
 
-    post "/api/v1/projects/#{id}/add_key",
-        email: 'kcarcia@cs.uml.edu',
-        password: '12345',
-        contrib_key:
-          {
-            'name' => 'key_name',
-            'project_id' => id,
-            'key' => 'key'
-          }
     assert_response :unprocessable_entity
+
+
   end
 
   private
