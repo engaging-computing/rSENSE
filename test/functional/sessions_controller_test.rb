@@ -24,24 +24,25 @@ class SessionsControllerTest < ActionController::TestCase
     assert_response :redirect
   end
 
-  test 'verify user is logged in' do
-    get :verify, { format: 'json' },  user_id: @kate.id
+  test 'user has save permissions' do
+    get :permissions, { format: 'json' },  user_id: @kate.id
     assert_response :success
+    assert JSON.parse(response.body)['permissions'].include? 'save'
   end
 
-  test 'verify user is not logged in' do
-    get :verify,  format: 'json'
+  test 'user has no permissions' do
+    get :permissions,  format: 'json'
     assert_response :unauthorized
   end
 
-  test 'verify user is logged in as project owner' do
-    get :verify,
+  test 'user has project permissions' do
+    get :permissions,
     {
       format: 'json',
-      project_id: @project_three.id,
-      verify_owner: 'true'
+      project_id: @project_three.id
     }, user_id: @kate.id
     assert_response :success
+    assert JSON.parse(response.body)['permissions'].include? 'project'
   end
 
   test 'should redirect from /login to /' do
