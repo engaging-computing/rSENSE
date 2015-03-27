@@ -246,6 +246,12 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     text-align:right;
   }
 
+  #refresh-data {
+    top: 20px;
+    right: 10px;
+    position: absolute;
+  }
+
   #regression-table {
 
     #regression-table-body {
@@ -315,7 +321,6 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
 
   // table vis needs additional love to make it look right
   #table_canvas {
-
     #first_toolbar_bottom, #last_toolbar_bottom, #next_toolbar_bottom, #prev_toolbar_bottom {
       background-image: url(/assets/vis/ui-icons_222222_256x240.png);
       width: 19px; // height set as !important to 19px elsewhere
@@ -393,6 +398,12 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   #target-img h4 {
     text-overflow: ellipsis;
     overflow: hidden;
+  }
+
+  #title_row {
+    padding-left:10px;
+    font-size:1.75em;
+    position:relative;
   }
 
   // an active tab has a different looking gradient
