@@ -67,43 +67,55 @@ module Api
           respond_to do |format|
             format.json { render json: { msg: 'contrib_key is nil' }, status: :unprocessable_entity }
           end
-        elsif params[:contrib_key][:name].nil?
+          return
+        end
+
+        if params[:contrib_key][:name].nil?
           respond_to do |format|
             format.json { render json: { msg: 'name is nil' }, status: :unprocessable_entity }
           end
-        elsif params[:id].nil?
+          return
+        end
+
+        if params[:id].nil?
           respond_to do |format|
             format.json { render json: { msg: 'project id is nil' }, status: :unprocessable_entity }
           end
-        elsif params[:contrib_key][:key].nil?
+          return
+        end
+
+        if params[:contrib_key][:key].nil?
           respond_to do |format|
             format.json { render json: { msg: 'key is nil' }, status: :unprocessable_entity }
           end
-        else
-          @project = Project.find(params[:id])
+          return
+        end
 
-          if @cur_user.id == @project.user_id
-            session[:name] = params[:key_name]
-            session[:key] = params[:key]
-            session[:project_id] = @project.id
-            key = ContribKey.new(contrib_key_params)
-            key.save
-          end
+        @project = Project.find(params[:id])
 
+        unless @cur_user.id == @project.user_id
           respond_to do |format|
-            if !key.nil?
-              format.json { render json: { msg: 'Success' }, status: :created }
-            elsif @cur_user.id != @project.user_id
-              format.json { render json: { msg: 'User does not own the project.' }, status: :unauthorized }
-            else
-              format.json { render json: { msg: 'Unprocessable Entity.' }, status: :unprocessable_entity }
-            end
+            format.json { render json: { msg: 'User does not own the project.' }, status: :unauthorized }
+          end
+          return
+        end
+
+        key = @project.contrib_keys.find_by_key(params[:contrib_key][:key])
+        unless key.nil?
+          respond_to do |format|
+            format.json { render json: { msg: 'key already exists.' }, status: :conflict }
+          end
+          return
+        end
+
+        key = ContribKey.new(name: params[:contrib_key][:name], project_id: @project.id, key: params[:contrib_key][:key])
+        respond_to do |format|
+          if key.save
+            format.json { render json: { msg: 'Success' }, status: :created }
+          else
+            format.json { render json: { msg: 'Unprocessable Entity.' }, status: :unprocessable_entity }
           end
         end
-      end
-
-      def contrib_key_params
-        params.require(:contrib_key).permit(:name, :project_id, :key)
       end
     end
   end

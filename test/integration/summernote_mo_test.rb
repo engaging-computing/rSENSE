@@ -47,7 +47,7 @@ class SummernoteMoTest < ActionDispatch::IntegrationTest
 
   test 'user_image_upload' do
     login 'nixon@whitehouse.gov', '12345'
-    click_on 'Richard N.'
+    find('.navbar-right > #username').click
     assert page.has_css? '.gravatar_img', 'Not on profile page.'
     find('#add-content-image').click
     find('.fa-code').find(:xpath, '..').click
