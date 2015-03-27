@@ -32,21 +32,22 @@
 <script type="text/javascript"
       src="https://maps-api-ssl.google.com/maps/api/js?key=AIzaSyBxtPK1_mxwVdl1NRu7ZEiSNvmCekFSZAw&amp;sensor=false&amp;libraries=visualization,geometry&amp;v=3.9">
 </script>
-<% if @datasets.count == 1%>
-  <div id="title_row" style="padding-left:10px">
-    <div style="font-size:1.75em">
-      <%= link_to @project.title.html_safe, project_path(@project)%>
-      <div class="half_width_edit"><%= data_set_edit_helper 'title', (can_edit? @datasets.first), false, "/data_sets/#{@datasets.first.id}" %></div>
+<div id="title_row">
+  <%= link_to @project.title.html_safe, project_path(@project)%>
+  <% if @datasets.count == 1 %>
+    <div class="half_width_edit">
+      <%= data_set_edit_helper 'title', (can_edit? @datasets.first), false,
+          "/data_sets/#{@datasets.first.id}" %>
     </div>
-  </div>
-<%else%>
-  <div id="title_row" style="padding-left:10px">
-    <div style="font-size:1.75em">
-      <%= link_to @project.title.html_safe, project_path(@project) %>
-      <div class="half_width_edit">Showing Multiple Data Sets</div>
-    </div>
-  </div>
-<%end%>
+  <% else %>
+    <div class="half_width_edit">Showing Multiple Data Sets</div>
+  <% end %>
+  <%= link_to "#{project_path(@project)}/data_sets",
+      { id:"refresh-data", class: "btn btn-default" } do %>
+      Get Latest
+    <%= content_tag(:i, ' ', class: 'fa fa-refresh') %>
+  <% end %>
+</div>
 <div style="margin: 0px 10px 10px;">
   <div id="viscontainer" style="height:500px;">
     <div class="pull-right"><button class="btn btn-default" id="fullscreen-vis" title="Maximize"><i class="fa fa-arrows-alt"></i></button></div>
