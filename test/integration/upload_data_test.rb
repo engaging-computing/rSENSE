@@ -1,6 +1,5 @@
 require 'test_helper'
-require 'uri'
-require 'net/http'
+
 class UploadDataTest < ActionDispatch::IntegrationTest
   include CapyHelper
 

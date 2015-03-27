@@ -9,8 +9,6 @@
 -->
 
 <div class="col-xs-<%= width %>">
-  <!--<% left_image = image_path('missing_tutorial.jpg') %>
-    <a class="item-image-link" href="<%= path %>" style="background-image: url(<%= left_image %>)"></a><br/>-->
   <% if image_id != nil %>
     <% left_image = MediaObject.find(image_id).src %>
   <% end %>
