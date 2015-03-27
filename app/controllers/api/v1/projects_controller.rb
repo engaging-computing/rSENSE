@@ -42,7 +42,7 @@ module Api
           respond_to do |format|
             format.json { render json: { error: 'Neither Project ID nor Contribution Key can be empty.' }, status: :unprocessable_entity }
           end
-          return
+        return
         end
 
         project = Project.find_by_id(params[:id])
@@ -67,28 +67,28 @@ module Api
           respond_to do |format|
             format.json { render json: { msg: 'contrib_key is nil' }, status: :unprocessable_entity }
           end
-        return
+          return
         end
 
         if params[:contrib_key][:name].nil?
           respond_to do |format|
             format.json { render json: { msg: 'name is nil' }, status: :unprocessable_entity }
           end
-        return
+          return
         end
 
         if params[:id].nil?
           respond_to do |format|
             format.json { render json: { msg: 'project id is nil' }, status: :unprocessable_entity }
           end
-        return
+          return
         end
 
         if params[:contrib_key][:key].nil?
           respond_to do |format|
             format.json { render json: { msg: 'key is nil' }, status: :unprocessable_entity }
           end
-        return
+          return
         end
 
         @project = Project.find(params[:id])
@@ -97,7 +97,7 @@ module Api
           respond_to do |format|
             format.json { render json: { msg: 'User does not own the project.' }, status: :unauthorized }
           end
-        return
+          return
         end
 
         key = @project.contrib_keys.find_by_key(params[:contrib_key][:key])
