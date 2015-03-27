@@ -705,7 +705,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
             'key' => 'apple'
           }
 
-    assert_response :unprocessable_entity
+    assert_response :conflict
   end
 
   private
