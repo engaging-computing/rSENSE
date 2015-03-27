@@ -482,6 +482,16 @@ $ ->
             name:  'analysis-type'
             label:  name
 
+        # Logarithmic Y Axis
+        if logYAxis
+          id = 'log-y-axis'
+          ictx.logYAxis =
+            id:    id
+            name:  id
+            value: id
+            logid: 'logarithmic-y-axis'
+            label: 'Logarithmic Y Axis'
+
         octx =
           id: 'common-ctrls'
           title: 'Tools'
@@ -510,11 +520,9 @@ $ ->
           console.log 'sup', @configs.analysisType
           @delayedUpdate()
 
-        ###
         $('.logY_box').click (e) =>
           globals.configs.logY = (globals.configs.logY + 1) % 2
           @start()
-        ###
 
       ###
       Do any necessary cleanup work before serialization.
