@@ -42,7 +42,7 @@ module Api
           respond_to do |format|
             format.json { render json: { error: 'Neither Project ID nor Contribution Key can be empty.' }, status: :unprocessable_entity }
           end
-        return
+          return
         end
 
         project = Project.find_by_id(params[:id])
