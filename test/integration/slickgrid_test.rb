@@ -6,7 +6,6 @@ class SlickgridTest < ActionDispatch::IntegrationTest
   self.use_transactional_fixtures = false
 
   current_month = Date.today.month.to_s.rjust(2, '0')
-
   compare_data = [
     { '100' => 'D', '101' => 'A', '102' => '4', '103' => "1991/#{current_month}/01 01:01:01", '104' => '3', '105' => '3' },
     { '100' => 'E', '101' => 'B', '102' => '5', '103' => "1992/#{current_month}/02 02:02:02", '104' => '4', '105' => '4' },
@@ -38,13 +37,18 @@ class SlickgridTest < ActionDispatch::IntegrationTest
     time = options[:time]
 
     find(:css, ".slick-row:nth-child(#{row + 1})>.slick-cell.l#{col}").click
+    find(:css, '.editor-button').click
     find(:css, '#dt-year-textbox').set "#{yr}\n"
     td = all(:css, '#dt-date-group td')
-    td.select { |x| x['data-date'.to_sym] == "#{dy}" and x['data-month'.to_sym] == '0' }.first.click
+    date_cell = td.select { |x| x['data-date'.to_sym] == "#{dy}" and x['data-month'.to_sym] == '0' }.first
+    date_cell.click
+    date_cell.click
     find(:css, '#dt-time-textbox').set "#{time}\n"
   end
 
   def slickgrid_add_data(start, field_map)
+    current_window.resize_to 1000, 1000
+
     slickgrid_enter_value start, field_map['100'], 'D'
     slickgrid_enter_value start + 1, field_map['100'], 'E'
     slickgrid_enter_value start + 2, field_map['100'], 'F'
@@ -96,8 +100,8 @@ class SlickgridTest < ActionDispatch::IntegrationTest
     # enter a valid project title
     find(:css, '#data_set_name').set dataset_title
 
-    # assert that we start with only one blank row
-    page.assert_selector '.slick-row', count: 1
+    # assert that we start with ten blank rows
+    page.assert_selector '.slick-row', count: 10
 
     # build a map of field ids to columns
     fields = all :css, '.slick-header-column'
@@ -109,7 +113,7 @@ class SlickgridTest < ActionDispatch::IntegrationTest
     3.times { button.click }
 
     # assert that we added some rows
-    page.assert_selector '.slick-row', count: 4
+    page.assert_selector '.slick-row', count: 13
 
     # add data to the rows
     slickgrid_add_data 0, field_map
@@ -126,10 +130,10 @@ class SlickgridTest < ActionDispatch::IntegrationTest
     assert_similar_arrays compare_data, dataset.data
   end
 
-  test 'slickgrid edit dataset' do
+  test 'slickgrid edit data set' do
     login 'nixon@whitehouse.gov', '12345'
 
-    dataset = DataSet.find_by_name 'Slickgrid Dataset 1'
+    dataset = DataSet.find_by_name 'Slickgrid Data set 1'
     dataset_id = dataset.id
     project_id = dataset.project_id
     visit "/data_sets/#{dataset_id}/edit"
@@ -142,7 +146,7 @@ class SlickgridTest < ActionDispatch::IntegrationTest
     assert page.has_content? 'latitude_field, longitude_field'
 
     # assert presence of data
-    page.assert_selector '.slick-row', count: 3
+    page.assert_selector '.slick-row', count: 10
     assert page.has_content? '0, 0'
     assert page.has_content? '1, 1'
     assert page.has_content? '2, 2'
@@ -157,7 +161,7 @@ class SlickgridTest < ActionDispatch::IntegrationTest
     4.times { button.click }
 
     # assert rows were actually added
-    page.assert_selector '.slick-row', count: 7
+    page.assert_selector '.slick-row', count: 14
 
     # add data to those rows
     slickgrid_add_data 3, field_map
@@ -168,7 +172,7 @@ class SlickgridTest < ActionDispatch::IntegrationTest
     find(:css, '.slick-row:nth-child(1) .slick-delete').click
 
     # assert correct rows were deleted
-    page.assert_selector '.slick-row', count: 4
+    page.assert_selector '.slick-row', count: 11
 
     # save the dataset
     find(:css, '#edit_table_save_1').click
@@ -178,7 +182,7 @@ class SlickgridTest < ActionDispatch::IntegrationTest
     assert page.current_path == "/projects/#{project_id}/data_sets/#{dataset_id}"
 
     # assert that the data that we saved is there
-    dataset = DataSet.find_by_name 'Slickgrid Dataset 1'
+    dataset = DataSet.find_by_name 'Slickgrid Data set 1'
     assert_similar_arrays compare_data, dataset.data
   end
 end

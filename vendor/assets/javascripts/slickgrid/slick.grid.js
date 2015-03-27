@@ -2494,6 +2494,7 @@ if (typeof Slick === "undefined") {
       trigger(self.onBeforeCellEditorDestroy, {editor: currentEditor});
       currentEditor.destroy();
       currentEditor = null;
+      trigger(self.onAfterCellEditorDestroy, {editor: currentEditor});
 
       if (activeCellNode) {
         var d = getDataItem(activeRow);
@@ -3214,6 +3215,7 @@ if (typeof Slick === "undefined") {
       "onCellChange": new Slick.Event(),
       "onBeforeEditCell": new Slick.Event(),
       "onBeforeCellEditorDestroy": new Slick.Event(),
+      "onAfterCellEditorDestroy": new Slick.Event(),
       "onBeforeDestroy": new Slick.Event(),
       "onActiveCellChanged": new Slick.Event(),
       "onActiveCellPositionChanged": new Slick.Event(),

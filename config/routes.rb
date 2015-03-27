@@ -78,7 +78,7 @@ Rsense::Application.routes.draw do
     post 'login' => :create
     delete 'login' => :destroy
   end
-  get '/sessions/verify' => 'sessions#verify'
+  get '/sessions/permissions' => 'sessions#permissions'
 
   get '/users/pw_request' => 'users#pw_request'
   post '/users/pw_send_key' => 'users#pw_send_key'
@@ -108,6 +108,7 @@ Rsense::Application.routes.draw do
 
   namespace :api, defaults: { format: 'json' }, except: :destroy do
     namespace :v1 do
+      get '/projects/:id/key/' => 'projects#key'
       post '/projects/:id/jsonDataUpload' => 'data_sets#jsonDataUpload'
       post '/projects/:id/add_key' => 'projects#add_key'
       post '/data_sets/append' => 'data_sets#append'

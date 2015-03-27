@@ -3,28 +3,42 @@
     <h1>API V1 Documentation</h1>
   </div>
   <div class="col-md-1">
-    <img alt="[iSENSE]" src="https://travis-ci.org/isenseDev/rSENSE.png"/>
+    <img alt="[iSENSE]" src="https://travis-ci.org/isenseDev/rSENSE.svg?branch=<%= @version %>"/>
   </div>
 </div>
-
-<p>Click on the type to expand</p>
-
+<p>Client-side APIs available on <a href="https://github.com/isenseDev/iSENSE-API">Github</a> </p>
+<p>Click on an API request to expand documentation.</p>
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
-      <tr>
+      <tr class="titleGet">
         <td class="GET def">GET</td>
-        <td class="method"> Projects </td>
-        <td class="code">/api/v1/projects/XX</td>
-        <td class="args">id(req) recur(opt boolean)</td>
+        <td class="method def"> Projects </td>
+        <td class="code def">/api/v1/projects/<b>(project id)</b></td>
+        <td class="args def">id(req) recur(opt boolean)</td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
+          <p>Get properties of a project.</p>
           <b>Response Codes</b>
           <ul>
-            <li>Success: 200 Ok</li>
+            <li>Success: 200 OK</li>
             <li>Fail: 404 Not Found</li>
           </ul>
+          <b>Example (Javascript)</b>
+          <pre>
+    var urlProject = 'http://isenseproject.org/api/v1/projects/<b>(project id)</b>';
+
+    var responseProject = $.ajax({ type: "GET",
+                                    url: urlProject,
+                                  async: false,
+                               dataType: "JSON"
+    }).responseText;
+
+    var parsedResponseProject = JSON.parse(responseProject);
+
+    console.log(parsedResponseProject);
+          </pre>
           <b>Response</b>
           <pre>
     {
@@ -48,7 +62,6 @@
           </pre>
           <b>Notes</b>
           <ul>
-            <li>XX should be replaced with the ID for the project. Or set id as a GET variable</li>
             <li>If recur is set to true, the function will also return 'dataSets', 'mediaObjects', and 'owner' objects</li>
           </ul>
         </td>
@@ -56,25 +69,43 @@
     </table>
   </div>
 </div>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
-      <tr>
+      <tr class="titleGet">
         <td class="GET def">GET</td>
-        <td class="method"> Projects </td>
-        <td class="code">/api/v1/projects</td>
-        <td class="args">search(opt), sort(opt), order(opt), per_page(opt), page(opt)</td>
+        <td class="method def"> Projects </td>
+        <td class="code def">/api/v1/projects</td>
+        <td class="args def">
+          search(opt), sort(opt), order(opt), per_page(opt), page(opt),
+          search(opt), templates_only(opt), curated_only(opt),
+          featured_only(opt), has_data(opt)
+        </td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
+          <p>Get an array of all the projects.</p>
           <b>Response Codes</b>
           <ul>
-            <li>Success: 200 Ok</li>
+            <li>Success: 200 OK</li>
           </ul>
+          <b>Example (Javascript)</b>
+          <pre>
+    var urlProject = 'http://isenseproject.org/api/v1/projects';
+    var responseProject = $.ajax({ type: "GET",
+                                    url: urlProject,
+                                  async: false,
+                               dataType: "JSON" }).responseText;
+
+    var parsedResponseProject = JSON.parse(responseProject);
+
+    console.log(parsedResponseProject);
+          </pre>
           <b>Response</b>
           <pre>
-  Projects (array)
+    {
+      "Projects"=> (array)
+    }
           </pre>
           <b>Notes</b>
           <ul>
@@ -83,29 +114,30 @@
             <li>order - "ASC", "DESC" (default "DESC")</li>
             <li>per_page - integer (default 50)</li>
             <li>page - integer (default 1)</li>
+            <li>Including the templates_only, curated_only, featured_only, or has_data keys will filter the results accordingly. The value passed along with the key is irrelevant.</li>
           </ul>
         </td>
       </tr>
     </table>
   </div>
 </div>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
-      <tr>
+      <tr class="titlePost">
         <td class="POST def">POST</td>
-        <td class="method"> Projects </td>
-        <td class="code">/api/v1/projects</td>
-        <td class="args">email(req), password(req), project_name(opt)</td>
+        <td class="method def"> Projects </td>
+        <td class="code def">/api/v1/projects</td>
+        <td class="args def">email(req), password(req), project_name(opt)</td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
+          <p>Create a new project.</p>
           <b>Response Codes</b>
           <ul>
-            <li>Success: 200 Ok</li>
-            <li>Fail: 422 Unprocessable Entity </li>
+            <li>Success: 200 OK</li>
             <li>Fail: 401 Unauthorized</li>
+            <li>Fail: 422 Unprocessable Entity</li>
           </ul>
           <b>Data</b>
           <pre>
@@ -114,6 +146,18 @@
     "password" => "password (string)",
     "project_name" => (string)
   }
+          </pre>
+          <b>Example (Javascript)</b>
+          <pre>
+    var apiUrl = 'http://isenseproject.org/api/v1/projects';
+
+    var upload = {
+        'email': '<b>(email)</b>',
+        'password': '<b>(password)</b>',
+        'project_name': '<b>(project name)</b>',
+    }
+
+    $.post(apiUrl, upload);
           </pre>
           <b>Response</b>
           <pre>
@@ -145,23 +189,24 @@
     </table>
   </div>
 </div>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
-      <tr>
+      <tr class="titlePost">
         <td class="POST def">POST</td>
-        <td class="method"> Projects </td>
-        <td class="code">/api/v1/projects/XX/add_key</td>
-        <td class="args">email(req), password(req), project_name(opt)</td>
+        <td class="method def"> Projects </td>
+        <td class="code def">/api/v1/projects/<b>(project id)</b>/add_key</td>
+        <td class="args def">email(req), password(req), project_name(opt)</td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
+          <p>Create a new key for an existing project.</p>
           <b>Response Codes</b>
           <ul>
             <li>Success: 201 Created</li>
-            <li>Fail: 422 Unprocessable Entity </li>
             <li>Fail: 401 Unauthorized</li>
+            <li>Fail: 409 Conflict</li>
+            <li>Fail: 422 Unprocessable Entity</li>
           </ul>
           <b>Data</b>
           <pre>
@@ -172,6 +217,21 @@
                             'key' => "Key (string)"
                          }
     }
+          </pre>
+          <b>Example (Javascript)</b>
+          <pre>
+    var apiUrl = 'http://isenseproject.org/api/v1/projects/<b>(project id)</b>/add_key';
+
+    var upload = {
+        'email' : '<b>(email)</b>',
+        'password' : '<b>(password)</b>',
+        'contrib_key': {  'name' : '<b>(key name)</b>',
+                          'project_id' : <b>(project id)</b>,
+                          'key' : '<b>(key)</b>'
+                        }
+    }
+
+    $.post(apiUrl, upload);
           </pre>
           <b>Response</b>
           <pre>
@@ -188,41 +248,112 @@
     </table>
   </div>
 </div>
-
 <hr>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
-      <tr>
-        <td class="POST def">POST</td>
-        <td class="method"> Fields </td>
-        <td class="code">/api/v1/fields</td>
-        <td class="args">email(req), password(req), project_id(req), field_type(req), name(opt), units(opt), restrictions(opt)</td>
+      <tr class="titleGet">
+        <td class="GET def">GET</td>
+        <td class="method def">Key</td>
+        <td class="code def">/api/v1/projects/<b>(project id)</b>/key/</td>
+        <td class="args def">contribution_key(req)</td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
           <b>Response Codes</b>
           <ul>
-            <li>Success: 200 Ok</li>
-            <li>Fail: 422 Unprocessable Entity (will contain message why) </li>
+            <li>Success: 302 Found</li>
+          </ul>
+          <ul>
+            <li>Fail: 404 Not Found</li>
+          </ul>
+          <b>Data</b>
+          <pre>
+  {
+    "contribution_key" => "contribution key (string)"
+  }
+          </pre>
+          <b>Example (Javascript)</b>
+          <pre>
+    var url = 'http://rsense-dev.cs.uml.edu/api/v1/projects/<b>(project id)</b>/key';
+    var response = $.ajax({ type: "GET",
+                             url: url,
+                           async: false,
+                        dataType: "JSON",
+                           data : {"contribution_key":"<b>(key)</b>"}
+    }).responseText;
+
+    var parsedResponse = JSON.parse(response);
+    console.log(parsedResponse);
+          </pre>
+          <b>Response</b>
+          <pre>
+  {
+    "contribution_key": "(string)"
+  }
+          </pre>
+          <b>Notes</b>
+          <ul>
+            <li>N/A</li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+<hr>
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-bordered api">
+      <tr class="titlePost">
+        <td class="POST def">POST</td>
+        <td class="method def"> Fields </td>
+        <td class="code def">/api/v1/fields</td>
+        <td class="args def">
+          email(req), password(req), project_id(req), field_type(req),
+          name(opt), units(opt), restrictions(opt)
+        </td>
+      </tr>
+      <tr class="more">
+        <td colspan="4">
+          <p>Add a new field to a project.</p>
+          <b>Response Codes</b>
+          <ul>
+            <li>Success: 200 OK</li>
             <li>Fail: 401 Unauthorized</li>
+            <li>Fail: 422 Unprocessable Entity</li>
           </ul>
           <b>Data</b>
           <pre>
   {
     "email" => "email address (string)",
     "password" => "password (string)",
-    "field" =>
-      {
-        "project_id" =>  integer,
-        "field_type" =>  integer,
-        "name" => string,
-        "unit" => string,
-        "restrictions" => string
-      }
+    "field" =>  {
+                  "project_id" =>  integer,
+                  "field_type" =>  integer,
+                  "name" => string,
+                  "unit" => string,
+                  "restrictions" => string
+                }
   }
 
+          </pre>
+          <b>Example (Javascript)</b>
+          <pre>
+    var apiUrl = 'http://isenseproject.org/api/v1/fields';
+
+    var upload = {
+        'email' : '<b>(email)</b>',
+        'password' : '<b>(password)</b>',
+        'field' : { 'project_id' : <b>(project id)</b>,
+                    'field_type' : <b>(1, 2, 3, 4, or 5)</b>,
+                    'name' : '<b>(field name)</b>',
+                    'unit' : '<b>(field's unit of measurement)</b>',
+                    'restrictions': '<b>(restriction1, restriction2, restriction3)</b>' # optional
+                  }
+    }
+
+    $.post(apiUrl, upload);
           </pre>
           <b>Response</b>
           <pre>
@@ -237,33 +368,51 @@
           </pre>
           <b>Notes</b>
           <ul>
+            <li>The user must be the owner of the project.</li>
             <li>Names - Must be unique per project. If name is not set one will be given based on type.</li>
             <li>Units - e.g. meters, lumens (ignored for timestamp and text)</li>
             <li>type - 1=Timestamp 2=Number 3=Text 4=Latitude 5=Longitude (lat/lon are created together)</li>
-            <li>restrictions - Currently text fields only. Defines accepted values "blue,green,red" will force the project to accept only those values</li>
+            <li>restrictions - Currently only applys to text fields. If we define restrictions for "blue,green,red" the project will only accept those strings for that field</li>
           </ul>
         </td>
       </tr>
     </table>
   </div>
 </div>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
-      <tr>
+      <tr class="titleGet">
         <td class="GET def">GET</td>
-        <td class="method"> Fields </td>
-        <td class="code">/api/v1/fields/XX</td>
-        <td class="args"> id(req)</td>
+        <td class="method def"> Fields </td>
+        <td class="code def">/api/v1/fields/<b>(field id)</b></td>
+        <td class="args def"> id(req)</td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
+          <p>Get properties of a field.</p>
           <b>Response Codes</b>
           <ul>
-            <li>Success: 200 Ok</li>
+            <li>Success: 200 OK</li>
             <li>Fail: 404 Not Found</li>
           </ul>
+          <b>Example (Javascript)</b>
+          <pre>
+    var urlProject = 'http://isenseproject.org/api/v1/fields/<b>(field id)</b>';
+
+    var responseProject = $.ajax({ type: "GET",
+                                    url: urlProject,
+                                  async: false,
+                               dataType: "JSON"
+    }).responseText;
+
+    var parsedResponseProject = JSON.parse(responseProject);
+
+
+    console.log(parsedResponseProject);
+
+    $.post(apiUrl, upload);
+          </pre>
           <b>Response</b>
           <pre>
   {
@@ -276,32 +425,88 @@
           </pre>
           <b>Notes</b>
           <ul>
-            <li>XX should be replaced with the ID for the field. Or set id as a GET variable</li>
+            <li>The user must be the owner of the project.</li>
           </ul>
         </td>
       </tr>
     </table>
   </div>
 </div>
-
 <hr>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
-      <tr>
-        <td class="POST def">POST</td>
-        <td class="method"> Data Sets </td>
-        <td class="code">/api/v1/projects/XX/jsonDataUpload</td>
-        <td class="args">email(req), password(req), title(req), data(req)</td>
+      <tr class="titleGet">
+        <td class="GET def">GET</td>
+        <td class="method def"> Data Sets </td>
+        <td class="code def">/api/v1/data_sets/<b>(data set id)</b>/</td>
+        <td class="args def">id(req)</td>
       </tr>
       <tr class="more" style="">
         <td colspan="4">
+          <p>Get properties of a data set.</p>
           <b>Response Codes</b>
           <ul>
-            <li>Success: 200 Ok</li>
-            <li>Fail: 422 Unprocessable Entity </li>
+            <li>Success: 200 OK</li>
+            <li>Fail: 404 Unprocessable Entity </li>
+          </ul>
+          <b>Example (Javascript)</b>
+          <pre>
+
+  var url = 'http://rsense-dev.cs.uml.edu/api/v1/data_sets/<b>(data set id)</b>';
+  var response = $.ajax({ type: "GET",
+                           url: url,
+                         async: false,
+                      dataType: "JSON"
+  }).responseText;
+
+  var parsedResponse = JSON.parse(response);
+  console.log(parsedResponse);
+          </pre>
+          <b>Response</b>
+          <pre>
+   {
+    "id"=> Data Set ID (integer),
+    "name"=> Data Set Title (string),
+    "url"=> Visualization URL (string),
+    "path"=> Data Set Path (string),
+    "createdAt"=>"January 28, 2014",
+    "fieldCount"=> Number of fields (integer),
+    "datapointCount"=> Number of data points (integer),
+    "displayURL"=> Display URL (string)
+    "data" =>
+      {
+        "FIELD_ID" => [1,2,3,4,5],
+        "FIELD_ID_2" => ["blue","red",,,"green"]
+      }
+    }
+          </pre>
+          <b>Notes</b>
+          <ul>
+            <li>N/A</li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-bordered api">
+      <tr class="titlePost">
+        <td class="POST def">POST</td>
+        <td class="method def"> Data Sets </td>
+        <td class="code def">/api/v1/projects/<b>(project id)</b>/jsonDataUpload</td>
+        <td class="args def">email(req), password(req), title(req), data(req)</td>
+      </tr>
+      <tr class="more">
+        <td colspan="4">
+          <p>Upload a data set in the form of JSON with a username and password.</p>
+          <b>Response Codes</b>
+          <ul>
+            <li>Success: 200 OK</li>
             <li>Fail: 401 Unauthorized</li>
+            <li>Fail: 422 Unprocessable Entity</li>
           </ul>
           <b>Data</b>
           <pre>
@@ -317,6 +522,22 @@
 
   }
           </pre>
+          <b>Example (Javascript)</b>
+          <pre>
+    var apiUrl = 'http://isenseproject.org/api/v1/projects/<b>(project id)</b>/jsonDataUpload';
+
+    var upload = {
+        'email' : '<b>(email)</b>',
+        'password' : '<b>(password)</b>',
+        'title' : '<b>(title)</b>',
+        'data' :  {
+                    '<b>(field id)</b>'   : [1,2,3],
+                    '<b>(field id_2)</b>' : ["blue", "red", "green"]
+                  }
+    }
+
+    $.post(apiUrl, upload);
+          </pre>
           <b>Response</b>
           <pre>
   {
@@ -333,7 +554,7 @@
           </pre>
           <b>Notes</b>
           <ul>
-            <li>XX should be replaced with the ID for the project.</li>
+            <li>A user can upload data to any unlocked project.</li>
             <li>Data is a hash of field_id -> data array pairs. FIELD_ID and FIELD_ID_2 would be replaced with ids for their respective fields.</li>
           </ul>
         </td>
@@ -341,28 +562,28 @@
     </table>
   </div>
 </div>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
-      <tr>
+      <tr class="titlePost">
         <td class="POST def">POST</td>
-        <td class="method"> Data Sets </td>
-        <td class="code">/api/v1/projects/XX/jsonDataUpload</td>
-        <td class="args">contribution_key(req), contributor_name(req), data(req)</td>
+        <td class="method def"> Data Sets </td>
+        <td class="code def">/api/v1/projects/<b>(project id)</b>/jsonDataUpload</td>
+        <td class="args def">contribution_key(req), contributor_name(req), data(req)</td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
+          <p>Upload a data set in the form of JSON with a contribution key. Keys can be added to a project by the owner.</p>
           <b>Response Codes</b>
           <ul>
-            <li>Success: 200 Ok</li>
-            <li>Fail: 422 Unprocessable Entity </li>
+            <li>Success: 200 OK</li>
             <li>Fail: 401 Unauthorized</li>
+            <li>Fail: 422 Unprocessable Entity</li>
           </ul>
           <b>Data</b>
           <pre>
   {
-    "title" => "Title for the dataset (string)"
+    "title" => "Title for the data set (string)"
     "contribution_key" => "key created by project owner (string)",
     "contributor_name" => (string),
     "data" =>
@@ -373,6 +594,21 @@
 
   }
           </pre>
+          <b>Example (Javascript)</b>
+          <pre>
+    var apiUrl = 'http://isenseproject.org/api/v1/projects/<b>(project id)</b>/jsonDataUpload';
+
+    var upload = {
+        'title' : '<b>(title)</b>',
+        'contribution_key' : '<b>(key)</b>',
+        'contributor_name' : '<b>(Your name)</b>',
+        'data' :  {
+                    '<b>(field id)</b>' : [1,2,3]
+                  }
+    }
+
+    $.post(apiUrl, upload);
+          </pre>
           <b>Response</b>
           <pre>
   {
@@ -389,7 +625,6 @@
           </pre>
           <b>Notes</b>
           <ul>
-            <li>XX should be replaced with the ID for the project.</li>
             <li>Data is a hash of field_id -> data array pairs. FIELD_ID and FIELD_ID_2 would be replaced with ids for their respective fields.</li>
           </ul>
         </td>
@@ -397,24 +632,24 @@
     </table>
   </div>
 </div>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
-      <tr>
+      <tr class="titleGet">
         <td class="GET def">GET</td>
-        <td class="method"> Data Sets </td>
-        <td class="code">/api/v1/data_sets/XX/edit</td>
-        <td class="args"> email(req), password(req), id(req)</td>
+        <td class="method def"> Data Sets </td>
+        <td class="code def">/api/v1/data_sets/<b>(data set id)</b>/edit</td>
+        <td class="args def"> email(req), password(req), id(req)</td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
+          <p>Edit an existing data set with a username and password.</p>
           <b>Response Codes</b>
           <ul>
-            <li>Success: 200 Ok</li>
-            <li>Fail: 422 Unprocessable</li>
-            <li>Fail: 404 Not Found</li>
+            <li>Success: 200 OK</li>
             <li>Fail: 401:Unauthorized</li>
+            <li>Fail: 404 Not Found</li>
+            <li>Fail: 422 Unprocessable Entity</li>
           </ul>
           <b>Data</b>
           <pre>
@@ -429,6 +664,20 @@
 
   }
           </pre>
+          <b>Example (Javascript)</b>
+          <pre>
+    var apiUrl = 'http://isenseproject.org/api/v1/data_sets/<b>(data set id)</b>/edit';
+
+    var upload = {
+        'email' : '<b>(email)</b>',
+        'password' : '<b>(password)</b>',
+        'data' :  {
+                    '<b>(field id)</b>' : [1,5,6]
+                  }
+    }
+
+    $.get(apiUrl, upload);
+          </pre>
           <b>Response</b>
           <pre>
   {
@@ -445,7 +694,7 @@
           </pre>
           <b>Notes</b>
           <ul>
-            <li>XX should be replaced with the ID for the project.</li>
+            <li>A user can edit any data set that they have uploaded or any data set that is on a project that he/she owns.</li>
             <li>Setting recur=true as a get variable will return the associated Project(hash), Fields(hash), Data(hash) </li>
           </ul>
         </td>
@@ -453,24 +702,24 @@
     </table>
   </div>
 </div>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
-      <tr>
+      <tr class="titleGet">
         <td class="GET def">GET</td>
-        <td class="method"> Data Sets </td>
-        <td class="code">/api/v1/data_sets/XX/edit</td>
+        <td class="method def"> Data Sets </td>
+        <td class="code def">/api/v1/data_sets/<b>(data set id)</b>/edit</td>
         <td class="args"> contribution_key(req), id(req)</td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
+          <p>Edit an existing data set with a contribution key. The data set must have been uploaded with the same contribution key.</p>
           <b>Response Codes</b>
           <ul>
-            <li>Success: 200 Ok</li>
-            <li>Fail: 422 Unprocessable</li>
-            <li>Fail: 404 Not Found</li>
+            <li>Success: 200 OK</li>
             <li>Fail: 401:Unauthorized</li>
+            <li>Fail: 404 Not Found</li>
+            <li>Fail: 422 Unprocessable Entity</li>
           </ul>
           <b>Data</b>
           <pre>
@@ -484,6 +733,18 @@
 
   }
           </pre>
+          <b>Example (Javascript)</b>
+          <pre>
+    var apiUrl = 'http://isenseproject.org/api/v1/data_sets/<b>(data set id)</b>/edit';
+
+    var upload = {
+        'contribution_key' : '<b>(key)</b>',
+        'data' :  {
+                    '<b>(field id)</b>' : [1,2,3,4]
+                  }
+    }
+    $.get(apiUrl, upload);
+          </pre>
           <b>Response</b>
           <pre>
   {
@@ -500,7 +761,6 @@
           </pre>
           <b>Notes</b>
           <ul>
-            <li>XX should be replaced with the ID for the project.</li>
             <li>Setting recur=true as a get variable will return the associated Project(hash), Fields(hash), Data(hash) </li>
           </ul>
         </td>
@@ -508,31 +768,31 @@
     </table>
   </div>
 </div>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
-      <tr>
+      <tr class="titlePost">
         <td class="POST def">POST</td>
-        <td class="method"> Data Sets </td>
-        <td class="code">/api/v1/data_sets/append</td>
-        <td class="args"> email(req), password(req), id(req)</td>
+        <td class="method def"> Data Sets </td>
+        <td class="code def">/api/v1/data_sets/append</td>
+        <td class="args def"> email(req), password(req), id(req)</td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
+          <p>Append new data to an existing data set with a username and password. </p>
           <b>Response Codes</b>
           <ul>
-            <li>Success: 200 Ok</li>
-            <li>Fail: 422 Unprocessable</li>
-            <li>Fail: 404 Not Found</li>
+            <li>Success: 200 OK</li>
             <li>Fail: 401:Unauthorized</li>
+            <li>Fail: 404 Not Found</li>
+            <li>Fail: 422 Unprocessable Entity</li>
           </ul>
           <b>Data</b>
           <pre>
   {
     "email" => "email address (string)",
     "password" => "password (string)",
-    "id" => "dataset id (integer)"
+    "id" => "data set id (integer)"
     "data" =>
       {
         "FIELD_ID" => [1,2,3,4,5],
@@ -540,6 +800,21 @@
       }
 
   }
+          </pre>
+          <b>Example (Javascript)</b>
+          <pre>
+    var apiUrl = 'http://isenseproject.org/api/v1/data_sets/append';
+
+    var upload = {
+        'email' : '<b>(email)</b>',
+        'password' : '<b>(password)</b>',
+        'id' : <b>(data set id)</b>,
+        'data' :  {
+                    '<b>(field id)</b>' : [4,5,6] # new data to be added
+                  }
+    }
+
+    $.post(apiUrl, upload);
           </pre>
           <b>Response</b>
           <pre>
@@ -556,35 +831,38 @@
   }
           </pre>
           <b>Notes</b>
+          <ul>
+            <li>A user can append to any data set that they have created or any data set that is on a project that he/she owns.</li>
+          </ul>
         </td>
       </tr>
     </table>
   </div>
 </div>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
-      <tr>
+      <tr class="titlePost">
         <td class="POST def">POST</td>
-        <td class="method"> Data Sets </td>
-        <td class="code">/api/v1/data_sets/append</td>
-        <td class="args"> contribution_key(req), id(req)</td>
+        <td class="method def"> Data Sets </td>
+        <td class="code def">/api/v1/data_sets/append</td>
+        <td class="args def"> contribution_key(req), id(req)</td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
+          <p>Append new data to an existing data set with a contribution key. </p>
           <b>Response Codes</b>
           <ul>
-            <li>Success: 200 Ok</li>
-            <li>Fail: 422 Unprocessable</li>
-            <li>Fail: 404 Not Found</li>
+            <li>Success: 200 OK</li>
             <li>Fail: 401:Unauthorized</li>
+            <li>Fail: 404 Not Found</li>
+            <li>Fail: 422 Unprocessable Entity</li>
           </ul>
           <b>Data</b>
           <pre>
   {
     "contribution_key" => "a contribution key (string)",
-    "id" => "dataset id (integer)"
+    "id" => "data set id (integer)"
     "data" =>
       {
         "FIELD_ID" => [1,2,3,4,5],
@@ -592,6 +870,20 @@
       }
 
   }
+          </pre>
+          <b>Example (Javascript)</b>
+          <pre>
+    var apiUrl = 'http://isenseproject.org/api/v1/data_sets/append';
+
+    var upload = {
+        'contribution_key' : '<b>(key)</b>',
+        'id' : <b>(data set id)</b>,
+        'data' :  {
+                    '<b>(field id)</b>' : [4,5,6] # new data to be added
+                  }
+    }
+
+    $.post(apiUrl, upload);
           </pre>
           <b>Response</b>
           <pre>
@@ -608,30 +900,32 @@
   }
           </pre>
           <b>Notes</b>
+          <ul>
+            <li>You can only append data sets that were uploaded with the same key.</li>
+          </ul>
         </td>
       </tr>
     </table>
   </div>
 </div>
-
 <hr>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
-      <tr>
+      <tr class="titlePost">
         <td class="POST def">POST</td>
-        <td class="method"> Media Objects </td>
-        <td class="code">/api/v1/media_objects</td>
-        <td class="args">email(req), password(req), upload(req), type(req), id(req)</td>
+        <td class="method def"> Media Objects </td>
+        <td class="code def">/api/v1/media_objects</td>
+        <td class="args def">email(req), password(req), upload(req), type(req), id(req)</td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
+          <p>Upload a media object to either a project or a data set. You can upload media objects to any project. You can upload media objects to any data set on a project that you own or any data sets that you have uploaded.</p>
           <b>Response Codes</b>
           <ul>
-            <li>Success: 200 Ok</li>
-            <li>Fail: 422 Unprocessable Entity (with message why)</li>
+            <li>Success: 200 OK</li>
             <li>Fail: 401 Unauthorized</li>
+            <li>Fail: 422 Unprocessable Entity</li>
           </ul>
           <b>Data</b>
           <pre>
@@ -643,6 +937,40 @@
     "id" => "ID of thing your pushing to (int)"
 
   }
+          </pre>
+          <b>Example (HTML) originial code by Scott Cytacki</b>
+          <pre>
+  &lt;html>
+    &lt;head>
+      &lt;script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">&lt;/script>
+        &lt;script type="text/javascript" src="example.js">&lt;/script>
+    &lt;/head>
+    &lt;body>
+      &lt;input type="file" id="file-select"/>
+      &lt;button onclick="run();">Get&lt;/button>
+    &lt;/body>
+  &lt;/html>
+          </pre>
+          <b>Example (Javascript) originial code by Scott Cytacki</b>
+            <pre>
+// MEDIA OBJECT POST WITH USERNAME AND PASSWORD
+
+    var apiUrl = 'http://isenseproject.org/api/v1/media_objects';
+    var fileSelect = document.getElementById('file-select');
+    var files = fileSelect.files;
+    var formData = new FormData();
+    var file = files[0];
+
+    formData.append('upload', file, file.name);
+    formData.append('email', '<b>(email)</b>');
+    formData.append('password', '<b>(password)</b>');
+    formData.append('type', '<b>("data_set" or "project")</b>');
+    formData.append('id', <b>(dataset id or project id)</b>);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', apiUrl, true);
+    xhr.send(formData);
+
           </pre>
           <b>Response</b>
           <pre>
@@ -658,30 +986,30 @@
           </pre>
           <b>Notes</b>
           <ul>
-            <li>type - either "project", or "data_sets"</li>
+            <li>type - "project" or "data_sets"</li>
           </ul>
         </td>
       </tr>
     </table>
   </div>
 </div>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
-      <tr>
+      <tr class="titlePost">
         <td class="POST def">POST</td>
-        <td class="method"> Media Objects </td>
-        <td class="code">/api/v1/media_objects</td>
-        <td class="args">contribution_key(req),contributor_name(req), upload(req), type(req), id(req)</td>
+        <td class="method def"> Media Objects </td>
+        <td class="code def">/api/v1/media_objects</td>
+        <td class="args def">contribution_key(req),contributor_name(req), upload(req), type(req), id(req)</td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
+          <p>Upload a media object to either a project or a data set. With a contribution key, you can upload a media object to the project or any data set that was uploaded with that key.</p>
           <b>Response Codes</b>
           <ul>
-            <li>Success: 200 Ok</li>
-            <li>Fail: 422 Unprocessable Entity (with message why)</li>
+            <li>Success: 200 OK</li>
             <li>Fail: 401 Unauthorized</li>
+            <li>Fail: 422 Unprocessable Entity</li>
           </ul>
           <b>Data</b>
           <pre>
@@ -691,8 +1019,41 @@
     "contributor_name" => "Name of contributor (string)",
     "type" => "(string) project or data_set",
     "id" => "ID of thing your pushing to (int)"
-
   }
+          </pre>
+          <b>Example (HTML) originial code by Scott Cytacki</b>
+          <pre>
+  &lt;html>
+    &lt;head>
+      &lt;script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">&lt;/script>
+        &lt;script type="text/javascript" src="example.js">&lt;/script>
+    &lt;/head>
+    &lt;body>
+      &lt;input type="file" id="file-select"/>
+      &lt;button onclick="run();">Get&lt;/button>
+    &lt;/body>
+  &lt;/html>
+          </pre>
+          <b>Example (Javascript) originial code by Scott Cytacki</b>
+            <pre>
+// MEDIA OBJECT POST WITH USERNAME AND PASSWORD
+
+    var apiUrl = 'http://isenseproject.org/api/v1/media_objects';
+    var fileSelect = document.getElementById('file-select');
+    var files = fileSelect.files;
+    var formData = new FormData();
+    var file = files[0];
+
+    formData.append('upload', file, file.name);
+    formData.append('contribution_key', '<b>(key)</b>');
+    formData.append('contributor_name', '<b>(contributor's name)</b>');
+    formData.append('type', '<b>("data_set" or "project")</b>');
+    formData.append('id', <b>(data set id or project id)</b>);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', apiUrl, true);
+    xhr.send(formData);
+
           </pre>
           <b>Response</b>
           <pre>
@@ -715,25 +1076,40 @@
     </table>
   </div>
 </div>
-
 <hr>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
-      <tr>
+      <tr class="titleGet">
         <td class="GET def">GET</td>
-        <td class="method"> Users </td>
-        <td class="code">/api/v1/users/myInfo</td>
-        <td class="args">email(req),password(req)</td>
+        <td class="method def"> Users </td>
+        <td class="code def">/api/v1/users/myInfo</td>
+        <td class="args def">email(req),password(req)</td>
       </tr>
-      <tr class="more" style="">
+      <tr class="more">
         <td colspan="4">
+          <p>Get your gravitar and full name.</p>
           <b>Response Codes</b>
           <ul>
-            <li>Success: 200 Ok</li>
+            <li>Success: 200 OK</li>
             <li>Fail: 401 Unauthorized</li>
           </ul>
+          <b>Example (Javascript)</b>
+          <pre>
+    var urlProject = 'http://isenseproject.org/api/v1/users/myInfo';
+
+    var responseProject = $.ajax({ type: "GET",
+                                    url: urlProject,
+                                  data : {'email' : '<b>(email)</b>',
+                                       'password' : '<b>(password)</b>'},
+                                  async: false,
+                               dataType: "JSON"
+    }).responseText;
+
+    var parsedResponseProject = JSON.parse(responseProject);
+
+    console.log(parsedResponseProject);
+          </pre>
           <b>Response</b>
           <pre>
     {
@@ -742,25 +1118,11 @@
     }
           </pre>
           <b>Notes</b>
+          <ul>
+            <li>N/A</li>
+          </ul>
         </td>
       </tr>
     </table>
   </div>
-</div>
-
-<hr/>
-<div class="row">
-  <p>This API runs through automated testing every time someone makes a change to the website. The following tests have been written</p>
-  <ul>
-    <li>Project listing - includes search/sort/order/paging</li>
-    <li>Project information - includes test to verify all attributes exist</li>
-    <li>Creating Project - includes tests for auhtorized/unauthorized </li>
-    <li>Field Information - includes test to verify all attributes exist</li>
-    <li>Creating Fields - includes test for authorized/unauthorized/named/unnamed/restrictions</li>
-    <li>Data Set Information - includes test to verify all attributes exist</li>
-    <li>Creating Data Set- includes tests for authorized/unauthorized</li>
-    <li>Editing Data Set - includes test for authorized/unauthorized/changing data</li>
-    <li>Creating Media - includes tests for authorized/unauthorized/bad keys</li>
-    <li>Media Information - includes test to verify all attributes exist</li>
-  </ul>
 </div>

@@ -14,15 +14,23 @@
             <div class="col-sm-12">
               <div class="info_label" style="font-size:1.1em">
                 by: <%= link_to @project.owner.name, user_path(@project.owner) %>
-                (<%=time_ago_in_words(@project.created_at)%> ago)
+                (<%= time_ago_in_words(@project.created_at) %> ago)
               </div>
               <br/>
             </div>
             <div class="col-sm-12">
               <div id="notices">
-                <span id="lock_notice" <%if !@project.lock%>style="display:none"<%end%>><i class="icon-lock"> This project is locked</i></span>
-                <span id="hidden_notice" <%if !@project.hidden%>style="display:none"<%end%>><i class="icon-eye-close"> This project is hidden</i></span>
-                <span id="id_notice" <% if @project.hidden || @project.lock%>style="display:none"<% end %>>
+                <span id="lock_notice"
+                      <% if !@project.lock%>style="display:none" <% end %>>
+                  <i class="icon-lock"> This project is locked</i>
+                </span>
+                <span id="hidden_notice"
+                      <% if !@project.hidden%>style="display:none"<% end %>>
+                  <i class="icon-eye-close"> This project is hidden</i>
+                </span>
+                <span id="id_notice"
+                      <% if @project.hidden || @project.lock%>
+                      style="display:none"<% end %>>
                   Project #: <%= @project.id %>
                 </span>
               </div>
@@ -59,7 +67,7 @@
             </div>
             <% if @cur_user.try(:id) %>
               <div class="col-xs-2">
-                <a href = "/projects/<%=@project.id%>/clone">
+                <a href = "/projects/<%= @project.id %>/clone">
                   <button type="button" class="btn btn-success">
                     <i class="fa fa-copy"></i> Clone
                   </button>
@@ -68,7 +76,7 @@
             <% end %>
             <% if can_edit? @project %>
               <div class="col-xs-2">
-                <a href = "/projects/<%=@project.id%>/edit">
+                <a href = "/projects/<%= @project.id %>/edit">
                   <button type="button" class="btn btn-primary" id="edit-project-button">
                     <i class="fa fa-cog"></i> Edit
                   </button>
@@ -80,7 +88,7 @@
       </div>
     </div>
     <div class= "row">
-      <%=render layout: "shared/box", locals: {title: 'Description', width: '12', unique_id: 'description', should_hide: false} do %>
+      <%= render layout: "shared/box", locals: {title: 'Description', width: '12', unique_id: 'description', should_hide: false} do %>
         <%= content_helper(@project) %>
       <% end %>
     </div>
@@ -127,7 +135,7 @@
                   <tr class="<%= cycle('feed-even', 'feed-odd')%> dataset" style="position:relative">
                     <% if( not (s.key.nil?) ) %>
                       <td class="key_icon">
-                        <div class="key" title="<%= s.key %>"> <%= image_tag("Key.png", :size => "32x32") %> <%= s.key %></div>
+                        <div class="key" title="<%= s.key %>"> <%= image_tag("Key.png", :style => "width: 40px; height: auto;") %> <%= s.key %></div>
                       </td>
                     <% else %>
                     <td class="gravatar">
@@ -185,14 +193,22 @@
       <%= render layout: "shared/box", locals: {title: 'Fields', width: '12', unique_id: 'fields', should_hide: false} do %>
         <% if (@project.fields.count == 0) && can_edit?(@project) %>
           <div class="col-md-12 center">
-            <a href="/projects/<%=@project.id%>/edit_fields"><button class="btn btn-success" id="manual_fields"><i class="fa fa-keyboard-o" style="margin:5px"></i>Setup Manually</button></a>
-            <button class="btn btn-success" id="template_file_upload"><i class="fa fa-file-o" style="margin:5px"></i>Upload File</button>
+            <a href="/projects/<%= @project.id %>/edit_fields">
+              <button class="btn btn-success" id="manual_fields">
+                <i class="fa fa-keyboard-o" style="margin:5px"></i>
+                Setup Manually
+              </button>
+            </a>
+            <button class="btn btn-success" id="template_file_upload">
+              <i class="fa fa-file-o" style="margin:5px"></i>
+              Upload File
+            </button>
           </div>
           <div class="clear"></div>
         <% elsif @project.fields.count != 0 %>
-          <table class="table table-striped" data-project="<%=@project.id%>"
+          <table class="table table-striped" data-project="<%= @project.id %>"
                  data-can_delete_fields="<% @project.data_sets.count == 0 %>"
-                 data-num_fields="<%=@project.fields.count%>">
+                 data-num_fields="<%= @project.fields.count %>">
             <thead>
               <tr>
                 <th style="max-width:30%">Name</th>
@@ -244,13 +260,13 @@
             </div>
           <% end %>
         <% else %>
-          <% if @project.has_contrib_key? %>
+          <% if @project.has_contrib_key? and @cur_user.nil? and @has_fields %>
             <p>Enter contributor key to submit data.</p>
             <%= form_tag '/contrib_keys/enter', method: 'post' do %>
               <div class="row" style="margin-left: 0px;" >
                 <%= hidden_field_tag :project_id, @project.id %>
-                <%= text_field_tag :key,"",placeholder:"Key" %>
-                <%= text_field_tag :contributor_name,"",placeholder:"Contributor Name" %>
+                <%= text_field_tag :key,"", placeholder:"Key", style:"margin-bottom: 10px;" %>
+                <%= text_field_tag :contributor_name,"", placeholder:"Contributor Name" %>
                 <%= submit_tag "Submit Key", class: "btn btn-success" %>
               </div>
             <% end %>
@@ -317,7 +333,7 @@
 <div style="display:none">
   <%= form_tag "/data_sets/dataFileUpload", method: 'post',multipart: true, id: 'datafile_form' do %>
     <%= file_field_tag 'file', { id: 'datafile_input' } %>
-    <input type="hidden" name="pid" value="<%=@project.id%>">
+    <input type="hidden" name="pid" value="<%= @project.id %>">
   <% end %>
 </div>
 <div id="doc_box" class="modal fade" role="dialog" aria-hidden="true">
@@ -329,7 +345,7 @@
           <h4 class="modal-title">Please enter the Google Spreadsheet 'Share' link below:</h4>
         </div>
         <div class="modal-body">
-          <input name="pid" value="<%=@project.id%>" type="hidden">
+          <input name="pid" value="<%= @project.id %>" type="hidden">
           <input name="gdoc" id="doc_url" class="form-control" type="text" style="width:95%">
         </div>
         <i>This can be generated by clicking 'File->Publish to the web' or 'File->Share' on your&nbsp;spreadsheet.</i>

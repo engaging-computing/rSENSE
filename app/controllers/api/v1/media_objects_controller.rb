@@ -24,7 +24,7 @@ module Api
         # Rotate based on EXIF data, then strip it out.
         unless file_type == 'image'
           respond_to do |format|
-            format.json { render json: { msg: 'API only supports images' }, status: :unprocessable_entity }
+            format.json { render json: { error: 'API only supports images', msg: 'API only supports images' }, status: :unprocessable_entity }
           end
           return
         end
@@ -80,13 +80,13 @@ module Api
             if @mo.save
               format.json { render json: @mo.to_hash(false), status: :ok }
             else
-              format.json { render json: { msg: @mo.errors.full_messages }, status: :unprocessable_entity }
+              format.json { render json: { error: @mo.errors.full_messages, msg: @mo.errors.full_messages }, status: :unprocessable_entity }
             end
           end
         else
           # Tell the user there is a problem with uploading their image.
           respond_to do |format|
-            format.json { render json: { msg: @errors }, status: :unprocessable_entity }
+            format.json { render json: { error: @errors, msg: @errors }, status: :unprocessable_entity }
           end
         end
       end
