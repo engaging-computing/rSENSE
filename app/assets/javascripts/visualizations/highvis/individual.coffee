@@ -267,13 +267,15 @@ $ ->
       # Goodness of fit is (by default) calculated via Normalized Mean-Squared Error,
       # and non-linearity is calculated through a visitation-length heuristic
       # as specified in the M. Keijzer and J. Foster paper. 
-      paretoFitness: (points, func = 'nmseFitness') -> 
+      paretoFitness: (points, func = 'scaledFitness') -> 
         fitness = if func in ['nmseFitness', 'sseFitness']
           eval "this.#{func}(points, true)"
         else eval "this.#{func}(points)"
         nonlinearity = (this.tree.depthAtPoint(i) for i in [0...this.tree.treeSize()]).reduce((pv, cv, index, array) -> pv + cv) + this.tree.treeSize()
-        ret = if isNaN(fitness + nonlinearity) or (fitness + nonlinearity) is Infinity then 0 else (1 / (1 + fitness + nonlinearity))
-
+        ret = if isNaN(fitness + nonlinearity) or (fitness + nonlinearity) is Infinity then 0 else fitness + (1 / (1 + Math.pow(nonlinearity + 10, 2)))#(1 / (1 + fitness + Math.pow(nonlinearity, 10))
+        console.log 'fitness:', fitness, 'nonlinearity: ', nonlinearity 
+        console.log ret
+        ret
       ###
       # Particle Swarm Optimization is a nonlinear optimization strategy used to enhance
       # the performance of symbolic regression.  The terminal set consists of the 

@@ -686,6 +686,7 @@ $ ->
 
           [func, Ps, r2, newRegression] = [null, null, null, null]
           try
+            #console.log points, regressionType, [xMin, xMax], name, dashStyle, regressionId
             [func, Ps, r2, newRegression] = globals.getRegression(
               points,
               regressionType,
@@ -694,17 +695,21 @@ $ ->
               dashStyle,
               regressionId
             )
+            console.log 'end of try block'
           catch error
-          console.log error
-          if regressionType is 3
-            alert "Unable to calculate an #{regressions[regressionType]} regression for this data."
-          else
-            alert "Unable to calculate a #{regressions[regressionType]} regression for this data."
-          return
+            console.trace()
+            console.log error
+            if regressionType is 3
+              alert "Unable to calculate an #{regressions[regressionType]} regression for this data."
+            else
+              alert "Unable to calculate a #{regressions[regressionType]} regression for this data."
+            return
 
           # Add the series
-          @chart.addSeries(newRegression)
-
+          #console.log newRegression
+          console.log newRegression
+          #@chart.addSeries(newRegression)
+          console.log 'hi'
           # Prepare to save regression fields
 
           savedRegression =

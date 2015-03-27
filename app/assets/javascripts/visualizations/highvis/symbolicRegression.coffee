@@ -49,7 +49,7 @@ $ ->
     ###
 
     # Fitness function to be used (scaled mean-squared error)
-    window.FITNESS = 'scaledFitness'
+    window.FITNESS = 'paretoFitness'
     # Selection operator to be used (fitness-proportional)
     window.SELECTION = 'fpSelection'
     # Reproduction operator to be used (fitness-proportional)
@@ -63,7 +63,7 @@ $ ->
     # Number of individuals in a population at any given time
     # NOTE:  MUST BE A MULTIPLE OF EIGHT TO USE THE 
     #        OPTIMIZED VERSION OF THE ALGORITHM CORRECTLY.
-    window.POPULATIONSIZE = 200
+    window.POPULATIONSIZE = 100
     # Probability that a child individual is produced through
     # reproduction, and inserted (unmodified) into the next 
     # generation of the population
@@ -77,11 +77,11 @@ $ ->
     # Maximum number of iterations (simulated generations) to 
     # be performed while searching for an adequately-fit
     # candidate solution (termination criteria)
-    window.MAXITERS = 200
+    window.MAXITERS = 100
     # Any individuals with fitness greater than MAXFITNESS
     # will be immediately returned as a candidate solution
     # (termination criteria)
-    window.MAXFITNESS = 0.95
+    window.MAXFITNESS = 2
     # tournament size parameter for tournament selection and reproduction
     window.TOURNAMENTSIZE = 10
     # Probability that the most fit individual of the tournament is 
@@ -168,7 +168,7 @@ $ ->
       # Check if the most fit individual from the 
       # initial population is sufficiently fit 
       if mostFit >= maxFitness
-        return if fitness isnt 'scaledFitness' 
+        return unless fitness in ['scaledFitness', 'paretoFitness'] 
           individual.particleSwarmOptimization(bestIndividual, points)
         else
           scaledIndividual(individual.particleSwarmOptimization(population[maxIndex]), points, individualDepth)
@@ -234,7 +234,7 @@ $ ->
         
         # Test primary termination condition
         if bestFitnessInPopulation >= maxFitness
-          return if fitness isnt 'scaledFitness' 
+          return unless fitness in ['scaledFitness', 'paretoFitness'] 
             individual.particleSwarmOptimization(population[maxIndex], points)
           else
             scaledIndividual(individual.particleSwarmOptimization(population[maxIndex], points), points, individualDepth)
@@ -247,7 +247,7 @@ $ ->
 
       # The maximum number of iterations have been performed, so we
       # return the fittest individual that has been found. 
-      if fitness isnt 'scaledFitness'
+      unless fitness in ['scaledFitness', 'paretoFitness']
         individual.particleSwarmOptimization(bestIndividual, points)
       else
         scaledIndividual(individual.particleSwarmOptimization(bestIndividual, points), points, individualDepth)
@@ -287,7 +287,7 @@ $ ->
       bestIndividual = population[maxIndex]
 
       if mostFit >= maxFitness
-        return if fitness isnt 'scaledFitness' 
+        return unless fitness in ['scaledFitness', 'paretoFitness']
           bestIndividual
         else
           scaledIndividual(population[maxIndex], points, individualDepth)
@@ -349,14 +349,14 @@ $ ->
 
         bestFitnessInPopulation = fitnesses.reduce(max, 0)
         if bestFitnessInPopulation >= maxFitness
-          return if fitness isnt 'scaledFitness' 
+          return unless fitness in ['scaledFitness', 'paretoFitness']
             population[maxIndex]
           else
             scaledIndividual(population[maxIndex], points, individualDepth)
         if bestFitnessInPopulation > eval "bestIndividual.#{fitness}(points)" 
           bestIndividual = population[maxIndex]
 
-      if fitness isnt 'scaledFitness'
+      unless fitness in ['scaledFitness', 'paretoFitness']
         bestIndividual
       else
         scaledIndividual(bestIndividual, points, individualDepth)

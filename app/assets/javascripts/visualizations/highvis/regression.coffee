@@ -87,6 +87,7 @@ $ ->
       if type isnt globals.REGRESSION.SYMBOLIC
         func = globals.REGRESSION.FUNCS[type]
         [xs, ys] = [(point.x for point in points), (point.y for point in points)]
+        #console.log xs, ys
         # Make an initial Estimate
         switch type
 
@@ -108,11 +109,12 @@ $ ->
       
         # Get the new Ps
         [Ps, R2] = NLLS(func, normalizeData(xs, type), ys, Ps)
-      
+        #console.log 'NLLS DONE'
         # Create the highcharts series
+        #console.log func[0]
         generateHighchartsSeries(func[0], Ps, R2, type, xBounds, seriesName, dashStyle, id)
       else
-        func = window.optimizedSymbolicRegression(points)
+        func = optimizedSymbolicRegression(points)
         R2 = calculateR2(func, points)
         generateHighchartsSeries(func, null, R2, type, xBounds, seriesName, dashStyle, id)
 
@@ -120,7 +122,9 @@ $ ->
     Returns a series object to draw on the chart canvas.
     ###
     generateHighchartsSeries = (func, Ps, R2, type, xBounds, seriesName, dashStyle, id, normalized = true) ->
-      data = for i in [0..globals.REGRESSION.NUM_POINTS]
+      console.log xBounds[0], xBounds[1]
+      #console.log 'start generateHighchartsSeries'
+      data = for i in [0...globals.REGRESSION.NUM_POINTS]
         xv = (i / globals.REGRESSION.NUM_POINTS)
         yv = null
         if not normalized
@@ -157,6 +161,7 @@ $ ->
             lineWidth: 4
 
       func = if func.length? and typeof(func) isnt 'function' then func[0] else func
+      console.log func, Ps, R2, retSeries
       [func, Ps, R2, retSeries]
 
     ###
