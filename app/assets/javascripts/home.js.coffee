@@ -20,7 +20,7 @@ $ ->
       e.preventDefault()
       $('#app-banner').hide()
 
-    # A few page-specific styles. 
+    # A few page-specific styles.
     $('.navbar-static-top').css('min-width', 994)
     $('.item-image-link').removeClass('hidden-xs')
     if $('#mobile-splash').length is 0
@@ -28,7 +28,7 @@ $ ->
 
   ###
   # Other stuff
-  ###  
+  ###
   $('.mainContent').on 'click', 'div.clickableItem', (event) ->
     window.location = $(event.currentTarget).children('a').attr 'href'
   $('li.dropdown.navbtn').click () ->

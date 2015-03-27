@@ -4,4 +4,4 @@
 # Mime::Type.register "text/richtext", :rtf
 # Mime::Type.register_alias "text/html", :iphone
 Rack::Mime::MIME_TYPES['.woff'] = 'application/x-font-woff'
-Mime::Type.register_alias "text/html", :mobile
+Mime::Type.register_alias 'text/html', :mobile
