@@ -6,12 +6,8 @@
     <img alt="[iSENSE]" src="https://travis-ci.org/isenseDev/rSENSE.svg?branch=<%= @version %>"/>
   </div>
 </div>
-
 <p>Client-side APIs available on <a href="https://github.com/isenseDev/iSENSE-API">Github</a> </p>
-
 <p>Click on an API request to expand documentation.</p>
-
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
@@ -34,9 +30,9 @@
     var urlProject = 'http://isenseproject.org/api/v1/projects/<b>(project id)</b>';
 
     var responseProject = $.ajax({ type: "GET",
-                        url: urlProject,
-                        async: false,
-                        dataType: "JSON"
+                                    url: urlProject,
+                                  async: false,
+                               dataType: "JSON"
     }).responseText;
 
     var parsedResponseProject = JSON.parse(responseProject);
@@ -73,7 +69,6 @@
     </table>
   </div>
 </div>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
@@ -81,8 +76,11 @@
         <td class="GET def">GET</td>
         <td class="method def"> Projects </td>
         <td class="code def">/api/v1/projects</td>
-        <td class="args def">search(opt), sort(opt), order(opt), per_page(opt), page(opt), search(opt),
-        templates_only(opt), curated_only(opt), featured_only(opt), has_data(opt)</td>
+        <td class="args def">
+          search(opt), sort(opt), order(opt), per_page(opt), page(opt),
+          search(opt), templates_only(opt), curated_only(opt),
+          featured_only(opt), has_data(opt)
+        </td>
       </tr>
       <tr class="more">
         <td colspan="4">
@@ -116,14 +114,13 @@
             <li>order - "ASC", "DESC" (default "DESC")</li>
             <li>per_page - integer (default 50)</li>
             <li>page - integer (default 1)</li>
-            <li>templates_only, curated_only, featured_only, has_data - Including any of the preceding keys will filter the results accordingly. The value passed along with the key is irrelevant.</li>
+            <li>Including the templates_only, curated_only, featured_only, or has_data keys will filter the results accordingly. The value passed along with the key is irrelevant.</li>
           </ul>
         </td>
       </tr>
     </table>
   </div>
 </div>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
@@ -139,8 +136,8 @@
           <b>Response Codes</b>
           <ul>
             <li>Success: 200 OK</li>
-            <li>Fail: 422 Unprocessable Entity </li>
             <li>Fail: 401 Unauthorized</li>
+            <li>Fail: 422 Unprocessable Entity</li>
           </ul>
           <b>Data</b>
           <pre>
@@ -192,7 +189,6 @@
     </table>
   </div>
 </div>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
@@ -208,8 +204,9 @@
           <b>Response Codes</b>
           <ul>
             <li>Success: 201 Created</li>
-            <li>Fail: 422 Unprocessable Entity </li>
             <li>Fail: 401 Unauthorized</li>
+            <li>Fail: 409 Conflict</li>
+            <li>Fail: 422 Unprocessable Entity</li>
           </ul>
           <b>Data</b>
           <pre>
@@ -251,9 +248,7 @@
     </table>
   </div>
 </div>
-
 <hr>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
@@ -306,9 +301,7 @@
     </table>
   </div>
 </div>
-
 <hr>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
@@ -316,7 +309,10 @@
         <td class="POST def">POST</td>
         <td class="method def"> Fields </td>
         <td class="code def">/api/v1/fields</td>
-        <td class="args def">email(req), password(req), project_id(req), field_type(req), name(opt), units(opt), restrictions(opt)</td>
+        <td class="args def">
+          email(req), password(req), project_id(req), field_type(req),
+          name(opt), units(opt), restrictions(opt)
+        </td>
       </tr>
       <tr class="more">
         <td colspan="4">
@@ -324,8 +320,8 @@
           <b>Response Codes</b>
           <ul>
             <li>Success: 200 OK</li>
-            <li>Fail: 422 Unprocessable Entity (will contain message why) </li>
             <li>Fail: 401 Unauthorized</li>
+            <li>Fail: 422 Unprocessable Entity</li>
           </ul>
           <b>Data</b>
           <pre>
@@ -383,7 +379,6 @@
     </table>
   </div>
 </div>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
@@ -437,9 +432,7 @@
     </table>
   </div>
 </div>
-
 <hr>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
@@ -497,7 +490,6 @@
     </table>
   </div>
 </div>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
@@ -509,12 +501,12 @@
       </tr>
       <tr class="more">
         <td colspan="4">
-          <p>Upload a data set in the form of json with a username and password.</p>
+          <p>Upload a data set in the form of JSON with a username and password.</p>
           <b>Response Codes</b>
           <ul>
             <li>Success: 200 OK</li>
-            <li>Fail: 422 Unprocessable Entity </li>
             <li>Fail: 401 Unauthorized</li>
+            <li>Fail: 422 Unprocessable Entity</li>
           </ul>
           <b>Data</b>
           <pre>
@@ -570,7 +562,6 @@
     </table>
   </div>
 </div>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
@@ -582,12 +573,12 @@
       </tr>
       <tr class="more">
         <td colspan="4">
-          <p>Upload a data set in the form of json with a contribution key. Keys can be added to a project by the owner.</p>
+          <p>Upload a data set in the form of JSON with a contribution key. Keys can be added to a project by the owner.</p>
           <b>Response Codes</b>
           <ul>
             <li>Success: 200 OK</li>
-            <li>Fail: 422 Unprocessable Entity </li>
             <li>Fail: 401 Unauthorized</li>
+            <li>Fail: 422 Unprocessable Entity</li>
           </ul>
           <b>Data</b>
           <pre>
@@ -641,7 +632,6 @@
     </table>
   </div>
 </div>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
@@ -657,9 +647,9 @@
           <b>Response Codes</b>
           <ul>
             <li>Success: 200 OK</li>
-            <li>Fail: 422 Unprocessable</li>
-            <li>Fail: 404 Not Found</li>
             <li>Fail: 401:Unauthorized</li>
+            <li>Fail: 404 Not Found</li>
+            <li>Fail: 422 Unprocessable Entity</li>
           </ul>
           <b>Data</b>
           <pre>
@@ -704,7 +694,7 @@
           </pre>
           <b>Notes</b>
           <ul>
-            <li>A user can edit any data set that they have uploaded or any data set that is on a project that they own.</li>
+            <li>A user can edit any data set that they have uploaded or any data set that is on a project that he/she owns.</li>
             <li>Setting recur=true as a get variable will return the associated Project(hash), Fields(hash), Data(hash) </li>
           </ul>
         </td>
@@ -712,7 +702,6 @@
     </table>
   </div>
 </div>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
@@ -728,9 +717,9 @@
           <b>Response Codes</b>
           <ul>
             <li>Success: 200 OK</li>
-            <li>Fail: 422 Unprocessable</li>
-            <li>Fail: 404 Not Found</li>
             <li>Fail: 401:Unauthorized</li>
+            <li>Fail: 404 Not Found</li>
+            <li>Fail: 422 Unprocessable Entity</li>
           </ul>
           <b>Data</b>
           <pre>
@@ -779,7 +768,6 @@
     </table>
   </div>
 </div>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
@@ -795,9 +783,9 @@
           <b>Response Codes</b>
           <ul>
             <li>Success: 200 OK</li>
-            <li>Fail: 422 Unprocessable</li>
-            <li>Fail: 404 Not Found</li>
             <li>Fail: 401:Unauthorized</li>
+            <li>Fail: 404 Not Found</li>
+            <li>Fail: 422 Unprocessable Entity</li>
           </ul>
           <b>Data</b>
           <pre>
@@ -844,14 +832,13 @@
           </pre>
           <b>Notes</b>
           <ul>
-            <li>A user can append to any data set that they have created or any data set that is on a project that they own.</li>
+            <li>A user can append to any data set that they have created or any data set that is on a project that he/she owns.</li>
           </ul>
         </td>
       </tr>
     </table>
   </div>
 </div>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
@@ -867,9 +854,9 @@
           <b>Response Codes</b>
           <ul>
             <li>Success: 200 OK</li>
-            <li>Fail: 422 Unprocessable</li>
-            <li>Fail: 404 Not Found</li>
             <li>Fail: 401:Unauthorized</li>
+            <li>Fail: 404 Not Found</li>
+            <li>Fail: 422 Unprocessable Entity</li>
           </ul>
           <b>Data</b>
           <pre>
@@ -921,9 +908,7 @@
     </table>
   </div>
 </div>
-
 <hr>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
@@ -939,8 +924,8 @@
           <b>Response Codes</b>
           <ul>
             <li>Success: 200 OK</li>
-            <li>Fail: 422 Unprocessable Entity (with message why)</li>
             <li>Fail: 401 Unauthorized</li>
+            <li>Fail: 422 Unprocessable Entity</li>
           </ul>
           <b>Data</b>
           <pre>
@@ -1008,7 +993,6 @@
     </table>
   </div>
 </div>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
@@ -1024,8 +1008,8 @@
           <b>Response Codes</b>
           <ul>
             <li>Success: 200 OK</li>
-            <li>Fail: 422 Unprocessable Entity (with message why)</li>
             <li>Fail: 401 Unauthorized</li>
+            <li>Fail: 422 Unprocessable Entity</li>
           </ul>
           <b>Data</b>
           <pre>
@@ -1035,7 +1019,6 @@
     "contributor_name" => "Name of contributor (string)",
     "type" => "(string) project or data_set",
     "id" => "ID of thing your pushing to (int)"
-
   }
           </pre>
           <b>Example (HTML) originial code by Scott Cytacki</b>
@@ -1093,9 +1076,7 @@
     </table>
   </div>
 </div>
-
 <hr>
-
 <div class="row">
   <div class="col-md-12">
     <table class="table table-bordered api">
@@ -1145,5 +1126,3 @@
     </table>
   </div>
 </div>
-
-<hr/>
