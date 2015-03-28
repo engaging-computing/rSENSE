@@ -75,6 +75,7 @@ $ ->
 
       # Crossover genetic operator (cut and splice approach)
       @crossover: (individual1, individual2) ->
+        #console.trace()
         [childOne, childTwo] = binaryTree.crossover(individual1.tree, individual2.tree)
         [new individual(childOne, childOne.maxDepth()), new individual(childTwo, childTwo.maxDepth())]
 
@@ -107,8 +108,8 @@ $ ->
         if distribution is null
           sumFitnesses = 0
           individualFitnesses = []
-          for individual in individuals
-            individualFitness = eval "individual.#{func}(points)"
+          for populant in individuals
+            individualFitness = eval "populant.#{func}(points)"
             sumFitnesses = sumFitnesses + individualFitness
             individualFitnesses.push individualFitness
           individualFitnesses = individualFitnesses.map((y) -> if isNaN y then 0 else y)
@@ -118,8 +119,8 @@ $ ->
         rand = Math.random()
         for probability, i in distribution
           if rand < probability
-            individual = individuals[i]
-            return new window.individual(individual.tree, individual.maxDepth)
+            indiv = individuals[i]
+            return new individual(indiv.tree, indiv.maxDepth)
 
       # Fitness-proportional selection genetic operator
       @fpSelection: (individuals, points, func, distribution = null) ->
@@ -279,19 +280,19 @@ $ ->
             when window.safeSqrt, window.pow, window.exp, window.safeLog
               2 * tree.treeSize() * (nonLinearity(tree.left) + nonLinearity(tree.right))
             else 1
-
-
         #console.log @
-        fitness = if func in ['nmseFitness', 'sseFitness']
-          eval "this.#{func}(points, true)"
-        else eval "this.#{func}(points)"
-        #test = new individual(this)
+        fitness = Math.pow(eval("this.#{func}(points)"), -1) - 1
+        console.log fitness
+        #test = new individual(@tree)
         #console.log "test tree is: ", @tree
         #console.log @tree
-        nonlinearity = nonLinearity(@tree)
+        #temp = binaryTree.clone(@tree)
+        #nonlinearity = nonLinearity(@tree)
+        #console.log "temp == @tree? ", binaryTree.is_equal(temp, @tree)
         #console.log "nonlinearity is: ", nonlinearity
-        #nonlinearity = (@tree.depthAtPoint(i) for i in [0...@tree.treeSize()]).reduce((pv, cv, index, array) -> pv + cv) + this.tree.treeSize()
-        ret = if isNaN(fitness + nonlinearity) or (fitness + nonlinearity) is Infinity then 0 else fitness + (1 / nonLinearity)#(1 / (1 + fitness + Math.pow(nonlinearity, 10))
+        nonlinearity = nonLinearity(@tree)#1 #(@tree.depthAtPoint(i) for i in [0...@tree.treeSize()]).reduce((pv, cv, index, array) -> pv + cv) + this.tree.treeSize()
+        #console.log nonlinearity
+        ret = if isNaN(fitness + nonlinearity) or (fitness + nonlinearity) is Infinity then 0 else (1 / fitness + nonlinearity)#(1 / (1 + fitness + Math.pow(nonlinearity, 10))
         #console.log 'fitness:', fitness, 'nonlinearity: ', nonlinearity 
         #console.log ret
         ret
@@ -306,7 +307,7 @@ $ ->
       ###
       # WARNING:  MUTATES THE INDIVIDUAL
       ###
-      @particleSwarmOptimization: (populant, points, fitness = 'mseFitness', maxFitness = 2, numParticles = 10, maxPosition = 1000, minPosition = -1000, maxVelocity = 50, minVelocity = -50, maxIterations = 50, numNeighborhoods = 5, c1 = 1, c2 = 3) ->
+      @particleSwarmOptimization: (populant, points, fitness = 'scaledFitness', maxFitness = 1, numParticles = 50, maxPosition = 1000, minPosition = -1000, maxVelocity = 50, minVelocity = -50, maxIterations = 100, numNeighborhoods = 5, c1 = 1, c2 = 3) ->
         
         tree = populant.tree
         treeValues = for i in [0...tree.treeSize()]
@@ -348,7 +349,7 @@ $ ->
           for particle in particles
             evaluationPoint = new individual(tree, populant.maxDepth)
             for dimension, index in particle.dimensions
-              dimension.velocity = Math.min(Math.max(dimension.velocity + Math.random() * c1 * (dimension.personalBest - dimension.position) + Math.random() * c2 * (dimensionBests[particle.neighborhood][index] - dimension.position), minVelocity), maxVelocity)
+              dimension.velocity = Math.min(Math.max(dimension.velocity + (Math.random() * c1 * (dimension.personalBest - dimension.position)) + (Math.random() * c2 * (dimensionBests[particle.neighborhood][index] - dimension.position)), minVelocity), maxVelocity)
               dimension.position = Math.max(Math.min(dimension.position + dimension.velocity, maxVelocity), minVelocity)
               #console.log "DIMENSION POSITION: #{dimension.position}"
               evaluationPoint.tree.index(dimension.index).insertData(dimension.position)
@@ -371,14 +372,3 @@ $ ->
         for constant, index in constants
           result.tree.index(constant.index).insertData(dimensionBests[bestIndex][index])
         result
-
-
-
-
-
-
-
-
-
-
-

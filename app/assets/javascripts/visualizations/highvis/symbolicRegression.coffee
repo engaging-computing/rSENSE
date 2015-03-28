@@ -49,7 +49,7 @@ $ ->
     ###
 
     # Fitness function to be used (scaled mean-squared error)
-    window.FITNESS = 'paretoFitness'
+    window.FITNESS = 'scaledFitness'
     # Selection operator to be used (fitness-proportional)
     window.SELECTION = 'fpSelection'
     # Reproduction operator to be used (fitness-proportional)
@@ -59,11 +59,13 @@ $ ->
     # Mutation operator to be used (point mutation)
     window.MUTATION = 'mutate'
     # Maximum depth of an individual's expression tree
-    window.INDIVIDUALDEPTH = 5
+    window.INDIVIDUALDEPTH = 4
+    # Maximum length of an expression tree
+    window.MAXDEPTH = 6
     # Number of individuals in a population at any given time
     # NOTE:  MUST BE A MULTIPLE OF EIGHT TO USE THE 
     #        OPTIMIZED VERSION OF THE ALGORITHM CORRECTLY.
-    window.POPULATIONSIZE = 100
+    window.POPULATIONSIZE = 200
     # Probability that a child individual is produced through
     # reproduction, and inserted (unmodified) into the next 
     # generation of the population
@@ -81,7 +83,7 @@ $ ->
     # Any individuals with fitness greater than MAXFITNESS
     # will be immediately returned as a candidate solution
     # (termination criteria)
-    window.MAXFITNESS = 2
+    window.MAXFITNESS = 1
     # tournament size parameter for tournament selection and reproduction
     window.TOURNAMENTSIZE = 10
     # Probability that the most fit individual of the tournament is 
@@ -157,7 +159,10 @@ $ ->
       # Calculate fitness of initial population
       fitnesses = for populant in population
         eval "populant.#{fitness}(points)"
-      
+      # Prevent the selection and reproduction of any trees that are too complex
+      for pop, i in population
+        if pop.tree.maxDepth() >= MAXDEPTH
+          fitnesses[i] = 0
       # Determine most fit individual from initial population
       mostFit = fitnesses.reduce max, 0
       bestIndividual = population[maxIndex]
@@ -226,6 +231,12 @@ $ ->
         # Calculate fitness of the next generation
         fitnesses = for populant in population
           eval "populant.#{fitness}(points)"
+        
+        # Prevent the selection and reproduction of any trees that are too complex
+        for pop, i in population
+          if pop.tree.maxDepth() >= MAXDEPTH
+            fitnesses[i] = 0
+        
         # Find the most fit individual in current population
         bestFitnessInPopulation = fitnesses.reduce(max, 0)
         
@@ -280,6 +291,11 @@ $ ->
       fitnesses = for populant in population
         eval "populant.#{fitness}(points)"
       
+      for pop, i in population
+        if pop.tree.maxDepth() >= MAXDEPTH
+          fitnesses[i] = 0
+
+      #console.log population
       mostFit = fitnesses.reduce max, 0
       bestIndividual = population[maxIndex]
 
@@ -290,7 +306,7 @@ $ ->
           scaledIndividual(individual.particleSwarmOptimization(population[maxIndex], points), points, individualDepth)
   
       newPopulation = []
-
+      #console.log population
       for i in [0...maxIters]
         console.log "Iteration #{i}"
         newPopulation = []
@@ -317,19 +333,23 @@ $ ->
             for _ in [0...(2 * Math.round(crossoverBatchSize / 4))]
               parents.push(eval("individual.#{selection}(population, points, fitness, distribution)"))
               parents.push(eval("individual.#{selection}(population, points, fitness, distribution)")) 
+            #console.log parents
           when 'susSelection'
             parents = eval "individual.#{selection}(population, points, fitness, (2 * Math.round(crossoverBatchSize / 4)), distribution)"
           when 'tournamentSelection'
             for _ in [0...(2 * Math.round(crossoverBatchSize / 4))]
               parents.push(eval("individual.#{selection}(population, points, fitness, tournamentSize, tournamentProbability)"))
               parents.push(eval("individual.#{selection}(population, points, fitness, tournamentSize, tournamentProbability)"))
+        #console.log parents
         children = []
         for j in [0...parents.length] by 2
+          #console.log parents[j], parents[j+1]
           res = eval("individual.#{crossover}(parents[j], parents[j+1])")
           children.push res[0]
           children.push res[1]
         newPopulation = newPopulation.concat(children)            
-
+        #console.log population
+        #console.log newPopulation
         switch selection
           when 'fpSelection'
             for _ in [0...mutationBatchSize]
@@ -348,6 +368,11 @@ $ ->
         #population = population.map((y) -> individual.particleSwarmOptimization(y, points))
         fitnesses = for populant in population
           eval "populant.#{fitness}(points)"
+        
+        for pop, i in population
+          if pop.tree.maxDepth() >= MAXDEPTH
+            fitnesses[i] = 0
+
         bestFitnessInPopulation = fitnesses.reduce(max, 0)
         if bestFitnessInPopulation >= maxFitness
           return unless fitness in ['scaledFitness', 'paretoFitness']
