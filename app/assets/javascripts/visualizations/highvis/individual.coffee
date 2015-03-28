@@ -182,7 +182,7 @@ $ ->
       # Calculates an individual's fitness by its sum of squared-error over points 
       sseFitness: (points, raw = false) ->
         fitnessAtPoints = for point in points
-          Math.pow(point.y - this.evaluate(point.x), 2)
+          Math.pow(point.y - @evaluate(point.x), 2)
         fitness = fitnessAtPoints.reduce (pv, cv, index, array) -> pv + cv
         if isNaN(fitness)
           fitness = Infinity
@@ -190,7 +190,7 @@ $ ->
 
       # Calculates an individual's fitness by its mean squared-error over points
       mseFitness: (points) ->
-        fitness = 1 / (1 + (1 / points.length) * this.sseFitness(points, true))
+        fitness = 1 / (1 + (1 / points.length) * @sseFitness(points, true))
         fitness      
 
       # Calculates an individual's fitness by scaled fitness 
@@ -198,7 +198,7 @@ $ ->
       scaledFitness: (points, params = false) ->
         # define inputs (xs), targets (ts), and outputs (ys)
         xs = (point.x for point in points)
-        ys = (this.evaluate(point.x) for point in points)
+        ys = (@evaluate(point.x) for point in points)
         ts = (point.y for point in points)
 
         # calculate sum of inputs, targets, and outputs
@@ -251,7 +251,7 @@ $ ->
       # Calculate an individual's fitness by its normalized mean-squared 
       # error over points
       nmseFitness: (points, raw = false) ->
-        values = (this.evaluate(point.x) for point in points)
+        values = (@evaluate(point.x) for point in points)
         averageValue = values.reduce((pv, cv, index, array) -> pv + cv) / values.length
         targets = (point.y for point in points)
         averageTarget = targets.reduce((pv, cv, index, array) -> pv + cv) / targets.length
@@ -268,13 +268,32 @@ $ ->
       # and non-linearity is calculated through a visitation-length heuristic
       # as specified in the M. Keijzer and J. Foster paper. 
       paretoFitness: (points, func = 'scaledFitness') -> 
+        nonLinearity = (tree) ->
+          return 0 if tree is null
+          #console.log add, subtract, multiply, safeDiv
+          switch tree.data
+            when window.add, window.subtract, window.multiply, window.safeDiv
+              tree.treeSize() * (nonLinearity(tree.left) + nonLinearity(tree.right))
+            when window.sin, window.cos
+              3 * tree.treeSize() * (nonLinearity(tree.left) + nonLinearity(tree.right))
+            when window.safeSqrt, window.pow, window.exp, window.safeLog
+              2 * tree.treeSize() * (nonLinearity(tree.left) + nonLinearity(tree.right))
+            else 1
+
+
+        #console.log @
         fitness = if func in ['nmseFitness', 'sseFitness']
           eval "this.#{func}(points, true)"
         else eval "this.#{func}(points)"
-        nonlinearity = (this.tree.depthAtPoint(i) for i in [0...this.tree.treeSize()]).reduce((pv, cv, index, array) -> pv + cv) + this.tree.treeSize()
-        ret = if isNaN(fitness + nonlinearity) or (fitness + nonlinearity) is Infinity then 0 else fitness + (1 / (1 + Math.pow(nonlinearity + 10, 2)))#(1 / (1 + fitness + Math.pow(nonlinearity, 10))
-        console.log 'fitness:', fitness, 'nonlinearity: ', nonlinearity 
-        console.log ret
+        #test = new individual(this)
+        #console.log "test tree is: ", @tree
+        #console.log @tree
+        nonlinearity = nonLinearity(@tree)
+        #console.log "nonlinearity is: ", nonlinearity
+        #nonlinearity = (@tree.depthAtPoint(i) for i in [0...@tree.treeSize()]).reduce((pv, cv, index, array) -> pv + cv) + this.tree.treeSize()
+        ret = if isNaN(fitness + nonlinearity) or (fitness + nonlinearity) is Infinity then 0 else fitness + (1 / nonLinearity)#(1 / (1 + fitness + Math.pow(nonlinearity, 10))
+        #console.log 'fitness:', fitness, 'nonlinearity: ', nonlinearity 
+        #console.log ret
         ret
       ###
       # Particle Swarm Optimization is a nonlinear optimization strategy used to enhance
@@ -287,18 +306,18 @@ $ ->
       ###
       # WARNING:  MUTATES THE INDIVIDUAL
       ###
-      @particleSwarmOptimization: (populant, points, fitness = 'scaledFitness', maxFitness = 1, numParticles = 50, maxPosition = 1000, minPosition = -1000, maxVelocity = 50, minVelocity = -50, maxIterations = 250, numNeighborhoods = 5, c1 = 1, c2 = 3) ->
+      @particleSwarmOptimization: (populant, points, fitness = 'mseFitness', maxFitness = 2, numParticles = 10, maxPosition = 1000, minPosition = -1000, maxVelocity = 50, minVelocity = -50, maxIterations = 50, numNeighborhoods = 5, c1 = 1, c2 = 3) ->
         
         tree = populant.tree
         treeValues = for i in [0...tree.treeSize()]
           value = tree.index(i)
           if value.data is 'ec' or typeof(value.data) is 'number' then value.data else null
-        console.log treeValues
+        #console.log treeValues
         constants = []
         for value, index in treeValues
           if value isnt null then constants.push {value: value, index, index}
         return populant if constants.length is 0
-        console.log  constants
+        #console.log  constants
         particles = []
         for i in [0...numParticles]
           dimensions = for j in [0...constants.length]

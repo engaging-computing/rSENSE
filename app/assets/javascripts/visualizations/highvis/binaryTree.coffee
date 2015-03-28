@@ -104,11 +104,11 @@ $ ->
 
       # Returns number of nodes in the tree
       treeSize: ->
-        this.__query((a, b) -> a + b)
+        @__query((a, b) -> a + b)
 
       # Returns the maximum depth of the tree
       maxDepth: ->
-        this.__query(Math.max)
+        @__query(Math.max)
 
       # Internal method used to abstract the treeSize() and maxDepth()
       # member functions
@@ -133,7 +133,7 @@ $ ->
         if pos is 'left'
           if @data isnt null
             if @left is null
-              @left = new binaryTree(this)
+              @left = new binaryTree(@)
             @left.data = data
 
           else
@@ -141,7 +141,7 @@ $ ->
         else if pos is 'right'
           if @data isnt null
             if @right is null
-              @right = new binaryTree(this)
+              @right = new binaryTree(@)
             @right.data = data
           else
             console.log "Error inserting #{data} into right child of tree."
@@ -168,7 +168,7 @@ $ ->
             console.log "Error deleting #{@left.data}, results in invalid binary tree."
             null
         else
-          if this.is_terminal()
+          if @is_terminal()
             @data = null
           else
             console.log "Error deleting #{@data}, results in invalid binary tree."
@@ -177,14 +177,14 @@ $ ->
       # Allows the user to index into the tree, following Preorder traversal:
       # ROOT, left, right
       index: (index) ->
-        this.__access(index)
+        @__access(index)
 
       # Determine how far away the node at position 'index' is from the root
       # of the binary tree.  This is used to determine how long the mutation
       # tree at a given point can be to maintain the maximum depth of the
       # tree during the point mutation genetic operation.
       depthAtPoint: (index, curDepth = 1) ->
-        this.__access(index, false, curDepth)
+        @__access(index, false, curDepth)
       
       # Internal method used to abstract the index and depth at point member
       # functions.
@@ -193,7 +193,7 @@ $ ->
       ###
       __access: (index, value = true, curDepth = 1) ->
         if index is 0
-          return if value is true then this else curDepth 
+          return if value is true then @ else curDepth 
         leftSize = if @left is null then 0 else @left.treeSize()
         rightSize = if @right is null then 0 else @right.treeSize()
         if index > leftSize + rightSize 
@@ -210,19 +210,19 @@ $ ->
       ###
       generate: (maxDepth = 10, curDepth = 1) ->
         if curDepth is maxDepth
-          this.insertData(window.binaryTree.terminals[Math.floor(Math.random() * window.binaryTree.terminals.length)])
+          @insertData(window.binaryTree.terminals[Math.floor(Math.random() * window.binaryTree.terminals.length)])
         else
           randomGene = Math.floor(Math.random() * (binaryTree.terminals.length + binaryTree.operators.length))
           if randomGene < binaryTree.terminals.length
-            this.insertData(binaryTree.terminals[randomGene])
+            @insertData(binaryTree.terminals[randomGene])
           else
             gene = binaryTree.operators[randomGene - binaryTree.terminals.length]
-            this.insertData(gene)
-            this.left = new binaryTree(this)
-            this.left.generate(maxDepth, curDepth + 1)
+            @insertData(gene)
+            @left = new binaryTree(@)
+            @left.generate(maxDepth, curDepth + 1)
             if gene.length isnt 1
-              this.right = new binaryTree(this)
-              this.right.generate(maxDepth, curDepth + 1)
+              @right = new binaryTree(@)
+              @right.generate(maxDepth, curDepth + 1)
 
       # Evaluate the Binary tree numerically for a given input value
       evaluate: (x, val = null) ->
@@ -234,9 +234,9 @@ $ ->
           @data
         else
           if @data.length is 1
-            @data(this.left.evaluate(x))
+            @data(@left.evaluate(x))
           else
-            @data(this.left.evaluate(x), this.right.evaluate(x))
+            @data(@left.evaluate(x), @right.evaluate(x))
 
       # Insert the binaryTree object 'tree' at the location of the binaryTree 
       # specified by index
@@ -244,7 +244,7 @@ $ ->
       # WARNING:  MUTATES THE BINARY TREE 'THIS', DOES NOT MUTATE ARGUMENT TREE
       ###
       insertTree: (tree, index = 0) ->
-        replacementPoint = this.index(index)
+        replacementPoint = @index(index)
         if index is null or replacementPoint is -1
           console.log "Error inserting #{tree} at location specified.  Index does not exist in the tree."
           null
@@ -259,11 +259,11 @@ $ ->
             start.__updateParents()
           else
 
-            this.data = tree.data
-            this.right = binaryTree.clone(tree.right)
-            this.left = binaryTree.clone(tree.left)
-            this.parent = null
-            this.__updateParents()
+            @data = tree.data
+            @right = binaryTree.clone(tree.right)
+            @left = binaryTree.clone(tree.left)
+            @parent = null
+            @__updateParents()
 
       # Updates binary tree element's parents to reflect the result of
       # an insertTree merger to parent.right or parent.left
@@ -274,12 +274,12 @@ $ ->
       # WARNING:  INTERNAL METHOD.  DO NOT CALL.
       ###
       __updateParents: ->
-        if this.right isnt null
-          this.right = window.binaryTree.clone(this.right, this)
-          this.right.__updateParents()
-        if this.left isnt null
-          this.left = window.binaryTree.clone(this.left, this)
-          this.left.__updateParents()
+        if @right isnt null
+          @right = window.binaryTree.clone(@right, @)
+          @right.__updateParents()
+        if @left isnt null
+          @left = window.binaryTree.clone(@left, @)
+          @left.__updateParents()
 
       # Given two parent trees, create two new child trees by crossover.
       # Both parent trees are given a randomly-selected crossover point.

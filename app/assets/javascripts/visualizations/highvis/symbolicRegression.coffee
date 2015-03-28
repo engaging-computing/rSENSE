@@ -107,10 +107,7 @@ $ ->
     # Return the scaled expression tree calculated by scaled fitness
     ###
     scaledIndividual = (populant, points, individualDepth) ->
-      populant = individual.particleSwarmOptimization(populant, points)
-      for i in [0...populant.tree.treeSize()]
-        if populant.tree.index(i).data is 'ec'
-          console.log 'done goofd'
+      #populant = individual.particleSwarmOptimization(populant, points)
       [a, b] = populant.scaledFitness(points, true)
       scaledTree = new binaryTree
       scaledTree.insertData(add)
@@ -171,7 +168,7 @@ $ ->
         return unless fitness in ['scaledFitness', 'paretoFitness'] 
           individual.particleSwarmOptimization(bestIndividual, points)
         else
-          scaledIndividual(individual.particleSwarmOptimization(population[maxIndex]), points, individualDepth)
+          scaledIndividual(individual.particleSwarmOptimization(population[maxIndex], points), points, individualDepth)
   
       newPopulation = []
 
@@ -288,14 +285,14 @@ $ ->
 
       if mostFit >= maxFitness
         return unless fitness in ['scaledFitness', 'paretoFitness']
-          bestIndividual
+          individual.particleSwarmOptimization(bestIndividual, points)
         else
-          scaledIndividual(population[maxIndex], points, individualDepth)
+          scaledIndividual(individual.particleSwarmOptimization(population[maxIndex], points), points, individualDepth)
   
       newPopulation = []
 
       for i in [0...maxIters]
-
+        console.log "Iteration #{i}"
         newPopulation = []
 
         sumFitnesses = fitnesses.map((y) -> if isNaN(y) then 0 else y).reduce((pv, cv, index, array) -> pv + cv)
@@ -347,27 +344,31 @@ $ ->
               mutant = eval "individual.#{selection}(population, points, fitness, tournamentSize, tournamentProbability)"
               newPopulation.push(eval("individual.#{mutation}(mutant)"))
 
+        population = newPopulation
+        #population = population.map((y) -> individual.particleSwarmOptimization(y, points))
+        fitnesses = for populant in population
+          eval "populant.#{fitness}(points)"
         bestFitnessInPopulation = fitnesses.reduce(max, 0)
         if bestFitnessInPopulation >= maxFitness
           return unless fitness in ['scaledFitness', 'paretoFitness']
-            population[maxIndex]
+            individual.particleSwarmOptimization(population[maxIndex], points)
           else
-            scaledIndividual(population[maxIndex], points, individualDepth)
+            scaledIndividual(individual.particleSwarmOptimization(population[maxIndex], points), points, individualDepth)
         if bestFitnessInPopulation > eval "bestIndividual.#{fitness}(points)" 
           bestIndividual = population[maxIndex]
 
       unless fitness in ['scaledFitness', 'paretoFitness']
-        bestIndividual
+        individual.particleSwarmOptimization(bestIndividual, points)
       else
-        scaledIndividual(bestIndividual, points, individualDepth)
+        scaledIndividual(individual.particleSwarmOptimization(bestIndividual, points), points, individualDepth)
 
     window.points = for i in [0...20]
       {x: i, y: Math.sqrt(i)}
     #window.result = window.optimizedSymbolicRegression(points)
     
     ###
-    # TODO:  PSO NOW RETURNS A NEW INDIVIDUAL BRO
+    # TODO:
     # FIX 'CANNOT CALCULATE REGRESSION ERROR'
     # OPTIMIZE TOOLTIP DISPLAYS (FEWER PARENS ARE GOODLY)
-    # DONE?
+    #
     ###
