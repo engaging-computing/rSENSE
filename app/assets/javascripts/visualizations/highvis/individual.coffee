@@ -307,7 +307,7 @@ $ ->
       ###
       # WARNING:  MUTATES THE INDIVIDUAL
       ###
-      @particleSwarmOptimization: (populant, points, fitness = 'scaledFitness', maxFitness = 1, numParticles = 50, maxPosition = 1000, minPosition = -1000, maxVelocity = 50, minVelocity = -50, maxIterations = 100, numNeighborhoods = 5, c1 = 1, c2 = 3) ->
+      @particleSwarmOptimization: (populant, points, fitness = 'scaledFitness', maxFitness = 1, numParticles = 50, maxPosition = 1000, minPosition = -1000, maxVelocity = 50, minVelocity = -50, maxIterations = 200, numNeighborhoods = 5, c1 = 2, c2 = 2) ->
         
         tree = populant.tree
         treeValues = for i in [0...tree.treeSize()]

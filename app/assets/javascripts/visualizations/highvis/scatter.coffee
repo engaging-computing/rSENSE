@@ -695,6 +695,9 @@ $ ->
             dashStyle,
             regressionId
           )
+          console.log 'the stuff,', func, Ps, r2, newRegression 
+          Ps = Ps.map((y) -> if Math.abs(Math.round(y) - y) < 1e-4 then Math.round(y) else y)
+          console.log Ps
           #console.log 'end of try block'
           #catch error
             #console.trace()
@@ -707,7 +710,8 @@ $ ->
 
           # Add the series
           #console.log newRegression
-          console.log newRegression
+          console.log newRegression.data
+          #newRegression.data = newRegression.data.map((t) -> t.y = 100) 
           #@chart.addSeries(newRegression)
           console.log 'hi'
           # Prepare to save regression fields
@@ -729,8 +733,8 @@ $ ->
 
           # Actually add the regression to the table
           @addRegressionToTable(savedRegression, true)
-          if regressionType is globals.REGRESSION.SYMBOLIC
-            globals.curVis.update()
+          #if regressionType is globals.REGRESSION.SYMBOLIC
+          #globals.curVis.update()
         # Set up accordion
         globals.configs.regressionOpen ?= 0
 

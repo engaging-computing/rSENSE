@@ -159,7 +159,7 @@ $ ->
         states:
           hover:
             lineWidth: 4
-
+      console.log retSeries
       func = if func.length? and typeof(func) isnt 'function' then func[0] else func
       console.log func, Ps, R2, retSeries
       [func, Ps, R2, retSeries]
