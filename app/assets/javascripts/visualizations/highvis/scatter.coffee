@@ -685,35 +685,45 @@ $ ->
           dashStyle = globals.dashes[dashIndex % globals.dashes.length]
 
           [func, Ps, r2, newRegression] = [null, null, null, null]
-          #try
-            #console.log points, regressionType, [xMin, xMax], name, dashStyle, regressionId
-          [func, Ps, r2, newRegression] = globals.getRegression(
-            points,
-            regressionType,
-            [xMin, xMax],
-            name,
-            dashStyle,
-            regressionId
-          )
-          console.log 'the stuff,', func, Ps, r2, newRegression 
-          Ps = Ps.map((y) -> if Math.abs(Math.round(y) - y) < 1e-4 then Math.round(y) else y)
-          console.log Ps
-          #console.log 'end of try block'
-          #catch error
-            #console.trace()
-            #console.log error
-            #if regressionType is 3
-            #  alert "Unable to calculate an #{regressions[regressionType]} regression for this data."
-            #else
-            #  alert "Unable to calculate a #{regressions[regressionType]} regression for this data."
-            #return
+          if regressionType is globals.REGRESSION.SYMBOLIC
+            [func, Ps, r2, newRegression] = globals.getRegression(
+              points,
+              regressionType,
+              [xMin, xMax],
+              name,
+              dashStyle,
+              regressionId
+            )
+          else
+            try
+              #console.log points, regressionType, [xMin, xMax], name, dashStyle, regressionId
+              [func, Ps, r2, newRegression] = globals.getRegression(
+                points,
+                regressionType,
+                [xMin, xMax],
+                name,
+                dashStyle,
+                regressionId
+              )
+              console.log 'the stuff,', func, Ps, r2, newRegression 
+              Ps = Ps.map((y) -> if Math.abs(Math.round(y) - y) < 1e-4 then Math.round(y) else y)
+              console.log Ps
+              console.log 'end of try block'
+            catch error
+              console.trace()
+              console.log error
+              if regressionType is 3
+                alert "Unable to calculate an #{regressions[regressionType]} regression for this data."
+              else
+                alert "Unable to calculate a #{regressions[regressionType]} regression for this data."
+              return
 
           # Add the series
           #console.log newRegression
-          console.log newRegression.data
+          #console.log newRegression.data
           #newRegression.data = newRegression.data.map((t) -> t.y = 100) 
-          #@chart.addSeries(newRegression)
-          console.log 'hi'
+          @chart.addSeries(newRegression)
+          #console.log 'hi'
           # Prepare to save regression fields
 
           savedRegression =
@@ -733,8 +743,8 @@ $ ->
 
           # Actually add the regression to the table
           @addRegressionToTable(savedRegression, true)
-          #if regressionType is globals.REGRESSION.SYMBOLIC
-          #globals.curVis.update()
+          # Draw the regression to the vis
+          globals.curVis.update()
         # Set up accordion
         globals.configs.regressionOpen ?= 0
 

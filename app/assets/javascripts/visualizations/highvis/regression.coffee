@@ -352,7 +352,7 @@ $ ->
       max = Math.max.apply(null, points)
       min = Math.min.apply(null, points)
       ret =
-        if type == globals.REGRESSION.LOGARITHMIC
+        if type in [globals.REGRESSION.LOGARITHMIC, globals.REGRESSION.EXPONENTIAL]
           points
         else
           points.map((y) -> ((y - min) / (max - min)) + 1)
@@ -366,7 +366,7 @@ $ ->
       [max, min] = [xBounds[1], xBounds[0]]
       projection = 2 * (max - min) + min
       
-      if type == globals.REGRESSION.LOGARITHMIC
+      if type in [globals.REGRESSION.LOGARITHMIC, globals.REGRESSION.EXPONENTIAL]
         return Ps
       
       switch type
@@ -431,20 +431,8 @@ $ ->
       yAvg = ys.reduce((pv, cv, index, array) -> pv + cv) / ys.length
       ssRes = (Math.pow(y - solution.evaluate(xs[i]), 2) for y, i in ys)\
       .reduce((pv, cv, index, array) -> (pv + cv))
-
       ssTot = (Math.pow(y - yAvg, 2) for y in ys).reduce (pv, cv, index, array) -> (pv + cv)
-      R2 = 1 - (ssRes / ssTot)
-      R2
-
-
-    globals.getSymbolicRegression = (xs, ys, type, xBounds, name, dashStyle, id) ->
-      points = ({x: xs[i], y: ys[i]} for _, i in xs when not(isNaN(xs[i]) or isNaN(ys[i])))
-      [min, max] = xBounds
-      # Get symbolic regression function
-      solution = window.optimizedSymbolicRegression(points)
-      
-      globals.getRegressionSeries(1, solution, null, type, name, xBounds, dashStyle, id)
-    
+      1 - (ssRes / ssTot)
 
     globals.getRegressionSeries = (func, Ps, R2, type, xBounds, seriesName, dashStyle, id, normalized = false) ->
       generateHighchartsSeries(func, Ps, R2, type, xBounds, seriesName, dashStyle, id, normalized)

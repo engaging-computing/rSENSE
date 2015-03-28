@@ -65,7 +65,7 @@ $ ->
     # Number of individuals in a population at any given time
     # NOTE:  MUST BE A MULTIPLE OF EIGHT TO USE THE 
     #        OPTIMIZED VERSION OF THE ALGORITHM CORRECTLY.
-    window.POPULATIONSIZE = 200
+    window.POPULATIONSIZE = 100
     # Probability that a child individual is produced through
     # reproduction, and inserted (unmodified) into the next 
     # generation of the population
@@ -79,7 +79,7 @@ $ ->
     # Maximum number of iterations (simulated generations) to 
     # be performed while searching for an adequately-fit
     # candidate solution (termination criteria)
-    window.MAXITERS = 100
+    window.MAXITERS = 10
     # Any individuals with fitness greater than MAXFITNESS
     # will be immediately returned as a candidate solution
     # (termination criteria)
@@ -310,7 +310,8 @@ $ ->
       for i in [0...maxIters]
         console.log "Iteration #{i}"
         newPopulation = []
-
+        console.log 'sumFitnesses'
+        console.log fitnesses
         sumFitnesses = fitnesses.map((y) -> if isNaN(y) then 0 else y).reduce((pv, cv, index, array) -> pv + cv)
         distribution = for _, index in fitnesses
           cumulativeFitness = fitnesses[0..index].reduce (pv, cv, index, array) -> pv + cv
