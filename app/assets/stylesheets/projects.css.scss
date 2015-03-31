@@ -1,7 +1,3 @@
-// Place all the styles related to the Experiments controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
-
 .projects-controller {
   #addProjectButton {
     margin-bottom: 12px;
@@ -37,8 +33,8 @@
   }
   
   .modal-dialog i {
-  	margin: 0 0 15px 15px;
-  	display: inline-block;
+    margin: 0 0 15px 15px;
+    display: inline-block;
   }
 
   .project_buttons {
@@ -46,10 +42,18 @@
   }
 
   .search-box .padded-col {
-  	margin-bottom: 12px;
+    margin-bottom: 12px;
   }
   
   .wide-input {
     width: 100% !important;
+  }
+  
+  .placeholder{
+    font-size: 2em;
+    color:gray;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
   }
 }
