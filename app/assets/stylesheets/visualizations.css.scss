@@ -231,6 +231,12 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     text-align:right;
   }
 
+  #refresh-data {
+    top: 20px;
+    right: 10px;
+    position: absolute;
+  }
+
   #regression-table {
     #regression-table-body {
       text-align: left;
@@ -368,6 +374,12 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   #target-img h4 {
     text-overflow: ellipsis;
     overflow: hidden;
+  }
+
+  #title_row {
+    padding-left:10px;
+    font-size:1.75em;
+    position:relative;
   }
 
   // an active tab has a different looking gradient

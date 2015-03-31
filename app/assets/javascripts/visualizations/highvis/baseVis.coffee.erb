@@ -421,26 +421,20 @@ $ ->
         ctx.body = HandlebarsTemplates[hbCtrl('save')](ctx);
         save = HandlebarsTemplates[hbCtrl('body')](ctx);
         $('#vis-ctrls').append save
-
-        globals.verifyUser ( -> ), ( ->
-          $('#saveVisButton').attr('disabled', 'disabled')), false
-        globals.verifyUser ( -> ), (->
-          $('#defaultVisButton').remove()), true
-
+    
         # Only Highcharts vises can be printed and downloaded
         # TODO - implement these for non-Highchart vises
         unless @chart?
           $('#print-vis-btn').hide()
           $('#download-vis-btn').hide()
 
-        $('#save-vis-btn').click ->
-          globals.verifyUser (-> globals.saveVis()), (->
-            alert 'You must be logged in to save a visualization.'), false
+	globals.userPermissions()
 
-        $('#default-vis-btn').click ->
-          globals.verifyUser (-> globals.defaultVis()), (->
-            alert 'You must be logged in as the project owner to set a
-            default visualization.'), true
+        ($ "#save-vis-btn").click ->
+          globals.saveVis()
+
+        ($ "#default-vis-btn").click ->
+          globals.defaultVis()
 
         $('#download-vis-btn').click =>
           @chart.exportChart
