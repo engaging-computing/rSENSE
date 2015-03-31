@@ -68,10 +68,6 @@ body {
   color: red;
 }
 
-.footer {
-  text-align: center;
-  font-size: smaller;
-}
 
 .item {
   background-color: #ddd;
@@ -198,7 +194,7 @@ body {
 #outer {
   min-height: 100%;
   margin: 0px;
-  padding: 0px 0px 70px 0px;
+  padding: 0px 0px 10px 0px;
 }
 
 .print {
@@ -268,4 +264,16 @@ body {
   text-overflow: ellipsis;
   padding-bottom: 2px; 
   max-width: 45%;
+}
+
+.footer{
+  font-size: smaller;
+  
+  .parts{
+    text-align: left; 
+  }
+
+  .category{
+    border-bottom: 1px solid gray; 
+  }
 }
