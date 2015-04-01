@@ -118,7 +118,7 @@ Rsense::Application.routes.draw do
       resources :projects, only: [:show, :index, :create, :add_key]
       resources :fields, only: [:create, :show]
       resources :visualizations, only: [:show]
-      resources :data_sets, only: [:show, :edit, :jsonDataUpload]
+      resources :data_sets, only: [:show, :index, :edit, :jsonDataUpload]
     end
   end
   get '/testing' => 'testing#index'

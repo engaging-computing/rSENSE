@@ -102,6 +102,25 @@
             <span>
               <button type="button" class="btn btn-default" style="margin-bottom: 10px;" id="export_button" >Export</button>
             </span>
+
+
+      <%=form_tag data_sets_path, method: 'get', id: 'data_sets_search' do%>
+
+        <div id="searchProjRow" class="row">
+          <div class="padded-col col-sm-10 col-xs-9" title="Enter keyword(s) or data set number to search for a project">
+            <%= text_field_tag :search, @params[:search], class: "form-control", placeholder: "Enter keyword(s) or datas set number to search for a data set." %>
+          </div>
+          <div class="padded-col col-sm-2 col-xs-3">
+            <%= submit_tag "Search", name: nil, class:'btn btn-default btn-group-justified'%>
+          </div>
+        </div>
+
+      <%end%>
+    </div>
+  </div>
+</div>
+
+
             <div class="pull-right">
               <div class="btn-group">
                 <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
