@@ -37,6 +37,14 @@
     display: inline-block;
   }
 
+  .placeholder{
+    font-size: 2em;
+    color: gray;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
   .project_buttons {
     margin-top: 40px;
   }
@@ -47,13 +55,5 @@
   
   .wide-input {
     width: 100% !important;
-  }
-  
-  .placeholder{
-    font-size: 2em;
-    color:gray;
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
   }
 }
