@@ -68,6 +68,17 @@ body {
   color: red;
 }
 
+.footer{
+  font-size: smaller;
+  
+  .category{
+    border-bottom: 1px solid gray; 
+  }
+  
+  .parts{
+    text-align: left; 
+  }
+}
 
 .item {
   background-color: #ddd;
@@ -266,14 +277,3 @@ body {
   max-width: 45%;
 }
 
-.footer{
-  font-size: smaller;
-  
-  .parts{
-    text-align: left; 
-  }
-
-  .category{
-    border-bottom: 1px solid gray; 
-  }
-}
