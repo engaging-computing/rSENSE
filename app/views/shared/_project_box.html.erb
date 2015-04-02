@@ -1,25 +1,38 @@
+<% has_img = @box_project.featured_media_id != nil %>
 <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
   <div class='item item-block
     <%= (defined? @box_project_front_page) ? "front_page_item" : "" %>'>
-    <% bg_image = generic_project_image(@box_project.id) %>
-    <% if @box_project.featured_media_id != nil %>
-      <% bg_image = MediaObject.find(@box_project.featured_media_id).src %>
+   
+    <% if has_img %>
+      <% bg_image = MediaObject.find(@box_project.featured_media_id).src %>   
+      <a href="<%= project_path @box_project %>">
+        <div class="item-image" style="background-image:url(<%= bg_image %>)"></div>
+      </a>
+    <% else %>
+      <a href='<%= project_path @box_project %>'>
+        <div class="item-image word-wrap center">
+          <div class="placeholder">
+            <%= truncate(@box_project.title.html_safe, length: 40) %>
+          </div>
+        </div>
+      </a>
     <% end %>
-    <a href="<%= project_path @box_project %>">
-      <div class="item-image" style="background-image:url(<%= bg_image %>)">
-      </div>
-    </a>
+    
+ 
     <div class="item-desc">
-      <div class="item-title word-wrap">
-        <%= link_to truncate(@box_project.name.html_safe, length: 40),
-                   @box_project %>
-        <% if @box_project.featured and !(defined? @box_project_front_page) %>
-          <span> (featured) </span>
-        <% end %>
-      </div>
-      by <a href="<%= user_url(@box_project.owner) %>">
+        <div class="item-title word-wrap"> 
+          <% if has_img %>
+            <%= link_to truncate(@box_project.name.html_safe, length: 40),
+                      @box_project %>
+            <% if @box_project.featured and !(defined? @box_project_front_page) %>
+              <span> (featured) </span>
+            <% end %>
+          <% end %>
+        </div>
+      <strong>Creator: </strong> 
+      <a href="<%= user_url(@box_project.owner) %>">
          <%= @box_project.owner.name %> </a><br/>
-      on <%= @box_project.created_at.strftime("%B %d, %Y") %>
+       <%= @box_project.created_at.strftime("%B %d, %Y") %>
       <br/>
     </div>
     <div class="item-badges">
