@@ -1,12 +1,10 @@
 $ ->
   if namespace.controller is "projects" and namespace.action is "edit_fields"
     ($ '#number').click ->
-      ($ '#text_fields').val('1')
-      ($ '#fields_table').submit
-      
-    ($ '#text').click ->
-      ($ '#num_fields').val('1')
-      ($ '#fields_table').submit
+      alert(square(2))
+
+	square = (x) ->
+  	  x * x
       
     ($ '.field_delete').click (e) ->
       e.preventDefault()
