@@ -1,5 +1,11 @@
 $ ->
   if namespace.controller is "projects" and namespace.action is "edit_fields"
+    ($ '#fields_table').keypress (e) ->
+      code = e.keyCode || e.which
+      if code == 13
+        e.preventDefault()
+        ($ '#fields_form_submit').click()
+
     ($ '#number').click ->
       alert(square(2))
 
