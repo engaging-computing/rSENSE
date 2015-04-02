@@ -13,21 +13,21 @@ class BugReportTest < ActionDispatch::IntegrationTest
     finish
   end
 
-  test 'get bug report page' do
+  test 'get issue report page' do
     visit '/'
-    click_on 'Report a Bug'
+    find('.issue').click
 
-    assert page.has_content?('Report a Bug: Do you have a GitHub account?'), 'Did not get to report a bug page.'
+    assert page.has_content?('Report Issue: Do you have a GitHub account?'), 'Did not get to report issue page.'
   end
 
-  test 'get bug report page without account' do
+  test 'get issue report page without account' do
     visit '/report_bug'
     find('#no_github_account').click
 
-    assert page.has_content?('Report a Bug'), 'Should have redirected to github for authorization'
+    assert page.has_content?('Report Issue'), 'Should have redirected to github for authorization'
   end
 
-  test 'get bug report page with github account not logged in' do
+  test 'get issue report page with github account not logged in' do
     visit '/report_bug'
     find('#github_account').click
 
