@@ -7,70 +7,31 @@ $ ->
         ($ '#fields_form_submit').click()
 
     ($ '#number').click ->
-      alert(square(2))
+      addRow("""<input class="input-small form-control" type="text" name="number" value="Number">""", "Number", """<input class="input-small form-control" type="text" name="units">""", "", """<a href="#" id="#{num}" class="field_delete"><i class="fa fa-close slick-delete"></i></a>""")
 
-	square = (x) ->
-  	  x * x
+    ($ '#text').click ->
+      addRow("""<input class="input-small form-control" type="text" name="number" value="Text">""", "Text", "", """<input class="input-small form-control" type="text" name="restrictions">""", """<a href="#" id="#{num}" class="field_delete"><i class="fa fa-close slick-delete"></i></a>""")
+
+    ($ '#timestamp').click ->
+      addRow("""<input class="input-small form-control" type="text" name="timestamp" value="Timestamp">""", "Timestamp", "", "", """<a href="#" id="#{num}" class="field_delete"><i class="fa fa-close slick-delete"></i></a>""")
+
+    ($ '#location').click ->
+      addRow("""<input class="input-small form-control" type="text" name="longitude" value="Longitude">""", "Longitude", "", "", """<a href="#" id="#{num}" class="field_delete"><i class="fa fa-close slick-delete"></i></a>""")
+      addRow("""<input class="input-small form-control" type="text" name="latitude" value="Latitude">""", "Latitude", "", "", """<a href="#" id="#{num}" class="field_delete"><i class="fa fa-close slick-delete"></i></a>""")
+
+	addRow = (cellContent1, cellContent2, cellContent3, cellContent4, cellContent5) ->
+      row = document.getElementById("fields_table").insertRow(1)
+      num = num + 1
+      cell1 = row.insertCell(0)
+      cell2 = row.insertCell(1)
+      cell3 = row.insertCell(2)
+      cell4 = row.insertCell(3)
+      cell5 = row.insertCell(4)
+      cell1.innerHTML = cellContent1
+      cell2.innerHTML = cellContent2
+      cell3.innerHTML = cellContent3
+      cell4.innerHTML = cellContent4
+      cell5.innerHTML = cellContent5
       
-    ($ '.field_delete').click (e) ->
-      e.preventDefault()
-      root = ($ @).parents('tr')
-      $.ajax
-        url: ($ @).attr('href')
-        dataType: 'json'
-        type: 'DELETE'
-        data:
-          field: ($ @).attr('fid')
-        success: (msg) ->
-          if root.hasClass('location')
-            ($ 'tr.location').each ->
-              ($ this).remove()
-          else
-            root.remove()
-          
-          $('#options').load(document.URL +  ' #options')
-            
-
-        error:(msg) ->
-          response = $.parseJSON msg['responseText']
-          error_message = response.errors.join "</p><p>"
-
-          ($ '.container.mainContent').find('form').before """
-            <div class="alert alert-danger fade in">
-              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-              <h4>Error Removing Field:</h4>
-              <p>#{error_message}</p>
-              <p>
-                <button type="button" class="btn btn-danger error_bind" data-retry-text"Retrying...">Retry</button>
-                <button type="button" class="btn btn-default error_dismiss">Or Dismiss</button>
-              </p>
-            </div>"""
-          
-          ($ '.error_dismiss').click ->
-            ($ '.alert').alert 'close'
-          
-          ($ '.error_bind').click ->
-            
-            ($ '.error_bind').button 'loading'
-            
-            target = root.find '.field_delete'
-            
-            $.ajax
-              url: ($ target).attr('href')
-              dataType: 'json'
-              type: 'DELETE'
-              data:
-                field: ($ target).attr('fid')
-              success: (msg) ->
-                ($ '.error_bind').button 'reset'
-                if root.hasClass('location')
-                  root.parents('table').find('tr.location').each ->
-                  ($ this).remove()
-                else
-                  root.remove()
-                
-                ($ '.alert').alert 'close'
-                
-              error: (msg) ->
-                ($ '.error_bind').button 'reset'
-                
+    ($ '.field_delete').click ->
+    
