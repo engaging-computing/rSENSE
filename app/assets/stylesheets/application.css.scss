@@ -68,9 +68,16 @@ body {
   color: red;
 }
 
-.footer {
-  text-align: center;
+.footer{
   font-size: smaller;
+  
+  .category{
+    border-bottom: 1px solid gray; 
+  }
+  
+  .parts{
+    text-align: left; 
+  }
 }
 
 .item {
@@ -199,7 +206,7 @@ body {
 #outer {
   min-height: 100%;
   margin: 0px;
-  padding: 0px 0px 70px 0px;
+  padding: 0px 0px 10px 0px;
 }
 
 .print {
@@ -270,3 +277,4 @@ body {
   padding-bottom: 2px; 
   max-width: 45%;
 }
+
