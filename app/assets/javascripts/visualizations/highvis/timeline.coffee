@@ -117,6 +117,6 @@ $ ->
         super(arr)
 
     if "Timeline" in data.relVis
-      globals.timeline = new Timeline 'timeline_canvas'
+      globals.timeline = new Timeline 'timeline-canvas'
     else
-      globals.timeline = new DisabledVis "timeline_canvas"
+      globals.timeline = new DisabledVis "timeline-canvas"

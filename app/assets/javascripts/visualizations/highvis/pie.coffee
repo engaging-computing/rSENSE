@@ -55,7 +55,7 @@ $ ->
 
         displayColors = []
         for number in data.groupSelection
-          displayColors.push(globals.configs.colors[number % globals.configs.colors.length])
+          displayColors.push(globals.getColor(number))
 
         options =
           showInLegend: false
@@ -99,7 +99,7 @@ $ ->
 
       drawControls: ->
         super()
-        @drawGroupControls false, false, false
+        @drawGroupControls(data.textFields)
         @drawYAxisControls('Fields', globals.configs.fieldSelection,
           data.normalFields.slice(1), true, @configs.displayField,
           @yAxisRadioHandler)
@@ -107,6 +107,6 @@ $ ->
         @drawSaveControls()
 
     if "Pie" in data.relVis
-      globals.pie = new Pie 'pie_canvas'
+      globals.pie = new Pie 'pie-canvas'
     else
-      globals.pie = new DisabledVis 'pie_canvas'
+      globals.pie = new DisabledVis 'pie-canvas'

@@ -47,44 +47,46 @@ $ ->
       unless globals.options? and globals.options.isEmbed?
         newHeight -= $(".navbar").height()
 
-      $("#viswrapper").height(newHeight)
+      $("#vis-wrapper").height(newHeight)
 
-      visWrapperSize = $('#viswrapper').innerWidth()
-      visWrapperHeight = $('#viswrapper').outerHeight()
-      visTitleBarHeight = $('#vistitlebar').outerHeight() +
-        $('#vistablist').outerHeight()
-      hiderSize     = $('#controlhider').outerWidth()
+      visWrapperSize = $('#vis-wrapper').innerWidth()
+      visWrapperHeight = $('#vis-wrapper').outerHeight()
+      visHeaderHeight = $('#vis-title-bar').outerHeight() +
+        $('#vis-tab-list').outerHeight()
+      hiderSize     = $('#control-hider').outerWidth()
       controlSize   = $('#vis-ctrls').outerWidth()
       controlOpac = $('#vis-ctrls').css 'opacity'
 
       controlSize = visWrapperSize * .2 - hiderSize
       controlOpac = 1.0
-      $("#hiderbtn").attr('class', 'fa fa-chevron-circle-left')
-
-      $("#viscontainer").height(visWrapperHeight - visTitleBarHeight)
+      $("#hider-btn").attr('class', 'fa fa-chevron-circle-left')
 
       if toggleControls and ($ '#vis-ctrl-container').width() > hiderSize or
       (init and globals.options.startCollapsed?) or !globals.configs.toolsOpen
         controlSize = 0
         controlOpac = 0.0
-        $("#hiderbtn").attr('class', 'fa fa-chevron-circle-right')
+        $("#hider-btn").attr('class', 'fa fa-chevron-circle-right')
 
       contrContSize = hiderSize + controlSize
 
       # New width should take into account visibility of tools
       newWidth = visWrapperSize
       if $('#vis-ctrl-container').is(':visible') then newWidth -= contrContSize
-      newHeight = $('#viscontainer').height() - $('#vistablist').outerHeight()
 
-      $('#vis-ctrl-container').height $('#viswrapper').height()
-      $('#vis-ctrl-container').animate {width: contrContSize}, aniLength, 'linear'
+      # Adjust heights
+      $('#vis-container').height(visWrapperHeight)
+      $('#vis-ctrl-container').height(visWrapperHeight)
+      newHeight = visWrapperHeight - visHeaderHeight
+      $('#vis-container > .tab-content').height(newHeight)
 
       # Animate the collapsing controls and the expanding vis
-      $('#vis-ctrls').animate {width: controlSize, opacity: controlOpac},
-        aniLength, 'linear'
+      $('#vis-ctrl-container').animate({width: contrContSize}, aniLength,
+        'linear')
+      $('#vis-ctrls').animate({width: controlSize, opacity: controlOpac},
+        aniLength, 'linear')
 
       # Only adjust with tools are visible
-      $('#viscontainer').animate {width: newWidth}, aniLength, 'linear'
+      $('#vis-container').animate({width: newWidth}, aniLength, 'linear')
       globals.curVis.resize(newWidth, newHeight, aniLength)
 
     # Resize vis on page resize
@@ -92,9 +94,9 @@ $ ->
       resizeVis(false, 0)
 
     ### hide all vis canvases to start ###
-    $(can).hide() for can in ['#map_canvas', '#timeline_canvas',
-      '#scatter_canvas', '#bar_canvas', '#histogram_canvas', '#pie_canvas',
-      '#table_canvas', '#summary_canvas','#viscanvas','#photos_canvas']
+    $(can).hide() for can in ['#map-canvas', '#timeline-canvas',
+      '#scatter-canvas', '#bar-canvas', '#histogram-canvas', '#pie-canvas',
+      '#table-canvas', '#summary-canvas','#viscanvas','#photos-canvas']
 
     # Restore saved globals
     if data.savedGlobals?
@@ -115,7 +117,7 @@ $ ->
     globals.configs.groupById ?= data.DATASET_NAME_FIELD
     data.setGroupIndex(globals.configs.groupById)
     data.groupSelection ?= for vals, keys in data.groups
-      Number keys
+      Number(keys)
 
     # Set default for logY
     globals.configs.logY ?= 0
@@ -136,11 +138,11 @@ $ ->
       lower = data.allVis[vis].toLowerCase()
       ctx.id = 'vis-tab-' + lower
       ctx.name = data.allVis[vis]
-      ctx.canvas = lower + '_canvas'
+      ctx.canvas = lower + '-canvas'
       ctx.icon = if enabled then window.icons[dark] else window.icons[light]
 
       tab = HandlebarsTemplates['visualizations/vis-tab'](ctx)
-      $('#vistablist').append tab
+      $('#vis-tab-list').append(tab)
 
       unless enabled
         $("#vis-tab-#{ctx.name.toLowerCase()}").addClass('strikethrough')
@@ -152,7 +154,7 @@ $ ->
       else data.defaultVis.toLowerCase()
 
     globals.configs.curVis = 'globals.' + cvis
-    ccanvas = cvis + '_canvas'
+    ccanvas = cvis + '-canvas'
 
     # Pointer to the actual vis
     globals.curVis = eval(globals.configs.curVis)
@@ -161,14 +163,14 @@ $ ->
     globals.curVis.start()
 
     # Highlight the starting tab
-    $("#vistablist a[href='##{ccanvas}']").tab('show')
+    $("#vis-tab-list a[href='##{ccanvas}']").tab('show')
     $('#' + ccanvas).addClass('active in')
 
     # Initialize View
     resizeVis(false, 0, true)
 
     ### Change vis click handler ###
-    $('#vistablist a').click (e) ->
+    $('#vis-tab-list a').click (e) ->
       e.preventDefault()
       $(this).tab('show')
 
@@ -177,7 +179,7 @@ $ ->
       href = $(this).attr('href')
 
       start = href.indexOf('#')
-      end = href.indexOf('_canvas')
+      end = href.indexOf('-canvas')
       start = start + 1
 
       link = href.substr(start, end - start)
@@ -192,7 +194,7 @@ $ ->
       globals.curVis.start()
       resizeVis(false, 0, true)
 
-    $('#controlhider').click ->
+    $('#control-hider').click ->
       globals.configs.toolsOpen = !globals.configs.toolsOpen
       resizeVis()
 
@@ -207,7 +209,7 @@ $ ->
         globals.fullscreen = true
         icon.removeClass('icon-resize-full')
         icon.addClass('icon-resize-small')
-        fullscreenVis = $('#viscontainer')[0]
+        fullscreenVis = $('#vis-container')[0]
         browserFullscreenMethod = fullscreenVis.webkitRequestFullScreen or
           fullscreenVis.mozRequestFullScreen or
           fullscreenVis.requestFullScreen or
@@ -226,7 +228,8 @@ $ ->
         else if (document.msExitFullscreen)
           document.msExitFullscreen()
 
-    $(document).on 'webkitfullscreenchange mozfullscreenchange fullscreenchange', ->
+    events = 'webkitfullscreenchange mozfullscreenchange fullscreenchange'
+    $(document).on events, ->
       if $('#fullscreen-vis').attr('title') == 'Maximize'
         $('#fullscreen-vis').attr('title', 'Minimize')
       else if $('#fullscreen-vis').attr('title') == 'Minimize'

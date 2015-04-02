@@ -35,7 +35,7 @@ $ ->
         super(@canvas)
 
       start: ->
-        @configs.displayField = Math.min globals.configs.fieldSelection...
+        @configs.displayField = Math.min(globals.configs.fieldSelection...)
         super()
 
       update: ->
@@ -104,10 +104,10 @@ $ ->
 
       drawControls: ->
         super()
-        @drawGroupControls(true, false)
+        @drawGroupControls(data.textFields)
         @drawYAxisControls('Fields', globals.configs.fieldSelection,
           data.normalFields.slice(1), true, @configs.displayField,
           @yAxisRadioHandler)
         @drawSaveControls()
 
-      globals.summary = new Summary "summary_canvas"
+      globals.summary = new Summary "summary-canvas"

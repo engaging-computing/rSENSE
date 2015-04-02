@@ -216,7 +216,30 @@ $ ->
        '#E67300','#8B0707','#329262','#5574A6','#3B3EAC']
 
     globals.configs ?= {}
-    globals.configs.colors = globals.colors
+    globals.configs.colors = []
+
+    ###
+    Make sure there are at least enough color slots per group
+    TODO fix underlying representation of colors (have an object of overrides)
+    ###
+    globals.updateColorSlots = ->
+      while (globals.configs.colors.length < data.groups.length)
+        globals.configs.colors.push(false)
+
+    ###
+    Associate a color with an index
+    ###
+    globals.setColor = (index, color) ->
+      globals.configs.colors[index] = color
+
+    ###
+    Retreive a color associated with an index
+    ###
+    globals.getColor = (index) ->
+      if !globals.configs.colors[index]
+        return globals.colors[index % globals.colors.length]
+
+      return globals.configs.colors[index]
 
     ###
     Generate a list of dashes
@@ -315,11 +338,11 @@ $ ->
 
       if globals.scatter instanceof DisabledVis
         delete globals.scatter
-        globals.scatter = new Scatter "scatter_canvas"
+        globals.scatter = new Scatter "scatter-canvas"
         # TODO deal with header restoration
 
       globals.scatter.xAxis = data.normalFields[data.normalFields.length - 1]
-      $("#vistablist li[aria-controls='scatter_canvas'] a").click()
+      $("#vistablist li[aria-controls='scatter-canvas'] a").click()
 
     ###
     If there is only one time field, generates an appropriate

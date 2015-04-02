@@ -81,6 +81,6 @@ $ ->
         super()
 
     if 'Photos' in data.relVis
-      globals.photos = new Photos 'photos_canvas'
+      globals.photos = new Photos 'photos-canvas'
     else
-      globals.photos = new DisabledVis 'photos_canvas'
+      globals.photos = new DisabledVis 'photos-canvas'

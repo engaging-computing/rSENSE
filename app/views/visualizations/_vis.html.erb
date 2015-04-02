@@ -33,60 +33,65 @@
 <script type="text/javascript"
         src="https://maps-api-ssl.google.com/maps/api/js?key=AIzaSyBxtPK1_mxwVdl1NRu7ZEiSNvmCekFSZAw&amp;sensor=false&amp;libraries=visualization,geometry&amp;v=3.9">
 </script>
-<div id="viswrapper">
+<div id="vis-wrapper">
   <div id="vis-ctrl-container"
     <% if @presentation %> style="display:none" <% end %>>
     <div id="vis-ctrls">
     </div>
-    <div id="controlhider">
-      <i id="hiderbtn" class="fa fa-chevron-circle-left"></i>
+    <div id="control-hider">
+      <i id="hider-btn" class="fa fa-chevron-circle-left"></i>
     </div>
   </div>
-  <div id="viscontainer" role="tabpanel">
-    <div id="vistitlebar">
+  <div id="vis-container" role="tabpanel">
+    <div id="vis-title-bar">
       <div class="inline-left">
         <%= title.html_safe %>
         <span class="subtitle">
           of <%= link_to project.title.html_safe, project, class: "i" %>
         </span>
       </div>
-      <div id="visowner" class="subtitle inline-right">
+      <div id="vis-owner" class="subtitle inline-right">
         by <%= link_to "#{owner.name}", owner, class: "link" %>
         <%= link_to image_tag(Gravatar.new.url(owner),
             class: "circle-img"), owner %>
       </div>
+      <%= link_to "#{project_path(@project)}/data_sets",
+          { id:"refresh-data", class: "btn btn-default" } do %>
+        Get Latest
+        <%= content_tag(:i, ' ', class: 'fa fa-refresh') %>
+      <% end %>
     </div>
-    <ul id="vistablist" role="tablist"
+    <ul id="vis-tab-list" role="tablist"
         class="nav nav-tabs <% if @presentation %>hidden<% end %>"
         data-tabs="tabs">
     </ul>
     <div class="tab-content">
-      <div role="tabpanel" id="map_canvas"
-           class="vis_canvas tab-pane fade">
+      <div role="tabpanel" id="map-canvas"
+           class="vis-canvas tab-pane fade">
       </div>
-      <div role="tabpanel" id="table_canvas"
-           class="vis_canvas tab-pane fade">
+      <div role="tabpanel" id="table-canvas"
+           class="vis-canvas tab-pane fade">
       </div>
-      <div role="tabpanel" id="timeline_canvas"
-           class="vis_canvas tab-pane fade">
+      <div role="tabpanel" id="timeline-canvas"
+           class="vis-canvas tab-pane fade">
       </div>
-      <div role="tabpanel" id="scatter_canvas"
-           class="vis_canvas tab-pane fade">
+      <div role="tabpanel" id="scatter-canvas"
+           class="vis-canvas tab-pane fade">
       </div>
-      <div role="tabpanel" id="bar_canvas"
-           class="vis_canvas tab-pane fade">
+      <div role="tabpanel" id="bar-canvas"
+           class="vis-canvas tab-pane fade">
       </div>
-      <div role="tabpanel" id="histogram_canvas"
-           class="vis_canvas tab-pane fade">
+      <div role="tabpanel" id="histogram-canvas"
+           class="vis-canvas tab-pane fade">
       </div>
-      <div role="tabpanel" id="pie_canvas"
-           class="vis_canvas tab-pane fade">
+      <div role="tabpanel" id="pie-canvas"
+           class="vis-canvas tab-pane fade">
       </div>
-      <div role="tabpanel" id="summary_canvas"
-           class="vis_canvas tab-pane fade">
+      <div role="tabpanel" id="summary-canvas"
+           class="vis-canvas tab-pane fade">
       </div>
-      <div role="tabpanel" id="photos_canvas"
-           class="vis_canvas tab-pane fade">
+      <div role="tabpanel" id="photos-canvas"
+           class="vis-canvas tab-pane fade">
       </div>
     </div>
   </div>

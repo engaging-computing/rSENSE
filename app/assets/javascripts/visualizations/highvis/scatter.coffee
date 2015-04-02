@@ -213,7 +213,7 @@ $ ->
       ###
       drawControls: ->
         super()
-        @drawGroupControls()
+        @drawGroupControls(data.textFields)
         @drawXAxisControls()
         @drawYAxisControls('Y Axis', globals.configs.fieldSelection,
           data.normalFields.slice(1), false)
@@ -279,7 +279,7 @@ $ ->
             options =
               data: dat
               showInLegend: false
-              color: globals.configs.colors[groupIndex % globals.configs.colors.length]
+              color: globals.getColor(groupIndex)
               name:
                 group: data.groups[groupIndex]
                 field: data.fields[fieldIndex].fieldName
@@ -772,6 +772,6 @@ $ ->
           arr
 
     if "Scatter" in data.relVis
-      globals.scatter = new Scatter "scatter_canvas"
+      globals.scatter = new Scatter "scatter-canvas"
     else
-      globals.scatter = new DisabledVis "scatter_canvas"
+      globals.scatter = new DisabledVis "scatter-canvas"

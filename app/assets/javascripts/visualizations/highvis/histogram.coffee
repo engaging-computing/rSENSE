@@ -201,7 +201,7 @@ $ ->
         i = 0
         binSizes = {}
         binTotals = {}
-        
+
         (key for key of binObjs).map((y) -> ({x: Number(val), y: binObjs[y][val]} for val of binObjs[y])).map (a) ->
           a.map (b) ->
             binSizes[b['x']] ?= 0
@@ -225,8 +225,8 @@ $ ->
                   binData.push {x: Number(bin), y: 1, total: binObjs[group][bin]}
               binData.sort (a, b) -> Number(a['x']) - Number(b['x'])
               options =
-                showInLegend: false,
-                color: globals.configs.colors[Number(group) % globals.configs.colors.length],
+                showInLegend: false
+                color: globals.getColor(Number(group))
                 name: data.groups[Number(group)]
                 data: binData
               @chart.addSeries options, false
@@ -249,7 +249,7 @@ $ ->
 
             options =
               showInLegend: false
-              color: globals.configs.colors[groupIndex % globals.configs.colors.length]
+              color: globals.getColor.colors(groupIndex)
               name: data.groups[groupIndex]
               data: finalData
 
@@ -328,7 +328,7 @@ $ ->
 
       drawControls: ->
         super()
-        @drawGroupControls()
+        @drawGroupControls(data.textFields)
 
         handler = (selected, selFields) =>
           @yAxisRadioHandler(selected, selFields)
@@ -341,6 +341,6 @@ $ ->
         @drawSaveControls()
 
     if "Histogram" in data.relVis
-      globals.histogram = new Histogram 'histogram_canvas'
+      globals.histogram = new Histogram 'histogram-canvas'
     else
-      globals.histogram = new DisabledVis 'histogram_canvas'
+      globals.histogram = new DisabledVis 'histogram-canvas'

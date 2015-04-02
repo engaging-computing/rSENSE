@@ -29,7 +29,6 @@
 $ ->
   if namespace.controller is "visualizations" and
   namespace.action in ["displayVis", "embedVis", "show"]
-
     window.globals ?= {}
     window.globals.configs ?= {}
 
@@ -244,168 +243,130 @@ $ ->
           selFields.push(selected)
 
       ###
-      Draws group selection controls
-      This includes a series of checkboxes and a selector for the grouping field.
-      The checkbox text color should correspond to the graph color.
+      Draws group selection controls. This includes a series of checkboxes and a
+      selector for the grouping field. The checkbox text color should correspond
+      to the graph color.
+        groupByFields    Array of field indices you want to sort on
+        startOnGroup     Call start() after grouping
       ###
-      drawGroupControls: (startOnGroup = false, radio = false, excludeNameAndCombined = false) ->
-
-        controls = '<div id="groupControl" class="vis_controls">'
-        controls += '<div class="control_header">'
-        controls += "<h3><a href='#'>Groups</a></h3></div>"
-        controls += "<div class='control_outer'>"
-
-        # Add grouping selector
-        controls += '<div class="inner_control_div"> Group By: '
-        controls += '<select id="groupSelector" class="form-control">'
-
-        if data.textFields.length > 2 and excludeNameAndCombined
-          yFields = data.textFields[2..data.textFields.length]
-        else
-          yFields = data.textFields
-
-        for fieldIndex in yFields
-          sel = if fieldIndex is globals.configs.groupById then 'selected' else ''
-          controls += "<option value='#{Number fieldIndex}' #{sel}>#{data.fields[fieldIndex].fieldName}</option>"
-
-        controls += "</select></div>"
-
-        controls += "<table>"
-
-        # Populate choices
+      drawGroupControls: (groupByFields, startOnGroup = false) ->
         counter = 0
-        if data.groups.length > 1
-          controls += "<tr><td>"
-          controls += "<div class='inner_control_div'>"
+        groupList = undefined
+        groupList =
+          for g, i in data.groups
+            color = globals.getColor(i)
+            label =
+              if g isnt '' then g
+              else "No #{data.fields[globals.configs.groupById].fieldName}"
+            style:   "color:#{color};"
+            value:   i
+            label:   label
+            name:    'grouping'
+            id:      'group-' + i
+            logId:   'group-' + i
+            picker:
+              type:  'color'
+              color: color
+              icon:  '<%= image_path('color-wheel.png') %>'
 
-          if not radio
-            controls += """<div class='checkbox'><label><input id='checkbox_all'
-              class='group_input_all' type='checkbox' value='#{gIndex}'
-              #{if data.groupSelection.length == data.groups.length then "checked" else ""}>
-              #Check All</label></div>"""
-            controls += "</td><td></td></tr>"
+        ictx =
+          groupByFields:
+            for f in groupByFields
+              value: f
+              name:  data.fields[f].fieldName
+              logId: 'group-by-field-' + f
+          checkall:
+            id:      'ckall-grouping'
+            label:   '#Select All'
+            logid:   'check-all-group-by'
+          groups:    groupList
 
-        for group, gIndex in data.groups
-          color_id = counter % globals.configs.colors.length
-          color = globals.configs.colors[color_id]
-          controls += "<tr><td class='label-dataset-name'>"
-          controls += "<div class='inner_control_div' id='label-color-#{color_id}'"
-          controls += "style=\"color:#{color};\">"
+        octx =
+          id: 'group-ctrls'
+          title: 'Groups'
+          body: HandlebarsTemplates[hbCtrl('groups')](ictx);
 
-          if radio
-            # Radio groups can only have one group selected
-            groupSelection = [data.groupSelection.reduce (a, b) -> Math.min(a,b)]
-            data.groupSelection = groupSelection
+        tools = HandlebarsTemplates[hbCtrl('body')](octx);
+        $('#vis-ctrls').append tools
 
-            selectedGroup = data.groupSelection[0]
-            controls += "<div class='radio'><label><input class='group_input' type='radio' name='groups'"
-            controls += " value='#{gIndex}' "
-            controls += "#{if (Number gIndex) is selectedGroup then "checked" else ""}/>"
-            if group isnt ''
-              controls += "#{group}</label>"
-            else
-              controls +="No #{data.fields[globals.configs.groupById].fieldName}</label>"
-          else
-            controls += "<div class='checkbox'><label><input class='group_input' type='checkbox'"
-            controls += " value='#{gIndex}' "
-            controls += "#{if (Number gIndex) in data.groupSelection then "checked" else ""}/>"
-            if group isnt ''
-              controls += "#{group}</label>"
-            else
-              controls +="No #{data.fields[globals.configs.groupById].fieldName}</label>"
-          controls += "</div></div>"
-          controls += "</td><td class='label-dataset-color'>"
-          controls += """<a href="javascript:void;" class="color-picker" data-color="#{color}" data-color-id="#{color_id}">
-                         <img height="20px" width="20px" src="<%= image_path('color-wheel.png') %>"></a>"""
-          controls += "</td></tr>"
-          counter += 1
-
-        controls += "</table>"
-
-        controls += '</div></div>'
-
-        # Write HTML
-        $('#vis-ctrls').append controls
+        # Initialize and track the status of this control panel
+        globals.configs.saveOpen ?= false
+        initCtrlPanel('group-ctrls', 'groupOpen')
 
         $('.color-picker').each (_, cpicker) =>
-          cid = $(cpicker).attr 'data-color-id'
+          cid = $(cpicker).data('color-id')
           $(cpicker).colorpicker 'create',
             outputType: 'hex'
             onOpen: () ->
-              $("#label-color-#{cid}").parent().parent().css 'background-color', '#EEE'
+              $("#label-color-#{cid}").parent().parent().css('background-color',
+                '#EEE')
             onClose: () ->
-              $("#label-color-#{cid}").parent().parent().css 'background-color', '#FFF'
+              $("#label-color-#{cid}").parent().parent().css('background-color',
+                '#FFF')
             onSubmit: (color) =>
-              globals.configs.colors[cid] = color
+              globals.setColor(cid, color)
               $("#label-color-#{cid}").css 'color', color
               @delayedUpdate()
               setTimeout (() => @start()), 1
-          $(cpicker).colorpicker 'setcolor', globals.configs.colors[cid]
+          $(cpicker).colorpicker 'setcolor', globals.getColor(cid)
 
-        # Make group select handler
-        $('#groupSelector').change (e) =>
-          element = e.target or e.srcElement
-          data.setGroupIndex (Number element.value)
+        $('#group-by').val(globals.configs.groupById)
+        $('#group-by').change (e) =>
+          gid =
+            if e.target then Number(e.target.value)
+            else Number(e.srcElement.value)
 
-          globals.configs.groupById = Number(element.value)
-
+          data.setGroupIndex(gid)
+          globals.configs.groupById = gid
           data.groupSelection = for vals, keys in data.groups
-            Number keys
+            Number(keys)
 
-          if startOnGroup
-            @start()
-          else
-            @delayedUpdate()
+          if startOnGroup then @start()
+          else @delayedUpdate()
 
           @drawControls()
 
-        if radio
-          # Make group checkbox handler
-          $('.group_input').click (e) =>
-            $('.group_input').each () ->
-              if @checked
-                data.groupSelection = [Number @value]
-            @delayedUpdate()
+        # Initialize
+        updateCheckAll = ->
+          numGroups = data.groups.length
+          numSel = data.groupSelection.length
+          indeterminate = numSel > 0 and numSel < numGroups
+          $('#ckbx-ckall-grouping').prop('checked', numSel is numGroups)
+          $('#ckbx-ckall-grouping').prop('indeterminate', indeterminate)
 
-        else
-          # Make group checkbox handler
-          $('.group_input').click (e) =>
-            selection = []
-            $('.group_input').each () ->
-              if @checked
-                selection.push Number @value
-              else
-            data.groupSelection = selection
+        # Update the check all box
+        updateCheckAll()
 
-            if data.groupSelection.length == data.groups.length
-              $('#checkbox_all').prop("checked", true)
-              $('#checkbox_all').prop("indeterminate", false)
-            else if data.groupSelection.length > 0
-              $('#checkbox_all').prop("checked", false)
-              $('#checkbox_all').prop("indeterminate", true)
-            else
-              $('#checkbox_all').prop("checked", false)
-              $('#checkbox_all').prop("indeterminate", false)
+        # Initialize the checkboxes to the group selection
+        $('input[name="grouping"]').each (key, elem) ->
+          if Number(elem.value) in data.groupSelection
+            $(elem).prop('checked', true)
 
-            @delayedUpdate()
+        # Set handler for the group checkboxes
+        $('input[name="grouping"]').click (e) =>
+          index = Number(e.target.value)
+          if index in data.groupSelection
+            arrayRemove(data.groupSelection, index)
+          else data.groupSelection.push(index)
 
-          # Make group checkbox for all groups
-          $('.group_input_all').click (e) =>
-            if e.target.checked
-              data.groupSelection = for vals, keys in data.groups
-                Number keys
-              $('.group_input').prop 'checked', true
-            else
-              data.groupSelection = []
-              $('.group_input').prop 'checked', false
+          updateCheckAll()
+          @delayedUpdate()
 
-            @delayedUpdate()
+        # Set handler for the check all box
+        $('#ckbx-ckall-grouping').click =>
+          checked = data.groupSelection.length isnt data.groups.length
 
-        # Set up accordion
-        globals.configs.groupOpen ?= 0
+          # Empty the array without changing the memory address
+          data.groupSelection.splice(0, data.groupSelection.length)
 
-        $('#groupControl > h3').click ->
-          globals.configs.groupOpen = (globals.configs.groupOpen + 1) % 2
+          # Repopulate the array if necessary
+          if checked then data.groupSelection.push(k) for v, k in data.groups
+
+          $('input[name="grouping"]').each (key, elem) ->
+            $(elem).prop('checked', checked)
+
+          updateCheckAll()
+          @delayedUpdate()
 
       ###
       Draws vis saving controls
@@ -421,14 +382,14 @@ $ ->
         ctx.body = HandlebarsTemplates[hbCtrl('save')](ctx);
         save = HandlebarsTemplates[hbCtrl('body')](ctx);
         $('#vis-ctrls').append save
-    
+
         # Only Highcharts vises can be printed and downloaded
         # TODO - implement these for non-Highchart vises
         unless @chart?
           $('#print-vis-btn').hide()
           $('#download-vis-btn').hide()
 
-	globals.userPermissions()
+        globals.userPermissions()
 
         ($ "#save-vis-btn").click ->
           globals.saveVis()
@@ -495,27 +456,24 @@ $ ->
         $('#vis-ctrls').append tools
 
         # Initialize and track the status of this control panel
-        globals.configs.saveOpen ?= false
+        globals.configs.toolsOpen ?= false
         initCtrlPanel('common-ctrls', 'toolsOpen')
         query = "input[name='analysis-type'][value='#{@configs.analysisType}']"
         $(query).prop('checked', 'true')
-
         $('#sort-by').val(@configs.sortField)
-        console.log @configs.sortField
-
         $('input[name="analysis-type"]').value = @configs.analysisType
+        $('#ckbx-log-y-axis').prop('checked', globals.configs.logY)
 
         $('#sort-by').change (e) =>
-          @configs.sortField = Number e.target.value
+          @configs.sortField = Number(e.target.value)
           @delayedUpdate()
 
         $('input[name="analysis-type"]').click (e) =>
           @configs.analysisType = Number(e.target.value)
-          console.log 'sup', @configs.analysisType
           @delayedUpdate()
 
-        $('.logY_box').click (e) =>
-          globals.configs.logY = (globals.configs.logY + 1) % 2
+        $('#ckbx-log-y-axis').click (e) =>
+          globals.configs.logY = !globals.configs.logY
           @start()
 
       ###
@@ -538,7 +496,6 @@ $ ->
       to expand upon these after calling super()
       ###
       buildOptions: ->
-
         self = this
 
         @chartOptions =
@@ -647,7 +604,8 @@ $ ->
       Resize highcharts to match
       ###
       resize: (newWidth, newHeight, duration) ->
-        @chart.setSize(newWidth, newHeight, {duration: duration, easing:'linear'})
+        @chart.setSize(newWidth, newHeight,
+          {duration: duration, easing:'linear'})
 
       ###
       End sequence used by runtime

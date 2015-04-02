@@ -123,9 +123,8 @@ $ ->
     serializing since they cannot be serialized.
     ###
     globals.serializeVis = (includeData = true) ->
-
       # Set current vis to default
-      current = (globals.curVis.canvas.match /([A-z]*)_canvas/)[1]
+      current = (globals.curVis.canvas.match /([A-z]*)-canvas/)[1]
       current = current[0].toUpperCase() + current.slice 1
       data.defaultVis = current
 
@@ -168,7 +167,7 @@ $ ->
       $.ajax
         type: 'PUT'
         url: '/projects/' + data.projectID
-        dataType: 'json'
+        dataType: 'JSON'
         data:
           project:
             globals: savedData.globals

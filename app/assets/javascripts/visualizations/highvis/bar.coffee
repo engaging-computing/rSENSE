@@ -96,7 +96,7 @@ $ ->
         # Draw the series
         for gid in sortedGroupIDs when gid in data.groupSelection
           options =
-            color: globals.configs.colors[gid % globals.configs.colors.length]
+            color: globals.getColor(gid)
             name:  data.groups[gid] or data.noField()
 
           options.data = for fid in data.normalFields when fid in fieldSelection
@@ -110,13 +110,13 @@ $ ->
 
       drawControls: ->
         super()
-        @drawGroupControls()
+        @drawGroupControls(data.textFields)
         @drawYAxisControls('Y Axis', globals.configs.fieldSelection,
           data.normalFields.slice(1), false)
         @drawToolControls(true, true)
         @drawSaveControls()
 
     if "Bar" in data.relVis
-      globals.bar = new Bar 'bar_canvas'
+      globals.bar = new Bar 'bar-canvas'
     else
-      globals.bar = new DisabledVis "bar_canvas"
+      globals.bar = new DisabledVis "bar-canvas"

@@ -48,95 +48,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     -moz-border-radius: 15px;
   }
 
-  #vis-ctrl-container {
-    position: relative;
-    display: inline-block;
-    float: left;
-    background-color: $vis-bkg-dark;
-    width: 20%;
-    height: 100%;
-
-    // this is where all the div controls get added
-    #vis-ctrls {
-      height: 100%;
-      overflow-x: hidden;
-      overflow-y: auto;
-      position: relative;
-      display: inline-block;
-      float: left;
-
-      // puts spacing between some boostrap buttons
-      .form-control { // this styles bootstrap stuff and IS VERY BAD
-        margin-bottom: 5px;
-      }
-
-      .save-btn {
-        display: inline-block;
-        width: 80%;
-        margin: 10px auto;
-      }
-
-      // any input button inside this class isn't lined up with the
-      // text to its right - this fixes that
-      .vis-ctrl-body {
-        display: none;
-        font-size: 12px;
-        width: 100%;
-        padding: 5px 20px;
-        background-color: $vis-bkg-light;
-
-        .centered {
-          text-align: center;
-        }
-
-        .checkbox, .radio {
-          text-align: left;
-          margin: 1px 0;
-
-          input {
-            margin-top: 2px;
-            margin-left: 0;
-          }
-        }
-
-        .label-dataset-color {
-          float: right;
-          width: 20px;
-        }
-
-        .vis-ctrl-subblock {
-          margin-bottom: 5px;
-        }
-
-        .vis-ctrl-subtitle {
-          text-align: left;
-        }
-      }
-
-      .vis-ctrl-header {
-        font-size: 24px;
-        padding: 10px 20px;
-        margin: 0;
-        color: #337AB7;
-        white-space: nowrap;
-        overflow: hidden;
-        cursor: pointer;
-        height: 55px;
-        width: 100%;
-        background: $dark-bkg;
-
-        .vis-ctrl-title {
-          float: left;
-        }
-
-        .vis-ctrl-icon {
-          float: right;
-        }
-      }
-    }
-  }
-
-  #controlhider {
+  #control-hider {
     position: relative;
     float: right;
     display: inline-block;
@@ -145,7 +57,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     cursor: pointer;
     background: $dark-bkg-ltr;
 
-    #hiderbtn {
+    #hider-btn {
       @include unselectable;
       padding: 0 8px;
       position: absolute;
@@ -221,7 +133,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   }
 
   // photos may require scrollbar; margin so photos do not touch top of canvas
-  #photos_canvas {
+  #photos-canvas {
     overflow-y: auto;
     margin-top: 20px;
   }
@@ -289,7 +201,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     color: $hint;
   }
 
-  #summary_canvas {
+  #summary-canvas {
     text-align: center;
     overflow-y: auto;
     overflow-x: hidden;
@@ -306,7 +218,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   }
 
   // table vis needs additional love to make it look right
-  #table_canvas {
+  #table-canvas {
     table {
       border-color: $border-color;
     }
@@ -387,27 +299,114 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     background-image: $dark-bkg-inv;
   }
 
-  .vis_canvas {
+  .vis-canvas {
     height: inherit;
     width: inherit;
-    overflow: hidden; // because something inside vis_canvas
+    overflow: hidden; // because something inside vis-canvas
                       // is overflowing on every non-map vis
   }
 
   // floats the actual vis to the right
-  #viscontainer {
+  #vis-container {
     position: absolute;
     right: 0px;
     width: 80%;
   }
 
-  #viswrapper {
+  #vis-wrapper {
     width: 100%;
     height: 100%;
-  }
 
-  .vis-ctrls {
-    width: 100%;
+    #vis-ctrl-container {
+      position: relative;
+      display: inline-block;
+      float: left;
+      background-color: $vis-bkg-dark;
+      width: 20%;
+      height: 100%;
+
+      // this is where all the div controls get added
+      #vis-ctrls {
+        height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        position: relative;
+        display: inline-block;
+        float: left;
+
+        // puts spacing between some boostrap buttons
+        .form-control { // this styles bootstrap stuff and IS VERY BAD
+          margin-bottom: 5px;
+        }
+
+        .save-btn {
+          display: inline-block;
+          width: 80%;
+          margin: 10px auto;
+        }
+
+        .full-width {
+          width: 100%;
+        }
+
+        // any input button inside this class isn't lined up with the
+        // text to its right - this fixes that
+        .vis-ctrl-body {
+          display: none;
+          font-size: 12px;
+          width: 100%;
+          padding: 5px 20px;
+          background-color: $vis-bkg-light;
+
+          .centered {
+            text-align: center;
+          }
+
+          .checkbox, .radio {
+            text-align: left;
+            margin: 1px 0;
+
+            input {
+              margin-top: 2px;
+              margin-left: 0;
+            }
+          }
+
+          .vis-ctrl-subblock {
+            margin-bottom: 5px;
+
+            .cpickr-icon {
+              margin-left: 2px;
+            }
+          }
+
+          .vis-ctrl-subtitle {
+            text-align: left;
+          }
+        }
+
+        .vis-ctrl-header {
+          font-size: 24px;
+          padding: 10px 20px;
+          margin: 0;
+          color: #337AB7;
+          white-space: nowrap;
+          overflow: hidden;
+          cursor: pointer;
+          height: 55px;
+          width: 100%;
+          background: $dark-bkg;
+
+          .vis-ctrl-title {
+            float: left;
+          }
+
+          .vis-ctrl-icon {
+            float: right;
+          }
+        }
+      }
+    }
   }
 
   #vis-disabled {
@@ -415,33 +414,18 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   }
 
   // the bar at the top of the vis window
-  #vistablist {
+  #vis-tab-list {
     padding: 0; // removes padding that shouldn't be there to begin with
     margin: 0;
     background-color: $vis-bkg-light;
   }
 
-  #vistitlebar {
+  #vis-title-bar {
     height: 50px;
     background-color: $vis-bkg-light;
     font-size: 24px;
     text-align: center;
     padding: 10px;
-  }
-
-  // an individual tab
-  .vis_tab {
-    @include unselectable;
-    display: inline-block;
-    font-size:1.2em;
-    border-right: $border; // borders are only on the right - tab list and vis window cover the other sides
-
-    .ui-tabs-anchor {
-      display: block; // so vertical padding works
-      padding: 6px 10px; // so the entire box is clickable
-      color: #222;
-      outline: none;
-    }
   }
 }
 

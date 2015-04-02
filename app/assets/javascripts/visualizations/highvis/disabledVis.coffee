@@ -117,20 +117,20 @@ $ ->
         $('#vis-ctrl-container').hide()
 
         switch @canvas
-          when 'map_canvas'
+          when 'map-canvas'
             $('#' + @canvas).html("<div id='vis_disabled'>#{map_err}</div>")
-          when "bar_canvas"
+          when "bar-canvas"
             $('#' + @canvas).html("<div id='vis_disabled'>#{bar_err}</div>")
-          when "histogram_canvas"
+          when "histogram-canvas"
             $('#' + @canvas).html "<div id='vis_disabled'>#{histogram_err}" +
               "</div>"
-          when "timeline_canvas"
+          when "timeline-canvas"
             $('#' + @canvas).html("<div id='vis_disabled'>#{time_err}</div>")
-          when "scatter_canvas"
+          when "scatter-canvas"
             $('#' + @canvas).html("<div id='vis_disabled'>#{scatter_err}</div>")
-          when "photos_canvas"
+          when "photos-canvas"
             $('#' + @canvas).html("<div id='vis_disabled'>#{photos_err}</div>")
-          when "pie_canvas"
+          when "pie-canvas"
             $('#' + @canvas).html("<div id='vis_disabled'>#{pie_err}</div>")
 
       clip: (arr) -> arr

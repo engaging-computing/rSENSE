@@ -55,8 +55,6 @@ $ ->
           delete @timeLines
 
       start: ->
-        ($ '#' + @canvas).show()
-
         # Remove old handlers if they exist
         if @markers?
           for group in @markers
@@ -161,9 +159,7 @@ $ ->
 
             groupIndex = data.groups.indexOf(
               dataPoint[globals.configs.groupById].toLowerCase())
-            color = globals.configs.colors[groupIndex %
-              globals.configs.colors.length]
-
+            color = globals.getColor(groupIndex)
             latlng = new google.maps.LatLng(lat, lon)
 
             # Put aside line info if necessary
@@ -210,9 +206,9 @@ $ ->
 
               label +=  "</div>
                           <a class='left carousel-control' href='#mapCarousel' role='button'
-                          	data-slide='prev'><span class='glyphicon glyphicon-chevron-left'></span></a>
+                            data-slide='prev'><span class='glyphicon glyphicon-chevron-left'></span></a>
                           <a class='right carousel-control' href='#mapCarousel' role='button'
-                          	data-slide='next'><span class='glyphicon glyphicon-chevron-right'></span></a>
+                            data-slide='next'><span class='glyphicon glyphicon-chevron-right'></span></a>
                         </div> </br>"
 
             label += "<table>"
@@ -272,7 +268,7 @@ $ ->
             @timeLines[index] = new google.maps.Polyline
               path: @timeLines[index]
               geodesic: true
-              strokeColor: globals.configs.colors[index]
+              strokeColor: globals.getColor(index)
               strokeOpacity: 1.0
               strokeWeight: 2
               visible: ((index in data.groupSelection) and @configs.visibleLines is 1)
@@ -301,7 +297,7 @@ $ ->
           @gmap.fitBounds(latlngbounds)
 
         @drawControls()
-        
+
         ctaLayer = new google.maps.KmlLayer({url: window.kml})
         ctaLayer.setMap(@gmap)
 
@@ -404,7 +400,7 @@ $ ->
 
       drawControls: ->
         super()
-        @drawGroupControls(true)
+        @drawGroupControls(data.textFields, true)
         @drawToolControls()
         @drawSaveControls()
 
@@ -612,6 +608,6 @@ $ ->
         projectPixels: (latlng) ->
           @getProjection().fromLatLngToContainerPixel(latlng)
 
-      globals.map = new Map "map_canvas"
+      globals.map = new Map "map-canvas"
     else
-      globals.map = new DisabledVis "map_canvas"
+      globals.map = new DisabledVis "map-canvas"

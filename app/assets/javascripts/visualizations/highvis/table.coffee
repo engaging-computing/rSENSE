@@ -47,13 +47,13 @@ $ ->
 
       # Removes nulls from the table and colors the groupByRow
       rowFormatter = (cellvalue, options, rowObject) ->
-        cellvalue = "" if $.type(cellvalue) is 'number' and isNaN(cellvalue) or cellvalue is null
+        cellvalue = "" if $.type(cellvalue) is 'number' and isNaN(cellvalue) or
+          cellvalue is null
 
-        colorIndex = data.groups.indexOf(String(cellvalue).toLowerCase()) % globals.configs.colors.length
-        if (colorIndex isnt -1)
-          return "<font color='#{globals.configs.colors[colorIndex]}'>#{cellvalue}<font>"
+        cIndex = data.groups.indexOf(String(cellvalue).toLowerCase())
+        if (cIndex is -1) then return cellvalue
 
-        cellvalue
+        return "<font color='#{globals.getColor(cIndex)}'>#{cellvalue}<font>"
 
       # Formats tables dates properly
       dateFormatter = (cellvalue, options, rowObject) ->
@@ -125,7 +125,7 @@ $ ->
             }
 
         # Add the nav bar
-        $('#table_canvas').append '<div id="toolbar_bottom"></div>'
+        $('#table-canvas').append '<div id="toolbar_bottom"></div>'
 
         # Build the grid
         @table = jQuery("#data_table").jqGrid({
@@ -211,7 +211,7 @@ $ ->
 
       drawControls: ->
         super()
-        @drawGroupControls()
+        @drawGroupControls(data.textFields)
         fields = (i for f, i in data.fields when i isnt data.COMBINED_FIELD)
         @drawYAxisControls('Visible Fields', @configs.tableFields,
           (i for f, i in data.fields when i isnt data.COMBINED_FIELD), false)
@@ -273,4 +273,4 @@ $ ->
 
       clip: (arr) -> arr
 
-    globals.table = new Table "table_canvas"
+    globals.table = new Table "table-canvas"

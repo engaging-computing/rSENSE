@@ -227,6 +227,7 @@ $ ->
     data.setGroupIndex = (gIndex) ->
       @groups = @makeGroups(gIndex)
       @dataPoints = @setIndexFromGroups(gIndex)
+      globals.updateColorSlots()
 
     ###
     Sets the value of the Data Point (id) field to its index within the selected group.
