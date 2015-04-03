@@ -322,7 +322,7 @@ $ ->
               new Function("x", regression.func)
             else
               new Function("x, P", regression.func)
-            series = globals.getRegressionSeries(func, regression.parameters, regression.r2, regression.type, [@configs.xBounds.min, @configs.xBounds.max], regression.name, regression.dashStyle, regression.id, regression.tooltip, false)[3]
+            series = globals.getRegressionSeries(func, regression.parameters.map((y) -> Number(y)), Number(regression.r2), regression.type, [@configs.xBounds.min, @configs.xBounds.max], regression.name, regression.dashStyle, regression.id, regression.tooltip, false)[3]
             # Add the regression to the chart
             @chart.addSeries(series)
             # Enabled the class by removing the disabled class
@@ -646,7 +646,7 @@ $ ->
             else
               new Function("x, P", regression.func)
             # Calculate the series
-            series = globals.getRegressionSeries(func, regression.parameters, regression.r2, regression.type, [@configs.xBounds.min, @configs.xBounds.max], regression.name, regression.dashStyle, regression.tooltip, regression.id)[3]
+            series = globals.getRegressionSeries(func, regression.parameters.map((y) -> Number(y)), Number(regression.r2), regression.type, [@configs.xBounds.min, @configs.xBounds.max], regression.name, regression.dashStyle, regression.id, regression.tooltip, false)[3]
             # Add the regression to the chart
             @chart.addSeries(series)
             @addRegressionToTable(regression, true)

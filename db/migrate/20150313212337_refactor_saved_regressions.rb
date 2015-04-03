@@ -16,13 +16,13 @@ class RefactorSavedRegressions < ActiveRecord::Migration
           id = regression['series']['name']['id']
           dashStyle = regression['series']['dashStyle']
           name = regression['series']['name']['group']
-          r2 = regression['series']['name']['regression']['tooltip'].split('</strong> ')[3].to_f
+          r2 = regression['series']['name']['regression']['tooltip'].split('</strong> ')[3].gsub('e', 'E')
           type = regression['type']
-          wtf = regression['series']['name']['regression']['tooltip'].split('<br>')[1].delete('^0-9 e\.\-').split('  ').reverse
+          wtf = regression['series']['name']['regression']['tooltip'].split('<br>')[1].delete('^0-9 \.\-eE').split('  ').reverse
           params = wtf.select { |x| x != '' }
-          params[params.length - 1] = sprintf("%.02f", params[params.length - 1])
+          params[params.length - 1] = params[params.length - 1][0...params[params.length -1].length - 1]
           puts params
-          params.map! { |x| x.to_f }
+          params.map! { |x| x.gsub('e', 'E') }
           
           if regression['type'] == 4 or regression['type'] == 5
             copy = params.clone
@@ -69,13 +69,14 @@ class RefactorSavedRegressions < ActiveRecord::Migration
           id = regression['series']['name']['id']
           dashStyle = regression['series']['dashStyle']
           name = regression['series']['name']['group']
-          r2 = regression['series']['name']['regression']['tooltip'].split('</strong> ')[3].to_f
+          r2 = regression['series']['name']['regression']['tooltip'].split('</strong> ')[3].gsub('e', 'E')
           type = regression['type']
           tooltip = regression['series']['name']['regression']['tooltip']
-          wtf = regression['series']['name']['regression']['tooltip'].split('<br>')[1].delete('^0-9 \.\-').split('  ').reverse
+          wtf = regression['series']['name']['regression']['tooltip'].split('<br>')[1].delete('^0-9 \.\-eE').split('  ').reverse
           params = wtf.select { |x| x != '' }
-          params[params.length - 1] = sprintf("%.02f", params[params.length - 1])
-          params.map! { |x| x.to_f }
+          params[params.length - 1] = params[params.length - 1][0...params[params.length -1].length - 1]
+          puts params
+          params.map! { |x| x.gsub('e', 'E') }
           
           if regression['type'] == 4 or regression['type'] == 5
             copy = params.clone
