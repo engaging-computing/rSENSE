@@ -91,7 +91,7 @@ class RefactorSavedRegressions < ActiveRecord::Migration
             function = 'return P[0] + Math.log(P[1] * x + P[2])'
           end
           regression.clear
-          regreesion['type'] = type
+          regression['type'] = type
           regression['xAxis'] = xAxis
           regression['yAxis'] = yAxis
           regression['groups'] = groups
