@@ -318,7 +318,11 @@ $ ->
           and "#{regression.groups}" is "#{data.groupSelection}" \
           and globals.configs.fieldSelection.indexOf(regression.yAxis) != -1
             # Calculate the series
-            series = globals.getRegressionSeries(regression.func, regression.parameters, regression.r2, regression.type, [@configs.xBounds.min, @configs.xBounds.max], regression.name, regression.dashStyle, regression.id, false)[3]
+            func = if regression.type is globals.REGRESSION.SYMBOLIC
+              new Function("x", regression.func)
+            else
+              new Function("x, P", regression.func)
+            series = globals.getRegressionSeries(func, regression.parameters, regression.r2, regression.type, [@configs.xBounds.min, @configs.xBounds.max], regression.name, regression.dashStyle, regression.id, regression.tooltip, false)[3]
             # Add the regression to the chart
             @chart.addSeries(series)
             # Enabled the class by removing the disabled class
@@ -637,8 +641,12 @@ $ ->
           if regression.xAxis == @configs.xAxis \
           and "#{regression.groups}" is "#{data.groupSelection}" \
           and globals.configs.fieldSelection.indexOf(regression.yAxis) != -1
+            func = if regression.type is globals.REGRESSION.SYMBOLIC
+              new Function("x", regression.func)
+            else
+              new Function("x, P", regression.func)
             # Calculate the series
-            series = globals.getRegressionSeries(regression.func, regression.parameters, regression.r2, regression.type, [@configs.xBounds.min, @configs.xBounds.max], regression.name, regression.dashStyle, regression.id)[3]
+            series = globals.getRegressionSeries(func, regression.parameters, regression.r2, regression.type, [@configs.xBounds.min, @configs.xBounds.max], regression.name, regression.dashStyle, regression.tooltip, regression.id)[3]
             # Add the regression to the chart
             @chart.addSeries(series)
             @addRegressionToTable(regression, true)
@@ -684,9 +692,9 @@ $ ->
           dashIndex = data.normalFields.indexOf(yAxisIndex)
           dashStyle = globals.dashes[dashIndex % globals.dashes.length]
 
-          [func, Ps, r2, newRegression] = [null, null, null, null]
+          [func, Ps, r2, newRegression, tooltip] = [null, null, null, null, null]
           if regressionType is globals.REGRESSION.SYMBOLIC
-            [func, Ps, r2, newRegression] = globals.getRegression(
+            [func, Ps, r2, newRegression, tooltip] = globals.getRegression(
               points,
               regressionType,
               [xMin, xMax],
@@ -696,8 +704,7 @@ $ ->
             )
           else
             try
-              #console.log points, regressionType, [xMin, xMax], name, dashStyle, regressionId
-              [func, Ps, r2, newRegression] = globals.getRegression(
+              [func, Ps, r2, newRegression, tooltip] = globals.getRegression(
                 points,
                 regressionType,
                 [xMin, xMax],
@@ -705,10 +712,7 @@ $ ->
                 dashStyle,
                 regressionId
               )
-              console.log 'the stuff,', func, Ps, r2, newRegression 
               Ps = Ps.map((y) -> if Math.abs(Math.round(y) - y) < 1e-4 then Math.round(y) else y)
-              console.log Ps
-              console.log 'end of try block'
             catch error
               console.trace()
               console.log error
@@ -719,13 +723,25 @@ $ ->
               return
 
           # Add the series
-          #console.log newRegression
-          #console.log newRegression.data
-          #newRegression.data = newRegression.data.map((t) -> t.y = 100) 
           @chart.addSeries(newRegression)
-          #console.log 'hi'
-          # Prepare to save regression fields
 
+          # Set func variable to a string that can be used to recreate the desired function
+          if typeof(func) is 'function'
+            func = switch regressionType
+              when globals.REGRESSION.LINEAR
+                'return P[0] + (P[1] * x)'
+              when globals.REGRESSION.QUADRATIC
+                'return P[0] + (P[1] * x) + (P[2] * x * x)'
+              when globals.REGRESSION.CUBIC
+                'return P[0] + (x * P[1]) + (x * x * P[2]) + (x * x * x * P[3])'
+              when globals.REGRESSION.EXPONENTIAL
+                'return P[0] + Math.exp(P[1] * x + P[2])'
+              when globals.REGRESSION.LOGARITHMIC
+                'return P[0] + Math.log(P[1] * x + P[2])'
+          else
+            func = binaryTree.codify(func.tree)
+
+          # Prepare to save regression fields
           savedRegression =
             type: regressionType
             xAxis: @configs.xAxis
@@ -737,6 +753,7 @@ $ ->
             r2: r2
             name: name
             dashStyle: dashStyle
+            tooltip: tooltip
       
           # Save a regression
           @configs.savedRegressions.push(savedRegression)

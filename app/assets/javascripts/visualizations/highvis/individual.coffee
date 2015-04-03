@@ -282,7 +282,7 @@ $ ->
             else 1
         #console.log @
         fitness = Math.pow(eval("this.#{func}(points)"), -1) - 1
-        console.log fitness
+        #console.log fitness
         #test = new individual(@tree)
         #console.log "test tree is: ", @tree
         #console.log @tree

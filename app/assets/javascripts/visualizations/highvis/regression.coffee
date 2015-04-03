@@ -121,17 +121,17 @@ $ ->
     ###
     Returns a series object to draw on the chart canvas.
     ###
-    generateHighchartsSeries = (func, Ps, R2, type, xBounds, seriesName, dashStyle, id, normalized = true) ->
-      console.log xBounds[0], xBounds[1]
+    generateHighchartsSeries = (func, Ps, R2, type, xBounds, seriesName, dashStyle, id, tooltip = null, normalized = true) ->
+      #console.log xBounds[0], xBounds[1]
       #console.log 'start generateHighchartsSeries'
       data = for i in [0...globals.REGRESSION.NUM_POINTS]
         xv = (i / globals.REGRESSION.NUM_POINTS)
         yv = null
         if not normalized
-          if typeof(func) is 'function'
+          if func.length is 2
             yv = func(xv * (xBounds[1] - xBounds[0]) + xBounds[0], Ps)
           else
-            yv = func.evaluate(xv * (xBounds[1] - xBounds[0]) + xBounds[0])
+            yv = func(xv * (xBounds[1] - xBounds[0]) + xBounds[0])
         else if type is globals.REGRESSION.LOGARITHMIC
           yv = func(xv * (xBounds[1] - xBounds[0]) + xBounds[0], Ps)
         else if type isnt globals.REGRESSION.SYMBOLIC
@@ -141,7 +141,7 @@ $ ->
         {x: xv * (xBounds[1] - xBounds[0]) + xBounds[0], y: yv}
       if normalized and Ps isnt null
         Ps = visSpaceParameters(Ps, xBounds, type)
-      str = makeToolTip(Ps, R2, type, seriesName, func)
+      str = if tooltip is null then makeToolTip(Ps, R2, type, seriesName, func) else tooltip
       retSeries =
         name:
           id: id
@@ -159,10 +159,10 @@ $ ->
         states:
           hover:
             lineWidth: 4
-      console.log retSeries
+      #console.log retSeries
       func = if func.length? and typeof(func) isnt 'function' then func[0] else func
-      console.log func, Ps, R2, retSeries
-      [func, Ps, R2, retSeries]
+      #console.log func, Ps, R2, retSeries
+      [func, Ps, R2, retSeries, str]
 
     ###
     # Uses the regression matrix to calculate the y value given an x value.
@@ -236,6 +236,7 @@ $ ->
           <strong>
             f(x) = 
           """
+          console.log func
           tooltip += binaryTree.stringify(func.tree)
           tooltip += """
           </strong>
@@ -434,8 +435,8 @@ $ ->
       ssTot = (Math.pow(y - yAvg, 2) for y in ys).reduce (pv, cv, index, array) -> (pv + cv)
       1 - (ssRes / ssTot)
 
-    globals.getRegressionSeries = (func, Ps, R2, type, xBounds, seriesName, dashStyle, id, normalized = false) ->
-      generateHighchartsSeries(func, Ps, R2, type, xBounds, seriesName, dashStyle, id, normalized)
+    globals.getRegressionSeries = (func, Ps, R2, type, xBounds, seriesName, dashStyle, id, tooltip = null, normalized = false) ->
+      generateHighchartsSeries(func, Ps, R2, type, xBounds, seriesName, dashStyle, id, tooltip, normalized)
 
 
 

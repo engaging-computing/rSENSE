@@ -69,6 +69,7 @@ class RefactorSavedRegressions < ActiveRecord::Migration
           name = regression['series']['name']['group']
           r2 = regression['series']['name']['regression']['tooltip'].split('</strong> ')[3]
           type = regression['type']
+          tooltip = regression['series']['name']['regression']['tooltip']
           wtf = regression['series']['name']['regression']['tooltip'].split('<br>')[1].delete('^0-9 \.\-').split('  ').reverse
           params = wtf.select({ |x| x != '' })
           params[params.length - 1] = sprintf("%.02f", params[params.length - 1])
@@ -104,6 +105,7 @@ class RefactorSavedRegressions < ActiveRecord::Migration
           regression['r2'] = r2
           regression['name'] = name
           regression['dashStyle'] = dashStyle
+          regression['tooltip'] = tooltip
         end
       end
       #puts globals.inspect

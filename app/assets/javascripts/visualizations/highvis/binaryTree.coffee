@@ -395,4 +395,4 @@ $ ->
         'return ' + getFunc(tree)
 
     #create lambda from codify
-    window.wat = new Function("x", binaryTree.codify(a))
+    #window.wat = new Function("x", binaryTree.codify(a))
