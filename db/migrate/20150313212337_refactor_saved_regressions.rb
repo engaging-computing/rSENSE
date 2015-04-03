@@ -13,7 +13,7 @@ class RefactorSavedRegressions < ActiveRecord::Migration
           xAxis = regression['fieldIndices'][0]
           yAxis = regression['fieldIndices'][1]
           groups = regression['fieldIndices'][2]
-          id = regression['series']['name']['id']
+          id = regression['series']['name']
           dashStyle = regression['series']['dashStyle']
           name = regression['series']['name']['group']
           r2 = regression['series']['name']['regression']['tooltip'].split('</strong> ')[3].to_f
@@ -65,7 +65,7 @@ class RefactorSavedRegressions < ActiveRecord::Migration
           xAxis = regression['fieldIndices'][0]
           yAxis = regression['fieldIndices'][1]
           groups = regression['fieldIndices'][2]
-          id = regression['series']['name']['id']
+          id = regression['series']['name']['']
           dashStyle = regression['series']['dashStyle']
           name = regression['series']['name']['group']
           r2 = regression['series']['name']['regression']['tooltip'].split('</strong> ')[3].to_f
@@ -113,8 +113,8 @@ class RefactorSavedRegressions < ActiveRecord::Migration
         globals['Timeline']['savedRegressions'] = timeline_regressions
       end
       #puts globals.inspect
-    v.globals = globals.to_json
-    v.save
+      v.globals = globals.to_json
+      v.save
     end
   end
 end
