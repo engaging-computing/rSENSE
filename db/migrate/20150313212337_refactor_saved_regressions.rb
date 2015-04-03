@@ -18,7 +18,7 @@ class RefactorSavedRegressions < ActiveRecord::Migration
           name = regression['series']['name']['group']
           r2 = regression['series']['name']['regression']['tooltip'].split('</strong> ')[3].to_f
           type = regression['type']
-          wtf = regression['series']['name']['regression']['tooltip'].split('<br>')[1].delete('^0-9 \.\-').split('  ').reverse
+          wtf = regression['series']['name']['regression']['tooltip'].split('<br>')[1].delete('^0-9 e\.\-').split('  ').reverse
           params = wtf.select { |x| x != '' }
           params[params.length - 1] = sprintf("%.02f", params[params.length - 1])
           params.map! { |x| x.to_f }
