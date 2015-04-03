@@ -21,6 +21,7 @@ class RefactorSavedRegressions < ActiveRecord::Migration
           wtf = regression['series']['name']['regression']['tooltip'].split('<br>')[1].delete('^0-9 e\.\-').split('  ').reverse
           params = wtf.select { |x| x != '' }
           params[params.length - 1] = sprintf("%.02f", params[params.length - 1])
+          puts params
           params.map! { |x| x.to_f }
           
           if regression['type'] == 4 or regression['type'] == 5
