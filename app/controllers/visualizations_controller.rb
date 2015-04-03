@@ -267,7 +267,7 @@ class VisualizationsController < ApplicationController
 
         # push unique contributors
         if dataset.key.nil?
-          arr.push "User: #{User.find(dataset.user_id).name}"
+          arr.push "User: #{User.select(:name).find(dataset.user_id).name}"
         else
           arr.push "Key: #{dataset.key}"
         end
