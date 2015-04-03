@@ -20,7 +20,7 @@ class RefactorSavedRegressions < ActiveRecord::Migration
           type = regression['type']
           wtf = regression['series']['name']['regression']['tooltip'].split('<br>')[1].delete('^0-9 \.\-eE').split('  ').reverse
           params = wtf.select { |x| x != '' }
-          params[params.length - 1] = params[params.length - 1][0...params[params.length -1].length - 1]
+          params[params.length() - 1] = params[params.length() - 1][0...params[params.length() - 1].length() - 1]
           puts params
           params.map! { |x| x.gsub('e', 'E') }
           
@@ -74,7 +74,7 @@ class RefactorSavedRegressions < ActiveRecord::Migration
           tooltip = regression['series']['name']['regression']['tooltip']
           wtf = regression['series']['name']['regression']['tooltip'].split('<br>')[1].delete('^0-9 \.\-eE').split('  ').reverse
           params = wtf.select { |x| x != '' }
-          params[params.length - 1] = params[params.length - 1][0...params[params.length -1].length - 1]
+          params[params.length() - 1] = params[params.length() - 1][0...params[params.length() - 1].length() - 1]
           puts params
           params.map! { |x| x.gsub('e', 'E') }
           
