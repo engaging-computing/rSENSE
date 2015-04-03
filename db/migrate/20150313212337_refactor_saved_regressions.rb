@@ -8,6 +8,7 @@ class RefactorSavedRegressions < ActiveRecord::Migration
       scatter_params = globals['Scatter']
       timeline_params = globals['Timeline']
       if scatter_params.has_key? 'savedRegressions'
+        scatter_regressions = []
         scatter_params['savedRegressions'].each do |regression|
           xAxis = regression['fieldIndices'][0]
           yAxis = regression['fieldIndices'][1]
@@ -41,21 +42,25 @@ class RefactorSavedRegressions < ActiveRecord::Migration
           when 4
             function = 'return P[0] + Math.log(P[1] * x + P[2])'
           end
-          regression.clear
-          regression['type'] = type
-          regression['xAxis'] = xAxis
-          regression['yAxis'] = yAxis
-          regression['groups'] = groups
-          regression['parameters'] = parameters
-          regression['func'] = function
-          regression['id'] = id
-          regression['r2'] = r2
-          regression['name'] = name
-          regression['dashStyle'] = dashStyle
+          #regression.clear
+          newRegression = {}
+          newRegression['type'] = type
+          newRegression['xAxis'] = xAxis
+          newRegression['yAxis'] = yAxis
+          newRegression['groups'] = groups
+          newRegression['parameters'] = parameters
+          newRegression['func'] = function
+          newRegression['id'] = id
+          newRegression['r2'] = r2
+          newRegression['name'] = name
+          newRegression['dashStyle'] = dashStyle
+          scatter_regressions.push newRegression
         end
+        globals['Scatter']['savedRegressions'] = scatter_regressions 
       end
 
       if timeline_params.has_key? 'savedRegressions'
+        timeline_regressions = []
         timeline_params['savedRegressions'].each do |regression|
           xAxis = regression['fieldIndices'][0]
           yAxis = regression['fieldIndices'][1]
@@ -90,21 +95,25 @@ class RefactorSavedRegressions < ActiveRecord::Migration
           when 4
             function = 'return P[0] + Math.log(P[1] * x + P[2])'
           end
-          regression.clear
-          regression['type'] = type
-          regression['xAxis'] = xAxis
-          regression['yAxis'] = yAxis
-          regression['groups'] = groups
-          regression['parameters'] = parameters
-          regression['func'] = function
-          regression['id'] = id
-          regression['r2'] = r2
-          regression['name'] = name
-          regression['dashStyle'] = dashStyle
-          regression['tooltip'] = tooltip
+          #regression.clear
+          newRegression = {}
+          newRegression['type'] = type
+          newRegression['xAxis'] = xAxis
+          newRegression['yAxis'] = yAxis
+          newRegression['groups'] = groups
+          newRegression['parameters'] = parameters
+          newRegression['func'] = function
+          newRegression['id'] = id
+          newRegression['r2'] = r2
+          newRegression['name'] = name
+          newRegression['dashStyle'] = dashStyle
+          newRegression['tooltip'] = tooltip
+          timeline_regressions.push newRegression
         end
+        globals['Timeline']['savedRegressions'] = timeline_regressions
       end
       #puts globals.inspect
+    v.globals = globals.to_json
     end
   end
 end
