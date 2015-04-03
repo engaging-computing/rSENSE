@@ -12,16 +12,13 @@ class RefactorSavedRegressions < ActiveRecord::Migration
           xAxis = regression['fieldIndices'][0]
           yAxis = regression['fieldIndices'][1]
           groups = regression['fieldIndices'][2]
-          uglyParseString = regression['name']['regression']['tooltip']
           id = regression['series']['name']
           dashStyle = regression['series']['dashStyle']
           name = regression['series']['name']['group']
-          r2 = regression['series']['name']['regression']['tooltip'].split('</strong> ')[3]
+          r2 = regression['series']['name']['regression']['tooltip'].split('</strong> ')[3].to_f
           type = regression['type']
-          #id = "regression_#{regression['xAxis']}_#{regression['yAxis']}_#{regression['type']}" + regression['groups'].to_s.gsub(',', '_').gsub('[', '_').gsub(']', '')
-          #lololol
           wtf = regression['series']['name']['regression']['tooltip'].split('<br>')[1].delete('^0-9 \.\-').split('  ').reverse
-          params = wtf.select({ |x| x != '' })
+          params = wtf.select { |x| x != '' }
           params[params.length - 1] = sprintf("%.02f", params[params.length - 1])
           params.map! { |x| x.to_f }
           
@@ -63,15 +60,14 @@ class RefactorSavedRegressions < ActiveRecord::Migration
           xAxis = regression['fieldIndices'][0]
           yAxis = regression['fieldIndices'][1]
           groups = regression['fieldIndices'][2]
-          uglyParseString = regression['name']['regression']['tooltip']
           id = regression['series']['name']
           dashStyle = regression['series']['dashStyle']
           name = regression['series']['name']['group']
-          r2 = regression['series']['name']['regression']['tooltip'].split('</strong> ')[3]
+          r2 = regression['series']['name']['regression']['tooltip'].split('</strong> ')[3].to_f
           type = regression['type']
           tooltip = regression['series']['name']['regression']['tooltip']
           wtf = regression['series']['name']['regression']['tooltip'].split('<br>')[1].delete('^0-9 \.\-').split('  ').reverse
-          params = wtf.select({ |x| x != '' })
+          params = wtf.select { |x| x != '' }
           params[params.length - 1] = sprintf("%.02f", params[params.length - 1])
           params.map! { |x| x.to_f }
           
