@@ -75,58 +75,76 @@ $ ->
       (x, P) -> x / (P[1] * x + P[2]),
       (x, P) -> 1 / (P[1] * x + P[2])]
 
+    globals.REGRESSION.SYMBOLIC = globals.REGRESSION.FUNCS.length
+
     globals.REGRESSION.NUM_POINTS = 200
 
     ###
     Calculates a regression and returns it as a highcharts series.
     ###
-    globals.getRegression = (xs, ys, type, xBounds, seriesName, dashStyle) ->
+    globals.getRegression = (points, type, xBounds, seriesName, dashStyle, id) ->
       Ps = []
-      func = globals.REGRESSION.FUNCS[type]
+      if type isnt globals.REGRESSION.SYMBOLIC
+        func = globals.REGRESSION.FUNCS[type]
+        [xs, ys] = [(point.x for point in points), (point.y for point in points)]
+        #console.log xs, ys
+        # Make an initial Estimate
+        switch type
 
-      # Make an initial Estimate
-      switch type
+          when globals.REGRESSION.LINEAR
+            Ps = [1,1]
 
-        when globals.REGRESSION.LINEAR
-          Ps = [1,1]
+          when globals.REGRESSION.QUADRATIC
+            Ps = [1,1,1]
 
-        when globals.REGRESSION.QUADRATIC
-          Ps = [1,1,1]
+          when globals.REGRESSION.CUBIC
+            Ps = [1,1,1,1]
 
-        when globals.REGRESSION.CUBIC
-          Ps = [1,1,1,1]
+          when globals.REGRESSION.EXPONENTIAL
+            Ps = [1,1,1]
 
-        when globals.REGRESSION.EXPONENTIAL
-          Ps = [1,1,1]
-
-        when globals.REGRESSION.LOGARITHMIC
-          # We want to avoid starting with a guess that takes the log of a negative number
-          Ps = [1,1,Math.min.apply(null, xs) + 1]
+          when globals.REGRESSION.LOGARITHMIC
+            # We want to avoid starting with a guess that takes the log of a negative number
+            Ps = [1,1,Math.min.apply(null, xs) + 1]
       
-      # Get the new Ps
-      [Ps, R2] = NLLS(func, normalizeData(xs, type), ys, Ps)
-      
-      # Create the highcharts series
-      generateHighchartsSeries(Ps, R2, type, xBounds, seriesName, dashStyle)
+        # Get the new Ps
+        [Ps, R2] = NLLS(func, normalizeData(xs, type), ys, Ps)
+        #console.log 'NLLS DONE'
+        # Create the highcharts series
+        #console.log func[0]
+        generateHighchartsSeries(func[0], Ps, R2, type, xBounds, seriesName, dashStyle, id)
+      else
+        func = optimizedSymbolicRegression(points)
+        R2 = calculateR2(func, points)
+        generateHighchartsSeries(func, null, R2, type, xBounds, seriesName, dashStyle, id)
 
     ###
     Returns a series object to draw on the chart canvas.
     ###
-    generateHighchartsSeries = (Ps, R2, type, xBounds, seriesName, dashStyle) ->
-      data = for i in [0..globals.REGRESSION.NUM_POINTS]
+    generateHighchartsSeries = (func, Ps, R2, type, xBounds, seriesName, dashStyle, id, tooltip = null, normalized = true) ->
+      #console.log xBounds[0], xBounds[1]
+      #console.log 'start generateHighchartsSeries'
+      data = for i in [0...globals.REGRESSION.NUM_POINTS]
         xv = (i / globals.REGRESSION.NUM_POINTS)
-        yv = 0
-        if type == globals.REGRESSION.LOGARITHMIC
-          yv = calculateRegressionPoint(Ps, xv * (xBounds.dataMax - xBounds.dataMin) + xBounds.dataMin, type)
-        else
-          yv = calculateRegressionPoint(Ps, xv + 1, type)
-        {x: xv * (xBounds.dataMax - xBounds.dataMin) + xBounds.dataMin, y: yv}
-      Ps = visSpaceParameters(Ps, xBounds, type)
-      str = makeToolTip(Ps, R2, type, seriesName)
-
-      ret =
+        yv = null
+        if not normalized
+          if func.length is 2
+            yv = func(xv * (xBounds[1] - xBounds[0]) + xBounds[0], Ps)
+          else
+            yv = func(xv * (xBounds[1] - xBounds[0]) + xBounds[0])
+        else if type is globals.REGRESSION.LOGARITHMIC
+          yv = func(xv * (xBounds[1] - xBounds[0]) + xBounds[0], Ps)
+        else if type isnt globals.REGRESSION.SYMBOLIC
+          yv = func(xv + 1, Ps)
+        else 
+          func.evaluate(xv * (xBounds[1] - xBounds[0]) + xBounds[0])
+        {x: xv * (xBounds[1] - xBounds[0]) + xBounds[0], y: yv}
+      if normalized and Ps isnt null
+        Ps = visSpaceParameters(Ps, xBounds, type)
+      str = if tooltip is null then makeToolTip(Ps, R2, type, seriesName, func) else tooltip
+      retSeries =
         name:
-          id: ''
+          id: id
           group: seriesName
           regression:
             tooltip: str
@@ -141,6 +159,10 @@ $ ->
         states:
           hover:
             lineWidth: 4
+      #console.log retSeries
+      func = if func.length? and typeof(func) isnt 'function' then func[0] else func
+      #console.log func, Ps, R2, retSeries
+      [func, Ps, R2, retSeries, str]
 
     ###
     # Uses the regression matrix to calculate the y value given an x value.
@@ -153,19 +175,15 @@ $ ->
     # that are equal to zero.
     ###
     roundOffError = (p) ->
-      if Math.abs(p) < Math.sqrt numeric.epsilon
-        0
-      else
-        p
+      if Math.abs(p) < Math.sqrt numeric.epsilon then 0 else p
 
     ###
     Returns tooltip description of the regression.
     ###
-    makeToolTip = (Ps, R2, type, seriesName) ->
+    makeToolTip = (Ps, R2, type, seriesName, func) ->
 
       # Format parameters for output
-      
-      Ps = Ps.map(roundToFourSigFigs).map(roundOffError)
+      Ps = if Ps isnt null then Ps.map(roundToFourSigFigs).map(roundOffError)
 
       ret = switch type
 
@@ -211,6 +229,18 @@ $ ->
           </strong>
           """
 
+        else 
+          tooltip = """
+          <div class="regressionTooltip"> #{seriesName} </div>
+          <br>
+          <strong>
+            f(x) = 
+          """
+          console.log func
+          tooltip += binaryTree.stringify(func.tree)
+          tooltip += """
+          </strong>
+          """
       ret += """
       <br>
       <strong> R <sup>2</sup> = </strong> #{roundToFourSigFigs R2}
@@ -220,7 +250,7 @@ $ ->
     Round the current float value to 4 significant figures.
     I keep this in a separate function because we weren't sure this was the best implemenation.
     ###
-    roundToFourSigFigs = (float) ->
+    window.roundToFourSigFigs = (float) ->
       return float.toPrecision(4)
 
     ###
@@ -323,7 +353,7 @@ $ ->
       max = Math.max.apply(null, points)
       min = Math.min.apply(null, points)
       ret =
-        if type == globals.REGRESSION.LOGARITHMIC
+        if type in [globals.REGRESSION.LOGARITHMIC, globals.REGRESSION.EXPONENTIAL]
           points
         else
           points.map((y) -> ((y - min) / (max - min)) + 1)
@@ -334,10 +364,10 @@ $ ->
     ###
     visSpaceParameters = (Ps, xBounds, type) ->
       [coeffMatrix, solutionVector, newPs] = [[], [], []]
-      [max, min] = [xBounds.dataMax, xBounds.dataMin]
+      [max, min] = [xBounds[1], xBounds[0]]
       projection = 2 * (max - min) + min
       
-      if type == globals.REGRESSION.LOGARITHMIC
+      if type in [globals.REGRESSION.LOGARITHMIC, globals.REGRESSION.EXPONENTIAL]
         return Ps
       
       switch type
@@ -382,8 +412,8 @@ $ ->
 
         when globals.REGRESSION.EXPONENTIAL
           coeffMatrix = [
-            [min, 1],
-            [max, 1]
+            [Math.exp(min), 1],
+            [Math.exp(max), 1]
           ]
           solutionVector = [
             Math.log(globals.REGRESSION.FUNCS[globals.REGRESSION.EXPONENTIAL][0](1, Ps) - Ps[0]),
@@ -395,3 +425,23 @@ $ ->
           newPs.push globals.REGRESSION.FUNCS[globals.REGRESSION.EXPONENTIAL][0](1, Ps) - \
             (Math.exp((newPs[0] * min) + newPs[1]))
       newPs
+
+    calculateR2 = (solution, points) ->
+      # Get R2 value
+      [xs, ys] = [(point.x for point in points), (point.y for point in points)]
+      yAvg = ys.reduce((pv, cv, index, array) -> pv + cv) / ys.length
+      ssRes = (Math.pow(y - solution.evaluate(xs[i]), 2) for y, i in ys)\
+      .reduce((pv, cv, index, array) -> (pv + cv))
+      ssTot = (Math.pow(y - yAvg, 2) for y in ys).reduce (pv, cv, index, array) -> (pv + cv)
+      1 - (ssRes / ssTot)
+
+    globals.getRegressionSeries = (func, Ps, R2, type, xBounds, seriesName, dashStyle, id, tooltip = null, normalized = false) ->
+      generateHighchartsSeries(func, Ps, R2, type, xBounds, seriesName, dashStyle, id, tooltip, normalized)
+
+
+
+
+
+
+
+
