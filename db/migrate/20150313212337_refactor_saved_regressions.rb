@@ -13,7 +13,7 @@ class RefactorSavedRegressions < ActiveRecord::Migration
           xAxis = regression['fieldIndices'][0]
           yAxis = regression['fieldIndices'][1]
           groups = regression['fieldIndices'][2]
-          id = regression['series']['name']
+          id = regression['series']['name']['id']
           dashStyle = regression['series']['dashStyle']
           name = regression['series']['name']['group']
           r2 = regression['series']['name']['regression']['tooltip'].split('</strong> ')[3].to_f
