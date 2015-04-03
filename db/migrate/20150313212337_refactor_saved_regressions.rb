@@ -34,15 +34,15 @@ class RefactorSavedRegressions < ActiveRecord::Migration
           function = nil
           case regression['type']
           when 0
-            function = '(x, P) -> P[0] + (P[1] * x)'
+            function = 'return P[0] + (P[1] * x)'
           when 1
-            function = '(x, P) -> P[0] + (P[1] * x) + (P[2] * x * x)'
+            function = 'return P[0] + (P[1] * x) + (P[2] * x * x)'
           when 2
-            function = '(x, P) -> P[0] + (x * P[1]) + (x * x * P[2]) + (x * x * x * P[3])'
+            function = 'return P[0] + (x * P[1]) + (x * x * P[2]) + (x * x * x * P[3])'
           when 3
-            function = '(x, P) -> P[0] + Math.exp(P[1] * x + P[2])'
+            function = 'return P[0] + Math.exp(P[1] * x + P[2])'
           when 4
-            function = '(x, P) -> P[0] + Math.log(P[1] * x + P[2])'
+            function = 'return P[0] + Math.log(P[1] * x + P[2])'
           end
           regression.clear
           regreesion['type'] = type
@@ -83,15 +83,15 @@ class RefactorSavedRegressions < ActiveRecord::Migration
           function = nil
           case regression['type']
           when 0
-            function = '(x, P) -> P[0] + (P[1] * x)'
+            function = 'return P[0] + (P[1] * x)'
           when 1
-            function = '(x, P) -> P[0] + (P[1] * x) + (P[2] * x * x)'
+            function = 'return P[0] + (P[1] * x) + (P[2] * x * x)'
           when 2
-            function = '(x, P) -> P[0] + (x * P[1]) + (x * x * P[2]) + (x * x * x * P[3])'
+            function = 'return P[0] + (x * P[1]) + (x * x * P[2]) + (x * x * x * P[3])'
           when 3
-            function = '(x, P) -> P[0] + Math.exp(P[1] * x + P[2])'
+            function = 'return P[0] + Math.exp(P[1] * x + P[2])'
           when 4
-            function = '(x, P) -> P[0] + Math.log(P[1] * x + P[2])'
+            function = 'return P[0] + Math.log(P[1] * x + P[2])'
           end
           regression.clear
           regreesion['type'] = type
