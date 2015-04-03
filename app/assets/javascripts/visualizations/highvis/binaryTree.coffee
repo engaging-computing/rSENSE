@@ -340,3 +340,59 @@ $ ->
           else
             #console.log tree.data
             "#{window.roundToFourSigFigs(tree.data)}"
+    
+      # Given a tree, construct a string of valid coffeescript code that can be 'evaled' to 
+      # mimic the symbolic regression.
+      @codify: (tree) ->
+      # Helper method to properly parenthesize nested terms
+        parenthesize = (string) -> 
+          if not isNaN(Number(string)) or string is 'x' then string else "(#{string})"
+        
+        getFunc = (tree) ->
+          switch tree.data
+            when window.add
+              "window.add(#{parenthesize(getFunc(tree.left))}, #{parenthesize(getFunc(tree.right))})"
+              #"#{parenthesize(@stringify(tree.left))} + #{parenthesize(@stringify(tree.right))}"
+
+            when window.subtract
+              "window.subtract(#{parenthesize(getFunc(tree.left))}, #{parenthesize(getFunc(tree.right))})"
+              #"#{parenthesize(@stringify(tree.left))} - #{parenthesize(@stringify(tree.right))}"
+
+            when window.multiply
+              "window.multiply(#{parenthesize(getFunc(tree.left))}, #{parenthesize(getFunc(tree.right))})"
+              # "#{parenthesize(@stringify(tree.left))} * #{parenthesize(@stringify(tree.right))}"
+
+            when window.safeDiv
+              "window.safeDiv(#{parenthesize(getFunc(tree.left))}, #{parenthesize(getFunc(tree.right))})"
+              # "#{parenthesize(@stringify(tree.left))} / #{parenthesize(@stringify(tree.right))}"
+
+            when window.pow
+              "window.pow(#{parenthesize(getFunc(tree.left))}, #{parenthesize(getFunc(tree.right))})"
+              # "#{parenthesize(@stringify(tree.left))} <sup>#{parenthesize(@stringify(tree.right))}</sup>"
+
+            when window.exp
+              "window.exp(#{parenthesize(getFunc(tree.left))})"
+              # "e <sup>#{parenthesize(@stringify(tree.left))}</sup>"
+            when window.cos
+              "window.cos(#{parenthesize(getFunc(tree.left))})"
+              # "cos(#{parenthesize(@stringify(tree.left))})"
+            when window.sin
+              "window.sin(#{parenthesize(getFunc(tree.left))})"
+              # "sin(#{parenthesize(@stringify(tree.left))})"
+            when window.safeLog
+              "window.safeLog(#{parenthesize(getFunc(tree.left))})"
+              # "log(|#{parenthesize(@stringify(tree.left))}|)"
+            when window.safeSqrt
+              "window.safeSqrt(#{parenthesize(getFunc(tree.left))})"
+              # "sqrt(|#{parenthesize(@stringify(tree.left))}|)"
+            when 'x'
+              'x'
+            when 'ec'
+              "#{binaryTree.ephemeralConstant}"
+            else
+              #console.log tree.data
+              "#{tree.data}"
+        'return ' + getFunc(tree)
+
+    #create lambda from codify
+    window.wat = new Function("x", binaryTree.codify(a))
