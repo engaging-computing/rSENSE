@@ -7,7 +7,7 @@ class RefactorSavedRegressions < ActiveRecord::Migration
       globals = JSON.parse(v.globals)
       scatter_params = globals['Scatter']
       timeline_params = globals['Timeline']
-      if scatter_params.has_key? 'savedRegressions'
+      if (not scatter_params.nil?) and scatter_params.has_key? 'savedRegressions'
         scatter_regressions = []
         scatter_params['savedRegressions'].each do |regression|
           xAxis = regression['fieldIndices'][0]
@@ -21,9 +21,8 @@ class RefactorSavedRegressions < ActiveRecord::Migration
           wtf = regression['series']['name']['regression']['tooltip'].split('<br>')[1].delete('^0-9 \.\-eE').split('  ').reverse
           params = wtf.select { |x| x != '' }
           params[params.length() - 1] = params[params.length() - 1][0...params[params.length() - 1].length() - 1]
-          puts params
           params.map! { |x| x.gsub('e', 'E') }
-          
+          puts params
           if regression['type'] == 4 or regression['type'] == 5
             copy = params.clone
             params[1] = copy[2]
@@ -60,7 +59,7 @@ class RefactorSavedRegressions < ActiveRecord::Migration
         globals['Scatter']['savedRegressions'] = scatter_regressions 
       end
 
-      if timeline_params.has_key? 'savedRegressions'
+      if (not timeline_params.nil?) and timeline_params.has_key? 'savedRegressions'
         timeline_regressions = []
         timeline_params['savedRegressions'].each do |regression|
           xAxis = regression['fieldIndices'][0]
