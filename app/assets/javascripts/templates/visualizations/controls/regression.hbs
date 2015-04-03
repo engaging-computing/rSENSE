@@ -1,0 +1,248 @@
+        controls = """
+          <div id="regressionControl" class="vis_controls">
+          <h3 class='clean_shrink'><a href='#'>Analysis Tools:</a></h3>
+          <div class='outer_control_div' style='text-align:center'>
+
+          <table><tr>
+          <td>X Axis: </td>
+          <td id='regressionXAxis'>#{data.fields[@configs.xAxis].fieldName}</td></tr>
+
+          <tr><td>Y Axis: </td>
+          <td><select id='regressionYAxisSelector' class='form-control'>
+          """
+
+        for fieldIndex in globals.configs.fieldSelection
+          controls += "<option value='#{fieldIndex}'>#{data.fields[fieldIndex].fieldName}</option>"
+
+        controls +=
+          """
+          </select></td></tr>
+          <tr><td>Type: </td>
+          <td><select id="regressionSelector" class="form-control">
+          """
+
+        regressions = ['Linear', 'Quadratic', 'Cubic', 'Exponential', 'Logarithmic']
+        for regressionType in regressions
+          controls += "<option value='#{regressions.indexOf(regressionType)}'>#{regressionType}</option>"
+
+        controls +=
+          """
+          </select></td></tr>
+          </table>
+          <button id='regressionButton' class='save_button btn btn-default'>Draw Best Fit Line</button>
+          <table id='regression-table'>
+          <col width='55%' />
+          <col width='35%' />
+          <col width='10%' />
+          <tr id='regression-table-header'><td><strong>f(x)<strong></td><td><strong>Type<strong></td></tr>
+          <tbody id='regression-table-body'></tbody></table>
+          </div></div>
+          """
+
+        # Write HTML
+        $('#vis-ctrls').append controls
+
+        # Add all the saved regressions correctly
+        for regression in @configs.savedRegressions
+          # Filter out the ones that should be enabled.
+          # - X indices must match.
+          # - Compare the arrays without comparing them.
+          # - Y axis must be present.
+          if regression.fieldIndices[0] == @configs.xAxis \
+          && "#{regression.fieldIndices[2]}" == "#{data.groupSelection}" \
+          && globals.configs.fieldSelection.indexOf(regression.fieldIndices[1]) != -1
+            @chart.addSeries(regression.series)
+            @addRegressionToTable(regression, true)
+          else
+            @addRegressionToTable(regression, false)
+
+        # Catches change in y axis
+        $('.y_axis_input').click (e) =>
+          @updateYRegression()
+
+        # Catches change in x axis
+        $('.xAxis_input').change (e) =>
+          @updateXRegression()
+
+        $("#regressionButton").click =>
+
+          # Make the title for the tooltip
+          xAxisName = data.fields[@configs.xAxis].fieldName
+          yAxisName = $('#regressionYAxisSelector option:selected').text()
+          name = "<strong>#{yAxisName}</strong> as a "
+          name += "#{$('#regressionSelector option:selected').text().toLowerCase()} "
+          name += "function of <strong>#{xAxisName}</strong>"
+
+          # Get the current selected y index, the regression type, and the current group indices
+          yAxisIndex = Number($('#regressionYAxisSelector').val())
+          regressionType = Number($('#regressionSelector').val())
+
+          #list of (x,y) points to be used in calculating regression
+          xyData = data.multiGroupXYSelector(@configs.xAxis, yAxisIndex, data.groupSelection)
+
+          # Separate the x and y data
+          xData =
+            point.x for point in xyData
+          yData =
+            point.y for point in xyData
+
+          # Get dash index
+          dashIndex = data.normalFields.indexOf(yAxisIndex)
+          dashStyle = globals.dashes[dashIndex % globals.dashes.length]
+
+          regressionMade = true
+          try
+            # Get the new regression
+            newRegression = globals.getRegression(
+              xData,
+              yData,
+              regressionType,
+              @configs.xBounds,
+              name,
+              dashStyle
+            )
+          catch error
+            regressionMade = false
+            if regressionType is 3
+              alert "Unable to calculate an #{regressions[regressionType]} regression for this data."
+            else
+              alert "Unable to calculate a #{regressions[regressionType]} regression for this data."
+            return
+
+          if regressionMade
+            # Get a unique identifier (last highest count plus one)
+            regressionIdentifier = ''
+            count = 0
+            for regression in @configs.savedRegressions
+              if regression.type == regressionType \
+              and regression.fieldIndices[1] == yAxisIndex \
+              and count <= regression.typeCount
+                count = regression.typeCount + 1
+
+          if count
+            regressionIdentifier = '(' + (count + 1) + ')'
+
+          # Add the series
+          newRegression.name.id = 'regression_' + yAxisIndex + '_' + regressionType + '_' + count
+          @chart.addSeries(newRegression)
+
+          # Prepare to save regression fields
+          savedRegression =
+            type:
+              regressionType
+            typeCount:
+              count
+            fieldIndices:
+              [@configs.xAxis, yAxisIndex, data.groupSelection]
+            fieldNames:
+              [xAxisName, yAxisName]
+            series:
+              newRegression
+            regressionId:
+              regressionIdentifier
+            bounds:
+              [@configs.xBounds, @configs.yBounds]
+
+          # Save a regression
+          @configs.savedRegressions.push(savedRegression)
+
+          # Actually add the regression to the table
+          @addRegressionToTable(savedRegression, true)
+
+        # Set up accordion
+        globals.configs.regressionOpen ?= 0
+
+        $('#regressionControl > h3').click ->
+          globals.configs.regressionOpen = (globals.configs.regressionOpen + 1) % 2
+
+      # Adds a regression row to our table, with styling for enabled or disabled
+      addRegressionToTable: (savedReg, enabled) ->
+
+        # Remove object from an array
+        Array::filterOutValue = (v) -> x for x in @ when x != v
+
+        # Here have a list of regressions
+        regressions = ['Linear', 'Quad', 'Cubic', 'Exp', 'Log']
+
+        # Add the entry used the passed regression
+        regressionRow =
+          """
+          <tr id = 'row_#{savedReg.series.name.id}' class='regression_row'>
+          <td class='regression_rowdata truncate'>#{savedReg.fieldNames[1]}(#{savedReg.fieldNames[0]})</td>
+          <td class='regression_rowdata'>#{regressions[savedReg.type]}#{savedReg.regressionId}</td>
+          <td id='#{savedReg.series.name.id}' class='regression_remove'><i class='fa fa-times-circle'></i></td>
+          </tr>
+          """
+
+        # Added a info relating to this regression
+        $('#regression-table-body').append(regressionRow)
+
+        # Add the disabled style if necessary
+        if !enabled
+          $('tr#row_' + savedReg.series.name.id).addClass('regression_row_disabled')
+
+        # Display the table header
+        $('tr#regression-table-header').show()
+
+        # Make each row a link to its view
+        $('tr#row_' + savedReg.series.name.id).click =>
+          # Reset the state of when you saved
+          @configs.xAxis = savedReg.fieldIndices[0]
+          globals.configs.fieldSelection = [savedReg.fieldIndices[1]]
+          data.groupSelection = savedReg.fieldIndices[2]
+
+          @configs.xBounds = savedReg.bounds[0]
+          @configs.yBounds = savedReg.bounds[1]
+
+          $('.xAxis_input').each (i, input) ->
+            if Number(input.value) == savedReg.fieldIndices[0]
+              input.checked = true
+
+          @start()
+
+        # Add a make the delete button remove the regression object
+        $('td#' + savedReg.series.name.id).click =>
+
+          # Remove regression view from the screen.
+          $('td#' + savedReg.series.name.id).parent().remove()
+
+          # Display the table header if necessary
+          if $('#regression-table-body > tr').length > 0
+            $('tr#regression-table-header').show()
+          else $('tr#regression-table-header').hide()
+
+          # Remove regression from the savedRegressions array.
+          id = savedReg.series.name.id
+          for regression in @configs.savedRegressions
+            if (regression.series.name.id == id)
+              @configs.savedRegressions =
+                @configs.savedRegressions.filterOutValue(regression)
+              break
+
+          # Remove regression from the chart
+          for series, i in @chart.series
+            if (series.name.id == id)
+              @chart.series[i].remove()
+              break
+
+        # Make the hovering highlight the correct regression
+        $('tr#row_' + savedReg.series.name.id).mouseover =>
+
+          # Remove regression from the chart
+          id = savedReg.series.name.id
+          for series, i in @chart.series
+            if (series.name.id == id)
+              @chart.series[i].setState('hover')
+              @chart.tooltip.refresh(@chart.series[i].points[@chart.series[i].points.length - 1])
+              break
+
+        # When the mouse leaves, don't highlight anymore
+        $('tr#row_' + savedReg.series.name.id).mouseout =>
+
+          # Remove regression from the chart
+          id = savedReg.series.name.id
+          for series, i in @chart.series
+            if (series.name.id == id)
+              @chart.series[i].setState()
+              @chart.tooltip.hide()
+              break

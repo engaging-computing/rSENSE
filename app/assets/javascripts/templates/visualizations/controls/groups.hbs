@@ -1,0 +1,28 @@
+<div class="vis-ctrl-sublock">
+  <label for="group-by">Group by:</label>
+  <select id="group-by" class="form-control">
+    {{#each groupByFields}}
+      <option value="{{value}}" data-log-id="{{logId}}">{{name}}</option>
+    {{/each}}
+  </select>
+</div>
+{{#if groups}}
+  <h4 class="vis-ctrl-subtitle">Group Selection</h4>
+  <div class="vis-ctrl-subblock">
+    {{> visualizations/controls/_checkbox checkall}}
+    <table>
+      {{#each groups}}
+        <tr>
+          <td>{{> visualizations/controls/_checkbox this}}</td>
+          <td>
+            <a href="#" class="color-picker"
+               data-color="{{picker.color}}" data-color-id="{{value}}">
+              <img class="cpickr-icon" height="16px" width="16px"
+                   src="{{picker.icon}}">
+            </a>
+          </td>
+        </tr>
+      {{/each}}
+    </table>
+  </div>
+{{/if}}
