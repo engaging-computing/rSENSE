@@ -803,6 +803,7 @@ $ ->
         regressions = ['Linear', 'Quad', 'Cubic', 'Exp', 'Log', 'Auto']
 
         # Add the entry used the passed regression
+        console.log savedReg
         regressionRow =
           """
           <tr id ='row_#{savedReg.id}' class='regression_row'>
