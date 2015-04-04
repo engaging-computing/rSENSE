@@ -30,6 +30,7 @@ class RefactorSavedRegressions < ActiveRecord::Migration
             end
             parameters = params
             function = get_func(regression['type'])
+            puts "PARAMETERS: " parameters
             new_regression = {}
             new_regression['type'] = type
             new_regression['xAxis'] = x_axis
@@ -75,6 +76,7 @@ class RefactorSavedRegressions < ActiveRecord::Migration
             end
             parameters = params
             function = get_func(regression['type'])
+            puts "PARAMETERS: " parameters
             new_regression = {}
             new_regression['type'] = type
             new_regression['xAxis'] = x_axis
