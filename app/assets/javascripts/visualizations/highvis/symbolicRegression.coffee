@@ -49,11 +49,11 @@ $ ->
     ###
 
     # Fitness function to be used (scaled mean-squared error)
-    window.FITNESS = 'sseFitness'
+    window.FITNESS = 'scaledFitness'
     # Selection operator to be used (fitness-proportional)
-    window.SELECTION = 'susSelection'
+    window.SELECTION = 'fpSelection'
     # Reproduction operator to be used (fitness-proportional)
-    window.REPRODUCTION = 'tournamentReproduce'
+    window.REPRODUCTION = 'fpReproduce'
     # Crossover operator to be used (cut-and-splice method)
     window.CROSSOVER = 'crossover'
     # Mutation operator to be used (point mutation)
