@@ -87,7 +87,6 @@ $ ->
       if type isnt globals.REGRESSION.SYMBOLIC
         func = globals.REGRESSION.FUNCS[type]
         [xs, ys] = [(point.x for point in points), (point.y for point in points)]
-        #console.log xs, ys
         # Make an initial Estimate
         switch type
 
@@ -109,9 +108,6 @@ $ ->
       
         # Get the new Ps
         [Ps, R2] = NLLS(func, normalizeData(xs, type), ys, Ps)
-        #console.log 'NLLS DONE'
-        # Create the highcharts series
-        #console.log func[0]
         generateHighchartsSeries(func[0], Ps, R2, type, xBounds, seriesName, dashStyle, id)
       else
         func = optimizedSymbolicRegression(points)
@@ -122,8 +118,6 @@ $ ->
     Returns a series object to draw on the chart canvas.
     ###
     generateHighchartsSeries = (func, Ps, R2, type, xBounds, seriesName, dashStyle, id, tooltip = null, normalized = true) ->
-      #console.log xBounds[0], xBounds[1]
-      #console.log 'start generateHighchartsSeries'
       data = for i in [0...globals.REGRESSION.NUM_POINTS]
         xv = (i / globals.REGRESSION.NUM_POINTS)
         yv = null
@@ -142,6 +136,7 @@ $ ->
       if normalized and Ps isnt null
         Ps = visSpaceParameters(Ps, xBounds, type)
       str = if tooltip is null then makeToolTip(Ps, R2, type, seriesName, func) else tooltip
+
       retSeries =
         name:
           id: id
@@ -159,9 +154,8 @@ $ ->
         states:
           hover:
             lineWidth: 4
-      #console.log retSeries
+
       func = if func.length? and typeof(func) isnt 'function' then func[0] else func
-      #console.log func, Ps, R2, retSeries
       [func, Ps, R2, retSeries, str]
 
     ###
@@ -195,6 +189,7 @@ $ ->
             f(x) = #{Ps[1]}x + #{Ps[0]}
           </strong>
           """
+
         when globals.REGRESSION.QUADRATIC
           """
           <div class="regressionTooltip"> #{seriesName} </div>
@@ -203,6 +198,7 @@ $ ->
             f(x) = #{Ps[2]}x<sup>2</sup> + #{Ps[1]}x + #{Ps[0]}
           </strong>
           """
+
         when globals.REGRESSION.CUBIC
           """
           <div class="regressionTooltip"> #{seriesName} </div>
@@ -211,6 +207,7 @@ $ ->
             f(x) = #{Ps[3]}x<sup>3</sup> + #{Ps[2]}x<sup>2</sup> + #{Ps[1]}x + #{Ps[0]}
           </strong>
           """
+
         when globals.REGRESSION.EXPONENTIAL
           """
           <div class="regressionTooltip"> #{seriesName} </div>
@@ -236,8 +233,7 @@ $ ->
           <strong>
             f(x) = 
           """
-          console.log func
-          tooltip += binaryTree.stringify(func.tree)
+          tooltip += BinaryTree.stringify(func.tree)
           tooltip += """
           </strong>
           """
@@ -437,11 +433,3 @@ $ ->
 
     globals.getRegressionSeries = (func, Ps, R2, type, xBounds, seriesName, dashStyle, id, tooltip = null, normalized = false) ->
       generateHighchartsSeries(func, Ps, R2, type, xBounds, seriesName, dashStyle, id, tooltip, normalized)
-
-
-
-
-
-
-
-

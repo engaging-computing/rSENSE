@@ -2,8 +2,6 @@ class RefactorSavedRegressions < ActiveRecord::Migration
   def change
     say 'Refactoring saved regressions'
     Visualization.find_each do | v |
-      #puts v.inspect
-      #
       globals = JSON.parse(v.globals)
       scatter_params = globals['Scatter']
       timeline_params = globals['Timeline']
@@ -44,7 +42,6 @@ class RefactorSavedRegressions < ActiveRecord::Migration
             when 4
               function = 'return P[0] + Math.log(P[1] * x + P[2])'
             end
-            #regression.clear
             newRegression = {}
             newRegression['type'] = type
             newRegression['xAxis'] = xAxis
@@ -122,7 +119,6 @@ class RefactorSavedRegressions < ActiveRecord::Migration
         end
         globals['Timeline']['savedRegressions'] = timeline_regressions
       end
-      #puts globals.inspect
       v.globals = globals.to_json
       v.save
     end

@@ -47,15 +47,15 @@ $ ->
   if namespace.controller is "visualizations" and
   namespace.action in ["displayVis", "embedVis", "show"]
 
-    class window.individual extends Object
+    class window.Individual extends Object
       
       # Create a a binary tree to represent a random mathematical function
       constructor: (tree = null, maxDepth = 10) ->
         if tree is null
-          @tree = new binaryTree
+          @tree = new BinaryTree
           @tree.generate(Math.floor(Math.random() * (maxDepth - 1)) + 2)
         else
-          @tree = binaryTree.clone(tree)
+          @tree = BinaryTree.clone(tree)
         @depth = @tree.maxDepth()
         @maxDepth = maxDepth
 
@@ -67,41 +67,40 @@ $ ->
       @mutate: (individual) -> 
         length = individual.tree.treeSize()
         mutationSite = Math.floor(Math.random() * length)
-        mutant = binaryTree.clone(individual.tree)
-        mutation = new binaryTree
+        mutant = BinaryTree.clone(individual.tree)
+        mutation = new BinaryTree
         mutation.generate(Math.floor(Math.random() * (individual.maxDepth - 1)) + 2)
         mutant.insertTree(mutation, mutationSite)
-        ret = new window.individual(mutant, mutant.maxDepth())
+        ret = new window.Individual(mutant, mutant.maxDepth())
 
       # Crossover genetic operator (cut and splice approach)
       @crossover: (individual1, individual2) ->
-        #console.trace()
-        [childOne, childTwo] = binaryTree.crossover(individual1.tree, individual2.tree)
-        [new individual(childOne, childOne.maxDepth()), new individual(childTwo, childTwo.maxDepth())]
+        [childOne, childTwo] = BinaryTree.crossover(individual1.tree, individual2.tree)
+        [new Individual(childOne, childOne.maxDepth()), new Individual(childTwo, childTwo.maxDepth())]
 
       # Crossover genetic operator (single-point approach)
       @onePointCrossover: (individual1, individual2) ->
-        [treeOne, treeTwo] = [binaryTree.clone(individual1.tree), binaryTree.clone(individual2.tree)]
+        [treeOne, treeTwo] = [BinaryTree.clone(individual1.tree), BinaryTree.clone(individual2.tree)]
         mutationSite = Math.floor(Math.random() * Math.min(treeOne.treeSize(), treeTwo.treeSize()))
-        [childOne, childTwo] = [binaryTree.clone(treeOne), binaryTree.clone(treeTwo)]
+        [childOne, childTwo] = [BinaryTree.clone(treeOne), BinaryTree.clone(treeTwo)]
         childOne.insertTree(treeTwo.index(mutationSite), mutationSite)
         childTwo.insertTree(treeOne.index(mutationSite), mutationSite)
-        [new individual(childOne, childOne.maxDepth()), new individual(childTwo, childTwo.maxDepth())]
+        [new Individual(childOne, childOne.maxDepth()), new Individual(childTwo, childTwo.maxDepth())]
 
       # Crossover genetic operator (two-point approach)
       @twoPointCrossover: (individual1, individual2) ->
-        [tree1a, tree1b] = [binaryTree.clone(individual1.tree), binaryTree.clone(individual1.tree)]
-        [tree2a, tree2b] = [binaryTree.clone(individual2.tree), binaryTree.clone(individual2.tree)]
-        [tree1c, tree2c] = [binaryTree.clone(individual1.tree), binaryTree.clone(individual2.tree)]
+        [tree1a, tree1b] = [BinaryTree.clone(individual1.tree), BinaryTree.clone(individual1.tree)]
+        [tree2a, tree2b] = [BinaryTree.clone(individual2.tree), BinaryTree.clone(individual2.tree)]
+        [tree1c, tree2c] = [BinaryTree.clone(individual1.tree), BinaryTree.clone(individual2.tree)]
         mutationSite1 = Math.floor(Math.random() * Math.min(tree1a.treeSize(), tree2a.treeSize()))
         mutationSite2 = Math.floor(Math.random() * Math.min(tree1a.treeSize() - mutationSite1, tree2a.treeSize() - mutationSite1)) + mutationSite1
-        [childOne, childTwo] = [binaryTree.clone(tree1a), binaryTree.clone(tree2a)]
-        [childOneTail, childTwoTail] = [binaryTree.clone(tree1a.index(mutationSite2)), binaryTree.clone(tree2a.index(mutationSite2))]
+        [childOne, childTwo] = [BinaryTree.clone(tree1a), BinaryTree.clone(tree2a)]
+        [childOneTail, childTwoTail] = [BinaryTree.clone(tree1a.index(mutationSite2)), BinaryTree.clone(tree2a.index(mutationSite2))]
         childOne.insertTree(tree2a.index(mutationSite1), mutationSite1)
         childTwo.insertTree(tree1a.index(mutationSite1), mutationSite1)
         childOne.insertTree(childOneTail, Math.min(mutationSite2, childOne.treeSize()))
         childTwo.insertTree(childTwoTail, Math.min(mutationSite2, childTwo.treeSize()))
-        [new individual(childOne, childOne.maxDepth()), new individual(childTwo, childTwo.maxDepth())]
+        [new Individual(childOne, childOne.maxDepth()), new Individual(childTwo, childTwo.maxDepth())]
 
       # Fitness-proportional reproduction genetic operator
       @fpReproduce: (individuals, points, func, distribution = null) ->
@@ -120,7 +119,7 @@ $ ->
         for probability, i in distribution
           if rand < probability
             indiv = individuals[i]
-            return new individual(indiv.tree, indiv.maxDepth)
+            return new Individual(indiv.tree, indiv.maxDepth)
 
       # Fitness-proportional selection genetic operator
       @fpSelection: (individuals, points, func, distribution = null) ->
@@ -131,7 +130,7 @@ $ ->
         tournament = for i in [0...tournamentSize]
           participant = Math.floor(Math.random() * individuals.length)
           [tree, maxDepth] = [participant.tree, participant.maxDepth]
-          {individual: new window.individual(tree, maxDepth), index: i} 
+          {individual: new window.Individual(tree, maxDepth), index: i} 
         for participant in tournament
           participant.fitness = eval "participant.individual.#{func}(points)"
         tournament.map((participant) -> if isNaN participant.fitness then 0 else participant.fitness)
@@ -139,8 +138,8 @@ $ ->
         for participant, ind in tournament
           rand = Math.random()
           if rand < probability * Math.pow(1 - probability, ind)
-            return new individual(participant.individual.tree, participant.individual.maxDepth)
-        return new individual(tournament[0].individual.tree, tournament[0].individual.maxDepth)
+            return new Individual(participant.individual.tree, participant.individual.maxDepth)
+        return new Individual(tournament[0].individual.tree, tournament[0].individual.maxDepth)
 
       # Tournament selection genetic operator
       @tournamentSelection: (individuals, points, func, tournamentSize = 10, probability = 0.8) ->
@@ -168,7 +167,7 @@ $ ->
             if distribution[j] > (pointer * (numChildren + 1))
               lastChild = j
               numChildren = numChildren + 1
-              child = new window.individual(individuals[j].tree, individuals[j].maxDepth)
+              child = new Individual(individuals[j].tree, individuals[j].maxDepth)
               children.push(child)
               break
         children
@@ -271,7 +270,6 @@ $ ->
       paretoFitness: (points, func = 'scaledFitness') -> 
         nonLinearity = (tree) ->
           return 0 if tree is null
-          #console.log add, subtract, multiply, safeDiv
           switch tree.data
             when window.add, window.subtract, window.multiply, window.safeDiv
               tree.treeSize() * (nonLinearity(tree.left) + nonLinearity(tree.right))
@@ -280,22 +278,11 @@ $ ->
             when window.safeSqrt, window.pow, window.exp, window.safeLog
               2 * tree.treeSize() * (nonLinearity(tree.left) + nonLinearity(tree.right))
             else 1
-        #console.log @
         fitness = Math.pow(eval("this.#{func}(points)"), -1) - 1
-        #console.log fitness
-        #test = new individual(@tree)
-        #console.log "test tree is: ", @tree
-        #console.log @tree
-        #temp = binaryTree.clone(@tree)
-        #nonlinearity = nonLinearity(@tree)
-        #console.log "temp == @tree? ", binaryTree.is_equal(temp, @tree)
-        #console.log "nonlinearity is: ", nonlinearity
         nonlinearity = nonLinearity(@tree)#1 #(@tree.depthAtPoint(i) for i in [0...@tree.treeSize()]).reduce((pv, cv, index, array) -> pv + cv) + this.tree.treeSize()
-        #console.log nonlinearity
         ret = if isNaN(fitness + nonlinearity) or (fitness + nonlinearity) is Infinity then 0 else (1 / fitness + nonlinearity)#(1 / (1 + fitness + Math.pow(nonlinearity, 10))
-        #console.log 'fitness:', fitness, 'nonlinearity: ', nonlinearity 
-        #console.log ret
         ret
+
       ###
       # Particle Swarm Optimization is a nonlinear optimization strategy used to enhance
       # the performance of symbolic regression.  The terminal set consists of the 
@@ -313,12 +300,10 @@ $ ->
         treeValues = for i in [0...tree.treeSize()]
           value = tree.index(i)
           if value.data is 'ec' or typeof(value.data) is 'number' then value.data else null
-        #console.log treeValues
         constants = []
         for value, index in treeValues
           if value isnt null then constants.push {value: value, index, index}
         return populant if constants.length is 0
-        #console.log  constants
         particles = []
         for i in [0...numParticles]
           dimensions = for j in [0...constants.length]
@@ -327,31 +312,25 @@ $ ->
             position = Math.random() * (maxPosition - minPosition) + minPosition
             {velocity: velocity, position: position, personalBest: position, index: index}
           particles.push {neighborhood: i % numNeighborhoods, dimensions: dimensions}
-        #console.log particles
         neighborhoodBests = (-Infinity for i in [0...numNeighborhoods])
         dimensionBests = (-Infinity for i in [0...numNeighborhoods])
         for particle in particles
-          evaluationPoint = new individual(tree)
+          evaluationPoint = new Individual(tree)
           for dimension in particle.dimensions
             evaluationPoint.tree.index(dimension.index).insertData(dimension.position)
-          #console.log evaluationPoint
           currentFitness = eval "evaluationPoint.#{fitness}(points)"
           particle.bestFitness = currentFitness
           if currentFitness >= maxFitness
             return evaluationPoint
-          #console.log "particle.neighborhood: #{particle.neighborhood}"
-          #console.log "current Fitness: #{currentFitness}", "neighborhoodBests[particle.neighborhood]: #{neighborhoodBests[particle.neighborhood]}"
           if currentFitness >= neighborhoodBests[particle.neighborhood]
             neighborhoodBests[particle.neighborhood] = currentFitness
             dimensionBests[particle.neighborhood] = (dim.position for dim in particle.dimensions)
-        #console.log neighborhoodBests        
         for i in [0...maxIterations]
           for particle in particles
-            evaluationPoint = new individual(tree, populant.maxDepth)
+            evaluationPoint = new Individual(tree, populant.maxDepth)
             for dimension, index in particle.dimensions
               dimension.velocity = Math.min(Math.max(dimension.velocity + (Math.random() * c1 * (dimension.personalBest - dimension.position)) + (Math.random() * c2 * (dimensionBests[particle.neighborhood][index] - dimension.position)), minVelocity), maxVelocity)
               dimension.position = Math.max(Math.min(dimension.position + dimension.velocity, maxVelocity), minVelocity)
-              #console.log "DIMENSION POSITION: #{dimension.position}"
               evaluationPoint.tree.index(dimension.index).insertData(dimension.position)
             currentFitness = eval "evaluationPoint.#{fitness}(points)"
             if currentFitness > particle.bestFitness
@@ -359,7 +338,7 @@ $ ->
               for dimension, index in particle.dimensions
                 dimension.personalBest = dimension.position
             if currentFitness >= maxFitness              
-              return new individual(evaluationPoint.tree, populant.maxDepth)
+              return new Individual(evaluationPoint.tree, populant.maxDepth)
             if currentFitness > neighborhoodBests[particle.neighborhood]
               neighborhoodBests[particle.neighborhood] = currentFitness
               dimensionBests[particle.neighborhood] = (dim.position for dim in particle.dimensions)
@@ -368,7 +347,7 @@ $ ->
           if neighborhoodBests[i] >= bestFitness
             bestIndex = index
             bestFitness = fitness
-        result = new individual(tree, populant.maxDepth)
+        result = new Individual(tree, populant.maxDepth)
         for constant, index in constants
           result.tree.index(constant.index).insertData(dimensionBests[bestIndex][index])
         result

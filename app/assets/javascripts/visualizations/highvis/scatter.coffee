@@ -317,13 +317,12 @@ $ ->
           if regression.xAxis is @configs.xAxis \
           and "#{regression.groups}" is "#{data.groupSelection}" \
           and globals.configs.fieldSelection.indexOf(regression.yAxis) != -1
-            # Calculate the series
-            console.log "REGRESSION", regression
-            
+            # Create the hypothesis function
             func = if regression.type is globals.REGRESSION.SYMBOLIC
               new Function("x", regression.func)
             else
               new Function("x, P", regression.func)
+            # Calculate the series
             series = if regression.type isnt globals.REGRESSION.SYMBOLIC
               globals.getRegressionSeries(func, regression.parameters.map((y) -> Number(y)), Number(regression.r2), regression.type, [@configs.xBounds.min, @configs.xBounds.max], regression.name, regression.dashStyle, regression.id, regression.tooltip, false)[3]
             else
@@ -646,7 +645,7 @@ $ ->
           if regression.xAxis == @configs.xAxis \
           and "#{regression.groups}" is "#{data.groupSelection}" \
           and globals.configs.fieldSelection.indexOf(regression.yAxis) != -1
-            console.log "REGRESSION", regression
+            # Calculate the hypothesis function
             func = if regression.type is globals.REGRESSION.SYMBOLIC
               new Function("x", regression.func)
             else
@@ -723,8 +722,6 @@ $ ->
               )
               Ps = Ps.map((y) -> if Math.abs(Math.round(y) - y) < 1e-4 then Math.round(y) else y)
             catch error
-              console.trace()
-              console.log error
               if regressionType is 3
                 alert "Unable to calculate an #{regressions[regressionType]} regression for this data."
               else
@@ -748,7 +745,7 @@ $ ->
               when globals.REGRESSION.LOGARITHMIC
                 'return P[0] + Math.log(P[1] * x + P[2])'
           else
-            func = binaryTree.codify(func.tree)
+            func = BinaryTree.codify(func.tree)
 
           # Prepare to save regression fields
           savedRegression =
@@ -816,9 +813,6 @@ $ ->
           @configs.xAxis = savedReg.xAxis
           globals.configs.fieldSelection = [savedReg.yAxis]
           data.groupSelection = savedReg.groups
-
-          #@configs.xBounds = savedReg.bounds[0]
-          #@configs.yBounds = savedReg.bounds[1]
 
           $('.xAxis_input').each (i, input) ->
             if Number(input.value) == savedReg.xAxis
