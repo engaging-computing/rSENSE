@@ -318,11 +318,16 @@ $ ->
           and "#{regression.groups}" is "#{data.groupSelection}" \
           and globals.configs.fieldSelection.indexOf(regression.yAxis) != -1
             # Calculate the series
+            console.log "REGRESSION", regression
+            
             func = if regression.type is globals.REGRESSION.SYMBOLIC
               new Function("x", regression.func)
             else
               new Function("x, P", regression.func)
-            series = globals.getRegressionSeries(func, regression.parameters.map((y) -> Number(y)), Number(regression.r2), regression.type, [@configs.xBounds.min, @configs.xBounds.max], regression.name, regression.dashStyle, regression.id, regression.tooltip, false)[3]
+            series = if regression.type isnt globals.REGRESSION.SYMBOLIC
+              globals.getRegressionSeries(func, regression.parameters.map((y) -> Number(y)), Number(regression.r2), regression.type, [@configs.xBounds.min, @configs.xBounds.max], regression.name, regression.dashStyle, regression.id, regression.tooltip, false)[3]
+            else
+              globals.getRegressionSeries(func, regression.parameters, Number(regression.r2), regression.type, [@configs.xBounds.min, @configs.xBounds.max], regression.name, regression.dashStyle, regression.id, regression.tooltip, false)[3]
             # Add the regression to the chart
             @chart.addSeries(series)
             # Enabled the class by removing the disabled class
@@ -641,12 +646,16 @@ $ ->
           if regression.xAxis == @configs.xAxis \
           and "#{regression.groups}" is "#{data.groupSelection}" \
           and globals.configs.fieldSelection.indexOf(regression.yAxis) != -1
+            console.log "REGRESSION", regression
             func = if regression.type is globals.REGRESSION.SYMBOLIC
               new Function("x", regression.func)
             else
               new Function("x, P", regression.func)
             # Calculate the series
-            series = globals.getRegressionSeries(func, regression.parameters.map((y) -> Number(y)), Number(regression.r2), regression.type, [@configs.xBounds.min, @configs.xBounds.max], regression.name, regression.dashStyle, regression.id, regression.tooltip, false)[3]
+            series = if regression.type isnt globals.REGRESSION.SYMBOLIC
+              globals.getRegressionSeries(func, regression.parameters.map((y) -> Number(y)), Number(regression.r2), regression.type, [@configs.xBounds.min, @configs.xBounds.max], regression.name, regression.dashStyle, regression.id, regression.tooltip, false)[3]
+            else
+              globals.getRegressionSeries(func, regression.parameters, Number(regression.r2), regression.type, [@configs.xBounds.min, @configs.xBounds.max], regression.name, regression.dashStyle, regression.id, regression.tooltip, false)[3]
             # Add the regression to the chart
             @chart.addSeries(series)
             @addRegressionToTable(regression, true)
