@@ -322,9 +322,12 @@ $ ->
               new Function("x", regression.func)
             else
               new Function("x, P", regression.func)
+            # Convert parameters from strings to numbers
+            params = for i in [0...regression.parameters.length]
+              parseFloat(regression.parameters[i])
             # Calculate the series
             series = if regression.type isnt globals.REGRESSION.SYMBOLIC
-              globals.getRegressionSeries(func, regression.parameters.map((y) -> Number(y)), \
+              globals.getRegressionSeries(func, params, \
               Number(regression.r2), regression.type, [@configs.xBounds.min, @configs.xBounds.max], \
               regression.name, regression.dashStyle, regression.id, regression.tooltip, false)[3]
             else
@@ -654,9 +657,12 @@ $ ->
               new Function("x", regression.func)
             else
               new Function("x, P", regression.func)
+            # Convert parameters from strings to numbers
+            params = for i in [0...regression.parameters.length]
+              parseFloat(regression.parameters[i])
             # Calculate the series
             series = if regression.type isnt globals.REGRESSION.SYMBOLIC
-              globals.getRegressionSeries(func, regression.parameters.map((y) -> Number(y)), \
+              globals.getRegressionSeries(func, params, \
               Number(regression.r2), regression.type, [@configs.xBounds.min, @configs.xBounds.max], \
               regression.name, regression.dashStyle, regression.id, regression.tooltip, false)[3]
             else

@@ -22,7 +22,6 @@ class RefactorSavedRegressions < ActiveRecord::Migration
             params = wtf.select { |x| x != '' }
             params[params.length - 1] = params[params.length - 1][0...params[params.length - 1].length - 1]
             params.map! { |x| x.gsub!('e', 'E') }
-            puts params
             if regression['type'] == 4 or regression['type'] == 5
               copy = params.clone
               params[1] = copy[2]
@@ -30,8 +29,6 @@ class RefactorSavedRegressions < ActiveRecord::Migration
             end
             parameters = params
             function = get_func(regression['type'])
-            puts "PARAMETERS: "
-            puts parameters
             new_regression = {}
             new_regression['type'] = type
             new_regression['xAxis'] = x_axis
@@ -68,7 +65,6 @@ class RefactorSavedRegressions < ActiveRecord::Migration
             wtf = regression['series']['name']['regression']['tooltip'].split('<br>')[1].delete('^0-9 \.\-eE').split('  ').reverse
             params = wtf.select { |x| x != '' }
             params[params.length - 1] = params[params.length - 1][0...params[params.length - 1].length - 1]
-            puts params
             params.map! { |x| x.gsub('e', 'E') }
             if regression['type'] == 4 or regression['type'] == 5
               copy = params.clone
@@ -77,8 +73,6 @@ class RefactorSavedRegressions < ActiveRecord::Migration
             end
             parameters = params
             function = get_func(regression['type'])
-            puts "PARAMETERS: "
-            puts parameters
             new_regression = {}
             new_regression['type'] = type
             new_regression['xAxis'] = x_axis
