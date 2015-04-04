@@ -41,6 +41,7 @@ class RefactorSavedRegressions < ActiveRecord::Migration
             new_regression['r2'] = r2
             new_regression['name'] = name
             new_regression['dashStyle'] = dash_style
+            puts new_regression.inspect
             scatter_regressions.push new_regression
           else
             scatter_regressions.push regression
@@ -87,6 +88,7 @@ class RefactorSavedRegressions < ActiveRecord::Migration
             new_regression['name'] = name
             new_regression['dashStyle'] = dash_style
             new_regression['tooltip'] = tooltip
+            puts new_regression.inspect
             timeline_regressions.push new_regression
           else
             timeline_regressions.push new_regression
