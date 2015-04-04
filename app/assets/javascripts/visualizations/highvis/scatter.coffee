@@ -324,9 +324,13 @@ $ ->
               new Function("x, P", regression.func)
             # Calculate the series
             series = if regression.type isnt globals.REGRESSION.SYMBOLIC
-              globals.getRegressionSeries(func, regression.parameters.map((y) -> Number(y)), Number(regression.r2), regression.type, [@configs.xBounds.min, @configs.xBounds.max], regression.name, regression.dashStyle, regression.id, regression.tooltip, false)[3]
+              globals.getRegressionSeries(func, regression.parameters.map((y) -> Number(y)), \
+              Number(regression.r2), regression.type, [@configs.xBounds.min, @configs.xBounds.max], \
+              regression.name, regression.dashStyle, regression.id, regression.tooltip, false)[3]
             else
-              globals.getRegressionSeries(func, regression.parameters, Number(regression.r2), regression.type, [@configs.xBounds.min, @configs.xBounds.max], regression.name, regression.dashStyle, regression.id, regression.tooltip, false)[3]
+              globals.getRegressionSeries(func, regression.parameters, Number(regression.r2), \
+              regression.type, [@configs.xBounds.min, @configs.xBounds.max], regression.name, \
+              regression.dashStyle, regression.id, regression.tooltip, false)[3]
             # Add the regression to the chart
             @chart.addSeries(series)
             # Enabled the class by removing the disabled class
@@ -652,9 +656,13 @@ $ ->
               new Function("x, P", regression.func)
             # Calculate the series
             series = if regression.type isnt globals.REGRESSION.SYMBOLIC
-              globals.getRegressionSeries(func, regression.parameters.map((y) -> Number(y)), Number(regression.r2), regression.type, [@configs.xBounds.min, @configs.xBounds.max], regression.name, regression.dashStyle, regression.id, regression.tooltip, false)[3]
+              globals.getRegressionSeries(func, regression.parameters.map((y) -> Number(y)), \
+              Number(regression.r2), regression.type, [@configs.xBounds.min, @configs.xBounds.max], \
+              regression.name, regression.dashStyle, regression.id, regression.tooltip, false)[3]
             else
-              globals.getRegressionSeries(func, regression.parameters, Number(regression.r2), regression.type, [@configs.xBounds.min, @configs.xBounds.max], regression.name, regression.dashStyle, regression.id, regression.tooltip, false)[3]
+              globals.getRegressionSeries(func, regression.parameters, Number(regression.r2), \
+              regression.type, [@configs.xBounds.min, @configs.xBounds.max], regression.name, \
+              regression.dashStyle, regression.id, regression.tooltip, false)[3]
             # Add the regression to the chart
             @chart.addSeries(series)
             @addRegressionToTable(regression, true)
@@ -679,7 +687,7 @@ $ ->
           xAxisName = data.fields[@configs.xAxis].fieldName
           yAxisName = $('#regressionYAxisSelector option:selected').text()
           name = "<strong>#{yAxisName}</strong> as a "
-          funcDesc = if regressionType isnt globals.REGRESSION.SYMBOLIC 
+          funcDesc = if regressionType isnt globals.REGRESSION.SYMBOLIC
             "#{$('#regressionSelector option:selected').text().toLowerCase()} "
           else ''
           name += funcDesc
@@ -692,9 +700,10 @@ $ ->
           points = ({x: point.x, y: point.y} for point in xyData)
           fn = (pv, cv, index, array) -> (pv and cv)
           # Create a unique identifier for the regression
-          regressionId = "regression_#{@configs.xAxis}_#{yAxisIndex}_#{regressionType}_" + data.groupSelection.toString()
+          regressionId = "regression_#{@configs.xAxis}_#{yAxisIndex}_#{regressionType}_" + \
+          data.groupSelection.toString()
           regressionId = regressionId.replace(',', '_') while regressionId.indexOf(',') isnt -1
-          return unless (regression.id isnt regressionId for regression in @configs.savedRegressions).reduce(fn, true)  
+          return unless (regression.id isnt regressionId for regression in @configs.savedRegressions).reduce(fn, true)
           
           # Get dash index
           dashIndex = data.normalFields.indexOf(yAxisIndex)
@@ -791,8 +800,10 @@ $ ->
         regressionRow =
           """
           <tr id ='row_#{savedReg.id}' class='regression_row'>
-          <td class='regression_rowdata truncate'>#{data.fields[savedReg.yAxis].fieldName}(#{data.fields[savedReg.xAxis].fieldName})</td>
-          <td class='regression_rowdata'>#{regressions[savedReg.type]}</td>
+          <td class='regression_rowdata truncate'>
+          #{data.fields[savedReg.yAxis].fieldName}(#{data.fields[savedReg.xAxis].fieldName})</td>
+          <td class='regression_rowdata'>
+          #{regressions[savedReg.type]}</td>
           <td id='#{savedReg.id}' class='regression_remove'><i class='fa fa-times-circle'></i></td>
           </tr>
           """

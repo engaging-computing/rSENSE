@@ -64,7 +64,7 @@ $ ->
         @tree.evaluate(n)
 
       # Point mutation genetic operator
-      @mutate: (individual) -> 
+      @mutate: (individual) ->
         length = individual.tree.treeSize()
         mutationSite = Math.floor(Math.random() * length)
         mutant = BinaryTree.clone(individual.tree)
@@ -93,9 +93,11 @@ $ ->
         [tree2a, tree2b] = [BinaryTree.clone(individual2.tree), BinaryTree.clone(individual2.tree)]
         [tree1c, tree2c] = [BinaryTree.clone(individual1.tree), BinaryTree.clone(individual2.tree)]
         mutationSite1 = Math.floor(Math.random() * Math.min(tree1a.treeSize(), tree2a.treeSize()))
-        mutationSite2 = Math.floor(Math.random() * Math.min(tree1a.treeSize() - mutationSite1, tree2a.treeSize() - mutationSite1)) + mutationSite1
+        mutationSite2 = Math.floor(Math.random() * \
+        Math.min(tree1a.treeSize() - mutationSite1, tree2a.treeSize() - mutationSite1)) + mutationSite1
         [childOne, childTwo] = [BinaryTree.clone(tree1a), BinaryTree.clone(tree2a)]
-        [childOneTail, childTwoTail] = [BinaryTree.clone(tree1a.index(mutationSite2)), BinaryTree.clone(tree2a.index(mutationSite2))]
+        [childOneTail, childTwoTail] = [BinaryTree.clone(tree1a.index(mutationSite2)), \
+        BinaryTree.clone(tree2a.index(mutationSite2))]
         childOne.insertTree(tree2a.index(mutationSite1), mutationSite1)
         childTwo.insertTree(tree1a.index(mutationSite1), mutationSite1)
         childOne.insertTree(childOneTail, Math.min(mutationSite2, childOne.treeSize()))
@@ -130,7 +132,7 @@ $ ->
         tournament = for i in [0...tournamentSize]
           participant = Math.floor(Math.random() * individuals.length)
           [tree, maxDepth] = [participant.tree, participant.maxDepth]
-          {individual: new window.Individual(tree, maxDepth), index: i} 
+          {individual: new window.Individual(tree, maxDepth), index: i}
         for participant in tournament
           participant.fitness = eval "participant.individual.#{func}(points)"
         tournament.map((participant) -> if isNaN participant.fitness then 0 else participant.fitness)
@@ -179,7 +181,7 @@ $ ->
       @susSelection: (individuals, points, func, offspring, distribution = null) ->
         @susReproduce(individuals, points, func, offspring, distribution)
 
-      # Calculates an individual's fitness by its sum of squared-error over points 
+      # Calculates an individual's fitness by its sum of squared-error over points
       sseFitness: (points, raw = false) ->
         fitnessAtPoints = for point in points
           Math.pow(point.y - @evaluate(point.x), 2)
@@ -191,9 +193,9 @@ $ ->
       # Calculates an individual's fitness by its mean squared-error over points
       mseFitness: (points) ->
         fitness = 1 / (1 + (1 / points.length) * @sseFitness(points, true))
-        fitness      
+        fitness
 
-      # Calculates an individual's fitness by scaled fitness 
+      # Calculates an individual's fitness by scaled fitness
       # (technique employed in the scaled symbolic regression paper by Keijzer)
       scaledFitness: (points, params = false) ->
         # define inputs (xs), targets (ts), and outputs (ys)
@@ -248,26 +250,27 @@ $ ->
         fitness = (1 / points.length) * sumScaledResiduals
         return if isNaN(fitness) or fitness is Infinity then 0 else 1 / (1 + fitness)
 
-      # Calculate an individual's fitness by its normalized mean-squared 
+      # Calculate an individual's fitness by its normalized mean-squared
       # error over points
       nmseFitness: (points, raw = false) ->
         values = (@evaluate(point.x) for point in points)
         averageValue = values.reduce((pv, cv, index, array) -> pv + cv) / values.length
         targets = (point.y for point in points)
         averageTarget = targets.reduce((pv, cv, index, array) -> pv + cv) / targets.length
-        fitness = (Math.pow(targets[i] - values[i], 2) / (averageTarget * averageValue) for i in [0...values.length]).reduce((pv, cv, index, array) -> pv + cv) / points.length
+        fitness = (Math.pow(targets[i] - values[i], 2) / (averageTarget * averageValue) \
+        for i in [0...values.length]).reduce((pv, cv, index, array) -> pv + cv) / points.length
         if isNaN(fitness)
           fitness = 0
         if raw then fitness else 1 / (1 + fitness)
 
-      # Calculate's an individual's fitness via pareto genetic 
-      # programming. Nonlinearity is concurrently minimized alongside 
+      # Calculate's an individual's fitness via pareto genetic
+      # programming. Nonlinearity is concurrently minimized alongside
       # the maximization of the fitness function specified.
-      # 
+      #
       # Goodness of fit is (by default) calculated via Normalized Mean-Squared Error,
       # and non-linearity is calculated through a visitation-length heuristic
-      # as specified in the M. Keijzer and J. Foster paper. 
-      paretoFitness: (points, func = 'scaledFitness') -> 
+      # as specified in the M. Keijzer and J. Foster paper.
+      paretoFitness: (points, func = 'scaledFitness') ->
         nonLinearity = (tree) ->
           return 0 if tree is null
           switch tree.data
@@ -279,23 +282,36 @@ $ ->
               2 * tree.treeSize() * (nonLinearity(tree.left) + nonLinearity(tree.right))
             else 1
         fitness = Math.pow(eval("this.#{func}(points)"), -1) - 1
-        nonlinearity = nonLinearity(@tree)#1 #(@tree.depthAtPoint(i) for i in [0...@tree.treeSize()]).reduce((pv, cv, index, array) -> pv + cv) + this.tree.treeSize()
-        ret = if isNaN(fitness + nonlinearity) or (fitness + nonlinearity) is Infinity then 0 else (1 / fitness + nonlinearity)#(1 / (1 + fitness + Math.pow(nonlinearity, 10))
-        ret
+        nonlinearity = nonLinearity(@tree)
+        return if isNaN(fitness + nonlinearity) or (fitness + nonlinearity) is Infinity
+          0
+        else
+          (1 / fitness + nonlinearity)
 
       ###
       # Particle Swarm Optimization is a nonlinear optimization strategy used to enhance
-      # the performance of symbolic regression.  The terminal set consists of the 
-      # dependent variable, x, and a single constant referred to in the literature as the 
-      # ephemeral constant.  PSO finds a near-optimal value of these ephemeral constants 
+      # the performance of symbolic regression.  The terminal set consists of the
+      # dependent variable, x, and a single constant referred to in the literature as the
+      # ephemeral constant.  PSO finds a near-optimal value of these ephemeral constants
       # to maximize the individual's fitness, separating the task of identifying the correct
       # function, and the constant values it contains.
       ###
       ###
       # WARNING:  MUTATES THE INDIVIDUAL
       ###
-      @particleSwarmOptimization: (populant, points, fitness = 'scaledFitness', maxFitness = 1, numParticles = 50, maxPosition = 1000, minPosition = -1000, maxVelocity = 50, minVelocity = -50, maxIterations = 200, numNeighborhoods = 5, c1 = 2, c2 = 2) ->
-        
+      @particleSwarmOptimization: (populant, points) ->
+        # Initialize algorithm parameters
+        fitness = 'scaledFitness'
+        maxFitness = 1
+        numParticles = 50
+        maxPosition = 1000
+        minPosition = -1000
+        maxVelocity = 50
+        minVelocity = -50
+        maxIterations = 200
+        numNeighborhoods = 5
+        c1 = 2
+        c2 = 2
         tree = populant.tree
         treeValues = for i in [0...tree.treeSize()]
           value = tree.index(i)
@@ -329,15 +345,18 @@ $ ->
           for particle in particles
             evaluationPoint = new Individual(tree, populant.maxDepth)
             for dimension, index in particle.dimensions
-              dimension.velocity = Math.min(Math.max(dimension.velocity + (Math.random() * c1 * (dimension.personalBest - dimension.position)) + (Math.random() * c2 * (dimensionBests[particle.neighborhood][index] - dimension.position)), minVelocity), maxVelocity)
-              dimension.position = Math.max(Math.min(dimension.position + dimension.velocity, maxVelocity), minVelocity)
+              dimension.velocity = Math.min(Math.max(dimension.velocity + (Math.random() * c1 * \
+              (dimension.personalBest - dimension.position)) + (Math.random() * c2 * \
+              (dimensionBests[particle.neighborhood][index] - dimension.position)), minVelocity), maxVelocity)
+              dimension.position = Math.max(Math.min(dimension.position + dimension.velocity, maxVelocity), \
+              minVelocity)
               evaluationPoint.tree.index(dimension.index).insertData(dimension.position)
             currentFitness = eval "evaluationPoint.#{fitness}(points)"
             if currentFitness > particle.bestFitness
               particle.bestFitness = currentFitness
               for dimension, index in particle.dimensions
                 dimension.personalBest = dimension.position
-            if currentFitness >= maxFitness              
+            if currentFitness >= maxFitness
               return new Individual(evaluationPoint.tree, populant.maxDepth)
             if currentFitness > neighborhoodBests[particle.neighborhood]
               neighborhoodBests[particle.neighborhood] = currentFitness

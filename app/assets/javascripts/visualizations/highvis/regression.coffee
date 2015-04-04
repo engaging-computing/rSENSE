@@ -117,7 +117,8 @@ $ ->
     ###
     Returns a series object to draw on the chart canvas.
     ###
-    generateHighchartsSeries = (func, Ps, R2, type, xBounds, seriesName, dashStyle, id, tooltip = null, normalized = true) ->
+    generateHighchartsSeries = \
+    (func, Ps, R2, type, xBounds, seriesName, dashStyle, id, tooltip = null, normalized = true) ->
       data = for i in [0...globals.REGRESSION.NUM_POINTS]
         xv = (i / globals.REGRESSION.NUM_POINTS)
         yv = null
@@ -130,7 +131,7 @@ $ ->
           yv = func(xv * (xBounds[1] - xBounds[0]) + xBounds[0], Ps)
         else if type isnt globals.REGRESSION.SYMBOLIC
           yv = func(xv + 1, Ps)
-        else 
+        else
           func.evaluate(xv * (xBounds[1] - xBounds[0]) + xBounds[0])
         {x: xv * (xBounds[1] - xBounds[0]) + xBounds[0], y: yv}
       if normalized and Ps isnt null
@@ -226,12 +227,12 @@ $ ->
           </strong>
           """
 
-        else 
+        else
           tooltip = """
           <div class="regressionTooltip"> #{seriesName} </div>
           <br>
           <strong>
-            f(x) = 
+            f(x) =
           """
           tooltip += BinaryTree.stringify(func.tree)
           tooltip += """
@@ -431,5 +432,6 @@ $ ->
       ssTot = (Math.pow(y - yAvg, 2) for y in ys).reduce (pv, cv, index, array) -> (pv + cv)
       1 - (ssRes / ssTot)
 
-    globals.getRegressionSeries = (func, Ps, R2, type, xBounds, seriesName, dashStyle, id, tooltip = null, normalized = false) ->
+    globals.getRegressionSeries = \
+    (func, Ps, R2, type, xBounds, seriesName, dashStyle, id, tooltip = null, normalized = false) ->
       generateHighchartsSeries(func, Ps, R2, type, xBounds, seriesName, dashStyle, id, tooltip, normalized)

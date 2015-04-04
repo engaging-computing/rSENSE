@@ -83,7 +83,7 @@ $ ->
         temp['data'] = tree.data
         temp
 
-      # Returns true if a and b are equivalent objects 
+      # Returns true if a and b are equivalent objects
       # (not necessarily references to the same object in memory).
       @is_equal: (a, b) ->
         [leftEq, rightEq] = [true, true]
@@ -123,9 +123,9 @@ $ ->
         if @right? and @right isnt null
           rest = combiner(rest, @right.__query(combiner))
         1 + rest
-      
-      # Inserts a single datum in the tree at @data, 
-      # or the @data member of the tree located at 
+
+      # Inserts a single datum in the tree at @data,
+      # or the @data member of the tree located at
       # pos = 'left' or pos = 'right'
       ###
       # WARNING:  MUTATES THE BINARY TREE
@@ -150,7 +150,7 @@ $ ->
           @data = data
 
       # Delete a single datum in the tree at @data,
-      # or the @data member of the tree located at 
+      # or the @data member of the tree located at
       # pos = 'left' or pos = 'right'
       ###
       # WARNING:  MUTATES THE BINARY TREE
@@ -158,7 +158,7 @@ $ ->
       deleteData: (pos = null) ->
         if pos is 'right'
           if @right.is_terminal()
-            @right = null 
+            @right = null
           else
             console.log "Error deleting #{@right.data}, results in invalid binary tree."
             null
@@ -194,18 +194,18 @@ $ ->
       ###
       __access: (index, value = true, curDepth = 1) ->
         if index is 0
-          return if value is true then @ else curDepth 
+          return if value is true then @ else curDepth
         leftSize = if @left is null then 0 else @left.treeSize()
         rightSize = if @right is null then 0 else @right.treeSize()
-        if index > leftSize + rightSize 
+        if index > leftSize + rightSize
           -1
         else if index > leftSize
           if @right isnt null then @right.__access(index - leftSize - 1, value, curDepth + 1) else -1
         else
           if @left isnt null then @left.__access(index - 1, value, curDepth + 1) else -1
       
-      # Given a tree, replace it with a randomly-generated tree whose maximum 
-      # depth is given by maxDepth. 
+      # Given a tree, replace it with a randomly-generated tree whose maximum
+      # depth is given by maxDepth.
       ###
       # WARNING:  MUTATES THE BINARY TREE
       ###
@@ -239,7 +239,7 @@ $ ->
           else
             @data(@left.evaluate(x), @right.evaluate(x))
 
-      # Insert the BinaryTree object 'tree' at the location of the BinaryTree 
+      # Insert the BinaryTree object 'tree' at the location of the BinaryTree
       # specified by index
       ###
       # WARNING:  MUTATES THE BINARY TREE 'THIS', DOES NOT MUTATE ARGUMENT TREE
@@ -305,7 +305,7 @@ $ ->
       @stringify: (tree) ->
         
         # Helper method to properly parenthesize nested terms
-        parenthesize = (string) -> 
+        parenthesize = (string) ->
           if not isNaN(Number(string)) or string is 'x' then string else "(#{string})"
         
         switch tree.data
@@ -341,11 +341,11 @@ $ ->
           else
             "#{window.roundToFourSigFigs(tree.data)}"
     
-      # Given a tree, construct a string of valid coffeescript code that can be 'evaled' to 
+      # Given a tree, construct a string of valid coffeescript code that can be 'evaled' to
       # mimic the symbolic regression.
       @codify: (tree) ->
       # Helper method to properly parenthesize nested terms
-        parenthesize = (string) -> 
+        parenthesize = (string) ->
           if not isNaN(Number(string)) or string is 'x' then string else "(#{string})"
         
         getFunc = (tree) ->

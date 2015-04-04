@@ -49,11 +49,11 @@ $ ->
     ###
 
     # Fitness function to be used (scaled mean-squared error)
-    window.FITNESS = 'scaledFitness'
+    window.FITNESS = 'sseFitness'
     # Selection operator to be used (fitness-proportional)
-    window.SELECTION = 'fpSelection'
+    window.SELECTION = 'susSelection'
     # Reproduction operator to be used (fitness-proportional)
-    window.REPRODUCTION = 'fpReproduce'
+    window.REPRODUCTION = 'tournamentReproduce'
     # Crossover operator to be used (cut-and-splice method)
     window.CROSSOVER = 'crossover'
     # Mutation operator to be used (point mutation)
@@ -63,30 +63,30 @@ $ ->
     # Maximum length of an expression tree
     window.MAXDEPTH = 6
     # Number of individuals in a population at any given time
-    # NOTE:  MUST BE A MULTIPLE OF EIGHT TO USE THE 
+    # NOTE:  MUST BE A MULTIPLE OF EIGHT TO USE THE
     #        OPTIMIZED VERSION OF THE ALGORITHM CORRECTLY.
     window.POPULATIONSIZE = 100
     # Probability that a child individual is produced through
-    # reproduction, and inserted (unmodified) into the next 
+    # reproduction, and inserted (unmodified) into the next
     # generation of the population
     window.REPRODUCTIONPROBABILITY = .3
     # Probability that two offspring are produced through a genetic
     # crossover operation
-    window.CROSSOVERPROBABILITY = .6    
+    window.CROSSOVERPROBABILITY = .6
     # Probability a mutation occurs, and the mutant is inserted into
     # the next generation of the population
     window.MUTATIONPROBABILITY = .1
-    # Maximum number of iterations (simulated generations) to 
+    # Maximum number of iterations (simulated generations) to
     # be performed while searching for an adequately-fit
     # candidate solution (termination criteria)
-    window.MAXITERS = 10
+    window.MAXITERS = 100
     # Any individuals with fitness greater than MAXFITNESS
     # will be immediately returned as a candidate solution
     # (termination criteria)
     window.MAXFITNESS = 1
     # tournament size parameter for tournament selection and reproduction
     window.TOURNAMENTSIZE = 10
-    # Probability that the most fit individual of the tournament is 
+    # Probability that the most fit individual of the tournament is
     # selected during tournament selection and reproduction
     window.TOURNAMENTPROBABILITY = 0.8
     ###
@@ -129,7 +129,7 @@ $ ->
       # Keep track of location of individuals with max/min fitness within population
       maxIndex = 0
       
-      max = (pv, cv, index, array) -> 
+      max = (pv, cv, index, array) ->
         if cv is Math.max(pv, cv) then maxIndex = index
         Math.max(pv, cv)
 
@@ -147,10 +147,10 @@ $ ->
       mostFit = fitnesses.reduce max, 0
       bestIndividual = population[maxIndex]
 
-      # Check if the most fit individual from the 
-      # initial population is sufficiently fit 
+      # Check if the most fit individual from the
+      # initial population is sufficiently fit
       if mostFit >= MAXFITNESS
-        return unless FITNESS in ['scaledFitness', 'paretoFitness'] 
+        return unless FITNESS in ['scaledFitness', 'paretoFitness']
           Individual.particleSwarmOptimization(bestIndividual, points)
         else
           scaledIndividual(Individual.particleSwarmOptimization(population[maxIndex], points), points, individualDepth)
@@ -174,11 +174,13 @@ $ ->
               when 'fpReproduce'
                 newPopulation.push(eval("Individual.#{REPRODUCTION}(population, points, FITNESS)"))
               when 'susReproduce'
-                newPopulation.push(eval("Individual.#{REPRODUCTION}(population, points, FITNESS, susReproductionSize)")[0])
+                newPopulation.push \
+                eval("Individual.#{REPRODUCTION}(population, points, FITNESS, susReproductionSize)")[0]
               when 'tournamentReproduce'
-                newPopulation.push(eval("Individual.#{REPRODUCTION}(population, points, FITNESS, TOURNAMENTSIZE, TOURNAMENTPROBABILITY)"))
+                newPopulation.push \
+                eval("Individual.#{REPRODUCTION}(population, points, FITNESS, TOURNAMENTSIZE, TOURNAMENTPROBABILITY)")
 
-          # Step 2: First, select two individuals for crossover with probability 
+          # Step 2: First, select two individuals for crossover with probability
           #         crossoverProbability.  If two individuals are selected, use the
           #         crossover methodology specified to produce two new individuals
           if Math.random() <= CROSSOVERPROBABILITY and POPULATIONSIZE - newPopulation.length >= 2
@@ -190,15 +192,19 @@ $ ->
               when 'susSelection'
                 eval "Individual.#{SELECTION}(population, points, FITNESS, susSelectionSize)"
               when 'tournamentSelection'
-                parentOne = eval "Individual.#{SELECTION}(population, points, FITNESS, TOURNAMENTSIZE, TOURNAMENTPROBABILITY)"
-                parentTwo = eval "Individual.#{SELECTION}(population, points, FITNESS, TOURNAMENTSIZE, TOURNAMENTPROBABILITY)"
+                parentOne = \
+                eval "Individual.#{SELECTION}(population, points, FITNESS, TOURNAMENTSIZE, TOURNAMENTPROBABILITY)"
+                parentTwo = \
+                eval "Individual.#{SELECTION}(population, points, FITNESS, TOURNAMENTSIZE, TOURNAMENTPROBABILITY)"
                 [parentOne, parentTwo]
             children = eval("Individual.#{CROSSOVER}(parents[0], parents[1])")
             newPopulation.push(children[0])
-            newPopulation.push(children[1])            
+            newPopulation.push(children[1])
 
           # Step 3:  Select one individual for mutation with probability mutationProbability
-          if Math.random() <= MUTATIONPROBABILITY and POPULATIONSIZE - newPopulation.length >= 1 and newPopulation.length isnt 0
+          if Math.random() <= MUTATIONPROBABILITY and \
+          POPULATIONSIZE - newPopulation.length >= 1 and \
+          newPopulation.length isnt 0
             switch SELECTION
               when 'fpSelection'
                 for _ in [0...MUTATIONBATCHSIZE]
@@ -210,8 +216,10 @@ $ ->
                   newPopulation.push(eval("Individual.#{MUTATION}(mutant)"))
               when 'tournamentSelection'
                 for _ in [0...MUTATIONBATCHSIZE]
-                  mutant = eval "Individual.#{SELECTION}(population, points, FITNESS, TOURNAMENTSIZE, TOURNAMENTPROBABILITY)"
-                  newPopulation.push(eval("Individual.#{MUTATION}(mutant)"))
+                  mutant = \
+                  eval "Individual.#{SELECTION}(population, points, FITNESS, TOURNAMENTSIZE, TOURNAMENTPROBABILITY)"
+                  newPopulation.push \
+                  eval("Individual.#{MUTATION}(mutant)")
         ###
         # End creation of a new generation of individuals
         ###
@@ -233,19 +241,20 @@ $ ->
         
         # Test primary termination condition
         if bestFitnessInPopulation >= MAXFITNESS
-          return unless FITNESS in ['scaledFitness', 'paretoFitness'] 
+          return unless FITNESS in ['scaledFitness', 'paretoFitness']
             Individual.particleSwarmOptimization(population[maxIndex], points)
           else
-            scaledIndividual(Individual.particleSwarmOptimization(population[maxIndex], points), points, INDIVIDUALDEPTH)
+            scaledIndividual \
+            Individual.particleSwarmOptimization(population[maxIndex], points), points, INDIVIDUALDEPTH
         
         # Update the fittest individual found if the fittest individual
         # from this generation is more fit than the fittest individual found
-        # thus far. 
-        if bestFitnessInPopulation > eval "bestIndividual.#{FITNESS}(points)" 
+        # thus far.
+        if bestFitnessInPopulation > eval "bestIndividual.#{FITNESS}(points)"
           bestIndividual = population[maxIndex]
 
       # The maximum number of iterations have been performed, so we
-      # return the fittest individual that has been found. 
+      # return the fittest individual that has been found.
       unless FITNESS in ['scaledFitness', 'paretoFitness']
         Individual.particleSwarmOptimization(bestIndividual, points)
       else
@@ -257,7 +266,7 @@ $ ->
             
       maxIndex = 0
       
-      max = (pv, cv, index, array) -> 
+      max = (pv, cv, index, array) ->
         if cv is Math.max(pv, cv) then maxIndex = index
         Math.max(pv, cv)
 
@@ -289,33 +298,39 @@ $ ->
         switch REPRODUCTION
           when 'fpReproduce'
             for _ in [0...REPRODUCTIONBATCHSIZE]
-              newPopulation.push(eval("Individual.#{REPRODUCTION}(population, points, FITNESS, distribution)"))
+              newPopulation.push \
+              eval("Individual.#{REPRODUCTION}(population, points, FITNESS, distribution)")
           when 'susReproduce'
-            children = eval "Individual.#{REPRODUCTION}(population, points, FITNESS, REPRODUCTIONBATCHSIZE, distribution)"
+            children = \
+            eval "Individual.#{REPRODUCTION}(population, points, FITNESS, REPRODUCTIONBATCHSIZE, distribution)"
             for child in children
               newPopulation.push child
           when 'tournamentReproduce'
             for _ in [0...REPRODUCTIONBATCHSIZE]
-              newPopulation.push(eval("Individual.#{REPRODUCTION}(population, points, FITNESS, TOURNAMENTSIZE, TOURNAMENTPROBABILITY)"))
+              newPopulation.push \
+              eval("Individual.#{REPRODUCTION}(population, points, FITNESS, TOURNAMENTSIZE, TOURNAMENTPROBABILITY)")
 
         parents = []
         switch SELECTION
           when 'fpSelection'
             for _ in [0...(2 * Math.round(CROSSOVERBATCHSIZE / 4))]
               parents.push(eval("Individual.#{SELECTION}(population, points, FITNESS, distribution)"))
-              parents.push(eval("Individual.#{SELECTION}(population, points, FITNESS, distribution)")) 
+              parents.push(eval("Individual.#{SELECTION}(population, points, FITNESS, distribution)"))
           when 'susSelection'
-            parents = eval "Individual.#{SELECTION}(population, points, FITNESS, (2 * Math.round(CROSSOVERBATCHSIZE / 4)), distribution)"
+            size = (2 * Math.round(CROSSOVERBATCHSIZE / 4))
+            parents = eval "Individual.#{SELECTION}(population, points, FITNESS, size, distribution)"
           when 'tournamentSelection'
             for _ in [0...(2 * Math.round(CROSSOVERBATCHSIZE / 4))]
-              parents.push(eval("Individual.#{SELECTION}(population, points, FITNESS, TOURNAMENTSIZE, TOURNAMENTPROBABILITY)"))
-              parents.push(eval("Individual.#{SELECTION}(population, points, FITNESS, TOURNAMENTSIZE, TOURNAMENTPROBABILITY)"))
+              parents.push \
+              eval("Individual.#{SELECTION}(population, points, FITNESS, TOURNAMENTSIZE, TOURNAMENTPROBABILITY)")
+              parents.push \
+              eval("Individual.#{SELECTION}(population, points, FITNESS, TOURNAMENTSIZE, TOURNAMENTPROBABILITY)")
         children = []
         for j in [0...parents.length] by 2
           res = eval("Individual.#{CROSSOVER}(parents[j], parents[j+1])")
           children.push res[0]
           children.push res[1]
-        newPopulation = newPopulation.concat(children)            
+        newPopulation = newPopulation.concat(children)
         switch SELECTION
           when 'fpSelection'
             for _ in [0...MUTATIONBATCHSIZE]
@@ -327,8 +342,8 @@ $ ->
               newPopulation.push(eval("Individual.#{MUTATION}(mutant)"))
           when 'tournamentSelection'
             for _ in [0...MUTATIONBATCHSIZE]
-              mutant = eval "Individual.#{SELECTION}(population, points, FITNESS, TOURNAMENTSIZE, TOURNAMENTPROBABILITY)"
-              newPopulation.push(eval("Individual.#{MUTATION}(mutant)"))
+              mutt = eval "Individual.#{SELECTION}(population, points, FITNESS, TOURNAMENTSIZE, TOURNAMENTPROBABILITY)"
+              newPopulation.push(eval("Individual.#{MUTATION}(mutt)"))
 
         population = newPopulation
         fitnesses = for populant in population
@@ -343,8 +358,9 @@ $ ->
           return unless FITNESS in ['scaledFitness', 'paretoFitness']
             Individual.particleSwarmOptimization(population[maxIndex], points)
           else
-            scaledIndividual(Individual.particleSwarmOptimization(population[maxIndex], points), points, INDIVIDUALDEPTH)
-        if bestFitnessInPopulation > eval "bestIndividual.#{FITNESS}(points)" 
+            scaledIndividual \
+            Individual.particleSwarmOptimization(population[maxIndex], points), points, INDIVIDUALDEPTH
+        if bestFitnessInPopulation > eval "bestIndividual.#{FITNESS}(points)"
           bestIndividual = population[maxIndex]
 
       unless FITNESS in ['scaledFitness', 'paretoFitness']
