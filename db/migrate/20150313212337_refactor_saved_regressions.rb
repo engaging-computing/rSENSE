@@ -3,8 +3,8 @@ class RefactorSavedRegressions < ActiveRecord::Migration
     say 'Refactoring saved regressions'
     Visualization.find_each do | v |
       globals = JSON.parse(v.globals)
-      scatter_params = globals['Scatter']
-      timeline_params = globals['Timeline']
+      scatter_params = globals['Scatter']['configs']
+      timeline_params = globals['Timeline']['configs']
       if !scatter_params.nil? and scatter_params.key? 'savedRegressions'
         scatter_regressions = []
         scatter_params['savedRegressions'].each do |regression|
@@ -46,7 +46,7 @@ class RefactorSavedRegressions < ActiveRecord::Migration
             scatter_regressions.push regression
           end
         end
-        globals['Scatter']['savedRegressions'] = scatter_regressions
+        globals['Scatter']['configs']['savedRegressions'] = scatter_regressions
       end
 
       if !timeline_params.nil? and timeline_params.key? 'savedRegressions'
@@ -92,7 +92,7 @@ class RefactorSavedRegressions < ActiveRecord::Migration
             timeline_regressions.push new_regression
           end
         end
-        globals['Timeline']['savedRegressions'] = timeline_regressions
+        globals['Timeline']['configs']['savedRegressions'] = timeline_regressions
       end
       v.globals = globals.to_json
       v.save
