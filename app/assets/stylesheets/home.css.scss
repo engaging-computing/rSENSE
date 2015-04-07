@@ -175,7 +175,11 @@
       .fa-sort-desc {
         position: absolute;
         bottom: 0;
-        left:50;
+        left: 0;
+        right: 0;
+        top: auto;
+        margin-left: auto;
+        margin-right: auto;
         font-size: 64px;
 
       }
@@ -188,7 +192,7 @@
       .first {
         margin-top: 5vh;
       }
-      .description {
+      .mobile-description {
         padding: 10px;
         div {
           //padding: 10px;
