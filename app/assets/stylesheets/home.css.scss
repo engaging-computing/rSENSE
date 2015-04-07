@@ -189,8 +189,10 @@
         margin-top: 5vh;
       }
       .description {
+        padding: 10px;
         div {
-          padding: 10px;
+          //padding: 10px;
+          //width: 100%;
         }
         .left {
           text-align: left !important;
@@ -366,7 +368,7 @@
 }
 .desktop-content-wrapper .left-content-wrapper {
   min-width: 467px !important;
-  width: 49%;
+  max-width: 49%;
   text-align: center;
   display: inline-block;
   float: left;
@@ -374,7 +376,7 @@
 }
 .desktop-content-wrapper .right-content-wrapper {
   text-align: center;
-  width: 49%;
+  max-width: 49%;
   display: inline-block;
   float:right;
   top: 0;
