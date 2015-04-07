@@ -345,73 +345,21 @@ $ ->
       $("#vistablist li[aria-controls='scatter-canvas'] a").click()
 
     ###
-    If there is only one time field, generates an appropriate
-    elapsed time field. Otherwise it prompts using a dialog for
-    which time field to use.
+    Generates an appropriate elapsed time field.
     ###
     globals.generateElapsedTimeDialog = ->
-      if data.timeFields.length is 1
-        name  = 'Elapsed Time [from '
-        name += data.fields[data.timeFields[0]].fieldName + ']'
-        data.generateElapsedTime name, data.timeFields[0]
-        globals.curVis.end()
-        globals.curVis.start()
-        return
-
-      formText = """
-      <div id="dialog-form" title="Generate Elapsed Time">
-
-        <form>
-        <fieldset>
-      """
-
-      formText += '<select id="timeSelector" class="form-control">'
-
-      for fieldIndex, index in data.timeFields
-        sel = if index is 0 then 'selected' else ''
-        formText += "<option value='#{Number fieldIndex}' #{sel}>#{data.fields[fieldIndex].fieldName}</option>"
-
-      formText += """
-        </fieldset>
-        </form>
-      </div>
-      """
-
-      selectedTime = data.timeFields[0]
-
-      $('#groupSelector').change (e) ->
-        element = e.target or e.srcElement
-        selectedTime = (Number element.value)
-
-      $("#container").append(formText)
-
-      $("#dialog-form" ).dialog
-        resizable: false
-        draggable: false
-        autoOpen: true
-        height: 'auto'
-        width: 'auto'
-        modal: true
-        buttons:
-          Generate: ->
-            name  = 'Elapsed Time [from '
-            name += data.fields[selectedTime].fieldName + ']'
-            data.generateElapsedTime name, selectedTime
-            globals.curVis.end()
-            globals.curVis.start()
-            $("#dialog-form").dialog 'close'
-        close: ->
-          $("#dialog-form").remove()
+      name  = 'Elapsed Time [from '
+      name += data.fields[data.timeFields[0]].fieldName + ']'
+      data.generateElapsedTime name, data.timeFields[0]
+      globals.curVis.start()
+      $('#elapsed-time-btn').addClass('disabled')
 
     globals.identity = (i) -> i
 
 ###
-Override default highcarts zoom behavior (because it sucks when allowing zoom out)
+Override default highcarts zoom behavior
 ###
 Highcharts.Axis.prototype.zoom = (newMin, newMax) ->
-
-  this.displayBtn = newMin != undefined || newMax != undefined
-
-  this.setExtremes newMin, newMax, true, undefined, {trigger: 'zoom'}
-
-  true
+  this.displayBtn = newMin isnt undefined or newMax isnt undefined
+  this.setExtremes(newMin, newMax, true, undefined, {trigger: 'zoom'})
+  return true

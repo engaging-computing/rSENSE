@@ -114,7 +114,7 @@ $ ->
                     root = ele.parent()
                     root.append ele
 
-          group_by = ''
+          groupBy = ''
           $('#groupSelector').find('option').each (i,j) ->
             if $(j).is(':selected')
               groupBy = $(j).text()
@@ -232,21 +232,25 @@ $ ->
 
         # Compute max bounds if there is no user zoom
         if not @isZoomLocked()
-
           @configs.yBounds.min = @configs.xBounds.min =  Number.MAX_VALUE
           @configs.yBounds.max = @configs.xBounds.max = -Number.MAX_VALUE
 
-          for fieldIndex, symbolIndex in data.normalFields when fieldIndex in globals.configs.fieldSelection
-            for group, groupIndex in data.groups when groupIndex in data.groupSelection
-              @configs.yBounds.min = Math.min @configs.yBounds.min, (data.getMin fieldIndex, groupIndex)
-              @configs.yBounds.max = Math.max @configs.yBounds.max, (data.getMax fieldIndex, groupIndex)
-
-              @configs.xBounds.min = Math.min @configs.xBounds.min, (data.getMin @configs.xAxis, groupIndex)
-              @configs.xBounds.max = Math.max @configs.xBounds.max, (data.getMax @configs.xAxis, groupIndex)
+          for fi in data.normalFields when fi in globals.configs.fieldSelection
+            for g, gi in data.groups when gi in data.groupSelection
+              @configs.yBounds.min = Math.min(@configs.yBounds.min,
+                data.getMin(fi, gi))
+              @configs.yBounds.max = Math.max(@configs.yBounds.max,
+                data.getMax(fi, gi))
+              @configs.xBounds.min = Math.min(@configs.xBounds.min,
+                data.getMin(@configs.xAxis, gi))
+              @configs.xBounds.max = Math.max(@configs.xBounds.max,
+                data.getMax(@configs.xAxis, gi))
 
               if (@timeMode isnt undefined) and (@timeMode is @GEO_TIME_MODE)
-                @configs.xBounds.min = (new Date(@configs.xBounds.min)).getUTCFullYear()
-                @configs.xBounds.max = (new Date(@configs.xBounds.max)).getUTCFullYear()
+                @configs.xBounds.min =
+                  (new Date(@configs.xBounds.min)).getUTCFullYear()
+                @configs.xBounds.max =
+                  (new Date(@configs.xBounds.max)).getUTCFullYear()
 
         # Calculate grid spacing for data reduction
         width = $('#' + @canvas).innerWidth()
@@ -260,13 +264,15 @@ $ ->
           @xGridSize = Math.round (width / height * @INITIAL_GRID_SIZE)
 
         # Draw series
-        for fieldIndex, symbolIndex in data.normalFields when fieldIndex in globals.configs.fieldSelection
-          for group, groupIndex in data.groups when groupIndex in data.groupSelection
+        fs = globals.configs.fieldSelection
+        for fi, si in data.normalFields when fi in fs
+          for g, gi in data.groups when gi in data.groupSelection
             dat = if not @configs.fullDetail
-              sel = data.xySelector(@configs.xAxis, fieldIndex, groupIndex)
-              globals.dataReduce sel, @configs.xBounds, @configs.yBounds, @xGridSize, @yGridSize, @MAX_SERIES_SIZE
+              sel = data.xySelector(@configs.xAxis, fi, gi)
+              globals.dataReduce(sel, @configs.xBounds, @configs.yBounds,
+                @xGridSize, @yGridSize, @MAX_SERIES_SIZE)
             else
-              data.xySelector(@configs.xAxis, fieldIndex, groupIndex)
+              data.xySelector(@configs.xAxis, fi, gi)
 
             if dat.length < 2 and @configs.mode is @LINES_MODE
               @configs.mode = @SYMBOLS_LINES_MODE
@@ -278,36 +284,36 @@ $ ->
             options =
               data: dat
               showInLegend: false
-              color: globals.getColor(groupIndex)
+              color: globals.getColor(gi)
               name:
-                group: data.groups[groupIndex]
-                field: data.fields[fieldIndex].fieldName
+                group: data.groups[gi]
+                field: data.fields[fi].fieldName
             switch
               when @configs.mode is @SYMBOLS_LINES_MODE
                 options.marker =
-                  symbol: globals.symbols[symbolIndex % globals.symbols.length]
+                  symbol: globals.symbols[si % globals.symbols.length]
                 options.lineWidth = 2
 
               when @configs.mode is @SYMBOLS_MODE
                 options.marker =
-                  symbol: globals.symbols[symbolIndex % globals.symbols.length]
+                  symbol: globals.symbols[si % globals.symbols.length]
                 options.lineWidth = 0
 
               when @configs.mode is @LINES_MODE
                 options.marker =
                   symbol: 'blank'
                 options.lineWidth = 2
-                options.dashStyle = globals.dashes[symbolIndex % globals.dashes.length]
+                options.dashStyle = globals.dashes[si % globals.dashes.length]
 
-            @chart.addSeries options, false
+            @chart.addSeries(options, false)
 
         if @isZoomLocked()
           @updateOnZoom = false
           @setExtremes()
-          $('#zoom-reset-btn').removeClass("disabled")
+          $('#zoom-reset-btn').removeClass('disabled')
         else
           @resetExtremes
-          $('#zoom-reset-btn').addClass("disabled")
+          $('#zoom-reset-btn').addClass('disabled')
 
         @chart.redraw()
 
@@ -328,9 +334,15 @@ $ ->
               new Function("x", regression.func)
             else
               new Function("x, P", regression.func)
-            series = globals.getRegressionSeries(func, regression.parameters, regression.r2, regression.type, [@configs.xBounds.min, @configs.xBounds.max], regression.name, regression.dashStyle, regression.id, regression.tooltip, false)[3]
+            series = globals.getRegressionSeries(func, regression.parameters,
+              regression.r2, regression.type,
+              [@configs.xBounds.min, @configs.xBounds.max],
+              regression.name, regression.dashStyle, regression.id,
+              regression.tooltip, false)[3]
+
             # Add the regression to the chart
             @chart.addSeries(series)
+
             # Enabled the class by removing the disabled class
             $('tr#row_' + regression.id).removeClass('regression_row_disabled')
           else
@@ -351,7 +363,7 @@ $ ->
         ictx = {}
         ictx.axes = ["Both", "X", "Y"]
         ictx.logSafe = data.logSafe
-        ictx.elapsedTime = elapsedTime
+        ictx.elapsedTime = elapsedTime and data.timeFields.length is 1
         ictx.modes = [
           { mode: @SYMBOLS_LINES_MODE, text: "Symbols and Lines" }
           { mode: @LINES_MODE,         text: "Lines Only" }
@@ -401,7 +413,7 @@ $ ->
           globals.configs.logY = (globals.configs.logY + 1) % 2
           @start()
 
-        $('#elasped-time-btn').click (e) ->
+        $('#elapsed-time-btn').click (e) ->
           globals.generateElapsedTimeDialog()
 
         # Initialize and track the status of this control panel
@@ -479,168 +491,149 @@ $ ->
         super()
 
       ###
-      Updates x axis for regression.
+      Updates regression control labels
       ###
-      updateXRegression:() ->
-        $('#regressionXAxis').text("#{data.fields[@configs.xAxis].fieldName}")
-
-      ###
-      Updates y axis for regression.
-      ###
-      updateYRegression:() ->
-        if $('#regressionYAxisSelector')?
-          $('#regressionYAxisSelector').empty()
-          for fieldIndex in globals.configs.fieldSelection
-            $('#regressionYAxisSelector').append($("<option/>", {
-              value: fieldIndex,
-              text: data.fields[fieldIndex].fieldName
-            }))
+      updateRegrLabels:() ->
+        $('#regr-x-axis').text("#{data.fields[@configs.xAxis].fieldName}")
+        if $('#regr-y-axis')? then $('#regr-y-axis').empty()
+        for f in globals.configs.fieldSelection
+          # TODO template this out
+          $('#regr-y-axis').append($("<option/>", {
+            value: f,
+            text: data.fields[f].fieldName
+          }))
 
       ###
       Adds the regression tools to the control bar.
       ###
       drawRegressionControls: () ->
-        controls = """
-          <div id="regressionControl" class="vis_controls">
-          <h3 class='clean_shrink'><a href='#'>Analysis Tools:</a></h3>
-          <div class='outer_control_div' style='text-align:center'>
+        ictx =
+          xAxis: data.fields[@configs.xAxis].fieldName
+          yFields:
+            for f in globals.configs.fieldSelection
+              name: data.fields[f].fieldName
+              id: f
+          regressions: ['Linear', 'Quadratic', 'Cubic', 'Exponential',
+            'Logarithmic', 'Automatic']
 
-          <table><tr>
-          <td>X Axis: </td>
-          <td id='regressionXAxis'>#{data.fields[@configs.xAxis].fieldName}</td></tr>
+        octx = {}
+        octx.id = 'regression-ctrls'
+        octx.title = 'Analysis Tools'
+        octx.body = HandlebarsTemplates[hbCtrl('regression')](ictx);
+        tools = HandlebarsTemplates[hbCtrl('body')](octx);
+        $('#vis-ctrls').append tools
 
-          <tr><td>Y Axis: </td>
-          <td><select id='regressionYAxisSelector' class='form-control'>
-          """
+        # Initialize and track the status of this control panel
+        globals.configs.regressionOpen ?= false
+        initCtrlPanel('regression-ctrls', 'regressionOpen')
 
-        for fieldIndex in globals.configs.fieldSelection
-          controls += "<option value='#{fieldIndex}'>#{data.fields[fieldIndex].fieldName}</option>"
-
-        controls +=
-          """
-          </select></td></tr>
-          <tr><td>Type: </td>
-          <td><select id="regressionSelector" class="form-control">
-          """
-
-        regressions = ['Linear', 'Quadratic', 'Cubic', 'Exponential', 'Logarithmic', 'Automatic']
-        for regressionType in regressions
-          controls += "<option value='#{regressions.indexOf(regressionType)}'>#{regressionType}</option>"
-
-        controls +=
-          """
-          </select></td></tr>
-          </table>
-          <button id='regressionButton' class='save_button btn btn-default'>Draw Best Fit Line</button>
-          <table id='regression-table'>
-          <col width='55%' />
-          <col width='35%' />
-          <col width='10%' />
-          <tr id='regression-table-header'><td><strong>f(x)<strong></td><td><strong>Type<strong></td></tr>
-          <tbody id='regression-table-body'></tbody></table>
-          </div></div>
-          """
-
-        # Write HTML
-        $('#controldiv').append controls
-        $("#regressionControl button").button()
-
-        # Add all the saved regressions correctly
+        # Restore saved regressions if they exist
+        fs = globals.configs.fieldSelection
         for regression in @configs.savedRegressions
-          # Filter out the ones that should be enabled.
-          # - X indices must match.
-          # - Compare the arrays without comparing them.
-          # - Y axis must be present.
-          if regression.xAxis == @configs.xAxis \
-          and "#{regression.groups}" is "#{data.groupSelection}" \
-          and globals.configs.fieldSelection.indexOf(regression.yAxis) != -1
-            func = if regression.type is globals.REGRESSION.SYMBOLIC
+          enabled =
+            regression.xAxis is @configs.xAxis and                  # X indices
+            "#{regression.groups}" is "#{data.groupSelection}" and  # Groups
+            fs.indexOf(regression.yAxis) isnt -1                    # Y field
+
+          func =
+            if regression.type is globals.REGRESSION.SYMBOLIC
               new Function("x", regression.func)
             else
               new Function("x, P", regression.func)
-            # Calculate the series
-            series = globals.getRegressionSeries(func, regression.parameters, regression.r2, regression.type, [@configs.xBounds.min, @configs.xBounds.max], regression.name, regression.dashStyle, regression.tooltip, regression.id)[3]
-            # Add the regression to the chart
-            @chart.addSeries(series)
-            @addRegressionToTable(regression, true)
-          else
-            @addRegressionToTable(regression, false)
 
-        # Catches change in y axis
-        $('.y_axis_input').click (e) =>
-          @updateYRegression()
+          # Calculate the series
+          series =
+            globals.getRegressionSeries(func, regression.parameters,
+              regression.r2, regression.type,
+              [@configs.xBounds.min, @configs.xBounds.max], regression.name,
+              regression.dashStyle, regression.tooltip, regression.id)[3]
 
-        # Catches change in x axis
-        $('.xAxis_input').change (e) =>
-          @updateXRegression()
+          # Add the regression to the chart
+          if enabled then @chart.addSeries(series)
+          @addRegressionToTable(regression, enabled)
 
-        $("#regressionButton").click =>
+        # Catches y axis changes
+        $('input[name="y-axis"]').click (e) =>
+          @updateRegrLabels()
 
-          # Get the current selected y index, the regression type, and the current group indices
-          yAxisIndex = Number($('#regressionYAxisSelector').val())
-          regressionType = Number($('#regressionSelector').val())
+        # Catches x axis changes
+        $('input[name="x-axis"]').change (e) =>
+          @updateRegrLabels()
+
+        # Create a new regression
+        $('#draw-regr-btn').click =>
+          yAxisIndex = Number($('#regr-y-axis').val())
+          regrType = Number($('#regr-type').val())
 
           # Make the title for the tooltip
           xAxisName = data.fields[@configs.xAxis].fieldName
-          yAxisName = $('#regressionYAxisSelector option:selected').text()
-          name = "<strong>#{yAxisName}</strong> as a "
-          funcDesc = if regressionType isnt globals.REGRESSION.SYMBOLIC 
-            "#{$('#regressionSelector option:selected').text().toLowerCase()} "
-          else ''
-          name += funcDesc
-          name += "function of <strong>#{xAxisName}</strong>"
+          yAxisName = $('#regr-y-axis option:selected').text()
 
-          #list of (x,y) points to be used in calculating regression
-          xyData = data.multiGroupXYSelector(@configs.xAxis, yAxisIndex, data.groupSelection)
+          # TODO template this out
+          name = "<strong>#{yAxisName}</strong> as a "
+          desc = ''
+          if regrType isnt globals.REGRESSION.SYMBOLIC
+            desc = "#{$('#regr-type option:selected').text().toLowerCase()} "
+          name += desc + "function of <strong>#{xAxisName}</strong>"
+
+          # List of (x,y) points to be used in calculating regression
+          xyData = data.multiGroupXYSelector(@configs.xAxis, yAxisIndex,
+            data.groupSelection)
           xMax = window.globals.curVis.configs.xBounds.max
           xMin = window.globals.curVis.configs.xBounds.min
           points = ({x: point.x, y: point.y} for point in xyData)
           fn = (pv, cv, index, array) -> (pv and cv)
+
           # Create a unique identifier for the regression
-          regressionId = "regression_#{@configs.xAxis}_#{yAxisIndex}_#{regressionType}_" + data.groupSelection.toString()
-          regressionId = regressionId.replace(',', '_') while regressionId.indexOf(',') isnt -1
-          return unless (regression.id isnt regressionId for regression in @configs.savedRegressions).reduce(fn, true)  
-          
+          regrId = "regr_#{@configs.xAxis}_#{yAxisIndex}_#{regrType}_" +
+            data.groupSelection.toString()
+          regrId = regrId.replace(',', '_') while regrId.indexOf(',') isnt -1
+          return unless (r.id isnt regrId for r in @configs.savedRegressions).reduce(fn, true)
+
           # Get dash index
           dashIndex = data.normalFields.indexOf(yAxisIndex)
           dashStyle = globals.dashes[dashIndex % globals.dashes.length]
 
-          [func, Ps, r2, newRegression, tooltip] = [null, null, null, null, null]
-          if regressionType is globals.REGRESSION.SYMBOLIC
-            [func, Ps, r2, newRegression, tooltip] = globals.getRegression(
+          [func, Ps, r2, newRegr, tooltip] = [null, null, null, null, null]
+          if regrType is globals.REGRESSION.SYMBOLIC
+            [func, Ps, r2, newRegr, tooltip] = globals.getRegression(
               points,
-              regressionType,
+              regrType,
               [xMin, xMax],
               name,
               dashStyle,
-              regressionId
+              regrId
             )
           else
             try
-              [func, Ps, r2, newRegression, tooltip] = globals.getRegression(
+              [func, Ps, r2, newRegr, tooltip] = globals.getRegression(
                 points,
-                regressionType,
+                regrType,
                 [xMin, xMax],
                 name,
                 dashStyle,
-                regressionId
+                regrId
               )
-              Ps = Ps.map((y) -> if Math.abs(Math.round(y) - y) < 1e-4 then Math.round(y) else y)
+              Ps = Ps.map (y) ->
+                if Math.abs(Math.round(y) - y) < 1e-4 then Math.round(y) else y
+
             catch error
               console.trace()
               console.log error
-              if regressionType is 3
-                alert "Unable to calculate an #{regressions[regressionType]} regression for this data."
+              if regrType is 3
+                alert("Unable to calculate an #{regressions[regrType]} " +
+                "regression for this data.")
               else
-                alert "Unable to calculate a #{regressions[regressionType]} regression for this data."
+                alert("Unable to calculate a #{regressions[regrType]} " +
+                "regression for this data.")
               return
 
           # Add the series
-          @chart.addSeries(newRegression)
+          @chart.addSeries(newRegr)
 
-          # Set func variable to a string that can be used to recreate the desired function
+          # Set func var to a string so it can be restored later
           if typeof(func) is 'function'
-            func = switch regressionType
+            func = switch regrType
               when globals.REGRESSION.LINEAR
                 'return P[0] + (P[1] * x)'
               when globals.REGRESSION.QUADRATIC
@@ -656,130 +649,26 @@ $ ->
 
           # Prepare to save regression fields
           savedRegression =
-            type: regressionType
+            type: regrType
             xAxis: @configs.xAxis
             yAxis: yAxisIndex
             groups: data.groupSelection
             parameters: Ps
             func: func
-            id: regressionId
+            id: regrId
             r2: r2
             name: name
             dashStyle: dashStyle
             tooltip: tooltip
-      
+
           # Save a regression
           @configs.savedRegressions.push(savedRegression)
 
           # Actually add the regression to the table
           @addRegressionToTable(savedRegression, true)
+
           # Draw the regression to the vis
           globals.curVis.update()
-        # Set up accordion
-        globals.configs.regressionOpen ?= 0
-
-        $('#regressionControl').accordion
-          collapsible:true
-          active:globals.configs.regressionOpen
-          heightStyle:"content"
-
-        $('#regressionControl > h3').click ->
-          globals.configs.regressionOpen = (globals.configs.regressionOpen + 1) % 2
-
-      # Adds a regression row to our table, with styling for enabled or disabled
-      addRegressionToTable: (savedReg, enabled) ->
-        # Remove object from an array
-        Array::filterOutValue = (v) -> x for x in @ when x != v
-
-        # Here have a list of regressions
-        regressions = ['Linear', 'Quad', 'Cubic', 'Exp', 'Log', 'Auto']
-
-        # Add the entry used the passed regression
-        regressionRow =
-          """
-          <tr id ='row_#{savedReg.id}' class='regression_row'>
-          <td class='regression_rowdata truncate'>#{data.fields[savedReg.yAxis].fieldName}(#{data.fields[savedReg.xAxis].fieldName})</td>
-          <td class='regression_rowdata'>#{regressions[savedReg.type]}</td>
-          <td id='#{savedReg.id}' class='regression_remove'><i class='fa fa-times-circle'></i></td>
-          </tr>
-          """
-
-        # Added info relating to this regression
-        $('#regression-table-body').append(regressionRow)
-
-        # Add the disabled style if necessary
-        if !enabled
-          $('tr#row_' + savedReg.id).addClass('regression_row_disabled')
-
-        # Display the table header
-        $('tr#regression-table-header').show()
-
-        # Make each row a link to its view
-        $('tr#row_' + savedReg.id).click =>
-          # Reset the state of when you saved
-          @configs.xAxis = savedReg.xAxis
-          globals.configs.fieldSelection = [savedReg.yAxis]
-          data.groupSelection = savedReg.groups
-
-          #@configs.xBounds = savedReg.bounds[0]
-          #@configs.yBounds = savedReg.bounds[1]
-
-          $('.xAxis_input').each (i, input) ->
-            if Number(input.value) == savedReg.xAxis
-              input.checked = true
-
-        # Draw the Tool controls
-        octx = {}
-        octx.id = 'regression-ctrls'
-        octx.title = 'Tools'
-        octx.body = HandlebarsTemplates[hbCtrl('regression')](ictx);
-        tools = HandlebarsTemplates[hbCtrl('body')](octx);
-        $('#vis-ctrls').append tools
-
-        # Add a make the delete button remove the regression object
-        $('td#' + savedReg.id).click =>
-          # Remove regression view from the screen.
-          $('td#' + savedReg.id).parent().remove()
-
-          # Display the table header if necessary
-          if $('#regression-table-body > tr').length > 0
-            $('tr#regression-table-header').show()
-          else $('tr#regression-table-header').hide()
-
-          # Remove regression from the savedRegressions array.
-          id = savedReg.id
-          for regression in @configs.savedRegressions
-            if (regression.id == id)
-              @configs.savedRegressions =
-                @configs.savedRegressions.filterOutValue(regression)
-              break
-
-          # Remove regression from the chart
-          for series, i in @chart.series
-            if (series.name.id == id)
-              @chart.series[i].remove()
-              break
-
-        # Make the hovering highlight the correct regression
-        $('tr#row_' + savedReg.id).mouseover =>
-
-          # Remove regression from the chart
-          id = savedReg.id
-          for series, i in @chart.series
-            if (series.name.id is id)
-              @chart.series[i].setState('hover')
-              @chart.tooltip.refresh(@chart.series[i].points[@chart.series[i].points.length - 1])
-              break
-
-        # When the mouse leaves, don't highlight anymore
-        $('tr#row_' + savedReg.id).mouseout =>
-          # Remove regression from the chart
-          id = savedReg.id
-          for series, i in @chart.series
-            if (series.name.id == id)
-              @chart.series[i].setState('')
-              @chart.tooltip.hide()
-              break
 
       ###
       Clips an array of data to include only bounded points
