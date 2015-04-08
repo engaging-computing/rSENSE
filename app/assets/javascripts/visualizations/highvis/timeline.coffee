@@ -48,12 +48,12 @@ $ ->
         super()
 
         self = this
-        group_by = ''
-        ($ '#groupSelector').find('option').each (i,j) ->
-          if ($ j).is(':selected')
-            group_by = ($ j).text()
-        if group_by is ''
-          group_by = "Data set Name (id)"
+        groupBy = ''
+        $('#groupSelector').find('option').each (i,j) ->
+          if $(j).is(':selected')
+            groupBy = $(j).text()
+        if groupBy is ''
+          groupBy = "Data set Name (id)"
         $.extend true, @chartOptions,
           title:
             text: ''

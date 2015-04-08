@@ -75,6 +75,8 @@ $ ->
     Returns the units for a field
     ###
     window.fieldUnit = (field, parens = true) ->
+      unless field?
+        console.trace()
       if field.unitName isnt null
         if parens is true then "(#{field.unitName})" else "#{field.unitName}"
 

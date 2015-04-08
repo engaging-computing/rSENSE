@@ -27,6 +27,10 @@ $table-bg-accent: #E8E8E8;
 @import "bootstrap-sprockets";
 @import "bootstrap";
 
+.alert {
+  margin-bottom: 0px;
+}
+
 body {
   background-color: #ddd;
 }

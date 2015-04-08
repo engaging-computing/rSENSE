@@ -44,6 +44,7 @@ $ ->
 
   if namespace.controller is "visualizations" and
   namespace.action in ["displayVis", "embedVis", "show"]
+
     window.add = (a, b) -> a + b
     window.subtract = (a, b) -> a - b
     window.multiply = (a, b) -> a * b
@@ -54,7 +55,7 @@ $ ->
     window.sin = (a) -> Math.sin(a)
     window.safeLog = (a) -> Math.log(Math.abs(a))
     window.safeSqrt = (a) -> Math.sqrt(Math.abs(a))
-    class window.binaryTree extends Object
+    class window.BinaryTree extends Object
 
       # Initial ephemeral constant value on the interval [-1, 1)
       @ephemeralConstant:  Math.random() * 2 - 1
@@ -76,13 +77,13 @@ $ ->
       # Returns deep copy of binary tree object
       @clone: (tree, parent = null) ->
         return tree if tree is null or typeof tree isnt 'object'
-        temp = new binaryTree(parent)
+        temp = new BinaryTree(parent)
         for key of tree when (typeof(tree[key]) isnt 'function' and key isnt 'parent')
           temp[key] = @clone(tree[key], temp)
         temp['data'] = tree.data
         temp
 
-      # Returns true if a and b are equivalent objects 
+      # Returns true if a and b are equivalent objects
       # (not necessarily references to the same object in memory).
       @is_equal: (a, b) ->
         [leftEq, rightEq] = [true, true]
@@ -93,9 +94,9 @@ $ ->
         if '' + a.data isnt '' + b.data or a.treeSize() isnt b.treeSize() or a.maxDepth() isnt b.maxDepth()
           return false
         if a.left isnt null and b.left isnt null
-          leftEq = binaryTree.is_equal(a.left, b.left)
+          leftEq = BinaryTree.is_equal(a.left, b.left)
         if a.right isnt null and b.right isnt null
-          rightEq = binaryTree.is_equal(a.right, b.right)
+          rightEq = BinaryTree.is_equal(a.right, b.right)
         leftEq and rightEq
 
       # Checks if the tree is terminal (i.e., no children)
@@ -122,9 +123,9 @@ $ ->
         if @right? and @right isnt null
           rest = combiner(rest, @right.__query(combiner))
         1 + rest
-      
-      # Inserts a single datum in the tree at @data, 
-      # or the @data member of the tree located at 
+
+      # Inserts a single datum in the tree at @data,
+      # or the @data member of the tree located at
       # pos = 'left' or pos = 'right'
       ###
       # WARNING:  MUTATES THE BINARY TREE
@@ -133,7 +134,7 @@ $ ->
         if pos is 'left'
           if @data isnt null
             if @left is null
-              @left = new binaryTree(@)
+              @left = new BinaryTree(@)
             @left.data = data
 
           else
@@ -141,7 +142,7 @@ $ ->
         else if pos is 'right'
           if @data isnt null
             if @right is null
-              @right = new binaryTree(@)
+              @right = new BinaryTree(@)
             @right.data = data
           else
             console.log "Error inserting #{data} into right child of tree."
@@ -149,7 +150,7 @@ $ ->
           @data = data
 
       # Delete a single datum in the tree at @data,
-      # or the @data member of the tree located at 
+      # or the @data member of the tree located at
       # pos = 'left' or pos = 'right'
       ###
       # WARNING:  MUTATES THE BINARY TREE
@@ -157,7 +158,7 @@ $ ->
       deleteData: (pos = null) ->
         if pos is 'right'
           if @right.is_terminal()
-            @right = null 
+            @right = null
           else
             console.log "Error deleting #{@right.data}, results in invalid binary tree."
             null
@@ -193,35 +194,35 @@ $ ->
       ###
       __access: (index, value = true, curDepth = 1) ->
         if index is 0
-          return if value is true then @ else curDepth 
+          return if value is true then @ else curDepth
         leftSize = if @left is null then 0 else @left.treeSize()
         rightSize = if @right is null then 0 else @right.treeSize()
-        if index > leftSize + rightSize 
+        if index > leftSize + rightSize
           -1
         else if index > leftSize
           if @right isnt null then @right.__access(index - leftSize - 1, value, curDepth + 1) else -1
         else
           if @left isnt null then @left.__access(index - 1, value, curDepth + 1) else -1
       
-      # Given a tree, replace it with a randomly-generated tree whose maximum 
-      # depth is given by maxDepth. 
+      # Given a tree, replace it with a randomly-generated tree whose maximum
+      # depth is given by maxDepth.
       ###
       # WARNING:  MUTATES THE BINARY TREE
       ###
       generate: (maxDepth = 10, curDepth = 1) ->
         if curDepth is maxDepth
-          @insertData(window.binaryTree.terminals[Math.floor(Math.random() * window.binaryTree.terminals.length)])
+          @insertData(window.BinaryTree.terminals[Math.floor(Math.random() * window.BinaryTree.terminals.length)])
         else
-          randomGene = Math.floor(Math.random() * (binaryTree.terminals.length + binaryTree.operators.length))
-          if randomGene < binaryTree.terminals.length
-            @insertData(binaryTree.terminals[randomGene])
+          randomGene = Math.floor(Math.random() * (BinaryTree.terminals.length + BinaryTree.operators.length))
+          if randomGene < BinaryTree.terminals.length
+            @insertData(BinaryTree.terminals[randomGene])
           else
-            gene = binaryTree.operators[randomGene - binaryTree.terminals.length]
+            gene = BinaryTree.operators[randomGene - BinaryTree.terminals.length]
             @insertData(gene)
-            @left = new binaryTree(@)
+            @left = new BinaryTree(@)
             @left.generate(maxDepth, curDepth + 1)
             if gene.length isnt 1
-              @right = new binaryTree(@)
+              @right = new BinaryTree(@)
               @right.generate(maxDepth, curDepth + 1)
 
       # Evaluate the Binary tree numerically for a given input value
@@ -229,7 +230,7 @@ $ ->
         if @data is 'x'
           if val isnt null then val else x
         else if @data is 'ec'
-          binaryTree.ephemeralConstant
+          BinaryTree.ephemeralConstant
         else if typeof(@data) is 'number'
           @data
         else
@@ -238,7 +239,7 @@ $ ->
           else
             @data(@left.evaluate(x), @right.evaluate(x))
 
-      # Insert the binaryTree object 'tree' at the location of the binaryTree 
+      # Insert the BinaryTree object 'tree' at the location of the BinaryTree
       # specified by index
       ###
       # WARNING:  MUTATES THE BINARY TREE 'THIS', DOES NOT MUTATE ARGUMENT TREE
@@ -251,17 +252,17 @@ $ ->
         else
           start = replacementPoint.parent
           if start isnt null
-            if start.left isnt null and window.binaryTree.is_equal(replacementPoint, start.left)
-              start.left = window.binaryTree.clone(tree)
+            if start.left isnt null and window.BinaryTree.is_equal(replacementPoint, start.left)
+              start.left = window.BinaryTree.clone(tree)
             else
-              if start.right isnt null and window.binaryTree.is_equal(replacementPoint, start.right)
-                start.right = window.binaryTree.clone(tree)
+              if start.right isnt null and window.BinaryTree.is_equal(replacementPoint, start.right)
+                start.right = window.BinaryTree.clone(tree)
             start.__updateParents()
           else
 
             @data = tree.data
-            @right = binaryTree.clone(tree.right)
-            @left = binaryTree.clone(tree.left)
+            @right = BinaryTree.clone(tree.right)
+            @left = BinaryTree.clone(tree.left)
             @parent = null
             @__updateParents()
 
@@ -275,10 +276,10 @@ $ ->
       ###
       __updateParents: ->
         if @right isnt null
-          @right = window.binaryTree.clone(@right, @)
+          @right = window.BinaryTree.clone(@right, @)
           @right.__updateParents()
         if @left isnt null
-          @left = window.binaryTree.clone(@left, @)
+          @left = window.BinaryTree.clone(@left, @)
           @left.__updateParents()
 
       # Given two parent trees, create two new child trees by crossover.
@@ -289,12 +290,12 @@ $ ->
       # point, and the part of the second parent before its crossover point.
 
       @crossover: (tree1, tree2) ->
-        [tree1a, tree1b] = [window.binaryTree.clone(tree1), window.binaryTree.clone(tree1)]
-        [tree2a, tree2b] = [window.binaryTree.clone(tree2), window.binaryTree.clone(tree2)]
+        [tree1a, tree1b] = [window.BinaryTree.clone(tree1), window.BinaryTree.clone(tree1)]
+        [tree2a, tree2b] = [window.BinaryTree.clone(tree2), window.BinaryTree.clone(tree2)]
         
         [crossoverPointOne, crossoverPointTwo] = \
         [Math.floor(Math.random() * tree1.treeSize()), Math.floor(Math.random() * tree2.treeSize())]
-        [childOne, childTwo] = [window.binaryTree.clone(tree1a), window.binaryTree.clone(tree2a)]
+        [childOne, childTwo] = [window.BinaryTree.clone(tree1a), window.BinaryTree.clone(tree2a)]
         childOne.insertTree(childTwo.index(crossoverPointTwo), crossoverPointOne)
         childTwo.insertTree(tree1b.index(crossoverPointOne), crossoverPointTwo)
         [childOne, childTwo]
@@ -304,7 +305,7 @@ $ ->
       @stringify: (tree) ->
         
         # Helper method to properly parenthesize nested terms
-        parenthesize = (string) -> 
+        parenthesize = (string) ->
           if not isNaN(Number(string)) or string is 'x' then string else "(#{string})"
         
         switch tree.data
@@ -336,63 +337,57 @@ $ ->
           when 'x'
             'x'
           when 'ec'
-            "#{window.roundToFourSigFigs(binaryTree.ephemeralConstant)}"
+            "#{window.roundToFourSigFigs(BinaryTree.ephemeralConstant)}"
           else
-            #console.log tree.data
             "#{window.roundToFourSigFigs(tree.data)}"
     
-      # Given a tree, construct a string of valid coffeescript code that can be 'evaled' to 
+      # Given a tree, construct a string of valid coffeescript code that can be 'evaled' to
       # mimic the symbolic regression.
       @codify: (tree) ->
       # Helper method to properly parenthesize nested terms
-        parenthesize = (string) -> 
+        parenthesize = (string) ->
           if not isNaN(Number(string)) or string is 'x' then string else "(#{string})"
         
         getFunc = (tree) ->
           switch tree.data
+            
             when window.add
               "window.add(#{parenthesize(getFunc(tree.left))}, #{parenthesize(getFunc(tree.right))})"
-              #"#{parenthesize(@stringify(tree.left))} + #{parenthesize(@stringify(tree.right))}"
 
             when window.subtract
               "window.subtract(#{parenthesize(getFunc(tree.left))}, #{parenthesize(getFunc(tree.right))})"
-              #"#{parenthesize(@stringify(tree.left))} - #{parenthesize(@stringify(tree.right))}"
 
             when window.multiply
               "window.multiply(#{parenthesize(getFunc(tree.left))}, #{parenthesize(getFunc(tree.right))})"
-              # "#{parenthesize(@stringify(tree.left))} * #{parenthesize(@stringify(tree.right))}"
 
             when window.safeDiv
               "window.safeDiv(#{parenthesize(getFunc(tree.left))}, #{parenthesize(getFunc(tree.right))})"
-              # "#{parenthesize(@stringify(tree.left))} / #{parenthesize(@stringify(tree.right))}"
 
             when window.pow
               "window.pow(#{parenthesize(getFunc(tree.left))}, #{parenthesize(getFunc(tree.right))})"
-              # "#{parenthesize(@stringify(tree.left))} <sup>#{parenthesize(@stringify(tree.right))}</sup>"
 
             when window.exp
               "window.exp(#{parenthesize(getFunc(tree.left))})"
-              # "e <sup>#{parenthesize(@stringify(tree.left))}</sup>"
+            
             when window.cos
               "window.cos(#{parenthesize(getFunc(tree.left))})"
-              # "cos(#{parenthesize(@stringify(tree.left))})"
+            
             when window.sin
               "window.sin(#{parenthesize(getFunc(tree.left))})"
-              # "sin(#{parenthesize(@stringify(tree.left))})"
+            
             when window.safeLog
               "window.safeLog(#{parenthesize(getFunc(tree.left))})"
-              # "log(|#{parenthesize(@stringify(tree.left))}|)"
+            
             when window.safeSqrt
               "window.safeSqrt(#{parenthesize(getFunc(tree.left))})"
-              # "sqrt(|#{parenthesize(@stringify(tree.left))}|)"
+            
             when 'x'
               'x'
+            
             when 'ec'
-              "#{binaryTree.ephemeralConstant}"
+              "#{BinaryTree.ephemeralConstant}"
+            
             else
-              #console.log tree.data
               "#{tree.data}"
+        
         'return ' + getFunc(tree)
-
-    #create lambda from codify
-    #window.wat = new Function("x", binaryTree.codify(a))

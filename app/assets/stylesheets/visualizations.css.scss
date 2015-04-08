@@ -65,7 +65,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     }
   }
 
-  div.regressionTooltip {
+  div.regr-tooltip {
     width: 100%;
     text-align: center;
     color: #000;
@@ -149,41 +149,53 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     position: absolute;
   }
 
-  #regression-table {
-    #regression-table-body {
+  .regr-option {
+    text-align: center;
+    font-size: 14px;
+    margin-left: 4px;
+  }
+
+  #regr-table {
+    width: 100%;
+
+    #regr-table-body {
       text-align: left;
       font-size: 10px;
+
+      .data {
+        border-bottom: $border;
+      }
+
+      .disabled {
+        background-color: $regr-dis-bkg;
+        color: $regr-dis-font;
+      }
+
+      .remove {
+        font-size: 14px;
+        color: $error;
+        width: 10%;
+        text-align: center;
+      }
+
+      .row {
+        border-bottom: $border;
+        cursor: pointer;
+      }
+
+      .row::before, .row::after {
+        content: none; // Override bootstrap row styling
+      }
+
+      .row:hover {
+        background-color: $regr-bkg;
+        border-bottom: $border;
+      }
     }
 
-    #regression-table-header {
+    #regr-table-header {
       text-align: left;
       font-size: 12px;
-    }
-
-    .regression_row {
-      border-bottom: $border;
-      cursor: pointer;
-    }
-
-    .regression_row:hover {
-      background-color: $regr-bkg;
-      border-bottom: $border;
-    }
-
-    .regression_rowdata {
-      border-bottom: $border;
-    }
-
-    .regression_row_disabled {
-      background-color: $regr-dis-bkg;
-      color: $regr-dis-font;
-    }
-
-    .regression_remove {
-      font-size: 14px;
-      color: $error;
-      width: 10%;
-      text-align: center;
     }
   }
 

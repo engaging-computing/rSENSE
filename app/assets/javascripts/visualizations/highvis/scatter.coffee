@@ -277,7 +277,7 @@ $ ->
             if dat.length < 2 and @configs.mode is @LINES_MODE
               @configs.mode = @SYMBOLS_LINES_MODE
               query = "input[name='mode'][value='#{@configs.mode}']"
-              $(query).prop('checked', true);
+              $(query).prop('checked', true)
               quickFlash('Mode has been changed to symbols and lines because
                 there were too few points to generate a line', 'warning')
 
@@ -321,39 +321,40 @@ $ ->
         @storeYBounds @chart.yAxis[0].getExtremes()
 
         # Disable/enable all of the saved regressions as necessary
-        for regression in @configs.savedRegressions
-          # Filter out the ones that should be enabled.
-          # - X indices must match.
-          # - Compare the arrays without comparing them.
-          # - Y axis must be present.
-          if regression.xAxis is @configs.xAxis \
-          and "#{regression.groups}" is "#{data.groupSelection}" \
-          and globals.configs.fieldSelection.indexOf(regression.yAxis) != -1
-            # Calculate the series
-            func = if regression.type is globals.REGRESSION.SYMBOLIC
-              new Function("x", regression.func)
+        fs = globals.configs.fieldSelection
+        for regr in @configs.savedRegressions
+          if regr.xAxis is @configs.xAxis              and # X indices
+          "#{regr.groups}" is "#{data.groupSelection}" and # Groups
+          fs.indexOf(regr.yAxis) isnt -1                   # Y field
+            # Create the hypothesis function
+            func = if regr.type is globals.REGRESSION.SYMBOLIC
+              new Function("x", regr.func)
             else
-              new Function("x, P", regression.func)
-            series = globals.getRegressionSeries(func, regression.parameters,
-              regression.r2, regression.type,
-              [@configs.xBounds.min, @configs.xBounds.max],
-              regression.name, regression.dashStyle, regression.id,
-              regression.tooltip, false)[3]
+              new Function("x, P", regr.func)
+
+            # Calculate the series
+            params = regr.parameters
+            unless regr.type is globals.REGRESSION.SYMBOLIC
+              # Convert parameters from strings to numbers
+              params = for i in [0...regr.parameters.length]
+                parseFloat(regr.parameters[i])
+
+            series =
+              globals.getRegressionSeries(func, params, Number(regr.r2),
+                regr.type, [@configs.xBounds.min, @configs.xBounds.max],
+                regr.name, regr.dashStyle, regr.id, regr.tooltip, false)[3]
 
             # Add the regression to the chart
             @chart.addSeries(series)
 
             # Enabled the class by removing the disabled class
-            $('tr#row_' + regression.id).removeClass('regression_row_disabled')
+            $('tr#' + regr.id).removeClass('regr_row_disabled')
           else
             # Prevent duplicate add classes
-            if $('tr#row_' + regression.id).hasClass('regression_row_disabled') is false
-              $('tr#row_' + regression.id).addClass('regression_row_disabled')
+            if $('tr#' + regr.id).hasClass('regr_row_disabled') is false
+              $('tr#' + regr.id).addClass('regr_row_disabled')
 
-        # Display the table header if necessary
-        if $('#regression-table-body > tr').length > 0
-          $('tr#regression-table-header').show()
-        else $('tr#regression-table-header').hide()
+        @updateRegrTools()
 
       ###
       Draws radio buttons for changing symbol/line mode.
@@ -374,8 +375,8 @@ $ ->
         octx = {}
         octx.id = 'scatter-ctrls'
         octx.title = 'Tools'
-        octx.body = HandlebarsTemplates[hbCtrl('scatter')](ictx);
-        tools = HandlebarsTemplates[hbCtrl('body')](octx);
+        octx.body = HandlebarsTemplates[hbCtrl('scatter')](ictx)
+        tools = HandlebarsTemplates[hbCtrl('body')](octx)
         $('#vis-ctrls').append tools
 
         # Check off the right boxes
@@ -493,7 +494,7 @@ $ ->
       ###
       Updates regression control labels
       ###
-      updateRegrLabels:() ->
+      updateRegrTools:() ->
         $('#regr-x-axis').text("#{data.fields[@configs.xAxis].fieldName}")
         if $('#regr-y-axis')? then $('#regr-y-axis').empty()
         for f in globals.configs.fieldSelection
@@ -503,24 +504,30 @@ $ ->
             text: data.fields[f].fieldName
           }))
 
+        # Display the table header if necessary
+        len = $('#regr-table-body > tr').length
+        $('tr#regr-table-header').toggle(len > 1)
+
       ###
       Adds the regression tools to the control bar.
       ###
       drawRegressionControls: () ->
+        regressions = ['Linear', 'Quadratic', 'Cubic', 'Exponential',
+            'Logarithmic', 'Automatic']
+
         ictx =
           xAxis: data.fields[@configs.xAxis].fieldName
           yFields:
             for f in globals.configs.fieldSelection
               name: data.fields[f].fieldName
               id: f
-          regressions: ['Linear', 'Quadratic', 'Cubic', 'Exponential',
-            'Logarithmic', 'Automatic']
+          regressions: regressions
 
         octx = {}
         octx.id = 'regression-ctrls'
         octx.title = 'Analysis Tools'
-        octx.body = HandlebarsTemplates[hbCtrl('regression')](ictx);
-        tools = HandlebarsTemplates[hbCtrl('body')](octx);
+        octx.body = HandlebarsTemplates[hbCtrl('regr')](ictx)
+        tools = HandlebarsTemplates[hbCtrl('body')](octx)
         $('#vis-ctrls').append tools
 
         # Initialize and track the status of this control panel
@@ -529,36 +536,34 @@ $ ->
 
         # Restore saved regressions if they exist
         fs = globals.configs.fieldSelection
-        for regression in @configs.savedRegressions
+        for regr in @configs.savedRegressions
           enabled =
-            regression.xAxis is @configs.xAxis and                  # X indices
-            "#{regression.groups}" is "#{data.groupSelection}" and  # Groups
-            fs.indexOf(regression.yAxis) isnt -1                    # Y field
+            regr.xAxis is @configs.xAxis                 and  # X indices
+            "#{regr.groups}" is "#{data.groupSelection}" and  # Groups
+            fs.indexOf(regr.yAxis) isnt -1                    # Y field
 
+          # Calculate the hypothesis function
           func =
-            if regression.type is globals.REGRESSION.SYMBOLIC
-              new Function("x", regression.func)
+            if regr.type is globals.REGRESSION.SYMBOLIC
+              new Function("x", regr.func)
             else
-              new Function("x, P", regression.func)
+              new Function("x, P", regr.func)
 
           # Calculate the series
+          params = regr.parameters
+          unless regr.type is globals.REGRESSION.SYMBOLIC
+            # Convert parameters from strings to numbers
+            params = for i in [0...regr.parameters.length]
+              parseFloat(regr.parameters[i])
+
           series =
-            globals.getRegressionSeries(func, regression.parameters,
-              regression.r2, regression.type,
-              [@configs.xBounds.min, @configs.xBounds.max], regression.name,
-              regression.dashStyle, regression.tooltip, regression.id)[3]
+            globals.getRegressionSeries(func, params, Number(regr.r2),
+              regr.type, [@configs.xBounds.min, @configs.xBounds.max],
+              regr.name, regr.dashStyle, regr.id, regr.tooltip, false)[3]
 
           # Add the regression to the chart
           if enabled then @chart.addSeries(series)
-          @addRegressionToTable(regression, enabled)
-
-        # Catches y axis changes
-        $('input[name="y-axis"]').click (e) =>
-          @updateRegrLabels()
-
-        # Catches x axis changes
-        $('input[name="x-axis"]').change (e) =>
-          @updateRegrLabels()
+          @addRegressionToTable(regr, enabled)
 
         # Create a new regression
         $('#draw-regr-btn').click =>
@@ -585,9 +590,9 @@ $ ->
           fn = (pv, cv, index, array) -> (pv and cv)
 
           # Create a unique identifier for the regression
-          regrId = "regr_#{@configs.xAxis}_#{yAxisIndex}_#{regrType}_" +
+          regrId = "regr-x-#{@configs.xAxis}-y-#{yAxisIndex}-t-#{regrType}-g-" +
             data.groupSelection.toString()
-          regrId = regrId.replace(',', '_') while regrId.indexOf(',') isnt -1
+          regrId = regrId.replace(',', '-') while regrId.indexOf(',') isnt -1
           return unless (r.id isnt regrId for r in @configs.savedRegressions).reduce(fn, true)
 
           # Get dash index
@@ -618,8 +623,6 @@ $ ->
                 if Math.abs(Math.round(y) - y) < 1e-4 then Math.round(y) else y
 
             catch error
-              console.trace()
-              console.log error
               if regrType is 3
                 alert("Unable to calculate an #{regressions[regrType]} " +
                 "regression for this data.")
@@ -645,7 +648,7 @@ $ ->
               when globals.REGRESSION.LOGARITHMIC
                 'return P[0] + Math.log(P[1] * x + P[2])'
           else
-            func = binaryTree.codify(func.tree)
+            func = BinaryTree.codify(func.tree)
 
           # Prepare to save regression fields
           savedRegression =
@@ -669,6 +672,71 @@ $ ->
 
           # Draw the regression to the vis
           globals.curVis.update()
+
+      # Adds a regression row to our table, with styling for enabled or disabled
+      addRegressionToTable: (savedReg, enabled) ->
+        # Here have a list of regressions
+        regressions = ['Linear', 'Quad', 'Cubic', 'Exp', 'Log', 'Auto']
+
+        # Add the entry used the passed regression
+        ctx =
+          id: savedReg.id
+          logId: 'regr-' + @configs.savedRegressions.length
+          name: data.fields[savedReg.yAxis].fieldName +
+            "(#{data.fields[savedReg.xAxis].fieldName})"
+          type: regressions[savedReg.type]
+
+        regressionRow = HandlebarsTemplates[hbCtrl('regr-row')](ctx)
+        @updateRegrTools()
+
+        # Added info relating to this regression
+        $('#regr-table-body').append(regressionRow)
+
+        # Add the disabled style if necessary
+        unless enabled then $('tr#' + savedReg.id).addClass('disabled')
+
+        # Make each row a link to its view
+        $('tr#' + savedReg.id).click =>
+          # Reset the state of when you saved
+          @configs.xAxis = savedReg.xAxis
+          globals.configs.fieldSelection = [savedReg.yAxis]
+          data.groupSelection = savedReg.groups
+          @start()
+
+        # Add a make the delete button remove the regression object
+        $('tr#' + savedReg.id + '> .remove').click =>
+          # Remove regression view from the screen.
+          $('tr#' + savedReg.id).remove()
+
+          # Remove regression from the savedRegressions array.
+          for r, i in @configs.savedRegressions
+            if (r.id is savedReg.id)
+              @configs.savedRegressions.splice(i, 1)
+              break
+
+          # Remove regression from the chart
+          for series, i in @chart.series
+            if (series.name.id is 'hs-' + savedReg.id)
+              @chart.series[i].remove()
+              break
+
+          @updateRegrTools()
+
+        # Make the hovering highlight the correct regression
+        $('tr#' + savedReg.id).mouseover =>
+          for series, i in @chart.series
+            if (series.name.id is 'hs-' + savedReg.id)
+              @chart.series[i].setState('hover')
+              midpoint = globals.REGRESSION.NUM_POINTS / 2
+              @chart.tooltip.refresh(@chart.series[i].points[midpoint])
+              break
+
+        # When the mouse leaves, don't highlight anymore
+        $('tr#' + savedReg.id).mouseout =>
+          for series, i in @chart.series
+            if (series.name.id == savedReg.id)
+              @chart.series[i].setState('')
+              break
 
       ###
       Clips an array of data to include only bounded points

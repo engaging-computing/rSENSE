@@ -87,7 +87,6 @@ $ ->
       if type isnt globals.REGRESSION.SYMBOLIC
         func = globals.REGRESSION.FUNCS[type]
         [xs, ys] = [(point.x for point in points), (point.y for point in points)]
-        #console.log xs, ys
         # Make an initial Estimate
         switch type
 
@@ -106,12 +105,9 @@ $ ->
           when globals.REGRESSION.LOGARITHMIC
             # We want to avoid starting with a guess that takes the log of a negative number
             Ps = [1,1,Math.min.apply(null, xs) + 1]
-      
+
         # Get the new Ps
         [Ps, R2] = NLLS(func, normalizeData(xs, type), ys, Ps)
-        #console.log 'NLLS DONE'
-        # Create the highcharts series
-        #console.log func[0]
         generateHighchartsSeries(func[0], Ps, R2, type, xBounds, seriesName, dashStyle, id)
       else
         func = optimizedSymbolicRegression(points)
@@ -121,9 +117,8 @@ $ ->
     ###
     Returns a series object to draw on the chart canvas.
     ###
-    generateHighchartsSeries = (func, Ps, R2, type, xBounds, seriesName, dashStyle, id, tooltip = null, normalized = true) ->
-      #console.log xBounds[0], xBounds[1]
-      #console.log 'start generateHighchartsSeries'
+    generateHighchartsSeries = (func, Ps, R2, type, xBounds,
+      seriesName, dashStyle, id, tooltip = null, normalized = true) ->
       data = for i in [0...globals.REGRESSION.NUM_POINTS]
         xv = (i / globals.REGRESSION.NUM_POINTS)
         yv = null
@@ -136,40 +131,43 @@ $ ->
           yv = func(xv * (xBounds[1] - xBounds[0]) + xBounds[0], Ps)
         else if type isnt globals.REGRESSION.SYMBOLIC
           yv = func(xv + 1, Ps)
-        else 
+        else
           func.evaluate(xv * (xBounds[1] - xBounds[0]) + xBounds[0])
         {x: xv * (xBounds[1] - xBounds[0]) + xBounds[0], y: yv}
       if normalized and Ps isnt null
         Ps = visSpaceParameters(Ps, xBounds, type)
-      str = if tooltip is null then makeToolTip(Ps, R2, type, seriesName, func) else tooltip
+
+      tt =
+        if tooltip? then tooltip
+        else makeToolTip(Ps, R2, type, seriesName, func)
+
       retSeries =
         name:
-          id: id
+          id: 'hs-' + id
           group: seriesName
           regression:
-            tooltip: str
+            tooltip: tt
         data: data
         type: 'line'
         color: '#000'
         lineWidth: 2
         dashStyle: dashStyle
-        showInLegend: 0
+        showInLegend: false
         marker:
           symbol: 'blank'
         states:
           hover:
             lineWidth: 4
-      #console.log retSeries
+
       func = if func.length? and typeof(func) isnt 'function' then func[0] else func
-      #console.log func, Ps, R2, retSeries
-      [func, Ps, R2, retSeries, str]
+      return [func, Ps, R2, retSeries, tt]
 
     ###
     # Uses the regression matrix to calculate the y value given an x value.
     ###
     calculateRegressionPoint = (Ps, x, type) ->
       globals.REGRESSION.FUNCS[type][0](x, Ps)
-      
+
     ###
     # Linear Equation solver creates trivial roundoff error for parameters
     # that are equal to zero.
@@ -181,7 +179,6 @@ $ ->
     Returns tooltip description of the regression.
     ###
     makeToolTip = (Ps, R2, type, seriesName, func) ->
-
       # Format parameters for output
       Ps = if Ps isnt null then Ps.map(roundToFourSigFigs).map(roundOffError)
 
@@ -195,6 +192,7 @@ $ ->
             f(x) = #{Ps[1]}x + #{Ps[0]}
           </strong>
           """
+
         when globals.REGRESSION.QUADRATIC
           """
           <div class="regressionTooltip"> #{seriesName} </div>
@@ -203,6 +201,7 @@ $ ->
             f(x) = #{Ps[2]}x<sup>2</sup> + #{Ps[1]}x + #{Ps[0]}
           </strong>
           """
+
         when globals.REGRESSION.CUBIC
           """
           <div class="regressionTooltip"> #{seriesName} </div>
@@ -211,6 +210,7 @@ $ ->
             f(x) = #{Ps[3]}x<sup>3</sup> + #{Ps[2]}x<sup>2</sup> + #{Ps[1]}x + #{Ps[0]}
           </strong>
           """
+
         when globals.REGRESSION.EXPONENTIAL
           """
           <div class="regressionTooltip"> #{seriesName} </div>
@@ -229,15 +229,14 @@ $ ->
           </strong>
           """
 
-        else 
+        else
           tooltip = """
           <div class="regressionTooltip"> #{seriesName} </div>
           <br>
           <strong>
-            f(x) = 
+            f(x) =
           """
-          console.log func
-          tooltip += binaryTree.stringify(func.tree)
+          tooltip += BinaryTree.stringify(func.tree)
           tooltip += """
           </strong>
           """
@@ -357,7 +356,7 @@ $ ->
           points
         else
           points.map((y) -> ((y - min) / (max - min)) + 1)
-    
+
     ###
     # Map the parameters of the normalized features to the visualization space
     # (done by Gauss-Jordan elimination on a system of linear equations)
@@ -366,10 +365,10 @@ $ ->
       [coeffMatrix, solutionVector, newPs] = [[], [], []]
       [max, min] = [xBounds[1], xBounds[0]]
       projection = 2 * (max - min) + min
-      
+
       if type in [globals.REGRESSION.LOGARITHMIC, globals.REGRESSION.EXPONENTIAL]
         return Ps
-      
+
       switch type
         when globals.REGRESSION.LINEAR
           coeffMatrix = [
@@ -435,13 +434,6 @@ $ ->
       ssTot = (Math.pow(y - yAvg, 2) for y in ys).reduce (pv, cv, index, array) -> (pv + cv)
       1 - (ssRes / ssTot)
 
-    globals.getRegressionSeries = (func, Ps, R2, type, xBounds, seriesName, dashStyle, id, tooltip = null, normalized = false) ->
+    globals.getRegressionSeries = \
+    (func, Ps, R2, type, xBounds, seriesName, dashStyle, id, tooltip = null, normalized = false) ->
       generateHighchartsSeries(func, Ps, R2, type, xBounds, seriesName, dashStyle, id, tooltip, normalized)
-
-
-
-
-
-
-
-
