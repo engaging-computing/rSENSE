@@ -3,10 +3,25 @@
   <div>
     <label for="map-by">Map by:</label>
     <select id="map-by" class="form-control">
-
+      {{#each heatmaps}}
+        <option value="{{value}}" data-log-id="{{logId}}">{{name}}</option>
+      {{/each}}
     </select>
   </div>
+  <div>
+    <label for="map-radius">Heatmap Radius:</label>
+    <input id="map-radius" value="{{radius}}"/>
+    <div id="heatmap-error"></div>
+    <input id="heatmap-slider" type="range" style="width:95%" data-show-value="true">
+  </div>
  </div>
+ <div class="vis-ctrl-subblock">
+   <h4 class="vis-ctrl-subtitle">Other</h4>
+   <div>
+     {{> visualizations/controls/_checkbox marker}}
+   </div>
+ </div>
+
 
 <!--
         sel = if @configs.heatmapSelection is @HEATMAP_NONE then 'selected' else ''
@@ -19,17 +34,6 @@
           sel = if @configs.heatmapSelection is fieldIndex then 'selected' else ''
           controls += "<option value=\"#{Number fieldIndex}\" #{sel}>#{data.fields[fieldIndex].fieldName}</option>"
 
-        controls += "</select></div>"
-
-        # Heatmap slider
-        controls += "<br>"
-        controls += "<div class='inner_control_div'> Heatmap Radius: "
-        controls += "<input id='radius-text' value='#{@configs.heatmapRadius}'>m</div>"
-        controls += "<div class='inner_control_div'> <div id='heatmap-error-text'> </div></div>"
-        controls += "<input id='heatmapSlider' type='range' style='width:95%' data-show-value='true'>"
-
-        # Other
-        controls += "<br>"
         controls += "<h4 class='clean_shrink'>Other</h4>"
 
         # Marker checkbox
