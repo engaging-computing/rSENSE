@@ -202,6 +202,14 @@ body {
   padding: 0px 0px 70px 0px;
 }
 
+.placeholder{
+  font-size: 2em;
+  color: gray;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 .print {
   display: none;
 }
