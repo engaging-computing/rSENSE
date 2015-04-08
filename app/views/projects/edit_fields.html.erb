@@ -31,6 +31,7 @@
         <table class="fields_table table table-striped table-bordered" id="fields_table">
           <thead>
             <tr>
+              <th></th>
               <th>Name</th>
               <th>Type</th>
               <th class="units">Units</th>
@@ -39,27 +40,6 @@
             </tr>
           </thead>
           <tbody>
-            <% @project.fields.order(:created_at).each do |field| %>
-              <tr class="<%= (field.field_type == get_field_type("Latitude") || field.field_type == get_field_type("Longitude")) ? "location " : "" %>">
-                <td><input class="form-control" type="text" name="<%= field.id %>_name" value="<%= (defined?(@tmp_save) && @tmp_save.has_key?("#{field.id}_name")) ? @tmp_save["#{field.id}_name"] : field.name %>"></td>
-                <td><%= get_field_name(field.field_type) %></td>
-                <td class="units">
-                  <% if field.field_type == get_field_type("Number") %>
-                    <input class="input-small form-control" type="text" name="<%= field.id %>_unit" value="<%= field.unit %>">
-                  <% end %>
-                </td>
-                <td class="restrictions">
-                  <% if field.field_type == get_field_type("Text") %>
-                    <input class="input-small form-control" type="text" name="<%= field.id %>_restrictions" value="<%= field.restrictions.nil? ? "" : field.restrictions.join(',') %>">
-                  <% end %>
-                </td>
-                <td>
-                  <a class="field_delete <%= @project.data_sets.count > 0 ? "not-active" : "" %>" href="/fields/<%= field.id %>" fid="<%= field.id %>">
-                    <i class="fa fa-close slick-delete"></i>
-                  </a>
-                </td>
-              </tr>
-            <% end %>
           </tbody>
         </table>
       </div>
