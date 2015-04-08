@@ -12,20 +12,26 @@ $ ->
         row.insertBefore(row.prev())
       else
         row.insertAfter(row.next())
+        
+    ($ "#fields_table" ).on "click", ".lat-up", ->
+      row1 = $(this).parents("tr:first")
+      row2 = (row1.next())
+      row1.insertBefore(row1.prev())
+      row2.insertBefore(row1)
 
     ($ '#number' ).click ->
-      addRow(["""<a href="#" class="up"><i class="fa fa-arrow-up"></i></a>&nbsp;<a href="#" class="down"><i class="fa fa-arrow-down"></i></a>""", """<input class="input-small form-control" type="text" name="number" value="Number">""", "Number", """<input class="input-small form-control" type="text" name="units">""", "", """<a href="#" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
+      addRow(["""<a href="#" class="up"><i class="fa fa-arrow-up"></i></a><br><a href="#" class="down"><i class="fa fa-arrow-down"></i></a>""", """<input class="input-small form-control" type="text" name="number" value="Number">""", "Number", """<input class="input-small form-control" type="text" name="units">""", "", """<a href="#" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
 
     ($ '#text' ).click ->
-      addRow(["""<a href="#" class="up"><i class="fa fa-arrow-up"></i></a>&nbsp;<a href="#" class="down"><i class="fa fa-arrow-down"></i></a>""", """<input class="input-small form-control" type="text" name="number" value="Text">""", "Text", "", """<input class="input-small form-control" type="text" name="restrictions">""", """<a href="#" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
+      addRow(["""<a href="#" class="up"><i class="fa fa-arrow-up"></i></a><br><a href="#" class="down"><i class="fa fa-arrow-down"></i></a>""", """<input class="input-small form-control" type="text" name="number" value="Text">""", "Text", "", """<input class="input-small form-control" type="text" name="restrictions">""", """<a href="#" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
 
     ($ '#timestamp' ).click ->
-      addRow(["""<a href="#" class="up"><i class="fa fa-arrow-up"></i></a>&nbsp;<a href="#" class="down"><i class="fa fa-arrow-down"></i></a>""", """<input class="input-small form-control" type="text" name="timestamp" value="Timestamp">""", "Timestamp", "", "", """<a href="#" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
+      addRow(["""<a href="#" class="up"><i class="fa fa-arrow-up"></i></a><br><a href="#" class="down"><i class="fa fa-arrow-down"></i></a>""", """<input class="input-small form-control" type="text" name="timestamp" value="Timestamp">""", "Timestamp", "", "", """<a href="#" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
       document.getElementById("timestamp").disabled = true
 
     ($ '#location' ).click ->
-      addRow(["""<a href="#" class="up"><i class="fa fa-arrow-up"></i></a><a href="#" class="down"><i class="fa fa-arrow-down"></i></a>""", """<input class="input-small form-control" type="text" name="longitude" value="Longitude">""", "Longitude", "", "", """<a href="#" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
-      addRow(["""<a href="#" class="up"><i class="fa fa-arrow-up"></i></a><a href="#" class="down"><i class="fa fa-arrow-down"></i></a>""", """<input class="input-small form-control" type="text" name="latitude" value="Latitude">""", "Latitude", "", "", """<a href="#" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
+      addRow(["""<a href="#" class="long-up"><i class="fa fa-arrow-up"></i></a><br><a href="#" class="down"><i class="fa fa-arrow-down"></i></a>""", """<input class="input-small form-control" type="text" name="longitude" value="Longitude">""", "Longitude", "", "", """<a href="#" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
+      addRow(["""<a href="#" class="lat-up"><i class="fa fa-arrow-up"></i></a><br><a href="#" class="down"><i class="fa fa-arrow-down"></i></a>""", """<input class="input-small form-control" type="text" name="latitude" value="Latitude">""", "Latitude", "", "", """<a href="#" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
       document.getElementById("location").disabled = true
 
     ($ "#fields_table" ).on "click", ".field_delete", ->
