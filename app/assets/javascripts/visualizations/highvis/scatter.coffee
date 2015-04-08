@@ -102,6 +102,8 @@ $ ->
                 display: "none"
           plotOptions:
             scatter:
+              animation:
+                false
               marker:
                 states:
                   hover:
