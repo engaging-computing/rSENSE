@@ -27,8 +27,8 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and
-  namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is 'visualizations' and
+  namespace.action in ['displayVis', 'embedVis', 'show']
 
     class window.DisabledVis extends BaseVis
       constructor: (@canvas) ->
@@ -115,6 +115,7 @@ $ ->
       start: ->
         $('#' + @canvas).show()
         $('#vis-ctrl-container').hide()
+        $('#ctrls-menu-btn').hide()
 
         switch @canvas
           when 'map-canvas'
@@ -138,3 +139,4 @@ $ ->
       end: ->
         $('#' + @canvas).hide()
         $('#vis-ctrl-container').show()
+        $('#ctrls-menu-btn').show()

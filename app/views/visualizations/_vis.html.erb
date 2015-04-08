@@ -38,12 +38,16 @@
     <% if @presentation %> style="display:none" <% end %>>
     <div id="vis-ctrls">
     </div>
-    <div id="control-hider">
-      <i id="hider-btn" class="fa fa-chevron-circle-left"></i>
-    </div>
   </div>
   <div id="vis-container" role="tabpanel">
     <div id="vis-title-bar">
+      <button id="ctrls-menu-btn" class="hamburger-menu btn btn-default">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <i id="ctrls-menu-chevron" class="fa fa-chevron-circle-left"
+           style="display:none"></i>
+      </button>
       <div class="inline-left">
         <%= title.html_safe %>
         <span class="subtitle">

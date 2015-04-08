@@ -35,10 +35,12 @@ $ ->
       start: ->
         super()
         $('#vis-ctrl-container').hide()
+        $('#ctrls-menu-btn').hide()
 
       end: ->
         super()
         $('#vis-ctrl-container').show()
+        $('#ctrls-menu-btn').show()
 
       # Gets called when the controls are clicked and at start
       update: ->

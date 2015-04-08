@@ -41,14 +41,12 @@
 #               applied.                                                 #
 ##########################################################################
 
-
 $ ->
-
   if namespace.controller is "visualizations" and
   namespace.action in ["displayVis", "embedVis", "show"]
 
     class window.Individual extends Object
-      
+
       # Create a a binary tree to represent a random mathematical function
       constructor: (tree = null, maxDepth = 10) ->
         if tree is null
@@ -173,7 +171,7 @@ $ ->
               children.push(child)
               break
         children
-        
+
       # Stochastic Universal Sampling selection genetic operator
       ###
       # WARNING:  PERFORMS REPRODUCTION/SELECTION ALL AT ONCE
@@ -212,14 +210,14 @@ $ ->
         xAvg = xSum / xs.length
         yAvg = ySum / ys.length
         tAvg = tSum / ts.length
-        
+
         # calculate each input's distance from the mean, xAvg
         xMeanDiffs = (x - xAvg for x in xs)
         # calculate each output's distance from the mean, yAvg
         yMeanDiffs = (y - yAvg for y in ys)
         # calculate each target's distance from the mean, tAvg
         tMeanDiffs = (t - tAvg for t in ts)
-        
+
         # calculate the pair-wise terms of cov(y,t)
         ytCovTerms = for i in [0...ys.length]
           (yMeanDiffs[i] * tMeanDiffs[i])
@@ -231,7 +229,7 @@ $ ->
           Math.pow(ydiff, 2)
         # calculate the variance of y
         yVar = yVarTerms.reduce (pv, cv, index, array) -> pv + cv
-        
+
         # b = cov(y,t) / var(y)
         b = if yVar is 0 then 1 else ytCov / yVar
         # a = tAvg - b * yAvg
@@ -239,13 +237,13 @@ $ ->
 
         # If we need a and b (params = true), return them
         if params then return [a, b]
-        
+
         # calculate scaled residuals (target[i] - (a + b * output[i])) ^ 2
         scaledResiduals = for i in [0...points.length]
           Math.pow(ts[i] - (a + b * ys[i]), 2)
         # calculate sum of scaled residuals
         sumScaledResiduals = scaledResiduals.reduce (pv, cv, index, array) -> pv + cv
-        
+
         # Calculate scaled fitness
         fitness = (1 / points.length) * sumScaledResiduals
         return if isNaN(fitness) or fitness is Infinity then 0 else 1 / (1 + fitness)

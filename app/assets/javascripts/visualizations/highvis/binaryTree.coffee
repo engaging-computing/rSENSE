@@ -41,10 +41,8 @@
 
 
 $ ->
-
-  if namespace.controller is "visualizations" and
-  namespace.action in ["displayVis", "embedVis", "show"]
-
+  if namespace.controller is 'visualizations' and
+  namespace.action in ['displayVis', 'embedVis', 'show']
     window.add = (a, b) -> a + b
     window.subtract = (a, b) -> a - b
     window.multiply = (a, b) -> a * b
@@ -186,7 +184,7 @@ $ ->
       # tree during the point mutation genetic operation.
       depthAtPoint: (index, curDepth = 1) ->
         @__access(index, false, curDepth)
-      
+
       # Internal method used to abstract the index and depth at point member
       # functions.
       ###
@@ -203,7 +201,7 @@ $ ->
           if @right isnt null then @right.__access(index - leftSize - 1, value, curDepth + 1) else -1
         else
           if @left isnt null then @left.__access(index - 1, value, curDepth + 1) else -1
-      
+
       # Given a tree, replace it with a randomly-generated tree whose maximum
       # depth is given by maxDepth.
       ###
@@ -292,7 +290,7 @@ $ ->
       @crossover: (tree1, tree2) ->
         [tree1a, tree1b] = [window.BinaryTree.clone(tree1), window.BinaryTree.clone(tree1)]
         [tree2a, tree2b] = [window.BinaryTree.clone(tree2), window.BinaryTree.clone(tree2)]
-        
+
         [crossoverPointOne, crossoverPointTwo] = \
         [Math.floor(Math.random() * tree1.treeSize()), Math.floor(Math.random() * tree2.treeSize())]
         [childOne, childTwo] = [window.BinaryTree.clone(tree1a), window.BinaryTree.clone(tree2a)]
@@ -303,11 +301,11 @@ $ ->
       # Given a tree, construct a string representation of the mathematical
       # function the tree describes
       @stringify: (tree) ->
-        
+
         # Helper method to properly parenthesize nested terms
         parenthesize = (string) ->
           if not isNaN(Number(string)) or string is 'x' then string else "(#{string})"
-        
+
         switch tree.data
           when window.add
             "#{parenthesize(@stringify(tree.left))} + #{parenthesize(@stringify(tree.right))}"
@@ -340,17 +338,17 @@ $ ->
             "#{window.roundToFourSigFigs(BinaryTree.ephemeralConstant)}"
           else
             "#{window.roundToFourSigFigs(tree.data)}"
-    
+
       # Given a tree, construct a string of valid coffeescript code that can be 'evaled' to
       # mimic the symbolic regression.
       @codify: (tree) ->
       # Helper method to properly parenthesize nested terms
         parenthesize = (string) ->
           if not isNaN(Number(string)) or string is 'x' then string else "(#{string})"
-        
+
         getFunc = (tree) ->
           switch tree.data
-            
+
             when window.add
               "window.add(#{parenthesize(getFunc(tree.left))}, #{parenthesize(getFunc(tree.right))})"
 
@@ -368,26 +366,26 @@ $ ->
 
             when window.exp
               "window.exp(#{parenthesize(getFunc(tree.left))})"
-            
+
             when window.cos
               "window.cos(#{parenthesize(getFunc(tree.left))})"
-            
+
             when window.sin
               "window.sin(#{parenthesize(getFunc(tree.left))})"
-            
+
             when window.safeLog
               "window.safeLog(#{parenthesize(getFunc(tree.left))})"
-            
+
             when window.safeSqrt
               "window.safeSqrt(#{parenthesize(getFunc(tree.left))})"
-            
+
             when 'x'
               'x'
-            
+
             when 'ec'
               "#{BinaryTree.ephemeralConstant}"
-            
+
             else
               "#{tree.data}"
-        
+
         'return ' + getFunc(tree)

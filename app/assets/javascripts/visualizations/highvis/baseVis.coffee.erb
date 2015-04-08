@@ -27,8 +27,8 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and
-  namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is 'visualizations' and
+  namespace.action in ['displayVis', 'embedVis', 'show']
     window.globals ?= {}
     window.globals.configs ?= {}
 
@@ -165,8 +165,8 @@ $ ->
         octx = {}
         octx.id = id + '-ctrls'
         octx.title = title
-        octx.body = HandlebarsTemplates[hbCtrl(template)](ictx);
-        axisTools = HandlebarsTemplates[hbCtrl('body')](octx);
+        octx.body = HandlebarsTemplates[hbCtrl(template)](ictx)
+        axisTools = HandlebarsTemplates[hbCtrl('body')](octx)
         $('#vis-ctrls').append axisTools
 
         # Initialize checked and make y axis checkbox/radio handler
@@ -284,9 +284,9 @@ $ ->
         octx =
           id: 'group-ctrls'
           title: 'Groups'
-          body: HandlebarsTemplates[hbCtrl('groups')](ictx);
+          body: HandlebarsTemplates[hbCtrl('groups')](ictx)
 
-        tools = HandlebarsTemplates[hbCtrl('body')](octx);
+        tools = HandlebarsTemplates[hbCtrl('body')](octx)
         $('#vis-ctrls').append tools
 
         # Initialize and track the status of this control panel
@@ -379,8 +379,8 @@ $ ->
         ctx = {}
         ctx.id = 'save-ctrls'
         ctx.title = 'Save'
-        ctx.body = HandlebarsTemplates[hbCtrl('save')](ctx);
-        save = HandlebarsTemplates[hbCtrl('body')](ctx);
+        ctx.body = HandlebarsTemplates[hbCtrl('save')](ctx)
+        save = HandlebarsTemplates[hbCtrl('body')](ctx)
         $('#vis-ctrls').append save
 
         # Only Highcharts vises can be printed and downloaded
@@ -448,16 +448,16 @@ $ ->
             label: 'Logarithmic Y Axis'
 
         octx =
-          id: 'common-ctrls'
+          id: 'tools-ctrls'
           title: 'Tools'
-          body: HandlebarsTemplates[hbCtrl('common-tools')](ictx);
+          body: HandlebarsTemplates[hbCtrl('common-tools')](ictx)
 
-        tools = HandlebarsTemplates[hbCtrl('body')](octx);
+        tools = HandlebarsTemplates[hbCtrl('body')](octx)
         $('#vis-ctrls').append tools
 
         # Initialize and track the status of this control panel
         globals.configs.toolsOpen ?= false
-        initCtrlPanel('common-ctrls', 'toolsOpen')
+        initCtrlPanel('tools-ctrls', 'toolsOpen')
         query = "input[name='analysis-type'][value='#{@configs.analysisType}']"
         $(query).prop('checked', 'true')
         $('#sort-by').val(@configs.sortField)
@@ -555,7 +555,7 @@ $ ->
       ###
       start: ->
         @buildOptions()
-        @chart = new Highcharts.Chart @chartOptions
+        @chart = new Highcharts.Chart(@chartOptions)
         super()
 
       ###

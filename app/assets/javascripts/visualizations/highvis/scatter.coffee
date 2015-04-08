@@ -27,8 +27,8 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and
-  namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is 'visualizations' and
+  namespace.action in ['displayVis', 'embedVis', 'show']
 
     class window.Scatter extends BaseHighVis
       ###
@@ -375,7 +375,7 @@ $ ->
 
         # Draw the Tool controls
         octx = {}
-        octx.id = 'scatter-ctrls'
+        octx.id = 'tools-ctrls'
         octx.title = 'Tools'
         octx.body = HandlebarsTemplates[hbCtrl('scatter')](ictx)
         tools = HandlebarsTemplates[hbCtrl('body')](octx)
@@ -421,7 +421,7 @@ $ ->
 
         # Initialize and track the status of this control panel
         globals.configs.toolsOpen ?= false
-        initCtrlPanel('scatter-ctrls', 'toolsOpen')
+        initCtrlPanel('tools-ctrls', 'toolsOpen')
 
       ###
       A wrapper for making x-axis controls

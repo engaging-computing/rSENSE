@@ -32,7 +32,7 @@ $ ->
     window.globals ?= {}
     globals.configs ?= {}
     globals.options ?= {}
-    globals.configs.toolsOpen ?= false
+    globals.configs.ctrlsOpen ?= false
 
     globals.curVis = null
     globals.VIS_MARGIN_WIDTH = 20
@@ -53,25 +53,23 @@ $ ->
       visWrapperHeight = $('#vis-wrapper').outerHeight()
       visHeaderHeight = $('#vis-title-bar').outerHeight() +
         $('#vis-tab-list').outerHeight()
-      hiderSize     = $('#control-hider').outerWidth()
-      controlSize   = $('#vis-ctrls').outerWidth()
       controlOpac = $('#vis-ctrls').css 'opacity'
-
-      controlSize = visWrapperSize * .2 - hiderSize
+      controlSize = visWrapperSize * .2
       controlOpac = 1.0
-      $("#hider-btn").attr('class', 'fa fa-chevron-circle-left')
 
-      if toggleControls and ($ '#vis-ctrl-container').width() > hiderSize or
-      (init and globals.options.startCollapsed?) or !globals.configs.toolsOpen
+      if toggleControls and ($ '#vis-ctrl-container').width() > 0 or
+      (init and globals.options.startCollapsed?) or !globals.configs.ctrlsOpen
         controlSize = 0
         controlOpac = 0.0
-        $("#hider-btn").attr('class', 'fa fa-chevron-circle-right')
-
-      contrContSize = hiderSize + controlSize
+        $('#ctrls-menu-btn > #ctrls-menu-chevron').hide()
+        $('#ctrls-menu-btn > .hamburger-bar').show()
+      else
+        $('#ctrls-menu-btn > #ctrls-menu-chevron').show()
+        $('#ctrls-menu-btn > .hamburger-bar').hide()
 
       # New width should take into account visibility of tools
       newWidth = visWrapperSize
-      if $('#vis-ctrl-container').is(':visible') then newWidth -= contrContSize
+      if $('#vis-ctrl-container').is(':visible') then newWidth -= controlSize
 
       # Adjust heights
       $('#vis-container').height(visWrapperHeight)
@@ -80,7 +78,7 @@ $ ->
       $('#vis-container > .tab-content').height(newHeight)
 
       # Animate the collapsing controls and the expanding vis
-      $('#vis-ctrl-container').animate({width: contrContSize}, aniLength,
+      $('#vis-ctrl-container').animate({width: controlSize}, aniLength,
         'linear')
       $('#vis-ctrls').animate({width: controlSize, opacity: controlOpac},
         aniLength, 'linear')
@@ -194,8 +192,8 @@ $ ->
       globals.curVis.start()
       resizeVis(false, 0, true)
 
-    $('#control-hider').click ->
-      globals.configs.toolsOpen = !globals.configs.toolsOpen
+    $('#ctrls-menu-btn').click ->
+      globals.configs.ctrlsOpen = !globals.configs.ctrlsOpen
       resizeVis()
 
     # Deal with full screen
@@ -237,3 +235,7 @@ $ ->
         window.globals.fullscreen = false
 
       $(window).trigger('resize')
+
+    $.fn.carousel.defaults =
+      interval: false,
+      pause: 'hover'

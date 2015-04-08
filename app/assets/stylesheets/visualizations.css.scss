@@ -10,14 +10,9 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   // colors
   $border-color: #ABABAB;
   $border: thin solid $border-color;
-  $dark-bkg: linear-gradient(#E4E4E4, #C4C4C4);
-  $dark-bkg-inv: linear-gradient(#C4C4C4, #E4E4E4);
-  $dark-bkg-ltr: linear-gradient(to right, #E4E4E4, #C4C4C4);
   $error: #F00;
   $error-hover: #C00;
   $hint: #888;
-  $light-bkg: linear-gradient(#F6F6F6, #D7D7D7);
-  $light-bkg-inv: linear-gradient(#D7D7D7, #F6F6F6);
   $link: #337AB7;
   $panel-bkg: #E8E8E8;
   $regr-bkg: #DDD;
@@ -26,9 +21,10 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   $select-bkg: linear-gradient(#49A7DB, #268AC1);
   $shadow-color: #9E9E9E;
   $shadow: 0 2px 3px 1px $shadow-color;
-  $vis-bkg-dark: #E3E3E3;
-  $vis-bkg-mid: #EEE;
-  $vis-bkg-light: #F5F5F5;
+  $vis-bkg-dark: #CDCDCD;
+  $vis-bkg-mid: #E4E4E4;
+  $vis-bkg-light: #F2F2F2;
+  $jqgrid-bkg: linear-gradient(#FFFFFF, $vis-bkg-mid);
 
   // some stuff on the page (buttons mostly) shouldn't have selectable text
   @mixin unselectable {
@@ -48,23 +44,6 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     -moz-border-radius: 15px;
   }
 
-  #control-hider {
-    position: relative;
-    float: right;
-    display: inline-block;
-    height: 100%;
-    width: 26px;
-    cursor: pointer;
-    background: $dark-bkg-ltr;
-
-    #hider-btn {
-      @include unselectable;
-      padding: 0 8px;
-      position: absolute;
-      top: 48%;
-    }
-  }
-
   div.regr-tooltip {
     width: 100%;
     text-align: center;
@@ -78,6 +57,22 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   // button that enables fullscreen vis, not the fullscreen viz itself
   #fullscreen-vis {
     margin: 1px;
+  }
+
+  .hamburger-menu {
+    height: 32px;
+    width: 30px;
+    padding: 0 5px;
+    margin: 0;
+
+    .hamburger-bar {
+      display: block;
+      height: 4px;
+      width: 100%;
+      background-color: black;
+      border-radius: 4px;
+      margin: 2px auto;
+    }
   }
 
   #heatmap-error-text {
@@ -248,7 +243,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
 
     // the entire header box
     .ui-jqgrid-hbox {
-      background-image: $light-bkg;
+      background: $jqgrid-bkg;
       border-bottom: $border;
     }
 
@@ -298,11 +293,6 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     padding-left:10px;
     font-size:1.75em;
     position:relative;
-  }
-
-  // an active tab has a different looking gradient
-  .ui-tabs-active {
-    background-image: $dark-bkg-inv;
   }
 
   .vis-canvas {
@@ -401,7 +391,8 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
           cursor: pointer;
           height: 55px;
           width: 100%;
-          background: $dark-bkg;
+          background: $vis-bkg-mid;
+          border-bottom: $border;
 
           .vis-ctrl-title {
             float: left;
@@ -432,6 +423,19 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     font-size: 24px;
     text-align: center;
     padding: 10px;
+
+    #ctrls-menu-btn {
+      position: absolute;
+      left: 0;
+      background-color: $vis-bkg-mid;
+      border-left: none;
+      border-radius: 0 10px 10px 0;
+    }
+
+    .inline-left {
+      position: relative;
+      left: 30px;
+    }
   }
 }
 
