@@ -45,9 +45,6 @@ gem 'bcrypt-ruby'
 # jQuery plugins
 gem 'jquery-drag-rails'
 
-# Include JQuery UI
-#gem 'jquery-ui-rails'
-
 gem 'httparty'
 
 gem 'execjs'
