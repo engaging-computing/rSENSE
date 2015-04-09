@@ -152,14 +152,14 @@ $ ->
           id:    id + '-field-' + f
           label: fieldTitle(data.fields[f])
           value: f
-          logid: id + '-field-' + f
+          logId: id + '-field-' + f
           name:  id
         template =  if radio then 'axis-radio' else 'axis-check'
         unless radio
           ictx.checkall =
             id:    'ckall-' + id
             label: '#Select All'
-            logid: 'check-all-' + id
+            logId: 'check-all-' + id
 
         # Draw the y-axis controls
         octx = {}
@@ -278,7 +278,7 @@ $ ->
           checkall:
             id:      'ckall-grouping'
             label:   '#Select All'
-            logid:   'check-all-group-by'
+            logId:   'check-all-group-by'
           groups:    groupList
 
         octx =
@@ -420,7 +420,7 @@ $ ->
           ictx.sortFields =
             for id in data.normalFields
               name: fieldTitle(data.fields[id])
-              logid: 'sort-by-' + 'id'
+              logId: 'sort-by-' + 'id'
               value: id
 
           ictx.sortFields.unshift
@@ -433,7 +433,7 @@ $ ->
           for name, i in @analysisTypeNames
             value: i
             id:    'analysis-type-' + i
-            logid: 'analysis-type-' + i
+            logId: 'analysis-type-' + i
             name:  'analysis-type'
             label:  name
 
@@ -442,9 +442,7 @@ $ ->
           id = 'log-y-axis'
           ictx.logYAxis =
             id:    id
-            name:  id
-            value: id
-            logid: 'logarithmic-y-axis'
+            logId: 'logarithmic-y-axis'
             label: 'Logarithmic Y Axis'
 
         octx =

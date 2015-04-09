@@ -72,6 +72,10 @@ body {
   color: red;
 }
 
+.error-flash {
+  transition: background-color .5s ease;
+}
+
 .footer {
   font-size: smaller;
 

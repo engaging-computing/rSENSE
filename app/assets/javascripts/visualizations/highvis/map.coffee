@@ -421,7 +421,40 @@ $ ->
         @drawSaveControls()
 
       drawToolControls: ->
-        ictx = {}
+        ictx =
+          radius: @configs.heatmapRadius
+          displayMarkers:
+            label: 'Display Markers'
+            id:    'display-markers'
+            logId: 'display-markers'
+          timeLines: @timeLines?
+          connectMarkers:
+            label: 'Connect Markers'
+            id:    'connect-markers'
+            logId: 'connect-markers'
+          clusterMarkers:
+            label: 'Cluster Markers'
+            id:    'cluster-markers'
+            logId: 'cluster-markers'
+          heatmaps: [
+            {
+              value: @HEATMAP_NONE,
+              logId: 'hmap-none',
+              label: 'None'
+            },
+            {
+              value: @HEATMAP_MARKERS,
+              logId: 'hmap-marker-density',
+              label: 'Marker Density'
+            }
+          ]
+
+        for i in data.normalFields
+          ictx.heatmaps.push
+            value: Number(i)
+            logId: 'hmap-field-' + Number(i)
+            label: data.fields[i].fieldName
+
         octx =
           id: 'tools-ctrls'
           title: 'Tools'
@@ -433,6 +466,45 @@ $ ->
         # Initialize and track the status of this control panel
         globals.configs.toolsOpen ?= false
         initCtrlPanel('tools-ctrls', 'toolsOpen')
+
+        # Heatmap Selection
+        $('#hmap-by').val(@configs.heatmapSelection)
+        $('#hmap-by').change (e) =>
+          ele = e.target or e.srcElement
+          @configs.heatmapSelection = Number(ele.value)
+          @delayedUpdate()
+
+        # Checkboxes
+        $('#ckbx-display-markers').prop('checked', @configs.visibleMarkers)
+        $('#ckbx-display-markers').click (e) =>
+          @configs.visibleMarkers = e.target.checked
+          @delayedUpdate()
+
+        $('#ckbx-connect-markers').prop('checked', @configs.visibleLines)
+        $('#ckbx-connect-markers').click (e) =>
+          @configs.visibleLines = e.target.checked
+          @delayedUpdate()
+
+        $('#ckbx-cluster-markers').prop('checked', @configs.visibleClusters)
+        $('#ckbx-cluster-markers').click (e) =>
+          @configs.visibleClusters = e.target.checked
+          @delayedUpdate()
+
+        # Heatmap Radius Box
+        $('#map-radius').change (e) =>
+          newRadius = Number(e.target.value)
+          console.log newRadius
+          if isNaN(newRadius)
+            $('#map-radius').errorFlash()
+            return
+
+          # Guess new pixel radius
+          @heatmapPixelRadius = Math.ceil(@heatmapPixelRadius * newRadius /
+            @configs.heatmapRadius)
+          @configs.heatmapRadius = newRadius
+          #$('#heatmapSlider')[0].value =
+          #    Math.log(@configs.heatmapRadius) / (Math.log 10)
+          @delayedUpdate()
 
       resize: (newWidth, newHeight, duration) ->
         func = =>
