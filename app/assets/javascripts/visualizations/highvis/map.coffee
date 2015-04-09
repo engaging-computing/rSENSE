@@ -37,9 +37,10 @@ $ ->
         @HEATMAP_NONE = -2
         @HEATMAP_MARKERS = -1
 
-        @configs.visibleMarkers = 1
-        @configs.visibleLines = 0
-        @configs.visibleClusters = if data.dataPoints.length > 100 then 1 else 0
+        # TODO write migration for visibles
+        @configs.visibleMarkers = true
+        @configs.visibleLines = false
+        @configs.visibleClusters = data.dataPoints.length > 100
         @configs.heatmapSelection = @HEATMAP_NONE
         @configs.mapTypeId ?= google.maps.MapTypeId.ROADMAP
 
@@ -249,7 +250,7 @@ $ ->
               icon: pinSym
               desc: label
               visible: ((groupIndex in data.groupSelection) and
-                @configs.visibleMarkers is 1)
+                @configs.visibleMarkers)
 
             @oms.addMarker newMarker
 
@@ -278,7 +279,7 @@ $ ->
               strokeOpacity: 1.0
               strokeWeight: 2
               visible: ((index in data.groupSelection) and
-                @configs.visibleLines is 1)
+                @configs.visibleLines)
 
             @timeLines[index].setMap(@gmap)
 
@@ -395,12 +396,11 @@ $ ->
         # Set marker visibility
         for mg, i in @markers
           for m in mg
-            m.setVisible((i in data.groupSelection) and
-              @configs.visibleMarkers is 1)
+            m.setVisible((i in data.groupSelection) and @configs.visibleMarkers)
 
           if @timeLines?
             @timeLines[i].setVisible((i in data.groupSelection) and
-              @configs.visibleLines is 1)
+              @configs.visibleLines)
 
         @clusterer.repaint()
 
