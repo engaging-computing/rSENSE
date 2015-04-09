@@ -61,11 +61,8 @@ $ ->
       (init and globals.options.startCollapsed?) or !globals.configs.ctrlsOpen
         controlSize = 0
         controlOpac = 0.0
-        $('#ctrls-menu-btn > #ctrls-menu-chevron').hide()
-        $('#ctrls-menu-btn > .hamburger-bar').show()
-      else
-        $('#ctrls-menu-btn > #ctrls-menu-chevron').show()
-        $('#ctrls-menu-btn > .hamburger-bar').hide()
+
+      $('#ctrls-menu-btn').toggleClass('down', globals.configs.ctrlsOpen)
 
       # New width should take into account visibility of tools
       newWidth = visWrapperSize

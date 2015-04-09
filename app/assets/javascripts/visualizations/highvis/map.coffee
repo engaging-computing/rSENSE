@@ -348,7 +348,6 @@ $ ->
         checkProj()
 
       update: ->
-        console.log 'update'
         # Disable old heatmap (if there)
         if @heatmap?
           @heatmap.setMap null
@@ -490,20 +489,31 @@ $ ->
           @configs.visibleClusters = e.target.checked
           @delayedUpdate()
 
+        # Set up heatmap slider
+        slider = $('#heatmap-slider')
+        slider.attr('min', 0)
+        slider.attr('max', 6)
+        slider.val(Math.log(@configs.heatmapRadius) / Math.log(10))
+        $('#heatmap-slider').on 'input change', (e) =>
+          newRadius = Math.pow(10, Number(e.target.value))
+          # Guess new pixel radius
+          @heatmapPixelRadius =
+            Math.ceil(@heatmapPixelRadius * newRadius / @configs.heatmapRadius)
+          @configs.heatmapRadius = newRadius
+          $('#map-radius').val("#{@configs.heatmapRadius}")
+          @delayedUpdate()
+
         # Heatmap Radius Box
         $('#map-radius').change (e) =>
           newRadius = Number(e.target.value)
-          console.log newRadius
-          if isNaN(newRadius)
-            $('#map-radius').errorFlash()
-            return
+          if isNaN(newRadius) then return $('#map-radius').errorFlash()
 
           # Guess new pixel radius
           @heatmapPixelRadius = Math.ceil(@heatmapPixelRadius * newRadius /
             @configs.heatmapRadius)
           @configs.heatmapRadius = newRadius
-          #$('#heatmapSlider')[0].value =
-          #    Math.log(@configs.heatmapRadius) / (Math.log 10)
+          $('#heatmap-slider').val(Math.log(@configs.heatmapRadius) /
+            Math.log(10))
           @delayedUpdate()
 
       resize: (newWidth, newHeight, duration) ->

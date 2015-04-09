@@ -26,23 +26,3 @@
      {{> visualizations/controls/_checkbox clusterMarkers}}
    </div>
  </div>
-
-<!--
-        # Set up heatmap entry
-        ($ '#radius-text').keydown (e) =>
-          if e.which == 13
-
-        # Set up heatmap slider
-        slider = $('#heatmapSlider')[0]
-        slider.min = 0
-        slider.max = 6
-        slider.value = Math.log(@configs.heatmapRadius) / Math.log(10)
-        $('#heatmapSlider').change (e) =>
-          newRadius = Math.pow(10, Number(e.target.value))
-          # Guess new pixel radius
-          @heatmapPixelRadius =
-            Math.ceil(@heatmapPixelRadius * newRadius / @configs.heatmapRadius)
-          @configs.heatmapRadius = newRadius
-          ($ '#radius-text').val("#{@configs.heatmapRadius}")
-          @delayedUpdate()
--->

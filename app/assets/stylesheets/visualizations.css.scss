@@ -21,8 +21,8 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   $select-bkg: linear-gradient(#49A7DB, #268AC1);
   $shadow-color: #9E9E9E;
   $shadow: 0 2px 3px 1px $shadow-color;
-  $vis-bkg-dark: #CDCDCD;
-  $vis-bkg-mid: #E4E4E4;
+  $vis-bkg-dark:  #CBCBCB;
+  $vis-bkg-mid:   #DCDCDC;
   $vis-bkg-light: #F2F2F2;
   $jqgrid-bkg: linear-gradient(#FFFFFF, $vis-bkg-mid);
 
@@ -60,18 +60,29 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   }
 
   .hamburger-menu {
+    transition: background-color .5s ease;
     height: 32px;
     width: 30px;
     padding: 0 5px;
     margin: 0;
+    background-color: white;
 
     .hamburger-bar {
+      transition: background-color .5s ease;
       display: block;
       height: 4px;
       width: 100%;
-      background-color: black;
+      background-color: #555;
       border-radius: 4px;
       margin: 2px auto;
+    }
+  }
+
+  .hamburger-menu.down {
+    background-color: #555;
+
+    .hamburger-bar {
+      background-color: white;
     }
   }
 
@@ -423,19 +434,6 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     font-size: 24px;
     text-align: center;
     padding: 10px;
-
-    #ctrls-menu-btn {
-      position: absolute;
-      left: 0;
-      background-color: $vis-bkg-mid;
-      border-left: none;
-      border-radius: 0 10px 10px 0;
-    }
-
-    .inline-left {
-      position: relative;
-      left: 30px;
-    }
   }
 }
 

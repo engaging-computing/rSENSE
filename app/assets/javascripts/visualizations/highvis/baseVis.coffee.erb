@@ -448,7 +448,7 @@ $ ->
         octx =
           id: 'tools-ctrls'
           title: 'Tools'
-          body: HandlebarsTemplates[hbCtrl('common-tools')](ictx)
+          body: HandlebarsTemplates[hbCtrl('base-tools')](ictx)
 
         tools = HandlebarsTemplates[hbCtrl('body')](octx)
         $('#vis-ctrls').append tools

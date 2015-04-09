@@ -41,14 +41,12 @@
   </div>
   <div id="vis-container" role="tabpanel">
     <div id="vis-title-bar">
-      <button id="ctrls-menu-btn" class="hamburger-menu btn btn-default">
-        <span class="hamburger-bar"></span>
-        <span class="hamburger-bar"></span>
-        <span class="hamburger-bar"></span>
-        <i id="ctrls-menu-chevron" class="fa fa-chevron-circle-left"
-           style="display:none"></i>
-      </button>
       <div class="inline-left">
+        <button id="ctrls-menu-btn" class="hamburger-menu btn btn-default">
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+        </button>
         <%= title.html_safe %>
         <span class="subtitle">
           of <%= link_to project.title.html_safe, project, class: "i" %>

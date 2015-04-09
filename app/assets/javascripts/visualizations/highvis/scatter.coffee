@@ -377,7 +377,7 @@ $ ->
         octx = {}
         octx.id = 'tools-ctrls'
         octx.title = 'Tools'
-        octx.body = HandlebarsTemplates[hbCtrl('scatter')](ictx)
+        octx.body = HandlebarsTemplates[hbCtrl('scatter-tools')](ictx)
         tools = HandlebarsTemplates[hbCtrl('body')](octx)
         $('#vis-ctrls').append tools
 
