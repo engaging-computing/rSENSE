@@ -45,9 +45,9 @@ $ ->
     resizeVis = (toggleControls = true, aniLength = 600, init = false) ->
       newHeight = $(window).height()
       embed = globals.options? and globals.options.isEmbed?
-      if embed then newHeight -= $(".navbar").height()
+      if embed then newHeight -= $('.navbar').height()
 
-      $("#vis-wrapper").height(newHeight)
+      $('#vis-wrapper').height(newHeight)
 
       visWrapperSize = $('#vis-wrapper').innerWidth()
       visWrapperHeight = $('#vis-wrapper').outerHeight()
@@ -143,12 +143,8 @@ $ ->
       unless enabled
         $("#vis-tab-#{ctx.name.toLowerCase()}").addClass('strikethrough')
 
-    ### Pick vis ###
-    cvis =
-      if not (data.defaultVis in data.relVis)
-        data.relVis[0].toLowerCase()
-      else data.defaultVis.toLowerCase()
-
+    ### Launch a default vis ###
+    cvis = defaultVis
     globals.configs.curVis = 'globals.' + cvis
     ccanvas = cvis + '-canvas'
 
@@ -160,7 +156,6 @@ $ ->
 
     # Highlight the starting tab
     $("#vis-tab-list a[href='##{ccanvas}']").tab('show')
-    $('#' + ccanvas).addClass('active in')
 
     # Initialize View
     resizeVis(false, 0, true)

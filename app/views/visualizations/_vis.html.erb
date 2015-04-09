@@ -1,7 +1,10 @@
+<% default = @data[:relVis].include?(@data[:defaultVis]) ?
+   @data[:defaultVis] : @data[:relVis][0] %>
 <script>
   window.kml = "<%= @project.kml_metadata %>";
   window.data = <%= raw @data.to_json %>;
   window.globals = <%= raw @globals.to_json %>;
+  window.defaultVis = "<%= default.downcase %>";
   window.icons = { 'Map_dark': "<%= path_to_image('vis_map_dark.png')%>",
                    'Map_light': "<%= path_to_image('vis_map_light.png')%>",
                    'Timeline_dark': "<%= path_to_image('vis_timeline_dark.png')%>",
@@ -70,31 +73,40 @@
     </ul>
     <div class="tab-content">
       <div role="tabpanel" id="map-canvas"
-           class="vis-canvas tab-pane fade">
-      </div>
-      <div role="tabpanel" id="table-canvas"
-           class="vis-canvas tab-pane fade">
+           class="vis-canvas tab-pane fade
+                  <% if default == 'Map' %> active in <% end %>">
       </div>
       <div role="tabpanel" id="timeline-canvas"
-           class="vis-canvas tab-pane fade">
+           class="vis-canvas tab-pane fade
+                  <% if default == 'Timeline' %> active in <% end %>">
       </div>
       <div role="tabpanel" id="scatter-canvas"
-           class="vis-canvas tab-pane fade">
+           class="vis-canvas tab-pane fade
+                  <% if default == 'Scatter' %> active in <% end %>">
       </div>
       <div role="tabpanel" id="bar-canvas"
-           class="vis-canvas tab-pane fade">
+           class="vis-canvas tab-pane fade
+                  <% if default == 'Bar' %> active in <% end %>">
       </div>
       <div role="tabpanel" id="histogram-canvas"
-           class="vis-canvas tab-pane fade">
+           class="vis-canvas tab-pane fade
+                  <% if default == 'Histogram' %> active in <% end %>">
       </div>
       <div role="tabpanel" id="pie-canvas"
-           class="vis-canvas tab-pane fade">
+           class="vis-canvas tab-pane fade
+                  <% if default == 'Pie' %> active in <% end %>">
+      </div>
+      <div role="tabpanel" id="table-canvas"
+           class="vis-canvas tab-pane fade
+                  <% if default == 'Table' %> active in <% end %>">
       </div>
       <div role="tabpanel" id="summary-canvas"
-           class="vis-canvas tab-pane fade">
+           class="vis-canvas tab-pane fade
+                  <% if default == 'Summary' %> active in <% end %>">
       </div>
       <div role="tabpanel" id="photos-canvas"
-           class="vis-canvas tab-pane fade">
+           class="vis-canvas tab-pane fade
+                  <% if default == 'Photos' %> active in <% end %>">
       </div>
     </div>
   </div>
