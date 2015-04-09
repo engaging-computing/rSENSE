@@ -89,7 +89,7 @@ $ ->
     $(window).resize () ->
       resizeVis(false, 0)
 
-    ### hide all vis canvases to start ###
+    ### Hide all vis canvases to start ###
     $(can).hide() for can in ['#map-canvas', '#timeline-canvas',
       '#scatter-canvas', '#bar-canvas', '#histogram-canvas', '#pie-canvas',
       '#table-canvas', '#summary-canvas','#viscanvas','#photos-canvas']

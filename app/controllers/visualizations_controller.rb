@@ -45,9 +45,15 @@ class VisualizationsController < ApplicationController
   def show
     @visualization = Visualization.find(params[:id])
     @project = Project.find_by_id(@visualization.project_id)
+    tmp = JSON.parse(@visualization.data)
 
     # The finalized data object
-    @data = { savedData: @visualization.data, savedGlobals: @visualization.globals }
+    @data = {
+      savedData:    @visualization.data,
+      savedGlobals: @visualization.globals,
+      defaultVis:   tmp['defaultVis'],
+      relVis:       tmp['relVis']
+    }
 
     recur = params.key?(:recur) ? params[:recur] == 'true' : false
 
