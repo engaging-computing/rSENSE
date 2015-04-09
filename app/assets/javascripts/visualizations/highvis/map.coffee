@@ -490,10 +490,11 @@ $ ->
           @delayedUpdate()
 
         # Set up heatmap slider
-        slider = $('#heatmap-slider')
-        slider.attr('min', 0)
-        slider.attr('max', 6)
-        slider.val(Math.log(@configs.heatmapRadius) / Math.log(10))
+        init =
+          value: Math.log(@configs.heatmapRadius) / Math.log(10)
+          min: 0
+          max: 6
+        $('#heatmap-slider').attr(init)
         $('#heatmap-slider').on 'input change', (e) =>
           newRadius = Math.pow(10, Number(e.target.value))
           # Guess new pixel radius

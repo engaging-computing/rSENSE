@@ -118,7 +118,8 @@ $ ->
         binNumTarget = Math.pow 10, @binNumSug
 
         tryNewSize = (size) ->
-          if (Math.abs (binNumTarget - (range / size))) < (Math.abs (binNumTarget - bestNum))
+          target = Math.abs(binNumTarget - (range / size))
+          if target < Math.abs(binNumTarget - bestNum)
             bestSize = size
             bestNum  = range / size
 
@@ -141,27 +142,21 @@ $ ->
         bestSize
 
       update: ->
-        #if !@updatedTooltips
-        #  @updatedTooltips = true
-        #  @start()
-        #@updatedTooltips = false
         super()
         # Name Axis
-        @chart.yAxis[0].setTitle {text: "Quantity"}, false
-        @chart.xAxis[0].setTitle {text: fieldTitle data.fields[@configs.displayField]}, false
+        @chart.yAxis[0].setTitle({text: "Quantity"}, false)
+        @chart.xAxis[0].setTitle(
+          {text: fieldTitle(data.fields[@configs.displayField])}, false)
         tooltipXAxis = @configs.displayField
-        if data.groupSelection.length is 0
-          return
+        if data.groupSelection.length is 0 then return
 
         while @chart.series.length > data.normalFields.length
           @chart.series[@chart.series.length - 1].remove false
 
-        ### --- ###
         @globalmin = Number.MAX_VALUE
         @globalmax = Number.MIN_VALUE
 
         for groupIndex in data.groupSelection
-
           min = data.getMin @configs.displayField, groupIndex
           min = Math.round(min / @configs.binSize) * @configs.binSize
           @globalmin = Math.min @globalmin, min
@@ -170,7 +165,7 @@ $ ->
           max = Math.round(max / @configs.binSize) * @configs.binSize
           @globalmax = Math.max @globalmax, max
 
-        #### Make 'fake' data to ensure proper bar spacing ###
+        # Make 'fake' data to ensure proper bar spacing ###
         fakeDat = for i in [@globalmin...@globalmax] by @configs.binSize
           [i, 0]
 
@@ -179,13 +174,10 @@ $ ->
           data: fakeDat
 
         @chart.addSeries options, false
-        ### ###
 
         # Generate all bin data
         binObjs = {}
-
         for groupIndex in data.groupSelection
-
           selectedData = data.selector @configs.displayField, groupIndex
 
           binArr = for i in selectedData
@@ -255,76 +247,67 @@ $ ->
 
             @chart.addSeries options, false
 
-        @chart.xAxis[0].setExtremes @globalmin - (@configs.binSize / 2), @globalmax + (@configs.binSize / 2), false
+        @chart.xAxis[0].setExtremes(@globalmin - (@configs.binSize / 2),
+          @globalmax + (@configs.binSize / 2), false)
 
         @chart.redraw()
 
       buildLegendSeries: ->
         count = -1
-        for field, fieldIndex in data.fields when fieldIndex in data.normalFields
+        for f, fi in data.fields when fi in data.normalFields
           count += 1
           dummy =
             data: []
             color: '#000'
-            visible: @configs.displayField is fieldIndex
-            name: field.fieldName
+            visible: @configs.displayField is fi
+            name: f.fieldName
             type: 'area'
             xAxis: 1
-            legendIndex: fieldIndex
+            legendIndex: fi
 
       drawToolControls: ->
+        ictx =
+          binSize: @configs.binSize
 
-        c = ""
+        octx =
+          id: 'tools-ctrls'
+          title: 'Tools'
+          body: HandlebarsTemplates[hbCtrl('histogram-tools')](ictx)
 
-        # --- #
-        c += '<div id="toolControl" class="vis_controls">'
-        c += "<div class='control_header'><h3><a href='#'>Tools:</a></h3></div>"
-        c += "<div class='control_outer'>"
-        c += "<h4 class='clean_shrink'>Bin Size</h4>"
-        c += "Automatic : <br>"
-        c += "<div id='binSizeSlider' style='width:90%;margin-left:5%'></div><br>"
-        c += "Manual: <input id='binSizeInput' class='form-control' value='#{@configs.binSize}'>"
-        c += '</div></div></div>'
+        tools = HandlebarsTemplates[hbCtrl('body')](octx)
+        $('#vis-ctrls').append(tools)
 
-        # Write HTML
-        $('#controldiv').append c
+        # Initialize and track the status of this control panel
+        globals.configs.toolsOpen ?= false
+        initCtrlPanel('tools-ctrls', 'toolsOpen')
 
-        ###
         # Set up slider
-        $('#binSizeSlider').slider
-          range: 'min'
-          value: 2.7 - @binNumSug
+        init =
+          value: @configs.binSize
           min: .5
           max: 2.2
           step: .1
-          slide: (event, ui) =>
-            @binNumSug = 2.7 - Number ui.value
+        $('#bin-size-slider').attr(init)
+        $('#bin-size-slider').on 'input change', (e) =>
+          @binNumSug = 2.7 - Number(e.target.value)
+          newBinSize = @defaultBinSize()
+          unless fpEq(newBinSize, @configs.binSize)
+            @configs.binSize = newBinSize
+            $('#bin-size').val(@configs.binSize)
+            @delayedUpdate()
 
-            newBinSize = @defaultBinSize()
+        # Bin Size Box
+        $('#bin-size').change (e) =>
+          newBinSize = Number(e.target.value)
+          if isNaN(newBinSize) or newBinSize <= 0
+            $('#bin-size').errorFlash()
+            return
 
-            if not fpEq newBinSize, @configs.binSize
-              @configs.binSize = newBinSize
-              $('#binSizeInput').val "#{@configs.binSize}"
-              @delayedUpdate()
-        ###
-        $("#binSizeInput").keydown (e) =>
-          if e.keyCode == 13
-
-            newBinSize = Number $('#binSizeInput').val()
-
-            if isNaN newBinSize
-              $("#binSizeInput").errorFlash()
-              return
-
-            if newBinSize <= 0
-              $("#binSizeInput").errorFlash()
-              return
-
-            if ((@globalmax - @globalmin) / newBinSize) < @MAX_NUM_BINS
-              @configs.binSize = newBinSize
-              @update()
-            else
-              alert "Entered bin size would result in too many bins."
+          if ((@globalmax - @globalmin) / newBinSize) < @MAX_NUM_BINS
+            @configs.binSize = newBinSize
+            @update()
+          else
+            alert('Entered bin size would result in too many bins.')
 
       drawControls: ->
         super()
@@ -333,7 +316,7 @@ $ ->
         handler = (selected, selFields) =>
           @yAxisRadioHandler(selected, selFields)
           @configs.binSize = @defaultBinSize()
-          $("#binSizeInput").attr('value', @configs.binSize)
+          $('#bin-size').attr('value', @configs.binSize)
 
         @drawYAxisControls('Fields', globals.configs.fieldSelection,
           data.normalFields.slice(1), true, @configs.displayField, handler)
