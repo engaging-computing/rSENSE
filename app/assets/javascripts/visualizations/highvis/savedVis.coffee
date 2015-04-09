@@ -45,8 +45,8 @@ $ ->
                 </div>
               </div>
               """
-      ($ '#viscontainer').append modal
-      ($ "#loadModal").modal
+      $('#vis-container').append modal
+      $("#loadModal").modal
         backdrop: 'static'
         keyboard: 'false'
 
@@ -63,46 +63,23 @@ $ ->
         dataType: 'json'
         data:
           visualization:
-            project_id: Number data.projectID
+            project_id: Number(data.projectID)
             title: name
             data: savedData.data
             globals: savedData.globals
             svg: svg
         success: (msg) ->
-          ($ "#loadModal").modal('hide')
+          $("#loadModal").modal('hide')
           window.location = msg.url
         error: (jqxhr, status, msg) ->
-          response = $.parseJSON msg['responseText']
-          error_message = response.errors.join "</p><p>"
-
-          ($ '.container.mainContent').find('p').before """
-          <div class="alert alert-danger fade in">
-            <button type="button" class="close" data-dismiss="alert"
-              aria-hidden="true">×</button>
-            <h4>Error Saving Visualization:</h4>
-            <p>#{error_message}</p>
-            <p>
-              <button type="button" class="btn btn-danger error_bind"
-                data-retry-text"Retrying...">Retry</button>
-              <button type="button" class="btn btn-default error_dismiss">
-                Or Dismiss</button>
-            </p>
-          </div>"""
-
-          # Dismiss
-          ($ '.error_dismiss').click ->
-            ($ '.alert').alert 'close'
-
-          # Retry
-          ($ '.error_bind').click ->
-            createVis(name)
+          quickFlash('Failed to save visualization', 'error')
 
     ###
     Creates a new vis upon name submission
     ###
-    globals.saveVis = (title, desc, succCallback, failCallback) ->
+    globals.saveVis = ->
       name = 'Saved Vis - ' + data.projectName
-      helpers.name_popup(name, 'visualization', '#viscontainer',
+      helpers.name_popup(name, 'visualization', '#vis-container',
         createVis, null)
 
     ###
