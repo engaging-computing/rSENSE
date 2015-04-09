@@ -35,14 +35,16 @@
 </script>
 <div id="vis-wrapper">
   <div id="vis-ctrl-container"
-    <% if @presentation %> style="display:none" <% end %>>
+       <% if @presentation || !controls %> style="display:none" <% end %>>
     <div id="vis-ctrls">
     </div>
   </div>
   <div id="vis-container" role="tabpanel">
-    <div id="vis-title-bar">
+    <div id="vis-title-bar"
+         <% if @presentation || !titleBar %> style="display:none" <% end %>>
       <div class="inline-left">
-        <button id="ctrls-menu-btn" class="hamburger-menu btn btn-default">
+        <button id="ctrls-menu-btn" class="hamburger-menu btn btn-default"
+                <% if !controls %> style="display:none" <% end %>>
           <span class="hamburger-bar"></span>
           <span class="hamburger-bar"></span>
           <span class="hamburger-bar"></span>
@@ -63,9 +65,8 @@
         <% end %>
       </div>
     </div>
-    <ul id="vis-tab-list" role="tablist"
-        class="nav nav-tabs <% if @presentation %>hidden<% end %>"
-        data-tabs="tabs">
+    <ul id="vis-tab-list" role="tablist" class="nav nav-tabs" data-tabs="tabs"
+         <% if @presentation || !titleBar %> style="display: none" <% end %>>
     </ul>
     <div class="tab-content">
       <div role="tabpanel" id="map-canvas"

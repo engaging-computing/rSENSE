@@ -44,8 +44,8 @@ $ ->
     # Toggle control panel
     resizeVis = (toggleControls = true, aniLength = 600, init = false) ->
       newHeight = $(window).height()
-      unless globals.options? and globals.options.isEmbed?
-        newHeight -= $(".navbar").height()
+      embed = globals.options? and globals.options.isEmbed?
+      if embed then newHeight -= $(".navbar").height()
 
       $("#vis-wrapper").height(newHeight)
 
@@ -71,7 +71,8 @@ $ ->
       # Adjust heights
       $('#vis-container').height(visWrapperHeight)
       $('#vis-ctrl-container').height(visWrapperHeight)
-      newHeight = visWrapperHeight - visHeaderHeight
+      newHeight = visWrapperHeight
+      unless embed then newHeight -= visHeaderHeight
       $('#vis-container > .tab-content').height(newHeight)
 
       # Animate the collapsing controls and the expanding vis

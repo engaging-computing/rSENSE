@@ -241,7 +241,7 @@ $ ->
 
             options =
               showInLegend: false
-              color: globals.getColor.colors(groupIndex)
+              color: globals.getColor(groupIndex)
               name: data.groups[groupIndex]
               data: finalData
 

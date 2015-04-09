@@ -1,3 +1,5 @@
 <%= render partial: 'vis', locals: { project: @visualization.project,
     owner: @visualization.owner,
-    title: @visualization.title.html_safe } %>
+    title: @visualization.title.html_safe,
+    titleBar: false,
+    controls: false } %>

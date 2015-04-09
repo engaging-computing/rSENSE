@@ -1,7 +1,9 @@
 <%= render partial: 'vis', locals: { project: @project,
     owner: @project.owner,
     title: (if @datasets.count == 1 then
-    @datasets.first.title.html_safe else 'Showing Multiple Data Sets' end) } %>
+    @datasets.first.title.html_safe else 'Showing Multiple Data Sets' end),
+    titleBar: true,
+    controls: false } %>
 <div class="row">
   <% if @datasets.count == 1 %>
     <div class="col-md-4">
