@@ -51,4 +51,8 @@ body[data-page-name="home/api_v1"] {
       cursor: pointer;
       outline: green solid thin;
   }
+
+  .row {
+    overflow: auto;
+  }
 }
