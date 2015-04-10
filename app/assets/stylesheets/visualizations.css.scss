@@ -317,17 +317,17 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
                       // is overflowing on every non-map vis
   }
 
-  // floats the actual vis to the right
-  #vis-container {
-    position: absolute;
-    right: 0;
-    width: 100%;
-    height: 100%;
-  }
-
   #vis-wrapper {
     width: 100%;
     height: 100%;
+
+    // floats the actual vis to the right
+    #vis-container {
+      position: absolute;
+      right: 0;
+      width: 100%;
+      height: 100%;
+    }
 
     #vis-ctrl-container {
       position: relative;

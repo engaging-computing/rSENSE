@@ -45,8 +45,9 @@ $ ->
     resizeVis = (toggleControls = true, aniLength = 600, init = false) ->
       newHeight = $(window).height()
       embed = globals.options? and globals.options.isEmbed?
-      if embed then newHeight -= $('.navbar').height()
+      presentation = globals.options and globals.options.presentation?
 
+      unless embed then newHeight -= $('.navbar').height()
       $('#vis-wrapper').height(newHeight)
 
       visWrapperSize = $('#vis-wrapper').innerWidth()
@@ -57,7 +58,7 @@ $ ->
       controlSize = visWrapperSize * .2
       controlOpac = 1.0
 
-      if toggleControls and ($ '#vis-ctrl-container').width() > 0 or
+      if toggleControls and $('#vis-ctrl-container').width() > 0 or
       (init and globals.options.startCollapsed?) or !globals.configs.ctrlsOpen
         controlSize = 0
         controlOpac = 0.0
@@ -72,7 +73,7 @@ $ ->
       $('#vis-container').height(visWrapperHeight)
       $('#vis-ctrl-container').height(visWrapperHeight)
       newHeight = visWrapperHeight
-      unless embed then newHeight -= visHeaderHeight
+      unless presentation then newHeight -= visHeaderHeight
       $('#vis-container > .tab-content').height(newHeight)
 
       # Animate the collapsing controls and the expanding vis
