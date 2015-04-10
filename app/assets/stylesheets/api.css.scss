@@ -52,7 +52,8 @@ body[data-page-name="home/api_v1"] {
       outline: green solid thin;
   }
 
-  .row {
+  .col-md-12 {
     overflow: auto;
+    padding: 1px;
   }
 }
