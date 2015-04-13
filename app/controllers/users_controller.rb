@@ -202,28 +202,26 @@ class UsersController < ApplicationController
       @user.likes.each do |l|
         l.destroy
       end
-      @user.projects.each do |p|
-        p.hidden = true
-        p.save
-      end
       @user.media_objects.each do |m|
         m.destroy
       end
       @user.visualizations.each do |v|
-        v.hidden = true
-        v.save
+        v.destroy
       end
       @user.data_sets.each do |d|
         d.destroy
       end
+      @user.projects.each do |p|
+        p.destroy
+      end
       @user.tutorials.each do |t|
-        t.hidden = true
-        t.save
+        t.destroy
+      end
+      @user.news.each do |n|
+        n.destroy
       end
 
-      @user.hidden = true
-      @user.email  = "#{SecureRandom.hex}@deleted.org"
-      @user.save!
+      @user.destroy
 
       respond_to do |format|
         format.html { redirect_to users_url }
