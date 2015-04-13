@@ -135,9 +135,6 @@ class UsersControllerTest < ActionController::TestCase
       delete :destroy, { id: @user },  user_id: @admin
     end
 
-    @u0 = User.find_by_id(@user)
-    assert_match(/\@deleted\.org$/, @u0.email)
-
     assert_redirected_to users_path
   end
 
