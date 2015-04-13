@@ -31,7 +31,7 @@ class TutorialsController < ApplicationController
 
     @new_tutorial = Tutorial.new
 
-    @tutorials = Tutorial.search(params[:search]).paginate(page: params[:page],
+    @tutorials = Tutorial.search(params[:search], @cur_user.try(:admin)).paginate(page: params[:page],
                                                            per_page: pagesize)
 
     @tutorials = @tutorials.order("#{sort} #{order}")

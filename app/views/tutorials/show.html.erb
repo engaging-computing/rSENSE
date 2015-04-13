@@ -5,34 +5,16 @@
 </div>
 
 <% if is_admin? %>
-
-  <script data-template-name="pub-status-none" type="text/x-handlebars">
-    &nbsp;
-  </script>
-  <script data-template-name="pub-status-wait" type="text/x-handlebars">
-    <p>Saving...</p>
-  </script>
-  <script data-template-name="pub-status-saved" type="text/x-handlebars">
-    <p>Saved.</p>
-  </script>
-  <script data-template-name="pub-status-error" type="text/x-handlebars">
-    <p>Error saving: {{ message }}</p>
-  </script>
-
-  <div class="row">
-    <div class="col-md-3">
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" id="publish_tutorial" 
-            <%= @tutorial.hidden ?  "" : "checked"%>> Publish
-        </label>
+  <%= form_for @tutorial, url: {action: :update} do |ff|%>
+    <div class="row">
+      <div class="col-md-3">
+        <input type="hidden" id="hidden" name="tutorial[hidden]" value="<%= !@tutorial.hidden? %>" />
+        <%= ff.button class: "btn btn-primary", id: "publish_tutorial", type: "submit" do%>
+          <i class="fa <%= @tutorial.hidden? ? 'fa-square-o' : 'fa-check-square-o' %>"></i> Published
+        <% end %>
       </div>
-    </div>
-    <div class="col-md-3" id="pub-status">
-      &nbsp;
-    </div>
-  </div>
-
+    </div>  
+  <% end %>
 <% end %>
 
 <div class="row">
