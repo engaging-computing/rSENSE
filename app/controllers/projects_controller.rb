@@ -57,6 +57,7 @@ class ProjectsController < ApplicationController
   # GET /projects/1
   # GET /projects/1.json
   def show
+    @params = params
     @project = Project.find(params[:id])
 
     # Determine if the project is cloned
@@ -76,7 +77,7 @@ class ProjectsController < ApplicationController
       @has_fields = true
     end
 
-    @data_sets = @project.data_sets
+    @data_sets = @project.data_sets.search(params[:search])
     if @data_sets.nil?
       @data_sets = []
     end
