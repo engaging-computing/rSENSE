@@ -81,7 +81,7 @@ class TutorialsControllerTest < ActionController::TestCase
   end
 
   test 'should destroy tutorial' do
-    assert_difference('Tutorial.count', 0) do
+    assert_difference('Tutorial.count', -1) do
       delete :destroy, { id: @tutorial },  user_id: @nixon
     end
 
@@ -96,4 +96,3 @@ class TutorialsControllerTest < ActionController::TestCase
     assert_response 403
   end
 end
-
