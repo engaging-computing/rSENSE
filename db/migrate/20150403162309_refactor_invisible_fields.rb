@@ -11,7 +11,15 @@ class RefactorInvisibleFields < ActiveRecord::Migration
   type = 3
   hash_name = "CONTRIBUTOR_FIELD"
 
-  def change
+  def up
+    refactor(1)
+  end
+
+  def down
+    refactor(-1)
+  end
+
+  def refactor(dir)
     say 'Adding new virtual field to projects and saved vises'
 
     Project.find_each do | p |
@@ -19,7 +27,7 @@ class RefactorInvisibleFields < ActiveRecord::Migration
       globals = JSON.parse(p.globals)
 
       # update everything field related
-      globals = refactor_globals(globals)
+      globals = refactor_globals(globals, dir)
 
       # save the new globals
       p.globals = JSON.dump(globals)
@@ -32,8 +40,8 @@ class RefactorInvisibleFields < ActiveRecord::Migration
       data = JSON.parse(v.data)
 
       # update everything field related
-      globals = refactor_globals(globals)
-      data = refactor_data(data)
+      globals = refactor_globals(globals, dir)
+      data = refactor_data(data, dir)
 
       # save the new globals and data
       v.globals = JSON.dump(globals)
@@ -42,14 +50,14 @@ class RefactorInvisibleFields < ActiveRecord::Migration
     end
   end
 
-  def refactor_globals(globals)
+  def refactor_globals(globals, dir)
     # global
     subglobal = globals['global']
     if subglobal['groupById'] >= n
-      subglobal['groupById'] += 1
+      subglobal['groupById'] += dir
     end
     if subglobal['fieldSelection'] >= n
-      subglobal['fieldSelection'] += 1
+      subglobal['fieldSelection'] += dir
     end
 
     # map unaffected
@@ -57,64 +65,64 @@ class RefactorInvisibleFields < ActiveRecord::Migration
     # timeline
     timeline = globals['Timeline']
     if timeline['xAxis'] >= n
-      timeline['xAxis'] += 1
+      timeline['xAxis'] += dir
     end
     timeline['yAxis'].each_with_index do | y, i |
       if y >= n
-        timeline['yAxis'][i] += 1
+        timeline['yAxis'][i] += dir
       end
     end
     timeline['savedRegressions'].each do | regres |
       if regres['xAxis'] >= n
-        regres['xAxis'] += 1
+        regres['xAxis'] += dir
       end
       if regres['yAxis'] >= n
-        regres['yAxis'] += 1
+        regres['yAxis'] += dir
       end
     end
 
     # scatter
     scatter = globals['Scatter']
     if scatter['xAxis'] >= n
-      scatter['xAxis'] += 1
+      scatter['xAxis'] += dir
     end
     scatter['yAxis'].each_with_index do | y, i |
       if y >= n
-        scatter['yAxis'][i] += 1
+        scatter['yAxis'][i] += dir
       end
     end
     scatter['savedRegressions'].each do | regres |
       if scatter['xAxis'] >= n
-        scatter['xAxis'] += 1
+        scatter['xAxis'] += dir
       end
       if regres['yAxis'] >= n
-        regres['yAxis'] += 1
+        regres['yAxis'] += dir
       end
     end
 
     # bar
     bar = globals['Bar']
     if bar['sortField'] >= n
-      bar['sortField'] += 1
+      bar['sortField'] += dir
     end
 
     # histogram
     histogram = globals['Histogram']
     if histogram['displayField'] >= n
-      histogram['displayField'] += 1
+      histogram['displayField'] += dir
     end
 
     # pie
     pie = globals['Pie']
     if pie['displayField'] >= n
-      pie['displayField'] += 1
+      pie['displayField'] += dir
     end
 
     # table
     table = globals['Table']
     table['tableFields'].each_with_index do | t, i |
       if t >= n
-        table['tableFields'][i] += 1
+        table['tableFields'][i] += dir
       end
     end
     table['tableFields'].push(n)
@@ -123,7 +131,7 @@ class RefactorInvisibleFields < ActiveRecord::Migration
     # summary
     summary = globals['Summary']
     if summary['displayField'] >= n
-      summary['displayField'] += 1
+      summary['displayField'] += dir
     end
 
     # photos unaffected
@@ -131,67 +139,90 @@ class RefactorInvisibleFields < ActiveRecord::Migration
     globals
   end
 
-  def refactor_data(data)
-    # add the new hidden field
+  def refactor_data(data, dir)
+    # add the new hidden field, or remove if direction is down
     fields = data['fields']
-    new_field = Hash.new
-    new_field['typeID'] = type
-    new_field['unitName'] = unit
-    new_field['fieldID'] = -1
-    new_field['fieldName'] = name
-    fields.insert(n + 1, new_field)
+    if (dir > 0)
+      new_field = Hash.new
+      new_field['typeID'] = type
+      new_field['unitName'] = unit
+      new_field['fieldID'] = -1
+      new_field['fieldName'] = name
+      fields.insert(n + 1, new_field)
+    else
+      fields.delete_at(n + 1)
 
-    ### TODO - how are we going to get contrib field
-    ###        in here?  (e.g. Key: a, User: Timmy)
-    ###        For now, pushing ""
+    # insert a blank string as the hidden field for this object;
+    # doing so makes this migration modular and applicable to
+    # future uses of this migration when adding more hidden fields
     dp = data['dataPoints']
     dp.each_with_index do | d, i |
-      dp[i].insert(n + 1, "")
+      if (dir > 0)
+        dp[i].insert(n + 1, "")
+      else
+        dp[i].delete_at(n + 1)
+      end
     end
 
-    # add to the data hash the new hidden field index
-    data[hash_name] = n + 1
+    # add to the data hash the new hidden field index, or remove
+    # if the direction is down
+    if (dir > 0)
+      data[hash_name] = n + 1
+    else
+      data.delete(hash_name)
+    end
 
     # update field arrays
     text_f = data['textFields']
     text_f.each_width_index do | t, i |
       if t >= n
-        text_f[i] += 1
+        text_f[i] += dir
       end
     end
-    text_f.push(n)
+    if (dir > 0)
+      # add the new field to the array
+      text_f.push(n)
+    else
+      # remove the new field from the array
+      text_f -= [n]
+    end
     text_f.sort!
 
     time_f = data['timeFields']
     time_f.each_width_index do | t, i |
       if t >= n
-        time_f[i] += 1
+        time_f[i] += dir
       end
     end
 
     norm_f = data['normalFields']
     norm_f.each_width_index do | t, i |
       if t >= n
-        norm_f[i] += 1
+        norm_f[i] += dir
       end
     end
 
     num_f = data['numericFields']
     num_f.each_width_index do | t, i |
       if t >= n
-        num_f[i] += 1
+        num_f[i] += dir
       end
     end
 
     geo_f = data['normalFields']
     geo_f.each_width_index do | t, i |
       if t >= n
-        geo_f[i] += 1
+        geo_f[i] += dir
       end
     end
 
-    # add the hidden field to group selection
-    data['groupSelection'].push(n)
+    # add the hidden field to group selection, or remove
+    # if direction is down
+    if (dir > 0)
+      data['groupSelection'].push(n)
+    else
+      data['groupSelection'] -= [n]
+    end
 
     data
   end
