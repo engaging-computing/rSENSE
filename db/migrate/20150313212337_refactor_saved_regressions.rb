@@ -66,8 +66,13 @@ class RefactorSavedRegressions < ActiveRecord::Migration
             end
           end
           if globals.has_key? type
+
             globals[type]['savedRegressions'] = regressions
             v.globals = globals.to_json
+            puts "\n\n\n\n\n"
+            puts globals[type]
+            puts globals[type].keys
+            puts "\n\n\n\n\n"
             v.save
           end
         end
