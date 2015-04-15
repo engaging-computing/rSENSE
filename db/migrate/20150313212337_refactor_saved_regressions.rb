@@ -39,8 +39,18 @@ class RefactorSavedRegressions < ActiveRecord::Migration
               r2 = regression['series']['name']['regression']['tooltip'].split('</strong> ')[3].gsub('e', 'E')
               type = regression['type']
               str_params = regression['series']['name']['regression']['tooltip'].split('<br>')[1].delete('^0-9 \.\-eE').split('  ').reverse
-              params = str_params.select { |x| x != '' }
-              params[params.length - 1] = params[params.length - 1][0...params[params.length - 1].length - 1]
+              temp_params = str_params.select { |x| x != '' }
+              params = []
+              case type
+              when 1
+                temp_params[temp_params.length - 1] = temp_params[temp_params.length - 1].chop
+              when 2
+                temp_params[temp_params.length - 1] = temp_params[temp_params.length - 1].chop
+                temp_params[temp_params.length - 2] = temp_params[temp_params.length - 2].chop
+              when 3
+                temp_params[temp_params.length - 1] = temp_params.last[1...temp_params.last.length]
+              end
+              params = temp_params
               params = params.map { |x| x.gsub('e', 'E') }
               if regression['type'] == 4 or regression['type'] == 5
                 copy = params.clone
