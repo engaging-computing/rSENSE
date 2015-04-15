@@ -26,7 +26,7 @@ class RefactorSavedRegressions < ActiveRecord::Migration
         globals = JSON.parse(v.globals)
         vis_params = globals[type]
         if !vis_params.nil? and vis_params.key? 'savedRegressions'
-          scatter_regressions = []
+          regressions = []
           vis_params['savedRegressions'].each do |regression|
             keys = regression.keys
             if keys.include? 'fieldIndices' and keys.include? 'series'
@@ -60,12 +60,15 @@ class RefactorSavedRegressions < ActiveRecord::Migration
               new_regression['r2'] = r2
               new_regression['name'] = name
               new_regression['dashStyle'] = dash_style
-              scatter_regressions.push new_regression
+              regressions.push new_regression
             else
-              scatter_regressions.push regression
+              regressions.push regression
             end
           end
-          globals[type]['savedRegressions'] = scatter_regressions
+          puts "WATWATWAT"
+          puts globals[type]
+          puts "LOLOLOLOLOLOL"
+          globals[type]['savedRegressions'] = regressions
           v.globals = globals.to_json
           v.save
         end
