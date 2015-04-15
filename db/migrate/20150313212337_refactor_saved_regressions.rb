@@ -22,9 +22,9 @@ class RefactorSavedRegressions < ActiveRecord::Migration
 
   def reformat(vis_types)
     Visualization.find_each do | v |
-      for type in vis_types do
+      for vis_type in vis_types do
         globals = JSON.parse(v.globals)
-        vis_params = globals[type]
+        vis_params = globals[vis_type]
         if !vis_params.nil? and vis_params.has_key? 'savedRegressions'
           regressions = []
           vis_params['savedRegressions'].each do |regression|
@@ -65,13 +65,13 @@ class RefactorSavedRegressions < ActiveRecord::Migration
               regressions.push regression
             end
           end
-          if globals.has_key? type
+          if globals.has_key? vis_type
 
-            globals[type]['savedRegressions'] = regressions
+            globals[vis_type]['savedRegressions'] = regressions
             v.globals = globals.to_json
             puts "\n\n\n\n\n"
-            puts globals[type]
-            puts globals[type].keys
+            puts globals[vis_type]
+            puts globals[vis_type].keys     
             puts "\n\n\n\n\n"
             v.save
           end
