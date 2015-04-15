@@ -66,7 +66,7 @@ class RefactorSavedRegressions < ActiveRecord::Migration
             end
           end
           puts "WATWATWAT"
-          puts globals
+          puts globals.keys
           puts globals[type]
           puts "LOLOLOLOLOLOL"
           globals[type]['savedRegressions'] = regressions
