@@ -25,7 +25,7 @@ class RefactorSavedRegressions < ActiveRecord::Migration
       for type in vis_types do
         globals = JSON.parse(v.globals)
         vis_params = globals[type]
-        if !vis_params.nil? and vis_params.key? 'savedRegressions'
+        if !vis_params.nil? and vis_params.has_key? 'savedRegressions'
           regressions = []
           vis_params['savedRegressions'].each do |regression|
             keys = regression.keys
