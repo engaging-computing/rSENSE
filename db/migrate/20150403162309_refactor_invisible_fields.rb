@@ -260,7 +260,7 @@ class RefactorInvisibleFields < ActiveRecord::Migration
       end
     end
 
-    geo_f = data['normalFields']
+    geo_f = data['geoFields']
     unless geo_f.nil?
       geo_f.each_with_index do | t, i |
         if t >= $n
