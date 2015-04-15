@@ -255,68 +255,6 @@ class ProjectsController < ApplicationController
   end
 
   def save_fields
-    @project = Project.find(params[:id])
-
-    # Save all the fields
-    @project.fields.each do |field|
-      restrictions = nil
-      if params.key?("#{field.id}_restrictions")
-        restrictions = params["#{field.id}_restrictions"].split(',')
-        if restrictions.count < 1
-          restrictions = nil
-        end
-      end
-
-      unless field.update_attributes(name: params["#{field.id}_name"],
-                                     unit: params["#{field.id}_unit"],
-                                     restrictions: restrictions)
-        respond_to do |format|
-          flash[:error] = 'Field names must be unique'
-          redirect_to "/projects/#{@project.id}/edit_fields"
-          return
-        end
-      end
-    end
-
-    # If there's a new field, add it the number of times specified.
-    field_type = params[:new_field]
-
-    if field_type == 'Location'
-      latitude  = Field.new(project_id: @project.id,
-                            field_type: get_field_type('Latitude'),
-                            name: 'Latitude',
-                            unit: 'deg')
-      longitude = Field.new(project_id: @project.id,
-                            field_type: get_field_type('Longitude'),
-                            name: 'Longitude',
-                            unit: 'deg')
-
-      unless latitude.save && longitude.save
-        flash[:error] = "#{latitude.errors.full_messages}\n"\
-          "\n#{longitude.errors.full_messages}"
-        redirect_to "/projects/#{@project.id}/edit_fields"
-        return
-      end
-    elsif !field_type.nil?
-      ((params[:num_fields].to_i > params[:text_fields].to_i) ? params[:num_fields].to_i : params[:text_fields].to_i).times do
-
-        next_name = Field.get_next_name(@project,
-                                        get_field_type(params[:new_field]))
-        field = Field.new(project_id: @project.id,
-                          field_type: get_field_type(field_type), name: next_name)
-
-        unless field.save
-          flash[:error] = field.errors.full_messages
-          redirect_to "/projects/#{@project.id}/edit_fields"
-          return
-        end
-      end
-    end
-    if field_type.nil?
-      redirect_to project_path(@project), notice: 'Changes to fields saved.'
-    else
-      redirect_to "/projects/#{@project.id}/edit_fields", notice: "#{field_type} field added."
-    end
   end
 
   def templateUpload
