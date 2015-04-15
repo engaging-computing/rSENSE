@@ -704,6 +704,7 @@ $ ->
           xMax = window.globals.curVis.configs.xBounds.max
           xMin = window.globals.curVis.configs.xBounds.min
           points = ({x: point.x, y: point.y} for point in xyData)
+          console.log points
           fn = (pv, cv, index, array) -> (pv and cv)
           # Create a unique identifier for the regression
           regressionId = "regression_#{@configs.xAxis}_#{yAxisIndex}_#{regressionType}_" + \
@@ -735,7 +736,6 @@ $ ->
                 dashStyle,
                 regressionId
               )
-              Ps = Ps.map((y) -> if Math.abs(Math.round(y) - y) < 1e-4 then Math.round(y) else y)
             catch error
               if regressionType is 3
                 alert "Unable to calculate an #{regressions[regressionType]} regression for this data."
