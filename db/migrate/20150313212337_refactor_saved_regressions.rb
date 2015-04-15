@@ -65,13 +65,11 @@ class RefactorSavedRegressions < ActiveRecord::Migration
               regressions.push regression
             end
           end
-          puts "WATWATWAT"
-          puts globals.keys
-          puts globals[type]
-          puts "LOLOLOLOLOLOL"
-          globals[type]['savedRegressions'] = regressions
-          v.globals = globals.to_json
-          v.save
+          if globals.has_key? type
+            globals[type]['savedRegressions'] = regressions
+            v.globals = globals.to_json
+            v.save
+          end
         end
       end
     end
