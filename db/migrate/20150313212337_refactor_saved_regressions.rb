@@ -2,7 +2,7 @@ class RefactorSavedRegressions < ActiveRecord::Migration
   def change
     say 'Refactoring saved regressions'
     vises = ['Scatter', 'Timeline']
-    migrate(vises)
+    reformat(vises)
   end
 
   def get_func(type)
@@ -20,9 +20,9 @@ class RefactorSavedRegressions < ActiveRecord::Migration
     end
   end
 
-  def migrate(types)
+  def reformat(vis_types)
     Visualization.find_each do | v |
-      types.each do | type |
+      for type in vis_types do
         globals = JSON.parse(v.globals)
         vis_params = globals[type]
         if !vis_params.nil? and vis_params.key? 'savedRegressions'
