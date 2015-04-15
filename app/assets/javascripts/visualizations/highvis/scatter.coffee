@@ -704,7 +704,6 @@ $ ->
           xMax = window.globals.curVis.configs.xBounds.max
           xMin = window.globals.curVis.configs.xBounds.min
           points = ({x: point.x, y: point.y} for point in xyData)
-          console.log points
           fn = (pv, cv, index, array) -> (pv and cv)
           # Create a unique identifier for the regression
           regressionId = "regression_#{@configs.xAxis}_#{yAxisIndex}_#{regressionType}_" + \
@@ -803,7 +802,6 @@ $ ->
         regressions = ['Linear', 'Quad', 'Cubic', 'Exp', 'Log', 'Auto']
 
         # Add the entry used the passed regression
-        console.log savedReg
         regressionRow =
           """
           <tr id ='row_#{savedReg.id}' class='regression_row'>
