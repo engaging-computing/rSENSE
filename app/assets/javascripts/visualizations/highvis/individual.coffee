@@ -69,7 +69,7 @@ $ ->
         mutation = new BinaryTree
         mutation.generate(Math.floor(Math.random() * (individual.maxDepth - 1)) + 2)
         mutant.insertTree(mutation, mutationSite)
-        ret = new window.Individual(mutant, mutant.maxDepth())
+        ret = new Individual(mutant, mutant.maxDepth())
 
       # Crossover genetic operator (cut and splice approach)
       @crossover: (individual1, individual2) ->
@@ -91,15 +91,15 @@ $ ->
         [tree2a, tree2b] = [BinaryTree.clone(individual2.tree), BinaryTree.clone(individual2.tree)]
         [tree1c, tree2c] = [BinaryTree.clone(individual1.tree), BinaryTree.clone(individual2.tree)]
         mutationSite1 = Math.floor(Math.random() * Math.min(tree1a.treeSize(), tree2a.treeSize()))
-        mutationSite2 = Math.floor(Math.random() * \
-        Math.min(tree1a.treeSize() - mutationSite1, tree2a.treeSize() - mutationSite1)) + mutationSite1
+        mutationSite2 = Math.floor(Math.random() *
+          Math.min(tree1a.treeSize() - mutationSite1, tree2a.treeSize() - mutationSite1)) + mutationSite1
         [childOne, childTwo] = [BinaryTree.clone(tree1a), BinaryTree.clone(tree2a)]
-        [childOneTail, childTwoTail] = [BinaryTree.clone(tree1a.index(mutationSite2)), \
-        BinaryTree.clone(tree2a.index(mutationSite2))]
+        [childOneTail, childTwoTail] = [BinaryTree.clone(tree1a.index(mutationSite2)),
+          BinaryTree.clone(tree2a.index(mutationSite2))]
         childOne.insertTree(tree2a.index(mutationSite1), mutationSite1)
         childTwo.insertTree(tree1a.index(mutationSite1), mutationSite1)
-        childOne.insertTree(childOneTail, Math.min(mutationSite2, childOne.treeSize()))
-        childTwo.insertTree(childTwoTail, Math.min(mutationSite2, childTwo.treeSize()))
+        childOne.insertTree(childOneTail, Math.min(mutationSite2, childOne.treeSize() - 1))
+        childTwo.insertTree(childTwoTail, Math.min(mutationSite2, childTwo.treeSize() - 1))
         [new Individual(childOne, childOne.maxDepth()), new Individual(childTwo, childTwo.maxDepth())]
 
       # Fitness-proportional reproduction genetic operator
@@ -130,7 +130,7 @@ $ ->
         tournament = for i in [0...tournamentSize]
           participant = Math.floor(Math.random() * individuals.length)
           [tree, maxDepth] = [participant.tree, participant.maxDepth]
-          {individual: new window.Individual(tree, maxDepth), index: i}
+          {individual: new Individual(tree, maxDepth), index: i}
         for participant in tournament
           participant.fitness = eval "participant.individual.#{func}(points)"
         tournament.map((participant) -> if isNaN participant.fitness then 0 else participant.fitness)
@@ -232,7 +232,6 @@ $ ->
 
         # b = cov(y,t) / var(y)
         b = if yVar is 0 then 1 else ytCov / yVar
-        # a = tAvg - b * yAvg
         a = tAvg - b * yAvg
 
         # If we need a and b (params = true), return them
@@ -255,8 +254,9 @@ $ ->
         averageValue = values.reduce((pv, cv, index, array) -> pv + cv) / values.length
         targets = (point.y for point in points)
         averageTarget = targets.reduce((pv, cv, index, array) -> pv + cv) / targets.length
-        fitness = (Math.pow(targets[i] - values[i], 2) / (averageTarget * averageValue) \
-        for i in [0...values.length]).reduce((pv, cv, index, array) -> pv + cv) / points.length
+        indFitness = for i in [0...values.length]
+          Math.pow(targets[i] - values[i], 2) / (averageTarget * averageValue)
+        fitness = indFitness.reduce((pv, cv, index, array) -> pv + cv) / points.length
         if isNaN(fitness)
           fitness = 0
         if raw then fitness else 1 / (1 + fitness)
@@ -272,11 +272,11 @@ $ ->
         nonLinearity = (tree) ->
           return 0 if tree is null
           switch tree.data
-            when window.add, window.subtract, window.multiply, window.safeDiv
+            when symregr.add, symregr.subtract, symregr.multiply, symregr.safeDiv
               tree.treeSize() * (nonLinearity(tree.left) + nonLinearity(tree.right))
-            when window.sin, window.cos
+            when symregr.sin, symregr.cos
               3 * tree.treeSize() * (nonLinearity(tree.left) + nonLinearity(tree.right))
-            when window.safeSqrt, window.pow, window.exp, window.safeLog
+            when symregr.safeSqrt, symregr.pow, symregr.exp, symregr.safeLog
               2 * tree.treeSize() * (nonLinearity(tree.left) + nonLinearity(tree.right))
             else 1
         fitness = Math.pow(eval("this.#{func}(points)"), -1) - 1
@@ -299,7 +299,7 @@ $ ->
       ###
       @particleSwarmOptimization: (populant, points) ->
         # Initialize algorithm parameters
-        fitness = 'scaledFitness'
+        fitness = 'mseFitness'
         maxFitness = 1
         numParticles = 50
         maxPosition = 1000
@@ -343,11 +343,11 @@ $ ->
           for particle in particles
             evaluationPoint = new Individual(tree, populant.maxDepth)
             for dimension, index in particle.dimensions
-              dimension.velocity = Math.min(Math.max(dimension.velocity + (Math.random() * c1 * \
-              (dimension.personalBest - dimension.position)) + (Math.random() * c2 * \
-              (dimensionBests[particle.neighborhood][index] - dimension.position)), minVelocity), maxVelocity)
-              dimension.position = Math.max(Math.min(dimension.position + dimension.velocity, maxVelocity), \
-              minVelocity)
+              dimension.velocity = Math.min(Math.max(dimension.velocity + (Math.random() * c1 *
+                (dimension.personalBest - dimension.position)) + (Math.random() * c2 *
+                  (dimensionBests[particle.neighborhood][index] - dimension.position)), minVelocity), maxVelocity)
+              dimension.position = Math.max(Math.min(dimension.position + dimension.velocity, maxVelocity),
+                minVelocity)
               evaluationPoint.tree.index(dimension.index).insertData(dimension.position)
             currentFitness = eval "evaluationPoint.#{fitness}(points)"
             if currentFitness > particle.bestFitness

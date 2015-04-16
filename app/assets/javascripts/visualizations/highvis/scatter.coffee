@@ -621,9 +621,6 @@ $ ->
                 dashStyle,
                 regrId
               )
-              Ps = Ps.map (y) ->
-                if Math.abs(Math.round(y) - y) < 1e-4 then Math.round(y) else y
-
             catch error
               if regrType is 3
                 alert("Unable to calculate an #{regressions[regrType]} " +

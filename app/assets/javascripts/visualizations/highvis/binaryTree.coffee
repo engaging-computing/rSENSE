@@ -43,16 +43,17 @@
 $ ->
   if namespace.controller is 'visualizations' and
   namespace.action in ['displayVis', 'embedVis', 'show']
-    window.add = (a, b) -> a + b
-    window.subtract = (a, b) -> a - b
-    window.multiply = (a, b) -> a * b
-    window.safeDiv = (a, b) -> if b is 0 then 1 else a / b
-    window.pow = (a, b) -> Math.pow(a, b)
-    window.exp = (a) -> Math.exp(a)
-    window.cos = (a) -> Math.cos(a)
-    window.sin = (a) -> Math.sin(a)
-    window.safeLog = (a) -> Math.log(Math.abs(a))
-    window.safeSqrt = (a) -> Math.sqrt(Math.abs(a))
+    window.symregr ?= {}
+    symregr.add = (a, b) -> a + b
+    symregr.subtract = (a, b) -> a - b
+    symregr.multiply = (a, b) -> a * b
+    symregr.safeDiv = (a, b) -> if b is 0 then 1 else a / b
+    symregr.pow = (a, b) -> Math.pow(a, b)
+    symregr.exp = (a) -> Math.exp(a)
+    symregr.cos = (a) -> Math.cos(a)
+    symregr.sin = (a) -> Math.sin(a)
+    symregr.safeLog = (a) -> Math.log(Math.abs(a))
+    symregr.safeSqrt = (a) -> Math.sqrt(Math.abs(a))
     class window.BinaryTree extends Object
 
       # Initial ephemeral constant value on the interval [-1, 1)
@@ -63,7 +64,8 @@ $ ->
       ]
 
       @operators = [
-        add, subtract, multiply, safeDiv, pow, exp, cos, sin, safeLog, safeSqrt
+        symregr.add, symregr.subtract, symregr.multiply, symregr.safeDiv, symregr.pow,
+        symregr.exp, symregr.cos, symregr.sin, symregr.safeLog, symregr.safeSqrt
       ]
 
       constructor: (parent = null) ->
@@ -83,22 +85,22 @@ $ ->
 
       # Returns true if a and b are equivalent objects
       # (not necessarily references to the same object in memory).
-      @is_equal: (a, b) ->
+      @isEqual: (a, b) ->
         [leftEq, rightEq] = [true, true]
         if a is null and b isnt null or a isnt null and b is null
           return false
-        if (a.is_terminal() and b.is_terminal()) is true and a.data is b.data
+        if (a.isTerminal() and b.isTerminal()) is true and a.data is b.data
           return true
         if '' + a.data isnt '' + b.data or a.treeSize() isnt b.treeSize() or a.maxDepth() isnt b.maxDepth()
           return false
         if a.left isnt null and b.left isnt null
-          leftEq = BinaryTree.is_equal(a.left, b.left)
+          leftEq = BinaryTree.isEqual(a.left, b.left)
         if a.right isnt null and b.right isnt null
-          rightEq = BinaryTree.is_equal(a.right, b.right)
+          rightEq = BinaryTree.isEqual(a.right, b.right)
         leftEq and rightEq
 
       # Checks if the tree is terminal (i.e., no children)
-      is_terminal: ->
+      isTerminal: ->
         @left is null and @right is null
 
       # Returns number of nodes in the tree
@@ -120,7 +122,7 @@ $ ->
           rest = combiner(rest, @left.__query(combiner))
         if @right? and @right isnt null
           rest = combiner(rest, @right.__query(combiner))
-        1 + rest
+        return 1 + rest
 
       # Inserts a single datum in the tree at @data,
       # or the @data member of the tree located at
@@ -130,20 +132,19 @@ $ ->
       ###
       insertData: (data, pos = null) ->
         if pos is 'left'
-          if @data isnt null
-            if @left is null
-              @left = new BinaryTree(@)
-            @left.data = data
-
-          else
+          if @data is null
             console.log "Error inserting #{data} into left child of tree."
+            return
+          if @left is null
+            @left = new BinaryTree(@)
+          @left.data = data
         else if pos is 'right'
-          if @data isnt null
-            if @right is null
-              @right = new BinaryTree(@)
-            @right.data = data
-          else
+          if @data is null
             console.log "Error inserting #{data} into right child of tree."
+            return
+          if @right is null
+            @right = new BinaryTree(@)
+          @right.data = data
         else
           @data = data
 
@@ -155,23 +156,23 @@ $ ->
       ###
       deleteData: (pos = null) ->
         if pos is 'right'
-          if @right.is_terminal()
+          if @right.isTerminal()
             @right = null
-          else
-            console.log "Error deleting #{@right.data}, results in invalid binary tree."
-            null
+            return
+          console.log "Error deleting #{@right.data}, results in invalid binary tree."
+          null
         else if pos is 'left'
-          if @left.is_terminal()
+          if @left.isTerminal()
             @left = null
-          else
-            console.log "Error deleting #{@left.data}, results in invalid binary tree."
-            null
+            return
+          console.log "Error deleting #{@left.data}, results in invalid binary tree."
+          null
         else
-          if @is_terminal()
+          if @isTerminal()
             @data = null
-          else
-            console.log "Error deleting #{@data}, results in invalid binary tree."
-            null
+            return
+          console.log "Error deleting #{@data}, results in invalid binary tree."
+          null
 
       # Allows the user to index into the tree, following Preorder traversal:
       # ROOT, left, right
@@ -209,7 +210,7 @@ $ ->
       ###
       generate: (maxDepth = 10, curDepth = 1) ->
         if curDepth is maxDepth
-          @insertData(window.BinaryTree.terminals[Math.floor(Math.random() * window.BinaryTree.terminals.length)])
+          @insertData(BinaryTree.terminals[Math.floor(Math.random() * BinaryTree.terminals.length)])
         else
           randomGene = Math.floor(Math.random() * (BinaryTree.terminals.length + BinaryTree.operators.length))
           if randomGene < BinaryTree.terminals.length
@@ -246,23 +247,21 @@ $ ->
         replacementPoint = @index(index)
         if index is null or replacementPoint is -1
           console.log "Error inserting #{tree} at location specified.  Index does not exist in the tree."
-          null
-        else
-          start = replacementPoint.parent
-          if start isnt null
-            if start.left isnt null and window.BinaryTree.is_equal(replacementPoint, start.left)
-              start.left = window.BinaryTree.clone(tree)
-            else
-              if start.right isnt null and window.BinaryTree.is_equal(replacementPoint, start.right)
-                start.right = window.BinaryTree.clone(tree)
-            start.__updateParents()
+          return null
+        start = replacementPoint.parent
+        if start isnt null
+          if start.left isnt null and BinaryTree.isEqual(replacementPoint, start.left)
+            start.left = BinaryTree.clone(tree)
           else
-
-            @data = tree.data
-            @right = BinaryTree.clone(tree.right)
-            @left = BinaryTree.clone(tree.left)
-            @parent = null
-            @__updateParents()
+            if start.right isnt null and BinaryTree.isEqual(replacementPoint, start.right)
+              start.right = BinaryTree.clone(tree)
+          start.__updateParents()
+        else
+          @data = tree.data
+          @right = BinaryTree.clone(tree.right)
+          @left = BinaryTree.clone(tree.left)
+          @parent = null
+          @__updateParents()
 
       # Updates binary tree element's parents to reflect the result of
       # an insertTree merger to parent.right or parent.left
@@ -274,10 +273,10 @@ $ ->
       ###
       __updateParents: ->
         if @right isnt null
-          @right = window.BinaryTree.clone(@right, @)
+          @right = BinaryTree.clone(@right, @)
           @right.__updateParents()
         if @left isnt null
-          @left = window.BinaryTree.clone(@left, @)
+          @left = BinaryTree.clone(@left, @)
           @left.__updateParents()
 
       # Given two parent trees, create two new child trees by crossover.
@@ -288,12 +287,12 @@ $ ->
       # point, and the part of the second parent before its crossover point.
 
       @crossover: (tree1, tree2) ->
-        [tree1a, tree1b] = [window.BinaryTree.clone(tree1), window.BinaryTree.clone(tree1)]
-        [tree2a, tree2b] = [window.BinaryTree.clone(tree2), window.BinaryTree.clone(tree2)]
+        [tree1a, tree1b] = [BinaryTree.clone(tree1), BinaryTree.clone(tree1)]
+        [tree2a, tree2b] = [BinaryTree.clone(tree2), BinaryTree.clone(tree2)]
 
-        [crossoverPointOne, crossoverPointTwo] = \
-        [Math.floor(Math.random() * tree1.treeSize()), Math.floor(Math.random() * tree2.treeSize())]
-        [childOne, childTwo] = [window.BinaryTree.clone(tree1a), window.BinaryTree.clone(tree2a)]
+        [crossoverPointOne, crossoverPointTwo] =
+          [Math.floor(Math.random() * tree1.treeSize()), Math.floor(Math.random() * tree2.treeSize())]
+        [childOne, childTwo] = [BinaryTree.clone(tree1a), BinaryTree.clone(tree2a)]
         childOne.insertTree(childTwo.index(crossoverPointTwo), crossoverPointOne)
         childTwo.insertTree(tree1b.index(crossoverPointOne), crossoverPointTwo)
         [childOne, childTwo]
@@ -307,84 +306,66 @@ $ ->
           if not isNaN(Number(string)) or string is 'x' then string else "(#{string})"
 
         switch tree.data
-          when window.add
+          when symregr.add
             "#{parenthesize(@stringify(tree.left))} + #{parenthesize(@stringify(tree.right))}"
-
-          when window.subtract
+          when symregr.subtract
             "#{parenthesize(@stringify(tree.left))} - #{parenthesize(@stringify(tree.right))}"
-
-          when window.multiply
+          when symregr.multiply
             "#{parenthesize(@stringify(tree.left))} * #{parenthesize(@stringify(tree.right))}"
-
-          when window.safeDiv
+          when symregr.safeDiv
             "#{parenthesize(@stringify(tree.left))} / #{parenthesize(@stringify(tree.right))}"
-
-          when window.pow
+          when symregr.pow
             "#{parenthesize(@stringify(tree.left))} <sup>#{parenthesize(@stringify(tree.right))}</sup>"
-
-          when window.exp
+          when symregr.exp
             "e <sup>#{parenthesize(@stringify(tree.left))}</sup>"
-          when window.cos
+          when symregr.cos
             "cos(#{parenthesize(@stringify(tree.left))})"
-          when window.sin
+          when symregr.sin
             "sin(#{parenthesize(@stringify(tree.left))})"
-          when window.safeLog
+          when symregr.safeLog
             "log(|#{parenthesize(@stringify(tree.left))}|)"
-          when window.safeSqrt
+          when symregr.safeSqrt
             "sqrt(|#{parenthesize(@stringify(tree.left))}|)"
           when 'x'
             'x'
           when 'ec'
-            "#{window.roundToFourSigFigs(BinaryTree.ephemeralConstant)}"
+            "#{roundToFourSigFigs(BinaryTree.ephemeralConstant)}"
           else
-            "#{window.roundToFourSigFigs(tree.data)}"
+            "#{roundToFourSigFigs(tree.data)}"
 
       # Given a tree, construct a string of valid coffeescript code that can be 'evaled' to
       # mimic the symbolic regression.
       @codify: (tree) ->
-      # Helper method to properly parenthesize nested terms
+        # Helper method to properly parenthesize nested terms
         parenthesize = (string) ->
           if not isNaN(Number(string)) or string is 'x' then string else "(#{string})"
 
         getFunc = (tree) ->
           switch tree.data
-
-            when window.add
-              "window.add(#{parenthesize(getFunc(tree.left))}, #{parenthesize(getFunc(tree.right))})"
-
-            when window.subtract
-              "window.subtract(#{parenthesize(getFunc(tree.left))}, #{parenthesize(getFunc(tree.right))})"
-
-            when window.multiply
-              "window.multiply(#{parenthesize(getFunc(tree.left))}, #{parenthesize(getFunc(tree.right))})"
-
-            when window.safeDiv
-              "window.safeDiv(#{parenthesize(getFunc(tree.left))}, #{parenthesize(getFunc(tree.right))})"
-
-            when window.pow
-              "window.pow(#{parenthesize(getFunc(tree.left))}, #{parenthesize(getFunc(tree.right))})"
-
-            when window.exp
-              "window.exp(#{parenthesize(getFunc(tree.left))})"
-
-            when window.cos
-              "window.cos(#{parenthesize(getFunc(tree.left))})"
-
-            when window.sin
-              "window.sin(#{parenthesize(getFunc(tree.left))})"
-
-            when window.safeLog
-              "window.safeLog(#{parenthesize(getFunc(tree.left))})"
-
-            when window.safeSqrt
-              "window.safeSqrt(#{parenthesize(getFunc(tree.left))})"
-
+            when symregr.add
+              "symregr.add(#{parenthesize(getFunc(tree.left))}, #{parenthesize(getFunc(tree.right))})"
+            when symregr.subtract
+              "symregr.subtract(#{parenthesize(getFunc(tree.left))}, #{parenthesize(getFunc(tree.right))})"
+            when symregr.multiply
+              "symregr.multiply(#{parenthesize(getFunc(tree.left))}, #{parenthesize(getFunc(tree.right))})"
+            when symregr.safeDiv
+              "symregr.safeDiv(#{parenthesize(getFunc(tree.left))}, #{parenthesize(getFunc(tree.right))})"
+            when symregr.pow
+              "symregr.pow(#{parenthesize(getFunc(tree.left))}, #{parenthesize(getFunc(tree.right))})"
+            when symregr.exp
+              "symregr.exp(#{parenthesize(getFunc(tree.left))})"
+            when symregr.cos
+              "symregr.cos(#{parenthesize(getFunc(tree.left))})"
+            when symregr.sin
+              "symregr.sin(#{parenthesize(getFunc(tree.left))})"
+            when symregr.safeLog
+              "symregr.safeLog(#{parenthesize(getFunc(tree.left))})"
+            when symregr.safeSqrt
+              "symregr.safeSqrt(#{parenthesize(getFunc(tree.left))})"
             when 'x'
               'x'
-
             when 'ec'
               "#{BinaryTree.ephemeralConstant}"
-
             else
               "#{tree.data}"
 
