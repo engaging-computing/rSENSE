@@ -169,6 +169,7 @@ $ ->
             # Put aside line info if necessary
             if @timeLines? and dataPoint[data.timeFields[0]] isnt null and
             not (isNaN dataPoint[data.timeFields[0]])
+              console.log @, @timesLines, groupIndex
               @timeLines[groupIndex].push
                 time: dataPoint[data.timeFields[0]]
                 latlng: latlng
