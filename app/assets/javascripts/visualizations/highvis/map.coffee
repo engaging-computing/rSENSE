@@ -161,9 +161,9 @@ $ ->
             if (lat is null) or (lon is null)
               return
 
-            console.log dataPoint
-            groupIndex = data.groups.indexOf(
-              dataPoint[globals.configs.groupById].toLowerCase())
+            console.log dataPoint, globals.configs.groupById
+            groupIndex = String(data.groups.indexOf(
+              dataPoint[globals.configs.groupById]).toLowerCase())
             color = globals.getColor(groupIndex)
             latlng = new google.maps.LatLng(lat, lon)
 
