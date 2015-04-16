@@ -161,6 +161,7 @@ $ ->
             if (lat is null) or (lon is null)
               return
 
+            console.log data.groups, dataPoint[globals.configs.groupById]
             groupIndex = data.groups.indexOf(
               String(dataPoint[globals.configs.groupById]).toLowerCase())
             color = globals.getColor(groupIndex)
@@ -169,7 +170,7 @@ $ ->
             # Put aside line info if necessary
             if @timeLines? and dataPoint[data.timeFields[0]] isnt null and
             not (isNaN dataPoint[data.timeFields[0]])
-              console.log @, @timesLines, groupIndex
+              console.log @timesLines, groupIndex
               @timeLines[groupIndex].push
                 time: dataPoint[data.timeFields[0]]
                 latlng: latlng
