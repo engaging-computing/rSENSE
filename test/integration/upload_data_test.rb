@@ -26,7 +26,7 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     page.execute_script "$('#datafile_form').submit()"
     assert page.has_content?('Match Quality')
     click_on 'Submit'
-    assert page.has_css?('#viscontainer'), 'Failed CSV'
+    assert page.has_css?('#vis-container'), 'Failed CSV'
   end
 
   test 'upload gpx' do
@@ -43,7 +43,7 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     all('select')[0].find(:xpath, 'option[1]').select_option
     all('select')[1].find(:xpath, 'option[1]').select_option
     click_on 'Submit'
-    assert page.has_css?('#viscontainer'), 'Failed GPX'
+    assert page.has_css?('#vis-container'), 'Failed GPX'
   end
 
   test 'upload ods' do
@@ -58,7 +58,7 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     page.execute_script "$('#datafile_form').submit()"
     assert page.has_content?('Match Quality')
     click_on 'Submit'
-    assert page.has_css?('#viscontainer'), 'Failed ODS'
+    assert page.has_css?('#vis-container'), 'Failed ODS'
   end
 
   test 'upload xls' do
@@ -73,7 +73,7 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     page.execute_script "$('#datafile_form').submit()"
     assert page.has_content?('Match Quality')
     click_on 'Submit'
-    assert page.has_css?('#viscontainer'), 'Failed XLS'
+    assert page.has_css?('#vis-container'), 'Failed XLS'
   end
 
   test 'upload xlsx' do
@@ -88,7 +88,7 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     page.execute_script "$('#datafile_form').submit()"
     assert page.has_content?('Match Quality')
     click_on 'Submit'
-    assert page.has_css?('#viscontainer'), 'Failed XLSX'
+    assert page.has_css?('#vis-container'), 'Failed XLSX'
   end
 
   test 'invalid csv (two lat fields)' do
@@ -116,7 +116,7 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     click_on 'Save'
     assert page.has_content?('Match Quality')
     click_on 'Submit'
-    assert page.has_css?('#viscontainer'), 'Failed GDOC'
+    assert page.has_css?('#vis-container'), 'Failed GDOC'
   end
 
   test 'unreadable file' do
@@ -142,7 +142,7 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     page.execute_script "$('#datafile_form').submit()"
     assert page.has_content?('Match Quality')
     click_on 'Submit'
-    assert page.has_css?('#viscontainer'), 'Failed ODS'
+    assert page.has_css?('#vis-container'), 'Failed ODS'
 
     visit project_path(@project)
 

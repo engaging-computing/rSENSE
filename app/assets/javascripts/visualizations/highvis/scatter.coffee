@@ -327,7 +327,7 @@ $ ->
         for regr in @configs.savedRegressions
           groupsIntersect =
             (g in data.groupSelection for g in regr.groups).reduce(
-              ((p, c) -> p and c), false)
+              ((p, c) -> p and c), true)
 
           if regr.xAxis is @configs.xAxis and groupsIntersect and
           fs.indexOf(regr.yAxis) isnt -1
@@ -542,7 +542,7 @@ $ ->
         for regr in @configs.savedRegressions
           groupsIntersect =
             (g in data.groupSelection for g in regr.groups).reduce(
-              ((p, c) -> p and c), false)
+              ((p, c) -> p and c), true)
 
           enabled = regr.xAxis is @configs.xAxis and groupsIntersect and
             fs.indexOf(regr.yAxis) isnt -1

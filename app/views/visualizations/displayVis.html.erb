@@ -3,7 +3,8 @@
     title: (if @datasets.count == 1 then
     @datasets.first.title.html_safe else 'Showing Multiple Data Sets' end),
     titleBar: true,
-    controls: true } %>
+    controls: true,
+    getLatest: true } %>
 <div class="row">
   <% if @datasets.count == 1 %>
     <div class="col-md-4">

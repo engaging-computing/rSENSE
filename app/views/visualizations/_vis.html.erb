@@ -61,10 +61,12 @@
         by <%= link_to "#{owner.name}", owner, class: "link" %>
         <%= link_to image_tag(Gravatar.new.url(owner),
             class: "circle-img"), owner %>
-        <%= link_to "#{project_path(@project)}/data_sets",
-          { id:"refresh-data", class: "btn btn-default" } do %>
-          Get Latest
-          <%= content_tag(:i, ' ', class: 'fa fa-refresh') %>
+        <% if getLatest %>
+          <%= link_to "#{project_path(@project)}/data_sets",
+            { id:"refresh-data", class: "btn btn-default" } do %>
+            Get Latest
+            <%= content_tag(:i, ' ', class: 'fa fa-refresh') %>
+          <% end %>
         <% end %>
       </div>
     </div>
