@@ -38,10 +38,11 @@ $ ->
         @HEATMAP_MARKERS = -1
 
         # TODO write migration for visibles
-        @configs.visibleMarkers = true
-        @configs.visibleLines = false
-        @configs.visibleClusters = data.dataPoints.length > 100
-        @configs.heatmapSelection = @HEATMAP_NONE
+        @configs.visibleMarkers ?= true
+        @configs.visibleLines ?= false
+
+        @configs.visibleClusters ?= data.dataPoints.length > 100
+        @configs.heatmapSelection ?= @HEATMAP_NONE
         @configs.mapTypeId ?= google.maps.MapTypeId.ROADMAP
 
       serializationCleanup: ->
@@ -141,7 +142,7 @@ $ ->
           textSize: 12
 
         @clusterer = new MarkerClusterer @gmap, [],
-          maxZoom: if @configs.visibleClusters then 17 else -1
+          maxZoom: if Boolean(@configs.visibleClusters) then 17 else -1
           gridSize: 35
           ignoreHidden: true
           styles: clusterStyles
@@ -161,7 +162,6 @@ $ ->
             if (lat is null) or (lon is null)
               return
 
-            console.log data.groups, dataPoint[globals.configs.groupById]
             groupIndex = data.groups.indexOf(
               String(dataPoint[globals.configs.groupById]).toLowerCase())
             color = globals.getColor(groupIndex)
@@ -170,7 +170,6 @@ $ ->
             # Put aside line info if necessary
             if @timeLines? and dataPoint[data.timeFields[0]] isnt null and
             not (isNaN dataPoint[data.timeFields[0]])
-              console.log @timesLines, groupIndex
               @timeLines[groupIndex].push
                 time: dataPoint[data.timeFields[0]]
                 latlng: latlng
@@ -252,7 +251,7 @@ $ ->
               icon: pinSym
               desc: label
               visible: ((groupIndex in data.groupSelection) and
-                @configs.visibleMarkers)
+                Boolean(@configs.visibleMarkers))
 
             @oms.addMarker newMarker
 
@@ -281,7 +280,7 @@ $ ->
               strokeOpacity: 1.0
               strokeWeight: 2
               visible: ((index in data.groupSelection) and
-                @configs.visibleLines)
+                Boolean(@configs.visibleLines))
 
             @timeLines[index].setMap(@gmap)
 
@@ -398,14 +397,14 @@ $ ->
         # Set marker visibility
         for mg, i in @markers
           for m in mg
-            m.setVisible((i in data.groupSelection) and @configs.visibleMarkers)
+            m.setVisible((i in data.groupSelection) and
+              Boolean(@configs.visibleMarkers))
 
           if @timeLines?
             @timeLines[i].setVisible((i in data.groupSelection) and
-              @configs.visibleLines)
+              Boolean(@configs.visibleLines))
 
         @clusterer.repaint()
-
         super()
 
       end: ->
