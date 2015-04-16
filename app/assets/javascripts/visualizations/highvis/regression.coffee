@@ -142,7 +142,7 @@ $ ->
 
       retSeries =
         name:
-          id: 'hs-' + id
+          id: id
           group: seriesName
           regression:
             tooltip: tt

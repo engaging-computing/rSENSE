@@ -161,6 +161,7 @@ $ ->
             if (lat is null) or (lon is null)
               return
 
+            console.log dataPoint
             groupIndex = data.groups.indexOf(
               dataPoint[globals.configs.groupById].toLowerCase())
             color = globals.getColor(groupIndex)

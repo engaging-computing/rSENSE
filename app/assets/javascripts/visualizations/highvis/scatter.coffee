@@ -325,9 +325,12 @@ $ ->
         # Disable/enable all of the saved regressions as necessary
         fs = globals.configs.fieldSelection
         for regr in @configs.savedRegressions
-          if regr.xAxis is @configs.xAxis              and # X indices
-          "#{regr.groups}" is "#{data.groupSelection}" and # Groups
-          fs.indexOf(regr.yAxis) isnt -1                   # Y field
+          groupsIntersect =
+            (g in data.groupSelection for g in regr.groups).reduce(
+              (p, c) -> p and c)
+
+          if regr.xAxis is @configs.xAxis and groupsIntersect and
+          fs.indexOf(regr.yAxis) isnt -1
             # Create the hypothesis function
             func = if regr.type is globals.REGRESSION.SYMBOLIC
               new Function("x", regr.func)
@@ -350,11 +353,9 @@ $ ->
             @chart.addSeries(series)
 
             # Enabled the class by removing the disabled class
-            $('tr#' + regr.id).removeClass('regr_row_disabled')
+            $('tr#' + regr.id).toggleClass('disabled', false)
           else
-            # Prevent duplicate add classes
-            if $('tr#' + regr.id).hasClass('regr_row_disabled') is false
-              $('tr#' + regr.id).addClass('regr_row_disabled')
+            $('tr#' + regr.id).toggleClass('disabled', true)
 
         @updateRegrTools()
 
@@ -539,10 +540,12 @@ $ ->
         # Restore saved regressions if they exist
         fs = globals.configs.fieldSelection
         for regr in @configs.savedRegressions
-          enabled =
-            regr.xAxis is @configs.xAxis                 and  # X indices
-            "#{regr.groups}" is "#{data.groupSelection}" and  # Groups
-            fs.indexOf(regr.yAxis) isnt -1                    # Y field
+          groupsIntersect =
+            (g in data.groupSelection for g in regr.groups).reduce(
+              (p, c) -> p and c)
+
+          enabled = regr.xAxis is @configs.xAxis and groupsIntersect and
+            fs.indexOf(regr.yAxis) isnt -1
 
           # Calculate the hypothesis function
           func =
@@ -654,7 +657,7 @@ $ ->
             type: regrType
             xAxis: @configs.xAxis
             yAxis: yAxisIndex
-            groups: data.groupSelection
+            groups: data.groupSelection.slice(0)
             parameters: Ps
             func: func
             id: regrId
@@ -715,7 +718,7 @@ $ ->
 
           # Remove regression from the chart
           for series, i in @chart.series
-            if (series.name.id is 'hs-' + savedReg.id)
+            if (series.name.id is savedReg.id)
               @chart.series[i].remove()
               break
 
@@ -724,7 +727,7 @@ $ ->
         # Make the hovering highlight the correct regression
         $('tr#' + savedReg.id).mouseover =>
           for series, i in @chart.series
-            if (series.name.id is 'hs-' + savedReg.id)
+            if (series.name.id is savedReg.id)
               @chart.series[i].setState('hover')
               midpoint = globals.REGRESSION.NUM_POINTS / 2
               @chart.tooltip.refresh(@chart.series[i].points[midpoint])
@@ -734,7 +737,8 @@ $ ->
         $('tr#' + savedReg.id).mouseout =>
           for series, i in @chart.series
             if (series.name.id == savedReg.id)
-              @chart.series[i].setState('')
+              @chart.series[i].setState()
+              @chart.tooltip.hide()
               break
 
       ###
