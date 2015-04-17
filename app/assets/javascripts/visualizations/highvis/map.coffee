@@ -264,7 +264,8 @@ $ ->
                 location: latlng
 
             console.log @heatPoints, @HEATMAP_MARKERS, groupIndex, latlng
-            @heatPoints[@HEATMAP_MARKERS][groupIndex].push latlng
+            if @heatPoints[@HEATMAP_MARKERS]
+              @heatPoints[@HEATMAP_MARKERS][groupIndex].push latlng
 
         # Add markers into the clusterer
         @clusterer.addMarkers [].concat.apply([], @markers)
