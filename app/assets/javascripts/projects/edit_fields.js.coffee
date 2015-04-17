@@ -21,8 +21,6 @@ $ ->
     ###
 
     # Variables to keep track num of text/num fields for name purposes
-    num_display_count = 0
-    text_display_count = 0
     num_count = 0
     text_count = 0
     timestamp_count = 0
@@ -30,14 +28,12 @@ $ ->
 
     # Add rows, disable buttons, increment counters (depends on field added)
     ($ '#number' ).click ->
-      num_display_count = num_display_count + 1
       num_count = num_count + 1
-      addRow(["""<input class="input-small form-control" type="text" name="number_#{num_display_count}" value="Number_#{num_display_count}">""", "Number", """<input class="input-small form-control" type="text" name="units_#{num_display_count}">""", "", """<a href="#" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
+      addRow(["""<input class="input-small form-control" type="text" name="number_#{num_count}" value="Number">""", "Number", """<input class="input-small form-control" type="text" name="units_#{num_count}">""", "", """<a href="#" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
 
     ($ '#text' ).click ->
-      text_count = num_count + 1
-      text_display_count = text_display_count + 1
-      addRow(["""<input class="input-small form-control" type="text" name="text_#{text_display_count}" value="Text_#{text_display_count}">""", "Text", "", """<input class="input-small form-control" type="text" name="restrictions">""", """<a href="#" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
+      text_count = text_count + 1
+      addRow(["""<input class="input-small form-control" type="text" name="text_#{text_count}" value="Text">""", "Text", "", """<input class="input-small form-control" type="text" name="restrictions">""", """<a href="#" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
 
     ($ '#timestamp' ).click ->
       timestamp_count = timestamp_count + 1
@@ -45,7 +41,7 @@ $ ->
       document.getElementById("timestamp").disabled = true
 
     ($ '#location' ).click ->
-      location__count = location_count + 1
+      location_count = location_count + 1
       addRow(["""<input class="input-small form-control" type="text" name="longitude" value="Longitude">""", "Longitude", "", "", """<a href="#" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
       addRow(["""<input class="input-small form-control" type="text" name="latitude" value="Latitude">""", "Latitude", "", "", """<a href="#" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
       document.getElementById("location").disabled = true
@@ -66,9 +62,9 @@ $ ->
 
     ($ '#fields_form_submit').click ->
       document.getElementById("hidden_num_count").value = num_count
-      document.getElementById("hidden_timestamp_count").value = num_timestamp
+      document.getElementById("hidden_text_count").value = text_count
+      document.getElementById("hidden_timestamp_count").value = timestamp_count
       document.getElementById("hidden_location_count").value = location_count
-      ($ '#fields_table').submit()
 
     # Adds rows    
 	addRow = (content) ->

@@ -258,9 +258,10 @@ class ProjectsController < ApplicationController
   end
 
   def save_fields
-  
-  @project = Project.find(params[:id])
 
+    @project = Project.find(params[:id])
+
+    # Update existing fields, create restrictions
     @project.fields.each do |field|
       restrictions = nil
       if params.key?("#{field.id}_restrictions")
@@ -274,7 +275,7 @@ class ProjectsController < ApplicationController
                                      unit: params["#{field.id}_unit"],
                                      restrictions: restrictions)
         respond_to do |format|
-          flash[:error] = 'Field names must be unique'
+          flash[:error] = 'Field names must be unique.'
           redirect_to "/projects/#{@project.id}/edit_fields"
           return
         end
@@ -282,49 +283,40 @@ class ProjectsController < ApplicationController
     end
 
     if params[:hidden_location_count] == "1"
-      latitude  = Field.new(project_id: @project.id,
-                            field_type: get_field_type('Latitude'),
-                            name: 'Latitude',
-                            unit: 'deg')
-      longitude = Field.new(project_id: @project.id,
-                            field_type: get_field_type('Longitude'),
-                            name: 'Longitude',
-                            unit: 'deg')
-
-      unless latitude.save && longitude.save
-        flash[:error] = "#{latitude.errors.full_messages}\n"\
-          "\n#{longitude.errors.full_messages}"
-        redirect_to "/projects/#{@project.id}/edit_fields"
-        return
-      end
+      addField('Latitude', 'Latitude', 'deg')
+      addField('Longitude', 'Longitude', 'deg')
     end
-    
+
     if params[:hidden_timestamp_count] == "1"
-      timestamp  = Field.new(project_id: @project.id,
-                            field_type: get_field_type('Timestamp'),
-                            name: 'Timestamp')
-
-      unless timestamp.save
-        flash[:error] = "#{timestamp.errors.full_messages}"
-        redirect_to "/projects/#{@project.id}/edit_fields"
-        return
-      end
+      addField('Timestamp', 'Timestamp', '')
     end
     
-    x = 1
-    logger.info "----------#{params}"
+    (params[:hidden_num_count].to_i).times do |i|
+      addField('Number', params[("number_" + (i + 1).to_s).to_sym], '')
+	end
 
-   1.times do |i|
+   (params[:hidden_text_count].to_i).times do |i|
+		text  = Field.new(project_id: @project.id,
+							field_type: get_field_type('Text'),
+							name: params[("text_" + (i + 1).to_s).to_sym])
+		text.save
+	end
     
-	number  = Field.new(project_id: @project.id,
-						field_type: get_field_type('Number'),
-						name: params["number_#{i}"],
-						unit: "deg")
-	number.save
-end
-    
-    flash[:error] = "WORK"
-    redirect_to "/projects/#{@project.id}/edit_fields"
+    flash[:success] = "Fields successfully updated."
+    redirect_to "/projects/#{@project.id}"
+  end
+
+  def addField(fieldType, fieldName, unit)
+    field  = Field.new(project_id: @project.id,
+                          field_type: get_field_type(fieldType),
+                          name: fieldName,
+                          unit: unit)
+
+    unless field.save
+      flash[:error] = "#{field.errors.full_messages}\n"
+      redirect_to "/projects/#{@project.id}/edit_fields"
+      return
+    end
   end
 
   def templateUpload
