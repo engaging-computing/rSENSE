@@ -263,9 +263,11 @@ $ ->
                 val: dataPoint[index]
                 location: latlng
 
-            console.log @heatPoints, @HEATMAP_MARKERS, @heatPoints[@HEATMAP_MARKERS]
             if @heatPoints[@HEATMAP_MARKERS]
               @heatPoints[@HEATMAP_MARKERS][groupIndex].push latlng
+            else
+              console.log @heatPoints, @HEATMAP_MARKERS, dataPoint, @heatPoints[@HEATMAP_MARKERS]
+
 
         # Add markers into the clusterer
         @clusterer.addMarkers [].concat.apply([], @markers)
