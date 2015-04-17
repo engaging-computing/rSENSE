@@ -264,10 +264,7 @@ $ ->
                 location: latlng
 
             if @heatPoints[@HEATMAP_MARKERS]
-              @heatPoints[@HEATMAP_MARKERS][groupIndex].push latlng
-            else
-              console.log @heatPoints, @HEATMAP_MARKERS, dataPoint, @heatPoints[@HEATMAP_MARKERS]
-
+              @heatPoints[@HEATMAP_MARKERS][groupIndex].push(latlng)
 
         # Add markers into the clusterer
         @clusterer.addMarkers [].concat.apply([], @markers)
@@ -492,7 +489,7 @@ $ ->
         $('#ckbx-cluster-markers').prop('checked', @configs.visibleClusters)
         $('#ckbx-cluster-markers').click (e) =>
           @configs.visibleClusters = e.target.checked
-          @delayedUpdate()
+          @start()
 
         # Set up heatmap slider
         init =

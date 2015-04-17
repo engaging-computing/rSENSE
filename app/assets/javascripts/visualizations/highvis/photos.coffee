@@ -34,11 +34,14 @@ $ ->
       constructor: (@canvas) ->
       start: ->
         super()
+        @restoreTools = globals.configs.ctrlsOpen
+        globals.configs.ctrlsOpen = false
         $('#vis-ctrl-container').hide()
         $('#ctrls-menu-btn').hide()
 
       end: ->
         super()
+        globals.configs.ctrlsOpen = @restoreTools
         $('#vis-ctrl-container').show()
         $('#ctrls-menu-btn').show()
 

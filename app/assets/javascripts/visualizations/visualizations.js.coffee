@@ -32,7 +32,7 @@ $ ->
     window.globals ?= {}
     globals.configs ?= {}
     globals.options ?= {}
-    globals.configs.ctrlsOpen ?= false
+    globals.configs.ctrlsOpen ?= true
 
     globals.curVis = null
     globals.VIS_MARGIN_WIDTH = 20
