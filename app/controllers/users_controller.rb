@@ -212,7 +212,14 @@ class UsersController < ApplicationController
         d.destroy
       end
       @user.projects.each do |p|
-        p.destroy
+        if can_delete?(p)
+          p.destroy
+        else
+          # switch ownership to admin if this project contains data sets
+          # not by the user we are deleting
+          p.user_id = 1
+          p.save
+        end
       end
       @user.tutorials.each do |t|
         t.destroy
