@@ -32,7 +32,7 @@ $ ->
     ($ '#number' ).click ->
       num_display_count = num_display_count + 1
       num_count = num_count + 1
-      addRow(["""<input class="input-small form-control" type="text" name="number_#{num_display_count}" value="Number_#{num_display_count}">""", "Number", """<input class="input-small form-control" type="text" name="units">""", "", """<a href="#" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
+      addRow(["""<input class="input-small form-control" type="text" name="number_#{num_display_count}" value="Number_#{num_display_count}">""", "Number", """<input class="input-small form-control" type="text" name="units_#{num_display_count}">""", "", """<a href="#" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
 
     ($ '#text' ).click ->
       text_count = num_count + 1
@@ -66,8 +66,8 @@ $ ->
 
     ($ '#fields_form_submit').click ->
       document.getElementById("hidden_num_count").value = num_count
-      document.getElementById("hidden_timestamp_count").value = num_count
-      document.getElementById("hidden_num_count").value = num_count
+      document.getElementById("hidden_timestamp_count").value = num_timestamp
+      document.getElementById("hidden_location_count").value = location_count
       ($ '#fields_table').submit()
 
     # Adds rows    
