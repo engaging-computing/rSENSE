@@ -263,8 +263,7 @@ $ ->
                 val: dataPoint[index]
                 location: latlng
 
-            console.log dataPoint
-            console.log @heatPoints, @HEATMAP_MARKERS, groupIndex, latlng
+            console.log @heatPoints, @HEATMAP_MARKERS, @heatPoints[@HEATMAP_MARKERS]
             if @heatPoints[@HEATMAP_MARKERS]
               @heatPoints[@HEATMAP_MARKERS][groupIndex].push latlng
 

@@ -46,7 +46,6 @@ $ ->
       newHeight = $(window).height()
       embed = globals.options? and globals.options.isEmbed?
       presentation = globals.options and globals.options.presentation?
-      console.log embed, presentation, init, globals.options.startCollapsed
 
       unless embed then newHeight -= $('.navbar').height()
       $('#vis-wrapper').height(newHeight)
