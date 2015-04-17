@@ -46,6 +46,7 @@ $ ->
       newHeight = $(window).height()
       embed = globals.options? and globals.options.isEmbed?
       presentation = globals.options and globals.options.presentation?
+      console.log embed, presentation, init, globals.options.startCollapsed
 
       unless embed then newHeight -= $('.navbar').height()
       $('#vis-wrapper').height(newHeight)
@@ -58,8 +59,11 @@ $ ->
       controlSize = visWrapperSize * .2
       controlOpac = 1.0
 
+      if init and globals.options.startCollapsed?
+        globals.configs.ctrlsOpen = false
+
       if toggleControls and $('#vis-ctrl-container').width() > 0 or
-      (init and globals.options.startCollapsed?) or !globals.configs.ctrlsOpen
+      !globals.configs.ctrlsOpen
         controlSize = 0
         controlOpac = 0.0
 
@@ -67,7 +71,7 @@ $ ->
 
       # New width should take into account visibility of tools
       newWidth = visWrapperSize
-      if $('#vis-ctrl-container').is(':visible') then newWidth -= controlSize
+      if globals.configs.ctrlsOpen then newWidth -= controlSize
 
       # Adjust heights
       $('#vis-container').height(visWrapperHeight)

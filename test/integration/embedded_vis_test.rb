@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EmbeddedVizTest < ActionDispatch::IntegrationTest
+class EmbeddedVisTest < ActionDispatch::IntegrationTest
   include CapyHelper
 
   self.use_transactional_fixtures = false
@@ -23,7 +23,7 @@ class EmbeddedVizTest < ActionDispatch::IntegrationTest
     assert page.has_css?('#controldiv'), 'vis controls should be present'
     assert page.has_no_css?('#saveVisButton'), 'save vis button should not be present'
     assert page.has_css?('#visTabList'), 'vis tabs should be present'
-    assert page.has_no_css?('#fullscreen-viz'), 'fullscreen button should not be present'
+    assert page.has_no_css?('#fullscreen-vis'), 'fullscreen button should not be present'
   end
 
   test 'presentation vis page' do
