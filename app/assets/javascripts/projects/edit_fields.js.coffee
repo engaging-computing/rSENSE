@@ -25,15 +25,16 @@ $ ->
     text_count = 0
     timestamp_count = 0
     location_count = 0
+    deleted_fields = []
 
     # Add rows, disable buttons, increment counters (depends on field added)
     ($ '#number' ).click ->
       num_count = num_count + 1
-      addRow(["""<input class="input-small form-control" type="text" name="number_#{num_count}" value="Number">""", "Number", """<input class="input-small form-control" type="text" name="units_#{num_count}">""", "", """<a href="#" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
+      addRow(["""<input class="input-small form-control" type="text" name="number_#{num_count}" value="Number">""", "Number", """<input class="input-small form-control" type="text" name="units_#{num_count}">""", "", """<a href="#" fid="-1" class="field_delete"><i class="fa fa-close slick-delete"></i></a>,""", "number_#{num_count}"])
 
     ($ '#text' ).click ->
       text_count = text_count + 1
-      addRow(["""<input class="input-small form-control" type="text" name="text_#{text_count}" value="Text">""", "Text", "", """<input class="input-small form-control" type="text" name="restrictions">""", """<a href="#" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
+      addRow(["""<input class="input-small form-control" type="text" name="text_#{text_count}" value="Text">""", "Text", "", """<input class="input-small form-control" type="text" name="restrictions">""", """<a href="#" fid="-1" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
 
     ($ '#timestamp' ).click ->
       timestamp_count = timestamp_count + 1
@@ -48,16 +49,13 @@ $ ->
 
     # Delete field, enable timestamp/location buttons
     ($ "#fields_table" ).on "click", ".field_delete", ->
-      row = this.closest('tr').rowIndex
-      if this.closest('tr').name == "Timestamp"
-        deleteRow(row, true, "timestamp")
-      else if this.closest('tr').name == "Latitude"
-        deleteRow(row, true, "location")
-        deleteRow(row, true, "location")
-      else if this.closest('tr').name == "Longitude"
-        deleteRow(row, true, "location")
-        deleteRow(row - 1, true, "location")
+      test = ($ this).closest('a').attr('fid')
+      if test != -1
+        deleted_fields.push test
+        row = ($ this).closest('tr').index()
+        deleteRow(row, false, "")
       else
+        row = ($ this).closest('tr').index()
         deleteRow(row, false, "")
 
     ($ '#fields_form_submit').click ->
@@ -65,11 +63,12 @@ $ ->
       document.getElementById("hidden_text_count").value = text_count
       document.getElementById("hidden_timestamp_count").value = timestamp_count
       document.getElementById("hidden_location_count").value = location_count
+      document.getElementById("hidden_deleted_fields").value = deleted_fields[0]
 
     # Adds rows    
 	addRow = (content) ->
       row = document.getElementById("fields_table").insertRow(1)
-      row.name = content[1]
+      ($ row).attr('name', content[5])
       
       cells = for i in [1...6]
         row.insertCell(i-1)
@@ -84,3 +83,5 @@ $ ->
       document.getElementById("fields_table").deleteRow(row)
       if enable
         document.getElementById(btn).disabled = false
+      
+      

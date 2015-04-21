@@ -64,8 +64,8 @@ class FieldsController < ApplicationController
 
   # DELETE /fields/1
   # DELETE /fields/1.json
-  def destroy
-    @field = Field.find(params[:id])
+  def destroy(fid)
+    @field = Field.find(fid)
     @project = Project.find(@field.project_id)
     if can_delete?(@field) && (@project.data_sets.count == 0)
       if (@field.field_type == get_field_type('Latitude')) || (@field.field_type == get_field_type('Longitude'))

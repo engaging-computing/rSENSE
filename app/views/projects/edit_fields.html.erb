@@ -52,7 +52,7 @@
                   <% end %>
                 </td>
                 <td>
-                  <a class="field_delete <%= @project.data_sets.count > 0 ? "not-active" : "" %>" href="/fields/<%= field.id %>" fid="<%= field.id %>">
+                  <a class="field_delete <%= @project.data_sets.count > 0 ? "not-active" : "" %>" href="#" fid="<%= field.id %>">
                     <i class="fa fa-close slick-delete"></i>
                   </a>
                 </td>
@@ -72,5 +72,6 @@
     <input type="text" id="hidden_text_count" name="hidden_text_count" style="visibility:hidden;">
     <input type="text" id="hidden_timestamp_count" name="hidden_timestamp_count" style="visibility:hidden;">
     <input type="text" id="hidden_location_count" name="hidden_location_count" style="visibility:hidden;">
+    <input type="text" id="hidden_deleted_fields" name="hidden_deleted_fields">
     <% end %>
 <% end %>
