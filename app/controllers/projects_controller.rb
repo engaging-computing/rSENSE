@@ -263,7 +263,7 @@ class ProjectsController < ApplicationController
 
     if params[:hidden_deleted_fields] != ""
       params[:hidden_deleted_fields].split(",").each { |x|
-        if destroy_field(x) == -1
+        if Field.find(x).destroy == -1
           return
         end }
     end
