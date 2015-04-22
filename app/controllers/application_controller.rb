@@ -168,6 +168,35 @@ class ApplicationController < ActionController::Base
       end
     end
   end
+  
+  # DELETE /fields/1
+  # DELETE /fields/1.json
+  def destroy_field(fid)
+    @field = Field.find(fid)
+    @project = Project.find(@field.project_id)
+    if can_delete?(@field) && (@project.data_sets.count == 0)
+      if (@field.field_type == get_field_type('Latitude')) || (@field.field_type == get_field_type('Longitude'))
+        @project.fields.where('field_type = ?', get_field_type('Latitude')).first.destroy
+        @project.fields.where('field_type = ?', get_field_type('Longitude')).first.destroy
+      else
+        @field.destroy
+      end
+      return
+    else
+      @errors = []
+      if @project.data_sets.count > 0
+        @errors.push 'Project Not Empty.'
+      end
+      if (can_delete?(@field) == false)
+        @errors.push 'User Not Authorized.'
+      end
+      respond_to do |format|
+        format.json { render json: { errors: @errors }, status: :forbidden }
+        format.html { redirect_to @field.project, alert: 'Field could not be destroyed.' }
+        return -1
+      end
+    end
+  end
 end
 
 class UserError < RuntimeError

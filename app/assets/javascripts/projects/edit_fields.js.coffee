@@ -1,71 +1,65 @@
 $ ->
   if namespace.controller is "projects" and namespace.action is "edit_fields"
+    # Variables to keep track of number of different fields added
+    num_count = text_count = timestamp_count = location_count = 0
+    
+    # Array of fids of fields to be deleted
+    deleted_fields = []
+    
+    # ids of all hidden inputs that need to be populated before submission
+    input_boxes = ["hidden_num_count", "hidden_text_count", "hidden_timestamp_count", "hidden_location_count", "hidden_deleted_fields"]
+    
+    # Clear all hidden inputs
+    for i in [0...5]
+      setValue(input_boxes[i], "")
+
     # Submit form on enter
     ($ '#fields_table' ).keypress (e) ->
       code = e.keyCode || e.which
       if code == 13
         e.preventDefault()
         ($ '#fields_form_submit').click()
-    ###
-    FOR MOVING ROWS AROUND
-    - Uncomment th on edit_fields.html.erb
-    - Uncomment this coffeescript
-    - TO DO: add up/down controls to addRow, handle lat/long, add display_id to fields,
-             fix indexes in addRow
-    ($ "#fields_table" ).on "click", ".up, .down", ->
-      row = $(this).parents("tr:first")
-      if $(this).is(".up")
-        row.insertBefore(row.prev())
-      else
-        row.insertAfter(row.next())
-    ###
 
-    # Variables to keep track num of text/num fields for name purposes
-    num_count = 0
-    text_count = 0
-    timestamp_count = 0
-    location_count = 0
-    deleted_fields = []
-
-    # Add rows, disable buttons, increment counters (depends on field added)
+    # Add rows, increment counters, and disable add buttons (for timestamp and location fields)
     ($ '#number' ).click ->
       num_count = num_count + 1
-      addRow(["""<input class="input-small form-control" type="text" name="number_#{num_count}" value="Number">""", "Number", """<input class="input-small form-control" type="text" name="units_#{num_count}">""", "", """<a href="#" fid="-1" class="field_delete"><i class="fa fa-close slick-delete"></i></a>,""", "number_#{num_count}"])
+      addRow(["""<input class="input-small form-control" type="text" name="number_#{num_count}" value="Number">""", "Number", """<input class="input-small form-control" type="text" name="units_#{num_count}">""", "", """<a href="#" fid="0" class="field_delete"><i class="fa fa-close slick-delete"></i></a>,""", "number"])
 
     ($ '#text' ).click ->
       text_count = text_count + 1
-      addRow(["""<input class="input-small form-control" type="text" name="text_#{text_count}" value="Text">""", "Text", "", """<input class="input-small form-control" type="text" name="restrictions">""", """<a href="#" fid="-1" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
+      addRow(["""<input class="input-small form-control" type="text" name="text_#{text_count}" value="Text">""", "Text", "", """<input class="input-small form-control" type="text" name="restrictions">""", """<a href="#" fid="0" class="field_delete"><i class="fa fa-close slick-delete"></i></a>""", "text"])
 
     ($ '#timestamp' ).click ->
       timestamp_count = timestamp_count + 1
-      addRow(["""<input class="input-small form-control" type="text" name="timestamp" value="Timestamp">""", "Timestamp", "", "", """<a href="#" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
+      addRow(["""<input class="input-small form-control" type="text" name="timestamp" value="Timestamp">""", "Timestamp", "", "", """<a href="#" fid="0" class="field_delete"><i class="fa fa-close slick-delete"></i></a>""", "timestamp"])
       document.getElementById("timestamp").disabled = true
 
     ($ '#location' ).click ->
       location_count = location_count + 1
-      addRow(["""<input class="input-small form-control" type="text" name="longitude" value="Longitude">""", "Longitude", "", "", """<a href="#" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
-      addRow(["""<input class="input-small form-control" type="text" name="latitude" value="Latitude">""", "Latitude", "", "", """<a href="#" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
+      addRow(["""<input class="input-small form-control" type="text" name="longitude" value="Longitude">""", "Longitude", "", "", """<a href="#" fid="0" class="field_delete"><i class="fa fa-close slick-delete"></i></a>""", "longitude"])
+      addRow(["""<input class="input-small form-control" type="text" name="latitude" value="Latitude">""", "Latitude", "", "", """<a href="#" fid="0" class="field_delete"><i class="fa fa-close slick-delete"></i></a>""", "latitude"])
       document.getElementById("location").disabled = true
 
-    # Delete field, enable timestamp/location buttons
+    # Delete field, enable timestamp/location buttons (fid is 0 when the field hasn't yet been added)
     ($ "#fields_table" ).on "click", ".field_delete", ->
-      test = ($ this).closest('a').attr('fid')
-      if test != -1
-        deleted_fields.push test
-        row = ($ this).closest('tr').index()
-        deleteRow(row, false, "")
+      fid = ($ this).closest('a').attr('fid')
+      row_index = ($ this).closest('tr').index()
+      row_name = ($ this).closest('tr').attr('name')
+      if fid != "0"
+        hidden_deleted_fields = $('#hidden_deleted_fields')
+        hidden_deleted_fields.val(hidden_deleted_fields.val() + fid + ",")
+        callDeleteRow(row_index, row_name)
       else
-        row = ($ this).closest('tr').index()
-        deleteRow(row, false, "")
+        callDeleteRow(row_index, row_name)
 
+    # Populate hidden fields w/ num of fields and array of deleted fields on submit
     ($ '#fields_form_submit').click ->
-      document.getElementById("hidden_num_count").value = num_count
-      document.getElementById("hidden_text_count").value = text_count
-      document.getElementById("hidden_timestamp_count").value = timestamp_count
-      document.getElementById("hidden_location_count").value = location_count
-      document.getElementById("hidden_deleted_fields").value = deleted_fields[0]
+      values = [num_count, text_count, timestamp_count, location_count]
+      
+      for i in [0...4]
+        setValue(input_boxes[i], values[i])
 
-    # Adds rows    
+    # Adds row to table, highlight new row  
 	addRow = (content) ->
       row = document.getElementById("fields_table").insertRow(1)
       ($ row).attr('name', content[5])
@@ -78,10 +72,25 @@ $ ->
         
       ($ row).effect("highlight", {}, 3000)
 
-    # Deletes rows
+    # Deletes row
     deleteRow = (row, enable, btn) ->
       document.getElementById("fields_table").deleteRow(row)
       if enable
         document.getElementById(btn).disabled = false
-      
-      
+        
+    # Calls deleteRow based on type of input
+    callDeleteRow = (row_index, row_name) ->
+      if row_name == "timestamp"
+        deleteRow(row_index, true, "timestamp")
+      else if row_name == "latitude"
+        deleteRow(row_index, true, "location")
+        deleteRow(row_index, true, "location")
+      else if row_name == "longitude"
+        deleteRow(row_index, true, "location")
+        deleteRow(row_index - 1, true, "location")
+      else
+        deleteRow(row_index, false, "")
+        
+    # Set value of hidden input boxes
+    setValue = (id, value) ->
+      document.getElementById(id).value = value
