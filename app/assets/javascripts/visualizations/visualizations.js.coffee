@@ -61,16 +61,11 @@ $ ->
       if init and globals.options.startCollapsed?
         globals.configs.ctrlsOpen = false
 
-      if toggleControls and $('#vis-ctrl-container').width() > 0 or
-      !globals.configs.ctrlsOpen
+      unless globals.configs.ctrlsOpen
         controlSize = 0
         controlOpac = 0.0
 
       $('#ctrls-menu-btn').toggleClass('down', globals.configs.ctrlsOpen)
-
-      # New width should take into account visibility of tools
-      newWidth = visWrapperSize
-      if globals.configs.ctrlsOpen then newWidth -= controlSize
 
       # Adjust heights
       $('#vis-container').height(visWrapperHeight)
@@ -85,9 +80,13 @@ $ ->
       $('#vis-ctrls').animate({width: controlSize, opacity: controlOpac},
         aniLength, 'linear')
 
-      # Only adjust with tools are visible
-      $('#vis-container').animate({width: newWidth}, aniLength, 'linear')
-      globals.curVis.resize(newWidth, newHeight, aniLength)
+      # New widths should take into account visibility of tools
+      cWidth = if globals.configs.ctrlsOpen then '80%' else '100%'
+      $('#vis-container').animate({width: cWidth}, aniLength, 'linear')
+      vWidth =
+        if globals.configs.ctrlsOpen then visWrapperSize
+        else visWrapperSize - controlSize
+      globals.curVis.resize(vWidth, newHeight, aniLength)
 
     # Resize vis on page resize
     $(window).resize () ->
