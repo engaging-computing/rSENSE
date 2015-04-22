@@ -23,7 +23,7 @@ $ ->
     # Add rows, increment counters, and disable add buttons (for timestamp and location fields)
     ($ '#number' ).click ->
       num_count = num_count + 1
-      addRow(["""<input class="input-small form-control" type="text" name="number_#{num_count}" value="Number">""", "Number", """<input class="input-small form-control" type="text" name="units_#{num_count}">""", "", """<a href="#" fid="0" class="field_delete"><i class="fa fa-close slick-delete"></i></a>,""", "number"])
+      addRow(["""<input class="input-small form-control" type="text" name="number_#{num_count}" value="Number">""", "Number", """<input class="input-small form-control" type="text" name="units_#{num_count}">""", "", """<a href="#" fid="0" class="field_delete"><i class="fa fa-close slick-delete"></i></a>""", "number"])
 
     ($ '#text' ).click ->
       text_count = text_count + 1
@@ -45,12 +45,16 @@ $ ->
       fid = ($ this).closest('a').attr('fid')
       row_index = ($ this).closest('tr').index()
       row_name = ($ this).closest('tr').attr('name')
+      if row_name == "latitude" || row_name == "longitude"
+        location_count = 0
+      else
+        "#{row_name}_count".to_sym = "#{row_name}_count".to_sym - 1
       if fid != "0"
         hidden_deleted_fields = $('#hidden_deleted_fields')
         hidden_deleted_fields.val(hidden_deleted_fields.val() + fid + ",")
-        callDeleteRow(row_index, row_name)
+        callDeleteRow(row_index, row_name, fid)
       else
-        callDeleteRow(row_index, row_name)
+        callDeleteRow(row_index, row_name, "")
 
     # Populate hidden fields w/ num of fields and array of deleted fields on submit
     ($ '#fields_form_submit').click ->
@@ -71,25 +75,27 @@ $ ->
         cells[i].innerHTML = content[i]
         
       ($ row).effect("highlight", {}, 3000)
+        
+    # Calls deleteRow based on type of input
+    callDeleteRow = (row_index, row_name, fid) ->
+      if row_name == "timestamp"
+        deleteRow(row_index, true, "timestamp")
+      else if row_name == "latitude"
+        location_count = location_count - 1
+        deleteRow(row_index, true, "location")
+        deleteRow(row_index, true, "location")
+      else if row_name == "longitude"
+        location_count = location_count - 1
+        deleteRow(row_index, true, "location")
+        deleteRow(row_index - 1, true, "location")
+      else
+        deleteRow(row_index, false, "")
 
     # Deletes row
     deleteRow = (row, enable, btn) ->
       document.getElementById("fields_table").deleteRow(row)
       if enable
         document.getElementById(btn).disabled = false
-        
-    # Calls deleteRow based on type of input
-    callDeleteRow = (row_index, row_name) ->
-      if row_name == "timestamp"
-        deleteRow(row_index, true, "timestamp")
-      else if row_name == "latitude"
-        deleteRow(row_index, true, "location")
-        deleteRow(row_index, true, "location")
-      else if row_name == "longitude"
-        deleteRow(row_index, true, "location")
-        deleteRow(row_index - 1, true, "location")
-      else
-        deleteRow(row_index, false, "")
         
     # Set value of hidden input boxes
     setValue = (id, value) ->
