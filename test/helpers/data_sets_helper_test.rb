@@ -3,9 +3,9 @@ require 'test_helper'
 class DataSetsHelperTest < ActionView::TestCase
   include DataSetsHelper
 
-  test 'slickgrid data formatting - merge lat and lon' do
+  test 'slickgrid data formatting merge lat and lon' do
     project = Project.find_by_name 'slickgrid_project'
-    dataset = DataSet.find_by_name 'Slickgrid Dataset 1'
+    dataset = DataSet.find_by_name 'Slickgrid Data set 1'
     cols, data = format_slickgrid_merge project.fields, dataset.data
 
     rescols = [
@@ -25,9 +25,9 @@ class DataSetsHelperTest < ActionView::TestCase
     assert_similar_arrays data, resdata
   end
 
-  test 'slickgrid data formatting - skip lat, lon merge' do
+  test 'slickgrid data formatting skip lat lon merge' do
     project = Project.find_by_name 'slickgrid_project_no_latlon'
-    dataset = DataSet.find_by_name 'Slickgrid Dataset 2'
+    dataset = DataSet.find_by_name 'Slickgrid Data set 2'
     cols, data = format_slickgrid_merge project.fields, dataset.data
 
     rescols = [{ field_type: 3, id: '106', name: 'something', restrictions: '""', units: '' }]
@@ -39,7 +39,7 @@ class DataSetsHelperTest < ActionView::TestCase
 
   test 'slickgrid data population w/ data' do
     project = Project.find_by_name 'slickgrid_project_no_latlon'
-    dataset = DataSet.find_by_name 'Slickgrid Dataset 2'
+    dataset = DataSet.find_by_name 'Slickgrid Data set 2'
     cols, data = format_slickgrid_merge project.fields, dataset.data
     cols_pop, data_pop = format_slickgrid_populate cols, data
 
@@ -49,7 +49,7 @@ class DataSetsHelperTest < ActionView::TestCase
 
   test 'slickgrid data population w/o data' do
     project = Project.find_by_name 'slickgrid_project_no_latlon'
-    dataset = DataSet.find_by_name 'Slickgrid Dataset 3'
+    dataset = DataSet.find_by_name 'Slickgrid Data set 3'
     cols, data = format_slickgrid_merge project.fields, dataset.data
     cols_pop, data = format_slickgrid_populate cols, data
     data_pop = [{ id: 0, '106' => '' }]
@@ -60,7 +60,7 @@ class DataSetsHelperTest < ActionView::TestCase
 
   test 'slickgrid editor association' do
     project = Project.find_by_name 'slickgrid_project'
-    dataset = DataSet.find_by_name 'Slickgrid Dataset 1'
+    dataset = DataSet.find_by_name 'Slickgrid Data set 1'
     cols, data = format_slickgrid_merge project.fields, dataset.data
     cols, data = format_slickgrid_populate cols, data
     cols, data = format_slickgrid_editors cols, data
@@ -82,7 +82,7 @@ class DataSetsHelperTest < ActionView::TestCase
 
   test 'slickgrid editor association oops' do
     project = Project.find_by_name 'slickgrid_oops'
-    dataset = DataSet.find_by_name 'Slickgrid Dataset Ooops I Messed Up'
+    dataset = DataSet.find_by_name 'Slickgrid Data set Ooops I Messed Up'
     cols, data = format_slickgrid_merge project.fields, dataset.data
     cols, data = format_slickgrid_populate cols, data
     cols, data = format_slickgrid_editors cols, data
@@ -98,7 +98,7 @@ class DataSetsHelperTest < ActionView::TestCase
 
   test 'slickgrid format json' do
     project = Project.find_by_name 'slickgrid_project'
-    dataset = DataSet.find_by_name 'Slickgrid Dataset 1'
+    dataset = DataSet.find_by_name 'Slickgrid Data set 1'
     cols, data = format_slickgrid_merge project.fields, dataset.data
     cols, data = format_slickgrid_populate cols, data
     cols, data = format_slickgrid_editors cols, data
@@ -135,7 +135,7 @@ class DataSetsHelperTest < ActionView::TestCase
 
   test 'slickgrid full preprocess' do
     project = Project.find_by_name 'slickgrid_project'
-    dataset = DataSet.find_by_name 'Slickgrid Dataset 1'
+    dataset = DataSet.find_by_name 'Slickgrid Data set 1'
     cols, data = format_slickgrid project.fields, dataset.data
     cols.gsub!(/(TextEditor|NumberEditor|TimestampEditor|LocationEditor|Slick\.Editors\.Text)/, '"\1"')
 

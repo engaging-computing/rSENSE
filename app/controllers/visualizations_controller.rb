@@ -218,7 +218,7 @@ class VisualizationsController < ApplicationController
             @datasets.push dset
           end
         rescue
-          logger.info 'Either project id or dataset does not exist in the DB'
+          logger.info 'Either project id or data set does not exist in the DB'
         end
       end
     else
@@ -228,9 +228,9 @@ class VisualizationsController < ApplicationController
     # create special row identifier field for all datasets
     data_fields.push(typeID: NUMBER_TYPE, unitName: 'id', fieldID: -1, fieldName: 'Data Point')
     # create special dataset grouping field
-    data_fields.push(typeID: TEXT_TYPE, unitName: 'String', fieldID: -1, fieldName: 'Dataset Name (id)')
+    data_fields.push(typeID: TEXT_TYPE, unitName: 'String', fieldID: -1, fieldName: 'Data Set Name (id)')
     # create special grouping field for all datasets
-    data_fields.push(typeID: TEXT_TYPE, unitName: 'String', fieldID: -1, fieldName: 'Combined Datasets')
+    data_fields.push(typeID: TEXT_TYPE, unitName: 'String', fieldID: -1, fieldName: 'Combined Data Sets')
 
     # push real fields to temp variable
     @project.fields.each do |field|

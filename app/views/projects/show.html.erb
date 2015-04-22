@@ -148,7 +148,7 @@
                   <tr class="<%= cycle('feed-even', 'feed-odd')%> dataset" style="position:relative">
                     <% if( not (s.key.nil?) ) %>
                       <td class="key_icon">
-                        <div class="key" title="<%= s.key %>"> <%= image_tag("Key.png", :size => "32x32") %> <%= s.key %></div>
+                        <div class="key" title="<%= s.key %>"> <%= image_tag("Key.png", :style => "width: 40px; height: auto;") %> <%= s.key %></div>
                       </td>
                     <% else %>
                     <td class="gravatar">
@@ -167,19 +167,16 @@
                     <td style="max-width:200px">
                       <div class="truncate dset" title="Created <%=s.created_at.strftime("%B %d, %Y")%>"><%= link_to s.title.html_safe, "/projects/#{params[:id]}/data_sets/#{s.id}" %></div>
                     </td>
-                    <td>
-                      <div class="controls" style="">
-                        <% if can_edit? s %>
-                          &nbsp;<a class="data_set_edit" href="<%= edit_data_set_path s %>">Edit</a>
-                        <% end %>
-                        <% if can_hide? s %>
-                          &nbsp;<a class="data_set_hide" href="<%= data_set_url s %>">Hide</a>
-                        <% end %>
-                        <% if can_delete? s %>
-                          &nbsp;<a class="data_set_delete" href="<%= data_set_url s %>" name="<%= s.title.html_safe %>">Delete</a>
-                        <% end %>
-                      </div>
-                    </td>
+                    <% if can_edit? s %>
+                      <td style="padding-right: 0px; text-align: right;">
+                        <a class="data_set_edit" href="<%= edit_data_set_path s %>">Edit</a>
+                      </td>
+                    <% end %>
+                    <% if can_delete? s %>
+                      <td style="padding-left: 0px;">
+                        &nbsp;|&nbsp;<a class="data_set_delete" href="<%= data_set_url s %>" name="<%= s.title.html_safe %>">Delete</a>
+                      </td>
+                    <% end %>
                     <td>
                       <div class="ds_selector">
                         <input type="checkbox" class="pull-right <%if s.user_id == @cur_user.try(:id)%> mine<%end%>" id="ds_<%=s.id%>" checked/>
@@ -278,8 +275,8 @@
             <%= form_tag '/contrib_keys/enter', method: 'post' do %>
               <div class="row" style="margin-left: 0px;" >
                 <%= hidden_field_tag :project_id, @project.id %>
-                <%= text_field_tag :key,"",placeholder:"Key" %>
-                <%= text_field_tag :contributor_name,"",placeholder:"Contributor Name" %>
+                <%= text_field_tag :key,"", placeholder:"Key", style:"margin-bottom: 10px;" %>
+                <%= text_field_tag :contributor_name,"", placeholder:"Contributor Name" %>
                 <%= submit_tag "Submit Key", class: "btn btn-success" %>
               </div>
             <% end %>

@@ -34,7 +34,7 @@ class CloneProjectTest < ActionDispatch::IntegrationTest
     find('#fields_form_submit').click
 
     click_on 'Manual Entry'
-    fill_in 'Dataset Name', with: 'I Like Clones'
+    fill_in 'Data Set Name', with: 'I Like Clones'
     find('#edit_table_add_2').click
     set_cell(0, 0, 47)
     find('#edit_table_save_2').click
@@ -66,7 +66,9 @@ class CloneProjectTest < ActionDispatch::IntegrationTest
 
     assert page.has_content?('nerdboy.jpg'), 'File should be in list'
     assert page.has_content?('test.pdf'), 'File should be in list'
-    assert page.has_content?('I Like Clones'), 'Dataset should be in list'
+    assert page.has_content?('I Like Clones'), 'Data set should be in list'
+
+    assert page.has_no_content?('Setup Manually'), 'Fields were not created'
 
     page.find('.dataset').click_on 'Delete'
     page.driver.browser.accept_js_confirms
