@@ -1,0 +1,7 @@
+<%= render partial: 'vis', locals: { project: @project,
+    owner: @project.owner,
+    title: (if @datasets.count == 1 then
+    @datasets.first.title.html_safe else 'Showing Multiple Data Sets' end),
+    titleBar: true,
+    controls: true,
+    getLatest: false } %>

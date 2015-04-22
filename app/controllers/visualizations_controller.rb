@@ -215,7 +215,7 @@ class VisualizationsController < ApplicationController
     field_count = []
 
     # build list of datasets
-    if  !params[:datasets].nil?
+    if !params[:datasets].nil?
       dsets = params[:datasets].split(',')
       dsets.each do |id|
         begin
@@ -339,7 +339,7 @@ class VisualizationsController < ApplicationController
           options[:isEmbed] = 1
           options[:startCollapsed] = 1
           @globals = { options: options }
-          render 'embed', layout: 'embedded'
+          render 'embedProjVis', layout: 'embedded'
         else
           @layout_wide = true
           render
