@@ -418,7 +418,7 @@ $ ->
           @start()
 
         $('#elapsed-time-btn').click (e) ->
-          globals.generateElapsedTimeDialog()
+          globals.generateElapsedTime()
 
         # Initialize and track the status of this control panel
         globals.configs.toolsOpen ?= false

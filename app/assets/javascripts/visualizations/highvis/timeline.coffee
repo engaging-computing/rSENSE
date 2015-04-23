@@ -104,6 +104,12 @@ $ ->
         super()
 
       ###
+      Turn off elapsed time
+      ###
+      drawToolControls: (elapsedTime = false) ->
+        super(elapsedTime)
+
+      ###
       Overwrite xAxis controls to only allow time fields
       ###
       drawXAxisControls: ->

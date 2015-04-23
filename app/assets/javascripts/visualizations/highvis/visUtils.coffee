@@ -349,12 +349,14 @@ $ ->
     ###
     Generates an appropriate elapsed time field.
     ###
-    globals.generateElapsedTimeDialog = ->
+    globals.generateElapsedTime = ->
       name  = 'Elapsed Time [from '
       name += data.fields[data.timeFields[0]].fieldName + ']'
       data.generateElapsedTime name, data.timeFields[0]
       globals.curVis.start()
       $('#elapsed-time-btn').addClass('disabled')
+      quickFlash('Elapsed time generated successfully', 'success')
+
 
     globals.identity = (i) -> i
 
