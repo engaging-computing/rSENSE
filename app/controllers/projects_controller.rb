@@ -266,12 +266,12 @@ class ProjectsController < ApplicationController
 
     # Update existing fields, create restrictions
     @project.fields.each do |field|
-      restrictions = nil
+      restrictions = []
 
       if params.key?("#{field.id}_restrictions")
         restrictions = params["#{field.id}_restrictions"].split(',')
         if restrictions.count < 1
-          restrictions = nil
+          restrictions = []
         end
       end
 
@@ -286,26 +286,27 @@ class ProjectsController < ApplicationController
     end
 
     if params[:hidden_location_count] == '1'
-      if addField('Latitude', 'Latitude', 'deg', '') == -1
+      if addField('Latitude', 'Latitude', 'deg', []) == -1
         return
       end
-      if addField('Longitude', 'Longitude', 'deg', '') == -1
+      if addField('Longitude', 'Longitude', 'deg', []) == -1
         return
       end
     end
 
     if params[:hidden_timestamp_count] == '1'
-      if addField('Timestamp', 'Timestamp', '', '') == -1
+      if addField('Timestamp', 'Timestamp', '', []) == -1
         return
       end
     end
 
     (params[:hidden_num_count].to_i).times do |i|
-      if addField('Number', params[('number_' + (i + 1).to_s).to_sym], params[('units_' + (i + 1).to_s).to_sym], '') == -1 and return
+      if addField('Number', params[('number_' + (i + 1).to_s).to_sym], params[('units_' + (i + 1).to_s).to_sym], []) == -1 and return
       end
     end
 
     (params[:hidden_text_count].to_i).times do |i|
+      logger.info "-------------------------------#{params[('restrictions_' + (i + 1).to_s).to_sym].split(',')}"
       restrictions = params[('restrictions_' + (i + 1).to_s).to_sym].split(',')
 
       if addField('Text', params[('text_' + (i + 1).to_s).to_sym], '', restrictions) == -1 and return
