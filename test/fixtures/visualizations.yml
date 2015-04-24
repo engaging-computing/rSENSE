@@ -10,8 +10,8 @@ visualization1:
   data: '{"defaultVis":"Map", "relVis":["Map"]}'
   globals: MyText
 
-tasty_viz:
-  title: Tasty Viz
+tasty_vis:
+  title: Tasty Vis
   user: kate
   project: dessert
   content: MyText

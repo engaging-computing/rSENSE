@@ -1,9 +1,8 @@
 <%= render partial: 'vis', locals: { project: @visualization.project,
-    owner: @visualization.owner,
-    title: @visualization.title.html_safe,
     titleBar: true,
     controls: true,
-    getLatest: false } %>
+    getLatest: false,
+    obj: @visualization } %>
 <div class="row">
   <div class="col-md-8">
     <div class="well" style="margin-top:10px" id="dataset_info">

@@ -7,7 +7,7 @@ class VisualizationsControllerTest < ActionController::TestCase
 
     @vis1 = visualizations(:visualization1)
 
-    @vis2 = visualizations(:tasty_viz)
+    @vis2 = visualizations(:tasty_vis)
     @vis2.save
 
     @tgd = data_sets(:thanksgiving)
@@ -90,7 +90,7 @@ class VisualizationsControllerTest < ActionController::TestCase
     assert_redirected_to visualizations_path
   end
 
-  test 'should for realz show viz' do
+  test 'should for realz show vis' do
     get :displayVis,  id: @vis2.project.id
     assert_response :success
     assert_valid_html response.body

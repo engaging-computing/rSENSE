@@ -1,5 +1,6 @@
 <% default = @data[:relVis].include?(@data[:defaultVis]) ?
    @data[:defaultVis] : @data[:relVis][0] %>
+<% owner = if obj then obj.owner else @project.owner end %>
 <script>
   window.kml = "<%= @project.kml_metadata %>";
   window.data = <%= raw @data.to_json %>;
@@ -52,8 +53,9 @@
           <span class="hamburger-bar"></span>
           <span class="hamburger-bar"></span>
         </button>
-        <%= title.html_safe %>
-        <span class="subtitle">
+        <%= if obj then title_and_edit_menu(obj) else
+            'Showing Multiple Data Sets' end %>
+        <span class="subtitle inline-block">
           of <%= link_to project.title.html_safe, project, class: "i" %>
         </span>
       </div>

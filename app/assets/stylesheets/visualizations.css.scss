@@ -44,6 +44,10 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     -moz-border-radius: 15px;
   }
 
+  .color-picker {
+    vertical-align: top;
+  }
+
   div.regr-tooltip {
     width: 100%;
     text-align: center;
@@ -325,8 +329,16 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
       width: 100%;
       height: 100%;
 
+      #title-and-menu {
+        display: inline-block;
+      }
+
       .tab-content {
         width: 100%;
+      }
+
+      #visualization_title {
+        margin: -3px;
       }
     }
 
@@ -354,10 +366,6 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
 
         .full-width {
           width: 100%;
-        }
-
-        .inline-block {
-          display: inline-block;
         }
 
         .save-btn {

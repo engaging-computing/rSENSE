@@ -1,6 +1,5 @@
 <%= render partial: 'vis', locals: { project: @visualization.project,
-    owner: @visualization.owner,
-    title: @visualization.title.html_safe,
     titleBar: true,
     controls: true,
-    getLatest: false } %>
+    getLatest: false,
+    obj: @visualization } %>

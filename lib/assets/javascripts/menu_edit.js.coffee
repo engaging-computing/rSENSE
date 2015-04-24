@@ -15,10 +15,10 @@ setupMenuEditCallbacks = () ->
 
   $('.summary_edit').click (e) ->
     e.preventDefault()
-    
+
     $('#title-and-menu-show-summary').hide()
     $('#title-and-menu-edit-summary').show()
-    
+
     $('#media_object_summary').focus()
 
 $ ->

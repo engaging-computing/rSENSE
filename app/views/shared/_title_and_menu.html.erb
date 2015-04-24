@@ -1,69 +1,74 @@
-<div id="title-and-menu-title" class="h1">
-  <%= obj.title.html_safe %>
-  <div class="edit_menu" data-field='title'
-       data-value='<%= obj.title.html_safe %>'>
-    <div class="btn-group" style="font-size:14px; vertical-align: middle;">
-      <a class="btn btn-default btn-small dropdown-toggle menu_edit_link"
-         data-toggle="dropdown" href="#">
-        <i class="fa fa-cog fa fa-content"></i>
-        <span class="caret"></span>
-      </a>
-      <ul class="dropdown-menu" role="menu">
-        <% if obj.is_a?(MediaObject) %>
-          <li role="presentation">
-            <a class="menu_rename" role="menuitem" href="#">
-              <i class="fa fa-edit"></i> Rename File
-            </a>
-          </li>
-        <% else %>
-          <li role="presentation">
-            <a class="menu_rename" role="menuitem" href="<%=url_for obj%>">
-              <i class="fa fa-edit"></i> Edit Title
-            </a>
-          </li>
-        <% end %>
-        <% if obj.is_a?(News) || obj.is_a?(Visualization) %>
-          <li role="presentation">
-            <a class="summary_edit" role="menuitem" href="<%=url_for obj%>">
-              <i class="fa fa-edit"></i> Edit Summary
-            </a>
-          </li>
-        <% end %>
-        <% if can_delete?(obj) %>
-          <li role="presentation">
-            <%= link_to obj, data: { confirm: "Are you sure?" },
-                method: :delete,
-                class: 'menu_delete' do %>
-              <i style="color:red" class="fa fa-times-circle"></i>
-              Delete <%= typeName %>
+<div id="title-and-menu">
+  <div id="title-and-menu-title">
+    <div class="inline-block"><%= obj.title.html_safe %></div>
+    <% if edit %>
+      <div class="edit_menu inline-block" data-field="title"
+           data-value="<%= obj.title.html_safe %>">
+        <div class="btn-group">
+          <a class="btn btn-default btn-small dropdown-toggle menu_edit_link"
+             data-toggle="dropdown" href="#">
+            <i class="fa fa-cog fa fa-content"></i>
+            <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu" role="menu">
+            <% if obj.is_a?(MediaObject) %>
+              <li role="presentation">
+                <a class="menu_rename" role="menuitem" href="#">
+                  <i class="fa fa-edit"></i> Rename File
+                </a>
+              </li>
+            <% else %>
+              <li role="presentation">
+                <a class="menu_rename" role="menuitem" href="<%=url_for obj%>">
+                  <i class="fa fa-edit"></i> Edit Title
+                </a>
+              </li>
             <% end %>
-          </li>
-        <% end %>
-      </ul>
-    </div>
-  </div>
-</div>
-<%= form_for obj do |ff| %>
-  <div id="title-and-menu-edit" style="font-size: 2em">
-    <%= ff.text_field :title, style: 'width: 35%',
-        :value => obj.title.html_safe %>
-    <button class="btn btn-success" type="submit">
-      <i class='fa fa-floppy-o icon-white'></i>
-    </button>
-  </div>
-  <% if obj.respond_to?(:summary) %>
-    <div class="summary" data-type="visualization">
-      <div id="title-and-menu-show-summary">
-        <%= obj.summary %>
+            <% if obj.is_a?(News) %>
+              <li role="presentation">
+                <a class="summary_edit" role="menuitem" href="<%=url_for obj%>">
+                  <i class="fa fa-edit"></i> Edit Summary
+                </a>
+              </li>
+             <% end %>
+             <% if can_delete?(obj) %>
+               <li role="presentation">
+                 <%= link_to obj, data: { confirm: "Are you sure?" },
+                     method: :delete,
+                     class: 'menu_delete' do %>
+                   <i style="color:red" class="fa fa-times-circle"></i>
+                   Delete <%= typeName %>
+                 <% end %>
+               </li>
+             <% end %>
+          </ul>
+        </div>
       </div>
-      <div id="title-and-menu-edit-summary">
-        <p><%= ff.text_area :summary, style: 'width: 35%; height: 150px;' %></p>
-        <p>
-          <button class="btn btn-success" type="submit">
-            <i class='fa fa-floppy-o icon-white'></i> Save
-          </button>
-        </p>
+    <% end %>
+  </div>
+  <% if edit %>
+    <%= form_for obj do |ff| %>
+      <div id="title-and-menu-edit">
+        <%= ff.text_field :title, :value => obj.title.html_safe %>
+        <button class="btn btn-success" type="submit">
+          <i class='fa fa-floppy-o icon-white'></i>
+        </button>
       </div>
-    </div>
+      <% if obj.is_a?(News) %>
+        <div class="summary" data-type="visualization">
+          <div id="title-and-menu-show-summary" class="summary-text">
+            <%= obj.summary %>
+          </div>
+          <div id="title-and-menu-edit-summary" class="summary-text">
+            <p><%= ff.text_area :summary, style: 'height: 150px;' %></p>
+            <p>
+              <button class="btn btn-success" type="submit">
+                <i class='fa fa-floppy-o icon-white'></i> Save
+              </button>
+            </p>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
   <% end %>
-<% end %>
+</div>
