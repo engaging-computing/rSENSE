@@ -42,7 +42,7 @@
                 <td><input class="form-control" type="text" name="<%= field.id %>_name" value="<%= (defined?(@tmp_save) && @tmp_save.has_key?("#{field.id}_name")) ? @tmp_save["#{field.id}_name"] : field.name %>"></td>
                 <td><%= get_field_name(field.field_type) %></td>
                 <td class="units">
-                  <% if field.field_type != get_field_type("Text") || field.field_type != get_field_type("Timestamp") %>
+                  <% if field.field_type != get_field_type("Text")|| field.field_type != get_field_type("Timestamp") %>
                     <input class="input-small form-control" type="text" name="<%= field.id %>_unit" value="<%= field.unit %>">
                   <% end %>
                 </td>
@@ -64,13 +64,14 @@
     <div class="row">
       <div class="col-lg-8 col-lg-offset-2">
         <div style="float: right">
+          <a href='<%= url_for @project %>' class="btn btn-danger"> Cancel </a>
           <%= submit_tag "Save and Return", class: 'btn btn-primary', id: 'fields_form_submit' %>
         </div>
       </div>
     </div>
-    <input type="text" id="hidden_num_count" name="hidden_num_count">
+    <input type="text" id="hidden_num_count" name="hidden_num_count" style="visibility:hidden;">
     <input type="text" id="hidden_text_count" name="hidden_text_count" style="visibility:hidden;">
-    <input type="text" id="hidden_timestamp_count" name="hidden_timestamp_count">
+    <input type="text" id="hidden_timestamp_count" name="hidden_timestamp_count" style="visibility:hidden;">
     <input type="text" id="hidden_location_count" name="hidden_location_count" style="visibility:hidden;">
     <input type="text" id="hidden_deleted_fields" name="hidden_deleted_fields" style="visibility:hidden;">
     <% end %>

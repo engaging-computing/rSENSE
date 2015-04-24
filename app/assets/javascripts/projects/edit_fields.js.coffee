@@ -36,8 +36,8 @@ $ ->
 
     ($ '#location' ).click ->
       location_count = location_count + 1
-      addRow(["""<input class="input-small form-control" type="text" name="longitude" value="Longitude">""", "Longitude", "", "", """<a href="#" fid="0" class="field_delete"><i class="fa fa-close slick-delete"></i></a>""", "longitude"])
-      addRow(["""<input class="input-small form-control" type="text" name="latitude" value="Latitude">""", "Latitude", "", "", """<a href="#" fid="0" class="field_delete"><i class="fa fa-close slick-delete"></i></a>""", "latitude"])
+      addRow(["""<input class="input-small form-control" type="text" name="longitude" value="Longitude">""", "Longitude", "deg", "", """<a href="#" fid="0" class="field_delete"><i class="fa fa-close slick-delete"></i></a>""", "longitude"])
+      addRow(["""<input class="input-small form-control" type="text" name="latitude" value="Latitude">""", "Latitude", "deg", "", """<a href="#" fid="0" class="field_delete"><i class="fa fa-close slick-delete"></i></a>""", "latitude"])
       document.getElementById("location").disabled = true
 
     # Delete field, enable timestamp/location buttons (fid is 0 when the field hasn't yet been added)
