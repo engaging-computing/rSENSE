@@ -289,28 +289,28 @@ class ProjectsController < ApplicationController
     end
 
     if params[:hidden_location_count] == "1"
-      if addField('Latitude', 'Latitude', 'deg') == -1
+      if addField('Latitude', 'Latitude', 'deg', '') == -1
         return
       end
-      if addField('Longitude', 'Longitude', 'deg') == -1
+      if addField('Longitude', 'Longitude', 'deg', '') == -1
         return
       end
     end
 
     if params[:hidden_timestamp_count] == "1"
-      if addField('Timestamp', 'Timestamp', '') == -1
+      if addField('Timestamp', 'Timestamp', '', '') == -1
         return
       end
     end
     
     (params[:hidden_num_count].to_i).times do |i|
-      if addField('Number', params[("number_" + (i + 1).to_s).to_sym], '') == -1
+      if addField('Number', params[("number_" + (i + 1).to_s).to_sym], params[("units_" + (i + 1).to_s).to_sym], '') == -1
         return
       end
 	end
 
     (params[:hidden_text_count].to_i).times do |i|
-      if addField('Text', params[("text_" + (i + 1).to_s).to_sym], '') == -1
+      if addField('Text', params[("text_" + (i + 1).to_s).to_sym], '', restrictions) == -1
         return
       end
     end
@@ -319,11 +319,12 @@ class ProjectsController < ApplicationController
 
   end
 
-  def addField(fieldType, fieldName, unit)
+  def addField(fieldType, fieldName, unit, restrictions)
     field  = Field.new(project_id: @project.id,
                           field_type: get_field_type(fieldType),
                           name: fieldName,
-                          unit: unit)
+                          unit: unit,
+                          restrictions: restrictions)
 
     unless field.save
       flash[:error] = "#{field.errors.full_messages}\n"
