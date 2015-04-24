@@ -12,7 +12,7 @@
   <tbody>
     <% @contributions.each do |contribution|%>
       <tr>
-        <td>
+        <td style="max-width:250px">
           <span class='word-wrap'>
             <%= link_to contribution.title.html_safe, url_for(contribution) %>
           </span>
