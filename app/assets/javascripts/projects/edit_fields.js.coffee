@@ -51,7 +51,16 @@ $ ->
         "#{row_name}_count".to_sym = "#{row_name}_count".to_sym - 1
       if fid != "0"
         hidden_deleted_fields = $('#hidden_deleted_fields')
-        hidden_deleted_fields.val(hidden_deleted_fields.val() + fid + ",")
+        if row_name == "latitude"
+          long_fid = fid + 1
+          hidden_deleted_fields.val(hidden_deleted_fields.val() + fid + ",")
+          hidden_deleted_fields.val(hidden_deleted_fields.val() + long_fid + ",")
+        else if row_name == "longitude"
+          lat_fid = fid - 1
+          hidden_deleted_fields.val(hidden_deleted_fields.val() + fid + ",")
+          hidden_deleted_fields.val(hidden_deleted_fields.val() + lat_fid + ",")
+        else
+          hidden_deleted_fields.val(hidden_deleted_fields.val() + fid + ",")
         callDeleteRow(row_index, row_name, fid)
       else
         callDeleteRow(row_index, row_name, "")
