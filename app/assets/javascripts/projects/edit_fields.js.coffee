@@ -27,7 +27,7 @@ $ ->
 
     ($ '#text' ).click ->
       text_count = text_count + 1
-      addRow(["""<input class="input-small form-control" type="text" name="text_#{text_count}" value="Text">""", "Text", "", """<input class="input-small form-control" type="text" name="restrictions">""", """<a href="#" fid="0" class="field_delete"><i class="fa fa-close slick-delete"></i></a>""", "text"])
+      addRow(["""<input class="input-small form-control" type="text" name="text_#{text_count}" value="Text">""", "Text", "", """<input class="input-small form-control" type="text" name="restrictions_#{text_count}">""", """<a href="#" fid="0" class="field_delete"><i class="fa fa-close slick-delete"></i></a>""", "text"])
 
     ($ '#timestamp' ).click ->
       timestamp_count = timestamp_count + 1

@@ -1,7 +1,4 @@
-require "active_support/hash_with_indifferent_access"
-
 class ProjectsController < ApplicationController
-
   # GET /projects
   # GET /projects.json
   skip_before_filter :authorize, only: [:show, :index]
@@ -258,19 +255,19 @@ class ProjectsController < ApplicationController
   end
 
   def save_fields
-
     @project = Project.find(params[:id])
 
-    if params[:hidden_deleted_fields] != ""
-      params[:hidden_deleted_fields].split(",").each { |x|
-        if Field.find(x).destroy == -1
-          return
-        end }
+    if params[:hidden_deleted_fields] != ''
+      params[:hidden_deleted_fields].split(',').each do |x|
+        if Field.find(x).destroy == -1 and return
+        end
+      end
     end
 
     # Update existing fields, create restrictions
     @project.fields.each do |field|
       restrictions = nil
+
       if params.key?("#{field.id}_restrictions")
         restrictions = params["#{field.id}_restrictions"].split(',')
         if restrictions.count < 1
@@ -288,7 +285,7 @@ class ProjectsController < ApplicationController
       end
     end
 
-    if params[:hidden_location_count] == "1"
+    if params[:hidden_location_count] == '1'
       if addField('Latitude', 'Latitude', 'deg', '') == -1
         return
       end
@@ -297,34 +294,37 @@ class ProjectsController < ApplicationController
       end
     end
 
-    if params[:hidden_timestamp_count] == "1"
+    if params[:hidden_timestamp_count] == '1'
       if addField('Timestamp', 'Timestamp', '', '') == -1
         return
       end
     end
-    
-    (params[:hidden_num_count].to_i).times do |i|
-      if addField('Number', params[("number_" + (i + 1).to_s).to_sym], params[("units_" + (i + 1).to_s).to_sym], '') == -1
-        return
-      end
-	end
 
-    (params[:hidden_text_count].to_i).times do |i|
-      if addField('Text', params[("text_" + (i + 1).to_s).to_sym], '', restrictions) == -1
-        return
+    (params[:hidden_num_count].to_i).times do |i|
+      if addField('Number', params[('number_' + (i + 1).to_s).to_sym], params[('units_' + (i + 1).to_s).to_sym], '') == -1 and return
       end
     end
-      
-    redirect_to "/projects/#{@project.id}", notice: "Fields were successfully updated." and return
 
+    (params[:hidden_text_count].to_i).times do |i|
+      restrictions = params[('restrictions_' + (i + 1).to_s).to_sym].split(',')
+
+      if addField('Text', params[('text_' + (i + 1).to_s).to_sym], '', restrictions) == -1 and return
+      end
+    end
+
+    redirect_to "/projects/#{@project.id}", notice: 'Fields were successfully updated.' and return
   end
 
   def addField(fieldType, fieldName, unit, restrictions)
-    field  = Field.new(project_id: @project.id,
-                          field_type: get_field_type(fieldType),
-                          name: fieldName,
-                          unit: unit,
-                          restrictions: restrictions)
+    if fieldName.nil?
+      return
+    else
+      field  = Field.new(project_id: @project.id,
+                            field_type: get_field_type(fieldType),
+                            name: fieldName,
+                            unit: unit,
+                            restrictions: restrictions)
+    end
 
     unless field.save
       flash[:error] = "#{field.errors.full_messages}\n"
