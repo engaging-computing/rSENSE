@@ -50,12 +50,12 @@ $ ->
       unless embed then newHeight -= $('.navbar').height()
       $('#vis-wrapper').height(newHeight)
 
-      visWrapperSize = $('#vis-wrapper').innerWidth()
+      windowWidth = window.innerWidth or window.outerWidth
       visWrapperHeight = $('#vis-wrapper').outerHeight()
       visHeaderHeight = $('#vis-title-bar').outerHeight() +
         $('#vis-tab-list').outerHeight()
       controlOpac = $('#vis-ctrls').css 'opacity'
-      controlSize = visWrapperSize * .2
+      controlSize = windowWidth * .2
       controlOpac = 1.0
 
       if init and globals.options.startCollapsed?
@@ -84,8 +84,8 @@ $ ->
       cWidth = if globals.configs.ctrlsOpen then '80%' else '100%'
       $('#vis-container').animate({width: cWidth}, aniLength, 'linear')
       vWidth =
-        if globals.configs.ctrlsOpen then visWrapperSize
-        else visWrapperSize - controlSize
+        if globals.configs.ctrlsOpen then windowWidth - controlSize
+        else windowWidth
       globals.curVis.resize(vWidth, newHeight, aniLength)
 
     # Resize vis on page resize

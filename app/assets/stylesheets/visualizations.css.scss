@@ -149,9 +149,12 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     text-align:right;
   }
 
+  #refresh-data {
+    margin-left: 10px;
+  }
+
   .regr-option {
     text-align: center;
-    font-size: 14px;
     margin-left: 4px;
   }
 
@@ -160,7 +163,6 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
 
     #regr-table-body {
       text-align: left;
-      font-size: 10px;
 
       .data {
         border-bottom: $border;
@@ -172,7 +174,6 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
       }
 
       .remove {
-        font-size: 14px;
         color: $error;
         width: 10%;
         text-align: center;
@@ -351,21 +352,25 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
           margin-bottom: 5px;
         }
 
+        .full-width {
+          width: 100%;
+        }
+
+        .inline-block {
+          display: inline-block;
+        }
+
         .save-btn {
           display: inline-block;
           width: 80%;
           margin: 10px auto;
         }
 
-        .full-width {
-          width: 100%;
-        }
-
         // any input button inside this class isn't lined up with the
         // text to its right - this fixes that
         .vis-ctrl-body {
           display: none;
-          font-size: 12px;
+          font-size: 14px;
           width: 100%;
           padding: 5px 20px;
           background-color: $vis-bkg-light;
@@ -382,6 +387,12 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
               margin-top: 2px;
               margin-left: 0;
             }
+          }
+
+          .name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
           }
 
           .vis-ctrl-subblock {

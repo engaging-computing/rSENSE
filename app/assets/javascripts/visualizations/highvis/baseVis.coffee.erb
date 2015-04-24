@@ -258,7 +258,7 @@ $ ->
             label =
               if g isnt '' then g
               else "No #{data.fields[globals.configs.groupById].fieldName}"
-            style:   "color:#{color};"
+            style:   "color: #{color}; width: 90%"
             value:   i
             label:   label
             name:    'grouping'
@@ -527,7 +527,6 @@ $ ->
                 'Y-Values'
               else
                 data.fields[globals.configs.fieldSelection[0]].fieldName
-
       ###
       Builds the 'fake series' for legend controls.
       Derrived objects should implement this.

@@ -102,8 +102,7 @@ $ ->
                 display: "none"
           plotOptions:
             scatter:
-              animation:
-                false
+              animation: false
               marker:
                 states:
                   hover:
@@ -269,19 +268,17 @@ $ ->
         fs = globals.configs.fieldSelection
         for fi, si in data.normalFields when fi in fs
           for g, gi in data.groups when gi in data.groupSelection
-            dat = if not @configs.fullDetail
-              sel = data.xySelector(@configs.xAxis, fi, gi)
-              globals.dataReduce(sel, @configs.xBounds, @configs.yBounds,
-                @xGridSize, @yGridSize, @MAX_SERIES_SIZE)
-            else
-              data.xySelector(@configs.xAxis, fi, gi)
+            dat =
+              if not @configs.fullDetail
+                sel = data.xySelector(@configs.xAxis, fi, gi)
+                globals.dataReduce(sel, @configs.xBounds, @configs.yBounds,
+                  @xGridSize, @yGridSize, @MAX_SERIES_SIZE)
+              else
+                data.xySelector(@configs.xAxis, fi, gi)
 
+            mode = @configs.mode
             if dat.length < 2 and @configs.mode is @LINES_MODE
-              @configs.mode = @SYMBOLS_LINES_MODE
-              query = "input[name='mode'][value='#{@configs.mode}']"
-              $(query).prop('checked', true)
-              quickFlash('Mode has been changed to symbols and lines because
-                there were too few points to generate a line', 'warning')
+              mode = @SYMBOLS_LINES_MODE
 
             options =
               data: dat
@@ -291,17 +288,17 @@ $ ->
                 group: data.groups[gi]
                 field: data.fields[fi].fieldName
             switch
-              when @configs.mode is @SYMBOLS_LINES_MODE
+              when mode is @SYMBOLS_LINES_MODE
                 options.marker =
                   symbol: globals.symbols[si % globals.symbols.length]
                 options.lineWidth = 2
 
-              when @configs.mode is @SYMBOLS_MODE
+              when mode is @SYMBOLS_MODE
                 options.marker =
                   symbol: globals.symbols[si % globals.symbols.length]
                 options.lineWidth = 0
 
-              when @configs.mode is @LINES_MODE
+              when mode is @LINES_MODE
                 options.marker =
                   symbol: 'blank'
                 options.lineWidth = 2

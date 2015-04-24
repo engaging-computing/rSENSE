@@ -46,7 +46,7 @@
     <div id="vis-title-bar"
          <% if @presentation || !titleBar %> style="display:none" <% end %>>
       <div class="inline-left">
-        <button id="ctrls-menu-btn" class="hamburger-menu btn btn-default"
+        <button id="ctrls-menu-btn" class="hamburger-menu btn btn-default down"
                 <% if !controls %> style="display:none" <% end %>>
           <span class="hamburger-bar"></span>
           <span class="hamburger-bar"></span>
@@ -57,7 +57,7 @@
           of <%= link_to project.title.html_safe, project, class: "i" %>
         </span>
       </div>
-      <div id="vis-owner" class="subtitle inline-right">
+      <div id="vis-owner" class="subtitle inline-right hidden-xs hidden-sm">
         by <%= link_to "#{owner.name}", owner, class: "link" %>
         <%= link_to image_tag(Gravatar.new.url(owner),
             class: "circle-img"), owner %>

@@ -9,9 +9,11 @@
     </select>
   </div>
   <div>
-    <label for="map-radius">Heatmap Radius:</label>
-    <input id="map-radius" value="{{radius}}"/>
-    <span>m</span>
+    <label for="map-radius-ctn">Heatmap Radius:</label>
+    <div id="map-radius-ctn" class="inline-block">
+      <input id="map-radius" value="{{radius}}"/>
+      <span>m</span>
+    </div>
     <div id="heatmap-error"></div>
     <input id="heatmap-slider" type="range" class="slider"
            data-log-id="heatmap-slider">

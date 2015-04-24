@@ -88,6 +88,9 @@ $ ->
                   #{fieldUnit(data.fields[index], false)}</strong></td></tr>"
                   str += "</table>"
             useHTML: true
+          plotOptions:
+            series:
+              animation: false
 
         @chartOptions.xAxis =
           if data.timeType is data.NORM_TIME
