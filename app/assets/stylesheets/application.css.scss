@@ -24,7 +24,7 @@ $navbar-default-color: white;
 $navbar-default-link-color: white;
 $navbar-default-link-hover-color: #DDDDDD;
 $table-bg-accent: #E8E8E8;
-
+@import "bootstrap-sprockets";
 @import "bootstrap";
 
 body {
@@ -68,9 +68,16 @@ body {
   color: red;
 }
 
-.footer {
-  text-align: center;
+.footer{
   font-size: smaller;
+  
+  .category{
+    border-bottom: 1px solid gray; 
+  }
+  
+  .parts{
+    text-align: left; 
+  }
 }
 
 .item {
@@ -99,14 +106,18 @@ body {
     background-repeat: no-repeat;
     background-size: 100%;
     height: 120px;
+    border-bottom: 1px solid gray;
   }
 
   .item-image.item-photo-image {
     height: 200px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .item-title {
-    font-size: 1em;
+    font-size: 1.25em;
   }
 }
 
@@ -195,7 +206,15 @@ body {
 #outer {
   min-height: 100%;
   margin: 0px;
-  padding: 0px 0px 70px 0px;
+  padding: 0px 0px 10px 0px;
+}
+
+.placeholder{
+  font-size: 2em;
+  color: gray;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .print {
@@ -266,3 +285,4 @@ body {
   padding-bottom: 2px; 
   max-width: 45%;
 }
+

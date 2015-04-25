@@ -542,11 +542,6 @@ $ ->
             controls += "Make Default </button>"
             controls += "</div>"
 
-        globals.verifyUser ( -> ), ( ->
-          $('#saveVisButton').attr('disabled', 'disabled')), false
-        globals.verifyUser ( -> ), (->
-          $('#defaultVisButton').remove()), true
-
         if @chart?
 
           controls += "<div class='inner_control_div'>"
@@ -566,14 +561,13 @@ $ ->
 
         ($ "#saveControl button").button()
 
+        globals.userPermissions()
+
         ($ "#saveVisButton").click ->
-          globals.verifyUser (-> globals.saveVis()), (->
-            alert 'You must be logged in to save a visualization.'), false
+          globals.saveVis()
 
         ($ "#defaultVisButton").click ->
-          globals.verifyUser (-> globals.defaultVis()), (->
-            alert 'You must be logged in as the project owner to set a
-            default visualization.'), true
+          globals.defaultVis()
 
         ($ '#downloadVisButton').click =>
           @chart.exportChart

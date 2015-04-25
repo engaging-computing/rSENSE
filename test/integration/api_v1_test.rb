@@ -247,7 +247,7 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert keys_match(response, @data_keys_extended), 'Keys are missing'
   end
 
-  test 'test second fields data is not trucated if longer than first fields' do
+  test 'data does not get truncated' do
     pid = @dessert_project.id
     post "/api/v1/projects/#{pid}/jsonDataUpload",
 
@@ -650,7 +650,6 @@ class ApiV1Test < ActionDispatch::IntegrationTest
         contrib_key:
           {
             'name' => 'key_name',
-            'project_id' => id,
             'key' => 'key'
           }
     assert_response :created
@@ -694,6 +693,19 @@ class ApiV1Test < ActionDispatch::IntegrationTest
             'key' => 'key'
           }
     assert_response :unprocessable_entity
+  end
+
+  test 'add a key that already exists' do
+    post "/api/v1/projects/#{@dessert_project.id}/add_key",
+        email: 'kcarcia@cs.uml.edu',
+        password: '12345',
+        contrib_key:
+          {
+            'name' => 'Pies',
+            'key' => 'apple'
+          }
+
+    assert_response :conflict
   end
 
   private

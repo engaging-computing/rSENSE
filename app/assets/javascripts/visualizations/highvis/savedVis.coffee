@@ -58,7 +58,7 @@ $ ->
 
       savedData = globals.serializeVis()
 
-      req = $.ajax
+      $.ajax
         type: 'POST'
         url: '/visualizations'
         dataType: 'json'
@@ -110,23 +110,17 @@ $ ->
     Ajax call to check if the user is logged in. Calls the appropriate
     given callback when completed.
     ###
-    globals.verifyUser = (succCallback, failCallback, checkOwner) ->
-
-      req = $.ajax
+    globals.userPermissions = ->
+      $.ajax
         type: 'GET'
-        url: "/sessions/verify"
-        dataType: 'json'
+        url: "/sessions/permissions"
+        dataType: 'script'
         data:
           project_id: data.projectID
-          verify_owner: checkOwner
-        success: (msg, status, details) ->
-          succCallback()
-        error: (msg, status, details) ->
-          failCallback()
 
     ###
-    Serializes all vis data. Strips functions from the objects bfire serializing
-    since they cannot be serialized.
+    Serializes all vis data. Strips functions from the objects before
+    serializing since they cannot be serialized.
     ###
     globals.serializeVis = (includeData = true) ->
 
@@ -170,10 +164,8 @@ $ ->
     Ajax call to update the project's default vis with the current settings.
     ###
     globals.defaultVis = ->
-
       savedData = globals.serializeVis(false)
-
-      req = $.ajax
+      $.ajax
         type: 'PUT'
         url: '/projects/' + data.projectID
         dataType: 'json'

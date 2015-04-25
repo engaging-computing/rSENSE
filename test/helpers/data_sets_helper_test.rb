@@ -3,7 +3,7 @@ require 'test_helper'
 class DataSetsHelperTest < ActionView::TestCase
   include DataSetsHelper
 
-  test 'slickgrid data formatting - merge lat and lon' do
+  test 'slickgrid data formatting merge lat and lon' do
     project = Project.find_by_name 'slickgrid_project'
     dataset = DataSet.find_by_name 'Slickgrid Data set 1'
     cols, data = format_slickgrid_merge project.fields, dataset.data
@@ -25,7 +25,7 @@ class DataSetsHelperTest < ActionView::TestCase
     assert_similar_arrays data, resdata
   end
 
-  test 'slickgrid data formatting - skip lat, lon merge' do
+  test 'slickgrid data formatting skip lat lon merge' do
     project = Project.find_by_name 'slickgrid_project_no_latlon'
     dataset = DataSet.find_by_name 'Slickgrid Data set 2'
     cols, data = format_slickgrid_merge project.fields, dataset.data
