@@ -60,11 +60,15 @@
             <% if @cur_user.try(:id) %>
               <li id="username" class="navbtn"
                   title="Click to view <%= @cur_user.name %>'s profile page">
-              <% if @cur_user.name.length < 30 %>
-                 <%= link_to @cur_user.name, user_path(@cur_user) %>
-              <% else %>
-                 <%= link_to "My Account", user_path(@cur_user) %>
-              <% end %>
+                <%= link_to user_path(@cur_user) do %>
+                  <% if @cur_user.name.length < 30 %>
+                    <%= @cur_user.name %>
+                  <% else %>
+                    <%= link_to "My Account", user_path(@cur_user) %>
+                  <% end %>
+                  <%= image_tag(Gravatar.new.url(@cur_user),
+                      class: "circle-img") %>
+                <% end %>
               </li>
               <li class="divider"></li>
               <li class="navbtn"><%= link_to "Logout", login_path, method: :delete%></li>

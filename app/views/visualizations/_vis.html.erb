@@ -53,20 +53,26 @@
           <span class="hamburger-bar"></span>
           <span class="hamburger-bar"></span>
         </button>
-        <%= if obj then title_and_edit_menu(obj) else
-            'Showing Multiple Data Sets' end %>
-        <span class="subtitle inline-block">
-          of <%= link_to project.title.html_safe, project, class: "i" %>
-        </span>
+        <% if obj %>
+          <%= title_and_edit_menu(obj) %>
+          <% unless can_edit?(obj) %>
+            <div class="inline-block subtitle">
+              by <%= link_to "#{owner.name}", owner, class: "link" %>
+            </div>
+          <% end %>
+        <% else %>
+          Showing Multiple Data Sets
+        <% end %>
       </div>
       <div id="vis-owner" class="subtitle inline-right hidden-xs hidden-sm">
-        by <%= link_to "#{owner.name}", owner, class: "link" %>
-        <%= link_to image_tag(Gravatar.new.url(owner),
-            class: "circle-img"), owner %>
+        <i class='fa fa-folder-open'></i>
+        <%= link_to project.title.html_safe, project %>
+        by <i class='fa fa-user'></i>
+        <%= link_to "#{project.owner.name}", owner, class: "link" %>
         <% if getLatest %>
           <%= link_to "#{project_path(@project)}/data_sets",
             { id:"refresh-data", class: "btn btn-default" } do %>
-            Get Latest
+            Get Latest Data
             <%= content_tag(:i, ' ', class: 'fa fa-refresh') %>
           <% end %>
         <% end %>

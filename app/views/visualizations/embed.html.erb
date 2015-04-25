@@ -1,5 +1,9 @@
-<%= render partial: 'vis', locals: { project: @visualization.project,
-    titleBar: true,
-    controls: true,
-    getLatest: false,
-    obj: @visualization } %>
+<%= render(partial: 'vis',
+    locals: {
+      project: @visualization.project,
+      titleBar: true,
+      controls: true,
+      getLatest: false,
+      obj: @visualization,
+      type: 'visualization'
+    }) %>

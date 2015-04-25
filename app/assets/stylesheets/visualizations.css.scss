@@ -36,14 +36,6 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     user-select: none;
   }
 
-  .circle-img {
-    height: 30px;
-    width: 30px;
-    border-radius: 15px;
-    -webkit-border-radius: 15px;
-    -moz-border-radius: 15px;
-  }
-
   .color-picker {
     vertical-align: top;
   }
@@ -329,16 +321,16 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
       width: 100%;
       height: 100%;
 
+      .edit_visualization, .edit_data_set {
+        display: none;
+      }
+
       #title-and-menu {
         display: inline-block;
       }
 
       .tab-content {
         width: 100%;
-      }
-
-      #visualization_title {
-        margin: -3px;
       }
     }
 

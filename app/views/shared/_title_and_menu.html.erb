@@ -1,3 +1,5 @@
+<% if typeName == 'Dataset' then typeName = 'Data Set'
+   elsif typeName == 'Mediaobject' then typeName = 'Media Object' end %>
 <div id="title-and-menu">
   <div id="title-and-menu-title">
     <div class="inline-block"><%= obj.title.html_safe %></div>
@@ -5,9 +7,9 @@
       <div class="edit_menu inline-block" data-field="title"
            data-value="<%= obj.title.html_safe %>">
         <div class="btn-group">
-          <a class="btn btn-default btn-small dropdown-toggle menu_edit_link"
+          <a class="btn btn-default btn-sm dropdown-toggle menu_edit_link"
              data-toggle="dropdown" href="#">
-            <i class="fa fa-cog fa fa-content"></i>
+            <i class="fa fa-gear"></i>
             <span class="caret"></span>
           </a>
           <ul class="dropdown-menu" role="menu">
@@ -48,11 +50,14 @@
   </div>
   <% if edit %>
     <%= form_for obj do |ff| %>
-      <div id="title-and-menu-edit">
-        <%= ff.text_field :title, :value => obj.title.html_safe %>
-        <button class="btn btn-success" type="submit">
-          <i class='fa fa-floppy-o icon-white'></i>
-        </button>
+      <div id="title-and-menu-edit" class="input-group">
+        <%= ff.text_field :title, :value => obj.title.html_safe,
+            class: "form-control" %>
+        <div class="input-group-btn">
+          <button class="btn btn-success" type="submit">
+            <i class="fa fa-floppy-o icon-white"></i>
+          </button>
+        </div>
       </div>
       <% if obj.is_a?(News) %>
         <div class="summary" data-type="visualization">

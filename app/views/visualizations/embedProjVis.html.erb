@@ -1,5 +1,9 @@
-<%= render partial: 'vis', locals: { project: @project,
-    titleBar: true,
-    controls: true,
-    getLatest: false,
-    obj: if @datasets.count == 1 then @datasets.first end } %>
+<%= render(partial: 'vis',
+    locals: {
+      project: @project,
+      titleBar: true,
+      controls: true,
+      getLatest: false,
+      obj: if @datasets.count == 1 then @datasets.first end,
+      type: 'data_set'
+    }) %>

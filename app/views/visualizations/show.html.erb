@@ -1,8 +1,12 @@
-<%= render partial: 'vis', locals: { project: @visualization.project,
-    titleBar: true,
-    controls: true,
-    getLatest: false,
-    obj: @visualization } %>
+<%= render(partial: 'vis',
+    locals: {
+      project: @visualization.project,
+      titleBar: true,
+      controls: true,
+      getLatest: false,
+      obj: @visualization,
+      type: 'visualization'
+    }) %>
 <div class="row">
   <div class="col-md-8">
     <div class="well" style="margin-top:10px" id="dataset_info">

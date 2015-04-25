@@ -92,12 +92,31 @@ body {
   }
 }
 
+.circle-img {
+  height: 30px;
+  width: 30px;
+  border-radius: 15px;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+}
+
 .create-button {
   margin-bottom: 2ex;
 }
 
 .data_set_delete, .delete a, .media_delete, .viz_delete {
   color: red;
+}
+
+.info_edit_link {
+  position: relative;
+  top: -2px;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.info_val {
+  font-weight: bold;
 }
 
 .error-flash {
@@ -229,6 +248,14 @@ body {
     font-size: 0.9em;
   }
 
+  .navbtn {
+    .circle-img {
+      position: relative;
+      top: -5px;
+      vertical-align: top;
+    }
+  }
+
   .navbtn a {
     padding-top: 20px;
   }
@@ -275,6 +302,10 @@ body {
 .summary-text {
   font-size: 16px;
   color: #666;
+}
+
+#title-and-menu {
+  vertical-align: middle;
 }
 
 .truncate {
