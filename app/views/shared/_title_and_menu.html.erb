@@ -2,7 +2,7 @@
    elsif typeName == 'Mediaobject' then typeName = 'Media Object' end %>
 <div id="title-and-menu">
   <div id="title-and-menu-title">
-    <div class="inline-block"><%= obj.title.html_safe %></div>
+    <div id="title-name" class="inline-block"><%= obj.title.html_safe %></div>
     <% if edit %>
       <div class="edit_menu inline-block" data-field="title"
            data-value="<%= obj.title.html_safe %>">

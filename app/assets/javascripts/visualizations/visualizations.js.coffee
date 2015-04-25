@@ -50,16 +50,24 @@ $ ->
       unless embed then newHeight -= $('.navbar').height()
       $('#vis-wrapper').height(newHeight)
 
-      windowWidth = window.innerWidth or window.outerWidth
+      visWrapperWidth =
+        if embed then window.innerWidth or window.outerWidth
+        else $('#vis-wrapper').innerWidth()
       visWrapperHeight = $('#vis-wrapper').outerHeight()
       visHeaderHeight = $('#vis-title-bar').outerHeight() +
         $('#vis-tab-list').outerHeight()
       controlOpac = $('#vis-ctrls').css 'opacity'
-      controlSize = windowWidth * .2
+      controlSize = 320
       controlOpac = 1.0
 
-      if init and globals.options.startCollapsed?
+      if (init and globals.options.startCollapsed?) or
+      $('#vis-ctrl-container').is(':hidden')
         globals.configs.ctrlsOpen = false
+
+      # Manual overflow calculations because dropdown prevents css fix
+      $('#vis-proj-info').show()
+      if $('#vis-proj-info').offset().top > 65
+        $('#vis-proj-info').hide()
 
       unless globals.configs.ctrlsOpen
         controlSize = 0
@@ -81,12 +89,11 @@ $ ->
         aniLength, 'linear')
 
       # New widths should take into account visibility of tools
-      cWidth = if globals.configs.ctrlsOpen then '80%' else '100%'
-      $('#vis-container').animate({width: cWidth}, aniLength, 'linear')
-      vWidth =
-        if globals.configs.ctrlsOpen then windowWidth - controlSize
-        else windowWidth
-      globals.curVis.resize(vWidth, newHeight, aniLength)
+      nWidth =
+        if globals.configs.ctrlsOpen then visWrapperWidth - controlSize
+        else visWrapperWidth
+      $('#vis-container').animate({width: nWidth}, aniLength, 'linear')
+      globals.curVis.resize(nWidth, newHeight, aniLength)
 
     # Resize vis on page resize
     $(window).resize () ->

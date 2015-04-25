@@ -108,12 +108,12 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   }
 
   .inline-left {
-    display: block-inline;
+    display: inline-block;
     float: left;
   }
 
   .inline-right {
-    display: block-incline;
+    display: inline-block;
     float: right;
   }
 
@@ -321,16 +321,45 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
       width: 100%;
       height: 100%;
 
-      .edit_visualization, .edit_data_set {
-        display: none;
-      }
-
-      #title-and-menu {
-        display: inline-block;
-      }
-
       .tab-content {
         width: 100%;
+      }
+
+      #vis-disabled {
+        overflow: hidden;
+      }
+
+      // the bar at the top of the vis window
+      #vis-tab-list {
+        padding: 0; // removes padding that shouldn't be there to begin with
+        margin: 0;
+        background-color: $vis-bkg-light;
+      }
+
+      #vis-title-bar {
+        position: relative;
+        width: 100%;
+        height: 50px;
+        background-color: $vis-bkg-light;
+        font-size: 24px;
+        padding: 10px;
+        white-space: nowrap;
+
+        .edit_visualization, .edit_data_set {
+          display: none;
+        }
+
+        .inline-left {
+          max-width: 100%;
+        }
+
+        #title-and-menu {
+          display: inline-block;
+
+          #title-name {
+            vertical-align: middle;
+          }
+        }
       }
     }
 
@@ -339,7 +368,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
       display: inline-block;
       float: left;
       background-color: $vis-bkg-dark;
-      width: 20%;
+      width: 320px;
       height: 100%;
 
       // this is where all the div controls get added
@@ -431,25 +460,6 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
         }
       }
     }
-  }
-
-  #vis-disabled {
-    overflow: hidden;
-  }
-
-  // the bar at the top of the vis window
-  #vis-tab-list {
-    padding: 0; // removes padding that shouldn't be there to begin with
-    margin: 0;
-    background-color: $vis-bkg-light;
-  }
-
-  #vis-title-bar {
-    height: 50px;
-    background-color: $vis-bkg-light;
-    font-size: 24px;
-    text-align: center;
-    padding: 10px;
   }
 }
 

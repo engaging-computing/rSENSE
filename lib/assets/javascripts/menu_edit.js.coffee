@@ -9,6 +9,8 @@ setupMenuEditCallbacks = () ->
 
     $('#title-and-menu-title').hide()
     $('#title-and-menu-edit').show()
+    $('.edit_visualization').show()
+    $('.edit_data_set').show()
 
     $('#media_object_title').focus()
     $('#media_object_title').select()
