@@ -84,18 +84,19 @@ $ ->
           else id
 
         # Build the data for the table
-        visibleGroups = for group, groupIndex in data.groups when groupIndex in data.groupSelection
-          group
+        visGroups = (g for g, i in data.groups when i in data.groupSelection)
 
         rows = []
-        for dataPoint in globals.CLIPPING.getData(data.dataPoints) \
-        when (String dataPoint[globals.configs.groupById]).toLowerCase() in visibleGroups
-          line = {}
-          for dat, fieldIndex in dataPoint
-            line[colIds[fieldIndex]] = dat
-          rows.push(line)
+        dp = globals.clipping.getData(true, globals.configs.clippingVises)
+        gbid = globals.configs.groupById
+        for p in dp when String(p[gbid]).toLowerCase() in visGroups
+          row = {}
+          for d, f in p
+            row[colIds[f]] = d
+          rows.push(row)
 
-        # Make sure the sort type for each column is appropriate, and save the time column
+        # Make sure the sort type for each column is appropriate, and save the
+        # time column
         timeCol = ""
         columns = for colId, colIndex in colIds
           if (data.fields[colIndex].typeID is data.types.TEXT)
@@ -128,7 +129,7 @@ $ ->
         $('#table_canvas').append '<div id="toolbar_bottom"></div>'
 
         # Build the grid
-        @table = jQuery("#data_table").jqGrid({
+        @table = $("#data_table").jqGrid({
           colNames: headers
           colModel: columns
           datatype: 'local'
@@ -206,6 +207,7 @@ $ ->
         super()
         @drawGroupControls()
         @drawYAxisControls()
+        @drawClippingControls()
         @drawSaveControls()
 
       saveSort: =>
@@ -216,7 +218,10 @@ $ ->
 
           # Save the table filters
           if @table.getGridParam('postData').filters?
-            @configs.searchParams = jQuery.parseJSON(@table.getGridParam('postData').filters).rules
+            @configs.searchParams = $.parseJSON(@table.getGridParam('postData').filters).rules
+
+        @clipDescriptor()
+        $('#clipping_controls').accordion('refresh')
 
       ###
       JQGrid time formatting (to implement search post formatting)
@@ -252,7 +257,7 @@ $ ->
 
             phrase = []
             if (this._trim)
-              phrase.push("jQuery.trim(")
+              phrase.push("$.trim(")
             phrase.push(column_formatter + "(" + s + ")")
             if (this._trim)
               phrase.push(")")
@@ -262,7 +267,42 @@ $ ->
 
           return result
 
-      clip: (arr) -> arr
+      clip: (arr) ->
+        for p in @configs.searchParams
+          if arr.length is 0 then break
+
+          # Get the field index to sort
+          fields = for f in @table.getGridParam('colNames')
+            f.replace(/\s+/g, '_').toLowerCase()
+          i = fields.indexOf(p.field)
+
+          # Create and clip with the sort filter
+          filter = eval('globals.' + p.op)(p.data, i)
+          arr = arr.filter(filter)
+
+        arr
+
+      ###
+      Updates a div describing the filtered scope of the visible data as
+      affected by that vis
+      ###
+      clipDescriptor: ->
+        t = 'Table:'
+        d = "<b>#{t}</b>"
+
+        unless @configs.searchParams? and @configs.searchParams.length > 0
+          d += '<div class="small">Table has no active filters.</div>'
+          return $('#table_descriptor').html(d)
+
+        d += '<table class="small">'
+        for sp in @configs.searchParams
+          name = sp.field.replace(/_/g, ' ')
+          name = name.charAt(0).toUpperCase() + name.slice(1)
+          d += "<tr><td>#{name}</td>"
+          d += "<td>#{globals.filterNames[sp.op]} #{sp.data}</td></tr>"
+        d += '</table>'
+
+        $('#table_descriptor').html(d)
 
       ###
       Draws y axis controls

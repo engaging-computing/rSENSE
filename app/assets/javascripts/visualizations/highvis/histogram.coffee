@@ -95,13 +95,15 @@ $ ->
         min = Number.MAX_VALUE
         max = Number.MIN_VALUE
 
+        dp = globals.clipping.getData(true, globals.configs.clippingVises)
+
         for groupIndex in data.groupSelection
 
-          localMin = data.getMin @configs.displayField, groupIndex
+          localMin = data.getMin(@configs.displayField, groupIndex, dp)
           if localMin isnt null
             min = Math.min min, localMin
 
-          localMax = data.getMax @configs.displayField, groupIndex
+          localMax = data.getMax(@configs.displayField, groupIndex, dp)
           if localMax isnt null
             max = Math.max max, localMax
 
@@ -142,7 +144,7 @@ $ ->
         bestSize
 
       update: ->
-        if !@updatedTooltips
+        unless @updatedTooltips
           @updatedTooltips = true
           @start()
         @updatedTooltips = false
@@ -161,13 +163,16 @@ $ ->
         @globalmin = Number.MAX_VALUE
         @globalmax = Number.MIN_VALUE
 
+
+        dp = globals.clipping.getData(true, globals.configs.clippingVises)
+
         for groupIndex in data.groupSelection
 
-          min = data.getMin @configs.displayField, groupIndex
+          min = data.getMin(@configs.displayField, groupIndex, dp)
           min = Math.round(min / @configs.binSize) * @configs.binSize
           @globalmin = Math.min @globalmin, min
 
-          max = data.getMax @configs.displayField, groupIndex
+          max = data.getMax(@configs.displayField, groupIndex, dp)
           max = Math.round(max / @configs.binSize) * @configs.binSize
           @globalmax = Math.max @globalmax, max
 
@@ -185,9 +190,11 @@ $ ->
         # Generate all bin data
         binObjs = {}
 
+        dp = globals.clipping.getData(true, globals.configs.clippingVises)
+
         for groupIndex in data.groupSelection
 
-          selectedData = data.selector @configs.displayField, groupIndex
+          selectedData = data.selector(@configs.displayField, groupIndex, dp)
 
           binArr = for i in selectedData
             Math.round(i / @configs.binSize) * @configs.binSize
@@ -350,6 +357,7 @@ $ ->
         @drawGroupControls()
         @drawYAxisControls(true)
         @drawToolControls()
+        @drawClippingControls()
         @drawSaveControls()
 
       drawYAxisControls: (radio = true) ->

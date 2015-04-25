@@ -102,6 +102,7 @@ $ ->
         @drawGroupControls false, false, false
         @drawYAxisControls true, false # Naming here is less than ideal
         @drawToolControls()
+        @drawClippingControls()
         @drawSaveControls()
 
     if "Pie" in data.relVis

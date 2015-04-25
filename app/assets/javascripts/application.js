@@ -49,6 +49,7 @@
 //= require better_colorpicker
 //= require better_datetimepicker
 //
+//= require visualizations/quickflash
 //= require visualizations/highvis/index
 //
 //= require summernote

@@ -1,0 +1,73 @@
+###
+  * Copyright (c) 2011, iSENSE Project. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without
+  * modification, are permitted provided that the following conditions are met:
+  *
+  * Redistributions of source code must retain the above copyright notice, this
+  * list of conditions and the following disclaimer. Redistributions in binary
+  * form must reproduce the above copyright notice, this list of conditions and
+  * the following disclaimer in the documentation and/or other materials
+  * provided with the distribution. Neither the name of the University of
+  * Massachusetts Lowell nor the names of its contributors may be used to
+  * endorse or promote products derived from this software without specific
+  * prior written permission.
+  *
+  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  * ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR
+  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+  * DAMAGE.
+  *
+###
+$ ->
+  if namespace.controller is "visualizations" and
+  namespace.action in ["displayVis", "embedVis", "show"]
+
+    # Captures vis state
+    window.globals ?= {}
+    globals.configs ?= {}
+    globals.configs.clippingMode ?= 1
+
+    globals.clipping ?= {}
+    globals.clipping.ALL_VIS ?= ['map', 'timeline', 'scatter', 'table']
+
+    globals.configs ?= {}
+    globals.configs.clippingVises ?= []
+
+    globals.clipping.thumbnails = {}
+    globals.clipping.thumbnails.dark =
+      'map':      '<%= image_path('vis_map_dark.png') %>'
+      'timeline': '<%= image_path('vis_timeline_dark.png') %>'
+      'scatter':  '<%= image_path('vis_scatter_dark.png') %>'
+      'table':    '<%= image_path('vis_table_dark.png') %>'
+    globals.clipping.thumbnails.light =
+      'map':      '<%= image_path('vis_map_light.png') %>'
+      'timeline': '<%= image_path('vis_timeline_light.png') %>'
+      'scatter':  '<%= image_path('vis_scatter_light.png') %>'
+      'table':    '<%= image_path('vis_table_light.png') %>'
+
+    # Retrieve the correct data depending on whether you are clipping or not
+    globals.clipping.getData = (clip = false, visList = null, curVis = false) ->
+      # Select all the data
+      dp = data.dataPoints
+      unless clip and globals.configs.clippingMode then return dp
+
+      # Get the curVis name
+      if visList is null then visList = globals.curVis.canvas.split('_')[0]
+
+      # Ensure visList is a list
+      if typeof(visList) is 'string' then visList = [visList]
+
+      # Take the intersection of the clipping visualizations
+      for vis in visList
+        cv = eval("globals.#{vis}")
+        if cv? and (curVis or cv isnt globals.curVis)
+          dp = cv.clip(dp)
+      dp

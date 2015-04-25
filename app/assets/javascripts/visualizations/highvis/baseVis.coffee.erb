@@ -60,6 +60,8 @@ $ ->
       Derived classes should overload to reload content.
       ###
       update: ->
+        @clipDescriptor()
+        $('#clipping_controls').accordion('refresh')
 
       ###
       Default delayed update simply updates
@@ -72,6 +74,13 @@ $ ->
       Defaults to doing nothing.
       ###
       resize: (newWidth, newHeight) ->
+
+      ###
+      Vises that can clip data should override this function
+      Defaults to doing nothing.
+      ###
+      clip: (arr) ->
+        arr
 
       ###
       End sequence used by runtime
@@ -100,17 +109,138 @@ $ ->
       Calculate data to be displayed subject to analysis type
       Returns an object of key-value pairs of the form { groupId, value }
       ###
-      getGroupedData: (field) ->
+      getGroupedData: (f) ->
+        dp = globals.clipping.getData(true, globals.configs.clippingVises)
         gData = {}
         for name, i in data.groups when i in data.groupSelection
           switch @configs.analysisType
-            when @ANALYSISTYPE_TOTAL  then gData[i] = (data.getTotal  field, i)
-            when @ANALYSISTYPE_MAX    then gData[i] = (data.getMax    field, i)
-            when @ANALYSISTYPE_MIN    then gData[i] = (data.getMin    field, i)
-            when @ANALYSISTYPE_MEAN   then gData[i] = (data.getMean   field, i)
-            when @ANALYSISTYPE_MEDIAN then gData[i] = (data.getMedian field, i)
-            when @ANALYSISTYPE_COUNT  then gData[i] = (data.getCount  field, i)
+            when @ANALYSISTYPE_TOTAL  then gData[i] =  data.getTotal(f, i, dp)
+            when @ANALYSISTYPE_MAX    then gData[i] =    data.getMax(f, i, dp)
+            when @ANALYSISTYPE_MIN    then gData[i] =    data.getMin(f, i, dp)
+            when @ANALYSISTYPE_MEAN   then gData[i] =   data.getMean(f, i, dp)
+            when @ANALYSISTYPE_MEDIAN then gData[i] = data.getMedian(f, i, dp)
+            when @ANALYSISTYPE_COUNT  then gData[i] =  data.getCount(f, i, dp)
         gData
+
+      ###
+      Draw clipping controls
+      ###
+      drawClippingControls: ->
+        # Build the new control pane
+        c =  '<div id="clipping_controls" class="vis_controls">'
+        c += '<h3 class="clean_shrink"><a href="#">Filtering:</a></h3>'
+        c += '<div class="outer_control_div">'
+        c += '<div class="inner_control_div">'
+
+        # Select All and Reset btns
+        c += '<div class="btn-group btn-group-justified" role="group">'
+        c += '<div class="btn-group" role="group">'
+        c += '<button id="clip_select_all_btn" class="btn btn-default">'
+        c += 'Select All</button></div>'
+
+        c += '<div class="btn-group" role="group">'
+        c += '<button id="clip_reset_btn" class="btn btn-default">'
+        c += 'Reset</button></div>'
+        c += '</div>'
+
+        # Clipping toggles
+        relVis = (v.toLowerCase() for v in data.relVis)
+        c += '<div class="container-fluid"><div class="row">'
+        for vis in globals.clipping.ALL_VIS
+          thumbnail = globals.clipping.thumbnails.dark[vis]
+          btnClass = 'col-xs-6 col-md-3 btn btn-default clip-btn'
+          if vis not in relVis then btnClass += ' disabled'
+          c += "<img name='#{vis}' src='#{thumbnail}' alt='#{vis}' "
+          c += "class='#{btnClass}'>"
+        c += '</div></div>'
+
+        # Text Divs
+        c += '<div id="clip_descriptors">'
+        for vis in globals.clipping.ALL_VIS
+          c += "<div id='#{vis}_descriptor' class='clip-descriptor'></div>"
+        c += '</div>'
+        c += '</div></div></div>'
+
+        # Write HTML
+        $('#controldiv').append(c)
+
+        setClipVis = (v, state) ->
+          vis = eval("globals.#{v}")
+          visQ = $(".clip_btn, [name='#{v}']")
+          img = ''
+
+          if (state)
+            img = globals.clipping.thumbnails.light[v]
+            visQ.addClass('clip-active')
+            vis.clipDescriptor()
+            $("##{v}_descriptor").show()
+          else
+            img = globals.clipping.thumbnails.dark[v]
+            visQ.removeClass('clip-active')
+            $("##{v}_descriptor").hide()
+
+          visQ.attr('src', img)
+
+        for v in globals.configs.clippingVises
+          setClipVis(v, true)
+
+        # Set up accordion
+        globals.configs.clippingOpen ?= 0
+
+        # Flash if data is filtered
+        if globals.configs.clippingVises.length > 0
+          quickFlash('You are currently viewing filtered data. To see the all of
+            the data, press \'Reset\' in the \'Filtering\' control panel.',
+            'warning')
+
+        $('#clipping_controls').accordion
+          collapsible:true
+          active:globals.configs.clippingOpen
+
+        $('#clipping_controls > h3').click ->
+          globals.configs.clippingOpen = (globals.configs.clippingOpen + 1) % 2
+
+        $('.clip-btn').click (e) =>
+          v = e.target.name
+          if globals.configs.clippingVises.indexOf(v) is -1
+              globals.configs.clippingVises.push(v)
+          else arrayRemove(globals.configs.clippingVises, v)
+
+          state = globals.configs.clippingVises.indexOf(v) isnt -1
+          setClipVis(v, state)
+
+          if globals.configs.clippingVises.length is 0
+            # Remove warning flash
+            $('.alert').remove()
+
+          @update()
+
+        ($ '#clip_select_all_btn').click =>
+          globals.configs.clippingVises = []
+          relClipVis = (v for v in globals.clipping.ALL_VIS when v in relVis)
+          globals.configs.clippingVises.push v for v in relClipVis
+          for v in relClipVis
+            setClipVis(v, true)
+
+          @update()
+
+        ($ '#clip_reset_btn').click =>
+          for v in globals.configs.clippingVises when v in relVis
+            setClipVis(v, false)
+
+          # Remove warning flash
+            $('.alert').remove()
+
+          globals.configs.clippingVises = []
+          @update()
+
+      ###
+      Updates a div describing the filtered scope of the visible data as
+      affected by that vis
+
+      Default does nothing
+      ###
+      clipDescriptor: ->
 
       ###
       Draws y axis controls
@@ -659,6 +789,8 @@ $ ->
         # Draw legend
         for options in @buildLegendSeries()
           @chart.addSeries options, false
+
+        super()
 
       ###
       Performs an update while displaying the loading text

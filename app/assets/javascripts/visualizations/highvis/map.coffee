@@ -143,7 +143,7 @@ $ ->
           styles: clusterStyles
         ################################################
 
-        for dataPoint in globals.CLIPPING.getData(data.dataPoints)
+        for dp in globals.clipping.getData(true, globals.configs.clippingVises)
           lat = lon = null
           do =>
             # Grab geospatial
@@ -151,25 +151,34 @@ $ ->
 
               if (Number field.typeID) in data.types.LOCATION
                 if (Number field.typeID) is data.units.LOCATION.LATITUDE
-                  lat = dataPoint[fieldIndex]
+                  lat = dp[fieldIndex]
                 else if (Number field.typeID) is data.units.LOCATION.LONGITUDE
-                  lon = dataPoint[fieldIndex]
+                  lon = dp[fieldIndex]
 
             if (lat is null) or (lon is null)
               return
 
-            groupIndex = data.groups.indexOf dataPoint[globals.configs.groupById].toLowerCase()
+            groupIndex = data.groups.indexOf dp[globals.configs.groupById].toLowerCase()
             color = globals.configs.colors[groupIndex % globals.configs.colors.length]
 
             latlng = new google.maps.LatLng(lat, lon)
 
             # Put aside line info if necessary
-            if @timeLines? and dataPoint[data.timeFields[0]] isnt null and not(isNaN dataPoint[data.timeFields[0]])
+            if @timeLines? and dp[data.timeFields[0]] isnt null and not(isNaN dp[data.timeFields[0]])
               @timeLines[groupIndex].push
-                time: dataPoint[data.timeFields[0]]
+                time: dp[data.timeFields[0]]
                 latlng: latlng
-            res = dataPoint[globals.configs.groupById]
-            idString = new String(dataPoint[1].match(/\((\d+)\)$/g))
+            res = dp[globals.configs.groupById]
+            idString = new String(dp[1].match(/\((\d+)\)$/g))
+            dataSetID = parseInt(idString.match(/(\d+)/g))
+
+            metaIndex = 0
+            for i in [1...Object.keys(data.metadata).length]
+              if data.metadata[i].dataset_id == dataSetID
+                metaIndex = i
+                break
+            res = dp[globals.configs.groupById]
+            idString = new String(dp[1].match(/\((\d+)\)$/g))
             dataSetID = parseInt(idString.match(/(\d+)/g))
 
             metaIndex = 0
@@ -181,7 +190,7 @@ $ ->
             # Build info window content
             label  = "<div style='font-size:9pt;overflow-x:none;'>"
             label += "<div style='width:100%;text-align:center;color:#{color};'> " +
-              "#{dataPoint[globals.configs.groupById]}</div></br>"
+              "#{dp[globals.configs.groupById]}</div></br>"
 
             if data.metadata[metaIndex].photos.length == 1
               photo = data.metadata[metaIndex].photos[0]
@@ -212,19 +221,15 @@ $ ->
                         </div> </br>"
 
             label += "<table>"
-            for field, fieldIndex in data.fields when dataPoint[fieldIndex] isnt null
+
+            for field, fieldIndex in data.fields when dp[fieldIndex] isnt null
               dat = if (Number field.typeID) is data.types.TIME
-                (globals.dateFormatter dataPoint[fieldIndex])
+                (globals.dateFormatter dp[fieldIndex])
               else
-                dataPoint[fieldIndex]
+                dp[fieldIndex]
 
               label += "<tr><td>#{field.fieldName}</td>"
-              label += "<td><strong>#{dat}</strong></td>"
-              unit = fieldUnit(field, false)
-              if unit? and fieldIndex > 2
-                label += "<td>#{unit}</td></tr>"
-              else
-                label += "</tr>"
+              label += "<td><strong>#{dat}</strong></td></tr>"
 
             label += "</table></div>"
 
@@ -249,10 +254,10 @@ $ ->
 
             @markers[groupIndex].push newMarker
 
-            for index in data.normalFields when dataPoint[index] isnt null
+            for index in data.normalFields when dp[index] isnt null
               @heatPoints[index][groupIndex].push
-                weight: dataPoint[index]
-                val: dataPoint[index]
+                weight: dp[index]
+                val: dp[index]
                 location: latlng
 
             @heatPoints[@HEATMAP_MARKERS][groupIndex].push latlng
@@ -308,20 +313,18 @@ $ ->
             if @configs.heatmapSelection isnt @HEATMAP_NONE
               # Guess new radius
               @heatmapPixelRadius = Math.ceil(@heatmapPixelRadius * Math.pow(2, newZoom - @configs.zoomLevel))
-              @delayedUpdate()
             @configs.zoomLevel = newZoom
+            @delayedUpdate()
 
           google.maps.event.addListener @gmap, "bounds_changed", =>
             cen = @gmap.getCenter()
             @configs.savedCenter =
               lat: cen.lat()
               lng: cen.lng()
+            @delayedUpdate()
 
           google.maps.event.addListener @gmap, "dragend", =>
-            # Update if the projection has changed enough to disturb the heatmap
-            if @configs.heatmapSelection isnt @HEATMAP_NONE
-              if @getHeatmapScale() isnt @heatmapPixelRadius
-                @delayedUpdate()
+            @delayedUpdate()
 
           # Calls update to draw heatmap on start
           if @configs.heatmapSelection isnt @HEATMAP_NONE
@@ -401,6 +404,7 @@ $ ->
         super()
         @drawGroupControls(true)
         @drawToolControls()
+        @drawClippingControls()
         @drawSaveControls()
 
       drawToolControls: ->
@@ -589,26 +593,48 @@ $ ->
 
       clip: (arr) ->
         viewBounds = @gmap.getBounds()
-        if viewBounds?
-          filterFunc = (row) ->
-            lat = lng = null
+        latIdx = lngIdx = null
+        for f, i in data.fields
+          if (Number f.typeID) is data.units.LOCATION.LATITUDE  then latIdx = i
+          if (Number f.typeID) is data.units.LOCATION.LONGITUDE then lngIdx = i
 
-            # Scan for lat and long
-            for field, fieldIndex in data.fields
-              if (Number field.typeID) in data.types.LOCATION
-                if (Number field.typeID) is data.units.LOCATION.LATITUDE
-                  lat = row[fieldIndex]
-                else if (Number field.typeID) is data.units.LOCATION.LONGITUDE
-                  lng = row[fieldIndex]
+        unless viewBounds? and latIdx? and lngIdx?
+          return arr
 
-            # If points are valid, check if they are visible
-            if (lat is null) or (lng is null)
-              return false
-            else return viewBounds.contains(new google.maps.LatLng(lat, lng))
+        filterFunc = (row) ->
+          lat = row[latIdx]
+          lng = row[lngIdx]
 
-          arr.filter filterFunc
+          # If points are valid, check if they are visible
+          if (lat is null) or (lng is null) then return false
 
-        else arr
+          return viewBounds.contains(new google.maps.LatLng(lat, lng))
+
+        arr.filter filterFunc
+
+      ###
+      Updates a div describing the filtered scope of the visible data as
+      affected by that vis
+      ###
+      clipDescriptor: ->
+        t = 'Map:'
+        d = "<b>#{t}</b>"
+        vb = undefined
+
+        unless @gmap? and (vb = @gmap.getBounds())?
+          d += '<div class="small">Map has no active filters.</div>'
+          return $('#map_descriptor').html(d)
+
+        ne = vb.getNorthEast()
+        sw = vb.getSouthWest()
+        lat = ne.lat() + ' to ' + sw.lat()
+        lng = ne.lng() + ' to ' + sw.lng()
+        d += '<table class="small">'
+        d += '<tr><td>Latitude</td>' + '<td>' + lat + '</td></tr>'
+        d += '<tr><td>Longitude</td>' + '<td>' + lng + '</td></tr>'
+        d += '</table>'
+
+        $('#map_descriptor').html(d)
 
     if "Map" in data.relVis
       class CanvasProjectionOverlay extends google.maps.OverlayView

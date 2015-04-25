@@ -113,6 +113,7 @@ $ ->
         @drawGroupControls()
         @drawYAxisControls()
         @drawToolControls(true, true)
+        @drawClippingControls()
         @drawSaveControls()
 
     if "Bar" in data.relVis

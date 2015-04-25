@@ -27,7 +27,8 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is "visualizations" and
+  namespace.action in ["displayVis", "embedVis", "show"]
 
     class window.Scatter extends BaseHighVis
       ###
@@ -181,14 +182,14 @@ $ ->
       ###
       buildLegendSeries: ->
         count = -1
-        for field, fieldIndex in data.fields when fieldIndex in data.normalFields
+        for f, i in data.fields when i in data.normalFields
           count += 1
           options =
-            legendIndex: fieldIndex
+            legendIndex: i
             data: []
             color: '#000'
-            showInLegend: if fieldIndex in globals.configs.fieldSelection then true else false
-            name: field.fieldName
+            showInLegend: i in globals.configs.fieldSelection
+            name: f.fieldName
 
           switch
             when @configs.mode is @SYMBOLS_LINES_MODE
@@ -218,6 +219,7 @@ $ ->
         @drawXAxisControls()
         @drawYAxisControls()
         @drawToolControls()
+        @drawClippingControls()
         @drawRegressionControls()
         @drawSaveControls()
 
@@ -231,6 +233,8 @@ $ ->
           text: fieldTitle data.fields[@configs.xAxis]
         @chart.xAxis[0].setTitle title, false
 
+        dp = globals.clipping.getData(true, globals.configs.clippingVises)
+
         # Compute max bounds if there is no user zoom
         if not @isZoomLocked()
 
@@ -239,11 +243,11 @@ $ ->
 
           for fieldIndex, symbolIndex in data.normalFields when fieldIndex in globals.configs.fieldSelection
             for group, groupIndex in data.groups when groupIndex in data.groupSelection
-              @configs.yBounds.min = Math.min @configs.yBounds.min, (data.getMin fieldIndex, groupIndex)
-              @configs.yBounds.max = Math.max @configs.yBounds.max, (data.getMax fieldIndex, groupIndex)
+              @configs.yBounds.min = Math.min @configs.yBounds.min, data.getMin(fieldIndex, groupIndex, dp)
+              @configs.yBounds.max = Math.max @configs.yBounds.max, data.getMax(fieldIndex, groupIndex, dp)
 
-              @configs.xBounds.min = Math.min @configs.xBounds.min, (data.getMin @configs.xAxis, groupIndex)
-              @configs.xBounds.max = Math.max @configs.xBounds.max, (data.getMax @configs.xAxis, groupIndex)
+              @configs.xBounds.min = Math.min @configs.xBounds.min, data.getMin(@configs.xAxis, groupIndex, dp)
+              @configs.xBounds.max = Math.max @configs.xBounds.max, data.getMax(@configs.xAxis, groupIndex, dp)
 
               if (@timeMode isnt undefined) and (@timeMode is @GEO_TIME_MODE)
                 @configs.xBounds.min = (new Date(@configs.xBounds.min)).getUTCFullYear()
@@ -263,14 +267,13 @@ $ ->
         # Draw series
         for fieldIndex, symbolIndex in data.normalFields when fieldIndex in globals.configs.fieldSelection
           for group, groupIndex in data.groups when groupIndex in data.groupSelection
-            dat = if not @configs.fullDetail
-              sel = data.xySelector(@configs.xAxis, fieldIndex, groupIndex)
-              globals.dataReduce sel, @configs.xBounds, @configs.yBounds, @xGridSize, @yGridSize, @MAX_SERIES_SIZE
-            else
-              data.xySelector(@configs.xAxis, fieldIndex, groupIndex)
+            xy = data.xySelector(@configs.xAxis, fieldIndex, groupIndex, dp)
+            sel =
+              if @configs.fullDetail then xy
+              else globals.dataReduce(xy, @configs.xBounds, @configs.yBounds, @xGridSize, @yGridSize, @MAX_SERIES_SIZE)
 
             options =
-              data: dat
+              data: sel
               showInLegend: false
               color: globals.configs.colors[groupIndex % globals.configs.colors.length]
               name:
@@ -347,6 +350,10 @@ $ ->
         if $('#regression-table-body > tr').length > 0
           $('tr#regression-table-header').show()
         else $('tr#regression-table-header').hide()
+
+        # Refresh the clipping accordion so it sizes correctly
+        @clipDescriptor()
+        $('#clipping_controls').accordion('refresh')
 
       ###
       Draws radio buttons for changing symbol/line mode.
@@ -885,28 +892,60 @@ $ ->
       Clips an array of data to include only bounded points
       ###
       clip: (arr) ->
+        # Verify parameters
+        unless @configs.xBounds.min? and @configs.xBounds.max? and
+        @configs.yBounds.min? and @configs.yBounds.max?
+          return arr
 
         # Checks if a point is visible on screen
         clipped = (point, xBounds, yBounds) =>
 
           # Check x axis
-          if (point[@configs.xAxis] isnt null) && (not isNaN point[@configs.xAxis]) \
-          && point[@configs.xAxis] >= xBounds.min && point[@configs.xAxis] <= xBounds.max
+          if (point[@configs.xAxis] is null) or
+          (isNaN point[@configs.xAxis]) or
+          point[@configs.xAxis] < xBounds.min or
+          point[@configs.xAxis] > xBounds.max
+            return false
 
-            # Check all y axes
-            for yAxis in @configs.yAxis
-              if !((point[yAxis] isnt null) && (not isNaN point[yAxis]) \
-              && point[yAxis] >= yBounds.min && point[yAxis] <= yBounds.max)
-                return false
+          # Check all y axes
+          for yAxis in @configs.yAxis
+            if ((point[yAxis] isnt null) and (not isNaN point[yAxis]) and
+            point[yAxis] >= yBounds.min and point[yAxis] <= yBounds.max)
+              return true
 
-            return true
-          else return false
+          return false
 
         # Do the actual clipping
-        if @configs.xBounds.min? and @configs.xBounds.max? and @configs.yBounds.min? and @configs.yBounds.max?
-          point for point in arr when clipped(point, @configs.xBounds, @configs.yBounds)
-        else
-          arr
+        (p for p in arr when clipped(p, @configs.xBounds, @configs.yBounds))
+
+      ###
+      Updates a div describing the filtered scope of the visible data as
+      affected by that vis
+      ###
+      clipDescriptor: ->
+        t = 'Scatter:'
+        xt = data.fields[@configs.xAxis].fieldName
+        yt =
+          if globals.configs.fieldSelection.length isnt 1 then 'Y-Values'
+          else data.fields[globals.configs.fieldSelection[0]].fieldName
+
+        x = @configs.xBounds
+        y = @configs.yBounds
+
+        xr = x.min + ' to ' + x.max
+        yr = y.min + ' to ' + y.max
+        d = '<b>' + t + '</b>'
+
+        unless (x.min? and x.max? and y.min? and y.max?)
+          d += '<div class="small">Scatter has no active filters.</div>'
+          return $('#scatter_descriptor').html(d)
+
+        d += '<table class="small">'
+        d += "<tr><td>#{xt}</td><td>#{xr}</td></tr>"
+        d += "<tr><td>#{yt}</td><td>#{yr}</td></tr>"
+        d += '</table>'
+
+        $('#scatter_descriptor').html(d)
 
     if "Scatter" in data.relVis
       globals.scatter = new Scatter "scatter_canvas"
