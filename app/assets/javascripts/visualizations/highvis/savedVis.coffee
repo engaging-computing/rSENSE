@@ -110,10 +110,13 @@ $ ->
         globals.configs.fieldSelection = [globals.curVis.configs.displayField]
 
       # Check for and note LT dates
+      dataBackup = data.dataPoints.slice(0)
       if data.timeType is data.NORM_TIME
         for dp, dIndex in data.dataPoints
           for fieldIndex in data.timeFields
-            data.dataPoints[dIndex][fieldIndex] = "U #{dp[fieldIndex]}"
+            tmpRow = data.dataPoints[dIndex].slice(0)
+            tmpRow[fieldIndex] = "U #{dp[fieldIndex]}"
+            data.dataPoints[dIndex] = tmpRow
 
       savedConfig = {}
 
@@ -131,9 +134,12 @@ $ ->
       dataCpy = {}
       if includeData then $.extend(dataCpy, data)
 
+      # Restore dataPoints (to before time update)
+      data.dataPoints = dataBackup
+
       ret =
-        globals: (JSON.stringify savedConfig)
-        data: (JSON.stringify dataCpy)
+        globals: JSON.stringify(savedConfig)
+        data:    JSON.stringify(dataCpy)
 
     ###
     Ajax call to update the project's default vis with the current settings.
