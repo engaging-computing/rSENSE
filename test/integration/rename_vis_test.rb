@@ -19,13 +19,12 @@ class RenameVisTest < ActionDispatch::IntegrationTest
     click_on 'Dessert is Delicious'
     click_on 'Visualize'
 
+    page.execute_script "$('#save-ctrls > .vis-ctrl-header').click()"
     assert page.has_content?('Save Visualization')
-
-    page.execute_script "$('#save-vis-btn').click()"
+    click_on 'Save Visualization'
 
     assert(page.has_content?('Please enter a name for this visualization:'),
       'Name modal')
-
     find('#nname').set('This is a vis')
     click_on 'Finish'
 
@@ -33,9 +32,7 @@ class RenameVisTest < ActionDispatch::IntegrationTest
            'Create worked')
 
     find('.menu_edit_link').click
-
-    assert page.has_content?('Edit Summary'), 'Dropdown menu'
-
+    assert page.has_content?('Edit Title'), 'Dropdown menu'
     click_on 'Edit Title'
 
     find('#visualization_title').set('Crazy Vis')
@@ -45,26 +42,11 @@ class RenameVisTest < ActionDispatch::IntegrationTest
     assert find('#title-and-menu-title').has_content?('Crazy Vis')
 
     find('.menu_edit_link').click
-
-    assert page.has_content?('Edit Summary'), 'Dropdown menu'
-
-    click_on 'Edit Summary'
-
-    find('#visualization_summary').set('The quick brown fox')
-    click_on 'Save'
-
-    assert find('#title-and-menu-show-summary').has_content?('The quick brown fox')
-
-    find('.menu_edit_link').click
-
-    assert page.has_content?('Edit Summary'), 'Dropdown menu'
-
+    assert page.has_content?('Edit Title'), 'Dropdown menu'
     click_on 'Delete Visualization'
 
     page.driver.browser.accept_js_confirms
-
     assert page.has_content?('Visualizations'), 'On vis index'
-
     assert page.has_no_content?('Crazy Vis'), 'Vis was renamed'
   end
 end
