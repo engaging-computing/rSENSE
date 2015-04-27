@@ -125,7 +125,7 @@ class RefactorInvisibleFields < ActiveRecord::Migration
         subglobal['groupById'] += dir
       end
       subglobal['fieldSelection'].each_with_index do | f, i |
-        if f['fieldSelection'] >= Param.n
+        if f >= Param.n
           subglobal['fieldSelection'][i] += dir
         end
       end
@@ -141,22 +141,22 @@ class RefactorInvisibleFields < ActiveRecord::Migration
     globals['Scatter'] = refactor_scatter(globals['Scatter'], dir)
 
     # bar
-    bar = globals['Bar']
-    unless bar.nil?
-      if !bar['sortField'].nil? && bar['sortField'] >= Param.n
-        bar['sortField'] += dir
-      end
-    end
-    globals['Bar'] = bar
+    #bar = globals['Bar']
+    #unless bar.nil?
+    #  if !bar['sortField'].nil? && bar['sortField'] >= Param.n
+    #    bar['sortField'] += dir
+    #  end
+    #end
+    #globals['Bar'] = bar
 
     # histogram
-    histogram = globals['Histogram']
-    unless histogram.nil?
-      if !histogram['displayField'].nil? && histogram['displayField'] >= Param.n
-        histogram['displayField'] += dir
-      end
-    end
-    globals['Histogram'] = histogram
+    #histogram = globals['Histogram']
+    #unless histogram.nil?
+    #  if !histogram['displayField'].nil? && histogram['displayField'] >= Param.n
+    #    histogram['displayField'] += dir
+    #  end
+    #end
+    #globals['Histogram'] = histogram
 
     # pie
     pie = globals['Pie']
