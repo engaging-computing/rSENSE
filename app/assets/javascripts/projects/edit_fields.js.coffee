@@ -52,11 +52,11 @@ $ ->
       if fid != "0"
         hidden_deleted_fields = $('#hidden_deleted_fields')
         if row_name == "latitude"
-          long_fid = fid + 1
+          long_fid = parseInt(fid, 10) + 1
           hidden_deleted_fields.val(hidden_deleted_fields.val() + fid + ",")
           hidden_deleted_fields.val(hidden_deleted_fields.val() + long_fid + ",")
         else if row_name == "longitude"
-          lat_fid = fid - 1
+          lat_fid = parseInt(fid, 10) - 1
           hidden_deleted_fields.val(hidden_deleted_fields.val() + fid + ",")
           hidden_deleted_fields.val(hidden_deleted_fields.val() + lat_fid + ",")
         else
