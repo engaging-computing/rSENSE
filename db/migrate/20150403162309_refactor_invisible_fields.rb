@@ -119,20 +119,27 @@ class RefactorInvisibleFields < ActiveRecord::Migration
 
   def refactor_globals(globals, dir)
     # global
-    subglobal = globals['global']
-    unless subglobal.nil?
-      if subglobal['groupById'] >= Param.n
-        subglobal['groupById'] += dir
+    subglobals = globals['globals']
+    unless subglobals.nil?
+      if subglobals['groupById'] >= Param.n
+        subglobals['groupById'] += dir
       end
-      subglobal['fieldSelection'].each_with_index do | f, i |
+      subglobals['fieldSelection'].each_with_index do | f, i |
         if f >= Param.n
-          subglobal['fieldSelection'][i] += dir
+          subglobals['fieldSelection'][i] += dir
         end
       end
     end
-    globals['global'] = subglobal
+    globals['globals'] = subglobals
 
     # map unaffected
+    map = globals['Map']
+    unless map.nil?
+      if !map['heatmapSelection'].nil? && map['heatmapSelection'] >= Param.n
+        map['heatmapSelection'] += dir
+      end
+    end
+    globals['Map'] = map
 
     # timeline
     globals['Timeline'] = refactor_scatter(globals['Timeline'], dir)
