@@ -103,40 +103,40 @@ $ ->
       for i in [0...4]
         setValue(input_boxes[i], values[i])
 
-    # Adds row to table, highlight new row  
-	addRow = (content) ->
-      row = document.getElementById('fields_table').insertRow(1)
-      $(row).attr('name', content[1].toLowerCase())
+# Adds row to table, highlight new row
+addRow = (content) ->
+  row = document.getElementById('fields_table').insertRow(1)
+  $(row).attr('name', content[1].toLowerCase())
 
-      cells = for i in [1...6]
-        row.insertCell(i-1)
+  cells = for i in [1...6]
+    row.insertCell(i - 1)
 
-      for i in [0...5]
-        cells[i].innerHTML = content[i]
+  for i in [0...5]
+    cells[i].innerHTML = content[i]
 
-      $(row).effect('highlight', {}, 3000)
+  $(row).effect('highlight', {}, 3000)
 
-    # Calls deleteRow based on type of field
-    callDeleteRow = (row_index, row_name, fid) ->
-      if row_name == "timestamp"
-        deleteRow(row_index, true, 'timestamp')
-      else if row_name == "latitude"
-        deleteRow(row_index, true, 'location')
-        deleteRow(row_index, true, 'location')
-      else if row_name == "longitude"
-        deleteRow(row_index, true, 'location')
-        deleteRow(row_index - 1, true, 'location')
-      else
-        deleteRow(row_index, false, '')
+# Calls deleteRow based on type of field
+callDeleteRow = (row_index, row_name, fid) ->
+  if row_name == "timestamp"
+    deleteRow(row_index, true, 'timestamp')
+  else if row_name == "latitude"
+    deleteRow(row_index, true, 'location')
+    deleteRow(row_index, true, 'location')
+  else if row_name == "longitude"
+    deleteRow(row_index, true, 'location')
+    deleteRow(row_index - 1, true, 'location')
+  else
+    deleteRow(row_index, false, '')
 
-    # Deletes row (enable is true only when field is timestamp or location; btn is
-    # timestamp or location or empty string for text/number)
-    deleteRow = (row_index, enable, btn) ->
-      document.getElementById('fields_table').deleteRow(row_index)
-      if enable
-        document.getElementById(btn).disabled = false
+# Deletes row (enable is true only when field is timestamp or location; btn is
+# timestamp or location or empty string for text/number)
+deleteRow = (row_index, enable, btn) ->
+  document.getElementById('fields_table').deleteRow(row_index)
+  if enable
+    document.getElementById(btn).disabled = false
 
-    # Set value of hidden input boxes (id is id of hidden input box, value is value
-    # to set input box)
-    setValue = (id, value) ->
-      document.getElementById(id).value = value
+# Set value of hidden input boxes (id is id of hidden input box, value is value
+# to set input box)
+setValue = (id, value) ->
+  document.getElementById(id).value = value
