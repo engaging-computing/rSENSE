@@ -254,9 +254,11 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
   end
 
+  # Save fields in fields table
   def save_fields
     @project = Project.find(params[:id])
 
+    # Delete fields as necessary
     if params[:hidden_deleted_fields] != ''
       params[:hidden_deleted_fields].split(',').each do |x|
         if Field.find(x).destroy == -1 and return
@@ -264,7 +266,7 @@ class ProjectsController < ApplicationController
       end
     end
 
-    # Update existing fields, create restrictions
+    # Update existing fields, create restrictions if any exist
     @project.fields.each do |field|
       restrictions = []
 
@@ -285,6 +287,7 @@ class ProjectsController < ApplicationController
       end
     end
 
+    # Add fields based on type
     if params[:hidden_location_count] == '1'
       if addField('Latitude', 'Latitude', 'deg', []) == -1
         return
@@ -306,6 +309,7 @@ class ProjectsController < ApplicationController
     end
 
     (params[:hidden_text_count].to_i).times do |i|
+      # Need to explicitly check if restrictions are nil because empty restrictions should be []
       restrictions = params[('restrictions_' + (i + 1).to_s).to_sym].nil? ? [] : params[('restrictions_' + (i + 1).to_s).to_sym].split(',')
 
       if addField('Text', params[('text_' + (i + 1).to_s).to_sym], '', restrictions) == -1 and return
@@ -315,6 +319,7 @@ class ProjectsController < ApplicationController
     redirect_to "/projects/#{@project.id}", notice: 'Fields were successfully updated.' and return
   end
 
+  # Helper function to add field to database
   def addField(fieldType, fieldName, unit, restrictions)
     if fieldName.nil?
       return
