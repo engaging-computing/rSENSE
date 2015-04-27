@@ -201,6 +201,7 @@ class ProjectsControllerTest < ActionController::TestCase
     assert_response :unprocessable_entity
     assert Project.find(@project_three).lock == false, 'Crunch should not have locked the project'
   end
+
   test 'should edit fields' do
     put :edit_fields, { id: @project_one }, user_id: @kate
     assert_response :success

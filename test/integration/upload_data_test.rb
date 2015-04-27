@@ -178,6 +178,10 @@ class UploadDataTest < ActionDispatch::IntegrationTest
 
     click_on 'Submit'
     assert page.has_content?('Bad Data')
+  end
 
+  test 'seach data sets' do
+    login('kcarcia@cs.uml.edu', '12345')
+    visit project_path(@project)
   end
 end
