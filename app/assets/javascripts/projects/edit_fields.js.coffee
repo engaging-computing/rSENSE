@@ -7,7 +7,8 @@ $ ->
     deleted_fields = []
 
     # Names of all hidden inputs that need to be populated before submission
-    input_boxes = ["hidden_num_count", "hidden_text_count", "hidden_timestamp_count", "hidden_location_count", "hidden_deleted_fields"]
+    input_boxes = ["hidden_num_count", "hidden_text_count", "hidden_timestamp_count",
+                   "hidden_location_count", "hidden_deleted_fields"]
 
     # Clear all hidden inputs on load
     for i in [0...5]
@@ -20,28 +21,44 @@ $ ->
         e.preventDefault()
         $('#fields_form_submit').click()
 
-    # Add row(s), increment counters, and disable add buttons (only for timestamp and location fields)
-    # addRow takes input box for name, type of field, input box for units (number only) or "deg" for lat/long, input box for restrictions (text only), delete
+    # Add row(s), increment counters, disable add buttons (for timestamp/location fields)
+    # addRow takes input box for name, type of field, input box for units (number only) or
+    # "deg" for lat/long, input box for restrictions (text only), delete
     $('#number').click ->
       num_count = num_count + 1
-      addRow(["""<input class="input-small form-control" type="text" name="number_#{num_count}" value="Number">""", "Number", """<input class="input-small form-control" type="text" name="units_#{num_count}">""", "", """<a href="#" fid="0" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
+      addRow(["""<input class="input-small form-control" type="text"
+                 name="number_#{num_count}" value="Number">""", "Number",
+                 """<input class="input-small form-control" type="text"
+                 name="units_#{num_count}">""", "", """<a href="#" fid="0"
+                 class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
 
     $( '#text' ).click ->
       text_count = text_count + 1
-      addRow(["""<input class="input-small form-control" type="text" name="text_#{text_count}" value="Text">""", "Text", "", """<input class="input-small form-control" type="text" name="restrictions_#{text_count}">""", """<a href="#" fid="0" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
+      addRow(["""<input class="input-small form-control" type="text"
+                 name="text_#{text_count}" value="Text">""", "Text", "",
+              """<input class="input-small form-control" type="text"
+                 name="restrictions_#{text_count}">""", """<a href="#" fid="0"
+                 class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
 
     $('#timestamp').click ->
       timestamp_count = timestamp_count + 1
-      addRow(["""<input class="input-small form-control" type="text" name="timestamp" value="Timestamp">""", "Timestamp", "", "", """<a href="#" fid="0" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
+      addRow(["""<input class="input-small form-control" type="text" name="timestamp"
+                 value="Timestamp">""", "Timestamp", "", "", """<a href="#" fid="0"
+                 class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
       document.getElementById('timestamp').disabled = true
 
     $('#location').click ->
       location_count = location_count + 1
-      addRow(["""<input class="input-small form-control" type="text" name="longitude" value="Longitude">""", "Longitude", "deg", "", """<a href="#" fid="0" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
-      addRow(["""<input class="input-small form-control" type="text" name="latitude" value="Latitude">""", "Latitude", "deg", "", """<a href="#" fid="0" class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
+      addRow(["""<input class="input-small form-control" type="text" name="longitude"
+                 value="Longitude">""", "Longitude", "deg", "", """<a href="#" fid="0"
+                 class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
+      addRow(["""<input class="input-small form-control" type="text" name="latitude"
+                 value="Latitude">""", "Latitude", "deg", "", """<a href="#" fid="0"
+                 class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
       document.getElementById('location').disabled = true
 
-    # Delete field, enable timestamp/location buttons (NOTE: fid is 0 when the field hasn't yet been added to project in database)
+    # Delete field, enable timestamp/location buttons (NOTE: fid is 0 when the field
+    # hasn't yet been added to project in database)
     $('#fields_table').on 'click', '.field_delete', ->
       # fid of row being deleted
       fid = $(this).closest('a').attr('fid')
@@ -112,12 +129,14 @@ $ ->
       else
         deleteRow(row_index, false, '')
 
-    # Deletes row (enable is true only when field is timestamp or location; btn is timestamp or location or empty string for text/number)
+    # Deletes row (enable is true only when field is timestamp or location; btn is
+    # timestamp or location or empty string for text/number)
     deleteRow = (row_index, enable, btn) ->
       document.getElementById('fields_table').deleteRow(row_index)
       if enable
         document.getElementById(btn).disabled = false
 
-    # Set value of hidden input boxes (id is id of hidden input box, value is value to set input box)
+    # Set value of hidden input boxes (id is id of hidden input box, value is value
+    # to set input box)
     setValue = (id, value) ->
       document.getElementById(id).value = value
