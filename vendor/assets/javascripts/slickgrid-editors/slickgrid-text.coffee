@@ -7,13 +7,9 @@
   form = null
   loadValue = null
 
-  console.log args.column.restrictions
-
   if not args.column.restrictions.length? or args.column.restrictions.length == 0
-    console.log 'a'
     form = $('<input type="text" class="editor-text" />')
   else
-    console.log 'b'
     formStr = ''
     for x in args.column.restrictions
       formStr += "<option value=\"#{x}\">#{x}</option>"
