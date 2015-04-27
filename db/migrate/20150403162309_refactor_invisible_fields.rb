@@ -30,7 +30,7 @@ class RefactorInvisibleFields < ActiveRecord::Migration
 
   # Run the migration down (rake db:rollback)
   def down
-    # refactor(-1)
+    refactor(-1)
   end
 
   def refactor(dir)
@@ -147,23 +147,9 @@ class RefactorInvisibleFields < ActiveRecord::Migration
     # scatter
     globals['Scatter'] = refactor_scatter(globals['Scatter'], dir)
 
-    # bar
-    #bar = globals['Bar']
-    #unless bar.nil?
-    #  if !bar['sortField'].nil? && bar['sortField'] >= Param.n
-    #    bar['sortField'] += dir
-    #  end
-    #end
-    #globals['Bar'] = bar
+    # bar unaffected, axis uses the globals.fieldSelection
 
-    # histogram
-    #histogram = globals['Histogram']
-    #unless histogram.nil?
-    #  if !histogram['displayField'].nil? && histogram['displayField'] >= Param.n
-    #    histogram['displayField'] += dir
-    #  end
-    #end
-    #globals['Histogram'] = histogram
+    # histogram unaffected, axis uses the globals.fieldSelection
 
     # pie
     pie = globals['Pie']
