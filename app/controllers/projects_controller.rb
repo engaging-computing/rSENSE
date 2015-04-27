@@ -306,7 +306,7 @@ class ProjectsController < ApplicationController
     end
 
     (params[:hidden_text_count].to_i).times do |i|
-      restrictions = params[('restrictions_' + (i + 1).to_s).to_sym].nil? ? [] : params[('restrictions_' + (i + 1).to_s).to_sym].split(',');
+      restrictions = params[('restrictions_' + (i + 1).to_s).to_sym].nil? ? [] : params[('restrictions_' + (i + 1).to_s).to_sym].split(',')
 
       if addField('Text', params[('text_' + (i + 1).to_s).to_sym], '', restrictions) == -1 and return
       end
