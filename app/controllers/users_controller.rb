@@ -202,28 +202,33 @@ class UsersController < ApplicationController
       @user.likes.each do |l|
         l.destroy
       end
-      @user.projects.each do |p|
-        p.hidden = true
-        p.save
-      end
       @user.media_objects.each do |m|
         m.destroy
       end
       @user.visualizations.each do |v|
-        v.hidden = true
-        v.save
+        v.destroy
       end
       @user.data_sets.each do |d|
         d.destroy
       end
+      @user.projects.each do |p|
+        if can_delete?(p)
+          p.destroy
+        else
+          # switch ownership to admin if this project contains data sets
+          # not by the user we are deleting
+          p.user_id = 1
+          p.save
+        end
+      end
       @user.tutorials.each do |t|
-        t.hidden = true
-        t.save
+        t.destroy
+      end
+      @user.news.each do |n|
+        n.destroy
       end
 
-      @user.hidden = true
-      @user.email  = "#{SecureRandom.hex}@deleted.org"
-      @user.save!
+      @user.destroy
 
       respond_to do |format|
         format.html { redirect_to users_url }
