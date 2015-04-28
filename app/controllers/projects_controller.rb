@@ -289,17 +289,14 @@ class ProjectsController < ApplicationController
 
     # Add fields based on type
     if params[:hidden_location_count] == '1'
-      if addField('Latitude', 'Latitude', 'deg', []) == -1
-        return
+      if addField('Latitude', 'Latitude', 'deg', []) == -1 and return
       end
-      if addField('Longitude', 'Longitude', 'deg', []) == -1
-        return
+      if addField('Longitude', 'Longitude', 'deg', []) == -1 and return
       end
     end
 
     if params[:hidden_timestamp_count] == '1'
-      if addField('Timestamp', 'Timestamp', '', []) == -1
-        return
+      if addField('Timestamp', 'Timestamp', '', []) == -1 and return
       end
     end
 
@@ -325,10 +322,10 @@ class ProjectsController < ApplicationController
       return
     else
       field  = Field.new(project_id: @project.id,
-                            field_type: get_field_type(fieldType),
-                            name: fieldName,
-                            unit: unit,
-                            restrictions: restrictions)
+                         field_type: get_field_type(fieldType),
+                         name: fieldName,
+                         unit: unit,
+                         restrictions: restrictions)
     end
 
     unless field.save

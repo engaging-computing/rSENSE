@@ -7,12 +7,12 @@ $ ->
     deleted_fields = []
 
     # Names of all hidden inputs that need to be populated before submission
-    input_boxes = ["hidden_num_count", "hidden_text_count", "hidden_timestamp_count",
-                   "hidden_location_count", "hidden_deleted_fields"]
+    input_boxes = ['hidden_num_count', 'hidden_text_count', 'hidden_timestamp_count',
+                   'hidden_location_count', 'hidden_deleted_fields']
 
     # Clear all hidden inputs on load
     for i in [0...5]
-      setValue(input_boxes[i],'')
+      setValue(input_boxes[i], '')
 
     # Submit form on enter
     $('#fields_table').keypress (e) ->
@@ -82,14 +82,12 @@ $ ->
       # fid != 0 when the field exists in the database
       if fid != '0'
         hidden_deleted_fields = $('#hidden_deleted_fields')
-        if row_name == "latitude"
+        if row_name == 'latitude'
           long_fid = parseInt(fid, 10) + 1
-          hidden_deleted_fields.val(hidden_deleted_fields.val() + fid + ',')
-          hidden_deleted_fields.val(hidden_deleted_fields.val() + long_fid + ',')
-        else if row_name == "longitude"
+          hidden_deleted_fields.val(hidden_deleted_fields.val() + fid + ',' + long_fid + ',')
+        else if row_name == 'longitude'
           lat_fid = parseInt(fid, 10) - 1
-          hidden_deleted_fields.val(hidden_deleted_fields.val() + fid + ',')
-          hidden_deleted_fields.val(hidden_deleted_fields.val() + lat_fid + ',')
+          hidden_deleted_fields.val(hidden_deleted_fields.val() + fid + ',' + lat_fid + ',')
         else
           hidden_deleted_fields.val(hidden_deleted_fields.val() + fid + ',')
         callDeleteRow(row_index, row_name, fid)
@@ -118,12 +116,12 @@ addRow = (content) ->
 
 # Calls deleteRow based on type of field
 callDeleteRow = (row_index, row_name, fid) ->
-  if row_name == "timestamp"
+  if row_name == 'timestamp'
     deleteRow(row_index, true, 'timestamp')
-  else if row_name == "latitude"
+  else if row_name == 'latitude'
     deleteRow(row_index, true, 'location')
     deleteRow(row_index, true, 'location')
-  else if row_name == "longitude"
+  else if row_name == 'longitude'
     deleteRow(row_index, true, 'location')
     deleteRow(row_index - 1, true, 'location')
   else

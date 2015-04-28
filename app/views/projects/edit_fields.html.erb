@@ -21,7 +21,7 @@
         </div>
       </div>
       <% if @project.data_sets.count > 0 %>
-        <p style="color: #F00;"><strong>Note:</strong> You cannot delete fields from a project with data.</p>
+        <p><strong>Note:</strong> You cannot delete fields from a project with data.</p>
       <% end %>
     </div>
   </div>
@@ -65,7 +65,7 @@
     <div class="row">
       <div class="col-lg-8 col-lg-offset-2">
         <div style="float: right">
-          <a href='<%= url_for @project %>' class="btn btn-danger"> Cancel </a>
+          <a href='<%= url_for @project %>' class="btn btn-danger">Cancel</a>
           <%= submit_tag "Save and Return", class: 'btn btn-primary', id: 'fields_form_submit' %>
         </div>
       </div>
