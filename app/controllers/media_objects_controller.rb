@@ -1,4 +1,3 @@
-
 class MediaObjectsController < ApplicationController
   include ApplicationHelper
 

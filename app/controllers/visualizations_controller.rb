@@ -188,9 +188,7 @@ class VisualizationsController < ApplicationController
         m.destroy
       end
 
-      @visualization.hidden = true
-      @visualization.user_id = -1
-      @visualization.save
+      @visualization.destroy
 
       respond_to do |format|
         format.html { redirect_to visualizations_url }
