@@ -2,6 +2,7 @@ $ ->
   if namespace.controller is "projects" and namespace.action is "edit_fields"
     # Variables to keep track of number of different fields added
     num_count = text_count = timestamp_count = location_count = 0
+    display_num_count = get_next_name("Number")
 
     # Array of fids of fields to be deleted
     deleted_fields = []
@@ -26,8 +27,9 @@ $ ->
     # "deg" for lat/long, input box for restrictions (text only), delete
     $('#number').click ->
       num_count = num_count + 1
+      display_num_count = display_num_count + 1
       addRow(["""<input class="input-small form-control" type="text"
-                 name="number_#{num_count}" value="Number">""", "Number",
+                 name="number_#{num_count}" value="Number_#{display_num_count}">""", "Number",
                  """<input class="input-small form-control" type="text"
                  name="units_#{num_count}">""", "", """<a href="#" fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
@@ -138,3 +140,11 @@ deleteRow = (row_index, enable, btn) ->
 # to set input box)
 setValue = (id, value) ->
   document.getElementById(id).value = value
+  
+get_next_name = (field_type) ->
+  count = 0
+  table = document.getElementById('fields_table')
+  for i in [1...table.rows.length]
+    if table.rows[i].cells[1].innerHTML == field_type
+      count = count + 1
+  return count
