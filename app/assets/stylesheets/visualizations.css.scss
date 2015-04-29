@@ -103,10 +103,6 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     color: $hint;
   }
 
-  .i {
-    font-style: italic;
-  }
-
   .inline-left {
     display: inline-block;
     float: left;
@@ -419,6 +415,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
           }
 
           .name {
+            width: 90%;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -429,6 +426,8 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
 
             .cpickr-icon {
               margin-left: 2px;
+              height: 20px;
+              width: 20px;
             }
           }
 
@@ -459,6 +458,11 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
           }
         }
       }
+    }
+
+    .vis-tab-icon {
+      height: 32px;
+      width: 32px;
     }
   }
 }

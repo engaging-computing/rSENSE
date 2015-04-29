@@ -215,7 +215,7 @@ $ ->
         super()
         @drawGroupControls(data.textFields)
         @drawXAxisControls()
-        @drawYAxisControls('Y Axis', globals.configs.fieldSelection,
+        @drawYAxisControls(globals.configs.fieldSelection,
           data.normalFields.slice(1), false)
         @drawToolControls()
         @drawRegressionControls()
@@ -361,22 +361,22 @@ $ ->
       ###
       drawToolControls: (elapsedTime = true) ->
         # Configure the tool controls
-        ictx = {}
-        ictx.axes = ["Both", "X", "Y"]
-        ictx.logSafe = data.logSafe
-        ictx.elapsedTime = elapsedTime and data.timeFields.length is 1
-        ictx.modes = [
+        inctx = {}
+        inctx.axes = ["Both", "X", "Y"]
+        inctx.logSafe = data.logSafe
+        inctx.elapsedTime = elapsedTime and data.timeFields.length is 1
+        inctx.modes = [
           { mode: @SYMBOLS_LINES_MODE, text: "Symbols and Lines" }
           { mode: @LINES_MODE,         text: "Lines Only" }
           { mode: @SYMBOLS_MODE,       text: "Symbols Only" }
         ]
 
         # Draw the Tool controls
-        octx = {}
-        octx.id = 'tools-ctrls'
-        octx.title = 'Tools'
-        octx.body = HandlebarsTemplates[hbCtrl('scatter-tools')](ictx)
-        tools = HandlebarsTemplates[hbCtrl('body')](octx)
+        outctx = {}
+        outctx.id = 'tools-ctrls'
+        outctx.title = 'Tools'
+        outctx.body = HandlebarsTemplates[hbCtrl('scatter-tools')](inctx)
+        tools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append tools
 
         # Check off the right boxes
@@ -515,7 +515,7 @@ $ ->
         regressions = ['Linear', 'Quadratic', 'Cubic', 'Exponential',
             'Logarithmic', 'Automatic']
 
-        ictx =
+        inctx =
           xAxis: data.fields[@configs.xAxis].fieldName
           yFields:
             for f in globals.configs.fieldSelection
@@ -523,11 +523,11 @@ $ ->
               id: f
           regressions: regressions
 
-        octx = {}
-        octx.id = 'regression-ctrls'
-        octx.title = 'Analysis Tools'
-        octx.body = HandlebarsTemplates[hbCtrl('regr')](ictx)
-        tools = HandlebarsTemplates[hbCtrl('body')](octx)
+        outctx = {}
+        outctx.id = 'regression-ctrls'
+        outctx.title = 'Analysis Tools'
+        outctx.body = HandlebarsTemplates[hbCtrl('regr')](inctx)
+        tools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append tools
 
         # Initialize and track the status of this control panel

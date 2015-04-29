@@ -254,27 +254,27 @@ $ ->
 
       buildLegendSeries: ->
         count = -1
-        for f, fi in data.fields when fi in data.normalFields
+        for f, i in data.fields when i in data.normalFields
           count += 1
           dummy =
             data: []
             color: '#000'
-            visible: @configs.displayField is fi
+            visible: @configs.displayField is i
             name: f.fieldName
             type: 'area'
             xAxis: 1
-            legendIndex: fi
+            legendIndex: i
 
       drawToolControls: ->
-        ictx =
+        inctx =
           binSize: @configs.binSize
 
-        octx =
+        outctx =
           id: 'tools-ctrls'
           title: 'Tools'
-          body: HandlebarsTemplates[hbCtrl('histogram-tools')](ictx)
+          body: HandlebarsTemplates[hbCtrl('histogram-tools')](inctx)
 
-        tools = HandlebarsTemplates[hbCtrl('body')](octx)
+        tools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append(tools)
 
         # Initialize and track the status of this control panel

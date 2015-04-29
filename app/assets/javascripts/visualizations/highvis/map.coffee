@@ -37,10 +37,8 @@ $ ->
         @HEATMAP_NONE = -2
         @HEATMAP_MARKERS = -1
 
-        # TODO write migration for visibles
         @configs.visibleMarkers ?= true
         @configs.visibleLines ?= false
-
         @configs.visibleClusters ?= data.dataPoints.length > 100
         @configs.heatmapSelection ?= @HEATMAP_NONE
         @configs.mapTypeId ?= google.maps.MapTypeId.ROADMAP
@@ -168,8 +166,8 @@ $ ->
             latlng = new google.maps.LatLng(lat, lon)
 
             # Put aside line info if necessary
-            if @timeLines? and dataPoint[data.timeFields[0]] isnt null and
-            not (isNaN dataPoint[data.timeFields[0]])
+            isNum = not isNaN(dataPoint[data.timeFields[0]])
+            if @timeLines? and dataPoint[data.timeFields[0]]? and isNum
               @timeLines[groupIndex].push
                 time: dataPoint[data.timeFields[0]]
                 latlng: latlng
@@ -219,16 +217,16 @@ $ ->
                           </div> </br>"
 
             label += "<table>"
-            for f, fi in data.fields when dataPoint[fi] isnt null
+            for f, i in data.fields when dataPoint[i] isnt null
               dat = if Number(f.typeID) is data.types.TIME
-                globals.dateFormatter(dataPoint[fi])
+                globals.dateFormatter(dataPoint[i])
               else
-                dataPoint[fi]
+                dataPoint[i]
 
               label += "<tr><td>#{f.fieldName}</td>"
               label += "<td><strong>#{dat}</strong></td>"
               unit = fieldUnit(f, false)
-              if unit? and fi > 2
+              if unit? and i > 2
                 label += "<td>#{unit}</td></tr>"
               else
                 label += "</tr>"
@@ -422,7 +420,7 @@ $ ->
         @drawSaveControls()
 
       drawToolControls: ->
-        ictx =
+        inctx =
           radius: @configs.heatmapRadius
           displayMarkers:
             label: 'Display Markers'
@@ -451,17 +449,17 @@ $ ->
           ]
 
         for i in data.normalFields
-          ictx.heatmaps.push
+          inctx.heatmaps.push
             value: Number(i)
             logId: 'hmap-field-' + Number(i)
             label: data.fields[i].fieldName
 
-        octx =
+        outctx =
           id: 'tools-ctrls'
           title: 'Tools'
-          body: HandlebarsTemplates[hbCtrl('map-tools')](ictx)
+          body: HandlebarsTemplates[hbCtrl('map-tools')](inctx)
 
-        tools = HandlebarsTemplates[hbCtrl('body')](octx)
+        tools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append(tools)
 
         # Initialize and track the status of this control panel
@@ -596,12 +594,12 @@ $ ->
           lat = lng = null
 
           # Scan for lat and long
-          for field, fieldIndex in data.fields
-            if (Number field.typeID) in data.types.LOCATION
-              if (Number field.typeID) is data.units.LOCATION.LATITUDE
-                lat = row[fieldIndex]
-              else if (Number field.typeID) is data.units.LOCATION.LONGITUDE
-                lng = row[fieldIndex]
+          for f, i in data.fields
+            if Number(f.typeID) in data.types.LOCATION
+              if Number(f.typeID) is data.units.LOCATION.LATITUDE
+                lat = row[i]
+              else
+                lng = row[i]
 
           # If points are valid, check if they are visible
           if (lat is null) or (lng is null)

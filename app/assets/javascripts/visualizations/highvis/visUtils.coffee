@@ -63,21 +63,22 @@ $ ->
     Makes a title with appropriate units for a field
     ###
     window.fieldTitle = (field, parens = true) ->
-      if field.unitName isnt "" and field.unitName isnt null
-        if parens is true
-          "#{field.fieldName} (#{field.unitName})"
+      unless field?
+        return
+
+      if field.unitName? and field.unitName isnt ""
+        if parens
+          return "#{field.fieldName} (#{field.unitName})"
         else
-          "#{field.fieldName} #{field.unitName}"
-      else
-        field.fieldName
+          return "#{field.fieldName} #{field.unitName}"
+
+      return field.fieldName
 
     ###
     Returns the units for a field
     ###
     window.fieldUnit = (field, parens = true) ->
-      unless field?
-        console.trace()
-      if field.unitName isnt null
+      if field? and field.unitName?
         if parens is true then "(#{field.unitName})" else "#{field.unitName}"
 
     ###

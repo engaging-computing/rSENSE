@@ -118,9 +118,9 @@ $ ->
       A wrapper for making y-axis controls
       See drawAxisControls for more detail
       ###
-      drawYAxisControls: (title, selFields, allFields, radio, iniRadio = 0,
+      drawYAxisControls: (selFields, allFields, radio, iniRadio = 0,
         handler = ->) ->
-        @drawAxisControls('y-axis', title, selFields, allFields, radio,
+        @drawAxisControls('y-axis', 'Y Axis', selFields, allFields, radio,
           iniRadio, handler)
 
         # Initialize and track the status of this control panel
@@ -147,8 +147,8 @@ $ ->
         if radio and allFields.length <= 1 then return
 
         # Configure the y-axis controls
-        ictx = {}
-        ictx.fields = for f in allFields
+        inctx = {}
+        inctx.fields = for f in allFields
           id:    id + '-field-' + f
           label: fieldTitle(data.fields[f])
           value: f
@@ -156,17 +156,17 @@ $ ->
           name:  id
         template =  if radio then 'axis-radio' else 'axis-check'
         unless radio
-          ictx.checkall =
+          inctx.checkall =
             id:    'ckall-' + id
             label: '#Select All'
             logId: 'check-all-' + id
 
         # Draw the y-axis controls
-        octx = {}
-        octx.id = id + '-ctrls'
-        octx.title = title
-        octx.body = HandlebarsTemplates[hbCtrl(template)](ictx)
-        axisTools = HandlebarsTemplates[hbCtrl('body')](octx)
+        outctx = {}
+        outctx.id = id + '-ctrls'
+        outctx.title = title
+        outctx.body = HandlebarsTemplates[hbCtrl(template)](inctx)
+        axisTools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append axisTools
 
         # Initialize checked and make y axis checkbox/radio handler
@@ -231,8 +231,9 @@ $ ->
 
       ###
       Default handler for radio button yAxis events
-        selected  The new value for the y axis
-        selFields A reference to the object responsible for tracking y selection
+        selected     The new value for the y axis
+        selFields    A reference to the object responsible for tracking
+                     y selection
       ###
       yAxisRadioHandler: (selected, selFields) =>
         @configs.displayField = selected
@@ -258,7 +259,7 @@ $ ->
             label =
               if g isnt '' then g
               else "No #{data.fields[globals.configs.groupById].fieldName}"
-            style:   "color: #{color}; width: 90%"
+            style:   "color: #{color};"
             value:   i
             label:   label
             name:    'grouping'
@@ -269,7 +270,7 @@ $ ->
               color: color
               icon:  '<%= image_path('color-wheel.png') %>'
 
-        ictx =
+        inctx =
           groupByFields:
             for f in groupByFields
               value: f
@@ -281,12 +282,12 @@ $ ->
             logId:   'check-all-group-by'
           groups:    groupList
 
-        octx =
+        outctx =
           id: 'group-ctrls'
           title: 'Groups'
-          body: HandlebarsTemplates[hbCtrl('groups')](ictx)
+          body: HandlebarsTemplates[hbCtrl('groups')](inctx)
 
-        tools = HandlebarsTemplates[hbCtrl('body')](octx)
+        tools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append tools
 
         # Initialize and track the status of this control panel
@@ -413,23 +414,23 @@ $ ->
       Bar Charts
       ###
       drawToolControls: (sortBy = false, logYAxis = false) ->
-        ictx = {}
+        inctx = {}
 
         # Populate sort fields
         if sortBy
-          ictx.sortFields =
+          inctx.sortFields =
             for id in data.normalFields
               name: fieldTitle(data.fields[id])
               logId: 'sort-by-' + 'id'
               value: id
 
-          ictx.sortFields.unshift
+          inctx.sortFields.unshift
             name: 'Group Name'
             logId: 'sort-by-' + @SORT_DEFAULT
             value: @SORT_DEFAULT
 
-        # Note the analysis types
-        ictx.analysisTypes =
+        # Analysis Types
+        inctx.analysisTypes =
           for name, i in @analysisTypeNames
             value: i
             id:    'analysis-type-' + i
@@ -440,17 +441,17 @@ $ ->
         # Logarithmic Y Axis
         if logYAxis
           id = 'log-y-axis'
-          ictx.logYAxis =
+          inctx.logYAxis =
             id:    id
             logId: 'logarithmic-y-axis'
             label: 'Logarithmic Y Axis'
 
-        octx =
+        outctx =
           id: 'tools-ctrls'
           title: 'Tools'
-          body: HandlebarsTemplates[hbCtrl('base-tools')](ictx)
+          body: HandlebarsTemplates[hbCtrl('base-tools')](inctx)
 
-        tools = HandlebarsTemplates[hbCtrl('body')](octx)
+        tools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append tools
 
         # Initialize and track the status of this control panel
