@@ -32,7 +32,7 @@ $ ->
                  name="units_#{num_count}">""", "", """<a href="#" fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
 
-    $( '#text' ).click ->
+    $('#text').click ->
       text_count = text_count + 1
       addRow(["""<input class="input-small form-control" type="text"
                  name="text_#{text_count}" value="Text">""", "Text", "",
