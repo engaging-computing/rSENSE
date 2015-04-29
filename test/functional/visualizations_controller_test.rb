@@ -83,7 +83,7 @@ class VisualizationsControllerTest < ActionController::TestCase
   end
 
   test 'should destroy visualization' do
-    assert_difference('Visualization.count', 0) do
+    assert_difference('Visualization.count', -1) do
       delete :destroy, { id: @vis2 },  user_id: @kate.id
     end
 
