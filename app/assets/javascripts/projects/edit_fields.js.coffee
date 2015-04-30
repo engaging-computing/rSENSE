@@ -2,7 +2,8 @@ $ ->
   if namespace.controller is "projects" and namespace.action is "edit_fields"
     # Variables to keep track of number of different fields added
     num_count = text_count = timestamp_count = location_count = 0
-    display_num_count = get_next_name("Number")
+    display_num_count = get_next_name('Number')
+    display_text_count = get_next_name('Text')
 
     # Array of fids of fields to be deleted
     deleted_fields = []
@@ -36,8 +37,9 @@ $ ->
 
     $('#text').click ->
       text_count = text_count + 1
+      display_text_count = display_text_count + 1
       addRow(["""<input class="input-small form-control" type="text"
-                 name="text_#{text_count}" value="Text">""", "Text", "",
+                 name="text_#{text_count}" value="Text_#{display_text_count}">""", "Text", "",
               """<input class="input-small form-control" type="text"
                  name="restrictions_#{text_count}">""", """<a href="#" fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
@@ -142,9 +144,11 @@ setValue = (id, value) ->
   document.getElementById(id).value = value
   
 get_next_name = (field_type) ->
-  count = 0
+  highest = 0
   table = document.getElementById('fields_table')
   for i in [1...table.rows.length]
     if table.rows[i].cells[1].innerHTML == field_type
-      count = count + 1
-  return count
+      index = parseInt(((table.rows[i].cells[0].innerHTML.split(' '))[3].split('_'))[1].split('\"'))
+      if index > highest
+        highest = index
+  return highest
