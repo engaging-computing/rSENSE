@@ -86,11 +86,9 @@ $ ->
       if fid != '0'
         hidden_deleted_fields = $('#hidden_deleted_fields')
         if row_name == 'latitude'
-          long_fid = parseInt(fid) + 1
-          hidden_deleted_fields.val(hidden_deleted_fields.val() + fid + ',' + long_fid + ',')
+          hidden_deleted_fields.val(hidden_deleted_fields.val() + fid + ',' + (parseInt(fid) + 1) + ',')
         else if row_name == 'longitude'
-          lat_fid = parseInt(fid) - 1
-          hidden_deleted_fields.val(hidden_deleted_fields.val() + fid + ',' + lat_fid + ',')
+          hidden_deleted_fields.val(hidden_deleted_fields.val() + fid + ',' + (parseInt(fid) - 1) + ',')
         else
           hidden_deleted_fields.val(hidden_deleted_fields.val() + fid + ',')
         callDeleteRow(row_index, row_name, fid)
