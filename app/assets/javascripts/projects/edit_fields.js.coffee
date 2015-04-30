@@ -140,7 +140,7 @@ deleteRow = (row_index, enable, btn) ->
 setValue = (id, value) ->
   document.getElementById(id).value = value
 
-# Returns the index for the name of a number or text field  
+# Returns the index for the name of a number or text field
 get_next_name = (field_type) ->
   highest = 0
   table = document.getElementById('fields_table')
