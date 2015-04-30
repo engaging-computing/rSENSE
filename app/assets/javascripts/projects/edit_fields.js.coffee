@@ -1,12 +1,11 @@
 $ ->
   if namespace.controller is "projects" and namespace.action is "edit_fields"
-    # Variables to keep track of number of different fields added
+    # Keeps track of number of different fields added
     num_count = text_count = timestamp_count = location_count = 0
+    
+    # For the number displayed in the input for numbers/text e.g. Number_1
     display_num_count = get_next_name('Number')
     display_text_count = get_next_name('Text')
-
-    # Array of fids of fields to be deleted
-    deleted_fields = []
 
     # Names of all hidden inputs that need to be populated before submission
     input_boxes = ['hidden_num_count', 'hidden_text_count', 'hidden_timestamp_count',
@@ -87,10 +86,10 @@ $ ->
       if fid != '0'
         hidden_deleted_fields = $('#hidden_deleted_fields')
         if row_name == 'latitude'
-          long_fid = parseInt(fid, 10) + 1
+          long_fid = parseInt(fid) + 1
           hidden_deleted_fields.val(hidden_deleted_fields.val() + fid + ',' + long_fid + ',')
         else if row_name == 'longitude'
-          lat_fid = parseInt(fid, 10) - 1
+          lat_fid = parseInt(fid) - 1
           hidden_deleted_fields.val(hidden_deleted_fields.val() + fid + ',' + lat_fid + ',')
         else
           hidden_deleted_fields.val(hidden_deleted_fields.val() + fid + ',')
@@ -142,7 +141,8 @@ deleteRow = (row_index, enable, btn) ->
 # to set input box)
 setValue = (id, value) ->
   document.getElementById(id).value = value
-  
+
+# Returns the index for the name of a number or text field  
 get_next_name = (field_type) ->
   highest = 0
   table = document.getElementById('fields_table')
