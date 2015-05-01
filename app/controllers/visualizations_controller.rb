@@ -45,9 +45,15 @@ class VisualizationsController < ApplicationController
   def show
     @visualization = Visualization.find(params[:id])
     @project = Project.find_by_id(@visualization.project_id)
+    tmp = JSON.parse(@visualization.data)
 
     # The finalized data object
-    @data = { savedData: @visualization.data, savedGlobals: @visualization.globals }
+    @data = {
+      savedData:    @visualization.data,
+      savedGlobals: @visualization.globals,
+      defaultVis:   tmp['defaultVis'],
+      relVis:       tmp['relVis']
+    }
 
     recur = params.key?(:recur) ? params[:recur] == 'true' : false
 
@@ -276,6 +282,7 @@ class VisualizationsController < ApplicationController
 
         format_data.push arr
       end
+
       i += 1
     end
 
@@ -284,6 +291,8 @@ class VisualizationsController < ApplicationController
     @project.fields.each do |field|
       field_count[field.field_type] += 1
     end
+
+    rel_vis = []
 
     # Determine which visualizations are relevant
     rel_vis = get_rel_vis(field_count, format_data, has_pics)
@@ -321,7 +330,7 @@ class VisualizationsController < ApplicationController
           options[:isEmbed] = 1
           options[:startCollapsed] = 1
           @globals = { options: options }
-          render 'embed', layout: 'embedded'
+          render 'embedProjVis', layout: 'embedded'
         else
           @layout_wide = true
           render

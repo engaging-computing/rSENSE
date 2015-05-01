@@ -1,0 +1,28 @@
+{{#if sortFields}}
+  <div class="vis-ctrl-sublock">
+    <label for="sort-by">Sort by:</label>
+    <select id="sort-by" class="form-control">
+      {{#each sortFields}}
+        <option value="{{value}}" data-log-id="{{logId}}">{{name}}</option>
+      {{/each}}
+    </select>
+  </div>
+{{/if}}
+{{#if analysisTypes}}
+  <div class="vis-ctrl-subblock">
+    <h4 class="vis-ctrl-subtitle">Analysis Type</h4>
+    <div>
+      {{#each analysisTypes}}
+        {{> visualizations/controls/_radio this}}
+      {{/each}}
+    </div>
+  </div>
+{{/if}}
+{{#if logYAxis}}
+  <div class="vis-ctrl-subblock">
+    <h4 class="vis-ctrl-subtitle">Other</h4>
+    <div>
+      {{> visualizations/controls/_checkbox logYAxis}}
+    </div>
+  </div>
+{{/if}}

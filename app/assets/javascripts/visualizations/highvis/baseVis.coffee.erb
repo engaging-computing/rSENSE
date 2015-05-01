@@ -27,9 +27,8 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and
-  namespace.action in ["displayVis", "embedVis", "show"]
-
+  if namespace.controller is 'visualizations' and
+  namespace.action in ['displayVis', 'embedVis', 'show']
     window.globals ?= {}
     window.globals.configs ?= {}
 
@@ -46,11 +45,14 @@ $ ->
 
       SORT_DEFAULT:          -1
 
-      analysisTypeNames: ["Total","Max","Min","Mean","Median","Row Count"]
+      analysisTypeNames: ["Total", "Maximum", "Mininum", "Mean (Average)",
+        "Median", "Row Count"]
+
       ###
       Start sequence used by runtime
       ###
       start: ->
+        $('#' + @canvas).show()
         @drawControls()
         @update()
 
@@ -79,7 +81,7 @@ $ ->
       Should destroy the chart, hide its canvas and remove controls.
       ###
       end: ->
-        ($ '#' + @canvas).hide()
+        $('#' + @canvas).hide()
 
       ###
       Draws controls
@@ -94,7 +96,7 @@ $ ->
       Unbinds control handlers and clears the HTML elements.
       ###
       clearControls: ->
-        ($ '#controldiv').empty()
+        $('#vis-ctrls').empty()
 
       ###
       Calculate data to be displayed subject to analysis type
@@ -113,279 +115,259 @@ $ ->
         gData
 
       ###
-      Draws y axis controls
-      This includes a series of checkboxes or radio buttons for selecting
-      the active y axis field(s).
+      A wrapper for making y-axis controls
+      See drawAxisControls for more detail
       ###
-      drawYAxisControls: (radio = false, enableDataPoint = false) ->
-        # Populate choices
-        yFields =
-          if enableDataPoint then data.normalFields
-          else data.normalFields[1..data.normalFields.length]
+      drawYAxisControls: (selFields, allFields, radio, name = 'Y Axis',
+        iniRadio = 0, handler = ->) ->
+        @drawAxisControls('y-axis', name, selFields, allFields, radio,
+          iniRadio, handler)
 
-        checked = false
-        controls = '<div id="yAxisControl" class="vis_controls">'
+        # Initialize and track the status of this control panel
+        globals.configs.yAxisOpen ?= false
+        initCtrlPanel('y-axis-ctrls', 'yAxisOpen')
 
+      ###
+      Draws axis controls
+      This includes a series of checkboxes or radio buttons for selecting
+      the active axis field(s).
+        id         Identifier prefix for the control panel
+        title      Title for the control panel
+        selFields  Object that tracks the current field selection
+        allFields  Listing of valid fields
+        radio      Boolean to draw radio buttons instead of checkboxes
+        iniRadio   Initial value of radio if radio == true (optional)
+        handler    A function of two parameters to handle selection events
+                   Takes the form: (selected, selFields) ->
+      ###
+      drawAxisControls: (id, title, selFields, allFields, radio, iniRadio = 0,
+        handler = ->) ->
+        # If there is only one option, then no radio button interaction is
+        # possible
+        if radio and allFields.length <= 1 then return
+
+        # Configure the y-axis controls
+        inctx = {}
+        inctx.fields = for f in allFields
+          id:    id + '-field-' + f
+          label: fieldTitle(data.fields[f])
+          value: f
+          logId: id + '-field-' + f
+          name:  id
+        template =  if radio then 'axis-radio' else 'axis-check'
+        unless radio
+          inctx.checkall =
+            id:    'ckall-' + id
+            label: '#Select All'
+            logId: 'check-all-' + id
+
+        # Draw the y-axis controls
+        outctx = {}
+        outctx.id = id + '-ctrls'
+        outctx.title = title
+        outctx.body = HandlebarsTemplates[hbCtrl(template)](inctx)
+        axisTools = HandlebarsTemplates[hbCtrl('body')](outctx)
+        $('#vis-ctrls').append axisTools
+
+        # Initialize checked and make y axis checkbox/radio handler
         if radio
-          controls += "<h3 class='clean_shrink'><a href='#'>Field:</a></h3>"
-          controls += "<div class='outer_control_div'>"
-        else
-          controls += "<h3 class='clean_shrink'><a href='#'>Y Axis:</a></h3>"
-          controls += "<div class='outer_control_div'>"
-          controls +=
-            "<div class='inner_control_div'>
-              <div class='checkbox all-y-fields'>
-                <label class='all-y'>
-                  <input id='select-all-y' type='checkbox'> #Select All </input>
-                </label>
-              </div>
-            </div>"
-          if yFields.length == globals.configs.fieldSelection.length
-            checked = true
+          # Set the current display field
+          query = "input[name='#{id}'][value='#{iniRadio}']"
+          $(query).prop('checked', 'true')
 
-        for f in yFields
-          controls += "<div class='inner_control_div' >"
+          # Record any changes to the display field
+          $("input[name='#{id}']").click (e) =>
+            index = Number(e.target.value)
+            query = "input[name='#{id}'][value='#{index}']"
+            $(query).prop('checked', 'true')
 
-          if radio
-            controls +=
-              """
-              <div class='radio'><label><input class='y_axis_input'
-               name='y_axis_group' type='radio' value='#{f}'
-               #{if (Number f) is @configs.displayField then "checked" else ""}>
-               #{data.fields[f].fieldName}</label></div>
-              """
-          else
-            controls +=
-              """
-              <div class='checkbox'><label><input class='y_axis_input'
-               type='checkbox' value='#{f}'
-               #{if (Number f) in globals.configs.fieldSelection then "checked" else ""}
-               />#{data.fields[f].fieldName}</label></div>
-              """
-          controls += "</div>"
-
-        controls += '</div></div>'
-
-        # Write HTML
-        ($ '#controldiv').append controls
-
-        if checked
-          ($ '#select-all-y').prop('checked', true)
-
-        # Make y axis checkbox/radio handler
-        if radio
-          ($ '.y_axis_input').click (e) =>
-            @configs.displayField = Number e.target.value
-            globals.configs.fieldSelection = [@configs.displayField]
-            @delayedUpdate()
-        else
-          ($ '.y_axis_input').click (e) =>
-            index = Number e.target.value
-            if index in globals.configs.fieldSelection
-              arrayRemove(globals.configs.fieldSelection, index)
-            else
-              globals.configs.fieldSelection.push(index)
-            if yFields.length == globals.configs.fieldSelection.length
-              ($ '#select-all-y').prop('checked', true)
-            else
-              ($ '#select-all-y').prop('checked', false)
-
+            handler(index, selFields)
             @delayedUpdate()
 
-        # Set up accordion
-        globals.configs.yAxisOpen ?= 0
+          return
 
-        ($ '#yAxisControl').accordion
-          collapsible:true
-          active:globals.configs.yAxisOpen
+        # Initialize
+        updateCheckAll = ->
+          numFields = allFields.length
+          numSel = selFields.length
+          indeterminate = numSel > 0 and numSel < numFields
+          $('#ckbx-ckall-' + id).prop('checked', numSel is numFields)
+          $('#ckbx-ckall-' + id).prop('indeterminate', indeterminate)
 
-        ($ '#yAxisControl > h3').click ->
-          globals.configs.yAxisOpen = (globals.configs.yAxisOpen + 1) % 2
+        # Update the check all box
+        updateCheckAll()
 
-        ($ '#select-all-y').click =>
-          yFields =
-            if enableDataPoint then data.normalFields
-            else data.normalFields[1..data.normalFields.length]
+        # Else initialize the checkboxes to the field selection
+        $("input[name='#{id}']").each (key, elem) ->
+          if Number(elem.value) in selFields then $(elem).prop('checked', true)
 
-          if yFields.length != globals.configs.fieldSelection.length
-            ($ '#yAxisControl').find('.y_axis_input').each (i,j) ->
-              ($ j).prop('checked', true)
-            globals.configs.fieldSelection = yFields
-          else
-            for element in data.normalFields
-              arrayRemove(globals.configs.fieldSelection, element)
-            ($ '#yAxisControl').find('.y_axis_input').each (i,j) ->
-              ($ j).prop('checked', false)
+        # Set handler for the field checkboxes
+        $("input[name='#{id}']").click (e) =>
+          index = Number(e.target.value)
+          if index in selFields then arrayRemove(selFields, index)
+          else selFields.push(index)
+
+          updateCheckAll()
+          handler(index, selFields)
+          @delayedUpdate()
+
+        # Set handler for the check all box
+        $('#ckbx-ckall-' + id).click =>
+          checked = selFields.length isnt allFields.length
+
+          # Empty the array without changing the memory address
+          selFields.splice(0, selFields.length)
+
+          # Repopulate the array if necessary
+          if checked then selFields.push(f) for f in allFields
+
+          $("input[name='#{id}']").each (key, elem) ->
+            $(elem).prop('checked', checked)
+
+          updateCheckAll()
+          selected = if checked then allFields else []
+          handler(selected, selFields)
           @delayedUpdate()
 
       ###
-      Draws group selection controls
-      This includes a series of checkboxes and a selector for the grouping field.
-      The checkbox text color should correspond to the graph color.
+      Default handler for radio button yAxis events
+        selected     The new value for the y axis
+        selFields    A reference to the object responsible for tracking
+                     y selection
       ###
-      drawGroupControls: (startOnGroup = false, radio = false, excludeNameAndCombined = false) ->
+      yAxisRadioHandler: (selected, selFields) =>
+        @configs.displayField = selected
 
-        controls = '<div id="groupControl" class="vis_controls">'
+        # Repopulate the selection array without changing memory address
+        if selFields
+          selFields.splice(0, selFields.length)
+          selFields.push(selected)
 
-        controls += "<h3 class='clean_shrink'><a href='#'>Groups:</a></h3>"
-
-        controls += "<div class='outer_control_div'>"
-
-        # Add grouping selector
-        controls += '<div class="inner_control_div"> Group By: '
-        controls += '<select id="groupSelector" class="form-control">'
-
-        if data.textFields.length > 2 and excludeNameAndCombined
-          yFields = data.textFields[2..data.textFields.length]
-        else
-          yFields = data.textFields
-
-        for fieldIndex in yFields
-          sel = if fieldIndex is globals.configs.groupById then 'selected' else ''
-          controls += "<option value='#{Number fieldIndex}' #{sel}>#{data.fields[fieldIndex].fieldName}</option>"
-
-        controls += "</select></div>"
-
-        controls += "<table>"
-
-        # Populate choices
+      ###
+      Draws group selection controls. This includes a series of checkboxes and a
+      selector for the grouping field. The checkbox text color should correspond
+      to the graph color.
+        groupByFields    Array of field indices you want to sort on
+        startOnGroup     Call start() after grouping
+      ###
+      drawGroupControls: (groupByFields, startOnGroup = false) ->
         counter = 0
-        if data.groups.length > 1
-          controls += "<tr><td>"
-          controls += "<div class='inner_control_div'>"
+        groupList = undefined
+        groupList =
+          for g, i in data.groups
+            color = globals.getColor(i)
+            label =
+              if g isnt '' then g
+              else "No #{data.fields[globals.configs.groupById].fieldName}"
+            style:   "color: #{color};"
+            value:   i
+            label:   label
+            name:    'grouping'
+            id:      'group-' + i
+            logId:   'group-' + i
+            picker:
+              type:  'color'
+              color: color
+              icon:  '<%= image_path('color-wheel.png') %>'
 
-          if not radio
-            controls += """<div class='checkbox'><label><input id='checkbox_all'
-              class='group_input_all' type='checkbox' value='#{gIndex}'
-              #{if data.groupSelection.length == data.groups.length then "checked" else ""}>
-              #Check All</label></div>"""
-            controls += "</td><td></td></tr>"
+        inctx =
+          groupByFields:
+            for f in groupByFields
+              value: f
+              name:  data.fields[f].fieldName
+              logId: 'group-by-field-' + f
+          checkall:
+            id:      'ckall-grouping'
+            label:   '#Select All'
+            logId:   'check-all-group-by'
+          groups:    groupList
 
-        for group, gIndex in data.groups
-          color_id = counter % globals.configs.colors.length
-          color = globals.configs.colors[color_id]
-          controls += "<tr><td class='label-dataset-name'>"
-          controls += "<div class='inner_control_div' id='label-color-#{color_id}'"
-          controls += "style=\"color:#{color};\">"
+        outctx =
+          id: 'group-ctrls'
+          title: 'Groups'
+          body: HandlebarsTemplates[hbCtrl('groups')](inctx)
 
-          if radio
-            # Radio groups can only have one group selected
-            groupSelection = [data.groupSelection.reduce (a, b) -> Math.min(a,b)]
-            data.groupSelection = groupSelection
+        tools = HandlebarsTemplates[hbCtrl('body')](outctx)
+        $('#vis-ctrls').append tools
 
-            selectedGroup = data.groupSelection[0]
-            controls += "<div class='radio'><label><input class='group_input' type='radio' name='groups'"
-            controls += " value='#{gIndex}' "
-            controls += "#{if (Number gIndex) is selectedGroup then "checked" else ""}/>"
-            if group isnt ''
-              controls += "#{group}</label>"
-            else
-              controls +="No #{data.fields[globals.configs.groupById].fieldName}</label>"
-          else
-            controls += "<div class='checkbox'><label><input class='group_input' type='checkbox'"
-            controls += " value='#{gIndex}' "
-            controls += "#{if (Number gIndex) in data.groupSelection then "checked" else ""}/>"
-            if group isnt ''
-              controls += "#{group}</label>"
-            else
-              controls +="No #{data.fields[globals.configs.groupById].fieldName}</label>"
-          controls += "</div></div>"
-          controls += "</td><td class='label-dataset-color'>"
-          controls += """<a href="javascript:void;" class="color-picker" data-color="#{color}" data-color-id="#{color_id}">
-                         <img height="20px" width="20px" src="<%= image_path('color-wheel.png') %>"></a>"""
-          controls += "</td></tr>"
-          counter += 1
+        # Initialize and track the status of this control panel
+        globals.configs.groupOpen ?= false
+        initCtrlPanel('group-ctrls', 'groupOpen')
 
-        controls += "</table>"
-
-        controls += '</div></div>'
-
-        # Write HTML
-        ($ '#controldiv').append controls
-
-        ($ '.color-picker').each (_, cpicker) =>
-          cid = $(cpicker).attr 'data-color-id'
+        $('.color-picker').each (_, cpicker) =>
+          cid = $(cpicker).data('color-id')
           $(cpicker).colorpicker 'create',
             outputType: 'hex'
             onOpen: () ->
-              $("#label-color-#{cid}").parent().parent().css 'background-color', '#EEE'
+              $("#label-color-#{cid}").parent().parent().css('background-color',
+                '#EEE')
             onClose: () ->
-              $("#label-color-#{cid}").parent().parent().css 'background-color', '#FFF'
+              $("#label-color-#{cid}").parent().parent().css('background-color',
+                '#FFF')
             onSubmit: (color) =>
-              globals.configs.colors[cid] = color
+              globals.setColor(cid, color)
               $("#label-color-#{cid}").css 'color', color
               @delayedUpdate()
               setTimeout (() => @start()), 1
-          ($ cpicker).colorpicker 'setcolor', globals.configs.colors[cid]
+          $(cpicker).colorpicker 'setcolor', globals.getColor(cid)
 
-        # Make group select handler
-        ($ '#groupSelector').change (e) =>
-          element = e.target or e.srcElement
-          data.setGroupIndex (Number element.value)
+        $('#group-by').val(globals.configs.groupById)
+        $('#group-by').change (e) =>
+          gid =
+            if e.target then Number(e.target.value)
+            else Number(e.srcElement.value)
 
-          globals.configs.groupById = Number(element.value)
-
+          data.setGroupIndex(gid)
+          globals.configs.groupById = gid
           data.groupSelection = for vals, keys in data.groups
-            Number keys
+            Number(keys)
 
-          if startOnGroup
-            @start()
-          else
-            @delayedUpdate()
+          if startOnGroup then @start()
+          else @delayedUpdate()
 
           @drawControls()
 
-        if radio
-          # Make group checkbox handler
-          ($ '.group_input').click (e) =>
-            ($ '.group_input').each () ->
-              if @checked
-                data.groupSelection = [Number @value]
-            @delayedUpdate()
+        # Initialize
+        updateCheckAll = ->
+          numGroups = data.groups.length
+          numSel = data.groupSelection.length
+          indeterminate = numSel > 0 and numSel < numGroups
+          $('#ckbx-ckall-grouping').prop('checked', numSel is numGroups)
+          $('#ckbx-ckall-grouping').prop('indeterminate', indeterminate)
 
-        else
-          # Make group checkbox handler
-          ($ '.group_input').click (e) =>
-            selection = []
-            ($ '.group_input').each () ->
-              if @checked
-                selection.push Number @value
-              else
-            data.groupSelection = selection
+        # Update the check all box
+        updateCheckAll()
 
-            if data.groupSelection.length == data.groups.length
-              ($ '#checkbox_all').prop("checked", true)
-              ($ '#checkbox_all').prop("indeterminate", false)
-            else if data.groupSelection.length > 0
-              ($ '#checkbox_all').prop("checked", false)
-              ($ '#checkbox_all').prop("indeterminate", true)
-            else
-              ($ '#checkbox_all').prop("checked", false)
-              ($ '#checkbox_all').prop("indeterminate", false)
+        # Initialize the checkboxes to the group selection
+        $('input[name="grouping"]').each (key, elem) ->
+          if Number(elem.value) in data.groupSelection
+            $(elem).prop('checked', true)
 
-            @delayedUpdate()
+        # Set handler for the group checkboxes
+        $('input[name="grouping"]').click (e) =>
+          index = Number(e.target.value)
+          if index in data.groupSelection
+            arrayRemove(data.groupSelection, index)
+          else data.groupSelection.push(index)
 
-          # Make group checkbox for all groups
-          ($ '.group_input_all').click (e) =>
-            if e.target.checked
-              data.groupSelection = for vals, keys in data.groups
-                Number keys
-              ($ '.group_input').prop 'checked', true
-            else
-              data.groupSelection = []
-              ($ '.group_input').prop 'checked', false
+          updateCheckAll()
+          @delayedUpdate()
 
-            @delayedUpdate()
+        # Set handler for the check all box
+        $('#ckbx-ckall-grouping').click =>
+          checked = data.groupSelection.length isnt data.groups.length
 
-        # Set up accordion
-        globals.configs.groupOpen ?= 0
+          # Empty the array without changing the memory address
+          data.groupSelection.splice(0, data.groupSelection.length)
 
-        ($ '#groupControl').accordion
-          collapsible:true
-          active:globals.configs.groupOpen
+          # Repopulate the array if necessary
+          if checked then data.groupSelection.push(k) for v, k in data.groups
 
-        ($ '#groupControl > h3').click ->
-          globals.configs.groupOpen = (globals.configs.groupOpen + 1) % 2
+          $('input[name="grouping"]').each (key, elem) ->
+            $(elem).prop('checked', checked)
+
+          updateCheckAll()
+          @delayedUpdate()
 
       ###
       Draws vis saving controls
@@ -394,156 +376,104 @@ $ ->
         if (globals.options? and globals.options.isEmbed?) and not @chart?
           return
 
-        controls = '<div id="saveControl" class="vis_controls">'
+        # Draw the Save controls
+        ctx = {}
+        ctx.id = 'save-ctrls'
+        ctx.title = 'Save'
+        ctx.body = HandlebarsTemplates[hbCtrl('save')](ctx)
+        save = HandlebarsTemplates[hbCtrl('body')](ctx)
+        $('#vis-ctrls').append save
 
-        controls += "<h3 class='clean_shrink'><a href='#'>Saving:</a></h3>"
-        controls += "<div class='outer_control_div' style='text-align:center'>"
-
-        if not (globals.options? and globals.options.isEmbed?)
-          controls += "<div class='inner_control_div'>"
-          controls += "<button id='saveVisButton' class='save_button btn btn-sm btn-default btn-success'>"
-          controls += "Save Visualization </button>"
-          controls += "</div>"
-
-          # Default vises only apply to project vises
-          if namespace.action is 'displayVis'
-            controls += "<div class='inner_control_div'>"
-            controls += "<button id='defaultVisButton' class='save_button btn btn-sm btn-primary'>"
-            controls += "Make Default </button>"
-            controls += "</div>"
-
-        if @chart?
-
-          controls += "<div class='inner_control_div'>"
-          controls += "<button id='downloadVisButton' class='save_button btn btn-sm btn-default'>"
-          controls += "Download Visualization </button>"
-          controls += "</div>"
-
-          controls += "<div class='inner_control_div'>"
-          controls += "<button id='printVisButton' class='save_button btn btn-sm btn-default'>"
-          controls += "Print Visualization </button>"
-          controls += "</div>"
-
-        controls += '</div></div>'
-
-        # Write HTML
-        ($ '#controldiv').append controls
-
-        ($ "#saveControl button").button()
+        # Only Highcharts vises can be printed and downloaded
+        # TODO - implement these for non-Highchart vises
+        unless @chart?
+          $('#print-vis-btn').hide()
+          $('#download-vis-btn').hide()
 
         globals.userPermissions()
 
-        ($ "#saveVisButton").click ->
+        ($ "#save-vis-btn").click ->
           globals.saveVis()
 
-        ($ "#defaultVisButton").click ->
+        ($ "#default-vis-btn").click ->
           globals.defaultVis()
 
-        ($ '#downloadVisButton').click =>
+        $('#download-vis-btn').click =>
           @chart.exportChart
             type: "image/svg+xml"
 
-        ($ '#printVisButton').click =>
+        $('#print-vis-btn').click =>
           @chart.print()
 
-        #Set up accordion
-        globals.configs.saveOpen ?= 0
+        # Initialize and track the status of this control panel
+        globals.configs.saveOpen ?= false
+        initCtrlPanel('save-ctrls', 'saveOpen')
 
-        ($ '#saveControl').accordion
-          collapsible:true
-          active:globals.configs.saveOpen
-
-        ($ '#saveControl > h3').click ->
-          globals.configs.saveOpen = (globals.configs.saveOpen + 1) % 2
       ###
-      Draw tool controls (Analysis Type, Log Y Axis, etc.) for Pie Chart and Bar Chart
+      Draw tool controls (Analysis Type, Log Y Axis, etc.) for Pie Chart and
+      Bar Charts
       ###
       drawToolControls: (sortBy = false, logYAxis = false) ->
+        inctx = {}
 
-        controls =  '<div id="toolControl" class="vis_controls">'
-        controls += "<h3 class='clean_shrink'><a href='#'>Tools:</a></h3>"
-        controls += "<div class='outer_control_div'>"
+        # Populate sort fields
         if sortBy
-          controls += "<div class='inner_control_div'>"
-          controls += 'Sort by: <select id="sortField" class="sortField form-control">'
-          tempFields = for fieldID in data.normalFields
-            [fieldID, data.fields[fieldID].fieldName]
-          tempFields = [].concat [[@SORT_DEFAULT, 'Group Name']], tempFields
+          inctx.sortFields =
+            for id in data.normalFields
+              name: fieldTitle(data.fields[id])
+              logId: 'sort-by-' + 'id'
+              value: id
 
-          for [fieldID, fieldName] in tempFields
-            selected = if @configs.sortField is fieldID then 'selected' else ''
-            controls += "<option value='#{fieldID}' #{selected}>#{fieldName}</option>"
+          inctx.sortFields.unshift
+            name: 'Group Name'
+            logId: 'sort-by-' + @SORT_DEFAULT
+            value: @SORT_DEFAULT
 
-          controls += '</select></div><br>'
-          controls += "<h4 class='clean_shrink'>Analysis Type</h4><div id='analysis_types'>"
+        # Analysis Types
+        inctx.analysisTypes =
+          for name, i in @analysisTypeNames
+            value: i
+            id:    'analysis-type-' + i
+            logId: 'analysis-type-' + i
+            name:  'analysis-type'
+            label:  name
 
-        for typestring, type in @analysisTypeNames
-          controls += "<div class='inner_control_div'>"
-          controls += "<div class='radio'><label><input type='radio' class='analysisType' "
-          controls += "name='analysisTypeSelector' value='"
-          controls += "#{type}' #{if type is @configs.analysisType then 'checked' else ''}> "
+        # Logarithmic Y Axis
+        if logYAxis
+          id = 'log-y-axis'
+          inctx.logYAxis =
+            id:    id
+            logId: 'logarithmic-y-axis'
+            label: 'Logarithmic Y Axis'
 
-          switch typestring
-            when 'Max' then controls += 'Maximum </label> </div>'
-            when 'Min' then controls += 'Minimum </label> </div>'
-            when 'Mean' then controls += 'Mean (Average)</label></div>'
-            else controls += "#{typestring} </label></div>"
+        outctx =
+          id: 'tools-ctrls'
+          title: 'Tools'
+          body: HandlebarsTemplates[hbCtrl('base-tools')](inctx)
 
-          controls += '</div>'
-        controls += "</div>"
+        tools = HandlebarsTemplates[hbCtrl('body')](outctx)
+        $('#vis-ctrls').append tools
 
-        if data.logSafe is 1 and logYAxis
-          controls += "<h4 class='clean_shrink'>Other</h4>"
-          controls += '<div class="inner_control_div">'
-          controls += "<div class='checkbox'><label><input class='logY_box' type='checkbox' "
-          controls += "name='tooltip_selector' #{if globals.configs.logY is 1 then 'checked' else ''}/> "
-          controls += "Logarithmic Y Axis</label></div>"
-          controls += "</div>"
+        # Initialize and track the status of this control panel
+        globals.configs.toolsOpen ?= false
+        initCtrlPanel('tools-ctrls', 'toolsOpen')
+        query = "input[name='analysis-type'][value='#{@configs.analysisType}']"
+        $(query).prop('checked', 'true')
+        $('#sort-by').val(@configs.sortField)
+        $('input[name="analysis-type"]').value = @configs.analysisType
+        $('#ckbx-log-y-axis').prop('checked', globals.configs.logY)
 
-        controls += '</div></div>'
-
-        ### --- ###
-        # Write HTML
-        ($ '#controldiv').append controls
-
-        ($ '.analysisType').change (e) =>
-          @configs.analysisType = Number e.target.value
+        $('#sort-by').change (e) =>
+          @configs.sortField = Number(e.target.value)
           @delayedUpdate()
 
-        ($ '#sortField').change (e) =>
-          @configs.sortField = Number e.target.value
+        $('input[name="analysis-type"]').click (e) =>
+          @configs.analysisType = Number(e.target.value)
           @delayedUpdate()
 
-        ($ '.logY_box').click (e) =>
-          globals.configs.logY = (globals.configs.logY + 1) % 2
+        $('#ckbx-log-y-axis').click (e) =>
+          globals.configs.logY = !globals.configs.logY
           @start()
-
-        # Set up accordion
-        globals.configs.toolsOpen ?= 0
-
-        ($ '#toolControl').accordion
-          collapsible:true
-          active:globals.configs.toolsOpen
-
-        ($ '#toolControl > h3').click ->
-          globals.configs.toolsOpen = (globals.configs.toolsOpen + 1) % 2
-
-      ###
-      Hides the control div and remembers its previous size.
-      ###
-      hideControls: ->
-        @controlWidth = ($ '#controldiv').width()
-        ($ '#controldiv').width 0
-        ($ '#controlcontainer').hide()
-        ($ '#' + @canvas).css
-          width: ($ "#viscontainer").width()
-
-      ###
-      Returns the control div with its previous size intact.
-      ###
-      unhideControls: ->
-        ($ '#controldiv').width @controlWidth
-        ($ '#controlcontainer').show()
 
       ###
       Do any necessary cleanup work before serialization.
@@ -565,7 +495,6 @@ $ ->
       to expand upon these after calling super()
       ###
       buildOptions: ->
-
         self = this
 
         @chartOptions =
@@ -599,37 +528,26 @@ $ ->
                 'Y-Values'
               else
                 data.fields[globals.configs.fieldSelection[0]].fieldName
-
       ###
       Builds the 'fake series' for legend controls.
       Derrived objects should implement this.
       ###
       buildLegendSeries: ->
-        console.trace()
-        alert   """
-          BAD IMPLEMENTATION ALERT!
+        quickFlash('An internal error has occured.', 'error')
 
-          Called: 'BaseVis.buildLegendSeries'
-
-          See logged stack trace in console.
-          """
       ###
       Start sequence used by runtime
 
       This is called when the user switched to this vis.
-      Should re-build options and the chart itself to ensure sync with global settings.
+      Should re-build options and the chart itself to ensure sync with global
+      settings.
       This method should also be usable as a 'full update' in that it
-      should destroy the current chart if it exists before generating a fresh one.
-
-      TODO: Update comment
+      should destroy the current chart if it exists before generating a fresh
+      one.
       ###
       start: ->
         @buildOptions()
-
-        @chart = new Highcharts.Chart @chartOptions
-
-        ($ '#' + @canvas).show()
-
+        @chart = new Highcharts.Chart(@chartOptions)
         super()
 
       ###
@@ -678,7 +596,8 @@ $ ->
       Resize highcharts to match
       ###
       resize: (newWidth, newHeight, duration) ->
-        @chart.setSize(newWidth, newHeight, {duration: duration, easing:'linear'})
+        @chart.setSize(newWidth, newHeight,
+          {duration: duration, easing:'linear'})
 
       ###
       End sequence used by runtime

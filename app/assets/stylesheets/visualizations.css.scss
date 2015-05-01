@@ -10,20 +10,21 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   // colors
   $border-color: #ABABAB;
   $border: thin solid $border-color;
-  $dark-bkg: linear-gradient(#E4E4E4, #C4C4C4);
-  $dark-bkg-inv: linear-gradient(#C4C4C4, #E4E4E4);
   $error: #F00;
   $error-hover: #C00;
   $hint: #888;
-  $light-bkg: linear-gradient(#F6F6F6, #D7D7D7);
-  $light-bkg-inv: linear-gradient(#D7D7D7, #F6F6F6);
-  $panel-bkg: #e8e8e8;
-  $regr-bkg: #ddd;
-  $regr-dis-bkg: #eee;
+  $link: #337AB7;
+  $panel-bkg: #E8E8E8;
+  $regr-bkg: #DDD;
+  $regr-dis-bkg: #EEE;
   $regr-dis-font: #666;
   $select-bkg: linear-gradient(#49A7DB, #268AC1);
   $shadow-color: #9E9E9E;
   $shadow: 0 2px 3px 1px $shadow-color;
+  $vis-bkg-dark:  #CBCBCB;
+  $vis-bkg-mid:   #DCDCDC;
+  $vis-bkg-light: #F2F2F2;
+  $jqgrid-bkg: linear-gradient(#FFFFFF, $vis-bkg-mid);
 
   // some stuff on the page (buttons mostly) shouldn't have selectable text
   @mixin unselectable {
@@ -35,149 +36,11 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     user-select: none;
   }
 
-  // Used in tool controls
-  .clean_shrink {
-    white-space: nowrap;
-    overflow: hidden;
+  .color-picker {
+    vertical-align: top;
   }
 
-  #controlcontainer {
-    position: absolute;
-    height: 100%;
-  }
-
-  #controlhider {
-    float: left;
-    left: 0;
-    display: inline-block;
-    height: 100%;
-
-    #control_hide_button { // eventually put this next to #fullscreen-vis?
-      @include unselectable;
-      background-image: $light-bkg;
-      border: $border;
-      border-radius: 3px;
-      outline: none;
-      margin: 5px 5px 5px;
-      padding: 8px 6px;
-    }
-  }
-
-  // this is where all the div controls get added
-  #controldiv {
-    width: 220px;
-    height: 100%;
-    position: absolute;
-    right: 0px;
-    overflow-x: hidden;
-    overflow-y: auto;
-    // This would be the correct place to add padding-right, but it break the
-    // jquery animation for some reason, so we add it instead to
-    // .ui-accordion-header
-
-    // puts spacing between some boostrap buttons
-    .form-control { // this styles bootstrap stuff and IS VERY BAD
-      margin-bottom: 5px;
-    }
-
-    // any input button inside this class isn't lined up with the text to its right - this fixes that
-    .inner_control_div {
-      font-size: 12px;
-
-      .checkbox, .radio {
-        margin: 1px 0;
-        input {
-          margin-top: 2px;
-        }
-      }
-    }
-
-    .ui-accordion {
-      margin: 5px 0 0; // add some space between accordions
-    }
-
-    .ui-accordion .ui-accordion-content {
-      padding: 3px;
-      overflow-y: hidden;
-    }
-
-    .ui-accordion table td:first-child {
-      padding-right: 5px; // adds some space between bootstrap buttons and their labels
-    }
-
-    #ui-accordion-groupControl-panel-0 {
-      min-height: 120px; // fixed height fixes weird sizing bug in firefox
-      max-height: 160px;
-      overflow: auto;
-    }
-
-    .ui-accordion-header {
-      @include unselectable;
-      vertical-align: middle;
-      height: 34px;
-      outline: none;
-      margin: 0 5px 0 0; // see #controldiv above for explanation
-      border: thin solid #ABABAB;
-      border-radius: 3px;
-      background-image: $light-bkg;
-    }
-
-    // this is the little arrow button next to every accordion header
-    .ui-accordion-header-icon {
-      width: 11px;
-      height: 11px;
-      background-image: url(/assets/vis/ui-icons_222222_256x240.png);
-      display: inline-block;
-    }
-
-    // the text on the dropdown header
-    .ui-accordion-header a {
-      padding-left: 10px;
-      color: #222;
-      font-size: 12pt;
-    }
-
-    // button for shrunken accordion dropdown
-    .ui-icon-triangle-1-e {
-      background-position: -34px -18px; // uses image @ (5, 2) on /assets/vis/ui-icons_222222_256x240.png
-    }
-
-    // button for expanded accordion dropdown
-    .ui-icon-triangle-1-s {
-      background-position: -67px -18px; // uses image @ (3, 2) on /assets/vis/ui-icons_222222_256x240.png
-    }
-
-    // because sliders need styling now that jQuery UI CSS is gone
-    .ui-slider {
-      position: relative;
-      margin: 10px 5px;
-      height: 10px;
-      background-image: $light-bkg-inv;
-      border: thin solid #ABABAB;
-      border-radius: 3px;
-    }
-
-    .ui-slider-handle {
-      display: inline-block;
-      position: absolute;
-      width: 16px;
-      height: 16px;
-      margin: -4px 0 0 -8px;
-      border-radius: 8px;
-      border: $border;
-      background-image: $dark-bkg;
-      outline: none;
-    }
-
-    .ui-slider-range {
-      position: absolute;
-      height: 8px;
-      background-image: $select-bkg;
-      border-radius: 3px;
-    }
-  }
-
-  div.regressionTooltip {
+  div.regr-tooltip {
     width: 100%;
     text-align: center;
     color: #000;
@@ -190,6 +53,33 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   // button that enables fullscreen vis, not the fullscreen viz itself
   #fullscreen-vis {
     margin: 1px;
+  }
+
+  .hamburger-menu {
+    transition: background-color .5s ease;
+    height: 32px;
+    width: 30px;
+    padding: 0 5px;
+    margin: 0;
+    background-color: white;
+
+    .hamburger-bar {
+      transition: background-color .5s ease;
+      display: block;
+      height: 4px;
+      width: 100%;
+      background-color: #555;
+      border-radius: 4px;
+      margin: 2px auto;
+    }
+  }
+
+  .hamburger-menu.down {
+    background-color: #555;
+
+    .hamburger-bar {
+      background-color: white;
+    }
   }
 
   #heatmap-error-text {
@@ -213,8 +103,21 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     color: $hint;
   }
 
+  .inline-left {
+    display: inline-block;
+    float: left;
+  }
+
+  .inline-right {
+    display: inline-block;
+    float: right;
+  }
+
   .mainContent {
-    width: 100%; // makes page body fill the screen instead of having a fixed width
+    padding: 0;  // Removes all the extra padding
+    margin: 0; // flushes border
+    width: 100%; // makes page body fill the screen
+                 // instead of having a fixed width
   }
 
   // the display text for a disabled vis
@@ -227,16 +130,8 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     color: $hint;
   }
 
-  .outer_control_div table {
-    width: 100%;
-    .label-dataset-color {
-      float: right;
-      width: 20px;
-    }
-  }
-
   // photos may require scrollbar; margin so photos do not touch top of canvas
-  #photos_canvas {
+  #photos-canvas {
     overflow-y: auto;
     margin-top: 20px;
   }
@@ -247,54 +142,62 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   }
 
   #refresh-data {
-    top: 20px;
-    right: 10px;
-    position: absolute;
+    margin-left: 10px;
   }
 
-  #regression-table {
+  .regr-option {
+    text-align: center;
+    margin-left: 4px;
+  }
 
-    #regression-table-body {
+  #regr-table {
+    width: 100%;
+
+    #regr-table-body {
       text-align: left;
-      font-size: 10px;
+
+      .data {
+        border-bottom: $border;
+      }
+
+      .disabled {
+        background-color: $regr-dis-bkg;
+        color: $regr-dis-font;
+      }
+
+      .remove {
+        color: $error;
+        width: 10%;
+        text-align: center;
+      }
+
+      .row {
+        border-bottom: $border;
+        cursor: pointer;
+      }
+
+      .row::before, .row::after {
+        content: none; // Override bootstrap row styling
+      }
+
+      .row:hover {
+        background-color: $regr-bkg;
+        border-bottom: $border;
+      }
     }
 
-    #regression-table-header {
+    #regr-table-header {
       text-align: left;
       font-size: 12px;
     }
-
-    .regression_row {
-      border-bottom: $border;
-      cursor: pointer;
-    }
-
-    .regression_row:hover {
-      background-color: $regr-bkg;
-      border-bottom: $border;
-    }
-
-    .regression_rowdata {
-      border-bottom: $border;
-    }
-
-    .regression_row_disabled {
-      background-color: $regr-dis-bkg;
-      color: $regr-dis-font;
-    }
-
-    .regression_remove {
-      font-size: 14px;
-      color: $error;
-      width: 10%;
-      text-align: center;
-    }
   }
 
-  .save_button {
-    width: 160px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+  .row {
+    margin: 0;
+  }
+
+  .strikethrough {
+    text-decoration: line-through;
   }
 
   .summary {
@@ -303,7 +206,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     color: $hint;
   }
 
-  #summary_canvas {
+  #summary-canvas {
     text-align: center;
     overflow-y: auto;
     overflow-x: hidden;
@@ -320,28 +223,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   }
 
   // table vis needs additional love to make it look right
-  #table_canvas {
-    #first_toolbar_bottom, #last_toolbar_bottom, #next_toolbar_bottom, #prev_toolbar_bottom {
-      background-image: url(/assets/vis/ui-icons_222222_256x240.png);
-      width: 19px; // height set as !important to 19px elsewhere
-    }
-
-    #first_toolbar_bottom {
-      background-position: -78px -158px;
-    }
-
-    #last_toolbar_bottom {
-      background-position: -63px -158px;
-    }
-
-    #next_toolbar_bottom {
-      background-position: -30px -158px;
-    }
-
-    #prev_toolbar_bottom {
-      background-position: -47px -158px;
-    }
-
+  #table-canvas {
     table {
       border-color: $border-color;
     }
@@ -365,17 +247,19 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
 
     // the entire header box
     .ui-jqgrid-hbox {
-      background-image: $light-bkg;
+      background: $jqgrid-bkg;
       border-bottom: $border;
     }
 
     .ui-jqgrid-hbox table > thead > tr > th {
-      border-top: none !important; // because inline styles (jQuery UI - can't fix)
+      border-top: none !important; // because inline styles
+                                   // (jQuery UI - can't fix)
       border-right: $border;
     }
 
     // hide inactive sort icon
-    .searchResults .ui-jqgrid .ui-icon-asc, .searchResults .ui-jqgrid .ui-icon-desc {
+    .searchResults .ui-jqgrid .ui-icon-asc,
+    .searchResults .ui-jqgrid .ui-icon-desc {
         color: black;
     }
 
@@ -395,6 +279,15 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     }
   }
 
+  .subtitle {
+    font-size: 18px;
+  }
+
+  .tab-content {
+    height: inherit;
+    width: inherit;
+  }
+
   #target-img h4 {
     text-overflow: ellipsis;
     overflow: hidden;
@@ -406,56 +299,175 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     position:relative;
   }
 
-  // an active tab has a different looking gradient
-  .ui-tabs-active {
-    background-image: $dark-bkg-inv;
+  .vis-canvas {
+    height: inherit;
+    width: inherit;
+    overflow: hidden; // because something inside vis-canvas
+                      // is overflowing on every non-map vis
   }
 
-  .vis_canvas {
-    float: left;
-    border-right: $border; // this makes it look like the control div has a border
-    overflow: hidden; // because something inside vis_canvas is overflowing on every non-map vis
-  }
-
-  // just used for the border around the vis window
-  #viscontainer {
+  #vis-wrapper {
     width: 100%;
-    height: 98%;
-    font-size:14px;
-    min-height:500px;
-    background-color: #FFF; // firefox - control menu turns black otherwise
-    border: $border;
-  }
+    height: 100%;
 
-  .vis_controls {
-    float: right;
-    width:100%;
-  }
+    // floats the actual vis to the right
+    #vis-container {
+      position: absolute;
+      right: 0;
+      width: 100%;
+      height: 100%;
 
-  #vis-disabled {
-    overflow: hidden;
-  }
+      .tab-content {
+        width: 100%;
+      }
 
-  // the bar at the top of the vis window
-  #visTabList {
-    background-image: $light-bkg;
-    border-bottom: $border; // puts a border only on the bottom of the tab list, #viscontainer does top and sides
-    padding: 0; // removes padding that shouldn't be there to begin with
-    margin: 0;
-  }
+      #vis-disabled {
+        overflow: hidden;
+      }
 
-  // an individual tab
-  .vis_tab {
-    @include unselectable;
-    display: inline-block;
-    font-size:1.2em;
-    border-right: $border; // borders are only on the right - tab list and vis window cover the other sides
+      // the bar at the top of the vis window
+      #vis-tab-list {
+        padding: 0; // removes padding that shouldn't be there to begin with
+        margin: 0;
+        background-color: $vis-bkg-light;
+      }
 
-    .ui-tabs-anchor {
-      display: block; // so vertical padding works
-      padding: 6px 10px; // so the entire box is clickable
-      color: #222;
-      outline: none;
+      #vis-title-bar {
+        position: relative;
+        width: 100%;
+        height: 50px;
+        background-color: $vis-bkg-light;
+        font-size: 24px;
+        padding: 10px;
+        white-space: nowrap;
+
+        .edit_visualization, .edit_data_set {
+          display: none;
+        }
+
+        .inline-left {
+          max-width: 100%;
+        }
+
+        #title-and-menu {
+          display: inline-block;
+
+          #title-name {
+            vertical-align: middle;
+          }
+        }
+
+        #vis-proj-right {
+          position: absolute;
+          right: 10px;
+        }
+      }
+    }
+
+    #vis-ctrl-container {
+      position: relative;
+      display: inline-block;
+      float: left;
+      background-color: $vis-bkg-dark;
+      width: 320px;
+      height: 100%;
+
+      // this is where all the div controls get added
+      #vis-ctrls {
+        height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        position: relative;
+        display: inline-block;
+        float: left;
+
+        // puts spacing between some boostrap buttons
+        .form-control { // this styles bootstrap stuff and IS VERY BAD
+          margin-bottom: 5px;
+        }
+
+        .full-width {
+          width: 100%;
+        }
+
+        .save-btn {
+          display: inline-block;
+          width: 80%;
+          margin: 10px auto;
+        }
+
+        // any input button inside this class isn't lined up with the
+        // text to its right - this fixes that
+        .vis-ctrl-body {
+          display: none;
+          font-size: 14px;
+          width: 100%;
+          padding: 5px 20px;
+          background-color: $vis-bkg-light;
+
+          .centered {
+            text-align: center;
+          }
+
+          .checkbox, .radio {
+            text-align: left;
+            margin: 1px 0;
+
+            input {
+              margin-top: 2px;
+              margin-left: 0;
+            }
+          }
+
+          .name {
+            width: 90%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+          .vis-ctrl-subblock {
+            margin-bottom: 5px;
+
+            .cpickr-icon {
+              margin-left: 2px;
+              height: 20px;
+              width: 20px;
+            }
+          }
+
+          .vis-ctrl-subtitle {
+            text-align: left;
+          }
+        }
+
+        .vis-ctrl-header {
+          font-size: 24px;
+          padding: 10px 20px;
+          margin: 0;
+          color: #337AB7;
+          white-space: nowrap;
+          overflow: hidden;
+          cursor: pointer;
+          height: 55px;
+          width: 100%;
+          background: $vis-bkg-mid;
+          border-bottom: $border;
+
+          .vis-ctrl-title {
+            float: left;
+          }
+
+          .vis-ctrl-icon {
+            float: right;
+          }
+        }
+      }
+    }
+
+    .vis-tab-icon {
+      height: 32px;
+      width: 32px;
     }
   }
 }

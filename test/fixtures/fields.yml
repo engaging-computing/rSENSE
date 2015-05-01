@@ -62,16 +62,19 @@ locked_projet_field:
   project: locked_project
 
 lat_field:
+  id: 27
   field_type: 4
   project: upload_test
   name: lat
 
 lon_field:
+  id: 28
   field_type: 5
   project: upload_test
   name: lon
 
 altitude_field:
+  id: 29
   field_type: 2
   project: upload_test
   name: altitude

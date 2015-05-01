@@ -4,8 +4,8 @@
  * See app/assets/visualizations/highvis/savedVis.coffee.erb
  */
 <% unless @permiss.include? 'save' %>
-  $('#saveVisButton').attr('disabled', 'disabled');
+  $('#save-vis-btn').attr('disabled', 'disabled');
 <% end %>
 <% unless @permiss.include? 'project' %>
-  $('#defaultVisButton').remove();
+  $('#default-vis-btn').remove();
 <% end %>

@@ -14,14 +14,11 @@
 //= require constants
 //= require image_path
 //= require jquery
-//= require handlebars
+//= require jquery_ujs
 //= require isense
 //= require helpers
 //= require dateParse
 //= require name_popup
-//= require jquery-ui
-//= require jquery_ujs
-//  require jquery.ui.all
 //= require unsupported
 //= require info_edit
 //= require menu_edit
@@ -32,12 +29,11 @@
 //= require titlebar.js.coffee
 //= require bootstrap
 //
-// Handlebars templates
+//  -- Handlebars --
 //= require handlebars
 //= require_tree ./templates
 //
-// Visualization stuff follows
-//
+//  -- Visualization stuff follows --
 //= require highcharts/highcharts
 //= require highcharts/modules/exporting
 //= require jquery.jqGrid.src.js
@@ -48,7 +44,6 @@
 //= require oms
 //= require better_colorpicker
 //= require better_datetimepicker
-//
 //= require visualizations/highvis/index
 //
 //= require summernote

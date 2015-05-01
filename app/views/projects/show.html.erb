@@ -154,16 +154,16 @@
                     <td style="max-width:200px">
                       <div class="truncate dset" title="Created <%=s.created_at.strftime("%B %d, %Y")%>"><%= link_to s.title.html_safe, "/projects/#{params[:id]}/data_sets/#{s.id}" %></div>
                     </td>
-                    <% if can_edit? s %>
-                      <td style="padding-right: 0px; text-align: right;">
+                    <td style="padding-right: 0px; text-align: right;">
+                      <% if can_edit? s %>
                         <a class="data_set_edit" href="<%= edit_data_set_path s %>">Edit</a>
-                      </td>
-                    <% end %>
-                    <% if can_delete? s %>
-                      <td style="padding-left: 0px;">
+                      <% end %>
+                    </td>
+                    <td style="padding-left: 0px;">
+                      <% if can_delete? s %>
                         &nbsp;|&nbsp;<a class="data_set_delete" href="<%= data_set_url s %>" name="<%= s.title.html_safe %>">Delete</a>
-                      </td>
-                    <% end %>
+                      <% end %>
+                    </td>
                     <td>
                       <div class="ds_selector">
                         <input type="checkbox" class="pull-right <%if s.user_id == @cur_user.try(:id)%> mine<%end%>" id="ds_<%=s.id%>" checked/>

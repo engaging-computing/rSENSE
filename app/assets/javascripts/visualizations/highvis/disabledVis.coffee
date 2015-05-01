@@ -27,46 +27,119 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is 'visualizations' and
+  namespace.action in ['displayVis', 'embedVis', 'show']
 
     class window.DisabledVis extends BaseVis
       constructor: (@canvas) ->
 
-      time_err = """<div class='novis_message'><img src='#{window.icons["novis_timeline"]}'><br>
-        <br>Either a time field was not found or there were not enough data<br>Cannot display
-        Timeline visualization</div>"""
-      scatter_err = """<div class='novis_message'><img src='#{window.icons["novis_scatter"]}'>
-        <br><br>Either two numeric fields were not found or there were not enough data<br>
-        Cannot display Scatter Chart visualization</div>"""
-      histogram_err = """<div class='novis_message'><img src='#{window.icons["novis_histogram"]}'>
-        <br><br>Either no numeric fields were found or there were not enough data<br>
-        Cannot display Histogram Visualization</div>"""
-      bar_err = """<div class='novis_message'><img src='#{window.icons["novis_bar"]}'><br><br>
-        Either no numeric fields were found or there were not enough data<br>
-        Cannot display Bar Chart visualization</div>"""
-      map_err = """<div class='novis_message'><img src='#{window.icons["novis_map"]}'><br><br>
-        No geographic data found<br>Cannot display Map visualization</div>"""
-      photos_err = """<div class='novis_message'><img src='#{window.icons["novis_photos"]}'><br><br>
-        There are no photos to display</div>"""
-      pie_err = """<div class='novis_message'><img src='#{window.icons["novis_pie"]}'>
-        <br><br>Either no numeric fields were found or there were not enough data<br>
-        Cannot display Pie Chart Visualization</div>"""
+      time_err =
+        """
+        <div class='novis_message'>
+          <img src='#{window.icons["novis_timeline"]}'>
+          <br>
+          <br>
+          Either a time field was not found or there were not enough data
+          <br>
+          Cannot display Timeline visualization
+        </div>
+        """
+      scatter_err =
+        """
+        <div class='novis_message'>
+          <img src='#{window.icons["novis_scatter"]}'>
+          <br>
+          <br>
+          Either two numeric fields were not found or there were not
+          enough data
+          <br>
+          Cannot display Scatter Chart visualization
+        </div>
+        """
+      histogram_err =
+        """
+        <div class='novis_message'>
+          <img src='#{window.icons["novis_histogram"]}'>
+          <br>
+          <br>
+          Either no numeric fields were found or there were not enough data
+          <br>
+          Cannot display Histogram Visualization
+        </div>
+        """
+      bar_err =
+        """
+        <div class='novis_message'>
+          <img src='#{window.icons["novis_bar"]}'>
+          <br>
+          <br>
+          Either no numeric fields were found or there were not enough data
+          <br>
+          Cannot display Bar Chart visualization
+        </div>
+        """
+      map_err =
+        """
+        <div class='novis_message'>
+          <img src='#{window.icons["novis_map"]}'>
+          <br>
+          <br>
+          No geographic data found
+          <br>
+          Cannot display Map visualization
+        </div>
+        """
+      photos_err =
+        """
+        <div class='novis_message'>
+          <img src='#{window.icons["novis_photos"]}'>
+          <br>
+          <br>
+          There are no photos to display
+          <br>
+          Cannot display Photos visualization
+        </div>
+        """
+      pie_err =
+        """
+        <div class='novis_message'>
+          <img src='#{window.icons["novis_pie"]}'>
+          <br>
+          <br>
+          Either no numeric fields were found or there were not enough data
+          <br>
+          Cannot display Pie Chart Visualization
+        </div>
+        """
 
       start: ->
-        ($ '#' + @canvas).show()
+        $('#' + @canvas).show()
+        @restoreTools = globals.configs.ctrlsOpen
+        globals.configs.ctrlsOpen = false
+        $('#vis-ctrl-container').hide()
+        $('#ctrls-menu-btn').hide()
 
         switch @canvas
-          when "map_canvas" then ($ '#' + @canvas).html("<div id='vis_disabled'>#{map_err}</div>")
-          when "bar_canvas" then ($ '#' + @canvas).html("<div id='vis_disabled'>#{bar_err}</div>")
-          when "histogram_canvas" then ($ '#' + @canvas).html("<div id='vis_disabled'>#{histogram_err}</div>")
-          when "timeline_canvas" then ($ '#' + @canvas).html("<div id='vis_disabled'>#{time_err}</div>")
-          when "scatter_canvas" then ($ '#' + @canvas).html("<div id='vis_disabled'>#{scatter_err}</div>")
-          when "photos_canvas" then ($ '#' + @canvas).html("<div id='vis_disabled'>#{photos_err}</div>")
-          when "pie_canvas" then ($ '#' + @canvas).html("<div id='vis_disabled'>#{pie_err}</div>")
-        @hideControls()
+          when 'map-canvas'
+            $('#' + @canvas).html("<div id='vis_disabled'>#{map_err}</div>")
+          when "bar-canvas"
+            $('#' + @canvas).html("<div id='vis_disabled'>#{bar_err}</div>")
+          when "histogram-canvas"
+            $('#' + @canvas).html "<div id='vis_disabled'>#{histogram_err}" +
+              "</div>"
+          when "timeline-canvas"
+            $('#' + @canvas).html("<div id='vis_disabled'>#{time_err}</div>")
+          when "scatter-canvas"
+            $('#' + @canvas).html("<div id='vis_disabled'>#{scatter_err}</div>")
+          when "photos-canvas"
+            $('#' + @canvas).html("<div id='vis_disabled'>#{photos_err}</div>")
+          when "pie-canvas"
+            $('#' + @canvas).html("<div id='vis_disabled'>#{pie_err}</div>")
 
       clip: (arr) -> arr
 
       end: ->
-        ($ '#' + @canvas).hide()
-        @unhideControls(@controlWidth)
+        $('#' + @canvas).hide()
+        globals.configs.ctrlsOpen = @restoreTools
+        $('#vis-ctrl-container').show()
+        $('#ctrls-menu-btn').show()

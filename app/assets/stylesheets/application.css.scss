@@ -8,7 +8,6 @@
  * You're free to add application-wide styles to this file and they'll appear at the top of the
  * compiled file, but it's generally better to create a new file per style scope.
  *
- *  require jquery-ui
  *= require better_colorpicker
  *= require better_datetimepicker
  *= require font-awesome
@@ -24,8 +23,13 @@ $navbar-default-color: white;
 $navbar-default-link-color: white;
 $navbar-default-link-hover-color: #DDDDDD;
 $table-bg-accent: #E8E8E8;
+
 @import "bootstrap-sprockets";
 @import "bootstrap";
+
+.alert {
+  margin-bottom: 0px;
+}
 
 body {
   background-color: #ddd;
@@ -60,6 +64,42 @@ body {
   cursor: pointer;
 }
 
+#content-partial{
+  .summernote-controls{
+    text-align: right;
+    margin-top: 1em;
+  }
+  overflow:hidden !important;
+  iframe{
+    width: 100%;
+    height: 390px;
+  }
+}
+
+#content-viewer {
+  max-height: 400px;
+  overflow: auto;
+  word-wrap: break-word;
+  img{
+    width: 100%;
+    height: auto;
+  }
+  #add-content-image{
+    img{
+      height: 250px !important;
+      width: 250px !important;
+    }
+  }
+}
+
+.circle-img {
+  height: 30px;
+  width: 30px;
+  border-radius: 15px;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+}
+
 .create-button {
   margin-bottom: 2ex;
 }
@@ -68,16 +108,35 @@ body {
   color: red;
 }
 
-.footer{
+.info_edit_link {
+  position: relative;
+  top: -2px;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.info_val {
+  font-weight: bold;
+}
+
+.error-flash {
+  transition: background-color .5s ease;
+}
+
+.footer {
   font-size: smaller;
-  
+
   .category{
-    border-bottom: 1px solid gray; 
+    border-bottom: 1px solid gray;
   }
-  
+
   .parts{
-    text-align: left; 
+    text-align: left;
   }
+}
+
+.inline-block {
+  display: inline-block;
 }
 
 .item {
@@ -189,6 +248,14 @@ body {
     font-size: 0.9em;
   }
 
+  .navbtn {
+    .circle-img {
+      position: relative;
+      top: -5px;
+      vertical-align: top;
+    }
+  }
+
   .navbtn a {
     padding-top: 20px;
   }
@@ -201,6 +268,10 @@ body {
   .navbar-collapse.in {
     background-color: $navbar-default-bg;
   }
+}
+
+.object-title {
+  font-size: 24px;
 }
 
 #outer {
@@ -228,6 +299,15 @@ body {
   margin-bottom: 2ex;
 }
 
+.summary-text {
+  font-size: 16px;
+  color: #666;
+}
+
+#title-and-menu {
+  vertical-align: middle;
+}
+
 .truncate {
   overflow-x: hidden;
   text-overflow: ellipsis;
@@ -250,39 +330,3 @@ body {
 .word-wrap {
    word-wrap: break-word;
 }
-#content-partial{
-  .summernote-controls{
-    text-align: right;
-    margin-top: 1em;
-  }
-  overflow:hidden !important;
-  iframe{
-    width: 100%;
-    height: 390px;
-  }
-}
-#content-viewer {
-  max-height: 400px;
-  overflow: auto;
-  word-wrap: break-word;
-  img{
-    width: 100%;
-    height: auto;
-  }
-  #add-content-image{
-    img{
-      height: 250px !important;
-      width: 250px !important;
-    }
-  }
-}
-
-.half_width_edit
-{
-  white-space: nowrap;
-  overflow-x: hidden;
-  text-overflow: ellipsis;
-  padding-bottom: 2px; 
-  max-width: 45%;
-}
-
