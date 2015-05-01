@@ -29,7 +29,6 @@ class CloneProjectTest < ActionDispatch::IntegrationTest
 
     find('#manual_fields').click
     click_on 'Add Number'
-    assert page.has_content?('field added'), 'Flash happened'
     assert page.has_content?('Number'), 'Number field is there'
     find('#fields_form_submit').click
 
