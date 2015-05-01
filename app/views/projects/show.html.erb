@@ -129,19 +129,16 @@
                 </ul>
               </div>
             </div>
-            <span>
-              <%=form_tag project_path, method: 'get', id: 'data_sets_search' do%>
-              <div id="searchProjRow" class="row">
-                <div class="padded-col col-sm-10 col-xs-9" title="Enter keyword(s) or data set number to search for a project">
-                  <%= text_field_tag :search, @params[:search], class: "form-control", placeholder: "Enter keyword(s) or data set number to search for a data set." %>
-                </div>
-                <div class="padded-col col-sm-2 col-xs-3">
-                  <%= submit_tag "Search", name: nil, class:'btn btn-default btn-group-justified'%>
-                </div>
+            <%=form_tag project_path, method: 'get', id: 'data_sets_search' do%>
+            <div id="searchProjRow" class="row">
+              <div class="padded-col col-sm-10 col-xs-9" title="Enter keyword(s) or data set number to search for a project">
+                <%= text_field_tag :search, @params[:search], class: "form-control", placeholder: "Enter keyword(s) or data set number to search for a data set." %>
               </div>
+              <div class="padded-col col-sm-2 col-xs-3">
+                <%= submit_tag "Search", name: nil, class:'btn btn-default btn-group-justified'%>
+              </div>
+            </div><br/>
             <%end%>
-          </span>
-          </br>
             <table id="dataset_table" class="table table-striped">
               <tbody>
                 <% @data_sets.each do |s| %>
