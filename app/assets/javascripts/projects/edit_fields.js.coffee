@@ -2,7 +2,7 @@ $ ->
   if namespace.controller is "projects" and namespace.action is "edit_fields"
     # Keeps track of number of different fields added
     numCount = textCount = timestampCount = locationCount = 0
-    
+
     # For the number displayed in the input for numbers/text e.g. Number_1
     displayNumCount = getNextName('Number')
     displayTextCount = getNextName('Text')
@@ -113,7 +113,7 @@ addRow = (content) ->
   for i in [0...5]
     cells[i].innerHTML = content[i]
 
-  $(row).effect('highlight', {}, 3000)
+  $(row).highlight(3000)
 
 # Calls deleteRow based on type of field
 callDeleteRow = (rowIndex, rowName, fid) ->
