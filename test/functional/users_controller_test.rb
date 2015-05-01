@@ -130,13 +130,10 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :redirect
   end
 
-  test 'should delete user' do
-    assert_difference('User.count', 0) do
+  test 'should destroy user' do
+    assert_difference('User.count', -1) do
       delete :destroy, { id: @user },  user_id: @admin
     end
-
-    @u0 = User.find_by_id(@user)
-    assert_match(/\@deleted\.org$/, @u0.email)
 
     assert_redirected_to users_path
   end
