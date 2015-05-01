@@ -107,6 +107,8 @@ $ ->
         if max < min
           return 1
 
+        console.log min, max
+
         curSize = 1
 
         bestSize = curSize
@@ -114,9 +116,9 @@ $ ->
 
         binNumTarget = Math.pow(10, @binNumSug)
 
-        tryNewSize = (size) ->
+        tryNewSize = (size) =>
           target = Math.abs(binNumTarget - (range / size))
-          if target <= Math.abs(binNumTarget - bestNum)
+          if target > Math.abs(binNumTarget - bestNum)
             return false
 
           bestSize = size
@@ -135,8 +137,7 @@ $ ->
         tryNewSize(curSize * 2)
         tryNewSize(curSize / 5)
         tryNewSize(curSize * 5)
-
-        bestSize
+        return bestSize
 
       update: ->
         super()
