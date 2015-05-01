@@ -113,7 +113,7 @@ addRow = (content) ->
   for i in [0...5]
     cells[i].innerHTML = content[i]
 
-  $(row).effect('highlight', {}, 3000)
+  $(row).effect('highlight', 3000)
 
 # Calls deleteRow based on type of field
 callDeleteRow = (rowIndex, rowName, fid) ->
@@ -146,7 +146,9 @@ getNextName = (fieldType) ->
   table = document.getElementById('fields_table')
   for i in [1...table.rows.length]
     if table.rows[i].cells[1].innerHTML == fieldType
-      index = parseInt(((table.rows[i].cells[0].innerHTML.split(' '))[3].split('_'))[1].split('\"'))
-      if index > highest
-        highest = index
+      index = 0
+      if ((table.rows[i].cells[0].innerHTML.split(' '))[3]).split('_')[1] != undefined
+        index = parseInt(((table.rows[i].cells[0].innerHTML.split(' '))[3].split('_'))[1].split('\"'))
+        if index > highest
+          highest = index
   return highest
