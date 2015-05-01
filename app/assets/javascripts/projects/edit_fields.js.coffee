@@ -113,8 +113,6 @@ addRow = (content) ->
   for i in [0...5]
     cells[i].innerHTML = content[i]
 
-  $(row).effect('highlight', 3000)
-
 # Calls deleteRow based on type of field
 callDeleteRow = (rowIndex, rowName, fid) ->
   if rowName == 'timestamp'
