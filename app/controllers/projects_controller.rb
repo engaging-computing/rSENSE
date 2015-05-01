@@ -329,7 +329,7 @@ class ProjectsController < ApplicationController
     end
 
     unless field.save
-      flash[:error] = "#{field.errors.full_messages}\n"
+      flash[:error] = "#{field.errors.full_messages[0]}\n"
       redirect_to "/projects/#{@project.id}/edit_fields" and return -1
     end
   end
