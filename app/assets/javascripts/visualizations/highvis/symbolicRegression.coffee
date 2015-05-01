@@ -39,10 +39,8 @@
 ##########################################################################
 
 $ ->
-
-  if namespace.controller is "visualizations" and
-  namespace.action in ["displayVis", "embedVis", "show"]
-    
+  if namespace.controller is 'visualizations' and
+  namespace.action in ['displayVis', 'embedVis', 'show']
     ###
     # Begin constant declarations. The following constants are used
     # when the user does not specify the algorithm parameters desired.
@@ -106,7 +104,7 @@ $ ->
     ###
     # End constant declarations.
     ###
-    
+
     ###
     # Return the scaled expression tree calculated by scaled fitness
     ###
@@ -122,7 +120,7 @@ $ ->
       return new Individual(scaledTree, Math.max(individualDepth, scaledTree.maxDepth()))
 
     window.symbolicRegression = (points) ->
-      
+
       # Stochastic Universal Sampling size is non-configurable for traditional symbolic regression
       susSS = 2
       susRS = 1
@@ -132,14 +130,14 @@ $ ->
 
       # Keep track of location of individuals with max/min fitness within population
       maxIndex = 0
-      
+
       max = (pv, cv, index, array) ->
         if cv is Math.max(pv, cv) then maxIndex = index
         Math.max(pv, cv)
 
       # Create initial population
       population = (new Individual(null, symregr.IDEPTH) for i in [0...symregr.POPSIZE])
-      
+
       # Calculate fitness of initial population
       fitnesses = for populant in population
         eval "populant.#{FITNESS}(points)"
@@ -158,7 +156,7 @@ $ ->
           Individual.particleSwarmOptimization(bestIndividual, points)
         else
           scaledIndividual(Individual.particleSwarmOptimization(population[maxIndex], points), points, individualDepth)
-  
+
       newPopulation = []
 
       # Else, begin symbolic regression algorithm
@@ -170,7 +168,7 @@ $ ->
         # Begin creation of a new generation of individuals
         ###
         while newPopulation.length isnt symregr.POPSIZE
-          
+
           # Step 1: Select one individual  for reproduction with probability reproductionProbability
           if Math.random() <= symregr.REPRODUCTIONPR
             # Perform user-specified reproduction with appropriate arguments
@@ -234,15 +232,15 @@ $ ->
         # Calculate fitness of the next generation
         fitnesses = for populant in population
           eval "populant.#{symregr.FITNESS}(points)"
-        
+
         # Prevent the selection and reproduction of any trees that are too complex
         for pop, i in population
           if pop.tree.maxDepth() >= symregr.MDEPTH
             fitnesses[i] = 0
-        
+
         # Find the most fit individual in current population
         bestFitnessInPopulation = fitnesses.reduce(max, 0)
-        
+
         # Test primary termination condition
         if bestFitnessInPopulation >= symregr.MAXFITNESS
           return unless symregr.FITNESS in ['scaledFitness', 'paretoFitness']
@@ -250,7 +248,7 @@ $ ->
           else
             scaledIndividual(
               Individual.particleSwarmOptimization(population[maxIndex], points), points, symregr.IDEPTH)
-        
+
         # Update the fittest individual found if the fittest individual
         # from this generation is more fit than the fittest individual found
         # thus far.
@@ -267,7 +265,7 @@ $ ->
     # Optimized symbolic regression implementation with deterministic population
     # ratios and batch selection and reproduction.  Comments omitted for brevity.
     window.optimizedSymbolicRegression = (points) ->
-            
+
       maxIndex = 0
       I = "Individual"
       max = (pv, cv, index, array) ->
@@ -277,7 +275,7 @@ $ ->
       population = (new Individual(null, symregr.IDEPTH) for i in [0...symregr.POPSIZE])
       fitnesses = for populant in population
         eval "populant.#{symregr.FITNESS}(points)"
-      
+
       for pop, i in population
         if pop.tree.maxDepth() >= symregr.MDEPTH
           fitnesses[i] = 0
@@ -290,7 +288,7 @@ $ ->
           Individual.particleSwarmOptimization(bestIndividual, points)
         else
           scaledIndividual(Individual.particleSwarmOptimization(population[maxIndex], points), points, symregr.IDEPTH)
-  
+ 
       newPopulation = []
       for i in [0...symregr.MAXITERS]
         newPopulation = []

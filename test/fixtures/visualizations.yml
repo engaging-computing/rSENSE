@@ -7,15 +7,15 @@ visualization1:
   user: kate
   project: one
   content: MyText
-  data: '{"defaultVis":"Map"}'
+  data: '{"defaultVis":"Map", "relVis":["Map"]}'
   globals: MyText
 
-tasty_viz:
-  title: Tasty Viz
+tasty_vis:
+  title: Tasty Vis
   user: kate
   project: dessert
   content: MyText
-  data: '{"defaultVis":"Summary"}'
+  data: '{"defaultVis":"Summary", "relVis":["Summary"]}'
   globals: MyText
 
 needs_media:
@@ -23,7 +23,7 @@ needs_media:
   user: nixon
   project: one
   content: MyText
-  data: '{"defaultVis":"Scatter"}'
+  data: '{"defaultVis":"Scatter", "relVis":["Scatter"]}'
   globals: MyText
 
 media_test:
@@ -31,5 +31,5 @@ media_test:
   user: nixon
   project: one
   content: MyText
-  data: '{"defaultVis":"Table"}'
+  data: '{"defaultVis":"Table", "relVis":["Table"]}'
   globals: MyText

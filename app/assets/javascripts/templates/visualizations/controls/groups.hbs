@@ -1,0 +1,19 @@
+<div class="vis-ctrl-sublock">
+  <label for="group-by">Group by:</label>
+  <select id="group-by" class="form-control">
+    {{#each groupByFields}}
+      <option value="{{value}}" data-log-id="{{logId}}">{{name}}</option>
+    {{/each}}
+  </select>
+</div>
+{{#if groups}}
+  <h4 class="vis-ctrl-subtitle">Group Selection</h4>
+  <div class="vis-ctrl-subblock">
+    {{> visualizations/controls/_checkbox checkall}}
+    {{#each groups}}
+      <div>
+        {{> visualizations/controls/_checkbox this}}
+      </div>
+    {{/each}}
+  </div>
+{{/if}}

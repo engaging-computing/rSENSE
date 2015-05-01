@@ -33,11 +33,17 @@ $ ->
     class window.Photos extends BaseVis
       constructor: (@canvas) ->
       start: ->
-        $('#' + @canvas).show()
-
-        # Hide the controls
-        @hideControls()
         super()
+        @restoreTools = globals.configs.ctrlsOpen
+        globals.configs.ctrlsOpen = false
+        $('#vis-ctrl-container').hide()
+        $('#ctrls-menu-btn').hide()
+
+      end: ->
+        super()
+        globals.configs.ctrlsOpen = @restoreTools
+        $('#vis-ctrl-container').show()
+        $('#ctrls-menu-btn').show()
 
       # Gets called when the controls are clicked and at start
       update: ->
@@ -54,20 +60,19 @@ $ ->
         for dsKey,dset of data.metadata
           if dset.photos.length > 0
             for picKey,pic of dset.photos
-              context = {
+              context =
                 p_id:   'pic-' + id
                 tn_src: pic.tn_src
                 src:    pic.src
                 p_name: pic.name
                 d_name: dset.name
                 d_id:   dset.dataset_id
-              }
 
               $(canvas).append picTemp(context)
 
               $('#pic-' + id).data('context', context)
               $('#pic-' + id).click ->
-                ctx = $(this).data('context')
+                ctx = $(@).data('context')
                 $(canvas).append lbTemp(ctx)
 
                 $('#target-img').modal
@@ -77,14 +82,10 @@ $ ->
 
               id++
 
-      end: ->
-        @unhideControls()
-        super()
-
       drawControls: ->
         super()
 
     if 'Photos' in data.relVis
-      globals.photos = new Photos 'photos_canvas'
+      globals.photos = new Photos 'photos-canvas'
     else
-      globals.photos = new DisabledVis 'photos_canvas'
+      globals.photos = new DisabledVis 'photos-canvas'

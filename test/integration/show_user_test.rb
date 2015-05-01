@@ -53,7 +53,7 @@ class ShowUserTest < ActionDispatch::IntegrationTest
     assert page.has_content?('Needs Media'), 'View data sets list'
 
     find('.nav-tabs').click_on 'Visualizations'
-    assert page.has_content?('Needs Media'), 'View viz list'
+    assert page.has_content?('Needs Media'), 'View vis list'
 
     find('.info_edit_link').click
     assert page.has_css?('.info_edit_box'), 'showed text box'

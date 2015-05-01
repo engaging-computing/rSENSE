@@ -47,13 +47,13 @@ $ ->
 
       # Removes nulls from the table and colors the groupByRow
       rowFormatter = (cellvalue, options, rowObject) ->
-        cellvalue = "" if $.type(cellvalue) is 'number' and isNaN(cellvalue) or cellvalue is null
+        cellvalue = "" if $.type(cellvalue) is 'number' and isNaN(cellvalue) or
+          cellvalue is null
 
-        colorIndex = data.groups.indexOf(String(cellvalue).toLowerCase()) % globals.configs.colors.length
-        if (colorIndex isnt -1)
-          return "<font color='#{globals.configs.colors[colorIndex]}'>#{cellvalue}<font>"
+        cIndex = data.groups.indexOf(String(cellvalue).toLowerCase())
+        if (cIndex is -1) then return cellvalue
 
-        cellvalue
+        return "<font color='#{globals.getColor(cIndex)}'>#{cellvalue}<font>"
 
       # Formats tables dates properly
       dateFormatter = (cellvalue, options, rowObject) ->
@@ -125,7 +125,7 @@ $ ->
             }
 
         # Add the nav bar
-        $('#table_canvas').append '<div id="toolbar_bottom"></div>'
+        $('#table-canvas').append '<div id="toolbar_bottom"></div>'
 
         # Build the grid
         @table = jQuery("#data_table").jqGrid({
@@ -158,12 +158,20 @@ $ ->
         $('#data_table').setGridWidth($('#' + @canvas).width())
 
         # Add a refresh button and enable the search bar
-        @table.jqGrid('navGrid','#toolbar_bottom',{ del:false, add:false, edit:false, search:false })
-        @table.jqGrid('filterToolbar',  { stringResult:     true,\
-                                          searchOnEnter:    false,\
-                                          searchOperators:  true,\
-                                          operandTitle:     'Select Search Operation',\
-                                          resetIcon: '<i class="fa fa-times-circle"></i>' })
+        params =
+          del:    false
+          add:    false
+          edit:   false
+          search: false
+        @table.jqGrid('navGrid','#toolbar_bottom', params)
+
+        params =
+          stringResult:    true
+          searchOnEnter:   false
+          searchOperators: true
+          operandTitle:    'Select Search Operation'
+          resetIcon:       '<i class="fa fa-times-circle"></i>'
+        @table.jqGrid('filterToolbar', params)
 
         # Set the time column formatters
         timePair = {}
@@ -186,11 +194,10 @@ $ ->
             # Restore the search filter type and operator symbol
             operator = $('#' + inputId).closest('tr').find('.soptclass')
             $(operator).attr('soper', column.op)
-            operands = { "eq": "==", "ne": "!", "lt": "<", \
-                         "le": "<=", "gt": ">", "ge": ">=",\
-                         "bw": "^",  "bn": "!^","in": "=", \
-                         "ni": "!=", "ew": "|", "en": "!@",\
-                         "cn": "~",  "nc": "!~","nu": "#", "nn": "!#" }
+            operands = { "eq": "==", "ne": "!",  "lt": "<",  "le": "<=", \
+                         "gt": ">",  "ge": ">=", "bw": "^",  "bn": "!^", \
+                         "in": "=",  "ni": "!=", "ew": "|",  "en": "!@", \
+                         "cn": "~",  "nc": "!~", "nu": "#",  "nn": "!#" }
             $(operator).text(operands[column.op])
 
         @table[0].triggerToolbar()
@@ -204,8 +211,11 @@ $ ->
 
       drawControls: ->
         super()
-        @drawGroupControls()
-        @drawYAxisControls()
+        @drawGroupControls(data.textFields)
+        fields = (i for f, i in data.fields when i isnt data.COMBINED_FIELD)
+        @drawYAxisControls(@configs.tableFields,
+          (i for f, i in data.fields when i isnt data.COMBINED_FIELD),
+          false, 'Visible Fields')
         @drawSaveControls()
 
       saveSort: =>
@@ -264,87 +274,4 @@ $ ->
 
       clip: (arr) -> arr
 
-      ###
-      Draws y axis controls
-      This includes a series of checkboxes or radio buttons for selecting
-      the active y axis field(s).
-      ###
-      drawYAxisControls: ->
-        # Populate choices
-        yFields = (i for f, i in data.fields when i isnt data.COMBINED_FIELD)
-        checked = false
-
-        c =  "<div id='yAxisControl' class='vis_controls'>"
-        c += "<h3 class='clean_shrink'><a href='#'>Visible Fields:</a></h3>"
-        c += "<div class='outer_control_div'>"
-        c +=
-          """
-          <div class='inner_control_div'>
-            <div class='checkbox all-y-fields'>
-              <label class='all-y'>
-                <input id='select-all-y' type='checkbox'> #Check All </input>
-              </label>
-            </div>
-          </div>
-          """
-        if @configs.tableFields.length == data.fields.length - 1
-          checked = true
-
-        for f in yFields
-          c +=
-            """
-            <div class='inner_control_div' >
-              <div class='checkbox'><label><input class='y_axis_input'
-              type='checkbox' value='#{f}'
-              #{if Number(f) in @configs.tableFields then "checked" else ""}
-              />#{data.fields[f].fieldName}</label></div></div>
-            """
-
-        c += "</div></div>"
-
-        # Write HTML
-        $('#controldiv').append c
-
-        if checked
-          $('#select-all-y').prop('checked', true)
-
-        $('.y_axis_input').click (e) =>
-          index = Number e.target.value
-          if index in @configs.tableFields
-            arrayRemove(@configs.tableFields, index)
-          else
-            @configs.tableFields.push(index)
-
-          if yFields.length == @configs.tableFields.length
-            $('#select-all-y').prop("checked", true)
-          else
-            $('#select-all-y').prop("checked", false)
-
-          @delayedUpdate()
-
-        # Set up accordion
-        globals.configs.yAxisOpen ?= 0
-
-        $('#yAxisControl').accordion
-          collapsible:true
-          active:globals.configs.yAxisOpen
-
-        $('#yAxisControl > h3').click ->
-          globals.configs.yAxisOpen = (globals.configs.yAxisOpen + 1) % 2
-
-        $('#select-all-y').click =>
-          selFields =
-            (i for f, i in data.fields when i isnt data.COMBINED_FIELD)
-
-          if $('#select-all-y').is(":checked")
-            $('#yAxisControl').find('.y_axis_input').each (i,j) ->
-              $(j).prop('checked', true)
-            @configs.tableFields = selFields
-          else
-            @configs.tableFields = []
-            $('#yAxisControl').find('.y_axis_input').each (i,j) ->
-              $(j).prop('checked', false)
-
-          @delayedUpdate()
-
-    globals.table = new Table "table_canvas"
+    globals.table = new Table "table-canvas"

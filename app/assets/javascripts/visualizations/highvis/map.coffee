@@ -27,8 +27,8 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and
-  namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is 'visualizations' and
+  namespace.action in ['displayVis', 'embedVis', 'show']
 
     class window.Map extends BaseVis
       constructor: (@canvas) ->
@@ -37,10 +37,10 @@ $ ->
         @HEATMAP_NONE = -2
         @HEATMAP_MARKERS = -1
 
-        @configs.visibleMarkers = 1
-        @configs.visibleLines = 0
-        @configs.visibleClusters = if data.dataPoints.length > 100 then 1 else 0
-        @configs.heatmapSelection = @HEATMAP_NONE
+        @configs.visibleMarkers ?= true
+        @configs.visibleLines ?= false
+        @configs.visibleClusters ?= data.dataPoints.length > 100
+        @configs.heatmapSelection ?= @HEATMAP_NONE
         @configs.mapTypeId ?= google.maps.MapTypeId.ROADMAP
 
       serializationCleanup: ->
@@ -55,7 +55,8 @@ $ ->
           delete @timeLines
 
       start: ->
-        ($ '#' + @canvas).show()
+        # Map needs this canvas visible to draw correctly
+        $('#' + @canvas).show()
 
         # Remove old handlers if they exist
         if @markers?
@@ -82,7 +83,8 @@ $ ->
         for index of @heatPoints
           for group in data.groups
             @heatPoints[index].push []
-        ################ PLUGIN INIT ###############
+
+        ### Initialize Plugins ###
         # Gmaps
         latlngbounds = new google.maps.LatLngBounds()
 
@@ -92,12 +94,13 @@ $ ->
           mapTypeId: @configs.mapTypeId
           scaleControl: true
 
-        @gmap = new google.maps.Map(document.getElementById(@canvas), mapOptions)
+        @gmap = new google.maps.Map(document.getElementById(@canvas),
+          mapOptions)
         info = new google.maps.InfoWindow()
 
         # Projection Helper
         @projOverlay = new CanvasProjectionOverlay()
-        @projOverlay.setMap @gmap
+        @projOverlay.setMap(@gmap)
 
         # Overlapping marker spiderfier
         initOMS()
@@ -137,11 +140,10 @@ $ ->
           textSize: 12
 
         @clusterer = new MarkerClusterer @gmap, [],
-          maxZoom: if @configs.visibleClusters then 17 else -1
+          maxZoom: if Boolean(@configs.visibleClusters) then 17 else -1
           gridSize: 35
           ignoreHidden: true
           styles: clusterStyles
-        ################################################
 
         for dataPoint in globals.CLIPPING.getData(data.dataPoints)
           lat = lon = null
@@ -158,13 +160,14 @@ $ ->
             if (lat is null) or (lon is null)
               return
 
-            groupIndex = data.groups.indexOf dataPoint[globals.configs.groupById].toLowerCase()
-            color = globals.configs.colors[groupIndex % globals.configs.colors.length]
-
+            groupIndex = data.groups.indexOf(
+              String(dataPoint[globals.configs.groupById]).toLowerCase())
+            color = globals.getColor(groupIndex)
             latlng = new google.maps.LatLng(lat, lon)
 
             # Put aside line info if necessary
-            if @timeLines? and dataPoint[data.timeFields[0]] isnt null and not(isNaN dataPoint[data.timeFields[0]])
+            isNum = not isNaN(dataPoint[data.timeFields[0]])
+            if @timeLines? and dataPoint[data.timeFields[0]]? and isNum
               @timeLines[groupIndex].push
                 time: dataPoint[data.timeFields[0]]
                 latlng: latlng
@@ -172,56 +175,58 @@ $ ->
             idString = new String(dataPoint[1].match(/\((\d+)\)$/g))
             dataSetID = parseInt(idString.match(/(\d+)/g))
 
-            metaIndex = 0
-            for i in [1...Object.keys(data.metadata).length]
-              if data.metadata[i].dataset_id == dataSetID
-                metaIndex = i
-                break
-
+            # TODO Template out this html
             # Build info window content
             label  = "<div style='font-size:9pt;overflow-x:none;'>"
             label += "<div style='width:100%;text-align:center;color:#{color};'> " +
               "#{dataPoint[globals.configs.groupById]}</div></br>"
 
-            if data.metadata[metaIndex].photos.length == 1
-              photo = data.metadata[metaIndex].photos[0]
-              label += "<div class='item'>
-                          <img class='item-image item-photo-image' src=#{photo.src} >
-                        </div>
-                        </br>"
+            metaIndex = 0
+            if data.metadata?
+              for i in [1...Object.keys(data.metadata).length]
+                if data.metadata[i].dataset_id == dataSetID
+                  metaIndex = i
+                  break
 
-            else if data.metadata[metaIndex].photos.length > 0
-              label += "<div id='mapCarousel' class='carousel slide' data-ride='carousel' data-interval='false'>
-                        <div class='carousel-inner' role='listbox'>"
+              if data.metadata[metaIndex].photos.length == 1
+                photo = data.metadata[metaIndex].photos[0]
+                label += "<div class='item'>
+                            <img class='item-image item-photo-image' src=#{photo.src} >
+                          </div>
+                          </br>"
 
-              firstPhoto = data.metadata[metaIndex].photos[0]
-              label += "<div class='item active'>
-                          <img class='item-image item-photo-image' src=#{firstPhoto.src} >
-                        </div>"
+              else if data.metadata[metaIndex].photos.length > 0
+                label += "<div id='mapCarousel' class='carousel slide' data-ride='carousel' data-interval='false'>
+                          <div class='carousel-inner' role='listbox'>"
 
-              for i in [1...data.metadata[metaIndex].photos.length]
-                label +=  "<div class='item'>
-                            <img class='item-image item-photo-image' src = #{data.metadata[metaIndex].photos[i].src} >
+                firstPhoto = data.metadata[metaIndex].photos[0]
+                label += "<div class='item active'>
+                            <img class='item-image item-photo-image' src=#{firstPhoto.src} >
                           </div>"
 
-              label +=  "</div>
-                          <a class='left carousel-control' href='#mapCarousel' role='button'
-                          	data-slide='prev'><span class='glyphicon glyphicon-chevron-left'></span></a>
-                          <a class='right carousel-control' href='#mapCarousel' role='button'
-                          	data-slide='next'><span class='glyphicon glyphicon-chevron-right'></span></a>
-                        </div> </br>"
+                for i in [1...data.metadata[metaIndex].photos.length]
+                  label +=  "<div class='item'>
+                              <img class='item-image item-photo-image' src = #{data.metadata[metaIndex].photos[i].src} >
+                            </div>"
+
+                label +=  "</div>
+                            <a class='left carousel-control' href='#mapCarousel' role='button'
+                              data-slide='prev'><span class='glyphicon glyphicon-chevron-left'></span></a>
+                            <a class='right carousel-control' href='#mapCarousel' role='button'
+                              data-slide='next'><span class='glyphicon glyphicon-chevron-right'></span></a>
+                          </div> </br>"
 
             label += "<table>"
-            for field, fieldIndex in data.fields when dataPoint[fieldIndex] isnt null
-              dat = if (Number field.typeID) is data.types.TIME
-                (globals.dateFormatter dataPoint[fieldIndex])
+            for f, i in data.fields when dataPoint[i] isnt null
+              dat = if Number(f.typeID) is data.types.TIME
+                globals.dateFormatter(dataPoint[i])
               else
-                dataPoint[fieldIndex]
+                dataPoint[i]
 
-              label += "<tr><td>#{field.fieldName}</td>"
+              label += "<tr><td>#{f.fieldName}</td>"
               label += "<td><strong>#{dat}</strong></td>"
-              unit = fieldUnit(field, false)
-              if unit? and fieldIndex > 2
+              unit = fieldUnit(f, false)
+              if unit? and i > 2
                 label += "<td>#{unit}</td></tr>"
               else
                 label += "</tr>"
@@ -243,7 +248,8 @@ $ ->
               position: latlng
               icon: pinSym
               desc: label
-              visible: ((groupIndex in data.groupSelection) and @configs.visibleMarkers is 1)
+              visible: ((groupIndex in data.groupSelection) and
+                Boolean(@configs.visibleMarkers))
 
             @oms.addMarker newMarker
 
@@ -255,7 +261,8 @@ $ ->
                 val: dataPoint[index]
                 location: latlng
 
-            @heatPoints[@HEATMAP_MARKERS][groupIndex].push latlng
+            if @heatPoints[@HEATMAP_MARKERS]
+              @heatPoints[@HEATMAP_MARKERS][groupIndex].push(latlng)
 
         # Add markers into the clusterer
         @clusterer.addMarkers [].concat.apply([], @markers)
@@ -268,10 +275,11 @@ $ ->
             @timeLines[index] = new google.maps.Polyline
               path: @timeLines[index]
               geodesic: true
-              strokeColor: globals.configs.colors[index]
+              strokeColor: globals.getColor(index)
               strokeOpacity: 1.0
               strokeWeight: 2
-              visible: ((index in data.groupSelection) and @configs.visibleLines is 1)
+              visible: ((index in data.groupSelection) and
+                Boolean(@configs.visibleLines))
 
             @timeLines[index].setMap(@gmap)
 
@@ -279,7 +287,7 @@ $ ->
         if @configs.zoomLevel?
           @gmap.setZoom @configs.zoomLevel
 
-        # Figure default heatmap
+        # Configure default heatmap
         if not @configs.heatmapRadius?
           @configs.heatmapRadius = 1
           dist = @getDiag(latlngbounds)
@@ -292,12 +300,13 @@ $ ->
 
         # Deal with zoom area
         if @configs.savedCenter?
-          @gmap.setCenter new google.maps.LatLng(@configs.savedCenter.lat, @configs.savedCenter.lng)
+          @gmap.setCenter(new google.maps.LatLng(@configs.savedCenter.lat,
+            @configs.savedCenter.lng))
         else
           @gmap.fitBounds(latlngbounds)
 
         @drawControls()
-        
+
         ctaLayer = new google.maps.KmlLayer({url: window.kml})
         ctaLayer.setMap(@gmap)
 
@@ -307,7 +316,8 @@ $ ->
             newZoom = @gmap.getZoom()
             if @configs.heatmapSelection isnt @HEATMAP_NONE
               # Guess new radius
-              @heatmapPixelRadius = Math.ceil(@heatmapPixelRadius * Math.pow(2, newZoom - @configs.zoomLevel))
+              @heatmapPixelRadius = Math.ceil(@heatmapPixelRadius * Math.pow(2,
+                newZoom - @configs.zoomLevel))
               @delayedUpdate()
             @configs.zoomLevel = newZoom
 
@@ -323,13 +333,15 @@ $ ->
               if @getHeatmapScale() isnt @heatmapPixelRadius
                 @delayedUpdate()
 
+          super()
+
           # Calls update to draw heatmap on start
           if @configs.heatmapSelection isnt @HEATMAP_NONE
             @delayedUpdate()
 
         checkProj = =>
           if @projOverlay.getProjection() is undefined
-            google.maps.event.addListenerOnce @gmap, "idle", checkProj
+            google.maps.event.addListenerOnce(@gmap, "idle", checkProj)
           else
             finalInit()
 
@@ -344,50 +356,54 @@ $ ->
 
         # Build heatmap points from pre-computed data
         if @configs.heatmapSelection isnt @HEATMAP_NONE
-
           @heatmapPixelRadius = @getHeatmapScale()
 
           heats = []
-          for index, heatArray of @heatPoints when (Number index) is @configs.heatmapSelection
-            for groupArray, groupIndex in heatArray when groupIndex in data.groupSelection
-              heats = heats.concat groupArray
+          for k, h of @heatPoints when Number(k) is @configs.heatmapSelection
+            for g, i in h when i in data.groupSelection
+              heats = heats.concat(g)
 
           if @configs.heatmapSelection >= 0
             coords = []
-            for heat in heats
-              coords.push @projOverlay.projectPixels heat.location
+            for h in heats
+              coords.push(@projOverlay.projectPixels(h.location))
 
-            for heat, hIndex in heats
-              ori = @projOverlay.projectPixels heat.location
+            for h, i in heats
+              ori = @projOverlay.projectPixels(h.location)
               # Distance to origin function
-              dist = (a) -> Math.sqrt((a.x - ori.x) * (a.x - ori.x) + (a.y - ori.y) * (a.y - ori.y))
+              dist = (a) -> Math.sqrt((a.x - ori.x) * (a.x - ori.x) +
+                (a.y - ori.y) * (a.y - ori.y))
               # Get all points within one radius of origin
-              neighbors = (coords.map(dist)).filter (a) => return a < (@heatmapPixelRadius)
+              neighbors = (coords.map(dist)).filter (a) =>
+                return a < (@heatmapPixelRadius)
               # Reverse the distance, and raise to power (for weighting)
-              neighbors = neighbors.map (a) => Math.pow((@heatmapPixelRadius) - a, 3)
-              # Scale by reciprical
-              neighbors = neighbors.map (a) => a / Math.pow((@heatmapPixelRadius), 3)
+              neighbors = neighbors.map (a) =>
+                return Math.pow((@heatmapPixelRadius) - a, 3)
+              # Scale by reciprocal
+              neighbors = neighbors.map (a) =>
+                return a / Math.pow((@heatmapPixelRadius), 3)
               # Finally, add together to get weight
               add = (a,b) -> a + b
-              heats[hIndex].weight = heat.val / neighbors.reduce(add, 0)
+              heats[i].weight = h.val / neighbors.reduce(add, 0)
 
           # Draw heatmap
           @heatmap = new google.maps.visualization.HeatmapLayer
             data: heats
             radius: @heatmapPixelRadius
             dissipating:true
-          @heatmap.setMap @gmap
+          @heatmap.setMap(@gmap)
 
         # Set marker visibility
-        for markGroup, index in @markers
-          for mark in markGroup
-            mark.setVisible ((index in data.groupSelection) and @configs.visibleMarkers is 1)
+        for mg, i in @markers
+          for m in mg
+            m.setVisible((i in data.groupSelection) and
+              Boolean(@configs.visibleMarkers))
 
           if @timeLines?
-            @timeLines[index].setVisible ((index in data.groupSelection) and @configs.visibleLines is 1)
+            @timeLines[i].setVisible((i in data.groupSelection) and
+              Boolean(@configs.visibleLines))
 
         @clusterer.repaint()
-
         super()
 
       end: ->
@@ -399,127 +415,107 @@ $ ->
 
       drawControls: ->
         super()
-        @drawGroupControls(true)
+        @drawGroupControls(data.textFields, true)
         @drawToolControls()
         @drawSaveControls()
 
       drawToolControls: ->
-        controls =  '<div id="toolControl" class="vis_controls">'
+        inctx =
+          radius: @configs.heatmapRadius
+          displayMarkers:
+            label: 'Display Markers'
+            id:    'display-markers'
+            logId: 'display-markers'
+          timeLines: @timeLines?
+          connectMarkers:
+            label: 'Connect Markers'
+            id:    'connect-markers'
+            logId: 'connect-markers'
+          clusterMarkers:
+            label: 'Cluster Markers'
+            id:    'cluster-markers'
+            logId: 'cluster-markers'
+          heatmaps: [
+            {
+              value: @HEATMAP_NONE,
+              logId: 'hmap-none',
+              label: 'None'
+            },
+            {
+              value: @HEATMAP_MARKERS,
+              logId: 'hmap-marker-density',
+              label: 'Marker Density'
+            }
+          ]
 
-        controls += "<h3 class='clean_shrink'><a href='#'>Tools:</a></h3>"
-        controls += "<div class='outer_control_div'>"
+        for i in data.normalFields
+          inctx.heatmaps.push
+            value: Number(i)
+            logId: 'hmap-field-' + Number(i)
+            label: data.fields[i].fieldName
 
-        controls += "<h4 class='clean_shrink'>Heat Maps</h4>"
+        outctx =
+          id: 'tools-ctrls'
+          title: 'Tools'
+          body: HandlebarsTemplates[hbCtrl('map-tools')](inctx)
 
-        # Add heatmap selector
-        controls += '<div class="inner_control_div"> Map By: '
-        controls += '<select id="heatmapSelector" class="form-control">'
+        tools = HandlebarsTemplates[hbCtrl('body')](outctx)
+        $('#vis-ctrls').append(tools)
 
-        sel = if @configs.heatmapSelection is @HEATMAP_NONE then 'selected' else ''
-        controls += "<option value=\"#{@HEATMAP_NONE}\" #{sel}>None</option>"
+        # Initialize and track the status of this control panel
+        globals.configs.toolsOpen ?= false
+        initCtrlPanel('tools-ctrls', 'toolsOpen')
 
-        sel = if @configs.heatmapSelection is @HEATMAP_MARKERS then 'selected' else ''
-        controls += "<option value=\"#{@HEATMAP_MARKERS}\" #{sel}>Marker Density</option>"
-
-        for fieldIndex in data.normalFields
-          sel = if @configs.heatmapSelection is fieldIndex then 'selected' else ''
-          controls += "<option value=\"#{Number fieldIndex}\" #{sel}>#{data.fields[fieldIndex].fieldName}</option>"
-
-        controls += "</select></div>"
-
-        # Heatmap slider
-        controls += "<br>"
-        controls += "<div class='inner_control_div'> Heatmap Radius: "
-        controls += "<input id='radius-text' value='#{@configs.heatmapRadius}'></input>m</div>"
-        controls += "<div class='inner_control_div'> <div id='heatmap-error-text'> </div></div>"
-        controls += "<div id='heatmapSlider' style='width:95%'></div>"
-
-        # Other
-        controls += "<br>"
-        controls += "<h4 class='clean_shrink'>Other</h4>"
-
-        # Marker checkbox
-        controls += '<div class="inner_control_div">'
-        controls += "<input id='markerBox' type='checkbox' name='marker_selector' "
-        controls += "#{if @configs.visibleMarkers is 1 then 'checked' else ''}/> Display Markers "
-        controls += "</div>"
-
-        # Marker line checkbox
-        if @timeLines?
-          controls += '<div class="inner_control_div">'
-          controls += "<input id='lineBox' type='checkbox' name='line_selector' "
-          controls += "#{if @configs.visibleLines is 1 then 'checked' else ''}/> Connect Markers "
-          controls += "</div>"
-
-        # Cluster checkbox
-        controls += '<div class="inner_control_div">'
-        controls += "<input id='clusterBox' type='checkbox' name='cluster_selector' "
-        controls += "#{if @configs.visibleClusters is 1 then 'checked' else ''}/> Cluster Markers "
-        controls += "</div>"
-
-
-        controls += "</div></div>"
-
-        # Write HTML
-        ($ '#controldiv').append controls
-
-        ($ '#markerBox').click (e) =>
-          @configs.visibleMarkers = if e.target.checked then 1 else 0
+        # Heatmap Selection
+        $('#hmap-by').val(@configs.heatmapSelection)
+        $('#hmap-by').change (e) =>
+          ele = e.target or e.srcElement
+          @configs.heatmapSelection = Number(ele.value)
           @delayedUpdate()
 
-        ($ '#lineBox').click (e) =>
-          @configs.visibleLines = if e.target.checked then 1 else 0
+        # Checkboxes
+        $('#ckbx-display-markers').prop('checked', @configs.visibleMarkers)
+        $('#ckbx-display-markers').click (e) =>
+          @configs.visibleMarkers = e.target.checked
           @delayedUpdate()
 
-        ($ '#clusterBox').click (e) =>
-          @configs.visibleClusters = if e.target.checked then 1 else 0
-          @clusterer.setMaxZoom (if @configs.visibleClusters then 17 else -1)
+        $('#ckbx-connect-markers').prop('checked', @configs.visibleLines)
+        $('#ckbx-connect-markers').click (e) =>
+          @configs.visibleLines = e.target.checked
           @delayedUpdate()
 
-        # Make heatmap select handler
-        ($ '#heatmapSelector').change (e) =>
-          element = e.target or e.srcElement
-          @configs.heatmapSelection = (Number element.value)
-
-          @delayedUpdate()
-
-        # Set up heatmap entry
-        ($ '#radius-text').keydown (e) =>
-          if e.which == 13
-            newRadius = Number ($ '#radius-text').val()
-            if isNaN newRadius
-              ($ '#radius-text').errorFlash()
-              return
-            # Guess new pixel radius
-            @heatmapPixelRadius = Math.ceil(@heatmapPixelRadius * newRadius / @configs.heatmapRadius)
-            @configs.heatmapRadius = newRadius
-            ($ '#heatmapSlider').slider "value", (Math.log @configs.heatmapRadius) / (Math.log 10)
-            @delayedUpdate()
+        $('#ckbx-cluster-markers').prop('checked', @configs.visibleClusters)
+        $('#ckbx-cluster-markers').click (e) =>
+          @configs.visibleClusters = e.target.checked
+          @start()
 
         # Set up heatmap slider
-        ($ '#heatmapSlider').slider
-          range: 'min'
-          value: (Math.log @configs.heatmapRadius) / (Math.log 10)
+        init =
+          value: Math.log(@configs.heatmapRadius) / Math.log(10)
           min: 0
           max: 6
-          values: 0
-          slide: (event, ui) =>
-            newRadius = Math.pow(10, Number ui.value)
-            # Guess new pixel radius
-            @heatmapPixelRadius = Math.ceil(@heatmapPixelRadius * newRadius / @configs.heatmapRadius)
-            @configs.heatmapRadius = newRadius
-            ($ '#radius-text').val("#{@configs.heatmapRadius}")
-            @delayedUpdate()
+        $('#heatmap-slider').attr(init)
+        $('#heatmap-slider').on 'input change', (e) =>
+          newRadius = Math.pow(10, Number(e.target.value))
+          # Guess new pixel radius
+          @heatmapPixelRadius =
+            Math.ceil(@heatmapPixelRadius * newRadius / @configs.heatmapRadius)
+          @configs.heatmapRadius = newRadius
+          $('#map-radius').val("#{@configs.heatmapRadius}")
+          @delayedUpdate()
 
-        # Set up accordion
-        globals.configs.toolsOpen ?= 0
+        # Heatmap Radius Box
+        $('#map-radius').change (e) =>
+          newRadius = Number(e.target.value)
+          if isNaN(newRadius) then return $('#map-radius').errorFlash()
 
-        ($ '#toolControl').accordion
-          collapsible:true
-          active:globals.configs.toolsOpen
-
-        ($ '#toolControl > h3').click ->
-          globals.configs.toolsOpen = (globals.configs.toolsOpen + 1) % 2
+          # Guess new pixel radius
+          @heatmapPixelRadius = Math.ceil(@heatmapPixelRadius * newRadius /
+            @configs.heatmapRadius)
+          @configs.heatmapRadius = newRadius
+          $('#heatmap-slider').val(Math.log(@configs.heatmapRadius) /
+            Math.log(10))
+          @delayedUpdate()
 
       resize: (newWidth, newHeight, duration) ->
         func = =>
@@ -527,26 +523,28 @@ $ ->
         setTimeout func, duration
 
       getPixelDiag: () ->
-        ww = ($ "##{@canvas}").width()
-        hh = ($ "##{@canvas}").height()
+        ww = $("##{@canvas}").width()
+        hh = $("##{@canvas}").height()
         Math.sqrt(ww * ww + hh * hh)
 
       getDiag: (latlngbounds = @gmap.getBounds()) ->
         google.maps.geometry.spherical.computeDistanceBetween(
           latlngbounds.getNorthEast(), latlngbounds.getSouthWest())
 
-      getHeatmapScale: () ->
+      getHeatmapScale: ->
         viewBounds = @gmap.getBounds()
         # Extends bounds by radius of heatmap
         # There are 111,329 meters per degree of longitude at the equator
         sw = viewBounds.getSouthWest()
         ss = sw.lat() - @configs.heatmapRadius / 111329
-        ww = sw.lng() - @configs.heatmapRadius / (Math.cos(sw.lat() * Math.PI / 180) * 111329)
+        ww = sw.lng() -
+          @configs.heatmapRadius / (Math.cos(sw.lat() * Math.PI / 180) * 111329)
         sw = new google.maps.LatLng(ss, ww)
 
         ne = viewBounds.getNorthEast()
         nn = ne.lat() + @configs.heatmapRadius / 111329
-        ee = ne.lng() + @configs.heatmapRadius / (Math.cos(ne.lat() * Math.PI / 180) * 111329)
+        ee = ne.lng() +
+          @configs.heatmapRadius / (Math.cos(ne.lat() * Math.PI / 180) * 111329)
         ne = new google.maps.LatLng(nn, ee)
 
         viewBounds = new google.maps.LatLngBounds(sw, ne)
@@ -558,13 +556,13 @@ $ ->
               heatBounds.extend mark.getPosition()
 
         if not heatBounds.isEmpty()
-          dist = google.maps.geometry.spherical.computeDistanceBetween(
-            heatBounds.getNorthEast(), heatBounds.getSouthWest())
+          dist = @getDiag()
 
           a = @projOverlay.projectPixels(heatBounds.getNorthEast())
           b = @projOverlay.projectPixels(heatBounds.getSouthWest())
 
-          pixelDist = Math.sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y))
+          pixelDist = Math.sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) *
+            (a.y - b.y))
 
           pixelDensity = dist / pixelDist
           newRad = Math.ceil(@configs.heatmapRadius / pixelDensity)
@@ -572,16 +570,17 @@ $ ->
 
           # Single point check
           if pixelDist is 0
-            newRad = Math.ceil(@configs.heatmapRadius * (@getPixelDiag() / @getDiag()))
+            newRad = Math.ceil(@getPixelDiag() / dist * @configs.heatmapRadius)
 
           if newRad <= maxRad
-            ($ '#heatmap-error-text').html ''
+            $('#heatmap-error-text').html ''
             return newRad
           else
-            act = Math.ceil(maxRad * (@getDiag() / @getPixelDiag()))
-            ($ '#heatmap-error-text').html(
-              "The radius had to be decreased to #{act}m for performance reasons. " +
-              "It will restore to your selection as the map is zoomed out."
+            act = Math.ceil(dist / @getPixelDiag() * maxRad)
+            $('#heatmap-error-text').html(
+              "The radius had to be decreased to #{act}m for performance " +
+              "reasons. It will restore to your selection as the map is " +
+              "zoomed out."
             )
             return maxRad
         else
@@ -589,26 +588,25 @@ $ ->
 
       clip: (arr) ->
         viewBounds = @gmap.getBounds()
-        if viewBounds?
-          filterFunc = (row) ->
-            lat = lng = null
+        unless viewBounds? then return arr
 
-            # Scan for lat and long
-            for field, fieldIndex in data.fields
-              if (Number field.typeID) in data.types.LOCATION
-                if (Number field.typeID) is data.units.LOCATION.LATITUDE
-                  lat = row[fieldIndex]
-                else if (Number field.typeID) is data.units.LOCATION.LONGITUDE
-                  lng = row[fieldIndex]
+        filterFunc = (row) ->
+          lat = lng = null
 
-            # If points are valid, check if they are visible
-            if (lat is null) or (lng is null)
-              return false
-            else return viewBounds.contains(new google.maps.LatLng(lat, lng))
+          # Scan for lat and long
+          for f, i in data.fields
+            if Number(f.typeID) in data.types.LOCATION
+              if Number(f.typeID) is data.units.LOCATION.LATITUDE
+                lat = row[i]
+              else
+                lng = row[i]
 
-          arr.filter filterFunc
+          # If points are valid, check if they are visible
+          if (lat is null) or (lng is null)
+            return false
+          else return viewBounds.contains(new google.maps.LatLng(lat, lng))
 
-        else arr
+        return arr.filter(filterFunc)
 
     if "Map" in data.relVis
       class CanvasProjectionOverlay extends google.maps.OverlayView
@@ -619,6 +617,6 @@ $ ->
         projectPixels: (latlng) ->
           @getProjection().fromLatLngToContainerPixel(latlng)
 
-      globals.map = new Map "map_canvas"
+      globals.map = new Map "map-canvas"
     else
-      globals.map = new DisabledVis "map_canvas"
+      globals.map = new DisabledVis "map-canvas"

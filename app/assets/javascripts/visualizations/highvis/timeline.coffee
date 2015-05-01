@@ -27,8 +27,8 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and
-  namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is 'visualizations' and
+  namespace.action in ['displayVis', 'embedVis', 'show']
 
     class window.Timeline extends Scatter
       ###
@@ -48,12 +48,12 @@ $ ->
         super()
 
         self = this
-        group_by = ''
-        ($ '#groupSelector').find('option').each (i,j) ->
-          if ($ j).is(':selected')
-            group_by = ($ j).text()
-        if group_by is ''
-          group_by = "Data set Name (id)"
+        groupBy = ''
+        $('#groupSelector').find('option').each (i,j) ->
+          if $(j).is(':selected')
+            groupBy = $(j).text()
+        if groupBy is ''
+          groupBy = "Data set Name (id)"
         $.extend true, @chartOptions,
           title:
             text: ''
@@ -88,6 +88,9 @@ $ ->
                   #{fieldUnit(data.fields[index], false)}</strong></td></tr>"
                   str += "</table>"
             useHTML: true
+          plotOptions:
+            series:
+              animation: false
 
         @chartOptions.xAxis =
           if data.timeType is data.NORM_TIME
@@ -102,12 +105,19 @@ $ ->
       ###
       drawRegressionControls: () ->
         super()
-        
+
+      ###
+      Turn off elapsed time
+      ###
+      drawToolControls: (elapsedTime = false) ->
+        super(elapsedTime)
+
       ###
       Overwrite xAxis controls to only allow time fields
       ###
       drawXAxisControls: ->
-        super (fieldIndex) -> fieldIndex in data.timeFields
+        fieldIndex = data.timeFields[0]
+        super(fieldIndex, data.timeFields)
 
       ###
       Clips an array of data to include only bounded points
@@ -116,6 +126,6 @@ $ ->
         super(arr)
 
     if "Timeline" in data.relVis
-      globals.timeline = new Timeline 'timeline_canvas'
+      globals.timeline = new Timeline 'timeline-canvas'
     else
-      globals.timeline = new DisabledVis "timeline_canvas"
+      globals.timeline = new DisabledVis "timeline-canvas"

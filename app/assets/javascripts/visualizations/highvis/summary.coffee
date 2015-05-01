@@ -27,15 +27,15 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and
-  namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is 'visualizations' and
+  namespace.action in ['displayVis', 'embedVis', 'show']
 
     class window.Summary extends BaseVis
       constructor: (@canvas) ->
         super(@canvas)
 
       start: ->
-        @configs.displayField = Math.min globals.configs.fieldSelection...
+        @configs.displayField = Math.min(globals.configs.fieldSelection...)
         super()
 
       update: ->
@@ -104,8 +104,10 @@ $ ->
 
       drawControls: ->
         super()
-        @drawGroupControls(true, false)
-        @drawYAxisControls(true)
+        @drawGroupControls(data.textFields)
+        @drawYAxisControls(globals.configs.fieldSelection,
+          data.normalFields.slice(1), true, 'Fields', @configs.displayField,
+          @yAxisRadioHandler)
         @drawSaveControls()
 
-      globals.summary = new Summary "summary_canvas"
+      globals.summary = new Summary "summary-canvas"
