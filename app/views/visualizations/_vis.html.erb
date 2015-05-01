@@ -56,20 +56,49 @@
         </button>
         <% if obj %>
           <%= title_and_edit_menu(obj) %>
-          <% unless can_edit?(obj) %>
-            <div class="inline-block subtitle">
-              by <%= link_to "#{owner.name}", owner, class: "link" %>
-            </div>
-          <% end %>
         <% else %>
           Showing Multiple Data Sets
         <% end %>
+        <div class="inline-block subtitle" style="font-style: italic">
+          <span>of&nbsp;</span>
+          <i class='fa fa-folder-open'></i>
+          <%= link_to project.title.html_safe, project %>
+          by <i class='fa fa-user'></i>
+          <%= link_to "#{project.owner.name}", owner, class: "link" %>
+        </div>
       </div>
-      <div id="vis-proj-info" class="subtitle inline-right hidden-xs hidden-sm">
-        <i class='fa fa-folder-open'></i>
-        <%= link_to project.title.html_safe, project %>
-        by <i class='fa fa-user'></i>
-        <%= link_to "#{project.owner.name}", owner, class: "link" %>
+      <div id="vis-proj-right"
+           class="subtitle inline-right hidden-xs hidden-sm">
+        <% if can_edit?(obj) %>
+          <div class="edit_menu inline-block" data-field="title"
+               data-value="<%= obj.title.html_safe %>">
+            <div class="btn-group">
+              <a class="btn btn-primary dropdown-toggle menu_edit_link"
+                 data-toggle="dropdown" href="#">
+                Edit <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu pull-right" role="menu">
+                <li role="presentation">
+                  <a class="menu_rename" role="menuitem"
+                     href="<%= url_for obj %>">
+                    <i class="fa fa-edit"></i> Edit Title
+                  </a>
+                </li>
+                <% if can_delete?(obj) %>
+                  <li role="presentation">
+                    <%= link_to obj, data: { confirm: "Are you sure?" },
+                        method: :delete,
+                        class: 'menu_delete' do %>
+                      <i style="color:red" class="fa fa-times-circle"></i>
+                      Delete
+                      <%= (s = obj.class.to_s) == 'DataSet' ? 'Data Set' : s  %>
+                    <% end %>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        <% end %>
         <% if getLatest %>
           <%= link_to "#{project_path(@project)}/data_sets",
             { id:"refresh-data", class: "btn btn-default" } do %>

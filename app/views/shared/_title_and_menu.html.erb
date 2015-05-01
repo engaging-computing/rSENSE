@@ -3,7 +3,7 @@
 <div id="title-and-menu">
   <div id="title-and-menu-title">
     <div id="title-name" class="inline-block"><%= obj.title.html_safe %></div>
-    <% if edit %>
+    <% if edit && !(obj.is_a?(DataSet) || obj.is_a?(Visualization)) %>
       <div class="edit_menu inline-block" data-field="title"
            data-value="<%= obj.title.html_safe %>">
         <div class="btn-group">
@@ -21,14 +21,16 @@
               </li>
             <% else %>
               <li role="presentation">
-                <a class="menu_rename" role="menuitem" href="<%=url_for obj%>">
+                <a class="menu_rename" role="menuitem"
+                   href="<%= url_for obj %>">
                   <i class="fa fa-edit"></i> Edit Title
                 </a>
               </li>
             <% end %>
             <% if obj.is_a?(News) %>
               <li role="presentation">
-                <a class="summary_edit" role="menuitem" href="<%=url_for obj%>">
+                <a class="summary_edit" role="menuitem"
+                   href="<%= url_for obj %>">
                   <i class="fa fa-edit"></i> Edit Summary
                 </a>
               </li>

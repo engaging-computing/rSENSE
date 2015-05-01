@@ -356,6 +356,11 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
             vertical-align: middle;
           }
         }
+
+        #vis-proj-right {
+          position: absolute;
+          right: 10px;
+        }
       }
     }
 

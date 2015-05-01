@@ -3,10 +3,10 @@ module ApplicationHelper
     render 'shared/content', obj: obj
   end
 
-  def title_and_edit_menu(obj, extension = '')
+  def title_and_edit_menu(obj)
     name = obj.class.to_s.split('_').map(&:capitalize).join(' ')
     render('shared/title_and_menu', obj: obj, typeName: name,
-           edit: can_edit?(obj), extension: extension.html_safe)
+           edit: can_edit?(obj))
   end
 
   def get_field_name(field)

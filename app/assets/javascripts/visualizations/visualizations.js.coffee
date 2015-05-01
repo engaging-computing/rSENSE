@@ -64,11 +64,6 @@ $ ->
       $('#vis-ctrl-container').is(':hidden')
         globals.configs.ctrlsOpen = false
 
-      # Manual overflow calculations because dropdown prevents css fix
-      $('#vis-proj-info').show()
-      if $('#vis-proj-info').offset().top > 65
-        $('#vis-proj-info').hide()
-
       unless globals.configs.ctrlsOpen
         controlSize = 0
         controlOpac = 0.0
