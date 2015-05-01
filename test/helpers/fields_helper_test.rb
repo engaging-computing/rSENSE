@@ -8,7 +8,7 @@ class FieldsHelperTest < ActionView::TestCase
     assert resp.include?('invalid input'), "There isn't a sixth field name"
   end
 
-  test 'get Timestamp field type' do
+  test 'get timestamp field type' do
     resp = get_field_type('Timestamp')
     assert resp == 1, 'Wrong field type for timestamp'
   end
