@@ -75,7 +75,9 @@ class RefactorInvisibleFields < ActiveRecord::Migration
   end
 
   def refactor_scatter(scatter, dir)
-    unless scatter.nil?
+    if scatter.nil?
+      nil
+    else
       if !scatter['xAxis'].nil? && scatter['xAxis'] >= Param.n
         scatter['xAxis'] += dir
       end
@@ -96,12 +98,14 @@ class RefactorInvisibleFields < ActiveRecord::Migration
           end
         end
       end
+      scatter
     end
-    scatter
   end
 
   def refactor_table(table, dir)
-    unless table.nil? || table['tableFields'].nil?
+    if table.nil? || table['tableFields'].nil?
+      nil
+    else
       table['tableFields'].each_with_index do | t, i |
         if t >= Param.n
           table['tableFields'][i] += dir
@@ -113,8 +117,8 @@ class RefactorInvisibleFields < ActiveRecord::Migration
         table['tableFields'] -= [Param.n]
       end
       table['tableFields'].sort!
+      table
     end
-    table
   end
 
   def refactor_globals(globals, dir)
@@ -129,27 +133,32 @@ class RefactorInvisibleFields < ActiveRecord::Migration
           subglobals['fieldSelection'][i] += dir
         end
       end
+      globals['globals'] = subglobals
     end
-    globals['globals'] = subglobals
 
-    # map unaffected
+    # map
     map = globals['Map']
     unless map.nil?
       if !map['heatmapSelection'].nil? && map['heatmapSelection'] >= Param.n
         map['heatmapSelection'] += dir
       end
+      globals['Map'] = map
     end
-    globals['Map'] = map
 
     # timeline
-    globals['Timeline'] = refactor_scatter(globals['Timeline'], dir)
+    timeline = refactor_scatter(globals['Timeline'], dir)
+    unless timeline.nil?
+      globals['Timeline'] = timeline
+    end
 
     # scatter
-    globals['Scatter'] = refactor_scatter(globals['Scatter'], dir)
+    scatter = refactor_scatter(globals['Scatter'], dir)
+    unless scatter.nil?
+      globals['Scatter'] = scatter
+    end
 
-    # bar unaffected, axis uses the globals.fieldSelection
-
-    # histogram unaffected, axis uses the globals.fieldSelection
+    # bar unaffected: axis uses the globals.fieldSelection
+    # histogram unaffected: axis uses the globals.fieldSelection
 
     # pie
     pie = globals['Pie']
@@ -157,11 +166,14 @@ class RefactorInvisibleFields < ActiveRecord::Migration
       if !pie['displayField'].nil? && pie['displayField'] >= Param.n
         pie['displayField'] += dir
       end
+      globals['Pie'] = pie
     end
-    globals['Pie'] = pie
 
     # table
-    globals['Table'] = refactor_table(globals['Table'], dir)
+    table = refactor_table(globals['Table'], dir)
+    unless table.nil?
+      globals['Table'] = table
+    end
 
     # summary
     summary = globals['Summary']
@@ -169,10 +181,8 @@ class RefactorInvisibleFields < ActiveRecord::Migration
       if !summary['displayField'].nil? && summary['displayField'] >= Param.n
         summary['displayField'] += dir
       end
+      globals['Summary'] = summary
     end
-    globals['Summary'] = summary
-
-    # photos unaffected
 
     globals
   end
@@ -191,8 +201,8 @@ class RefactorInvisibleFields < ActiveRecord::Migration
       else
         fields.delete_at(Param.n + 1)
       end
+      data['fields'] = fields
     end
-    data['fields'] = fields
 
     # insert a blank string as the hidden field for this object;
     # doing so makes this migration modular and applicable to
@@ -206,8 +216,8 @@ class RefactorInvisibleFields < ActiveRecord::Migration
           dp[i].delete_at(Param.n + 1)
         end
       end
+      data['dataPoints'] = dp
     end
-    data['dataPoints'] = dp
 
     # add to the data hash the new hidden field index, or remove
     # if the direction is down
@@ -233,8 +243,8 @@ class RefactorInvisibleFields < ActiveRecord::Migration
         text_f -= [Param.n]
       end
       text_f.sort!
+      data['textFields'] = text_f
     end
-    data['textFields'] = text_f
 
     time_f = data['timeFields']
     unless time_f.nil?
@@ -243,8 +253,8 @@ class RefactorInvisibleFields < ActiveRecord::Migration
           time_f[i] += dir
         end
       end
+      data['timeFields'] = time_f
     end
-    data['timeFields'] = time_f
 
     norm_f = data['normalFields']
     unless norm_f.nil?
@@ -253,8 +263,8 @@ class RefactorInvisibleFields < ActiveRecord::Migration
           norm_f[i] += dir
         end
       end
+      data['normalFields'] = norm_f
     end
-    data['normalFields'] = norm_f
 
     num_f = data['numericFields']
     unless num_f.nil?
@@ -263,8 +273,8 @@ class RefactorInvisibleFields < ActiveRecord::Migration
           num_f[i] += dir
         end
       end
+      data['numericFields'] = num_f
     end
-    data['numericFields'] = num_f
 
     geo_f = data['geoFields']
     unless geo_f.nil?
@@ -273,8 +283,8 @@ class RefactorInvisibleFields < ActiveRecord::Migration
           geo_f[i] += dir
         end
       end
+      data['geoFields'] = geo_f
     end
-    data['geoFields'] = geo_f
 
     # add the hidden field to group selection, or remove
     # if direction is down
