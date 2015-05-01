@@ -9,7 +9,7 @@
         </div>
         <div class="col-sm-3 col-xs-6 add_fields">
           <button value="Text" class="btn btn-success center new_field" id="text">Add Text</button>
-		  <p class="description">Any string value. "Restrictions" are a comma separated list of values that limit input to only predefined values.</p>
+          <p class="description">Any string value. "Restrictions" are a comma separated list of values that limit input to only predefined values.</p>
         </div>
         <div class="col-sm-3 col-xs-6 add_fields">
           <button value="Timestamp" class="btn btn-success center new_field" id="timestamp" style="padding: 6px 0px;" <%= (@project.fields.any? {|f| f.field_type == TIME_TYPE}) ? "disabled" : "" %>>Add Timestamp</button>

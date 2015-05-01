@@ -1,19 +1,19 @@
 $ ->
   if namespace.controller is "projects" and namespace.action is "edit_fields"
     # Keeps track of number of different fields added
-    num_count = text_count = timestamp_count = location_count = 0
+    numCount = textCount = timestampCount = locationCount = 0
     
     # For the number displayed in the input for numbers/text e.g. Number_1
-    display_num_count = get_next_name('Number')
-    display_text_count = get_next_name('Text')
+    displayNumCount = getNextName('Number')
+    displayTextCount = getNextName('Text')
 
     # Names of all hidden inputs that need to be populated before submission
-    input_boxes = ['hidden_num_count', 'hidden_text_count', 'hidden_timestamp_count',
-                   'hidden_location_count', 'hidden_deleted_fields']
+    inputBoxes = ['hiddenNumCount', 'hiddenTextCount', 'hiddenTimestampCount',
+                   'hiddenLocationCount', 'hiddenDeletedFields']
 
     # Clear all hidden inputs on load
     for i in [0...5]
-      setValue(input_boxes[i], '')
+      setValue(inputBoxes[i], '')
 
     # Submit form on enter
     $('#fields_table').keypress (e) ->
@@ -26,32 +26,32 @@ $ ->
     # addRow takes input box for name, type of field, input box for units (number only) or
     # "deg" for lat/long, input box for restrictions (text only), delete
     $('#number').click ->
-      num_count = num_count + 1
-      display_num_count = display_num_count + 1
+      numCount = numCount + 1
+      displayNumCount = displayNumCount + 1
       addRow(["""<input class="input-small form-control" type="text"
-                 name="number_#{num_count}" value="Number_#{display_num_count}">""", "Number",
+                 name="number_#{numCount}" value="Number_#{displayNumCount}">""", "Number",
                  """<input class="input-small form-control" type="text"
-                 name="units_#{num_count}">""", "", """<a href="#" fid="0"
+                 name="units_#{numCount}">""", "", """<a href="#" fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
 
     $('#text').click ->
-      text_count = text_count + 1
-      display_text_count = display_text_count + 1
+      textCount = textCount + 1
+      displayTextCount = displayTextCount + 1
       addRow(["""<input class="input-small form-control" type="text"
-                 name="text_#{text_count}" value="Text_#{display_text_count}">""", "Text", "",
+                 name="text_#{textCount}" value="Text_#{displayTextCount}">""", "Text", "",
               """<input class="input-small form-control" type="text"
-                 name="restrictions_#{text_count}">""", """<a href="#" fid="0"
+                 name="restrictions_#{textCount}">""", """<a href="#" fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
 
     $('#timestamp').click ->
-      timestamp_count = timestamp_count + 1
+      timestampCount = timestampCount + 1
       addRow(["""<input class="input-small form-control" type="text" name="timestamp"
                  value="Timestamp">""", "Timestamp", "", "", """<a href="#" fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
       document.getElementById('timestamp').disabled = true
 
     $('#location').click ->
-      location_count = location_count + 1
+      locationCount = locationCount + 1
       addRow(["""<input class="input-small form-control" type="text" name="longitude"
                  value="Longitude">""", "Longitude", "deg", "", """<a href="#" fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
@@ -64,43 +64,43 @@ $ ->
     # hasn't yet been added to project in database)
     $('#fields_table').on 'click', '.field_delete', ->
       # fid of row being deleted
-      fid = $(this).closest('a').attr('fid')
+      fid = $(@).closest('a').attr('fid')
 
-      # row index of row being deleted
-      row_index = $(this).closest('tr').index()
+      # Row index of row being deleted
+      rowIndex = $(@).closest('tr').index()
 
-      # row name of row being deleted
-      row_name = $(this).closest('tr').attr('name')
+      # Row name of row being deleted
+      rowName = $(@).closest('tr').attr('name')
 
       # Decrease counter based on row name
-      if row_name == 'latitude' || row_name == 'longitude'
-        location_count = 0
-      else if row_name == 'number'
-        number_count = number_count - 1
-      else if row_name == 'text'
-        text_count = text_count - 1
+      if rowName == 'latitude' || rowName == 'longitude'
+        locationCount = 0
+      else if rowName == 'number'
+        numberCount = numberCount - 1
+      else if rowName == 'text'
+        textCount = textCount - 1
       else
-        timestamp_count = timestamp_count - 1
+        timestampCount = timestampCount - 1
 
       # fid != 0 when the field exists in the database
       if fid != '0'
-        hidden_deleted_fields = $('#hidden_deleted_fields')
-        if row_name == 'latitude'
-          hidden_deleted_fields.val(hidden_deleted_fields.val() + fid + ',' + (parseInt(fid) + 1) + ',')
-        else if row_name == 'longitude'
-          hidden_deleted_fields.val(hidden_deleted_fields.val() + fid + ',' + (parseInt(fid) - 1) + ',')
+        hiddenDeletedFields = $('#hiddenDeletedFields')
+        if rowName == 'latitude'
+          hiddenDeletedFields.val(hiddenDeletedFields.val() + fid + ',' + (parseInt(fid) + 1) + ',')
+        else if rowName == 'longitude'
+          hiddenDeletedFields.val(hiddenDeletedFields.val() + fid + ',' + (parseInt(fid) - 1) + ',')
         else
-          hidden_deleted_fields.val(hidden_deleted_fields.val() + fid + ',')
-        callDeleteRow(row_index, row_name, fid)
+          hiddenDeletedFields.val(hiddenDeletedFields.val() + fid + ',')
+        callDeleteRow(rowIndex, rowName, fid)
       else
-        callDeleteRow(row_index, row_name, '')
+        callDeleteRow(rowIndex, rowName, '')
 
     # Populate hidden fields w/ num of fields and array of deleted fields on submit
     $('#fields_form_submit').click ->
-      values = [num_count, text_count, timestamp_count, location_count]
+      values = [numCount, textCount, timestampCount, locationCount]
 
       for i in [0...4]
-        setValue(input_boxes[i], values[i])
+        setValue(inputBoxes[i], values[i])
 
 # Adds row to table, highlight new row
 addRow = (content) ->
@@ -116,22 +116,22 @@ addRow = (content) ->
   $(row).effect('highlight', {}, 3000)
 
 # Calls deleteRow based on type of field
-callDeleteRow = (row_index, row_name, fid) ->
-  if row_name == 'timestamp'
-    deleteRow(row_index, true, 'timestamp')
-  else if row_name == 'latitude'
-    deleteRow(row_index, true, 'location')
-    deleteRow(row_index, true, 'location')
-  else if row_name == 'longitude'
-    deleteRow(row_index, true, 'location')
-    deleteRow(row_index - 1, true, 'location')
+callDeleteRow = (rowIndex, rowName, fid) ->
+  if rowName == 'timestamp'
+    deleteRow(rowIndex, true, 'timestamp')
+  else if rowName == 'latitude'
+    deleteRow(rowIndex, true, 'location')
+    deleteRow(rowIndex, true, 'location')
+  else if rowName == 'longitude'
+    deleteRow(rowIndex, true, 'location')
+    deleteRow(rowIndex - 1, true, 'location')
   else
-    deleteRow(row_index, false, '')
+    deleteRow(rowIndex, false, '')
 
 # Deletes row (enable is true only when field is timestamp or location; btn is
 # timestamp or location or empty string for text/number)
-deleteRow = (row_index, enable, btn) ->
-  document.getElementById('fields_table').deleteRow(row_index)
+deleteRow = (rowIndex, enable, btn) ->
+  document.getElementById('fields_table').deleteRow(rowIndex)
   if enable
     document.getElementById(btn).disabled = false
 
@@ -141,11 +141,11 @@ setValue = (id, value) ->
   document.getElementById(id).value = value
 
 # Returns the index for the name of a number or text field
-get_next_name = (field_type) ->
+getNextName = (fieldType) ->
   highest = 0
   table = document.getElementById('fields_table')
   for i in [1...table.rows.length]
-    if table.rows[i].cells[1].innerHTML == field_type
+    if table.rows[i].cells[1].innerHTML == fieldType
       index = parseInt(((table.rows[i].cells[0].innerHTML.split(' '))[3].split('_'))[1].split('\"'))
       if index > highest
         highest = index
