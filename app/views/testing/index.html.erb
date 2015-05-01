@@ -10,7 +10,8 @@
       <%= text_field_tag('userinfo[os_version]', @browser.platform,
           class: 'form-control label-padding') %>
       <%= link_to('GitHub Personal Access Token',
-          'https://github.com/settings/applications') %>:
+          'https://github.com/settings/applications',
+          target: '_blank') %>:
       <%= text_field_tag('userinfo[auth_token]', '',
           class: 'form-control label-padding') %>
     </div>
