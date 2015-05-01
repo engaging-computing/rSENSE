@@ -8,8 +8,8 @@ $ ->
     displayTextCount = getNextName('Text')
 
     # Names of all hidden inputs that need to be populated before submission
-    inputBoxes = ['hiddenNumCount', 'hiddenTextCount', 'hiddenTimestampCount',
-                   'hiddenLocationCount', 'hiddenDeletedFields']
+    inputBoxes = ['hidden_num_count', 'hidden_text_count', 'hidden_timestamp_count',
+                   'hidden_location_count', 'hidden_deleted_fields']
 
     # Clear all hidden inputs on load
     for i in [0...5]
@@ -84,7 +84,7 @@ $ ->
 
       # fid != 0 when the field exists in the database
       if fid != '0'
-        hiddenDeletedFields = $('#hiddenDeletedFields')
+        hiddenDeletedFields = $('#hidden_deleted_fields')
         if rowName == 'latitude'
           hiddenDeletedFields.val(hiddenDeletedFields.val() + fid + ',' + (parseInt(fid) + 1) + ',')
         else if rowName == 'longitude'
