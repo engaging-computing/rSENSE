@@ -118,9 +118,9 @@ $ ->
       A wrapper for making y-axis controls
       See drawAxisControls for more detail
       ###
-      drawYAxisControls: (selFields, allFields, radio, iniRadio = 0,
-        handler = ->) ->
-        @drawAxisControls('y-axis', 'Y Axis', selFields, allFields, radio,
+      drawYAxisControls: (selFields, allFields, radio, name = 'Y Axis',
+        iniRadio = 0, handler = ->) ->
+        @drawAxisControls('y-axis', name, selFields, allFields, radio,
           iniRadio, handler)
 
         # Initialize and track the status of this control panel

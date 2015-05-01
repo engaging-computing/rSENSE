@@ -53,11 +53,11 @@ $ ->
         @chartOptions
         $.extend true, @chartOptions,
           chart:
-            type: "column"
+            type: 'column'
           legend:
             enabled: false
           title:
-            text: ""
+            text: ''
           tooltipXAxis = @configs.displayField
           tooltip:
             formatter: ->
@@ -79,13 +79,11 @@ $ ->
               events:
                 legendItemClick: (event) ->
                   false
-
-        # For Histogram
-        @chartOptions.xAxis = []
-        @chartOptions.xAxis.push {}
-        @chartOptions.xAxis.push
-          lineWidth: 0
-          categories: ['']
+          xAxis: [
+            {alignTicks: false},
+            lineWidth: 0
+            categories: ['']
+          ]
 
       ###
       Returns a rough default 'human-like' bin size selection
@@ -98,11 +96,11 @@ $ ->
 
           localMin = data.getMin @configs.displayField, groupIndex
           if localMin isnt null
-            min = Math.min min, localMin
+            min = Math.min(min, localMin)
 
           localMax = data.getMax @configs.displayField, groupIndex
           if localMax isnt null
-            max = Math.max max, localMax
+            max = Math.max(max, localMax)
 
         range = max - min
 
@@ -119,12 +117,12 @@ $ ->
 
         tryNewSize = (size) ->
           target = Math.abs(binNumTarget - (range / size))
-          if target < Math.abs(binNumTarget - bestNum)
-            bestSize = size
-            bestNum  = range / size
+          if target <= Math.abs(binNumTarget - bestNum)
+            return false
 
-            return true
-          false
+          bestSize = size
+          bestNum  = range / size
+          return true
 
         loop
           if (range / curSize) < binNumTarget
@@ -134,10 +132,10 @@ $ ->
 
           break if not tryNewSize curSize
 
-        tryNewSize (curSize / 2)
-        tryNewSize (curSize * 2)
-        tryNewSize (curSize / 5)
-        tryNewSize (curSize * 5)
+        tryNewSize(curSize / 2)
+        tryNewSize(curSize * 2)
+        tryNewSize(curSize / 5)
+        tryNewSize(curSize * 5)
 
         bestSize
 
@@ -247,10 +245,8 @@ $ ->
 
             @chart.addSeries options, false
 
-        @chart.xAxis[0].setExtremes(@globalmin - (@configs.binSize / 2),
-          @globalmax + (@configs.binSize / 2), false)
-
-        @chart.redraw()
+        half = @configs.binSize / 2
+        @chart.xAxis[0].setExtremes(@globalmin - half, @globalmax + half, true)
 
       buildLegendSeries: ->
         count = -1
@@ -261,7 +257,6 @@ $ ->
             color: '#000'
             visible: @configs.displayField is i
             name: f.fieldName
-            type: 'area'
             xAxis: 1
             legendIndex: i
 
@@ -318,8 +313,9 @@ $ ->
           @configs.binSize = @defaultBinSize()
           $('#bin-size').attr('value', @configs.binSize)
 
-        @drawYAxisControls('Fields', globals.configs.fieldSelection,
-          data.normalFields.slice(1), true, @configs.displayField, handler)
+        @drawYAxisControls(globals.configs.fieldSelection,
+          data.normalFields.slice(1), true, 'Fields',
+          @configs.displayField, handler)
         @drawToolControls()
         @drawSaveControls()
 

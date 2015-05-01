@@ -67,7 +67,7 @@ $ ->
               str += "</table>"
             useHTML: true
           yAxis:
-            type: if globals.configs.logY is 1 then 'logarithmic' else 'linear'
+            type: if globals.configs.logY then 'logarithmic' else 'linear'
           xAxis:
             type: 'category'
 
@@ -111,7 +111,7 @@ $ ->
       drawControls: ->
         super()
         @drawGroupControls(data.textFields)
-        @drawYAxisControls('Y Axis', globals.configs.fieldSelection,
+        @drawYAxisControls(globals.configs.fieldSelection,
           data.normalFields.slice(1), false)
         @drawToolControls(true, true)
         @drawSaveControls()

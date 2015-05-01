@@ -105,8 +105,8 @@ $ ->
       drawControls: ->
         super()
         @drawGroupControls(data.textFields)
-        @drawYAxisControls('Fields', globals.configs.fieldSelection,
-          data.normalFields.slice(1), true, @configs.displayField,
+        @drawYAxisControls(globals.configs.fieldSelection,
+          data.normalFields.slice(1), true, 'Fields', @configs.displayField,
           @yAxisRadioHandler)
         @drawSaveControls()
 

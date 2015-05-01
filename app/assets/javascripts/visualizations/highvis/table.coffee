@@ -213,8 +213,9 @@ $ ->
         super()
         @drawGroupControls(data.textFields)
         fields = (i for f, i in data.fields when i isnt data.COMBINED_FIELD)
-        @drawYAxisControls('Visible Fields', @configs.tableFields,
-          (i for f, i in data.fields when i isnt data.COMBINED_FIELD), false)
+        @drawYAxisControls(@configs.tableFields,
+          (i for f, i in data.fields when i isnt data.COMBINED_FIELD),
+          false, 'Visible Fields')
         @drawSaveControls()
 
       saveSort: =>

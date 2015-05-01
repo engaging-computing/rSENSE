@@ -161,7 +161,7 @@ $ ->
             minorTickInterval: 'auto'
             }]
           yAxis:
-            type: if globals.configs.logY is 1 then 'logarithmic' else 'linear'
+            type: if globals.configs.logY then 'logarithmic' else 'linear'
             events:
               afterSetExtremes: (e) =>
                 @storeXBounds @chart.xAxis[0].getExtremes()
@@ -383,7 +383,7 @@ $ ->
         if @configs.advancedTooltips
           $('#ckbx-tooltips').prop('checked', true)
         if @configs.fullDetail then $('#ckbx-fulldetail').prop('checked', true)
-        if globals.configs.logY then $('#ckbx-log-y').prop('checked', true)
+        if globals.configs.logY then $('#ckbx-log-y-axis').prop('checked', true)
         $("input[name='mode'][value='#{@configs.mode}']").prop('checked', true)
 
         # Set initial state of zoom reset
@@ -410,8 +410,8 @@ $ ->
           @delayedUpdate()
           true
 
-        $('#ckbx-log-y').click (e) =>
-          globals.configs.logY = (globals.configs.logY + 1) % 2
+        $('#ckbx-log-y-axis').click (e) =>
+          globals.configs.logY = !globals.configs.logY
           @start()
 
         $('#elapsed-time-btn').click (e) ->
@@ -472,7 +472,7 @@ $ ->
           @configs.xBounds.min -= xRange * 0.1
 
         if whichAxis in ['Both', 'Y']
-          if globals.configs.logY is 1
+          if globals.configs.logY
             @configs.yBounds.max *= 10.0
             @configs.yBounds.min /= 10.0
           else
@@ -670,7 +670,7 @@ $ ->
           @addRegressionToTable(savedRegression, true)
 
           # Draw the regression to the vis
-          globals.curVis.update()
+          globals.curVis.delayedUpdate()
 
       # Adds a regression row to our table, with styling for enabled or disabled
       addRegressionToTable: (savedReg, enabled) ->
