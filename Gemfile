@@ -9,7 +9,10 @@ gem 'coffee-rails'
 gem 'coffee-rails-source-maps'
 gem 'uglifier'
 gem 'modernizr-rails'
+
+# Handlebars
 gem 'handlebars_assets'
+gem 'handlebars'
 
 gem 'therubyracer', :platforms => :ruby
 
@@ -41,9 +44,6 @@ gem 'bcrypt-ruby'
 
 # jQuery plugins
 gem 'jquery-drag-rails'
-
-# Include JQuery UI
-gem 'jquery-ui-rails'
 
 gem 'httparty'
 

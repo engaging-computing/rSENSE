@@ -122,7 +122,7 @@ class SlickgridTest < ActionDispatch::IntegrationTest
     find(:css, '#edit_table_save_1').click
 
     # assert that we're where we should be
-    find '#viscontainer'
+    find '#vis-container'
     dataset = DataSet.find_by_name dataset_title
     assert page.current_path == "/projects/#{project.id}/data_sets/#{dataset.id}"
 
@@ -178,7 +178,7 @@ class SlickgridTest < ActionDispatch::IntegrationTest
     find(:css, '#edit_table_save_1').click
 
     # assert that we're where we should be
-    find '#viscontainer'
+    find '#vis-container'
     assert page.current_path == "/projects/#{project_id}/data_sets/#{dataset_id}"
 
     # assert that the data that we saved is there

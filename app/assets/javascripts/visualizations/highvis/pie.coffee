@@ -27,8 +27,8 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and
-  namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is 'visualizations' and
+  namespace.action in ['displayVis', 'embedVis', 'show']
 
     class window.Pie extends BaseHighVis
       constructor: (@canvas) ->
@@ -55,7 +55,7 @@ $ ->
 
         displayColors = []
         for number in data.groupSelection
-          displayColors.push(globals.configs.colors[number % globals.configs.colors.length])
+          displayColors.push(globals.getColor(number))
 
         options =
           showInLegend: false
@@ -99,12 +99,14 @@ $ ->
 
       drawControls: ->
         super()
-        @drawGroupControls false, false, false
-        @drawYAxisControls true, false # Naming here is less than ideal
+        @drawGroupControls(data.textFields)
+        @drawYAxisControls(globals.configs.fieldSelection,
+          data.normalFields.slice(1), true, 'Fields', @configs.displayField,
+          @yAxisRadioHandler)
         @drawToolControls()
         @drawSaveControls()
 
     if "Pie" in data.relVis
-      globals.pie = new Pie 'pie_canvas'
+      globals.pie = new Pie 'pie-canvas'
     else
-      globals.pie = new DisabledVis 'pie_canvas'
+      globals.pie = new DisabledVis 'pie-canvas'

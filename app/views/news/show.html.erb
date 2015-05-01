@@ -1,6 +1,6 @@
 <div class="row">
-  <div class="col-md-8 news_title" id="object_title">
-      <%= title_and_edit_menu(@news) %>
+  <div class="col-md-8 news_title object-title">
+    <%= title_and_edit_menu(@news) %>
   </div>
 </div>
 
@@ -13,7 +13,7 @@
           <i class="fa <%= @news.hidden? ? 'fa-square-o' : 'fa-check-square-o' %>"></i> Published
         <% end %>
       </div>
-    </div>  
+    </div>
   <% end %>
 <%end%>
 
@@ -21,7 +21,7 @@
   <%=render layout: "shared/box", locals: {title: 'Content', width: '12', unique_id: 'content', should_hide: false} do %>
     <%= content_helper(@news) %>
   <%end%>
-</div>  
+</div>
 <div class="row">
   <!-- media objects -->
   <%=render layout: "shared/box", locals: {title: 'Media', width: '5', unique_id: 'media', should_hide: false} do %>

@@ -27,8 +27,8 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
-
+  if namespace.controller is 'visualizations' and
+  namespace.action in ['displayVis', 'embedVis', 'show']
     # Use this to save vis state
     window.globals ?= {}
     globals.CLIPPING ?= {}

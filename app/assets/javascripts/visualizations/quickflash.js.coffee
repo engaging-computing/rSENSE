@@ -3,7 +3,10 @@
 #
 # This file is for dynamic addition of 'flash' messages from js.
 $ ->
-  flashTypes = { 'success': 'alert-success', 'error': 'alert-danger' }
+  flashTypes =
+    success: 'alert-success'
+    error: 'alert-danger'
+    warning: 'alert-warning'
 
   window.quickFlash = (msg, type) ->
     # Remove any old flash messages
@@ -20,7 +23,7 @@ $ ->
         #{msg}
       </div>
       """
-      
+
     # Scroll so you can see the flash message
     scrollTo(0, 0)
 
