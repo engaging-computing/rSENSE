@@ -30,7 +30,7 @@ class RefactorInvisibleFields < ActiveRecord::Migration
 
   # Run the migration down (rake db:rollback)
   def down
-    refactor(-1)
+    #refactor(-1)
   end
 
   def refactor(dir)
@@ -207,17 +207,17 @@ class RefactorInvisibleFields < ActiveRecord::Migration
     # insert a blank string as the hidden field for this object;
     # doing so makes this migration modular and applicable to
     # future uses of this migration when adding more hidden fields
-    dp = data['dataPoints']
-    unless dp.nil?
-      dp.each_with_index do | d, i |
-        if dir > 0
-          dp[i].insert(Param.n + 1, '""')
-        else
-          dp[i].delete_at(Param.n + 1)
-        end
-      end
-      data['dataPoints'] = dp
-    end
+    #dp = data['dataPoints']
+    #unless dp.nil?
+    #  dp.each_with_index do | d, i |
+    #    if dir > 0
+    #      dp[i].insert(Param.n + 1, '""')
+    #    else
+    #      dp[i].delete_at(Param.n + 1)
+    #    end
+    #  end
+    #  data['dataPoints'] = dp
+    #end
 
     # add to the data hash the new hidden field index, or remove
     # if the direction is down
