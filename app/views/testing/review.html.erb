@@ -1,26 +1,34 @@
 <h1>Review Issues</h1>
 <div>
-  <%= form_tag("/testing/publish", method: :post) do %>
-    <div id="userinfo">
-      <%= hidden_field("userinfo",:auth_token, :value => @userinfo[:auth_token]) %>
+  <%= form_tag('/testing/publish', method: :post) do %>
+    <div id='userinfo'>
+      <%= hidden_field('userinfo',:auth_token,
+          :value => @userinfo[:auth_token]) %>
     </div>
-    <div id="issues" style="margin-bottom: 20px">
+    <div id='issues' style='margin-bottom: 20px'>
       <% @issues.each do |issue| %>
-        <% if issue[1][:passed] != "NA" %>
-          <div id="issue_<%= issue[0] %>">
-            <div id="title_<%= issue[0] %>">
-              <h3><%= link_to(issue[0],issue[1][:html_url]) %>: <%= issue[1][:title] %></h3>
-              <%= hidden_field("issues[#{issue[0]}", :number, :value => issue[0]) %>
+        <% if issue[1][:passed] != 'NA' %>
+          <div id='issue_<%= issue[0] %>'>
+            <div id='title_<%= issue[0] %>'>
+              <h3>
+                <%= link_to(issue[0],issue[1][:html_url],
+                      target: '_blank') %>:
+                <%= issue[1][:title] %>
+              </h3>
+              <%= hidden_field("issues[#{issue[0]}",
+                  :number, :value => issue[0]) %>
             </div>
-            <div id="body_<%= issue[0] %>">
-              <%= text_area("issues[#{issue[0]}", :message, :value => "#{if issue[1][:passed] == "true" then "PASSED" else "FAILED" end} testing on #{@userinfo[:broswer_version]} (#{@userinfo[:os_version]}).\n#{issue[1][:message]}", class: "form-control", rows: 4) %>
+            <div id='body_<%= issue[0] %>'>
+              <%= text_area("issues[#{issue[0]}", :message,
+                  :value => "#{if issue[1][:passed] == 'true' then 'PASSED' else 'FAILED' end} testing on #{@userinfo[:broswer_version]} (#{@userinfo[:os_version]}).\n#{issue[1][:message]}", class: 'form-control', rows: 4) %>
             </div>
           </div>
         <% end %>
       <% end %>
     </div>
-    <div id="submit">
-      <%= submit_tag("Publish to GitHub", class: "form-control btn btn-primary") %>
+    <div id='submit'>
+      <%= submit_tag('Publish to GitHub',
+          class: 'form-control btn btn-primary') %>
     </div>
   <% end %>
 </div>
