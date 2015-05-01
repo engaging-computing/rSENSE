@@ -30,7 +30,7 @@ $ ->
       displayNumCount = displayNumCount + 1
       addRow(["""<input class="input-small form-control" type="text"
                  name="number_#{numCount}" value="Number_#{displayNumCount}">""", "Number",
-                 """<input class="input-small form-control" type="text"
+                 """<input class="input-small form-control" type="text" class="units"
                  name="units_#{numCount}">""", "", """<a href="#" fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
 
@@ -39,7 +39,7 @@ $ ->
       displayTextCount = displayTextCount + 1
       addRow(["""<input class="input-small form-control" type="text"
                  name="text_#{textCount}" value="Text_#{displayTextCount}">""", "Text", "",
-              """<input class="input-small form-control" type="text"
+              """<input class="input-small form-control" type="text" class="restrictions"
                  name="restrictions_#{textCount}">""", """<a href="#" fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
 
