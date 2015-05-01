@@ -156,6 +156,7 @@ $ ->
             hideDelay: 0
 
           xAxis: [{
+            alignTicks: false
             type: 'linear'
             gridLineWidth: 1
             minorTickInterval: 'auto'
@@ -311,7 +312,6 @@ $ ->
           @setExtremes()
           $('#zoom-reset-btn').removeClass('disabled')
         else
-          @resetExtremes
           $('#zoom-reset-btn').addClass('disabled')
 
         @chart.redraw()
