@@ -2,7 +2,7 @@ include ApplicationHelper
 class Field < ActiveRecord::Base
   validates_presence_of :project_id, :field_type, :name
   validates_uniqueness_of :name, scope: :project_id, case_sensitive: false
-  validates_with RestrictionsValidator, fields: [:restrictions]
+  validate :validate_restrictions
   belongs_to :project
   serialize :restrictions, JSON
   alias_attribute :owner, :project
@@ -71,23 +71,21 @@ class Field < ActiveRecord::Base
   end
 
   def trim_restrictions
-    m = restrictions
-    if m.is_a? String
-      m.split! ','
+    if restrictions.is_a? String
+      split_r = restrictions.split ','
+      self.restrictions = split_r
     end
 
-    if m.is_a? Array
-      m.map! { |x| x.strip }
+    if restrictions.is_a? Array
+      restrictions.map! { |x| x.strip }
     end
   end
-end
 
-class RestrictionsValidator < ActiveRecord::Validator
-  def validate(record)
-    if record.is_a? Array
-      record.reduce(true) { |a, e| a and e.is_a? String }
-    else
-      false
+  def validate_restrictions
+    if restrictions.is_a? Array
+      errors[:base] << 'Field restrictions are not in a list format'
+    elsif restrictions.reduce(true) { |a, e| a and e.is_a? String }
+      errors[:base] << 'Not all field restrictions are strings'
     end
   end
 end
