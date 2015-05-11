@@ -82,9 +82,9 @@ class Field < ActiveRecord::Base
   end
 
   def validate_restrictions
-    if restrictions.is_a? Array
+    if not restrictions.is_a? Array
       errors[:base] << 'Field restrictions are not in a list format'
-    elsif restrictions.reduce(true) { |a, e| a and e.is_a? String }
+    elsif not restrictions.reduce(true) { |a, e| a and e.is_a? String }
       errors[:base] << 'Not all field restrictions are strings'
     end
   end
