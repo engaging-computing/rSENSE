@@ -94,7 +94,7 @@
     </div>
     <div class="row">
       <%= render layout: "shared/box", locals: {title: 'Data Sets', width: '12', unique_id: 'data_sets', should_hide: false} do %>
-        <% if @data_sets.count != 0 %>
+        <% if @data_sets.count != 0 || @params[:search] %>
           <div id="dataset_list">
             <span>
               <button type="button" class="btn btn-info" style="margin-bottom: 10px;" id="vis_button" data-href="/projects/<%=@project.id%>/data_sets/">Visualize</button>
@@ -138,6 +138,9 @@
                 <%= submit_tag "Search", name: nil, class:'btn btn-default btn-group-justified'%>
               </div>
             </div><br/>
+            <%end%>
+            <% if @data_sets.count == 0 %>
+              <p> No Matching Data Sets. </p>
             <%end%>
             <table id="dataset_table" class="table table-striped">
               <tbody>
