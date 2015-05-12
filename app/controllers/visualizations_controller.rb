@@ -45,9 +45,15 @@ class VisualizationsController < ApplicationController
   def show
     @visualization = Visualization.find(params[:id])
     @project = Project.find_by_id(@visualization.project_id)
+    tmp = JSON.parse(@visualization.data)
 
     # The finalized data object
-    @data = { savedData: @visualization.data, savedGlobals: @visualization.globals }
+    @data = {
+      savedData:    @visualization.data,
+      savedGlobals: @visualization.globals,
+      defaultVis:   tmp['defaultVis'],
+      relVis:       tmp['relVis']
+    }
 
     recur = params.key?(:recur) ? params[:recur] == 'true' : false
 
@@ -182,9 +188,7 @@ class VisualizationsController < ApplicationController
         m.destroy
       end
 
-      @visualization.hidden = true
-      @visualization.user_id = -1
-      @visualization.save
+      @visualization.destroy
 
       respond_to do |format|
         format.html { redirect_to visualizations_url }
@@ -209,7 +213,7 @@ class VisualizationsController < ApplicationController
     field_count = []
 
     # build list of datasets
-    if  !params[:datasets].nil?
+    if !params[:datasets].nil?
       dsets = params[:datasets].split(',')
       dsets.each do |id|
         begin
@@ -279,7 +283,8 @@ class VisualizationsController < ApplicationController
       rel_vis.push 'Map'
     end
 
-    if field_count[TIME_TYPE] > 0 and field_count[NUMBER_TYPE] > 0 and format_data.count > 1
+    if field_count[TIME_TYPE] > 0 and field_count[NUMBER_TYPE] > 0 and
+        format_data.count > 2
       rel_vis.push 'Timeline'
     end
 
@@ -332,7 +337,7 @@ class VisualizationsController < ApplicationController
           options[:isEmbed] = 1
           options[:startCollapsed] = 1
           @globals = { options: options }
-          render 'embed', layout: 'embedded'
+          render 'embedProjVis', layout: 'embedded'
         else
           @layout_wide = true
           render

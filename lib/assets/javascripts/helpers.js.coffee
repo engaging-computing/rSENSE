@@ -1,97 +1,60 @@
 $ ->
+  window.helpers = {}
 
-  window.helpers ?= {}
+  $.fn.errorFlash = ->
+    @.addClass('flash')
+    @.css('background-color', 'red')
+    flash = () => @.css('background-color', '')
+    end   = () => @.removeClass('flash')
+    setTimeout(flash, 400)
+    setTimeout(end, 800)
 
-  helpers.truncate = (str, length) ->
-    if str.length > length
-      str = str.substr(0, length - 3) + '...'
-    else
-      str
-  
-  helpers.get_field_name = (type) ->
-    switch type
-      when 1 then "Timestamp"
-      when 2 then "Number"
-      when 3 then "Text"
-      when 4 then "Latitude"
-      when 5 then "Longitude"
+  $.fn.highlight = (aniLen) ->
+    @.css('background-color', '#FFFF99')
+    @.addClass('flash')
+    flash = () => @.css('background-color', '')
+    end   = () => @.removeClass('flash')
+    setTimeout(flash, aniLen)
+    setTimeout(end, aniLen + 500)
 
-  helpers.get_field_type = (name) ->
-    switch name
-      when "Timestamp" then 1
-      when "Number"    then 2
-      when "Text"      then 3
-      when "Latitude"  then 4
-      when "Longitude" then 5
-
-  helpers.get_default_unit = (type) ->
-    switch type
-      when 1 then ""
-      when 2 then ""
-      when 3 then ""
-      when 4 then "deg"
-      when 5 then "deg"
-
-  $.fn.errorFlash = () ->
-    this.effect "highlight", {color: "#F00"}, 2000
-    
   $.fn.hide_row = (callback = null) ->
-  
     prop =
       height: "0px"
       opacity: 0
-      
+
     options =
       duration: 400
       always: () ->
-        ($ this).hide()
+        $(@).hide()
         if callback isnt null
           callback()
-  
-    this.animate prop, options
-    
+
+    @.animate(prop, options)
+
   helpers.confirm_delete = (objName) ->
     confirm("Are you sure you want to delete #{objName}?")
-    
-  helpers.isotope_layout = (selector, colWidth = 200, colSep = 16, numCols = 6, item = '.item') ->
-    
-    while $(selector).width() < numCols * colWidth
-      numCols--
-    
-    $(selector).imagesLoaded ->
 
-      $(item).width(Math.floor(($(selector).width() / numCols) - colSep))
-
-      $(selector).isotope
-        itemSelector : item
-        layoutMode : 'masonry'
-        resizeable: false
-        masonry:
-          columnWidth: $(selector).width() / numCols
-    true
-    
   $.fn.delete_row = (callback = null) ->
     $(@).find('div, input').each ->
       prop =
         height: "0px"
         opacity: 0
-          
+
       options =
         duration: 400
         always: () ->
-          ($ this).hide()
+          $(@).hide()
           if callback isnt null
             callback()
-    
-      ($ this).animate prop, options
 
-  
+      $(@).animate prop, options
+
   $.fn.recolor_rows = (recolored = false) ->
     if not recolored
-      ($ @).find("tr").each (idx) ->
+      $(@).find("tr").each (idx) ->
         if idx % 2 is 0
-          ($ @).addClass 'feed-even'
-          ($ @).removeClass 'feed-odd'
+          $(@).addClass 'feed-even'
+          $(@).removeClass 'feed-odd'
         else
-          ($ @).removeClass 'feed-even'
-          ($ @).addClass 'feed-odd'
+          $(@).removeClass 'feed-even'
+          $(@).addClass 'feed-odd'

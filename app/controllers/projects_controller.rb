@@ -255,16 +255,26 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
   end
 
+  # Save fields in fields table
   def save_fields
     @project = Project.find(params[:id])
 
-    # Save all the fields
+    # Delete fields as necessary
+    if params[:hidden_deleted_fields] != ''
+      params[:hidden_deleted_fields].split(',').each do |x|
+        if Field.find(x).destroy == -1 and return
+        end
+      end
+    end
+
+    # Update existing fields, create restrictions if any exist
     @project.fields.each do |field|
-      restrictions = nil
+      restrictions = []
+
       if params.key?("#{field.id}_restrictions")
         restrictions = params["#{field.id}_restrictions"].split(',')
         if restrictions.count < 1
-          restrictions = nil
+          restrictions = []
         end
       end
 
@@ -272,51 +282,56 @@ class ProjectsController < ApplicationController
                                      unit: params["#{field.id}_unit"],
                                      restrictions: restrictions)
         respond_to do |format|
-          flash[:error] = 'Field names must be unique'
-          redirect_to "/projects/#{@project.id}/edit_fields"
-          return
+          flash[:error] = 'Field names must be unique.'
+          redirect_to "/projects/#{@project.id}/edit_fields" and return
         end
       end
     end
 
-    # If there's a new field, add it the number of times specified.
-    field_type = params[:new_field]
-
-    if field_type == 'Location'
-      latitude  = Field.new(project_id: @project.id,
-                            field_type: get_field_type('Latitude'),
-                            name: 'Latitude',
-                            unit: 'deg')
-      longitude = Field.new(project_id: @project.id,
-                            field_type: get_field_type('Longitude'),
-                            name: 'Longitude',
-                            unit: 'deg')
-
-      unless latitude.save && longitude.save
-        flash[:error] = "#{latitude.errors.full_messages}\n"\
-          "\n#{longitude.errors.full_messages}"
-        redirect_to "/projects/#{@project.id}/edit_fields"
-        return
+    # Add fields based on type
+    if params[:hidden_location_count] == '1'
+      if addField('Latitude', 'Latitude', 'deg', []) == -1 and return
       end
-    elsif !field_type.nil?
-      ((params[:num_fields].to_i > params[:text_fields].to_i) ? params[:num_fields].to_i : params[:text_fields].to_i).times do
-
-        next_name = Field.get_next_name(@project,
-                                        get_field_type(params[:new_field]))
-        field = Field.new(project_id: @project.id,
-                          field_type: get_field_type(field_type), name: next_name)
-
-        unless field.save
-          flash[:error] = field.errors.full_messages
-          redirect_to "/projects/#{@project.id}/edit_fields"
-          return
-        end
+      if addField('Longitude', 'Longitude', 'deg', []) == -1 and return
       end
     end
-    if field_type.nil?
-      redirect_to project_path(@project), notice: 'Changes to fields saved.'
+
+    if params[:hidden_timestamp_count] == '1'
+      if addField('Timestamp', 'Timestamp', '', []) == -1 and return
+      end
+    end
+
+    (params[:hidden_num_count].to_i).times do |i|
+      if addField('Number', params[('number_' + (i + 1).to_s).to_sym], params[('units_' + (i + 1).to_s).to_sym], []) == -1 and return
+      end
+    end
+
+    (params[:hidden_text_count].to_i).times do |i|
+      # Need to explicitly check if restrictions are nil because empty restrictions should be []
+      restrictions = params[('restrictions_' + (i + 1).to_s).to_sym].nil? ? [] : params[('restrictions_' + (i + 1).to_s).to_sym].split(',')
+
+      if addField('Text', params[('text_' + (i + 1).to_s).to_sym], '', restrictions) == -1 and return
+      end
+    end
+
+    redirect_to "/projects/#{@project.id}", notice: 'Fields were successfully updated.' and return
+  end
+
+  # Helper function to add field to database
+  def addField(fieldType, fieldName, unit, restrictions)
+    if fieldName.nil?
+      return
     else
-      redirect_to "/projects/#{@project.id}/edit_fields", notice: "#{field_type} field added."
+      field  = Field.new(project_id: @project.id,
+                         field_type: get_field_type(fieldType),
+                         name: fieldName,
+                         unit: unit,
+                         restrictions: restrictions)
+    end
+
+    unless field.save
+      flash[:error] = "#{field.errors.full_messages[0]}\n"
+      redirect_to "/projects/#{@project.id}/edit_fields" and return -1
     end
   end
 

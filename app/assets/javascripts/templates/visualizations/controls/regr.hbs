@@ -1,0 +1,45 @@
+<div class="vis-ctrl-subblock">
+  <table>
+    <tr>
+      <td><label for="regr-x-axis">X Axis:</label></td>
+      <td id="regr-x-axis" class="regr-option">{{xAxis}}</td>
+    </tr>
+    <tr>
+      <td><label for="regr-y-axis">Y Axis:</label></td>
+      <td>
+        <select id="regr-y-axis" class="form-control regr-option">
+          {{#each yFields}}
+            <option value="{{this.id}}">{{this.name}}</option>
+          {{/each}}
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td><label for="regr-type">Type:</label></td>
+      <td>
+        <select id="regr-type" class="form-control regr-option">
+          {{#each regressions}}
+            <option value="{{@index}}">{{this}}</option>
+          {{/each}}
+        </select>
+      </td>
+    </tr>
+  </table>
+</div>
+<div class="vis-ctrl-subblock centered">
+  <button id="draw-regr-btn" class="save-btn btn btn-sm btn-default"">
+    Draw Best Fit Line
+  </button>
+  <table id="regr-table">
+    <col width="65%"/>
+    <col width="25%"/>
+    <col width="10%"/>
+    <tbody id="regr-table-body">
+      <tr id="regr-table-header">
+        <th><strong>f(x)<strong></th>
+        <th><strong>Type<strong></th>
+        <th></th>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -27,8 +27,8 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
-
+  if namespace.controller is 'visualizations' and
+  namespace.action in ['displayVis', 'embedVis', 'show']
     window.globals ?= {}
 
     ###
@@ -36,7 +36,6 @@ $ ->
     See http://en.wikipedia.org/wiki/Cohen%E2%80%93Sutherland
     ###
     globals.clip = (arr, xBounds, yBounds) ->
-
       if arr.length <= 1
         return arr
 
@@ -151,4 +150,3 @@ $ ->
         return globals.dataReduce res, xBounds, yBounds, (xCells / 2), (yCells / 2), target
 
       res
-

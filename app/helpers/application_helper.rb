@@ -4,10 +4,9 @@ module ApplicationHelper
   end
 
   def title_and_edit_menu(obj)
-    if can_edit?(obj)
-      name = obj.class.to_s.split('_').map(&:capitalize).join(' ')
-      render 'shared/title_and_menu', obj: obj, typeName: name
-    end
+    name = obj.class.to_s.split('_').map(&:capitalize).join(' ')
+    render('shared/title_and_menu', obj: obj, typeName: name,
+           edit: can_edit?(obj))
   end
 
   def get_field_name(field)

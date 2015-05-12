@@ -27,27 +27,58 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and namespace.action in ["displayVis", "embedVis", "show"]
-
+  if namespace.controller is 'visualizations' and
+  namespace.action in ['displayVis', 'embedVis', 'show']
     window.globals ?= {}
 
     ###
-    Makes a title with apropriate units for a field
+    Initializes and tracks the open / collapsed status of a control panel
+      id    The id of the control panel
+      gvar  The key of the tracking variable in globals.configs
+    ###
+    window.initCtrlPanel = (id, gvar) ->
+      # Determines whether it should start hidden
+      if globals.configs[gvar]
+        $("##{id} > .vis-ctrl-body").show()
+        $("##{id}").find('.vis-ctrl-icon > i').attr('class',
+          'fa fa-chevron-down')
+
+      # Tracks if open / collapsed
+      $("##{id} > .vis-ctrl-header").click ->
+        globals.configs[gvar] = !globals.configs[gvar]
+
+        # Toggle collapsed/open
+        $(@).siblings('.vis-ctrl-body').slideToggle()
+        icon = $(@).find('.vis-ctrl-icon > i')
+        icon.toggleClass('fa-chevron-left').toggleClass('fa-chevron-down')
+
+    ###
+    Returns the full path to a handlebars template
+      template  Name of the handlebars template
+    ###
+    window.hbCtrl = (template) ->
+      return 'visualizations/controls/' + template
+
+    ###
+    Makes a title with appropriate units for a field
     ###
     window.fieldTitle = (field, parens = true) ->
-      if field.unitName isnt "" and field.unitName isnt null
-        if parens is true
-          "#{field.fieldName} (#{field.unitName})"
+      unless field?
+        return
+
+      if field.unitName? and field.unitName isnt ""
+        if parens
+          return "#{field.fieldName} (#{field.unitName})"
         else
-          "#{field.fieldName} #{field.unitName}"
-      else
-        field.fieldName
+          return "#{field.fieldName} #{field.unitName}"
+
+      return field.fieldName
 
     ###
     Returns the units for a field
     ###
     window.fieldUnit = (field, parens = true) ->
-      if field.unitName isnt null
+      if field? and field.unitName?
         if parens is true then "(#{field.unitName})" else "#{field.unitName}"
 
     ###
@@ -55,9 +86,9 @@ $ ->
     Returns the modified (or unmodified) arr.
     ###
     window.arrayRemove = (arr, item) ->
-      index = arr.indexOf item
+      index = arr.indexOf(item)
       if index isnt -1
-        arr.splice index, 1
+        arr.splice(index, 1)
       arr
 
     ###
@@ -188,7 +219,30 @@ $ ->
        '#E67300','#8B0707','#329262','#5574A6','#3B3EAC']
 
     globals.configs ?= {}
-    globals.configs.colors = globals.colors
+    globals.configs.colors = []
+
+    ###
+    Make sure there are at least enough color slots per group
+    TODO fix underlying representation of colors (have an object of overrides)
+    ###
+    globals.updateColorSlots = ->
+      while (globals.configs.colors.length < data.groups.length)
+        globals.configs.colors.push(false)
+
+    ###
+    Associate a color with an index
+    ###
+    globals.setColor = (index, color) ->
+      globals.configs.colors[index] = color
+
+    ###
+    Retreive a color associated with an index
+    ###
+    globals.getColor = (index) ->
+      if !globals.configs.colors[index]
+        return globals.colors[index % globals.colors.length]
+
+      return globals.configs.colors[index]
 
     ###
     Generate a list of dashes
@@ -287,83 +341,30 @@ $ ->
 
       if globals.scatter instanceof DisabledVis
         delete globals.scatter
-        globals.scatter = new Scatter "scatter_canvas"
-        ($ "#visTabList li[aria-controls='scatter_canvas'] a span").css "text-decoration", ""
-        ($ "#visTabList li[aria-controls='scatter_canvas'] a img").attr('src',
-          ($ "#visTabList li[aria-controls='scatter_canvas'] a img").data('enable-src'))
+        globals.scatter = new Scatter "scatter-canvas"
+        # TODO deal with header restoration
 
       globals.scatter.xAxis = data.normalFields[data.normalFields.length - 1]
-      ($ "#visTabList li[aria-controls='scatter_canvas'] a").click()
+      $("#vistablist li[aria-controls='scatter-canvas'] a").click()
 
     ###
-    If there is only one time field, generates an appropriate
-    elapsed time field. Otherwise it prompts using a dialog for
-    which time field to use.
+    Generates an appropriate elapsed time field.
     ###
-    globals.generateElapsedTimeDialog = ->
+    globals.generateElapsedTime = ->
+      name  = 'Elapsed Time [from '
+      name += data.fields[data.timeFields[0]].fieldName + ']'
+      data.generateElapsedTime name, data.timeFields[0]
+      globals.curVis.start()
+      $('#elapsed-time-btn').addClass('disabled')
+      quickFlash('Elapsed time generated successfully', 'success')
 
-      if data.timeFields.length is 1
-        name  = 'Elapsed Time [from '
-        name += data.fields[data.timeFields[0]].fieldName + ']'
-        data.generateElapsedTime name, data.timeFields[0]
-        globals.curVis.end()
-        globals.curVis.start()
-        return
-
-      formText = """
-      <div id="dialog-form" title="Generate Elapsed Time">
-
-        <form>
-        <fieldset>
-      """
-
-      formText += '<select id="timeSelector" class="form-control">'
-
-      for fieldIndex, index in data.timeFields
-        sel = if index is 0 then 'selected' else ''
-        formText += "<option value='#{Number fieldIndex}' #{sel}>#{data.fields[fieldIndex].fieldName}</option>"
-
-      formText += """
-        </fieldset>
-        </form>
-      </div>
-      """
-
-      selectedTime = data.timeFields[0]
-
-      ($ '#groupSelector').change (e) ->
-        element = e.target or e.srcElement
-        selectedTime = (Number element.value)
-
-      ($ "#container").append(formText)
-
-      ($ "#dialog-form" ).dialog
-        resizable: false
-        draggable: false
-        autoOpen: true
-        height: 'auto'
-        width: 'auto'
-        modal: true
-        buttons:
-          Generate: ->
-            name  = 'Elapsed Time [from '
-            name += data.fields[selectedTime].fieldName + ']'
-            data.generateElapsedTime name, selectedTime
-            globals.curVis.end()
-            globals.curVis.start()
-            ($ "#dialog-form").dialog 'close'
-        close: ->
-          ($ "#dialog-form").remove()
 
     globals.identity = (i) -> i
 
 ###
-Override default highcarts zoom behavior (because it sucks when allowing zoom out)
+Override default highcarts zoom behavior
 ###
 Highcharts.Axis.prototype.zoom = (newMin, newMax) ->
-
-  this.displayBtn = newMin != undefined || newMax != undefined
-
-  this.setExtremes newMin, newMax, true, undefined, {trigger: 'zoom'}
-
-  true
+  this.displayBtn = newMin isnt undefined or newMax isnt undefined
+  this.setExtremes(newMin, newMax, true, undefined, {trigger: 'zoom'})
+  return true

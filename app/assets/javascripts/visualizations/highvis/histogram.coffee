@@ -27,8 +27,8 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and
-  namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is 'visualizations' and
+  namespace.action in ['displayVis', 'embedVis', 'show']
 
     class window.Histogram extends BaseHighVis
       constructor: (@canvas) ->
@@ -53,11 +53,11 @@ $ ->
         @chartOptions
         $.extend true, @chartOptions,
           chart:
-            type: "column"
+            type: 'column'
           legend:
             enabled: false
           title:
-            text: ""
+            text: ''
           tooltipXAxis = @configs.displayField
           tooltip:
             formatter: ->
@@ -79,31 +79,27 @@ $ ->
               events:
                 legendItemClick: (event) ->
                   false
-
-        # For Histogram
-        @chartOptions.xAxis = []
-        @chartOptions.xAxis.push {}
-        @chartOptions.xAxis.push
-          lineWidth: 0
-          categories: ['']
+          xAxis: [
+            {alignTicks: false},
+            lineWidth: 0
+            categories: ['']
+          ]
 
       ###
       Returns a rough default 'human-like' bin size selection
       ###
       defaultBinSize: ->
-
         min = Number.MAX_VALUE
         max = Number.MIN_VALUE
 
         for groupIndex in data.groupSelection
-
           localMin = data.getMin @configs.displayField, groupIndex
           if localMin isnt null
-            min = Math.min min, localMin
+            min = Math.min(min, localMin)
 
           localMax = data.getMax @configs.displayField, groupIndex
           if localMax isnt null
-            max = Math.max max, localMax
+            max = Math.max(max, localMax)
 
         range = max - min
 
@@ -111,20 +107,23 @@ $ ->
         if max < min
           return 1
 
+        console.log min, max
+
         curSize = 1
 
         bestSize = curSize
         bestNum  = range / curSize
 
-        binNumTarget = Math.pow 10, @binNumSug
+        binNumTarget = Math.pow(10, @binNumSug)
 
-        tryNewSize = (size) ->
-          if (Math.abs (binNumTarget - (range / size))) < (Math.abs (binNumTarget - bestNum))
-            bestSize = size
-            bestNum  = range / size
+        tryNewSize = (size) =>
+          target = Math.abs(binNumTarget - (range / size))
+          if target > Math.abs(binNumTarget - bestNum)
+            return false
 
-            return true
-          false
+          bestSize = size
+          bestNum  = range / size
+          return true
 
         loop
           if (range / curSize) < binNumTarget
@@ -134,35 +133,28 @@ $ ->
 
           break if not tryNewSize curSize
 
-        tryNewSize (curSize / 2)
-        tryNewSize (curSize * 2)
-        tryNewSize (curSize / 5)
-        tryNewSize (curSize * 5)
-
-        bestSize
+        tryNewSize(curSize / 2)
+        tryNewSize(curSize * 2)
+        tryNewSize(curSize / 5)
+        tryNewSize(curSize * 5)
+        return bestSize
 
       update: ->
-        if !@updatedTooltips
-          @updatedTooltips = true
-          @start()
-        @updatedTooltips = false
         super()
         # Name Axis
-        @chart.yAxis[0].setTitle {text: "Quantity"}, false
-        @chart.xAxis[0].setTitle {text: fieldTitle data.fields[@configs.displayField]}, false
+        @chart.yAxis[0].setTitle({text: "Quantity"}, false)
+        @chart.xAxis[0].setTitle(
+          {text: fieldTitle(data.fields[@configs.displayField])}, false)
         tooltipXAxis = @configs.displayField
-        if data.groupSelection.length is 0
-          return
+        if data.groupSelection.length is 0 then return
 
         while @chart.series.length > data.normalFields.length
           @chart.series[@chart.series.length - 1].remove false
 
-        ### --- ###
         @globalmin = Number.MAX_VALUE
         @globalmax = Number.MIN_VALUE
 
         for groupIndex in data.groupSelection
-
           min = data.getMin @configs.displayField, groupIndex
           min = Math.round(min / @configs.binSize) * @configs.binSize
           @globalmin = Math.min @globalmin, min
@@ -171,7 +163,7 @@ $ ->
           max = Math.round(max / @configs.binSize) * @configs.binSize
           @globalmax = Math.max @globalmax, max
 
-        #### Make 'fake' data to ensure proper bar spacing ###
+        # Make 'fake' data to ensure proper bar spacing ###
         fakeDat = for i in [@globalmin...@globalmax] by @configs.binSize
           [i, 0]
 
@@ -180,13 +172,10 @@ $ ->
           data: fakeDat
 
         @chart.addSeries options, false
-        ### ###
 
         # Generate all bin data
         binObjs = {}
-
         for groupIndex in data.groupSelection
-
           selectedData = data.selector @configs.displayField, groupIndex
 
           binArr = for i in selectedData
@@ -202,7 +191,7 @@ $ ->
         i = 0
         binSizes = {}
         binTotals = {}
-        
+
         (key for key of binObjs).map((y) -> ({x: Number(val), y: binObjs[y][val]} for val of binObjs[y])).map (a) ->
           a.map (b) ->
             binSizes[b['x']] ?= 0
@@ -226,8 +215,8 @@ $ ->
                   binData.push {x: Number(bin), y: 1, total: binObjs[group][bin]}
               binData.sort (a, b) -> Number(a['x']) - Number(b['x'])
               options =
-                showInLegend: false,
-                color: globals.configs.colors[Number(group) % globals.configs.colors.length],
+                showInLegend: false
+                color: globals.getColor(Number(group))
                 name: data.groups[Number(group)]
                 data: binData
               @chart.addSeries options, false
@@ -250,120 +239,87 @@ $ ->
 
             options =
               showInLegend: false
-              color: globals.configs.colors[groupIndex % globals.configs.colors.length]
+              color: globals.getColor(groupIndex)
               name: data.groups[groupIndex]
               data: finalData
 
             @chart.addSeries options, false
 
-        @chart.xAxis[0].setExtremes @globalmin - (@configs.binSize / 2), @globalmax + (@configs.binSize / 2), false
-
-        @chart.redraw()
+        half = @configs.binSize / 2
+        @chart.xAxis[0].setExtremes(@globalmin - half, @globalmax + half, true)
 
       buildLegendSeries: ->
         count = -1
-        for field, fieldIndex in data.fields when fieldIndex in data.normalFields
+        for f, i in data.fields when i in data.normalFields
           count += 1
           dummy =
             data: []
             color: '#000'
-            visible: @configs.displayField is fieldIndex
-            name: field.fieldName
-            type: 'area'
+            visible: @configs.displayField is i
+            name: f.fieldName
             xAxis: 1
-            legendIndex: fieldIndex
+            legendIndex: i
 
       drawToolControls: ->
+        inctx =
+          binSize: @configs.binSize
 
-        controls = ""
+        outctx =
+          id: 'tools-ctrls'
+          title: 'Tools'
+          body: HandlebarsTemplates[hbCtrl('histogram-tools')](inctx)
 
-        # --- #
-        controls +=  '<div id="toolControl" class="vis_controls">'
+        tools = HandlebarsTemplates[hbCtrl('body')](outctx)
+        $('#vis-ctrls').append(tools)
 
-        controls += "<h3 class='clean_shrink'><a href='#'>Tools:</a></h3>"
-
-        controls += "<div class='outer_control_div'>"
-
-        controls += "<h4 class='clean_shrink'>Bin Size</h4>"
-
-        controls += "Automatic : <br>"
-        controls += "<div id='binSizeSlider' style='width:90%;margin-left:5%'></div><br>"
-
-
-        controls += "Manual: <input id='binSizeInput' class='form-control' value='#{@configs.binSize}'></input>"
-
-        controls += '</div></div></div>'
-
-
-        # Write HTML
-        ($ '#controldiv').append controls
+        # Initialize and track the status of this control panel
+        globals.configs.toolsOpen ?= false
+        initCtrlPanel('tools-ctrls', 'toolsOpen')
 
         # Set up slider
-        ($ '#binSizeSlider').slider
-          range: 'min'
-          value: 2.7 - @binNumSug
+        init =
+          value: @configs.binSize
           min: .5
           max: 2.2
           step: .1
-          slide: (event, ui) =>
-            @binNumSug = 2.7 - Number ui.value
+        $('#bin-size-slider').attr(init)
+        $('#bin-size-slider').on 'input change', (e) =>
+          @binNumSug = 2.7 - Number(e.target.value)
+          newBinSize = @defaultBinSize()
+          unless fpEq(newBinSize, @configs.binSize)
+            @configs.binSize = newBinSize
+            $('#bin-size').val(@configs.binSize)
+            @delayedUpdate()
 
-            newBinSize = @defaultBinSize()
+        # Bin Size Box
+        $('#bin-size').change (e) =>
+          newBinSize = Number(e.target.value)
+          if isNaN(newBinSize) or newBinSize <= 0
+            $('#bin-size').errorFlash()
+            return
 
-            if not fpEq newBinSize, @configs.binSize
-              @configs.binSize = newBinSize
-              ($ '#binSizeInput').val "#{@configs.binSize}"
-              @delayedUpdate()
-
-        # Set up accordion
-        globals.configs.toolsOpen ?= 0
-
-        ($ '#toolControl').accordion
-          collapsible:true
-          active:globals.configs.toolsOpen
-
-        ($ '#toolControl > h3').click ->
-          globals.configs.toolsOpen = (globals.configs.toolsOpen + 1) % 2
-
-        ($ "#binSizeInput").keydown (e) =>
-          if e.keyCode == 13
-
-            newBinSize = Number ($ '#binSizeInput').val()
-
-            if isNaN newBinSize
-              ($ "#binSizeInput").errorFlash()
-              return
-
-            if newBinSize <= 0
-              ($ "#binSizeInput").errorFlash()
-              return
-
-            if ((@globalmax - @globalmin) / newBinSize) < @MAX_NUM_BINS
-              @configs.binSize = newBinSize
-              @update()
-            else
-              alert "Entered bin size would result in too many bins."
-
+          if ((@globalmax - @globalmin) / newBinSize) < @MAX_NUM_BINS
+            @configs.binSize = newBinSize
+            @update()
+          else
+            alert('Entered bin size would result in too many bins.')
 
       drawControls: ->
         super()
-        @drawGroupControls()
-        @drawYAxisControls(true)
+        @drawGroupControls(data.textFields)
+
+        handler = (selected, selFields) =>
+          @yAxisRadioHandler(selected, selFields)
+          @configs.binSize = @defaultBinSize()
+          $('#bin-size').attr('value', @configs.binSize)
+
+        @drawYAxisControls(globals.configs.fieldSelection,
+          data.normalFields.slice(1), true, 'Fields',
+          @configs.displayField, handler)
         @drawToolControls()
         @drawSaveControls()
 
-      drawYAxisControls: (radio = true) ->
-        super(radio)
-
-        # Currently specific to histogram
-        ($ '.y_axis_input').click (e) =>
-          @configs.displayField = Number e.target.value
-          globals.configs.fieldSelection = [@configs.displayField]
-          @configs.binSize = @defaultBinSize()
-          ($ "#binSizeInput").attr('value', @configs.binSize)
-          @delayedUpdate()
-
     if "Histogram" in data.relVis
-      globals.histogram = new Histogram 'histogram_canvas'
+      globals.histogram = new Histogram 'histogram-canvas'
     else
-      globals.histogram = new DisabledVis 'histogram_canvas'
+      globals.histogram = new DisabledVis 'histogram-canvas'

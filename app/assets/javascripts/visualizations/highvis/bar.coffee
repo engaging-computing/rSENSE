@@ -27,8 +27,8 @@
   *
 ###
 $ ->
-  if namespace.controller is "visualizations" and
-  namespace.action in ["displayVis", "embedVis", "show"]
+  if namespace.controller is 'visualizations' and
+  namespace.action in ['displayVis', 'embedVis', 'show']
 
     class window.Bar extends BaseHighVis
       constructor: (@canvas) ->
@@ -67,7 +67,7 @@ $ ->
               str += "</table>"
             useHTML: true
           yAxis:
-            type: if globals.configs.logY is 1 then 'logarithmic' else 'linear'
+            type: if globals.configs.logY then 'logarithmic' else 'linear'
           xAxis:
             type: 'category'
 
@@ -96,7 +96,7 @@ $ ->
         # Draw the series
         for gid in sortedGroupIDs when gid in data.groupSelection
           options =
-            color: globals.configs.colors[gid % globals.configs.colors.length]
+            color: globals.getColor(gid)
             name:  data.groups[gid] or data.noField()
 
           options.data = for fid in data.normalFields when fid in fieldSelection
@@ -110,12 +110,13 @@ $ ->
 
       drawControls: ->
         super()
-        @drawGroupControls()
-        @drawYAxisControls()
+        @drawGroupControls(data.textFields)
+        @drawYAxisControls(globals.configs.fieldSelection,
+          data.normalFields.slice(1), false)
         @drawToolControls(true, true)
         @drawSaveControls()
 
     if "Bar" in data.relVis
-      globals.bar = new Bar 'bar_canvas'
+      globals.bar = new Bar 'bar-canvas'
     else
-      globals.bar = new DisabledVis "bar_canvas"
+      globals.bar = new DisabledVis "bar-canvas"

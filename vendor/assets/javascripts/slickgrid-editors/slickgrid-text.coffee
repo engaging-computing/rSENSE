@@ -7,7 +7,7 @@
   form = null
   loadValue = null
 
-  if args.column.restrictions == ''
+  if not args.column.restrictions.length? or args.column.restrictions.length == 0
     form = $('<input type="text" class="editor-text" />')
   else
     formStr = ''
