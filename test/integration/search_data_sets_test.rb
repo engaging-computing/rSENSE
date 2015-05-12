@@ -18,7 +18,7 @@ class EditProjDescTest < ActionDispatch::IntegrationTest
   test 'nav on no desc edit' do
     login('kcarcia@cs.uml.edu', '12345')
     visit project_path(@project)
-    fill_in('search', :with => 'two')
+    fill_in('search', with: 'two')
 
     # confirm you can leave the project page
     find('#Search').click
@@ -27,6 +27,6 @@ class EditProjDescTest < ActionDispatch::IntegrationTest
       'Search does not find data set'
 
     assert page.has_no_content?('one'),
-      'Search finds non-matching data set.'  end
-
+      'Search finds non-matching data set.'
+  end
 end
