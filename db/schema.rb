@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150313212337) do
+ActiveRecord::Schema.define(version: 20150511165600) do
 
   create_table "contrib_keys", force: true do |t|
     t.string   "name",       null: false
@@ -40,7 +40,7 @@ ActiveRecord::Schema.define(version: 20150313212337) do
     t.integer  "project_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "restrictions"
+    t.text     "restrictions",             default: "[]"
   end
 
   create_table "likes", force: true do |t|
