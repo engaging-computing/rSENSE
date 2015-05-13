@@ -63,7 +63,8 @@ $ ->
             formatter: ->
               str  = "<table>"
               str += "<tr><td>#{data.fields[tooltipXAxis].fieldName}:</td>\
-              <td>#{@point.realValue} #{fieldUnit(data.fields[tooltipXAxis], false)}</td></tr>"
+              <td>#{@point.realValue} #{fieldUnit(data.fields[tooltipXAxis], false)}<td></tr>"
+              str += "<tr><td>Bin:</td><td>#{@x}</td></tr>"
               str += "<tr><td># Occurrences:</td><td>#{@total}<td></tr>"
               if @y isnt 0
                 str += "<tr><td><div style='color:#{@series.color};'> #{@series.name}:</div></td>"
@@ -173,11 +174,16 @@ $ ->
 
         # Generate all bin data
         binObjs = {}
+        binMesh = {}
         for groupIndex in data.groupSelection
           selectedData = data.selector @configs.displayField, groupIndex
 
           binArr = for i in selectedData
-            Math.round(i / @configs.binSize) * @configs.binSize
+            x = Math.round(i / @configs.binSize) * @configs.binSize
+            unless binMesh[x]?
+              binMesh[x] = []
+            binMesh[x].push i
+            x
 
           binObjs[groupIndex] = {}
 
@@ -203,7 +209,6 @@ $ ->
         maxValueAnyGroupAnyBin = (binSizes[key] for key of binSizes).reduce max, 0
 
         if largestBin < 100 and maxValueAnyGroupAnyBin < 50
-          pts = @computeBinnedData()
           for group of binObjs
             maxValueOneGroupAnyBin = \
             (binObjs[group][key] for key of binObjs[group]).reduce max, 0
@@ -211,8 +216,12 @@ $ ->
               binData = []
               for bin of binObjs[group]
                 if binObjs[group][bin] > i
-                  pt = pts[bin].pop()
-                  binData.push {x: bin, realValue: pt, y: 1, total: binObjs[group][bin]}
+                  x = binMesh[bin].pop()
+                  binData.push
+                    x: Number(bin)
+                    y: 1
+                    total: binObjs[group][bin]
+                    realValue: x
               binData.sort (a, b) -> Number(a['x']) - Number(b['x'])
               options =
                 showInLegend: false
@@ -247,16 +256,6 @@ $ ->
 
         half = @configs.binSize / 2
         @chart.xAxis[0].setExtremes(@globalmin - half, @globalmax + half, true)
-
-      computeBinnedData: ->
-        binnedData = {}
-        for x in data.dataPoints
-          newX =  Math.round((x[@configs.displayField] - @globalmin) / @configs.binSize)
-          newX = newX * @configs.binSize + @globalmin
-          unless binnedData[newX]?
-            binnedData[newX] = []
-          binnedData[newX].push x[@configs.displayField]
-        binnedData
 
       buildLegendSeries: ->
         count = -1
