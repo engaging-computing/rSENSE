@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EditProjDescTest < ActionDispatch::IntegrationTest
+class SeachDataSetsTest < ActionDispatch::IntegrationTest
   include CapyHelper
 
   self.use_transactional_fixtures = false
@@ -9,6 +9,8 @@ class EditProjDescTest < ActionDispatch::IntegrationTest
     @project = projects(:one)
     Capybara.current_driver = :webkit
     Capybara.default_wait_time = 15
+    Capybara.ignore_hidden_elements = false
+
   end
 
   teardown do
@@ -16,32 +18,28 @@ class EditProjDescTest < ActionDispatch::IntegrationTest
   end
 
   test 'search data sets' do
-    login('kcarcia@cs.uml.edu', '12345')
     visit project_path(@project)
-    fill_in('search', with: 'two')
 
-    # confirm you can leave the project page
-    find('#search').click
+    fill_in 'search', with: 'MyString'
+    click_on 'Search'
 
-    assert page.has_content?('two'),
+    assert page.has_content?('MyString'),
       'Search does not find data set'
 
-    assert page.has_no_content?('one'),
+    assert page.has_no_content?('Sample Title'),
       'Search finds non-matching data set.'
   end
 
   test 'search data sets no matches' do
-    login('kcarcia@cs.uml.edu', '12345')
     visit project_path(@project)
-    fill_in('search', with: 'there is no matches')
 
-    # confirm you can leave the project page
-    find('#search').click
+    fill_in 'search', with: 'no dataset with this name'
+    click_on 'Search'
 
     assert page.has_content?('No Matching Data Sets.'),
       'Found data sets when it should not have'
 
-    assert page.has_no_content?('one'),
-      'Search finds non-matching data set.'
+    assert page.has_no_content?('Sample Title'),
+      'Search finds data set when it should not.'
   end
 end
