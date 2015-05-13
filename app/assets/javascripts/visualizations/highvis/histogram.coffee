@@ -62,8 +62,8 @@ $ ->
           tooltip:
             formatter: ->
               str  = "<table>"
-              str += "<tr><td>#{data.fields[tooltipXAxis].fieldName}:</td><td>#{@x} \
-              #{fieldUnit(data.fields[tooltipXAxis], false)}<td></tr>"
+              str += "<tr><td>#{data.fields[tooltipXAxis].fieldName}:</td>\
+              <td>#{@point.realValue} #{fieldUnit(data.fields[tooltipXAxis], false)}</td></tr>"
               str += "<tr><td># Occurrences:</td><td>#{@total}<td></tr>"
               if @y isnt 0
                 str += "<tr><td><div style='color:#{@series.color};'> #{@series.name}:</div></td>"
@@ -106,8 +106,6 @@ $ ->
         # No data
         if max < min
           return 1
-
-        console.log min, max
 
         curSize = 1
 
@@ -205,6 +203,7 @@ $ ->
         maxValueAnyGroupAnyBin = (binSizes[key] for key of binSizes).reduce max, 0
 
         if largestBin < 100 and maxValueAnyGroupAnyBin < 50
+          pts = @computeBinnedData()
           for group of binObjs
             maxValueOneGroupAnyBin = \
             (binObjs[group][key] for key of binObjs[group]).reduce max, 0
@@ -212,7 +211,8 @@ $ ->
               binData = []
               for bin of binObjs[group]
                 if binObjs[group][bin] > i
-                  binData.push {x: Number(bin), y: 1, total: binObjs[group][bin]}
+                  pt = pts[bin].pop()
+                  binData.push {x: bin, realValue: pt, y: 1, total: binObjs[group][bin]}
               binData.sort (a, b) -> Number(a['x']) - Number(b['x'])
               options =
                 showInLegend: false
@@ -247,6 +247,16 @@ $ ->
 
         half = @configs.binSize / 2
         @chart.xAxis[0].setExtremes(@globalmin - half, @globalmax + half, true)
+
+      computeBinnedData: ->
+        binnedData = {}
+        for x in data.dataPoints
+          newX =  Math.round((x[@configs.displayField] - @globalmin) / @configs.binSize)
+          newX = newX * @configs.binSize + @globalmin
+          unless binnedData[newX]?
+            binnedData[newX] = []
+          binnedData[newX].push x[@configs.displayField]
+        binnedData
 
       buildLegendSeries: ->
         count = -1
