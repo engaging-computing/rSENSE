@@ -68,7 +68,7 @@ class Field < ActiveRecord::Base
     end
 
     if restrictions.is_a? Array
-      restrictions.map! { |x| x.strip }
+      restrictions.map! { |x| x.to_s.strip }
     end
   end
 
@@ -76,8 +76,8 @@ class Field < ActiveRecord::Base
     # verify that restrictions is an array of strings
     if !restrictions.is_a? Array
       errors.add :restrictions, 'must be in an array'
-    elsif !restrictions.reduce(true) { |a, e| a and e.is_a? String }
-      errors.add :restrictions, 'must all be strings'
+    elsif !restrictions.reduce(true) { |a, e| a and (e.is_a? String or e.is_a? Number) }
+      errors.add :restrictions, 'must all be parsable as strings'
     end
 
     if !field_type.nil? and ![1, 2, 3, 4, 5].include? field_type
