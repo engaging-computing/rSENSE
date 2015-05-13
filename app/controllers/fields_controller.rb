@@ -19,15 +19,6 @@ class FieldsController < ApplicationController
   # POST /fields
   # POST /fields.json
   def create
-    # begin
-    #   Field.verify_params(params[:field])
-    # rescue Exception => e
-    #   respond_to do |format|
-    #     format.json { render json: { msg: e }, status: :unprocessable_entity }
-    #   end
-    #   return
-    # end
-
     @field = Field.new(field_params)
     unless @field.valid?
       respond_to do |format|
