@@ -21,8 +21,8 @@ class ContribKeysController < ApplicationController
 
       @errors = @key.errors
 
-      flash[:error] = "Failed to create Contributor Key"
-      render "app/views/projects/_form.html.erb"
+      flash[:error] = 'Failed to create Contributor Key'
+      render 'app/views/projects/_form.html.erb'
     end
   end
 
