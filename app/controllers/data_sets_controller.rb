@@ -6,49 +6,6 @@ class DataSetsController < ApplicationController
   skip_before_filter :authorize, only: [:export, :manualEntry, :manualUpload, :update, :show, :dataFileUpload, :field_matching, :jsonDataUpload, :create]
   before_filter :authorize_allow_key, only: [:manualEntry, :manualUpload, :update, :show, :dataFileUpload, :field_matching, :jsonDataUpload, :create]
 
-  def index
-    @params = params
-
-    if !params[:sort].nil? and ['created_at',
-                                'updated_at'].include? params[:sort]
-      sort = params[:sort]
-    else
-      sort = 'updated_at'
-    end
-
-    if !params[:order].nil?
-      order = params[:order]
-    else
-      order = 'DESC'
-    end
-
-    if !params[:per_page].nil?
-      pagesize = params[:per_page]
-    else
-      pagesize = 50
-    end
-
-    has_data = params.key? 'has_data'
-
-    @data_sets = DataSet.search(params[:search])
-
-    @data_sets = @data_sets.order("#{sort} #{order}")
-
-    @projects = @projects.has_data(has_data)
-
-    count = @data_sets.length
-
-    @data_sets = @data_sets.paginate(page: params[:page], per_page: pagesize,
-                                   total_entries: count)
-
-    @data_sets = DataSet.new
-
-    respond_to do |format|
-      format.html
-      format.json { render json: @data_sets.map { |d| d.to_hash(false) } }
-    end
-  end
-
   # GET /data_sets/1
   # GET /data_sets/1.json
   def show

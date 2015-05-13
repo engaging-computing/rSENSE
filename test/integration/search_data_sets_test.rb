@@ -21,7 +21,7 @@ class EditProjDescTest < ActionDispatch::IntegrationTest
     fill_in('search', with: 'two')
 
     # confirm you can leave the project page
-    find('#Search').click
+    find('#search').click
 
     assert page.has_content?('two'),
       'Search does not find data set'
@@ -36,7 +36,7 @@ class EditProjDescTest < ActionDispatch::IntegrationTest
     fill_in('search', with: 'there is no matches')
 
     # confirm you can leave the project page
-    find('#Search').click
+    find('#search').click
 
     assert page.has_content?('No Matching Data Sets.'),
       'Found data sets when it should not have'
