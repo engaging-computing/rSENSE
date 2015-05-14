@@ -6,11 +6,9 @@ class SeachDataSetsTest < ActionDispatch::IntegrationTest
   self.use_transactional_fixtures = false
 
   setup do
-    @project = projects(:one)
     Capybara.current_driver = :webkit
     Capybara.default_wait_time = 15
-    Capybara.ignore_hidden_elements = false
-
+    @project = projects(:one)
   end
 
   teardown do
