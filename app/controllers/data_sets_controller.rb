@@ -287,6 +287,10 @@ class DataSetsController < ApplicationController
 
   # POST /data_sets/dataFileUpload
   def dataFileUpload
+    require 'tempfile'
+    require 'rubygems'
+    require 'zip'
+
     project = Project.find(params[:pid])
 
     if project.lock? and !can_edit?(project) and !key?(project)
@@ -305,9 +309,50 @@ class DataSetsController < ApplicationController
       end
     end
 
-    if params[:file]
+    if params[:file] && DataSet.get_next_name(project, params[:file].original_filename.split('.')[1]) == "zip"
+      Zip::File.open(params[:file].path) do |zip_file|
+        # Handle entries one by one
+        zip_file.each do |entry|
+          puts "\n\n\n\n\n"
+
+          puts "Extracting #{entry.name}"
+
+          if entry.directory?
+            puts "#{entry.name} is a folder!"
+            next
+          elsif entry.file?
+            puts "#{entry.name} is a file!"
+            begin
+              puts "here"
+              puts "#{entry.name.split('/')[1]}"
+              tempfile = Tempfile.new(entry.name.split('/')[1])
+              puts "#{entry.get_input_stream.read}"
+              content = entry.get_input_stream.read
+              tempfile.write(content)
+              puts "#{tempfile}"
+              puts "uploading"
+
+              uploader = FileUploader.new
+              data_obj = uploader.generateObject(tempfile.path)
+              @results = uploader.match_headers(project, data_obj)
+
+              tempfile.close
+              tempfile.unlink
+            rescue Exception => e
+              flash[:error] = "Error reading file: #{e}"
+            end
+            next
+          else
+            puts "#{entry.name} is a something else!"
+            next
+          end
+        end
+      end
+      redirect_to project_path(project)
+      return
+    elsif params[:file]
       @filename = DataSet.get_next_name(project, params[:file].original_filename.split('.')[0])
-    else
+    elsif !params[:file]
       @filename = DataSet.get_next_name(project, 'Google docs')
     end
 
