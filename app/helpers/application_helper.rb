@@ -133,7 +133,7 @@ module ApplicationHelper
         # viewing data sets
         if @datasets.count == 1
           # viewing a single data set
-          @datasets[0].title.html_safe
+          @datasets[0].title
         else
           # viewing multiple data sets
           'Multiple Data Sets'
