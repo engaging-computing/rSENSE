@@ -185,7 +185,11 @@ class MediaObject < ActiveRecord::Base
     end
     add_tn
 
-    self.save!
+    begin
+      self.save!
+    rescue
+      remove_data!
+    end
   end
 
   def self.create_media_objects(description, type, item_id, owner_id = nil)
