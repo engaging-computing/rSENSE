@@ -313,37 +313,35 @@ class DataSetsController < ApplicationController
       Zip::File.open(params[:file].path) do |zip_file|
         # Handle entries one by one
         zip_file.each do |entry|
-          puts "\n\n\n\n\n"
-
-          puts "Extracting #{entry.name}"
-
           if entry.directory?
-            puts "#{entry.name} is a folder!"
             next
           elsif entry.file?
-            puts "#{entry.name} is a file!"
             begin
-              puts "here"
-              puts "#{entry.name.split('/')[1]}"
               tempfile = Tempfile.new(entry.name.split('/')[1])
-              puts "#{entry.get_input_stream.read}"
-              content = entry.get_input_stream.read
-              tempfile.write(content)
-              puts "#{tempfile}"
-              puts "uploading"
+              tempfile.write(entry.get_input_stream.read)
 
               uploader = FileUploader.new
-              data_obj = uploader.generateObject(tempfile.path)
+              data_obj = uploader.generateObject(tempfile)
               @results = uploader.match_headers(project, data_obj)
 
-              tempfile.close
-              tempfile.unlink
+              puts "\n\n\n\n\n\n\n\n\n"
+              puts @results
+              puts "results\n\n\n\n\n\n\n\n"
+
+              # tempfile.close
+              # tempfile.unlink
+
+              respond_to do |format|
+                format.html
+                return
+              end
             rescue Exception => e
-              flash[:error] = "Error reading file: #{e}"
+              flash[:error] = "Error reading file #{entry.name.split('/')[1]}: #{e}"
+              next
             end
             next
           else
-            puts "#{entry.name} is a something else!"
+            flash[:error] = "Error reading #{entry.name.split('/')[1]}"
             next
           end
         end
