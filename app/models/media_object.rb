@@ -16,10 +16,11 @@ class MediaObject < ActiveRecord::Base
 
   validates_presence_of :media_type, :store_key
   validates :name, length: { maximum: 128 }
-
   validates_presence_of :name, :file
+  validate :unique_md5
 
   before_validation :sanitize_media
+  before_validation :make_md5
   before_save :check_store!
 
   after_destroy :remove_data!
@@ -33,6 +34,38 @@ class MediaObject < ActiveRecord::Base
 
   def sanitize_media
     self.title = sanitize title, tags: %w()
+  end
+
+  def make_md5
+    self.md5 = Digest::MD5.file(file_name).hexdigest
+  end
+
+  def unique_md5
+    if !project_id.nil?
+      owner = Project.find project_id
+    elsif !data_set_id.nil?
+      owner = DataSet.find data_set_id
+    elsif !tutorial_id.nil?
+      owner = Tutorial.find tutorial_id
+    elsif !visualization_id.nil?
+      owner = Visualization.find visualization_id
+    elsif !news_id.nil?
+      owner = News.find news_id
+    else
+      nil
+    end
+
+    if owner.nil?
+      return
+    end
+
+    matches = owner.media_objects.collect.select do |x|
+      x.md5 == md5
+    end
+
+    if matches.length > 0
+      errors.add :base, 'Duplicate media object detected'
+    end
   end
 
   def check_store!
@@ -117,8 +150,6 @@ class MediaObject < ActiveRecord::Base
       end
 
       File.chmod(0644, tn_file_name)
-
-      self.save!
     end
   end
 

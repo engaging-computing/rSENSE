@@ -173,7 +173,7 @@ class ProjectsController < ApplicationController
         format.json { render json: {}, status: :ok }
       else
         @project.errors[:base] << 'Permission denied' unless can_edit?(@project)
-        format.html { render action: 'edit' }
+        format.html { render action: 'show' }
         format.json do
           render json: @project.errors.full_messages,
           status: :unprocessable_entity
