@@ -34,7 +34,6 @@ class AddHashToMediaObject < ActiveRecord::Migration
       if File.exist? mo.file_name
         mo.md5 = Digest::MD5.file(mo.file_name).hexdigest
       end
-      
       unless mo.save
         if isFeatured? mo
           resave.push mo
