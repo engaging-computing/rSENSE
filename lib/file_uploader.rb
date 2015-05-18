@@ -284,7 +284,7 @@ class FileUploader
           return { status: false, msg: 'Longiude contains invalid data' }
         when 'Time'
         when 'Text'
-          unless field.restrictions.nil?
+          unless field.restrictions.length == 0
             unless field.restrictions.map { |r| r.downcase.gsub(/\s+/, '') }.include? dp.downcase.gsub(/\s+/, '')
               data[key][index] = ''
             end
