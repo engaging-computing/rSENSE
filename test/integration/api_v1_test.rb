@@ -80,6 +80,16 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert keys_match(response, @project_keys), 'Keys are missing'
   end
 
+  test 'create autonamed project' do
+    post '/api/v1/projects',
+
+      email: 'boxes@boxes.boxes',
+      password: '12345'
+
+    assert_response :success
+    assert keys_match(response, @project_keys), 'Keys are missing'
+  end
+
   # Create a named project
   test 'create project named' do
     post '/api/v1/projects',
@@ -94,10 +104,23 @@ class ApiV1Test < ActionDispatch::IntegrationTest
   end
 
   # Failed project creation because of unauthorized
-  test 'failed create project' do
+  test 'failed create project unauthorized' do
     assert_difference('Project.count', 0) do
       post '/api/v1/projects'
       assert_response :unauthorized
+    end
+  end
+
+  # Failed project creation because project name is way too long
+  test 'failed create project long name' do
+    assert_difference('Project.count', 0) do
+      post '/api/v1/projects',
+
+        project_name: 'W' * 999,
+        email: 'kcarcia@cs.uml.edu',
+        password: '12345'
+
+      assert_response :unprocessable_entity
     end
   end
 
@@ -678,13 +701,14 @@ class ApiV1Test < ActionDispatch::IntegrationTest
   test 'add a key to a project unprocessable' do
     post '/api/v1/projects',
 
-    email: 'kcarcia@cs.uml.edu',
-    password: '12345'
+      email: 'kcarcia@cs.uml.edu',
+      password: '12345'
 
     assert_response :success
     id = parse(response)['id']
 
     post "/api/v1/projects/#{id}/add_key",
+
         email: 'kcarcia@cs.uml.edu',
         password: '12345',
         wrong_name:
@@ -692,7 +716,76 @@ class ApiV1Test < ActionDispatch::IntegrationTest
             'wrong_name2' => 'key_name',
             'key' => 'key'
           }
+
     assert_response :unprocessable_entity
+  end
+
+  test 'add a key with missing key name' do
+    post '/api/v1/projects',
+
+      email: 'kcarcia@cs.uml.edu',
+      password: '12345'
+
+    assert_response :success
+    id = parse(response)['id']
+
+    post "/api/v1/projects/#{id}/add_key",
+
+        email: 'kcarcia@cs.uml.edu',
+        password: '12345',
+        contrib_key:
+          {
+            'wrong_name2' => 'key_name',
+            'key' => 'key'
+          }
+
+    assert_response :unprocessable_entity
+  end
+
+  test 'add a key with missing key value' do
+    post '/api/v1/projects',
+
+      email: 'kcarcia@cs.uml.edu',
+      password: '12345'
+
+    assert_response :success
+    id = parse(response)['id']
+
+    post "/api/v1/projects/#{id}/add_key",
+
+        email: 'kcarcia@cs.uml.edu',
+        password: '12345',
+        contrib_key:
+          {
+            'name' => 'key_name',
+            'wrong_name3' => 'key'
+          }
+
+    assert_response :unprocessable_entity
+  end
+
+  test 'add a key with really long name' do
+    post '/api/v1/projects',
+
+      email: 'kcarcia@cs.uml.edu',
+      password: '12345'
+
+    assert_response :success
+    id = parse(response)['id']
+
+    assert_difference 'ContribKey.count', 0 do
+      post "/api/v1/projects/#{id}/add_key",
+
+          email: 'kcarcia@cs.uml.edu',
+          password: '12345',
+          contrib_key:
+            {
+              'name' => 'W' * 999,
+              'key' => 'key'
+            }
+
+      assert_response :unprocessable_entity
+    end
   end
 
   test 'add a key that already exists' do
