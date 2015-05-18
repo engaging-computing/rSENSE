@@ -438,6 +438,24 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert keys_match(response, @media_object_keys_extended), 'Keys are missing'
   end
 
+  test 'failed create non-image media object' do
+    img_path = Rails.root.join('test', 'CSVs', 'test.txt')
+    file = Rack::Test::UploadedFile.new(img_path, 'text/plain')
+
+    # Create a media object for a project
+    post '/api/v1/media_objects',
+
+         upload: file,
+         email: 'kcarcia@cs.uml.edu',
+         password: '12345',
+         type: 'project',
+         id: @dessert_project.id
+
+    assert_response :unprocessable_entity
+    assert parse(response).has_key?('error')
+    assert parse(response)['error'] == 'API only supports images'
+  end
+
   test 'failed create media bad auth' do
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
     file = Rack::Test::UploadedFile.new(img_path, 'image/jpeg')
@@ -451,17 +469,59 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     assert_response :unauthorized
   end
 
+  test 'failed create media wrong auth for data set' do
+    img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
+    file = Rack::Test::UploadedFile.new(img_path, 'image/jpeg')
+
+    post '/api/v1/media_objects',
+        upload: file,
+        email: 'boxes@boxes.boxes',
+        password: '12345',
+        id: @thanksgiving_dataset.id,
+        type: 'data_set'
+
+    assert_response :unprocessable_entity
+  end
+
+  test 'failed create media wrong auth for project' do
+    img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
+    file = Rack::Test::UploadedFile.new(img_path, 'image/jpeg')
+
+    post '/api/v1/media_objects',
+        upload: file,
+        email: 'boxes@boxes.boxes',
+        password: '12345',
+        id: @dessert_project.id,
+        type: 'project'
+
+    assert_response :unprocessable_entity
+  end
+
+  test 'fialed create media long name' do
+    img_path = Rails.root.join('test', 'CSVs', "nerdboy-long-name-#{'w' * 160}.jpg")
+    file = Rack::Test::UploadedFile.new(img_path, 'image/jpeg')
+
+    post '/api/v1/media_objects',
+        upload: file,
+        email: 'kcarcia@cs.uml.edu',
+        password: '12345',
+        id: @dessert_project.id,
+        type: 'project'
+
+    assert_response :unprocessable_entity
+  end
+
   test 'failed create media bad id' do
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
     file = Rack::Test::UploadedFile.new(img_path, 'image/jpeg')
 
     # Failed due to bad data
     post '/api/v1/media_objects',
-         upload: file,
-         email: 'kcarcia@cs.uml.edu',
-         password: '12345',
-         type: 'project',
-         id: 3
+        upload: file,
+        email: 'kcarcia@cs.uml.edu',
+        password: '12345',
+        type: 'project',
+        id: 3
 
     assert_response :unprocessable_entity
   end
@@ -583,6 +643,21 @@ class ApiV1Test < ActionDispatch::IntegrationTest
     some_new_data = { '20' => '99', '21' => '102', '22' => '105' }
 
     assert data.include?(some_new_data), 'Updated data did not include new data points'
+  end
+
+  test 'fail append to data set (unauthorized)' do
+    a = post '/api/v1/data_sets/append',
+        id: @dessert_project.data_sets.first.id,
+        email: 'boxes@boxes.boxes',
+        password: '12345',
+        data:
+          {
+            '20' => ['blue', '100', '101'],
+            '21' => ['102', '103', '104'],
+            '22' => ['105', '106', '107']
+          }
+
+    assert_response :unauthorized
   end
 
   test 'fail append to data set (failed sanitization)' do
