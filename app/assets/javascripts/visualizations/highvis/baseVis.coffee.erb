@@ -36,17 +36,18 @@ $ ->
       constructor: (@canvas) ->
         @configs ?= {}
 
-      ANALYSISTYPE_TOTAL:     0
-      ANALYSISTYPE_MAX:       1
-      ANALYSISTYPE_MIN:       2
-      ANALYSISTYPE_MEAN:      3
-      ANALYSISTYPE_MEDIAN:    4
-      ANALYSISTYPE_COUNT:     5
+      ANALYSISTYPE_TOTAL:      0
+      ANALYSISTYPE_MAX:        1
+      ANALYSISTYPE_MIN:        2
+      ANALYSISTYPE_MEAN:       3
+      ANALYSISTYPE_MEAN_ERROR: 4
+      ANALYSISTYPE_MEDIAN:     5
+      ANALYSISTYPE_COUNT:      6
 
-      SORT_DEFAULT:          -1
+      SORT_DEFAULT:           -1
 
-      analysisTypeNames: ["Total", "Maximum", "Mininum", "Mean (Average)",
-        "Median", "Row Count"]
+      analysisTypeNames: ['Total', 'Maximum', 'Mininum', 'Mean (Average)',
+        'Mean with Error', 'Median', 'Row Count']
 
       ###
       Start sequence used by runtime
@@ -106,12 +107,13 @@ $ ->
         gData = {}
         for name, i in data.groups when i in data.groupSelection
           switch @configs.analysisType
-            when @ANALYSISTYPE_TOTAL  then gData[i] = (data.getTotal  field, i)
-            when @ANALYSISTYPE_MAX    then gData[i] = (data.getMax    field, i)
-            when @ANALYSISTYPE_MIN    then gData[i] = (data.getMin    field, i)
-            when @ANALYSISTYPE_MEAN   then gData[i] = (data.getMean   field, i)
-            when @ANALYSISTYPE_MEDIAN then gData[i] = (data.getMedian field, i)
-            when @ANALYSISTYPE_COUNT  then gData[i] = (data.getCount  field, i)
+            when @ANALYSISTYPE_TOTAL        then gData[i] = (data.getTotal  field, i)
+            when @ANALYSISTYPE_MAX          then gData[i] = (data.getMax    field, i)
+            when @ANALYSISTYPE_MIN          then gData[i] = (data.getMin    field, i)
+            when @ANALYSISTYPE_MEAN         then gData[i] = (data.getMean   field, i)
+            when @ANALYSISTYPE_MEAN_ERROR   then gData[i] = (data.getMean   field, i)
+            when @ANALYSISTYPE_MEDIAN       then gData[i] = (data.getMedian field, i)
+            when @ANALYSISTYPE_COUNT        then gData[i] = (data.getCount  field, i)
         gData
 
       ###
