@@ -121,10 +121,6 @@ $ ->
                 [mean - stdDev, mean + stdDev]
 
             @chart.addSeries errors
-          else
-            options.data = for fid in data.normalFields when fid in fieldSelection
-              [fieldTitle(data.fields[fid]), groupedData[fid][gid]]
-            @chart.addSeries options, false
 
         @chart.redraw()
 
