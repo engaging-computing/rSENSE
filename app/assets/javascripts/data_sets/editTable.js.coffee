@@ -42,6 +42,7 @@ class Grid
     # this is needed because slickgrid opens after this function completes
     @initialize()
     @subscribeEvents()
+    console.log @data
 
   initialize: ->
     # add the delete button to each row
@@ -73,6 +74,10 @@ class Grid
     @grid = new Slick.Grid '#slickgrid-container', @view, @cols, options
     @view.setItems @data
 
+    setTimeout ->
+      $('.slick-cell.l0.r0').first().trigger 'click'
+    , 1
+
   subscribeEvents: ->
     $(window).resize =>
       @resizeWindow()
@@ -84,7 +89,7 @@ class Grid
     $('.edit_table_add').click =>
       if $('.edit_table_save').hasClass 'disabled'
         return
-      @addRow()
+      @addRow true
 
     $('.edit_table_cancel').click ->
       projectID = $(document).data 'project'
@@ -110,7 +115,7 @@ class Grid
       if cell.cell == @grid.getColumns().length - 1
         @queueDeleteRow(cell.row)
         if @grid.getDataLength() == 0
-          @addRow()
+          @addRow true
 
     @grid.onAfterCellEditorDestroy.subscribe =>
       @hidePopover()
@@ -122,7 +127,7 @@ class Grid
 
     @grid.onKeyDown.subscribe (e, args) =>
       if e.keyCode == 13 and @grid.getDataLength() - 1 == @grid.getActiveCell().row
-        @addRow()
+        @addRow true
       if e.keyCode == 37 and args.cell? and args.cell == 0
         nextRow = (args.row - 1) % @grid.getDataLength()
         nextRow += @grid.getDataLength() if nextRow < 0
@@ -131,10 +136,6 @@ class Grid
         e.stopImmediatePropagation()
 
     $(window).trigger 'resize'
-
-    setTimeout ->
-      $('.slick-cell.l0.r0').first().trigger 'click'
-    , 1
 
   resizeWindow: ->
     newHeight = $(window).height()-
@@ -172,13 +173,14 @@ class Grid
     for x in temp
       x()
 
-  addRow: ->
+  addRow: (scroll) ->
     newRow = {id: @currID}
     @currID += 1
     for x in @cols
       newRow[x.field] = ''
     @view.addItem newRow
-    @grid.scrollRowIntoView @view.getLength()
+    if scroll
+      @grid.scrollRowIntoView @view.getLength()
 
   queueDeleteRow: (row) ->
     deleteRow = () =>
@@ -297,7 +299,7 @@ IS.onReady 'data_sets/edit', ->
   # ensure a minimum of ten rows per dataset
   newRows = Math.max 1, 10 - grid.length()
   for i in [1 .. newRows]
-    grid.addRow()
+    grid.addRow false
 
 IS.onReady 'data_sets/manualEntry', ->
   uploadSettings.pageName = 'entry'
@@ -312,4 +314,4 @@ IS.onReady 'data_sets/manualEntry', ->
 
   # we get one row for free in slickgrid, so just add 9 more
   for i in [1 .. 9]
-    grid.addRow()
+    grid.addRow false
