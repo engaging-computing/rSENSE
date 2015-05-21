@@ -105,15 +105,20 @@ $ ->
       ###
       getGroupedData: (field) ->
         gData = {}
-        for name, i in data.groups when i in data.groupSelection
+
+        analysisMethod =
           switch @configs.analysisType
-            when @ANALYSISTYPE_TOTAL        then gData[i] = (data.getTotal  field, i)
-            when @ANALYSISTYPE_MAX          then gData[i] = (data.getMax    field, i)
-            when @ANALYSISTYPE_MIN          then gData[i] = (data.getMin    field, i)
-            when @ANALYSISTYPE_MEAN         then gData[i] = (data.getMean   field, i)
-            when @ANALYSISTYPE_MEAN_ERROR   then gData[i] = (data.getMean   field, i)
-            when @ANALYSISTYPE_MEDIAN       then gData[i] = (data.getMedian field, i)
-            when @ANALYSISTYPE_COUNT        then gData[i] = (data.getCount  field, i)
+            when @ANALYSISTYPE_TOTAL      then data.getTotal
+            when @ANALYSISTYPE_MAX        then data.getMax
+            when @ANALYSISTYPE_MIN        then data.getMin
+            when @ANALYSISTYPE_MEAN       then data.getMean
+            when @ANALYSISTYPE_MEAN_ERROR then data.getMean
+            when @ANALYSISTYPE_MEDIAN     then data.getMedian
+            when @ANALYSISTYPE_COUNT      then data.getCount
+
+        for name, i in data.groups when i in data.groupSelection
+          gData[i] = analysisMethod.call data, field, i
+
         gData
 
       ###
@@ -415,7 +420,7 @@ $ ->
       Draw tool controls (Analysis Type, Log Y Axis, etc.) for Pie Chart and
       Bar Charts
       ###
-      drawToolControls: (sortBy = false, logYAxis = false) ->
+      drawToolControls: (sortBy = false, logYAxis = false, analysisTypes = []) ->
         inctx = {}
 
         # Populate sort fields
@@ -433,12 +438,12 @@ $ ->
 
         # Analysis Types
         inctx.analysisTypes =
-          for name, i in @analysisTypeNames
+          for i in analysisTypes
             value: i
             id:    'analysis-type-' + i
             logId: 'analysis-type-' + i
             name:  'analysis-type'
-            label:  name
+            label:  @analysisTypeNames[i]
 
         # Logarithmic Y Axis
         if logYAxis
