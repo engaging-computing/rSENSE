@@ -42,7 +42,6 @@ class Grid
     # this is needed because slickgrid opens after this function completes
     @initialize()
     @subscribeEvents()
-    console.log @data
 
   initialize: ->
     # add the delete button to each row
