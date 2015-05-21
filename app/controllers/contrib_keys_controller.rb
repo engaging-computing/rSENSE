@@ -14,8 +14,15 @@ class ContribKeysController < ApplicationController
       flash[:notice] = 'Added contributor key.'
       redirect_to [:edit, @key.project]
     else
-      flash[:error] = @key.errors.full_messages
-      redirect_to [:edit, @key.project]
+      @project = @key.project
+
+      @new_contrib_key = ContribKey.new
+      @new_contrib_key.project_id = @project.id
+
+      @errors = @key.errors
+
+      flash[:error] = 'Failed to create Contributor Key'
+      render 'app/views/projects/_form.html.erb'
     end
   end
 

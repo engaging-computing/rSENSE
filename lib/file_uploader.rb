@@ -212,13 +212,14 @@ class FileUploader
     types['latitude'] = []
     types['longitude'] = []
 
-    regex = %r{((?<year>\d{4})(-|\/)(?<month>\d{1,2})(-|\/)(?<day>\d{1,2})|([uU]\s\d+))}
+    yyyymmdd = %r{((?<year>\d{4})( |-|\/)(?<month>\d{1,2})( |-|\/)(?<day>\d{1,2})|([uU]\s\d+))}
+    mmddyyyy = %r{((?<month>\d{1,2})( |-|\/)(?<day>\d{1,2})( |-|\/)(?<year>\d{4})|([uU]\s\d+))}
 
     data_set.each do |column|
       # if the data is not nil and matches the timestamp regex, or if the data
       # is nil but the header contains "time," classify as a timestamp
       if (!column[1].nil? and
-           (column[1]).map { |dp| (regex =~ dp) }.reduce(:&)) or
+           (column[1]).map { |dp| (yyyymmdd =~ dp) or (mmddyyyy =~ dp) }.reduce(:&)) or
            (column[1].nil? and column[0].upcase.include?('TIME'))
         types['timestamp'].push column[0]
         next
@@ -284,7 +285,7 @@ class FileUploader
           return { status: false, msg: 'Longiude contains invalid data' }
         when 'Time'
         when 'Text'
-          unless field.restrictions.nil?
+          unless field.restrictions.length == 0
             unless field.restrictions.map { |r| r.downcase.gsub(/\s+/, '') }.include? dp.downcase.gsub(/\s+/, '')
               data[key][index] = ''
             end

@@ -1,12 +1,14 @@
 include ApplicationHelper
 class Field < ActiveRecord::Base
+  after_initialize :default_values
+  before_validation :trim_restrictions
   validates_presence_of :project_id, :field_type, :name
   validates_uniqueness_of :name, scope: :project_id, case_sensitive: false
+  validate :validate_values
+
   belongs_to :project
   serialize :restrictions, JSON
   alias_attribute :owner, :project
-
-  before_validation :trim_restrictions
 
   default_scope { order('field_type ASC, created_at ASC') }
 
@@ -27,6 +29,10 @@ class Field < ActiveRecord::Base
   end
 
   def self.get_next_name(project, field_type)
+    if project.nil? or field_type.nil?
+      return
+    end
+
     highest = 0
     base = get_field_name(field_type)
     project.fields.where('field_type = ?', field_type).each do |f|
@@ -50,37 +56,38 @@ class Field < ActiveRecord::Base
     name
   end
 
-  def self.verify_params(params)
-    if !params.key? 'field_type'
-      fail 'No field type given'
-    else
-      unless ['1', '2', '3', '4', '5'].include?(params['field_type'].to_s)
-        fail 'Bad field type given'
-      end
-    end
-
-    if !params.key? 'project_id'
-      fail 'No project id given'
-    else
-      @project = Project.find_by_id(params['project_id']) || nil
-      if @project.nil?
-        fail 'Project not found'
-      end
-    end
+  def default_values
+    self.restrictions ||= []
+    self.name ||= Field.get_next_name project, field_type
   end
 
   def trim_restrictions
-    unless restrictions.nil?
-      m = nil
-      if restrictions.is_a? String
-        m = restrictions.split(',')
-      else
-        m = restrictions
-      end
+    if restrictions.is_a? String
+      split_r = restrictions.split ','
+      self.restrictions = split_r
+    end
 
-      m.map! do |x|
-        x.strip!
-        x
+    if restrictions.is_a? Array
+      restrictions.map! { |x| x.to_s.strip }
+    end
+  end
+
+  def validate_values
+    # verify that restrictions is an array of strings
+    if !restrictions.is_a? Array
+      errors.add :restrictions, 'must be in an array'
+    elsif !restrictions.reduce(true) { |a, e| a and (e.is_a? String or e.is_a? Number) }
+      errors.add :restrictions, 'must all be parsable as strings'
+    end
+
+    if !field_type.nil? and ![1, 2, 3, 4, 5].include? field_type
+      errors.add :field_type, 'must be a number between 1 and 5'
+    end
+
+    unless project_id.nil?
+      @project = Project.find_by_id(project_id)
+      if project.nil?
+        errors.add :project, 'not found'
       end
     end
   end

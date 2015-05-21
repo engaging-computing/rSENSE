@@ -58,12 +58,12 @@ $ ->
             enabled: false
           title:
             text: ''
-          tooltipXAxis = @configs.displayField
           tooltip:
             formatter: ->
               str  = "<table>"
-              str += "<tr><td>#{data.fields[tooltipXAxis].fieldName}:</td>\
-              <td>#{@point.realValue} #{fieldUnit(data.fields[tooltipXAxis], false)}<td></tr>"
+              xField = @series.xAxis.options.title.text
+              idx = data.fields.map((x) -> fieldTitle(x)).indexOf(xField)
+              str += "<tr><td>#{xField}:</td> <td>#{@point.realValue}</td></tr>"
               str += "<tr><td>Bin:</td><td>#{@x}</td></tr>"
               str += "<tr><td># Occurrences:</td><td>#{@total}<td></tr>"
               if @y isnt 0
@@ -144,7 +144,6 @@ $ ->
         @chart.yAxis[0].setTitle({text: "Quantity"}, false)
         @chart.xAxis[0].setTitle(
           {text: fieldTitle(data.fields[@configs.displayField])}, false)
-        tooltipXAxis = @configs.displayField
         if data.groupSelection.length is 0 then return
 
         while @chart.series.length > data.normalFields.length
@@ -156,11 +155,11 @@ $ ->
         for groupIndex in data.groupSelection
           min = data.getMin @configs.displayField, groupIndex
           min = Math.round(min / @configs.binSize) * @configs.binSize
-          @globalmin = Math.min @globalmin, min
+          @globalmin = Math.min(@globalmin, min)
 
           max = data.getMax @configs.displayField, groupIndex
           max = Math.round(max / @configs.binSize) * @configs.binSize
-          @globalmax = Math.max @globalmax, max
+          @globalmax = Math.max(@globalmax, max)
 
         # Make 'fake' data to ensure proper bar spacing ###
         fakeDat = for i in [@globalmin...@globalmax] by @configs.binSize
