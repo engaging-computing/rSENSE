@@ -54,10 +54,6 @@ class MediaObject < ActiveRecord::Base
     elsif !news_id.nil?
       owner = News.find news_id
     else
-      nil
-    end
-
-    if owner.nil?
       return
     end
 
