@@ -27,7 +27,7 @@
   applyValue: (item, state) ->
     item[args.column.field] = state
   validate: ->
-    isNumber = /^(?:\+|-)?(?:\d*\.\d+|\d+)$/
+    isNumber = /^(?:(?:\+|-)?(?:\d*\.\d+|\d+))?$/
     if isNumber.test form.val()
       {valid: true, msg: null}
     else
