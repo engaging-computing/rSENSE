@@ -39,6 +39,9 @@ class Grid
   actions: []
 
   constructor: (@cols, @data, @submit) ->
+    console.log JSON.stringify @data
+    console.log @data
+
     # this is needed because slickgrid opens after this function completes
     @initialize()
     @subscribeEvents()
@@ -295,8 +298,9 @@ IS.onReady 'data_sets/edit', ->
     success: uploadSettings.successEdit
 
   # ensure a minimum of ten rows per dataset
-  newRows = 10 - grid.length()
+  newRows = Math.max 1, 10 - grid.length()
   for i in [1 .. newRows]
+    console.log i
     grid.addRow()
 
 IS.onReady 'data_sets/manualEntry', ->
