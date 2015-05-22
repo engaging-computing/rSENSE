@@ -186,7 +186,8 @@ class MediaObjectsController < ApplicationController
           # render default
         end
       else
-        render text: 'File upload failed'
+        flash[:error] = @mo.errors.full_messages
+        redirect_to :back
       end
     else
       # Tell the user there is a problem with uploading their image.

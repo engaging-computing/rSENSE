@@ -64,7 +64,7 @@
                   <% if @cur_user.name.length < 30 %>
                     <%= @cur_user.name %>&nbsp;
                   <% else %>
-                    <%= "My Account" %>&nbsp;
+                    My Account&nbsp;
                   <% end %>
                   <%= image_tag(Gravatar.new.url(@cur_user),
                       class: "circle-img hidden-sm") %>

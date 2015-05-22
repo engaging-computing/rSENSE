@@ -77,13 +77,6 @@ module Api
           return
         end
 
-        if params[:id].nil?
-          respond_to do |format|
-            format.json { render json: { msg: 'project id is nil' }, status: :unprocessable_entity }
-          end
-          return
-        end
-
         if params[:contrib_key][:key].nil?
           respond_to do |format|
             format.json { render json: { msg: 'key is nil' }, status: :unprocessable_entity }

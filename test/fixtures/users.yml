@@ -25,3 +25,11 @@ crunch:
   password_digest: $2a$10$aK2OsTVTnWuPVmDthm9pj.vDApO9VGNgRwvwHmwzVQ0ScmW3BOPjC
   validation_key: abcd
   created_at: <%= 7.day.ago.to_s(:db) %>
+
+boxes:
+  name: boxes
+  email: boxes@boxes.boxes
+  validated: true
+  password_digest: $2a$10$aK2OsTVTnWuPVmDthm9pj.vDApO9VGNgRwvwHmwzVQ0ScmW3BOPjC
+  admin: false
+  created_at: <%= 8.day.ago.to_s(:db) %>
