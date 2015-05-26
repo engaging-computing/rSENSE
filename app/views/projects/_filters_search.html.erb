@@ -1,30 +1,30 @@
 <% align_style = "text-align: #{local_assigns[:align]};" %>
 <% puts params = local_assigns[:params] %>
-<% template_checked = "checked" if !params['templates_only'].nil? %>
-<% curated_checked = "checked" if !params['curated_only'].nil? %>
-<% featured_checked = "checked" if !params['featured_only'].nil? %>
-<% has_data_checked = "checked" if !params['has_data'].nil? %>
-<label class="btn btn-primary template-check"
+<% template_checked = 'checked' if params['templates_only'] %>
+<% curated_checked = 'checked' if params['curated_only'] %>
+<% featured_checked = 'checked' if params['featured_only'] %>
+<% has_data_checked = 'checked' if params['has_data'] %>
+<label class="btn btn-primary"
        title="Projects that can be cloned and repopulated with new data"
        style="<%= align_style %>">
-  <input type="checkbox" value="yes" checked="<% template_checked %>" />
+  <input type="checkbox" value="yes" <%= template_checked %> class="template-check" />
   Templates
 </label>
-<label class="btn btn-primary curated-check"
+<label class="btn btn-primary"
        title="Projects populated with professionally collected data"
        style="<%= align_style %>">
-  <input type="checkbox" value="yes" checked="<% curated_checked %>" />
+  <input type="checkbox" value="yes" <%= curated_checked %> class="curated-check" />
   Curated
 </label>
-<label class="btn btn-primary featured-check"
+<label class="btn btn-primary"
        title="Projects that have been featured by the iSENSE team"
        style="<%= align_style %>">
-  <input type="checkbox" value="yes" checked="<% featured_checked %>" />
+  <input type="checkbox" value="yes" <%= featured_checked %> class="featured-check" />
   Featured
 </label>
-<label class="btn btn-primary has-data-check"
+<label class="btn btn-primary"
        title="Non-empty projects populated with data"
        style="<%= align_style %>">
-  <input type="checkbox" value="yes" checked="<% has_data_checked %>" />
+  <input type="checkbox" value="yes" <%= has_data_checked %> class="has-data-check" />
   Has Data
 </label>

@@ -62,9 +62,9 @@
 
           <!-- secret hidden filters form shhh don't tell anyone -->
           <div class="hidden">
-            <%= check_box_tag "templates_only", "yes", @params["templates_only"], class: 'templates-check' %>
+            <%= check_box_tag "templates_only", "yes", @params["templates_only"], class: 'template-check' %>
             <%= check_box_tag "curated_only", "yes", @params["curated_only"], class: 'curated-check' %>
-            <%= check_box_tag "featured_only", "yes", @params["curated_only"], class: 'featured-check' %>
+            <%= check_box_tag "featured_only", "yes", @params["featured_only"], class: 'featured-check' %>
             <%= check_box_tag "has_data", "yes", @params["has_data"], class: 'has-data-check' %>
           </div>
         </div>
