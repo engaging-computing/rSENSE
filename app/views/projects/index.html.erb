@@ -8,62 +8,64 @@
           </div>
         </div>
         <div id="searchProjRow" class="row">
-          <div class="padded-col col-sm-10 col-xs-9"
+          <!-- search query -->
+          <div class="padded-col col-xs-12"
                title="Enter keyword(s) or project number to search for a project">
-            <%= text_field_tag :search, @params[:search],
-                class: "form-control",
-                placeholder: "Enter keyword(s) or project number to search for a project" %>
-          </div>
-          <div class="padded-col col-sm-2 col-xs-3">
-            <%= submit_tag "Search", name: nil,
-                class:"btn btn-default btn-group-justified"%>
-          </div>
-        </div>
-        <div class="row">
-          <div class="padded-col col-md-3 col-xs-6" title="Sort by">
-            <%= select_tag(:sort,
-                options_for_select([["Sort by Modified", "updated_at"],
-                                    ["Sort by Created", "created_at"],
-                                    ["Sort by View Count","views"],
-                                    ["Sort by Rating", "like_count"]],
-                                   @params["sort"]),
-                class: "projects_sort_select form-control")
-            %>
-          </div>
-          <div class="padded-col col-md-3 col-xs-6">
-            <%= select_tag(:order,
-                options_for_select([["Descending", "DESC"],
-                                    ["Ascending", "ASC"]], @params["order"]),
-                class: "projects_order_select form-control")
-            %>
-          </div>
-          <div class="padded-col col-md-6 col-xs-12 binary-filters"
-               data-toggle="checkbox">
-            <div class="btn-group btn-group-justified">
-              <label class="btn btn-primary"
-                     title="Projects that can be cloned and repopulated with new data">
-                <%= check_box_tag "templates_only", "yes",
-                    @params["templates_only"] %>
-                Templates
-              </label>
-              <label class="btn btn-primary"
-                     title="Projects populated with professionally collected data">
-                <%= check_box_tag "curated_only", "yes",
-                    @params["curated_only"] %>
-                Curated
-              </label>
-              <label class="btn btn-primary"
-                     title="Projects that have been featured by the iSENSE team">
-                <%= check_box_tag "featured_only", "yes",
-                    @params["featured_only"] %>
-                Featured
-              </label>
-              <label class="btn btn-primary"
-                     title="Non-empty projects populated with data">
-                <%= check_box_tag "has_data", "yes", @params["has_data"] %>
-                Has Data
-              </label>
+            <div class="input-group">
+              <%= text_field_tag :search, @params[:search],
+                  class: "form-control",
+                  placeholder: "Enter keyword(s) or project number to search for a project" %>
+              <span class="input-group-btn">
+                <button class="btn btn-default">
+                  <i class='fa fa-search'></i>
+                </button>
+              </span>
             </div>
+          </div>
+
+          <!-- sort options -->
+          <div class="col-xs-12 col-md-6">
+            <div class="row">
+              <div class="padded-col col-xs-6 col-sm-6" title="Sort by">
+                <%= select_tag(:sort,
+                    options_for_select([["Sort by Modified", "updated_at"],
+                                        ["Sort by Created", "created_at"],
+                                        ["Sort by View Count","views"],
+                                        ["Sort by Rating", "like_count"]],
+                                       @params["sort"]),
+                    class: "projects_sort_select form-control")
+                %>
+              </div>
+              <div class="padded-col col-xs-6 col-sm-6">
+                <%= select_tag(:order,
+                    options_for_select([["Descending", "DESC"],
+                                        ["Ascending", "ASC"]], @params["order"]),
+                    class: "projects_order_select form-control")
+                %>
+              </div>
+            </div>
+          </div>
+
+          <!-- filters on big screens -->
+          <div class="padded-col col-xs-12 col-md-6 hidden-xs" id="lg-filters">
+            <div class="btn-group btn-group-justified btn-block binary-filters">
+              <%= render 'filters_search', align: 'center', params: @params %>
+            </div>
+          </div>
+
+          <!-- filters on small screens-->
+          <div class="padded-col col-xs-12 col-md-6 visible-xs" id="sm-filters">
+            <div class="btn-group-vertical btn-block binary-filters">
+              <%= render 'filters_search', align: 'left', params: @params %>
+            </div>
+          </div>
+
+          <!-- secret hidden filters form shhh don't tell anyone -->
+          <div class="hidden">
+            <%= check_box_tag "templates_only", "yes", @params["templates_only"], class: 'templates-check' %>
+            <%= check_box_tag "curated_only", "yes", @params["curated_only"], class: 'curated-check' %>
+            <%= check_box_tag "featured_only", "yes", @params["curated_only"], class: 'featured-check' %>
+            <%= check_box_tag "has_data", "yes", @params["has_data"], class: 'has-data-check' %>
           </div>
         </div>
         <div class="clear"></div>
