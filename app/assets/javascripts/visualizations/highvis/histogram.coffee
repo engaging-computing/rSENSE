@@ -63,7 +63,8 @@ $ ->
               str  = "<table>"
               xField = @series.xAxis.options.title.text
               idx = data.fields.map((x) -> fieldTitle(x)).indexOf(xField)
-              str += "<tr><td>#{xField}:</td><td>#{@x}<td></tr>"
+              str += "<tr><td>#{xField}:</td> <td>#{@point.realValue}</td></tr>"
+              str += "<tr><td>Bin:</td><td>#{@x}</td></tr>"
               str += "<tr><td># Occurrences:</td><td>#{@total}<td></tr>"
               if @y isnt 0
                 str += "<tr><td><div style='color:#{@series.color};'> #{@series.name}:</div></td>"
@@ -172,11 +173,16 @@ $ ->
 
         # Generate all bin data
         binObjs = {}
+        binMesh = {}
         for groupIndex in data.groupSelection
           selectedData = data.selector @configs.displayField, groupIndex
 
           binArr = for i in selectedData
-            Math.round(i / @configs.binSize) * @configs.binSize
+            x = Math.round(i / @configs.binSize) * @configs.binSize
+            unless binMesh[x]?
+              binMesh[x] = []
+            binMesh[x].push i
+            x
 
           binObjs[groupIndex] = {}
 
@@ -209,7 +215,12 @@ $ ->
               binData = []
               for bin of binObjs[group]
                 if binObjs[group][bin] > i
-                  binData.push {x: Number(bin), y: 1, total: binObjs[group][bin]}
+                  x = binMesh[bin].pop()
+                  binData.push
+                    x: Number(bin)
+                    y: 1
+                    total: binObjs[group][bin]
+                    realValue: x
               binData.sort (a, b) -> Number(a['x']) - Number(b['x'])
               options =
                 showInLegend: false
