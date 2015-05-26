@@ -420,7 +420,7 @@ $ ->
       Draw tool controls (Analysis Type, Log Y Axis, etc.) for Pie Chart and
       Bar Charts
       ###
-      drawToolControls: (sortBy = false, logYAxis = false, analysisTypes = []) ->
+      drawToolControls: (sortBy = false, logYAxis = false, analysisTypeExcludes = []) ->
         inctx = {}
 
         # Populate sort fields
@@ -435,6 +435,19 @@ $ ->
             name: 'Group Name'
             logId: 'sort-by-' + @SORT_DEFAULT
             value: @SORT_DEFAULT
+
+        # Set up analysis types from the list of exclusions
+        analysisTypes = [
+          @ANALYSISTYPE_TOTAL
+          @ANALYSISTYPE_MAX
+          @ANALYSISTYPE_MIN
+          @ANALYSISTYPE_MEAN
+          @ANALYSISTYPE_MEAN_ERROR
+          @ANALYSISTYPE_MEDIAN
+          @ANALYSISTYPE_COUNT
+          ]
+        analysisTypes = analysisTypes.filter (x) ->
+          x not in analysisTypeExcludes
 
         # Analysis Types
         inctx.analysisTypes =

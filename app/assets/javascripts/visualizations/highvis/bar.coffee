@@ -79,15 +79,7 @@ $ ->
         # Get the column data
         groupedData = {}
         for f in data.normalFields
-          groupedData[f] = @getGroupedData(f, [
-            data.getTotal
-            data.getMax
-            data.getMin
-            data.getMean
-            data.getMean
-            data.getMedian
-            data.getCount
-            ])
+          groupedData[f] = @getGroupedData(f)
 
         # Sort the sort-by field
         # The default sort is just the group order
@@ -140,15 +132,7 @@ $ ->
         @drawGroupControls(data.textFields)
         @drawYAxisControls(globals.configs.fieldSelection,
           data.normalFields.slice(1), false)
-        @drawToolControls(true, true, [
-          @ANALYSISTYPE_TOTAL
-          @ANALYSISTYPE_MAX
-          @ANALYSISTYPE_MIN
-          @ANALYSISTYPE_MEAN
-          @ANALYSISTYPE_MEAN_ERROR
-          @ANALYSISTYPE_MEDIAN
-          @ANALYSISTYPE_COUNT
-          ])
+        @drawToolControls(true, true)
         @drawSaveControls()
 
     if "Bar" in data.relVis
