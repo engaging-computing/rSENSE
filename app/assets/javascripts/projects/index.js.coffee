@@ -24,9 +24,3 @@ $ ->
       if checkType.length == 1
         checkType = "input.#{checkType[0]}"
         $(checkType).prop('checked', cb.prop 'checked')
-
-    # ($ '.binary-filters .btn').on 'click', (e) ->
-    #   e.preventDefault()
-    #   cb = ($ ($ e.target).children()[0])
-    #   cb.prop("checked", not cb.prop("checked"))
-    #   ($ '#projects_search').submit()
