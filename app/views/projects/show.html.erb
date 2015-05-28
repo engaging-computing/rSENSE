@@ -52,14 +52,14 @@
                 <i class="fa fa-eye"> Views | </i> <%= @project.views %>
               </button>
             </div>
-            <div class="col-sm-3">
-              <div class="btn-group likes" data-project_id="<%= @project.id%>">
-                <% if @cur_user.try(:id) %>
+            <% if @cur_user.try(:id) %>
+              <div class="col-sm-3">
+                <div class="btn-group likes" data-project_id="<%= @project.id%>">
                   <button type="button" class="btn btn-default liked_status <% if @liked_by_cur_user%>active<%end%>" data-toggle="button"><i class="fa fa-thumbs-up"></i> Like</button>
                   <button type="button" class="btn btn-default like_display" disabled> <%= @project.likes.count %></button>
-                <% end %>
+                </div>
               </div>
-            </div>
+            <% end %>
             <div class="col-sm-2">
               <button type="button" class="btn btn-default" id="print">
                 <i class="fa fa-print"></i> Print
