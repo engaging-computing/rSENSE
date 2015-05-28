@@ -248,14 +248,16 @@ class DataSetsController < ApplicationController
 
     files.each_with_index do |file, index|
       pid = params[:pid]
-      puts pid
       project = Project.find(pid)
       uploader = FileUploader.new
       data_obj = uploader.retrieve_obj(file)
-      sane = uploader.sanitize_data(data_obj, params[:matches])
+      matches = params[:matches]
+      sane = uploader.sanitize_data(data_obj, matches["#{index}"])
+
       if sane[:status]
         data_obj = sane[:data_obj]
         data = uploader.swap_columns(data_obj, project)
+
         dataset = DataSet.new do |d|
           d.user_id = @cur_user.try(:id) || project.owner.id
           d.title = titles[index]
@@ -274,9 +276,10 @@ class DataSetsController < ApplicationController
         end
 
         if dataset.errors[:base].empty? and dataset.save
-          if index+1 == files.size
+          if files.size == 1
             redirect_to "/projects/#{project.id}/data_sets/#{dataset.id}"
-            return
+          elsif index + 1 == files.size
+            redirect_to "/projects/#{project.id}"
           end
         else
           @results = params[:results]
@@ -287,6 +290,7 @@ class DataSetsController < ApplicationController
           end
           return
         end
+
       else
         respond_to do |format|
           flash[:error] = "Data could not be saved: #{sane[:msg]}"
@@ -321,7 +325,7 @@ class DataSetsController < ApplicationController
       end
     end
 
-    if params[:file] && params[:file].original_filename.split('.')[1] == "zip"
+    if params[:file] && params[:file].original_filename.split('.')[1] == 'zip'
       Zip::File.open(params[:file].path) do |zip_file|
 
         results = []
@@ -370,8 +374,6 @@ class DataSetsController < ApplicationController
 
     begin
       uploader = FileUploader.new
-      puts "\n\n\n\n\n\n"
-      puts params[:file]
       data_obj = uploader.generateObject(params[:file] ? params[:file] : gcsv)
       @results = [uploader.match_headers(project, data_obj)]
 

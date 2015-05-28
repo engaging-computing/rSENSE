@@ -30,7 +30,7 @@
                   <tr class="">
                     <td><%=f[:name]%></td>
                     <td>
-                      <select form="field_matching" name="matches[<%=f[:id]%>]", class="form-control">
+                      <select form="field_matching" name="matches[<%=index%>][<%=f[:id]%>]", class="form-control">
                         <%= options_for_select(result[:options], matches.has_key?(findex) ? result[:headers][matches[findex][:index]] : 0 )%>
                       </select>
                     </td>
