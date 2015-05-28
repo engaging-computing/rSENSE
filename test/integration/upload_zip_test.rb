@@ -15,12 +15,12 @@ class UploadZipTest < ActionDispatch::IntegrationTest
     finish
   end
 
-  test 'upload csv' do
+  test 'upload zip with csv files' do
     login('kcarcia@cs.uml.edu', '12345')
     visit project_path(@project)
     assert page.has_content?('one'), 'Not on project page.'
 
-    zip_path = Rails.root.join('test', 'CSVs', 'upload_zip.zip')
+    zip_path = Rails.root.join('test', 'CSVs', 'upload.zip')
     page.execute_script "$('#datafile_form').parent().show()"
     find('#datafile_form').attach_file('file', zip_path)
     page.execute_script "$('#datafile_form').submit()"
@@ -36,11 +36,10 @@ class UploadZipTest < ActionDispatch::IntegrationTest
     visit project_path(@project)
     assert page.has_content?('one'), 'Not on project page.'
 
-    zip_path = Rails.root.join('test', 'CSVs', 'bad_with_image.zip')
+    zip_path = Rails.root.join('test', 'CSVs', 'img.zip')
     page.execute_script "$('#datafile_form').parent().show()"
     find('#datafile_form').attach_file('file', zip_path)
     page.execute_script "$('#datafile_form').submit()"
     assert page.has_content?('Error reading file')
-    click_on 'Submit'
   end
 end

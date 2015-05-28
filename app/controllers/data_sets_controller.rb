@@ -278,8 +278,10 @@ class DataSetsController < ApplicationController
         if dataset.errors[:base].empty? and dataset.save
           if files.size == 1
             redirect_to "/projects/#{project.id}/data_sets/#{dataset.id}"
+            return
           elsif index + 1 == files.size
             redirect_to "/projects/#{project.id}"
+            return
           end
         else
           @results = params[:results]
@@ -295,8 +297,8 @@ class DataSetsController < ApplicationController
         respond_to do |format|
           flash[:error] = "Data could not be saved: #{sane[:msg]}"
           format.html { redirect_to project }
-          return
         end
+        return
       end
     end
   end
@@ -334,6 +336,9 @@ class DataSetsController < ApplicationController
           if entry.directory?
             next
           elsif entry.file?
+            if entry.name.include? '__MACOSX' or entry.name.include? 'DS_Store'
+              next
+            end
             begin
               tempfile = Tempfile.new(entry.name.split('/')[1])
               tempfile.write(entry.get_input_stream.read)
@@ -344,11 +349,8 @@ class DataSetsController < ApplicationController
 
               filenames.push(DataSet.get_next_name(project, entry.name.split('/')[1].split('.')[0]))
 
-              # tempfile.close
-              # tempfile.unlink
-
-            rescue Exception => e
-              flash[:error] = "Error reading file #{entry.name.split('/')[1]}: #{e}"
+            rescue Exception
+              flash[:error] = "Error reading file #{entry.name}"
               next
             end
             next
@@ -357,11 +359,13 @@ class DataSetsController < ApplicationController
             next
           end
         end
-        @filenames = filenames
-        @results = results
-        respond_to do |format|
-          format.html
-          return
+        if results.any?
+          @filenames = filenames
+          @results = results
+          respond_to do |format|
+            format.html
+            return
+          end
         end
       end
       redirect_to project_path(project)
