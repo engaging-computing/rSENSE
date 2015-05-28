@@ -24,6 +24,7 @@
 //= require menu_edit
 //= require collapse_link_flipper
 //= require validator
+//= require jquery.caret.js
 //= require jquery.form.js
 //= require jquery.qrcode.min.js
 //= require titlebar.js.coffee
