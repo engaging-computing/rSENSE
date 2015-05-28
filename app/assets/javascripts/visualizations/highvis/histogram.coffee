@@ -115,7 +115,7 @@ $ ->
 
         binNumTarget = Math.pow(10, @binNumSug)
 
-        tryNewSize = (size) =>
+        tryNewSize = (size) ->
           target = Math.abs(binNumTarget - (range / size))
           if target > Math.abs(binNumTarget - bestNum)
             return false
