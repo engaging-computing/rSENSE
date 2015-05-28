@@ -178,6 +178,5 @@ class UploadDataTest < ActionDispatch::IntegrationTest
 
     click_on 'Submit'
     assert page.has_content?('Bad Data')
-
   end
 end
