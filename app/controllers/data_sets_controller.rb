@@ -243,44 +243,56 @@ class DataSetsController < ApplicationController
 
   # PUT /data_sets/field_matching
   def field_matching
-    project = Project.find(params[:pid])
-    uploader = FileUploader.new
-    data_obj = uploader.retrieve_obj(params[:file])
-    sane = uploader.sanitize_data(data_obj, params[:matches])
-    if sane[:status]
-      data_obj = sane[:data_obj]
-      data = uploader.swap_columns(data_obj, project)
-      dataset = DataSet.new do |d|
-        d.user_id = @cur_user.try(:id) || project.owner.id
-        d.title = params[:title]
-        d.project_id = project.id
-        d.data = data
-        unless params[:contributor_name].nil?
-          if params[:contributor_name].length == 0
-            d.contributor_name = 'Contributed via Key'
-          else
-            d.contributor_name = params[:contributor_name]
+    files = params[:files]
+    titles = params[:titles]
+
+    files.each_with_index do |file, index|
+      pid = params[:pid]
+      puts pid
+      project = Project.find(pid)
+      uploader = FileUploader.new
+      data_obj = uploader.retrieve_obj(file)
+      sane = uploader.sanitize_data(data_obj, params[:matches])
+      if sane[:status]
+        data_obj = sane[:data_obj]
+        data = uploader.swap_columns(data_obj, project)
+        dataset = DataSet.new do |d|
+          d.user_id = @cur_user.try(:id) || project.owner.id
+          d.title = titles[index]
+          d.project_id = project.id
+          d.data = data
+          unless params[:contributor_name].nil?
+            if params[:contributor_name].length == 0
+              d.contributor_name = 'Contributed via Key'
+            else
+              d.contributor_name = params[:contributor_name]
+            end
+          end
+          unless can_edit? @project
+            d.key = key_name(project.id, session[:key])
           end
         end
-        unless can_edit? @project
-          d.key = key_name(project.id, session[:key])
-        end
-      end
 
-      if dataset.errors[:base].empty? and dataset.save
-        redirect_to "/projects/#{project.id}/data_sets/#{dataset.id}"
-      else
-        @results = params[:results]
-        @default_name = params[:title]
-        respond_to do |format|
-          flash[:error] = dataset.errors.full_messages
-          format.html { render action: 'dataFileUpload' }
+        if dataset.errors[:base].empty? and dataset.save
+          if index+1 == files.size
+            redirect_to "/projects/#{project.id}/data_sets/#{dataset.id}"
+            return
+          end
+        else
+          @results = params[:results]
+          @filenames = params[:titles]
+          respond_to do |format|
+            flash[:error] = dataset.errors.full_messages
+            format.html { render action: 'dataFileUpload' }
+          end
+          return
         end
-      end
-    else
-      respond_to do |format|
-        flash[:error] = "Data could not be saved: #{sane[:msg]}"
-        format.html { redirect_to project }
+      else
+        respond_to do |format|
+          flash[:error] = "Data could not be saved: #{sane[:msg]}"
+          format.html { redirect_to project }
+          return
+        end
       end
     end
   end
@@ -309,9 +321,11 @@ class DataSetsController < ApplicationController
       end
     end
 
-    if params[:file] && DataSet.get_next_name(project, params[:file].original_filename.split('.')[1]) == "zip"
+    if params[:file] && params[:file].original_filename.split('.')[1] == "zip"
       Zip::File.open(params[:file].path) do |zip_file|
-        # Handle entries one by one
+
+        results = []
+        filenames = []
         zip_file.each do |entry|
           if entry.directory?
             next
@@ -322,19 +336,13 @@ class DataSetsController < ApplicationController
 
               uploader = FileUploader.new
               data_obj = uploader.generateObject(tempfile)
-              @results = uploader.match_headers(project, data_obj)
+              results.push(uploader.match_headers(project, data_obj))
 
-              puts "\n\n\n\n\n\n\n\n\n"
-              puts @results
-              puts "results\n\n\n\n\n\n\n\n"
+              filenames.push(DataSet.get_next_name(project, entry.name.split('/')[1].split('.')[0]))
 
               # tempfile.close
               # tempfile.unlink
 
-              respond_to do |format|
-                format.html
-                return
-              end
             rescue Exception => e
               flash[:error] = "Error reading file #{entry.name.split('/')[1]}: #{e}"
               next
@@ -345,19 +353,27 @@ class DataSetsController < ApplicationController
             next
           end
         end
+        @filenames = filenames
+        @results = results
+        respond_to do |format|
+          format.html
+          return
+        end
       end
       redirect_to project_path(project)
       return
     elsif params[:file]
-      @filename = DataSet.get_next_name(project, params[:file].original_filename.split('.')[0])
+      @filenames = [DataSet.get_next_name(project, params[:file].original_filename.split('.')[0])]
     elsif !params[:file]
-      @filename = DataSet.get_next_name(project, 'Google docs')
+      @filenames = [DataSet.get_next_name(project, 'Google docs')]
     end
 
     begin
       uploader = FileUploader.new
+      puts "\n\n\n\n\n\n"
+      puts params[:file]
       data_obj = uploader.generateObject(params[:file] ? params[:file] : gcsv)
-      @results = uploader.match_headers(project, data_obj)
+      @results = [uploader.match_headers(project, data_obj)]
 
       respond_to do |format|
         format.html

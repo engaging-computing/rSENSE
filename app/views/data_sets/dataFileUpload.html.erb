@@ -1,61 +1,62 @@
 <div class="row">
-  <% if ((@results.class) == String) %><%@results =  eval(@results)  %><%end%>
-  <% matches = @results[:partial_matches]%>
   <div class="col-lg-12">
     <%= form_tag '/data_sets/field_matching', method: 'put', id: 'field_matching' do%>
-      <div class="row form-group">
-        <div class="col-lg-3 col-lg-offset-3">
-          <label for="title"><b>Title</b></label>
-          <input type="text" id="title" name="title" value="<%=@filename%>" class="form-control" autofocus>
-        </div>
-        <% if @cur_user.nil? %>
-          <div class="col-lg-3">
-            <input type="hidden" id="contrib_name" name="contrib_name" value="<%=session[:contributor_name]%>">
+    <% @results.each_with_index do |result, index| %>
+      <% if ((result.class) == String) %><%result =  eval(result)  %><%end%>
+        <% matches = result[:partial_matches]%>
+        <div class="row form-group">
+          <div class="col-lg-3 col-lg-offset-3">
+            <label for="title"><b>Title</b></label>
+            <input type="text" id="title" name="titles[]" value="<%=@filenames[index]%>" class="form-control" autofocus>
           </div>
-        <% end %>
-      </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-6 col-lg-offset-3">
-          <table class="field_match table table-striped table-bordered">
-            <thead>
-              <tr>
-                <th>Project Fields</th>
-                <th>File Headers</th>
-                <th>Match Quality</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% @results[:fields].each_with_index do |f,findex|%>
-                <tr class="">
-                  <td><%=f[:name]%></td>
-                  <td>
-                    <select form="field_matching" name="matches[<%=f[:id]%>]", class="form-control">
-                      <%= options_for_select(@results[:options], matches.has_key?(findex) ? @results[:headers][matches[findex][:index]] : 0 )%>
-                    </select>
-                  </td>
-                  <td>
-                    <div class="progress">
-                      <% if matches.has_key?(findex) %>
-                        <% if matches[findex][:quality] < 0.8 %>
-                          <div class="progress-bar progress-bar-warning" style="width:100%">Poor</div>
-                        <% else %>
-                          <div class="progress-bar progress-bar-success" style="width:100%">Good</div>
-                        <% end %>
-                      <% else %>
-                        <div class="progress-bar progress-bar-danger" style="width:100%">No Match</div>
-                      <% end %>
-                    </div>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-          <input type="hidden" name="pid" value=<%=params[:pid]%>>
-          <input type="hidden" name="file" value=<%= @results[:file]%>>
-          <input type="hidden" name="results" value="<%=@results%>">
+          <% if @cur_user.nil? %>
+            <div class="col-lg-3">
+              <input type="hidden" id="contrib_name" name="contrib_name" value="<%=session[:contributor_name]%>">
+            </div>
+          <% end %>
         </div>
-      </div>
+        <div class="row">
+          <div class="col-lg-6 col-lg-offset-3">
+            <table class="field_match table table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th>Project Fields</th>
+                  <th>File Headers</th>
+                  <th>Match Quality</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% result[:fields].each_with_index do |f,findex|%>
+                  <tr class="">
+                    <td><%=f[:name]%></td>
+                    <td>
+                      <select form="field_matching" name="matches[<%=f[:id]%>]", class="form-control">
+                        <%= options_for_select(result[:options], matches.has_key?(findex) ? result[:headers][matches[findex][:index]] : 0 )%>
+                      </select>
+                    </td>
+                    <td>
+                      <div class="progress">
+                        <% if matches.has_key?(findex) %>
+                          <% if matches[findex][:quality] < 0.8 %>
+                            <div class="progress-bar progress-bar-warning" style="width:100%">Poor</div>
+                          <% else %>
+                            <div class="progress-bar progress-bar-success" style="width:100%">Good</div>
+                          <% end %>
+                        <% else %>
+                          <div class="progress-bar progress-bar-danger" style="width:100%">No Match</div>
+                        <% end %>
+                      </div>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <input type="hidden" name="pid" value=<%=params[:pid]%>>
+        <input type="hidden" name="files[]" value=<%= result[:file]%>>
+        <input type="hidden" name="results[]" value="<%=result%>">
+      <% end %>
       <div class="row">
         <div class="col-lg-3 col-lg-offset-3">
           <button type="submit" class='btn btn-default'>Submit</button>
@@ -64,4 +65,5 @@
     <% end %>
   </div>
 </div>
+
 

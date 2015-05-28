@@ -5,7 +5,7 @@ class DataSet < ActiveRecord::Base
 
   validates_presence_of :project_id, :user_id, :title
 
-  validates_uniqueness_of :title, scope: [:project_id]
+  validates_uniqueness_of :title, message: "\"%{value}\" is taken.", scope: [:project_id]
 
   validates :title, length: { maximum: 128 }
 
