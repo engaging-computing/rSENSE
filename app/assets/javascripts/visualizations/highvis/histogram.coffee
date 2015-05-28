@@ -302,7 +302,7 @@ $ ->
               clearTimeout badNumberPopoverTimer
             badNumberPopoverTimer = setTimeout ->
               $(e.target).popover 'destroy'
-            , 1000
+            , 3000
             return
           else
             $(e.target).popover 'destroy'
