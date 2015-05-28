@@ -9,11 +9,11 @@ class DataSetsHelperTest < ActionView::TestCase
     cols, data = format_slickgrid_merge project.fields, dataset.data
 
     rescols = [
-      { field_type: 3, id: '100', name: 'text_field', restrictions: '""', units: '' },
+      { field_type: 3, id: '100', name: 'text_field', restrictions: [], units: '' },
       { field_type: 3, id: '101', name: 'restrictions_field', restrictions: ['A', 'B', 'C'], units: '' },
-      { field_type: 2, id: '102', name: 'number_field', restrictions: '""', units: '' },
-      { field_type: 1, id: '103', name: 'timestamp_field', restrictions: '""', units: '' },
-      { field_type: 4, id: '104-105', name: 'latitude_field, longitude_field', restrictions: '""', units: '' }
+      { field_type: 2, id: '102', name: 'number_field', restrictions: [], units: '' },
+      { field_type: 1, id: '103', name: 'timestamp_field', restrictions: [], units: '' },
+      { field_type: 4, id: '104-105', name: 'latitude_field, longitude_field', restrictions: [], units: '' }
     ]
     assert_similar_arrays cols, rescols
 
@@ -30,7 +30,7 @@ class DataSetsHelperTest < ActionView::TestCase
     dataset = DataSet.find_by_name 'Slickgrid Data set 2'
     cols, data = format_slickgrid_merge project.fields, dataset.data
 
-    rescols = [{ field_type: 3, id: '106', name: 'something', restrictions: '""', units: '' }]
+    rescols = [{ field_type: 3, id: '106', name: 'something', restrictions: [], units: '' }]
     assert_similar_arrays cols, rescols
 
     resdata = [{ '106' => 'A' }, { '106' => 'B' }, { '106' => 'C' }]
@@ -66,11 +66,11 @@ class DataSetsHelperTest < ActionView::TestCase
     cols, data = format_slickgrid_editors cols, data
 
     rescols = [
-      { id: '"slickgrid-100"', name: '"text_field"', field: '"100"', editor: 'TextEditor', restrictions: '""', sortable: 'false' },
+      { id: '"slickgrid-100"', name: '"text_field"', field: '"100"', editor: 'TextEditor', restrictions: '[]', sortable: 'false' },
       { id: '"slickgrid-101"', name: '"restrictions_field"', field: '"101"', editor: 'TextEditor', restrictions: '["A", "B", "C"]', sortable: 'false' },
-      { id: '"slickgrid-102"', name: '"number_field"', field: '"102"', editor: 'NumberEditor', restrictions: '""', sortable: 'false' },
-      { id: '"slickgrid-103"', name: '"timestamp_field"', field: '"103"', editor: 'TimestampEditor', restrictions: '""', sortable: 'false' },
-      { id: '"slickgrid-104-105"', name: '"latitude_field, longitude_field"', field: '"104-105"', editor: 'LocationEditor', restrictions: '""', sortable: 'false' }
+      { id: '"slickgrid-102"', name: '"number_field"', field: '"102"', editor: 'NumberEditor', restrictions: '[]', sortable: 'false' },
+      { id: '"slickgrid-103"', name: '"timestamp_field"', field: '"103"', editor: 'TimestampEditor', restrictions: '[]', sortable: 'false' },
+      { id: '"slickgrid-104-105"', name: '"latitude_field, longitude_field"', field: '"104-105"', editor: 'LocationEditor', restrictions: '[]', sortable: 'false' }
     ]
     assert_similar_arrays cols, rescols
 
@@ -88,7 +88,7 @@ class DataSetsHelperTest < ActionView::TestCase
     cols, data = format_slickgrid_editors cols, data
 
     rescols = [
-      { id: '"slickgrid-107"', name: '"oops"', field: '"107"', editor: 'Slick.Editors.Text', restrictions: '""', sortable: 'false' }
+      { id: '"slickgrid-107"', name: '"oops"', field: '"107"', editor: 'Slick.Editors.Text', restrictions: '[]', sortable: 'false' }
     ]
     assert_similar_arrays cols, rescols
 
@@ -116,11 +116,11 @@ class DataSetsHelperTest < ActionView::TestCase
     end
 
     jrescols = [
-      { 'id' => 'slickgrid-100', 'name' => 'text_field', 'field' => '100', 'editor' => 'TextEditor', 'restrictions' => '', 'sortable' => false },
+      { 'id' => 'slickgrid-100', 'name' => 'text_field', 'field' => '100', 'editor' => 'TextEditor', 'restrictions' => [], 'sortable' => false },
       { 'id' => 'slickgrid-101', 'name' => 'restrictions_field', 'field' => '101', 'editor' => 'TextEditor', 'restrictions' => ['A', 'B', 'C'], 'sortable' => false },
-      { 'id' => 'slickgrid-102', 'name' => 'number_field', 'field' => '102', 'editor' => 'NumberEditor', 'restrictions' => '', 'sortable' => false },
-      { 'id' => 'slickgrid-103', 'name' => 'timestamp_field', 'field' => '103', 'editor' => 'TimestampEditor', 'restrictions' => '', 'sortable' => false },
-      { 'id' => 'slickgrid-104-105', 'name' => 'latitude_field, longitude_field', 'field' => '104-105', 'editor' => 'LocationEditor', 'restrictions' => '', 'sortable' => false }
+      { 'id' => 'slickgrid-102', 'name' => 'number_field', 'field' => '102', 'editor' => 'NumberEditor', 'restrictions' => [], 'sortable' => false },
+      { 'id' => 'slickgrid-103', 'name' => 'timestamp_field', 'field' => '103', 'editor' => 'TimestampEditor', 'restrictions' => [], 'sortable' => false },
+      { 'id' => 'slickgrid-104-105', 'name' => 'latitude_field, longitude_field', 'field' => '104-105', 'editor' => 'LocationEditor', 'restrictions' => [], 'sortable' => false }
     ]
     assert_similar_arrays jcols, jrescols
 
@@ -147,11 +147,11 @@ class DataSetsHelperTest < ActionView::TestCase
     end
 
     jrescols = [
-      { 'id' => 'slickgrid-100', 'name' => 'text_field<br>', 'field' => '100', 'editor' => 'TextEditor', 'restrictions' => '', 'sortable' => false },
+      { 'id' => 'slickgrid-100', 'name' => 'text_field<br>', 'field' => '100', 'editor' => 'TextEditor', 'restrictions' => [], 'sortable' => false },
       { 'id' => 'slickgrid-101', 'name' => 'restrictions_field<br>', 'field' => '101', 'editor' => 'TextEditor', 'restrictions' => ['A', 'B', 'C'], 'sortable' => false },
-      { 'id' => 'slickgrid-102', 'name' => 'number_field<br>', 'field' => '102', 'editor' => 'NumberEditor', 'restrictions' => '', 'sortable' => false },
-      { 'id' => 'slickgrid-103', 'name' => 'timestamp_field<br>', 'field' => '103', 'editor' => 'TimestampEditor', 'restrictions' => '', 'sortable' => false },
-      { 'id' => 'slickgrid-104-105', 'name' => 'latitude_field, longitude_field<br>', 'field' => '104-105', 'editor' => 'LocationEditor', 'restrictions' => '', 'sortable' => false }
+      { 'id' => 'slickgrid-102', 'name' => 'number_field<br>', 'field' => '102', 'editor' => 'NumberEditor', 'restrictions' => [], 'sortable' => false },
+      { 'id' => 'slickgrid-103', 'name' => 'timestamp_field<br>', 'field' => '103', 'editor' => 'TimestampEditor', 'restrictions' => [], 'sortable' => false },
+      { 'id' => 'slickgrid-104-105', 'name' => 'latitude_field, longitude_field<br>', 'field' => '104-105', 'editor' => 'LocationEditor', 'restrictions' => [], 'sortable' => false }
     ]
     assert_similar_arrays jcols, jrescols
 
