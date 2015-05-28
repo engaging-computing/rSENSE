@@ -48,7 +48,8 @@ $ ->
 
         @configs.selectName = data.fields[globals.configs.groupById].fieldName
 
-        displayData = for gid, val of @getGroupedData(@configs.displayField)
+        groupedData = @getGroupedData(@configs.displayField)
+        displayData = for gid, val of groupedData
           ret =
             y: val
             name: data.groups[gid] or data.noField()
@@ -103,7 +104,7 @@ $ ->
         @drawYAxisControls(globals.configs.fieldSelection,
           data.normalFields.slice(1), true, 'Fields', @configs.displayField,
           @yAxisRadioHandler)
-        @drawToolControls()
+        @drawToolControls(false, false, [@ANALYSISTYPE_MEAN_ERROR])
         @drawSaveControls()
 
     if "Pie" in data.relVis
