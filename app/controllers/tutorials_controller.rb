@@ -109,7 +109,7 @@ class TutorialsController < ApplicationController
         end
         format.json { render json: {}, status: :ok }
       else
-        format.html { render action: 'show' }
+        format.html { render action: 'edit' }
         format.json do
           render json: @tutorial.errors.full_messages,
                  status: :unprocessable_entity

@@ -46,7 +46,7 @@ module Api
         case type
         when 'project'
           @project = Project.find_by_id(id) || nil
-          if can_edit?(@project) && !@project.nil?
+          if can_edit?(@project) || !@project.nil?
             @mo.user_id = @project.owner.id
             @mo.project_id = @project.id
           else
@@ -54,7 +54,7 @@ module Api
           end
         when 'data_set'
           @data_set = DataSet.find_by_id(id) || nil
-          if can_edit?(@data_set) && !@data_set.nil?
+          if can_edit?(@data_set) || !@data_set.nil?
             @mo.user_id = @data_set.owner.id
             @mo.data_set_id = @data_set.id
             @mo.project_id = @data_set.project_id
