@@ -17,17 +17,6 @@ uploadSettings =
   successEntry: (data, textStatus, jqXHR) ->
     window.location = data['displayURL']
 
-
-#      if e.keyCode == 13 and @grid.getDataLength() - 1 == @grid.getActiveCell().row
-#        @addRow true
-#      if ((e.keyCode == 37) or (e.keyCode == 9 and e.shiftKey)) and args.cell? and args.cell == 0
-#        nextRow = (args.row - 1) % @grid.getDataLength()
-#        nextRow += @grid.getDataLength() if nextRow < 0
-#        nextCol = @grid.getColumns().length - 2
-#        @grid.gotoCell nextRow, nextCol, true
-#        e.stopImmediatePropagation()
-
-
 moveLeft = (args) ->
   args.cell -= 1
 
