@@ -298,11 +298,23 @@ $ ->
             @delayedUpdate()
 
         # Bin Size Box
+        badNumberPopoverTimer = null
         $('#bin-size').change (e) =>
           newBinSize = Number(e.target.value)
           if isNaN(newBinSize) or newBinSize <= 0
-            $('#bin-size').errorFlash()
+            $(e.target).popover
+              content: "Please enter a valid number"
+              placement: "bottom"
+              trigger: "manual"
+            $(e.target).popover 'show'
+            if badNumberPopoverTimer?
+              clearTimeout badNumberPopoverTimer
+            badNumberPopoverTimer = setTimeout ->
+              $(e.target).popover 'destroy'
+            , 3000
             return
+          else
+            $(e.target).popover 'destroy'
 
           if ((@globalmax - @globalmin) / newBinSize) < @MAX_NUM_BINS
             @configs.binSize = newBinSize

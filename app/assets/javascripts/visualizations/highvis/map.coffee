@@ -524,9 +524,23 @@ $ ->
           @delayedUpdate()
 
         # Heatmap Radius Box
+        badNumberPopoverTimer = null
         $('#map-radius').change (e) =>
           newRadius = Number(e.target.value)
-          if isNaN(newRadius) then return $('#map-radius').errorFlash()
+          if isNaN(newRadius)
+            $(e.target).popover
+              content: "Please enter a valid number"
+              placement: "bottom"
+              trigger: "manual"
+            $(e.target).popover 'show'
+            if badNumberPopoverTimer?
+              clearTimeout badNumberPopoverTimer
+            badNumberPopoverTimer = setTimeout ->
+              $(e.target).popover 'destroy'
+            , 3000
+            return
+          else
+            $(e.target).popover 'destroy'
 
           # Guess new pixel radius
           @heatmapPixelRadius = Math.ceil(@heatmapPixelRadius * newRadius /
