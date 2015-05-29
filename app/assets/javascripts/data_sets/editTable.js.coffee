@@ -17,6 +17,63 @@ uploadSettings =
   successEntry: (data, textStatus, jqXHR) ->
     window.location = data['displayURL']
 
+moveLeft = (args) ->
+  args.cell -= 1
+
+moveRight = (args) ->
+  args.cell += 1
+
+moveUp = (args) ->
+  args.row -= 1
+
+moveDown = (args) ->
+  args.row += 1
+
+wrapNew = (args) ->
+  if args.grid.getDataLength() == args.row
+    args.this.addRow true
+  wrapOver args
+
+wrapOver = (args) ->
+  grid = args.grid
+  numCols = grid.getColumns().length
+  numRows = grid.getDataLength()
+  dir = args.cell - grid.getActiveCell().cell
+
+  if args.cell < 0
+    args.cell += numCols - 1
+    args.row -= 1
+  else if args.cell >= numCols
+    args.cell -= numCols
+    args.row += 1
+
+  if args.row < 0
+    args.row += numRows
+  else if args.row >= numRows
+    args.row -= numRows
+
+  grid.gotoCell args.row, args.cell, true
+
+  editor = grid.getCellEditor()
+  if dir > 0 and editor? and editor.getInput?
+    editor.getInput().caret 0
+
+wrapThru = (args) ->
+  editor = args.grid.getCellEditor()
+  oldPos = args.grid.getActiveCell()
+
+  if editor? and editor.getInput?
+    form = editor.getInput()
+    dir = args.cell - oldPos.cell
+    if dir < 0 and form.caret() != 0
+      form.caret form.caret() - 1
+    else if dir > 0 and form.caret() != form.val().length
+      form.caret form.caret() + 1
+    else
+      wrapOver args
+  else
+    wrapOver args
+
 class Grid
   cols: null
   data: null
@@ -59,6 +116,7 @@ class Grid
       editable: true
       enableCellNavigation: true
       enableColumnReorder: false
+      enableTextSelectionOnCells: true
       forceFitColumns: true
       rowHeight: 35
       syncColumnCellResize: true
@@ -73,6 +131,10 @@ class Grid
     @grid = new Slick.Grid '#slickgrid-container', @view, @cols, options
     @view.setItems @data
 
+    setTimeout ->
+      $('.slick-cell.l0.r0').first().trigger 'click'
+    , 1
+
   subscribeEvents: ->
     $(window).resize =>
       @resizeWindow()
@@ -84,7 +146,7 @@ class Grid
     $('.edit_table_add').click =>
       if $('.edit_table_save').hasClass 'disabled'
         return
-      @addRow()
+      @addRow true
 
     $('.edit_table_cancel').click ->
       projectID = $(document).data 'project'
@@ -110,7 +172,7 @@ class Grid
       if cell.cell == @grid.getColumns().length - 1
         @queueDeleteRow(cell.row)
         if @grid.getDataLength() == 0
-          @addRow()
+          @addRow true
 
     @grid.onAfterCellEditorDestroy.subscribe =>
       @hidePopover()
@@ -121,20 +183,23 @@ class Grid
       @actions = []
 
     @grid.onKeyDown.subscribe (e, args) =>
-      if e.keyCode == 13 and @grid.getDataLength() - 1 == @grid.getActiveCell().row
-        @addRow()
-      if e.keyCode == 37 and args.cell? and args.cell == 0
-        nextRow = (args.row - 1) % @grid.getDataLength()
-        nextRow += @grid.getDataLength() if nextRow < 0
-        nextCol = @grid.getColumns().length - 2
-        @grid.gotoCell nextRow, nextCol, true
-        e.stopImmediatePropagation()
+      args.this = @
+      tabMethod = if e.shiftKey then moveLeft else moveRight
+      enterMethod = if e.shiftKey then moveUp else moveDown
+      switch e.keyCode
+        when 9  then @moveCursor e, args, tabMethod,   wrapOver
+        when 13 then @moveCursor e, args, enterMethod, wrapNew
+        when 37 then @moveCursor e, args, moveLeft,    wrapThru
+        when 38 then @moveCursor e, args, moveUp,      wrapOver
+        when 39 then @moveCursor e, args, moveRight,   wrapThru
+        when 40 then @moveCursor e, args, moveDown,    wrapOver
 
     $(window).trigger 'resize'
 
-    setTimeout ->
-      $('.slick-cell.l0.r0').first().trigger 'click'
-    , 1
+  moveCursor: (e, args, dirMethod, wrapMethod) ->
+    e.stopImmediatePropagation()
+    dirMethod args
+    wrapMethod args
 
   resizeWindow: ->
     newHeight = $(window).height()-
@@ -172,13 +237,14 @@ class Grid
     for x in temp
       x()
 
-  addRow: ->
+  addRow: (scroll) ->
     newRow = {id: @currID}
     @currID += 1
     for x in @cols
       newRow[x.field] = ''
     @view.addItem newRow
-    @grid.scrollRowIntoView @view.getLength()
+    if scroll
+      @grid.scrollRowIntoView @view.getLength()
 
   queueDeleteRow: (row) ->
     deleteRow = () =>
@@ -295,9 +361,9 @@ IS.onReady 'data_sets/edit', ->
     success: uploadSettings.successEdit
 
   # ensure a minimum of ten rows per dataset
-  newRows = 10 - grid.length()
+  newRows = Math.max 1, 10 - grid.length()
   for i in [1 .. newRows]
-    grid.addRow()
+    grid.addRow false
 
 IS.onReady 'data_sets/manualEntry', ->
   uploadSettings.pageName = 'entry'
@@ -312,4 +378,4 @@ IS.onReady 'data_sets/manualEntry', ->
 
   # we get one row for free in slickgrid, so just add 9 more
   for i in [1 .. 9]
-    grid.addRow()
+    grid.addRow false

@@ -70,9 +70,8 @@ class ApiV1DataSetsTest < ApiV1Test
               '20' => ['1', '2', '3', '4', '5']
             }
     assert_response :unprocessable_entity
-    assert parse(response)['error'][0] == 'Title has already been taken',
-        'Message should have been: Title has already been taken'
-
+    assert parse(response)['error'][0] == "Title \"Thanksgiving Dinner\" is taken.",
+        "Message should be Title \"Thanksgiving Dinner\" is taken."
   end
 
   test 'failed create data set with bad contribution_key' do

@@ -16,14 +16,13 @@ module DataSetsHelper
 
   def format_slickgrid_merge(cols, data)
     cols_merge = cols.map do |x|
-      restrictions = x.restrictions.nil? ? '""' : x.restrictions
       units = x.unit.nil? ? '' : x.unit
 
       {
         field_type: x.field_type,
         id: "#{x.id}",
         name: x.name,
-        restrictions: restrictions,
+        restrictions: x.restrictions,
         units: units
       }
     end
@@ -42,7 +41,7 @@ module DataSetsHelper
         field_type: 4,
         id: "#{lat[:id]}-#{lon[:id]}",
         name: "#{lat[:name]}, #{lon[:name]}",
-        restrictions: '""',
+        restrictions: [],
         units: ''
       }
 
@@ -81,6 +80,12 @@ module DataSetsHelper
 
   def format_slickgrid_populate(cols, data)
     if data != []
+      data.map! do |x|
+        x.map do |i, y|
+          y = '' if y.nil?
+          [i, y]
+        end.to_h
+      end
       [cols, data]
     else
       data = { id: 0 }

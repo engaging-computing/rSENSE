@@ -38,7 +38,7 @@ class MakeProjectTest < ActionDispatch::IntegrationTest
     click_on 'Projects'
     select 'Rating', from: 'sort'
     fill_in 'search', with: 'Empty'
-    click_on 'Search'
+    find(:css, '.fa-search').click
 
     assert page.has_content?('Empty Project'),
       'Search does not find project'

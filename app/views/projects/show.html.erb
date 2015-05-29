@@ -52,14 +52,14 @@
                 <i class="fa fa-eye"> Views | </i> <%= @project.views %>
               </button>
             </div>
-            <div class="col-sm-3">
-              <div class="btn-group likes" data-project_id="<%= @project.id%>">
-                <% if @cur_user.try(:id) %>
+            <% if @cur_user.try(:id) %>
+              <div class="col-sm-3">
+                <div class="btn-group likes" data-project_id="<%= @project.id%>">
                   <button type="button" class="btn btn-default liked_status <% if @liked_by_cur_user%>active<%end%>" data-toggle="button"><i class="fa fa-thumbs-up"></i> Like</button>
                   <button type="button" class="btn btn-default like_display" disabled> <%= @project.likes.count %></button>
-                <% end %>
+                </div>
               </div>
-            </div>
+            <% end %>
             <div class="col-sm-2">
               <button type="button" class="btn btn-default" id="print">
                 <i class="fa fa-print"></i> Print
@@ -94,7 +94,7 @@
     </div>
     <div class="row">
       <%= render layout: "shared/box", locals: {title: 'Data Sets', width: '12', unique_id: 'data_sets', should_hide: false} do %>
-        <% if @data_sets.count != 0 %>
+        <% if @data_sets.count != 0 || @params[:search] %>
           <div id="dataset_list">
             <span>
               <button type="button" class="btn btn-info" style="margin-bottom: 10px;" id="vis_button" data-href="/projects/<%=@project.id%>/data_sets/">Visualize</button>
@@ -129,6 +129,19 @@
                 </ul>
               </div>
             </div>
+            <%=form_tag project_path, method: 'get', id: 'data_sets_search' do%>
+            <div id="searchProjRow" class="row">
+              <div class="padded-col col-sm-10 col-xs-9" title="Enter keyword(s) or data set number to search for a project">
+                <%= text_field_tag :search, @params[:search], class: "form-control", placeholder: "Enter keyword(s) or data set number to search for a data set." %>
+              </div>
+              <div class="padded-col col-sm-2 col-xs-3">
+                <%= submit_tag "Search", name: nil, class:'btn btn-default btn-group-justified'%>
+              </div>
+            </div><br/>
+            <%end%>
+            <% if @data_sets.count == 0 %>
+              <p> No Matching Data Sets. </p>
+            <%end%>
             <table id="dataset_table" class="table table-striped">
               <tbody>
                 <% @data_sets.each do |s| %>

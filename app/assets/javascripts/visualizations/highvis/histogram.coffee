@@ -58,12 +58,13 @@ $ ->
             enabled: false
           title:
             text: ''
-          tooltipXAxis = @configs.displayField
           tooltip:
             formatter: ->
               str  = "<table>"
-              str += "<tr><td>#{data.fields[tooltipXAxis].fieldName}:</td><td>#{@x} \
-              #{fieldUnit(data.fields[tooltipXAxis], false)}<td></tr>"
+              xField = @series.xAxis.options.title.text
+              idx = data.fields.map((x) -> fieldTitle(x)).indexOf(xField)
+              str += "<tr><td>#{xField}:</td> <td>#{@point.realValue}</td></tr>"
+              str += "<tr><td>Bin:</td><td>#{@x}</td></tr>"
               str += "<tr><td># Occurrences:</td><td>#{@total}<td></tr>"
               if @y isnt 0
                 str += "<tr><td><div style='color:#{@series.color};'> #{@series.name}:</div></td>"
@@ -93,12 +94,12 @@ $ ->
         max = Number.MIN_VALUE
 
         for groupIndex in data.groupSelection
-          localMin = data.getMin @configs.displayField, groupIndex
-          if localMin isnt null
+          localMin = data.getMin(@configs.displayField, groupIndex)
+          if localMin?
             min = Math.min(min, localMin)
 
-          localMax = data.getMax @configs.displayField, groupIndex
-          if localMax isnt null
+          localMax = data.getMax(@configs.displayField, groupIndex)
+          if localMax?
             max = Math.max(max, localMax)
 
         range = max - min
@@ -107,18 +108,14 @@ $ ->
         if max < min
           return 1
 
-        console.log min, max
-
         curSize = 1
-
         bestSize = curSize
         bestNum  = range / curSize
-
         binNumTarget = Math.pow(10, @binNumSug)
 
-        tryNewSize = (size) =>
+        tryNewSize = (size) ->
           target = Math.abs(binNumTarget - (range / size))
-          if target > Math.abs(binNumTarget - bestNum)
+          if target >= Math.abs(binNumTarget - bestNum)
             return false
 
           bestSize = size
@@ -131,7 +128,7 @@ $ ->
           else if (range / curSize) > binNumTarget
             curSize *= 10
 
-          break if not tryNewSize curSize
+          break if not tryNewSize(curSize)
 
         tryNewSize(curSize / 2)
         tryNewSize(curSize * 2)
@@ -145,7 +142,6 @@ $ ->
         @chart.yAxis[0].setTitle({text: "Quantity"}, false)
         @chart.xAxis[0].setTitle(
           {text: fieldTitle(data.fields[@configs.displayField])}, false)
-        tooltipXAxis = @configs.displayField
         if data.groupSelection.length is 0 then return
 
         while @chart.series.length > data.normalFields.length
@@ -157,11 +153,11 @@ $ ->
         for groupIndex in data.groupSelection
           min = data.getMin @configs.displayField, groupIndex
           min = Math.round(min / @configs.binSize) * @configs.binSize
-          @globalmin = Math.min @globalmin, min
+          @globalmin = Math.min(@globalmin, min)
 
           max = data.getMax @configs.displayField, groupIndex
           max = Math.round(max / @configs.binSize) * @configs.binSize
-          @globalmax = Math.max @globalmax, max
+          @globalmax = Math.max(@globalmax, max)
 
         # Make 'fake' data to ensure proper bar spacing ###
         fakeDat = for i in [@globalmin...@globalmax] by @configs.binSize
@@ -175,11 +171,16 @@ $ ->
 
         # Generate all bin data
         binObjs = {}
+        binMesh = {}
         for groupIndex in data.groupSelection
           selectedData = data.selector @configs.displayField, groupIndex
 
           binArr = for i in selectedData
-            Math.round(i / @configs.binSize) * @configs.binSize
+            x = Math.round(i / @configs.binSize) * @configs.binSize
+            unless binMesh[x]?
+              binMesh[x] = []
+            binMesh[x].push i
+            x
 
           binObjs[groupIndex] = {}
 
@@ -212,7 +213,12 @@ $ ->
               binData = []
               for bin of binObjs[group]
                 if binObjs[group][bin] > i
-                  binData.push {x: Number(bin), y: 1, total: binObjs[group][bin]}
+                  x = binMesh[bin].pop()
+                  binData.push
+                    x: Number(bin)
+                    y: 1
+                    total: binObjs[group][bin]
+                    realValue: x
               binData.sort (a, b) -> Number(a['x']) - Number(b['x'])
               options =
                 showInLegend: false
@@ -292,11 +298,23 @@ $ ->
             @delayedUpdate()
 
         # Bin Size Box
+        badNumberPopoverTimer = null
         $('#bin-size').change (e) =>
           newBinSize = Number(e.target.value)
           if isNaN(newBinSize) or newBinSize <= 0
-            $('#bin-size').errorFlash()
+            $(e.target).popover
+              content: "Please enter a valid number"
+              placement: "bottom"
+              trigger: "manual"
+            $(e.target).popover 'show'
+            if badNumberPopoverTimer?
+              clearTimeout badNumberPopoverTimer
+            badNumberPopoverTimer = setTimeout ->
+              $(e.target).popover 'destroy'
+            , 3000
             return
+          else
+            $(e.target).popover 'destroy'
 
           if ((@globalmax - @globalmin) / newBinSize) < @MAX_NUM_BINS
             @configs.binSize = newBinSize

@@ -44,8 +44,13 @@ setupMediaObjectsView = () ->
         url: obj.attr("href")
         type: 'DELETE'
         dataType: "json"
-        error: (_, e0, e1) ->
-          $(obj).errorFlash()
+        error: (j, s, t) ->
+          errors = JSON.parse j.responseText
+          $(obj).popover
+            content: errors[0]
+            placement: "bottom"
+            trigger: "manual"
+          $(obj).popover 'show'
         success: ->
           recolored = false
           row = obj.parents('tr')

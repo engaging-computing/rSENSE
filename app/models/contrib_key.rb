@@ -11,7 +11,7 @@ class ContribKey < ActiveRecord::Base
 
   validates :name, length: {
     minimum: 1,
-    too_short:  ' is too short (Minimum is one character)',
+    too_short:  ' (Key\'s Label) is too short (Minimum is one character)',
     maximum: 40
   }
   validates :key,  length: {
