@@ -266,7 +266,11 @@ class FileUploader
       field = Field.find(key)
       type = get_field_name(field.field_type)
       value.each_with_index do |dp, index|
-        next if dp.nil? or (dp.to_s.strip == '')
+        if dp.nil? or (dp.to_s.strip == '')
+          data[key][index] = ''
+          next
+        end
+
         case type
         when 'Number'
           unless valid_float?(dp)

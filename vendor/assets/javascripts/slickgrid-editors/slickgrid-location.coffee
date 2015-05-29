@@ -12,6 +12,8 @@
   form.appendTo args.container
   form.focus()
 
+  getInput: ->
+    form
   destroy: ->
     form.remove()
   focus: ->
