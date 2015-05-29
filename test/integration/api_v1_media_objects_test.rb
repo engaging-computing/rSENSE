@@ -99,7 +99,7 @@ class ApiV1MediaObjectsTest < ApiV1Test
   #       password: '12345',
   #       id: @dessert_project.id,
   #       type: 'project'
-  # 
+  #
   #   assert_response :unprocessable_entity
   # end
 
