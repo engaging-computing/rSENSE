@@ -94,12 +94,12 @@ $ ->
         max = Number.MIN_VALUE
 
         for groupIndex in data.groupSelection
-          localMin = data.getMin @configs.displayField, groupIndex
-          if localMin isnt null
+          localMin = data.getMin(@configs.displayField, groupIndex)
+          if localMin?
             min = Math.min(min, localMin)
 
-          localMax = data.getMax @configs.displayField, groupIndex
-          if localMax isnt null
+          localMax = data.getMax(@configs.displayField, groupIndex)
+          if localMax?
             max = Math.max(max, localMax)
 
         range = max - min
@@ -109,15 +109,13 @@ $ ->
           return 1
 
         curSize = 1
-
         bestSize = curSize
         bestNum  = range / curSize
-
         binNumTarget = Math.pow(10, @binNumSug)
 
         tryNewSize = (size) ->
           target = Math.abs(binNumTarget - (range / size))
-          if target > Math.abs(binNumTarget - bestNum)
+          if target >= Math.abs(binNumTarget - bestNum)
             return false
 
           bestSize = size
@@ -130,7 +128,7 @@ $ ->
           else if (range / curSize) > binNumTarget
             curSize *= 10
 
-          break if not tryNewSize curSize
+          break if not tryNewSize(curSize)
 
         tryNewSize(curSize / 2)
         tryNewSize(curSize * 2)

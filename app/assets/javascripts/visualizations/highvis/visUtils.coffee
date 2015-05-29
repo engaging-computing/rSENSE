@@ -92,13 +92,12 @@ $ ->
       arr
 
     ###
-    Tests to see if a and b are within thresh%
+    Tests to see if a and b are within thresh
     of the smaller value.
     ###
     window.fpEq = (a, b, thresh = 0.0001) ->
-      diff = Math.abs (a - b)
-      e = (Math.abs (Math.min a, b)) * thresh
-
+      diff = Math.abs(a - b)
+      e = Math.abs(Math.min(a, b)) * thresh
       return diff < e
 
     ###
