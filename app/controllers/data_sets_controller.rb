@@ -347,7 +347,7 @@ class DataSetsController < ApplicationController
               data_obj = uploader.generateObject(tempfile)
               results.push(uploader.match_headers(project, data_obj))
 
-              filenames.push(DataSet.get_next_name(project, entry.name.split('/')[1].split('.')[0]))
+              filenames.push(DataSet.get_next_name(project, entry.name.split('/')[-1].split('.')[0]))
 
             rescue Exception
               flash[:error] = "Error reading file #{entry.name}"
