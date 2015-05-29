@@ -1,35 +1,35 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
-# Don't know what to put in content, data, and global fields
+#Don't know what to put in content, data, and global fields
 
 visualization1:
   title: VisualizationTitle1
   user: kate
   project: one
-  content: "fill me in later!"
+  content: MyText
   data: '{"defaultVis":"Map", "relVis":["Map"]}'
-  globals: '{"Bar":{"analysisType": 1}}'
+  globals: MyText
 
 tasty_vis:
   title: Tasty Vis
   user: kate
   project: dessert
-  content: "fill me in later!"
+  content: MyText
   data: '{"defaultVis":"Summary", "relVis":["Summary"]}'
-  globals: '{"Bar":{"analysisType": 1}}'
+  globals: MyText
 
 needs_media:
   title: Needs Media
   user: nixon
   project: one
-  content: "fill me in later!"
+  content: MyText
   data: '{"defaultVis":"Scatter", "relVis":["Scatter"]}'
-  globals: '{"Bar":{"analysisType": 4}}'
+  globals: MyText
 
 media_test:
   title: Needs Media
   user: nixon
   project: one
-  content: "fill me in later!"
+  content: MyText
   data: '{"defaultVis":"Table", "relVis":["Table"]}'
-  globals: '{"Bar":{"analysisType": 5}}'
+  globals: MyText
