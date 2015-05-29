@@ -327,7 +327,7 @@ class DataSetsController < ApplicationController
       end
     end
 
-    if params[:file] && params[:file].original_filename.split('.')[1] == 'zip'
+    if params[:file] && params[:file].original_filename.split('.')[-1] == 'zip'
       Zip::File.open(params[:file].path) do |zip_file|
 
         results = []
@@ -340,7 +340,7 @@ class DataSetsController < ApplicationController
               next
             end
             begin
-              tempfile = Tempfile.new(entry.name.split('/')[1])
+              tempfile = Tempfile.new(entry.name.split('/')[-1])
               tempfile.write(entry.get_input_stream.read)
 
               uploader = FileUploader.new
@@ -355,7 +355,7 @@ class DataSetsController < ApplicationController
             end
             next
           else
-            flash[:error] = "Error reading #{entry.name.split('/')[1]}"
+            flash[:error] = "Error reading #{entry.name.split('/')[-1]}"
             next
           end
         end
