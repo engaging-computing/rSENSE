@@ -301,7 +301,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
 
   .vis-canvas {
     height: inherit;
-    width: inherit;
+    width: auto;
     overflow: hidden; // because something inside vis-canvas
                       // is overflowing on every non-map vis
   }
