@@ -8,11 +8,11 @@ class AddMeanErrorBars < ActiveRecord::Migration
 
       # Mean with Error was inserted at position 4, so everything 4 or greater
       # gets moved up by 1
-      if !y['Bar'].nil? and !y['Bar'].empty? and y['Bar']['analysisType'] >= 4
+      if !y['Bar'].nil? and !y['Bar']['analysisType'].nil? and y['Bar']['analysisType'] >= 4
         y['Bar']['analysisType'] += 1
       end
 
-      if !y['Pie'].nil? and !y['Pie'].empty? and y['Pie']['analysisType'] >= 4
+      if !y['Pie'].nil? and !y['Pie']['analysisType'].nil? and y['Pie']['analysisType'] >= 4
         y['Pie']['analysisType'] += 1
       end
 
@@ -25,11 +25,11 @@ class AddMeanErrorBars < ActiveRecord::Migration
       next if x.globals.nil?
       y = JSON.parse x.globals
 
-      if !y['Bar'].nil? and !y['Bar'].empty? and y['Bar']['analysisType'] >= 4
+      if !y['Bar'].nil? and !y['Bar']['analysisType'].nil? and y['Bar']['analysisType'] >= 4
         y['Bar']['analysisType'] += 1
       end
 
-      if !y['Pie'].nil? and !y['Pie'].empty? and y['Pie']['analysisType'] >= 4
+      if !y['Pie'].nil? and !y['Pie']['analysisType'].nil? and y['Pie']['analysisType'] >= 4
         y['Pie']['analysisType'] += 1
       end
 
@@ -48,11 +48,11 @@ class AddMeanErrorBars < ActiveRecord::Migration
       # greater than 4 get shifted down to the correct analysis type, and converts
       # all "Mean with Error" analysis types to just "Mean (average)" analysis
       # types
-      if !y['Bar'].nil? and !y['Bar'].empty? and y['Bar']['analysisType'] >= 4
+      if !y['Bar'].nil? and !y['Bar']['analysisType'].nil? and y['Bar']['analysisType'] >= 4
         y['Bar']['analysisType'] -= 1
       end
 
-      if !y['Pie'].nil? and !y['Pie'].empty? and y['Pie']['analysisType'] >= 4
+      if !y['Pie'].nil? and !y['Pie']['analysisType'].nil? and y['Pie']['analysisType'] >= 4
         y['Pie']['analysisType'] -= 1
       end
 
@@ -65,11 +65,11 @@ class AddMeanErrorBars < ActiveRecord::Migration
       next if x.globals.nil?
       y = JSON.parse x.globals
 
-      if !y['Bar'].nil? and !y['Bar'].empty? and y['Bar']['analysisType'] >= 4
+      if !y['Bar'].nil? and !y['Bar']['analysisType'].nil? and y['Bar']['analysisType'] >= 4
         y['Bar']['analysisType'] -= 1
       end
 
-      if !y['Pie'].nil? and !y['Pie'].empty? and y['Pie']['analysisType'] >= 4
+      if !y['Pie'].nil? and !y['Pie']['analysisType'].nil? and y['Pie']['analysisType'] >= 4
         y['Pie']['analysisType'] -= 1
       end
 
