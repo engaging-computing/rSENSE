@@ -117,8 +117,13 @@ $ ->
               else
                 mean = groupedData[fid][gid]
                 innerStd = barData.map((x) -> (x - mean) ** 2).reduce((x, y) -> x + y)
-                stdDev = Math.sqrt (1 / (barData.length - 1)) * innerStd
-                [mean - stdDev, mean + stdDev]
+                stdDev = Math.sqrt((1 / (barData.length - 1)) * innerStd)
+                if globals.configs.logY != true
+                  [mean - stdDev, mean + stdDev]
+                else if mean > 0
+                  [mean, mean + stdDev]
+                else
+                  []
 
             @chart.addSeries errors
 
@@ -129,6 +134,7 @@ $ ->
 
       drawControls: ->
         super()
+
         @drawGroupControls(data.textFields)
         @drawYAxisControls(globals.configs.fieldSelection,
           data.normalFields.slice(1), false)
