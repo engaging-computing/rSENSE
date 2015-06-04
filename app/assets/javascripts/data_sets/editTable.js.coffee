@@ -55,7 +55,7 @@ wrapOver = (args) ->
   grid.gotoCell args.row, args.cell, true
 
   editor = grid.getCellEditor()
-  if dir > 0 and editor? and editor.getInput?
+  if dir > 0 and editor? and editor.getInput? and editor.getInput().prop('tagName') == 'input'
     editor.getInput().caret 0
 
 wrapThru = (args) ->
@@ -64,11 +64,14 @@ wrapThru = (args) ->
 
   if editor? and editor.getInput?
     form = editor.getInput()
-    dir = args.cell - oldPos.cell
-    if dir < 0 and form.caret() != 0
-      form.caret form.caret() - 1
-    else if dir > 0 and form.caret() != form.val().length
-      form.caret form.caret() + 1
+    if form.prop('tagName').toLowerCase() == 'input'
+      dir = args.cell - oldPos.cell
+      if dir < 0 and form.caret() != 0
+        form.caret form.caret() - 1
+      else if dir > 0 and form.caret() != form.val().length
+        form.caret form.caret() + 1
+      else
+        wrapOver args
     else
       wrapOver args
   else

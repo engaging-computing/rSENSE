@@ -35,7 +35,7 @@
     else if loadValue in args.column.restrictions
       form.val loadValue
     else
-      ''
+      form.val ''
   applyValue: (item, state) ->
     item[args.column.field] = state
   validate: ->
