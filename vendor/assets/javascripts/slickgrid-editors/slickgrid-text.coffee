@@ -30,15 +30,12 @@
     form.val()
   loadValue: (item) ->
     loadValue = item[args.column.field] || ''
-    console.log args.column.restrictions
-    console.log []
-    console.log args.column.restrictions == []
     if args.column.restrictions.length == 0
       form.val loadValue
     else if loadValue in args.column.restrictions
       form.val loadValue
     else
-      form.val ''
+      ''
   applyValue: (item, state) ->
     item[args.column.field] = state
   validate: ->
