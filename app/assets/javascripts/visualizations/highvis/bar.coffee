@@ -118,7 +118,7 @@ $ ->
                 mean = groupedData[fid][gid]
                 innerStd = barData.map((x) -> (x - mean) ** 2).reduce((x, y) -> x + y)
                 stdDev = Math.sqrt((1 / (barData.length - 1)) * innerStd)
-                if globals.configs.logY != true
+                if !globals.configs.logY
                   [mean - stdDev, mean + stdDev]
                 else if mean > 0
                   [mean, mean + stdDev]
