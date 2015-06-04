@@ -36,6 +36,10 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     user-select: none;
   }
 
+  .bold {
+    font-weight: bold;
+  }
+
   .color-picker {
     vertical-align: top;
   }
@@ -324,20 +328,21 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
         overflow: hidden;
       }
 
-      // the bar at the top of the vis window
+      #vis-header {
+        background-color: $vis-bkg-light;
+      }
+
       #vis-tab-list {
         padding: 0; // removes padding that shouldn't be there to begin with
         margin: 0;
-        background-color: $vis-bkg-light;
       }
 
       #vis-title-bar {
         position: relative;
         width: 100%;
-        height: 50px;
-        background-color: $vis-bkg-light;
         font-size: 24px;
         padding: 10px;
+        overflow: hidden;
         white-space: nowrap;
 
         .edit_visualization, .edit_data_set {
@@ -355,10 +360,27 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
             vertical-align: middle;
           }
         }
+      }
 
-        #vis-proj-right {
-          position: absolute;
-          right: 10px;
+      #vis-filters {
+        margin: 3px;
+        overflow-y: auto;
+
+        .vis-filter {
+          display: inline;
+          margin: 3px;
+          padding: 2px;
+          background-color: $vis-bkg-mid;
+          border-radius: 18px;
+          whitespace: nowrap;
+        }
+
+        .vis-filter:hover {
+          background-color: $vis-bkg-dark;
+        }
+
+        .remove {
+          cursor: pointer;
         }
       }
     }
@@ -392,7 +414,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
         .save-btn {
           display: inline-block;
           width: 80%;
-          margin: 10px auto;
+          margin: 5px auto;
         }
 
         // any input button inside this class isn't lined up with the

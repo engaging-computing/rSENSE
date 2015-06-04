@@ -52,8 +52,8 @@ $ ->
         $(canvas).html("")
 
         # load the Handlebars templates
-        picTemp = HandlebarsTemplates['visualizations/photo/pic']
-        lbTemp = HandlebarsTemplates['visualizations/photo/lightbox']
+        picTemp = HandlebarsTemplates[hbVis('photo/pic')]
+        lbTemp = HandlebarsTemplates[hbVis('photo/lightbox')]
 
         # add each photo to the canvas
         id = 0

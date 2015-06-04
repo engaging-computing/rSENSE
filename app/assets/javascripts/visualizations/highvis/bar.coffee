@@ -144,6 +144,7 @@ $ ->
         @drawYAxisControls(globals.configs.fieldSelection,
           data.normalFields.slice(1), false)
         @drawToolControls(true, true)
+        @drawClippingControls()
         @drawSaveControls()
 
     if "Bar" in data.relVis
