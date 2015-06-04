@@ -102,14 +102,28 @@ class MediaObjectsController < ApplicationController
     # Rotate based on EXIF data, then strip it out.
     if file_type == 'image'
       fix_rot = MiniMagick::Image.read(file_path)
-      unless file_name.include? 'svg'
+      puts "\nA\n#{fix_rot.path}\nA\n"
+
+      unless fix_rot.type == 'SVG'
         fix_rot.auto_orient
       end
+
+      puts "\nB\n#{fix_rot.path}\nB\n"
       file_path = '/tmp/' + SecureRandom.hex
       File.open(file_path, 'wb') do |ff|
         fix_rot.write ff
       end
+
+      if fix_rot.type == 'PNG'
+        MiniMagick::Tool::Convert.new do |c|
+          c << file_path
+          c << '-define' << 'png:exclude-chunks=date'
+          c << file_path
+        end
+      end
     end
+
+    # Create the media object
     adjust_file_name = file_name.gsub ' ', '_'
     @mo = MediaObject.new
     @mo.name = @mo.file = adjust_file_name
