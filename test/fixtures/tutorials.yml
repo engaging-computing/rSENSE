@@ -13,7 +13,7 @@ two:
   featured: false
   user: nixon
   hidden: false
-
+  
 media_test:
   content: MyText
   title: Tutorial Three

@@ -103,25 +103,6 @@ $ ->
             [fieldTitle(data.fields[fid]), groupedData[fid][gid]]
 
           @chart.addSeries options, false
-
-          # Draw error bars if that analysis type is selected
-          if @configs.analysisType == @ANALYSISTYPE_MEAN_ERROR
-            errors =
-              type: 'errorbar'
-              name: "Error for #{data.groups[gid]}" or data.noField()
-
-            errors.data = for fid in data.normalFields when fid in fieldSelection
-              barData = data.selector fid, gid
-              if barData.length == 1
-                []
-              else
-                mean = groupedData[fid][gid]
-                innerStd = barData.map((x) -> (x - mean) ** 2).reduce((x, y) -> x + y)
-                stdDev = Math.sqrt (1 / (barData.length - 1)) * innerStd
-                [mean - stdDev, mean + stdDev]
-
-            @chart.addSeries errors
-
         @chart.redraw()
 
       buildLegendSeries: ->
