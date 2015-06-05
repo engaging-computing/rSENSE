@@ -28,7 +28,7 @@ class FieldTest < ActiveSupport::TestCase
     @field2.restrictions = 4
     assert !@field2.valid?, 'Result should not be valid'
   end
-  
+
   test 'fail with bad array restrictions' do
     assert @field2.valid?, 'Field should initially be valid'
     @field2.restrictions = [:some_label, [1, 2, 3]]
