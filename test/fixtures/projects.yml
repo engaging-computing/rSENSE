@@ -97,3 +97,7 @@ description_test:
   title: Goat
   user: kate
   content: Description Test
+
+never_visited:
+  title: Never Visited
+  user: kate
