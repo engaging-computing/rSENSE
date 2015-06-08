@@ -80,17 +80,17 @@ end
 module CapyHelper
   def login(email, pass)
     visit '/'
-    find('.navbar').click_on('Login')
+    find(:css, '.navbar').click_on('Login')
     fill_in 'Email', with: email
     fill_in 'Password', with: pass
-    find('.mainContent').click_on('Login')
+    find(:css, '.mainContent').click_on('Login')
 
     assert page.has_content?('Logout'), 'Successfully logged in.'
   end
 
   def logout
     visit '/'
-    find('.navbar').click_on('Logout')
+    find(:css, '.navbar').click_on('Logout')
   end
 
   def finish
