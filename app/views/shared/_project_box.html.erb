@@ -10,7 +10,7 @@
       </a>
     <% else %>
       <a href='<%= project_path @box_project %>'>
-        <div class="item-image word-wrap center">
+        <div class="item-image word-wrap center" style="background-image:url(/assets/projects_placeholder.jpg)">
           <div class="placeholder">
             <%= truncate(@box_project.title.html_safe, length: 40) %>
           </div>
