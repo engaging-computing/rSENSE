@@ -36,6 +36,7 @@
 //
 //  -- Visualization stuff follows --
 //= require highcharts/highcharts
+//= require highcharts/highcharts-more
 //= require highcharts/modules/exporting
 //= require jquery.jqGrid.src.js
 //= require grid.locale-en.js
