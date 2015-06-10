@@ -157,10 +157,11 @@ $ ->
           @saveFilters()
           $(window).resize()
 
-        $('#clear-filters-btn').click ->
+        $('#clear-filters-btn').click =>
           globals.configs.activeFilters = []
           clearFilters()
           $(window).resize()
+          @start()
 
         # Initialize and track the status of this control panel
         globals.configs.clippingOpen ?= false
