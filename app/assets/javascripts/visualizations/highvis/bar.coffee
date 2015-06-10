@@ -68,6 +68,11 @@ $ ->
             useHTML: true
           yAxis:
             type: if globals.configs.logY then 'logarithmic' else 'linear'
+            plotLines: [{
+              color: '#000000'
+              width: 2
+              value: 0
+             }]
           xAxis:
             type: 'category'
 
