@@ -3,6 +3,8 @@ require 'test_helper'
 class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
   include CapyHelper
 
+  self.use_transactional_fixtures = false
+
   setup do
     Capybara.current_driver = :webkit
     Capybara.default_wait_time = 2
@@ -109,5 +111,24 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     visit "/projects/#{@project_id}"
     assert page.has_content? 'Contributor Key Test Project'
     assert page.has_no_css?('.gravatar')
+  end
+
+  test 'create invalid contributor key' do
+    login('kcarcia@cs.uml.edu', '12345')
+    visit '/projects'
+
+    project_id = projects(:contributor_key_project).id
+    visit "/projects/#{project_id}"
+    find('#edit-project-button').click
+    click_on 'Create Key'
+
+    assert page.has_content? 'Failed to create Contributor Key'
+    assert page.has_content? "Name (Key's Label) is too short (Minimum is one character)"
+    assert page.has_content? 'Key is too short (Minimum is one character)'
+  end
+
+  test 'use invalid contributor key' do
+    login('kcarcia@cs.uml.edu', '12345')
+
   end
 end
