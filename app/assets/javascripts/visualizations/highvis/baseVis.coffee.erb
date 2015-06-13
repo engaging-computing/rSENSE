@@ -54,8 +54,10 @@ $ ->
       ###
       start: ->
         $('#' + @canvas).show()
+        toolScroll = $('#vis-ctrls').scrollTop()
         @drawControls()
         @update()
+        $('#vis-ctrls').scrollTop(toolScroll)
 
       ###
       Update minor state
