@@ -2,7 +2,7 @@ require 'test_helper'
 
 class RenameVisTest < ActionDispatch::IntegrationTest
   include CapyHelper
-  
+
   self.use_transactional_fixtures = false
 
   setup do
