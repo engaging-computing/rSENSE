@@ -16,8 +16,8 @@ class MediaObject < ActiveRecord::Base
 
   validates_presence_of :media_type, :store_key
   validates :name, length: { maximum: 128 }
-
   validates_presence_of :name, :file
+  validate :unique_md5, on: :create
 
   before_validation :sanitize_media
   before_save :check_store!
@@ -33,6 +33,38 @@ class MediaObject < ActiveRecord::Base
 
   def sanitize_media
     self.title = sanitize title, tags: %w()
+  end
+
+  def make_md5
+    if File.exist? file_name
+      self.md5 = Digest::MD5.file(file_name).hexdigest
+    end
+  end
+
+  def unique_md5
+    make_md5
+
+    if !project_id.nil?
+      owner = Project.find project_id
+    elsif !data_set_id.nil?
+      owner = DataSet.find data_set_id
+    elsif !tutorial_id.nil?
+      owner = Tutorial.find tutorial_id
+    elsif !visualization_id.nil?
+      owner = Visualization.find visualization_id
+    elsif !news_id.nil?
+      owner = News.find news_id
+    else
+      return
+    end
+
+    matches = owner.media_objects.collect.select do |x|
+      x.md5 == md5
+    end
+
+    if matches.length > 0
+      errors.add :base, 'Duplicate media object detected'
+    end
   end
 
   def check_store!
@@ -117,19 +149,17 @@ class MediaObject < ActiveRecord::Base
       end
 
       File.chmod(0644, tn_file_name)
-
-      self.save!
     end
   end
 
   # Creates a deep clone of a mediaobject, including copying the underlying file
+  # Doesn't save the media object, owner and user ID must still be updated
   def cloneMedia
     nmo = dup
     nmo.store_key = nil
     nmo.check_store!
     FileUtils.cp(file_name, nmo.file_name)
     nmo.add_tn
-    nmo.save!
     nmo
   end
 
@@ -138,18 +168,25 @@ class MediaObject < ActiveRecord::Base
     unless owner_id.nil?
       self.user_id = owner_id
     end
+
     self.media_type = 'image'
     self.name = 'Uploaded Image ' + SecureRandom.hex[0...5] + "#{file_type}"
     self.file = name.split('.')[0] + SecureRandom.hex + '.' + name.split('.')[1]
     sanitize_media
     self.store_key = nil
     self.check_store!
+
     File.open("#{file_name}", 'wb+') do |f|
       f.write image_data
       f.chmod(0644)
     end
     add_tn
-    self.save!
+
+    begin
+      self.save!
+    rescue
+      remove_data!
+    end
   end
 
   def self.create_media_objects(description, type, item_id, owner_id = nil)
@@ -164,9 +201,14 @@ class MediaObject < ActiveRecord::Base
         else
           file_type = '.jpg'
         end
+
         summernote_mo = MediaObject.new
         summernote_mo.summernote_image(data, file_type, type, item_id, owner_id)
         picture['src'] = summernote_mo.src
+        unless summernote_mo.valid?
+          summernote_mo = MediaObject.where("#{type} = ? AND md5 = ?", item_id, summernote_mo.md5).first
+          picture['src'] = summernote_mo.src
+        end
       end
     end
     text.search('iframe').each do |video|
@@ -188,8 +230,10 @@ class MediaObject < ActiveRecord::Base
   private
 
   def remove_data!
-    File.delete(file_name)
-    File.delete(tn_file_name)
+    unless store_key.nil?
+      File.delete(file_name)
+      File.delete(tn_file_name)
+    end
   rescue Errno::ENOENT
     # whatever
   end
