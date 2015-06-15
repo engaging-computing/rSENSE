@@ -164,15 +164,16 @@ class SlickgridTest < ActionDispatch::IntegrationTest
     page.assert_selector '.slick-row', count: 14
 
     # add data to those rows
-    slickgrid_add_data 3, field_map
+    slickgrid_add_data 4, field_map
 
     # delete some rows
+    find(:css, '.slick-row:nth-child(4) .slick-delete').click
     find(:css, '.slick-row:nth-child(3) .slick-delete').click
     find(:css, '.slick-row:nth-child(2) .slick-delete').click
     find(:css, '.slick-row:nth-child(1) .slick-delete').click
 
     # assert correct rows were deleted
-    page.assert_selector '.slick-row', count: 11
+    page.assert_selector '.slick-row', count: 10
 
     # save the dataset
     find(:css, '#edit_table_save_1').click
