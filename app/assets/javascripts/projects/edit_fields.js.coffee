@@ -28,7 +28,8 @@ $ ->
     $('#number').click ->
       numCount = numCount + 1
       displayNumCount = displayNumCount + 1
-      addRow(["""<input class="input-small form-control" type="text"
+      addRow(["""<i class="fa fa-chevron-up up"></i><i class="fa fa-chevron-down down"></i></td>""",
+      			 """<input class="input-small form-control" type="text"
                  name="number_#{numCount}" value="Number_#{displayNumCount}">""", "Number",
                  """<input class="input-small form-control" type="text" class="units"
                  name="units_#{numCount}">""", "", """<a href="#" fid="0"
@@ -37,28 +38,39 @@ $ ->
     $('#text').click ->
       textCount = textCount + 1
       displayTextCount = displayTextCount + 1
-      addRow(["""<input class="input-small form-control" type="text"
+      addRow(["""<i class="fa fa-chevron-up up"></i><i class="fa fa-chevron-down down"></i></td>""",
+      			 """<input class="input-small form-control" type="text"
                  name="text_#{textCount}" value="Text_#{displayTextCount}">""", "Text", "",
-              """<input class="input-small form-control" type="text" class="restrictions"
+              	 """<input class="input-small form-control" type="text" class="restrictions"
                  name="restrictions_#{textCount}">""", """<a href="#" fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
 
     $('#timestamp').click ->
       timestampCount = timestampCount + 1
-      addRow(["""<input class="input-small form-control" type="text" name="timestamp"
+      addRow(["""<i class="fa fa-chevron-up up"></i><i class="fa fa-chevron-down down"></i></td>""",
+      			 """<input class="input-small form-control" type="text" name="timestamp"
                  value="Timestamp">""", "Timestamp", "", "", """<a href="#" fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
       document.getElementById('timestamp').disabled = true
 
     $('#location').click ->
       locationCount = locationCount + 1
-      addRow(["""<input class="input-small form-control" type="text" name="longitude"
+      addRow(["""<i class="fa fa-chevron-up up"></i><i class="fa fa-chevron-down down"></i></td>""",
+      			 """<input class="input-small form-control" type="text" name="longitude"
                  value="Longitude">""", "Longitude", "deg", "", """<a href="#" fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
-      addRow(["""<input class="input-small form-control" type="text" name="latitude"
+      addRow(["""<i class="fa fa-chevron-up up"></i><i class="fa fa-chevron-down down"></i></td>""",
+      			 """<input class="input-small form-control" type="text" name="latitude"
                  value="Latitude">""", "Latitude", "deg", "", """<a href="#" fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
       document.getElementById('location').disabled = true
+
+    $('#fields_table').on 'click', '.up, .down', ->
+      row = $(@).parents('tr:first')
+      if $(@).is('.up') && row.index('tr') > 1
+        row.insertBefore(row.prev())
+      else if $(@).is('.down')
+        row.insertAfter(row.next())
 
     # Delete field, enable timestamp/location buttons (NOTE: fid is 0 when the field
     # hasn't yet been added to project in database)
@@ -107,10 +119,10 @@ addRow = (content) ->
   row = document.getElementById('fields_table').insertRow(1)
   $(row).attr('name', content[1].toLowerCase())
 
-  cells = for i in [1...6]
+  cells = for i in [1...7]
     row.insertCell(i - 1)
 
-  for i in [0...5]
+  for i in [0...6]
     cells[i].innerHTML = content[i]
 
   $(row).highlight(500)

@@ -30,6 +30,7 @@
       <%= form_tag "/projects/#{@project.id}/save_fields", name: "fields_form" do %>
         <table class="fields_table table table-bordered" id="fields_table" name="fields_table">
           <tr style="background: #DDD;">
+            <th></th>
             <th>Name</th>
             <th>Type</th>
             <th class="units">Units</th>
@@ -38,6 +39,7 @@
           </tr>
           <% @project.fields.order(:created_at).each do |field| %>
             <tr name="<%= get_field_name(field.field_type).downcase %>">
+              <td><i class="fa fa-chevron-up up"></i><i class="fa fa-chevron-down down"></i></td>
               <td><input class="form-control" type="text" name="<%= field.id %>_name" value="<%= (defined?(@tmp_save) && @tmp_save.has_key?("#{field.id}_name")) ? @tmp_save["#{field.id}_name"] : field.name %>"></td>
               <td><%= get_field_name(field.field_type) %></td>
               <td class="units">
