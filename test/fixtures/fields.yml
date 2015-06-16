@@ -127,3 +127,8 @@ slickgrid_not_a_field:
   field_type: -1
   project: slickgrid_oops
   name: oops
+
+contrib_key_number:
+  field_type: 1
+  project: contributor_key_project
+  name: field

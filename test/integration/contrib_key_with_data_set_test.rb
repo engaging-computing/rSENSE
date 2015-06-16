@@ -115,7 +115,6 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
 
   test 'create invalid contributor key' do
     login('kcarcia@cs.uml.edu', '12345')
-    visit '/projects'
 
     project_id = projects(:contributor_key_project).id
     visit "/projects/#{project_id}"
@@ -128,7 +127,24 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
   end
 
   test 'use invalid contributor key' do
-    login('kcarcia@cs.uml.edu', '12345')
+    project_id = projects(:contributor_key_project).id
 
+    # no contributor key or contributor name
+    visit "/projects/#{project_id}"
+    click_on 'Submit Key'
+    assert page.has_content? 'Invalid contributor key.'
+    assert page.has_content? 'Enter a contributor Name.'
+
+    # no contributor name
+    visit "/projects/#{project_id}"
+    find('#key').set 'key'
+    click_on 'Submit Key'
+    assert page.has_content? 'Enter a contributor Name.'
+
+    # no contributor key
+    visit "/projects/#{project_id}"
+    find('#contributor_name').set 'name'
+    click_on 'Submit Key'
+    assert page.has_content? 'Invalid contributor key.'
   end
 end

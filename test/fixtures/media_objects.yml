@@ -8,6 +8,7 @@ one:
   data_set: one
   user: kate
   store_key: aaa
+  news_id: 2
 
 two:
   project: one
