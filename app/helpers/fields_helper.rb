@@ -1,3 +1,2 @@
 module FieldsHelper
-  
 end
