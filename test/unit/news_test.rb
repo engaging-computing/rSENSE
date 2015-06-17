@@ -6,7 +6,7 @@ class NewsTest < ActiveSupport::TestCase
     @year_diff = "over #{Time.now.year - old_time.year} years"
     @year_text = "January 01, #{old_time.year}"
 
-    @url_regex = /.*\/news\/(\d+)/
+    @url_regex = %r{.*/news/(\d+)}
 
     @media_src = media_objects(:one).tn_src
 
@@ -43,7 +43,7 @@ class NewsTest < ActiveSupport::TestCase
     assert_equal obj.content, h[:content]
   end
 
-  def media_asserts(obj, h)
+  def media_asserts(_obj, h)
     assert_equal @media_src, h[:mediaSrc]
   end
 
