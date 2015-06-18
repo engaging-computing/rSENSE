@@ -100,6 +100,7 @@ class MediaObjectsController < ApplicationController
     end
 
     # Rotate based on EXIF data, then strip it out.
+    # Also, strip out date information to make hashing the image work.
     if file_type == 'image'
       @image_fixing
     end
