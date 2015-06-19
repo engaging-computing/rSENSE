@@ -96,7 +96,7 @@ $ ->
               allowPointSelect: true
               cursor: 'pointer'
               dataLabels:
-                enabled: true
+                enabled: if $(window).width() > 700 then true else false
                 format: '<b>{point.name}</b>: {point.percentage:.1f} %'
 
       drawControls: ->
