@@ -91,6 +91,34 @@ class UsersController < ApplicationController
       end
     end
 
+    @sort = if params[:sort].nil?
+              'create dsc'
+            else
+              params[:sort].to_s.downcase
+            end
+    if @filter == 'liked projects'
+      case @sort
+      when 'create asc'
+        @contributions.sort! { |l, r| l.created_at <=> r.created_at }
+      when 'create dsc'
+        @contributions.sort! { |l, r| r.created_at <=> l.created_at }
+      when 'title asc'
+        @contributions.sort! { |l, r| l.title <=> r.title }
+      when 'title dsc'
+        @contributions.sort! { |l, r| r.title <=> l.title }
+      else
+        @contributions.sort! { |l, r| r.created_at <=> l.created_at }
+      end
+    else
+      sort_type = case @sort
+                  when 'create asc' then 'created_at ASC'
+                  when 'create dsc' then 'created_at DESC'
+                  when 'title asc' then 'title ASC'
+                  when 'title dsc' then 'title DESC'
+                  end
+      @contributions = @contributions.order sort_type
+    end
+
     page = params[:page].to_i
 
     if @contributions.length == 0
