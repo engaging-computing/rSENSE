@@ -84,8 +84,12 @@ class UsersController < ApplicationController
     when 'liked projects'
       @contributions = []
       @user.likes.each do |like|
-        y = Project.where('(lower(title) LIKE lower(?)) AND (id = ?)', "%#{params[:search]}%",
-                          like.project_id).first || next
+        y = if params[:search].to_s.strip.length == 0
+              Project.where('(id = ?)', like.project_id).first || next
+            else
+              Project.where('(lower(title) LIKE lower(?)) AND (id = ?)', "%#{params[:search]}%",
+                            like.project_id).first || next
+            end
         next if y.hidden == true && !can_edit?(y)
         @contributions << y
       end
@@ -96,7 +100,8 @@ class UsersController < ApplicationController
             else
               params[:sort].to_s.downcase
             end
-    if @filter == 'liked projects'
+
+    if @contributions.is_a? Array
       case @sort
       when 'create asc'
         @contributions.sort! { |l, r| l.created_at <=> r.created_at }
