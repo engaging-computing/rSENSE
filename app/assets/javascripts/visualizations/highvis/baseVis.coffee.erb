@@ -438,12 +438,12 @@ $ ->
 
         # Set up analysis types from the list of exclusions
         analysisTypes = [
-          @ANALYSISTYPE_TOTAL
-          @ANALYSISTYPE_MAX
-          @ANALYSISTYPE_MIN
           @ANALYSISTYPE_MEAN
           @ANALYSISTYPE_MEAN_ERROR
           @ANALYSISTYPE_MEDIAN
+          @ANALYSISTYPE_MAX
+          @ANALYSISTYPE_MIN
+          @ANALYSISTYPE_TOTAL
           @ANALYSISTYPE_COUNT
           ]
         analysisTypes = analysisTypes.filter (x) ->
