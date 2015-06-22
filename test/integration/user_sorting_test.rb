@@ -37,7 +37,7 @@ class UserSortingTest < ActionDispatch::IntegrationTest
     # Sort by name descending and assert things
     find(:css, 'thead > tr > th:nth-child(1)').click
     wait_for_ajax
-    assert_equal 'empty_project', find(:css, 'tr:first-child > td:first-child').text
+    assert_equal 'Upload Test', find(:css, 'tr:first-child > td:first-child').text
 
     # Switch to data sets tab, assert that we're still sorting by name descending
     find(:css, 'ul#user_filter > li:nth-child(2)').click

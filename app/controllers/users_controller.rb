@@ -73,26 +73,27 @@ class UsersController < ApplicationController
     show_hidden = (@cur_user.id == @user.id) || can_admin?(@user)
 
     @contributions = []
+    @objtype = ''
 
     case @filter
     when 'my projects'
       @contributions = @user.projects.search(params[:search], show_hidden)
+      @objtype = 'projects'
     when 'data sets'
       @contributions = @user.data_sets.search(params[:search])
+      @objtype = 'datasets'
     when 'visualizations'
       @contributions = @user.visualizations.search(params[:search], show_hidden)
+      @objtype = 'visualizations'
     when 'liked projects'
       @contributions = []
       @user.likes.each do |like|
-        y = if params[:search].to_s.strip.length == 0
-              Project.where('(id = ?)', like.project_id).first || next
-            else
-              Project.where('(lower(title) LIKE lower(?)) AND (id = ?)', "%#{params[:search]}%",
+        y = Project.where('(lower(title) LIKE lower(?)) AND (id = ?)', "%#{params[:search]}%",
                             like.project_id).first || next
-            end
         next if y.hidden == true && !can_edit?(y)
         @contributions << y
       end
+      @objtype = 'likes'
     end
 
     @sort = if params[:sort].nil?
@@ -104,24 +105,24 @@ class UsersController < ApplicationController
     if @contributions.is_a? Array
       case @sort
       when 'create asc'
-        @contributions.sort! { |l, r| l.created_at <=> r.created_at }
+        @contributions.sort! { |l, r| l.created_at.downcase <=> r.created_at.downcase }
       when 'create dsc'
-        @contributions.sort! { |l, r| r.created_at <=> l.created_at }
+        @contributions.sort! { |l, r| r.created_at.downcase <=> l.created_at.downcase }
       when 'title asc'
-        @contributions.sort! { |l, r| l.title <=> r.title }
+        @contributions.sort! { |l, r| l.title.downcase <=> r.title.downcase }
       when 'title dsc'
-        @contributions.sort! { |l, r| r.title <=> l.title }
+        @contributions.sort! { |l, r| r.title.downcase <=> l.title.downcase }
       else
-        @contributions.sort! { |l, r| r.created_at <=> l.created_at }
+        @contributions.sort! { |l, r| r.created_at.downcase <=> l.created_at.downcase }
       end
     else
       sort_type = case @sort
-                  when 'create asc' then 'created_at ASC'
-                  when 'create dsc' then 'created_at DESC'
-                  when 'title asc' then 'title ASC'
-                  when 'title dsc' then 'title DESC'
+                  when 'create asc' then "lower(#{@objtype}.created_at) ASC"
+                  when 'create dsc' then "lower(#{@objtype}.created_at) DESC"
+                  when 'title asc' then 'lower(title) ASC'
+                  when 'title dsc' then 'lower(title) DESC'
                   end
-      @contributions = @contributions.order sort_type
+      @contributions = @contributions.order(sort_type).all
     end
 
     page = params[:page].to_i
