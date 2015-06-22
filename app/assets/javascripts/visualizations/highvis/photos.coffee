@@ -70,6 +70,9 @@ $ ->
         # create the groups to put the photos in
         id = 0
         for group in selectedGroups
+          if groupedMedia[group[1]].length == 0
+            continue
+
           groupContext =
             g_id: group[0]
             group_label: group[1]
