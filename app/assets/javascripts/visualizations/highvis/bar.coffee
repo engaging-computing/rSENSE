@@ -48,8 +48,6 @@ $ ->
 
         self = this
 
-        console.log(data.groups.length)
-
         @chartOptions
         $.extend true, @chartOptions,
           chart:
