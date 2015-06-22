@@ -40,7 +40,7 @@ class Project < ActiveRecord::Base
   end
 
   def media_object_exists
-    if !self.featured_media_id.nil? and MediaObject.where(id: self.featured_media_id).blank?
+    if !featured_media_id.nil? and MediaObject.where(id: featured_media_id).blank?
       errors.add :base, 'That media object no longer exists.'
     end
   end
