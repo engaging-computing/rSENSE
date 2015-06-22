@@ -48,6 +48,8 @@ $ ->
 
         self = this
 
+        console.log(data.groups.length)
+
         @chartOptions
         $.extend true, @chartOptions,
           chart:
@@ -75,6 +77,8 @@ $ ->
              }]
           xAxis:
             type: 'category'
+          legend:
+            enabled: if $(window).width() > 700 && data.groups.length < 20 then true else false
 
       update: ->
         super()

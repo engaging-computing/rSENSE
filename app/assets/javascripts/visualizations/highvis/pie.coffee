@@ -96,7 +96,7 @@ $ ->
               allowPointSelect: true
               cursor: 'pointer'
               dataLabels:
-                enabled: true
+                floating: false
                 format: '<b>{point.name}</b>: {point.percentage:.1f} %'
 
       drawControls: ->
