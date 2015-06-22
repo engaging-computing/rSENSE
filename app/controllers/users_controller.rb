@@ -81,7 +81,7 @@ class UsersController < ApplicationController
       @objtype = 'projects'
     when 'data sets'
       @contributions = @user.data_sets.search(params[:search])
-      @objtype = 'datasets'
+      @objtype = 'data_sets'
     when 'visualizations'
       @contributions = @user.visualizations.search(params[:search], show_hidden)
       @objtype = 'visualizations'
@@ -117,8 +117,8 @@ class UsersController < ApplicationController
       end
     else
       sort_type = case @sort
-                  when 'create asc' then "lower(#{@objtype}.created_at) ASC"
-                  when 'create dsc' then "lower(#{@objtype}.created_at) DESC"
+                  when 'create asc' then "#{@objtype}.created_at ASC"
+                  when 'create dsc' then "#{@objtype}.created_at DESC"
                   when 'title asc' then 'lower(title) ASC'
                   when 'title dsc' then 'lower(title) DESC'
                   end
