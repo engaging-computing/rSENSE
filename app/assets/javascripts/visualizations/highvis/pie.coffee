@@ -97,6 +97,7 @@ $ ->
               cursor: 'pointer'
               dataLabels:
                 floating: false
+                enabled: if $(window).width() > 700 && data.groups.length < 50 then true else false
                 format: '<b>{point.name}</b>: {point.percentage:.1f} %'
 
       drawControls: ->
