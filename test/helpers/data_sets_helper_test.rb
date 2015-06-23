@@ -150,7 +150,7 @@ class DataSetsHelperTest < ActionView::TestCase
     end
 
     jrescols = [
-      { 'id' => 'slickgrid-100', 'name' => 'text_field<br>', 'field' => '100','field_type' => 3,  'editor' => 'TextEditor', 'restrictions' => [], 'sortable' => false },
+      { 'id' => 'slickgrid-100', 'name' => 'text_field<br>', 'field' => '100', 'field_type' => 3,  'editor' => 'TextEditor', 'restrictions' => [], 'sortable' => false },
       { 'id' => 'slickgrid-101', 'name' => 'restrictions_field<br>', 'field' => '101', 'field_type' => 3, 'editor' => 'TextEditor', 'restrictions' => ['A', 'B', 'C'], 'sortable' => false },
       { 'id' => 'slickgrid-102', 'name' => 'number_field<br>', 'field' => '102', 'field_type' => 2, 'editor' => 'NumberEditor', 'restrictions' => [], 'sortable' => false },
       { 'id' => 'slickgrid-103', 'name' => 'timestamp_field<br>', 'field' => '103', 'field_type' => 1, 'editor' => 'TimestampEditor', 'restrictions' => [], 'sortable' => false },

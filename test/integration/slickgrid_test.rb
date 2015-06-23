@@ -6,7 +6,7 @@ class SlickgridTest < ActionDispatch::IntegrationTest
   self.use_transactional_fixtures = false
 
   current_month = Date.today.month.to_s.rjust(2, '0')
-  dst = if Time.now.dst? then - 1 else 0 end
+  dst = Time.now.dst? ? -1 : 0
   puts dst
   compare_data = [
     { '100' => 'D', '101' => 'A', '102' => '4', '103' => "1991/#{current_month}/01 0#{6 + dst}:01:01", '104' => '3', '105' => '3' },
