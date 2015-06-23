@@ -211,6 +211,11 @@ class ProjectsController < ApplicationController
       m.destroy
     end
 
+    Project.where('cloned_from = ?', @project.id).each do |clone|
+      clone.cloned_from = nil
+      clone.save!
+    end
+
     @project.destroy
 
     respond_to do |format|
