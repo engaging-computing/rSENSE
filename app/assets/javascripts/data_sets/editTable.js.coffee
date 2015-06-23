@@ -122,7 +122,7 @@ class Grid
         mtime = moment.tz("#{y[x]}+00:00", @timezone)
         unless mtime.isValid()
           continue
-        y[x] = mtime.format('YYYY-MM-DD HH:mm' )
+        y[x] = mtime.format('YYYY/MM/DD HH:mm:ss' )
 
     # slickgrid's grid options
     options =
@@ -305,10 +305,10 @@ class Grid
       timezoneFields = @cols.filter (x) -> x.field_type == 1
       for x in timezoneFields
         for y, i in @submit.data.data[x.field]
-          gtime = moment.tz(y, @timezone).tz('GMT')        
+          gtime = moment.tz(y, @timezone).tz('GMT')
           unless gtime.isValid()
             continue
-          @submit.data.data[x.field][i] = gtime.format('YYYY-MM-DD HH:mm')
+          @submit.data.data[x.field][i] = gtime.format('YYYY/MM/DD HH:mm:ss')
 
       hasData = Object.keys(@submit['data']['data']).reduce (l, r) =>
         nonEmpty = @submit['data']['data'][r].filter (i) -> i != ''
