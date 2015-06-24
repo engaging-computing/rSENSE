@@ -21,20 +21,24 @@ GIT
       ruby-progressbar (~> 1.4)
 
 GIT
-  remote: https://github.com/isenseDev/better-datetimepicker
-  revision: 9aa5f12d3b08675c5e0cdff6374564ed98a6073f
+  remote: https://github.com/isenseDev/better-colorpicker
+  revision: 1e42c14b48c79e1b143dce7c80416a5efbfcc49e
   specs:
-    better_datetimepicker (0.0.7)
+    better_colorpicker (0.1.0)
       coffee-rails
       coffee-rails-source-maps
       rails (~> 4)
       sass
 
-PATH
-  remote: ~/Documents/ecg/better-colorpicker
+GIT
+  remote: https://github.com/isenseDev/better-datetimepicker
+  revision: 261b999e62605af5e64e0f2b313e00c4ecd93f99
   specs:
-    better_colorpicker (0.0.3)
-      rails (~> 4.1.4)
+    better_datetimepicker (0.0.8)
+      coffee-rails
+      coffee-rails-source-maps
+      rails (~> 4)
+      sass
 
 GEM
   remote: https://rubygems.org/
@@ -245,8 +249,8 @@ PLATFORMS
 DEPENDENCIES
   auto_html
   bcrypt-ruby
-  better_colorpicker!
-  better_datetimepicker (~> 0.0.7)!
+  better_colorpicker (~> 0.1.0)!
+  better_datetimepicker (~> 0.0.8)!
   bootstrap-sass
   browser
   capybara
