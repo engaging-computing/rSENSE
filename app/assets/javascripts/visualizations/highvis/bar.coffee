@@ -43,8 +43,8 @@ $ ->
 
         super()
 
-      buildOptions: ->
-        super()
+      buildOptions: (animate = true)->
+        super(animate)
 
         self = this
 

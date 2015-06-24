@@ -44,8 +44,8 @@ $ ->
       ###
       Build options relevant to timeline
       ###
-      buildOptions: ->
-        super()
+      buildOptions: (animate = true) ->
+        super(animate)
 
         self = this
         groupBy = ''

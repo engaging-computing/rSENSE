@@ -71,8 +71,8 @@ $ ->
       buildLegendSeries: ->
         []
 
-      buildOptions: ->
-        super()
+      buildOptions: (animate = true) ->
+        super(animate)
 
         self = this
         @chartOptions

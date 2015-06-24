@@ -148,7 +148,7 @@ $ ->
             state = $('#swch-clipping-enabled').bootstrapSwitch('state')
             globals.configs.clippingMode = state
             $(window).resize()
-            @start()
+            @start(false)
           state: clipMode
 
         clippable = @canvas.split('-')[0] in globals.clippingVises
@@ -158,13 +158,13 @@ $ ->
         $('#save-filters-btn').click =>
           @saveFilters()
           $(window).resize()
-          @start()
+          @start(false)
 
         $('#clear-filters-btn').click =>
           globals.configs.activeFilters = []
           clearFilters()
           $(window).resize()
-          @start()
+          @start(false)
 
         # Initialize and track the status of this control panel
         globals.configs.clippingOpen ?= false
@@ -588,13 +588,14 @@ $ ->
       Subsequent derived classes should use $.extend
       to expand upon these after calling super()
       ###
-      buildOptions: ->
+      buildOptions: (animate = true) ->
         self = this
 
         @chartOptions =
           chart:
             renderTo: @canvas
             reflow: false
+            animation: animate
           credits:
             enabled: false
           exporting:
@@ -640,8 +641,8 @@ $ ->
       should destroy the current chart if it exists before generating a fresh
       one.
       ###
-      start: ->
-        @buildOptions()
+      start: (animate = true) ->
+        @buildOptions(animate)
         @chart = new Highcharts.Chart(@chartOptions)
         super()
 

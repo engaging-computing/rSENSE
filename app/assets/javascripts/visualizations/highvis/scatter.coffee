@@ -75,8 +75,8 @@ $ ->
 
         @configs.fullDetail ?= 0
 
-      start: ->
-        super()
+      start: (animate = true) ->
+        super(animate)
 
       storeXBounds: (bounds) ->
         @configs.xBounds = bounds
@@ -88,8 +88,9 @@ $ ->
       Build up the chart options specific to scatter chart
       The only complex thing here is the html-formatted tooltip.
       ###
-      buildOptions: ->
-        super()
+      buildOptions: (animate = true)->
+        super(animate)
+        console.log animate
 
         self = this
 
