@@ -148,16 +148,17 @@ $ ->
             state = $('#swch-clipping-enabled').bootstrapSwitch('state')
             globals.configs.clippingMode = state
             $(window).resize()
-            $('#save-filters-btn').toggleClass('disabled', !state)
             @start()
           state: clipMode
 
         clippable = @canvas.split('-')[0] in globals.clippingVises
         $('#save-filters-btn').toggleClass('disabled',
           !(clipMode and clippable))
+
         $('#save-filters-btn').click =>
           @saveFilters()
           $(window).resize()
+          @start()
 
         $('#clear-filters-btn').click =>
           globals.configs.activeFilters = []
