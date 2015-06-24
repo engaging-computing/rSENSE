@@ -61,7 +61,6 @@ $ ->
           root.find('.info-edit-form').hide()
 
         error: (j, s, t) ->
-          edit_box.errorFlash()
           errors = JSON.parse j.responseText
           edit_box.popover
             content: errors[0]

@@ -80,6 +80,12 @@ module DataSetsHelper
 
   def format_slickgrid_populate(cols, data)
     if data != []
+      data.map! do |x|
+        x.map do |i, y|
+          y = '' if y.nil?
+          [i, y]
+        end.to_h
+      end
       [cols, data]
     else
       data = { id: 0 }

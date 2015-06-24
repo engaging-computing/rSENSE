@@ -17,10 +17,9 @@ class MediaObject < ActiveRecord::Base
   validates_presence_of :media_type, :store_key
   validates :name, length: { maximum: 128 }
   validates_presence_of :name, :file
-  validate :unique_md5
+  validate :unique_md5, on: :create
 
   before_validation :sanitize_media
-  before_validation :make_md5
   before_save :check_store!
 
   after_destroy :remove_data!
@@ -43,6 +42,8 @@ class MediaObject < ActiveRecord::Base
   end
 
   def unique_md5
+    make_md5
+
     if !project_id.nil?
       owner = Project.find project_id
     elsif !data_set_id.nil?
@@ -200,11 +201,11 @@ class MediaObject < ActiveRecord::Base
         else
           file_type = '.jpg'
         end
-        begin
-          summernote_mo = MediaObject.new
-          summernote_mo.summernote_image(data, file_type, type, item_id, owner_id)
-          picture['src'] = summernote_mo.src
-        rescue
+
+        summernote_mo = MediaObject.new
+        summernote_mo.summernote_image(data, file_type, type, item_id, owner_id)
+        picture['src'] = summernote_mo.src
+        unless summernote_mo.valid?
           summernote_mo = MediaObject.where("#{type} = ? AND md5 = ?", item_id, summernote_mo.md5).first
           picture['src'] = summernote_mo.src
         end

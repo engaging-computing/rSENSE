@@ -94,12 +94,12 @@ $ ->
         max = Number.MIN_VALUE
 
         for groupIndex in data.groupSelection
-          localMin = data.getMin @configs.displayField, groupIndex
-          if localMin isnt null
+          localMin = data.getMin(@configs.displayField, groupIndex)
+          if localMin?
             min = Math.min(min, localMin)
 
-          localMax = data.getMax @configs.displayField, groupIndex
-          if localMax isnt null
+          localMax = data.getMax(@configs.displayField, groupIndex)
+          if localMax?
             max = Math.max(max, localMax)
 
         range = max - min
@@ -109,15 +109,13 @@ $ ->
           return 1
 
         curSize = 1
-
         bestSize = curSize
         bestNum  = range / curSize
-
         binNumTarget = Math.pow(10, @binNumSug)
 
-        tryNewSize = (size) =>
+        tryNewSize = (size) ->
           target = Math.abs(binNumTarget - (range / size))
-          if target > Math.abs(binNumTarget - bestNum)
+          if target >= Math.abs(binNumTarget - bestNum)
             return false
 
           bestSize = size
@@ -130,7 +128,7 @@ $ ->
           else if (range / curSize) > binNumTarget
             curSize *= 10
 
-          break if not tryNewSize curSize
+          break if not tryNewSize(curSize)
 
         tryNewSize(curSize / 2)
         tryNewSize(curSize * 2)
@@ -300,10 +298,20 @@ $ ->
             @delayedUpdate()
 
         # Bin Size Box
-        $('#bin-size').change (e) =>
-          newBinSize = Number(e.target.value)
+        badNumberPopoverTimer = null
+        $('#set-bin-size-btn').click =>
+          $('#bin-size').popover('destroy')
+          newBinSize = Number($('#bin-size').val())
           if isNaN(newBinSize) or newBinSize <= 0
-            $('#bin-size').errorFlash()
+            $('#bin-size').popover
+              content: 'Please enter a valid number'
+              placement: 'bottom'
+              trigger: 'manual'
+            $('#bin-size').popover('show')
+            if badNumberPopoverTimer? then clearTimeout(badNumberPopoverTimer)
+            badNumberPopoverTimer = setTimeout ->
+              $('#bin-size').popover('destroy')
+            , 3000
             return
 
           if ((@globalmax - @globalmin) / newBinSize) < @MAX_NUM_BINS

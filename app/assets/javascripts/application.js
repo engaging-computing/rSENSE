@@ -24,10 +24,12 @@
 //= require menu_edit
 //= require collapse_link_flipper
 //= require validator
+//= require jquery.caret.js
 //= require jquery.form.js
 //= require jquery.qrcode.min.js
 //= require titlebar.js.coffee
 //= require bootstrap
+//= require jstz/jstz-1.0.4.min.js
 //
 //  -- Handlebars --
 //= require handlebars
@@ -35,6 +37,7 @@
 //
 //  -- Visualization stuff follows --
 //= require highcharts/highcharts
+//= require highcharts/highcharts-more
 //= require highcharts/modules/exporting
 //= require jquery.jqGrid.src.js
 //= require grid.locale-en.js

@@ -4,8 +4,34 @@
 <table class="table table-default table-striped">
   <thead >
     <tr>
-      <th>Title</th>
-      <th>Created</th>
+      <% if @sort == 'title asc' %>
+        <th class="col-header unselectable" data-nsort="title dsc">
+      <% else %>
+        <th class="col-header unselectable" data-nsort="title asc">
+      <% end %>
+        <span class="col-name">Title</span>
+        <span class="col-arrows">
+          <% if @sort == 'title asc' %>
+            <i class="fa fa-caret-left fa-rotate-90"></i>
+          <% elsif @sort == 'title dsc' %>
+            <i class="fa fa-caret-left fa-rotate-270"></i>
+          <% end %>
+        </span>
+      </th>
+      <% if @sort == 'create asc' %>
+        <th class="col-header unselectable" data-nsort="create dsc">
+      <% else %>
+        <th class="col-header unselectable" data-nsort="create asc">
+      <% end %>
+        <span class="col-name">Created</span>
+        <span class="col-arrows">
+          <% if @sort == 'create asc' %>
+            <i class="fa fa-caret-left fa-rotate-90"></i>
+          <% elsif @sort == 'create dsc' %>
+            <i class="fa fa-caret-left fa-rotate-270"></i>
+          <% end %>
+        </span>
+      </th>
       <th class="center" colspan="4">Controls</th>
     </tr>
   </thead>

@@ -5,7 +5,7 @@ class MakeProjectTest < ActionDispatch::IntegrationTest
 
   setup do
     Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 15
+    Capybara.default_wait_time = 2
   end
 
   teardown do
@@ -38,7 +38,7 @@ class MakeProjectTest < ActionDispatch::IntegrationTest
     click_on 'Projects'
     select 'Rating', from: 'sort'
     fill_in 'search', with: 'Empty'
-    click_on 'Search'
+    find(:css, '.fa-search').click
 
     assert page.has_content?('Empty Project'),
       'Search does not find project'

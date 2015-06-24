@@ -115,25 +115,25 @@ $ ->
         # Clusterer
         clusterStyles = []
         clusterStyles.push
-          url: "/assets/cluster1.png"
+          url: '/assets/cluster1.png'
           height: 35
           width:  35
           textColor: '#FFF'
           textSize: 10
         clusterStyles.push
-          url: "/assets/cluster2.png"
+          url: '/assets/cluster2.png'
           height: 35
           width:  35
           textColor: '#FFF'
           textSize: 11
         clusterStyles.push
-          url: "/assets/cluster3.png"
+          url: '/assets/cluster3.png'
           height: 35
           width:  35
           textColor: '#FFF'
           textSize: 12
         clusterStyles.push
-          url: "/assets/cluster4.png"
+          url: '/assets/cluster4.png'
           height: 35
           width:  35
           textColor: '#FFF'
@@ -240,7 +240,7 @@ $ ->
               fillColor: color
               fillOpacity: 1
               path: google.maps.SymbolPath.CIRCLE
-              strokeColor: "#000"
+              strokeColor: '#000'
               strokeWeight: 2
               scale: 7
 
@@ -327,7 +327,7 @@ $ ->
 
         finalInit = =>
           @configs.zoomLevel = @gmap.getZoom()
-          google.maps.event.addListener @gmap, "zoom_changed", =>
+          google.maps.event.addListener @gmap, 'zoom_changed', =>
             newZoom = @gmap.getZoom()
             if @configs.heatmapSelection isnt @HEATMAP_NONE
               # Guess new radius
@@ -336,13 +336,13 @@ $ ->
               @delayedUpdate()
             @configs.zoomLevel = newZoom
 
-          google.maps.event.addListener @gmap, "bounds_changed", =>
+          google.maps.event.addListener @gmap, 'bounds_changed', =>
             cen = @gmap.getCenter()
             @configs.savedCenter =
               lat: cen.lat()
               lng: cen.lng()
 
-          google.maps.event.addListener @gmap, "dragend", =>
+          google.maps.event.addListener @gmap, 'dragend', =>
             # Update if the projection has changed enough to disturb the heatmap
             if @configs.heatmapSelection isnt @HEATMAP_NONE
               if @getHeatmapScale() isnt @heatmapPixelRadius
@@ -356,7 +356,7 @@ $ ->
 
         checkProj = =>
           if @projOverlay.getProjection() is undefined
-            google.maps.event.addListenerOnce(@gmap, "idle", checkProj)
+            google.maps.event.addListenerOnce(@gmap, 'idle', checkProj)
           else
             finalInit()
 
@@ -383,6 +383,10 @@ $ ->
             for h in heats
               coords.push(@projOverlay.projectPixels(h.location))
 
+            # If there are negative numbers, shift data into positive range
+            min = data.getMin(@configs.heatmapSelection, data.groupSelection)
+            offset = if min < 0 then Math.abs(min) else 0
+
             for h, i in heats
               ori = @projOverlay.projectPixels(h.location)
               # Distance to origin function
@@ -399,13 +403,13 @@ $ ->
                 return a / Math.pow((@heatmapPixelRadius), 3)
               # Finally, add together to get weight
               add = (a,b) -> a + b
-              heats[i].weight = h.val / neighbors.reduce(add, 0)
+              heats[i].weight = (offset + h.val) / neighbors.reduce(add, 0)
 
           # Draw heatmap
           @heatmap = new google.maps.visualization.HeatmapLayer
             data: heats
             radius: @heatmapPixelRadius
-            dissipating:true
+            dissipating: true
           @heatmap.setMap(@gmap)
 
         # Set marker visibility
@@ -520,9 +524,23 @@ $ ->
           @delayedUpdate()
 
         # Heatmap Radius Box
+        badNumberPopoverTimer = null
         $('#map-radius').change (e) =>
           newRadius = Number(e.target.value)
-          if isNaN(newRadius) then return $('#map-radius').errorFlash()
+          if isNaN(newRadius)
+            $(e.target).popover
+              content: "Please enter a valid number"
+              placement: "bottom"
+              trigger: "manual"
+            $(e.target).popover 'show'
+            if badNumberPopoverTimer?
+              clearTimeout badNumberPopoverTimer
+            badNumberPopoverTimer = setTimeout ->
+              $(e.target).popover 'destroy'
+            , 3000
+            return
+          else
+            $(e.target).popover 'destroy'
 
           # Guess new pixel radius
           @heatmapPixelRadius = Math.ceil(@heatmapPixelRadius * newRadius /
@@ -623,7 +641,7 @@ $ ->
 
         return arr.filter(filterFunc)
 
-    if "Map" in data.relVis
+    if 'Map' in data.relVis
       class CanvasProjectionOverlay extends google.maps.OverlayView
         constructor: ->
         onAdd: ->
@@ -632,6 +650,6 @@ $ ->
         projectPixels: (latlng) ->
           @getProjection().fromLatLngToContainerPixel(latlng)
 
-      globals.map = new Map "map-canvas"
+      globals.map = new Map 'map-canvas'
     else
-      globals.map = new DisabledVis "map-canvas"
+      globals.map = new DisabledVis 'map-canvas'

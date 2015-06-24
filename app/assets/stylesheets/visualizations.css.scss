@@ -55,6 +55,13 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     margin: 1px;
   }
 
+  .group-header {
+    border-bottom: thin solid #777;
+    color: #222;
+    margin: 5px;
+    padding: 5px;
+  }
+
   .hamburger-menu {
     transition: background-color .5s ease;
     height: 32px;
@@ -301,7 +308,6 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
 
   .vis-canvas {
     height: inherit;
-    width: inherit;
     overflow: hidden; // because something inside vis-canvas
                       // is overflowing on every non-map vis
   }

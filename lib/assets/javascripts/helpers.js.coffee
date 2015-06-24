@@ -1,14 +1,6 @@
 $ ->
   window.helpers = {}
 
-  $.fn.errorFlash = ->
-    @.addClass('flash')
-    @.css('background-color', 'red')
-    flash = () => @.css('background-color', '')
-    end   = () => @.removeClass('flash')
-    setTimeout(flash, 400)
-    setTimeout(end, 800)
-
   $.fn.highlight = (aniLen) ->
     @.css('background-color', '#FFFF99')
     @.addClass('flash')

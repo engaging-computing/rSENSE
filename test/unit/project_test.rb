@@ -83,4 +83,14 @@ class ProjectTest < ActiveSupport::TestCase
   test 'project featured_media_id' do
     assert_nil projects(:one).featured_media_id, 'Expected project featured_media_id is not nil.'
   end
+
+  #-----------------------------------------------------------------------------
+  # Testing validation
+
+  test 'invalid media object id' do
+    old_media_id = @project.featured_media_id
+    @project.featured_media_id = -1
+    refute @project.valid?
+    @project.featured_media_id = old_media_id
+  end
 end

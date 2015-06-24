@@ -35,7 +35,7 @@ end
 
 # Jquery stuff
 gem 'better_datetimepicker', '~> 0.0.7', git: 'https://github.com/isenseDev/better-datetimepicker'
-gem 'better_colorpicker', '~> 0.0.3', git: 'https://github.com/isenseDev/better-colorpicker'
+gem 'better_colorpicker', '~> 0.1.0', git: 'https://github.com/isenseDev/better-colorpicker'
 gem 'jquery-rails'
 
 # To use ActiveModel has_secure_password
@@ -81,5 +81,8 @@ gem 'roo'
 # GitHub Bug Reporting and Testing
 gem 'browser'
 gem 'useragent', '~> 0.10.0'
+
+# Upload Zip Files
+gem 'rubyzip', '>= 1.0.0'
 
 gem 'recaptcha', git: 'https://github.com/ambethia/recaptcha'
