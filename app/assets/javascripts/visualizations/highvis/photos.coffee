@@ -43,7 +43,6 @@ $ ->
       update: ->
         # Clear the old canvas
         canvas = '#' + @canvas
-        console.log canvas
         $(canvas).html("")
 
         # load the Handlebars templates
