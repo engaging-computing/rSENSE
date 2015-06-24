@@ -304,22 +304,20 @@ $ ->
 
         # Bin Size Box
         badNumberPopoverTimer = null
-        $('#bin-size').change (e) =>
-          newBinSize = Number(e.target.value)
+        $('#set-bin-size-btn').click =>
+          $('#bin-size').popover('destroy')
+          newBinSize = Number($('#bin-size').val())
           if isNaN(newBinSize) or newBinSize <= 0
-            $(e.target).popover
-              content: "Please enter a valid number"
-              placement: "bottom"
-              trigger: "manual"
-            $(e.target).popover 'show'
-            if badNumberPopoverTimer?
-              clearTimeout badNumberPopoverTimer
+            $('#bin-size').popover
+              content: 'Please enter a valid number'
+              placement: 'bottom'
+              trigger: 'manual'
+            $('#bin-size').popover('show')
+            if badNumberPopoverTimer? then clearTimeout(badNumberPopoverTimer)
             badNumberPopoverTimer = setTimeout ->
-              $(e.target).popover 'destroy'
+              $('#bin-size').popover('destroy')
             , 3000
             return
-          else
-            $(e.target).popover 'destroy'
 
           if ((@globalmax - @globalmin) / newBinSize) < @MAX_NUM_BINS
             @configs.binSize = newBinSize

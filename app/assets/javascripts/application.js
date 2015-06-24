@@ -30,6 +30,7 @@
 //= require titlebar.js.coffee
 //= require bootstrap
 //= require bootstrap-switch
+//= require jstz/jstz-1.0.4.min.js
 //
 //  -- Handlebars --
 //= require handlebars

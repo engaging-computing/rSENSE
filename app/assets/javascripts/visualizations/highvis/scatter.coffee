@@ -325,10 +325,12 @@ $ ->
         # Disable/enable all of the saved regressions as necessary
         fs = globals.configs.fieldSelection
         for regr in @configs.savedRegressions
+          unless regr.groups? then continue
           groupsIntersect =
             (g in data.groupSelection for g in regr.groups).reduce(
               ((p, c) -> p and c), true)
 
+          unless regr.xAxis? and regr.yAxis? then continue
           if regr.xAxis is @configs.xAxis and groupsIntersect and
           fs.indexOf(regr.yAxis) isnt -1
             # Create the hypothesis function

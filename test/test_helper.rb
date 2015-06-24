@@ -70,6 +70,12 @@ class ActiveSupport::TestCase
     end
     true
   end
+
+  def assert_similar_arrays(a, b)
+    c = a - b
+    d = b - a
+    assert c.length + d.length == 0, "Arrays\n\n#{a}\n\nand\n\n#{b}\n\ndo not have the same contents: #{c + d}"
+  end
 end
 
 class ActionDispatch::IntegrationTest
@@ -80,17 +86,17 @@ end
 module CapyHelper
   def login(email, pass)
     visit '/'
-    find('.navbar').click_on('Login')
+    find(:css, '.navbar').click_on('Login')
     fill_in 'Email', with: email
     fill_in 'Password', with: pass
-    find('.mainContent').click_on('Login')
+    find(:css, '.mainContent').click_on('Login')
 
     assert page.has_content?('Logout'), 'Successfully logged in.'
   end
 
   def logout
     visit '/'
-    find('.navbar').click_on('Logout')
+    find(:css, '.navbar').click_on('Logout')
   end
 
   def finish
@@ -130,10 +136,10 @@ module CapyHelper
       $('#content-area').code("#{text}");
     SCRIPT
   end
-end
 
-def assert_similar_arrays(a, b)
-  c = a - b
-  d = b - a
-  assert c.length + d.length == 0, "Arrays\n\n#{a}\n\nand\n\n#{b}\n\ndo not have the same contents: #{c + d}"
+  def wait_for_ajax
+    Timeout.timeout(Capybara.default_wait_time) do
+      loop until page.evaluate_script('jQuery.active').zero?
+    end
+  end
 end

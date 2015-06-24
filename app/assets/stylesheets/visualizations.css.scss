@@ -59,6 +59,13 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     margin: 1px;
   }
 
+  .group-header {
+    border-bottom: thin solid #777;
+    color: #222;
+    margin: 5px;
+    padding: 5px;
+  }
+
   .hamburger-menu {
     transition: background-color .5s ease;
     height: 32px;
