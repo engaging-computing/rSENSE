@@ -7,7 +7,6 @@ class SlickgridTest < ActionDispatch::IntegrationTest
 
   current_month = Date.today.month.to_s.rjust(2, '0')
   dst = if Time.now.dst? then - 1 else 0 end
-  puts dst
   compare_data = [
     { '100' => 'D', '101' => 'A', '102' => '4', '103' => "1991/#{current_month}/01 0#{6 + dst}:01:01", '104' => '3', '105' => '3' },
     { '100' => 'E', '101' => 'B', '102' => '5', '103' => "1992/#{current_month}/02 0#{7 + dst}:02:02", '104' => '4', '105' => '4' },
