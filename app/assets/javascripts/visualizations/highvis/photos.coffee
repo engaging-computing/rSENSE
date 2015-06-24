@@ -43,6 +43,7 @@ $ ->
       update: ->
         # Clear the old canvas
         canvas = '#' + @canvas
+        console.log canvas
         $(canvas).html("")
 
         # load the Handlebars templates
@@ -54,7 +55,7 @@ $ ->
         groupedMedia = {}
         groupedMedia['all'] = []
         for _, dset of data.metadata
-          label = "#{dset.name}(#{dset.dataset_id})"
+          label = "#{dset.name.toLowerCase()}(#{dset.dataset_id})"
           groupedMedia[label] = []
           for pic in dset.photos
             groupedMedia[label].push pic
@@ -70,7 +71,7 @@ $ ->
         # create the groups to put the photos in
         id = 0
         for group in selectedGroups
-          if groupedMedia[group[1]].length == 0
+          if !groupedMedia[group[1]]? or groupedMedia[group[1]].length == 0
             continue
 
           groupContext =
