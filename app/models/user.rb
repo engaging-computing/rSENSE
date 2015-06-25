@@ -4,9 +4,8 @@ class User < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
 
   validates_uniqueness_of :email, case_sensitive: false
-  puts "\n\n\n\n\nname: " + "#{:name}"
   validates :name, length: { minimum: 4, maximum: 70 }, format: {
-    with: /\A[\p{Alpha}\p{Blank}\-\'\.\p[^\x00-\x7F]+]*\z/,
+    with: /\A[\p{Alpha}\p{Blank}\-\'\.[^\x00-\x7F]+]*\z/,
     message: 'can only contain letters, hyphens, single quotes, periods, and spaces.' }
 
   validates :email, format: { with: /\@.*\./ }, confirmation: true
