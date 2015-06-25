@@ -171,7 +171,7 @@ class VisualizationsController < ApplicationController
         format.json { render json: {}, status: :ok }
       else
         @visualization.errors[:base] << 'Permission denied' unless can_edit?(@visualization)
-        format.html { render action: 'show' }
+        format.html { render action: 'edit' }
         format.json do
           render json: @visualization.errors.full_messages,
           status: :unprocessable_entity
