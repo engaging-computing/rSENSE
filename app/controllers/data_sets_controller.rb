@@ -72,7 +72,7 @@ class DataSetsController < ApplicationController
       return
     end
 
-    if !session[:contributor_name].nil?
+    if session[:contributor_name]?
       @data_set.user_id = @project.user_id
       @data_set.contributor_name = session[:contributor_name]
     elsif @cur_user.nil?
