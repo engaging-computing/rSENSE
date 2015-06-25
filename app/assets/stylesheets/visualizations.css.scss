@@ -68,20 +68,20 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
 
   .hamburger-menu {
     transition: background-color .5s ease;
-    height: 32px;
-    width: 30px;
-    padding: 0 5px;
+    height: 46px;
+    width: 44px;
+    padding: 0 6px;
     margin: 0;
     background-color: white;
 
     .hamburger-bar {
       transition: background-color .5s ease;
       display: block;
-      height: 4px;
+      height: 6px;
       width: 100%;
       background-color: #555;
-      border-radius: 4px;
-      margin: 2px auto;
+      border-radius: 6px;
+      margin: 4px auto;
     }
   }
 
@@ -112,16 +112,6 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     margin-top: 10px;
     font-size: 90%;
     color: $hint;
-  }
-
-  .inline-left {
-    display: inline-block;
-    float: left;
-  }
-
-  .inline-right {
-    display: inline-block;
-    float: right;
   }
 
   .mainContent {
@@ -291,7 +281,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   }
 
   .subtitle {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   .tab-content {
@@ -345,19 +335,21 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
       }
 
       #vis-title-bar {
-        position: relative;
         width: 100%;
         font-size: 24px;
         padding: 10px;
-        overflow: hidden;
         white-space: nowrap;
+
+        #vis-title {
+          vertical-align: middle;
+        }
+
+        #vis-title-edit-btn {
+          float: right;
+        }
 
         .edit_visualization, .edit_data_set {
           display: none;
-        }
-
-        .inline-left {
-          max-width: 100%;
         }
 
         #title-and-menu {
@@ -374,7 +366,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
         overflow-y: auto;
 
         .vis-filter {
-          display: inline;
+          display: inline-block;
           margin: 3px;
           padding: 2px;
           background-color: $vis-bkg-mid;
@@ -535,6 +527,10 @@ body[data-page-name='visualizations/show'] .visualizations-controller {
 .embedded {
   .ui-accordion-header {
     padding-top: 10px;
+  }
+
+  .bootstrap-switch {
+    height: 36px;
   }
 }
 

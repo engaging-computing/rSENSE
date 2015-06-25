@@ -88,9 +88,8 @@ $ ->
       Build up the chart options specific to scatter chart
       The only complex thing here is the html-formatted tooltip.
       ###
-      buildOptions: (animate = true)->
+      buildOptions: (animate = true) ->
         super(animate)
-        console.log animate
 
         self = this
 
