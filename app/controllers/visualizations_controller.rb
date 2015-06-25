@@ -170,9 +170,12 @@ class VisualizationsController < ApplicationController
         format.html { redirect_to @visualization, notice: 'Visualization was successfully updated.' }
         format.json { render json: {}, status: :ok }
       else
-        @visualization.errors[:base] << 'Permission denied' unless can_edit(@visualization)
-        format.html { render action: 'edit' }
-        format.json { render json: @visualization.errors.full_messages, status: :unprocessable_entity }
+        @visualization.errors[:base] << 'Permission denied' unless can_edit?(@visualization)
+        format.html { render action: 'show' }
+        format.json do
+          render json: @visualization.errors.full_messages,
+          status: :unprocessable_entity
+        end
       end
     end
   end
