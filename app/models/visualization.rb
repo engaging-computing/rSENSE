@@ -17,6 +17,7 @@ class Visualization < ActiveRecord::Base
   validates_presence_of :globals
 
   validates :title, length: { maximum: 128 }
+  validate :media_object_exists
 
   alias_attribute :name, :title
 
@@ -36,6 +37,12 @@ class Visualization < ActiveRecord::Base
       mo.tn_src
     else
       nil
+    end
+  end
+
+  def media_object_exists
+    if !featured_media_id.nil? and MediaObject.where(id: featured_media_id).blank?
+      errors.add :base, 'That media object no longer exists.'
     end
   end
 
