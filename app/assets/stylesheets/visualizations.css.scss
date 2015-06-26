@@ -366,11 +366,12 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
         overflow-y: auto;
 
         .vis-filter {
+          background-color: white;
+          border: thin solid $vis-bkg-mid;
+          border-radius: 5px;
           display: inline-block;
           margin: 3px;
-          padding: 2px;
-          background-color: $vis-bkg-mid;
-          border-radius: 18px;
+          padding: 2px 5px;
           whitespace: nowrap;
         }
 

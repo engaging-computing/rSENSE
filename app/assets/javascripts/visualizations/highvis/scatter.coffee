@@ -774,16 +774,20 @@ $ ->
 
         # Check all y axes
         for yAxis in globals.configs.fieldSelection
-          filters.push
-            vis: vis
-            op:  'gt'
-            field: yAxis
-            value: @configs.yBounds.min
-          ,
-            vis: vis
-            op:  'lt'
-            field: yAxis
-            value: @configs.yBounds.max
+          if yAxis is @configs.xAxis
+            filters[0].value = Math.max(filters[0].value, @configs.yBounds.min)
+            filters[1].value = Math.min(filters[1].value, @configs.yBounds.max)
+          else
+            filters.push
+              vis: vis
+              op:  'gt'
+              field: yAxis
+              value: @configs.yBounds.min
+            ,
+              vis: vis
+              op:  'lt'
+              field: yAxis
+              value: @configs.yBounds.max
 
         for filter in filters
           globals.configs.activeFilters.push(filter)
