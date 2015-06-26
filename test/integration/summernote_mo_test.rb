@@ -7,7 +7,9 @@ class SummernoteMoTest < ActionDispatch::IntegrationTest
 
   setup do
     Capybara.current_driver = :webkit
+    Capybara.default_wait_time = 2
   end
+
   teardown do
     finish
   end
@@ -16,14 +18,14 @@ class SummernoteMoTest < ActionDispatch::IntegrationTest
     login('kcarcia@cs.uml.edu', '12345')
     visit '/'
     click_on 'Projects'
-    find('#project_title').set('Upload Images SNMO')
+    find(:css, '#project_title').set('Upload Images SNMO')
     click_on 'Create Project'
     assert page.has_content? 'Fields must be set up to contribute data'
     assert page.has_no_css? '.mo_image'
 
-    find('#add-content-image').click
-    find('.fa-code').find(:xpath, '..').click
-    find('.note-codable').set('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" </img>')
+    find(:css, '#add-content-image').click
+    find(:css, '.fa-code').find(:xpath, '..').click
+    find(:css, '.note-codable').set('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" </img>')
     click_on 'Save'
     assert page.has_css? '.mo_image'
     click_on 'Logout'
@@ -34,12 +36,12 @@ class SummernoteMoTest < ActionDispatch::IntegrationTest
   test 'tutorial_image_upload' do
     login 'nixon@whitehouse.gov', '12345'
     visit '/tutorials'
-    find('#tutorial_title').set('Test Tutorial SNMO')
+    find(:css, '#tutorial_title').set('Test Tutorial SNMO')
     click_on 'Create Tutorial'
     assert page.has_no_css? '.mo_image'
-    find('#add-content-image').click
-    find('.fa-code').find(:xpath, '..').click
-    find('.note-codable').set('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" </img>')
+    find(:css, '#add-content-image').click
+    find(:css, '.fa-code').find(:xpath, '..').click
+    find(:css, '.note-codable').set('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" </img>')
     click_on 'Save'
     assert page.has_css? '.mo_image'
     click_on 'Logout'
@@ -47,26 +49,26 @@ class SummernoteMoTest < ActionDispatch::IntegrationTest
 
   test 'user_image_upload' do
     login 'nixon@whitehouse.gov', '12345'
-    find('.navbar-right > #username').click
+    find(:css, '.navbar-right > #username').click
     assert page.has_css? '.gravatar_img', 'Not on profile page.'
-    find('#add-content-image').click
-    find('.fa-code').find(:xpath, '..').click
-    find('.note-codable').set('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" </img>')
+    find(:css, '#add-content-image').click
+    find(:css, '.fa-code').find(:xpath, '..').click
+    find(:css, '.note-codable').set('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" </img>')
     click_on 'Save'
-    assert !(page.find('#content-viewer').find('img')[:src].include? 'data:image')
+    assert !(page.find(:css, '#content-viewer').find(:css, 'img')[:src].include? 'data:image')
     click_on 'Logout'
   end
 
   test 'news_image_upload' do
     login 'nixon@whitehouse.gov', '12345'
     visit '/news'
-    page.find('#news_title').set('Test News Article SNMO')
+    page.find(:css, '#news_title').set('Test News Article SNMO')
     click_on 'Add News Item'
     assert page.has_content? 'News entry was successfully created.'
     assert page.has_no_css? '.mo_image'
-    find('#add-content-image').click
-    find('.fa-code').find(:xpath, '..').click
-    find('.note-codable').set('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" </img>')
+    find(:css, '#add-content-image').click
+    find(:css, '.fa-code').find(:xpath, '..').click
+    find(:css, '.note-codable').set('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" </img>')
     click_on 'Save'
     assert page.has_css? '.mo_image'
     click_on 'Logout'

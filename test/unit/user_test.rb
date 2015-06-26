@@ -47,4 +47,14 @@ class UserTest < ActiveSupport::TestCase
   test 'admin' do
     assert_equal false, users(:kate).admin
   end
+
+  test 'to_hash' do
+    h = users(:nixon).to_hash
+    keys = ['dataSets', 'mediaObjects', 'projects', 'tutorials', 'visualizations']
+
+    keys.each do |x|
+      assert !h[x.to_sym].nil?
+      assert !h[x.to_sym].empty?
+    end
+  end
 end

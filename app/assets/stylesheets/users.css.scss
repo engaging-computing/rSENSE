@@ -11,4 +11,14 @@
 	#searchUserRow {
 		margin-top: 12px;
 	}
+
+  .col-header {
+    cursor: pointer;
+    .col-arrows {
+      float: right;
+    }
+    .col-name {
+      float: left;
+    }
+  }
 }

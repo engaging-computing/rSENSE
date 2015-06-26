@@ -5,12 +5,15 @@ class Project < ActiveRecord::Base
   include ActionView::Helpers::DateHelper
   include ActionView::Helpers::SanitizeHelper
 
+  before_validation :sanitize_project
+
   validates_presence_of :title
   validates_presence_of :user_id
-
   validates :title, length: { maximum: 128 }
-  before_validation :sanitize_project
+  validate :media_object_exists
+
   before_save :summernote_media_objects
+
   has_many :fields
   has_many :data_sets, -> { order('created_at desc') }
   has_many :media_objects
@@ -34,6 +37,12 @@ class Project < ActiveRecord::Base
     end
 
     self.title = sanitize title, tags: %w()
+  end
+
+  def media_object_exists
+    if !featured_media_id.nil? and MediaObject.where(id: featured_media_id).blank?
+      errors.add :base, 'That media object no longer exists.'
+    end
   end
 
   def self.search(search, include_hidden = false)
