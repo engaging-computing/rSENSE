@@ -66,7 +66,7 @@ $ ->
                   str  = "<div style='width:100%;text-align:center;color:#{@series.color};'>"
                   str += "#{@series.name.group}</div><br>"
                   str += "<table>"
-                  str += "<tr><td>Group by: </td>" + "\t" + "<td>#{group_by} </td> </tr>"
+                  str += "<tr><td>Group by: </td>" + "\t" + "<td>#{groupBy} </td> </tr>"
                   for field, fieldIndex in data.fields when @point.datapoint[fieldIndex] isnt null
                     dat = if (Number field.typeID) is data.types.TIME
                       (globals.dateFormatter @point.datapoint[fieldIndex])
