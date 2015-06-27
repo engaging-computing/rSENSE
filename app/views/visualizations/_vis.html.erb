@@ -57,19 +57,19 @@
         <% if obj %>
           <%= title_and_edit_menu(obj) %>
         <% else %>
-          Showing Multiple Data Sets
+          Showing <%= @project.data_sets.size %> Data Sets
         <% end %>
         <div class="inline-block subtitle" style="font-style: italic">
-          <span>of&nbsp;</span>
+          <span>from&nbsp;</span>
           <i class='fa fa-folder-open'></i>
-          <%= link_to project.title.html_safe, project %>
+          <%= link_to project.title.html_safe, project, class: "link" %>
           by <i class='fa fa-user'></i>
           <%= link_to "#{project.owner.name}", owner, class: "link" %>
         </div>
       </div>
       <div id="vis-proj-right"
            class="subtitle inline-right hidden-xs hidden-sm">
-        <% if can_edit?(obj) %>
+        <% if obj && can_edit?(obj) %>
           <div class="edit_menu inline-block" data-field="title"
                data-value="<%= obj.title.html_safe %>">
             <div class="btn-group">

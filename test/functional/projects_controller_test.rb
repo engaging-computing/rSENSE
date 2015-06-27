@@ -11,7 +11,6 @@ class ProjectsControllerTest < ActionController::TestCase
     @delete_me = projects(:delete_me)
     @delete_me_two = projects(:delete_me2)
     @delete_me_three = projects(:delete_me3)
-    @contrib_key_test = projects(:contributor_key_project)
     @key = contrib_keys(:contributor_key_test)
     @media_test = projects(:media_test)
     @dessert = projects(:dessert)
@@ -41,8 +40,6 @@ class ProjectsControllerTest < ActionController::TestCase
 
     @pp = Project.find(@project_one.id)
     assert @pp.views == views_before + 1, 'View count incremented'
-    get :show, id: @contrib_key_test
-    assert_response :success
   end
 
   test 'should show project (json)' do
@@ -201,6 +198,7 @@ class ProjectsControllerTest < ActionController::TestCase
     assert_response :unprocessable_entity
     assert Project.find(@project_three).lock == false, 'Crunch should not have locked the project'
   end
+
   test 'should edit fields' do
     put :edit_fields, { id: @project_one }, user_id: @kate
     assert_response :success

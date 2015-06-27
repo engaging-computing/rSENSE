@@ -18,6 +18,8 @@
   form.appendTo args.container
   form.focus()
 
+  getInput: ->
+    form
   destroy: ->
     form.remove()
   focus: ->
@@ -28,7 +30,7 @@
     form.val()
   loadValue: (item) ->
     loadValue = item[args.column.field] || ''
-    if args.column.restrictions == ''
+    if args.column.restrictions.length == 0
       form.val loadValue
     else if loadValue in args.column.restrictions
       form.val loadValue

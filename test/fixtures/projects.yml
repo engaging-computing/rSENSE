@@ -12,6 +12,7 @@ one:
 
 two:
   title: Breaking Things
+  created_at: <%= 7.day.from_now.to_s(:db) %>
   user: kate
   content:
   cloned_from:
@@ -22,6 +23,7 @@ two:
 
 three:
   title: Empty Project
+  created_at: <%= 7.day.ago.to_s(:db) %>
   user: kate
   content:
   cloned_from:
@@ -89,7 +91,15 @@ slickgrid_oops:
   title: slickgrid_oops
   user: nixon
 
+empty_project:
+  title: empty_project
+  user: kate
+
 description_test:
   title: Goat
   user: kate
   content: Description Test
+
+never_visited:
+  title: Never Visited
+  user: kate

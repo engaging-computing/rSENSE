@@ -48,9 +48,11 @@ $ ->
 
         @configs.selectName = data.fields[globals.configs.groupById].fieldName
 
-        displayData = for gid, val of @getGroupedData(@configs.displayField)
+        groupedData = @getGroupedData(@configs.displayField)
+        displayData = for gid, val of groupedData
           ret =
-            y: val
+            y: if val < 0 then 0 else val            # for calculations
+            val: val                                 # for display
             name: data.groups[gid] or data.noField()
 
         displayColors = []
@@ -85,7 +87,7 @@ $ ->
               str += "<table>"
               str += "<tr><td>#{data.fields[self.configs.displayField].fieldName}
                  (#{self.analysisTypeNames[self.configs.analysisType]}): "
-              str += "</td><td><strong>#{@y} \
+              str += "</td><td><strong>#{@point.val} \
               #{fieldUnit(data.fields[self.configs.displayField], false)}</strong></td></tr>"
               str += "</table>"
             useHTML: true
@@ -103,7 +105,7 @@ $ ->
         @drawYAxisControls(globals.configs.fieldSelection,
           data.normalFields.slice(1), true, 'Fields', @configs.displayField,
           @yAxisRadioHandler)
-        @drawToolControls()
+        @drawToolControls(false, false, [@ANALYSISTYPE_MEAN_ERROR])
         @drawSaveControls()
 
     if "Pie" in data.relVis

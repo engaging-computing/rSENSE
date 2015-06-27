@@ -92,13 +92,12 @@ $ ->
       arr
 
     ###
-    Tests to see if a and b are within thresh%
+    Tests to see if a and b are within thresh
     of the smaller value.
     ###
     window.fpEq = (a, b, thresh = 0.0001) ->
-      diff = Math.abs (a - b)
-      e = (Math.abs (Math.min a, b)) * thresh
-
+      diff = Math.abs(a - b)
+      e = Math.abs(Math.min(a, b)) * thresh
       return diff < e
 
     ###
@@ -127,16 +126,15 @@ $ ->
         str
 
       str = ""
-      str += dat.getUTCDate()              + " "
-      str += monthNames[dat.getUTCMonth()] + " "
-      str += dat.getUTCFullYear()          + " "
+      str += dat.getDate()              + " "
+      str += monthNames[dat.getMonth()] + " "
+      str += dat.getFullYear()          + " "
 
-
-
-      str += (minDigits 2, dat.getUTCHours())   + ":"
-      str += (minDigits 2, dat.getUTCMinutes()) + ":"
-      str += (minDigits 2, dat.getUTCSeconds()) + "."
-      str += (minDigits 3, dat.getUTCMilliseconds()) + " GMT"
+      str += (minDigits 2, dat.getHours())   + ":"
+      str += (minDigits 2, dat.getMinutes()) + ":"
+      str += (minDigits 2, dat.getSeconds()) + "."
+      str += (minDigits 3, dat.getMilliseconds()) + " "
+      str += jstz.determine().name()
 
     ###
     Date formatter for geological scale dates

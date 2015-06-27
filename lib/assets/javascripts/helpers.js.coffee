@@ -1,13 +1,13 @@
 $ ->
   window.helpers = {}
 
-  $.fn.errorFlash = ->
-    @.addClass('error-flash')
-    @.css('background-color', 'red')
+  $.fn.highlight = (aniLen) ->
+    @.css('background-color', '#FFFF99')
+    @.addClass('flash')
     flash = () => @.css('background-color', '')
-    end   = () => @.removeClass('error-flash')
-    setTimeout(flash, 400)
-    setTimeout(end, 800)
+    end   = () => @.removeClass('flash')
+    setTimeout(flash, aniLen)
+    setTimeout(end, aniLen + 500)
 
   $.fn.hide_row = (callback = null) ->
     prop =

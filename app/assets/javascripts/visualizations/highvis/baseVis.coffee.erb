@@ -36,17 +36,18 @@ $ ->
       constructor: (@canvas) ->
         @configs ?= {}
 
-      ANALYSISTYPE_TOTAL:     0
-      ANALYSISTYPE_MAX:       1
-      ANALYSISTYPE_MIN:       2
-      ANALYSISTYPE_MEAN:      3
-      ANALYSISTYPE_MEDIAN:    4
-      ANALYSISTYPE_COUNT:     5
+      ANALYSISTYPE_TOTAL:      0
+      ANALYSISTYPE_MAX:        1
+      ANALYSISTYPE_MIN:        2
+      ANALYSISTYPE_MEAN:       3
+      ANALYSISTYPE_MEAN_ERROR: 4
+      ANALYSISTYPE_MEDIAN:     5
+      ANALYSISTYPE_COUNT:      6
 
-      SORT_DEFAULT:          -1
+      SORT_DEFAULT:           -1
 
-      analysisTypeNames: ["Total", "Maximum", "Mininum", "Mean (Average)",
-        "Median", "Row Count"]
+      analysisTypeNames: ['Total', 'Maximum', 'Mininum', 'Mean (Average)',
+        'Mean with Error', 'Median', 'Row Count']
 
       ###
       Start sequence used by runtime
@@ -104,14 +105,20 @@ $ ->
       ###
       getGroupedData: (field) ->
         gData = {}
-        for name, i in data.groups when i in data.groupSelection
+
+        analysisMethod =
           switch @configs.analysisType
-            when @ANALYSISTYPE_TOTAL  then gData[i] = (data.getTotal  field, i)
-            when @ANALYSISTYPE_MAX    then gData[i] = (data.getMax    field, i)
-            when @ANALYSISTYPE_MIN    then gData[i] = (data.getMin    field, i)
-            when @ANALYSISTYPE_MEAN   then gData[i] = (data.getMean   field, i)
-            when @ANALYSISTYPE_MEDIAN then gData[i] = (data.getMedian field, i)
-            when @ANALYSISTYPE_COUNT  then gData[i] = (data.getCount  field, i)
+            when @ANALYSISTYPE_TOTAL      then data.getTotal
+            when @ANALYSISTYPE_MAX        then data.getMax
+            when @ANALYSISTYPE_MIN        then data.getMin
+            when @ANALYSISTYPE_MEAN       then data.getMean
+            when @ANALYSISTYPE_MEAN_ERROR then data.getMean
+            when @ANALYSISTYPE_MEDIAN     then data.getMedian
+            when @ANALYSISTYPE_COUNT      then data.getCount
+
+        for name, i in data.groups when i in data.groupSelection
+          gData[i] = analysisMethod.call data, field, i
+
         gData
 
       ###
@@ -296,11 +303,12 @@ $ ->
 
         $('.color-picker').each (_, cpicker) =>
           cid = $(cpicker).data('color-id')
-          $(cpicker).colorpicker 'create',
+          a = $(cpicker).colorpicker
             outputType: 'hex'
             onOpen: () ->
               $("#label-color-#{cid}").parent().parent().css('background-color',
                 '#EEE')
+              globals.getColor(cid)
             onClose: () ->
               $("#label-color-#{cid}").parent().parent().css('background-color',
                 '#FFF')
@@ -309,7 +317,19 @@ $ ->
               $("#label-color-#{cid}").css 'color', color
               @delayedUpdate()
               setTimeout (() => @start()), 1
-          $(cpicker).colorpicker 'setcolor', globals.getColor(cid)
+            hPosition: (w, h) =>
+              button = $(cpicker).children('img')
+              buttonX = button.offset().left
+              buttonW = button.width()
+              buttonX - w + buttonW
+            vPosition: (w, h) =>
+              button = $(cpicker).children('img')
+              buttonY = button.offset().top
+              buttonH = button.height()
+              buttonY + buttonH
+
+          $(cpicker).click ->
+            a.open()
 
         $('#group-by').val(globals.configs.groupById)
         $('#group-by').change (e) =>
@@ -413,7 +433,7 @@ $ ->
       Draw tool controls (Analysis Type, Log Y Axis, etc.) for Pie Chart and
       Bar Charts
       ###
-      drawToolControls: (sortBy = false, logYAxis = false) ->
+      drawToolControls: (sortBy = false, logYAxis = false, analysisTypeExcludes = []) ->
         inctx = {}
 
         # Populate sort fields
@@ -429,14 +449,27 @@ $ ->
             logId: 'sort-by-' + @SORT_DEFAULT
             value: @SORT_DEFAULT
 
+        # Set up analysis types from the list of exclusions
+        analysisTypes = [
+          @ANALYSISTYPE_MEAN
+          @ANALYSISTYPE_MEAN_ERROR
+          @ANALYSISTYPE_MEDIAN
+          @ANALYSISTYPE_MAX
+          @ANALYSISTYPE_MIN
+          @ANALYSISTYPE_TOTAL
+          @ANALYSISTYPE_COUNT
+          ]
+        analysisTypes = analysisTypes.filter (x) ->
+          x not in analysisTypeExcludes
+
         # Analysis Types
         inctx.analysisTypes =
-          for name, i in @analysisTypeNames
+          for i in analysisTypes
             value: i
             id:    'analysis-type-' + i
             logId: 'analysis-type-' + i
             name:  'analysis-type'
-            label:  name
+            label:  @analysisTypeNames[i]
 
         # Logarithmic Y Axis
         if logYAxis

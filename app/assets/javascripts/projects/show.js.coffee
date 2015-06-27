@@ -25,8 +25,13 @@ IS.onReady "projects/show", ->
       dataType: 'json'
       success: (resp) ->
         root.find('.like_display').html resp['update']
-      error: (resp) =>
-        $(@).errorFlash()
+      error: (j, s, t) =>
+        errors = JSON.parse j.responseText
+        $(@).popover
+          content: errors[0]
+          placement: "bottom"
+          trigger: "manual"
+        $(@).popover 'show'
         if was_liked
           $(@).addClass('active')
         else

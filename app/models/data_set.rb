@@ -5,7 +5,7 @@ class DataSet < ActiveRecord::Base
 
   validates_presence_of :project_id, :user_id, :title
 
-  validates_uniqueness_of :title, scope: [:project_id]
+  validates_uniqueness_of :title, message: "\"%{value}\" is taken.", scope: [:project_id]
 
   validates :title, length: { maximum: 128 }
 
@@ -31,7 +31,11 @@ class DataSet < ActiveRecord::Base
   end
 
   def self.search(search)
-    res = if search
+    regex = /^[0-9]+$/
+    res = if search =~ regex
+            where(
+            '(data_sets.id = ?)', search.to_i)
+          elsif search
             where('title LIKE ?', "%#{search}%").order('created_at DESC')
           else
             all.order('created_at DESC')
