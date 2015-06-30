@@ -33,6 +33,7 @@
 //= require angular-animate
 //= require angular-aria
 //= require angular-material.min
+//= require jstz/jstz-1.0.4.min.js
 //
 //  -- Handlebars --
 //= require handlebars

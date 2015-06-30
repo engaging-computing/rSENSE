@@ -117,6 +117,7 @@ module DataSetsHelper
         name: "\"#{x[:name]}\"",
         field: "\"#{x[:id]}\"",
         editor: editor,
+        field_type: x[:field_type],
         restrictions: "#{x[:restrictions]}",
         sortable: 'false'
       }

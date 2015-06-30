@@ -174,7 +174,7 @@ class ProjectsController < ApplicationController
         format.json { render json: {}, status: :ok }
       else
         @project.errors[:base] << 'Permission denied' unless can_edit?(@project)
-        format.html { render action: 'edit' }
+        format.html { render action: 'show' }
         format.json do
           render json: @project.errors.full_messages,
           status: :unprocessable_entity
@@ -209,6 +209,11 @@ class ProjectsController < ApplicationController
 
     @project.media_objects.each do |m|
       m.destroy
+    end
+
+    Project.where('cloned_from = ?', @project.id).each do |clone|
+      clone.cloned_from = nil
+      clone.save!
     end
 
     @project.destroy

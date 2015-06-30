@@ -7,7 +7,7 @@ class EmbeddedVisTest < ActionDispatch::IntegrationTest
 
   setup do
     Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 15
+    Capybara.default_wait_time = 2
 
     @project_id = projects(:dessert).id
     @dataset_id = data_sets(:thanksgiving).id

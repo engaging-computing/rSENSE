@@ -8,6 +8,7 @@ one:
   data_set: one
   user: kate
   store_key: aaa
+  news_id: 2
 
 two:
   project: one
@@ -33,3 +34,35 @@ mo_test:
   file: MyString
   user: nixon
   store_key: ddd
+
+helper_image:
+  project: never_visited
+  media_type: image
+  name: some_image
+  file: some_image
+  user: nixon
+  store_key: eee
+
+helper_text:
+  project: never_visited
+  media_type: text
+  name: some_text
+  file: some_text
+  user: nixon
+  store_key: fff
+
+helper_pdf:
+  project: never_visited
+  media_type: pdf
+  name: some_pdf
+  file: some_pdf
+  user: nixon
+  store_key: ggg
+
+helper_other:
+  project: never_visited
+  media_type: dogpark
+  name: some_other
+  file: some_other
+  user: nixon
+  store_key: hhh

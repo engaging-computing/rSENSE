@@ -5,7 +5,7 @@ class TutorialsTest < ActionDispatch::IntegrationTest
 
   setup do
     Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 15
+    Capybara.default_wait_time = 2
   end
 
   teardown do
