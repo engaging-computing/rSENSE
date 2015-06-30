@@ -29,6 +29,10 @@
 //= require jquery.qrcode.min.js
 //= require titlebar.js.coffee
 //= require bootstrap
+//= require angular
+//= require angular-animate
+//= require angular-aria
+//= require angular-material.min
 //
 //  -- Handlebars --
 //= require handlebars

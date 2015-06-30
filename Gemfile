@@ -86,3 +86,8 @@ gem 'useragent', '~> 0.10.0'
 gem 'rubyzip', '>= 1.0.0'
 
 gem 'recaptcha', git: 'https://github.com/ambethia/recaptcha'
+
+# Material Design
+gem 'angular-gem', '~> 1.3.8'
+gem 'rails-angular-material'
+
