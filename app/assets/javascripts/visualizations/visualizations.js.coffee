@@ -57,7 +57,7 @@ $ ->
       visHeaderHeight = $('#vis-title-bar').outerHeight() +
         $('#vis-tab-list').outerHeight()
       controlOpac = $('#vis-ctrls').css 'opacity'
-      controlSize = 320
+      controlSize = 290
       controlOpac = 1.0
 
       if (init and globals.options.startCollapsed?) or
@@ -84,9 +84,7 @@ $ ->
         aniLength, 'linear')
 
       # New widths should take into account visibility of tools
-      nWidth =
-        if globals.configs.ctrlsOpen then visWrapperWidth - controlSize
-        else visWrapperWidth
+      nWidth = visWrapperWidth
       $('#vis-container').animate({width: nWidth}, aniLength, 'linear')
       globals.curVis.resize(nWidth, newHeight, aniLength)
 

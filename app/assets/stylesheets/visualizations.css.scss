@@ -521,3 +521,16 @@ body[data-page-name='visualizations/show'] .visualizations-controller {
     margin-bottom: 12px;
   }
 }
+
+md-sidenav, 
+md-sidenav.md-locked-open, 
+md-sidenav.md-closed.md-locked-open-add-active {
+    min-width: 320px !important;
+    width: 320px !important;
+    max-width: 320px !important;
+    margin-top: 55px;
+} 
+
+md-sidenav.md-locked-open {
+  margin-top: 0px;
+}
