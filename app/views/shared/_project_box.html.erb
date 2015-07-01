@@ -1,6 +1,6 @@
 <% has_img = @box_project.featured_media_id != nil %>
 <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
-  <div class='item item-block
+  <md-card class='item item-block
     <%= (defined? @box_project_front_page) ? "front_page_item" : "" %>'>
    
     <% if has_img %>
@@ -18,23 +18,24 @@
       </a>
     <% end %>
     
- 
+
     <div class="item-desc">
-        <div class="item-title word-wrap"> 
-          <% if has_img %>
-            <%= link_to truncate(@box_project.name.html_safe, length: 40),
-                      @box_project %>
-            <% if @box_project.featured and !(defined? @box_project_front_page) %>
-              <span> (featured) </span>
-            <% end %>
+      <div class="item-title word-wrap"> 
+        <% if has_img %>
+          <%= link_to truncate(@box_project.name.html_safe, length: 40),
+                    @box_project %>
+          <% if @box_project.featured and !(defined? @box_project_front_page) %>
+            <span> (featured) </span>
           <% end %>
-        </div>
+        <% end %>
+      </div>
       <strong>Creator: </strong> 
       <a href="<%= user_url(@box_project.owner) %>">
          <%= @box_project.owner.name %> </a><br/>
        <%= @box_project.created_at.strftime("%B %d, %Y") %>
       <br/>
     </div>
+    
     <div class="item-badges">
       <div>
         <span class="badge" title="Data Sets">
@@ -54,5 +55,6 @@
         </span>
       </div>
     </div>
-  </div>
+  
+  </md-card>
 </div>
