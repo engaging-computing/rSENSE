@@ -42,7 +42,7 @@ $ ->
     CoffeeScript version of runtime.
     ###
     # Toggle control panel
-    resizeVis = (toggleControls = true, aniLength = 600, init = false) ->
+    resizeVis = (aniLength = 600) ->
       newHeight = $(window).height()
       embed = globals.options? and globals.options.isEmbed?
       presentation = globals.options and globals.options.presentation?
@@ -52,23 +52,13 @@ $ ->
 
       visWrapperWidth =
         if embed then window.innerWidth or window.outerWidth
-        else $('#vis-wrapper').innerWidth()
+        else $('#vis-wrapper').width()
       visWrapperHeight = $('#vis-wrapper').outerHeight()
       visHeaderHeight = $('#vis-title-bar').outerHeight() +
         $('#vis-tab-list').outerHeight()
       controlOpac = $('#vis-ctrls').css 'opacity'
       controlSize = 290
       controlOpac = 1.0
-
-      if (init and globals.options.startCollapsed?) or
-      $('#vis-ctrl-container').is(':hidden')
-        globals.configs.ctrlsOpen = false
-
-      unless globals.configs.ctrlsOpen
-        controlSize = 0
-        controlOpac = 0.0
-
-      $('#ctrls-menu-btn').toggleClass('down', globals.configs.ctrlsOpen)
 
       # Adjust heights
       $('#vis-container').height(visWrapperHeight)
@@ -85,12 +75,11 @@ $ ->
 
       # New widths should take into account visibility of tools
       nWidth = visWrapperWidth
-      $('#vis-container').animate({width: nWidth}, aniLength, 'linear')
       globals.curVis.resize(nWidth, newHeight, aniLength)
 
     # Resize vis on page resize
     $(window).resize () ->
-      resizeVis(false, 0)
+      resizeVis(0)
 
     ### Hide all vis canvases to start ###
     $(can).hide() for can in ['#map-canvas', '#timeline-canvas',
@@ -161,7 +150,7 @@ $ ->
     $("#vis-tab-list a[href='##{ccanvas}']").tab('show')
 
     # Initialize View
-    resizeVis(false, 0, true)
+    resizeVis(0)
 
     ### Change vis click handler ###
     $('#vis-tab-list a').click (e) ->
@@ -186,11 +175,8 @@ $ ->
 
       oldVis.end() if oldVis?
       globals.curVis.start()
-      resizeVis(false, 0, true)
+      resizeVis(0)
 
-    $('#ctrls-menu-btn').click ->
-      globals.configs.ctrlsOpen = !globals.configs.ctrlsOpen
-      resizeVis()
 
     # Deal with full screen
     $('#fullscreen-vis').click (e) ->
