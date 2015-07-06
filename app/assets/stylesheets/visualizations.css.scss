@@ -369,118 +369,106 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
         }
       }
     }
+  }
 
-    #vis-ctrl-container {
-      position: relative;
+  // this is where all the div controls get added
+  md-sidenav {
+
+    // puts spacing between some boostrap buttons
+    .form-control { // this styles bootstrap stuff and IS VERY BAD
+      margin-bottom: 5px;
+    }
+
+    .full-width {
+      width: 100%;
+    }
+
+    .save-btn {
       display: inline-block;
-      float: left;
-      background-color: $vis-bkg-dark;
-      width: 320px;
-      height: 100%;
+      width: 80%;
+      margin: 10px auto;
+    }
 
-      // this is where all the div controls get added
-      #vis-ctrls {
-        height: 100%;
-        overflow-x: hidden;
-        overflow-y: auto;
-        position: relative;
-        display: inline-block;
-        float: left;
+    // any input button inside this class isn't lined up with the
+    // text to its right - this fixes that
+    .vis-ctrl-body {
+      display: none;
+      font-size: 14px;
+      width: 100%;
+      padding: 5px 20px;
 
-        // puts spacing between some boostrap buttons
-        .form-control { // this styles bootstrap stuff and IS VERY BAD
-          margin-bottom: 5px;
+      .centered {
+        text-align: center;
+      }
+
+      .checkbox, .radio {
+        text-align: left;
+        margin: 1px 0;
+
+        input {
+          margin-top: 2px;
+          margin-left: 0;
         }
-
-        .full-width {
-          width: 100%;
+        label {
+          font-weight: normal;
         }
-
-        .save-btn {
-          display: inline-block;
-          width: 80%;
-          margin: 10px auto;
+        .color-picker {
+          float:right;
         }
+      }
 
-        // any input button inside this class isn't lined up with the
-        // text to its right - this fixes that
-        .vis-ctrl-body {
-          display: none;
-          font-size: 14px;
-          width: 100%;
-          padding: 5px 20px;
-          background-color: $vis-bkg-light;
+      .name {
+        width: 90%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
 
-          .centered {
-            text-align: center;
-          }
+      .vis-ctrl-subblock {
+        margin-bottom: 5px;
 
-          .checkbox, .radio {
-            text-align: left;
-            margin: 1px 0;
-
-            input {
-              margin-top: 2px;
-              margin-left: 0;
-            }
-          }
-
-          .name {
-            width: 90%;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-          }
-
-          .vis-ctrl-subblock {
-            margin-bottom: 5px;
-
-            .cpickr-icon {
-              margin-left: 2px;
-              height: 20px;
-              width: 20px;
-            }
-          }
-
-          .vis-ctrl-subtitle {
-            text-align: left;
-          }
+        .cpickr-icon {
+          margin-left: 2px;
+          height: 20px;
+          width: 20px;
         }
+      }
 
-        .vis-ctrl-header {
-          font-size: 24px;
-          padding: 10px 20px;
-          margin: 0;
-          color: #337AB7;
-          white-space: nowrap;
-          overflow: hidden;
-          cursor: pointer;
-          height: 55px;
-          width: 100%;
-          background: $vis-bkg-mid;
-          border-bottom: $border;
-
-          .vis-ctrl-title {
-            float: left;
-          }
-
-          .vis-ctrl-icon {
-            float: right;
-          }
-        }
+      .vis-ctrl-subtitle {
+        text-align: left;
       }
     }
 
-    .vis-tab-icon {
-      height: 32px;
-      width: 32px;
+    .vis-ctrl-header {
+      font-size: 24px;
+      padding: 10px 20px;
+      margin: 0;
+      color: #337AB7;
+      white-space: nowrap;
+      overflow: hidden;
+      cursor: pointer;
+      height: 55px;
+      width: 100%;
+
+      .vis-ctrl-title {
+        float: left;
+      }
+
+      .vis-ctrl-icon {
+        float: right;
+      }
     }
+  }
+  
+  .vis-tab-icon {
+    height: 32px;
+    width: 32px;
   }
 }
 
+
 // the dropdown menu for the table vis is located as a direct child of the body, so this has to go here
 ul#sopt_menu {
-  background-color: #FFF;
   margin: 0;
   padding: 0;
 
@@ -531,6 +519,11 @@ md-sidenav.md-closed.md-locked-open-add-active {
     margin-top: 55px; //compensate for navbar
 } 
 
-md-sidenav.md-locked-open {
+md-sidenav.md-locked-open,
+div.embedded md-sidenav {
   margin-top: 0px;
+}
+
+div.embedded md-sidenav {
+  display: none !important;
 }
