@@ -513,10 +513,11 @@ body[data-page-name='visualizations/show'] .visualizations-controller {
 md-sidenav, 
 md-sidenav.md-locked-open, 
 md-sidenav.md-closed.md-locked-open-add-active {
-    min-width: 320px !important;
-    width: 320px !important;
-    max-width: 320px !important;
-    margin-top: 55px; //compensate for navbar
+  height: inherit;
+  min-width: 320px !important;
+  width: 320px !important;
+  max-width: 320px !important;
+  margin-top: 55px; //compensate for navbar
 } 
 
 md-sidenav.md-locked-open,

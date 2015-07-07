@@ -62,7 +62,7 @@ $ ->
 
       # Adjust heights
       $('#vis-container').height(visWrapperHeight)
-      $('#vis-ctrl-container').height(visWrapperHeight)
+      $('.md-sidenav-left').height(visWrapperHeight)
       newHeight = visWrapperHeight
       unless presentation then newHeight -= visHeaderHeight
       $('#vis-container > .tab-content').height(newHeight)
