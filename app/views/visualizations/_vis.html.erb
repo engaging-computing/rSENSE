@@ -60,9 +60,8 @@
           <div id="vis-title-bar"
                <% if @presentation || !titleBar %> style="display:none" <% end %>>
             <div class="inline-left">
-              <md-button ng-click="toggleLeft()"
-                class="md-primary" hide-gt-md>
-                Visualization Tools
+              <md-button class="md-icon-button md-primary" ng-click="toggleLeft()"  hide-gt-md aria-label="Settings">
+                <img class="vis-tab-icon" src="/assets/menu.png">
               </md-button>
               <% if obj %>
                 <%= title_and_edit_menu(obj) %>
