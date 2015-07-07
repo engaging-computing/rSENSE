@@ -243,9 +243,8 @@ body {
 
 .navbar {
   border-bottom: 1px solid black;
-  box-shadow: 0 1px 3px $shadow-color;
   margin-bottom: 0px;
-  background-color: #113;
+  background-color: #1A237E;
   height: 55px;
 
   // larger font sizes cause weird overflow errors on some names
@@ -266,7 +265,7 @@ body {
   }
 
   .navbar-brand {
-    padding-top: 8px;
+    padding-top: 11px;
   }
 
   .navbar-collapse.collapsing,
