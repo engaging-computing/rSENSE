@@ -1,4 +1,4 @@
-###
+z###
   * Copyright (c) 2011, iSENSE Project. All rights reserved.
   *
   * Redistribution and use in source and binary forms, with or without
@@ -76,7 +76,7 @@ $ ->
           xAxis:
             type: 'category'
           legend:
-            enabled: if $(window).width() > 700 && data.groups.length < 20 then true else false
+            enabled: if $(window).width() > 700 && data.groups.length < 20
 
       update: ->
         super()
