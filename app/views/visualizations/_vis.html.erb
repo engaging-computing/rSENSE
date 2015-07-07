@@ -61,7 +61,7 @@
                <% if @presentation || !titleBar %> style="display:none" <% end %>>
             <div class="inline-left">
               <md-button class="md-icon-button md-primary" ng-click="toggleLeft()"  hide-gt-md aria-label="Settings">
-                <img class="vis-tab-icon" src="/assets/menu.png">
+                <img class="vis-tab-icon" src=<%=image_path('menu.png')%>>
               </md-button>
               <% if obj %>
                 <%= title_and_edit_menu(obj) %>
