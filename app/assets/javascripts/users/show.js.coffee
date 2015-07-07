@@ -7,7 +7,8 @@ $ ->
         query.closest('tr').after('<tr></tr>').hide()
 
     $(document).ajaxError (event, xhr, settings, error) ->
-      quickFlash(error, 'error')
+      e = JSON.parse xhr.responseText
+      quickFlash(e, 'error')
 
     navList = []
 
