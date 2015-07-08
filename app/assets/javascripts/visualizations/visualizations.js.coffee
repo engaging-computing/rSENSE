@@ -52,7 +52,7 @@ $ ->
 
       visWrapperWidth =
         if embed then window.innerWidth or window.outerWidth
-        else $('#vis-wrapper').width()
+        else $('#vis-wrapper').innerWidth()
       visWrapperHeight = $('#vis-wrapper').outerHeight()
       visHeaderHeight = $('#vis-title-bar').outerHeight() +
         $('#vis-tab-list').outerHeight()
