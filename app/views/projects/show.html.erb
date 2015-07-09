@@ -46,40 +46,39 @@
               <% end %>
             </div>
           </div>
-          <div class="row project_buttons">
+          <div class="row ect_buttons">
             <div class="col-sm-3">
-              <button type="button" class="btn btn-default" disabled>
+              <md-button ng-disabled="true">
                 <i class="fa fa-eye"> Views | </i> <%= @project.views %>
-              </button>
+              </md-button>
             </div>
             <% if @cur_user.try(:id) %>
               <div class="col-sm-3">
                 <div class="btn-group likes" data-project_id="<%= @project.id%>">
-                  <button type="button" class="btn btn-default liked_status <% if @liked_by_cur_user%>active<%end%>" data-toggle="button"><i class="fa fa-thumbs-up"></i> Like</button>
-                  <button type="button" class="btn btn-default like_display" disabled> <%= @project.likes.count %></button>
+                  <md-button class="liked_status <% if @liked_by_cur_user%>active<%end%>" data-toggle="button"><i class="fa fa-thumbs-up"></i> Like | <%= @project.likes.count %></md-button>
                 </div>
               </div>
             <% end %>
             <div class="col-sm-2">
-              <button type="button" class="btn btn-default" id="print">
+              <md-button id="print">
                 <i class="fa fa-print"></i> Print
-              </button>
+              </md-button>
             </div>
             <% if @cur_user.try(:id) %>
               <div class="col-xs-2">
                 <a href = "/projects/<%= @project.id %>/clone">
-                  <button type="button" class="btn btn-success">
+                  <md-button class="btn-success-material">
                     <i class="fa fa-copy"></i> Clone
-                  </button>
+                  </md-button>
                 </a>
               </div>
             <% end %>
             <% if can_edit? @project %>
               <div class="col-xs-2">
                 <a href = "/projects/<%= @project.id %>/edit">
-                  <button type="button" class="btn btn-primary" id="edit-project-button">
+                  <md-button id="edit-project-button">
                     <i class="fa fa-cog"></i> Edit
-                  </button>
+                  </md-button>
                 </a>
               </div>
             <% end %>
@@ -97,10 +96,10 @@
         <% if @data_sets.count != 0 || @params[:search] %>
           <div id="dataset_list">
             <span>
-              <button type="button" class="btn btn-info" style="margin-bottom: 10px;" id="vis_button" data-href="/projects/<%=@project.id%>/data_sets/">Visualize</button>
+              <md-button class="md-raised md-primary" style="margin-bottom: 10px;" id="vis_button" data-href="/projects/<%=@project.id%>/data_sets/">Visualize</md-button>
             </span>
             <span>
-              <button type="button" class="btn btn-default" style="margin-bottom: 10px;" id="export_button" >Export</button>
+             <md-button class="md-raised" style="margin-bottom: 10px;" id="export_button" >Export</md-button>
             </span>
             <div class="pull-right">
               <div class="btn-group">
@@ -146,7 +145,7 @@
             <% if @data_sets.count == 0 %>
               <p> No Matching Data Sets. </p>
             <%end%>
-            <table id="dataset_table" class="table table-striped">
+            <table id="dataset_table" class="table table-striped" ng-controller="switches">
               <tbody>
                 <% @data_sets.each do |s| %>
                   <tr class="<%= cycle('feed-even', 'feed-odd')%> dataset" style="position:relative">
@@ -182,8 +181,9 @@
                       <% end %>
                     </td>
                     <td>
-                      <div class="ds_selector">
-                        <input type="checkbox" class="pull-right <%if s.user_id == @cur_user.try(:id)%> mine<%end%>" id="ds_<%=s.id%>" checked/>
+                      <div class="ds_selector" id="ds_<%=s.id%>" >
+                        <md-switch class="pull-right <%if s.user_id == @cur_user.try(:id)%> mine<%end%>" ng-model="ds_<%=s.id%>" aria-label="ds_<%=s.id%>">
+                        </md-switch>
                       </div>
                     </td>
                   </tr>
@@ -269,7 +269,7 @@
             <div class="row" align="center" style="margin-top: 110px;">
               <%= form_tag '/contrib_keys/clear', method: 'get' do %>
                 <%= hidden_field_tag :project_id, @project.id %>
-                <%= submit_tag "Clear Key", class: "btn btn-success" %>
+                <%= submit_tag "Clear Key", class: "md-button btn-success" %>
               <% end %>
             </div>
           <% end %>
@@ -355,7 +355,7 @@
     <div class="modal-content">
       <%= form_tag "/data_sets/dataFileUpload", method: 'post', multipart: true do %>
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <md-button class="md-raised" class="close" data-dismiss="modal" aria-hidden="true">&times;</md-button>
           <h4 class="modal-title">Please enter the Google Spreadsheet 'Share' link below:</h4>
         </div>
         <div class="modal-body">

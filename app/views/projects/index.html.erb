@@ -86,8 +86,9 @@
                 <%= f.label :project_name, "Project Name", class:"hidden" %>
                 <%= f.text_field :title, class: "form-control wide-input",
                     placeholder: "Project Name" %>
-                <%= button_tag "Create Project", type: "submit",
-                    class: "btn btn-success create-project-btn" %>
+                <md-button type = "submit"
+                    class="btn-success-material create-project-btn"> Create Project
+                </md-button>
               <% end %>
             </div>
           </md-card>

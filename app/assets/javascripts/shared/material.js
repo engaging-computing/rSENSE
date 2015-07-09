@@ -1,4 +1,4 @@
-var app = angular.module('iSENSE', ['ngMaterial']).config(function($mdThemingProvider) {
+window.app = angular.module('iSENSE', ['ngMaterial']).config(function($mdThemingProvider) {
   $mdThemingProvider.theme('default')
     .primaryPalette('blue')
     .accentPalette('light-blue');
@@ -32,4 +32,6 @@ app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil, $log)
     };
   });
 
-  
+// // Set all the data set
+app.controller('switches', function($scope) {
+});

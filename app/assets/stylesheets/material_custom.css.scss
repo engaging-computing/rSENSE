@@ -1,0 +1,11 @@
+// A stylesheet for overriding angular-material defaults
+
+.btn-success-material {
+  background-color: #4CAF50 !important;
+  color: white !important;
+}
+
+/* Prevent material design from capitalizing everything */
+.md-button, .md-header-items-container, md-toast .md-action {
+ text-transform: none !important;
+}
