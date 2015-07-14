@@ -50,7 +50,7 @@ module ApplicationHelper
   end
 
   def key_name(proj, key)
-    first_key = ContribKey.where('project_id=? AND key=?', proj, key).first
+    first_key = ContribKey.where('project_id=? AND lower(key)=?', proj, key.downcase).first
     if first_key.nil?
       nil
     else
