@@ -36,6 +36,10 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     user-select: none;
   }
 
+  .bold {
+    font-weight: bold;
+  }
+
   .color-picker {
     vertical-align: top;
   }
@@ -64,20 +68,20 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
 
   .hamburger-menu {
     transition: background-color .5s ease;
-    height: 32px;
-    width: 30px;
-    padding: 0 5px;
+    height: 46px;
+    width: 44px;
+    padding: 0 6px;
     margin: 0;
     background-color: white;
 
     .hamburger-bar {
       transition: background-color .5s ease;
       display: block;
-      height: 4px;
+      height: 6px;
       width: 100%;
       background-color: #555;
-      border-radius: 4px;
-      margin: 2px auto;
+      border-radius: 6px;
+      margin: 4px auto;
     }
   }
 
@@ -108,16 +112,6 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     margin-top: 10px;
     font-size: 90%;
     color: $hint;
-  }
-
-  .inline-left {
-    display: inline-block;
-    float: left;
-  }
-
-  .inline-right {
-    display: inline-block;
-    float: right;
   }
 
   .mainContent {
@@ -287,7 +281,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   }
 
   .subtitle {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   .tab-content {
@@ -331,28 +325,31 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
         overflow: hidden;
       }
 
-      // the bar at the top of the vis window
-      #vis-tab-list {
-        padding: 0; // removes padding that shouldn't be there to begin with
-        margin: 0;
+      #vis-header {
         background-color: $vis-bkg-light;
       }
 
+      #vis-tab-list {
+        padding: 0; // removes padding that shouldn't be there to begin with
+        margin: 0;
+      }
+
       #vis-title-bar {
-        position: relative;
         width: 100%;
-        height: 50px;
-        background-color: $vis-bkg-light;
         font-size: 24px;
         padding: 10px;
         white-space: nowrap;
 
-        .edit_visualization, .edit_data_set {
-          display: none;
+        #vis-title {
+          vertical-align: middle;
         }
 
-        .inline-left {
-          max-width: 100%;
+        #vis-title-edit-btn {
+          float: right;
+        }
+
+        .edit_visualization, .edit_data_set {
+          display: none;
         }
 
         #title-and-menu {
@@ -362,10 +359,28 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
             vertical-align: middle;
           }
         }
+      }
 
-        #vis-proj-right {
-          position: absolute;
-          right: 10px;
+      #vis-filters {
+        margin: 3px;
+        overflow-y: auto;
+
+        .vis-filter {
+          background-color: white;
+          border: thin solid $vis-bkg-mid;
+          border-radius: 5px;
+          display: inline-block;
+          margin: 3px;
+          padding: 2px 5px;
+          whitespace: nowrap;
+        }
+
+        .vis-filter:hover {
+          background-color: $vis-bkg-dark;
+        }
+
+        .remove {
+          cursor: pointer;
         }
       }
     }
@@ -399,7 +414,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
         .save-btn {
           display: inline-block;
           width: 80%;
-          margin: 10px auto;
+          margin: 5px auto;
         }
 
         // any input button inside this class isn't lined up with the
@@ -513,6 +528,10 @@ body[data-page-name='visualizations/show'] .visualizations-controller {
 .embedded {
   .ui-accordion-header {
     padding-top: 10px;
+  }
+
+  .bootstrap-switch {
+    height: 36px;
   }
 }
 

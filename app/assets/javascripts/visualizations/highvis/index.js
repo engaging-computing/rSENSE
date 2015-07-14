@@ -8,6 +8,7 @@
 // These two provide the foundation for baseVis
 //= require ./highmodifiers
 //= require ./visUtils
+//= require ./filters
 //
 // BaseVis holds up the other vises
 //= require ./baseVis
