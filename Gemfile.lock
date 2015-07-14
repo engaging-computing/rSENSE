@@ -22,9 +22,9 @@ GIT
 
 GIT
   remote: https://github.com/isenseDev/better-colorpicker
-  revision: 1e42c14b48c79e1b143dce7c80416a5efbfcc49e
+  revision: 55c4ae1819bdae7b85a0281b4055a6359c2bf91c
   specs:
-    better_colorpicker (0.1.0)
+    better_colorpicker (0.1.1)
       coffee-rails
       coffee-rails-source-maps
       rails (~> 4)
@@ -32,9 +32,9 @@ GIT
 
 GIT
   remote: https://github.com/isenseDev/better-datetimepicker
-  revision: 261b999e62605af5e64e0f2b313e00c4ecd93f99
+  revision: 9aa5f12d3b08675c5e0cdff6374564ed98a6073f
   specs:
-    better_datetimepicker (0.0.8)
+    better_colorpicker (0.1.0)
       coffee-rails
       coffee-rails-source-maps
       rails (~> 4)
