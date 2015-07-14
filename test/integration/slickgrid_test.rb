@@ -5,13 +5,25 @@ class SlickgridTest < ActionDispatch::IntegrationTest
 
   self.use_transactional_fixtures = false
 
-  current_month = Date.today.month.to_s.rjust(2, '0')
   compare_data = [
-    { '100' => 'D', '101' => 'A', '102' => '4', '103' => "1991/#{current_month}/01 01:01:01", '104' => '3', '105' => '3' },
-    { '100' => 'E', '101' => 'B', '102' => '5', '103' => "1992/#{current_month}/02 02:02:02", '104' => '4', '105' => '4' },
-    { '100' => 'F', '101' => 'C', '102' => '6', '103' => "1993/#{current_month}/03 03:03:03", '104' => '5', '105' => '5' },
-    { '100' => 'G', '101' => 'A', '102' => '7', '103' => "1994/#{current_month}/04 04:04:04", '104' => '6', '105' => '6' }
+    { '100' => 'D', '101' => 'A', '102' => '4', '103' => '', '104' => '3', '105' => '3' },
+    { '100' => 'E', '101' => 'B', '102' => '5', '103' => '', '104' => '4', '105' => '4' },
+    { '100' => 'F', '101' => 'C', '102' => '6', '103' => '', '104' => '5', '105' => '5' },
+    { '100' => 'G', '101' => 'A', '102' => '7', '103' => '', '104' => '6', '105' => '6' }
   ]
+
+  current_month = Date.today.month
+  times = [
+    [1991, current_month, 1, 1, 1, 1],
+    [1992, current_month, 2, 2, 2, 2],
+    [1993, current_month, 3, 3, 3, 3],
+    [1994, current_month, 4, 4, 4, 4]
+  ]
+
+  times.each_with_index do |time, i|
+    new_time = Time.local(*time).getutc
+    compare_data[i]['103'] = new_time.strftime '%Y/%m/%d %H:%M:%S'
+  end
 
   setup do
     Capybara.current_driver = :webkit

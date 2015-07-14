@@ -28,7 +28,6 @@ setupMediaObjectsView = () ->
       data:
         data
       error: (j, s, t) ->
-        console.log j, s, t
         root.find('.img_selector').each ->
           ($ this).prop("checked", false)
         old_mo.prop("checked", true)
