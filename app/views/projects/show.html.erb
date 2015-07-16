@@ -55,7 +55,9 @@
             <% if @cur_user.try(:id) %>
               <div class="col-sm-3">
                 <div class="btn-group likes" data-project_id="<%= @project.id%>">
-                  <md-button class="liked_status <% if @liked_by_cur_user%>active<%end%>" data-toggle="button"><i class="fa fa-thumbs-up"></i> Like | <%= @project.likes.count %></md-button>
+                  <md-button class="liked_status <% if @liked_by_cur_user%>active<%end%>" data-toggle="button">
+                    <i class="fa fa-thumbs-up"></i> Like | <span class="like_display"><%= @project.likes.count %></span>
+                  </md-button>
                 </div>
               </div>
             <% end %>
@@ -75,11 +77,9 @@
             <% end %>
             <% if can_edit? @project %>
               <div class="col-xs-2">
-                <a href = "/projects/<%= @project.id %>/edit">
-                  <md-button id="edit-project-button">
-                    <i class="fa fa-cog"></i> Edit
-                  </md-button>
-                </a>
+                <md-button ng-href="/projects/<%= @project.id %>/edit" class="md-button" id="edit-project-button">
+                  <i class="fa fa-cog"></i> Edit
+                </md-button>
               </div>
             <% end %>
           </div>
@@ -208,15 +208,15 @@
         <% if (@project.fields.count == 0) && can_edit?(@project) %>
           <div class="col-md-12 center">
             <a href="/projects/<%= @project.id %>/edit_fields">
-              <button class="btn btn-success" id="manual_fields">
+              <md-button class="btn-success-material" id="manual_fields">
                 <i class="fa fa-keyboard-o" style="margin:5px"></i>
                 Setup Manually
-              </button>
+              </md-button>
             </a>
-            <button class="btn btn-success" id="template_file_upload">
+            <md-button class="btn-success-material" id="template_file_upload">
               <i class="fa fa-file-o" style="margin:5px"></i>
               Upload File
-            </button>
+            </md-button>
           </div>
           <div class="clear"></div>
         <% elsif @project.fields.count != 0 %>

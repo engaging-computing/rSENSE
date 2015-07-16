@@ -181,7 +181,7 @@ $ ->
     # Deal with full screen
     $('#fullscreen-vis').click (e) ->
       fullscreenEnabled = document.fullscreenEnabled or
-        document.mozFullScreenEnabled ordocument.webkitFullscreenEnabled
+        document.mozFullScreenEnabled
       fullscreenElement = document.fullscreenElement or
         document.mozFullScreenElement or document.webkitFullscreenElement
       icon = $('#fullscreen-vis').find('i')
@@ -189,7 +189,7 @@ $ ->
         globals.fullscreen = true
         icon.removeClass('icon-resize-full')
         icon.addClass('icon-resize-small')
-        fullscreenVis = $('#vis-container')[0]
+        fullscreenVis = $('#vis-wrapper')[0]
         browserFullscreenMethod = fullscreenVis.webkitRequestFullScreen or
           fullscreenVis.mozRequestFullScreen or
           fullscreenVis.requestFullScreen or
