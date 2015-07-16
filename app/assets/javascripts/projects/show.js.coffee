@@ -1,4 +1,8 @@
 IS.onReady "projects/show", ->
+  # Set all switches to enabled
+  root = $('#dataset_table')
+  root.find("[id^=ds_]").each (i,j) ->
+    $(j).addClass("md-checked")
 
   # Initializes the dropdown lightbox for google drive upload
   $('#google_doc').click ->
@@ -65,7 +69,7 @@ IS.onReady "projects/show", ->
   # Takes all sessions that are checked, appends its id to the url and
   # redirects the user to the view sessions page (Vis page)
   $('#vis_button').click (e) ->
-    targets = $(document).find(".dataset .ds_selector input:checked")
+    targets = $(document).find(".dataset .ds_selector [aria-checked='true']")
     ds_list = (get_ds_id t for t in targets)
     window.location = $(this).attr("data-href") + ds_list
 
@@ -74,7 +78,7 @@ IS.onReady "projects/show", ->
 
   $('#export_individual_button').click (e) ->
     $('#export_modal').modal('hide')
-    targets = $(document).find(".dataset .ds_selector input:checked")
+    targets = $(document).find(".dataset .ds_selector")
     ds_list = (get_ds_id t for t in targets)
 
     if ds_list.length is 0
@@ -84,7 +88,7 @@ IS.onReady "projects/show", ->
 
   $('#export_concatenated_button').click (e) ->
     $('#export_modal').modal('hide')
-    targets = $(document).find(".dataset .ds_selector input:checked")
+    targets = $(document).find("[aria-checked='true']")
     ds_list = (get_ds_id t for t in targets)
 
     if ds_list.length is 0
@@ -102,23 +106,23 @@ IS.onReady "projects/show", ->
   $("a#check_all").click ->
     root = $('#dataset_table')
     root.find("[id^=ds_]").each (i,j) ->
-      $(j).prop("checked",true)
+      $(j).addClass("md-checked")
     $('#vis_button').prop("disabled",false)
     $('#export_button').prop("disabled",false)
 
   $("a#uncheck_all").click ->
     root = $('#dataset_table')
     root.find("[id^=ds_]").each (i,j) ->
-      $(j).prop("checked",false)
+      $(j).removeClass("md-checked")
     $('#vis_button').prop("disabled",true)
     $('#export_button').prop("disabled",true)
 
   $("a#check_mine").click ->
     root = $('#dataset_table')
     root.find("[id^=ds_]").each (i,j) ->
-      $(j).prop("checked",false)
+      $(j).removeClass("md-checked")
     root.find(".mine").each (i,j) ->
-      $(j).prop("checked",true)
+      $(j).addClass("md-checked")
     if root.find(".mine").length isnt 0
       $('#vis_button').prop("disabled",false)
       $('#export_button').prop("disabled",false)
@@ -130,10 +134,10 @@ IS.onReady "projects/show", ->
     $('#vis_button').prop("disabled",true)
     $('#export_button').prop("disabled",true)
     root.find("[id^=ds_]").each (i,j) ->
-      $(j).prop("checked",false)
+      $(j).removeClass("md-checked")
     root.find('tr').each (i,j) =>
       if $(j).find('.key').attr('title') is $(this).attr('m-title')
-        $(j).find("[id^=ds_]").prop("checked",true)
+        $(j).find("[id^=ds_]").addClass("md-checked")
         $('#vis_button').prop("disabled",false)
         $('#export_button').prop("disabled",false)
   #Turn off visualize button on page load, and when nothings checked
@@ -143,7 +147,7 @@ IS.onReady "projects/show", ->
       if($(j).is(":checked"))
         should_disable = false
       else
-        $('#check_selector').prop("checked",false)
+        $('#check_selector').removeClass("md-checked")
         $('#export_button').prop("disabled",false)
       $('#vis_button').prop("disabled", should_disable)
       $('#export_button').prop("disabled", should_disable)

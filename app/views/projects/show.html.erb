@@ -182,7 +182,7 @@
                     </td>
                     <td>
                       <div class="ds_selector" id="ds_<%=s.id%>" >
-                        <md-switch class="pull-right <%if s.user_id == @cur_user.try(:id)%> mine<%end%>" ng-model="ds_<%=s.id%>" aria-label="ds_<%=s.id%>">
+                        <md-switch class="pull-right <%if s.user_id == @cur_user.try(:id)%> mine<%end%>" ng-model="ds_<%=s.id%>" id="ds_<%=s.id%>" aria-label="ds_<%=s.id%>">
                         </md-switch>
                       </div>
                     </td>
@@ -269,7 +269,7 @@
             <div class="row" align="center" style="margin-top: 110px;">
               <%= form_tag '/contrib_keys/clear', method: 'get' do %>
                 <%= hidden_field_tag :project_id, @project.id %>
-                <%= submit_tag "Clear Key", class: "md-button btn-success" %>
+                <%= submit_tag "Clear Key", class: "md-button btn-success-material" %>
               <% end %>
             </div>
           <% end %>
@@ -281,7 +281,7 @@
                 <%= hidden_field_tag :project_id, @project.id %>
                 <%= text_field_tag :key,"", placeholder:"Key", style:"margin-bottom: 10px;" %>
                 <%= text_field_tag :contributor_name,"", placeholder:"Contributor Name" %>
-                <%= submit_tag "Submit Key", class: "btn btn-success" %>
+                <%= submit_tag "Submit Key", class: "md-button btn-success-material" %>
               </div>
             <% end %>
           <% else %>
