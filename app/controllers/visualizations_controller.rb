@@ -15,7 +15,7 @@ class VisualizationsController < ApplicationController
     if !params[:sort].nil?
       sort = params[:sort]
     else
-      sort = 'updated_at'
+      sort = 'created_at'
     end
 
     if !params[:order].nil?

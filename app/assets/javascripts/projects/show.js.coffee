@@ -78,7 +78,7 @@ IS.onReady "projects/show", ->
 
   $('#export_individual_button').click (e) ->
     $('#export_modal').modal('hide')
-    targets = $(document).find(".dataset .ds_selector")
+    targets = $(document).find(".dataset .ds_selector [aria-checked='true']")
     ds_list = (get_ds_id t for t in targets)
 
     if ds_list.length is 0
@@ -88,7 +88,7 @@ IS.onReady "projects/show", ->
 
   $('#export_concatenated_button').click (e) ->
     $('#export_modal').modal('hide')
-    targets = $(document).find("[aria-checked='true']")
+    targets = $(document).find(".dataset .ds_selector [aria-checked='true']")
     ds_list = (get_ds_id t for t in targets)
 
     if ds_list.length is 0

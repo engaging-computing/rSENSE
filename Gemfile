@@ -35,7 +35,7 @@ end
 
 # Jquery stuff
 gem 'better_datetimepicker', '~> 0.0.8', git: 'https://github.com/isenseDev/better-datetimepicker'
-gem 'better_colorpicker', '~> 0.1.1', git: 'https://github.com/isenseDev/better-colorpicker'
+gem 'better_colorpicker', '~> 0.1.2', git: 'https://github.com/isenseDev/better-colorpicker'
 gem 'jquery-rails'
 
 # To use ActiveModel has_secure_password
