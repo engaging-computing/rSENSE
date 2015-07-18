@@ -69,7 +69,7 @@ class RefactorSavedVises < ActiveRecord::Migration
 
     say 'Refactoring saved visualizations'
     # Extract the data/globals -> JSON.parse(Project.find(#).var)
-    Visualization.find_each do | v |
+    Visualization.find_each do |v|
       globals = JSON.parse(v.globals)
       data = JSON.parse(v.data)
 
@@ -81,7 +81,7 @@ class RefactorSavedVises < ActiveRecord::Migration
 
       # Pull out anything that's not in vises into a globals object
       temp = {}
-      globals.keys.each do | key |
+      globals.keys.each do |key|
         unless vises.include?(key)
           extract_globals(key, globals, temp)
         end
@@ -98,13 +98,13 @@ class RefactorSavedVises < ActiveRecord::Migration
   def down
     say 'Restoring saved visualization format'
     # Extract the data/globals -> JSON.parse(Project.find(#).var)
-    Visualization.find_each do | v |
+    Visualization.find_each do |v|
       globals = JSON.parse(v.globals)
       data = JSON.parse(v.data)
 
       # Revert back to the previous configurations
       temp = globals['globals']
-      temp.keys.each do | key |
+      temp.keys.each do |key|
         undo_extract_globals(key, globals, temp)
       end
       undo_move_vars(globals, data)

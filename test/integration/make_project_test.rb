@@ -30,7 +30,6 @@ class MakeProjectTest < ActionDispatch::IntegrationTest
     click_on 'Projects'
     assert page.has_content?('Templates'), 'Should be on Projects page'
     assert page.has_content?('Das Projekt'), 'New project should be in list'
-
   end
 
   test 'search in projects' do

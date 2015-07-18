@@ -220,7 +220,7 @@ class FileUploader
       # is nil but the header contains "time," classify as a timestamp
       if (!column[1].nil? and
            (column[1]).map { |dp| (yyyymmdd =~ dp) or (mmddyyyy =~ dp) }.reduce(:&)) or
-           (column[1].nil? and column[0].upcase.include?('TIME'))
+         (column[1].nil? and column[0].upcase.include?('TIME'))
         types['timestamp'].push column[0]
         next
       end
@@ -235,7 +235,7 @@ class FileUploader
       end
       # if there is data and the data is a valid float, classify as text
       if !column[1].nil? &&
-           !(column[1]).map { |dp| valid_float?(dp) }.reduce(:&)
+         !(column[1]).map { |dp| valid_float?(dp) }.reduce(:&)
         types['text'].push column[0]
       end
       # if no match was found above, this defaults to number
@@ -376,7 +376,8 @@ class FileUploader
 
     # read the substring out from the matrix
     result = ''
-    x, y = a.size, b.size
+    x = a.size
+    y = b.size
     while x != 0 and y != 0
       if lengths[x][y] == lengths[x - 1][y]
         x -= 1
@@ -396,10 +397,10 @@ class FileUploader
   def convert(filepath)
     data = CSV.parse(File.read(filepath))
 
-    headers = data[0].map { |x| x.downcase }
-    overlap = headers.uniq.map { | e | [headers.count(e), e] }.select { |c, _| c > 1 }.map { | c, e | "found #{c} #{e} column(s) " }
+    headers = data[0].map(&:downcase)
+    overlap = headers.uniq.map { |e| [headers.count(e), e] }.select { |c, _| c > 1 }.map { |c, e| "found #{c} #{e} column(s) " }
 
-    if headers.map { |h| h.downcase }.uniq.count == headers.count
+    if headers.map(&:downcase).uniq.count == headers.count
       data
     else
       fail overlap.to_s
@@ -419,7 +420,7 @@ class FileUploader
     keys = data_obj.keys
 
     while row >= 0
-      row_empty = keys.map { |k| (data_obj[k][row].nil? or  (data_obj[k][row].to_s.strip == '')) }.reduce(:&)
+      row_empty = keys.map { |k| (data_obj[k][row].nil? or (data_obj[k][row].to_s.strip == '')) }.reduce(:&)
       if row_empty
         keys.map { |k| data_obj[k].delete_at(row) }
       end
