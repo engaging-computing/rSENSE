@@ -185,7 +185,6 @@ class ProjectsControllerTest < ActionController::TestCase
     put :update, { format: 'json', id: @project_three, project: { curated: 'false' } },  user_id: @nixon
     assert_response :success
     assert Project.find(@project_three).curated == false, 'Nixon should have been able to uncurated the project'
-
   end
 
   test 'should lock project (json)' do
@@ -208,7 +207,7 @@ class ProjectsControllerTest < ActionController::TestCase
   end
 
   test 'save fields' do
-    parameters = Hash.new
+    parameters = {}
     @dessert.fields.each do |field|
       parameters["#{field.id}_name"] = field.name
       parameters["#{field.id}_unit"] = field.unit

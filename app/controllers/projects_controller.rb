@@ -39,7 +39,7 @@ class ProjectsController < ApplicationController
     @projects = @projects.order("#{sort} #{order}")
 
     @projects = @projects.only_templates(templates).only_curated(curated)
-      .only_featured(featured).has_data(has_data)
+                .only_featured(featured).has_data(has_data)
 
     count = @projects.length
 
@@ -207,9 +207,7 @@ class ProjectsController < ApplicationController
       return
     end
 
-    @project.media_objects.each do |m|
-      m.destroy
-    end
+    @project.media_objects.each(&:destroy)
 
     @project.destroy
 

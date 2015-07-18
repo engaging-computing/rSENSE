@@ -60,7 +60,7 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     list = page.all(:css, '.slick-header-column')
     field_id_long = list[0]['id']
     field_id_pos = field_id_long.rindex(/-/)
-    field_id = field_id_long[field_id_pos + 1 .. -1]
+    field_id = field_id_long[field_id_pos + 1..-1]
     find('#data_set_name').set('Data1')
     find(:css, '.slick-row:nth-child(1)>.slick-cell.l0.r0').double_click
     find('.editor-text').set('5')

@@ -27,7 +27,7 @@ class UsersController < ApplicationController
 
     @users = User.search(params[:search]).paginate(
       page: params[:page], per_page: pagesize).order("created_at #{sort}")
-    logger.error @users.map { |u| u.created_at }
+    logger.error @users.map(&:created_at)
     respond_to do |format|
       format.html { render status: :ok }
       format.json { render json: @users.map { |u| u.to_hash(false) }, status: :ok }
@@ -163,7 +163,7 @@ class UsersController < ApplicationController
 
     if !auth && can_edit?(@user)
       if (params[:user][:password].nil? && params[:user][:email].nil?) or
-           @user.authenticate(params[:current_password])
+         @user.authenticate(params[:current_password])
         auth  = true
       else
         auth_error = "Current password doesn't match"
@@ -199,18 +199,10 @@ class UsersController < ApplicationController
       if @cur_user.id == @user.id
         session[:user_id] = nil
       end
-      @user.likes.each do |l|
-        l.destroy
-      end
-      @user.media_objects.each do |m|
-        m.destroy
-      end
-      @user.visualizations.each do |v|
-        v.destroy
-      end
-      @user.data_sets.each do |d|
-        d.destroy
-      end
+      @user.likes.each(&:destroy)
+      @user.media_objects.each(&:destroy)
+      @user.visualizations.each(&:destroy)
+      @user.data_sets.each(&:destroy)
       @user.projects.each do |p|
         if can_delete?(p)
           p.destroy
@@ -221,12 +213,8 @@ class UsersController < ApplicationController
           p.save
         end
       end
-      @user.tutorials.each do |t|
-        t.destroy
-      end
-      @user.news.each do |n|
-        n.destroy
-      end
+      @user.tutorials.each(&:destroy)
+      @user.news.each(&:destroy)
 
       @user.destroy
 

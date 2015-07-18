@@ -87,7 +87,7 @@ class SessionsController < ApplicationController
     # Not admin, and you don't own or didn't specify a project
     unless is_admin
       if params[:project_id].nil? or
-          Project.find(params[:project_id]).user_id != session[:user_id]
+         Project.find(params[:project_id]).user_id != session[:user_id]
         respond_to do |format|
           format.json { render json: { permissions: @permiss }, status: :ok }
           format.js {}

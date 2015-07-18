@@ -33,7 +33,6 @@ class PostNewsTest < ActionDispatch::IntegrationTest
     login('kcarcia@cs.uml.edu', '12345')
     click_on 'News'
     assert page.has_no_content?('New news item #1'), 'News was not published, should not be shown.'
-
   end
 
   test 'publish news' do

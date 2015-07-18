@@ -34,8 +34,6 @@ class Visualization < ActiveRecord::Base
     mo = MediaObject.find_by_id(thumb_id)
     if mo
       mo.tn_src
-    else
-      nil
     end
   end
 

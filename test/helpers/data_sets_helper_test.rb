@@ -130,7 +130,6 @@ class DataSetsHelperTest < ActionView::TestCase
       { '100' => 'C', '101' => 'C', '102' => '3', '103' => '33', '104-105' => '2, 2' }
     ]
     assert_similar_arrays jdata, jresdata
-
   end
 
   test 'slickgrid full preprocess' do
