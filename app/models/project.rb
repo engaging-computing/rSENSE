@@ -133,7 +133,7 @@ class Project < ActiveRecord::Base
       ownerName: owner.name,
       ownerUrl: UrlGenerator.new.user_url(owner),
       dataSetCount: data_sets.count,
-      dataSetIDs: data_sets.map     { |o| o.id },
+      dataSetIDs: data_sets.select(:id).map {|ds| ds.id},
       fieldCount: fields.count,
       fields: fields.map { |o| o.to_hash false }
     }
