@@ -59,3 +59,9 @@ slickgrid_dataset_oops:
   user: nixon
   project: slickgrid_oops
   data: "[{\"107\": \"SOMEBODY ONCE TOLD ME THE WORLD IS GONNA ROLL ME\"}]"
+  
+project_one_dataset:
+  title: New DataSet for api test
+  user: kate
+  project: media_test
+  

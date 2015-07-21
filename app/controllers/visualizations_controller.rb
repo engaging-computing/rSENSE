@@ -15,7 +15,7 @@ class VisualizationsController < ApplicationController
     if !params[:sort].nil?
       sort = params[:sort]
     else
-      sort = 'updated_at'
+      sort = 'created_at'
     end
 
     if !params[:order].nil?
@@ -187,9 +187,7 @@ class VisualizationsController < ApplicationController
 
     if can_delete?(@visualization)
 
-      @visualization.media_objects.each do |m|
-        m.destroy
-      end
+      @visualization.media_objects.each(&:destroy)
 
       @visualization.destroy
 
@@ -287,7 +285,7 @@ class VisualizationsController < ApplicationController
     end
 
     if field_count[TIME_TYPE] > 0 and field_count[NUMBER_TYPE] > 0 and
-        format_data.count > 2
+       format_data.count > 2
       rel_vis.push 'Timeline'
     end
 

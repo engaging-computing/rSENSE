@@ -69,6 +69,10 @@ $ ->
 
       # Gets called when the controls are clicked and at start
       update: ->
+        # clear table searchboxes when filtering is turned on
+        $('#save-filters-btn').click =>
+          clearSearchOptions()
+
         # Updates controls by default
         $('#' + @canvas).html('')
         $('#' + @canvas).append '<table id="data_table" class="table table-striped"></table>'
@@ -300,5 +304,9 @@ $ ->
             value: param.data
 
           globals.configs.activeFilters.push(filter)
+
+      clearSearchOptions = ->
+        # Clears all the table's searchboxes
+        $('#data_table')[0].clearToolbar()
 
     globals.table = new Table "table-canvas"

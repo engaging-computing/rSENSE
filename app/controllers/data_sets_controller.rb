@@ -132,9 +132,7 @@ class DataSetsController < ApplicationController
 
     if can_delete?(@data_set)
 
-      @data_set.media_objects.each do |m|
-        m.destroy
-      end
+      @data_set.media_objects.each(&:destroy)
 
       respond_to do |format|
         if @data_set.destroy
@@ -333,7 +331,6 @@ class DataSetsController < ApplicationController
 
     if params[:file] && params[:file].original_filename.split('.')[-1] == 'zip'
       Zip::File.open(params[:file].path) do |zip_file|
-
         results = []
         filenames = []
         zip_file.each do |entry|

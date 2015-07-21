@@ -25,8 +25,8 @@
           <div class="row">
             <div class="padded-col col-md-3 col-xs-6" title="Sort by">
               <%= select_tag(:sort,
-                options_for_select([["Sort by Modified Date", "updated_at"],
-                                    ["Sort by Created Date", "created_at"]],
+                options_for_select([["Sort by Created Date", "created_at"],
+                                    ["Sort by Modified Date", "updated_at"]],
                                    @params["sort"]),
                 class: "visualizations_sort_select form-control")
               %>

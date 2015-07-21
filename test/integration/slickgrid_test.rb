@@ -53,7 +53,7 @@ class SlickgridTest < ActionDispatch::IntegrationTest
     find(:css, '.editor-button').click
     find(:css, '#dt-year-textbox').set "#{yr}\n"
     td = all(:css, '#dt-date-group td')
-    date_cell = td.select { |x| x['data-date'.to_sym] == "#{dy}" and x['data-month'.to_sym] == '0' }.first
+    date_cell = td.find { |x| x['data-date'.to_sym] == "#{dy}" and x['data-month'.to_sym] == '0' }
     date_cell.click
     date_cell.click
     find(:css, '#dt-time-textbox').set "#{time}\n"

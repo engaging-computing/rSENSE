@@ -1,5 +1,4 @@
 Recaptcha.configure do |config|
-
   key_file = File.expand_path('~/.recaptcha_key').to_s
 
   # Create the file to put Recaptcha keys in
@@ -15,5 +14,4 @@ Recaptcha.configure do |config|
   config.private_key = IO.readlines(key_file)[1]
 
   config.api_version = 'v2'
-
 end

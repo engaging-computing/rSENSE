@@ -14,7 +14,7 @@ gem 'modernizr-rails'
 gem 'handlebars_assets'
 gem 'handlebars'
 
-gem 'therubyracer', :platforms => :ruby
+gem 'therubyracer', platforms: :ruby
 
 gem 'bootstrap-sass'
 gem 'bootstrap-switch-rails'
@@ -22,13 +22,13 @@ gem 'sprockets', '~> 2.12'
 
 # Integration testing stuff
 group :development, :test do
-  gem "capybara"
-  gem "selenium-webdriver"
-  gem "launchy"
-  gem "simplecov"
-  gem "minitest-reporters"
-  gem "rubocop", git: 'https://github.com/bbatsov/rubocop'
-  gem "coffeelint"
+  gem 'capybara'
+  gem 'selenium-webdriver'
+  gem 'launchy'
+  gem 'simplecov'
+  gem 'minitest-reporters'
+  gem 'rubocop', git: 'https://github.com/bbatsov/rubocop'
+  gem 'coffeelint'
   gem 'capybara-webkit'
   gem 'minitest', '~> 5.1'
   gem 'capybara-screenshot'
@@ -36,11 +36,11 @@ end
 
 # Jquery stuff
 gem 'better_datetimepicker', '~> 0.0.8', git: 'https://github.com/isenseDev/better-datetimepicker'
-gem 'better_colorpicker', '~> 0.1.0', git: 'https://github.com/isenseDev/better-colorpicker'
+gem 'better_colorpicker', '~> 0.1.2', git: 'https://github.com/isenseDev/better-colorpicker'
 gem 'jquery-rails'
 
 # To use ActiveModel has_secure_password
-#gem 'bcrypt' # Can't use the new name yet.
+# gem 'bcrypt' # Can't use the new name yet.
 gem 'bcrypt-ruby'
 
 # jQuery plugins
@@ -54,7 +54,7 @@ gem 'execjs'
 gem 'font-awesome-rails', '~> 4.2.0.0'
 
 # Rich Editor
-#gem 'simple_form'
+# gem 'simple_form'
 gem 'summernote-rails'
 gem 'auto_html'
 
@@ -63,7 +63,7 @@ gem 'will_paginate'
 gem 'will_paginate-bootstrap'
 
 # Include Remotipart
-gem "remotipart"
+gem 'remotipart'
 
 # To allow coffescript views
 gem 'coffeebeans'

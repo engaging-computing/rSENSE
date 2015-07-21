@@ -121,7 +121,6 @@ class ApiV1DataSetsTest < ApiV1Test
 
     assert new_data != old_data, 'Data didnt get updated'
     assert new_data[0]['20'] == '5', 'First point should have been updated to 5'
-
   end
 
   test 'failed edit data set' do

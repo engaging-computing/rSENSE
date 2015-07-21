@@ -2,7 +2,7 @@
    <div class="item item-block">
      <% thumb = nil %>
      <% if @box_vis.thumb_id != nil %>
-       <% thumb = @box_vis.tn_src unless @box_vis.tn_src.empty? %>
+       <% thumb = @box_vis.try(:tn_src) %>
      <% else %>
        <% type = JSON.parse(@box_vis.data)["defaultVis"] %>
        <% case type %>
