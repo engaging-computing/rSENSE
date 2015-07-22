@@ -145,7 +145,7 @@
             <% if @data_sets.count == 0 %>
               <p> No Matching Data Sets. </p>
             <%end%>
-            <table id="dataset_table" class="table table-striped" ng-controller="switches">
+            <table id="dataset_table" class="table table-striped">
               <tbody>
                 <% @data_sets.each do |s| %>
                   <tr class="<%= cycle('feed-even', 'feed-odd')%> dataset" style="position:relative">
@@ -181,9 +181,9 @@
                       <% end %>
                     </td>
                     <td>
-                      <div class="ds_selector" id="ds_<%=s.id%>" >
-                        <md-switch class="pull-right <%if s.user_id == @cur_user.try(:id)%> mine<%end%>" ng-model="ds_<%=s.id%>" id="ds_<%=s.id%>" aria-label="ds_<%=s.id%>">
-                        </md-switch>
+                      <div class="ds_selector" >
+                        <md-checkbox class="pull-right <%if s.user_id == @cur_user.try(:id)%> mine<%end%>" id="ds_<%=s.id%>">
+                        </md-checkbox>
                       </div>
                     </td>
                   </tr>

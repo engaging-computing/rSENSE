@@ -144,7 +144,7 @@ IS.onReady "projects/show", ->
   check_for_selection = ->
     should_disable = true
     $(document).find("[id^=ds_]").each (i,j) ->
-      if($(j).is(":checked"))
+      if($(j).hasClass("md-checked"))
         should_disable = false
       else
         $('#check_selector').removeClass("md-checked")
