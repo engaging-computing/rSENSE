@@ -60,9 +60,13 @@ class UsersController < ApplicationController
   # GET /users/1.json
   def contributions
     @user = User.find(params[:id])
+    puts 'user:'
+    puts @user
 
     # See if we are only looking for specific contributions
     @filter = params[:filters].to_s.downcase
+    puts "filter:"
+    puts @filter
 
     if params[:page_size].nil?
       page_size = 10
@@ -101,6 +105,8 @@ class UsersController < ApplicationController
             else
               params[:sort].to_s.downcase
             end
+    puts 'sort:'
+    puts @sort
 
     if @contributions.is_a? Array
       case @sort
@@ -139,6 +145,9 @@ class UsersController < ApplicationController
     end
 
     @contributions = @contributions[page * page_size..(page * page_size) + (page_size - 1)]
+
+    puts 'contributions:'
+    puts @contributions
 
     respond_to do |format|
       format.html { render partial: 'display_contributions' }
