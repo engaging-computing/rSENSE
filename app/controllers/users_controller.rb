@@ -65,7 +65,7 @@ class UsersController < ApplicationController
 
     # See if we are only looking for specific contributions
     @filter = params[:filters].to_s.downcase
-    puts "filter:"
+    puts 'filter:'
     puts @filter
 
     if params[:page_size].nil?
