@@ -45,7 +45,6 @@ class ShowUserTest < ActionDispatch::IntegrationTest
     page.first(:css, '.contrib-delete-link').click
     page.driver.browser.confirm_messages
 
-
     page.has_css?('.contrib-delete-link',
                   count: (count - 1), visible: true)
 
