@@ -60,6 +60,7 @@ class ShowUserTest < ActionDispatch::IntegrationTest
 
     fill_in 'info_edit_value', with: 'George Bush'
     find('.info-save-button').click
+    screenshot_and_open_image
     assert find('.info-show-value').has_content?('George Bush'), 'name updated'
   end
 end
