@@ -33,7 +33,10 @@ class ShowUserTest < ActionDispatch::IntegrationTest
     assert page.has_content?('Media Test'), 'View projects list'
 
     # Verify existence of and count of delete project links
-    page.should have_css('.contrib-delete-link'), 'Delete project should exist'
+    puts 'exists'
+    puts page.has_css?('.contrib-delete-link')
+
+    assert page.has_css?('.contrib-delete-link'), 'Delete project should exist'
     count = page.all(:css, '.contrib-delete-link').length
 
     puts 'count in show user test:'
