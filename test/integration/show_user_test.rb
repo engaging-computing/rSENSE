@@ -42,8 +42,9 @@ class ShowUserTest < ActionDispatch::IntegrationTest
     puts 'count in show user test:'
     puts count
 
-    page.driver.browser.accept_js_confirms
     page.first(:css, '.contrib-delete-link').click
+    page.driver.browser.confirm_messages
+
 
     page.has_css?('.contrib-delete-link',
                   count: (count - 1), visible: true)
