@@ -36,6 +36,9 @@ class ShowUserTest < ActionDispatch::IntegrationTest
     assert page.has_css?('.contrib-delete-link'), 'Delete project should exist'
     count = page.all(:css, '.contrib-delete-link').length
 
+    puts 'count in show user test:'
+    puts count
+
     page.driver.browser.accept_js_confirms
     page.first(:css, '.contrib-delete-link').click
 
