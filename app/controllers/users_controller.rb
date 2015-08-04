@@ -139,8 +139,8 @@ class UsersController < ApplicationController
     end
 
     @contributions = @contributions[page * page_size..(page * page_size) + (page_size - 1)]
-    
-    puts "contributions"
+
+    puts 'contributions'
     puts @contributions
 
     respond_to do |format|
