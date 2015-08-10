@@ -94,7 +94,7 @@ class UsersController < ApplicationController
       @user.likes.each do |like|
         y = Project.where('(lower(title) LIKE lower(?)) AND (id = ?)', "%#{params[:search]}%",
                             like.project_id).first || next
-        puts y
+        puts "AAA #{y}"
         next if y.hidden == true && !can_edit?(y)
         @contributions << y
       end
