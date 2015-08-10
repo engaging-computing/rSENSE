@@ -39,14 +39,15 @@ $ ->
         super()
 
       update: ->
+        dp = globals.getData(true, globals.configs.activeFilters)
         groupSel = data.groupSelection
         analysis =
-          'total':  (data.getTotal       @configs.displayField, groupSel)
-          'min':    (data.getMin         @configs.displayField, groupSel)
-          'max':    (data.getMax         @configs.displayField, groupSel)
-          'median': (data.getMedian      @configs.displayField, groupSel)
-          'count':  (data.getCount       @configs.displayField, groupSel)
-          'mean':   (data.getMean        @configs.displayField, groupSel)
+          'total':   data.getTotal(@configs.displayField, groupSel, dp)
+          'min':       data.getMin(@configs.displayField, groupSel, dp)
+          'max':       data.getMax(@configs.displayField, groupSel, dp)
+          'median': data.getMedian(@configs.displayField, groupSel, dp)
+          'count':   data.getCount(@configs.displayField, groupSel, dp)
+          'mean':     data.getMean(@configs.displayField, groupSel, dp)
 
         ($ '#' + @canvas).html('')
         field = data.fields[@configs.displayField]
@@ -108,6 +109,7 @@ $ ->
         @drawYAxisControls(globals.configs.fieldSelection,
           data.normalFields.slice(1), true, 'Fields', @configs.displayField,
           @yAxisRadioHandler)
+        @drawClippingControls()
         @drawSaveControls()
 
       globals.summary = new Summary "summary-canvas"

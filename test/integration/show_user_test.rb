@@ -33,11 +33,17 @@ class ShowUserTest < ActionDispatch::IntegrationTest
     assert page.has_content?('Media Test'), 'View projects list'
 
     # Verify existence of and count of delete project links
+    puts 'exists'
+    puts page.has_css?('.contrib-delete-link')
+
     assert page.has_css?('.contrib-delete-link'), 'Delete project should exist'
     count = page.all(:css, '.contrib-delete-link').length
 
-    page.driver.browser.accept_js_confirms
+    puts 'count in show user test:'
+    puts count
+
     page.first(:css, '.contrib-delete-link').click
+    page.driver.browser.confirm_messages
 
     page.has_css?('.contrib-delete-link',
                   count: (count - 1), visible: true)
@@ -60,6 +66,7 @@ class ShowUserTest < ActionDispatch::IntegrationTest
 
     fill_in 'info_edit_value', with: 'George Bush'
     find('.info-save-button').click
+    screenshot_and_open_image
     assert find('.info-show-value').has_content?('George Bush'), 'name updated'
   end
 end

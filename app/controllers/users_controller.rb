@@ -60,9 +60,13 @@ class UsersController < ApplicationController
   # GET /users/1.json
   def contributions
     @user = User.find(params[:id])
+    puts 'user:'
+    puts @user
 
     # See if we are only looking for specific contributions
     @filter = params[:filters].to_s.downcase
+    puts 'filter:'
+    puts @filter
 
     if params[:page_size].nil?
       page_size = 10
@@ -75,6 +79,7 @@ class UsersController < ApplicationController
     @contributions = []
     @objtype = ''
 
+    puts "filter is #{@filter}"
     case @filter
     when 'my projects'
       @contributions = @user.projects.search(params[:search], show_hidden)
@@ -90,6 +95,7 @@ class UsersController < ApplicationController
       @user.likes.each do |like|
         y = Project.where('(lower(title) LIKE lower(?)) AND (id = ?)', "%#{params[:search]}%",
                             like.project_id).first || next
+        puts "AAA #{y}"
         next if y.hidden == true && !can_edit?(y)
         @contributions << y
       end
@@ -101,13 +107,15 @@ class UsersController < ApplicationController
             else
               params[:sort].to_s.downcase
             end
+    puts 'sort:'
+    puts @sort
 
     if @contributions.is_a? Array
       case @sort
       when 'create asc'
-        @contributions.sort! { |l, r| l.created_at.downcase <=> r.created_at.downcase }
+        @contributions.sort! { |l, r| l.created_at.to_s.downcase <=> r.created_at.to_s.downcase }
       when 'create dsc'
-        @contributions.sort! { |l, r| r.created_at.downcase <=> l.created_at.downcase }
+        @contributions.sort! { |l, r| r.created_at.to_s.downcase <=> l.created_at.to_s.downcase }
       when 'title asc'
         @contributions.sort! { |l, r| l.title.downcase <=> r.title.downcase }
       when 'title dsc'
@@ -139,6 +147,9 @@ class UsersController < ApplicationController
     end
 
     @contributions = @contributions[page * page_size..(page * page_size) + (page_size - 1)]
+
+    puts 'contributions:'
+    puts @contributions
 
     respond_to do |format|
       format.html { render partial: 'display_contributions' }

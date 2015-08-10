@@ -53,8 +53,15 @@ $ ->
         icon.toggleClass('fa-chevron-left').toggleClass('fa-chevron-down')
 
     ###
-    Returns the full path to a handlebars template
-      template  Name of the handlebars template
+    Returns the full path to a handlebars vis template
+      template     Name of the handlebars vis template
+    ###
+    window.hbVis = (template) ->
+      return 'visualizations/' + template
+
+    ###
+    Returns the full path to a handlebars control template
+      template     Name of the handlebars control template
     ###
     window.hbCtrl = (template) ->
       return 'visualizations/controls/' + template
