@@ -79,7 +79,7 @@ class UsersController < ApplicationController
     @contributions = []
     @objtype = ''
 
-    puts 'filter is #{@filter}'
+    puts "filter is #{@filter}"
     case @filter
     when 'my projects'
       @contributions = @user.projects.search(params[:search], show_hidden)
