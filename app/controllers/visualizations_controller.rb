@@ -237,7 +237,7 @@ class VisualizationsController < ApplicationController
     data_fields.push(typeID: TEXT_TYPE, unitName: 'String', fieldID: -1, fieldName: 'Combined Data Sets')
 
     # push real fields to temp variable
-    @project.fields.each do |field|
+    (@project.fields.sort_by &:index).each do |field|
       data_fields.push(typeID: field.field_type, unitName: field.unit, fieldID: field.id, fieldName: field.name)
     end
 

@@ -33,7 +33,7 @@
   <table class="table table-striped table-bordered" id="entry">
     <thead>
       <tr>
-        <% @project.fields.each do |field|%>
+        <% (@project.fields.sort_by &:index).each do |field|%>
           <td class="center"><%=field.name%></td>
         <% end %>
       </tr>

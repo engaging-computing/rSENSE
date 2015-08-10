@@ -1,4 +1,4 @@
-<% @project.fields.each do |field| %>
+<% (@project.fields.sort_by &:index).each do |field| %>
   <tr class="<%= cycle('feed-even', 'feed-odd') %> fields" >
     <td style="max-width:95px" class="field_name"
         data-field_id="<%= field.id %>">

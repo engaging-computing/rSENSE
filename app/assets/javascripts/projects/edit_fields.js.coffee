@@ -28,7 +28,7 @@ $ ->
     $('#number').click ->
       numCount = numCount + 1
       displayNumCount = displayNumCount + 1
-      addRow(["""<i class="fa fa-chevron-up up"></i><i class="fa fa-chevron-down down"></i></td>""",
+      addRow(["""<i class="fa fa-chevron-up up"></i><i class="fa fa-chevron-down down"></i>""",
       			 """<input class="input-small form-control" type="text"
                  name="number_#{numCount}" value="Number_#{displayNumCount}">""", "Number",
                  """<input class="input-small form-control" type="text" class="units"
@@ -38,7 +38,7 @@ $ ->
     $('#text').click ->
       textCount = textCount + 1
       displayTextCount = displayTextCount + 1
-      addRow(["""<i class="fa fa-chevron-up up"></i><i class="fa fa-chevron-down down"></i></td>""",
+      addRow(["""<i class="fa fa-chevron-up up"></i><i class="fa fa-chevron-down down"></i>""",
       			 """<input class="input-small form-control" type="text"
                  name="text_#{textCount}" value="Text_#{displayTextCount}">""", "Text", "",
               	 """<input class="input-small form-control" type="text" class="restrictions"
@@ -47,7 +47,7 @@ $ ->
 
     $('#timestamp').click ->
       timestampCount = timestampCount + 1
-      addRow(["""<i class="fa fa-chevron-up up"></i><i class="fa fa-chevron-down down"></i></td>""",
+      addRow(["""<i class="fa fa-chevron-up up"></i><i class="fa fa-chevron-down down"></i>""",
       			 """<input class="input-small form-control" type="text" name="timestamp"
                  value="Timestamp">""", "Timestamp", "", "", """<a href="#" fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
@@ -55,22 +55,18 @@ $ ->
 
     $('#location').click ->
       locationCount = locationCount + 1
-      addRow(["""<i class="fa fa-chevron-up up"></i><i class="fa fa-chevron-down down"></i></td>""",
+      addRow(["""<div> <span style="width: 100px;" class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> </div>""",
       			 """<input class="input-small form-control" type="text" name="longitude"
                  value="Longitude">""", "Longitude", "deg", "", """<a href="#" fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
-      addRow(["""<i class="fa fa-chevron-up up"></i><i class="fa fa-chevron-down down"></i></td>""",
+      addRow(["""<i class="fa fa-chevron-up up"></i><i class="fa fa-chevron-down down"></i>""",
       			 """<input class="input-small form-control" type="text" name="latitude"
                  value="Latitude">""", "Latitude", "deg", "", """<a href="#" fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
       document.getElementById('location').disabled = true
 
-    $('#fields_table').on 'click', '.up, .down', ->
-      row = $(@).parents('tr:first')
-      if $(@).is('.up') && row.index('tr') > 1
-        row.insertBefore(row.prev())
-      else if $(@).is('.down')
-        row.insertAfter(row.next())
+    # Make table sortable
+    $( "tbody" ).sortable();
 
     # Delete field, enable timestamp/location buttons (NOTE: fid is 0 when the field
     # hasn't yet been added to project in database)
@@ -79,7 +75,7 @@ $ ->
       fid = $(@).closest('a').attr('fid')
 
       # Row index of row being deleted
-      rowIndex = $(@).closest('tr').index()
+      rowIndex = $(@).closest('tr').index()+1
 
       # Row name of row being deleted
       rowName = $(@).closest('tr').attr('name')
@@ -114,10 +110,25 @@ $ ->
       for i in [0...4]
         setValue(inputBoxes[i], values[i])
 
+      # add hidden input for each field with it's position 
+      t = document.getElementById('fields_table')
+      for i in [1...t.rows.length]
+        field_id = t.rows[i].cells[5].getElementsByTagName('a')[0].getAttribute('fid')
+        console.log t.rows[i].cells[2].innerHTML 
+        input = document.createElement('input');
+        input.setAttribute('type', 'text');
+        input.setAttribute('text', 'form-control');
+        input.setAttribute('style', 'visibility:collapse;');
+        input.setAttribute('name', "#{field_id}_index");
+        input.setAttribute('id', "#{field_id}_index");
+        input.setAttribute('value', i-1);
+        document.getElementById('hidden_index_inputs').appendChild(input);
+
+
 # Adds row to table, highlight new row
 addRow = (content) ->
-  row = document.getElementById('fields_table').insertRow(1)
-  $(row).attr('name', content[1].toLowerCase())
+  row = document.getElementById('sortable').insertRow(0)
+  $(row).attr('name', content[2].toLowerCase())
 
   cells = for i in [1...7]
     row.insertCell(i - 1)
@@ -131,12 +142,21 @@ addRow = (content) ->
 callDeleteRow = (rowIndex, rowName, fid) ->
   if rowName == 'timestamp'
     deleteRow(rowIndex, true, 'timestamp')
+
   else if rowName == 'latitude'
+    t = document.getElementById('fields_table')
     deleteRow(rowIndex, true, 'location')
-    deleteRow(rowIndex, true, 'location')
+    for i in [1...t.rows.length]
+      if t.rows[i].cells[2].innerHTML == 'Longitude'
+        deleteRow(i, true, 'location')
+
   else if rowName == 'longitude'
+    t = document.getElementById('fields_table')
     deleteRow(rowIndex, true, 'location')
-    deleteRow(rowIndex - 1, true, 'location')
+    for i in [1...t.rows.length]
+      if t.rows[i].cells[2].innerHTML == 'Latitude'
+        deleteRow(i, true, 'location')
+
   else
     deleteRow(rowIndex, false, '')
 

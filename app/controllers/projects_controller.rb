@@ -280,6 +280,7 @@ class ProjectsController < ApplicationController
 
       unless field.update_attributes(name: params["#{field.id}_name"],
                                      unit: params["#{field.id}_unit"],
+                                     index: params["#{field.id}_index"],
                                      restrictions: restrictions)
         respond_to do |format|
           flash[:error] = 'Field names must be unique.'
@@ -326,7 +327,8 @@ class ProjectsController < ApplicationController
                          field_type: get_field_type(fieldType),
                          name: fieldName,
                          unit: unit,
-                         restrictions: restrictions)
+                         restrictions: restrictions,
+                         index: @project.fields.size())
     end
 
     unless field.save
@@ -366,7 +368,9 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
     @matches.each do |header|
       field = Field.new(project_id: @project.id,
-                        field_type: header[1].to_i, name: header[0])
+                        field_type: header[1].to_i, 
+                        name: header[0],
+                        index: @project.fields.size())
 
       unless field.save
         respond_to do |format|
