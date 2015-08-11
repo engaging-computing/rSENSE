@@ -303,11 +303,12 @@ $ ->
 
         $('.color-picker').each (_, cpicker) =>
           cid = $(cpicker).data('color-id')
-          $(cpicker).colorpicker 'create',
+          a = $(cpicker).colorpicker
             outputType: 'hex'
             onOpen: () ->
               $("#label-color-#{cid}").parent().parent().css('background-color',
                 '#EEE')
+              globals.getColor(cid)
             onClose: () ->
               $("#label-color-#{cid}").parent().parent().css('background-color',
                 '#FFF')
@@ -316,7 +317,19 @@ $ ->
               $("#label-color-#{cid}").css 'color', color
               @delayedUpdate()
               setTimeout (() => @start()), 1
-          $(cpicker).colorpicker 'setcolor', globals.getColor(cid)
+            hPosition: (w, h) =>
+              button = $(cpicker).children('img')
+              buttonX = button.offset().left
+              buttonW = button.width()
+              buttonX - w + buttonW
+            vPosition: (w, h) =>
+              button = $(cpicker).children('img')
+              buttonY = button.offset().top
+              buttonH = button.height()
+              buttonY + buttonH
+
+          $(cpicker).click ->
+            a.open()
 
         $('#group-by').val(globals.configs.groupById)
         $('#group-by').change (e) =>
@@ -438,12 +451,12 @@ $ ->
 
         # Set up analysis types from the list of exclusions
         analysisTypes = [
-          @ANALYSISTYPE_TOTAL
-          @ANALYSISTYPE_MAX
-          @ANALYSISTYPE_MIN
           @ANALYSISTYPE_MEAN
           @ANALYSISTYPE_MEAN_ERROR
           @ANALYSISTYPE_MEDIAN
+          @ANALYSISTYPE_MAX
+          @ANALYSISTYPE_MIN
+          @ANALYSISTYPE_TOTAL
           @ANALYSISTYPE_COUNT
           ]
         analysisTypes = analysisTypes.filter (x) ->

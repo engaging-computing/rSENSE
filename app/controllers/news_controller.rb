@@ -16,7 +16,7 @@ class NewsController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @news.map { |p| p.to_hash } }
+      format.json { render json: @news.map(&:to_hash) }
     end
   end
 
@@ -84,9 +84,7 @@ class NewsController < ApplicationController
   def destroy
     @news = News.find(params[:id])
 
-    @news.media_objects.each do |m|
-      m.destroy
-    end
+    @news.media_objects.each(&:destroy)
 
     @news.destroy
 

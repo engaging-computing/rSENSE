@@ -27,7 +27,7 @@ class UsersController < ApplicationController
 
     @users = User.search(params[:search]).paginate(
       page: params[:page], per_page: pagesize).order("created_at #{sort}")
-    logger.error @users.map { |u| u.created_at }
+    logger.error @users.map(&:created_at)
     respond_to do |format|
       format.html { render status: :ok }
       format.json { render json: @users.map { |u| u.to_hash(false) }, status: :ok }
@@ -73,22 +73,56 @@ class UsersController < ApplicationController
     show_hidden = (@cur_user.id == @user.id) || can_admin?(@user)
 
     @contributions = []
+    @objtype = ''
 
     case @filter
     when 'my projects'
       @contributions = @user.projects.search(params[:search], show_hidden)
+      @objtype = 'projects'
     when 'data sets'
       @contributions = @user.data_sets.search(params[:search])
+      @objtype = 'data_sets'
     when 'visualizations'
       @contributions = @user.visualizations.search(params[:search], show_hidden)
+      @objtype = 'visualizations'
     when 'liked projects'
       @contributions = []
       @user.likes.each do |like|
         y = Project.where('(lower(title) LIKE lower(?)) AND (id = ?)', "%#{params[:search]}%",
-                          like.project_id).first || next
+                            like.project_id).first || next
         next if y.hidden == true && !can_edit?(y)
         @contributions << y
       end
+      @objtype = 'likes'
+    end
+
+    @sort = if params[:sort].nil?
+              'create dsc'
+            else
+              params[:sort].to_s.downcase
+            end
+
+    if @contributions.is_a? Array
+      case @sort
+      when 'create asc'
+        @contributions.sort! { |l, r| l.created_at.downcase <=> r.created_at.downcase }
+      when 'create dsc'
+        @contributions.sort! { |l, r| r.created_at.downcase <=> l.created_at.downcase }
+      when 'title asc'
+        @contributions.sort! { |l, r| l.title.downcase <=> r.title.downcase }
+      when 'title dsc'
+        @contributions.sort! { |l, r| r.title.downcase <=> l.title.downcase }
+      else
+        @contributions.sort! { |l, r| r.created_at.downcase <=> l.created_at.downcase }
+      end
+    else
+      sort_type = case @sort
+                  when 'create asc' then "#{@objtype}.created_at ASC"
+                  when 'create dsc' then "#{@objtype}.created_at DESC"
+                  when 'title asc' then 'lower(title) ASC'
+                  when 'title dsc' then 'lower(title) DESC'
+                  end
+      @contributions = @contributions.order(sort_type).all
     end
 
     page = params[:page].to_i
@@ -163,7 +197,7 @@ class UsersController < ApplicationController
 
     if !auth && can_edit?(@user)
       if (params[:user][:password].nil? && params[:user][:email].nil?) or
-           @user.authenticate(params[:current_password])
+         @user.authenticate(params[:current_password])
         auth  = true
       else
         auth_error = "Current password doesn't match"
@@ -199,18 +233,10 @@ class UsersController < ApplicationController
       if @cur_user.id == @user.id
         session[:user_id] = nil
       end
-      @user.likes.each do |l|
-        l.destroy
-      end
-      @user.media_objects.each do |m|
-        m.destroy
-      end
-      @user.visualizations.each do |v|
-        v.destroy
-      end
-      @user.data_sets.each do |d|
-        d.destroy
-      end
+      @user.likes.each(&:destroy)
+      @user.media_objects.each(&:destroy)
+      @user.visualizations.each(&:destroy)
+      @user.data_sets.each(&:destroy)
       @user.projects.each do |p|
         if can_delete?(p)
           p.destroy
@@ -221,12 +247,8 @@ class UsersController < ApplicationController
           p.save
         end
       end
-      @user.tutorials.each do |t|
-        t.destroy
-      end
-      @user.news.each do |n|
-        n.destroy
-      end
+      @user.tutorials.each(&:destroy)
+      @user.news.each(&:destroy)
 
       @user.destroy
 

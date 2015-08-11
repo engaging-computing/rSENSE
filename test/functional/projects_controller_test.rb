@@ -11,7 +11,6 @@ class ProjectsControllerTest < ActionController::TestCase
     @delete_me = projects(:delete_me)
     @delete_me_two = projects(:delete_me2)
     @delete_me_three = projects(:delete_me3)
-    @contrib_key_test = projects(:contributor_key_project)
     @key = contrib_keys(:contributor_key_test)
     @media_test = projects(:media_test)
     @dessert = projects(:dessert)
@@ -41,8 +40,6 @@ class ProjectsControllerTest < ActionController::TestCase
 
     @pp = Project.find(@project_one.id)
     assert @pp.views == views_before + 1, 'View count incremented'
-    get :show, id: @contrib_key_test
-    assert_response :success
   end
 
   test 'should show project (json)' do
@@ -185,7 +182,6 @@ class ProjectsControllerTest < ActionController::TestCase
     put :update, { format: 'json', id: @project_three, project: { curated: 'false' } },  user_id: @nixon
     assert_response :success
     assert Project.find(@project_three).curated == false, 'Nixon should have been able to uncurated the project'
-
   end
 
   test 'should lock project (json)' do
@@ -208,7 +204,7 @@ class ProjectsControllerTest < ActionController::TestCase
   end
 
   test 'save fields' do
-    parameters = Hash.new
+    parameters = {}
     @dessert.fields.each do |field|
       parameters["#{field.id}_name"] = field.name
       parameters["#{field.id}_unit"] = field.unit

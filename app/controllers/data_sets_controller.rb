@@ -72,7 +72,10 @@ class DataSetsController < ApplicationController
       return
     end
 
-    if @cur_user.nil?
+    if !session[:contributor_name].nil?
+      @data_set.user_id = @project.user_id
+      @data_set.contributor_name = session[:contributor_name]
+    elsif @cur_user.nil?
       @data_set.user_id = @project.user_id
     else
       @data_set.user_id = @cur_user.id
@@ -129,9 +132,7 @@ class DataSetsController < ApplicationController
 
     if can_delete?(@data_set)
 
-      @data_set.media_objects.each do |m|
-        m.destroy
-      end
+      @data_set.media_objects.each(&:destroy)
 
       respond_to do |format|
         if @data_set.destroy
@@ -186,6 +187,7 @@ class DataSetsController < ApplicationController
         d.title = params[:title]
         d.project_id = project.id
         d.data = data
+        params[:contributor_name] ||= session[:contributor_name]
         unless params[:contributor_name].nil?
           if params[:contributor_name].length == 0
             d.contributor_name = 'Contributed via Key'
@@ -329,7 +331,6 @@ class DataSetsController < ApplicationController
 
     if params[:file] && params[:file].original_filename.split('.')[-1] == 'zip'
       Zip::File.open(params[:file].path) do |zip_file|
-
         results = []
         filenames = []
         zip_file.each do |entry|
