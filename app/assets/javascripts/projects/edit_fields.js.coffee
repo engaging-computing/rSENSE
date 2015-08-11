@@ -28,7 +28,7 @@ $ ->
     $('#number').click ->
       numCount = numCount + 1
       displayNumCount = displayNumCount + 1
-      addRow(["""<i class="fa fa-chevron-up up"></i><i class="fa fa-chevron-down down"></i>""",
+      addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
       			 """<input class="input-small form-control" type="text"
                  name="number_#{numCount}" value="Number_#{displayNumCount}">""", "Number",
                  """<input class="input-small form-control" type="text" class="units"
@@ -38,7 +38,7 @@ $ ->
     $('#text').click ->
       textCount = textCount + 1
       displayTextCount = displayTextCount + 1
-      addRow(["""<i class="fa fa-chevron-up up"></i><i class="fa fa-chevron-down down"></i>""",
+      addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
       			 """<input class="input-small form-control" type="text"
                  name="text_#{textCount}" value="Text_#{displayTextCount}">""", "Text", "",
               	 """<input class="input-small form-control" type="text" class="restrictions"
@@ -47,7 +47,7 @@ $ ->
 
     $('#timestamp').click ->
       timestampCount = timestampCount + 1
-      addRow(["""<i class="fa fa-chevron-up up"></i><i class="fa fa-chevron-down down"></i>""",
+      addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
       			 """<input class="input-small form-control" type="text" name="timestamp"
                  value="Timestamp">""", "Timestamp", "", "", """<a href="#" fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
@@ -55,11 +55,11 @@ $ ->
 
     $('#location').click ->
       locationCount = locationCount + 1
-      addRow(["""<div> <span style="width: 100px;" class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span> </div>""",
+      addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
       			 """<input class="input-small form-control" type="text" name="longitude"
                  value="Longitude">""", "Longitude", "deg", "", """<a href="#" fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
-      addRow(["""<i class="fa fa-chevron-up up"></i><i class="fa fa-chevron-down down"></i>""",
+      addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
       			 """<input class="input-small form-control" type="text" name="latitude"
                  value="Latitude">""", "Latitude", "deg", "", """<a href="#" fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
@@ -114,7 +114,11 @@ $ ->
       t = document.getElementById('fields_table')
       for i in [1...t.rows.length]
         field_id = t.rows[i].cells[5].getElementsByTagName('a')[0].getAttribute('fid')
-        console.log t.rows[i].cells[2].innerHTML 
+        # This is for new fields that do not have an id yet
+        console.log field_id
+        if field_id == '0'
+          field_id = t.rows[1].cells[1].getElementsByTagName('input')[0].getAttribute('name')
+          console.log field_id
         input = document.createElement('input');
         input.setAttribute('type', 'text');
         input.setAttribute('text', 'form-control');

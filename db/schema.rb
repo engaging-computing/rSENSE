@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20150805145056) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "contrib_keys", force: true do |t|
     t.string   "name",       null: false
     t.string   "key",        null: false
@@ -36,11 +39,11 @@ ActiveRecord::Schema.define(version: 20150805145056) do
   create_table "fields", force: true do |t|
     t.string   "name"
     t.integer  "field_type"
-    t.text     "unit",         limit: 255, default: ""
+    t.text     "unit",         default: ""
     t.integer  "project_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "restrictions",             default: "[]"
+    t.text     "restrictions", default: "[]"
     t.integer  "index"
   end
 
@@ -65,7 +68,6 @@ ActiveRecord::Schema.define(version: 20150805145056) do
     t.integer  "news_id"
     t.string   "store_key"
     t.string   "file"
-    t.string   "md5"
   end
 
   create_table "news", force: true do |t|
@@ -85,18 +87,18 @@ ActiveRecord::Schema.define(version: 20150805145056) do
     t.text     "content"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "featured",                      default: false
-    t.text     "filter",            limit: 255, default: ""
+    t.boolean  "featured",          default: false
+    t.text     "filter",            default: ""
     t.integer  "cloned_from"
-    t.boolean  "is_template",                   default: false
+    t.boolean  "is_template",       default: false
     t.integer  "featured_media_id"
-    t.boolean  "hidden",                        default: false
+    t.boolean  "hidden",            default: false
     t.datetime "featured_at"
-    t.boolean  "lock",                          default: false
-    t.boolean  "curated",                       default: false
+    t.boolean  "lock",              default: false
+    t.boolean  "curated",           default: false
     t.datetime "curated_at"
     t.text     "default_vis"
-    t.integer  "precision",                     default: 4
+    t.integer  "precision",         default: 4
     t.text     "globals"
     t.text     "kml_metadata"
   end
