@@ -29,7 +29,7 @@ $ ->
       numCount = numCount + 1
       displayNumCount = displayNumCount + 1
       addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
-      			 """<input class="input-small form-control" type="text"
+             """<input class="input-small form-control" type="text"
                  name="number_#{numCount}" value="Number_#{displayNumCount}">""", "Number",
                  """<input class="input-small form-control" type="text" class="units"
                  name="units_#{numCount}">""", "", """<a href="#" fid="0"
@@ -39,16 +39,16 @@ $ ->
       textCount = textCount + 1
       displayTextCount = displayTextCount + 1
       addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
-      			 """<input class="input-small form-control" type="text"
+             """<input class="input-small form-control" type="text"
                  name="text_#{textCount}" value="Text_#{displayTextCount}">""", "Text", "",
-              	 """<input class="input-small form-control" type="text" class="restrictions"
+                 """<input class="input-small form-control" type="text" class="restrictions"
                  name="restrictions_#{textCount}">""", """<a href="#" fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
 
     $('#timestamp').click ->
       timestampCount = timestampCount + 1
       addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
-      			 """<input class="input-small form-control" type="text" name="timestamp"
+             """<input class="input-small form-control" type="text" name="timestamp"
                  value="Timestamp">""", "Timestamp", "", "", """<a href="#" fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
       document.getElementById('timestamp').disabled = true
@@ -56,11 +56,11 @@ $ ->
     $('#location').click ->
       locationCount = locationCount + 1
       addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
-      			 """<input class="input-small form-control" type="text" name="longitude"
+             """<input class="input-small form-control" type="text" name="longitude"
                  value="Longitude">""", "Longitude", "deg", "", """<a href="#" fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
       addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
-      			 """<input class="input-small form-control" type="text" name="latitude"
+             """<input class="input-small form-control" type="text" name="latitude"
                  value="Latitude">""", "Latitude", "deg", "", """<a href="#" fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
       document.getElementById('location').disabled = true
