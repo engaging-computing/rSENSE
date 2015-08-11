@@ -64,6 +64,7 @@ ActiveRecord::Schema.define(version: 20150519161334) do
     t.integer  "news_id"
     t.string   "store_key"
     t.string   "file"
+    t.string   "md5"
   end
 
   create_table "news", force: true do |t|
