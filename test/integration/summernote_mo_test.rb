@@ -30,7 +30,6 @@ class SummernoteMoTest < ActionDispatch::IntegrationTest
     assert page.has_css? '.mo_image'
     click_on 'Logout'
     assert page.has_css? '.mo_image'
-
   end
 
   test 'tutorial_image_upload' do

@@ -123,9 +123,7 @@ class TutorialsController < ApplicationController
   def destroy
     @tutorial = Tutorial.find(params[:id])
 
-    @tutorial.media_objects.each do |m|
-      m.destroy
-    end
+    @tutorial.media_objects.each(&:destroy)
 
     @tutorial.destroy
 

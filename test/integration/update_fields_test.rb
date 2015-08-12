@@ -45,7 +45,6 @@ class UpdateFieldsTest < ActionDispatch::IntegrationTest
     find('#fields_form_submit').click
 
     assert page.has_content?('Fields were successfully updated.')
-
   end
 
   test 'template fields with data set' do
