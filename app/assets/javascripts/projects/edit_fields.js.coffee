@@ -75,7 +75,7 @@ $ ->
       fid = $(@).closest('a').attr('fid')
 
       # Row index of row being deleted
-      rowIndex = $(@).closest('tr').index()+1
+      rowIndex = $(@).closest('tr').index() + 1
 
       # Row name of row being deleted
       rowName = $(@).closest('tr').attr('name')
@@ -110,21 +110,21 @@ $ ->
       for i in [0...4]
         setValue(inputBoxes[i], values[i])
 
-      # add hidden input for each field with it's position 
+      # add hidden input for each field with it's position
       t = document.getElementById('fields_table')
       for i in [1...t.rows.length]
         field_id = t.rows[i].cells[5].getElementsByTagName('a')[0].getAttribute('fid')
         # This is for new fields that do not have an id yet
         if field_id == '0'
           field_id = t.rows[1].cells[1].getElementsByTagName('input')[0].getAttribute('name')
-        input = document.createElement('input');
-        input.setAttribute('type', 'text');
-        input.setAttribute('text', 'form-control');
-        input.setAttribute('style', 'visibility:collapse;');
-        input.setAttribute('name', "#{field_id}_index");
-        input.setAttribute('id', "#{field_id}_index");
-        input.setAttribute('value', i-1);
-        document.getElementById('hidden_index_inputs').appendChild(input);
+        input = document.createElement('input')
+        input.setAttribute('type', 'text')
+        input.setAttribute('text', 'form-control')
+        input.setAttribute('style', 'visibility:collapse;')
+        input.setAttribute('name', "#{field_id}_index")
+        input.setAttribute('id', "#{field_id}_index")
+        input.setAttribute('value', i - 1)
+        document.getElementById('hidden_index_inputs').appendChild(input)
 
 
 # Adds row to table, highlight new row

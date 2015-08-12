@@ -294,19 +294,19 @@ class ProjectsController < ApplicationController
 
     # Add fields based on type
     if params[:hidden_location_count] == '1'
-      if addField('Latitude', 'Latitude', 'deg', [], params["latitude_index"]) == -1 and return
+      if addField('Latitude', 'Latitude', 'deg', [], params['latitude_index']) == -1 and return
       end
-      if addField('Longitude', 'Longitude', 'deg', [], params["longitude_index"]) == -1 and return
+      if addField('Longitude', 'Longitude', 'deg', [], params['longitude_index']) == -1 and return
       end
     end
 
     if params[:hidden_timestamp_count] == '1'
-      if addField('Timestamp', 'Timestamp', '', [], params["timestamp_index"]) == -1 and return
+      if addField('Timestamp', 'Timestamp', '', [], params['timestamp_index']) == -1 and return
       end
     end
 
     (params[:hidden_num_count].to_i).times do |i|
-      if addField('Number', params[('number_' + (i + 1).to_s).to_sym], params[('units_' + (i + 1).to_s).to_sym], [],  params["number_" + i.to_s + "_index"]) == -1 and return
+      if addField('Number', params[('number_' + (i + 1).to_s).to_sym], params[('units_' + (i + 1).to_s).to_sym], [],  params['number_' + i.to_s + '_index']) == -1 and return
       end
     end
 
@@ -314,7 +314,7 @@ class ProjectsController < ApplicationController
       # Need to explicitly check if restrictions are nil because empty restrictions should be []
       restrictions = params[('restrictions_' + (i + 1).to_s).to_sym].nil? ? [] : params[('restrictions_' + (i + 1).to_s).to_sym].split(',')
 
-      if addField('Text', params[('text_' + (i + 1).to_s).to_sym], '', restrictions, params["text_" + i.to_s + "_index"]) == -1 and return
+      if addField('Text', params[('text_' + (i + 1).to_s).to_sym], '', restrictions, params['text_' + i.to_s + '_index']) == -1 and return
       end
     end
 
@@ -327,7 +327,7 @@ class ProjectsController < ApplicationController
       return
     else
       if index.nil?
-        index =@project.fields.size()
+        index = @project.fields.size
       end
       field  = Field.new(project_id: @project.id,
                          field_type: get_field_type(fieldType),
@@ -374,9 +374,9 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
     @matches.each do |header|
       field = Field.new(project_id: @project.id,
-                        field_type: header[1].to_i, 
+                        field_type: header[1].to_i,
                         name: header[0],
-                        index: @project.fields.size())
+                        index: @project.fields.size)
 
       unless field.save
         respond_to do |format|

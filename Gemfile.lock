@@ -22,9 +22,9 @@ GIT
 
 GIT
   remote: https://github.com/isenseDev/better-colorpicker
-  revision: 55c4ae1819bdae7b85a0281b4055a6359c2bf91c
+  revision: abb1a3ebb6e20bea6a3dfd5ed2b5bab09a83c552
   specs:
-    better_colorpicker (0.1.1)
+    better_colorpicker (0.1.2)
       coffee-rails
       coffee-rails-source-maps
       rails (~> 4)
@@ -251,7 +251,7 @@ PLATFORMS
 DEPENDENCIES
   auto_html
   bcrypt-ruby
-  better_colorpicker (~> 0.1.1)!
+  better_colorpicker (~> 0.1.2)!
   better_datetimepicker (~> 0.0.8)!
   bootstrap-sass
   browser
