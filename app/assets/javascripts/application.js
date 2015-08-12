@@ -29,6 +29,7 @@
 //= require jquery.qrcode.min.js
 //= require titlebar.js.coffee
 //= require bootstrap
+//= require jstz/jstz-1.0.4.min.js
 //
 //  -- Handlebars --
 //= require handlebars

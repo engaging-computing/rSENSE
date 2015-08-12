@@ -12,7 +12,8 @@
                  title="Enter keyword(s) to search for a visualization">
               <div class="input-group">
                 <%= text_field_tag :search, @params[:search],
-                  class: "form-control" %>
+                  class: "form-control",
+                  placeholder: "Enter keyword(s) to search for a visualization" %>
                 <span class="input-group-btn">
                   <button class="btn btn-default">
                     <i class='fa fa-search'></i>
@@ -24,8 +25,8 @@
           <div class="row">
             <div class="padded-col col-md-3 col-xs-6" title="Sort by">
               <%= select_tag(:sort,
-                options_for_select([["Sort by Modified Date", "updated_at"],
-                                    ["Sort by Created Date", "created_at"]],
+                options_for_select([["Sort by Created Date", "created_at"],
+                                    ["Sort by Modified Date", "updated_at"]],
                                    @params["sort"]),
                 class: "visualizations_sort_select form-control")
               %>

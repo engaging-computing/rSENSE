@@ -99,7 +99,7 @@ class ApplicationController < ActionController::Base
       end
 
     elsif (params.key? :contribution_key) && (['jsonDataUpload', 'saveMedia'].include? params[:action]) &&
-        (params[:type] == 'data_set')
+          (params[:type] == 'data_set')
       data_set = DataSet.find(params[:id])
       project = Project.find_by_id(data_set.project_id)
       key = project.contrib_keys.find_by_key(params[:contribution_key])
@@ -135,12 +135,12 @@ class ApplicationController < ActionController::Base
 
     # The API call came with a contribution key and they are trying to access a dataset
     elsif (params.key? :contribution_key) &&
-        (['append', 'edit'].include? params[:action]) &&
-        params[:controller].include?('data_sets')
+          (['append', 'edit'].include? params[:action]) &&
+          params[:controller].include?('data_sets')
       data_set = DataSet.find_by_id(params[:id])
       if data_set &&
-          data_set.key == params[:contribution_key].downcase &&
-          !data_set.project.contrib_keys.find_by_key(params[:contribution_key].downcase).nil?
+         data_set.key == params[:contribution_key].downcase &&
+         !data_set.project.contrib_keys.find_by_key(params[:contribution_key].downcase).nil?
         @cur_user = User.find_by_id(data_set.owner.id)
       else
         respond_to do |format|

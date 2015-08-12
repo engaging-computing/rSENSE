@@ -7,7 +7,8 @@ $ ->
         query.closest('tr').after('<tr></tr>').hide()
 
     $(document).ajaxError (event, xhr, settings, error) ->
-      quickFlash(error, 'error')
+      e = JSON.parse xhr.responseText
+      quickFlash(e, 'error')
 
     navList = []
 
@@ -66,6 +67,7 @@ $ ->
     $("#contribution_search").submit ->
       ajaxParams = $('#contribution_search').serialize()
       ajaxParams += "&filters=#{$('#user_filter .active').text()}"
+      ajaxParams += "&sort=#{$('#contribution_sort').val()}"
 
       globals.arrowsClicked = false
 
@@ -94,8 +96,12 @@ $ ->
 
       return false
 
-    $("#contribution_search_btn").click ->
-      $("#contribution_search").submit()
+    $('#contribution_search_btn').click ->
+      $('#contribution_search').submit()
+
+    $('#contributions').on 'click', '.col-header', ->
+      $('#contribution_sort').val($(@).attr('data-nsort'))
+      $('#contribution_search').submit()
 
     $("#contribution_search").submit()
 

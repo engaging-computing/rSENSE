@@ -35,7 +35,7 @@ $ ->
         super(@canvas)
 
       start: ->
-        @configs.analysisType ?= @ANALYSISTYPE_TOTAL
+        @configs.analysisType ?= @ANALYSISTYPE_MEAN
 
         # Default Sort
         fs = globals.configs.fieldSelection

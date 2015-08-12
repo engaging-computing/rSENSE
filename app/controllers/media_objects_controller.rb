@@ -100,16 +100,12 @@ class MediaObjectsController < ApplicationController
     end
 
     # Rotate based on EXIF data, then strip it out.
+    # Also, strip out date information to make hashing the image work.
     if file_type == 'image'
-      fix_rot = MiniMagick::Image.read(file_path)
-      unless file_name.include? 'svg'
-        fix_rot.auto_orient
-      end
-      file_path = '/tmp/' + SecureRandom.hex
-      File.open(file_path, 'wb') do |ff|
-        fix_rot.write ff
-      end
+      @image_fixing
     end
+
+    # Create the media object
     adjust_file_name = file_name.gsub ' ', '_'
     @mo = MediaObject.new
     @mo.name = @mo.file = adjust_file_name
@@ -182,11 +178,10 @@ class MediaObjectsController < ApplicationController
             format.html { redirect_to params[:non_wys] }
             format.json { render json: @mo.to_hash(false) }
           end
-        else
-          # render default
         end
       else
-        render text: 'File upload failed'
+        flash[:error] = @mo.errors.full_messages
+        redirect_to :back
       end
     else
       # Tell the user there is a problem with uploading their image.
@@ -197,6 +192,24 @@ class MediaObjectsController < ApplicationController
   end
 
   private
+
+  def image_fixing
+    fix_rot = MiniMagick::Image.read(file_path)
+    unless fix_rot.type == 'SVG'
+      fix_rot.auto_orient
+    end
+    file_path = '/tmp/' + SecureRandom.hex
+    File.open(file_path, 'wb') do |ff|
+      fix_rot.write ff
+    end
+    if fix_rot.type == 'PNG'
+      MiniMagick::Tool::Convert.new do |c|
+        c << file_path
+        c << '-define' << 'png:exclude-chunks=date'
+        c << file_path
+      end
+    end
+  end
 
   def media_object_params
     params[:media_object].permit(:project_id, :media_type, :name, :data_set_id, :src, :user_id, :tutorial_id,

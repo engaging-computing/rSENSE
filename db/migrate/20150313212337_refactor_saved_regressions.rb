@@ -21,8 +21,8 @@ class RefactorSavedRegressions < ActiveRecord::Migration
   end
 
   def reformat(vis_types)
-    Visualization.find_each do | v |
-      vis_types.each do | vis_type |
+    Visualization.find_each do |v|
+      vis_types.each do |vis_type|
         globals = JSON.parse(v.globals)
         vis_params = globals[vis_type]
         if !vis_params.nil? and vis_params.key? 'savedRegressions'

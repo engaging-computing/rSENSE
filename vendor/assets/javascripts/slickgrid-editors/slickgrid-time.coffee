@@ -23,8 +23,6 @@
     unless pickerOpen
       dtPicker.open()
 
-  keyDownFunc = (e) ->
-
   dtPicker = formButton.datetimepicker
     autoClose: false
     keyEventOn: (e) ->
@@ -52,6 +50,9 @@
       args.position.left + 2
     vPosition: (w, h) ->
       args.position.bottom + 2
+
+  getInput: ->
+    formInput
 
   destroy: ->
     form.remove()

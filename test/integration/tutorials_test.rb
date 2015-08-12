@@ -5,7 +5,7 @@ class TutorialsTest < ActionDispatch::IntegrationTest
 
   setup do
     Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 15
+    Capybara.default_wait_time = 2
   end
 
   teardown do
@@ -13,7 +13,6 @@ class TutorialsTest < ActionDispatch::IntegrationTest
   end
 
   test 'create a tutorial' do
-
     # Make sure a regular user cant create a tutorial
     login('kcarcia@cs.uml.edu', '12345')
     click_on 'Tutorials'

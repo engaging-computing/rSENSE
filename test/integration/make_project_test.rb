@@ -5,7 +5,7 @@ class MakeProjectTest < ActionDispatch::IntegrationTest
 
   setup do
     Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 15
+    Capybara.default_wait_time = 2
   end
 
   teardown do
@@ -30,7 +30,6 @@ class MakeProjectTest < ActionDispatch::IntegrationTest
     click_on 'Projects'
     assert page.has_content?('Templates'), 'Should be on Projects page'
     assert page.has_content?('Das Projekt'), 'New project should be in list'
-
   end
 
   test 'search in projects' do

@@ -5,16 +5,29 @@ class SlickgridTest < ActionDispatch::IntegrationTest
 
   self.use_transactional_fixtures = false
 
-  current_month = Date.today.month.to_s.rjust(2, '0')
   compare_data = [
-    { '100' => 'D', '101' => 'A', '102' => '4', '103' => "1991/#{current_month}/01 01:01:01", '104' => '3', '105' => '3' },
-    { '100' => 'E', '101' => 'B', '102' => '5', '103' => "1992/#{current_month}/02 02:02:02", '104' => '4', '105' => '4' },
-    { '100' => 'F', '101' => 'C', '102' => '6', '103' => "1993/#{current_month}/03 03:03:03", '104' => '5', '105' => '5' },
-    { '100' => 'G', '101' => 'A', '102' => '7', '103' => "1994/#{current_month}/04 04:04:04", '104' => '6', '105' => '6' }
+    { '100' => 'D', '101' => 'A', '102' => '4', '103' => '', '104' => '3', '105' => '3' },
+    { '100' => 'E', '101' => 'B', '102' => '5', '103' => '', '104' => '4', '105' => '4' },
+    { '100' => 'F', '101' => 'C', '102' => '6', '103' => '', '104' => '5', '105' => '5' },
+    { '100' => 'G', '101' => 'A', '102' => '7', '103' => '', '104' => '6', '105' => '6' }
   ]
+
+  current_month = Date.today.month
+  times = [
+    [1991, current_month, 1, 1, 1, 1],
+    [1992, current_month, 2, 2, 2, 2],
+    [1993, current_month, 3, 3, 3, 3],
+    [1994, current_month, 4, 4, 4, 4]
+  ]
+
+  times.each_with_index do |time, i|
+    new_time = Time.local(*time).getutc
+    compare_data[i]['103'] = new_time.strftime '%Y/%m/%d %H:%M:%S'
+  end
 
   setup do
     Capybara.current_driver = :webkit
+    Capybara.default_wait_time = 2
   end
 
   teardown do
@@ -40,7 +53,7 @@ class SlickgridTest < ActionDispatch::IntegrationTest
     find(:css, '.editor-button').click
     find(:css, '#dt-year-textbox').set "#{yr}\n"
     td = all(:css, '#dt-date-group td')
-    date_cell = td.select { |x| x['data-date'.to_sym] == "#{dy}" and x['data-month'.to_sym] == '0' }.first
+    date_cell = td.find { |x| x['data-date'.to_sym] == "#{dy}" and x['data-month'.to_sym] == '0' }
     date_cell.click
     date_cell.click
     find(:css, '#dt-time-textbox').set "#{time}\n"
@@ -164,15 +177,16 @@ class SlickgridTest < ActionDispatch::IntegrationTest
     page.assert_selector '.slick-row', count: 14
 
     # add data to those rows
-    slickgrid_add_data 3, field_map
+    slickgrid_add_data 4, field_map
 
     # delete some rows
+    find(:css, '.slick-row:nth-child(4) .slick-delete').click
     find(:css, '.slick-row:nth-child(3) .slick-delete').click
     find(:css, '.slick-row:nth-child(2) .slick-delete').click
     find(:css, '.slick-row:nth-child(1) .slick-delete').click
 
     # assert correct rows were deleted
-    page.assert_selector '.slick-row', count: 11
+    page.assert_selector '.slick-row', count: 10
 
     # save the dataset
     find(:css, '#edit_table_save_1').click

@@ -32,7 +32,7 @@ $table-bg-accent: #E8E8E8;
 }
 
 body {
-  background-color: #ddd;
+  background-color: white;
 }
 
 .box-content {
@@ -230,14 +230,12 @@ body {
 }
 
 .mainContent {
+  padding-top: 20px;
   background-color: #fff;
-  box-shadow: 0px 0px 20px grey;
-  padding: 18px 20px 18px 20px;
   min-height: 100%;
 }
 
 .navbar {
-  box-shadow: 0px 0px 10px black;
   border-bottom: 1px solid black;
   margin-bottom: 0px;
   background-color: #113;
@@ -277,7 +275,7 @@ body {
 #outer {
   min-height: 100%;
   margin: 0px;
-  padding: 0px 0px 10px 0px;
+  padding: 55px 0px 10px 0px;
 }
 
 .placeholder{
@@ -311,6 +309,14 @@ body {
 .truncate {
   overflow-x: hidden;
   text-overflow: ellipsis;
+}
+
+.unselectable {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }
 
 .wide-item {

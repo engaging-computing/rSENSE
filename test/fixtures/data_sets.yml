@@ -39,7 +39,8 @@ slickgrid_dataset_1:
   project: slickgrid_project
   data: "[{\"100\": \"A\", \"101\": \"A\", \"102\": \"1\", \"103\": \"11\", \"104\": \"0\", \"105\": \"0\"},\
     {\"100\": \"B\", \"101\": \"B\", \"102\": \"2\", \"103\": \"22\", \"104\": \"1\", \"105\": \"1\"},\
-    {\"100\": \"C\", \"101\": \"C\", \"102\": \"3\", \"103\": \"33\", \"104\": \"2\", \"105\": \"2\"}]"
+    {\"100\": \"C\", \"101\": \"C\", \"102\": \"3\", \"103\": \"33\", \"104\": \"2\", \"105\": \"2\"},\
+    {\"100\": \"A\", \"101\": \"A\", \"102\": \"1\", \"103\": \"11\", \"104\": \"\", \"105\": \"\"}]"
 
 slickgrid_dataset_2:
   title: Slickgrid Data set 2
@@ -58,3 +59,9 @@ slickgrid_dataset_oops:
   user: nixon
   project: slickgrid_oops
   data: "[{\"107\": \"SOMEBODY ONCE TOLD ME THE WORLD IS GONNA ROLL ME\"}]"
+  
+project_one_dataset:
+  title: New DataSet for api test
+  user: kate
+  project: media_test
+  

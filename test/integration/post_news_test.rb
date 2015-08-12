@@ -11,7 +11,7 @@ class PostNewsTest < ActionDispatch::IntegrationTest
     @to_delete = news(:delete_this_news)
     @to_update = news(:update_this_news)
     Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 15
+    Capybara.default_wait_time = 2
   end
 
   teardown do
@@ -33,7 +33,6 @@ class PostNewsTest < ActionDispatch::IntegrationTest
     login('kcarcia@cs.uml.edu', '12345')
     click_on 'News'
     assert page.has_no_content?('New news item #1'), 'News was not published, should not be shown.'
-
   end
 
   test 'publish news' do

@@ -46,6 +46,13 @@ class ApiV1ProjectsTest < ApiV1Test
     assert parse(response)['id'] == @test_proj.id, "Should have returned project #{@test_proj.id}"
   end
 
+  test 'get project should have data_set_ids' do
+    get "/api/v1/projects/#{@test_proj.id}"
+    assert_response :success
+    assert keys_match(response, @project_keys), 'Keys are missing'
+    assert parse(response)['dataSetIDs'].nil? == false, 'Should have returned data_set_ids'
+  end
+
   # Get project with owner/dataSets/mediaObjects
   test 'get project full' do
     get "/api/v1/projects/#{@test_proj.id}?recur=true"
