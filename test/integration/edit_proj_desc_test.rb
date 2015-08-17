@@ -8,7 +8,7 @@ class EditProjDescTest < ActionDispatch::IntegrationTest
   setup do
     @project = projects(:description_test)
     Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 2
+    Capybara.default_wait_time = 15
   end
 
   teardown do
