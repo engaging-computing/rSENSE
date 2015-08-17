@@ -5,18 +5,18 @@ rvm:
   - 2.1.1
 env:
   - DB=default
-  - DB=postgres 
-before_script:
-  - bundle exec rake db:preprep
-  - psql -c 'create database rsense_test;' -U postgres
-  - RAILS_ENV=test bundle exec rake db:migrate --trace
-  - bundle exec rake db:test:prepare
+  - DB=postgres
 addons:
   apt:
     packages:
     - libreoffice
     - libreoffice-calc
     - unoconv
+before_script:
+  - bundle exec rake db:preprep
+  - psql -c 'create database rsense_test;' -U postgres
+  - RAILS_ENV=test bundle exec rake db:migrate --trace
+  - bundle exec rake db:test:prepare
 before_install:
   - "gem install bundler --version '>= 1.5.1'"
   - bundle install
