@@ -11,7 +11,7 @@ class PostNewsTest < ActionDispatch::IntegrationTest
     @to_delete = news(:delete_this_news)
     @to_update = news(:update_this_news)
     Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 2
+    Capybara.default_wait_time = 15
   end
 
   teardown do
