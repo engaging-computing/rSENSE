@@ -7,10 +7,16 @@ class NewsController < ApplicationController
 
   def index
     if @cur_user.try(:admin)
-      @news = News.order('created_at DESC').limit(10)
+      @news = News.order('created_at DESC')
     else
-      @news = News.where(hidden: false).order('created_at DESC').limit(10)
+      @news = News.where(hidden: false).order('created_at DESC')
     end
+
+    pagesize = 10
+    count = @news.length
+
+    @news = @news.paginate(page: params[:page], per_page: pagesize,
+                                   total_entries: count)
 
     @new_news = News.new
 
