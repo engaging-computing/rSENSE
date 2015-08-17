@@ -131,7 +131,7 @@ class ApplicationController < ActionController::Base
           params[:controller].include?('data_sets')
       data_set = DataSet.find_by_id(params[:id])
       if data_set &&
-         data_set.key == params[:contribution_key].downcase &&
+         data_set.key == data_set.project.contrib_keys.where(key: params[:contribution_key].downcase)[0].name &&
          !data_set.project.contrib_keys.find_by_key(params[:contribution_key].downcase).nil?
         @cur_user = User.find_by_id(data_set.owner.id)
       else
