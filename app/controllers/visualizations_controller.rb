@@ -129,14 +129,14 @@ class VisualizationsController < ApplicationController
     end
 
     @visualization = Visualization.new(visualization_params)
-    @visualization.thumb_id = mo.id unless mo.id.nil?
 
     respond_to do |format|
       if @visualization.save
-        unless mo.id.nil?
-          mo.visualization_id = @visualization.id
-          mo.save!
-        end
+        mo.visualization_id = @visualization.id
+        mo.save!
+
+        @visualization.thumb_id = mo.id
+        @visualization.save!
 
         flash[:notice] = 'Visualization was successfully created.'
         format.html { redirect_to @visualization }
