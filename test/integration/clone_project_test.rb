@@ -69,8 +69,10 @@ class CloneProjectTest < ActionDispatch::IntegrationTest
 
     assert page.has_no_content?('Setup Manually'), 'Fields were not created'
 
-    page.find('.dataset').click_on 'Delete'
-    page.driver.browser.accept_js_confirms
+    page.all(:css, '.data_set_delete').each do |ds|
+      ds.click
+      page.driver.browser.accept_js_confirms
+    end
 
     page.find('#edit-project-button').click
     click_on 'Delete Project'

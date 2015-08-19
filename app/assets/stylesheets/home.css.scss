@@ -1,4 +1,525 @@
 // Place all the styles related to the Home controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+#outer {
+  padding-bottom: 20px !important;
+}
 
+/* Mobile CSS */
+.ios-desc {
+  width: 100% !important;
+  clear:both;
+  position:fixed !important;
+  z-index: 100;
+  margin-top: 55px;
+  margin-left: 15px;
+  text-align: center;
+  
+  div {
+    color: white;
+    text-align: center;
+    background-color:rgba(39,135,245,0.5);
+    width: 100% !important;
+    i {
+      color: white;
+      font-size: 2em;
+      float: right;
+      vertical-align: center;
+      z-index: 1000 !important;
+    }
+  }
+}
+@media (orientation : landscape) and (max-height : 640px) {
+  .globe {
+    margin-top: 0px !important;
+  }
+  #mobile-splash {
+    height: 120vh !important;
+  }
+}
+.android-button:hover {
+  background-color:rgba(39,135,245,0.5) !important;
+}
+.android-desc {
+  width: 100% !important;
+  clear:both;
+  position:fixed !important;
+  z-index: 100;
+  margin-top: 55px;
+  text-align: center;
+    text-align: center;
+    a {
+      word-wrap: break-word;
+      width: 100% !important;
+      color: white;
+      text-align: center;
+      background-color:rgba(39,135,245,0.5);
+      width: 100% !important;
+      i {
+      color: white;
+      font-size: 2em;
+      float: right;
+      vertical-align: center;
+      z-index: 1000 !important;
+    }
+  }
+}
+.mobile-nav {
+  width:100%;
+  .row {
+    width: 100%;
+  }
+}
+.dropdown-menu {
+  width: 100%;
+  background-color: black;
+}
+.navbar-fixed-top .row {
+  position: relative;
+}
+.navbar-fixed-top {
+  width: 100% !important;
+  min-width: 100px !important;
+  .row {
+    margin: 0px !important;
+    padding: 0px !important;
+    width: 100% !important;
+    height:100%;
+    .col-xs-12 {
+      margin: 0px !important;
+      padding: 0px !important;
+      height: 100%;
+      width: 100% !important;
+      .navbar-category {
+        text-align: center;
+        width: 25%;
+        display: inline-block;
+        vertical-align: top;
+        margin-top: 10px;
+        .lr {
+          font-size: 24px;
+          color: white;
+        }
+        .navbar-brand {
+          max-width: 25% !important;
+          margin-top: 0px !important;
+          padding-top: 0px !important;
+        }
+        .mobile-dropdown {
+          text-align: right !important;
+        }
+      }
+    }
+  }
+}
+#dropdownMenu1 {
+  position:absolute;
+  right: 0;
+  top: 0;
+  margin-right: 1%;
+  margin-top: 10px;
+}
+.navbar-fixed-top .dropdown-menu {
+  background-color: #113 !important;
+  i {
+    color: white;
+  }
+  li {
+    a {
+      color: white !important;
+    }
+  }
+}
+.mobile-homepage-text {
+  background-color: #F2F2F2 !important;
+  margin-top: 10vh;
+  border: 1px solid gray;
+}
+#mobile-outer {
+  overflow-x: hidden !important;
+  width: 100% !important;
+  padding-bottom: 10px !important;
+  padding-top: 55px;
+  background-color: white;
+  
+  div.container.main_content {
+    hr {
+      color: gray;
+    }
+    width: 100% !important;
+    .row {
+      margin-bottom: 5vh;
+    }
+    .featured-list {
+      font-weight: bold;
+    }
+    #mobile-splash {
+      display:inline-block;
+      position: relative;
+      text-align: center;
+      .globe {
+        margin-top: 20vh;
+        width: 30%;
+        max-width: 256px !important;
+        max-height: 256px !important;
+        height: auto;
+      }
+      .story-separator {
+        position: absolute;
+        bottom: 0;
+      }
+      .splash-title {
+        margin-top: 10vh;
+        font-size: 2em;
+      }
+      .fa-sort-desc {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: auto;
+        margin-left: auto;
+        margin-right: auto;
+        font-size: 64px;
+
+      }
+    }
+    .col-xs-12 {
+      text-align: center;
+      .blue {
+        color:#3366CC;;
+      }
+      .first {
+        margin-top: 5vh;
+      }
+      .mobile-description {
+        padding: 10px;
+        div {
+          //padding: 10px;
+          //width: 100%;
+        }
+        .left {
+          text-align: left !important;
+        }
+      }
+      .mobile-header {
+        text-align: center;
+        font-size: 2em;
+      }
+      .mobile-text {
+        font-size: 1.25em;
+        text-align: center;
+        margin-top: 1vh;
+      }
+    }
+      .mobile-news {
+        text-align: center !important;
+        .col-xs-12 {
+          clear: both !important;
+          text-align: center !important;
+          .mobile-news-article {
+              margin: 5vh auto;
+              background-color: #F2F2F2;
+              border: 1px solid gray;
+              width: 100%;
+              max-width: 512px;
+              text-align: center !important;
+              .item-desc {
+                .article_page_content.truncate {
+                  height: 360px;
+                }
+                .article_page_link {
+                  background: #F2F2F2 !important;
+                }
+              }
+              .item-image-link {
+                text-align: center;
+                width: 100% !important;
+                height: auto;
+                img {
+                  width: 100%;
+                  max-width: 512px;
+                  height: auto;
+                  display:inline-block;
+                }
+              }
+            .item-desc {
+              clear: both;
+            }
+          }
+        }
+      }
+    .story-image {
+        height: auto;
+        width: 100%;
+        max-width: 100%;
+        max-width: 512px !important;
+        max-height: 512px !important;
+        height: auto;
+        text-align: center;
+    }
+  }
+}
+
+/* Desktop CSS */
+.home-controller.index-action .mainContent {
+  width: 100%;
+  min-width: 994px;
+  }
+.mainContent hr {
+  color: gray;
+  margin-top: 40px !important;
+  margin-bottom: 20px !important;
+}
+.carousel {
+  height: 738px;
+  width: 100%;
+  position: relative !important;
+}
+.carousel-inner {
+  height: 738px;
+  width: 100%;
+  background-color: white;
+  border: 1px solid gray;
+}
+.carousel-control {
+  height: 738px;
+  width: 49px !important;
+  position: absolute;
+  background: white !important;
+}
+
+.carousel-control span {
+  color: black !important;
+  opacity: 1;
+}
+.carousel-inner > .item {
+  height: 738px;
+  background-color: white !important;
+  text-align: center;
+}
+.carousel-inner > .item > .image-wrapper {
+  min-width: 487px;
+  width: 50%;
+  height: 100%;
+  text-align: center;
+  position: relative;
+}
+.carousel-inner > .item > .image-wrapper > img {
+  width:413px;
+  height: auto;
+  top: 0;
+  left: auto;
+  bottom: 0;
+  right: 25px;
+  position: absolute;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.item .carousel-caption {
+  position: absolute;
+  top: 0;
+  left: calc(50% + 25px);
+  right: 0;
+  bottom: 0;
+  width: 413px;
+  padding: 10px;
+  padding-top: 0px !important;
+  text-align: center;
+  .header-wrapper {
+    color: black !important;
+    position: absolute;
+    top: 30%;
+  }
+}
+.item .carousel-caption .header-wrapper {
+  width: 100%;
+  position: absolute;
+  top: 30%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.carousel-slide-text {
+  text-align: left;  
+  font-size: 1.5em !important;
+  background-color: white;
+}
+.slide-header {
+  font-size: 1.5em;
+}
+
+.carousel ol li {
+  border: 1px solid gray;
+}
+.carousel ol .active {
+  background-color: gray !important;
+}
+
+.homepage-header {
+  clear: both;
+  float: center;
+  color:#3366CC;
+  font-size:1.5em;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.desktop-content-wrapper {
+  width: 100%;
+}
+.desktop-content-wrapper .left-content-wrapper {
+  min-width: 467px !important;
+  max-width: 49%;
+  text-align: center;
+  display: inline-block;
+  float: left;
+  margin-bottom: 40px;
+}
+.desktop-content-wrapper .right-content-wrapper {
+  text-align: center;
+  max-width: 49%;
+  display: inline-block;
+  float:right;
+  top: 0;
+  left: auto;
+  right: 0;
+  bottom: 0;
+  min-width: 467px !important;
+  margin-bottom: 40px;
+}
+.homepage-text {
+  clear: both;
+  margin: auto;
+  padding: 10px;
+  padding-bottom: 15px;
+  background-color: #F2F2F2 !important;
+  text-align: left;
+  margin-bottom: 10px;
+  font-size: 1.2em;
+  border: 1px solid gray;
+  .featured-list {
+    font-weight: bold;
+  }
+}
+#main-image-featurette {
+  width: 457px;
+  height: auto;
+}
+
+.app-store-button {
+  height: 96px;
+  width: 96px;
+}
+.play-store-button {
+  height: 96px;
+  width: 96px;
+}
+.news-prev-wrapper {
+  clear: both;
+  width: 974px;
+  margin: auto;
+  margin-bottom: 40px;
+  display: block !important;
+}
+.news-prev-wrapper .news-item {
+  height: 400px;
+  background-color: #F2F2F2;
+  width: 98%;
+  border: 1px solid gray;
+  position: relative;
+  overflow: hidden;
+}
+.news-prev-wrapper .image {
+  width: 40%;
+  margin-left: 50px;
+  height: 100%;
+  display: inline-block;
+}
+.news-prev-wrapper .description {
+  padding-top: 50px;
+  padding-bottom: 50px;
+  width: calc(60% - 100px);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: calc(40% + 100px);
+}
+.news-prev-wrapper .description:before {
+  position: absolute;
+  content: '';
+  background: linear-gradient(to bottom, rgba(242,242,242,0) 55%, rgba(242,242,242,1) 80%);
+  height: 350px;
+  width:100%;
+  pointer-events: none;
+}
+.news-prev-wrapper .item-image-link {
+  height: 0px;
+}
+.news-prev-wrapper img {
+  width: 381px;
+  position: absolute;
+  left: 50px;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.news-prev-wrapper .news-title {
+  text-align: center;
+  font-size: 1.5em;
+  padding-right: 50px;
+}
+.news-prev-wrapper .news-brief {
+  text-align: center;
+  padding-right: 50px;
+  font-size: 1.2em;
+}
+.news-prev-wrapper .news-date {
+  text-align: center;
+  padding-right: 50px;
+  font-size: 1.2em;
+}
+.news-prev-wrapper .news-titlebar {
+  color: black !important;
+}
+.news-prev-wrapper .news-link {
+  position: absolute;
+  top: auto;
+  bottom: 25px;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+.news-prev-wrapper .news-body {
+  padding-right: 50px;
+}
+.news-prev-wrapper .news-feed-text {
+  font-size: 1.2em;
+}
+hr {
+  clear:both;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  color: gray;
+}
+.stats div {
+  display: inline-block;
+  width: 32.5%;
+  text-align: center;
+}
+.csvfooter {
+  width: 100%;
+}
+.csvfooter div {
+  display: inline-block;
+  width: 33%;
+  text-align: center;
+}
+.csvfooter div p {
+  font-size: 1.5em;
+}

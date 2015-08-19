@@ -1,0 +1,106 @@
+<div class="row">
+  <div class="col-xs-12" id="mobile-splash">
+    <img class="globe" src="<%= image_path 'globe.png' %>">
+    <p class="mobile-header splash-title"> Let's learn together. </p>
+    <i class="fa fa-sort-desc"></i>
+  </div>
+</div>
+<hr />
+<div class="row">
+  <div class="col-xs-12">
+    <p class="mobile-header first"><span class="text-success featured-list">Collect </span> experimental data. </p>
+    <img src="<%= image_path 'create.jpg' %>" class="story-image">
+    <div class="mobile-homepage-text">
+    <p class="mobile-text">Collect data from classroom experiments, online resources, and mobile apps.  Upload your data to iSENSE. </p>  
+  	<!--<p class="featurette-text"><span class="text-success featured-list">Collect </span> experimental data. </p>-->
+    </div>
+  </div>
+</div>
+<hr />
+<div class="row">
+  <div class="col-xs-12">
+    <p class="mobile-header"><span class="text-info featured-list">Share </span> data with the world. </p>
+  	<img src="<%= image_path 'Share.jpg' %>" class="story-image">
+    <div class="mobile-homepage-text">
+    <p class="mobile-text"> Share data on iSENSE and collaborate with others.  Upload data to iSENSE and access it from anywhere.</p>
+  	<!--<p class="featurette-text"><span class="text-info featured-list">Share </span> data with the world. </p>-->
+    </div>
+  </div>
+</div>
+<hr />
+<div class="row">
+  <div class="col-xs-12">
+  	<p class="mobile-header"><span class="text-primary featured-list">Visualize </span>data with robust analysis tools.</p>
+  	<img src="<%= image_path 'Visualize.png' %>" class="story-image">
+    <div class="mobile-homepage-text">
+    <p class="mobile-text"> Configure visualizations to best suit displaying your data, and save them to revisit your work later. </p>
+  	<!--<p class="featurette-text"><span class="text-primary featured-list">Visualize </span>data with robust analysis tools.</p>-->
+    </div>
+  </div>
+</div>
+<hr />
+<div class="row">
+  <div class="col-xs-12 mobile-news">
+    <p class="mobile-header blue">What's New?</p>
+    <% News.where(hidden: false).last(3).reverse.each do |n|  %>
+      <%= render 'shared/article_box', {
+        image_id: n.featured_media_id, path: news_path(n), title: n.title,
+        brief: n.summary, content: n.content, date: n.created_at.strftime("%B %d %Y"),
+        width: 12
+      }  %>
+    <% end  %>
+  </div>
+</div>
+<hr />
+<div class="row">
+  <div class="col-xs-12">
+    <p class="mobile-header blue">
+      Teachers Love iSENSE
+    </p>
+    <div class="mobile-description">
+      <div class="mobile-homepage-text">
+      <p class="mobile-text left">
+              "Students are able to make connections between mathematics and real life using iSENSE. For example, students are able to observe the linear relationship between a length of a forearm and height of a person. Students can also discover that coffee cooling is modeled by an exponential function by trying to determine which type of coffee cup keeps coffee hot the longest."
+              <br />- Elaine G., Math Teacher
+            </p><br />
+      </div>
+      <div class="mobile-homepage-text">
+            <p class="mobile-text left">
+              “Using a iSENSE Data Walk Android application with a seventh grade students was one of the most engaging and authentic learning activities of the year. Students used technology to learn about the physical science standard for graphing and interpreting distance and time."
+              <br />-Barbara K., Science Teacher 
+            </p><br />
+      </div>
+      <div class="mobile-homepage-text">
+            <p class="mobile-text left">
+              "After attending a professional development workshop on using tablets in a classroom, I brought a Ticker Tape motion lab into the 21st century. Using the iSENSE DataWalk application on Android tablets with GPS, over 300 Physics students created accurate plots of their motion on a football field and analyzed the results on iSENSE. I called this lesson the Human Ticker Tape lab and used it to reinforce prior activities on motion concepts."
+              <br />
+              -Steve C., Physics Teacher
+              </p><br/>
+      </div>
+    </div>
+  </div>
+</div>
+<hr />
+<div class="row">
+<div class="col-xs-12">
+<p class="mobile-header blue">Get involved with iSENSE </p>
+<div class="mobile-description">
+  <div class="mobile-homepage-text">
+  <p class="mobile-text left">
+    For more information, please contact Fred Martin (<a href="mailto:fredm@cs.uml.edu">fredm@cs.uml.edu</a>) and Samantha Michalka (<a href="mailto:samantha@machinescience.org">samantha@machinescience.org</a>). We hold workshops for teachers to learn how to use iSENSE in the classroom, and for students to learn about scientific data collection and analysis. We will also come to your school with the tools and resources necessary to use iSENSE.
+  </p>
+  </div>
+  <div class="mobile-homepage-text"> 
+  <p class="mobile-text left">
+    For technical inquiries related to the iSENSE website, please contact one of the developers listed on our 
+    <a href="/contact">iSENSE contact page.</a></p><br />
+  </div>
+</div>
+</div>
+</div>
+<hr/>
+<div class="row">
+<div class="col-xs-12">
+  <%= link_to current_url(mobile: false) do%><i class="fa fa-desktop"></i>&nbsp;Desktop Site<% end %>
+</div>
+</div>

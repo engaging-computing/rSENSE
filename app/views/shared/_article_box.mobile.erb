@@ -1,0 +1,33 @@
+<!--
+  image_id = the image to use on the left side
+  path = what to link to
+  title = title of the article
+  brief = a subtitle more or less
+  date = the date it was written on
+  content = a preview of what is in the article
+  width = size of bootstrap column
+-->
+
+<div class="col-xs-<%= width %>">
+  <% if image_id != nil %>
+    <% left_image = MediaObject.find(image_id).src %>
+  <% end %>
+  <div class="mobile-news-article">
+      <a class="item-image-link" href="<%= path %>">
+        <img src="<%= left_image %>"></img>
+      </a>
+    <div class="item-desc">
+      <div class="article_page_title truncate"><%= link_to title, path %></div>
+        <div class="article_page_subtitle truncate"><%= brief %></div>
+          <div class="article_page_date">Written on <%= date %></div>
+            <div class="article_page_content truncate">
+              
+              <% if content != nil %>
+                <%= content.html_safe %>
+              <% end %>
+              <div class="article_page_link"><%= link_to "Read More", path %>
+              </div>
+            </div>
+    </div>
+  </div>
+</div>
