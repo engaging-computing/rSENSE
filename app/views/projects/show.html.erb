@@ -95,37 +95,40 @@
       <%= render layout: "shared/box", locals: {title: 'Data Sets', width: '12', unique_id: 'data_sets', should_hide: false} do %>
         <% if @data_sets.count != 0 || @params[:search] %>
           <div id="dataset_list">
-            <span>
-              <md-button class="md-raised md-primary" style="margin-bottom: 10px;" id="vis_button" data-href="/projects/<%=@project.id%>/data_sets/">Visualize</md-button>
-            </span>
-            <span>
-             <md-button class="md-raised" style="margin-bottom: 10px;" id="export_button" >Export</md-button>
-            </span>
-            <div class="pull-right">
-              <div class="btn-group">
-                <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
-                  <i class="fa fa-check-square-o"></i>
-                  <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu" role="menu" style="left:-200%;">
-                  <li role="presentation">
-                    <a role="menuitem" href="javascript:void(0);" id="check_all"><i class="fa fa-check-square-o"></i> All</a>
-                  </li>
-                  <li role="presentation">
-                    <a role="menuitem" href="javascript:void(0);" id="uncheck_all"><i class="fa fa-square-o"></i> None</a>
-                  </li>
-                  <% if @cur_user.try(:id) %>
+            <div layout="row">
+              <span>
+                <md-button class="md-raised md-primary" style="margin-bottom: 10px;" id="vis_button" data-href="/projects/<%=@project.id%>/data_sets/">Visualize</md-button>
+              </span>
+              <span>
+               <md-button class="md-raised" style="margin-bottom: 10px;" id="export_button" >Export</md-button>
+              </span>
+              <span flex></span>
+              <div class="pull-right">
+                <div class="btn-group">
+                  <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-check-square-o"></i>
+                    <span class="caret"></span>
+                  </a>
+                  <ul class="dropdown-menu" role="menu" style="left:-200%;">
                     <li role="presentation">
-                      <a role="menuitem" href="javascript:void(0);" id="check_mine"><i class="fa fa-user"></i> Mine</a>
+                      <a role="menuitem" href="javascript:void(0);" id="check_all"><i class="fa fa-check-square-o"></i> All</a>
                     </li>
-                  <% end %>
-                  <% data_set_keys = @data_sets.map { |x| x.key }.uniq.reject { |x| x.nil? } %>
-                  <% data_set_keys.each do |key| %>
                     <li role="presentation">
-                      <a role="menuitem" m-title="<%= key %>" href="javascript:void(0);" class="check_id"><i class="fa fa-square-o"></i> <%= key %></a>
+                      <a role="menuitem" href="javascript:void(0);" id="uncheck_all"><i class="fa fa-square-o"></i> None</a>
                     </li>
-                  <% end %>
-                </ul>
+                    <% if @cur_user.try(:id) %>
+                      <li role="presentation">
+                        <a role="menuitem" href="javascript:void(0);" id="check_mine"><i class="fa fa-user"></i> Mine</a>
+                      </li>
+                    <% end %>
+                    <% data_set_keys = @data_sets.map { |x| x.key }.uniq.reject { |x| x.nil? } %>
+                    <% data_set_keys.each do |key| %>
+                      <li role="presentation">
+                        <a role="menuitem" m-title="<%= key %>" href="javascript:void(0);" class="check_id"><i class="fa fa-square-o"></i> <%= key %></a>
+                      </li>
+                    <% end %>
+                  </ul>
+                </div>
               </div>
             </div>
             <%=form_tag project_path, method: 'get', id: 'data_sets_search' do%>
