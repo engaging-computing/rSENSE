@@ -56,9 +56,6 @@ $ ->
       visWrapperHeight = $('#vis-wrapper').outerHeight()
       visHeaderHeight = $('#vis-title-bar').outerHeight() +
         $('#vis-tab-list').outerHeight()
-      controlOpac = $('#vis-ctrls').css 'opacity'
-      controlSize = 290
-      controlOpac = 1.0
 
       # Adjust heights
       $('#vis-container').height(visWrapperHeight)
@@ -66,12 +63,6 @@ $ ->
       newHeight = visWrapperHeight
       unless presentation then newHeight -= visHeaderHeight
       $('#vis-container > .tab-content').height(newHeight)
-
-      # Animate the collapsing controls and the expanding vis
-      $('#vis-ctrl-container').animate({width: controlSize}, aniLength,
-        'linear')
-      $('#vis-ctrls').animate({width: controlSize, opacity: controlOpac},
-        aniLength, 'linear')
 
       # New widths should take into account visibility of tools
       nWidth = visWrapperWidth

@@ -339,6 +339,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
       }
 
       #vis-title-bar {
+        display: flex;
         position: relative;
         width: 100%;
         height: 50px;

@@ -56,7 +56,7 @@
         <div id="vis-container" role="tabpanel">
           <div id="vis-title-bar"
                <% if @presentation || !titleBar %> style="display:none" <% end %>>
-            <div class="inline-left">
+            <div>
               <md-button class="md-icon-button md-primary" ng-click="toggleLeft()"  hide-gt-md aria-label="Settings">
                 <img class="vis-tab-icon" src=<%=image_path('menu.png')%>>
               </md-button>
@@ -74,7 +74,7 @@
               </div>
             </div>
             <div id="vis-proj-right"
-                 class="subtitle inline-right hidden-xs hidden-sm">
+                 class="subtitle">
               <% if obj && can_edit?(obj) %>
                 <div class="edit_menu inline-block" data-field="title"
                      data-value="<%= obj.title.html_safe %>">
@@ -159,6 +159,5 @@
         </div>
       </div>
     </md-content>
-
   </section>
 </div>
