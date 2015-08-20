@@ -37,7 +37,7 @@
         </div>
         <div class="panel-footer">
           <p>
-          <%= submit_tag "Change Password", class: "btn btn-primary" %>
+          <md-button class="md-raised md-primary" type='submit'>Change Password</md-button>
           </p>
         </div>  
       <% end %>
@@ -81,7 +81,7 @@
           </div>  
           <div class="panel-footer">    
             <p>
-              <%= submit_tag "Change Email", class: "btn btn-primary" %>
+              <md-button class="md-raised md-primary" type='submit'>Change Email</md-button>
             </p>
           </div>
         <% end %>
@@ -100,7 +100,7 @@
         <div class="panel-body">
           <%= form_for(@user, html: {method: :delete}) do |f| %>
             <h4 style="color:red">Warning! This can not be undone.</h4>
-            <%= f.submit value: "Delete User", class: "btn btn-danger"  %>
+            <md-button class="md-raised md-warn" type='submit'>Delete User</md-button>
           <%end%>
         </div>
         <div class="panel-footer">

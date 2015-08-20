@@ -2,7 +2,7 @@ IS.onReady "projects/show", ->
   # Set all switches to enabled
   root = $('#dataset_table')
   root.find("[id^=ds_]").each (i,j) ->
-    $(j).addClass("md-checked")
+    $(j).prop("checked",true)
 
   # Initializes the dropdown lightbox for google drive upload
   $('#google_doc').click ->
@@ -106,23 +106,23 @@ IS.onReady "projects/show", ->
   $("a#check_all").click ->
     root = $('#dataset_table')
     root.find("[id^=ds_]").each (i,j) ->
-      $(j).addClass("md-checked")
+      $(j).prop("checked",true)
     $('#vis_button').prop("disabled",false)
     $('#export_button').prop("disabled",false)
 
   $("a#uncheck_all").click ->
     root = $('#dataset_table')
     root.find("[id^=ds_]").each (i,j) ->
-      $(j).removeClass("md-checked")
+      $(j).prop("checked",false)
     $('#vis_button').prop("disabled",true)
     $('#export_button').prop("disabled",true)
 
   $("a#check_mine").click ->
     root = $('#dataset_table')
     root.find("[id^=ds_]").each (i,j) ->
-      $(j).removeClass("md-checked")
+      $(j).prop("checked",false)
     root.find(".mine").each (i,j) ->
-      $(j).addClass("md-checked")
+      $(j).prop("checked",true)
     if root.find(".mine").length isnt 0
       $('#vis_button').prop("disabled",false)
       $('#export_button').prop("disabled",false)
@@ -134,20 +134,20 @@ IS.onReady "projects/show", ->
     $('#vis_button').prop("disabled",true)
     $('#export_button').prop("disabled",true)
     root.find("[id^=ds_]").each (i,j) ->
-      $(j).removeClass("md-checked")
+      $(j).prop("checked",false)
     root.find('tr').each (i,j) =>
       if $(j).find('.key').attr('title') is $(this).attr('m-title')
-        $(j).find("[id^=ds_]").addClass("md-checked")
+        $(j).find("[id^=ds_]").prop("checked",true)
         $('#vis_button').prop("disabled",false)
         $('#export_button').prop("disabled",false)
   #Turn off visualize button on page load, and when nothings checked
   check_for_selection = ->
     should_disable = true
     $(document).find("[id^=ds_]").each (i,j) ->
-      if($(j).hasClass("md-checked"))
+      if $(j).prop("checked",true)
         should_disable = false
       else
-        $('#check_selector').removeClass("md-checked")
+        $('#check_selector').prop("checked",false)
         $('#export_button').prop("disabled",false)
       $('#vis_button').prop("disabled", should_disable)
       $('#export_button').prop("disabled", should_disable)

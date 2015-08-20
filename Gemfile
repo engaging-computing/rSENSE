@@ -50,7 +50,7 @@ gem 'httparty'
 gem 'execjs'
 
 # Font-awesome
-gem 'font-awesome-rails', '~> 4.2.0.0'
+gem 'font-awesome-rails', '~> 4.4.0.0'
 
 # Rich Editor
 #gem 'simple_form'
