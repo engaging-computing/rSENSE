@@ -26,7 +26,7 @@ class TutorialsController < ApplicationController
     if !params[:per_page].nil?
       pagesize = params[:per_page]
     else
-      pagesize = 50
+      pagesize = 6
     end
 
     @new_tutorial = Tutorial.new
