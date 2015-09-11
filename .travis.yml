@@ -8,6 +8,8 @@ env:
   - DB=postgres
 addons:
   apt:
+    sources:
+    - universe
     packages:
     - libreoffice
     - libreoffice-calc
