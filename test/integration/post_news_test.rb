@@ -64,7 +64,7 @@ class PostNewsTest < ActionDispatch::IntegrationTest
     find('.menu_edit_link').click
     find('.menu_rename').click
     find('#news_title').set 'Changed'
-    find('.fa-floppy-o').click
+    find('#save-title').click
 
     assert page.has_content?('News was successfully updated.'), 'Failed to update title'
     assert page.has_content?('Changed'), 'Title should be changed'
@@ -90,7 +90,7 @@ class PostNewsTest < ActionDispatch::IntegrationTest
     find('.menu_edit_link').click
     find('.summary_edit').click
     find('#news_summary').set 'Updated to have a summary'
-    find('.fa-floppy-o').click
+    find('#save-summary').click
 
     assert page.has_content?('News was successfully updated.'), 'Failed to update summary'
     assert page.has_content?('Updated to have a summary'), 'Title should be changed'
