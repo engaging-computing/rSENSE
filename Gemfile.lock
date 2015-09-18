@@ -169,6 +169,7 @@ GEM
     pg (0.17.1)
     powerpack (0.0.9)
     rack (1.5.3)
+    rack-cors (0.4.0)
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.1.9)
@@ -277,6 +278,7 @@ DEPENDENCIES
   modernizr-rails
   multi_json
   pg
+  rack-cors
   rails (~> 4.1.4)
   recaptcha!
   remotipart
