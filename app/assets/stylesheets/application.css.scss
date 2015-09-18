@@ -242,8 +242,8 @@ body {
   height: 55px;
 
   // larger font sizes cause weird overflow errors on some names
-  @media screen and (max-width: 991px) {
-    font-size: 0.9em;
+  @media screen and (max-width: 991px) and (min-width: 768px)  {
+    font-size: 0.7em;
   }
 
   .navbtn {
