@@ -1,17 +1,7 @@
 require 'test_helper'
+require_relative 'base_integration_test'
 
-class UpdateFieldsTest < ActionDispatch::IntegrationTest
-  include CapyHelper
-
-  setup do
-    Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 2
-  end
-
-  teardown do
-    finish
-  end
-
+class UpdateFieldsTest < IntegrationTest
   test 'edit fields' do
     login('kcarcia@cs.uml.edu', '12345')
     click_on 'Projects'

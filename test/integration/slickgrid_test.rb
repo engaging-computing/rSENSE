@@ -1,7 +1,7 @@
 require 'test_helper'
+require_relative 'base_integration_test'
 
-class SlickgridTest < ActionDispatch::IntegrationTest
-  include CapyHelper
+class SlickgridTest < IntegrationTest
 
   self.use_transactional_fixtures = false
 
@@ -23,15 +23,6 @@ class SlickgridTest < ActionDispatch::IntegrationTest
   times.each_with_index do |time, i|
     new_time = Time.local(*time).getutc
     compare_data[i]['103'] = new_time.strftime '%Y/%m/%d %H:%M:%S'
-  end
-
-  setup do
-    Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 2
-  end
-
-  teardown do
-    finish
   end
 
   def slickgrid_enter_value(row, col, value)

@@ -1,18 +1,11 @@
 require 'test_helper'
+require_relative 'base_integration_test'
 
-class UploadDataTest < ActionDispatch::IntegrationTest
-  include CapyHelper
-
+class UploadDataTest < IntegrationTest
   self.use_transactional_fixtures = false
 
   setup do
     @project = projects(:upload_test)
-    Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 2
-  end
-
-  teardown do
-    finish
   end
 
   test 'upload csv' do
@@ -21,9 +14,17 @@ class UploadDataTest < ActionDispatch::IntegrationTest
     assert page.has_content?('Upload Test'), 'Not on project page.'
 
     csv_path = Rails.root.join('test', 'CSVs', 'test.csv')
-    page.execute_script "$('#datafile_form').parent().show()"
+    begin
+        page.execute_script "$('#datafile_form').parent().show()"
+    rescue => e
+        puts e.inspect
+    end
     find(:css, '#datafile_form').attach_file('file', csv_path)
-    page.execute_script "$('#datafile_form').submit()"
+    begin
+        page.execute_script "$('#datafile_form').submit()"
+    rescue => e
+        puts e.inspect
+    end
     assert page.has_content?('Match Quality')
     click_on 'Submit'
     assert page.has_css?('#vis-container'), 'Failed CSV'
@@ -36,9 +37,17 @@ class UploadDataTest < ActionDispatch::IntegrationTest
 
     # Test GPX upload
     gpx_path = Rails.root.join('test', 'CSVs', 'test.gpx')
-    page.execute_script "$('#datafile_form').parent().show()"
+    begin
+        page.execute_script "$('#datafile_form').parent().show()"
+    rescue => e
+        puts e.inspect
+    end
     find(:css, '#datafile_form').attach_file('file', gpx_path)
-    page.execute_script "$('#datafile_form').submit()"
+    begin
+        page.execute_script "$('#datafile_form').submit()"
+    rescue => e
+        e.inspect
+    end
     assert page.has_content?('Match Quality')
     all('select')[0].find(:xpath, 'option[1]').select_option
     all('select')[1].find(:xpath, 'option[1]').select_option
@@ -53,9 +62,17 @@ class UploadDataTest < ActionDispatch::IntegrationTest
 
     # Test ODS upload
     ods_path = Rails.root.join('test', 'CSVs', 'test.ods')
-    page.execute_script "$('#datafile_form').parent().show()"
+    begin
+        page.execute_script "$('#datafile_form').parent().show()"
+    rescue => e
+        puts e.inspect
+    end
     find(:css, '#datafile_form').attach_file('file', ods_path)
-    page.execute_script "$('#datafile_form').submit()"
+    begin
+        page.execute_script "$('#datafile_form').submit()"
+    rescue => e
+        puts e.inspect
+    end
     assert page.has_content?('Match Quality')
     click_on 'Submit'
     assert page.has_css?('#vis-container'), 'Failed ODS'
@@ -68,9 +85,17 @@ class UploadDataTest < ActionDispatch::IntegrationTest
 
     # Test XLS upload
     xls_path = Rails.root.join('test', 'CSVs', 'test.xls')
-    page.execute_script "$('#datafile_form').parent().show()"
+    begin
+        page.execute_script "$('#datafile_form').parent().show()"
+    rescue => e
+        puts e.inspect
+    end
     find(:css, '#datafile_form').attach_file('file', xls_path)
-    page.execute_script "$('#datafile_form').submit()"
+    begin
+        page.execute_script "$('#datafile_form').submit()"
+    rescue => e
+        puts e.inspect
+    end
     assert page.has_content?('Match Quality')
     click_on 'Submit'
     assert page.has_css?('#vis-container'), 'Failed XLS'

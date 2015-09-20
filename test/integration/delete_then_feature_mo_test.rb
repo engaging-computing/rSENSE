@@ -1,17 +1,7 @@
 require 'test_helper'
+require_relative 'base_integration_test'
 
-class DeleteThenFeatureMoTest < ActionDispatch::IntegrationTest
-  include CapyHelper
-
-  setup do
-    Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 2
-  end
-
-  teardown do
-    finish
-  end
-
+class DeleteThenFeatureMoTest < IntegrationTest
   test 'delete then feature project mo' do
     login 'nixon@whitehouse.gov', '12345'
 
