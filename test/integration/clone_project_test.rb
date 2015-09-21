@@ -30,13 +30,11 @@ class CloneProjectTest < IntegrationTest
 
     assert page.has_content?('I Like Clones'), 'Save should succeed'
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
-    page.execute_script "$('#upload').show()"
     find('.upload_media form').attach_file('upload', img_path)
     assert page.has_content?('nerdboy.jpg'), 'File should be in list'
 
     click_on 'Das Cloning Projekt'
     img_path = Rails.root.join('test', 'CSVs', 'test.pdf')
-    page.execute_script "$('#upload').show()"
     find('.upload_media form').attach_file('upload', img_path)
     assert page.has_content?('test.pdf'), 'File should be in list'
 

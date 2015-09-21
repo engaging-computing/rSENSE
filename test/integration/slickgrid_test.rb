@@ -2,7 +2,6 @@ require 'test_helper'
 require_relative 'base_integration_test'
 
 class SlickgridTest < IntegrationTest
-
   self.use_transactional_fixtures = false
 
   compare_data = [

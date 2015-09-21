@@ -14,17 +14,7 @@ class UploadZipTest < IntegrationTest
     assert page.has_content?('one'), 'Not on project page.'
 
     zip_path = Rails.root.join('test', 'CSVs', 'upload.zip')
-    begin
-      page.execute_script "$('#datafile_form').parent().show()"
-    rescue => e
-      puts e.inspect
-    end
     find('#datafile_form').attach_file('file', zip_path)
-    begin
-      page.execute_script "$('#datafile_form').submit()"
-    rescue => e
-      puts e.inspect
-    end
     assert page.has_content?('Match Quality')
     click_on 'Submit'
     assert page.has_content?('one'), 'Not on project page after upload.'
@@ -38,9 +28,7 @@ class UploadZipTest < IntegrationTest
     assert page.has_content?('one'), 'Not on project page.'
 
     zip_path = Rails.root.join('test', 'CSVs', 'img.zip')
-    page.execute_script "$('#datafile_form').parent().show()"
     find('#datafile_form').attach_file('file', zip_path)
-    page.execute_script "$('#datafile_form').submit()"
     assert page.has_content?('Error reading file')
   end
 end

@@ -14,17 +14,7 @@ class UploadDataTest < IntegrationTest
     assert page.has_content?('Upload Test'), 'Not on project page.'
 
     csv_path = Rails.root.join('test', 'CSVs', 'test.csv')
-    begin
-        page.execute_script "$('#datafile_form').parent().show()"
-    rescue => e
-        puts e.inspect
-    end
     find(:css, '#datafile_form').attach_file('file', csv_path)
-    begin
-        page.execute_script "$('#datafile_form').submit()"
-    rescue => e
-        puts e.inspect
-    end
     assert page.has_content?('Match Quality')
     click_on 'Submit'
     assert page.has_css?('#vis-container'), 'Failed CSV'
@@ -37,17 +27,7 @@ class UploadDataTest < IntegrationTest
 
     # Test GPX upload
     gpx_path = Rails.root.join('test', 'CSVs', 'test.gpx')
-    begin
-        page.execute_script "$('#datafile_form').parent().show()"
-    rescue => e
-        puts e.inspect
-    end
     find(:css, '#datafile_form').attach_file('file', gpx_path)
-    begin
-        page.execute_script "$('#datafile_form').submit()"
-    rescue => e
-        e.inspect
-    end
     assert page.has_content?('Match Quality')
     all('select')[0].find(:xpath, 'option[1]').select_option
     all('select')[1].find(:xpath, 'option[1]').select_option
@@ -62,17 +42,7 @@ class UploadDataTest < IntegrationTest
 
     # Test ODS upload
     ods_path = Rails.root.join('test', 'CSVs', 'test.ods')
-    begin
-        page.execute_script "$('#datafile_form').parent().show()"
-    rescue => e
-        puts e.inspect
-    end
     find(:css, '#datafile_form').attach_file('file', ods_path)
-    begin
-        page.execute_script "$('#datafile_form').submit()"
-    rescue => e
-        puts e.inspect
-    end
     assert page.has_content?('Match Quality')
     click_on 'Submit'
     assert page.has_css?('#vis-container'), 'Failed ODS'
@@ -85,17 +55,7 @@ class UploadDataTest < IntegrationTest
 
     # Test XLS upload
     xls_path = Rails.root.join('test', 'CSVs', 'test.xls')
-    begin
-        page.execute_script "$('#datafile_form').parent().show()"
-    rescue => e
-        puts e.inspect
-    end
     find(:css, '#datafile_form').attach_file('file', xls_path)
-    begin
-        page.execute_script "$('#datafile_form').submit()"
-    rescue => e
-        puts e.inspect
-    end
     assert page.has_content?('Match Quality')
     click_on 'Submit'
     assert page.has_css?('#vis-container'), 'Failed XLS'
@@ -108,9 +68,7 @@ class UploadDataTest < IntegrationTest
 
     # Test XLSX upload
     xlsx_path = Rails.root.join('test', 'CSVs', 'test.xlsx')
-    page.execute_script "$('#datafile_form').parent().show()"
     find(:css, '#datafile_form').attach_file('file', xlsx_path)
-    page.execute_script "$('#datafile_form').submit()"
     assert page.has_content?('Match Quality')
     click_on 'Submit'
     assert page.has_css?('#vis-container'), 'Failed XLSX'
@@ -122,9 +80,7 @@ class UploadDataTest < IntegrationTest
     assert page.has_content?('Upload Test'), 'Not on project page.'
 
     csv_path = Rails.root.join('test', 'CSVs', 'invalid_test.csv')
-    page.execute_script "$('#datafile_form').parent().show()"
     find(:css, '#datafile_form').attach_file('file', csv_path)
-    page.execute_script "$('#datafile_form').submit()"
 
     assert page.has_content?('Error reading file:')
   end
@@ -151,7 +107,6 @@ class UploadDataTest < IntegrationTest
 
     # Test upload non-readable
     jpg_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
-    page.execute_script "$('#datafile_form').parent().show()"
     find(:css, '#datafile_form').attach_file('file', jpg_path)
     assert page.has_content?('Error reading file:')
   end
@@ -162,9 +117,7 @@ class UploadDataTest < IntegrationTest
     assert page.has_content?('Upload Test'), 'Not on project page.'
 
     ods_path = Rails.root.join('test', 'CSVs', 'test.ods')
-    page.execute_script "$('#datafile_form').parent().show()"
     find(:css, '#datafile_form').attach_file('file', ods_path)
-    page.execute_script "$('#datafile_form').submit()"
     assert page.has_content?('Match Quality')
     click_on 'Submit'
     assert page.has_css?('#vis-container'), 'Failed ODS'
@@ -195,9 +148,7 @@ class UploadDataTest < IntegrationTest
     click_on 'Submit Key'
 
     csv_path = Rails.root.join('test', 'CSVs', 'test.csv')
-    page.execute_script "$('#datafile_form').parent().show()"
     find(:css, '#datafile_form').attach_file('file', csv_path)
-    page.execute_script "$('#datafile_form').submit()"
     assert page.has_content?('Match Quality'), "Data wasn't submitted"
     fill_in 'Title', with: 'Bad Data'
 

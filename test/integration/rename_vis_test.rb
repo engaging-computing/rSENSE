@@ -10,7 +10,7 @@ class RenameVisTest < IntegrationTest
     visit "/projects/#{projects(:dessert).id}"
     click_on 'Visualize'
 
-    page.execute_script "$('#save-ctrls > .vis-ctrl-header').click()"
+    find('#save-ctrls > .vis-ctrl-header').click
     assert page.has_content?('Save Visualization')
     click_on 'Save Visualization'
 

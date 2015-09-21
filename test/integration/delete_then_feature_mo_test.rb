@@ -13,7 +13,6 @@ class DeleteThenFeatureMoTest < IntegrationTest
     # upload a media object to the project
     url = page.current_path
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
-    page.execute_script "$('#upload').show()"
     find('.upload_media form').attach_file('upload', img_path)
 
     # open a new tab/window thing
@@ -42,7 +41,6 @@ class DeleteThenFeatureMoTest < IntegrationTest
     # upload some data so we can save a visualization
     url = page.current_path
     csv_path = Rails.root.join('test', 'CSVs', 'test.csv')
-    page.execute_script "$('#template_file_form').parent().show()"
     find(:css, '#template_file_form').attach_file('file', csv_path)
     find(:css, 'button.btn-primary').click
 
@@ -56,7 +54,6 @@ class DeleteThenFeatureMoTest < IntegrationTest
     # upload a media object to the project
     url = page.current_path
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
-    page.execute_script "$('#upload').show()"
     find('.upload_media form').attach_file('upload', img_path)
 
     # open a new tab/window thing

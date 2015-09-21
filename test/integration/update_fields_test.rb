@@ -48,9 +48,7 @@ class UpdateFieldsTest < IntegrationTest
     # find('#template_file_upload').click
 
     csv_path = Rails.root.join('test', 'CSVs', 'dessert.csv')
-    page.execute_script "$('#template_file_form').parent().show()"
     find('#template_file_form').attach_file('file', csv_path)
-    page.execute_script "$('#template_file_form').submit()"
 
     assert page.has_content?('Please select types for each field below.')
 
@@ -70,9 +68,7 @@ class UpdateFieldsTest < IntegrationTest
     # find('#template_file_upload').click
 
     csv_path = Rails.root.join('test', 'CSVs', 'dessert.csv')
-    page.execute_script "$('#template_file_form').parent().show()"
     find('#template_file_form').attach_file('file', csv_path)
-    page.execute_script "$('#template_file_form').submit()"
 
     assert page.has_content?('Please select types for each field below.')
     find('#create_dataset').click
