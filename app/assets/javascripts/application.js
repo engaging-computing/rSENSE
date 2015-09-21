@@ -14,6 +14,7 @@
 //= require constants
 //= require image_path
 //= require jquery
+//= require jquery-ui
 //= require jquery_ujs
 //= require isense
 //= require helpers
@@ -39,7 +40,7 @@
 //= require highcharts/highcharts
 //= require highcharts/highcharts-more
 //= require highcharts/modules/exporting
-//= require jquery.jqGrid.src.js
+//= require jqgrid-jquery-rails
 //= require grid.locale-en.js
 //= require jquery.prettyPhoto
 //= require markerclustererplus
