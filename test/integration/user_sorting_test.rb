@@ -1,17 +1,7 @@
 require 'test_helper'
+require_relative 'base_integration_test'
 
-class UserSortingTest < ActionDispatch::IntegrationTest
-  include CapyHelper
-
-  setup do
-    Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 2
-  end
-
-  teardown do
-    finish
-  end
-
+class UserSortingTest < IntegrationTest
   test 'use sorting' do
     # Navigate to the user's page
     login('kcarcia@cs.uml.edu', '12345')

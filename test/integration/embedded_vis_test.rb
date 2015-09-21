@@ -1,20 +1,12 @@
 require 'test_helper'
+require_relative 'base_integration_test'
 
-class EmbeddedVisTest < ActionDispatch::IntegrationTest
-  include CapyHelper
-
+class EmbeddedVisTest < IntegrationTest
   self.use_transactional_fixtures = false
 
   setup do
-    Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 2
-
     @project_id = projects(:dessert).id
     @dataset_id = data_sets(:thanksgiving).id
-  end
-
-  teardown do
-    finish
   end
 
   test 'embedded vis page' do
