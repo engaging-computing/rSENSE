@@ -1,18 +1,10 @@
 require 'test_helper'
+require_relative 'base_integration_test'
 
-class SummernoteMoTest < ActionDispatch::IntegrationTest
+class SummernoteMoTest < IntegrationTest
   include CapyHelper
 
   self.use_transactional_fixtures = false
-
-  setup do
-    Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 2
-  end
-
-  teardown do
-    finish
-  end
 
   test 'project_image_upload' do
     login('kcarcia@cs.uml.edu', '12345')
@@ -30,7 +22,6 @@ class SummernoteMoTest < ActionDispatch::IntegrationTest
     assert page.has_css? '.mo_image'
     click_on 'Logout'
     assert page.has_css? '.mo_image'
-
   end
 
   test 'tutorial_image_upload' do

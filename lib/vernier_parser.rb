@@ -42,17 +42,13 @@ class VernierParser
     row = []
 
     @col[0].each_with_index do |col_row, row_index|
-
       new_row = []
 
       @col.each_with_index do |cur, cur_index|
-
         new_row.push @col[cur_index][row_index]
-
       end
 
       row.push new_row
-
     end
 
     @row = row
@@ -86,12 +82,10 @@ class VernierParser
     rows = []
 
     @row.each_with_index do |row, row_index|
-
       rows.push @row[row_index].join "\",\""
 
       rows[row_index].insert(0, "\"")
       rows[row_index] << "\""
-
     end
 
     rows = rows.join "\n"

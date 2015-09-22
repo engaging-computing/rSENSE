@@ -140,10 +140,16 @@ GEM
       json (~> 1.8)
       multi_xml (>= 0.5.2)
     i18n (0.7.0)
+    jqgrid-jquery-rails (4.6.1)
+      jquery-rails
+      jquery-ui-rails (>= 5.0.0)
+      railties (>= 3.1)
     jquery-drag-rails (2.2.0)
     jquery-rails (3.1.2)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
+    jquery-ui-rails (5.0.5)
+      railties (>= 3.2.16)
     json (1.8.1)
     launchy (2.4.3)
       addressable (~> 2.3)
@@ -170,6 +176,7 @@ GEM
     pg (0.17.1)
     powerpack (0.0.9)
     rack (1.5.3)
+    rack-cors (0.4.0)
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.1.9)
@@ -270,8 +277,10 @@ DEPENDENCIES
   handlebars
   handlebars_assets
   httparty
+  jqgrid-jquery-rails (~> 4.6.001)
   jquery-drag-rails
   jquery-rails
+  jquery-ui-rails
   launchy
   mini_magick
   minitest (~> 5.1)
@@ -279,6 +288,7 @@ DEPENDENCIES
   modernizr-rails
   multi_json
   pg
+  rack-cors
   rails (~> 4.1.4)
   rails-angular-material
   recaptcha!

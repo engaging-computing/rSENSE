@@ -1,19 +1,8 @@
 require 'test_helper'
+require_relative 'base_integration_test'
 
-class TutorialsTest < ActionDispatch::IntegrationTest
-  include CapyHelper
-
-  setup do
-    Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 2
-  end
-
-  teardown do
-    finish
-  end
-
+class TutorialsTest < IntegrationTest
   test 'create a tutorial' do
-
     # Make sure a regular user cant create a tutorial
     login('kcarcia@cs.uml.edu', '12345')
     click_on 'Tutorials'

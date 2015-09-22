@@ -1,8 +1,7 @@
 require 'test_helper'
+require_relative 'base_integration_test'
 
-class SlickgridTest < ActionDispatch::IntegrationTest
-  include CapyHelper
-
+class SlickgridTest < IntegrationTest
   self.use_transactional_fixtures = false
 
   compare_data = [
@@ -25,15 +24,6 @@ class SlickgridTest < ActionDispatch::IntegrationTest
     compare_data[i]['103'] = new_time.strftime '%Y/%m/%d %H:%M:%S'
   end
 
-  setup do
-    Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 2
-  end
-
-  teardown do
-    finish
-  end
-
   def slickgrid_enter_value(row, col, value)
     find(:css, ".slick-row:nth-child(#{row + 1})>.slick-cell.l#{col}").click
     find(:css, ".slick-row:nth-child(#{row + 1})>.slick-cell.l#{col}>input").set value
@@ -53,7 +43,7 @@ class SlickgridTest < ActionDispatch::IntegrationTest
     find(:css, '.editor-button').click
     find(:css, '#dt-year-textbox').set "#{yr}\n"
     td = all(:css, '#dt-date-group td')
-    date_cell = td.select { |x| x['data-date'.to_sym] == "#{dy}" and x['data-month'.to_sym] == '0' }.first
+    date_cell = td.find { |x| x['data-date'.to_sym] == "#{dy}" and x['data-month'.to_sym] == '0' }
     date_cell.click
     date_cell.click
     find(:css, '#dt-time-textbox').set "#{time}\n"

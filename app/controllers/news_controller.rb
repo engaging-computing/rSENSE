@@ -7,16 +7,22 @@ class NewsController < ApplicationController
 
   def index
     if @cur_user.try(:admin)
-      @news = News.order('created_at DESC').limit(10)
+      @news = News.order('created_at DESC')
     else
-      @news = News.where(hidden: false).order('created_at DESC').limit(10)
+      @news = News.where(hidden: false).order('created_at DESC')
     end
+
+    pagesize = 10
+    count = @news.length
+
+    @news = @news.paginate(page: params[:page], per_page: pagesize,
+                                   total_entries: count)
 
     @new_news = News.new
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @news.map { |p| p.to_hash } }
+      format.json { render json: @news.map(&:to_hash) }
     end
   end
 
@@ -84,9 +90,7 @@ class NewsController < ApplicationController
   def destroy
     @news = News.find(params[:id])
 
-    @news.media_objects.each do |m|
-      m.destroy
-    end
+    @news.media_objects.each(&:destroy)
 
     @news.destroy
 

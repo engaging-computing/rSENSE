@@ -1,18 +1,8 @@
 require 'test_helper'
+require_relative 'base_integration_test'
 
-class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
-  include CapyHelper
-
+class ContribKeyWithDataSetTest < IntegrationTest
   self.use_transactional_fixtures = false
-
-  setup do
-    Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 2
-  end
-
-  teardown do
-    finish
-  end
 
   test 'website_and_API' do
     login('kcarcia@cs.uml.edu', '12345')
@@ -62,7 +52,7 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     list = page.all(:css, '.slick-header-column')
     field_id_long = list[0]['id']
     field_id_pos = field_id_long.rindex(/-/)
-    field_id = field_id_long[field_id_pos + 1 .. -1]
+    field_id = field_id_long[field_id_pos + 1..-1]
     find('#data_set_name').set('Data1')
     find(:css, '.slick-row:nth-child(1)>.slick-cell.l0.r0').double_click
     find('.editor-text').set('5')

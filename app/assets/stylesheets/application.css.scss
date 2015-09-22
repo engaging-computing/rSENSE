@@ -11,8 +11,9 @@
  *= require better_colorpicker
  *= require better_datetimepicker
  *= require font-awesome
- *= require ui.jqgrid.css
  *= require summernote
+ *= require jquery-ui
+ *= require jqgrid-jquery-rails
  *= require slickgrid/slick.grid.css
  *= require_tree .
  *= require_self
@@ -141,6 +142,10 @@ body {
   }
 }
 
+.hidden-form {
+  display: none;
+}
+
 .inline-block {
   display: inline-block;
 }
@@ -247,8 +252,8 @@ body {
   height: 55px;
 
   // larger font sizes cause weird overflow errors on some names
-  @media screen and (max-width: 991px) {
-    font-size: 0.9em;
+  @media screen and (max-width: 991px) and (min-width: 768px)  {
+    font-size: 0.7em;
   }
 
   .navbtn {

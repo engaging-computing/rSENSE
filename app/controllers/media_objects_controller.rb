@@ -178,8 +178,6 @@ class MediaObjectsController < ApplicationController
             format.html { redirect_to params[:non_wys] }
             format.json { render json: @mo.to_hash(false) }
           end
-        else
-          # render default
         end
       else
         flash[:error] = @mo.errors.full_messages

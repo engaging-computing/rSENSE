@@ -15,7 +15,7 @@ thanksgiving:
   user: kate
   project: dessert
   data: "[{\"20\": 1, \"21\": 2, \"22\": 3},{\"20\": 1, \"21\": 2, \"22\": 3}]"
-  key: apple
+  key: Pies
   
 needs_media:
   title: Needs Media
@@ -59,3 +59,9 @@ slickgrid_dataset_oops:
   user: nixon
   project: slickgrid_oops
   data: "[{\"107\": \"SOMEBODY ONCE TOLD ME THE WORLD IS GONNA ROLL ME\"}]"
+  
+project_one_dataset:
+  title: New DataSet for api test
+  user: kate
+  project: media_test
+  

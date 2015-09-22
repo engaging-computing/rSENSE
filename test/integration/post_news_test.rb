@@ -1,8 +1,7 @@
 require 'test_helper'
+require_relative 'base_integration_test'
 
-class PostNewsTest < ActionDispatch::IntegrationTest
-  include CapyHelper
-
+class PostNewsTest < IntegrationTest
   self.use_transactional_fixtures = false
 
   setup do
@@ -10,12 +9,6 @@ class PostNewsTest < ActionDispatch::IntegrationTest
     @to_rename = news(:rename_this_news)
     @to_delete = news(:delete_this_news)
     @to_update = news(:update_this_news)
-    Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 2
-  end
-
-  teardown do
-    finish
   end
 
   test 'add a news item' do
@@ -33,7 +26,6 @@ class PostNewsTest < ActionDispatch::IntegrationTest
     login('kcarcia@cs.uml.edu', '12345')
     click_on 'News'
     assert page.has_no_content?('New news item #1'), 'News was not published, should not be shown.'
-
   end
 
   test 'publish news' do
@@ -65,7 +57,7 @@ class PostNewsTest < ActionDispatch::IntegrationTest
     find('.menu_edit_link').click
     find('.menu_rename').click
     find('#news_title').set 'Changed'
-    find('.fa-floppy-o').click
+    find('#save-title').click
 
     assert page.has_content?('News was successfully updated.'), 'Failed to update title'
     assert page.has_content?('Changed'), 'Title should be changed'
@@ -91,7 +83,7 @@ class PostNewsTest < ActionDispatch::IntegrationTest
     find('.menu_edit_link').click
     find('.summary_edit').click
     find('#news_summary').set 'Updated to have a summary'
-    find('.fa-floppy-o').click
+    find('#save-summary').click
 
     assert page.has_content?('News was successfully updated.'), 'Failed to update summary'
     assert page.has_content?('Updated to have a summary'), 'Title should be changed'
