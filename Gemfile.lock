@@ -137,6 +137,10 @@ GEM
       json (~> 1.8)
       multi_xml (>= 0.5.2)
     i18n (0.7.0)
+    jqgrid-jquery-rails (4.6.1)
+      jquery-rails
+      jquery-ui-rails (>= 5.0.0)
+      railties (>= 3.1)
     jquery-drag-rails (2.2.0)
     jquery-rails (3.1.2)
       railties (>= 3.0, < 5.0)
@@ -268,6 +272,7 @@ DEPENDENCIES
   handlebars
   handlebars_assets
   httparty
+  jqgrid-jquery-rails (~> 4.6.001)
   jquery-drag-rails
   jquery-rails
   jquery-ui-rails

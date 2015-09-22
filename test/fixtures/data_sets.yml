@@ -15,7 +15,7 @@ thanksgiving:
   user: kate
   project: dessert
   data: "[{\"20\": 1, \"21\": 2, \"22\": 3},{\"20\": 1, \"21\": 2, \"22\": 3}]"
-  key: apple
+  key: Pies
   
 needs_media:
   title: Needs Media

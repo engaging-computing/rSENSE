@@ -11,8 +11,9 @@
  *= require better_colorpicker
  *= require better_datetimepicker
  *= require font-awesome
- *= require ui.jqgrid.css
  *= require summernote
+ *= require jquery-ui
+ *= require jqgrid-jquery-rails
  *= require slickgrid/slick.grid.css
  *= require_tree .
  *= require_self
@@ -133,6 +134,10 @@ body {
   .parts{
     text-align: left;
   }
+}
+
+.hidden-form {
+  display: none;
 }
 
 .inline-block {
