@@ -106,7 +106,6 @@ class VisualizationsController < ApplicationController
 
     if params[:visualization].try(:[], :svg)
       begin
-        puts "\n\nAAAA\n\n"
         mo = MediaObject.new
         mo.media_type = 'image'
         mo.name = 'image.png'
