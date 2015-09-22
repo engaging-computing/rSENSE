@@ -125,7 +125,6 @@ class VisualizationsController < ApplicationController
         mo.add_tn
       rescue MiniMagick::Invalid => err
         mo = nil
-        puts "\n\nBBBB\n\n"
         logger.info "Failed to create thumbnail (#{err})."
       end
 
