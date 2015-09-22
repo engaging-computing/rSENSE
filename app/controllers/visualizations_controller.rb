@@ -102,15 +102,18 @@ class VisualizationsController < ApplicationController
     end
 
     # Try to make a thumbnail
-    mo = MediaObject.new
-    mo.media_type = 'image'
-    mo.name = 'image.png'
-    mo.file = 'image.png'
-    mo.user_id = @cur_user.id
-    mo.check_store!
+    mo = nil
 
     if params[:visualization].try(:[], :svg)
       begin
+        puts "\n\nAAAA\n\n"
+        mo = MediaObject.new
+        mo.media_type = 'image'
+        mo.name = 'image.png'
+        mo.file = 'image.png'
+        mo.user_id = @cur_user.id
+        mo.check_store!
+
         image = MiniMagick::Image.read(params[:visualization][:svg], '.svg')
         image.format 'png'
         image.resize '512'
@@ -120,8 +123,9 @@ class VisualizationsController < ApplicationController
         end
 
         mo.add_tn
-
       rescue MiniMagick::Invalid => err
+        mo = nil
+        puts "\n\nBBBB\n\n"
         logger.info "Failed to create thumbnail (#{err})."
       end
 
@@ -132,11 +136,12 @@ class VisualizationsController < ApplicationController
 
     respond_to do |format|
       if @visualization.save
-        mo.visualization_id = @visualization.id
-        mo.save!
-
-        @visualization.thumb_id = mo.id
-        @visualization.save!
+        unless mo.nil?
+          mo.visualization_id = @visualization.id
+          mo.save!
+          @visualization.thumb_id = mo.id
+          @visualization.save!
+        end
 
         flash[:notice] = 'Visualization was successfully created.'
         format.html { redirect_to @visualization }
