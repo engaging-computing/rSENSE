@@ -11,6 +11,7 @@
 
     <%= javascript_tag do %>
       window.namespace = <%= raw @namespace.to_json %>
+      window.env = '<%= Rails.env %>'
     <% end %>
   </head>
 
