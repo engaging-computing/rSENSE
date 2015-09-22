@@ -26,3 +26,9 @@
       brief: n.summary, content: n.content, date: n.created_at.strftime("%B %d %Y"), width: 12} %>
   <% end %>
 </div>
+
+<div class="text-center">
+  <%= will_paginate @news, renderer: BootstrapPagination::Rails,
+      inner_window: 1, outer_window: 0, previous_label: "<<",
+      next_label: ">>" %>
+</div>

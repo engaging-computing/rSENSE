@@ -1,17 +1,7 @@
 require 'test_helper'
+require_relative 'base_integration_test'
 
-class UpdateFieldsTest < ActionDispatch::IntegrationTest
-  include CapyHelper
-
-  setup do
-    Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 2
-  end
-
-  teardown do
-    finish
-  end
-
+class UpdateFieldsTest < IntegrationTest
   test 'edit fields' do
     login('kcarcia@cs.uml.edu', '12345')
     click_on 'Projects'
@@ -58,9 +48,7 @@ class UpdateFieldsTest < ActionDispatch::IntegrationTest
     # find('#template_file_upload').click
 
     csv_path = Rails.root.join('test', 'CSVs', 'dessert.csv')
-    page.execute_script "$('#template_file_form').parent().show()"
     find('#template_file_form').attach_file('file', csv_path)
-    page.execute_script "$('#template_file_form').submit()"
 
     assert page.has_content?('Please select types for each field below.')
 
@@ -80,9 +68,7 @@ class UpdateFieldsTest < ActionDispatch::IntegrationTest
     # find('#template_file_upload').click
 
     csv_path = Rails.root.join('test', 'CSVs', 'dessert.csv')
-    page.execute_script "$('#template_file_form').parent().show()"
     find('#template_file_form').attach_file('file', csv_path)
-    page.execute_script "$('#template_file_form').submit()"
 
     assert page.has_content?('Please select types for each field below.')
     find('#create_dataset').click

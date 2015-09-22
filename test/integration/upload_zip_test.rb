@@ -1,18 +1,11 @@
 require 'test_helper'
+require_relative 'base_integration_test'
 
-class UploadZipTest < ActionDispatch::IntegrationTest
-  include CapyHelper
-
+class UploadZipTest < IntegrationTest
   self.use_transactional_fixtures = false
 
   setup do
     @project = projects(:one)
-    Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 2
-  end
-
-  teardown do
-    finish
   end
 
   test 'upload zip with csv files' do
@@ -21,9 +14,7 @@ class UploadZipTest < ActionDispatch::IntegrationTest
     assert page.has_content?('one'), 'Not on project page.'
 
     zip_path = Rails.root.join('test', 'CSVs', 'upload.zip')
-    page.execute_script "$('#datafile_form').parent().show()"
     find('#datafile_form').attach_file('file', zip_path)
-    page.execute_script "$('#datafile_form').submit()"
     assert page.has_content?('Match Quality')
     click_on 'Submit'
     assert page.has_content?('one'), 'Not on project page after upload.'
@@ -37,9 +28,7 @@ class UploadZipTest < ActionDispatch::IntegrationTest
     assert page.has_content?('one'), 'Not on project page.'
 
     zip_path = Rails.root.join('test', 'CSVs', 'img.zip')
-    page.execute_script "$('#datafile_form').parent().show()"
     find('#datafile_form').attach_file('file', zip_path)
-    page.execute_script "$('#datafile_form').submit()"
     assert page.has_content?('Error reading file')
   end
 end

@@ -1,17 +1,7 @@
 require 'test_helper'
+require_relative 'base_integration_test'
 
-class CloneProjectTest < ActionDispatch::IntegrationTest
-  include CapyHelper
-
-  setup do
-    Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 2
-  end
-
-  teardown do
-    finish
-  end
-
+class CloneProjectTest < IntegrationTest
   def set_cell(row, col, value)
     find(:css, ".slick-row:nth-child(#{row + 1})>.slick-cell.l#{col}").double_click
     find(:css, ".slick-row:nth-child(#{row + 1})>.slick-cell.l#{col}>input").set value
@@ -40,13 +30,11 @@ class CloneProjectTest < ActionDispatch::IntegrationTest
 
     assert page.has_content?('I Like Clones'), 'Save should succeed'
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
-    page.execute_script "$('#upload').show()"
     find('.upload_media form').attach_file('upload', img_path)
     assert page.has_content?('nerdboy.jpg'), 'File should be in list'
 
     click_on 'Das Cloning Projekt'
     img_path = Rails.root.join('test', 'CSVs', 'test.pdf')
-    page.execute_script "$('#upload').show()"
     find('.upload_media form').attach_file('upload', img_path)
     assert page.has_content?('test.pdf'), 'File should be in list'
 

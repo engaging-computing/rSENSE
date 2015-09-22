@@ -56,7 +56,7 @@
         <%= ff.text_field :title, :value => obj.title.html_safe,
             class: "form-control" %>
         <div class="input-group-btn">
-          <button class="btn btn-success" type="submit">
+          <button class="btn btn-success" id="save-title" type="submit">
             <i class="fa fa-floppy-o icon-white"></i>
           </button>
         </div>
@@ -69,7 +69,7 @@
           <div id="title-and-menu-edit-summary" class="summary-text">
             <p><%= ff.text_area :summary, style: 'height: 150px;' %></p>
             <p>
-              <button class="btn btn-success" type="submit">
+              <button class="btn btn-success" id="save-summary" type="submit">
                 <i class='fa fa-floppy-o icon-white'></i> Save
               </button>
             </p>
