@@ -97,7 +97,7 @@ $ ->
               cursor: 'pointer'
               dataLabels:
                 floating: false
-                enabled: ($(window).width() > 1000)
+                enabled: ($(window).width() >= 1000)
                 format: '<b>{point.name}</b>: {point.percentage:.1f} %'
 
       drawControls: ->
