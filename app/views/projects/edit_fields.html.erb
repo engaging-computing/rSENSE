@@ -1,34 +1,34 @@
 <% if can_edit?(@project) %>
-  <div class="row" data-project_id="<%= @project.id %>">
-    <div class="col-lg-8 col-lg-offset-2">
-      <h1>Setup Fields Manually</h1>
-      <div class="center">
-        <div class="col-sm-3 col-xs-6 add_fields">
-          <button value="Number" class="btn btn-success center new_field" id="number">Add Number</button>
-          <p class="description">Any number value. "Units" specifies how the value is expressed. e.g. 'Temperature' could have a unit of 'C'</p>
+  <%= form_tag "/projects/#{@project.id}/save_fields", name: "fields_form" do %>
+    <div class="row" data-project_id="<%= @project.id %>">
+      <div class="col-lg-8 col-lg-offset-2">
+        <h1>Setup Fields Manually</h1>
+        <div class="center">
+          <div class="col-sm-3 col-xs-6 add_fields">
+            <div value="Number" class="btn btn-success center new_field" id="number">Add Number</div>
+            <p class="description">Any number value. "Units" specifies how the value is expressed. e.g. 'Temperature' could have a unit of 'C'</p>
+          </div>
+          <div class="col-sm-3 col-xs-6 add_fields">
+            <div value="Text" class="btn btn-success center new_field" id="text">Add Text</div>
+            <p class="description">Any string value. "Restrictions" are a comma separated list of values that limit input to only predefined values.</p>
+          </div>
+          <div class="col-sm-3 col-xs-6 add_fields">
+            <div value="Timestamp" class="btn btn-success center new_field" id="timestamp" style="padding: 6px 0px;" <%= (@project.fields.any? {|f| f.field_type == TIME_TYPE}) ? "disabled" : "" %>>Add Timestamp</div>
+            <p class="description">Data and time values in the form yyyy/mm/dd hh:mm:ss. Limit 1 per project.</p>
+          </div>
+          <div class="col-sm-3 col-xs-6 add_fields">
+            <div value="Location" class="btn btn-success center new_field" id="location" <%= (@project.fields.any? {|f| f.field_type == LONGITUDE_TYPE or f.field_type == LATITUDE_TYPE}) ? "disabled" : "" %>>Add Location</div>
+            <p class="description">Latitude (between -90 and 90) and longitude (between -180 and 180) values in the form 'latitude, longitude'. Limit 1 per project.</p>
+          </div>
         </div>
-        <div class="col-sm-3 col-xs-6 add_fields">
-          <button value="Text" class="btn btn-success center new_field" id="text">Add Text</button>
-          <p class="description">Any string value. "Restrictions" are a comma separated list of values that limit input to only predefined values.</p>
-        </div>
-        <div class="col-sm-3 col-xs-6 add_fields">
-          <button value="Timestamp" class="btn btn-success center new_field" id="timestamp" style="padding: 6px 0px;" <%= (@project.fields.any? {|f| f.field_type == TIME_TYPE}) ? "disabled" : "" %>>Add Timestamp</button>
-          <p class="description">Data and time values in the form yyyy/mm/dd hh:mm:ss. Limit 1 per project.</p>
-        </div>
-        <div class="col-sm-3 col-xs-6 add_fields">
-          <button value="Location" class="btn btn-success center new_field" id="location" <%= (@project.fields.any? {|f| f.field_type == LONGITUDE_TYPE or f.field_type == LATITUDE_TYPE}) ? "disabled" : "" %>>Add Location</button>
-          <p class="description">Latitude (between -90 and 90) and longitude (between -180 and 180) values in the form 'latitude, longitude'. Limit 1 per project.</p>
-        </div>
+        <% if @project.data_sets.count > 0 %>
+          <p><strong>Note:</strong> You cannot delete fields from a project with data.</p>
+        <% end %>
       </div>
-      <% if @project.data_sets.count > 0 %>
-        <p><strong>Note:</strong> You cannot delete fields from a project with data.</p>
-      <% end %>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="col-lg-8 col-lg-offset-2">
-      <%= form_tag "/projects/#{@project.id}/save_fields", name: "fields_form" do %>
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2">
         <table class="fields_table table table-bordered" id="fields_table" name="fields_table">
           <thead>
             <tr style="background: #DDD;">
@@ -70,6 +70,7 @@
         </table>
       </div>
     </div>
+
     <div class="row">
       <div class="col-lg-8 col-lg-offset-2">
         <div style="float: right">
@@ -78,10 +79,11 @@
         </div>
       </div>
     </div>
+
     <input type="text" id="hidden_num_count" name="hidden_num_count" style="visibility:hidden;">
     <input type="text" id="hidden_text_count" name="hidden_text_count" style="visibility:hidden;">
     <input type="text" id="hidden_timestamp_count" name="hidden_timestamp_count" style="visibility:hidden;">
     <input type="text" id="hidden_location_count" name="hidden_location_count" style="visibility:hidden;">
     <input type="text" id="hidden_deleted_fields" name="hidden_deleted_fields" style="visibility:hidden;">
-    <% end %>
+  <% end %>
 <% end %>
