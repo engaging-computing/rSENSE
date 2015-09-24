@@ -37,6 +37,8 @@ end
 gem 'better_datetimepicker', '~> 0.0.8', git: 'https://github.com/isenseDev/better-datetimepicker'
 gem 'better_colorpicker', '~> 0.1.2', git: 'https://github.com/isenseDev/better-colorpicker'
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
+gem 'jqgrid-jquery-rails', '~> 4.6.001'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt' # Can't use the new name yet.
@@ -86,3 +88,6 @@ gem 'useragent', '~> 0.10.0'
 gem 'rubyzip', '>= 1.0.0'
 
 gem 'recaptcha', git: 'https://github.com/ambethia/recaptcha'
+
+# Allow CORS
+gem 'rack-cors', :require => 'rack/cors'

@@ -102,15 +102,17 @@ class VisualizationsController < ApplicationController
     end
 
     # Try to make a thumbnail
-    mo = MediaObject.new
-    mo.media_type = 'image'
-    mo.name = 'image.png'
-    mo.file = 'image.png'
-    mo.user_id = @cur_user.id
-    mo.check_store!
+    mo = nil
 
     if params[:visualization].try(:[], :svg)
       begin
+        mo = MediaObject.new
+        mo.media_type = 'image'
+        mo.name = 'image.png'
+        mo.file = 'image.png'
+        mo.user_id = @cur_user.id
+        mo.check_store!
+
         image = MiniMagick::Image.read(params[:visualization][:svg], '.svg')
         image.format 'png'
         image.resize '512'
@@ -120,8 +122,8 @@ class VisualizationsController < ApplicationController
         end
 
         mo.add_tn
-
       rescue MiniMagick::Invalid => err
+        mo = nil
         logger.info "Failed to create thumbnail (#{err})."
       end
 
@@ -129,13 +131,14 @@ class VisualizationsController < ApplicationController
     end
 
     @visualization = Visualization.new(visualization_params)
-    @visualization.thumb_id = mo.id unless mo.id.nil?
 
     respond_to do |format|
       if @visualization.save
-        unless mo.id.nil?
+        unless mo.nil?
           mo.visualization_id = @visualization.id
           mo.save!
+          @visualization.thumb_id = mo.id
+          @visualization.save!
         end
 
         flash[:notice] = 'Visualization was successfully created.'
@@ -238,7 +241,7 @@ class VisualizationsController < ApplicationController
     data_fields.push(typeID: TEXT_TYPE, unitName: 'String', fieldID: -1, fieldName: 'Combined Data Sets')
 
     # push real fields to temp variable
-    @project.fields.each do |field|
+    @project.fields.sort_by(&:index).each do |field|
       data_fields.push(typeID: field.field_type, unitName: field.unit, fieldID: field.id, fieldName: field.name)
     end
 
