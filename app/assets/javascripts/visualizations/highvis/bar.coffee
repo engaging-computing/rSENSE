@@ -75,6 +75,8 @@ $ ->
              }]
           xAxis:
             type: 'category'
+          legend:
+            enabled: $(window).width() > 700 && data.groups.length < 30
 
       update: ->
         super()
