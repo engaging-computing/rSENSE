@@ -15,7 +15,7 @@
     <% end %>
   </head>
 
-  <body data-page-name="<%= params[:controller] %>/<%= params[:action] %>" ng-app="iSENSE">
+  <body data-page-name="<%= params[:controller] %>/<%= params[:action] %>" data-ng-app="iSENSE">
     <% if !@cur_user.nil? and @cur_user.email.blank? %>
       <div class="alert">
         <button type="button" class="close" data-dismiss="alert">&times;</button>

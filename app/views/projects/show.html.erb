@@ -95,7 +95,7 @@
       <%= render layout: "shared/box", locals: {title: 'Data Sets', width: '12', unique_id: 'data_sets', should_hide: false} do %>
         <% if @data_sets.count != 0 || @params[:search] %>
           <div id="dataset_list">
-            <div layout="row">
+            <div data-layout="row">
               <span>
                 <md-button class="md-raised md-primary" style="margin-bottom: 10px;" id="vis_button" data-href="/projects/<%=@project.id%>/data_sets/">Visualize</md-button>
               </span>
