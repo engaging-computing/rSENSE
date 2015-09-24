@@ -32,8 +32,8 @@ $ ->
              """<input class="input-small form-control" type="text"
                  name="number_#{numCount}" value="Number_#{displayNumCount}">""", "Number",
                  """<input class="input-small form-control" type="text" class="units"
-                 name="units_#{numCount}">""", "", """<a href="#" fid="0"
-                 class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
+                 name="units_#{numCount}">""", "", """<div fid="0"
+                 class="field_delete"><i class="fa fa-close slick-delete"></i></div>"""])
 
     $('#text').click ->
       textCount = textCount + 1
@@ -42,27 +42,27 @@ $ ->
              """<input class="input-small form-control" type="text"
                  name="text_#{textCount}" value="Text_#{displayTextCount}">""", "Text", "",
                  """<input class="input-small form-control" type="text" class="restrictions"
-                 name="restrictions_#{textCount}">""", """<a href="#" fid="0"
-                 class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
+                 name="restrictions_#{textCount}">""", """<div fid="0"
+                 class="field_delete"><i class="fa fa-close slick-delete"></i></div>"""])
 
     $('#timestamp').click ->
       timestampCount = timestampCount + 1
       addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
              """<input class="input-small form-control" type="text" name="timestamp"
-                 value="Timestamp">""", "Timestamp", "", "", """<a href="#" fid="0"
-                 class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
+                 value="Timestamp">""", "Timestamp", "", "", """<div fid="0"
+                 class="field_delete"><i class="fa fa-close slick-delete"></i></div>"""])
       document.getElementById('timestamp').disabled = true
 
     $('#location').click ->
       locationCount = locationCount + 1
       addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
              """<input class="input-small form-control" type="text" name="longitude"
-                 value="Longitude">""", "Longitude", "deg", "", """<a href="#" fid="0"
-                 class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
+                 value="Longitude">""", "Longitude", "deg", "", """<div href="#" fid="0"
+                 class="field_delete"><i class="fa fa-close slick-delete"></i></div>"""])
       addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
              """<input class="input-small form-control" type="text" name="latitude"
-                 value="Latitude">""", "Latitude", "deg", "", """<a href="#" fid="0"
-                 class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
+                 value="Latitude">""", "Latitude", "deg", "", """<div fid="0"
+                 class="field_delete"><i class="fa fa-close slick-delete"></i></div>"""])
       document.getElementById('location').disabled = true
 
     # Make table sortable

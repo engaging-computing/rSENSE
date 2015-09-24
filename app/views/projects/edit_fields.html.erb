@@ -59,9 +59,9 @@
                 <% end %>
                 </td>
                 <td>
-                  <a class="field_delete <%= @project.data_sets.count > 0 ? "not-active" : "" %>" href="#" fid="<%= field.id %>">
+                  <div class="field_delete <%= @project.data_sets.count > 0 ? "not-active" : "" %>" fid="<%= field.id %>">
                     <i class="fa fa-close slick-delete"></i>
-                  </a>
+                  </div>
                 </td>
               </tr>
             <% end %>
