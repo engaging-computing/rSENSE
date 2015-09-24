@@ -120,6 +120,13 @@ Rsense::Application.routes.draw do
       resources :visualizations, only: [:show]
       resources :data_sets, only: [:show, :edit, :jsonDataUpload]
     end
+
+    namespace :v2 do
+      get '/data_sets/:id/getData' => 'data_sets#get_data'
+      get '/data_sets/keys' => 'data_sets#get_keys'
+      get '/projects/:id/getData' => 'projects#get_data'
+      resources :data_sets, only: [:show, :edit, :get_data, :get_keys]
+    end
   end
   get '/testing' => 'testing#index'
   post '/testing/review' => 'testing#review'
