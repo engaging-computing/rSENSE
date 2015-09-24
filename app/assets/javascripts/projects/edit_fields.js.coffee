@@ -72,7 +72,7 @@ $ ->
     # hasn't yet been added to project in database)
     $('#fields_table').on 'click', '.field_delete', ->
       # fid of row being deleted
-      fid = $(@).closest('a').attr('fid')
+      fid = $(@).closest('div').attr('fid')
 
       # Row index of row being deleted
       rowIndex = $(@).closest('tr').index() + 1
@@ -91,6 +91,7 @@ $ ->
         timestampCount = timestampCount - 1
 
       # fid != 0 when the field exists in the database
+      console.log fid
       if fid != '0'
         hiddenDeletedFields = $('#hidden_deleted_fields')
         if rowName == 'latitude'
