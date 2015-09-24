@@ -31,10 +31,7 @@
 //= require jquery-ui/sortable
 //= require titlebar.js.coffee
 //= require bootstrap
-//= require angular
-//= require angular-animate
-//= require angular-aria
-//= require angular-material.min
+//= require material
 //= require jstz/jstz-1.0.4.min.js
 //
 //  -- Handlebars --

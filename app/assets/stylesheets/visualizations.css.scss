@@ -367,7 +367,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   }
 
   // this is where all the div controls get added
-  md-sidenav {
+  .mdl-layout__drawer {
 
 
     // puts spacing between some boostrap buttons
@@ -504,23 +504,4 @@ body[data-page-name='visualizations/show'] .visualizations-controller {
   #searchVisRow {
     margin-bottom: 12px;
   }
-}
-
-md-sidenav, 
-md-sidenav.md-locked-open, 
-md-sidenav.md-closed.md-locked-open-add-active {
-  height: inherit;
-  min-width: 320px !important;
-  width: 320px !important;
-  max-width: 320px !important;
-  margin-top: 55px; //compensate for navbar
-} 
-
-md-sidenav.md-locked-open,
-div.embedded md-sidenav {
-  margin-top: 0px;
-}
-
-div.embedded md-sidenav {
-  display: none !important;
 }
