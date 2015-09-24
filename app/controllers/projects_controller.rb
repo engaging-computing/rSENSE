@@ -60,27 +60,12 @@ class ProjectsController < ApplicationController
     @params = params
     @project = Project.find(params[:id])
 
-    # Determine if the project is cloned
-    @cloned_project = nil
-    unless @project.cloned_from.nil?
-      @cloned_project = Project.find(@project.cloned_from)
-    end
-
-    @liked_by_cur_user = false
-    if Like.find_by_user_id_and_project_id(@cur_user, @project.id)
-      @liked_by_cur_user = true
-    end
-
-    # checks for fields
-    @has_fields = false
-    if @project.fields.count > 0
-      @has_fields = true
-    end
-
-    @data_sets = @project.data_sets.search(params[:search])
-    if @data_sets.nil?
-      @data_sets = []
-    end
+    @cloned_project = Project.select(:id, :user_id, :title).where(id: @project.cloned_from).first
+    @liked_by_cur_user = Like.find_by_user_id_and_project_id(@cur_user, @project.id)
+    @data_sets = @project.data_sets.select('id', 'title', 'user_id', 'key', 'created_at', 'contributor_name').search(params[:search])
+    @fields = @project.fields
+    @field_count = @fields.count
+    @data_set_count = @data_sets.length
 
     recur = params.key?(:recur) ? params[:recur] == 'true' : false
 

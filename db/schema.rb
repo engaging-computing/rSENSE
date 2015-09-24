@@ -138,6 +138,14 @@ ActiveRecord::Schema.define(version: 20150805145056) do
     t.datetime "updated_at"
   end
 
+  create_table "vislogs", force: true do |t|
+    t.text     "data"
+    t.integer  "visualization_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "visualizations", force: true do |t|
     t.string   "title"
     t.integer  "user_id"
@@ -152,6 +160,7 @@ ActiveRecord::Schema.define(version: 20150805145056) do
     t.datetime "featured_at"
     t.text     "summary"
     t.integer  "thumb_id"
+    t.boolean  "should_log",  default: false
   end
 
 end
