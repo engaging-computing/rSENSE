@@ -57,7 +57,7 @@ class User < ActiveRecord::Base
 
     if recurse
       h.merge!(
-        dataSets:       data_sets.search(false).map                   { |o| o.to_hash false },
+        dataSets:       data_sets.search("").map                   { |o| o.to_hash false },
         mediaObjects:   media_objects.map                             { |o| o.to_hash false },
         projects:       projects.search(false, show_hidden).map       { |o| o.to_hash false },
         tutorials:      tutorials.search(false, show_hidden).map      { |o| o.to_hash false },

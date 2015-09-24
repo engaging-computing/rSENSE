@@ -31,7 +31,7 @@ class DataSet < ActiveRecord::Base
   end
 
   def self.search(search)
-    where('id = ? OR title LIKE ?', search.to_i , "%#{search}%").order('created_at DESC')
+    where('id = ? OR title LIKE ?', search.to_i, "%#{search}%").order('created_at DESC')
   end
 
   def to_hash(recurse = true)
