@@ -95,6 +95,6 @@ class FieldsController < ApplicationController
   private
 
   def field_params
-    params[:field].permit(:project_id, :field_type, :name, :unit, :restrictions, :index)
+    params[:field].permit(:project_id, :field_type, :name, :unit, :restrictions)
   end
 end

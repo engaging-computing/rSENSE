@@ -5,7 +5,8 @@ module DataSetsHelper
   end
 
   def format_slickgrid(fields, data_set)
-    cols, data = [fields.sort_by(&:index), data_set]
+    cols = fields
+    data = data_set
     cols, data = format_slickgrid_merge cols, data
     cols, data = format_slickgrid_units cols, data
     cols, data = format_slickgrid_populate cols, data
