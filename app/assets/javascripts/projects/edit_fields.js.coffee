@@ -32,8 +32,8 @@ $ ->
              """<input class="input-small form-control" type="text"
                  name="number_#{numCount}" value="Number_#{displayNumCount}">""", "Number",
                  """<input class="input-small form-control" type="text" class="units"
-                 name="units_#{numCount}">""", "", """<div fid="0"
-                 class="field_delete"><i class="fa fa-close slick-delete"></i></div>"""])
+                 name="units_#{numCount}">""", "", """<a fid="0"
+                 class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
 
     $('#text').click ->
       textCount = textCount + 1
@@ -42,27 +42,27 @@ $ ->
              """<input class="input-small form-control" type="text"
                  name="text_#{textCount}" value="Text_#{displayTextCount}">""", "Text", "",
                  """<input class="input-small form-control" type="text" class="restrictions"
-                 name="restrictions_#{textCount}">""", """<div fid="0"
-                 class="field_delete"><i class="fa fa-close slick-delete"></i></div>"""])
+                 name="restrictions_#{textCount}">""", """<a fid="0"
+                 class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
 
     $('#timestamp').click ->
       timestampCount = timestampCount + 1
       addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
              """<input class="input-small form-control" type="text" name="timestamp"
-                 value="Timestamp">""", "Timestamp", "", "", """<div fid="0"
-                 class="field_delete"><i class="fa fa-close slick-delete"></i></div>"""])
+                 value="Timestamp">""", "Timestamp", "", "", """<a fid="0"
+                 class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
       document.getElementById('timestamp').disabled = true
 
     $('#location').click ->
       locationCount = locationCount + 1
       addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
              """<input class="input-small form-control" type="text" name="longitude"
-                 value="Longitude">""", "Longitude", "deg", "", """<div href="#" fid="0"
-                 class="field_delete"><i class="fa fa-close slick-delete"></i></div>"""])
+                 value="Longitude">""", "Longitude", "deg", "", """<a fid="0"
+                 class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
       addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
              """<input class="input-small form-control" type="text" name="latitude"
-                 value="Latitude">""", "Latitude", "deg", "", """<div fid="0"
-                 class="field_delete"><i class="fa fa-close slick-delete"></i></div>"""])
+                 value="Latitude">""", "Latitude", "deg", "", """<a fid="0"
+                 class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
       document.getElementById('location').disabled = true
 
     # Make table sortable
@@ -72,7 +72,7 @@ $ ->
     # hasn't yet been added to project in database)
     $('#fields_table').on 'click', '.field_delete', ->
       # fid of row being deleted
-      fid = $(@).closest('div').attr('fid')
+      fid = $(@).closest('a').attr('fid')
 
       # Row index of row being deleted
       rowIndex = $(@).closest('tr').index() + 1
@@ -91,7 +91,6 @@ $ ->
         timestampCount = timestampCount - 1
 
       # fid != 0 when the field exists in the database
-      console.log fid
       if fid != '0'
         hiddenDeletedFields = $('#hidden_deleted_fields')
         if rowName == 'latitude'
