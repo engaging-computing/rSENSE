@@ -2,8 +2,10 @@ include ApplicationHelper
 class Field < ActiveRecord::Base
   after_initialize :default_values
   before_validation :trim_restrictions
+  before_validation :choose_refname
   validates_presence_of :project_id, :field_type, :name
   validates_uniqueness_of :name, scope: :project_id, case_sensitive: false
+  validates_uniqueness_of :refname, scope: :project_id, case_sensitive: false
   validate :validate_values
 
   belongs_to :project
@@ -76,6 +78,26 @@ class Field < ActiveRecord::Base
         end
       end
     end
+  end
+
+  def choose_refname
+    parent = Project.find_by_id(project_id)
+    other_refnames = []
+    unless parent.nil?
+      parent.fields.find_each do |f|
+        other_refnames << f.refname
+      end
+    end
+
+    base_refname = name.gsub(/[^0-9A-Za-z]/, '').camelize :lower
+    next_refname = base_refname
+    name_count = 1
+    while other_refnames.include? next_refname
+      next_refname = "#{base_refname}#{name_count}"
+      name_count += 1
+    end
+
+    self.refname = next_refname
   end
 
   def validate_values
