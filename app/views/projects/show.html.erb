@@ -92,9 +92,11 @@
         <%= content_helper(@project) %>
       <% end %>
     </div>
+    
+    <!-- Data Sets View-->
     <div class="row">
       <%= render layout: "shared/box", locals: {title: 'Data Sets', width: '12', unique_id: 'data_sets', should_hide: false} do %>
-        <% if @data_sets.count != 0 || @params[:search] %>
+        <% if @data_set_count != 0 || @params[:search] %>
           <div id="dataset_list">
             <span>
               <button type="button" class="btn btn-info" style="margin-bottom: 10px;" id="vis_button" data-href="/projects/<%=@project.id%>/data_sets/">Visualize</button>
@@ -143,7 +145,7 @@
               </div>
             </div><br/>
             <%end%>
-            <% if @data_sets.count == 0 %>
+            <% if @data_set_count == 0 %>
               <p> No Matching Data Sets. </p>
             <%end%>
             <table id="dataset_table" class="table table-striped">
@@ -205,7 +207,7 @@
   <div class="col-md-5">
     <div class="row">
       <%= render layout: "shared/box", locals: {title: 'Fields', width: '12', unique_id: 'fields', should_hide: false} do %>
-        <% if (@project.fields.count == 0) && can_edit?(@project) %>
+        <% if (@field_count == 0) && can_edit?(@project) %>
           <div class="col-md-12 center">
             <a href="/projects/<%= @project.id %>/edit_fields">
               <button class="btn btn-success" id="manual_fields">
@@ -219,10 +221,10 @@
             </button>
           </div>
           <div class="clear"></div>
-        <% elsif @project.fields.count != 0 %>
+        <% elsif @field_count != 0 %>
           <table class="table table-striped" data-project="<%= @project.id %>"
-                 data-can_delete_fields="<% @project.data_sets.count == 0 %>"
-                 data-num_fields="<%= @project.fields.count %>">
+                 data-can_delete_fields="<% @data_set_count == 0 %>"
+                 data-num_fields="<%= @field_count %>">
             <thead>
               <tr>
                 <th style="max-width:30%">Name</th>
@@ -231,7 +233,7 @@
               </tr>
             </thead>
             <tbody>
-              <%= render 'field_edit', type: "field", can_edit: (can_edit? @project), has_ses: @project.data_sets.count %>
+              <%= render 'field_edit', type: "field", can_edit: (can_edit? @project), has_ses: @data_set_count %>
             </tbody>
           </table>
           <% if can_edit?(@project) %>
@@ -243,8 +245,8 @@
       <% end %>
     </div>
     <div class="row">
-      <%=render layout: "shared/box", locals: {title: 'Contribute Data', width:'12', unique_id: 'create_data_set', should_hide: !(@project.fields.count() > 0)} do %>
-        <% if ((can_edit?(@project) || can_contribute?(@project)) and @project.fields.count > 0) %>
+      <%=render layout: "shared/box", locals: {title: 'Contribute Data', width:'12', unique_id: 'create_data_set', should_hide: !(@field_count > 0)} do %>
+        <% if ((can_edit?(@project) || can_contribute?(@project)) and @field_count > 0) %>
           <div class="row-fluid">
             <div class="col-md-4 center">
               <%= link_to :controller => :data_sets, :action => :manualEntry do %>
@@ -274,7 +276,7 @@
             </div>
           <% end %>
         <% else %>
-          <% if @project.has_contrib_key? and @cur_user.nil? and @has_fields %>
+          <% if @project.has_contrib_key? and @cur_user.nil? and (@field_count > 0) %>
             <p>Enter contributor key to submit data.</p>
             <%= form_tag '/contrib_keys/enter', method: 'post' do %>
               <div class="row" style="margin-left: 0px;" >
@@ -285,7 +287,7 @@
               </div>
             <% end %>
           <% else %>
-            <% if (@project.fields.count == 0) %>
+            <% if (!(@field_count > 0)) %>
               <h4 class="center">Fields must be set up to contribute data</h4>
             <% elsif @cur_user.try(:id) %>
               <h2 class="center"><i class="icon-lock"></i></h2>
