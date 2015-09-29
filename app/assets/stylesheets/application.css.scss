@@ -245,6 +245,13 @@ body {
   min-height: 100%;
 }
 
+.mdl-card {
+  width: initial !important;
+  height: 250px;
+  margin-bottom: 2em;
+  line-height: initial;
+}
+
 .navbar {
   border-bottom: 1px solid black;
   margin-bottom: 0px;
