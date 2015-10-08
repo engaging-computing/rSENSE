@@ -248,6 +248,7 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
 
     # Delete fields as necessary
+    puts params[:hidden_deleted_fields]
     if params[:hidden_deleted_fields] != ''
       params[:hidden_deleted_fields].split(',').each do |x|
         if Field.find(x).destroy == -1 and return

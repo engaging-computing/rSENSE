@@ -42,7 +42,7 @@
           </thead>
            <tbody id="sortable"> 
             <% (@project.fields.sort_by &:index).each do |field| %>
-              <tr class="ui-state-default" name="<%= get_field_name(field.field_type).downcase %>">
+              <tr name="<%= get_field_name(field.field_type).downcase %>">
                 <td><i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i></td>
                 <td><input class="form-control" type="text" name="<%= field.id %>_name" value="<%= (defined?(@tmp_save) && @tmp_save.has_key?("#{field.id}_name")) ? @tmp_save["#{field.id}_name"] : field.name %>"></td>
                 <td><%= get_field_name(field.field_type) %></td>
@@ -59,9 +59,9 @@
                 <% end %>
                 </td>
                 <td>
-                  <a class="field_delete <%= @project.data_sets.count > 0 ? "not-active" : "" %>" href="#" fid="<%= field.id %>">
+                  <div class="field_delete <%= @project.data_sets.count > 0 ? "not-active" : "" %>" fid="<%= field.id %>">
                     <i class="fa fa-close slick-delete"></i>
-                  </a>
+                  </div>
                 </td>
               </tr>
             <% end %>

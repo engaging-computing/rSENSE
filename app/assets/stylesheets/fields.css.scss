@@ -35,3 +35,11 @@
    cursor: default;
    opacity: 0.35;
 }
+
+tr { 
+  background-color: white;
+}
+
+.ui-sortable-helper {
+    display: table;
+}
