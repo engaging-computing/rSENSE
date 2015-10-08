@@ -292,7 +292,7 @@ class ProjectsController < ApplicationController
     end
 
     (params[:hidden_num_count].to_i).times do |i|
-      if addField('Number', params[('number_' + (i + 1).to_s).to_sym], params[('units_' + (i + 1).to_s).to_sym], [],  params['number_' + i.to_s + '_index']) == -1 and return
+      if addField('Number', params[('number_' + (i + 1).to_s).to_sym], params[('units_' + (i + 1).to_s).to_sym], [],  params[('number_' + ((i + 1).to_s) + '_index').to_sym]) == -1 and return
       end
     end
 
@@ -300,7 +300,7 @@ class ProjectsController < ApplicationController
       # Need to explicitly check if restrictions are nil because empty restrictions should be []
       restrictions = params[('restrictions_' + (i + 1).to_s).to_sym].nil? ? [] : params[('restrictions_' + (i + 1).to_s).to_sym].split(',')
 
-      if addField('Text', params[('text_' + (i + 1).to_s).to_sym], '', restrictions, params['text_' + i.to_s + '_index']) == -1 and return
+      if addField('Text', params[('text_' + (i + 1).to_s).to_sym], '', restrictions, params[('text_' + (i + 1).to_s + '_index').to_sym]) == -1 and return
       end
     end
 
