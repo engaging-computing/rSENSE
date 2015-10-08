@@ -329,7 +329,7 @@ $ ->
           @configs.zoomLevel = @gmap.getZoom()
           google.maps.event.addListener @gmap, 'zoom_changed', =>
             newZoom = @gmap.getZoom()
-            if @configs.heatmapSelection isnt @HEATMAP_NONE
+            if @configs.heatmapSelection isnt @HEATMAP_NONE && @heatmapPixelRadius?
               # Guess new radius
               @heatmapPixelRadius = Math.ceil(@heatmapPixelRadius * Math.pow(2,
                 newZoom - @configs.zoomLevel))
