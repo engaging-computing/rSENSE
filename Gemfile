@@ -46,6 +46,7 @@ gem 'bcrypt-ruby'
 
 # jQuery plugins
 gem 'jquery-drag-rails'
+gem 'touchpunch-rails'
 
 gem 'httparty'
 

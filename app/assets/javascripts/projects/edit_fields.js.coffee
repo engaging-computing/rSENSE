@@ -116,7 +116,7 @@ $ ->
         field_id = t.rows[i].cells[5].getElementsByTagName('a')[0].getAttribute('fid')
         # This is for new fields that do not have an id yet
         if field_id == '0'
-          field_id = t.rows[1].cells[1].getElementsByTagName('input')[0].getAttribute('name')
+          field_id = t.rows[i].cells[1].getElementsByTagName('input')[0].getAttribute('name')
         input = document.createElement('input')
         input.setAttribute('type', 'text')
         input.setAttribute('text', 'form-control')

@@ -236,6 +236,8 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.4)
     tilt (1.4.1)
+    touchpunch-rails (1.0.3)
+      railties (>= 3.1)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
     uglifier (2.6.1)
@@ -296,9 +298,13 @@ DEPENDENCIES
   sqlite3
   summernote-rails
   therubyracer
+  touchpunch-rails
   uglifier
   useragent (~> 0.10.0)
   webrick
   will_paginate
   will_paginate-bootstrap
   yaml_db!
+
+BUNDLED WITH
+   1.10.6
