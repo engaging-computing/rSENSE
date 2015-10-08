@@ -17,6 +17,7 @@ gem 'handlebars'
 gem 'therubyracer', platforms: :ruby
 
 gem 'bootstrap-sass'
+gem 'bootstrap-switch-rails'
 gem 'sprockets', '~> 2.12'
 
 # Integration testing stuff
