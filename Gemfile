@@ -89,8 +89,5 @@ gem 'rubyzip', '>= 1.0.0'
 
 gem 'recaptcha', git: 'https://github.com/ambethia/recaptcha'
 
-# Material Design
-gem 'material_design_lite-rails'
-
 # Allow CORS
 gem 'rack-cors', :require => 'rack/cors'

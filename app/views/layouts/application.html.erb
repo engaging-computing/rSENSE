@@ -9,6 +9,7 @@
     <%= csrf_meta_tags %>
     <%= favicon_link_tag 'favicon.png' %>
     <%= stylesheet_link_tag "https://fonts.googleapis.com/icon?family=Material+Icons" %>
+    <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.5/material.indigo-blue.min.css" /> 
 
     <%= javascript_tag do %>
       window.namespace = <%= raw @namespace.to_json %>
