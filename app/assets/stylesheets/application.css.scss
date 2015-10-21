@@ -17,22 +17,17 @@
  *= require slickgrid/slick.grid.css
  *= require_tree .
  *= require_self
- *= require material
  */
 
 $navbar-default-bg: #111133;
 $navbar-default-color: white;
 $navbar-default-link-color: white;
 $navbar-default-link-hover-color: #DDDDDD;
-$shadow-color: rgba(0,0,0,0.5);
 $table-bg-accent: #E8E8E8;
 
 @import "bootstrap-sprockets";
 @import "bootstrap";
-
-@mixin material-shadow {
-  box-shadow: 0 3px 5px -1px $shadow-color;
-}
+@import "bootstrap3-switch.css.scss";
 
 .alert {
   margin-bottom: 0px;
@@ -151,10 +146,9 @@ body {
 }
 
 .item {
-  @include material-shadow;
-
   background-color: #ddd;
   margin: auto;
+  box-shadow: 2px 3px 1px grey;
 
   .badge {
     float: left;
@@ -177,6 +171,7 @@ body {
     background-repeat: no-repeat;
     background-size: 100%;
     height: 120px;
+    border-bottom: 1px solid gray;
   }
 
   .item-image.item-photo-image {
@@ -312,9 +307,8 @@ body {
 }
 
 .search-box {
-  @include material-shadow;
-
   background-color: #ddd;
+  box-shadow: 2px 3px 1px grey;
   padding: 2em;
   margin-bottom: 2ex;
 }
@@ -342,9 +336,8 @@ body {
 }
 
 .wide-item {
-  @include material-shadow;
-
   background-color: #ddd;
+  box-shadow: 2px 3px 1px grey;
   min-height: 210px;
   margin-bottom: 1ex;
 

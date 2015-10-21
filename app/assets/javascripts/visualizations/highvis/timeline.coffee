@@ -44,8 +44,8 @@ $ ->
       ###
       Build options relevant to timeline
       ###
-      buildOptions: ->
-        super()
+      buildOptions: (animate = true) ->
+        super(animate)
 
         self = this
         groupBy = ''
@@ -119,11 +119,8 @@ $ ->
         fieldIndex = data.timeFields[0]
         super(fieldIndex, data.timeFields)
 
-      ###
-      Clips an array of data to include only bounded points
-      ###
-      clip: (arr) ->
-        super(arr)
+      saveFilters: (vis = 'timeline') ->
+        super(vis)
 
     if "Timeline" in data.relVis
       globals.timeline = new Timeline 'timeline-canvas'

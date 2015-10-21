@@ -17,6 +17,7 @@ gem 'handlebars'
 gem 'therubyracer', platforms: :ruby
 
 gem 'bootstrap-sass'
+gem 'bootstrap-switch-rails'
 gem 'sprockets', '~> 2.12'
 
 # Integration testing stuff
@@ -46,6 +47,7 @@ gem 'bcrypt-ruby'
 
 # jQuery plugins
 gem 'jquery-drag-rails'
+gem 'touchpunch-rails'
 
 gem 'httparty'
 

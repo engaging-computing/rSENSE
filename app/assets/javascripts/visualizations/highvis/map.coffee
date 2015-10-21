@@ -145,41 +145,41 @@ $ ->
           ignoreHidden: true
           styles: clusterStyles
 
-        for dataPoint in globals.CLIPPING.getData(data.dataPoints)
+        for dp in globals.getData(true, globals.configs.activeFilters)
           lat = lon = null
           do =>
             # Grab geospatial
             for field, fieldIndex in data.fields
 
-              if (Number field.typeID) in data.types.LOCATION
-                if (Number field.typeID) is data.units.LOCATION.LATITUDE
-                  lat = dataPoint[fieldIndex]
-                else if (Number field.typeID) is data.units.LOCATION.LONGITUDE
-                  lon = dataPoint[fieldIndex]
+              if Number(field.typeID) in data.types.LOCATION
+                if Number(field.typeID) is data.units.LOCATION.LATITUDE
+                  lat = dp[fieldIndex]
+                else if Number(field.typeID) is data.units.LOCATION.LONGITUDE
+                  lon = dp[fieldIndex]
 
             if (lat is null) or (lon is null)
               return
 
             groupIndex = data.groups.indexOf(
-              String(dataPoint[globals.configs.groupById]).toLowerCase())
+              String(dp[globals.configs.groupById]).toLowerCase())
             color = globals.getColor(groupIndex)
             latlng = new google.maps.LatLng(lat, lon)
 
             # Put aside line info if necessary
-            isNum = not isNaN(dataPoint[data.timeFields[0]])
-            if @timeLines? and dataPoint[data.timeFields[0]]? and isNum
+            isNum = not isNaN(dp[data.timeFields[0]])
+            if @timeLines? and dp[data.timeFields[0]]? and isNum
               @timeLines[groupIndex].push
-                time: dataPoint[data.timeFields[0]]
+                time: dp[data.timeFields[0]]
                 latlng: latlng
-            res = dataPoint[globals.configs.groupById]
-            idString = new String(dataPoint[1].match(/\((\d+)\)$/g))
+            res = dp[globals.configs.groupById]
+            idString = new String(dp[1].match(/\((\d+)\)$/g))
             dataSetID = parseInt(idString.match(/(\d+)/g))
 
             # TODO Template out this html
             # Build info window content
             label  = "<div style='font-size:9pt;overflow-x:none;'>"
             label += "<div style='width:100%;text-align:center;color:#{color};'> " +
-              "#{dataPoint[globals.configs.groupById]}</div></br>"
+              "#{dp[globals.configs.groupById]}</div></br>"
 
             metaIndex = 0
             if data.metadata?
@@ -217,11 +217,11 @@ $ ->
                           </div> </br>"
 
             label += "<table>"
-            for f, i in data.fields when dataPoint[i] isnt null
+            for f, i in data.fields when dp[i] isnt null
               dat = if Number(f.typeID) is data.types.TIME
-                globals.dateFormatter(dataPoint[i])
+                globals.dateFormatter(dp[i])
               else
-                dataPoint[i]
+                dp[i]
 
               label += "<tr><td>#{f.fieldName}</td>"
               label += "<td><strong>#{dat}</strong></td>"
@@ -270,10 +270,10 @@ $ ->
 
             @markers[groupIndex].push newMarker
 
-            for index in data.normalFields when dataPoint[index] isnt null
+            for index in data.normalFields when dp[index] isnt null
               @heatPoints[index][groupIndex].push
-                weight: dataPoint[index]
-                val: dataPoint[index]
+                weight: dp[index]
+                val: dp[index]
                 location: latlng
 
             if @heatPoints[@HEATMAP_MARKERS]
@@ -329,7 +329,7 @@ $ ->
           @configs.zoomLevel = @gmap.getZoom()
           google.maps.event.addListener @gmap, 'zoom_changed', =>
             newZoom = @gmap.getZoom()
-            if @configs.heatmapSelection isnt @HEATMAP_NONE
+            if @configs.heatmapSelection isnt @HEATMAP_NONE && @heatmapPixelRadius?
               # Guess new radius
               @heatmapPixelRadius = Math.ceil(@heatmapPixelRadius * Math.pow(2,
                 newZoom - @configs.zoomLevel))
@@ -341,6 +341,7 @@ $ ->
             @configs.savedCenter =
               lat: cen.lat()
               lng: cen.lng()
+            @delayedUpdate()
 
           google.maps.event.addListener @gmap, 'dragend', =>
             # Update if the projection has changed enough to disturb the heatmap
@@ -364,6 +365,9 @@ $ ->
         checkProj()
 
       update: ->
+        # Get current data
+        dp = globals.getData(true, globals.configs.activeFilters)
+
         # Disable old heatmap (if there)
         if @heatmap?
           @heatmap.setMap null
@@ -384,7 +388,8 @@ $ ->
               coords.push(@projOverlay.projectPixels(h.location))
 
             # If there are negative numbers, shift data into positive range
-            min = data.getMin(@configs.heatmapSelection, data.groupSelection)
+            min = data.getMin(@configs.heatmapSelection,
+              data.groupSelection, dp)
             offset = if min < 0 then Math.abs(min) else 0
 
             for h, i in heats
@@ -436,6 +441,7 @@ $ ->
         super()
         @drawGroupControls(data.textFields, true)
         @drawToolControls()
+        @drawClippingControls()
         @drawSaveControls()
 
       drawToolControls: ->
@@ -619,27 +625,41 @@ $ ->
         else
           return @heatmapPixelRadius
 
-      clip: (arr) ->
+      saveFilters: (vis = 'map') ->
+        super(vis)
+
         viewBounds = @gmap.getBounds()
-        unless viewBounds? then return arr
+        ne = viewBounds.getNorthEast()
+        sw = viewBounds.getSouthWest()
+        latIdx = lngIdx = null
+        for f, i in data.fields
+          if Number(f.typeID) is data.units.LOCATION.LATITUDE  then latIdx = i
+          if Number(f.typeID) is data.units.LOCATION.LONGITUDE then lngIdx = i
 
-        filterFunc = (row) ->
-          lat = lng = null
+        unless viewBounds? and ne? and sw? and latIdx? and lngIdx?
+          return
 
-          # Scan for lat and long
-          for f, i in data.fields
-            if Number(f.typeID) in data.types.LOCATION
-              if Number(f.typeID) is data.units.LOCATION.LATITUDE
-                lat = row[i]
-              else
-                lng = row[i]
+        # Account for longitudinal wrap around
+        filters = [
+          vis: vis
+          op:  'bb'
+          field: latIdx
+          min: -90
+          max:  90
+          lvalue: sw.lat()
+          uvalue: ne.lat()
+        ,
+          vis: vis
+          op:  'bb'
+          field: lngIdx
+          min: -180
+          max:  180
+          lvalue: sw.lng()
+          uvalue: ne.lng()
+        ]
 
-          # If points are valid, check if they are visible
-          if (lat is null) or (lng is null)
-            return false
-          else return viewBounds.contains(new google.maps.LatLng(lat, lng))
-
-        return arr.filter(filterFunc)
+        for filter in filters
+          globals.configs.activeFilters.push(filter)
 
     if 'Map' in data.relVis
       class CanvasProjectionOverlay extends google.maps.OverlayView

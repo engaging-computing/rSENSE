@@ -46,9 +46,9 @@ $ ->
         $(canvas).html("")
 
         # load the Handlebars templates
-        grpTemp = HandlebarsTemplates['visualizations/photo/group']
-        picTemp = HandlebarsTemplates['visualizations/photo/pic']
-        lbTemp = HandlebarsTemplates['visualizations/photo/lightbox']
+        grpTemp = HandlebarsTemplates[hbVis('photo/group')]
+        picTemp = HandlebarsTemplates[hbVis('photo/pic')]
+        lbTemp = HandlebarsTemplates[hbVis('photo/lightbox')]
 
         # group the media
         groupedMedia = {}

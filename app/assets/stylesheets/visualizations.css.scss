@@ -36,6 +36,10 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     user-select: none;
   }
 
+  .bold {
+    font-weight: bold;
+  }
+
   .color-picker {
     vertical-align: top;
   }
@@ -108,16 +112,6 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     margin-top: 10px;
     font-size: 90%;
     color: $hint;
-  }
-
-  .inline-left {
-    display: inline-block;
-    float: left;
-  }
-
-  .inline-right {
-    display: inline-block;
-    float: right;
   }
 
   .mainContent {
@@ -281,7 +275,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   }
 
   .subtitle {
-    font-size: 18px;
+    font-size: 14px;
   }
 
   .tab-content {
@@ -306,6 +300,101 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
                       // is overflowing on every non-map vis
   }
 
+  #vis-ctrl-container {
+
+    // this is where all the div controls get added
+    #vis-ctrls {
+      height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+      position: relative;
+      display: inline-block;
+      float: left;
+
+      // puts spacing between some boostrap buttons
+      .form-control { // this styles bootstrap stuff and IS VERY BAD
+        margin-bottom: 5px;
+      }
+
+      .full-width {
+        width: 100%;
+      }
+
+      .save-btn {
+        display: inline-block;
+        width: 80%;
+        margin: 5px auto;
+      }
+
+      // any input button inside this class isn't lined up with the
+      // text to its right - this fixes that
+      .vis-ctrl-body {
+        display: none;
+        font-size: 14px;
+        width: 100%;
+        padding: 5px 20px;
+        background-color: $vis-bkg-light;
+
+        .centered {
+          text-align: center;
+        }
+
+        .checkbox, .radio {
+          text-align: left;
+          margin: 1px 0;
+
+          input {
+            margin-top: 2px;
+            margin-left: 0;
+          }
+        }
+
+        .name {
+          width: 90%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .vis-ctrl-subblock {
+          margin-bottom: 5px;
+
+          .cpickr-icon {
+            margin-left: 2px;
+            height: 20px;
+            width: 20px;
+          }
+        }
+
+        .vis-ctrl-subtitle {
+          text-align: left;
+        }
+      }
+
+      .vis-ctrl-header {
+        font-size: 24px;
+        padding: 10px 20px;
+        margin: 0;
+        color: #337AB7;
+        white-space: nowrap;
+        overflow: hidden;
+        cursor: pointer;
+        height: 55px;
+        width: 100%;
+        background: $vis-bkg-mid;
+        border-bottom: $border;
+
+        .vis-ctrl-title {
+          float: left;
+        }
+
+        .vis-ctrl-icon {
+          float: right;
+        }
+      }
+    }
+  }
+
   #vis-wrapper {
     width: 100%;
     height: 100%;
@@ -325,29 +414,32 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
         overflow: hidden;
       }
 
-      // the bar at the top of the vis window
-      #vis-tab-list {
-        padding: 0; // removes padding that shouldn't be there to begin with
-        margin: 0;
+      #vis-header {
         background-color: $vis-bkg-light;
       }
 
+      #vis-tab-list {
+        padding: 0; // removes padding that shouldn't be there to begin with
+        margin: 0;
+      }
+
       #vis-title-bar {
-        display: flex;
-        position: relative;
         width: 100%;
-        height: 50px;
-        background-color: $vis-bkg-light;
-        font-size: 24px;
+        font-size: 1.5em;
         padding: 10px;
         white-space: nowrap;
 
-        .edit_visualization, .edit_data_set {
-          display: none;
+        #vis-title {
+          margin-left: 10px;
+          vertical-align: middle;
         }
 
-        .inline-left {
-          max-width: 100%;
+        #vis-title-edit-btn {
+          float: right;
+        }
+
+        .edit_visualization, .edit_data_set {
+          display: none;
         }
 
         #title-and-menu {
@@ -357,114 +449,42 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
             vertical-align: middle;
           }
         }
+      }
 
-        #vis-proj-right {
-          position: absolute;
-          right: 10px;
+      #vis-filters {
+        margin: 3px;
+        overflow-y: auto;
+
+        .vis-filter {
+          background-color: white;
+          border: thin solid $vis-bkg-mid;
+          border-radius: 5px;
+          display: inline-block;
+          margin: 3px;
+          padding: 2px 5px;
+          whitespace: nowrap;
+        }
+
+        .vis-filter:hover {
+          background-color: $vis-bkg-dark;
+        }
+
+        .remove {
+          cursor: pointer;
         }
       }
     }
-  }
 
-  // this is where all the div controls get added
-  .mdl-layout__drawer {
-
-
-    // puts spacing between some boostrap buttons
-    .form-control { // this styles bootstrap stuff and IS VERY BAD
-      margin-bottom: 5px;
+    .vis-tab-icon {
+      height: 32px;
+      width: 32px;
     }
-
-    .full-width {
-      width: 100%;
-    }
-
-    .save-btn {
-      display: inline-block;
-      width: 80%;
-      margin: 10px auto;
-    }
-
-    // any input button inside this class isn't lined up with the
-    // text to its right - this fixes that
-    .vis-ctrl-body {
-      display: none;
-      font-size: 14px;
-      width: 100%;
-      padding: 5px 20px;
-
-      .centered {
-        text-align: center;
-      }
-
-      .checkbox, .radio {
-        text-align: left;
-        margin: 1px 0;
-
-        input {
-          margin-top: 2px;
-          margin-left: 0;
-        }
-        label {
-          font-weight: normal;
-        }
-        .color-picker {
-          float:right;
-        }
-      }
-
-      .name {
-        width: 90%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      .vis-ctrl-subblock {
-        margin-bottom: 5px;
-
-        .cpickr-icon {
-          margin-left: 2px;
-          height: 20px;
-          width: 20px;
-        }
-      }
-
-      .vis-ctrl-subtitle {
-        text-align: left;
-      }
-    }
-
-    .vis-ctrl-header {
-      font-size: 24px;
-      padding: 10px 20px;
-      margin: 0;
-      color: #337AB7;
-      white-space: nowrap;
-      overflow: hidden;
-      cursor: pointer;
-      height: 55px;
-      width: 100%;
-
-      .vis-ctrl-title {
-        float: left;
-      }
-
-      .vis-ctrl-icon {
-        float: right;
-      }
-    }
-  }
-  
-  .vis-tab-icon {
-    height: 32px;
-    width: 32px;
   }
 }
 
-
 // the dropdown menu for the table vis is located as a direct child of the body, so this has to go here
 ul#sopt_menu {
+  background-color: #FFF;
   margin: 0;
   padding: 0;
 
@@ -497,6 +517,10 @@ body[data-page-name='visualizations/show'] .visualizations-controller {
 .embedded {
   .ui-accordion-header {
     padding-top: 10px;
+  }
+
+  .bootstrap-switch {
+    height: 36px;
   }
 }
 

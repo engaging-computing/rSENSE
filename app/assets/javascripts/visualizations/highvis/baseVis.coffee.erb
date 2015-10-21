@@ -30,7 +30,7 @@ $ ->
   if namespace.controller is 'visualizations' and
   namespace.action in ['displayVis', 'embedVis', 'show']
     window.globals ?= {}
-    window.globals.configs ?= {}
+    globals.configs ?= {}
 
     class window.BaseVis
       constructor: (@canvas) ->
@@ -54,8 +54,10 @@ $ ->
       ###
       start: ->
         $('#' + @canvas).show()
+        toolScroll = $('#vis-ctrls').scrollTop()
         @drawControls()
         @update()
+        $('#vis-ctrls').scrollTop(toolScroll)
 
       ###
       Update minor state
@@ -104,6 +106,7 @@ $ ->
       Returns an object of key-value pairs of the form { groupId, value }
       ###
       getGroupedData: (field) ->
+        dp = globals.getData(true, globals.configs.activeFilters)
         gData = {}
 
         analysisMethod =
@@ -116,10 +119,68 @@ $ ->
             when @ANALYSISTYPE_MEDIAN     then data.getMedian
             when @ANALYSISTYPE_COUNT      then data.getCount
 
-        for name, i in data.groups when i in data.groupSelection
-          gData[i] = analysisMethod.call data, field, i
+        for name, groupIdx in data.groups when groupIdx in data.groupSelection
+          gData[groupIdx] = analysisMethod.call(data, field, groupIdx, dp)
 
-        gData
+        return gData
+
+      ###
+      Draw clipping controls
+      ###
+      drawClippingControls: ->
+        # Draw the Clipping controls
+        inctx =
+          id: 'clipping-enabled'
+          logId: 'clipping-enabled'
+          label: 'Filters:'
+
+        outctx = {}
+        outctx.id = 'clipping-ctrls'
+        outctx.title = 'Filtering'
+        outctx.body = HandlebarsTemplates[hbCtrl('clipping')](inctx)
+        clipping = HandlebarsTemplates[hbCtrl('body')](outctx)
+        $('#vis-ctrls').append(clipping)
+
+        # Enable clipping mode switch
+        clipMode = Boolean(globals.configs.clippingMode)
+        $('#swch-clipping-enabled').bootstrapSwitch
+          onSwitchChange: =>
+            state = $('#swch-clipping-enabled').bootstrapSwitch('state')
+            globals.configs.clippingMode = state
+            $(window).resize()
+            @start(false)
+          state: clipMode
+
+        clippable = @canvas.split('-')[0] in globals.clippingVises
+        $('#save-filters-btn').toggleClass('disabled',
+          !(clipMode and clippable))
+
+        $('#save-filters-btn').click =>
+          @saveFilters()
+          $(window).resize()
+          @start(false)
+
+        $('#clear-filters-btn').click =>
+          globals.configs.activeFilters = []
+          clearFilters()
+          $(window).resize()
+          @start(false)
+
+        # Initialize and track the status of this control panel
+        globals.configs.clippingOpen ?= false
+        initCtrlPanel('clipping-ctrls', 'clippingOpen')
+
+      ###
+      Adds any filter that this vis is currently applying to the data to the
+      active filters
+      ###
+      saveFilters: (vis) ->
+        unless vis? then return
+
+        # Clear out old filters
+        globals.configs.activeFilters =
+          globals.configs.activeFilters.filter (f) ->
+            f.vis != vis
 
       ###
       A wrapper for making y-axis controls
@@ -527,13 +588,14 @@ $ ->
       Subsequent derived classes should use $.extend
       to expand upon these after calling super()
       ###
-      buildOptions: ->
+      buildOptions: (animate = true) ->
         self = this
 
         @chartOptions =
           chart:
             renderTo: @canvas
             reflow: false
+            animation: animate
           credits:
             enabled: false
           exporting:
@@ -561,6 +623,7 @@ $ ->
                 'Y-Values'
               else
                 data.fields[globals.configs.fieldSelection[0]].fieldName
+
       ###
       Builds the 'fake series' for legend controls.
       Derrived objects should implement this.
@@ -578,8 +641,8 @@ $ ->
       should destroy the current chart if it exists before generating a fresh
       one.
       ###
-      start: ->
-        @buildOptions()
+      start: (animate = true) ->
+        @buildOptions(animate)
         @chart = new Highcharts.Chart(@chartOptions)
         super()
 
@@ -610,6 +673,8 @@ $ ->
         # Draw legend
         for options in @buildLegendSeries()
           @chart.addSeries options, false
+
+        super()
 
       ###
       Performs an update while displaying the loading text

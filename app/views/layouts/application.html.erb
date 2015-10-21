@@ -8,8 +8,9 @@
     <%= javascript_include_tag :modernizr %>
     <%= csrf_meta_tags %>
     <%= favicon_link_tag 'favicon.png' %>
-    <%= stylesheet_link_tag "https://fonts.googleapis.com/icon?family=Material+Icons" %>
+    <script src="https://storage.googleapis.com/code.getmdl.io/1.0.5/material.min.js"></script>
     <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.5/material.indigo-blue.min.css" /> 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
     <%= javascript_tag do %>
       window.namespace = <%= raw @namespace.to_json %>
