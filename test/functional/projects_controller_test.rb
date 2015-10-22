@@ -243,4 +243,20 @@ class ProjectsControllerTest < ActionController::TestCase
                       '25_name' => 'Location of Foodz', '25_unit' => '', new_field: 'Latitude' }, user_id: @kate.id
     assert_redirected_to "/projects/#{@dessert.id}"
   end
+
+  test 'fields are destroyed along with project' do
+    assert_difference('Project.count', -1) do
+      delete :destroy, { format: 'json', id: @delete_me_and_my_fields },  user_id: @nixon
+    end
+
+    assert_raises(ActiveRecord::RecordNotFound) do
+      Project.find(@delete_me_and_my_fields.id)
+    end
+
+    assert_raises(ActiveRecord::RecordNotFound) do
+      Field.find(@delete_me.id)
+    end
+
+    assert_response :success
+  end
 end

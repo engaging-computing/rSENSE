@@ -132,3 +132,8 @@ contrib_key_number:
   field_type: 1
   project: contributor_key_project
   name: field
+
+delete_me:
+  field_type: 1
+  project: delete_me
+  name: delete_me

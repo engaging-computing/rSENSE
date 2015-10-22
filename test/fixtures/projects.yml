@@ -103,3 +103,7 @@ description_test:
 never_visited:
   title: Never Visited
   user: kate
+
+delete_me_and_my_fields:
+  title: Festroy My Fields
+  user: nixon
