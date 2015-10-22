@@ -37,123 +37,124 @@
 <script type="text/javascript"
         src="https://maps-api-ssl.google.com/maps/api/js?key=AIzaSyBxtPK1_mxwVdl1NRu7ZEiSNvmCekFSZAw&amp;sensor=false&amp;libraries=visualization,geometry&amp;v=3.21">
 </script>
-
-<div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer"> 
-  <div id="vis-ctrl-container" class="mdl-layout__drawer">
+<div id="vis-wrapper">
+  <div id="vis-ctrl-container" class="hidden-xs"
+       <% if @presentation || !controls %> style="display:none" <% end %>>
     <div id="vis-ctrls">
     </div>
   </div>
-  <main class="mdl-layout__content">
-    <div class="page-content">
-      <div id="vis-wrapper">
-        <div id="vis-container" role="tabpanel">
-          <div id="vis-header">
-            <div id="vis-title-bar"
-                 <% if @presentation || !titleBar %> style="display:none" <% end %>>
-              <div id="vis-title-edit-btn" class="hidden-xs hidden-sm">
-                <div class="inline-block subtitle">
-                  <% if obj && can_edit?(obj) %>
-                    <div class="edit_menu inline-block" data-field="title"
-                         data-value="<%= obj.title.html_safe %>">
-                      <div class="btn-group">
-                        <a class="btn btn-primary dropdown-toggle menu_edit_link"
-                           data-toggle="dropdown" href="#">
-                          Edit <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu pull-right" role="menu">
-                          <li role="presentation">
-                            <a class="menu_rename" role="menuitem"
-                               href="<%= url_for obj %>">
-                              <i class="fa fa-edit"></i> Edit Title
-                            </a>
-                          </li>
-                          <% if can_delete?(obj) %>
-                            <li role="presentation">
-                              <%= link_to obj, data: { confirm: "Are you sure?" },
-                                  method: :delete,
-                                  class: 'menu_delete' do %>
-                              <i style="color:red" class="fa fa-times-circle"></i>
-                              Delete
-                              <%= (s = obj.class.to_s) == 'DataSet' ?
-                                  'Data Set' : s  %>
-                              <% end %>
-                            </li>
-                          <% end %>
-                        </ul>
-                      </div>
-                    </div>
-                  <% end %>
-                </div>
-                <% if getLatest %>
-                  <%= link_to "#{project_path(@project)}/data_sets",
-                      { id:"refresh-data", class: "btn btn-default" } do %>
-                    Get Latest Data
-                    <%= content_tag(:i, ' ', class: 'fa fa-refresh') %>
-                  <% end %>
-                <% end %>
-              </div>
-              <div id="vis-title" class="inline-block">
-                <% if obj %>
-                  <%= title_and_edit_menu(obj) %>
-                <% else %>
-                  Showing <%= @project.data_sets.size %> Data Sets
-                <% end %>
-                <div class="subtitle" style="font-style: italic">
-                  <span>from&nbsp;</span>
-                  <i class='fa fa-folder-open'></i>
-                  <%= link_to project.title.html_safe, project, class: "link" %>
-                    by <i class='fa fa-user'></i>
-                  <%= link_to "#{project.owner.name}", owner, class: "link" %>
+  <div id="vis-container" role="tabpanel">
+    <div id="vis-header">
+      <div id="vis-title-bar"
+           <% if @presentation || !titleBar %> style="display:none" <% end %>>
+        <div id="vis-title-edit-btn" class="hidden-xs hidden-sm">
+          <div class="inline-block subtitle">
+            <% if obj && can_edit?(obj) %>
+              <div class="edit_menu inline-block" data-field="title"
+                   data-value="<%= obj.title.html_safe %>">
+                <div class="btn-group">
+                  <a class="btn btn-primary dropdown-toggle menu_edit_link"
+                     data-toggle="dropdown" href="#">
+                    Edit <span class="caret"></span>
+                  </a>
+                  <ul class="dropdown-menu pull-right" role="menu">
+                    <li role="presentation">
+                      <a class="menu_rename" role="menuitem"
+                         href="<%= url_for obj %>">
+                        <i class="fa fa-edit"></i> Edit Title
+                      </a>
+                    </li>
+                    <% if can_delete?(obj) %>
+                      <li role="presentation">
+                        <%= link_to obj, data: { confirm: "Are you sure?" },
+                            method: :delete,
+                            class: 'menu_delete' do %>
+                        <i style="color:red" class="fa fa-times-circle"></i>
+                        Delete
+                        <%= (s = obj.class.to_s) == 'DataSet' ?
+                            'Data Set' : s  %>
+                        <% end %>
+                      </li>
+                    <% end %>
+                  </ul>
                 </div>
               </div>
-            </div>
-            <div id="vis-filters">
-              Filters:
-            </div>
-            <ul id="vis-tab-list" role="tablist" class="nav nav-tabs" data-tabs="tabs"
-                <% if @presentation || !titleBar %> style="display: none" <% end %>>
-            </ul>
+            <% end %>
           </div>
-          <div class="tab-content">
-            <div role="tabpanel" id="map-canvas"
-                 class="vis-canvas tab-pane fade
-                        <% if default == 'Map' %> active in <% end %>">
-            </div>
-            <div role="tabpanel" id="timeline-canvas"
-                 class="vis-canvas tab-pane fade
-                        <% if default == 'Timeline' %> active in <% end %>">
-            </div>
-            <div role="tabpanel" id="scatter-canvas"
-                 class="vis-canvas tab-pane fade
-                        <% if default == 'Scatter' %> active in <% end %>">
-            </div>
-            <div role="tabpanel" id="bar-canvas"
-                 class="vis-canvas tab-pane fade
-                        <% if default == 'Bar' %> active in <% end %>">
-            </div>
-            <div role="tabpanel" id="histogram-canvas"
-                 class="vis-canvas tab-pane fade
-                        <% if default == 'Histogram' %> active in <% end %>">
-            </div>
-            <div role="tabpanel" id="pie-canvas"
-                 class="vis-canvas tab-pane fade
-                        <% if default == 'Pie' %> active in <% end %>">
-            </div>
-            <div role="tabpanel" id="table-canvas"
-                 class="vis-canvas tab-pane fade
-                        <% if default == 'Table' %> active in <% end %>">
-            </div>
-            <div role="tabpanel" id="summary-canvas"
-                 class="vis-canvas tab-pane fade
-                        <% if default == 'Summary' %> active in <% end %>">
-            </div>
-            <div role="tabpanel" id="photos-canvas"
-                 class="vis-canvas tab-pane fade
-                        <% if default == 'Photos' %> active in <% end %>">
-            </div>
+          <% if getLatest %>
+            <%= link_to "#{project_path(@project)}/data_sets",
+                { id:"refresh-data", class: "btn btn-default" } do %>
+              Get Latest Data
+              <%= content_tag(:i, ' ', class: 'fa fa-refresh') %>
+            <% end %>
+          <% end %>
+        </div>
+        <button id="ctrls-menu-btn"
+                class="hamburger-menu btn btn-default down hidden-xs"
+                <% if !controls %> style="display:none" <% end %>>
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+        </button>
+        <div id="vis-title" class="inline-block">
+          <% if obj %>
+            <%= title_and_edit_menu(obj) %>
+          <% else %>
+            Showing <%= @project.data_sets.size %> Data Sets
+          <% end %>
+          <div class="subtitle" style="font-style: italic">
+            <span>from&nbsp;</span>
+            <i class='fa fa-folder-open'></i>
+            <%= link_to project.title.html_safe, project, class: "link" %>
+              by <i class='fa fa-user'></i>
+            <%= link_to "#{project.owner.name}", owner, class: "link" %>
           </div>
         </div>
       </div>
-   </div>
-  </main>
+      <div id="vis-filters">
+        Filters:
+      </div>
+      <ul id="vis-tab-list" role="tablist" class="nav nav-tabs" data-tabs="tabs"
+          <% if @presentation || !titleBar %> style="display: none" <% end %>>
+      </ul>
+    </div>
+    <div class="tab-content">
+      <div role="tabpanel" id="map-canvas"
+           class="vis-canvas tab-pane fade
+                  <% if default == 'Map' %> active in <% end %>">
+      </div>
+      <div role="tabpanel" id="timeline-canvas"
+           class="vis-canvas tab-pane fade
+                  <% if default == 'Timeline' %> active in <% end %>">
+      </div>
+      <div role="tabpanel" id="scatter-canvas"
+           class="vis-canvas tab-pane fade
+                  <% if default == 'Scatter' %> active in <% end %>">
+      </div>
+      <div role="tabpanel" id="bar-canvas"
+           class="vis-canvas tab-pane fade
+                  <% if default == 'Bar' %> active in <% end %>">
+      </div>
+      <div role="tabpanel" id="histogram-canvas"
+           class="vis-canvas tab-pane fade
+                  <% if default == 'Histogram' %> active in <% end %>">
+      </div>
+      <div role="tabpanel" id="pie-canvas"
+           class="vis-canvas tab-pane fade
+                  <% if default == 'Pie' %> active in <% end %>">
+      </div>
+      <div role="tabpanel" id="table-canvas"
+           class="vis-canvas tab-pane fade
+                  <% if default == 'Table' %> active in <% end %>">
+      </div>
+      <div role="tabpanel" id="summary-canvas"
+           class="vis-canvas tab-pane fade
+                  <% if default == 'Summary' %> active in <% end %>">
+      </div>
+      <div role="tabpanel" id="photos-canvas"
+           class="vis-canvas tab-pane fade
+                  <% if default == 'Photos' %> active in <% end %>">
+      </div>
+    </div>
+  </div>
 </div>

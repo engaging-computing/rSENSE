@@ -51,7 +51,7 @@
     <div class="upload_media">
       <%= form_tag({controller: :media_objects ,action: :saveMedia, keys: "#{type}/#{object.id}"}, multipart: true) do %>
         <div class="center">
-          <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" id="filechooser" style="margin-top:15px">Add File</button>
+          <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--green" id="filechooser" style="margin-top:15px">Add File</button>
         </div>
         <input type="file" name="upload" id="upload" style="display:none;"/>
         <input name="non_wys" type="hidden" value="<%= request.url %>"/>

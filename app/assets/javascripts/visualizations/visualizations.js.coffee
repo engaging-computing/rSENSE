@@ -78,7 +78,7 @@ $ ->
         controlSize = 0
         controlOpac = 0.0
 
-      # $('#ctrls-menu-btn').toggleClass('down', globals.configs.ctrlsOpen)
+      $('#ctrls-menu-btn').toggleClass('down', globals.configs.ctrlsOpen)
 
       # Adjust heights
       $('#vis-container').height(visWrapperHeight)
@@ -87,8 +87,16 @@ $ ->
       unless presentation then newHeight -= visHeaderHeight
       $('#vis-container > .tab-content').height(newHeight)
 
+      # Animate the collapsing controls and the expanding vis
+      $('#vis-ctrl-container').animate({width: controlSize}, aniLength,
+        'linear')
+      $('#vis-ctrls').animate({width: controlSize, opacity: controlOpac},
+        aniLength, 'linear')
+
       # New widths should take into account visibility of tools
-      nWidth = visWrapperWidth
+      nWidth =
+        if globals.configs.ctrlsOpen then visWrapperWidth - controlSize
+        else visWrapperWidth
       $('#vis-container').animate({width: nWidth}, aniLength, 'linear')
       globals.curVis.resize(nWidth, newHeight, aniLength)
 
