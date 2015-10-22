@@ -70,13 +70,13 @@ project_one_dataset:
   user: kate
   project: media_test
 
-map_vis_disable_dset_1:
+map_vis_disable_dset_with_loc:
   title: Map vis should be enabled
   user: nixon
   project: map_vis_disable
   data: "[{\"109\": 117, \"110\": 5, \"111\": 5}, {\"109\": 343, \"110\": \"\", \"111\": \"\"}]"
 
-map_vis_disable_dset_2:
+map_vis_disable_dset_no_loc:
   title: Map vis should be disabled
   user: nixon
   project: map_vis_disable

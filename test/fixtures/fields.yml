@@ -143,10 +143,10 @@ map_vis_lat:
   id: 110
   field_type: 4
   project: map_vis_disable
-  name: latitude_field
+  name: Latitude
 
 map_vis_long:
   id: 111
   field_type: 5
   project: map_vis_disable
-  name: longitude_field
+  name: Longitude
