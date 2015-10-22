@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150519161334) do
+ActiveRecord::Schema.define(version: 20150805145056) do
 
   create_table "contrib_keys", force: true do |t|
     t.string   "name",       null: false
@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(version: 20150519161334) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "restrictions",             default: "[]"
+    t.integer  "index"
   end
 
   create_table "likes", force: true do |t|
@@ -64,6 +65,7 @@ ActiveRecord::Schema.define(version: 20150519161334) do
     t.integer  "news_id"
     t.string   "store_key"
     t.string   "file"
+    t.string   "md5"
   end
 
   create_table "news", force: true do |t|
@@ -136,14 +138,6 @@ ActiveRecord::Schema.define(version: 20150519161334) do
     t.datetime "updated_at"
   end
 
-  create_table "vislogs", force: true do |t|
-    t.text     "data"
-    t.integer  "visualization_id"
-    t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "visualizations", force: true do |t|
     t.string   "title"
     t.integer  "user_id"
@@ -158,7 +152,6 @@ ActiveRecord::Schema.define(version: 20150519161334) do
     t.datetime "featured_at"
     t.text     "summary"
     t.integer  "thumb_id"
-    t.boolean  "should_log",  default: false
   end
 
 end
