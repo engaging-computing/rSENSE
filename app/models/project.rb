@@ -14,7 +14,7 @@ class Project < ActiveRecord::Base
 
   before_save :summernote_media_objects
 
-  has_many :fields, :dependent => :destroy
+  has_many :fields, dependent: :destroy
   has_many :data_sets, -> { order('created_at desc') }
   has_many :media_objects
   has_many :likes

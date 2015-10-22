@@ -135,5 +135,5 @@ contrib_key_number:
 
 delete_me:
   field_type: 1
-  project: delete_me
+  project: delete_me_and_my_fields
   name: delete_me
