@@ -189,7 +189,5 @@ class UploadDataTest < IntegrationTest
     # that was entered before logging in
     visit project_path(@project)
     assert page.has_no_content?('Bobby D.')
-
-
   end
 end
