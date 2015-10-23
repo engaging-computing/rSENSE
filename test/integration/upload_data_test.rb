@@ -155,4 +155,39 @@ class UploadDataTest < IntegrationTest
     click_on 'Submit'
     assert page.has_content?('Bad Data')
   end
+
+  test 'display users name not contributor name' do
+    login('kcarcia@cs.uml.edu', '12345')
+    visit project_path(@project)
+    # Add a key
+    find(:css, '#edit-project-button').click
+    fill_in 'Label', with: 'Starbucks'
+    fill_in 'Key', with: 'grande'
+    click_on 'Create Key'
+
+    click_on 'Back to Project'
+    click_on 'Logout'
+
+    # Enter Key
+    find(:css, '#key').set('grande')
+    find(:css, '#contributor_name').set('Bobby D.')
+    click_on 'Submit Key'
+
+    # Log back in and upload data
+    login('kcarcia@cs.uml.edu', '12345')
+    visit project_path(@project)
+    csv_path = Rails.root.join('test', 'CSVs', 'test.csv')
+    find(:css, '#datafile_form').attach_file('file', csv_path)
+    assert page.has_content?('Match Quality'), "Data wasn't submitted"
+    fill_in 'Title', with: 'My Data'
+    click_on 'Submit'
+
+    # Check that data uploaded
+    assert page.has_content?('My Data')
+
+    # Check that the name is the users name and not the contributer name
+    # that was entered before logging in
+    visit project_path(@project)
+    assert page.has_no_content?('Bobby D.')
+  end
 end
