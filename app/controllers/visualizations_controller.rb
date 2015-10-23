@@ -245,8 +245,6 @@ class VisualizationsController < ApplicationController
       data_fields.push(typeID: field.field_type, unitName: field.unit, fieldID: field.id, fieldName: field.name)
       lat = field.id.to_s if field.field_type == 4
     end
-    puts "***Data Fields:"
-    puts data_fields
 
     has_pics = false
     has_loc_data = false
@@ -257,8 +255,6 @@ class VisualizationsController < ApplicationController
       has_pics = true if photos.size > 0
       metadata[i] = { name: dataset.title, user_id: dataset.user_id, dataset_id: dataset.id, timecreated: dataset.created_at, timemodified: dataset.updated_at, photos: photos }
       dataset.data.each_with_index do |row, index|
-        puts "***"
-        puts row
         has_loc_data = true if has_loc_data == false and lat != '' and row.has_key?(lat) and row[lat] != ''
         unless row.class == Hash
           logger.info 'Bad row in JSON data:'
