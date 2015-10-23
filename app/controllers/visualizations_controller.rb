@@ -239,21 +239,23 @@ class VisualizationsController < ApplicationController
     data_fields.push(typeID: TEXT_TYPE, unitName: 'String', fieldID: -1, fieldName: 'Data Set Name (id)')
     # create special grouping field for all datasets
     data_fields.push(typeID: TEXT_TYPE, unitName: 'String', fieldID: -1, fieldName: 'Combined Data Sets')
-
+    lat = ''
     # push real fields to temp variable
     @project.fields.sort_by(&:index).each do |field|
       data_fields.push(typeID: field.field_type, unitName: field.unit, fieldID: field.id, fieldName: field.name)
+      lat = field.id.to_s if field.field_type == 4
     end
 
     has_pics = false
+    has_loc_data = false
     # create/push metadata for datasets
     i = 0
     @datasets.each do |dataset|
       photos = dataset.media_objects.to_a.keep_if { |mo| mo.media_type == 'image' }.map { |mo| mo.to_hash(true) }
       has_pics = true if photos.size > 0
       metadata[i] = { name: dataset.title, user_id: dataset.user_id, dataset_id: dataset.id, timecreated: dataset.created_at, timemodified: dataset.updated_at, photos: photos }
-
       dataset.data.each_with_index do |row, index|
+        has_loc_data = true if has_loc_data == false and lat != '' and row[lat] != ''
         unless row.class == Hash
           logger.info 'Bad row in JSON data:'
           logger.info row.inspect
@@ -283,7 +285,7 @@ class VisualizationsController < ApplicationController
     rel_vis = []
 
     # Determine which visualizations are relevant
-    if field_count[LONGITUDE_TYPE] > 0 and field_count[LATITUDE_TYPE] > 0
+    if field_count[LONGITUDE_TYPE] > 0 and field_count[LATITUDE_TYPE] > 0 and has_loc_data
       rel_vis.push 'Map'
     end
 

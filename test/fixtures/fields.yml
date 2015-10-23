@@ -137,3 +137,21 @@ delete_me:
   field_type: 1
   project: delete_me_and_my_fields
   name: delete_me
+
+map_vis_number:
+  id: 109
+  field_type: 2
+  project: map_vis_disable
+  name: number_field
+
+map_vis_lat:
+  id: 110
+  field_type: 4
+  project: map_vis_disable
+  name: Latitude
+
+map_vis_long:
+  id: 111
+  field_type: 5
+  project: map_vis_disable
+  name: Longitude
