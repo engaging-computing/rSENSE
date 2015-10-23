@@ -70,7 +70,7 @@ $ ->
       # Gets called when the controls are clicked and at start
       update: ->
         # clear table searchboxes when filtering is turned on
-        $('#save-filters-btn').click =>
+        $('#save-filters-btn').click ->
           clearSearchOptions()
 
         # Updates controls by default
