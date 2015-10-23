@@ -47,7 +47,7 @@ $ ->
         else data.precisionFilter
 
       if f.value?
-        f.dispValue  = formatter(f.value)
+        f.dispValue = f.value
       else
         delimiter = ', '
         switch f.op
@@ -177,35 +177,35 @@ $ ->
 
     # Begins with
     globals.bw = (s, i) ->
-      (a) -> String(a[i]).startsWith(String(s))
+      (a) -> String(a[i]).toLowerCase().startsWith(String(s).toLowerCase())
 
     # Does not begin with
     globals.bn = (s, i) ->
-      (a) -> not String(a[i]).startsWith(String(s))
+      (a) -> not String(a[i]).toLowerCase().startsWith(String(s).toLowerCase())
 
     # Is in
     globals.in = (s, i) ->
-      (a) -> String(s).contains(String(a[i]))
+      (a) -> String(s).toLowerCase().contains(String(a[i]).toLowerCase())
 
     # Is not in
     globals.ni = (s, i) ->
-      (a) -> not String(s).contains(String(a[i]))
+      (a) -> not String(s).toLowerCase().contains(String(a[i]).toLowerCase())
 
     # Ends with
     globals.ew = (s, i) ->
-      (a) -> String(a[i]).endsWith(String(s))
+      (a) -> String(a[i]).toLowerCase().endsWith(String(s).toLowerCase())
 
     # Does not end with
     globals.en = (s, i) ->
-      (a) -> not String(a[i]).endsWith(String(s))
+      (a) -> not String(a[i]).toLowerCase().endsWith(String(s).toLowerCase())
 
     # Contains
     globals.cn = (s, i) ->
-      (a) -> String(a[i]).contains(String(s))
+      (a) -> String(a[i]).toLowerCase().contains(String(s).toLowerCase())
 
     # Does not contain
     globals.nc = (s, i) ->
-      (a) -> not String(a[i]).contains(String(s))
+      (a) -> not String(a[i]).toLowerCase().contains(String(s).toLowerCase())
 
     # Filter names
     globals.filterNames =
