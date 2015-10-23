@@ -280,14 +280,14 @@ class ProjectsController < ApplicationController
 
     # Add fields based on type
     if params[:hidden_location_count] == '1'
-      if addField('Latitude', params['latitude'.to_sym], 'deg', [], params['latitude_index']) == -1 and return
+      if addField('Latitude', params[:latitude], 'deg', [], params['latitude_index']) == -1 and return
       end
-      if addField('Longitude', params['longitude'.to_sym], 'deg', [], params['longitude_index']) == -1 and return
+      if addField('Longitude', params[:longitude], 'deg', [], params['longitude_index']) == -1 and return
       end
     end
 
     if params[:hidden_timestamp_count] == '1'
-      if addField('Timestamp', params['timestamp'.to_sym], '', [], params['timestamp_index']) == -1 and return
+      if addField('Timestamp', params[:timestamp], '', [], params['timestamp_index']) == -1 and return
       end
     end
 
