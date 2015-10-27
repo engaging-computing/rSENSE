@@ -70,8 +70,8 @@ $ ->
       buildLegendSeries: ->
         []
 
-      buildOptions: ->
-        super()
+      buildOptions: (animate = true) ->
+        super(animate)
 
         self = this
         @chartOptions
@@ -107,6 +107,7 @@ $ ->
           data.normalFields.slice(1), true, 'Fields', @configs.displayField,
           @yAxisRadioHandler)
         @drawToolControls(false, false, [@ANALYSISTYPE_MEAN_ERROR])
+        @drawClippingControls()
         @drawSaveControls()
 
     if "Pie" in data.relVis

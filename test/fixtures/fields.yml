@@ -133,6 +133,11 @@ contrib_key_number:
   project: contributor_key_project
   name: field
 
+delete_me:
+  field_type: 1
+  project: delete_me_and_my_fields
+  name: delete_me
+
 map_vis_number:
   id: 109
   field_type: 2

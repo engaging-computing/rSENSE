@@ -105,9 +105,9 @@ class UsersController < ApplicationController
     if @contributions.is_a? Array
       case @sort
       when 'create asc'
-        @contributions.sort! { |l, r| l.created_at.downcase <=> r.created_at.downcase }
+        @contributions.sort! { |l, r| l.created_at.to_s.downcase <=> r.created_at.to_s.downcase }
       when 'create dsc'
-        @contributions.sort! { |l, r| r.created_at.downcase <=> l.created_at.downcase }
+        @contributions.sort! { |l, r| r.created_at.to_s.downcase <=> l.created_at.to_s.downcase }
       when 'title asc'
         @contributions.sort! { |l, r| l.title.downcase <=> r.title.downcase }
       when 'title dsc'
