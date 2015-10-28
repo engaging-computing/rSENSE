@@ -55,6 +55,10 @@ $ ->
             val: val                                 # for display
             name: data.groups[gid] or data.noField()
 
+        # Sort array in ascending order so that the colors on the Pie Chart show up in the correct order.
+        data.groupSelection = data.groupSelection.sort (a, b) ->
+          return a - b;
+
         displayColors = []
         for number in data.groupSelection
           displayColors.push(globals.getColor(number))
