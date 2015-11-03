@@ -114,23 +114,6 @@
   </div>
 </div>
 <div class="visible-xs visible-sm">
-  <% if @featured_projects.first != nil %>
-    <% i = @featured_projects.first %>
-    <div>
-      <% if i.featured_media_id != nil %>
-        <%= link_to image_tag(MediaObject.find(i.featured_media_id).src,
-            style: 'max-height:150px; float:right; padding: 5px;'),
-            project_path(i) %>
-      <% end %>
-      <h4><%= link_to i.title.html_safe, project_path(i) %></h4>
-      <span style="font-weight:bold">Owner: </span>
-      <%= link_to i.owner.name, user_path(i.owner) %><br/>
-      <span style="font-weight:bold">Created: </span>
-      <%= i.to_hash(false)[:timeAgoInWords] %> ago
-      <div style="margin-top:20px;"><%= mobileParse(i) %></div>
-      <a href="projects" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">See More Projects</a>
-    </div>
-  <% end %>
   <div style="margin-top:20px;">
     <h4 style="text-align: center;">iSENSE Mobile Apps</h4>
     <p style="text-align: center;">Download official apps to use with iSENSE.</p>
