@@ -21,6 +21,19 @@ class SeachDataSetsTest < IntegrationTest
       'Search finds non-matching data set.'
   end
 
+  test 'search data sets starting with number' do
+    visit project_path(@project)
+
+    fill_in 'search', with: '5'
+    click_on 'Search'
+
+    assert page.has_content?('5 apples'),
+      'Search does not find data set'
+
+    assert page.has_no_content?('Sample Title'),
+      'Search finds non-matching data set.'
+  end
+
   test 'search data sets no matches' do
     visit project_path(@project)
 

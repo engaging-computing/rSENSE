@@ -72,13 +72,13 @@ class DataSetsController < ApplicationController
       return
     end
 
-    if !session[:contributor_name].nil?
+    if !@cur_user.nil?
+      @data_set.user_id = @cur_user.id
+    elsif !session[:contributor_name].nil?
       @data_set.user_id = @project.user_id
       @data_set.contributor_name = session[:contributor_name]
-    elsif @cur_user.nil?
-      @data_set.user_id = @project.user_id
     else
-      @data_set.user_id = @cur_user.id
+      @data_set.user_id = @project.user_id
     end
 
     respond_to do |format|

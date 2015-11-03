@@ -103,3 +103,12 @@ description_test:
 never_visited:
   title: Never Visited
   user: kate
+
+delete_me_and_my_fields:
+  title: Destroy My Fields
+  user: nixon
+
+map_vis_disable:
+  title: Map Vis Test
+  user: nixon
+  content: Test for disabling the Map vis (issue 2262)

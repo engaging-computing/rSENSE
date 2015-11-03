@@ -11,6 +11,8 @@ class ProjectsControllerTest < ActionController::TestCase
     @delete_me = projects(:delete_me)
     @delete_me_two = projects(:delete_me2)
     @delete_me_three = projects(:delete_me3)
+    @delete_me_and_my_fields = projects(:delete_me_and_my_fields)
+    @delete_me_field = fields(:delete_me)
     @key = contrib_keys(:contributor_key_test)
     @media_test = projects(:media_test)
     @dessert = projects(:dessert)
@@ -242,5 +244,22 @@ class ProjectsControllerTest < ActionController::TestCase
                       '20_restrictions' => '',
                       '25_name' => 'Location of Foodz', '25_unit' => '', new_field: 'Latitude' }, user_id: @kate.id
     assert_redirected_to "/projects/#{@dessert.id}"
+  end
+
+  test 'fields are destroyed along with project' do
+    # Delete Project
+    assert_difference('Project.count', -1) do
+      delete :destroy, { id: @delete_me_and_my_fields },  user_id: @nixon
+    end
+
+    # Test Project no longer exists
+    assert_raises(ActiveRecord::RecordNotFound) do
+      Project.find(@delete_me_and_my_fields.id)
+    end
+
+    # Test Project's field no longer exists either
+    assert_raises(ActiveRecord::RecordNotFound) do
+      Field.find(@delete_me_field.id)
+    end
   end
 end
