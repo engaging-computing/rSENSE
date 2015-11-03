@@ -11,8 +11,8 @@
       <% end %>
     </div>
     <p class ='summernote-controls'>
-      <button id="content-cancel-btn" class="btn btn-danger">Cancel</button>
-      <button id="content-save-btn" type="submit" class="btn btn-primary">
+      <button id="content-cancel-btn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--red">Cancel</button>
+      <button id="content-save-btn" type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--green">
         Save
       </button>
     </p>
@@ -40,7 +40,7 @@
   <% if can_edit?(obj) %>
     <p class='summernote-controls'>
       <% if !(content.nil?|| content.empty?) %>
-        <button id="content-edit-btn" class="btn btn-primary">Edit</button>
+        <button id="content-edit-btn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--blue">Edit</button>
       <% end %>
     </p>
   <% end %>

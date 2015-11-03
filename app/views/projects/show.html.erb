@@ -99,7 +99,7 @@
           <div id="dataset_list">
             <div data-layout="row">
               <span>
-                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--blue" style="margin-bottom: 10px;" id="vis_button" data-href="/projects/<%=@project.id%>/data_sets/">Visualize</button>
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--light-blue" style="margin-bottom: 10px;" id="vis_button" data-href="/projects/<%=@project.id%>/data_sets/">Visualize</button>
               </span>
               <span>
                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" style="margin-bottom: 10px;" id="export_button" >Export</button>
@@ -213,7 +213,7 @@
         <% if (@field_count == 0) && can_edit?(@project) %>
           <div class="col-md-12 center">
             <a href="/projects/<%= @project.id %>/edit_fields">
-              <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-button--blue" id="manual_fields">
+              <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--blue" id="manual_fields">
                 <i class="fa fa-keyboard-o" style="margin:5px"></i>
                 Setup Manually
               </button>
@@ -241,7 +241,7 @@
           </table>
           <% if can_edit?(@project) %>
             <div class="center">
-              <a href="/projects/<%=@project.id%>/edit_fields"><button class="btn btn-primary" id="field_edit">Edit</button></a>
+              <a href="/projects/<%=@project.id%>/edit_fields"><button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--blue" id="field_edit">Edit</button></a>
             </div>
           <% end %>
         <% end %>
