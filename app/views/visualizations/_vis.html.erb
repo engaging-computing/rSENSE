@@ -100,7 +100,7 @@
           <% if obj %>
             <%= title_and_edit_menu(obj) %>
           <% else %>
-            Showing <%= Object.keys(data.metadata).length %> Data Sets
+            Showing <%= @datasets.count %> Data Sets
           <% end %>
           <div class="subtitle" style="font-style: italic">
             <span>from&nbsp;</span>
