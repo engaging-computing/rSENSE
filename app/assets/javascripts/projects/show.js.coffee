@@ -1,8 +1,4 @@
 IS.onReady "projects/show", ->
-  # Set all switches to enabled
-  root = $('#dataset_table')
-  root.find("[id^=ds_]").each (i,j) ->
-    $(j).prop("checked",true)
 
   # Initializes the dropdown lightbox for google drive upload
   $('#google_doc').click ->
@@ -69,7 +65,7 @@ IS.onReady "projects/show", ->
   # Takes all sessions that are checked, appends its id to the url and
   # redirects the user to the view sessions page (Vis page)
   $('#vis_button').click (e) ->
-    targets = $(document).find(".dataset .ds_selector [aria-checked='true']")
+    targets = $(document).find(".dataset .ds_selector input:checked")
     ds_list = (get_ds_id t for t in targets)
     window.location = $(this).attr("data-href") + ds_list
 
@@ -78,7 +74,7 @@ IS.onReady "projects/show", ->
 
   $('#export_individual_button').click (e) ->
     $('#export_modal').modal('hide')
-    targets = $(document).find(".dataset .ds_selector [aria-checked='true']")
+    targets = $(document).find(".dataset .ds_selector input:checked")
     ds_list = (get_ds_id t for t in targets)
 
     if ds_list.length is 0
@@ -88,7 +84,7 @@ IS.onReady "projects/show", ->
 
   $('#export_concatenated_button').click (e) ->
     $('#export_modal').modal('hide')
-    targets = $(document).find(".dataset .ds_selector [aria-checked='true']")
+    targets = $(document).find(".dataset .ds_selector input:checked")
     ds_list = (get_ds_id t for t in targets)
 
     if ds_list.length is 0
@@ -144,7 +140,7 @@ IS.onReady "projects/show", ->
   check_for_selection = ->
     should_disable = true
     $(document).find("[id^=ds_]").each (i,j) ->
-      if $(j).prop("checked",true)
+      if($(j).is(":checked"))
         should_disable = false
       else
         $('#check_selector').prop("checked",false)

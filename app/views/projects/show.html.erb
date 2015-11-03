@@ -187,8 +187,9 @@
                     </td>
                     <td>
                       <div class="ds_selector" >
-                        <checkbox class="mdl-checkbox__input pull-right <%if s.user_id == @cur_user.try(:id)%> mine<%end%>" id="ds_<%=s.id%>">
-                        </checkbox>
+                        <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect pull-right" for="ds_<%=s.id%>">
+                          <input type="checkbox" id="ds_<%=s.id%>" class="mdl-checkbox__input <%if s.user_id == @cur_user.try(:id)%> mine<%end%>" checked>
+                        </label>
                       </div>
                     </td>
                   </tr>
