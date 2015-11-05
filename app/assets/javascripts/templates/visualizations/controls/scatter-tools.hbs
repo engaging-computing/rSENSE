@@ -30,32 +30,29 @@
   <h4 class="vis-ctrl-subtitle">Display Mode</h4>
   <div>
     {{#each modes}}
-      <div class="radio">
-        <input id="vis-mode-{{mode}}" type="radio" name="mode"
-               value="{{mode}}" data-log-id="{{text}}"/>
-        <label for="vis-mode-{{mode}}">{{text}}</label>
-      </div>
+      <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="vis-mode-{{mode}}"  id="lbl-vis-mode-{{mode}}">{{text}}
+        <input type="radio" id="vis-mode-{{mode}}" class="mdl-radio__button" name="mode" value="{{mode}}" checked/>
+        <span class="mdl-radio__label">{{label}}</span>
+      </label>
     {{/each}}
   </div>
 </div>
 <div class="vis-ctrl-subblock">
   <h4 class="vis-ctrl-subtitle">Other</h4>
-  <div>
-    <div class="checkbox">
-      <input id="ckbx-tooltips" type="checkbox"
-             data-log-id="detailed-tooltips"/>
-      <label for="ckbx-tooltips">Detailed Tooltips</label>
-    </div>
-    <div class="checkbox">
-      <input id="ckbx-fulldetail" type="checkbox" data-log-id="show-all-data"/>
-      <label for="ckbx-fulldetail">Show All Data</label>
-    </div>
+  <div>  
+    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="ckbx-tooltips">Detailed Tooltips
+      <input id="ckbx-tooltips" data-log-id="detailed-tooltips" type="checkbox" class="mdl-checkbox__input"/>
+      <span class="mdl-checkbox__label">{{label}}</span>
+    </label>      
+    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="ckbx-fulldetail">Show All Data
+      <input id="ckbx-fulldetail" data-log-id="show-all-data" type="checkbox" class="mdl-checkbox__input"/>
+      <span class="mdl-checkbox__label">{{label}}</span>
+    </label>
     {{#if logSafe}}
-      <div class="checkbox">
-        <input id="ckbx-log-y-axis" type="checkbox"
-               data-log-id="logarithmic-y-axis"/>
-        <label for="ckbx-log-y-axis">Logarithmic Y Axis</label>
-      </div>
+      <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="ckbx-log-y-axis">Logarithmic Y Axis
+        <input id="ckbx-log-y-axis" data-log-id="logarithmic-y-axis" type="checkbox" class="mdl-checkbox__input"/>
+        <span class="mdl-checkbox__label">{{label}}</span>
+      </label>
     {{/if}}
     {{#if elapsedTime}}
       <div class="centered">

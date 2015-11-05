@@ -435,6 +435,11 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
             }
           }
 
+          .mdl-radio {
+            position: relative;
+            display: block;
+          }
+
           .name {
             width: 90%;
             overflow: hidden;
