@@ -17,6 +17,7 @@
  *= require slickgrid/slick.grid.css
  *= require_tree .
  *= require_self
+ *= require mdl/material.min.css
  */
 
 $navbar-default-bg: #111133;
@@ -273,6 +274,10 @@ body {
     color: white !important;
   }
 
+  .mdl-button--blue[disabled] {
+    background-color: #5bc0de !important;
+    border-color: #46b8da !important;
+  }
 
 .navbar {
   border-bottom: 1px solid black;

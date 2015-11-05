@@ -384,6 +384,13 @@ $ ->
         tools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append tools
 
+        # Add material design
+        $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
+        $('#vis-ctrls').find(".mdl-radio").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
         # Check off the right boxes
         if @configs.advancedTooltips
           $('#ckbx-tooltips').prop('checked', true)
@@ -541,6 +548,13 @@ $ ->
         outctx.body = HandlebarsTemplates[hbCtrl('regr')](inctx)
         tools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append tools
+
+        # Adds material design
+        $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
+        $('#vis-ctrls').find(".mdl-radio").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
 
         # Initialize and track the status of this control panel
         globals.configs.regressionOpen ?= false

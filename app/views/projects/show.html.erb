@@ -47,13 +47,13 @@
             </div>
           </div>
           <div class="row ect_buttons">
-            <div class="col-sm-3">
+            <div class="col-xs-3">
               <button class="mdl-button mdl-js-button mdl-button--raised" disabled>
                 <i class="fa fa-eye"> Views | </i> <%= @project.views %>
               </button>
             </div>
             <% if @cur_user.try(:id) %>
-              <div class="col-sm-3">
+              <div class="col-xs-3">
                 <div class="btn-group likes" data-project_id="<%= @project.id%>">
                   <button class="liked_status mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect <% if @liked_by_cur_user%>active<%end%>" data-toggle="button">
                     <i class="fa fa-thumbs-up"></i> Like | <span class="like_display"><%= @project.likes.count %></span>
@@ -61,7 +61,7 @@
                 </div>
               </div>
             <% end %>
-            <div class="col-sm-2">
+            <div class="col-xs-2">
               <button id="print" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                 <i class="fa fa-print"></i> Print
               </button>
@@ -187,7 +187,7 @@
                     </td>
                     <td>
                       <div class="ds_selector" >
-                        <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect pull-right" for="ds_<%=s.id%>">
+                        <label id="lbl_<%=s.id%>" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect pull-right" for="ds_<%=s.id%>">
                           <input type="checkbox" id="ds_<%=s.id%>" class="mdl-checkbox__input <%if s.user_id == @cur_user.try(:id)%> mine<%end%>" checked>
                         </label>
                       </div>
@@ -252,19 +252,19 @@
       <%=render layout: "shared/box", locals: {title: 'Contribute Data', width:'12', unique_id: 'create_data_set', should_hide: !(@field_count > 0)} do %>
         <% if ((can_edit?(@project) || can_contribute?(@project)) and @field_count > 0) %>
           <div class="row-fluid">
-            <div class="col-md-4 center">
+            <div class="col-sm-4 center">
               <%= link_to :controller => :data_sets, :action => :manualEntry do %>
                 <%= image_tag "manual.png", class: "hoverimage" %><br/>
                 Manual Entry
               <% end %>
             </div>
-            <div class="col-md-4 center" title="Supports - CSV,XLS,XLSX,ODS">
+            <div class="col-sm-4 center" title="Supports - CSV,XLS,XLSX,ODS">
               <a id="upload_datafile" href="">
                 <%= image_tag "upload.png", class: "hoverimage" %><br/>
                 Upload File
               </a>
             </div>
-            <div class="col-md-4 center">
+            <div class="col-sm-4 center">
               <a id="google_doc" href="">
                 <%= image_tag "google.png", class: "hoverimage" %><br/>
                 Google Doc
@@ -287,7 +287,7 @@
                 <%= hidden_field_tag :project_id, @project.id %>
                 <%= text_field_tag :key,"", placeholder:"Key", style:"margin-bottom: 10px;" %>
                 <%= text_field_tag :contributor_name,"", placeholder:"Contributor Name" %>
-                <%= submit_tag "Submit Key", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" %>
+                <%= submit_tag "Submit Key", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--green" %>
               </div>
             <% end %>
           <% else %>

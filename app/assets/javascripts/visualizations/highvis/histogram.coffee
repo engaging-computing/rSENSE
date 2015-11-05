@@ -283,6 +283,16 @@ $ ->
         tools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append(tools)
 
+        # Adds material design
+        $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
+        $('#vis-ctrls').find(".mdl-radio").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
+        $('#vis-ctrls').find(".mdl-slider").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
         # Initialize and track the status of this control panel
         globals.configs.toolsOpen ?= false
         initCtrlPanel('tools-ctrls', 'toolsOpen')
