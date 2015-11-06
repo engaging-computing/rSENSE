@@ -239,23 +239,31 @@ class VisualizationsController < ApplicationController
     data_fields.push(typeID: TEXT_TYPE, unitName: 'String', fieldID: -1, fieldName: 'Data Set Name (id)')
     # create special grouping field for all datasets
     data_fields.push(typeID: TEXT_TYPE, unitName: 'String', fieldID: -1, fieldName: 'Combined Data Sets')
+    # lat and time_field are for verifying that the correct data is present for the relevant vis
     lat = ''
+    time_field = ''
     # push real fields to temp variable
     @project.fields.sort_by(&:index).each do |field|
       data_fields.push(typeID: field.field_type, unitName: field.unit, fieldID: field.id, fieldName: field.name)
+      #check if location and timestamp fields exist
       lat = field.id.to_s if field.field_type == 4
+      time_field = field.id.to_s if field.field_type == 1
     end
 
     has_pics = false
     has_loc_data = false
+    has_time_data = false
     # create/push metadata for datasets
     i = 0
+    time_count = 0
     @datasets.each do |dataset|
       photos = dataset.media_objects.to_a.keep_if { |mo| mo.media_type == 'image' }.map { |mo| mo.to_hash(true) }
       has_pics = true if photos.size > 0
       metadata[i] = { name: dataset.title, user_id: dataset.user_id, dataset_id: dataset.id, timecreated: dataset.created_at, timemodified: dataset.updated_at, photos: photos }
       dataset.data.each_with_index do |row, index|
+        # check if location and/or timestamp data exists
         has_loc_data = true if has_loc_data == false and lat != '' and row.has_key?(lat) and row[lat] != ''
+        time_count += 1 if time_count < 3 and time_field != '' and row.has_key?(time_field) and row[time_field] != ''
         unless row.class == Hash
           logger.info 'Bad row in JSON data:'
           logger.info row.inspect
@@ -276,6 +284,9 @@ class VisualizationsController < ApplicationController
       i += 1
     end
 
+    # Timeline needs at least 3 datapoints
+    has_time_data = true if time_count > 2
+
     # Count the number of each type of field
     field_count = [0, 0, 0, 0, 0, 0]
     @project.fields.each do |field|
@@ -290,7 +301,7 @@ class VisualizationsController < ApplicationController
     end
 
     if field_count[TIME_TYPE] > 0 and field_count[NUMBER_TYPE] > 0 and
-       format_data.count > 2
+       format_data.count > 2 and has_time_data
       rel_vis.push 'Timeline'
     end
 
