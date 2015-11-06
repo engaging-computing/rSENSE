@@ -140,7 +140,6 @@ IS.onReady "projects/show", ->
   check_for_selection = ->
     should_disable = true
     $(":checkbox").each (i,j) ->
-      console.log $(j).checked
       if($(j)[0].checked)
         should_disable = false
       else

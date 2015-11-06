@@ -247,8 +247,7 @@ $ ->
         # Initialize checked and make y axis checkbox/radio handler
         if radio
           # Set the current display field
-          query = "input[name='#{id}'][value='#{iniRadio}']"
-          $(query).prop('checked', 'true')
+          $("#rdo-lbl-#{id}-field-#{iniRadio}")[0].MaterialRadio.check()
 
           # Record any changes to the display field
           $("input[name='#{id}']").click (e) =>
@@ -266,19 +265,24 @@ $ ->
           numFields = allFields.length
           numSel = selFields.length
           indeterminate = numSel > 0 and numSel < numFields
-          $('#ckbx-ckall-' + id).prop('checked', numSel is numFields)
+          if numSel is numFields
+            $("#ckbx-lbl-ckall-#{id}")[0].MaterialCheckbox.check()
+          else
+            $("#ckbx-lbl-ckall-#{id}")[0].MaterialCheckbox.uncheck()
           $('#ckbx-ckall-' + id).prop('indeterminate', indeterminate)
 
         # Update the check all box
         updateCheckAll()
 
         # Else initialize the checkboxes to the field selection
-        $("input[name='#{id}']").each (key, elem) ->
-          if Number(elem.value) in selFields then $(elem).prop('checked', true)
+        $("label[name='#{id}']").each (key, elem) ->
+          console.log elem.getAttribute('value')
+          if Number(elem.getAttribute('value')) in selFields then $(elem)[0].MaterialCheckbox.check()
 
         # Set handler for the field checkboxes
         $("input[name='#{id}']").click (e) =>
-          index = Number(e.target.value)
+          index = Number(e.target.getAttribute('value'))
+          console.log e
           if index in selFields then arrayRemove(selFields, index)
           else selFields.push(index)
 
