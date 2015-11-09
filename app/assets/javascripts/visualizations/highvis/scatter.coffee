@@ -392,11 +392,10 @@ $ ->
           componentHandler.upgradeElement($(j)[0]);
 
         # Check off the right boxes
-        if @configs.advancedTooltips
-          $('#ckbx-tooltips').prop('checked', true)
-        if @configs.fullDetail then $('#ckbx-fulldetail').prop('checked', true)
-        if globals.configs.logY then $('#ckbx-log-y-axis').prop('checked', true)
-        $("input[name='mode'][value='#{@configs.mode}']").prop('checked', true)
+        if @configs.advancedTooltips then $('#ckbx-lbl-tooltips')[0].MaterialCheckbox.check()
+        if @configs.fullDetail then $('#ckbx-lbl-fulldetail')[0].MaterialCheckbox.check()
+        if globals.configs.logY then $('#ckbx-lbl-log-y-axis')[0].MaterialCheckbox.check()
+        $("label[name='mode'][value='#{@configs.mode}']")[0].MaterialRadio.check()
 
         # Set initial state of zoom reset
         if not @isZoomLocked() then $('#zoom-reset-btn').addClass("disabled")

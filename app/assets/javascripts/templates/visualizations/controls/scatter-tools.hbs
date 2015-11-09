@@ -30,8 +30,8 @@
   <h4 class="vis-ctrl-subtitle">Display Mode</h4>
   <div>
     {{#each modes}}
-      <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="vis-mode-{{mode}}"  id="lbl-vis-mode-{{mode}}">{{text}}
-        <input type="radio" id="vis-mode-{{mode}}" class="mdl-radio__button" name="mode" value="{{mode}}" checked/>
+      <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="vis-mode-{{mode}}"  id="lbl-vis-mode-{{mode}}" name="mode" value="{{mode}}">{{text}}
+        <input type="radio" id="vis-mode-{{mode}}" class="mdl-radio__button" name="mode" value="{{mode}}"/>
         <span class="mdl-radio__label">{{label}}</span>
       </label>
     {{/each}}
@@ -40,16 +40,16 @@
 <div class="vis-ctrl-subblock">
   <h4 class="vis-ctrl-subtitle">Other</h4>
   <div>  
-    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="ckbx-tooltips">Detailed Tooltips
+    <label id="ckbx-lbl-tooltips" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="ckbx-tooltips">Detailed Tooltips
       <input id="ckbx-tooltips" data-log-id="detailed-tooltips" type="checkbox" class="mdl-checkbox__input"/>
       <span class="mdl-checkbox__label">{{label}}</span>
     </label>      
-    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="ckbx-fulldetail">Show All Data
+    <label id="ckbx-lbl-fulldetail" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="ckbx-fulldetail">Show All Data
       <input id="ckbx-fulldetail" data-log-id="show-all-data" type="checkbox" class="mdl-checkbox__input"/>
       <span class="mdl-checkbox__label">{{label}}</span>
     </label>
     {{#if logSafe}}
-      <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="ckbx-log-y-axis">Logarithmic Y Axis
+      <label id="ckbx-lbl-log-y-axis" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="ckbx-log-y-axis">Logarithmic Y Axis
         <input id="ckbx-log-y-axis" data-log-id="logarithmic-y-axis" type="checkbox" class="mdl-checkbox__input"/>
         <span class="mdl-checkbox__label">{{label}}</span>
       </label>

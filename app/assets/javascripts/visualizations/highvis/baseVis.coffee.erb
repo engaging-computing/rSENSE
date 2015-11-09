@@ -276,13 +276,11 @@ $ ->
 
         # Else initialize the checkboxes to the field selection
         $("label[name='#{id}']").each (key, elem) ->
-          console.log elem.getAttribute('value')
           if Number(elem.getAttribute('value')) in selFields then $(elem)[0].MaterialCheckbox.check()
 
         # Set handler for the field checkboxes
         $("input[name='#{id}']").click (e) =>
           index = Number(e.target.getAttribute('value'))
-          console.log e
           if index in selFields then arrayRemove(selFields, index)
           else selFields.push(index)
 
@@ -300,8 +298,12 @@ $ ->
           # Repopulate the array if necessary
           if checked then selFields.push(f) for f in allFields
 
-          $("input[name='#{id}']").each (key, elem) ->
-            $(elem).prop('checked', checked)
+          $("label[name='#{id}']").each (key, elem) ->
+            if checked
+              $(elem)[0].MaterialCheckbox.check()
+            else
+              $(elem)[0].MaterialCheckbox.uncheck()
+
 
           updateCheckAll()
           selected = if checked then allFields else []
@@ -431,20 +433,23 @@ $ ->
           numGroups = data.groups.length
           numSel = data.groupSelection.length
           indeterminate = numSel > 0 and numSel < numGroups
-          $('#ckbx-ckall-grouping').prop('checked', numSel is numGroups)
+          if numSel is numGroups
+            $('#ckbx-lbl-ckall-grouping')[0].MaterialCheckbox.check()
+          else
+            $('#ckbx-lbl-ckall-grouping')[0].MaterialCheckbox.uncheck()
           $('#ckbx-ckall-grouping').prop('indeterminate', indeterminate)
 
         # Update the check all box
         updateCheckAll()
 
         # Initialize the checkboxes to the group selection
-        $('input[name="grouping"]').each (key, elem) ->
-          if Number(elem.value) in data.groupSelection
-            $(elem).prop('checked', true)
+        $('label[name="grouping"]').each (key, elem) ->
+          if Number(elem.getAttribute('value')) in data.groupSelection
+            $(elem)[0].MaterialCheckbox.check()
 
         # Set handler for the group checkboxes
         $('input[name="grouping"]').click (e) =>
-          index = Number(e.target.value)
+          index = Number(e.target.getAttribute('value'))
           if index in data.groupSelection
             arrayRemove(data.groupSelection, index)
           else data.groupSelection.push(index)
@@ -462,8 +467,11 @@ $ ->
           # Repopulate the array if necessary
           if checked then data.groupSelection.push(k) for v, k in data.groups
 
-          $('input[name="grouping"]').each (key, elem) ->
-            $(elem).prop('checked', checked)
+          $('label[name="grouping"]').each (key, elem) ->
+            if checked
+              $(elem)[0].MaterialCheckbox.check()
+            else
+              $(elem)[0].MaterialCheckbox.uncheck()
 
           updateCheckAll()
           @delayedUpdate()
