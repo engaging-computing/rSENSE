@@ -588,9 +588,9 @@ $ ->
         $(query)[0].MaterialRadio.check()
         $('#sort-by').val(@configs.sortField)
         $('input[name="analysis-type"]').value = @configs.analysisType
-        if globals.configs.logY
+        if globals.configs.logY and $('#ckbx-lbl-log-y-axis').length
           $('#ckbx-lbl-log-y-axis')[0].MaterialCheckbox.check()
-        else
+        else if $('#ckbx-lbl-log-y-axis').length
           $('#ckbx-lbl-log-y-axis')[0].MaterialCheckbox.uncheck()
 
         $('#sort-by').change (e) =>
