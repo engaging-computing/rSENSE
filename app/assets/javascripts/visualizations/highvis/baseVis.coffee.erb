@@ -584,8 +584,8 @@ $ ->
         # Initialize and track the status of this control panel
         globals.configs.toolsOpen ?= false
         initCtrlPanel('tools-ctrls', 'toolsOpen')
-        query = "input[name='analysis-type'][value='#{@configs.analysisType}']"
-        $(query).prop('checked', 'true')
+        query = "label[name='analysis-type'][value='#{@configs.analysisType}']"
+        $(query)[0].MaterialRadio.check()
         $('#sort-by').val(@configs.sortField)
         $('input[name="analysis-type"]').value = @configs.analysisType
         $('#ckbx-log-y-axis').prop('checked', globals.configs.logY)
