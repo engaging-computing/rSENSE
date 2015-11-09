@@ -46,41 +46,31 @@
               <% end %>
             </div>
           </div>
-          <div class="row ect_buttons">
-            <div class="col-xs-3">
-              <button class="mdl-button mdl-js-button mdl-button--raised" disabled>
-                <i class="fa fa-eye"> Views | </i> <%= @project.views %>
-              </button>
-            </div>
+          <div class="row project_buttons">
+            <button class="mdl-button mdl-js-button mdl-button--raised" disabled>
+              <i class="fa fa-eye"> Views | </i> <%= @project.views %>
+            </button>
             <% if @cur_user.try(:id) %>
-              <div class="col-xs-3">
-                <div class="btn-group likes" data-project_id="<%= @project.id%>">
-                  <button class="liked_status mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect <% if @liked_by_cur_user%>active<%end%>" data-toggle="button">
-                    <i class="fa fa-thumbs-up"></i> Like | <span class="like_display"><%= @project.likes.count %></span>
-                  </button>
-                </div>
+              <div class="btn-group likes" data-project_id="<%= @project.id%>">
+                <button class="liked_status mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect <% if @liked_by_cur_user%>active<%end%>" data-toggle="button">
+                  <i class="fa fa-thumbs-up"></i> Like | <span class="like_display"><%= @project.likes.count %></span>
+                </button>
               </div>
             <% end %>
-            <div class="col-xs-2">
               <button id="print" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                 <i class="fa fa-print"></i> Print
               </button>
-            </div>
             <% if @cur_user.try(:id) %>
-              <div class="col-xs-2">
-                <a href = "/projects/<%= @project.id %>/clone">
-                  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--green">
-                    <i class="fa fa-copy"></i> Clone
-                  </button>
-                </a>
-              </div>
+              <a href = "/projects/<%= @project.id %>/clone">
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--green">
+                  <i class="fa fa-copy"></i> Clone
+                </button>
+              </a>
             <% end %>
             <% if can_edit? @project %>
-              <div class="col-xs-2">
-                <a href="/projects/<%= @project.id %>/edit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--blue" id="edit-project-button">
-                  <i class="fa fa-cog"></i> Edit
-                </a>
-              </div>
+              <a href="/projects/<%= @project.id %>/edit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--blue" id="edit-project-button">
+                <i class="fa fa-cog"></i> Edit
+              </a>
             <% end %>
           </div>
         </div>
