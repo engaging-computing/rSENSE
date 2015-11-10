@@ -39,7 +39,7 @@ $ ->
           <img src='#{window.icons["novis_timeline"]}'>
           <br>
           <br>
-          Either a time field was not found or there were not enough data
+          Either Timestamp field or Number field is missing from project or there is not enough data. (min of 3 points required)
           <br>
           Cannot display Timeline visualization
         </div>
