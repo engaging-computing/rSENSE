@@ -112,3 +112,7 @@ map_vis_disable:
   title: Map Vis Test
   user: nixon
   content: Test for disabling the Map vis (issue 2262)
+
+lots_of_data_sets:
+  title: Lots of Data Sets
+  user: nixon

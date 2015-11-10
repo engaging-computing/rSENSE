@@ -81,3 +81,33 @@ map_vis_disable_dset_no_loc:
   user: nixon
   project: map_vis_disable
   data: "[{\"109\": 2401, \"110\": \"\", \"111\": \"\"}]"
+
+one:
+  title: One
+  user: nixon
+  project: lots_of_data_sets
+
+two:
+  title: Two
+  user: nixon
+  project: lots_of_data_sets
+
+three:
+  title: Three
+  user: nixon
+  project: lots_of_data_sets
+
+four:
+  title: Four
+  user: nixon
+  project: lots_of_data_sets
+
+five:
+  title: Five
+  user: nixon
+  project: lots_of_data_sets
+
+six:
+  title: Six
+  user: nixon
+  project: lots_of_data_sets
