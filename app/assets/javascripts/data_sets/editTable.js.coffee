@@ -7,6 +7,7 @@ uploadSettings =
   error: (jqXHR, textStatus, errorThrown) ->
     $('.edit_table_add, .edit_table_save').removeClass 'disabled'
     $('.edit_table_save').text 'Save'
+
     if uploadSettings.pageName == 'entry'
       showError 'Data set titles must be unique to the project'
     else
@@ -318,7 +319,6 @@ class Grid
         nonEmpty.length != 0 or l
       , false
 
-
       # validate presence of data
       unless hasData
         showError 'Data sets require data'
@@ -334,6 +334,7 @@ class Grid
       $('.edit_table_save').text 'Saving...'
 
       $.ajax @submit
+
     if @grid.getCellEditor() != null
       @actions.push saveGrid
     else
