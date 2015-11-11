@@ -11,12 +11,20 @@
   margin-top: 10px;
 }
 
-.field_delete {
-  color: #F00;
+.field_delete, .field_edit_formula {
+  cursor: pointer;
   display: block;
   margin: 5px auto 0;
   width: 30px;
   text-align: center;
+}
+
+.field_delete {
+  color: #F00;
+}
+
+.field_edit_formula {
+  color: #000;
 }
 
 @media (max-width: 770px) {

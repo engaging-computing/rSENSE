@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150805145056) do
+ActiveRecord::Schema.define(version: 20150924115657) do
 
   create_table "contrib_keys", force: true do |t|
     t.string   "name",       null: false
@@ -42,6 +42,19 @@ ActiveRecord::Schema.define(version: 20150805145056) do
     t.datetime "updated_at"
     t.text     "restrictions",             default: "[]"
     t.integer  "index"
+    t.string   "refname",                  default: ""
+  end
+
+  create_table "formula_fields", force: true do |t|
+    t.string   "name"
+    t.integer  "field_type"
+    t.text     "unit",       limit: 255, default: ""
+    t.integer  "project_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "index"
+    t.string   "refname",                default: ""
+    t.string   "formula",                default: ""
   end
 
   create_table "likes", force: true do |t|

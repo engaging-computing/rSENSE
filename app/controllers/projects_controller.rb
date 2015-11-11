@@ -65,6 +65,8 @@ class ProjectsController < ApplicationController
     @data_sets = @project.data_sets.select('id', 'title', 'user_id', 'key', 'created_at', 'contributor_name').search(params[:search])
     @fields = @project.fields
     @field_count = @fields.count
+    @formula_fields = @project.formula_fields
+    @formula_field_count = @formula_fields.count
     @data_set_count = @data_sets.length
 
     recur = params.key?(:recur) ? params[:recur] == 'true' : false
@@ -241,92 +243,58 @@ class ProjectsController < ApplicationController
 
   def edit_fields
     @project = Project.find(params[:id])
+    @fields = @project.fields
+    @allowable_types = [:timestamp, :number, :text, :location]
+    @action = 'fields'
+    @can_delete = @project.data_sets.count == 0
+  end
+
+  def edit_formula_fields
+    @project = Project.find(params[:id])
+    @fields = @project.formula_fields
+    @allowable_types = [:number, :text]
+    @action = 'formula_fields'
+    @can_delete = true
+    render 'edit_fields'
   end
 
   # Save fields in fields table
   def save_fields
     @project = Project.find(params[:id])
 
-    # Delete fields as necessary
-    puts params[:hidden_deleted_fields]
-    if params[:hidden_deleted_fields] != ''
-      params[:hidden_deleted_fields].split(',').each do |x|
-        if Field.find(x).destroy == -1 and return
-        end
-      end
-    end
+    delete_hidden_fields(Field, params[:hidden_deleted_fields])
 
     # Update existing fields, create restrictions if any exist
-    @project.fields.each do |field|
-      restrictions = []
-
-      if params.key?("#{field.id}_restrictions")
-        restrictions = params["#{field.id}_restrictions"].split(',')
-        if restrictions.count < 1
-          restrictions = []
-        end
-      end
-
-      unless field.update_attributes(name: params["#{field.id}_name"],
-                                     unit: params["#{field.id}_unit"],
-                                     index: params["#{field.id}_index"],
-                                     restrictions: restrictions)
-        respond_to do |format|
-          flash[:error] = 'Field names must be unique.'
-          redirect_to "/projects/#{@project.id}/edit_fields" and return
-        end
-      end
+    updated = @project.fields.reduce true do |memo, field|
+      memo ? update_field(field, params) : false
     end
+    return unless updated
 
     # Add fields based on type
-    if params[:hidden_location_count] == '1'
-      if addField('Latitude', 'Latitude', 'deg', [], params['latitude_index']) == -1 and return
-      end
-      if addField('Longitude', 'Longitude', 'deg', [], params['longitude_index']) == -1 and return
-      end
-    end
+    add_location_field(params) or return
+    add_timestamp_field(params) or return
+    add_number_fields(params) or return
+    add_text_fields(params) or return
 
-    if params[:hidden_timestamp_count] == '1'
-      if addField('Timestamp', 'Timestamp', '', [], params['timestamp_index']) == -1 and return
-      end
-    end
-
-    (params[:hidden_num_count].to_i).times do |i|
-      if addField('Number', params[('number_' + (i + 1).to_s).to_sym], params[('units_' + (i + 1).to_s).to_sym], [],  params[('number_' + ((i + 1).to_s) + '_index').to_sym]) == -1 and return
-      end
-    end
-
-    (params[:hidden_text_count].to_i).times do |i|
-      # Need to explicitly check if restrictions are nil because empty restrictions should be []
-      restrictions = params[('restrictions_' + (i + 1).to_s).to_sym].nil? ? [] : params[('restrictions_' + (i + 1).to_s).to_sym].split(',')
-
-      if addField('Text', params[('text_' + (i + 1).to_s).to_sym], '', restrictions, params[('text_' + (i + 1).to_s + '_index').to_sym]) == -1 and return
-      end
-    end
-
-    redirect_to "/projects/#{@project.id}", notice: 'Fields were successfully updated.' and return
+    redirect_to "/projects/#{@project.id}", notice: 'Fields were successfully updated.'
   end
 
-  # Helper function to add field to database
-  def addField(fieldType, fieldName, unit, restrictions, index)
-    if fieldName.nil?
-      return
-    else
-      if index.nil?
-        index = @project.fields.size
-      end
-      field  = Field.new(project_id: @project.id,
-                         field_type: get_field_type(fieldType),
-                         name: fieldName,
-                         unit: unit,
-                         restrictions: restrictions,
-                         index: index)
-    end
+  def save_formula_fields
+    @project = Project.find(params[:id])
 
-    unless field.save
-      flash[:error] = "#{field.errors.full_messages[0]}\n"
-      redirect_to "/projects/#{@project.id}/edit_fields" and return -1
+    delete_hidden_fields(FormulaField, params[:hidden_deleted_fields])
+
+    # Update existing fields, create restrictions if any exist
+    updated = @project.formula_fields.reduce true do |memo, field|
+      memo ? update_formula_field(field, params) : false
     end
+    return unless updated
+
+    # Add fields based on type
+    add_number_formula_fields(params) or return
+    add_text_formula_fields(params) or return
+
+    redirect_to "/projects/#{@project.id}", notice: 'Formula fields were successfully updated.'
   end
 
   def templateUpload
@@ -406,6 +374,150 @@ class ProjectsController < ApplicationController
   end
 
   private
+
+  # Helper function to delete hidden fields
+  def delete_hidden_fields(field_model, hidden_fields_str)
+    # Delete fields as necessary
+    if hidden_fields_str != ''
+      hidden_fields_str.split(',').each do |x|
+        if field_model.find(x).destroy == -1 and return
+        end
+      end
+    end
+  end
+
+  # Helper function to update individual fields
+  def update_field(field, params)
+    if params.key?("#{field.id}_restrictions")
+      restrictions = params["#{field.id}_restrictions"].split(',')
+      if restrictions.count < 1
+        restrictions = []
+      end
+    else
+      restrictions = []
+    end
+
+    success = field.update_attributes(name: params["#{field.id}_name"],
+                                      unit: params["#{field.id}_unit"],
+                                      restrictions: restrictions,
+                                      index: params["#{field.id}_index"])
+
+    unless success
+      flash[:error] = 'Field names must be unique.'
+      redirect_to "/projects/#{@project.id}/edit_fields"
+    end
+    success
+  end
+
+  # Helper function to update individual formulafields
+  def update_formula_field(field, params)
+    success = field.update_attributes(name: params["#{field.id}_name"],
+                                      unit: params["#{field.id}_unit"],
+                                      formula: params["#{field.id}_formula"],
+                                      index: params["#{field.id}_index"])
+
+    unless success
+      flash[:error] = 'Field names must be unique.'
+      redirect_to "/projects/#{@project.id}/edit_formula_fields"
+    end
+    success
+  end
+
+  def add_location_field(params)
+    if params[:hidden_location_count] == '1'
+      add_field('Latitude', 'Latitude', 'deg', [], params['latitude_index']) == -1 and return false
+      add_field('Longitude', 'Longitude', 'deg', [], params['longitude_index']) == -1 and return false
+    end
+    true
+  end
+
+  def add_timestamp_field(params)
+    if params[:hidden_timestamp_count] == '1'
+      add_field('Timestamp', 'Timestamp', '', [], params['timestamp_index']) == -1 and return false
+    end
+    true
+  end
+
+  def add_number_fields(params)
+    (params[:hidden_num_count].to_i).times do |i|
+      add_field('Number', params[('number_' + (i + 1).to_s).to_sym], params[('units_' + (i + 1).to_s).to_sym], [],  params[('number_' + ((i + 1).to_s) + '_index').to_sym]) == -1 and return false
+    end
+    true
+  end
+
+  def add_text_fields(params)
+    (params[:hidden_text_count].to_i).times do |i|
+      # Need to explicitly check if restrictions are nil because empty restrictions should be []
+      restrictions = params[('restrictions_' + (i + 1).to_s).to_sym].nil? ? [] : params[('restrictions_' + (i + 1).to_s).to_sym].split(',')
+      add_field('Text', params[('text_' + (i + 1).to_s).to_sym], '', restrictions, params[('text_' + (i + 1).to_s + '_index').to_sym]) == -1 and return false
+    end
+    true
+  end
+
+  def add_number_formula_fields(params)
+    (params[:hidden_num_count].to_i).times do |i|
+      field_name = params[('number_' + (i + 1).to_s).to_sym]
+      units = params[('units_' + (i + 1).to_s).to_sym]
+      formula = params[('nformula_' + (i + 1).to_s).to_sym]
+      index = params[('number_' + ((i + 1).to_s) + '_index').to_sym]
+      add_formula_field('Number', field_name, units, formula, index) == -1 and return false
+    end
+    true
+  end
+
+  def add_text_formula_fields(params)
+    (params[:hidden_text_count].to_i).times do |i|
+      field_name = params[('text_' + (i + 1).to_s).to_sym]
+      formula = params[('tformula_' + (i + 1).to_s).to_sym]
+      index = params[('text_' + (i + 1).to_s + '_index').to_sym]
+      add_formula_field('Text', field_name, '', formula, index) == -1 and return false
+    end
+    true
+  end
+
+  # Helper function to add field to database
+  def add_field(field_type, field_name, unit, restrictions, index)
+    if field_name.nil?
+      return
+    else
+      if index.nil?
+        index = @project.fields.size
+      end
+      field = Field.new(project_id: @project.id,
+                        field_type: get_field_type(field_type),
+                        name: field_name,
+                        unit: unit,
+                        restrictions: restrictions,
+                        index: index)
+    end
+
+    unless field.save
+      flash[:error] = "#{field.errors.full_messages[0]}\n"
+      redirect_to "/projects/#{@project.id}/edit_fields" and return -1
+    end
+  end
+
+  # Helper function to add field to database
+  def add_formula_field(field_type, field_name, unit, formula, index)
+    if field_name.nil?
+      return
+    else
+      if index.nil?
+        index = @project.fields.size
+      end
+      field = FormulaField.new(project_id: @project.id,
+                               field_type: get_field_type(field_type),
+                               name: field_name,
+                               unit: unit,
+                               formula: formula,
+                               index: index)
+    end
+
+    unless field.save
+      flash[:error] = "#{field.errors.full_messages[0]}\n"
+      redirect_to "/projects/#{@project.id}/edit_formula_fields" and return -1
+    end
+  end
 
   def project_params
     if @cur_user.try(:admin)

@@ -13,6 +13,9 @@ Rsense::Application.routes.draw do
   get '/projects/:id/edit_fields' => 'projects#edit_fields'
   post '/projects/:id/save_fields' => 'projects#save_fields'
 
+  get '/projects/:id/edit_formula_fields' => 'projects#edit_formula_fields'
+  post '/projects/:id/save_formula_fields' => 'projects#save_formula_fields'
+
   post 'projects/:id/templateFields' => 'projects#templateFields'
   post '/projects/import' => 'projects#importFromIsense'
   post '/projects/import/:pid' => 'projects#importFromIsense'
@@ -22,6 +25,7 @@ Rsense::Application.routes.draw do
   resources :data_sets
 
   resources :fields, except: [:index, :new, :edit]
+  resources :formula_fields, except: [:index, :new, :edit]
 
   get 'projects/create' => 'projects#create'
   post 'projects/create' => 'projects#create'
@@ -117,6 +121,7 @@ Rsense::Application.routes.draw do
       get '/users/myInfo' => 'users#my_info'
       resources :projects, only: [:show, :index, :create, :add_key]
       resources :fields, only: [:create, :show]
+      resources :formula_fields, only: [:create, :show]
       resources :visualizations, only: [:show]
       resources :data_sets, only: [:show, :edit, :jsonDataUpload]
     end

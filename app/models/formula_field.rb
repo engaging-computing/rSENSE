@@ -1,7 +1,6 @@
 include ApplicationHelper
-class Field < ActiveRecord::Base
+class FormulaField < ActiveRecord::Base
   after_initialize :default_values
-  before_validation :trim_restrictions
   before_validation :choose_refname
   validates_presence_of :project_id, :field_type, :name
   validates_uniqueness_of :name, scope: :project_id, case_sensitive: false
@@ -19,8 +18,7 @@ class Field < ActiveRecord::Base
       id: id,
       name: name,
       type: field_type,
-      unit: unit,
-      restrictions: restrictions
+      unit: unit
     }
 
     if recurse
@@ -59,25 +57,7 @@ class Field < ActiveRecord::Base
   end
 
   def default_values
-    self.restrictions ||= []
     self.name ||= Field.get_next_name project, field_type
-  end
-
-  def trim_restrictions
-    if restrictions.is_a? String
-      split_r = restrictions.split ','
-      self.restrictions = split_r
-    end
-
-    if restrictions.is_a? Array
-      restrictions.map! do |x|
-        if x.is_a? String
-          x.strip
-        else
-          x
-        end
-      end
-    end
   end
 
   def choose_refname
@@ -104,15 +84,8 @@ class Field < ActiveRecord::Base
   end
 
   def validate_values
-    # verify that restrictions is an array of strings
-    if !restrictions.is_a? Array
-      errors.add :restrictions, 'must be in an array'
-    elsif !restrictions.reduce(true) { |a, e| a and (e.is_a? String or e.is_a? Numeric) }
-      errors.add :restrictions, 'must all be parsable as strings'
-    end
-
-    if !field_type.nil? and ![1, 2, 3, 4, 5].include? field_type
-      errors.add :field_type, 'must be a number between 1 and 5'
+    if !field_type.nil? and ![2, 3].include? field_type
+      errors.add :field_type, 'must be either 2 (number) or 3 (text)'
     end
 
     unless project_id.nil?

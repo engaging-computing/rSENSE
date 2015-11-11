@@ -1,27 +1,38 @@
 <% if can_edit?(@project) %>
-  <%= form_tag "/projects/#{@project.id}/save_fields", name: "fields_form" do %>
+  <%= form_tag "/projects/#{@project.id}/save_#{@action}", name: "fields_form" do %>
     <div class="row" data-project_id="<%= @project.id %>">
       <div class="col-lg-8 col-lg-offset-2">
         <h1>Setup Fields Manually</h1>
         <div class="center">
-          <div class="col-sm-3 col-xs-6 add_fields">
-            <div value="Number" class="btn btn-success center new_field" id="number">Add Number</div>
-            <p class="description">Any number value. "Units" specifies how the value is expressed. e.g. 'Temperature' could have a unit of 'C'</p>
-          </div>
-          <div class="col-sm-3 col-xs-6 add_fields">
-            <div value="Text" class="btn btn-success center new_field" id="text">Add Text</div>
-            <p class="description">Any string value. "Restrictions" are a comma separated list of values that limit input to only predefined values.</p>
-          </div>
-          <div class="col-sm-3 col-xs-6 add_fields">
-            <div value="Timestamp" class="btn btn-success center new_field" id="timestamp" style="padding: 6px 0px;" <%= (@project.fields.any? {|f| f.field_type == TIME_TYPE}) ? "disabled" : "" %>>Add Timestamp</div>
-            <p class="description">Data and time values in the form yyyy/mm/dd hh:mm:ss. Limit 1 per project.</p>
-          </div>
-          <div class="col-sm-3 col-xs-6 add_fields">
-            <div value="Location" class="btn btn-success center new_field" id="location" <%= (@project.fields.any? {|f| f.field_type == LONGITUDE_TYPE or f.field_type == LATITUDE_TYPE}) ? "disabled" : "" %>>Add Location</div>
-            <p class="description">Latitude (between -90 and 90) and longitude (between -180 and 180) values in the form 'latitude, longitude'. Limit 1 per project.</p>
-          </div>
+          <% if @allowable_types.include? :number %>
+            <div class="col-sm-3 col-xs-6 add_fields">
+              <div value="Number" class="btn btn-success center new_field" id="number">Add Number</div>
+              <p class="description">Any number value. "Units" specifies how the value is expressed. e.g. 'Temperature' could have a unit of 'C'</p>
+            </div>
+          <% end %>
+
+          <% if @allowable_types.include? :text %>
+            <div class="col-sm-3 col-xs-6 add_fields">
+              <div value="Text" class="btn btn-success center new_field" id="text">Add Text</div>
+              <p class="description">Any string value. "Restrictions" are a comma separated list of values that limit input to only predefined values.</p>
+            </div>
+          <% end %>
+
+          <% if @allowable_types.include? :timestamp %>
+            <div class="col-sm-3 col-xs-6 add_fields">
+              <div value="Timestamp" class="btn btn-success center new_field" id="timestamp" style="padding: 6px 0px;" <%= (@fields.any? {|f| f.field_type == TIME_TYPE}) ? "disabled" : "" %>>Add Timestamp</div>
+              <p class="description">Data and time values in the form yyyy/mm/dd hh:mm:ss. Limit 1 per project.</p>
+            </div>
+          <% end %>
+
+          <% if @allowable_types.include? :location %>
+            <div class="col-sm-3 col-xs-6 add_fields">
+              <div value="Location" class="btn btn-success center new_field" id="location" <%= (@fields.any? {|f| f.field_type == LONGITUDE_TYPE or f.field_type == LATITUDE_TYPE}) ? "disabled" : "" %>>Add Location</div>
+              <p class="description">Latitude (between -90 and 90) and longitude (between -180 and 180) values in the form 'latitude, longitude'. Limit 1 per project.</p>
+            </div>
+          <% end %>
         </div>
-        <% if @project.data_sets.count > 0 %>
+        <% if @project.data_sets.count > 0 and @action == 'fields' %>
           <p><strong>Note:</strong> You cannot delete fields from a project with data.</p>
         <% end %>
       </div>
@@ -36,30 +47,49 @@
               <th>Name</th>
               <th>Type</th>
               <th class="units">Units</th>
-              <th class="restrictions">Restrictions</th>
+              <% if @action == 'fields' %>
+                <th class="restrictions">Restrictions</th>
+              <% elsif @action == 'formula_fields' %>
+                <th class="formula">Formula</th>
+              <% end %>
               <th></th>
             </tr>
           </thead>
            <tbody id="sortable"> 
-            <% (@project.fields.sort_by &:index).each do |field| %>
+            <% (@fields.sort_by &:index).each do |field| %>
               <tr name="<%= get_field_name(field.field_type).downcase %>">
-                <td><i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i></td>
-                <td><input class="form-control" type="text" name="<%= field.id %>_name" value="<%= (defined?(@tmp_save) && @tmp_save.has_key?("#{field.id}_name")) ? @tmp_save["#{field.id}_name"] : field.name %>"></td>
-                <td><%= get_field_name(field.field_type) %></td>
-                <td class="units">
-                <% if (field.field_type == get_field_type("Number")) %>
-                  <input class="input-small form-control" type="text" name="<%= field.id %>_unit" value="<%= field.unit %>">
-                <% elsif field.field_type == get_field_type("Latitude") || field.field_type == get_field_type("Longitude") %>
-                  <%= field.unit %>
-                <% end %>
-                </td>
-                <td class="restrictions">
-                <% if field.field_type == get_field_type("Text") %>
-                  <input class="input-small form-control" type="text" name="<%= field.id %>_restrictions" value="<%= field.restrictions.nil? ? "" : field.restrictions.join(',') %>">
-                <% end %>
+                <td>
+                  <i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>
                 </td>
                 <td>
-                  <a class="field_delete <%= @project.data_sets.count > 0 ? "not-active" : "" %>" fid="<%= field.id %>">
+                  <input class="form-control" type="text" name="<%= field.id %>_name" value="<%= (defined?(@tmp_save) && @tmp_save.has_key?("#{field.id}_name")) ? @tmp_save["#{field.id}_name"] : field.name %>">
+                </td>
+                <td>
+                  <%= get_field_name(field.field_type) %>
+                </td>
+                <td class="units">
+                  <% if (field.field_type == get_field_type("Number")) %>
+                    <input class="input-small form-control" type="text" name="<%= field.id %>_unit" value="<%= field.unit %>">
+                  <% elsif field.field_type == get_field_type("Latitude") || field.field_type == get_field_type("Longitude") %>
+                    <%= field.unit %>
+                  <% end %>
+                </td>
+                <% if @action == 'fields' %>
+                  <td class="restrictions">
+                    <% if field.field_type == get_field_type("Text") %>
+                      <input class="input-small form-control" type="text" name="<%= field.id %>_restrictions" value="<%= field.restrictions.nil? ? "" : field.restrictions.join(',') %>">
+                    <% end %>
+                  </td>
+                <% elsif @action == 'formula_fields' %>
+                  <td class="formula">
+                    <a class="field_edit_formula" fid="<%= field.id %>" data-toggle="modal" data-target=".modal">
+                      <i class="fa fa-pencil-square-o slick-delete"></i>
+                    </a>
+                    <input type="hidden" name="<%=field.id %>_formula" value="<%= field.formula %>">
+                  </td>
+                <% end %>
+                <td>
+                  <a class="field_delete <%= @can_delete ? '' : 'not-active' %>" fid="<%= field.id %>">
                     <i class="fa fa-close slick-delete"></i>
                   </a>
                 </td>
@@ -85,5 +115,36 @@
     <input type="text" id="hidden_timestamp_count" name="hidden_timestamp_count" style="visibility:hidden;">
     <input type="text" id="hidden_location_count" name="hidden_location_count" style="visibility:hidden;">
     <input type="text" id="hidden_deleted_fields" name="hidden_deleted_fields" style="visibility:hidden;">
+  <% end %>
+
+  <% if @action == 'formula_fields' %>
+    <div class="modal">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">
+              Edit Formula
+            </h4>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-xs-12 col-md-9">
+                <textarea id="formula-text" class="form-control" rows="10"></textarea>
+              </div>
+              <div class="hidden-xs hidden-sm col-md-3">
+              Helpers
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="formula-save">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
   <% end %>
 <% end %>

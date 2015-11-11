@@ -1,5 +1,5 @@
 $ ->
-  if namespace.controller is "projects" and namespace.action is "edit_fields"
+  if namespace.controller is 'projects' and (namespace.action is 'edit_fields' or namespace.action is 'edit_formula_fields')
     # Keeps track of number of different fields added
     numCount = textCount = timestampCount = locationCount = 0
 
@@ -21,49 +21,6 @@ $ ->
       if code == 13
         e.preventDefault()
         $('#fields_form_submit').click()
-
-    # Add row(s), increment counters, disable add buttons (for timestamp/location fields)
-    # addRow takes input box for name, type of field, input box for units (number only) or
-    # "deg" for lat/long, input box for restrictions (text only), delete
-    $('#number').click ->
-      numCount = numCount + 1
-      displayNumCount = displayNumCount + 1
-      addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
-             """<input class="input-small form-control" type="text"
-                 name="number_#{numCount}" value="Number_#{displayNumCount}">""", "Number",
-                 """<input class="input-small form-control" type="text" class="units"
-                 name="units_#{numCount}">""", "", """<a fid="0"
-                 class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
-
-    $('#text').click ->
-      textCount = textCount + 1
-      displayTextCount = displayTextCount + 1
-      addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
-             """<input class="input-small form-control" type="text"
-                 name="text_#{textCount}" value="Text_#{displayTextCount}">""", "Text", "",
-                 """<input class="input-small form-control" type="text" class="restrictions"
-                 name="restrictions_#{textCount}">""", """<a fid="0"
-                 class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
-
-    $('#timestamp').click ->
-      timestampCount = timestampCount + 1
-      addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
-             """<input class="input-small form-control" type="text" name="timestamp"
-                 value="Timestamp">""", "Timestamp", "", "", """<a fid="0"
-                 class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
-      document.getElementById('timestamp').disabled = true
-
-    $('#location').click ->
-      locationCount = locationCount + 1
-      addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
-             """<input class="input-small form-control" type="text" name="longitude"
-                 value="Longitude">""", "Longitude", "deg", "", """<a fid="0"
-                 class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
-      addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
-             """<input class="input-small form-control" type="text" name="latitude"
-                 value="Latitude">""", "Latitude", "deg", "", """<a fid="0"
-                 class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
-      document.getElementById('location').disabled = true
 
     # Make table sortable
     $( "tbody" ).sortable();
@@ -125,6 +82,91 @@ $ ->
         input.setAttribute('id', "#{field_id}_index")
         input.setAttribute('value', i - 1)
         document.getElementById('hidden_index_inputs').appendChild(input)
+
+  if namespace.controller is 'projects' and namespace.action is 'edit_fields'
+    # Add row(s), increment counters, disable add buttons (for timestamp/location fields)
+    # addRow takes input box for name, type of field, input box for units (number only) or
+    # "deg" for lat/long, input box for restrictions (text only), delete
+    $('#number').click ->
+      numCount = numCount + 1
+      displayNumCount = displayNumCount + 1
+      addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
+             """<input class="input-small form-control" type="text"
+                 name="number_#{numCount}" value="Number_#{displayNumCount}">""", "Number",
+                 """<input class="input-small form-control" type="text" class="units"
+                 name="units_#{numCount}">""", "", """<a fid="0"
+                 class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
+
+    $('#text').click ->
+      textCount = textCount + 1
+      displayTextCount = displayTextCount + 1
+      addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
+             """<input class="input-small form-control" type="text"
+                 name="text_#{textCount}" value="Text_#{displayTextCount}">""", "Text", "",
+                 """<input class="input-small form-control" type="text" class="restrictions"
+                 name="restrictions_#{textCount}">""", """<a fid="0"
+                 class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
+
+    $('#timestamp').click ->
+      timestampCount = timestampCount + 1
+      addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
+             """<input class="input-small form-control" type="text" name="timestamp"
+                 value="Timestamp">""", "Timestamp", "", "", """<a fid="0"
+                 class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
+      document.getElementById('timestamp').disabled = true
+
+    $('#location').click ->
+      locationCount = locationCount + 1
+      addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
+             """<input class="input-small form-control" type="text" name="longitude"
+                 value="Longitude">""", "Longitude", "deg", "", """<a fid="0"
+                 class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
+      addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
+             """<input class="input-small form-control" type="text" name="latitude"
+                 value="Latitude">""", "Latitude", "deg", "", """<a fid="0"
+                 class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
+      document.getElementById('location').disabled = true
+
+  if namespace.controller is 'projects' and namespace.action is 'edit_formula_fields'
+    # Add row(s), increment counters, disable add buttons (for timestamp/location fields)
+    # addRow takes input box for name, type of field, input box for units (number only) or
+    # "deg" for lat/long, input box for restrictions (text only), delete
+    $('#number').click ->
+      numCount = numCount + 1
+      displayNumCount = displayNumCount + 1
+      addRow(['<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>',
+              """<input class="input-small form-control" type="text" name="number_#{numCount}" value="Number_#{displayNumCount}">""",
+              "Number",
+              """<input class="input-small form-control" type="text" class="units" name="units_#{numCount}">""",
+              """<a class="field_edit_formula" fid="0" data-toggle="modal" data-target=".modal">
+                   <i class="fa fa-pencil-square-o slick-delete"></i>
+                 </a>
+                 <input type="hidden" name="nformula_#{numCount}" value="">""",
+              '<a fid="0" class="field_delete"><i class="fa fa-close slick-delete"></i></a>'])
+
+    $('#text').click ->
+      textCount = textCount + 1
+      displayTextCount = displayTextCount + 1
+      addRow(['<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>',
+              """<input class="input-small form-control" type="text" name="text_#{textCount}" value="Text_#{displayTextCount}">""",
+              'Text',
+              '',
+              """<a class="field_edit_formula" fid="0" data-toggle="modal" data-target=".modal">
+                   <i class="fa fa-pencil-square-o slick-delete"></i>
+                 </a>
+                 <input type="hidden" name="tformula_#{textCount}" value="">""",
+              '<a fid="0" class="field_delete"><i class="fa fa-close slick-delete"></i></a>'])
+    $('#fields_table').on 'click', '.field_edit_formula', ->
+      $hiddenField = $(this).parent().children('input')
+      contents = $hiddenField.val()
+      $formulaText = $('#formula-text')
+      $formulaText.val(contents)
+      $formulaText.data('onClose', $hiddenField)
+    $('#formula-save').click ->
+      contents = $('#formula-text').val()
+      $hiddenField = $('#formula-text').data('onClose')
+      $hiddenField.val(contents)
+      $('.modal').toggle()
 
 
 # Adds row to table, highlight new row
