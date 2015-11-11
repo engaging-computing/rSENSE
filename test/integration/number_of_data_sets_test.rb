@@ -19,5 +19,4 @@ class UploadDataTest < IntegrationTest
 
     assert page.has_content?('Showing 4 Data Sets'), 'Showing wrong number of data sets.'
   end
-
 end
