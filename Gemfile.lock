@@ -32,9 +32,9 @@ GIT
 
 GIT
   remote: https://github.com/isenseDev/better-datetimepicker
-  revision: 261b999e62605af5e64e0f2b313e00c4ecd93f99
+  revision: a159fb6f3e0ad24712658f249d8dad22c514fc25
   specs:
-    better_datetimepicker (0.0.8)
+    better_datetimepicker (0.0.9)
       coffee-rails
       coffee-rails-source-maps
       rails (~> 4)
@@ -260,7 +260,7 @@ DEPENDENCIES
   auto_html
   bcrypt-ruby
   better_colorpicker (~> 0.1.2)!
-  better_datetimepicker (~> 0.0.8)!
+  better_datetimepicker (~> 0.0.9)!
   bootstrap-sass
   bootstrap-switch-rails
   browser
