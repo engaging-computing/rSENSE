@@ -76,7 +76,7 @@
         </div>
       </div>
     </div>
-    <div class= "row">
+    <div class="row">
       <%= render layout: "shared/box", locals: {title: 'Description', width: '12', unique_id: 'description', should_hide: false} do %>
         <%= content_helper(@project) %>
       <% end %>
@@ -94,7 +94,6 @@
               <span>
                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" style="margin-bottom: 10px;" id="export_button" >Export</button>
               </span>
-              <span flex></span>
               <div class="pull-right">
                 <div class="btn-group">
                   <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
@@ -349,7 +348,7 @@
     <div class="modal-content">
       <%= form_tag "/data_sets/dataFileUpload", method: 'post', multipart: true do %>
         <div class="modal-header">
-          <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <h4 class="modal-title">Please enter the Google Spreadsheet 'Share' link below:</h4>
         </div>
         <div class="modal-body">
