@@ -39,7 +39,8 @@ $ ->
           <img src='#{window.icons["novis_timeline"]}'>
           <br>
           <br>
-          Either a time field was not found or there were not enough data
+          Either a timestamp or number field is missing,
+          or there are not at least 3 data points.
           <br>
           Cannot display Timeline visualization
         </div>
