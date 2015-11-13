@@ -255,7 +255,7 @@ class VisualizationsController < ApplicationController
       has_pics = true if photos.size > 0
       metadata[i] = { name: dataset.title, user_id: dataset.user_id, dataset_id: dataset.id, timecreated: dataset.created_at, timemodified: dataset.updated_at, photos: photos }
       dataset.data.each_with_index do |row, index|
-        has_loc_data = true if has_loc_data == false and lat != '' and row.has_key?(lat) and row[lat] != ''
+        has_loc_data = true if has_loc_data == false and lat != '' and row.key?(lat) and row[lat] != ''
         unless row.class == Hash
           logger.info 'Bad row in JSON data:'
           logger.info row.inspect
