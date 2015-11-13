@@ -13,7 +13,7 @@ class MapNoDataDisableTest < IntegrationTest
 
   test 'timeline vis enabled: dset 1, 3 timestamps' do
     visit "/projects/#{@project_id}/data_sets/#{@dataset_1_id}"
-    click_on "Table"
+    click_on 'Table'
     assert page.has_no_css?('#vis-tab-timeline.strikethrough'), 'timeline vis should be enabled'
   end
 
