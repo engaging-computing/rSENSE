@@ -283,7 +283,8 @@ $ ->
 
       for dp in @dataPoints
         if dp[gIndex] isnt null
-          result[String(dp[gIndex]).toLowerCase()] = true
+          # Modified so that the "Group Selection" does not appear all lowercase
+          result[String(dp[gIndex])] = true
 
       groups = for keys of result
         keys
