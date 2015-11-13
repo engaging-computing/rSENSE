@@ -40,7 +40,7 @@ $ ->
           <br>
           <br>
           Either a timestamp or number field is missing,
-          or there is not at least 3 data points.
+          or there are not at least 3 data points.
           <br>
           Cannot display Timeline visualization
         </div>
