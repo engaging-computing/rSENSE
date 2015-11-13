@@ -82,7 +82,7 @@ CollectionMethods:
 
 # Offence count: 23
 CyclomaticComplexity:
-  Max: 31
+  Max: 40
 
 # Offence count: 163
 Documentation:
@@ -173,7 +173,7 @@ MethodCallParentheses:
 # Offence count: 78
 # Configuration parameters: CountComments.
 MethodLength:
-  Max: 110 
+  Max: 130 
 
 # Offence count: 16
 # Configuration parameters: EnforcedStyle, SupportedStyles.
