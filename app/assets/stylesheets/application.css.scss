@@ -259,14 +259,26 @@ body {
     color: white !important;
   }
 
+  .mdl-button--green[disabled] {
+    opacity: 0.65 !important;
+  }
+
   .mdl-button--blue {
     background-color: #337ab7 !important;
     color: white !important;
   }
 
+  .mdl-button--blue[disabled] {
+    opacity: 0.65 !important;
+  }
+
   .mdl-button--red {
     background-color: #d9534f !important;
     color: white !important;
+  }
+
+  .mdl-button--red[disabled] {
+    opacity: 0.65 !important;
   }
 
   .mdl-button--light-blue {
