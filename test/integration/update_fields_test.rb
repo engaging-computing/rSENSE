@@ -61,11 +61,11 @@ class UpdateFieldsTest < IntegrationTest
     assert page.has_content?('Longitude'), 'Longitude is there'
 
     # Rename Fields
-    fill_in 'number_1', with: "apple"
-    fill_in 'text_1', with: "banana"
-    fill_in 'timestamp', with: "robot"
-    fill_in 'latitude', with: "fan"
-    fill_in 'longitude', with: "watermelon"
+    fill_in 'number_1', with: 'apple'
+    fill_in 'text_1', with: 'banana'
+    fill_in 'timestamp', with: 'robot'
+    fill_in 'latitude', with: 'fan'
+    fill_in 'longitude', with: 'watermelon'
 
     find('#fields_form_submit').click
 
