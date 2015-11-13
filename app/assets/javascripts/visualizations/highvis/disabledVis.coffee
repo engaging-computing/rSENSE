@@ -39,8 +39,8 @@ $ ->
           <img src='#{window.icons["novis_timeline"]}'>
           <br>
           <br>
-          Either Timestamp field or Number field is missing from project or
-          there is not enough data. (min of 3 points required)
+          Either a timestamp or number field is missing,
+          or there is not at least 3 data points.
           <br>
           Cannot display Timeline visualization
         </div>
