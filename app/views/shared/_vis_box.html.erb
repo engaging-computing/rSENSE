@@ -1,36 +1,38 @@
  <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
+  <div class="mdl-card mdl-shadow--2dp">
    <div class="item item-block">
      <% thumb = nil %>
      <% if @box_vis.thumb_id != nil %>
        <% thumb = @box_vis.try(:tn_src) %>
-     <% else %>
-       <% type = JSON.parse(@box_vis.data)["defaultVis"] %>
-       <% case type %>
-       <% when "Map" %>
-         <% thumb = image_path("vis_map.png") %>
-       <% when "Table" %>
-         <% thumb = image_path("vis_table.png") %>
-       <% when "Summary" %>
-         <% thumb = image_path("vis_summary.png") %>
        <% else %>
-         <% thumb = image_path("vis_#{type.downcase}_light.png") %>
-       <% end %>
-     <% end %>
-     <a href="<%= visualization_path @box_vis %>">
-       <div class="item-image"
-            style="background-image:url(<%= thumb %>);">
-       </div>
-     </a>
-     <div class="item-desc">
-       <div class="item-title">
-         <%= link_to @box_vis.name.html_safe, @box_vis %>
-         <% if @box_vis.featured %>
-           <span> (featured)</span>
+         <% type = JSON.parse(@box_vis.data)["defaultVis"] %>
+         <% case type %>
+         <% when "Map" %>
+           <% thumb = image_path("vis_map.png") %>
+         <% when "Table" %>
+           <% thumb = image_path("vis_table.png") %>
+         <% when "Summary" %>
+           <% thumb = image_path("vis_summary.png") %>
+         <% else %>
+           <% thumb = image_path("vis_#{type.downcase}_light.png") %>
          <% end %>
-       </div>
-       by <a href="<%= user_url(@box_vis.owner) %>">
-          <%= @box_vis.owner.name %> </a><br/>
-       on <%= @box_vis.created_at.strftime("%B %d, %Y") %><br/>
-     </div>
-   </div>
+       <% end %>
+       <a href="<%= visualization_path @box_vis %>">
+         <div class="item-image"
+              style="background-image:url(<%= thumb %>);">
+         </div>
+       </a>
+       <div class="item-desc">
+         <div class="item-title">
+           <%= link_to @box_vis.name.html_safe, @box_vis %>
+           <% if @box_vis.featured %>
+             <span> (featured)</span>
+           <% end %>
+         </div>
+         by <a href="<%= user_url(@box_vis.owner) %>">
+            <%= @box_vis.owner.name %> </a><br/>
+         on <%= @box_vis.created_at.strftime("%B %d, %Y") %><br/>
+        </div>
+      </div>
+    </div>
  </div>

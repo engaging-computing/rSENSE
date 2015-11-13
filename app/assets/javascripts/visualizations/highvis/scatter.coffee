@@ -384,12 +384,18 @@ $ ->
         tools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append tools
 
+        # Add material design
+        $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
+        $('#vis-ctrls').find(".mdl-radio").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
         # Check off the right boxes
-        if @configs.advancedTooltips
-          $('#ckbx-tooltips').prop('checked', true)
-        if @configs.fullDetail then $('#ckbx-fulldetail').prop('checked', true)
-        if globals.configs.logY then $('#ckbx-log-y-axis').prop('checked', true)
-        $("input[name='mode'][value='#{@configs.mode}']").prop('checked', true)
+        if @configs.advancedTooltips then $('#ckbx-lbl-tooltips')[0].MaterialCheckbox.check()
+        if @configs.fullDetail then $('#ckbx-lbl-fulldetail')[0].MaterialCheckbox.check()
+        if globals.configs.logY then $('#ckbx-lbl-log-y-axis')[0].MaterialCheckbox.check()
+        $("label[name='mode'][value='#{@configs.mode}']")[0].MaterialRadio.check()
 
         # Set initial state of zoom reset
         if not @isZoomLocked() then $('#zoom-reset-btn').addClass("disabled")
@@ -425,6 +431,13 @@ $ ->
         # Initialize and track the status of this control panel
         globals.configs.toolsOpen ?= false
         initCtrlPanel('tools-ctrls', 'toolsOpen')
+
+        # Add material design
+        $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
+        $('#vis-ctrls').find(".mdl-radio").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
 
       ###
       A wrapper for making x-axis controls
@@ -541,6 +554,13 @@ $ ->
         outctx.body = HandlebarsTemplates[hbCtrl('regr')](inctx)
         tools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append tools
+
+        # Adds material design
+        $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
+        $('#vis-ctrls').find(".mdl-radio").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
 
         # Initialize and track the status of this control panel
         globals.configs.regressionOpen ?= false

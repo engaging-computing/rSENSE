@@ -1,25 +1,26 @@
 <% has_img = @box_project.featured_media_id != nil %>
 <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
-  <div class='item item-block
-    <%= (defined? @box_project_front_page) ? "front_page_item" : "" %>'>
-   
-    <% if has_img %>
-      <% bg_image = MediaObject.find(@box_project.featured_media_id).src %>   
-      <a href="<%= project_path @box_project %>">
-        <div class="item-image" style="background-image:url(<%= bg_image %>)"></div>
-      </a>
-    <% else %>
-      <a href='<%= project_path @box_project %>'>
-        <div class="item-image word-wrap center" style="background-image:url(<%= image_path('projects_placeholder.jpg') %>)">
-          <div class="placeholder">
-            <%= truncate(@box_project.title.html_safe, length: 40) %>
+  <div class="mdl-card mdl-shadow--2dp">
+    <div class='item item-block
+      <%= (defined? @box_project_front_page) ? "front_page_item" : "" %>'>
+     
+      <% if has_img %>
+        <% bg_image = MediaObject.find(@box_project.featured_media_id).src %>   
+        <a href="<%= project_path @box_project %>">
+          <div class="item-image" style="background-image:url(<%= bg_image %>)"></div>
+        </a>
+      <% else %>
+        <a href='<%= project_path @box_project %>'>
+          <div class="item-image word-wrap center" style="background-image:url(<%= image_path('projects_placeholder.jpg') %>)">
+            <div class="placeholder">
+              <%= truncate(@box_project.title.html_safe, length: 40) %>
+            </div>
           </div>
-        </div>
-      </a>
-    <% end %>
+        </a>
+      <% end %>
     
- 
-    <div class="item-desc">
+
+      <div class="item-desc">
         <div class="item-title word-wrap"> 
           <% if has_img %>
             <%= link_to truncate(@box_project.name.html_safe, length: 40),
@@ -29,29 +30,31 @@
             <% end %>
           <% end %>
         </div>
-      <strong>Creator: </strong> 
-      <a href="<%= user_url(@box_project.owner) %>">
-         <%= @box_project.owner.name %> </a><br/>
-       <%= @box_project.created_at.strftime("%B %d, %Y") %>
-      <br/>
-    </div>
-    <div class="item-badges">
-      <div>
-        <span class="badge" title="Data Sets">
-          <i class="fa fa-flask">&nbsp;</i><%= @box_project.data_sets.count %>
-        </span>
+        <strong>Creator: </strong> 
+        <a href="<%= user_url(@box_project.owner) %>">
+           <%= @box_project.owner.name %> </a><br/>
+         <%= @box_project.created_at.strftime("%B %d, %Y") %>
+        <br/>
       </div>
-      <div>
-        <span class="badge" title="Views" >
-          <i class="fa fa-eye">&nbsp;</i>
-          <%= @box_project.views %>
-        </span>
-      </div>
-      <div>
-        <span class="badge" title="Likes" >
-          <i class="fa fa-thumbs-up">&nbsp;</i>
-          <%= @box_project.like_count %>
-        </span>
+      
+      <div class="item-badges">
+        <div>
+          <span class="badge" title="Data Sets">
+            <i class="fa fa-flask">&nbsp;</i><%= @box_project.data_sets.count %>
+          </span>
+        </div>
+        <div>
+          <span class="badge" title="Views" >
+            <i class="fa fa-eye">&nbsp;</i>
+            <%= @box_project.views %>
+          </span>
+        </div>
+        <div>
+          <span class="badge" title="Likes" >
+            <i class="fa fa-thumbs-up">&nbsp;</i>
+            <%= @box_project.like_count %>
+          </span>
+        </div>
       </div>
     </div>
   </div>

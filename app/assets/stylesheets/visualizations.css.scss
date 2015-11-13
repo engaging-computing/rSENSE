@@ -42,6 +42,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
 
   .color-picker {
     vertical-align: top;
+    float: right;
   }
 
   div.regr-tooltip {
@@ -424,10 +425,14 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
           .centered {
             text-align: center;
           }
-
+          .cbx {
+            display: inline;
+          }
           .checkbox, .radio {
             text-align: left;
             margin: 1px 0;
+            width: 90%;
+            display: inline-block;
 
             input {
               margin-top: 2px;
@@ -435,8 +440,13 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
             }
           }
 
-          .name {
-            width: 90%;
+          .mdl-radio, .mdl-checkbox{
+            position: relative;
+            float: left;
+          }
+
+          .mdl-checkbox__label, .mdl-radiobox__label {
+            display: block;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;

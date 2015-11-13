@@ -1,5 +1,6 @@
 <div class="radio">
-  <input id="rdo-{{id}}" type="radio" data-log-id="{{logId}}" name="{{name}}"
-         value="{{value}}"/>
-  <label for="rdo-{{id}}">{{label}}</label>
+  <label id="rdo-lbl-{{id}}" class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rdo-{{id}}" name="{{name}}" value="{{value}}">
+    <input type="radio" id="rdo-{{id}}" class="mdl-radio__button" name="{{name}}" value="{{value}}"/>
+    <span class="mdl-radio__label">{{label}}</span>
+  </label>
 </div>
