@@ -1,15 +1,17 @@
 <% has_img = @box_project.featured_media_id != nil %>
 <div class="col-xs-12 col-sm-4 col-md-3">
   <div class="mdl-card mdl-shadow--2dp">
-    <div class="mdl-card__title" style="background-image:url( 
-      <% if has_img %> <%= MediaObject.find(@box_project.featured_media_id).src %>  
-      <% else %> <%= image_path('projects_placeholder.jpg') %> 
-      <% end %>);">
-      <% if !has_img %>
-        <h2 class="mdl-card__title-text"><%= link_to truncate(@box_project.name.html_safe, length: 40),
-                        @box_project %></h2>
-      <% end %>
-    </div>
+    <% if has_img %> <a href='<%= project_path @box_project %>' ><% end %>
+      <div class="mdl-card__title" style="background-image:url( 
+        <% if has_img %> <%= MediaObject.find(@box_project.featured_media_id).src %>  
+        <% else %> <%= image_path('projects_placeholder.jpg') %> 
+        <% end %>);" >
+        <% if !has_img %>
+          <h2 class="mdl-card__title-text"><%= link_to truncate(@box_project.name.html_safe, length: 40),
+                          @box_project %></h2>
+        <% end %>
+      </div>
+    <% if has_img %> </a><% end %>
     <div class="mdl-card__supporting-text proj-info">
       <% if has_img %>
         <div class="item-title word-wrap"> 
