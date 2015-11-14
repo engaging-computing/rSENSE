@@ -272,8 +272,14 @@
             <%= form_tag '/contrib_keys/enter', method: 'post' do %>
               <div class="row" style="margin-left: 0px;" >
                 <%= hidden_field_tag :project_id, @project.id %>
-                <%= text_field_tag :key,"", placeholder:"Key", style:"margin-bottom: 10px;" %>
-                <%= text_field_tag :contributor_name,"", placeholder:"Contributor Name" %>
+                 <div class="mdl-textfield mdl-js-textfield" style="width:35%">
+                  <%= text_field_tag :key,"", class: "mdl-textfield__input" %>
+                  <label class="mdl-textfield__label" for="sample1">Key</label>
+                </div>
+                <div class="mdl-textfield mdl-js-textfield" style="width:35%">
+                  <%= text_field_tag :contributor_name,"", class: "mdl-textfield__input" %>
+                  <label class="mdl-textfield__label" for="sample1">Contributor Name</label>
+                </div>
                 <%= submit_tag "Submit Key", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--green" %>
               </div>
             <% end %>
