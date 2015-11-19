@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'capybara-screenshot'
 require_relative 'base_integration_test'
 
 class UploadDataTest < IntegrationTest
@@ -11,8 +10,6 @@ class UploadDataTest < IntegrationTest
 
   test 'correct number of data sets' do
     visit project_path(@project)
-
-    screenshot_and_open_image
 
     assert page.has_content?('Lots of Data Sets'), 'Not on project page.'
 
