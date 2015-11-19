@@ -10,7 +10,6 @@ class UploadDataTest < IntegrationTest
 
   test 'correct number of data sets' do
     visit project_path(@project)
-
     assert page.has_content?('Lots of Data Sets'), 'Not on project page.'
 
     first('.mdl-checkbox ').click
