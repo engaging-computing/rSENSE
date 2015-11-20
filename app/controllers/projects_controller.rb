@@ -372,8 +372,8 @@ class ProjectsController < ApplicationController
       end
     end
 
-    #reload the project here after the fields are added
-    #otherwise, @project.fields returns nothing.
+    # reload the project here after the fields are added
+    # otherwise, @project.fields returns nothing.
     @project = Project.find(params[:id])
 
     if params.key?('create_dataset')
