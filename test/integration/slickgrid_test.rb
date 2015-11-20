@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'capybara-screenshot'
 require_relative 'base_integration_test'
 
 class SlickgridTest < IntegrationTest
@@ -126,6 +127,13 @@ class SlickgridTest < IntegrationTest
 
     # add data to the rows
     slickgrid_add_data 0, field_map
+
+    # click restrictions but don't select one to see if it breaks things (bug #2298)
+    screenshot_and_open_image
+
+    2.times { all('.slick-cell.l3.r3').last.click }
+
+    screenshot_and_open_image
 
     # save the dataset
     find(:css, '#edit_table_save_1').click
