@@ -31,17 +31,7 @@ class DataSet < ActiveRecord::Base
   end
 
   def self.search(search)
-    regex = /^[0-9]+$/
-    res = if search =~ regex
-            where(
-              '(data_sets.id = ?)', search.to_i)
-          elsif search
-            where('title LIKE ?', "%#{search}%").order('created_at DESC')
-          else
-            all.order('created_at DESC')
-          end
-
-    res
+    where('id = ? OR title LIKE ?', search.to_i, "%#{search}%").order('created_at DESC')
   end
 
   def to_hash(recurse = true)

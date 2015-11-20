@@ -47,86 +47,79 @@
             </div>
           </div>
           <div class="row project_buttons">
-            <div class="col-sm-3">
-              <button type="button" class="btn btn-default" disabled>
-                <i class="fa fa-eye"> Views | </i> <%= @project.views %>
-              </button>
-            </div>
+            <button class="mdl-button mdl-js-button mdl-button--raised" disabled>
+              <i class="fa fa-eye"> Views | </i> <%= @project.views %>
+            </button>
             <% if @cur_user.try(:id) %>
-              <div class="col-sm-3">
-                <div class="btn-group likes" data-project_id="<%= @project.id%>">
-                  <button type="button" class="btn btn-default liked_status <% if @liked_by_cur_user%>active<%end%>" data-toggle="button"><i class="fa fa-thumbs-up"></i> Like</button>
-                  <button type="button" class="btn btn-default like_display" disabled> <%= @project.likes.count %></button>
-                </div>
+              <div class="btn-group likes" data-project_id="<%= @project.id%>">
+                <button class="liked_status mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect <% if @liked_by_cur_user%>active<%end%>" data-toggle="button">
+                  <i class="fa fa-thumbs-up"></i> Like | <span class="like_display"><%= @project.likes.count %></span>
+                </button>
               </div>
             <% end %>
-            <div class="col-sm-2">
-              <button type="button" class="btn btn-default" id="print">
+              <button id="print" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                 <i class="fa fa-print"></i> Print
               </button>
-            </div>
             <% if @cur_user.try(:id) %>
-              <div class="col-xs-2">
-                <a href = "/projects/<%= @project.id %>/clone">
-                  <button type="button" class="btn btn-success">
-                    <i class="fa fa-copy"></i> Clone
-                  </button>
-                </a>
-              </div>
+              <a href = "/projects/<%= @project.id %>/clone">
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--green">
+                  <i class="fa fa-copy"></i> Clone
+                </button>
+              </a>
             <% end %>
             <% if can_edit? @project %>
-              <div class="col-xs-2">
-                <a href = "/projects/<%= @project.id %>/edit">
-                  <button type="button" class="btn btn-primary" id="edit-project-button">
-                    <i class="fa fa-cog"></i> Edit
-                  </button>
-                </a>
-              </div>
+              <a href="/projects/<%= @project.id %>/edit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--blue" id="edit-project-button">
+                <i class="fa fa-cog"></i> Edit
+              </a>
             <% end %>
           </div>
         </div>
       </div>
     </div>
-    <div class= "row">
+    <div class="row">
       <%= render layout: "shared/box", locals: {title: 'Description', width: '12', unique_id: 'description', should_hide: false} do %>
         <%= content_helper(@project) %>
       <% end %>
     </div>
+    
+    <!-- Data Sets View-->
     <div class="row">
       <%= render layout: "shared/box", locals: {title: 'Data Sets', width: '12', unique_id: 'data_sets', should_hide: false} do %>
-        <% if @data_sets.count != 0 || @params[:search] %>
+        <% if @data_set_count != 0 || @params[:search] %>
           <div id="dataset_list">
-            <span>
-              <button type="button" class="btn btn-info" style="margin-bottom: 10px;" id="vis_button" data-href="/projects/<%=@project.id%>/data_sets/">Visualize</button>
-            </span>
-            <span>
-              <button type="button" class="btn btn-default" style="margin-bottom: 10px;" id="export_button" >Export</button>
-            </span>
-            <div class="pull-right">
-              <div class="btn-group">
-                <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
-                  <i class="fa fa-check-square-o"></i>
-                  <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu" role="menu" style="left:-200%;">
-                  <li role="presentation">
-                    <a role="menuitem" href="javascript:void(0);" id="check_all"><i class="fa fa-check-square-o"></i> All</a>
-                  </li>
-                  <li role="presentation">
-                    <a role="menuitem" href="javascript:void(0);" id="uncheck_all"><i class="fa fa-square-o"></i> None</a>
-                  </li>
-                  <% if @cur_user.try(:id) %>
+            <div data-layout="row">
+              <span>
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--light-blue" style="margin-bottom: 10px;" id="vis_button" data-href="/projects/<%=@project.id%>/data_sets/">Visualize</button>
+              </span>
+              <span>
+               <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" style="margin-bottom: 10px;" id="export_button" >Export</button>
+              </span>
+              <div class="pull-right">
+                <div class="btn-group">
+                  <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-check-square-o"></i>
+                    <span class="caret"></span>
+                  </a>
+                  <ul class="dropdown-menu" role="menu" style="left:-200%;">
                     <li role="presentation">
-                      <a role="menuitem" href="javascript:void(0);" id="check_mine"><i class="fa fa-user"></i> Mine</a>
+                      <a role="menuitem" href="javascript:void(0);" id="check_all"><i class="fa fa-check-square-o"></i> All</a>
                     </li>
-                  <% end %>
-                  <% data_set_keys = @data_sets.map { |x| x.key }.uniq.reject { |x| x.nil? } %>
-                  <% data_set_keys.each do |key| %>
                     <li role="presentation">
-                      <a role="menuitem" m-title="<%= key %>" href="javascript:void(0);" class="check_id"><i class="fa fa-square-o"></i> <%= key %></a>
+                      <a role="menuitem" href="javascript:void(0);" id="uncheck_all"><i class="fa fa-square-o"></i> None</a>
                     </li>
-                  <% end %>
-                </ul>
+                    <% if @cur_user.try(:id) %>
+                      <li role="presentation">
+                        <a role="menuitem" href="javascript:void(0);" id="check_mine"><i class="fa fa-user"></i> Mine</a>
+                      </li>
+                    <% end %>
+                    <% data_set_keys = @data_sets.map { |x| x.key }.uniq.reject { |x| x.nil? } %>
+                    <% data_set_keys.each do |key| %>
+                      <li role="presentation">
+                        <a role="menuitem" m-title="<%= key %>" href="javascript:void(0);" class="check_id"><i class="fa fa-square-o"></i> <%= key %></a>
+                      </li>
+                    <% end %>
+                  </ul>
+                </div>
               </div>
             </div>
             <%=form_tag project_path, method: 'get', id: 'data_sets_search' do%>
@@ -143,7 +136,7 @@
               </div>
             </div><br/>
             <%end%>
-            <% if @data_sets.count == 0 %>
+            <% if @data_set_count == 0 %>
               <p> No Matching Data Sets. </p>
             <%end%>
             <table id="dataset_table" class="table table-striped">
@@ -182,8 +175,10 @@
                       <% end %>
                     </td>
                     <td>
-                      <div class="ds_selector">
-                        <input type="checkbox" class="pull-right <%if s.user_id == @cur_user.try(:id)%> mine<%end%>" id="ds_<%=s.id%>" checked/>
+                      <div class="ds_selector" >
+                        <label id="lbl_<%=s.id%>" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect pull-right" for="ds_<%=s.id%>">
+                          <input type="checkbox" id="ds_<%=s.id%>" class="mdl-checkbox__input <%if s.user_id == @cur_user.try(:id)%> mine<%end%>" checked>
+                        </label>
                       </div>
                     </td>
                   </tr>
@@ -205,24 +200,22 @@
   <div class="col-md-5">
     <div class="row">
       <%= render layout: "shared/box", locals: {title: 'Fields', width: '12', unique_id: 'fields', should_hide: false} do %>
-        <% if (@project.fields.count == 0) && can_edit?(@project) %>
+        <% if (@field_count == 0) && can_edit?(@project) %>
           <div class="col-md-12 center">
-            <a href="/projects/<%= @project.id %>/edit_fields">
-              <button class="btn btn-success" id="manual_fields">
-                <i class="fa fa-keyboard-o" style="margin:5px"></i>
-                Setup Manually
-              </button>
+            <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--green" id="manual_fields" href="/projects/<%= @project.id %>/edit_fields">
+              <i class="fa fa-keyboard-o" style="margin:5px"></i>
+              Setup Manually
             </a>
-            <button class="btn btn-success" id="template_file_upload">
+            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--green" id="template_file_upload">
               <i class="fa fa-file-o" style="margin:5px"></i>
               Upload File
             </button>
           </div>
           <div class="clear"></div>
-        <% elsif @project.fields.count != 0 %>
+        <% elsif @field_count != 0 %>
           <table class="table table-striped" data-project="<%= @project.id %>"
-                 data-can_delete_fields="<% @project.data_sets.count == 0 %>"
-                 data-num_fields="<%= @project.fields.count %>">
+                 data-can_delete_fields="<% @data_set_count == 0 %>"
+                 data-num_fields="<%= @field_count %>">
             <thead>
               <tr>
                 <th style="max-width:30%">Name</th>
@@ -231,34 +224,34 @@
               </tr>
             </thead>
             <tbody>
-              <%= render 'field_edit', type: "field", can_edit: (can_edit? @project), has_ses: @project.data_sets.count %>
+              <%= render 'field_edit', type: "field", can_edit: (can_edit? @project), has_ses: @data_set_count %>
             </tbody>
           </table>
           <% if can_edit?(@project) %>
             <div class="center">
-              <a href="/projects/<%=@project.id%>/edit_fields"><button class="btn btn-primary" id="field_edit">Edit</button></a>
+              <a href="/projects/<%=@project.id%>/edit_fields"><button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--blue" id="field_edit">Edit</button></a>
             </div>
           <% end %>
         <% end %>
       <% end %>
     </div>
     <div class="row">
-      <%=render layout: "shared/box", locals: {title: 'Contribute Data', width:'12', unique_id: 'create_data_set', should_hide: !(@project.fields.count() > 0)} do %>
-        <% if ((can_edit?(@project) || can_contribute?(@project)) and @project.fields.count > 0) %>
+      <%=render layout: "shared/box", locals: {title: 'Contribute Data', width:'12', unique_id: 'create_data_set', should_hide: !(@field_count > 0)} do %>
+        <% if ((can_edit?(@project) || can_contribute?(@project)) and @field_count > 0) %>
           <div class="row-fluid">
-            <div class="col-md-4 center">
+            <div class="col-sm-4 center">
               <%= link_to :controller => :data_sets, :action => :manualEntry do %>
                 <%= image_tag "manual.png", class: "hoverimage" %><br/>
                 Manual Entry
               <% end %>
             </div>
-            <div class="col-md-4 center" title="Supports - CSV,XLS,XLSX,ODS">
+            <div class="col-sm-4 center" title="Supports - CSV,XLS,XLSX,ODS">
               <a id="upload_datafile" href="">
                 <%= image_tag "upload.png", class: "hoverimage" %><br/>
                 Upload File
               </a>
             </div>
-            <div class="col-md-4 center">
+            <div class="col-sm-4 center">
               <a id="google_doc" href="">
                 <%= image_tag "google.png", class: "hoverimage" %><br/>
                 Google Doc
@@ -269,23 +262,23 @@
             <div class="row" align="center" style="margin-top: 110px;">
               <%= form_tag '/contrib_keys/clear', method: 'get' do %>
                 <%= hidden_field_tag :project_id, @project.id %>
-                <%= submit_tag "Clear Key", class: "btn btn-success" %>
+                <%= submit_tag "Clear Key", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" %>
               <% end %>
             </div>
           <% end %>
         <% else %>
-          <% if @project.has_contrib_key? and @cur_user.nil? and @has_fields %>
+          <% if @project.has_contrib_key? and @cur_user.nil? and (@field_count > 0) %>
             <p>Enter contributor key to submit data.</p>
             <%= form_tag '/contrib_keys/enter', method: 'post' do %>
               <div class="row" style="margin-left: 0px;" >
                 <%= hidden_field_tag :project_id, @project.id %>
                 <%= text_field_tag :key,"", placeholder:"Key", style:"margin-bottom: 10px;" %>
                 <%= text_field_tag :contributor_name,"", placeholder:"Contributor Name" %>
-                <%= submit_tag "Submit Key", class: "btn btn-success" %>
+                <%= submit_tag "Submit Key", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--green" %>
               </div>
             <% end %>
           <% else %>
-            <% if (@project.fields.count == 0) %>
+            <% if (!(@field_count > 0)) %>
               <h4 class="center">Fields must be set up to contribute data</h4>
             <% elsif @cur_user.try(:id) %>
               <h2 class="center"><i class="icon-lock"></i></h2>
@@ -355,7 +348,7 @@
     <div class="modal-content">
       <%= form_tag "/data_sets/dataFileUpload", method: 'post', multipart: true do %>
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <h4 class="modal-title">Please enter the Google Spreadsheet 'Share' link below:</h4>
         </div>
         <div class="modal-body">
@@ -365,8 +358,8 @@
         </div>
         <i>This can be generated by clicking 'File->Publish to the web' or 'File->Share' on your&nbsp;spreadsheet.</i>
         <div class="modal-footer">
-          <button id="cancel_doc" class="cancel_login_button btn btn-danger">Cancel</button>
-          <button id="save_doc" type="submit" value="Submit" class="login_button btn btn-success">Save</button>
+          <button id="cancel_doc" class="cancel_login_button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Cancel</button>
+          <button id="save_doc" type="submit" value="Submit" class="login_button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Save</button>
         </div>
       <% end %>
     </div>
@@ -388,10 +381,10 @@
         <div class="row">
           <div class="col-md-12"><b>How would you like to export your data?</b></div>
           <div class="col-md-4 col-md-offset-1">
-            <button type="button" class="btn btn-default col-md-12" style="margin: 10px;" id="export_individual_button" data-href="/projects/<%=@project.id%>/export/data_sets/">Individual Files</button>
+            <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect col-md-12" style="margin: 10px;" id="export_individual_button" data-href="/projects/<%=@project.id%>/export/data_sets/">Individual Files</button>
           </div>
           <div class="col-md-4 col-md-offset-1">
-            <button type="button" class="btn btn-default col-md-12" style="margin: 10px;" id="export_concatenated_button" data-href="/projects/<%=@project.id%>/export_concatenated/data_sets/">Single File</button>
+            <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect col-md-12" style="margin: 10px;" id="export_concatenated_button" data-href="/projects/<%=@project.id%>/export_concatenated/data_sets/">Single File</button>
           </div>
         </div>
       </div>

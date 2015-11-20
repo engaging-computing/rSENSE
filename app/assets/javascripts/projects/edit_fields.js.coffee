@@ -32,7 +32,7 @@ $ ->
              """<input class="input-small form-control" type="text"
                  name="number_#{numCount}" value="Number_#{displayNumCount}">""", "Number",
                  """<input class="input-small form-control" type="text" class="units"
-                 name="units_#{numCount}">""", "", """<a href="#" fid="0"
+                 name="units_#{numCount}">""", "", """<a fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
 
     $('#text').click ->
@@ -42,14 +42,14 @@ $ ->
              """<input class="input-small form-control" type="text"
                  name="text_#{textCount}" value="Text_#{displayTextCount}">""", "Text", "",
                  """<input class="input-small form-control" type="text" class="restrictions"
-                 name="restrictions_#{textCount}">""", """<a href="#" fid="0"
+                 name="restrictions_#{textCount}">""", """<a fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
 
     $('#timestamp').click ->
       timestampCount = timestampCount + 1
       addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
              """<input class="input-small form-control" type="text" name="timestamp"
-                 value="Timestamp">""", "Timestamp", "", "", """<a href="#" fid="0"
+                 value="Timestamp">""", "Timestamp", "", "", """<a fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
       document.getElementById('timestamp').disabled = true
 
@@ -57,11 +57,11 @@ $ ->
       locationCount = locationCount + 1
       addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
              """<input class="input-small form-control" type="text" name="longitude"
-                 value="Longitude">""", "Longitude", "deg", "", """<a href="#" fid="0"
+                 value="Longitude">""", "Longitude", "deg", "", """<a fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
       addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
              """<input class="input-small form-control" type="text" name="latitude"
-                 value="Latitude">""", "Latitude", "deg", "", """<a href="#" fid="0"
+                 value="Latitude">""", "Latitude", "deg", "", """<a fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
       document.getElementById('location').disabled = true
 
@@ -116,7 +116,7 @@ $ ->
         field_id = t.rows[i].cells[5].getElementsByTagName('a')[0].getAttribute('fid')
         # This is for new fields that do not have an id yet
         if field_id == '0'
-          field_id = t.rows[1].cells[1].getElementsByTagName('input')[0].getAttribute('name')
+          field_id = t.rows[i].cells[1].getElementsByTagName('input')[0].getAttribute('name')
         input = document.createElement('input')
         input.setAttribute('type', 'text')
         input.setAttribute('text', 'form-control')

@@ -1,9 +1,10 @@
 require 'test_helper'
+include ActionView::Helpers::DateHelper
 
 class NewsTest < ActiveSupport::TestCase
   def setup
     old_time = Time.new 1776
-    @year_diff = "over #{Time.now.year - old_time.year} years"
+    @year_diff = time_ago_in_words(old_time)
     @year_text = "January 01, #{old_time.year}"
 
     @url_regex = %r{.*/news/(\d+)}

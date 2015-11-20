@@ -60,27 +60,12 @@ class ProjectsController < ApplicationController
     @params = params
     @project = Project.find(params[:id])
 
-    # Determine if the project is cloned
-    @cloned_project = nil
-    unless @project.cloned_from.nil?
-      @cloned_project = Project.find(@project.cloned_from)
-    end
-
-    @liked_by_cur_user = false
-    if Like.find_by_user_id_and_project_id(@cur_user, @project.id)
-      @liked_by_cur_user = true
-    end
-
-    # checks for fields
-    @has_fields = false
-    if @project.fields.count > 0
-      @has_fields = true
-    end
-
-    @data_sets = @project.data_sets.search(params[:search])
-    if @data_sets.nil?
-      @data_sets = []
-    end
+    @cloned_project = Project.select(:id, :user_id, :title).where(id: @project.cloned_from).first
+    @liked_by_cur_user = Like.find_by_user_id_and_project_id(@cur_user, @project.id)
+    @data_sets = @project.data_sets.select('id', 'title', 'user_id', 'key', 'created_at', 'contributor_name').search(params[:search])
+    @fields = @project.fields
+    @field_count = @fields.count
+    @data_set_count = @data_sets.length
 
     recur = params.key?(:recur) ? params[:recur] == 'true' : false
 
@@ -263,6 +248,7 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
 
     # Delete fields as necessary
+    puts params[:hidden_deleted_fields]
     if params[:hidden_deleted_fields] != ''
       params[:hidden_deleted_fields].split(',').each do |x|
         if Field.find(x).destroy == -1 and return
@@ -294,19 +280,19 @@ class ProjectsController < ApplicationController
 
     # Add fields based on type
     if params[:hidden_location_count] == '1'
-      if addField('Latitude', 'Latitude', 'deg', [], params['latitude_index']) == -1 and return
+      if addField('Latitude', params[:latitude], 'deg', [], params['latitude_index']) == -1 and return
       end
-      if addField('Longitude', 'Longitude', 'deg', [], params['longitude_index']) == -1 and return
+      if addField('Longitude', params[:longitude], 'deg', [], params['longitude_index']) == -1 and return
       end
     end
 
     if params[:hidden_timestamp_count] == '1'
-      if addField('Timestamp', 'Timestamp', '', [], params['timestamp_index']) == -1 and return
+      if addField('Timestamp', params[:timestamp], '', [], params['timestamp_index']) == -1 and return
       end
     end
 
     (params[:hidden_num_count].to_i).times do |i|
-      if addField('Number', params[('number_' + (i + 1).to_s).to_sym], params[('units_' + (i + 1).to_s).to_sym], [],  params['number_' + i.to_s + '_index']) == -1 and return
+      if addField('Number', params[('number_' + (i + 1).to_s).to_sym], params[('units_' + (i + 1).to_s).to_sym], [],  params[('number_' + ((i + 1).to_s) + '_index').to_sym]) == -1 and return
       end
     end
 
@@ -314,7 +300,7 @@ class ProjectsController < ApplicationController
       # Need to explicitly check if restrictions are nil because empty restrictions should be []
       restrictions = params[('restrictions_' + (i + 1).to_s).to_sym].nil? ? [] : params[('restrictions_' + (i + 1).to_s).to_sym].split(',')
 
-      if addField('Text', params[('text_' + (i + 1).to_s).to_sym], '', restrictions, params['text_' + i.to_s + '_index']) == -1 and return
+      if addField('Text', params[('text_' + (i + 1).to_s).to_sym], '', restrictions, params[('text_' + (i + 1).to_s + '_index').to_sym]) == -1 and return
       end
     end
 

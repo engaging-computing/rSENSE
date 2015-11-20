@@ -37,6 +37,46 @@ class UpdateFieldsTest < IntegrationTest
     assert page.has_content?('Fields were successfully updated.')
   end
 
+  test 'edit fields named correctly' do
+    login('kcarcia@cs.uml.edu', '12345')
+    click_on 'Projects'
+    find('#project_title').set('Field Naming Test')
+    click_on 'Create Project'
+
+    assert page.has_content?('Fields'), "Project page should have 'Fields'"
+
+    find('#manual_fields').click
+
+    # Add Fields
+    click_on 'Add Number'
+    click_on 'Add Text'
+    click_on 'Add Timestamp'
+    click_on 'Add Location'
+
+    # Verify that they were added
+    assert page.has_content?('Number'), 'Number field is there'
+    assert page.has_content?('Text'), 'Text field is there'
+    assert page.has_content?('Timestamp'), 'Timestamp is there'
+    assert page.has_content?('Latitude'), 'Latitude is there'
+    assert page.has_content?('Longitude'), 'Longitude is there'
+
+    # Rename Fields
+    fill_in 'number_1', with: 'apple'
+    fill_in 'text_1', with: 'banana'
+    fill_in 'timestamp', with: 'robot'
+    fill_in 'latitude', with: 'fan'
+    fill_in 'longitude', with: 'watermelon'
+
+    find('#fields_form_submit').click
+
+    # Verify they were named correctly
+    assert page.has_content?('apple')
+    assert page.has_content?('banana')
+    assert page.has_content?('robot')
+    assert page.has_content?('fan')
+    assert page.has_content?('watermelon')
+  end
+
   test 'template fields with data set' do
     login('kcarcia@cs.uml.edu', '12345')
     click_on 'Projects'
