@@ -8,6 +8,11 @@
         </div>
         <div class="panel-body">
           <div class="form-group">
+            <%= f.label :name %><br />
+            <%= f.text_field :name, autofocus: true, class: "form-control", placeholder: "Your name here." %>
+          </div>
+          
+          <div class="form-group">
             <%= f.label :email %><br />
             <%= f.email_field :email, autofocus: true, class: "form-control", placeholder: "Required, allows you to reset your password." %>
           </div>

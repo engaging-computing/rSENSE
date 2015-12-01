@@ -70,7 +70,7 @@ class UsersController < ApplicationController
       page_size = params[:page_size].to_i
     end
 
-    show_hidden = (@cur_user.id == @user.id) || can_admin?(@user)
+    show_hidden = (current_user.id == @user.id) || can_admin?(@user)
 
     @contributions = []
     @objtype = ''
@@ -155,7 +155,7 @@ class UsersController < ApplicationController
   def edit
     @user = User.find(params[:id])
 
-    unless @cur_user.admin or @user == @cur_user
+    unless current_user.admin or @user == current_user
       render_404
       return
     end
@@ -192,7 +192,7 @@ class UsersController < ApplicationController
     auth = false
     auth_error = 'Not authorized to update user'
 
-    auth  = true if @cur_user.admin?
+    auth  = true if current_user.admin?
     auth  = true if can_edit?(@user) && session[:pw_change]
 
     if !auth && can_edit?(@user)
@@ -230,7 +230,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
 
     if can_delete?(@user)
-      if @cur_user.id == @user.id
+      if current_user.id == @user.id
         session[:user_id] = nil
       end
       @user.likes.each(&:destroy)
@@ -340,7 +340,7 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    if @cur_user.try(:admin)
+    if current_user.try(:admin)
       params[:user].permit(:content, :email, :email_confirmation, :name, :password, :password_confirmation,
                            :admin, :validated, :hidden, :bio, :last_login)
     else

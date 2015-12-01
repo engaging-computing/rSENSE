@@ -61,26 +61,26 @@ module ApplicationHelper
 
   # Begin permissions stuff
   def can_edit?(obj)
-    return false if @cur_user.nil?
-    return true  if @cur_user.try(:admin)
+    return false if current_user.nil?
+    return true  if current_user.try(:admin)
     return false if obj.nil?
 
     case obj
     when DataSet
-      obj.owner.id == @cur_user.try(:id)
+      obj.owner.id == current_user.try(:id)
     when User
-      obj.id == @cur_user.try(:id)
+      obj.id == current_user.try(:id)
     when Project, Visualization, MediaObject
-      obj.try(:owner).try(:id) == @cur_user.try(:id)
+      obj.try(:owner).try(:id) == current_user.try(:id)
     when Field
-      obj.try(:owner).try(:owner).try(:id) == @cur_user.try(:id)
+      obj.try(:owner).try(:owner).try(:id) == current_user.try(:id)
     else
       false
     end
   end
 
   def can_hide?(obj)
-    if @cur_user.nil?
+    if current_user.nil?
       return false
     end
 
@@ -89,40 +89,40 @@ module ApplicationHelper
       if obj.owner.nil?
         return false
       end
-      (obj.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin)
+      (obj.owner.id == current_user.try(:id)) || current_user.try(:admin)
     else
       false
     end
   end
 
   def can_delete?(obj)
-    if @cur_user.nil?
+    if current_user.nil?
       return false
     end
 
     case obj
     when Project
-      (@cur_user.try(:admin) || obj.owner == @cur_user) &&
+      (current_user.try(:admin) || obj.owner == current_user) &&
         obj.data_sets.count == 0
     when User, Tutorial, News
-      @cur_user.try(:admin)
+      current_user.try(:admin)
     when DataSet, Visualization
-      (obj.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin)
+      (obj.owner.id == current_user.try(:id)) || current_user.try(:admin)
     when MediaObject
-      (obj.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin)
+      (obj.owner.id == current_user.try(:id)) || current_user.try(:admin)
     when Field
-      (obj.owner.owner.id == @cur_user.try(:id)) || @cur_user.try(:admin)
+      (obj.owner.owner.id == current_user.try(:id)) || current_user.try(:admin)
     else
       false
     end
   end
 
   def can_admin?(_obj)
-    if @cur_user.nil?
+    if current_user.nil?
       return false
     end
 
-    @cur_user.try(:admin)
+    current_user.try(:admin)
   end
 
   def render_title
@@ -153,8 +153,8 @@ module ApplicationHelper
   end
 
   def is_admin?
-    unless @cur_user.nil?
-      if @cur_user.admin == true
+    unless current_user.nil?
+      if current_user.admin == true
         return true
       end
     end
