@@ -1,4 +1,5 @@
 Rsense::Application.routes.draw do
+  devise_for :users
   get 'testing/index'
 
   # See how all your routes lay out with "rake routes"
