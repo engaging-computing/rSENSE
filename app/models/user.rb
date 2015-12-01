@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
+  
   include ActionView::Helpers::SanitizeHelper
 
   validates_uniqueness_of :email, case_sensitive: false
@@ -15,8 +16,6 @@ class User < ActiveRecord::Base
   validates :email, format: { with: /\@.*\./ }, confirmation: true
 
   validates :password, presence: true, on: :create
-
-  has_secure_password
 
   before_validation :sanitize_user
   before_save :summernote_media_objects

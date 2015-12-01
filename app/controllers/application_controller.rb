@@ -9,9 +9,9 @@ class ApplicationController < ActionController::Base
   skip_before_filter :authorize, only: [:options_req]
 
   def authorize
-    unless User.find_by_id(session[:user_id])
-      redirect_to '/login'
-    end
+#     unless User.find_by_id(session[:user_id])
+#       redirect_to '/login'
+#     end
   end
 
   def authorize_allow_key
