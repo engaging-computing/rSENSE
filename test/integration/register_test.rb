@@ -8,11 +8,11 @@ class RegisterTest < IntegrationTest
     assert page.has_content?('Register for iSENSE')
     fill_in 'user_name',       with: 'Mark S.'
     fill_in 'user_email',      with: 'msherman@cs.uml.edu'
-    fill_in 'user_password',   with: 'pietime'
+    fill_in 'user_password',   with: 'pietimes'
     fill_in 'user_password_confirmation',
-                               with: 'pietime'
-    save_and_open_page
+                               with: 'pietimes'
     click_on 'Create User'
+    save_and_open_page
 
     assert find('.navbar').has_content?('News'), 'No error registering'
     assert page.has_content?('Mark S.')

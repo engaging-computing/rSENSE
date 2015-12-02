@@ -21,7 +21,7 @@ class BugReportTest < IntegrationTest
   test 'get bug report page with github account not logged in' do
     visit '/report_bug'
     find(:css, '#github_account').click
-
+    save_and_open_page
     assert page.has_content?('Log in to iSENSE'), 'Should have redirected to github for authorization'
   end
 end

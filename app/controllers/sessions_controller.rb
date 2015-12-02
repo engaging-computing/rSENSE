@@ -52,6 +52,7 @@ class SessionsController < ApplicationController
     base_url = 'https://github.com/login/oauth/authorize'
 
     client_id = ENV['GITHUB_ID']
+    
     redirect_uri = 'http://isenseproject.org/auth/github/callback'
     scope = 'repo'
     state = current_state

@@ -15,10 +15,10 @@ class ApplicationController < ActionController::Base
   end
   
   def authorize
-    logger.error "In authorize------------------"
-    logger.error "signed in? #{user_signed_in?}"
-    logger.error "sessions controller? #{params[:controller]}"
-    unless (user_signed_in? or ['devise/sessions', 'devise/registrations'].include? params[:controller] ) 
+#     logger.error "In authorize------------------"
+#     logger.error "signed in? #{user_signed_in?}"
+#     logger.error "sessions controller? -#{params[:controller]}-"
+    unless (user_signed_in? or ['devise/sessions', 'devise/registrations', 'sessions'].include? params[:controller] ) 
       redirect_to '/'
     end
   end
