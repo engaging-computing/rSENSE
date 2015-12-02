@@ -1,6 +1,6 @@
 Rsense::Application.configure do
   # Enable stdout logger
-  # config.logger = Logger.new(STDOUT)
+   config.logger = Logger.new(STDOUT)
   
   # Settings specified here will take precedence over those in config/application.rb
 

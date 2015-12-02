@@ -95,6 +95,7 @@ module CapyHelper
   end
 
   def logout
+    logger.error "-------Logging out---------"
     visit '/'
     find(:css, '.navbar').click_on('Logout')
   end

@@ -61,13 +61,19 @@ module ApplicationHelper
 
   # Begin permissions stuff
   def can_edit?(obj)
-    return false if current_user.nil?
+    Rails.logger.error "----In can_edit?----"
+    return false if current_user.nil? && session.try(:key)
+    Rails.logger.error "Has key or user"
     return true  if current_user.try(:admin)
+    Rails.logger.error "not admin"
     return false if obj.nil?
+    Rails.logger.error "not nil"
 
     case obj
     when DataSet
-      obj.owner.id == current_user.try(:id)
+      Rails.logger.error obj.key
+      Rails.logger.error session[:key]
+      obj.owner.id == current_user.try(:id) || obj.key == session[:key]
     when User
       obj.id == current_user.try(:id)
     when Project, Visualization, MediaObject

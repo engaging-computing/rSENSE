@@ -15,7 +15,10 @@ class ApplicationController < ActionController::Base
   end
   
   def authorize
-    unless (user_signed_in? or params[:controller] == 'devise/sessions') 
+    logger.error "In authorize------------------"
+    logger.error "signed in? #{user_signed_in?}"
+    logger.error "sessions controller? #{params[:controller]}"
+    unless (user_signed_in? or ['devise/sessions', 'devise/registrations'].include? params[:controller] ) 
       redirect_to '/'
     end
   end
@@ -118,7 +121,9 @@ class ApplicationController < ActionController::Base
       project = Project.find_by_id(params[:id] || params[:pid])
       if project && !project.contrib_keys.find_by_key(params[:contribution_key].downcase).nil?
         if params.key? :contributor_name
-          current_user = User.find_by_id(project.owner.id)
+          owner = User.find_for_database_authentication(id: project.owner.id)
+          sign_in("user", owner)
+#           current_user = User.find_by_id(project.owner.id)
         else
           respond_to do |format|
             format.json { render json: { msg: 'Missing contributor name' }, status: :unprocessable_entity }
@@ -138,8 +143,9 @@ class ApplicationController < ActionController::Base
       if data_set &&
         !data_set.project.contrib_keys.find_by_key(params[:contribution_key].downcase).nil? &&
         data_set.key == data_set.project.contrib_keys.where(key: params[:contribution_key].downcase)[0].name
-
-        current_user = User.find_by_id(data_set.owner.id)
+        owner = User.find_for_database_authentication(id: data_set.owner.id)
+        sign_in("user", owner)
+        #current_user = User.find_by_id(data_set.owner.id)
       else
         respond_to do |format|
           format.json { render json: { msg: 'Contribution key not valid' }, status: :unauthorized }

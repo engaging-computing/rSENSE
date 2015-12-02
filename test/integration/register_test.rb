@@ -11,6 +11,7 @@ class RegisterTest < IntegrationTest
     fill_in 'user_password',   with: 'pietime'
     fill_in 'user_password_confirmation',
                                with: 'pietime'
+    save_and_open_page
     click_on 'Create User'
 
     assert find('.navbar').has_content?('News'), 'No error registering'

@@ -79,7 +79,7 @@ class SessionsController < ApplicationController
   def permissions
     @permiss = []
     # Session is null
-    if session[:user_id].nil?
+    if !user_signed_in?
       respond_to do |format|
         format.js {}
         format.json { head :unauthorized }
@@ -87,13 +87,13 @@ class SessionsController < ApplicationController
       return
     end
 
-    is_admin = User.find(session[:user_id]).admin
+    is_admin = current_user.admin
     @permiss.push 'save'
 
     # Not admin, and you don't own or didn't specify a project
     unless is_admin
       if params[:project_id].nil? or
-         Project.find(params[:project_id]).user_id != session[:user_id]
+         Project.find(params[:project_id]).user_id != current_user.id
         respond_to do |format|
           format.json { render json: { permissions: @permiss }, status: :ok }
           format.js {}
