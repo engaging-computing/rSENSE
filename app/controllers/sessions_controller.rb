@@ -20,32 +20,32 @@ class SessionsController < ApplicationController
     end
   end
 
-  def create
-    session[:key] = nil
-    session[:contributor_name] = nil
-    session[:contrib_access] = nil
-
-    login_email = params[:email].downcase
-
-    @user = User.where('lower(email) = ?', login_email).first
-
-    if @user and @user.authenticate(params[:password])
-      session[:user_id] = @user.id
-      @user.update_attributes(last_login: Time.now)
-
-      respond_to do |format|
-        format.html { redirect_to session[:redirect_to] }
-        format.json { render json: { authenticity_token: form_authenticity_token, user: @user.to_hash(false) }, status: :ok }
-      end
-    else
-      flash.now[:error] = 'The entered email and password do not match'
-      flash.now[:email] = params[:email]
-      respond_to do |format|
-        format.html { render action: 'new' }
-        format.json { render json: {}, status: :unauthorized }
-      end
-    end
-  end
+#   def create
+#     session[:key] = nil
+#     session[:contributor_name] = nil
+#     session[:contrib_access] = nil
+# 
+#     login_email = params[:email].downcase
+# 
+#     @user = User.where('lower(email) = ?', login_email).first
+# 
+#     if @user and @user.authenticate(params[:password])
+#       session[:user_id] = @user.id
+#       @user.update_attributes(last_login: Time.now)
+# 
+#       respond_to do |format|
+#         format.html { redirect_to session[:redirect_to] }
+#         format.json { render json: { authenticity_token: form_authenticity_token, user: @user.to_hash(false) }, status: :ok }
+#       end
+#     else
+#       flash.now[:error] = 'The entered email and password do not match'
+#       flash.now[:email] = params[:email]
+#       respond_to do |format|
+#         format.html { render action: 'new' }
+#         format.json { render json: {}, status: :unauthorized }
+#       end
+#     end
+#   end
 
   # GET /auth/github
   def github_authorize

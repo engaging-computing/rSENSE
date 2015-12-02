@@ -7,8 +7,6 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
   
   include ActionView::Helpers::SanitizeHelper
-
-  
   
   validates_uniqueness_of :email, case_sensitive: false
   validates :name, length: { minimum: 4, maximum: 70 }, format: {

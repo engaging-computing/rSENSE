@@ -3,8 +3,7 @@ require 'base64'
 class UsersController < ApplicationController
   before_filter :authorize_admin, only: [:index]
 
-  skip_before_filter :authorize, only:
-    [:new, :create, :validate, :pw_request, :pw_send_key, :pw_reset]
+  skip_before_filter :authorize, except: [:show, :index]
 
   include ActionView::Helpers::DateHelper
   include ApplicationHelper
@@ -145,12 +144,6 @@ class UsersController < ApplicationController
     end
   end
 
-  # GET /users/new
-  # GET /users/new.json
-  def new
-    @user = User.new
-  end
-
   # GET /users/1/edit
   def edit
     @user = User.find(params[:id])
@@ -188,16 +181,19 @@ class UsersController < ApplicationController
   # PUT /users/1
   # PUT /users/1.json
   def update
-    @user = User.find(params[:id])
     auth = false
     auth_error = 'Not authorized to update user'
+    
+    @user = User.find_for_database_authentication(id: params[:id])
 
+    sign_in("user", @user)
+    
     auth  = true if current_user.admin?
     auth  = true if can_edit?(@user) && session[:pw_change]
 
     if !auth && can_edit?(@user)
       if (params[:user][:password].nil? && params[:user][:email].nil?) or
-         @user.authenticate(params[:current_password])
+         @user.valid_password?(params[:password])
         auth  = true
       else
         auth_error = "Current password doesn't match"

@@ -86,10 +86,10 @@ end
 module CapyHelper
   def login(email, pass)
     visit '/'
-    find(:css, '.navbar').click_on('Login')
-    fill_in 'Email', with: email
-    fill_in 'Password', with: pass
-    find(:css, '.mainContent').click_on('Login')
+    click_on('Login')
+    fill_in 'user_email', with: email
+    fill_in 'user_password', with: pass
+    find(:css, '.mainContent').click_on('Log in')
 
     assert page.has_content?('Logout'), 'Successfully logged in.'
   end
@@ -142,4 +142,8 @@ module CapyHelper
       loop until page.evaluate_script('jQuery.active').zero?
     end
   end
+end
+
+class ActionController::TestCase
+  include Devise::TestHelpers
 end

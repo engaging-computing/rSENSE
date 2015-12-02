@@ -12,6 +12,8 @@ class RenameVisTest < IntegrationTest
 
     find('#save-ctrls > .vis-ctrl-header').click
     assert page.has_content?('Save Visualization')
+    save_and_open_page
+    find('#save-vis-btn').show
     click_on 'Save Visualization'
 
     assert(page.has_content?('Please enter a name for this visualization:'),

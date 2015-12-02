@@ -10,15 +10,18 @@ class ApplicationController < ActionController::Base
 
   before_action :configure_permitted_parameters, if: :devise_controller?
 
+  def after_sign_out_path_for(resource_or_scope)
+    request.referrer
+  end
   
   def authorize
-#     unless User.find_by_id(session[:user_id])
-#       redirect_to '/login'
-#     end
+    unless (user_signed_in? or params[:controller] == 'devise/sessions') 
+      redirect_to '/'
+    end
   end
 
   def authorize_allow_key
-    return if User.find_by_id(session[:user_id])
+    return if user_signed_in?
 
     ckey = session[:contrib_access].to_i
 
@@ -81,12 +84,11 @@ class ApplicationController < ActionController::Base
     # The API call came with an email and password
     if (params.key? :email) & (params.key? :password)
       login_email = params[:email].downcase
+      @user = User.find_for_database_authentication(email: login_email)
 
-      @user = User.where('lower(email) = ?', login_email).first
-
-      if @user and @user.authenticate(params[:password])
+      if @user and @user.valid_password?(params[:password])
+        sign_in("user", @user)
         @user.update_attributes(last_login: Time.now)
-        current_user = @user
       else
         respond_to do |format|
           format.json { render json: { msg: 'Email & Password do not match.' }, status: :unauthorized }
@@ -166,9 +168,9 @@ class ApplicationController < ActionController::Base
   end
   protected
   def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:name, :email, :password, :password_confirmation, :remember_me, :bio) }
+    devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:name, :email, :password, :password_confirmation, :remember_me, :bio, :admin) }
     devise_parameter_sanitizer.for(:sign_in) { |u| u.permit(:login, :name, :email, :password, :remember_me) }
-    devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:name, :email, :password, :password_confirmation, :current_password, :bio) }
+    devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:name, :email, :password, :password_confirmation, :current_password, :bio, :admin) }
   end
 end
 

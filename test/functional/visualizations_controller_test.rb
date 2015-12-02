@@ -2,9 +2,6 @@ require 'test_helper'
 
 class VisualizationsControllerTest < ActionController::TestCase
   setup do
-    @kate = users(:kate)
-    @admin = users(:nixon)
-
     @vis1 = visualizations(:visualization1)
 
     @vis2 = visualizations(:tasty_vis)
@@ -23,35 +20,38 @@ class VisualizationsControllerTest < ActionController::TestCase
   end
 
   test 'should create visualization' do
+    kate = sign_in("user",users(:kate))
+    
     assert_difference('Visualization.count') do
       post :create, { visualization: { content: @vis1.content, data: @vis1.data, project_id: @vis1.project_id,
-        globals: @vis1.globals, title: @vis1.title, user_id: @vis1.user_id } },  user_id: @kate.id
+        globals: @vis1.globals, title: @vis1.title, user_id: @vis1.user_id } },  user_id: kate
     end
     assert_redirected_to visualization_path(assigns(:visualization))
     assert_difference('Visualization.count') do
       post :create, { visualization: { content: @vis1.content, data: @vis1.data, project_id: @vis1.project_id,
-        globals: @vis1.globals, title: @vis1.title, user_id: @vis1.user_id, tn_file_key: 'abcd', tn_src: 'image' } },  user_id: @kate.id
+        globals: @vis1.globals, title: @vis1.title, user_id: @vis1.user_id, tn_file_key: 'abcd', tn_src: 'image' } },  user_id: kate
     end
     assert_difference('Visualization.count') do
       post :create, { visualization: { content: @vis1.content, data: @vis1.data, project_id: @vis1.project_id,
-        globals: @vis1.globals, title: @vis1.title, user_id: @vis1.user_id, svg: @svg } },  user_id: @kate.id
+        globals: @vis1.globals, title: @vis1.title, user_id: @vis1.user_id, svg: @svg } },  user_id: kate
     end
     @svg = File.read(@svg)
     assert_difference('Visualization.count') do
       post :create, { visualization: { content: @vis1.content, data: @vis1.data, project_id: @vis1.project_id,
-        globals: @vis1.globals, title: @vis1.title, user_id: @vis1.user_id, svg: @svg } },  user_id: @kate.id
+        globals: @vis1.globals, title: @vis1.title, user_id: @vis1.user_id, svg: @svg } },  user_id: kate
     end
     post :create, { format: 'json', visualization: { content: @vis1.content, data: @vis1.data, project_id: @vis1.project_id,
-        globals: @vis1.globals, user_id: @vis1.user_id, svg: @svg } },  user_id: @kate.id
+        globals: @vis1.globals, user_id: @vis1.user_id, svg: @svg } },  user_id: kate
     assert_response :unprocessable_entity
   end
 
   test 'should show visualization' do
-    get :show, { id: @vis2.id },  user_id: @kate.id
+    kate = sign_in("user",users(:kate))
+    get :show, { id: @vis2.id },  user_id: kate
     assert_response :success
     assert_valid_html response.body
 
-    get :show, { id: @vis2.id, presentation: true },  user_id: @kate.id
+    get :show, { id: @vis2.id, presentation: true },  user_id: kate
     assert_response :success
   end
 
@@ -62,29 +62,35 @@ class VisualizationsControllerTest < ActionController::TestCase
   end
 
   test 'should get edit' do
-    get :edit, { id: @vis2 },  user_id: @admin
+    nixon = sign_in("user",users(:nixon))
+    get :edit, { id: @vis2 },  user_id: nixon
     assert_response :success
     assert_valid_html response.body
   end
 
   test 'should update visualization' do
+    kate = sign_in("user",users(:kate))
     put :update, { id: @vis1, visualization: { content: @vis1.content, data: @vis1.data,
-      project_id: @vis1.project_id, globals: @vis1.globals, title: @vis1.title, user_id: @kate.id } },
-       user_id: @kate.id
+      project_id: @vis1.project_id, globals: @vis1.globals, title: @vis1.title, user_id: users(:kate).id } },
+       user_id: kate
     assert_redirected_to visualization_path(assigns(:visualization))
+    sign_out("user")
+    
+    nixon = sign_in("user",users(:nixon))
     put :update, { id: @vis1, visualization: { featured: '1', content: @vis1.content, data: @vis1.data,
-      project_id: @vis1.project_id, globals: @vis1.globals, title: @vis1.title, user_id: @kate.id } },
-       user_id: @admin.id
+      project_id: @vis1.project_id, globals: @vis1.globals, title: @vis1.title, user_id: users(:kate).id } },
+       user_id: nixon
     assert_redirected_to visualization_path(assigns(:visualization))
     put :update, { id: @vis1, visualization: { featured: '0', content: @vis1.content, data: @vis1.data,
-      project_id: @vis1.project_id, globals: @vis1.globals, title: @vis1.title, user_id: @kate.id } },
-       user_id: @admin.id
+      project_id: @vis1.project_id, globals: @vis1.globals, title: @vis1.title, user_id: users(:kate).id } },
+       user_id: nixon
     assert_redirected_to visualization_path(assigns(:visualization))
   end
 
   test 'should destroy visualization' do
+    kate = sign_in("user",users(:kate))
     assert_difference('Visualization.count', -1) do
-      delete :destroy, { id: @vis2 },  user_id: @kate.id
+      delete :destroy, { id: @vis2 },  user_id: kate
     end
 
     assert_redirected_to visualizations_path
