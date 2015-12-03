@@ -132,8 +132,8 @@ IS.onReady "projects/show", ->
     root.find("[id^=lbl_]").each (i,j) ->
       $(j)[0].MaterialCheckbox.uncheck()
     root.find('tr').each (i,j) =>
-      if $(j)[0].find('.key').attr('title') is $(this).attr('m-title')
-        $(j)[0].find("[id^=lbl_]").prop("checked",true)
+      if $(j).find('.key').attr('title') is $(this).attr('m-title')
+        $(j).find("[id^=lbl_]")[0].MaterialCheckbox.check()
         $('#vis_button').prop("disabled",false)
         $('#export_button').prop("disabled",false)
   #Turn off visualize button on page load, and when nothings checked
