@@ -5,9 +5,9 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
-  
+
   include ActionView::Helpers::SanitizeHelper
-  
+
   validates_uniqueness_of :email, case_sensitive: false
   validates :name, length: { minimum: 4, maximum: 70 }, format: {
     with: /\A[\p{Alpha}\p{Blank}\-\'\.]*\z/,

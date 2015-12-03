@@ -35,7 +35,7 @@ class TutorialsControllerTest < ActionController::TestCase
   end
 
   test 'should create tutorial' do
-    nixon = sign_in("user",users(:nixon))
+    nixon = sign_in('user', users(:nixon))
     assert_difference('Tutorial.count') do
       post :create, { tutorial: { content: @tutorial.content, title: @tutorial.title } },  user_id: nixon
     end
@@ -44,7 +44,7 @@ class TutorialsControllerTest < ActionController::TestCase
   end
 
   test 'should not create tutorial as non-admin' do
-    kate = sign_in("user",users(:kate))
+    kate = sign_in('user', users(:kate))
     assert_difference('Tutorial.count', 0) do
       post :create, { tutorial: { content: @tutorial.content, title: @tutorial.title } },  user_id: kate
     end
@@ -59,21 +59,21 @@ class TutorialsControllerTest < ActionController::TestCase
   end
 
   test 'should get edit' do
-    nixon = sign_in("user",users(:nixon))
+    nixon = sign_in('user', users(:nixon))
     get :edit, { id: @tutorial },  user_id: nixon
     assert_response :success
     assert_valid_html response.body
   end
 
   test 'should update tutorial' do
-    nixon = sign_in("user",users(:nixon))
+    nixon = sign_in('user', users(:nixon))
     put :update, { id: @tutorial, tutorial: { content: @tutorial.content, title: @tutorial.title } },
        user_id: nixon
     assert_redirected_to tutorial_path(assigns(:tutorial))
   end
 
   test 'should feature tutorial' do
-    nixon = sign_in("user",users(:nixon))
+    nixon = sign_in('user', users(:nixon))
     put :update, { id: @tutorial, tutorial: { featured: 'true' } },  user_id: nixon
     assert_redirected_to tutorial_path(assigns(:tutorial))
     assert Tutorial.find(@tutorial.id).featured == true
@@ -84,7 +84,7 @@ class TutorialsControllerTest < ActionController::TestCase
   end
 
   test 'should destroy tutorial' do
-    nixon = sign_in("user",users(:nixon))
+    nixon = sign_in('user', users(:nixon))
     assert_difference('Tutorial.count', -1) do
       delete :destroy, { id: @tutorial },  user_id: nixon
     end
@@ -93,7 +93,7 @@ class TutorialsControllerTest < ActionController::TestCase
   end
 
   test 'should not destroy tutorial as non-admin' do
-    kate = sign_in("user",users(:kate))
+    kate = sign_in('user', users(:kate))
     assert_difference('Tutorial.count', 0) do
       delete :destroy, { id: @tutorial },  user_id: kate
     end

@@ -3,7 +3,7 @@ Rsense::Application.routes.draw do
   get '/users/:id/contributions' => 'users#contributions'
   get '/users/:id/edit' => 'users#edit'
   resources :users
-  
+
   get 'testing/index'
 
   # See how all your routes lay out with "rake routes"

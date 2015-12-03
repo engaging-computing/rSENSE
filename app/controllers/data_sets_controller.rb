@@ -67,7 +67,6 @@ class DataSetsController < ApplicationController
     @data_set = DataSet.new(data_set_params)
     @project  = @data_set.project
 
-
     if @project.lock? and !can_edit?(@project) and !key?(@project)
       redirect_to @project, alert: 'Project is locked'
       return
@@ -158,7 +157,7 @@ class DataSetsController < ApplicationController
   def manualEntry
     @project = Project.find(params[:id])
     @fields = @project.fields
-    
+
     if @project.lock? and !can_edit?(@project) and !key?(@project)
       redirect_to @project, alert: 'Project is locked'
       return

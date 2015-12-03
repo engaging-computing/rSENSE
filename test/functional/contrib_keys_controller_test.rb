@@ -7,7 +7,7 @@ class ContribKeysControllerTest < ActionController::TestCase
   end
 
   test 'should create contrib key' do
-    kate = sign_in("user",users(:kate))
+    kate = sign_in('user', users(:kate))
     assert_difference('ContribKey.count') do
       post :create, { contrib_key: { project_id: @proj.id, name: 'Pie', key: 'Pecan' } },  user_id: kate
     end
@@ -15,7 +15,7 @@ class ContribKeysControllerTest < ActionController::TestCase
   end
 
   test 'should not create contrib key' do
-    crunch = sign_in("user",users(:crunch))
+    crunch = sign_in('user', users(:crunch))
     assert_difference('ContribKey.count', 0) do
       post :create, { contrib_key: { project_id: @proj.id, name: 'Pie', key: 'Pecan' } },  user_id: crunch
     end
@@ -23,7 +23,7 @@ class ContribKeysControllerTest < ActionController::TestCase
   end
 
   test 'should destroy key' do
-    kate = sign_in("user",users(:kate))
+    kate = sign_in('user', users(:kate))
     assert_difference('ContribKey.count', -1) do
       post :destroy, { id: @skey.id },  user_id: kate
     end
@@ -31,7 +31,7 @@ class ContribKeysControllerTest < ActionController::TestCase
   end
 
   test 'should not destroy key' do
-    crunch = sign_in("user",users(:crunch))
+    crunch = sign_in('user', users(:crunch))
     assert_difference('ContribKey.count', 0) do
       post :destroy, { id: @skey.id },  user_id: crunch
     end
@@ -39,7 +39,6 @@ class ContribKeysControllerTest < ActionController::TestCase
   end
 
   test 'should enter key' do
-    kate = sign_in("user",users(:kate))
     post :enter,  project_id: @proj.id, key: @skey.key, contributor_name: users(:kate).name
     assert_response :redirect
     assert_equal @proj.id, session[:contrib_access]

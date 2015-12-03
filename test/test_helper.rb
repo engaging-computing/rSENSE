@@ -91,12 +91,13 @@ module CapyHelper
     fill_in 'user_password', with: pass
     find(:css, '.mainContent').click_on('Log in')
 
-    assert page.has_content?('Logout'), 'Successfully logged in.'
+    assert page.has_content?('Logout'), 'Did not successfully log in'
   end
 
   def logout
     visit '/'
     find(:css, '.navbar').click_on('Logout')
+    assert page.has_content?('Signed out successfully.'), 'Did not successfully log out'
   end
 
   def finish

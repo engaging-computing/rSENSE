@@ -10,11 +10,11 @@ class CorrectNumberOfDataSets < IntegrationTest
 
   test 'correct number of data sets' do
     visit project_path(@project)
-    save_and_open_page
+
     assert page.has_content?('Lots of Data Sets'), 'Not on project page.'
 
-    all('input[type="checkbox"]')[0].click
-    all('input[type="checkbox"]')[1].click
+    first('.mdl-checkbox ').click
+    all('.mdl-checkbox ').last.click
 
     click_on('Visualize')
 

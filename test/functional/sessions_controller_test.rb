@@ -2,7 +2,6 @@ require 'test_helper'
 
 class SessionsControllerTest < ActionController::TestCase
   setup do
-    @kate = users(:kate)
     @project_three = projects(:three)
   end
 
@@ -19,7 +18,8 @@ class SessionsControllerTest < ActionController::TestCase
   end
 
   test 'user has save permissions' do
-    get :permissions, { format: 'json' },  user_id: @kate.id
+    kate = sign_in('user', users(:kate))
+    get :permissions, { format: 'json' },  user_id: kate
     assert_response :success
     assert JSON.parse(response.body)['permissions'].include? 'save'
   end
@@ -30,11 +30,12 @@ class SessionsControllerTest < ActionController::TestCase
   end
 
   test 'user has project permissions' do
+    kate = sign_in('user', users(:kate))
     get :permissions,
     {
       format: 'json',
       project_id: @project_three.id
-    }, user_id: @kate.id
+    }, user_id: kate
     assert_response :success
     assert JSON.parse(response.body)['permissions'].include? 'project'
   end

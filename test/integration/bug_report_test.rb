@@ -22,6 +22,6 @@ class BugReportTest < IntegrationTest
     visit '/report_bug'
     find(:css, '#github_account').click
     assert page.has_content?('Sign in'), 'Should have redirected to github for authorization'
-  
+
   end
 end

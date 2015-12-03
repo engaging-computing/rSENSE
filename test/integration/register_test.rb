@@ -12,14 +12,12 @@ class RegisterTest < IntegrationTest
     fill_in 'user_password_confirmation',
                                with: 'pietimes'
     click_on 'Create User'
-    save_and_open_page
 
     assert find('.navbar').has_content?('News'), 'No error registering'
     assert page.has_content?('Mark S.')
 
     logout
-
-    login('msherman@cs.uml.edu', 'pietime')
+    login('msherman@cs.uml.edu', 'pietimes')
 
     assert find('.navbar').has_content?('News'), 'Can log in with new user'
   end

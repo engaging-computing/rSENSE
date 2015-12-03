@@ -154,40 +154,16 @@ class UsersController < ApplicationController
     end
   end
 
-  # POST /users
-  # POST /users.json
-  def create
-    @user = User.new(user_params)
-    @user.reset_validation!
-
-    captcha_message = 'Sorry, but the reCAPTCHA was incorrect.'
-
-    respond_to do |format|
-      if verify_recaptcha(model: @user, message: captcha_message) && @user.save
-        session[:user_id] = @user.id
-
-        UserMailer.validation_email(@user)
-
-        format.html { redirect_to @user, notice: 'User was successfully created.' }
-        format.json { render json: @user.to_hash(false), status: :created, location: @user }
-      else
-        flash[:error] = @user.errors.full_messages
-        format.html { render action: 'new' }
-
-      end
-    end
-  end
-
   # PUT /users/1
   # PUT /users/1.json
   def update
     auth = false
     auth_error = 'Not authorized to update user'
-    
+
     @user = User.find_for_database_authentication(id: params[:id])
 
-    sign_in("user", @user)
-    
+    sign_in('user', @user)
+
     auth  = true if current_user.admin?
     auth  = true if can_edit?(@user) && session[:pw_change]
 

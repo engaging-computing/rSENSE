@@ -20,8 +20,8 @@ class VisualizationsControllerTest < ActionController::TestCase
   end
 
   test 'should create visualization' do
-    kate = sign_in("user",users(:kate))
-    
+    kate = sign_in('user', users(:kate))
+
     assert_difference('Visualization.count') do
       post :create, { visualization: { content: @vis1.content, data: @vis1.data, project_id: @vis1.project_id,
         globals: @vis1.globals, title: @vis1.title, user_id: @vis1.user_id } },  user_id: kate
@@ -46,7 +46,7 @@ class VisualizationsControllerTest < ActionController::TestCase
   end
 
   test 'should show visualization' do
-    kate = sign_in("user",users(:kate))
+    kate = sign_in('user', users(:kate))
     get :show, { id: @vis2.id },  user_id: kate
     assert_response :success
     assert_valid_html response.body
@@ -62,21 +62,21 @@ class VisualizationsControllerTest < ActionController::TestCase
   end
 
   test 'should get edit' do
-    nixon = sign_in("user",users(:nixon))
+    nixon = sign_in('user', users(:nixon))
     get :edit, { id: @vis2 },  user_id: nixon
     assert_response :success
     assert_valid_html response.body
   end
 
   test 'should update visualization' do
-    kate = sign_in("user",users(:kate))
+    kate = sign_in('user', users(:kate))
     put :update, { id: @vis1, visualization: { content: @vis1.content, data: @vis1.data,
       project_id: @vis1.project_id, globals: @vis1.globals, title: @vis1.title, user_id: users(:kate).id } },
        user_id: kate
     assert_redirected_to visualization_path(assigns(:visualization))
-    sign_out("user")
-    
-    nixon = sign_in("user",users(:nixon))
+    sign_out('user')
+
+    nixon = sign_in('user', users(:nixon))
     put :update, { id: @vis1, visualization: { featured: '1', content: @vis1.content, data: @vis1.data,
       project_id: @vis1.project_id, globals: @vis1.globals, title: @vis1.title, user_id: users(:kate).id } },
        user_id: nixon
@@ -88,7 +88,7 @@ class VisualizationsControllerTest < ActionController::TestCase
   end
 
   test 'should destroy visualization' do
-    kate = sign_in("user",users(:kate))
+    kate = sign_in('user', users(:kate))
     assert_difference('Visualization.count', -1) do
       delete :destroy, { id: @vis2 },  user_id: kate
     end

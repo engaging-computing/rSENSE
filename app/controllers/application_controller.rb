@@ -10,36 +10,37 @@ class ApplicationController < ActionController::Base
 
   before_action :configure_permitted_parameters, if: :devise_controller?
 
-  def after_sign_out_path_for(resource_or_scope)
+  def after_sign_out_path_for(_resource_or_scope)
     session.delete(:sign_in_referrer)
     request.referrer
   end
-  
-  def after_sign_in_path_for(resource_or_scope)
-    unless request.referrer == new_user_session_path
+
+  def after_sign_in_path_for(_resource_or_scope)
+    session[:key] = nil
+    session[:contributor_name] = nil
+    session[:contrib_access] = nil
+    if session[:sign_in_referrer]
       ref = session[:sign_in_referrer]
       session.delete(:sign_in_referrer)
       return ref
     end
-    return '/'
+    '/'
   end
-  
+
   def authorize
-  
-    #We have a separate sign in page that we dont want to redirect to
+    # We have a separate sign in page that we dont want to redirect to
     if request.referrer
-      unless (request.referrer.include? "sign_in")
+      unless (request.referrer.include? 'sign_in') || (request.referrer.include? 'sign_up')
         session[:sign_in_referrer] = request.referrer
       end
     end
-    
-    if(params[:controller] == 'application' && params[:action] == 'create_issue_anon')
-      logger.info "GENERATING A BUG"
+
+    if params[:controller] == 'application' && params[:action] == 'create_issue_anon'
       redirect_to new_user_session_path
       return
     end
 
-    unless (user_signed_in? or ['devise/sessions', 'devise/registrations', 'sessions'].include? params[:controller]) 
+    unless user_signed_in? or ['devise/sessions', 'devise/registrations', 'sessions'].include? params[:controller]
       redirect_to '/'
     end
   end
@@ -85,7 +86,7 @@ class ApplicationController < ActionController::Base
   end
 
   def find_user
-#     current_user = User.find_by_id(session[:user_id])
+    #     current_user = User.find_by_id(session[:user_id])
     @namespace = { action: params[:action], controller: params[:controller] }
     @version = `(git describe --tags) 2>&1`
     @version = 'Development Version' if @version == '' || @version =~ /fatal:/
@@ -111,7 +112,7 @@ class ApplicationController < ActionController::Base
       @user = User.find_for_database_authentication(email: login_email)
 
       if @user and @user.valid_password?(params[:password])
-        sign_in("user", @user)
+        sign_in('user', @user)
         @user.update_attributes(last_login: Time.now)
       else
         respond_to do |format|
@@ -126,7 +127,7 @@ class ApplicationController < ActionController::Base
       key = project.contrib_keys.find_by_key(params[:contribution_key])
       if project && !key.nil? && data_set.key == key.name
         if params.key? :contributor_name
-          current_user = User.find_by_id(project.owner.id)
+          @cur_user = User.find_by_id(project.owner.id)
         else
           respond_to do |format|
             format.json { render json: { msg: 'Missing contributor name' }, status: :unprocessable_entity }
@@ -143,8 +144,8 @@ class ApplicationController < ActionController::Base
       if project && !project.contrib_keys.find_by_key(params[:contribution_key].downcase).nil?
         if params.key? :contributor_name
           owner = User.find_for_database_authentication(id: project.owner.id)
-          sign_in("user", owner)
-#           current_user = User.find_by_id(project.owner.id)
+          sign_in('user', owner)
+        #           current_user = User.find_by_id(project.owner.id)
         else
           respond_to do |format|
             format.json { render json: { msg: 'Missing contributor name' }, status: :unprocessable_entity }
@@ -165,8 +166,8 @@ class ApplicationController < ActionController::Base
         !data_set.project.contrib_keys.find_by_key(params[:contribution_key].downcase).nil? &&
         data_set.key == data_set.project.contrib_keys.where(key: params[:contribution_key].downcase)[0].name
         owner = User.find_for_database_authentication(id: data_set.owner.id)
-        sign_in("user", owner)
-        #current_user = User.find_by_id(data_set.owner.id)
+        sign_in('user', owner)
+        # current_user = User.find_by_id(data_set.owner.id)
       else
         respond_to do |format|
           format.json { render json: { msg: 'Contribution key not valid' }, status: :unauthorized }
@@ -193,7 +194,9 @@ class ApplicationController < ActionController::Base
       end
     end
   end
+
   protected
+
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:name, :email, :password, :password_confirmation, :remember_me, :bio, :admin) }
     devise_parameter_sanitizer.for(:sign_in) { |u| u.permit(:login, :name, :email, :password, :remember_me) }
