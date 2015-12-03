@@ -1,7 +1,7 @@
 require 'test_helper'
 require_relative 'base_integration_test'
 
-class MapNoDataDisableTest < IntegrationTest
+class TimelineNoDataDisableTest < IntegrationTest
   self.use_transactional_fixtures = false
 
   setup do
