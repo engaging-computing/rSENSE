@@ -176,8 +176,8 @@
                     </td>
                     <td>
                       <div class="ds_selector" >
-                        <label id="lbl_<%=s.id%>" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect pull-right <%if s.user_id == @cur_user.try(:id)%> mine<%end%>" for="ds_<%=s.id%>">
-                          <input type="checkbox" id="ds_<%=s.id%>" class="mdl-checkbox__input" checked>
+                        <label id="lbl_<%=s.id%>" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect pull-right" for="ds_<%=s.id%>">
+                          <input type="checkbox" id="ds_<%=s.id%>" class="mdl-checkbox__input <%if s.user_id == @cur_user.try(:id)%> mine<%end%>" checked>
                         </label>
                       </div>
                     </td>
@@ -272,14 +272,8 @@
             <%= form_tag '/contrib_keys/enter', method: 'post' do %>
               <div class="row" style="margin-left: 0px;" >
                 <%= hidden_field_tag :project_id, @project.id %>
-                 <div class="mdl-textfield mdl-js-textfield" style="width:35%">
-                  <%= text_field_tag :key,"", class: "mdl-textfield__input" %>
-                  <label class="mdl-textfield__label" for="sample1">Key</label>
-                </div>
-                <div class="mdl-textfield mdl-js-textfield" style="width:35%">
-                  <%= text_field_tag :contributor_name,"", class: "mdl-textfield__input" %>
-                  <label class="mdl-textfield__label" for="sample1">Contributor Name</label>
-                </div>
+                <%= text_field_tag :key,"", placeholder:"Key", style:"width: 35%" %>
+                <%= text_field_tag :contributor_name,"", placeholder:"Contributor Name", style:"width: 35%"%>
                 <%= submit_tag "Submit Key", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--green" %>
               </div>
             <% end %>
