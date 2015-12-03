@@ -208,7 +208,9 @@ $ ->
       resizeVis(false, 0, true)
 
     $('#vis-container').click ->
-      if globals.configs.ctrlsOpen and $(event.target).attr("class") != 'hamburger-bar'  and $(event.target).attr("id") != 'ctrls-menu-btn' and window.innerWidth < 600
+      shouldCloseTools = globals.configs.ctrlsOpen and $(event.target).attr("class") != 'hamburger-bar' and
+        $(event.target).attr("id") != 'ctrls-menu-btn' and window.innerWidth < 600
+      if shouldCloseTools
         globals.configs.ctrlsOpen = false
         resizeVis()
 
