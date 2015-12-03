@@ -155,6 +155,13 @@ $ ->
       tab = HandlebarsTemplates[hbVis('vis-tab')](ctx)
       $('#vis-tab-list').append(tab)
 
+      # Add material design
+      $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
+        componentHandler.upgradeElement($(j)[0]);
+
+      $('#vis-ctrls').find(".mdl-radio").each (i,j) ->
+        componentHandler.upgradeElement($(j)[0]);
+
       unless enabled
         $("#vis-tab-#{ctx.name.toLowerCase()}").addClass('strikethrough')
 

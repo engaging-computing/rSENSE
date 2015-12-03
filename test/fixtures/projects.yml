@@ -117,3 +117,7 @@ timeline_vis_disable:
   title: Timeline Vis Test
   user: nixon
   content: Test for disabling the timeline similar to issue 2262
+
+lots_of_data_sets:
+  title: Lots of Data Sets
+  user: nixon

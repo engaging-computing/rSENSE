@@ -101,24 +101,24 @@ IS.onReady "projects/show", ->
   #Select all/none check box in the data sets box
   $("a#check_all").click ->
     root = $('#dataset_table')
-    root.find("[id^=ds_]").each (i,j) ->
-      $(j).prop("checked",true)
+    root.find("[id^=lbl_]").each (i,j) ->
+      $(j)[0].MaterialCheckbox.check()
     $('#vis_button').prop("disabled",false)
     $('#export_button').prop("disabled",false)
 
   $("a#uncheck_all").click ->
     root = $('#dataset_table')
-    root.find("[id^=ds_]").each (i,j) ->
-      $(j).prop("checked",false)
+    root.find("[id^=lbl_]").each (i,j) ->
+      $(j)[0].MaterialCheckbox.uncheck()
     $('#vis_button').prop("disabled",true)
     $('#export_button').prop("disabled",true)
 
   $("a#check_mine").click ->
     root = $('#dataset_table')
-    root.find("[id^=ds_]").each (i,j) ->
-      $(j).prop("checked",false)
+    root.find("[id^=lbl_]").each (i,j) ->
+      $(j)[0].MaterialCheckbox.uncheck()
     root.find(".mine").each (i,j) ->
-      $(j).prop("checked",true)
+      $(j)[0].MaterialCheckbox.check()
     if root.find(".mine").length isnt 0
       $('#vis_button').prop("disabled",false)
       $('#export_button').prop("disabled",false)
@@ -129,18 +129,18 @@ IS.onReady "projects/show", ->
     root = $('#dataset_table')
     $('#vis_button').prop("disabled",true)
     $('#export_button').prop("disabled",true)
-    root.find("[id^=ds_]").each (i,j) ->
-      $(j).prop("checked",false)
+    root.find("[id^=lbl_]").each (i,j) ->
+      $(j)[0].MaterialCheckbox.uncheck()
     root.find('tr').each (i,j) =>
-      if $(j).find('.key').attr('title') is $(this).attr('m-title')
-        $(j).find("[id^=ds_]").prop("checked",true)
+      if $(j)[0].find('.key').attr('title') is $(this).attr('m-title')
+        $(j)[0].find("[id^=lbl_]").prop("checked",true)
         $('#vis_button').prop("disabled",false)
         $('#export_button').prop("disabled",false)
   #Turn off visualize button on page load, and when nothings checked
   check_for_selection = ->
     should_disable = true
-    $(document).find("[id^=ds_]").each (i,j) ->
-      if($(j).is(":checked"))
+    $(":checkbox").each (i,j) ->
+      if($(j)[0].checked)
         should_disable = false
       else
         $('#check_selector').prop("checked",false)
@@ -151,7 +151,7 @@ IS.onReady "projects/show", ->
   check_for_selection()
 
   #Add click events to all check boxes in the data_sets box
-  $(document).find("[id^=ds_]").each (i,j) ->
+  $('#dataset_table').find(".mdl-checkbox__input").each (i,j) ->
     $(j).click check_for_selection
 
   # delete data sets
