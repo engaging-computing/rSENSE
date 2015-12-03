@@ -92,7 +92,7 @@ Rsense::Application.routes.draw do
 
   # Github Authentication Routes
   get '/auth/github' => 'sessions#github_authorize'
-  get '/auth/anon_github' => 'sessions#create_issue_anon'
+  get '/auth/anon_github' => 'application#create_issue_anon'
   get '/auth/github/callback' => 'application#create_issue'
   post '/submit_issue' => 'application#submit_issue'
 

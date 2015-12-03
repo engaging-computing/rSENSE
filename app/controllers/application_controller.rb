@@ -11,14 +11,35 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   def after_sign_out_path_for(resource_or_scope)
+    session.delete(:sign_in_referrer)
     request.referrer
   end
   
+  def after_sign_in_path_for(resource_or_scope)
+    unless request.referrer == new_user_session_path
+      ref = session[:sign_in_referrer]
+      session.delete(:sign_in_referrer)
+      return ref
+    end
+    return '/'
+  end
+  
   def authorize
-#     logger.error "In authorize------------------"
-#     logger.error "signed in? #{user_signed_in?}"
-#     logger.error "sessions controller? -#{params[:controller]}-"
-    unless (user_signed_in? or ['devise/sessions', 'devise/registrations', 'sessions'].include? params[:controller] ) 
+  
+    #We have a separate sign in page that we dont want to redirect to
+    if request.referrer
+      unless (request.referrer.include? "sign_in")
+        session[:sign_in_referrer] = request.referrer
+      end
+    end
+    
+    if(params[:controller] == 'application' && params[:action] == 'create_issue_anon')
+      logger.info "GENERATING A BUG"
+      redirect_to new_user_session_path
+      return
+    end
+
+    unless (user_signed_in? or ['devise/sessions', 'devise/registrations', 'sessions'].include? params[:controller]) 
       redirect_to '/'
     end
   end
