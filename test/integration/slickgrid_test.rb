@@ -139,6 +139,17 @@ class SlickgridTest < IntegrationTest
     assert_similar_arrays compare_data, dataset.data
   end
 
+  test 'slickgrid enter number with spaces' do
+    login 'nixon@whitehouse.gov', '12345'
+
+    dataset = DataSet.find_by_name 'Slickgrid Data set 1'
+    visit "/data_sets/#{dataset.id}/edit"
+    find(:css, '.slick-row:nth-child(5)>.slick-cell.l1').click
+    find(:css, '.slick-row:nth-child(5)>.slick-cell.l1>input').set ' 117 '
+    find(:css, '#edit_table_add_1').click
+    assert page.has_no_content?('Please enter a valid number.'), 'Number with spaces failed.'
+  end
+
   test 'slickgrid edit data set' do
     login 'nixon@whitehouse.gov', '12345'
 
