@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'capybara-screenshot'
 require_relative 'base_integration_test'
 
 class UploadDataTest < IntegrationTest
@@ -9,7 +8,6 @@ class UploadDataTest < IntegrationTest
     @project = projects(:lots_of_data_sets)
 
     visit project_path(@project)
-    screenshot_and_open_image
     assert page.has_content?('Lots of Data Sets'), 'Not on project page.'
 
     first('.mdl-checkbox ').click
