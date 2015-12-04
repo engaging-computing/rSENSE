@@ -118,7 +118,8 @@ $ ->
               name: "Error for #{data.groups[gid]}" or data.noField()
 
             errors.data = for fid in data.normalFields when fid in fieldSelection
-              barData = data.selector fid, gid
+              dp = globals.getData(true, globals.configs.activeFilters)
+              barData = data.selector fid, gid, dp
               if barData.length == 1
                 []
               else
