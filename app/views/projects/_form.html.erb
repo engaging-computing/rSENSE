@@ -96,7 +96,7 @@
       <div class="form-group">
         <div class="checkbox">
           <% del = '<i class="fa fa-times-circle"></i> Delete Project ' %>
-          <% cls = 'btn btn-danger'; if !can_delete? @project then cls += ' disabled' end %>
+          <% cls = 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--red'; if !can_delete? @project then cls += ' disabled' end %>
           <%= link_to raw(del),
               @project,
               { method: :delete, data: { confirm: 'Really delete project?' },
@@ -109,8 +109,8 @@
     </div>
 
     <div class="panel-footer text-center">
-      <a href='<%= url_for @project %>' class="btn btn-danger"> Cancel </a>
-      <button type="submit" name="commit" class="btn btn-primary"> Submit </button>
+      <a href='<%= url_for @project %>' class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--red"> Cancel </a>
+      <button type="submit" name="commit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--blue"> Submit </button>
     </div>
   </div>
 <% end %>
@@ -147,7 +147,7 @@
       </div>
       <div class="form-group">
         <br>
-        <%= submit_tag "Create Key", class: 'btn btn-success' %>
+        <%= submit_tag "Create Key", class: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--green' %>
       </div>
     <% end %>
     </div>
