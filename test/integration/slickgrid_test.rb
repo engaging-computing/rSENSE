@@ -127,6 +127,9 @@ class SlickgridTest < IntegrationTest
     # add data to the rows
     slickgrid_add_data 0, field_map
 
+    # click restrictions but don't select one to see if it breaks things (bug #2298)
+    2.times { all('.slick-cell.l3.r3').last.click }
+
     # save the dataset
     find(:css, '#edit_table_save_1').click
 
