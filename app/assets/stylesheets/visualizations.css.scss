@@ -385,6 +385,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
       position: relative;
       display: inline-block;
       float: left;
+      z-index: 1;
       background-color: $vis-bkg-dark;
       width: 320px;
       height: 100%;
@@ -431,7 +432,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
           .checkbox, .radio {
             text-align: left;
             margin: 1px 0;
-            width: 90%;
+            width: 85%;
             display: inline-block;
 
             input {

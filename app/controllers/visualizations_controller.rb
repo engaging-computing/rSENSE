@@ -27,7 +27,7 @@ class VisualizationsController < ApplicationController
     if !params[:per_page].nil?
       pagesize = params[:per_page]
     else
-      pagesize = 50
+      pagesize = 48
     end
 
     @visualizations = Visualization.search(params[:search]).paginate(page: params[:page], per_page: pagesize)

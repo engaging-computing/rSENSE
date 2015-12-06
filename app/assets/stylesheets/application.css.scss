@@ -34,6 +34,12 @@ $table-bg-accent: #E8E8E8;
   margin-bottom: 0px;
 }
 
+.badges {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0px
+}
+
 body {
   background-color: white;
 }
@@ -242,11 +248,41 @@ body {
 }
 
 .mdl-card {
+  height: 250px !important;
   width: initial !important;
-  height: 250px;
   margin-bottom: 2em;
   line-height: initial;
+  background: #ddd !important;
 }
+
+  .mdl-card__title-text {
+    a {
+      margin: auto !important;
+    }
+  }
+
+  .item-title {
+    font-size: 1.25em;
+  }
+
+  .proj-info {
+    height: 100px;
+  }
+
+  .mdl-card__title{
+    background-size: cover !important;
+    background-position: center;
+    height: 130px;
+
+    .mdl-card__title-text {
+      text-align: center;
+      width: 100%;
+      margin: 0 auto;
+      -webkit-align-self: center !important; /* Safari 7.0+ */
+      align-self: center !important;
+    }
+}
+
   // Prevent underlining button links
   // Prevent mdl from making all buttons uppercase
   .mdl-button {
@@ -310,6 +346,7 @@ body {
   }
 
   .navbtn a {
+    font-size: 0.9em;
     padding-top: 20px;
   }
 

@@ -128,7 +128,7 @@ module ApplicationHelper
   def render_title
     if @namespace[:controller] == 'projects' and params.key?(:id)
       # viewing a project
-      Project.find(params[:id]).name.capitalize.html_safe
+      Project.find(params[:id]).name.html_safe
     elsif @namespace[:controller] == 'visualizations' and params.key?(:id)
       if @namespace[:action] == 'displayVis'
         # viewing data sets
