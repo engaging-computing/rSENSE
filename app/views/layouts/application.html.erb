@@ -17,13 +17,7 @@
   </head>
 
   <body data-page-name="<%= params[:controller] %>/<%= params[:action] %>">
-    <% if !current_user.nil? and current_user.email.blank? %>
-      <div class="alert">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        You are currently logged into an account that has no linked email address. In the near future accounts on iSENSE will require email addresses to log in; we recomend you go to your  <%= link_to("user edit page", edit_user_path(current_user)) %> and add an email address for this account.
-      </div>
-    <% end %>
-
+  
     <!-- The title bar -->
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container"><!-- Brand and toggle get grouped for better mobile display -->

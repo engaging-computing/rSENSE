@@ -23,14 +23,15 @@ class ApplicationController < ActionController::Base
       ref = session[:sign_in_referrer]
       session.delete(:sign_in_referrer)
       return ref
+    else
+      return user_path(current_user.id)
     end
-    '/'
   end
 
   def authorize
     # We have a separate sign in page that we dont want to redirect to
     if request.referrer
-      unless (request.referrer.include? 'sign_in') || (request.referrer.include? 'sign_up')
+      unless request.referrer.include? 'sign_in'
         session[:sign_in_referrer] = request.referrer
       end
     end
@@ -56,7 +57,7 @@ class ApplicationController < ActionController::Base
     dset = DataSet.find_by_id(params[:id])
     return if dset && ckey == dset.project.id
 
-    redirect_to '/login'
+    redirect_to new_user_session_path
   end
 
   def authorize_admin
@@ -113,7 +114,6 @@ class ApplicationController < ActionController::Base
 
       if @user and @user.valid_password?(params[:password])
         sign_in('user', @user)
-        @user.update_attributes(last_login: Time.now)
       else
         respond_to do |format|
           format.json { render json: { msg: 'Email & Password do not match.' }, status: :unauthorized }
