@@ -37,15 +37,15 @@
         <div class="panel-footer">
           <div class="actions">
             <%= f.submit("Create User", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--blue") %>
-          </div>
           <div class="pull-right"><a href="#" onclick="$('#privacy_policy').toggle()">Privacy Policy</a></div>
           <div class="clear"></div>
+          </div>
         </div>
       <% end %>
       </div>
     </div>
   </div>
 </div>
-  
-
-<%= render "devise/shared/links" %>
+<div class="row" id="privacy_policy" style="display:none">
+  <%= render :partial => "shared/privacy_policy"%>
+</div>
