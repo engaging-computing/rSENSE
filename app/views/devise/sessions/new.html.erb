@@ -18,9 +18,11 @@
           </div>
 
           <% if devise_mapping.rememberable? -%>
-            <div class="form-control">
-              <%= f.check_box :remember_me %>
-              <%= f.label :remember_me %>
+            <div class="form-group">
+              <label for="user_remember_me" class="mdl-checkbox mdl-js-checkbox">
+                <%= f.check_box :remember_me, class: "mdl-checkbox__input" %>
+                <span >Remember me</span>
+              </label>
             </div>
           <% end -%>
         </div>
@@ -34,5 +36,3 @@
     </div>
   </div>
 <% end %>
-
-<%= render "devise/shared/links" %>
