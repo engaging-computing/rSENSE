@@ -77,7 +77,7 @@
   <div id="projects" class="isotope_container">
     <div class="isotope_pane">
       <!-- Create Project -->
-      <% if current_user.try(:id) %>
+      <% if user_signed_in? %>
         <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
           <div class="mdl-card mdl-shadow--2dp create-project-outer-block">
             <div class="item item-block text-center create-project-inner-block">
