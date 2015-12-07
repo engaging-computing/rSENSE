@@ -1,6 +1,6 @@
+<%= devise_error_messages! %><br>
 <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
   <%= f.hidden_field :reset_password_token %>
-  <%= devise_error_messages! %>
   <div class="row">
     <div class="col-lg-6 col-lg-offset-3">
       <div class="panel panel-default">
