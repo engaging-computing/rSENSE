@@ -9,7 +9,7 @@ module DeviseHelper
       #{messages}
     </div>
     HTML
-    
+
     html.html_safe
   end
 end

@@ -11,8 +11,7 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   def after_sign_out_path_for(_resource_or_scope)
-    session.delete(:sign_in_referrer)
-    request.referrer
+    '/'
   end
 
   def after_sign_in_path_for(_resource_or_scope)
@@ -42,7 +41,7 @@ class ApplicationController < ActionController::Base
     end
 
     unless user_signed_in? or ['devise/sessions', 'devise/registrations', 'sessions'].include? params[:controller]
-      redirect_to '/', flash: {error: 'You are not currently logged in.'}
+      redirect_to '/', flash: { error: 'You are not currently logged in.' }
     end
   end
 
