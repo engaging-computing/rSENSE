@@ -42,7 +42,7 @@ class ApplicationController < ActionController::Base
     end
 
     unless user_signed_in? or ['devise/sessions', 'devise/registrations', 'sessions'].include? params[:controller]
-      redirect_to '/'
+      redirect_to '/', flash: {error: 'You are not currently logged in.'}
     end
   end
 
