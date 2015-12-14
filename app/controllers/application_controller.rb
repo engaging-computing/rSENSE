@@ -11,7 +11,13 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   def after_sign_out_path_for(_resource_or_scope)
-    '/'
+    logger.error "---#{request.referrer}--"
+    logger.error "-----------#{params[:controller]}-------------"
+    if request.referrer.include? '/users/'
+      '/'
+    else
+      request.referrer
+    end
   end
 
   def after_sign_in_path_for(_resource_or_scope)
