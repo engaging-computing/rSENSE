@@ -1,17 +1,7 @@
 require 'test_helper'
+require_relative 'base_integration_test'
 
-class MakeProjectTest < ActionDispatch::IntegrationTest
-  include CapyHelper
-
-  setup do
-    Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 15
-  end
-
-  teardown do
-    finish
-  end
-
+class MakeProjectTest < IntegrationTest
   test 'kate makes a new project' do
     login('kcarcia@cs.uml.edu', '12345')
 
@@ -30,7 +20,6 @@ class MakeProjectTest < ActionDispatch::IntegrationTest
     click_on 'Projects'
     assert page.has_content?('Templates'), 'Should be on Projects page'
     assert page.has_content?('Das Projekt'), 'New project should be in list'
-
   end
 
   test 'search in projects' do

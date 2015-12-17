@@ -44,8 +44,8 @@ $ ->
       ###
       Build options relevant to timeline
       ###
-      buildOptions: ->
-        super()
+      buildOptions: (animate = true) ->
+        super(animate)
 
         self = this
         groupBy = ''
@@ -66,7 +66,7 @@ $ ->
                   str  = "<div style='width:100%;text-align:center;color:#{@series.color};'>"
                   str += "#{@series.name.group}</div><br>"
                   str += "<table>"
-                  str += "<tr><td>Group by: </td>" + "\t" + "<td>#{group_by} </td> </tr>"
+                  str += "<tr><td>Group by: </td>" + "\t" + "<td>#{groupBy} </td> </tr>"
                   for field, fieldIndex in data.fields when @point.datapoint[fieldIndex] isnt null
                     dat = if (Number field.typeID) is data.types.TIME
                       (globals.dateFormatter @point.datapoint[fieldIndex])
@@ -119,11 +119,8 @@ $ ->
         fieldIndex = data.timeFields[0]
         super(fieldIndex, data.timeFields)
 
-      ###
-      Clips an array of data to include only bounded points
-      ###
-      clip: (arr) ->
-        super(arr)
+      saveFilters: (vis = 'timeline') ->
+        super(vis)
 
     if "Timeline" in data.relVis
       globals.timeline = new Timeline 'timeline-canvas'

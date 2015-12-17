@@ -45,8 +45,8 @@ $ ->
         @configs.binSize ?= @defaultBinSize()
         super()
 
-      buildOptions: ->
-        super()
+      buildOptions: (animate = true) ->
+        super(animate)
 
         self = this
 
@@ -93,12 +93,14 @@ $ ->
         min = Number.MAX_VALUE
         max = Number.MIN_VALUE
 
+        dp = globals.getData(true, globals.configs.activeFilters)
+
         for groupIndex in data.groupSelection
-          localMin = data.getMin(@configs.displayField, groupIndex)
+          localMin = data.getMin(@configs.displayField, groupIndex, dp)
           if localMin?
             min = Math.min(min, localMin)
 
-          localMax = data.getMax(@configs.displayField, groupIndex)
+          localMax = data.getMax(@configs.displayField, groupIndex, dp)
           if localMax?
             max = Math.max(max, localMax)
 
@@ -150,16 +152,18 @@ $ ->
         @globalmin = Number.MAX_VALUE
         @globalmax = Number.MIN_VALUE
 
+        dp = globals.getData(true, globals.configs.activeFilters)
+
         for groupIndex in data.groupSelection
-          min = data.getMin @configs.displayField, groupIndex
+          min = data.getMin(@configs.displayField, groupIndex, dp)
           min = Math.round(min / @configs.binSize) * @configs.binSize
           @globalmin = Math.min(@globalmin, min)
 
-          max = data.getMax @configs.displayField, groupIndex
+          max = data.getMax(@configs.displayField, groupIndex, dp)
           max = Math.round(max / @configs.binSize) * @configs.binSize
           @globalmax = Math.max(@globalmax, max)
 
-        # Make 'fake' data to ensure proper bar spacing ###
+        # Make 'fake' data to ensure proper bar spacing
         fakeDat = for i in [@globalmin...@globalmax] by @configs.binSize
           [i, 0]
 
@@ -172,8 +176,9 @@ $ ->
         # Generate all bin data
         binObjs = {}
         binMesh = {}
+        dp = globals.getData(true, globals.configs.activeFilters)
         for groupIndex in data.groupSelection
-          selectedData = data.selector @configs.displayField, groupIndex
+          selectedData = data.selector(@configs.displayField, groupIndex, dp)
 
           binArr = for i in selectedData
             x = Math.round(i / @configs.binSize) * @configs.binSize
@@ -278,6 +283,16 @@ $ ->
         tools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append(tools)
 
+        # Adds material design
+        $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
+        $('#vis-ctrls').find(".mdl-radio").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
+        $('#vis-ctrls').find(".mdl-slider").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
         # Initialize and track the status of this control panel
         globals.configs.toolsOpen ?= false
         initCtrlPanel('tools-ctrls', 'toolsOpen')
@@ -299,22 +314,20 @@ $ ->
 
         # Bin Size Box
         badNumberPopoverTimer = null
-        $('#bin-size').change (e) =>
-          newBinSize = Number(e.target.value)
+        $('#set-bin-size-btn').click =>
+          $('#bin-size').popover('destroy')
+          newBinSize = Number($('#bin-size').val())
           if isNaN(newBinSize) or newBinSize <= 0
-            $(e.target).popover
-              content: "Please enter a valid number"
-              placement: "bottom"
-              trigger: "manual"
-            $(e.target).popover 'show'
-            if badNumberPopoverTimer?
-              clearTimeout badNumberPopoverTimer
+            $('#bin-size').popover
+              content: 'Please enter a valid number'
+              placement: 'bottom'
+              trigger: 'manual'
+            $('#bin-size').popover('show')
+            if badNumberPopoverTimer? then clearTimeout(badNumberPopoverTimer)
             badNumberPopoverTimer = setTimeout ->
-              $(e.target).popover 'destroy'
+              $('#bin-size').popover('destroy')
             , 3000
             return
-          else
-            $(e.target).popover 'destroy'
 
           if ((@globalmax - @globalmin) / newBinSize) < @MAX_NUM_BINS
             @configs.binSize = newBinSize
@@ -335,6 +348,7 @@ $ ->
           data.normalFields.slice(1), true, 'Fields',
           @configs.displayField, handler)
         @drawToolControls()
+        @drawClippingControls()
         @drawSaveControls()
 
     if "Histogram" in data.relVis

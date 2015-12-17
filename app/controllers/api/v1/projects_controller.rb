@@ -4,7 +4,6 @@ module Api
       skip_before_filter :authorize
       skip_before_filter :verify_authenticity_token
       before_filter :set_user, only: [:create, :add_key]
-      before_filter :allow_cross_site_requests
 
       def index
         super
@@ -73,13 +72,6 @@ module Api
         if params[:contrib_key][:name].nil?
           respond_to do |format|
             format.json { render json: { msg: 'name is nil' }, status: :unprocessable_entity }
-          end
-          return
-        end
-
-        if params[:id].nil?
-          respond_to do |format|
-            format.json { render json: { msg: 'project id is nil' }, status: :unprocessable_entity }
           end
           return
         end

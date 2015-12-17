@@ -1,24 +1,26 @@
 require 'test_helper'
+require_relative 'base_integration_test'
 
-class SlickgridTest < ActionDispatch::IntegrationTest
-  include CapyHelper
-
+class SlickgridTest < IntegrationTest
   self.use_transactional_fixtures = false
 
-  current_month = Date.today.month.to_s.rjust(2, '0')
   compare_data = [
-    { '100' => 'D', '101' => 'A', '102' => '4', '103' => "1991/#{current_month}/01 01:01:01", '104' => '3', '105' => '3' },
-    { '100' => 'E', '101' => 'B', '102' => '5', '103' => "1992/#{current_month}/02 02:02:02", '104' => '4', '105' => '4' },
-    { '100' => 'F', '101' => 'C', '102' => '6', '103' => "1993/#{current_month}/03 03:03:03", '104' => '5', '105' => '5' },
-    { '100' => 'G', '101' => 'A', '102' => '7', '103' => "1994/#{current_month}/04 04:04:04", '104' => '6', '105' => '6' }
+    { '100' => 'D', '101' => 'A', '102' => '4', '103' => '', '104' => '3', '105' => '3' },
+    { '100' => 'E', '101' => 'B', '102' => '5', '103' => '', '104' => '4', '105' => '4' },
+    { '100' => 'F', '101' => 'C', '102' => '6', '103' => '', '104' => '5', '105' => '5' },
+    { '100' => 'G', '101' => 'A', '102' => '7', '103' => '', '104' => '6', '105' => '6' }
   ]
 
-  setup do
-    Capybara.current_driver = :webkit
-  end
+  times = [
+    [1991, 12, 1, 1, 1, 1],
+    [1992, 12, 2, 2, 2, 2],
+    [1993, 12, 3, 3, 3, 3],
+    [1994, 12, 4, 4, 4, 4]
+  ]
 
-  teardown do
-    finish
+  times.each_with_index do |time, i|
+    new_time = Time.local(*time).getutc
+    compare_data[i]['103'] = new_time.strftime '%Y/%m/%d %H:%M:%S'
   end
 
   def slickgrid_enter_value(row, col, value)
@@ -33,6 +35,7 @@ class SlickgridTest < ActionDispatch::IntegrationTest
 
   def slickgrid_set_date(row, col, options)
     yr = options[:year]
+    mn = options[:month]
     dy = options[:day]
     time = options[:time]
 
@@ -40,10 +43,12 @@ class SlickgridTest < ActionDispatch::IntegrationTest
     find(:css, '.editor-button').click
     find(:css, '#dt-year-textbox').set "#{yr}\n"
     td = all(:css, '#dt-date-group td')
-    date_cell = td.select { |x| x['data-date'.to_sym] == "#{dy}" and x['data-month'.to_sym] == '0' }.first
+    date_cell = td.find { |x| x['data-date'.to_sym] == "#{dy}" and x['data-month'.to_sym] == '0' }
     date_cell.click
     date_cell.click
     find(:css, '#dt-time-textbox').set "#{time}\n"
+    find(:css, '#dt-month-textbox').click
+    select(mn, from: 'dt-month-select')
   end
 
   def slickgrid_add_data(start, field_map)
@@ -66,21 +71,25 @@ class SlickgridTest < ActionDispatch::IntegrationTest
 
     slickgrid_set_date start + 3, field_map['103'],
       year: 1994,
+      month: 'December',
       day: 4,
       time: '04:04:04'
 
     slickgrid_set_date start + 2, field_map['103'],
       year: 1993,
+      month: 'December',
       day: 3,
       time: '03:03:03'
 
     slickgrid_set_date start + 1, field_map['103'],
       year: 1992,
+      month: 'December',
       day: 2,
       time: '02:02:02'
 
     slickgrid_set_date start, field_map['103'],
       year: 1991,
+      month: 'December',
       day: 1,
       time: '01:01:01'
 
@@ -118,6 +127,9 @@ class SlickgridTest < ActionDispatch::IntegrationTest
     # add data to the rows
     slickgrid_add_data 0, field_map
 
+    # click restrictions but don't select one to see if it breaks things (bug #2298)
+    2.times { all('.slick-cell.l3.r3').last.click }
+
     # save the dataset
     find(:css, '#edit_table_save_1').click
 
@@ -128,6 +140,17 @@ class SlickgridTest < ActionDispatch::IntegrationTest
 
     # assert that the data that we saved is there
     assert_similar_arrays compare_data, dataset.data
+  end
+
+  test 'slickgrid enter number with spaces' do
+    login 'nixon@whitehouse.gov', '12345'
+
+    dataset = DataSet.find_by_name 'Slickgrid Data set 1'
+    visit "/data_sets/#{dataset.id}/edit"
+    find(:css, '.slick-row:nth-child(5)>.slick-cell.l1').click
+    find(:css, '.slick-row:nth-child(5)>.slick-cell.l1>input').set ' 117 '
+    find(:css, '#edit_table_add_1').click
+    assert page.has_no_content?('Please enter a valid number.'), 'Number with spaces failed.'
   end
 
   test 'slickgrid edit data set' do
@@ -164,15 +187,16 @@ class SlickgridTest < ActionDispatch::IntegrationTest
     page.assert_selector '.slick-row', count: 14
 
     # add data to those rows
-    slickgrid_add_data 3, field_map
+    slickgrid_add_data 4, field_map
 
     # delete some rows
+    find(:css, '.slick-row:nth-child(4) .slick-delete').click
     find(:css, '.slick-row:nth-child(3) .slick-delete').click
     find(:css, '.slick-row:nth-child(2) .slick-delete').click
     find(:css, '.slick-row:nth-child(1) .slick-delete').click
 
     # assert correct rows were deleted
-    page.assert_selector '.slick-row', count: 11
+    page.assert_selector '.slick-row', count: 10
 
     # save the dataset
     find(:css, '#edit_table_save_1').click

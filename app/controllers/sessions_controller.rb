@@ -5,6 +5,10 @@ class SessionsController < ApplicationController
 
   # GET /sessions/new
   def new
+    session[:key] = nil
+    session[:contributor_name] = nil
+    session[:contrib_access] = nil
+
     if request.referrer && !(URI(request.referrer).path == login_path)
       if request.referrer.include? '/users'
         session[:redirect_to] = '/home/index'
@@ -18,7 +22,9 @@ class SessionsController < ApplicationController
 
   def create
     session[:key] = nil
+    session[:contributor_name] = nil
     session[:contrib_access] = nil
+
     login_email = params[:email].downcase
 
     @user = User.where('lower(email) = ?', login_email).first
@@ -87,7 +93,7 @@ class SessionsController < ApplicationController
     # Not admin, and you don't own or didn't specify a project
     unless is_admin
       if params[:project_id].nil? or
-          Project.find(params[:project_id]).user_id != session[:user_id]
+         Project.find(params[:project_id]).user_id != session[:user_id]
         respond_to do |format|
           format.json { render json: { permissions: @permiss }, status: :ok }
           format.js {}

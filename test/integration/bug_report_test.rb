@@ -1,17 +1,8 @@
 require 'test_helper'
-class BugReportTest < ActionDispatch::IntegrationTest
-  include CapyHelper
+require_relative 'base_integration_test'
 
+class BugReportTest < IntegrationTest
   self.use_transactional_fixtures = false
-
-  setup do
-    Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 15
-  end
-
-  teardown do
-    finish
-  end
 
   test 'get bug report page' do
     visit '/'
@@ -22,14 +13,14 @@ class BugReportTest < ActionDispatch::IntegrationTest
 
   test 'get bug report page without account' do
     visit '/report_bug'
-    find('#no_github_account').click
+    find(:css, '#no_github_account').click
 
     assert page.has_content?('Report a Bug'), 'Should have redirected to github for authorization'
   end
 
   test 'get bug report page with github account not logged in' do
     visit '/report_bug'
-    find('#github_account').click
+    find(:css, '#github_account').click
 
     assert page.has_content?('Log in to iSENSE'), 'Should have redirected to github for authorization'
   end

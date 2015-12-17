@@ -55,12 +55,15 @@ $ ->
             val: val                                 # for display
             name: data.groups[gid] or data.noField()
 
+        # Sort array in ascending order so that the colors on the Pie Chart show up in the correct order.
+        data.groupSelection = data.groupSelection.sort (a, b) ->
+          return a - b;
+
         displayColors = []
         for number in data.groupSelection
           displayColors.push(globals.getColor(number))
 
         options =
-          showInLegend: false
           data: displayData
           colors: displayColors
         @chart.setTitle { text: "#{data.fields[@configs.displayField].fieldName} grouped by #{@configs.selectName}" }
@@ -71,8 +74,8 @@ $ ->
       buildLegendSeries: ->
         []
 
-      buildOptions: ->
-        super()
+      buildOptions: (animate = true) ->
+        super(animate)
 
         self = this
         @chartOptions
@@ -93,10 +96,12 @@ $ ->
             useHTML: true
           plotOptions:
             pie:
+              showInLegend: ($(window).width() < 1000 && data.groups.length < 30) && !($(window).width() < 400)
               allowPointSelect: true
               cursor: 'pointer'
               dataLabels:
-                enabled: true
+                floating: false
+                enabled: ($(window).width() >= 1000)
                 format: '<b>{point.name}</b>: {point.percentage:.1f} %'
 
       drawControls: ->
@@ -106,6 +111,7 @@ $ ->
           data.normalFields.slice(1), true, 'Fields', @configs.displayField,
           @yAxisRadioHandler)
         @drawToolControls(false, false, [@ANALYSISTYPE_MEAN_ERROR])
+        @drawClippingControls()
         @drawSaveControls()
 
     if "Pie" in data.relVis

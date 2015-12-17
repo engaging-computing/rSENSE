@@ -55,7 +55,7 @@ wrapOver = (args) ->
   grid.gotoCell args.row, args.cell, true
 
   editor = grid.getCellEditor()
-  if dir > 0 and editor? and editor.getInput?
+  if dir > 0 and editor? and editor.getInput? and editor.getInput().prop('tagName').toLowerCase() == 'input'
     editor.getInput().caret 0
 
 wrapThru = (args) ->
@@ -64,11 +64,14 @@ wrapThru = (args) ->
 
   if editor? and editor.getInput?
     form = editor.getInput()
-    dir = args.cell - oldPos.cell
-    if dir < 0 and form.caret() != 0
-      form.caret form.caret() - 1
-    else if dir > 0 and form.caret() != form.val().length
-      form.caret form.caret() + 1
+    if form.prop('tagName').toLowerCase() == 'input'
+      dir = args.cell - oldPos.cell
+      if dir < 0 and form.caret() != 0
+        form.caret form.caret() - 1
+      else if dir > 0 and form.caret() != form.val().length
+        form.caret form.caret() + 1
+      else
+        wrapOver args
     else
       wrapOver args
   else
@@ -78,6 +81,7 @@ class Grid
   cols: null
   data: null
   submit: {}
+  timezone: null
 
   # slickgrid objects
   view: null
@@ -105,10 +109,23 @@ class Grid
     @cols.push
       id: 'del'
       field: 'del'
+      field_type: -1
       name: ''
       width: 0
       formatter: (row, cell, value, columnDef, dataContext) ->
         '<i class="fa fa-close slick-delete"></i>'
+
+    @timezone = jstz.determine().name()
+    timezoneFields = @cols.filter (x) -> x.field_type == 1
+    timezoneFields = timezoneFields.map (x) -> x.field
+    for x in timezoneFields
+      for y in @data
+        unless x of y
+          continue
+        mtime = moment.tz("#{y[x]}+00:00", @timezone)
+        unless mtime.isValid()
+          continue
+        y[x] = mtime.format('YYYY/MM/DD HH:mm:ss' )
 
     # slickgrid's grid options
     options =
@@ -226,6 +243,7 @@ class Grid
         curr
       , []
       row.forEach (pair) ->
+        if pair[1] == null then pair[1] = ""
         unless buckets[pair[0]]? then buckets[pair[0]] = []
         buckets[pair[0]].push pair[1]
 
@@ -286,6 +304,15 @@ class Grid
       @submit['data'] =
         data: @getJSON()
         title: if uploadSettings.pageName == 'entry' then $('#data_set_name').val()
+
+      # convert timestamps back to GMT
+      timezoneFields = @cols.filter (x) -> x.field_type == 1
+      for x in timezoneFields
+        for y, i in @submit.data.data[x.field]
+          gtime = moment.tz(y, @timezone).tz('GMT')
+          unless gtime.isValid()
+            continue
+          @submit.data.data[x.field][i] = gtime.format('YYYY/MM/DD HH:mm:ss')
 
       hasData = Object.keys(@submit['data']['data']).reduce (l, r) =>
         nonEmpty = @submit['data']['data'][r].filter (i) -> i != ''

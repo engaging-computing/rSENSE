@@ -36,8 +36,13 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     user-select: none;
   }
 
+  .bold {
+    font-weight: bold;
+  }
+
   .color-picker {
     vertical-align: top;
+    float: right;
   }
 
   div.regr-tooltip {
@@ -53,6 +58,13 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   // button that enables fullscreen vis, not the fullscreen viz itself
   #fullscreen-vis {
     margin: 1px;
+  }
+
+  .group-header {
+    border-bottom: thin solid #777;
+    color: #222;
+    margin: 5px;
+    padding: 5px;
   }
 
   .hamburger-menu {
@@ -101,16 +113,6 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     margin-top: 10px;
     font-size: 90%;
     color: $hint;
-  }
-
-  .inline-left {
-    display: inline-block;
-    float: left;
-  }
-
-  .inline-right {
-    display: inline-block;
-    float: right;
   }
 
   .mainContent {
@@ -234,15 +236,9 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
       background-image: url(/assets/vis/ui-icons_222222_256x240.png);
     }
 
-    // Flips the bottom sort icon down and moves it down a bit
+    // Moves the bottom sort icon down a bit
     .ui-icon-triangle-1-s {
       margin-top: 5px;
-      -moz-transform: scaleY(-1);
-      -o-transform: scaleY(-1);
-      -webkit-transform: scaleY(-1);
-      transform: scaleY(-1);
-      filter: FlipV;
-      -ms-filter: "FlipV";
     }
 
     // the entire header box
@@ -280,7 +276,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   }
 
   .subtitle {
-    font-size: 18px;
+    font-size: 14px;
   }
 
   .tab-content {
@@ -324,28 +320,32 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
         overflow: hidden;
       }
 
-      // the bar at the top of the vis window
-      #vis-tab-list {
-        padding: 0; // removes padding that shouldn't be there to begin with
-        margin: 0;
+      #vis-header {
         background-color: $vis-bkg-light;
       }
 
+      #vis-tab-list {
+        padding: 0; // removes padding that shouldn't be there to begin with
+        margin: 0;
+      }
+
       #vis-title-bar {
-        position: relative;
         width: 100%;
-        height: 50px;
-        background-color: $vis-bkg-light;
-        font-size: 24px;
+        font-size: 1.5em;
         padding: 10px;
         white-space: nowrap;
 
-        .edit_visualization, .edit_data_set {
-          display: none;
+        #vis-title {
+          margin-left: 10px;
+          vertical-align: middle;
         }
 
-        .inline-left {
-          max-width: 100%;
+        #vis-title-edit-btn {
+          float: right;
+        }
+
+        .edit_visualization, .edit_data_set {
+          display: none;
         }
 
         #title-and-menu {
@@ -355,10 +355,28 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
             vertical-align: middle;
           }
         }
+      }
 
-        #vis-proj-right {
-          position: absolute;
-          right: 10px;
+      #vis-filters {
+        margin: 3px;
+        overflow-y: auto;
+
+        .vis-filter {
+          background-color: white;
+          border: thin solid $vis-bkg-mid;
+          border-radius: 5px;
+          display: inline-block;
+          margin: 3px;
+          padding: 2px 5px;
+          whitespace: nowrap;
+        }
+
+        .vis-filter:hover {
+          background-color: $vis-bkg-dark;
+        }
+
+        .remove {
+          cursor: pointer;
         }
       }
     }
@@ -367,6 +385,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
       position: relative;
       display: inline-block;
       float: left;
+      z-index: 1;
       background-color: $vis-bkg-dark;
       width: 320px;
       height: 100%;
@@ -392,7 +411,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
         .save-btn {
           display: inline-block;
           width: 80%;
-          margin: 10px auto;
+          margin: 5px auto;
         }
 
         // any input button inside this class isn't lined up with the
@@ -407,10 +426,14 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
           .centered {
             text-align: center;
           }
-
+          .cbx {
+            display: inline;
+          }
           .checkbox, .radio {
             text-align: left;
             margin: 1px 0;
+            width: 85%;
+            display: inline-block;
 
             input {
               margin-top: 2px;
@@ -418,8 +441,13 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
             }
           }
 
-          .name {
-            width: 90%;
+          .mdl-radio, .mdl-checkbox{
+            position: relative;
+            float: left;
+          }
+
+          .mdl-checkbox__label, .mdl-radiobox__label {
+            display: block;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -506,6 +534,10 @@ body[data-page-name='visualizations/show'] .visualizations-controller {
 .embedded {
   .ui-accordion-header {
     padding-top: 10px;
+  }
+
+  .bootstrap-switch {
+    height: 36px;
   }
 }
 

@@ -8,13 +8,6 @@ class ApplicationController < ActionController::Base
   skip_before_filter :find_user, only: [:options_req]
   skip_before_filter :authorize, only: [:options_req]
 
-  def allow_cross_site_requests
-    headers['Access-Control-Allow-Origin'] = '*'
-    headers['Access-Control-Allow-Methods'] = 'POST, PUT, DELETE, GET, OPTIONS'
-    headers['Access-Control-Request-Method'] = '*'
-    headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-  end
-
   def authorize
     unless User.find_by_id(session[:user_id])
       redirect_to '/login'
@@ -69,7 +62,6 @@ class ApplicationController < ActionController::Base
   end
 
   def options_req
-    allow_cross_site_requests
     head(:ok)
   end
 
@@ -99,7 +91,7 @@ class ApplicationController < ActionController::Base
       end
 
     elsif (params.key? :contribution_key) && (['jsonDataUpload', 'saveMedia'].include? params[:action]) &&
-        (params[:type] == 'data_set')
+          (params[:type] == 'data_set')
       data_set = DataSet.find(params[:id])
       project = Project.find_by_id(data_set.project_id)
       key = project.contrib_keys.find_by_key(params[:contribution_key])
@@ -135,12 +127,13 @@ class ApplicationController < ActionController::Base
 
     # The API call came with a contribution key and they are trying to access a dataset
     elsif (params.key? :contribution_key) &&
-        (['append', 'edit'].include? params[:action]) &&
-        params[:controller].include?('data_sets')
+          (['append', 'edit'].include? params[:action]) &&
+          params[:controller].include?('data_sets')
       data_set = DataSet.find_by_id(params[:id])
       if data_set &&
-          data_set.key == params[:contribution_key].downcase &&
-          !data_set.project.contrib_keys.find_by_key(params[:contribution_key].downcase).nil?
+        !data_set.project.contrib_keys.find_by_key(params[:contribution_key].downcase).nil? &&
+        data_set.key == data_set.project.contrib_keys.where(key: params[:contribution_key].downcase)[0].name
+
         @cur_user = User.find_by_id(data_set.owner.id)
       else
         respond_to do |format|

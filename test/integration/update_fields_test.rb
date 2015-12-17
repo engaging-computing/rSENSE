@@ -1,17 +1,7 @@
 require 'test_helper'
+require_relative 'base_integration_test'
 
-class UpdateFieldsTest < ActionDispatch::IntegrationTest
-  include CapyHelper
-
-  setup do
-    Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 15
-  end
-
-  teardown do
-    finish
-  end
-
+class UpdateFieldsTest < IntegrationTest
   test 'edit fields' do
     login('kcarcia@cs.uml.edu', '12345')
     click_on 'Projects'
@@ -45,7 +35,46 @@ class UpdateFieldsTest < ActionDispatch::IntegrationTest
     find('#fields_form_submit').click
 
     assert page.has_content?('Fields were successfully updated.')
+  end
 
+  test 'edit fields named correctly' do
+    login('kcarcia@cs.uml.edu', '12345')
+    click_on 'Projects'
+    find('#project_title').set('Field Naming Test')
+    click_on 'Create Project'
+
+    assert page.has_content?('Fields'), "Project page should have 'Fields'"
+
+    find('#manual_fields').click
+
+    # Add Fields
+    click_on 'Add Number'
+    click_on 'Add Text'
+    click_on 'Add Timestamp'
+    click_on 'Add Location'
+
+    # Verify that they were added
+    assert page.has_content?('Number'), 'Number field is there'
+    assert page.has_content?('Text'), 'Text field is there'
+    assert page.has_content?('Timestamp'), 'Timestamp is there'
+    assert page.has_content?('Latitude'), 'Latitude is there'
+    assert page.has_content?('Longitude'), 'Longitude is there'
+
+    # Rename Fields
+    fill_in 'number_1', with: 'apple'
+    fill_in 'text_1', with: 'banana'
+    fill_in 'timestamp', with: 'robot'
+    fill_in 'latitude', with: 'fan'
+    fill_in 'longitude', with: 'watermelon'
+
+    find('#fields_form_submit').click
+
+    # Verify they were named correctly
+    assert page.has_content?('apple')
+    assert page.has_content?('banana')
+    assert page.has_content?('robot')
+    assert page.has_content?('fan')
+    assert page.has_content?('watermelon')
   end
 
   test 'template fields with data set' do
@@ -59,9 +88,7 @@ class UpdateFieldsTest < ActionDispatch::IntegrationTest
     # find('#template_file_upload').click
 
     csv_path = Rails.root.join('test', 'CSVs', 'dessert.csv')
-    page.execute_script "$('#template_file_form').parent().show()"
     find('#template_file_form').attach_file('file', csv_path)
-    page.execute_script "$('#template_file_form').submit()"
 
     assert page.has_content?('Please select types for each field below.')
 
@@ -81,9 +108,7 @@ class UpdateFieldsTest < ActionDispatch::IntegrationTest
     # find('#template_file_upload').click
 
     csv_path = Rails.root.join('test', 'CSVs', 'dessert.csv')
-    page.execute_script "$('#template_file_form').parent().show()"
     find('#template_file_form').attach_file('file', csv_path)
-    page.execute_script "$('#template_file_form').submit()"
 
     assert page.has_content?('Please select types for each field below.')
     find('#create_dataset').click

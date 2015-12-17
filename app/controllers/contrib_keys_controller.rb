@@ -42,18 +42,18 @@ class ContribKeysController < ApplicationController
   def enter
     @project = Project.find(params[:project_id])
     keys = @project.contrib_keys.where(key: params[:key].downcase)
-    contributor_name = params[:contributor_name]
+    contributor_name = params[:contributor_name].to_s.strip
 
-    if keys.count > 0 && !(contributor_name.nil?)
+    if keys.count > 0 && contributor_name.length > 0
       session[:key] = keys.first.name
       session[:contrib_access] = @project.id
       session[:contributor_name] = params[:contributor_name]
       flash[:notice] = 'You have entered a valid contributor key.'
-    elsif !(keys.count > 0) && contributor_name.nil?
+    elsif !(keys.count > 0) && contributor_name.length == 0
       flash[:error] = 'Invalid contributor key.', 'Enter a contributor Name.'
     elsif !(keys.count > 0)
       flash[:error] = 'Invalid contributor key.'
-    elsif contributor_name.nil?
+    elsif contributor_name.length == 0
       flash[:error] = 'Enter a contributor Name.'
     end
 

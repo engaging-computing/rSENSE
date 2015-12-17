@@ -75,8 +75,8 @@ $ ->
 
         @configs.fullDetail ?= 0
 
-      start: ->
-        super()
+      start: (animate = true) ->
+        super(animate)
 
       storeXBounds: (bounds) ->
         @configs.xBounds = bounds
@@ -88,8 +88,8 @@ $ ->
       Build up the chart options specific to scatter chart
       The only complex thing here is the html-formatted tooltip.
       ###
-      buildOptions: ->
-        super()
+      buildOptions: (animate = true) ->
+        super(animate)
 
         self = this
 
@@ -219,6 +219,7 @@ $ ->
         @drawYAxisControls(globals.configs.fieldSelection,
           data.normalFields.slice(1), false)
         @drawToolControls()
+        @drawClippingControls()
         @drawRegressionControls()
         @drawSaveControls()
 
@@ -232,6 +233,8 @@ $ ->
           text: fieldTitle data.fields[@configs.xAxis]
         @chart.xAxis[0].setTitle title, false
 
+        dp = globals.getData(true, globals.configs.activeFilters)
+
         # Compute max bounds if there is no user zoom
         if not @isZoomLocked()
           @configs.yBounds.min = @configs.xBounds.min =  Number.MAX_VALUE
@@ -240,13 +243,13 @@ $ ->
           for fi in data.normalFields when fi in globals.configs.fieldSelection
             for g, gi in data.groups when gi in data.groupSelection
               @configs.yBounds.min = Math.min(@configs.yBounds.min,
-                data.getMin(fi, gi))
+                data.getMin(fi, gi, dp))
               @configs.yBounds.max = Math.max(@configs.yBounds.max,
-                data.getMax(fi, gi))
+                data.getMax(fi, gi, dp))
               @configs.xBounds.min = Math.min(@configs.xBounds.min,
-                data.getMin(@configs.xAxis, gi))
+                data.getMin(@configs.xAxis, gi, dp))
               @configs.xBounds.max = Math.max(@configs.xBounds.max,
-                data.getMax(@configs.xAxis, gi))
+                data.getMax(@configs.xAxis, gi, dp))
 
               if (@timeMode isnt undefined) and (@timeMode is @GEO_TIME_MODE)
                 @configs.xBounds.min =
@@ -271,11 +274,11 @@ $ ->
           for g, gi in data.groups when gi in data.groupSelection
             dat =
               if not @configs.fullDetail
-                sel = data.xySelector(@configs.xAxis, fi, gi)
+                sel = data.xySelector(@configs.xAxis, fi, gi, dp)
                 globals.dataReduce(sel, @configs.xBounds, @configs.yBounds,
                   @xGridSize, @yGridSize, @MAX_SERIES_SIZE)
               else
-                data.xySelector(@configs.xAxis, fi, gi)
+                data.xySelector(@configs.xAxis, fi, gi, dp)
 
             mode = @configs.mode
             if dat.length < 2 and @configs.mode is @LINES_MODE
@@ -322,10 +325,12 @@ $ ->
         # Disable/enable all of the saved regressions as necessary
         fs = globals.configs.fieldSelection
         for regr in @configs.savedRegressions
+          unless regr.groups? then continue
           groupsIntersect =
             (g in data.groupSelection for g in regr.groups).reduce(
               ((p, c) -> p and c), true)
 
+          unless regr.xAxis? and regr.yAxis? then continue
           if regr.xAxis is @configs.xAxis and groupsIntersect and
           fs.indexOf(regr.yAxis) isnt -1
             # Create the hypothesis function
@@ -379,12 +384,18 @@ $ ->
         tools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append tools
 
+        # Add material design
+        $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
+        $('#vis-ctrls').find(".mdl-radio").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
         # Check off the right boxes
-        if @configs.advancedTooltips
-          $('#ckbx-tooltips').prop('checked', true)
-        if @configs.fullDetail then $('#ckbx-fulldetail').prop('checked', true)
-        if globals.configs.logY then $('#ckbx-log-y-axis').prop('checked', true)
-        $("input[name='mode'][value='#{@configs.mode}']").prop('checked', true)
+        if @configs.advancedTooltips then $('#ckbx-lbl-tooltips')[0].MaterialCheckbox.check()
+        if @configs.fullDetail then $('#ckbx-lbl-fulldetail')[0].MaterialCheckbox.check()
+        if globals.configs.logY then $('#ckbx-lbl-log-y-axis')[0].MaterialCheckbox.check()
+        $("label[name='mode'][value='#{@configs.mode}']")[0].MaterialRadio.check()
 
         # Set initial state of zoom reset
         if not @isZoomLocked() then $('#zoom-reset-btn').addClass("disabled")
@@ -421,6 +432,13 @@ $ ->
         globals.configs.toolsOpen ?= false
         initCtrlPanel('tools-ctrls', 'toolsOpen')
 
+        # Add material design
+        $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
+        $('#vis-ctrls').find(".mdl-radio").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
       ###
       A wrapper for making x-axis controls
       ###
@@ -429,6 +447,7 @@ $ ->
         handler = (selection, selFields) =>
           @configs.xAxis = selection
           @resetExtremes()
+          @update()
 
         @drawAxisControls('x-axis', 'X Axis', null, allFields, true,
           iniRadio, handler)
@@ -482,6 +501,12 @@ $ ->
         @setExtremes()
 
       ###
+      Saves the current zoom level
+      ###
+      end: ->
+        super()
+
+      ###
       Saves the zoom level before cleanup
       ###
       serializationCleanup: ->
@@ -530,6 +555,13 @@ $ ->
         tools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append tools
 
+        # Adds material design
+        $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
+        $('#vis-ctrls').find(".mdl-radio").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
         # Initialize and track the status of this control panel
         globals.configs.regressionOpen ?= false
         initCtrlPanel('regression-ctrls', 'regressionOpen')
@@ -537,35 +569,37 @@ $ ->
         # Restore saved regressions if they exist
         fs = globals.configs.fieldSelection
         for regr in @configs.savedRegressions
-          groupsIntersect =
-            (g in data.groupSelection for g in regr.groups).reduce(
-              ((p, c) -> p and c), true)
+          # this if statement is a fix that prevents certain projects from halting during rendering.
+          if typeof regr.groups != 'undefined'
+            groupsIntersect =
+              (g in data.groupSelection for g in regr.groups).reduce(
+                ((p, c) -> p and c), true)
 
-          enabled = regr.xAxis is @configs.xAxis and groupsIntersect and
-            fs.indexOf(regr.yAxis) isnt -1
+            enabled = regr.xAxis is @configs.xAxis and groupsIntersect and
+              fs.indexOf(regr.yAxis) isnt -1
 
-          # Calculate the hypothesis function
-          func =
-            if regr.type is globals.REGRESSION.SYMBOLIC
-              new Function("x", regr.func)
-            else
-              new Function("x, P", regr.func)
+            # Calculate the hypothesis function
+            func =
+              if regr.type is globals.REGRESSION.SYMBOLIC
+                new Function("x", regr.func)
+              else
+                new Function("x, P", regr.func)
 
-          # Calculate the series
-          params = regr.parameters
-          unless regr.type is globals.REGRESSION.SYMBOLIC
-            # Convert parameters from strings to numbers
-            params = for i in [0...regr.parameters.length]
-              parseFloat(regr.parameters[i])
+            # Calculate the series
+            params = regr.parameters
+            unless regr.type is globals.REGRESSION.SYMBOLIC
+              # Convert parameters from strings to numbers
+              params = for i in [0...regr.parameters.length]
+                parseFloat(regr.parameters[i])
 
-          series =
-            globals.getRegressionSeries(func, params, Number(regr.r2),
-              regr.type, [@configs.xBounds.min, @configs.xBounds.max],
-              regr.name, regr.dashStyle, regr.id, regr.tooltip, false)[3]
+            series =
+              globals.getRegressionSeries(func, params, Number(regr.r2),
+                regr.type, [@configs.xBounds.min, @configs.xBounds.max],
+                regr.name, regr.dashStyle, regr.id, regr.tooltip, false)[3]
 
-          # Add the regression to the chart
-          if enabled then @chart.addSeries(series)
-          @addRegressionToTable(regr, enabled)
+            # Add the regression to the chart
+            if enabled then @chart.addSeries(series)
+            @addRegressionToTable(regr, enabled)
 
         # Create a new regression
         $('#draw-regr-btn').click =>
@@ -584,8 +618,9 @@ $ ->
           name += desc + "function of <strong>#{xAxisName}</strong>"
 
           # List of (x,y) points to be used in calculating regression
+          dp = globals.getData(true, globals.configs.activeFilters)
           xyData = data.multiGroupXYSelector(@configs.xAxis, yAxisIndex,
-            data.groupSelection)
+            data.groupSelection, dp)
           xMax = window.globals.curVis.configs.xBounds.max
           xMin = window.globals.curVis.configs.xBounds.min
           points = ({x: point.x, y: point.y} for point in xyData)
@@ -738,33 +773,46 @@ $ ->
               @chart.tooltip.hide()
               break
 
-      ###
-      Clips an array of data to include only bounded points
-      ###
-      clip: (arr) ->
-        # Checks if a point is visible on screen
-        clipped = (point, xBounds, yBounds) =>
-          # Check x axis
-          if point[@configs.xAxis] is null    or
-          isNaN(point[@configs.xAxis])        or
-          point[@configs.xAxis] < xBounds.min or
-          point[@configs.xAxis] > xBounds.max
-            return false
+      saveFilters: (vis = 'scatter') ->
+        super(vis)
 
-          # Check all y axes
-          for yAxis in globals.configs.fieldSelection
-            if (point[yAxis] is null   or isNaN(point[yAxis]) or
-            point[yAxis] < yBounds.min or point[yAxis] > yBounds.max)
-              return false
+        # Verify parameters
+        unless @configs.xBounds.min? and @configs.xBounds.max? and
+        @configs.yBounds.min? and @configs.yBounds.max?
+          return
 
-          return true
+        # Start with x boundaries
+        filters = [
+          vis: vis
+          op:  'gt'
+          field: @configs.xAxis
+          value: @configs.xBounds.min
+        ,
+          vis: vis
+          op:  'lt'
+          field: @configs.xAxis
+          value: @configs.xBounds.max
+        ]
 
-        # Do the actual clipping
-        if @configs.xBounds.min? and @configs.xBounds.max? and
-        @configs.yBounds.min?    and @configs.yBounds.max?
-          p for p in arr when clipped(p, @configs.xBounds, @configs.yBounds)
-        else
-          arr
+        # Check all y axes
+        for yAxis in globals.configs.fieldSelection
+          if yAxis is @configs.xAxis
+            filters[0].value = Math.max(filters[0].value, @configs.yBounds.min)
+            filters[1].value = Math.min(filters[1].value, @configs.yBounds.max)
+          else
+            filters.push
+              vis: vis
+              op:  'gt'
+              field: yAxis
+              value: @configs.yBounds.min
+            ,
+              vis: vis
+              op:  'lt'
+              field: yAxis
+              value: @configs.yBounds.max
+
+        for filter in filters
+          globals.configs.activeFilters.push(filter)
 
     if "Scatter" in data.relVis
       globals.scatter = new Scatter "scatter-canvas"

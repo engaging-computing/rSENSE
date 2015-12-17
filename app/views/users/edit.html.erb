@@ -36,9 +36,7 @@
           </div>  
         </div>
         <div class="panel-footer">
-          <p>
-          <%= submit_tag "Change Password", class: "btn btn-primary" %>
-          </p>
+          <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" type='submit'>Change Password</button>
         </div>  
       <% end %>
     </div>
@@ -81,7 +79,7 @@
           </div>  
           <div class="panel-footer">    
             <p>
-              <%= submit_tag "Change Email", class: "btn btn-primary" %>
+              <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" type='submit'>Change Email</button>
             </p>
           </div>
         <% end %>
@@ -100,7 +98,7 @@
         <div class="panel-body">
           <%= form_for(@user, html: {method: :delete}) do |f| %>
             <h4 style="color:red">Warning! This can not be undone.</h4>
-            <%= f.submit value: "Delete User", class: "btn btn-danger"  %>
+            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" type='submit'>Delete User</button>
           <%end%>
         </div>
         <div class="panel-footer">

@@ -29,6 +29,13 @@
 $ ->
   if namespace.controller is 'visualizations' and
   namespace.action in ['displayVis', 'embedVis', 'show']
+    # Use this to save vis state
+    window.globals ?= {}
+    globals.configs ?= {}
+    globals.clippingVises = ['map', 'timeline', 'scatter', 'table']
+    globals.configs.activeFilters ?= []
+    globals.configs.clippingMode ?= false
+
     # Restore saved data
     if data.savedData?
       # Don't extend the globals yet
@@ -69,33 +76,56 @@ $ ->
     data.precision ?= data.DEFAULT_PRECISION
 
     ###
+    Selects data with potential filters
+    ###
+    globals.getData = (clip = false, filters = []) ->
+      # Select all the data
+      dp = data.dataPoints
+      unless clip and globals.configs.clippingMode then return dp
+
+      # Ensure filters is a list
+      if typeof(filters) is 'function' then filters = [filters]
+
+      # Take the intersection of all the filters
+      for filter in filters
+        unless dp.filter? then break
+        switch filter.op
+          when 'bb', 'bt'
+            func = eval('globals.' + filter.op)(filter.min, filter.max,
+              filter.lvalue, filter.uvalue, filter.field)
+          else
+            func = eval('globals.' + filter.op)(filter.value, filter.field)
+        dp = dp.filter(func)
+
+      return dp
+
+    ###
     Selects data in an x,y object format of the given group.
     ###
-    data.xySelector = (xIndex, yIndex, groupIndex) ->
-      rawData = globals.CLIPPING.getData(@dataPoints).filter (dp) =>
-        group = (String dp[globals.configs.groupById]).toLowerCase() == @groups[groupIndex]
-        notNull = (dp[xIndex] isnt null) and (dp[yIndex] isnt null)
-        notNaN = (not isNaN(dp[xIndex])) and (not isNaN(dp[yIndex]))
+    data.xySelector = (xIndex, yIndex, groupIndex, dp) ->
+      rawData = dp.filter (p) =>
+        group = (String p[globals.configs.groupById]).toLowerCase() == @groups[groupIndex]
+        notNull = (p[xIndex] isnt null) and (p[yIndex] isnt null)
+        notNaN = (not isNaN(p[xIndex])) and (not isNaN(p[yIndex]))
 
         group and notNull and notNaN
 
-      mapFunc = (dp) ->
+      mapFunc = (p) ->
         obj =
-          x: dp[xIndex]
-          y: dp[yIndex]
-          datapoint: dp
+          x: p[xIndex]
+          y: p[yIndex]
+          datapoint: p
 
       mapped = rawData.map mapFunc
       mapped.sort (a, b) -> (a.x - b.x)
-
-      mapped
+      return mapped
 
     ###
     Selects data in an x,y object format of the given groups.
     ###
-    data.multiGroupXYSelector = (xIndex, yIndex, groupIndices) ->
+    data.multiGroupXYSelector = (xIndex, yIndex, groupIndices, dp) ->
       allData =
-        data.xySelector(xIndex, yIndex, group) for group in groupIndices
+        data.xySelector(xIndex, yIndex, group, dp) for group in groupIndices
 
       merged = []
       merged = merged.concat.apply(merged, allData)
@@ -105,41 +135,38 @@ $ ->
     if 'nans' is true then datapoints with NaN values in the given field will be included.
     'filterFunc' is a boolean filter that must be passed (true) for a datapoint to be included.
     ###
-    data.selector = (fieldIndex, groupIndex, nans = false) ->
+    data.selector = (fieldIndex, groupIndex, dp, nans = false) ->
       groupById = globals.configs.groupById
 
-      filterFunc = (dp) =>
-        (String dp[groupById]).toLowerCase() == @groups[groupIndex]
+      filterFunc = (p) =>
+        (String p[groupById]).toLowerCase() == @groups[groupIndex]
 
       newFilterFunc = if nans
         filterFunc
       else
-        (dp) -> (filterFunc dp) and (not isNaN dp[fieldIndex]) and (dp[fieldIndex] isnt null)
+        (p) -> filterFunc(p) and (not isNaN p[fieldIndex]) and (p[fieldIndex] isnt null)
 
-      rawData = globals.CLIPPING.getData(@dataPoints).filter newFilterFunc
-
-      rawData.map (dp) -> dp[fieldIndex]
+      rawData = dp.filter(newFilterFunc)
+      rawData.map (p) -> p[fieldIndex]
 
     ###
     Selects an array of data from the given field index. Support being given an array of group indices.
     if 'nans' is true then datapoints with NaN values in the given field will be included.
     ###
-    data.multiGroupSelector = (fieldIndex, groupIndices, nans = false) ->
-
+    data.multiGroupSelector = (fieldIndex, groupIndices, dp, nans = false) ->
       allData =
-        data.selector(fieldIndex, group, nans) for group in groupIndices
+        data.selector(fieldIndex, group, dp, nans) for group in groupIndices
 
       merged = []
       merged = merged.concat.apply(merged, allData)
-
 
     ###
     Gets the maximum (numeric) value for the given field index.
     All included datapoints must pass the given filter (defaults to all datapoints).
     ###
-    data.getMax = (fieldIndex, groupIndices) ->
+    data.getMax = (fieldIndex, groupIndices, dp) ->
       if typeof groupIndices is 'number' then groupIndices = [groupIndices]
-      rawData = @multiGroupSelector(fieldIndex, groupIndices)
+      rawData = @multiGroupSelector(fieldIndex, groupIndices, dp)
 
       if rawData.length > 0
         result = rawData.reduce (a,b) -> Math.max(a, b)
@@ -151,9 +178,9 @@ $ ->
     Gets the minimum (numeric) value for the given field index.
     All included datapoints must pass the given filter (defaults to all datapoints).
     ###
-    data.getMin = (fieldIndex, groupIndices) ->
+    data.getMin = (fieldIndex, groupIndices, dp) ->
       if typeof groupIndices is 'number' then groupIndices = [groupIndices]
-      rawData = @multiGroupSelector(fieldIndex, groupIndices)
+      rawData = @multiGroupSelector(fieldIndex, groupIndices, dp)
 
       if rawData.length > 0
         result = rawData.reduce (a,b) -> Math.min(a, b)
@@ -165,9 +192,9 @@ $ ->
     Gets the mean (numeric) value for the given field index.
     All included datapoints must pass the given filter (defaults to all datapoints).
     ###
-    data.getMean = (fieldIndex, groupIndices) ->
+    data.getMean = (fieldIndex, groupIndices, dp) ->
       if typeof groupIndices is 'number' then groupIndices = [groupIndices]
-      rawData = @multiGroupSelector(fieldIndex, groupIndices)
+      rawData = @multiGroupSelector(fieldIndex, groupIndices, dp)
 
       if rawData.length > 0
         result = (rawData.reduce (a,b) -> a + b) / rawData.length
@@ -179,10 +206,11 @@ $ ->
     Gets the median (numeric) value for the given field index.
     All included datapoints must pass the given filter (defaults to all datapoints).
     ###
-    data.getMedian = (fieldIndex, groupIndices) ->
+    data.getMedian = (fieldIndex, groupIndices, dp) ->
       if typeof groupIndices is 'number' then groupIndices = [groupIndices]
-      rawData = @multiGroupSelector(fieldIndex, groupIndices)
-      rawData = rawData.sort (a, b) ->
+
+      rawData = @multiGroupSelector(fieldIndex, groupIndices, dp)
+      rawData.sort (a, b) ->
         if a < b then -1 else 1
       mid = Math.floor (rawData.length / 2)
 
@@ -198,9 +226,9 @@ $ ->
     Gets the number of points belonging to fieldIndex and groupIndex
     All included datapoints must pass the given filter (defaults to all datapoints).
     ###
-    data.getCount = (fieldIndex, groupIndices) ->
+    data.getCount = (fieldIndex, groupIndices, dp) ->
       if typeof groupIndices is 'number' then groupIndices = [groupIndices]
-      dataCount = @multiGroupSelector(fieldIndex, groupIndices).length
+      dataCount = @multiGroupSelector(fieldIndex, groupIndices, dp).length
 
       return dataCount
 
@@ -208,9 +236,9 @@ $ ->
     Gets the sum of the points belonging to fieldIndex and groupIndex
     All included datapoints must pass the given filter (defaults to all datapoints).
     ###
-    data.getTotal = (fieldIndex, groupIndices) ->
+    data.getTotal = (fieldIndex, groupIndices, dp) ->
       if typeof groupIndices is 'number' then groupIndices = [groupIndices]
-      rawData = @multiGroupSelector(fieldIndex, groupIndices)
+      rawData = @multiGroupSelector(fieldIndex, groupIndices, dp)
 
       if rawData.length > 0
         total = 0

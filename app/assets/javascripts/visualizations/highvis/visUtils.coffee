@@ -53,8 +53,15 @@ $ ->
         icon.toggleClass('fa-chevron-left').toggleClass('fa-chevron-down')
 
     ###
-    Returns the full path to a handlebars template
-      template  Name of the handlebars template
+    Returns the full path to a handlebars vis template
+      template     Name of the handlebars vis template
+    ###
+    window.hbVis = (template) ->
+      return 'visualizations/' + template
+
+    ###
+    Returns the full path to a handlebars control template
+      template     Name of the handlebars control template
     ###
     window.hbCtrl = (template) ->
       return 'visualizations/controls/' + template
@@ -126,16 +133,15 @@ $ ->
         str
 
       str = ""
-      str += dat.getUTCDate()              + " "
-      str += monthNames[dat.getUTCMonth()] + " "
-      str += dat.getUTCFullYear()          + " "
+      str += dat.getDate()              + " "
+      str += monthNames[dat.getMonth()] + " "
+      str += dat.getFullYear()          + " "
 
-
-
-      str += (minDigits 2, dat.getUTCHours())   + ":"
-      str += (minDigits 2, dat.getUTCMinutes()) + ":"
-      str += (minDigits 2, dat.getUTCSeconds()) + "."
-      str += (minDigits 3, dat.getUTCMilliseconds()) + " GMT"
+      str += (minDigits 2, dat.getHours())   + ":"
+      str += (minDigits 2, dat.getMinutes()) + ":"
+      str += (minDigits 2, dat.getSeconds()) + "."
+      str += (minDigits 3, dat.getMilliseconds()) + " "
+      str += jstz.determine().name()
 
     ###
     Date formatter for geological scale dates

@@ -26,7 +26,7 @@ class TutorialsController < ApplicationController
     if !params[:per_page].nil?
       pagesize = params[:per_page]
     else
-      pagesize = 50
+      pagesize = 6
     end
 
     @new_tutorial = Tutorial.new
@@ -109,7 +109,7 @@ class TutorialsController < ApplicationController
         end
         format.json { render json: {}, status: :ok }
       else
-        format.html { render action: 'edit' }
+        format.html { render action: 'show' }
         format.json do
           render json: @tutorial.errors.full_messages,
                  status: :unprocessable_entity
@@ -123,9 +123,7 @@ class TutorialsController < ApplicationController
   def destroy
     @tutorial = Tutorial.find(params[:id])
 
-    @tutorial.media_objects.each do |m|
-      m.destroy
-    end
+    @tutorial.media_objects.each(&:destroy)
 
     @tutorial.destroy
 

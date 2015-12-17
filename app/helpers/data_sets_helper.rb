@@ -5,7 +5,7 @@ module DataSetsHelper
   end
 
   def format_slickgrid(fields, data_set)
-    cols, data = [fields, data_set]
+    cols, data = [fields.sort_by(&:index), data_set]
     cols, data = format_slickgrid_merge cols, data
     cols, data = format_slickgrid_units cols, data
     cols, data = format_slickgrid_populate cols, data
@@ -117,6 +117,7 @@ module DataSetsHelper
         name: "\"#{x[:name]}\"",
         field: "\"#{x[:id]}\"",
         editor: editor,
+        field_type: x[:field_type],
         restrictions: "#{x[:restrictions]}",
         sortable: 'false'
       }

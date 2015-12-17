@@ -28,37 +28,45 @@ $ ->
     $('#number').click ->
       numCount = numCount + 1
       displayNumCount = displayNumCount + 1
-      addRow(["""<input class="input-small form-control" type="text"
+      addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
+             """<input class="input-small form-control" type="text"
                  name="number_#{numCount}" value="Number_#{displayNumCount}">""", "Number",
                  """<input class="input-small form-control" type="text" class="units"
-                 name="units_#{numCount}">""", "", """<a href="#" fid="0"
+                 name="units_#{numCount}">""", "", """<a fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
 
     $('#text').click ->
       textCount = textCount + 1
       displayTextCount = displayTextCount + 1
-      addRow(["""<input class="input-small form-control" type="text"
+      addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
+             """<input class="input-small form-control" type="text"
                  name="text_#{textCount}" value="Text_#{displayTextCount}">""", "Text", "",
-              """<input class="input-small form-control" type="text" class="restrictions"
-                 name="restrictions_#{textCount}">""", """<a href="#" fid="0"
+                 """<input class="input-small form-control" type="text" class="restrictions"
+                 name="restrictions_#{textCount}">""", """<a fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
 
     $('#timestamp').click ->
       timestampCount = timestampCount + 1
-      addRow(["""<input class="input-small form-control" type="text" name="timestamp"
-                 value="Timestamp">""", "Timestamp", "", "", """<a href="#" fid="0"
+      addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
+             """<input class="input-small form-control" type="text" name="timestamp"
+                 value="Timestamp">""", "Timestamp", "", "", """<a fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
       document.getElementById('timestamp').disabled = true
 
     $('#location').click ->
       locationCount = locationCount + 1
-      addRow(["""<input class="input-small form-control" type="text" name="longitude"
-                 value="Longitude">""", "Longitude", "deg", "", """<a href="#" fid="0"
+      addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
+             """<input class="input-small form-control" type="text" name="longitude"
+                 value="Longitude">""", "Longitude", "deg", "", """<a fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
-      addRow(["""<input class="input-small form-control" type="text" name="latitude"
-                 value="Latitude">""", "Latitude", "deg", "", """<a href="#" fid="0"
+      addRow(["""<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>""",
+             """<input class="input-small form-control" type="text" name="latitude"
+                 value="Latitude">""", "Latitude", "deg", "", """<a fid="0"
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
       document.getElementById('location').disabled = true
+
+    # Make table sortable
+    $( "tbody" ).sortable();
 
     # Delete field, enable timestamp/location buttons (NOTE: fid is 0 when the field
     # hasn't yet been added to project in database)
@@ -67,7 +75,7 @@ $ ->
       fid = $(@).closest('a').attr('fid')
 
       # Row index of row being deleted
-      rowIndex = $(@).closest('tr').index()
+      rowIndex = $(@).closest('tr').index() + 1
 
       # Row name of row being deleted
       rowName = $(@).closest('tr').attr('name')
@@ -102,15 +110,32 @@ $ ->
       for i in [0...4]
         setValue(inputBoxes[i], values[i])
 
+      # add hidden input for each field with it's position
+      t = document.getElementById('fields_table')
+      for i in [1...t.rows.length]
+        field_id = t.rows[i].cells[5].getElementsByTagName('a')[0].getAttribute('fid')
+        # This is for new fields that do not have an id yet
+        if field_id == '0'
+          field_id = t.rows[i].cells[1].getElementsByTagName('input')[0].getAttribute('name')
+        input = document.createElement('input')
+        input.setAttribute('type', 'text')
+        input.setAttribute('text', 'form-control')
+        input.setAttribute('style', 'visibility:collapse;')
+        input.setAttribute('name', "#{field_id}_index")
+        input.setAttribute('id', "#{field_id}_index")
+        input.setAttribute('value', i - 1)
+        document.getElementById('hidden_index_inputs').appendChild(input)
+
+
 # Adds row to table, highlight new row
 addRow = (content) ->
-  row = document.getElementById('fields_table').insertRow(1)
-  $(row).attr('name', content[1].toLowerCase())
+  row = document.getElementById('sortable').insertRow(0)
+  $(row).attr('name', content[2].toLowerCase())
 
-  cells = for i in [1...6]
+  cells = for i in [1...7]
     row.insertCell(i - 1)
 
-  for i in [0...5]
+  for i in [0...6]
     cells[i].innerHTML = content[i]
 
   $(row).highlight(500)
@@ -119,12 +144,21 @@ addRow = (content) ->
 callDeleteRow = (rowIndex, rowName, fid) ->
   if rowName == 'timestamp'
     deleteRow(rowIndex, true, 'timestamp')
+
   else if rowName == 'latitude'
+    t = document.getElementById('fields_table')
     deleteRow(rowIndex, true, 'location')
-    deleteRow(rowIndex, true, 'location')
+    for i in [1...t.rows.length]
+      if t.rows[i].cells[2].innerHTML == 'Longitude'
+        deleteRow(i, true, 'location')
+
   else if rowName == 'longitude'
+    t = document.getElementById('fields_table')
     deleteRow(rowIndex, true, 'location')
-    deleteRow(rowIndex - 1, true, 'location')
+    for i in [1...t.rows.length]
+      if t.rows[i].cells[2].innerHTML == 'Latitude'
+        deleteRow(i, true, 'location')
+
   else
     deleteRow(rowIndex, false, '')
 

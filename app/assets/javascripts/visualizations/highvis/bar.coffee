@@ -35,7 +35,7 @@ $ ->
         super(@canvas)
 
       start: ->
-        @configs.analysisType ?= @ANALYSISTYPE_TOTAL
+        @configs.analysisType ?= @ANALYSISTYPE_MEAN
 
         # Default Sort
         fs = globals.configs.fieldSelection
@@ -43,8 +43,8 @@ $ ->
 
         super()
 
-      buildOptions: ->
-        super()
+      buildOptions: (animate = true) ->
+        super(animate)
 
         self = this
 
@@ -75,6 +75,8 @@ $ ->
              }]
           xAxis:
             type: 'category'
+          legend:
+            enabled: $(window).width() > 700 && data.groups.length < 30
 
       update: ->
         super()
@@ -116,7 +118,8 @@ $ ->
               name: "Error for #{data.groups[gid]}" or data.noField()
 
             errors.data = for fid in data.normalFields when fid in fieldSelection
-              barData = data.selector fid, gid
+              dp = globals.getData(true, globals.configs.activeFilters)
+              barData = data.selector fid, gid, dp
               if barData.length == 1
                 []
               else
@@ -144,6 +147,7 @@ $ ->
         @drawYAxisControls(globals.configs.fieldSelection,
           data.normalFields.slice(1), false)
         @drawToolControls(true, true)
+        @drawClippingControls()
         @drawSaveControls()
 
     if "Bar" in data.relVis

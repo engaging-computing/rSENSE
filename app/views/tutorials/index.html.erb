@@ -22,3 +22,9 @@
       brief: '', content: tut.content, date: tut.created_at.strftime("%B %d %Y"), width: 6} %>
   <% end %>  
 </div>
+
+<div class="text-center">
+  <%= will_paginate @tutorials, renderer: BootstrapPagination::Rails,
+      inner_window: 1, outer_window: 0, previous_label: "<<",
+      next_label: ">>" %>
+</div>

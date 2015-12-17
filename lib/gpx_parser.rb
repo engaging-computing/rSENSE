@@ -58,25 +58,4 @@ class GpxParser
 
     data
   end
-
-  private
-
-  def write_temp_file(data)
-    # Create a tmp directory if it does not exist
-    begin
-      Dir.mkdir('/tmp/rsense')
-    rescue
-    end
-
-    # Save file so we can grab it again
-    base = '/tmp/rsense/dataset'
-    fname = base + "#{SecureRandom.hex}.csv"
-    f = File.new(fname, 'w')
-
-    f.write(data)
-
-    f.close
-
-    fname
-  end
 end

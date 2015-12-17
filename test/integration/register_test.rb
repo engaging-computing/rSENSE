@@ -1,17 +1,7 @@
 require 'test_helper'
+require_relative 'base_integration_test'
 
-class RegisterTest < ActionDispatch::IntegrationTest
-  include CapyHelper
-
-  setup do
-    Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 15
-  end
-
-  teardown do
-    finish
-  end
-
+class RegisterTest < IntegrationTest
   test 'create a user' do
     visit '/'
     find('.navbar').click_on('Register')

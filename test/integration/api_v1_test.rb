@@ -1,8 +1,9 @@
 require 'test_helper'
+require_relative 'base_integration_test'
 
-class ApiV1Test < ActionDispatch::IntegrationTest
+class ApiV1Test < IntegrationTest
   setup do
-    @project_keys = ['id', 'featuredMediaId', 'name', 'url', 'path', 'hidden', 'featured', 'likeCount', 'content', 'timeAgoInWords', 'createdAt', 'ownerName', 'ownerUrl', 'dataSetCount', 'fieldCount', 'fields']
+    @project_keys = %w(id featuredMediaId name url path hidden featured likeCount content timeAgoInWords createdAt ownerName ownerUrl dataSetCount fieldCount fields dataSetIDs)
     @project_keys_extended = @project_keys + ['dataSets', 'mediaObjects', 'owner']
     @field_keys = ['id', 'name', 'type', 'unit', 'restrictions']
     @data_keys = ['id', 'name', 'ownerId', 'ownerName', 'contribKey', 'url', 'path', 'createdAt', 'fieldCount', 'datapointCount', 'displayURL', 'data']

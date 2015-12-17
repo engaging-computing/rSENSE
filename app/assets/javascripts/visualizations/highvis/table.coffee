@@ -36,7 +36,8 @@ $ ->
         @TOOLBAR_HEIGHT_OFFSET = 70
 
         fieldList = (i for f, i in data.fields when i isnt data.COMBINED_FIELD)
-        @configs.tableFields ?= fieldList[0..7]
+        rows = Math.round( $(window).width() / 180 )
+        @configs.tableFields ?= fieldList[0..rows]
 
         # Set sort state to default none existed
         @configs.sortName ?= ''
@@ -68,6 +69,10 @@ $ ->
 
       # Gets called when the controls are clicked and at start
       update: ->
+        # clear table searchboxes when filtering is turned on
+        $('#save-filters-btn').click ->
+          clearSearchOptions()
+
         # Updates controls by default
         $('#' + @canvas).html('')
         $('#' + @canvas).append '<table id="data_table" class="table table-striped"></table>'
@@ -84,18 +89,19 @@ $ ->
           else id
 
         # Build the data for the table
-        visibleGroups = for group, groupIndex in data.groups when groupIndex in data.groupSelection
-          group
+        visGroups = (g for g, i in data.groups when i in data.groupSelection)
 
         rows = []
-        for dataPoint in globals.CLIPPING.getData(data.dataPoints) \
-        when (String dataPoint[globals.configs.groupById]).toLowerCase() in visibleGroups
-          line = {}
-          for dat, fieldIndex in dataPoint
-            line[colIds[fieldIndex]] = dat
-          rows.push(line)
+        dp = globals.getData(true, globals.configs.activeFilters)
+        gbid = globals.configs.groupById
+        for point in dp when String(point[gbid]).toLowerCase() in visGroups
+          row = {}
+          for d, i in point
+            row[colIds[i]] = d
+          rows.push(row)
 
-        # Make sure the sort type for each column is appropriate, and save the time column
+        # Make sure the sort type for each column is appropriate, and save the
+        # time column
         timeCol = ""
         columns = for colId, colIndex in colIds
           if (data.fields[colIndex].typeID is data.types.TEXT)
@@ -128,7 +134,7 @@ $ ->
         $('#table-canvas').append '<div id="toolbar_bottom"></div>'
 
         # Build the grid
-        @table = jQuery("#data_table").jqGrid({
+        @table = $("#data_table").jqGrid({
           colNames: headers
           colModel: columns
           datatype: 'local'
@@ -148,9 +154,9 @@ $ ->
         })
 
         # Show only the checked columns
-        for f, fIndex in data.fields
-          col = @table.jqGrid('getGridParam','colModel')[fIndex]
-          if $.inArray(fIndex, @configs.tableFields) is -1
+        for f, fi in data.fields
+          col = @table.jqGrid('getGridParam','colModel')[fi]
+          if $.inArray(fi, @configs.tableFields) is -1
             @table.hideCol(col.name)
           else
             @table.showCol(col.name)
@@ -205,8 +211,8 @@ $ ->
         super()
 
       resize: (newWidth, newHeight, aniLength) ->
-        # In the case that this was called by the hide button, this gets called a second time
-        # needlessly, but doesn't effect the overall performance
+        # In the case that this was called by the hide button, this gets called
+        # a second time needlessly, but doesn't effect the overall performance
         $('#data_table').setGridWidth(newWidth)
 
       drawControls: ->
@@ -216,6 +222,7 @@ $ ->
         @drawYAxisControls(@configs.tableFields,
           (i for f, i in data.fields when i isnt data.COMBINED_FIELD),
           false, 'Visible Fields')
+        @drawClippingControls()
         @drawSaveControls()
 
       saveSort: =>
@@ -226,11 +233,13 @@ $ ->
 
           # Save the table filters
           if @table.getGridParam('postData').filters?
-            @configs.searchParams = jQuery.parseJSON(@table.getGridParam('postData').filters).rules
+            @configs.searchParams = $.parseJSON(
+              @table.getGridParam('postData').filters).rules
 
       ###
       JQGrid time formatting (to implement search post formatting)
-      http://stackoverflow.com/questions/5822302/how-to-do-local-search-on-formatted-column-value-in-jqgrid
+        http://stackoverflow.com/questions/5822302/how-to-do-local-search-on-\
+        formatted-column-value-in-jqgrid
       Credits to Oleg and adam-p
       Converted to coffee script by Jeremy Poulin
 
@@ -238,7 +247,8 @@ $ ->
         formatters is a dictionary of the form:
         { "column_name_1_needing_formatting": "column1FormattingFunctionName",
           "column_name_2_needing_formatting": "column2FormattingFunctionName" }
-        Note that subsequent calls will *replace* all formatters set by previous calls.
+        Note that subsequent calls will *replace* all formatters set by previous
+        calls.
       ###
       setFilterFormatters = (formatters) ->
         columnUsesCustomFormatter = (column_name) ->
@@ -262,7 +272,7 @@ $ ->
 
             phrase = []
             if (this._trim)
-              phrase.push("jQuery.trim(")
+              phrase.push("$.trim(")
             phrase.push(column_formatter + "(" + s + ")")
             if (this._trim)
               phrase.push(")")
@@ -272,6 +282,31 @@ $ ->
 
           return result
 
-      clip: (arr) -> arr
+      saveFilters: (vis = 'table') ->
+        super(vis)
+
+        if @configs.searchParams.length <= 0
+          quickFlash('Use the search boxes in the table to specify column
+            specific filters.', 'warning')
+          return
+
+        for param in @configs.searchParams
+          # Get the field index to sort
+          fields = for f in @table.getGridParam('colNames')
+            f.replace(/\s+/g, '_').toLowerCase()
+          field = fields.indexOf(param.field)
+
+          # Create and clip with the sort filter
+          filter =
+            vis: vis
+            op:  param.op
+            field: field
+            value: param.data
+
+          globals.configs.activeFilters.push(filter)
+
+      clearSearchOptions = ->
+        # Clears all the table's searchboxes
+        $('#data_table')[0].clearToolbar()
 
     globals.table = new Table "table-canvas"

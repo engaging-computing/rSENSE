@@ -30,7 +30,7 @@ $ ->
   if namespace.controller is 'visualizations' and
   namespace.action in ['displayVis', 'embedVis', 'show']
     window.globals ?= {}
-    window.globals.configs ?= {}
+    globals.configs ?= {}
 
     class window.BaseVis
       constructor: (@canvas) ->
@@ -54,8 +54,10 @@ $ ->
       ###
       start: ->
         $('#' + @canvas).show()
+        toolScroll = $('#vis-ctrls').scrollTop()
         @drawControls()
         @update()
+        $('#vis-ctrls').scrollTop(toolScroll)
 
       ###
       Update minor state
@@ -104,6 +106,7 @@ $ ->
       Returns an object of key-value pairs of the form { groupId, value }
       ###
       getGroupedData: (field) ->
+        dp = globals.getData(true, globals.configs.activeFilters)
         gData = {}
 
         analysisMethod =
@@ -116,10 +119,68 @@ $ ->
             when @ANALYSISTYPE_MEDIAN     then data.getMedian
             when @ANALYSISTYPE_COUNT      then data.getCount
 
-        for name, i in data.groups when i in data.groupSelection
-          gData[i] = analysisMethod.call data, field, i
+        for name, groupIdx in data.groups when groupIdx in data.groupSelection
+          gData[groupIdx] = analysisMethod.call(data, field, groupIdx, dp)
 
-        gData
+        return gData
+
+      ###
+      Draw clipping controls
+      ###
+      drawClippingControls: ->
+        # Draw the Clipping controls
+        inctx =
+          id: 'clipping-enabled'
+          logId: 'clipping-enabled'
+          label: 'Filters:'
+
+        outctx = {}
+        outctx.id = 'clipping-ctrls'
+        outctx.title = 'Filtering'
+        outctx.body = HandlebarsTemplates[hbCtrl('clipping')](inctx)
+        clipping = HandlebarsTemplates[hbCtrl('body')](outctx)
+        $('#vis-ctrls').append(clipping)
+
+        # Enable clipping mode switch
+        clipMode = Boolean(globals.configs.clippingMode)
+        $('#swch-clipping-enabled').bootstrapSwitch
+          onSwitchChange: =>
+            state = $('#swch-clipping-enabled').bootstrapSwitch('state')
+            globals.configs.clippingMode = state
+            $(window).resize()
+            @start(false)
+          state: clipMode
+
+        clippable = @canvas.split('-')[0] in globals.clippingVises
+        $('#save-filters-btn').toggleClass('disabled',
+          !(clipMode and clippable))
+
+        $('#save-filters-btn').click =>
+          @saveFilters()
+          $(window).resize()
+          @start(false)
+
+        $('#clear-filters-btn').click =>
+          globals.configs.activeFilters = []
+          clearFilters()
+          $(window).resize()
+          @start(false)
+
+        # Initialize and track the status of this control panel
+        globals.configs.clippingOpen ?= false
+        initCtrlPanel('clipping-ctrls', 'clippingOpen')
+
+      ###
+      Adds any filter that this vis is currently applying to the data to the
+      active filters
+      ###
+      saveFilters: (vis) ->
+        unless vis? then return
+
+        # Clear out old filters
+        globals.configs.activeFilters =
+          globals.configs.activeFilters.filter (f) ->
+            f.vis != vis
 
       ###
       A wrapper for making y-axis controls
@@ -176,11 +237,17 @@ $ ->
         axisTools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append axisTools
 
+        # Add material design
+        $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
+        $('#vis-ctrls').find(".mdl-radio").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
         # Initialize checked and make y axis checkbox/radio handler
         if radio
           # Set the current display field
-          query = "input[name='#{id}'][value='#{iniRadio}']"
-          $(query).prop('checked', 'true')
+          $("#rdo-lbl-#{id}-field-#{iniRadio}")[0].MaterialRadio.check()
 
           # Record any changes to the display field
           $("input[name='#{id}']").click (e) =>
@@ -198,19 +265,22 @@ $ ->
           numFields = allFields.length
           numSel = selFields.length
           indeterminate = numSel > 0 and numSel < numFields
-          $('#ckbx-ckall-' + id).prop('checked', numSel is numFields)
+          if numSel is numFields
+            $("#ckbx-lbl-ckall-#{id}")[0].MaterialCheckbox.check()
+          else
+            $("#ckbx-lbl-ckall-#{id}")[0].MaterialCheckbox.uncheck()
           $('#ckbx-ckall-' + id).prop('indeterminate', indeterminate)
 
         # Update the check all box
         updateCheckAll()
 
         # Else initialize the checkboxes to the field selection
-        $("input[name='#{id}']").each (key, elem) ->
-          if Number(elem.value) in selFields then $(elem).prop('checked', true)
+        $("label[name='#{id}']").each (key, elem) ->
+          if Number(elem.getAttribute('value')) in selFields then $(elem)[0].MaterialCheckbox.check()
 
         # Set handler for the field checkboxes
         $("input[name='#{id}']").click (e) =>
-          index = Number(e.target.value)
+          index = Number(e.target.getAttribute('value'))
           if index in selFields then arrayRemove(selFields, index)
           else selFields.push(index)
 
@@ -228,8 +298,12 @@ $ ->
           # Repopulate the array if necessary
           if checked then selFields.push(f) for f in allFields
 
-          $("input[name='#{id}']").each (key, elem) ->
-            $(elem).prop('checked', checked)
+          $("label[name='#{id}']").each (key, elem) ->
+            if checked
+              $(elem)[0].MaterialCheckbox.check()
+            else
+              $(elem)[0].MaterialCheckbox.uncheck()
+
 
           updateCheckAll()
           selected = if checked then allFields else []
@@ -297,17 +371,25 @@ $ ->
         tools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append tools
 
+        # Add material design
+        $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
+        $('#vis-ctrls').find(".mdl-radio").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
         # Initialize and track the status of this control panel
         globals.configs.groupOpen ?= false
         initCtrlPanel('group-ctrls', 'groupOpen')
 
         $('.color-picker').each (_, cpicker) =>
           cid = $(cpicker).data('color-id')
-          $(cpicker).colorpicker 'create',
+          a = $(cpicker).colorpicker
             outputType: 'hex'
             onOpen: () ->
               $("#label-color-#{cid}").parent().parent().css('background-color',
                 '#EEE')
+              globals.getColor(cid)
             onClose: () ->
               $("#label-color-#{cid}").parent().parent().css('background-color',
                 '#FFF')
@@ -316,7 +398,19 @@ $ ->
               $("#label-color-#{cid}").css 'color', color
               @delayedUpdate()
               setTimeout (() => @start()), 1
-          $(cpicker).colorpicker 'setcolor', globals.getColor(cid)
+            hPosition: (w, h) =>
+              button = $(cpicker).children('img')
+              buttonX = button.offset().left
+              buttonW = button.width()
+              buttonX - w + buttonW
+            vPosition: (w, h) =>
+              button = $(cpicker).children('img')
+              buttonY = button.offset().top
+              buttonH = button.height()
+              buttonY + buttonH
+
+          $(cpicker).click ->
+            a.open()
 
         $('#group-by').val(globals.configs.groupById)
         $('#group-by').change (e) =>
@@ -339,20 +433,23 @@ $ ->
           numGroups = data.groups.length
           numSel = data.groupSelection.length
           indeterminate = numSel > 0 and numSel < numGroups
-          $('#ckbx-ckall-grouping').prop('checked', numSel is numGroups)
+          if numSel is numGroups
+            $('#ckbx-lbl-ckall-grouping')[0].MaterialCheckbox.check()
+          else
+            $('#ckbx-lbl-ckall-grouping')[0].MaterialCheckbox.uncheck()
           $('#ckbx-ckall-grouping').prop('indeterminate', indeterminate)
 
         # Update the check all box
         updateCheckAll()
 
         # Initialize the checkboxes to the group selection
-        $('input[name="grouping"]').each (key, elem) ->
-          if Number(elem.value) in data.groupSelection
-            $(elem).prop('checked', true)
+        $('label[name="grouping"]').each (key, elem) ->
+          if Number(elem.getAttribute('value')) in data.groupSelection
+            $(elem)[0].MaterialCheckbox.check()
 
         # Set handler for the group checkboxes
         $('input[name="grouping"]').click (e) =>
-          index = Number(e.target.value)
+          index = Number(e.target.getAttribute('value'))
           if index in data.groupSelection
             arrayRemove(data.groupSelection, index)
           else data.groupSelection.push(index)
@@ -370,8 +467,11 @@ $ ->
           # Repopulate the array if necessary
           if checked then data.groupSelection.push(k) for v, k in data.groups
 
-          $('input[name="grouping"]').each (key, elem) ->
-            $(elem).prop('checked', checked)
+          $('label[name="grouping"]').each (key, elem) ->
+            if checked
+              $(elem)[0].MaterialCheckbox.check()
+            else
+              $(elem)[0].MaterialCheckbox.uncheck()
 
           updateCheckAll()
           @delayedUpdate()
@@ -438,12 +538,12 @@ $ ->
 
         # Set up analysis types from the list of exclusions
         analysisTypes = [
-          @ANALYSISTYPE_TOTAL
-          @ANALYSISTYPE_MAX
-          @ANALYSISTYPE_MIN
           @ANALYSISTYPE_MEAN
           @ANALYSISTYPE_MEAN_ERROR
           @ANALYSISTYPE_MEDIAN
+          @ANALYSISTYPE_MAX
+          @ANALYSISTYPE_MIN
+          @ANALYSISTYPE_TOTAL
           @ANALYSISTYPE_COUNT
           ]
         analysisTypes = analysisTypes.filter (x) ->
@@ -473,15 +573,25 @@ $ ->
 
         tools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append tools
+        
+        # Add material design
+        $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
+        $('#vis-ctrls').find(".mdl-radio").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
 
         # Initialize and track the status of this control panel
         globals.configs.toolsOpen ?= false
         initCtrlPanel('tools-ctrls', 'toolsOpen')
-        query = "input[name='analysis-type'][value='#{@configs.analysisType}']"
-        $(query).prop('checked', 'true')
+        query = "label[name='analysis-type'][value='#{@configs.analysisType}']"
+        $(query)[0].MaterialRadio.check()
         $('#sort-by').val(@configs.sortField)
         $('input[name="analysis-type"]').value = @configs.analysisType
-        $('#ckbx-log-y-axis').prop('checked', globals.configs.logY)
+        if globals.configs.logY and $('#ckbx-lbl-log-y-axis').length
+          $('#ckbx-lbl-log-y-axis')[0].MaterialCheckbox.check()
+        else if $('#ckbx-lbl-log-y-axis').length
+          $('#ckbx-lbl-log-y-axis')[0].MaterialCheckbox.uncheck()
 
         $('#sort-by').change (e) =>
           @configs.sortField = Number(e.target.value)
@@ -514,13 +624,14 @@ $ ->
       Subsequent derived classes should use $.extend
       to expand upon these after calling super()
       ###
-      buildOptions: ->
+      buildOptions: (animate = true) ->
         self = this
 
         @chartOptions =
           chart:
             renderTo: @canvas
             reflow: false
+            animation: animate
           credits:
             enabled: false
           exporting:
@@ -548,6 +659,7 @@ $ ->
                 'Y-Values'
               else
                 data.fields[globals.configs.fieldSelection[0]].fieldName
+
       ###
       Builds the 'fake series' for legend controls.
       Derrived objects should implement this.
@@ -565,8 +677,8 @@ $ ->
       should destroy the current chart if it exists before generating a fresh
       one.
       ###
-      start: ->
-        @buildOptions()
+      start: (animate = true) ->
+        @buildOptions(animate)
         @chart = new Highcharts.Chart(@chartOptions)
         super()
 
@@ -597,6 +709,8 @@ $ ->
         # Draw legend
         for options in @buildLegendSeries()
           @chart.addSeries options, false
+
+        super()
 
       ###
       Performs an update while displaying the loading text

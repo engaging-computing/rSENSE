@@ -31,17 +31,7 @@ class DataSet < ActiveRecord::Base
   end
 
   def self.search(search)
-    regex = /^[0-9]+$/
-    res = if search =~ regex
-            where(
-            '(data_sets.id = ?)', search.to_i)
-          elsif search
-            where('title LIKE ?', "%#{search}%").order('created_at DESC')
-          else
-            all.order('created_at DESC')
-          end
-
-    res
+    where('id = ? OR title LIKE ?', search.to_i, "%#{search}%").order('created_at DESC')
   end
 
   def to_hash(recurse = true)
@@ -85,7 +75,7 @@ class DataSet < ActiveRecord::Base
     fname = ("#{title.parameterize}.csv")
     tmp_file = File.new("#{tmpdir}/#{fname}", 'w+')
 
-    tmp_file.write(fields.map { |f| f.name }.join(',') + "\n")
+    tmp_file.write(fields.map(&:name).join(',') + "\n")
 
     data.each do |datapoint|
       tmp_file.write(fields.map { |f| datapoint["#{f.id}"] }.join(',') + "\n")

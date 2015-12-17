@@ -47,13 +47,16 @@
       </ul>
 
       <div id="contributions_content">
-        <div id="searchUserRow" class="row">
-          <div class="col-lg-9">
-            <input class="form-search form-control" id="contributions_search" name="search" type="text">
-          </div>
-          <div class="col-lg-3">
-            <input type="button" class="btn btn-success" value="Search" id="contribution_search_btn" style="margin-left: 7px; margin-bottom: 10px;"/>
-          </div>
+        <input id="contribution_sort" name="sort" type="hidden" value="create dsc" />
+          <div id="searchUserRow" class="input-group">
+          <span>
+            <input class="form-search form-control" id="contributions_search" name="search" type="text" />
+          </span>
+          <span class="input-group-btn">
+            <button id="Search" class="btn btn-default">
+              <i class='fa fa-search'></i>
+            </button>
+          </span>
         </div>
 
         <%= hidden_field_tag "page", params[:page].to_i %>

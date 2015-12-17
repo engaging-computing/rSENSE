@@ -10,12 +10,17 @@ two:
   user: kate
   project: one
 
+three:
+  title: 5 apples
+  user: kate
+  project: one
+
 thanksgiving:
   title: Thanksgiving Dinner
   user: kate
   project: dessert
   data: "[{\"20\": 1, \"21\": 2, \"22\": 3},{\"20\": 1, \"21\": 2, \"22\": 3}]"
-  key: apple
+  key: Pies
   
 needs_media:
   title: Needs Media
@@ -39,7 +44,8 @@ slickgrid_dataset_1:
   project: slickgrid_project
   data: "[{\"100\": \"A\", \"101\": \"A\", \"102\": \"1\", \"103\": \"11\", \"104\": \"0\", \"105\": \"0\"},\
     {\"100\": \"B\", \"101\": \"B\", \"102\": \"2\", \"103\": \"22\", \"104\": \"1\", \"105\": \"1\"},\
-    {\"100\": \"C\", \"101\": \"C\", \"102\": \"3\", \"103\": \"33\", \"104\": \"2\", \"105\": \"2\"}]"
+    {\"100\": \"C\", \"101\": \"C\", \"102\": \"3\", \"103\": \"33\", \"104\": \"2\", \"105\": \"2\"},\
+    {\"100\": \"A\", \"101\": \"A\", \"102\": \"1\", \"103\": \"11\", \"104\": \"\", \"105\": \"\"}]"
 
 slickgrid_dataset_2:
   title: Slickgrid Data set 2
@@ -58,3 +64,50 @@ slickgrid_dataset_oops:
   user: nixon
   project: slickgrid_oops
   data: "[{\"107\": \"SOMEBODY ONCE TOLD ME THE WORLD IS GONNA ROLL ME\"}]"
+  
+project_one_dataset:
+  title: New DataSet for api test
+  user: kate
+  project: media_test
+
+map_vis_disable_dset_with_loc:
+  title: Map vis should be enabled
+  user: nixon
+  project: map_vis_disable
+  data: "[{\"109\": 117, \"110\": 5, \"111\": 5}, {\"109\": 343, \"110\": \"\", \"111\": \"\"}]"
+
+map_vis_disable_dset_no_loc:
+  title: Map vis should be disabled
+  user: nixon
+  project: map_vis_disable
+  data: "[{\"109\": 2401, \"110\": \"\", \"111\": \"\"}]"
+
+a:
+  title: a
+  user: nixon
+  project: lots_of_data_sets
+
+b:
+  title: b
+  user: nixon
+  project: lots_of_data_sets
+
+c:
+  title: c
+  user: nixon
+  project: lots_of_data_sets
+
+d:
+  title: d
+  user: nixon
+  project: lots_of_data_sets
+
+e:
+  title: e
+  user: nixon
+  project: lots_of_data_sets
+
+f:
+  title: f
+  user: nixon
+  project: lots_of_data_sets

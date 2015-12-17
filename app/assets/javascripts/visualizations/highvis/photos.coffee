@@ -32,18 +32,12 @@ $ ->
 
     class window.Photos extends BaseVis
       constructor: (@canvas) ->
+
       start: ->
         super()
-        @restoreTools = globals.configs.ctrlsOpen
-        globals.configs.ctrlsOpen = false
-        $('#vis-ctrl-container').hide()
-        $('#ctrls-menu-btn').hide()
 
       end: ->
         super()
-        globals.configs.ctrlsOpen = @restoreTools
-        $('#vis-ctrl-container').show()
-        $('#ctrls-menu-btn').show()
 
       # Gets called when the controls are clicked and at start
       update: ->
@@ -52,38 +46,68 @@ $ ->
         $(canvas).html("")
 
         # load the Handlebars templates
-        picTemp = HandlebarsTemplates['visualizations/photo/pic']
-        lbTemp = HandlebarsTemplates['visualizations/photo/lightbox']
+        grpTemp = HandlebarsTemplates[hbVis('photo/group')]
+        picTemp = HandlebarsTemplates[hbVis('photo/pic')]
+        lbTemp = HandlebarsTemplates[hbVis('photo/lightbox')]
 
-        # add each photo to the canvas
+        # group the media
+        groupedMedia = {}
+        groupedMedia['all'] = []
+        for _, dset of data.metadata
+          label = "#{dset.name.toLowerCase()}(#{dset.dataset_id})"
+          groupedMedia[label] = []
+          for pic in dset.photos
+            groupedMedia[label].push pic
+            groupedMedia['all'].push pic
+
+        # determine which data sets are selected based on the groupSelection
+        # also, sort them because they move around otherwise
+        selectedGroups = data.groupSelection.map (x) ->
+          [x, data.groups[x]]
+        selectedGroups.sort (x, y) ->
+          x[0] > y[0]
+
+        # create the groups to put the photos in
         id = 0
-        for dsKey,dset of data.metadata
-          if dset.photos.length > 0
-            for picKey,pic of dset.photos
-              context =
-                p_id:   'pic-' + id
-                tn_src: pic.tn_src
-                src:    pic.src
-                p_name: pic.name
-                d_name: dset.name
-                d_id:   dset.dataset_id
+        for group in selectedGroups
+          if !groupedMedia[group[1]]? or groupedMedia[group[1]].length == 0
+            continue
 
-              $(canvas).append picTemp(context)
+          groupContext =
+            g_id: group[0]
+            group_label: group[1]
+          groupObj = $(grpTemp(groupContext))
 
-              $('#pic-' + id).data('context', context)
-              $('#pic-' + id).click ->
-                ctx = $(@).data('context')
-                $(canvas).append lbTemp(ctx)
+          # put the photos in their correct groups
+          for photo in groupedMedia[group[1]]
+            photoContext =
+              p_id: "pic-#{id}"
+              tn_src: photo.tn_src
+              src:    photo.src
+              p_name: photo.name
+              d_name: photo.dataSet.name
+              d_id:   photo.dataSet.id
+            photoObj = $(picTemp(photoContext))
 
-                $('#target-img').modal
-                  keyboard: true
-                $('#target-img').on 'hidden.bs.modal', ->
-                  $('#target-img').remove()
+            # set up the lightbox for each image
+            photoObj.click photoContext, (e) ->
+              ltboxObj = $(lbTemp(e.data))
+              $(canvas).append(ltboxObj)
+              $('#target-img').modal
+                keyboard: true
+              $('#target-img').on 'hidden.bs.modal', ->
+                $('#target-img').remove()
 
-              id++
+            groupObj.children('.group-body').append(photoObj)
+
+            id += 1
+
+          $(canvas).append(groupObj)
 
       drawControls: ->
         super()
+
+        @drawGroupControls([1, 2])
 
     if 'Photos' in data.relVis
       globals.photos = new Photos 'photos-canvas'

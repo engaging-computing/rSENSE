@@ -1,18 +1,11 @@
 require 'test_helper'
+require_relative 'base_integration_test'
 
-class EditProjDescTest < ActionDispatch::IntegrationTest
-  include CapyHelper
-
+class EditProjDescTest < IntegrationTest
   self.use_transactional_fixtures = false
 
   setup do
     @project = projects(:description_test)
-    Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 15
-  end
-
-  teardown do
-    finish
   end
 
   def login_and_nav_to_project

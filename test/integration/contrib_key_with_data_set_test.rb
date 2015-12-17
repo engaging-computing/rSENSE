@@ -1,16 +1,8 @@
 require 'test_helper'
+require_relative 'base_integration_test'
 
-class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
-  include CapyHelper
-
-  setup do
-    Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 15
-  end
-
-  teardown do
-    finish
-  end
+class ContribKeyWithDataSetTest < IntegrationTest
+  self.use_transactional_fixtures = false
 
   test 'website_and_API' do
     login('kcarcia@cs.uml.edu', '12345')
@@ -60,7 +52,7 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     list = page.all(:css, '.slick-header-column')
     field_id_long = list[0]['id']
     field_id_pos = field_id_long.rindex(/-/)
-    field_id = field_id_long[field_id_pos + 1 .. -1]
+    field_id = field_id_long[field_id_pos + 1..-1]
     find('#data_set_name').set('Data1')
     find(:css, '.slick-row:nth-child(1)>.slick-cell.l0.r0').double_click
     find('.editor-text').set('5')
@@ -109,5 +101,40 @@ class ContribKeyWithDataSetTest < ActionDispatch::IntegrationTest
     visit "/projects/#{@project_id}"
     assert page.has_content? 'Contributor Key Test Project'
     assert page.has_no_css?('.gravatar')
+  end
+
+  test 'create invalid contributor key' do
+    login('kcarcia@cs.uml.edu', '12345')
+
+    project_id = projects(:contributor_key_project).id
+    visit "/projects/#{project_id}"
+    find('#edit-project-button').click
+    click_on 'Create Key'
+
+    assert page.has_content? 'Failed to create Contributor Key'
+    assert page.has_content? "Name (Key's Label) is too short (Minimum is one character)"
+    assert page.has_content? 'Key is too short (Minimum is one character)'
+  end
+
+  test 'use invalid contributor key' do
+    project_id = projects(:contributor_key_project).id
+
+    # no contributor key or contributor name
+    visit "/projects/#{project_id}"
+    click_on 'Submit Key'
+    assert page.has_content? 'Invalid contributor key.'
+    assert page.has_content? 'Enter a contributor Name.'
+
+    # no contributor name
+    visit "/projects/#{project_id}"
+    find('#key').set 'key'
+    click_on 'Submit Key'
+    assert page.has_content? 'Enter a contributor Name.'
+
+    # no contributor key
+    visit "/projects/#{project_id}"
+    find('#contributor_name').set 'name'
+    click_on 'Submit Key'
+    assert page.has_content? 'Invalid contributor key.'
   end
 end

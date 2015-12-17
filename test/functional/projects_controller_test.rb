@@ -11,7 +11,8 @@ class ProjectsControllerTest < ActionController::TestCase
     @delete_me = projects(:delete_me)
     @delete_me_two = projects(:delete_me2)
     @delete_me_three = projects(:delete_me3)
-    @contrib_key_test = projects(:contributor_key_project)
+    @delete_me_and_my_fields = projects(:delete_me_and_my_fields)
+    @delete_me_field = fields(:delete_me)
     @key = contrib_keys(:contributor_key_test)
     @media_test = projects(:media_test)
     @dessert = projects(:dessert)
@@ -41,8 +42,6 @@ class ProjectsControllerTest < ActionController::TestCase
 
     @pp = Project.find(@project_one.id)
     assert @pp.views == views_before + 1, 'View count incremented'
-    get :show, id: @contrib_key_test
-    assert_response :success
   end
 
   test 'should show project (json)' do
@@ -185,7 +184,6 @@ class ProjectsControllerTest < ActionController::TestCase
     put :update, { format: 'json', id: @project_three, project: { curated: 'false' } },  user_id: @nixon
     assert_response :success
     assert Project.find(@project_three).curated == false, 'Nixon should have been able to uncurated the project'
-
   end
 
   test 'should lock project (json)' do
@@ -208,7 +206,7 @@ class ProjectsControllerTest < ActionController::TestCase
   end
 
   test 'save fields' do
-    parameters = Hash.new
+    parameters = {}
     @dessert.fields.each do |field|
       parameters["#{field.id}_name"] = field.name
       parameters["#{field.id}_unit"] = field.unit
@@ -246,5 +244,22 @@ class ProjectsControllerTest < ActionController::TestCase
                       '20_restrictions' => '',
                       '25_name' => 'Location of Foodz', '25_unit' => '', new_field: 'Latitude' }, user_id: @kate.id
     assert_redirected_to "/projects/#{@dessert.id}"
+  end
+
+  test 'fields are destroyed along with project' do
+    # Delete Project
+    assert_difference('Project.count', -1) do
+      delete :destroy, { id: @delete_me_and_my_fields },  user_id: @nixon
+    end
+
+    # Test Project no longer exists
+    assert_raises(ActiveRecord::RecordNotFound) do
+      Project.find(@delete_me_and_my_fields.id)
+    end
+
+    # Test Project's field no longer exists either
+    assert_raises(ActiveRecord::RecordNotFound) do
+      Field.find(@delete_me_field.id)
+    end
   end
 end

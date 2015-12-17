@@ -15,7 +15,7 @@ class VisualizationsController < ApplicationController
     if !params[:sort].nil?
       sort = params[:sort]
     else
-      sort = 'updated_at'
+      sort = 'created_at'
     end
 
     if !params[:order].nil?
@@ -27,7 +27,7 @@ class VisualizationsController < ApplicationController
     if !params[:per_page].nil?
       pagesize = params[:per_page]
     else
-      pagesize = 50
+      pagesize = 48
     end
 
     @visualizations = Visualization.search(params[:search]).paginate(page: params[:page], per_page: pagesize)
@@ -102,15 +102,17 @@ class VisualizationsController < ApplicationController
     end
 
     # Try to make a thumbnail
-    mo = MediaObject.new
-    mo.media_type = 'image'
-    mo.name = 'image.png'
-    mo.file = 'image.png'
-    mo.user_id = @cur_user.id
-    mo.check_store!
+    mo = nil
 
     if params[:visualization].try(:[], :svg)
       begin
+        mo = MediaObject.new
+        mo.media_type = 'image'
+        mo.name = 'image.png'
+        mo.file = 'image.png'
+        mo.user_id = @cur_user.id
+        mo.check_store!
+
         image = MiniMagick::Image.read(params[:visualization][:svg], '.svg')
         image.format 'png'
         image.resize '512'
@@ -120,8 +122,8 @@ class VisualizationsController < ApplicationController
         end
 
         mo.add_tn
-
       rescue MiniMagick::Invalid => err
+        mo = nil
         logger.info "Failed to create thumbnail (#{err})."
       end
 
@@ -129,13 +131,14 @@ class VisualizationsController < ApplicationController
     end
 
     @visualization = Visualization.new(visualization_params)
-    @visualization.thumb_id = mo.id unless mo.id.nil?
 
     respond_to do |format|
       if @visualization.save
-        unless mo.id.nil?
+        unless mo.nil?
           mo.visualization_id = @visualization.id
           mo.save!
+          @visualization.thumb_id = mo.id
+          @visualization.save!
         end
 
         flash[:notice] = 'Visualization was successfully created.'
@@ -170,9 +173,12 @@ class VisualizationsController < ApplicationController
         format.html { redirect_to @visualization, notice: 'Visualization was successfully updated.' }
         format.json { render json: {}, status: :ok }
       else
-        @visualization.errors[:base] << 'Permission denied' unless can_edit(@visualization)
+        @visualization.errors[:base] << 'Permission denied' unless can_edit?(@visualization)
         format.html { render action: 'edit' }
-        format.json { render json: @visualization.errors.full_messages, status: :unprocessable_entity }
+        format.json do
+          render json: @visualization.errors.full_messages,
+          status: :unprocessable_entity
+        end
       end
     end
   end
@@ -184,9 +190,7 @@ class VisualizationsController < ApplicationController
 
     if can_delete?(@visualization)
 
-      @visualization.media_objects.each do |m|
-        m.destroy
-      end
+      @visualization.media_objects.each(&:destroy)
 
       @visualization.destroy
 
@@ -235,21 +239,23 @@ class VisualizationsController < ApplicationController
     data_fields.push(typeID: TEXT_TYPE, unitName: 'String', fieldID: -1, fieldName: 'Data Set Name (id)')
     # create special grouping field for all datasets
     data_fields.push(typeID: TEXT_TYPE, unitName: 'String', fieldID: -1, fieldName: 'Combined Data Sets')
-
+    lat = ''
     # push real fields to temp variable
-    @project.fields.each do |field|
+    @project.fields.sort_by(&:index).each do |field|
       data_fields.push(typeID: field.field_type, unitName: field.unit, fieldID: field.id, fieldName: field.name)
+      lat = field.id.to_s if field.field_type == 4
     end
 
     has_pics = false
+    has_loc_data = false
     # create/push metadata for datasets
     i = 0
     @datasets.each do |dataset|
       photos = dataset.media_objects.to_a.keep_if { |mo| mo.media_type == 'image' }.map { |mo| mo.to_hash(true) }
       has_pics = true if photos.size > 0
       metadata[i] = { name: dataset.title, user_id: dataset.user_id, dataset_id: dataset.id, timecreated: dataset.created_at, timemodified: dataset.updated_at, photos: photos }
-
       dataset.data.each_with_index do |row, index|
+        has_loc_data = true if has_loc_data == false and lat != '' and row[lat] != ''
         unless row.class == Hash
           logger.info 'Bad row in JSON data:'
           logger.info row.inspect
@@ -279,12 +285,12 @@ class VisualizationsController < ApplicationController
     rel_vis = []
 
     # Determine which visualizations are relevant
-    if field_count[LONGITUDE_TYPE] > 0 and field_count[LATITUDE_TYPE] > 0
+    if field_count[LONGITUDE_TYPE] > 0 and field_count[LATITUDE_TYPE] > 0 and has_loc_data
       rel_vis.push 'Map'
     end
 
     if field_count[TIME_TYPE] > 0 and field_count[NUMBER_TYPE] > 0 and
-        format_data.count > 2
+       format_data.count > 2
       rel_vis.push 'Timeline'
     end
 

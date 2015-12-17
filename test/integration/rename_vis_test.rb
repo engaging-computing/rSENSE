@@ -1,25 +1,16 @@
 require 'test_helper'
+require_relative 'base_integration_test'
 
-class RenameVisTest < ActionDispatch::IntegrationTest
-  include CapyHelper
-
-  setup do
-    Capybara.current_driver = :webkit
-    Capybara.default_wait_time = 15
-  end
-
-  teardown do
-    finish
-  end
+class RenameVisTest < IntegrationTest
+  self.use_transactional_fixtures = false
 
   test 'create modify and delete a vis' do
     login('kcarcia@cs.uml.edu', '12345')
 
-    click_on 'Projects'
-    click_on 'Dessert is Delicious'
+    visit "/projects/#{projects(:dessert).id}"
     click_on 'Visualize'
 
-    page.execute_script "$('#save-ctrls > .vis-ctrl-header').click()"
+    find('#save-ctrls > .vis-ctrl-header').click
     assert page.has_content?('Save Visualization')
     click_on 'Save Visualization'
 
