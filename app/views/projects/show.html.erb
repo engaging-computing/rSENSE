@@ -11,15 +11,13 @@
                 <%= project_edit_helper "title", (can_edit? @project), false %>
               </div>
             </div>
-            <% if !@project.owner.nil? %>
-              <div class="col-sm-12">
-                <div class="info_label" style="font-size:1.1em">
-                  by: <%= link_to @project.owner.name, user_path(@project.owner) %>
-                  (<%= time_ago_in_words(@project.created_at) %> ago)
-                </div>
-                <br/>
+            <div class="col-sm-12">
+              <div class="info_label" style="font-size:1.1em">
+                by: <%= link_to @project.owner.name, user_path(@project.owner) %>
+                (<%= time_ago_in_words(@project.created_at) %> ago)
               </div>
-            <% end %>
+              <br/>
+            </div>
             <div class="col-sm-12">
               <div id="notices">
                 <span id="lock_notice"
@@ -37,16 +35,16 @@
                 </span>
               </div>
             </div>
-            <% if !@cloned_project.nil? and !is_deleted?(@cloned_project) %>
-              <div class="col-sm-12">
+            <div class="col-sm-12">
+              <% if !@cloned_project.nil? and !is_deleted?(@cloned_project) %>
                 <span class="info_label" style="font-size:1.1em">
                   <%= 'Cloned From: ' %>
                 </span>
                 <%= link_to @cloned_project.title.html_safe,
                     project_path(@cloned_project.id) %>
                 <br/>
-              </div>
-            <% end %>
+              <% end %>
+            </div>
           </div>
           <div class="row project_buttons">
             <button class="mdl-button mdl-js-button mdl-button--raised" disabled>
