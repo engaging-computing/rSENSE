@@ -154,7 +154,6 @@ $ ->
           if fs and fs.length == 1
             $('#sort-by').val(fs[0])
 
-
     if "Bar" in data.relVis
       globals.bar = new Bar 'bar-canvas'
     else
