@@ -56,10 +56,9 @@ $ ->
 
         cIndex = data.groups.indexOf(String(cellvalue).toLowerCase())
 
-        if gbid != colIndex
-          cIndex = -1
-
-        if (cIndex is -1) then return cellvalue
+        # If its not one of the groups or its not a value you're grouping by
+        # don't set a color.
+        if (cIndex is -1 or gbid != colIndex) then return cellvalue 
 
         return "<font color='#{globals.getColor(cIndex)}'>#{cellvalue}<font>"
 
