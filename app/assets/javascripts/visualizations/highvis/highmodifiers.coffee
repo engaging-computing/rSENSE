@@ -104,7 +104,7 @@ $ ->
     ###
     data.xySelector = (xIndex, yIndex, groupIndex, dp) ->
       rawData = dp.filter (p) =>
-        group = (String p[globals.configs.groupById]).toLowerCase() == @groups[groupIndex]
+        group = (String p[globals.configs.groupById]) == @groups[groupIndex]
         notNull = (p[xIndex] isnt null) and (p[yIndex] isnt null)
         notNaN = (not isNaN(p[xIndex])) and (not isNaN(p[yIndex]))
 
@@ -139,7 +139,7 @@ $ ->
       groupById = globals.configs.groupById
 
       filterFunc = (p) =>
-        (String p[groupById]).toLowerCase() == @groups[groupIndex]
+        (String p[groupById]) == @groups[groupIndex]
 
       newFilterFunc = if nans
         filterFunc
@@ -262,7 +262,7 @@ $ ->
     ###
     data.setIndexFromGroups = (gIndex) ->
       filterFunc = (dp) =>
-        (String dp[gIndex]).toLowerCase() == @groups[groupIndex]
+        (String dp[gIndex]) == @groups[groupIndex]
 
       rawData = for group, groupIndex in @groups
         selectedPoints = @dataPoints.filter filterFunc
@@ -283,7 +283,7 @@ $ ->
 
       for dp in @dataPoints
         if dp[gIndex] isnt null
-          result[String(dp[gIndex]).toLowerCase()] = true
+          result[String(dp[gIndex])] = true
 
       groups = for keys of result
         keys
