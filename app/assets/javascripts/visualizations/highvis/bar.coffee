@@ -110,7 +110,7 @@ $ ->
             [fieldTitle(data.fields[fid]), groupedData[fid][gid]]
 
           # Do not label x-axis if there is just one group
-          if options.data.length == 1 
+          if options.data.length == 1
             options.data[0][0] = ' '
 
           @chart.addSeries options, false
