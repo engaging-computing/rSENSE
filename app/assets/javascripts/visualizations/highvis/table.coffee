@@ -51,7 +51,14 @@ $ ->
         cellvalue = "" if $.type(cellvalue) is 'number' and isNaN(cellvalue) or
           cellvalue is null
 
+        gbid = globals.configs.groupById
+        colIndex = options.pos
+
         cIndex = data.groups.indexOf(String(cellvalue).toLowerCase())
+
+        if gbid != colIndex
+          cIndex = -1
+
         if (cIndex is -1) then return cellvalue
 
         return "<font color='#{globals.getColor(cIndex)}'>#{cellvalue}<font>"
