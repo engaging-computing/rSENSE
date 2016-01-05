@@ -405,19 +405,46 @@ $ ->
         if not @isZoomLocked() then $('#zoom-reset-btn').addClass("disabled")
         else $('#zoom-reset-btn').addClass("enabled")
 
+        badNumberPopoverTimerx = null
+        badNumberPopoverTimery = null
         $('#set-axis-button').click =>
+          $('#x-axis-range').popover('destroy')
+          $('#y-axis-range').popover('destroy')
+          regexPattern = /(-?\d+\.?\d*,-?\d+\.?\d*$)/
+
           xAxisRange = String($('#x-axis-range').val())
-          xAxisRangeArray = xAxisRange.split ","
-          xAxisMin = Number(xAxisRangeArray[0])
-          xAxisMax = Number(xAxisRangeArray[1])
-
           yAxisRange = String($('#y-axis-range').val())
-          yAxisRangeArray = yAxisRange.split ","
-          yAxisMin = Number(yAxisRangeArray[0])
-          yAxisMax = Number(yAxisRangeArray[1])
-
-
           
+          if xAxisRange.match(regexPattern)
+            alert "yes"
+            xAxisRangeArray = xAxisRange.split ","
+            xAxisMin = Number(xAxisRangeArray[0])
+            xAxisMax = Number(xAxisRangeArray[1])
+          else
+            $('#x-axis-range').popover
+              content: 'Please use for 1.0,5.5'
+              placement: 'bottom'
+              trigger: 'manual'
+            $('#x-axis-range').popover('show')
+            if badNumberPopoverTimerx? then clearTimeout(badNumberPopoverTimerx)
+            badNumberPopoverTimerx = setTimeout ->
+              $('#x-axis-range').popover('destroy')
+            , 3000
+
+          if yAxisRange.match(regexPattern)
+            yAxisRangeArray = yAxisRange.split ","
+            yAxisMin = Number(yAxisRangeArray[0])
+            yAxisMax = Number(yAxisRangeArray[1])
+          else
+            $('#y-axis-range').popover
+              content: 'Please use for 1.0,5.5'
+              placement: 'bottom'
+              trigger: 'manual'
+            $('#y-axis-range').popover('show')
+            if badNumberPopoverTimery? then clearTimeout(badNumberPopoverTimery)
+            badNumberPopoverTimery = setTimeout ->
+              $('#y-axis-range').popover('destroy')
+            , 3000
 
           @configs.xBounds.min = xAxisMin
           @configs.xBounds.max = xAxisMax
