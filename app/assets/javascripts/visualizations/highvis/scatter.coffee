@@ -382,6 +382,10 @@ $ ->
         outctx.title = 'Tools'
         outctx.body = HandlebarsTemplates[hbCtrl('scatter-tools')](inctx)
         tools = HandlebarsTemplates[hbCtrl('body')](outctx)
+
+
+
+
         $('#vis-ctrls').append tools
 
         # Add material design
@@ -400,6 +404,30 @@ $ ->
         # Set initial state of zoom reset
         if not @isZoomLocked() then $('#zoom-reset-btn').addClass("disabled")
         else $('#zoom-reset-btn').addClass("enabled")
+
+        $('#set-axis-button').click =>
+          xAxisRange = String($('#x-axis-range').val())
+          xAxisRangeArray = xAxisRange.split ","
+          xAxisMin = Number(xAxisRangeArray[0])
+          xAxisMax = Number(xAxisRangeArray[1])
+
+          yAxisRange = String($('#y-axis-range').val())
+          yAxisRangeArray = yAxisRange.split ","
+          yAxisMin = Number(yAxisRangeArray[0])
+          yAxisMax = Number(yAxisRangeArray[1])
+
+
+          
+
+          @configs.xBounds.min = xAxisMin
+          @configs.xBounds.max = xAxisMax
+
+          @configs.yBounds.min = yAxisMin
+          @configs.yBounds.max = yAxisMax
+
+          console.log "yaxisMin: " + @configs.yBounds.min
+          @setExtremes()
+
 
         $('#zoom-reset-btn').click (e) =>
           @resetExtremes($('#zoom-axis-list').val())
@@ -463,6 +491,7 @@ $ ->
         not (undefined in [@configs.xBounds.userMin, @configs.xBounds.userMax])
 
       resetExtremes: (whichAxis = 'Both') =>
+
         if @chart isnt undefined
           if whichAxis in ['Both', 'X']
             @configs.xBounds.userMin = undefined
@@ -472,8 +501,10 @@ $ ->
             @configs.yBounds.userMin = undefined
             @configs.yBounds.userMax = undefined
             @chart.yAxis[0].setExtremes()
+        #console.log "yaxisMin: " + @configs.yBounds.min
 
       setExtremes: ->
+        console.log "yaxisMin: " + @configs.yBounds.min
         if @chart?
           if(@configs.xBounds.min? and @configs.yBounds.min?)
             @chart.xAxis[0].setExtremes(@configs.xBounds.min,
@@ -481,6 +512,7 @@ $ ->
             @chart.yAxis[0].setExtremes(@configs.yBounds.min,
               @configs.yBounds.max, true)
           else @resetExtremes()
+        
 
       zoomOutExtremes: (whichAxis) ->
         xRange = @configs.xBounds.max - @configs.xBounds.min
