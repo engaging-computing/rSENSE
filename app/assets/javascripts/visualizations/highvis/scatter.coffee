@@ -412,7 +412,12 @@ $ ->
           $('#y-axis-range').popover('destroy')
           regexPattern = /(-?\d+\.?\d*,-?\d+\.?\d*$)/
 
-          xAxisRange = String($('#x-axis-range').val())
+          xAxisMin = $('#x-axis-min').val()
+          xAxisMax = $('#x-axis-max').val()
+
+          yAxisMin = $('#y-axis-min').val()
+          yAxisMax = $('#y-axis-max').val()
+
           yAxisRange = String($('#y-axis-range').val())
           
           if xAxisRange.match(regexPattern)
