@@ -361,6 +361,13 @@ $ ->
 
         @updateRegrTools()
 
+
+        # Set Axis range to initial zoom
+        $('#x-axis-min').val(@configs.xBounds.min)
+        $('#x-axis-max').val(@configs.xBounds.max)
+        $('#y-axis-min').val(@configs.yBounds.min)
+        $('#y-axis-max').val(@configs.yBounds.max)
+
       ###
       Draws radio buttons for changing symbol/line mode.
       ###
@@ -383,10 +390,12 @@ $ ->
         outctx.body = HandlebarsTemplates[hbCtrl('scatter-tools')](inctx)
         tools = HandlebarsTemplates[hbCtrl('body')](outctx)
 
-
-
-
         $('#vis-ctrls').append tools
+
+
+
+
+        
 
         # Add material design
         $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
@@ -411,6 +420,8 @@ $ ->
         badNumberPopoverTimerYMax = null
         badNumberPopoverTimerY = null
         badNumberPopoverTimerX = null
+
+
 
         $('#set-axis-button').click =>
           $('#x-axis-min').popover('destroy')
@@ -478,7 +489,13 @@ $ ->
 
           if thereIsAFailure then return
 
+          xAxisMin = Number(xAxisMin)
+          xAxisMax = Number(xAxisMax)
+          yAxisMin = Number(yAxisMin)
+          yAxisMax = Number(yAxisMax)
+
           if xAxisMin >= xAxisMax
+            console.log xAxisMin + " " + xAxisMax
             thereIsAFailure = true
             $('#x-axis-min').popover
               content: 'Left must be less than right'
@@ -513,7 +530,7 @@ $ ->
           @configs.yBounds.min = yAxisMin
           @configs.yBounds.max = yAxisMax
 
-          console.log "yaxisMin: " + @configs.yBounds.min
+          #console.log "yaxisMin: " + @configs.yBounds.min
           @setExtremes()
 
 
@@ -571,6 +588,9 @@ $ ->
         # Initialize and track the status of this control panel
         globals.configs.xAxisOpen ?= false
         initCtrlPanel('x-axis-ctrls', 'xAxisOpen')
+
+
+
 
       ###
       Checks if the user has requested a specific zoom
