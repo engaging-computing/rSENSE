@@ -1,4 +1,7 @@
 Rsense::Application.configure do
+  # Enable stdout logger
+  #   config.logger = Logger.new(STDOUT)
+
   # Settings specified here will take precedence over those in config/application.rb
 
   # The test environment is used exclusively to run your application's
@@ -45,4 +48,5 @@ Rsense::Application.configure do
     host: '127.0.0.1',
     port: 3001
   }
+
 end

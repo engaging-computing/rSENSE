@@ -1,4 +1,9 @@
 Rsense::Application.routes.draw do
+  devise_for :users
+  get '/users/:id/contributions' => 'users#contributions'
+  get '/users/:id/edit' => 'users#edit'
+  resources :users
+
   get 'testing/index'
 
   # See how all your routes lay out with "rake routes"
@@ -73,19 +78,7 @@ Rsense::Application.routes.draw do
   post '/projects/:id/finishTemplateUpload', to: 'projects#finishTemplateUpload'
   put '/projects/:id/removeField' => 'projects#removeField'
 
-  controller :sessions do
-    get 'login' => :new
-    post 'login' => :create
-    delete 'login' => :destroy
-  end
   get '/sessions/permissions' => 'sessions#permissions'
-
-  get '/users/pw_request' => 'users#pw_request'
-  post '/users/pw_send_key' => 'users#pw_send_key'
-  get '/users/pw_reset/:key' => 'users#pw_reset'
-  resources :users
-  get '/users/validate/:key' => 'users#validate'
-  get '/users/:id/contributions' => 'users#contributions'
 
   post '/projects/:id/updateLikedStatus' => 'projects#updateLikedStatus'
 
@@ -99,7 +92,7 @@ Rsense::Application.routes.draw do
 
   # Github Authentication Routes
   get '/auth/github' => 'sessions#github_authorize'
-  get '/auth/anon_github' => 'sessions#create_issue_anon'
+  get '/auth/anon_github' => 'application#create_issue_anon'
   get '/auth/github/callback' => 'application#create_issue'
   post '/submit_issue' => 'application#submit_issue'
 

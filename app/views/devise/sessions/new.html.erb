@@ -1,0 +1,39 @@
+<%= devise_error_messages! %><br>
+
+<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+ <div class="row">
+    <div class="col-lg-6 col-lg-offset-3">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3>Log in to iSENSE</h3>
+        </div>
+
+        <div class="panel-body">
+          <div class="form-group">
+            <%= f.label(:email, "Email:") %>
+            <%= f.email_field :email, autofocus: true, class: "form-control", placeholder: "user@email.com" %>
+          </div> 
+
+          <div class="form-group">
+            <%= f.label :password, "Password:" %><br />
+            <%= f.password_field :password, autocomplete: "off", class: "form-control" %>
+          </div>
+
+          <% if devise_mapping.rememberable? -%>
+            <div class="form-group">
+              <label for="user_remember_me" class="mdl-checkbox mdl-js-checkbox">
+                <%= f.check_box :remember_me, class: "mdl-checkbox__input" %>
+                <span >Remember me</span>
+              </label>
+            </div>
+          <% end -%>
+        </div>
+        <div class="panel-footer">
+          <div class="form-group">
+            <%= f.submit "Log in", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--blue" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

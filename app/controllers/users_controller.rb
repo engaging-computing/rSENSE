@@ -3,8 +3,7 @@ require 'base64'
 class UsersController < ApplicationController
   before_filter :authorize_admin, only: [:index]
 
-  skip_before_filter :authorize, only:
-    [:new, :create, :validate, :pw_request, :pw_send_key, :pw_reset]
+  skip_before_filter :authorize, except: [:show, :index]
 
   include ActionView::Helpers::DateHelper
   include ApplicationHelper
@@ -47,7 +46,7 @@ class UsersController < ApplicationController
     else
 
       recur = params.key?(:recur) ? params[:recur] == 'true' : false
-      show_hidden = @cur_user.id == @user.id
+      show_hidden = current_user.id == @user.id
 
       respond_to do |format|
         format.html { render status: :ok }
@@ -70,7 +69,7 @@ class UsersController < ApplicationController
       page_size = params[:page_size].to_i
     end
 
-    show_hidden = (@cur_user.id == @user.id) || can_admin?(@user)
+    show_hidden = (current_user.id == @user.id) || can_admin?(@user)
 
     @contributions = []
     @objtype = ''
@@ -145,59 +144,32 @@ class UsersController < ApplicationController
     end
   end
 
-  # GET /users/new
-  # GET /users/new.json
-  def new
-    @user = User.new
-  end
-
   # GET /users/1/edit
   def edit
     @user = User.find(params[:id])
 
-    unless @cur_user.admin or @user == @cur_user
+    unless current_user.admin or @user == current_user
       render_404
       return
-    end
-  end
-
-  # POST /users
-  # POST /users.json
-  def create
-    @user = User.new(user_params)
-    @user.reset_validation!
-
-    captcha_message = 'Sorry, but the reCAPTCHA was incorrect.'
-
-    respond_to do |format|
-      if verify_recaptcha(model: @user, message: captcha_message) && @user.save
-        session[:user_id] = @user.id
-
-        UserMailer.validation_email(@user)
-
-        format.html { redirect_to @user, notice: 'User was successfully created.' }
-        format.json { render json: @user.to_hash(false), status: :created, location: @user }
-      else
-        flash[:error] = @user.errors.full_messages
-        format.html { render action: 'new' }
-
-      end
     end
   end
 
   # PUT /users/1
   # PUT /users/1.json
   def update
-    @user = User.find(params[:id])
     auth = false
     auth_error = 'Not authorized to update user'
 
-    auth  = true if @cur_user.admin?
+    @user = User.find_for_database_authentication(id: params[:id])
+
+    sign_in('user', @user)
+
+    auth  = true if current_user.admin?
     auth  = true if can_edit?(@user) && session[:pw_change]
 
     if !auth && can_edit?(@user)
       if (params[:user][:password].nil? && params[:user][:email].nil?) or
-         @user.authenticate(params[:current_password])
+         @user.valid_password?(params[:password])
         auth  = true
       else
         auth_error = "Current password doesn't match"
@@ -230,7 +202,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
 
     if can_delete?(@user)
-      if @cur_user.id == @user.id
+      if current_user.id == @user.id
         session[:user_id] = nil
       end
       @user.likes.each(&:destroy)
@@ -340,7 +312,7 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    if @cur_user.try(:admin)
+    if current_user.try(:admin)
       params[:user].permit(:content, :email, :email_confirmation, :name, :password, :password_confirmation,
                            :admin, :validated, :hidden, :bio, :last_login)
     else

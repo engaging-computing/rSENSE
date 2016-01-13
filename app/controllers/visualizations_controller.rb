@@ -91,7 +91,7 @@ class VisualizationsController < ApplicationController
   # POST /visualizations
   # POST /visualizations.json
   def create
-    params[:visualization][:user_id] = @cur_user.id
+    params[:visualization][:user_id] = current_user.id
 
     # Remove any piggybacking updates
     if params[:visualization].try(:[], :tn_file_key)
@@ -110,7 +110,7 @@ class VisualizationsController < ApplicationController
         mo.media_type = 'image'
         mo.name = 'image.png'
         mo.file = 'image.png'
-        mo.user_id = @cur_user.id
+        mo.user_id = current_user.id
         mo.check_store!
 
         image = MiniMagick::Image.read(params[:visualization][:svg], '.svg')
@@ -355,7 +355,7 @@ class VisualizationsController < ApplicationController
   private
 
   def visualization_params
-    if @cur_user.try(:admin)
+    if current_user.try(:admin)
       params[:visualization].permit(:content, :data, :project_id, :globals, :title, :user_id, :featured,
                                     :featured_at, :tn_src, :tn_file_key, :summary, :thumb_id, :featured_media_id)
     else

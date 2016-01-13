@@ -5,7 +5,7 @@ nixon:
   email: nixon@whitehouse.gov
   validated: true
   # Password is "12345"
-  password_digest: $2a$10$aK2OsTVTnWuPVmDthm9pj.vDApO9VGNgRwvwHmwzVQ0ScmW3BOPjC
+  encrypted_password: <%= Devise::Encryptor.digest(User, '12345') %>
   admin: true
   created_at: <%= 5.day.ago.to_s(:db) %>
 
@@ -14,7 +14,7 @@ kate:
   email: kcarcia@cs.uml.edu 
   validated: true
   # Password is "12345"
-  password_digest: $2a$10$aK2OsTVTnWuPVmDthm9pj.vDApO9VGNgRwvwHmwzVQ0ScmW3BOPjC
+  encrypted_password: <%= Devise::Encryptor.digest(User, '12345') %>
   admin: false
   created_at: <%= 6.day.ago.to_s(:db) %>
 
@@ -22,7 +22,7 @@ crunch:
   name: Captain C.
   email: captncrunch@example.com
   validated: false
-  password_digest: $2a$10$aK2OsTVTnWuPVmDthm9pj.vDApO9VGNgRwvwHmwzVQ0ScmW3BOPjC
+  encrypted_password: <%= Devise::Encryptor.digest(User, '12345') %>
   validation_key: abcd
   created_at: <%= 7.day.ago.to_s(:db) %>
 
@@ -30,6 +30,6 @@ boxes:
   name: boxes
   email: boxes@boxes.boxes
   validated: true
-  password_digest: $2a$10$aK2OsTVTnWuPVmDthm9pj.vDApO9VGNgRwvwHmwzVQ0ScmW3BOPjC
+  encrypted_password: <%= Devise::Encryptor.digest(User, '12345') %>
   admin: false
   created_at: <%= 8.day.ago.to_s(:db) %>

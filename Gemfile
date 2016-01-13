@@ -93,3 +93,5 @@ gem 'recaptcha', git: 'https://github.com/ambethia/recaptcha'
 
 # Allow CORS
 gem 'rack-cors', :require => 'rack/cors'
+
+gem 'devise'
