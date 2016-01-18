@@ -124,6 +124,32 @@ $ ->
 
         return gData
 
+
+      ###
+      Calculate data to be displayed subject to analysis type
+      Returns an object of key-value pairs of the form { groupId, value }
+      This function is used when the groups are fields.
+      ###
+      getFieldData: () ->
+        fData = {}
+        dp = globals.getData(true, globals.configs.activeFilters)
+
+        analysisMethod =
+          switch @configs.analysisType
+            when @ANALYSISTYPE_TOTAL      then data.getTotal
+            when @ANALYSISTYPE_MAX        then data.getMax
+            when @ANALYSISTYPE_MIN        then data.getMin
+            when @ANALYSISTYPE_MEAN       then data.getMean
+            when @ANALYSISTYPE_MEAN_ERROR then data.getMean
+            when @ANALYSISTYPE_MEDIAN     then data.getMedian
+            when @ANALYSISTYPE_COUNT      then data.getCount
+
+        hiddenFields = data.fields.map((field) -> field.fieldID).filter((id) -> id == -1).length
+        for fieldId, index in data.groupSelection
+          fData[index] = analysisMethod.call(data, fieldId + hiddenFields, null, dp)
+
+        return fData
+
       ###
       Draw clipping controls
       ###
@@ -417,7 +443,6 @@ $ ->
           gid =
             if e.target then Number(e.target.value)
             else Number(e.srcElement.value)
-
           data.setGroupIndex(gid)
           globals.configs.groupById = gid
           data.groupSelection = for vals, keys in data.groups

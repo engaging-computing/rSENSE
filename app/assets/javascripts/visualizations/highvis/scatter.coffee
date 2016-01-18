@@ -214,7 +214,10 @@ $ ->
       ###
       drawControls: ->
         super()
-        @drawGroupControls(data.textFields)
+        # Remove group by number fields, only for pie chart
+        groups = $.extend(true, [], data.textFields)
+        groups.splice(2, 1)
+        @drawGroupControls(groups)
         @drawXAxisControls()
         @drawYAxisControls(globals.configs.fieldSelection,
           data.normalFields.slice(1), false)

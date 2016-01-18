@@ -239,6 +239,8 @@ class VisualizationsController < ApplicationController
     data_fields.push(typeID: TEXT_TYPE, unitName: 'String', fieldID: -1, fieldName: 'Data Set Name (id)')
     # create special grouping field for all datasets
     data_fields.push(typeID: TEXT_TYPE, unitName: 'String', fieldID: -1, fieldName: 'Combined Data Sets')
+    # create special grouping field for number fields
+    data_fields.push(typeID: TEXT_TYPE, unitName: 'String', fieldID: -1, fieldName: 'Number Fields')
     lat = ''
     # push real fields to temp variable
     @project.fields.sort_by(&:index).each do |field|
@@ -264,6 +266,7 @@ class VisualizationsController < ApplicationController
         arr = []
         arr.push index + 1
         arr.push "#{dataset.title}(#{dataset.id})"
+        arr.push 'All'
         arr.push 'All'
 
         data_fields.slice(arr.length, data_fields.length).each do |field|

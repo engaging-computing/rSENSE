@@ -439,6 +439,9 @@ $ ->
 
       drawControls: ->
         super()
+        # Remove group by number fields
+        groups = $.extend(true, [], data.textFields)
+        groups.splice(2, 1)
         @drawGroupControls(data.textFields, true)
         @drawToolControls()
         @drawClippingControls()
