@@ -422,7 +422,7 @@ $ ->
         badNumberPopoverTimerX = null
 
 
-
+        # Axis Manual entry
         $('#set-axis-button').click =>
           $('#x-axis-min').popover('destroy')
           $('#x-axis-max').popover('destroy')
@@ -437,7 +437,7 @@ $ ->
           yAxisMin = $('#y-axis-min').val()
           yAxisMax = $('#y-axis-max').val()
 
-          console.log xAxisMin
+          #console.log xAxisMin
 
           if isNaN(xAxisMin) or xAxisMin == ""
             thereIsAFailure = true
@@ -494,6 +494,8 @@ $ ->
           yAxisMin = Number(yAxisMin)
           yAxisMax = Number(yAxisMax)
 
+          console.log @
+
           if xAxisMin >= xAxisMax
             console.log xAxisMin + " " + xAxisMax
             thereIsAFailure = true
@@ -521,8 +523,8 @@ $ ->
 
           if thereIsAFailure then return
 
-
-
+          @configs.xBounds.userMin = xAxisMin
+          @configs.xBounds.userMax = xAxisMax
 
           @configs.xBounds.min = xAxisMin
           @configs.xBounds.max = xAxisMax
@@ -599,7 +601,7 @@ $ ->
         not (undefined in [@configs.xBounds.userMin, @configs.xBounds.userMax])
 
       resetExtremes: (whichAxis = 'Both') =>
-
+        
         if @chart isnt undefined
           if whichAxis in ['Both', 'X']
             @configs.xBounds.userMin = undefined
@@ -619,7 +621,9 @@ $ ->
               @configs.xBounds.max, true)
             @chart.yAxis[0].setExtremes(@configs.yBounds.min,
               @configs.yBounds.max, true)
-          else @resetExtremes()
+          else 
+            @resetExtremes()
+            
         
 
       zoomOutExtremes: (whichAxis) ->
