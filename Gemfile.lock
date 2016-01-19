@@ -21,6 +21,13 @@ GIT
       ruby-progressbar (~> 1.4)
 
 GIT
+  remote: https://github.com/isenseDev/beaker-lang
+  revision: 8a9cec7814f8c29c1c6cd79e4ccdaa53c27ea399
+  specs:
+    beaker (1.0.0)
+      rltk
+
+GIT
   remote: https://github.com/isenseDev/better-colorpicker
   revision: abb1a3ebb6e20bea6a3dfd5ed2b5bab09a83c552
   specs:
@@ -122,6 +129,7 @@ GEM
     erubis (2.7.0)
     execjs (2.2.2)
     ffi (1.9.8)
+    filigree (0.3.3)
     font-awesome-rails (4.2.0.0)
       railties (>= 3.2, < 5.0)
     handlebars (0.6.0)
@@ -198,6 +206,9 @@ GEM
     ref (1.0.5)
     remotipart (1.2.1)
     rinku (1.5.1)
+    rltk (3.0.1)
+      ffi (>= 1.0.0)
+      filigree (>= 0.2.0)
     roo (1.13.2)
       nokogiri
       rubyzip
@@ -259,6 +270,7 @@ PLATFORMS
 DEPENDENCIES
   auto_html
   bcrypt-ruby
+  beaker (~> 1.0)!
   better_colorpicker (~> 0.1.2)!
   better_datetimepicker (~> 0.0.8)!
   bootstrap-sass
