@@ -261,9 +261,15 @@ class FileUploader
     end
 
     data_obj = remove_empty_lines(data_obj)
+    remove_keys = []
 
     data.each do |(key, value)|
-      field = Field.find(key)
+      field = Field.find_by_id(key)
+      if field.nil?
+        remove_keys.push(key)
+        next
+      end
+
       type = get_field_name(field.field_type)
       value.each_with_index do |dp, index|
         if dp.nil? or (dp.to_s.strip == '')
@@ -297,6 +303,11 @@ class FileUploader
         end
       end
     end
+
+    remove_keys.each do |key|
+      data.delete(key)
+    end
+
     { status: true, msg: 'passed', data_obj: data }
   end
 
