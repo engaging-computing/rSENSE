@@ -57,6 +57,7 @@ $ ->
     data.DATA_POINT_ID_FIELD = 0
     data.DATASET_NAME_FIELD = 1
     data.COMBINED_FIELD = 2
+    data.CONTRIBUTOR_FIELD = 3
 
     data.types ?=
       TIME: 1

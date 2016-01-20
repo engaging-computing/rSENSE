@@ -107,6 +107,8 @@ $ ->
       ###
       getGroupedData: (field) ->
         dp = globals.getData(true, globals.configs.activeFilters)
+        console.log "Dp"
+        console.log dp
         gData = {}
 
         analysisMethod =

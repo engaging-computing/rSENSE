@@ -239,6 +239,8 @@ class VisualizationsController < ApplicationController
     data_fields.push(typeID: TEXT_TYPE, unitName: 'String', fieldID: -1, fieldName: 'Data Set Name (id)')
     # create special grouping field for all datasets
     data_fields.push(typeID: TEXT_TYPE, unitName: 'String', fieldID: -1, fieldName: 'Combined Data Sets')
+    # create a special grouping field for contributors
+    data_fields.push(typeID: TEXT_TYPE, unitName: 'String', fieldID: -1, fieldName: 'Contributors')
     lat = ''
     # push real fields to temp variable
     @project.fields.sort_by(&:index).each do |field|
@@ -265,6 +267,13 @@ class VisualizationsController < ApplicationController
         arr.push index + 1
         arr.push "#{dataset.title}(#{dataset.id})"
         arr.push 'All'
+        
+        # push unique contributors
+        if dataset.key.nil?
+          arr.push "User: #{User.select(:name).find(dataset.user_id).name}"
+        else
+          arr.push "Key: #{dataset.key}"
+        end
 
         data_fields.slice(arr.length, data_fields.length).each do |field|
           arr.push row[field[:fieldID].to_s]
