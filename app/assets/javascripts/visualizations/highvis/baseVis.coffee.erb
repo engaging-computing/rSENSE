@@ -764,6 +764,9 @@ $ ->
       Should destroy the chart, hide its canvas and remove controls.
       ###
       end: ->
+        if "Pie" in data.relVis and globals.configs.groupById == data.NUMBER_FIELDS_FIELD
+          $('#group-by').val(data.COMBINED_FIELD).change()
+          
         if @chart?
           @chart.destroy()
           @chart = undefined

@@ -171,8 +171,7 @@ $ ->
         rawData = @multiGroupSelector(fieldIndex, groupIndices, dp)
       else
         if typeof groupIndices is 'number' then groupIndices = [groupIndices]
-        rawData = dp
-        rawData.map (p) -> p[fieldIndex]
+        rawData = dp.map (p) -> p[fieldIndex]
 
       if rawData.length > 0
         result = rawData.reduce (a,b) -> Math.max(a, b)
@@ -189,8 +188,8 @@ $ ->
         if typeof groupIndices is 'number' then groupIndices = [groupIndices]
         rawData = @multiGroupSelector(fieldIndex, groupIndices, dp)
       else
-        rawData = dp
-        rawData.map (p) -> p[fieldIndex]
+        rawData = dp.map (p) -> p[fieldIndex]
+
       if rawData.length > 0
         result = rawData.reduce (a,b) -> Math.min(a, b)
         data.precisionFilter(result)
@@ -206,8 +205,7 @@ $ ->
         if typeof groupIndices is 'number' then groupIndices = [groupIndices]
         rawData = @multiGroupSelector(fieldIndex, groupIndices, dp)
       else
-        rawData = dp
-        rawData.map (p) -> p[fieldIndex]
+        rawData = dp.map (p) -> p[fieldIndex]
 
       if rawData.length > 0
         result = (rawData.reduce (a,b) -> a + b) / rawData.length
@@ -224,8 +222,7 @@ $ ->
         if typeof groupIndices is 'number' then groupIndices = [groupIndices]
         rawData = @multiGroupSelector(fieldIndex, groupIndices, dp)
       else
-        rawData = dp
-        rawData.map (p) -> p[fieldIndex]
+        rawData = dp.map (p) -> p[fieldIndex]
 
       rawData.sort (a, b) ->
         if a < b then -1 else 1
@@ -246,10 +243,9 @@ $ ->
     data.getCount = (fieldIndex, groupIndices, dp) ->
       if groupIndices?
         if typeof groupIndices is 'number' then groupIndices = [groupIndices]
-        rawData = @multiGroupSelector(fieldIndex, groupIndices, dp)
+        dataCount = @multiGroupSelector(fieldIndex, groupIndices, dp).length
       else
-        rawData = dp
-        rawData.map (p) -> p[fieldIndex]
+        dataCount = (dp.map (p) -> p[fieldIndex]).length
 
       return dataCount
 
@@ -262,8 +258,7 @@ $ ->
         if typeof groupIndices is 'number' then groupIndices = [groupIndices]
         rawData = @multiGroupSelector(fieldIndex, groupIndices, dp)
       else
-        rawData = dp
-        rawData = rawData.map (p) -> p[fieldIndex]
+        rawData = dp.map (p) -> p[fieldIndex]
 
       if rawData.length > 0
         total = 0
