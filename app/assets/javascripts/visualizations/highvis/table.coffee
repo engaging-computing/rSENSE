@@ -219,7 +219,7 @@ $ ->
         super()
         # Remove group by number fields, only for pie chart
         groups = $.extend(true, [], data.textFields)
-        groups.splice(2, 1)
+        groups.splice(data.NUMBER_FIELDS_FIELD - 1, 1)
         @drawGroupControls(groups)
         fields = (i for f, i in data.fields when i isnt data.COMBINED_FIELD and i isnt data.NUMBER_FIELDS_FIELD)
         @drawYAxisControls(@configs.tableFields,

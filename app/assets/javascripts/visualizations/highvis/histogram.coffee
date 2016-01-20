@@ -339,7 +339,7 @@ $ ->
         super()
         # Remove group by number fields, only for pie chart
         groups = $.extend(true, [], data.textFields)
-        groups.splice(2, 1)
+        groups.splice(data.NUMBER_FIELDS_FIELD - 1, 1)
         @drawGroupControls(groups)
 
         handler = (selected, selFields) =>

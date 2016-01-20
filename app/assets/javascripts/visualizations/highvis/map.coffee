@@ -441,8 +441,8 @@ $ ->
         super()
         # Remove group by number fields
         groups = $.extend(true, [], data.textFields)
-        groups.splice(2, 1)
-        @drawGroupControls(data.textFields, true)
+        groups.splice(data.NUMBER_FIELDS_FIELD - 1, 1)
+        @drawGroupControls(groups, true)
         @drawToolControls()
         @drawClippingControls()
         @drawSaveControls()
