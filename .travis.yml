@@ -1,23 +1,24 @@
+sudo: false
 language: 
   - ruby
 rvm:
   - 2.1.1
 env:
   - DB=default
-  - DB=postgres 
+  - DB=postgres
+addons:
+  apt:
+    packages:
+    - libreoffice
+    - libreoffice-calc
+    - unoconv
 before_script:
   - bundle exec rake db:preprep
   - psql -c 'create database rsense_test;' -U postgres
   - RAILS_ENV=test bundle exec rake db:migrate --trace
   - bundle exec rake db:test:prepare
 before_install:
-  - sudo apt-get update -qq
   - "gem install bundler --version '>= 1.5.1'"
   - bundle install
-  - sudo apt-get install -qq libreoffice libreoffice-calc unoconv
-  - sudo rm -rf /dev/shm
-  - sudo ln -s /run/shm /dev/shm
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
-install:
-  - libreoffice --headless --accept="socket,host=0,port=8001,tcpNoDelay=1;urp" --nodefault --nofirststartwizard --nolockcheck --nologo --norestore --invisible &
