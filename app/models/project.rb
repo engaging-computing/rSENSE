@@ -230,6 +230,13 @@ class Project < ActiveRecord::Base
       field_map[f.id.to_s] = nf.id.to_s
     end
 
+    # Clone formula fields
+    formula_fields.each do |f|
+      nf = f.dup
+      nf.project_id = new_project.id
+      nf.save
+    end
+
     # Clone Media Objects
     media_objects.each do |mo|
       next unless mo.data_set_id.nil?
@@ -262,17 +269,25 @@ class Project < ActiveRecord::Base
         nds.project_id = new_project.id
         nds.user_id = user_id
         nds.created_at = ds.created_at
+
         # Fix data fields
         data = nds.data
         new_data = []
         data.each do |row|
           field_map.each do |old_key, new_key|
             row[new_key] = row[old_key]
+            puts row[new_key].length
             row.delete old_key
           end
           new_data.push row
         end
         nds.data = new_data
+
+        # Fix formula data fields
+        # We're just blanking out the data so that when we call save we can
+        #  regenerate the data
+        nds.formula_data = {}
+
         nds.save!
 
         # Clone dataset media
