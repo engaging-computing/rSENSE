@@ -107,7 +107,7 @@ $ ->
       drawControls: ->
         super()
 
-        @drawGroupControls([1, 2])
+        @drawGroupControls([1, 2, 3])
 
     if 'Photos' in data.relVis
       globals.photos = new Photos 'photos-canvas'

@@ -58,6 +58,7 @@ $ ->
     data.DATASET_NAME_FIELD = 1
     data.COMBINED_FIELD = 2
     data.NUMBER_FIELDS_FIELD = 3
+    data.CONTRIBUTOR_FIELD = 4
 
     data.types ?=
       TIME: 1
