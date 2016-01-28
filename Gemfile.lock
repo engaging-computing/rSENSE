@@ -21,13 +21,6 @@ GIT
       ruby-progressbar (~> 1.4)
 
 GIT
-  remote: https://github.com/isenseDev/beaker-lang
-  revision: 8a9cec7814f8c29c1c6cd79e4ccdaa53c27ea399
-  specs:
-    beaker (1.0.0)
-      rltk
-
-GIT
   remote: https://github.com/isenseDev/better-colorpicker
   revision: abb1a3ebb6e20bea6a3dfd5ed2b5bab09a83c552
   specs:
@@ -46,6 +39,12 @@ GIT
       coffee-rails-source-maps
       rails (~> 4)
       sass
+
+PATH
+  remote: ~/Documents/ecg/beaker-lang
+  specs:
+    beaker (1.0.0)
+      rltk
 
 GEM
   remote: https://rubygems.org/
@@ -270,7 +269,7 @@ PLATFORMS
 DEPENDENCIES
   auto_html
   bcrypt-ruby
-  beaker (~> 1.0)!
+  beaker!
   better_colorpicker (~> 0.1.2)!
   better_datetimepicker (~> 0.0.8)!
   bootstrap-sass

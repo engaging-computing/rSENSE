@@ -292,6 +292,14 @@ class Project < ActiveRecord::Base
     new_project
   end
 
+  def recalculate_data_sets
+    return if formula_fields.length == 0
+    data_sets.map do |x|
+      x.save!
+      # x.recalculate formula_fields, fields
+    end
+  end
+
   def summernote_media_objects
     self.content = MediaObject.create_media_objects(content, 'project_id', id, user_id)
   end

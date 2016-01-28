@@ -18,6 +18,9 @@ class AddFormulaFields < ActiveRecord::Migration
     Field.find_each do |f|
       f.update_attribute :refname, f.choose_refname
     end
+
+    # add a formula data field
+    add_column :data_sets, :formula_data, :text, default: '[]', null: false
   end
 
   def down
@@ -26,5 +29,8 @@ class AddFormulaFields < ActiveRecord::Migration
 
     # remove the refname attribute
     remove_column :fields, :refname
+
+    # remove the formula data attribute
+    remove_column :data_sets, :formula_data
   end
 end

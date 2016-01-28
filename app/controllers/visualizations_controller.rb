@@ -242,8 +242,13 @@ class VisualizationsController < ApplicationController
     lat = ''
     # push real fields to temp variable
     @project.fields.sort_by(&:index).each do |field|
-      data_fields.push(typeID: field.field_type, unitName: field.unit, fieldID: field.id, fieldName: field.name)
+      data_fields.push(typeID: field.field_type, unitName: field.unit, fieldID: "#{field.id}", fieldName: field.name, formula: false)
       lat = field.id.to_s if field.field_type == 4
+    end
+
+    # push formula fields to temp variable
+    @project.formula_fields.sort_by(&:index).each do |field|
+      data_fields.push(typeID: field.field_type, unitName: field.unit, fieldID: "f#{field.id}", fieldName: field.name, formula: true)
     end
 
     has_pics = false
@@ -267,7 +272,11 @@ class VisualizationsController < ApplicationController
         arr.push 'All'
 
         data_fields.slice(arr.length, data_fields.length).each do |field|
-          arr.push row[field[:fieldID].to_s]
+          if field[:formula]
+            arr.push dataset.formula_data[index][field[:fieldID][1..-1]]
+          else
+            arr.push row[field[:fieldID]]
+          end
         end
 
         format_data.push arr

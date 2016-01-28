@@ -276,6 +276,9 @@ class ProjectsController < ApplicationController
     add_number_fields(params) or return
     add_text_fields(params) or return
 
+    @project.reload
+    @project.recalculate_data_sets
+
     redirect_to "/projects/#{@project.id}", notice: 'Fields were successfully updated.'
   end
 
@@ -293,6 +296,9 @@ class ProjectsController < ApplicationController
     # Add fields based on type
     add_number_formula_fields(params) or return
     add_text_formula_fields(params) or return
+
+    @project.reload
+    @project.recalculate_data_sets
 
     redirect_to "/projects/#{@project.id}", notice: 'Formula fields were successfully updated.'
   end

@@ -81,6 +81,8 @@ class Field < ActiveRecord::Base
   end
 
   def choose_refname
+    return if refname != ''
+
     parent = Project.find_by_id(project_id)
     other_refnames = []
     unless parent.nil?

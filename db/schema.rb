@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(version: 20150924115657) do
     t.text     "data",             default: "[]", null: false
     t.string   "key"
     t.string   "contributor_name"
+    t.text     "formula_data",     default: "[]", null: false
   end
 
   create_table "fields", force: true do |t|
