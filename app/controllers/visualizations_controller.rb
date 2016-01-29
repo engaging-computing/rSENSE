@@ -270,13 +270,7 @@ class VisualizationsController < ApplicationController
         arr.push "#{dataset.title}(#{dataset.id})"
         arr.push 'All'
         arr.push 'All'
-        
-        # push unique contributors
-        if dataset.key.nil?
-          arr.push "User: #{User.select(:name).find(dataset.user_id).name}"
-        else
-          arr.push "Key: #{dataset.key}"
-        end
+        arr.push dataset.key.nil? ? "User: #{User.select(:name).find(dataset.user_id).name}" : "Key: #{dataset.key}"
 
         data_fields.slice(arr.length, data_fields.length).each do |field|
           arr.push row[field[:fieldID].to_s]

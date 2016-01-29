@@ -1,6 +1,5 @@
 class AddGroupsToSavedVisualizations < ActiveRecord::Migration
-
-  class Number_Field
+  class NumberField
     def self.typeID
       3
     end
@@ -15,7 +14,7 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
     end
   end
 
-   class Contributor_Field
+  class ContributorField
     def self.typeID
       3
     end
@@ -31,23 +30,19 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
   end
 
   def up
-    add_field('up', 3, Number_Field)
-    add_field('up', 4, Contributor_Field)
+    say 'adding group by contributor and group by number fields to saved vises'
+    add_field(1, 3, NumberField)
+    add_field(1, 4, ContributorField)
   end
 
   def down
-    add_field('down', 4)
-    add_field('down', 3)
+    say 'removing group by contributor and group by number fields to saved vises'
+    add_field(-1, 4)
+    add_field(-1, 3)
   end
 
-  def add_field(direction, position, field=nil)
-
-    if direction == 'up'
-      say 'adding group by contributor and group by number fields to saved vises'
-    else
-      say 'removing group by contributor and group by number fields to saved vises'
-    end
-
+  # 1 for up, -1 for down, position of field being added or removed, field (if field is being added)
+  def add_field(direction, position, field = nil)
     # Refactor globals for default projects to account for new group by field
     Project.find_each do | p |
       next if p.globals.nil?
@@ -56,7 +51,7 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
       globals = JSON.parse(p.globals)
 
       # update everything field related
-      globals = refactor_globals(globals, dir)
+      globals = refactor_globals(globals, direction, position)
 
       # save the new globals
       p.globals = JSON.dump(globals)
@@ -64,20 +59,19 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
     end
 
     # Add field to saved visualization
-    Visualization.find_each do |v|
+    Visualization.find_each do | v |
       globals = v.globals.nil? ? nil : JSON.parse(v.globals)
-      data = v.data.nil? ? nil : JSON.parse(v.data)
+      data = (v.data.nil? or v.data == 'null') ? nil : JSON.parse(v.data)
 
       # update everything field related
       unless globals.nil?
-        globals = refactor_globals(globals, direction)
+        globals = refactor_globals(globals, direction, position)
         v.globals = JSON.dump(globals)
       end
       unless data.nil?
-        data = refactor_data(data, direction)
-        v.data = JSON.dump(data)
+        v.data = JSON.dump(refactor_data(data, direction, position, field))
       end
- 
+
       # save the new globals and data
       v.save
     end
@@ -85,10 +79,10 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
 
   # If direction is up, must pass a field, and position to insert it
   # If direction is down, pass the position of the field to remove
-  def refactor_data(data, direction, position, field=nil)
+  def refactor_data(data, direction, position, field = nil)
     fields = data['fields']
     unless fields.nil?
-      if dir == "up"
+      if direction == 1
         new_field = {}
         new_field['typeID'] = field.typeID
         new_field['unitName'] = field.unitName
@@ -104,8 +98,8 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
     dp = data['dataPoints']
     unless dp.nil? or dp.length == 0
       dp.each_with_index do | d, i |
-        if dir == 'up'
-          # This is the group the data point belongs to. 
+        if direction == 1
+          # This is the group the data point belongs to.
           # We need to add the group to every data point
           if field.fieldName == 'Contributors'
             # Every point has a data set name value, we can get the id from that, then we can get the contributor who created it
@@ -116,7 +110,7 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
             contrib_name = DataSet.find(ds_id).contributor_name
             if contrib_name?
               dp[i].insert(position, contrib_name)
-            else 
+            else
               user_name User.find(DataSet.find(ds_id).user_id).name
               dp[i].insert(position, user_name)
             end
@@ -125,27 +119,22 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
           end
 
         # down migration
-        else 
+        else
           dp[i].delete_at(position)
         end
       end
       data['dataPoints'] = dp
 
       text_fields = data['textFields']
-      insert_end = true
-      insert_pos = 0
       unless text_fields.nil? or text_fields.length == 0
         text_fields.each_with_index do | f, i |
           # if greater than position, add 1 because it was shifted over
           if f >= position
-            insert_end = false
-            f++
-          end
-          if insert_end
-            insert_pos = i
+            text_fields[i] += direction
           end
         end
-        text_fields.insert(insert_pos, position)
+        text_fields.push(position)
+        text_fields.sort!
       end
       data['textFields'] = text_fields
 
@@ -154,19 +143,18 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
         time_fields.each_with_index do | f, i |
           # if greater than position, add 1 because it was shifted over
           if f >= position
-            f++
+            time_fields[i] += direction
           end
         end
-      end 
-      data['timeFields'] = timeFields
+      end
+      data['timeFields'] = time_fields
 
       numeric_fields = data['numericFields']
       unless numeric_fields.nil? or numeric_fields.length == 0
         numeric_fields.each_with_index do | f, i |
           # if greater than position, add 1 because it was shifted over
           if f >= position
-            insert_end = false
-            f++
+            numeric_fields[i] += direction
           end
         end
       end
@@ -177,8 +165,7 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
         geo_fields.each_with_index do | f, i |
           # if greater than position, add 1 because it was shifted over
           if f >= position
-            insert_end = false
-            f++
+            geo_fields[i] += direction
           end
         end
       end
@@ -189,43 +176,39 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
         normal_fields.each_with_index do | f, i |
           # if greater than position, add 1 because it was shifted over
           if f >= position
-            insert_end = false
-            f++
+            normal_fields[i] += direction
           end
         end
       end
       data['normalFields'] = normal_fields
 
       group_selection = data['groupSelection']
-      insert_end = true
-      insert_pos = 0
       unless group_selection.nil? or group_selection.length == 0
         group_selection.each_with_index do | g, i |
           # if greater than position, add 1 because it was shifted over
           if g >= position
-            insert_end = false
-            g++
-          end
-          if insert_end
-            insert_pos = i
+            group_selection[i] += direction
           end
         end
+        group_selection.push(position)
+        group_selection.sort!
       end
-      data['groupSelection'] = groupSelection
-      
+      data['groupSelection'] = group_selection
     end
   end
 
-  def refactor_globals(data, direction, position, field=nil)
+  def refactor_globals(globals, direction, position)
+    # move index of fields up or down after field being added or removed
+
     # global
     subglobals = globals['globals']
     unless subglobals.nil?
       if subglobals['groupById'] >= position
-        subglobals['groupById'] += 1
+        subglobals['groupById'] += direction
       end
       subglobals['fieldSelection'].each_with_index do | f, i |
-        if f >= Param.n
-          subglobals['fieldSelection'][i] += 1
+        if f >= position
+          subglobals['fieldSelection'][i] += direction
         end
       end
       globals['globals'] = subglobals
@@ -235,19 +218,19 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
     map = globals['Map']
     unless map.nil?
       if !map['heatmapSelection'].nil? && map['heatmapSelection'] >= position
-        map['heatmapSelection'] += 1
+        map['heatmapSelection'] += direction
       end
       globals['Map'] = map
     end
 
     # timeline
-    timeline = refactor_scatter(globals['Timeline'], directiondirection)
+    timeline = refactor_scatter(globals['Timeline'], direction, position)
     unless timeline.nil?
       globals['Timeline'] = timeline
     end
 
     # scatter
-    scatter = refactor_scatter(globals['Scatter'], direction)
+    scatter = refactor_scatter(globals['Scatter'], direction, position)
     unless scatter.nil?
       globals['Scatter'] = scatter
     end
@@ -265,7 +248,7 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
     end
 
     # table
-    table = refactor_table(globals['Table'], direction)
+    table = refactor_table(globals['Table'], direction, position)
     unless table.nil?
       globals['Table'] = table
     end
@@ -274,7 +257,7 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
     summary = globals['Summary']
     unless summary.nil?
       if !summary['displayField'].nil? && summary['displayField'] >= position
-        summary['displayField'] += 1
+        summary['displayField'] += direction
       end
       globals['Summary'] = summary
     end
@@ -286,23 +269,23 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
     if scatter.nil?
       nil
     else
-      if !scatter['xAxis'].nil? && scatter['xAxis'] >= Param.n
-        scatter['xAxis'] += 1
+      if !scatter['xAxis'].nil? && scatter['xAxis'] >= position
+        scatter['xAxis'] += direction
       end
       unless scatter['yAxis'].nil?
         scatter['yAxis'].each_with_index do | y, i |
-          if y >= Param.n
-            scatter['yAxis'][i] += 1
+          if y >= position
+            scatter['yAxis'][i] += direction
           end
         end
       end
       unless scatter['savedRegressions'].nil?
         scatter['savedRegressions'].each do | regres |
-          if !regres['xAxis'].nil? && regres['xAxis'] >= Param.n
-            regres['xAxis'] += 1
+          if !regres['xAxis'].nil? && regres['xAxis'] >= position
+            regres['xAxis'] += direction
           end
-          if !regres['yAxis'].nil? && regres['yAxis'] >= Param.n
-            regres['yAxis'] += 1
+          if !regres['yAxis'].nil? && regres['yAxis'] >= position
+            regres['yAxis'] += direction
           end
         end
       end
@@ -315,14 +298,14 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
       nil
     else
       table['tableFields'].each_with_index do | t, i |
-        if t >= Param.n
-          table['tableFields'][i] += 1
+        if t >= position
+          table['tableFields'][i] += direction
         end
       end
-      if direction == 'up'
+      if direction == 1
         table['tableFields'].push(position)
       else
-        table['tableFields'] -= [Param.n]
+        table['tableFields'] -= [position]
       end
       table['tableFields'].sort!
       table
