@@ -48,7 +48,7 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
       say 'removing group by contributor and group by number fields to saved vises'
     end
 
-    # Add field to default project
+    # Refactor globals for default projects to account for new group by field
     Project.find_each do | p |
       next if p.globals.nil?
 
@@ -130,15 +130,202 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
         end
       end
       data['dataPoints'] = dp
+
+      text_fields = data['textFields']
+      insert_end = true
+      insert_pos = 0
+      unless text_fields.nil? or text_fields.length == 0
+        text_fields.each_with_index do | f, i |
+          # if greater than position, add 1 because it was shifted over
+          if f >= position
+            insert_end = false
+            f++
+          end
+          if insert_end
+            insert_pos = i
+          end
+        end
+        text_fields.insert(insert_pos, position)
+      end
+      data['textFields'] = text_fields
+
+      time_fields = data['timeFields']
+      unless time_fields.nil? or time_fields.length == 0
+        time_fields.each_with_index do | f, i |
+          # if greater than position, add 1 because it was shifted over
+          if f >= position
+            f++
+          end
+        end
+      end 
+      data['timeFields'] = timeFields
+
+      numeric_fields = data['numericFields']
+      unless numeric_fields.nil? or numeric_fields.length == 0
+        numeric_fields.each_with_index do | f, i |
+          # if greater than position, add 1 because it was shifted over
+          if f >= position
+            insert_end = false
+            f++
+          end
+        end
+      end
+      data['numericFields'] = numeric_fields
+
+      geo_fields = data['geoFields']
+      unless geo_fields.nil? or geo_fields.length == 0
+        geo_fields.each_with_index do | f, i |
+          # if greater than position, add 1 because it was shifted over
+          if f >= position
+            insert_end = false
+            f++
+          end
+        end
+      end
+      data['geoFields'] = geo_fields
+
+      normal_fields = data['normalFields']
+      unless normal_fields.nil? or normal_fields.length == 0
+        normal_fields.each_with_index do | f, i |
+          # if greater than position, add 1 because it was shifted over
+          if f >= position
+            insert_end = false
+            f++
+          end
+        end
+      end
+      data['normalFields'] = normal_fields
+
+      group_selection = data['groupSelection']
+      insert_end = true
+      insert_pos = 0
+      unless group_selection.nil? or group_selection.length == 0
+        group_selection.each_with_index do | g, i |
+          # if greater than position, add 1 because it was shifted over
+          if g >= position
+            insert_end = false
+            g++
+          end
+          if insert_end
+            insert_pos = i
+          end
+        end
+      end
+      data['groupSelection'] = groupSelection
+      
     end
-
-
-
-
   end
 
   def refactor_globals(data, direction, position, field=nil)
+    # global
+    subglobals = globals['globals']
+    unless subglobals.nil?
+      if subglobals['groupById'] >= position
+        subglobals['groupById'] += 1
+      end
+      subglobals['fieldSelection'].each_with_index do | f, i |
+        if f >= Param.n
+          subglobals['fieldSelection'][i] += 1
+        end
+      end
+      globals['globals'] = subglobals
+    end
 
+    # map
+    map = globals['Map']
+    unless map.nil?
+      if !map['heatmapSelection'].nil? && map['heatmapSelection'] >= position
+        map['heatmapSelection'] += 1
+      end
+      globals['Map'] = map
+    end
 
+    # timeline
+    timeline = refactor_scatter(globals['Timeline'], directiondirection)
+    unless timeline.nil?
+      globals['Timeline'] = timeline
+    end
+
+    # scatter
+    scatter = refactor_scatter(globals['Scatter'], direction)
+    unless scatter.nil?
+      globals['Scatter'] = scatter
+    end
+
+    # bar unaffected: axis uses the globals.fieldSelection
+    # histogram unaffected: axis uses the globals.fieldSelection
+
+    # pie
+    pie = globals['Pie']
+    unless pie.nil?
+      if !pie['displayField'].nil? && pie['displayField'] >= position
+        pie['displayField'] += direction
+      end
+      globals['Pie'] = pie
+    end
+
+    # table
+    table = refactor_table(globals['Table'], direction)
+    unless table.nil?
+      globals['Table'] = table
+    end
+
+    # summary
+    summary = globals['Summary']
+    unless summary.nil?
+      if !summary['displayField'].nil? && summary['displayField'] >= position
+        summary['displayField'] += 1
+      end
+      globals['Summary'] = summary
+    end
+
+    globals
+  end
+
+  def refactor_scatter(scatter, direction, position)
+    if scatter.nil?
+      nil
+    else
+      if !scatter['xAxis'].nil? && scatter['xAxis'] >= Param.n
+        scatter['xAxis'] += 1
+      end
+      unless scatter['yAxis'].nil?
+        scatter['yAxis'].each_with_index do | y, i |
+          if y >= Param.n
+            scatter['yAxis'][i] += 1
+          end
+        end
+      end
+      unless scatter['savedRegressions'].nil?
+        scatter['savedRegressions'].each do | regres |
+          if !regres['xAxis'].nil? && regres['xAxis'] >= Param.n
+            regres['xAxis'] += 1
+          end
+          if !regres['yAxis'].nil? && regres['yAxis'] >= Param.n
+            regres['yAxis'] += 1
+          end
+        end
+      end
+      scatter
+    end
+  end
+
+  def refactor_table(table, direction, position)
+    if table.nil? || table['tableFields'].nil?
+      nil
+    else
+      table['tableFields'].each_with_index do | t, i |
+        if t >= Param.n
+          table['tableFields'][i] += 1
+        end
+      end
+      if direction == 'up'
+        table['tableFields'].push(position)
+      else
+        table['tableFields'] -= [Param.n]
+      end
+      table['tableFields'].sort!
+      table
+    end
   end
 end
