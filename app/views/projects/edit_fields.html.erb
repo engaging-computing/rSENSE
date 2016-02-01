@@ -131,11 +131,26 @@
           </div>
           <div class="modal-body">
             <div class="row">
-              <div class="col-xs-12 col-md-9">
+              <div class="col-xs-12 col-md-8">
                 <textarea id="formula-text" class="form-control" rows="10"></textarea>
               </div>
-              <div class="hidden-xs hidden-sm col-md-3">
-              Helpers
+              <div class="hidden-xs hidden-sm col-md-4">
+                <table>
+                  <thead>
+                    <tr>
+                      <td>Name</td>
+                      <td>Reference</td>
+                      <td>Type</td>
+                    </tr>
+                  </thead>
+                  <% @field_refs.each do |field| %>
+                    <tr>
+                      <td><%= field[0] %></td>
+                      <td><%= field[1] %></td>
+                      <td><%= field[2] %></td>
+                    </tr>
+                  <% end %>
+                </table>
               </div>
             </div>
           </div>

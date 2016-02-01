@@ -27,6 +27,11 @@
   color: #000;
 }
 
+#formula-text {
+  resize: vertical;
+  width: 100%;
+}
+
 @media (max-width: 770px) {
   .description, .restrictions, .units {
     display: none;

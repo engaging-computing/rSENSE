@@ -251,10 +251,22 @@ class ProjectsController < ApplicationController
 
   def edit_formula_fields
     @project = Project.find(params[:id])
-    @fields = @project.formula_fields
+    @fields = @project.formula_fields.sort { |l, r| l.index <=> r.index }
     @allowable_types = [:number, :text]
     @action = 'formula_fields'
     @can_delete = true
+
+    @field_refs = (@project.fields + @fields).map do |f|
+      type = case f.field_type
+      when 1 then 'Timestamp'
+      when 2 then 'Number'
+      when 3 then 'Text'
+      when 4 then 'Latitude'
+      when 5 then 'Longitude'
+      end
+      [f.name, f.refname, type]
+    end
+
     render 'edit_fields'
   end
 
