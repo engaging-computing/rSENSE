@@ -384,12 +384,18 @@ $ ->
         tools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append tools
 
+        # Add material design
+        $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
+        $('#vis-ctrls').find(".mdl-radio").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
         # Check off the right boxes
-        if @configs.advancedTooltips
-          $('#ckbx-tooltips').prop('checked', true)
-        if @configs.fullDetail then $('#ckbx-fulldetail').prop('checked', true)
-        if globals.configs.logY then $('#ckbx-log-y-axis').prop('checked', true)
-        $("input[name='mode'][value='#{@configs.mode}']").prop('checked', true)
+        if @configs.advancedTooltips then $('#ckbx-lbl-tooltips')[0].MaterialCheckbox.check()
+        if @configs.fullDetail then $('#ckbx-lbl-fulldetail')[0].MaterialCheckbox.check()
+        if globals.configs.logY then $('#ckbx-lbl-log-y-axis')[0].MaterialCheckbox.check()
+        $("label[name='mode'][value='#{@configs.mode}']")[0].MaterialRadio.check()
 
         # Set initial state of zoom reset
         if not @isZoomLocked() then $('#zoom-reset-btn').addClass("disabled")
@@ -425,6 +431,13 @@ $ ->
         # Initialize and track the status of this control panel
         globals.configs.toolsOpen ?= false
         initCtrlPanel('tools-ctrls', 'toolsOpen')
+
+        # Add material design
+        $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
+        $('#vis-ctrls').find(".mdl-radio").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
 
       ###
       A wrapper for making x-axis controls
@@ -542,6 +555,13 @@ $ ->
         tools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append tools
 
+        # Adds material design
+        $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
+        $('#vis-ctrls').find(".mdl-radio").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
         # Initialize and track the status of this control panel
         globals.configs.regressionOpen ?= false
         initCtrlPanel('regression-ctrls', 'regressionOpen')
@@ -549,35 +569,37 @@ $ ->
         # Restore saved regressions if they exist
         fs = globals.configs.fieldSelection
         for regr in @configs.savedRegressions
-          groupsIntersect =
-            (g in data.groupSelection for g in regr.groups).reduce(
-              ((p, c) -> p and c), true)
+          # this if statement is a fix that prevents certain projects from halting during rendering.
+          if typeof regr.groups != 'undefined'
+            groupsIntersect =
+              (g in data.groupSelection for g in regr.groups).reduce(
+                ((p, c) -> p and c), true)
 
-          enabled = regr.xAxis is @configs.xAxis and groupsIntersect and
-            fs.indexOf(regr.yAxis) isnt -1
+            enabled = regr.xAxis is @configs.xAxis and groupsIntersect and
+              fs.indexOf(regr.yAxis) isnt -1
 
-          # Calculate the hypothesis function
-          func =
-            if regr.type is globals.REGRESSION.SYMBOLIC
-              new Function("x", regr.func)
-            else
-              new Function("x, P", regr.func)
+            # Calculate the hypothesis function
+            func =
+              if regr.type is globals.REGRESSION.SYMBOLIC
+                new Function("x", regr.func)
+              else
+                new Function("x, P", regr.func)
 
-          # Calculate the series
-          params = regr.parameters
-          unless regr.type is globals.REGRESSION.SYMBOLIC
-            # Convert parameters from strings to numbers
-            params = for i in [0...regr.parameters.length]
-              parseFloat(regr.parameters[i])
+            # Calculate the series
+            params = regr.parameters
+            unless regr.type is globals.REGRESSION.SYMBOLIC
+              # Convert parameters from strings to numbers
+              params = for i in [0...regr.parameters.length]
+                parseFloat(regr.parameters[i])
 
-          series =
-            globals.getRegressionSeries(func, params, Number(regr.r2),
-              regr.type, [@configs.xBounds.min, @configs.xBounds.max],
-              regr.name, regr.dashStyle, regr.id, regr.tooltip, false)[3]
+            series =
+              globals.getRegressionSeries(func, params, Number(regr.r2),
+                regr.type, [@configs.xBounds.min, @configs.xBounds.max],
+                regr.name, regr.dashStyle, regr.id, regr.tooltip, false)[3]
 
-          # Add the regression to the chart
-          if enabled then @chart.addSeries(series)
-          @addRegressionToTable(regr, enabled)
+            # Add the regression to the chart
+            if enabled then @chart.addSeries(series)
+            @addRegressionToTable(regr, enabled)
 
         # Create a new regression
         $('#draw-regr-btn').click =>

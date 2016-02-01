@@ -35,7 +35,7 @@ group :development, :test do
 end
 
 # Jquery stuff
-gem 'better_datetimepicker', '~> 0.0.8', git: 'https://github.com/isenseDev/better-datetimepicker'
+gem 'better_datetimepicker', '~> 0.0.9', git: 'https://github.com/isenseDev/better-datetimepicker'
 gem 'better_colorpicker', '~> 0.1.2', git: 'https://github.com/isenseDev/better-colorpicker'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
@@ -54,7 +54,7 @@ gem 'httparty'
 gem 'execjs'
 
 # Font-awesome
-gem 'font-awesome-rails', '~> 4.2.0.0'
+gem 'font-awesome-rails', '~> 4.4.0.0'
 
 # Rich Editor
 # gem 'simple_form'
@@ -95,5 +95,4 @@ gem 'recaptcha', git: 'https://github.com/ambethia/recaptcha'
 gem 'rack-cors', :require => 'rack/cors'
 
 # for formula fields
-# gem 'beaker', '~> 1.0', git: 'https://github.com/isenseDev/beaker-lang'
-gem 'beaker', path: '~/Documents/ecg/beaker-lang'
+gem 'beaker', '~> 1.0.1', git: 'https://github.com/isenseDev/beaker-lang'

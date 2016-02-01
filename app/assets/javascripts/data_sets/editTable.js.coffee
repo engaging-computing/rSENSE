@@ -243,6 +243,7 @@ class Grid
         curr
       , []
       row.forEach (pair) ->
+        if pair[1] == null then pair[1] = ""
         unless buckets[pair[0]]? then buckets[pair[0]] = []
         buckets[pair[0]].push pair[1]
 

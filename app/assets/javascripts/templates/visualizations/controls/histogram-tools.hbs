@@ -2,9 +2,8 @@
   <h4 class="vis-ctrl-subtitle">Bin Size</h4>
   <div>
     <label for="bin-size-slider">Automatic:</label>
-    <input id="bin-size-slider" type="range" class="slider"
-           data-log-id="bin-size-slider">
-  </div>
+    <input id="bin-size-slider" type="range" class="mdl-slider mdl-js-slider"
+           data-log-id="bin-size-slider" min="0" max="100" value="0" tabindex="0">
   <div>
     <label for="bin-size">Manual:</label>
     <input id="bin-size" class="form-control" value="{{binSize}}">

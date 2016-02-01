@@ -4,7 +4,7 @@
       <%= form_tag projects_path, method: "get", id: "projects_search" do %>
         <div class="row">
           <div class="col-md-12">
-            <h1><i class="fa fa-folder-open"></i> Projects</h1>
+            <h3><i class="fa fa-folder-open"></i> Projects</h3>
           </div>
         </div>
         <div id="searchProjRow" class="row">
@@ -76,7 +76,7 @@
 <div class="row">
   <div id="projects" class="isotope_container">
     <div class="isotope_pane">
-      <!-- Create Project -->
+       <!-- Create Project -->
       <% if @cur_user.try(:id) %>
         <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 create-project-outer-block">
           <div class="item item-block text-center create-project-inner-block">

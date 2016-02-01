@@ -32,7 +32,7 @@ $ ->
     window.globals ?= {}
     globals.configs ?= {}
     globals.options ?= {}
-    globals.configs.ctrlsOpen ?= true
+    globals.configs.ctrlsOpen ?= window.innerWidth >= 600
 
     globals.curVis = null
 
@@ -67,7 +67,7 @@ $ ->
       visWrapperHeight = $('#vis-wrapper').outerHeight()
       visHeaderHeight = $('#vis-header').outerHeight()
       controlOpac = $('#vis-ctrls').css 'opacity'
-      controlSize = 320
+      controlSize = if window.innerWidth >= 600 then 320 else 250
       controlOpac = 1.0
 
       if (init and globals.options.startCollapsed?) or
@@ -95,7 +95,7 @@ $ ->
 
       # New widths should take into account visibility of tools
       nWidth =
-        if globals.configs.ctrlsOpen then visWrapperWidth - controlSize
+        if globals.configs.ctrlsOpen and window.innerWidth > 600 then visWrapperWidth - controlSize
         else visWrapperWidth
       $('#vis-container').animate({width: nWidth}, aniLength, 'linear')
       globals.curVis.resize(nWidth, newHeight, aniLength)
@@ -155,6 +155,13 @@ $ ->
       tab = HandlebarsTemplates[hbVis('vis-tab')](ctx)
       $('#vis-tab-list').append(tab)
 
+      # Add material design
+      $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
+        componentHandler.upgradeElement($(j)[0]);
+
+      $('#vis-ctrls').find(".mdl-radio").each (i,j) ->
+        componentHandler.upgradeElement($(j)[0]);
+
       unless enabled
         $("#vis-tab-#{ctx.name.toLowerCase()}").addClass('strikethrough')
 
@@ -199,6 +206,13 @@ $ ->
       oldVis.end() if oldVis?
       globals.curVis.start()
       resizeVis(false, 0, true)
+
+    $('#vis-container').click ->
+      shouldCloseTools = globals.configs.ctrlsOpen and $(event.target).attr("class") != 'hamburger-bar' and
+        $(event.target).attr("id") != 'ctrls-menu-btn' and window.innerWidth < 600
+      if shouldCloseTools
+        globals.configs.ctrlsOpen = false
+        resizeVis()
 
     $('#ctrls-menu-btn').click ->
       globals.configs.ctrlsOpen = !globals.configs.ctrlsOpen

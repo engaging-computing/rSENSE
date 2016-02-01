@@ -11,12 +11,11 @@ class SlickgridTest < IntegrationTest
     { '100' => 'G', '101' => 'A', '102' => '7', '103' => '', '104' => '6', '105' => '6' }
   ]
 
-  current_month = Date.today.month
   times = [
-    [1991, current_month, 1, 1, 1, 1],
-    [1992, current_month, 2, 2, 2, 2],
-    [1993, current_month, 3, 3, 3, 3],
-    [1994, current_month, 4, 4, 4, 4]
+    [1991, 12, 1, 1, 1, 1],
+    [1992, 12, 2, 2, 2, 2],
+    [1993, 12, 3, 3, 3, 3],
+    [1994, 12, 4, 4, 4, 4]
   ]
 
   times.each_with_index do |time, i|
@@ -36,6 +35,7 @@ class SlickgridTest < IntegrationTest
 
   def slickgrid_set_date(row, col, options)
     yr = options[:year]
+    mn = options[:month]
     dy = options[:day]
     time = options[:time]
 
@@ -47,6 +47,8 @@ class SlickgridTest < IntegrationTest
     date_cell.click
     date_cell.click
     find(:css, '#dt-time-textbox').set "#{time}\n"
+    find(:css, '#dt-month-textbox').click
+    select(mn, from: 'dt-month-select')
   end
 
   def slickgrid_add_data(start, field_map)
@@ -69,21 +71,25 @@ class SlickgridTest < IntegrationTest
 
     slickgrid_set_date start + 3, field_map['103'],
       year: 1994,
+      month: 'December',
       day: 4,
       time: '04:04:04'
 
     slickgrid_set_date start + 2, field_map['103'],
       year: 1993,
+      month: 'December',
       day: 3,
       time: '03:03:03'
 
     slickgrid_set_date start + 1, field_map['103'],
       year: 1992,
+      month: 'December',
       day: 2,
       time: '02:02:02'
 
     slickgrid_set_date start, field_map['103'],
       year: 1991,
+      month: 'December',
       day: 1,
       time: '01:01:01'
 
@@ -121,6 +127,9 @@ class SlickgridTest < IntegrationTest
     # add data to the rows
     slickgrid_add_data 0, field_map
 
+    # click restrictions but don't select one to see if it breaks things (bug #2298)
+    2.times { all('.slick-cell.l3.r3').last.click }
+
     # save the dataset
     find(:css, '#edit_table_save_1').click
 
@@ -131,6 +140,17 @@ class SlickgridTest < IntegrationTest
 
     # assert that the data that we saved is there
     assert_similar_arrays compare_data, dataset.data
+  end
+
+  test 'slickgrid enter number with spaces' do
+    login 'nixon@whitehouse.gov', '12345'
+
+    dataset = DataSet.find_by_name 'Slickgrid Data set 1'
+    visit "/data_sets/#{dataset.id}/edit"
+    find(:css, '.slick-row:nth-child(5)>.slick-cell.l1').click
+    find(:css, '.slick-row:nth-child(5)>.slick-cell.l1>input').set ' 117 '
+    find(:css, '#edit_table_add_1').click
+    assert page.has_no_content?('Please enter a valid number.'), 'Number with spaces failed.'
   end
 
   test 'slickgrid edit data set' do

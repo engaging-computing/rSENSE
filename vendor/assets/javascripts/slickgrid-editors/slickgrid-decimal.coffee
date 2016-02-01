@@ -25,11 +25,11 @@
     form.val()
   loadValue: (item) ->
     loadValue = item[args.column.field] || ''
-    form.val loadValue
+    form.val loadValue.trim()
   applyValue: (item, state) ->
     item[args.column.field] = state
   validate: ->
-    isNumber = /^(?:(?:\+|-)?(?:\d*\.\d+|\d+))?$/
+    isNumber = /^\s*(?:(?:\+|-)?(?:\d*\.\d+|\d+))?\s*$/
     if isNumber.test form.val()
       {valid: true, msg: null}
     else

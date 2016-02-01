@@ -237,11 +237,17 @@ $ ->
         axisTools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append axisTools
 
+        # Add material design
+        $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
+        $('#vis-ctrls').find(".mdl-radio").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
         # Initialize checked and make y axis checkbox/radio handler
         if radio
           # Set the current display field
-          query = "input[name='#{id}'][value='#{iniRadio}']"
-          $(query).prop('checked', 'true')
+          $("#rdo-lbl-#{id}-field-#{iniRadio}")[0].MaterialRadio.check()
 
           # Record any changes to the display field
           $("input[name='#{id}']").click (e) =>
@@ -259,19 +265,22 @@ $ ->
           numFields = allFields.length
           numSel = selFields.length
           indeterminate = numSel > 0 and numSel < numFields
-          $('#ckbx-ckall-' + id).prop('checked', numSel is numFields)
+          if numSel is numFields
+            $("#ckbx-lbl-ckall-#{id}")[0].MaterialCheckbox.check()
+          else
+            $("#ckbx-lbl-ckall-#{id}")[0].MaterialCheckbox.uncheck()
           $('#ckbx-ckall-' + id).prop('indeterminate', indeterminate)
 
         # Update the check all box
         updateCheckAll()
 
         # Else initialize the checkboxes to the field selection
-        $("input[name='#{id}']").each (key, elem) ->
-          if Number(elem.value) in selFields then $(elem).prop('checked', true)
+        $("label[name='#{id}']").each (key, elem) ->
+          if Number(elem.getAttribute('value')) in selFields then $(elem)[0].MaterialCheckbox.check()
 
         # Set handler for the field checkboxes
         $("input[name='#{id}']").click (e) =>
-          index = Number(e.target.value)
+          index = Number(e.target.getAttribute('value'))
           if index in selFields then arrayRemove(selFields, index)
           else selFields.push(index)
 
@@ -289,8 +298,12 @@ $ ->
           # Repopulate the array if necessary
           if checked then selFields.push(f) for f in allFields
 
-          $("input[name='#{id}']").each (key, elem) ->
-            $(elem).prop('checked', checked)
+          $("label[name='#{id}']").each (key, elem) ->
+            if checked
+              $(elem)[0].MaterialCheckbox.check()
+            else
+              $(elem)[0].MaterialCheckbox.uncheck()
+
 
           updateCheckAll()
           selected = if checked then allFields else []
@@ -358,6 +371,13 @@ $ ->
         tools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append tools
 
+        # Add material design
+        $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
+        $('#vis-ctrls').find(".mdl-radio").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
         # Initialize and track the status of this control panel
         globals.configs.groupOpen ?= false
         initCtrlPanel('group-ctrls', 'groupOpen')
@@ -413,20 +433,23 @@ $ ->
           numGroups = data.groups.length
           numSel = data.groupSelection.length
           indeterminate = numSel > 0 and numSel < numGroups
-          $('#ckbx-ckall-grouping').prop('checked', numSel is numGroups)
+          if numSel is numGroups
+            $('#ckbx-lbl-ckall-grouping')[0].MaterialCheckbox.check()
+          else
+            $('#ckbx-lbl-ckall-grouping')[0].MaterialCheckbox.uncheck()
           $('#ckbx-ckall-grouping').prop('indeterminate', indeterminate)
 
         # Update the check all box
         updateCheckAll()
 
         # Initialize the checkboxes to the group selection
-        $('input[name="grouping"]').each (key, elem) ->
-          if Number(elem.value) in data.groupSelection
-            $(elem).prop('checked', true)
+        $('label[name="grouping"]').each (key, elem) ->
+          if Number(elem.getAttribute('value')) in data.groupSelection
+            $(elem)[0].MaterialCheckbox.check()
 
         # Set handler for the group checkboxes
         $('input[name="grouping"]').click (e) =>
-          index = Number(e.target.value)
+          index = Number(e.target.getAttribute('value'))
           if index in data.groupSelection
             arrayRemove(data.groupSelection, index)
           else data.groupSelection.push(index)
@@ -444,8 +467,11 @@ $ ->
           # Repopulate the array if necessary
           if checked then data.groupSelection.push(k) for v, k in data.groups
 
-          $('input[name="grouping"]').each (key, elem) ->
-            $(elem).prop('checked', checked)
+          $('label[name="grouping"]').each (key, elem) ->
+            if checked
+              $(elem)[0].MaterialCheckbox.check()
+            else
+              $(elem)[0].MaterialCheckbox.uncheck()
 
           updateCheckAll()
           @delayedUpdate()
@@ -547,15 +573,25 @@ $ ->
 
         tools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append tools
+        
+        # Add material design
+        $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
+        $('#vis-ctrls').find(".mdl-radio").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
 
         # Initialize and track the status of this control panel
         globals.configs.toolsOpen ?= false
         initCtrlPanel('tools-ctrls', 'toolsOpen')
-        query = "input[name='analysis-type'][value='#{@configs.analysisType}']"
-        $(query).prop('checked', 'true')
+        query = "label[name='analysis-type'][value='#{@configs.analysisType}']"
+        $(query)[0].MaterialRadio.check()
         $('#sort-by').val(@configs.sortField)
         $('input[name="analysis-type"]').value = @configs.analysisType
-        $('#ckbx-log-y-axis').prop('checked', globals.configs.logY)
+        if globals.configs.logY and $('#ckbx-lbl-log-y-axis').length
+          $('#ckbx-lbl-log-y-axis')[0].MaterialCheckbox.check()
+        else if $('#ckbx-lbl-log-y-axis').length
+          $('#ckbx-lbl-log-y-axis')[0].MaterialCheckbox.uncheck()
 
         $('#sort-by').change (e) =>
           @configs.sortField = Number(e.target.value)

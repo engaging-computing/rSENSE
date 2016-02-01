@@ -7,6 +7,16 @@
     margin-top: 10px;
   }
 
+  #create-project-fab-button {
+    background: #00CC00;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    padding-top: 25px;
+    margin-bottom: 0;
+    z-index: 998;
+  }
+
   .create-project-inner-block {
     padding: 10px;
     display: table-cell;
@@ -15,7 +25,6 @@
   
   .create-project-outer-block {
     display: table;
-    margin-bottom: 2em;
   } 
    
   .hidden {
@@ -39,20 +48,22 @@
   
   .project_buttons {
     margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
   }
 
   .search-box .padded-col {
     margin-bottom: 12px;
   }
   
-  .wide-input {
-    width: 100% !important;
-  }
-
   .sort-hamburger {
     padding-top:8px;
     padding-left: 12px;
     padding-right: 12px;
+  }
+
+  .wide-input {
+    width: 100% !important;
   }
 
 }

@@ -293,7 +293,7 @@ class FileUploader
             next if (Float dp).abs <= 180
           end
           return { status: false, msg: 'Longiude contains invalid data' }
-        when 'Time'
+        when 'Timestamp'
         when 'Text'
           unless field.restrictions.length == 0
             unless field.restrictions.map { |r| r.downcase.gsub(/\s+/, '') }.include? dp.downcase.gsub(/\s+/, '')

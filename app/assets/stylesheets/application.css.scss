@@ -17,6 +17,7 @@
  *= require slickgrid/slick.grid.css
  *= require_tree .
  *= require_self
+ *= require mdl/material.min.css
  */
 
 $navbar-default-bg: #111133;
@@ -31,6 +32,12 @@ $table-bg-accent: #E8E8E8;
 
 .alert {
   margin-bottom: 0px;
+}
+
+.badges {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0px
 }
 
 body {
@@ -188,8 +195,7 @@ body {
 
 .item-block {
   height: 250px;
-  margin-bottom: 2em;
-
+  margin: 0;
   overflow: hidden;
 }
 
@@ -241,6 +247,85 @@ body {
   min-height: 100%;
 }
 
+.mdl-card {
+  height: 250px !important;
+  width: initial !important;
+  margin-bottom: 2em;
+  line-height: initial;
+  background: #ddd !important;
+}
+
+  .mdl-card__title-text {
+    a {
+      margin: auto !important;
+    }
+  }
+
+  .item-title {
+    font-size: 1.25em;
+  }
+
+  .proj-info {
+    height: 100px;
+  }
+
+  .mdl-card__title{
+    background-size: cover !important;
+    background-position: center;
+    height: 130px;
+
+    .mdl-card__title-text {
+      text-align: center;
+      width: 100%;
+      margin: 0 auto;
+      -webkit-align-self: center !important; /* Safari 7.0+ */
+      align-self: center !important;
+    }
+}
+
+  // Prevent underlining button links
+  // Prevent mdl from making all buttons uppercase
+  .mdl-button {
+    text-transform: none !important;
+    text-decoration: none !important;
+  }
+
+  .mdl-button--green {
+    background-color: #4CAF50 !important;
+    color: white !important;
+  }
+
+  .mdl-button--green[disabled] {
+    opacity: 0.65 !important;
+  }
+
+  .mdl-button--blue {
+    background-color: #337ab7 !important;
+    color: white !important;
+  }
+
+  .mdl-button--blue[disabled] {
+    opacity: 0.65 !important;
+  }
+
+  .mdl-button--red {
+    background-color: #d9534f !important;
+    color: white !important;
+  }
+
+  .mdl-button--red[disabled] {
+    opacity: 0.65 !important;
+  }
+
+  .mdl-button--light-blue {
+    background-color: #5bc0de !important;
+    color: white !important;
+  }
+
+  .mdl-button--light-blue[disabled] {
+    opacity: 0.65 !important;
+  }
+
 .navbar {
   border-bottom: 1px solid black;
   margin-bottom: 0px;
@@ -261,6 +346,7 @@ body {
   }
 
   .navbtn a {
+    font-size: 0.9em;
     padding-top: 20px;
   }
 
@@ -270,8 +356,12 @@ body {
 
   .navbar-collapse.collapsing,
   .navbar-collapse.in {
-    background-color: $navbar-default-bg;
+    background-color: #113;
   }
+} 
+
+.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+  background-color: #113;
 }
 
 .object-title {

@@ -1,7 +1,10 @@
-<div class="checkbox">
-  <input id="ckbx-{{id}}" type="checkbox" data-log-id="{{logId}}"
-         value="{{value}}" name="{{name}}"/>
-  <label for="ckbx-{{id}}" style="{{style}}" class="name">{{label}}</label>
+<div class="row">
+  <div class="checkbox">
+  	<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="ckbx-{{id}}" style="{{style}}" id="ckbx-lbl-{{id}}" name="{{name}}" value="{{value}}">
+  	  <input type="checkbox" id="ckbx-{{id}}" class="mdl-checkbox__input" name="{{name}}" value="{{value}}"/>
+  	  <span class="mdl-checkbox__label">{{label}}</span>
+  	</label>
+  </div>
   {{#if picker}}
     <a href="#" class="color-picker"
        data-color="{{picker.color}}" data-color-id="{{value}}">
