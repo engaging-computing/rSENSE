@@ -29,33 +29,56 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
     end
   end
 
+  class DataPointIdField
+    def self.typeID
+      2
+    end
+    def self.unitName
+      'id'
+    end
+    def self.fieldID
+      -1
+    end
+    def self.fieldName
+      'Data Point'
+    end
+  end
+
   def up
+    say 'adding data point field to saved vises that do not have it already'
+    add_or_remove_field(1, 0, DataPointIdField)
+
     say 'adding group by contributor and group by number fields to saved vises'
-    add_field(1, 3, NumberField)
-    add_field(1, 4, ContributorField)
+    add_or_remove_field(1, 3, NumberField)
+    add_or_remove_field(1, 4, ContributorField)
   end
 
   def down
     say 'removing group by contributor and group by number fields to saved vises'
-    add_field(-1, 4)
-    add_field(-1, 3)
+    add_or_remove_field(-1, 4)
+    add_or_remove_field(-1, 3)
   end
 
   # 1 for up, -1 for down, position of field being added or removed, field (if field is being added)
-  def add_field(direction, position, field = nil)
-    # Refactor globals for default projects to account for new group by field
-    Project.find_each do | p |
-      next if p.globals.nil?
+  def add_or_remove_field(direction, position, field = nil)
+    # No way to tell at this point what default projects need a migration for Data Point (id)
+    # The old projects have the field since it is added in the controller but the settings might be off
+    # default projects before Early 2014 may have been affected but there isn't much that can be done at this point
+    unless !field.nil? and field.fieldName == "Data Point"
+      # Refactor globals for default projects to account for new group by field
+      Project.find_each do | p |
+        next if p.globals.nil?
 
-      # projects require a globals update
-      globals = JSON.parse(p.globals)
+        # projects require a globals update
+        globals = JSON.parse(p.globals)
 
-      # update everything field related
-      globals = refactor_globals(globals, direction, position)
+        # update everything field related
+        globals = refactor_globals(globals, direction, position)
 
-      # save the new globals
-      p.globals = JSON.dump(globals)
-      p.save
+        # save the new globals
+        p.globals = JSON.dump(globals)
+        p.save
+      end
     end
 
     # Add field to saved visualization
@@ -65,6 +88,8 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
 
       # update everything field related
       unless globals.nil?
+        # Only add Data Point field if it does not already exist
+        next if JSON.parse(v.data)['fields'][0]["fieldName"] == 'Data Point' and !field.nil? and field.fieldName == "Data Point"
         globals = refactor_globals(globals, direction, position)
         v.globals = JSON.dump(globals)
       end
@@ -104,18 +129,26 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
           if field.fieldName == 'Contributors'
             # Every point has a data set name value, we can get the id from that, then we can get the contributor who created it
             # Get data set id between last two parenthesis from data set name, ex. 'Data Set name(101)'
-            ds_name = dp[i][0]
-            ds_id = ds_name.split('(').last.split(')').first.to_i
+            ds_name = dp[i][1]
 
-            contrib_name = DataSet.find(ds_id).contributor_name
-            if contrib_name?
-              dp[i].insert(position, contrib_name)
-            else
-              user_name User.find(DataSet.find(ds_id).user_id).name
-              dp[i].insert(position, user_name)
+            begin
+              ds_id = ds_name.split('(').last.split(')').first.to_i
+              contrib_name = DataSet.find(ds_id).contributor_name
+              if contrib_name.nil?
+                name = User.find(DataSet.find(ds_id).user_id).name
+              else
+                name = dp[i].insert(position, contrib_name)
+              end
+              puts name
+            rescue
+              puts "Unknown"
+              name = "Unknown"
             end
+            dp[i].insert(position, name)
           elsif field.fieldName == 'Number Fields'
             dp[i].insert(position, 'ALL')
+          elsif field.fieldName == 'Data Point'
+            dp[i].insert(position, i)
           end
 
         # down migration
@@ -195,6 +228,7 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
       end
       data['groupSelection'] = group_selection
     end
+    data
   end
 
   def refactor_globals(globals, direction, position)
