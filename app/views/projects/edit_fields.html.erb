@@ -2,7 +2,11 @@
   <%= form_tag "/projects/#{@project.id}/save_#{@action}", name: "fields_form" do %>
     <div class="row" data-project_id="<%= @project.id %>">
       <div class="col-lg-8 col-lg-offset-2">
-        <h1>Setup Fields Manually</h1>
+        <% if @action == 'formula_fields' %>
+          <h1>Setup Formula Fields Manually</h1>
+        <% else %>
+          <h1>Setup Fields Manually</h1>
+        <% end %>
         <div class="center">
           <% if @allowable_types.include? :number %>
             <div class="col-sm-3 col-xs-6 add_fields">
