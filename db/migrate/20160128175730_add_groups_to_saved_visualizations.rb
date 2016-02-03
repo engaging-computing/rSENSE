@@ -122,6 +122,7 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
 
     dp = data['dataPoints']
     unless dp.nil? or dp.length == 0
+      h = {} # Hash so we don't have to keep doing lookups
       dp.each_with_index do | d, i |
         if direction == 1
           # This is the group the data point belongs to.
@@ -133,11 +134,10 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
 
             begin
               ds_id = ds_name.split('(').last.split(')').first.to_i
-              contrib_name = DataSet.find(ds_id).contributor_name
-              if contrib_name.nil?
-                name = User.find(DataSet.find(ds_id).user_id).name
-              else
-                name = dp[i].insert(position, contrib_name)
+              name = h[ds_id.to_s]
+              if name.nil?
+                name = look_up_contributor(ds_id)
+                h[ds_id.to_s] = name
               end
             rescue
               name = 'Unknown'
@@ -342,5 +342,15 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
       table['tableFields'].sort!
       table
     end
+  end
+
+  def look_up_contributor(ds_id)
+    contrib_name = DataSet.find(ds_id).contributor_name
+    if contrib_name.nil?
+      name = User.find(DataSet.find(ds_id).user_id).name
+    else
+      name = contrib_name
+    end
+    name
   end
 end
