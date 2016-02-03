@@ -222,9 +222,7 @@ class VisualizationsController < ApplicationController
       dsets.each do |id|
         begin
           dset = DataSet.find_by_id(id.to_i)
-          if dset.project_id == @project.id
-            @datasets.push dset
-          end
+          @datasets.push dset if dset.project_id == @project.id
         rescue
           logger.info 'Either project id or data set does not exist in the DB'
         end

@@ -64,7 +64,7 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
     # No way to tell at this point what default projects need a migration for Data Point (id)
     # The old projects have the field since it is added in the controller but the settings might be off
     # default projects before Early 2014 may have been affected but there isn't much that can be done at this point
-    unless !field.nil? and field.fieldName == "Data Point"
+    unless !field.nil? and field.fieldName == 'Data Point'
       # Refactor globals for default projects to account for new group by field
       Project.find_each do | p |
         next if p.globals.nil?
@@ -89,7 +89,7 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
       # update everything field related
       unless globals.nil?
         # Only add Data Point field if it does not already exist
-        next if JSON.parse(v.data)['fields'][0]["fieldName"] == 'Data Point' and !field.nil? and field.fieldName == "Data Point"
+        next if JSON.parse(v.data)['fields'][0]['fieldName'] == 'Data Point' and !field.nil? and field.fieldName == 'Data Point'
         globals = refactor_globals(globals, direction, position)
         v.globals = JSON.dump(globals)
       end
@@ -139,10 +139,8 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
               else
                 name = dp[i].insert(position, contrib_name)
               end
-              puts name
             rescue
-              puts "Unknown"
-              name = "Unknown"
+              name = 'Unknown'
             end
             dp[i].insert(position, name)
           elsif field.fieldName == 'Number Fields'
