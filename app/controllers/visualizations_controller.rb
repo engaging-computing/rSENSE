@@ -267,7 +267,7 @@ class VisualizationsController < ApplicationController
         arr.push index + 1
         arr.push "#{dataset.title}(#{dataset.id})"
         arr.push 'All'
-        arr.push 'All'
+        arr.push ''
         arr.push dataset.key.nil? ? "User: #{User.select(:name).find(dataset.user_id).name}" : "Key: #{dataset.key}"
 
         data_fields.slice(arr.length, data_fields.length).each do |field|

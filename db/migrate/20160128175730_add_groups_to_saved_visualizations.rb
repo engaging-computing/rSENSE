@@ -144,7 +144,7 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
             end
             dp[i].insert(position, name)
           elsif field.fieldName == 'Number Fields'
-            dp[i].insert(position, 'ALL')
+            dp[i].insert(position, '')
           elsif field.fieldName == 'Data Point'
             dp[i].insert(position, i)
           end
