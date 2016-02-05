@@ -48,7 +48,11 @@ $ ->
 
         @configs.selectName = data.fields[globals.configs.groupById].fieldName
 
-        groupedData = @getGroupedData(@configs.displayField)
+        if globals.configs.groupById == 3
+          groupedData = @getFieldData(@configs.displayField)
+        else
+          groupedData = @getGroupedData(@configs.displayField)
+
         displayData = for gid, val of groupedData
           ret =
             y: if val < 0 then 0 else val            # for calculations
@@ -66,7 +70,10 @@ $ ->
         options =
           data: displayData
           colors: displayColors
-        @chart.setTitle { text: "#{data.fields[@configs.displayField].fieldName} grouped by #{@configs.selectName}" }
+        if globals.configs.groupById == data.NUMBER_FIELDS_FIELD
+          @chart.setTitle { text: "#{@configs.selectName}" }
+        else
+          @chart.setTitle { text: "#{data.fields[@configs.displayField].fieldName} grouped by #{@configs.selectName}" }
         @chart.addSeries options, false
 
         @chart.redraw()
@@ -88,8 +95,11 @@ $ ->
               str  = "<div style='width:100%;text-align:center;color:#{@series.color};"
               str += "margin-bottom:5px'> #{@point.name}</div>"
               str += "<table>"
-              str += "<tr><td>#{data.fields[self.configs.displayField].fieldName}
-                 (#{self.analysisTypeNames[self.configs.analysisType]}): "
+              if globals.configs.groupById == data.NUMBER_FIELDS_FIELD
+                str += "<tr><td>#{self.analysisTypeNames[self.configs.analysisType]}: "
+              else
+                str += "<tr><td>#{data.fields[self.configs.displayField].fieldName}
+                   (#{self.analysisTypeNames[self.configs.analysisType]}): "
               str += "</td><td><strong>#{@point.val} \
               #{fieldUnit(data.fields[self.configs.displayField], false)}</strong></td></tr>"
               str += "</table>"
@@ -107,9 +117,10 @@ $ ->
       drawControls: ->
         super()
         @drawGroupControls(data.textFields)
-        @drawYAxisControls(globals.configs.fieldSelection,
-          data.normalFields.slice(1), true, 'Fields', @configs.displayField,
-          @yAxisRadioHandler)
+        if globals.configs.groupById != data.NUMBER_FIELDS_FIELD
+          @drawYAxisControls(globals.configs.fieldSelection,
+            data.normalFields.slice(1), true, 'Fields', @configs.displayField,
+            @yAxisRadioHandler)
         @drawToolControls(false, false, [@ANALYSISTYPE_MEAN_ERROR])
         @drawClippingControls()
         @drawSaveControls()

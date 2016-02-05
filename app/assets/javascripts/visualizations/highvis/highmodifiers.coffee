@@ -57,6 +57,8 @@ $ ->
     data.DATA_POINT_ID_FIELD = 0
     data.DATASET_NAME_FIELD = 1
     data.COMBINED_FIELD = 2
+    data.NUMBER_FIELDS_FIELD = 3
+    data.CONTRIBUTOR_FIELD = 4
 
     data.types ?=
       TIME: 1
@@ -165,8 +167,12 @@ $ ->
     All included datapoints must pass the given filter (defaults to all datapoints).
     ###
     data.getMax = (fieldIndex, groupIndices, dp) ->
-      if typeof groupIndices is 'number' then groupIndices = [groupIndices]
-      rawData = @multiGroupSelector(fieldIndex, groupIndices, dp)
+      if groupIndices?
+        if typeof groupIndices is 'number' then groupIndices = [groupIndices]
+        rawData = @multiGroupSelector(fieldIndex, groupIndices, dp)
+      else
+        if typeof groupIndices is 'number' then groupIndices = [groupIndices]
+        rawData = dp.map (p) -> p[fieldIndex]
 
       if rawData.length > 0
         result = rawData.reduce (a,b) -> Math.max(a, b)
@@ -179,8 +185,11 @@ $ ->
     All included datapoints must pass the given filter (defaults to all datapoints).
     ###
     data.getMin = (fieldIndex, groupIndices, dp) ->
-      if typeof groupIndices is 'number' then groupIndices = [groupIndices]
-      rawData = @multiGroupSelector(fieldIndex, groupIndices, dp)
+      if groupIndices?
+        if typeof groupIndices is 'number' then groupIndices = [groupIndices]
+        rawData = @multiGroupSelector(fieldIndex, groupIndices, dp)
+      else
+        rawData = dp.map (p) -> p[fieldIndex]
 
       if rawData.length > 0
         result = rawData.reduce (a,b) -> Math.min(a, b)
@@ -193,8 +202,11 @@ $ ->
     All included datapoints must pass the given filter (defaults to all datapoints).
     ###
     data.getMean = (fieldIndex, groupIndices, dp) ->
-      if typeof groupIndices is 'number' then groupIndices = [groupIndices]
-      rawData = @multiGroupSelector(fieldIndex, groupIndices, dp)
+      if groupIndices?
+        if typeof groupIndices is 'number' then groupIndices = [groupIndices]
+        rawData = @multiGroupSelector(fieldIndex, groupIndices, dp)
+      else
+        rawData = dp.map (p) -> p[fieldIndex]
 
       if rawData.length > 0
         result = (rawData.reduce (a,b) -> a + b) / rawData.length
@@ -207,9 +219,12 @@ $ ->
     All included datapoints must pass the given filter (defaults to all datapoints).
     ###
     data.getMedian = (fieldIndex, groupIndices, dp) ->
-      if typeof groupIndices is 'number' then groupIndices = [groupIndices]
+      if groupIndices?
+        if typeof groupIndices is 'number' then groupIndices = [groupIndices]
+        rawData = @multiGroupSelector(fieldIndex, groupIndices, dp)
+      else
+        rawData = dp.map (p) -> p[fieldIndex]
 
-      rawData = @multiGroupSelector(fieldIndex, groupIndices, dp)
       rawData.sort (a, b) ->
         if a < b then -1 else 1
       mid = Math.floor (rawData.length / 2)
@@ -227,8 +242,11 @@ $ ->
     All included datapoints must pass the given filter (defaults to all datapoints).
     ###
     data.getCount = (fieldIndex, groupIndices, dp) ->
-      if typeof groupIndices is 'number' then groupIndices = [groupIndices]
-      dataCount = @multiGroupSelector(fieldIndex, groupIndices, dp).length
+      if groupIndices?
+        if typeof groupIndices is 'number' then groupIndices = [groupIndices]
+        dataCount = @multiGroupSelector(fieldIndex, groupIndices, dp).length
+      else
+        dataCount = (dp.map (p) -> p[fieldIndex]).length
 
       return dataCount
 
@@ -237,8 +255,11 @@ $ ->
     All included datapoints must pass the given filter (defaults to all datapoints).
     ###
     data.getTotal = (fieldIndex, groupIndices, dp) ->
-      if typeof groupIndices is 'number' then groupIndices = [groupIndices]
-      rawData = @multiGroupSelector(fieldIndex, groupIndices, dp)
+      if groupIndices?
+        if typeof groupIndices is 'number' then groupIndices = [groupIndices]
+        rawData = @multiGroupSelector(fieldIndex, groupIndices, dp)
+      else
+        rawData = dp.map (p) -> p[fieldIndex]
 
       if rawData.length > 0
         total = 0
@@ -254,7 +275,8 @@ $ ->
     ###
     data.setGroupIndex = (gIndex) ->
       @groups = @makeGroups(gIndex)
-      @dataPoints = @setIndexFromGroups(gIndex)
+      if gIndex != data.NUMBER_FIELDS_FIELD
+        @dataPoints = @setIndexFromGroups(gIndex)
       globals.updateColorSlots()
 
     ###
@@ -278,15 +300,21 @@ $ ->
     Gets a list of unique, non-null, stringified vals from the group field index.
     ###
     data.makeGroups = (gIndex) ->
-
       result = {}
 
-      for dp in @dataPoints
-        if dp[gIndex] isnt null
-          result[String(dp[gIndex])] = true
+      # If group by number fields, get the number fields
+      if gIndex == data.NUMBER_FIELDS_FIELD
+        groups = []
+        for f in data.normalFields
+          if data.fields[f].fieldID != -1
+            groups.push(data.fields[f].fieldName)
+      else
+        for dp in @dataPoints
+          if dp[gIndex] isnt null
+            result[String(dp[gIndex])] = true
 
-      groups = for keys of result
-        keys
+        groups = for keys of result
+          keys
 
       groups.sort()
 
