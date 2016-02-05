@@ -270,6 +270,9 @@ $ ->
         $('#vis-ctrls').find(".mdl-radio").each (i,j) ->
           componentHandler.upgradeElement($(j)[0]);
 
+        $('#vis-ctrls').find(".mdl-slider").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
         # Initialize checked and make y axis checkbox/radio handler
         if radio
           # Set the current display field
@@ -402,6 +405,9 @@ $ ->
           componentHandler.upgradeElement($(j)[0]);
 
         $('#vis-ctrls').find(".mdl-radio").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
+        $('#vis-ctrls').find(".mdl-slider").each (i,j) ->
           componentHandler.upgradeElement($(j)[0]);
 
         # Initialize and track the status of this control panel

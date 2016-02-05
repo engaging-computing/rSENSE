@@ -448,6 +448,7 @@ $ ->
         @drawSaveControls()
 
       drawToolControls: ->
+
         inctx =
           radius: @configs.heatmapRadius
           displayMarkers:
@@ -492,10 +493,10 @@ $ ->
 
         # Add material design
         $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
-          componentHandler.upgradeElement($(j)[0]);
+          componentHandler.upgradeElement($(j)[0])
 
         $('#vis-ctrls').find(".mdl-radio").each (i,j) ->
-          componentHandler.upgradeElement($(j)[0]);
+          componentHandler.upgradeElement($(j)[0])
 
         # Initialize and track the status of this control panel
         globals.configs.toolsOpen ?= false
@@ -509,17 +510,20 @@ $ ->
           @delayedUpdate()
 
         # Checkboxes
-        $('#ckbx-display-markers').prop('checked', @configs.visibleMarkers)
+        if @configs.visibleMarkers
+          $('#ckbx-lbl-display-markers')[0].MaterialCheckbox.check()
         $('#ckbx-display-markers').click (e) =>
           @configs.visibleMarkers = e.target.checked
           @delayedUpdate()
 
-        $('#ckbx-connect-markers').prop('checked', @configs.visibleLines)
+        if @configs.visibleLines
+          $('#ckbx-lbl-connect-markers')[0].MaterialCheckbox.check()
         $('#ckbx-connect-markers').click (e) =>
           @configs.visibleLines = e.target.checked
           @delayedUpdate()
 
-        $('#ckbx-cluster-markers').prop('checked', @configs.visibleClusters)
+        if @configs.visibleClusters
+          $('#ckbx-lbl-cluster-markers')[0].MaterialCheckbox.check()
         $('#ckbx-cluster-markers').click (e) =>
           @configs.visibleClusters = e.target.checked
           @start()
@@ -565,6 +569,9 @@ $ ->
           $('#heatmap-slider').val(Math.log(@configs.heatmapRadius) /
             Math.log(10))
           @delayedUpdate()
+
+        $('#vis-ctrls').find(".mdl-slider").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0])
 
       resize: (newWidth, newHeight, duration) ->
         func = =>
