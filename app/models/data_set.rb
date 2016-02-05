@@ -32,6 +32,16 @@ class DataSet < ActiveRecord::Base
 
   def sanitize_data_set
     self.title = sanitize title, tags: %w()
+
+    # replace numeric hash keys with string hash keys
+    data.each do |data_row|
+      data_row.keys.each do |key|
+        unless key.is_a? String
+          data_row[key.to_s] = data_row[key]
+          data_row.delete key
+        end
+      end
+    end
   end
 
   def self.search(search)
@@ -115,22 +125,24 @@ class DataSet < ActiveRecord::Base
     formula_field_arrays = []
 
     # add each regular field to the environment as an array type
+    puts data
     fields.each do |x|
+      key = x.id.to_s
       beaker_arr = case x.field_type
       when 1
-        arr = data.map { |y| DateTime.new(y[x.id.to_s]) }
+        arr = data.map { |y| DateTime.new(y[key]) }
         Beaker::ArrayType.new(arr, :timestamp, 0)
       when 2
-        arr = data.map { |y| y[x.id.to_s].to_f }
+        arr = data.map { |y| y[key].to_f }
         Beaker::ArrayType.new(arr, :number, 0)
       when 3
-        arr = data.map { |y| y[x.id.to_s] }
+        arr = data.map { |y| y[key] }
         Beaker::ArrayType.new(arr, :text, 0)
       when 4
-        arr = data.map { |y| y[x.id.to_s].to_f }
+        arr = data.map { |y| y[key].to_f }
         Beaker::ArrayType.new(arr, :latitude, 0)
       when 5
-        arr = data.map { |y| y[x.id.to_s].to_f }
+        arr = data.map { |y| y[key].to_f }
         Beaker::ArrayType.new(arr, :longitude, 0)
       end
       curr_env.add x.refname, beaker_arr
