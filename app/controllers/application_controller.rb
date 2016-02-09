@@ -24,7 +24,8 @@ class ApplicationController < ActionController::Base
     session[:key] = nil
     session[:contributor_name] = nil
     session[:contrib_access] = nil
-    if session[:sign_in_referrer]
+    # If there was an error creating a user then session[:sign_in_referrer] == localhost:3000/users
+    if session[:sign_in_referrer] && !(session[:sign_in_referrer].include? 'users')
       ref = session[:sign_in_referrer]
       session.delete(:sign_in_referrer)
       return ref
