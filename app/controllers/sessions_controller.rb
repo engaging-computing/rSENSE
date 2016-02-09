@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  skip_before_filter :authorize, only: ['create', 'new', 'permissions']
+  skip_before_filter :authorize, only: ['permissions']
 
   protect_from_forgery except: :create
 

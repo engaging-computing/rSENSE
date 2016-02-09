@@ -29,7 +29,7 @@ class ApplicationController < ActionController::Base
       session.delete(:sign_in_referrer)
       return ref
     else
-      return user_path(current_user.id)
+      return user_path(current_user)
     end
   end
 
@@ -41,7 +41,7 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    if params[:controller] == 'application' && params[:action] == 'create_issue_anon'
+    if params[:action] == 'create_issue_anon' || params[:action] == 'github_authorize'
       redirect_to new_user_session_path
       return
     end
