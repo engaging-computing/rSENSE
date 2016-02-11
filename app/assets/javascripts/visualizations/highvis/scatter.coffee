@@ -587,7 +587,6 @@ $ ->
         not (undefined in [@configs.xBounds.userMin, @configs.xBounds.userMax])
 
       resetExtremes: (whichAxis = 'Both') =>
-        
         if @chart isnt undefined
           if whichAxis in ['Both', 'X']
             @configs.xBounds.userMin = undefined
@@ -605,7 +604,7 @@ $ ->
               @configs.xBounds.max, true)
             @chart.yAxis[0].setExtremes(@configs.yBounds.min,
               @configs.yBounds.max, true)
-          else 
+          else
             @resetExtremes()
 
       zoomOutExtremes: (whichAxis) ->
