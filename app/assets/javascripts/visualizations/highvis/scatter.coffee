@@ -162,6 +162,8 @@ $ ->
             minorTickInterval: 'auto'
             }]
           yAxis:
+            startOnTick: false
+            endOnTick: false
             type: if globals.configs.logY then 'logarithmic' else 'linear'
             events:
               afterSetExtremes: (e) =>
@@ -361,7 +363,6 @@ $ ->
 
         @updateRegrTools()
 
-
         # Set Axis range to initial zoom
         $('#x-axis-min').val(@configs.xBounds.min)
         $('#x-axis-max').val(@configs.xBounds.max)
@@ -392,11 +393,6 @@ $ ->
 
         $('#vis-ctrls').append tools
 
-
-
-
-        
-
         # Add material design
         $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
           componentHandler.upgradeElement($(j)[0]);
@@ -421,7 +417,6 @@ $ ->
         badNumberPopoverTimerY = null
         badNumberPopoverTimerX = null
 
-
         # Axis Manual entry
         $('#set-axis-button').click =>
           $('#x-axis-min').popover('destroy')
@@ -436,8 +431,6 @@ $ ->
 
           yAxisMin = $('#y-axis-min').val()
           yAxisMax = $('#y-axis-max').val()
-
-          #console.log xAxisMin
 
           if isNaN(xAxisMin) or xAxisMin == ""
             thereIsAFailure = true
@@ -494,10 +487,7 @@ $ ->
           yAxisMin = Number(yAxisMin)
           yAxisMax = Number(yAxisMax)
 
-          console.log @
-
           if xAxisMin >= xAxisMax
-            console.log xAxisMin + " " + xAxisMax
             thereIsAFailure = true
             $('#x-axis-min').popover
               content: 'Left must be less than right'
@@ -522,17 +512,13 @@ $ ->
             , 3000
 
           if thereIsAFailure then return
-
-          @configs.xBounds.userMin = xAxisMin
-          @configs.xBounds.userMax = xAxisMax
-
+         
           @configs.xBounds.min = xAxisMin
           @configs.xBounds.max = xAxisMax
 
           @configs.yBounds.min = yAxisMin
           @configs.yBounds.max = yAxisMax
 
-          #console.log "yaxisMin: " + @configs.yBounds.min
           @setExtremes()
 
 
@@ -591,9 +577,6 @@ $ ->
         globals.configs.xAxisOpen ?= false
         initCtrlPanel('x-axis-ctrls', 'xAxisOpen')
 
-
-
-
       ###
       Checks if the user has requested a specific zoom
       ###
@@ -611,10 +594,8 @@ $ ->
             @configs.yBounds.userMin = undefined
             @configs.yBounds.userMax = undefined
             @chart.yAxis[0].setExtremes()
-        #console.log "yaxisMin: " + @configs.yBounds.min
 
       setExtremes: ->
-        console.log "yaxisMin: " + @configs.yBounds.min
         if @chart?
           if(@configs.xBounds.min? and @configs.yBounds.min?)
             @chart.xAxis[0].setExtremes(@configs.xBounds.min,
@@ -623,8 +604,6 @@ $ ->
               @configs.yBounds.max, true)
           else 
             @resetExtremes()
-            
-        
 
       zoomOutExtremes: (whichAxis) ->
         xRange = @configs.xBounds.max - @configs.xBounds.min
@@ -962,3 +941,4 @@ $ ->
       globals.scatter = new Scatter "scatter-canvas"
     else
       globals.scatter = new DisabledVis "scatter-canvas"
+
