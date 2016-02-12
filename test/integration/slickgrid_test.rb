@@ -209,4 +209,16 @@ class SlickgridTest < IntegrationTest
     dataset = DataSet.find_by_name 'Slickgrid Data set 1'
     assert_similar_arrays compare_data, dataset.data
   end
+
+  test 'dataset name pre-populated manual entry' do
+    login 'nixon@whitehouse.gov', '12345'
+
+    project = Project.find_by_name 'slickgrid_project'
+    visit "/projects/#{project.id}/manualEntry"
+
+    # Left out time because it could change between when page is loaded and now
+    date = Time.now.strftime('%-m/%-d/%Y')
+
+    page.has_content? "Richard N. #{date}"
+  end
 end
