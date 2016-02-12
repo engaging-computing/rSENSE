@@ -3,7 +3,7 @@ require 'base64'
 class UsersController < ApplicationController
   before_filter :authorize_admin, only: [:index]
 
-  skip_before_filter :authorize, except: [:show, :index]
+  skip_before_filter :authorize, only: [:show, :index, :pw_request, :pw_send_key, :pw_reset]
 
   include ActionView::Helpers::DateHelper
   include ApplicationHelper
@@ -239,6 +239,7 @@ class UsersController < ApplicationController
 
   # GET /users/validate/:key
   def validate
+    puts "trying to validate"
     key = params[:key]
 
     @user = User.find_by_validation_key(key)
@@ -270,17 +271,6 @@ class UsersController < ApplicationController
       return
     end
 
-    if @user.email.nil? or @user.email.empty?
-      @reason = "You didn't set an email."
-      return
-    end
-
-    @user.reset_validation!
-    unless @user.save
-      @reason = 'There was a database error.'
-      return
-    end
-
     begin
       UserMailer.pw_reset_email(@user).deliver
     rescue Net::SMTPFatalError
@@ -289,24 +279,6 @@ class UsersController < ApplicationController
     end
 
     @sent = true
-  end
-
-  # GET /users/pw_reset
-  def pw_reset
-    key = params[:key]
-
-    @user = User.find_by_validation_key(key)
-    if @user.nil?
-      session[:user_id]   = nil
-      session[:pw_change] = nil
-      logger.info 'No such validation key'
-      render_404
-      return
-    else
-      session[:user_id]   = @user.id
-      session[:pw_change] = true
-      redirect_to edit_user_path(@user)
-    end
   end
 
   private

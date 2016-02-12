@@ -15,7 +15,7 @@
           </div> 
 
           <div class="form-group">
-            <%= f.label :password, "Password:" %><br />
+            <%= label_tag(:password, "Password #{(link_to "(forgot password)", '/users/pw_request', tabindex: -1)}:".html_safe) %><br/>
             <%= f.password_field :password, autocomplete: "off", class: "form-control" %>
           </div>
 

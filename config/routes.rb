@@ -3,6 +3,7 @@ Rsense::Application.routes.draw do
   get '/users/:id/contributions' => 'users#contributions'
   get '/users/:id/edit' => 'users#edit'
   resources :users
+  get '/users/pw_reset/:key' => 'users#pw_reset'
 
   get 'testing/index'
 
