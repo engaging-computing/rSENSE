@@ -213,18 +213,6 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
       end
       data['normalFields'] = normal_fields
 
-      # group_selection = data['groupSelection']
-      # unless group_selection.nil? or group_selection.length == 0
-      #   group_selection.each_with_index do | g, i |
-      #     # if greater than position, add 1 because it was shifted over
-      #     if g >= position
-      #       group_selection[i] += direction
-      #     end
-      #   end
-      #   group_selection.push(position)
-      #   group_selection.sort!
-      # end
-      # data['groupSelection'] = group_selection
     end
     data
   end
