@@ -46,6 +46,7 @@ $ ->
 
         @xGridSize = @yGridSize = @INITIAL_GRID_SIZE
 
+        @isScatter = true # To do add axis bounds feature that does time
         # Used for data reduction triggering
         @updateOnZoom = true
 
@@ -380,6 +381,7 @@ $ ->
         inctx = {}
         inctx.axes = ["Both", "X", "Y"]
         inctx.logSafe = data.logSafe
+        inctx.vis = @isScatter # To do add axis bounds feature that does time
         inctx.elapsedTime = elapsedTime and data.timeFields.length is 1
         inctx.modes = [
           { mode: @SYMBOLS_LINES_MODE, text: "Symbols and Lines" }
@@ -515,7 +517,7 @@ $ ->
             , 3000
 
           if thereIsAFailure then return
-         
+
           @configs.xBounds.min = xAxisMin
           @configs.xBounds.max = xAxisMax
 
@@ -943,4 +945,3 @@ $ ->
       globals.scatter = new Scatter "scatter-canvas"
     else
       globals.scatter = new DisabledVis "scatter-canvas"
-
