@@ -35,7 +35,13 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     -ms-user-select: none;
     user-select: none;
   }
-
+  .axis {
+    display:inherit;
+    width: 45%;
+  }
+  .axis-container {
+    display: inline-block;
+  }
   .bold {
     font-weight: bold;
   }

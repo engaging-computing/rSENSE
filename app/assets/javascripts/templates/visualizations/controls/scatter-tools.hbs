@@ -40,6 +40,24 @@
   </div>
 </div>
 <div class="vis-ctrl-subblock">
+  <h4 class="vis-ctrl-subtitle">Axis Bounds</h4>
+  <div>
+      <label>X Axis Range:</label>
+      <div  class="inline-block">
+        <input id="x-axis-min" class="form-control axis" value="{{xAxisMin}}" placeholder="eg: 5,10">        
+        <span>to</span>       
+        <input id="x-axis-max" class="form-control axis" value="{{xAxisMax}}" placeholder="eg: 5,10">        
+      </div>
+      <label>Y Axis Range:</label>
+      <div  class="inline-block">
+        <input id="y-axis-min" class="form-control axis" value="{{yAxisMin}}" placeholder="eg: 5,10"> 
+        <span>to</span>
+        <input id="y-axis-max" class="form-control axis" value="{{yAxisMax}}" placeholder="eg: 5,10">       
+      </div>
+  </div>
+    <button id="set-axis-button" data-log-id="set-axis-size" class="btn btn-default">Set Axis Size</button>
+</div>
+<div class="vis-ctrl-subblock">
   <h4 class="vis-ctrl-subtitle">Other</h4>
   <div> 
     <div class="checkbox">

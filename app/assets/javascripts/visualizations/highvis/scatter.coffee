@@ -162,6 +162,8 @@ $ ->
             minorTickInterval: 'auto'
             }]
           yAxis:
+            startOnTick: false
+            endOnTick: false
             type: if globals.configs.logY then 'logarithmic' else 'linear'
             events:
               afterSetExtremes: (e) =>
@@ -364,6 +366,12 @@ $ ->
 
         @updateRegrTools()
 
+        # Set Axis range to initial zoom
+        $('#x-axis-min').val(@configs.xBounds.min)
+        $('#x-axis-max').val(@configs.xBounds.max)
+        $('#y-axis-min').val(@configs.yBounds.min)
+        $('#y-axis-max').val(@configs.yBounds.max)
+
       ###
       Draws radio buttons for changing symbol/line mode.
       ###
@@ -385,6 +393,7 @@ $ ->
         outctx.title = 'Tools'
         outctx.body = HandlebarsTemplates[hbCtrl('scatter-tools')](inctx)
         tools = HandlebarsTemplates[hbCtrl('body')](outctx)
+
         $('#vis-ctrls').append tools
 
         # Add material design
@@ -403,6 +412,118 @@ $ ->
         # Set initial state of zoom reset
         if not @isZoomLocked() then $('#zoom-reset-btn').addClass("disabled")
         else $('#zoom-reset-btn').addClass("enabled")
+
+        badNumberPopoverTimerXMin = null
+        badNumberPopoverTimerXMax = null
+        badNumberPopoverTimerYMin = null
+        badNumberPopoverTimerYMax = null
+        badNumberPopoverTimerY = null
+        badNumberPopoverTimerX = null
+
+        # Axis Manual entry
+        $('#set-axis-button').click =>
+          $('#x-axis-min').popover('destroy')
+          $('#x-axis-max').popover('destroy')
+          $('#y-axis-min').popover('destroy')
+          $('#y-axis-max').popover('destroy')
+
+          thereIsAFailure = false
+
+          xAxisMin = $('#x-axis-min').val()
+          xAxisMax = $('#x-axis-max').val()
+
+          yAxisMin = $('#y-axis-min').val()
+          yAxisMax = $('#y-axis-max').val()
+
+          if isNaN(xAxisMin) or xAxisMin == ""
+            thereIsAFailure = true
+            $('#x-axis-min').popover
+              content: 'Please enter a valid number'
+              placement: 'bottom'
+              trigger: 'manual'
+            $('#x-axis-min').popover('show')
+            if badNumberPopoverTimerXMin? then clearTimeout(badNumberPopoverTimerXMin)
+            badNumberPopoverTimerXMin = setTimeout ->
+              $('#x-axis-min').popover('destroy')
+            , 3000
+
+          if isNaN(xAxisMax) or xAxisMax == ""
+            thereIsAFailure = true
+            $('#x-axis-max').popover
+              content: 'Please enter a valid number'
+              placement: 'bottom'
+              trigger: 'manual'
+            $('#x-axis-max').popover('show')
+            if badNumberPopoverTimerXMax? then clearTimeout(badNumberPopoverTimerXMax)
+            badNumberPopoverTimerXMax = setTimeout ->
+              $('#x-axis-max').popover('destroy')
+            , 3000
+
+          if isNaN(yAxisMin) or yAxisMin == ""
+            thereIsAFailure = true
+            $('#y-axis-min').popover
+              content: 'Please enter a valid number'
+              placement: 'bottom'
+              trigger: 'manual'
+            $('#y-axis-min').popover('show')
+            if badNumberPopoverTimerYMin? then clearTimeout(badNumberPopoverTimerYMin)
+            badNumberPopoverTimerYMin = setTimeout ->
+              $('#y-axis-min').popover('destroy')
+            , 3000
+
+          if isNaN(yAxisMax) or yAxisMax == ""
+            thereIsAFailure = true
+            $('#y-axis-max').popover
+              content: 'Please enter a valid number'
+              placement: 'bottom'
+              trigger: 'manual'
+            $('#y-axis-max').popover('show')
+            if badNumberPopoverTimerYMax? then clearTimeout(badNumberPopoverTimerYMax)
+            badNumberPopoverTimerYMax = setTimeout ->
+              $('#y-axis-max').popover('destroy')
+            , 3000
+
+          if thereIsAFailure then return
+
+          xAxisMin = Number(xAxisMin)
+          xAxisMax = Number(xAxisMax)
+          yAxisMin = Number(yAxisMin)
+          yAxisMax = Number(yAxisMax)
+
+          if xAxisMin >= xAxisMax
+            thereIsAFailure = true
+            $('#x-axis-min').popover
+              content: 'Left must be less than right'
+              placement: 'bottom'
+              trigger: 'manual'
+            $('#x-axis-min').popover('show')
+            if badNumberPopoverTimerX? then clearTimeout(badNumberPopoverTimerX)
+            badNumberPopoverTimerX = setTimeout ->
+              $('#x-axis-min').popover('destroy')
+            , 3000
+
+          if yAxisMin >= yAxisMax
+            thereIsAFailure = true
+            $('#y-axis-min').popover
+              content: 'Left must be less than right'
+              placement: 'bottom'
+              trigger: 'manual'
+            $('#y-axis-min').popover('show')
+            if badNumberPopoverTimerY? then clearTimeout(badNumberPopoverTimerY)
+            badNumberPopoverTimerY = setTimeout ->
+              $('#y-axis-min').popover('destroy')
+            , 3000
+
+          if thereIsAFailure then return
+         
+          @configs.xBounds.min = xAxisMin
+          @configs.xBounds.max = xAxisMax
+
+          @configs.yBounds.min = yAxisMin
+          @configs.yBounds.max = yAxisMax
+
+          @setExtremes()
+
 
         $('#zoom-reset-btn').click (e) =>
           @resetExtremes($('#zoom-axis-list').val())
@@ -483,7 +604,8 @@ $ ->
               @configs.xBounds.max, true)
             @chart.yAxis[0].setExtremes(@configs.yBounds.min,
               @configs.yBounds.max, true)
-          else @resetExtremes()
+          else
+            @resetExtremes()
 
       zoomOutExtremes: (whichAxis) ->
         xRange = @configs.xBounds.max - @configs.xBounds.min
@@ -821,3 +943,4 @@ $ ->
       globals.scatter = new Scatter "scatter-canvas"
     else
       globals.scatter = new DisabledVis "scatter-canvas"
+
