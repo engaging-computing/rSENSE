@@ -116,3 +116,7 @@ map_vis_disable:
 lots_of_data_sets:
   title: Lots of Data Sets
   user: nixon
+
+template_fields_project:
+  title: Test for templating fields
+  user: nixon
