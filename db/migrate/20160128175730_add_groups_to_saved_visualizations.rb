@@ -213,18 +213,6 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
       end
       data['normalFields'] = normal_fields
 
-      group_selection = data['groupSelection']
-      unless group_selection.nil? or group_selection.length == 0
-        group_selection.each_with_index do | g, i |
-          # if greater than position, add 1 because it was shifted over
-          if g >= position
-            group_selection[i] += direction
-          end
-        end
-        group_selection.push(position)
-        group_selection.sort!
-      end
-      data['groupSelection'] = group_selection
     end
     data
   end
@@ -267,7 +255,15 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
       globals['Scatter'] = scatter
     end
 
-    # bar unaffected: axis uses the globals.fieldSelection
+    # bar
+    bar = globals['Bar']
+    unless bar.nil?
+      if !bar['sortField'].nil? && bar['sortField'] >= position
+        bar['sortField'] += direction
+      end
+      globals['Bar'] = bar
+    end
+
     # histogram unaffected: axis uses the globals.fieldSelection
 
     # pie
@@ -334,9 +330,10 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
           table['tableFields'][i] += direction
         end
       end
-      if direction == 1
+      # if position is 3 then it is the number group by field and we do not want that on the table
+      if direction == 1 && position != 3
         table['tableFields'].push(position)
-      else
+      elsif position != 3
         table['tableFields'] -= [position]
       end
       table['tableFields'].sort!
