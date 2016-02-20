@@ -5,8 +5,4 @@ machine:
 
 database:
   override:
-    - bundle exec rake db:create db:schema:load --trace
-
-test:
-  post:
-    - bundle exec rake test
+    - bundle exec rake db:create db:migrate db:seed permissions:permissions --trace
