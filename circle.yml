@@ -4,5 +4,4 @@ machine:
 
 dependencies:
   pre:
-    - sudo apt-get build-dep build-essential
-    - sudo apt-get update; sudo apt-get install libreoffice libreoffice-calc unoconv
+    - sudo apt-get update; sudo apt-get build-dep build-essential; sudo apt-get install libreoffice libreoffice-calc unoconv
