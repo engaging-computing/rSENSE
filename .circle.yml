@@ -6,3 +6,7 @@ machine:
 database:
   override:
     - bundle exec rake db:create db:migrate db:seed permissions:permissions --trace
+test:
+  post:
+      environment:
+        RAILS_ENV=test
