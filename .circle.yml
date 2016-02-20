@@ -2,3 +2,21 @@ machine:
   ruby:
     version:
       2.1.1
+
+database:
+  override:
+    - bundle exec rake db:create db:schema:load --trace
+    - rake db:migrate RAILS_ENV=test
+
+  pre:
+    - bundle exec rake db:preprep
+    - psql -c 'create database rsense_test;' -U postgres
+    - RAILS_ENV=test bundle exec rake db:migrate --trace
+    - bundle exec rake db:test:prepare
+
+test: 
+  pre:
+    - "gem install bundler --version '>= 1.5.1'"
+    - bundle install
+    - "export DISPLAY=:99.0"
+    - "sh -e /etc/init.d/xvfb start"
