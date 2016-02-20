@@ -5,7 +5,3 @@ machine:
 dependencies:
   pre:
     - sudo apt-get update; sudo apt-get install libreoffice libreoffice-calc unoconv; sudo apt-get install ruby-railties-4.0 bundler;
-
-dependencies:
-    override:
-        - PATH="/home/ubuntu/.rvm/rubies/ruby-2.2.3/bin/:$PATH" /home/ubuntu/.rvm/gems/ruby-2.2.3@global/bin/bundle install
