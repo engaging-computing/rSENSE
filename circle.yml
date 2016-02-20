@@ -5,3 +5,5 @@ machine:
 dependencies:
   pre:
     - sudo apt-get update; sudo apt-get install libreoffice libreoffice-calc unoconv; sudo apt-get install ruby-railties-4.0 bundler;
+    - gem uninstall bundler
+    - gem install bundler
