@@ -8,9 +8,9 @@ dependencies:
 
 dependencies:
     override:
-        - PATH="/home/ubuntu/.rvm/rubies/ruby-2.2.3/bin/:$PATH" /home/ubuntu/.rvm/gems/ruby-2.1.1@global/bin/bundle install
+        - PATH="/home/ubuntu/.rvm/rubies/ruby-2.1.1/bin/:$PATH" /home/ubuntu/.rvm/gems/ruby-2.1.1@global/bin/bundle install
 
 test:
     override:
-        - PATH="/home/ubuntu/.rvm/rubies/ruby-2.2.3/bin/:$PATH" /home/ubuntu/.rvm/gems/ruby-2.1.1@global/bin/bundle exec jekyll build
-        - PATH="/home/ubuntu/.rvm/rubies/ruby-2.2.3/bin/:$PATH" /home/ubuntu/.rvm/gems/ruby-2.1.1@global/bin/bundle exec htmlproof ./_source
+        - PATH="/home/ubuntu/.rvm/rubies/ruby-2.1.1/bin/:$PATH" /home/ubuntu/.rvm/gems/ruby-2.1.1@global/bin/bundle exec jekyll build
+        - PATH="/home/ubuntu/.rvm/rubies/ruby-2.1.1/bin/:$PATH" /home/ubuntu/.rvm/gems/ruby-2.1.1@global/bin/bundle exec htmlproof ./_source
