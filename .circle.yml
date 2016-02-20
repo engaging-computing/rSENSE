@@ -1,7 +1,6 @@
 machine:
   ruby:
-    version:
-      2.1.1
+    version: 2.1.1
     environment:
       DISPLAY=:99
 
