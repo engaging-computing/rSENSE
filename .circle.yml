@@ -16,5 +16,5 @@ database:
     - bundle exec rake db:preprep
     - psql -c 'create database rsense_test;' -U postgres
     - RAILS_ENV=test bundle exec rake db:create db:migrate --trace
-    - bundle exec rake db:test:prepare
+    - bundle exec rake test:prepare
 
