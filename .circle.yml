@@ -6,15 +6,15 @@ machine:
 dependencies:
   pre:
     - sudo apt-get update; sudo apt-get install libreoffice libreoffice-calc unoconv
-    - "gem install bundler --version '>= 1.5.1'"
+    - gem install bundler --version '>= 1.5.1'
     - bundle install
-    - "export DISPLAY=:99.0"
-    - "sh -e /etc/init.d/xvfb start"
+    - export DISPLAY=:99.0
+    - sh -e /etc/init.d/xvfb start
 
 database:
   override:
     - bundle exec rake db:preprep
     - psql -c 'create database rsense_test;' -U postgres
     - RAILS_ENV=test bundle exec rake db:create db:migrate --trace
-    - bundle exec rake test:prepare
+    - bundle exec rake db:test:prepare
 
