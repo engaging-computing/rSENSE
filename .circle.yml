@@ -1,7 +1,0 @@
-machine:
-  ruby:
-    version: 2.1.1
-
-dependencies:
-  pre:
-    - sudo apt-get update; sudo apt-get install libreoffice libreoffice-calc unoconv
