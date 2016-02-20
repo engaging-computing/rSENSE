@@ -7,3 +7,10 @@ dependencies:
     - sudo apt-get update; sudo apt-get install libreoffice libreoffice-calc unoconv; sudo apt-get install ruby-railties-4.0 bundler;
     - gem uninstall bundler
     - gem install bundler
+
+## Customize database setup
+database:
+  override:
+    # replace CircleCI's generated database.yml
+    - cp config/database.yml.ci config/database.yml
+    - bundle exec rake db:create db:schema:load
