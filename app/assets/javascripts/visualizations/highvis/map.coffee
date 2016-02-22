@@ -545,7 +545,9 @@ $ ->
 
         # Heatmap Radius Box
         badNumberPopoverTimer = null
+
         $('#map-radius').change (e) =>
+          $('#e.target').popover('destroy')
           newRadius = Number(e.target.value)
           if isNaN(newRadius)
             $(e.target).popover

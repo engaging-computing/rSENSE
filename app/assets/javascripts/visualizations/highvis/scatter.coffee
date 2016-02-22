@@ -424,10 +424,7 @@ $ ->
 
         # Axis Manual entry
         $('#set-axis-button').click =>
-          $('#x-axis-min').popover('destroy')
-          $('#x-axis-max').popover('destroy')
-          $('#y-axis-min').popover('destroy')
-          $('#y-axis-max').popover('destroy')
+
 
           thereIsAFailure = false
 
@@ -518,6 +515,11 @@ $ ->
 
           if thereIsAFailure then return
 
+          $('#x-axis-min').popover('destroy')
+          $('#x-axis-max').popover('destroy')
+          $('#y-axis-min').popover('destroy')
+          $('#y-axis-max').popover('destroy')
+
           @configs.xBounds.min = xAxisMin
           @configs.xBounds.max = xAxisMax
 
@@ -525,7 +527,6 @@ $ ->
           @configs.yBounds.max = yAxisMax
 
           @setExtremes()
-
 
         $('#zoom-reset-btn').click (e) =>
           @resetExtremes($('#zoom-axis-list').val())
