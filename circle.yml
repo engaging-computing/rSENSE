@@ -1,12 +1,17 @@
 machine:
   ruby:
     version: 2.1.1
+  environment:
+    DISPLAY=:99.0
+
 
 dependencies:
   pre:
     - sudo apt-get update; sudo apt-get install libreoffice libreoffice-calc unoconv; sudo apt-get install ruby-railties-4.0 bundler;
     - gem uninstall bundler
     - gem install bundler
+  post:
+    - bundle exec rake assets:precompile
 
 ## Customize database setup
 database:
