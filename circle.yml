@@ -1,8 +1,9 @@
 machine:
   ruby:
     version: 2.1.1
+
   environment:
-    DISPLAY=:99.0
+    DISPLAY=:99
 
 
 dependencies:
