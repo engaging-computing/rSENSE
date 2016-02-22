@@ -425,7 +425,6 @@ $ ->
         # Axis Manual entry
         $('#set-axis-button').click =>
 
-
           thereIsAFailure = false
 
           xAxisMin = $('#x-axis-min').val()
