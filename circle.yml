@@ -9,6 +9,12 @@ dependencies:
     - gem install bundler
   post:
     - bundle exec rake assets:precompile
+    - bundle exec rake db:preprep
+    - psql -c 'create database rsense_test;' -U postgres
+    - RAILS_ENV=test bundle exec rake db:migrate --trace
+    - bundle exec rake db:test:prepare
+    - sh -e /etc/init.d/xvfb start
+
 
 ## Customize database setup
 database:
