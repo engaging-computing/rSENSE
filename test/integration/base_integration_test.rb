@@ -4,7 +4,7 @@ class IntegrationTest < ActionDispatch::IntegrationTest
   include CapyHelper
 
   setup do
-    Capybara.current_driver = :webkit
+    Capybara.current_driver = :selenium
     Capybara.default_wait_time = 2
   end
 

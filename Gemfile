@@ -23,14 +23,14 @@ gem 'sprockets', '~> 2.12'
 # Integration testing stuff
 group :development, :test do
   gem 'capybara'
-  gem 'selenium-webdriver'
+  gem 'selenium-webdriver', '~> 2.48'
   gem 'launchy'
   gem 'simplecov'
   gem 'minitest-reporters'
   gem 'rubocop', git: 'https://github.com/bbatsov/rubocop'
   gem 'coffeelint'
   gem 'capybara-webkit'
-  gem 'minitest', '~> 5.1'
+  gem 'minitest'
   gem 'capybara-screenshot'
 end
 

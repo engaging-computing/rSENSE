@@ -19,11 +19,3 @@ dependencies:
 database:
   override:
     - bundle exec rake db:create db:schema:load
-
-test:
-  override:
-    - xvfb-run -a bundle exec rspec:
-      parallel: true
-      files:
-        - spec/**/*_spec.rb
-        - lib/inter_exchange/spec/**/*_spec.rb
