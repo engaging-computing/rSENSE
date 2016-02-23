@@ -20,6 +20,3 @@ database:
   override:
     - bundle exec rake db:create db:schema:load
 
-test:
-  override:
-    - xvfb-run -a bundle exec rspec
