@@ -16,7 +16,7 @@ class GithubInterface
     req.set_form_data(new_params)
     req['accept'] = 'application/json'
     http = Net::HTTP.new(url.host, url.port)
-    http.use_ssl = (url.scheme == 'https')
+    http.use_ssl = false
 
     response = http.request(req)
 
@@ -50,7 +50,7 @@ class GithubInterface
       req = Net::HTTP::Post.new(url.request_uri)
       req.body = new_params.to_json
       http = Net::HTTP.new(url.host, url.port)
-      http.use_ssl = (url.scheme == 'https')
+      http.use_ssl = false
       response = http.request(req)
       response
     end
