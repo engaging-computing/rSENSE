@@ -22,7 +22,7 @@ database:
 
 test:
   override:
-    - xvfb-run -a bundle exec rspec:
+    - xvfb-run -a bundle exec rspec
       parallel: true
       files:
         - spec/**/*_spec.rb
