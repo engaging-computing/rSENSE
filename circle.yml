@@ -7,15 +7,15 @@ dependencies:
     - sudo apt-get update; sudo apt-get install libreoffice libreoffice-calc unoconv; sudo apt-get install ruby-railties-4.0 bundler;
     - gem uninstall bundler
     - gem install bundler
-  post:
+    - bundle install
     - bundle exec rake assets:precompile
     - bundle exec rake db:preprep
     - psql -c 'create database rsense_test;' -U postgres
     - RAILS_ENV=test bundle exec rake db:migrate --trace
     - bundle exec rake db:test:prepare
 
-
-## Customize database setup
 database:
   override:
-    - bundle exec rake db:create db:schema:load
+    - bundle exec rake db:preprep
+    - RAILS_ENV=test bundle exec rake db:migrate --trace
+    - bundle exec rake db:test:prepare

@@ -307,6 +307,3 @@ DEPENDENCIES
   will_paginate
   will_paginate-bootstrap
   yaml_db!
-
-BUNDLED WITH
-   1.10.6
