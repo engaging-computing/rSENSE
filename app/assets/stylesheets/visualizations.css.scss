@@ -520,13 +520,19 @@ ul#sopt_menu {
     border-bottom: thin solid #ABABAB;
     border-right: thin solid #ABABAB;
   }
+
+  /***********************/
+
   // when a box is chosen or hovered over
   li:hover, li.ui-state-highlight {
-    background-image: linear-gradient(#49A7DB, #268AC1);
+    background-image: linear-gradient(#49A7DB, #268AC1); // hex codes are blue
     a > table > tbody > tr > td { // this is gross
       color: #FFF;
     }
   }
+
+  /***********************/
+
 }
 
 body[data-page-name='visualizations/displayVis'] .visualizations-controller,
