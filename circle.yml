@@ -17,6 +17,8 @@ dependencies:
 
 ## Customize database setup
 database:
+  pre:
+    - mv config/database.yml.ci config/database.yml # ignore circles yml and use ours
   override:
     - bundle exec rake db:create db:schema:load
 
