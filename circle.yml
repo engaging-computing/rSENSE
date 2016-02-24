@@ -5,6 +5,7 @@ machine:
 dependencies:
   pre:
     - sudo apt-get update; sudo apt-get install libreoffice libreoffice-calc unoconv; sudo apt-get install ruby-railties-4.0 bundler;
+    - sudo apt-get install libqt4-dev libqtwebkit-dev
     - gem uninstall bundler
     - gem install bundler
     - bundle install
