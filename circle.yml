@@ -9,10 +9,6 @@ dependencies:
     - gem install bundler
     - bundle install
     - bundle exec rake assets:precompile
-    - bundle exec rake db:preprep
-    - psql -c 'create database rsense_test;' -U postgres
-    - RAILS_ENV=test bundle exec rake db:migrate --trace
-    - bundle exec rake db:test:prepare
 
 database:
   override:
