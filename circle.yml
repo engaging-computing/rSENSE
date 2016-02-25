@@ -9,10 +9,11 @@ dependencies:
     - sudo apt-get install qt5-default libqt5webkit5-dev gstreamer1.0-plugins-base gstreamer1.0-tools gstreamer1.0-x
     - gem uninstall bundler
     - gem install bundler
-  post:
+    - bundle install
     - bundle exec rake assets:precompile
 
-## Customize database setup
 database:
   override:
-    - bundle exec rake db:create db:schema:load
+    - bundle exec rake db:preprep
+    - RAILS_ENV=test bundle exec rake db:migrate --trace
+    - bundle exec rake db:test:prepare
