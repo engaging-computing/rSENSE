@@ -27,8 +27,6 @@ class ShowUserTest < IntegrationTest
     count = page.all(:css, '.contrib-delete-link').length
 
     page.driver.browser.accept_js_confirms
-    # expect call waits for ajax to finish
-    expect(page).to have_css('.contrib-delete-link')
     page.first(:css, '.contrib-delete-link').click
 
     page.has_css?('.contrib-delete-link',
