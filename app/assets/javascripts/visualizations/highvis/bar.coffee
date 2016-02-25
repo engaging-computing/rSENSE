@@ -109,6 +109,10 @@ $ ->
           options.data = for fid in data.normalFields when fid in fieldSelection
             [fieldTitle(data.fields[fid]), groupedData[fid][gid]]
 
+          # Do not label x-axis if there is just one group
+          if options.data.length == 1
+            options.data[0][0] = ' '
+
           @chart.addSeries options, false
 
           # Draw error bars if that analysis type is selected
@@ -142,13 +146,19 @@ $ ->
 
       drawControls: ->
         super()
-
-        @drawGroupControls(data.textFields)
+        # Remove group by number fields, only for pie chart
+        groups = $.extend(true, [], data.textFields)
+        groups.splice(data.NUMBER_FIELDS_FIELD - 1, 1)
+        @drawGroupControls(groups)
         @drawYAxisControls(globals.configs.fieldSelection,
           data.normalFields.slice(1), false)
         @drawToolControls(true, true)
         @drawClippingControls()
         @drawSaveControls()
+        $('[id^=ckbx-y-axis]').click (e) ->
+          fs = globals.configs.fieldSelection
+          if fs and fs.length == 1
+            $('#sort-by').val(fs[0])
 
     if "Bar" in data.relVis
       globals.bar = new Bar 'bar-canvas'
