@@ -46,8 +46,8 @@ class ShowUserTest < IntegrationTest
     find('.nav-tabs').click_on 'Visualizations'
     assert page.has_content?('Needs Media'), 'View vis list'
 
-    wait_for_ajax
     find('.info_edit_link').click
+    wait_for_ajax
     assert page.has_css?('.info_edit_box'), 'showed text box'
 
     fill_in 'info_edit_value', with: 'George Bush'
