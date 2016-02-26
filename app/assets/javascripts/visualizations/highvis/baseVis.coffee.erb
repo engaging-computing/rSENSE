@@ -420,12 +420,10 @@ $ ->
           a = $(cpicker).colorpicker
             outputType: 'hex'
             onOpen: () ->
-              $("#label-color-#{cid}").parent().parent().css('background-color',
-                '#EEE')		  
-              globals.getColor(cid)
+              # $("#label-color-#{cid}").parent().parent().css('background-color', '#EEE')		  
+              # globals.getColor(cid)
             onClose: () ->
-              $("#label-color-#{cid}").parent().parent().css('background-color',
-                '#FFF')
+              $("#label-color-#{cid}").parent().parent().css('background-color', '#FFF')
             onSubmit: (color) =>
               globals.setColor(cid, color)
               $("#label-color-#{cid}").css 'color', color
