@@ -27,7 +27,7 @@ class ShowUserTest < IntegrationTest
     count = page.all(:css, '.contrib-delete-link').length
 
     page.driver.browser.accept_js_confirms
-    wait_for_ajax
+    wait_for_class('contrib-delete-link')
     page.first(:css, '.contrib-delete-link').click
 
     page.has_css?('.contrib-delete-link',
@@ -46,8 +46,8 @@ class ShowUserTest < IntegrationTest
     find('.nav-tabs').click_on 'Visualizations'
     assert page.has_content?('Needs Media'), 'View vis list'
 
+    wait_for_class('info_edit_link')
     find('.info_edit_link').click
-    wait_for_ajax
     assert page.has_css?('.info_edit_box'), 'showed text box'
 
     fill_in 'info_edit_value', with: 'George Bush'
