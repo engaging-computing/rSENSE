@@ -47,7 +47,9 @@ class ShowUserTest < IntegrationTest
     assert page.has_content?('Needs Media'), 'View vis list'
 
     wait_for_class('info_edit_link')
-    find('.info_edit_link').click
+    # Trigger click because due to a webkit bug, it is not visible
+    # https://github.com/thoughtbot/capybara-webkit/issues/494
+    find('.info_edit_link').trigger('click')
     assert page.has_css?('.info_edit_box'), 'showed text box'
 
     fill_in 'info_edit_value', with: 'George Bush'
