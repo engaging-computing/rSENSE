@@ -10,6 +10,7 @@ class ShowUserTest < IntegrationTest
     pid = projects(:media_test).id
     visit "/projects/#{pid}"
     click_on 'Like'
+    wait_for_ajax
 
     assert find('.like_display').has_content?('1'), 'Like updated'
 
@@ -17,9 +18,11 @@ class ShowUserTest < IntegrationTest
 
     visit "/users/#{@nixon.id}"
     click_on 'Liked Projects'
+    wait_for_ajax
     assert page.has_content?('Media Test'), 'View admin user'
 
     click_on 'My Projects'
+    wait_for_ajax
     assert page.has_content?('Media Test'), 'View projects list'
 
     # Verify existence of and count of delete project links
@@ -40,12 +43,16 @@ class ShowUserTest < IntegrationTest
     'Deleted project should be hidden successfully'
 
     click_on 'Data Sets'
+    wait_for_ajax
     assert page.has_content?('Needs Media'), 'View data sets list'
 
     find('.nav-tabs').click_on 'Visualizations'
+    wait_for_ajax
     assert page.has_content?('Needs Media'), 'View vis list'
 
-    find('.info_edit_link').click
+    # Trigger click because due to a webkit bug, it is not visible
+    # https://github.com/thoughtbot/capybara-webkit/issues/494
+    find('.info_edit_link').trigger('click')
     assert page.has_css?('.info_edit_box'), 'showed text box'
 
     fill_in 'info_edit_value', with: 'George Bush'
