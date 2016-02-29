@@ -82,6 +82,24 @@ map_vis_disable_dset_no_loc:
   project: map_vis_disable
   data: "[{\"109\": 2401, \"110\": \"\", \"111\": \"\"}]"
 
+timeline_vis_disable_dset_with_time:
+  title: Timeline vis should be enabled
+  user: nixon
+  project: timeline_vis_disable
+  data: "[{\"112\": 0, \"113\": \"1994/10/14 19:39:38\"}, {\"112\": 13, \"113\": \"2007/10/14 19:39:38\"}, {\"112\": 21, \"113\": \"2015/10/14 19:39:38\"}]"
+
+timeline_vis_disable_dset_no_time:
+  title: Timeline vis should be disabled
+  user: nixon
+  project: timeline_vis_disable
+  data: "[{\"112\": 0, \"113\": \"\"}, {\"112\": 13, \"113\": \"\"}, {\"112\": 21, \"113\": \"\"}]"
+
+timeline_vis_disable_dset_some_time:
+  title: Timeline vis should be disabled
+  user: nixon
+  project: timeline_vis_disable
+  data: "[{\"112\": 0, \"113\": \"1994/10/14 19:39:38\"}, {\"112\": 13, \"113\": \"2007/10/14 19:39:38\"}, {\"112\": 21, \"113\": \"\"}]"
+
 a:
   title: a
   user: nixon
