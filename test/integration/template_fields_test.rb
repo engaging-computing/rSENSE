@@ -9,7 +9,7 @@ class TemplateFieldsTest < IntegrationTest
   end
 
   test 'template from csv' do
-    login('nixon@whitehouse.gov', '12345')
+    login('pson@cs.uml.edu', '12345')
     visit project_path(@project)
     assert page.has_content?('Test for templating fields'), 'Not on project page.'
 

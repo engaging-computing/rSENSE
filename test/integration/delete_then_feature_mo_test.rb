@@ -60,6 +60,7 @@ class DeleteThenFeatureMoTest < IntegrationTest
     within_window open_new_window do
       visit url
       accept_confirm do
+        screenshot_and_open_image
         click_on 'Delete'
       end
       assert page.has_content?('Deleted'),

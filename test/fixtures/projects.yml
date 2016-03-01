@@ -115,7 +115,7 @@ map_vis_disable:
 
 timeline_vis_disable:
   title: Timeline Vis Test
-  user: nixon
+  user: patson
   content: Test for disabling the timeline similar to issue 2262
 
 lots_of_data_sets:
@@ -124,4 +124,4 @@ lots_of_data_sets:
 
 template_fields_project:
   title: Test for templating fields
-  user: nixon
+  user: patson
