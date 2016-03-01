@@ -121,7 +121,7 @@ class UpdateFieldsTest < IntegrationTest
   end
 
   test 'simultaneous add and delete of fields' do
-    login('nixon@whitehouse.gov', '12345')
+    login('pson@cs.uml.edu', '12345')
     visit "/projects/#{projects(:fields_test).id}"
 
     assert page.has_content?('oldnum'), 'Number field is there'
