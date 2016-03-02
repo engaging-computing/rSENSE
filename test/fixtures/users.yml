@@ -33,3 +33,11 @@ boxes:
   password_digest: $2a$10$aK2OsTVTnWuPVmDthm9pj.vDApO9VGNgRwvwHmwzVQ0ScmW3BOPjC
   admin: false
   created_at: <%= 8.day.ago.to_s(:db) %>
+
+patson:
+  name: Patrick Son
+  email: pson@cs.uml.edu
+  validated: true
+  password_digest: $2a$10$aK2OsTVTnWuPVmDthm9pj.vDApO9VGNgRwvwHmwzVQ0ScmW3BOPjC
+  admin: false
+  created_at: <%= 2.day.ago.to_s(:db) %>

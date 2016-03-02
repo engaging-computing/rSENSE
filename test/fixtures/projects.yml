@@ -116,3 +116,7 @@ map_vis_disable:
 lots_of_data_sets:
   title: Lots of Data Sets
   user: nixon
+
+fields_test:
+  title: Field Test for Simultaneous Add and Delete
+  user: patson
