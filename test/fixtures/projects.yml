@@ -125,3 +125,7 @@ lots_of_data_sets:
 template_fields_project:
   title: Test for templating fields
   user: patson
+  
+fields_test:
+  title: Field Test for Simultaneous Add and Delete
+  user: patson

@@ -545,11 +545,25 @@ $ ->
 
         # Heatmap Radius Box
         badNumberPopoverTimer = null
+
         $('#map-radius').change (e) =>
+          $('#e.target').popover('destroy')
           newRadius = Number(e.target.value)
           if isNaN(newRadius)
             $(e.target).popover
               content: "Please enter a valid number"
+              placement: "bottom"
+              trigger: "manual"
+            $(e.target).popover 'show'
+            if badNumberPopoverTimer?
+              clearTimeout badNumberPopoverTimer
+            badNumberPopoverTimer = setTimeout ->
+              $(e.target).popover 'destroy'
+            , 3000
+            return
+          else if newRadius >= 10000000000
+            $(e.target).popover
+              content: "Number must be less than 10,000,000,000"
               placement: "bottom"
               trigger: "manual"
             $(e.target).popover 'show'
