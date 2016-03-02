@@ -15,7 +15,7 @@ development:
 
 test:
   adapter: sqlite3
-  database: db/test<%= ENV['TEST_ENV_NUMBER'] %>
+  database: db/parallel<%= ENV['TEST_ENV_NUMBER'] %>.sqlite3
   pool: 5
   timeout: 25000
 
