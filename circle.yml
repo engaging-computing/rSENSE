@@ -20,4 +20,5 @@ database:
 
 test: 
   override:
-    - rake
+    - rake:
+      parallel: true
