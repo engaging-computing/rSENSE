@@ -33,6 +33,7 @@ $ ->
     class window.Summary extends BaseVis
       constructor: (@canvas) ->
         super(@canvas)
+        @isSummary = true
 
       start: ->
         @configs.displayField = Math.min(globals.configs.fieldSelection...)

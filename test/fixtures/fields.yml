@@ -167,3 +167,15 @@ timeline_vis_timestamp:
   field_type: 1
   project: timeline_vis_disable
   name: Timestamp
+
+fields_test_text:
+  id: 114
+  field_type: 3
+  project: fields_test
+  name: oldtext
+
+fields_test_num:
+  id: 115
+  field_type: 2
+  project: fields_test
+  name: oldnum
