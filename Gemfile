@@ -93,3 +93,6 @@ gem 'recaptcha', git: 'https://github.com/ambethia/recaptcha'
 
 # Allow CORS
 gem 'rack-cors', :require => 'rack/cors'
+
+# Allows for parrellel testing
+gem "parallel_tests", group: :development
