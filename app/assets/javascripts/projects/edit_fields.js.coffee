@@ -80,12 +80,6 @@ $ ->
       # Row name of row being deleted
       rowName = $(@).closest('tr').attr('name')
 
-      # Decrease counter based on row name
-      if rowName == 'latitude' || rowName == 'longitude'
-        locationCount = 0
-      else
-        timestampCount = timestampCount - 1
-
       # fid != 0 when the field exists in the database
       if fid != '0'
         hiddenDeletedFields = $('#hidden_deleted_fields')
