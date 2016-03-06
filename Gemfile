@@ -25,7 +25,7 @@ group :development, :test do
   gem 'capybara'
   gem 'selenium-webdriver'
   gem 'launchy'
-  gem 'simplecov'
+  gem 'simplecov', '~> 0.11.2'
   gem 'minitest-reporters'
   gem 'rubocop', git: 'https://github.com/bbatsov/rubocop'
   gem 'coffeelint'

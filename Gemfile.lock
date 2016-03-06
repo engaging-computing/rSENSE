@@ -214,11 +214,11 @@ GEM
       multi_json (~> 1.0)
       rubyzip (~> 1.0)
       websocket (~> 1.0)
-    simplecov (0.9.1)
+    simplecov (0.11.2)
       docile (~> 1.1.0)
-      multi_json (~> 1.0)
-      simplecov-html (~> 0.8.0)
-    simplecov-html (0.8.0)
+      json (~> 1.8)
+      simplecov-html (~> 0.10.0)
+    simplecov-html (0.10.0)
     slop (3.6.0)
     spreadsheet (1.0.0)
       ruby-ole (>= 1.0)
@@ -299,7 +299,7 @@ DEPENDENCIES
   rubocop!
   rubyzip (>= 1.0.0)
   selenium-webdriver
-  simplecov
+  simplecov (~> 0.11.2)
   sprockets (~> 2.12)
   sqlite3
   summernote-rails
@@ -311,3 +311,6 @@ DEPENDENCIES
   will_paginate
   will_paginate-bootstrap
   yaml_db!
+
+BUNDLED WITH
+   1.10.6
