@@ -37,16 +37,6 @@ $ ->
       # Row name of row being deleted
       rowName = $(@).closest('tr').attr('name')
 
-      # Decrease counter based on row name
-      if rowName == 'latitude' || rowName == 'longitude'
-        locationCount = 0
-      else if rowName == 'number'
-        numberCount = numberCount - 1
-      else if rowName == 'text'
-        textCount = textCount - 1
-      else
-        timestampCount = timestampCount - 1
-
       # fid != 0 when the field exists in the database
       if fid != '0'
         hiddenDeletedFields = $('#hidden_deleted_fields')
@@ -60,8 +50,12 @@ $ ->
       else
         callDeleteRow(rowIndex, rowName, '')
 
-    # Populate hidden fields w/ num of fields and array of deleted fields on submit
-    $('#fields_form_submit').click ->
+
+    $('#fields_form_submit').click (e) ->
+      # don't do a form submit
+      e.preventDefault()
+
+      # Populate hidden fields w/ num of fields and array of deleted fields on submit
       values = [numCount, textCount, timestampCount, locationCount]
 
       for i in [0...4]
@@ -74,14 +68,24 @@ $ ->
         # This is for new fields that do not have an id yet
         if field_id == '0'
           field_id = t.rows[i].cells[1].getElementsByTagName('input')[0].getAttribute('name')
-        input = document.createElement('input')
-        input.setAttribute('type', 'text')
-        input.setAttribute('text', 'form-control')
-        input.setAttribute('style', 'visibility:collapse;')
-        input.setAttribute('name', "#{field_id}_index")
-        input.setAttribute('id', "#{field_id}_index")
-        input.setAttribute('value', i - 1)
-        document.getElementById('hidden_index_inputs').appendChild(input)
+        input = $("<input type='hidden' name='#{field_id}_index' value='#{i - 1}' />")
+        $('#hidden_index_inputs').append(input)
+
+      # construct a JSON object to send the server via AJAX
+      formData = {}
+      form = $('form[name="fields_form"]')
+      form.serializeArray().map (x) ->
+        formData[x.name] = x.value
+      console.log formData
+      $.ajax
+        type: 'POST'
+        url: form.attr('action')
+        data: formData
+        dataType: 'json'
+        success: (data, textStatus, jqXHR) ->
+          1
+        error: (jqXHR, textStatus, errorThrown) ->
+          showErrors(jqXHR.responseJSON)
 
   if namespace.controller is 'projects' and namespace.action is 'edit_fields'
     # Add row(s), increment counters, disable add buttons (for timestamp/location fields)
@@ -156,18 +160,21 @@ $ ->
                  </a>
                  <input type="hidden" name="tformula_#{textCount}" value="">""",
               '<a fid="0" class="field_delete"><i class="fa fa-close slick-delete"></i></a>'])
+
+    # jQuery event for opening the formula edit modal
     $('#fields_table').on 'click', '.field_edit_formula', ->
       $hiddenField = $(this).parent().children('input')
       contents = $hiddenField.val()
       $formulaText = $('#formula-text')
       $formulaText.val(contents)
       $formulaText.data('onClose', $hiddenField)
+
+    # jQuery event for closing the formula edit modal and saving the changes
     $('#formula-save').click ->
       contents = $('#formula-text').val()
       $hiddenField = $('#formula-text').data('onClose')
       $hiddenField.val(contents)
       $('.modal').toggle()
-
 
 # Adds row to table, highlight new row
 addRow = (content) ->
@@ -228,3 +235,23 @@ getNextName = (fieldType) ->
         if index > highest
           highest = index
   return highest
+
+showErrors = (errors) ->
+  $('.mainContent').children('.alert-danger').remove()
+
+  errBold = if errors.length == 1 then 'An error occured: ' else 'Some errors occured: '
+
+  errBody = $('<div class="alert alert-danger alert-dismissable">')
+  errBody.append('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>')
+  errBody.append("<strong>#{errBold}</strong>")
+
+  if errors.length == 1
+    errBody.append(errors[0])
+  else
+    errList = $('<ul>')
+    errors.forEach (err) ->
+      errItem = $('<li>').text(err)
+      errList.append(errItem)
+    errBody.append(errList)
+
+  $('.mainContent').prepend errBody

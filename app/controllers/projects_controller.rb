@@ -274,45 +274,87 @@ class ProjectsController < ApplicationController
   def save_fields
     @project = Project.find(params[:id])
 
-    delete_hidden_fields(Field, params[:hidden_deleted_fields])
+    errors = []
+    success = true
 
-    # Update existing fields, create restrictions if any exist
-    updated = @project.fields.reduce true do |memo, field|
-      memo ? update_field(field, params) : false
+    ActiveRecord::Base.transaction do
+      # Deletion silently fails upon any error
+      delete_hidden_fields(Field, params[:hidden_deleted_fields])
+
+      # Update existing fields, create restrictions if any exist
+      @project.fields.each do |field|
+        errors += update_field(field, params)
+      end
+
+      # Add fields based on type
+      errors += add_location_field(params)
+      errors += add_timestamp_field(params)
+      errors += add_number_fields(params)
+      errors += add_text_fields(params)
+
+      # If there's recorded error messages, roll back the database
+      if errors.length != 0
+        success = false
+        raise ActiveRecord::Rollback
+      end
     end
-    return unless updated
 
-    # Add fields based on type
-    add_location_field(params) or return
-    add_timestamp_field(params) or return
-    add_number_fields(params) or return
-    add_text_fields(params) or return
+    # Don't recalculate anything if we ended up rolling back, because nothing changed
+    if success
+      @project.reload
+      @project.recalculate_data_sets
+    end
 
-    @project.reload
-    @project.recalculate_data_sets
-
-    redirect_to "/projects/#{@project.id}", notice: 'Fields were successfully updated.'
+    # redirect_to "/projects/#{@project.id}", notice: 'Fields were successfully updated.'
+    respond_to do |format|
+      if success
+        format.json { render json: errors,  status: :ok }
+      else
+        format.json { render json: errors,  status: :unprocessable_entity }
+      end
+    end
   end
 
   def save_formula_fields
     @project = Project.find(params[:id])
 
-    delete_hidden_fields(FormulaField, params[:hidden_deleted_fields])
+    errors = []
+    success = true
 
-    # Update existing fields, create restrictions if any exist
-    updated = @project.formula_fields.reduce true do |memo, field|
-      memo ? update_formula_field(field, params) : false
+    ActiveRecord::Base.transaction do
+      delete_hidden_fields(FormulaField, params[:hidden_deleted_fields])
+
+      # Update existing fields, create restrictions if any exist
+      @projects.formula_fields.each do |field|
+        errors += update_formula_field(field, params)
+        # do formula validation here
+      end
+
+      # Add fields based on type
+      errors += add_number_formula_fields(params)
+      errors += add_text_formula_fields(params)
+
+      # If there's recorded error messages, roll back the databases
+      if errors.length != 0
+        success = false
+        raise ActiveRecord::Rollback
+      end
     end
-    return unless updated
 
-    # Add fields based on type
-    add_number_formula_fields(params) or return
-    add_text_formula_fields(params) or return
+    # Don't recalculate anything if we ended up rolling back, because nothing changed
+    if success
+      @project.reload
+      @project.recalculate_data_sets
+    end
 
-    @project.reload
-    @project.recalculate_data_sets
-
-    redirect_to "/projects/#{@project.id}", notice: 'Formula fields were successfully updated.'
+    # redirect_to "/projects/#{@project.id}", notice: 'Formula fields were successfully updated.'
+    respond_to do |format|
+      if success
+        format.html { render json: errors, status: :ok }
+      else
+        format.html { render json: errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   def templateUpload
@@ -415,16 +457,19 @@ class ProjectsController < ApplicationController
       restrictions = []
     end
 
-    success = field.update_attributes(name: params["#{field.id}_name"],
-                                      unit: params["#{field.id}_unit"],
-                                      restrictions: restrictions,
-                                      index: params["#{field.id}_index"])
+    attributes = {
+      name: params["#{field.id}_name"],
+      unit: params["#{field.id}_unit"],
+      restrictions: restrictions,
+      index: params["#{field.id}_index"]
+    }
+    success = field.update_attributes(attributes)
 
-    unless success
-      flash[:error] = 'Field names must be unique.'
-      redirect_to "/projects/#{@project.id}/edit_fields"
+    if success
+      []
+    else
+      ["Field name \"#{attributes[:name]}\" is not unique."]
     end
-    success
   end
 
   # Helper function to update individual formulafields
@@ -443,33 +488,39 @@ class ProjectsController < ApplicationController
 
   def add_location_field(params)
     if params[:hidden_location_count] == '1'
-      add_field('Latitude', 'Latitude', 'deg', [], params['latitude_index']) == -1 and return false
-      add_field('Longitude', 'Longitude', 'deg', [], params['longitude_index']) == -1 and return false
+      errors = []
+      errors += add_field('Latitude', 'Latitude', 'deg', [], params['latitude_index'])
+      errors += add_field('Longitude', 'Longitude', 'deg', [], params['longitude_index'])
+      errors
+    else
+      []
     end
-    true
   end
 
   def add_timestamp_field(params)
     if params[:hidden_timestamp_count] == '1'
-      add_field('Timestamp', 'Timestamp', '', [], params['timestamp_index']) == -1 and return false
+      add_field('Timestamp', 'Timestamp', '', [], params['timestamp_index'])
+    else
+      []
     end
-    true
   end
 
   def add_number_fields(params)
+    errors = []
     (params[:hidden_num_count].to_i).times do |i|
-      add_field('Number', params[('number_' + (i + 1).to_s).to_sym], params[('units_' + (i + 1).to_s).to_sym], [],  params[('number_' + ((i + 1).to_s) + '_index').to_sym]) == -1 and return false
+      errors += add_field('Number', params[('number_' + (i + 1).to_s).to_sym], params[('units_' + (i + 1).to_s).to_sym], [],  params[('number_' + ((i + 1).to_s) + '_index').to_sym])
     end
-    true
+    errors
   end
 
   def add_text_fields(params)
+    errors = []
     (params[:hidden_text_count].to_i).times do |i|
       # Need to explicitly check if restrictions are nil because empty restrictions should be []
       restrictions = params[('restrictions_' + (i + 1).to_s).to_sym].nil? ? [] : params[('restrictions_' + (i + 1).to_s).to_sym].split(',')
-      add_field('Text', params[('text_' + (i + 1).to_s).to_sym], '', restrictions, params[('text_' + (i + 1).to_s + '_index').to_sym]) == -1 and return false
+      errors += add_field('Text', params[('text_' + (i + 1).to_s).to_sym], '', restrictions, params[('text_' + (i + 1).to_s + '_index').to_sym])
     end
-    true
+    errors
   end
 
   def add_number_formula_fields(params)
@@ -496,7 +547,7 @@ class ProjectsController < ApplicationController
   # Helper function to add field to database
   def add_field(field_type, field_name, unit, restrictions, index)
     if field_name.nil?
-      return
+      []
     else
       if index.nil?
         index = @project.fields.size
@@ -507,11 +558,7 @@ class ProjectsController < ApplicationController
                         unit: unit,
                         restrictions: restrictions,
                         index: index)
-    end
-
-    unless field.save
-      flash[:error] = "#{field.errors.full_messages[0]}\n"
-      redirect_to "/projects/#{@project.id}/edit_fields" and return -1
+      field.save ? [] : field.errors.full_messages
     end
   end
 
