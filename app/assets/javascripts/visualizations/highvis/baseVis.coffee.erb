@@ -541,8 +541,9 @@ $ ->
             type: "image/svg+xml"
 
         $('#print-vis-btn').click =>
-        	# if (@chart.chartWidth > 700) 
-         #    @chart.setSize(700, @chart.chartHeight, false)
+          # Resize chart if it is too big to print
+        	if (@chart.chartWidth > 700) 
+            @chart.setSize(700, @chart.chartHeight, false)
           @chart.print()
           # Callback to detect when print controls have been closed
           callback = ->
