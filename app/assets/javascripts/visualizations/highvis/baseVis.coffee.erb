@@ -541,6 +541,8 @@ $ ->
             type: "image/svg+xml"
 
         $('#print-vis-btn').click =>
+        	# if (@chart.chartWidth > 700) 
+         #    @chart.setSize(700, @chart.chartHeight, false)
           @chart.print()
           # Callback to detect when print controls have been closed
           callback = ->
@@ -549,7 +551,7 @@ $ ->
             $(window).resize()
           setTimeout callback, 1000
           # Resize again; otherwise, the vis is half-sized.
-          # Doesn't work withut putting it in another callback; I dont know why
+          # Doesn't work without putting it in another callback; I dont know why
           call2 = -> $(window).resize()
           setTimeout call2, 1000
 
