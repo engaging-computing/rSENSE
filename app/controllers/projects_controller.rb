@@ -171,7 +171,14 @@ class ProjectsController < ApplicationController
   # DELETE /projects/1
   # DELETE /projects/1.json
   def destroy
-    @project = Project.find(params[:id])
+    begin
+      @project = Project.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      respond_to do |format|
+        format.json { render json: { error: "Project not found." }, status: :not_found }
+      end
+      return
+    end
 
     unless can_delete?(@project)
       respond_to do |format|

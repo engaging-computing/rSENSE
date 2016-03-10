@@ -7,7 +7,8 @@ $ ->
         query.closest('tr').after('<tr></tr>').hide()
 
     $(document).ajaxError (event, xhr, settings, error) ->
-      quickFlash("Sorry, but the file you are looking for does not exist.", 'error')
+      e = JSON.parse xhr.responseText
+      quickFlash(e["error"], 'error')
 
     navList = []
 
