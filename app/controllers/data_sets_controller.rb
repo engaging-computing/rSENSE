@@ -125,7 +125,7 @@ class DataSetsController < ApplicationController
       @data_set = DataSet.find(params[:id])
     rescue ActiveRecord::RecordNotFound
       respond_to do |format|
-        format.json { render json: { error: "Data set not found." }, status: :not_found }
+        format.json { render json: { error: 'Data set not found.' }, status: :not_found }
       end
       return
     end

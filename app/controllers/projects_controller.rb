@@ -175,7 +175,7 @@ class ProjectsController < ApplicationController
       @project = Project.find(params[:id])
     rescue ActiveRecord::RecordNotFound
       respond_to do |format|
-        format.json { render json: { error: "Project not found." }, status: :not_found }
+        format.json { render json: { error: 'Project not found.' }, status: :not_found }
       end
       return
     end

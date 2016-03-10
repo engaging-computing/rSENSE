@@ -190,7 +190,7 @@ class VisualizationsController < ApplicationController
       @visualization = Visualization.find(params[:id])
     rescue ActiveRecord::RecordNotFound
       respond_to do |format|
-        format.json { render json: { error: "Visualization not found." }, status: :not_found }
+        format.json { render json: { error: 'Visualization not found.' }, status: :not_found }
       end
       return
     end
