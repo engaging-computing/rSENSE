@@ -1,0 +1,23 @@
+machine:
+  ruby:
+    version: 2.1.1
+
+dependencies:
+  pre:
+    - sudo apt-get update; sudo apt-get install libreoffice libreoffice-calc unoconv
+    - sudo apt-get install ruby-railties-4.0 bundler
+    - sudo apt-get install qt5-default libqt5webkit5-dev gstreamer1.0-plugins-base gstreamer1.0-tools gstreamer1.0-x
+    - gem uninstall bundler
+    - gem install bundler
+    - bundle install
+    - bundle exec rake assets:precompile
+
+database:
+  override:
+    - bundle exec rake db:preprep
+    - RAILS_ENV=test bundle exec rake db:migrate --trace
+    - bundle exec rake db:test:prepare
+
+test: 
+  override:
+    - rake
