@@ -15,9 +15,9 @@ class FilterTimestampLabelTest < IntegrationTest
     visit "/projects/#{@project_id}/data_sets/#{@dataset_1_id},#{@dataset_2_id},#{@dataset_3_id}"
     current_window.resize_to 1000, 1000
     click_on 'Timeline'
-    find("#clipping-ctrls").click
-    find(".bootstrap-switch-label").click
-    click_on "Set Current Filters"
+    find('#clipping-ctrls').click
+    find('.bootstrap-switch-label').click
+    click_on 'Set Current Filters'
     assert page.has_content?('Dec'), 'filter label for timestamps should be formatted'
   end
 end
