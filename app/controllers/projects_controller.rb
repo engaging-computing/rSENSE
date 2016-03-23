@@ -256,14 +256,16 @@ class ProjectsController < ApplicationController
     @action = 'formula_fields'
     @can_delete = true
 
-    @field_refs = (@project.fields + @fields).map do |f|
+    @field_refs = @project.fields.sort do |a, b|
+      a.index <=> b.index
+    end.map do |f|
       type = case f.field_type
-      when 1 then 'Timestamp'
-      when 2 then 'Number'
-      when 3 then 'Text'
-      when 4 then 'Latitude'
-      when 5 then 'Longitude'
-      end
+             when 1 then 'Timestamp'
+             when 2 then 'Number'
+             when 3 then 'Text'
+             when 4 then 'Latitude'
+             when 5 then 'Longitude'
+             end
       [f.name, f.refname, type]
     end
 
@@ -295,7 +297,7 @@ class ProjectsController < ApplicationController
       # If there's recorded error messages, roll back the database
       if errors.length != 0
         success = false
-        raise ActiveRecord::Rollback
+        fail ActiveRecord::Rollback
       end
     end
 
@@ -308,9 +310,11 @@ class ProjectsController < ApplicationController
     # redirect_to "/projects/#{@project.id}", notice: 'Fields were successfully updated.'
     respond_to do |format|
       if success
-        format.json { render json: errors,  status: :ok }
+        response = { redirect: url_for(@project) }
+        format.json { render json: response,  status: :ok }
       else
-        format.json { render json: errors,  status: :unprocessable_entity }
+        response = { errors: errors.uniq }
+        format.json { render json: response,  status: :unprocessable_entity }
       end
     end
   end
@@ -325,7 +329,7 @@ class ProjectsController < ApplicationController
       delete_hidden_fields(FormulaField, params[:hidden_deleted_fields])
 
       # Update existing fields, create restrictions if any exist
-      @projects.formula_fields.each do |field|
+      @project.formula_fields.each do |field|
         errors += update_formula_field(field, params)
         # do formula validation here
       end
@@ -334,10 +338,25 @@ class ProjectsController < ApplicationController
       errors += add_number_formula_fields(params)
       errors += add_text_formula_fields(params)
 
+      # check the formulas for validity
+      # put the fields and formula fields in a format usable by the checker
+      check_fields = @project.fields.map do |x|
+        type = [nil, [:timestamp], [:number], [:text], [:latitude], [:longitude]][x.field_type]
+        [x.refname, type]
+      end
+      check_formulas = @project.formula_fields.sort do |a, b|
+        a.index <=> b.index
+      end.map do |x|
+        type = [nil, nil, [:number], [:text]][x.field_type]
+        [x.refname, type, x.formula, x.name]
+      end
+      # try and run the formulas on a dummy environment and see if they work
+      errors += FormulaField.try_execute(check_formulas, check_fields)
+
       # If there's recorded error messages, roll back the databases
       if errors.length != 0
         success = false
-        raise ActiveRecord::Rollback
+        fail ActiveRecord::Rollback
       end
     end
 
@@ -350,9 +369,11 @@ class ProjectsController < ApplicationController
     # redirect_to "/projects/#{@project.id}", notice: 'Formula fields were successfully updated.'
     respond_to do |format|
       if success
-        format.html { render json: errors, status: :ok }
+        response = { redirect: url_for(@project) }
+        format.json { render json: response, status: :ok }
       else
-        format.html { render json: errors, status: :unprocessable_entity }
+        response = { errors: errors.uniq }
+        format.json { render json: response, status: :unprocessable_entity }
       end
     end
   end
@@ -468,29 +489,29 @@ class ProjectsController < ApplicationController
     if success
       []
     else
-      ["Field name \"#{attributes[:name]}\" is not unique."]
+      field.errors.full_messages
     end
   end
 
-  # Helper function to update individual formulafields
+  # Helper function to update individual formula fields
   def update_formula_field(field, params)
     success = field.update_attributes(name: params["#{field.id}_name"],
                                       unit: params["#{field.id}_unit"],
                                       formula: params["#{field.id}_formula"],
                                       index: params["#{field.id}_index"])
 
-    unless success
-      flash[:error] = 'Field names must be unique.'
-      redirect_to "/projects/#{@project.id}/edit_formula_fields"
+    if success
+      []
+    else
+      field.errors.full_messages
     end
-    success
   end
 
   def add_location_field(params)
     if params[:hidden_location_count] == '1'
       errors = []
-      errors += add_field('Latitude', 'Latitude', 'deg', [], params['latitude_index'])
-      errors += add_field('Longitude', 'Longitude', 'deg', [], params['longitude_index'])
+      errors += add_field('Latitude', params[:latitude], 'deg', [], params['latitude_index'])
+      errors += add_field('Longitude', params[:longitude], 'deg', [], params['longitude_index'])
       errors
     else
       []
@@ -499,7 +520,7 @@ class ProjectsController < ApplicationController
 
   def add_timestamp_field(params)
     if params[:hidden_timestamp_count] == '1'
-      add_field('Timestamp', 'Timestamp', '', [], params['timestamp_index'])
+      add_field('Timestamp', params[:timestamp], '', [], params['timestamp_index'])
     else
       []
     end
@@ -524,24 +545,26 @@ class ProjectsController < ApplicationController
   end
 
   def add_number_formula_fields(params)
+    errors = []
     (params[:hidden_num_count].to_i).times do |i|
       field_name = params[('number_' + (i + 1).to_s).to_sym]
       units = params[('units_' + (i + 1).to_s).to_sym]
       formula = params[('nformula_' + (i + 1).to_s).to_sym]
       index = params[('number_' + ((i + 1).to_s) + '_index').to_sym]
-      add_formula_field('Number', field_name, units, formula, index) == -1 and return false
+      errors += add_formula_field('Number', field_name, units, formula, index)
     end
-    true
+    errors
   end
 
   def add_text_formula_fields(params)
+    errors = []
     (params[:hidden_text_count].to_i).times do |i|
       field_name = params[('text_' + (i + 1).to_s).to_sym]
       formula = params[('tformula_' + (i + 1).to_s).to_sym]
       index = params[('text_' + (i + 1).to_s + '_index').to_sym]
-      add_formula_field('Text', field_name, '', formula, index) == -1 and return false
+      errors += add_formula_field('Text', field_name, '', formula, index)
     end
-    true
+    errors
   end
 
   # Helper function to add field to database
@@ -565,7 +588,7 @@ class ProjectsController < ApplicationController
   # Helper function to add field to database
   def add_formula_field(field_type, field_name, unit, formula, index)
     if field_name.nil?
-      return
+      []
     else
       if index.nil?
         index = @project.fields.size
@@ -576,11 +599,7 @@ class ProjectsController < ApplicationController
                                unit: unit,
                                formula: formula,
                                index: index)
-    end
-
-    unless field.save
-      flash[:error] = "#{field.errors.full_messages[0]}\n"
-      redirect_to "/projects/#{@project.id}/edit_formula_fields" and return -1
+      field.save ? [] : field.errors.full_messages
     end
   end
 

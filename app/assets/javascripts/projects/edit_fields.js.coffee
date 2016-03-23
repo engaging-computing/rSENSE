@@ -1,5 +1,5 @@
 $ ->
-  if namespace.controller is 'projects' and (namespace.action is 'edit_fields' or namespace.action is 'edit_formula_fields')
+  if namespace.controller is 'projects' and (namespace.action in ['edit_fields', 'edit_formula_fields'])
     # Keeps track of number of different fields added
     numCount = textCount = timestampCount = locationCount = 0
 
@@ -76,16 +76,24 @@ $ ->
       form = $('form[name="fields_form"]')
       form.serializeArray().map (x) ->
         formData[x.name] = x.value
-      console.log formData
+
+      # disable some buttons so we can't hit save multiple times
+      $('#fields_form_submit, #fields_form_cancel').addClass 'disabled'
+      $('#fields_form_submit').val 'Saving...'
+
+      # send the form data to try and create the field
       $.ajax
         type: 'POST'
         url: form.attr('action')
         data: formData
         dataType: 'json'
         success: (data, textStatus, jqXHR) ->
-          1
+          window.location = data.redirect
         error: (jqXHR, textStatus, errorThrown) ->
-          showErrors(jqXHR.responseJSON)
+          showErrors(jqXHR.responseJSON.errors)
+          $('#fields_form_submit, #fields_form_cancel').removeClass 'disabled'
+          $('#fields_form_submit').val 'Save and Return'
+
 
   if namespace.controller is 'projects' and namespace.action is 'edit_fields'
     # Add row(s), increment counters, disable add buttons (for timestamp/location fields)
@@ -139,31 +147,36 @@ $ ->
       numCount = numCount + 1
       displayNumCount = displayNumCount + 1
       addRow(['<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>',
-              """<input class="input-small form-control" type="text" name="number_#{numCount}" value="Number_#{displayNumCount}">""",
+              """<input class="input-small form-control" type="text"
+                name="number_#{numCount}" value="Number_#{displayNumCount}">""",
               "Number",
               """<input class="input-small form-control" type="text" class="units" name="units_#{numCount}">""",
               """<a class="field_edit_formula" fid="0" data-toggle="modal" data-target=".modal">
                    <i class="fa fa-pencil-square-o slick-delete"></i>
                  </a>
-                 <input type="hidden" name="nformula_#{numCount}" value="">""",
+                 <input type="hidden" class="formula" name="nformula_#{numCount}" value="">
+                 <input type="hidden" class="refname" value="???">""",
               '<a fid="0" class="field_delete"><i class="fa fa-close slick-delete"></i></a>'])
 
     $('#text').click ->
       textCount = textCount + 1
       displayTextCount = displayTextCount + 1
       addRow(['<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>',
-              """<input class="input-small form-control" type="text" name="text_#{textCount}" value="Text_#{displayTextCount}">""",
+              """<input class="input-small form-control" type="text"
+                name="text_#{textCount}" value="Text_#{displayTextCount}">""",
               'Text',
               '',
               """<a class="field_edit_formula" fid="0" data-toggle="modal" data-target=".modal">
                    <i class="fa fa-pencil-square-o slick-delete"></i>
                  </a>
-                 <input type="hidden" name="tformula_#{textCount}" value="">""",
+                 <input type="hidden" class="formula" name="tformula_#{textCount}" value="">
+                 <input type="hidden" class="refname" value="???">""",
               '<a fid="0" class="field_delete"><i class="fa fa-close slick-delete"></i></a>'])
 
     # jQuery event for opening the formula edit modal
     $('#fields_table').on 'click', '.field_edit_formula', ->
-      $hiddenField = $(this).parent().children('input')
+      generateRefNames($(this).closest('tr').index())
+      $hiddenField = $(this).parent().children('input.formula')
       contents = $hiddenField.val()
       $formulaText = $('#formula-text')
       $formulaText.val(contents)
@@ -174,7 +187,7 @@ $ ->
       contents = $('#formula-text').val()
       $hiddenField = $('#formula-text').data('onClose')
       $hiddenField.val(contents)
-      $('.modal').toggle()
+      $('.modal').modal('hide')
 
 # Adds row to table, highlight new row
 addRow = (content) ->
@@ -236,6 +249,27 @@ getNextName = (fieldType) ->
           highest = index
   return highest
 
+# Given the names of the formula fields, compute which refnames are available to
+#   each formula
+# This function depends on the DOM representation of the field edit table, so
+#   modifying that will most likely break this function.  This is not ideal, but
+#   the correct way of implementing something like this is more or less
+#   incompatible with the site's current implementation
+generateRefNames = (index) ->
+  ffRefs = $('#formula-field-refs')
+  fTable = $('#fields_table > tbody > tr')
+
+  ffRefs.empty()
+
+  fTable.each (i) ->
+    if i <= index
+      row = $(this)
+      name = row.find('td:nth-child(2) > input').val().trim()
+      type = row.find('td:nth-child(3)').text().trim()
+      refName = row.find('.refname').val().trim()
+      newRow = $("<tr><td>#{name}</td><td>#{refName}</td><td>#{type}</td></tr>")
+      ffRefs.append(newRow)
+
 showErrors = (errors) ->
   $('.mainContent').children('.alert-danger').remove()
 
@@ -246,7 +280,8 @@ showErrors = (errors) ->
   errBody.append("<strong>#{errBold}</strong>")
 
   if errors.length == 1
-    errBody.append(errors[0])
+    errItem = $('<span>').text(errors[0])
+    errBody.append(errItem)
   else
     errList = $('<ul>')
     errors.forEach (err) ->

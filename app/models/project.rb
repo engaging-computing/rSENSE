@@ -276,7 +276,6 @@ class Project < ActiveRecord::Base
         data.each do |row|
           field_map.each do |old_key, new_key|
             row[new_key] = row[old_key]
-            puts row[new_key].length
             row.delete old_key
           end
           new_data.push row
@@ -310,8 +309,8 @@ class Project < ActiveRecord::Base
   def recalculate_data_sets
     return if formula_fields.length == 0
     data_sets.map do |x|
+      # saving the data set triggers them to recalculate their data
       x.save!
-      # x.recalculate formula_fields, fields
     end
   end
 

@@ -10,28 +10,28 @@
         <div class="center">
           <% if @allowable_types.include? :number %>
             <div class="col-sm-3 col-xs-6 add_fields">
-              <div value="Number" class="btn btn-success center new_field" id="number">Add Number</div>
+              <button type="button" class="btn btn-success center new_field" id="number">Add Number</button>
               <p class="description">Any number value. "Units" specifies how the value is expressed. e.g. 'Temperature' could have a unit of 'C'</p>
             </div>
           <% end %>
 
           <% if @allowable_types.include? :text %>
             <div class="col-sm-3 col-xs-6 add_fields">
-              <div value="Text" class="btn btn-success center new_field" id="text">Add Text</div>
+              <button type="button" class="btn btn-success center new_field" id="text">Add Text</button>
               <p class="description">Any string value. "Restrictions" are a comma separated list of values that limit input to only predefined values.</p>
             </div>
           <% end %>
 
           <% if @allowable_types.include? :timestamp %>
             <div class="col-sm-3 col-xs-6 add_fields">
-              <div value="Timestamp" class="btn btn-success center new_field" id="timestamp" style="padding: 6px 0px;" <%= (@fields.any? {|f| f.field_type == TIME_TYPE}) ? "disabled" : "" %>>Add Timestamp</div>
+              <button type="button" class="btn btn-success center new_field" id="timestamp" style="padding: 6px 0px;" <%= (@fields.any? {|f| f.field_type == TIME_TYPE}) ? "disabled" : "" %>>Add Timestamp</button>
               <p class="description">Data and time values in the form yyyy/mm/dd hh:mm:ss. Limit 1 per project. Timeline requires a Timestamp and Number.</p>
             </div>
           <% end %>
 
           <% if @allowable_types.include? :location %>
             <div class="col-sm-3 col-xs-6 add_fields">
-              <div value="Location" class="btn btn-success center new_field" id="location" <%= (@fields.any? {|f| f.field_type == LONGITUDE_TYPE or f.field_type == LATITUDE_TYPE}) ? "disabled" : "" %>>Add Location</div>
+              <button type="button" class="btn btn-success center new_field" id="location" <%= (@fields.any? {|f| f.field_type == LONGITUDE_TYPE or f.field_type == LATITUDE_TYPE}) ? "disabled" : "" %>>Add Location</button>
               <p class="description">Latitude (between -90 and 90) and longitude (between -180 and 180) values in the form 'latitude, longitude'. Limit 1 per project.</p>
             </div>
           <% end %>
@@ -89,7 +89,8 @@
                     <a class="field_edit_formula" fid="<%= field.id %>" data-toggle="modal" data-target=".modal">
                       <i class="fa fa-pencil-square-o slick-delete"></i>
                     </a>
-                    <input type="hidden" name="<%=field.id %>_formula" value="<%= field.formula %>">
+                    <input type="hidden" class="formula" name="<%=field.id %>_formula" value="<%= field.formula %>">
+                    <input type="hidden" class="refname" value="<%= field.refname %>">
                   </td>
                 <% end %>
                 <td>
@@ -108,7 +109,7 @@
     <div class="row">
       <div class="col-lg-8 col-lg-offset-2">
         <div style="float: right">
-          <a href='<%= url_for @project %>' class="btn btn-danger">Cancel</a>
+          <a href='<%= url_for @project %>' class="btn btn-danger" id='fields_form_cancel'>Cancel</a>
           <%= submit_tag "Save and Return", class: 'btn btn-primary', id: 'fields_form_submit' %>
         </div>
       </div>
@@ -135,25 +136,48 @@
           </div>
           <div class="modal-body">
             <div class="row">
-              <div class="col-xs-12 col-md-8">
-                <textarea id="formula-text" class="form-control" rows="10"></textarea>
+              <div class="col-xs-12">
+                <textarea id="formula-text" class="form-control" rows="4"></textarea>
               </div>
-              <div class="hidden-xs hidden-sm col-md-4">
-                <table>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <table class="field-ref-table">
                   <thead>
+                    <tr>
+                      <td colspan="3">Fields</td>
+                    </tr>
                     <tr>
                       <td>Name</td>
                       <td>Reference</td>
                       <td>Type</td>
                     </tr>
                   </thead>
-                  <% @field_refs.each do |field| %>
+                  <tbody id="field-refs">
+                    <% @field_refs.each do |field| %>
+                      <tr>
+                        <td><%= field[0] %></td>
+                        <td><%= field[1] %></td>
+                        <td><%= field[2] %></td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-xs-6">
+                <table class="field-ref-table">
+                  <thead>
                     <tr>
-                      <td><%= field[0] %></td>
-                      <td><%= field[1] %></td>
-                      <td><%= field[2] %></td>
+                      <td colspan="3">Formula Fields</td>
                     </tr>
-                  <% end %>
+                    <tr>
+                      <td>Name</td>
+                      <td>Reference</td>
+                      <td>Type</td>
+                    </tr>
+                  </thead>
+                  <tbody id="formula-field-refs">
+                  </tbody>
                 </table>
               </div>
             </div>

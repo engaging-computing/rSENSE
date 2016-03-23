@@ -125,26 +125,25 @@ class DataSet < ActiveRecord::Base
     formula_field_arrays = []
 
     # add each regular field to the environment as an array type
-    puts data
     fields.each do |x|
       key = x.id.to_s
       beaker_arr = case x.field_type
-      when 1
-        arr = data.map { |y| DateTime.new(y[key]) }
-        Beaker::ArrayType.new(arr, :timestamp, 0)
-      when 2
-        arr = data.map { |y| y[key].to_f }
-        Beaker::ArrayType.new(arr, :number, 0)
-      when 3
-        arr = data.map { |y| y[key] }
-        Beaker::ArrayType.new(arr, :text, 0)
-      when 4
-        arr = data.map { |y| y[key].to_f }
-        Beaker::ArrayType.new(arr, :latitude, 0)
-      when 5
-        arr = data.map { |y| y[key].to_f }
-        Beaker::ArrayType.new(arr, :longitude, 0)
-      end
+                   when 1
+                     arr = data.map { |y| DateTime.parse(y[key]) }
+                     Beaker::ArrayType.new(arr, :timestamp, 0)
+                   when 2
+                     arr = data.map { |y| y[key].to_f }
+                     Beaker::ArrayType.new(arr, :number, 0)
+                   when 3
+                     arr = data.map { |y| y[key] }
+                     Beaker::ArrayType.new(arr, :text, 0)
+                   when 4
+                     arr = data.map { |y| y[key].to_f }
+                     Beaker::ArrayType.new(arr, :latitude, 0)
+                   when 5
+                     arr = data.map { |y| y[key].to_f }
+                     Beaker::ArrayType.new(arr, :longitude, 0)
+                   end
       curr_env.add x.refname, beaker_arr
       field_arrays.push(beaker_arr)
     end
@@ -154,10 +153,13 @@ class DataSet < ActiveRecord::Base
     formulae.each do |x|
       # parse the expression and get it ready to run on the data
       lex = Beaker::Lexer.lex(x.formula)
-      return if lex.length == 1
       ast = Beaker::Parser.parse(x.formula, lex)
 
-      res = (0 ... data.length).map do |idx|
+      # create the new field so it can be referenced by itself
+      new_field = Beaker::ArrayType.new([nil] * data.length, x.field_type == 2 ? :number : :text, 0)
+      curr_env.add x.refname, new_field
+
+      (0 ... data.length).each do |idx|
         # set up the environment
         pos_env = Beaker::Environment.new(false, curr_env)
         pos_env.add '*', Beaker::NumberType.new(idx)
@@ -165,14 +167,14 @@ class DataSet < ActiveRecord::Base
         # update the position of each of the fields to the current position
         field_arrays.each { |field| field.curr_pos = idx }
         formula_field_arrays.each { |field| field.curr_pos = idx }
+        new_field.curr_pos = idx
 
         # evaluate the AST with environment
         eval = ast.evaluate(pos_env)
-        eval.get
+        new_field.value[idx] = eval.get
+        curr_env.add x.refname, new_field
       end
 
-      new_field = Beaker::ArrayType.new(res, x.field_type == 2 ? :number : :text, 0)
-      curr_env.add x.refname, new_field
       formula_field_arrays.push(new_field)
     end
 

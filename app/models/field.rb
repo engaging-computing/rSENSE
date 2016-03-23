@@ -7,6 +7,7 @@ class Field < ActiveRecord::Base
   validates_uniqueness_of :name, scope: :project_id, case_sensitive: false
   validates_uniqueness_of :refname, scope: :project_id, case_sensitive: false
   validate :validate_values
+  validate :unique_name
 
   belongs_to :project
   serialize :restrictions, JSON
@@ -81,7 +82,7 @@ class Field < ActiveRecord::Base
   end
 
   def choose_refname
-    return if refname != ''
+    return if refname != '' or name.nil?
 
     parent = Project.find_by_id(project_id)
     other_refnames = []
@@ -94,7 +95,7 @@ class Field < ActiveRecord::Base
       end
     end
 
-    base_refname = name.gsub(/[^0-9A-Za-z]/, '').camelize :lower
+    base_refname = name.gsub(/[^0-9A-Za-z]/, '-').split('-').map { |x| x.capitalize }.join
     next_refname = base_refname
     name_count = 1
     while other_refnames.include? next_refname
@@ -122,6 +123,13 @@ class Field < ActiveRecord::Base
       if project.nil?
         errors.add :project, 'not found'
       end
+    end
+  end
+
+  def unique_name
+    hits = @project.formula_fields.where 'UPPER(name) = ?', name.upcase
+    unless hits.empty?
+      errors.add :base, "#{name} has the same name as another formula field"
     end
   end
 end

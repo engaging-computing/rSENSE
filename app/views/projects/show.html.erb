@@ -241,7 +241,7 @@
       <%= render layout: "shared/box", locals: {title: 'Formula Fields', width: 12, unique_id: 'formula_fields', should_hide:false} do %>      
         <% if (@formula_field_count == 0) and can_edit?(@project) %>
           <div class="col-md-12 center">
-            <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--green" id="manual_fields" href="/projects/<%=@project.id%>/edit_formula_fields">
+            <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--green" id="manual_formula_fields" href="/projects/<%=@project.id%>/edit_formula_fields">
               <i class="fa fa-keyboard-o" style="margin:5px"></i>
               Setup Manually
             </a>

@@ -34,7 +34,7 @@ class UpdateFieldsTest < IntegrationTest
 
     find('#fields_form_submit').click
 
-    assert page.has_content?('Fields were successfully updated.')
+    assert page.has_content?('Fields Test')
   end
 
   test 'edit fields named correctly' do
