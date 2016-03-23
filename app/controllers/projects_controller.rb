@@ -421,6 +421,10 @@ class ProjectsController < ApplicationController
       end
     end
 
+    # reload the project here after the fields are added
+    # otherwise, @project.fields returns nothing.
+    @project = Project.find(params[:id])
+
     if params.key?('create_dataset')
       data_obj = uploader.retrieve_obj(params[:file])
       data = uploader.swap_with_field_names(data_obj, @project)

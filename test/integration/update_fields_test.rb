@@ -2,6 +2,8 @@ require 'test_helper'
 require_relative 'base_integration_test'
 
 class UpdateFieldsTest < IntegrationTest
+  self.use_transactional_fixtures = false
+
   test 'edit fields' do
     login('kcarcia@cs.uml.edu', '12345')
     click_on 'Projects'
@@ -116,5 +118,31 @@ class UpdateFieldsTest < IntegrationTest
     click_on 'Submit'
 
     assert page.has_content?('Contribute Data')
+  end
+
+  test 'simultaneous add and delete of fields' do
+    login('pson@cs.uml.edu', '12345')
+    visit "/projects/#{projects(:fields_test).id}"
+
+    assert page.has_content?('oldnum'), 'Number field is there'
+    assert page.has_content?('oldtext'), 'Text field is there'
+
+    visit "/projects/#{projects(:fields_test).id}/edit_fields"
+
+    first(:css, '.field_delete').click
+    find('.field_delete').click
+
+    click_on 'Add Number'
+    click_on 'Add Text'
+
+    fill_in 'number_1', with: 'newnum'
+    fill_in 'text_1', with: 'newtext'
+
+    find('#fields_form_submit').click
+
+    assert page.has_content?('newnum'), 'New number field added'
+    assert page.has_content?('newtext'), 'New Text field added'
+    assert page.has_no_content?('oldnum'), 'Old number field deleted'
+    assert page.has_no_content?('oldtext'), 'Old Text field deleted'
   end
 end
