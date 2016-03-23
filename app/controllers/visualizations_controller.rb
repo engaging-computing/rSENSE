@@ -260,7 +260,7 @@ class VisualizationsController < ApplicationController
 
     has_pics = false
     has_loc_data = false
-    has_time_data = false
+
     # create/push metadata for datasets
     i = 0
     time_count = 0
@@ -312,7 +312,7 @@ class VisualizationsController < ApplicationController
       field_count[field.field_type] += 1
     end
 
-    rel_vis = which_vis(has_loc_data, has_pics, field_count, format_data)
+    rel_vis = which_vis(has_time_data, has_loc_data, has_pics, field_count, format_data)
 
     # A list of all current visualizations
     all_vis =  ['Map', 'Timeline', 'Scatter', 'Bar', 'Histogram', 'Pie', 'Table', 'Summary', 'Photos']
@@ -367,7 +367,7 @@ class VisualizationsController < ApplicationController
     end
   end
 
-  def which_vis(has_loc_data, has_pics, field_count, format_data)
+  def which_vis(has_time_data, has_loc_data, has_pics, field_count, format_data)
     visualizations = []
 
     # Determine which visualizations are relevant
@@ -375,7 +375,7 @@ class VisualizationsController < ApplicationController
       visualizations.push 'Map'
     end
 
-    if field_count[TIME_TYPE] > 0 and field_count[NUMBER_TYPE] > 0 and format_data.count > 2
+    if field_count[TIME_TYPE] > 0 and field_count[NUMBER_TYPE] > 0 and format_data.count > 2 and has_time_data
       visualizations.push 'Timeline'
     end
 

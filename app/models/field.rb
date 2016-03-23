@@ -127,6 +127,7 @@ class Field < ActiveRecord::Base
   end
 
   def unique_name
+    return if project.nil? or name.nil?
     hits = @project.formula_fields.where 'UPPER(name) = ?', name.upcase
     unless hits.empty?
       errors.add :base, "#{name} has the same name as another formula field"

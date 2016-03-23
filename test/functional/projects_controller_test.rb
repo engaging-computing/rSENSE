@@ -222,7 +222,7 @@ class ProjectsControllerTest < ActionController::TestCase
                         '23_name' => 'Location of Foods', '23_unit' => '', new_field: 'Location', format: 'json' }, user_id: @kate.id
     body = JSON.parse(@response.body)
     assert_response :ok
-    assert body.has_key?('redirect'), 'Response body does not contain redirect information'
+    assert body.key?('redirect'), 'Response body does not contain redirect information'
     assert body['redirect'].include?("/projects/#{@dessert.id}"), 'Redirect is to wrong location'
 
     # No field added, cannot have two Lat fields, even with different names.
@@ -248,7 +248,7 @@ class ProjectsControllerTest < ActionController::TestCase
                       '25_name' => 'Location of Foodz', '25_unit' => '', new_field: 'Latitude', format: :json }, user_id: @kate.id
     body = JSON.parse(@response.body)
     assert_response :ok
-    assert body.has_key?('redirect'), 'Response body does not contain redirect information'
+    assert body.key?('redirect'), 'Response body does not contain redirect information'
     assert body['redirect'].include?("/projects/#{@dessert.id}"), 'Redirect is to wrong location'
   end
 

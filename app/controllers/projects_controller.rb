@@ -256,9 +256,8 @@ class ProjectsController < ApplicationController
     @action = 'formula_fields'
     @can_delete = true
 
-    @field_refs = @project.fields.sort do |a, b|
-      a.index <=> b.index
-    end.map do |f|
+    fields_sorted = @project.fields.sort { |a, b| a.index <=> b.index }
+    @field_refs = fields_sorted.map do |f|
       type = case f.field_type
              when 1 then 'Timestamp'
              when 2 then 'Number'
@@ -344,9 +343,8 @@ class ProjectsController < ApplicationController
         type = [nil, [:timestamp], [:number], [:text], [:latitude], [:longitude]][x.field_type]
         [x.refname, type]
       end
-      check_formulas = @project.formula_fields.sort do |a, b|
-        a.index <=> b.index
-      end.map do |x|
+      formulas_sorted = @project.formula_fields.sort { |a, b| a.index <=> b.index }
+      check_formulas = formulas_sorted.map do |x|
         type = [nil, nil, [:number], [:text]][x.field_type]
         [x.refname, type, x.formula, x.name]
       end
