@@ -186,7 +186,14 @@ class VisualizationsController < ApplicationController
   # DELETE /visualizations/1
   # DELETE /visualizations/1.json
   def destroy
-    @visualization = Visualization.find(params[:id])
+    begin
+      @visualization = Visualization.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      respond_to do |format|
+        format.json { render json: { error: 'Visualization not found.' }, status: :not_found }
+      end
+      return
+    end
 
     if can_delete?(@visualization)
 

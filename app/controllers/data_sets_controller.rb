@@ -121,7 +121,14 @@ class DataSetsController < ApplicationController
   # DELETE /data_sets/1
   # DELETE /data_sets/1.json
   def destroy
-    @data_set = DataSet.find(params[:id])
+    begin
+      @data_set = DataSet.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      respond_to do |format|
+        format.json { render json: { error: 'Data set not found.' }, status: :not_found }
+      end
+      return
+    end
     @project  = @data_set.project
     @errors = []
 
