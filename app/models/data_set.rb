@@ -169,9 +169,16 @@ class DataSet < ActiveRecord::Base
         formula_field_arrays.each { |field| field.curr_pos = idx }
         new_field.curr_pos = idx
 
-        # evaluate the AST with environment
-        eval = ast.evaluate(pos_env)
-        new_field.value[idx] = eval.get
+        eval = begin
+                 # evaluate the AST with environment
+                 tmp = ast.evaluate(pos_env)
+                 tmp.get
+               rescue Beaker::Error
+                 # if anything breaks, just return nil
+                 nil
+               end
+        # dump this value into the array
+        new_field.value[idx] = eval
         curr_env.add x.refname, new_field
       end
 

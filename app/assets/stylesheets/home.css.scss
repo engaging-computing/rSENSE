@@ -5,3 +5,53 @@
 #more-vis-btn {
   margin: 10px;
 }
+
+body[data-page-name="home/formulas_help"] {
+  $func-border: 1px solid #DDD;
+
+  .category-header {
+    align-items: baseline;
+    border-bottom: 1px solid #888;
+    display: flex;
+    margin-bottom: 24px;
+  }
+
+  .category-header__anchor {
+    display: block;
+    position: relative;
+    top: -80px;
+  }
+
+  .category-header__title {
+    flex-grow: 1;
+  }
+
+  .func-description:not(:last-child) {
+    margin-bottom: 10px;
+  }
+
+  .func-description__bottom {
+    border: $func-border;
+    border-top: none;
+  }
+
+  .func-description__signature {
+    border: $func-border;
+    border-right: none;
+    flex-grow: 1;
+    //white-space: nowrap;
+  }
+
+  .func-description__summary {
+    font-weight: bold;
+    border: $func-border;
+  }
+
+  .func-description__top {
+    display: flex;
+  }
+
+  .func-description__bottom, .func-description__signature, .func-description__summary {
+    padding: 20px;
+  }
+}

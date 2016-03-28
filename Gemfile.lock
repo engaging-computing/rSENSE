@@ -22,9 +22,9 @@ GIT
 
 GIT
   remote: https://github.com/isenseDev/beaker-lang
-  revision: ffe94f8d612c1d96f74e93af39fbf1b860c2e472
+  revision: 345eed5c0413e977322468f9b86618f254fe147d
   specs:
-    beaker (1.1.2)
+    beaker (1.1.5)
       rltk
 
 GIT
@@ -270,7 +270,7 @@ PLATFORMS
 DEPENDENCIES
   auto_html
   bcrypt-ruby
-  beaker (~> 1.1.2)!
+  beaker (~> 1.1.5)!
   better_colorpicker (~> 0.1.2)!
   better_datetimepicker (~> 0.0.9)!
   bootstrap-sass
@@ -319,3 +319,6 @@ DEPENDENCIES
   will_paginate
   will_paginate-bootstrap
   yaml_db!
+
+BUNDLED WITH
+   1.10.6

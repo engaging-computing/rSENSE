@@ -145,7 +145,9 @@ class Project < ActiveRecord::Base
       dataSetCount: data_sets.count,
       dataSetIDs: data_sets.select(:id).map { |ds| ds.id },
       fieldCount: fields.count,
-      fields: fields.map { |o| o.to_hash false }
+      fields: fields.map { |o| o.to_hash false },
+      formulaFieldCount: formula_fields.count,
+      formulaFields: formula_fields.map { |o| o.to_hash false }
     }
 
     unless featured_media_id.nil?

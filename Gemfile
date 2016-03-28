@@ -95,4 +95,4 @@ gem 'recaptcha', git: 'https://github.com/ambethia/recaptcha'
 gem 'rack-cors', :require => 'rack/cors'
 
 # for formula fields
-gem 'beaker', '~> 1.1.2', git: 'https://github.com/isenseDev/beaker-lang'
+gem 'beaker', '~> 1.1.5', git: 'https://github.com/isenseDev/beaker-lang'

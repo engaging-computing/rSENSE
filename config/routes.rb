@@ -100,6 +100,7 @@ Rsense::Application.routes.draw do
   get '/contrib_keys/clear' => 'contrib_keys#clear'
 
   get '/api/v1/docs' => 'home#api_v1'
+  get '/api/formulas_help' => 'home#formulas_help'
 
   # Github Authentication Routes
   get '/auth/github' => 'sessions#github_authorize'

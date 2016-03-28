@@ -3,9 +3,10 @@ require_relative 'base_integration_test'
 
 class ApiV1Test < IntegrationTest
   setup do
-    @project_keys = %w(id featuredMediaId name url path hidden featured likeCount content timeAgoInWords createdAt ownerName ownerUrl dataSetCount fieldCount fields dataSetIDs)
+    @project_keys = %w(id featuredMediaId name url path hidden featured likeCount content timeAgoInWords createdAt) +
+      %w(ownerName ownerUrl dataSetCount fieldCount fields formulaFieldCount formulaFields dataSetIDs)
     @project_keys_extended = @project_keys + ['dataSets', 'mediaObjects', 'owner']
-    @field_keys = ['id', 'name', 'type', 'unit', 'restrictions']
+    @field_keys = ['id', 'name', 'type', 'unit', 'restrictions', 'index', 'refname']
     @data_keys = ['id', 'name', 'ownerId', 'ownerName', 'contribKey', 'url', 'path', 'createdAt', 'fieldCount', 'datapointCount', 'displayURL', 'data']
     @data_keys_extended = @data_keys + ['owner', 'project', 'fields']
     @dessert_project = projects(:dessert)

@@ -19,7 +19,10 @@ class FormulaField < ActiveRecord::Base
       id: id,
       name: name,
       type: field_type,
-      unit: unit
+      unit: unit,
+      refname: refname,
+      formula: formula,
+      index: index
     }
 
     if recurse
@@ -27,34 +30,6 @@ class FormulaField < ActiveRecord::Base
     end
 
     h
-  end
-
-  def self.get_next_name(project, field_type)
-    if project.nil? or field_type.nil?
-      return
-    end
-
-    highest = 0
-    base = get_field_name(field_type)
-    project.fields.where('field_type = ?', field_type).each do |f|
-      fname = f.name.split('_')
-      if fname[0] == base
-        if fname[1].nil?
-          highest += 1
-        else
-          tmp = fname[1].to_i
-          if tmp > highest
-            highest = tmp
-          end
-        end
-      end
-    end
-    if highest > 0
-      name = "#{base}_#{highest + 1}"
-    else
-      name = base
-    end
-    name
   end
 
   def default_values
@@ -105,15 +80,6 @@ class FormulaField < ActiveRecord::Base
     unless hits.empty?
       errors.add :base, "#{name} has the same name as another field"
     end
-  end
-
-  def self.try_parse(formula)
-    lex = Beaker::Lexer.lex(formula)
-    Beaker::Parser.parse(formula, lex)
-  rescue RLTK::LexingError, RLTK::NotInLanguage => e
-    e
-  rescue Beaker::Error => e
-    e
   end
 
   def self.try_execute(formulas, fields)

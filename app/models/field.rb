@@ -21,7 +21,9 @@ class Field < ActiveRecord::Base
       name: name,
       type: field_type,
       unit: unit,
-      restrictions: restrictions
+      restrictions: restrictions,
+      refname: refname,
+      index: index
     }
 
     if recurse
@@ -36,27 +38,24 @@ class Field < ActiveRecord::Base
       return
     end
 
-    highest = 0
     base = get_field_name(field_type)
-    project.fields.where('field_type = ?', field_type).each do |f|
+    project_fields = project.fields.where('field_type = ?', field_type)
+    project_formula_fields = project.formula_fields.where('field_type = ?', field_type)
+    suffixes = (project_fields + project_formula_fields).map do |f|
       fname = f.name.split('_')
       if fname[0] == base
-        if fname[1].nil?
-          highest += 1
-        else
-          tmp = fname[1].to_i
-          if tmp > highest
-            highest = tmp
-          end
-        end
+        fname[1].nil? ? 1 : fname[1].to_i
+      else
+        0
       end
     end
+
+    highest = suffixes.length == 0 ? 0 : suffixes.max
     if highest > 0
-      name = "#{base}_#{highest + 1}"
+      "#{base}_#{highest + 1}"
     else
-      name = base
+      base
     end
-    name
   end
 
   def default_values

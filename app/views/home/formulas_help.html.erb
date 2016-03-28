@@ -1,0 +1,436 @@
+<h1>Formula Reference</h1>
+<%= render 'category_header', name: 'table_of_contents', text: '1. Table of Contents' %>
+<ol>
+  <li><a href="#table_of_contents">Table of Contents</a></li>
+  <li><a href="#intro">Introduction</a></li>
+  <li><a href="#operators">Operators</a></li>
+  <li><a href="#conditions">Conditions</a></li>
+  <li><a href="#arrays">Arrays</a></li>
+  <li><a href="#locations">Locations</a></li>
+  <li><a href="#math">Math</a></li>
+  <li><a href="#numbers">Numbers</a></li>
+  <li><a href="#text">Text</a></li>
+  <li><a href="#time">Time</a></li>
+  <li><a href="#examples">Examples</a></li>
+</ol>
+
+<!-- category for the introduction -->
+<%= render 'category_header', name: 'intro', text: '2. Introduction' %>
+[in progress]
+
+<!-- category for list of operators and their applications -->
+<%= render 'category_header', name: 'operators', text: '3. Operators' %>
+<%= render layout: 'func_description', locals: { signature: '(+)(l: number, r: number) -> number' } do %>
+  Returns <code>l</code> added to <code>r</code>.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: '(+)(l: text, r: number) -> text' } do %>
+  Concatenates the text value <code>l</code> with the textual representation of <code>r</code>.
+  The arguments <code>l</code> and <code>r</code> can be reversed.
+  If the arguments are reversed, the order of concatenation is reversed.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: '(+)(l: text, r: text) -> text' } do %>
+  Concatenates the two text values <code>l</code> and <code>r</code>.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: '(+)(l: timestamp, r: number) -> timestamp' } do %>
+  Increments the timestamp <code>l</code> by <code>r</code> seconds.
+  The arguments <code>l</code> and <code>r</code> can be reversed.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: '(-)(l: number, r: number) -> number' } do %>
+  Returns <code>l</code> minus <code>r</code>.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: '(-)(l: location, r: location) -> location' } do %>
+  Returns the distance between the two locations <code>l</code> and <code>r</code> as a percentage of the radius.
+  For example, to obtain an arc length in miles, multiply this value by the radius of the Earth in miles.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: '(-)(l: timestamp, r: timestamp) -> timestamp' } do %>
+  Returns the number of seconds between <code>l</code> and <code>r</code>.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: '(*)(l: number, r: number) -> number' } do %>
+  Returns <code>l</code> multiplied by <code>r</code>.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: '(*)(l: text, r: number) -> text' } do %>
+  Returns the text <code>l</code> repeated <code>r</code> times.
+  If <code>r</code> is a fractional value, that percentage of characters are repeated.
+  If <code>r</code> is negative, the string is reversed.
+  The arguments <code>l</code> and <code>r</code> can be reversed.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: '(/)(l: number, r: number) -> number' } do %>
+  Returns <code>l</code> divided by <code>r</code>.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: '(%)(l: number, r: number) -> number' } do %>
+  Returns <code>l</code> modulo <code>r</code>.
+  For an explanation of the modulo operation, refer to <a href="https://en.wikipedia.org/wiki/Modulo_operation" target="_blank">this</a>.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: '(^)(l: number, r: number) -> number' } do %>
+  Returns <code>l</code> raised to the power of <code>r</code>.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: '(&&)(l: bool, r: bool) -> bool' } do %>
+  If both <code>l</code> and <code>r</code> evaluate to true, the expression evaluates to true.
+  Otherwise, it evaluates to false.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: '(||)(l: bool, r: bool) -> bool' } do %>
+  If either <code>l</code> or <code>r</code> evaluate to true, the expression evaluates to true.
+  Otherwise, it evaluates to false.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: '(==)(l: any, r: any) -> bool' } do %>
+  Both <code>l</code> and <code>r</code> must be the same type, and must be comparable.
+  The expression evaluates to true if <code>l</code> is equal to <code>r</code>.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: '(!=)(l: any, r: any) -> bool' } do %>
+  Both <code>l</code> and <code>r</code> must be the same type, and must be comparable.
+  The expression evaluates to true if <code>l</code> is not equal to <code>r</code>.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: '(<)(l: any, r: any) -> bool' } do %>
+  Both <code>l</code> and <code>r</code> must be the same type, and must be orderable.
+  The expression evaluates to true if <code>l</code> is less than <code>r</code>.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: '(<=)(l: any, r: any) -> bool' } do %>
+  Both <code>l</code> and <code>r</code> must be the same type, and must be orderable.
+  The expression evaluates to true if <code>l</code> is less than or equal to <code>r</code>.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: '(>)(l: any, r: any) -> bool' } do %>
+  Both <code>l</code> and <code>r</code> must be the same type, and must be orderable.
+  The expression evaluates to true if <code>l</code> is greater than <code>r</code>.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: '(>=)(l: any, r: any) -> bool' } do %>
+  Both <code>l</code> and <code>r</code> must be the same type, and must be orderable.
+  The expression evaluates to true if <code>l</code> is greater than or equal to <code>r</code>.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: '(!)(x: bool) -> bool' } do %>
+  If <code>x</code> is true, the expression evaluates to false.
+  Otherwise, it evaluates to true.
+<% end %>
+
+<!-- category for conditions -->
+<%= render 'category_header', name: 'conditions', text: '4. Conditions' %>
+<%= render layout: 'func_description', locals: { signature: 'if(cond: bool, then: any, else: any) -> any' } do %>
+  Takes an expression that evaluates to true or false.  If that expression evaluates to true, <code>then</code> is
+  returned.  Otherwise, <code>else</code> is returned.  Both <code>then</code> and <code>else</code> must evaluate to
+  the same type.  The type returned is therefore the same as both <code>then</code> and <code>else</code>.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'true: bool' } do %>
+  A constant defined as the boolean value "true".
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'false: bool' } do %>
+  A constant defined as the boolean value "false".
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'bool(x: number or bool) -> bool' } do %>
+  Converts <code>x</code> from either a number or a boolean to a boolean. If <code>x</code> is a number,
+  <code>bool</code> returns false if <code>x</code> is either 0 or nothing. Otherwise, it returns true. If
+  <code>x</code> is a boolean, <code>x</code> is returned without any changes.
+<% end %>
+
+<!-- category for array functions -->
+<%= render 'category_header', name: 'arrays', text: '5. Arrays' %>
+<%= render layout: 'func_description', locals: { signature: 'next(array: [any], default: any) -> [any]' } do %>
+  Takes an <code>array</code> and returns a new array with the position incremented by one.
+  If <code>default</code> is provided, then the default value for <code>array</code> is set to it.
+  Otherwise, it is left unchanged.
+  The value for <code>default</code> must match the contents of <code>array</code>, and is optional.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'next_p(array: [any], default: any, idx: number) -> [any]' } do %>
+  Takes an <code>array</code> and returns a new array with the position incremented by <code>idx</code>.
+  If <code>default</code> is provided, then the default value for <code>array</code> is set to it.
+  Otherwise, it is left unchanged.
+  The value for <code>default</code> must match the contents of <code>array</code>, and is optional.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'prev(array: [any], default: any) -> [any]' } do %>
+  Takes an <code>array</code> and returns a new array with the position decremented by one.
+  If <code>default</code> is provided, then the default value for <code>array</code> is set to it.
+  Otherwise, it is left unchanged.
+  The value for <code>default</code> must match the contents of <code>array</code>, and is optional.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'prev_p(array: [any], default: any, idx: number) -> [any]' } do %>
+  Takes an <code>array</code> and returns a new array with the position decremented by <code>idx</code>.
+  If <code>default</code> is provided, then the default value for <code>array</code> is set to it.
+  Otherwise, it is left unchanged.
+  The value for <code>default</code> must match the contents of <code>array</code>, and is optional.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'first(array: [any], default: any) -> [any]' } do %>
+  Takes an <code>array</code> and returns a new array with the position set to 0.
+  If <code>default</code> is provided, then the default value for <code>array</code> is set to it.
+  Otherwise, it is left unchanged.
+  The value for <code>default</code> must match the contents of <code>array</code>, and is optional.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'first_p(array: [any], default: any, idx: number) -> [any]' } do %>
+  Takes an <code>array</code> and returns a new array with the position set to <code>idx</code>.
+  If <code>default</code> is provided, then the default value for <code>array</code> is set to it.
+  Otherwise, it is left unchanged.
+  The value for <code>default</code> must match the contents of <code>array</code>, and is optional.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'last(array: [any], default: any) -> [any]' } do %>
+  Takes an <code>array</code> and returns a new array with the position set to <code>array_length(array) - 1</code>.
+  If <code>default</code> is provided, then the default value for <code>array</code> is set to it.
+  Otherwise, it is left unchanged.
+  The value for <code>default</code> must match the contents of <code>array</code>, and is optional.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'last_p(array: [any], default: any, idx: number) -> [any]' } do %>
+  Takes an <code>array</code> and returns a new array with the position set to <code>array_length(array) - idx - 1</code>.
+  If <code>default</code> is provided, then the default value for <code>array</code> is set to it.
+  Otherwise, it is left unchanged.
+  The value for <code>default</code> must match the contents of <code>array</code>, and is optional.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'array_length(array: [any]) -> number' } do %>
+  Takes an <code>array</code> and returns the number of elements in the array.
+<% end %>
+
+<!-- category for location functions -->
+<%= render 'category_header', name: 'locations', text: '6. Locations' %>
+<%= render layout: 'func_description', locals: { signature: 'latitude(x: number or text or latitude) -> latitude' } do %>
+  Converts <code>x</code> to a latitude.
+  If <code>x</code> is a number, it is interpreted as a latitude in degrees.
+  If <code>x</code> is text, it is parsed as a number and interpreted as a latitude in degrees.
+  If <code>x</code> is a latitude, it is returned without any changes.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'longitude(x: number or text or longitude) -> longitude' } do %>
+  Converts <code>x</code> to a longitude.
+  If <code>x</code> is a number, it is interpreted as a longitude in degrees.
+  If <code>x</code> is text, it is parsed as a number and interpreted as a longitude in degrees.
+  If <code>x</code> is a longitude, it is returned without any changes.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'location(x: longitude, y: latitude) -> location' } do %>
+  Converts a longitude and latitude pair to a location.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'degrees(x: longitude or latitude) -> number' } do %>
+  Converts a latitude or longitude to an angle represented in degrees.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'radians(x: longitude or latitude) -> number' } do %>
+  Converts a latitude or longitude to an angle represented in radians.
+<% end %>
+
+<!-- category for math -->
+<%= render 'category_header', name: 'math', text: '7. Math' %>
+<%= render layout: 'func_description', locals: { signature: 'e: number' } do %>
+  A numeric constant defined as Euler's number, or 2.71828...
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'pi: number' } do %>
+  A numeric constant defined as pi, or 3.14159...
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'sqrt(n: number) -> number' } do %>
+  Computes the square root of <code>n</code>.
+  If <code>n</code> is less than zero, the function returns a nothing value.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'abs(n: number) -> number' } do %>
+  Computes the absolute value of <code>n</code>.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'floor(n: number) -> number' } do %>
+  Rounds the number <code>n</code> down to the next integer value.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'ceil(n: number) -> number' } do %>
+  Rounds the number <code>n</code> up to the next integer value.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'round(n: number) -> number' } do %>
+  Rounds the number <code>n</code> to the closest integer value.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'sin(n: number) -> number' } do %>
+  Returns the sine of <code>n</code> as an angle in radians.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'cos(n: number) -> number' } do %>
+  Returns the cosine of <code>n</code> as an angle in radians.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'tan(n: number) -> number' } do %>
+  Returns the tangent of <code>n</code> as an angle in radians.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'sinh(n: number) -> number' } do %>
+  Returns the hyperbolic sine of <code>n</code> as an angle in radians.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'cosh(n: number) -> number' } do %>
+  Returns the hyperbolic cosine of <code>n</code> as an angle in radians.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'tanh(n: number) -> number' } do %>
+  Returns the hyperbolic tangent of <code>n</code> as an angle in radians.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'asin(n: number) -> number' } do %>
+  Returns the inverse sine of <code>n</code> as an angle in radians.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'acos(n: number) -> number' } do %>
+  Returns the inverse cosine of <code>n</code> as an angle in radians.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'atan(n: number) -> number' } do %>
+  Returns the inverse tangent of <code>n</code> as an angle in radians.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'asinh(n: number) -> number' } do %>
+  Returns the inverse hyperbolic sine of <code>n</code> as an angle in radians.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'acosh(n: number) -> number' } do %>
+  Returns the inverse hyperbolic cosine of <code>n</code> as an angle in radians.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'atanh(n: number) -> number' } do %>
+  Returns the inverse hyperbolic tangent of <code>n</code> as an angle in radians.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'ln(n: number) -> number' } do %>
+  Returns the natural logarithm of <code>n</code>.
+  If <code>n</code> is less than or equal to 0, the function returns a nothing value.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'log2(n: number) -> number' } do %>
+  Returns the logarithm base 2 of <code>n</code>.
+  If <code>n</code> is less than or equal to 0, the function returns a nothing value.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'log10(n: number) -> number' } do %>
+  Returns the logarithm base 10 of <code>n</code>.
+  If <code>n</code> is less than or equal to 0, the function returns a nothing value.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'atan2(y: number, x: number) -> number' } do %>
+  Computes the inverse tangent given an <code>x</code> and <code>y</code>.
+  Unlike <code>atan</code>, this function is capable of returning an angle in radians in the correct quadrant.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'log(a: number, b: number) -> number' } do %>
+  Returns the logarithm base <code>b</code> of <code>a</code>.
+  If <code>a</code> is less than or equal to 0, the function returns a nothing value.
+  If <code>b</code> is less than or equal to 1, the function returns a nothing value.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'min(a: number, b: number) -> number' } do %>
+  Returns the minimum value between <code>a</code> and <code>b</code>.
+  If only one of the two arguments are nothing values, the non-nothing value of the two is returned.
+  If both are nothing values, a nothing value is returned.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'max(a: number, b: number) -> number' } do %>
+  Returns the maximum value between <code>a</code> and <code>b</code>.
+  If only one of the two arguments are nothing values, the non-nothing value of the two is returned.
+  If both are nothing values, a nothing value is returned.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'sum(a: [number]) -> number' } do %>
+  Computes a sum over the number array <code>a</code>.
+  Nothing values in the array are treated as zero.
+  An empty array has a sum of zero.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'prod(a: [number]) -> number' } do %>
+  Computes a product over the number array <code>a</code>.
+  Nothing values in the array are treated as one.
+  An empty array has a product of one.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'mean(a: [number]) -> number' } do %>
+  Computes the mean over the number array <code>a</code>.
+  Nothing values in the array are treated as zero.
+  An empty array has a mean of zero.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'variance(a: [number]) -> number' } do %>
+  Computes the variance over the number array <code>a</code>.
+  Nothing values in the array are treated as zero.
+  An empty array has a variance of zero.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'stddev(a: [number]) -> number' } do %>
+  Computes the standard deviation over the number array <code>a</code>.
+  Nothing values in the array are treated as zero.
+  An empty array has a standard deviation of zero.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'array_min(a: [number]) -> number' } do %>
+  Determines the minimum value in the number array <code>a</code>.
+  Nothing values are ignored in the computation.
+  If <code>a</code> is empty, a nothing value is returned.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'array_max(a: [number]) -> number' } do %>
+  Determines the maximum value in the number array <code>a</code>.
+  Nothing values are ignored in the computation.
+  If <code>a</code> is empty, a nothing value is returned.
+<% end %>
+
+<!-- category for number functions -->
+<%= render 'category_header', name: 'numbers', text: '8. Numbers' %>
+<%= render layout: 'func_description', locals: { signature: 'number(x: bool or number or text or timestamp or latitude or longitude) -> number' } do %>
+  Converts the value <code>x</code> into a number.
+  If <code>x</code> is a boolean, it is converted to one if true and zero if false.
+  If <code>x</code> is a number, it is returned as-is.
+  If <code>x</code> is text, it is parsed as a number.
+  If the parse fails, the nothing value is returned.
+  If <code>x</code> is a timestamp, the number of seconds since the Unix epoch is returned.
+  If <code>x</code> is a latitude or longitude, the value in degrees is returned.
+<% end %>
+
+<!-- category for text functions -->
+<%= render 'category_header', name: 'text', text: '9. Text' %>
+<%= render layout: 'func_description', locals: { signature: 'strlen(t: text) -> number' } do %>
+  Returns the length of the text <code>t</code>.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'capitalize(t: text) -> text' } do %>
+  Returns <code>t</code> with the first character capitalized.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'upper(t: text) -> text' } do %>
+  Returns <code>t</code> with every character capitalized.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'lower(t: text) -> text' } do %>
+  Returns <code>t</code> with every character made lowercase.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'swap(t: text) -> text' } do %>
+  Returns <code>t</code> with the case of every character swapped.
+  This means that all lowercase characters are made uppercase, and all uppercase characters are made lowercase.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'reverse(t: text) -> text' } do %>
+  Reverses <code>t</code>.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'trim(t: text) -> text' } do %>
+  Removes whitespace from the edges of <code>t</code>.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'substr(t: text, spos: number, epos: number) -> text' } do %>
+  Takes the substring of <code>t</code>, starting at <code>spos</code> and ending before <code>epos</code>.
+  If <code>spos</code> is omitted or refers to a location before the end of, it defaults to the first character.
+  If <code>epos</code> is omitted or refers to a location after the end of <code>t</code>, it defaults to the last character.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'text(x: bool or number or text or timestamp or latitude or longitude or location) -> text' } do %>
+  Converts the value <code>x</code> into text.
+<% end %>
+
+<!-- category for time functions -->
+<%= render 'category_header', name: 'time', text: '10. Time' %>
+<%= render layout: 'func_description', locals: { signature: 'datetime(yr: number, mo: number, dy: number, hr: number, mn: number, sc: number) -> timestamp' } do %>
+  Creates a timestamp from the given arguments.
+  <code>yr</code> refers the current year. Defaults to 0.
+  <code>mo</code> refers to the month in the year, starting at 1 for January. Defaults to 1.
+  <code>dy</code> refers to the day of the month, starting at 1 for the first of the month. Defaults to 1.
+  <code>hr</code> refers to the hour of the day. Defaults to 0.
+  <code>mn</code> refers to the minute of the hour. Defaults to 0.
+  <code>sc</code> refers to the second of the minute. Defaults to 0.
+  Any value outside of the range for any of the arguments will change the next largest unit of time.
+  For example, setting the month to 13 will increment the year by one.
+  Every argument in this functional is optional.
+  If an argument is omitted or receives the nothing value, it is set to its default.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'offset(t: timestamp, off: number, units: text) -> text' } do %>
+  Offsets the timestamp <code>t</code> by <code>off</code>.
+  <code>units</code> determines what measure of time is meant by <code>off</code>.
+  If it is not provided, it defaults to seconds.
+  Valid values for <code>units</code> are: second(s), minute(s), hour(s), day(s), week(s), month(s), year(s).
+  If an invalid unit of time is provided, no change to the time is made.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'elapsed(l: timestamp, r: timestamp, units: text) -> text' } do %>
+  Determines how much time has elapsed between <code>l</code> and <code>r</code>.
+  Follows the same rules for <code>units</code> as <code>offset</code>.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'second(t: timestamp) -> number' } do %>
+  Returns the number of seconds since the last minute in <code>t</code>.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'minute(t: timestamp) -> number' } do %>
+  Returns the number of minutes since the last hour in <code>t</code>.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'hour(t: timestamp) -> number' } do %>
+  Returns the number of hours since the last day in <code>t</code>.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'day(t: timestamp) -> number' } do %>
+  Returns the day of the month in <code>t</code>.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'week(t: timestamp) -> number' } do %>
+  Returns the week of the year in <code>t</code>.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'weekday(t: timestamp) -> number' } do %>
+  Returns the day of the week in <code>t</code>.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'month(t: timestamp) -> number' } do %>
+  Returns the month of the year in <code>t</code>.
+  Months start at 1 and end at 12.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'year(t: timestamp) -> number' } do %>
+  Returns the year.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'am_pm(t: timestamp) -> text' } do %>
+  Returns the text "AM" if <code>t</code> is an AM time, or "PM" if it is a PM time.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'weekday_name(t: timestamp) -> text' } do %>
+  Returns the name of the weekday in <code>t</code>.
+<% end %>
+<%= render layout: 'func_description', locals: { signature: 'month_name(t: timestamp) -> text' } do %>
+  Returns the name of the month in <code>t</code>.
+<% end %>
+
+<!-- category for examples of formulas -->
+<%= render 'category_header', name: 'examples', text: '11. Examples' %>
+[in progress]
