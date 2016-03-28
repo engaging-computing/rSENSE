@@ -255,7 +255,7 @@ class VisualizationsController < ApplicationController
 
     # push formula fields to temp variable
     @project.formula_fields.sort_by(&:index).each do |field|
-      data_fields.push(typeID: field.field_type, unitName: field.unit, fieldID: "f#{field.id}", fieldName: field.name)
+      data_fields.push(typeID: field.field_type, unitName: field.unit, fieldID: "f#{field.id}", fieldName: field.name, formula: true)
     end
 
     has_pics = false
