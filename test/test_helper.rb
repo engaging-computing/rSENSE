@@ -4,7 +4,8 @@ require 'rails/test_help'
 
 require 'simplecov'
 require 'simplecov_rsense'
-SimpleCov.start 'rsense'
+SimpleCov.command_name "Parallel" + (ENV['TEST_ENV_NUMBER'] || '')
+SimpleCov.start 'rsense' 
 
 require 'capybara/rails'
 Capybara.javascript_driver = :none

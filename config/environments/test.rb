@@ -39,7 +39,7 @@ Rsense::Application.configure do
   config.eager_load = false
 
   Capybara.server_port = '127.0.0.1'
-  Capybara.server_port = 3001
+  Capybara.server_port = 3001 + ENV['TEST_ENV_NUMBER'].to_i
 
   config.action_mailer.default_url_options = {
     host: '127.0.0.1',
