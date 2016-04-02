@@ -47,6 +47,7 @@ $ ->
         @xGridSize = @yGridSize = @INITIAL_GRID_SIZE
 
         @isScatter = true # To do add axis bounds feature that does time
+        @configs.isPeriod = false # Controls how series are constructed in update(), for the period tool
         # Used for data reduction triggering
         @updateOnZoom = true
 
@@ -235,6 +236,10 @@ $ ->
       update: () ->
         # Remove all series and draw legend
         super()
+        console.log("Update called")
+        console.log(@configs.isPeriod)
+        if @configs.isPeriod == true
+          console.log($('#period-list').val())
         title =
           text: fieldTitle data.fields[@configs.xAxis]
         @chart.xAxis[0].setTitle title, false
@@ -376,13 +381,14 @@ $ ->
       ###
       Draws radio buttons for changing symbol/line mode.
       ###
-      drawToolControls: (elapsedTime = true) ->
+      drawToolControls: (elapsedTime = true, period = false) ->
         # Configure the tool controls
         inctx = {}
         inctx.axes = ["Both", "X", "Y"]
         inctx.logSafe = data.logSafe
         inctx.vis = @isScatter # To do add axis bounds feature that does time
         inctx.elapsedTime = elapsedTime and data.timeFields.length is 1
+        inctx.period = period
         inctx.modes = [
           { mode: @SYMBOLS_LINES_MODE, text: "Symbols and Lines" }
           { mode: @LINES_MODE,         text: "Lines Only" }

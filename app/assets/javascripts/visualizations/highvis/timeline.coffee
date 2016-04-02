@@ -39,6 +39,9 @@ $ ->
         super @canvas
 
         @isScatter = null # To do add axis bounds feature that does time
+        @configs.isPeriod ?= false # Controls how series are constructed in update(). 
+                          # Changes when a period option is selected.
+        @configs.periodMode ?= 'off'
 
         @configs.mode = @LINES_MODE
         @configs.xAxis = data.timeFields[0]
@@ -111,8 +114,20 @@ $ ->
       ###
       Turn off elapsed time
       ###
-      drawToolControls: (elapsedTime = false) ->
-        super(elapsedTime)
+      drawToolControls: (elapsedTime = false, period = true) ->
+        super(elapsedTime, period)
+
+        # Set the correct period option:
+        $('#period-list').val(@configs.periodMode)
+
+        $('#period-list').change =>
+          @configs.periodMode = $('#period-list').val()
+          if $('#period-list').val() != 'off'
+            @configs.isPeriod = true
+            @start()
+          else
+            @configs.isPeriod = false
+            @start()
 
       ###
       Overwrite xAxis controls to only allow time fields
