@@ -41,13 +41,12 @@ $ ->
     window.addFilter = (f) ->
       f.fieldName = fieldTitle(data.fields[f.field])
       f.opName    = globals.filterNames[f.op]
-
       formatter =
         if f.field is data.timeFields[0] then globals.dateFormatter
         else data.precisionFilter
 
       if f.value?
-        f.dispValue = f.value
+        f.dispValue = formatter(f.value)
       else
         delimiter = ', '
         switch f.op
@@ -62,9 +61,9 @@ $ ->
             closer = ')'
 
         f.dispValue = opener
-        if f.lvalue? then f.dispValue += data.precisionFilter(f.lvalue)
+        if f.lvalue? then f.dispValue += formatter(f.lvalue)
         f.dispValue += delimiter
-        if f.uvalue? then f.dispValue += data.precisionFilter(f.uvalue)
+        if f.uvalue? then f.dispValue += formatter(f.uvalue)
         f.dispValue += closer
 
       filterBox = HandlebarsTemplates[hbVis('vis-filter')](f)

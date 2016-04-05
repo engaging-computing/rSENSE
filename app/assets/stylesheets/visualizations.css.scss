@@ -376,11 +376,11 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
           padding: 2px 5px;
           whitespace: nowrap;
         }
-
+	
         .vis-filter:hover {
           background-color: $vis-bkg-dark;
         }
-
+	
         .remove {
           cursor: pointer;
         }
@@ -521,13 +521,25 @@ ul#sopt_menu {
     border-right: thin solid #ABABAB;
   }
 
-  // when a box is chosen or hovered over
   li:hover, li.ui-state-highlight {
-    background-image: linear-gradient(#49A7DB, #268AC1);
+    background-image: linear-gradient(#49A7DB, #268AC1); // hex codes are blue
     a > table > tbody > tr > td { // this is gross
       color: #FFF;
     }
   }
+
+  // override ui-state-hover class on filter dropdown menu to fix double highlight issue
+  a.ui-corner-all.g-menu-item.ui-state-hover {
+    border-color: transparent; 
+    background: none; 
+    font-weight: normal; 
+    color: #212121;
+    text-decoration: none;
+  }
+}
+
+tr.ui-widget-content.jqgrow.ui-row-ltr.ui-state-highlight {
+  border: 2px solid #263960;
 }
 
 body[data-page-name='visualizations/displayVis'] .visualizations-controller,

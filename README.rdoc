@@ -7,7 +7,7 @@ multiple visualization tools. The following tutorials explain how to create
 projects, contribute data to projects in the form of data sets, and visualize
 data.     
 
-<b>Status:</b> {<img src="https://travis-ci.org/isenseDev/rSENSE.png" />}[https://travis-ci.org/isenseDev/rSENSE]
+<b>Status:</b> {<img src="https://circleci.com/gh/isenseDev/rSENSE/tree/master.svg?style=shield" />}[https://circleci.com/gh/isenseDev/rSENSE]
 
 == Installing the iSense Site
 

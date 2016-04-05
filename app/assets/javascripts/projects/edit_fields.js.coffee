@@ -80,16 +80,6 @@ $ ->
       # Row name of row being deleted
       rowName = $(@).closest('tr').attr('name')
 
-      # Decrease counter based on row name
-      if rowName == 'latitude' || rowName == 'longitude'
-        locationCount = 0
-      else if rowName == 'number'
-        numberCount = numberCount - 1
-      else if rowName == 'text'
-        textCount = textCount - 1
-      else
-        timestampCount = timestampCount - 1
-
       # fid != 0 when the field exists in the database
       if fid != '0'
         hiddenDeletedFields = $('#hidden_deleted_fields')
@@ -106,7 +96,6 @@ $ ->
     # Populate hidden fields w/ num of fields and array of deleted fields on submit
     $('#fields_form_submit').click ->
       values = [numCount, textCount, timestampCount, locationCount]
-
       for i in [0...4]
         setValue(inputBoxes[i], values[i])
 
