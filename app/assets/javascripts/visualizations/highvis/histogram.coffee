@@ -285,13 +285,10 @@ $ ->
 
         # Adds material design
         $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
-          componentHandler.upgradeElement($(j)[0]);
+          componentHandler.upgradeElement($(j)[0])
 
         $('#vis-ctrls').find(".mdl-radio").each (i,j) ->
-          componentHandler.upgradeElement($(j)[0]);
-
-        $('#vis-ctrls').find(".mdl-slider").each (i,j) ->
-          componentHandler.upgradeElement($(j)[0]);
+          componentHandler.upgradeElement($(j)[0])
 
         # Initialize and track the status of this control panel
         globals.configs.toolsOpen ?= false
@@ -335,9 +332,16 @@ $ ->
           else
             alert('Entered bin size would result in too many bins.')
 
+        # Adds Material Design to slider
+        $('#vis-ctrls').find(".mdl-slider").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0])
+
       drawControls: ->
         super()
-        @drawGroupControls(data.textFields)
+        # Remove group by number fields, only for pie chart
+        groups = $.extend(true, [], data.textFields)
+        groups.splice(data.NUMBER_FIELDS_FIELD - 1, 1)
+        @drawGroupControls(groups)
 
         handler = (selected, selFields) =>
           @yAxisRadioHandler(selected, selFields)

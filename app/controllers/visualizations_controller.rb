@@ -222,9 +222,7 @@ class VisualizationsController < ApplicationController
       dsets.each do |id|
         begin
           dset = DataSet.find_by_id(id.to_i)
-          if dset.project_id == @project.id
-            @datasets.push dset
-          end
+          @datasets.push dset if dset.project_id == @project.id
         rescue
           logger.info 'Either project id or data set does not exist in the DB'
         end
@@ -239,6 +237,10 @@ class VisualizationsController < ApplicationController
     data_fields.push(typeID: TEXT_TYPE, unitName: 'String', fieldID: -1, fieldName: 'Data Set Name (id)')
     # create special grouping field for all datasets
     data_fields.push(typeID: TEXT_TYPE, unitName: 'String', fieldID: -1, fieldName: 'Combined Data Sets')
+    # create special grouping field for number fields
+    data_fields.push(typeID: TEXT_TYPE, unitName: 'String', fieldID: -1, fieldName: 'Number Fields')
+    # create a special grouping field for contributors
+    data_fields.push(typeID: TEXT_TYPE, unitName: 'String', fieldID: -1, fieldName: 'Contributors')
     lat = ''
     # push real fields to temp variable
     @project.fields.sort_by(&:index).each do |field|
@@ -265,6 +267,8 @@ class VisualizationsController < ApplicationController
         arr.push index + 1
         arr.push "#{dataset.title}(#{dataset.id})"
         arr.push 'All'
+        arr.push ''
+        arr.push dataset.key.nil? ? "User: #{User.select(:name).find(dataset.user_id).name}" : "Key: #{dataset.key}"
 
         data_fields.slice(arr.length, data_fields.length).each do |field|
           arr.push row[field[:fieldID].to_s]
