@@ -20,83 +20,83 @@
 
 <!-- category for list of operators and their applications -->
 <%= render 'category_header', name: 'operators', text: '3. Operators' %>
-<%= render layout: 'func_description', locals: { signature: '(+)(l: number, r: number) -> number' } do %>
+<%= render layout: 'func_description', locals: { signature: '(l: number) +  (r: number) -> number' } do %>
   Returns <code>l</code> added to <code>r</code>.
 <% end %>
-<%= render layout: 'func_description', locals: { signature: '(+)(l: text, r: number) -> text' } do %>
+<%= render layout: 'func_description', locals: { signature: '(l: text) + (r: number) -> text' } do %>
   Concatenates the text value <code>l</code> with the textual representation of <code>r</code>.
   The arguments <code>l</code> and <code>r</code> can be reversed.
   If the arguments are reversed, the order of concatenation is reversed.
 <% end %>
-<%= render layout: 'func_description', locals: { signature: '(+)(l: text, r: text) -> text' } do %>
+<%= render layout: 'func_description', locals: { signature: '(l: text) + (r: text) -> text' } do %>
   Concatenates the two text values <code>l</code> and <code>r</code>.
 <% end %>
-<%= render layout: 'func_description', locals: { signature: '(+)(l: timestamp, r: number) -> timestamp' } do %>
+<%= render layout: 'func_description', locals: { signature: '(l: timestamp) + (r: number) -> timestamp' } do %>
   Increments the timestamp <code>l</code> by <code>r</code> seconds.
   The arguments <code>l</code> and <code>r</code> can be reversed.
 <% end %>
-<%= render layout: 'func_description', locals: { signature: '(-)(l: number, r: number) -> number' } do %>
+<%= render layout: 'func_description', locals: { signature: '(l: number) - (r: number) -> number' } do %>
   Returns <code>l</code> minus <code>r</code>.
 <% end %>
-<%= render layout: 'func_description', locals: { signature: '(-)(l: location, r: location) -> location' } do %>
+<%= render layout: 'func_description', locals: { signature: '(l: location) - (r: location) -> location' } do %>
   Returns the distance between the two locations <code>l</code> and <code>r</code> as a percentage of the radius.
   For example, to obtain an arc length in miles, multiply this value by the radius of the Earth in miles.
 <% end %>
-<%= render layout: 'func_description', locals: { signature: '(-)(l: timestamp, r: timestamp) -> timestamp' } do %>
+<%= render layout: 'func_description', locals: { signature: '(l: timestamp) - (r: timestamp) -> number' } do %>
   Returns the number of seconds between <code>l</code> and <code>r</code>.
 <% end %>
-<%= render layout: 'func_description', locals: { signature: '(*)(l: number, r: number) -> number' } do %>
+<%= render layout: 'func_description', locals: { signature: '(l: number) * (r: number) -> number' } do %>
   Returns <code>l</code> multiplied by <code>r</code>.
 <% end %>
-<%= render layout: 'func_description', locals: { signature: '(*)(l: text, r: number) -> text' } do %>
+<%= render layout: 'func_description', locals: { signature: '(l: text) * (r: number) -> text' } do %>
   Returns the text <code>l</code> repeated <code>r</code> times.
   If <code>r</code> is a fractional value, that percentage of characters are repeated.
   If <code>r</code> is negative, the string is reversed.
   The arguments <code>l</code> and <code>r</code> can be reversed.
 <% end %>
-<%= render layout: 'func_description', locals: { signature: '(/)(l: number, r: number) -> number' } do %>
+<%= render layout: 'func_description', locals: { signature: '(l: number) / (r: number) -> number' } do %>
   Returns <code>l</code> divided by <code>r</code>.
 <% end %>
-<%= render layout: 'func_description', locals: { signature: '(%)(l: number, r: number) -> number' } do %>
+<%= render layout: 'func_description', locals: { signature: '(l: number) % (r: number) -> number' } do %>
   Returns <code>l</code> modulo <code>r</code>.
   For an explanation of the modulo operation, refer to <a href="https://en.wikipedia.org/wiki/Modulo_operation" target="_blank">this</a>.
 <% end %>
-<%= render layout: 'func_description', locals: { signature: '(^)(l: number, r: number) -> number' } do %>
+<%= render layout: 'func_description', locals: { signature: '(l: number) ^ (r: number) -> number' } do %>
   Returns <code>l</code> raised to the power of <code>r</code>.
 <% end %>
-<%= render layout: 'func_description', locals: { signature: '(&&)(l: bool, r: bool) -> bool' } do %>
+<%= render layout: 'func_description', locals: { signature: '(l: bool) && (r: bool) -> bool' } do %>
   If both <code>l</code> and <code>r</code> evaluate to true, the expression evaluates to true.
   Otherwise, it evaluates to false.
 <% end %>
-<%= render layout: 'func_description', locals: { signature: '(||)(l: bool, r: bool) -> bool' } do %>
+<%= render layout: 'func_description', locals: { signature: '(l: bool) || (r: bool) -> bool' } do %>
   If either <code>l</code> or <code>r</code> evaluate to true, the expression evaluates to true.
   Otherwise, it evaluates to false.
 <% end %>
-<%= render layout: 'func_description', locals: { signature: '(==)(l: any, r: any) -> bool' } do %>
+<%= render layout: 'func_description', locals: { signature: '(l: any) == (r: any) -> bool' } do %>
   Both <code>l</code> and <code>r</code> must be the same type, and must be comparable.
   The expression evaluates to true if <code>l</code> is equal to <code>r</code>.
 <% end %>
-<%= render layout: 'func_description', locals: { signature: '(!=)(l: any, r: any) -> bool' } do %>
+<%= render layout: 'func_description', locals: { signature: '(l: any) != (r: any) -> bool' } do %>
   Both <code>l</code> and <code>r</code> must be the same type, and must be comparable.
   The expression evaluates to true if <code>l</code> is not equal to <code>r</code>.
 <% end %>
-<%= render layout: 'func_description', locals: { signature: '(<)(l: any, r: any) -> bool' } do %>
+<%= render layout: 'func_description', locals: { signature: '(l: any) < (r: any) -> bool' } do %>
   Both <code>l</code> and <code>r</code> must be the same type, and must be orderable.
   The expression evaluates to true if <code>l</code> is less than <code>r</code>.
 <% end %>
-<%= render layout: 'func_description', locals: { signature: '(<=)(l: any, r: any) -> bool' } do %>
+<%= render layout: 'func_description', locals: { signature: '(l: any) <= (r: any) -> bool' } do %>
   Both <code>l</code> and <code>r</code> must be the same type, and must be orderable.
   The expression evaluates to true if <code>l</code> is less than or equal to <code>r</code>.
 <% end %>
-<%= render layout: 'func_description', locals: { signature: '(>)(l: any, r: any) -> bool' } do %>
+<%= render layout: 'func_description', locals: { signature: '(l: any) > (r: any) -> bool' } do %>
   Both <code>l</code> and <code>r</code> must be the same type, and must be orderable.
   The expression evaluates to true if <code>l</code> is greater than <code>r</code>.
 <% end %>
-<%= render layout: 'func_description', locals: { signature: '(>=)(l: any, r: any) -> bool' } do %>
+<%= render layout: 'func_description', locals: { signature: '(l: any) >= (r: any) -> bool' } do %>
   Both <code>l</code> and <code>r</code> must be the same type, and must be orderable.
   The expression evaluates to true if <code>l</code> is greater than or equal to <code>r</code>.
 <% end %>
-<%= render layout: 'func_description', locals: { signature: '(!)(x: bool) -> bool' } do %>
+<%= render layout: 'func_description', locals: { signature: '!(x: bool) -> bool' } do %>
   If <code>x</code> is true, the expression evaluates to false.
   Otherwise, it evaluates to true.
 <% end %>

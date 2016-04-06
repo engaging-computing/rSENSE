@@ -105,7 +105,7 @@ class FormulaFieldTest < ActiveSupport::TestCase
     ff.project_id = @pid
     ff.name = 'N-F-2'
     ff.choose_refname
-    assert_equal 'NF21', ff.refname
+    assert_equal 'NF2_1', ff.refname
   end
 
   # Try to choose an appropriate refname with a formula field name collision
@@ -114,7 +114,7 @@ class FormulaFieldTest < ActiveSupport::TestCase
     ff.project_id = @pid
     ff.name = 'F-F-2'
     ff.choose_refname
-    assert_equal 'FF21', ff.refname
+    assert_equal 'FF2_1', ff.refname
   end
 
   # Setting a valid field type

@@ -23,7 +23,7 @@ $ ->
         $('#fields_form_submit').click()
 
     # Make table sortable
-    $( "tbody" ).sortable();
+    $( '#sortable' ).sortable();
 
     # Delete field, enable timestamp/location buttons (NOTE: fid is 0 when the field
     # hasn't yet been added to project in database)
@@ -148,7 +148,7 @@ $ ->
       displayNumCount = displayNumCount + 1
       addRow(['<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>',
               """<input class="input-small form-control" type="text"
-                name="number_#{numCount}" value="Number_#{displayNumCount}">""",
+                name="number_#{numCount}" value="Formula_Number_#{displayNumCount}">""",
               "Number",
               """<input class="input-small form-control" type="text" class="units" name="units_#{numCount}">""",
               """<a class="field_edit_formula" fid="0" data-toggle="modal" data-target=".modal">
@@ -163,7 +163,7 @@ $ ->
       displayTextCount = displayTextCount + 1
       addRow(['<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>',
               """<input class="input-small form-control" type="text"
-                name="text_#{textCount}" value="Text_#{displayTextCount}">""",
+                name="text_#{textCount}" value="Formula_Text_#{displayTextCount}">""",
               'Text',
               '',
               """<a class="field_edit_formula" fid="0" data-toggle="modal" data-target=".modal">
@@ -238,6 +238,9 @@ setValue = (id, value) ->
 
 # Returns the index for the name of a number or text field
 getNextName = (fieldType) ->
+  if namespace.action == 'edit_formula_fields'
+    fieldType = 'Formula_' + fieldType
+
   highest = 0
   table = document.getElementById('fields_table')
   for i in [1...table.rows.length]
