@@ -122,13 +122,17 @@
 
 <!-- category for array functions -->
 <%= render 'category_header', name: 'arrays', text: '5. Arrays' %>
+<%= render layout: 'func_description', locals: { signature: 'default(array: [any], default: any) -> [any]' } do %>
+  Takes an <code>array</code> and returns a new array with the default value set to <code>default</code>.
+  The value for <code>default</code> must match the contents of <code>array</code>.
+<% end %>
 <%= render layout: 'func_description', locals: { signature: 'next(array: [any], default: any) -> [any]' } do %>
   Takes an <code>array</code> and returns a new array with the position incremented by one.
   If <code>default</code> is provided, then the default value for <code>array</code> is set to it.
   Otherwise, it is left unchanged.
   The value for <code>default</code> must match the contents of <code>array</code>, and is optional.
 <% end %>
-<%= render layout: 'func_description', locals: { signature: 'next_p(array: [any], default: any, idx: number) -> [any]' } do %>
+<%= render layout: 'func_description', locals: { signature: 'next_p(array: [any], idx: number, default: any) -> [any]' } do %>
   Takes an <code>array</code> and returns a new array with the position incremented by <code>idx</code>.
   If <code>default</code> is provided, then the default value for <code>array</code> is set to it.
   Otherwise, it is left unchanged.
@@ -140,7 +144,7 @@
   Otherwise, it is left unchanged.
   The value for <code>default</code> must match the contents of <code>array</code>, and is optional.
 <% end %>
-<%= render layout: 'func_description', locals: { signature: 'prev_p(array: [any], default: any, idx: number) -> [any]' } do %>
+<%= render layout: 'func_description', locals: { signature: 'prev_p(array: [any], idx: number, default: any) -> [any]' } do %>
   Takes an <code>array</code> and returns a new array with the position decremented by <code>idx</code>.
   If <code>default</code> is provided, then the default value for <code>array</code> is set to it.
   Otherwise, it is left unchanged.
@@ -152,7 +156,7 @@
   Otherwise, it is left unchanged.
   The value for <code>default</code> must match the contents of <code>array</code>, and is optional.
 <% end %>
-<%= render layout: 'func_description', locals: { signature: 'first_p(array: [any], default: any, idx: number) -> [any]' } do %>
+<%= render layout: 'func_description', locals: { signature: 'first_p(array: [any], idx: number, default: any) -> [any]' } do %>
   Takes an <code>array</code> and returns a new array with the position set to <code>idx</code>.
   If <code>default</code> is provided, then the default value for <code>array</code> is set to it.
   Otherwise, it is left unchanged.
@@ -164,7 +168,7 @@
   Otherwise, it is left unchanged.
   The value for <code>default</code> must match the contents of <code>array</code>, and is optional.
 <% end %>
-<%= render layout: 'func_description', locals: { signature: 'last_p(array: [any], default: any, idx: number) -> [any]' } do %>
+<%= render layout: 'func_description', locals: { signature: 'last_p(array: [any], idx: number, default: any) -> [any]' } do %>
   Takes an <code>array</code> and returns a new array with the position set to <code>array_length(array) - idx - 1</code>.
   If <code>default</code> is provided, then the default value for <code>array</code> is set to it.
   Otherwise, it is left unchanged.

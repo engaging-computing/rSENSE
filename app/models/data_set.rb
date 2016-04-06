@@ -132,7 +132,7 @@ class DataSet < ActiveRecord::Base
                      arr = data.map { |y| DateTime.parse(y[key]) }
                      Beaker::ArrayType.new(arr, :timestamp, 0)
                    when 2
-                     arr = data.map { |y| y[key].to_f }
+                     arr = data.map { |y| y[key].nil? or y[key] == '' ? nil : y[key].to_f }
                      Beaker::ArrayType.new(arr, :number, 0)
                    when 3
                      arr = data.map { |y| y[key] }

@@ -54,7 +54,7 @@ class FormulaField < ActiveRecord::Base
     next_refname = base_refname
     name_count = 1
     while other_refnames.include? next_refname
-      next_refname = "#{base_refname}#{name_count}"
+      next_refname = "#{base_refname}_#{name_count}"
       name_count += 1
     end
 

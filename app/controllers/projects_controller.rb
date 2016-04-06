@@ -337,6 +337,9 @@ class ProjectsController < ApplicationController
       errors += add_number_formula_fields(params)
       errors += add_text_formula_fields(params)
 
+      # so we can validate the formulas
+      @project.reload
+
       # check the formulas for validity
       # put the fields and formula fields in a format usable by the checker
       check_fields = @project.fields.map do |x|
