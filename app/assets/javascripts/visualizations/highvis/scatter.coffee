@@ -236,10 +236,6 @@ $ ->
       update: () ->
         # Remove all series and draw legend
         super()
-        console.log("Update called")
-        console.log(@configs.isPeriod)
-        if @configs.isPeriod == true
-          console.log($('#period-list').val())
         title =
           text: fieldTitle data.fields[@configs.xAxis]
         @chart.xAxis[0].setTitle title, false
@@ -262,7 +258,8 @@ $ ->
               @configs.xBounds.max = Math.max(@configs.xBounds.max,
                 data.getMax(@configs.xAxis, gi, dp))
 
-              if (@timeMode isnt undefined) and (@timeMode is @GEO_TIME_MODE)
+              if (@timeMode isnt undefined) and (
+                @timeMode is @GEO_TIME_MODE)
                 @configs.xBounds.min =
                   (new Date(@configs.xBounds.min)).getUTCFullYear()
                 @configs.xBounds.max =
@@ -290,6 +287,21 @@ $ ->
                   @xGridSize, @yGridSize, @MAX_SERIES_SIZE)
               else
                 data.xySelector(@configs.xAxis, fi, gi, dp)
+            
+            for point in dat when @configs.isPeriod is true
+              tempDate = new Date(point.x)
+              switch
+                when @configs.periodMode is 'yearly'
+                  point.x = new Date(1970, tempDate.getMonth(), tempDate.getDate(), tempDate.getHours(), tempDate.getMinutes(), tempDate.getSeconds(), tempDate.getMilliseconds()).getTime()
+                when @configs.periodMode is 'monthly'
+                  point.x = new Date(1970, 0, tempDate.getDate(), tempDate.getHours(), tempDate.getMinutes(), tempDate.getSeconds(), tempDate.getMilliseconds()).getTime()  
+                when @configs.periodMode is 'weekly'
+                  # Jan 1 1978 is a Sunday
+                  point.x = new Date(1978, 0, tempDate.getDay() + 1, tempDate.getHours(), tempDate.getMinutes(), tempDate.getSeconds(), tempDate.getMilliseconds()).getTime()
+                when @configs.periodMode is 'daily'
+                  point.x = new Date(1970, 0, 1, tempDate.getHours(), tempDate.getMinutes(), tempDate.getSeconds(), tempDate.getMilliseconds()).getTime()
+                when @configs.periodMode is 'hourly'
+                  point.x = new Date(1970, 0, 1, 0, tempDate.getMinutes(), tempDate.getSeconds(), tempDate.getMilliseconds()).getTime()
 
             mode = @configs.mode
             if dat.length < 2 and @configs.mode is @LINES_MODE
@@ -319,6 +331,7 @@ $ ->
                 options.lineWidth = 2
                 options.dashStyle = globals.dashes[si % globals.dashes.length]
 
+            #console.log(options)
             @chart.addSeries(options, false)
 
         if @isZoomLocked()

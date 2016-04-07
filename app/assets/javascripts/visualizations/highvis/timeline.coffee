@@ -87,7 +87,11 @@ $ ->
                   str += "#{@series.name.group}</div><br>"
                   str += "<table>"
                   str += "<tr><td>#{@series.xAxis.options.title.text}:</td><td><strong> "
-                  str += "#{globals.dateFormatter @x}</strong></td></tr>"
+                  for field, fieldIndex in data.fields when @point.datapoint[fieldIndex] isnt null
+                    if (Number field.typeID) is data.types.TIME
+                      dat = (globals.dateFormatter @point.datapoint[fieldIndex])
+                      break
+                  str += "#{dat}</strong></td></tr>"
                   index = data.fields.map((y) -> y.fieldName).indexOf(@series.name.field)
                   str += "<tr><td>#{@series.name.field}:</td><td><strong>#{@y} \
                   #{fieldUnit(data.fields[index], false)}</strong></td></tr>"
@@ -104,6 +108,61 @@ $ ->
             labels:
               formatter: ->
                 globals.geoDateFormatter @value
+
+        # when the period option is enabled, change date format to obscure irrelevant info
+        @chartOptions.xAxis.dateTimeLabelFormats =
+          switch
+            when @configs.periodMode is 'yearly'
+              {
+                month: '%b'
+                year: '%b'
+              }
+            when @configs.periodMode is 'monthly'
+              {
+                day: '%e'
+                week: '%e'
+                month: '%e'
+                year: '%e'
+              }
+            when @configs.periodMode is 'weekly'
+              {
+                day: '%a'
+                week: '%a'
+                month: '%a'
+                year: '%a'
+              }
+            when @configs.periodMode is 'daily'
+              {
+                day: '%H:%M'
+                week: '%H:%M'
+                month: '%H:%M'
+                year: '%H:%M'
+              }
+            when @configs.periodMode is 'hourly'
+              {
+                millisecond: '%M:%S.%L'
+                second: '%M:%S'
+                minute: '%M:%S'
+                hour: '%M:%S'
+                day: '%M:%S'
+                week: '%M:%S'
+                month: '%M:%S'
+                year: '%M:%S'
+              }
+            else
+              {
+                millisecond: '%H:%M:%S.%L',
+                second: '%H:%M:%S',
+                minute: '%H:%M',
+                hour: '%H:%M',
+                day: '%e. %b',
+                week: '%e. %b',
+                month: '%b \'%y',
+                year: '%Y'
+              }
+
+        #TODO: change update's calculation of max and min to account for period mode
+        #TODO: maybe add helper functions to convert times, decrease amount of code repeated
 
       ###
       Adds the regression tools to the control bar.
