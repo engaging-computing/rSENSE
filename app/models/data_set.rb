@@ -189,7 +189,11 @@ class DataSet < ActiveRecord::Base
     dset = (0 ... data.length).map do |x|
       obj = {}
       (0 ... formula_fields.length).each do |y|
-        obj[formulae[y].id.to_s] = formula_field_arrays[y].value[x].to_s
+        if formulae[y].field_type == 2
+          obj[formulae[y].id.to_s] = Beaker::NumberType.to_s(formula_field_arrays[y].value[x])
+        else
+          obj[formulae[y].id.to_s] = formula_field_arrays[y].value[x]
+        end
       end
       obj
     end
