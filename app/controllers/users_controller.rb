@@ -239,7 +239,6 @@ class UsersController < ApplicationController
 
   # GET /users/validate/:key
   def validate
-    puts "trying to validate"
     key = params[:key]
 
     @user = User.find_by_validation_key(key)

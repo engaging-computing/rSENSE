@@ -191,7 +191,7 @@ class DataSetsControllerTest < ActionController::TestCase
     post :jsonDataUpload, { format: 'json', id: @proj.id, title: 'JSON Upload',
       data: { '20' => ['1', '2', '3'], '21' => ['4', '5', '6'], '22' => ['14', '13', '12'] } },
        contrib_access: @proj.id,
-       contributor_name: users(:kate).name
+       contributor_name: 'Kate C.'
     assert_response :success
     @new_dataset_id = JSON.parse(response.body)['id']
   end
