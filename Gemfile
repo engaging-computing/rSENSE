@@ -94,4 +94,6 @@ gem 'recaptcha', git: 'https://github.com/ambethia/recaptcha'
 # Allow CORS
 gem 'rack-cors', :require => 'rack/cors'
 
+# User System
 gem 'devise'
+gem "omniauth-google-oauth2"
