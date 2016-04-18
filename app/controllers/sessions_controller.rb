@@ -20,17 +20,6 @@ class SessionsController < ApplicationController
     redirect_to auth_url
   end
 
-  def destroy
-    session[:user_id] = nil
-    session[:key] = nil
-    session[:contrib_access] = nil
-    session[:state] = nil
-    respond_to do |format|
-      format.html { redirect_to :back, notice: 'Logged out' }
-      format.json { render json: {}, status: :ok }
-    end
-  end
-
   # GET /sessions/permissions
   def permissions
     @permiss = []

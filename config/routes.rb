@@ -1,5 +1,5 @@
 Rsense::Application.routes.draw do
-  devise_for :users, :controllers => { :omniauth_callbacks => "omniauth_callbacks" }
+  devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks' }
   get '/users/:id/contributions' => 'users#contributions'
   get '/users/:id/edit' => 'users#edit'
   resources :users
