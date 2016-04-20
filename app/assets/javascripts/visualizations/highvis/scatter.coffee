@@ -242,6 +242,34 @@ $ ->
 
         dp = globals.getData(true, globals.configs.activeFilters)
 
+        # Helper Function to modify the date based on period option
+        modifyDate = (date) =>
+          switch
+            when @configs.periodMode is 'yearly'
+              new Date(1990, date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).getTime()
+            when @configs.periodMode is 'monthly'
+              new Date(1990, 0, date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).getTime()  
+            when @configs.periodMode is 'weekly'
+              # Jan 1 1989 is a Sunday
+              new Date(1989, 0, date.getDay() + 1, date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).getTime()
+            when @configs.periodMode is 'daily'
+              new Date(1990, 0, 1, date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).getTime()
+            when @configs.periodMode is 'hourly'
+              new Date(1990, 0, 1, 0, date.getMinutes(), date.getSeconds(), date.getMilliseconds()).getTime()
+
+        getCurrentPeriod = (date) =>
+          switch
+            when @configs.periodMode is 'yearly'
+              date.getFullYear()
+            when @configs.periodMode is 'monthly'
+              date.getMonth()
+            when @configs.periodMode is 'weekly'
+              (date.getDate() - 1) % 7
+            when @configs.periodMode is 'daily'
+              date.getDate()
+            when @configs.periodMode is 'hourly'
+              date.getHours()
+
         # Compute max bounds if there is no user zoom
         if not @isZoomLocked()
           @configs.yBounds.min = @configs.xBounds.min =  Number.MAX_VALUE
@@ -258,8 +286,7 @@ $ ->
               @configs.xBounds.max = Math.max(@configs.xBounds.max,
                 data.getMax(@configs.xAxis, gi, dp))
 
-              if (@timeMode isnt undefined) and (
-                @timeMode is @GEO_TIME_MODE)
+              if (@timeMode isnt undefined) and (@timeMode is @GEO_TIME_MODE)
                 @configs.xBounds.min =
                   (new Date(@configs.xBounds.min)).getUTCFullYear()
                 @configs.xBounds.max =
@@ -287,52 +314,52 @@ $ ->
                   @xGridSize, @yGridSize, @MAX_SERIES_SIZE)
               else
                 data.xySelector(@configs.xAxis, fi, gi, dp)
-            
-            for point in dat when @configs.isPeriod is true
-              tempDate = new Date(point.x)
-              switch
-                when @configs.periodMode is 'yearly'
-                  point.x = new Date(1970, tempDate.getMonth(), tempDate.getDate(), tempDate.getHours(), tempDate.getMinutes(), tempDate.getSeconds(), tempDate.getMilliseconds()).getTime()
-                when @configs.periodMode is 'monthly'
-                  point.x = new Date(1970, 0, tempDate.getDate(), tempDate.getHours(), tempDate.getMinutes(), tempDate.getSeconds(), tempDate.getMilliseconds()).getTime()  
-                when @configs.periodMode is 'weekly'
-                  # Jan 1 1978 is a Sunday
-                  point.x = new Date(1978, 0, tempDate.getDay() + 1, tempDate.getHours(), tempDate.getMinutes(), tempDate.getSeconds(), tempDate.getMilliseconds()).getTime()
-                when @configs.periodMode is 'daily'
-                  point.x = new Date(1970, 0, 1, tempDate.getHours(), tempDate.getMinutes(), tempDate.getSeconds(), tempDate.getMilliseconds()).getTime()
-                when @configs.periodMode is 'hourly'
-                  point.x = new Date(1970, 0, 1, 0, tempDate.getMinutes(), tempDate.getSeconds(), tempDate.getMilliseconds()).getTime()
+
+            datArray = new Array
+            if @configs.isPeriod is true
+              currentPeriod = null
+              for point in dat
+                if currentPeriod is null
+                  datArray.push(new Array)
+                  currentPeriod = getCurrentPeriod(new Date(point.x))
+                if getCurrentPeriod(new Date(point.x)) != currentPeriod
+                  currentPeriod = getCurrentPeriod(new Date(point.x)) # TODO: make a temp new Date(point.x)
+                  datArray.push(new Array)
+                point.x = modifyDate(new Date(point.x))
+                datArray[datArray.length-1].push(point)
+            else
+              datArray.push(dat)
 
             mode = @configs.mode
             if dat.length < 2 and @configs.mode is @LINES_MODE
               mode = @SYMBOLS_LINES_MODE
 
-            options =
-              data: dat
-              showInLegend: false
-              color: globals.getColor(gi)
-              name:
-                group: data.groups[gi]
-                field: data.fields[fi].fieldName
-            switch
-              when mode is @SYMBOLS_LINES_MODE
-                options.marker =
-                  symbol: globals.symbols[si % globals.symbols.length]
-                options.lineWidth = 2
+            for set in datArray
+              options =
+                data: set
+                showInLegend: false
+                color: globals.getColor(gi)
+                name:
+                  group: data.groups[gi]
+                  field: data.fields[fi].fieldName
+              switch
+                when mode is @SYMBOLS_LINES_MODE
+                  options.marker =
+                    symbol: globals.symbols[si % globals.symbols.length]
+                  options.lineWidth = 2
 
-              when mode is @SYMBOLS_MODE
-                options.marker =
-                  symbol: globals.symbols[si % globals.symbols.length]
-                options.lineWidth = 0
+                when mode is @SYMBOLS_MODE
+                  options.marker =
+                    symbol: globals.symbols[si % globals.symbols.length]
+                  options.lineWidth = 0
 
-              when mode is @LINES_MODE
-                options.marker =
-                  symbol: 'blank'
-                options.lineWidth = 2
-                options.dashStyle = globals.dashes[si % globals.dashes.length]
+                when mode is @LINES_MODE
+                  options.marker =
+                    symbol: 'blank'
+                  options.lineWidth = 2
+                  options.dashStyle = globals.dashes[si % globals.dashes.length]
 
-            #console.log(options)
-            @chart.addSeries(options, false)
+              @chart.addSeries(options, false)
 
         if @isZoomLocked()
           @updateOnZoom = false
@@ -391,6 +418,7 @@ $ ->
         $('#y-axis-min').val(@configs.yBounds.min)
         $('#y-axis-max').val(@configs.yBounds.max)
 
+        
       ###
       Draws radio buttons for changing symbol/line mode.
       ###

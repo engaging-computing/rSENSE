@@ -40,7 +40,7 @@ $ ->
 
         @isScatter = null # To do add axis bounds feature that does time
         @configs.isPeriod ?= false # Controls how series are constructed in update(). 
-                          # Changes when a period option is selected.
+                                   # Changes when a period option is selected.
         @configs.periodMode ?= 'off'
 
         @configs.mode = @LINES_MODE
@@ -162,7 +162,7 @@ $ ->
               }
 
         #TODO: change update's calculation of max and min to account for period mode
-        #TODO: maybe add helper functions to convert times, decrease amount of code repeated
+        #TODO: change update to split series by period when period option is on
 
       ###
       Adds the regression tools to the control bar.
@@ -176,7 +176,7 @@ $ ->
       drawToolControls: (elapsedTime = false, period = true) ->
         super(elapsedTime, period)
 
-        # Set the correct period option:
+        # Set the correct options:
         $('#period-list').val(@configs.periodMode)
 
         $('#period-list').change =>
