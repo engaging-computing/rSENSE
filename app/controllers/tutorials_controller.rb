@@ -23,16 +23,9 @@ class TutorialsController < ApplicationController
       order = 'DESC'
     end
 
-    if !params[:per_page].nil?
-      pagesize = params[:per_page]
-    else
-      pagesize = 6
-    end
-
     @new_tutorial = Tutorial.new
 
-    @tutorials = Tutorial.search(params[:search], @cur_user.try(:admin)).paginate(page: params[:page],
-                                                           per_page: pagesize)
+    @tutorials = Tutorial.search(params[:search])
 
     @tutorials = @tutorials.order("#{sort} #{order}")
 

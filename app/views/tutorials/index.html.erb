@@ -16,15 +16,46 @@
   </div>
 <% end %>
 
-<div class="row">
-  <% @tutorials.each do |tut| %>
-    <%= render 'shared/article_box', {image_id: tut.featured_media_id, path: tutorial_path(tut), title: tut.name,
-      brief: '', content: tut.content, date: tut.created_at.strftime("%B %d %Y"), width: 6} %>
-  <% end %>  
+<!-- Always shows a header, even in smaller screens. -->
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+  <header class="mdl-layout__header">
+    <div class="mdl-layout__header-row">
+      <!-- Title -->
+      <span class="mdl-layout-title">Tutorials</span>
+      <!-- Add spacer, to align navigation to the right -->
+    </div>
+  </header>
+  <div class="mdl-layout__drawer">
+    <span class="mdl-layout-title">Categories</span>
+    <nav class="mdl-navigation">
+      <a class="mdl-navigation__link" href="">All Tutorials</a>
+      <a class="mdl-navigation__link" href="">Using a Visualization</a>
+      <a class="mdl-navigation__link" href="">Setting up a Project</a>
+      <a class="mdl-navigation__link" href="">Uploading Data</a>
+    </nav>
+  </div>
+  <main class="mdl-layout__content">
+    <div class="page-content"><!-- Your content goes here --></div>
+  </main>
 </div>
 
-<div class="text-center">
-  <%= will_paginate @tutorials, renderer: BootstrapPagination::Rails,
-      inner_window: 1, outer_window: 0, previous_label: "<<",
-      next_label: ">>" %>
+<div class="tutorialsContainer">
+  <% @tutorials.each do |tut| %>
+    <div class="col-md-6 text-center">
+
+      <div class="mdl-card mdl-shadow--2dp" >
+        <div class="mdl-card__title" >
+          <iframe width="220" height="215" src="https://www.youtube.com/embed/GUizvEjR-0U" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div class="mdl-card__supporting-text">
+          <%=tut.title%>
+        </div>
+        <div class="mdl-card__actions mdl-card--border">
+          <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+            View Full Written Turorial
+          </a>
+        </div>
+      </div>
+    </div>
+  <% end %>
 </div>

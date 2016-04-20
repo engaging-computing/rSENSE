@@ -42,17 +42,7 @@
           <ul class="nav navbar-nav">
             <li class="navbtn" title="Browse through projects created by iSENSE users"><%=link_to projects_path do %><i class='fa fa-folder-open'></i> Projects<%end%></li>
             <li class="navbtn" title="Explore data visualizations built by iSENSE users"><%=link_to visualizations_path do %><i class='fa fa-picture-o'></i> Visualizations<%end%></li>
-            <li class="dropdown navbtn">
-              <a href="#" class="dropdown-toggle" title="Learn how to use iSENSE" data-toggle="dropdown"><i class="fa fa-info-circle"></i> Tutorials <b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><%= link_to "See All Tutorials", tutorials_path%></li>
-                <li class="divider"></li>
-                <% @featured_tutorials = Tutorial.where("featured = ? and hidden = ?",  true, false).order("title ASC").limit(10) %>
-                <% @featured_tutorials.each do |tutorial| %>
-                <li><%= link_to tutorial.title.html_safe, tutorial_path(tutorial)%></li>
-                <% end %>
-              </ul>
-            </li>
+            <li class="navbtn" title="Learn how to use iSENSE"><%=link_to tutorials_path do %><i class='fa fa-info-circle'></i> Tutorials<%end%></li>
             <li class="navbtn" title="Check out the latest iSENSE news and updates"><%=link_to news_index_path do %><i class='fa fa-book'></i> News<%end%></li>
             <% if is_admin? %>
             <li class="navbtn"><%= link_to users_path do%><i class="fa fa-users"></i> Users<%end%></li>
