@@ -39,9 +39,6 @@ $ ->
         super @canvas
 
         @isScatter = null # To do add axis bounds feature that does time
-        @configs.isPeriod ?= false # Controls how series are constructed in update(). 
-                                   # Changes when a period option is selected.
-        @configs.periodMode ?= 'off'
 
         @configs.mode = @LINES_MODE
         @configs.xAxis = data.timeFields[0]
