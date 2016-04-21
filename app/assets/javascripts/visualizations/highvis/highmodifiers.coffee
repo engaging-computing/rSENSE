@@ -35,6 +35,7 @@ $ ->
     globals.clippingVises = ['map', 'timeline', 'scatter', 'table']
     globals.configs.activeFilters ?= []
     globals.configs.clippingMode ?= false
+    globals.configs.isPeriod = false # For timeline period
 
     # Restore saved data
     if data.savedData?
@@ -59,6 +60,7 @@ $ ->
     data.COMBINED_FIELD = 2
     data.NUMBER_FIELDS_FIELD = 3
     data.CONTRIBUTOR_FIELD = 4
+    data.TIME_PERIOD_FIELD = 5
 
     data.types ?=
       TIME: 1
@@ -76,6 +78,22 @@ $ ->
 
     data.DEFAULT_PRECISION = 4
     data.precision ?= data.DEFAULT_PRECISION
+
+    # This should not be here.... It is also in scatter.coffee... i'll find a place for it some other time
+    globals.getCurrentPeriod = (date) =>
+      switch
+        when globals.configs.periodMode is 'yearly'
+          date.getFullYear()
+        when globals.configs.periodMode is 'monthly'
+          date.getMonth()
+        when globals.configs.periodMode is 'weekly'
+          (date.getDate() - 1) % 7
+        when globals.configs.periodMode is 'daily'
+          date.getDate()
+        when globals.configs.periodMode is 'hourly'
+          date.getHours()
+        else
+          date.getMinutes()
 
     ###
     Selects data with potential filters
@@ -309,12 +327,23 @@ $ ->
           if data.fields[f].fieldID != -1
             groups.push(data.fields[f].fieldName)
       else
-        for dp in @dataPoints
-          if dp[gIndex] isnt null
-            result[String(dp[gIndex]).toLowerCase()] = true
 
-        groups = for keys of result
-          keys
+      if gIndex == data.TIME_PERIOD_FIELD #and globals.configs.isPeriod
+        timestampIndex = data.timeFields[0]
+        groups = []
+
+        # Look through all timestamps to find the different time periods to use for groups
+        for point in data.dataPoints
+          timestamp = point[timestampIndex]
+          period = globals.getCurrentPeriod(new Date(timestamp))
+          point[data.TIME_PERIOD_FIELD] = period
+
+      for dp in @dataPoints
+        if dp[gIndex] isnt null
+          result[String(dp[gIndex]).toLowerCase()] = true
+
+      groups = for keys of result
+        keys
 
       groups.sort()
 

@@ -248,6 +248,8 @@ class VisualizationsController < ApplicationController
     data_fields.push(typeID: TEXT_TYPE, unitName: 'String', fieldID: -1, fieldName: 'Number Fields')
     # create a special grouping field for contributors
     data_fields.push(typeID: TEXT_TYPE, unitName: 'String', fieldID: -1, fieldName: 'Contributors')
+    # create a special grouping field for time period (when enabled on timeline)
+    data_fields.push(typeID: TEXT_TYPE, unitName: 'String', fieldID: -1, fieldName: 'Time Period')
     lat = ''
     time_field = ''
     num_field = ''
@@ -287,6 +289,7 @@ class VisualizationsController < ApplicationController
         arr.push 'All'
         arr.push ''
         arr.push dataset.key.nil? ? "User: #{User.select(:name).find(dataset.user_id).name}" : "Key: #{dataset.key}"
+        arr.push ''
 
         data_fields.slice(arr.length, data_fields.length).each do |field|
           arr.push row[field[:fieldID].to_s]

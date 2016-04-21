@@ -47,7 +47,6 @@ $ ->
         @xGridSize = @yGridSize = @INITIAL_GRID_SIZE
 
         @isScatter = true # To do add axis bounds feature that does time
-        @configs.isPeriod = false # Controls how series are constructed in update(), for the period tool
         # Used for data reduction triggering
         @updateOnZoom = true
 
@@ -245,30 +244,17 @@ $ ->
         # Helper Function to modify the date based on period option
         modifyDate = (date) =>
           switch
-            when @configs.periodMode is 'yearly'
+            when globals.configs.periodMode is 'yearly'
               new Date(1990, date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).getTime()
-            when @configs.periodMode is 'monthly'
+            when globals.configs.periodMode is 'monthly'
               new Date(1990, 0, date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).getTime()  
             when @configs.periodMode is 'weekly'
               # Jan 1 1989 is a Sunday
               new Date(1989, 0, date.getDay() + 1, date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).getTime()
-            when @configs.periodMode is 'daily'
+            when globals.configs.periodMode is 'daily'
               new Date(1990, 0, 1, date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).getTime()
-            when @configs.periodMode is 'hourly'
+            when globalsconfigs.periodMode is 'hourly'
               new Date(1990, 0, 1, 0, date.getMinutes(), date.getSeconds(), date.getMilliseconds()).getTime()
-
-        getCurrentPeriod = (date) =>
-          switch
-            when @configs.periodMode is 'yearly'
-              date.getFullYear()
-            when @configs.periodMode is 'monthly'
-              date.getMonth()
-            when @configs.periodMode is 'weekly'
-              (date.getDate() - 1) % 7
-            when @configs.periodMode is 'daily'
-              date.getDate()
-            when @configs.periodMode is 'hourly'
-              date.getHours()
 
         # Compute max bounds if there is no user zoom
         if not @isZoomLocked()
@@ -321,9 +307,9 @@ $ ->
               for point in dat
                 if currentPeriod is null
                   datArray.push(new Array)
-                  currentPeriod = getCurrentPeriod(new Date(point.x))
-                if getCurrentPeriod(new Date(point.x)) != currentPeriod
-                  currentPeriod = getCurrentPeriod(new Date(point.x)) # TODO: make a temp new Date(point.x)
+                  currentPeriod = globals.getCurrentPeriod(new Date(point.x))
+                if globals.getCurrentPeriod(new Date(point.x)) != currentPeriod
+                  currentPeriod = globals.getCurrentPeriod(new Date(point.x)) # TODO: make a temp new Date(point.x)
                   datArray.push(new Array)
                 point.x = modifyDate(new Date(point.x))
                 datArray[datArray.length-1].push(point)
