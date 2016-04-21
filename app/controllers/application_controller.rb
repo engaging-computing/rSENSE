@@ -93,7 +93,6 @@ class ApplicationController < ActionController::Base
   end
 
   def find_user
-    #     current_user = User.find_by_id(session[:user_id])
     @namespace = { action: params[:action], controller: params[:controller] }
     @version = `(git describe --tags) 2>&1`
     @version = 'Development Version' if @version == '' || @version =~ /fatal:/
