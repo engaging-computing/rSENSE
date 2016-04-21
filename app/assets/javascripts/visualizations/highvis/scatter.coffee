@@ -248,12 +248,12 @@ $ ->
               new Date(1990, date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).getTime()
             when globals.configs.periodMode is 'monthly'
               new Date(1990, 0, date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).getTime()  
-            when @configs.periodMode is 'weekly'
+            when globals.configs.periodMode is 'weekly'
               # Jan 1 1989 is a Sunday
               new Date(1989, 0, date.getDay() + 1, date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).getTime()
             when globals.configs.periodMode is 'daily'
               new Date(1990, 0, 1, date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).getTime()
-            when globalsconfigs.periodMode is 'hourly'
+            when globals.configs.periodMode is 'hourly'
               new Date(1990, 0, 1, 0, date.getMinutes(), date.getSeconds(), date.getMilliseconds()).getTime()
 
         # Compute max bounds if there is no user zoom
@@ -302,7 +302,7 @@ $ ->
                 data.xySelector(@configs.xAxis, fi, gi, dp)
 
             datArray = new Array
-            if @configs.isPeriod is true
+            if globals.configs.isPeriod is true
               currentPeriod = null
               for point in dat
                 if currentPeriod is null
@@ -430,6 +430,17 @@ $ ->
         tools = HandlebarsTemplates[hbCtrl('body')](outctx)
 
         $('#vis-ctrls').append tools
+        
+        # Set the correct options for period:
+        $('#period-list').val(globals.configs.periodMode)
+
+        $('#period-list').change =>
+          globals.configs.periodMode = $('#period-list').val()
+          if $('#period-list').val() != 'off'
+            globals.configs.isPeriod = true
+          else
+            globals.configs.isPeriod = false
+          @start()
 
         # Add material design
         $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->

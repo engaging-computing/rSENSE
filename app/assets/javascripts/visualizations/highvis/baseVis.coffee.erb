@@ -37,6 +37,10 @@ $ ->
         @configs ?= {}
         @isSummary = false
 
+        @configs.isPeriod ?= false # Controls how series are constructed in update(). 
+                            # Changes when a period option is selected.
+        @configs.periodMode ?= 'off'
+
       ANALYSISTYPE_TOTAL:      0
       ANALYSISTYPE_MAX:        1
       ANALYSISTYPE_MIN:        2
@@ -566,7 +570,7 @@ $ ->
       ###
       drawToolControls: (sortBy = false, logYAxis = false, analysisTypeExcludes = [], drawAnalysisTypes = true) ->
         inctx = {}
-        
+        console.log("Here")
         # Add Period to Base Tools
         inctx.period = HandlebarsTemplates[hbCtrl('period')]
         
@@ -583,8 +587,8 @@ $ ->
             logId: 'sort-by-' + @SORT_DEFAULT
             value: @SORT_DEFAULT
             
-        # Set up analysis types from the list of exclusions
         if drawAnalysisTypes
+          # Set up analysis types from the list of exclusions
           analysisTypes = [
             @ANALYSISTYPE_MEAN
             @ANALYSISTYPE_MEAN_ERROR
@@ -614,49 +618,55 @@ $ ->
             logId: 'logarithmic-y-axis'
             label: 'Logarithmic Y Axis'
 
-          outctx =
-            id: 'tools-ctrls'
-            title: 'Tools'
-            body: HandlebarsTemplates[hbCtrl('base-tools')](inctx)
+        outctx =
+          id: 'tools-ctrls'
+          title: 'Tools'
+          body: HandlebarsTemplates[hbCtrl('base-tools')](inctx)
 
-          tools = HandlebarsTemplates[hbCtrl('body')](outctx)
-          $('#vis-ctrls').append tools
+        tools = HandlebarsTemplates[hbCtrl('body')](outctx)
+        $('#vis-ctrls').append tools
 
-          # Add material design
-          $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
-            componentHandler.upgradeElement($(j)[0]);
+        # Add material design
+        $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
 
-          $('#vis-ctrls').find(".mdl-radio").each (i,j) ->
-            componentHandler.upgradeElement($(j)[0]);
+        $('#vis-ctrls').find(".mdl-radio").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
 
-          # Initialize and track the status of this control panel
-          globals.configs.toolsOpen ?= false
-          initCtrlPanel('tools-ctrls', 'toolsOpen')
+        # Initialize and track the status of this control panel
+        globals.configs.toolsOpen ?= false
+        initCtrlPanel('tools-ctrls', 'toolsOpen')
+        if drawAnalysisTypes
           query = "label[name='analysis-type'][value='#{@configs.analysisType}']"
           $(query)[0].MaterialRadio.check()
+          
+        if sortBy
           $('#sort-by').val(@configs.sortField)
           $('input[name="analysis-type"]').value = @configs.analysisType
-          if globals.configs.logY and $('#ckbx-lbl-log-y-axis').length
-            $('#ckbx-lbl-log-y-axis')[0].MaterialCheckbox.check()
-          else if $('#ckbx-lbl-log-y-axis').length
-            $('#ckbx-lbl-log-y-axis')[0].MaterialCheckbox.uncheck()
+          
+        if globals.configs.logY and $('#ckbx-lbl-log-y-axis').length
+          $('#ckbx-lbl-log-y-axis')[0].MaterialCheckbox.check()
+        else if $('#ckbx-lbl-log-y-axis').length
+          $('#ckbx-lbl-log-y-axis')[0].MaterialCheckbox.uncheck()
 
-          $('#sort-by').change (e) =>
-            @configs.sortField = Number(e.target.value)
-            @delayedUpdate()
+        $('#sort-by').change (e) =>
+          @configs.sortField = Number(e.target.value)
+          @delayedUpdate()
 
-          $('input[name="analysis-type"]').click (e) =>
-            @configs.analysisType = Number(e.target.value)
-            @delayedUpdate()
+        $('input[name="analysis-type"]').click (e) =>
+          @configs.analysisType = Number(e.target.value)
+          @delayedUpdate()
 
-          $('#ckbx-log-y-axis').click (e) =>
-            globals.configs.logY = !globals.configs.logY
-            @start()
-        
+        $('#ckbx-log-y-axis').click (e) =>
+          globals.configs.logY = !globals.configs.logY
+          @start()
+      
         # Set the correct options for period:
         $('#period-list').val(globals.configs.periodMode)
 
         $('#period-list').change =>
+          console.log('Period:')
+          console.log($('#period-list').val())
           globals.configs.periodMode = $('#period-list').val()
           if $('#period-list').val() != 'off'
             globals.configs.isPeriod = true
