@@ -173,20 +173,8 @@ $ ->
       ###
       Turn off elapsed time
       ###
-      drawToolControls: (elapsedTime = false, period = true) ->
-        super(elapsedTime, period)
-
-        # Set the correct options:
-        $('#period-list').val(globals.configs.periodMode)
-
-        $('#period-list').change =>
-          globals.configs.periodMode = $('#period-list').val()
-          if $('#period-list').val() != 'off'
-            globals.configs.isPeriod = true
-            @start()
-          else
-            globals.configs.isPeriod = false
-            @start()
+      drawToolControls: (elapsedTime = false) ->
+        super()
 
       ###
       Overwrite xAxis controls to only allow time fields

@@ -476,6 +476,7 @@ $ ->
               label: 'Marker Density'
             }
           ]
+          period: HandlebarsTemplates[hbCtrl('period')]
 
         for i in data.normalFields
           inctx.heatmaps.push

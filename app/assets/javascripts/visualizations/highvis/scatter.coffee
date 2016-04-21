@@ -408,19 +408,19 @@ $ ->
       ###
       Draws radio buttons for changing symbol/line mode.
       ###
-      drawToolControls: (elapsedTime = true, period = false) ->
+      drawToolControls: (elapsedTime = true) ->
         # Configure the tool controls
         inctx = {}
         inctx.axes = ["Both", "X", "Y"]
         inctx.logSafe = data.logSafe
         inctx.vis = @isScatter # To do add axis bounds feature that does time
         inctx.elapsedTime = elapsedTime and data.timeFields.length is 1
-        inctx.period = period
         inctx.modes = [
           { mode: @SYMBOLS_LINES_MODE, text: "Symbols and Lines" }
           { mode: @LINES_MODE,         text: "Lines Only" }
           { mode: @SYMBOLS_MODE,       text: "Symbols Only" }
         ]
+        inctx.period = HandlebarsTemplates[hbCtrl('period')]
 
         # Draw the Tool controls
         outctx = {}

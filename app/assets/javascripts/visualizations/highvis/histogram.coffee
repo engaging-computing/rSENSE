@@ -274,6 +274,7 @@ $ ->
       drawToolControls: ->
         inctx =
           binSize: @configs.binSize
+          period: HandlebarsTemplates[hbCtrl('period')]
 
         outctx =
           id: 'tools-ctrls'
