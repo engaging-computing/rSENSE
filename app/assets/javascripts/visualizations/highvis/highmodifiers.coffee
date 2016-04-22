@@ -34,8 +34,10 @@ $ ->
     globals.configs ?= {}
     globals.clippingVises = ['map', 'timeline', 'scatter', 'table']
     globals.configs.activeFilters ?= []
-    globals.configs.clippingMode ?= false
-    globals.configs.isPeriod = false # For timeline period
+
+    globals.configs.isPeriod ?= false # Controls how series are constructed in update(). 
+    globals.configs.periodMode ?= 'off' # Changes when a period option is selected.
+
 
     # Restore saved data
     if data.savedData?
@@ -83,17 +85,19 @@ $ ->
     globals.getCurrentPeriod = (date) =>
       switch
         when globals.configs.periodMode is 'yearly'
-          date.getFullYear()
+          'year: ' + date.getFullYear()
         when globals.configs.periodMode is 'monthly'
-          date.getMonth()
+          'month: ' + date.getMonth()
         when globals.configs.periodMode is 'weekly'
-          (date.getDate() - 1) % 7
+          'week: ' + (date.getDate() - 1) % 7
         when globals.configs.periodMode is 'daily'
-          date.getDate()
+          'day: ' + date.getDate()
         when globals.configs.periodMode is 'hourly'
-          date.getHours()
+          'hour: ' + date.getHours()
+        when globals.configs.periodMode is 'minute'
+          'minute: ' + date.getMinutes()
         else
-          date.getMinutes()
+          'Enable Period in Tools'
 
     ###
     Selects data with potential filters
