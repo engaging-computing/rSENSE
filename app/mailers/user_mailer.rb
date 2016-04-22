@@ -14,12 +14,6 @@ class UserMailer < ActionMailer::Base
   end
 
   def pw_reset_email(user)
-    @user = user
-    @url  = url_for(controller: 'users', action: 'pw_reset', key: @user.validation_key, only_path: false)
-
-    hostname = `hostname`.chomp
-    from = "no-reply@#{hostname}"
-
-    mail(from: from, to: user.email, subject: 'Reset your iSENSE password.')
+    user.send_reset_password_instructions
   end
 end

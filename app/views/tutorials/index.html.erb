@@ -28,10 +28,9 @@
   <div class="mdl-layout__drawer">
     <span class="mdl-layout-title">Categories</span>
     <nav class="mdl-navigation">
-      <a class="mdl-navigation__link" href="">All Tutorials</a>
-      <a class="mdl-navigation__link" href="">Using a Visualization</a>
-      <a class="mdl-navigation__link" href="">Setting up a Project</a>
-      <a class="mdl-navigation__link" href="">Uploading Data</a>
+      <a class="mdl-navigation__link" href="">Getting Started</a>
+      <a class="mdl-navigation__link" href="">Working with Data</a>
+      <a class="mdl-navigation__link" href="">Visualizations</a>
     </nav>
   </div>
   <main class="mdl-layout__content">
@@ -40,12 +39,53 @@
 </div>
 
 <div class="tutorialsContainer">
+  <h2 style="text-align: center">Getting Started</h2>
   <% @tutorials.each do |tut| %>
-    <div class="col-md-6 text-center">
+    <div class="col-lg-6 col-xs-12 text-center">
 
       <div class="mdl-card mdl-shadow--2dp" >
         <div class="mdl-card__title" >
-          <iframe width="220" height="215" src="https://www.youtube.com/embed/GUizvEjR-0U" frameborder="0" allowfullscreen></iframe>
+          <iframe width="350" height="290" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div class="mdl-card__supporting-text">
+          <%=tut.title%>
+        </div>
+        <div class="mdl-card__actions mdl-card--border">
+          <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+            View Full Written Turorial
+          </a>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <h2 style="text-align: center">Working with Data</h2>
+  <% @tutorials.each do |tut| %>
+    <div class="col-lg-6 col-xs-12 text-center">
+
+      <div class="mdl-card mdl-shadow--2dp" >
+        <div class="mdl-card__title" >
+          <iframe width="350" height="290" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div class="mdl-card__supporting-text">
+          <%=tut.title%>
+        </div>
+        <div class="mdl-card__actions mdl-card--border">
+          <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+            View Full Written Turorial
+          </a>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <h2 style="text-align: center">Visualizations</h2>
+  <% @tutorials.each do |tut| %>
+    <div class="col-lg-6 col-xs-12 text-center">
+
+      <div class="mdl-card mdl-shadow--2dp" >
+        <div class="mdl-card__title" >
+          <iframe width="350" height="290" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
         </div>
         <div class="mdl-card__supporting-text">
           <%=tut.title%>

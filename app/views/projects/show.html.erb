@@ -52,7 +52,7 @@
             <button class="mdl-button mdl-js-button mdl-button--raised" disabled>
               <i class="fa fa-eye"> Views | </i> <%= @project.views %>
             </button>
-            <% if @cur_user.try(:id) %>
+            <% if current_user.try(:id) %>
               <div class="btn-group likes" data-project_id="<%= @project.id%>">
                 <button class="liked_status mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect <% if @liked_by_cur_user%>active<%end%>" data-toggle="button">
                   <i class="fa fa-thumbs-up"></i> Like | <span class="like_display"><%= @project.likes.count %></span>
@@ -62,7 +62,7 @@
               <button id="print" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                 <i class="fa fa-print"></i> Print
               </button>
-            <% if @cur_user.try(:id) %>
+            <% if current_user.try(:id) %>
               <a href = "/projects/<%= @project.id %>/clone">
                 <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--green">
                   <i class="fa fa-copy"></i> Clone
@@ -109,7 +109,7 @@
                     <li role="presentation">
                       <a role="menuitem" href="javascript:void(0);" id="uncheck_all"><i class="fa fa-square-o"></i> None</a>
                     </li>
-                    <% if @cur_user.try(:id) %>
+                    <% if current_user.try(:id) %>
                       <li role="presentation">
                         <a role="menuitem" href="javascript:void(0);" id="check_mine"><i class="fa fa-user"></i> Mine</a>
                       </li>
@@ -179,7 +179,7 @@
                     <td>
                       <div class="ds_selector" >
                         <label id="lbl_<%=s.id%>" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect pull-right" for="ds_<%=s.id%>">
-                          <input type="checkbox" id="ds_<%=s.id%>" class="mdl-checkbox__input <%if s.user_id == @cur_user.try(:id)%> mine<%end%>" checked>
+                          <input type="checkbox" id="ds_<%=s.id%>" class="mdl-checkbox__input <%if s.user_id == current_user.try(:id)%> mine<%end%>" checked>
                         </label>
                       </div>
                     </td>
@@ -269,7 +269,7 @@
             </div>
           <% end %>
         <% else %>
-          <% if @project.has_contrib_key? and @cur_user.nil? and (@field_count > 0) %>
+          <% if @project.has_contrib_key? and current_user.nil? and (@field_count > 0) %>
             <p>Enter contributor key to submit data.</p>
             <%= form_tag '/contrib_keys/enter', method: 'post' do %>
               <div class="row" style="margin-left: 0px;" >
@@ -282,7 +282,7 @@
           <% else %>
             <% if (!(@field_count > 0)) %>
               <h4 class="center">Fields must be set up to contribute data</h4>
-            <% elsif @cur_user.try(:id) %>
+            <% elsif current_user.try(:id) %>
               <h2 class="center"><i class="icon-lock"></i></h2>
               <h4 class="center">This project has been locked</h4>
             <% else %>

@@ -25,7 +25,8 @@ class TutorialsController < ApplicationController
 
     @new_tutorial = Tutorial.new
 
-    @tutorials = Tutorial.search(params[:search])
+
+    @tutorials = Tutorial.search(params[:search], current_user.try(:admin)).paginate(page: params[:page])
 
     @tutorials = @tutorials.order("#{sort} #{order}")
 
@@ -52,7 +53,7 @@ class TutorialsController < ApplicationController
   # POST /tutorials.json
   def create
     @tutorial = Tutorial.new(tutorial_params)
-    @tutorial.user_id = @cur_user.id
+    @tutorial.user_id = current_user.id
 
     respond_to do |format|
       if @tutorial.save
