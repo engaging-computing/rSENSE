@@ -37,9 +37,8 @@ $ ->
         @configs ?= {}
         @isSummary = false
 
-        @configs.isPeriod ?= false # Controls how series are constructed in update(). 
-                            # Changes when a period option is selected.
-        @configs.periodMode ?= 'off'
+        globals.configs.isPeriod ?= false # Controls how series are constructed in update(). 
+        globals.configs.periodMode ?= 'off' # Changes when a period option is selected.
 
       ANALYSISTYPE_TOTAL:      0
       ANALYSISTYPE_MAX:        1
@@ -665,14 +664,14 @@ $ ->
         $('#period-list').val(globals.configs.periodMode)
 
         $('#period-list').change =>
-          console.log('Period:')
-          console.log($('#period-list').val())
           globals.configs.periodMode = $('#period-list').val()
           if $('#period-list').val() != 'off'
             globals.configs.isPeriod = true
           else
             globals.configs.isPeriod = false
+          $( "#group-by" ).trigger( "change" );
           @start()
+
 
       ###
       Do any necessary cleanup work before serialization.
