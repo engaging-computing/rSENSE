@@ -39,9 +39,6 @@ $ ->
         super @canvas
 
         @isScatter = null # To do add axis bounds feature that does time
-        @configs.isPeriod ?= false # Controls how series are constructed in update(). 
-                                   # Changes when a period option is selected.
-        @configs.periodMode ?= 'off'
 
         @configs.mode = @LINES_MODE
         @configs.xAxis = data.timeFields[0]
@@ -112,33 +109,33 @@ $ ->
         # when the period option is enabled, change date format to obscure irrelevant info
         @chartOptions.xAxis.dateTimeLabelFormats =
           switch
-            when @configs.periodMode is 'yearly'
+            when globals.configs.periodMode is 'yearly'
               {
                 month: '%b'
                 year: '%b'
               }
-            when @configs.periodMode is 'monthly'
+            when globals.configs.periodMode is 'monthly'
               {
                 day: '%e'
                 week: '%e'
                 month: '%e'
                 year: '%e'
               }
-            when @configs.periodMode is 'weekly'
+            when globals.configs.periodMode is 'weekly'
               {
                 day: '%a'
                 week: '%a'
                 month: '%a'
                 year: '%a'
               }
-            when @configs.periodMode is 'daily'
+            when globals.configs.periodMode is 'daily'
               {
                 day: '%H:%M'
                 week: '%H:%M'
                 month: '%H:%M'
                 year: '%H:%M'
               }
-            when @configs.periodMode is 'hourly'
+            when globals.configs.periodMode is 'hourly'
               {
                 millisecond: '%M:%S.%L'
                 second: '%M:%S'
@@ -173,20 +170,8 @@ $ ->
       ###
       Turn off elapsed time
       ###
-      drawToolControls: (elapsedTime = false, period = true) ->
-        super(elapsedTime, period)
-
-        # Set the correct options:
-        $('#period-list').val(@configs.periodMode)
-
-        $('#period-list').change =>
-          @configs.periodMode = $('#period-list').val()
-          if $('#period-list').val() != 'off'
-            @configs.isPeriod = true
-            @start()
-          else
-            @configs.isPeriod = false
-            @start()
+      drawToolControls: (elapsedTime = false) ->
+        super()
 
       ###
       Overwrite xAxis controls to only allow time fields

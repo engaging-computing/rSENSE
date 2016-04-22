@@ -232,6 +232,7 @@ $ ->
           (i for f, i in data.fields when i isnt data.COMBINED_FIELD and i isnt data.NUMBER_FIELDS_FIELD),
           false, 'Visible Fields')
         @drawClippingControls()
+        @drawToolControls(false, false, [], false)
         @drawSaveControls()
 
       saveSort: =>

@@ -47,7 +47,6 @@ $ ->
         @xGridSize = @yGridSize = @INITIAL_GRID_SIZE
 
         @isScatter = true # To do add axis bounds feature that does time
-        @configs.isPeriod = false # Controls how series are constructed in update(), for the period tool
         # Used for data reduction triggering
         @updateOnZoom = true
 
@@ -245,30 +244,17 @@ $ ->
         # Helper Function to modify the date based on period option
         modifyDate = (date) =>
           switch
-            when @configs.periodMode is 'yearly'
+            when globals.configs.periodMode is 'yearly'
               new Date(1990, date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).getTime()
-            when @configs.periodMode is 'monthly'
+            when globals.configs.periodMode is 'monthly'
               new Date(1990, 0, date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).getTime()  
-            when @configs.periodMode is 'weekly'
+            when globals.configs.periodMode is 'weekly'
               # Jan 1 1989 is a Sunday
               new Date(1989, 0, date.getDay() + 1, date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).getTime()
-            when @configs.periodMode is 'daily'
+            when globals.configs.periodMode is 'daily'
               new Date(1990, 0, 1, date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).getTime()
-            when @configs.periodMode is 'hourly'
+            when globals.configs.periodMode is 'hourly'
               new Date(1990, 0, 1, 0, date.getMinutes(), date.getSeconds(), date.getMilliseconds()).getTime()
-
-        getCurrentPeriod = (date) =>
-          switch
-            when @configs.periodMode is 'yearly'
-              date.getFullYear()
-            when @configs.periodMode is 'monthly'
-              date.getMonth()
-            when @configs.periodMode is 'weekly'
-              (date.getDate() - 1) % 7
-            when @configs.periodMode is 'daily'
-              date.getDate()
-            when @configs.periodMode is 'hourly'
-              date.getHours()
 
         # Compute max bounds if there is no user zoom
         if not @isZoomLocked()
@@ -316,14 +302,14 @@ $ ->
                 data.xySelector(@configs.xAxis, fi, gi, dp)
 
             datArray = new Array
-            if @configs.isPeriod is true
+            if globals.configs.isPeriod is true
               currentPeriod = null
               for point in dat
                 if currentPeriod is null
                   datArray.push(new Array)
-                  currentPeriod = getCurrentPeriod(new Date(point.x))
-                if getCurrentPeriod(new Date(point.x)) != currentPeriod
-                  currentPeriod = getCurrentPeriod(new Date(point.x)) # TODO: make a temp new Date(point.x)
+                  currentPeriod = globals.getCurrentPeriod(new Date(point.x))
+                if globals.getCurrentPeriod(new Date(point.x)) != currentPeriod
+                  currentPeriod = globals.getCurrentPeriod(new Date(point.x)) # TODO: make a temp new Date(point.x)
                   datArray.push(new Array)
                 point.x = modifyDate(new Date(point.x))
                 datArray[datArray.length-1].push(point)
@@ -422,19 +408,19 @@ $ ->
       ###
       Draws radio buttons for changing symbol/line mode.
       ###
-      drawToolControls: (elapsedTime = true, period = false) ->
+      drawToolControls: (elapsedTime = true) ->
         # Configure the tool controls
         inctx = {}
         inctx.axes = ["Both", "X", "Y"]
         inctx.logSafe = data.logSafe
         inctx.vis = @isScatter # To do add axis bounds feature that does time
         inctx.elapsedTime = elapsedTime and data.timeFields.length is 1
-        inctx.period = period
         inctx.modes = [
           { mode: @SYMBOLS_LINES_MODE, text: "Symbols and Lines" }
           { mode: @LINES_MODE,         text: "Lines Only" }
           { mode: @SYMBOLS_MODE,       text: "Symbols Only" }
         ]
+        inctx.period = HandlebarsTemplates[hbCtrl('period')]
 
         # Draw the Tool controls
         outctx = {}
@@ -444,6 +430,19 @@ $ ->
         tools = HandlebarsTemplates[hbCtrl('body')](outctx)
 
         $('#vis-ctrls').append tools
+        
+        # Set the correct options for period:
+        $('#period-list').val(globals.configs.periodMode)
+
+        $('#period-list').change =>
+          globals.configs.periodMode = $('#period-list').val()
+          if $('#period-list').val() != 'off'
+            globals.configs.isPeriod = true
+          else
+            globals.configs.isPeriod = false
+          $( "#group-by" ).trigger( "change" );
+          @start()
+
 
         # Add material design
         $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
