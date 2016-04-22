@@ -72,8 +72,8 @@ class DataSetsController < ApplicationController
       return
     end
 
-    if !@cur_user.nil?
-      @data_set.user_id = @cur_user.id
+    if !current_user.nil?
+      @data_set.user_id = current_user.id
     elsif !session[:contributor_name].nil?
       @data_set.user_id = @project.user_id
       @data_set.contributor_name = session[:contributor_name]
@@ -190,7 +190,7 @@ class DataSetsController < ApplicationController
       data_obj = sane[:data_obj]
       data = uploader.swap_columns(data_obj, project)
       dataset = DataSet.new do |d|
-        d.user_id = @cur_user.try(:id) || project.owner.id
+        d.user_id = current_user.try(:id) || project.owner.id
         d.title = params[:title]
         d.project_id = project.id
         d.data = data
@@ -268,7 +268,7 @@ class DataSetsController < ApplicationController
         data = uploader.swap_columns(data_obj, project)
 
         dataset = DataSet.new do |d|
-          d.user_id = @cur_user.try(:id) || project.owner.id
+          d.user_id = current_user.try(:id) || project.owner.id
           d.title = titles[index]
           d.project_id = project.id
           d.data = data

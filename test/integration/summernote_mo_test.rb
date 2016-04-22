@@ -25,7 +25,7 @@ class SummernoteMoTest < IntegrationTest
   end
 
   test 'tutorial_image_upload' do
-    login 'nixon@whitehouse.gov', '12345'
+    login('nixon@whitehouse.gov', '12345')
     visit '/tutorials'
     find(:css, '#tutorial_title').set('Test Tutorial SNMO')
     click_on 'Create Tutorial'
@@ -39,7 +39,7 @@ class SummernoteMoTest < IntegrationTest
   end
 
   test 'user_image_upload' do
-    login 'nixon@whitehouse.gov', '12345'
+    login('nixon@whitehouse.gov', '12345')
     find(:css, '.navbar-right > #username').click
     assert page.has_css? '.gravatar_img', 'Not on profile page.'
     find(:css, '#add-content-image').click
@@ -51,7 +51,7 @@ class SummernoteMoTest < IntegrationTest
   end
 
   test 'news_image_upload' do
-    login 'nixon@whitehouse.gov', '12345'
+    login('nixon@whitehouse.gov', '12345')
     visit '/news'
     page.find(:css, '#news_title').set('Test News Article SNMO')
     click_on 'Add News Item'

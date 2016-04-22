@@ -1,21 +1,21 @@
 <%= form_tag('/users/pw_send_key') do %>
   <div class="row">
     <div class="col-lg-6 col-lg-offset-3">
-      <div class="panel panel-default">  
+      <div class="panel panel-default">
         <div class="panel-heading">
           <h1>Reset Your Password</h1>
-        </div>  
+        </div>
         <div class="panel-body">
           <div class="form-group">
             <%= label_tag :email, "Email:" %>
             <%= text_field_tag :email, nil, class: "form-control", placeholder: "Enter your email address to reset your password." %>
           </div>
-        </div> 
+        </div>
         <div class="panel-footer">
           <%= submit_tag "Reset Password", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"%>
         </div>
       </div>
-    </div>  
+    </div>
   </div>
 <% end %>
 
