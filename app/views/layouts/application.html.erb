@@ -17,13 +17,7 @@
   </head>
 
   <body data-page-name="<%= params[:controller] %>/<%= params[:action] %>">
-    <% if !@cur_user.nil? and @cur_user.email.blank? %>
-      <div class="alert">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        You are currently logged into an account that has no linked email address. In the near future accounts on iSENSE will require email addresses to log in; we recomend you go to your  <%= link_to("user edit page", edit_user_path(@cur_user)) %> and add an email address for this account.
-      </div>
-    <% end %>
-
+  
     <!-- The title bar -->
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container"><!-- Brand and toggle get grouped for better mobile display -->
@@ -59,25 +53,25 @@
             <% end %>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <% if @cur_user.try(:id) %>
+            <% if user_signed_in? %>
               <li id="username" class="navbtn"
-                  title="Click to view <%= @cur_user.name %>'s profile page">
-                <%= link_to user_path(@cur_user) do %>
-                  <% if @cur_user.name.length < 30 %>
-                    <%= @cur_user.name %>&nbsp;
+                  title="Click to view <%= current_user.name %>'s profile page">
+                <%= link_to user_path(current_user.id) do %>
+                  <% if current_user.name.length < 30 %>
+                    <%= current_user.name %>&nbsp;
                   <% else %>
                     My Account&nbsp;
                   <% end %>
-                  <%= image_tag(Gravatar.new.url(@cur_user),
+                  <%= image_tag(Gravatar.new.url(current_user),
                       class: "circle-img hidden-sm") %>
                 <% end %>
               </li>
               <li class="divider"></li>
-              <li class="navbtn"><%= link_to "Logout", login_path, method: :delete%></li>
+              <li class="navbtn"><%= link_to "Logout", destroy_user_session_path, method: :delete%></li>
             <% else %>
-              <li class="navbtn"><%= link_to "Login", login_path(), method: :get%></li>
+              <li class="navbtn"><%= link_to "Login", new_user_session_path, name:"Login" %></li>
               <li class="divider"></li>
-              <li class="navbtn" title="Register now to start using iSENSE"><%= link_to "Register", new_user_path %></li>
+              <li class="navbtn" title="Register now to start using iSENSE"><%= link_to "Register", new_user_registration_path %></li>
             <% end %>
           </ul>
         </div><!-- /.navbar-collapse -->
