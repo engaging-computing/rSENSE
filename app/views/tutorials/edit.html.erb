@@ -1,4 +1,4 @@
-<% if @cur_user.admin%>
+<% if current_user.admin%>
   <div class="panel panel-default">
     <div class="panel-heading">
       <h1>Editing: <%= @tutorial.title.html_safe %></h1>

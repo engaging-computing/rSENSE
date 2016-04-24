@@ -1,5 +1,5 @@
 <script>
-  window.logged_in = <%= @cur_user != nil %>;
+  window.logged_in = <%= current_user != nil %>;
   window.is_admin = <%= is_admin? %>
 </script>
 

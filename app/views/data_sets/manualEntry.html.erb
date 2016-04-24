@@ -11,20 +11,20 @@
 
 <div class="row" style="padding-bottom: 2em">
   <% time = Time.now.strftime('%-m/%-d/%Y %-I:%M%P') %>
-  <% if @cur_user.nil? %>
+  <% if @current_user.nil? %>
     <div class="col-lg-6">
       <strong><label for="data_set_name">Data Set Name:</label></strong>
-        <input id="data_set_name" name="data_set_name" class="form-control" 
+        <input id="data_set_name" name="data_set_name" class="form-control"
           type="text" placeholder="Boston, MA Snowfall Total" value="<%=session[:contributor_name]%> <%=time%>">
     </div>
-    <div class="col-lg-6" <% unless @cur_user.nil? %>style="display: none"<% end %>>
+    <div class="col-lg-6" <% unless current_user.nil? %>style="display: none"<% end %>>
       <input type="hidden" id="contrib_name" name="contrib_name" value="<%=session[:contributor_name]%>">
     </div>
   <% else %>
    <div class="col-lg-6">
       <strong><label for="data_set_name">Data Set Name:</label></strong>
       <input id="data_set_name" name="data_set_name" class="form-control"
-        type="text" placeholder="Boston, MA Snowfall Total" value="<%=@cur_user.name%> <%=time%>">
+        type="text" placeholder="Boston, MA Snowfall Total" value="<%=@current_user.name%> <%=time%>">
     </div>
   <% end %>
 </div>

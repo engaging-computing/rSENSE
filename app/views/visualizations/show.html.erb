@@ -12,7 +12,7 @@
     <div class="well" style="margin-top:10px" id="dataset_info">
       <div class="full_width_edit" style="font-size:1.5em;">
         <%= visualization_edit_helper 'title',
-            @visualization.owner.id == @cur_user.try(:id), make_link = false %>
+            @visualization.owner.id == current_user.try(:id), make_link = false %>
       </div>
       <%= content_helper(@visualization) %>
     </div>
