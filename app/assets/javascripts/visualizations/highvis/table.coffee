@@ -35,7 +35,7 @@ $ ->
         super(@canvas)
         @TOOLBAR_HEIGHT_OFFSET = 70
 
-        fieldList = (i for f, i in data.fields when i isnt data.COMBINED_FIELD and i isnt data.NUMBER_FIELDS_FIELD)
+        fieldList = (i for f, i in data.fields when i isnt data.COMBINED_FIELD and i isnt data.NUMBER_FIELDS_FIELD and i isnt data.TIME_PERIOD_FIELD)
         rows = Math.round( $(window).width() / 180 )
         @configs.tableFields ?= fieldList[0..rows]
 

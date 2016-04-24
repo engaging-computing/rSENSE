@@ -266,12 +266,16 @@ class GroupByTimePeriod < ActiveRecord::Migration
           table['tableFields'][i] += direction
         end
       end
-      # if position is 3 then it is the number group by field and we do not want that on the table
-      if direction == 1 && position != 3
-        table['tableFields'].push(position)
-      elsif position != 3
-        table['tableFields'] -= [position]
-      end
+      
+      # Commented out because I do not want time period to be a visible field but I left it in incase this 
+      # needs to be a template for future group by options
+      
+      # if direction == 1 && position != 3
+      #   table['tableFields'].push(position)
+      # elsif position != 3
+      #   table['tableFields'] -= [position]
+      # end
+      
       table['tableFields'].sort!
       table
     end
