@@ -278,7 +278,7 @@ $ ->
           componentHandler.upgradeElement($(j)[0]);
 
         # Initialize checked and make y axis checkbox/radio handler
-        if radio
+        if radio and $("#rdo-lbl-#{id}-field-#{iniRadio}")[0]?
           # Set the current display field
           $("#rdo-lbl-#{id}-field-#{iniRadio}")[0].MaterialRadio.check()
 
