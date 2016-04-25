@@ -83,19 +83,20 @@ $ ->
 
     # This should not be here.... It is also in scatter.coffee... i'll find a place for it some other time
     globals.getCurrentPeriod = (date) =>
+      month = ["January", "February", "March", "April", "May","June", "July", 
+        "August", "September", "October", "November", "December"]
+    
       switch
         when globals.configs.periodMode is 'yearly'
-          'year: ' + date.getFullYear()
+          '' + date.getFullYear()
         when globals.configs.periodMode is 'monthly'
-          'month: ' + date.getMonth()
+          month[date.getMonth()] + ' ' + date.getFullYear() 
         when globals.configs.periodMode is 'weekly'
-          'week: ' + (date.getDate() - 1) % 7
+          'week ' + (date.getDate() - 1) % 7 + ' in ' + month[date.getMonth()] + ' ' + date.getFullYear() 
         when globals.configs.periodMode is 'daily'
-          'day: ' + date.getDate()
+          '' + date.getMonth + '/' + date.getDate() + '/' + date.getFullYear()
         when globals.configs.periodMode is 'hourly'
-          'hour: ' + date.getHours()
-        when globals.configs.periodMode is 'minute'
-          'minute: ' + date.getMinutes()
+          'hour ' + date.getHours() + ' on ' + date.getMonth() +  '/' + date.getDate() + '/' + date.getFullYear()
         else
           'Enable Period in Tools'
 
