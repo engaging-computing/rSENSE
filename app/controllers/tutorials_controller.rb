@@ -22,30 +22,16 @@ class TutorialsController < ApplicationController
     else
       order = 'DESC'
     end
-
+    
     @new_tutorial = Tutorial.new
 
-
-    @tutorials = Tutorial.search(params[:search], current_user.try(:admin)).paginate(page: params[:page])
-
-    @tutorials = @tutorials.order("#{sort} #{order}")
+    @tutorials = Tutorial.all()
 
     recur = params.key?(:recur) ? params[:recur].to_bool : false
 
     respond_to do |format|
       format.html
       format.json { render json: @tutorials.map { |t| t.to_hash(recur) } }
-    end
-  end
-
-  # GET /tutorials/1
-  # GET /tutorials/1.json
-  def show
-    @tutorial = Tutorial.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @tutorial.to_hash(false) }
     end
   end
 
@@ -86,15 +72,6 @@ class TutorialsController < ApplicationController
     @tutorial = Tutorial.find(params[:id])
     update = tutorial_params
 
-    # ADMIN REQUEST
-    if update.key?(:featured)
-      if update['featured'] == 'true'
-        update['featured_at'] = Time.now
-      else
-        update['featured_at'] = nil
-      end
-    end
-
     respond_to do |format|
       if @tutorial.update_attributes(update)
         format.html do
@@ -130,7 +107,6 @@ class TutorialsController < ApplicationController
   private
 
   def tutorial_params
-    params[:tutorial].permit(:content, :title, :featured, :user_id, :hidden,
-                             :featured_media_id, :featured_at)
+    params[:tutorial].permit(:content, :title, :user_id, :hidden, :youtube_url, :category)
   end
 end
