@@ -36,7 +36,7 @@
   <% end %>
 
 <!-- Always shows a header, even in smaller screens. -->
-<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header" id="top">
   <header class="mdl-layout__header">
     <div class="mdl-layout__header-row">
       <!-- Title -->
@@ -64,6 +64,10 @@
 
 <div class="tutorialsContainer">
   <h2 style="text-align: center"><a id="getting_started"></a>Getting Started</h2>
+  <div style="text-align: center; margin-bottom: 20px;">
+    <button class="back_to_top" onClick="document.getElementById('top').scrollIntoView();">Back to Top</button>
+    <br/>
+  </div>
   <% @tutorials.each do |tut| %>
     <div class="col-lg-6 col-xs-12 text-center">
 
@@ -84,6 +88,10 @@
   <% end %>
 
   <h2 style="text-align: center"><a id="working_w_data"></a>Working with Data</h2>
+  <div style="text-align: center; margin-bottom: 20px;">
+    <button class="back_to_top" onClick="document.getElementById('top').scrollIntoView();">Back to Top</button>
+    <br/>
+  </div>
   <% @tutorials.each do |tut| %>
     <div class="col-lg-6 col-xs-12 text-center">
 
@@ -104,6 +112,10 @@
   <% end %>
 
   <h2 style="text-align: center"><a id="visualizations"></a>Visualizations</h2>
+  <div style="text-align: center; margin-bottom: 20px;">
+    <button class="back_to_top" onClick="document.getElementById('top').scrollIntoView();">Back to Top</button>
+    <br/>
+  </div>
   <% @tutorials.each do |tut| %>
     <div class="col-lg-6 col-xs-12 text-center">
 
