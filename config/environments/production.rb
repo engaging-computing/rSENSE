@@ -33,7 +33,10 @@ Rsense::Application.configure do
   # config.force_ssl = true
 
   # See everything in the log (default is :info)
-  # config.log_level = :debug
+  
+  # info log level leaks password reset tokens which is a BIG SECURITY HOLE!
+  # anyone who got access to our logs, they could steal tokens and reset user's passwords
+  config.log_level = :warn
 
   # Prepend all log lines with the following tags
   # config.log_tags = [ :subdomain, :uuid ]
