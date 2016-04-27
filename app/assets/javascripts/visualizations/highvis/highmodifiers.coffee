@@ -81,7 +81,9 @@ $ ->
     data.DEFAULT_PRECISION = 4
     data.precision ?= data.DEFAULT_PRECISION
 
-    # This should not be here.... It is also in scatter.coffee... i'll find a place for it some other time
+    # This should not be here.... i'll find a place for it some other time
+    # Calculate which range a date falls in, both for group-by period
+    # and to fix a bug causing points to be connected wrong
     globals.getCurrentPeriod = (date) =>
       month = ["January", "February", "March", "April", "May","June", "July", 
         "August", "September", "October", "November", "December"]
@@ -92,7 +94,24 @@ $ ->
         when globals.configs.periodMode is 'monthly'
           month[date.getMonth()] + ' ' + date.getFullYear() 
         when globals.configs.periodMode is 'weekly'
-          'week ' + (Math.floor((date.getDate() - 1) / 7) + 1) + ' in ' + month[date.getMonth()] + ' ' + date.getFullYear() 
+          # since every month has day numbers falling on different days of the week,
+          # the weekly period calculation is a little different. Need to iteratively
+          # calculate the week number.
+          tempDate = new Date(date.getFullYear(), date.getMonth(), 1)
+          weekNumber = 1
+          dayNumber = 1
+          incrementWeekNext = false
+          while tempDate.getDate() != date.getDate()
+            if incrementWeekNext is true
+              incrementWeekNext = false
+              weekNumber += 1
+            if tempDate.getDay() == 6
+              incrementWeekNext = true
+            dayNumber += 1
+            tempDate.setDate(dayNumber)
+          weekNumber += 1 if incrementWeekNext is true
+
+          'week ' + weekNumber + ' in ' + month[date.getMonth()] + ' ' + date.getFullYear() 
         when globals.configs.periodMode is 'daily'
           '' + date.getMonth + '/' + date.getDate() + '/' + date.getFullYear()
         when globals.configs.periodMode is 'hourly'
