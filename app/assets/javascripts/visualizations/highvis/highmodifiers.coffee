@@ -35,7 +35,7 @@ $ ->
     globals.clippingVises = ['map', 'timeline', 'scatter', 'table']
     globals.configs.activeFilters ?= []
 
-    globals.configs.isPeriod ?= false # Controls how series are constructed in update(). 
+    globals.configs.isPeriod ?= false # Controls how series are constructed in update().
     globals.configs.periodMode ?= 'off' # Changes when a period option is selected.
 
 
@@ -85,14 +85,14 @@ $ ->
     # Calculate which range a date falls in, both for group-by period
     # and to fix a bug causing points to be connected wrong
     globals.getCurrentPeriod = (date) =>
-      month = ["January", "February", "March", "April", "May","June", "July", 
+      month = ["January", "February", "March", "April", "May","June", "July",
         "August", "September", "October", "November", "December"]
     
       switch
         when globals.configs.periodMode is 'yearly'
           '' + date.getFullYear()
         when globals.configs.periodMode is 'monthly'
-          month[date.getMonth()] + ' ' + date.getFullYear() 
+          month[date.getMonth()] + ' ' + date.getFullYear()
         when globals.configs.periodMode is 'weekly'
           # since every month has day numbers falling on different days of the week,
           # the weekly period calculation is a little different. Need to iteratively
@@ -111,7 +111,7 @@ $ ->
             tempDate.setDate(dayNumber)
           weekNumber += 1 if incrementWeekNext is true
 
-          'week ' + weekNumber + ' in ' + month[date.getMonth()] + ' ' + date.getFullYear() 
+          'week ' + weekNumber + ' in ' + month[date.getMonth()] + ' ' + date.getFullYear()
         when globals.configs.periodMode is 'daily'
           '' + date.getMonth + '/' + date.getDate() + '/' + date.getFullYear()
         when globals.configs.periodMode is 'hourly'

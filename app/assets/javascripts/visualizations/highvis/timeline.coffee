@@ -158,9 +158,6 @@ $ ->
                 year: '%Y'
               }
 
-        #TODO: change update's calculation of max and min to account for period mode
-        #TODO: change update to split series by period when period option is on
-
       ###
       Adds the regression tools to the control bar.
       ###
