@@ -318,8 +318,13 @@ $ ->
           @gmap.setCenter(new google.maps.LatLng(@configs.savedCenter.lat,
             @configs.savedCenter.lng))
         else
-          @gmap.fitBounds(latlngbounds)
-
+          # Set default 200 km scale for case of one data point
+          if globals.getData(true, globals.configs.activeFilters).length is 1
+            @gmap.setZoom(5)
+            @gmap.setCenter(latlngbounds.getCenter())
+          else
+            @gmap.fitBounds(latlngbounds)
+            
         @drawControls()
 
         ctaLayer = new google.maps.KmlLayer({url: window.kml})
