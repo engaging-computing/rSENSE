@@ -36,7 +36,7 @@
   <% end %>
 
 <!-- Always shows a header, even in smaller screens. -->
-<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header" id="top">
   <header class="mdl-layout__header">
     <div class="mdl-layout__header-row">
       <!-- Title -->
@@ -52,9 +52,9 @@
   <div class="mdl-layout__drawer">
     <span class="mdl-layout-title">Categories</span>
     <nav class="mdl-navigation">
-      <a class="mdl-navigation__link" href="">Getting Started</a>
-      <a class="mdl-navigation__link" href="">Working with Data</a>
-      <a class="mdl-navigation__link" href="">Visualizations</a>
+      <a class="mdl-navigation__link" href="#getting_started">Getting Started</a>
+      <a class="mdl-navigation__link" href="#working_w_data">Working with Data</a>
+      <a class="mdl-navigation__link" href="#visualizations">Visualizations</a>
     </nav>
   </div>
   <main class="mdl-layout__content">
@@ -63,7 +63,11 @@
 </div>
 
 <div class="tutorialsContainer">
-  <h2 style="text-align: center">Getting Started</h2>
+  <h2 style="text-align: center"><a id="getting_started"></a>Getting Started</h2>
+  <div style="text-align: center; margin-bottom: 20px;">
+    <button class="back_to_top" onClick="document.getElementById('top').scrollIntoView();">Back to Top</button>
+    <br/>
+  </div>
   <% @tutorials.each do |tut| %>
     <div class="col-lg-6 col-xs-12 text-center">
 
@@ -83,7 +87,11 @@
     </div>
   <% end %>
 
-  <h2 style="text-align: center">Working with Data</h2>
+  <h2 style="text-align: center"><a id="working_w_data"></a>Working with Data</h2>
+  <div style="text-align: center; margin-bottom: 20px;">
+    <button class="back_to_top" onClick="document.getElementById('top').scrollIntoView();">Back to Top</button>
+    <br/>
+  </div>
   <% @tutorials.each do |tut| %>
     <div class="col-lg-6 col-xs-12 text-center">
 
@@ -103,7 +111,11 @@
     </div>
   <% end %>
 
-  <h2 style="text-align: center">Visualizations</h2>
+  <h2 style="text-align: center"><a id="visualizations"></a>Visualizations</h2>
+  <div style="text-align: center; margin-bottom: 20px;">
+    <button class="back_to_top" onClick="document.getElementById('top').scrollIntoView();">Back to Top</button>
+    <br/>
+  </div>
   <% @tutorials.each do |tut| %>
     <div class="col-lg-6 col-xs-12 text-center">
 
