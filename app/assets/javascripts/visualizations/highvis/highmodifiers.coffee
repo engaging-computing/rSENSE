@@ -92,7 +92,7 @@ $ ->
         when globals.configs.periodMode is 'monthly'
           month[date.getMonth()] + ' ' + date.getFullYear() 
         when globals.configs.periodMode is 'weekly'
-          'week ' + (date.getDate() - 1) % 7 + ' in ' + month[date.getMonth()] + ' ' + date.getFullYear() 
+          'week ' + (Math.floor((date.getDate() - 1) / 7) + 1) + ' in ' + month[date.getMonth()] + ' ' + date.getFullYear() 
         when globals.configs.periodMode is 'daily'
           '' + date.getMonth + '/' + date.getDate() + '/' + date.getFullYear()
         when globals.configs.periodMode is 'hourly'
