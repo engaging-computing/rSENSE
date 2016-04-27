@@ -300,18 +300,21 @@ $ ->
                   @xGridSize, @yGridSize, @MAX_SERIES_SIZE)
               else
                 data.xySelector(@configs.xAxis, fi, gi, dp)
-
+            
+            #TODO: There is a disconnect between the real week and modified week. Need to do some sort of check before modifying the week
             datArray = new Array
             if globals.configs.isPeriod is true
               currentPeriod = null
               for point in dat
+                newDate = new Date(point.x)
+                thisPeriod = globals.getCurrentPeriod(newDate)
                 if currentPeriod is null
                   datArray.push(new Array)
-                  currentPeriod = globals.getCurrentPeriod(new Date(point.x))
-                if globals.getCurrentPeriod(new Date(point.x)) != currentPeriod
-                  currentPeriod = globals.getCurrentPeriod(new Date(point.x)) # TODO: make a temp new Date(point.x)
+                  currentPeriod = thisPeriod              
+                if thisPeriod != currentPeriod
+                  currentPeriod = thisPeriod
                   datArray.push(new Array)
-                point.x = modifyDate(new Date(point.x))
+                point.x = modifyDate(newDate)
                 datArray[datArray.length-1].push(point)
             else
               datArray.push(dat)
@@ -328,22 +331,27 @@ $ ->
                 name:
                   group: data.groups[gi]
                   field: data.fields[fi].fieldName
-              switch
-                when mode is @SYMBOLS_LINES_MODE
-                  options.marker =
-                    symbol: globals.symbols[si % globals.symbols.length]
-                  options.lineWidth = 2
+              if set.length < 2 and @configs.mode is @LINES_MODE
+                options.marker =
+                  symbol: globals.symbols[si % globals.symbols.length]
+                options.lineWidth = 2
+              else
+                switch
+                  when mode is @SYMBOLS_LINES_MODE
+                    options.marker =
+                      symbol: globals.symbols[si % globals.symbols.length]
+                    options.lineWidth = 2
 
-                when mode is @SYMBOLS_MODE
-                  options.marker =
-                    symbol: globals.symbols[si % globals.symbols.length]
-                  options.lineWidth = 0
+                  when mode is @SYMBOLS_MODE
+                    options.marker =
+                      symbol: globals.symbols[si % globals.symbols.length]
+                    options.lineWidth = 0
 
-                when mode is @LINES_MODE
-                  options.marker =
-                    symbol: 'blank'
-                  options.lineWidth = 2
-                  options.dashStyle = globals.dashes[si % globals.dashes.length]
+                  when mode is @LINES_MODE
+                    options.marker =
+                      symbol: 'blank'
+                    options.lineWidth = 2
+                    options.dashStyle = globals.dashes[si % globals.dashes.length]
 
               @chart.addSeries(options, false)
 
