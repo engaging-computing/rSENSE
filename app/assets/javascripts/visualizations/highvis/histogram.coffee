@@ -293,7 +293,7 @@ $ ->
             globals.configs.isPeriod = true
           else
             globals.configs.isPeriod = false
-          $( "#group-by" ).trigger( "change" );
+          $( "#group-by" ).trigger( "change" )
           @start()
 
         # Adds material design

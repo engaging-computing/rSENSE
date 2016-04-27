@@ -247,7 +247,7 @@ $ ->
             when globals.configs.periodMode is 'yearly'
               new Date(1990, date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).getTime()
             when globals.configs.periodMode is 'monthly'
-              new Date(1990, 0, date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).getTime()  
+              new Date(1990, 0, date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).getTime()
             when globals.configs.periodMode is 'weekly'
               # Jan 1 1989 is a Sunday
               new Date(1989, 0, date.getDay() + 1, date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()).getTime()
@@ -310,7 +310,7 @@ $ ->
                 thisPeriod = globals.getCurrentPeriod(newDate)
                 if currentPeriod is null
                   datArray.push(new Array)
-                  currentPeriod = thisPeriod              
+                  currentPeriod = thisPeriod
                 if thisPeriod != currentPeriod
                   currentPeriod = thisPeriod
                   datArray.push(new Array)
@@ -448,7 +448,7 @@ $ ->
             globals.configs.isPeriod = true
           else
             globals.configs.isPeriod = false
-          $( "#group-by" ).trigger( "change" );
+          $( "#group-by" ).trigger( "change" )
           @start()
 
 
