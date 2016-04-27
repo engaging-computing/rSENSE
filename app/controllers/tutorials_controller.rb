@@ -22,7 +22,7 @@ class TutorialsController < ApplicationController
     else
       order = 'DESC'
     end
-    
+
     @new_tutorial = Tutorial.new
 
     @tutorials = Tutorial.all()
@@ -44,7 +44,7 @@ class TutorialsController < ApplicationController
     respond_to do |format|
       if @tutorial.save
         format.html do
-          redirect_to @tutorial,
+          redirect_to :back,
           notice: 'Tutorial was successfully created.'
         end
         format.json do

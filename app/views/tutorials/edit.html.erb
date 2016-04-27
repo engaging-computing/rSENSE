@@ -8,6 +8,11 @@
     </div>
   </div>
 
+  <h1>Upload Written Instructions as PDF</h1>
+  <%=render layout: "shared/box", locals: {title: 'Media', width: '5', unique_id: 'media', should_hide: false} do %>
+    <%=render "shared/media_objects_view", {type: 'tutorial', object: @tutorial} %>
+  <%end%>
+
   <div class="panel panel-default panel-danger">
     <div class="panel-heading">
       <h1>Danger Zone</h1>

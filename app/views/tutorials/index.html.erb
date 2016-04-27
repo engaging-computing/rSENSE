@@ -17,12 +17,8 @@
                 <%= ff.text_field :youtube_url, placeholder: "Embedded Youtube URL", class: "form-control" %>
               </div>
               <div class="col-xs-12" style="margin-top: 20px">
-                <%=  label_tag ':category', 'Categories:'%>
-                <%= select_tag(:category, options_for_select(['Getting Started', 'Working With Data', 'Visualizations']), class: "form-control") %>
-              </div>
-              <div class="col-xs-12" style="margin-top: 20px">
-                <%=  label_tag ':pdf', 'Instructions PDF:'%>
-                <%= ff.file_field :pdf %>
+                <%= label_tag ':category', 'Categories:'%>
+                <%= ff.select(:category, options_for_select([['Getting Started','Getting Started'], ['Working With Data', 'Working With Data'], ['Visualizations', 'Visualizations']]), class: "form-control") %>
               </div>
             </div>
             <div class="form-group">
@@ -43,10 +39,11 @@
       <span class="mdl-layout-title">Tutorials</span>
       <!-- Add spacer, to align navigation to the right -->
       <div class="mdl-layout-spacer"></div>
-
+      <% if is_admin? %>
       <button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#newTutorialModal">
         New Tutorial
       </button>
+      <% end %>
     </div>
   </header>
   <div class="mdl-layout__drawer">
@@ -73,7 +70,7 @@
 
       <div class="mdl-card mdl-shadow--2dp" >
         <div class="mdl-card__title" >
-          <iframe width="350" height="290" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+          <iframe width="350" height="290" src="<%=tut.youtube_url%>" frameborder="0" allowfullscreen></iframe>
         </div>
         <div class="mdl-card__supporting-text">
           <%=tut.title%>
@@ -83,6 +80,11 @@
             View Full Written Turorial
           </a>
         </div>
+        <% if is_admin? %>
+          <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/tutorials/<%=tut.id%>/edit">
+            Edit Tutorial
+          </a>
+        <% end %>
       </div>
     </div>
   <% end %>
@@ -92,46 +94,12 @@
     <button class="back_to_top" onClick="document.getElementById('top').scrollIntoView();">Back to Top</button>
     <br/>
   </div>
-  <% @tutorials.each do |tut| %>
-    <div class="col-lg-6 col-xs-12 text-center">
-
-      <div class="mdl-card mdl-shadow--2dp" >
-        <div class="mdl-card__title" >
-          <iframe width="350" height="290" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
-        </div>
-        <div class="mdl-card__supporting-text">
-          <%=tut.title%>
-        </div>
-        <div class="mdl-card__actions mdl-card--border">
-          <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
-            View Full Written Turorial
-          </a>
-        </div>
-      </div>
-    </div>
-  <% end %>
+ 
 
   <h2 style="text-align: center"><a id="visualizations"></a>Visualizations</h2>
   <div style="text-align: center; margin-bottom: 20px;">
     <button class="back_to_top" onClick="document.getElementById('top').scrollIntoView();">Back to Top</button>
     <br/>
   </div>
-  <% @tutorials.each do |tut| %>
-    <div class="col-lg-6 col-xs-12 text-center">
 
-      <div class="mdl-card mdl-shadow--2dp" >
-        <div class="mdl-card__title" >
-          <iframe width="350" height="290" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
-        </div>
-        <div class="mdl-card__supporting-text">
-          <%=tut.title%>
-        </div>
-        <div class="mdl-card__actions mdl-card--border">
-          <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
-            View Full Written Turorial
-          </a>
-        </div>
-      </div>
-    </div>
-  <% end %>
 </div>
