@@ -41,6 +41,7 @@ Rsense::Application.routes.draw do
   # match "tutorials/create" => "tutorials#create"
   post '/tutorials/switch/' => 'tutorials#switch'
   resources :tutorials, except: [:new]
+  put '/tutorials/:id/edit'=> 'tutorials#update'
 
   get 'about' => 'home#about'
   get 'contact' => 'home#contact'

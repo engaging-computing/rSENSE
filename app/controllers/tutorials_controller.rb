@@ -22,10 +22,13 @@ class TutorialsController < ApplicationController
     else
       order = 'DESC'
     end
-    
+
     @new_tutorial = Tutorial.new
 
-    @tutorials = Tutorial.all()
+    @gettingStarted = Tutorial.where(:category => "Getting Started")
+    @workingWithData = Tutorial.where(:category => "Working With Data")
+    @visualization = Tutorial.where(:category => "Visualizations")
+
 
     recur = params.key?(:recur) ? params[:recur].to_bool : false
 
@@ -44,7 +47,7 @@ class TutorialsController < ApplicationController
     respond_to do |format|
       if @tutorial.save
         format.html do
-          redirect_to @tutorial,
+          redirect_to tutorials_url,
           notice: 'Tutorial was successfully created.'
         end
         format.json do
@@ -78,6 +81,7 @@ class TutorialsController < ApplicationController
           redirect_to @tutorial,
           notice: 'Tutorial was successfully updated.'
         end
+        format.html { redirect_to tutorials_url }
         format.json { render json: {}, status: :ok }
       else
         format.html { render action: 'show' }
@@ -107,6 +111,7 @@ class TutorialsController < ApplicationController
   private
 
   def tutorial_params
-    params[:tutorial].permit(:content, :title, :user_id, :hidden, :youtube_url, :category)
+    params[:tutorial].permit(:content, :title, :user_id, :hidden, :youtube_url,
+           :featured_media_id, :category)
   end
 end

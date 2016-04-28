@@ -9,9 +9,6 @@ class RedoTutorials < ActiveRecord::Migration
     remove_column :tutorials, :featured_at
     remove_column :tutorials, :content
     remove_column :tutorials, :hidden
-
-    # No more media objects for tutorials
-    remove_column :media_object, :tutorial_id
   end
   def down
     remove_column :tutorials, :youtube_url
@@ -20,6 +17,5 @@ class RedoTutorials < ActiveRecord::Migration
     add_column :tutorials, :featured_at, :datetime
     add_column :tutorials, :content, :text
     add_column :tutorials, :hidden, :boolean, :default => true
-    add_column :media_object, :tutorial_id, :integer
   end
 end
