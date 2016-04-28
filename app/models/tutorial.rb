@@ -9,7 +9,7 @@ class Tutorial < ActiveRecord::Base
   validates_presence_of :youtube_url
   validates_presence_of :category
   
-  has_one :media_objects
+  has_many :media_objects
   
   validates :title, length: { maximum: 128 }
 
@@ -43,12 +43,13 @@ class Tutorial < ActiveRecord::Base
     
     # The featured media object is the instructions pdf
     unless featured_media_id.nil?
-      h.merge!(pdfSrc: media_objects.find(featured_media_id).tn_src)
+      h.merge!(mediaSrc: media_objects.find(featured_media_id).tn_src)
     end
 
     if recurse
       h.merge!(
-        owner: owner.to_hash(false)
+        mediaObjects: media_objects.map { |o| o.to_hash false },
+        owner:        owner.to_hash(false)
       )
     end
 
