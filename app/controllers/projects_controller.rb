@@ -282,18 +282,8 @@ class ProjectsController < ApplicationController
   def save_fields
     @project = Project.find(params[:id])
 
-<<<<<<< HEAD
-    # Delete fields as necessary
-    if params[:hidden_deleted_fields] != ''
-      params[:hidden_deleted_fields].split(',').each do |x|
-        if Field.find(x).destroy == -1 and return
-        end
-      end
-    end
-=======
     errors = []
     success = true
->>>>>>> upstream/master
 
     ActiveRecord::Base.transaction do
       # Deletion silently fails upon any error
