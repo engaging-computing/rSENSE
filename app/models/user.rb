@@ -1,18 +1,19 @@
 require 'nokogiri'
 
 class User < ActiveRecord::Base
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable, :validatable,
+         :omniauthable, omniauth_providers: [:google_oauth2]
+
   include ActionView::Helpers::SanitizeHelper
 
-  validates_uniqueness_of :email, case_sensitive: false
   validates :name, length: { minimum: 4, maximum: 70 }, format: {
     with: /\A[\p{Alpha}\p{Blank}\-\'\.]*\z/,
     message: 'can only contain letters, hyphens, single quotes, periods, and spaces.' }
 
-  validates :email, format: { with: /\@.*\./ }, confirmation: true
-
   validates :password, presence: true, on: :create
-
-  has_secure_password
 
   before_validation :sanitize_user
   before_save :summernote_media_objects
@@ -75,5 +76,19 @@ class User < ActiveRecord::Base
 
   def summernote_media_objects
     self.bio = MediaObject.create_media_objects(bio, 'user_id', id)
+  end
+
+  def self.from_omniauth(access_token)
+    data = access_token.info
+    user = User.where(email: data['email']).first
+
+    unless user
+      user = User.create(
+        name: data['name'],
+        email: data['email'],
+        password: Devise.friendly_token[0, 20]
+      )
+    end
+    user
   end
 end

@@ -61,7 +61,7 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
 
     @cloned_project = Project.select(:id, :user_id, :title).where(id: @project.cloned_from).first
-    @liked_by_cur_user = Like.find_by_user_id_and_project_id(@cur_user, @project.id)
+    @liked_by_cur_user = Like.find_by_user_id_and_project_id(current_user, @project.id)
     @data_sets = @project.data_sets.select('id', 'title', 'user_id', 'key', 'created_at', 'contributor_name').search(params[:search])
     @fields = @project.fields
     @field_count = @fields.count
@@ -101,11 +101,11 @@ class ProjectsController < ApplicationController
   def create
     if params[:project_id]
       cloned_from = Project.find(params[:project_id])
-      @project = cloned_from.clone(params, @cur_user.id)
+      @project = cloned_from.clone(params, current_user.id)
     else
       @cloned_project = nil
       @project = Project.new project_params
-      @project.user_id = @cur_user.id
+      @project.user_id = current_user.id
     end
 
     respond_to do |format|
@@ -134,7 +134,7 @@ class ProjectsController < ApplicationController
     update = project_params
 
     # ADMIN REQUEST
-    if @cur_user.try(:admin)
+    if current_user.try(:admin)
       if update.key?(:featured)
         if update['featured'] == 'true'
           update['featured_at'] = Time.now
@@ -173,7 +173,14 @@ class ProjectsController < ApplicationController
   # DELETE /projects/1
   # DELETE /projects/1.json
   def destroy
-    @project = Project.find(params[:id])
+    begin
+      @project = Project.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      respond_to do |format|
+        format.json { render json: { error: 'Project not found.' }, status: :not_found }
+      end
+      return
+    end
 
     unless can_delete?(@project)
       respond_to do |format|
@@ -213,7 +220,7 @@ class ProjectsController < ApplicationController
 
   # POST /projects/1/updateLikedStatus
   def updateLikedStatus
-    like = Like.find_by_user_id_and_project_id(@cur_user, params[:id])
+    like = Like.find_by_user_id_and_project_id(current_user, params[:id])
 
     if like
       if Like.destroy(like.id)
@@ -228,7 +235,7 @@ class ProjectsController < ApplicationController
       end
 
     else
-      if Like.create(user_id: @cur_user.id, project_id: params[:id])
+      if Like.create(user_id: current_user.id, project_id: params[:id])
         count = Project.find(params[:id]).likes.count
         respond_to do |format|
           format.json { render json: { update: count }, status: :ok }
@@ -431,7 +438,7 @@ class ProjectsController < ApplicationController
       data = uploader.swap_with_field_names(data_obj, @project)
 
       dataset = DataSet.new do |d|
-        d.user_id = @cur_user.id
+        d.user_id = current_user.id
         d.title = params[:title]
         d.project_id = @project.id
         d.data = data
@@ -609,7 +616,7 @@ class ProjectsController < ApplicationController
   end
 
   def project_params
-    if @cur_user.try(:admin)
+    if current_user.try(:admin)
       return params[:project].permit(:content, :title, :user_id, :filter,
                                      :cloned_from, :has_fields, :featured,
                                      :is_template, :featured_media_id, :hidden,

@@ -2,8 +2,6 @@ require 'test_helper'
 
 class NewsControllerTest < ActionController::TestCase
   setup do
-    @nixon = users(:nixon)
-    @kate  = users(:kate)
     @news  = news(:one)
     @news_three = news(:news_three)
   end
@@ -36,31 +34,35 @@ class NewsControllerTest < ActionController::TestCase
   end
 
   test 'should create news' do
+    nixon = sign_in('user', users(:nixon))
     assert_difference('News.count') do
-      post :create, { news: { title: 'News' } },  user_id: @nixon
+      post :create, { news: { title: 'News' } },  user_id: nixon
     end
 
     assert_redirected_to news_path(assigns(:news))
   end
 
   test 'should create news (json)' do
+    nixon = sign_in('user', users(:nixon))
     assert_difference('News.count') do
-      post :create, { news: { title: 'News' }, format: 'json' },  user_id: @nixon
+      post :create, { news: { title: 'News' }, format: 'json' },  user_id: nixon
     end
 
     assert_response :success
   end
 
   test 'should not create news as non-admin (json)' do
+    kate = sign_in('user', users(:kate))
     assert_difference('News.count', 0) do
-      post :create, { format: 'json' },  user_id: @kate
+      post :create, { format: 'json' },  user_id: kate
     end
 
     assert_response :forbidden
   end
 
   test 'should update news' do
-    put :update, { id: @news, news: { title: "It's raining" } },  user_id: @nixon
+    nixon = sign_in('user', users(:nixon))
+    put :update, { id: @news, news: { title: "It's raining" } },  user_id: nixon
 
     news = News.find @news.id
     assert news.title == "It's raining", 'Title did not change correctly.'
@@ -69,7 +71,8 @@ class NewsControllerTest < ActionController::TestCase
   end
 
   test 'should update news (json)' do
-    put :update, { format: 'json', id: @news, news: { title: "It's raining" } },  user_id: @nixon
+    nixon = sign_in('user', users(:nixon))
+    put :update, { format: 'json', id: @news, news: { title: "It's raining" } },  user_id: nixon
 
     news = News.find @news.id
     assert news.title == "It's raining", 'Title did not change correctly.'
@@ -78,15 +81,17 @@ class NewsControllerTest < ActionController::TestCase
   end
 
   test 'should destroy news' do
+    nixon = sign_in('user', users(:nixon))
     assert_difference('News.count', -1) do
-      delete :destroy, { id: @news },  user_id: @nixon
+      delete :destroy, { id: @news },  user_id: nixon
     end
     assert_redirected_to news_index_path
   end
 
   test 'should destroy news (json)' do
+    nixon = sign_in('user', users(:nixon))
     assert_difference('News.count', -1) do
-      delete :destroy, { format: 'json', id: @news },  user_id: @nixon
+      delete :destroy, { format: 'json', id: @news },  user_id: nixon
     end
     assert_response :success
   end

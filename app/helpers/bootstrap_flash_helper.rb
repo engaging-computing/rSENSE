@@ -17,7 +17,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 module BootstrapFlashHelper
-  ALERT_TYPES = [:danger, :info, :success, :warning]
+  ALERT_TYPES = [:danger, :info, :success, :warning, :alert]
 
   def bootstrap_flash
     flash_messages = []
@@ -31,6 +31,7 @@ module BootstrapFlashHelper
 
       type = :success  if type == :notice
       type = :danger   if type == :error
+      type = :danger   if type == :alert
 
       next unless ALERT_TYPES.include?(type)
 
