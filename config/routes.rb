@@ -1,9 +1,14 @@
 Rsense::Application.routes.draw do
-  devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks' }
+  devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks', passwords: 'passwords' }
+
   get '/users/:id/contributions' => 'users#contributions'
   get '/users/:id/edit' => 'users#edit'
+
+  get 'users/password/edit:key' => 'users#pw_reset'
+
+  get '/users/pw_request' => 'users#pw_request'
+  post '/users/pw_send_key' => 'users#pw_send_key'
   resources :users
-  get '/users/pw_reset/:key' => 'users#pw_reset'
 
   get 'testing/index'
 

@@ -57,6 +57,12 @@
   <main class="mdl-layout__content">
     <div class="page-content">
 
+<div class="tutorialsContainer">
+  <div style="height: 5px;" id="getting_started"></div>
+  <h2 style="text-align: center; padding-top: 50px;">Getting Started</h2>
+  <% @tutorials.each do |tut| %>
+    <div class="col-lg-6 col-xs-12 text-center">
+
       <div class="tutorialsContainer">
         <div class="col-xs-12 text-center">
           <a id="getting_started"></a>
@@ -67,6 +73,12 @@
           </div>
         </div>
 
+  <h2 style="text-align: center; padding-top: 50px;">Working with Data</h2>
+  <div style="height: 5px; margin-top: -160px; z-index: -2;" id="working_w_data"></div>
+  <div style="text-align: center; margin-top:140px; margin-bottom: 20px;">
+    <button class="back_to_top" onClick="document.getElementById('top').scrollIntoView();">Back to Top</button>
+    <br/>
+  </div>
         <% @getting_started.each do |tut| %>
           <div class="col-lg-6 col-xs-12 text-center">
             <div class="mdl-card mdl-shadow--2dp" >
@@ -102,6 +114,12 @@
           </div>
         </div>
 
+  <h2 style="text-align: center; padding-top: 50px;">Visualizations</h2>
+  <div style="height: 5px; margin-top: -160px; z-index: -2;" id="visualizations"></div>
+  <div style="text-align: center; margin-top: 140px; margin-bottom: 20px;">
+    <button class="back_to_top" onClick="document.getElementById('top').scrollIntoView();">Back to Top</button>
+    <br/>
+  </div>
         <% @working_with_data.each do |tut| %>
           <div class="col-lg-6 col-xs-12 text-center">
             <div class="mdl-card mdl-shadow--2dp" >
