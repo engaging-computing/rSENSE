@@ -52,12 +52,6 @@ class TutorialsControllerTest < ActionController::TestCase
     assert_response 403
   end
 
-  test 'should show tutorial' do
-    get :show, id: @tutorial
-    assert_response :success
-    assert_valid_html response.body
-  end
-
   test 'should get edit' do
     nixon = sign_in('user', users(:nixon))
     get :edit, { id: @tutorial },  user_id: nixon
@@ -67,21 +61,11 @@ class TutorialsControllerTest < ActionController::TestCase
 
   test 'should update tutorial' do
     nixon = sign_in('user', users(:nixon))
-    put :update, { id: @tutorial, tutorial: { content: @tutorial.content, title: @tutorial.title } },
+    put :update, { id: @tutorial, tutorial: { title: @tutorial.title, category: @tutorial.category, youtube_url: @tutorial.youtube_url} },
        user_id: nixon
     assert_redirected_to tutorial_path(assigns(:tutorial))
   end
 
-  test 'should feature tutorial' do
-    nixon = sign_in('user', users(:nixon))
-    put :update, { id: @tutorial, tutorial: { featured: 'true' } },  user_id: nixon
-    assert_redirected_to tutorial_path(assigns(:tutorial))
-    assert Tutorial.find(@tutorial.id).featured == true
-
-    put :update, { id: @tutorial, tutorial: { featured: 'false' } },  user_id: nixon
-    assert_redirected_to tutorial_path(assigns(:tutorial))
-    assert Tutorial.find(@tutorial.id).featured == false
-  end
 
   test 'should destroy tutorial' do
     nixon = sign_in('user', users(:nixon))

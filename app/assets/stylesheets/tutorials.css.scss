@@ -1,4 +1,54 @@
 // Place all the styles related to the Tutorials controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
-
+.tutorials-controller {
+  .mainContent {
+    padding: 0 !important;  // Removes all the extra padding
+    margin: 0 !important; // flushes border
+    width: 100% !important; // makes page body fill the screen
+                 // instead of having a fixed width
+    .tutorialsContainer {
+      margin-left: auto;
+      margin-right: auto;
+      padding: 100px;
+    }
+    @media (min-width: 768px) {
+      .tutorialsContainer {
+        width: 750px; 
+      } 
+    }
+    @media (min-width: 992px) {
+      .tutorialsContainer {
+        width: 970px; 
+      }
+    }
+    @media (min-width: 1200px) {
+      .tutorialsContainer {
+        width: 1400px; 
+      }
+    }
+    .mdl-layout__drawer-button {
+      color: white !important;
+    }
+    .mdl-layout__header{
+      background-color: #0D47A1;
+      color: white;
+    }
+    .mdl-card__title {
+      height: 300px !important;
+    }
+    .mdl-card {
+      height:420px !important;
+    }
+  }
+ 
+  .back_to_top {
+    background-color: transparent; 
+    border-color: transparent;
+    text-decoration: underline;
+    color: #0645AD; 
+  }
+  .mdl-layout__container {
+    position: relative;
+  }
+}
