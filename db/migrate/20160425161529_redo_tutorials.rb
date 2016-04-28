@@ -10,12 +10,13 @@ class RedoTutorials < ActiveRecord::Migration
     remove_column :tutorials, :content
     remove_column :tutorials, :hidden
   end
+
   def down
     remove_column :tutorials, :youtube_url
     remove_column :tutorials, :category
-    add_column :tutorials, :featured, :boolean, :default => false
+    add_column :tutorials, :featured, :boolean, default: false
     add_column :tutorials, :featured_at, :datetime
     add_column :tutorials, :content, :text
-    add_column :tutorials, :hidden, :boolean, :default => true
+    add_column :tutorials, :hidden, :boolean, default: true
   end
 end

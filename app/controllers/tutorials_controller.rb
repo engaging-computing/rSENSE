@@ -1,7 +1,7 @@
 class TutorialsController < ApplicationController
   # GET /tutorials
   # GET /tutorials.json
-  skip_before_filter :authorize, only: [:show, :index]
+  skip_before_filter :authorize, only: [:index]
   before_filter :authorize_admin, only: [:create, :update, :destroy]
 
   include ApplicationHelper
@@ -10,25 +10,11 @@ class TutorialsController < ApplicationController
   def index
     @params = params
 
-    # Main List
-    if !params[:sort].nil?
-      sort = params[:sort]
-    else
-      sort = 'updated_at'
-    end
-
-    if !params[:order].nil?
-      order = params[:order]
-    else
-      order = 'DESC'
-    end
-
     @new_tutorial = Tutorial.new
 
-    @gettingStarted = Tutorial.where(:category => "Getting Started")
-    @workingWithData = Tutorial.where(:category => "Working With Data")
-    @visualization = Tutorial.where(:category => "Visualizations")
-
+    @getting_started = Tutorial.where(category: 'Getting Started')
+    @working_with_data = Tutorial.where(category: 'Working With Data')
+    @visualization = Tutorial.where(category: 'Visualizations')
 
     recur = params.key?(:recur) ? params[:recur].to_bool : false
 
@@ -84,7 +70,7 @@ class TutorialsController < ApplicationController
         format.html { redirect_to tutorials_url }
         format.json { render json: {}, status: :ok }
       else
-        format.html { render action: 'show' }
+        format.html { render action: 'index' }
         format.json do
           render json: @tutorial.errors.full_messages,
                  status: :unprocessable_entity

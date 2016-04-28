@@ -8,9 +8,9 @@ class Tutorial < ActiveRecord::Base
   validates_presence_of :user_id
   validates_presence_of :youtube_url
   validates_presence_of :category
-  
+
   has_many :media_objects
-  
+
   validates :title, length: { maximum: 128 }
 
   belongs_to :user
@@ -40,7 +40,7 @@ class Tutorial < ActiveRecord::Base
       ownerName: owner.name,
       ownerUrl: UrlGenerator.new.user_url(owner)
     }
-    
+
     # The featured media object is the instructions pdf
     unless featured_media_id.nil?
       h.merge!(mediaSrc: media_objects.find(featured_media_id).tn_src)
@@ -55,5 +55,4 @@ class Tutorial < ActiveRecord::Base
 
     h
   end
-
 end
