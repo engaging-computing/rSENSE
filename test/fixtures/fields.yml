@@ -179,3 +179,71 @@ fields_test_num:
   field_type: 2
   project: fields_test
   name: oldnum
+
+f_noformula_1:
+  id: 116
+  field_type: 2
+  project: formula_fields_test
+  name: No Formula 1
+  refname: NF1
+
+f_noformula_2:
+  id: 117
+  field_type: 3
+  project: formula_fields_test
+  name: No Formula 2
+  refname: NF2
+
+next_name_num_1:
+  field_type: 2
+  project: next_name_test
+  name: Number
+
+next_name_num_2:
+  field_type: 2
+  project: next_name_test
+  name: Number_3
+
+next_name_num_3:
+  field_type: 2
+  project: next_name_test
+  name: Number_6
+
+next_name_time_1:
+  field_type: 1
+  project: next_name_test
+  name: Timestamp
+
+next_name_lat_1:
+  field_type: 4
+  project: next_name_test
+  name: Blarp
+
+next_name_lon_1:
+  field_type: 5
+  project: next_name_test
+  name: Longitude_100
+
+next_name_text_1:
+  field_type: 3
+  project: next_name_test
+  name: Text_2
+
+next_name_text_2:
+  field_type: 3
+  project: next_name_test
+  name: Text_4
+
+calculation_field_1:
+  id: 118
+  field_type: 2
+  project: calculation_test_1
+  name: Calc
+  refname: Calc
+
+calculation_field_2:
+  id: 119
+  field_type: 2
+  project: calculation_test_2
+  name: Calc
+  refname: Calc

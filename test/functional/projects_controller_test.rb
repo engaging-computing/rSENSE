@@ -253,15 +253,18 @@ class ProjectsControllerTest < ActionController::TestCase
     post :save_fields, { id: @dessert.id, hidden_deleted_fields: '', field: { id: 23, project_id: @dessert.id, field_type: 4, name: 'Location of Foods' },
                         '20_name' => parameters['20_name'], '20_unit' => parameters['20_unit'], '21_name' => parameters['21_name'],
                         '21_unit' => parameters['21_unit'], '22_name' => parameters['22_name'], '22_unit' => parameters['22_unit'],
-                        '23_name' => 'Location of Foods', '23_unit' => '', new_field: 'Location' }, user_id: kate
-    assert_redirected_to "/projects/#{@dessert.id}"
+                        '23_name' => 'Location of Foods', '23_unit' => '', new_field: 'Location', format: 'json' }, user_id: kate
+    body = JSON.parse(@response.body)
+    assert_response :ok
+    assert body.key?('redirect'), 'Response body does not contain redirect information'
+    assert body['redirect'].include?("/projects/#{@dessert.id}"), 'Redirect is to wrong location'
 
     # No field added, cannot have two Lat fields, even with different names.
     assert_difference('Project.find(@dessert.id).fields.length', 0) do
       post :save_fields, { id: @dessert.id, hidden_deleted_fields: '', field: { id: 24, project_id: @dessert.id, field_type: 4, name: 'Location of Foodss' },
                           '20_name' => parameters['20_name'], '20_unit' => parameters['20_unit'], '21_name' => parameters['21_name'],
                           '21_unit' => parameters['21_unit'], '22_name' => parameters['22_name'], '22_unit' => parameters['22_unit'],
-                          '24_name' => 'Location of Foodss', '24_unit' => '', new_field: 'Location' }, user_id: kate
+                          '24_name' => 'Location of Foodss', '24_unit' => '', new_field: 'Location', format: 'json' }, user_id: kate
     end
 
     @project = Project.find(@dessert.id)
@@ -276,8 +279,11 @@ class ProjectsControllerTest < ActionController::TestCase
                       "#{new_lat_field_id}_name" => @project.fields[num_fields - 2].name, "#{new_lat_field_id}_unit" => @project.fields[num_fields - 2].unit,
                       "#{new_long_field_id}_name" => @project.fields[num_fields - 1].name, "#{new_long_field_id}_unit" => @project.fields[num_fields - 1].unit,
                       '20_restrictions' => '',
-                      '25_name' => 'Location of Foodz', '25_unit' => '', new_field: 'Latitude' }, user_id: kate
-    assert_redirected_to "/projects/#{@dessert.id}"
+                      '25_name' => 'Location of Foodz', '25_unit' => '', new_field: 'Latitude', format: :json }, user_id: kate
+    body = JSON.parse(@response.body)
+    assert_response :ok
+    assert body.key?('redirect'), 'Response body does not contain redirect information'
+    assert body['redirect'].include?("/projects/#{@dessert.id}"), 'Redirect is to wrong location'
   end
 
   test 'fields are destroyed along with project' do
