@@ -16,29 +16,6 @@ class TutorialsTest < IntegrationTest
     assert page.has_content?('Create Tutorial'), 'Admin should be able to create a tutorial'
     find('#tutorial_title').set('Awesome Tutorial')
     click_on 'Create Tutorial'
-    assert page.has_content?('Awesome Tutorial'), 'Should have ended up on tutorials show page'
-
-    # An Admin should be able to publish a tutorial.
-    find('#publish_tutorial').click
-    assert page.has_content?('Tutorial was successfully updated.'), 'Tutorial was not saved.'
-
-    # Once published anyone should be able to see the tutorial
-    visit '/tutorials'
-    assert page.has_content?('Awesome Tutorial'), 'All tutorials should be visible to admins'
-    logout
-    visit '/tutorials'
-    assert page.has_content?('Awesome Tutorial'), 'Published tutorial should be visible to user'
-
-    # Unpublish the tutorial
-    login('nixon@whitehouse.gov', '12345')
-    visit '/tutorials'
-    click_on 'Awesome Tutorial'
-    assert page.has_content?('Description'), 'Should have ended up on tutorials show page'
-    find('#publish_tutorial').click
-    assert page.has_content?('Tutorial was successfully updated.'), 'Tutorial was not saved.'
-
-    logout
-    visit '/tutorials'
-    assert page.has_no_content?('Awesome Tutorial'), 'Tutorial should have been unpublished'
+    assert page.has_content?('Awesome Tutorial'), 'Tutorial should be on the Tutorial Index Page'
   end
 end

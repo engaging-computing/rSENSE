@@ -26,9 +26,7 @@ class SummernoteMoTest < IntegrationTest
 
   test 'tutorial_image_upload' do
     login('nixon@whitehouse.gov', '12345')
-    visit '/tutorials'
-    find(:css, '#tutorial_title').set('Test Tutorial SNMO')
-    click_on 'Create Tutorial'
+    visit '/tutorials/3/edit'
     assert page.has_no_css? '.mo_image'
     find(:css, '#add-content-image').click
     find(:css, '.fa-code').find(:xpath, '..').click
