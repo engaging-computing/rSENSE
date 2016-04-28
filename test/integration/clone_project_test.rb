@@ -28,6 +28,10 @@ class CloneProjectTest < IntegrationTest
     set_cell(0, 0, 47)
     find('#edit_table_save_2').click
 
+    # This line forces Capybara to wait until the data set is saved. Otherwise,
+    #   the next line will intermittently fail.
+    find('#title-name')
+
     assert page.has_content?('I Like Clones'), 'Save should succeed'
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
     find('.upload_media form').attach_file('upload', img_path)
@@ -54,8 +58,7 @@ class CloneProjectTest < IntegrationTest
     assert page.has_content?('nerdboy.jpg'), 'File should be in list'
     assert page.has_content?('test.pdf'), 'File should be in list'
     assert page.has_content?('I Like Clones'), 'Data set should be in list'
-
-    assert page.has_no_content?('Setup Manually'), 'Fields were not created'
+    assert find('#fields').has_no_content?('Setup Manually')
 
     page.find('.dataset').click_on 'Delete'
     page.driver.browser.accept_js_confirms

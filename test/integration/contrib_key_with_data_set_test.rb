@@ -20,7 +20,6 @@ class ContribKeyWithDataSetTest < IntegrationTest
     click_on 'Add Number'
     assert page.has_content? 'Number'
     click_on 'Save and Return'
-    assert page.has_content? 'Fields were successfully updated.'
     find('#edit-project-button').click
     assert page.has_content? 'Back to Project'
     find('#project_lock').click

@@ -115,7 +115,7 @@ class VisualizationsController < ApplicationController
 
         image = MiniMagick::Image.read(params[:visualization][:svg], '.svg')
         image.format 'png'
-        image.resize '512'
+        image.resize '512x512'
 
         File.open(mo.file_name, 'wb') do |ff|
           ff.write(image.to_blob)
@@ -255,16 +255,21 @@ class VisualizationsController < ApplicationController
     num_field = ''
     # push real fields to temp variable
     @project.fields.sort_by(&:index).each do |field|
-      data_fields.push(typeID: field.field_type, unitName: field.unit, fieldID: field.id, fieldName: field.name)
+      data_fields.push(typeID: field.field_type, unitName: field.unit, fieldID: "#{field.id}", fieldName: field.name)
       # check if location and timestamp fields exist
       lat = field.id.to_s if field.field_type == 4
       time_field = field.id.to_s if field.field_type == 1
       num_field = field.id.to_s if field.field_type == 2
     end
 
+    # push formula fields to temp variable
+    @project.formula_fields.sort_by(&:index).each do |field|
+      data_fields.push(typeID: field.field_type, unitName: field.unit, fieldID: "f#{field.id}", fieldName: field.name, formula: true)
+    end
+
     has_pics = false
     has_loc_data = false
-    has_time_data = false
+
     # create/push metadata for datasets
     i = 0
     time_count = 0
@@ -292,7 +297,11 @@ class VisualizationsController < ApplicationController
         arr.push ''
 
         data_fields.slice(arr.length, data_fields.length).each do |field|
-          arr.push row[field[:fieldID].to_s]
+          if field[:formula]
+            arr.push dataset.formula_data[index][field[:fieldID][1..-1]]
+          else
+            arr.push row[field[:fieldID]]
+          end
         end
 
         format_data.push arr
@@ -309,35 +318,11 @@ class VisualizationsController < ApplicationController
     @project.fields.each do |field|
       field_count[field.field_type] += 1
     end
-
-    rel_vis = []
-
-    # Determine which visualizations are relevant
-    if field_count[LONGITUDE_TYPE] > 0 and field_count[LATITUDE_TYPE] > 0 and has_loc_data
-      rel_vis.push 'Map'
+    @project.formula_fields.each do |field|
+      field_count[field.field_type] += 1
     end
 
-    if field_count[TIME_TYPE] > 0 and field_count[NUMBER_TYPE] > 0 and
-       format_data.count > 2 and has_time_data
-      rel_vis.push 'Timeline'
-    end
-
-    if field_count[NUMBER_TYPE] > 0 and format_data.count > 1
-      rel_vis.push 'Scatter'
-      rel_vis.push 'Pie'
-    end
-
-    if format_data.count > 0
-      rel_vis.push 'Bar'
-      rel_vis.push 'Histogram'
-    end
-
-    rel_vis.push 'Table'
-    rel_vis.push 'Summary'
-
-    if has_pics
-      rel_vis.push 'Photos'
-    end
+    rel_vis = which_vis(has_time_data, has_loc_data, has_pics, field_count, format_data)
 
     # A list of all current visualizations
     all_vis =  ['Map', 'Timeline', 'Scatter', 'Bar', 'Histogram', 'Pie', 'Table', 'Summary', 'Photos']
@@ -390,6 +375,38 @@ class VisualizationsController < ApplicationController
       params[:visualization].permit(:content, :data, :project_id, :globals, :title, :user_id,
                                     :tn_src, :tn_file_key, :summary, :thumb_id, :featured_media_id)
     end
+  end
+
+  def which_vis(has_time_data, has_loc_data, has_pics, field_count, format_data)
+    visualizations = []
+
+    # Determine which visualizations are relevant
+    if field_count[LONGITUDE_TYPE] > 0 and field_count[LATITUDE_TYPE] > 0 and has_loc_data
+      visualizations.push 'Map'
+    end
+
+    if field_count[TIME_TYPE] > 0 and field_count[NUMBER_TYPE] > 0 and format_data.count > 2 and has_time_data
+      visualizations.push 'Timeline'
+    end
+
+    if field_count[NUMBER_TYPE] > 0 and format_data.count > 1
+      visualizations.push 'Scatter'
+      visualizations.push 'Pie'
+    end
+
+    if format_data.count > 0
+      visualizations.push 'Bar'
+      visualizations.push 'Histogram'
+    end
+
+    visualizations.push 'Table'
+    visualizations.push 'Summary'
+
+    if has_pics
+      visualizations.push 'Photos'
+    end
+
+    visualizations
   end
 
   def allow_iframe
