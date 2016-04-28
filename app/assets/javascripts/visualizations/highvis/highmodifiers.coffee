@@ -84,7 +84,7 @@ $ ->
     # This should not be here.... i'll find a place for it some other time
     # Calculate which range a date falls in, both for group-by period
     # and to fix a bug causing points to be connected wrong
-    globals.getCurrentPeriod = (date) =>
+    globals.getCurrentPeriod = (date) ->
       month = ["January", "February", "March", "April", "May","June", "July",
         "August", "September", "October", "November", "December"]
     

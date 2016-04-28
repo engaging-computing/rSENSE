@@ -245,7 +245,7 @@ $ ->
         # Dates are normalized to 1990 so that when they are graphed, dates fall
         # on the right point, e.g. if the period option is set to Yearly, then
         # October 14 2016 and October 14 1994 will fall on the same x-value on the Timeline.
-        modifyDate = (date) =>
+        modifyDate = (date) ->
           switch
             when globals.configs.periodMode is 'yearly'
               new Date(1990, date.getMonth(), date.getDate(), date.getHours(),

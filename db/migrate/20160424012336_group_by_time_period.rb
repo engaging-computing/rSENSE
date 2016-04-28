@@ -1,7 +1,6 @@
 # This migration is very similar to the last one because it doing the
-# same thing, adding another group by field. 
+# same thing, adding another group by field.
 class GroupByTimePeriod < ActiveRecord::Migration
-
   class TimeField
     def self.typeID
       3
@@ -43,7 +42,7 @@ class GroupByTimePeriod < ActiveRecord::Migration
       p.globals = JSON.dump(globals)
       p.save
     end
- 
+
     # Add field to saved visualization
     Visualization.find_each do | v |
       globals = v.globals.nil? ? nil : JSON.parse(v.globals)
@@ -266,16 +265,16 @@ class GroupByTimePeriod < ActiveRecord::Migration
           table['tableFields'][i] += direction
         end
       end
-      
-      # Commented out because I do not want time period to be a visible field but I left it in incase this 
+
+      # Commented out because I do not want time period to be a visible field but I left it in incase this
       # needs to be a template for future group by options
-      
+
       # if direction == 1 && position != 3
       #   table['tableFields'].push(position)
       # elsif position != 3
       #   table['tableFields'] -= [position]
       # end
-      
+
       table['tableFields'].sort!
       table
     end
