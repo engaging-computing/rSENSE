@@ -122,8 +122,14 @@ $ ->
     https://github.com/curran/quadstream
     ###
     globals.dataReduce = (arr, xBounds, yBounds, xCells, yCells, target) ->
-
-      arr = globals.clip arr, xBounds, yBounds
+      
+      # If period option is on, disable clipping. This is to prevent a bug with
+      # zooming caused by the fact that when period is enabled and the user
+      # tries to zoom, the new x/yBounds are modified dates but the points in
+      # arr are not yet modified, so they are all tossed out.
+      # Should produce a more elegant fix later.
+      if not globals.configs.isPeriod
+        arr = globals.clip arr, xBounds, yBounds
 
       xRange = xBounds.max - xBounds.min
       yRange = yBounds.max - yBounds.min

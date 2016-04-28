@@ -34,7 +34,10 @@ $ ->
     globals.configs ?= {}
     globals.clippingVises = ['map', 'timeline', 'scatter', 'table']
     globals.configs.activeFilters ?= []
-    globals.configs.clippingMode ?= false
+
+    globals.configs.isPeriod ?= false # Controls how series are constructed in update().
+    globals.configs.periodMode ?= 'off' # Changes when a period option is selected.
+
 
     # Restore saved data
     if data.savedData?
@@ -59,6 +62,7 @@ $ ->
     data.COMBINED_FIELD = 2
     data.NUMBER_FIELDS_FIELD = 3
     data.CONTRIBUTOR_FIELD = 4
+    data.TIME_PERIOD_FIELD = 5
 
     data.types ?=
       TIME: 1
@@ -76,6 +80,44 @@ $ ->
 
     data.DEFAULT_PRECISION = 4
     data.precision ?= data.DEFAULT_PRECISION
+
+    # This should not be here.... i'll find a place for it some other time
+    # Calculate which range a date falls in, both for group-by period
+    # and to fix a bug causing points to be connected wrong
+    globals.getCurrentPeriod = (date) ->
+      month = ["January", "February", "March", "April", "May","June", "July",
+        "August", "September", "October", "November", "December"]
+    
+      switch
+        when globals.configs.periodMode is 'yearly'
+          '' + date.getFullYear()
+        when globals.configs.periodMode is 'monthly'
+          month[date.getMonth()] + ' ' + date.getFullYear()
+        when globals.configs.periodMode is 'weekly'
+          # since every month has day numbers falling on different days of the week,
+          # the weekly period calculation is a little different. Need to iteratively
+          # calculate the week number.
+          tempDate = new Date(date.getFullYear(), date.getMonth(), 1)
+          weekNumber = 1
+          dayNumber = 1
+          incrementWeekNext = false
+          while tempDate.getDate() != date.getDate()
+            if incrementWeekNext is true
+              incrementWeekNext = false
+              weekNumber += 1
+            if tempDate.getDay() == 6
+              incrementWeekNext = true
+            dayNumber += 1
+            tempDate.setDate(dayNumber)
+          weekNumber += 1 if incrementWeekNext is true
+
+          'week ' + weekNumber + ' in ' + month[date.getMonth()] + ' ' + date.getFullYear()
+        when globals.configs.periodMode is 'daily'
+          '' + date.getMonth + '/' + date.getDate() + '/' + date.getFullYear()
+        when globals.configs.periodMode is 'hourly'
+          'hour ' + date.getHours() + ' on ' + date.getMonth() +  '/' + date.getDate() + '/' + date.getFullYear()
+        else
+          'Enable Period in Tools'
 
     ###
     Selects data with potential filters
@@ -309,12 +351,23 @@ $ ->
           if data.fields[f].fieldID != -1
             groups.push(data.fields[f].fieldName)
       else
-        for dp in @dataPoints
-          if dp[gIndex] isnt null
-            result[String(dp[gIndex]).toLowerCase()] = true
 
-        groups = for keys of result
-          keys
+      if gIndex == data.TIME_PERIOD_FIELD #and globals.configs.isPeriod
+        timestampIndex = data.timeFields[0]
+        groups = []
+
+        # Look through all timestamps to find the different time periods to use for groups
+        for point in data.dataPoints
+          timestamp = point[timestampIndex]
+          period = globals.getCurrentPeriod(new Date(timestamp))
+          point[data.TIME_PERIOD_FIELD] = period
+
+      for dp in @dataPoints
+        if dp[gIndex] isnt null
+          result[String(dp[gIndex]).toLowerCase()] = true
+
+      groups = for keys of result
+        keys
 
       groups.sort()
 

@@ -241,6 +241,28 @@ $ ->
 
         dp = globals.getData(true, globals.configs.activeFilters)
 
+        # Helper Function to modify the date based on period option on Timeline
+        # Dates are normalized to 1990 so that when they are graphed, dates fall
+        # on the right point, e.g. if the period option is set to Yearly, then
+        # October 14 2016 and October 14 1994 will fall on the same x-value on the Timeline.
+        modifyDate = (date) ->
+          switch
+            when globals.configs.periodMode is 'yearly'
+              new Date(1990, date.getMonth(), date.getDate(), date.getHours(),
+                       date.getMinutes(), date.getSeconds(), date.getMilliseconds()).getTime()
+            when globals.configs.periodMode is 'monthly'
+              new Date(1990, 0, date.getDate(), date.getHours(), date.getMinutes(),
+                       date.getSeconds(), date.getMilliseconds()).getTime()
+            when globals.configs.periodMode is 'weekly'
+              # Jan 1 1989 is a Sunday
+              new Date(1989, 0, date.getDay() + 1, date.getHours(), date.getMinutes(),
+                       date.getSeconds(), date.getMilliseconds()).getTime()
+            when globals.configs.periodMode is 'daily'
+              new Date(1990, 0, 1, date.getHours(), date.getMinutes(), date.getSeconds(),
+                       date.getMilliseconds()).getTime()
+            when globals.configs.periodMode is 'hourly'
+              new Date(1990, 0, 1, 0, date.getMinutes(), date.getSeconds(), date.getMilliseconds()).getTime()
+
         # Compute max bounds if there is no user zoom
         if not @isZoomLocked()
           @configs.yBounds.min = @configs.xBounds.min =  Number.MAX_VALUE
@@ -285,36 +307,66 @@ $ ->
                   @xGridSize, @yGridSize, @MAX_SERIES_SIZE)
               else
                 data.xySelector(@configs.xAxis, fi, gi, dp)
+            
+            # For Timeline Period option:
+            # There was a bug causing the lines connecting points to wrap around from
+            # the right edge to the left (ex: http://i.imgur.com/SIzP03P.png). This block
+            # fixes it by splitting the data into different series based on the range
+            # the point falls in (ex fixed: http://i.imgur.com/NDIrq8i.png).
+            datArray = new Array
+            if globals.configs.isPeriod is true
+              currentPeriod = null
+              for point in dat
+                newDate = new Date(point.x)
+                thisPeriod = globals.getCurrentPeriod(newDate)
+                if currentPeriod is null
+                  datArray.push(new Array)
+                  currentPeriod = thisPeriod
+                if thisPeriod != currentPeriod
+                  currentPeriod = thisPeriod
+                  datArray.push(new Array)
+                point.x = modifyDate(newDate)
+                datArray[datArray.length - 1].push(point)
+            else
+              # if not using the period option, don't worry about the above.
+              datArray.push(dat)
 
             mode = @configs.mode
             if dat.length < 2 and @configs.mode is @LINES_MODE
               mode = @SYMBOLS_LINES_MODE
 
-            options =
-              data: dat
-              showInLegend: false
-              color: globals.getColor(gi)
-              name:
-                group: data.groups[gi]
-                field: data.fields[fi].fieldName
-            switch
-              when mode is @SYMBOLS_LINES_MODE
+            # loop through all the series and add them to the chart
+            for series in datArray
+              options =
+                data: series
+                showInLegend: false
+                color: globals.getColor(gi)
+                name:
+                  group: data.groups[gi]
+                  field: data.fields[fi].fieldName
+              if series.length < 2 and @configs.mode is @LINES_MODE
                 options.marker =
                   symbol: globals.symbols[si % globals.symbols.length]
                 options.lineWidth = 2
+              else
+                switch
+                  when mode is @SYMBOLS_LINES_MODE
+                    options.marker =
+                      symbol: globals.symbols[si % globals.symbols.length]
+                    options.lineWidth = 2
 
-              when mode is @SYMBOLS_MODE
-                options.marker =
-                  symbol: globals.symbols[si % globals.symbols.length]
-                options.lineWidth = 0
+                  when mode is @SYMBOLS_MODE
+                    options.marker =
+                      symbol: globals.symbols[si % globals.symbols.length]
+                    options.lineWidth = 0
 
-              when mode is @LINES_MODE
-                options.marker =
-                  symbol: 'blank'
-                options.lineWidth = 2
-                options.dashStyle = globals.dashes[si % globals.dashes.length]
+                  when mode is @LINES_MODE
+                    options.marker =
+                      symbol: 'blank'
+                    options.lineWidth = 2
+                    options.dashStyle = globals.dashes[si % globals.dashes.length]
 
-            @chart.addSeries(options, false)
+              @chart.addSeries(options, false)
 
         if @isZoomLocked()
           @updateOnZoom = false
@@ -373,6 +425,7 @@ $ ->
         $('#y-axis-min').val(@configs.yBounds.min)
         $('#y-axis-max').val(@configs.yBounds.max)
 
+        
       ###
       Draws radio buttons for changing symbol/line mode.
       ###
@@ -388,6 +441,7 @@ $ ->
           { mode: @LINES_MODE,         text: "Lines Only" }
           { mode: @SYMBOLS_MODE,       text: "Symbols Only" }
         ]
+        inctx.period = HandlebarsTemplates[hbCtrl('period')]
 
         # Draw the Tool controls
         outctx = {}
@@ -397,6 +451,19 @@ $ ->
         tools = HandlebarsTemplates[hbCtrl('body')](outctx)
 
         $('#vis-ctrls').append tools
+        
+        # Set the correct options for period:
+        $('#period-list').val(globals.configs.periodMode)
+
+        $('#period-list').change =>
+          globals.configs.periodMode = $('#period-list').val()
+          if $('#period-list').val() != 'off'
+            globals.configs.isPeriod = true
+          else
+            globals.configs.isPeriod = false
+          $( "#group-by" ).trigger( "change" )
+          @start()
+
 
         # Add material design
         $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
