@@ -17,7 +17,7 @@
                 <%= ff.text_field :youtube_url, placeholder: "Embedded Youtube URL", class: "form-control" %>
               </div>
               <div class="col-xs-12" style="margin-top: 20px">
-                <%= label_tag ':category', 'Categories:'%>
+                Category:
                 <%= ff.select(:category, options_for_select([['Getting Started','Getting Started'], ['Working With Data', 'Working With Data'], ['Visualizations', 'Visualizations']]), class: "form-control") %>
               </div>
             </div>

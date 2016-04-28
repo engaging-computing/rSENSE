@@ -33,7 +33,7 @@ class TutorialsController < ApplicationController
     respond_to do |format|
       if @tutorial.save
         format.html do
-          redirect_to tutorials_url,
+          redirect_to "/tutorials/#{@tutorial.id}/edit",
           notice: 'Tutorial was successfully created.'
         end
         format.json do

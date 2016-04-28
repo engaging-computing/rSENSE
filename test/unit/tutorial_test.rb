@@ -8,18 +8,8 @@ class TutorialTest < ActiveSupport::TestCase
     @tutorial = Tutorial.new
   end
 
-  # Passes if content is nil
-  test 'content is nil' do
-    assert_default_nil(@tutorial, @tutorial.content)
-  end
-
-  # Passes if hidden is true
-  test 'hidden is true' do
-    assert_default_true(@tutorial, @tutorial.hidden)
-  end
-
-  # Passes if featured is false
-  test 'featured is false' do
-    assert_default_false(@tutorial, @tutorial.featured)
+  # Passes if category is nil
+  test 'category is nil' do
+    assert_default_nil(@tutorial, @tutorial.category)
   end
 end

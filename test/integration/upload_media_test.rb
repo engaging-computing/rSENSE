@@ -9,7 +9,7 @@ class UploadMediaTest < IntegrationTest
 
     # Upload media to tutorial
     tut_id = tutorials(:media_test).id
-    visit "/tutorials/#{tut_id}"
+    visit "/tutorials/#{tut_id}/edit"
     assert page.has_content? 'Media'
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
     find('.upload_media form').attach_file('upload', img_path)
