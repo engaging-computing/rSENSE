@@ -357,8 +357,4 @@ DEPENDENCIES
   yaml_db!
 
 BUNDLED WITH
-<<<<<<< HEAD
-   1.10.6
-=======
    1.11.2
->>>>>>> upstream/master

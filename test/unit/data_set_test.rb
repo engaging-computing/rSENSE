@@ -32,9 +32,9 @@ class DataSetTest < ActiveSupport::TestCase
     dset1.recalculate
     assert_similar_arrays dset1.formula_data, [
       { "#{ff1.id}" =>  '4.5', "#{ff2.id}" => '20.249999999999993' },
-      { "#{ff1.id}" =>  '6.0', "#{ff2.id}" => '20.249999999999993' },
+      { "#{ff1.id}" =>    '6', "#{ff2.id}" => '20.249999999999993' },
       { "#{ff1.id}" =>  '7.5', "#{ff2.id}" => '20.249999999999993' },
-      { "#{ff1.id}" =>  '9.0', "#{ff2.id}" => '20.249999999999993' },
+      { "#{ff1.id}" =>    '9', "#{ff2.id}" => '20.249999999999993' },
       { "#{ff1.id}" => '10.5', "#{ff2.id}" => '20.249999999999993' }
     ]
 
@@ -53,11 +53,11 @@ class DataSetTest < ActiveSupport::TestCase
     dset3 = data_sets(:calculation_data_3)
     dset3.recalculate
     assert_similar_arrays dset3.formula_data, [
-      { "#{ff1.id}" =>     '', "#{ff2.id}" => '0.0' },
-      { "#{ff1.id}" => '19.0', "#{ff2.id}" => '2702.3362560000005' },
-      { "#{ff1.id}" =>     '', "#{ff2.id}" => '0.0' },
-      { "#{ff1.id}" => '19.0', "#{ff2.id}" => '2702.3362560000005' },
-      { "#{ff1.id}" =>     '', "#{ff2.id}" => '0.0' }
+      { "#{ff1.id}" =>   '', "#{ff2.id}" => '0' },
+      { "#{ff1.id}" => '19', "#{ff2.id}" => '2702.3362560000005' },
+      { "#{ff1.id}" =>   '', "#{ff2.id}" => '0' },
+      { "#{ff1.id}" => '19', "#{ff2.id}" => '2702.3362560000005' },
+      { "#{ff1.id}" =>   '', "#{ff2.id}" => '0' }
     ]
   end
 
@@ -71,11 +71,11 @@ class DataSetTest < ActiveSupport::TestCase
     dset1 = data_sets(:calculation_data_4)
     dset1.recalculate
     assert_similar_arrays dset1.formula_data, [
-      { "#{ff1.id}" => '1.0', "#{ff2.id}" => '', "#{ff3.id}" => '1.0' },
-      { "#{ff1.id}" => '2.0', "#{ff2.id}" => '', "#{ff3.id}" => '2.0' },
-      { "#{ff1.id}" => '3.0', "#{ff2.id}" => '', "#{ff3.id}" => '3.0' },
-      { "#{ff1.id}" => '4.0', "#{ff2.id}" => '', "#{ff3.id}" => '4.0' },
-      { "#{ff1.id}" => '5.0', "#{ff2.id}" => '', "#{ff3.id}" => '5.0' }
+      { "#{ff1.id}" => '1', "#{ff2.id}" => '', "#{ff3.id}" => '1' },
+      { "#{ff1.id}" => '2', "#{ff2.id}" => '', "#{ff3.id}" => '2' },
+      { "#{ff1.id}" => '3', "#{ff2.id}" => '', "#{ff3.id}" => '3' },
+      { "#{ff1.id}" => '4', "#{ff2.id}" => '', "#{ff3.id}" => '4' },
+      { "#{ff1.id}" => '5', "#{ff2.id}" => '', "#{ff3.id}" => '5' }
     ]
   end
 end

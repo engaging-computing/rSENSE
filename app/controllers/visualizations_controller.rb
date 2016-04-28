@@ -115,7 +115,7 @@ class VisualizationsController < ApplicationController
 
         image = MiniMagick::Image.read(params[:visualization][:svg], '.svg')
         image.format 'png'
-        image.resize '512'
+        image.resize '512x512'
 
         File.open(mo.file_name, 'wb') do |ff|
           ff.write(image.to_blob)

@@ -143,6 +143,9 @@ class DataSet < ActiveRecord::Base
                    when 5
                      arr = data.map { |y| y[key].to_f }
                      Beaker::ArrayType.new(arr, :longitude, 0)
+                   else
+                     arr = data.map { |y| y[key] }
+                     Beaker::ArrayType.new(arr, :text, 0)
                    end
       curr_env.add x.refname, beaker_arr
       field_arrays.push(beaker_arr)
