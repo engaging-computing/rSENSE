@@ -8,7 +8,6 @@ class TutorialsControllerTest < ActionController::TestCase
   test 'should get index' do
     get :index
     assert_response :success
-    assert_not_nil assigns(:tutorials)
     assert_valid_html response.body
   end
 

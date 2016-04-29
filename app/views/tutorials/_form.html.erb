@@ -5,7 +5,7 @@
         <strong>Title: </strong><%= f.text_field :title, class: "form-control" %>
       </div>
       <div class="col-xs-12" style="margin-top: 20px">
-        <%= f.label ':category', 'Categories:'%>
+        Category: 
         <%= f.select(:category, options_for_select([['Getting Started','Getting Started'], ['Working With Data', 'Working With Data'], ['Visualizations', 'Visualizations']]), class: "form-control") %>
       </div>
       <div class="clear"><br></div>
