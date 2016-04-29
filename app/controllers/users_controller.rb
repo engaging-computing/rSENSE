@@ -3,7 +3,7 @@ require 'base64'
 class UsersController < ApplicationController
   before_filter :authorize_admin, only: [:index]
 
-  skip_before_filter :authorize, only: [:show, :index, :pw_request, :pw_send_key, :pw_reset]
+  skip_before_filter :authorize, only: [:show, :index, :pw_request, :pw_send_key, :pw_reset, :contributions]
 
   include ActionView::Helpers::DateHelper
   include ApplicationHelper
@@ -59,7 +59,7 @@ class UsersController < ApplicationController
   # GET /users/1/contributions
   # GET /users/1.json
   def contributions
-    @user = User.find(params[:id])
+    @user = User.find_by_id(params[:id])
 
     # See if we are only looking for specific contributions
     @filter = params[:filters].to_s.downcase
@@ -70,7 +70,7 @@ class UsersController < ApplicationController
       page_size = params[:page_size].to_i
     end
 
-    show_hidden = (current_user.id == @user.id) || can_admin?(@user)
+    show_hidden = (!current_user.nil? && (current_user.id == @user.id)) || can_admin?(@user)
 
     @contributions = []
     @objtype = ''
