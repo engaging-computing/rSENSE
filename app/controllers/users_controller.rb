@@ -165,7 +165,7 @@ class UsersController < ApplicationController
 
     sign_in('user', @user)
 
-    auth  = true if current_user != nil && current_user.admin?
+    auth  = true if !current_user.nil? && current_user.admin?
     auth  = true if can_edit?(@user) && session[:pw_change]
 
     if !auth && can_edit?(@user)
