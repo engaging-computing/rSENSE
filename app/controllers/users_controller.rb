@@ -46,7 +46,8 @@ class UsersController < ApplicationController
     else
 
       recur = params.key?(:recur) ? params[:recur] == 'true' : false
-      show_hidden = current_user.id == @user.id
+
+      show_hidden = current_user != nil && current_user.id == @user.id
 
       respond_to do |format|
         format.html { render status: :ok }
@@ -164,7 +165,7 @@ class UsersController < ApplicationController
 
     sign_in('user', @user)
 
-    auth  = true if current_user.admin?
+    auth  = true if current_user != nil && current_user.admin?
     auth  = true if can_edit?(@user) && session[:pw_change]
 
     if !auth && can_edit?(@user)
