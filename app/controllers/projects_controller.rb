@@ -520,7 +520,7 @@ class ProjectsController < ApplicationController
   end
 
   def add_location_field(params)
-    if params[:hidden_location_count] == '1'
+    if params[:hidden_location_count] != '0'
       errors = []
       errors += add_field('Latitude', params[:latitude], 'deg', [], params['latitude_index'])
       errors += add_field('Longitude', params[:longitude], 'deg', [], params['longitude_index'])

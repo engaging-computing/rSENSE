@@ -211,14 +211,14 @@ callDeleteRow = (rowIndex, rowName, fid) ->
     t = document.getElementById('fields_table')
     deleteRow(rowIndex, true, 'location')
     for i in [1...t.rows.length]
-      if t.rows[i].cells[2].innerHTML == 'Longitude'
+      if t.rows[i].cells[2].innerHTML.trim() == 'Longitude'
         deleteRow(i, true, 'location')
 
   else if rowName == 'longitude'
     t = document.getElementById('fields_table')
     deleteRow(rowIndex, true, 'location')
     for i in [1...t.rows.length]
-      if t.rows[i].cells[2].innerHTML == 'Latitude'
+      if t.rows[i].cells[2].innerHTML.trim() == 'Latitude'
         deleteRow(i, true, 'location')
 
   else
