@@ -116,6 +116,10 @@ class DataSet < ActiveRecord::Base
       formula_fields = project.formula_fields
     end
 
+    if formula_fields.length == 0
+      return
+    end
+
     if fields.nil?
       fields = project.fields
     end
@@ -129,7 +133,13 @@ class DataSet < ActiveRecord::Base
       key = x.id.to_s
       beaker_arr = case x.field_type
                    when 1
-                     arr = data.map { |y| DateTime.parse(y[key]) }
+                     arr = data.map do |y|
+                       begin
+                         DateTime.parse(y[key])
+                       rescue
+                         nil
+                       end
+                     end
                      Beaker::ArrayType.new(arr, :timestamp, 0)
                    when 2
                      arr = data.map { |y| y[key].nil? or y[key] == '' ? nil : y[key].to_f }

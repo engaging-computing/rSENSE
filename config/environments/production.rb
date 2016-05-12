@@ -36,7 +36,8 @@ Rsense::Application.configure do
 
   # info log level leaks password reset tokens which is a BIG SECURITY HOLE!
   # anyone who got access to our logs, they could steal tokens and reset user's passwords
-  config.log_level = :warn
+  # Dev note: We're leaving it at "info" level for now. Will decide how to proceed later.
+  config.log_level = :info
 
   # Prepend all log lines with the following tags
   # config.log_tags = [ :subdomain, :uuid ]
