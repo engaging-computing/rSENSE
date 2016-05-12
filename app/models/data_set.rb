@@ -115,7 +115,11 @@ class DataSet < ActiveRecord::Base
     if formula_fields.nil?
       formula_fields = project.formula_fields
     end
-
+    
+    if formula_fields.length == 0
+      return
+    end
+    
     if fields.nil?
       fields = project.fields
     end
