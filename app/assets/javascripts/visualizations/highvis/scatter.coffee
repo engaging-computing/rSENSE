@@ -314,7 +314,8 @@ $ ->
             # fixes it by splitting the data into different series based on the range
             # the point falls in (ex fixed: http://i.imgur.com/NDIrq8i.png).
             datArray = new Array
-            if globals.configs.isPeriod is true
+            console.log(@isScatter)
+            if @isScatter is null and globals.configs.isPeriod is true and data.timeType is data.NORM_TIME
               currentPeriod = null
               for point in dat
                 newDate = new Date(point.x)
