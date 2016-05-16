@@ -50,8 +50,10 @@ $ ->
         backdrop: 'static'
         keyboard: 'false'
 
+      # Strip all font selection away from svg (except for "sans-serif") so that newer versions of ImageMagick work.
+      # Our site uses the default sans-serif font anyway.
       svg = if globals.curVis.chart?
-        globals.curVis.chart.getSVG()
+        globals.curVis.chart.getSVG().replace("'lucida grande', 'lucida sans unicode', arial, helvetica, ", "")
       else
         undefined
 
