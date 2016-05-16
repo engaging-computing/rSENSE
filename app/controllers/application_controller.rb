@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
 
   skip_before_filter :verify_authenticity_token, only: [:options_req]
   skip_before_filter :find_user, only: [:options_req]
-  skip_before_filter :authorize, only: [:options_req]
+  skip_before_filter :authorize, only: [:options_req, :create_issue, :create_issue_anon]
 
   before_action :configure_permitted_parameters, if: :devise_controller?
 
@@ -42,7 +42,7 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    if params[:action] == 'create_issue_anon' || params[:action] == 'github_authorize'
+    if !user_signed_in? && (params[:action] == 'create_issue_anon' || params[:action] == 'github_authorize')
       redirect_to new_user_session_path
       return
     end
