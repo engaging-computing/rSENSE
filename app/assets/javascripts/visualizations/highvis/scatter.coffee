@@ -314,8 +314,7 @@ $ ->
             # fixes it by splitting the data into different series based on the range
             # the point falls in (ex fixed: http://i.imgur.com/NDIrq8i.png).
             datArray = new Array
-            console.log(@isScatter)
-            if @isScatter is null and globals.configs.isPeriod is true and data.timeType is data.NORM_TIME
+            if @isScatter is null and globals.configs.isPeriod is true and data.timeType == data.NORM_TIME
               currentPeriod = null
               for point in dat
                 newDate = new Date(point.x)
@@ -442,7 +441,13 @@ $ ->
           { mode: @LINES_MODE,         text: "Lines Only" }
           { mode: @SYMBOLS_MODE,       text: "Symbols Only" }
         ]
-        inctx.period = HandlebarsTemplates[hbCtrl('period')]
+
+        if data.timeFields.length > 0 and data.timeType != data.GEO_TIME
+          inctx.period = HandlebarsTemplates[hbCtrl('period')]
+        else
+          # Safeguard, in case the default vis has time data but the current dataset does not.
+          globals.configs.isPeriod = false
+          globals.configs.periodMode = 'off'
 
         # Draw the Tool controls
         outctx = {}
@@ -454,7 +459,8 @@ $ ->
         $('#vis-ctrls').append tools
         
         # Set the correct options for period:
-        $('#period-list').val(globals.configs.periodMode)
+        if data.timeFields.length > 0 and data.timeType != data.GEO_TIME
+          $('#period-list').val(globals.configs.periodMode)
 
         $('#period-list').change =>
           globals.configs.periodMode = $('#period-list').val()
