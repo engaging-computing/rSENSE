@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160128175730) do
+ActiveRecord::Schema.define(version: 20160424012336) do
 
   create_table "contrib_keys", force: true do |t|
     t.string   "name",       null: false
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(version: 20160128175730) do
     t.text     "data",             default: "[]", null: false
     t.string   "key"
     t.string   "contributor_name"
+    t.text     "formula_data",     default: "[]", null: false
   end
 
   create_table "fields", force: true do |t|
@@ -42,6 +43,19 @@ ActiveRecord::Schema.define(version: 20160128175730) do
     t.datetime "updated_at"
     t.text     "restrictions",             default: "[]"
     t.integer  "index"
+    t.string   "refname",                  default: ""
+  end
+
+  create_table "formula_fields", force: true do |t|
+    t.string   "name"
+    t.integer  "field_type"
+    t.text     "unit",       limit: 255, default: ""
+    t.integer  "project_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "index"
+    t.string   "refname",                default: ""
+    t.string   "formula",                default: ""
   end
 
   create_table "likes", force: true do |t|
@@ -118,18 +132,30 @@ ActiveRecord::Schema.define(version: 20160128175730) do
     t.string   "lastname"
     t.string   "email"
     t.integer  "group_id"
-    t.boolean  "validated",       default: false
+    t.boolean  "validated",              default: false
     t.string   "password_digest"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "validation_key"
-    t.boolean  "admin",           default: false
-    t.boolean  "hidden",          default: false
+    t.boolean  "admin",                  default: false
+    t.boolean  "hidden",                 default: false
     t.text     "bio"
     t.integer  "news_id"
-    t.datetime "last_login",      default: '2013-08-16 12:00:00'
+    t.datetime "last_login",             default: '2013-08-16 12:00:00'
     t.string   "name"
+    t.string   "encrypted_password",     default: "",                    null: false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",          default: 0,                     null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
   end
+
+  add_index "users", ["email"], name: "index_users_on_email", unique: true
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
 
   create_table "view_counts", force: true do |t|
     t.integer  "project_id",             null: false

@@ -274,6 +274,7 @@ $ ->
       drawToolControls: ->
         inctx =
           binSize: @configs.binSize
+          period: HandlebarsTemplates[hbCtrl('period')]
 
         outctx =
           id: 'tools-ctrls'
@@ -282,6 +283,18 @@ $ ->
 
         tools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append(tools)
+        
+        # Set the correct options for period:
+        $('#period-list').val(globals.configs.periodMode)
+
+        $('#period-list').change =>
+          globals.configs.periodMode = $('#period-list').val()
+          if $('#period-list').val() != 'off'
+            globals.configs.isPeriod = true
+          else
+            globals.configs.isPeriod = false
+          $( "#group-by" ).trigger( "change" )
+          @start()
 
         # Adds material design
         $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->

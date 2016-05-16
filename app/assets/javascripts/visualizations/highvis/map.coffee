@@ -318,8 +318,13 @@ $ ->
           @gmap.setCenter(new google.maps.LatLng(@configs.savedCenter.lat,
             @configs.savedCenter.lng))
         else
-          @gmap.fitBounds(latlngbounds)
-
+          # Set default 200 km scale for case of one data point
+          if globals.getData(true, globals.configs.activeFilters).length is 1
+            @gmap.setZoom(5)
+            @gmap.setCenter(latlngbounds.getCenter())
+          else
+            @gmap.fitBounds(latlngbounds)
+            
         @drawControls()
 
         ctaLayer = new google.maps.KmlLayer({url: window.kml})
@@ -476,6 +481,7 @@ $ ->
               label: 'Marker Density'
             }
           ]
+          period: HandlebarsTemplates[hbCtrl('period')]
 
         for i in data.normalFields
           inctx.heatmaps.push
@@ -490,6 +496,20 @@ $ ->
 
         tools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append(tools)
+        
+        # Set the correct options for period:
+        $('#period-list').val(globals.configs.periodMode)
+
+        $('#period-list').change =>
+          console.log('Period:')
+          console.log($('#period-list').val())
+          globals.configs.periodMode = $('#period-list').val()
+          if $('#period-list').val() != 'off'
+            globals.configs.isPeriod = true
+          else
+            globals.configs.isPeriod = false
+          $( "#group-by" ).trigger( "change" )
+          @start()
 
         # Add material design
         $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->

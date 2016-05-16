@@ -9,7 +9,7 @@ module ProjectsHelper
 
   def can_contribute?(project)
     session[:contrib_access] == project.id ||
-      (@cur_user.try(:id) && !project.lock?)
+      (current_user.try(:id) && !project.lock?)
   end
 
   def is_deleted?(project)

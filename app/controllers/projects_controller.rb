@@ -61,10 +61,12 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
 
     @cloned_project = Project.select(:id, :user_id, :title).where(id: @project.cloned_from).first
-    @liked_by_cur_user = Like.find_by_user_id_and_project_id(@cur_user, @project.id)
+    @liked_by_cur_user = Like.find_by_user_id_and_project_id(current_user, @project.id)
     @data_sets = @project.data_sets.select('id', 'title', 'user_id', 'key', 'created_at', 'contributor_name').search(params[:search])
     @fields = @project.fields
     @field_count = @fields.count
+    @formula_fields = @project.formula_fields
+    @formula_field_count = @formula_fields.count
     @data_set_count = @data_sets.length
 
     recur = params.key?(:recur) ? params[:recur] == 'true' : false
@@ -99,11 +101,11 @@ class ProjectsController < ApplicationController
   def create
     if params[:project_id]
       cloned_from = Project.find(params[:project_id])
-      @project = cloned_from.clone(params, @cur_user.id)
+      @project = cloned_from.clone(params, current_user.id)
     else
       @cloned_project = nil
       @project = Project.new project_params
-      @project.user_id = @cur_user.id
+      @project.user_id = current_user.id
     end
 
     respond_to do |format|
@@ -132,7 +134,7 @@ class ProjectsController < ApplicationController
     update = project_params
 
     # ADMIN REQUEST
-    if @cur_user.try(:admin)
+    if current_user.try(:admin)
       if update.key?(:featured)
         if update['featured'] == 'true'
           update['featured_at'] = Time.now
@@ -171,7 +173,14 @@ class ProjectsController < ApplicationController
   # DELETE /projects/1
   # DELETE /projects/1.json
   def destroy
-    @project = Project.find(params[:id])
+    begin
+      @project = Project.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      respond_to do |format|
+        format.json { render json: { error: 'Project not found.' }, status: :not_found }
+      end
+      return
+    end
 
     unless can_delete?(@project)
       respond_to do |format|
@@ -211,7 +220,7 @@ class ProjectsController < ApplicationController
 
   # POST /projects/1/updateLikedStatus
   def updateLikedStatus
-    like = Like.find_by_user_id_and_project_id(@cur_user, params[:id])
+    like = Like.find_by_user_id_and_project_id(current_user, params[:id])
 
     if like
       if Like.destroy(like.id)
@@ -226,7 +235,7 @@ class ProjectsController < ApplicationController
       end
 
     else
-      if Like.create(user_id: @cur_user.id, project_id: params[:id])
+      if Like.create(user_id: current_user.id, project_id: params[:id])
         count = Project.find(params[:id]).likes.count
         respond_to do |format|
           format.json { render json: { update: count }, status: :ok }
@@ -241,91 +250,139 @@ class ProjectsController < ApplicationController
 
   def edit_fields
     @project = Project.find(params[:id])
+    @fields = @project.fields
+    @allowable_types = [:timestamp, :number, :text, :location]
+    @action = 'fields'
+    @can_delete = @project.data_sets.count == 0
+  end
+
+  def edit_formula_fields
+    @project = Project.find(params[:id])
+    @fields = @project.formula_fields.sort { |l, r| l.index <=> r.index }
+    @allowable_types = [:number, :text]
+    @action = 'formula_fields'
+    @can_delete = true
+
+    fields_sorted = @project.fields.sort { |a, b| a.index <=> b.index }
+    @field_refs = fields_sorted.map do |f|
+      type = case f.field_type
+             when 1 then 'Timestamp'
+             when 2 then 'Number'
+             when 3 then 'Text'
+             when 4 then 'Latitude'
+             when 5 then 'Longitude'
+             end
+      [f.name, f.refname, type]
+    end
+
+    render 'edit_fields'
   end
 
   # Save fields in fields table
   def save_fields
     @project = Project.find(params[:id])
 
-    # Delete fields as necessary
-    puts params[:hidden_deleted_fields]
-    if params[:hidden_deleted_fields] != ''
-      params[:hidden_deleted_fields].split(',').each do |x|
-        if Field.find(x).destroy == -1 and return
-        end
+    errors = []
+    success = true
+
+    ActiveRecord::Base.transaction do
+      # Deletion silently fails upon any error
+      delete_hidden_fields(Field, params[:hidden_deleted_fields])
+
+      # Update existing fields, create restrictions if any exist
+      @project.fields.each do |field|
+        errors += update_field(field, params)
+      end
+
+      # Add fields based on type
+      errors += add_location_field(params)
+      errors += add_timestamp_field(params)
+      errors += add_number_fields(params)
+      errors += add_text_fields(params)
+
+      # If there's recorded error messages, roll back the database
+      if errors.length != 0
+        success = false
+        fail ActiveRecord::Rollback
       end
     end
 
-    # Update existing fields, create restrictions if any exist
-    @project.fields.each do |field|
-      restrictions = []
-
-      if params.key?("#{field.id}_restrictions")
-        restrictions = params["#{field.id}_restrictions"].split(',')
-        if restrictions.count < 1
-          restrictions = []
-        end
-      end
-
-      unless field.update_attributes(name: params["#{field.id}_name"],
-                                     unit: params["#{field.id}_unit"],
-                                     index: params["#{field.id}_index"],
-                                     restrictions: restrictions)
-        respond_to do |format|
-          flash[:error] = 'Field names must be unique.'
-          redirect_to "/projects/#{@project.id}/edit_fields" and return
-        end
-      end
+    # Don't recalculate anything if we ended up rolling back, because nothing changed
+    if success
+      @project.reload
+      @project.recalculate_data_sets
     end
 
-    # Add fields based on type
-    if params[:hidden_location_count] == '1'
-      if addField('Latitude', params[:latitude], 'deg', [], params['latitude_index']) == -1 and return
-      end
-      if addField('Longitude', params[:longitude], 'deg', [], params['longitude_index']) == -1 and return
-      end
-    end
-
-    if params[:hidden_timestamp_count] == '1'
-      if addField('Timestamp', params[:timestamp], '', [], params['timestamp_index']) == -1 and return
+    # redirect_to "/projects/#{@project.id}", notice: 'Fields were successfully updated.'
+    respond_to do |format|
+      if success
+        response = { redirect: url_for(@project) }
+        format.json { render json: response,  status: :ok }
+      else
+        response = { errors: errors.uniq }
+        format.json { render json: response,  status: :unprocessable_entity }
       end
     end
-
-    (params[:hidden_num_count].to_i).times do |i|
-      if addField('Number', params[('number_' + (i + 1).to_s).to_sym], params[('units_' + (i + 1).to_s).to_sym], [],  params[('number_' + ((i + 1).to_s) + '_index').to_sym]) == -1 and return
-      end
-    end
-
-    (params[:hidden_text_count].to_i).times do |i|
-      # Need to explicitly check if restrictions are nil because empty restrictions should be []
-      restrictions = params[('restrictions_' + (i + 1).to_s).to_sym].nil? ? [] : params[('restrictions_' + (i + 1).to_s).to_sym].split(',')
-
-      if addField('Text', params[('text_' + (i + 1).to_s).to_sym], '', restrictions, params[('text_' + (i + 1).to_s + '_index').to_sym]) == -1 and return
-      end
-    end
-
-    redirect_to "/projects/#{@project.id}", notice: 'Fields were successfully updated.' and return
   end
 
-  # Helper function to add field to database
-  def addField(fieldType, fieldName, unit, restrictions, index)
-    if fieldName.nil?
-      return
-    else
-      if index.nil?
-        index = @project.fields.size
+  def save_formula_fields
+    @project = Project.find(params[:id])
+
+    errors = []
+    success = true
+
+    ActiveRecord::Base.transaction do
+      delete_hidden_fields(FormulaField, params[:hidden_deleted_fields])
+
+      # Update existing fields, create restrictions if any exist
+      @project.formula_fields.each do |field|
+        errors += update_formula_field(field, params)
+        # do formula validation here
       end
-      field  = Field.new(project_id: @project.id,
-                         field_type: get_field_type(fieldType),
-                         name: fieldName,
-                         unit: unit,
-                         restrictions: restrictions,
-                         index: index)
+
+      # Add fields based on type
+      errors += add_number_formula_fields(params)
+      errors += add_text_formula_fields(params)
+
+      # so we can validate the formulas
+      @project.reload
+
+      # check the formulas for validity
+      # put the fields and formula fields in a format usable by the checker
+      check_fields = @project.fields.map do |x|
+        type = [nil, [:timestamp], [:number], [:text], [:latitude], [:longitude]][x.field_type]
+        [x.refname, type]
+      end
+      formulas_sorted = @project.formula_fields.sort { |a, b| a.index <=> b.index }
+      check_formulas = formulas_sorted.map do |x|
+        type = [nil, nil, [:number], [:text]][x.field_type]
+        [x.refname, type, x.formula, x.name]
+      end
+      # try and run the formulas on a dummy environment and see if they work
+      errors += FormulaField.try_execute(check_formulas, check_fields)
+
+      # If there's recorded error messages, roll back the databases
+      if errors.length != 0
+        success = false
+        fail ActiveRecord::Rollback
+      end
     end
 
-    unless field.save
-      flash[:error] = "#{field.errors.full_messages[0]}\n"
-      redirect_to "/projects/#{@project.id}/edit_fields" and return -1
+    # Don't recalculate anything if we ended up rolling back, because nothing changed
+    if success
+      @project.reload
+      @project.recalculate_data_sets
+    end
+
+    # redirect_to "/projects/#{@project.id}", notice: 'Formula fields were successfully updated.'
+    respond_to do |format|
+      if success
+        response = { redirect: url_for(@project) }
+        format.json { render json: response, status: :ok }
+      else
+        response = { errors: errors.uniq }
+        format.json { render json: response, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -381,7 +438,7 @@ class ProjectsController < ApplicationController
       data = uploader.swap_with_field_names(data_obj, @project)
 
       dataset = DataSet.new do |d|
-        d.user_id = @cur_user.id
+        d.user_id = current_user.id
         d.title = params[:title]
         d.project_id = @project.id
         d.data = data
@@ -411,8 +468,155 @@ class ProjectsController < ApplicationController
 
   private
 
+  # Helper function to delete hidden fields
+  def delete_hidden_fields(field_model, hidden_fields_str)
+    # Delete fields as necessary
+    if hidden_fields_str != ''
+      hidden_fields_str.split(',').each do |x|
+        if field_model.find(x).destroy == -1 and return
+        end
+      end
+    end
+  end
+
+  # Helper function to update individual fields
+  def update_field(field, params)
+    if params.key?("#{field.id}_restrictions")
+      restrictions = params["#{field.id}_restrictions"].split(',')
+      if restrictions.count < 1
+        restrictions = []
+      end
+    else
+      restrictions = []
+    end
+
+    attributes = {
+      name: params["#{field.id}_name"],
+      unit: params["#{field.id}_unit"],
+      restrictions: restrictions,
+      index: params["#{field.id}_index"]
+    }
+    success = field.update_attributes(attributes)
+
+    if success
+      []
+    else
+      field.errors.full_messages
+    end
+  end
+
+  # Helper function to update individual formula fields
+  def update_formula_field(field, params)
+    success = field.update_attributes(name: params["#{field.id}_name"],
+                                      unit: params["#{field.id}_unit"],
+                                      formula: params["#{field.id}_formula"],
+                                      index: params["#{field.id}_index"])
+
+    if success
+      []
+    else
+      field.errors.full_messages
+    end
+  end
+
+  def add_location_field(params)
+    if params[:hidden_location_count] != '0'
+      errors = []
+      errors += add_field('Latitude', params[:latitude], 'deg', [], params['latitude_index'])
+      errors += add_field('Longitude', params[:longitude], 'deg', [], params['longitude_index'])
+      errors
+    else
+      []
+    end
+  end
+
+  def add_timestamp_field(params)
+    if params[:hidden_timestamp_count] == '1'
+      add_field('Timestamp', params[:timestamp], '', [], params['timestamp_index'])
+    else
+      []
+    end
+  end
+
+  def add_number_fields(params)
+    errors = []
+    (params[:hidden_num_count].to_i).times do |i|
+      errors += add_field('Number', params[('number_' + (i + 1).to_s).to_sym], params[('units_' + (i + 1).to_s).to_sym], [],  params[('number_' + ((i + 1).to_s) + '_index').to_sym])
+    end
+    errors
+  end
+
+  def add_text_fields(params)
+    errors = []
+    (params[:hidden_text_count].to_i).times do |i|
+      # Need to explicitly check if restrictions are nil because empty restrictions should be []
+      restrictions = params[('restrictions_' + (i + 1).to_s).to_sym].nil? ? [] : params[('restrictions_' + (i + 1).to_s).to_sym].split(',')
+      errors += add_field('Text', params[('text_' + (i + 1).to_s).to_sym], '', restrictions, params[('text_' + (i + 1).to_s + '_index').to_sym])
+    end
+    errors
+  end
+
+  def add_number_formula_fields(params)
+    errors = []
+    (params[:hidden_num_count].to_i).times do |i|
+      field_name = params[('number_' + (i + 1).to_s).to_sym]
+      units = params[('units_' + (i + 1).to_s).to_sym]
+      formula = params[('nformula_' + (i + 1).to_s).to_sym]
+      index = params[('number_' + ((i + 1).to_s) + '_index').to_sym]
+      errors += add_formula_field('Number', field_name, units, formula, index)
+    end
+    errors
+  end
+
+  def add_text_formula_fields(params)
+    errors = []
+    (params[:hidden_text_count].to_i).times do |i|
+      field_name = params[('text_' + (i + 1).to_s).to_sym]
+      formula = params[('tformula_' + (i + 1).to_s).to_sym]
+      index = params[('text_' + (i + 1).to_s + '_index').to_sym]
+      errors += add_formula_field('Text', field_name, '', formula, index)
+    end
+    errors
+  end
+
+  # Helper function to add field to database
+  def add_field(field_type, field_name, unit, restrictions, index)
+    if field_name.nil?
+      []
+    else
+      if index.nil?
+        index = @project.fields.size
+      end
+      field = Field.new(project_id: @project.id,
+                        field_type: get_field_type(field_type),
+                        name: field_name,
+                        unit: unit,
+                        restrictions: restrictions,
+                        index: index)
+      field.save ? [] : field.errors.full_messages
+    end
+  end
+
+  # Helper function to add field to database
+  def add_formula_field(field_type, field_name, unit, formula, index)
+    if field_name.nil?
+      []
+    else
+      if index.nil?
+        index = @project.fields.size
+      end
+      field = FormulaField.new(project_id: @project.id,
+                               field_type: get_field_type(field_type),
+                               name: field_name,
+                               unit: unit,
+                               formula: formula,
+                               index: index)
+      field.save ? [] : field.errors.full_messages
+    end
+  end
+
   def project_params
-    if @cur_user.try(:admin)
+    if current_user.try(:admin)
       return params[:project].permit(:content, :title, :user_id, :filter,
                                      :cloned_from, :has_fields, :featured,
                                      :is_template, :featured_media_id, :hidden,

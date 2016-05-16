@@ -20,7 +20,20 @@
       </tr>
     </thead>
     <tbody>
-      <%= render 'field_edit', type: "field", can_edit: (can_edit? @project), has_ses: @project.data_sets.count %>
+      <%= render 'field_edit', fields: @fields %>
+    </tbody>
+  </table>
+
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th style="max-width:30%">Name</th>
+        <th style="max-width:30%">Units</th>
+        <th style="max-width:30%">Type</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= render 'field_edit', fields: @formula_fields %>
     </tbody>
   </table>
 

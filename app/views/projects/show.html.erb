@@ -52,7 +52,7 @@
             <button class="mdl-button mdl-js-button mdl-button--raised" disabled>
               <i class="fa fa-eye"> Views | </i> <%= @project.views %>
             </button>
-            <% if @cur_user.try(:id) %>
+            <% if current_user.try(:id) %>
               <div class="btn-group likes" data-project_id="<%= @project.id%>">
                 <button class="liked_status mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect <% if @liked_by_cur_user%>active<%end%>" data-toggle="button">
                   <i class="fa fa-thumbs-up"></i> Like | <span class="like_display"><%= @project.likes.count %></span>
@@ -62,7 +62,7 @@
               <button id="print" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                 <i class="fa fa-print"></i> Print
               </button>
-            <% if @cur_user.try(:id) %>
+            <% if current_user.try(:id) %>
               <a href = "/projects/<%= @project.id %>/clone">
                 <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--green">
                   <i class="fa fa-copy"></i> Clone
@@ -109,7 +109,7 @@
                     <li role="presentation">
                       <a role="menuitem" href="javascript:void(0);" id="uncheck_all"><i class="fa fa-square-o"></i> None</a>
                     </li>
-                    <% if @cur_user.try(:id) %>
+                    <% if current_user.try(:id) %>
                       <li role="presentation">
                         <a role="menuitem" href="javascript:void(0);" id="check_mine"><i class="fa fa-user"></i> Mine</a>
                       </li>
@@ -179,7 +179,7 @@
                     <td>
                       <div class="ds_selector" >
                         <label id="lbl_<%=s.id%>" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect pull-right" for="ds_<%=s.id%>">
-                          <input type="checkbox" id="ds_<%=s.id%>" class="mdl-checkbox__input <%if s.user_id == @cur_user.try(:id)%> mine<%end%>" checked>
+                          <input type="checkbox" id="ds_<%=s.id%>" class="mdl-checkbox__input <%if s.user_id == current_user.try(:id)%> mine<%end%>" checked>
                         </label>
                       </div>
                     </td>
@@ -200,6 +200,7 @@
   </div>
   <!-- Right hand column -->
   <div class="col-md-5">
+    <!-- Field box -->
     <div class="row">
       <%= render layout: "shared/box", locals: {title: 'Fields', width: '12', unique_id: 'fields', should_hide: false} do %>
         <% if (@field_count == 0) && can_edit?(@project) %>
@@ -226,12 +227,46 @@
               </tr>
             </thead>
             <tbody>
-              <%= render 'field_edit', type: "field", can_edit: (can_edit? @project), has_ses: @data_set_count %>
+              <%= render 'field_edit', fields: @fields %>
             </tbody>
           </table>
           <% if can_edit?(@project) %>
             <div class="center">
               <a href="/projects/<%=@project.id%>/edit_fields"><button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--blue" id="field_edit">Edit</button></a>
+            </div>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+    <!-- Formula field box -->
+    <div class="row">
+      <%= render layout: "shared/box", locals: {title: 'Formula Fields', width: 12, unique_id: 'formula_fields', should_hide:false} do %>      
+        <% if (@formula_field_count == 0) and can_edit?(@project) %>
+          <div class="col-md-12 center">
+            <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--green" id="manual_formula_fields" href="/projects/<%=@project.id%>/edit_formula_fields">
+              <i class="fa fa-keyboard-o" style="margin:5px"></i>
+              Setup Manually
+            </a>
+          </div>
+          <div class="clear"></div>
+        <% elsif @formula_field_count != 0 %>
+          <table class="table table-striped" data-project="<%= @project.id %>"
+                 data-can_delete_fields="<% @data_set_count == 0 %>"
+                 data-num_fields="<%= @formula_field_count %>">
+            <thead>
+              <tr>
+                <th style="max-width:30%">Name</th>
+                <th style="max-width:30%">Units</th>
+                <th style="max-width:30%">Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              <%= render 'field_edit', fields: @formula_fields %>
+            </tbody>
+          </table>
+          <% if can_edit?(@project) %>
+            <div class="center">
+              <a href="/projects/<%=@project.id%>/edit_formula_fields"><button class="btn btn-primary" id="formula_field_edit">Edit</button></a>
             </div>
           <% end %>
         <% end %>
@@ -269,7 +304,7 @@
             </div>
           <% end %>
         <% else %>
-          <% if @project.has_contrib_key? and @cur_user.nil? and (@field_count > 0) %>
+          <% if @project.has_contrib_key? and current_user.nil? and (@field_count > 0) %>
             <p>Enter contributor key to submit data.</p>
             <%= form_tag '/contrib_keys/enter', method: 'post' do %>
               <div class="row" style="margin-left: 0px;" >
@@ -282,7 +317,7 @@
           <% else %>
             <% if (!(@field_count > 0)) %>
               <h4 class="center">Fields must be set up to contribute data</h4>
-            <% elsif @cur_user.try(:id) %>
+            <% elsif current_user.try(:id) %>
               <h2 class="center"><i class="icon-lock"></i></h2>
               <h4 class="center">This project has been locked</h4>
             <% else %>

@@ -538,6 +538,10 @@ ul#sopt_menu {
   }
 }
 
+tr.ui-widget-content.jqgrow.ui-row-ltr.ui-state-highlight {
+  border: 2px solid #263960;
+}
+
 body[data-page-name='visualizations/displayVis'] .visualizations-controller,
 body[data-page-name='visualizations/show'] .visualizations-controller {
   .ui-accordion-header {

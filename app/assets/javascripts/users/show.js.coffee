@@ -8,7 +8,7 @@ $ ->
 
     $(document).ajaxError (event, xhr, settings, error) ->
       e = JSON.parse xhr.responseText
-      quickFlash(e, 'error')
+      quickFlash(e["error"], 'error')
 
     navList = []
 

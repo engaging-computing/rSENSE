@@ -129,3 +129,19 @@ template_fields_project:
 fields_test:
   title: Field Test for Simultaneous Add and Delete
   user: patson
+
+formula_fields_test:
+  title: Project for formula field testing
+  user: boxes
+
+next_name_test:
+  title: Project for default field names
+  user: boxes
+
+calculation_test_1:
+  title: Project for valid formula calculation tests
+  user: boxes
+
+calculation_test_2:
+  title: Project for invalid formula calculation tests
+  user: boxes

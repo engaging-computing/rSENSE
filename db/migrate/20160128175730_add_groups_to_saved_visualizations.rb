@@ -89,7 +89,8 @@ class AddGroupsToSavedVisualizations < ActiveRecord::Migration
       # update everything field related
       unless globals.nil?
         # Only add Data Point field if it does not already exist
-        next if JSON.parse(v.data)['fields'][0]['fieldName'] == 'Data Point' and !field.nil? and field.fieldName == 'Data Point'
+        json = JSON.parse(v.data)
+        next if !json['fields'].nil? and json['fields'][0]['fieldName'] == 'Data Point' and !field.nil? and field.fieldName == 'Data Point'
         globals = refactor_globals(globals, direction, position)
         v.globals = JSON.dump(globals)
       end

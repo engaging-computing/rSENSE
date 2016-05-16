@@ -19,6 +19,9 @@ class HomeController < ApplicationController
   def api_v1
   end
 
+  def formulas_help
+  end
+
   def privacy_policy
   end
 end
