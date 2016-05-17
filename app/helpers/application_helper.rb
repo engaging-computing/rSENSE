@@ -61,7 +61,7 @@ module ApplicationHelper
 
   # Begin permissions stuff
   def can_edit?(obj)
-    return false if current_user.nil? && session.try(:key)
+    return false if current_user.nil? && session.try(:key).nil?
     return true  if current_user.try(:admin)
     return false if obj.nil?
 
