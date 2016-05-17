@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
 
   skip_before_filter :verify_authenticity_token, only: [:options_req]
   skip_before_filter :find_user, only: [:options_req]
-  skip_before_filter :authorize, only: [:options_req, :create_issue, :create_issue_anon]
+  skip_before_filter :authorize, only: [:options_req]
 
   before_action :configure_permitted_parameters, if: :devise_controller?
 
