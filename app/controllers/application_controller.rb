@@ -42,7 +42,7 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    if params[:action] == 'create_issue_anon' || params[:action] == 'github_authorize'
+    if !user_signed_in? && (params[:action] == 'create_issue_anon' || params[:action] == 'github_authorize')
       redirect_to new_user_session_path
       return
     end
