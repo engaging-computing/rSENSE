@@ -275,12 +275,8 @@ $ ->
         inctx =
           binSize: @configs.binSize
           
-        if data.timeFields.length > 0 and data.timeType != data.GEO_TIME
+        if data.hasTimeData and data.timeType != data.GEO_TIME
           inctx.period = HandlebarsTemplates[hbCtrl('period')]
-        else
-          # Safeguard, in case the default vis has time data but the current dataset does not.
-          globals.configs.isPeriod = false
-          globals.configs.periodMode = 'off'
 
         outctx =
           id: 'tools-ctrls'
@@ -291,8 +287,7 @@ $ ->
         $('#vis-ctrls').append(tools)
         
         # Set the correct options for period:
-        if data.timeFields.length > 0 and data.timeType != data.GEO_TIME
-          $('#period-list').val(globals.configs.periodMode)
+        $('#period-list').val(globals.configs.periodMode)
 
         $('#period-list').change =>
           globals.configs.periodMode = $('#period-list').val()
