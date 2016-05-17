@@ -41,7 +41,7 @@ class ApplicationController < ActionController::Base
         session[:sign_in_referrer] = request.referrer
       end
     end
-    
+
     if !user_signed_in? && (params[:action] == 'create_issue_anon' || params[:action] == 'github_authorize')
       redirect_to new_user_session_path
       return
