@@ -282,11 +282,6 @@ $ ->
               @configs.xBounds.max = Math.max(@configs.xBounds.max,
                 data.getMax(@configs.xAxis, gi, dp))
 
-              if (@timeMode isnt undefined) and (@timeMode is @GEO_TIME_MODE)
-                @configs.xBounds.min =
-                  (new Date(@configs.xBounds.min)).getUTCFullYear()
-                @configs.xBounds.max =
-                  (new Date(@configs.xBounds.max)).getUTCFullYear()
 
         # Calculate grid spacing for data reduction
         width = $('#' + @canvas).innerWidth()
