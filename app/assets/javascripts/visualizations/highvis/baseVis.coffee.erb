@@ -59,6 +59,11 @@ $ ->
       start: ->
         $('#' + @canvas).show()
         toolScroll = $('#vis-ctrls').scrollTop()
+        #Protect against edge case where the default vis uses the period mode but this dataset doesn't have time data:
+        if globals.configs.groupById == data.TIME_PERIOD_FIELD and 
+        ( data.hasTimeData is false or data.timeType == data.GEO_TIME )
+          data.setGroupIndex(data.COMBINED_FIELD)
+          globals.configs.groupById = data.COMBINED_FIELD
         @drawControls()
         @update()
         $('#vis-ctrls').scrollTop(toolScroll)

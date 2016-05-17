@@ -149,6 +149,9 @@ $ ->
         # Remove group by number fields, only for pie chart
         groups = $.extend(true, [], data.textFields)
         groups.splice(data.NUMBER_FIELDS_FIELD - 1, 1)
+        # Remove Group By Time Period if there is no time data
+        if data.hasTimeData is false or data.timeType == data.GEO_TIME
+          groups.splice(data.TIME_PERIOD_FIELD - 2, 1)
         @drawGroupControls(groups)
         @drawYAxisControls(globals.configs.fieldSelection,
           data.normalFields.slice(1), false)
