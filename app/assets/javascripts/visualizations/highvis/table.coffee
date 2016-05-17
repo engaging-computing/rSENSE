@@ -235,7 +235,9 @@ $ ->
            i isnt data.NUMBER_FIELDS_FIELD and i isnt data.TIME_PERIOD_FIELD),
           false, 'Visible Fields')
         @drawClippingControls()
-        @drawToolControls(false, false, [], false)
+        # Period is currently the only Tool for table. Don't render Tool Controls if period is not available.'
+        if data.timeFields.length > 0 and data.timeType != data.GEO_TIME
+          @drawToolControls(false, false, [], false)
         @drawSaveControls()
 
       saveSort: =>
