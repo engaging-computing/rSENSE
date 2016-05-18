@@ -50,7 +50,7 @@ $ ->
         backdrop: 'static'
         keyboard: 'false'
 
-      # New versions of ImageMagick have issue with the way Highcharts puts quotes 
+      # New versions of ImageMagick have issue with the way Highcharts puts quotes
       # around the first two fonts, so just remove those fonts from the style attribute.
       # Our site uses arial anyway.
       svg = if globals.curVis.chart?
