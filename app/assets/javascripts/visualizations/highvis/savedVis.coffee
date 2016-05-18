@@ -50,10 +50,11 @@ $ ->
         backdrop: 'static'
         keyboard: 'false'
 
-      # Strip all font selection away from svg (except for "sans-serif") so that newer versions of ImageMagick work.
-      # Our site uses the default sans-serif font anyway.
+      # New versions of ImageMagick have issue with the way Highcharts puts quotes 
+      # around the first two fonts, so just remove those fonts from the style attribute.
+      # Our site uses arial anyway.
       svg = if globals.curVis.chart?
-        globals.curVis.chart.getSVG().replace("'lucida grande', 'lucida sans unicode', arial, helvetica, ", "")
+        globals.curVis.chart.getSVG().replace("'lucida grande', 'lucida sans unicode', ", "")
       else
         undefined
 
