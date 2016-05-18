@@ -67,7 +67,7 @@ module ApplicationHelper
 
     case obj
     when DataSet
-      obj.owner.id == current_user.try(:id) || obj.key == session[:key]
+      obj.owner.id == current_user.try(:id) || (!session.try(:key).nil? && obj.key == session[:key])
     when User
       obj.id == current_user.try(:id)
     when Project, Visualization, MediaObject
