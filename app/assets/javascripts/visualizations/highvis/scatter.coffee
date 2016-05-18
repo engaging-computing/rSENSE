@@ -220,6 +220,9 @@ $ ->
         # Remove group by number fields, only for pie chart
         groups = $.extend(true, [], data.textFields)
         groups.splice(data.NUMBER_FIELDS_FIELD - 1, 1)
+        # Remove Group By Time Period if there is no time data
+        if data.hasTimeData is false or data.timeType == data.GEO_TIME
+          groups.splice(data.TIME_PERIOD_FIELD - 2, 1)
         @drawGroupControls(groups)
         @drawXAxisControls()
         @drawYAxisControls(globals.configs.fieldSelection,
@@ -279,11 +282,6 @@ $ ->
               @configs.xBounds.max = Math.max(@configs.xBounds.max,
                 data.getMax(@configs.xAxis, gi, dp))
 
-              if (@timeMode isnt undefined) and (@timeMode is @GEO_TIME_MODE)
-                @configs.xBounds.min =
-                  (new Date(@configs.xBounds.min)).getUTCFullYear()
-                @configs.xBounds.max =
-                  (new Date(@configs.xBounds.max)).getUTCFullYear()
 
         # Calculate grid spacing for data reduction
         width = $('#' + @canvas).innerWidth()
@@ -314,7 +312,7 @@ $ ->
             # fixes it by splitting the data into different series based on the range
             # the point falls in (ex fixed: http://i.imgur.com/NDIrq8i.png).
             datArray = new Array
-            if globals.configs.isPeriod is true
+            if @isScatter is null and globals.configs.isPeriod is true and data.timeType == data.NORM_TIME
               currentPeriod = null
               for point in dat
                 newDate = new Date(point.x)
@@ -441,7 +439,10 @@ $ ->
           { mode: @LINES_MODE,         text: "Lines Only" }
           { mode: @SYMBOLS_MODE,       text: "Symbols Only" }
         ]
-        inctx.period = HandlebarsTemplates[hbCtrl('period')]
+
+        if data.hasTimeData and data.timeType != data.GEO_TIME
+          inctx.period = HandlebarsTemplates[hbCtrl('period')]
+
 
         # Draw the Tool controls
         outctx = {}

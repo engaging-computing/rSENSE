@@ -359,8 +359,11 @@ $ ->
         # Look through all timestamps to find the different time periods to use for groups
         for point in data.dataPoints
           timestamp = point[timestampIndex]
-          period = globals.getCurrentPeriod(new Date(timestamp))
-          point[data.TIME_PERIOD_FIELD] = period
+          if timestamp is null
+            point[data.TIME_PERIOD_FIELD] = "No Time Data"
+          else
+            period = globals.getCurrentPeriod(new Date(timestamp))
+            point[data.TIME_PERIOD_FIELD] = period
 
       for dp in @dataPoints
         if dp[gIndex] isnt null
