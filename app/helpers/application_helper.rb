@@ -61,13 +61,13 @@ module ApplicationHelper
 
   # Begin permissions stuff
   def can_edit?(obj)
-    return false if current_user.nil? && session.try(:key)
+    return false if current_user.nil? && session.try(:key).nil?
     return true  if current_user.try(:admin)
     return false if obj.nil?
 
     case obj
     when DataSet
-      obj.owner.id == current_user.try(:id) || obj.key == session[:key]
+      obj.owner.id == current_user.try(:id) || (!session.try(:key).nil? && obj.key == session[:key])
     when User
       obj.id == current_user.try(:id)
     when Project, Visualization, MediaObject

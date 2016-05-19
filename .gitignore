@@ -36,3 +36,6 @@ node_modules/
 
 # visual studio code
 .vscode
+
+# some linters want coffeelint files to be named a specific way.
+coffeelint.json
