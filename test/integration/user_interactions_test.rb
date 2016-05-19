@@ -15,6 +15,5 @@ class UserInteractionsTest < IntegrationTest
     login('pson@cs.uml.edu', '12345')
     visit project_path(@slick_project)
     assert page.has_no_content?('Edit'), 'Edit button appears on project that the user does not own.'
-    screenshot_and_open_image
   end
 end
