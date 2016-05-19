@@ -145,3 +145,8 @@ calculation_test_1:
 calculation_test_2:
   title: Project for invalid formula calculation tests
   user: boxes
+
+weather_data:
+  title: Weather Data
+  user: patson
+  content: Simple project to test Formula Fields from uploaded data.

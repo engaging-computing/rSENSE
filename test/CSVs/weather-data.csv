@@ -1,0 +1,6 @@
+MaxTemp,MeanTemp,MinTemp,Event
+65,50,35,Clear
+50,40,30,Clouds
+70,65,60,Sunny
+60,50,40,Rain
+20,10,0.44,Snow
