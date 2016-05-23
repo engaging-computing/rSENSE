@@ -572,7 +572,7 @@ $ ->
       Draw tool controls (Analysis Type, Log Y Axis, etc.) for Pie Chart and
       Bar Charts
       ###
-      drawToolControls: (sortBy = false, logYAxis = false, analysisTypeExcludes = [], drawAnalysisTypes = true) ->
+      drawToolControls: (sortBy = false, barChart = false, analysisTypeExcludes = [], drawAnalysisTypes = true) ->
         inctx = {}
 
         # Add Period to Base Tools
@@ -615,13 +615,17 @@ $ ->
                 name:  'analysis-type'
                 label:  @analysisTypeNames[i]
 
-        # Logarithmic Y Axis
-        if logYAxis
-          id = 'log-y-axis'
+        # Bar-specific tools
+        if barChart
+          inctx.barChart = true
           inctx.logYAxis =
-            id:    id
+            id:    'log-y-axis'
             logId: 'logarithmic-y-axis'
             label: 'Logarithmic Y Axis'
+          inctx.histogramDensity =
+            id:    'hist-density'
+            logId: 'histogram-density'
+            label: 'Histogram Density'
 
         outctx =
           id: 'tools-ctrls'
@@ -653,6 +657,11 @@ $ ->
           $('#ckbx-lbl-log-y-axis')[0].MaterialCheckbox.check()
         else if $('#ckbx-lbl-log-y-axis').length
           $('#ckbx-lbl-log-y-axis')[0].MaterialCheckbox.uncheck()
+          
+        if globals.configs.histogramDensity and $('#ckbx-lbl-hist-density').length
+          $('#ckbx-lbl-hist-density')[0].MaterialCheckbox.check()
+        else if $('#ckbx-lbl-hist-density').length
+          $('#ckbx-lbl-hist-density')[0].MaterialCheckbox.uncheck()
 
         $('#sort-by').change (e) =>
           @configs.sortField = Number(e.target.value)
@@ -665,7 +674,11 @@ $ ->
         $('#ckbx-log-y-axis').click (e) =>
           globals.configs.logY = !globals.configs.logY
           @start()
-      
+          
+        $('#ckbx-hist-density').click () =>
+          globals.configs.histogramDensity = not globals.configs.histogramDensity
+          @start()
+          
         # Set the correct options for period:
         $('#period-list').val(globals.configs.periodMode)
 
