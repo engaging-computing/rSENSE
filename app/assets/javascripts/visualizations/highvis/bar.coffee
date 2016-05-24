@@ -57,18 +57,27 @@ $ ->
             text: ""
           tooltip:
             formatter: ->
-              str  = "<div style='width:100%;text-align:center;"
-              if globals.configs.histogramDensity
-                str += "color:#{@series.data[@x].borderColor};margin-bottom:5px'> "
+              console.log(@series)
+              if @series.name == "histogram density"
+                str  = "<div style='width:100%;text-align:center;"
+                str += "color:#{@series.color};margin-bottom:5px'> "
+                str += "#{@series.data[0].name}</div>"
+                str += "<table><tr><td>#{data.fields[globals.configs.fieldSelection[0]].fieldName}: "
+                str += "</td><td><strong>#{@y} \
+                #{fieldUnit(data.fields[globals.configs.fieldSelection[0]], false)}</strong></td></tr>"
               else
-                str += "color:#{@series.data[@x].color};margin-bottom:5px'> "
-              str += "#{@series.data[@x].name}</div>"
-              str += "<table>"
-              str += "<tr><td>#{data.fields[globals.configs.fieldSelection[0]].fieldName} "
-              str += "(#{self.analysisTypeNames[self.configs.analysisType]}):"
-              str += "</td><td><strong>#{@y} \
-              #{fieldUnit(data.fields[globals.configs.fieldSelection[0]], false)}</strong></td></tr>"
-              str += "</table>"
+                str  = "<div style='width:100%;text-align:center;"
+                if globals.configs.histogramDensity
+                  str += "color:#{@series.data[@x].borderColor};margin-bottom:5px'> "
+                else
+                  str += "color:#{@series.data[@x].color};margin-bottom:5px'> "
+                str += "#{@series.data[@x].name}</div>"
+                str += "<table>"
+                str += "<tr><td>#{@series.data[@x].field} "
+                str += "(#{self.analysisTypeNames[self.configs.analysisType]}): "
+                str += "</td><td><strong>#{@y} \
+                #{@series.data[@x].fieldUnit}</strong></td></tr>"
+                str += "</table>"
             useHTML: true
           yAxis:
             type: if globals.configs.logY then 'logarithmic' else 'linear'
@@ -106,28 +115,30 @@ $ ->
             sortable.push [k, v] for k, v of groupedData[@configs.sortField]
             sortable.sort (a,b) -> a[1] - b[1]
             Number k for [k, v] in sortable
-            
+                      
         # Draw the bars
         datArray = []
         xCoords = 0
-        for gid in sortedGroupIDs when gid in data.groupSelection
-          for fid in data.normalFields when fid in fieldSelection
+        for fid in data.normalFields when fid in fieldSelection
+          for gid in sortedGroupIDs when gid in data.groupSelection
             thisData = {
               x: xCoords
               y: groupedData[fid][gid]
-              name:  data.groups[gid] or data.noField()
+              name: data.groups[gid] or data.noField()
+              field: fieldTitle(data.fields[fid])
+              fieldUnit: fieldUnit(data.fields[fid], false)
             }
+            
+            xCoords += 1
+            
+            if globals.configs.histogramDensity
+              thisData.color = 'rgba(255,255,255,0)'
+              thisData.borderColor = globals.getColor(gid)
+            else
+              thisData.color = globals.getColor(gid)
+            
+            datArray.push(thisData)
           
-          xCoords += 1
-          
-          if globals.configs.histogramDensity
-            thisData.color = 'rgba(255,255,255,0)'
-            thisData.borderColor = globals.getColor(gid)
-          else
-            thisData.color = globals.getColor(gid)
-          
-          datArray.push(thisData)
-
         series = {
           data: datArray
           showInLegend: false
@@ -142,8 +153,8 @@ $ ->
         if @configs.analysisType == @ANALYSISTYPE_MEAN_ERROR
           allErrors = []
           xCoords = 0
-          for gid in sortedGroupIDs when gid in data.groupSelection
-            for fid in data.normalFields when fid in fieldSelection
+          for fid in data.normalFields when fid in fieldSelection
+            for gid in sortedGroupIDs when gid in data.groupSelection
               dp = globals.getData(true, globals.configs.activeFilters)
               barData = data.selector fid, gid, dp
               if barData.length == 1
@@ -179,10 +190,42 @@ $ ->
           }
           @chart.addSeries series
 
-        # Draw points for each bar, if the option is enabled.
-        # if globals.configs.histogramDensity
-          
-          
+        # Draw points for histogram density, if option is on
+        if globals.configs.histogramDensity
+          dp = globals.getData(true, globals.configs.activeFilters)
+          xCoords = 0
+          for fid in data.normalFields when fid in fieldSelection
+            for gid in sortedGroupIDs when gid in data.groupSelection
+              # Turn hex color into RGB so that we can add an alpha channel:
+              rgb = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(globals.getColor(gid))
+              r = parseInt(rgb[1], 16)
+              g = parseInt(rgb[2], 16)
+              b = parseInt(rgb[3], 16)
+              a = .25
+              dat = data.xySelector(0, fid, gid, dp)
+              datArray = []
+              for point in dat
+                datArray.push({
+                  x: xCoords
+                  y: point.y
+                  name: data.groups[gid] or data.noField()
+                  color: 'rgba( '+ r + ', '+ g + ', ' + b + ', ' + a + ')'
+                  # color: globals.getColor(gid)
+                })
+              xCoords += 1
+              series = {
+                type: 'scatter'
+                name: 'histogram density'
+                data: datArray
+                showInLegend: false
+                color: globals.getColor(gid)
+                marker:
+                  enabled: true
+                  symbol: 'square'
+                  fillColor: 'rgba( '+ r + ', '+ g + ', ' + b + ', ' + a + ')'
+              }
+              @chart.addSeries series
+                
         
         @chart.redraw()
 
