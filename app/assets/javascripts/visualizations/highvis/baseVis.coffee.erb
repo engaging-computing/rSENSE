@@ -677,7 +677,7 @@ $ ->
           
         $('#ckbx-hist-density').click () =>
           globals.configs.histogramDensity = not globals.configs.histogramDensity
-          @start()
+          @delayedUpdate()
           
         # Set the correct options for period:
         $('#period-list').val(globals.configs.periodMode)

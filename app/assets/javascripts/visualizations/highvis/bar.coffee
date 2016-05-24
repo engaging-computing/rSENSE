@@ -33,6 +33,9 @@ $ ->
     class window.Bar extends BaseHighVis
       constructor: (@canvas) ->
         super(@canvas)
+        xCoordsToBarIndex = []
+        @xCoordsToErrorIndex = []
+        @xCoordstoPointIndex = []
 
       start: ->
         @configs.analysisType ?= @ANALYSISTYPE_MEAN
@@ -57,26 +60,46 @@ $ ->
             text: ""
           tooltip:
             formatter: ->
-              console.log(@series)
               if @series.name == "histogram density"
                 str  = "<div style='width:100%;text-align:center;"
                 str += "color:#{@series.color};margin-bottom:5px'> "
                 str += "#{@series.data[0].name}</div>"
-                str += "<table><tr><td>#{data.fields[globals.configs.fieldSelection[0]].fieldName}: "
+                str += "<table><tr><td>#{@series.data[0].field}: "
                 str += "</td><td><strong>#{@y} \
-                #{fieldUnit(data.fields[globals.configs.fieldSelection[0]], false)}</strong></td></tr>"
-              else
+                #{@series.data[0].fieldUnit}</strong></td></tr>"
+              else if @series.name == "error bars"
+                index = 0
+                for datapoint in @series.xData
+                  break if datapoint == @x
+                  index += 1
                 str  = "<div style='width:100%;text-align:center;"
                 if globals.configs.histogramDensity
-                  str += "color:#{@series.data[@x].borderColor};margin-bottom:5px'> "
+                  str += "color:#{@series.data[index].borderColor};margin-bottom:5px'> "
                 else
-                  str += "color:#{@series.data[@x].color};margin-bottom:5px'> "
-                str += "#{@series.data[@x].name}</div>"
+                  str += "color:#{@series.data[index].color};margin-bottom:5px'> "
+                str += "#{@series.data[index].name}</div>"
                 str += "<table>"
-                str += "<tr><td>#{@series.data[@x].field} "
+                str += "<tr><td>#{@series.data[index].field} "
                 str += "(#{self.analysisTypeNames[self.configs.analysisType]}): "
                 str += "</td><td><strong>#{@y} \
-                #{@series.data[@x].fieldUnit}</strong></td></tr>"
+                #{@series.data[index].fieldUnit}</strong></td></tr>"
+                str += "</table>"
+              else
+                index = 0
+                for datapoint in @series.xData
+                  break if datapoint == @x
+                  index += 1
+                str  = "<div style='width:100%;text-align:center;"
+                if globals.configs.histogramDensity
+                  str += "color:#{@series.data[index].borderColor};margin-bottom:5px'> "
+                else
+                  str += "color:#{@series.data[index].color};margin-bottom:5px'> "
+                str += "#{@series.data[index].name}</div>"
+                str += "<table>"
+                str += "<tr><td>#{@series.data[index].field} "
+                str += "(#{self.analysisTypeNames[self.configs.analysisType]}): "
+                str += "</td><td><strong>#{@y} \
+                #{@series.data[index].fieldUnit}</strong></td></tr>"
                 str += "</table>"
             useHTML: true
           yAxis:
@@ -87,9 +110,20 @@ $ ->
               value: 0
              }]
           xAxis:
-            #type: 'category'
+            tickPositioner: ->
+              positions = []
+              tick = 0
+              while tick < @dataMax and positions.length < globals.configs.fieldSelection.length
+                positions.push(tick)
+                tick += 4
+              positions
             labels:
               enabled: true
+              formatter: ->
+                if @value % 4 == 0
+                  fieldTitle(data.fields[globals.configs.fieldSelection[@value/4]])
+                else
+                  ""
           legend:
             enabled: $(window).width() > 700 && data.groups.length < 30
             
@@ -98,7 +132,7 @@ $ ->
         super()
 
         fieldSelection = globals.configs.fieldSelection
-
+        
         # Get the column data
         groupedData = {}
         for f in data.normalFields
@@ -116,20 +150,21 @@ $ ->
             sortable.sort (a,b) -> a[1] - b[1]
             Number k for [k, v] in sortable
                       
+        interval = 3 / (data.groupSelection.length + 1)
         # Draw the bars
         datArray = []
-        xCoords = 0
+        xCluster = 0
+        pos = 1
         for fid in data.normalFields when fid in fieldSelection
           for gid in sortedGroupIDs when gid in data.groupSelection
+            xCoord = (xCluster - 1.5) + pos * interval
             thisData = {
-              x: xCoords
+              x: xCoord
               y: groupedData[fid][gid]
               name: data.groups[gid] or data.noField()
               field: fieldTitle(data.fields[fid])
               fieldUnit: fieldUnit(data.fields[fid], false)
             }
-            
-            xCoords += 1
             
             if globals.configs.histogramDensity
               thisData.color = 'rgba(255,255,255,0)'
@@ -137,12 +172,20 @@ $ ->
             else
               thisData.color = globals.getColor(gid)
             
+            pos += 1
             datArray.push(thisData)
+            
+          xCluster += 4
+          pos = 1
+          
           
         series = {
           data: datArray
           showInLegend: false
           borderWidth: 4
+          pointWidth: null
+          pointPadding: 0
+          groupPadding: 0
           states:
             hover:
               enabled: false
@@ -152,11 +195,13 @@ $ ->
         # Draw error bars, if option is enabled
         if @configs.analysisType == @ANALYSISTYPE_MEAN_ERROR
           allErrors = []
-          xCoords = 0
+          xCluster = 0
+          pos = 1
           for fid in data.normalFields when fid in fieldSelection
             for gid in sortedGroupIDs when gid in data.groupSelection
               dp = globals.getData(true, globals.configs.activeFilters)
               barData = data.selector fid, gid, dp
+              xCoord = (xCluster - 1.5) + pos * interval
               if barData.length == 1
                 thisError = {}
               else
@@ -167,33 +212,41 @@ $ ->
                   # [mean - stdDev, mean + stdDev]
                   thisError = {
                     name: "Error for #{data.groups[gid]}" or data.noField()
-                    x: xCoords
+                    x: xCoord
                     low: mean - stdDev
                     high: mean + stdDev
                   }
                 else if mean > 0
                   thisError = {
                     name: "Error for #{data.groups[gid]}" or data.noField()
-                    x: xCoords
+                    x: xCoord
                     low: mean
                     high: mean + stdDev
                   }
                 else
                   thisError = {}
-                  
-              xCoords += 1    
+              
+              pos += 1
               allErrors.push(thisError)
+              
+             xCluster += 4
+             pos = 1
 
           series = {
             type: 'errorbar'
+            name: 'error bars'
             data: allErrors
           }
           @chart.addSeries series
 
         # Draw points for histogram density, if option is on
         if globals.configs.histogramDensity
+          console.time("drawpoints")
+          console.time("getData")
           dp = globals.getData(true, globals.configs.activeFilters)
-          xCoords = 0
+          console.timeEnd("getData")
+          xCluster = 0
+          pos = 1
           for fid in data.normalFields when fid in fieldSelection
             for gid in sortedGroupIDs when gid in data.groupSelection
               # Turn hex color into RGB so that we can add an alpha channel:
@@ -202,17 +255,22 @@ $ ->
               g = parseInt(rgb[2], 16)
               b = parseInt(rgb[3], 16)
               a = .25
+              xCoord = (xCluster - 1.5) + pos * interval
+              #console.time("xySelector")
               dat = data.xySelector(0, fid, gid, dp)
+              #console.timeEnd("xySelector")
               datArray = []
+              #console.time("loop")
               for point in dat
                 datArray.push({
-                  x: xCoords
+                  x: xCoord
                   y: point.y
                   name: data.groups[gid] or data.noField()
                   color: 'rgba( '+ r + ', '+ g + ', ' + b + ', ' + a + ')'
-                  # color: globals.getColor(gid)
+                  field: fieldTitle(data.fields[fid])
+                  fieldUnit: fieldUnit(data.fields[fid], false)
                 })
-              xCoords += 1
+              #console.timeEnd("loop")
               series = {
                 type: 'scatter'
                 name: 'histogram density'
@@ -224,9 +282,13 @@ $ ->
                   symbol: 'square'
                   fillColor: 'rgba( '+ r + ', '+ g + ', ' + b + ', ' + a + ')'
               }
+              pos += 1
               @chart.addSeries series
+              
+            xCluster += 4
+            pos = 1
                 
-        
+          console.timeEnd("drawpoints")
         @chart.redraw()
 
       # Build dummy legend series
