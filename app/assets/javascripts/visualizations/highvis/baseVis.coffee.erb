@@ -658,7 +658,7 @@ $ ->
         else if $('#ckbx-lbl-log-y-axis').length
           $('#ckbx-lbl-log-y-axis')[0].MaterialCheckbox.uncheck()
           
-        if globals.configs.histogramDensity and $('#ckbx-lbl-hist-density').length
+        if @configs.histogramDensity and $('#ckbx-lbl-hist-density').length
           $('#ckbx-lbl-hist-density')[0].MaterialCheckbox.check()
         else if $('#ckbx-lbl-hist-density').length
           $('#ckbx-lbl-hist-density')[0].MaterialCheckbox.uncheck()
@@ -676,7 +676,7 @@ $ ->
           @start()
           
         $('#ckbx-hist-density').click () =>
-          globals.configs.histogramDensity = not globals.configs.histogramDensity
+          @configs.histogramDensity = not @configs.histogramDensity
           @delayedUpdate()
           
         # Set the correct options for period:

@@ -33,13 +33,10 @@ $ ->
     class window.Bar extends BaseHighVis
       constructor: (@canvas) ->
         super(@canvas)
-        xCoordsToBarIndex = []
-        @xCoordsToErrorIndex = []
-        @xCoordstoPointIndex = []
 
       start: ->
         @configs.analysisType ?= @ANALYSISTYPE_MEAN
-        globals.configs.histogramDensity ?= false
+        @configs.histogramDensity ?= false
 
         # Default Sort
         fs = globals.configs.fieldSelection
@@ -61,45 +58,27 @@ $ ->
           tooltip:
             formatter: ->
               if @series.name == "histogram density"
+                # Formatter for points
                 str  = "<div style='width:100%;text-align:center;"
-                str += "color:#{@series.color};margin-bottom:5px'> "
-                str += "#{@series.data[0].name}</div>"
-                str += "<table><tr><td>#{@series.data[0].field}: "
+                str += "color:#{@point.groupColor};margin-bottom:5px'> "
+                str += "#{@point.name}</div>"
+                str += "<table><tr><td>#{@point.field}: "
                 str += "</td><td><strong>#{@y} \
-                #{@series.data[0].fieldUnit}</strong></td></tr>"
-              else if @series.name == "error bars"
-                index = 0
-                for datapoint in @series.xData
-                  break if datapoint == @x
-                  index += 1
-                str  = "<div style='width:100%;text-align:center;"
-                if globals.configs.histogramDensity
-                  str += "color:#{@series.data[index].borderColor};margin-bottom:5px'> "
-                else
-                  str += "color:#{@series.data[index].color};margin-bottom:5px'> "
-                str += "#{@series.data[index].name}</div>"
-                str += "<table>"
-                str += "<tr><td>#{@series.data[index].field} "
-                str += "(#{self.analysisTypeNames[self.configs.analysisType]}): "
-                str += "</td><td><strong>#{@y} \
-                #{@series.data[index].fieldUnit}</strong></td></tr>"
+                #{@point.fieldUnit}</strong></td></tr>"
                 str += "</table>"
               else
-                index = 0
-                for datapoint in @series.xData
-                  break if datapoint == @x
-                  index += 1
+                # Formatter for Bars
                 str  = "<div style='width:100%;text-align:center;"
-                if globals.configs.histogramDensity
-                  str += "color:#{@series.data[index].borderColor};margin-bottom:5px'> "
+                if self.configs.histogramDensity
+                  str += "color:#{@point.borderColor};margin-bottom:5px'> "
                 else
-                  str += "color:#{@series.data[index].color};margin-bottom:5px'> "
-                str += "#{@series.data[index].name}</div>"
+                  str += "color:#{@point.color};margin-bottom:5px'> "
+                str += "#{@point.name}</div>"
                 str += "<table>"
-                str += "<tr><td>#{@series.data[index].field} "
+                str += "<tr><td>#{@point.field} "
                 str += "(#{self.analysisTypeNames[self.configs.analysisType]}): "
                 str += "</td><td><strong>#{@y} \
-                #{@series.data[index].fieldUnit}</strong></td></tr>"
+                #{@point.fieldUnit}</strong></td></tr>"
                 str += "</table>"
             useHTML: true
           yAxis:
@@ -110,7 +89,9 @@ $ ->
               value: 0
              }]
           xAxis:
+            tickWidth: 0
             tickPositioner: ->
+              # Only place tick marks under the center point of each field cluster
               positions = []
               tick = 0
               while tick < @dataMax and positions.length < globals.configs.fieldSelection.length
@@ -118,10 +99,10 @@ $ ->
                 tick += 4
               positions
             labels:
-              enabled: true
               formatter: ->
-                if @value % 4 == 0
-                  fieldTitle(data.fields[globals.configs.fieldSelection[@value/4]])
+                # Only label certain tick marks, and only if there is more than one field selected.
+                if @value % 4 == 0 and globals.configs.fieldSelection.length != 1
+                  fieldTitle(data.fields[globals.configs.fieldSelection[@value / 4]])
                 else
                   ""
           legend:
@@ -149,12 +130,17 @@ $ ->
             sortable.push [k, v] for k, v of groupedData[@configs.sortField]
             sortable.sort (a,b) -> a[1] - b[1]
             Number k for [k, v] in sortable
-                      
+        
+        # interval, xCluster, and pos are used to place bars into clusters based
+        # on which field the bar is for. Bars are evenly spaced inside a range
+        # of 3 units. Each cluster is 4 units apart.
         interval = 3 / (data.groupSelection.length + 1)
-        # Draw the bars
-        datArray = []
         xCluster = 0
         pos = 1
+        # Draw the bars
+        # Bar charts are graphed at explicit x-coordinates instead of
+        # implicit (and easier) categories to support the histogram density feature
+        datArray = []
         for fid in data.normalFields when fid in fieldSelection
           for gid in sortedGroupIDs when gid in data.groupSelection
             xCoord = (xCluster - 1.5) + pos * interval
@@ -162,11 +148,12 @@ $ ->
               x: xCoord
               y: groupedData[fid][gid]
               name: data.groups[gid] or data.noField()
+              # field and fieldUnit are used by the tooltip
               field: fieldTitle(data.fields[fid])
               fieldUnit: fieldUnit(data.fields[fid], false)
             }
             
-            if globals.configs.histogramDensity
+            if @configs.histogramDensity
               thisData.color = 'rgba(255,255,255,0)'
               thisData.borderColor = globals.getColor(gid)
             else
@@ -178,17 +165,16 @@ $ ->
           xCluster += 4
           pos = 1
           
-          
         series = {
           data: datArray
-          showInLegend: false
+          showInLegend: false # Dummy Legend used instead (see buildLegendSeries())
           borderWidth: 4
           pointWidth: null
           pointPadding: 0
           groupPadding: 0
           states:
             hover:
-              enabled: false
+              enabled: not @configs.histogramDensity # hover makes bars invisible in histogramDensity mode
         }
         @chart.addSeries series, false
           
@@ -209,19 +195,23 @@ $ ->
                 innerStd = barData.map((x) -> (x - mean) ** 2).reduce((x, y) -> x + y)
                 stdDev = Math.sqrt((1 / (barData.length - 1)) * innerStd)
                 if !globals.configs.logY
-                  # [mean - stdDev, mean + stdDev]
+                  name = data.groups[gid] or data.noField()
                   thisError = {
-                    name: "Error for #{data.groups[gid]}" or data.noField()
+                    name: "Error for #{name}"
                     x: xCoord
                     low: mean - stdDev
                     high: mean + stdDev
+                    field: fieldTitle(data.fields[fid])
+                    fieldUnit: fieldUnit(data.fields[fid], false)
                   }
                 else if mean > 0
                   thisError = {
-                    name: "Error for #{data.groups[gid]}" or data.noField()
+                    name: "Error for #{name}"
                     x: xCoord
                     low: mean
                     high: mean + stdDev
+                    field: fieldTitle(data.fields[fid])
+                    fieldUnit: fieldUnit(data.fields[fid], false)
                   }
                 else
                   thisError = {}
@@ -234,17 +224,14 @@ $ ->
 
           series = {
             type: 'errorbar'
-            name: 'error bars'
             data: allErrors
           }
           @chart.addSeries series
 
         # Draw points for histogram density, if option is on
-        if globals.configs.histogramDensity
-          console.time("drawpoints")
-          console.time("getData")
+        if @configs.histogramDensity
           dp = globals.getData(true, globals.configs.activeFilters)
-          console.timeEnd("getData")
+          datArray = []
           xCluster = 0
           pos = 1
           for fid in data.normalFields when fid in fieldSelection
@@ -256,39 +243,35 @@ $ ->
               b = parseInt(rgb[3], 16)
               a = .25
               xCoord = (xCluster - 1.5) + pos * interval
-              #console.time("xySelector")
               dat = data.xySelector(0, fid, gid, dp)
-              #console.timeEnd("xySelector")
-              datArray = []
-              #console.time("loop")
               for point in dat
                 datArray.push({
                   x: xCoord
                   y: point.y
                   name: data.groups[gid] or data.noField()
-                  color: 'rgba( '+ r + ', '+ g + ', ' + b + ', ' + a + ')'
+                  color: "rgba(#{r}, #{g}, #{b}, #{a})"
+                  groupColor: globals.getColor(gid)
                   field: fieldTitle(data.fields[fid])
                   fieldUnit: fieldUnit(data.fields[fid], false)
                 })
-              #console.timeEnd("loop")
-              series = {
-                type: 'scatter'
-                name: 'histogram density'
-                data: datArray
-                showInLegend: false
-                color: globals.getColor(gid)
-                marker:
-                  enabled: true
-                  symbol: 'square'
-                  fillColor: 'rgba( '+ r + ', '+ g + ', ' + b + ', ' + a + ')'
-              }
               pos += 1
-              @chart.addSeries series
               
             xCluster += 4
             pos = 1
-                
-          console.timeEnd("drawpoints")
+            
+          series = {
+            type: 'scatter'
+            name: 'histogram density'
+            data: datArray
+            showInLegend: false
+            color: 'rgba(255, 255, 255, 0)'
+            marker:
+              enabled: true
+              symbol: 'square'
+          }
+          
+          @chart.addSeries series
+          
         @chart.redraw()
 
       # Build dummy legend series
