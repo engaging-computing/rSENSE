@@ -161,10 +161,12 @@ $ ->
             type: 'linear'
             gridLineWidth: 1
             minorTickInterval: 'auto'
+            minRange: 1e-10
             }]
           yAxis:
             startOnTick: false
             endOnTick: false
+            minRange: 1e-10
             type: if globals.configs.logY then 'logarithmic' else 'linear'
             events:
               afterSetExtremes: (e) =>
