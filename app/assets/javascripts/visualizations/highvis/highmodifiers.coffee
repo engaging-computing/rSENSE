@@ -34,6 +34,7 @@ $ ->
     globals.configs ?= {}
     globals.clippingVises = ['map', 'timeline', 'scatter', 'table']
     globals.configs.activeFilters ?= []
+    globals.configs.clippingMode ?= false
 
     globals.configs.isPeriod ?= false # Controls how series are constructed in update().
     globals.configs.periodMode ?= 'off' # Changes when a period option is selected.
