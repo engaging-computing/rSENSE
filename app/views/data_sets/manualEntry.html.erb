@@ -10,7 +10,7 @@
 </div>
 
 <div class="row" style="padding-bottom: 2em">
-  <% time = Time.now.strftime('%-m/%-d/%Y %-I:%M%P') %>
+  <% time = Time.now.strftime('%-m/%-d/%Y %I:%M:%S%P') %>
   <% if @current_user.nil? %>
     <div class="col-lg-6">
       <strong><label for="data_set_name">Data Set Name:</label></strong>
