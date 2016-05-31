@@ -1,10 +1,17 @@
 include ApplicationHelper
 class FormulaField < ActiveRecord::Base
+  include ActionView::Helpers::SanitizeHelper
+
   after_initialize :default_values
+
+  before_validation :sanitize_html
   before_validation :choose_refname
+
   validates_presence_of :project_id, :field_type, :name
+
   validates_uniqueness_of :name, scope: :project_id, case_sensitive: false
   validates_uniqueness_of :refname, scope: :project_id, case_sensitive: false
+
   validate :validate_values
   validate :unique_name
 
@@ -34,6 +41,12 @@ class FormulaField < ActiveRecord::Base
 
   def default_values
     self.name ||= Field.get_next_name project, field_type
+  end
+
+  def sanitize_html
+    # Strip HTML tags from input
+    self.name = strip_tags(name)
+    self.unit = strip_tags(unit)
   end
 
   def choose_refname
