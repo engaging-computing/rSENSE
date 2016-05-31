@@ -116,7 +116,12 @@ class Field < ActiveRecord::Base
     # Strip HTML from input
     self.name = strip_tags(name)
     self.unit = strip_tags(unit)
-    self.restrictions = strip_tags(restrictions)
+    self.restrictions = strip_tags(restrictions) if restrictions.is_a? String
+    if restrictions.is_a? Array
+      restrictions.each_with_index do |v, i|
+        restrictions[i] = strip_tags(v) if restrictions[i].is_a? String
+      end
+    end
   end
 
   def validate_values
