@@ -1,10 +1,16 @@
 <div class="vis-ctrl-sublock">
   {{> visualizations/controls/_switch this}}
   <div class="centered">
-    <button id="save-filters-btn" class="save-btn btn btn-sm btn-default"
-            data-log-id="save-filters">
-      Set Current Filters
-    </button>
+    {{#if buttonEnabled}}
+      <button id="save-filters-btn" class="save-btn btn btn-sm btn-default"
+              data-log-id="save-filters">
+        Set Current Filters
+      </button>
+    {{else}}
+      <button id="save-filters-disabled-btn" class="btn btn-sm btn-default save-disabled">
+        Filtering Disabled with Period
+      </button>
+    {{/if}}
     <button id="clear-filters-btn" class="save-btn btn btn-sm btn-default"
             data-log-id="clear-filters">
       Clear All Filters
