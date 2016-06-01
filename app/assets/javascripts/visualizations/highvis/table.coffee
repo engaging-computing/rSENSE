@@ -98,7 +98,7 @@ $ ->
           colIdsAndTypes[id] = field.typeID
           colId += 1
           fieldTitle(field)
-        console.log(globals.configs.tableGroupingId)
+
         # Build the data for the table
         visGroups = (g for g, i in data.groups when i in data.groupSelection)
 
@@ -116,7 +116,6 @@ $ ->
         # Make sure the sort type for each column is appropriate, and save the
         # time column
         timeCol = ""
-        # columns = for colId, colIndex in colIds
         columns = for colId, type of colIdsAndTypes
           if (type is data.types.TEXT)
             {
@@ -166,14 +165,6 @@ $ ->
           pager: '#toolbar_bottom'
           gridComplete: @saveSort
         })
-
-        # Show only the checked columns
-        # for f, fi in data.fields
-        #   col = @table.jqGrid('getGridParam','colModel')[fi]
-        #   if $.inArray(fi, @configs.tableFields) is -1
-        #     #@table.hideCol(col.name)
-        #   else
-        #     #@table.showCol(col.name)
 
         $('#data_table').setGridWidth($('#' + @canvas).width())
 
