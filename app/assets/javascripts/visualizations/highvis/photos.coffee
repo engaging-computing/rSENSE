@@ -35,6 +35,10 @@ $ ->
 
       start: ->
         super()
+        
+        # Photos doesn't have any fancy group by options, so set it to a default
+        # on load so the pictues actually show.
+        $('#group-by').val(data.COMBINED_FIELD).change()
 
       end: ->
         super()
