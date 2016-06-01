@@ -45,11 +45,6 @@ class DataSet < ActiveRecord::Base
           data_row.delete key
         end
       end
-      # data_row.each do |key, value|
-      #   if value.is_a? String
-      #     data_row[key] = strip_tags(value)
-      #   end
-      # end
     end
   end
 
