@@ -133,6 +133,8 @@ class ApplicationController < ActionController::Base
       if project && !key.nil? && data_set.key == key.name
         if params.key? :contributor_name
           @cur_user = User.find_by_id(project.owner.id)
+          owner = User.find_for_database_authentication(id: project.owner.id)
+          sign_in('user', owner)
         else
           respond_to do |format|
             format.json { render json: { msg: 'Missing contributor name' }, status: :unprocessable_entity }
