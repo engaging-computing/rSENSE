@@ -16,4 +16,26 @@ class UserInteractionsTest < IntegrationTest
     visit project_path(@slick_project)
     assert page.has_no_content?('Edit'), 'Edit button appears on project that the user does not own.'
   end
+
+  test 'try to inject code into data set' do
+    # Make sure that code injection cannot happen anymore
+    login('pson@cs.uml.edu', '12345')
+
+    click_on 'Projects'
+    find('#project_title').set('Code Injection Test')
+    click_on 'Create Project'
+
+    find('#manual_fields').click
+    click_on 'Add Text'
+    fill_in 'text_1', with: '<script>alert(1)</script>'
+    click_on 'Save and Return'
+
+    assert page.has_no_content?('<script>'), 'Users should not be able to inject code into the webpage.'
+
+    click_on 'Manual Entry'
+    first('.editor-text').set('<h1>Testing...</h1>')
+    find('#edit_table_save_1').click
+
+    assert page.has_no_content?('<h1>'), 'Users should not be able to inject code into the webpage.'
+  end
 end
