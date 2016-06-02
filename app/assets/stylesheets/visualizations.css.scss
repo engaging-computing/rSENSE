@@ -419,6 +419,14 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
           width: 80%;
           margin: 5px auto;
         }
+        
+        .save-disabled {
+          display: inline-block;
+          width: 80%;
+          margin: 5px auto;
+          pointer-events: none;
+          background-color:#c0c0c0;
+        }
 
         // any input button inside this class isn't lined up with the
         // text to its right - this fixes that

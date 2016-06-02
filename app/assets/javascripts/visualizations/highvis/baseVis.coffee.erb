@@ -168,6 +168,7 @@ $ ->
           id: 'clipping-enabled'
           logId: 'clipping-enabled'
           label: 'Filters:'
+          buttonEnabled: !(globals.curVis.canvas == "timeline-canvas" and globals.configs.isPeriod)
 
         outctx = {}
         outctx.id = 'clipping-ctrls'
