@@ -46,13 +46,15 @@ $ ->
 
         # Set default search to empty string
         @configs.searchParams ?= {}
+        # tableGroupingId needs to be global so rowFormatter can see it
+        globals.configs.tableGroupingId ?= 0
 
       # Removes nulls from the table and colors the groupByRow
       rowFormatter = (cellvalue, options, rowObject) ->
         cellvalue = "" if $.type(cellvalue) is 'number' and isNaN(cellvalue) or
           cellvalue is null
 
-        gbid = globals.configs.groupById
+        gbid = globals.configs.tableGroupingId
         colIndex = options.pos
 
         cIndex = data.groups.indexOf(String(cellvalue).toLowerCase())
@@ -84,16 +86,18 @@ $ ->
         $('#' + @canvas).html('')
         $('#' + @canvas).append '<table id="data_table" class="table table-striped"></table>'
 
+        colIdsAndTypes = {}
+        colIds = []
         # Build the headers for the table
-        headers = for field in data.fields
-          fieldTitle(field)
-
-        # Make valid id's for the colModel
-        colIds = for header, index in headers
-          id = header.replace(/\s+/g, '_').toLowerCase()
+        colId = 0
+        headers = for field, index in data.fields when index in @configs.tableFields
+          id = fieldTitle(field).replace(/\s+/g, '_').toLowerCase()
           if index is globals.configs.groupById
-            @configs.groupingId = id
-          else id
+            globals.configs.tableGroupingId = colId
+          colIds.push(id)
+          colIdsAndTypes[id] = field.typeID
+          colId += 1
+          fieldTitle(field)
 
         # Build the data for the table
         visGroups = (g for g, i in data.groups when i in data.groupSelection)
@@ -103,15 +107,17 @@ $ ->
         gbid = globals.configs.groupById
         for point in dp when String(point[gbid]).toLowerCase() in visGroups
           row = {}
-          for d, i in point
-            row[colIds[i]] = d
+          index = 0
+          for d, i in point when i in @configs.tableFields
+            row[colIds[index]] = d
+            index += 1
           rows.push(row)
 
         # Make sure the sort type for each column is appropriate, and save the
         # time column
         timeCol = ""
-        columns = for colId, colIndex in colIds
-          if (data.fields[colIndex].typeID is data.types.TEXT)
+        columns = for colId, type of colIdsAndTypes
+          if (type is data.types.TEXT)
             {
               name:           colId
               id:             colId
@@ -119,7 +125,7 @@ $ ->
               formatter:      rowFormatter
               searchoptions:  { sopt:['cn','nc','bw','bn','ew','en','in','ni'] }
             }
-          else if (data.fields[colIndex].typeID is data.types.TIME)
+          else if (type is data.types.TIME)
             timeCol = colId
             {
               name:           colId
@@ -159,14 +165,6 @@ $ ->
           pager: '#toolbar_bottom'
           gridComplete: @saveSort
         })
-
-        # Show only the checked columns
-        for f, fi in data.fields
-          col = @table.jqGrid('getGridParam','colModel')[fi]
-          if $.inArray(fi, @configs.tableFields) is -1
-            @table.hideCol(col.name)
-          else
-            @table.showCol(col.name)
 
         $('#data_table').setGridWidth($('#' + @canvas).width())
 
