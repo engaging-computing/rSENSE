@@ -1,11 +1,18 @@
 include ApplicationHelper
 class Field < ActiveRecord::Base
+  include ActionView::Helpers::SanitizeHelper
+
   after_initialize :default_values
+
+  before_validation :sanitize_html
   before_validation :trim_restrictions
   before_validation :choose_refname
+
   validates_presence_of :project_id, :field_type, :name
+
   validates_uniqueness_of :name, scope: :project_id, case_sensitive: false
   validates_uniqueness_of :refname, scope: :project_id, case_sensitive: false
+
   validate :validate_values
   validate :unique_name
 
@@ -103,6 +110,18 @@ class Field < ActiveRecord::Base
     end
 
     self.refname = next_refname
+  end
+
+  def sanitize_html
+    # Strip HTML from input
+    self.name = strip_tags(name)
+    self.unit = strip_tags(unit)
+    self.restrictions = strip_tags(restrictions) if restrictions.is_a? String
+    if restrictions.is_a? Array
+      restrictions.each_with_index do |v, i|
+        restrictions[i] = strip_tags(v) if restrictions[i].is_a? String
+      end
+    end
   end
 
   def validate_values

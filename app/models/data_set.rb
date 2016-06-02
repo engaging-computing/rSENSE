@@ -31,11 +31,15 @@ class DataSet < ActiveRecord::Base
   end
 
   def sanitize_data_set
-    self.title = sanitize title, tags: %w()
+    self.title = strip_tags(title)
 
-    # replace numeric hash keys with string hash keys
     data.each do |data_row|
       data_row.keys.each do |key|
+        # Remove any and all HTML tags
+        if data_row[key].is_a? String
+          data_row[key] = strip_tags(data_row[key])
+        end
+        # replace numeric hash keys with string hash keys
         unless key.is_a? String
           data_row[key.to_s] = data_row[key]
           data_row.delete key
@@ -190,6 +194,8 @@ class DataSet < ActiveRecord::Base
                  # if anything breaks, just return nil
                  nil
                end
+        # Strip HTML from result
+        eval = strip_tags(eval) if eval.is_a? String
         # dump this value into the array
         new_field.value[idx] = eval
         curr_env.add x.refname, new_field
