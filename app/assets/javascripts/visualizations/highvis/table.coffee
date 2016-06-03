@@ -43,6 +43,8 @@ $ ->
         # Set sort state to default none existed
         @configs.sortName ?= ''
         @configs.sortType ?= ''
+        
+        @fieldsAndColumns = []
 
         # Set default search to empty string
         @configs.searchParams ?= {}
@@ -86,7 +88,7 @@ $ ->
         $('#' + @canvas).html('')
         $('#' + @canvas).append '<table id="data_table" class="table table-striped"></table>'
 
-        colIdsAndTypes = {}
+        @fieldsAndColumns = []
         colIds = []
         # Build the headers for the table
         colId = 0
@@ -95,7 +97,7 @@ $ ->
           if index is globals.configs.groupById
             globals.configs.tableGroupingId = colId
           colIds.push(id)
-          colIdsAndTypes[id] = field.typeID
+          @fieldsAndColumns.push({field: index,colId: id, type: field.typeID})
           colId += 1
           fieldTitle(field)
 
@@ -116,28 +118,28 @@ $ ->
         # Make sure the sort type for each column is appropriate, and save the
         # time column
         timeCol = ""
-        columns = for colId, type of colIdsAndTypes
-          if (type is data.types.TEXT)
+        columns = for column in @fieldsAndColumns
+          if (column.type is data.types.TEXT)
             {
-              name:           colId
-              id:             colId
+              name:           column.colId
+              id:             column.colId
               sorttype:       'text'
               formatter:      rowFormatter
               searchoptions:  { sopt:['cn','nc','bw','bn','ew','en','in','ni'] }
             }
-          else if (type is data.types.TIME)
-            timeCol = colId
+          else if (column.type is data.types.TIME)
+            timeCol = column.colId
             {
-              name:           colId
-              id:             colId
+              name:           column.colId
+              id:             column.colId
               sorttype:       'text'
               formatter:      dateFormatter
               searchoptions:  { sopt:['cn','nc','bw','bn','ew','en','in','ni'] }
             }
           else
             {
-              name:           colId
-              id:             colId
+              name:           column.colId
+              id:             column.colId
               sorttype:       'number'
               formatter:      rowFormatter
               searchoptions:  { sopt:['eq','ne','lt','le','gt','ge'] }
@@ -308,9 +310,11 @@ $ ->
 
         for param in @configs.searchParams
           # Get the field index to sort
-          fields = for f in @table.getGridParam('colNames')
-            f.replace(/\s+/g, '_').toLowerCase()
-          field = fields.indexOf(param.field)
+          field = 0
+          for fieldItem in @fieldsAndColumns
+            if fieldItem.colId == param.field
+              field = fieldItem.field
+              break
 
           # Create and clip with the sort filter
           filter =
