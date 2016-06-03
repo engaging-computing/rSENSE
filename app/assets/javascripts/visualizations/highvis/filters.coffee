@@ -43,6 +43,8 @@ $ ->
       f.opName    = globals.filterNames[f.op]
       formatter =
         if f.field is data.timeFields[0] then globals.dateFormatter
+        else if f.field in data.textFields then (str) ->
+          return str
         else data.precisionFilter
 
       if f.value?
