@@ -133,3 +133,4 @@ $ ->
       globals.pie = new Pie 'pie-canvas'
     else
       globals.pie = new DisabledVis 'pie-canvas'
+      

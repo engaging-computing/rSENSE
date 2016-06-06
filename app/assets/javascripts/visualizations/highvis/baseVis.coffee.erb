@@ -39,6 +39,10 @@ $ ->
 
         globals.configs.isPeriod ?= false # Controls how series are constructed in update(). 
         globals.configs.periodMode ?= 'off' # Changes when a period option is selected.
+        
+        # globals for saving the unique field ids, in case fields were reordered/new fields were added
+        globals.configs.fieldSelectionIds ?= []
+        globals.configs.groupByFieldId ?= -1
 
       ANALYSISTYPE_TOTAL:      0
       ANALYSISTYPE_MAX:        1
@@ -64,6 +68,7 @@ $ ->
         ( data.hasTimeData is false or data.timeType == data.GEO_TIME )
           data.setGroupIndex(data.COMBINED_FIELD)
           globals.configs.groupById = data.COMBINED_FIELD
+          
         @drawControls()
         @update()
         $('#vis-ctrls').scrollTop(toolScroll)
@@ -74,6 +79,11 @@ $ ->
       Derived classes should overload to reload content.
       ###
       update: ->
+        # Update the ids for field selection in case they were changed
+        globals.configs.fieldSelectionIds = []
+        for field in globals.configs.fieldSelection
+          globals.configs.fieldSelectionIds.push(data.fields[field].fieldID)
+        globals.configs.groupByFieldId = data.fields[globals.configs.groupById].fieldID
 
       ###
       Default delayed update simply updates
