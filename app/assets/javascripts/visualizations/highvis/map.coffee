@@ -244,24 +244,10 @@ $ ->
               strokeWeight: 2
               scale: 7
 
-            cameraSym =
-              fillColor: color
-              fillOpacity: 1
-              path: 'M 20, 10
-                      m -6, 0
-                      a 6,6 0 1,0 12,0
-                      a 6,6 0 1,0 -12,0
-                      M 0 20 L 40 20 L 40 0 L 34 0 L 34 -2 L 38 -2 L 38 0 L 40 0  L 0 0 Z'
-              strokeColor: "#000"
-              strokeWeight: 2
-              scale: .8
-
-            symbol = if data.metadata[metaIndex].photos.length > 0 then cameraSym else pinSym
-
             newMarker = new google.maps.Marker
               position: latlng
               animation: google.maps.Animation.DROP
-              icon: symbol
+              icon: pinSym
               desc: label
               visible: ((groupIndex in data.groupSelection) and
                 Boolean(@configs.visibleMarkers))
