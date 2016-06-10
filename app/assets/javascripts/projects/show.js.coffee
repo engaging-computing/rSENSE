@@ -65,8 +65,12 @@ IS.onReady "projects/show", ->
   # Takes all sessions that are checked, appends its id to the url and
   # redirects the user to the view sessions page (Vis page)
   $('#vis_button').click (e) ->
-    targets = $(document).find(".dataset .ds_selector input:checked")
-    ds_list = (get_ds_id t for t in targets)
+    unchecked = $(document).find(".dataset .ds_selector input:not(:checked)")
+    unchecked_list = (get_ds_id u for u in unchecked)
+    ds_list = []
+    if unchecked_list.length > 0
+      targets = $(document).find(".dataset .ds_selector input:checked")
+      ds_list = (get_ds_id t for t in targets)
     window.location = $(this).attr("data-href") + ds_list
 
   $('#export_button').click (e) ->
