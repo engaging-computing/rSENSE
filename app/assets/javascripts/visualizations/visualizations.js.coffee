@@ -120,6 +120,19 @@ $ ->
         vis  = eval "globals.#{visName.toLowerCase()}"
         if vis? and savedGlobals[visName]?
           $.extend(vis.configs, savedGlobals[visName])
+          
+      # Reset correct field indices in case the fields were reordered/new fields were added
+      fieldIds = for field in data.fields
+        field.fieldID
+        
+      if globals.configs.fieldSelectionIds?
+        globals.configs.fieldSelection = []
+        for id in globals.configs.fieldSelectionIds
+          if id in fieldIds
+            globals.configs.fieldSelection.push(fieldIds.indexOf(id))
+            
+      if globals.configs.groupByFieldId? and globals.configs.groupByFieldId != -1
+        globals.configs.groupById = fieldIds.indexOf(globals.configs.groupByFieldId)
 
       delete data.savedGlobals
 
