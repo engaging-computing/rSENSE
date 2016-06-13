@@ -125,7 +125,7 @@ $ ->
       fieldIds = for field in data.fields
         field.fieldID
         
-      if globals.configs.fieldSelectionIds?
+      if globals.configs.fieldSelectionIds? and globals.fieldSelectionIds.length != 0
         globals.configs.fieldSelection = []
         for id in globals.configs.fieldSelectionIds
           if id in fieldIds
