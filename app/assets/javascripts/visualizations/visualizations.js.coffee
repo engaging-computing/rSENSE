@@ -125,8 +125,10 @@ $ ->
       fieldIds = for field in data.fields
         field.fieldID
         
+      console.log(globals.configs.fieldSelectionIds)
+
       if globals.configs.fieldSelectionIds?
-        if globals.fieldSelectionIds.length != 0
+        if globals.configs.fieldSelectionIds.length != 0
           globals.configs.fieldSelection = []
           for id in globals.configs.fieldSelectionIds
             if id in fieldIds
