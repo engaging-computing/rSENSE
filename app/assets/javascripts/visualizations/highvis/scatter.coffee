@@ -52,7 +52,7 @@ $ ->
 
         @configs.mode ?= @SYMBOLS_MODE
 
-        @configs.xAxisId ?= -1
+        # @configs.xAxisId ?= -1
         @configs.xAxis ?= data.normalFields[0]
         # TODO write a migration to nuke @configs.yAxis
         @configs.advancedTooltips ?= 0
@@ -79,6 +79,7 @@ $ ->
         @configs.fullDetail ?= 0
 
       start: (animate = true) ->
+        @configs.xAxisId ?= data.fields[@configs.xAxis].fieldID
         # Reset the xAxis in case a new field was added or fields were reordered
         if not @isScatter? then @configs.xAxis = data.timeFields[0]
         else if @configs.xAxisId == -1 then @configs.xAxis = 0
