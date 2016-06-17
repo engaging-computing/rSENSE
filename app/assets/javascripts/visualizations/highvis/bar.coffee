@@ -41,6 +41,19 @@ $ ->
         # Default Sort
         fs = globals.configs.fieldSelection
         @configs.sortField ?= if fs? then fs[0] else @SORT_DEFAULT
+        @configs.sortFieldId ?=
+          if @configs.sortField == @SORT_DEFAULT
+            -2
+          else
+            data.fields[@configs.sortField].fieldID
+        
+        if @configs.sortFieldId == -2 then @configs.sortField = @SORT_DEFAULT
+        else if @configs.sortFieldId == -1 then @configs.sortField = 0
+        else
+          fieldIds = for field in data.fields
+            field.fieldID
+          @configs.sortField = fieldIds.indexOf(@configs.sortFieldId)
+
 
         super()
 
@@ -113,6 +126,9 @@ $ ->
         super()
 
         fieldSelection = globals.configs.fieldSelection
+
+        @configs.sortFieldId =
+          if @configs.sortField == @SORT_DEFAULT then -2 else data.fields[@configs.sortField].fieldID
         
         # Get the column data
         groupedData = {}

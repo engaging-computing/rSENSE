@@ -124,8 +124,6 @@ $ ->
       # Reset correct field indices in case the fields were reordered/new fields were added
       fieldIds = for field in data.fields
         field.fieldID
-        
-      console.log(globals.configs.fieldSelectionIds)
 
       if globals.configs.fieldSelectionIds?
         if globals.configs.fieldSelectionIds.length != 0
