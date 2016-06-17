@@ -127,7 +127,8 @@ $ ->
 
         fieldSelection = globals.configs.fieldSelection
 
-        @configs.sortFieldId = if @configs.sortField == @SORT_DEFAULT then -2 else data.fields[@configs.sortField].fieldID
+        @configs.sortFieldId =
+          if @configs.sortField == @SORT_DEFAULT then -2 else data.fields[@configs.sortField].fieldID
         
         # Get the column data
         groupedData = {}
