@@ -151,12 +151,19 @@ IS.onReady "projects/show", ->
         $('#export_button').prop("disabled",false)
       $('#vis_button').prop("disabled", should_disable)
       $('#export_button').prop("disabled", should_disable)
+      $('#delete_selected_button').prop("disabled", should_disable)
 
   check_for_selection()
 
   #Add click events to all check boxes in the data_sets box
   $('#dataset_table').find(".mdl-checkbox__input").each (i,j) ->
     $(j).click check_for_selection
+
+  # delete selected data sets
+
+  $('#delete_selected_button').click (e) ->
+    targets = $(document).find(".dataset .ds_selector input:checked")
+    ds_list = (get_ds_id t for t in targets)
 
   # delete data sets
 
@@ -167,6 +174,10 @@ IS.onReady "projects/show", ->
     row = $(@).parents('tr')
     p_id = url.split '/'
     p_id = p_id[ p_id.length - 1 ]
+
+    console.log(url)
+    console.log(row)
+    console.log(p_id)
 
     if helpers.confirm_delete $(@).attr('name')
       $.ajax
