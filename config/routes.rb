@@ -35,6 +35,8 @@ Rsense::Application.routes.draw do
 
   resources :data_sets
 
+  delete '/delete_data_sets/:id_list' => 'data_sets#deleteMultiple'
+
   resources :fields, except: [:index, :new, :edit]
   resources :formula_fields, except: [:index, :new, :edit]
 

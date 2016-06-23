@@ -160,6 +160,53 @@ class DataSetsController < ApplicationController
     end
   end
 
+  def deleteMultiple
+    datasetIds = params[:id_list].split(',')
+    @datasetArray = []
+    datasetIds.each do |id|
+      begin
+        @datasetArray.push DataSet.find_by_id(id)
+      rescue ActiveRecord::RecordNotFound
+        respond_to do |format|
+          format.json { render json: { error: 'Data set not found.' }, status: :not_found }
+        end
+        return
+      end
+      @project ||= @datasetArray[0].project
+    end
+
+    if @project.lock? and !can_edit?(@project)
+      redirect_to @project, alert: 'Project is locked'
+      return
+    end
+
+    @datasetArray.each do |data_set|
+      if can_delete?(data_set)
+        data_set.media_objects.each(&:destroy)
+
+        if !data_set.destroy
+          respond_to do |format|
+            format.html { redirect_to project_path(@data_set.project.id), notice: 'Data set could not be removed' }
+            format.json { render json: {}, status: :unprocessable_entity }
+          end
+        end
+
+      else
+        @errors = ['User Not Authorized']
+
+        respond_to do |format|
+          format.html { redirect_to 'public/403.html', status: :forbidden }
+          format.json { render json: { errors: @errors }, status: :forbidden }
+        end
+      end
+    end
+
+    respond_to do |format|
+      format.html {redirect_to request.referrer, notice: 'Data sets removed' }
+      format.json { render json: {}, status: :ok }
+    end
+  end
+
   # GET /projects/1/manualEntry
   def manualEntry
     @project = Project.find(params[:id])
