@@ -97,7 +97,9 @@
                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" style="margin-bottom: 10px;" id="export_button" >Export</button>
               </span>
               <div class="pull-right">
-                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--red" id="delete_selected_button">Delete Selected</button>
+                <% if !current_user.nil? %>
+                  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--red" id="delete_selected_button">Delete Selected</button>
+                <% end %>
                 <div class="btn-group">
                   <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
                     <i class="fa fa-check-square-o"></i>
