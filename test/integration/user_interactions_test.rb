@@ -1,4 +1,6 @@
-# Put tests based on how the user interacts with the site here
+# Put tests based on how the user interacts with the site here.
+# Not every test needs its own file. However, if one feature has a lot of tests
+# on this page, consider moving it to its own file.
 require 'test_helper'
 require_relative 'base_integration_test'
 

@@ -153,3 +153,24 @@ calculation_data_4:
   user: boxes
   project: calculation_test_2
   data: '[{"119": 1}, {"119": 2}, {"119": 3}, {"119": 4}, {"119": 5}]'
+
+delete_data_sets_pat-1:
+  title: pat-1
+  id: 100
+  user: patson
+  project: delete_data_sets
+  data: '[{"200": 117}]'
+
+delete_data_sets_pat-2:
+  title: pat-2
+  id: 101
+  user: patson
+  project: delete_data_sets
+  data: '[{"200": 117}]'
+
+delete_data_sets_nixon-1:
+  title: nixon-1
+  id: 102
+  user: nixon
+  project: delete_data_sets
+  data: '[{"200": 117}]'

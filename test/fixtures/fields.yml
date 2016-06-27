@@ -247,3 +247,9 @@ calculation_field_2:
   project: calculation_test_2
   name: Calc
   refname: Calc
+
+delete_data_sets_number:
+  id: 200
+  field_type: 2
+  project: delete_data_sets
+  name: Number
