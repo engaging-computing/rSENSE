@@ -165,10 +165,19 @@ class DataSetsController < ApplicationController
     @datasetArray = []
     datasetIds.each do |id|
       begin
-        @datasetArray.push DataSet.find_by_id(id)
+        dset = DataSet.find(id)
+        @datasetArray.push dset
       rescue ActiveRecord::RecordNotFound
         respond_to do |format|
           format.json { render json: { error: 'Data set not found.' }, status: :not_found }
+        end
+        return
+      end
+      if !can_delete?(dset)
+      @errors = ['User Not Authorized']
+        respond_to do |format|
+          format.html { redirect_to 'public/403.html', status: :forbidden }
+          format.json { render json: { errors: @errors }, status: :forbidden }
         end
         return
       end
@@ -181,22 +190,12 @@ class DataSetsController < ApplicationController
     end
 
     @datasetArray.each do |data_set|
-      if can_delete?(data_set)
-        data_set.media_objects.each(&:destroy)
+      data_set.media_objects.each(&:destroy)
 
-        if !data_set.destroy
-          respond_to do |format|
-            format.html { redirect_to project_path(@data_set.project.id), notice: 'Data set could not be removed' }
-            format.json { render json: {}, status: :unprocessable_entity }
-          end
-        end
-
-      else
-        @errors = ['User Not Authorized']
-
+      if !data_set.destroy
         respond_to do |format|
-          format.html { redirect_to 'public/403.html', status: :forbidden }
-          format.json { render json: { errors: @errors }, status: :forbidden }
+          format.html { redirect_to project_path(@data_set.project.id), notice: 'Data set could not be removed' }
+          format.json { render json: {}, status: :unprocessable_entity }
         end
       end
     end
