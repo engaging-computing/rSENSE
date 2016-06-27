@@ -193,7 +193,9 @@ IS.onReady "projects/show", ->
           tbody.recolor_rows(recolored)
           recolored = true
         error: (msg) ->
-          console.log(msg)
+          response = $.parseJSON msg['responseText']
+          error_message = response.error
+          alert("There was an issue deleting the data sets: " + error_message + ". Please try again.")
 
   # delete data sets
   $('a.data_set_delete').click (e) ->

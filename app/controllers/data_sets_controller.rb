@@ -125,7 +125,7 @@ class DataSetsController < ApplicationController
       @data_set = DataSet.find(params[:id])
     rescue ActiveRecord::RecordNotFound
       respond_to do |format|
-        format.json { render json: { error: 'Data set not found.' }, status: :not_found }
+        format.json { render json: { errors: ['Data set not found.'] }, status: :not_found }
       end
       return
     end
@@ -160,28 +160,28 @@ class DataSetsController < ApplicationController
     end
   end
 
+  # DELETE /delete_data_sets/1,2,3...
   def deleteMultiple
-    datasetIds = params[:id_list].split(',')
-    @datasetArray = []
-    datasetIds.each do |id|
+    dataset_ids = params[:id_list].split(',')
+    @dataset_array = []
+    dataset_ids.each do |id|
       begin
         dset = DataSet.find(id)
-        @datasetArray.push dset
+        @dataset_array.push dset
       rescue ActiveRecord::RecordNotFound
         respond_to do |format|
-          format.json { render json: { error: 'Data set not found.' }, status: :not_found }
+          format.json { render json: { error: 'Data set not found' }, status: :not_found }
         end
         return
       end
-      if !can_delete?(dset)
-      @errors = ['User Not Authorized']
+      unless can_delete?(dset)
         respond_to do |format|
           format.html { redirect_to 'public/403.html', status: :forbidden }
-          format.json { render json: { errors: @errors }, status: :forbidden }
+          format.json { render json: { error: 'User not authorized' }, status: :forbidden }
         end
         return
       end
-      @project ||= @datasetArray[0].project
+      @project ||= @dataset_array[0].project
     end
 
     if @project.lock? and !can_edit?(@project)
@@ -189,19 +189,19 @@ class DataSetsController < ApplicationController
       return
     end
 
-    @datasetArray.each do |data_set|
+    @dataset_array.each do |data_set|
       data_set.media_objects.each(&:destroy)
 
-      if !data_set.destroy
+      unless data_set.destroy
         respond_to do |format|
           format.html { redirect_to project_path(@data_set.project.id), notice: 'Data set could not be removed' }
-          format.json { render json: {}, status: :unprocessable_entity }
+          format.json { render json: { error: 'Unprocessable Entity' }, status: :unprocessable_entity }
         end
       end
     end
 
     respond_to do |format|
-      format.html {redirect_to request.referrer, notice: 'Data sets removed' }
+      format.html { redirect_to request.referrer, notice: 'Data sets removed' }
       format.json { render json: {}, status: :ok }
     end
   end
