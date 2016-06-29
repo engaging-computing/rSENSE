@@ -127,7 +127,7 @@ $ ->
       # Select all the data
       dp = data.dataPoints
       if disabledPoints.length > 0
-        dp = dp.filter (p) =>
+        dp = dp.filter (p) ->
           obj = {pointId: p[0], dataSetId: globals.getDataSetId(p[1])}
           pass = true
           for point in disabledPoints
@@ -155,7 +155,7 @@ $ ->
       return dp
 
     ###
-    Returns the Data Set ID given the data set name from the 
+    Returns the Data Set ID given the data set name from the
     datapoint object, of the form: "[dataset name]([dataset id])".
     Does some fancy Regex magic in case the user includes numbers
     inside of parentheses in the data set name.

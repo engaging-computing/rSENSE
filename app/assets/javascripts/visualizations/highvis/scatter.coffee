@@ -134,7 +134,6 @@ $ ->
                     root = ele.parent()
                     root.append ele
                   select: () ->
-                    console.log(@)
                     self.selectedDataSetId = globals.getDataSetId(@.datapoint[1])
                     self.selectedPointId = @.datapoint[0]
                     $('#disable-point-button').prop("disabled", false)
@@ -640,7 +639,6 @@ $ ->
           $('#disable-point-button').prop("disabled", true)
           $('#enable-points-button').prop("disabled", false)
           @configs.disabledPoints.push({pointId: @selectedPointId, dataSetId: @selectedDataSetId})
-          console.log(@configs.disabledPoints)
           @start()
 
         $('#enable-points-button').click (e) =>
