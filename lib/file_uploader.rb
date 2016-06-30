@@ -33,7 +33,9 @@ class FileUploader
     # Presentation
     'pez', 'sti', 'sxi',
     # Google
-    'gdoc', 'gsheet'
+    'gdoc', 'gsheet',
+    # App Inventor
+    'aia'
   ]
 
   @converted_csv = nil
