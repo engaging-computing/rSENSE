@@ -151,3 +151,7 @@ weather_data:
   user: patson
   content: Simple project to test Formula Fields from uploaded data.
 
+delete_data_sets:
+  title: Delete Data Sets
+  user: patson
+  content: Project to be used to test deleting data sets
