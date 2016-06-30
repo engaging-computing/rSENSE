@@ -132,6 +132,9 @@ class ProjectsController < ApplicationController
   def update
     @project = Project.find(params[:id])
     update = project_params
+    # If the user hit the "Reset Defaults" button, set globals to nil.
+    # nil can't be passed from the url, so do it here.
+    update[:globals] = nil if update[:globals] == ''
 
     # ADMIN REQUEST
     if current_user.try(:admin)
