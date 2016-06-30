@@ -95,6 +95,19 @@
 
       <div class="form-group">
         <div class="checkbox">
+          <% res = 'Reset Defaults' %>
+          <% cls = 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--blue' %>
+          <%= link_to raw(res),
+              project_path(@project, project: { globals: nil, default_vis: "none" }),
+              { method: :put, data: { confirm: 'Really reset default options?' },
+              class: cls } %>
+          <span class="help-block">Reset the default options on the visualization page. 
+            If your visualization is behaving incorrectly, try using this option.</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="checkbox">
           <% del = '<i class="fa fa-times-circle"></i> Delete Project ' %>
           <% cls = 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--red'; if !can_delete? @project then cls += ' disabled' end %>
           <%= link_to raw(del),
