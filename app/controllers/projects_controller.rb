@@ -293,7 +293,7 @@ class ProjectsController < ApplicationController
               redirect_to [:show, @project],
               alert: "Can't delete fields when you have existing data sets."
             end
-            format.json { render json: {errors: ["Can't delete fields when you have existing data sets. Delete existing data sets and try again."]}, status: :forbidden }
+            format.json { render json: { errors: ["Can't delete fields when you have existing data sets. Delete existing data sets and try again."] }, status: :forbidden }
           end
           return
         end
