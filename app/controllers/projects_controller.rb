@@ -286,8 +286,19 @@ class ProjectsController < ApplicationController
     success = true
 
     ActiveRecord::Base.transaction do
-      # Deletion silently fails upon any error
-      delete_hidden_fields(Field, params[:hidden_deleted_fields])
+      if params[:hidden_deleted_fields].length != 0
+        if @project.data_sets.length > 0
+          respond_to do |format|
+            format.html do
+              redirect_to [:show, @project],
+              alert: "Can't delete fields when you have existing data sets."
+            end
+            format.json { render json: { errors: ["Can't delete fields when you have existing data sets. Delete existing data sets and try again."] }, status: :forbidden }
+          end
+          return
+        end
+        delete_hidden_fields(Field, params[:hidden_deleted_fields])
+      end
 
       # Update existing fields, create restrictions if any exist
       @project.fields.each do |field|
