@@ -15,6 +15,7 @@ class Field < ActiveRecord::Base
 
   validate :validate_values
   validate :unique_name
+  validate :reserved_names
 
   belongs_to :project
   serialize :restrictions, JSON
@@ -149,6 +150,12 @@ class Field < ActiveRecord::Base
     hits = @project.formula_fields.where 'UPPER(name) = ?', name.upcase
     unless hits.empty?
       errors.add :base, "#{name} has the same name as another formula field"
+    end
+  end
+
+  def reserved_names
+    if ['Data Point', 'Data Set Name (id)', 'Combined Data Sets', 'Number Fields', 'Contributors', 'Time Period'].include? name
+      errors.add :base, "#{name} is reserved for internal use. Please choose a different name."
     end
   end
 end
