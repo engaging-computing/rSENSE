@@ -68,7 +68,7 @@ IS.onReady "projects/show", ->
     unchecked = $(document).find(".dataset .ds_selector input:not(:checked)")
     unchecked_list = (get_ds_id u for u in unchecked)
     ds_list = []
-    if unchecked_list.length > 0
+    if unchecked_list.length > 0 or window.location.href.indexOf('&search') != -1
       targets = $(document).find(".dataset .ds_selector input:checked")
       ds_list = (get_ds_id t for t in targets)
     window.location = $(this).attr("data-href") + ds_list
