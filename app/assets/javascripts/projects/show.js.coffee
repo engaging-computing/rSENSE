@@ -185,13 +185,8 @@ IS.onReady "projects/show", ->
         type: "delete"
         dataType: "json"
         success: ->
-          recolored = false
-          tbody = rows[0].parents('tbody')
-          for row in rows
-            row.fadeOut ->
-              row.remove()
-          tbody.recolor_rows(recolored)
-          recolored = true
+          # reload page without scrolling back to previous position, so we can see the message at the top.
+          window.location.href = window.location.href
         error: (msg) ->
           response = $.parseJSON msg['responseText']
           error_message = response.error
