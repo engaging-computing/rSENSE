@@ -183,6 +183,7 @@ class DataSetsController < ApplicationController
       end
       @project ||= @dataset_array[0].project
     end
+    amount = @dataset_array.length
 
     if @project.lock? and !can_edit?(@project)
       redirect_to @project, alert: 'Project is locked'
@@ -197,9 +198,11 @@ class DataSetsController < ApplicationController
           format.html { redirect_to project_path(@data_set.project.id), notice: 'Data set could not be removed' }
           format.json { render json: { error: 'Unprocessable Entity' }, status: :unprocessable_entity }
         end
+        return
       end
     end
 
+    flash[:notice] = "Successfully deleted #{amount} data set" + (amount == 1 ? '' : 's') + '.'
     respond_to do |format|
       format.html { redirect_to request.referrer, notice: 'Data sets removed' }
       format.json { render json: {}, status: :ok }
