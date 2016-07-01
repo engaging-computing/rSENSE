@@ -52,6 +52,12 @@ $ ->
 
         @configs.mode ?= @SYMBOLS_MODE
 
+        # Used to remember the IDs of the selected point on the chart
+        @selectedPointId = -1
+        @selectedDataSetId = -1
+
+        @configs.disabledPoints ?= []
+
         # @configs.xAxisId ?= -1
         @configs.xAxis ?= data.normalFields[0]
         # TODO write a migration to nuke @configs.yAxis
@@ -115,6 +121,7 @@ $ ->
           plotOptions:
             scatter:
               animation: false
+              allowPointSelect: true
               marker:
                 states:
                   hover:
@@ -126,6 +133,10 @@ $ ->
                     ele = $(@.graphic.element)
                     root = ele.parent()
                     root.append ele
+                  select: () ->
+                    self.selectedDataSetId = globals.getDataSetId(@.datapoint[1])
+                    self.selectedPointId = @.datapoint[0]
+                    $('#disable-point-button').prop("disabled", false)
 
           groupBy = ''
           $('#groupSelector').find('option').each (i,j) ->
@@ -258,7 +269,7 @@ $ ->
           text: fieldTitle data.fields[@configs.xAxis]
         @chart.xAxis[0].setTitle title, false
 
-        dp = globals.getData(true, globals.configs.activeFilters)
+        dp = globals.getData(true, globals.configs.activeFilters, @configs.disabledPoints)
 
         # Helper Function to modify the date based on period option on Timeline
         # Dates are normalized to 1990 so that when they are graphed, dates fall
@@ -621,6 +632,20 @@ $ ->
           @configs.mode = Number e.target.value
           @start()
 
+        if @configs.disabledPoints.length == 0
+          $('#enable-points-button').prop("disabled", true)
+
+        $('#disable-point-button').click (e) =>
+          $('#disable-point-button').prop("disabled", true)
+          $('#enable-points-button').prop("disabled", false)
+          @configs.disabledPoints.push({pointId: @selectedPointId, dataSetId: @selectedDataSetId})
+          @start()
+
+        $('#enable-points-button').click (e) =>
+          $('#enable-points-button').prop("disabled", true)
+          @configs.disabledPoints = []
+          @start()
+
         $('#ckbx-tooltips').click (e) =>
           @configs.advancedTooltips = (@configs.advancedTooltips + 1) % 2
           @start()
@@ -829,7 +854,7 @@ $ ->
           name += desc + "function of <strong>#{xAxisName}</strong>"
 
           # List of (x,y) points to be used in calculating regression
-          dp = globals.getData(true, globals.configs.activeFilters)
+          dp = globals.getData(true, globals.configs.activeFilters, @configs.disabledPoints)
           xyData = data.multiGroupXYSelector(@configs.xAxis, yAxisIndex,
             data.groupSelection, dp)
           xMax = window.globals.curVis.configs.xBounds.max
@@ -1024,7 +1049,7 @@ $ ->
 
         for filter in filters
           globals.configs.activeFilters.push(filter)
-
+    
     if "Scatter" in data.relVis
       globals.scatter = new Scatter "scatter-canvas"
     else

@@ -123,9 +123,19 @@ $ ->
     ###
     Selects data with potential filters
     ###
-    globals.getData = (clip = false, filters = []) ->
+    globals.getData = (clip = false, filters = [], disabledPoints = []) ->
       # Select all the data
       dp = data.dataPoints
+      if disabledPoints.length > 0
+        dp = dp.filter (p) ->
+          obj = {pointId: p[0], dataSetId: globals.getDataSetId(p[1])}
+          pass = true
+          for point in disabledPoints
+            if JSON.stringify(point) == JSON.stringify(obj)
+              pass = false
+              break
+          return pass
+
       unless clip and globals.configs.clippingMode then return dp
 
       # Ensure filters is a list
@@ -143,6 +153,16 @@ $ ->
         dp = dp.filter(func)
 
       return dp
+
+    ###
+    Returns the Data Set ID given the data set name from the
+    datapoint object, of the form: "[dataset name]([dataset id])".
+    Does some fancy Regex magic in case the user includes numbers
+    inside of parentheses in the data set name.
+    ###
+    globals.getDataSetId = (dsetName) ->
+      matches = dsetName.match(/\([0-9]*\)/g)
+      return /\(([0-9]*)\)/i.exec(matches[matches.length - 1])[1]
 
     ###
     Selects data in an x,y object format of the given group.
