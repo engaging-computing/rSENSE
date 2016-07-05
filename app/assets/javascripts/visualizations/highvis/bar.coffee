@@ -35,7 +35,7 @@ $ ->
         super(@canvas)
 
       start: ->
-        @configs.analysisType ?= @ANALYSISTYPE_MEAN
+        @configs.analysisType ?= @ANALYSISTYPE_TOTAL
         @configs.histogramDensity ?= false
 
         # Default Sort
