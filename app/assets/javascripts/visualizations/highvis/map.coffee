@@ -160,9 +160,8 @@ $ ->
             if (lat is null) or (lon is null)
               return
 
-            groupsLowerCase = (g.toLowerCase() for g in data.groups)
-            groupIndex = groupsLowerCase.indexOf(
-              String(dp[globals.configs.groupById]).toLowerCase())
+            groupIndex = data.groups.indexOf(
+              String(dp[globals.configs.groupById]))
             color = globals.getColor(groupIndex)
             latlng = new google.maps.LatLng(lat, lon)
 
