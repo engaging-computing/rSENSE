@@ -119,6 +119,8 @@ IS.onReady "projects/show", ->
     $('#export_button').prop("disabled", true)
     $('#delete_selected_button').prop("disabled", true)
 
+
+  #Select all checkboxes created by current logged in user
   $("a#check_mine").click ->
     root = $('#dataset_table')
     root.find("[id^=lbl_]").each (i,j) ->
@@ -133,6 +135,7 @@ IS.onReady "projects/show", ->
       $('#vis_button').prop("disabled", true)
       $('#export_button').prop("disabled", true)
       $('#delete_selected_button').prop("disabled", true)
+      
   $("a.check_id").click ->
     root = $('#dataset_table')
     $('#vis_button').prop("disabled", true)
