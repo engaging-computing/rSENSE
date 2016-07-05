@@ -123,14 +123,14 @@ $ ->
     ###
     Selects data with potential filters
     ###
-    globals.getData = (clip = false, filters = [], disabledPoints = []) ->
+    globals.getData = (clip = false, filters = []) ->
       # Select all the data
       dp = data.dataPoints
-      if disabledPoints.length > 0
+      if globals.configs.disabledPoints.length > 0
         dp = dp.filter (p) ->
           obj = {pointId: p[0], dataSetId: globals.getDataSetId(p[1])}
           pass = true
-          for point in disabledPoints
+          for point in globals.configs.disabledPoints
             if JSON.stringify(point) == JSON.stringify(obj)
               pass = false
               break
