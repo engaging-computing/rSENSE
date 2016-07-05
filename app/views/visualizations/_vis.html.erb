@@ -47,69 +47,83 @@
     <div id="vis-header">
       <div id="vis-title-bar"
            <% if @presentation || !titleBar %> style="display:none" <% end %>>
-        <div id="vis-title-edit-btn" class="hidden-xs hidden-sm">
-          <div class="inline-block subtitle">
-            <% if obj && can_edit?(obj) %>
-              <div class="edit_menu inline-block" data-field="title"
-                   data-value="<%= obj.title.html_safe %>">
-                <div class="btn-group">
-                  <a class="btn btn-primary dropdown-toggle menu_edit_link"
-                     data-toggle="dropdown" href="#">
-                    Edit <span class="caret"></span>
-                  </a>
-                  <ul class="dropdown-menu pull-right" role="menu">
-                    <li role="presentation">
-                      <a class="menu_rename" role="menuitem"
-                         href="<%= url_for obj %>">
-                        <i class="fa fa-edit"></i> Edit Title
-                      </a>
-                    </li>
-                    <% if can_delete?(obj) %>
-                      <li role="presentation">
-                        <%= link_to obj, data: { confirm: "Are you sure?" },
-                            method: :delete,
-                            class: 'menu_delete' do %>
-                        <i style="color:red" class="fa fa-times-circle"></i>
-                        Delete
-                        <%= (s = obj.class.to_s) == 'DataSet' ?
-                            'Data Set' : s  %>
-                        <% end %>
-                      </li>
-                    <% end %>
-                  </ul>
+        <div class = "row"> 
+          
+          <div class = "col-md-8">
+   
+                <button id="ctrls-menu-btn"
+                          class="hamburger-menu btn btn-default down"
+                          <% if !controls %> style="display:none" <% end %>>
+                    <span class="hamburger-bar"></span>
+                    <span class="hamburger-bar"></span>
+                    <span class="hamburger-bar"></span>
+                </button>
+          
+  
+                <div id="vis-title" class="inline-block">
+                  <% if obj %>
+                    <%= title_and_edit_menu(obj) %>
+                  <% else %>
+                    Showing <%= @datasets.count %> Data Sets
+                  <% end %>
+                  <div class="subtitle" style="font-style: italic">
+                    <span>from&nbsp;</span>
+                    <i class='fa fa-folder-open'></i>
+                    <%= link_to project.title.html_safe, project, class: "link" %>
+                      by <i class='fa fa-user'></i>
+                    <%= link_to "#{project.owner.name}", owner, class: "link" %>
                 </div>
+
               </div>
-            <% end %>
+            
           </div>
-          <% if getLatest %>
-            <%= link_to "#{project_path(@project)}/data_sets",
-                { id:"refresh-data", class: "btn btn-default" } do %>
-              Get Latest Data
-              <%= content_tag(:i, ' ', class: 'fa fa-refresh') %>
-            <% end %>
-          <% end %>
-        </div>
-        <button id="ctrls-menu-btn"
-                class="hamburger-menu btn btn-default down"
-                <% if !controls %> style="display:none" <% end %>>
-          <span class="hamburger-bar"></span>
-          <span class="hamburger-bar"></span>
-          <span class="hamburger-bar"></span>
-        </button>
-        <div id="vis-title" class="inline-block">
-          <% if obj %>
-            <%= title_and_edit_menu(obj) %>
-          <% else %>
-            Showing <%= @datasets.count %> Data Sets
-          <% end %>
-          <div class="subtitle" style="font-style: italic">
-            <span>from&nbsp;</span>
-            <i class='fa fa-folder-open'></i>
-            <%= link_to project.title.html_safe, project, class: "link" %>
-              by <i class='fa fa-user'></i>
-            <%= link_to "#{project.owner.name}", owner, class: "link" %>
+        
+          <div class = "col-md-4">
+            <div id="vis-title-edit-btn" class="hidden-xs hidden-sm">
+              <div class="inline-block subtitle">
+                <% if obj && can_edit?(obj) %>
+                  <div class="edit_menu inline-block" data-field="title"
+                      data-value="<%= obj.title.html_safe %>">
+                    <div class="btn-group">
+                      <a class="btn btn-primary dropdown-toggle menu_edit_link"
+                        data-toggle="dropdown" href="#">
+                        Edit <span class="caret"></span>
+                      </a>
+                      <ul class="dropdown-menu pull-right" role="menu">
+                        <li role="presentation">
+                          <a class="menu_rename" role="menuitem"
+                            href="<%= url_for obj %>">
+                            <i class="fa fa-edit"></i> Edit Title
+                          </a>
+                        </li>
+                        <% if can_delete?(obj) %>
+                          <li role="presentation">
+                            <%= link_to obj, data: { confirm: "Are you sure?" },
+                                method: :delete,
+                                class: 'menu_delete' do %>
+                            <i style="color:red" class="fa fa-times-circle"></i>
+                            Delete
+                            <%= (s = obj.class.to_s) == 'DataSet' ?
+                                'Data Set' : s  %>
+                            <% end %>
+                          </li>
+                        <% end %>
+                      </ul>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+              <% if getLatest %>
+                <%= link_to "#{project_path(@project)}/data_sets",
+                    { id:"refresh-data", class: "btn btn-default" } do %>
+                  Get Latest Data
+                  <%= content_tag(:i, ' ', class: 'fa fa-refresh') %>
+                <% end %>
+              <% end %>
+            </div>
           </div>
         </div>
+   
       </div>
       <div id="vis-filters">
         Filters:
