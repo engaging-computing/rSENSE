@@ -325,13 +325,15 @@ $ ->
       for group in data.groups
         timeMins.push Number.MAX_VALUE
 
+      groupsLowerCase = (g.toLowerCase() for g in data.groups)
+
       for datapoint in data.dataPoints
-        group = data.groups.indexOf (String datapoint[globals.configs.groupById]).toLowerCase()
+        group = groupsLowerCase.indexOf (String datapoint[globals.configs.groupById]).toLowerCase()
         time = datapoint[sourceField].valueOf()
         timeMins[group] = Math.min timeMins[group], datapoint[sourceField]
 
       for datapoint in data.dataPoints
-        group = data.groups.indexOf (String datapoint[globals.configs.groupById]).toLowerCase()
+        group = groupsLowerCase.indexOf (String datapoint[globals.configs.groupById]).toLowerCase()
         curTime = datapoint[sourceField].valueOf()
         datapoint.push (curTime - timeMins[group]) / 1000.0
 

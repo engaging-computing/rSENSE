@@ -102,7 +102,7 @@ $ ->
           fieldTitle(field)
 
         # Build the data for the table
-        visGroups = (g for g, i in data.groups when i in data.groupSelection)
+        visGroups = (g.toLowerCase() for g, i in data.groups when i in data.groupSelection)
 
         rows = []
         dp = globals.getData(true, globals.configs.activeFilters)
