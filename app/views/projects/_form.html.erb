@@ -1,3 +1,75 @@
+<div class="panel panel-default contrib-keys-box">
+  <div class="panel-heading">
+    Contributor Keys
+  </div>
+
+  <div class="panel-body">
+    <div class="col-sm-12">
+      <div class="center">
+
+        <p><strong>New Contributor Key</strong></p>
+          <% if @errors %>
+            <% @errors.full_messages.each do |message| %>
+              <div class="alert alert-danger" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <%= message %>
+              </div>
+            <% end %>
+          <% end %>
+        <%= form_for @new_contrib_key, html: { class: 'form-inline' } do |ff| %>
+          <%= ff.hidden_field :project_id %>
+        <div class="form-group">
+          <%= ff.label :name, "Label" %><br>
+          <%= ff.text_field :name, :placeholder => "C Block Biology" %>
+        </div>
+        <div class="form-group">
+          <%= ff.label :key, "Key" %><br>
+          <%= ff.text_field :key, :placeholder => "glucose10" %>
+        </div>
+        <div class="form-group">
+          <br>
+          <%= submit_tag "Create Key", class: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--green' %>
+        </div>
+      <% end %>
+      </div>
+
+      <p>Create a contributor key to allow anyone to add data to your project.
+      The <i>key</i> is like a per-project password. The associated <i>label</i> will appear
+      next to data sets contributed with the matching key. Contributor keys are
+      not case-sensitive; e.g., "Glucose10" and "glucose10" are the same. Contributor
+      keys also allow users to contribute to locked projects. To fully lock a project,
+      set it to locked and delete all contributor keys.</p>
+
+      <table class="contrib_keys_table table table-striped">
+        <%if @project.contrib_keys.count > 0%>
+          <thead>
+          <tr>
+            <th>Label</th>
+            <th>Key</th>
+            <th>&nbsp;</th>
+          </tr>
+        </thead>
+      <%end%>
+        <tbody>
+        <% @project.contrib_keys.each do |kk| %>
+          <tr>
+          <td><%= kk.name %></td>
+          <td><%= kk.key %></td>
+          <td>
+            <%= button_to kk, method: :delete do %>
+              <i class="fa fa-times"></i> Delete
+            <% end %>
+          </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
 <%= form_for(@project) do |f| %>
   <div class="panel panel-default">
     <div class="panel-heading">
@@ -127,74 +199,3 @@
     </div>
   </div>
 <% end %>
-
-<div class="panel panel-default contrib-keys-box">
-  <div class="panel-heading">
-    Contributor Keys
-  </div>
-
-  <div class="panel-body">
-    <div class="col-sm-12">
-    <div class="center">
-
-      <p><strong>New Contributor Key</strong></p>
-        <% if @errors %>
-          <% @errors.full_messages.each do |message| %>
-            <div class="alert alert-danger" role="alert">
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-              <%= message %>
-            </div>
-          <% end %>
-        <% end %>
-      <%= form_for @new_contrib_key, html: { class: 'form-inline' } do |ff| %>
-        <%= ff.hidden_field :project_id %>
-      <div class="form-group">
-        <%= ff.label :name, "Label" %><br>
-        <%= ff.text_field :name, :placeholder => "C Block Biology" %>
-      </div>
-      <div class="form-group">
-        <%= ff.label :key, "Key" %><br>
-        <%= ff.text_field :key, :placeholder => "glucose10" %>
-      </div>
-      <div class="form-group">
-        <br>
-        <%= submit_tag "Create Key", class: 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--green' %>
-      </div>
-    <% end %>
-    </div>
-
-    <p>Anyone with a contributor key to this project will always be able to contribute to it.
-    This allows users to contribute without logging in, and it also enables users to
-    contribute to locked projects. The <i>label</i> will help you manage your contributor keys,
-    and it is only visible to you. The <i>key</i> will be distributed to those who seek to
-    contribute to your project and require a contributor key to do so.</p>
-
-    <table class="contrib_keys_table table table-striped">
-      <%if @project.contrib_keys.count > 0%>
-        <thead>
-        <tr>
-          <th>Label</th>
-          <th>Key</th>
-          <th>&nbsp;</th>
-        </tr>
-      </thead>
-    <%end%>
-      <tbody>
-      <% @project.contrib_keys.each do |kk| %>
-        <tr>
-        <td><%= kk.name %></td>
-        <td><%= kk.key %></td>
-        <td>
-          <%= button_to kk, method: :delete do %>
-            <i class="fa fa-times"></i> Delete
-          <% end %>
-        </td>
-        </tr>
-      <% end %>
-      </tbody>
-    </table>
-  </div>
-</div>
-</div>
