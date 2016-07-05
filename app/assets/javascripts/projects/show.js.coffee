@@ -125,9 +125,9 @@ IS.onReady "projects/show", ->
     root = $('#dataset_table')
     root.find("[id^=lbl_]").each (i,j) ->
       $(j)[0].MaterialCheckbox.uncheck()
-    root.find(".mine").each (i,j) ->
+    root.find(".lbl-mine").each (i,j) ->
       $(j)[0].MaterialCheckbox.check()
-    if root.find(".mine").length isnt 0
+    if root.find(".lbl-mine").length isnt 0
       $('#vis_button').prop("disabled", false)
       $('#export_button').prop("disabled", false)
       $('#delete_selected_button').prop("disabled", false)
