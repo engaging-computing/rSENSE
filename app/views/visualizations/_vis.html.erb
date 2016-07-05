@@ -48,36 +48,29 @@
       <div id="vis-title-bar"
            <% if @presentation || !titleBar %> style="display:none" <% end %>>
         <div class = "row"> 
-          
           <div class = "col-md-8">
-   
-                <button id="ctrls-menu-btn"
-                          class="hamburger-menu btn btn-default down"
-                          <% if !controls %> style="display:none" <% end %>>
-                    <span class="hamburger-bar"></span>
-                    <span class="hamburger-bar"></span>
-                    <span class="hamburger-bar"></span>
-                </button>
-          
-  
-                <div id="vis-title" class="inline-block">
-                  <% if obj %>
-                    <%= title_and_edit_menu(obj) %>
-                  <% else %>
-                    Showing <%= @datasets.count %> Data Sets
-                  <% end %>
-                  <div class="subtitle" style="font-style: italic">
-                    <span>from&nbsp;</span>
-                    <i class='fa fa-folder-open'></i>
-                    <%= link_to project.title.html_safe, project, class: "link" %>
+              <button id="ctrls-menu-btn"
+                        class="hamburger-menu btn btn-default down"
+                        <% if !controls %> style="display:none" <% end %>>
+                  <span class="hamburger-bar"></span>
+                  <span class="hamburger-bar"></span>
+                  <span class="hamburger-bar"></span>
+              </button>
+              <div id="vis-title" class="inline-block">
+                <% if obj %>
+                  <%= title_and_edit_menu(obj) %>
+                <% else %>
+                  Showing <%= @datasets.count %> Data Sets
+                <% end %>
+                <div class="subtitle" style="font-style: italic">
+                  <span>from&nbsp;</span>
+                  <i class='fa fa-folder-open'></i>
+                  <%= link_to project.title.html_safe, project, class: "link" %>
                       by <i class='fa fa-user'></i>
-                    <%= link_to "#{project.owner.name}", owner, class: "link" %>
-                </div>
-
+                  <%= link_to "#{project.owner.name}", owner, class: "link" %>
               </div>
-            
           </div>
-        
+        </div>
           <div class = "col-md-4">
             <div id="vis-title-edit-btn" class="hidden-xs hidden-sm">
               <div class="inline-block subtitle">
@@ -123,7 +116,6 @@
             </div>
           </div>
         </div>
-   
       </div>
       <div id="vis-filters">
         Filters:
