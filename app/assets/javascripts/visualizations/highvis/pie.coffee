@@ -128,6 +128,7 @@ $ ->
         @drawToolControls(false, false, [@ANALYSISTYPE_MEAN_ERROR])
         @drawClippingControls()
         @drawSaveControls()
+        $('[data-toggle="tooltip"]').tooltip();
 
     if "Pie" in data.relVis
       globals.pie = new Pie 'pie-canvas'

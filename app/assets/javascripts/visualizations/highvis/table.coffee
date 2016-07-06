@@ -242,6 +242,7 @@ $ ->
         if data.timeFields.length > 0 and data.timeType != data.GEO_TIME
           @drawToolControls(false, false, [], false)
         @drawSaveControls()
+        $('[data-toggle="tooltip"]').tooltip();
 
       saveSort: =>
         if @table?

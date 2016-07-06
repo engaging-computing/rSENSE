@@ -440,6 +440,7 @@ $ ->
         @drawToolControls()
         @drawClippingControls()
         @drawSaveControls()
+        $('[data-toggle="tooltip"]').tooltip();
 
       drawToolControls: ->
 
