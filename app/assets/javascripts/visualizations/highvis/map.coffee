@@ -107,6 +107,9 @@ $ ->
         @oms = new OverlappingMarkerSpiderfier @gmap,
           keepSpiderfied: true
         @oms.addListener 'click', (marker, ev) =>
+          globals.selectedDataSetId = globals.getDataSetId(marker.datapoint[1])
+          globals.selectedPointId = marker.datapoint[0]
+          $('#disable-point-button').prop("disabled", false)
           info.setContent marker.desc
           info.open @gmap, marker
         @oms.addListener 'unspiderfy', () ->
@@ -249,6 +252,7 @@ $ ->
               animation: google.maps.Animation.DROP
               icon: pinSym
               desc: label
+              datapoint: dp
               visible: ((groupIndex in data.groupSelection) and
                 Boolean(@configs.visibleMarkers))
 
