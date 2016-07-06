@@ -225,11 +225,13 @@ $ ->
           $('#disable-point-button').prop("disabled", true)
           $('#enable-points-button').prop("disabled", false)
           globals.configs.disabledPoints.push({pointId: globals.selectedPointId, dataSetId: globals.selectedDataSetId})
+          $(window).resize()
           @start()
 
         $('#enable-points-button').click (e) =>
           $('#enable-points-button').prop("disabled", true)
           globals.configs.disabledPoints = []
+          $(window).resize()
           @start()
 
         # Initialize and track the status of this control panel

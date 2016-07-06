@@ -363,6 +363,15 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
         }
       }
 
+      #disabled-points-box {
+        margin: 3px;
+
+        .enable-points-text {
+          cursor: pointer;
+          text-decoration: none;
+        }
+      }
+
       #vis-filters {
         margin: 3px;
         overflow-y: auto;
