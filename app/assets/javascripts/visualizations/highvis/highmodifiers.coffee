@@ -338,12 +338,12 @@ $ ->
     ###
     data.setGroupIndex = (gIndex) ->
       @groups = @makeGroups(gIndex)
-      if gIndex != data.NUMBER_FIELDS_FIELD
-        @dataPoints = @setIndexFromGroups(gIndex)
       globals.updateColorSlots()
 
     ###
     Sets the value of the Data Point (id) field to its index within the selected group.
+    Deprecated function.
+    TODO: Delete this once we are sure we no longer need it.
     ###
     data.setIndexFromGroups = (gIndex) ->
       filterFunc = (dp) =>
