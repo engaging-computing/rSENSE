@@ -186,6 +186,10 @@ class Grid
 
     @grid.onClick.subscribe (e, args) =>
       cell = @grid.getCellFromEvent e
+      activeCell = @grid.getActiveCell()
+      # return focus to active cell if we are returning to the table. See #2323.
+      if activeCell? and cell.row == activeCell.row and cell.cell == activeCell.cell
+        @grid.setActiveCell(cell)
       if cell.cell == @grid.getColumns().length - 1
         @queueDeleteRow(cell.row)
         if @grid.getDataLength() == 0
