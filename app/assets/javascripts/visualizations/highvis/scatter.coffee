@@ -162,7 +162,7 @@ $ ->
                     else
                       @point.datapoint[fieldIndex]
                     
-                    if field.fieldName isnt 'Number Fields' and field.fieldName isnt 'Time Period'
+                    if field.fieldName isnt 'Number Fields' and field.fieldName isnt 'Time Period' and field.fieldName isnt 'Combined Data Sets'
                       str += "<tr><td>#{field.fieldName}</td>"
                       str += "<td><strong>#{dat}</strong></td></tr>"
 
