@@ -48,7 +48,7 @@
       <div id="vis-title-bar"
            <% if @presentation || !titleBar %> style="display:none" <% end %>>
         <div class = "row"> 
-          <div class = "col-md-8">
+          <div class = "col-md-4">
               <button id="ctrls-menu-btn"
                         class="hamburger-menu btn btn-default down"
                         <% if !controls %> style="display:none" <% end %>>
@@ -71,7 +71,7 @@
               </div>
           </div>
         </div>
-          <div class = "col-md-4">
+          <div class = "col-md-8">
             <div id="vis-title-edit-btn" class="hidden-xs hidden-sm">
               <div class="inline-block subtitle">
                 <% if obj && can_edit?(obj) %>

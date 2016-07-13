@@ -52,7 +52,7 @@
   </div>
   <% if edit %>
     <%= form_for obj do |ff| %>
-      <div id="title-and-menu-edit" class="input-group">
+      <div id="title-and-menu-edit" class="input-group hidden-xs hidden-sm">
         <%= ff.text_field :title, :value => obj.title.html_safe,
             class: "form-control" %>
         <div class="input-group-btn">
