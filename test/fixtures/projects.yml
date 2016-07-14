@@ -155,3 +155,8 @@ delete_data_sets:
   title: Delete Data Sets
   user: patson
   content: Project to be used to test deleting data sets
+
+template_escape_commas:
+  title: Escaping Commas when Templating/Uploading
+  user: patson
+  content: Project with commas in field titles/data to make sure they are escaped properly.
