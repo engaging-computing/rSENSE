@@ -19,7 +19,7 @@ thanksgiving:
   title: Thanksgiving Dinner
   user: kate
   project: dessert
-  data: "[{\"20\": 1, \"21\": 2, \"22\": 3},{\"20\": 1, \"21\": 2, \"22\": 3}]"
+  data: '[{"20": "1", "21": "2", "22": "3"},{"20": "1", "21": "2", "22": "3"}]'
   key: Pies
   
 needs_media:
