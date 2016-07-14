@@ -21,7 +21,6 @@ class UploadDataTest < IntegrationTest
   end
 
   test 'upload gpx' do
-    skip('GPX does not appear to be working correctly; skipping pending a fix.')
     login('kcarcia@cs.uml.edu', '12345')
     visit project_path(@project)
     assert page.has_content?('Upload Test'), 'Not on project page.'
