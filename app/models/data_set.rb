@@ -93,10 +93,10 @@ class DataSet < ActiveRecord::Base
     fname = ("#{title.parameterize}.csv")
     tmp_file = File.new("#{tmpdir}/#{fname}", 'w+')
 
-    tmp_file.write(fields.map { |f| f.name.include?(',') ? '"' + f.name + '"' : f.name }.join(',') + "\n")
+    tmp_file.write(fields.map { |f| (f.name.respond_to?(:include?) and f.name.include?(',')) ? '"' + f.name + '"' : f.name }.join(',') + "\n")
 
     data.each do |datapoint|
-      tmp_file.write(fields.map { |f| datapoint["#{f.id}"].include?(',') ? '"' + datapoint["#{f.id}"] + '"' : datapoint["#{f.id}"] }.join(',') + "\n")
+      tmp_file.write(fields.map { |f| (datapoint["#{f.id}"].respond_to?(:include?) and datapoint["#{f.id}"].include?(',')) ? '"' + datapoint["#{f.id}"] + '"' : datapoint["#{f.id}"] }.join(',') + "\n")
     end
 
     tmp_file.close
@@ -109,7 +109,7 @@ class DataSet < ActiveRecord::Base
     fields = project.fields
     dstring = ''
     data.each do |datapoint|
-      dstring += (fields.map { |f| datapoint["#{f.id}"].include?(',') ? '"' + datapoint["#{f.id}"] + '"' : datapoint["#{f.id}"] }.join(',') + "\n")
+      dstring += (fields.map { |f| (datapoint["#{f.id}"].respond_to?(:include?) and datapoint["#{f.id}"].include?(',')) ? '"' + datapoint["#{f.id}"] + '"' : datapoint["#{f.id}"] }.join(',') + "\n")
     end
 
     dstring
