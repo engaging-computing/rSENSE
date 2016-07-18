@@ -112,6 +112,7 @@ $ ->
         super()
 
         @drawGroupControls([1, 2])
+        $('[data-toggle="tooltip"]').tooltip();
 
     if 'Photos' in data.relVis
       globals.photos = new Photos 'photos-canvas'

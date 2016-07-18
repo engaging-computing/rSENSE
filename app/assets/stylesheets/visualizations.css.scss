@@ -121,6 +121,16 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     color: $hint;
   }
 
+  .control-tooltip {
+    font-size: 75%;
+    color: $hint;
+    transition: color 0.5s ease;
+  }
+
+  .control-tooltip:hover {
+    color: $link
+  }
+
   .mainContent {
     padding: 0;  // Removes all the extra padding
     margin: 0; // flushes border

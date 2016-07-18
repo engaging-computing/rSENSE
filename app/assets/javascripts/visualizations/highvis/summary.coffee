@@ -118,5 +118,6 @@ $ ->
           @yAxisRadioHandler)
         @drawClippingControls()
         @drawSaveControls()
+        $('[data-toggle="tooltip"]').tooltip();
 
       globals.summary = new Summary "summary-canvas"

@@ -249,6 +249,7 @@ $ ->
         @drawClippingControls()
         @drawRegressionControls()
         @drawSaveControls()
+        $('[data-toggle="tooltip"]').tooltip();
 
       ###
       Update the chart by removing all current series and recreating them

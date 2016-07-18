@@ -372,6 +372,7 @@ $ ->
         @drawToolControls()
         @drawClippingControls()
         @drawSaveControls()
+        $('[data-toggle="tooltip"]').tooltip();
 
     if "Histogram" in data.relVis
       globals.histogram = new Histogram 'histogram-canvas'
