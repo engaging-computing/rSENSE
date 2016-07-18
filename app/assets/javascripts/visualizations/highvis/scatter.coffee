@@ -170,6 +170,9 @@ $ ->
                   #{fieldUnit(data.fields[index], false)}</strong></td></tr>"
                   str += "</table>"
             useHTML: true
+            # Turning 'shared' on when in scatter fixes Issue #2322.
+            # Note that 'shared' doesn't function in scatter mode, but somehow fixes our issue.
+            shared: if @configs.mode is @LINES_MODE then false else true
             hideDelay: 0
 
           xAxis: [{
