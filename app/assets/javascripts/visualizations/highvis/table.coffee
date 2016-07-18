@@ -107,7 +107,7 @@ $ ->
         rows = []
         dp = globals.getData(true, globals.configs.activeFilters)
         gbid = globals.configs.groupById
-        for point in dp when String(point[gbid]).toLowerCase() in visGroups
+        for point in dp when String(point[gbid]) in visGroups
           row = {}
           index = 0
           for d, i in point when i in @configs.tableFields

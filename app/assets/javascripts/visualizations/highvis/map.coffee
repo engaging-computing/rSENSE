@@ -161,7 +161,7 @@ $ ->
               return
 
             groupIndex = data.groups.indexOf(
-              String(dp[globals.configs.groupById]).toLowerCase())
+              String(dp[globals.configs.groupById]))
             color = globals.getColor(groupIndex)
             latlng = new google.maps.LatLng(lat, lon)
 
