@@ -185,20 +185,20 @@ class ProjectsController < ApplicationController
       return
     end
 
-    unless can_delete?(@project)
-      respond_to do |format|
-        format.html { redirect_to '/401.html' }
-        format.json { render json: {}, status: :forbidden }
-      end
-      return
-    end
-
     if @project.data_sets.length > 0
       respond_to do |format|
         format.html do
           redirect_to [:edit, @project],
           alert: "Can't delete project with data sets"
         end
+        format.json { render json: {}, status: :forbidden }
+      end
+      return
+    end
+
+    unless can_delete?(@project)
+      respond_to do |format|
+        format.html { redirect_to '/401.html' }
         format.json { render json: {}, status: :forbidden }
       end
       return

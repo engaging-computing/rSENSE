@@ -174,7 +174,7 @@ class Project < ActiveRecord::Base
     begin
       FileUtils.mkdir_p(tmpdir)
       tmp_file = File.new("#{tmpdir}/#{title.gsub(' ', '_')}_selected_data_sets.csv", 'w+')
-      tmp_file.write(fields.map { |f| f.name }.join(',') + "\n")
+      tmp_file.write(fields.map { |f| (f.name.respond_to?(:include?) and f.name.include?(',')) ? '"' + f.name + '"' : f.name }.join(',') + "\n")
       datasets.split(',').each do |d|
         dataset = DataSet.find(d.to_i)
         tmp_file.write(dataset.data_as_csv_string)

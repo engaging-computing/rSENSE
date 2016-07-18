@@ -9,6 +9,8 @@ class UserInteractionsTest < IntegrationTest
 
   setup do
     @slick_project = projects(:slickgrid_project)
+    @timeline_project = projects(:timeline_vis_disable)
+    @commas_project = projects(:template_escape_commas)
   end
 
   test 'edit button should not show on projects you don\'t own' do
@@ -39,5 +41,35 @@ class UserInteractionsTest < IntegrationTest
     find('#edit_table_save_1').click
 
     assert page.has_no_content?('<h1>'), 'Users should not be able to inject code into the webpage.'
+  end
+
+  test 'delete project with data sets' do
+    login('pson@cs.uml.edu', '12345')
+    visit project_path(@timeline_project)
+
+    find('#edit-project-button').click
+    click_on 'Delete Project'
+    assert page.has_content?("Can't delete project with data sets"), 'Error message not given.'
+  end
+
+  test 'upload CSV containing commas' do
+    login('pson@cs.uml.edu', '12345')
+    visit project_path(@commas_project)
+    csv_path = Rails.root.join('test', 'CSVs', 'commas.csv')
+
+    find(:css, '#template_file_form').attach_file('file', csv_path)
+    assert page.has_content?('Please select types for each field below.'), "Didn't find upload button"
+    find('#create_dataset').click
+    click_on 'Submit'
+    visit project_path(@commas_project)
+    assert page.has_content?('Last Name, First Name'), 'Field names were split at comma.'
+
+    find(:css, '#datafile_form').attach_file('file', csv_path)
+    assert page.has_content?('Match Quality'), "Didn't find upload button"
+    click_on 'Submit'
+    visit project_path(@commas_project)
+
+    find('.data_set_edit').click
+    assert page.has_content?('Son, Patrick'), 'Text data was split up at comma.'
   end
 end

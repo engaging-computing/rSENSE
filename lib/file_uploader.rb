@@ -329,6 +329,10 @@ class FileUploader
     rescue
     end
 
+    # if an item has a comma in it, then surround it with quotes
+    # This prevents one item from being separated into two
+    # the "respond_to" protects against the situation where there is a nil or non-string object where it shouldn't be
+    data = data.map { |row| row.map { |x| (x.respond_to?(:include?) and x.include?(',')) ? '"' + x + '"' : x } }
     # Save file so we can grab it again
     base = '/tmp/rsense/dataset'
     fname = base + "#{SecureRandom.hex}.csv"
