@@ -119,13 +119,15 @@ IS.onReady "projects/show", ->
     $('#export_button').prop("disabled", true)
     $('#delete_selected_button').prop("disabled", true)
 
+
+  #Select all checkboxes created by current logged in user
   $("a#check_mine").click ->
     root = $('#dataset_table')
     root.find("[id^=lbl_]").each (i,j) ->
       $(j)[0].MaterialCheckbox.uncheck()
-    root.find(".mine").each (i,j) ->
+    root.find(".lbl-mine").each (i,j) ->
       $(j)[0].MaterialCheckbox.check()
-    if root.find(".mine").length isnt 0
+    if root.find(".lbl-mine").length isnt 0
       $('#vis_button').prop("disabled", false)
       $('#export_button').prop("disabled", false)
       $('#delete_selected_button').prop("disabled", false)
@@ -133,6 +135,7 @@ IS.onReady "projects/show", ->
       $('#vis_button').prop("disabled", true)
       $('#export_button').prop("disabled", true)
       $('#delete_selected_button').prop("disabled", true)
+      
   $("a.check_id").click ->
     root = $('#dataset_table')
     $('#vis_button').prop("disabled", true)
