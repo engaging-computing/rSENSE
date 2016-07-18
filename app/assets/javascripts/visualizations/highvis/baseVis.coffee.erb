@@ -44,6 +44,12 @@ $ ->
         globals.configs.fieldSelectionIds ?= []
         globals.configs.groupByFieldId ?= -1
 
+        # Used to remember the IDs of the selected point on the chart
+        globals.selectedPointId = -1
+        globals.selectedDataSetId = -1
+
+        globals.configs.disabledPoints ?= []
+
       ANALYSISTYPE_TOTAL:      0
       ANALYSISTYPE_MAX:        1
       ANALYSISTYPE_MIN:        2
@@ -211,6 +217,22 @@ $ ->
           clearFilters()
           $(window).resize()
           @start(false)
+
+        if globals.configs.disabledPoints.length == 0
+          $('#enable-points-button').prop("disabled", true)
+
+        $('#disable-point-button').click (e) =>
+          $('#disable-point-button').prop("disabled", true)
+          $('#enable-points-button').prop("disabled", false)
+          globals.configs.disabledPoints.push({pointId: globals.selectedPointId, dataSetId: globals.selectedDataSetId})
+          $(window).resize()
+          @start()
+
+        $('#enable-points-button').click (e) =>
+          $('#enable-points-button').prop("disabled", true)
+          globals.configs.disabledPoints = []
+          $(window).resize()
+          @start()
 
         # Initialize and track the status of this control panel
         globals.configs.clippingOpen ?= false

@@ -100,6 +100,9 @@ $ ->
           @fieldsAndColumns.push({field: index,colId: id, type: field.typeID})
           colId += 1
           fieldTitle(field)
+        # Hidden columns to identify rows regardless of field selection
+        headers.push("hidden_datapoint_id")
+        headers.push("hidden_dataset_id")
 
         # Build the data for the table
         visGroups = (g for g, i in data.groups when i in data.groupSelection)
@@ -113,6 +116,8 @@ $ ->
           for d, i in point when i in @configs.tableFields
             row[colIds[index]] = d
             index += 1
+          row["hidden_datapoint_id"] = point[0]
+          row["hidden_dataset_id"] = globals.getDataSetId(point[1])
           rows.push(row)
 
         # Make sure the sort type for each column is appropriate, and save the
@@ -144,6 +149,14 @@ $ ->
               formatter:      rowFormatter
               searchoptions:  { sopt:['eq','ne','lt','le','gt','ge'] }
             }
+        columns.push({
+          name: "hidden_datapoint_id"
+          hidden: true
+        })
+        columns.push({
+          name: "hidden_dataset_id"
+          hidden: true
+        })
 
         # Add the nav bar
         $('#table-canvas').append '<div id="toolbar_bottom"></div>'
@@ -166,6 +179,11 @@ $ ->
           loadui: 'block'
           pager: '#toolbar_bottom'
           gridComplete: @saveSort
+          onSelectRow: (id) ->
+            row = $("#data_table").getRowData(id)
+            globals.selectedDataSetId = row["hidden_dataset_id"]
+            globals.selectedPointId = parseInt(row["hidden_datapoint_id"])
+            $('#disable-point-button').prop("disabled", false)
         })
 
         $('#data_table').setGridWidth($('#' + @canvas).width())
