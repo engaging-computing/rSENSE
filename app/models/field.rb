@@ -16,7 +16,6 @@ class Field < ActiveRecord::Base
   validate :validate_values
   validate :unique_name
   validate :reserved_names
-  validate :single_timestamp
 
   belongs_to :project
   serialize :restrictions, JSON
@@ -157,14 +156,6 @@ class Field < ActiveRecord::Base
   def reserved_names
     if ['Data Point', 'Data Set Name (id)', 'Combined Data Sets', 'Number Fields', 'Contributors', 'Time Period'].include? name
       errors.add :base, "#{name} is reserved for internal use. Please choose a different name."
-    end
-  end
-
-  def single_timestamp
-    return if field_type != 1
-    hits = @project.fields.where 'field_type = ?', 1
-    unless hits.empty?
-      errors.add :base, 'You may only have 1 Timestamp field.'
     end
   end
 end
