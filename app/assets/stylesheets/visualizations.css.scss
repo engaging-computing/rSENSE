@@ -346,6 +346,11 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
           vertical-align: middle;
         }
 
+        // Fix the width of the edit title box
+        #vis-title .input-group {
+          width: 50%;
+        }
+
         #vis-title-edit-btn {
           float: right;
         }
