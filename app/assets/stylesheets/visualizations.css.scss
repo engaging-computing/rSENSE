@@ -345,8 +345,9 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
         #vis-title {
           margin-left: 10px;
           vertical-align: middle; 
-          width: 50%;
-          overflow-x: hidden;
+          width: 70%;
+          overflow: hidden;
+        
         }
 
         #vis-title:hover {
