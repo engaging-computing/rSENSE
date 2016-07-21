@@ -164,7 +164,7 @@ class Field < ActiveRecord::Base
     return if field_type != 1
     hits = @project.fields.where 'field_type = ?', 1
     unless hits.empty?
-      errors.add :base, "You may only have 1 Timestamp field."
+      errors.add :base, 'You may only have 1 Timestamp field.'
     end
   end
 end
