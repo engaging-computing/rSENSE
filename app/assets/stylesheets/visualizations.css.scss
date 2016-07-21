@@ -339,11 +339,12 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
         width: 100%;
         font-size: 1.5em;
         padding: 10px;
-        white-space: nowrap;
+        white-space: normal;
 
         #vis-title {
           margin-left: 10px;
-          vertical-align: middle;
+          vertical-align: middle; 
+          width: 80%;   
         }
 
         #vis-title-edit-btn {
