@@ -112,7 +112,7 @@ class DataSetsController < ApplicationController
         format.json { render json: {}, status: :ok }
       else
         @data_set.errors[:base] << 'Permission denied' unless can_edit?(@data_set)
-        format.html { render action: 'edit' }
+        format.html { redirect_to request.referrer, alert: @data_set.errors.full_messages }
         format.json { render json: @data_set.errors.full_messages, status: :unprocessable_entity }
       end
     end
