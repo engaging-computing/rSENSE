@@ -339,19 +339,17 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
         width: 100%;
         font-size: 1.5em;
         padding: 10px;
-        white-space: nowrap;
-        display: inline-block;
-
+  
         #vis-title {
           margin-left: 10px;
-          vertical-align: middle; 
-          width: 70%;
-          overflow: hidden;
-        
+          vertical-align: middle;
+          width: 65%;
+          overflow: hidden;  
+          white-space: nowrap;
         }
 
         #vis-title:hover {
-          overflow-x: scroll;
+          overflow: auto;
         }
 
         #vis-title-edit-btn {
