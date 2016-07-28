@@ -15,6 +15,15 @@
     padding-top: 25px;
     margin-bottom: 0;
     z-index: 998;
+    width: 104px;
+    height: 104px;
+  }
+
+  #fab-plus-icon {
+    font-size: 48px;
+    -ms-transform: translate(-24px,-12px);
+    -webkit-transform: translate(-24px,-12px);
+    transform: translate(-24px,-12px);
   }
 
   .create-project-inner-block {
