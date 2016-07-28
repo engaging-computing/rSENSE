@@ -14,6 +14,7 @@ class CloneProjectTest < IntegrationTest
 
     click_on 'Projects'
 
+    find('#create-project-fab-button').click
     find('#project_title').set('Das Cloning Projekt')
     click_on 'Create Project'
 

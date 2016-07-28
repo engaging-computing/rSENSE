@@ -26,6 +26,7 @@ class UserInteractionsTest < IntegrationTest
     login('pson@cs.uml.edu', '12345')
 
     click_on 'Projects'
+    find('#create-project-fab-button').click
     find('#project_title').set('Code Injection Test')
     click_on 'Create Project'
 

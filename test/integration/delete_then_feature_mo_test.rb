@@ -7,6 +7,7 @@ class DeleteThenFeatureMoTest < IntegrationTest
 
     # create a new project to use
     visit '/projects'
+    find('#create-project-fab-button').click
     find('#project_title').set('Feature MO Project')
     click_on 'Create Project'
 
@@ -35,6 +36,7 @@ class DeleteThenFeatureMoTest < IntegrationTest
 
     # create a new project to use
     visit '/projects'
+    find('#create-project-fab-button').click
     find('#project_title').set('Feature MO Project')
     click_on 'Create Project'
 

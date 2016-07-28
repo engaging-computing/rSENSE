@@ -8,6 +8,7 @@ class MakeProjectTest < IntegrationTest
     # Add a project
     click_on 'Projects'
 
+    find('#create-project-fab-button').click
     find('#project_title').set('Das Projekt')
     click_on 'Create Project'
 
