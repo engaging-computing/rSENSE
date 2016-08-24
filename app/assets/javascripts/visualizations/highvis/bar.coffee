@@ -193,7 +193,7 @@ $ ->
               enabled: not @configs.histogramDensity # hover makes bars invisible in histogramDensity mode
         }
         @chart.addSeries series, false
-          
+
         # Draw error bars, if option is enabled
         if @configs.analysisType == @ANALYSISTYPE_MEAN_ERROR
           allErrors = []
@@ -204,14 +204,24 @@ $ ->
               dp = globals.getData(true, globals.configs.activeFilters)
               barData = data.selector fid, gid, dp
               xCoord = (xCluster - 1.5) + pos * interval
+              name = data.groups[gid] or data.noField()
+              if barData.length == 0
+                barData.push(0) # Null values short circuit this function; fill with zero
               if barData.length == 1
-                thisError = {}
+                # Error bar must be present or it causes issues with other bars
+                thisError = {
+                  name: "Error for #{name}"
+                  x: xCoord
+                  low: barData[0]
+                  high: barData[0]
+                  field: fieldTitle(data.fields[fid])
+                  fieldUnit: fieldUnit(data.fields[fid], false)
+                }
               else
                 mean = groupedData[fid][gid]
                 innerStd = barData.map((x) -> (x - mean) ** 2).reduce((x, y) -> x + y)
                 stdDev = Math.sqrt((1 / (barData.length - 1)) * innerStd)
                 if !globals.configs.logY
-                  name = data.groups[gid] or data.noField()
                   thisError = {
                     name: "Error for #{name}"
                     x: xCoord
@@ -234,9 +244,9 @@ $ ->
               
               pos += 1
               allErrors.push(thisError)
-              
-             xCluster += 4
-             pos = 1
+
+            xCluster += 4
+            pos = 1
 
           series = {
             type: 'errorbar'
