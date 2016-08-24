@@ -9,6 +9,7 @@ class ContribKeyWithDataSetTest < IntegrationTest
 
     # Create a Project
     visit '/projects'
+    find('#create-project-fab-button').click
     find('#project_title').set('Contributor Key Test Project')
     click_on 'Create Project'
 
