@@ -207,7 +207,7 @@ class VisualizationsController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { redirect_to '/public/401.html' }
+        format.html { redirect_to '/401.html' }
         format.json { render json: { errors: ['User Not Authorized.'] }, status: :forbidden }
       end
     end
@@ -216,6 +216,13 @@ class VisualizationsController < ApplicationController
   # GET
   def displayVis
     @project = Project.find_by_id params[:id]
+    if @project.nil?
+      respond_to do |format|
+        format.html { redirect_to '/404.html' }
+        format.json { render json: { errors: ['File not found.'] }, status: 404 }
+      end
+      return
+    end
 
     @datasets = []
     data_fields = []
@@ -228,10 +235,18 @@ class VisualizationsController < ApplicationController
       dsets = params[:datasets].split(',')
       dsets.each do |id|
         begin
-          dset = DataSet.find_by_id(id.to_i)
-          @datasets.push dset if dset.project_id == @project.id
+          dset = DataSet.find_by_id(id)
+          if dset.project_id == @project.id
+            @datasets.push dset
+          else
+            fail 'data set does not belong to project'
+          end
         rescue
-          logger.info 'Either project id or data set does not exist in the DB'
+          respond_to do |format|
+            format.html { redirect_to '/404.html' }
+            format.json { render json: { errors: ['File not found.'] }, status: 404 }
+          end
+          return
         end
       end
     else

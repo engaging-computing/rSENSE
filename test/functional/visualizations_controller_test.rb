@@ -101,4 +101,13 @@ class VisualizationsControllerTest < ActionController::TestCase
     assert_response :success
     assert_valid_html response.body
   end
+
+  test 'should redirect to 404' do
+    # Project doesn't exist:
+    get :displayVis, id: 0
+    assert_redirected_to '/404.html'
+    # Data set doesn't belong to project:
+    get :displayVis, id: @vis1.project.id, datasets: [@tgd.id]
+    assert_redirected_to '/404.html'
+  end
 end
