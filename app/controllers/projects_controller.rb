@@ -429,17 +429,32 @@ class ProjectsController < ApplicationController
     uploader = FileUploader.new
     @matches = params[:headers]
     @project = Project.find(params[:id])
+    fields = []
+    num_timestamps = 0
     @matches.each do |header|
       field = Field.new(project_id: @project.id,
                         field_type: header[1].to_i,
                         name: header[0],
                         index: @project.fields.size)
 
+      if field.field_type == 1 and num_timestamps == 0 then num_timestamps += 1
+      elsif field.field_type == 1
+        flash[:error] = 'You may only have 1 Timestamp field.'
+        redirect_to project_path(@project) and return
+      end
+
+      unless field.valid?
+        flash[:error] = field.errors.full_messages
+        redirect_to project_path(@project) and return
+      end
+      # Don't save fields until we know they are all valid
+      fields.push(field)
+    end
+
+    fields.each do |field|
       unless field.save
-        respond_to do |format|
-          flash[:error] = field.errors.full_messages
-          render 'templateUpload' and return
-        end
+        flash[:error] = field.errors.full_messages
+        redirect_to project_path(@project) and return
       end
     end
 
