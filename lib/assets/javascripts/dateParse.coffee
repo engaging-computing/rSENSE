@@ -58,6 +58,7 @@ $ ->
     Requires year month and day (in that order) Year can be negative (or zero)
   ###
   parseDate = (res, str) ->
+    originalStr = str;
     # Year
     ym = matchNoSep(str, /[\-\+]?\d+/)
     if ym is null
@@ -79,16 +80,34 @@ $ ->
       
     res.day = Number dm[1]
     str = str.substr dm[0].length
-    
-    # Fall back to American ordering if day is nonsense
-    if res.day > 31
-      month = res.year - 1
-      day = res.month + 1
-      year = res.day
-      
-      res.month = month
-      res.day = day
-      res.year = year
+
+    # Recalculate in American format if date is nonsense
+    if res.day > 31 or isNaN(res.month)
+      str = originalStr
+
+      # Month
+      mm = matchWithSep(str, /(\d{1,2}|[a-zA-Z]{3})/)
+      if mm is null
+        throw new Error('fail')
+        
+      res.month = (new Date mm[1] + "/20 1970").getMonth()
+      str = str.substr mm[0].length
+
+      # Day
+      dm = matchWithSep(str, /(\d+)/)
+      if dm is null
+        throw new Error('fail')
+        
+      res.day = Number dm[1]
+      str = str.substr dm[0].length
+
+      # Year
+      ym = matchNoSep(str, /[\-\+]?\d+/)
+      if ym is null
+        throw new Error('fail')
+        
+      res.year = Number ym[0]
+      str = str.substr ym[0].length
   
     return [res, str]
   
