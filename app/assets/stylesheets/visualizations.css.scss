@@ -362,6 +362,11 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
           overflow: auto;
         }
 
+        // Fix the width of the edit title box
+        #vis-title .input-group {
+          width: 50%;
+        }
+
         #vis-title-edit-btn {
           float: right;
         }
