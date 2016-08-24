@@ -352,7 +352,7 @@ $ ->
 
         checkProj = =>
           if @projOverlay.getProjection() is undefined
-            google.maps.event.addListenerOnce(@gmap, 'idle', checkProj)
+            @idleListener = google.maps.event.addListenerOnce(@gmap, 'idle', checkProj)
           else
             finalInit()
 
@@ -421,7 +421,7 @@ $ ->
           if @timeLines?
             @timeLines[i].setVisible((i in data.groupSelection) and
               Boolean(@configs.visibleLines))
-
+              
         @clusterer.repaint()
         super()
 
@@ -430,6 +430,8 @@ $ ->
         if @gmap?
           @configs.mapType = @gmap.getMapTypeId()
 
+        # Remove the idle listener in case the user switches vis tabs before it fires (see #2201)
+        google.maps.event.removeListener(@idleListener)
         super()
 
       drawControls: ->
