@@ -32,6 +32,7 @@ group :development, :test do
   gem 'capybara-webkit'
   gem 'minitest', '~> 5.1'
   gem 'capybara-screenshot'
+  gem 'html5_validator'
 end
 
 # Jquery stuff
