@@ -19,6 +19,8 @@ require 'selenium-webdriver'
 require 'capybara-screenshot/minitest'
 Capybara::Screenshot.autosave_on_failure = false
 
+require 'html5_validator/validator'
+
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.
   #
@@ -54,21 +56,10 @@ class ActiveSupport::TestCase
   end
 
   def assert_valid_html(text)
-    temp = Tempfile.new(['foo', '.html'])
-    begin
-      temp.write(text)
-      temp.close
+    validator = Html5Validator::Validator.new
+    validator.validate_text(text)
 
-      script = Rails.root.join('test', 'html5check.py')
-      result = `(python "#{script}" --encoding=utf-8 "#{temp.path}") 2>&1`
-      status = result.split(/\r?\n/)[0]
-
-      test = (status == '200' && result =~ /^The document is valid HTML5/)
-      assert test || status == '503', "HTML invalid:\n#{result}"
-    ensure
-      temp.unlink
-    end
-    true
+    assert validator.valid?, "HTML invalid:\n#{validator.errors}"
   end
 
   def assert_similar_arrays(a, b)
