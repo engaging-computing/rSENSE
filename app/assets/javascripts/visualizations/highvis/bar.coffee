@@ -107,7 +107,7 @@ $ ->
               # Only place tick marks under the center point of each field cluster
               positions = []
               tick = 0
-              while tick < @dataMax and positions.length < globals.configs.fieldSelection.length
+              while tick <= @dataMax and positions.length < globals.configs.fieldSelection.length
                 positions.push(tick)
                 tick += 4
               positions
