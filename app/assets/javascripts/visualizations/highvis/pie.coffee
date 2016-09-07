@@ -116,7 +116,11 @@ $ ->
 
       drawControls: ->
         super()
-        @drawGroupControls(data.textFields)
+        groups = $.extend(true, [], data.textFields)
+        # Remove Group By Time Period if there is no time data
+        if data.hasTimeData is false or data.timeType == data.GEO_TIME
+          groups.splice(data.TIME_PERIOD_FIELD - 1, 1)
+        @drawGroupControls(groups)
         if globals.configs.groupById != data.NUMBER_FIELDS_FIELD
           @drawYAxisControls(globals.configs.fieldSelection,
             data.normalFields.slice(1), true, 'Fields', @configs.displayField,
@@ -124,8 +128,10 @@ $ ->
         @drawToolControls(false, false, [@ANALYSISTYPE_MEAN_ERROR])
         @drawClippingControls()
         @drawSaveControls()
+        $('[data-toggle="tooltip"]').tooltip();
 
     if "Pie" in data.relVis
       globals.pie = new Pie 'pie-canvas'
     else
       globals.pie = new DisabledVis 'pie-canvas'
+      

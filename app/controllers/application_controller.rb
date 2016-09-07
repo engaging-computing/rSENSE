@@ -42,7 +42,7 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    if params[:action] == 'create_issue_anon' || params[:action] == 'github_authorize'
+    if !user_signed_in? && (params[:action] == 'create_issue_anon' || params[:action] == 'github_authorize')
       redirect_to new_user_session_path
       return
     end
@@ -132,7 +132,8 @@ class ApplicationController < ActionController::Base
       key = project.contrib_keys.find_by_key(params[:contribution_key])
       if project && !key.nil? && data_set.key == key.name
         if params.key? :contributor_name
-          @cur_user = User.find_by_id(project.owner.id)
+          owner = User.find_for_database_authentication(id: project.owner.id)
+          sign_in('user', owner)
         else
           respond_to do |format|
             format.json { render json: { msg: 'Missing contributor name' }, status: :unprocessable_entity }

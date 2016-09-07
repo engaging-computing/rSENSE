@@ -11,7 +11,7 @@
           <%= user_edit_helper 'name', can_edit?(@user), false %>
         </div>
 
-        <% if current_user.admin? or current_user.id == @user.id %>
+        <% if current_user && (current_user.admin? or current_user.id == @user.id) %>
           <br />
           <span class="info_label" style="line-height: 30px;">Email:</span><br>
           <span class="full_width_edit" style="font-style: italic; font-weight: bold">

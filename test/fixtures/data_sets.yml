@@ -19,7 +19,7 @@ thanksgiving:
   title: Thanksgiving Dinner
   user: kate
   project: dessert
-  data: "[{\"20\": 1, \"21\": 2, \"22\": 3},{\"20\": 1, \"21\": 2, \"22\": 3}]"
+  data: '[{"20": "1", "21": "2", "22": "3"},{"20": "1", "21": "2", "22": "3"}]'
   key: Pies
   
 needs_media:
@@ -64,7 +64,7 @@ slickgrid_dataset_oops:
   user: nixon
   project: slickgrid_oops
   data: "[{\"107\": \"SOMEBODY ONCE TOLD ME THE WORLD IS GONNA ROLL ME\"}]"
-  
+
 project_one_dataset:
   title: New DataSet for api test
   user: kate
@@ -129,3 +129,48 @@ f:
   title: f
   user: nixon
   project: lots_of_data_sets
+
+calculation_data_1:
+  title: a
+  user: boxes
+  project: calculation_test_1
+  data: '[{"118": 1}, {"118": 2}, {"118": 3}, {"118": 4}, {"118": 5}]'
+
+calculation_data_2:
+  title: b
+  user: boxes
+  project: calculation_test_1
+  data: '[{"118": 2}, {"118": 4}, {"118": 8}, {"118": 16}, {"118": 32}]'
+
+calculation_data_3:
+  title: c
+  user: boxes
+  project: calculation_test_1
+  data: '[{"118": ""}, {"118": 10}, {"118": ""}, {"118": 10}, {"118": ""}]'
+
+calculation_data_4:
+  title: a
+  user: boxes
+  project: calculation_test_2
+  data: '[{"119": 1}, {"119": 2}, {"119": 3}, {"119": 4}, {"119": 5}]'
+
+delete_data_sets_pat-1:
+  title: pat-1
+  id: 100
+  user: patson
+  project: delete_data_sets
+  data: '[{"200": 117}]'
+
+delete_data_sets_pat-2:
+  title: pat-2
+  id: 101
+  user: patson
+  project: delete_data_sets
+  data: '[{"200": 117}]'
+
+delete_data_sets_nixon-1:
+  title: nixon-1
+  id: 102
+  user: nixon
+  project: delete_data_sets
+  data: '[{"200": 117}]'

@@ -32,6 +32,7 @@ group :development, :test do
   gem 'capybara-webkit'
   gem 'minitest', '~> 5.1'
   gem 'capybara-screenshot'
+  gem 'html5_validator'
 end
 
 # Jquery stuff
@@ -93,6 +94,9 @@ gem 'recaptcha', git: 'https://github.com/ambethia/recaptcha'
 
 # Allow CORS
 gem 'rack-cors', :require => 'rack/cors'
+
+# for formula fields
+gem 'beaker', '~> 1.3.0', git: 'https://github.com/isenseDev/beaker-lang'
 
 # User System
 gem 'devise'

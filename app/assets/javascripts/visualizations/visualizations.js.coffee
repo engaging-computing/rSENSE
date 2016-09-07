@@ -60,6 +60,19 @@ $ ->
           globals.curVis.start()
 
       $('#vis-filters').toggle(showFilters)
+      $('#disabled-points-box').empty()
+      len = globals.configs.disabledPoints.length
+      if len > 0
+        $('#disabled-points-box').toggle(true)
+        msg = "#{len} data point" + (if len == 1 then '' else 's')
+        $('#disabled-points-box').append(
+          msg + ' currently disabled. <a class="enable-points-text">Enable all points</a>')
+        $('.enable-points-text').click ->
+          globals.configs.disabledPoints = []
+          $(window).resize()
+          globals.curVis.start()
+      else
+        $('#disabled-points-box').toggle(false)
 
       visWrapperWidth =
         if embed then window.innerWidth or window.outerWidth
@@ -120,6 +133,20 @@ $ ->
         vis  = eval "globals.#{visName.toLowerCase()}"
         if vis? and savedGlobals[visName]?
           $.extend(vis.configs, savedGlobals[visName])
+          
+      # Reset correct field indices in case the fields were reordered/new fields were added
+      fieldIds = for field in data.fields
+        field.fieldID
+
+      if globals.configs.fieldSelectionIds?
+        if globals.configs.fieldSelectionIds.length != 0
+          globals.configs.fieldSelection = []
+          for id in globals.configs.fieldSelectionIds
+            if id in fieldIds
+              globals.configs.fieldSelection.push(fieldIds.indexOf(id))
+            
+      if globals.configs.groupByFieldId? and globals.configs.groupByFieldId != -1
+        globals.configs.groupById = fieldIds.indexOf(globals.configs.groupByFieldId)
 
       delete data.savedGlobals
 

@@ -1,5 +1,5 @@
 $ ->
-  if namespace.controller is "projects" and namespace.action is "edit_fields"
+  if namespace.controller is 'projects' and (namespace.action in ['edit_fields', 'edit_formula_fields'])
     # Keeps track of number of different fields added
     numCount = textCount = timestampCount = locationCount = 0
 
@@ -22,6 +22,80 @@ $ ->
         e.preventDefault()
         $('#fields_form_submit').click()
 
+    # Make table sortable
+    $( '#sortable' ).sortable();
+
+    # Delete field, enable timestamp/location buttons (NOTE: fid is 0 when the field
+    # hasn't yet been added to project in database)
+    $('#fields_table').on 'click', '.field_delete', ->
+      # fid of row being deleted
+      fid = $(@).closest('a').attr('fid')
+
+      # Row index of row being deleted
+      rowIndex = $(@).closest('tr').index() + 1
+
+      # Row name of row being deleted
+      rowName = $(@).closest('tr').attr('name')
+
+      # fid != 0 when the field exists in the database
+      if fid != '0'
+        hiddenDeletedFields = $('#hidden_deleted_fields')
+        if rowName == 'latitude'
+          hiddenDeletedFields.val(hiddenDeletedFields.val() + fid + ',' + (parseInt(fid) + 1) + ',')
+        else if rowName == 'longitude'
+          hiddenDeletedFields.val(hiddenDeletedFields.val() + fid + ',' + (parseInt(fid) - 1) + ',')
+        else
+          hiddenDeletedFields.val(hiddenDeletedFields.val() + fid + ',')
+        callDeleteRow(rowIndex, rowName, fid)
+      else
+        callDeleteRow(rowIndex, rowName, '')
+
+
+    $('#fields_form_submit').click (e) ->
+      # don't do a form submit
+      e.preventDefault()
+
+      # Populate hidden fields w/ num of fields and array of deleted fields on submit
+      values = [numCount, textCount, timestampCount, locationCount]
+
+      for i in [0...4]
+        setValue(inputBoxes[i], values[i])
+
+      # add hidden input for each field with it's position
+      t = document.getElementById('fields_table')
+      for i in [1...t.rows.length]
+        field_id = t.rows[i].cells[5].getElementsByTagName('a')[0].getAttribute('fid')
+        # This is for new fields that do not have an id yet
+        if field_id == '0'
+          field_id = t.rows[i].cells[1].getElementsByTagName('input')[0].getAttribute('name')
+        input = $("<input type='hidden' name='#{field_id}_index' value='#{i - 1}' />")
+        $('#hidden_index_inputs').append(input)
+
+      # construct a JSON object to send the server via AJAX
+      formData = {}
+      form = $('form[name="fields_form"]')
+      form.serializeArray().map (x) ->
+        formData[x.name] = x.value
+
+      # disable some buttons so we can't hit save multiple times
+      $('#fields_form_submit, #fields_form_cancel').addClass 'disabled'
+      $('#fields_form_submit').val 'Saving...'
+
+      # send the form data to try and create the field
+      $.ajax
+        type: 'POST'
+        url: form.attr('action')
+        data: formData
+        dataType: 'json'
+        success: (data, textStatus, jqXHR) ->
+          window.location = data.redirect
+        error: (jqXHR, textStatus, errorThrown) ->
+          showErrors(jqXHR.responseJSON.errors)
+          $('#fields_form_submit, #fields_form_cancel').removeClass 'disabled'
+          $('#fields_form_submit').val 'Save and Return'
+
+
+  if namespace.controller is 'projects' and namespace.action is 'edit_fields'
     # Add row(s), increment counters, disable add buttons (for timestamp/location fields)
     # addRow takes input box for name, type of field, input box for units (number only) or
     # "deg" for lat/long, input box for restrictions (text only), delete
@@ -65,56 +139,55 @@ $ ->
                  class="field_delete"><i class="fa fa-close slick-delete"></i></a>"""])
       document.getElementById('location').disabled = true
 
-    # Make table sortable
-    $( "tbody" ).sortable();
+  if namespace.controller is 'projects' and namespace.action is 'edit_formula_fields'
+    # Add row(s), increment counters, disable add buttons (for timestamp/location fields)
+    # addRow takes input box for name, type of field, input box for units (number only) or
+    # "deg" for lat/long, input box for restrictions (text only), delete
+    $('#number').click ->
+      numCount = numCount + 1
+      displayNumCount = displayNumCount + 1
+      addRow(['<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>',
+              """<input class="input-small form-control" type="text"
+                name="number_#{numCount}" value="Formula_Number_#{displayNumCount}">""",
+              "Number",
+              """<input class="input-small form-control" type="text" class="units" name="units_#{numCount}">""",
+              """<a class="field_edit_formula" fid="0" data-toggle="modal" data-target=".modal">
+                   <i class="fa fa-pencil-square-o slick-delete"></i>
+                 </a>
+                 <input type="hidden" class="formula" name="nformula_#{numCount}" value="">
+                 <input type="hidden" class="refname" value="???">""",
+              '<a fid="0" class="field_delete"><i class="fa fa-close slick-delete"></i></a>'])
 
-    # Delete field, enable timestamp/location buttons (NOTE: fid is 0 when the field
-    # hasn't yet been added to project in database)
-    $('#fields_table').on 'click', '.field_delete', ->
-      # fid of row being deleted
-      fid = $(@).closest('a').attr('fid')
+    $('#text').click ->
+      textCount = textCount + 1
+      displayTextCount = displayTextCount + 1
+      addRow(['<i class="sort-hamburger glyphicon glyphicon-menu-hamburger"></i>',
+              """<input class="input-small form-control" type="text"
+                name="text_#{textCount}" value="Formula_Text_#{displayTextCount}">""",
+              'Text',
+              '',
+              """<a class="field_edit_formula" fid="0" data-toggle="modal" data-target=".modal">
+                   <i class="fa fa-pencil-square-o slick-delete"></i>
+                 </a>
+                 <input type="hidden" class="formula" name="tformula_#{textCount}" value="">
+                 <input type="hidden" class="refname" value="???">""",
+              '<a fid="0" class="field_delete"><i class="fa fa-close slick-delete"></i></a>'])
 
-      # Row index of row being deleted
-      rowIndex = $(@).closest('tr').index() + 1
+    # jQuery event for opening the formula edit modal
+    $('#fields_table').on 'click', '.field_edit_formula', ->
+      generateRefNames($(this).closest('tr').index())
+      $hiddenField = $(this).parent().children('input.formula')
+      contents = $hiddenField.val()
+      $formulaText = $('#formula-text')
+      $formulaText.val(contents)
+      $formulaText.data('onClose', $hiddenField)
 
-      # Row name of row being deleted
-      rowName = $(@).closest('tr').attr('name')
-
-      # fid != 0 when the field exists in the database
-      if fid != '0'
-        hiddenDeletedFields = $('#hidden_deleted_fields')
-        if rowName == 'latitude'
-          hiddenDeletedFields.val(hiddenDeletedFields.val() + fid + ',' + (parseInt(fid) + 1) + ',')
-        else if rowName == 'longitude'
-          hiddenDeletedFields.val(hiddenDeletedFields.val() + fid + ',' + (parseInt(fid) - 1) + ',')
-        else
-          hiddenDeletedFields.val(hiddenDeletedFields.val() + fid + ',')
-        callDeleteRow(rowIndex, rowName, fid)
-      else
-        callDeleteRow(rowIndex, rowName, '')
-
-    # Populate hidden fields w/ num of fields and array of deleted fields on submit
-    $('#fields_form_submit').click ->
-      values = [numCount, textCount, timestampCount, locationCount]
-      for i in [0...4]
-        setValue(inputBoxes[i], values[i])
-
-      # add hidden input for each field with it's position
-      t = document.getElementById('fields_table')
-      for i in [1...t.rows.length]
-        field_id = t.rows[i].cells[5].getElementsByTagName('a')[0].getAttribute('fid')
-        # This is for new fields that do not have an id yet
-        if field_id == '0'
-          field_id = t.rows[i].cells[1].getElementsByTagName('input')[0].getAttribute('name')
-        input = document.createElement('input')
-        input.setAttribute('type', 'text')
-        input.setAttribute('text', 'form-control')
-        input.setAttribute('style', 'visibility:collapse;')
-        input.setAttribute('name', "#{field_id}_index")
-        input.setAttribute('id', "#{field_id}_index")
-        input.setAttribute('value', i - 1)
-        document.getElementById('hidden_index_inputs').appendChild(input)
-
+    # jQuery event for closing the formula edit modal and saving the changes
+    $('#formula-save').click ->
+      contents = $('#formula-text').val()
+      $hiddenField = $('#formula-text').data('onClose')
+      $hiddenField.val(contents)
+      $('.modal').modal('hide')
 
 # Adds row to table, highlight new row
 addRow = (content) ->
@@ -138,14 +211,14 @@ callDeleteRow = (rowIndex, rowName, fid) ->
     t = document.getElementById('fields_table')
     deleteRow(rowIndex, true, 'location')
     for i in [1...t.rows.length]
-      if t.rows[i].cells[2].innerHTML == 'Longitude'
+      if t.rows[i].cells[2].innerHTML.trim() == 'Longitude'
         deleteRow(i, true, 'location')
 
   else if rowName == 'longitude'
     t = document.getElementById('fields_table')
     deleteRow(rowIndex, true, 'location')
     for i in [1...t.rows.length]
-      if t.rows[i].cells[2].innerHTML == 'Latitude'
+      if t.rows[i].cells[2].innerHTML.trim() == 'Latitude'
         deleteRow(i, true, 'location')
 
   else
@@ -165,6 +238,9 @@ setValue = (id, value) ->
 
 # Returns the index for the name of a number or text field
 getNextName = (fieldType) ->
+  if namespace.action == 'edit_formula_fields'
+    fieldType = 'Formula_' + fieldType
+
   highest = 0
   table = document.getElementById('fields_table')
   for i in [1...table.rows.length]
@@ -175,3 +251,45 @@ getNextName = (fieldType) ->
         if index > highest
           highest = index
   return highest
+
+# Given the names of the formula fields, compute which refnames are available to
+#   each formula
+# This function depends on the DOM representation of the field edit table, so
+#   modifying that will most likely break this function.  This is not ideal, but
+#   the correct way of implementing something like this is more or less
+#   incompatible with the site's current implementation
+generateRefNames = (index) ->
+  ffRefs = $('#formula-field-refs')
+  fTable = $('#fields_table > tbody > tr')
+
+  ffRefs.empty()
+
+  fTable.each (i) ->
+    if i <= index
+      row = $(this)
+      name = row.find('td:nth-child(2) > input').val().trim()
+      type = row.find('td:nth-child(3)').text().trim()
+      refName = row.find('.refname').val().trim()
+      newRow = $("<tr><td>#{name}</td><td>#{refName}</td><td>#{type}</td></tr>")
+      ffRefs.append(newRow)
+
+showErrors = (errors) ->
+  $('.mainContent').children('.alert-danger').remove()
+
+  errBold = if errors.length == 1 then 'An error occured: ' else 'Some errors occured: '
+
+  errBody = $('<div class="alert alert-danger alert-dismissable">')
+  errBody.append('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>')
+  errBody.append("<strong>#{errBold}</strong>")
+
+  if errors.length == 1
+    errItem = $('<span>').text(errors[0])
+    errBody.append(errItem)
+  else
+    errList = $('<ul>')
+    errors.forEach (err) ->
+      errItem = $('<li>').text(err)
+      errList.append(errItem)
+    errBody.append(errList)
+
+  $('.mainContent').prepend errBody

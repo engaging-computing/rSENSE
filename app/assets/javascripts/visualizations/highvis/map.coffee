@@ -107,6 +107,9 @@ $ ->
         @oms = new OverlappingMarkerSpiderfier @gmap,
           keepSpiderfied: true
         @oms.addListener 'click', (marker, ev) =>
+          globals.selectedDataSetId = globals.getDataSetId(marker.datapoint[1])
+          globals.selectedPointId = marker.datapoint[0]
+          $('#disable-point-button').prop("disabled", false)
           info.setContent marker.desc
           info.open @gmap, marker
         @oms.addListener 'unspiderfy', () ->
@@ -161,7 +164,7 @@ $ ->
               return
 
             groupIndex = data.groups.indexOf(
-              String(dp[globals.configs.groupById]).toLowerCase())
+              String(dp[globals.configs.groupById]))
             color = globals.getColor(groupIndex)
             latlng = new google.maps.LatLng(lat, lon)
 
@@ -244,25 +247,12 @@ $ ->
               strokeWeight: 2
               scale: 7
 
-            cameraSym =
-              fillColor: color
-              fillOpacity: 1
-              path: 'M 20, 10
-                      m -6, 0
-                      a 6,6 0 1,0 12,0
-                      a 6,6 0 1,0 -12,0
-                      M 0 20 L 40 20 L 40 0 L 34 0 L 34 -2 L 38 -2 L 38 0 L 40 0  L 0 0 Z'
-              strokeColor: "#000"
-              strokeWeight: 2
-              scale: .8
-
-            symbol = if data.metadata[metaIndex].photos.length > 0 then cameraSym else pinSym
-
             newMarker = new google.maps.Marker
               position: latlng
               animation: google.maps.Animation.DROP
-              icon: symbol
+              icon: pinSym
               desc: label
+              datapoint: dp
               visible: ((groupIndex in data.groupSelection) and
                 Boolean(@configs.visibleMarkers))
 
@@ -362,7 +352,7 @@ $ ->
 
         checkProj = =>
           if @projOverlay.getProjection() is undefined
-            google.maps.event.addListenerOnce(@gmap, 'idle', checkProj)
+            @idleListener = google.maps.event.addListenerOnce(@gmap, 'idle', checkProj)
           else
             finalInit()
 
@@ -431,7 +421,7 @@ $ ->
           if @timeLines?
             @timeLines[i].setVisible((i in data.groupSelection) and
               Boolean(@configs.visibleLines))
-
+              
         @clusterer.repaint()
         super()
 
@@ -440,6 +430,8 @@ $ ->
         if @gmap?
           @configs.mapType = @gmap.getMapTypeId()
 
+        # Remove the idle listener in case the user switches vis tabs before it fires (see #2201)
+        google.maps.event.removeListener(@idleListener)
         super()
 
       drawControls: ->
@@ -447,10 +439,14 @@ $ ->
         # Remove group by number fields
         groups = $.extend(true, [], data.textFields)
         groups.splice(data.NUMBER_FIELDS_FIELD - 1, 1)
+        # Remove Group By Time Period if there is no time data
+        if data.hasTimeData is false or data.timeType == data.GEO_TIME
+          groups.splice(data.TIME_PERIOD_FIELD - 2, 1)
         @drawGroupControls(groups, true)
         @drawToolControls()
         @drawClippingControls()
         @drawSaveControls()
+        $('[data-toggle="tooltip"]').tooltip();
 
       drawToolControls: ->
 
@@ -482,6 +478,9 @@ $ ->
             }
           ]
 
+        if data.hasTimeData and data.timeType != data.GEO_TIME
+          inctx.period = HandlebarsTemplates[hbCtrl('period')]
+
         for i in data.normalFields
           inctx.heatmaps.push
             value: Number(i)
@@ -495,6 +494,18 @@ $ ->
 
         tools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append(tools)
+        
+        # Set the correct options for period:
+        $('#period-list').val(globals.configs.periodMode)
+
+        $('#period-list').change =>
+          globals.configs.periodMode = $('#period-list').val()
+          if $('#period-list').val() != 'off'
+            globals.configs.isPeriod = true
+          else
+            globals.configs.isPeriod = false
+          $( "#group-by" ).trigger( "change" )
+          @start()
 
         # Add material design
         $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->

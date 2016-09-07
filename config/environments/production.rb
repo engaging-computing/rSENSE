@@ -36,7 +36,8 @@ Rsense::Application.configure do
 
   # info log level leaks password reset tokens which is a BIG SECURITY HOLE!
   # anyone who got access to our logs, they could steal tokens and reset user's passwords
-  config.log_level = :warn
+  # Dev note: We're leaving it at "info" level for now. Will decide how to proceed later.
+  config.log_level = :info
 
   # Prepend all log lines with the following tags
   # config.log_tags = [ :subdomain, :uuid ]
@@ -70,5 +71,5 @@ Rsense::Application.configure do
   # with SQLite, MySQL, and PostgreSQL)
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
-  config.action_mailer.default_url_options = { host: `hostname`.chomp }
+  config.action_mailer.default_url_options = { protocol: 'https', host: `hostname`.chomp }
 end

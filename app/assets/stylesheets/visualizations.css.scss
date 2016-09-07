@@ -121,6 +121,16 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     color: $hint;
   }
 
+  .control-tooltip {
+    font-size: 75%;
+    color: $hint;
+    transition: color 0.5s ease;
+  }
+
+  .control-tooltip:hover {
+    color: $link
+  }
+
   .mainContent {
     padding: 0;  // Removes all the extra padding
     margin: 0; // flushes border
@@ -339,11 +349,22 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
         width: 100%;
         font-size: 1.5em;
         padding: 10px;
-        white-space: nowrap;
-
+  
         #vis-title {
           margin-left: 10px;
           vertical-align: middle;
+          width: 70%;
+          overflow: hidden;  
+          white-space: nowrap;
+        }
+
+        #vis-title:hover {
+          overflow: auto;
+        }
+
+        // Fix the width of the edit title box
+        #vis-title .input-group {
+          width: 50%;
         }
 
         #vis-title-edit-btn {
@@ -360,6 +381,15 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
           #title-name {
             vertical-align: middle;
           }
+        }
+      }
+
+      #disabled-points-box {
+        margin: 3px;
+
+        .enable-points-text {
+          cursor: pointer;
+          text-decoration: none;
         }
       }
 
@@ -418,6 +448,14 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
           display: inline-block;
           width: 80%;
           margin: 5px auto;
+        }
+        
+        .save-disabled {
+          display: inline-block;
+          width: 80%;
+          margin: 5px auto;
+          pointer-events: none;
+          background-color:#c0c0c0;
         }
 
         // any input button inside this class isn't lined up with the

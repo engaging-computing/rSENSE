@@ -15,6 +15,15 @@
     padding-top: 25px;
     margin-bottom: 0;
     z-index: 998;
+    width: 104px;
+    height: 104px;
+  }
+
+  #fab-plus-icon {
+    font-size: 48px;
+    -ms-transform: translate(-24px,-12px);
+    -webkit-transform: translate(-24px,-12px);
+    transform: translate(-24px,-12px);
   }
 
   .create-project-inner-block {
@@ -25,8 +34,32 @@
   
   .create-project-outer-block {
     display: table;
-  } 
-   
+  }
+
+  .field-ref-table {
+    margin: 0 auto;
+
+    thead {
+      font-weight: bold;
+
+      tr:first-child {
+        text-align: center;
+      }
+
+      tr:last-child {
+        border-bottom: 1px solid #888;
+      }
+    }
+
+    td {
+      padding: 3px 10px;
+    }
+
+    td:not(:last-child) {
+      border-right: 1px solid #AAA;
+    }
+  }
+
   .hidden {
     position: absolute;
     left: -10000px;
@@ -66,4 +99,8 @@
     width: 100% !important;
   }
 
+  .fmodal-ref-link {
+    padding-bottom: 10px;
+    padding-top: 50px;
+  }
 }

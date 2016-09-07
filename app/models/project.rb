@@ -15,6 +15,7 @@ class Project < ActiveRecord::Base
   before_save :summernote_media_objects
 
   has_many :fields, dependent: :destroy
+  has_many :formula_fields, dependent: :destroy
   has_many :data_sets, -> { order('created_at desc') }
   has_many :media_objects
   has_many :likes
@@ -144,7 +145,9 @@ class Project < ActiveRecord::Base
       dataSetCount: data_sets.count,
       dataSetIDs: data_sets.select(:id).map { |ds| ds.id },
       fieldCount: fields.count,
-      fields: fields.map { |o| o.to_hash false }
+      fields: fields.map { |o| o.to_hash false },
+      formulaFieldCount: formula_fields.count,
+      formulaFields: formula_fields.map { |o| o.to_hash false }
     }
 
     unless featured_media_id.nil?
@@ -171,7 +174,7 @@ class Project < ActiveRecord::Base
     begin
       FileUtils.mkdir_p(tmpdir)
       tmp_file = File.new("#{tmpdir}/#{title.gsub(' ', '_')}_selected_data_sets.csv", 'w+')
-      tmp_file.write(fields.map { |f| f.name }.join(',') + "\n")
+      tmp_file.write(fields.map { |f| (f.name.respond_to?(:include?) and f.name.include?(',')) ? '"' + f.name + '"' : f.name }.join(',') + "\n")
       datasets.split(',').each do |d|
         dataset = DataSet.find(d.to_i)
         tmp_file.write(dataset.data_as_csv_string)
@@ -229,6 +232,13 @@ class Project < ActiveRecord::Base
       field_map[f.id.to_s] = nf.id.to_s
     end
 
+    # Clone formula fields
+    formula_fields.each do |f|
+      nf = f.dup
+      nf.project_id = new_project.id
+      nf.save
+    end
+
     # Clone Media Objects
     media_objects.each do |mo|
       next unless mo.data_set_id.nil?
@@ -261,6 +271,7 @@ class Project < ActiveRecord::Base
         nds.project_id = new_project.id
         nds.user_id = user_id
         nds.created_at = ds.created_at
+
         # Fix data fields
         data = nds.data
         new_data = []
@@ -272,6 +283,12 @@ class Project < ActiveRecord::Base
           new_data.push row
         end
         nds.data = new_data
+
+        # Fix formula data fields
+        # We're just blanking out the data so that when we call save we can
+        #  regenerate the data
+        nds.formula_data = {}
+
         nds.save!
 
         # Clone dataset media
@@ -289,6 +306,14 @@ class Project < ActiveRecord::Base
     end
 
     new_project
+  end
+
+  def recalculate_data_sets
+    return if formula_fields.length == 0
+    data_sets.map do |x|
+      # saving the data set triggers them to recalculate their data
+      x.save!
+    end
   end
 
   def summernote_media_objects

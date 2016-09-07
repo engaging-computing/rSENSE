@@ -112,7 +112,7 @@ class DataSetsController < ApplicationController
         format.json { render json: {}, status: :ok }
       else
         @data_set.errors[:base] << 'Permission denied' unless can_edit?(@data_set)
-        format.html { render action: 'edit' }
+        format.html { redirect_to request.referrer, alert: @data_set.errors.full_messages }
         format.json { render json: @data_set.errors.full_messages, status: :unprocessable_entity }
       end
     end
@@ -125,7 +125,7 @@ class DataSetsController < ApplicationController
       @data_set = DataSet.find(params[:id])
     rescue ActiveRecord::RecordNotFound
       respond_to do |format|
-        format.json { render json: { error: 'Data set not found.' }, status: :not_found }
+        format.json { render json: { errors: ['Data set not found.'] }, status: :not_found }
       end
       return
     end
@@ -157,6 +157,55 @@ class DataSetsController < ApplicationController
         format.html { redirect_to 'public/403.html', status: :forbidden }
         format.json { render json: { errors: @errors }, status: :forbidden }
       end
+    end
+  end
+
+  # DELETE /delete_data_sets/1,2,3...
+  def deleteMultiple
+    dataset_ids = params[:id_list].split(',')
+    @dataset_array = []
+    dataset_ids.each do |id|
+      begin
+        dset = DataSet.find(id)
+        @dataset_array.push dset
+      rescue ActiveRecord::RecordNotFound
+        respond_to do |format|
+          format.json { render json: { error: 'Data set not found' }, status: :not_found }
+        end
+        return
+      end
+      unless can_delete?(dset)
+        respond_to do |format|
+          format.html { redirect_to 'public/403.html', status: :forbidden }
+          format.json { render json: { error: 'User not authorized' }, status: :forbidden }
+        end
+        return
+      end
+      @project ||= @dataset_array[0].project
+    end
+    amount = @dataset_array.length
+
+    if @project.lock? and !can_edit?(@project)
+      redirect_to @project, alert: 'Project is locked'
+      return
+    end
+
+    @dataset_array.each do |data_set|
+      data_set.media_objects.each(&:destroy)
+
+      unless data_set.destroy
+        respond_to do |format|
+          format.html { redirect_to project_path(@data_set.project.id), notice: 'Data set could not be removed' }
+          format.json { render json: { error: 'Unprocessable Entity' }, status: :unprocessable_entity }
+        end
+        return
+      end
+    end
+
+    flash[:notice] = "Successfully deleted #{amount} data set" + (amount == 1 ? '' : 's') + '.'
+    respond_to do |format|
+      format.html { redirect_to request.referrer, notice: 'Data sets removed' }
+      format.json { render json: {}, status: :ok }
     end
   end
 

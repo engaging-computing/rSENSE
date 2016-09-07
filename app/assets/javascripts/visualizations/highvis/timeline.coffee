@@ -84,7 +84,11 @@ $ ->
                   str += "#{@series.name.group}</div><br>"
                   str += "<table>"
                   str += "<tr><td>#{@series.xAxis.options.title.text}:</td><td><strong> "
-                  str += "#{globals.dateFormatter @x}</strong></td></tr>"
+                  for field, fieldIndex in data.fields when @point.datapoint[fieldIndex] isnt null
+                    if (Number field.typeID) is data.types.TIME
+                      dat = (globals.dateFormatter @point.datapoint[fieldIndex])
+                      break
+                  str += "#{dat}</strong></td></tr>"
                   index = data.fields.map((y) -> y.fieldName).indexOf(@series.name.field)
                   str += "<tr><td>#{@series.name.field}:</td><td><strong>#{@y} \
                   #{fieldUnit(data.fields[index], false)}</strong></td></tr>"
@@ -102,6 +106,58 @@ $ ->
               formatter: ->
                 globals.geoDateFormatter @value
 
+        # when the period option is enabled, change date format to obscure irrelevant info
+        @chartOptions.xAxis.dateTimeLabelFormats =
+          switch
+            when globals.configs.periodMode is 'yearly'
+              {
+                month: '%b'
+                year: '%b'
+              }
+            when globals.configs.periodMode is 'monthly'
+              {
+                day: '%e'
+                week: '%e'
+                month: '%e'
+                year: '%e'
+              }
+            when globals.configs.periodMode is 'weekly'
+              {
+                day: '%a'
+                week: '%a'
+                month: '%a'
+                year: '%a'
+              }
+            when globals.configs.periodMode is 'daily'
+              {
+                day: '%H:%M'
+                week: '%H:%M'
+                month: '%H:%M'
+                year: '%H:%M'
+              }
+            when globals.configs.periodMode is 'hourly'
+              {
+                millisecond: '%M:%S.%L'
+                second: '%M:%S'
+                minute: '%M:%S'
+                hour: '%M:%S'
+                day: '%M:%S'
+                week: '%M:%S'
+                month: '%M:%S'
+                year: '%M:%S'
+              }
+            else
+              {
+                millisecond: '%H:%M:%S.%L',
+                second: '%H:%M:%S',
+                minute: '%H:%M',
+                hour: '%H:%M',
+                day: '%e. %b',
+                week: '%e. %b',
+                month: '%b \'%y',
+                year: '%Y'
+              }
+
       ###
       Adds the regression tools to the control bar.
       ###
@@ -112,7 +168,7 @@ $ ->
       Turn off elapsed time
       ###
       drawToolControls: (elapsedTime = false) ->
-        super(elapsedTime)
+        super()
 
       ###
       Overwrite xAxis controls to only allow time fields

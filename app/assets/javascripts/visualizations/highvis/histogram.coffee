@@ -274,6 +274,9 @@ $ ->
       drawToolControls: ->
         inctx =
           binSize: @configs.binSize
+          
+        if data.hasTimeData and data.timeType != data.GEO_TIME
+          inctx.period = HandlebarsTemplates[hbCtrl('period')]
 
         outctx =
           id: 'tools-ctrls'
@@ -282,6 +285,18 @@ $ ->
 
         tools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append(tools)
+        
+        # Set the correct options for period:
+        $('#period-list').val(globals.configs.periodMode)
+
+        $('#period-list').change =>
+          globals.configs.periodMode = $('#period-list').val()
+          if $('#period-list').val() != 'off'
+            globals.configs.isPeriod = true
+          else
+            globals.configs.isPeriod = false
+          $( "#group-by" ).trigger( "change" )
+          @start()
 
         # Adds material design
         $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
@@ -341,6 +356,9 @@ $ ->
         # Remove group by number fields, only for pie chart
         groups = $.extend(true, [], data.textFields)
         groups.splice(data.NUMBER_FIELDS_FIELD - 1, 1)
+        # Remove Group By Time Period if there is no time data
+        if data.hasTimeData is false or data.timeType == data.GEO_TIME
+          groups.splice(data.TIME_PERIOD_FIELD - 2, 1)
         @drawGroupControls(groups)
 
         handler = (selected, selFields) =>
@@ -354,6 +372,7 @@ $ ->
         @drawToolControls()
         @drawClippingControls()
         @drawSaveControls()
+        $('[data-toggle="tooltip"]').tooltip();
 
     if "Histogram" in data.relVis
       globals.histogram = new Histogram 'histogram-canvas'

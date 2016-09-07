@@ -7,6 +7,7 @@ class UpdateFieldsTest < IntegrationTest
   test 'edit fields' do
     login('kcarcia@cs.uml.edu', '12345')
     click_on 'Projects'
+    find('#create-project-fab-button').click
     find('#project_title').set('Fields Test')
     click_on 'Create Project'
 
@@ -36,12 +37,13 @@ class UpdateFieldsTest < IntegrationTest
 
     find('#fields_form_submit').click
 
-    assert page.has_content?('Fields were successfully updated.')
+    assert page.has_content?('Fields Test')
   end
 
   test 'edit fields named correctly' do
     login('kcarcia@cs.uml.edu', '12345')
     click_on 'Projects'
+    find('#create-project-fab-button').click
     find('#project_title').set('Field Naming Test')
     click_on 'Create Project'
 
@@ -82,6 +84,7 @@ class UpdateFieldsTest < IntegrationTest
   test 'template fields with data set' do
     login('kcarcia@cs.uml.edu', '12345')
     click_on 'Projects'
+    find('#create-project-fab-button').click
     find('#project_title').set('Template Fields Test')
     click_on 'Create Project'
 
@@ -102,6 +105,7 @@ class UpdateFieldsTest < IntegrationTest
   test 'teplate fields without data set' do
     login('kcarcia@cs.uml.edu', '12345')
     click_on 'Projects'
+    find('#create-project-fab-button').click
     find('#project_title').set('Template Fields Test 2')
     click_on 'Create Project'
 

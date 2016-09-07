@@ -36,6 +36,10 @@ $ ->
     globals.configs.activeFilters ?= []
     globals.configs.clippingMode ?= false
 
+    globals.configs.isPeriod ?= false # Controls how series are constructed in update().
+    globals.configs.periodMode ?= 'off' # Changes when a period option is selected.
+
+
     # Restore saved data
     if data.savedData?
       # Don't extend the globals yet
@@ -59,6 +63,7 @@ $ ->
     data.COMBINED_FIELD = 2
     data.NUMBER_FIELDS_FIELD = 3
     data.CONTRIBUTOR_FIELD = 4
+    data.TIME_PERIOD_FIELD = 5
 
     data.types ?=
       TIME: 1
@@ -77,12 +82,60 @@ $ ->
     data.DEFAULT_PRECISION = 4
     data.precision ?= data.DEFAULT_PRECISION
 
+    # This should not be here.... i'll find a place for it some other time
+    # Calculate which range a date falls in, both for group-by period
+    # and to fix a bug causing points to be connected wrong
+    globals.getCurrentPeriod = (date) ->
+      month = ["January", "February", "March", "April", "May","June", "July",
+        "August", "September", "October", "November", "December"]
+    
+      switch
+        when globals.configs.periodMode is 'yearly'
+          '' + date.getFullYear()
+        when globals.configs.periodMode is 'monthly'
+          month[date.getMonth()] + ' ' + date.getFullYear()
+        when globals.configs.periodMode is 'weekly'
+          # since every month has day numbers falling on different days of the week,
+          # the weekly period calculation is a little different. Need to iteratively
+          # calculate the week number.
+          tempDate = new Date(date.getFullYear(), date.getMonth(), 1)
+          weekNumber = 1
+          dayNumber = 1
+          incrementWeekNext = false
+          while tempDate.getDate() != date.getDate()
+            if incrementWeekNext is true
+              incrementWeekNext = false
+              weekNumber += 1
+            if tempDate.getDay() == 6
+              incrementWeekNext = true
+            dayNumber += 1
+            tempDate.setDate(dayNumber)
+          weekNumber += 1 if incrementWeekNext is true
+
+          'week ' + weekNumber + ' in ' + month[date.getMonth()] + ' ' + date.getFullYear()
+        when globals.configs.periodMode is 'daily'
+          '' + date.getMonth + '/' + date.getDate() + '/' + date.getFullYear()
+        when globals.configs.periodMode is 'hourly'
+          'hour ' + date.getHours() + ' on ' + date.getMonth() +  '/' + date.getDate() + '/' + date.getFullYear()
+        else
+          'Enable Period in Tools'
+
     ###
     Selects data with potential filters
     ###
     globals.getData = (clip = false, filters = []) ->
       # Select all the data
       dp = data.dataPoints
+      if globals.configs.disabledPoints.length > 0
+        dp = dp.filter (p) ->
+          obj = {pointId: p[0], dataSetId: globals.getDataSetId(p[1])}
+          pass = true
+          for point in globals.configs.disabledPoints
+            if JSON.stringify(point) == JSON.stringify(obj)
+              pass = false
+              break
+          return pass
+
       unless clip and globals.configs.clippingMode then return dp
 
       # Ensure filters is a list
@@ -102,11 +155,21 @@ $ ->
       return dp
 
     ###
+    Returns the Data Set ID given the data set name from the
+    datapoint object, of the form: "[dataset name]([dataset id])".
+    Does some fancy Regex magic in case the user includes numbers
+    inside of parentheses in the data set name.
+    ###
+    globals.getDataSetId = (dsetName) ->
+      matches = dsetName.match(/\([0-9]*\)/g)
+      return /\(([0-9]*)\)/i.exec(matches[matches.length - 1])[1]
+
+    ###
     Selects data in an x,y object format of the given group.
     ###
     data.xySelector = (xIndex, yIndex, groupIndex, dp) ->
       rawData = dp.filter (p) =>
-        group = (String p[globals.configs.groupById]).toLowerCase() == @groups[groupIndex]
+        group = (String p[globals.configs.groupById]) == @groups[groupIndex]
         notNull = (p[xIndex] isnt null) and (p[yIndex] isnt null)
         notNaN = (not isNaN(p[xIndex])) and (not isNaN(p[yIndex]))
 
@@ -141,7 +204,7 @@ $ ->
       groupById = globals.configs.groupById
 
       filterFunc = (p) =>
-        (String p[groupById]).toLowerCase() == @groups[groupIndex]
+        (String p[groupById]) == @groups[groupIndex]
 
       newFilterFunc = if nans
         filterFunc
@@ -275,16 +338,16 @@ $ ->
     ###
     data.setGroupIndex = (gIndex) ->
       @groups = @makeGroups(gIndex)
-      if gIndex != data.NUMBER_FIELDS_FIELD
-        @dataPoints = @setIndexFromGroups(gIndex)
       globals.updateColorSlots()
 
     ###
     Sets the value of the Data Point (id) field to its index within the selected group.
+    Deprecated function.
+    TODO: Delete this once we are sure we no longer need it.
     ###
     data.setIndexFromGroups = (gIndex) ->
       filterFunc = (dp) =>
-        (String dp[gIndex]).toLowerCase() == @groups[groupIndex]
+        (String dp[gIndex]) == @groups[groupIndex]
 
       rawData = for group, groupIndex in @groups
         selectedPoints = @dataPoints.filter filterFunc
@@ -309,12 +372,26 @@ $ ->
           if data.fields[f].fieldID != -1
             groups.push(data.fields[f].fieldName)
       else
-        for dp in @dataPoints
-          if dp[gIndex] isnt null
-            result[String(dp[gIndex]).toLowerCase()] = true
 
-        groups = for keys of result
-          keys
+      if gIndex == data.TIME_PERIOD_FIELD #and globals.configs.isPeriod
+        timestampIndex = data.timeFields[0]
+        groups = []
+
+        # Look through all timestamps to find the different time periods to use for groups
+        for point in data.dataPoints
+          timestamp = point[timestampIndex]
+          if timestamp is null
+            point[data.TIME_PERIOD_FIELD] = "No Time Data"
+          else
+            period = globals.getCurrentPeriod(new Date(timestamp))
+            point[data.TIME_PERIOD_FIELD] = period
+
+      for dp in @dataPoints
+        if dp[gIndex] isnt null
+          result[String(dp[gIndex])] = true
+
+      groups = for keys of result
+        keys
 
       groups.sort()
 

@@ -35,23 +35,28 @@ $ ->
         super(@canvas)
         @TOOLBAR_HEIGHT_OFFSET = 70
 
-        fieldList = (i for f, i in data.fields when i isnt data.COMBINED_FIELD and i isnt data.NUMBER_FIELDS_FIELD)
+        fieldList = (i for f, i in data.fields when i isnt data.COMBINED_FIELD and
+                     i isnt data.NUMBER_FIELDS_FIELD and i isnt data.TIME_PERIOD_FIELD)
         rows = Math.round( $(window).width() / 180 )
         @configs.tableFields ?= fieldList[0..rows]
 
         # Set sort state to default none existed
         @configs.sortName ?= ''
         @configs.sortType ?= ''
+        
+        @fieldsAndColumns = []
 
         # Set default search to empty string
         @configs.searchParams ?= {}
+        # tableGroupingId needs to be global so rowFormatter can see it
+        globals.configs.tableGroupingId ?= 0
 
       # Removes nulls from the table and colors the groupByRow
       rowFormatter = (cellvalue, options, rowObject) ->
         cellvalue = "" if $.type(cellvalue) is 'number' and isNaN(cellvalue) or
           cellvalue is null
 
-        gbid = globals.configs.groupById
+        gbid = globals.configs.tableGroupingId
         colIndex = options.pos
 
         cIndex = data.groups.indexOf(String(cellvalue).toLowerCase())
@@ -83,16 +88,21 @@ $ ->
         $('#' + @canvas).html('')
         $('#' + @canvas).append '<table id="data_table" class="table table-striped"></table>'
 
+        @fieldsAndColumns = []
+        colIds = []
         # Build the headers for the table
-        headers = for field in data.fields
-          fieldTitle(field)
-
-        # Make valid id's for the colModel
-        colIds = for header, index in headers
-          id = header.replace(/\s+/g, '_').toLowerCase()
+        colId = 0
+        headers = for field, index in data.fields when index in @configs.tableFields
+          id = fieldTitle(field).replace(/\s+/g, '_').toLowerCase()
           if index is globals.configs.groupById
-            @configs.groupingId = id
-          else id
+            globals.configs.tableGroupingId = colId
+          colIds.push(id)
+          @fieldsAndColumns.push({field: index,colId: id, type: field.typeID})
+          colId += 1
+          fieldTitle(field)
+        # Hidden columns to identify rows regardless of field selection
+        headers.push("hidden_datapoint_id")
+        headers.push("hidden_dataset_id")
 
         # Build the data for the table
         visGroups = (g for g, i in data.groups when i in data.groupSelection)
@@ -100,41 +110,53 @@ $ ->
         rows = []
         dp = globals.getData(true, globals.configs.activeFilters)
         gbid = globals.configs.groupById
-        for point in dp when String(point[gbid]).toLowerCase() in visGroups
+        for point in dp when String(point[gbid]) in visGroups
           row = {}
-          for d, i in point
-            row[colIds[i]] = d
+          index = 0
+          for d, i in point when i in @configs.tableFields
+            row[colIds[index]] = d
+            index += 1
+          row["hidden_datapoint_id"] = point[0]
+          row["hidden_dataset_id"] = globals.getDataSetId(point[1])
           rows.push(row)
 
         # Make sure the sort type for each column is appropriate, and save the
         # time column
         timeCol = ""
-        columns = for colId, colIndex in colIds
-          if (data.fields[colIndex].typeID is data.types.TEXT)
+        columns = for column in @fieldsAndColumns
+          if (column.type is data.types.TEXT)
             {
-              name:           colId
-              id:             colId
+              name:           column.colId
+              id:             column.colId
               sorttype:       'text'
               formatter:      rowFormatter
               searchoptions:  { sopt:['cn','nc','bw','bn','ew','en','in','ni'] }
             }
-          else if (data.fields[colIndex].typeID is data.types.TIME)
-            timeCol = colId
+          else if (column.type is data.types.TIME)
+            timeCol = column.colId
             {
-              name:           colId
-              id:             colId
+              name:           column.colId
+              id:             column.colId
               sorttype:       'text'
               formatter:      dateFormatter
               searchoptions:  { sopt:['cn','nc','bw','bn','ew','en','in','ni'] }
             }
           else
             {
-              name:           colId
-              id:             colId
+              name:           column.colId
+              id:             column.colId
               sorttype:       'number'
               formatter:      rowFormatter
               searchoptions:  { sopt:['eq','ne','lt','le','gt','ge'] }
             }
+        columns.push({
+          name: "hidden_datapoint_id"
+          hidden: true
+        })
+        columns.push({
+          name: "hidden_dataset_id"
+          hidden: true
+        })
 
         # Add the nav bar
         $('#table-canvas').append '<div id="toolbar_bottom"></div>'
@@ -157,15 +179,12 @@ $ ->
           loadui: 'block'
           pager: '#toolbar_bottom'
           gridComplete: @saveSort
+          onSelectRow: (id) ->
+            row = $("#data_table").getRowData(id)
+            globals.selectedDataSetId = row["hidden_dataset_id"]
+            globals.selectedPointId = parseInt(row["hidden_datapoint_id"])
+            $('#disable-point-button').prop("disabled", false)
         })
-
-        # Show only the checked columns
-        for f, fi in data.fields
-          col = @table.jqGrid('getGridParam','colModel')[fi]
-          if $.inArray(fi, @configs.tableFields) is -1
-            @table.hideCol(col.name)
-          else
-            @table.showCol(col.name)
 
         $('#data_table').setGridWidth($('#' + @canvas).width())
 
@@ -226,13 +245,22 @@ $ ->
         # Remove group by number fields, only for pie chart
         groups = $.extend(true, [], data.textFields)
         groups.splice(data.NUMBER_FIELDS_FIELD - 1, 1)
+        # Remove Group By Time Period if there is no time data
+        if data.hasTimeData is false or data.timeType == data.GEO_TIME
+          groups.splice(data.TIME_PERIOD_FIELD - 2, 1)
         @drawGroupControls(groups)
-        fields = (i for f, i in data.fields when i isnt data.COMBINED_FIELD and i isnt data.NUMBER_FIELDS_FIELD)
+        fields = (i for f, i in data.fields when i isnt data.COMBINED_FIELD and
+                  i isnt data.NUMBER_FIELDS_FIELD and i isnt data.TIME_PERIOD_FIELD)
         @drawYAxisControls(@configs.tableFields,
-          (i for f, i in data.fields when i isnt data.COMBINED_FIELD and i isnt data.NUMBER_FIELDS_FIELD),
+          (i for f, i in data.fields when i isnt data.COMBINED_FIELD and
+           i isnt data.NUMBER_FIELDS_FIELD and i isnt data.TIME_PERIOD_FIELD),
           false, 'Visible Fields')
         @drawClippingControls()
+        # Period is currently the only Tool for table. Don't render Tool Controls if period is not available.'
+        if data.timeFields.length > 0 and data.timeType != data.GEO_TIME
+          @drawToolControls(false, false, [], false)
         @drawSaveControls()
+        $('[data-toggle="tooltip"]').tooltip();
 
       saveSort: =>
         if @table?
@@ -301,9 +329,11 @@ $ ->
 
         for param in @configs.searchParams
           # Get the field index to sort
-          fields = for f in @table.getGridParam('colNames')
-            f.replace(/\s+/g, '_').toLowerCase()
-          field = fields.indexOf(param.field)
+          field = 0
+          for fieldItem in @fieldsAndColumns
+            if fieldItem.colId == param.field
+              field = fieldItem.field
+              break
 
           # Create and clip with the sort filter
           filter =

@@ -1,10 +1,21 @@
 include ApplicationHelper
 class Field < ActiveRecord::Base
+  include ActionView::Helpers::SanitizeHelper
+
   after_initialize :default_values
+
+  before_validation :sanitize_html
   before_validation :trim_restrictions
+  before_validation :choose_refname
+
   validates_presence_of :project_id, :field_type, :name
+
   validates_uniqueness_of :name, scope: :project_id, case_sensitive: false
+  validates_uniqueness_of :refname, scope: :project_id, case_sensitive: false
+
   validate :validate_values
+  validate :unique_name
+  validate :reserved_names
 
   belongs_to :project
   serialize :restrictions, JSON
@@ -18,7 +29,9 @@ class Field < ActiveRecord::Base
       name: name,
       type: field_type,
       unit: unit,
-      restrictions: restrictions
+      restrictions: restrictions,
+      refname: refname,
+      index: index
     }
 
     if recurse
@@ -33,27 +46,24 @@ class Field < ActiveRecord::Base
       return
     end
 
-    highest = 0
     base = get_field_name(field_type)
-    project.fields.where('field_type = ?', field_type).each do |f|
+    project_fields = project.fields.where('field_type = ?', field_type)
+    project_formula_fields = project.formula_fields.where('field_type = ?', field_type)
+    suffixes = (project_fields + project_formula_fields).map do |f|
       fname = f.name.split('_')
       if fname[0] == base
-        if fname[1].nil?
-          highest += 1
-        else
-          tmp = fname[1].to_i
-          if tmp > highest
-            highest = tmp
-          end
-        end
+        fname[1].nil? ? 1 : fname[1].to_i
+      else
+        0
       end
     end
+
+    highest = suffixes.length == 0 ? 0 : suffixes.max
     if highest > 0
-      name = "#{base}_#{highest + 1}"
+      "#{base}_#{highest + 1}"
     else
-      name = base
+      base
     end
-    name
   end
 
   def default_values
@@ -78,6 +88,43 @@ class Field < ActiveRecord::Base
     end
   end
 
+  def choose_refname
+    return if refname != '' or name.nil?
+
+    parent = Project.find_by_id(project_id)
+    other_refnames = []
+    unless parent.nil?
+      parent.fields.find_each do |f|
+        other_refnames << f.refname
+      end
+      parent.formula_fields.find_each do |f|
+        other_refnames << f.refname
+      end
+    end
+
+    base_refname = name.gsub(/[^0-9A-Za-z]/, '-').split('-').map { |x| x.capitalize }.join
+    next_refname = base_refname
+    name_count = 1
+    while other_refnames.include? next_refname
+      next_refname = "#{base_refname}_#{name_count}"
+      name_count += 1
+    end
+
+    self.refname = next_refname
+  end
+
+  def sanitize_html
+    # Strip HTML from input
+    self.name = strip_tags(name)
+    self.unit = strip_tags(unit)
+    self.restrictions = strip_tags(restrictions) if restrictions.is_a? String
+    if restrictions.is_a? Array
+      restrictions.each_with_index do |v, i|
+        restrictions[i] = strip_tags(v) if restrictions[i].is_a? String
+      end
+    end
+  end
+
   def validate_values
     # verify that restrictions is an array of strings
     if !restrictions.is_a? Array
@@ -95,6 +142,20 @@ class Field < ActiveRecord::Base
       if project.nil?
         errors.add :project, 'not found'
       end
+    end
+  end
+
+  def unique_name
+    return if project.nil? or name.nil?
+    hits = @project.formula_fields.where 'UPPER(name) = ?', name.upcase
+    unless hits.empty?
+      errors.add :base, "#{name} has the same name as another formula field"
+    end
+  end
+
+  def reserved_names
+    if ['Data Point', 'Data Set Name (id)', 'Combined Data Sets', 'Number Fields', 'Contributors', 'Time Period'].include? name
+      errors.add :base, "#{name} is reserved for internal use. Please choose a different name."
     end
   end
 end

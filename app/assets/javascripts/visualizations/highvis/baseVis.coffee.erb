@@ -37,6 +37,19 @@ $ ->
         @configs ?= {}
         @isSummary = false
 
+        globals.configs.isPeriod ?= false # Controls how series are constructed in update(). 
+        globals.configs.periodMode ?= 'off' # Changes when a period option is selected.
+        
+        # globals for saving the unique field ids, in case fields were reordered/new fields were added
+        globals.configs.fieldSelectionIds ?= []
+        globals.configs.groupByFieldId ?= -1
+
+        # Used to remember the IDs of the selected point on the chart
+        globals.selectedPointId = -1
+        globals.selectedDataSetId = -1
+
+        globals.configs.disabledPoints ?= []
+
       ANALYSISTYPE_TOTAL:      0
       ANALYSISTYPE_MAX:        1
       ANALYSISTYPE_MIN:        2
@@ -56,6 +69,12 @@ $ ->
       start: ->
         $('#' + @canvas).show()
         toolScroll = $('#vis-ctrls').scrollTop()
+        #Protect against edge case where the default vis uses the period mode but this dataset doesn't have time data:
+        if globals.configs.groupById == data.TIME_PERIOD_FIELD and 
+        ( data.hasTimeData is false or data.timeType == data.GEO_TIME )
+          data.setGroupIndex(data.COMBINED_FIELD)
+          globals.configs.groupById = data.COMBINED_FIELD
+          
         @drawControls()
         @update()
         $('#vis-ctrls').scrollTop(toolScroll)
@@ -66,6 +85,11 @@ $ ->
       Derived classes should overload to reload content.
       ###
       update: ->
+        # Update the ids for field selection in case they were changed
+        globals.configs.fieldSelectionIds = []
+        for field in globals.configs.fieldSelection
+          globals.configs.fieldSelectionIds.push(data.fields[field].fieldID)
+        globals.configs.groupByFieldId = data.fields[globals.configs.groupById].fieldID
 
       ###
       Default delayed update simply updates
@@ -160,6 +184,7 @@ $ ->
           id: 'clipping-enabled'
           logId: 'clipping-enabled'
           label: 'Filters:'
+          buttonEnabled: !(globals.curVis.canvas == "timeline-canvas" and globals.configs.isPeriod)
 
         outctx = {}
         outctx.id = 'clipping-ctrls'
@@ -192,6 +217,22 @@ $ ->
           clearFilters()
           $(window).resize()
           @start(false)
+
+        if globals.configs.disabledPoints.length == 0
+          $('#enable-points-button').prop("disabled", true)
+
+        $('#disable-point-button').click (e) =>
+          $('#disable-point-button').prop("disabled", true)
+          $('#enable-points-button').prop("disabled", false)
+          globals.configs.disabledPoints.push({pointId: globals.selectedPointId, dataSetId: globals.selectedDataSetId})
+          $(window).resize()
+          @start()
+
+        $('#enable-points-button').click (e) =>
+          $('#enable-points-button').prop("disabled", true)
+          globals.configs.disabledPoints = []
+          $(window).resize()
+          @start()
 
         # Initialize and track the status of this control panel
         globals.configs.clippingOpen ?= false
@@ -275,7 +316,7 @@ $ ->
           componentHandler.upgradeElement($(j)[0]);
 
         # Initialize checked and make y axis checkbox/radio handler
-        if radio
+        if radio and $("#rdo-lbl-#{id}-field-#{iniRadio}")[0]?
           # Set the current display field
           $("#rdo-lbl-#{id}-field-#{iniRadio}")[0].MaterialRadio.check()
 
@@ -416,12 +457,12 @@ $ ->
         globals.configs.groupOpen ?= false
         initCtrlPanel('group-ctrls', 'groupOpen')
 
-        $('.color-picker').each (_, cpicker) =>     
+        $('.color-picker').each (_, cpicker) =>
           cid = $(cpicker).data('color-id')
           a = $(cpicker).colorpicker
             outputType: 'hex'
             onOpen: () ->
-              $("#label-color-#{cid}").parent().parent().css('background-color', '#EEE')		  
+              $("#label-color-#{cid}").parent().parent().css('background-color', '#EEE')
               globals.getColor(cid)
             onClose: () ->
               $("#label-color-#{cid}").parent().parent().css('background-color', '#FFF')
@@ -542,7 +583,7 @@ $ ->
 
         $('#print-vis-btn').click =>
           # Resize chart if it is too big to print
-        	if (@chart.chartWidth > 700) 
+        	if (@chart.chartWidth > 700)
             @chart.setSize(700, @chart.chartHeight, false)
           @chart.print()
           # Callback to detect when print controls have been closed
@@ -564,9 +605,13 @@ $ ->
       Draw tool controls (Analysis Type, Log Y Axis, etc.) for Pie Chart and
       Bar Charts
       ###
-      drawToolControls: (sortBy = false, logYAxis = false, analysisTypeExcludes = []) ->
+      drawToolControls: (sortBy = false, barChart = false, analysisTypeExcludes = [], drawAnalysisTypes = true) ->
         inctx = {}
 
+        # Add Period to Base Tools
+        if data.hasTimeData and data.timeType != data.GEO_TIME
+          inctx.period = HandlebarsTemplates[hbCtrl('period')]
+        
         # Populate sort fields
         if sortBy
           inctx.sortFields =
@@ -579,36 +624,41 @@ $ ->
             name: 'Group Name'
             logId: 'sort-by-' + @SORT_DEFAULT
             value: @SORT_DEFAULT
-
-        # Set up analysis types from the list of exclusions
-        analysisTypes = [
-          @ANALYSISTYPE_MEAN
-          @ANALYSISTYPE_MEAN_ERROR
-          @ANALYSISTYPE_MEDIAN
-          @ANALYSISTYPE_MAX
-          @ANALYSISTYPE_MIN
-          @ANALYSISTYPE_TOTAL
-          @ANALYSISTYPE_COUNT
+            
+        if drawAnalysisTypes
+          # Set up analysis types from the list of exclusions
+          analysisTypes = [
+            @ANALYSISTYPE_MEAN
+            @ANALYSISTYPE_MEAN_ERROR
+            @ANALYSISTYPE_MEDIAN
+            @ANALYSISTYPE_MAX
+            @ANALYSISTYPE_MIN
+            @ANALYSISTYPE_TOTAL
+            @ANALYSISTYPE_COUNT
           ]
-        analysisTypes = analysisTypes.filter (x) ->
-          x not in analysisTypeExcludes
+          analysisTypes = analysisTypes.filter (x) ->
+            x not in analysisTypeExcludes
 
-        # Analysis Types
-        inctx.analysisTypes =
-          for i in analysisTypes
-            value: i
-            id:    'analysis-type-' + i
-            logId: 'analysis-type-' + i
-            name:  'analysis-type'
-            label:  @analysisTypeNames[i]
+          # Analysis Types
+          inctx.analysisTypes =
+            for i in analysisTypes
+                value: i
+                id:    'analysis-type-' + i
+                logId: 'analysis-type-' + i
+                name:  'analysis-type'
+                label:  @analysisTypeNames[i]
 
-        # Logarithmic Y Axis
-        if logYAxis
-          id = 'log-y-axis'
+        # Bar-specific tools
+        if barChart
+          inctx.barChart = true
           inctx.logYAxis =
-            id:    id
+            id:    'log-y-axis'
             logId: 'logarithmic-y-axis'
             label: 'Logarithmic Y Axis'
+          inctx.histogramDensity =
+            id:    'hist-density'
+            logId: 'histogram-density'
+            label: 'Histogram Density'
 
         outctx =
           id: 'tools-ctrls'
@@ -617,7 +667,7 @@ $ ->
 
         tools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append tools
-        
+
         # Add material design
         $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
           componentHandler.upgradeElement($(j)[0]);
@@ -628,14 +678,23 @@ $ ->
         # Initialize and track the status of this control panel
         globals.configs.toolsOpen ?= false
         initCtrlPanel('tools-ctrls', 'toolsOpen')
-        query = "label[name='analysis-type'][value='#{@configs.analysisType}']"
-        $(query)[0].MaterialRadio.check()
-        $('#sort-by').val(@configs.sortField)
-        $('input[name="analysis-type"]').value = @configs.analysisType
+        if drawAnalysisTypes
+          query = "label[name='analysis-type'][value='#{@configs.analysisType}']"
+          $(query)[0].MaterialRadio.check()
+          
+        if sortBy
+          $('#sort-by').val(@configs.sortField)
+          $('input[name="analysis-type"]').value = @configs.analysisType
+          
         if globals.configs.logY and $('#ckbx-lbl-log-y-axis').length
           $('#ckbx-lbl-log-y-axis')[0].MaterialCheckbox.check()
         else if $('#ckbx-lbl-log-y-axis').length
           $('#ckbx-lbl-log-y-axis')[0].MaterialCheckbox.uncheck()
+          
+        if @configs.histogramDensity and $('#ckbx-lbl-hist-density').length
+          $('#ckbx-lbl-hist-density')[0].MaterialCheckbox.check()
+        else if $('#ckbx-lbl-hist-density').length
+          $('#ckbx-lbl-hist-density')[0].MaterialCheckbox.uncheck()
 
         $('#sort-by').change (e) =>
           @configs.sortField = Number(e.target.value)
@@ -648,6 +707,23 @@ $ ->
         $('#ckbx-log-y-axis').click (e) =>
           globals.configs.logY = !globals.configs.logY
           @start()
+          
+        $('#ckbx-hist-density').click () =>
+          @configs.histogramDensity = not @configs.histogramDensity
+          @delayedUpdate()
+          
+        # Set the correct options for period:
+        $('#period-list').val(globals.configs.periodMode)
+
+        $('#period-list').change =>
+          globals.configs.periodMode = $('#period-list').val()
+          if $('#period-list').val() != 'off'
+            globals.configs.isPeriod = true
+          else
+            globals.configs.isPeriod = false
+          $( "#group-by" ).trigger( "change" );
+          @start()
+
 
       ###
       Do any necessary cleanup work before serialization.
@@ -785,7 +861,7 @@ $ ->
       end: ->
         if "Pie" in data.relVis and globals.configs.groupById == data.NUMBER_FIELDS_FIELD
           $('#group-by').val(data.COMBINED_FIELD).change()
-          
+
         if @chart?
           @chart.destroy()
           @chart = undefined

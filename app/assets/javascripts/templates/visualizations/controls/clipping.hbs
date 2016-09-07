@@ -1,13 +1,31 @@
 <div class="vis-ctrl-sublock">
   {{> visualizations/controls/_switch this}}
+  <i class="fa fa-question-circle control-tooltip"
+     style="font-size: 1.25em; margin-left: 0.25em;"
+     data-toggle="tooltip" data-placement="top"
+     title="Use the search boxes in the Table to define filters. You can also define filters from your current bounds in the Scatter and Timeline visualizations."></i>
   <div class="centered">
-    <button id="save-filters-btn" class="save-btn btn btn-sm btn-default"
-            data-log-id="save-filters">
-      Set Current Filters
-    </button>
+    {{#if buttonEnabled}}
+      <button id="save-filters-btn" class="save-btn btn btn-sm btn-default"
+              data-log-id="save-filters">
+        Set Current Filters
+      </button>
+    {{else}}
+      <button id="save-filters-disabled-btn" class="btn btn-sm btn-default save-disabled">
+        Filtering Disabled with Period
+      </button>
+    {{/if}}
     <button id="clear-filters-btn" class="save-btn btn btn-sm btn-default"
             data-log-id="clear-filters">
       Clear All Filters
     </button>
+  </div>
+</div>
+<div class="vis-ctrl-subblock">
+  <h4 class="vis-ctrl-subtitle">Disable Data Points <i class="fa fa-question-circle control-tooltip" data-toggle="tooltip" data-placement="top" 
+    title="Click on a data point in Map, Scatter, or Table, then click the Disable Selected Point button to filter it from the visualization. Enable all disabled points with the Enable button."></i></h4>
+  <div style="width: 70%;">
+    <button id="disable-point-button" data-log-id="disable-point" class="btn btn-default" style="display: block; width: 100%;" disabled>Disable Selected Point</button>
+    <button id="enable-points-button" data-log-id="enable-points" class="btn btn-default" style="display: block; width: 100%;">Enable All Points</button>
   </div>
 </div>

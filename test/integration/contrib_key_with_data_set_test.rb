@@ -9,6 +9,7 @@ class ContribKeyWithDataSetTest < IntegrationTest
 
     # Create a Project
     visit '/projects'
+    find('#create-project-fab-button').click
     find('#project_title').set('Contributor Key Test Project')
     click_on 'Create Project'
 
@@ -20,7 +21,6 @@ class ContribKeyWithDataSetTest < IntegrationTest
     click_on 'Add Number'
     assert page.has_content? 'Number'
     click_on 'Save and Return'
-    assert page.has_content? 'Fields were successfully updated.'
     find('#edit-project-button').click
     assert page.has_content? 'Back to Project'
     find('#project_lock').click

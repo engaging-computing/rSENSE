@@ -1,0 +1,98 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+f_one:
+  name: FF1
+  field_type: 2
+  unit:
+  project: formula_fields_test
+  formula: 5
+  index: 1
+  refname: FF1
+
+f_two:
+  name: FF2
+  field_type: 3
+  unit:
+  project: formula_fields_test
+  formula: "cat"
+  index: 2
+  refname: FF2
+
+f_three:
+  name: FF3
+  field_type: 2
+  unit:
+  project: formula_fields_test
+  formula: FF1 * 2
+  index: 3
+  refname: FF3
+
+f_four:
+  name: FF4
+  field_type: 3
+  unit:
+  project: formula_fields_test
+  formula: FF2 + "dog"
+  index: 4
+  refname: FF4
+
+next_name_num_1:
+  field_type: 2
+  project: next_name_test
+  name: Number_2
+
+next_name_num_2:
+  field_type: 2
+  project: next_name_test
+  name: Number_4
+
+next_name_text_1:
+  field_type: 3
+  project: next_name_test
+  name: Text_1
+
+next_name_text_2:
+  field_type: 3
+  project: next_name_test
+  name: Text_3
+
+next_name_text_3:
+  field_type: 3
+  project: next_name_test
+  name: Text_6
+
+calculation_ff_1:
+  project: calculation_test_1
+  name: A
+  refname: A
+  field_type: 2
+  formula: Calc + Calc / 2 + mean(Calc)
+  index: 1
+
+calculation_ff_2:
+  project: calculation_test_1
+  name: B
+  field_type: 2
+  formula: stddev(A) ^ 4
+  index: 2
+
+calculation_ff_3:
+  project: calculation_test_2
+  name: A
+  field_type: 2
+  formula: Calc
+  index: 1
+
+calculation_ff_4:
+  project: calculation_test_2
+  name: B
+  field_type: 2
+  formula: spling
+  index: 2
+
+calculation_ff_5:
+  project: calculation_test_2
+  name: C
+  field_type: 2
+  formula: Calc
+  index: 3

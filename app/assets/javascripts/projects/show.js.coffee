@@ -65,8 +65,12 @@ IS.onReady "projects/show", ->
   # Takes all sessions that are checked, appends its id to the url and
   # redirects the user to the view sessions page (Vis page)
   $('#vis_button').click (e) ->
-    targets = $(document).find(".dataset .ds_selector input:checked")
-    ds_list = (get_ds_id t for t in targets)
+    unchecked = $(document).find(".dataset .ds_selector input:not(:checked)")
+    unchecked_list = (get_ds_id u for u in unchecked)
+    ds_list = []
+    if unchecked_list.length > 0 or window.location.href.indexOf('&search') != -1
+      targets = $(document).find(".dataset .ds_selector input:checked")
+      ds_list = (get_ds_id t for t in targets)
     window.location = $(this).attr("data-href") + ds_list
 
   $('#export_button').click (e) ->
@@ -103,39 +107,49 @@ IS.onReady "projects/show", ->
     root = $('#dataset_table')
     root.find("[id^=lbl_]").each (i,j) ->
       $(j)[0].MaterialCheckbox.check()
-    $('#vis_button').prop("disabled",false)
-    $('#export_button').prop("disabled",false)
+    $('#vis_button').prop("disabled", false)
+    $('#export_button').prop("disabled", false)
+    $('#delete_selected_button').prop("disabled", false)
 
   $("a#uncheck_all").click ->
     root = $('#dataset_table')
     root.find("[id^=lbl_]").each (i,j) ->
       $(j)[0].MaterialCheckbox.uncheck()
-    $('#vis_button').prop("disabled",true)
-    $('#export_button').prop("disabled",true)
+    $('#vis_button').prop("disabled", true)
+    $('#export_button').prop("disabled", true)
+    $('#delete_selected_button').prop("disabled", true)
 
+
+  #Select all checkboxes created by current logged in user
   $("a#check_mine").click ->
     root = $('#dataset_table')
     root.find("[id^=lbl_]").each (i,j) ->
       $(j)[0].MaterialCheckbox.uncheck()
-    root.find(".mine").each (i,j) ->
+    root.find(".lbl-mine").each (i,j) ->
       $(j)[0].MaterialCheckbox.check()
-    if root.find(".mine").length isnt 0
-      $('#vis_button').prop("disabled",false)
-      $('#export_button').prop("disabled",false)
+    if root.find(".lbl-mine").length isnt 0
+      $('#vis_button').prop("disabled", false)
+      $('#export_button').prop("disabled", false)
+      $('#delete_selected_button').prop("disabled", false)
     else
-      $('#vis_button').prop("disabled",true)
-      $('#export_button').prop("disabled",true)
+      $('#vis_button').prop("disabled", true)
+      $('#export_button').prop("disabled", true)
+      $('#delete_selected_button').prop("disabled", true)
+      
   $("a.check_id").click ->
     root = $('#dataset_table')
-    $('#vis_button').prop("disabled",true)
-    $('#export_button').prop("disabled",true)
+    $('#vis_button').prop("disabled", true)
+    $('#export_button').prop("disabled", true)
+    $('#delete_selected_button').prop("disabled", true)
     root.find("[id^=lbl_]").each (i,j) ->
       $(j)[0].MaterialCheckbox.uncheck()
     root.find('tr').each (i,j) =>
       if $(j).find('.key').attr('title') is $(this).attr('m-title')
         $(j).find("[id^=lbl_]")[0].MaterialCheckbox.check()
-        $('#vis_button').prop("disabled",false)
-        $('#export_button').prop("disabled",false)
+        $('#vis_button').prop("disabled", false)
+        $('#export_button').prop("disabled", false)
+        $('#delete_selected_button').prop("disabled", false)
+
   #Turn off visualize button on page load, and when nothings checked
   check_for_selection = ->
     should_disable = true
@@ -147,6 +161,7 @@ IS.onReady "projects/show", ->
         $('#export_button').prop("disabled",false)
       $('#vis_button').prop("disabled", should_disable)
       $('#export_button').prop("disabled", should_disable)
+      $('#delete_selected_button').prop("disabled", should_disable)
 
   check_for_selection()
 
@@ -154,8 +169,33 @@ IS.onReady "projects/show", ->
   $('#dataset_table').find(".mdl-checkbox__input").each (i,j) ->
     $(j).click check_for_selection
 
-  # delete data sets
+  # delete selected data sets
+  $('#delete_selected_button').click (e) ->
+    targets = $(document).find(".dataset .ds_selector input:checked")
+    ds_list = (get_ds_id t for t in targets)
+    rows = []
+    for t in targets
+      if $(t).hasClass("mine") is false
+        alert("You have selected another user's data set. You may only delete data sets that belong to you.")
+        return
+      rows.push $(t).parents('tr')
 
+    dsetsAmount = ds_list.length + " data set" + (if ds_list.length == 1 then "" else "s")
+
+    if helpers.confirm_delete dsetsAmount
+      $.ajax
+        url: window.location.origin + "/delete_data_sets/" + ds_list
+        type: "delete"
+        dataType: "json"
+        success: ->
+          # reload page without scrolling back to previous position, so we can see the message at the top.
+          window.location.href = window.location.href
+        error: (msg) ->
+          response = $.parseJSON msg['responseText']
+          error_message = response.error
+          alert("There was an issue deleting the data sets: " + error_message + ". Please try again.")
+
+  # delete data sets
   $('a.data_set_delete').click (e) ->
     e.preventDefault()
 
@@ -163,6 +203,7 @@ IS.onReady "projects/show", ->
     row = $(@).parents('tr')
     p_id = url.split '/'
     p_id = p_id[ p_id.length - 1 ]
+
 
     if helpers.confirm_delete $(@).attr('name')
       $.ajax

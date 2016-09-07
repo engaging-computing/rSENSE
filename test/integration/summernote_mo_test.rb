@@ -10,6 +10,7 @@ class SummernoteMoTest < IntegrationTest
     login('kcarcia@cs.uml.edu', '12345')
     visit '/'
     click_on 'Projects'
+    find('#create-project-fab-button').click
     find(:css, '#project_title').set('Upload Images SNMO')
     click_on 'Create Project'
     assert page.has_content? 'Fields must be set up to contribute data'

@@ -18,11 +18,15 @@
     </div>
   </div>
 {{/if}}
-{{#if logYAxis}}
+{{{period}}}
+{{#if barChart}}
   <div class="vis-ctrl-subblock">
     <h4 class="vis-ctrl-subtitle">Other</h4>
     <div>
       {{> visualizations/controls/_checkbox logYAxis}}
+    </div>
+    <div>
+      {{> visualizations/controls/_checkbox histogramDensity}}
     </div>
   </div>
 {{/if}}
