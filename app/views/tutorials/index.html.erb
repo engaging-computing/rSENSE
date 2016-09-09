@@ -4,12 +4,12 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-body">
-
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title" id="myModalLabel">New Tutorial</h4>
-            </br>
-            <%= form_for @new_tutorial do |ff| %>        
-						<div class="form-group">
+            <br/>
+
+            <%= form_for @new_tutorial do |ff| %>
+            <div class="form-group">
               <div class="col-xs-6">
                 <%= ff.text_field :title, placeholder: "Title for Tutorial", class: "form-control" %>
               </div>
@@ -17,31 +17,187 @@
                 <%= ff.text_field :youtube_url, placeholder: "Embedded Youtube URL", class: "form-control" %>
               </div>
               <div class="col-xs-12" style="margin-top: 20px">
-                <%= label_tag ':category', 'Categories:'%>
+                Category:
                 <%= ff.select(:category, options_for_select([['Getting Started','Getting Started'], ['Working With Data', 'Working With Data'], ['Visualizations', 'Visualizations']]), class: "form-control") %>
               </div>
             </div>
-            
-						<div class="form-group">
+            <div class="form-group">
               <button type="submit" class="btn btn-success form-control" style="margin-top: 20px">Create Tutorial</button>
             </div>
-
-          </div> <!--Modal Body-->
-        </div> <!--Modal Content-->
-      </div> <!--Modal Dialog-->
-    </div> <!--Modal Fade-->
-  <% end %> <!--if is admin-->
+          </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
 
 <!-- Always shows a header, even in smaller screens. -->
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header" id="top">
-  
-	<header class="mdl-layout__header">
+  <header class="mdl-layout__header">
+    <div class="mdl-layout__header-row">
+      <!-- Title -->
+      <span class="mdl-layout-title">Tutorials</span>
+      <!-- Add spacer, to align navigation to the right -->
+      <div class="mdl-layout-spacer"></div>
+      <% if is_admin? %>
+      <button type="button" id="create-new-tutorial" class="btn btn-success btn-lg" data-toggle="modal" data-target="#newTutorialModal">
+        New Tutorial
+      </button>
+      <% end %>
+    </div>
   </header>
-	
   <div class="mdl-layout__drawer">
+    <span class="mdl-layout-title">Categories</span>
+    <nav class="mdl-navigation">
+      <a class="mdl-navigation__link" href="#getting_started">Getting Started</a>
+      <a class="mdl-navigation__link" href="#working_w_data">Working with Data</a>
+      <a class="mdl-navigation__link" href="#visualizations">Visualizations</a>
+    </nav>
   </div>
-
   <main class="mdl-layout__content">
-  </main>
+    <div class="page-content">
+			<div class="tutorialsContainer">
 
+			  <div style="height: 5px;" id="getting_started"></div>
+			  <h2 style="text-align: center; padding-top: 50px;">Getting Started</h2>
+			
+			  <% @tutorials.each do |tut| %>
+			    <div class="col-lg-6 col-xs-12 text-center">
+			      <div class="tutorialsContainer">
+			        
+							<!--This is a good indent space for this level-->
+							<div class="col-xs-12 text-center">
+			          <a id="getting_started"></a>
+			          <h2 style="text-align: center">Getting Started</h2>
+			          <div style="text-align: center; margin-bottom: 20px;">
+			            <button class="back_to_top" onClick="document.getElementById('top').scrollIntoView();">Back to Top</button>
+			            <br/>
+			          </div>
+			        </div>
+
+							<!--This is a good indent space for this level-->
+						  <h2 style="text-align: center; padding-top: 50px;">Working with Data</h2>
+						  <div style="height: 5px; margin-top: -160px; z-index: -2;" id="working_w_data"></div>
+						  <div style="text-align: center; margin-top:140px; margin-bottom: 20px;">
+						    <button class="back_to_top" onClick="document.getElementById('top').scrollIntoView();">Back to Top</button>
+						    <br/>
+						  </div>
+
+							<!--This is a good indent space for this level-->
+			        <% @getting_started.each do |tut| %>
+			          <div class="col-lg-6 col-xs-12 text-center">
+			            <div class="mdl-card mdl-shadow--2dp" >
+			              <div class="mdl-card__title" >
+			                <iframe width="350" height="290" src="<%=tut.youtube_url%>" frameborder="0" allowfullscreen></iframe>
+			              </div>
+			              <div class="mdl-card__supporting-text">
+			                <%=tut.title%>
+			              </div>
+			              <div class="mdl-card__actions mdl-card--border">
+			                <% has_img = tut.featured_media_id != nil %>
+			                <% if has_img %>
+			                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="<%= MediaObject.find(tut.featured_media_id).src %>">
+			                    View Full Written Turorial
+			                  </a>
+			                <% end %>
+			                <% if is_admin? %>
+			                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/tutorials/<%=tut.id%>/edit">
+      			              Edit Tutorial
+			                  </a>
+			                <% end %>
+			              </div>
+			            </div>
+			          </div>
+			        <% end %>
+
+							<!--This is a good indent space for this level-->
+			        <div class="col-xs-12 text-center">
+			          <a id="working_w_data"></a>
+			          <h2 style="text-align: center">Working with Data</h2>
+			          <div style="text-align: center; margin-bottom: 20px;">
+			            <button class="back_to_top" onClick="document.getElementById('top').scrollIntoView();">Back to Top</button>
+			            <br/>
+			          </div>
+			        </div>
+
+							<!--This is a good indent space for this level-->
+						  <h2 style="text-align: center; padding-top: 50px;">Visualizations</h2>
+						  <div style="height: 5px; margin-top: -160px; z-index: -2;" id="visualizations"></div>
+						  <div style="text-align: center; margin-top: 140px; margin-bottom: 20px;">
+						    <button class="back_to_top" onClick="document.getElementById('top').scrollIntoView();">Back to Top</button>
+						    <br/>
+						  </div>
+
+							<!--This is a good indent space for this level-->
+			        <% @working_with_data.each do |tut| %>
+			          <div class="col-lg-6 col-xs-12 text-center">
+			            <div class="mdl-card mdl-shadow--2dp" >
+			              <div class="mdl-card__title" >
+			                <iframe width="350" height="290" src="<%=tut.youtube_url%>" frameborder="0" allowfullscreen></iframe>
+			              </div>
+			              <div class="mdl-card__supporting-text">
+			                <%=tut.title%>
+			              </div>
+			              <div class="mdl-card__actions mdl-card--border">
+			                <% has_img = tut.featured_media_id != nil %>
+			                <% if has_img %>
+			                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="<%= MediaObject.find(tut.featured_media_id).src %>">
+			                    View Full Written Turorial
+			                  </a>
+			                <% end %>
+			                <% if is_admin? %>
+			                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/tutorials/<%=tut.id%>/edit">
+			                    Edit Tutorial
+			                  </a>
+			                <% end %>
+			              </div>
+			            </div>
+			          </div>
+			        <% end %>
+
+							<!--This is a good indent space for this level-->
+			        <div class="col-xs-12 text-center">
+			          <a id="visualizations"></a>
+			          <h2>Visualizations</h2>
+			          <div style="text-align: center; margin-bottom: 20px;">
+			            <button class="back_to_top" onClick="document.getElementById('top').scrollIntoView();">Back to Top</button>
+			            <br/>
+			          </div>
+			        </div>
+
+							<!--This is a good indent space for this level-->
+			        <% @visualization.each do |tut| %>
+			          <div class="col-lg-6 col-xs-12 text-center">
+			            <div class="mdl-card mdl-shadow--2dp" >
+			              <div class="mdl-card__title" >
+			                <iframe width="350" height="290" src="<%=tut.youtube_url%>" frameborder="0" allowfullscreen></iframe>
+			              </div>
+		      	        <div class="mdl-card__supporting-text">
+			                <%=tut.title%>
+			              </div>
+			              <div class="mdl-card__actions mdl-card--border">
+			                <% has_img = tut.featured_media_id != nil %>
+			                <% if has_img %>
+			                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="<%= MediaObject.find(tut.featured_media_id).src %>">
+			                    View Full Written Turorial
+			                  </a>
+			                <% end %>
+			                <% if is_admin? %>
+			                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/tutorials/<%=tut.id%>/edit">
+			                    Edit Tutorial
+			                  </a>
+			                <% end %>
+			              </div>
+			            </div>
+			          </div>
+			        <% end %>
+
+						</div>
+					</div>
+				<% end %>
+
+      </div>
+    </div>
+  </main>
 </div>
+
