@@ -404,6 +404,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
           display: inline-block;
           margin: 3px;
           padding: 2px 5px;
+          whitespace: nowrap;
         }
 	
         .vis-filter:hover {
