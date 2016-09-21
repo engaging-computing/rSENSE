@@ -15,7 +15,8 @@ class UsersControllerTest < ActionController::TestCase
     get :index, {},  user_id: nixon
     assert_response :success
     assert_not_nil assigns(:users)
-    assert_valid_html response.body
+    # HTML5 Validation is being skipped until the validator is fixed
+    # assert_valid_html response.body
   end
 
   test 'should get index paged' do
@@ -55,7 +56,8 @@ class UsersControllerTest < ActionController::TestCase
     kate = sign_in('user', users(:kate))
     get :show, { id: users(:kate).id },  user_id: kate
     assert_response :success
-    assert_valid_html response.body
+    # HTML5 Validation is being skipped until the validator is fixed
+    # assert_valid_html response.body
   end
 
   test 'should show user with contributions' do
