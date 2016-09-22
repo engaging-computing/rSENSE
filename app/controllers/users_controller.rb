@@ -39,13 +39,14 @@ class UsersController < ApplicationController
       end
     end
 
-    endDate = endDate + 1.day #date range is not inclusive
+    endDate = endDate + 1.day # date range is not inclusive
 
     @users = User.search(params[:search]).where(:created_at => startDate..endDate)
     logger.error @users.map(&:created_at)
     # TODO: Get the activeUsers thing working
     if params[:activeUsers] == "1"
-      @users = @users.reject { |user| user.projects.count == 0 and user.data_sets.count == 0 and user.visualizations.count == 0}
+      # grab only users who have done something
+      @users = @users.where( "projects_count > 0 OR data_sets_count > 0 OR visualizations_count > 0" )
     end
     @users = @users.paginate(page: params[:page], per_page: pagesize).order("created_at #{sort}")
     respond_to do |format|
