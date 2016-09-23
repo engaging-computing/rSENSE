@@ -24,9 +24,9 @@
           </div>
           <div class="col-lg-5" style="margin-top: 3px;">
             Find Users from 
-            <%= date_field_tag :startDate, params.has_key?(:startDate) ? params[:startDate] : "2013-08-01" %>
+            <%= date_field_tag :start_date, params.has_key?(:start_date) ? params[:start_date] : "2013-08-01" %>
             To 
-            <%= date_field_tag :endDate, params.has_key?(:endDate) ? params[:endDate] : Date.today %>
+            <%= date_field_tag :end_date, params.has_key?(:end_date) ? params[:end_date] : Date.today %>
           </div>
           <div class="col-lg-6" style="height: 40px; padding-top: 13px;">
             Show only users with contributions? 

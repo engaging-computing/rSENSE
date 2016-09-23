@@ -26,27 +26,24 @@ class UsersController < ApplicationController
     end
 
     # constrain results by date
-    startDate = Date.strptime("2013-08-01", "%Y-%m-%d")
-    endDate = Date.today
-    if !params[:startDate].nil?
-      if params[:startDate] != ""
-        startDate = Date.strptime(params[:startDate], "%Y-%m-%d")
+    start_date = Date.strptime('2013-08-01', '%Y-%m-%d')
+    end_date = Date.today
+    unless params[:start_date].nil?
+      if params[:start_date] != ''
+        start_date = Date.strptime(params[:start_date], '%Y-%m-%d')
       end
     end
-    if !params[:endDate].nil?
-      if params[:endDate] != ""
-        endDate = Date.strptime(params[:endDate], "%Y-%m-%d")
+    unless params[:end_date].nil?
+      if params[:end_date] != ''
+        end_date = Date.strptime(params[:end_date], '%Y-%m-%d')
       end
     end
 
-    endDate = endDate + 1.day # date range is not inclusive
-
-    @users = User.search(params[:search]).where(:created_at => startDate..endDate)
+    @users = User.search(params[:search]).where(created_at: start_date.beginning_of_day..end_date.end_of_day)
     logger.error @users.map(&:created_at)
-    # TODO: Get the activeUsers thing working
-    if params[:activeUsers] == "1"
+    if params[:activeUsers] == '1'
       # grab only users who have done something
-      @users = @users.where( "projects_count > 0 OR data_sets_count > 0 OR visualizations_count > 0" )
+      @users = @users.where('projects_count > 0 OR data_sets_count > 0 OR visualizations_count > 0')
     end
     @users = @users.paginate(page: params[:page], per_page: pagesize).order("created_at #{sort}")
     respond_to do |format|
