@@ -45,6 +45,7 @@ class UsersController < ApplicationController
       # grab only users who have done something
       @users = @users.where('projects_count > 0 OR data_sets_count > 0 OR visualizations_count > 0')
     end
+    @count = @users.count
     @users = @users.paginate(page: params[:page], per_page: pagesize).order("created_at #{sort}")
     respond_to do |format|
       format.html { render status: :ok }
