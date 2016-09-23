@@ -7,6 +7,20 @@
     margin-top: 10px;
   }
 
+  @media only screen and (min-width: 700px) {
+    #create-project-fab-button {
+      width: 104px;
+      height: 104px;
+    }
+
+    #fab-plus-icon {
+      font-size: 48px;
+      -ms-transform: translate(-24px,-12px);
+      -webkit-transform: translate(-24px,-12px);
+      transform: translate(-24px,-12px);
+    }
+  }
+
   #create-project-fab-button {
     background: #00CC00;
     position: fixed;
@@ -15,15 +29,6 @@
     padding-top: 25px;
     margin-bottom: 0;
     z-index: 998;
-    width: 104px;
-    height: 104px;
-  }
-
-  #fab-plus-icon {
-    font-size: 48px;
-    -ms-transform: translate(-24px,-12px);
-    -webkit-transform: translate(-24px,-12px);
-    transform: translate(-24px,-12px);
   }
 
   .create-project-inner-block {
