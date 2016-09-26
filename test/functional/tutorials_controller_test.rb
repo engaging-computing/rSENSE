@@ -63,11 +63,10 @@ class TutorialsControllerTest < ActionController::TestCase
 
   test 'should update tutorial' do
     nixon = sign_in('user', users(:nixon))
-    put :update, { id: @tutorial, tutorial: { title: @tutorial.title, category: @tutorial.category, youtube_url: @tutorial.youtube_url} },
+    put :update, { id: @tutorial, tutorial: { title: @tutorial.title, category: @tutorial.category, youtube_url: @tutorial.youtube_url } },
        user_id: nixon
     assert_redirected_to tutorial_path(assigns(:tutorial))
   end
-
 
   test 'should destroy tutorial' do
     nixon = sign_in('user', users(:nixon))
