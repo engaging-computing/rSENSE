@@ -7,8 +7,7 @@ $ ->
         query.closest('tr').after('<tr></tr>').hide()
 
     $(document).ajaxError (event, xhr, settings, error) ->
-      e = JSON.parse xhr.responseText
-      quickFlash(e["error"], 'error')
+      quickFlash('Failed to edit Display Name.', 'error')
 
     navList = []
 
