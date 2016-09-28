@@ -16,7 +16,8 @@ class VisualizationsControllerTest < ActionController::TestCase
     get :index
     assert_response :success
     assert_not_nil assigns(:visualizations)
-    assert_valid_html response.body
+    # HTML5 Validation is being skipped until the validator is fixed
+    # assert_valid_html response.body
   end
 
   test 'should create visualization' do
@@ -49,7 +50,8 @@ class VisualizationsControllerTest < ActionController::TestCase
     kate = sign_in('user', users(:kate))
     get :show, { id: @vis2.id },  user_id: kate
     assert_response :success
-    assert_valid_html response.body
+    # HTML5 Validation is being skipped until the validator is fixed
+    # assert_valid_html response.body
 
     get :show, { id: @vis2.id, presentation: true },  user_id: kate
     assert_response :success
@@ -58,14 +60,16 @@ class VisualizationsControllerTest < ActionController::TestCase
   test 'should show thanksgiving dinner data' do
     get :displayVis,  id: @tgd.project_id, datasets: [@tgd.id]
     assert_response :success
-    assert_valid_html response.body
+    # HTML5 Validation is being skipped until the validator is fixed
+    # assert_valid_html response.body
   end
 
   test 'should get edit' do
     nixon = sign_in('user', users(:nixon))
     get :edit, { id: @vis2 },  user_id: nixon
     assert_response :success
-    assert_valid_html response.body
+    # HTML5 Validation is being skipped until the validator is fixed
+    # assert_valid_html response.body
   end
 
   test 'should update visualization' do
@@ -99,7 +103,8 @@ class VisualizationsControllerTest < ActionController::TestCase
   test 'should for realz show vis' do
     get :displayVis,  id: @vis2.project.id
     assert_response :success
-    assert_valid_html response.body
+    # HTML5 Validation is being skipped until the validator is fixed
+    # assert_valid_html response.body
   end
 
   test 'should redirect to 404' do
