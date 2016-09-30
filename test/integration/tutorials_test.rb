@@ -13,8 +13,10 @@ class TutorialsTest < IntegrationTest
     login('nixon@whitehouse.gov', '12345')
     visit '/tutorials'
     assert page.has_content?('New Tutorial'), 'Admin should be able to create a tutorial'
-    find('#tutorial_title').set('Awesome Tutorial')
     click_on 'New Tutorial'
+    find('#tutorial_title').set('Awesome Tutorial')
+    find('#tutorial_youtube_url').set('https://www.youtube.com/embed/dQw4w9WgXcQ')
+    click_on 'Create Tutorial'
     assert page.has_content?('Awesome Tutorial'), 'Tutorial should be on the Tutorial Index Page'
   end
 end

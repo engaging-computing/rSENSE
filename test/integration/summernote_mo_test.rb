@@ -26,8 +26,10 @@ class SummernoteMoTest < IntegrationTest
   end
 
   test 'tutorial_image_upload' do
+		skip('Uploading images to the new tutorials has not been implemented yet')
+		tut_id = tutorials(:media_test).id
     login('nixon@whitehouse.gov', '12345')
-    visit '/tutorials/3/edit'
+    visit "/tutorials/#{tut_id}/edit"
     assert page.has_no_css? '.mo_image'
     find(:css, '#add-content-image').click
     find(:css, '.fa-code').find(:xpath, '..').click
