@@ -184,9 +184,11 @@ $ ->
         series = {
           data: datArray
           showInLegend: false # Dummy Legend used instead (see buildLegendSeries())
-          borderWidth: 4
+          borderWidth: 0
           pointWidth: null
-          pointPadding: 0
+          pointPadding: 0.05
+          minPointLength: 2 # Allows tooltips to at least show up on ~0 values
+                            # 2 is the height of the line y=0, so values =0 will not appear as > 0
           groupPadding: 0
           states:
             hover:
