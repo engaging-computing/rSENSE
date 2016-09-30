@@ -1,16 +1,18 @@
 <div class="row">
   <%= form_for(@tutorial) do |f| %>
     <div class="col-md-12">
-      <div class="form-group">
+      <div class="form-group col-xs-12">
         <strong>Title: </strong><%= f.text_field :title, class: "form-control" %>
       </div>
-      <div class="col-xs-12" style="margin-top: 20px">
+      <div class="col-xs-12" style="margin-top: 10px; margin-bottom: 30px;">
         <%= f.label ':category', 'Categories:'%>
+				<br/>
         <%= f.select(:category, options_for_select([['Getting Started','Getting Started'], ['Working With Data', 'Working With Data'], ['Visualizations', 'Visualizations']]), class: "form-control") %>
       </div>
       <div class="clear"><br></div>
-      <div class="actions">
+      <div class="actions col-xs-12">
         <%= f.submit "Submit",class: "btn btn-default" %>
+				<br/>
       </div>
     </div>
   <% end %>

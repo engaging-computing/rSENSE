@@ -55,6 +55,11 @@ class TutorialsController < ApplicationController
     @tutorial = Tutorial.find(params[:id])
   end
 
+  def show
+      redirect_to '/tutorials',
+      notice: 'Tutorial was successfully updated.'
+  end
+
   # PUT /tutorials/1
   # PUT /tutorials/1.json
   def update
