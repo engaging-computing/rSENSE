@@ -8,7 +8,6 @@ class TutorialsControllerTest < ActionController::TestCase
   test 'should get index' do
     get :index
     assert_response :success
-    assert_not_nil assigns(:tutorials)
     # HTML5 Validation is being skipped until the validator is fixed
     # assert_valid_html response.body
   end
