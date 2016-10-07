@@ -61,7 +61,7 @@ class User < ActiveRecord::Base
         dataSets:       data_sets.search('').map                      { |o| o.to_hash false },
         mediaObjects:   media_objects.map                             { |o| o.to_hash false },
         projects:       projects.search(false, show_hidden).map       { |o| o.to_hash false },
-        tutorials:      tutorials.search(false, show_hidden).map      { |o| o.to_hash false },
+        tutorials:      tutorials.search(false).map                   { |o| o.to_hash false },
         visualizations: visualizations.search(false, show_hidden).map { |o| o.to_hash false }
       )
     end

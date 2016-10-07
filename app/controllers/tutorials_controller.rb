@@ -56,8 +56,8 @@ class TutorialsController < ApplicationController
   end
 
   def show
-      redirect_to '/tutorials',
-      notice: 'Tutorial was successfully updated.'
+    redirect_to '/tutorials',
+    notice: 'Tutorial was successfully updated.'
   end
 
   # PUT /tutorials/1
