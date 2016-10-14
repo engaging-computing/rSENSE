@@ -24,7 +24,7 @@ class Visualization < ActiveRecord::Base
   before_validation :sanitize_viz
   before_save :summernote_media_objects
 
-  belongs_to :user
+  belongs_to :user, counter_cache: true
   belongs_to :project
 
   alias_attribute :owner, :user

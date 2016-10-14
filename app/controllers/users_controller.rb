@@ -11,6 +11,7 @@ class UsersController < ApplicationController
   # GET /users
   # GET /users.json
   def index
+    puts params
     # Main List
     if !params[:sort].nil?
       sort = params[:sort]
@@ -24,9 +25,28 @@ class UsersController < ApplicationController
       pagesize = 30
     end
 
-    @users = User.search(params[:search]).paginate(
-      page: params[:page], per_page: pagesize).order("created_at #{sort}")
+    # constrain results by date
+    start_date = Date.strptime('2013-08-01', '%Y-%m-%d')
+    end_date = Date.today
+    unless params[:start_date].nil?
+      if params[:start_date] != ''
+        start_date = Date.strptime(params[:start_date], '%Y-%m-%d')
+      end
+    end
+    unless params[:end_date].nil?
+      if params[:end_date] != ''
+        end_date = Date.strptime(params[:end_date], '%Y-%m-%d')
+      end
+    end
+
+    @users = User.search(params[:search]).where(created_at: start_date.beginning_of_day..end_date.end_of_day)
     logger.error @users.map(&:created_at)
+    if params[:activeUsers] == '1'
+      # grab only users who have done something
+      @users = @users.where('projects_count > 0 OR data_sets_count > 0 OR visualizations_count > 0')
+    end
+    @count = @users.count
+    @users = @users.paginate(page: params[:page], per_page: pagesize).order("created_at #{sort}")
     respond_to do |format|
       format.html { render status: :ok }
       format.json { render json: @users.map { |u| u.to_hash(false) }, status: :ok }
