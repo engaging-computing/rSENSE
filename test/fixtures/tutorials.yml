@@ -1,22 +1,19 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
-  content: MyText
   title: Tutorial One
-  featured: false
+  category: Getting Started
   user: nixon
-  hidden: false
+  youtube_url: https://www.youtube.com/embed/dQw4w9WgXcQ
 
 two:
-  content: MyText
   title: Tutorial Two
-  featured: false
+  category: Working with Data
   user: nixon
-  hidden: false
+  youtube_url: https://www.youtube.com/embed/dQw4w9WgXcQ
 
 media_test:
-  content: MyText
   title: Tutorial Three
-  featured: false
+  category: Visualizations
   user: nixon
-  hidden: false
+  youtube_url: https://www.youtube.com/embed/dQw4w9WgXcQ

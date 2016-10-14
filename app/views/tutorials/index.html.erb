@@ -1,30 +1,172 @@
+  <% if is_admin? %>
+    <!-- Button trigger modal -->
+    <div class="modal fade" id="newTutorialModal" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-body">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">New Tutorial</h4>
+            <br/>
 
-<% if is_admin? %>
-  <div class="row">
-    <%= form_for @new_tutorial do |ff| %>
-      <div class="col-md-6 text-center">
-        <div class="form-group">
-          <%= ff.text_field :title, placeholder: "Title for Tutorial", class: "form-control" %>
+            <%= form_for @new_tutorial do |ff| %>
+            <div class="form-group">
+              <div class="col-xs-6">
+                <%= ff.text_field :title, placeholder: "Title for Tutorial", class: "form-control" %>
+              </div>
+              <div class="col-xs-6">
+                <%= ff.text_field :youtube_url, placeholder: "Embedded Youtube URL", class: "form-control" %>
+              </div>
+              <div class="col-xs-12" style="margin-top: 20px">
+                Category:
+                <%= ff.select(:category, options_for_select([['Getting Started','Getting Started'], ['Working With Data', 'Working With Data'], ['Visualizations', 'Visualizations']]), class: "form-control") %>
+              </div>
+            </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-success form-control" style="margin-top: 20px">Create Tutorial</button>
+            </div>
+          </div>
+          <% end %>
         </div>
       </div>
-      <div class="col-md-6 text-center">
-        <div class="form-group">
-          <button type="submit" class="btn btn-success form-control">Create Tutorial</button>
-        </div>
-      </div>
-    <% end %>
+    </div>
+  <% end %>
+
+<!-- Always shows a header, even in smaller screens. -->
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header" id="top">
+  <header class="mdl-layout__header">
+    <div class="mdl-layout__header-row">
+      <!-- Title -->
+      <span class="mdl-layout-title">Tutorials</span>
+      <!-- Add spacer, to align navigation to the right -->
+      <div class="mdl-layout-spacer"></div>
+      <% if is_admin? %>
+      <button type="button" id="create-new-tutorial" class="btn btn-success btn-lg" data-toggle="modal" data-target="#newTutorialModal">
+        New Tutorial
+      </button>
+      <% end %>
+	    <a id="getting_started"></a>
+    </div>
+  </header>
+  <div class="mdl-layout__drawer">
+    <span class="mdl-layout-title">Categories</span>
+    <nav class="mdl-navigation">
+      <a class="mdl-navigation__link" href="#getting_started">Getting Started</a>
+      <a class="mdl-navigation__link" href="#working_w_data">Working with Data</a>
+      <a class="mdl-navigation__link" href="#visualizations">Visualizations</a>
+    </nav>
   </div>
-<% end %>
+  <main class="mdl-layout__content">
+    <div class="page-content">
+      <div class="tutorialsContainer">
 
-<div class="row">
-  <% @tutorials.each do |tut| %>
-    <%= render 'shared/article_box', {image_id: tut.featured_media_id, path: tutorial_path(tut), title: tut.name,
-      brief: '', content: tut.content, date: tut.created_at.strftime("%B %d %Y"), width: 6} %>
-  <% end %>  
+	      <!--Getting Started Section Header-->
+	      <div class="col-xs-12 text-center">
+	        <h2 style="text-align: center">Getting Started</h2>
+	      </div>
+
+	      <!--Getting Started Section Tutorials-->
+	      <% @getting_started.each do |tut| %>
+	        <div class="col-lg-6 col-xs-12 text-center">
+	          <div class="mdl-card mdl-shadow--2dp" >
+	            <div class="mdl-card__title" >
+	              <iframe width="350" height="290" src="<%=tut.youtube_url%>" frameborder="0" allowfullscreen></iframe>
+	            </div>
+	            <div class="mdl-card__supporting-text">
+	              <%=tut.title%>
+	            </div>
+	            <div class="mdl-card__actions mdl-card--border">
+	              <% has_img = tut.featured_media_id != nil %>
+	              <% if has_img %>
+	                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="<%= MediaObject.find(tut.featured_media_id).src %>">
+	                  View Full Written Turorial
+	                </a>
+	              <% end %>
+	              <% if is_admin?%>
+	                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/tutorials/<%=tut.id%>/edit">
+      	            Edit Tutorial
+	                </a>
+	              <% end %>
+	            </div>
+	          </div>
+	        </div>
+	      <% end %>
+
+	      <!--Working With Data Section Header-->
+	      <div class="col-xs-12 text-center">
+          <h2 style="text-align: center;"><a style="color:white; text-decoration: none;" name="working_w_data">_</a></h2>
+          <h2 style="text-align: center;">Working with Data</h2>
+          <div style="text-align: center; margin-bottom: 20px;">
+	          <button class="back_to_top" onClick="document.getElementById('top').scrollIntoView();">Back to Top</button>
+            <br/>
+          </div>
+        </div>
+
+	      <!--Working With Data Section Tutorials-->
+        <% @working_with_data.each do |tut| %>
+          <div class="col-lg-6 col-xs-12 text-center">
+            <div class="mdl-card mdl-shadow--2dp" >
+              <div class="mdl-card__title" >
+                <iframe width="350" height="290" src="<%=tut.youtube_url%>" frameborder="0" allowfullscreen></iframe>
+              </div>
+              <div class="mdl-card__supporting-text">
+                <%=tut.title%>
+              </div>
+              <div class="mdl-card__actions mdl-card--border">
+                <% has_img = tut.featured_media_id != nil %>
+                <% if has_img %>
+                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="<%= MediaObject.find(tut.featured_media_id).src %>">
+                    View Full Written Turorial
+                  </a>
+                <% end %>
+                <% if is_admin? %>
+                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/tutorials/<%=tut.id%>/edit">
+                    Edit Tutorial
+                  </a>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+	      <!--Visualizations Section Header-->
+        <div class="col-xs-12 text-center">
+          <h2 style="text-align: center;"><a style="color:white; text-decoration: none;" name="visualizations">_</a></h2>
+          <h2>Visualizations</h2>
+          <div style="text-align: center; margin-bottom: 20px;">
+            <button class="back_to_top" onClick="document.getElementById('top').scrollIntoView();">Back to Top</button>
+            <br/>
+          </div>
+        </div>
+
+	      <!--Visualizations Section Tutorials-->
+        <% @visualization.each do |tut| %>
+          <div class="col-lg-6 col-xs-12 text-center">
+            <div class="mdl-card mdl-shadow--2dp" >
+              <div class="mdl-card__title" >
+                <iframe width="350" height="290" src="<%=tut.youtube_url%>" frameborder="0" allowfullscreen></iframe>
+              </div>
+     	        <div class="mdl-card__supporting-text">
+                <%=tut.title%>
+              </div>
+              <div class="mdl-card__actions mdl-card--border">
+                <% has_img = tut.featured_media_id != nil %>
+                <% if has_img %>
+                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="<%= MediaObject.find(tut.featured_media_id).src %>">
+                    View Full Written Turorial
+                  </a>
+                <% end %>
+                <% if is_admin? %>
+                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/tutorials/<%=tut.id%>/edit">
+                    Edit Tutorial
+                  </a>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+      </div>
+    </div>
+  </main>
 </div>
 
-<div class="text-center">
-  <%= will_paginate @tutorials, renderer: BootstrapPagination::Rails,
-      inner_window: 1, outer_window: 0, previous_label: "<<",
-      next_label: ">>" %>
-</div>

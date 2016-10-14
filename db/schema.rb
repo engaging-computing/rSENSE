@@ -116,15 +116,13 @@ ActiveRecord::Schema.define(version: 20160922171344) do
   end
 
   create_table "tutorials", force: true do |t|
-    t.text     "content"
     t.string   "title"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
-    t.boolean  "hidden",            default: true
     t.integer  "featured_media_id"
-    t.boolean  "featured",          default: false
-    t.datetime "featured_at"
+    t.string   "youtube_url"
+    t.string   "category"
   end
 
   create_table "users", force: true do |t|
