@@ -24,7 +24,7 @@ class Project < ActiveRecord::Base
 
   has_one :view_count
 
-  belongs_to :user
+  belongs_to :user, counter_cache: true
 
   alias_attribute :name, :title
   alias_attribute :owner, :user
