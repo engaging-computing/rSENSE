@@ -7,7 +7,7 @@ $ ->
         query.closest('tr').after('<tr></tr>').hide()
 
     $(document).ajaxError (event, xhr, settings, error) ->
-      quickFlash('Failed to edit Display Name.', 'error')
+      quickFlash('Failed to edit Display Name', 'error')
 
     navList = []
 
