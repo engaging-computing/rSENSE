@@ -13,49 +13,51 @@
     </div>
   <% end %>
 
-  <div class="col-xs-12 col-sm-8 col-sm-offset-2">
-    <%= form_for @clone, url: {action: 'create'} do |ff| %>
-      <div class="panel panel-default">
+<div class="cloning-panel">
+    <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+      <%= form_for @clone, url: {action: 'create'} do |ff| %>
+        <div class="panel panel-default">
 
-        <div class="panel-heading">
-          <h1>Cloning: <%= @project.title.html_safe %></h1>
-        </div>
-
-        <div class="panel-body">
-          <div class="form-group">
-            <%= label_tag(:name, "Title:") %>
-            <%= text_field_tag :project_name,
-                @project.title.html_safe + " (clone)",
-                class: "form-control", autofocus: true %>
+          <div class="panel-heading">
+            <h1>Cloning: <%= @project.title.html_safe %></h1>
           </div>
 
-          <% if @project.data_sets.any? %>
+          <div class="panel-body">
             <div class="form-group">
-              <%= label_tag(:clone_datasets, "Clone Data Sets:") %>
-              <%= check_box_tag :clone_datasets, class: "form-control",
-                  autofocus: true %>
+              <%= label_tag(:name, "Title:") %>
+              <%= text_field_tag :project_name,
+                  @project.title.html_safe + " (clone)",
+                  class: "form-control", autofocus: true %>
             </div>
-          <% end %>
 
-          <div style="text-align:center;">
-            <span style="color:#BBB;">
-              Media objects will automatically be cloned
-              (e.g. photos, text, and files)
-            </span>
+            <% if @project.data_sets.any? %>
+              <div class="form-group">
+                <%= label_tag(:clone_datasets, "Clone Data Sets:") %>
+                <%= check_box_tag :clone_datasets, class: "form-control",
+                    autofocus: true %>
+              </div>
+            <% end %>
+
+            <div style="text-align:center;">
+              <span style="color:#BBB;">
+                Media objects will automatically be cloned
+                (e.g. photos, text, and files)
+              </span>
+            </div>
+
+            <%= hidden_field_tag(:project_id, @project.id) %>
           </div>
 
-          <%= hidden_field_tag(:project_id, @project.id) %>
+          <div class="panel-footer text-center">
+            <a href='<%= url_for @project %>'>
+              <button type="button" class="btn btn-danger"> Cancel </button>
+            </a>
+            <button type="submit" name="commit" class="btn btn-success">
+              Clone Project
+            </button>
+          </div>
         </div>
-
-        <div class="panel-footer text-center">
-          <a href='<%= url_for @project %>'>
-            <button type="button" class="btn btn-danger"> Cancel </button>
-          </a>
-          <button type="submit" name="commit" class="btn btn-success">
-            Clone Project
-          </button>
-        </div>
-      </div>
-    <% end %>
+      <% end %>
+    </div>
   </div>
 </div>
