@@ -1,3 +1,46 @@
 // Place all the styles related to the Sessions controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+}
+
+.google-or-isense {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 1.5em;
+  margin: 20px 0px;
+}
+
+.left-rule {
+  display: inline-block;
+  background-color: black; // backwards compatibility
+  background: linear-gradient(to left, black, white);
+  height: 1px;
+  width: 45%;
+}
+
+.or-label {
+  display: inline-block;
+  width: 10%;
+}
+
+.right-rule {
+  display: inline-block;
+  background-color: black; // backwards compatibility
+  background: linear-gradient(to right, black, white);
+  height: 1px;
+  width: 45%;
+}
+
+.log-in-button {
+  float: right;
+}
+
+.remember-me-label {
+  width: initial !important;
+}

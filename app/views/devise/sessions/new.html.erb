@@ -1,18 +1,24 @@
 <%= content_for(:title, "Log in to iSENSE") %>
 <%= devise_error_messages! %><br>
 
-<div class="alert alert-warning">
-  <strong>Attention!</strong> All passwords have been reset as of 4/29/16 to make way for our new user system. Please click the 'forgot password' button to create a new one if you have not already. More info is posted <a href='/news/45'>here.</a>
-</div>
-</br>
-
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
  <div class="row">
-    <div class="col-lg-6 col-lg-offset-3">
+    <div class="col-lg-5 col-lg-offset-3">
       <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3>Log in to iSENSE</h3>
+        <div class="panel-body flex-center">
+          <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--google-sign-in"
+            href='/users/auth/google_oauth2'>
+            <img class="google-logo" src='/assets/btn_google_light_normal_ios.svg'/>
+            Sign in with Google
+          </a>
         </div>
+      </div>
+      <div class="google-or-isense">
+        <div class="left-rule"></div>
+        <div class="or-label">or</div>
+        <div class="right-rule"></div>
+      </div>
+      <div class="panel panel-default">
 
         <div class="panel-body">
           <div class="form-group">
@@ -24,24 +30,14 @@
             <%= label_tag(:password, "Password #{(link_to "(forgot password)", '/users/pw_request', tabindex: -1)}:".html_safe) %><br/>
             <%= f.password_field :password, autocomplete: "off", class: "form-control" %>
           </div>
-
-          <% if devise_mapping.rememberable? -%>
-            <div class="form-group">
-              <label for="user_remember_me" class="mdl-checkbox mdl-js-checkbox">
+          <div class="form-group">
+            <% if devise_mapping.rememberable? -%>
+              <label for="user_remember_me" class="mdl-checkbox mdl-js-checkbox remember-me-label">
                 <%= f.check_box :remember_me, class: "mdl-checkbox__input" %>
                 <span >Remember me</span>
               </label>
-            </div>
-          <% end -%>
-        </div>
-        <div class="panel-footer">
-          <div class="form-group">
-            <%= f.submit "Log in", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--blue" %>
-            <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--google-sign-in"
-              href='/users/auth/google_oauth2'>
-              <img class="google-logo" src='/assets/btn_google_light_normal_ios.svg'/>
-              Sign in with Google
-            </a>
+            <% end -%>
+            <%= f.submit "Log in", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--blue log-in-button" %>
           </div>
         </div>
       </div>
