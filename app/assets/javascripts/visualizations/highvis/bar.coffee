@@ -107,15 +107,18 @@ $ ->
               # Only place tick marks under the center point of each field cluster
               positions = []
               tick = 0
-              while tick < @dataMax and positions.length < globals.configs.fieldSelection.length
+              while tick <= @dataMax and positions.length < globals.configs.fieldSelection.length
                 positions.push(tick)
                 tick += 4
               positions
             labels:
               formatter: ->
+                # The bars are always placed in numerical order by ID, so the labels must be as well
+                fieldsInOrder = for fid in data.normalFields when fid in globals.configs.fieldSelection
+                  fid
                 # Only label certain tick marks, and only if there is more than one field selected.
                 if @value % 4 == 0 and globals.configs.fieldSelection.length != 1
-                  fieldTitle(data.fields[globals.configs.fieldSelection[@value / 4]])
+                  fieldTitle(data.fields[fieldsInOrder[@value / 4]])
                 else
                   ""
           legend:
@@ -184,9 +187,11 @@ $ ->
         series = {
           data: datArray
           showInLegend: false # Dummy Legend used instead (see buildLegendSeries())
-          borderWidth: 4
+          borderWidth: 0
           pointWidth: null
-          pointPadding: 0
+          pointPadding: 0.05
+          minPointLength: 2 # Allows tooltips to at least show up on ~0 values
+                            # 2 is the height of the line y=0, so values =0 will not appear as > 0
           groupPadding: 0
           states:
             hover:

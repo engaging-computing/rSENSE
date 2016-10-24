@@ -223,10 +223,6 @@ class Grid
     wrapMethod args
 
   resizeWindow: ->
-    newHeight = $(window).height()-
-      $('#row-slickgrid-1').outerHeight() -
-      $('#row-slickgrid-2').outerHeight()
-    $('#slickgrid-container').height newHeight
     @grid.resizeCanvas()
 
   getJSON: ->

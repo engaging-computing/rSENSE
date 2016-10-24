@@ -5,11 +5,11 @@ class UploadMediaTest < IntegrationTest
   self.use_transactional_fixtures = false
 
   test 'upload media' do
+    skip('Uploading media for new tutorials not implemented yet')
     login('nixon@whitehouse.gov', '12345')
 
     # Upload media to tutorial
-    tut_id = tutorials(:media_test).id
-    visit "/tutorials/#{tut_id}"
+    visit '/tutorials'
     assert page.has_content? 'Media'
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
     find('.upload_media form').attach_file('upload', img_path)
