@@ -1,5 +1,5 @@
 Rsense::Application.routes.draw do
-  devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks', registrations: 'registrations', passwords: 'passwords' }
+  devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks', passwords: 'passwords' }
 
   get '/users/:id/contributions' => 'users#contributions'
   get '/users/:id/edit' => 'users#edit'
