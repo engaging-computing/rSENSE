@@ -141,7 +141,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-xs-6">
+              <div class="col-xs-12">
                 <table class="field-ref-table">
                   <thead>
                     <tr>
@@ -156,15 +156,15 @@
                   <tbody id="field-refs">
                     <% @field_refs.each do |field| %>
                       <tr>
-                        <td><%= field[0] %></td>
-                        <td><%= field[1] %></td>
-                        <td><%= field[2] %></td>
+                        <% 3.times do |x| %>
+                            <td title="<%= field[x] %>"><%= field[x] %></td>
+                        <% end %>
                       </tr>
                     <% end %>
                   </tbody>
                 </table>
               </div>
-              <div class="col-xs-6">
+              <div class="col-xs-12">
                 <table class="field-ref-table">
                   <thead>
                     <tr>

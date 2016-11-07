@@ -270,7 +270,7 @@ generateRefNames = (index) ->
       name = row.find('td:nth-child(2) > input').val().trim()
       type = row.find('td:nth-child(3)').text().trim()
       refName = row.find('.refname').val().trim()
-      newRow = $("<tr><td>#{name}</td><td>#{refName}</td><td>#{type}</td></tr>")
+      newRow = $("<tr><td title=\"#{name}\">#{name}</td><td title=\"#{refName}\">#{refName}</td><td title=\"#{type}\">#{type}</td></tr>")
       ffRefs.append(newRow)
 
 showErrors = (errors) ->
