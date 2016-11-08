@@ -277,6 +277,21 @@ $ ->
       else
         null
 
+    data.getStandardDeviation = (fieldIndex, groupIndices, dp) ->
+      if groupIndices?
+        if typeof groupIndices is 'number' then groupIndices = [groupIndices]
+        rawData = @multiGroupSelector(fieldIndex, groupIndices, dp)
+      else
+        rawData = dp.map (p) -> p[fieldIndex]
+
+      if rawData.length > 0
+        mean = (rawData.reduce (a,b) -> a + b) / rawData.length
+        variance = (rawData.reduce(((a,b) -> a + Math.pow(b - mean, 2)), 0)) / rawData.length
+        stddev = Math.sqrt(variance)
+        data.precisionFilter(stddev)
+      else
+        null
+
     ###
     Gets the median (numeric) value for the given field index.
     All included datapoints must pass the given filter (defaults to all datapoints).
