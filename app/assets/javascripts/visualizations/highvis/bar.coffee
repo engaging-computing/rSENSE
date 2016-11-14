@@ -183,13 +183,31 @@ $ ->
             
           xCluster += 4
           pos = 1
+
+        # In order to set a max width to bars, we need to dynamically calculate the pointPadding
+        # If the number of bars is six or greater, we'll stick to the default of 0.05
+        # Else, we'll calculate pointPadding to make the bars the same width as a bar would be
+        #   if there were six bars and a pointPadding of 0.05
+        # To understand pointPadding, think of a bar chart with 5 bars. The width of the graph is
+        #   divided into 5 columns, and the bar is placed inside this column. The bar is centered
+        #   on its respective column, with space on either side (padding) equal to the pointPadding.
+        #   For example, if the pointPadding is 5% (0.05), and there are ten bars, each bar sits in
+        #   a column whose width is 10% of the graph. Each bar itself is 90% of that column, and is
+        #   centered, so that the remaining 5% of the column on either side is reserved for padding.
+        # In the case where there are less than six bars, we want each bar to be equal to 3/20 the
+        #   width of the graph, so the following calculates the padding needed.
+
+        numberOfBars = datArray.length
+        ptPadding = 0.05
+        if numberOfBars < 6
+          ptPadding = 0.5 - (0.075 * numberOfBars)
           
         series = {
           data: datArray
           showInLegend: false # Dummy Legend used instead (see buildLegendSeries())
           borderWidth: 0
           pointWidth: null
-          pointPadding: 0.05
+          pointPadding: ptPadding # In order to set a max width to bars, we need to dynamically calculate the pointPadding
           minPointLength: 2 # Allows tooltips to at least show up on ~0 values
                             # 2 is the height of the line y=0, so values =0 will not appear as > 0
           groupPadding: 0
