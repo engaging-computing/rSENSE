@@ -156,9 +156,9 @@
                   <tbody id="field-refs">
                     <% @field_refs.each do |field| %>
                       <tr>
-                        <% 3.times do |x| %>
-                            <td title="<%= field[x] %>"><%= field[x] %></td>
-                        <% end %>
+                        <td title="<%= field[0] %>"><%= field[0] %></td>
+                        <td title="<%= field[1] %>"><%= field[1] %></td>
+                        <td title="<%= field[2] %>"><%= field[2] %></td>
                       </tr>
                     <% end %>
                   </tbody>
