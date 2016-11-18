@@ -198,7 +198,7 @@ $ ->
         series = {
           data: datArray
           showInLegend: false # Dummy Legend used instead (see buildLegendSeries())
-          borderWidth: 0
+          borderWidth: if @configs.histogramDensity then 4 else 0
           pointWidth: null
           pointPadding: ptPadding
           minPointLength: 2 # Allows tooltips to at least show up on ~0 values
