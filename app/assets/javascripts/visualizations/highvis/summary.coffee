@@ -49,6 +49,7 @@ $ ->
           'median': data.getMedian(@configs.displayField, groupSel, dp)
           'count':   data.getCount(@configs.displayField, groupSel, dp)
           'mean':     data.getMean(@configs.displayField, groupSel, dp)
+          'stddev': data.getStandardDeviation(@configs.displayField, groupSel, dp)
 
         ($ '#' + @canvas).html('')
         field = data.fields[@configs.displayField]
@@ -64,6 +65,13 @@ $ ->
                     <div class='panel panel-default'>
                       <div class='panel-heading'>Mean</div>
                       <div class='panel-body'>#{if analysis.mean? then analysis.mean else noData}</div>
+                    </div>
+                  </div>
+                  <div class="row">
+                  <div class="col-md-4">
+                    <div class='panel panel-default'>
+                      <div class='panel-heading'>Standard Deviation</div>
+                      <div class='panel-body'>#{if analysis.stddev? then analysis.stddev else noData}</div>
                     </div>
                   </div>
                   <div class="col-md-4">
