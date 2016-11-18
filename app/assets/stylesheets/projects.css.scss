@@ -43,6 +43,9 @@
 
   .field-ref-table {
     margin: 0 auto;
+    margin-top: 10px;
+    table-layout: fixed;
+    width: 100%;
 
     thead {
       font-weight: bold;
@@ -58,6 +61,8 @@
 
     td {
       padding: 3px 10px;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
 
     td:not(:last-child) {
