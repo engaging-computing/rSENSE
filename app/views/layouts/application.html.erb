@@ -48,7 +48,8 @@
                   title="Click to view <%= current_user.name %>'s profile page">
                 <%= link_to user_path(current_user.id) do %>
                   <% if current_user.name.length < 30 %>
-                    <%= current_user.name %>&nbsp;
+                    <span class="variable-username"><%= current_user.name %>&nbsp;</span>
+                    <span class="default-username">My Account&nbsp;</span>
                   <% else %>
                     My Account&nbsp;
                   <% end %>
