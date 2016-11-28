@@ -22,6 +22,9 @@ class ContribKeysController < ApplicationController
       @errors = @key.errors
 
       flash[:error] = 'Failed to create Contributor Key'
+      @errors.full_messages.each do |e|
+        flash[:error] << '<br>- ' << e
+      end
       redirect_to [:edit, @project]
     end
   end
