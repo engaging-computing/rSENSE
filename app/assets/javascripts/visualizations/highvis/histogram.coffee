@@ -60,15 +60,18 @@ $ ->
             text: ''
           tooltip:
             formatter: ->
-              str  = "<table>"
+              
               xField = @series.xAxis.options.title.text
               idx = data.fields.map((x) -> fieldTitle(x)).indexOf(xField)
-              str += "<tr><td>#{xField}:</td> <td>#{@point.realValue}</td></tr>"
-              str += "<tr><td>Bin:</td><td>#{@x}</td></tr>"
-              str += "<tr><td># Occurrences:</td><td>#{@total}<td></tr>"
-              if @y isnt 0
-                str += "<tr><td><div style='color:#{@series.color};'> #{@series.name}:</div></td>"
-                str += "<td>#{@y}</td></tr>"
+              str  = "<div style='width:100%;text-align:center;color:#{@series.color};'> "
+              str += "Bin #{@x}<br>Contains #{@total} Items</div><br>"
+              str += "<table>"  
+              str += "<tr><td>Group:&nbsp;</td><td>#{@series.name}</td></tr>"
+              if @y > 0
+                if @y is 1
+                  str += "<tr><td>#{xField}:&nbsp;</td><td>#{@point.realValue}</td></tr>"
+                else
+                  str += "<tr><td>Data Points:&nbsp;</td><td>#{@y} in this Bin</td></tr>"
               str += "</table>"
             useHTML: true
           plotOptions:
@@ -176,6 +179,7 @@ $ ->
         # Generate all bin data
         binObjs = {}
         binMesh = {}
+        binMeans = {}
         dp = globals.getData(true, globals.configs.activeFilters)
         for groupIndex in data.groupSelection
           selectedData = data.selector(@configs.displayField, groupIndex, dp)
