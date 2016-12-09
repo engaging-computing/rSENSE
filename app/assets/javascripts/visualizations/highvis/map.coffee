@@ -301,7 +301,7 @@ $ ->
 
           # Make sure the radius is at least 10px
           while @configs.heatmapRadius * dpp < 10
-            @configs.heatmapRadius *= 10
+            @configs.heatmapRadius *= 20
 
         # Deal with zoom area
         if @configs.savedCenter?
