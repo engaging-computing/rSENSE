@@ -407,11 +407,11 @@ class VisualizationsController < ApplicationController
 
     if field_count[NUMBER_TYPE] > 0 and format_data.count > 1
       visualizations.push 'Scatter'
-      visualizations.push 'Pie'
     end
 
     if format_data.count > 0
       visualizations.push 'Bar'
+      visualizations.push 'Pie'
       visualizations.push 'Histogram'
     end
 
