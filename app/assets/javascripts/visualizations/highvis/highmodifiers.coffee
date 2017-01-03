@@ -67,6 +67,7 @@ $ ->
 
     data.types ?=
       TIME: 1
+      NUMBER: 2
       TEXT: 3
       LOCATION: [4,5]
 
