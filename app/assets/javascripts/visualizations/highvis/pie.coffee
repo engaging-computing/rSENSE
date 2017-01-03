@@ -131,6 +131,7 @@ $ ->
         for field of data.fields
           if field["typeID"] == 2 && field["fieldID"] == 1 # if one of the fields is userdefined and numeric
             analyisTypeExcludes = [@ANALYSISTYPE_MEAN_ERROR]
+            break
         @drawToolControls(false, false, analysisTypeExcludes)
         @drawClippingControls()
         @drawSaveControls()
