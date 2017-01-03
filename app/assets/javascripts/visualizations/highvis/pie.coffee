@@ -40,7 +40,7 @@ $ ->
 
       start: () ->
         @configs.displayField = Math.min globals.configs.fieldSelection...
-        @configs.analysisType ?= @ANALYSISTYPE_COUNT
+        @configs.analysisType ?= @ANALYSISTYPE_TOTAL
         super()
 
       update: () ->
@@ -128,9 +128,11 @@ $ ->
         # If there are no number fields, then restrict pie chart to just row count analysis
         analysisTypeExcludes = [@ANALYSISTYPE_TOTAL, @ANALYSISTYPE_MAX, @ANALYSISTYPE_MIN,
           @ANALYSISTYPE_MEAN, @ANALYSISTYPE_MEAN_ERROR, @ANALYSISTYPE_MEDIAN]
-        for field of data.fields
-          if field["typeID"] == 2 && field["fieldID"] == 1 # if one of the fields is userdefined and numeric
-            analyisTypeExcludes = [@ANALYSISTYPE_MEAN_ERROR]
+        @configs.analysisType = @ANALYSISTYPE_COUNT
+        for field in data.fields
+          if field.typeID == data.types.NUMBER && field.fieldID != -1 # if one of the fields is userdefined and numeric
+            analysisTypeExcludes = [@ANALYSISTYPE_MEAN_ERROR]
+            @configs.analysisType = @ANALYSISTYPE_TOTAL
             break
         @drawToolControls(false, false, analysisTypeExcludes)
         @drawClippingControls()
