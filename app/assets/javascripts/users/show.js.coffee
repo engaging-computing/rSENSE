@@ -3,11 +3,15 @@ $ ->
     # Place all the behaviors and hooks related to the users show page here.
     $(document).ajaxSuccess (event, request, settings) ->
       query = $(event.target.activeElement)
+      #alert "SUCCESS"
+      #$( ".log" ).text( "Triggered ajaxSuccess handler. The ajax response was: " + request.responseText );
+      #alert "SUCCESS2"
       if (query.data('method') is 'delete')
         query.closest('tr').after('<tr></tr>').hide()
 
     $(document).ajaxError (event, xhr, settings, error) ->
-      quickFlash('Failed to edit Display Name', 'error')
+      #alert "FAILURE"
+      #quickFlash('Failed to edit Display Name', 'error')
 
     navList = []
 
