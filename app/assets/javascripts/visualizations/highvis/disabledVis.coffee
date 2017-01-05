@@ -79,6 +79,17 @@ $ ->
           Cannot display Bar Chart visualization
         </div>
         """
+      boxplot_err =
+        """
+        <div class='novis_message'>
+          <img src='#{window.icons["novis_boxplot"]}'>
+          <br>
+          <br>
+          Either no numeric fields were found or there were not enough data
+          <br>
+          Cannot display Boxplot Chart visualization
+        </div>
+        """
       map_err =
         """
         <div class='novis_message'>
@@ -125,6 +136,8 @@ $ ->
             $('#' + @canvas).html("<div id='vis_disabled'>#{map_err}</div>")
           when "bar-canvas"
             $('#' + @canvas).html("<div id='vis_disabled'>#{bar_err}</div>")
+          when "boxplot-canvas"
+            $('#' + @canvas).html("<div id='vis_disabled'>#{boxplot_err}</div>")
           when "histogram-canvas"
             $('#' + @canvas).html "<div id='vis_disabled'>#{histogram_err}" +
               "</div>"

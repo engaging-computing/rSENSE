@@ -340,7 +340,7 @@ class VisualizationsController < ApplicationController
     rel_vis = which_vis(has_time_data, has_loc_data, has_pics, field_count, format_data)
 
     # A list of all current visualizations
-    all_vis =  ['Map', 'Timeline', 'Scatter', 'Bar', 'Histogram', 'Pie', 'Table', 'Summary', 'Photos']
+    all_vis =  ['Map', 'Timeline', 'Scatter', 'Bar', 'Histogram', 'Pie', 'Boxplot', 'Table', 'Summary', 'Photos']
 
     # Defaut vis if one exists for the project
     default_vis = @project.default_vis.nil? ? 'none' : @project.default_vis
@@ -413,6 +413,7 @@ class VisualizationsController < ApplicationController
     if format_data.count > 0
       visualizations.push 'Bar'
       visualizations.push 'Histogram'
+      visualizations.push 'Boxplot'
     end
 
     visualizations.push 'Table'
