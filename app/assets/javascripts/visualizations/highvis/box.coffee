@@ -41,6 +41,10 @@ $ ->
       buildOptions: (animate = true) ->
         super(animate)
 
+        groups = []
+        for g, gi in data.groups when gi in data.groupSelection
+          groups.push(g)
+
         self = this
 
         @chartOptions
@@ -52,7 +56,7 @@ $ ->
           legend:
             enabled: false
           xAxis:
-            categories: data.groups
+            categories: groups
 
 
       update: ->
@@ -62,8 +66,8 @@ $ ->
         boxes = []
         index = 0
 
-        outliers = []
-        for groupIndex in data.groupSelection
+        allOutliers = []
+        for groupIndex in data.groupSelection.sort()
           median = data.getMedian(@configs.displayField, groupIndex, dp)
           q1 = data.getQ1(@configs.displayField, groupIndex, dp)
           q3 = data.getQ3(@configs.displayField, groupIndex, dp)
@@ -77,36 +81,48 @@ $ ->
 
           lowerOutliers = true
           upperOutliers = true
-          if min > lowerBound
+          if min >= lowerBound
             lowerBound = min
             lowerOutliers = false
-          if max < upperBound
+          if max <= upperBound
             upperBound = max
             upperOutliers = false
 
           boxes.push([lowerBound, q1, median, q3, upperBound])
-
+          outliers = []
 
           if lowerOutliers or upperOutliers
             for point in data.selector(@configs.displayField, groupIndex, dp)
               if point < lowerBound or point > upperBound
                 outliers.push([index + 0.15, point])
-
+            allOutliers.push({gindex: groupIndex, points: outliers})
+              
           index++
+
+        gcolors = []
+        groups = []
+        for g, gi in data.groups when gi in data.groupSelection
+          gcolors.push(globals.getColor(gi))
+          groups.push(g)
 
         boxSeries = {
           data: boxes
           colorByPoint: true
+          colors: gcolors
         }
         @chart.addSeries boxSeries, false
 
-        if outliers.length > 0
+        for o in allOutliers
           outlierSeries = {
             type: 'scatter'
-            data: outliers
+            data: o.points
+            color: globals.getColor(o.gindex)
+            marker:
+              symbol: "circle"
           }
           @chart.addSeries outlierSeries, false
 
+        @chart.xAxis[0].setCategories(groups, false)
         @chart.redraw()
 
 
