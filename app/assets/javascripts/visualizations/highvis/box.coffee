@@ -34,6 +34,8 @@ $ ->
       constructor: (@canvas) ->
         super(@canvas)
 
+        @configs.meanLine ?= false
+
       start: ->
         @configs.displayField = Math.min globals.configs.fieldSelection...
         super()
@@ -41,11 +43,30 @@ $ ->
       buildOptions: (animate = true) ->
         super(animate)
 
+        self = this
+
         groups = []
         for g, gi in data.groups when gi in data.groupSelection
           groups.push(g)
 
-        self = this
+        plotLines = [{
+              color: '#000000'
+              width: 2
+              value: 0
+             }]
+
+        if @configs.meanLine
+          dp = globals.getData(true, globals.configs.activeFilters)
+          mean = data.getMean(@configs.displayField, data.groupSelection, dp)
+          plotLines.push({
+            color: 'red'
+            width: 2
+            value: mean
+            label:
+              text: 'Mean: ' + mean
+              style:
+                color: 'gray'
+          })
 
         @chartOptions
         $.extend true, @chartOptions,
@@ -53,10 +74,39 @@ $ ->
             type: "boxplot"
           title:
             text: ""
+          tooltip:
+            formatter: ->
+              if @series.options.type == "scatter"
+                #formatter for outlier points
+                str  = "<div style='width:100%;text-align:center;"
+                str += "color:#{@series.color};'> "
+                str += "#{@series.name}</div>"
+                str += "<div style='width:100%;text-align:center;;margin-bottom:5px'>"
+                str += "Outlier</div>"
+                str += "<table><tr><td>#{@series.options.field}: "
+                str += "</td><td><strong>#{@y} \
+                #{@series.options.fieldUnit}</strong></td></tr>"
+                str += "</table>"
+              else
+                #formatter for boxes
+                str  = "<div style='width:100%;text-align:center;"
+                str += "color:#{@point.color};margin-bottom:5px'> "
+                str += "#{@point.name}</div>"
+                str += "<table>"
+                str += "<tr><td>Maximum: <strong>#{@point.high}</strong></td></tr>"
+                str += "<tr><td>Upper Quartile: <strong>#{@point.q3}</strong></td></tr>"
+                str += "<tr><td>Median: <strong>#{@point.median}</strong></td></tr>"
+                str += "<tr><td>Lower Quartile: <strong>#{@point.q1}</strong></td></tr>"
+                str += "<tr><td>Minimum: <strong>#{@point.low}</strong></td></tr>"
+                str += "</table>"
+            useHTML: true
           legend:
-            enabled: false
+            enabled: $(window).width() > 700 && data.groups.length < 30
           xAxis:
-            categories: groups
+            labels:
+              enabled: false
+          yAxis:
+            plotLines: plotLines
 
 
       update: ->
@@ -65,8 +115,9 @@ $ ->
         dp = globals.getData(true, globals.configs.activeFilters)
         boxes = []
         index = 0
-
         allOutliers = []
+        offset = if data.groupSelection.length == 1 then 0 else 0.15
+
         for groupIndex in data.groupSelection.sort()
           median = data.getMedian(@configs.displayField, groupIndex, dp)
           q1 = data.getQ1(@configs.displayField, groupIndex, dp)
@@ -88,13 +139,24 @@ $ ->
             upperBound = max
             upperOutliers = false
 
-          boxes.push([lowerBound, q1, median, q3, upperBound])
+          thisBox = {
+            x: index
+            low: lowerBound
+            q1: q1
+            median: median
+            q3: q3
+            high: upperBound
+            color: globals.getColor(groupIndex)
+            name: data.groups[groupIndex] or data.noField()
+          }
+
+          boxes.push(thisBox)
           outliers = []
 
           if lowerOutliers or upperOutliers
             for point in data.selector(@configs.displayField, groupIndex, dp)
               if point < lowerBound or point > upperBound
-                outliers.push([index + 0.15, point])
+                outliers.push([index, point])
             allOutliers.push({gindex: groupIndex, points: outliers})
               
           index++
@@ -105,39 +167,48 @@ $ ->
           gcolors.push(globals.getColor(gi))
           groups.push(g)
 
-        boxSeries = {
-          data: boxes
-          colorByPoint: true
-          colors: gcolors
-        }
-        @chart.addSeries boxSeries, false
+        if(boxes.length > 0)
+          boxSeries = {
+            data: boxes
+            type: "boxplot"
+            showInLegend: false
+          }
+          @chart.addSeries boxSeries, false
 
         for o in allOutliers
           outlierSeries = {
+            name: data.groups[o.gindex] or data.noField()
             type: 'scatter'
             data: o.points
             color: globals.getColor(o.gindex)
             marker:
               symbol: "circle"
+            showInLegend: false
+            field: fieldTitle(data.fields[@configs.displayField])
+            fieldUnit: fieldUnit(data.fields[@configs.displayField], false)
           }
           @chart.addSeries outlierSeries, false
 
-        @chart.xAxis[0].setCategories(groups, false)
+        # @chart.xAxis[0].setCategories(groups, false)
         @chart.redraw()
 
 
 
       buildLegendSeries: ->
-        count = -1
-        for f, i in data.fields when i in data.normalFields
-          count += 1
-          dummy =
+        for groupIndex in data.groupSelection.sort()
+          options =
+            # dummy series needs to be scatter, otherwise it pushes
+            # the other boxes over.
+            type: 'scatter'
+            showInLegend: true
+            color: globals.getColor(groupIndex)
             data: []
-            color: '#000'
-            visible: @configs.displayField is i
-            name: f.fieldName
-            # xAxis: 1
-            legendIndex: i
+            name: data.groups[groupIndex] or data.noField()
+            marker:
+              symbol: 'square'
+              radius: 6
+            
+          options
 
         
       drawControls: ->
@@ -153,11 +224,58 @@ $ ->
         @drawYAxisControls(globals.configs.fieldSelection,
           data.normalFields.slice(1), true, 'Fields',
           @configs.displayField, @yAxisRadioHandler)
-        #@drawToolControls()
+        @drawToolControls()
         @drawClippingControls()
         @drawSaveControls()
         $('[data-toggle="tooltip"]').tooltip();
-        
+
+      drawToolControls: ->
+        inctx = {}
+
+        if data.hasTimeData and data.timeType != data.GEO_TIME
+          inctx.period = HandlebarsTemplates[hbCtrl('period')]
+
+        inctx.meanLine =
+          id: 'mean-line'
+          logId: 'draw-mean-line'
+          label: 'Draw Line at Mean'
+
+        outctx =
+          id: 'tools-ctrls'
+          title: 'Tools'
+          body: HandlebarsTemplates[hbCtrl('box-tools')](inctx)
+
+        tools = HandlebarsTemplates[hbCtrl('body')](outctx)
+        $('#vis-ctrls').append tools
+
+        # Add material design
+        $('#vis-ctrls').find(".mdl-checkbox").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
+        $('#vis-ctrls').find(".mdl-radio").each (i,j) ->
+          componentHandler.upgradeElement($(j)[0]);
+
+        globals.configs.toolsOpen ?= false
+        initCtrlPanel('tools-ctrls', 'toolsOpen')
+
+        # Set the correct options for period:
+        $('#period-list').val(globals.configs.periodMode)
+
+        $('#period-list').change =>
+          globals.configs.periodMode = $('#period-list').val()
+          if $('#period-list').val() != 'off'
+            globals.configs.isPeriod = true
+          else
+            globals.configs.isPeriod = false
+          $( "#group-by" ).trigger( "change" )
+          @start()
+
+        if @configs.meanLine then $('#ckbx-lbl-mean-line')[0].MaterialCheckbox.check()
+
+        $('#ckbx-mean-line').click (e) =>
+          @configs.meanLine = (@configs.meanLine + 1) % 2
+          @start()
+          true
 
     if "Box" in data.relVis
       globals.box = new Box 'box-canvas'
