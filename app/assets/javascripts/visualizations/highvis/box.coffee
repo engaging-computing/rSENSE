@@ -35,6 +35,7 @@ $ ->
         super(@canvas)
 
         @configs.meanLine ?= false
+        @configs.horizontalBoxes ?= false
 
       start: ->
         @configs.displayField = Math.min globals.configs.fieldSelection...
@@ -44,10 +45,6 @@ $ ->
         super(animate)
 
         self = this
-
-        groups = []
-        for g, gi in data.groups when gi in data.groupSelection
-          groups.push(g)
 
         plotLines = [{
               color: '#000000'
@@ -62,6 +59,7 @@ $ ->
             color: 'red'
             width: 2
             value: mean
+            zIndex: 10 # draw on top
             label:
               text: 'Mean: ' + mean
               style:
@@ -72,6 +70,7 @@ $ ->
         $.extend true, @chartOptions,
           chart:
             type: "boxplot"
+            inverted: @configs.horizontalBoxes
           title:
             text: ""
           tooltip:
@@ -116,7 +115,6 @@ $ ->
         boxes = []
         index = 0
         allOutliers = []
-        offset = if data.groupSelection.length == 1 then 0 else 0.15
 
         for groupIndex in data.groupSelection.sort()
           median = data.getMedian(@configs.displayField, groupIndex, dp)
@@ -240,6 +238,11 @@ $ ->
           logId: 'draw-mean-line'
           label: 'Draw Line at Mean'
 
+        inctx.horizontalBoxes =
+          id: 'horizontal-boxes'
+          logId: 'display-horizontal-boxes'
+          label: 'Display Boxes Horizontally'
+
         outctx =
           id: 'tools-ctrls'
           title: 'Tools'
@@ -271,9 +274,15 @@ $ ->
           @start()
 
         if @configs.meanLine then $('#ckbx-lbl-mean-line')[0].MaterialCheckbox.check()
+        if @configs.horizontalBoxes then $('#ckbx-lbl-horizontal-boxes')[0].MaterialCheckbox.check()
 
         $('#ckbx-mean-line').click (e) =>
           @configs.meanLine = (@configs.meanLine + 1) % 2
+          @start()
+          true
+
+        $('#ckbx-horizontal-boxes').click (e) =>
+          @configs.horizontalBoxes = (@configs.horizontalBoxes + 1) % 2
           @start()
           true
 
