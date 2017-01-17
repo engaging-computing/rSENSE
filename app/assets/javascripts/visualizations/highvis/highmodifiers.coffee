@@ -300,12 +300,19 @@ $ ->
       else
         null
 
+    ###
+    Gets the first quartile for the given field index.
+    All included datapoints must pass the given filter (defaults to all datapoints).
+    ###
     data.getQ1 = (fieldIndex, groupIndices, dp) ->
       if groupIndices?
         if typeof groupIndices is 'number' then groupIndices = [groupIndices]
         rawData = @multiGroupSelector(fieldIndex, groupIndices, dp)
       else
         rawData = dp.map (p) -> p[fieldIndex]
+
+      if rawData.length == 1
+        return data.precisionFilter(rawData[0])
 
       rawData.sort (a, b) ->
         if a < b then -1 else 1
@@ -324,12 +331,19 @@ $ ->
       else
         null
 
+    ###
+    Gets the third quartile for the given field index.
+    All included datapoints must pass the given filter (defaults to all datapoints).
+    ###
     data.getQ3 = (fieldIndex, groupIndices, dp) ->
       if groupIndices?
         if typeof groupIndices is 'number' then groupIndices = [groupIndices]
         rawData = @multiGroupSelector(fieldIndex, groupIndices, dp)
       else
         rawData = dp.map (p) -> p[fieldIndex]
+
+      if rawData.length == 1
+        return data.precisionFilter(rawData[0])
 
       rawData.sort (a, b) ->
         if a < b then -1 else 1
