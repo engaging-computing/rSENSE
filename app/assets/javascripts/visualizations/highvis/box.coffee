@@ -60,6 +60,7 @@ $ ->
             width: 2
             value: mean
             zIndex: 10 # draw on top
+            id: 'meanLine'
             label:
               text: 'Mean: ' + mean
               style:
@@ -166,10 +167,15 @@ $ ->
           groups.push(g)
 
         if(boxes.length > 0)
+          pointWidth = null
+          if boxes.length < 3
+            pointWidth = 250 # limit the size of boxes when only a few a present
+
           boxSeries = {
             data: boxes
             type: "boxplot"
             showInLegend: false
+            pointWidth: pointWidth
           }
           @chart.addSeries boxSeries, false
 
@@ -187,7 +193,22 @@ $ ->
           }
           @chart.addSeries outlierSeries, false
 
-        # @chart.xAxis[0].setCategories(groups, false)
+        if @configs.meanLine
+          # Update the mean line
+          @chart.yAxis[0].removePlotLine("meanLine")
+          mean = data.getMean(@configs.displayField, data.groupSelection, dp)
+          @chart.yAxis[0].addPlotLine({
+            color: 'red'
+            width: 2
+            value: mean
+            zIndex: 10 # draw on top
+            id: 'meanLine'
+            label:
+              text: 'Mean: ' + mean
+              style:
+                color: 'gray'
+          })
+
         @chart.redraw()
 
 
