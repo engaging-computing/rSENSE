@@ -32,6 +32,7 @@ $table-bg-accent: #E8E8E8;
 
 .alert {
   margin-bottom: 0px;
+  word-wrap: break-word;
 }
 
 .badges {
@@ -142,6 +143,10 @@ body {
   .parts{
     text-align: left;
   }
+}
+
+#github_account, #no_github_account {
+  white-space: normal;
 }
 
 .hidden-form {
@@ -297,7 +302,6 @@ body {
   }
 
   .mdl-button--google-sign-in {
-    float: right;
     padding: 0;
     font-family: 'Roboto', sans-serif;
     background-color: #4285F4 !important;
@@ -347,9 +351,33 @@ body {
   background-color: #113;
   height: 55px;
 
-  // larger font sizes cause weird overflow errors on some names
+  // When screen is in width range, hide username on navbar and show "My Account"
+  //    to avoid overflow and vice versa
   @media screen and (max-width: 991px) and (min-width: 768px)  {
-    font-size: 0.7em;
+    .variable-username {
+      display: none;
+    }
+    .default-username {
+      display: inline-block;
+    }
+  }
+
+  @media screen and (min-width: 992px) {
+    .variable-username {
+      display: inline-block;
+    }
+    .default-username {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    .variable-username {
+      display: inline-block;
+    }
+    .default-username {
+      display: none;
+    }
   }
 
   .navbtn {
@@ -446,4 +474,9 @@ body {
 
 .word-wrap {
    word-wrap: break-word;
+}
+
+// put a red box around the recaptcha when verification fails
+.recaptcha_error ~ .g-recaptcha div div {
+  border: 2px solid red !important;
 }

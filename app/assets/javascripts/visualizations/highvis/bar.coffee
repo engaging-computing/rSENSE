@@ -183,13 +183,24 @@ $ ->
             
           xCluster += 4
           pos = 1
+
+        # In order to set a max width to bars, we need to dynamically calculate the pointPadding
+        # If there are less than six bars, make the bars as wide as they would be if there were
+        #   six bars
+        # NOTE: If/when we upgrade to highcharts v4.1.8 or later, this should be implemented with
+        #   the maxPointWidth parameter instead
+
+        numberOfBars = datArray.length
+        ptPadding = 0.05
+        if numberOfBars < 6
+          ptPadding = 0.5 - (0.075 * numberOfBars)
           
         series = {
           data: datArray
           showInLegend: false # Dummy Legend used instead (see buildLegendSeries())
-          borderWidth: 0
+          borderWidth: if @configs.histogramDensity then 4 else 0
           pointWidth: null
-          pointPadding: 0.05
+          pointPadding: ptPadding
           minPointLength: 2 # Allows tooltips to at least show up on ~0 values
                             # 2 is the height of the line y=0, so values =0 will not appear as > 0
           groupPadding: 0

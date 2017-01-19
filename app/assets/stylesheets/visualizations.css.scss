@@ -490,7 +490,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
             float: left;
           }
 
-          .mdl-checkbox__label, .mdl-radiobox__label {
+          .mdl-checkbox__label, .mdl-radio__label {
             display: block;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -537,8 +537,23 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     }
 
     .vis-tab-icon {
-      height: 32px;
-      width: 32px;
+      height: 30px;
+      width: 30px;
+    }
+
+    //reduce size of tabs on mobile view:
+    @media only screen and (max-width: 600px) {
+      .nav > li > a {
+      padding: 2px;
+      }
+    }
+
+    // Very small screens need a little bit more room
+    @media only screen and (max-width: 350px) {
+      .vis-tab-icon {
+        height: 26px;
+        width: 26px;
+      }
     }
   }
 }
