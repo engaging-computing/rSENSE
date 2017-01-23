@@ -6,15 +6,15 @@ class UploadMediaTest < IntegrationTest
 
   # Upload pdf to tutorial
   test 'upload pdf to tutorial' do
-    skip('Uploading media for new tutorials not implemented yet')
     login('nixon@whitehouse.gov', '12345')
-    visit '/tutorials'
-    assert page.has_no_content? 'Media'
+		tutorial_id = tutorials(:media_test).id
+    visit "/tutorials/#{tutorial_id}/edit"
+    assert page.has_no_content? 'Media' 'should be no media by default'
     pdf_path = Rails.root.join('test', 'CSVs', 'test.pdf')
     find('.upload_media form').attach_file('upload', pdf_path)
-    # assert page.has_content?('test.pdf'), 'File should be in list'
-    # find('.media_edit').click
-    # assert page.has_content?('test.pdf'), 'Should have gone to edit page'
+    assert page.has_content?('test.pdf'), 'File should be in list'
+    find('.media_edit').click
+    assert page.has_content?('test.pdf'), 'Should have gone to edit page'
   end
 
   # Upload jpg to tutorial should fail
