@@ -17,23 +17,6 @@ class UploadMediaTest < IntegrationTest
     assert page.has_content?('test.pdf'), 'Should have gone to edit page'
   end
 
-  # Upload jpg to tutorial should fail
-  test 'upload media to tutorial' do
-    skip('Uploading media for new tutorials not implemented yet')
-    login('nixon@whitehouse.gov', '12345')
-    visit '/tutorials'
-    assert page.has_content? 'Media'
-    img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
-    find('.upload_media form').attach_file('upload', img_path)
-    assert page.has_content?('nerdboy.jpg'), 'File should be in list'
-    find('.media_edit').click
-    assert page.has_content?('nerdboy.jpg'), 'Should have gone to edit page'
-
-    find('.upload_media form').attach_file('upload', html_path)
-    assert page.has_no_content?('test.html'), 'File should be in list'
-    assert page.has_content?('Sorry, html is not a supported file type.'), 'Unsupported file type failed.'
-  end
-
   # Upload media to news
   test 'upload media to news' do
     login('nixon@whitehouse.gov', '12345')
