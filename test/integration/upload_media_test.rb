@@ -7,7 +7,7 @@ class UploadMediaTest < IntegrationTest
   # Upload pdf to tutorial
   test 'upload pdf to tutorial' do
     login('nixon@whitehouse.gov', '12345')
-		tutorial_id = tutorials(:media_test).id
+    tutorial_id = tutorials(:media_test).id
     visit "/tutorials/#{tutorial_id}/edit"
     assert page.has_no_content? 'Media' 'should be no media by default'
     pdf_path = Rails.root.join('test', 'CSVs', 'test.pdf')
