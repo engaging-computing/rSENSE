@@ -5,4 +5,17 @@
     {{> visualizations/controls/_checkbox horizontalBoxes}}
   </div>
 </div>
+<div class="vis-ctrl-subblock">
+  <h4 class="vis-ctrl-subtitle">Whiskers
+    <i class="fa fa-question-circle control-tooltip" data-toggle="tooltip" data-placement="top" 
+      title="Change what the whiskers represent. This will also change which data points are considered outliers."></i>
+  </h4>
+  <div>
+    <select id="whisker-list" class="form-control">
+      <option value="iqr" data-log-id="whisker-iqr">1.5 * Interquartile Range</option>
+      <option value="std-dev" data-log-id="whisker-std-dev">One Standard Deviation from Mean</option>
+      <option value="max-min" data-log-id="whisker-max-min">Maximum and Minimum</option>
+    </select>
+  </div>
+</div>
 {{{period}}}
