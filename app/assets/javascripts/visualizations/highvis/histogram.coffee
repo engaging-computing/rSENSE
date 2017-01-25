@@ -64,7 +64,9 @@ $ ->
               xField = @series.xAxis.options.title.text
               idx = data.fields.map((x) -> fieldTitle(x)).indexOf(xField)
               str  = "<div style='width:100%;text-align:center;color:#{@series.color};'> "
-              str += "Bin #{@x}<br>Contains #{@total} Items</div><br>"
+              str += "Bin #{@x}<br>"
+              str += "Contains #{@total} Items<br>"
+              str += "Within the Range #{@x - document.getElementById("bin-size").value/2} - #{@x + document.getElementById("bin-size").value/2}</div><br>"
               str += "<table>"  
               str += "<tr><td>Group:&nbsp;</td><td>#{@series.name}</td></tr>"
               if @y > 0
