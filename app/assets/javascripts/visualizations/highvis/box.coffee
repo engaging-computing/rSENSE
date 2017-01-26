@@ -36,6 +36,7 @@ $ ->
 
         @configs.meanLine ?= false
         @configs.horizontalBoxes ?= false
+        @configs.whiskerMode ?= 'iqr'
 
       start: ->
         @configs.displayField = Math.min globals.configs.fieldSelection...
@@ -89,15 +90,27 @@ $ ->
                 str += "</table>"
               else
                 #formatter for boxes
+                topWhiskerLabel = "Q3 + 1.5 * IQR"
+                bottomWhiskerLabel = "Q1 - 1.5 * IQR"
+                if self.configs.whiskerMode == "std-dev"
+                  topWhiskerLabel = "Mean + 1 Std Dev"
+                  bottomWhiskerLabel = "Mean - 1 Std Dev"
+                else if self.configs.whiskerMode == "max-min"
+                  topWhiskerLabel = "Maximum"
+                  bottomWhiskerLabel = "Minimum"
+                if not @point.lowerOutliers
+                  bottomWhiskerLabel = "Minimum"
+                if not @point.upperOutliers
+                  topWhiskerLabel = "Maximum"
                 str  = "<div style='width:100%;text-align:center;"
                 str += "color:#{@point.color};margin-bottom:5px'> "
                 str += "#{@point.name}</div>"
                 str += "<table>"
-                str += "<tr><td>Maximum: <strong>#{@point.high}</strong></td></tr>"
+                str += "<tr><td>#{topWhiskerLabel}: <strong>#{@point.high}</strong></td></tr>"
                 str += "<tr><td>Upper Quartile: <strong>#{@point.q3}</strong></td></tr>"
                 str += "<tr><td>Median: <strong>#{@point.median}</strong></td></tr>"
                 str += "<tr><td>Lower Quartile: <strong>#{@point.q1}</strong></td></tr>"
-                str += "<tr><td>Minimum: <strong>#{@point.low}</strong></td></tr>"
+                str += "<tr><td>#{bottomWhiskerLabel}: <strong>#{@point.low}</strong></td></tr>"
                 str += "</table>"
             useHTML: true
           legend:
@@ -121,13 +134,27 @@ $ ->
           median = data.getMedian(@configs.displayField, groupIndex, dp)
           q1 = data.getQ1(@configs.displayField, groupIndex, dp)
           q3 = data.getQ3(@configs.displayField, groupIndex, dp)
+          min = data.getMin(@configs.displayField, groupIndex, dp)
+          max = data.getMax(@configs.displayField, groupIndex, dp)
           iqr = q3 - q1
 
           lowerBound = q1 - 1.5 * iqr
           upperBound = q3 + 1.5 * iqr
 
-          min = data.getMin(@configs.displayField, groupIndex, dp)
-          max = data.getMax(@configs.displayField, groupIndex, dp)
+          if @configs.whiskerMode == "std-dev"
+            stdDev = data.getStandardDeviation(@configs.displayField, groupIndex, dp)
+            mean = data.getMean(@configs.displayField, groupIndex, dp)
+            lowerBound = mean - stdDev
+            upperBound = mean + stdDev
+            
+            if lowerBound > q1
+              lowerBound = q1
+            if upperBound < q3
+              upperBound = q3
+
+          else if @configs.whiskerMode == "max-min"
+            lowerBound = min
+            upperBound = max
 
           lowerOutliers = true
           upperOutliers = true
@@ -147,6 +174,8 @@ $ ->
             high: upperBound
             color: globals.getColor(groupIndex)
             name: data.groups[groupIndex] or data.noField()
+            lowerOutliers: lowerOutliers
+            upperOutliers: upperOutliers
           }
 
           boxes.push(thisBox)
@@ -292,6 +321,13 @@ $ ->
           else
             globals.configs.isPeriod = false
           $( "#group-by" ).trigger( "change" )
+          @start()
+
+        # Set the correct option for whisker mode
+        $("label[name='whisker'][value='#{@configs.whiskerMode}']")[0].MaterialRadio.check()
+
+        $('input[name="whisker"]').click (e) =>
+          @configs.whiskerMode = e.target.value
           @start()
 
         if @configs.meanLine then $('#ckbx-lbl-mean-line')[0].MaterialCheckbox.check()
