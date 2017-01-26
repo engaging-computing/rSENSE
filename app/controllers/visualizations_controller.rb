@@ -65,7 +65,7 @@ class VisualizationsController < ApplicationController
     @data = {
       savedData:    @visualization.data,
       savedGlobals: @visualization.globals,
-      defaultVis:   paramVis || tmp['defaultVis'],
+      defaultVis:   param_vis || tmp['defaultVis'],
       relVis:       tmp['relVis']
     }
 
