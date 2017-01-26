@@ -54,12 +54,11 @@ class VisualizationsController < ApplicationController
     @visualization = Visualization.find(params[:id])
     @project = Project.find_by_id(@visualization.project_id)
     tmp = JSON.parse(@visualization.data)
-    paramVis = nil
-
+    param_vis = nil
 
     unless params[:vis].nil?
-      visName = params[:vis].capitalize
-      paramVis = @all_vis.include?(visName) ? visName : nil  
+      vis_name = params[:vis].capitalize
+      param_vis = @all_vis.include?(vis_name) ? vis_name : nil
     end
 
     # The finalized data object
