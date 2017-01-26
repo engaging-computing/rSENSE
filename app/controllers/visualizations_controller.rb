@@ -8,7 +8,6 @@ class VisualizationsController < ApplicationController
 
   before_action :set_vis_list
 
-
   def set_vis_list
     # A list of all current visualizations
     @all_vis =  ['Map', 'Timeline', 'Scatter', 'Bar', 'Histogram', 'Pie', 'Table', 'Summary', 'Photos']
