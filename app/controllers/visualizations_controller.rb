@@ -6,6 +6,14 @@ class VisualizationsController < ApplicationController
 
   after_action :allow_iframe, only: [:show, :displayVis]
 
+  before_action :set_vis_list
+
+
+  def set_vis_list
+    # A list of all current visualizations
+    @all_vis =  ['Map', 'Timeline', 'Scatter', 'Bar', 'Histogram', 'Pie', 'Table', 'Summary', 'Photos']
+  end
+
   # GET /visualizations
   # GET /visualizations.json
   def index
@@ -46,12 +54,19 @@ class VisualizationsController < ApplicationController
     @visualization = Visualization.find(params[:id])
     @project = Project.find_by_id(@visualization.project_id)
     tmp = JSON.parse(@visualization.data)
+    paramVis = nil
+
+
+    unless params[:vis].nil?
+      visName = params[:vis].capitalize
+      paramVis = @all_vis.include?(visName) ? visName : nil  
+    end
 
     # The finalized data object
     @data = {
       savedData:    @visualization.data,
       savedGlobals: @visualization.globals,
-      defaultVis:   tmp['defaultVis'],
+      defaultVis:   paramVis || tmp['defaultVis'],
       relVis:       tmp['relVis']
     }
 
@@ -339,9 +354,6 @@ class VisualizationsController < ApplicationController
 
     rel_vis = which_vis(has_time_data, has_loc_data, has_pics, field_count, format_data)
 
-    # A list of all current visualizations
-    all_vis =  ['Map', 'Timeline', 'Scatter', 'Bar', 'Histogram', 'Pie', 'Table', 'Summary', 'Photos']
-
     # Defaut vis if one exists for the project
     default_vis = @project.default_vis.nil? ? 'none' : @project.default_vis
 
@@ -349,7 +361,7 @@ class VisualizationsController < ApplicationController
     @data = { projectName: @project.title,   projectID: @project.id,
               fields: data_fields,           dataPoints: format_data,
               metadata: metadata,            relVis: rel_vis,
-              allVis: all_vis,               defaultVis: default_vis,
+              allVis: @all_vis,               defaultVis: default_vis,
               precision: @project.precision, savedGlobals: @project.globals,
               hasTimeData: time_count != 0 }
 
