@@ -72,12 +72,13 @@ $ ->
               str += "<tr><td style='text-align: right'>Group :&nbsp;</td>"
               str += "<td style='color:#{@series.color};'>#{@series.name}</td></tr>"
               if @y > 0
-                console.log @point
                 if @y is 1
+                  # Print specific value
                   str += "<tr><td style='text-align: right'>#{xField} :&nbsp;</td><td style='color:#{@series.color};'>"
                   str += if (@point.realValue == undefined) then "1 in this Bin" else "#{@point.realValue}"
                   str += "</td></tr>"
                 else
+                  # Print amount in bin
                   str += "<tr><td style='text-align: right'>Data Points :&nbsp;</td>"
                   str += "<td style='color:#{@series.color};'>#{@y} in this Bin</td></tr>"
               str += "</table>"
