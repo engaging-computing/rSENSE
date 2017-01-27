@@ -187,7 +187,6 @@ $ ->
         # Generate all bin data
         binObjs = {}
         binMesh = {}
-        binMeans = {}
         dp = globals.getData(true, globals.configs.activeFilters)
         for groupIndex in data.groupSelection
           selectedData = data.selector(@configs.displayField, groupIndex, dp)
