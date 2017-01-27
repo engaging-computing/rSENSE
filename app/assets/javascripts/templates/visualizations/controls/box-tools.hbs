@@ -1,0 +1,38 @@
+<div class="vis-ctrl-subblock">
+  <h4 class="vis-ctrl-subtitle">Box Plot Options</h4>
+  <div>
+    {{> visualizations/controls/_checkbox meanLine}}
+    {{> visualizations/controls/_checkbox horizontalBoxes}}
+  </div>
+</div>
+<div class="vis-ctrl-subblock">
+  <h4 class="vis-ctrl-subtitle">Whiskers
+    <i class="fa fa-question-circle control-tooltip" data-toggle="tooltip" data-placement="top" 
+      title="Change what the whiskers represent. This will also change which data points are considered outliers."></i>
+  </h4>
+  <div>
+    <div class="radio">
+      <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="whisker-iqr"  id="lbl-whisker-iqr" name="whisker" value="iqr">Interquartile Range
+        <input type="radio" id="whisker-iqr" class="mdl-radio__button" name="whisker" value="iqr"/>
+      </label>
+    </div>
+    <div class="radio">
+      <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="whisker-std-dev"  id="lbl-whisker-std-dev" name="whisker" value="std-dev">Standard Deviation
+        <input type="radio" id="whisker-std-dev" class="mdl-radio__button" name="whisker" value="std-dev"/>
+      </label>
+    </div>
+    <div class="radio">
+      <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="whisker-max-min"  id="lbl-whisker-max-min" name="whisker" value="max-min">Maximum and Minimum
+        <input type="radio" id="whisker-max-min" class="mdl-radio__button" name="whisker" value="max-min"/>
+      </label>
+    </div>
+  </div>
+  {{!--<div>
+    <select id="whisker-list" class="form-control">
+      <option value="iqr" data-log-id="whisker-iqr">1.5 * Interquartile Range</option>
+      <option value="std-dev" data-log-id="whisker-std-dev">One Standard Deviation from Mean</option>
+      <option value="max-min" data-log-id="whisker-max-min">Maximum and Minimum</option>
+    </select>
+  </div>--}}
+</div>
+{{{period}}}

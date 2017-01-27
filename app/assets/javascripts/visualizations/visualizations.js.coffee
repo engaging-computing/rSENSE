@@ -120,7 +120,7 @@ $ ->
     ### Hide all vis canvases to start ###
     $(can).hide() for can in ['#map-canvas', '#timeline-canvas',
       '#scatter-canvas', '#bar-canvas', '#histogram-canvas', '#pie-canvas',
-      '#table-canvas', '#summary-canvas','#viscanvas','#photos-canvas']
+      '#box-canvas', '#table-canvas', '#summary-canvas','#viscanvas','#photos-canvas']
 
     # Restore saved globals
     if data.savedGlobals?
