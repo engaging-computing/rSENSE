@@ -47,18 +47,22 @@ class VisualizationsController < ApplicationController
     end
   end
 
+  def param_vis_check(params)
+    param_vis = nil
+    unless params[:vis].nil?
+      vis_name = params[:vis].capitalize
+      param_vis = @all_vis.include?(vis_name) ? vis_name : nil
+    end
+    return param_vis
+  end
+
   # GET /visualizations/1
   # GET /visualizations/1.json
   def show
     @visualization = Visualization.find(params[:id])
     @project = Project.find_by_id(@visualization.project_id)
     tmp = JSON.parse(@visualization.data)
-    param_vis = nil
-
-    unless params[:vis].nil?
-      vis_name = params[:vis].capitalize
-      param_vis = @all_vis.include?(vis_name) ? vis_name : nil
-    end
+    param_vis = param_vis_check(params)
 
     # The finalized data object
     @data = {
@@ -355,11 +359,13 @@ class VisualizationsController < ApplicationController
     # Defaut vis if one exists for the project
     default_vis = @project.default_vis.nil? ? 'none' : @project.default_vis
 
+    param_vis = param_vis_check(params)
+
     # The finalized data object
     @data = { projectName: @project.title,   projectID: @project.id,
               fields: data_fields,           dataPoints: format_data,
               metadata: metadata,            relVis: rel_vis,
-              allVis: @all_vis,               defaultVis: default_vis,
+              allVis: @all_vis,              defaultVis: param_vis || default_vis,
               precision: @project.precision, savedGlobals: @project.globals,
               hasTimeData: time_count != 0 }
 
