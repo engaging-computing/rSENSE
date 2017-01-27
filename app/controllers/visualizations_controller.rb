@@ -53,7 +53,7 @@ class VisualizationsController < ApplicationController
       vis_name = params[:vis].capitalize
       param_vis = @all_vis.include?(vis_name) ? vis_name : nil
     end
-    return param_vis
+    param_vis
   end
 
   # GET /visualizations/1
