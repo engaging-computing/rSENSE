@@ -31,7 +31,7 @@ dry = ARGV.include? '-n'
 
 puts "New version will be v#{new_major}.#{new_minor}..."
 
-# puts "Pulling (git pull origin master)..."
+# puts "Pulling (git pull origin master)...."
 # if not dry
 #  puts `cd rSENSE && git pull origin master`
 # end
