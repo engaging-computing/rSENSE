@@ -118,8 +118,7 @@
           <% @project.tags.each do |tag| %>
             <li class="list-group-item">
               <span><%= tag.name %></span>
-              <span class="glyphicon glyphicon-remove" 
-                    id="remove-tag" 
+              <span class="glyphicon glyphicon-remove remove-tag" 
                     data-id="<%= tag.id %>">
               </span>
             </li>
