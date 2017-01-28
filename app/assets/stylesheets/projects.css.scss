@@ -113,4 +113,15 @@
     padding-bottom: 10px;
     padding-top: 50px;
   }
+
+  #project-tag-list {
+    width: 50%;
+    margin-top: 2%;
+  }
+
+  #remove-tag {
+    float: right;
+    line-height: inherit;
+    cursor:pointer;
+  }
 }

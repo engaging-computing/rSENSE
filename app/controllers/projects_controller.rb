@@ -495,6 +495,35 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def create_tag
+    tag = Tag.find_or_create_by(name: params[:name])
+    project = Project.find(params[:id])
+    project.tags << tag
+    project.save!
+    respond_to do |format|
+      msg = { :status => "ok", :message => "Success!",
+             :id => tag.id, :name => tag.name }
+      format.json  { render :json => msg }
+    end
+  end
+
+  def remove_tag
+    tag_id = params[:tagId]
+    project_id = params[:id]
+    tag = Tag.find(tag_id)
+    project = Project.find(project_id)
+    # deletes association but not tag
+    project.tags.delete(tag)
+    last_tagging = Tagging.where(tag_id: tag_id).empty?
+    if last_tagging
+      tag.delete
+    end
+    respond_to do |format|
+      msg = { :status => "ok", :message => "Success!" }
+      format.json  { render :json => msg }
+    end
+  end
+
   private
 
   # Helper function to delete hidden fields
@@ -659,4 +688,6 @@ class ProjectsController < ApplicationController
                             :lock, :updated_at, :default_vis, :precision,
                             :globals, :kml_metadata)
   end
+
+
 end

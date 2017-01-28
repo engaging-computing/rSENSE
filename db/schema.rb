@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160922171344) do
+ActiveRecord::Schema.define(version: 20170128155421) do
 
   create_table "contrib_keys", force: true do |t|
     t.string   "name",       null: false
@@ -114,6 +114,24 @@ ActiveRecord::Schema.define(version: 20160922171344) do
     t.text     "globals"
     t.text     "kml_metadata"
   end
+
+  create_table "taggings", force: true do |t|
+    t.integer  "project_id"
+    t.integer  "tag_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "taggings", ["project_id"], name: "index_taggings_on_project_id"
+  add_index "taggings", ["tag_id"], name: "index_taggings_on_tag_id"
+
+  create_table "tags", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "tags", ["name"], name: "index_tags_on_name"
 
   create_table "tutorials", force: true do |t|
     t.string   "title"

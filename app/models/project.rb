@@ -21,6 +21,8 @@ class Project < ActiveRecord::Base
   has_many :likes
   has_many :visualizations
   has_many :contrib_keys
+  has_many :taggings, inverse_of: :project
+  has_many :tags, through: :taggings
 
   has_one :view_count
 
@@ -28,6 +30,8 @@ class Project < ActiveRecord::Base
 
   alias_attribute :name, :title
   alias_attribute :owner, :user
+
+  accepts_nested_attributes_for :tags
 
   def sanitize_project
     self.content = sanitize content
