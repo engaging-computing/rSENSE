@@ -5,6 +5,6 @@ class CreateTags < ActiveRecord::Migration
 
       t.timestamps
     end
-    add_index :tags, :name, :unique => true
+    add_index :tags, :name, unique: true
   end
 end

@@ -501,9 +501,9 @@ class ProjectsController < ApplicationController
     project.tags << tag
     project.save!
     respond_to do |format|
-      msg = { :status => "ok", :message => "Success!",
-             :id => tag.id, :name => tag.name }
-      format.json  { render :json => msg }
+      msg = { status: 'ok', message: 'Success!',
+             id: tag.id, name: tag.name }
+      format.json  { render json: msg }
     end
   end
 
@@ -519,8 +519,8 @@ class ProjectsController < ApplicationController
       tag.delete
     end
     respond_to do |format|
-      msg = { :status => "ok", :message => "Success!" }
-      format.json  { render :json => msg }
+      msg = { status: 'ok', message: 'Success!' }
+      format.json  { render json: msg }
     end
   end
 
@@ -688,6 +688,4 @@ class ProjectsController < ApplicationController
                             :lock, :updated_at, :default_vis, :precision,
                             :globals, :kml_metadata)
   end
-
-
 end

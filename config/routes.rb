@@ -34,7 +34,6 @@ Rsense::Application.routes.draw do
   post '/projects/create_tag' => 'projects#create_tag'
   delete '/projects/remove_tag' => 'projects#remove_tag'
 
-
   resources :visualizations, except: [:new]
 
   resources :data_sets

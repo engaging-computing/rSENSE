@@ -1,9 +1,7 @@
 class Tag < ActiveRecord::Base
+  validates :name, uniqueness: true
+  validates :name, presence: true
 
-validates :name, uniqueness: true
-validates :name, presence: true
-
-has_many :taggings, inverse_of: :tag
-has_many :projects, through: :taggings
-
+  has_many :taggings, inverse_of: :tag
+  has_many :projects, through: :taggings
 end

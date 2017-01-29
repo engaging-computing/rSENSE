@@ -55,8 +55,8 @@ class Project < ActiveRecord::Base
     search_query = Project.joins(
       'LEFT OUTER JOIN "likes" ON "likes"."project_id" = "projects"."id"
       LEFT OUTER JOIN "view_counts" ON "view_counts"."project_id" = "projects"."id"
-      INNER JOIN "taggings" ON "taggings"."project_id" = "projects"."id"
-      INNER JOIN "tags" ON "taggings"."tag_id" = "tags"."id"
+      LEFT OUTER JOIN "taggings" ON "taggings"."project_id" = "projects"."id"
+      LEFT OUTER JOIN "tags" ON "taggings"."tag_id" = "tags"."id"
       '
       ).select(
       'projects.*, count(likes.id) as like_count, view_counts.count as views'
@@ -70,7 +70,7 @@ class Project < ActiveRecord::Base
       search_query.where(
      '(lower(projects.title) LIKE lower(?)) OR
      (lower(projects.content) LIKE lower(?)) OR
-     (lower(tags.name) LIKE lower(?))' , "%#{search}%", "%#{search}%", "%#{search}%")
+     (lower(tags.name) LIKE lower(?))', "%#{search}%", "%#{search}%", "%#{search}%")
     else
       Project.joins(
         'LEFT OUTER JOIN "likes" ON "likes"."project_id" = "projects"."id"

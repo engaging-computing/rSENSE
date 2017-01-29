@@ -131,7 +131,7 @@ ActiveRecord::Schema.define(version: 20170128155421) do
     t.datetime "updated_at"
   end
 
-  add_index "tags", ["name"], name: "index_tags_on_name"
+  add_index "tags", ["name"], name: "index_tags_on_name", unique: true
 
   create_table "tutorials", force: true do |t|
     t.string   "title"
