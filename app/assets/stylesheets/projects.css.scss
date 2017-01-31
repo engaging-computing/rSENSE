@@ -128,4 +128,13 @@
   .project-card-tags {
     min-height: 14%;
   }
+
+.card-tag-list {
+  text-overflow: clip;
+  text-overflow: ellipsis;
+  text-overflow: "…";
+  white-space: nowrap;
+  overflow: hidden;
+  }
+
 }
