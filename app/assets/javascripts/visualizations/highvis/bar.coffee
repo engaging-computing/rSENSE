@@ -37,7 +37,7 @@ $ ->
       start: ->
         @configs.analysisType ?= @ANALYSISTYPE_TOTAL
         @configs.histogramDensity ?= false
-
+        
         # Default Sort
         fs = globals.configs.fieldSelection
         @configs.sortField ?= if fs? then fs[0] else @SORT_DEFAULT
@@ -80,17 +80,23 @@ $ ->
                 #{@point.fieldUnit}</strong></td></tr>"
                 str += "</table>"
               else
+                #console.log("---------------")
+                #console.log(@configs.displayField)
+                #console.log(groupSel)
+                #console.log(dp)
+                #console.log(data.getStandardDeviation(@configs.displayField, groupSel, dp))
+                #console.log("---------------")
                 # Formatter for Bars
                 str  = "<div style='width:100%;text-align:center;"
                 if self.configs.histogramDensity
                   str += "color:#{@point.borderColor};margin-bottom:5px'> "
                 else
                   str += "color:#{@point.color};margin-bottom:5px'> "
-                str += "#{@point.name}</div>"
+                str += "<b><u>Group : #{@point.name}</u></b></div>"
                 str += "<table>"
-                str += "<tr><td>#{@point.field} "
-                str += "(#{self.analysisTypeNames[self.configs.analysisType]}): "
-                str += "</td><td><strong>#{@y} \
+                str += "<tr><td style='text-align: right'>Analysis Type :&nbsp</td><td>#{self.analysisTypeNames[self.configs.analysisType]}</td></tr>"
+                str += "<tr><td style='text-align: right'>#{@point.field} :&nbsp</td><td>#{@y}</td></tr>"
+                #str += "<tr><td style='text-align: right'>Standard Deviation :&nbsp</td><td>± #{@data.getStandardDeviation(@configs.displayField, groupSel, dp)}</td></tr>"
                 #{@point.fieldUnit}</strong></td></tr>"
                 str += "</table>"
             useHTML: true
@@ -236,8 +242,7 @@ $ ->
                 }
               else
                 mean = groupedData[fid][gid]
-                variance = barData.map((x) -> (x - mean) ** 2).reduce((x, y) -> x + y) / barData.length
-                stdDev = Math.sqrt(variance)
+                stdDev = data.getStandardDeviation(fid, gid, dp)
                 if !globals.configs.logY
                   thisError = {
                     name: "#{name} \u00B1 1 Standard Deviation"
