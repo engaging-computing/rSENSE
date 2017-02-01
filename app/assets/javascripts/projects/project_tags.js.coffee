@@ -1,6 +1,10 @@
 $ ->
   if namespace.controller is "projects" and namespace.action is "edit"
 
+    $('#enter-project-tag-name').keypress (e) ->
+      if e.keyCode == 10 or e.keyCode == 13
+        e.preventDefault()
+
     $('.remove-tag').click (e) ->
       tagId = $(e.currentTarget).data("id")
       $(e.currentTarget).parent().remove()
