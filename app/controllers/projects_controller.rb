@@ -496,7 +496,7 @@ class ProjectsController < ApplicationController
   end
 
   def create_tag
-    tag = Tag.find_or_create_by(name: params[:name])
+    tag = Tag.find_or_create_by(name: params[:name].to_s.squish)
     project = Project.find(params[:id])
     project.tags << tag
     project.save!
