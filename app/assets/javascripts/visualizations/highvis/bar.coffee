@@ -255,9 +255,6 @@ $ ->
                 }
               else
                 mean = groupedData[fid][gid]
-                console.log(data)
-                console.log(fid)
-                console.log("***")
                 stdDev = data.getStandardDeviation(fid, gid, dp)
                 if !globals.configs.logY
                   thisError = {
@@ -271,7 +268,7 @@ $ ->
                   }
                 else if mean > 0
                   thisError = {
-                    name: "{name} + 1 Standard Deviation"
+                    name: "{name}"
                     x: xCoord
                     low: mean
                     high: mean + stdDev
