@@ -254,7 +254,6 @@ $ ->
                   fieldUnit: fieldUnit(data.fields[fid], false)
                 }
               else
-                mean = groupedData[fid][gid]
                 stdDev = data.getStandardDeviation(fid, gid, dp)
                 if !globals.configs.logY
                   thisError = {
