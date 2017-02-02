@@ -101,11 +101,11 @@ $ ->
                 else
                   str += "color:#{@point.color};margin-bottom:5px'> "
                 str += "<b><u>Error Bar for Group : #{@point.name}</u></b><br>"
-                str += "Upper and Lower Bounds Represent<br>Data Point ± 1 Standard Deviation<br></div>"
+                str += "<b>Bounds Represent Data ± 1 StdDev</b><br></div>"
                 str += "<table>"
                 #str += "<tr><td style='text-align: right'>#{@point.field} :&nbsp</td><td>#{@y} ± #{@point.stdDev}</td></tr>"
                 str += "<tr><td style='text-align: right'>Upper Bound :&nbsp</td><td>#{@y + @point.stdDev}</td></tr>"
-                str += "<tr><td style='text-align: right'>Lower Bound :&nbsp</td><td>#{@y + @point.stdDev}</td></tr>"
+                str += "<tr><td style='text-align: right'>Lower Bound :&nbsp</td><td>#{@y - @point.stdDev}</td></tr>"
                 #{@point.fieldUnit}</strong></td></tr>"
                 str += "</table>" 
 
