@@ -40,18 +40,6 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test 'should get new' do
-    skip('No longer valid as of devise integration')
-  end
-
-  test 'should create user' do
-    skip('No longer valid as of devise integration')
-  end
-
-  test 'should show errors on bad attempt to create user' do
-    skip('No longer valid as of devise integration')
-  end
-
   test 'should show user' do
     kate = sign_in('user', users(:kate))
     get :show, { id: users(:kate).id },  user_id: kate
@@ -81,14 +69,6 @@ class UsersControllerTest < ActionController::TestCase
     nixon = sign_in('user', users(:nixon))
     get :show, { format: 'json', id: 'GreenGoblin' }, user_id: nixon
     assert_response :unprocessable_entity
-  end
-
-  test 'should get edit' do
-    skip('No longer valid as of devise integration')
-  end
-
-  test 'should update user' do
-    skip('No longer valid as of devise integration')
   end
 
   test 'should update bio' do
@@ -140,53 +120,5 @@ class UsersControllerTest < ActionController::TestCase
     assert_response :success
     get :contributions, {  id: users(:kate).id, filters: 'Visualizations' },  user_id: kate
     assert_response :success
-  end
-
-  test 'should validate user' do
-    skip('No longer valid as of devise integration')
-  end
-
-  test 'bad validation should 404' do
-    skip('No longer valid as of devise integration')
-  end
-
-  test 'should show password reset request form' do
-    skip('No longer valid as of devise integration')
-  end
-
-  test 'should send password reset email for email' do
-    skip('No longer valid as of devise integration')
-  end
-
-  test 'password reset URL should redirect to pw change form' do
-    skip('No longer valid as of devise integration')
-  end
-
-  test 'bad password reset URL should 404' do
-    skip('No longer valid as of devise integration')
-  end
-
-  test 'password change form should work after reset link' do
-    skip('No longer valid as of devise integration')
-  end
-
-  test 'password change form should work normally' do
-    skip('No longer valid as of devise integration')
-  end
-
-  test 'password change form should work for admin' do
-    skip('No longer valid as of devise integration')
-  end
-
-  test 'password change form should fail for other user' do
-    skip('No longer valid as of devise integration')
-  end
-
-  test 'actually change password' do
-    skip('No longer valid as of devise integration')
-  end
-
-  test 'actually change email' do
-    skip('No longer valid as of devise integration')
   end
 end
