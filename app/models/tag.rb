@@ -6,7 +6,6 @@ class Tag < ActiveRecord::Base
   has_many :projects, through: :taggings
 
   def name=(value)
-  	self[:name] = value.to_s.squish
+    self[:name] = value.to_s.squish
   end
-
 end
