@@ -70,8 +70,8 @@ $ ->
             text: ""
           tooltip:
             formatter: ->
+              # Formatter for point tooltips
               if @series.name == "histogram density"
-                # Formatter for points
                 str  = "<div style='width:100%;text-align:center;"
                 str += "color:#{@point.groupColor};margin-bottom:5px'> "
                 str += "#{@point.name}</div>"
@@ -79,14 +79,8 @@ $ ->
                 str += "</td><td><strong>#{@y} \
                 #{@point.fieldUnit}</strong></td></tr>"
                 str += "</table>"
-              else
-                #console.log("---------------")
-                #console.log(@configs.displayField)
-                #console.log(groupSel)
-                #console.log(dp)
-                #console.log(data.getStandardDeviation(@configs.displayField, groupSel, dp))
-                #console.log("---------------")
-                # Formatter for Bars
+              # Formatter for bar tooltips
+              else if @series.type == "column"
                 str  = "<div style='width:100%;text-align:center;"
                 if self.configs.histogramDensity
                   str += "color:#{@point.borderColor};margin-bottom:5px'> "
@@ -96,9 +90,25 @@ $ ->
                 str += "<table>"
                 str += "<tr><td style='text-align: right'>Analysis Type :&nbsp</td><td>#{self.analysisTypeNames[self.configs.analysisType]}</td></tr>"
                 str += "<tr><td style='text-align: right'>#{@point.field} :&nbsp</td><td>#{@y}</td></tr>"
-                #str += "<tr><td style='text-align: right'>Standard Deviation :&nbsp</td><td>± #{@data.getStandardDeviation(@configs.displayField, groupSel, dp)}</td></tr>"
+                str += "<tr><td style='text-align: right'>Standard Deviation :&nbsp</td><td>± #{@point.stdDev}</td></tr>"
                 #{@point.fieldUnit}</strong></td></tr>"
-                str += "</table>"
+                str += "</table>" 
+              # Formatter for error bar tooltips
+              else
+                str  = "<div style='width:100%;text-align:center;"
+                if self.configs.histogramDensity
+                  str += "color:#{@point.borderColor};margin-bottom:5px'> "
+                else
+                  str += "color:#{@point.color};margin-bottom:5px'> "
+                str += "<b><u>Error Bar for Group : #{@point.name}</u></b><br>"
+                str += "Upper and Lower Bounds Represent<br>Data Point ± 1 Standard Deviation<br></div>"
+                str += "<table>"
+                #str += "<tr><td style='text-align: right'>#{@point.field} :&nbsp</td><td>#{@y} ± #{@point.stdDev}</td></tr>"
+                str += "<tr><td style='text-align: right'>Upper Bound :&nbsp</td><td>#{@y + @point.stdDev}</td></tr>"
+                str += "<tr><td style='text-align: right'>Lower Bound :&nbsp</td><td>#{@y + @point.stdDev}</td></tr>"
+                #{@point.fieldUnit}</strong></td></tr>"
+                str += "</table>" 
+
             useHTML: true
           yAxis:
             type: if globals.configs.logY then 'logarithmic' else 'linear'
@@ -169,9 +179,12 @@ $ ->
         for fid in data.normalFields when fid in fieldSelection
           for gid in sortedGroupIDs when gid in data.groupSelection
             xCoord = (xCluster - 1.5) + pos * interval
+            dp = globals.getData(true, globals.configs.activeFilters)
+            stdDev = data.getStandardDeviation(fid, gid, dp)
             thisData = {
               x: xCoord
               y: groupedData[fid][gid]
+              stdDev: stdDev
               name: data.groups[gid] or data.noField()
               # field and fieldUnit are used by the tooltip
               field: fieldTitle(data.fields[fid])
@@ -233,7 +246,7 @@ $ ->
               if barData.length == 1
                 # Error bar must be present or it causes issues with other bars
                 thisError = {
-                  name: "Error for #{name}"
+                  name: "#{name}"
                   x: xCoord
                   low: barData[0]
                   high: barData[0]
@@ -242,11 +255,15 @@ $ ->
                 }
               else
                 mean = groupedData[fid][gid]
+                console.log(data)
+                console.log(fid)
+                console.log("***")
                 stdDev = data.getStandardDeviation(fid, gid, dp)
                 if !globals.configs.logY
                   thisError = {
-                    name: "#{name} \u00B1 1 Standard Deviation"
+                    name: "#{name}"
                     x: xCoord
+                    stdDev: stdDev
                     low: mean - stdDev
                     high: mean + stdDev
                     field: fieldTitle(data.fields[fid])
