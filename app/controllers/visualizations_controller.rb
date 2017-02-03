@@ -10,7 +10,7 @@ class VisualizationsController < ApplicationController
 
   def set_vis_list
     # A list of all current visualizations
-    @all_vis =  ['Map', 'Timeline', 'Scatter', 'Bar', 'Histogram', 'Pie', 'Table', 'Summary', 'Photos']
+    @all_vis =  ['Map', 'Timeline', 'Scatter', 'Bar', 'Histogram', 'Box', 'Pie', 'Table', 'Summary', 'Photos']
   end
 
   # GET /visualizations
@@ -356,12 +356,6 @@ class VisualizationsController < ApplicationController
 
     rel_vis = which_vis(has_time_data, has_loc_data, has_pics, field_count, format_data)
 
-<<<<<<< HEAD
-    # A list of all current visualizations
-    all_vis =  ['Map', 'Timeline', 'Scatter', 'Bar', 'Histogram', 'Pie', 'Box', 'Table', 'Summary', 'Photos']
-
-=======
->>>>>>> upstream/master
     # Defaut vis if one exists for the project
     default_vis = @project.default_vis.nil? ? 'none' : @project.default_vis
 
