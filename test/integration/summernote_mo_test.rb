@@ -25,20 +25,6 @@ class SummernoteMoTest < IntegrationTest
     assert page.has_css? '.mo_image'
   end
 
-  test 'tutorial_image_upload' do
-    skip('Uploading images to the new tutorials has not been implemented yet')
-    tut_id = tutorials(:media_test).id
-    login('nixon@whitehouse.gov', '12345')
-    visit "/tutorials/#{tut_id}/edit"
-    assert page.has_no_css? '.mo_image'
-    find(:css, '#add-content-image').click
-    find(:css, '.fa-code').find(:xpath, '..').click
-    find(:css, '.note-codable').set('<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" </img>')
-    click_on 'Save'
-    assert page.has_css? '.mo_image'
-    click_on 'Logout'
-  end
-
   test 'user_image_upload' do
     login('nixon@whitehouse.gov', '12345')
     find(:css, '.navbar-right > #username').click

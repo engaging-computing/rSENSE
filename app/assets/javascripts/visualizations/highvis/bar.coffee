@@ -210,7 +210,8 @@ $ ->
         }
         @chart.addSeries series, false
 
-        # Draw error bars, if option is enabled
+        # Draw "error bars", if option is enabled
+        # Error bars represent +/- 1 standard deviation
         if @configs.analysisType == @ANALYSISTYPE_MEAN_ERROR
           allErrors = []
           xCluster = 0
@@ -235,11 +236,11 @@ $ ->
                 }
               else
                 mean = groupedData[fid][gid]
-                innerStd = barData.map((x) -> (x - mean) ** 2).reduce((x, y) -> x + y)
-                stdDev = Math.sqrt((1 / (barData.length - 1)) * innerStd)
+                variance = barData.map((x) -> (x - mean) ** 2).reduce((x, y) -> x + y) / barData.length
+                stdDev = Math.sqrt(variance)
                 if !globals.configs.logY
                   thisError = {
-                    name: "Error for #{name}"
+                    name: "#{name} \u00B1 1 Standard Deviation"
                     x: xCoord
                     low: mean - stdDev
                     high: mean + stdDev
@@ -248,7 +249,7 @@ $ ->
                   }
                 else if mean > 0
                   thisError = {
-                    name: "Error for #{name}"
+                    name: "{name} + 1 Standard Deviation"
                     x: xCoord
                     low: mean
                     high: mean + stdDev

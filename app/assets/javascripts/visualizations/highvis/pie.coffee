@@ -125,7 +125,16 @@ $ ->
           @drawYAxisControls(globals.configs.fieldSelection,
             data.normalFields.slice(1), true, 'Fields', @configs.displayField,
             @yAxisRadioHandler)
-        @drawToolControls(false, false, [@ANALYSISTYPE_MEAN_ERROR])
+        # If there are no number fields, then restrict pie chart to just row count analysis
+        analysisTypeExcludes = [@ANALYSISTYPE_TOTAL, @ANALYSISTYPE_MAX, @ANALYSISTYPE_MIN,
+          @ANALYSISTYPE_MEAN, @ANALYSISTYPE_MEAN_ERROR, @ANALYSISTYPE_MEDIAN]
+        @configs.analysisType = @ANALYSISTYPE_COUNT
+        for field in data.fields
+          if field.typeID == data.types.NUMBER && field.fieldID != -1 # if one of the fields is userdefined and numeric
+            analysisTypeExcludes = [@ANALYSISTYPE_MEAN_ERROR]
+            @configs.analysisType = @ANALYSISTYPE_TOTAL
+            break
+        @drawToolControls(false, false, analysisTypeExcludes)
         @drawClippingControls()
         @drawSaveControls()
         $('[data-toggle="tooltip"]').tooltip();

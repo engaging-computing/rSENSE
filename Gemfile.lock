@@ -95,6 +95,7 @@ GEM
     bootstrap-switch-rails (3.3.2)
     browser (0.8.0)
     builder (3.2.2)
+    byebug (9.0.6)
     capybara (2.4.4)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
@@ -343,6 +344,7 @@ DEPENDENCIES
   bootstrap-sass
   bootstrap-switch-rails
   browser
+  byebug
   capybara
   capybara-screenshot
   capybara-webkit
@@ -389,3 +391,6 @@ DEPENDENCIES
   will_paginate
   will_paginate-bootstrap
   yaml_db!
+
+BUNDLED WITH
+   1.14.3

@@ -16,6 +16,9 @@ $ ->
 
     navList.push "All"
 
+    $('#edit-user-name').click ->
+      $('.alert').remove()
+
     $('#user_filter li').click ->
       $("#user_filter .active").removeClass "active"
       $(@).addClass "active"
