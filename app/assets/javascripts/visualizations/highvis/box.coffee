@@ -205,6 +205,7 @@ $ ->
             type: "boxplot"
             showInLegend: false
             pointWidth: pointWidth
+            lineWidth: 3
           }
           @chart.addSeries boxSeries, false
 
