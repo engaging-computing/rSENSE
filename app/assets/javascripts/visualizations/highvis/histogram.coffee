@@ -353,8 +353,31 @@ $ ->
             , 3000
             return
 
-          if ((@globalmax - @globalmin) / newBinSize) < @MAX_NUM_BINS
+          if ((@globalmax - @globalmin) / newBinSize) < @MAX_NUM_BINS          
             @configs.binSize = newBinSize
+ 
+            #  Update the position of the slider
+            sliderStart = init.min
+            @binNumSug = init.min
+            sliderEndValue = @defaultBinSize()
+            sliderEnd = init.max
+            @binNumSug = init.max
+            sliderStartValue = @defaultBinSize()
+            #  Boundary cases
+            if newBinSize <= sliderStartValue
+              newSliderSize = sliderStart
+            else if newBinSize >= sliderEndValue
+              newSliderSize = sliderEnd
+            #  General case
+            else
+              #  Calculate which percentage of the slider is covered
+              base = sliderEndValue - sliderStartValue
+              value = newBinSize - sliderStartValue
+              pct = Math.log(value) / Math.log(base)
+              #  Scale to the range of the slider
+              newSliderSize = pct * (sliderEnd - sliderStart) + sliderStart
+            #  Good to go
+            $('#bin-size-slider').get(0).MaterialSlider.change(newSliderSize)   
             @update()
           else
             alert('Entered bin size would result in too many bins.')
