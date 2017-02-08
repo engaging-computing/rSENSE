@@ -14,7 +14,7 @@ class DataSet < ActiveRecord::Base
 
   has_many :media_objects
 
-  belongs_to :project
+  belongs_to :project, inverse_of: :data_sets
   belongs_to :user, counter_cache: true
 
   alias_attribute :name, :title
