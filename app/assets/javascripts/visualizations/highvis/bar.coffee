@@ -143,7 +143,10 @@ $ ->
         # Otherwise, make sortable key-pairs and sort by the sortField array
         sortedGroupIDs =
           if @configs.sortField is @SORT_DEFAULT
-            i for n, i in data.groups when i in data.groupSelection
+            sortable = []
+            sortable.push [k, v]  for v, k in data.groups when k in data.groupSelection
+            sortable.sort (a,b) -> a[1].toLowerCase().localeCompare(b[1].toLowerCase())
+            Number k for [k, v] in sortable
           else
             sortable = []
             sortable.push [k, v] for k, v of groupedData[@configs.sortField]
@@ -328,7 +331,10 @@ $ ->
         # Otherwise, make sortable key-pairs and sort by the sortField array
         sortedGroupIDs =
           if @configs.sortField is @SORT_DEFAULT
-            i for n, i in data.groups when i in data.groupSelection
+            sortable = []
+            sortable.push [k, v]  for v, k in data.groups when k in data.groupSelection
+            sortable.sort (a,b) -> a[1].toLowerCase().localeCompare(b[1].toLowerCase())
+            Number k for [k, v] in sortable
           else
             sortable = []
             sortable.push [k, v] for k, v of groupedData[@configs.sortField]
