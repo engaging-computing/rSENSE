@@ -353,7 +353,7 @@ $ ->
             , 3000
             return
 
-          if ((@globalmax - @globalmin) / newBinSize) < @MAX_NUM_BINS          
+          if ((@globalmax - @globalmin) / newBinSize) < @MAX_NUM_BINS
             @configs.binSize = newBinSize
  
             #  Update the position of the slider
@@ -377,7 +377,7 @@ $ ->
               #  Scale to the range of the slider
               newSliderSize = pct * (sliderEnd - sliderStart) + sliderStart
             #  Good to go
-            $('#bin-size-slider').get(0).MaterialSlider.change(newSliderSize)   
+            $('#bin-size-slider').get(0).MaterialSlider.change(newSliderSize)
             @update()
           else
             alert('Entered bin size would result in too many bins.')
