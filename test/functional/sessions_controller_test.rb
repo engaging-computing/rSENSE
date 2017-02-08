@@ -27,5 +27,4 @@ class SessionsControllerTest < ActionController::TestCase
     assert_response :success
     assert JSON.parse(response.body)['permissions'].include? 'project'
   end
-
 end

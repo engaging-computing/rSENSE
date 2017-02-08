@@ -121,5 +121,4 @@ class UsersControllerTest < ActionController::TestCase
     get :contributions, {  id: users(:kate).id, filters: 'Visualizations' },  user_id: kate
     assert_response :success
   end
-
 end
