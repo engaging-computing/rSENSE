@@ -30,6 +30,14 @@ class TutorialsControllerTest < ActionController::TestCase
     assert_response 403
   end
 
+  test 'should show tutorial' do
+    sign_in('user', users(:nixon))
+    get :show, id: @tutorial
+    assert_redirected_to tutorials_path
+    # HTML5 Validation is being skipped until the validator is fixed
+    # assert_valid_html response.body
+  end
+
   test 'should get edit' do
     nixon = sign_in('user', users(:nixon))
     get :edit, { id: @tutorial },  user_id: nixon

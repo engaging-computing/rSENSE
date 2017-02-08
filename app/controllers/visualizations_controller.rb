@@ -6,6 +6,13 @@ class VisualizationsController < ApplicationController
 
   after_action :allow_iframe, only: [:show, :displayVis]
 
+  before_action :set_vis_list
+
+  def set_vis_list
+    # A list of all current visualizations
+    @all_vis =  ['Map', 'Timeline', 'Scatter', 'Bar', 'Histogram', 'Pie', 'Table', 'Summary', 'Photos']
+  end
+
   # GET /visualizations
   # GET /visualizations.json
   def index
@@ -40,18 +47,28 @@ class VisualizationsController < ApplicationController
     end
   end
 
+  def param_vis_check(params)
+    param_vis = nil
+    unless params[:vis].nil?
+      vis_name = params[:vis].capitalize
+      param_vis = @all_vis.include?(vis_name) ? vis_name : nil
+    end
+    param_vis
+  end
+
   # GET /visualizations/1
   # GET /visualizations/1.json
   def show
     @visualization = Visualization.find(params[:id])
     @project = Project.find_by_id(@visualization.project_id)
     tmp = JSON.parse(@visualization.data)
+    param_vis = param_vis_check(params)
 
     # The finalized data object
     @data = {
       savedData:    @visualization.data,
       savedGlobals: @visualization.globals,
-      defaultVis:   tmp['defaultVis'],
+      defaultVis:   param_vis || tmp['defaultVis'],
       relVis:       tmp['relVis']
     }
 
@@ -339,17 +356,16 @@ class VisualizationsController < ApplicationController
 
     rel_vis = which_vis(has_time_data, has_loc_data, has_pics, field_count, format_data)
 
-    # A list of all current visualizations
-    all_vis =  ['Map', 'Timeline', 'Scatter', 'Bar', 'Histogram', 'Pie', 'Table', 'Summary', 'Photos']
-
     # Defaut vis if one exists for the project
     default_vis = @project.default_vis.nil? ? 'none' : @project.default_vis
+
+    param_vis = param_vis_check(params)
 
     # The finalized data object
     @data = { projectName: @project.title,   projectID: @project.id,
               fields: data_fields,           dataPoints: format_data,
               metadata: metadata,            relVis: rel_vis,
-              allVis: all_vis,               defaultVis: default_vis,
+              allVis: @all_vis,              defaultVis: param_vis || default_vis,
               precision: @project.precision, savedGlobals: @project.globals,
               hasTimeData: time_count != 0 }
 
@@ -407,11 +423,11 @@ class VisualizationsController < ApplicationController
 
     if field_count[NUMBER_TYPE] > 0 and format_data.count > 1
       visualizations.push 'Scatter'
-      visualizations.push 'Pie'
     end
 
     if format_data.count > 0
       visualizations.push 'Bar'
+      visualizations.push 'Pie'
       visualizations.push 'Histogram'
     end
 

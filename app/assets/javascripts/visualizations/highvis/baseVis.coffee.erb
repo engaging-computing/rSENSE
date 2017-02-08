@@ -61,7 +61,7 @@ $ ->
       SORT_DEFAULT:           -1
 
       analysisTypeNames: ['Total', 'Maximum', 'Mininum', 'Mean (Average)',
-        'Mean with Error', 'Median', 'Row Count']
+        'Mean with Deviation', 'Median', 'Row Count']
 
       ###
       Start sequence used by runtime
@@ -145,7 +145,8 @@ $ ->
             when @ANALYSISTYPE_COUNT      then data.getCount
 
         for name, groupIdx in data.groups when groupIdx in data.groupSelection
-          gData[groupIdx] = analysisMethod.call(data, field, groupIdx, dp)
+          if data.getCount.call(data, field, groupIdx, dp) > 0
+            gData[groupIdx] = analysisMethod.call(data, field, groupIdx, dp)
 
         return gData
 

@@ -67,6 +67,7 @@ $ ->
 
     data.types ?=
       TIME: 1
+      NUMBER: 2
       TEXT: 3
       LOCATION: [4,5]
 
@@ -276,6 +277,11 @@ $ ->
         data.precisionFilter(result)
       else
         null
+
+    ###
+    Gets the standard deviation (numeric) value for the given field index.
+    All included datapoints must pass the given filter (defaults to all datapoints).
+    ###
 
     data.getStandardDeviation = (fieldIndex, groupIndices, dp) ->
       if groupIndices?

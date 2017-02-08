@@ -60,15 +60,27 @@ $ ->
             text: ''
           tooltip:
             formatter: ->
-              str  = "<table>"
+              
               xField = @series.xAxis.options.title.text
               idx = data.fields.map((x) -> fieldTitle(x)).indexOf(xField)
-              str += "<tr><td>#{xField}:</td> <td>#{@point.realValue}</td></tr>"
-              str += "<tr><td>Bin:</td><td>#{@x}</td></tr>"
-              str += "<tr><td># Occurrences:</td><td>#{@total}<td></tr>"
-              if @y isnt 0
-                str += "<tr><td><div style='color:#{@series.color};'> #{@series.name}:</div></td>"
-                str += "<td>#{@y}</td></tr>"
+              str  = "<div style='width:100%;text-align:center;'> "
+              str += "<b><u>Bin #{@x}</u></b><br>"
+              str += "Contains #{@total} Items<br>"
+              str += "Within the Range #{@x - document.getElementById("bin-size").value / 2}"
+              str += "- #{@x + document.getElementById("bin-size").value / 2}</div><br>"
+              str += "<table>"
+              str += "<tr><td style='text-align: right'>Group :&nbsp;</td>"
+              str += "<td style='color:#{@series.color};'>#{@series.name}</td></tr>"
+              if @y > 0
+                if @y is 1
+                  # Print specific value
+                  str += "<tr><td style='text-align: right'>#{xField} :&nbsp;</td><td style='color:#{@series.color};'>"
+                  str += if (@point.realValue == undefined) then "1 in this Bin" else "#{@point.realValue}"
+                  str += "</td></tr>"
+                else
+                  # Print amount in bin
+                  str += "<tr><td style='text-align: right'>Data Points :&nbsp;</td>"
+                  str += "<td style='color:#{@series.color};'>#{@y} in this Bin</td></tr>"
               str += "</table>"
             useHTML: true
           plotOptions:

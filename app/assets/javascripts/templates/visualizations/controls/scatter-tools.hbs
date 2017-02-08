@@ -1,5 +1,11 @@
 <div class="vis-ctrl-subblock">
-  <h4 class="vis-ctrl-subtitle">Zoom</h4>
+  <h4 class="vis-ctrl-subtitle">
+    Zoom
+    <i class="fa fa-question-circle control-tooltip"
+      data-toggle="tooltip" data-placement="right"
+      title="To zoom in, click and drag on the graph to select an area to zoom-in to.">
+    </i>
+  </h4>
   <div>
     <select id="zoom-axis-list" class="form-control">
       {{#each axes}}
@@ -96,5 +102,4 @@
       </div>
     {{/if}}
   </div>
-</div>
-  
+</div>  
