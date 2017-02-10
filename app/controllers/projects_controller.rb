@@ -62,7 +62,7 @@ class ProjectsController < ApplicationController
 
     @cloned_project = Project.select(:id, :user_id, :title).where(id: @project.cloned_from).first
     @liked_by_cur_user = Like.find_by_user_id_and_project_id(current_user, @project.id)
-    @data_sets = @project.data_sets.select('id', 'title', 'user_id', 'key', 'created_at', 'contributor_name').search(params[:search])
+    @data_sets = @project.data_sets.includes(:user).select('id', 'title', 'user_id', 'key', 'created_at', 'contributor_name').search(params[:search])
     @fields = @project.fields
     @field_count = @fields.count
     @formula_fields = @project.formula_fields

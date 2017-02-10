@@ -267,7 +267,7 @@ class VisualizationsController < ApplicationController
         end
       end
     else
-      @datasets = DataSet.where(project_id: params[:id])
+      @datasets = DataSet.includes(:user, :media_objects).where(project_id: params[:id])
     end
 
     # create special row identifier field for all datasets
@@ -325,7 +325,7 @@ class VisualizationsController < ApplicationController
         arr.push "#{dataset.title}(#{dataset.id})"
         arr.push 'All'
         arr.push ''
-        arr.push dataset.key.nil? ? "User: #{User.select(:name).find(dataset.user_id).name}" : "Key: #{dataset.key}"
+        arr.push dataset.key.nil? ? "User: #{dataset.user.name}" : "Key: #{dataset.key}"
         arr.push ''
 
         data_fields.slice(arr.length, data_fields.length).each do |field|

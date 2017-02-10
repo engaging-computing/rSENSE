@@ -16,7 +16,8 @@ class Project < ActiveRecord::Base
 
   has_many :fields, dependent: :destroy
   has_many :formula_fields, dependent: :destroy
-  has_many :data_sets, -> { order('created_at desc') }
+  has_many :data_sets, -> { order('created_at desc') },
+    inverse_of: :project
   has_many :media_objects
   has_many :likes
   has_many :visualizations
@@ -143,7 +144,7 @@ class Project < ActiveRecord::Base
       ownerName: owner.nil? ? nil : owner.name,
       ownerUrl: owner.nil? ? nil : UrlGenerator.new.user_url(owner),
       dataSetCount: data_sets.count,
-      dataSetIDs: data_sets.select(:id).map { |ds| ds.id },
+      dataSetIDs: data_sets.pluck(:id),
       fieldCount: fields.count,
       fields: fields.map { |o| o.to_hash false },
       formulaFieldCount: formula_fields.count,
@@ -156,7 +157,7 @@ class Project < ActiveRecord::Base
 
     if recurse
       h.merge!(
-        dataSets:     data_sets.map     { |o| o.to_hash false },
+        dataSets:     data_sets.includes(:user).map     { |o| o.to_hash false },
         mediaObjects: media_objects.map { |o| o.to_hash false },
         owner:        owner.to_hash(false)
       )
