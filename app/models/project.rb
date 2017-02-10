@@ -70,7 +70,7 @@ class Project < ActiveRecord::Base
       search_query.where(
      '(lower(projects.title) LIKE lower(?)) OR
      (lower(projects.content) LIKE lower(?)) OR
-     (lower(tags.name) ILIKE lower(?))', "%#{search}%", "%#{search}%", "%#{search}%")
+     (lower(tags.name) LIKE lower(?))', "%#{search}%", "%#{search}%", "%#{search}%")
     else
       Project.joins(
         'LEFT OUTER JOIN "likes" ON "likes"."project_id" = "projects"."id"
