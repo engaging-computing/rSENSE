@@ -239,9 +239,10 @@ $ ->
           allErrors = []
           xCluster = 0
           pos = 1
+          dp = globals.getData(true, globals.configs.activeFilters)
           for fid in data.normalFields when fid in fieldSelection
             for gid in sortedGroupIDs when gid in data.groupSelection
-              dp = globals.getData(true, globals.configs.activeFilters)
+              stdDev = data.getStandardDeviation(fid, gid, dp)
               barData = data.selector fid, gid, dp
               xCoord = (xCluster - 1.5) + pos * interval
               name = data.groups[gid] or data.noField()
@@ -252,6 +253,7 @@ $ ->
                 thisError = {
                   name: "#{name}"
                   x: xCoord
+                  stdDev: stdDev
                   low: barData[0]
                   high: barData[0]
                   field: fieldTitle(data.fields[fid])
@@ -259,7 +261,6 @@ $ ->
                 }
               else
                 mean = groupedData[fid][gid]
-                stdDev = data.getStandardDeviation(fid, gid, dp)
                 if !globals.configs.logY
                   thisError = {
                     name: "#{name}"
@@ -274,6 +275,7 @@ $ ->
                   thisError = {
                     name: "{name}"
                     x: xCoord
+                    stdDev: stdDev
                     low: mean
                     high: mean + stdDev
                     field: fieldTitle(data.fields[fid])
