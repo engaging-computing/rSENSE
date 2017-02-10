@@ -69,6 +69,8 @@ class UsersController < ApplicationController
 
       show_hidden = !current_user.nil? && current_user.id == @user.id
 
+      @project = Project.new
+
       respond_to do |format|
         format.html { render status: :ok }
         format.json { render json: @user.to_hash(recur, show_hidden), status: :ok }

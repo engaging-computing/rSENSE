@@ -38,6 +38,34 @@
   </div>
 
   <div class="col-lg-8">
+  <% if user_signed_in? %>
+    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--green" id="newProject" style="margin: 20px 0;" data-toggle="modal" data-target="#create-project-model">New Project</button>
+    <!-- Modal -->
+    <div id="create-project-model" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <%= form_for(@project, html: { class: "form-inline" }) do |f| %>
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Create a Project</h4>
+            </div>
+            <div class="modal-body">
+                <%= f.label :project_name, "Project Name", class:"hidden" %>
+                <%= f.text_field :title, class: "form-control wide-input",
+                    placeholder: "Project Name", :autofocus=>true %>  
+            </div>
+            <div class="modal-footer">
+              <button type="submit" name="new-project-button"
+                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect create-project-btn mdl-button--green"> Create Project
+              </button>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <% end %>
     <%= form_tag users_path, method: 'get', id: 'contribution_search', "data-user-id" => @user.id do%>
       <ul class="nav nav-tabs" id="user_filter">
         <li class="active"><a href="#" title="Search through <%=@user.name%>'s projects">My Projects</a></li>
@@ -49,15 +77,15 @@
       <div id="contributions_content">
         <input id="contribution_sort" name="sort" type="hidden" value="create dsc" />
           <div id="searchUserRow" class="input-group">
-          <span>
-            <input class="form-search form-control" id="contributions_search" name="search" type="text" />
-          </span>
-          <span class="input-group-btn">
-            <button id="Search" class="btn btn-default">
-              <i class='fa fa-search'></i>
-            </button>
-          </span>
-        </div>
+            <span>
+              <input class="form-search form-control" id="contributions_search" name="search" type="text" />
+            </span>
+            <span class="input-group-btn">
+              <button id="Search" class="btn btn-default">
+                <i class='fa fa-search'></i>
+              </button>
+            </span>
+          </div>
 
         <%= hidden_field_tag "page", params[:page].to_i %>
         <div id="contributions">
