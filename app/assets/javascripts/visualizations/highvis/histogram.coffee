@@ -371,8 +371,10 @@ $ ->
             #  General case
             else
               #  Calculate which percentage of the slider is covered
-              base = sliderEndValue - sliderStartValue
-              value = newBinSize - sliderStartValue
+              base = sliderEndValue - sliderStartValue + 1
+              #  Adds 1 to account for case where input to log would be < 1
+              #  Resultant error is negligible unless range is extreme
+              value = newBinSize - sliderStartValue + 1
               pct = Math.log(value) / Math.log(base)
               #  Scale to the range of the slider
               newSliderSize = pct * (sliderEnd - sliderStart) + sliderStart
