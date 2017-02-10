@@ -37,7 +37,7 @@ $ ->
       start: ->
         @configs.analysisType ?= @ANALYSISTYPE_TOTAL
         @configs.histogramDensity ?= false
-
+        
         # Default Sort
         fs = globals.configs.fieldSelection
         @configs.sortField ?= if fs? then fs[0] else @SORT_DEFAULT
@@ -70,8 +70,8 @@ $ ->
             text: ""
           tooltip:
             formatter: ->
+              # Formatter for point tooltips
               if @series.name == "histogram density"
-                # Formatter for points
                 str  = "<div style='width:100%;text-align:center;"
                 str += "color:#{@point.groupColor};margin-bottom:5px'> "
                 str += "#{@point.name}</div>"
@@ -79,20 +79,40 @@ $ ->
                 str += "</td><td><strong>#{@y} \
                 #{@point.fieldUnit}</strong></td></tr>"
                 str += "</table>"
-              else
-                # Formatter for Bars
+              # Formatter for bar tooltips
+              else if @series.type == "column"
                 str  = "<div style='width:100%;text-align:center;"
                 if self.configs.histogramDensity
                   str += "color:#{@point.borderColor};margin-bottom:5px'> "
                 else
                   str += "color:#{@point.color};margin-bottom:5px'> "
-                str += "#{@point.name}</div>"
+                str += "<b><u>Group : #{@point.name}</u></b></div>"
                 str += "<table>"
-                str += "<tr><td>#{@point.field} "
-                str += "(#{self.analysisTypeNames[self.configs.analysisType]}): "
-                str += "</td><td><strong>#{@y} \
+                str += "<tr><td style='text-align: right'>Analysis Type :&nbsp</td>"
+                str += "<td>#{self.analysisTypeNames[self.configs.analysisType]}</td></tr>"
+                str += "<tr><td style='text-align: right'>#{@point.field} :&nbsp</td>"
+                str += "<td>#{@y}</td></tr>"
+                str += "<tr><td style='text-align: right'>Standard Deviation :&nbsp</td>"
+                str += "<td>± #{@point.stdDev}</td></tr>"
                 #{@point.fieldUnit}</strong></td></tr>"
                 str += "</table>"
+              # Formatter for error bar tooltips
+              else
+                str  = "<div style='width:100%;text-align:center;"
+                if self.configs.histogramDensity
+                  str += "color:#{@point.borderColor};margin-bottom:5px'> "
+                else
+                  str += "color:#{@point.color};margin-bottom:5px'> "
+                str += "<b><u>Error Bar for Group : #{@point.name}</u></b><br>"
+                str += "<b>Bounds Represent Data ± 1 StdDev</b><br></div>"
+                str += "<table>"
+                str += "<tr><td style='text-align: right'>Upper Bound :&nbsp</td>"
+                str += "<td>#{@y + @point.stdDev}</td></tr>"
+                str += "<tr><td style='text-align: right'>Lower Bound :&nbsp</td>"
+                str += "<td>#{@y - @point.stdDev}</td></tr>"
+                #{@point.fieldUnit}</strong></td></tr>"
+                str += "</table>"
+
             useHTML: true
           yAxis:
             type: if globals.configs.logY then 'logarithmic' else 'linear'
@@ -163,12 +183,15 @@ $ ->
         # Bar charts are graphed at explicit x-coordinates instead of
         # implicit (and easier) categories to support the histogram density feature
         datArray = []
+        dp = globals.getData(true, globals.configs.activeFilters)
         for fid in data.normalFields when fid in fieldSelection
           for gid in sortedGroupIDs when gid in data.groupSelection
             xCoord = (xCluster - 1.5) + pos * interval
+            stdDev = data.getStandardDeviation(fid, gid, dp)
             thisData = {
               x: xCoord
               y: groupedData[fid][gid]
+              stdDev: stdDev
               name: data.groups[gid] or data.noField()
               # field and fieldUnit are used by the tooltip
               field: fieldTitle(data.fields[fid])
@@ -219,9 +242,10 @@ $ ->
           allErrors = []
           xCluster = 0
           pos = 1
+          dp = globals.getData(true, globals.configs.activeFilters)
           for fid in data.normalFields when fid in fieldSelection
             for gid in sortedGroupIDs when gid in data.groupSelection
-              dp = globals.getData(true, globals.configs.activeFilters)
+              stdDev = data.getStandardDeviation(fid, gid, dp)
               barData = data.selector fid, gid, dp
               xCoord = (xCluster - 1.5) + pos * interval
               name = data.groups[gid] or data.noField()
@@ -230,8 +254,9 @@ $ ->
               if barData.length == 1
                 # Error bar must be present or it causes issues with other bars
                 thisError = {
-                  name: "Error for #{name}"
+                  name: "#{name}"
                   x: xCoord
+                  stdDev: stdDev
                   low: barData[0]
                   high: barData[0]
                   field: fieldTitle(data.fields[fid])
@@ -239,12 +264,11 @@ $ ->
                 }
               else
                 mean = groupedData[fid][gid]
-                variance = barData.map((x) -> (x - mean) ** 2).reduce((x, y) -> x + y) / barData.length
-                stdDev = Math.sqrt(variance)
                 if !globals.configs.logY
                   thisError = {
-                    name: "#{name} \u00B1 1 Standard Deviation"
+                    name: "#{name}"
                     x: xCoord
+                    stdDev: stdDev
                     low: mean - stdDev
                     high: mean + stdDev
                     field: fieldTitle(data.fields[fid])
@@ -252,8 +276,9 @@ $ ->
                   }
                 else if mean > 0
                   thisError = {
-                    name: "{name} + 1 Standard Deviation"
+                    name: "{name}"
                     x: xCoord
+                    stdDev: stdDev
                     low: mean
                     high: mean + stdDev
                     field: fieldTitle(data.fields[fid])
