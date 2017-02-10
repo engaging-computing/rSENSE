@@ -180,10 +180,10 @@ $ ->
         # Bar charts are graphed at explicit x-coordinates instead of
         # implicit (and easier) categories to support the histogram density feature
         datArray = []
+        dp = globals.getData(true, globals.configs.activeFilters)
         for fid in data.normalFields when fid in fieldSelection
           for gid in sortedGroupIDs when gid in data.groupSelection
             xCoord = (xCluster - 1.5) + pos * interval
-            dp = globals.getData(true, globals.configs.activeFilters)
             stdDev = data.getStandardDeviation(fid, gid, dp)
             thisData = {
               x: xCoord
