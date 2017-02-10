@@ -363,6 +363,12 @@ $ ->
             sliderEnd = init.max
             @binNumSug = init.max
             sliderStartValue = @defaultBinSize()
+            #  Calculate scale to nearest power of ten
+            scale = Math.pow(10, Math.floor(Math.log(sliderStartValue) / Math.log(10)))
+            #  Scale for precision
+            sliderStartValue /= scale
+            sliderEndValue /= scale
+            newBinSize /= scale
             #  Boundary cases
             if newBinSize <= sliderStartValue
               newSliderSize = sliderStart
