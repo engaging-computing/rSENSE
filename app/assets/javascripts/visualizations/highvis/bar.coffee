@@ -107,9 +107,9 @@ $ ->
                 str += "<b>Bounds Represent Data ± 1 StdDev</b><br></div>"
                 str += "<table>"
                 str += "<tr><td style='text-align: right'>Upper Bound :&nbsp</td>"
-                str += "<td>#{@y + @point.stdDev}</td></tr>"
+                str += "<td>#{@y}</td></tr>"
                 str += "<tr><td style='text-align: right'>Lower Bound :&nbsp</td>"
-                str += "<td>#{@y - @point.stdDev}</td></tr>"
+                str += "<td>#{@y - 2 * @point.stdDev}</td></tr>"
                 #{@point.fieldUnit}</strong></td></tr>"
                 str += "</table>"
 
