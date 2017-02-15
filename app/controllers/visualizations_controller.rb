@@ -267,7 +267,9 @@ class VisualizationsController < ApplicationController
         end
       end
     else
-      @datasets = DataSet.includes(:user, :media_objects).where(project_id: params[:id])
+      @datasets = DataSet.includes(:user, media_objects: [{project: [:fields, :formula_fields, :media_objects, :data_sets, :user, :likes]},
+                  {data_set: [{project: [:fields]}, :user]}, {tutorial: [:user, :media_objects]}, {visualization: [:user, :project]},
+                  {news: [:user, :media_objects]}, :user]).where(project_id: params[:id])
     end
 
     # create special row identifier field for all datasets

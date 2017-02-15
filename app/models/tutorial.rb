@@ -43,7 +43,7 @@ class Tutorial < ActiveRecord::Base
 
     # The featured media object is the instructions pdf
     unless featured_media_id.nil?
-      h.merge!(mediaSrc: media_objects.find(featured_media_id).tn_src)
+      h.merge!(mediaSrc: media_objects.to_a.select { |i| i.id == featured_media_id }.first.tn_src)
     end
 
     if recurse

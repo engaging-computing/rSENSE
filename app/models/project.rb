@@ -137,22 +137,22 @@ class Project < ActiveRecord::Base
       path: UrlGenerator.new.project_path(self),
       hidden: hidden,
       featured: featured,
-      likeCount: likes.count,
+      likeCount: likes.length,
       content: content,
       timeAgoInWords: time_ago_in_words(created_at),
       createdAt: created_at.strftime('%B %d, %Y'),
       ownerName: owner.nil? ? nil : owner.name,
       ownerUrl: owner.nil? ? nil : UrlGenerator.new.user_url(owner),
-      dataSetCount: data_sets.count,
-      dataSetIDs: data_sets.pluck(:id),
-      fieldCount: fields.count,
+      dataSetCount: data_sets.length,
+      dataSetIDs: data_sets.to_a.collect(&:id),
+      fieldCount: fields.length,
       fields: fields.map { |o| o.to_hash false },
-      formulaFieldCount: formula_fields.count,
+      formulaFieldCount: formula_fields.length,
       formulaFields: formula_fields.map { |o| o.to_hash false }
     }
 
     unless featured_media_id.nil?
-      h.merge!(mediaSrc: media_objects.find(featured_media_id).src)
+      h.merge!(mediaSrc: media_objects.to_a.select { |i| i.id == featured_media_id }.first.src)
     end
 
     if recurse

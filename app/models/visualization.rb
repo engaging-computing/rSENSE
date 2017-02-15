@@ -32,6 +32,9 @@ class Visualization < ActiveRecord::Base
   alias_attribute :featured_media_id, :thumb_id
 
   def tn_src
+    if thumb_id.nil?
+      return nil
+    end
     mo = MediaObject.find_by_id(thumb_id)
     if mo
       mo.tn_src
