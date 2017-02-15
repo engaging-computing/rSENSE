@@ -144,7 +144,7 @@ class Project < ActiveRecord::Base
       ownerName: owner.nil? ? nil : owner.name,
       ownerUrl: owner.nil? ? nil : UrlGenerator.new.user_url(owner),
       dataSetCount: data_sets.length,
-      dataSetIDs: data_sets.to_a.collect(&:id),
+      dataSetIDs: data_sets.to_a.map(&:id),
       fieldCount: fields.length,
       fields: fields.map { |o| o.to_hash false },
       formulaFieldCount: formula_fields.length,

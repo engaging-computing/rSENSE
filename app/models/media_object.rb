@@ -116,16 +116,16 @@ class MediaObject < ActiveRecord::Base
         h.merge!(owner: owner.to_hash(false))
       end
 
-      if try(:project_id) && self.project
-        h.merge!(project: self.project.to_hash(false))
+      if try(:project_id) && project
+        h.merge!(project: project.to_hash(false))
       end
 
-      if try(:data_set_id) && self.data_set
-        h.merge!(dataSet: self.data_set.to_hash(false))
+      if try(:data_set_id) && data_set
+        h.merge!(dataSet: data_set.to_hash(false))
       end
 
-      if try(:tutorial_id) && self.tutorial
-        h.merge!(tutorial: self.tutorial.to_hash(false))
+      if try(:tutorial_id) && tutorial
+        h.merge!(tutorial: tutorial.to_hash(false))
       end
 
       if try(:visualization_id) && visualization
