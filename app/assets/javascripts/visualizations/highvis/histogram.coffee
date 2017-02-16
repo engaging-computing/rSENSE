@@ -240,6 +240,7 @@ $ ->
               options =
                 showInLegend: false
                 color: globals.getColor(Number(group))
+                borderColor: '#fff'
                 name: data.groups[Number(group)]
                 data: binData
               @chart.addSeries options, false
@@ -263,6 +264,7 @@ $ ->
             options =
               showInLegend: false
               color: globals.getColor(groupIndex)
+              borderColor: globals.getColor(Number(group))
               name: data.groups[groupIndex]
               data: finalData
 
