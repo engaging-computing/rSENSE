@@ -23,4 +23,4 @@ production:
   encoding: utf8
   database: rsense_production
   pool: 5
-  username: rsense
+  username: ec2-user
