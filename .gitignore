@@ -39,3 +39,7 @@ node_modules/
 
 # some linters want coffeelint files to be named a specific way.
 coffeelint.json
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
