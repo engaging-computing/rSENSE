@@ -14,6 +14,8 @@
                    'Scatter_light': "<%= path_to_image('vis_scatter_light.png')%>",
                    'Bar_dark': "<%= path_to_image('vis_bar_dark.png')%>",
                    'Bar_light': "<%= path_to_image('vis_bar_light.png')%>",
+                   'Box_dark': "<%= path_to_image('vis_box_dark.png')%>",
+                   'Box_light': "<%= path_to_image('vis_box_light.png')%>",
                    'Histogram_dark': "<%= path_to_image('vis_histogram_dark.png')%>",
                    'Histogram_light': "<%= path_to_image('vis_histogram_light.png')%>",
                    'Summary_dark': "<%= path_to_image('vis_summary_dark.png')%>",
@@ -29,6 +31,7 @@
                    'novis_timeline': "<%= path_to_image('novis_timeline.png')%>",
                    'novis_scatter': "<%= path_to_image('novis_scatter.png')%>",
                    'novis_bar': "<%= path_to_image('novis_bar.png')%>",
+                   'novis_box': "<%= path_to_image('novis_box.png')%>",
                    'novis_histogram': "<%= path_to_image('novis_histogram.png')%>",
                    'novis_table': "<%= path_to_image('novis_table.png')%>",
                    'novis_photos': "<%= path_to_image('novis_photos.png')%>"
@@ -144,6 +147,10 @@
       <div role="tabpanel" id="pie-canvas"
            class="vis-canvas tab-pane fade
                   <% if default == 'Pie' %> active in <% end %>">
+      </div>
+      <div role="tabpanel" id="box-canvas"
+           class="vis-canvas tab-pane fade
+                  <% if default == 'Box' %> active in <% end %>">
       </div>
       <div role="tabpanel" id="table-canvas"
            class="vis-canvas tab-pane fade
