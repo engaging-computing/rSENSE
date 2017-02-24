@@ -24,4 +24,5 @@ production:
   database: rsense_production
   pool: 5
   username: ec2-user
+  password: ec2-user
   host: localhost
