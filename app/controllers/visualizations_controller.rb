@@ -250,21 +250,14 @@ class VisualizationsController < ApplicationController
     # build list of datasets
     if !params[:datasets].nil?
       dsets = params[:datasets].split(',')
-      dsets.each do |id|
-        begin
-          dset = DataSet.find_by_id(id)
-          if dset.project_id == @project.id
-            @datasets.push dset
-          else
-            fail 'data set does not belong to project'
-          end
-        rescue
-          respond_to do |format|
-            format.html { redirect_to '/404.html' }
-            format.json { render json: { errors: ['File not found.'] }, status: 404 }
-          end
-          return
+      @datasets = DataSet.where(id: dsets, project_id: @project.id)
+
+      if @datasets.length == 0
+        respond_to do |format|
+          format.html { redirect_to '/404.html' }
+          format.json { render json: { errors: ['File not found.'] }, status: 404 }
         end
+        return
       end
     else
       @datasets = DataSet.includes(:user, :media_objects).where(project_id: params[:id])
