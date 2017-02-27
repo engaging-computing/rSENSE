@@ -10,7 +10,7 @@ class VisualizationsController < ApplicationController
 
   def set_vis_list
     # A list of all current visualizations
-    @all_vis =  ['Map', 'Timeline', 'Scatter', 'Bar', 'Histogram', 'Pie', 'Table', 'Summary', 'Photos']
+    @all_vis =  ['Map', 'Timeline', 'Scatter', 'Bar', 'Histogram', 'Box', 'Pie', 'Table', 'Summary', 'Photos']
   end
 
   # GET /visualizations
@@ -250,21 +250,14 @@ class VisualizationsController < ApplicationController
     # build list of datasets
     if !params[:datasets].nil?
       dsets = params[:datasets].split(',')
-      dsets.each do |id|
-        begin
-          dset = DataSet.find_by_id(id)
-          if dset.project_id == @project.id
-            @datasets.push dset
-          else
-            fail 'data set does not belong to project'
-          end
-        rescue
-          respond_to do |format|
-            format.html { redirect_to '/404.html' }
-            format.json { render json: { errors: ['File not found.'] }, status: 404 }
-          end
-          return
+      @datasets = DataSet.where(id: dsets, project_id: @project.id)
+
+      if @datasets.length == 0
+        respond_to do |format|
+          format.html { redirect_to '/404.html' }
+          format.json { render json: { errors: ['File not found.'] }, status: 404 }
         end
+        return
       end
     else
       @datasets = DataSet.includes(:user, :media_objects).where(project_id: params[:id])
@@ -429,6 +422,7 @@ class VisualizationsController < ApplicationController
       visualizations.push 'Bar'
       visualizations.push 'Pie'
       visualizations.push 'Histogram'
+      visualizations.push 'Box'
     end
 
     visualizations.push 'Table'
