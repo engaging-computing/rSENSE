@@ -46,7 +46,8 @@ $ ->
 
         @xGridSize = @yGridSize = @INITIAL_GRID_SIZE
 
-        @isScatter = true # To do add axis bounds feature that does time
+        @useSetAxis = true 
+        @isTimeline = null 
         # Used for data reduction triggering
         @updateOnZoom = true
 
@@ -81,7 +82,7 @@ $ ->
       start: (animate = true) ->
         @configs.xAxisId ?= data.fields[@configs.xAxis].fieldID
         # Reset the xAxis in case a new field was added or fields were reordered
-        if not @isScatter? then @configs.xAxis = data.timeFields[0]
+        if not @useSetAxis? then @configs.xAxis = data.timeFields[0]
         else if @configs.xAxisId == -1 then @configs.xAxis = 0
         else
           fieldIds = for field in data.fields
@@ -339,7 +340,7 @@ $ ->
             # fixes it by splitting the data into different series based on the range
             # the point falls in (ex fixed: http://i.imgur.com/NDIrq8i.png).
             datArray = new Array
-            if @isScatter is null and globals.configs.isPeriod is true and data.timeType == data.NORM_TIME
+            if @useSetAxis is null and globals.configs.isPeriod is true and data.timeType == data.NORM_TIME
               currentPeriod = null
               for point in dat
                 newDate = new Date(point.x)
@@ -459,7 +460,7 @@ $ ->
         inctx = {}
         inctx.axes = ["Both", "X", "Y"]
         inctx.logSafe = data.logSafe
-        inctx.vis = @isScatter # To do add axis bounds feature that does time
+        inctx.vis = @useSetAxis # To do add axis bounds feature that does time
         inctx.elapsedTime = elapsedTime and data.timeFields.length is 1
         inctx.modes = [
           { mode: @SYMBOLS_LINES_MODE, text: "Symbols and Lines" }
@@ -470,6 +471,9 @@ $ ->
         if data.hasTimeData and data.timeType != data.GEO_TIME
           inctx.period = HandlebarsTemplates[hbCtrl('period')]
 
+        inctx.setAxis = HandlebarsTemplates[hbCtrl('set-axis-scatter')]
+        if @isTimeline == true
+          inctx.setAxis = HandlebarsTemplates[hbCtrl('set-axis-timeline')]
 
         # Draw the Tool controls
         outctx = {}
@@ -517,110 +521,117 @@ $ ->
         badNumberPopoverTimerY = null
         badNumberPopoverTimerX = null
 
-        # Axis Manual entry
-        $('#set-axis-button').click =>
+        # Axis Manual entry for timeline
+        if @isTimeline == true
+          console.log("timeline")
 
-          thereIsAFailure = false
+        # Axis Manual entry for scatter
+        if @isTimeline == null
+          console.log("scatter")
 
-          xAxisMin = $('#x-axis-min').val()
-          xAxisMax = $('#x-axis-max').val()
+          $('#set-axis-button').click =>
 
-          yAxisMin = $('#y-axis-min').val()
-          yAxisMax = $('#y-axis-max').val()
+            thereIsAFailure = false
 
-          if isNaN(xAxisMin) or xAxisMin == ""
-            thereIsAFailure = true
-            $('#x-axis-min').popover
-              content: 'Please enter a valid number'
-              placement: 'bottom'
-              trigger: 'manual'
-            $('#x-axis-min').popover('show')
-            if badNumberPopoverTimerXMin? then clearTimeout(badNumberPopoverTimerXMin)
-            badNumberPopoverTimerXMin = setTimeout ->
-              $('#x-axis-min').popover('destroy')
-            , 3000
+            xAxisMin = $('#x-axis-min').val()
+            xAxisMax = $('#x-axis-max').val()
+  
+            yAxisMin = $('#y-axis-min').val()
+            yAxisMax = $('#y-axis-max').val()
 
-          if isNaN(xAxisMax) or xAxisMax == ""
-            thereIsAFailure = true
-            $('#x-axis-max').popover
-              content: 'Please enter a valid number'
-              placement: 'bottom'
-              trigger: 'manual'
-            $('#x-axis-max').popover('show')
-            if badNumberPopoverTimerXMax? then clearTimeout(badNumberPopoverTimerXMax)
-            badNumberPopoverTimerXMax = setTimeout ->
-              $('#x-axis-max').popover('destroy')
-            , 3000
-
-          if isNaN(yAxisMin) or yAxisMin == ""
-            thereIsAFailure = true
-            $('#y-axis-min').popover
-              content: 'Please enter a valid number'
-              placement: 'bottom'
-              trigger: 'manual'
-            $('#y-axis-min').popover('show')
-            if badNumberPopoverTimerYMin? then clearTimeout(badNumberPopoverTimerYMin)
-            badNumberPopoverTimerYMin = setTimeout ->
-              $('#y-axis-min').popover('destroy')
-            , 3000
-
-          if isNaN(yAxisMax) or yAxisMax == ""
-            thereIsAFailure = true
-            $('#y-axis-max').popover
-              content: 'Please enter a valid number'
-              placement: 'bottom'
-              trigger: 'manual'
-            $('#y-axis-max').popover('show')
-            if badNumberPopoverTimerYMax? then clearTimeout(badNumberPopoverTimerYMax)
-            badNumberPopoverTimerYMax = setTimeout ->
-              $('#y-axis-max').popover('destroy')
-            , 3000
-
-          if thereIsAFailure then return
-
-          xAxisMin = Number(xAxisMin)
-          xAxisMax = Number(xAxisMax)
-          yAxisMin = Number(yAxisMin)
-          yAxisMax = Number(yAxisMax)
-
-          if xAxisMin >= xAxisMax
-            thereIsAFailure = true
-            $('#x-axis-min').popover
-              content: 'Left must be less than right'
-              placement: 'bottom'
-              trigger: 'manual'
-            $('#x-axis-min').popover('show')
-            if badNumberPopoverTimerX? then clearTimeout(badNumberPopoverTimerX)
-            badNumberPopoverTimerX = setTimeout ->
-              $('#x-axis-min').popover('destroy')
-            , 3000
-
-          if yAxisMin >= yAxisMax
-            thereIsAFailure = true
-            $('#y-axis-min').popover
-              content: 'Left must be less than right'
-              placement: 'bottom'
-              trigger: 'manual'
-            $('#y-axis-min').popover('show')
-            if badNumberPopoverTimerY? then clearTimeout(badNumberPopoverTimerY)
-            badNumberPopoverTimerY = setTimeout ->
-              $('#y-axis-min').popover('destroy')
-            , 3000
-
-          if thereIsAFailure then return
-
-          $('#x-axis-min').popover('destroy')
-          $('#x-axis-max').popover('destroy')
-          $('#y-axis-min').popover('destroy')
-          $('#y-axis-max').popover('destroy')
-
-          @configs.xBounds.min = xAxisMin
-          @configs.xBounds.max = xAxisMax
-
-          @configs.yBounds.min = yAxisMin
-          @configs.yBounds.max = yAxisMax
-
-          @setExtremes()
+            if isNaN(xAxisMin) or xAxisMin == ""
+              thereIsAFailure = true
+              $('#x-axis-min').popover
+                content: 'Please enter a valid number'
+                placement: 'bottom'
+                trigger: 'manual'
+              $('#x-axis-min').popover('show')
+              if badNumberPopoverTimerXMin? then clearTimeout(badNumberPopoverTimerXMin)
+              badNumberPopoverTimerXMin = setTimeout ->
+                 $('#x-axis-min').popover('destroy')
+              , 3000
+  
+            if isNaN(xAxisMax) or xAxisMax == ""
+              thereIsAFailure = true
+              $('#x-axis-max').popover
+                content: 'Please enter a valid number'
+                placement: 'bottom'
+                trigger: 'manual'
+              $('#x-axis-max').popover('show')
+              if badNumberPopoverTimerXMax? then clearTimeout(badNumberPopoverTimerXMax)
+              badNumberPopoverTimerXMax = setTimeout ->
+                $('#x-axis-max').popover('destroy')
+              , 3000
+  
+            if isNaN(yAxisMin) or yAxisMin == ""
+              thereIsAFailure = true
+              $('#y-axis-min').popover
+                content: 'Please enter a valid number'
+                placement: 'bottom'
+                trigger: 'manual'
+              $('#y-axis-min').popover('show')
+              if badNumberPopoverTimerYMin? then clearTimeout(badNumberPopoverTimerYMin)
+              badNumberPopoverTimerYMin = setTimeout ->
+                $('#y-axis-min').popover('destroy')
+              , 3000
+  
+            if isNaN(yAxisMax) or yAxisMax == ""
+              thereIsAFailure = true
+              $('#y-axis-max').popover
+                content: 'Please enter a valid number'
+                placement: 'bottom'
+                trigger: 'manual'
+              $('#y-axis-max').popover('show')
+              if badNumberPopoverTimerYMax? then clearTimeout(badNumberPopoverTimerYMax)
+              badNumberPopoverTimerYMax = setTimeout ->
+                $('#y-axis-max').popover('destroy')
+              , 3000
+  
+            if thereIsAFailure then return
+  
+            xAxisMin = Number(xAxisMin)
+            xAxisMax = Number(xAxisMax)
+            yAxisMin = Number(yAxisMin)
+            yAxisMax = Number(yAxisMax)
+  
+            if xAxisMin >= xAxisMax
+              thereIsAFailure = true
+              $('#x-axis-min').popover
+                content: 'Left must be less than right'
+                placement: 'bottom'
+                trigger: 'manual'
+              $('#x-axis-min').popover('show')
+              if badNumberPopoverTimerX? then clearTimeout(badNumberPopoverTimerX)
+              badNumberPopoverTimerX = setTimeout ->
+                $('#x-axis-min').popover('destroy')
+              , 3000
+  
+            if yAxisMin >= yAxisMax
+              thereIsAFailure = true
+              $('#y-axis-min').popover
+                content: 'Left must be less than right'
+                placement: 'bottom'
+                trigger: 'manual'
+              $('#y-axis-min').popover('show')
+              if badNumberPopoverTimerY? then clearTimeout(badNumberPopoverTimerY)
+              badNumberPopoverTimerY = setTimeout ->
+                $('#y-axis-min').popover('destroy')
+              , 3000
+  
+            if thereIsAFailure then return
+  
+            $('#x-axis-min').popover('destroy')
+            $('#x-axis-max').popover('destroy')
+            $('#y-axis-min').popover('destroy')
+            $('#y-axis-max').popover('destroy')
+  
+            @configs.xBounds.min = xAxisMin
+            @configs.xBounds.max = xAxisMax
+  
+            @configs.yBounds.min = yAxisMin
+            @configs.yBounds.max = yAxisMax
+  
+            @setExtremes()
 
         $('#zoom-reset-btn').click (e) =>
           @resetExtremes($('#zoom-axis-list').val())

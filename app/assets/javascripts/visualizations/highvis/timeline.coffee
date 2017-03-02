@@ -38,7 +38,8 @@ $ ->
       constructor: (@canvas) ->
         super @canvas
 
-        @isScatter = true # To do add axis bounds feature that does time
+        @useSetAxis = true 
+        @isTimeline = true
 
         @configs.mode = @LINES_MODE
         @configs.xAxis = data.timeFields[0]
