@@ -89,7 +89,7 @@ class FileUploader
       end
     else
       x = write_temp_file(CSV.parse(open(file) { |f| f.read }))
-      if x.size() > 10000000
+      if File.size(x) > 10000000
         fail 'Maximum upload size of a single data set is 10 MB. Please split your file into multiple pieces and upload them individually.'
       end
       spreadsheet = convert(x)
