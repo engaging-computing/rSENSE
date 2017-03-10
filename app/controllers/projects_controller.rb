@@ -503,7 +503,9 @@ class ProjectsController < ApplicationController
   def create_tag
     tag = Tag.find_or_create_by(name: params[:name].to_s.squish)
     project = Project.find(params[:id])
-    project.tags << tag
+    unless project.tags.exists?(tag.id)
+      project.tags << tag
+    end
     project.save!
     respond_to do |format|
       msg = { status: 'ok', message: 'Success!',
