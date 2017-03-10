@@ -12,7 +12,7 @@ class DataSet < ActiveRecord::Base
 
   validates :title, length: { maximum: 128 }
 
-  has_many :media_objects
+  has_many :media_objects, inverse_of: :data_set
 
   belongs_to :project, inverse_of: :data_sets
   belongs_to :user, counter_cache: true

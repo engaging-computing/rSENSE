@@ -7,7 +7,7 @@ class MediaObject < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :project
-  belongs_to :data_set
+  belongs_to :data_set, inverse_of: :media_objects
   belongs_to :tutorial
   belongs_to :visualization
   belongs_to :news, class_name: 'News', foreign_key: 'news_id'
@@ -113,12 +113,19 @@ class MediaObject < ActiveRecord::Base
     if recurse
       h.merge!(owner: owner.to_hash(false))
 
-      if try(:project_id)
-        h.merge!(project: project.to_hash(false))
-      end
-
       if try(:data_set_id)
         h.merge!(dataSet: data_set.to_hash(false))
+      end
+
+      if try(:project_id)
+        # try to use the project object from the data_set because in most cases the
+        # project of the data_set will already be loaded into memory.
+        if data_set_id && data_set.project_id == project_id
+          _project = data_set.project
+        else
+          _project = project
+        end
+        h.merge!(project: _project.to_hash(false))
       end
 
       if try(:tutorial_id)
