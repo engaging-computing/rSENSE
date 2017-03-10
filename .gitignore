@@ -20,6 +20,7 @@ db/data.yml
 aws_config.yml
 *.DS_Store
 .*.swp
+.byebug_history
 
 public/assets/*
 log/*

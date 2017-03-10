@@ -22,6 +22,8 @@ class Project < ActiveRecord::Base
   has_many :likes
   has_many :visualizations
   has_many :contrib_keys
+  has_many :taggings, inverse_of: :project
+  has_many :tags, through: :taggings
 
   has_one :view_count
 
@@ -29,6 +31,8 @@ class Project < ActiveRecord::Base
 
   alias_attribute :name, :title
   alias_attribute :owner, :user
+
+  accepts_nested_attributes_for :tags
 
   def sanitize_project
     self.content = sanitize content
@@ -51,7 +55,10 @@ class Project < ActiveRecord::Base
     regex = /^[0-9]+$/
     search_query = Project.joins(
       'LEFT OUTER JOIN "likes" ON "likes"."project_id" = "projects"."id"
-      LEFT OUTER JOIN "view_counts" ON "view_counts"."project_id" = "projects"."id"'
+      LEFT OUTER JOIN "view_counts" ON "view_counts"."project_id" = "projects"."id"
+      LEFT OUTER JOIN "taggings" ON "taggings"."project_id" = "projects"."id"
+      LEFT OUTER JOIN "tags" ON "taggings"."tag_id" = "tags"."id"
+      '
       ).select(
       'projects.*, count(likes.id) as like_count, view_counts.count as views'
       ).group(
@@ -63,7 +70,8 @@ class Project < ActiveRecord::Base
     elsif search
       search_query.where(
      '(lower(projects.title) LIKE lower(?)) OR
-     (lower(projects.content) LIKE lower(?))', "%#{search}%", "%#{search}%")
+     (lower(projects.content) LIKE lower(?)) OR
+     (lower(tags.name) LIKE lower(?))', "%#{search}%", "%#{search}%", "%#{search}%")
     else
       Project.joins(
         'LEFT OUTER JOIN "likes" ON "likes"."project_id" = "projects"."id"

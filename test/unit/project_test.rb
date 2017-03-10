@@ -53,6 +53,11 @@ class ProjectTest < ActiveSupport::TestCase
     assert_default_nil(@project, @project.featured_at)
   end
 
+  # Passes if tags is empty
+  test 'tags is empty' do
+    assert_empty(@project.tags)
+  end
+
   # ---------------------------------------------------
   # Testing with fixtures
 
