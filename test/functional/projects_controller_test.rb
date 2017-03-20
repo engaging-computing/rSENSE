@@ -13,6 +13,7 @@ class ProjectsControllerTest < ActionController::TestCase
     @key = contrib_keys(:contributor_key_test)
     @media_test = projects(:media_test)
     @dessert = projects(:dessert)
+    @tag = tags(:one)
   end
 
   test 'should get index' do
@@ -98,6 +99,18 @@ class ProjectsControllerTest < ActionController::TestCase
     nixon = sign_in('user', users(:nixon))
     put :update, { format: 'json', id: @project_one, project: { content: @project_one.content, title: @project_one.title,
       user_id: @project_one.user_id } },  user_id: nixon
+    assert_response :success
+  end
+
+  test 'should create project tag (json)' do
+    nixon = sign_in('user', users(:nixon))
+    post :create_tag, { format: 'json', id: @project_one, name: 'science' },  user_id: nixon
+    assert_response :success
+  end
+
+  test 'should remove project tag (json)' do
+    nixon = sign_in('user', users(:nixon))
+    post :remove_tag, { format: 'json', id: @project_one, tagId: @tag },  user_id: nixon
     assert_response :success
   end
 

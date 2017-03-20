@@ -31,6 +31,9 @@ Rsense::Application.routes.draw do
   post '/projects/import' => 'projects#importFromIsense'
   post '/projects/import/:pid' => 'projects#importFromIsense'
 
+  post '/projects/create_tag' => 'projects#create_tag'
+  delete '/projects/remove_tag' => 'projects#remove_tag'
+
   resources :visualizations, except: [:new]
 
   resources :data_sets

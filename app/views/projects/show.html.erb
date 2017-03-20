@@ -35,6 +35,11 @@
                       style="display:none"<% end %>>
                   Project #: <%= @project.id %>
                 </span>
+                <div id="tags_notice"
+                      <% if @project.hidden || @project.lock%>
+                      style="display:none"<% end %>>
+                  Tags: <%= @project.tags.select(:name).pluck(:name).join(", ") %>
+                </div>
               </div>
             </div>
             <% if !@cloned_project.nil? and !is_deleted?(@cloned_project) %>
@@ -83,7 +88,7 @@
         <%= content_helper(@project) %>
       <% end %>
     </div>
-    
+
     <!-- Data Sets View-->
     <div class="row">
       <%= render layout: "shared/box", locals: {title: 'Data Sets', width: '12', unique_id: 'data_sets', should_hide: false} do %>
@@ -243,7 +248,7 @@
     </div>
     <!-- Formula field box -->
     <div class="row">
-      <%= render layout: "shared/box", locals: {title: 'Formula Fields', width: 12, unique_id: 'formula_fields', should_hide:false} do %>      
+      <%= render layout: "shared/box", locals: {title: 'Formula Fields', width: 12, unique_id: 'formula_fields', should_hide:false} do %>
         <% if (@formula_field_count == 0) and can_edit?(@project) %>
           <div class="col-md-12 center">
             <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--green" id="manual_formula_fields" href="/projects/<%=@project.id%>/edit_formula_fields">
