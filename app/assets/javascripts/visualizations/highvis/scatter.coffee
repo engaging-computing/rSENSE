@@ -523,11 +523,39 @@ $ ->
 
         # Axis Manual entry for timeline
         if @isTimeline == true
-          console.log("timeline")
-
+            
+          #@TimestampEditor = (args) ->  
+            
+          formButton = $('#x-min-cal')
+          formInput = $('#x-axis-min')
+          currValue = null
+          position = document.getElementById('#x-axis-min') #.getBoundingClientRect();
+          console.log(position)
+          console.log(typeof position)
+          console.log(formButton.getBoundingClientRect[0])
+  
+  
+          formButton.click =>
+            dtPicker.open() 
+          console.log(formButton.datetimepicker) 
+          dtPicker = formButton.datetimepicker
+            autoClose: false
+            onOpen: ->
+              formInput.focus()
+              currValue
+            onChange: (val) ->
+              currValue = val.format('YYYY/MM/DD HH:mm:ss')
+              formInput.val currValue
+            hPosition: (w, h) ->
+              200
+              #@args.position.left + 2
+            vPosition: (w, h) ->
+              200
+              #@args.position.bottom + 2
+            
+          
         # Axis Manual entry for scatter
         if @isTimeline == null
-          console.log("scatter")
 
           $('#set-axis-button').click =>
 
