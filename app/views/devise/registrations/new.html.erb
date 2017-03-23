@@ -46,9 +46,6 @@
           </div>
 
           <div class="form-group">
-            <%if flash[:recaptcha_error] %>
-              <b class="recaptcha_error"><%= flash[:recaptcha_error] %></b>
-            <% end %>
             <%= recaptcha_tags noscript: false %>
           </div> 
         </div>
