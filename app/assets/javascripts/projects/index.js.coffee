@@ -25,24 +25,25 @@ $ ->
         checkType = "input.#{checkType[0]}"
         $(checkType).prop('checked', cb.prop 'checked')
 
-    $('.tag-list').each (i) ->
-      console.log "------"
-      totalWidth = $(this).innerWidth() - 35
+    $('.project-card-tags.tagged').each (i) ->
+      list = $(this).find(".tag-list")
+      parentBox = $(this)
+      totalWidth = $(list).innerWidth() - 35
       accumWidth = 0
       hiddenTags = false
-      list = this
-      console.log(totalWidth)
-      $(this).children().each (i) ->
+      hiddenList = [] # Due to closure, this and other variables are unique to each project box
+      $(list).children().each (i) ->
         accumWidth += $(this).outerWidth()
-        console.log $(this).outerWidth()
         if accumWidth >= totalWidth
           hiddenTags = true;
           $(this).hide();
+          hiddenList.push($(this))
 
       if hiddenTags
         expando = $('<span class="tag-badge" style="float: right;"><i class="fa fa-ellipsis-h"></i></span>')
         $(this).append(expando)
         expando.click (e) ->
-          $(list).children().show()
-          $(list).height("+=100")
+          $.each(hiddenList, (i, ele) ->
+            ele.show())
+          parentBox.addClass("expanded") # TODO: Put the project-card-tags class in application.scss; add collapse button; figure out why the box doesn't want to resize correctly scroll?
           expando.hide()

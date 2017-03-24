@@ -49,7 +49,7 @@
       </div>
     </div>
 
-    <div class="mdl-card__actions mdl-card--border project-card-tags">
+    <div class="mdl-card__actions mdl-card--border project-card-tags<% if tags_count > 0 -%> tagged<% end %>">
       <% if tags_count > 0 %>
         <div class="tag-list">
           <!--<span class="badge card-tag-list" >
