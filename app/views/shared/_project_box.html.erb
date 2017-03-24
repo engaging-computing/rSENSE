@@ -50,13 +50,16 @@
     </div>
 
     <div class="mdl-card__actions mdl-card--border project-card-tags">
-      <div class="badges">
-        <% if tags_count > 0 %>
-          <span class="badge card-tag-list" >
+      <% if tags_count > 0 %>
+        <div class="tag-list">
+          <!--<span class="badge card-tag-list" >
             <%=  "Tags: " + @box_project.tags.all.collect(&:name).join(", ") %>
-          </span>
-        <% end %>
-      </div>
+          </span>-->
+          <% @box_project.tags.each do |t| -%>
+            <span class="tag-badge"><%= t.name %></span>
+          <% end %>
+        </div>
+      <% end %>
     </div>
 
   </div>
