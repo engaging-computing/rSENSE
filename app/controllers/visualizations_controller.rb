@@ -250,7 +250,7 @@ class VisualizationsController < ApplicationController
     # build list of datasets
     if !params[:datasets].nil?
       dsets = params[:datasets].split(',')
-      @datasets = DataSet.where(:id => dsets, :project_id => @project.id)
+      @datasets = DataSet.where(id: dsets, project_id: @project.id)
     else
       @datasets = DataSet.includes(:user, :media_objects).where(project_id: params[:id])
     end
