@@ -24,6 +24,6 @@ production:
   database: rsense_production
   pool: 5
   username: ec2_user
-  password: 
+  password: <%= ENV['RDS_PASSWORD'] %>
   port: 5432
-  host: localhost
+  host: <%= ENV['RDS_HOSTNAME'] %>
