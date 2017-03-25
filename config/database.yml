@@ -26,4 +26,4 @@ production:
   username: ec2_user
   password: 
   port: 5432
-  host: 
+  host: localhost
