@@ -23,6 +23,7 @@ production:
   encoding: utf8
   database: rsense_production
   pool: 5
-  username: ec2-user
-  password: ec2-user
-  host: localhost
+  username: ec2_user
+  password: 
+  port: 5432
+  host: 
