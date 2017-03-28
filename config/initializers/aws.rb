@@ -19,8 +19,8 @@ unless tables.table_names.include?("Datums")
 	    {attribute_name: 'datum_id', key_type: 'RANGE'}
 	  ],
 	  provisioned_throughput: {
-	    read_capacity_units: 25,
-	    write_capacity_units: 25
+	    read_capacity_units: 1,
+	    write_capacity_units: 125
 	  }
 	})
 end

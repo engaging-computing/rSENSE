@@ -1,7 +1,7 @@
 require 'aws-sdk'
 
 dynamodb = Aws::DynamoDB::Client.new(
-	# endpoint: 'http://localhost:8000',
+    # endpoint: 'http://localhost:8000',
 	region: 'us-east-1'
 )
 
@@ -10,8 +10,8 @@ namespace :seed_datums do
   	# start your engines
   	start = Time.now
   	threadpool = []
-  	DataSet.all.each_slice(25000) do |data_set_arr|
-  		puts "init thr"
+  	DataSet.all.each_slice(2000) do |data_set_arr|
+  	  puts "init thr"
   		threadpool << Thread.new do
   			data_set_arr.each do |data_set|
 		  	  data = data_set.data
@@ -45,7 +45,8 @@ namespace :seed_datums do
 						  request_items: { 
 						    "Datums" => putrqs,
 						  },
-						})	
+						})
+						sleep 2	
 		      end
 		    end
 		  end		  
