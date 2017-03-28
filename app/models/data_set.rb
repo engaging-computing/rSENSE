@@ -1,4 +1,5 @@
 require 'beaker'
+require 'digest'
 
 class DataSet < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
@@ -50,6 +51,42 @@ class DataSet < ActiveRecord::Base
 
   def self.search(search)
     where('id = ? OR title LIKE ?', search.to_i, "%#{search}%").order('created_at DESC')
+  end
+
+  def dynamodb
+    Aws::DynamoDB::Client.new(
+    endpoint: 'http://localhost:8000',
+    region: 'us-east-1'
+    )
+  end
+
+  def self.data
+    response = dynamodb.query({
+      table_name: 'Datums',
+      key_condition_expression: 'data_set_id = :data_set_id',
+      expression_attribute_values: {
+        ':data_set_id' => self.id
+      }
+    })
+    response.items
+  end
+
+  def self.data=(data)
+    unless data.class == Array
+      data = [data]
+    end
+    data.each do |datum|
+      next if datum.class != Hash
+      dynamodb.put_item({
+        table_name: 'Datums',
+        item: {
+          'data_set_id' => self.id,
+          'datum_id' => Digest::SHA2.hexdigest(datum.to_a.sort_by {|k,v| k.to_s}.to_h).to_s,
+          'datum' => datum,
+        }
+      })
+    end
+    self[:data] = nil
   end
 
   def to_hash(recurse = true)
