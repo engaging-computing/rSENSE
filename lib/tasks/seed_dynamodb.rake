@@ -10,10 +10,11 @@ namespace :seed_datums do
   	# start your engines
   	start = Time.now
   	threadpool = []
-  	DataSet.all.each_slice(2000) do |data_set_arr|
+  	DataSet.all.shuffle.each_slice(12500) do |data_set_arr|
   	  puts "init thr"
-  		threadpool << Thread.new do
-  			data_set_arr.each do |data_set|
+  		threadpool << Thread.new(data_set_arr) do |thr_data_sets|
+  			datum_arr = []
+  			thr_data_sets.each do |data_set|
 		  	  data = data_set.data
 		  	 	unless data.class == Array
 			      data = [data]
@@ -39,15 +40,18 @@ namespace :seed_datums do
 						        },
 					        }
 				      }
+				      datum_arr << put_request
 			      end
-			      puts "REQUESTS: #{putrqs}"
-			      dynamodb.batch_write_item({
-						  request_items: { 
-						    "Datums" => putrqs,
-						  },
-						})
-						sleep 2	
 		      end
+		    end
+		    datum_arr.shuffle.each do |datum|
+		      puts "REQUESTS: #{putrqs}"
+		      dynamodb.batch_write_item({
+					  request_items: { 
+					    "Datums" => putrqs,
+					  },
+					})
+					sleep 0.025
 		    end
 		  end		  
 		end

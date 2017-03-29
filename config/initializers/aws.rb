@@ -20,7 +20,7 @@ unless tables.table_names.include?("Datums")
 	  ],
 	  provisioned_throughput: {
 	    read_capacity_units: 1,
-	    write_capacity_units: 125
+	    write_capacity_units: 500
 	  }
 	})
 end
