@@ -56,8 +56,9 @@
             <%=  "Tags: " + @box_project.tags.all.collect(&:name).join(", ") %>
           </span>-->
           <% @box_project.tags.each do |t| -%>
-            <span class="tag-badge"><%= t.name %></span>
-          <% end %>
+            <a href="<%= projects_path %>?utf8=✓&search=<%= t.name %>&sort=updated_at&order=DESC"<span class="tag-badge"><%= t.name %></span></a>
+          <% end %> <%# If there are too many tags to display, they are hidden and a toggle button is added in index.js.coffee %>
+          <div class="clear-tags" style="clear: both;"></div>
         </div>
       <% end %>
     </div>

@@ -157,19 +157,60 @@ body {
   display: inline-block;
 }
 
+.project-card-tags {
+  min-height: 14%;
+  position: relative;
+}
+
 .tag-badge {
   float: left;
   font-size: 12px;
   font-weight: bold;
   color: white;
-  background-color: rgb(68,138,255);;
+  background-color: rgb(68,138,255);
+  border-radius: 10px;
+  padding: 3px 7px;
+  margin: 2px;
+  max-width: 150px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.tag-badge:hover {
+  background-color: #235283;
+  color: white;
+  text-decoration: none;
+}
+
+.expanded {
+  min-height: 50% !important;
+  padding-bottom: 20px !important;
+}
+
+.tag-expando-button {
+  float: right;
+}
+
+.tag-collapse-button {
+  position: absolute;
+  right: 8px;
+  bottom: 7px;
+  display: none;
+}
+
+.tag-toggle-button {
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  color: white;
+  background-color: #777;
   border-radius: 10px;
   padding: 3px 7px;
   margin: 2px;
 }
 
-.expanded {
-  height: 100px;
+.tag-toggle-button:hover {
+  background-color: #aaa
 }
 
 .item {

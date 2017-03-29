@@ -25,25 +25,54 @@ $ ->
         checkType = "input.#{checkType[0]}"
         $(checkType).prop('checked', cb.prop 'checked')
 
+    # For each project box: Hide tags if there are too many to fit in the box, and
+    # add a button to toggle the hidden tags
     $('.project-card-tags.tagged').each (i) ->
-      list = $(this).find(".tag-list")
+      list = $($(this).find(".tag-list"))
       parentBox = $(this)
-      totalWidth = $(list).innerWidth() - 35
-      accumWidth = 0
+      totalWidth = $(list).innerWidth()
+      accumWidth = 0 # total width of tag list
+      rowWidth = 0 # width for each row
+      numRows = 1
       hiddenTags = false
-      hiddenList = [] # Due to closure, this and other variables are unique to each project box
-      $(list).children().each (i) ->
+      hiddenList = [] # Due to closure, hiddenList and other variables are unique to each project box
+
+      list.children(".tag-badge").each (i) ->
         accumWidth += $(this).outerWidth()
-        if accumWidth >= totalWidth
-          hiddenTags = true;
-          $(this).hide();
+        rowWidth += $(this).outerWidth()
+        if accumWidth >= totalWidth - 35
+          hiddenTags = true
+          $(this).hide()
           hiddenList.push($(this))
+        if rowWidth >= totalWidth
+          numRows += 1 # count number of rows for scrolling
+          rowWidth = $(this).outerWidth()
 
       if hiddenTags
-        expando = $('<span class="tag-badge" style="float: right;"><i class="fa fa-ellipsis-h"></i></span>')
-        $(this).append(expando)
+        # create buttons to show and hide tags
+        expando = $('<span class="tag-toggle-button tag-expando-button"><i class="fa fa-ellipsis-h"></i></span>')
+        collapso = $('<span class="tag-toggle-button tag-collapse-button"><i class="fa fa-close"></i></span>')
+        list.find(".clear-tags").before(expando)
+        parentBox.parent().append(collapso) # collapse needs to be attached to parent box in case the list needs to scroll
+
         expando.click (e) ->
           $.each(hiddenList, (i, ele) ->
             ele.show())
-          parentBox.addClass("expanded") # TODO: Put the project-card-tags class in application.scss; add collapse button; figure out why the box doesn't want to resize correctly scroll?
+          parentBox.siblings("a").find(".mdl-card__title").css("height": "inherit") # make image shrink
+          parentBox.addClass("expanded") # make the tags box bigger
+          if numRows > 4
+            parentBox.css("overflow-y": "scroll") # scroll if there are multiple rows
+          
           expando.hide()
+          collapso.show()
+
+        collapso.click (e) ->
+          $.each(hiddenList, (i, ele) ->
+            ele.hide())
+          parentBox.siblings("a").find(".mdl-card__title").css("height": "130px") # restore image height
+          parentBox.removeClass("expanded")
+          if numRows > 4
+            parentBox.css("overflow-y": "") # turn off scrolling
+
+          expando.show()
+          collapso.hide()
