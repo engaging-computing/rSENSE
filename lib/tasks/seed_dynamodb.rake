@@ -20,35 +20,31 @@ namespace :seed_datums do
 			      data = [data]
 			    end
 			    dp_id = 0
-			    data.each_slice(25) do |datums|
-			      putrqs = datums.map do |datum|
-			      	datum.each do |k,v| 
-					      if v == ""
-					      	datum[k] = nil
-					      end
-					      if k == ""
-					      	datum.delete("")
-					      end
+			    datum_arr << data.map do |datum|
+			    	datum.each do |k,v| 
+					    if v == ""
+					    	datum[k] = nil
 					    end
-					    dp_id = dp_id + 1
-				      put_request = {
-				      	put_request: {
-					          item: {
-						          'data_set_id' => data_set.id,
-						          'datum_id' => dp_id,
-						          'datum' => datum,
-						        },
-					        }
-				      }
-				      datum_arr << put_request
-			      end
+					    if k == ""
+					    	datum.delete("")
+					    end
+					  end
+					  dp_id = dp_id + 1
+				    put_request: {
+					      item: {
+				        'data_set_id' => data_set.id,
+				        'datum_id' => dp_id,
+				        'datum' => datum,
+				      },
+					  }	
 		      end
 		    end
-		    datum_arr.shuffle.each do |datum|
-		      puts "REQUESTS: #{putrqs}"
+		    puts "datum arr length #{datum_arr.length}"
+		    datum_arr.flatten.shuffle.each_slice(25) do |datums|
+		      puts "REQUESTS: #{datums}"
 		      dynamodb.batch_write_item({
 					  request_items: { 
-					    "Datums" => putrqs,
+					    "Datums" => datums,
 					  },
 					})
 					sleep 0.025
