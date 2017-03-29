@@ -30,17 +30,20 @@ namespace :seed_datums do
 					    end
 					  end
 					  dp_id = dp_id + 1
-				    put_request: {
+				    { put_request: {
 					      item: {
 				        'data_set_id' => data_set.id,
 				        'datum_id' => dp_id,
 				        'datum' => datum,
-				      },
-					  }	
+				      	}
+					    }	
+					  }
 		      end
 		    end
 		    puts "datum arr length #{datum_arr.length}"
-		    datum_arr.flatten.shuffle.each_slice(25) do |datums|
+		    datum_arr = datum_arr.flatten
+		    puts "datum arr flat length #{datum_arr.length}"
+		    datum_arr.shuffle.each_slice(25) do |datums|
 		      puts "REQUESTS: #{datums}"
 		      dynamodb.batch_write_item({
 					  request_items: { 
