@@ -385,6 +385,11 @@ class DataSetsController < ApplicationController
       end
     end
 
+    if params[:file] && params[:file].size > 10000000
+      redirect_to project, alert: 'Maximum upload size of a single data set is 10 MB. Please split your file into multiple pieces and upload them individually.'
+      return
+    end
+
     if params[:file] && params[:file].original_filename.split('.')[-1] == 'zip'
       Zip::File.open(params[:file].path) do |zip_file|
         results = []

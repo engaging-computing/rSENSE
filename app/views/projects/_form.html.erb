@@ -111,6 +111,22 @@
       </div>
 
       <div class="form-group">
+        <div><strong>Tags</strong></div>
+        <%= text_field_tag 'enter-project-tag-name' %>
+        <button type="button" class="btn btn-primary" id="add-project-tag">Add Tag</button>
+        <ul class="list-group" id="project-tag-list">
+          <% @project.tags.each do |tag| %>
+            <li class="list-group-item">
+              <span><%= tag.name %></span>
+              <span class="glyphicon glyphicon-remove remove-tag" 
+                    data-id="<%= tag.id %>">
+              </span>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+
+      <div class="form-group">
         <div class="checkbox">
           <div class="checkbox checkbox-inner">
             <%= f.check_box :lock %><strong> <i class="fa fa-lock"></i> Lock Project</strong>

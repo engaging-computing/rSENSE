@@ -2,20 +2,20 @@
 
 $ ->
   if namespace.controller is "projects" and namespace.action is "index"
-    
+
     # Setup toggle buttons
     $('.btn').button()
 
     # Setup auto-submit
     $('.projects_filter_checkbox').click ->
       ($ '#projects_search').submit()
-    
+
     $('.projects_sort_select').change ->
       ($ '#projects_search').submit()
-      
+
     $('.projects_order_select').change ->
       ($ '#projects_search').submit()
-    
+
     $('.binary-filters > .btn > input').click (e) ->
       cb = $(@)
       allowedClass = ['template-check', 'curated-check', 'featured-check', 'has-data-check']
