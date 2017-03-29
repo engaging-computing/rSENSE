@@ -28,7 +28,7 @@ $ ->
         expando = $('<span class="tag-toggle-button tag-expando-button"><i class="fa fa-ellipsis-h"></i></span>')
         collapso = $('<span class="tag-toggle-button tag-collapse-button"><i class="fa fa-close"></i></span>')
         list.find(".clear-tags").before(expando)
-        parentBox.parent().append(collapso) # collapse needs to be attached to parent box in case the list needs to scroll
+        parentBox.parent().append(collapso) # collapse needs to be attached to parent box in case list needs to scroll
 
         expando.click (e) ->
           $.each(hiddenList, (i, ele) ->
