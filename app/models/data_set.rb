@@ -27,6 +27,25 @@ class DataSet < ActiveRecord::Base
   before_validation :recalculate
 
   after_create :update_project
+  after_create :dynamo_upload
+
+  def dynamo_upload
+    unless self.temp_data.class == Array
+      self.temp_data = [data]
+    end
+    self.sanitize_data_set
+    self.temp_data.each do |datum|
+      next if datum.class != Hash
+      dynamodb.put_item({
+        table_name: 'Datums',
+        item: {
+          'data_set_id' => self.id,
+          'datum_id' =>  rand * 10000000000000000 + Time.now.to_i,
+          'datum' => datum,
+        }
+      })
+    end
+  end
 
   def update_project
     proj = Project.find(project_id)
@@ -74,26 +93,6 @@ class DataSet < ActiveRecord::Base
 
   def data=(data)
     self.temp_data = data
-  end
-
-  def save
-    unless self.temp_data.class == Array
-      self.temp_data = [data]
-    end
-    self.sanitize_data_set
-    self.temp_data.each do |datum|
-      next if datum.class != Hash
-      dynamodb.put_item({
-        table_name: 'Datums',
-        item: {
-          'data_set_id' => self.id,
-          'datum_id' =>  rand * 10000000000000000 + Time.now.to_i,
-          'datum' => datum,
-        }
-      })
-    end
-    self[:data] = "[]"
-    super
   end
 
   def to_hash(recurse = true)
