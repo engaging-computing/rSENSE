@@ -41,7 +41,12 @@ class DataSet < ActiveRecord::Base
       pause = 0.0125
       thrpt = 120
     end
-    dynamo_update_throughput(10,thrpt)
+    resp = client.describe_table({
+      table_name: "Datums", 
+    })
+    unless resp.to_h[:table][:provisioned_throughput][:write_capacity_units] == thrpt
+      dynamo_update_throughput(10,thrpt)
+    end
     sleep 5
     self.temp_data.each_slice(25) do |datums|
       datums = datums.map do |datum|
