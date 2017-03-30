@@ -34,17 +34,45 @@ class DataSet < ActiveRecord::Base
       self.temp_data = [data]
     end
     self.sanitize_data_set
-    self.temp_data.each do |datum|
-      next if datum.class != Hash
-      dynamodb.put_item({
-        table_name: 'Datums',
-        item: {
-          'data_set_id' => self.id,
-          'datum_id' =>  rand * 10000000000000000 + Time.now.to_i,
-          'datum' => datum,
-        }
-      })
+    if self.temp_data.length > 999
+      pause = 0.005
+      thrpt = 1200
+    else
+      pause = 0.0125
+      thrpt = 120
     end
+    dynamo_update_throughput(10,thrpt)
+    sleep 5
+    self.temp_data.each_slice(25) do |datums|
+      datums = datums.map do |datum|
+        {
+          table_name: 'Datums',
+          item: {
+            'data_set_id' => self.id,
+            'datum_id' =>  rand * 10000000000000000 + Time.now.to_i,
+            'datum' => datum,
+          }
+        }
+      end
+      puts "REQUESTS: #{datums}"
+      dynamodb.batch_write_item({
+        request_items: { 
+          "Datums" => datums,
+        },
+      })
+      sleep pause
+    end
+    dynamo_update_throughput(10,1)
+  end
+
+  def dynamo_update_throughput(read=10, write=1)
+    dynamodb.update_table({
+      provisioned_throughput: {
+        read_capacity_units: read, 
+        write_capacity_units: write, 
+      }, 
+      table_name: "Datums", 
+    })
   end
 
   def update_project
