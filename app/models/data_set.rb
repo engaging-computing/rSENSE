@@ -4,6 +4,8 @@ require 'digest'
 class DataSet < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
 
+  attr_accessor :temp_data
+
   serialize :data, JSON
   serialize :formula_data, JSON
 
@@ -21,7 +23,7 @@ class DataSet < ActiveRecord::Base
   alias_attribute :name, :title
   alias_attribute :owner, :user
 
-  before_validation :sanitize_data_set
+  # before_validation :sanitize_data_set
   before_validation :recalculate
 
   after_create :update_project
@@ -33,8 +35,7 @@ class DataSet < ActiveRecord::Base
 
   def sanitize_data_set
     self.title = strip_tags(title)
-
-    data.each do |data_row|
+    self.temp_data.each do |data_row|
       data_row.keys.each do |key|
         # Remove any and all HTML tags
         if data_row[key].is_a? String
@@ -60,7 +61,7 @@ class DataSet < ActiveRecord::Base
     )
   end
 
-  def self.data
+  def data
     response = dynamodb.query({
       table_name: 'Datums',
       key_condition_expression: 'data_set_id = :data_set_id',
@@ -68,25 +69,31 @@ class DataSet < ActiveRecord::Base
         ':data_set_id' => self.id
       }
     })
-    response.items
+    response.items.map { |item| item["datum"] }
   end
 
-  def self.data=(data)
-    unless data.class == Array
-      data = [data]
+  def data=(data)
+    self.temp_data = data
+  end
+
+  def save
+    unless self.temp_data.class == Array
+      self.temp_data = [data]
     end
-    data.each do |datum|
+    self.sanitize_data_set
+    self.temp_data.each do |datum|
       next if datum.class != Hash
       dynamodb.put_item({
         table_name: 'Datums',
         item: {
           'data_set_id' => self.id,
-          'datum_id' => Digest::SHA2.hexdigest(datum.to_a.sort_by {|k,v| k.to_s}.to_h).to_s,
+          'datum_id' =>  rand * 10000000000000000 + Time.now.to_i,
           'datum' => datum,
         }
       })
     end
-    self[:data] = nil
+    self[:data] = "[]"
+    super
   end
 
   def to_hash(recurse = true)
