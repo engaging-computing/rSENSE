@@ -56,7 +56,7 @@ class DataSet < ActiveRecord::Base
 
   def dynamodb
     Aws::DynamoDB::Client.new(
-    endpoint: 'http://localhost:8000',
+    # endpoint: 'http://localhost:8000',
     region: 'us-east-1'
     )
   end
