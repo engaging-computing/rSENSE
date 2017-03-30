@@ -45,13 +45,14 @@ class DataSet < ActiveRecord::Base
     sleep 5
     self.temp_data.each_slice(25) do |datums|
       datums = datums.map do |datum|
-        {
-          table_name: 'Datums',
-          item: {
+        { 
+          put_request: {
+            item: {
             'data_set_id' => self.id,
-            'datum_id' =>  rand * 10000000000000000 + Time.now.to_i,
+            'datum_id' => rand * 10000000000000000 + Time.now.to_i,
             'datum' => datum,
-          }
+            }    
+          } 
         }
       end
       puts "REQUESTS: #{datums}"
