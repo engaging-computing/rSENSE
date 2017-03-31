@@ -37,23 +37,23 @@ class DataSet < ActiveRecord::Base
     if self.temp_data.length > 999
       pause = 0.005
       thrpt = 1200
+      resp = dynamodb.describe_table({
+        table_name: "Datums", 
+      })
+      table = resp.to_h[:table]
+      same_thrpt = thrpt == table[:provisioned_throughput][:write_capacity_units]
+      max_decreases = table[:provisioned_throughput][:number_of_decreases_today] == 3
+      unless max_decreases || same_thrpt
+        dynamo_update_throughput(10,thrpt)
+        increased_thrpt = true
+        sleep 5 
+      else
+        increased_thrpt = false
+      end
     else
       pause = 0.0125
-      thrpt = 120
-    end
-    resp = dynamodb.describe_table({
-      table_name: "Datums", 
-    })
-    table = resp.to_h[:table]
-    same_thrpt = thrpt == table[:provisioned_throughput][:write_capacity_units]
-    max_decreases = table[:provisioned_throughput][:number_of_decreases_today] == 3
-    unless max_decreases || same_thrpt
-      dynamo_update_throughput(10,thrpt)
-      increased_thrpt = true
-    else
       increased_thrpt = false
     end
-    sleep 5
     self.temp_data.each_slice(25) do |datums|
       datums = datums.map do |datum|
         { 
