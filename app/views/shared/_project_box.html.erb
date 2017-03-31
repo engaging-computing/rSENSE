@@ -49,14 +49,15 @@
       </div>
     </div>
 
-    <div class="mdl-card__actions mdl-card--border project-card-tags">
-      <div class="badges">
-        <% if tags_count > 0 %>
-          <span class="badge card-tag-list" >
-            <%=  "Tags: " + @box_project.tags.all.collect(&:name).join(", ") %>
-          </span>
-        <% end %>
-      </div>
+    <div class="mdl-card__actions mdl-card--border project-card-tags<% if tags_count > 0 -%> tagged<% end %>">
+      <% if tags_count > 0 %>
+        <div class="tag-list">
+          <% @box_project.tags.each do |t| -%>
+            <a href="<%= projects_path %>?utf8=✓&search=<%= t.name %>&sort=updated_at&order=DESC"<span class="tag-badge"><%= t.name %></span></a>
+          <% end %> <%# If there are too many tags to display, they are hidden and a toggle button is added in index.js.coffee %>
+          <div class="clear-tags" style="clear: both;"></div>
+        </div>
+      <% end %>
     </div>
 
   </div>
