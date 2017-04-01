@@ -7,7 +7,6 @@ dynamodb = Aws::DynamoDB::Client.new(
 
 namespace :seed_datums do
   task copy_rdb_to_dynamo: :environment do
-  	# start your engines
   	start = Time.now
   	threadpool = []
   	DataSet.all.shuffle.each_slice(12500) do |data_set_arr|

@@ -1,5 +1,4 @@
 require 'beaker'
-require 'digest'
 
 class DataSet < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
