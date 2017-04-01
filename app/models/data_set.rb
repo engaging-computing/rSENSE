@@ -55,6 +55,7 @@ class DataSet < ActiveRecord::Base
       increased_thrpt = false
     end
     half_length = self.temp_data.length/2
+    threadpool = []
     self.temp_data.each_slice(half_length) do |data_set_arr|
       threadpool << Thread.new(data_set_arr) do |thr_data_sets|
         thr_data_sets.each_slice(25) do |datums|
