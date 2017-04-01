@@ -22,74 +22,10 @@ class DataSet < ActiveRecord::Base
   alias_attribute :name, :title
   alias_attribute :owner, :user
 
-  # before_validation :sanitize_data_set
+  before_validation :sanitize_data_set
   before_validation :recalculate
 
   after_create :update_project
-  after_create :dynamo_upload
-
-  def dynamo_upload
-    self.sanitize_data_set
-    #TODO check if data set already exists
-    # if so do not batch upload
-    increased_thrpt = false
-    resp = dynamodb.describe_table(table_name: "Data")
-    table = resp.to_h[:table]
-    if self.temp_data.length > 5000
-      # TODO send email to dev team
-      thrpt = 1000
-      same_thrpt = thrpt == table[:provisioned_throughput][:write_capacity_units]
-      max_decreases = table[:provisioned_throughput][:number_of_decreases_today] == 3
-      unless max_decreases || same_thrpt
-        dynamo_update_throughput(10,thrpt)
-        increased_thrpt = true
-        sleep 5 
-      end
-    end
-    threadpool = []
-    self.temp_data.each_slice(self.temp_data.length/2) do |data_set_arr|
-      threadpool << dynamo_upload_thr(data_set_arr)
-    end
-    threadpool.each(&:join)
-    if increased_thrpt
-      dynamo_update_throughput(10,10)
-    end
-  end
-
-  def dynamo_upload_thr(data_set_arr)
-    Thread.new(data_set_arr) do |thr_data_sets|
-      thr_data_sets.each_slice(25) do |datums|
-        datums = datums.map do |datum|
-          { 
-            put_request: {
-              item: {
-              'data_set_id' => self.id,
-              'datum_id' => rand * 10000000000000000 + Time.now.to_i,
-              'datum' => datum,
-              }    
-            } 
-          }
-        end
-        puts "REQUESTS: #{datums}"
-        dynamodb.batch_write_item({
-          request_items: { 
-            "Data" => datums,
-          },
-        })
-        sleep 0.005
-      end
-    end
-  end
-
-  def dynamo_update_throughput(read=10, write=1)
-    dynamodb.update_table({
-      provisioned_throughput: {
-        read_capacity_units: read, 
-        write_capacity_units: write, 
-      }, 
-      table_name: "Data", 
-    })
-  end
 
   def update_project
     proj = Project.find(project_id)
@@ -98,7 +34,7 @@ class DataSet < ActiveRecord::Base
 
   def sanitize_data_set
     self.title = strip_tags(title)
-    self.temp_data.each do |data_row|
+    self.data.each do |data_row|
       data_row.keys.each do |key|
         # Remove any and all HTML tags
         if data_row[key].is_a? String
@@ -115,28 +51,6 @@ class DataSet < ActiveRecord::Base
 
   def self.search(search)
     where('id = ? OR title LIKE ?', search.to_i, "%#{search}%").order('created_at DESC')
-  end
-
-  def dynamodb
-    Aws::DynamoDB::Client.new(
-    # endpoint: 'http://localhost:8000',
-    region: 'us-east-1'
-    )
-  end
-
-  def data
-    response = dynamodb.query({
-      table_name: 'Data',
-      key_condition_expression: 'data_set_id = :data_set_id',
-      expression_attribute_values: {
-        ':data_set_id' => self.id
-      }
-    })
-    response.items.map { |item| item["datum"] }
-  end
-
-  def data=(data)
-    self.temp_data = data
   end
 
   def to_hash(recurse = true)
