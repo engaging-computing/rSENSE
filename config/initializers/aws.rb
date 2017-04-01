@@ -7,9 +7,9 @@ dynamodb = Aws::DynamoDB::Client.new(
 
 tables = dynamodb.list_tables
 
-unless tables.table_names.include?("Datums")
+unless tables.table_names.include?("Data")
 	dynamodb.create_table({
-	  table_name: 'Datums',
+	  table_name: 'Data',
 	  attribute_definitions: [
 	    {attribute_name: 'data_set_id', attribute_type: 'N'},
 	    {attribute_name: 'datum_id', attribute_type: 'N'}
