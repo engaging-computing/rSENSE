@@ -10,7 +10,6 @@ class DataSetsController < ApplicationController
   # GET /data_sets/1.json
   def show
     @data_set = DataSet.find(params[:id])
-    @mongo_data_set = { data: @data_set.data }
     recur = params.include?(:recur) ? params[:recur] == 'true' : false
     respond_to do |format|
       format.html { redirect_to project_path(@data_set.project) + data_set_path(@data_set) }

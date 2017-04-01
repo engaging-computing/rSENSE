@@ -30,59 +30,55 @@ class DataSet < ActiveRecord::Base
   after_create :dynamo_upload
 
   def dynamo_upload
-    unless self.temp_data.class == Array
-      self.temp_data = [data]
-    end
     self.sanitize_data_set
     #TODO check if data set already exists
     # if so do not batch upload
+    increased_thrpt = false
+    resp = dynamodb.describe_table(table_name: "Data")
+    table = resp.to_h[:table]
     if self.temp_data.length > 5000
-      thrpt = 1200
-      resp = dynamodb.describe_table({
-        table_name: "Data", 
-      })
-      table = resp.to_h[:table]
+      # TODO send email to dev team
+      thrpt = 1000
       same_thrpt = thrpt == table[:provisioned_throughput][:write_capacity_units]
       max_decreases = table[:provisioned_throughput][:number_of_decreases_today] == 3
       unless max_decreases || same_thrpt
         dynamo_update_throughput(10,thrpt)
         increased_thrpt = true
         sleep 5 
-      else
-        increased_thrpt = false
       end
-    else
-      increased_thrpt = false
     end
-    half_length = self.temp_data.length/2
     threadpool = []
-    self.temp_data.each_slice(half_length) do |data_set_arr|
-      threadpool << Thread.new(data_set_arr) do |thr_data_sets|
-        thr_data_sets.each_slice(25) do |datums|
-          datums = datums.map do |datum|
-            { 
-              put_request: {
-                item: {
-                'data_set_id' => self.id,
-                'datum_id' => rand * 10000000000000000 + Time.now.to_i,
-                'datum' => datum,
-                }    
-              } 
-            }
-          end
-          puts "REQUESTS: #{datums}"
-          dynamodb.batch_write_item({
-            request_items: { 
-              "Data" => datums,
-            },
-          })
-          sleep 0.001
-        end
-      end
+    self.temp_data.each_slice(self.temp_data.length/2) do |data_set_arr|
+      threadpool << dynamo_upload_thr(data_set_arr)
     end
     threadpool.each(&:join)
     if increased_thrpt
       dynamo_update_throughput(10,10)
+    end
+  end
+
+  def dynamo_upload_thr(data_set_arr)
+    Thread.new(data_set_arr) do |thr_data_sets|
+      thr_data_sets.each_slice(25) do |datums|
+        datums = datums.map do |datum|
+          { 
+            put_request: {
+              item: {
+              'data_set_id' => self.id,
+              'datum_id' => rand * 10000000000000000 + Time.now.to_i,
+              'datum' => datum,
+              }    
+            } 
+          }
+        end
+        puts "REQUESTS: #{datums}"
+        dynamodb.batch_write_item({
+          request_items: { 
+            "Data" => datums,
+          },
+        })
+        sleep 0.005
+      end
     end
   end
 
