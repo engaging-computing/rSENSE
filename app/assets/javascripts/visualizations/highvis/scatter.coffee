@@ -46,8 +46,8 @@ $ ->
 
         @xGridSize = @yGridSize = @INITIAL_GRID_SIZE
 
-        @useSetAxis = true 
-        @isTimeline = null 
+        @useSetAxis = true
+        @isTimeline = null
         # Used for data reduction triggering
         @updateOnZoom = true
 
@@ -524,36 +524,107 @@ $ ->
         # Axis Manual entry for timeline
         if @isTimeline == true
             
-          #@TimestampEditor = (args) ->  
-            
-          formButton = $('#x-min-cal')
-          formInput = $('#x-axis-min')
-          currValue = null
-          position = document.getElementById('#x-axis-min') #.getBoundingClientRect();
-          console.log(position)
-          console.log(typeof position)
-          console.log(formButton.getBoundingClientRect[0])
-  
-  
-          formButton.click =>
-            dtPicker.open() 
-          console.log(formButton.datetimepicker) 
-          dtPicker = formButton.datetimepicker
+          # XMin DTPicker Control     
+          formButtonMin = $('#x-min-cal')
+          formInputMin = $('#x-axis-min')
+          formAnchorMin = $('#x-min')
+          currValueMin = null
+   
+          formButtonMin.click ->
+            dtPickerMin.open()
+
+          dtPickerMin = formButtonMin.datetimepicker
             autoClose: false
+            keyPress: (e) ->
+              e.stopImmediatePropagation()
+              e.keyCode
             onOpen: ->
-              formInput.focus()
-              currValue
+              formInputMin.focus()
+              currValueMin
             onChange: (val) ->
-              currValue = val.format('YYYY/MM/DD HH:mm:ss')
-              formInput.val currValue
-            hPosition: (w, h) ->
-              200
-              #@args.position.left + 2
-            vPosition: (w, h) ->
-              200
-              #@args.position.bottom + 2
-            
-          
+              currValueMin = val.format('YYYY/MM/DD HH:mm:ss')
+              formInputMin.val currValueMin
+              $(this).datepicker('hide')
+            onKeys:
+              13: -> #enter
+                dtPickerMin.close()
+              27: -> #escape
+                dtPickerMin.close()
+            anchor: formAnchorMin 
+            hPosition: ->
+              0
+            vPosition: ->
+              0 
+				 
+          # XMax DTPicker Control     
+          formButtonMax = $('#x-max-cal')
+          formInputMax = $('#x-axis-max')
+          formAnchorMax = $('#x-max')
+          currValueMax = null
+    
+          formButtonMax.click ->
+            dtPickerMax.open()
+
+          dtPickerMax = formButtonMax.datetimepicker
+            autoClose: false
+            keyPress: (e) ->
+              e.stopImmediatePropagation()
+              e.keyCode
+            onOpen: ->
+              formInputMax.focus()
+              currValueMax
+            onChange: (val) ->
+              currValueMax = val.format('YYYY/MM/DD HH:mm:ss')
+              formInputMax.val currValueMax
+            onKeys:
+              13: -> #enter
+                dtPickerMax.close()
+              27: -> #escape
+                dtPickerMax.close()
+            anchor: formAnchorMax 
+            hPosition: ->
+              0
+            vPosition: ->
+              0 
+
+            console.log(@configs)
+            # get values as numbers
+            $('#set-axis-button').click ->
+              console.log(@configs)
+ 
+              xAxisMin = $('#x-axis-min').val()
+              xAxisMax = $('#x-axis-max').val()
+              #console.log(xAxisMin)
+              #console.log(xAxisMax)
+              #xAxisMin = Number(xAxisMin)
+              #xAxisMax = Number(xAxisMax)
+              console.log(xAxisMin)
+              console.log(xAxisMax)
+
+              # error checking
+              #thereIsAFailure = false
+              #if xAxisMin >= xAxisMax
+              #  thereIsAFailure = true
+              #  $('#x-axis-min').popover
+              #    content: 'Left must be less than right'
+              #    placement: 'bottom'
+              #    trigger: 'manual'
+              #  $('#x-axis-min').popover('show')
+              #  if badNumberPopoverTimerX? then clearTimeout(badNumberPopoverTimerX)
+              #  badNumberPopoverTimerX = setTimeout ->
+              #    $('#x-axis-min').popover('destroy')
+              #  , 3000
+  
+              #if thereIsAFailure then return
+  
+              #$('#x-axis-min').popover('destroy')
+              #$('#x-axis-max').popover('destroy')
+              console.log(@configs) 
+              @configs.xBounds.min = xAxisMin
+              @configs.xBounds.max = xAxisMax
+  
+              @setExtremes() 
+ 
         # Axis Manual entry for scatter
         if @isTimeline == null
 
@@ -576,7 +647,7 @@ $ ->
               $('#x-axis-min').popover('show')
               if badNumberPopoverTimerXMin? then clearTimeout(badNumberPopoverTimerXMin)
               badNumberPopoverTimerXMin = setTimeout ->
-                 $('#x-axis-min').popover('destroy')
+                $('#x-axis-min').popover('destroy')
               , 3000
   
             if isNaN(xAxisMax) or xAxisMax == ""

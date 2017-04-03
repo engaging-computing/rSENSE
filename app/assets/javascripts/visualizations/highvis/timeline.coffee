@@ -38,7 +38,7 @@ $ ->
       constructor: (@canvas) ->
         super @canvas
 
-        @useSetAxis = true 
+        @useSetAxis = true
         @isTimeline = true
 
         @configs.mode = @LINES_MODE

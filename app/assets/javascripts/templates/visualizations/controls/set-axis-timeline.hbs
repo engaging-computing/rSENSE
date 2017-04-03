@@ -1,28 +1,20 @@
 <div class="vis-ctrl-subblock">
   <h4 class="vis-ctrl-subtitle">Axis Bounds</h4>
-  <table>
+  <table style="z-index: 99;">
     <tr>
       <td style="padding-bottom:10px;">
         <label>X Axis Min:</label>
-        <input id="x-axis-min" class="form-control axis" value="{{xAxisMin}}" placeholder="eg: 5,10">
+        <input id="x-axis-min" class="form-control axis" style="width:200px;" value="{{xAxisMin}}" placeholder="eg: 5,10">
         <i id="x-min-cal" class="editor-button fa fa-calendar"></i>
+				<div id="x-min"></div>
       </td>
+		</tr>
+		<tr>
       <td style="padding-bottom:10px;">
         <label>X Axis Max:</label>
-        <input id="x-axis-max" class="form-control axis" value="{{xAxisMax}}" placeholder="eg: 5,10">
+        <input id="x-axis-max" class="form-control axis" style="width:200px;" value="{{xAxisMax}}" placeholder="eg: 5,10">
         <i id="x-max-cal" class="editor-button fa fa-calendar"></i>
-      </td>
-    </tr>
-    <tr>
-      <td style="padding-bottom:10px;">
-        <label>Y Axis Min:</label>
-        <input id="y-axis-min" class="form-control axis" value="{{yAxisMin}}" placeholder="eg: 5,10">
-        <i id="y-min-cal" class="editor-button fa fa-calendar"></i>
-      </td>
-      <td style="padding-bottom:10px;">
-        <label>Y Axis Max:</label>
-        <input id="y-axis-max" class="form-control axis" value="{{yAxisMax}}" placeholder="eg: 5,10">
-        <i id="y-max-cal" class="editor-button fa fa-calendar"></i>
+				<div id="x-max"></div>
       </td>
     </tr>
     <tr>
