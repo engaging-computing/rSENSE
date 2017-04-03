@@ -1,16 +1,29 @@
-<h2>Resend confirmation instructions</h2>
-
+<%= devise_error_messages! %>
 <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
-  <%= devise_error_messages! %>
+<div class="row">
+  <div class="col-lg-6 col-lg-offset-3">
+    <div class="panel panel-default">
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %> 
-  </div>
+      <div class="panel-heading">
+        <h3>Didn't get a confirmation link?</h3>
+        <p> Just enter your email address below and we'll send you a new one. </p>
+      </div>
 
-  <div class="actions">
-    <%= f.submit "Resend confirmation instructions" %>
+      <div class="panel-body">
+        <div class="form-group">
+            <%= f.label :email %><br />
+            <%= f.email_field :email, autofocus: true, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %>
+        </div>
+      </div>
+
+      <div class="panel-footer">
+        <div class="form-group">
+          <%= f.submit("Resend", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--blue") %>
+        </div>
+      </div>
+
+    </div>
   </div>
+</div>
+
 <% end %>
-
-<%= render "devise/shared/links" %>

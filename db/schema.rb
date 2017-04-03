@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170128155421) do
+ActiveRecord::Schema.define(version: 20170306192933) do
 
   create_table "contrib_keys", force: true do |t|
     t.string   "name",       null: false
@@ -171,8 +171,12 @@ ActiveRecord::Schema.define(version: 20170128155421) do
     t.integer  "projects_count",         default: 0
     t.integer  "data_sets_count",        default: 0
     t.integer  "visualizations_count",   default: 0
+    t.string   "confirmation_token"
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
   end
 
+  add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
   add_index "users", ["email"], name: "index_users_on_email", unique: true
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
 
