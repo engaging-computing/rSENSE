@@ -524,7 +524,7 @@ $ ->
         # Axis Manual entry for timeline
         if @isTimeline == true
             
-          # XMin DTPicker Control     
+          # XMin DTPicker Control
           formButtonMin = $('#x-min-cal')
           formInputMin = $('#x-axis-min')
           formAnchorMin = $('#x-min')
@@ -532,6 +532,7 @@ $ ->
    
           formButtonMin.click ->
             dtPickerMin.open()
+            $('#dt-time-textbox').css("fontSize", "13px")
 
           dtPickerMin = formButtonMin.datetimepicker
             autoClose: false
@@ -550,13 +551,13 @@ $ ->
                 dtPickerMin.close()
               27: -> #escape
                 dtPickerMin.close()
-            anchor: formAnchorMin 
+            anchor: formAnchorMin
             hPosition: ->
               0
             vPosition: ->
-              0 
+              0
 				 
-          # XMax DTPicker Control     
+          # XMax DTPicker Control
           formButtonMax = $('#x-max-cal')
           formInputMax = $('#x-axis-max')
           formAnchorMax = $('#x-max')
@@ -564,6 +565,8 @@ $ ->
     
           formButtonMax.click ->
             dtPickerMax.open()
+            $('#dt-time-textbox').css('cssText', 'font-size: 13px !important;')
+            $('#dt-picker option').css('cssText', 'font-size: 13px !important;')
 
           dtPickerMax = formButtonMax.datetimepicker
             autoClose: false
@@ -581,49 +584,43 @@ $ ->
                 dtPickerMax.close()
               27: -> #escape
                 dtPickerMax.close()
-            anchor: formAnchorMax 
+            anchor: formAnchorMax
             hPosition: ->
               0
             vPosition: ->
-              0 
+              0
 
-            console.log(@configs)
             # get values as numbers
             $('#set-axis-button').click ->
-              console.log(@configs)
  
-              xAxisMin = $('#x-axis-min').val()
-              xAxisMax = $('#x-axis-max').val()
-              #console.log(xAxisMin)
-              #console.log(xAxisMax)
-              #xAxisMin = Number(xAxisMin)
-              #xAxisMax = Number(xAxisMax)
+              xAxisMin = Date.parse($('#x-axis-min').val()) / 1000
+              xAxisMax = Date.parse($('#x-axis-max').val()) / 1000
               console.log(xAxisMin)
               console.log(xAxisMax)
 
               # error checking
-              #thereIsAFailure = false
-              #if xAxisMin >= xAxisMax
-              #  thereIsAFailure = true
-              #  $('#x-axis-min').popover
-              #    content: 'Left must be less than right'
-              #    placement: 'bottom'
-              #    trigger: 'manual'
-              #  $('#x-axis-min').popover('show')
-              #  if badNumberPopoverTimerX? then clearTimeout(badNumberPopoverTimerX)
-              #  badNumberPopoverTimerX = setTimeout ->
-              #    $('#x-axis-min').popover('destroy')
-              #  , 3000
+              thereIsAFailure = false
+              if xAxisMin >= xAxisMax
+                thereIsAFailure = true
+                $('#x-axis-min').popover
+                  content: 'Left must be less than right'
+                  placement: 'bottom'
+                  trigger: 'manual'
+                $('#x-axis-min').popover('show')
+                if badNumberPopoverTimerX? then clearTimeout(badNumberPopoverTimerX)
+                badNumberPopoverTimerX = setTimeout ->
+                  $('#x-axis-min').popover('destroy')
+                , 3000
   
-              #if thereIsAFailure then return
+              if thereIsAFailure then return
   
               #$('#x-axis-min').popover('destroy')
               #$('#x-axis-max').popover('destroy')
-              console.log(@configs) 
-              @configs.xBounds.min = xAxisMin
-              @configs.xBounds.max = xAxisMax
+              #console.log(@configs)
+              #@configs.xBounds.min = xAxisMin
+              #@configs.xBounds.max = xAxisMax
   
-              @setExtremes() 
+              #@setExtremes()
  
         # Axis Manual entry for scatter
         if @isTimeline == null
@@ -634,7 +631,7 @@ $ ->
 
             xAxisMin = $('#x-axis-min').val()
             xAxisMax = $('#x-axis-max').val()
-  
+            console.log('test')
             yAxisMin = $('#y-axis-min').val()
             yAxisMax = $('#y-axis-max').val()
 
