@@ -269,7 +269,7 @@ class VisualizationsController < ApplicationController
     @datasets.each do |dset|
       total_data_points += dset.count
     end
-    
+
     if total_data_points > 100000
       flash[:danger] = 'Too many data points selected. You may only visualize up to 100,000 data points at one time.'
       respond_to do |format|
