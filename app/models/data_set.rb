@@ -223,7 +223,7 @@ class DataSet < ActiveRecord::Base
   end
 
   def update_count
-    self.count = self.data.count
+    self.count = data.count
   end
 
   def self.get_next_name(project, fname)
