@@ -12,8 +12,8 @@ class AddCountersToUsers < ActiveRecord::Migration
   end
 
   def down
-    add_column :users, :projects_count
-    add_column :users, :data_sets_count
-    add_column :users, :visualizations_count
+    remove_column :users, :projects_count, :integer
+    remove_column :users, :data_sets_count, :integer
+    remove_column :users, :visualizations_count, :integer
   end
 end

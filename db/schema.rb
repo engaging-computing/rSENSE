@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170306192933) do
+ActiveRecord::Schema.define(version: 20170403144606) do
 
   create_table "contrib_keys", force: true do |t|
     t.string   "name",       null: false
@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(version: 20170306192933) do
     t.string   "key"
     t.string   "contributor_name"
     t.text     "formula_data",     default: "[]", null: false
+    t.integer  "count",            default: 0
   end
 
   create_table "fields", force: true do |t|
