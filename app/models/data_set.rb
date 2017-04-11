@@ -3,8 +3,6 @@ require 'beaker'
 class DataSet < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
 
-  attr_accessor :temp_data
-
   serialize :data, JSON
   serialize :formula_data, JSON
 
