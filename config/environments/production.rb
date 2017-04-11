@@ -9,6 +9,7 @@ Rsense::Application.configure do
   config.action_controller.perform_caching = true
 
   # Disable Rails's static asset server (Apache or nginx will already do this)
+  # EDIT: enable for now
   config.serve_static_assets = true
 
   # Compress JavaScripts and CSS
