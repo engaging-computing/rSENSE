@@ -32,7 +32,7 @@ class DataSet < ActiveRecord::Base
 
   def sanitize_data_set
     self.title = strip_tags(title)
-    self.data.each do |data_row|
+    data.each do |data_row|
       data_row.keys.each do |key|
         # Remove any and all HTML tags
         if data_row[key].is_a? String
