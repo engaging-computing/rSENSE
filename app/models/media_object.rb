@@ -111,25 +111,28 @@ class MediaObject < ActiveRecord::Base
     }
 
     if recurse
-      h.merge!(owner: owner.to_hash(false))
 
-      if try(:project_id)
+      if owner
+        h.merge!(owner: owner.to_hash(false))
+      end
+
+      if try(:project_id) && project
         h.merge!(project: project.to_hash(false))
       end
 
-      if try(:data_set_id)
+      if try(:data_set_id) && data_set
         h.merge!(dataSet: data_set.to_hash(false))
       end
 
-      if try(:tutorial_id)
+      if try(:tutorial_id) && tutorial
         h.merge!(tutorial: tutorial.to_hash(false))
       end
 
-      if try(:visualization_id)
+      if try(:visualization_id) && visualization
         h.merge!(visualization: visualization.to_hash(false))
       end
 
-      if try(:news_id)
+      if try(:news_id) && news
         h.merge!(news: news.to_hash(false))
       end
     end

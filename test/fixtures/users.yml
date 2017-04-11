@@ -8,6 +8,7 @@ nixon:
   encrypted_password: <%= Devise::Encryptor.digest(User, '12345') %>
   admin: true
   created_at: <%= 5.day.ago.to_s(:db) %>
+  confirmed_at: "2017-03-06 00:00:00"
 
 kate:
   name: Kate C.
@@ -17,6 +18,7 @@ kate:
   encrypted_password: <%= Devise::Encryptor.digest(User, '12345') %>
   admin: false
   created_at: <%= 6.day.ago.to_s(:db) %>
+  confirmed_at: "2017-03-06 00:00:00"
 
 crunch:
   name: Captain C.
@@ -25,7 +27,8 @@ crunch:
   encrypted_password: <%= Devise::Encryptor.digest(User, '12345') %>
   validation_key: abcd
   created_at: <%= 7.day.ago.to_s(:db) %>
-
+  confirmed_at: "2017-03-06 00:00:00"
+  
 boxes:
   name: boxes
   email: boxes@boxes.boxes
@@ -33,6 +36,7 @@ boxes:
   encrypted_password: <%= Devise::Encryptor.digest(User, '12345') %>
   admin: false
   created_at: <%= 8.day.ago.to_s(:db) %>
+  confirmed_at: "2017-03-06 00:00:00"
 
 patson:
   name: Patrick Son
@@ -41,3 +45,4 @@ patson:
   encrypted_password: <%= Devise::Encryptor.digest(User, '12345') %>
   admin: false
   created_at: <%= 2.day.ago.to_s(:db) %>
+  confirmed_at: "2017-03-06 00:00:00"
