@@ -322,6 +322,71 @@ $ ->
         null
 
     ###
+    Gets the first quartile for the given field index.
+    All included datapoints must pass the given filter (defaults to all datapoints).
+    ###
+    data.getQ1 = (fieldIndex, groupIndices, dp) ->
+      if groupIndices?
+        if typeof groupIndices is 'number' then groupIndices = [groupIndices]
+        rawData = @multiGroupSelector(fieldIndex, groupIndices, dp)
+      else
+        rawData = dp.map (p) -> p[fieldIndex]
+
+      if rawData.length == 1
+        return data.precisionFilter(rawData[0])
+
+      rawData.sort (a, b) ->
+        if a < b then -1 else 1
+      mid = Math.floor(rawData.length / 2)
+
+      if rawData.length > 0
+        firstHalf = rawData.splice(0, mid)
+        mid = Math.floor(firstHalf.length / 2)
+        if firstHalf.length > 0
+          if firstHalf.length % 2
+            return data.precisionFilter(firstHalf[mid])
+          else
+            return data.precisionFilter((firstHalf[mid - 1] + firstHalf[mid]) / 2.0)
+        else
+          null
+      else
+        null
+
+    ###
+    Gets the third quartile for the given field index.
+    All included datapoints must pass the given filter (defaults to all datapoints).
+    ###
+    data.getQ3 = (fieldIndex, groupIndices, dp) ->
+      if groupIndices?
+        if typeof groupIndices is 'number' then groupIndices = [groupIndices]
+        rawData = @multiGroupSelector(fieldIndex, groupIndices, dp)
+      else
+        rawData = dp.map (p) -> p[fieldIndex]
+
+      if rawData.length == 1
+        return data.precisionFilter(rawData[0])
+
+      rawData.sort (a, b) ->
+        if a < b then -1 else 1
+      mid = Math.floor(rawData.length / 2)
+
+      if rawData.length > 0
+        if rawData.length % 2
+          secondHalf = rawData.splice(mid + 1, rawData.length)
+        else
+          secondHalf = rawData.splice(mid, rawData.length)
+        mid = Math.floor(secondHalf.length / 2)
+        if secondHalf.length > 0
+          if secondHalf.length % 2
+            return data.precisionFilter(secondHalf[mid])
+          else
+            return data.precisionFilter((secondHalf[mid - 1] + secondHalf[mid]) / 2.0)
+        else
+          null
+      else
+        null
+
+    ###
     Gets the number of points belonging to fieldIndex and groupIndex
     All included datapoints must pass the given filter (defaults to all datapoints).
     ###

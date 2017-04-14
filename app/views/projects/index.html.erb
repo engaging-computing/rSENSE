@@ -14,7 +14,7 @@
             <div class="input-group">
               <%= text_field_tag :search, @params[:search],
                   class: "form-control",
-                  placeholder: "Enter keyword(s) or project number to search for a project" %>
+                  placeholder: "Enter keyword(s) or project number or tag(s) to search for a project" %>
               <span class="input-group-btn">
                 <button class="btn btn-default">
                   <i class='fa fa-search'></i>
@@ -96,7 +96,7 @@
                 <div class="modal-body">
                     <%= f.label :project_name, "Project Name", class:"hidden" %>
                     <%= f.text_field :title, class: "form-control wide-input",
-                        placeholder: "Project Name", :autofocus=>true %>  
+                        placeholder: "Project Name", :autofocus=>true %>
                 </div>
                 <div class="modal-footer">
                   <button type = "submit"

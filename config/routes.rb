@@ -1,5 +1,5 @@
 Rsense::Application.routes.draw do
-  devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks', registrations: 'registrations', passwords: 'passwords' }
+  devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks', registrations: 'registrations', passwords: 'passwords', confirmations: 'confirmations' }
 
   get '/users/:id/contributions' => 'users#contributions'
   get '/users/:id/edit' => 'users#edit'
@@ -30,6 +30,9 @@ Rsense::Application.routes.draw do
   post 'projects/:id/templateFields' => 'projects#templateFields'
   post '/projects/import' => 'projects#importFromIsense'
   post '/projects/import/:pid' => 'projects#importFromIsense'
+
+  post '/projects/create_tag' => 'projects#create_tag'
+  delete '/projects/remove_tag' => 'projects#remove_tag'
 
   resources :visualizations, except: [:new]
 

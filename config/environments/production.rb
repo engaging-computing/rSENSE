@@ -9,6 +9,7 @@ Rsense::Application.configure do
   config.action_controller.perform_caching = true
 
   # Disable Rails's static asset server (Apache or nginx will already do this)
+  # EDIT: enable for now
   config.serve_static_assets = true
 
   # Compress JavaScripts and CSS
@@ -71,6 +72,11 @@ Rsense::Application.configure do
   # with SQLite, MySQL, and PostgreSQL)
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
-  # TODO: revert upon cutover
-  config.action_mailer.default_url_options = { protocol: 'http', host: 'rsense-beanstalk-env.j344zpn2wr.us-east-1.elasticbeanstalk.com' }
+  # Don't use HTTPS for the dev server
+  if `hostname`.chomp == 'rsense-dev.cs.uml.edu'
+    config.action_mailer.default_url_options = { host: `hostname`.chomp }
+  else
+    # TODO: revert upon cutover
+    config.action_mailer.default_url_options = { protocol: 'http', host: 'rsense-beanstalk-env.j344zpn2wr.us-east-1.elasticbeanstalk.com' }
+  end
 end

@@ -1,5 +1,5 @@
 <h1>Welcome to iSENSE, <%= @user.firstname %></h1>
 <p>
-  To validate your email so you can start creating projects, just follow this link: <%= link_to 'Confirm my account', confirmation_url(@resource, confirmation_token: @token) %>
+  To confirm your email so you can start creating projects, just follow this link: <%= link_to 'Confirm my account', confirmation_url(@resource, :confirmation_token => @token) %>
 </p>
 <p>Thanks for joining and have a great day!</p>

@@ -1,10 +1,12 @@
 <% has_img = @box_project.featured_media_id != nil %>
+<% tags_count = @box_project.tags.length %>
+
 <div class="col-xs-12 col-sm-4 col-md-3">
   <div class="mdl-card mdl-shadow--2dp">
     <% if has_img %> <a href='<%= project_path @box_project %>' ><% end %>
-      <div class="mdl-card__title" style="background-image:url( 
-        <% if has_img %> <%= MediaObject.find(@box_project.featured_media_id).src %>  
-        <% else %> <%= image_path('projects_placeholder.jpg') %> 
+      <div class="mdl-card__title" style="background-image:url(
+        <% if has_img %> <%= MediaObject.find(@box_project.featured_media_id).src %>
+        <% else %> <%= image_path('projects_placeholder.jpg') %>
         <% end %>);" >
         <% if !has_img %>
           <h2 class="mdl-card__title-text"><%= link_to truncate(@box_project.name.html_safe, length: 40),
@@ -14,7 +16,7 @@
     <% if has_img %> </a><% end %>
     <div class="mdl-card__supporting-text proj-info">
       <% if has_img %>
-        <div class="item-title word-wrap"> 
+        <div class="item-title word-wrap">
           <%= link_to truncate(@box_project.name.html_safe, length: 40),
                     @box_project %>
           <% if @box_project.featured and !(defined? @box_project_front_page) %>
@@ -22,7 +24,7 @@
           <% end %>
         </div>
       <% end %>
-      <strong>Creator: </strong> 
+      <strong>Creator: </strong>
         <a href="<%= user_url(@box_project.owner) %>">
         <%= @box_project.owner.name %> </a><br/>
         <%= @box_project.created_at.strftime("%B %d, %Y") %>
@@ -46,5 +48,17 @@
         </div>
       </div>
     </div>
+
+    <div class="mdl-card__actions mdl-card--border project-card-tags<% if tags_count > 0 -%> tagged<% end %>">
+      <% if tags_count > 0 %>
+        <div class="tag-list">
+          <% @box_project.tags.each do |t| -%>
+            <a href="<%= projects_path %>?utf8=✓&search=<%= t.name %>&sort=updated_at&order=DESC"<span class="tag-badge"><%= t.name %></span></a>
+          <% end %> <%# If there are too many tags to display, they are hidden and a toggle button is added in index.js.coffee %>
+          <div class="clear-tags" style="clear: both;"></div>
+        </div>
+      <% end %>
+    </div>
+
   </div>
 </div>

@@ -102,7 +102,3 @@ gem 'beaker', '~> 1.3.0', git: 'https://github.com/isenseDev/beaker-lang'
 # User System
 gem 'devise'
 gem "omniauth-google-oauth2"
-
-# Amazon Web Services
-gem 'aws-sdk', '~> 2'
-gem 'aws-sdk-rails', '~> 1.0'
