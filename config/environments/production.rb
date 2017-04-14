@@ -71,5 +71,6 @@ Rsense::Application.configure do
   # with SQLite, MySQL, and PostgreSQL)
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
-  config.action_mailer.default_url_options = { protocol: 'https', host: `hostname`.chomp }
+  # TODO: revert upon cutover
+  config.action_mailer.default_url_options = { protocol: 'http', host: 'rsense-beanstalk-env.j344zpn2wr.us-east-1.elasticbeanstalk.com' }
 end
