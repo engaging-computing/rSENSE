@@ -590,39 +590,38 @@ $ ->
             vPosition: ->
               0
 
-            # get values as numbers
-            $('#set-axis-button').click ->
+          # get values as numbers
+          console.log(@configs)
+          $('#set-axis-button').click ->
  
-              xAxisMin = Date.parse($('#x-axis-min').val()) / 1000
-              xAxisMax = Date.parse($('#x-axis-max').val()) / 1000
-              console.log(xAxisMin)
-              console.log(xAxisMax)
+            xAxisMin = Date.parse($('#x-axis-min').val()) / 1000
+            xAxisMax = Date.parse($('#x-axis-max').val()) / 1000
+            console.log(xAxisMin)
+            console.log(xAxisMax)
+             # error checking
+            thereIsAFailure = false
+            if xAxisMin >= xAxisMax
+              thereIsAFailure = true
+              $('#x-axis-min').popover
+                content: 'Left must be less than right'
+                placement: 'bottom'
+                trigger: 'manual'
+              $('#x-axis-min').popover('show')
+              if badNumberPopoverTimerX? then clearTimeout(badNumberPopoverTimerX)
+              badNumberPopoverTimerX = setTimeout ->
+                $('#x-axis-min').popover('destroy')
+              , 3000
 
-              # error checking
-              thereIsAFailure = false
-              if xAxisMin >= xAxisMax
-                thereIsAFailure = true
-                $('#x-axis-min').popover
-                  content: 'Left must be less than right'
-                  placement: 'bottom'
-                  trigger: 'manual'
-                $('#x-axis-min').popover('show')
-                if badNumberPopoverTimerX? then clearTimeout(badNumberPopoverTimerX)
-                badNumberPopoverTimerX = setTimeout ->
-                  $('#x-axis-min').popover('destroy')
-                , 3000
+            if thereIsAFailure then return
+
+            $('#x-axis-min').popover('destroy')
+            $('#x-axis-max').popover('destroy')
+            console.log(@)
+            @configs.xBounds.min = xAxisMin
+            @configs.xBounds.max = xAxisMax
+            #@setExtremes()
   
-              if thereIsAFailure then return
-  
-              #$('#x-axis-min').popover('destroy')
-              #$('#x-axis-max').popover('destroy')
-              #console.log(@configs)
-              #@configs.xBounds.min = xAxisMin
-              #@configs.xBounds.max = xAxisMax
-  
-              #@setExtremes()
- 
-        # Axis Manual entry for scatter
+	      # Axis Manual entry for scatter
         if @isTimeline == null
 
           $('#set-axis-button').click =>
@@ -631,7 +630,6 @@ $ ->
 
             xAxisMin = $('#x-axis-min').val()
             xAxisMax = $('#x-axis-max').val()
-            console.log('test')
             yAxisMin = $('#y-axis-min').val()
             yAxisMax = $('#y-axis-max').val()
 
@@ -721,6 +719,7 @@ $ ->
             $('#y-axis-min').popover('destroy')
             $('#y-axis-max').popover('destroy')
   
+            console.log(@)
             @configs.xBounds.min = xAxisMin
             @configs.xBounds.max = xAxisMax
   
