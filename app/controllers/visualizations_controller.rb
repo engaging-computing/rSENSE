@@ -1,7 +1,7 @@
 class VisualizationsController < ApplicationController
   include ApplicationHelper
   include ActionView::Helpers::DateHelper
-
+  # this comment is a test, please delete
   skip_before_filter :authorize, only: [:show, :displayVis, :index, :embedVis]
 
   after_action :allow_iframe, only: [:show, :displayVis]
