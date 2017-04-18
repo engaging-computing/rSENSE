@@ -265,6 +265,20 @@ class VisualizationsController < ApplicationController
                                                           { news: [:user, :media_objects] }, :user]).where(project_id: params[:id])
     end
 
+    total_data_points = 0
+    @datasets.each do |dset|
+      total_data_points += dset.count
+    end
+
+    if total_data_points > 100000
+      flash[:danger] = 'Too many data points selected. You may only visualize up to 100,000 data points at one time.'
+      respond_to do |format|
+        format.html { redirect_to @project }
+        format.json { render json: { errors: ['Too many data points.'] }, status: 302 }
+      end
+      return
+    end
+
     # create special row identifier field for all datasets
     data_fields.push(typeID: NUMBER_TYPE, unitName: 'id', fieldID: -1, fieldName: 'Data Point')
     # create special dataset grouping field

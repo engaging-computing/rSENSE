@@ -71,5 +71,10 @@ Rsense::Application.configure do
   # with SQLite, MySQL, and PostgreSQL)
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
-  config.action_mailer.default_url_options = { protocol: 'https', host: `hostname`.chomp }
+  # Don't use HTTPS for the dev server
+  if `hostname`.chomp == 'rsense-dev.cs.uml.edu'
+    config.action_mailer.default_url_options = { host: `hostname`.chomp }
+  else
+    config.action_mailer.default_url_options = { protocol: 'https', host: `hostname`.chomp }
+  end
 end

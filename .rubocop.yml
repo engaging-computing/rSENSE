@@ -173,7 +173,7 @@ MethodCallParentheses:
 # Offence count: 78
 # Configuration parameters: CountComments.
 MethodLength:
-  Max: 130 
+  Max: 150
 
 # Offence count: 16
 # Configuration parameters: EnforcedStyle, SupportedStyles.

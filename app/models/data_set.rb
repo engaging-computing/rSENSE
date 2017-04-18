@@ -11,6 +11,7 @@ class DataSet < ActiveRecord::Base
   validates_uniqueness_of :title, message: "\"%{value}\" is taken.", scope: [:project_id]
 
   validates :title, length: { maximum: 128 }
+  validates :count, numericality: { less_than_or_equal_to: 100000, message: 'Maximum size of a data set is 100,000.' }
 
   has_many :media_objects
 
@@ -22,6 +23,7 @@ class DataSet < ActiveRecord::Base
 
   before_validation :sanitize_data_set
   before_validation :recalculate
+  before_validation :update_count
 
   after_create :update_project
 
@@ -65,7 +67,8 @@ class DataSet < ActiveRecord::Base
       fieldCount: project.fields.length,
       datapointCount: data.length,
       displayURL: "/projects/#{project.id}/data_sets/#{id}",
-      data: data
+      data: data,
+      count: count
     }
 
     if recurse
@@ -218,6 +221,10 @@ class DataSet < ActiveRecord::Base
     end
 
     self.formula_data = dset
+  end
+
+  def update_count
+    self.count = data.count
   end
 
   def self.get_next_name(project, fname)
