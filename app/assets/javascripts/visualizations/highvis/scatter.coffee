@@ -451,6 +451,9 @@ $ ->
         $('#y-axis-min').val(@configs.yBounds.min)
         $('#y-axis-max').val(@configs.yBounds.max)
 
+        if @isTimeline = true
+          $('#x-axis-min').val(new Date(@configs.xBounds.min).toLocaleString())
+          $('#x-axis-max').val(new Date(@configs.xBounds.max).toLocaleString())
         
       ###
       Draws radio buttons for changing symbol/line mode.
@@ -530,6 +533,8 @@ $ ->
           formAnchorMin = $('#x-min')
           currValueMin = null
    
+          formInputMin.val()
+
           formButtonMin.click ->
             dtPickerMin.open()
             $('#dt-time-textbox').css("fontSize", "13px")
@@ -591,8 +596,7 @@ $ ->
               0
 
           # get values as numbers
-          console.log(@configs)
-          $('#set-axis-button').click ->
+          $('#set-axis-button').click =>
  
             xAxisMin = Date.parse($('#x-axis-min').val()) / 1000
             xAxisMax = Date.parse($('#x-axis-max').val()) / 1000
@@ -616,10 +620,11 @@ $ ->
 
             $('#x-axis-min').popover('destroy')
             $('#x-axis-max').popover('destroy')
-            console.log(@)
+
             @configs.xBounds.min = xAxisMin
             @configs.xBounds.max = xAxisMax
-            #@setExtremes()
+ 
+            @setExtremes()
   
 	      # Axis Manual entry for scatter
         if @isTimeline == null
