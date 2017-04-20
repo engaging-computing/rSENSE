@@ -548,7 +548,7 @@ $ ->
               formInputMin.focus()
               currValueMin
             onChange: (val) ->
-              currValueMin = val.format('YYYY/MM/DD HH:mm:ss')
+              currValueMin = val.toLocaleString()
               formInputMin.val currValueMin
               $(this).datepicker('hide')
             onKeys:
@@ -582,7 +582,7 @@ $ ->
               formInputMax.focus()
               currValueMax
             onChange: (val) ->
-              currValueMax = val.format('YYYY/MM/DD HH:mm:ss')
+              currValueMax = val.toLocaleString()
               formInputMax.val currValueMax
             onKeys:
               13: -> #enter
@@ -598,8 +598,8 @@ $ ->
           # get values as numbers
           $('#set-axis-button').click =>
  
-            xAxisMin = Date.parse($('#x-axis-min').val()) / 1000
-            xAxisMax = Date.parse($('#x-axis-max').val()) / 1000
+            xAxisMin = Date.parse($('#x-axis-min').val())
+            xAxisMax = Date.parse($('#x-axis-max').val())	
             console.log(xAxisMin)
             console.log(xAxisMax)
              # error checking
