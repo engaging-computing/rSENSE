@@ -79,4 +79,7 @@ Rsense::Application.configure do
     # TODO: revert upon cutover
     config.action_mailer.default_url_options = { protocol: 'http', host: 'rsense-beanstalk-env.j344zpn2wr.us-east-1.elasticbeanstalk.com' }
   end
+
+  # unset X-FRAME
+  config.action_dispatch.default_headers['X-Frame-Options'] = "OKAY"
 end
