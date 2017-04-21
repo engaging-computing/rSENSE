@@ -251,7 +251,6 @@ class VisualizationsController < ApplicationController
     if !params[:datasets].nil?
       dsets = params[:datasets].split(',')
       @datasets = DataSet.where(id: dsets, project_id: @project.id)
-
       if @datasets.length == 0
         respond_to do |format|
           format.html { redirect_to '/404.html' }
