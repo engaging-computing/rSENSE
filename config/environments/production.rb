@@ -76,7 +76,7 @@ Rsense::Application.configure do
   if `hostname`.chomp == 'rsense-dev.cs.uml.edu'
     config.action_mailer.default_url_options = { host: `hostname`.chomp }
   else
-    # TODO: revert upon cutover
-    config.action_mailer.default_url_options = { protocol: 'http', host: 'rsense-beanstalk-env.j344zpn2wr.us-east-1.elasticbeanstalk.com' }
+    config.action_mailer.default_url_options = { protocol: 'https', host: 'isenseproject.org' }
   end
+
 end
