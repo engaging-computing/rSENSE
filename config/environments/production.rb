@@ -76,9 +76,7 @@ Rsense::Application.configure do
   if `hostname`.chomp == 'rsense-dev.cs.uml.edu'
     config.action_mailer.default_url_options = { host: `hostname`.chomp }
   else
-    config.action_mailer.default_url_options = { protocol: 'http', host: 'isenseproject.org' }
+    config.action_mailer.default_url_options = { protocol: 'https', host: 'isenseproject.org' }
   end
 
-  # unset X-FRAME
-  config.action_dispatch.default_headers['X-Frame-Options'] = "OKAY"
 end
