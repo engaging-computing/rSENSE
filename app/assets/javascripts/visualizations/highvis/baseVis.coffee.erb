@@ -578,9 +578,17 @@ $ ->
         ($ "#default-vis-btn").click ->
           globals.defaultVis()
 
-        $('#download-vis-btn').click =>
+        $('#download-image-btn').click =>
+          @chart.exportChart
+            type: "image/png"
+
+        $('#download-vector-btn').click =>
           @chart.exportChart
             type: "image/svg+xml"
+
+        $('#download-document-btn').click =>
+          @chart.exportChart
+            type: "application/pdf"
 
         $('#print-vis-btn').click =>
           # Resize chart if it is too big to print
