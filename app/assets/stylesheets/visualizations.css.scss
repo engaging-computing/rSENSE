@@ -454,6 +454,10 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
           display: inline-block;
           margin: 5px auto;
         }
+
+        .export-btn img {
+          width: 100%;
+        }
         
         .save-disabled {
           display: inline-block;
