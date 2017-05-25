@@ -449,6 +449,11 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
           width: 80%;
           margin: 5px auto;
         }
+
+        .export-btn {
+          display: inline-block;
+          margin: 5px auto;
+        }
         
         .save-disabled {
           display: inline-block;
