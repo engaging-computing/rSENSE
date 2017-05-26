@@ -79,4 +79,7 @@ Rsense::Application.configure do
     config.action_mailer.default_url_options = { protocol: 'https', host: 'isenseproject.org' }
   end
 
+  # Puma logger 
+  config.middleware.use PumaStatsLogger::Middleware, logger: Logger.new('/var/log/puma/puma-stats.log')
+
 end

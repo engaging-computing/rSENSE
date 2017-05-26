@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 gem 'puma'
+gem 'puma-stats-logger'
 gem 'rails', '~> 4.1.4'
 
 gem 'sqlite3'
