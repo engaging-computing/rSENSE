@@ -64,6 +64,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     -webkit-user-drag: none;
     -webkit-user-select: none;
     -ms-user-select: none;
+    display: none
   }
 
   div.regr-tooltip {
