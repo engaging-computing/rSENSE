@@ -79,4 +79,6 @@ Rsense::Application.configure do
     config.action_mailer.default_url_options = { protocol: 'https', host: 'isenseproject.org' }
   end
 
+  ENV['RSENSE_VERSION'] = `(git describe --tags) 2>&1`
+
 end
