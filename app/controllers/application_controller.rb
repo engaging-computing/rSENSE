@@ -94,7 +94,7 @@ class ApplicationController < ActionController::Base
 
   def find_user
     @namespace = { action: params[:action], controller: params[:controller], id: params[:id] }
-    @version = `(git describe --tags) 2>&1`
+    @version = ENV['RSENSE_VERSION']
     @version = 'Development Version' if @version == '' || @version =~ /fatal:/
   end
 
