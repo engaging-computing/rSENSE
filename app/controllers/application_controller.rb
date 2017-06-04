@@ -95,7 +95,7 @@ class ApplicationController < ActionController::Base
   def find_user
     @namespace = { action: params[:action], controller: params[:controller], id: params[:id] }
     @version = ENV['RSENSE_VERSION']
-    @version = 'Development Version' if @version.blank? || @version =~ /fatal:/ || if @version.nil?
+    @version = 'Development Version' if @version.blank? || @version =~ /fatal:/
   end
 
   def options_req
