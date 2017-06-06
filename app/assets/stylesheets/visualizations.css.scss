@@ -35,6 +35,20 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     -ms-user-select: none;
     user-select: none;
   }
+
+  #add-annotation-button {
+    height: 48px;
+    position: absolute;
+    right: 0;
+    padding: 0 5px;
+    opacity: .5;
+    cursor: pointer;
+  }
+
+  img#add-annotation-button:hover {
+    opacity: 1;
+  }
+
   .axis {
     display:inherit;
     width: 45%;
