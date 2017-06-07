@@ -84,6 +84,7 @@
               </div>
             <% end %>
           </div>
+        <%= image_tag("comment.svg", id:"add-annotation-button") %>
           <% if getLatest %>
             <%= link_to "#{project_path(@project)}/data_sets",
                 { id:"refresh-data", class: "btn btn-default" } do %>
@@ -113,7 +114,6 @@
             <%= link_to "#{project.owner.name}", owner, class: "link" %>
           </div>
         </div>
-        <%= image_tag("comment.svg", id:"add-annotation-button") %>
       </div>
       <div id="disabled-points-box">
       </div>

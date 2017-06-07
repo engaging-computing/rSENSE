@@ -48,6 +48,10 @@ $ ->
         globals.selectedPointId = -1
         globals.selectedDataSetId = -1
 
+        # Need X's and Y's for positioning annotations
+        globals.selectedPointX = -1
+        globals.selectedPointY = -1
+
         globals.configs.disabledPoints ?= []
 
       ANALYSISTYPE_TOTAL:      0
@@ -125,6 +129,9 @@ $ ->
       ###
       clearControls: ->
         $('#vis-ctrls').empty()
+        # The annotation button could not have the same ID as other controls
+        #     due to different location on screen.
+        $('#add-annotation-button').unbind('click')
 
       ###
       Calculate data to be displayed subject to analysis type
@@ -862,7 +869,6 @@ $ ->
       end: ->
         if "Pie" in data.relVis and globals.configs.groupById == data.NUMBER_FIELDS_FIELD
           $('#group-by').val(data.COMBINED_FIELD).change()
-
         if @chart?
           @chart.destroy()
           @chart = undefined
@@ -876,8 +882,13 @@ $ ->
         # Projects no longer get destroyed on serialize
 
       ###
-      Annotation button
+      Control button for adding annotations to a vis
+      NOTE: Currently is in "sloppy" demo state...
       ###
+
       drawAnnotationControls: ->
-        $('#add-annotation-button').click =>
-          alert "Button pressed."
+        $('#add-annotation-button').click (e) =>
+          pt_x = globals.selectedPointX + @chart.plotLeft
+          pt_y = globals.selectedPointY + @chart.plotTop
+          annotation = prompt("Enter a comment:", "New Annotation")
+          @chart.renderer.label(annotation, pt_x - 20, pt_y - 40, 'callout', pt_x, pt_y).css({color: '#FABFAB'}).attr({padding: 8, r: 5, zIndex: 100, fill: 'rgba(0, 0, 0, 0.75'}).add()

@@ -130,6 +130,8 @@ $ ->
                   select: () ->
                     globals.selectedDataSetId = globals.getDataSetId(@.datapoint[1])
                     globals.selectedPointId = @.datapoint[0]
+                    globals.selectedPointX = @plotX
+                    globals.selectedPointY = @plotY
                     $('#disable-point-button').prop("disabled", false)
 
           groupBy = ''
