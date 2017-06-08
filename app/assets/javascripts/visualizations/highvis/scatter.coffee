@@ -132,6 +132,7 @@ $ ->
                     globals.selectedPointId = @.datapoint[0]
                     globals.selectedPointX = @plotX
                     globals.selectedPointY = @plotY
+                    console.log this.datapoint
                     $('#disable-point-button').prop("disabled", false)
 
           groupBy = ''

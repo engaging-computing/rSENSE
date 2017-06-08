@@ -36,6 +36,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     user-select: none;
   }
 
+  // Annotations stuff
   #add-annotation-button {
     height: 48px;
     position: relative;
@@ -47,6 +48,10 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
 
   img#add-annotation-button:hover {
     opacity: 1;
+  }
+  
+  .highcharts-annotation {
+    cursor: pointer; 
   }
 
   .axis {
