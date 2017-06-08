@@ -890,5 +890,6 @@ $ ->
         $('#add-annotation-button').click (e) =>
           pt_x = globals.selectedPointX + @chart.plotLeft
           pt_y = globals.selectedPointY + @chart.plotTop
-          annotation = prompt("Enter a comment:", "New Annotation")
-          @chart.renderer.label(annotation, pt_x - 20, pt_y - 40, 'callout', pt_x, pt_y).css({color: '#FABFAB'}).attr({padding: 8, r: 5, zIndex: 100, fill: 'rgba(0, 0, 0, 0.75'}).add()
+          msg = prompt "Enter a comment:", "New Annotation"
+          annotation = new Annotation msg, pt_x, pt_y, 'callout'
+          annotation.draw @chart
