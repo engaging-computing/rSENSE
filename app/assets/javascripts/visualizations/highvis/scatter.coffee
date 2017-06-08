@@ -111,7 +111,7 @@ $ ->
             zoomType: "xy"
             resetZoomButton:
               theme:
-                display: "none"
+                display: "none" 
           plotOptions:
             scatter:
               animation: false
