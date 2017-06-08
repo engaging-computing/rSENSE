@@ -52,6 +52,7 @@ $ ->
         globals.selectedPointX = -1
         globals.selectedPointY = -1
 
+        globals.annotationSet = null
         globals.configs.disabledPoints ?= []
 
       ANALYSISTYPE_TOTAL:      0
@@ -883,13 +884,16 @@ $ ->
 
       ###
       Control button for adding annotations to a vis
-      NOTE: Currently is in "sloppy" demo state...
       ###
 
       drawAnnotationControls: ->
         $('#add-annotation-button').click (e) =>
+          globals.annotationSet ?= new AnnotationSet()
+          # Create a new annotation
           pt_x = globals.selectedPointX + @chart.plotLeft
           pt_y = globals.selectedPointY + @chart.plotTop
           msg = prompt "Enter a comment:", "New Annotation"
           annotation = new Annotation msg, pt_x, pt_y, 'callout'
+          globals.annotationSet.addToList annotation
           annotation.draw @chart
+          console.log globals.annotationSet

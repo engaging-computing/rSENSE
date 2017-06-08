@@ -4,6 +4,7 @@ $ ->
 
     class window.Annotation extends Object
         constructor: (msg, x_pt, y_pt, type = 'rect') ->
+            console.log "Creating a new annotation"
             @msg = msg
             @x_pt = x_pt
             @y_pt = y_pt
@@ -16,3 +17,14 @@ $ ->
             chart.renderer.label(@msg, x_box, y_box, @type, @x_pt, @y_pt) \
                           .css(text).attr(bubble) \
                           .add()
+
+    class window.AnnotationSet extends Object
+        constructor: ->
+            console.log "Creating an annotation set"
+            @list = []
+        
+        addToList: (elt) ->
+            @list.push elt
+
+        emptyList: ->
+            @list = []
