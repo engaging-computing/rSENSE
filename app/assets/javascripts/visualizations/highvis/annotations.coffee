@@ -11,15 +11,23 @@ $ ->
             if type == 'callout' then @type = 'callout' else @type = 'rect'
             
         draw: (chart) ->
-            x_box = @x_pt - 20;
-            y_box = @y_pt - 40;
+            # X position of box corner
+            x_box = @x_pt - 20
+            # Y position of box corner
+            if @y_pt > (chart.chartHeight / 4)
+                y_box = @y_pt - 40    
+            else
+                y_box = @y_pt + 10
+            # Styling stuff (can't use traditional CSS)
             style = {padding: 8, r: 5, zIndex: 6, fill: 'rgba(0, 0, 0, 0.75'}
             text = {color: 'white'}
+            # Render new element
             elt = chart.renderer.label(@msg, x_box, y_box, @type, @x_pt, @y_pt, \
                                        false, false, "annotation")
             elt.attr(style)
             elt.css(text)
             elt.add()
+            # Set up double-click to delete
             $(elt.element).dblclick =>
                 # Remove from data structure
                 globals.annotationSet.deleteElement(@x_pt, @y_pt)
