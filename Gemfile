@@ -2,7 +2,6 @@ source 'https://rubygems.org'
 gem 'puma'
 gem 'rails', '~> 4.1.4'
 
-gem 'sqlite3'
 gem 'pg'
 
 gem 'coffee-rails'
@@ -22,6 +21,7 @@ gem 'sprockets', '~> 2.12'
 
 # Integration testing stuff
 group :development, :test do
+  gem 'sqlite3'
   gem 'capybara'
   gem 'selenium-webdriver'
   gem 'launchy'
@@ -34,6 +34,7 @@ group :development, :test do
   gem 'capybara-screenshot'
   gem 'html5_validator'
   gem 'byebug'
+  gem 'derailed'
 end
 
 # Jquery stuff
@@ -69,12 +70,6 @@ gem 'will_paginate-bootstrap'
 
 # Include Remotipart
 gem 'remotipart'
-
-# To allow coffescript views
-gem 'coffeebeans'
-
-# Include newer version of WEBrick
-gem 'webrick'
 
 gem 'mini_magick'
 
