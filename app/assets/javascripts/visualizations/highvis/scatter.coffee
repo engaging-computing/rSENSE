@@ -31,9 +31,9 @@ $ ->
   namespace.action in ['displayVis', 'embedVis', 'show']
 
     class window.Scatter extends BaseHighVis
-      ####
+      ###
       Initialize constants for scatter display mode.
-      ####
+      ###
       constructor: (@canvas) ->
         super(@canvas)
 
