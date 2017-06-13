@@ -3,26 +3,26 @@ $ ->
   namespace.action in ['displayVis', 'embedVis', 'show']
 
     class window.Annotation extends Object
-        constructor: (msg, x_pt, y_pt, type = 'rect') ->
+        constructor: (msg, ds_id, pt_id, type = 'rect') ->
             console.log "Creating a new annotation"
             @msg = msg
-            @x_pt = x_pt
-            @y_pt = y_pt
+            @ds_id = ds_id
+            @pt_id = pt_id
             if type == 'callout' then @type = 'callout' else @type = 'rect'
             
-        draw: (chart) ->
+        draw: (chart, x_pt, y_pt) ->
             # X position of box corner
-            x_box = @x_pt - 20
+            x_box = x_pt - 20
             # Y position of box corner
-            if @y_pt > (chart.chartHeight / 4)
-                y_box = @y_pt - 40    
+            if y_pt > (chart.chartHeight * .25)
+                y_box = y_pt - 40    
             else
-                y_box = @y_pt + 10
+                y_box = y_pt + 10
             # Styling stuff (can't use traditional CSS)
             style = {padding: 8, r: 5, zIndex: 6, fill: 'rgba(0, 0, 0, 0.75'}
             text = {color: 'white'}
-            # Render new element
-            elt = chart.renderer.label(@msg, x_box, y_box, @type, @x_pt, @y_pt, \
+            # Render new element with class .highcharts-annotation
+            elt = chart.renderer.label(@msg, x_box, y_box, @type, x_pt, y_pt, \
                                        false, false, "annotation")
             elt.attr(style)
             elt.css(text)
@@ -30,7 +30,7 @@ $ ->
             # Set up double-click to delete
             $(elt.element).dblclick =>
                 # Remove from data structure
-                globals.annotationSet.deleteElement(@x_pt, @y_pt)
+                globals.annotationSet.deleteElement(@ds_id, @pt_id)
                 # Remove DOM element
                 elt.element.remove()
 
@@ -41,9 +41,16 @@ $ ->
         
         addToList: (elt) ->
             @list.push elt
+            console.log @list
 
-        emptyList: ->
-            @list = []
+        # Checks list membership
+        hasAnnotationAt: (id1, id2) ->
+            idx = @list.findIndex (elt) ->
+                (elt.ds_id == id1) and (elt.pt_id == id2)
+            not (idx == -1)
 
-        deleteElement: (arg1, arg2) ->
-            console.log "Delete called"
+        deleteElement: (id1, id2) ->
+            idx = @list.findIndex (elt) ->
+                (elt.ds_id == id1) and (elt.pt_id == id2)
+            @list.splice idx, 1
+            console.log @list
