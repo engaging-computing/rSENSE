@@ -479,6 +479,7 @@ $ ->
 
         # Draw the annotations
         $('.highcharts-annotation').remove()
+        $()
         if globals.annotationSet isnt null
           for series in datArray
             for point in series

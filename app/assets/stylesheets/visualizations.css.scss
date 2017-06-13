@@ -51,7 +51,11 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   }
   
   .highcharts-annotation {
-    cursor: pointer; 
+    cursor: default; 
+  }
+
+  .highcharts-annotation:hover {
+    opacity: .25;
   }
 
   .axis {
