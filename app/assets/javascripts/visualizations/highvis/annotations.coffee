@@ -49,6 +49,15 @@ $ ->
                 (elt.ds_id == id1) and (elt.pt_id == id2)
             not (idx == -1)
 
+        # Similar, but returns element
+        getElement: (id1, id2) ->
+            idx = @list.findIndex (elt) ->
+                (elt.ds_id == id1) and (elt.pt_id == id2)
+            if (idx isnt -1)
+                @list[idx]
+            else
+                null
+
         deleteElement: (id1, id2) ->
             idx = @list.findIndex (elt) ->
                 (elt.ds_id == id1) and (elt.pt_id == id2)

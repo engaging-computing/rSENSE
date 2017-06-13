@@ -881,29 +881,3 @@ $ ->
       ###
       serializationCleanup: ->
         # Projects no longer get destroyed on serialize
-
-      ###
-      Control button for adding annotations to a vis
-      ###
-      drawAnnotationControls: ->
-      
-        $('#add-annotation-button').click (e) =>
-          globals.annotationSet ?= new AnnotationSet()
-          # Point selected?
-          console.log @chart.getSelectedPoints()
-          if (@chart.getSelectedPoints().length == 0)
-            alert "No point selected."
-          # Already one here?
-          else if globals.annotationSet.hasAnnotationAt globals.selectedDataSetId, \
-                                                        globals.selectedPointId
-            alert "This point already has an annotation!"
-          else
-            # Create a new annotation
-            pt_x = globals.selectedPointX + @chart.plotLeft
-            pt_y = globals.selectedPointY + @chart.plotTop
-            msg = prompt "Enter a comment:", "New Annotation"
-            if not (msg is null) and not (msg is "")
-              annotation = new Annotation msg, globals.selectedDataSetId, \
-                                          globals.selectedPointId, 'callout'
-              globals.annotationSet.addToList annotation
-              annotation.draw @chart, pt_x, pt_y

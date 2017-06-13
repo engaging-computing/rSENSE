@@ -238,6 +238,32 @@ $ ->
           options
 
       ###
+      Control button for adding annotations to a point
+      ###
+      drawAnnotationControls: ->
+      
+        $('#add-annotation-button').click (e) =>
+          globals.annotationSet ?= new AnnotationSet()
+          # Point selected?
+          console.log @chart.getSelectedPoints()
+          if (@chart.getSelectedPoints().length == 0)
+            alert "No point selected."
+          # Already one here?
+          else if globals.annotationSet.hasAnnotationAt globals.selectedDataSetId, \
+                                                        globals.selectedPointId
+            alert "This point already has an annotation!"
+          else
+            # Create a new annotation
+            pt_x = globals.selectedPointX + @chart.plotLeft
+            pt_y = globals.selectedPointY + @chart.plotTop
+            msg = prompt "Enter a comment:", "New Annotation"
+            if (msg isnt null) and (msg isnt "")
+              annotation = new Annotation msg, globals.selectedDataSetId, \
+                                          globals.selectedPointId, 'callout'
+              globals.annotationSet.addToList annotation
+              annotation.draw @chart, pt_x, pt_y
+
+      ###
       Call control drawing methods in order of apperance
       ###
       drawControls: ->
@@ -452,6 +478,16 @@ $ ->
         $('#x-axis-max').val(@configs.xBounds.max)
         $('#y-axis-min').val(@configs.yBounds.min)
         $('#y-axis-max').val(@configs.yBounds.max)
+
+        # Draw the annotations
+        $('.highcharts-annotation').remove()
+        if globals.annotationSet isnt null
+          for series in datArray
+            for point in series
+              if (elt = globals.annotationSet.getElement globals.getDataSetId(point.datapoint[1]), \
+                                                         point.datapoint[0]) isnt null
+                elt.draw @chart, @chart.xAxis[0].toPixels(point.x), \
+                                 @chart.yAxis[0].toPixels(point.y)
 
         
       ###

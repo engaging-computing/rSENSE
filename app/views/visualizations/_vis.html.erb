@@ -51,6 +51,7 @@
       <div id="vis-title-bar"
            <% if @presentation || !titleBar %> style="display:none" <% end %>>
         <div id="vis-title-edit-btn" class="hidden-xs hidden-sm">
+          <%= image_tag("comment.svg", id:"add-annotation-button") %>
           <div class="inline-block subtitle">
             <% if obj && can_edit?(obj) %>
               <div class="edit_menu inline-block" data-field="title"
@@ -84,7 +85,6 @@
               </div>
             <% end %>
           </div>
-        <%= image_tag("comment.svg", id:"add-annotation-button") %>
           <% if getLatest %>
             <%= link_to "#{project_path(@project)}/data_sets",
                 { id:"refresh-data", class: "btn btn-default" } do %>
