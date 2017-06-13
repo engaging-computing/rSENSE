@@ -11,6 +11,9 @@ $ ->
             if type == 'callout' then @type = 'callout' else @type = 'rect'
             
         draw: (chart, x_pt, y_pt) ->
+            # Calculate pixel positions
+            x_pt = chart.xAxis[0].toPixels(x_pt)
+            y_pt = chart.yAxis[0].toPixels(y_pt)
             # X position of box corner
             x_box = x_pt - 20
             # Y position of box corner

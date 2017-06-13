@@ -130,8 +130,8 @@ $ ->
                   select: () ->
                     globals.selectedDataSetId = globals.getDataSetId(@.datapoint[1])
                     globals.selectedPointId = @.datapoint[0]
-                    globals.selectedPointX = @plotX
-                    globals.selectedPointY = @plotY
+                    globals.selectedPointX = @x
+                    globals.selectedPointY = @y
                     $('#disable-point-button').prop("disabled", false)
 
           groupBy = ''
@@ -254,14 +254,12 @@ $ ->
             alert "This point already has an annotation!"
           else
             # Create a new annotation
-            pt_x = globals.selectedPointX + @chart.plotLeft
-            pt_y = globals.selectedPointY + @chart.plotTop
             msg = prompt "Enter a comment:", "New Annotation"
             if (msg isnt null) and (msg isnt "")
               annotation = new Annotation msg, globals.selectedDataSetId, \
                                           globals.selectedPointId, 'callout'
               globals.annotationSet.addToList annotation
-              annotation.draw @chart, pt_x, pt_y
+              annotation.draw @chart, globals.selectedPointX, globals.selectedPointY
 
       ###
       Call control drawing methods in order of apperance
@@ -486,8 +484,7 @@ $ ->
             for point in series
               if (elt = globals.annotationSet.getElement globals.getDataSetId(point.datapoint[1]), \
                                                          point.datapoint[0]) isnt null
-                elt.draw @chart, @chart.xAxis[0].toPixels(point.x), \
-                                 @chart.yAxis[0].toPixels(point.y)
+                elt.draw @chart, point.x, point.y
 
         
       ###
