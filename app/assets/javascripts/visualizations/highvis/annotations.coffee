@@ -25,20 +25,17 @@ $ ->
             style = {padding: 8, r: 5, zIndex: 6, fill: 'rgba(0, 0, 0, 0.75'}
             text = {color: 'white'}
             # Render new element with class .highcharts-annotation
-            id = "delete" + @ds_id + @pt_id
-            @msg += "<button id=\"" + id + "\">X</button>"
             elt = chart.renderer.label(@msg, x_box, y_box, @type, x_pt, y_pt, \
-                                       true, false, "annotation")
+                                       false, false, "annotation")
             elt.attr(style)
             elt.css(text)
             elt.add()
             # Set up double-click to delete
-            $("#" + id).click =>
+            $(".highcharts-annotation").click (e) =>
                 # Remove from data structure
                 globals.annotationSet.deleteElement(@ds_id, @pt_id)
                 # Remove DOM element
                 elt.element.remove()
-                $("#" + id).remove()
 
     class window.AnnotationSet extends Object
         constructor: ->

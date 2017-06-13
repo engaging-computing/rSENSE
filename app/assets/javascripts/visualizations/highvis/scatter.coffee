@@ -260,6 +260,7 @@ $ ->
                                           globals.selectedPointId, 'callout'
               globals.annotationSet.addToList annotation
               annotation.draw @chart, globals.selectedPointX, globals.selectedPointY
+          console.log document.getElementsByTagName('*').length
 
       ###
       Call control drawing methods in order of apperance
@@ -479,7 +480,7 @@ $ ->
 
         # Draw the annotations
         $('.highcharts-annotation').remove()
-        $()
+        $('.highcharts-annotation button')
         if globals.annotationSet isnt null
           for series in datArray
             for point in series
