@@ -97,3 +97,6 @@ gem 'beaker', '~> 1.3.0', git: 'https://github.com/isenseDev/beaker-lang'
 # User System
 gem 'devise'
 gem "omniauth-google-oauth2"
+
+# still necessary?
+gem 'coffeebeans'
