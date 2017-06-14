@@ -113,6 +113,7 @@ $ ->
                 display: "none"
             events:
               redraw: (e) ->
+                $('.highcharts-annotation').remove()
                 if globals.annotationSet isnt null
                   globals.annotationSet.redrawAll(this)
           plotOptions:
@@ -268,8 +269,8 @@ $ ->
                                                         globals.selectedPointId
             globals.annotationSet.deleteElement globals.selectedDataSetId, \
                                                 globals.selectedPointId
-            toggleAnnotationButton("comment")
-            @update()
+            toggleAnnotationButton("comment-point")
+            @chart.redraw()
           else
             # Create a new annotation
             msg = prompt "Enter a comment:", "New Annotation"
@@ -406,6 +407,10 @@ $ ->
             if dat.length < 2 and @configs.mode is @LINES_MODE
               mode = @SYMBOLS_LINES_MODE
 
+            # Clear the annotations
+            toggleAnnotationButton("comment");
+            $('.highcharts-annotation').remove()
+            
             # loop through all the series and add them to the chart
             for series in datArray
               options =
@@ -438,6 +443,13 @@ $ ->
                     options.dashStyle = globals.dashes[si % globals.dashes.length]
 
               @chart.addSeries(options, false)
+
+              # Draw the annotations
+              if globals.annotationSet isnt null
+                  for point in series
+                    if (elt = globals.annotationSet.getElement globals.getDataSetId(point.datapoint[1]), \
+                                                               point.datapoint[0]) isnt null
+                      elt.draw @chart, point.x, point.y
 
         if @isZoomLocked()
           @updateOnZoom = false
@@ -495,18 +507,6 @@ $ ->
         $('#x-axis-max').val(@configs.xBounds.max)
         $('#y-axis-min').val(@configs.yBounds.min)
         $('#y-axis-max').val(@configs.yBounds.max)
-
-        # Draw the annotations
-        toggleAnnotationButton("comment");
-        $('.highcharts-annotation').remove()
-        $('.highcharts-annotation button')
-        if globals.annotationSet isnt null
-          for series in datArray
-            for point in series
-              if (elt = globals.annotationSet.getElement globals.getDataSetId(point.datapoint[1]), \
-                                                         point.datapoint[0]) isnt null
-                elt.draw @chart, point.x, point.y
-
         
       ###
       Draws radio buttons for changing symbol/line mode.
