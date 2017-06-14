@@ -104,14 +104,17 @@ $ ->
         super(animate)
 
         self = this
-
         $.extend true, @chartOptions,
           chart:
             type: if @configs.mode is @LINES_MODE then "line" else "scatter"
             zoomType: "xy"
             resetZoomButton:
               theme:
-                display: "none" 
+                display: "none"
+            events:
+              redraw: (e) ->
+                if globals.annotationSet isnt null
+                  globals.annotationSet.redrawAll(this)
           plotOptions:
             scatter:
               animation: false
