@@ -133,6 +133,19 @@ $ ->
                     globals.selectedPointX = @x
                     globals.selectedPointY = @y
                     $('#disable-point-button').prop("disabled", false)
+                    # Change button to delete if applicable
+                    if (globals.annotationSet isnt null) and \ 
+                       (globals.annotationSet.hasAnnotationAt globals.selectedDataSetId, \
+                                                              globals.selectedPointId)
+                      toggleAnnotationButton("comment-delete")
+                    # Else make it add
+                    else
+                      toggleAnnotationButton("comment-point")
+                  unselect: () ->
+                    # See if another point has been selected
+                    p = @series.chart.getSelectedPoints()
+                    if (p.length > 0) and (p[0].x == @x)
+                      toggleAnnotationButton("comment")
 
           groupBy = ''
           $('#groupSelector').find('option').each (i,j) ->
@@ -245,13 +258,15 @@ $ ->
         $('#add-annotation-button').click (e) =>
           globals.annotationSet ?= new AnnotationSet()
           # Point selected?
-          console.log @chart.getSelectedPoints()
-          if (@chart.getSelectedPoints().length == 0)
-            alert "No point selected."
+          if (@chart.getSelectedPoints().length != 1)
+            alert "Please select a single point."
           # Already one here?
           else if globals.annotationSet.hasAnnotationAt globals.selectedDataSetId, \
                                                         globals.selectedPointId
-            alert "This point already has an annotation!"
+            globals.annotationSet.deleteElement globals.selectedDataSetId, \
+                                                globals.selectedPointId
+            toggleAnnotationButton("comment")
+            @update()
           else
             # Create a new annotation
             msg = prompt "Enter a comment:", "New Annotation"
@@ -260,7 +275,7 @@ $ ->
                                           globals.selectedPointId, 'callout'
               globals.annotationSet.addToList annotation
               annotation.draw @chart, globals.selectedPointX, globals.selectedPointY
-          console.log document.getElementsByTagName('*').length
+              toggleAnnotationButton("comment-delete")
 
       ###
       Call control drawing methods in order of apperance
@@ -479,6 +494,7 @@ $ ->
         $('#y-axis-max').val(@configs.yBounds.max)
 
         # Draw the annotations
+        toggleAnnotationButton("comment");
         $('.highcharts-annotation').remove()
         $('.highcharts-annotation button')
         if globals.annotationSet isnt null

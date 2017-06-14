@@ -4,7 +4,6 @@ $ ->
 
     class window.Annotation extends Object
         constructor: (msg, ds_id, pt_id, type = 'rect') ->
-            console.log "Creating a new annotation"
             @msg = msg
             @ds_id = ds_id
             @pt_id = pt_id
@@ -30,21 +29,13 @@ $ ->
             elt.attr(style)
             elt.css(text)
             elt.add()
-            # Set up double-click to delete
-            $(".highcharts-annotation").click (e) =>
-                # Remove from data structure
-                globals.annotationSet.deleteElement(@ds_id, @pt_id)
-                # Remove DOM element
-                elt.element.remove()
 
     class window.AnnotationSet extends Object
         constructor: ->
-            console.log "Creating an annotation set"
             @list = []
         
         addToList: (elt) ->
             @list.push elt
-            console.log @list
 
         # Checks list membership
         hasAnnotationAt: (id1, id2) ->
@@ -64,5 +55,5 @@ $ ->
         deleteElement: (id1, id2) ->
             idx = @list.findIndex (elt) ->
                 (elt.ds_id == id1) and (elt.pt_id == id2)
-            @list.splice idx, 1
-            console.log @list
+            if idx isnt -1
+                @list.splice idx, 1
