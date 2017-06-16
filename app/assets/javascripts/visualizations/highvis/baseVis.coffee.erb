@@ -587,8 +587,12 @@ $ ->
           globals.defaultVis()
 
         $('#download-vis-btn').click =>
-          @chart.exportChart
-            type: "image/svg+xml"
+          @chart.exportChart(type: "image/svg+xml",
+            chart: 
+                events: 
+                    load: () -> 
+                        if globals.annotationSet isnt null
+                          globals.annotationSet.redrawAll(this))
 
         $('#print-vis-btn').click =>
           # Resize chart if it is too big to print
