@@ -19,7 +19,7 @@ $ ->
             @x_pt = x_pt
             @y_pt = y_pt
             x_px = chart.xAxis[0].toPixels(@x_pt)
-            y_px = chart.yAxis[0].toPixels(@y_pt)
+            y_px = chart.yAxis[0].toPixels(@y_pt) 
             # X position of box corner
             x_box = x_px - 20
             # Y position of box corner
@@ -27,36 +27,32 @@ $ ->
                 y_box = y_px - 40    
             else
                 y_box = y_px + 10
+            # Free space
+            space = chart.chartWidth - x_box
             # Styling stuff (can't use traditional CSS)
             style = {padding: 8, r: 5, zIndex: 6, fill: 'rgba(0, 0, 0, 0.75'}
             text = {color: 'white'}
             # Render new element with class .highcharts-annotation
-            @elt = chart.renderer.label(@msg, x_box, y_box, @type, x_px, y_px, \
-                                       false, false, "annotation")
-            @elt.attr(style)
-            @elt.css(text)
-            @elt.add()
+            render = (x, y) =>
+                @elt = chart.renderer.label(@msg, x, y, @type, x_px, y_px, \
+                                           false, false, "annotation")
+                @elt.attr(style)
+                @elt.css(text)
+                @elt.add()
+            render x_box, y_box
+            if @elt.width > space
+                @elt.element.remove()
+                overflow = @elt.width - space
+                render x_box - overflow, y_box
+
+
 
         # Similar to draw, but uses last known coordinates
         # Sufficient for re-drawing on browser resizes which don't change
         #           coordinate system.
         redraw: (chart) ->
             if @x_pt isnt -1
-                @elt.element.remove()
-                x_px = chart.xAxis[0].toPixels(@x_pt)
-                y_px = chart.yAxis[0].toPixels(@y_pt)
-                x_box = x_px - 20
-                if y_px > (chart.chartHeight * .25)
-                    y_box = y_px - 40    
-                else
-                    y_box = y_px + 10
-                style = {padding: 8, r: 5, zIndex: 6, fill: 'rgba(0, 0, 0, 0.75'}
-                text = {color: 'white'}
-                @elt = chart.renderer.label(@msg, x_box, y_box, @type, x_px, y_px, \
-                                        false, false, "annotation")
-                @elt.attr(style)
-                @elt.css(text)
-                @elt.add()
+                @draw chart, @x_pt, @y_pt
 
 
     class window.AnnotationSet extends Object

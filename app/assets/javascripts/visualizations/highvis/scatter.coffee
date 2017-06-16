@@ -148,7 +148,7 @@ $ ->
                   unselect: () ->
                     # See if another point has been selected
                     p = @series.chart.getSelectedPoints()
-                    if (p.length > 0) and (p[0].x == @x)
+                    if (p.length > 0) and (p[0].x == @x) and (p[0].y == @y)
                       toggleAnnotationButton("comment")
 
           groupBy = ''
