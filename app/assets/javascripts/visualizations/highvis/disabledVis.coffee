@@ -130,6 +130,7 @@ $ ->
         globals.configs.ctrlsOpen = false
         $('#vis-ctrl-container').hide()
         $('#ctrls-menu-btn').hide()
+        $('#add-annotation-button').hide()
 
         switch @canvas
           when 'map-canvas'

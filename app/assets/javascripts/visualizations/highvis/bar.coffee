@@ -395,6 +395,7 @@ $ ->
         @drawToolControls(true, true)
         @drawClippingControls()
         @drawSaveControls()
+        @drawAnnotationControls()
         $('[id^=ckbx-y-axis]').click (e) ->
           fs = globals.configs.fieldSelection
           if fs and fs.length == 1

@@ -132,6 +132,7 @@ $ ->
         $('#vis-ctrls').empty()
         # The annotation button could not have the same ID as other controls
         #     due to different location on screen.
+        $('#add-annotation-button').hide()
         $('#add-annotation-button').unbind('click')
 
       ###
@@ -737,6 +738,13 @@ $ ->
           $( "#group-by" ).trigger( "change" );
           @start()
 
+      ###
+      Control button for adding annotations to a point
+      ###
+      drawAnnotationControls: ->
+        $('#add-annotation-button').show()
+        $('#add-annotation-button').click (e) =>
+          alert "Not implemented yet"
 
       ###
       Do any necessary cleanup work before serialization.
@@ -821,6 +829,9 @@ $ ->
       Derrived classes should overload to add data drawing.
       ###
       update: ->
+        # Clear the annotations
+        toggleAnnotationButton("comment");
+        $('.highcharts-annotation').remove()
         # Name Y Axis
         title = if globals.configs.fieldSelection.length isnt 1
           temp =

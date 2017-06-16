@@ -38,6 +38,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
 
   // Annotations stuff
   #add-annotation-button {
+    display: none;
     height: 48px;
     position: relative;
     right: 0;

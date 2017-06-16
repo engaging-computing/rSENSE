@@ -255,35 +255,6 @@ $ ->
           options
 
       ###
-      Control button for adding annotations to a point
-      ###
-      drawAnnotationControls: ->
-      
-        $('#add-annotation-button').click (e) =>
-          globals.annotationSet ?= new AnnotationSet()
-          # Point selected?
-          if (@chart.getSelectedPoints().length != 1)
-            alert "Please select a single point."
-          # Already one here?
-          else if globals.annotationSet.hasAnnotationAt globals.selectedDataSetId, \
-                                                        globals.selectedPointId
-            globals.annotationSet.deleteElement globals.selectedDataSetId, \
-                                                globals.selectedPointId
-            toggleAnnotationButton("comment-point")
-            @chart.redraw()
-          else
-            # Create a new annotation
-            msg = prompt "Enter a message:", "New Annotation"
-            if msg.length > 100
-              alert "Callout bubble should not exceed 100 characters, consider using a block comment."
-            else if (msg isnt null) and (msg isnt "")
-              annotation = new Annotation msg, globals.selectedDataSetId, \
-                                          globals.selectedPointId, 'callout'
-              globals.annotationSet.addToList annotation
-              annotation.draw @chart, globals.selectedPointX, globals.selectedPointY
-              toggleAnnotationButton("comment-delete")
-
-      ###
       Call control drawing methods in order of apperance
       ###
       drawControls: ->
@@ -735,6 +706,35 @@ $ ->
         # Initialize and track the status of this control panel
         globals.configs.xAxisOpen ?= false
         initCtrlPanel('x-axis-ctrls', 'xAxisOpen')
+
+      ###
+      Control button for adding annotations to a point
+      ###
+      drawAnnotationControls: ->
+        $('#add-annotation-button').show()
+        $('#add-annotation-button').click (e) =>
+          globals.annotationSet ?= new AnnotationSet()
+          # Point selected?
+          if (@chart.getSelectedPoints().length != 1)
+            alert "Not implemented yet"
+          # Already one here?
+          else if globals.annotationSet.hasAnnotationAt globals.selectedDataSetId, \
+                                                        globals.selectedPointId
+            globals.annotationSet.deleteElement globals.selectedDataSetId, \
+                                                globals.selectedPointId
+            toggleAnnotationButton("comment-point")
+            @chart.redraw()
+          else
+            # Create a new annotation
+            msg = prompt "Enter a message:", "New Annotation"
+            if msg.length > 100
+              alert "Callout bubble should not exceed 100 characters, consider using a block comment."
+            else if (msg isnt null) and (msg isnt "")
+              annotation = new Annotation msg, globals.selectedDataSetId, \
+                                          globals.selectedPointId, 'callout'
+              globals.annotationSet.addToList annotation
+              annotation.draw @chart, globals.selectedPointX, globals.selectedPointY
+              toggleAnnotationButton("comment-delete")
 
       ###
       Checks if the user has requested a specific zoom
