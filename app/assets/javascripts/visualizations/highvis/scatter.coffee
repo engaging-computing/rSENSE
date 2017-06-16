@@ -273,8 +273,10 @@ $ ->
             @chart.redraw()
           else
             # Create a new annotation
-            msg = prompt "Enter a comment:", "New Annotation"
-            if (msg isnt null) and (msg isnt "")
+            msg = prompt "Enter a message:", "New Annotation"
+            if msg.length > 100
+              alert "Callout bubble should not exceed 100 characters, consider using a block comment."
+            else if (msg isnt null) and (msg isnt "")
               annotation = new Annotation msg, globals.selectedDataSetId, \
                                           globals.selectedPointId, 'callout'
               globals.annotationSet.addToList annotation
