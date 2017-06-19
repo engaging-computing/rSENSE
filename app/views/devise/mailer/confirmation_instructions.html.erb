@@ -10,8 +10,8 @@
         <td style="padding: 15px; text-align: center">
             <h2>Hi <%= @resource.name %></h2>
             <h1>Welcome to iSENSE</h1>
-            <p>A password reset has been requested for your iSENSE account.</p>
-            <p>To reset your password, please click the button below:</p>
+            <p>An iSENSE account has been requested for this email address.</p>
+            <p>To confirm your email address and continue using iSENSE, please click the button below:</p>
             <p><br><%= link_to 'Confirm Account', confirmation_url(@resource, :confirmation_token=> @token), {:style=>'color: white; text-decoration: none; font-size: 1.5em; background-color: #4CAF50; padding: 15px;'} %></p>
             <p><br>Thanks for joining and have a great day!</p>
             <p>- iSENSE Team</p>
