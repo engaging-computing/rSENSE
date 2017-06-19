@@ -744,7 +744,13 @@ $ ->
       drawAnnotationControls: ->
         $('#add-annotation-button').show()
         $('#add-annotation-button').click (e) =>
-          alert "Not implemented yet"
+          globals.annotationSet ?= new AnnotationSet()
+          msg = prompt "Enter a message:", "New Annotation"
+          if (msg isnt null) and (msg isnt "")
+            annotation = new Annotation msg, globals.annotationSet.generateDsID(), \
+                                             globals.annotationSet.generatePtID(), false
+            globals.annotationSet.addToList annotation
+            annotation.draw @chart
 
       ###
       Do any necessary cleanup work before serialization.

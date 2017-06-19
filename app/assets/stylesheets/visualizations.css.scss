@@ -59,6 +59,10 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     opacity: .25;
   }
 
+  .highcharts-block-annotation {
+    cursor: move;
+  }
+
   .axis {
     display:inherit;
     width: 45%;

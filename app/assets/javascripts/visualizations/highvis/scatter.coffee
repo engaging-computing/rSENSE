@@ -731,7 +731,7 @@ $ ->
               alert "Callout bubble should not exceed 100 characters, consider using a block comment."
             else if (msg isnt null) and (msg isnt "")
               annotation = new Annotation msg, globals.selectedDataSetId, \
-                                          globals.selectedPointId, 'callout'
+                                          globals.selectedPointId, true
               globals.annotationSet.addToList annotation
               annotation.draw @chart, globals.selectedPointX, globals.selectedPointY
               toggleAnnotationButton("comment-delete")
