@@ -384,7 +384,7 @@ $ ->
       ###
       Draws control to suggest grouping option
       ###
-      drawControlTip: () ->
+      drawGroupingTip: () ->
         
         # Local function which creates the alert
         recommend = (field) ->
@@ -426,7 +426,7 @@ $ ->
         # Remove Group By Time Period if there is no time data
         if data.hasTimeData is false or data.timeType == data.GEO_TIME
           groups.splice(data.TIME_PERIOD_FIELD - 2, 1)
-        @drawControlTip()
+        @drawGroupingTip()
         @drawGroupControls(groups)
         @drawYAxisControls(globals.configs.fieldSelection,
           data.normalFields.slice(1), false)
