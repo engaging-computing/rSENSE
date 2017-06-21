@@ -160,3 +160,8 @@ template_escape_commas:
   title: Escaping Commas when Templating/Uploading
   user: patson
   content: Project with commas in field titles/data to make sure they are escaped properly.
+
+votes:
+  title: Favorite Pet
+  user: doug
+  content: Vote for your favorite pet
