@@ -51,6 +51,22 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     float: right;
   }
 
+  #compass {
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 20%;
+    min-height: 120px;
+    user-drag: none; 
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    display: none
+  }
+
   div.regr-tooltip {
     width: 100%;
     text-align: center;
