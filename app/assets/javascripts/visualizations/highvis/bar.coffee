@@ -381,6 +381,43 @@ $ ->
             
           options
 
+      ###
+      Draws control to suggest grouping option
+      ###
+      drawControlTip: () ->
+        
+        # Local function which creates the alert
+        recommend = (field) ->
+          ctx = {}
+          ctx.field = field
+          tip = HandlebarsTemplates[hbCtrl('tip')](ctx)
+          $('#vis-ctrls').append tip
+        
+        # Can't give good suggestion if only one point
+        if data.dataPoints.length > 1
+          # If there is only one bar
+          if data.groups.length is 1
+            # Find a text field to suggest
+            if data.userTextFields.length isnt 0
+              gid = globals.configs.groupById
+              # Select any random text field
+              while gid == globals.configs.groupById
+                gid = data.userTextFields[Math.floor(Math.random() * data.userTextFields.length)]
+              recommend(data.fields[gid].fieldName)
+            # If there are multiple datasets, suggest group by dataset
+            else if data.includesMultipleDatasets
+              gid = data.DATASET_NAME_FIELD
+              recommend("Data Set")
+            # Note: otherwise we are doing nothing
+            # Bind the link to changing the vis
+            $('#control-tip-link').click () =>
+              data.setGroupIndex(gid)
+              globals.configs.groupById = gid
+              data.groupSelection = for vals, keys in data.groups
+                Number(keys)
+              @delayedUpdate()
+              @drawControls()
+
       drawControls: ->
         super()
         # Remove group by number fields, only for pie chart
@@ -389,6 +426,7 @@ $ ->
         # Remove Group By Time Period if there is no time data
         if data.hasTimeData is false or data.timeType == data.GEO_TIME
           groups.splice(data.TIME_PERIOD_FIELD - 2, 1)
+        @drawControlTip()
         @drawGroupControls(groups)
         @drawYAxisControls(globals.configs.fieldSelection,
           data.normalFields.slice(1), false)
