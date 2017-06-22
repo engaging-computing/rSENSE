@@ -588,12 +588,13 @@ $ ->
           globals.defaultVis()
 
         $('#download-vis-btn').click =>
+          canvas = @canvas
           @chart.exportChart(type: "image/svg+xml",
             chart: 
                 events: 
                     load: () -> 
                         if globals.annotationSet isnt null
-                          globals.annotationSet.redrawAll(this))
+                          globals.annotationSet.redrawAll(this, canvas))
 
         $('#print-vis-btn').click =>
           # Resize chart if it is too big to print
@@ -740,6 +741,7 @@ $ ->
 
       ###
       Control button for adding annotations to a point
+      Overridden by scatter only
       ###
       drawAnnotationControls: ->
         $('#add-annotation-button').show()
@@ -748,7 +750,8 @@ $ ->
           msg = prompt "Enter a message:", "New Annotation"
           if (msg isnt null) and (msg isnt "")
             annotation = new Annotation msg, globals.annotationSet.generateDsID(), \
-                                             globals.annotationSet.generatePtID(), false
+                                             globals.annotationSet.generatePtID(), false,
+                                             @canvas
             globals.annotationSet.addToList annotation
             annotation.draw @chart
 
@@ -773,12 +776,19 @@ $ ->
       ###
       buildOptions: (animate = true) ->
         self = this
+        canvas = @canvas
 
         @chartOptions =
           chart:
             renderTo: @canvas
             reflow: false
             animation: animate
+            events:
+              redraw: (e) ->
+                $('.highcharts-annotation').remove()
+                $('.highcharts-block-annotation').remove()
+                if globals.annotationSet isnt null
+                  globals.annotationSet.redrawAll(this, canvas)
           credits:
             enabled: false
           exporting:
@@ -836,8 +846,8 @@ $ ->
       ###
       update: ->
         # Clear the annotations
-        toggleAnnotationButton("comment");
-        $('.highcharts-annotation').remove()
+        toggleAnnotationButton("comment-add");
+        $('.highcharts-block-annotation').remove()
         # Name Y Axis
         title = if globals.configs.fieldSelection.length isnt 1
           temp =

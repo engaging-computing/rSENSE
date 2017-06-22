@@ -61,6 +61,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
 
   .highcharts-block-annotation {
     cursor: move;
+    position: absolute;
   }
 
   .axis {

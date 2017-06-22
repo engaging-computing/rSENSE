@@ -111,11 +111,6 @@ $ ->
             resetZoomButton:
               theme:
                 display: "none"
-            events:
-              redraw: (e) ->
-                $('.highcharts-annotation').remove()
-                if globals.annotationSet isnt null
-                  globals.annotationSet.redrawAll(this)
           plotOptions:
             scatter:
               animation: false
@@ -144,7 +139,7 @@ $ ->
                       toggleAnnotationButton("comment-delete")
                     # Else make it add
                     else
-                      toggleAnnotationButton("comment-point")
+                      toggleAnnotationButton("comment-add")
                   unselect: () ->
                     # See if another point has been selected
                     p = @series.chart.getSelectedPoints()
@@ -711,18 +706,19 @@ $ ->
       Control button for adding annotations to a point
       ###
       drawAnnotationControls: ->
+        toggleAnnotationButton("comment")
         $('#add-annotation-button').show()
         $('#add-annotation-button').click (e) =>
           globals.annotationSet ?= new AnnotationSet()
           # Point selected?
           if (@chart.getSelectedPoints().length != 1)
-            alert "Not implemented yet"
+            alert "Please select 1 point."
           # Already one here?
           else if globals.annotationSet.hasAnnotationAt globals.selectedDataSetId, \
                                                         globals.selectedPointId
             globals.annotationSet.deleteElement globals.selectedDataSetId, \
                                                 globals.selectedPointId
-            toggleAnnotationButton("comment-point")
+            toggleAnnotationButton("comment-add")
             @chart.redraw()
           else
             # Create a new annotation
@@ -731,7 +727,7 @@ $ ->
               alert "Callout bubble should not exceed 100 characters, consider using a block comment."
             else if (msg isnt null) and (msg isnt "")
               annotation = new Annotation msg, globals.selectedDataSetId, \
-                                          globals.selectedPointId, true
+                                          globals.selectedPointId, true, @canvas
               globals.annotationSet.addToList annotation
               annotation.draw @chart, globals.selectedPointX, globals.selectedPointY
               toggleAnnotationButton("comment-delete")

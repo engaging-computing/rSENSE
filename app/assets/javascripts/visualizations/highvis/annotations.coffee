@@ -10,14 +10,15 @@ $ ->
     # Also stores the last used x and y points for quick
     # redraws
     class window.Annotation extends Object
-        constructor: (msg, ds_id, pt_id, callout = false) ->
+        constructor: (msg, ds_id, pt_id, callout = false, canvas) ->
             @msg = msg
             @ds_id = ds_id
             @pt_id = pt_id
             @last_x_pt = null
             @last_y_pt = null
             @callout = callout
-            
+            @canvas = canvas
+
         # Draw the annotation at the chart coordinates
         # Useful for drawing new objects or loading for a vis
         # Important to pass coordinates because units/intervals/etc
@@ -49,10 +50,17 @@ $ ->
                     elt = chart.renderer.label(@msg, x, y, 'callout', x_px, y_px, false, false, "annotation")
                 else
                     elt = chart.renderer.label(@msg, x, y, null, null, null, false, false, "block-annotation")
+                    id = '#' + @canvas
+                    $(elt.element)
+                    .draggable()
+                    .bind('drag', (event, ui) =>
+                        @last_x_pt = ui.position.left - $(id).offset().left
+                        @last_y_pt =  ui.position.top - $(id).offset().top
+                        elt.attr({x: ui.position.left - $(id).offset().left})
+                        elt.attr({y: ui.position.top - $(id).offset().top}))
                 elt.attr(style)
                 elt.css(text)
                 elt.add()
-                $(elt.element).draggable()
                 return elt
             elt = render x_box, y_box
             
@@ -101,9 +109,10 @@ $ ->
             if idx isnt -1
                 @list.splice idx, 1
 
-        redrawAll: (chart) ->
+        redrawAll: (chart, canvas) ->
             for elt in @list
-                elt.redraw(chart)
+                if elt.canvas == canvas
+                    elt.redraw(chart)
 
         # For general "rect" annotations, we don't need to associate
         #   with a dataset; however, we still need a unique way to identify it
