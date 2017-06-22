@@ -24,6 +24,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   $vis-bkg-dark:  #CBCBCB;
   $vis-bkg-mid:   #DCDCDC;
   $vis-bkg-light: #F2F2F2;
+  $vis-bkg-attn: #ffdd00;
   $jqgrid-bkg: linear-gradient(#FFFFFF, $vis-bkg-mid);
 
   // some stuff on the page (buttons mostly) shouldn't have selectable text
@@ -571,7 +572,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
           height: 55px;
           width: 100%;
           background: $vis-bkg-mid;
-          border-bottom: $border;
+          border-bottom: $border;        
 
           .vis-ctrl-title {
             float: left;
@@ -579,6 +580,25 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
 
           .vis-ctrl-icon {
             float: right;
+          }
+        }
+
+        .vis-ctrl-tip {
+          font-size: 24px;
+          padding: 10px 20px;
+          margin: 0;
+          white-space: nowrap;
+          overflow: hidden;
+          width: 100%;
+          background: $vis-bkg-attn;
+          text-align: center;
+
+          p {
+            margin: 0;
+          }
+
+          a {
+            cursor: pointer;
           }
         }
       }
