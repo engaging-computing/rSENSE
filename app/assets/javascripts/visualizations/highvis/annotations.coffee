@@ -23,7 +23,9 @@ $ ->
         # Useful for drawing new objects or loading for a vis
         # Important to pass coordinates because units/intervals/etc
         #       depend on what vis is being used, grouping, etc.
-        draw: (chart, x_pt = chart.plotLeft, y_pt = chart.plotTop) ->
+        draw: (chart, x_pt = 0, y_pt = 0) ->
+            w = chart.chartWidth
+            h = chart.chartHeight
             @last_x_pt = x_pt
             @last_y_pt = y_pt
             if @callout
@@ -32,15 +34,15 @@ $ ->
                 y_px = chart.yAxis[0].toPixels(@last_y_pt) 
                 # Position of box corner
                 x_box = x_px - 20
-                if y_px > (chart.chartHeight * .25)
+                if y_px > (h * .25)
                     y_box = y_px - 40    
                 else
                     y_box = y_px + 10
-                # Free space
-                space = chart.chartWidth - x_box
             else
-                x_box = x_pt
-                y_box = y_pt
+                x_box = x_pt * w
+                y_box = y_pt * h
+            # Free space
+            space = w - x_box
             # Styling stuff (can't use traditional CSS)
             style = {padding: 8, r: 5, zIndex: 6, fill: 'rgba(0, 0, 0, 0.75'}
             text = {color: 'white'}
@@ -60,18 +62,17 @@ $ ->
                     l = $(id).offset().left
                     t = $(id).offset().top
                     $(elt.element)
-                        .draggable({containment: [l, t, l + chart.chartWidth - elt.width, t + chart.chartHeight - elt.height], \
-                                    scroll: false})
+                        .draggable({containment: [l, t, l + w - elt.width, t + h - elt.height], scroll: false})
                         .bind('drag', (event, ui) =>
-                            @last_x_pt = ui.position.left - l
-                            @last_y_pt =  ui.position.top - t
+                            @last_x_pt = (ui.position.left - l) / w
+                            @last_y_pt = (ui.position.top - t) / h
                             elt.attr({x: ui.position.left - l})
                             elt.attr({y: ui.position.top - t}))
                 return elt
 
             elt = render x_box, y_box
             
-            if @callout and (elt.width > space)
+            if (elt.width > space)
                 elt.element.remove()
                 overflow = elt.width - space
                 render x_box - overflow, y_box
