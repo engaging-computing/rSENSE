@@ -48,28 +48,33 @@ $ ->
             render = (x, y) =>
                 if @callout
                     elt = chart.renderer.label(@msg, x, y, 'callout', x_px, y_px, false, false, "annotation")
+                    elt.attr(style)
+                    elt.css(text)
+                    elt.add()
                 else
                     elt = chart.renderer.label(@msg, x, y, null, null, null, false, false, "block-annotation")
                     id = '#' + @canvas
+                    elt.attr(style)
+                    elt.css(text)
+                    elt.add()
+                    l = $(id).offset().left
+                    t = $(id).offset().top
                     $(elt.element)
-                    .draggable()
-                    .bind('drag', (event, ui) =>
-                        @last_x_pt = ui.position.left - $(id).offset().left
-                        @last_y_pt =  ui.position.top - $(id).offset().top
-                        elt.attr({x: ui.position.left - $(id).offset().left})
-                        elt.attr({y: ui.position.top - $(id).offset().top}))
-                elt.attr(style)
-                elt.css(text)
-                elt.add()
+                        .draggable({containment: [l, t, l + chart.chartWidth - elt.width, t + chart.chartHeight - elt.height], \
+                                    scroll: false})
+                        .bind('drag', (event, ui) =>
+                            @last_x_pt = ui.position.left - l
+                            @last_y_pt =  ui.position.top - t
+                            elt.attr({x: ui.position.left - l})
+                            elt.attr({y: ui.position.top - t}))
                 return elt
+
             elt = render x_box, y_box
             
             if @callout and (elt.width > space)
                 elt.element.remove()
                 overflow = elt.width - space
                 render x_box - overflow, y_box
-
-
 
         # Similar to draw, but uses last known coordinates
         # Sufficient for re-drawing on browser resizes which don't change
