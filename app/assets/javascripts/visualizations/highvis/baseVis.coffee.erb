@@ -587,9 +587,26 @@ $ ->
         ($ "#default-vis-btn").click ->
           globals.defaultVis()
 
-        $('#download-vis-btn').click =>
+        # Saving vises; need to redraw comments
+        $('#download-image-btn').click =>
+          canvas = @canvas
+          @chart.exportChart(type: "image/png",
+            chart:
+                events:
+                    load: () -> 
+                        if globals.annotationSet isnt null
+                          globals.annotationSet.redrawAll(this, canvas))
+        $('#download-vector-btn').click =>
           canvas = @canvas
           @chart.exportChart(type: "image/svg+xml",
+            chart: 
+                events: 
+                    load: () -> 
+                        if globals.annotationSet isnt null
+                          globals.annotationSet.redrawAll(this, canvas))
+        $('#download-document-btn').click =>
+          canvas = @canvas
+          @chart.exportChart( type: "application/pdf",
             chart: 
                 events: 
                     load: () -> 
@@ -737,7 +754,7 @@ $ ->
           else
             globals.configs.isPeriod = false
           $( "#group-by" ).trigger( "change" );
-          @start()
+          @start()  
 
       ###
       Control button for adding annotations to a point

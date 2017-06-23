@@ -712,7 +712,7 @@ $ ->
           globals.annotationSet ?= new AnnotationSet()
           # Point selected?
           if (@chart.getSelectedPoints().length != 1)
-            alert "Please select 1 point."
+            alert "¯\\_(ツ)_/¯\nPlease select 1 point."
           # Already one here?
           else if globals.annotationSet.hasAnnotationAt globals.selectedDataSetId, \
                                                         globals.selectedPointId
