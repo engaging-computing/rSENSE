@@ -21,7 +21,7 @@ test:
 production:
   adapter: postgresql
   encoding: utf8
-  database: rsense_production
+  database: <%= ENV['RDS_NAME'] %>
   pool: 5
   username: ec2_user
   password: <%= ENV['RDS_PASSWORD'] %>
