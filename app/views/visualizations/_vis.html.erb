@@ -41,8 +41,8 @@
       $('#add-annotation-button').attr( 'src' , '<%= image_path "comment.svg", :id => "add-annotation-button" %>' );
     else if (setting == "comment-add")
       $('#add-annotation-button').attr( 'src' , '<%= image_path "comment-add.svg", :id => "add-annotation-button" %>' );
-    else if (setting == "comment-delete")
-      $('#add-annotation-button').attr( 'src' , '<%= image_path "comment-delete.svg", :id => "add-annotation-button" %>' );
+    else if (setting == "comment-edit")
+      $('#add-annotation-button').attr( 'src' , '<%= image_path "comment-edit.svg", :id => "add-annotation-button" %>' );
 };
 </script>
 <script type="text/javascript"
@@ -60,11 +60,14 @@
            <% if @presentation || !titleBar %> style="display:none" <% end %>>
         <div id="vis-title-edit-btn" class="hidden-xs hidden-sm">
           <%= image_tag("comment-add.svg", id:"add-annotation-button") %>
-          <div id="annotation-editor" title="Edit your Annotation">
+          <div id="annotation-editor" title="Annotation">
             <p>Please enter a comment:</p>
-              <input id="annotation-string" type="text"/>
-              <label for="annotation-bold">Bold</label>
-              <input type="checkbox" name="annotation-bold" id="annotation-bold">
+              <input id="annotation-string" type="text" maxlength="100"/><br>
+              <input type="checkbox" name="annotation-bold" value="b"><span style="font-weight: bold;">B</span>
+              <input type="checkbox" name="annotation-italic" value="i"><span style="font-style: italic;">I</span><br>
+              <input type="radio" name="annotation-size" value="1" checked>A
+              <input type="radio" name="annotation-size" value="1.25"><span style="font-size: 2em;">A</span><br>
+              Link: <input id="annotation-link" type="text" maxlength="100"/>
           </div>
           <div class="inline-block subtitle">
             <% if obj && can_edit?(obj) %>

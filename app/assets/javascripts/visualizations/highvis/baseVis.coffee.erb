@@ -757,22 +757,37 @@ $ ->
           @start()  
 
       ###
-      Control button for adding annotations to a point
+      Control button for adding annotations to a chart
       Overridden by scatter only
       ###
       drawAnnotationControls: ->
         $('#add-annotation-button').show()
         $('#add-annotation-button').click (e) =>
           globals.annotationSet ?= new AnnotationSet()
-          globals.annotationSet.editorStartPrompt()
-        $('#annotation-editor').dialog({modal: true,                                                 \
-                                        autoOpen: false,                                             \
-                                        buttons: {                                                   \
-                                          Save: () =>                                                \
-                                            globals.annotationSet.editorEndPrompt(@chart, @canvas);  \
-                                            $('#annotation-editor').dialog('close');                 \
+          $('#annotation-string').val("New Annotation")
+          $('#annotation-editor').dialog('open')
+        $('#annotation-editor').dialog({modal: true, autoOpen: false, buttons: {                                       
+                                          Save: () =>                  
+                                            msg = $("#annotation-string").val()                                        
+                                            $('#annotation-editor').dialog('close')
+                                            msg = msg.replace(/<\/?[^>]+(>|$)/g, "")                              
+                                            if (msg != null) and (msg != "")
+                                              bold = if $('input[name="annotation-bold"]').is(':checked') \
+                                                     then "font-weight: bold; " \
+                                                     else ""
+                                              italic = if $('input[name="annotation-italic"]').is(':checked') \
+                                                       then "font-style: italic; " \
+                                                       else ""
+                                              size = $('input[name="annotation-size"]:checked').val()      
+                                              link = $("#annotation-link").val()
+                                              msg = "<p style=\"font-size: " + size + "em; " + bold + italic + "\">" + msg + "</p>"
+                                              if link isnt ""
+                                                msg = "<a href=\"" + link + "\">" + msg + "</a>"
+                                              annotation = new Annotation msg, globals.annotationSet.generateDsID(), \
+                                                           globals.annotationSet.generatePtID(), false, @canvas        
+                                              globals.annotationSet.addToList annotation                               
+                                              annotation.draw @chart                                                   
                                         }})
-
       ###
       Do any necessary cleanup work before serialization.
       ###

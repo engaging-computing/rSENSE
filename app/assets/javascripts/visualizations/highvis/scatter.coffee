@@ -136,7 +136,7 @@ $ ->
                     if (globals.annotationSet isnt null) and \ 
                        (globals.annotationSet.hasAnnotationAt globals.selectedDataSetId, \
                                                               globals.selectedPointId)
-                      toggleAnnotationButton("comment-delete")
+                      toggleAnnotationButton("comment-edit")
                     # Else make it add
                     else
                       toggleAnnotationButton("comment-add")
@@ -716,21 +716,54 @@ $ ->
           # Already one here?
           else if globals.annotationSet.hasAnnotationAt globals.selectedDataSetId, \
                                                         globals.selectedPointId
+            annotation = globals.annotationSet.getElement globals.selectedDataSetId, \
+                                                          globals.selectedPointId
             globals.annotationSet.deleteElement globals.selectedDataSetId, \
                                                 globals.selectedPointId
-            toggleAnnotationButton("comment-add")
-            @chart.redraw()
+            msg = annotation.msg.replace(/<\/?[^>]+(>|$)/g, "")
+            $('#annotation-string').val(msg)
+            link = annotation.msg.match(/href=\"(.*?)\"/)
+            if link isnt null then link = link[1]
+            $('#annotation-link').val(link)
+            $('#annotation-editor').dialog('open')
           else
             # Create a new annotation
-            globals.annotationSet.editorStartPrompt()
+            $('#annotation-string').val("New Annotation")
+            $('#annotation-link').val("")
+            $('#annotation-editor').dialog('open')
 
-        $('#annotation-editor').dialog({modal: true,                                                 \
-                                        autoOpen: false,                                             \
-                                        buttons: {                                                   \
-                                          Save: () =>                                                \
-                                            globals.annotationSet.editorEndPrompt(@chart, @canvas,   \
-                                            globals.selectedPointX, globals.selectedPointY);         \
-                                            $('#annotation-editor').dialog('close');                 \
+        $('#annotation-editor').dialog({modal: true, autoOpen: false, buttons: {                    
+                                          Delete: () =>
+                                            $('#annotation-editor').dialog('close')
+                                            toggleAnnotationButton("comment-add")  
+                                            @chart.redraw()                                           
+                                          Save: () =>                              
+                                            msg = $("#annotation-string").val()                                        
+                                            $('#annotation-editor').dialog('close')
+                                            if (msg isnt null) and (msg isnt "")
+                                                bold = if $('input[name="annotation-bold"]').is(':checked') \
+                                                       then "font-weight: bold; " \
+                                                       else ""
+                                                italic = if $('input[name="annotation-italic"]').is(':checked') \
+                                                         then "font-style: italic; " \
+                                                         else ""
+                                                size = $('input[name="annotation-size"]:checked').val()      
+                                                link = $("#annotation-link").val()
+                                                msg = "<p style=\"font-size: " + size + "em; " + bold + italic + "\">" + msg + "</p>"
+                                                if link isnt ""
+                                                  if not /^(http|https):\/\//.test(link)
+                                                    link = "http://" + link
+                                                  msg = "<a href=\"" + link + "\">" + msg + "</a>"
+                                                console.log msg
+                                                annotation = new Annotation msg, globals.selectedDataSetId, \
+                                                             globals.selectedPointId, true, @canvas
+                                                globals.annotationSet.addToList annotation
+                                                annotation.initRedraw globals.selectedPointX, globals.selectedPointY
+                                                toggleAnnotationButton("comment-edit")
+                                                @chart.redraw()
+                                                return
+                                            @chart.redraw()
+                                            toggleAnnotationButton("comment-add")
                                       }})
 
       ###
