@@ -764,13 +764,14 @@ $ ->
         $('#add-annotation-button').show()
         $('#add-annotation-button').click (e) =>
           globals.annotationSet ?= new AnnotationSet()
-          msg = prompt "Enter a message:", "New Annotation"
-          if (msg isnt null) and (msg isnt "")
-            annotation = new Annotation msg, globals.annotationSet.generateDsID(), \
-                                             globals.annotationSet.generatePtID(), false,
-                                             @canvas
-            globals.annotationSet.addToList annotation
-            annotation.draw @chart
+          globals.annotationSet.editorStartPrompt()
+        $('#annotation-editor').dialog({modal: true,                                                 \
+                                        autoOpen: false,                                             \
+                                        buttons: {                                                   \
+                                          Save: () =>                                                \
+                                            globals.annotationSet.editorEndPrompt(@chart, @canvas);  \
+                                            $('#annotation-editor').dialog('close');                 \
+                                        }})
 
       ###
       Do any necessary cleanup work before serialization.

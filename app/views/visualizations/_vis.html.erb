@@ -60,6 +60,12 @@
            <% if @presentation || !titleBar %> style="display:none" <% end %>>
         <div id="vis-title-edit-btn" class="hidden-xs hidden-sm">
           <%= image_tag("comment-add.svg", id:"add-annotation-button") %>
+          <div id="annotation-editor" title="Edit your Annotation">
+            <p>Please enter a comment:</p>
+              <input id="annotation-string" type="text"/>
+              <label for="annotation-bold">Bold</label>
+              <input type="checkbox" name="annotation-bold" id="annotation-bold">
+          </div>
           <div class="inline-block subtitle">
             <% if obj && can_edit?(obj) %>
               <div class="edit_menu inline-block" data-field="title"

@@ -14,7 +14,6 @@
 //= require constants
 //= require image_path
 //= require jquery
-//= require jquery-ui
 //= require jquery_ujs
 //= require isense
 //= require helpers
@@ -33,6 +32,7 @@
 //= require titlebar.js.coffee
 //= require bootstrap
 //= require bootstrap-switch
+//= require jquery-ui
 //= require jstz/jstz-1.0.4.min.js
 //= require mdl/material.min.js
 //

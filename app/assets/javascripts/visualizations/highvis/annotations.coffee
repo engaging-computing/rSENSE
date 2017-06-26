@@ -91,6 +91,7 @@ $ ->
             @ds_id_counter = 0
             @pt_id_counter = 0
         
+        # Should be removable eventually
         addToList: (elt) ->
             @list.push elt
 
@@ -128,3 +129,27 @@ $ ->
         generatePtID: () ->
             @pt_id_counter -= 1;
             return @pt_id_counter;
+
+        # Editor modal for adding an annotation
+        editorStartPrompt: () ->
+            $('#annotation-string').val("New Annotation")
+            $('#annotation-editor').dialog('open')
+
+        editorEndPrompt: (chart, canvas, x = -1, y = -1) ->
+            msg = $('#annotation-string').val()
+            $('#annotation-editor').dialog('close')
+
+            # Would be -1 unless callout
+            if x isnt -1
+                if msg.length > 100
+                    alert "Callout bubble should not exceed 100 characters, consider using a block comment."
+                else if (msg isnt null) and (msg isnt "")
+                    annotation = new Annotation msg, globals.selectedDataSetId, \
+                                                globals.selectedPointId, true, canvas
+                    @addToList annotation
+                    annotation.draw chart, x, y
+                    toggleAnnotationButton("comment-delete")
+            else if (msg isnt null) and (msg isnt "")
+                annotation = new Annotation msg, @generateDsID(), @generatePtID(), false, canvas
+                @addToList annotation
+                annotation.draw chart

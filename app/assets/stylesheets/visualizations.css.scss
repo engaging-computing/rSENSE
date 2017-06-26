@@ -65,6 +65,10 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     position: absolute;
   }
 
+  #annotation-editor {
+    display: none;
+  }
+
   .axis {
     display:inherit;
     width: 45%;
