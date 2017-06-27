@@ -731,8 +731,15 @@ $ ->
             $('#annotation-string').val("New Annotation")
             $('#annotation-link').val("")
             $('#annotation-editor').dialog('open')
-
-        $('#annotation-editor').dialog({modal: true, autoOpen: false, buttons: {                    
+        $('.annotation-controlgroup').controlgroup()
+        $('#annotation-editor').dialog({modal: true, \
+                                        autoOpen: false, \ 
+                                        closeOnEscape: false, \
+                                        open:
+                                          (event, ui) ->
+                                            $(".ui-dialog-titlebar-close", ui.dialog | ui).hide()
+                                        ,
+                                        buttons: {                    
                                           Delete: () =>
                                             $('#annotation-editor').dialog('close')
                                             toggleAnnotationButton("comment-add")  
@@ -754,7 +761,6 @@ $ ->
                                                   if not /^(http|https):\/\//.test(link)
                                                     link = "http://" + link
                                                   msg = "<a href=\"" + link + "\">" + msg + "</a>"
-                                                console.log msg
                                                 annotation = new Annotation msg, globals.selectedDataSetId, \
                                                              globals.selectedPointId, true, @canvas
                                                 globals.annotationSet.addToList annotation

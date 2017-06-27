@@ -63,10 +63,18 @@
           <div id="annotation-editor" title="Annotation">
             <p>Please enter a comment:</p>
               <input id="annotation-string" type="text" maxlength="100"/><br>
-              <input type="checkbox" name="annotation-bold" value="b"><span style="font-weight: bold;">B</span>
-              <input type="checkbox" name="annotation-italic" value="i"><span style="font-style: italic;">I</span><br>
-              <input type="radio" name="annotation-size" value="1" checked>A
-              <input type="radio" name="annotation-size" value="1.25"><span style="font-size: 2em;">A</span><br>
+              <div class="annotation-controlgroup">
+                <label for="annotation-bold">B</label>
+                <input type="checkbox" name="annotation-bold" value="b">
+                <label for="annotation-italic">I</label>
+                <input type="checkbox" name="annotation-italic" value="i">
+              </div>
+              <div class="annotation-controlgroup">
+                <label for="annotation-size-small">A</label>
+                <input type="radio" name="annotation-size" value="1" id="annotation-size-small" checked>
+                <label for="annotation-size-large" style="font-size: 2em;">A</label>
+                <input type="radio" name="annotation-size" value="1.25" id="annotation-size-large">
+              </div>
               Link: <input id="annotation-link" type="text" maxlength="100"/>
           </div>
           <div class="inline-block subtitle">
