@@ -24,6 +24,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   $vis-bkg-dark:  #CBCBCB;
   $vis-bkg-mid:   #DCDCDC;
   $vis-bkg-light: #F2F2F2;
+  $vis-bkg-attn: #ffdd00;
   $jqgrid-bkg: linear-gradient(#FFFFFF, $vis-bkg-mid);
 
   // some stuff on the page (buttons mostly) shouldn't have selectable text
@@ -49,6 +50,22 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   .color-picker {
     vertical-align: top;
     float: right;
+  }
+
+  #compass {
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 20%;
+    min-height: 120px;
+    user-drag: none; 
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    display: none
   }
 
   div.regr-tooltip {
@@ -340,10 +357,33 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
         background-color: $vis-bkg-light;
       }
 
+      // Begin navigation tabs
       #vis-tab-list {
-        padding: 0; // removes padding that shouldn't be there to begin with
+        padding: 1px; // removes padding that shouldn't be there to begin with
         margin: 0;
       }
+
+      .nav-tabs {
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+        border: none;
+        display: -webkit-box;  
+        display: -moz-box;   
+        // Make scrollbar on top so as not to ruin tab effect
+        transform:rotateX(180deg);
+        -ms-transform:rotateX(180deg); /* IE 9 */
+        -webkit-transform:rotateX(180deg); /* Safari and Chrome */
+      }
+
+      .nav-tabs>li {
+        float:none;
+        // Rotate the contents back
+        transform:rotateX(180deg);
+        -ms-transform:rotateX(180deg);
+        -webkit-transform:rotateX(180deg);
+      }
+      // End navigation tabs
 
       #vis-title-bar {
         width: 100%;
@@ -532,7 +572,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
           height: 55px;
           width: 100%;
           background: $vis-bkg-mid;
-          border-bottom: $border;
+          border-bottom: $border;        
 
           .vis-ctrl-title {
             float: left;
@@ -542,19 +582,31 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
             float: right;
           }
         }
+
+        .vis-ctrl-tip {
+          font-size: 24px;
+          padding: 10px 20px;
+          margin: 0;
+          white-space: nowrap;
+          overflow: hidden;
+          width: 100%;
+          background: $vis-bkg-attn;
+          text-align: center;
+
+          p {
+            margin: 0;
+          }
+
+          a {
+            cursor: pointer;
+          }
+        }
       }
     }
 
     .vis-tab-icon {
       height: 30px;
       width: 30px;
-    }
-
-    //reduce size of tabs on mobile view:
-    @media only screen and (max-width: 600px) {
-      .nav > li > a {
-      padding: 2px;
-      }
     }
 
     // Very small screens need a little bit more room

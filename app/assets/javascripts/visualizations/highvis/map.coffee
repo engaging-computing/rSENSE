@@ -55,6 +55,8 @@ $ ->
           delete @timeLines
 
       start: ->
+        $('#compass').show()
+
         # Map needs this canvas visible to draw correctly
         $('#' + @canvas).show()
 
@@ -426,6 +428,7 @@ $ ->
         super()
 
       end: ->
+        $("#compass").hide()
         @heatmap = undefined
         if @gmap?
           @configs.mapType = @gmap.getMapTypeId()

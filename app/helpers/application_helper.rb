@@ -147,6 +147,8 @@ module ApplicationHelper
       'Manual Entry'
     elsif @namespace[:controller] == 'data_sets' and @namespace[:action] == 'edit'
       'Editing a Data Set'
+    elsif @namespace[:controller] == 'data_sets' and @namespace[:action] == 'dataFileUpload'
+      'Field Matching'
     elsif @namespace[:controller] == 'devise/sessions'
       'Sign in to iSENSE'
     elsif @namespace[:controller] == 'devise/registrations'
