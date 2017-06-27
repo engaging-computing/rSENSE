@@ -174,3 +174,10 @@ delete_data_sets_nixon-1:
   user: nixon
   project: delete_data_sets
   data: '[{"200": 117}]'
+
+votes-data-set:
+  title: votest-data-set
+  id: 200
+  user: doug
+  project: votes
+  data: '[{"300": "Cat", "301": 2}, {"300": "Dog", "301": 3}]'

@@ -24,6 +24,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   $vis-bkg-dark:  #CBCBCB;
   $vis-bkg-mid:   #DCDCDC;
   $vis-bkg-light: #F2F2F2;
+  $vis-bkg-attn: #ffdd00;
   $jqgrid-bkg: linear-gradient(#FFFFFF, $vis-bkg-mid);
 
   // some stuff on the page (buttons mostly) shouldn't have selectable text
@@ -49,6 +50,22 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   .color-picker {
     vertical-align: top;
     float: right;
+  }
+
+  #compass {
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 20%;
+    min-height: 120px;
+    user-drag: none; 
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    display: none
   }
 
   div.regr-tooltip {
@@ -474,6 +491,15 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
           width: 80%;
           margin: 5px auto;
         }
+
+        .export-btn {
+          display: inline-block;
+          margin: 5px auto;
+        }
+
+        .export-btn img {
+          width: 100%;
+        }
         
         .save-disabled {
           display: inline-block;
@@ -548,7 +574,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
           height: 55px;
           width: 100%;
           background: $vis-bkg-mid;
-          border-bottom: $border;
+          border-bottom: $border;        
 
           .vis-ctrl-title {
             float: left;
@@ -556,6 +582,25 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
 
           .vis-ctrl-icon {
             float: right;
+          }
+        }
+
+        .vis-ctrl-tip {
+          font-size: 24px;
+          padding: 10px 20px;
+          margin: 0;
+          white-space: nowrap;
+          overflow: hidden;
+          width: 100%;
+          background: $vis-bkg-attn;
+          text-align: center;
+
+          p {
+            margin: 0;
+          }
+
+          a {
+            cursor: pointer;
           }
         }
       }
