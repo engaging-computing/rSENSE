@@ -723,15 +723,33 @@ $ ->
             msg = annotation.msg.replace(/<\/?[^>]+(>|$)/g, "")
             $('#annotation-string').val(msg)
             link = annotation.msg.match(/href=\"(.*?)\"/)
-            if link isnt null then link = link[1]
-            $('#annotation-link').val(link)
+            bold = (/<.*?bold.*?>/).test annotation.msg
+            italic = (/<.*?italic.*?>/).test annotation.msg
+            small = not (/<.*?1\.25.*?>/).test annotation.msg
+            if link isnt null
+              link = link[1]
+              $('#annotation-link').val(link)
+              $('input[name="annotation-linktoggle"]').prop("checked", true)
+              $('#annotation-linktoggle').change()
+            else
+              $('#annotation-link').val("")
+              $('input[name="annotation-linktoggle"]').prop("checked", false)
+              $('#annotation-linktoggle').change()
+            $('input[name="annotation-bold"]').prop("checked", bold)
+            $('input[name="annotation-italic"]').prop("checked", italic)
+            $('#annotation-size-small').prop("checked", small)
+            $('#annotation-size-large').prop("checked", not small)
             $('#annotation-editor').dialog('open')
           else
             # Create a new annotation
             $('#annotation-string').val("New Annotation")
             $('#annotation-link').val("")
+            $('input[name="annotation-linktoggle"]').prop("checked", false)
+            $('#annotation-linktoggle').change()
             $('#annotation-editor').dialog('open')
-        $('.annotation-controlgroup').controlgroup()
+        $('#annotation-linktoggle').change () ->
+          $('#annotation-link-container').toggle(this.checked)
+        $('#annotation-linktoggle').change()
         $('#annotation-editor').dialog({modal: true, \
                                         autoOpen: false, \ 
                                         closeOnEscape: false, \
@@ -757,7 +775,7 @@ $ ->
                                                 size = $('input[name="annotation-size"]:checked').val()      
                                                 link = $("#annotation-link").val()
                                                 msg = "<p style=\"font-size: " + size + "em; " + bold + italic + "\">" + msg + "</p>"
-                                                if link isnt ""
+                                                if $('input[name="annotation-linktoggle"]').is(':checked') and (link isnt "")
                                                   if not /^(http|https):\/\//.test(link)
                                                     link = "http://" + link
                                                   msg = "<a href=\"" + link + "\">" + msg + "</a>"
@@ -771,6 +789,8 @@ $ ->
                                             @chart.redraw()
                                             toggleAnnotationButton("comment-add")
                                       }})
+        $('.ui-dialog-buttonpane').find('button:contains("Delete")').css('background','linear-gradient( 45deg, #ffcccc, #ffb2b2').html("").prepend('<span style="float:left;" class="ui-icon ui-icon-trash"></span>')
+        $('.ui-dialog-buttonpane').find('button:contains("Save")').css('background','linear-gradient( 45deg, #e5ffe5, #99ff99').html("").prepend('<span style="float:left;" class="ui-icon ui-icon-check"></span>')
 
       ###
       Checks if the user has requested a specific zoom

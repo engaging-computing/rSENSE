@@ -766,7 +766,6 @@ $ ->
           globals.annotationSet ?= new AnnotationSet()
           $('#annotation-string').val("New Annotation")
           $('#annotation-editor').dialog('open')
-        $('.annotation-controlgroup').controlgroup()
         $('#annotation-editor').dialog({modal: true, autoOpen: false, buttons: {                                       
                                           Save: () =>                  
                                             msg = $("#annotation-string").val()                                        
