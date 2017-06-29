@@ -96,7 +96,7 @@ $ ->
             @ds_id_counter = 0
             @pt_id_counter = 0
         
-        # Should be removable eventually
+        # Add an element
         addToList: (elt) ->
             @list.push elt
 
@@ -134,4 +134,3 @@ $ ->
         generatePtID: () ->
             @pt_id_counter -= 1;
             return @pt_id_counter;
-                
