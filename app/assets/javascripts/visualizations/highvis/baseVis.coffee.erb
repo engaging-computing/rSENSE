@@ -769,7 +769,7 @@ $ ->
           # Point selected?
           if (@canvas is "scatter-canvas") or (@canvas is "timeline-canvas")
             if (@chart.getSelectedPoints().length != 1)
-              alert "¯\\_(ツ)_/¯\nPlease select 1 point."
+              $('#annotation-alert').dialog('open')
               return
             # Attempt to edit current one?
             # TODO: will add if a block comment is selected to conditional
@@ -813,9 +813,11 @@ $ ->
         $('#annotation-linktoggle').change()
 
         # Enable the annotation editor
+        $('#annotation-alert').dialog({modal: true, autoOpen: false, resizable: false, buttons: Gotcha: () => $('#annotation-alert').dialog('close')})
         $('#annotation-editor').dialog({modal: true, \
                                         autoOpen: false, \ 
                                         closeOnEscape: false, \
+                                        resizable: false, \
                                         open:
                                           (event, ui) ->
                                             $(".ui-dialog-titlebar-close", ui.dialog | ui).hide()

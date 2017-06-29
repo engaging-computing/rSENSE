@@ -61,6 +61,10 @@
         <div id="vis-title-edit-btn" class="hidden-xs hidden-sm">
         
           <%= image_tag("comment-add.svg", id:"add-annotation-button") %>
+          <div id="annotation-alert" title="Oops...">
+            <h3 style="text-align: center;">¯\_(ツ)_/¯</h3>
+            <p style="text-align: center;"> Please select a single point to add a comment. <p>
+          </div>
           <div id="annotation-editor" title="Annotation">
             Please enter a comment:
               <input id="annotation-string" type="text" maxlength="100" class="form-control wide-input"/><br>
