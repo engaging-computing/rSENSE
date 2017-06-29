@@ -68,6 +68,21 @@ $ ->
                             @last_y_pt = (ui.position.top - t) / h
                             elt.attr({x: ui.position.left - l})
                             elt.attr({y: ui.position.top - t}))
+                    # TODO: Move click binding somewhere independent of global env
+                    $(elt.element).click () =>
+                        if globals.selectedAnnotation \
+                           and (globals.selectedAnnotationDsId is @ds_id) \
+                           and (globals.selectedAnnotationPtId is @pt_id)
+                                globals.selectedAnnotation = false
+                                toggleAnnotationButton('comment-add')
+                                $('.highcharts-block-annotation>rect').css('fill', 'rgba(0, 0, 0, 0.75')
+                        else
+                            globals.selectedAnnotationDsId = @ds_id
+                            globals.selectedAnnotationPtId = @pt_id
+                            globals.selectedAnnotation = true
+                            toggleAnnotationButton('comment-edit')
+                            $('.highcharts-block-annotation>rect').css('fill', 'rgba(0, 0, 0, 0.75')
+                            $(elt.element).children('rect').css('fill', 'rgba(0, 0, 200, 0.75')
                 return elt
 
             elt = render x_box, y_box

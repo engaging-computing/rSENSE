@@ -51,8 +51,11 @@ $ ->
         # Need X's and Y's for positioning annotations
         globals.selectedPointX = -1
         globals.selectedPointY = -1
-
+        globals.selectedAnnotation = false
+        globals.selectedAnnotationDsId = -1
+        globals.selectedAnnotationPtId = -1
         globals.annotationSet = null
+
         globals.configs.disabledPoints ?= []
 
       ANALYSISTYPE_TOTAL:      0
@@ -771,41 +774,47 @@ $ ->
             if (@chart.getSelectedPoints().length != 1)
               $('#annotation-alert').dialog('open')
               return
-            # Attempt to edit current one?
-            # TODO: will add if a block comment is selected to conditional
-            else if globals.annotationSet.hasAnnotationAt globals.selectedDataSetId, globals.selectedPointId
-              # Extract info about this annotation
-              annotation = globals.annotationSet.getElement globals.selectedDataSetId, globals.selectedPointId
-              globals.annotationSet.deleteElement globals.selectedDataSetId, globals.selectedPointId
-              msg = annotation.msg.replace(/<\/?[^>]+(>|$)/g, "")
-              $('#annotation-string').val(msg)
-              link = annotation.msg.match(/href=\"(.*?)\"/)
-              bold = (/<.*?bold.*?>/).test annotation.msg
-              italic = (/<.*?italic.*?>/).test annotation.msg
-              small = not (/<.*?1\.25.*?>/).test annotation.msg
-              # Reflect this info in the editor
-              if link isnt null
-                link = link[1]
-                $('#annotation-link').val(link)
-                $('input[name="annotation-linktoggle"]').prop("checked", true)
-              else
-                $('#annotation-link').val("")
-                $('input[name="annotation-linktoggle"]').prop("checked", false)
-              $('#annotation-linktoggle').change()
-              $('input[name="annotation-bold"]').prop("checked", bold)
-              $('input[name="annotation-italic"]').prop("checked", italic)
-              $('#annotation-size-small').prop("checked", small)
-              $('#annotation-size-large').prop("checked", not small)
-              # Open the editor
-              $('#annotation-editor').dialog('open')
-              return
-          # Create a new annotation
-          $('#annotation-string').val("New Annotation")
-          $('#annotation-link').val("")
-          $('input[name="annotation-linktoggle"]').prop("checked", false)
-          $('#annotation-linktoggle').change()
-          # Leave bold-italic-small-large as they were last time
-          $('#annotation-editor').dialog('open')
+          # Attempt to edit selected one?
+          ds = pt = null
+          if (@canvas is "scatter-canvas") or (@canvas is "timeline-canvas")
+            ds = globals.selectedDataSetId
+            pt = globals.selectedPointId
+          else if globals.selectedAnnotation
+            ds = globals.selectedAnnotationDsId
+            pt = globals.selectedAnnotationPtId
+          if (ds isnt null) and (globals.annotationSet.hasAnnotationAt ds, pt)
+            # Extract info about this annotation
+            annotation = globals.annotationSet.getElement ds, pt
+            globals.annotationSet.deleteElement ds, pt
+            msg = annotation.msg.replace(/<\/?[^>]+(>|$)/g, "")
+            $('#annotation-string').val(msg)
+            link = annotation.msg.match(/href=\"(.*?)\"/)
+            bold = (/<.*?bold.*?>/).test annotation.msg
+            italic = (/<.*?italic.*?>/).test annotation.msg
+            small = not (/<.*?1\.25.*?>/).test annotation.msg
+            # Reflect this info in the editor
+            if link isnt null
+              link = link[1]
+              $('#annotation-link').val(link)
+              $('input[name="annotation-linktoggle"]').prop("checked", true)
+            else
+              $('#annotation-link').val("")
+              $('input[name="annotation-linktoggle"]').prop("checked", false)
+            $('#annotation-linktoggle').change()
+            $('input[name="annotation-bold"]').prop("checked", bold)
+            $('input[name="annotation-italic"]').prop("checked", italic)
+            $('#annotation-size-small').prop("checked", small)
+            $('#annotation-size-large').prop("checked", not small)
+            # Open the editor
+            $('#annotation-editor').dialog('open')
+          else
+            # Create a new annotation
+            $('#annotation-string').val("New Annotation")
+            $('#annotation-link').val("")
+            $('input[name="annotation-linktoggle"]').prop("checked", false)
+            $('#annotation-linktoggle').change()
+            # Leave bold-italic-small-large as they were last time
+            $('#annotation-editor').dialog('open')
 
         # Set up link toggling
         $('#annotation-linktoggle').change () ->
@@ -844,7 +853,6 @@ $ ->
                                                   if not /^(http|https):\/\//.test(link)
                                                     link = "http://" + link
                                                   msg = "<a href=\"" + link + "\">" + msg + "</a>"
-                                                ## Only vis-dependent code should be here
                                                 if (@canvas is "scatter-canvas") or (@canvas is "timeline-canvas")
                                                   annotation = new Annotation msg, globals.selectedDataSetId, \
                                                                globals.selectedPointId, true, @canvas
