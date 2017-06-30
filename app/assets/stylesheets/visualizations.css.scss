@@ -56,10 +56,6 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     cursor: default; 
   }
 
-  .highcharts-annotation:hover {
-    opacity: .25;
-  }
-
   .highcharts-block-annotation {
     cursor: move;
     position: absolute;

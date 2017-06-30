@@ -44,7 +44,7 @@ $ ->
             # Free space
             space = w - x_box
             # Styling stuff (can't use traditional CSS)
-            style = {padding: 8, r: 5, zIndex: 6, fill: 'rgba(0, 0, 0, 0.75'}
+            style = {padding: 8, r: 5, zIndex: 6, fill: 'rgba(0, 0, 0, 0.75)'}
             text = {color: 'white'}
             # Render new element with class .highcharts-annotation
             render = (x, y) =>
@@ -59,15 +59,13 @@ $ ->
                     elt.attr(style)
                     elt.css(text)
                     elt.add()
-                    l = $(id).offset().left
-                    t = $(id).offset().top
                     $(elt.element)
-                        .draggable({containment: [l, t, l + w - elt.width, t + h - elt.height], scroll: false})
+                        .draggable({containment: $(id), scroll: false})
                         .bind('drag', (event, ui) =>
-                            @last_x_pt = (ui.position.left - l) / w
-                            @last_y_pt = (ui.position.top - t) / h
-                            elt.attr({x: ui.position.left - l})
-                            elt.attr({y: ui.position.top - t}))
+                            @last_x_pt = (ui.position.left - $(id).offset().left) / w
+                            @last_y_pt = (ui.position.top - $(id).offset().top) / h
+                            elt.attr({x: ui.position.left - $(id).offset().left})
+                            elt.attr({y: ui.position.top - $(id).offset().top}))
                     # TODO: Move click binding somewhere independent of global env
                     $(elt.element).click () =>
                         if globals.selectedAnnotation \
@@ -75,18 +73,24 @@ $ ->
                            and (globals.selectedAnnotationPtId is @pt_id)
                                 globals.selectedAnnotation = false
                                 toggleAnnotationButton('comment-add')
-                                $('.highcharts-block-annotation>rect').css('fill', 'rgba(0, 0, 0, 0.75')
+                                $('.highcharts-block-annotation>rect').css('fill', 'rgba(0, 0, 0, 0.75)')
                         else
                             globals.selectedAnnotationDsId = @ds_id
                             globals.selectedAnnotationPtId = @pt_id
                             globals.selectedAnnotation = true
                             toggleAnnotationButton('comment-edit')
-                            $('.highcharts-block-annotation>rect').css('fill', 'rgba(0, 0, 0, 0.75')
-                            $(elt.element).children('rect').css('fill', 'rgba(0, 0, 200, 0.5')
+                            $('.highcharts-block-annotation>rect').css('fill', 'rgba(0, 0, 0, 0.75)')
+                            $(elt.element).children('rect').css('fill', 'rgba(0, 0, 200, 0.75)')
                 return elt
 
             elt = render x_box, y_box
-            
+            $(elt.element).hover (() =>
+                                    if @callout
+                                        elt.attr({opacity: 0.25})
+                                    else
+                                        elt.attr({opacity: 0.75})),
+                                 (() => 
+                                    elt.attr({opacity: 1}))
             if (elt.width > space)
                 elt.element.remove()
                 overflow = elt.width - space
@@ -94,6 +98,7 @@ $ ->
 
         # Setter for last point
         initDraw: (x, y) ->
+            console.log "init"
             @last_x_pt = x
             @last_y_pt = y
 
