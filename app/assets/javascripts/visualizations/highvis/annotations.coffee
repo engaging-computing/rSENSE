@@ -23,11 +23,11 @@ $ ->
         # Useful for drawing new objects or loading for a vis
         # Important to pass coordinates because units/intervals/etc
         #       depend on what vis is being used, grouping, etc.
-        draw: (chart, x_pt = 0, y_pt = 0) ->
+        draw: (chart) ->
             w = chart.chartWidth
             h = chart.chartHeight
-            @last_x_pt = x_pt
-            @last_y_pt = y_pt
+            x_pt = @last_x_pt
+            y_pt = @last_y_pt
             if @callout
                 # Calculate pixel positions
                 x_px = chart.xAxis[0].toPixels(@last_x_pt)
@@ -82,7 +82,7 @@ $ ->
                             globals.selectedAnnotation = true
                             toggleAnnotationButton('comment-edit')
                             $('.highcharts-block-annotation>rect').css('fill', 'rgba(0, 0, 0, 0.75')
-                            $(elt.element).children('rect').css('fill', 'rgba(0, 0, 200, 0.75')
+                            $(elt.element).children('rect').css('fill', 'rgba(0, 0, 200, 0.5')
                 return elt
 
             elt = render x_box, y_box
@@ -92,15 +92,8 @@ $ ->
                 overflow = elt.width - space
                 render x_box - overflow, y_box
 
-        # Similar to draw, but uses last known coordinates
-        # Sufficient for re-drawing on browser resizes which don't change
-        #           coordinate system.
-        redraw: (chart) ->
-            if @last_x_pt isnt null
-                @draw chart, @last_x_pt, @last_y_pt
-
         # Setter for last point
-        initRedraw: (x, y) ->
+        initDraw: (x, y) ->
             @last_x_pt = x
             @last_y_pt = y
 
@@ -136,10 +129,18 @@ $ ->
             if idx isnt -1
                 @list.splice idx, 1
 
+        deleteObject: (annotation) ->
+            id1 = annotation.ds_id
+            id2 = annotation.pt_id
+            idx = @list.findIndex (elt) ->
+                (elt.ds_id == id1) and (elt.pt_id == id2)
+            if idx isnt -1
+                @list.splice idx, 1
+
         redrawAll: (chart, canvas) ->
             for elt in @list
                 if elt.canvas == canvas
-                    elt.redraw(chart)
+                    elt.draw chart
 
         # For general "rect" annotations, we don't need to associate
         #   with a dataset; however, we still need a unique way to identify it
