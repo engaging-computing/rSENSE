@@ -1,5 +1,5 @@
 == iSENSE Project Site
-iSENSE is an online system that promotes collaborative scientific analysis by
+iSENSE[https://isenseproject.org] is an online system that promotes collaborative scientific analysis by
 providing accessible ways to collect, contribute, and visualize data. iSENSE
 users create projects to which they can contribute data. After contributing
 data to projects in the form of data sets, users can analyze their data using
