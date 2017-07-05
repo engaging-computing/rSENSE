@@ -1,157 +1,222 @@
+###
+  * Copyright (c) 2017, iSENSE Project. All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without
+  * modification, are permitted provided that the following conditions are met:
+  *
+  * Redistributions of source code must retain the above copyright notice, this
+  * list of conditions and the following disclaimer. Redistributions in binary
+  * form must reproduce the above copyright notice, this list of conditions and
+  * the following disclaimer in the documentation and/or other materials
+  * provided with the distribution. Neither the name of the University of
+  * Massachusetts Lowell nor the names of its contributors may be used to
+  * endorse or promote products derived from this software without specific
+  * prior written permission.
+  *
+  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  * ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR
+  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+  * DAMAGE.
+  *
+###
+
 $ ->
   if namespace.controller is 'visualizations' and
   namespace.action in ['displayVis', 'embedVis', 'show']
 
     # Class for an annotation
-    # Crucial member variables are the annotation message,
-    # along with the associated datapoint and dataset IDs
-    # Type indicates whether it is locked onto a datapoint
-    # with a callout bubble
-    # Also stores the last used x and y points for quick
-    # redraws
-    class window.Annotation extends Object
-        constructor: (msg, ds_id, pt_id, callout = false, canvas) ->
-            @msg = msg
-            @ds_id = ds_id
-            @pt_id = pt_id
-            @last_x_pt = null
-            @last_y_pt = null
-            @callout = callout
-            @canvas = canvas
+    #
+    # @msg is the HTML contents of the annotation
+    #
+    # @id1 and @id2 are general identifiers that can be used however you want
+    #     For instance, for annotations on a scatter plot we use them for the
+    #     dataset ID and point ID.  However, they do not necessarily need to
+    #     be numerical.
+    #     IF no ID is provided, a negative number will be assigned.  If you have
+    #     no need to search for annotations programmatically instead of using the
+    #     selection feature, go for this option.
+    #
+    # @last_x_pt and @last_y_pt indicate the last known coordinates of the annotation
+    #
+    # @callout indicates whether to draw a callout bubble
+    #
+    # @canvas indicates which vis the annotation is assigned to
+    #
+    # Due to the following static variables, each annotation is aware of whether
+    #     another is selected.  Therefore, you don't need an Annotation Set to
+    #     create an annotation.  See the AnnotationSet class below for details.
+    #
+    # Annotation.selectedAnnotation indicates whether an annotation is selected
+    # Annotation.selectedAnnotationId1 indicates the first ID of the selection
+    # Annotation.selectedAnnotationId2 indicates the second ID of the selection
 
-        # Draw the annotation at the chart coordinates
-        # Useful for drawing new objects or loading for a vis
-        # Important to pass coordinates because units/intervals/etc
-        #       depend on what vis is being used, grouping, etc.
-        draw: (chart) ->
-            w = chart.chartWidth
-            h = chart.chartHeight
-            x_pt = @last_x_pt
-            y_pt = @last_y_pt
-            if @callout
-                # Calculate pixel positions
-                x_px = chart.xAxis[0].toPixels(@last_x_pt)
-                y_px = chart.yAxis[0].toPixels(@last_y_pt) 
-                # Position of box corner
-                x_box = x_px - 20
-                if y_px > (h * .25)
-                    y_box = y_px - 40    
-                else
-                    y_box = y_px + 10
-            else
-                x_box = x_pt * w
-                y_box = y_pt * h
-            # Free space
-            space = w - x_box
-            # Styling stuff (can't use traditional CSS)
-            style = {padding: 8, r: 5, zIndex: 6, fill: 'rgba(0, 0, 0, 0.75)'}
-            text = {color: 'white'}
-            # Render new element with class .highcharts-annotation
-            render = (x, y) =>
-                if @callout
-                    elt = chart.renderer.label(@msg, x, y, 'callout', x_px, y_px, false, false, "annotation")
-                    elt.attr(style)
-                    elt.css(text)
-                    elt.add()
-                else
-                    elt = chart.renderer.label(@msg, x, y, null, null, null, false, false, "block-annotation")
-                    id = '#' + @canvas
-                    elt.attr(style)
-                    elt.css(text)
-                    elt.add()
-                    $(elt.element)
-                        .draggable({containment: $(id), scroll: false})
-                        .bind('drag', (event, ui) =>
+    class window.Annotation extends Object
+      # Static variables
+      Annotation.selectedAnnotation = false
+      Annotation.selectedAnnotationId1 = 0
+      Annotation.selectedAnnotationId2 = 0
+      Annotation.id_counter = 0
+      # Constructor
+      constructor: (msg, canvas, callout = false, id1 = null, id2 = null) ->
+        @msg = msg
+        if id1 is null
+          @id1 = @id2 = Annotation.id_counter -= 1
+        else
+          @id1 = id1
+          @id2 = id2
+        @last_x_pt = null
+        @last_y_pt = null
+        @callout = callout
+        @canvas = canvas
+      # Draw the annotation at the chart coordinates
+      # The optional onSelection is a function that runs when a comment is selected
+      draw: (chart, onSelection = null) ->
+        w = chart.chartWidth
+        h = chart.chartHeight
+        x_pt = @last_x_pt
+        y_pt = @last_y_pt
+        if @callout
+          # Calculate pixel positions
+          x_px = chart.xAxis[0].toPixels(@last_x_pt)
+          y_px = chart.yAxis[0].toPixels(@last_y_pt)
+          # Position of box corner
+          x_box = x_px - 20
+          if y_px > (h * .25)
+            y_box = y_px - 40
+          else
+            y_box = y_px + 10
+        else
+          x_box = x_pt * w
+          y_box = y_pt * h
+        # Free space
+        space = w - x_box
+        # Styling stuff (can't use traditional CSS)
+        style = {padding: 8, r: 5, zIndex: 6, fill: 'rgba(0, 0, 0, 0.75)'}
+        text = {color: 'white'}
+        # Render new element with class .highcharts-annotation
+        render = (x, y) =>
+          if @callout
+            elt = chart.renderer.label(@msg, x, y, 'callout', x_px, y_px, false, false, "annotation")
+            elt.attr(style)
+            elt.css(text)
+            elt.add()
+          else
+            elt = chart.renderer.label(@msg, x, y, null, null, null, false, false, "block-annotation")
+            id = '#' + @canvas
+            elt.attr(style)
+            elt.css(text)
+            elt.add()
+            $(elt.element).draggable({containment: $(id), scroll: false})
+                          .bind('drag', (event, ui) =>
                             @last_x_pt = (ui.position.left - $(id).offset().left) / w
                             @last_y_pt = (ui.position.top - $(id).offset().top) / h
                             elt.attr({x: ui.position.left - $(id).offset().left})
                             elt.attr({y: ui.position.top - $(id).offset().top}))
-                    # TODO: Move click binding somewhere independent of global env
-                    $(elt.element).click () =>
-                        if globals.selectedAnnotation \
-                           and (globals.selectedAnnotationDsId is @ds_id) \
-                           and (globals.selectedAnnotationPtId is @pt_id)
-                                globals.selectedAnnotation = false
-                                toggleAnnotationButton('comment-add')
-                                $('.highcharts-block-annotation>rect').css('fill', 'rgba(0, 0, 0, 0.75)')
-                        else
-                            globals.selectedAnnotationDsId = @ds_id
-                            globals.selectedAnnotationPtId = @pt_id
-                            globals.selectedAnnotation = true
-                            toggleAnnotationButton('comment-edit')
-                            $('.highcharts-block-annotation>rect').css('fill', 'rgba(0, 0, 0, 0.75)')
-                            $(elt.element).children('rect').css('fill', 'rgba(0, 0, 200, 0.75)')
-                return elt
+            $(elt.element).click () =>
+              if Annotation.selectedAnnotation \
+                 and (Annotation.selectedAnnotationId1 is @id1) \
+                 and (Annotation.selectedAnnotationId2 is @id2)
+                Annotation.selectedAnnotation = false
+                if onSelection isnt null then onSelection()
+                $('.highcharts-block-annotation>rect').css('fill', 'rgba(0, 0, 0, 0.75)')
+              else
+                Annotation.selectedAnnotationId1 = @id1
+                Annotation.selectedAnnotationId2 = @id2
+                Annotation.selectedAnnotation = true
+                if onSelection isnt null then onSelection()
+                $('.highcharts-block-annotation>rect').css('fill', 'rgba(0, 0, 0, 0.75)')
+                $(elt.element).children('rect').css('fill', 'rgba(0, 0, 200, 0.75)')
+          return elt
+        elt = render x_box, y_box
+        $(elt.element).hover (() =>
+          if @callout
+            elt.attr({opacity: 0.25})
+          else
+            elt.attr({opacity: 0.75})),
+                             (() ->
+                               elt.attr({opacity: 1}))
+        if (elt.width > space)
+          elt.element.remove()
+          overflow = elt.width - space
+          render x_box - overflow, y_box
+      # Setter for last point
+      # Should be a one-time deal as the position is tracked automatically after this
+      initDraw: (x, y) ->
+        @last_x_pt = x
+        @last_y_pt = y
+      # The following predicates give info about the msg formatting
+      isBold: () ->
+        (/<.*?bold.*?>/).test @msg
+      isItalic: () ->
+        (/<.*?italic.*?>/).test @msg
+      isSmall: () ->
+        not (/<.*?1\.25.*?>/).test @msg
+      href: () ->
+        link = @msg.match(/href=\"(.*?)\"/)
+        if link isnt null
+          return link[1]
+        else
+          return null
+      raw: () ->
+        @msg.replace(/<\/?[^>]+(>|$)/g, "")
 
-            elt = render x_box, y_box
-            $(elt.element).hover (() =>
-                                    if @callout
-                                        elt.attr({opacity: 0.25})
-                                    else
-                                        elt.attr({opacity: 0.75})),
-                                 (() => 
-                                    elt.attr({opacity: 1}))
-            if (elt.width > space)
-                elt.element.remove()
-                overflow = elt.width - space
-                render x_box - overflow, y_box
-
-        # Setter for last point
-        initDraw: (x, y) ->
-            console.log "init"
-            @last_x_pt = x
-            @last_y_pt = y
-
-
+    # AnnotationSet class
+    #
+    # This offers a way to group annotations into a collection for easy
+    #   mass re-drawing and searching through annotations of a certain
+    #   type.  For instance, create an AnnotationSet for user comments.
+    #
+    # @list is a list of Annotation objects
     class window.AnnotationSet extends Object
-        constructor: ->
-            @list = []
-            @ds_id_counter = 0
-            @pt_id_counter = 0
+      # Constructor
+      constructor: ->
+        @list = []
         
-        # Add an element
-        addToList: (elt) ->
-            @list.push elt
+      # Add an element
+      addToList: (elt) ->
+        @list.push elt
 
-        # Checks list membership
-        hasAnnotationAt: (id1, id2) ->
-            idx = @list.findIndex (elt) ->
-                (elt.ds_id == id1) and (elt.pt_id == id2)
-            not (idx == -1)
+      # Checks list membership
+      hasAnnotationAt: (id1, id2) ->
+        idx = @list.findIndex (elt) ->
+          (elt.id1 == id1) and (elt.id2 == id2)
+        not (idx == -1)
 
-        # Similar, but returns element
-        getElement: (id1, id2) ->
-            idx = @list.findIndex (elt) ->
-                (elt.ds_id == id1) and (elt.pt_id == id2)
-            if (idx isnt -1)
-                @list[idx]
-            else
-                null
+      # Similar, but returns element
+      getElement: (id1, id2) ->
+        idx = @list.findIndex (elt) ->
+          (elt.id1 == id1) and (elt.id2 == id2)
+        if (idx isnt -1)
+          @list[idx]
+        else
+          null
+    
+      # Delete an element by its ID
+      deleteElement: (id1, id2) ->
+        idx = @list.findIndex (elt) ->
+          (elt.id1 == id1) and (elt.id2 == id2)
+        if idx isnt -1
+          @list.splice idx, 1
 
-        deleteElement: (id1, id2) ->
-            idx = @list.findIndex (elt) ->
-                (elt.ds_id == id1) and (elt.pt_id == id2)
-            if idx isnt -1
-                @list.splice idx, 1
+      # Delete an element by finding a matching annotation
+      deleteObject: (annotation) ->
+        id1 = annotation.id1
+        id2 = annotation.id2
+        idx = @list.findIndex (elt) ->
+          (elt.id1 == id1) and (elt.id2 == id2)
+        if idx isnt -1
+          @list.splice idx, 1
 
-        deleteObject: (annotation) ->
-            id1 = annotation.ds_id
-            id2 = annotation.pt_id
-            idx = @list.findIndex (elt) ->
-                (elt.ds_id == id1) and (elt.pt_id == id2)
-            if idx isnt -1
-                @list.splice idx, 1
-
-        redrawAll: (chart, canvas) ->
-            for elt in @list
-                if elt.canvas == canvas
-                    elt.draw chart
-
-        # For general "rect" annotations, we don't need to associate
-        #   with a dataset; however, we still need a unique way to identify it
-        generateDsID: () ->
-            @ds_id_counter -= 1;
-            return @ds_id_counter;
-        generatePtID: () ->
-            @pt_id_counter -= 1;
-            return @pt_id_counter;
+      # Draw all of the annotations in the set to the given chart
+      # The optional onSelection is a function that runs when a comment is selected
+      drawAll: (chart, canvas, onSelection = null) ->
+        for elt in @list
+          if elt.canvas == canvas
+            elt.draw chart, onSelection

@@ -133,7 +133,7 @@ $ ->
                     globals.selectedPointY = @y
                     $('#disable-point-button').prop("disabled", false)
                     # Change button to delete if applicable
-                    if (globals.annotationSet isnt null) and \ 
+                    if (globals.annotationSet isnt null) and \
                        (globals.annotationSet.hasAnnotationAt globals.selectedDataSetId, \
                                                               globals.selectedPointId)
                       toggleAnnotationButton("comment-edit")
@@ -376,7 +376,7 @@ $ ->
               mode = @SYMBOLS_LINES_MODE
 
             # Clear the annotations
-            toggleAnnotationButton("comment");
+            toggleAnnotationButton("comment")
             $('.highcharts-annotation').remove()
             
             # loop through all the series and add them to the chart
@@ -414,10 +414,10 @@ $ ->
 
               # Draw the annotations
               if globals.annotationSet isnt null
-                  for point in series
-                    if (elt = globals.annotationSet.getElement globals.getDataSetId(point.datapoint[1]), \
-                                                               point.datapoint[0]) isnt null
-                      elt.draw @chart, point.x, point.y
+                for point in series
+                  if (elt = globals.annotationSet.getElement globals.getDataSetId(point.datapoint[1]), \
+                                                              point.datapoint[0]) isnt null
+                    elt.draw @chart, point.x, point.y
 
         if @isZoomLocked()
           @updateOnZoom = false

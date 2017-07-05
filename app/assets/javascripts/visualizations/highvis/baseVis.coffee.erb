@@ -1,5 +1,5 @@
 ###
-  * Copyright (c) 2011, iSENSE Project. All rights reserved.
+  * Copyright (c) 2011 - 2017, iSENSE Project. All rights reserved.
   *
   * Redistribution and use in source and binary forms, with or without
   * modification, are permitted provided that the following conditions are met:
@@ -51,9 +51,6 @@ $ ->
         # Need X's and Y's for positioning annotations
         globals.selectedPointX = -1
         globals.selectedPointY = -1
-        globals.selectedAnnotation = false
-        globals.selectedAnnotationDsId = -1
-        globals.selectedAnnotationPtId = -1
         globals.annotationSet = null
 
         globals.configs.disabledPoints ?= []
@@ -598,7 +595,7 @@ $ ->
                 events:
                     load: () -> 
                         if globals.annotationSet isnt null
-                          globals.annotationSet.redrawAll(this, canvas))
+                          globals.annotationSet.drawAll(this, canvas))
         $('#download-vector-btn').click =>
           canvas = @canvas
           @chart.exportChart(type: "image/svg+xml",
@@ -606,7 +603,7 @@ $ ->
                 events: 
                     load: () -> 
                         if globals.annotationSet isnt null
-                          globals.annotationSet.redrawAll(this, canvas))
+                          globals.annotationSet.drawAll(this, canvas))
         $('#download-document-btn').click =>
           canvas = @canvas
           @chart.exportChart( type: "application/pdf",
@@ -614,7 +611,7 @@ $ ->
                 events: 
                     load: () -> 
                         if globals.annotationSet isnt null
-                          globals.annotationSet.redrawAll(this, canvas))
+                          globals.annotationSet.drawAll(this, canvas))
 
         $('#print-vis-btn').click =>
           # Resize chart if it is too big to print
@@ -768,72 +765,69 @@ $ ->
         toggleAnnotationButton("comment")
         $('#add-annotation-button').show()
         $('#add-annotation-button').click (e) =>
+          # Create an annotation set if one does not already exist
           globals.annotationSet ?= new AnnotationSet()
+
           # Point selected?
-          if (@canvas is "scatter-canvas") or (@canvas is "timeline-canvas")
-            if (@chart.getSelectedPoints().length != 1)
+          if ((@canvas is "scatter-canvas") or (@canvas is "timeline-canvas")) and (@chart.getSelectedPoints().length != 1)
               $('#annotation-alert').dialog('open')
               return
+          
           # Attempt to edit selected one?
           ds = pt = null
           if (@canvas is "scatter-canvas") or (@canvas is "timeline-canvas")
             ds = globals.selectedDataSetId
             pt = globals.selectedPointId
-          else if globals.selectedAnnotation
-            ds = globals.selectedAnnotationDsId
-            pt = globals.selectedAnnotationPtId
+          else if Annotation.selectedAnnotation
+            ds = Annotation.selectedAnnotationId1
+            pt = Annotation.selectedAnnotationId2
           if (ds isnt null) and (globals.annotationSet.hasAnnotationAt ds, pt)
-            # Extract info about this annotation
             annotation = globals.annotationSet.getElement ds, pt
-            msg = annotation.msg.replace(/<\/?[^>]+(>|$)/g, "")
-            $('#annotation-string').val(msg)
-            link = annotation.msg.match(/href=\"(.*?)\"/)
-            bold = (/<.*?bold.*?>/).test annotation.msg
-            italic = (/<.*?italic.*?>/).test annotation.msg
-            small = not (/<.*?1\.25.*?>/).test annotation.msg
-            # Reflect this info in the editor
-            if link isnt null
-              link = link[1]
-              $('#annotation-link').val(link)
-              $('input[name="annotation-linktoggle"]').prop("checked", true)
-            else
-              $('#annotation-link').val("")
-              $('input[name="annotation-linktoggle"]').prop("checked", false)
-            $('#annotation-linktoggle').change()
-            $('input[name="annotation-bold"]').prop("checked", bold)
-            $('input[name="annotation-italic"]').prop("checked", italic)
-            $('#annotation-size-small').prop("checked", small)
-            $('#annotation-size-large').prop("checked", not small)
             # Open the editor
             $('#annotation-editor').data("annotation", annotation).dialog('open')
-          else
-            # Create a new annotation
-            $('#annotation-string').val("New Annotation")
-            $('#annotation-link').val("")
-            $('input[name="annotation-linktoggle"]').prop("checked", false)
-            $('#annotation-linktoggle').change()
-            # Leave bold-italic-small-large as they were last time
-            $('#annotation-editor').dialog('open')
+            return
+
+          # Else create a new annotation
+          $('#annotation-editor').dialog('open')
+          return
+
+        # Setting up the editor
 
         # Set up link toggling
         $('#annotation-linktoggle').change () ->
           $('#annotation-link-container').toggle(this.checked)
         $('#annotation-linktoggle').change()
-
+        
         # Enable the annotation editor
         $('#annotation-alert').dialog({modal: true, autoOpen: false, resizable: false, buttons: Gotcha: () => $('#annotation-alert').dialog('close')})
-        $('#annotation-editor').dialog({modal: true, \
-                                        autoOpen: false, \ 
-                                        closeOnEscape: false, \
-                                        resizable: false, \
+        $('#annotation-editor').dialog({modal: true, autoOpen: false, resizable: false, \
                                         open:
                                           (event, ui) ->
-                                            $(".ui-dialog-titlebar-close", ui.dialog | ui).hide()
+                                            if $('#annotation-editor').data("annotation")?
+                                              annotation = $('#annotation-editor').data("annotation")
+                                              $('#annotation-string').val(annotation.raw())
+                                              if annotation.href() isnt null
+                                                $('#annotation-link').val(annotation.href())
+                                                $('input[name="annotation-linktoggle"]').prop("checked", true)
+                                              else
+                                                $('#annotation-link').val("")
+                                                $('input[name="annotation-linktoggle"]').prop("checked", false)
+                                              $('#annotation-linktoggle').change()
+                                              $('input[name="annotation-bold"]').prop("checked", annotation.isBold())
+                                              $('input[name="annotation-italic"]').prop("checked", annotation.isItalic())
+                                              $('#annotation-size-small').prop("checked", annotation.isSmall())
+                                              $('#annotation-size-large').prop("checked", not annotation.isSmall())
+                                            else
+                                              $('#annotation-string').val("New Annotation")
+                                              $('#annotation-link').val("")
+                                              $('input[name="annotation-linktoggle"]').prop("checked", false)
+                                              $('#annotation-linktoggle').change()
                                         ,
                                         buttons: {                    
                                           Delete: () =>
                                             if $('#annotation-editor').data("annotation")?
-                                              globals.annotationSet.deleteObject $('#annotation-editor').data("annotation")
+                                              annotation = $('#annotation-editor').data("annotation")
+                                              globals.annotationSet.deleteElement annotation.id1, annotation.id2
                                               $('#annotation-editor').removeData("annotation").dialog('close')
                                               toggleAnnotationButton("comment-add")  
                                               @chart.redraw() 
@@ -857,14 +851,13 @@ $ ->
                                                 if $('#annotation-editor').data("annotation")?
                                                   $('#annotation-editor').data("annotation").msg = msg
                                                 else if (@canvas is "scatter-canvas") or (@canvas is "timeline-canvas")
-                                                  annotation = new Annotation msg, globals.selectedDataSetId, \
-                                                               globals.selectedPointId, true, @canvas
+                                                  annotation = new Annotation msg, @canvas, true, globals.selectedDataSetId, \
+                                                               globals.selectedPointId
                                                   globals.annotationSet.addToList annotation
                                                   annotation.initDraw globals.selectedPointX, globals.selectedPointY
                                                   toggleAnnotationButton("comment-edit")
                                                 else
-                                                  annotation = new Annotation msg, globals.annotationSet.generateDsID(), \
-                                                               globals.annotationSet.generatePtID(), false, @canvas
+                                                  annotation = new Annotation msg, @canvas
                                                   annotation.initDraw 0, 0
                                                   globals.annotationSet.addToList annotation
                                                 @chart.redraw()
@@ -911,10 +904,14 @@ $ ->
                 $('.highcharts-annotation').remove()
                 $('.highcharts-block-annotation').remove()
                 unless (canvas is "scatter-canvas") or (canvas is "timeline-canvas")
-                  globals.selectedAnnotation = false
+                  Annotation.selectedAnnotation = false
                   toggleAnnotationButton('comment-add')
                 if globals.annotationSet isnt null
-                  globals.annotationSet.redrawAll(this, canvas)
+                  globals.annotationSet.drawAll(this, canvas, () ->
+                    if Annotation.selectedAnnotation
+                      toggleAnnotationButton('comment-edit')
+                    else
+                      toggleAnnotationButton('comment-add'))
           credits:
             enabled: false
           exporting:
