@@ -127,7 +127,7 @@ $ ->
                             @last_y_pt = (ui.position.top - $(id).offset().top) / h
                             elt.attr({x: ui.position.left - $(id).offset().left})
                             elt.attr({y: ui.position.top - $(id).offset().top}))
-            $(elt.element).click () =>
+            $(elt.element).click (event) =>
               if Annotation.selectedAnnotation \
                  and (Annotation.selectedAnnotationId1 is @id1) \
                  and (Annotation.selectedAnnotationId2 is @id2)
@@ -184,8 +184,8 @@ $ ->
     # @list is a list of Annotation objects
     class window.AnnotationSet extends Object
       # Constructor
-      constructor: ->
-        @list = []
+      constructor: (list = [])->
+        @list = list
         
       # Add an element
       addToList: (elt) ->
