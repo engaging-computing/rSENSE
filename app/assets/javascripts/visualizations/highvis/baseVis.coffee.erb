@@ -804,8 +804,8 @@ $ ->
         $('#annotation-linktoggle').change()
         
         # Enable the annotation editor
-        $('#annotation-alert').dialog({modal: true, autoOpen: false, resizable: false, buttons: Gotcha: () => $('#annotation-alert').dialog('close')})
-        $('#annotation-editor').dialog({modal: true, autoOpen: false, resizable: false, \
+        $('#annotation-alert').dialog({modal: true, autoOpen: false, width: 400, resizable: false, buttons: Gotcha: () => $('#annotation-alert').dialog('close')})
+        $('#annotation-editor').dialog({modal: true, autoOpen: false, width: 400, resizable: false, \
                                         open:
                                           (event, ui) ->
                                             if $('#annotation-editor').data("annotation")?
