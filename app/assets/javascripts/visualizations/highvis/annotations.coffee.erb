@@ -38,7 +38,7 @@ $ ->
         $('#add-annotation-button').attr( 'src' , '<%= image_path "comment-add.svg", :id => "add-annotation-button" %>' )
       else if (setting == "comment-edit")
         $('#add-annotation-button').attr( 'src' , '<%= image_path "comment-edit.svg", :id => "add-annotation-button" %>' )
-        
+
     # Class for an annotation
     #
     # @msg is the HTML contents of the annotation
@@ -192,33 +192,25 @@ $ ->
         @list.push elt
 
       # Checks list membership
-      hasAnnotationAt: (id1, id2) ->
+      # Only specify canvas if the ids are the same and you don't want annotation to show up on multiple vis
+      hasAnnotationAt: (id1, id2, canvas = "") ->
         idx = @list.findIndex (elt) ->
-          (elt.id1 == id1) and (elt.id2 == id2)
+          (elt.id1 == id1) and (elt.id2 == id2) and ((canvas == "") or (elt.canvas == canvas))
         not (idx == -1)
 
       # Similar, but returns element
-      getElement: (id1, id2) ->
+      getElement: (id1, id2, canvas = "") ->
         idx = @list.findIndex (elt) ->
-          (elt.id1 == id1) and (elt.id2 == id2)
+          (elt.id1 == id1) and (elt.id2 == id2) and ((canvas == "") or (elt.canvas == canvas))
         if (idx isnt -1)
           @list[idx]
         else
           null
     
       # Delete an element by its ID
-      deleteElement: (id1, id2) ->
+      deleteElement: (id1, id2, canvas = "") ->
         idx = @list.findIndex (elt) ->
-          (elt.id1 == id1) and (elt.id2 == id2)
-        if idx isnt -1
-          @list.splice idx, 1
-
-      # Delete an element by finding a matching annotation
-      deleteObject: (annotation) ->
-        id1 = annotation.id1
-        id2 = annotation.id2
-        idx = @list.findIndex (elt) ->
-          (elt.id1 == id1) and (elt.id2 == id2)
+          (elt.id1 == id1) and (elt.id2 == id2) and ((canvas == "") or (elt.canvas == canvas))
         if idx isnt -1
           @list.splice idx, 1
 

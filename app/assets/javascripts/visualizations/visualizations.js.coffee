@@ -126,7 +126,13 @@ $ ->
     if data.savedGlobals?
       savedGlobals = JSON.parse(data.savedGlobals)
       savedConfigs = savedGlobals['globals']
+      savedAnnotations = savedGlobals['annotations']
       $.extend(globals.configs, savedConfigs)
+      if savedAnnotations?
+        globals.annotationSet = new AnnotationSet
+        for elt in savedAnnotations.list
+          annotation = $.extend(true, new Annotation, elt)
+          globals.annotationSet.addToList annotation
 
       # Restore vis specific configs
       for visName in data.allVis

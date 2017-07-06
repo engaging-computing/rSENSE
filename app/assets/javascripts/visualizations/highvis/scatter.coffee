@@ -104,6 +104,7 @@ $ ->
         super(animate)
 
         self = this
+        canvas = @canvas
         $.extend true, @chartOptions,
           chart:
             type: if @configs.mode is @LINES_MODE then "line" else "scatter"
@@ -134,8 +135,7 @@ $ ->
                     $('#disable-point-button').prop("disabled", false)
                     # Change button to delete if applicable
                     if (globals.annotationSet isnt null) and \
-                       (globals.annotationSet.hasAnnotationAt globals.selectedDataSetId, \
-                                                              globals.selectedPointId)
+                       (globals.annotationSet.hasAnnotationAt globals.selectedDataSetId, globals.selectedPointId, canvas)
                       toggleAnnotationButton("comment-edit")
                     # Else make it add
                     else

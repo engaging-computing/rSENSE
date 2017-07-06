@@ -781,8 +781,8 @@ $ ->
           else if Annotation.selectedAnnotation
             ds = Annotation.selectedAnnotationId1
             pt = Annotation.selectedAnnotationId2
-          if (ds isnt null) and (globals.annotationSet.hasAnnotationAt ds, pt)
-            annotation = globals.annotationSet.getElement ds, pt
+          if (ds isnt null) and (globals.annotationSet.hasAnnotationAt ds, pt, @canvas)
+            annotation = globals.annotationSet.getElement ds, pt, @canvas
             # Open the editor
             $('#annotation-editor').data("annotation", annotation).dialog('open')
             return
@@ -827,7 +827,7 @@ $ ->
                                           Delete: () =>
                                             if $('#annotation-editor').data("annotation")?
                                               annotation = $('#annotation-editor').data("annotation")
-                                              globals.annotationSet.deleteElement annotation.id1, annotation.id2
+                                              globals.annotationSet.deleteElement annotation.id1, annotation.id2, annotation.canvas
                                               $('#annotation-editor').removeData("annotation").dialog('close')
                                               toggleAnnotationButton("comment-add")  
                                               @chart.redraw() 
