@@ -31,6 +31,14 @@ $ ->
   if namespace.controller is 'visualizations' and
   namespace.action in ['displayVis', 'embedVis', 'show']
 
+    window.toggleAnnotationButton = (setting) ->
+      if (setting == "comment")
+        $('#add-annotation-button').attr( 'src' , '<%= image_path "comment.svg", :id => "add-annotation-button" %>' )
+      else if (setting == "comment-add")
+        $('#add-annotation-button').attr( 'src' , '<%= image_path "comment-add.svg", :id => "add-annotation-button" %>' )
+      else if (setting == "comment-edit")
+        $('#add-annotation-button').attr( 'src' , '<%= image_path "comment-edit.svg", :id => "add-annotation-button" %>' )
+        
     # Class for an annotation
     #
     # @msg is the HTML contents of the annotation
