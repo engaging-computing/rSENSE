@@ -15,6 +15,7 @@
 //= require image_path
 //= require jquery
 //= require jquery-ui
+//= require jquery_ujs
 //= require isense
 //= require helpers
 //= require dateParse
@@ -62,4 +63,3 @@
 //= require slickgrid-editors/editors
 //
 //= require_tree .
-//
