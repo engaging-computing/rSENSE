@@ -371,29 +371,21 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
         display: -webkit-box;  
         display: -moz-box;   
         // Make scrollbar on top so as not to ruin tab effect
-        transform:rotateX(180deg);
-        -ms-transform:rotateX(180deg); /* IE 9 */
-        -webkit-transform:rotateX(180deg); /* Safari and Chrome */
-        // Prevent blurriness in some browsers
-        -webkit-transform: translate3d(0,0,1px);
-        -moz-transform: translate3d(0,0,1px);
-        -ms-transform: translate3d(0,0,1px);
-        -o-transform: translate3d(0,0,1px);
-        transform: translate3d(0,0,1px);
+        -moz-transform: scale(1, -1);
+        -webkit-transform: scale(1, -1);
+        -o-transform: scale(1, -1);
+        -ms-transform: scale(1, -1);
+        transform: scale(1, -1);
       }
 
       .nav-tabs>li {
-        float:none;
-        // Rotate the contents back
-        transform:rotateX(180deg);
-        -ms-transform:rotateX(180deg);
-        -webkit-transform:rotateX(180deg);
-        // Prevent blurriness in some browsers
-        -webkit-transform: translate3d(0,0,1px);
-        -moz-transform: translate3d(0,0,1px);
-        -ms-transform: translate3d(0,0,1px);
-        -o-transform: translate3d(0,0,1px);
-        transform: translate3d(0,0,1px);
+        float: none;
+        // Flip the contents back
+        -moz-transform: scale(1, -1);
+        -webkit-transform: scale(1, -1);
+        -o-transform: scale(1, -1);
+        -ms-transform: scale(1, -1);
+        transform: scale(1, -1);
       }
       // End navigation tabs
 
