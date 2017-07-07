@@ -132,10 +132,11 @@ $ ->
                     globals.selectedPointId = @.datapoint[0]
                     globals.selectedPointX = @x
                     globals.selectedPointY = @y
+                    globals.selectedPointField = data.fields.findIndex (elt) => elt.fieldName is @series.name.field
                     $('#disable-point-button').prop("disabled", false)
                     # Change button to delete if applicable
                     if (globals.annotationSet isnt null) and \
-                       (globals.annotationSet.hasAnnotationAt globals.selectedDataSetId, globals.selectedPointId, canvas)
+                       (globals.annotationSet.hasAnnotationAt globals.selectedDataSetId, globals.selectedPointId, canvas, globals.selectedPointField)
                       toggleAnnotationButton("comment-edit")
                     # Else make it add
                     else
@@ -418,9 +419,10 @@ $ ->
               # Draw the annotations
               if globals.annotationSet isnt null
                 for point in series
-                  if (match = globals.annotationSet.getElement globals.getDataSetId(point.datapoint[1]), point.datapoint[0]) isnt null
-                    match.enabled = true
-                    match.draw @chart, point.x, point.y
+                  if (match = globals.annotationSet.getElement globals.getDataSetId(point.datapoint[1]), point.datapoint[0], @canvas, fi) isnt null
+                    if match.field == fi
+                      match.enabled = true
+                      match.draw @chart, point.x, point.y
 
         if @isZoomLocked()
           @updateOnZoom = false

@@ -56,6 +56,10 @@ $ ->
     # @callout indicates whether to draw a callout bubble
     #
     # @canvas indicates which vis the annotation is assigned to
+    # @field indicates which field the annotation is assigned to
+    #        it is optional for annotations which are not assigned to a data point
+    #        if an annotation is associated with a point and the field is not indicated,
+    #           the behavior is undefined
     #
     # Due to the following static variables, each annotation is aware of whether
     #     another is selected.  Therefore, you don't need an Annotation Set to
@@ -72,9 +76,9 @@ $ ->
       Annotation.selectedAnnotationId2 = 0
       Annotation.id_counter = 0
       # Constructor
-      constructor: (msg, canvas, callout = false, id1 = null, id2 = null) ->
+      constructor: (msg, canvas, callout = false, id1 = null, id2 = null, field = null) ->
         @msg = msg
-        if id1 is null
+        if (id1 is null) or (id2 is null)
           @id1 = @id2 = Annotation.id_counter -= 1
         else
           @id1 = id1
@@ -84,6 +88,9 @@ $ ->
         @callout = callout
         @canvas = canvas
         @enabled = true
+        if field isnt null
+          @field = field
+
       # Draw the annotation at the chart coordinates
       # The optional onSelection is a function that runs when a comment is selected
       draw: (chart, onSelection = null) ->
@@ -194,24 +201,24 @@ $ ->
 
       # Checks list membership
       # Only specify canvas if the ids are the same and you don't want annotation to show up on multiple vis
-      hasAnnotationAt: (id1, id2, canvas = "") ->
+      hasAnnotationAt: (id1, id2, canvas = "", field = null) ->
         idx = @list.findIndex (elt) ->
-          (elt.id1 == id1) and (elt.id2 == id2) and ((canvas == "") or (elt.canvas == canvas))
+          (elt.id1 == id1) and (elt.id2 == id2) and ((canvas == "") or (elt.canvas == canvas)) and ((field == null) or (elt.field == field))
         not (idx == -1)
 
       # Similar, but returns element
-      getElement: (id1, id2, canvas = "") ->
+      getElement: (id1, id2, canvas = "", field = null) ->
         idx = @list.findIndex (elt) ->
-          (elt.id1 == id1) and (elt.id2 == id2) and ((canvas == "") or (elt.canvas == canvas))
+          (elt.id1 == id1) and (elt.id2 == id2) and ((canvas == "") or (elt.canvas == canvas)) and ((field == null) or (elt.field == field))
         if (idx isnt -1)
           @list[idx]
         else
           null
     
       # Delete an element by its ID
-      deleteElement: (id1, id2, canvas = "") ->
+      deleteElement: (id1, id2, canvas = "", field = null) ->
         idx = @list.findIndex (elt) ->
-          (elt.id1 == id1) and (elt.id2 == id2) and ((canvas == "") or (elt.canvas == canvas))
+          (elt.id1 == id1) and (elt.id2 == id2) and ((canvas == "") or (elt.canvas == canvas)) and ((field == null) or (elt.field == field))
         if idx isnt -1
           @list.splice idx, 1
 

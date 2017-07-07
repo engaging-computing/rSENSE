@@ -779,15 +779,16 @@ $ ->
               return
           
           # Attempt to edit selected one?
-          ds = pt = null
+          ds = pt = field = null
           if (@canvas is "scatter-canvas") or (@canvas is "timeline-canvas")
             ds = globals.selectedDataSetId
             pt = globals.selectedPointId
+            field = globals.selectedPointField
           else if Annotation.selectedAnnotation
             ds = Annotation.selectedAnnotationId1
             pt = Annotation.selectedAnnotationId2
-          if (ds isnt null) and (globals.annotationSet.hasAnnotationAt ds, pt, @canvas)
-            annotation = globals.annotationSet.getElement ds, pt, @canvas
+          if (ds isnt null) and (globals.annotationSet.hasAnnotationAt ds, pt, @canvas, field)
+            annotation = globals.annotationSet.getElement ds, pt, @canvas, field
             # Open the editor
             $('#annotation-editor').data("annotation", annotation).dialog('open')
             return
@@ -846,7 +847,7 @@ $ ->
                                           Delete: () =>
                                             if $('#annotation-editor').data("annotation")?
                                               annotation = $('#annotation-editor').data("annotation")
-                                              globals.annotationSet.deleteElement annotation.id1, annotation.id2, annotation.canvas
+                                              globals.annotationSet.deleteElement annotation.id1, annotation.id2, annotation.canvas, annotation.field
                                               $('#annotation-editor').removeData("annotation").dialog('close')
                                               toggleAnnotationButton("comment-add")  
                                               @chart.redraw() 
@@ -871,7 +872,7 @@ $ ->
                                                   $('#annotation-editor').data("annotation").msg = msg
                                                 else if (@canvas is "scatter-canvas") or (@canvas is "timeline-canvas")
                                                   annotation = new Annotation msg, @canvas, true, globals.selectedDataSetId, \
-                                                               globals.selectedPointId
+                                                               globals.selectedPointId, globals.selectedPointField
                                                   globals.annotationSet.addToList annotation
                                                   annotation.initDraw globals.selectedPointX, globals.selectedPointY
                                                   toggleAnnotationButton("comment-edit")
