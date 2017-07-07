@@ -374,7 +374,12 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
         transform:rotateX(180deg);
         -ms-transform:rotateX(180deg); /* IE 9 */
         -webkit-transform:rotateX(180deg); /* Safari and Chrome */
-        -webkit-transform-origin: 50%  51%;
+        // Prevent blurriness in some browsers
+        -webkit-transform: translate3d(0,0,1px);
+        -moz-transform: translate3d(0,0,1px);
+        -ms-transform: translate3d(0,0,1px);
+        -o-transform: translate3d(0,0,1px);
+        transform: translate3d(0,0,1px);
       }
 
       .nav-tabs>li {
@@ -383,7 +388,12 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
         transform:rotateX(180deg);
         -ms-transform:rotateX(180deg);
         -webkit-transform:rotateX(180deg);
-        -webkit-transform-origin: 50%  51%;
+        // Prevent blurriness in some browsers
+        -webkit-transform: translate3d(0,0,1px);
+        -moz-transform: translate3d(0,0,1px);
+        -ms-transform: translate3d(0,0,1px);
+        -o-transform: translate3d(0,0,1px);
+        transform: translate3d(0,0,1px);
       }
       // End navigation tabs
 
