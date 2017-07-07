@@ -121,12 +121,12 @@ $ ->
             elt.attr(style)
             elt.css(text)
             elt.add()
-            $(elt.element).draggable({containment: $(id), scroll: false})
+            $(elt.element).draggable({containment: $(id), scroll: false })
                           .bind('drag', (event, ui) =>
-                            @last_x_pt = (ui.position.left - $(id).offset().left) / w
-                            @last_y_pt = (ui.position.top - $(id).offset().top) / h
-                            elt.attr({x: ui.position.left - $(id).offset().left})
-                            elt.attr({y: ui.position.top - $(id).offset().top}))
+                            @last_x_pt = (ui.offset.left - $(id).offset().left) / w
+                            @last_y_pt = (ui.offset.top - $(id).offset().top) / h
+                            elt.attr({x: ui.offset.left - $(id).offset().left})
+                            elt.attr({y: ui.offset.top - $(id).offset().top}))
             $(elt.element).click (event) =>
               if Annotation.selectedAnnotation \
                  and (Annotation.selectedAnnotationId1 is @id1) \

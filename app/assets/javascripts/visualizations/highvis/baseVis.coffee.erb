@@ -804,10 +804,24 @@ $ ->
         $('#annotation-linktoggle').change()
         
         # Enable the annotation editor
-        $('#annotation-alert').dialog({modal: true, autoOpen: false, width: 400, resizable: false, buttons: Gotcha: () => $('#annotation-alert').dialog('close')})
+        $('#annotation-alert').dialog({modal: true, autoOpen: false, width: 400, resizable: false, \
+                                        open:
+                                          (event, ui) ->
+                                            $(this).closest(".ui-dialog")
+                                            .find(".ui-dialog-titlebar-close")
+                                            .removeClass("ui-dialog-titlebar-close")
+                                            .html("<span class='ui-button-icon-primary ui-icon ui-icon-closethick'></span>")
+                                        ,
+                                        buttons:
+                                          Gotcha: () => $('#annotation-alert').dialog('close')
+                                      })
         $('#annotation-editor').dialog({modal: true, autoOpen: false, width: 400, resizable: false, \
                                         open:
                                           (event, ui) ->
+                                            $(this).closest(".ui-dialog")
+                                            .find(".ui-dialog-titlebar-close")
+                                            .removeClass("ui-dialog-titlebar-close")
+                                            .html("<span class='ui-button-icon-primary ui-icon ui-icon-closethick'></span>")
                                             if $('#annotation-editor').data("annotation")?
                                               annotation = $('#annotation-editor').data("annotation")
                                               $('#annotation-string').val(annotation.raw())
@@ -873,8 +887,8 @@ $ ->
                                       }})
 
         # Change buttons to be icons
-        $('.ui-dialog-buttonpane').find('button:contains("Delete")').css('background','linear-gradient( 45deg, #ffcccc, #ffb2b2').html("").prepend('<span style="float:left;" class="ui-icon ui-icon-trash"></span>')
-        $('.ui-dialog-buttonpane').find('button:contains("Save")').css('background','linear-gradient( 45deg, #e5ffe5, #99ff99').html("").prepend('<span style="float:left;" class="ui-icon ui-icon-check"></span>')
+        $('.ui-dialog-buttonpane').find('button:contains("Delete")').addClass('btn').css('background','linear-gradient( 45deg, #ffcccc, #ffb2b2').html('').prepend('<span style="float:left;" class="ui-icon ui-icon-trash"></span>')
+        $('.ui-dialog-buttonpane').find('button:contains("Save")').addClass('btn').css('background','linear-gradient( 45deg, #e5ffe5, #99ff99').html('').prepend('<span style="float:left;" class="ui-icon ui-icon-check"></span>')
       
       ###
       Do any necessary cleanup work before serialization.

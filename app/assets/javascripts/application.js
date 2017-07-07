@@ -14,7 +14,7 @@
 //= require constants
 //= require image_path
 //= require jquery
-//= require jquery_ujs
+//= require jquery-ui
 //= require isense
 //= require helpers
 //= require dateParse
@@ -32,7 +32,6 @@
 //= require titlebar.js.coffee
 //= require bootstrap
 //= require bootstrap-switch
-//= require jquery-ui
 //= require jstz/jstz-1.0.4.min.js
 //= require mdl/material.min.js
 //
@@ -63,3 +62,4 @@
 //= require slickgrid-editors/editors
 //
 //= require_tree .
+//
