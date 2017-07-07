@@ -336,6 +336,13 @@ $ ->
         else
           @xGridSize = Math.round (width / height * @INITIAL_GRID_SIZE)
 
+        # Clear all annotations
+        toggleAnnotationButton("comment")
+        $('.highcharts-annotation').remove()
+        if globals.annotationSet?
+          for elt in globals.annotationSet.list
+            elt.enabled = false
+
         # Draw series
         fs = globals.configs.fieldSelection
         for fi, si in data.normalFields when fi in fs
@@ -374,10 +381,6 @@ $ ->
             mode = @configs.mode
             if dat.length < 2 and @configs.mode is @LINES_MODE
               mode = @SYMBOLS_LINES_MODE
-
-            # Clear the annotations
-            toggleAnnotationButton("comment")
-            $('.highcharts-annotation').remove()
             
             # loop through all the series and add them to the chart
             for series in datArray
@@ -415,9 +418,9 @@ $ ->
               # Draw the annotations
               if globals.annotationSet isnt null
                 for point in series
-                  if (elt = globals.annotationSet.getElement globals.getDataSetId(point.datapoint[1]), \
-                                                              point.datapoint[0]) isnt null
-                    elt.draw @chart, point.x, point.y
+                  if (match = globals.annotationSet.getElement globals.getDataSetId(point.datapoint[1]), point.datapoint[0]) isnt null
+                    match.enabled = true
+                    match.draw @chart, point.x, point.y
 
         if @isZoomLocked()
           @updateOnZoom = false

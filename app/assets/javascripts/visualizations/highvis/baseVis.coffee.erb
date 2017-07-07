@@ -926,14 +926,7 @@ $ ->
                   Annotation.selectedAnnotation = false
                   toggleAnnotationButton('comment-add')
                 if globals.annotationSet isnt null
-                  if (canvas is "scatter-canvas") or (canvas is "timeline-canvas")
-                    filtered = globals.annotationSet.list.filter (annotation) ->
-                      idx = globals.configs.disabledPoints.findIndex (disabled) ->
-                        (annotation.id1 == disabled.dataSetId) and (annotation.id2 == disabled.pointId)
-                      idx == -1
-                    filteredAnnotationSet = new AnnotationSet filtered
-                    filteredAnnotationSet.drawAll(this, canvas)
-                  else globals.annotationSet.drawAll(this, canvas, () ->
+                  globals.annotationSet.drawAll(this, canvas, () ->
                     if Annotation.selectedAnnotation
                       toggleAnnotationButton('comment-edit')
                     else

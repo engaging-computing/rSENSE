@@ -83,6 +83,7 @@ $ ->
         @last_y_pt = null
         @callout = callout
         @canvas = canvas
+        @enabled = true
       # Draw the annotation at the chart coordinates
       # The optional onSelection is a function that runs when a comment is selected
       draw: (chart, onSelection = null) ->
@@ -218,5 +219,5 @@ $ ->
       # The optional onSelection is a function that runs when a comment is selected
       drawAll: (chart, canvas, onSelection = null) ->
         for elt in @list
-          if elt.canvas == canvas
+          if (elt.canvas == canvas) and (elt.enabled)
             elt.draw chart, onSelection
