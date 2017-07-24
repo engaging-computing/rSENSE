@@ -342,7 +342,8 @@ $ ->
         $('.highcharts-annotation').remove()
         if globals.annotationSet?
           for elt in globals.annotationSet.list
-            elt.enabled = false
+            if elt.callout
+              elt.enabled = false
 
         # Draw series
         fs = globals.configs.fieldSelection
