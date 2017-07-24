@@ -767,20 +767,15 @@ $ ->
       ###
       drawAnnotationControls: ->
         # Set up button for adding/editing annotation
-        toggleAnnotationButton("comment")
+        toggleAnnotationButton("comment-add")
         $('#add-annotation-button').show()
         $('#add-annotation-button').click (event) =>
           # Create an annotation set if one does not already exist
           globals.annotationSet ?= new AnnotationSet()
-
-          # Point selected?
-          if ((@canvas is "scatter-canvas") or (@canvas is "timeline-canvas")) and (@chart.getSelectedPoints().length != 1)
-              $('#annotation-alert').dialog('open')
-              return
           
           # Attempt to edit selected one?
           ds = pt = field = null
-          if (@canvas is "scatter-canvas") or (@canvas is "timeline-canvas")
+          if (@chart.getSelectedPoints().length is 1)
             ds = globals.selectedDataSetId
             pt = globals.selectedPointId
             field = globals.selectedPointField
@@ -790,10 +785,15 @@ $ ->
           if (ds isnt null) and (globals.annotationSet.hasAnnotationAt ds, pt, @canvas, field)
             annotation = globals.annotationSet.getElement ds, pt, @canvas, field
             # Open the editor
+            $('#annotation-editor>p').html("")
             $('#annotation-editor').data("annotation", annotation).dialog('open')
             return
 
           # Else create a new annotation
+          if ((@canvas is "scatter-canvas") or (@canvas is "timeline-canvas")) and (@chart.getSelectedPoints().length isnt 1)
+            $('#annotation-editor>p').html("<span style='color: gray;'>TIP: Select a point to lock onto a callout bubble.</span>")
+          else
+            $('#annotation-editor>p').html("")
           $('#annotation-editor').dialog('open')
           return
 
@@ -805,17 +805,6 @@ $ ->
         $('#annotation-linktoggle').change()
         
         # Enable the annotation editor
-        $('#annotation-alert').dialog({modal: true, autoOpen: false, width: 400, resizable: false, \
-                                        open:
-                                          (event, ui) ->
-                                            $(this).closest(".ui-dialog")
-                                            .find(".ui-dialog-titlebar-close")
-                                            .removeClass("ui-dialog-titlebar-close")
-                                            .html("<span class='ui-button-icon-primary ui-icon ui-icon-closethick'></span>")
-                                        ,
-                                        buttons:
-                                          Gotcha: () => $('#annotation-alert').dialog('close')
-                                      })
         $('#annotation-editor').dialog({modal: true, autoOpen: false, width: 400, resizable: false, \
                                         open:
                                           (event, ui) ->
@@ -870,7 +859,7 @@ $ ->
                                                   msg = "<a href=\"" + link + "\">" + msg + "</a>"
                                                 if $('#annotation-editor').data("annotation")?
                                                   $('#annotation-editor').data("annotation").msg = msg
-                                                else if (@canvas is "scatter-canvas") or (@canvas is "timeline-canvas")
+                                                else if (@chart.getSelectedPoints().length is 1)
                                                   annotation = new Annotation msg, @canvas, true, globals.selectedDataSetId, \
                                                                globals.selectedPointId, globals.selectedPointField
                                                   globals.annotationSet.addToList annotation
@@ -923,15 +912,15 @@ $ ->
               redraw: (e) ->
                 $('.highcharts-annotation').remove()
                 $('.highcharts-block-annotation').remove()
-                unless (canvas is "scatter-canvas") or (canvas is "timeline-canvas")
-                  Annotation.selectedAnnotation = false
-                  toggleAnnotationButton('comment-add')
+                Annotation.selectedAnnotation = false
                 if globals.annotationSet isnt null
-                  globals.annotationSet.drawAll(this, canvas, () ->
+                  globals.annotationSet.drawAll(this, canvas, () =>
                     if Annotation.selectedAnnotation
-                      toggleAnnotationButton('comment-edit')
+                      toggleAnnotationButton("comment-edit")
+                      if (selected = this.getSelectedPoints()).length isnt 0
+                        selected[0].select()
                     else
-                      toggleAnnotationButton('comment-add'))
+                      toggleAnnotationButton("comment-add"))
           credits:
             enabled: false
           exporting:

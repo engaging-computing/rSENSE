@@ -53,37 +53,29 @@
         <div id="vis-title-edit-btn" class="hidden-xs hidden-sm">
         
           <%= image_tag("comment-add.svg", id:"add-annotation-button") %>
-          <div id="annotation-alert" title="Oops...">
-            <h3 style="text-align: center;">¯\_(ツ)_/¯</h3>
-            <p style="text-align: center;"> Please select a single point to add a comment. <p>
-          </div>
           <div id="annotation-editor" title="Annotation">
             Please enter a comment:
-              <input id="annotation-string" type="text" maxlength="100" class="form-control wide-input"/><br>
-
-              <span class="btn-group annotation-controlgroup" style="font-family: serif;">
-                <label class="btn btn-default" for="annotation-bold">
-                <input type="checkbox" name="annotation-bold" value="b" id="annotation-bold"><b>B</b></label>
-                <label class="btn btn-default" for="annotation-italic">
-                <input type="checkbox" name="annotation-italic" value="i" id="annotation-italic"><i>I</i></label>
-              </span>
-
-              <span class="btn-group annotation-controlgroup" style="font-family: serif;">
-                <label class="btn btn-default" for="annotation-size-small">
-                <input type="radio" name="annotation-size" value="1" id="annotation-size-small" checked><sub>A</sub></label>
-                <label class="btn btn-default" for="annotation-size-large">
-                <input type="radio" name="annotation-size" value="1.25" id="annotation-size-large">A</label>
-              </span>
-
-              <span class="btn-group annotation-controlgroup">
-                <label class="btn btn-default" for="annotation-linktoggle">
-                <input type="checkbox" name="annotation-linktoggle" id="annotation-linktoggle">Link</label>
-              </span>
-
-              <div id="annotation-link-container">
-                Link: <input class="form-control wide-input" id="annotation-link" type="text" maxlength="100"/>
-              </div>
-
+            <p></p>
+            <input id="annotation-string" type="text" maxlength="100" class="form-control wide-input"/><br>
+            <span class="btn-group annotation-controlgroup" style="font-family: serif;">
+              <label class="btn btn-default" for="annotation-bold">
+              <input type="checkbox" name="annotation-bold" value="b" id="annotation-bold"><b>B</b></label>
+              <label class="btn btn-default" for="annotation-italic">
+              <input type="checkbox" name="annotation-italic" value="i" id="annotation-italic"><i>I</i></label>
+            </span>
+            <span class="btn-group annotation-controlgroup" style="font-family: serif;">
+              <label class="btn btn-default" for="annotation-size-small">
+              <input type="radio" name="annotation-size" value="1" id="annotation-size-small" checked><sub>A</sub></label>
+              <label class="btn btn-default" for="annotation-size-large">
+              <input type="radio" name="annotation-size" value="1.25" id="annotation-size-large">A</label>
+            </span>
+            <span class="btn-group annotation-controlgroup">
+              <label class="btn btn-default" for="annotation-linktoggle">
+              <input type="checkbox" name="annotation-linktoggle" id="annotation-linktoggle">Link</label>
+            </span>
+            <div id="annotation-link-container">
+              Link: <input class="form-control wide-input" id="annotation-link" type="text" maxlength="100"/>
+            </div>
           </div>
 
           <div class="inline-block subtitle">

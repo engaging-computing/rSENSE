@@ -32,9 +32,8 @@ $ ->
   namespace.action in ['displayVis', 'embedVis', 'show']
 
     window.toggleAnnotationButton = (setting) ->
-      if (setting == "comment")
-        $('#add-annotation-button').attr( 'src' , '<%= image_path "comment.svg", :id => "add-annotation-button" %>' )
-      else if (setting == "comment-add")
+      console.log setting
+      if (setting == "comment-add")
         $('#add-annotation-button').attr( 'src' , '<%= image_path "comment-add.svg", :id => "add-annotation-button" %>' )
       else if (setting == "comment-edit")
         $('#add-annotation-button').attr( 'src' , '<%= image_path "comment-edit.svg", :id => "add-annotation-button" %>' )
@@ -116,12 +115,14 @@ $ ->
         # Styling stuff (can't use traditional CSS)
         style = {padding: 8, r: 5, zIndex: 6, fill: 'rgba(0, 0, 0, 0.75)'}
         text = {color: 'white'}
+        cstyle = {padding: 8, r: 5, zIndex: 6, fill: 'rgba(150, 150, 150, 0.75)'}
+        ctext = {color: 'black'} 
         # Render new element with class .highcharts-annotation
         render = (x, y) =>
           if @callout
             elt = chart.renderer.label(@msg, x, y, 'callout', x_px, y_px, false, false, "annotation")
-            elt.attr(style)
-            elt.css(text)
+            elt.attr(cstyle)
+            elt.css(ctext)
             elt.add()
           else
             elt = chart.renderer.label(@msg, x, y, null, null, null, false, false, "block-annotation")
@@ -192,7 +193,7 @@ $ ->
     # @list is a list of Annotation objects
     class window.AnnotationSet extends Object
       # Constructor
-      constructor: (list = [])->
+      constructor: (list = []) ->
         @list = list
         
       # Add an element
@@ -228,3 +229,8 @@ $ ->
         for elt in @list
           if (elt.canvas == canvas) and (elt.enabled)
             elt.draw chart, onSelection
+
+      # Deselects a selected annotation
+      deselect: () ->
+        Annotation.selectedAnnotation = false
+        $('.highcharts-block-annotation>rect').css('fill', 'rgba(0, 0, 0, 0.75)')

@@ -128,13 +128,15 @@ $ ->
                     root = ele.parent()
                     root.append ele
                   select: () ->
+                    if globals.annotationSet?
+                      globals.annotationSet.deselect()
                     globals.selectedDataSetId = globals.getDataSetId(@.datapoint[1])
                     globals.selectedPointId = @.datapoint[0]
                     globals.selectedPointX = @x
                     globals.selectedPointY = @y
                     globals.selectedPointField = data.fields.findIndex (elt) => elt.fieldName is @series.name.field
                     $('#disable-point-button').prop("disabled", false)
-                    # Change button to delete if applicable
+                    # Change button to edit if applicable
                     if (globals.annotationSet isnt null) and \
                        (globals.annotationSet.hasAnnotationAt globals.selectedDataSetId, globals.selectedPointId, canvas, globals.selectedPointField)
                       toggleAnnotationButton("comment-edit")
@@ -144,8 +146,8 @@ $ ->
                   unselect: () ->
                     # See if another point has been selected
                     p = @series.chart.getSelectedPoints()
-                    if (p.length > 0) and (p[0].x == @x) and (p[0].y == @y)
-                      toggleAnnotationButton("comment")
+                    if (p.length > 0) and (p[0].x == @x) and (p[0].y == @y) and (Annotation.selectedAnnotation is false)
+                      toggleAnnotationButton("comment-add")
 
           groupBy = ''
           $('#groupSelector').find('option').each (i,j) ->
@@ -338,7 +340,7 @@ $ ->
           @xGridSize = Math.round (width / height * @INITIAL_GRID_SIZE)
 
         # Clear all annotations
-        toggleAnnotationButton("comment")
+        toggleAnnotationButton("comment-add")
         $('.highcharts-annotation').remove()
         if globals.annotationSet?
           for elt in globals.annotationSet.list
