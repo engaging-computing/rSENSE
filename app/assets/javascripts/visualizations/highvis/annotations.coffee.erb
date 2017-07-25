@@ -32,7 +32,6 @@ $ ->
   namespace.action in ['displayVis', 'embedVis', 'show']
 
     window.toggleAnnotationButton = (setting) ->
-      console.log setting
       if (setting == "comment-add")
         $('#add-annotation-button').attr( 'src' , '<%= image_path "comment-add.svg", :id => "add-annotation-button" %>' )
       else if (setting == "comment-edit")
