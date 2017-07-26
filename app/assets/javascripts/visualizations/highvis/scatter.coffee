@@ -129,7 +129,7 @@ $ ->
                     root.append ele
                   select: () ->
                     if globals.annotationSet?
-                      globals.annotationSet.deselect()
+                      AnnotationSet.deselect()
                     globals.selectedDataSetId = globals.getDataSetId(@.datapoint[1])
                     globals.selectedPointId = @.datapoint[0]
                     globals.selectedPointX = @x
@@ -138,7 +138,8 @@ $ ->
                     $('#disable-point-button').prop("disabled", false)
                     # Change button to edit if applicable
                     if (globals.annotationSet isnt null) and \
-                       (globals.annotationSet.hasAnnotationAt globals.selectedDataSetId, globals.selectedPointId, canvas, globals.selectedPointField)
+                       (globals.annotationSet.hasAnnotationAt globals.selectedDataSetId, globals.selectedPointId, \
+                                                              canvas, globals.selectedPointField)
                       toggleAnnotationButton("comment-edit")
                     # Else make it add
                     else
@@ -146,8 +147,10 @@ $ ->
                   unselect: () ->
                     # See if another point has been selected
                     p = @series.chart.getSelectedPoints()
-                    if (p.length > 0) and (p[0].x == @x) and (p[0].y == @y) and (Annotation.selectedAnnotation is false)
-                      toggleAnnotationButton("comment-add")
+                    if (p.length > 0) and (p[0].x == @x) and (p[0].y == @y)
+                      if (Annotation.selectedAnnotation is false)
+                        toggleAnnotationButton("comment-add")
+                      $('#disable-point-button').prop("disabled", true)
 
           groupBy = ''
           $('#groupSelector').find('option').each (i,j) ->
@@ -422,7 +425,8 @@ $ ->
               # Draw the annotations
               if globals.annotationSet isnt null
                 for point in series
-                  if (match = globals.annotationSet.getElement globals.getDataSetId(point.datapoint[1]), point.datapoint[0], @canvas, fi) isnt null
+                  if (match = globals.annotationSet.getElement globals.getDataSetId(point.datapoint[1]), \
+                                                               point.datapoint[0], @canvas, fi) isnt null
                     if match.field == fi
                       match.enabled = true
                       match.draw @chart, point.x, point.y

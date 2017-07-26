@@ -232,11 +232,12 @@ $ ->
           $('#enable-points-button').prop("disabled", true)
 
         $('#disable-point-button').click (e) =>
-          $('#disable-point-button').prop("disabled", true)
-          $('#enable-points-button').prop("disabled", false)
-          globals.configs.disabledPoints.push({pointId: globals.selectedPointId, dataSetId: globals.selectedDataSetId})
-          $(window).resize()
-          @start()
+          if @chart.getSelectedPoints().length is 1
+            $('#disable-point-button').prop("disabled", true)
+            $('#enable-points-button').prop("disabled", false)
+            globals.configs.disabledPoints.push({pointId: globals.selectedPointId, dataSetId: globals.selectedDataSetId})
+            $(window).resize()
+            @start()
 
         $('#enable-points-button').click (e) =>
           $('#enable-points-button').prop("disabled", true)
@@ -763,7 +764,6 @@ $ ->
 
       ###
       Control button for adding annotations to a chart
-      Overridden by scatter only
       ###
       drawAnnotationControls: ->
         # Set up button for adding/editing annotation
