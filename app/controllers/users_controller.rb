@@ -279,9 +279,9 @@ class UsersController < ApplicationController
   def confirm
     @user = User.find(params[:id])
     if @user.confirm!
-      flash[:success] = "User successfully confirmed!"
+      flash[:success] = 'User successfully confirmed!'
     else
-      flash[:error] = "Failed to confirm user..."
+      flash[:error] = 'Failed to confirm user...'
     end
     redirect_to :back
   end
