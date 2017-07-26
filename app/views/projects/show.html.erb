@@ -187,7 +187,7 @@
                     <td>
                       <div class="ds_selector" >
                         <label id="lbl_<%=s.id%>" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect pull-right <%if s.user_id == current_user.try(:id)%> lbl-mine<%end%>" for="ds_<%=s.id%>">
-                          <input type="checkbox" id="ds_<%=s.id%>" class="mdl-checkbox__input<%if s.user_id == current_user.try(:id)%> mine<%end%>" checked>
+                          <input type="checkbox" id="ds_<%=s.id%>" class="mdl-checkbox__input<%if (s.user_id == current_user.try(:id)) or (current_user.try(:admin))%> mine<%end%>" checked>
                         </label>
                       </div>
                     </td>
