@@ -10,11 +10,14 @@
   <div class="full_width_edit" style="font-size:2em;"><%= data_set_edit_helper 'title', can_edit?(@data_set), false, "/data_sets/#{@data_set.id}" %></div>
   <div><strong>Project:</strong> <%= link_to @project.title.html_safe, project_path(@project.id)%></div>
 
+  <hr>
+
   <div class="row">
+    <div class="span12 edit_table_control pull-left" style="font-size: 2em;">
+      Data
+    </div>
     <div class="span12 edit_table_control pull-right">
-      <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--red edit_table_cancel">Cancel</button>
       <button id="edit_table_add_1" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--green edit_table_add">Add Row</button>
-      <button id="edit_table_save_1" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--blue edit_table_save">Save</button>
     </div>
   </div>
 
@@ -22,12 +25,30 @@
     <div id="slickgrid-container"></div>
   </div>
 
-  <div id="row-slickgrid-1" class="row">*Timestamps must be in the form "yyyy/MM/dd hh:mm:ss" or a unix timestamp</div>
+  <div id="row-slickgrid-1" class="row" style="color: silver;">*Timestamps must be in the form "yyyy/MM/dd hh:mm:ss" or a UNIX timestamp</div>
+
+  <hr>
+
+  <div class="row">
+    <div class="span12 edit_table_control pull-left" style="font-size: 2em;">
+      Photos & Media
+    </div>
+  </div>
+
+  <div>
+      <%= render layout: "shared/box",
+          locals: {title: '', width: '12',
+          unique_id: 'media', should_hide: false} do %>
+          <%= render "shared/media_objects_view",
+            {type: 'data_set', object: @data_set} %>
+      <% end %>
+  </div>
+  
+  &nbsp<hr>
 
   <div id="row-slickgrid-2" class="row">
     <div class="span12 edit_table_control pull-right">
       <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--red edit_table_cancel">Cancel</button>
-      <button id="edit_table_add_2" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--green edit_table_add">Add Row</button>
       <button id="edit_table_save_2" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--blue edit_table_save">Save</button>
     </div>
   </div>

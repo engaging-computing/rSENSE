@@ -404,5 +404,5 @@ IS.onReady 'data_sets/manualEntry', ->
     success: uploadSettings.successEntry
 
   # we get one row for free in slickgrid, so just add 9 more
-  for i in [1 .. 9]
+  for i in [1 .. 4]
     grid.addRow false
