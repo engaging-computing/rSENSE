@@ -154,7 +154,20 @@ $ ->
               filter.lvalue, filter.uvalue, filter.field)
           else
             func = eval('globals.' + filter.op)(filter.value, filter.field)
-        dp = dp.filter(func)
+        dp = dp.filter (a) ->
+          # Timestamps can do textual or numerical comparisons
+          if typeof a[filter.field] is 'string' \
+          or (filter.op is 'gt') or (filter.op is 'lt') \
+          or (filter.op is 'ge') or (filter.op is 'le')
+            # Numerical
+            func(a)
+          else
+            # String - need to get date format
+            tmp = a[filter.field]
+            a[filter.field] = globals.dateFormatter(a[filter.field])
+            ret = func(a)
+            a[filter.field] = tmp
+            ret
 
       return dp
 
