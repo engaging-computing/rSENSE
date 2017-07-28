@@ -192,7 +192,7 @@ class DataSet < ActiveRecord::Base
                  # evaluate the AST with environment
                  tmp = ast.evaluate(pos_env)
                  tmp.get
-               rescue Beaker::Error
+               rescue Beaker::Error, TypeError
                  # if anything breaks, just return nil
                  nil
                end
