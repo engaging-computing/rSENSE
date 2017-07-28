@@ -837,7 +837,7 @@ $ ->
                                             if $('#annotation-editor').data("annotation")?
                                               annotation = $('#annotation-editor').data("annotation")
                                               globals.annotationSet.deleteElement annotation.id1, annotation.id2, annotation.canvas, annotation.field
-                                              $('#annotation-editor').removeData("annotation").dialog('close')
+                                              $('#annotation-editor').dialog('close')
                                               toggleAnnotationButton("comment-add")  
                                               @chart.redraw() 
                                             $('#annotation-editor').dialog('close')                            
@@ -873,9 +873,10 @@ $ ->
                                             else
                                               @chart.redraw()
                                               toggleAnnotationButton("comment-add") 
-                                            $('#annotation-editor').removeData("annotation").dialog('close')
-                                      }})
-
+                                            $('#annotation-editor').dialog('close')
+                                        }
+                                        ,
+                                        close: () -> $('#annotation-editor').removeData("annotation")})
         # Change buttons to be icons
         $('.ui-dialog-buttonpane').find('button:contains("Delete")').addClass('btn').css('background','linear-gradient( 45deg, #ffcccc, #ffb2b2').html('').prepend('<span style="float:left;" class="ui-icon ui-icon-trash"></span>')
         $('.ui-dialog-buttonpane').find('button:contains("Save")').addClass('btn').css('background','linear-gradient( 45deg, #e5ffe5, #99ff99').html('').prepend('<span style="float:left;" class="ui-icon ui-icon-check"></span>')
