@@ -388,7 +388,7 @@ IS.onReady 'data_sets/edit', ->
     success: uploadSettings.successEdit
 
   # ensure a minimum of ten rows per dataset
-  newRows = Math.max 1, 10 - grid.length()
+  newRows = Math.max 1, 5 - grid.length()
   for i in [1 .. newRows]
     grid.addRow false
 

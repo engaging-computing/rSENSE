@@ -109,8 +109,8 @@ class SlickgridTest < IntegrationTest
     # enter a valid project title
     find(:css, '#data_set_name').set dataset_title
 
-    # assert that we start with ten blank rows
-    page.assert_selector '.slick-row', count: 10
+    # assert that we start with five blank rows
+    page.assert_selector '.slick-row', count: 5
 
     # build a map of field ids to columns
     fields = all :css, '.slick-header-column'
@@ -118,11 +118,11 @@ class SlickgridTest < IntegrationTest
     fields.each.with_index { |x, i| field_map[x[:id][-3..-1]] = i }
 
     # add three more rows
-    button = find :css, '#edit_table_add_2'
+    button = find :css, '#edit_table_add_1'
     3.times { button.click }
 
     # assert that we added some rows
-    page.assert_selector '.slick-row', count: 13
+    page.assert_selector '.slick-row', count: 8
 
     # add data to the rows
     slickgrid_add_data 0, field_map
@@ -131,7 +131,7 @@ class SlickgridTest < IntegrationTest
     2.times { all('.slick-cell.l3.r3').last.click }
 
     # save the dataset
-    find(:css, '#edit_table_save_1').click
+    find(:css, '#edit_table_save_2').click
 
     # assert that we're where we should be
     find '#vis-container'
@@ -169,7 +169,7 @@ class SlickgridTest < IntegrationTest
     assert page.has_content? 'latitude_field, longitude_field'
 
     # assert presence of data
-    page.assert_selector '.slick-row', count: 10
+    page.assert_selector '.slick-row', count: 5
     assert page.has_content? '0, 0'
     assert page.has_content? '1, 1'
     assert page.has_content? '2, 2'
@@ -184,7 +184,7 @@ class SlickgridTest < IntegrationTest
     4.times { button.click }
 
     # assert rows were actually added
-    page.assert_selector '.slick-row', count: 14
+    page.assert_selector '.slick-row', count: 9
 
     # add data to those rows
     slickgrid_add_data 4, field_map
@@ -196,10 +196,10 @@ class SlickgridTest < IntegrationTest
     find(:css, '.slick-row:nth-child(1) .slick-delete').click
 
     # assert correct rows were deleted
-    page.assert_selector '.slick-row', count: 10
+    page.assert_selector '.slick-row', count: 5
 
     # save the dataset
-    find(:css, '#edit_table_save_1').click
+    find(:css, '#edit_table_save_2').click
 
     # assert that we're where we should be
     find '#vis-container'
