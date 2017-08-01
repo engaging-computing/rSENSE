@@ -1,7 +1,7 @@
 require 'base64'
 
 class UsersController < ApplicationController
-  before_filter :authorize_admin, only: [:index]
+  before_filter :authorize_admin, only: [:index, :confirm]
 
   skip_before_filter :authorize, only: [:show, :index, :pw_request, :pw_send_key, :pw_reset, :contributions]
 
