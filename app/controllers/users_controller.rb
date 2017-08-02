@@ -1,7 +1,7 @@
 require 'base64'
 
 class UsersController < ApplicationController
-  before_filter :authorize_admin, only: [:index]
+  before_filter :authorize_admin, only: [:index, :confirm]
 
   skip_before_filter :authorize, only: [:show, :index, :pw_request, :pw_send_key, :pw_reset, :contributions]
 
@@ -274,6 +274,16 @@ class UsersController < ApplicationController
 
       render
     end
+  end
+
+  def confirm
+    @user = User.find(params[:id])
+    if @user.confirm!
+      flash[:success] = 'User successfully confirmed!'
+    else
+      flash[:error] = 'Failed to confirm user...'
+    end
+    redirect_to :back
   end
 
   # GET /users/pw_reset
