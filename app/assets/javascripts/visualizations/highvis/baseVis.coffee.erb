@@ -1,5 +1,5 @@
 ###
-  * Copyright (c) 2011, iSENSE Project. All rights reserved.
+  * Copyright (c) 2011 - 2017, iSENSE Project. All rights reserved.
   *
   * Redistribution and use in source and binary forms, with or without
   * modification, are permitted provided that the following conditions are met:
@@ -47,6 +47,11 @@ $ ->
         # Used to remember the IDs of the selected point on the chart
         globals.selectedPointId = -1
         globals.selectedDataSetId = -1
+
+        # Need X's and Y's for positioning annotations
+        globals.selectedPointX = -1
+        globals.selectedPointY = -1
+        globals.annotationSet = null
 
         globals.configs.disabledPoints ?= []
 
@@ -171,6 +176,10 @@ $ ->
       ###
       clearControls: ->
         $('#vis-ctrls').empty()
+        # The annotation button could not have the same ID as other controls
+        #     due to different location on screen.
+        $('#add-annotation-button').hide()
+        $('#add-annotation-button').unbind('click')
 
       ###
       Calculate data to be displayed subject to analysis type
@@ -269,11 +278,12 @@ $ ->
           $('#enable-points-button').prop("disabled", true)
 
         $('#disable-point-button').click (e) =>
-          $('#disable-point-button').prop("disabled", true)
-          $('#enable-points-button').prop("disabled", false)
-          globals.configs.disabledPoints.push({pointId: globals.selectedPointId, dataSetId: globals.selectedDataSetId})
-          $(window).resize()
-          @start()
+          if @chart.getSelectedPoints().length is 1
+            $('#disable-point-button').prop("disabled", true)
+            $('#enable-points-button').prop("disabled", false)
+            globals.configs.disabledPoints.push({pointId: globals.selectedPointId, dataSetId: globals.selectedDataSetId})
+            $(window).resize()
+            @start()
 
         $('#enable-points-button').click (e) =>
           $('#enable-points-button').prop("disabled", true)
@@ -624,18 +634,37 @@ $ ->
         ($ "#default-vis-btn").click ->
           globals.defaultVis()
 
+        # Saving vises; need to redraw comments
         $('#download-image-btn').click =>
-          @chart.exportChart
-            type: "image/png"
+          canvas = @canvas
+          @chart.exportChart(type: "image/png",
+            chart:
+                events:
+                    load: () -> 
+                        if globals.annotationSet isnt null
+                          globals.annotationSet.drawAll(this, canvas))
+          @chart.redraw()
 
         $('#download-vector-btn').click =>
-          @chart.exportChart
-            type: "image/svg+xml"
+          canvas = @canvas
+          @chart.exportChart(type: "image/svg+xml",
+            chart: 
+                events: 
+                    load: () -> 
+                        if globals.annotationSet isnt null
+                          globals.annotationSet.drawAll(this, canvas))
+          @chart.redraw()
 
         $('#download-document-btn').click =>
-          @chart.exportChart
-            type: "application/pdf"
-
+          canvas = @canvas
+          @chart.exportChart( type: "application/pdf",
+            chart: 
+                events: 
+                    load: () -> 
+                        if globals.annotationSet isnt null
+                          globals.annotationSet.drawAll(this, canvas))
+          @chart.redraw()
+            
         $('#print-vis-btn').click =>
           # Resize chart if it is too big to print
         	if (@chart.chartWidth > 700)
@@ -777,9 +806,127 @@ $ ->
           else
             globals.configs.isPeriod = false
           $( "#group-by" ).trigger( "change" );
-          @start()
+          @start()  
 
+      ###
+      Control button for adding annotations to a chart
+      ###
+      drawAnnotationControls: ->
+        # Set up button for adding/editing annotation
+        toggleAnnotationButton("comment-add")
+        $('#add-annotation-button').show()
+        $('#add-annotation-button').click (event) =>
+          # Create an annotation set if one does not already exist
+          globals.annotationSet ?= new AnnotationSet()
+          
+          # Attempt to edit selected one?
+          ds = pt = field = null
+          if (@chart.getSelectedPoints().length is 1)
+            ds = globals.selectedDataSetId
+            pt = globals.selectedPointId
+            field = globals.selectedPointField
+          else if Annotation.selectedAnnotation
+            ds = Annotation.selectedAnnotationId1
+            pt = Annotation.selectedAnnotationId2
+          if (ds isnt null) and (globals.annotationSet.hasAnnotationAt ds, pt, @canvas, field)
+            annotation = globals.annotationSet.getElement ds, pt, @canvas, field
+            # Open the editor
+            $('#annotation-editor>p').html("")
+            $('#annotation-editor').data("annotation", annotation).dialog('open')
+            return
 
+          # Else create a new annotation
+          if ((@canvas is "scatter-canvas") or (@canvas is "timeline-canvas")) and (@chart.getSelectedPoints().length isnt 1)
+            $('#annotation-editor>p').html("<span style='color: gray;'>TIP: Select a point to lock onto a callout bubble.</span>")
+          else
+            $('#annotation-editor>p').html("")
+          $('#annotation-editor').dialog('open')
+          return
+
+        # Setting up the editor
+
+        # Set up link toggling
+        $('#annotation-linktoggle').change () ->
+          $('#annotation-link-container').toggle(this.checked)
+        $('#annotation-linktoggle').change()
+        
+        # Enable the annotation editor
+        $('#annotation-editor').dialog({modal: true, autoOpen: false, width: 400, resizable: false, \
+                                        open:
+                                          (event, ui) ->
+                                            $(this).closest(".ui-dialog")
+                                            .find(".ui-dialog-titlebar-close")
+                                            .removeClass("ui-dialog-titlebar-close")
+                                            .html("<span class='ui-button-icon-primary ui-icon ui-icon-closethick'></span>")
+                                            if $('#annotation-editor').data("annotation")?
+                                              annotation = $('#annotation-editor').data("annotation")
+                                              $('#annotation-string').val(annotation.raw())
+                                              if annotation.href() isnt null
+                                                $('#annotation-link').val(annotation.href())
+                                                $('input[name="annotation-linktoggle"]').prop("checked", true)
+                                              else
+                                                $('#annotation-link').val("")
+                                                $('input[name="annotation-linktoggle"]').prop("checked", false)
+                                              $('#annotation-linktoggle').change()
+                                              $('input[name="annotation-bold"]').prop("checked", annotation.isBold())
+                                              $('input[name="annotation-italic"]').prop("checked", annotation.isItalic())
+                                              $('#annotation-size-small').prop("checked", annotation.isSmall())
+                                              $('#annotation-size-large').prop("checked", not annotation.isSmall())
+                                            else
+                                              $('#annotation-string').val("New Annotation")
+                                              $('#annotation-link').val("")
+                                              $('input[name="annotation-linktoggle"]').prop("checked", false)
+                                              $('#annotation-linktoggle').change()
+                                        ,
+                                        buttons: {                    
+                                          Delete: () =>
+                                            if $('#annotation-editor').data("annotation")?
+                                              annotation = $('#annotation-editor').data("annotation")
+                                              globals.annotationSet.deleteElement annotation.id1, annotation.id2, annotation.canvas, annotation.field
+                                              $('#annotation-editor').dialog('close')
+                                              toggleAnnotationButton("comment-add")  
+                                              @chart.redraw() 
+                                            $('#annotation-editor').dialog('close')                            
+                                          Save: () =>                              
+                                            msg = $("#annotation-string").val()
+                                            if (msg isnt null) and (msg isnt "")
+                                                bold = if $('input[name="annotation-bold"]').is(':checked') \
+                                                       then "font-weight: bold; " \
+                                                       else ""
+                                                italic = if $('input[name="annotation-italic"]').is(':checked') \
+                                                         then "font-style: italic; " \
+                                                         else ""
+                                                size = $('input[name="annotation-size"]:checked').val()      
+                                                link = $("#annotation-link").val()
+                                                msg = "<p style=\"font-size: " + size + "em; " + bold + italic + "\">" + msg + "</p>"
+                                                if $('input[name="annotation-linktoggle"]').is(':checked') and (link isnt "")
+                                                  if not /^(http|https):\/\//.test(link)
+                                                    link = "http://" + link
+                                                  msg = "<a href=\"" + link + "\">" + msg + "</a>"
+                                                if $('#annotation-editor').data("annotation")?
+                                                  $('#annotation-editor').data("annotation").msg = msg
+                                                else if (@chart.getSelectedPoints().length is 1)
+                                                  annotation = new Annotation msg, @canvas, true, globals.selectedDataSetId, \
+                                                               globals.selectedPointId, globals.selectedPointField
+                                                  globals.annotationSet.addToList annotation
+                                                  annotation.initDraw globals.selectedPointX, globals.selectedPointY
+                                                  toggleAnnotationButton("comment-edit")
+                                                else
+                                                  annotation = new Annotation msg, @canvas
+                                                  annotation.initDraw 0, 0
+                                                  globals.annotationSet.addToList annotation
+                                                @chart.redraw()
+                                            else
+                                              @chart.redraw()
+                                              toggleAnnotationButton("comment-add") 
+                                            $('#annotation-editor').dialog('close')
+                                        }
+                                        ,
+                                        close: () -> $('#annotation-editor').removeData("annotation")})
+        # Change buttons to be icons
+        $('.ui-dialog-buttonpane').find('button:contains("Delete")').addClass('btn').css('background','linear-gradient( 45deg, #ffcccc, #ffb2b2').html('').prepend('<span style="float:left;" class="ui-icon ui-icon-trash"></span>')
+        $('.ui-dialog-buttonpane').find('button:contains("Save")').addClass('btn').css('background','linear-gradient( 45deg, #e5ffe5, #99ff99').html('').prepend('<span style="float:left;" class="ui-icon ui-icon-check"></span>')
+      
       ###
       Do any necessary cleanup work before serialization.
       ###
@@ -801,12 +948,26 @@ $ ->
       ###
       buildOptions: (animate = true) ->
         self = this
+        canvas = @canvas
 
         @chartOptions =
           chart:
             renderTo: @canvas
             reflow: false
             animation: animate
+            events:
+              redraw: (e) ->
+                $('.highcharts-annotation').remove()
+                $('.highcharts-block-annotation').remove()
+                Annotation.selectedAnnotation = false
+                if globals.annotationSet isnt null
+                  globals.annotationSet.drawAll(this, canvas, () =>
+                    if Annotation.selectedAnnotation
+                      toggleAnnotationButton("comment-edit")
+                      if (selected = this.getSelectedPoints()).length isnt 0
+                        selected[0].select()
+                    else
+                      toggleAnnotationButton("comment-add"))
           credits:
             enabled: false
           exporting:
@@ -863,6 +1024,9 @@ $ ->
       Derrived classes should overload to add data drawing.
       ###
       update: ->
+        # Clear the annotations
+        toggleAnnotationButton("comment-add");
+        $('.highcharts-block-annotation').remove()
         # Name Y Axis
         title = if globals.configs.fieldSelection.length isnt 1
           temp =
@@ -916,7 +1080,6 @@ $ ->
       end: ->
         if "Pie" in data.relVis and globals.configs.groupById == data.NUMBER_FIELDS_FIELD
           $('#group-by').val(data.COMBINED_FIELD).change()
-
         if @chart?
           @chart.destroy()
           @chart = undefined

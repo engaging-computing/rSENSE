@@ -287,6 +287,7 @@ $ ->
         @drawToolControls()
         @drawClippingControls()
         @drawSaveControls()
+        @drawAnnotationControls()
         $('[data-toggle="tooltip"]').tooltip();
 
       drawToolControls: ->
