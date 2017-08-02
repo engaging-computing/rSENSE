@@ -335,7 +335,7 @@ $ ->
           newBinSize = @defaultBinSize()
           unless fpEq(newBinSize, @configs.binSize)
             @configs.binSize = newBinSize
-            $('#bin-size').val(@configs.binSize)
+            $('#bin-size').attr('value', @configs.binSize)
             @delayedUpdate()
 
         # Bin Size Box
@@ -409,6 +409,7 @@ $ ->
         handler = (selected, selFields) =>
           @yAxisRadioHandler(selected, selFields)
           @configs.binSize = @defaultBinSize()
+          console.log "Auto-filling text box"
           $('#bin-size').attr('value', @configs.binSize)
 
         @drawYAxisControls(globals.configs.fieldSelection,
