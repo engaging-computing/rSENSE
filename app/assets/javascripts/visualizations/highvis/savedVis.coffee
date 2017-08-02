@@ -125,6 +125,7 @@ $ ->
 
       # Grab the global configs
       savedConfig['globals'] = globals.configs
+      savedConfig['annotations'] = globals.annotationSet
 
       # Grab the vis specific configs
       for visName in data.allVis
