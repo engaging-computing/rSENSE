@@ -80,7 +80,7 @@ $ ->
 
       start: (animate = true) ->
         # Validate fields exist
-        switch @validate_fields(true) 
+        switch @validate_fields(true)
           when -2
             alert "A field is missing from the project, so a different one was selected. If you are the owner, consider remaking the default in the Save menu."
           when -4
