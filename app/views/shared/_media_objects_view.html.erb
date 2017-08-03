@@ -51,7 +51,7 @@
   <% if can_edit? object%>
     <div class="upload_media">
       <%= form_tag({controller: :media_objects ,action: :saveMedia, keys: "#{type}/#{object.id}"}, {class: 'dropzone', id: 'upload', multipart: true}) do %>
-        <div class="dz-message" data-dz-message><span><span id="drophere">Drop Here</span> or <a>Choose a File</a></span></div>
+        <div class="dz-message" data-dz-message><span>Drop Here or <a>Choose a File</a></span></div>
         <input name="non_wys" type="hidden" value="<%= request.url %>"/>
       <% end %>
     </div>
