@@ -198,10 +198,10 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     color: $hint;
   }
 
-  // photos may require scrollbar; margin so photos do not touch top of canvas
+  // photos may require scrollbar
   #photos-canvas {
     overflow-y: auto;
-    margin-top: 20px;
+    background: #111133;
   }
 
   #radius-text {
