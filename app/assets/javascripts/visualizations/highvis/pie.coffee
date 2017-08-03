@@ -137,6 +137,7 @@ $ ->
         @drawToolControls(false, false, analysisTypeExcludes)
         @drawClippingControls()
         @drawSaveControls()
+        @drawAnnotationControls()
         $('[data-toggle="tooltip"]').tooltip();
 
     if "Pie" in data.relVis

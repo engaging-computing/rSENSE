@@ -64,6 +64,13 @@
             <td>
               <%= link_to 'Delete', user_path(u), data: { 
                     :confirm => 'Are you sure you want to delete this account?' }, :method => :delete %>
+              |
+              <%= if u.confirmed_at?
+              then
+                "Confirmed"
+              else
+                link_to 'Confirm', user_path(u), :method => :confirm
+              end %>
             </td>
           </tr>
         <% end %>

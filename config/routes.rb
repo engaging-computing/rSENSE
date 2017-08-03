@@ -135,4 +135,5 @@ Rsense::Application.routes.draw do
   get '/testing' => 'testing#index'
   post '/testing/review' => 'testing#review'
   post '/testing/publish' => 'testing#publish'
+  post '/users/:id(:confirm)' => 'users#confirm'
 end

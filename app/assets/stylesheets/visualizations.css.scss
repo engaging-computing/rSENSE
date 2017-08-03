@@ -36,6 +36,39 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     -ms-user-select: none;
     user-select: none;
   }
+
+  // Annotations stuff
+  #add-annotation-button {
+    display: none;
+    height: 48px;
+    position: relative;
+    right: 0;
+    padding: 0;
+    opacity: .5;
+    cursor: pointer;
+  }
+
+  img#add-annotation-button:hover {
+    opacity: 1;
+  }
+  
+  .highcharts-annotation {
+    cursor: default; 
+  }
+
+  .highcharts-block-annotation {
+    cursor: move;
+    position: absolute;
+  }
+
+  #annotation-editor {
+    display: none;
+  }
+
+  .annotation-controlgroup {
+    margin: 5px;
+  }
+
   .axis {
     display:inherit;
     width: 45%;
@@ -165,10 +198,10 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     color: $hint;
   }
 
-  // photos may require scrollbar; margin so photos do not touch top of canvas
+  // photos may require scrollbar
   #photos-canvas {
     overflow-y: auto;
-    margin-top: 20px;
+    background: #111133;
   }
 
   #radius-text {

@@ -217,7 +217,6 @@ body {
 .item {
   background-color: #ddd;
   margin: auto;
-  box-shadow: 2px 3px 1px grey;
 
   .badge {
     float: left;
@@ -236,18 +235,21 @@ body {
   }
 
   .item-image {
+    background-color: #111133;
     background-position: center;
     background-repeat: no-repeat;
     background-size: 100%;
     height: 120px;
-    border-bottom: 1px solid gray;
   }
 
   .item-image.item-photo-image {
-    height: 200px;
+    height: 250px;
     display: block;
     margin-left: auto;
     margin-right: auto;
+  }
+  .item-image.item-photo-image:hover {
+    height: 200px;
   }
 
   .item-title {

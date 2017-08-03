@@ -42,10 +42,15 @@ $ ->
       f.fieldName = fieldTitle(data.fields[f.field])
       f.opName    = globals.filterNames[f.op]
       formatter =
-        if f.field is data.timeFields[0] then globals.dateFormatter
-        else if f.field in data.textFields then (str) ->
-          return str
-        else data.precisionFilter
+        if f.field is data.timeFields[0] \
+        and ((f.op is 'gt') or (f.op is 'lt') or (f.op is 'ge') or (f.op is 'le'))
+          globals.dateFormatter
+        else if (f.field in data.textFields) \
+        or f.field is data.timeFields[0]
+          (str) ->
+            return str
+        else
+          data.precisionFilter
 
       if f.value?
         f.dispValue = formatter(f.value)
