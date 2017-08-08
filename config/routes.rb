@@ -54,6 +54,7 @@ Rsense::Application.routes.draw do
 
   get 'about' => 'home#about'
   get 'contact' => 'home#contact'
+  get 'aix' => 'home#aix'
   get 'report_bug' => 'home#report_bug'
   get 'privacy_policy' => 'home#privacy_policy'
 
