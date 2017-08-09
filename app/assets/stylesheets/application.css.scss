@@ -353,6 +353,16 @@ body {
   background-position: center center;
 }
 
+#main_feature {
+  border: 1px solid rgba(130,221,229,1);
+  border-radius: 10px;
+  background: #a1dee2;
+  background: -moz-linear-gradient(left, #a1dee2 0%, #ffffff 36%, #ffffff 36%, #ffffff 99%);
+  background: -webkit-linear-gradient(left, #a1dee2 0%,#ffffff 36%,#ffffff 36%,#ffffff 99%);
+  background: linear-gradient(to right, #a1dee2 0%,#ffffff 36%,#ffffff 36%,#ffffff 99%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a1dee2', endColorstr='#ffffff',GradientType=1 );
+}
+
 .mainContent {
   padding-top: 20px;
   background-color: #fff;
