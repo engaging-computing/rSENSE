@@ -5,3 +5,4 @@ IS.onReady "tutorials/index", ->
   # Close sidenav when a link is clicked
   $('.mdl-navigation__link').click ->
     $('.mdl-layout__obfuscator').trigger('click')
+    

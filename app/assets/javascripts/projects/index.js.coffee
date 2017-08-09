@@ -76,3 +76,4 @@ $ ->
 
           expando.show()
           collapso.hide()
+          

@@ -3,7 +3,6 @@ $ ->
     # For each project box: Hide tags if there are too many to fit in the box, and
     # add a button to toggle the hidden tags
     $('.project-card-tags.tagged').each (i) ->
-      console.log count++
       list = $($(this).find(".tag-list"))
       parentBox = $(this)
       totalWidth = $(list).innerWidth()
