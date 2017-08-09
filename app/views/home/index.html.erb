@@ -61,8 +61,6 @@
     <% end %>
   </div>
 
-<!-- NEW DESIGN -->
-
 <div class="row">
     <div class="col-md-12">
       <h3>Explore</h3>
@@ -83,9 +81,19 @@
       <div class="explore-item" id="stats">
           <%= image_tag "stats.svg"%>
           <h4>Statistics</h4>
-          <b><%=User.count%></b> Users<br/>
-          <b><%=DataSet.count%></b> Data Sets<br/>
-          <b><%=Project.count%></b> Projects<br/>
+          <table style="margin: auto;">
+            <tr>
+              <td><div style="text-align: right;">
+                <b><%= number_with_delimiter(User.count, :delimiter => ',') %></b> <br/>
+                <b><%= number_with_delimiter(DataSet.count, :delimiter => ',') %></b> <br/>
+                <b><%= number_with_delimiter(Project.count, :delimiter => ',') %></b> <br/>
+              </div></td>
+              <td><div style="text-align: left;">
+                Users<br/>
+                Data Sets<br/>
+                Projects<br/>
+              </div></td>
+          </table>
       </div>
     </div>
     <div class="col-md-4">
@@ -98,9 +106,6 @@
       </div>
     </div>
   </div>
-
-<!-- END NEW DESIGN -->
-
 
 </div>
 <div class="visible-xs visible-sm">
