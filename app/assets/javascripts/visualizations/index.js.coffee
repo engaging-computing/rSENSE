@@ -27,4 +27,3 @@ $ ->
       cb = ($ ($ e.target).children()[0])
       cb.prop("checked", not cb.prop("checked"))
       ($ '#visualizations_search').submit()
-      
