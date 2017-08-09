@@ -76,3 +76,14 @@ $ ->
 
           expando.show()
           collapso.hide()
+
+    # Fun coloring
+    $('.mdl-card').each () ->
+      color = 'rgba(' + Math.floor(Math.random() * 256) + ',' \
+                      + Math.floor(Math.random() * 256) + ',' \
+                      + Math.floor(Math.random() * 256) + ',' \
+                      + '0.5)'
+      $(this).css('background', color, 'important')
+      $(this).css('background', '-moz-linear-gradient(top,  #ffffff 30%, ' + color + ' 100%)', 'important')
+      $(this).css('background', '-webkit-linear-gradient(top,  #ffffff 30%, ' + color + ' 100%)', 'important')
+      $(this).css('background', 'linear-gradient(to bottom,  #ffffff 30%, ' + color + ' 100%)', 'important')

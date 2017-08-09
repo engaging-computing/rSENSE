@@ -1,8 +1,20 @@
 $ ->
   if namespace.controller is "home" and namespace.action is "index"
+    # Fun coloring
+    $('.mdl-card').each () ->
+      color = 'rgba(' + Math.floor(Math.random() * 256) + ',' \
+                      + Math.floor(Math.random() * 256) + ',' \
+                      + Math.floor(Math.random() * 256) + ',' \
+                      + '0.5)'
+      $(this).css('background', color, 'important')
+      $(this).css('background', '-moz-linear-gradient(top,  #ffffff 30%, ' + color + ' 100%)', 'important')
+      $(this).css('background', '-webkit-linear-gradient(top,  #ffffff 30%, ' + color + ' 100%)', 'important')
+      $(this).css('background', 'linear-gradient(to bottom,  #ffffff 30%, ' + color + ' 100%)', 'important')
+
     # For each project box: Hide tags if there are too many to fit in the box, and
     # add a button to toggle the hidden tags
     $('.project-card-tags.tagged').each (i) ->
+      console.log count++
       list = $($(this).find(".tag-list"))
       parentBox = $(this)
       totalWidth = $(list).innerWidth()
