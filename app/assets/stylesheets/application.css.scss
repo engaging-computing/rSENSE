@@ -374,6 +374,11 @@ body {
   width: initial !important;
   margin-bottom: 2em;
   line-height: initial;
+  background: #a1dee2;
+  background: -moz-linear-gradient(bottom, #a1dee2 0%, #ffffff 70%) !important;
+  background: -webkit-linear-gradient(bottom, #a1dee2 0%,#ffffff 70%) !important;
+  background: linear-gradient(to top, #a1dee2 0%,#ffffff 70%) !important;
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a1dee2', endColorstr='#ffffff',GradientType=1 ) !important;
 }
 
   .mdl-card__title-text {
