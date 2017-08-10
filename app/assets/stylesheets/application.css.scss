@@ -325,12 +325,11 @@ body {
   .article_page_link {
     position: absolute;
     bottom: 0;
-    padding-top: 10px;
+    padding-top: 20px;
     text-align: center;
     width: 100%;
-    background: linear-gradient(rgba(221, 221, 211, 0),
-      rgba(221, 221, 221, 1) 45%,
-      rgba(221, 221, 221, 1));
+    background: linear-gradient(rgba(256,256,256,0), white 45%);
+    border-radius: 0 0 10px 0;
   }
   .article_page_subtitle {
     height: 20px;
@@ -346,11 +345,12 @@ body {
 .item-image-link {
   float: left;
   display: block;
-  width: 210px;
-  height: 210px;
+  width: 150px;
+  height: 150px;
   background-size: cover;
   margin-right: 5px;
   background-position: center center;
+  border-radius: 10px;
 }
 
 #main_feature {
@@ -577,10 +577,16 @@ body {
 }
 
 .wide-item {
-  background-color: #ddd;
-  box-shadow: 2px 3px 1px grey;
-  min-height: 210px;
-  margin-bottom: 1ex;
+  //min-height: 210px;
+  margin-bottom: 2ex;
+  padding: 15px;
+  background: #c5e3ff;
+  background: -moz-linear-gradient(top, #c5e3ff 0%,#ffffff 99%);
+  background: -webkit-linear-gradient(top, #c5e3ff 0%,#ffffff 99%);
+  background: linear-gradient(to bottom, #c5e3ff 0%,#ffffff 99%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c5e3ff', endColorstr='#ffffff',GradientType=1 );
+  border: 2px solid #c5e3ff;
+  border-radius: 10px;
 
   .item-image {
     height: 210px;
