@@ -33,7 +33,7 @@
                 <span id="id_notice"
                       <% if @project.hidden || @project.lock%>
                       style="display:none"<% end %>>
-                  Project #: <%= @project.id %>
+                  Project #<%= @project.id %>
                 </span>
                 <div id="tags_notice"
                       <% if @project.hidden || @project.lock%>

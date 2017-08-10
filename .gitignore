@@ -23,6 +23,7 @@ aws_config.yml
 .byebug_history
 
 public/assets/*
+public/media/*
 log/*
 db/data.yml*
 
