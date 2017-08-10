@@ -38,7 +38,14 @@
                 <div id="tags_notice"
                       <% if @project.hidden || @project.lock%>
                       style="display:none"<% end %>>
-                  Tags: <%= @project.tags.select(:name).pluck(:name).join(", ") %>
+                      <% if can_edit? @project %>
+                        <%= render 'tagform' %>
+                      <% else %>
+                        <% @project.tags.each do |t| -%>
+                          <a href="<%= projects_path %>?utf8=✓&search=<%= t.name %>&sort=updated_at&order=DESC"><span class="tag-badge"><%= t.name %></span></a>
+                        <% end %>
+                      <% end %>
+                  
                 </div>
               </div>
             </div>

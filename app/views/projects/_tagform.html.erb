@@ -1,0 +1,4 @@
+<% @project.tags.each do |t| -%>
+    <a href="<%= projects_path %>?utf8=✓&search=<%= t.name %>&sort=updated_at&order=DESC"><span class="tag-badge"><%= t.name %></span></a>
+<% end %>
+<br>More functionality coming soon.

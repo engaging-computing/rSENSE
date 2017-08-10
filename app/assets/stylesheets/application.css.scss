@@ -177,6 +177,13 @@ body {
   overflow: hidden;
 }
 
+.tag-badge#tag-badge-add {
+  background-color: limegreen;
+}
+.tag-badge#tag-badge-add:hover {
+  background-color: darkgreen;
+}
+
 .tag-badge:hover {
   background-color: #235283;
   color: white;
