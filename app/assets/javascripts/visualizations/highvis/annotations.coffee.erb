@@ -151,6 +151,10 @@ $ ->
                 $(elt.element).children('rect').css('fill', 'rgba(0, 0, 200, 0.75)')
           return elt
         elt = render x_box, y_box
+        if (elt.width > space)
+          elt.element.remove()
+          overflow = elt.width - space
+          elt = render x_box - overflow, y_box
         $(elt.element).hover (() =>
           if @callout
             elt.attr({opacity: 0.25})
@@ -158,10 +162,6 @@ $ ->
             elt.attr({opacity: 0.75})),
                              (() ->
                                elt.attr({opacity: 1}))
-        if (elt.width > space)
-          elt.element.remove()
-          overflow = elt.width - space
-          render x_box - overflow, y_box
       # Setter for last point
       # Should be a one-time deal as the position is tracked automatically after this
       initDraw: (x, y) ->
