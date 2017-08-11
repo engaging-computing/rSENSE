@@ -317,9 +317,16 @@ body {
     height: 110px;
     overflow-y: hidden;
     position: relative;
+    margin-top: 5px;
+    background: white;
+    border: 1px solid #c5e3ff;
+    border-radius: 10px;
+  }
+  .article_page_content_text {
+    padding: 5px;
   }
   .article_page_date {
-    font-size:0.8em;
+    font-size: 1em;
     margin-bottom: 20px;
   }
   .article_page_link {
@@ -329,27 +336,49 @@ body {
     text-align: center;
     width: 100%;
     background: linear-gradient(rgba(256,256,256,0), white 45%);
-    border-radius: 0 0 10px 0;
+    border-radius: 0 0 10px 10px;
   }
   .article_page_subtitle {
-    height: 20px;
+    a {color: black; }
+    font-size: 1.25em; // Larger than title b/c usually title is just version #
     white-space: nowrap;
     overflow: hidden;
   }
   .article_page_title {
     white-space: nowrap;
-    font-size: 18px;
+    font-size: 1em;
+    margin-bottom: 20px;
   }
+  .article_date_title {
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .article_date_title:hover {
+    .article_page_title {
+      white-space: normal;
+      overflow: visible;
+    }
+  }
+  .article_page_subtitle:hover {
+      white-space: normal;
+      overflow: visible;
+  }
+}
+
+#latest-news-image {
+  height: auto;
+  width: 150px;
 }
 
 .item-image-link {
   float: left;
   display: block;
-  width: 150px;
-  height: 150px;
+  width: 160px;
+  height: 160px;
   background-size: cover;
-  margin-right: 5px;
+  margin-right: 15px;
   background-position: center center;
+  border: 1px solid #c5e3ff;
   border-radius: 10px;
 }
 
@@ -577,7 +606,6 @@ body {
 }
 
 .wide-item {
-  //min-height: 210px;
   margin-bottom: 2ex;
   padding: 15px;
   background: #c5e3ff;
