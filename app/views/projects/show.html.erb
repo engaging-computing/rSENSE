@@ -64,9 +64,6 @@
                 </button>
               </div>
             <% end %>
-              <button id="print" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
-                <i class="fa fa-print"></i> Print
-              </button>
             <% if current_user.try(:id) %>
               <a href = "/projects/<%= @project.id %>/clone">
                 <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--green">
@@ -312,6 +309,7 @@
               <% end %>
             </div>
           <% end %>
+          <br><a id="print" href="#"><i class="fa fa-print"></i> Get a Printable Worksheet</a>
         <% else %>
           <% if @project.has_contrib_key? and current_user.nil? and (@field_count > 0) %>
             <p>Enter contributor key to submit data.</p>

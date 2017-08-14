@@ -539,3 +539,11 @@ body {
 .recaptcha_error ~ .g-recaptcha div div {
   border: 2px solid red !important;
 }
+
+@media print
+{    
+    .noPrint *
+    {
+        display: none !important;
+    }
+}

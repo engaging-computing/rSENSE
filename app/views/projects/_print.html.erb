@@ -1,22 +1,22 @@
 <div class="visible-print">
   <h2><%= @project.title.html_safe %></h2>
-  <p>Project #: <%= @project.id%></p>
+  <p>Project #<%= @project.id%> on iSENSEProject.org</p>
 
   <hr/>
 
-  <div class="header">Description</div>
+  <div class="header"><b>Description</b></div>
   <%= raw @project.content %>
 
   <hr/>
 
-  <div class="header">Fields</div>
+  <div class="header"><b>Fields</b></div>
 
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
-        <th style="max-width:30%">Name</th>
-        <th style="max-width:30%">Units</th>
-        <th style="max-width:30%">Type</th>
+        <th style="width:33%">Name</th>
+        <th style="width:33%">Units</th>
+        <th style="width:33%">Type of Data</th>
       </tr>
     </thead>
     <tbody>
@@ -24,27 +24,37 @@
     </tbody>
   </table>
 
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th style="max-width:30%">Name</th>
-        <th style="max-width:30%">Units</th>
-        <th style="max-width:30%">Type</th>
-      </tr>
-    </thead>
-    <tbody>
-      <%= render 'field_edit', fields: @formula_fields %>
-    </tbody>
-  </table>
+  <% if @formula_fields.count > 0 %>
+    <div class="header"><b>Formula Fields</b></div>
+
+    <table class="table table-bordered table-striped table-condensed">
+      <thead>
+        <tr>
+          <th style="width:33%">Name</th>
+          <th style="width:33%">Units</th>
+          <th style="width:33%">Type of Data</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= render 'field_edit', fields: @formula_fields %>
+      </tbody>
+    </table>
+  <% end %>
+
+  <hr/>
 
   <div class="pagebreak"></div>
 
-  <div class="input-line">Name/Group:__________________________________</div>
+  <div class="header"><b>Our Data</b></div>
 
-  <div class="input-line">Date:________________________________________</div>
+  <div class="input-line">Name(s): ______________________________________</div>
+
+  <div class="input-line">Date: _________________________________________</div>
+
+  <br>
 
   <table class="table table-striped table-bordered" id="entry">
-    <thead>
+    <thead> 
       <tr>
         <% @project.fields.sort_by(&:index).each do |field|%>
           <td class="center"><%=field.name%></td>
@@ -55,7 +65,7 @@
       <% (1..10).each do |i| %>
         <tr>
           <% @project.fields.each do |field|%>
-            <td>  </td>
+            <td style="height: 3em;">  </td>
           <% end %>
         </tr>
       <% end %>
