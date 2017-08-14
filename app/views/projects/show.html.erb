@@ -357,41 +357,43 @@
     </div>
     <div class="row">
       <!-- ##### SAVED VISUALIZATIONS MENU ##### -->
-      <%=render layout: "shared/box", locals: {title: 'Visualizations', width: '12', unique_id: 'visualizations', should_hide: false} do %>
-        <div id="viz_list" <% if @project.visualizations.count == 0 %> style="display:none;" <% end %> >
-          <table id="viz_table" class="table table-striped">
-            <thead>
-              <tr><th>Name</th><th></th></tr>
-            </thead>
-            <tbody>
-              <% @project.visualizations.search(false).each do |vis|%>
-                <tr class="<%= cycle('feed-even', 'feed-odd')%> vis">
-                  <td style="max-width:200px" >
-                    <div class="truncate">
-                      <%= link_to vis.title.html_safe, visualization_url(vis) %>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="controls" style="float:right">
-                      <% if can_hide? vis %>
-                        <a class="viz_hide" href="<%= visualization_url vis %>">
-                          Hide
-                        </a> |
-                      <% end %>
-                      <% if can_delete? vis %>
-                        <a class="viz_delete"
-                           href="<%= visualization_url vis %>"
-                           name="<%= vis.title.html_safe %>">
-                          Delete
-                        </a>
-                      <% end %>
-                    </div>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
+      <% if @project.visualizations.count != 0 %>
+        <%=render layout: "shared/box", locals: {title: 'Visualizations', width: '12', unique_id: 'visualizations', should_hide: false} do %>
+          <div id="viz_list">
+            <table id="viz_table" class="table table-striped">
+              <thead>
+                <tr><th>Name</th><th></th></tr>
+              </thead>
+              <tbody>
+                <% @project.visualizations.search(false).each do |vis|%>
+                  <tr class="<%= cycle('feed-even', 'feed-odd')%> vis">
+                    <td style="max-width:200px" >
+                      <div class="truncate">
+                        <%= link_to vis.title.html_safe, visualization_url(vis) %>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="controls" style="float:right">
+                        <% if can_hide? vis %>
+                          <a class="viz_hide" href="<%= visualization_url vis %>">
+                            Hide
+                          </a> |
+                        <% end %>
+                        <% if can_delete? vis %>
+                          <a class="viz_delete"
+                             href="<%= visualization_url vis %>"
+                             name="<%= vis.title.html_safe %>">
+                            Delete
+                          </a>
+                        <% end %>
+                      </div>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% end %>
       <% end %>
     </div>
   </div>
