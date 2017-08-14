@@ -17,23 +17,17 @@
                   by: <%= link_to @project.owner.name, user_path(@project.owner) %>
                   (<%= time_ago_in_words(@project.created_at) %> ago)
                 </div>
-                <br/>
               </div>
             <% end %>
             <div class="col-sm-12">
               <div id="notices">
                 <span id="lock_notice"
                       <% if !@project.lock%>style="display:none" <% end %>>
-                  <i class="icon-lock"> This project is locked</i>
+                  <i class="icon-lock"> This project is locked.</i>
                 </span>
                 <span id="hidden_notice"
                       <% if !@project.hidden%>style="display:none"<% end %>>
-                  <i class="icon-eye-close"> This project is hidden</i>
-                </span>
-                <span id="id_notice"
-                      <% if @project.hidden || @project.lock%>
-                      style="display:none"<% end %>>
-                  Project #<%= @project.id %>
+                  <i class="icon-eye-close"> This project is hidden.</i>
                 </span>
                 <div id="tags_notice"
                       <% if @project.hidden || @project.lock%>
@@ -71,9 +65,6 @@
                 </button>
               </div>
             <% end %>
-              <button id="print" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
-                <i class="fa fa-print"></i> Print
-              </button>
             <% if current_user.try(:id) %>
               <a href = "/projects/<%= @project.id %>/clone">
                 <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--green">
