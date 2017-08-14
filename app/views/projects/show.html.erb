@@ -17,31 +17,8 @@
                   by: <%= link_to @project.owner.name, user_path(@project.owner) %>
                   (<%= time_ago_in_words(@project.created_at) %> ago)
                 </div>
-                <br/>
               </div>
             <% end %>
-            <div class="col-sm-12">
-              <div id="notices">
-                <span id="lock_notice"
-                      <% if !@project.lock%>style="display:none" <% end %>>
-                  <i class="icon-lock"> This project is locked</i>
-                </span>
-                <span id="hidden_notice"
-                      <% if !@project.hidden%>style="display:none"<% end %>>
-                  <i class="icon-eye-close"> This project is hidden</i>
-                </span>
-                <span id="id_notice"
-                      <% if @project.hidden || @project.lock%>
-                      style="display:none"<% end %>>
-                  Project #: <%= @project.id %>
-                </span>
-                <div id="tags_notice"
-                      <% if @project.hidden || @project.lock%>
-                      style="display:none"<% end %>>
-                  Tags: <%= @project.tags.select(:name).pluck(:name).join(", ") %>
-                </div>
-              </div>
-            </div>
             <% if !@cloned_project.nil? and !is_deleted?(@cloned_project) %>
               <div class="col-sm-12 word-wrap">
                 <span class="info_label" style="font-size:1.1em">
@@ -52,32 +29,68 @@
                 <br/>
               </div>
             <% end %>
+            <div class="col-sm-12">
+              <div id="notices">
+                <span id="lock_notice"
+                      <% if !@project.lock%>style="display:none" <% end %>>
+                  <i class="icon-lock"> This project is locked.</i>
+                </span>
+                <span id="hidden_notice"
+                      <% if !@project.hidden%>style="display:none"<% end %>>
+                  <i class="icon-eye-close"> This project is hidden.</i>
+                </span>
+                <div id="tags_notice"
+                      <% if @project.hidden || @project.lock%>
+                      style="display:none"<% end %>>
+                      <% if can_edit? @project %>
+                        <%= render 'tagform' %>
+                      <% else %>
+                        <% @project.tags.each do |t| -%>
+                          <a href="<%= projects_path %>?utf8=✓&search=<%= t.name %>&sort=updated_at&order=DESC"><span class="tag-badge"><%= t.name %></span></a>
+                        <% end %>
+                      <% end %>
+                  
+                </div>
+              </div>
+            </div>
           </div>
+          <hr>
           <div class="row project_buttons">
-            <button class="mdl-button mdl-js-button mdl-button--raised" disabled>
-              <i class="fa fa-eye"> Views | </i> <%= @project.views %>
-            </button>
+            <div>
+              <button class="liked_status mdl-button mdl-js-button" disabled>
+                <i class="fa fa-folder-open" style="color: black"></i>
+              </button><br>
+              <b>Project #<%= @project.id %></b>
+            </div>
+            <div>
+              <button class="liked_status mdl-button mdl-js-button" disabled>
+                <i class="fa fa-eye" style="color: black"></i>
+              </button><br>
+              <b><%= @project.views %> Views</b>
+            </div>
             <% if current_user.try(:id) %>
               <div class="btn-group likes" data-project_id="<%= @project.id%>">
-                <button class="liked_status mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect <% if @liked_by_cur_user%>active<%end%>" data-toggle="button">
-                  <i class="fa fa-thumbs-up"></i> Like | <span class="like_display"><%= @project.likes.count %></span>
-                </button>
+                <button class="liked_status mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect <% if @liked_by_cur_user%>active<%end%>" style="padding: none !important" data-toggle="button">
+                   <i class="fa fa-thumbs-up"></i><br>
+                </button><br>
+                <b><span class="like_display"><%= @project.likes.count %></span> Likes</b>
               </div>
             <% end %>
-              <button id="print" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
-                <i class="fa fa-print"></i> Print
-              </button>
             <% if current_user.try(:id) %>
-              <a href = "/projects/<%= @project.id %>/clone">
-                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--green">
-                  <i class="fa fa-copy"></i> Clone
-                </button>
-              </a>
+              <div>
+                <a href = "/projects/<%= @project.id %>/clone" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--green">
+                    <i class="fa fa-copy"></i>
+                </a><br>
+                <b>Clone</b>
+              </div>
             <% end %>
             <% if can_edit? @project %>
-              <a href="/projects/<%= @project.id %>/edit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--blue" id="edit-project-button">
-                <i class="fa fa-cog"></i> Edit
-              </a>
+              <div>
+                <a href="/projects/<%= @project.id %>/edit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--blue" id="edit-project-button">
+                  <i class="fa fa-cog"></i>
+                </a><br>
+                <b>Settings</b>
+              </div>
             <% end %>
           </div>
         </div>
@@ -274,7 +287,7 @@
           </table>
           <% if can_edit?(@project) %>
             <div class="center">
-              <a href="/projects/<%=@project.id%>/edit_formula_fields"><button class="btn btn-primary" id="formula_field_edit">Edit</button></a>
+              <a href="/projects/<%=@project.id%>/edit_formula_fields"><button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--blue" id="field_edit" id="formula_field_edit">Edit</button></a>
             </div>
           <% end %>
         <% end %>
@@ -283,7 +296,7 @@
     <div class="row">
       <%=render layout: "shared/box", locals: {title: 'Contribute Data', width:'12', unique_id: 'create_data_set', should_hide: !(@field_count > 0)} do %>
         <% if ((can_edit?(@project) || can_contribute?(@project)) and @field_count > 0) %>
-          <div class="row-fluid">
+          <div class="row-fluid" style="overflow: auto;">
             <div class="col-sm-4 center">
               <%= link_to :controller => :data_sets, :action => :manualEntry do %>
                 <%= image_tag "manual.png", class: "hoverimage" %><br/>
@@ -333,6 +346,7 @@
             <% end %>
           <% end %>
         <% end %>
+        <br><div><a id="print" href="#"><i class="fa fa-print"></i> Get a Printable Worksheet</a></div>
       <% end %>
     </div>
     <div class="row">
