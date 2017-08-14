@@ -7,7 +7,7 @@
       </div>
     </td>
     <td style="max-width:95px" class="field_unit"> <div class="truncate">
-      <%=field.unit%>
+      <%= (field.unit == '') ? "None" : field.unit %>
     </div></td>
     <td class="field_type" data-value="<%= get_field_name(field.field_type) %>">
       <div>

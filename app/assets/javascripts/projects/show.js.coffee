@@ -367,7 +367,7 @@ IS.onReady "projects/show", ->
             $('#addatag').hide()
             $('#tag-badge-container').append $('<span>',
               class: 'tag-badge',
-              html: '<a href="<%= projects_path %>?utf8=✓&search=#' + tagName + \
+              html: '<a href="../projects?utf8=✓&search=' + tagName + \
                     '&sort=updated_at&order=DESC">' + tagName + '</a>
                      <div class="tag-badge-remove" data-id="' + tagId + '">&nbsp<i class="fa fa-remove"></i></div>')
       else
