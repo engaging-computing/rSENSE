@@ -292,6 +292,9 @@ class UsersController < ApplicationController
       @user.update_attribute(:subscribed, false)
     end
     @user.toggle!(:subscribed)
+    if @user.subscribed
+      UserMailer.send_welcome_to(@user).deliver
+    end
     redirect_to :back
   end
 

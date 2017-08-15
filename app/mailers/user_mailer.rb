@@ -16,4 +16,11 @@ class UserMailer < ActionMailer::Base
   def pw_reset_email(user)
     user.send_reset_password_instructions
   end
+
+  def send_welcome_to(user)
+    @user = user
+    @hostname = `hostname`.chomp
+    from = "isenseproject@gmail.com"
+    mail(from: from, to: user.email, subject: "Join the iSENSE Google Group!")  
+  end
 end
