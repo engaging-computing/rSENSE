@@ -286,6 +286,15 @@ class UsersController < ApplicationController
     redirect_to :back
   end
 
+  def toggle_subscription
+    @user = User.find(params[:id])
+    if @user.subscribed == nil
+      @user.update_attribute(:subscribed, false)
+    end
+    @user.toggle!(:subscribed)
+    redirect_to :back
+  end
+
   # GET /users/pw_reset
   def pw_request
     # Show the form

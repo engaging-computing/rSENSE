@@ -166,3 +166,6 @@ $ ->
 
     $('.gravatar_img').tooltip
       title: "Go to www.gravatar.com to change your avatar"
+
+    $('.mailing_list_help').tooltip
+      title: "Subscribe to recieve occasional emails from the iSENSE team. Changing this setting does not affect your membership in the Google Group."
