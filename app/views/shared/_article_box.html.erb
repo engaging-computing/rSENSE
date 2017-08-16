@@ -9,7 +9,7 @@
 -->
 
 <div class="col-md-<%= width %>">
-  <div class="wide-item"> 
+  <div class="wide-item article_box"> 
     <% if image_id != nil %>
       <% left_image = MediaObject.find(image_id).src %>
       <a class="item-image-link hidden-xs" href="<%= path %>" style="background-image: url(<%= left_image %>)"></a>

@@ -6,10 +6,10 @@
 <![endif]-->
 
 <div class="">
-  <div class="row" id="main_feature">
+  <div class="row" id="homepage_feature">
     <% if @featured_vis != nil%>
       <div class="">
-        <div class="col-md-4">
+        <div class="col-md-4" id="description_area">
           <h4>
             <%= link_to @featured_vis.title.html_safe,
                 visualization_path(@featured_vis)%>

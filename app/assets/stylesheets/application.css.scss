@@ -35,6 +35,10 @@ $table-bg-accent: #E8E8E8;
   word-wrap: break-word;
 }
 
+.article_box {
+  background: #c5e3ff;
+}
+
 .badges {
   display: flex;
   justify-content: space-between;
@@ -386,10 +390,13 @@ body {
   border: 1px solid #c5e3ff;
   border-radius: 10px;
   background: #c5e3ff;
-  background: -moz-linear-gradient(left, #c5e3ff 0%, #ffffff 36%, #ffffff 36%, #ffffff 99%);
-  background: -webkit-linear-gradient(left, #c5e3ff 0%,#ffffff 36%,#ffffff 36%,#ffffff 99%);
-  background: linear-gradient(to right, #c5e3ff 0%,#ffffff 36%,#ffffff 36%,#ffffff 99%);
+  background: -webkit-linear-gradient(bottom, #c5e3ff 0%, #ffffff 99%);
+  background: -moz-linear-gradient(bottom, #c5e3ff 0%, #ffffff 99%);
+  background: -o-linear-gradient(bottom, #c5e3ff 0%, #ffffff 99%);
+  background: linear-gradient(to top, #c5e3ff 0%, #ffffff 99%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c5e3ff', endColorstr='#ffffff',GradientType=1 );
+  box-shadow: 0px 3px 6px 0px rgba(200,200,200,1);
+  margin-bottom: 32px;
 }
 
 .mainContent {
@@ -401,6 +408,8 @@ body {
 .mdl-card {
   height: 295px !important;
   width: initial !important;
+  border: 1px solid #c5e3ff;
+  border-radius: 10px;
   margin-bottom: 2em;
   line-height: initial;
   background: #ddd !important;
@@ -608,12 +617,6 @@ body {
 .wide-item {
   margin-bottom: 2ex;
   padding: 15px;
-  background: #c5e3ff;
-  background: -moz-linear-gradient(top, #c5e3ff 0%,#ffffff 99%);
-  background: -webkit-linear-gradient(top, #c5e3ff 0%,#ffffff 99%);
-  background: linear-gradient(to bottom, #c5e3ff 0%,#ffffff 99%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c5e3ff', endColorstr='#ffffff',GradientType=1 );
-  border: 2px solid #c5e3ff;
   border-radius: 10px;
 
   .item-image {
