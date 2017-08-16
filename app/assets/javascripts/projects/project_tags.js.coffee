@@ -38,4 +38,3 @@ $ ->
                   </span>")
         else
           alert "Tag already exists."
-                
