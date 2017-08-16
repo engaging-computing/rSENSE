@@ -1,6 +1,116 @@
 <div class="row">
   <div class="col-md-12">
-    <h1>AppVis Extension</h1>
-    <p>More information coming soon.</p>
- </div>
+    <h1><i class="fa fa-puzzle-piece" style="color: orange;"></i> AppVis Extension</h1>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12" style="text-align: justify; line-height: 2em;">
+    App Inventor 2 is an online tool used to create mobile apps for use on Android devices.
+    It is available for free at <a href="http://ai2.appinventor.mit.edu">ai2.appinventor.mit.edu</a>.
+    This page gives a quick look at AppVis, an extension for usage of App Inventor 2 in
+    conjunction with iSENSE.   With AppVis, App Inventor 2 apps are able to upload data sets
+    to a project, and retrieve a URL of a visualization of a project.
+  </div>
+</div>
+
+<hr>
+
+<div class="row">
+  <div class="col-md-12">
+    <h3>Get the extension</h3>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-4">
+    <%= link_to image_tag("appvis/import-aix.png", width: "100%"), image_path("appvis/import-aix.png") %>
+  </div>
+  <div class="col-md-8" style="text-align: justify; line-height: 2em;">
+    Start a new project on App Inventor 2 where you would like to use AppVis.
+    The last option on the Palette found on the left side of the screen is "Extension".
+    Click that, and then click where it says "Import Extension".
+    You will be prompted to either import an extension from your computer,
+    or use a URL. Use a URL, paste in the link <%= link_to 'isenseproject.org/aix', '/aix' %>,
+    and click "Import" to finish. iSENSEPublisher should be installed, and can be dragged into the
+    Viewer just as any other regular component.
+  </div>  
+</div>
+
+<hr>
+
+<div class="row">
+  <div class="col-md-12">
+    <h3>Set up your project</h3>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-4" style="text-align: justify; line-height: 2em;">
+    This is a brief page that will explain how to set up your iSENSE project for use with App Inventor 2.
+    What you need to know to set up a project, access your contributor key, find your project ID, and change
+    the default visualization.
+  </div>
+  <div class="col-md-8">
+    <%= link_to image_tag("appvis/isense-settings.png", width: "100%"), image_path("appvis/isense-settings.png") %>
+  </div>
+</div>
+
+<hr>
+
+<div class="row">
+  <div class="col-md-12">
+    <h3>Design your screen</h3>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-8">
+    <%= link_to image_tag("appvis/ai-example.png", width: "100%"), image_path("appvis/ai-example.png") %>
+  </div>
+  <div class="col-md-4" style="text-align: justify; line-height: 2em;">
+    These are all the current editable properties in the Designer page of App Inventor 2 for the iSENSEPublisher extension.
+    ContributorKey
+    to be completed later
+    ProjectID
+    to be completed later
+    VisType
+    to be completed later
+  </div>
+</div>
+
+<hr>
+
+<div class="row">
+  <div class="col-md-12">
+    <h3>Code your blocks</h3>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6" style="text-align: justify; line-height: 2em;">
+    Apps made in App Inventor are powered by code blocks.
+    In addition to the numerous blocks App Inventor already has for you to use,
+    the AppVis extension includes <a href="https://github.com/mck529/appinventor-sources/wiki/Code-Blocks">many blocks</a>
+    that make working with iSENSE simple.
+  </div>
+  <div class="col-md-6">
+    <%= link_to image_tag("appvis/blocks.png", width: "100%"), image_path("appvis/blocks.png") %>
+  </div>
+</div>
+
+<hr>
+
+<div class="row">
+  <div class="col-md-12">
+    <h3>Use your app!</h3>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-3">
+    <%= link_to image_tag("appvis/screenshot.png", width: "100%"), image_path("appvis/screenshot.png") %>
+  </div>
+  <div class="col-md-9" style="text-align: justify; line-height: 2em;">
+     With your screen designed and your blocks set up, your app is ready to run on Android devices.
+     Check out the <a href="https://play.google.com/store/apps/details?id=edu.mit.appinventor.aicompanion3">AI Companion App</a>
+     for an easy way to test and run your AppVis creations!<br><br>
+     For more details and the latest on AppVis, check out the
+     <a href="https://github.com/mck529/appinventor-sources/wiki">wiki page</a>.
+  </div>
 </div>
