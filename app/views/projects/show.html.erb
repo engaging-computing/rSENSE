@@ -42,6 +42,7 @@
                 <div id="tags_notice"
                       <% if @project.hidden || @project.lock%>
                       style="display:none"<% end %>>
+                      <br>
                       <% if can_edit? @project %>
                         <%= render 'tagform' %>
                       <% else %>
