@@ -51,7 +51,7 @@ class CloneProjectTest < IntegrationTest
 
     click_on 'Das Cloning Projekt'
 
-    click_button 'Clone'
+    visit URI.parse(current_url).to_s + '/clone'
     find('#clone_datasets').set(true)
     find('#project_name').set('Cloned with Data')
     click_on 'Clone Project'
