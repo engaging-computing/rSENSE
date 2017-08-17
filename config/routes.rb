@@ -90,6 +90,7 @@ Rsense::Application.routes.draw do
   post '/media_objects/saveMedia/*keys' => 'media_objects#saveMedia'
   get '/projects/:id/data_sets/*datasets' => 'visualizations#displayVis'
   get '/projects/:id/data_sets/' => 'visualizations#displayVis'
+  post '/projects/:id/data_sets/' => 'visualizations#displayVis'
   post '/projects/:id/templateUpload', to: 'projects#templateUpload'
   post '/projects/:id/finishTemplateUpload', to: 'projects#finishTemplateUpload'
   put '/projects/:id/removeField' => 'projects#removeField'

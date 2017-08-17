@@ -70,7 +70,11 @@ IS.onReady "projects/show", ->
     if unchecked_list.length > 0 or window.location.href.indexOf('&search') != -1
       targets = $(document).find(".dataset .ds_selector input:checked")
       ds_list = (get_ds_id t for t in targets)
-      # Should make POST request here with ds_list as the parameters
+      $.ajax({
+        url: "/data_sets",
+        type: "POST",
+        data: {datasets: ds_list}
+      })
     else
       window.location = $(this).attr("data-href")
 
