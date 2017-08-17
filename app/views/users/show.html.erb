@@ -28,7 +28,11 @@
           </span>
 
           <p style="margin-top: 8px">
-            <%= link_to (@user.subscribed ? 'Unsubscribe' : 'Subscribe'), user_path(@user) + '/subscribe', :method => :toggle_subscription %>
+            <% if @user.subscribed %>
+              <%= link_to 'Unsubscribe', user_path(@user) + '/unsubscribe', :method => :disable_subscription %>
+            <% else %>
+              <%= link_to 'Subscribe', user_path(@user) + '/subscribe', :method => :enable_subscription %>
+            <% end %>
           </p>
         <% end %>
         

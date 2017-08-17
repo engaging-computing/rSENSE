@@ -136,5 +136,6 @@ Rsense::Application.routes.draw do
   post '/testing/review' => 'testing#review'
   post '/testing/publish' => 'testing#publish'
   post '/users/:id/confirm' => 'users#confirm'
-  post '/users/:id/subscribe' => 'users#toggle_subscription'
+  post '/users/:id/subscribe' => 'users#enable_subscription'
+  post '/users/:id/unsubscribe' => 'users#disable_subscription'
 end

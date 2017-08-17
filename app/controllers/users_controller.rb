@@ -286,15 +286,16 @@ class UsersController < ApplicationController
     redirect_to :back
   end
 
-  def toggle_subscription
+  def enable_subscription
     @user = User.find(params[:id])
-    if @user.subscribed == nil
-      @user.update_attribute(:subscribed, false)
-    end
-    @user.toggle!(:subscribed)
-    if @user.subscribed
-      UserMailer.send_welcome_to(@user).deliver
-    end
+    @user.update_attribute(:subscribed, true)
+    UserMailer.send_welcome_to(@user).deliver
+    redirect_to :back
+  end
+
+  def disable_subscription
+    @user = User.find(params[:id])
+    @user.update_attribute(:subscribed, false)
     redirect_to :back
   end
 
