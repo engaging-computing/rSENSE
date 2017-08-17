@@ -175,12 +175,64 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  a {
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+  }
+  a:hover {
+    text-decoration: none;
+  }
+}
+
+#tag-badge-add:hover{
+  background-color: #3B9E3F;
+  cursor: pointer;
 }
 
 .tag-badge:hover {
   background-color: #235283;
   color: white;
   text-decoration: none;
+  .tag-badge-remove {
+    display: inline;
+  }
+}
+
+.tag-badge-remove {
+  display: none;
+}
+
+.tag-badge-remove:hover {
+   color: darkgray;
+   cursor: pointer;
+}
+
+.tag-badge-green {
+  background-color: #4CAF50;
+}
+
+.tag-badge-green:hover {
+  background-color: #4CAF50;  
+}
+
+#tag-badge-form {
+  display: none;
+}
+
+#tag-badge-textfield {
+  background-color: #88D68B;
+  color: black;
+  padding-left: 5px;
+  border: none;
+  border-radius: 5px;
+  height: 100%;
+  width: 75px;
+}
+
+#tag-badge-confirm:hover {
+  color:lightgray;
+  cursor: pointer;
 }
 
 .expanded {
@@ -358,6 +410,13 @@ body {
   .mdl-button {
     text-transform: none !important;
     text-decoration: none !important;
+  }
+
+  .used-as-label {
+    background: white !important;
+    * {
+      color: black;
+    }
   }
 
   .mdl-button--google-sign-in {
@@ -538,4 +597,10 @@ body {
 // put a red box around the recaptcha when verification fails
 .recaptcha_error ~ .g-recaptcha div div {
   border: 2px solid red !important;
+}
+
+@media print {    
+  .noPrint * {
+    display: none !important;
+  }
 }

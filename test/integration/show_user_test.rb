@@ -9,7 +9,7 @@ class ShowUserTest < IntegrationTest
 
     pid = projects(:media_test).id
     visit "/projects/#{pid}"
-    click_on 'Like'
+    find('.liked_status').click
     wait_for_ajax
 
     assert find('.like_display').has_content?('1'), 'Like updated'
