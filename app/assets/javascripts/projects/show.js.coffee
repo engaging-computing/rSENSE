@@ -67,11 +67,12 @@ IS.onReady "projects/show", ->
   $('#vis_button').click (e) ->
     unchecked = $(document).find(".dataset .ds_selector input:not(:checked)")
     unchecked_list = (get_ds_id u for u in unchecked)
-    ds_list = []
     if unchecked_list.length > 0 or window.location.href.indexOf('&search') != -1
       targets = $(document).find(".dataset .ds_selector input:checked")
       ds_list = (get_ds_id t for t in targets)
-    window.location = $(this).attr("data-href") + ds_list
+      # Should make POST request here with ds_list as the parameters
+    else
+      window.location = $(this).attr("data-href")
 
   $('#export_button').click (e) ->
     $('#export_modal').modal('show')
