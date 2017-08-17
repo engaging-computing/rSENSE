@@ -107,6 +107,8 @@ class MediaObjectsController < ApplicationController
 
     # Create the media object
     adjust_file_name = file_name.gsub ' ', '_'
+    adjust_file_name = adjust_file_name.gsub '(', ''
+    adjust_file_name = adjust_file_name.gsub ')', ''
     @mo = MediaObject.new
     @mo.name = @mo.file = adjust_file_name
     @mo.media_type = file_type
