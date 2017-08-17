@@ -45,9 +45,8 @@
 </div>
 <div class="row">
   <div class="col-md-4" style="text-align: justify; line-height: 2em;">
-    This is a brief page that will explain how to set up your iSENSE project for use with App Inventor 2.
-    What you need to know to set up a project, access your contributor key, find your project ID, and change
-    the default visualization.
+    You don't need to change much to set up your iSENSE project for use with App Inventor 2.
+    What you need to do is set up a contributor key and find your project ID.
   </div>
   <div class="col-md-8">
     <%= link_to image_tag("appvis/isense-settings.png", width: "100%"), image_path("appvis/isense-settings.png") %>
@@ -67,12 +66,8 @@
   </div>
   <div class="col-md-4" style="text-align: justify; line-height: 2em;">
     These are all the current editable properties in the Designer page of App Inventor 2 for the iSENSEPublisher extension.
-    ContributorKey
-    to be completed later
-    ProjectID
-    to be completed later
-    VisType
-    to be completed later
+    ContributorKey is your contributor key from the previous step, and ProjectID is from the previous step as well.
+    UseVis specifies the visualization that will show up if you try to view it in the app.
   </div>
 </div>
 
@@ -88,7 +83,8 @@
     Apps made in App Inventor are powered by code blocks.
     In addition to the numerous blocks App Inventor already has for you to use,
     the AppVis extension includes <a href="https://github.com/mck529/appinventor-sources/wiki/Code-Blocks">many blocks</a>
-    that make working with iSENSE simple.
+    that make working with iSENSE simple.  Combined with a WebViewer component, you can even 
+    <a href="https://github.com/mck529/appinventor-sources/wiki/Code-Blocks#getvisurl">view your default visualization</a> right on the app screen!
   </div>
   <div class="col-md-6">
     <%= link_to image_tag("appvis/blocks.png", width: "100%"), image_path("appvis/blocks.png") %>
