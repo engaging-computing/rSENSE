@@ -9,21 +9,18 @@
 -->
 
 <div class="col-md-<%= width %>">
-  <div class="wide-item">
-    <% left_image = image_path('missing_news.jpg') %>
+  <div class="wide-item article_box"> 
     <% if image_id != nil %>
       <% left_image = MediaObject.find(image_id).src %>
+      <a class="item-image-link hidden-xs" href="<%= path %>" style="background-image: url(<%= left_image %>)"></a>
     <% end %>
 
-    <a class="item-image-link hidden-xs" href="<%= path %>" style="background-image: url(<%= left_image %>)"></a>
-
     <div class="item-desc">
-      <div class="article_page_title truncate"><%= link_to title, path %></div>
-      <div class="article_page_subtitle truncate"><%= brief %></div>
-      <div class="article_page_date">Written on <%= date %></div>
+      <div class="article_date_title truncate"><span class="article_page_date"><%= date %></span><span class="article_page_title"><%= title %></span></div>
+      <b><div class="article_page_subtitle truncate"><%= link_to brief, path %></div></b>
       <div class="article_page_content truncate">
         <% if content != nil %>
-          <%= content.html_safe %>
+          <div class="article_page_content_text"><%= content.html_safe %></div>
         <% end %>
         <div class="article_page_link"><%= link_to "Read More", path %></div>
       </div>

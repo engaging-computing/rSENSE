@@ -54,6 +54,8 @@ Rsense::Application.routes.draw do
 
   get 'about' => 'home#about'
   get 'contact' => 'home#contact'
+  get 'appvis' => 'home#appvis'
+  get 'aix' => redirect('http://bit.ly/michael-isense-aix')
   get 'report_bug' => 'home#report_bug'
   get 'privacy_policy' => 'home#privacy_policy'
 
