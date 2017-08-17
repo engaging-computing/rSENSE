@@ -55,3 +55,18 @@ body[data-page-name="home/formulas_help"] {
     padding: 20px;
   }
 }
+
+#homepage_feature {
+  border: 1px solid #c5e3ff;
+  border-radius: 10px;
+  #description_area {
+    border-right: 1px solid #c5e3ff;
+    border-radius: 10px 0 0 10px;
+    background: #c5e3ff;
+    background: -moz-linear-gradient(bottom, #c5e3ff 0%,#ffffff 99%);
+    background: -webkit-linear-gradient(bottom, #c5e3ff 0%,#ffffff 99%);
+    background: linear-gradient(to top, #c5e3ff 0%,#ffffff 99%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c5e3ff', endColorstr='#ffffff',GradientType=1 );
+    height: 400px; // Vis height is constant
+  }
+}
