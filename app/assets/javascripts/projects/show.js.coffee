@@ -90,7 +90,10 @@ IS.onReady "projects/show", ->
     if ds_list.length is 0
       alert "No data sets selected for Export. Select at least 1 and try again."
     else
-      window.location = $(this).attr("data-href") + ds_list
+      # Set the value in the hidden form field
+      $('#export_selected>input').attr('value', ds_list)
+      # POST form
+      $('#export_selected').submit()
 
   $('#export_concatenated_button').click (e) ->
     $('#export_modal').modal('hide')
@@ -100,7 +103,10 @@ IS.onReady "projects/show", ->
     if ds_list.length is 0
       alert "No data sets selected for Export. Select at least 1 and try again."
     else
-      window.location = $(this).attr("data-href") + ds_list
+      # Set the value in the hidden form field
+      $('#export_concatenated_selected>input').attr('value', ds_list)
+      # POST form
+      $('#export_concatenated_selected').submit()
 
   # get the session number for viewing vises
   get_ds_id = (t) ->

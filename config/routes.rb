@@ -78,6 +78,8 @@ Rsense::Application.routes.draw do
   get '/projects/:id/export/data_sets/*datasets' => 'data_sets#export'
   get '/projects/:id/export_concatenated/data_sets/*datasets' => 'data_sets#export_concatenated'
   get '/projects/:id/export' => 'data_sets#export'
+  post '/projects/:id/export/data_sets' => 'data_sets#export'
+  post '/projects/:id/export_concatenated/data_sets' => 'data_sets#export_concatenated'
 
   get '/data_sets/:id/edit' => 'data_sets#edit'
   put '/data_sets/:id/edit' => 'data_sets#edit'

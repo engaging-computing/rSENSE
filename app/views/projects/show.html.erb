@@ -107,6 +107,12 @@
     <%=form_tag project_path + '/data_sets', method: 'post', id: 'visualize_selected' do%>
       <input type="hidden" name="datasets" value="">
     <% end %>
+    <%=form_tag project_path + '/export/data_sets', method: 'post', id: 'export_selected' do%>
+      <input type="hidden" name="datasets" value="">
+    <% end %>
+    <%=form_tag project_path + '/export_concatenated/data_sets', method: 'post', id: 'export_concatenated_selected' do%>
+      <input type="hidden" name="datasets" value="">
+    <% end %>
     <div class="row">
       <%= render layout: "shared/box", locals: {title: 'Data Sets', width: '12', unique_id: 'data_sets', should_hide: false} do %>
         <% if @data_set_count != 0 || @params[:search] %>
