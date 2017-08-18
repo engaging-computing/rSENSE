@@ -474,6 +474,11 @@ $ ->
           if data.fields[f].fieldID != -1
             groups.push(data.fields[f].fieldName)
       else
+        for dp in @dataPoints
+          if dp[gIndex] isnt null
+            result[String(dp[gIndex])] = true
+        groups = for keys of result
+          keys
 
       if gIndex == data.TIME_PERIOD_FIELD #and globals.configs.isPeriod
         timestampIndex = data.timeFields[0]
@@ -487,14 +492,7 @@ $ ->
           else
             period = globals.getCurrentPeriod(new Date(timestamp))
             point[data.TIME_PERIOD_FIELD] = period
-
-      for dp in @dataPoints
-        if dp[gIndex] isnt null
-          result[String(dp[gIndex])] = true
-
-      groups = for keys of result
-        keys
-
+            
       groups.sort()
 
     ###
