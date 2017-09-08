@@ -67,11 +67,17 @@ IS.onReady "projects/show", ->
   $('#vis_button').click (e) ->
     unchecked = $(document).find(".dataset .ds_selector input:not(:checked)")
     unchecked_list = (get_ds_id u for u in unchecked)
-    ds_list = []
+    # Viewing a subset of the data sets
     if unchecked_list.length > 0 or window.location.href.indexOf('&search') != -1
       targets = $(document).find(".dataset .ds_selector input:checked")
       ds_list = (get_ds_id t for t in targets)
-    window.location = $(this).attr("data-href") + ds_list
+      # Set the value in the hidden form field
+      $('#visualize_selected>input').attr('value', ds_list)
+      # POST form
+      $('#visualize_selected').submit()
+    # Just show them all the old-fashioned way
+    else
+      window.location = $(this).attr("data-href")
 
   $('#export_button').click (e) ->
     $('#export_modal').modal('show')
@@ -84,7 +90,10 @@ IS.onReady "projects/show", ->
     if ds_list.length is 0
       alert "No data sets selected for Export. Select at least 1 and try again."
     else
-      window.location = $(this).attr("data-href") + ds_list
+      # Set the value in the hidden form field
+      $('#export_selected>input').attr('value', ds_list)
+      # POST form
+      $('#export_selected').submit()
 
   $('#export_concatenated_button').click (e) ->
     $('#export_modal').modal('hide')
@@ -94,7 +103,10 @@ IS.onReady "projects/show", ->
     if ds_list.length is 0
       alert "No data sets selected for Export. Select at least 1 and try again."
     else
-      window.location = $(this).attr("data-href") + ds_list
+      # Set the value in the hidden form field
+      $('#export_concatenated_selected>input').attr('value', ds_list)
+      # POST form
+      $('#export_concatenated_selected').submit()
 
   # get the session number for viewing vises
   get_ds_id = (t) ->
