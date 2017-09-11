@@ -574,89 +574,98 @@ $ ->
         badNumberPopoverTimerX = null
 
         # Axis Manual entry for timeline
-        if @isTimeline == true
-            
+        if @isTimeline == true 
+          
+          ###################################
           # XMin DTPicker Control
-          formButtonMin = $('#x-min-cal')
-          formInputMin = $('#x-axis-min')
-          formAnchorMin = $('#x-min')
-          currValueMin = null
-   
-          formInputMin.val()
+          ###################################
 
-          formButtonMin.click ->
+          # Set some variables
+          calendarButtonMin = $('#x-min-cal')   # calendar button symbol
+          formInputMin = $('#x-axis-min')       # textbox where the new axis min goes
+          formAnchorMin = $('#x-min')           # div cheat used to anchor the dtpicker to the textbox
+          currValueMin = formInput.val()        # current value in the textbox
+          
+          # Get the value currently in the axis min textbox
+          # formInputMin.val()
+
+          # When you click the calendar button, 
+          # open the datetime picker and fix some font stuff
+          calendarButtonMin.click ->
             dtPickerMin.open()
             $('#dt-time-textbox').css("fontSize", "13px")
 
-          dtPickerMin = formButtonMin.datetimepicker
-            autoClose: false
-            keyPress: (e) ->
-              e.stopImmediatePropagation()
-              e.keyCode
-            onOpen: ->
-              formInputMin.focus()
-              currValueMin
-            onChange: (val) ->
-              currValueMin = val.toLocaleString()
-              formInputMin.val currValueMin
-              $(this).datepicker('hide')
-            onKeys:
-              13: -> #enter
-                dtPickerMin.close()
-              27: -> #escape
-                dtPickerMin.close()
-            anchor: formAnchorMin
-            hPosition: ->
-              0
-            vPosition: ->
-              0
-
-
-
+          # Set some properties of the dtPicker
+          dtPickerMin = calendarButtonMin.datetimepicker
+            autoClose: false                        # 
+            keyPress: (e) ->                        # 
+              e.stopImmediatePropagation()          #
+              e.keyCode                             #
+            onOpen: ->                              # when the dtPicker opens
+              formInputMin.focus()                  #   focus on the textbox
+              currValueMin                          #   return the current value in the textbox
+            onChange: (val) ->                      # when the value of the dtPicker changes
+              currValueMin = val.toLocaleString()   #   update the local variable
+              formInputMin.val currValueMin         #   ???		
+              $(this).datepicker('hide')            #   try and hide the dtPicker
+            onKeys:                                 # when these keys are clicked:
+              13: -> #enter                         #	  the enter key
+                dtPickerMin.close()                 #     close the dtpicker
+              27: -> #escape                        #	  the escape key
+                dtPickerMin.close()                 #	    close the dtPicker
+            anchor: formAnchorMin                   # anchor the dtPicker to the div cheat
+            hPosition: ->                           # set the horizontal position
+              0                                     #	  ???
+            vPosition: ->                           # set the vertical position
+              0                                     #	  ???
+ 
+          ###################################
           # XMax DTPicker Control
-          formButtonMax = $('#x-max-cal')
-          formInputMax = $('#x-axis-max')
-          formAnchorMax = $('#x-max')
-          currValueMax = null
-    
-          formButtonMax.click ->
+          ###################################
+
+          # Set some variables
+          calendarButtonMin = $('#x-max-cal')   # calendar button symbol
+          formInputMin = $('#x-axis-max')       # textbox where the new axis max goes
+          formAnchorMin = $('#x-max')           # div cheat used to anchor the dtpicker to the textbox
+          currValueMax = formInput.val()        # current value in the textbox
+
+          # When you click the calendar button, 
+          # open the datetime picker and fix some font stuff
+          calendarButtonMax.click ->
             dtPickerMax.open()
             $('#dt-time-textbox').css('cssText', 'font-size: 13px !important;')
             $('#dt-picker option').css('cssText', 'font-size: 13px !important;')
 
-          dtPickerMax = formButtonMax.datetimepicker
-            autoClose: false
-            keyPress: (e) ->
-              e.stopImmediatePropagation()
-              e.keyCode
-            onOpen: ->
-              formInputMax.focus()
-              currValueMax
-            onChange: (val) ->
-              currValueMax = val.toLocaleString()
-              formInputMax.val currValueMax
-            onKeys:
-              13: -> #enter
-                dtPickerMax.close()
-              27: -> #escape
-                dtPickerMax.close()
-            anchor: formAnchorMax
-            hPosition: ->
-              0
-            vPosition: ->
-              0
+          # Set some properties of the dtPicker
+          dtPickerMax = calendarButtonMax.datetimepicker
+            autoClose: false                        # 
+            keyPress: (e) ->                        # 
+              e.stopImmediatePropagation()          #
+              e.keyCode                             #
+            onOpen: ->                              # when the dtPicker opens
+              formInputMax.focus()                  #   focus on the textbox
+              currValueMax                          #   return the current value in the textbox
+            onChange: (val) ->                      # when the value of the dtPicker changes
+              currValueMax = val.toLocaleString()   #   update the local variable
+              formInputMax.val currValueMax         #   ???		
+            onKeys:                                 # when these keys are clicked:
+              13: -> #enter                         #	  the enter key
+                dtPickerMax.close()                 #     close the dtpicker
+              27: -> #escape                        #	  the escape key
+                dtPickerMax.close()                 #	    close the dtPicker
+            anchor: formAnchorMax                   # anchor the dtPicker to the div cheat
+            hPosition: ->                           # set the horizontal position
+              0                                     #	  ???
+            vPosition: ->                           # set the vertical position
+              0                                     #	  ???
 
           # click outside of dt picker to close #############################         
-          formButtonMax.click ->
-            console.log('clicked inside')
-            if $('#dt-picker').click
-              console.log('still good')
-            else
-              dtPickerMax.close()
-              dtPickerMin.close()
-              console.log('clicked outside')
+          calendarButtonMax.click ->
+            console.log('hello world')
 
+          ###################################
           # get values as numbers
+          ###################################
           $('#set-axis-button').click =>
  
             xAxisMin = Date.parse($('#x-axis-min').val())
