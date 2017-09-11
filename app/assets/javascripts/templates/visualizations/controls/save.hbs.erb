@@ -1,0 +1,39 @@
+<div class="centered">
+  <button id="save-vis-btn" class="save-btn btn btn-sm btn-success"
+          data-log-id="save-vis">
+    Save Visualization
+  </button>
+  <button id="default-vis-btn" class="save-btn btn btn-sm btn-primary"
+          data-log-id="default-vis">
+    Make Default
+  </button>
+  <button id="print-vis-btn" class="save-btn btn btn-sm btn-default"
+          data-log-id="print-vis">
+    Print Visualization
+  </button>
+
+  <div id="export-controls">
+  <h4 class="vis-ctrl-subtitle">Export</h4>
+
+    <div class="btn-group btn-group-justified">
+      <div class="btn-group">
+      <button id="download-image-btn" class="export-btn btn btn-sm btn-default"
+          data-log-id="download-vis">
+          <%= image_tag("export-png.png") %>
+      </button>
+      </div>
+      <div class="btn-group">
+      <button id="download-document-btn" class="export-btn btn btn-sm btn-default"
+          data-log-id="download-vis">
+          <%= image_tag("export-pdf.png") %>
+      </button>
+      </div>
+      <div class="btn-group">
+      <button id="download-vector-btn" class="export-btn btn btn-sm btn-default"
+          data-log-id="download-vis">
+          <%= image_tag("export-svg.png") %>
+      </button>
+      </div>
+    </div>
+    </div>
+</div>

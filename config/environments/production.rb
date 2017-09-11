@@ -9,7 +9,8 @@ Rsense::Application.configure do
   config.action_controller.perform_caching = true
 
   # Disable Rails's static asset server (Apache or nginx will already do this)
-  config.serve_static_assets = false
+  # EDIT: enable for now
+  config.serve_static_assets = true
 
   # Compress JavaScripts and CSS
   config.assets.compress = true
@@ -75,6 +76,9 @@ Rsense::Application.configure do
   if `hostname`.chomp == 'rsense-dev.cs.uml.edu'
     config.action_mailer.default_url_options = { host: `hostname`.chomp }
   else
-    config.action_mailer.default_url_options = { protocol: 'https', host: `hostname`.chomp }
+    config.action_mailer.default_url_options = { protocol: 'https', host: 'isenseproject.org' }
   end
+
+  ENV['RSENSE_VERSION'] = `(git describe --tags) 2>&1`
+
 end

@@ -39,7 +39,7 @@ class UserInteractionsTest < IntegrationTest
 
     click_on 'Manual Entry'
     first('.editor-text').set('<h1>Testing...</h1>')
-    find('#edit_table_save_1').click
+    find('#edit_table_save_2').click
 
     assert page.has_no_content?('<h1>'), 'Users should not be able to inject code into the webpage.'
   end

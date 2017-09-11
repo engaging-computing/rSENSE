@@ -54,6 +54,8 @@ Rsense::Application.routes.draw do
 
   get 'about' => 'home#about'
   get 'contact' => 'home#contact'
+  get 'appvis' => 'home#appvis'
+  get 'aix' => redirect('http://bit.ly/michael-isense-aix')
   get 'report_bug' => 'home#report_bug'
   get 'privacy_policy' => 'home#privacy_policy'
 
@@ -76,6 +78,8 @@ Rsense::Application.routes.draw do
   get '/projects/:id/export/data_sets/*datasets' => 'data_sets#export'
   get '/projects/:id/export_concatenated/data_sets/*datasets' => 'data_sets#export_concatenated'
   get '/projects/:id/export' => 'data_sets#export'
+  post '/projects/:id/export/data_sets' => 'data_sets#export'
+  post '/projects/:id/export_concatenated/data_sets' => 'data_sets#export_concatenated'
 
   get '/data_sets/:id/edit' => 'data_sets#edit'
   put '/data_sets/:id/edit' => 'data_sets#edit'
@@ -90,6 +94,7 @@ Rsense::Application.routes.draw do
   post '/media_objects/saveMedia/*keys' => 'media_objects#saveMedia'
   get '/projects/:id/data_sets/*datasets' => 'visualizations#displayVis'
   get '/projects/:id/data_sets/' => 'visualizations#displayVis'
+  post '/projects/:id/data_sets/' => 'visualizations#displayVis'
   post '/projects/:id/templateUpload', to: 'projects#templateUpload'
   post '/projects/:id/finishTemplateUpload', to: 'projects#finishTemplateUpload'
   put '/projects/:id/removeField' => 'projects#removeField'
@@ -135,4 +140,5 @@ Rsense::Application.routes.draw do
   get '/testing' => 'testing#index'
   post '/testing/review' => 'testing#review'
   post '/testing/publish' => 'testing#publish'
+  post '/users/:id(:confirm)' => 'users#confirm'
 end

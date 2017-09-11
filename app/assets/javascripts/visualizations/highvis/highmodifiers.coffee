@@ -58,12 +58,15 @@ $ ->
 
       delete data.savedData
 
+    # Extra "reserved" fields that are always added
     data.DATA_POINT_ID_FIELD = 0
     data.DATASET_NAME_FIELD = 1
     data.COMBINED_FIELD = 2
     data.NUMBER_FIELDS_FIELD = 3
     data.CONTRIBUTOR_FIELD = 4
     data.TIME_PERIOD_FIELD = 5
+    # Helps determine where user-defined fields start
+    data.NUMBER_RESERVED_FIELDS = 6
 
     data.types ?=
       TIME: 1
@@ -151,7 +154,20 @@ $ ->
               filter.lvalue, filter.uvalue, filter.field)
           else
             func = eval('globals.' + filter.op)(filter.value, filter.field)
-        dp = dp.filter(func)
+        dp = dp.filter (a) ->
+          # Timestamps can do textual or numerical comparisons
+          if typeof a[filter.field] is 'string' \
+          or (filter.op is 'gt') or (filter.op is 'lt') \
+          or (filter.op is 'ge') or (filter.op is 'le')
+            # Numerical
+            func(a)
+          else
+            # String - need to get date format
+            tmp = a[filter.field]
+            a[filter.field] = globals.dateFormatter(a[filter.field])
+            ret = func(a)
+            a[filter.field] = tmp
+            ret
 
       return dp
 
@@ -486,6 +502,20 @@ $ ->
     ###
     data.textFields = for field, index in data.fields when (Number field.typeID) is data.types.TEXT
       Number index
+
+    ###
+    Gets a list of USER text field indicies
+    ###
+    data.userTextFields = data.textFields.filter (n) -> n > (data.NUMBER_RESERVED_FIELDS - 1)
+
+    ###
+    Boolean, whether there is more than one data set
+    ###
+    for dp in data.dataPoints
+      if dp[1] isnt data.dataPoints[0][1]
+        data.includesMultipleDatasets = true
+        break
+      data.includesMultipleDatasets = false
 
     ###
     Gets a list of time field indicies

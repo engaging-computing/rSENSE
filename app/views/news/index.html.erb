@@ -21,14 +21,50 @@
 <% end %>
 
 <div class="row">
-  <% @news.each do |n| %>
-    <%= render 'shared/article_box', {image_id: n.featured_media_id, path: news_path(n), title: n.title.html_safe,
-      brief: n.summary, content: n.content, date: n.created_at.strftime("%B %d %Y"), width: 12} %>
+  <div class="col-lg-12">
+    <div class="search-box" id="main_feature">
+        <div class="row">
+          <div class="col-md-12">
+            <h3><i class="fa fa-newspaper-o"></i> News</h3>
+            Read the latest news and learn about all the features we've added to iSENSE just for you!
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="col-md-12">
+  <h3>Latest</h3>
+</div>
+<div class="col-md-4">
+  <div class="explore-item" id="news">
+    <% if @news.paginate(page: 1).all.first != nil %>
+      <% n = @news.paginate(page: 1).all.first %>
+      <%= image_tag((n.featured_media_id == nil) ? "news.svg" : MediaObject.find(n.featured_media_id).src, :id => "latest-news-image") %><br><br>
+      <%=n.created_at.strftime("%-m/%-d/%y")%> | <%= n.title.html_safe %><br/>
+      <b><%= n.summary%></b><br>
+  <% end %>
+  </div>
+</div>
+<div class="col-md-8">
+    <% if @news.paginate(page: 1).all.first != nil %>
+      <% n = @news.paginate(page: 1).all.first %>
+      <%= n.content.html_safe %>
   <% end %>
 </div>
 
-<div class="text-center">
-  <%= will_paginate @news, renderer: BootstrapPagination::Rails,
-      inner_window: 1, outer_window: 0, previous_label: "<<",
-      next_label: ">>" %>
+<div class="col-md-12">
+  <h3 id="all_news">All News</h3>
+  <div class="row">
+    <% @news.each do |n| %>
+      <%= render 'shared/article_box', {image_id: n.featured_media_id, path: news_path(n), title: n.title.html_safe,
+        brief: ((n.summary == '') or (n.summary == nil)) ? "Click for Details" : n.summary, content: n.content, date: n.created_at.strftime("%-m/%-d/%y | "), width: 6} %>
+    <% end %>
+    <div class="text-center">
+      <%= will_paginate @news, renderer: BootstrapPagination::Rails,
+          inner_window: 1, outer_window: 0, previous_label: "<<",
+          next_label: ">>", :params => {:anchor => "all_news"} %>
+    </div>
+  </div>
 </div>

@@ -34,7 +34,6 @@ class DataSet < ActiveRecord::Base
 
   def sanitize_data_set
     self.title = strip_tags(title)
-
     data.each do |data_row|
       data_row.keys.each do |key|
         # Remove any and all HTML tags
@@ -193,7 +192,7 @@ class DataSet < ActiveRecord::Base
                  # evaluate the AST with environment
                  tmp = ast.evaluate(pos_env)
                  tmp.get
-               rescue Beaker::Error
+               rescue Beaker::Error, TypeError
                  # if anything breaks, just return nil
                  nil
                end

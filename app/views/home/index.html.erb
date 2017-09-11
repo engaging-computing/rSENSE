@@ -6,10 +6,10 @@
 <![endif]-->
 
 <div class="">
-  <div class="row">
+  <div class="row" id="homepage_feature">
     <% if @featured_vis != nil%>
       <div class="">
-        <div class="col-md-4">
+        <div class="col-md-4" id="description_area">
           <h4>
             <%= link_to @featured_vis.title.html_safe,
                 visualization_path(@featured_vis)%>
@@ -28,7 +28,7 @@
           <%= raw @featured_vis.content %>
           <br/>
           <div style="text-align:center">
-            <a id="more-vis-btn" class="mdl-button mdl-button--blue mdl-js-button mdl-button--raised mdl-js-ripple-effect" href="visualizations" target="_blank">See More Visualizations</a>
+            <a id="more-vis-btn" class="mdl-button mdl-button--blue mdl-js-button mdl-button--raised mdl-js-ripple-effect" href="visualizations">See More Visualizations</a>
           </div>
         </div>
         <div class="col-md-8">
@@ -61,57 +61,52 @@
     <% end %>
   </div>
 
-  <div class="row">
+<div class="row">
     <div class="col-md-12">
-      <h3>What's New</h3>
+      <h3>Explore</h3>
     </div>
-    <div class="col-md-6">
-      <% if @news.first != nil %>
-        <div class="wide-item">
+    <div class="col-md-4">
+      <div class="explore-item" id="news">
+        <%= image_tag "news.svg"%>
+        <h4>News</h4>
+        <% if @news.first != nil %>
           <% n = @news.first %>
-
-          <% if n.featured_media_id != nil %>
-            <a href='<%= news_path n %>'>
-              <div class="news_featured_image">
-                <% mo = MediaObject.find(n.featured_media_id) %>
-                <div class="item-image"
-                     style="<%= "background-image:url(#{mo.src})"%>">
-                </div>
-              </div>
-            </a>
-          <% end %>
-          <div class="item-desc">
-            <span class="item_title">
-              <%= n.title.html_safe %>
-            </span>
-            <br/>
-            <span style="font-size:0.8em">
-              Written on <%=n.created_at.strftime("%B %d, %Y")%>
-            </span>
-            <br/>
-            <br/>
-            <div class="news_description">
-              <%= n.summary%>
-              <br/>
-            </div>
-            <div class="article_link">
-              <%= link_to "Read More", news_path(n) %>
-            </div>
-          </div>
-        </div>
+          <%=n.created_at.strftime("%-m/%-d/%y")%> | <%= n.title.html_safe %><br/>
+          <b><%= n.summary%></b><br>
+          <%= link_to "Read More", news_path(n) %>
       <% end %>
+      </div>
     </div>
-    <div class="col-md-3">
-      <div class="item">
-        <div class="item-desc">
-          <span class="item_title">Statistics</span><br/><br/>
-          <b><%=User.count%> users</b> registered<br/>
-          <b><%=DataSet.count%> data sets</b> contributed<br/>
-          <b><%=Project.count%> projects</b> created<br/>
-        </div>
+    <div class="col-md-4">
+      <div class="explore-item" id="stats">
+          <%= image_tag "stats.svg"%>
+          <h4>Statistics</h4>
+          <table style="margin: auto;">
+            <tr>
+              <td><div style="text-align: right;">
+                <b><%= number_with_delimiter(User.count, :delimiter => ',') %></b> <br/>
+                <b><%= number_with_delimiter(DataSet.count, :delimiter => ',') %></b> <br/>
+                <b><%= number_with_delimiter(Project.count, :delimiter => ',') %></b> <br/>
+              </div></td>
+              <td><div style="text-align: left;">
+                Users<br/>
+                Data Sets<br/>
+                Projects<br/>
+              </div></td>
+          </table>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="explore-item" id="appvis">
+        <%= image_tag "appvis.svg"%>
+        <h4>AppVis</h4>
+        Easily create your own app featuring iSENSE!<br>
+        <i class='fa fa-arrow-circle-down'></i> <%= link_to 'Get the App Inventor Extension', '/aix' %></br>
+        <%= link_to 'Learn More', '/appvis' %>
       </div>
     </div>
   </div>
+
 </div>
 <div class="visible-xs visible-sm">
   <div style="margin-top:20px;">

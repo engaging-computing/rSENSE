@@ -80,6 +80,17 @@ $ ->
         @configs.fullDetail ?= 0
 
       start: (animate = true) ->
+        # Validate fields exist
+        switch @validate_fields(true)
+          when -2
+            alert "The default field that you chose has been removed from the project, so a different
+            one was selected. If you are the owner, consider clicking 'Make Default'  in the Save menu to reset."
+          when -4
+            alert "A critical error has occured and the chart can't be drawn.\nIf you are the owner,
+            please login and reset your defaults.\nYou probably deleted a field."
+            window.location.href = window.location.href.replace(/\/[A-Za-z0-9_]*\/?$/, "/edit")
+          else break
+
         @configs.xAxisId ?= data.fields[@configs.xAxis].fieldID
         # Reset the xAxis in case a new field was added or fields were reordered
         if not @useSetAxis? then @configs.xAxis = data.timeFields[0]
@@ -105,7 +116,7 @@ $ ->
         super(animate)
 
         self = this
-
+        canvas = @canvas
         $.extend true, @chartOptions,
           chart:
             type: if @configs.mode is @LINES_MODE then "line" else "scatter"
@@ -129,9 +140,29 @@ $ ->
                     root = ele.parent()
                     root.append ele
                   select: () ->
+                    if globals.annotationSet?
+                      AnnotationSet.deselect()
                     globals.selectedDataSetId = globals.getDataSetId(@.datapoint[1])
                     globals.selectedPointId = @.datapoint[0]
+                    globals.selectedPointX = @x
+                    globals.selectedPointY = @y
+                    globals.selectedPointField = data.fields.findIndex (elt) => elt.fieldName is @series.name.field
                     $('#disable-point-button').prop("disabled", false)
+                    # Change button to edit if applicable
+                    if (globals.annotationSet isnt null) and \
+                       (globals.annotationSet.hasAnnotationAt globals.selectedDataSetId, globals.selectedPointId, \
+                                                              canvas, globals.selectedPointField)
+                      toggleAnnotationButton("comment-edit")
+                    # Else make it add
+                    else
+                      toggleAnnotationButton("comment-add")
+                  unselect: () ->
+                    # See if another point has been selected
+                    p = @series.chart.getSelectedPoints()
+                    if (p.length > 0) and (p[0].x == @x) and (p[0].y == @y)
+                      if (Annotation.selectedAnnotation is false)
+                        toggleAnnotationButton("comment-add")
+                      $('#disable-point-button').prop("disabled", true)
 
           groupBy = ''
           $('#groupSelector').find('option').each (i,j) ->
@@ -255,6 +286,7 @@ $ ->
         @drawClippingControls()
         @drawRegressionControls()
         @drawSaveControls()
+        @drawAnnotationControls()
         $('[data-toggle="tooltip"]').tooltip();
 
       ###
@@ -322,6 +354,14 @@ $ ->
         else
           @xGridSize = Math.round (width / height * @INITIAL_GRID_SIZE)
 
+        # Clear all annotations
+        toggleAnnotationButton("comment-add")
+        $('.highcharts-annotation').remove()
+        if globals.annotationSet?
+          for elt in globals.annotationSet.list
+            if elt.callout
+              elt.enabled = false
+
         # Draw series
         fs = globals.configs.fieldSelection
         for fi, si in data.normalFields when fi in fs
@@ -360,7 +400,7 @@ $ ->
             mode = @configs.mode
             if dat.length < 2 and @configs.mode is @LINES_MODE
               mode = @SYMBOLS_LINES_MODE
-
+            
             # loop through all the series and add them to the chart
             for series in datArray
               options =
@@ -393,6 +433,15 @@ $ ->
                     options.dashStyle = globals.dashes[si % globals.dashes.length]
 
               @chart.addSeries(options, false)
+
+              # Draw the annotations
+              if globals.annotationSet isnt null
+                for point in series
+                  if (match = globals.annotationSet.getElement globals.getDataSetId(point.datapoint[1]), \
+                                                               point.datapoint[0], @canvas, fi) isnt null
+                    if match.field == fi
+                      match.enabled = true
+                      match.draw @chart, point.x, point.y
 
         if @isZoomLocked()
           @updateOnZoom = false
