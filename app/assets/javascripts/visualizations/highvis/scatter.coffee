@@ -561,7 +561,9 @@ $ ->
               0
             vPosition: ->
               0
-				 
+
+
+
           # XMax DTPicker Control
           formButtonMax = $('#x-max-cal')
           formInputMax = $('#x-axis-max')
@@ -594,6 +596,16 @@ $ ->
               0
             vPosition: ->
               0
+
+          # click outside of dt picker to close #############################         
+          formButtonMax.click ->
+            console.log('clicked inside')
+            if $('#dt-picker').click
+              console.log('still good')
+            else
+              dtPickerMax.close()
+              dtPickerMin.close()
+              console.log('clicked outside')
 
           # get values as numbers
           $('#set-axis-button').click =>
