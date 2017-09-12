@@ -231,10 +231,10 @@ $ ->
         # Map the group selection to reflect the discrepency
 
         hiddenFields = data.fields.map((field) -> field.fieldID).filter((id) -> id == -1).length
-        console.log hiddenFields
         
         # Relevant fields in alpahbetical selection list order
         selectionOrder = data.groups
+        console.log selectionOrder
 
         # Relevant fields in internally-stored project order
         internalOrder = []
@@ -244,6 +244,7 @@ $ ->
         ignoredFields = internalOrder.findIndex (f) -> f.typeID is data.types.NUMBER
         internalOrder = internalOrder.filter (f) -> f.typeID is data.types.NUMBER
         internalOrder = internalOrder.map (f) -> f.fieldName
+        console.log internalOrder
         
         # Map the group selection to reflect the discrepency
         mappedSelections = []
