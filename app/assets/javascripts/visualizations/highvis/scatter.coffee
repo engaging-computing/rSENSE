@@ -583,11 +583,6 @@ $ ->
           # Set some variables
           calendarButtonMin = $('#x-min-cal')   # calendar button symbol
           formInputMin = $('#x-axis-min')       # textbox where the new axis min goes
-          formAnchorMin = $('#x-min')           # div cheat used to anchor the dtpicker to the textbox
-          currValueMin = formInput.val()        # current value in the textbox
-          
-          # Get the value currently in the axis min textbox
-          # formInputMin.val()
 
           # When you click the calendar button, 
           # open the datetime picker and fix some font stuff
@@ -597,37 +592,36 @@ $ ->
 
           # Set some properties of the dtPicker
           dtPickerMin = calendarButtonMin.datetimepicker
-            autoClose: false                        # 
-            keyPress: (e) ->                        # 
-              e.stopImmediatePropagation()          #
-              e.keyCode                             #
-            onOpen: ->                              # when the dtPicker opens
-              formInputMin.focus()                  #   focus on the textbox
-              currValueMin                          #   return the current value in the textbox
-            onChange: (val) ->                      # when the value of the dtPicker changes
-              currValueMin = val.toLocaleString()   #   update the local variable
-              formInputMin.val currValueMin         #   ???		
-              $(this).datepicker('hide')            #   try and hide the dtPicker
-            onKeys:                                 # when these keys are clicked:
-              13: -> #enter                         #	  the enter key
-                dtPickerMin.close()                 #     close the dtpicker
-              27: -> #escape                        #	  the escape key
-                dtPickerMin.close()                 #	    close the dtPicker
-            anchor: formAnchorMin                   # anchor the dtPicker to the div cheat
-            hPosition: ->                           # set the horizontal position
-              0                                     #	  ???
-            vPosition: ->                           # set the vertical position
-              0                                     #	  ???
+            autoClose: false
+            keyPress: (e) ->                         
+              e.stopImmediatePropagation()          
+              e.keyCode                             
+            onOpen: ->                              
+              formInputMin.focus()                  
+              formInputMin[0].value
+            onChange: (val) ->                     
+              formattedVal = val.format('M/D/YYYY h:mm:ss A')
+              formInputMin.val(formattedVal)      
+            onKeys:                                 
+              13: -> #enter                         
+                dtPickerMin.close()               
+              27: -> #escape                    
+                dtPickerMin.close()            
+            anchor: $('#x-min') 
+            hPosition: ->                           
+              0                                    
+            vPosition: ->                         
+              0                               
+
+          #console.log(dtPickerMin)
  
           ###################################
           # XMax DTPicker Control
           ###################################
 
           # Set some variables
-          calendarButtonMin = $('#x-max-cal')   # calendar button symbol
-          formInputMin = $('#x-axis-max')       # textbox where the new axis max goes
-          formAnchorMin = $('#x-max')           # div cheat used to anchor the dtpicker to the textbox
-          currValueMax = formInput.val()        # current value in the textbox
+          calendarButtonMax = $('#x-max-cal')   # calendar button symbol
+          formInputMax = $('#x-axis-max')       # textbox where the new axis max goes
 
           # When you click the calendar button, 
           # open the datetime picker and fix some font stuff
@@ -638,30 +632,26 @@ $ ->
 
           # Set some properties of the dtPicker
           dtPickerMax = calendarButtonMax.datetimepicker
-            autoClose: false                        # 
-            keyPress: (e) ->                        # 
-              e.stopImmediatePropagation()          #
-              e.keyCode                             #
-            onOpen: ->                              # when the dtPicker opens
-              formInputMax.focus()                  #   focus on the textbox
-              currValueMax                          #   return the current value in the textbox
-            onChange: (val) ->                      # when the value of the dtPicker changes
-              currValueMax = val.toLocaleString()   #   update the local variable
-              formInputMax.val currValueMax         #   ???		
-            onKeys:                                 # when these keys are clicked:
-              13: -> #enter                         #	  the enter key
-                dtPickerMax.close()                 #     close the dtpicker
-              27: -> #escape                        #	  the escape key
-                dtPickerMax.close()                 #	    close the dtPicker
-            anchor: formAnchorMax                   # anchor the dtPicker to the div cheat
-            hPosition: ->                           # set the horizontal position
-              0                                     #	  ???
-            vPosition: ->                           # set the vertical position
-              0                                     #	  ???
-
-          # click outside of dt picker to close #############################         
-          calendarButtonMax.click ->
-            console.log('hello world')
+            autoClose: false    
+            keyPress: (e) ->                         
+              e.stopImmediatePropagation()          
+              e.keyCode    
+            onOpen: ->                   
+              formInputMax.focus()                  
+              formInputMax[0].value
+            onChange: (val) ->                     
+              formattedVal = val.format('M/D/YYYY h:mm:ss A')
+              formInputMax.val(formattedVal)      
+            onKeys:               
+              13: -> #enter         
+                dtPickerMax.close()      
+              27: -> #escape               
+                dtPickerMax.close()            
+            anchor: $('#x-max')                 
+            hPosition: ->                      
+              0                                
+            vPosition: ->                     
+              0                            
 
           ###################################
           # get values as numbers
