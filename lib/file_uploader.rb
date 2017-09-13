@@ -80,9 +80,7 @@ class FileUploader
       case File.extname(file.original_filename)
       when '.csv', '.txt', '.text' then convert(file.path)
       when '.xls', '.xlsx', '.ods'
-        system "mv #{file.path} #{file.path}.xlsx"
-        system "ssconvert #{file.path}.xlsx -T Gnumeric_stf:stf_csv > /dev/null 2>&1"
-        system "mv #{file.path}.csv /tmp/rsense"
+        system "libreoffice --calc --headless --nologo --invisible --convert-to csv #{file.path} --outdir /tmp/rsense > /dev/null 2>&1"
         @converted_csv = "/tmp/rsense/#{file.path.gsub('/tmp/', '')}.csv"
         convert(@converted_csv)
       when '.gpx' then GpxParser.new.convert(file.path)
