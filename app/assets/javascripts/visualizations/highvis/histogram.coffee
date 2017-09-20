@@ -41,6 +41,21 @@ $ ->
       updatedTooltips:    false
 
       start: ->
+        # Validate fields exist
+        switch @validate_fields(true)
+          when -2
+            alert "The default field that you chose has been removed from the project, so a different
+            one was selected. If you are the owner, consider clicking 'Make Default'  in the Save menu to reset."
+          when -4
+            alert "A critical error has occured and the chart can't be drawn.\nIf you are the owner,
+            please login and reset your defaults.\nYou probably deleted a field."
+            window.location.href = window.location.href.replace(/\/[A-Za-z0-9_]*\/?$/, "/edit")
+          else break
+
+        @configs.analysisType ?= @ANALYSISTYPE_TOTAL
+        @configs.histogramDensity ?= false
+
+
         @configs.displayField = Math.min globals.configs.fieldSelection...
         @configs.binSize ?= @defaultBinSize()
         super()

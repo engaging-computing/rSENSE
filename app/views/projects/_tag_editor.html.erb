@@ -1,0 +1,25 @@
+<span id="tag-badge-container">
+    <% @project.tags.each do |t| -%>
+        <span class="tag-badge">
+            <a href="<%= projects_path %>?utf8=✓&search=<%= t.name %>&sort=updated_at&order=DESC">
+                <%= t.name %>
+            </a>
+            <div class="tag-badge-remove" data-id="<%= t.id %>">&nbsp<i class="fa fa-remove"></i></div>
+        </span>
+    <% end %>
+</span>
+
+<% if @project.tags.count == 0 -%>
+    <span class="tag-badge tag-badge-green" id="tag-badge-add">
+        <i class="fa fa-plus"></i><span id="addatag"> Add a Tag</span>
+    </span>
+<% else -%>
+    <span class="tag-badge tag-badge-green" id="tag-badge-add">
+        <i class="fa fa-plus"></i><span id="addatag" style="display: none;"> Add a Tag</span>
+    </span>
+<% end %>
+
+<span class="tag-badge tag-badge-green" id='tag-badge-form'>
+    <input id="tag-badge-textfield" maxlength="16"></input>
+    <i class="fa fa-check" id="tag-badge-confirm"></i>
+</span>

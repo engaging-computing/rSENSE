@@ -69,6 +69,52 @@ $ ->
         'Mean with Deviation', 'Median', 'Row Count']
 
       ###
+      Makes sure default fields are still in existence
+      Return values:
+         0 -> Everything checks out.
+              There is a field selected and it exists.
+        -1 -> There is no field selected.
+              This is not ALWAYS an error, think about table.
+        -2 -> There is a field selected which does not exist.
+              User needs to reset their defaults.
+        -3 -> Case -1 occurred but the problem could not be
+              auto-fixed.
+        -4 -> Case -2 occurred but the problem could not be
+              auto-fixed. This case could cause serious prolems
+              and should be handled.
+      ###
+      validate_fields: (should_fix_problem) ->
+        fieldIds = for field in data.fields
+          field.fieldID 
+        l = globals.configs.fieldSelection.length
+        
+        for id in globals.configs.fieldSelectionIds 
+          if not (id in fieldIds)
+            if should_fix_problem
+              # Choose the first normal field
+              idx = data.normalFields.slice(1)[0]
+              id = fieldIds[idx]
+              if not id?
+                return -4
+              else
+                globals.configs.fieldSelection = [idx]
+                globals.configs.fieldSelectionIds = [id]
+            return -2
+        
+        if l is 0
+          if should_fix_problem
+            # Choose the first normal field
+            idx = data.normalFields.slice(1)[0]
+            id = fieldIds[idx]
+            if not id?
+              return -3
+            else
+              globals.configs.fieldSelection = [idx]
+              globals.configs.fieldSelectionIds = [id]
+            return -1
+        return 0
+
+      ###
       Start sequence used by runtime
       ###
       start: ->

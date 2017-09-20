@@ -67,11 +67,17 @@ IS.onReady "projects/show", ->
   $('#vis_button').click (e) ->
     unchecked = $(document).find(".dataset .ds_selector input:not(:checked)")
     unchecked_list = (get_ds_id u for u in unchecked)
-    ds_list = []
+    # Viewing a subset of the data sets
     if unchecked_list.length > 0 or window.location.href.indexOf('&search') != -1
       targets = $(document).find(".dataset .ds_selector input:checked")
       ds_list = (get_ds_id t for t in targets)
-    window.location = $(this).attr("data-href") + ds_list
+      # Set the value in the hidden form field
+      $('#visualize_selected>input').attr('value', ds_list)
+      # POST form
+      $('#visualize_selected').submit()
+    # Just show them all the old-fashioned way
+    else
+      window.location = $(this).attr("data-href")
 
   $('#export_button').click (e) ->
     $('#export_modal').modal('show')
@@ -84,7 +90,10 @@ IS.onReady "projects/show", ->
     if ds_list.length is 0
       alert "No data sets selected for Export. Select at least 1 and try again."
     else
-      window.location = $(this).attr("data-href") + ds_list
+      # Set the value in the hidden form field
+      $('#export_selected>input').attr('value', ds_list)
+      # POST form
+      $('#export_selected').submit()
 
   $('#export_concatenated_button').click (e) ->
     $('#export_modal').modal('hide')
@@ -94,7 +103,10 @@ IS.onReady "projects/show", ->
     if ds_list.length is 0
       alert "No data sets selected for Export. Select at least 1 and try again."
     else
-      window.location = $(this).attr("data-href") + ds_list
+      # Set the value in the hidden form field
+      $('#export_concatenated_selected>input').attr('value', ds_list)
+      # POST form
+      $('#export_concatenated_selected').submit()
 
   # get the session number for viewing vises
   get_ds_id = (t) ->
@@ -322,3 +334,56 @@ IS.onReady "projects/show", ->
   $('#print').click (e) ->
     e.preventDefault()
     window.print()
+
+  ###
+  # Tags
+  ###
+  $('#enter-project-tag-name').keypress (e) ->
+    if e.keyCode == 10 or e.keyCode == 13
+      e.preventDefault()
+
+  $('#tag-badge-container').on 'click', '.tag-badge-remove', (e) ->
+    tagId = $(e.currentTarget).data("id")
+    $(e.currentTarget).parent().remove()
+    $.ajax
+      dataType: 'text'
+      url: '/projects/remove_tag'
+      type: 'DELETE'
+      data:
+        id: namespace.id
+        tagId: tagId
+    if $('#tag-badge-container>.tag-badge').length is 0
+      $('#addatag').show()
+
+  $('#tag-badge-add').click ->
+    $('#tag-badge-add').hide()
+    $('#tag-badge-form').show()
+    $('#tag-badge-textfield').focus()
+
+  $('#tag-badge-textfield').bind "enterKey", (e) -> $('#tag-badge-confirm').click()
+  $('#tag-badge-textfield').keyup (e) -> if (e.keyCode is 13) then $(this).trigger("enterKey")
+
+  $('#tag-badge-confirm').click ->
+    if (tagName = $('#tag-badge-textfield').val()) isnt ''
+      if ($("#tag-badge-container>.tag-badge").filter () -> $.trim($(this).text()) is tagName).length is 0
+        $.ajax
+          dataType: 'text'
+          url: '/projects/create_tag'
+          type: 'POST'
+          data:
+            id: namespace.id
+            name: tagName
+          success: (res) ->
+            tagId = JSON.parse(res)["id"]
+            tagName = JSON.parse(res)["name"]
+            $('#addatag').hide()
+            $('#tag-badge-container').append $('<span>',
+              class: 'tag-badge',
+              html: '<a href="../projects?utf8=✓&search=' + tagName + \
+                    '&sort=updated_at&order=DESC">' + tagName + '</a>
+                     <div class="tag-badge-remove" data-id="' + tagId + '">&nbsp<i class="fa fa-remove"></i></div>')
+      else
+        alert "Tag already exists."
+    $('#tag-badge-textfield').val('')
+    $('#tag-badge-form').hide()
+    $('#tag-badge-add').show()
