@@ -69,7 +69,7 @@
 	        <div class="col-lg-6 col-xs-12 text-center">
 	          <div class="mdl-card mdl-shadow--2dp" >
 	            <div class="mdl-card__title" >
-	              <iframe width="350" height="290" src="<%=tut.youtube_url%>" frameborder="0" allowfullscreen></iframe>
+	              <iframe width="350" height="290" src="<%=tut.youtube_url%>?rel=0" frameborder="0" allowfullscreen></iframe>
 	            </div>
 	            <div class="mdl-card__supporting-text">
 	              <%=tut.title%>
@@ -78,7 +78,7 @@
 	              <% has_img = tut.featured_media_id != nil %>
 	              <% if has_img %>
 	                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="<%= MediaObject.find(tut.featured_media_id).src %>">
-	                  View Full Written Turorial
+	                  View Full Written Tutorial
 	                </a>
 	              <% end %>
 	              <% if is_admin?%>
@@ -106,7 +106,7 @@
           <div class="col-lg-6 col-xs-12 text-center">
             <div class="mdl-card mdl-shadow--2dp" >
               <div class="mdl-card__title" >
-                <iframe width="350" height="290" src="<%=tut.youtube_url%>" frameborder="0" allowfullscreen></iframe>
+                <iframe width="350" height="290" src="<%=tut.youtube_url%>?rel=0" frameborder="0" allowfullscreen></iframe>
               </div>
               <div class="mdl-card__supporting-text">
                 <%=tut.title%>
@@ -115,7 +115,7 @@
                 <% has_img = tut.featured_media_id != nil %>
                 <% if has_img %>
                   <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="<%= MediaObject.find(tut.featured_media_id).src %>">
-                    View Full Written Turorial
+                    View Full Written Tutorial
                   </a>
                 <% end %>
                 <% if is_admin? %>
@@ -143,7 +143,7 @@
           <div class="col-lg-6 col-xs-12 text-center">
             <div class="mdl-card mdl-shadow--2dp" >
               <div class="mdl-card__title" >
-                <iframe width="350" height="290" src="<%=tut.youtube_url%>" frameborder="0" allowfullscreen></iframe>
+                <iframe width="350" height="290" src="<%=tut.youtube_url%>?rel=0" frameborder="0" allowfullscreen></iframe>
               </div>
      	        <div class="mdl-card__supporting-text">
                 <%=tut.title%>
@@ -152,7 +152,7 @@
                 <% has_img = tut.featured_media_id != nil %>
                 <% if has_img %>
                   <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="<%= MediaObject.find(tut.featured_media_id).src %>">
-                    View Full Written Turorial
+                    View Full Written Tutorial
                   </a>
                 <% end %>
                 <% if is_admin? %>
