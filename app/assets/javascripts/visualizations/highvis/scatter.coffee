@@ -500,7 +500,7 @@ $ ->
         $('#y-axis-min').val(@configs.yBounds.min)
         $('#y-axis-max').val(@configs.yBounds.max)
 
-        if @isTimeline = true
+        if @isTimeline == true
           $('#x-axis-min').val(new Date(@configs.xBounds.min).toLocaleString())
           $('#x-axis-max').val(new Date(@configs.xBounds.max).toLocaleString())
         
@@ -614,7 +614,7 @@ $ ->
               0                               
 
           #console.log(dtPickerMin)
- 
+
           ###################################
           # XMax DTPicker Control
           ###################################
