@@ -36,6 +36,10 @@ $ ->
         @isSummary = true
 
       start: ->
+        # Validate fields exist
+        if @validate_fields(true) is -4
+          window.location = '/'
+          
         @configs.displayField = Math.min(globals.configs.fieldSelection...)
         super()
 
