@@ -307,8 +307,6 @@
       <%=render layout: "shared/box", locals: {title: 'Contribute Data', width:'12', unique_id: 'create_data_set', should_hide: !(@field_count > 0)} do %>
         <% if ((can_edit?(@project) || can_contribute?(@project)) and @field_count > 0) %>
           <div class="row-fluid" style="overflow: auto;">
-          <%= form_tag({controller: :data_sets, action: :dataFileUpload, pid: "3"}, {method: 'post', class: 'row-fluid dropzone', multipart: true}) do %>
-            <div class="dz-message" data-dz-message><span>Drop Here or</span></div>
             <div class="col-sm-4 center">
               <%= link_to :controller => :data_sets, :action => :manualEntry do %>
                 <%= image_tag "manual.png", class: "hoverimage" %><br/>
@@ -327,7 +325,7 @@
                 Google Doc
               </a>
             </div>
-          <% end %>
+          </div>
           <% if !(session[:contrib_access].nil?) %>
             <div class="row" align="center" style="margin-top: 110px;">
               <%= form_tag '/contrib_keys/clear', method: 'get' do %>
