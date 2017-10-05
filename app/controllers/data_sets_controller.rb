@@ -438,7 +438,6 @@ class DataSetsController < ApplicationController
     end
 
     begin
-      puts "))))))))))))))))))))))))))))))))))))))))))))))"
       uploader = FileUploader.new
       data_obj = uploader.generateObject(params[:file] ? params[:file] : gcsv)
       @results = [uploader.match_headers(project, data_obj)]
