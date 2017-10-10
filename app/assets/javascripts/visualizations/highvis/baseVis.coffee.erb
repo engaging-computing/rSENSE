@@ -60,13 +60,14 @@ $ ->
       ANALYSISTYPE_MIN:        2
       ANALYSISTYPE_MEAN:       3
       ANALYSISTYPE_MEAN_ERROR: 4
-      ANALYSISTYPE_MEDIAN:     5
-      ANALYSISTYPE_COUNT:      6
+      ANALYSISTYPE_MEAN_SEM:   5
+      ANALYSISTYPE_MEDIAN:     6
+      ANALYSISTYPE_COUNT:      7
 
       SORT_DEFAULT:           -1
 
       analysisTypeNames: ['Total', 'Maximum', 'Mininum', 'Mean (Average)',
-        'Mean with Deviation', 'Median', 'Row Count']
+        'Mean with Deviation', 'Mean with 2 SEM', 'Median', 'Row Count']
 
       ###
       Start sequence used by runtime
@@ -150,6 +151,7 @@ $ ->
             when @ANALYSISTYPE_MIN        then data.getMin
             when @ANALYSISTYPE_MEAN       then data.getMean
             when @ANALYSISTYPE_MEAN_ERROR then data.getMean
+            when @ANALYSISTYPE_MEAN_SEM   then data.getMean
             when @ANALYSISTYPE_MEDIAN     then data.getMedian
             when @ANALYSISTYPE_COUNT      then data.getCount
 
@@ -176,6 +178,7 @@ $ ->
             when @ANALYSISTYPE_MIN        then data.getMin
             when @ANALYSISTYPE_MEAN       then data.getMean
             when @ANALYSISTYPE_MEAN_ERROR then data.getMean
+            when @ANALYSISTYPE_MEAN_SEM   then data.getMean
             when @ANALYSISTYPE_MEDIAN     then data.getMedian
             when @ANALYSISTYPE_COUNT      then data.getCount
 
@@ -668,6 +671,7 @@ $ ->
           analysisTypes = [
             @ANALYSISTYPE_MEAN
             @ANALYSISTYPE_MEAN_ERROR
+            @ANALYSISTYPE_MEAN_SEM
             @ANALYSISTYPE_MEDIAN
             @ANALYSISTYPE_MAX
             @ANALYSISTYPE_MIN
