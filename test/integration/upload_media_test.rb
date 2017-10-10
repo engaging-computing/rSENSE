@@ -1,6 +1,21 @@
 require 'test_helper'
 require_relative 'base_integration_test'
 
+# This function from https://stackoverflow.com/questions/32880524/how-do-you-test-uploading-a-file-with-capybara-and-dropzone-js
+def drop_in_dropzone(file_path)
+  page.execute_script <<-JS
+    fakeFileInput = window.$('<input/>').attr(
+      {id: 'fakeFileInput', type:'file'}
+    ).appendTo('body');
+  JS
+  attach_file('fakeFileInput', file_path)
+  page.execute_script('var fileList = [fakeFileInput.get(0).files[0]]')
+  page.execute_script <<-JS
+    var e = jQuery.Event('drop', { dataTransfer : { files : [fakeFileInput.get(0).files[0]] } });
+    $('.dropzone')[0].dropzone.listeners[0].events.drop(e);
+  JS
+end
+
 class UploadMediaTest < IntegrationTest
   self.use_transactional_fixtures = false
 
@@ -11,7 +26,7 @@ class UploadMediaTest < IntegrationTest
     visit "/tutorials/#{tutorial_id}/edit"
     assert page.has_no_content? 'Media' 'should be no media by default'
     pdf_path = Rails.root.join('test', 'CSVs', 'test.pdf')
-    find('.upload_media form').attach_file('upload', pdf_path)
+    drop_in_dropzone pdf_path
     assert page.has_content?('test.pdf'), 'File should be in list'
     find('.media_edit').click
     assert page.has_content?('test.pdf'), 'Should have gone to edit page'
@@ -24,7 +39,7 @@ class UploadMediaTest < IntegrationTest
     visit "/news/#{news_id}"
     assert page.has_content? 'Media'
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
-    find('.upload_media form').attach_file('upload', img_path)
+    drop_in_dropzone img_path
     assert page.has_content?('nerdboy.jpg'), 'File should be in list'
     find('.media_edit').click
     assert page.has_content?('nerdboy.jpg'), 'Should have gone to edit page'
@@ -44,7 +59,7 @@ class UploadMediaTest < IntegrationTest
     visit "/projects/#{proj_id}"
     assert page.has_content? 'Media'
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
-    find('.upload_media form').attach_file('upload', img_path)
+    drop_in_dropzone img_path
     assert page.has_content?('nerdboy.jpg'), 'File should be in list'
 
     nerdboy_found = 0
@@ -67,7 +82,7 @@ class UploadMediaTest < IntegrationTest
     visit "/projects/#{proj_id}"
     assert page.has_content? 'Media'
     text_path = Rails.root.join('test', 'CSVs', 'test.txt')
-    find('.upload_media form').attach_file('upload', text_path)
+    drop_in_dropzone text_path
     assert page.has_content?('test.txt'), 'File should be in list'
   end
 
@@ -78,7 +93,7 @@ class UploadMediaTest < IntegrationTest
     visit "/projects/#{proj_id}"
     assert page.has_content? 'Media'
     pdf_path = Rails.root.join('test', 'CSVs', 'test.pdf')
-    find('.upload_media form').attach_file('upload', pdf_path)
+    drop_in_dropzone pdf_path
     assert page.has_content?('test.pdf'), 'File should be in list'
   end
 
@@ -89,7 +104,7 @@ class UploadMediaTest < IntegrationTest
     visit "/projects/#{proj_id}"
     assert page.has_content? 'Media'
     ods_path = Rails.root.join('test', 'CSVs', 'test.ods')
-    find('.upload_media form').attach_file('upload', ods_path)
+    drop_in_dropzone ods_path
     assert page.has_content?('test.ods'), 'File should be in list'
   end
 
@@ -100,7 +115,7 @@ class UploadMediaTest < IntegrationTest
     visit "/projects/#{proj_id}"
     assert page.has_content? 'Media'
     html_path = Rails.root.join('test', 'CSVs', 'test.html')
-    find('.upload_media form').attach_file('upload', html_path)
+    drop_in_dropzone html_path
     assert page.has_no_content?('test.html'), 'File should be in list'
     assert page.has_content?('Sorry, html is not a supported file type.'), 'Unsupported file type failed.'
   end
