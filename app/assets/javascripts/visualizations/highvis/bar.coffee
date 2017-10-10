@@ -105,17 +105,17 @@ $ ->
                 if globals.bar.configs.analysisType == globals.bar.ANALYSISTYPE_MEAN_ERROR
                   str += "<b>Bounds Represent Data ± 1 StdDev</b><br></div>"
                 else
-                  str += "<b>Bounds Represent Data ± 1 SEM</b><br></div>"
+                  str += "<b>Bounds Represent Data ± 2 SEM</b><br></div>"
                 str += "<table>"
                 str += "<tr><td style='text-align: right'>Upper Bound :&nbsp</td>"
-                str += "<td>#{@y}</td></tr>"
+                str += "<td>#{@y.toFixed(4)}</td></tr>"
                 str += "<tr><td style='text-align: right'>Lower Bound :&nbsp</td>"
-                str += "<td>#{@y - 2 * @point.stdDev}</td></tr>"
+                str += "<td>#{(@y - 2 * @point.stdDev).toFixed(4)}</td></tr>"
                 if globals.bar.configs.analysisType == globals.bar.ANALYSISTYPE_MEAN_ERROR
                   str += "<tr><td style='text-align: right'>StdDev :&nbsp</td>"
                 else
-                  str += "<tr><td style='text-align: right'>SEM :&nbsp</td>"
-                str += "<td>#{@point.stdDev}</td></tr>"
+                  str += "<tr><td style='text-align: right'>2 SEM :&nbsp</td>"
+                str += "<td>#{@point.stdDev.toFixed(4)}</td></tr>"
                 #{@point.fieldUnit}</strong></td></tr>"
                 str += "</table>"
 
@@ -255,6 +255,7 @@ $ ->
               if @configs.analysisType == @ANALYSISTYPE_MEAN_SEM
                 N = data.multiGroupSelector(fid, [gid], dp).length
                 stdDev /= Math.sqrt(N)
+                stdDev *= 2
               barData = data.selector fid, gid, dp
               xCoord = (xCluster - 1.5) + pos * interval
               name = data.groups[gid] or data.noField()
