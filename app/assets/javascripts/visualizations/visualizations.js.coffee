@@ -84,8 +84,7 @@ $ ->
       controlOpac = 1.0
 
       if (init and globals.options.startCollapsed?) or
-      $('#vis-ctrl-container').is(':hidden') or
-      window.innerWidth < 600
+      $('#vis-ctrl-container').is(':hidden')
         globals.configs.ctrlsOpen = false
 
       unless globals.configs.ctrlsOpen
