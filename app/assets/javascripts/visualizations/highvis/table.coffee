@@ -72,6 +72,10 @@ $ ->
         globals.dateFormatter cellvalue
 
       start: ->
+        # Validate fields exist
+        if @validate_fields(true) is -4
+          window.location = '/'
+
         # Make table visible? (or something)
         $('#' + @canvas).show()
 
