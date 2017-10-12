@@ -132,9 +132,6 @@ $ ->
           globals.configs.groupById = data.COMBINED_FIELD
           
         @drawControls()
-        # 600px seems to be the standard width for hiding this iSENSE menu
-        if window.innerWidth < 600
-          globals.configs.ctrlsOpen = false
         @update()
         $('#vis-ctrls').scrollTop(toolScroll)
 
