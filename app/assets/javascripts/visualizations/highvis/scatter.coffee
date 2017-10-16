@@ -602,7 +602,14 @@ $ ->
             vPosition: ->                         
               0                               
 
-          #console.log(dtPickerMin)
+          console.log(dtPickerMin)
+          
+          $(document).click (event) -> 
+            if $(event.target).closest('#dt-picker').length == 0
+              if $('#dt-picker').is(':visible')
+                $('#dt-picker').hide()
+                console.log('poop')
+ 
 
           ###################################
           # XMax DTPicker Control
