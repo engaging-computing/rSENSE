@@ -585,7 +585,7 @@ $ ->
             keyPress: (e) ->                         
               e.stopImmediatePropagation()          
               e.keyCode                             
-            onOpen: ->                              
+            onOpen: ->  
               formInputMin.focus()                  
               formInputMin[0].value
             onChange: (val) ->                     
@@ -603,13 +603,11 @@ $ ->
               0                               
 
           console.log(dtPickerMin)
-          
-          $(document).click (event) -> 
-            if $(event.target).closest('#dt-picker').length == 0
-              if $('#dt-picker').is(':visible')
-                $('#dt-picker').hide()
-                console.log('poop')
- 
+
+          jQuery(document.body).on "click", ":not(#dt-picker, #dt-picker *)", (e) ->
+            console.log(this) 
+            if !(e.target.id == 'x-min-cal' || e.currentTarget.id == '#x-min' || $('#x-min').find(e.target).length != 0)
+              dtPickerMin.close() 
 
           ###################################
           # XMax DTPicker Control
