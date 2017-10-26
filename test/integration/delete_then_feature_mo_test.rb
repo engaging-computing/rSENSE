@@ -14,7 +14,10 @@ class DeleteThenFeatureMoTest < IntegrationTest
     # upload a media object to the project
     url = page.current_path
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
-    find('.upload_media form').attach_file('upload', img_path)
+    drop_in_dropzone img_path
+
+    assert page.has_content?('Delete'),
+        'Media not added.'
 
     # open a new tab/window thing
     within_window open_new_window do
@@ -56,7 +59,10 @@ class DeleteThenFeatureMoTest < IntegrationTest
     # upload a media object to the project
     url = page.current_path
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
-    find('.upload_media form').attach_file('upload', img_path)
+    drop_in_dropzone img_path
+
+    assert page.has_content?('Delete'),
+        'Media not added.'
 
     # open a new tab/window thing
     within_window open_new_window do

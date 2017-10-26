@@ -34,6 +34,10 @@ $ ->
       constructor: (@canvas) ->
 
       start: ->
+        # Validate fields exist
+        if @validate_fields(true) is -4
+          window.location = '/'
+
         super()
         
         # Photos doesn't have any fancy group by options, so set it to a default

@@ -409,7 +409,7 @@
   </div>
 </div>
 <div class="hidden-form">
-  <%= form_tag "/data_sets/dataFileUpload", method: 'post',multipart: true, id: 'datafile_form' do %>
+  <%= form_tag "/data_sets/dataFileUpload", method: 'post', multipart: true, id: 'datafile_form' do %>
     <%= file_field_tag 'file', { id: 'datafile_input' } %>
     <input type="hidden" name="pid" value="<%= @project.id %>">
   <% end %>

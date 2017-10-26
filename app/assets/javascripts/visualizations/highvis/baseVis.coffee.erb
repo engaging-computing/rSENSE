@@ -60,14 +60,65 @@ $ ->
       ANALYSISTYPE_MIN:        2
       ANALYSISTYPE_MEAN:       3
       ANALYSISTYPE_MEAN_ERROR: 4
-      ANALYSISTYPE_MEDIAN:     5
-      ANALYSISTYPE_COUNT:      6
+      ANALYSISTYPE_MEAN_SEM:   5
+      ANALYSISTYPE_MEDIAN:     6
+      ANALYSISTYPE_COUNT:      7
 
       SORT_DEFAULT:           -1
 
       analysisTypeNames: ['Total', 'Maximum', 'Mininum', 'Mean (Average)',
-        'Mean with Deviation', 'Median', 'Row Count']
+        'Mean with Deviation', 'Mean with 2 SEM', 'Median', 'Row Count']
 
+      ###
+        Makes sure default fields are still in existence
+        Return values:
+           0 -> Everything checks out.
+                There is a field selected and it exists.
+          -1 -> There is no field selected.
+                This is not ALWAYS an error, think about table.
+          -2 -> There is a field selected which does not exist.
+                User needs to reset their defaults.
+          -3 -> Case -1 occurred but the problem could not be
+                auto-fixed.
+          -4 -> Case -2 occurred but the problem could not be
+                auto-fixed. This case could cause serious prolems
+                and should be handled.
+      ###
+      validate_fields: (should_fix_problem) ->
+        fieldIds = for field in data.fields
+          field.fieldID 
+        l = globals.configs.fieldSelection.length
+        
+        for id in globals.configs.fieldSelectionIds 
+          if not (id in fieldIds)
+            if should_fix_problem
+              # Choose the first normal field
+              idx = data.normalFields.slice(1)[0]
+              id = fieldIds[idx]
+              if not id?
+                alert "A critical error has occured and the chart can't be drawn.\nIf you are the owner,
+                  please login and reset your defaults.\nYou probably deleted a field."
+                return -4
+              else
+                globals.configs.fieldSelection = [idx]
+                globals.configs.fieldSelectionIds = [id]
+            alert "The default field that you chose has been removed from the project, so a different
+              one was selected. If you are the owner, consider clicking 'Make Default'  in the Save menu to reset."
+            return -2
+        
+        if l is 0
+          if should_fix_problem
+            # Choose the first normal field
+            idx = data.normalFields.slice(1)[0]
+            id = fieldIds[idx]
+            if not id?
+              return -3
+            else
+              globals.configs.fieldSelection = [idx]
+              globals.configs.fieldSelectionIds = [id]
+            return -1
+        return 0
+          
       ###
       Start sequence used by runtime
       ###
@@ -150,6 +201,7 @@ $ ->
             when @ANALYSISTYPE_MIN        then data.getMin
             when @ANALYSISTYPE_MEAN       then data.getMean
             when @ANALYSISTYPE_MEAN_ERROR then data.getMean
+            when @ANALYSISTYPE_MEAN_SEM   then data.getMean
             when @ANALYSISTYPE_MEDIAN     then data.getMedian
             when @ANALYSISTYPE_COUNT      then data.getCount
 
@@ -176,6 +228,7 @@ $ ->
             when @ANALYSISTYPE_MIN        then data.getMin
             when @ANALYSISTYPE_MEAN       then data.getMean
             when @ANALYSISTYPE_MEAN_ERROR then data.getMean
+            when @ANALYSISTYPE_MEAN_SEM   then data.getMean
             when @ANALYSISTYPE_MEDIAN     then data.getMedian
             when @ANALYSISTYPE_COUNT      then data.getCount
 
@@ -668,6 +721,7 @@ $ ->
           analysisTypes = [
             @ANALYSISTYPE_MEAN
             @ANALYSISTYPE_MEAN_ERROR
+            @ANALYSISTYPE_MEAN_SEM
             @ANALYSISTYPE_MEDIAN
             @ANALYSISTYPE_MAX
             @ANALYSISTYPE_MIN
