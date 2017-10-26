@@ -563,7 +563,7 @@ $ ->
         badNumberPopoverTimerX = null
 
         # Axis Manual entry for timeline
-        if @isTimeline == true 
+        if @isTimeline == true
           
           ###################################
           # XMin DTPicker Control
@@ -573,7 +573,7 @@ $ ->
           calendarButtonMin = $('#x-min-cal')   # calendar button symbol
           formInputMin = $('#x-axis-min')       # textbox where the new axis min goes
 
-          # When you click the calendar button, 
+          # When you click the calendar button
           # open the datetime picker and fix some font stuff
           calendarButtonMin.click ->
             dtPickerMin.open()
@@ -582,32 +582,30 @@ $ ->
           # Set some properties of the dtPicker
           dtPickerMin = calendarButtonMin.datetimepicker
             autoClose: false
-            keyPress: (e) ->                         
-              e.stopImmediatePropagation()          
-              e.keyCode                             
-            onOpen: ->  
-              formInputMin.focus()                  
+            keyPress: (e) ->
+              e.stopImmediatePropagation()
+              e.keyCode
+            onOpen: ->
+              formInputMin.focus()
               formInputMin[0].value
-            onChange: (val) ->                     
+            onChange: (val) ->
               formattedVal = val.format('M/D/YYYY h:mm:ss A')
-              formInputMin.val(formattedVal)      
-            onKeys:                                 
-              13: -> #enter                         
-                dtPickerMin.close()               
-              27: -> #escape                    
-                dtPickerMin.close()            
-            anchor: $('#x-min') 
-            hPosition: ->                           
-              0                                    
-            vPosition: ->                         
-              0                               
+              formInputMin.val(formattedVal)
+            onKeys:
+              13: -> #enter
+                dtPickerMin.close()
+              27: -> #escape
+                dtPickerMin.close()
+            anchor: $('#x-min')
+            hPosition: ->
+              0
+            vPosition: ->
+              0
 
-          console.log(dtPickerMin)
-
-          jQuery(document.body).on "click", ":not(#dt-picker, #dt-picker *)", (e) ->
-            console.log(this) 
-            if !(e.target.id == 'x-min-cal' || e.currentTarget.id == '#x-min' || $('#x-min').find(e.target).length != 0)
-              dtPickerMin.close() 
+          # TODO: fix dtPicker so that it closes when you click outside of it
+          # jQuery(document.body).on "click", ":not(#dt-picker, #dt-picker *)", (e) ->
+          #   if !(e.target.id == 'x-min-cal' || e.currentTarget.id == '#x-min' || $('#x-min').find(e.target).length != 0)
+          #     dtPickerMin.close()
 
           ###################################
           # XMax DTPicker Control
@@ -626,26 +624,31 @@ $ ->
 
           # Set some properties of the dtPicker
           dtPickerMax = calendarButtonMax.datetimepicker
-            autoClose: false    
-            keyPress: (e) ->                         
-              e.stopImmediatePropagation()          
-              e.keyCode    
-            onOpen: ->                   
-              formInputMax.focus()                  
+            autoClose: false
+            keyPress: (e) ->
+              e.stopImmediatePropagation()
+              e.keyCode
+            onOpen: ->
+              formInputMax.focus()
               formInputMax[0].value
-            onChange: (val) ->                     
+            onChange: (val) ->
               formattedVal = val.format('M/D/YYYY h:mm:ss A')
-              formInputMax.val(formattedVal)      
-            onKeys:               
-              13: -> #enter         
-                dtPickerMax.close()      
-              27: -> #escape               
-                dtPickerMax.close()            
-            anchor: $('#x-max')                 
-            hPosition: ->                      
-              0                                
-            vPosition: ->                     
-              0                            
+              formInputMax.val(formattedVal)
+            onKeys:
+              13: -> #enter
+                dtPickerMax.close()
+              27: -> #escape
+                dtPickerMax.close()
+            anchor: $('#x-max')
+            hPosition: ->
+              0
+            vPosition: ->
+              0
+
+          # TODO: fix dtPicker so that it closes when you click outside of it
+          # jQuery(document.body).on "click", ":not(#dt-picker, #dt-picker *)", (e) ->
+          #   if !(e.target.id == 'x-max-cal' || e.currentTarget.id == '#x-max' || $('#x-max').find(e.target).length != 0)
+          #     dtPickerMax.close()
 
           ###################################
           # get values as numbers
