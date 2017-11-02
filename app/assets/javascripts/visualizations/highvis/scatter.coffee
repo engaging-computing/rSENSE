@@ -661,8 +661,6 @@ $ ->
  
             xAxisMin = Date.parse($('#x-axis-min').val())
             xAxisMax = Date.parse($('#x-axis-max').val())
-            console.log(xAxisMin)
-            console.log(xAxisMax)
              # error checking
             thereIsAFailure = false
             if xAxisMin >= xAxisMax
@@ -785,7 +783,6 @@ $ ->
             $('#y-axis-min').popover('destroy')
             $('#y-axis-max').popover('destroy')
   
-            console.log(@)
             @configs.xBounds.min = xAxisMin
             @configs.xBounds.max = xAxisMax
   
