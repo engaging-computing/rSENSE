@@ -1040,7 +1040,9 @@ $ ->
           temp =
             text: 'Y-Values'
         else
-          if "#{data.fields[globals.configs.fieldSelection[0]].unitName}" == ""
+          if globals.bar.configs.analysisType == globals.bar.ANALYSISTYPE_COUNT
+            temp = text: 'Count'
+          else if "#{data.fields[globals.configs.fieldSelection[0]].unitName}" == ""
             temp = text: "#{data.fields[globals.configs.fieldSelection[0]].fieldName}"
           else
             temp =

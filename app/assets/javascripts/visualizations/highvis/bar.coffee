@@ -94,7 +94,11 @@ $ ->
                 str += "<table>"
                 str += "<tr><td style='text-align: right'>Analysis Type :&nbsp</td>"
                 str += "<td>#{self.analysisTypeNames[self.configs.analysisType]}</td></tr>"
-                str += "<tr><td style='text-align: right'>#{@point.field} :&nbsp</td>"
+                str += "<tr><td style='text-align: right'>"
+                if globals.bar.configs.analysisType == globals.bar.ANALYSISTYPE_COUNT
+                  str += "Count :&nbsp"
+                else
+                  str += "#{@point.field} :&nbsp</td>"
                 str += "<td>#{@y}</td></tr>"
                 #{@point.fieldUnit}</strong></td></tr>"
                 str += "</table>"
@@ -122,7 +126,6 @@ $ ->
                 str += "<td>#{@point.stdDev.toFixed(4)}</td></tr>"
                 #{@point.fieldUnit}</strong></td></tr>"
                 str += "</table>"
-
             useHTML: true
           yAxis:
             type: if globals.configs.logY then 'logarithmic' else 'linear'
