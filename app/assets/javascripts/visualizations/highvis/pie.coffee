@@ -105,18 +105,19 @@ $ ->
               # If grouping by Row Count, then change the text to say "Count:nn items"
               if globals.pie.configs.analysisType == globals.pie.ANALYSISTYPE_COUNT
                 str += "<tr><td>Count :&nbsp"
-                  if @point.val == 1
-                    str += "</td><td><strong>#{@point.val} \
-                    item</strong></td></tr>"
-                  else
-                    str += "</td><td><strong>#{@point.val} \
-                    items</strong></td></tr>"
+                if @point.val == 1
+                  str += "</td><td><strong>#{@point.val} \
+                  item</strong></td></tr>"
+                else
+                  str += "</td><td><strong>#{@point.val} \
+                  items</strong></td></tr>"
               else
                 if globals.configs.groupById == data.NUMBER_FIELDS_FIELD
                   str += "<tr><td>#{self.analysisTypeNames[self.configs.analysisType]}: "
                 else
                   str += "<tr><td>#{data.fields[self.configs.displayField].fieldName}
                   (#{self.analysisTypeNames[self.configs.analysisType]}): "
+
                 str += "</td><td><strong>#{@point.val} \
                 #{fieldUnit(data.fields[self.configs.displayField], false)}</strong></td></tr>"
               str += "</table>"
