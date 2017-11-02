@@ -5,9 +5,9 @@ users create projects to which they can contribute data. After contributing
 data to projects in the form of data sets, users can analyze their data using
 multiple visualization tools. The following tutorials explain how to create
 projects, contribute data to projects in the form of data sets, and visualize
-data.     
+data.
 
-<b>Status:</b> {<img src="https://circleci.com/gh/isenseDev/rSENSE/tree/master.svg?style=shield" />}[https://circleci.com/gh/isenseDev/rSENSE]
+<b>Status:</b> {<img src="https://circleci.com/gh/isenseDev/rSENSE/tree/master.svg?style=shield" />}[https://circleci.com/gh/isenseDev/rSENSE] {<img src="https://copilot.blackducksoftware.com/github/repos/isenseDev/rSENSE/branches/add-security-scan/badge-risk.svg" alt="Black Duck Security Risk">}[https://copilot.blackducksoftware.com/github/repos/isenseDev/rSENSE/branches/add-security-scan]
 
 == Installing the iSense Site
 
