@@ -448,10 +448,6 @@ $ ->
         @drawClippingControls()
         @drawSaveControls()
         @drawAnnotationControls()
-        $('[id^=ckbx-y-axis]').click (e) ->
-          fs = globals.configs.fieldSelection
-          if fs and fs.length == 1
-            $('#sort-by').val(fs[0])
         $('[data-toggle="tooltip"]').tooltip();
 
     if "Bar" in data.relVis
