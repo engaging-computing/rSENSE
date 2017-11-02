@@ -604,7 +604,9 @@ $ ->
 
           # TODO: fix dtPicker so that it closes when you click outside of it
           # jQuery(document.body).on "click", ":not(#dt-picker, #dt-picker *)", (e) ->
-          #   if !(e.target.id == 'x-min-cal' || e.currentTarget.id == '#x-min' || $('#x-min').find(e.target).length != 0)
+          #   if !(e.target.id == 'x-min-cal'
+          #           || e.currentTarget.id == '#x-min'
+          #           || $('#x-min').find(e.target).length != 0)
           #     dtPickerMin.close()
 
           ###################################
@@ -615,7 +617,7 @@ $ ->
           calendarButtonMax = $('#x-max-cal')   # calendar button symbol
           formInputMax = $('#x-axis-max')       # textbox where the new axis max goes
 
-          # When you click the calendar button, 
+          # When you click the calendar button,
           # open the datetime picker and fix some font stuff
           calendarButtonMax.click ->
             dtPickerMax.open()
@@ -647,7 +649,9 @@ $ ->
 
           # TODO: fix dtPicker so that it closes when you click outside of it
           # jQuery(document.body).on "click", ":not(#dt-picker, #dt-picker *)", (e) ->
-          #   if !(e.target.id == 'x-max-cal' || e.currentTarget.id == '#x-max' || $('#x-max').find(e.target).length != 0)
+          #   if !(e.target.id == 'x-max-cal'
+          #         || e.currentTarget.id == '#x-max'
+          #         || $('#x-max').find(e.target).length != 0)
           #     dtPickerMax.close()
 
           ###################################
@@ -656,7 +660,7 @@ $ ->
           $('#set-axis-button').click =>
  
             xAxisMin = Date.parse($('#x-axis-min').val())
-            xAxisMax = Date.parse($('#x-axis-max').val())	
+            xAxisMax = Date.parse($('#x-axis-max').val())
             console.log(xAxisMin)
             console.log(xAxisMax)
              # error checking
