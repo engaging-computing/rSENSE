@@ -104,7 +104,7 @@ $ ->
               str += "<table>"
               # If grouping by Row Count, then change the text to say "Count:nn items"
               if globals.pie.configs.analysisType == globals.pie.ANALYSISTYPE_COUNT
-                  str += "<tr><td>Count :&nbsp"
+                str += "<tr><td>Count :&nbsp"
                   if @point.val == 1
                     str += "</td><td><strong>#{@point.val} \
                     item</strong></td></tr>"
