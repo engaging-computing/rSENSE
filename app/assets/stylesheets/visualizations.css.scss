@@ -506,11 +506,38 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
       // this is where all the div controls get added
       #vis-ctrls {
         height: 100%;
-        overflow-x: hidden;
+        //overflow-x: hidden;
         overflow-y: auto;
         position: relative;
         display: inline-block;
         float: left;
+
+        // fix up the datetime picker
+        #dt-picker {
+					width: 285px;
+					height: 206px;
+					 
+					#dt-horiz-picker {
+						height: 18px;				
+					}
+
+			 		#dt-time-group {
+						padding-left: 2px;
+						width: 78px;
+
+						select {
+							height: 172px;				
+						}
+
+					}
+			  
+        }
+
+				.editor-button {
+				  top: 8px;
+					left: 5px;
+					position: relative;
+				}
 
         // puts spacing between some boostrap buttons
         .form-control { // this styles bootstrap stuff and IS VERY BAD
@@ -715,3 +742,9 @@ body[data-page-name='visualizations/show'] .visualizations-controller {
     margin-bottom: 12px;
   }
 }
+	
+.fixed {
+	//font-size: 13px !important;
+	font-weight: bold;
+}
+
