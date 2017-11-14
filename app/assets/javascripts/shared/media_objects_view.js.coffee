@@ -3,11 +3,14 @@ setupMediaObjectsView = () ->
     event.preventDefault()
     ($ this).parents('form').submit()
 
-  ($ '#filechooser').click (event) ->
-    event.preventDefault()
-
-    ($ @).parents('div').find('#upload').click()
-    false
+  Dropzone.options.upload = {
+    paramName: "upload",
+    init: () ->
+      this.on("complete",(file) ->
+        if (this.getUploadingFiles().length is 0 && this.getQueuedFiles().length is 0)
+          location.reload()
+      )
+  }
 
   # Selection of featured image
   img_selector_click = (obj) ->

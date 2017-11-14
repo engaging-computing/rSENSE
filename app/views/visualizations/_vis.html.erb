@@ -41,7 +41,7 @@
         src="https://maps-api-ssl.google.com/maps/api/js?key=AIzaSyBxtPK1_mxwVdl1NRu7ZEiSNvmCekFSZAw&amp;sensor=false&amp;libraries=visualization,geometry&amp;v=3.21">
 </script>
 <div id="vis-wrapper">
-  <div id="vis-ctrl-container"
+  <div id="vis-ctrl-container" 
        <% if @presentation || !controls %> style="display:none" <% end %>>
     <div id="vis-ctrls">
     </div>
@@ -51,6 +51,33 @@
       <div id="vis-title-bar"
            <% if @presentation || !titleBar %> style="display:none" <% end %>>
         <div id="vis-title-edit-btn" class="hidden-xs hidden-sm">
+        
+          <%= image_tag("comment-add.svg", id:"add-annotation-button") %>
+          <div id="annotation-editor" title="Annotation">
+            Please enter a comment:
+            <p></p>
+            <input id="annotation-string" type="text" maxlength="100" class="form-control wide-input"/><br>
+            <span class="btn-group annotation-controlgroup" style="font-family: serif;">
+              <label class="btn btn-default" for="annotation-bold">
+              <input type="checkbox" name="annotation-bold" value="b" id="annotation-bold"><b>B</b></label>
+              <label class="btn btn-default" for="annotation-italic">
+              <input type="checkbox" name="annotation-italic" value="i" id="annotation-italic"><i>I</i></label>
+            </span>
+            <span class="btn-group annotation-controlgroup" style="font-family: serif;">
+              <label class="btn btn-default" for="annotation-size-small">
+              <input type="radio" name="annotation-size" value="1" id="annotation-size-small" checked><sub>A</sub></label>
+              <label class="btn btn-default" for="annotation-size-large">
+              <input type="radio" name="annotation-size" value="1.25" id="annotation-size-large">A</label>
+            </span>
+            <span class="btn-group annotation-controlgroup">
+              <label class="btn btn-default" for="annotation-linktoggle">
+              <input type="checkbox" name="annotation-linktoggle" id="annotation-linktoggle">Link</label>
+            </span>
+            <div id="annotation-link-container">
+              Link: <input class="form-control wide-input" id="annotation-link" type="text" maxlength="256"/>
+            </div>
+          </div>
+
           <div class="inline-block subtitle">
             <% if obj && can_edit?(obj) %>
               <div class="edit_menu inline-block" data-field="title"
@@ -123,7 +150,8 @@
           <% if @presentation || !titleBar %> style="display: none" <% end %>>
       </ul>
     </div>
-    <div class="tab-content">
+    <div class="tab-content" style="position: relative;">
+      <%= image_tag("compass.svg", id:"compass") %>
       <div role="tabpanel" id="map-canvas"
            class="vis-canvas tab-pane fade
                   <% if default == 'Map' %> active in <% end %>">

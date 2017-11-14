@@ -35,6 +35,10 @@ $ ->
         super(@canvas)
 
       start: ->
+        # Validate fields exist
+        if @validate_fields(true) is -4
+          window.location = '/'
+
         @configs.analysisType ?= @ANALYSISTYPE_TOTAL
         @configs.histogramDensity ?= false
         
@@ -90,10 +94,12 @@ $ ->
                 str += "<table>"
                 str += "<tr><td style='text-align: right'>Analysis Type :&nbsp</td>"
                 str += "<td>#{self.analysisTypeNames[self.configs.analysisType]}</td></tr>"
-                str += "<tr><td style='text-align: right'>#{@point.field} :&nbsp</td>"
+                str += "<tr><td style='text-align: right'>"
+                if globals.bar.configs.analysisType == globals.bar.ANALYSISTYPE_COUNT
+                  str += "Count :&nbsp"
+                else
+                  str += "#{@point.field} :&nbsp</td>"
                 str += "<td>#{@y}</td></tr>"
-                str += "<tr><td style='text-align: right'>Standard Deviation :&nbsp</td>"
-                str += "<td>± #{@point.stdDev}</td></tr>"
                 #{@point.fieldUnit}</strong></td></tr>"
                 str += "</table>"
               # Formatter for error bar tooltips
@@ -104,15 +110,22 @@ $ ->
                 else
                   str += "color:#{@point.color};margin-bottom:5px'> "
                 str += "<b><u>Error Bar for Group : #{@point.name}</u></b><br>"
-                str += "<b>Bounds Represent Data ± 1 StdDev</b><br></div>"
+                if globals.bar.configs.analysisType == globals.bar.ANALYSISTYPE_MEAN_ERROR
+                  str += "<b>Bounds Represent Data ± 1 StdDev</b><br></div>"
+                else
+                  str += "<b>Bounds Represent Data ± 2 SEM</b><br></div>"
                 str += "<table>"
                 str += "<tr><td style='text-align: right'>Upper Bound :&nbsp</td>"
-                str += "<td>#{@y}</td></tr>"
+                str += "<td>#{@y.toFixed(4)}</td></tr>"
                 str += "<tr><td style='text-align: right'>Lower Bound :&nbsp</td>"
-                str += "<td>#{@y - 2 * @point.stdDev}</td></tr>"
+                str += "<td>#{(@y - 2 * @point.stdDev).toFixed(4)}</td></tr>"
+                if globals.bar.configs.analysisType == globals.bar.ANALYSISTYPE_MEAN_ERROR
+                  str += "<tr><td style='text-align: right'>StdDev :&nbsp</td>"
+                else
+                  str += "<tr><td style='text-align: right'>2 SEM :&nbsp</td>"
+                str += "<td>#{@point.stdDev.toFixed(4)}</td></tr>"
                 #{@point.fieldUnit}</strong></td></tr>"
                 str += "</table>"
-
             useHTML: true
           yAxis:
             type: if globals.configs.logY then 'logarithmic' else 'linear'
@@ -238,7 +251,7 @@ $ ->
 
         # Draw "error bars", if option is enabled
         # Error bars represent +/- 1 standard deviation
-        if @configs.analysisType == @ANALYSISTYPE_MEAN_ERROR
+        if @configs.analysisType == @ANALYSISTYPE_MEAN_ERROR or @configs.analysisType == @ANALYSISTYPE_MEAN_SEM
           allErrors = []
           xCluster = 0
           pos = 1
@@ -246,6 +259,10 @@ $ ->
           for fid in data.normalFields when fid in fieldSelection
             for gid in sortedGroupIDs when gid in data.groupSelection
               stdDev = data.getStandardDeviation(fid, gid, dp)
+              if @configs.analysisType == @ANALYSISTYPE_MEAN_SEM
+                N = data.multiGroupSelector(fid, [gid], dp).length
+                stdDev /= Math.sqrt(N)
+                stdDev *= 2
               barData = data.selector fid, gid, dp
               xCoord = (xCluster - 1.5) + pos * interval
               name = data.groups[gid] or data.noField()
@@ -381,6 +398,43 @@ $ ->
             
           options
 
+      ###
+      Draws control to suggest grouping option
+      ###
+      drawGroupingTip: () ->
+        
+        # Local function which creates the alert
+        recommend = (field) ->
+          ctx = {}
+          ctx.field = field
+          tip = HandlebarsTemplates[hbCtrl('tip')](ctx)
+          $('#vis-ctrls').append tip
+        
+        # Can't give good suggestion if only one point
+        if data.dataPoints.length > 1
+          # If there is only one bar
+          if data.groups.length is 1
+            # Find a text field to suggest
+            if data.userTextFields.length isnt 0
+              gid = globals.configs.groupById
+              # Select any random text field
+              while gid == globals.configs.groupById
+                gid = data.userTextFields[Math.floor(Math.random() * data.userTextFields.length)]
+              recommend(data.fields[gid].fieldName)
+            # If there are multiple datasets, suggest group by dataset
+            else if data.includesMultipleDatasets
+              gid = data.DATASET_NAME_FIELD
+              recommend("Data Set")
+            # Note: otherwise we are doing nothing
+            # Bind the link to changing the vis
+            $('#control-tip-link').click () =>
+              data.setGroupIndex(gid)
+              globals.configs.groupById = gid
+              data.groupSelection = for vals, keys in data.groups
+                Number(keys)
+              @delayedUpdate()
+              @drawControls()
+
       drawControls: ->
         super()
         # Remove group by number fields, only for pie chart
@@ -389,16 +443,14 @@ $ ->
         # Remove Group By Time Period if there is no time data
         if data.hasTimeData is false or data.timeType == data.GEO_TIME
           groups.splice(data.TIME_PERIOD_FIELD - 2, 1)
+        @drawGroupingTip()
         @drawGroupControls(groups)
         @drawYAxisControls(globals.configs.fieldSelection,
           data.normalFields.slice(1), false)
         @drawToolControls(true, true)
         @drawClippingControls()
         @drawSaveControls()
-        $('[id^=ckbx-y-axis]').click (e) ->
-          fs = globals.configs.fieldSelection
-          if fs and fs.length == 1
-            $('#sort-by').val(fs[0])
+        @drawAnnotationControls()
         $('[data-toggle="tooltip"]').tooltip();
 
     if "Bar" in data.relVis

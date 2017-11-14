@@ -25,7 +25,7 @@ class CloneProjectTest < IntegrationTest
 
     click_on 'Manual Entry'
     fill_in 'Data Set Name', with: 'I Like Clones'
-    find('#edit_table_add_2').click
+    find('#edit_table_add_1').click
     set_cell(0, 0, 47)
     find('#edit_table_save_2').click
 
@@ -35,12 +35,12 @@ class CloneProjectTest < IntegrationTest
 
     assert page.has_content?('I Like Clones'), 'Save should succeed'
     img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
-    find('.upload_media form').attach_file('upload', img_path)
+    drop_in_dropzone img_path
     assert page.has_content?('nerdboy.jpg'), 'File should be in list'
 
     click_on 'Das Cloning Projekt'
     img_path = Rails.root.join('test', 'CSVs', 'test.pdf')
-    find('.upload_media form').attach_file('upload', img_path)
+    drop_in_dropzone img_path
     assert page.has_content?('test.pdf'), 'File should be in list'
 
     logout
@@ -51,7 +51,7 @@ class CloneProjectTest < IntegrationTest
 
     click_on 'Das Cloning Projekt'
 
-    click_button 'Clone'
+    visit URI.parse(current_url).to_s + '/clone'
     find('#clone_datasets').set(true)
     find('#project_name').set('Cloned with Data')
     click_on 'Clone Project'

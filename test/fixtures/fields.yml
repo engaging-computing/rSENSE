@@ -253,3 +253,15 @@ delete_data_sets_number:
   field_type: 2
   project: delete_data_sets
   name: Number
+
+pet:
+  id: 300
+  field_type: 3
+  project: votes
+  name: Pet
+
+num_votes:
+  id: 301
+  field_type: 2
+  project: votes
+  name: Votes

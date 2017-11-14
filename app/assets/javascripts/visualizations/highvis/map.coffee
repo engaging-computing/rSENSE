@@ -55,6 +55,12 @@ $ ->
           delete @timeLines
 
       start: ->
+        # Validate fields exist
+        if @validate_fields(true) is -4
+          window.location = '/'
+          
+        $('#compass').show()
+
         # Map needs this canvas visible to draw correctly
         $('#' + @canvas).show()
 
@@ -426,6 +432,7 @@ $ ->
         super()
 
       end: ->
+        $("#compass").hide()
         @heatmap = undefined
         if @gmap?
           @configs.mapType = @gmap.getMapTypeId()

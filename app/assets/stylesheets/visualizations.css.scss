@@ -24,6 +24,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   $vis-bkg-dark:  #CBCBCB;
   $vis-bkg-mid:   #DCDCDC;
   $vis-bkg-light: #F2F2F2;
+  $vis-bkg-attn: #ffdd00;
   $jqgrid-bkg: linear-gradient(#FFFFFF, $vis-bkg-mid);
 
   // some stuff on the page (buttons mostly) shouldn't have selectable text
@@ -35,6 +36,39 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     -ms-user-select: none;
     user-select: none;
   }
+
+  // Annotations stuff
+  #add-annotation-button {
+    display: none;
+    height: 48px;
+    position: relative;
+    right: 0;
+    padding: 0;
+    opacity: .5;
+    cursor: pointer;
+  }
+
+  img#add-annotation-button:hover {
+    opacity: 1;
+  }
+  
+  .highcharts-annotation {
+    cursor: default; 
+  }
+
+  .highcharts-block-annotation {
+    cursor: move;
+    position: absolute;
+  }
+
+  #annotation-editor {
+    display: none;
+  }
+
+  .annotation-controlgroup {
+    margin: 5px;
+  }
+
   .axis {
     display:inherit;
     width: 45%;
@@ -49,6 +83,22 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   .color-picker {
     vertical-align: top;
     float: right;
+  }
+
+  #compass {
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 20%;
+    min-height: 120px;
+    user-drag: none; 
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    display: none
   }
 
   div.regr-tooltip {
@@ -148,10 +198,10 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
     color: $hint;
   }
 
-  // photos may require scrollbar; margin so photos do not touch top of canvas
+  // photos may require scrollbar
   #photos-canvas {
     overflow-y: auto;
-    margin-top: 20px;
+    background: #111133;
   }
 
   #radius-text {
@@ -340,10 +390,37 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
         background-color: $vis-bkg-light;
       }
 
+      // Begin navigation tabs
       #vis-tab-list {
-        padding: 0; // removes padding that shouldn't be there to begin with
+        padding: 1px; // removes padding that shouldn't be there to begin with
         margin: 0;
       }
+
+      .nav-tabs {
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+        border: none;
+        display: -webkit-box;  
+        display: -moz-box;   
+        // Make scrollbar on top so as not to ruin tab effect
+        -moz-transform: scale(1, -1);
+        -webkit-transform: scale(1, -1);
+        -o-transform: scale(1, -1);
+        -ms-transform: scale(1, -1);
+        transform: scale(1, -1);
+      }
+
+      .nav-tabs>li {
+        float: none;
+        // Flip the contents back
+        -moz-transform: scale(1, -1);
+        -webkit-transform: scale(1, -1);
+        -o-transform: scale(1, -1);
+        -ms-transform: scale(1, -1);
+        transform: scale(1, -1);
+      }
+      // End navigation tabs
 
       #vis-title-bar {
         width: 100%;
@@ -429,11 +506,38 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
       // this is where all the div controls get added
       #vis-ctrls {
         height: 100%;
-        overflow-x: hidden;
+        //overflow-x: hidden;
         overflow-y: auto;
         position: relative;
         display: inline-block;
         float: left;
+
+        // fix up the datetime picker
+        #dt-picker {
+					width: 285px;
+					height: 206px;
+					 
+					#dt-horiz-picker {
+						height: 18px;				
+					}
+
+			 		#dt-time-group {
+						padding-left: 2px;
+						width: 78px;
+
+						select {
+							height: 172px;				
+						}
+
+					}
+			  
+        }
+
+				.editor-button {
+				  top: 8px;
+					left: 5px;
+					position: relative;
+				}
 
         // puts spacing between some boostrap buttons
         .form-control { // this styles bootstrap stuff and IS VERY BAD
@@ -448,6 +552,15 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
           display: inline-block;
           width: 80%;
           margin: 5px auto;
+        }
+
+        .export-btn {
+          display: inline-block;
+          margin: 5px auto;
+        }
+
+        .export-btn img {
+          width: 100%;
         }
         
         .save-disabled {
@@ -523,7 +636,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
           height: 55px;
           width: 100%;
           background: $vis-bkg-mid;
-          border-bottom: $border;
+          border-bottom: $border;        
 
           .vis-ctrl-title {
             float: left;
@@ -533,19 +646,31 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
             float: right;
           }
         }
+
+        .vis-ctrl-tip {
+          font-size: 24px;
+          padding: 10px 20px;
+          margin: 0;
+          white-space: nowrap;
+          overflow: hidden;
+          width: 100%;
+          background: $vis-bkg-attn;
+          text-align: center;
+
+          p {
+            margin: 0;
+          }
+
+          a {
+            cursor: pointer;
+          }
+        }
       }
     }
 
     .vis-tab-icon {
       height: 30px;
       width: 30px;
-    }
-
-    //reduce size of tabs on mobile view:
-    @media only screen and (max-width: 600px) {
-      .nav > li > a {
-      padding: 2px;
-      }
     }
 
     // Very small screens need a little bit more room
@@ -617,3 +742,9 @@ body[data-page-name='visualizations/show'] .visualizations-controller {
     margin-bottom: 12px;
   }
 }
+	
+.fixed {
+	//font-size: 13px !important;
+	font-weight: bold;
+}
+

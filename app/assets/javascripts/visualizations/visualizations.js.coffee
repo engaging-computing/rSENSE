@@ -126,7 +126,13 @@ $ ->
     if data.savedGlobals?
       savedGlobals = JSON.parse(data.savedGlobals)
       savedConfigs = savedGlobals['globals']
+      savedAnnotations = savedGlobals['annotations']
       $.extend(globals.configs, savedConfigs)
+      if savedAnnotations?
+        globals.annotationSet = new AnnotationSet
+        for elt in savedAnnotations.list
+          annotation = $.extend(true, new Annotation, elt)
+          globals.annotationSet.addToList annotation
 
       # Restore vis specific configs
       for visName in data.allVis
@@ -234,14 +240,14 @@ $ ->
       globals.curVis.start()
       resizeVis(false, 0, true)
 
-    $('#vis-container').click ->
+    $('#vis-container').click (event) ->
       shouldCloseTools = globals.configs.ctrlsOpen and $(event.target).attr("class") != 'hamburger-bar' and
         $(event.target).attr("id") != 'ctrls-menu-btn' and window.innerWidth < 600
       if shouldCloseTools
         globals.configs.ctrlsOpen = false
         resizeVis()
 
-    $('#ctrls-menu-btn').click ->
+    $('#ctrls-menu-btn').click (event) ->
       globals.configs.ctrlsOpen = !globals.configs.ctrlsOpen
       resizeVis()
 

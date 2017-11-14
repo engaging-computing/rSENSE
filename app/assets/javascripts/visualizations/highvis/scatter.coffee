@@ -46,7 +46,8 @@ $ ->
 
         @xGridSize = @yGridSize = @INITIAL_GRID_SIZE
 
-        @isScatter = true # To do add axis bounds feature that does time
+        @useSetAxis = true
+        @isTimeline = null
         # Used for data reduction triggering
         @updateOnZoom = true
 
@@ -81,7 +82,7 @@ $ ->
       start: (animate = true) ->
         @configs.xAxisId ?= data.fields[@configs.xAxis].fieldID
         # Reset the xAxis in case a new field was added or fields were reordered
-        if not @isScatter? then @configs.xAxis = data.timeFields[0]
+        if not @useSetAxis? then @configs.xAxis = data.timeFields[0]
         else if @configs.xAxisId == -1 then @configs.xAxis = 0
         else
           fieldIds = for field in data.fields
@@ -104,7 +105,7 @@ $ ->
         super(animate)
 
         self = this
-
+        canvas = @canvas
         $.extend true, @chartOptions,
           chart:
             type: if @configs.mode is @LINES_MODE then "line" else "scatter"
@@ -128,9 +129,29 @@ $ ->
                     root = ele.parent()
                     root.append ele
                   select: () ->
+                    if globals.annotationSet?
+                      AnnotationSet.deselect()
                     globals.selectedDataSetId = globals.getDataSetId(@.datapoint[1])
                     globals.selectedPointId = @.datapoint[0]
+                    globals.selectedPointX = @x
+                    globals.selectedPointY = @y
+                    globals.selectedPointField = data.fields.findIndex (elt) => elt.fieldName is @series.name.field
                     $('#disable-point-button').prop("disabled", false)
+                    # Change button to edit if applicable
+                    if (globals.annotationSet isnt null) and \
+                       (globals.annotationSet.hasAnnotationAt globals.selectedDataSetId, globals.selectedPointId, \
+                                                              canvas, globals.selectedPointField)
+                      toggleAnnotationButton("comment-edit")
+                    # Else make it add
+                    else
+                      toggleAnnotationButton("comment-add")
+                  unselect: () ->
+                    # See if another point has been selected
+                    p = @series.chart.getSelectedPoints()
+                    if (p.length > 0) and (p[0].x == @x) and (p[0].y == @y)
+                      if (Annotation.selectedAnnotation is false)
+                        toggleAnnotationButton("comment-add")
+                      $('#disable-point-button').prop("disabled", true)
 
           groupBy = ''
           $('#groupSelector').find('option').each (i,j) ->
@@ -254,6 +275,7 @@ $ ->
         @drawClippingControls()
         @drawRegressionControls()
         @drawSaveControls()
+        @drawAnnotationControls()
         $('[data-toggle="tooltip"]').tooltip();
 
       ###
@@ -321,6 +343,14 @@ $ ->
         else
           @xGridSize = Math.round (width / height * @INITIAL_GRID_SIZE)
 
+        # Clear all annotations
+        toggleAnnotationButton("comment-add")
+        $('.highcharts-annotation').remove()
+        if globals.annotationSet?
+          for elt in globals.annotationSet.list
+            if elt.callout
+              elt.enabled = false
+
         # Draw series
         fs = globals.configs.fieldSelection
         for fi, si in data.normalFields when fi in fs
@@ -339,7 +369,7 @@ $ ->
             # fixes it by splitting the data into different series based on the range
             # the point falls in (ex fixed: http://i.imgur.com/NDIrq8i.png).
             datArray = new Array
-            if @isScatter is null and globals.configs.isPeriod is true and data.timeType == data.NORM_TIME
+            if @useSetAxis is null and globals.configs.isPeriod is true and data.timeType == data.NORM_TIME
               currentPeriod = null
               for point in dat
                 newDate = new Date(point.x)
@@ -359,7 +389,7 @@ $ ->
             mode = @configs.mode
             if dat.length < 2 and @configs.mode is @LINES_MODE
               mode = @SYMBOLS_LINES_MODE
-
+            
             # loop through all the series and add them to the chart
             for series in datArray
               options =
@@ -392,6 +422,15 @@ $ ->
                     options.dashStyle = globals.dashes[si % globals.dashes.length]
 
               @chart.addSeries(options, false)
+
+              # Draw the annotations
+              if globals.annotationSet isnt null
+                for point in series
+                  if (match = globals.annotationSet.getElement globals.getDataSetId(point.datapoint[1]), \
+                                                               point.datapoint[0], @canvas, fi) isnt null
+                    if match.field == fi
+                      match.enabled = true
+                      match.draw @chart, point.x, point.y
 
         if @isZoomLocked()
           @updateOnZoom = false
@@ -450,6 +489,9 @@ $ ->
         $('#y-axis-min').val(@configs.yBounds.min)
         $('#y-axis-max').val(@configs.yBounds.max)
 
+        if @isTimeline == true
+          $('#x-axis-min').val(new Date(@configs.xBounds.min).toLocaleString())
+          $('#x-axis-max').val(new Date(@configs.xBounds.max).toLocaleString())
         
       ###
       Draws radio buttons for changing symbol/line mode.
@@ -459,7 +501,7 @@ $ ->
         inctx = {}
         inctx.axes = ["Both", "X", "Y"]
         inctx.logSafe = data.logSafe
-        inctx.vis = @isScatter # To do add axis bounds feature that does time
+        inctx.vis = @useSetAxis # To do add axis bounds feature that does time
         inctx.elapsedTime = elapsedTime and data.timeFields.length is 1
         inctx.modes = [
           { mode: @SYMBOLS_LINES_MODE, text: "Symbols and Lines" }
@@ -470,6 +512,9 @@ $ ->
         if data.hasTimeData and data.timeType != data.GEO_TIME
           inctx.period = HandlebarsTemplates[hbCtrl('period')]
 
+        inctx.setAxis = HandlebarsTemplates[hbCtrl('set-axis-scatter')]
+        if @isTimeline == true
+          inctx.setAxis = HandlebarsTemplates[hbCtrl('set-axis-timeline')]
 
         # Draw the Tool controls
         outctx = {}
@@ -517,110 +562,234 @@ $ ->
         badNumberPopoverTimerY = null
         badNumberPopoverTimerX = null
 
-        # Axis Manual entry
-        $('#set-axis-button').click =>
+        # Axis Manual entry for timeline
+        if @isTimeline == true
+          
+          ###################################
+          # XMin DTPicker Control
+          ###################################
 
-          thereIsAFailure = false
+          # Set some variables
+          calendarButtonMin = $('#x-min-cal')   # calendar button symbol
+          formInputMin = $('#x-axis-min')       # textbox where the new axis min goes
 
-          xAxisMin = $('#x-axis-min').val()
-          xAxisMax = $('#x-axis-max').val()
+          # When you click the calendar button
+          # open the datetime picker and fix some font stuff
+          calendarButtonMin.click ->
+            dtPickerMin.open()
+            $('#dt-time-textbox').css("fontSize", "13px")
 
-          yAxisMin = $('#y-axis-min').val()
-          yAxisMax = $('#y-axis-max').val()
+          # Set some properties of the dtPicker
+          dtPickerMin = calendarButtonMin.datetimepicker
+            autoClose: false
+            keyPress: (e) ->
+              e.stopImmediatePropagation()
+              e.keyCode
+            onOpen: ->
+              formInputMin.focus()
+              formInputMin[0].value
+            onChange: (val) ->
+              formattedVal = val.format('M/D/YYYY h:mm:ss A')
+              formInputMin.val(formattedVal)
+            onKeys:
+              13: -> #enter
+                dtPickerMin.close()
+              27: -> #escape
+                dtPickerMin.close()
+            anchor: $('#x-min')
+            hPosition: ->
+              0
+            vPosition: ->
+              0
 
-          if isNaN(xAxisMin) or xAxisMin == ""
-            thereIsAFailure = true
-            $('#x-axis-min').popover
-              content: 'Please enter a valid number'
-              placement: 'bottom'
-              trigger: 'manual'
-            $('#x-axis-min').popover('show')
-            if badNumberPopoverTimerXMin? then clearTimeout(badNumberPopoverTimerXMin)
-            badNumberPopoverTimerXMin = setTimeout ->
-              $('#x-axis-min').popover('destroy')
-            , 3000
+          # TODO: fix dtPicker so that it closes when you click outside of it
+          # jQuery(document.body).on "click", ":not(#dt-picker, #dt-picker *)", (e) ->
+          #   if !(e.target.id == 'x-min-cal'
+          #           || e.currentTarget.id == '#x-min'
+          #           || $('#x-min').find(e.target).length != 0)
+          #     dtPickerMin.close()
 
-          if isNaN(xAxisMax) or xAxisMax == ""
-            thereIsAFailure = true
-            $('#x-axis-max').popover
-              content: 'Please enter a valid number'
-              placement: 'bottom'
-              trigger: 'manual'
-            $('#x-axis-max').popover('show')
-            if badNumberPopoverTimerXMax? then clearTimeout(badNumberPopoverTimerXMax)
-            badNumberPopoverTimerXMax = setTimeout ->
-              $('#x-axis-max').popover('destroy')
-            , 3000
+          ###################################
+          # XMax DTPicker Control
+          ###################################
 
-          if isNaN(yAxisMin) or yAxisMin == ""
-            thereIsAFailure = true
-            $('#y-axis-min').popover
-              content: 'Please enter a valid number'
-              placement: 'bottom'
-              trigger: 'manual'
-            $('#y-axis-min').popover('show')
-            if badNumberPopoverTimerYMin? then clearTimeout(badNumberPopoverTimerYMin)
-            badNumberPopoverTimerYMin = setTimeout ->
-              $('#y-axis-min').popover('destroy')
-            , 3000
+          # Set some variables
+          calendarButtonMax = $('#x-max-cal')   # calendar button symbol
+          formInputMax = $('#x-axis-max')       # textbox where the new axis max goes
 
-          if isNaN(yAxisMax) or yAxisMax == ""
-            thereIsAFailure = true
-            $('#y-axis-max').popover
-              content: 'Please enter a valid number'
-              placement: 'bottom'
-              trigger: 'manual'
-            $('#y-axis-max').popover('show')
-            if badNumberPopoverTimerYMax? then clearTimeout(badNumberPopoverTimerYMax)
-            badNumberPopoverTimerYMax = setTimeout ->
-              $('#y-axis-max').popover('destroy')
-            , 3000
+          # When you click the calendar button,
+          # open the datetime picker and fix some font stuff
+          calendarButtonMax.click ->
+            dtPickerMax.open()
+            $('#dt-time-textbox').css('cssText', 'font-size: 13px !important;')
+            $('#dt-picker option').css('cssText', 'font-size: 13px !important;')
 
-          if thereIsAFailure then return
+          # Set some properties of the dtPicker
+          dtPickerMax = calendarButtonMax.datetimepicker
+            autoClose: false
+            keyPress: (e) ->
+              e.stopImmediatePropagation()
+              e.keyCode
+            onOpen: ->
+              formInputMax.focus()
+              formInputMax[0].value
+            onChange: (val) ->
+              formattedVal = val.format('M/D/YYYY h:mm:ss A')
+              formInputMax.val(formattedVal)
+            onKeys:
+              13: -> #enter
+                dtPickerMax.close()
+              27: -> #escape
+                dtPickerMax.close()
+            anchor: $('#x-max')
+            hPosition: ->
+              0
+            vPosition: ->
+              0
 
-          xAxisMin = Number(xAxisMin)
-          xAxisMax = Number(xAxisMax)
-          yAxisMin = Number(yAxisMin)
-          yAxisMax = Number(yAxisMax)
+          # TODO: fix dtPicker so that it closes when you click outside of it
+          # jQuery(document.body).on "click", ":not(#dt-picker, #dt-picker *)", (e) ->
+          #   if !(e.target.id == 'x-max-cal'
+          #         || e.currentTarget.id == '#x-max'
+          #         || $('#x-max').find(e.target).length != 0)
+          #     dtPickerMax.close()
 
-          if xAxisMin >= xAxisMax
-            thereIsAFailure = true
-            $('#x-axis-min').popover
-              content: 'Left must be less than right'
-              placement: 'bottom'
-              trigger: 'manual'
-            $('#x-axis-min').popover('show')
-            if badNumberPopoverTimerX? then clearTimeout(badNumberPopoverTimerX)
-            badNumberPopoverTimerX = setTimeout ->
-              $('#x-axis-min').popover('destroy')
-            , 3000
+          ###################################
+          # get values as numbers
+          ###################################
+          $('#set-axis-button').click =>
+ 
+            xAxisMin = Date.parse($('#x-axis-min').val())
+            xAxisMax = Date.parse($('#x-axis-max').val())
+             # error checking
+            thereIsAFailure = false
+            if xAxisMin >= xAxisMax
+              thereIsAFailure = true
+              $('#x-axis-min').popover
+                content: 'Left must be less than right'
+                placement: 'bottom'
+                trigger: 'manual'
+              $('#x-axis-min').popover('show')
+              if badNumberPopoverTimerX? then clearTimeout(badNumberPopoverTimerX)
+              badNumberPopoverTimerX = setTimeout ->
+                $('#x-axis-min').popover('destroy')
+              , 3000
 
-          if yAxisMin >= yAxisMax
-            thereIsAFailure = true
-            $('#y-axis-min').popover
-              content: 'Left must be less than right'
-              placement: 'bottom'
-              trigger: 'manual'
-            $('#y-axis-min').popover('show')
-            if badNumberPopoverTimerY? then clearTimeout(badNumberPopoverTimerY)
-            badNumberPopoverTimerY = setTimeout ->
-              $('#y-axis-min').popover('destroy')
-            , 3000
+            if thereIsAFailure then return
 
-          if thereIsAFailure then return
+            $('#x-axis-min').popover('destroy')
+            $('#x-axis-max').popover('destroy')
 
-          $('#x-axis-min').popover('destroy')
-          $('#x-axis-max').popover('destroy')
-          $('#y-axis-min').popover('destroy')
-          $('#y-axis-max').popover('destroy')
+            @configs.xBounds.min = xAxisMin
+            @configs.xBounds.max = xAxisMax
+ 
+            @setExtremes()
+  
+	      # Axis Manual entry for scatter
+        if @isTimeline == null
 
-          @configs.xBounds.min = xAxisMin
-          @configs.xBounds.max = xAxisMax
+          $('#set-axis-button').click =>
 
-          @configs.yBounds.min = yAxisMin
-          @configs.yBounds.max = yAxisMax
+            thereIsAFailure = false
 
-          @setExtremes()
+            xAxisMin = $('#x-axis-min').val()
+            xAxisMax = $('#x-axis-max').val()
+            yAxisMin = $('#y-axis-min').val()
+            yAxisMax = $('#y-axis-max').val()
+
+            if isNaN(xAxisMin) or xAxisMin == ""
+              thereIsAFailure = true
+              $('#x-axis-min').popover
+                content: 'Please enter a valid number'
+                placement: 'bottom'
+                trigger: 'manual'
+              $('#x-axis-min').popover('show')
+              if badNumberPopoverTimerXMin? then clearTimeout(badNumberPopoverTimerXMin)
+              badNumberPopoverTimerXMin = setTimeout ->
+                $('#x-axis-min').popover('destroy')
+              , 3000
+  
+            if isNaN(xAxisMax) or xAxisMax == ""
+              thereIsAFailure = true
+              $('#x-axis-max').popover
+                content: 'Please enter a valid number'
+                placement: 'bottom'
+                trigger: 'manual'
+              $('#x-axis-max').popover('show')
+              if badNumberPopoverTimerXMax? then clearTimeout(badNumberPopoverTimerXMax)
+              badNumberPopoverTimerXMax = setTimeout ->
+                $('#x-axis-max').popover('destroy')
+              , 3000
+  
+            if isNaN(yAxisMin) or yAxisMin == ""
+              thereIsAFailure = true
+              $('#y-axis-min').popover
+                content: 'Please enter a valid number'
+                placement: 'bottom'
+                trigger: 'manual'
+              $('#y-axis-min').popover('show')
+              if badNumberPopoverTimerYMin? then clearTimeout(badNumberPopoverTimerYMin)
+              badNumberPopoverTimerYMin = setTimeout ->
+                $('#y-axis-min').popover('destroy')
+              , 3000
+  
+            if isNaN(yAxisMax) or yAxisMax == ""
+              thereIsAFailure = true
+              $('#y-axis-max').popover
+                content: 'Please enter a valid number'
+                placement: 'bottom'
+                trigger: 'manual'
+              $('#y-axis-max').popover('show')
+              if badNumberPopoverTimerYMax? then clearTimeout(badNumberPopoverTimerYMax)
+              badNumberPopoverTimerYMax = setTimeout ->
+                $('#y-axis-max').popover('destroy')
+              , 3000
+  
+            if thereIsAFailure then return
+  
+            xAxisMin = Number(xAxisMin)
+            xAxisMax = Number(xAxisMax)
+            yAxisMin = Number(yAxisMin)
+            yAxisMax = Number(yAxisMax)
+  
+            if xAxisMin >= xAxisMax
+              thereIsAFailure = true
+              $('#x-axis-min').popover
+                content: 'Left must be less than right'
+                placement: 'bottom'
+                trigger: 'manual'
+              $('#x-axis-min').popover('show')
+              if badNumberPopoverTimerX? then clearTimeout(badNumberPopoverTimerX)
+              badNumberPopoverTimerX = setTimeout ->
+                $('#x-axis-min').popover('destroy')
+              , 3000
+  
+            if yAxisMin >= yAxisMax
+              thereIsAFailure = true
+              $('#y-axis-min').popover
+                content: 'Left must be less than right'
+                placement: 'bottom'
+                trigger: 'manual'
+              $('#y-axis-min').popover('show')
+              if badNumberPopoverTimerY? then clearTimeout(badNumberPopoverTimerY)
+              badNumberPopoverTimerY = setTimeout ->
+                $('#y-axis-min').popover('destroy')
+              , 3000
+  
+            if thereIsAFailure then return
+  
+            $('#x-axis-min').popover('destroy')
+            $('#x-axis-max').popover('destroy')
+            $('#y-axis-min').popover('destroy')
+            $('#y-axis-max').popover('destroy')
+  
+            @configs.xBounds.min = xAxisMin
+            @configs.xBounds.max = xAxisMax
+  
+            @configs.yBounds.min = yAxisMin
+            @configs.yBounds.max = yAxisMax
+  
+            @setExtremes()
 
         $('#zoom-reset-btn').click (e) =>
           @resetExtremes($('#zoom-axis-list').val())

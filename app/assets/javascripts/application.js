@@ -62,4 +62,5 @@
 //= require slickgrid/slickgrid
 //= require slickgrid-editors/editors
 //
+//= require dropzone
 //= require_tree .

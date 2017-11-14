@@ -9,8 +9,8 @@ class @GoogleAnalytics
     ga = document.createElement("script")
     ga.type = "text/javascript"
     ga.async = true
-    ga.src = if "https:" is document.location.protocol then "https://ssl" else "http://www"
-    ga.src = ga.src + ".google-analytics.com/ga.js"
+    ga.src = ((if "https:" is document.location.protocol then "https://ssl" else "http://www")) + \
+      ".google-analytics.com/ga.js"
     firstScript = document.getElementsByTagName("script")[0]
     firstScript.parentNode.insertBefore ga, firstScript
 

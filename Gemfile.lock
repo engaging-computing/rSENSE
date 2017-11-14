@@ -120,6 +120,9 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.8.0)
+    coffeebeans (1.0.1)
+      actionpack (>= 3.0.0)
+      coffee-script
     coffeelint (0.4.0)
       coffee-script
       execjs
@@ -145,6 +148,8 @@ GEM
     docile (1.1.5)
     domain_name (0.5.20160615)
       unf (>= 0.0.5, < 1.0.0)
+    dropzonejs-rails (0.8.1)
+      rails (> 3.1)
     erubis (2.7.0)
     execjs (2.2.2)
     faraday (0.9.2)
@@ -361,9 +366,11 @@ DEPENDENCIES
   capybara-webkit
   coffee-rails
   coffee-rails-source-maps
+  coffeebeans
   coffeelint
   derailed
   devise
+  dropzonejs-rails
   execjs
   font-awesome-rails (~> 4.4.0.0)
   handlebars
@@ -402,6 +409,3 @@ DEPENDENCIES
   will_paginate
   will_paginate-bootstrap
   yaml_db!
-
-BUNDLED WITH
-   1.14.6

@@ -34,6 +34,10 @@ $ ->
       constructor: (@canvas) ->
 
       start: ->
+        # Validate fields exist
+        if @validate_fields(true) is -4
+          window.location = '/'
+
         super()
         
         # Photos doesn't have any fancy group by options, so set it to a default
@@ -74,16 +78,16 @@ $ ->
         # create the groups to put the photos in
         id = 0
         for group in selectedGroups
-          if !groupedMedia[group[1]]? or groupedMedia[group[1]].length == 0
+          if (!groupedMedia[group[1].toLowerCase()]?) or (groupedMedia[group[1].toLowerCase()].length is 0)
             continue
-
+            
           groupContext =
             g_id: group[0]
             group_label: group[1]
           groupObj = $(grpTemp(groupContext))
 
           # put the photos in their correct groups
-          for photo in groupedMedia[group[1]]
+          for photo in groupedMedia[group[1].toLowerCase()]
             photoContext =
               p_id: "pic-#{id}"
               tn_src: photo.tn_src

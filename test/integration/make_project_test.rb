@@ -24,11 +24,7 @@ class MakeProjectTest < IntegrationTest
   end
 
   test 'search in projects' do
-    visit '/'
-    click_on 'Projects'
-    select 'Rating', from: 'sort'
-    fill_in 'search', with: 'Empty'
-    find(:css, '.fa-search').click
+    visit '/projects?utf8=%E2%9C%93&search=Empty&sort=like_count&order=DESC'
 
     assert page.has_content?('Empty Project'),
       'Search does not find project'

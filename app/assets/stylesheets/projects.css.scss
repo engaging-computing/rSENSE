@@ -90,9 +90,11 @@
   }
 
   .project_buttons {
-    margin-top: 40px;
+    margin: 10px;
+    margin-bottom: 0;
     display: flex;
     justify-content: space-between;
+    text-align: center;
   }
 
   .search-box .padded-col {
@@ -134,3 +136,7 @@
   }
 
 }
+
+ #create_data_set {
+   text-align: center;
+ }
