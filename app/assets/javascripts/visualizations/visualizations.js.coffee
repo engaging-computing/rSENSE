@@ -32,7 +32,7 @@ $ ->
     window.globals ?= {}
     globals.configs ?= {}
     globals.options ?= {}
-    globals.configs.ctrlsOpen ?= window.innerWidth >= 600
+    globals.configs.ctrlsOpen = window.innerWidth >= 600
 
     globals.curVis = null
 
