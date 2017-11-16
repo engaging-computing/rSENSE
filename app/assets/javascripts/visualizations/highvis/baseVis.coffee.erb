@@ -125,6 +125,7 @@ $ ->
       Start sequence used by runtime
       ###
       start: ->
+        $('#' + @canvas).show()
         toolScroll = $('#vis-ctrls').scrollTop()
         #Protect against edge case where the default vis uses the period mode but this dataset doesn't have time data:
         if globals.configs.groupById == data.TIME_PERIOD_FIELD and 
