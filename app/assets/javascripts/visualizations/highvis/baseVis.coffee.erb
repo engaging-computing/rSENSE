@@ -124,7 +124,16 @@ $ ->
       ###
       Start sequence used by runtime
       ###
-      start: ->        
+      start: ->
+
+        # 600px seems to be the typical cutoff for iSENSE mobile
+        if window.innerWidth < 600
+            console.log "Mobile!"
+            globals.configs.ctrlsOpen = false
+            $('#' + @canvas).show()
+        else
+            console.log "Normal"
+
         toolScroll = $('#vis-ctrls').scrollTop()
         #Protect against edge case where the default vis uses the period mode but this dataset doesn't have time data:
         if globals.configs.groupById == data.TIME_PERIOD_FIELD and 
@@ -133,13 +142,6 @@ $ ->
           globals.configs.groupById = data.COMBINED_FIELD
           
         @drawControls()
-        # 600px seems to be the typical cutoff for iSENSE mobile
-        if window.innerWidth < 600
-            console.log "Mobile!"
-            globals.configs.ctrlsOpen = false
-            $('#' + @canvas).show()
-        else
-            console.log "Normal"
 
         @update()
         $('#vis-ctrls').scrollTop(toolScroll)
