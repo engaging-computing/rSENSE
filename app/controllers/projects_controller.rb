@@ -102,8 +102,8 @@ class ProjectsController < ApplicationController
     @new_contrib_key = ContribKey.new
     @new_contrib_key.project_id = @project.id
   end
-# POST /projects
-# POST /projects.json
+  # POST /projects
+  # POST /projects.json
   def create
     if params[:project_id]
       cloned_from = Project.find(params[:project_id])
@@ -458,10 +458,10 @@ class ProjectsController < ApplicationController
         flash[:error] = field.errors.full_messages
         redirect_to project_path(@project) and return
       end
+      # Don't save fields until we know they are all valid
 
       fields.push(field)
     end
-    # Don't save fields until we know they are all valid
 
     fields.each do |field|
       unless field.save
