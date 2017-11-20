@@ -335,6 +335,31 @@ IS.onReady "projects/show", ->
     e.preventDefault()
     window.print()
 
+  $("select#display_n").change ->
+    console.log $("#display_n option:selected").val()
+
+    ###
+    $.ajax
+      dataType: 'text'
+      url: "/projects/#{ namespace.id }"
+      type: 'GET'
+      data:
+        id: namespace.id
+        display_n : $("#display_n option:selected").val()
+      success: ->
+        console.log "SENT AJAX FOR display_n"
+    ###
+    console.log "/projects/#{ namespace.id }"
+    console.log window.location
+    
+    window.location.href = window.location.origin + window.location.pathname + "?per_page=#{$("#display_n option:selected").val()}"
+    ###
+      error: (msg) ->
+        console.log msg
+        console.log "failure"
+    ###
+       
+
   ###
   # Tags
   ###
@@ -387,3 +412,5 @@ IS.onReady "projects/show", ->
     $('#tag-badge-textfield').val('')
     $('#tag-badge-form').hide()
     $('#tag-badge-add').show()
+
+

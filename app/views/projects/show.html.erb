@@ -128,7 +128,18 @@
                 <% if !current_user.nil? %>
                   <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--red" id="delete_selected_button">Delete Selected</button>
                 <% end %>
-                <div class="btn-group">
+                <div class="btn-group" style="display:inline-flex;">
+                  <div class="dropdown-toggle" style="padding: 0 10%;">
+                  <%= select_tag(:display_n,
+                  options_for_select([["25",25],
+                                      ["50",50],
+                                      ["100",100]],
+                                     @params["per_page"]),
+                  class: "form-control",include_blank:"Per Page:")
+                  %>
+
+                </div>
+                
                   <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
                     <i class="fa fa-check-square-o"></i>
                     <span class="caret"></span>
@@ -226,6 +237,12 @@
            <p>This project has no data yet. Sign in or enter a Contributor Key to add some.</p>
           <% end %>
         <% end %>
+        <div class="text-center">
+            <%= will_paginate @data_sets, renderer: BootstrapPagination::Rails,
+                  inner_window: 1, outer_window: 0, previous_label: "<<",
+                        next_label: ">>" %>
+        </div>
+
       <% end %>
     </div>
   </div>
