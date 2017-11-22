@@ -65,19 +65,12 @@ IS.onReady "projects/show", ->
   # Takes all sessions that are checked, appends its id to the url and
   # redirects the user to the view sessions page (Vis page)
   $('#vis_button').click (e) ->
-    unchecked = $(document).find(".dataset .ds_selector input:not(:checked)")
-    unchecked_list = (get_ds_id u for u in unchecked)
-    # Viewing a subset of the data sets
-    if unchecked_list.length > 0 or window.location.href.indexOf('&search') != -1
-      targets = $(document).find(".dataset .ds_selector input:checked")
-      ds_list = (get_ds_id t for t in targets)
-      # Set the value in the hidden form field
-      $('#visualize_selected>input').attr('value', ds_list)
-      # POST form
-      $('#visualize_selected').submit()
-    # Just show them all the old-fashioned way
-    else
-      window.location = $(this).attr("data-href")
+    targets = $(document).find(".dataset .ds_selector input:checked")
+    ds_list = (get_ds_id t for t in targets)
+    # Set the value in the hidden form field
+    $('#visualize_selected>input').attr('value', ds_list)
+    # POST form
+    $('#visualize_selected').submit()
 
   $('#export_button').click (e) ->
     $('#export_modal').modal('show')
