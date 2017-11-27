@@ -36,10 +36,6 @@ $ ->
       constructor: (@canvas) ->
         @configs ?= {}
         @isSummary = false
-
-        if window.innerWidth <= 600
-            globals.configs.ctrlsOpen = false
-
         globals.configs.isPeriod ?= false # Controls how series are constructed in update(). 
         globals.configs.periodMode ?= 'off' # Changes when a period option is selected.
         
