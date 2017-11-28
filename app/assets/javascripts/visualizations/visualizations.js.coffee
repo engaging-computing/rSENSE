@@ -128,11 +128,15 @@ $ ->
       savedConfigs = savedGlobals['globals']
       savedAnnotations = savedGlobals['annotations']
       $.extend(globals.configs, savedConfigs)
+      # Load annotations
       if savedAnnotations?
         globals.annotationSet = new AnnotationSet
         for elt in savedAnnotations.list
           annotation = $.extend(true, new Annotation, elt)
           globals.annotationSet.addToList annotation
+      # If on mobile, close sidebar
+      if window.innerWidth <= 600
+        globals.configs.ctrlsOpen = false
 
       # Restore vis specific configs
       for visName in data.allVis
