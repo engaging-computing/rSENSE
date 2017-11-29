@@ -36,15 +36,9 @@ $ ->
 
       start: ->
         # Validate fields exist
-        switch @validate_fields(true)
-          when -2
-            alert "The default field that you chose has been removed from the project, so a different
-            one was selected. If you are the owner, consider clicking 'Make Default'  in the Save menu to reset."
-          when -4
-            alert "A critical error has occured and the chart can't be drawn.\nIf you are the owner,
-            please login and reset your defaults.\nYou probably deleted a field."
-            window.location.href = window.location.href.replace(/\/[A-Za-z0-9_]*\/?$/, "/edit")
-          else break
+        if @validate_fields(true) is -4
+          window.location = '/'
+
         @configs.analysisType ?= @ANALYSISTYPE_TOTAL
         @configs.histogramDensity ?= false
         
@@ -100,10 +94,12 @@ $ ->
                 str += "<table>"
                 str += "<tr><td style='text-align: right'>Analysis Type :&nbsp</td>"
                 str += "<td>#{self.analysisTypeNames[self.configs.analysisType]}</td></tr>"
-                str += "<tr><td style='text-align: right'>#{@point.field} :&nbsp</td>"
+                str += "<tr><td style='text-align: right'>"
+                if globals.bar.configs.analysisType == globals.bar.ANALYSISTYPE_COUNT
+                  str += "Count :&nbsp"
+                else
+                  str += "#{@point.field} :&nbsp</td>"
                 str += "<td>#{@y}</td></tr>"
-                str += "<tr><td style='text-align: right'>Standard Deviation :&nbsp</td>"
-                str += "<td>± #{@point.stdDev}</td></tr>"
                 #{@point.fieldUnit}</strong></td></tr>"
                 str += "</table>"
               # Formatter for error bar tooltips
@@ -114,15 +110,22 @@ $ ->
                 else
                   str += "color:#{@point.color};margin-bottom:5px'> "
                 str += "<b><u>Error Bar for Group : #{@point.name}</u></b><br>"
-                str += "<b>Bounds Represent Data ± 1 StdDev</b><br></div>"
+                if globals.bar.configs.analysisType == globals.bar.ANALYSISTYPE_MEAN_ERROR
+                  str += "<b>Bounds Represent Data ± 1 StdDev</b><br></div>"
+                else
+                  str += "<b>Bounds Represent Data ± 2 SEM</b><br></div>"
                 str += "<table>"
                 str += "<tr><td style='text-align: right'>Upper Bound :&nbsp</td>"
-                str += "<td>#{@y}</td></tr>"
+                str += "<td>#{@y.toFixed(4)}</td></tr>"
                 str += "<tr><td style='text-align: right'>Lower Bound :&nbsp</td>"
-                str += "<td>#{@y - 2 * @point.stdDev}</td></tr>"
+                str += "<td>#{(@y - 2 * @point.stdDev).toFixed(4)}</td></tr>"
+                if globals.bar.configs.analysisType == globals.bar.ANALYSISTYPE_MEAN_ERROR
+                  str += "<tr><td style='text-align: right'>StdDev :&nbsp</td>"
+                else
+                  str += "<tr><td style='text-align: right'>2 SEM :&nbsp</td>"
+                str += "<td>#{@point.stdDev.toFixed(4)}</td></tr>"
                 #{@point.fieldUnit}</strong></td></tr>"
                 str += "</table>"
-
             useHTML: true
           yAxis:
             type: if globals.configs.logY then 'logarithmic' else 'linear'
@@ -248,7 +251,7 @@ $ ->
 
         # Draw "error bars", if option is enabled
         # Error bars represent +/- 1 standard deviation
-        if @configs.analysisType == @ANALYSISTYPE_MEAN_ERROR
+        if @configs.analysisType == @ANALYSISTYPE_MEAN_ERROR or @configs.analysisType == @ANALYSISTYPE_MEAN_SEM
           allErrors = []
           xCluster = 0
           pos = 1
@@ -256,6 +259,10 @@ $ ->
           for fid in data.normalFields when fid in fieldSelection
             for gid in sortedGroupIDs when gid in data.groupSelection
               stdDev = data.getStandardDeviation(fid, gid, dp)
+              if @configs.analysisType == @ANALYSISTYPE_MEAN_SEM
+                N = data.multiGroupSelector(fid, [gid], dp).length
+                stdDev /= Math.sqrt(N)
+                stdDev *= 2
               barData = data.selector fid, gid, dp
               xCoord = (xCluster - 1.5) + pos * interval
               name = data.groups[gid] or data.noField()
@@ -444,10 +451,6 @@ $ ->
         @drawClippingControls()
         @drawSaveControls()
         @drawAnnotationControls()
-        $('[id^=ckbx-y-axis]').click (e) ->
-          fs = globals.configs.fieldSelection
-          if fs and fs.length == 1
-            $('#sort-by').val(fs[0])
         $('[data-toggle="tooltip"]').tooltip();
 
     if "Bar" in data.relVis

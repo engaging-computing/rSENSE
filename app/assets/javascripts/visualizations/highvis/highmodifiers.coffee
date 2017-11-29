@@ -306,9 +306,9 @@ $ ->
       else
         rawData = dp.map (p) -> p[fieldIndex]
 
-      if rawData.length > 0
+      if rawData.length > 1
         mean = (rawData.reduce (a,b) -> a + b) / rawData.length
-        variance = (rawData.reduce(((a,b) -> a + Math.pow(b - mean, 2)), 0)) / rawData.length
+        variance = (rawData.reduce(((a,b) -> a + Math.pow(b - mean, 2)), 0)) / (rawData.length - 1)
         stddev = Math.sqrt(variance)
         data.precisionFilter(stddev)
       else

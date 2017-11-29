@@ -40,17 +40,8 @@ $ ->
 
       start: () ->
         # Validate fields exist
-        switch @validate_fields(true)
-          when -2
-            alert "The default field that you chose has been removed from the project, so a different
-            one was selected. If you are the owner, consider clicking 'Make Default'  in the Save menu to reset."
-          when -4
-            alert "A critical error has occured and the chart can't be drawn.\nIf you are the owner,
-            please login and reset your defaults.\nYou probably deleted a field."
-            window.location.href = window.location.href.replace(/\/[A-Za-z0-9_]*\/?$/, "/edit")
-          else break
-        @configs.analysisType ?= @ANALYSISTYPE_TOTAL
-        @configs.histogramDensity ?= false
+        if @validate_fields(true) is -4
+          window.location = '/'
 
         @configs.displayField = Math.min globals.configs.fieldSelection...
         @configs.analysisType ?= @ANALYSISTYPE_TOTAL
@@ -85,6 +76,9 @@ $ ->
           colors: displayColors
         if globals.configs.groupById == data.NUMBER_FIELDS_FIELD
           @chart.setTitle { text: "#{@configs.selectName}" }
+        # If grouping by Row Count, then change title to "Count grouped by ..."
+        else if globals.pie.configs.analysisType == globals.pie.ANALYSISTYPE_COUNT
+          @chart.setTitle { text: "Count grouped by #{@configs.selectName}" }
         else
           @chart.setTitle { text: "#{data.fields[@configs.displayField].fieldName} grouped by #{@configs.selectName}" }
         @chart.addSeries options, false
@@ -108,13 +102,24 @@ $ ->
               str  = "<div style='width:100%;text-align:center;color:#{@series.color};"
               str += "margin-bottom:5px'> #{@point.name}</div>"
               str += "<table>"
-              if globals.configs.groupById == data.NUMBER_FIELDS_FIELD
-                str += "<tr><td>#{self.analysisTypeNames[self.configs.analysisType]}: "
+              # If grouping by Row Count, then change the text to say "Count:nn items"
+              if globals.pie.configs.analysisType == globals.pie.ANALYSISTYPE_COUNT
+                str += "<tr><td>Count :&nbsp"
+                if @point.val == 1
+                  str += "</td><td><strong>#{@point.val} \
+                  item</strong></td></tr>"
+                else
+                  str += "</td><td><strong>#{@point.val} \
+                  items</strong></td></tr>"
               else
-                str += "<tr><td>#{data.fields[self.configs.displayField].fieldName}
-                   (#{self.analysisTypeNames[self.configs.analysisType]}): "
-              str += "</td><td><strong>#{@point.val} \
-              #{fieldUnit(data.fields[self.configs.displayField], false)}</strong></td></tr>"
+                if globals.configs.groupById == data.NUMBER_FIELDS_FIELD
+                  str += "<tr><td>#{self.analysisTypeNames[self.configs.analysisType]}: "
+                else
+                  str += "<tr><td>#{data.fields[self.configs.displayField].fieldName}
+                  (#{self.analysisTypeNames[self.configs.analysisType]}): "
+
+                str += "</td><td><strong>#{@point.val} \
+                #{fieldUnit(data.fields[self.configs.displayField], false)}</strong></td></tr>"
               str += "</table>"
             useHTML: true
           plotOptions:

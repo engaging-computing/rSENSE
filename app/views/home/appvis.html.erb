@@ -30,9 +30,11 @@
     The last option on the Palette found on the left side of the screen is "Extension".
     Click that, and then click where it says "Import Extension".
     You will be prompted to either import an extension from your computer,
-    or use a URL. Use a URL, paste in the link <%= link_to 'isenseproject.org/aix', '/aix' %>,
+    or use a URL. Use a URL, paste in the link <span id="aix_link"><%= link_to 'http://isenseproject.org/aix', '/aix' %></span>,
     and click "Import" to finish. iSENSEPublisher should be installed, and can be dragged into the
     Viewer just as any other regular component.
+    <br />
+    <button onClick="copyToClipboard('#aix_link')" > Copy URL</button>
   </div>  
 </div>
 
