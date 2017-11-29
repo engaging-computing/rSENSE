@@ -143,4 +143,5 @@ Rsense::Application.routes.draw do
   post '/users/:id/confirm' => 'users#confirm'
   post '/users/:id/subscribe' => 'users#enable_subscription'
   post '/users/:id/unsubscribe' => 'users#disable_subscription'
+  get '/users/:id/unsubscribe' => 'users#disable_subscription_by_email'
 end

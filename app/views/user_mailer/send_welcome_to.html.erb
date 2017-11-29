@@ -11,11 +11,11 @@
             <h2>Hi <%= @user.name %></h2>
             <h1>Welcome to the iSENSE mailing list.</h1>
             <p>You have opted to recieve messages from the iSENSE team at this address.</p>
-            <p>Much of our news and support is posted in our Google Group, we encourage you to join:</p>
-            <p><br><%= link_to 'Check it Out', 'https://groups.google.com/forum/#!forum/isense-users/join', {:style=>'color: white; text-decoration: none; font-size: 1.5em; background-color: #4CAF50; padding: 15px;'} %></p>
-            <p><br>Thanks for joining and have a great day!</p>
-            <p>- iSENSE Team</p>
-            <p><br>If you didn't request to be on this mailing list, click <%= link_to "here", '#' %> to unsubscribe.</p>
+            <p>Thanks for joining and have a great day! - iSENSE Team</p>
+            <% digester = Digest::MD5.new  %>
+            <% digester << "#{@user.id} #{@user.email} #{@user.created_at}" %>
+            <% token = digester.hexdigest %>
+            <p><br>If you didn't request to be on this mailing list, click <%= link_to "here", user_path(@user) + '/unsubscribe' + "?token=#{token}"%> to unsubscribe.</p>
         </td>
     </tr>
     <tr>

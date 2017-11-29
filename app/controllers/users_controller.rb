@@ -288,17 +288,47 @@ class UsersController < ApplicationController
 
   def enable_subscription
     @user = User.find(params[:id])
-    @user.update_attribute(:subscribed, true)
-    UserMailer.send_welcome_to(@user).deliver
-    redirect_to :back
+    if current_user.id == @user.id
+      @user.update_attribute(:subscribed, true)
+      flash[:success] = 'Successfully subscribed'
+      UserMailer.send_welcome_to(@user).deliver
+      redirect_to user_path(@user)
+    else
+      flash[:error] = 'Failed to subscribe'
+      redirect_to user_path(@user)
+    end
   end
 
   def disable_subscription
     @user = User.find(params[:id])
-    @user.update_attribute(:subscribed, false)
-    redirect_to :back
+    if current_user.id == @user.id
+      @user.update_attribute(:subscribed, false)
+      flash[:success] = 'Successfully unsubscribed'
+      redirect_to user_path(@user)
+    else
+      flash[:error] = 'Failed to unsubscribe'
+      redirect_to user_path(@user)
+    end
   end
 
+  def disable_subscription_by_email
+    @user = User.find(params[:id])
+    token = params[:token]
+
+    digester= Digest::MD5.new 
+    digester << "#{@user.id} #{@user.email} #{@user.created_at}"
+    truetoken = digester.hexdigest
+
+    if token == truetoken 
+      @user.update_attribute(:subscribed, false)
+      flash[:success] = 'Successfully unsubscribed'
+      redirect_to root_path
+    else
+      flash[:error] = 'Failed to unsubscribe'
+      redirect_to root_path
+    end
+  end
+  
   # GET /users/pw_reset
   def pw_request
     # Show the form
@@ -334,7 +364,7 @@ class UsersController < ApplicationController
                            :admin, :validated, :hidden, :bio, :last_login)
     else
       params[:user].permit(:content, :email, :email_confirmation, :name, :password, :password_confirmation,
-                           :hidden, :bio)
+                           :hidden, :bio, :subscribed)
     end
   end
 end
