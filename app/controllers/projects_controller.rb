@@ -66,7 +66,7 @@ class ProjectsController < ApplicationController
 
     # The comparision validates the per_page display. The minimum and maximum are arbitrarily chosen but reasonable
     if params[:per_page].to_i < 1 or params[:per_page].to_i > 1000
-      @data_sets = @all_data_sets.paginate(page: params[:page], per_page: 25)
+      @data_sets = @all_data_sets.paginate(page: params[:page], per_page: 100)
     else
       @data_sets = @all_data_sets.paginate(page: params[:page], per_page: params[:per_page])
     end
@@ -78,6 +78,9 @@ class ProjectsController < ApplicationController
 
     recur = params.key?(:recur) ? params[:recur] == 'true' : false
 
+    #byebug
+    #params[:per_page] = params[:per_page].blank? ? 100 : params[:per_page]
+  
     respond_to do |format|
       format.html do
         # Update view count
