@@ -65,6 +65,8 @@ class ProjectsController < ApplicationController
     @all_data_sets = @project.data_sets.includes(:user).select('id', 'title', 'user_id', 'key', 'created_at', 'contributor_name').search(params[:search])
 
     # The comparision validates the per_page display. The minimum and maximum are arbitrarily chosen but reasonable
+    # Non-integer values of per_page evaluate to 0, so only valid integer values will be accepted as a param
+    # All other values will fail the comparison
     if params[:per_page].to_i < 1 or params[:per_page].to_i > 1000
       @data_sets = @all_data_sets.paginate(page: params[:page], per_page: 100)
     else
@@ -78,9 +80,6 @@ class ProjectsController < ApplicationController
 
     recur = params.key?(:recur) ? params[:recur] == 'true' : false
 
-    #byebug
-    #params[:per_page] = params[:per_page].blank? ? 100 : params[:per_page]
-  
     respond_to do |format|
       format.html do
         # Update view count
