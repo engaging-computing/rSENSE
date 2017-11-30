@@ -64,7 +64,7 @@ class ProjectsController < ApplicationController
     @liked_by_cur_user = Like.find_by_user_id_and_project_id(current_user, @project.id)
     @all_data_sets = @project.data_sets.includes(:user).select('id', 'title', 'user_id', 'key', 'created_at', 'contributor_name').search(params[:search])
 
-    # The comparission validates the per_page display. The minimum and maximum are arbitrarily chosen but reasonable
+    # The comparision validates the per_page display. The minimum and maximum are arbitrarily chosen but reasonable
     if params[:per_page].to_i < 1 or params[:per_page].to_i > 1000
       @data_sets = @all_data_sets.paginate(page: params[:page], per_page: 25)
     else
@@ -459,7 +459,6 @@ class ProjectsController < ApplicationController
         redirect_to project_path(@project) and return
       end
       # Don't save fields until we know they are all valid
-
       fields.push(field)
     end
 

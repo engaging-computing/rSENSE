@@ -328,8 +328,10 @@ IS.onReady "projects/show", ->
     e.preventDefault()
     window.print()
 
+  ###
+  # Update per_page param when a drop-down option is selected
+  ###
   $("select#display_n").change ->
-    console.log $("#display_n option:selected").val()
     window.location.href = window.location.origin + window.location.pathname +
     "?per_page=#{$("#display_n option:selected").val()}"
 
@@ -385,5 +387,3 @@ IS.onReady "projects/show", ->
     $('#tag-badge-textfield').val('')
     $('#tag-badge-form').hide()
     $('#tag-badge-add').show()
-
-
