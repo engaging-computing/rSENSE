@@ -11,7 +11,8 @@
             <h2>Hi <%= @user.name %></h2>
             <h1>Welcome to the iSENSE mailing list.</h1>
             <p>You have opted to recieve messages from the iSENSE team at this address.</p>
-            <p>Thanks for joining and have a great day! - iSENSE Team</p>
+            <p>Thanks for joining and have a great day!<p>
+            <p><br> -iSENSE Team</p>
             <% digester = Digest::MD5.new  %>
             <% digester << "#{@user.id} #{@user.email} #{@user.created_at}" %>
             <% token = digester.hexdigest %>
