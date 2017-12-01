@@ -62,7 +62,16 @@ class ProjectsController < ApplicationController
 
     @cloned_project = Project.select(:id, :user_id, :title).where(id: @project.cloned_from).first
     @liked_by_cur_user = Like.find_by_user_id_and_project_id(current_user, @project.id)
-    @data_sets = @project.data_sets.includes(:user).select('id', 'title', 'user_id', 'key', 'created_at', 'contributor_name').search(params[:search])
+    @all_data_sets = @project.data_sets.includes(:user).select('id', 'title', 'user_id', 'key', 'created_at', 'contributor_name').search(params[:search])
+
+    # The comparision validates the per_page display. The minimum and maximum are arbitrarily chosen but reasonable
+    # Non-integer values of per_page evaluate to 0, so only valid integer values will be accepted as a param
+    # All other values will fail the comparison
+    if params[:per_page].to_i < 1 or params[:per_page].to_i > 1000
+      @data_sets = @all_data_sets.paginate(page: params[:page], per_page: 100)
+    else
+      @data_sets = @all_data_sets.paginate(page: params[:page], per_page: params[:per_page])
+    end
     @fields = @project.fields
     @field_count = @fields.count
     @formula_fields = @project.formula_fields
@@ -95,7 +104,6 @@ class ProjectsController < ApplicationController
     @new_contrib_key = ContribKey.new
     @new_contrib_key.project_id = @project.id
   end
-
   # POST /projects
   # POST /projects.json
   def create
@@ -687,12 +695,12 @@ class ProjectsController < ApplicationController
                                      :is_template, :featured_media_id, :hidden,
                                      :featured_at, :lock, :curated,
                                      :curated_at, :updated_at, :default_vis,
-                                     :precision, :globals, :kml_metadata)
+                                     :precision, :globals, :kml_metadata, :per_page)
     end
 
     params[:project].permit(:content, :title, :user_id, :filter, :hidden,
                             :cloned_from, :has_fields, :featured_media_id,
                             :lock, :updated_at, :default_vis, :precision,
-                            :globals, :kml_metadata)
+                            :globals, :kml_metadata, :per_page)
   end
 end
