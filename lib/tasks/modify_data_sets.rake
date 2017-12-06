@@ -11,7 +11,7 @@ namespace :modify_data_sets do
     grouped_datasets = datasets.group_by { |ds| ds.data[0][longitude_id] }
 
     grouped_datasets.each do |k,v|
-      merged_data = v.map { |ds| ds.data }
+      merged_data = v.map { |ds| ds.data }.flatten
       merged_ids = v.map { |ds| ds.id }
       DataSet.where(id: merged_ids).each do |ds|
         ds.update_attribute(:data, [])
