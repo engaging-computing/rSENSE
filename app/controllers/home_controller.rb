@@ -24,4 +24,24 @@ class HomeController < ApplicationController
 
   def privacy_policy
   end
+
+  def report_content
+    @prev_URL =  params[:prev_URL]
+  end  
+
+  def report_content_submit
+
+
+    @prev_URL = "params[:prev_URL]"
+
+    begin
+      UserMailer.report_content_email(params).deliver
+    rescue Net::SMTPFatalError
+      @reason = 'Failed to send email.'
+      return
+    end
+
+    render 'report_content_success'
+
+  end
 end

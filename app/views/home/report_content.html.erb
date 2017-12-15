@@ -1,0 +1,32 @@
+<%= form_tag('/report_content_submit', method: 'post') do %>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-md-9 h1">Report Inappropriate Content</div>
+      </div>
+    </div>
+    <div class="col-md-12">
+	    <div style="float:right; margin-top: 15px;">* denotes a required field</div>
+    </div>
+	</div>
+    <div id="report_content_form" class="panel-body">
+      <div class="form-group" style="display:none">
+          <%= label_tag(:prev_URL, "Previous URL:") %>
+          <%= text_field_tag(:prev_URL, @prev_URL) %>
+      </div>
+      <div class="form-group">
+          <%= label_tag(:location, "Where is the content located?*") %>
+          <%= text_area_tag(:location, nil, placeholder: 'e.g. http://isenseproject.org/projects/12345', class: "form-control", rows: 4) %>
+      </div>
+      <div class="form-group">
+          <%= label_tag(:content, "Describe the content") %>
+          <%= text_area_tag(:content, nil, placeholder: 'e.g. Inappropriate language in data set xyz.', class: "form-control", rows: 4) %>
+      </div>      
+    </div>
+    <div class="panel-footer">
+      <%= submit_tag("Submit", class: "btn btn-primary") %>
+    </div>
+  </div>
+  <%= hidden_field_tag(:access_token, params[:access_token]) %>
+  <%= hidden_field_tag(:href, params[:href]) %>
+<% end %>
