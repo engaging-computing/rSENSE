@@ -10,7 +10,7 @@ class VisualizationsController < ApplicationController
 
   def set_vis_list
     # A list of all current visualizations
-    @all_vis =  ['Map', 'Timeline', 'Scatter', 'Bar', 'Histogram', 'Box', 'Pie', 'Table', 'Summary', 'Photos']
+    @all_vis =  ['Map', 'Timeline', 'Scatter', 'Bar', 'Histogram', 'Box', 'Pie', 'Table', 'Summary', 'Photos', 'Dive']
   end
 
   # GET /visualizations
@@ -438,6 +438,7 @@ class VisualizationsController < ApplicationController
       visualizations.push 'Pie'
       visualizations.push 'Histogram'
       visualizations.push 'Box'
+      visualizations.push 'Dive'
     end
 
     visualizations.push 'Table'
