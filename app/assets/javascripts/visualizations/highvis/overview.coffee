@@ -47,8 +47,18 @@ $ ->
           overviewpts = $.extend(true, {}, data.dataPoints)
           overviewpts = Object.keys(overviewpts).map (key) -> overviewpts[key]
           fields = data.fields
+          rmFields = ["Data Point", "Data Set Name (id)", "Combined Data Sets",
+           "Number Fields", "Contributors", "Time Period"]
+          rmIdx = []
+          for field in fields
+            idx = $.inArray(field.fieldName, rmFields)
+            if idx != -1
+              rmIdx.push idx
           for dp in overviewpts
             for k, v of dp
+              if $.inArray(+k, rmIdx) != -1
+                delete dp[k]
+                continue
               dp[fields[k].fieldName] = dp[k]
               delete dp[k]
 
