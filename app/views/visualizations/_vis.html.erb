@@ -40,6 +40,10 @@
 <script type="text/javascript"
         src="https://maps-api-ssl.google.com/maps/api/js?key=AIzaSyBxtPK1_mxwVdl1NRu7ZEiSNvmCekFSZAw&amp;sensor=false&amp;libraries=visualization,geometry&amp;v=3.21">
 </script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.24/webcomponents-lite.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.35.3/es6-shim.js"></script>
+
+
 <div id="vis-wrapper">
   <div id="vis-ctrl-container" 
        <% if @presentation || !controls %> style="display:none" <% end %>>
@@ -191,6 +195,14 @@
       <div role="tabpanel" id="photos-canvas"
            class="vis-canvas tab-pane fade
                   <% if default == 'Photos' %> active in <% end %>">
+      </div>
+      <div role="tabpanel" id="overview-canvas"
+           class="vis-canvas tab-pane fade
+                  <% if default == 'Overview' %> active in <% end %>">
+      </div>
+      <div role="tabpanel" id="dive-canvas"
+           class="vis-canvas tab-pane fade
+                  <% if default == 'Dive' %> active in <% end %>">
       </div>
     </div>
   </div>
