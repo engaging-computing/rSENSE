@@ -2,15 +2,14 @@
     <tr>
         <td style="background-color: #111133; padding: 15px;">
                 <a href="https://isenseproject.org"><img src="https://raw.githubusercontent.com/isenseDev/rSENSE/master/app/assets/images/isense-logo.png" style="height: 35px;"></a>
-                <h1 style="color: white;"><em>You've been subscribed to emails from iSENSE.</em></h1>
-            </h1>
         </td>
     </tr>
+<table style="border: 1px solid gray; border-collapse: collapse;">
     <tr>
         <td style="padding: 15px; text-align: center">
             <h2>Hi <%= @user.name %>!</h2>
-            <p>You have opted to recieve messages from the iSENSE team at this email address.</p>
-            <p>Thanks for joining and have a great day!<p>
+            <%= @subscriber_email.message %>
+     
             <p><br> -iSENSE Team</p>
             <% digester = Digest::MD5.new  %>
             <% digester << "#{@user.id} #{@user.email} #{@user.created_at}" %>

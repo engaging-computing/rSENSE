@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170814213517) do
+ActiveRecord::Schema.define(version: 20171217214452) do
 
   create_table "contrib_keys", force: true do |t|
     t.string   "name",       null: false
@@ -114,6 +114,13 @@ ActiveRecord::Schema.define(version: 20170814213517) do
     t.integer  "precision",                     default: 4
     t.text     "globals"
     t.text     "kml_metadata"
+  end
+
+  create_table "subscriber_emails", force: true do |t|
+    t.string   "subject"
+    t.string   "message"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "taggings", force: true do |t|

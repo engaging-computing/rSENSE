@@ -329,6 +329,10 @@ class UsersController < ApplicationController
     end
   end
   
+  def self.subscribed_users
+    User.where(subscribed: true)
+  end
+  
   # GET /users/pw_reset
   def pw_request
     # Show the form
