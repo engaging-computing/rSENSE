@@ -10,7 +10,7 @@
         <div class="full_width_edit" style="font-style:italic">
           <%= user_edit_helper 'name', can_edit?(@user), false %>
         </div>
-
+        
         <% if current_user && (current_user.admin? or current_user.id == @user.id) %>
           <br />
           <span class="info_label" style="line-height: 30px;">Email:</span><br>
@@ -21,6 +21,21 @@
           <p style="margin-top: 8px"><%= link_to "Change Email or Password", edit_user_registration_path(@user) %></p>
         <% end %>
 
+        <% if current_user && (current_user.admin? or current_user.id == @user.id) %>
+          <span class="info_label" style="line-height: 30px;">Mailing List Preference:</span><br>
+          <span class="full_width_edit" style="font-style: italic; font-weight: bold">
+            <%= @user.subscribed ? "Subscribed" : "Not Subscribed" %> <i class="mailing_list_help fa fa-question-circle"></i>
+          </span>
+
+          <p style="margin-top: 8px">
+            <% if @user.subscribed %>
+              <%= link_to 'Unsubscribe', user_path(@user) + '/unsubscribe', :method => :disable_subscription %>
+            <% else %>
+              <%= link_to 'Subscribe', user_path(@user) + '/subscribe', :method => :enable_subscription %>
+            <% end %>
+          </p>
+        <% end %>
+        
         <br />
         <i>Joined <%= time_ago_in_words(@user.created_at)%> ago</i>
         <br />

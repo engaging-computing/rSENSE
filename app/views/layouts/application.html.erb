@@ -17,7 +17,20 @@
   </head>
 
   <body data-page-name="<%= params[:controller] %>/<%= params[:action] %>">
-  
+
+  <!-- Mailing list pop-up (only rendered if not chosen preference yet) -->
+  <% if user_signed_in? and current_user.subscribed == nil%>
+    <div id="set_email_preference" style="display: none; text-align: justify; ">
+      <h3> Welcome Back :) </h3>
+      You haven't set an email preference yet.
+      Are you willing to recieve occasional emails from the iSENSE team, including an invitation to the official Google Group?<br><br><br>
+      <div class="center">
+        <%= link_to 'No Thanks', user_path(current_user) + '/unsubscribe', :method => :disable_subscription, class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" %>
+        <%= link_to 'Sure', user_path(current_user) + '/subscribe', :method => :enable_subscription, class: "mdl-button mdl-button--blue mdl-js-button mdl-button--raised mdl-js-ripple-effect" %>
+      </div>
+    </div>
+  <% end %>
+
     <!-- The title bar -->
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container"><!-- Brand and toggle get grouped for better mobile display -->
@@ -40,6 +53,7 @@
             <li class="navbtn" title="Check out the latest iSENSE news and updates"><%=link_to news_index_path do %><i class='fa fa-newspaper-o'></i> News<%end%></li>
             <% if is_admin? %>
             <li class="navbtn"><%= link_to users_path do%><i class="fa fa-users"></i> Users<%end%></li>
+            <li class="navbtn" title="Send an email to subscribers"><%=link_to new_subscriber_email_path  do %><i class='fa fa-newspaper-o'></i> Email Subscribers<%end%></li>
             <% end %>
           </ul>
           <ul class="nav navbar-nav navbar-right">
