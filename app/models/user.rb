@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
 
   include ActionView::Helpers::SanitizeHelper
 
-  validates :name, length: { minimum: 4, maximum: 70 }, format: {
+  validates :name, length: { minimum: 1, maximum: 70 }, format: {
     with: /\A[\p{Alpha}\p{Blank}\-\'\.]*\z/,
     message: 'can only contain letters, hyphens, single quotes, periods, and spaces.' }
 
