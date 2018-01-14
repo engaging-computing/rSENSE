@@ -1,8 +1,13 @@
 Enter the email
 <hr>
-<%= form_for @subscriber_email do |f| %>
-	Subject: <%= f.text_field :subject %> <br />
-	Message: <%= f.text_field :message%> <br />
-	<%= f.submit %>
-	<%= link_to "Back", root_path %>
-<%end-%>
+	<%= form_for @subscriber_email do |f| %>
+	<div>
+		Subject: <%= f.text_field :subject %> <br />
+		Message: <%= f.text_area :message, id:'content-area', class: :summernote%> <br />
+		<%= f.submit %>
+		<button>
+		<%= link_to "Back", root_path %>
+		</button>
+		<% end %>
+	</div>
+</p>

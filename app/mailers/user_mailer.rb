@@ -20,15 +20,15 @@ class UserMailer < ActionMailer::Base
   def send_welcome_to(user)
     @user = user
     @hostname = `hostname`.chomp
-    from = "isenseproject@gmail.com"
-    mail(from: from, to: user.email, subject: "Welcome to the iSENSE mailing list!")  
+    from = 'isenseproject@gmail.com'
+    mail(from: from, to: user.email, subject: 'Welcome to the iSENSE mailing list!')
   end
 
   def send_subscriber_email(user, subscriber_email)
     @user = user
     @hostname = `hostname`.chomp
     @subscriber_email = subscriber_email
-    from = "isenseproject@gmail.com"
-    mail(from: from, to: user.email, subject: subscriber_email.subject)  
+    from = 'isenseproject@gmail.com'
+    mail(from: from, to: user.email, subject: subscriber_email.subject)
   end
 end

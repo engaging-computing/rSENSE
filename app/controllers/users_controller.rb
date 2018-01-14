@@ -315,11 +315,11 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     token = params[:token]
 
-    digester= Digest::MD5.new 
+    digester = Digest::MD5.new
     digester << "#{@user.id} #{@user.email} #{@user.created_at}"
     truetoken = digester.hexdigest
 
-    if token == truetoken 
+    if token == truetoken
       @user.update_attribute(:subscribed, false)
       flash[:success] = 'Successfully unsubscribed'
       redirect_to root_path
@@ -328,11 +328,11 @@ class UsersController < ApplicationController
       redirect_to root_path
     end
   end
-  
+
   def self.subscribed_users
     User.where(subscribed: true)
   end
-  
+
   # GET /users/pw_reset
   def pw_request
     # Show the form
