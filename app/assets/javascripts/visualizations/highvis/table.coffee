@@ -74,7 +74,7 @@ $ ->
       start: ->
         # Validate fields exist
         if @validate_fields(true) is -4
-          window.location = '/'
+          window.location = '/tutorials'
 
         # Make table visible? (or something)
         $('#' + @canvas).show()
