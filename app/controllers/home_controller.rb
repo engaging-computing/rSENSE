@@ -29,10 +29,7 @@ class HomeController < ApplicationController
     @prev_URL =  params[:prev_URL]
     
     if not current_user.nil?
-      puts '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@MTTTTT'
       redirect_to '/report_content_form'
-    else
-      puts '!!!!!!!!!!!!!!!!NOLOGIN'
     end
   end  
 
@@ -49,7 +46,7 @@ class HomeController < ApplicationController
   def report_content_submit
 
 
-    @prev_URL = "params[:prev_URL]"
+    @prev_URL = params[:prev_URL]
 
     begin
       UserMailer.report_content_email(params).deliver
@@ -64,6 +61,7 @@ class HomeController < ApplicationController
 
   def report_content_submitted
 
+    # TODO why is this here?
     puts 'in submitted routine'
     redirect_to 'home/index'
     
