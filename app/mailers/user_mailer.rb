@@ -22,6 +22,7 @@ class UserMailer < ActionMailer::Base
     hostname = `hostname`.chomp
     from = "admin@#{hostname}"
 
+    @current_user = params[:current_user]
     @prev_URL = params[:prev_URL]
     @location = params[:location]
     @content = params[:content]

@@ -25,9 +25,26 @@ class HomeController < ApplicationController
   def privacy_policy
   end
 
-  def report_content
+  def report_content_login_check
     @prev_URL =  params[:prev_URL]
+    
+    if not current_user.nil?
+      puts '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@MTTTTT'
+      redirect_to '/report_content_form'
+    else
+      puts '!!!!!!!!!!!!!!!!NOLOGIN'
+    end
   end  
+
+  def report_content_form
+    @prev_url = params[:prev_URL]
+    @current_user = current_user
+
+    if current_user.nil?
+      redirect_to '/report_content'
+    end
+
+  end
 
   def report_content_submit
 
@@ -43,5 +60,12 @@ class HomeController < ApplicationController
 
     render 'report_content_success'
 
+  end
+
+  def report_content_submitted
+
+    puts 'in submitted routine'
+    redirect_to 'home/index'
+    
   end
 end
