@@ -246,7 +246,7 @@ $ ->
         inctx =
           id: 'clipping-enabled'
           logId: 'clipping-enabled'
-          label: 'Filters:'
+          label: ''
           buttonEnabled: !(globals.curVis.canvas == "timeline-canvas" and globals.configs.isPeriod)
 
         outctx = {}
@@ -260,10 +260,13 @@ $ ->
         clipMode = Boolean(globals.configs.clippingMode)
         $('#swch-clipping-enabled').bootstrapSwitch
           onSwitchChange: =>
+            val = $('#uploadfilter').val()
             state = $('#swch-clipping-enabled').bootstrapSwitch('state')
             globals.configs.clippingMode = state
             $(window).resize()
             @start(false)
+            $('#uploadfilter').prop("disabled", !state)
+            $('#uploadfilter').val(val)
           state: clipMode
 
         clippable = @canvas.split('-')[0] in globals.clippingVises
@@ -280,6 +283,9 @@ $ ->
           clearFilters()
           $(window).resize()
           @start(false)
+
+        $('#uploadfilter').change =>
+          console.log "option changed"
 
         if globals.configs.disabledPoints.length == 0
           $('#enable-points-button').prop("disabled", true)
