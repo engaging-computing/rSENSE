@@ -39,7 +39,10 @@ $ ->
     Adds a filter to the current UI
     ###
     window.addFilter = (f) ->
-      f.fieldName = fieldTitle(data.fields[f.field])
+      if f.op is 'up'
+        f.fieldName = ""
+      else
+        f.fieldName = fieldTitle(data.fields[f.field])
       f.opName    = globals.filterNames[f.op]
       formatter =
         if f.field is data.timeFields[0] \
@@ -73,7 +76,8 @@ $ ->
         if f.uvalue? then f.dispValue += formatter(f.uvalue)
         f.dispValue += closer
 
-      filterBox = HandlebarsTemplates[hbVis('vis-filter')](f)
+      if f.op is "up"
+        filterBox = HandlebarsTemplates[hbVis('vis-filter')](f)
       $('#vis-filters').append(filterBox)
 
     window.globals ?= {}
@@ -231,3 +235,4 @@ $ ->
       en: 'doesn\'t end with'
       cn: 'contains'
       nc: 'doesn\'t contain'
+      up: 'Uploaded'

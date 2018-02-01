@@ -265,8 +265,7 @@ $ ->
             globals.configs.clippingMode = state
             $(window).resize()
             @start(false)
-            $('#uploadfilter').prop("disabled", !state)
-            $('#uploadfilter').val(val)
+            $('#uploadfilter').prop("disabled", !state).val(val)
           state: clipMode
 
         clippable = @canvas.split('-')[0] in globals.clippingVises
@@ -284,8 +283,23 @@ $ ->
           $(window).resize()
           @start(false)
 
+        $('#uploadfilter').prop("disabled", !$('#swch-clipping-enabled').bootstrapSwitch('state'))
+
         $('#uploadfilter').change =>
-          console.log "option changed"
+          filter =
+            op:  'up'
+            field: 1
+            value: $('#uploadfilter').val()
+          # Find current upload filter to replace
+          idx = -1
+          for f, i in globals.configs.activeFilters
+            if f.op is 'up'
+              idx = i
+          unless idx is -1
+            globals.configs.activeFilters.splice(idx, 1)
+          unless filter.value is "anytime"
+            globals.configs.activeFilters.push(filter)
+          $(window).resize()  
 
         if globals.configs.disabledPoints.length == 0
           $('#enable-points-button').prop("disabled", true)
