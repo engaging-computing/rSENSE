@@ -26,44 +26,34 @@ class HomeController < ApplicationController
   end
 
   def report_content_login_check
-    @prev_URL =  params[:prev_URL]
-    
-    if not current_user.nil?
+    unless current_user.nil?
       redirect_to '/report_content_form'
     end
-  end  
+  end
 
   def report_content_form
-    @prev_url = params[:prev_URL]
     @current_user = current_user
 
     if current_user.nil?
       redirect_to '/report_content'
     end
-
   end
 
   def report_content_submit
-
-
-    @prev_URL = params[:prev_URL]
-
-    begin
-      UserMailer.report_content_email(params).deliver
-    rescue Net::SMTPFatalError
-      @reason = 'Failed to send email.'
-      return
+    if params[:location] == '' or params[:content] == ''
+      redirect_to :back, flash: { error: 'Please fill out all required fields.' }
+    else
+      begin
+        UserMailer.report_content_email(params).deliver
+        redirect_to '/report_content_success'
+      rescue Net::SMTPFatalError
+        @reason = 'Failed to send email.'
+        return
+      end
     end
-
-    render 'report_content_success'
-
   end
 
-  def report_content_submitted
-
-    # TODO why is this here?
-    puts 'in submitted routine'
-    redirect_to 'home/index'
-    
+  def report_content_success
+    render 'report_content_success'
   end
 end

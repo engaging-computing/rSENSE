@@ -60,7 +60,7 @@ Rsense::Application.routes.draw do
   get 'report_content' => 'home#report_content_login_check'
   get 'report_content_form' => 'home#report_content_form'
   post 'report_content_submit' => 'home#report_content_submit'
-  get 'report_content_submit' => 'home#report_content_submitted'
+  get 'report_content_submit' => 'home#report_content_success'
   get 'report_content_success' => 'home#report_content_success'
   get 'privacy_policy' => 'home#privacy_policy'
 

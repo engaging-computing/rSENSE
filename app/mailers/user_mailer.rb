@@ -18,16 +18,13 @@ class UserMailer < ActionMailer::Base
   end
 
   def report_content_email(params)
-
     hostname = `hostname`.chomp
     from = "admin@#{hostname}"
 
     @current_user = params[:current_user]
-    @prev_URL = params[:prev_URL]
     @location = params[:location]
     @content = params[:content]
 
-
-    mail(from: from, to: "joelsavitz@gmail.com", subject: "Report of inappropriate content on iSense.")
+    mail(from: from, to: 'admin@isenseproject.org', cc: 'joelsavitz@gmail.com', subject: 'Report of inappropriate content on iSense.')
   end
 end
