@@ -1,0 +1,13 @@
+Enter the email
+<hr>
+	<%= form_for @subscriber_email do |f| %>
+	<div>
+		Subject: <%= f.text_field :subject %> <br />
+		Message: <%= f.text_area :message, id:'content-area'%> <br />
+		<%= f.submit %>
+		<button>
+		<%= link_to "Back", root_path %>
+		</button>
+		<% end %>
+	</div>
+</p>

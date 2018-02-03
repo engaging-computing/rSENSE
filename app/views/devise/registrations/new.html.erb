@@ -45,6 +45,13 @@
             <%= f.password_field :password_confirmation, autocomplete: "off", class: "form-control", placeholder: "Retype your password."  %>
           </div>
 
+          <hr>
+
+          <div class="form-group">
+            <%= f.label "Email Preference" %><br />
+            <%= f.check_box :subscribed %> I am willing to recieve occasional emails from the iSENSE team, including an invitation to the official Google Group.
+          </div>
+
           <div class="form-group">
             <%if flash[:recaptcha_error] %>
               <b class="recaptcha_error"><%= flash[:recaptcha_error] %></b>
