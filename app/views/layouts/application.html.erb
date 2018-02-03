@@ -53,7 +53,7 @@
             <li class="navbtn" title="Check out the latest iSENSE news and updates"><%=link_to news_index_path do %><i class='fa fa-newspaper-o'></i> News<%end%></li>
             <% if is_admin? %>
             <li class="navbtn"><%= link_to users_path do%><i class="fa fa-users"></i> Users<%end%></li>
-            <li class="navbtn" title="Send an email to subscribers"><%=link_to new_subscriber_email_path  do %><i class='fa fa-newspaper-o'></i> Email Subscribers<%end%></li>
+            <li class="navbtn" title="Send an email to subscribers"><%=link_to new_subscriber_email_path  do %><i class='fa fa-envelope-o' aria-hidden = "true"></i> Email Subscribers<%end%></li>
             <% end %>
           </ul>
           <ul class="nav navbar-nav navbar-right">

@@ -8,7 +8,7 @@
     <tr>
         <td style="padding: 15px; text-align: center">
             <h2>Hi <%= @user.name %>!</h2>
-            <%= @subscriber_email.message %>
+            <%= simple_format(@subscriber_email.message)%>
      
             <p><br> -iSENSE Team</p>
             <% digester = Digest::MD5.new  %>

@@ -1,4 +1,6 @@
 class SubscriberEmailsController < ApplicationController
+  skip_before_filter :authorize
+
   def new
     unless current_user.admin
       render_404
