@@ -284,6 +284,8 @@ $ ->
           clearFilters()
           $(window).resize()
           @start(false)
+          globals.configs.uploadFilter = "anytime"
+          $('#uploadfilter').val("anytime")
 
         $('#uploadfilter').prop("disabled", !$('#swch-clipping-enabled').bootstrapSwitch('state'))
         $('#uploadfilter').val(globals.configs.uploadFilter)

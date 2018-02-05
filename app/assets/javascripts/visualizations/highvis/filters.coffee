@@ -76,8 +76,7 @@ $ ->
         if f.uvalue? then f.dispValue += formatter(f.uvalue)
         f.dispValue += closer
 
-      if f.op is "up"
-        filterBox = HandlebarsTemplates[hbVis('vis-filter')](f)
+      filterBox = HandlebarsTemplates[hbVis('vis-filter')](f)
       $('#vis-filters').append(filterBox)
 
     window.globals ?= {}
