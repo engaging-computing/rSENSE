@@ -53,6 +53,9 @@ $ ->
         globals.selectedPointY = -1
         globals.annotationSet = null
 
+        # Filter by upload date choice
+        globals.configs.uploadFilter = "anytime"
+
         globals.configs.disabledPoints ?= []
 
       ANALYSISTYPE_TOTAL:      0
@@ -260,12 +263,11 @@ $ ->
         clipMode = Boolean(globals.configs.clippingMode)
         $('#swch-clipping-enabled').bootstrapSwitch
           onSwitchChange: =>
-            val = $('#uploadfilter').val()
             state = $('#swch-clipping-enabled').bootstrapSwitch('state')
             globals.configs.clippingMode = state
             $(window).resize()
             @start(false)
-            $('#uploadfilter').prop("disabled", !state).val(val)
+            $('#uploadfilter').prop("disabled", !state).val(globals.configs.uploadFilter)
           state: clipMode
 
         clippable = @canvas.split('-')[0] in globals.clippingVises
@@ -284,8 +286,10 @@ $ ->
           @start(false)
 
         $('#uploadfilter').prop("disabled", !$('#swch-clipping-enabled').bootstrapSwitch('state'))
+        $('#uploadfilter').val(globals.configs.uploadFilter)
 
         $('#uploadfilter').change =>
+          globals.configs.uploadFilter = $('#uploadfilter').val()
           filter =
             op:  'up'
             field: 1
@@ -299,7 +303,8 @@ $ ->
             globals.configs.activeFilters.splice(idx, 1)
           unless filter.value is "anytime"
             globals.configs.activeFilters.push(filter)
-          $(window).resize()  
+          $(window).resize()
+          @start(false)
 
         if globals.configs.disabledPoints.length == 0
           $('#enable-points-button').prop("disabled", true)

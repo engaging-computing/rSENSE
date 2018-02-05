@@ -217,6 +217,39 @@ $ ->
     globals.nc = (s, i) ->
       (a) -> not String(a[i]).toLowerCase().contains(String(s).toLowerCase())
 
+    # In uploading range
+    globals.up = (s, i) ->
+      (a) ->
+        # Get dates to compare
+        dset_id = globals.getDataSetId(a[data.DATASET_NAME_FIELD])
+        for idx, meta of data.metadata
+          if meta.dataset_id is parseInt(dset_id)
+            uploaded = new Date(meta.timecreated)
+            break
+        now = new Date(Date.now())
+        yesterday = new Date(Date.now())
+        yesterday.setDate(now.getDate()-1)
+        beginning_of_week = new Date(Date.now())
+        beginning_of_week.setDate(now.getDate() - now.getDay())
+
+        # Compare
+        switch s
+          when 'today'
+            uploaded.getFullYear() is now.getFullYear() and \
+            uploaded.getMonth() is now.getMonth() and \
+            uploaded.getDate() is now.getDate()
+          when 'yesterday'
+            uploaded.getFullYear() is now.getFullYear() and \
+            uploaded.getMonth() is now.getMonth() and \
+            uploaded.getDate() is yesterday.getDate()
+          when 'this week'
+            uploaded >= beginning_of_week
+          when 'this month'
+            uploaded.getFullYear() is now.getFullYear() and \
+            uploaded.getMonth() is now.getMonth()
+          when 'this year'
+            uploaded.getFullYear() is now.getFullYear()
+
     # Filter names
     globals.filterNames =
       lt: '<'
