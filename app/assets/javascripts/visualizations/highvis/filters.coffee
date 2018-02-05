@@ -227,7 +227,7 @@ $ ->
             break
         now = new Date(Date.now())
         yesterday = new Date(Date.now())
-        yesterday.setDate(now.getDate()-1)
+        yesterday.setDate(now.getDate() - 1)
         beginning_of_week = new Date(Date.now())
         beginning_of_week.setDate(now.getDate() - now.getDay())
 
