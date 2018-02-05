@@ -3,7 +3,7 @@ Enter the email
 	<%= form_for @subscriber_email do |f| %>
 	<div>
 		Subject: <%= f.text_field :subject %> <br />
-		Message: <%= f.text_area :message, id:'content-area', class: :summernote%> <br />
+		Message: <%= f.text_area :message, id:'content-area'%> <br />
 		<%= f.submit %>
 		<button>
 		<%= link_to "Back", root_path %>

@@ -48,7 +48,7 @@ Rsense::Application.configure do
   # config.action_mailer.default :charset => "utf-8"
 
   # ActionMailer::Base.smtp_settings = {
-  # :address => "smtp.gmail.com",
+  #   :address => "smtp.gmail.com",
   #   :port => 587,
   #   :authentication => :plain,
   #   :domain => 'gmail.com',
