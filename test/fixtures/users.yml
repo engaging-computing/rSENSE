@@ -60,4 +60,3 @@ doug:
   admin: false
   created_at: <%= 3.day.ago.to_s(:db) %>
   confirmed_at: "2017-03-06 00:00:00"
-  subscribed: false
