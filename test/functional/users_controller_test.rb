@@ -121,4 +121,17 @@ class UsersControllerTest < ActionController::TestCase
     get :contributions, {  id: users(:kate).id, filters: 'Visualizations' },  user_id: kate
     assert_response :success
   end
+
+  test 'subscribe should send an email' do
+    doug = sign_in('user', users(:doug))
+    id = users(:doug).id.to_s
+    # Trigger an email to be sent and make sure it got queued up
+    assert_difference 'ActionMailer::Base.deliveries.size', +1 do
+      post :enable_subscription, {id: id}, user_id: doug
+    end
+    # Check out the email and make sure it has proper values
+    invite_email = ActionMailer::Base.deliveries.last
+    assert_equal 'Welcome to the iSENSE mailing list!', invite_email.subject
+    assert_equal 'dsalvati@cs.uml.edu', invite_email.to[0]
+  end
 end
