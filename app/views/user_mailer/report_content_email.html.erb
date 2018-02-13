@@ -6,20 +6,19 @@
   </head>
 
   <body>
-    <h1> REPORT OF INAPPROPRIATE CONTENT ON ISENSE</h1>
+    <h1>REPORT OF INAPPROPRIATE CONTENT ON ISENSE</h1>
 
-    <h3>User ID of reporter:</h3>
+    <h3>User ID of reporter (-1 means user not logged in):</h3>
     <p>
-      <%= @current_user %>
+      <%= @current_user_id %>
     </p>
 
-    <h3>The content is located at: </h3>
+    <h3>Reported URL:</h3>
     <p>
-      <%= @location %>
+      <%= @prev_url %>
     </p>
-    
 
-    <h3>The offending content is: </h3>
+    <h3>Additional Comment: </h3>
     <p>
       <%= @content %>
     </p>
