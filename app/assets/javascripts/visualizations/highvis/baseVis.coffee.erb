@@ -53,6 +53,9 @@ $ ->
         globals.selectedPointY = -1
         globals.annotationSet = null
 
+        # Filter by upload date choice
+        globals.configs.uploadFilter = "anytime"
+
         globals.configs.disabledPoints ?= []
 
       ANALYSISTYPE_TOTAL:      0
@@ -273,7 +276,7 @@ $ ->
         inctx =
           id: 'clipping-enabled'
           logId: 'clipping-enabled'
-          label: 'Filters:'
+          label: ''
           buttonEnabled: !(globals.curVis.canvas == "timeline-canvas" and globals.configs.isPeriod)
 
         outctx = {}
@@ -291,6 +294,7 @@ $ ->
             globals.configs.clippingMode = state
             $(window).resize()
             @start(false)
+            $('#uploadfilter').prop("disabled", !state).val(globals.configs.uploadFilter)
           state: clipMode
 
         clippable = @canvas.split('-')[0] in globals.clippingVises
@@ -305,6 +309,29 @@ $ ->
         $('#clear-filters-btn').click =>
           globals.configs.activeFilters = []
           clearFilters()
+          $(window).resize()
+          @start(false)
+          globals.configs.uploadFilter = "anytime"
+          $('#uploadfilter').val("anytime")
+
+        $('#uploadfilter').prop("disabled", !$('#swch-clipping-enabled').bootstrapSwitch('state'))
+        $('#uploadfilter').val(globals.configs.uploadFilter)
+
+        $('#uploadfilter').change =>
+          globals.configs.uploadFilter = $('#uploadfilter').val()
+          filter =
+            op:  'up'
+            field: 1
+            value: $('#uploadfilter').val()
+          # Find current upload filter to replace
+          idx = -1
+          for f, i in globals.configs.activeFilters
+            if f.op is 'up'
+              idx = i
+          unless idx is -1
+            globals.configs.activeFilters.splice(idx, 1)
+          unless filter.value is "anytime"
+            globals.configs.activeFilters.push(filter)
           $(window).resize()
           @start(false)
 
