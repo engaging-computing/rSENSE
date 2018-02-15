@@ -7,13 +7,10 @@
 <table style="border: 1px solid gray; border-collapse: collapse;">
     <tr>
         <td style="padding: 15px; text-align: center">
-            <h2>Hi <%= @user.name %>!</h2>
-            <%= simple_format(@subscriber_email.message)%>
+            <h2>Hi Doug Salvati!</h2>
+            <p>It's a system we can't afford to lose.</p>
      
             <p><br> -iSENSE Team</p>
-            <% digester = Digest::MD5.new  %>
-            <% digester << "#{@user.id} #{@user.email} #{@user.created_at}" %>
-            <% token = digester.hexdigest %>
         </td>
     </tr>
     <tr>
@@ -22,7 +19,7 @@
                 Message sent by the iSENSE Project.<br>
                 iSENSE is a web system for sharing and visualizing scientific data. It is intended to be a resource for middle school and high school science, math, and engineering instruction.
                 The iSENSE project is a collaborative effort of the University of Massachusetts Lowell and Machine Science Inc.<br>
-                <a style = "color: #c5c5c5;" <%= link_to "Unsubscribe", 'https://isenseproject.org' +  user_path(@user) + '/unsubscribe' + "?token=#{token}"%> |  
+                <a style = "color: #c5c5c5;" <a href="https://isenseproject.org/users/foo/unsubscribe?token=bar">Unsubscribe</a> |  
                 <a style="color: #c5c5c5;" href="https://isenseproject.org">Home</a> | 
                 <a style="color: #c5c5c5;" href="https://isenseproject.org/about">About</a> | 
                 <a style="color: #c5c5c5;" href="https://isenseproject.org/privacy_policy">Privacy Policy</a>
