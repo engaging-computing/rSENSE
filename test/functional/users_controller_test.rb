@@ -127,11 +127,21 @@ class UsersControllerTest < ActionController::TestCase
     id = users(:doug).id.to_s
     # Trigger an email to be sent and make sure it got queued up
     assert_difference 'ActionMailer::Base.deliveries.size', +1 do
-      post :enable_subscription, {id: id}, user_id: doug
+      post :enable_subscription, { id: id }, user_id: doug
     end
     # Check out the email and make sure it has proper values
     invite_email = ActionMailer::Base.deliveries.last
     assert_equal 'Welcome to the iSENSE mailing list!', invite_email.subject
     assert_equal 'dsalvati@cs.uml.edu', invite_email.to[0]
   end
+
+  test 'forgot password' do
+    assert_difference 'ActionMailer::Base.deliveries.size', +1 do
+      post :pw_send_key, { email: users(:doug).email.to_s }
+      email_sent = ActionMailer::Base.deliveries.last
+      assert_equal 'Reset password instructions', email_sent.subject
+      assert_equal 'dsalvati@cs.uml.edu', email_sent.to[0]
+    end
+  end  
+
 end
