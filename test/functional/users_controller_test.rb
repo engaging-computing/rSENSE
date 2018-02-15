@@ -137,11 +137,10 @@ class UsersControllerTest < ActionController::TestCase
 
   test 'forgot password' do
     assert_difference 'ActionMailer::Base.deliveries.size', +1 do
-      post :pw_send_key, { email: users(:doug).email.to_s }
+      post :pw_send_key, email: users(:doug).email.to_s
       email_sent = ActionMailer::Base.deliveries.last
       assert_equal 'Reset password instructions', email_sent.subject
       assert_equal 'dsalvati@cs.uml.edu', email_sent.to[0]
     end
-  end  
-
+  end
 end
