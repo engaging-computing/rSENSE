@@ -237,6 +237,18 @@ $ ->
 
         @table[0].triggerToolbar()
 
+        # X only shows up when there's text in search
+        show_x = ->
+          x_btn = $(this).parent().next().find('.clearsearchclass')
+          if $(this).val().length
+            x_btn.show()
+          else
+            x_btn.hide()
+        $('.ui-search-input > input').keyup show_x
+        $('.ui-search-input > input').change show_x
+        $('.clearsearchclass').click ->
+          $(this).hide()
+
         super()
 
       resize: (newWidth, newHeight, aniLength) ->
