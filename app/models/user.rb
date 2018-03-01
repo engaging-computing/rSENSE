@@ -91,4 +91,8 @@ class User < ActiveRecord::Base
     end
     user
   end
+
+  def self.subscribed_users
+    User.where(subscribed: true)
+  end
 end

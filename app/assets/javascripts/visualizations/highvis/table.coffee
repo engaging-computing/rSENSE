@@ -74,7 +74,7 @@ $ ->
       start: ->
         # Validate fields exist
         if @validate_fields(true) is -4
-          window.location = '/'
+          window.location = '/tutorials'
 
         # Make table visible? (or something)
         $('#' + @canvas).show()
@@ -236,6 +236,18 @@ $ ->
             $(operator).text(operands[column.op])
 
         @table[0].triggerToolbar()
+
+        # X only shows up when there's text in search
+        show_x = ->
+          x_btn = $(this).parent().next().find('.clearsearchclass')
+          if $(this).val().length
+            x_btn.show()
+          else
+            x_btn.hide()
+        $('.ui-search-input > input').keyup show_x
+        $('.ui-search-input > input').change show_x
+        $('.clearsearchclass').click ->
+          $(this).hide()
 
         super()
 

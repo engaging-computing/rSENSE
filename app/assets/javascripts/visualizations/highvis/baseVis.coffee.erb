@@ -53,6 +53,9 @@ $ ->
         globals.selectedPointY = -1
         globals.annotationSet = null
 
+        # Filter by upload date choice
+        globals.configs.uploadFilter = "anytime"
+
         globals.configs.disabledPoints ?= []
 
       ANALYSISTYPE_TOTAL:      0
@@ -97,7 +100,8 @@ $ ->
               id = fieldIds[idx]
               if not id?
                 alert "A critical error has occured and the chart can't be drawn.\nIf you are the owner,
-                  please login and reset your defaults.\nYou probably deleted a field."
+                  please login and reset your defaults.\nYou probably deleted a field.\nSee the \"Restting Defaults\"
+                  tutorial."
                 return -4
               else
                 globals.configs.fieldSelection = [idx]
@@ -232,10 +236,36 @@ $ ->
             when @ANALYSISTYPE_MEDIAN     then data.getMedian
             when @ANALYSISTYPE_COUNT      then data.getCount
 
-        hiddenFields = data.fields.map((field) -> field.fieldID).filter((id) -> id == -1).length
-        for fieldId, index in data.groupSelection
-          fData[index] = analysisMethod.call(data, fieldId + hiddenFields, null, dp)
+        # PROBLEM:
+        # Fields aren't necessarily in alphabetical order in DB
+        # SOLUTION:
+        # Map the group selection to reflect the discrepency
 
+        hiddenFields = data.fields.map((field) -> field.fieldID).filter((id) -> id == -1).length
+        
+        # Relevant fields in alpahbetical selection list order
+        selectionOrder = data.groups
+
+        # Relevant fields in internally-stored project order
+        internalOrder = []
+        for elt, i in data.fields
+          internalOrder[i] = elt
+        internalOrder = internalOrder.splice(hiddenFields, internalOrder.length)
+        ignoredFields = internalOrder.findIndex (f) -> f.typeID is data.types.NUMBER
+        internalOrder = internalOrder.filter (f) -> f.typeID is data.types.NUMBER
+        internalOrder = internalOrder.map (f) -> f.fieldName
+        
+        # Map the group selection to reflect the discrepency
+        mappedSelections = []
+        for elt in data.groupSelection
+          correspondingField = selectionOrder[elt]
+          actualIdxOfField = internalOrder.findIndex (fieldName) -> fieldName is correspondingField
+          mappedSelections[actualIdxOfField] = elt
+
+        # Get the data
+        for fieldId, index in mappedSelections
+          unless fieldId is undefined
+            fData[fieldId] = analysisMethod.call(data, index + hiddenFields + ignoredFields, null, dp)
         return fData
 
       ###
@@ -246,7 +276,7 @@ $ ->
         inctx =
           id: 'clipping-enabled'
           logId: 'clipping-enabled'
-          label: 'Filters:'
+          label: ''
           buttonEnabled: !(globals.curVis.canvas == "timeline-canvas" and globals.configs.isPeriod)
 
         outctx = {}
@@ -264,6 +294,7 @@ $ ->
             globals.configs.clippingMode = state
             $(window).resize()
             @start(false)
+            $('#uploadfilter').prop("disabled", !state).val(globals.configs.uploadFilter)
           state: clipMode
 
         clippable = @canvas.split('-')[0] in globals.clippingVises
@@ -278,6 +309,29 @@ $ ->
         $('#clear-filters-btn').click =>
           globals.configs.activeFilters = []
           clearFilters()
+          $(window).resize()
+          @start(false)
+          globals.configs.uploadFilter = "anytime"
+          $('#uploadfilter').val("anytime")
+
+        $('#uploadfilter').prop("disabled", !$('#swch-clipping-enabled').bootstrapSwitch('state'))
+        $('#uploadfilter').val(globals.configs.uploadFilter)
+
+        $('#uploadfilter').change =>
+          globals.configs.uploadFilter = $('#uploadfilter').val()
+          filter =
+            op:  'up'
+            field: 1
+            value: $('#uploadfilter').val()
+          # Find current upload filter to replace
+          idx = -1
+          for f, i in globals.configs.activeFilters
+            if f.op is 'up'
+              idx = i
+          unless idx is -1
+            globals.configs.activeFilters.splice(idx, 1)
+          unless filter.value is "anytime"
+            globals.configs.activeFilters.push(filter)
           $(window).resize()
           @start(false)
 
@@ -1047,8 +1101,7 @@ $ ->
           else
             temp =
               text: "#{data.fields[globals.configs.fieldSelection[0]].fieldName} " +
-                "(#{data.fields[globals.configs.fieldSelection[0]].unitName})"
-
+                "(#{data.fields[globals.configs.fieldSelection[0]].unitName})"     
         @chart.yAxis[0].setTitle title, false
 
         # Remove curent data
