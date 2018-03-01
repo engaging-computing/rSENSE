@@ -28,7 +28,7 @@ class UserMailer < ActionMailer::Base
     @user = user
     @hostname = `hostname`.chomp
     @subscriber_email = subscriber_email
-    from = 'isenseproject@gmail.com'
+    from = 'davidnguyencollege@gmail.com'
     mail(from: from, to: user.email, subject: subscriber_email.subject)
   end
 end
