@@ -69,7 +69,7 @@
               then
                 "Confirmed"
               else
-                link_to 'Confirm', user_path(u), :method => :confirm
+                link_to 'Confirm', user_path(u) + '/confirm', :method => :confirm
               end %>
             </td>
           </tr>

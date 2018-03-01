@@ -55,6 +55,9 @@ $ ->
         clearFilters()
         addFilter(f) for f in globals.configs.activeFilters
         $('.vis-filter > .remove').click ->
+          if globals.configs.activeFilters[$(@).parent().index()].op is "up"
+            globals.configs.uploadFilter = "anytime"
+            $('#uploadfilter').val("anytime")
           globals.configs.activeFilters.splice($(@).parent().index(), 1)
           $(window).resize()
           globals.curVis.start()
