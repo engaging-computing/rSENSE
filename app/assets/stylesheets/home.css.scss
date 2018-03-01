@@ -70,3 +70,11 @@ body[data-page-name="home/formulas_help"] {
     height: 400px; // Vis height is constant
   }
 }
+
+#about_us {
+  @media (min-width: 992px) and (max-width: 1199px) {
+    .panel {
+      height: 430px;
+    }
+  }
+}
