@@ -1,5 +1,5 @@
 class SubscriberEmailsController < ApplicationController
-  before_filter :authorize_admin, only: [:new, :create]
+  before_filter :authorize_admin, :redirect_cancel, only: [:new, :create]
 
   def new
     @subscriber_email = SubscriberEmail.new
@@ -20,5 +20,9 @@ class SubscriberEmailsController < ApplicationController
 
   def subscriber_email_params
     params[:subscriber_email].permit(:subject, :message)
+  end
+
+  def redirect_cancel
+    redirect_to root_path if params[:cancel]
   end
 end
