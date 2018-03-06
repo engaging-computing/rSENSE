@@ -80,7 +80,7 @@ Rsense::Application.configure do
   end
 
   ENV['RSENSE_VERSION'] = `(git describe --tags) 2>&1`
-  
+
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
