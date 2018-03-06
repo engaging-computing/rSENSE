@@ -26,6 +26,7 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   $vis-bkg-light: #F2F2F2;
   $vis-bkg-attn: #ffdd00;
   $jqgrid-bkg: linear-gradient(#FFFFFF, $vis-bkg-mid);
+  $jqgrid-bkg-dk: linear-gradient($vis-bkg-mid, $vis-bkg-dark);
 
   // some stuff on the page (buttons mostly) shouldn't have selectable text
   @mixin unselectable {
@@ -78,6 +79,10 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
   }
   .bold {
     font-weight: bold;
+  }
+
+  .clearsearchclass {
+    display: none;
   }
 
   .color-picker {
@@ -262,6 +267,19 @@ body[data-page-name='visualizations/show'] .visualizations-controller,
 
   .row {
     margin: 0;
+  }
+
+  .soptclass {
+    border: 1px solid gray;
+    border-radius: 3px;
+    background: $jqgrid-bkg;
+    padding: 3px;
+    padding-left: 5px;
+    margin-right: 5px;
+  }
+  .soptclass:hover {
+    background: $jqgrid-bkg-dk;
+    text-decoration: none;
   }
 
   .strikethrough {

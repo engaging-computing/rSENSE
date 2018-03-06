@@ -369,7 +369,7 @@ $ ->
             # fixes it by splitting the data into different series based on the range
             # the point falls in (ex fixed: http://i.imgur.com/NDIrq8i.png).
             datArray = new Array
-            if @useSetAxis is null and globals.configs.isPeriod is true and data.timeType == data.NORM_TIME
+            if @isTimeline and globals.configs.isPeriod is true and data.timeType == data.NORM_TIME
               currentPeriod = null
               for point in dat
                 newDate = new Date(point.x)
