@@ -32,9 +32,11 @@ hideEditor = () ->
   false
 
 $ ->
+  if namespace.controller is "subscriber_emails" and namespace.action is "new"
+    showEditor()
   if ($ '#content-partial')?
     ($ '#content-editor').hide()
     ($ '#content-edit-btn').click(showEditor)
     if ($ '#add-content-image')?
       ($ '#add-content-image').click(showEditor)
-    ($ '#content-cancel-btn').click(hideEditor)
+      ($ '#content-cancel-btn').click(hideEditor)
