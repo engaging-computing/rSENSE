@@ -24,6 +24,6 @@ class UserMailer < ActionMailer::Base
     @current_user_id = params[:current_user]
     @content = params[:content]
 
-    mail(from: from, to: from, Cc: ENV['FRED_EMAIL'], subject: 'Report of inappropriate content on iSense.')
+    mail(from: from, to: from, Cc: ENV['FRED_EMAIL'], subject: 'Report of inappropriate content on iSENSE.')
   end
 end
