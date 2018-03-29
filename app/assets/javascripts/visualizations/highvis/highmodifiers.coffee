@@ -156,9 +156,7 @@ $ ->
             func = eval('globals.' + filter.op)(filter.value, filter.field)
         dp = dp.filter (a) ->
           # Timestamps can do textual or numerical comparisons
-          if typeof a[filter.field] is 'string' \
-          or (filter.op is 'gt') or (filter.op is 'lt') \
-          or (filter.op is 'ge') or (filter.op is 'le')
+          if typeof a[filter.field] is 'string' or (filter.op in ['eq','ne','gt','lt','ge','le'])
             # Numerical
             func(a)
           else
@@ -168,7 +166,7 @@ $ ->
             ret = func(a)
             a[filter.field] = tmp
             ret
-
+            
       return dp
 
     ###
