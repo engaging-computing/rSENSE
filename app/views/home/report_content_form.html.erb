@@ -1,0 +1,29 @@
+<%= form_tag("/report_content_submit", method: "post") do %>
+  <div >
+    <div class="panel-heading">
+      <h1>
+        Report inappropriate content on iSENSE
+      </h1>
+    </div>
+
+    <div id="report_content_form" class="panel-body">
+      <h3>You are submitting this link for review. Please confirm your submission.</h3>
+      <h5><%= @prev_url %></h5>
+      <div class="form-group">
+        <%= label_tag(:content, "Add an optional comment.") %>
+        <%= text_area_tag(:content, nil, placeholder: "e.g. 'Inappropriate language for a student resource'", class: "form-control", rows: 4) %>
+      </div>
+      <div class="form-group" style="display:none">
+        <%= text_area_tag(:current_user, @current_user_id) %> 
+      </div>
+      <div class="form-group" style="display:none">
+        <%= text_area_tag(:prev_url, @prev_url) %> 
+      </div>
+    </div>
+
+    <div class="panel-footer">
+      <%= submit_tag("Submit", class: "btn btn-primary") %>
+    </div>
+  </div>
+
+<% end %>

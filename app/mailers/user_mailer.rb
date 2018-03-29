@@ -17,6 +17,14 @@ class UserMailer < ActionMailer::Base
     user.send_reset_password_instructions
   end
 
+  def report_content_email(params)
+    from = 'isenseproject@gmail.com'
+
+    @prev_url = params[:prev_url]
+    @current_user_id = params[:current_user]
+    @content = params[:content]
+
+    mail(from: from, to: from, Cc: ENV['FRED_EMAIL'], subject: 'Report of inappropriate content on iSENSE.')
   def send_welcome_to(user)
     @user = user
     @hostname = `hostname`.chomp
