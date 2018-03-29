@@ -1,0 +1,15 @@
+Enter the email
+<hr>
+<p>
+	<body class = "SubscriberEmail" >
+	<%= form_for @subscriber_email do |f| %>
+	<div>
+		Subject: <%= f.text_field :subject %> <br />
+		Message: <%= f.text_area :message, id:'content-area', class: 'summernote'%> <br />
+		</div>
+		<%= f.button :Submit, :label => "Save" %>
+		<%= submit_tag 'Cancel', :name => 'cancel' %>
+		<% end %>
+	</div>
+	</body>
+</p>
