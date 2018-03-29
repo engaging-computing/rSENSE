@@ -151,3 +151,4 @@ Rsense::Application.routes.draw do
   get '/users/:id/unsubscribe' => 'users#disable_subscription_by_email'
 
   resources :subscriber_emails
+end
