@@ -208,7 +208,7 @@ $ ->
           for bin in binArr
             binObjs[groupIndex][bin] ?= 0
             binObjs[groupIndex][bin]++
-        
+
         # Convert bin data into series data
         i = 0
         binSizes = {}
