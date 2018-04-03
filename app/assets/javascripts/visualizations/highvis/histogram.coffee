@@ -200,7 +200,7 @@ $ ->
             x = Math.round(i / @configs.binSize) * @configs.binSize
             unless binMesh[x]?
               binMesh[x] = []
-            binMesh[x].push i
+            binMesh[x].unshift i
             x
 
           binObjs[groupIndex] = {}
@@ -208,7 +208,7 @@ $ ->
           for bin in binArr
             binObjs[groupIndex][bin] ?= 0
             binObjs[groupIndex][bin]++
-
+        
         # Convert bin data into series data
         i = 0
         binSizes = {}
