@@ -42,4 +42,14 @@ class HomeControllerTest < ActionController::TestCase
     # HTML5 Validation is being skipped until the validator is fixed
     # assert_valid_html response.body
   end
+
+  test 'report inappropriate content should send email' do
+    params = { prev_url: 'https://www.uml.edu', current_user: '1234', content: 'foo' }
+    assert_difference 'ActionMailer::Base.deliveries.size', +1 do
+      post :report_content_submit, params
+    end
+    email = ActionMailer::Base.deliveries.last
+    assert_equal 'Report of inappropriate content on iSENSE.', email.subject
+    assert_equal 'isenseproject@gmail.com', email.to[0]
+  end
 end
