@@ -209,6 +209,7 @@ IS.onReady "projects/show", ->
     p_id = url.split '/'
     p_id = p_id[ p_id.length - 1 ]
 
+    deleting_last = $('a.data_set_delete').length is 1
 
     if helpers.confirm_delete $(@).attr('name')
       $.ajax
@@ -216,6 +217,8 @@ IS.onReady "projects/show", ->
         type: "delete"
         dataType: "json"
         success: ->
+          if deleting_last
+            window.location.href = window.location.href
           recolored = false
           tbody = row.parents('tbody')
           row.delete_row ->
