@@ -166,7 +166,7 @@ $ ->
             ret = func(a)
             a[filter.field] = tmp
             ret
-            
+
       return dp
 
     ###
