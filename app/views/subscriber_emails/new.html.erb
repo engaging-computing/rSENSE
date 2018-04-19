@@ -6,7 +6,6 @@ Enter the email
 	<div>
 		Subject: <%= f.text_field :subject %> <br />
 		Message: <%= f.text_area :message, id:'content-area', class: 'summernote'%> <br />
-		</div>
 		<%= f.button :Submit, :label => "Save" %>
 		<%= submit_tag 'Cancel', :name => 'cancel' %>
 		<% end %>
