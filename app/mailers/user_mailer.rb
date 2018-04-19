@@ -25,6 +25,8 @@ class UserMailer < ActionMailer::Base
     @content = params[:content]
 
     mail(from: from, to: from, Cc: ENV['FRED_EMAIL'], subject: 'Report of inappropriate content on iSENSE.')
+  end
+
   def send_welcome_to(user)
     @user = user
     @hostname = `hostname`.chomp
