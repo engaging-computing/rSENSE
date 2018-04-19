@@ -149,7 +149,6 @@ Rsense::Application.routes.draw do
   post '/users/:id/subscribe' => 'users#enable_subscription'
   post '/users/:id/unsubscribe' => 'users#disable_subscription'
   get '/users/:id/unsubscribe' => 'users#disable_subscription_by_email'
-  get '/subscriber_emails/new' => 'subscriber_emails#new'
-  get '/subscriber_emails/:id' => 'subscriber_emails#show'
+
   resources :subscriber_emails
 end
