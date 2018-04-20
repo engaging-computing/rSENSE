@@ -13,11 +13,6 @@ class UserTest < ActiveSupport::TestCase
     assert_default_nil(@user, @user.email)
   end
 
-  # Passes if validated is false
-  test 'validated is false' do
-    assert_default_false(@user, @user.validated)
-  end
-
   # Passes if admin is false
   test 'admin is false' do
     assert_default_false(@user, @user.admin)
@@ -38,10 +33,6 @@ class UserTest < ActiveSupport::TestCase
 
   test 'email' do
     assert_equal 'kcarcia@cs.uml.edu', users(:kate).email
-  end
-
-  test 'validation' do
-    assert_equal true, users(:kate).validated
   end
 
   test 'admin' do

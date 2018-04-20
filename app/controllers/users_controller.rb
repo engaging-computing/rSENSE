@@ -266,22 +266,6 @@ class UsersController < ApplicationController
     end
   end
 
-  # GET /users/validate/:key
-  def validate
-    key = params[:key]
-
-    @user = User.find_by_validation_key(key)
-
-    if @user.nil? or params[:key].blank?
-      render_404
-    else
-      @user.validated = true
-      @user.save!
-
-      render
-    end
-  end
-
   def confirm
     @user = User.find(params[:id])
     if @user.confirm!
@@ -371,7 +355,7 @@ class UsersController < ApplicationController
   def user_params
     if current_user.try(:admin)
       params[:user].permit(:content, :email, :email_confirmation, :name, :password, :password_confirmation,
-                           :admin, :validated, :hidden, :bio, :last_login)
+                           :admin, :hidden, :bio, :last_login)
     else
       params[:user].permit(:content, :email, :email_confirmation, :name, :password, :password_confirmation,
                            :hidden, :bio, :subscribed)
