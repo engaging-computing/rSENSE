@@ -21,4 +21,14 @@ class UserMailerTest < ActionMailer::TestCase
     assert_equal 'What about the droid attack on the Wookiees?', email.subject
     assert_equal read_fixture('subscribers.html').join, email.body.to_s.gsub(%r{users/.*/unsubscribe\?token=.*\"}, 'users/foo/unsubscribe?token=bar"')
   end
+
+  # Report inappropriate content
+  test 'report content' do
+    params = { prev_url: 'https://www.uml.edu', current_user: '1234', content: 'No wise fish would go anywhere without a porpoise.' }
+    email = UserMailer.report_content_email(params)
+    assert_equal ['isenseproject@gmail.com'], email.from
+    assert_equal ['isenseproject@gmail.com'], email.to
+    assert_equal 'Report of inappropriate content on iSENSE.', email.subject
+    assert_equal read_fixture('report_content_email.html').join, email.body.to_s
+  end
 end

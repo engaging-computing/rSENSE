@@ -57,6 +57,10 @@ Rsense::Application.routes.draw do
   get 'appvis' => 'home#appvis'
   get 'aix' => redirect('http://bit.ly/michael-isense-aix')
   get 'report_bug' => 'home#report_bug'
+  get 'report_content' => 'home#report_content_form'
+  get 'report_content_submit' => 'home#report_content_success'
+  post 'report_content_submit' => 'home#report_content_submit'
+  get 'report_content_success' => 'home#report_content_success'
   get 'privacy_policy' => 'home#privacy_policy'
 
   get 'home/index'
@@ -140,11 +144,11 @@ Rsense::Application.routes.draw do
   get '/testing' => 'testing#index'
   post '/testing/review' => 'testing#review'
   post '/testing/publish' => 'testing#publish'
+  post '/users/:id(:confirm)' => 'users#confirm'
   post '/users/:id/confirm' => 'users#confirm'
   post '/users/:id/subscribe' => 'users#enable_subscription'
   post '/users/:id/unsubscribe' => 'users#disable_subscription'
   get '/users/:id/unsubscribe' => 'users#disable_subscription_by_email'
-  get '/subscriber_emails/new' => 'subscriber_emails#new'
-  get '/subscriber_emails/:id' => 'subscriber_emails#show'
+
   resources :subscriber_emails
 end

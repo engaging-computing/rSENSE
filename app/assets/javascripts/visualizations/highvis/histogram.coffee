@@ -200,7 +200,7 @@ $ ->
             x = Math.round(i / @configs.binSize) * @configs.binSize
             unless binMesh[x]?
               binMesh[x] = []
-            binMesh[x].push i
+            binMesh[x].unshift i
             x
 
           binObjs[groupIndex] = {}
