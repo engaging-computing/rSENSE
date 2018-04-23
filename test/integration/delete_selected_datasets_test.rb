@@ -42,4 +42,13 @@ class DeleteSelectedDataSetsTest < IntegrationTest
     visit project_path(@project)
     assert page.has_no_content?('#delete_selected_button'), 'Delete Selected button should not be displayed when the user is logged out'
   end
+
+  test 'page should reload if last dataset deleted' do
+    login('kcarcia@cs.uml.edu', 12345)
+    visit project_path(projects(:dessert))
+    accept_confirm do
+      first('.data_set_delete').click
+    end
+    assert page.has_content?('This project has no data yet.'), 'Page didnt reload when last dset was deleted'
+  end
 end

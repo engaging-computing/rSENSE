@@ -3,7 +3,6 @@
 nixon:
   name: Richard N.
   email: nixon@whitehouse.gov
-  validated: true
   # Password is "12345"
   encrypted_password: <%= Devise::Encryptor.digest(User, '12345') %>
   admin: true
@@ -14,7 +13,6 @@ nixon:
 kate:
   name: Kate C.
   email: kcarcia@cs.uml.edu
-  validated: true
   # Password is "12345"
   encrypted_password: <%= Devise::Encryptor.digest(User, '12345') %>
   admin: false
@@ -25,7 +23,6 @@ kate:
 crunch:
   name: Captain C.
   email: captncrunch@example.com
-  validated: false
   encrypted_password: <%= Devise::Encryptor.digest(User, '12345') %>
   validation_key: abcd
   created_at: <%= 7.day.ago.to_s(:db) %>
@@ -35,7 +32,6 @@ crunch:
 boxes:
   name: boxes
   email: boxes@boxes.boxes
-  validated: true
   encrypted_password: <%= Devise::Encryptor.digest(User, '12345') %>
   admin: false
   created_at: <%= 8.day.ago.to_s(:db) %>
@@ -45,7 +41,6 @@ boxes:
 patson:
   name: Patrick Son
   email: pson@cs.uml.edu
-  validated: true
   encrypted_password: <%= Devise::Encryptor.digest(User, '12345') %>
   admin: false
   created_at: <%= 2.day.ago.to_s(:db) %>
@@ -55,7 +50,6 @@ patson:
 doug:
   name: Doug Salvati
   email: dsalvati@cs.uml.edu
-  validated: true
   encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
   admin: false
   created_at: <%= 3.day.ago.to_s(:db) %>
