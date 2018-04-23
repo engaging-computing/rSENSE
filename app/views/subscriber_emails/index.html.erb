@@ -46,10 +46,10 @@
           </tr>
         </thead>
           
-        <% @subscriber_emails.each do |u| %>
+        <% @subscriber_emails.each do |e| %>
         <tr>
-          <th> <%= link_to(u.subject, subscriber_email_path(u)) %> </th>
-          <th> <%= u.created_at %> </th>
+          <th> <%= link_to(e.subject, subscriber_email_path(e)) %> </th>
+          <th> <%= e.created_at %> </th>
         </tr>
         <% end %>
       </table>
