@@ -1,7 +1,7 @@
 require 'test_helper'
 require_relative 'base_integration_test'
 
-class SubscriberEmailTest < IntegrationTest
+class SubscriberEmailIntegrationTest < IntegrationTest
   self.use_transactional_fixtures = false
 
   # testing subscriber_emails#index
