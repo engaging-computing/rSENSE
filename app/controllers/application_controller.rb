@@ -93,8 +93,6 @@ class ApplicationController < ActionController::Base
   end
 
   def report_content
-    puts '##########in report_content'
-
     @prev_url = params[:prev_url]
 
     # This condition should never be true but it will be left in in case of failure
