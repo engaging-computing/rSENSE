@@ -92,6 +92,23 @@ class ApplicationController < ActionController::Base
     render '/home/create_issue'
   end
 
+  def report_content
+    puts '##########in report_content'
+
+    @prev_url = params[:prev_url]
+
+    # This condition should never be true but it will be left in in case of failure
+    if current_user.nil?
+      @current_user_id = -1
+      @current_user_email = '<form submitted without login>'
+    else
+      @current_user_id = current_user.id
+      @current_user_email = current_user.email
+    end
+
+    render '/home/report_content_form'
+  end
+
   def find_user
     @namespace = { action: params[:action], controller: params[:controller], id: params[:id] }
     @version = ENV['RSENSE_VERSION']

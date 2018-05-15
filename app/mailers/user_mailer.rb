@@ -11,7 +11,8 @@ class UserMailer < ActionMailer::Base
     from = 'isenseproject@gmail.com'
 
     @prev_url = params[:prev_url]
-    @current_user_id = params[:current_user]
+    @current_user_id = params[:current_user_id]
+    @current_user_email = params[:current_user_email]
     @content = params[:content]
 
     mail(from: from, to: from, Cc: ENV['FRED_EMAIL'], subject: 'Report of inappropriate content on iSENSE.')
