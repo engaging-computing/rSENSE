@@ -24,7 +24,7 @@ class UserMailerTest < ActionMailer::TestCase
 
   # Report inappropriate content
   test 'report content' do
-    params = { prev_url: 'https://www.uml.edu', current_user: '1234', content: 'No wise fish would go anywhere without a porpoise.' }
+    params = { prev_url: 'https://www.uml.edu', current_user_id: '1234', current_user_email: 'test@gmail.ignore', content: 'No wise fish would go anywhere without a porpoise.' }
     email = UserMailer.report_content_email(params)
     assert_equal ['isenseproject@gmail.com'], email.from
     assert_equal ['isenseproject@gmail.com'], email.to

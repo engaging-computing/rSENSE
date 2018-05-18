@@ -14,7 +14,10 @@
         <%= text_area_tag(:content, nil, placeholder: "e.g. 'Inappropriate language for a student resource'", class: "form-control", rows: 4) %>
       </div>
       <div class="form-group" style="display:none">
-        <%= text_area_tag(:current_user, @current_user_id) %> 
+        <%= text_area_tag(:current_user_id, @current_user_id) %> 
+      </div>
+      <div class="form-group" style="display:none">
+        <%= text_area_tag(:current_user_email, @current_user_email) %> 
       </div>
       <div class="form-group" style="display:none">
         <%= text_area_tag(:prev_url, @prev_url) %> 
