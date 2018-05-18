@@ -1,0 +1,61 @@
+<div class="row">
+  <div class="col-lg-12">
+    <div class="search-box" id="main_feature">
+      <%=form_tag subscriber_emails_path, method: 'get', id: 'subscriber_emails_search' do%>
+        <!-- hidden input for pagination -->
+        <input type="text" id="hidden_pagination" name="page" value="1" style="display: none;" />
+
+        <div class="row">
+          <div class="col-lg-12">
+            <h1><%= @count %> Email<%= if @count == 1 then "" else "s" end %></h1>
+          </div>
+        
+          <div class="col-lg-4">
+            <select name="sort" class="users_sort_select form-control">
+              <%= options_for_select([["Newest First","DESC"],["Oldest First","ASC"]], 
+                                     params.has_key?(:sort) ? params[:sort] : "DESC") %>
+            </select>
+          </div>
+          <div class="col-lg-6">
+            <%=text_field_tag :search, params[:search], class:'form-control' %>
+          </div>
+          <div class="col-lg-2">
+            <%= submit_tag "Search", name: nil, class:'btn btn-default' %>
+          </div>
+          <div class="col-lg-5" style="margin-top: 3px;">
+            Find Emails from 
+            <%= date_field_tag :start_date, params.has_key?(:start_date) ? params[:start_date] : "2013-08-01" %>
+            To 
+            <%= date_field_tag :end_date, params.has_key?(:end_date) ? params[:end_date] : Date.today %>
+          </div>
+          <div class="clear"></div>
+        </div>
+      <%end%>
+    </div>  
+  </div>
+  <div>
+  <%= link_to("Click here to create and send an email", new_subscriber_email_path) %>
+  </div>
+  <div class="row">
+    <div  class="col-lg-12">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+          
+        <% @subscriber_emails.each do |e| %>
+        <tr>
+          <th> <%= link_to(e.subject, subscriber_email_path(e)) %> </th>
+          <th> <%= e.created_at %> </th>
+        </tr>
+        <% end %>
+      </table>
+      <div>
+        <%= will_paginate @subscriber_emails%>
+      </div>
+    </div> 
+  </div> 
+</div>
