@@ -116,6 +116,12 @@ Rsense::Application.routes.draw do
   get '/api/v1/docs' => 'home#api_v1'
   get '/api/formulas_help' => 'home#formulas_help'
 
+  # Physics Tracker
+  get '/physics' => 'physics#index'
+  get '/physics/about' => 'physics#about'
+  post '/physics/click' => 'physics#click'
+  post '/physics/analyze' => 'physics#analyze'
+
   # Github Authentication Routes
   get '/auth/github' => 'sessions#github_authorize'
   get '/auth/anon_github' => 'application#create_issue_anon'
