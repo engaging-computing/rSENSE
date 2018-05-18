@@ -117,10 +117,10 @@ Rsense::Application.routes.draw do
   get '/api/formulas_help' => 'home#formulas_help'
 
   # Physics Tracker
-  get '/physics' => 'physics#index'
-  get '/physics/about' => 'physics#about'
-  post '/physics/click' => 'physics#click'
-  post '/physics/analyze' => 'physics#analyze'
+  get '/physics' => 'physicstracker#index'
+  get '/physics/about' => 'physicstracker#about'
+  post '/physics/click' => 'physicstracker#click'
+  post '/physics/analyze' => 'physicstracker#analyze'
 
   # Github Authentication Routes
   get '/auth/github' => 'sessions#github_authorize'

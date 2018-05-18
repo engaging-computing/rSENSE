@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+	<body>
+	        <%= image_tag("physicstracker/logo.png", :class => "center") %>
+		<p class="center"><em>Hey there! Physics Tracker is a tool that lets you automatically track the<br/>
+		motion of an object in a video and gather data to visualize here on iSENSE!<br/>
+	  To begin, upload a video below. Then press <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> and we'll get started!</em><br/></p>
+		<%= form_tag "/physics/click", method: 'post', multipart: true, class: 'center' do %>
+    		<%= file_field_tag 'video', class: 'yellow_button' %>
+  			<%= button_tag(type: "submit", id: "upload-next", class: "next") do %>
+			  	<i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+				<% end %>
+		<% end %>
+		<p class="center"><%= link_to "Learn More about this App", "/physics/about" %></p>
+		<br/>
+		<hr/>
+		<h3 class="center"> Tips for Filming a Good Video</h3>
+		<div class="center">
+		  <div class="tips">
+		    <%= image_tag "physicstracker/solid_colors.png" %>
+		    <%= image_tag "physicstracker/contrast.png" %>
+		    <%= image_tag "physicstracker/in_frame.png" %>
+		    <%= image_tag "physicstracker/dont_move.png" %>
+		  </div>
+		</div>
+		<hr/>
+	</body>
+</html>

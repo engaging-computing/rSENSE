@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head></head>
+  <body>
+    <%= link_to "Do another Video", "/physics" %>
+    <div class="column center">
+      <h1>Video Analysis</h1>
+      <%= video_tag(@output, controls: true, autoplay: true, loop: true, type: "video/webm", width: "50%") %>
+    </div>
+    <div class="column center">
+      <h1>Data</h1>
+      <div id="export_btns">
+      <a class="download_btn" href="/<%= @data_download %>" download="physics_data.json"><i class="fa fa-download fa-2x" aria-hidden="true"></i> Download Data</a>
+      <a class="download_btn" id="upload-to-isense"><i class="fa fa-line-chart fa-2x" aria-hidden="true"></i> Upload to iSENSE</a>
+      </div>
+      <div class="table-head-container">
+      <table><thead>
+	  <th>Time (s)</th><th><i>x</i> (<%= @units %>)</th><th><i>y</i> (<%= @units %>)</th>
+	  <th><i>v<sub>x</sub></i> (<%= @units %>/s)</th><th><i>v<sub>y</sub></i> (<%= @units %>/s)</th>
+	  <th><i>a<sub>x</sub></i> (<%= @units %>/s<sup>2</sup>)</th>
+	  <th><i>a<sub>y</sub></i> (<%= @units %>/s<sup>2</sup>)</th>
+      </thead></table>
+      </div>
+      <div class="table-container"><table id="data-table">
+	<tbody>
+	  <% @data.each do |datum| %>
+	  <tr>
+	    <td><%= datum["t"].to_f.round(4) %></td>
+	    <td><%= datum["x"].to_f.round(4) %></td>
+	    <td><%= datum["y"].to_f.round(4) %></td>
+	    <td><%= datum["vx"].to_f.round(4) %></td>
+	    <td><%= datum["vy"].to_f.round(4) %></td>
+	    <td><%= datum["ax"].to_f.round(4) %></td>
+	    <td><%= datum["ay"].to_f.round(4) %></td>
+	  </tr>
+	  <% end %>
+	</tbody>
+      </table></div>
+    </div>
+    <!-- iSENSE Upload Form -->
+    <div id="isense-form">
+      <h1 class="center">Upload to iSENSE!</h1>
+      <div id="isense-default">
+	Experiment Title: <input type="text" value="" id="isense-dset-2"><br/>
+	Your Name: <input type="text" value="" id="isense-name-2"><br/>
+	<hr/>
+	<div class="center"><a href="#" id="isense-use-custom">Use my own project...</a></div>
+      </div>
+      <div id="isense-custom">
+	Project ID: <input type="text" value="" id="isense-pid"><br/>
+	Contributor Key: <input type="text" value="" id="isense-key"><br/>
+	Data Set Name: <input type="text" value="" id="isense-dset"><br/>
+	Your Name: <input type="text" value="" id="isense-name"><br/>
+	<hr/>
+	<h2 class="center">Field Names:</h2>
+	Time: <input type="text" value="Time" id="t"><br/>
+	X-Position: <input type="text" value="X-Position" id="x"><br/>
+	Y-Position: <input type="text" value="Y-Position" id="y"><br/>
+	X-Velocity: <input type="text" value="X-Velocity" id="vx"><br/>
+	Y-Velocity: <input type="text" value="Y-Velocity" id="vy"><br/>
+	X-Acceleration: <input type="text" value="X-Acceleration" id="ax"><br/>
+	Y-Acceleration: <input type="text" value="Y-Acceleration" id="ay"><br/></br>
+      </div>
+      <hr/>
+      <div class="center"><a href="#" id="isense-cancel">Cancel</a> | <a href="#" id="isense-submit">Submit</a></div>
+</div>
+  </body>
+</html>
