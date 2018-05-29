@@ -32,7 +32,7 @@ $(document).ready ->
     $("input[name=x]").val(x)
     $("input[name=y]").val(y)
     $("#click-object-next").show()
-    $("#click-object-next").click (e) ->
+  $("#click-object-next").click (e) ->
     $("#click-object").hide()
     $("#measure-length").show()
     document.body.scrollTop = document.documentElement.scrollTop = 0
@@ -48,28 +48,28 @@ $(document).ready ->
     x1 = Math.round(click_x - $(this).offset().left)
     y1 = Math.round(click_y - $(this).offset().top)
     $("#measure-length-next").hide()
-    if $("#measure-length-img").length
-      drawLine(x1,y1,x2,y2)
-    $("#measure-length-canvas").bind 'touchend mouseup', (e) ->
+  if $("#measure-length-img").length
+    drawLine(x1,y1,x2,y2)
+  $("#measure-length-canvas").bind 'touchend mouseup', (e) ->
     # Selecting 2nd point (need to calc dist)
-      click_x = lastx
-      click_y = lasty
-      x2 = Math.round(click_x - $(this).offset().left)
-      y2 = Math.round(click_y - $(this).offset().top)
-      if (x1 == x2) and (y1 == y2)
-        drawLine(x1,y1,x2,y2)
-        x1 = x2 = y1 = y2 = -1
-        return
-      x_term = Math.pow(x2 - x1, 2)
-      y_term = Math.pow(y2 - y1, 2)
-      dist = Math.sqrt(x_term + y_term)
-      if dist is 0
-        dist = 1
+    click_x = lastx
+    click_y = lasty
+    x2 = Math.round(click_x - $(this).offset().left)
+    y2 = Math.round(click_y - $(this).offset().top)
+    if (x1 == x2) and (y1 == y2)
+      drawLine(x1,y1,x2,y2)
+      x1 = x2 = y1 = y2 = -1
+      return
+    x_term = Math.pow(x2 - x1, 2)
+    y_term = Math.pow(y2 - y1, 2)
+    dist = Math.sqrt(x_term + y_term)
+    if dist is 0
+      dist = 1
     $("input[name=length]").val(Math.round(dist))
     drawLine(x1,y1,x2,y2)
     x1 = y1 = x2 = y2 = -1
     $("#measure-length-next").show()
-    $('input[name=video]').change (e) ->
+  $('input[name=video]').change (e) ->
     if e.target.files.length
       $("#upload-next").show()
     else

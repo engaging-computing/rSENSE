@@ -23,7 +23,7 @@
 	  <option value="ft">Foot</option>
 	  <option value="yd">Yard</option>
 	</select></p>
-      <%= image_tag @frame, id: "measure-length-img" %>
+      <img src=<%= @frame %> id='measure-length-img'/><br/>
       <canvas id="measure-length-canvas"></canvas>
       <%= hidden_field_tag "length", "1" %>
       <%= hidden_field_tag "video", @video %>
