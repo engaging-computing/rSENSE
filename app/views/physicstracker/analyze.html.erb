@@ -5,7 +5,7 @@
     <%= link_to "Do another Video", "/physics" %>
     <div class="column center">
       <h1>Video Analysis</h1>
-      <%= video_tag(@output, controls: true, autoplay: true, loop: true, type: "video/webm", width: "50%") %>
+			<video autoplay="autoplay" controls="controls" loop="loop" src=<%= @output %> type="video/webm" width="50%"></video>
     </div>
     <div class="column center">
       <h1>Data</h1>

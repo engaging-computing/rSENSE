@@ -6,7 +6,7 @@
     <%= form_tag "/physics/analyze", method: 'post', multipart: true, id: 'click_form' do %>
     <div id="click-object" class="center">
       <p><em>Click your object to identify it in the video.<br/>Then press <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> to continue.</em></p>
-      <%= image_tag @frame, id: "click-object-img" %><br/>
+      <img src=<%= @frame %> id='click-object-img'/><br/>
       <%= hidden_field_tag "x" %>
       <%= hidden_field_tag "y" %>
       <a id="click-object-next" class="next right-next")>
