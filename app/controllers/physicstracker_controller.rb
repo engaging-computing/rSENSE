@@ -5,6 +5,10 @@ class PhysicstrackerController < ApplicationController
   end
 
   def click
+    if params[:video].size > 10.megabytes
+      redirect_to('/physics', flash: { error: 'Sorry, that video file is too large to process.' })
+      return
+    end
     @video = params[:video].tempfile.path
     @frame = File.basename(@video, File.extname(@video)) + '.png'
     frame_path = Rails.root.join('public', 'physicsassets', 'images', @frame)
