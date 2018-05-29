@@ -14,7 +14,7 @@ class PhysicstrackerController < ApplicationController
     @frame = '/physicsassets/images/' + @frame
     @o, @e, @s = Open3.capture3("ffmpeg -i #{@video} -q:v 3 -vframes 1 #{frame_path}")
     if @s.exitstatus != 0
-      redirect_to('/physics', { :flash => { :error => 'Your file is not in a supported format.  Try:<ul><li>Make sure you are using a VIDEO file</li><li>Convert to a different format on the web</li></ul>' } })
+      redirect_to('/physics', { flash: { error: 'Your file is not in a supported format.  Try:<ul><li>Make sure you are using a VIDEO file</li><li>Convert to a different format on the web</li></ul>' } })
       return
     end
     # Convert to MOV - only one I could get working easily
@@ -27,7 +27,7 @@ class PhysicstrackerController < ApplicationController
     logger.info(@ve1)
     logger.info(@vs1)
     if @vs1.exitstatus != 0
-      redirect_to('/physics', { :flash => { :error => 'Failed to convert video for processing. Try:<ul><li>Make sure you are using a proper video file</li><li>Convert to a different format</li></ul>' } })
+      redirect_to('/physics', { flash: { error: 'Failed to convert video for processing. Try:<ul><li>Make sure you are using a proper video file</li><li>Convert to a different format</li></ul>' } })
       return
     end
   end
@@ -67,7 +67,7 @@ class PhysicstrackerController < ApplicationController
       if @ps.exitstatus != 0
         tolerance += 5
         if tolerance > 100
-          redirect_to('/physics', { :flash => { :error => 'Failed during tracking with the following issues:<br/>' + @po } })
+          redirect_to('/physics', { flash: => { error: 'Failed during tracking with the following issues:<br/>' + @po } })
           return
         end
       end
