@@ -45,11 +45,18 @@
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <span class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li class="navbtn" title="Browse through projects created by iSENSE users"><%=link_to projects_path do %><i class='fa fa-folder-open'></i> Projects<%end%></li>
             <li class="navbtn" title="Explore data visualizations built by iSENSE users"><%=link_to visualizations_path do %><i class='fa fa-picture-o'></i> Visualizations<%end%></li>
             <li class="navbtn" title="Learn how to use iSENSE"><%=link_to tutorials_path do %><i class='fa fa-info-circle'></i> Tutorials<%end%></li>
+            <li class="navbtn" title="Related projects built around iSENSE">
+              <a style="cursor: pointer" id="tools_dropdown"><i class='fa fa-wrench'></i> Tools</a>
+              <ul for="tools_dropdown" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+                <%=link_to 'physics' do %><li class="mdl-menu__item" title="Automatically track motion in a video to learn about physics"><i class='fa fa-flask'></i> Physics Tracker</li><%end%>
+                <%=link_to 'appvis' do %><li class="mdl-menu__item" title="Program Andriod apps using iSENSE"><i class='fa fa-puzzle-piece'></i> AppVis</li><%end%>
+              </ul>
+            </li>
             <li class="navbtn" title="Check out the latest iSENSE news and updates"><%=link_to news_index_path do %><i class='fa fa-newspaper-o'></i> News<%end%></li>
             <% if is_admin? %>
             <li class="navbtn"><%= link_to users_path do%><i class="fa fa-users"></i> Users<%end%></li>
