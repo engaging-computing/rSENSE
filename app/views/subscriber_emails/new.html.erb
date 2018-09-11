@@ -5,7 +5,9 @@ Enter the email
 	<%= form_for @subscriber_email do |f| %>
 	<div>
 		Subject: <%= f.text_field :subject %> <br />
-		Message: <%= f.text_area :message, id:'content-area', class: 'summernote'%> <br />
+		Message: <br />
+		<%= link_to("Image upload does not work correctly!", "https://github.com/isenseDev/rSENSE/issues/2817") %> <br />
+		<%= f.text_area :message, id:'content-area', class: 'summernote'%> <br />
 		</div>
 		<%= f.button :Submit, :label => "Save" %>
 		<%= submit_tag 'Cancel', :name => 'cancel' %>
