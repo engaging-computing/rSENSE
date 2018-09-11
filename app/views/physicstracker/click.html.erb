@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head></head>
+  <body>
+    Not happy? <%= link_to "Start Over", "/physics" %>
+    <%= form_tag "/physics/analyze", method: 'post', multipart: true, id: 'click_form' do %>
+    <div id="click-object" class="center">
+      <p><em>Click your object to identify it in the video.<br/>Then press <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> to continue.</em></p>
+      <img src=<%= @frame %> id='click-object-img'/><br/>
+      <%= hidden_field_tag "x" %>
+      <%= hidden_field_tag "y" %>
+      <a id="click-object-next" class="next right-next")>
+          <i class="fa fa-arrow-circle-right fa-3x" aria-hidden="true"></i>
+      </a>
+    </div>
+    <div id="measure-length" class="center">
+      <p><em>Click and drag to measure an object in the video</i><br/>Then press <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> and I'll do some fancy calculations.</em></p>
+      <p>This line equals 1 <select name="units">
+	  <option value="cm">Centimeter</option>
+	  <option value="m">Meter</option>
+	  <option value="km">Kilometer</option>
+	  <option value="in">Inch</option>
+	  <option value="ft">Foot</option>
+	  <option value="yd">Yard</option>
+	</select></p>
+      <img src=<%= @frame %> id='measure-length-img'/><br/>
+      <canvas id="measure-length-canvas"></canvas>
+      <%= hidden_field_tag "length", "1" %>
+      <%= hidden_field_tag "video", @video %>
+      <%= button_tag(type: "submit", id: "measure-length-next", class: "next right-next") do %>
+          <i class="fa fa-arrow-circle-right fa-3x" aria-hidden="true"></i>
+      <% end %>
+    </div>
+    <% end %>
+    <div id="loading-screen">
+      <div class="loader"></div>
+    </div>
+  </body>
+</html>

@@ -24,6 +24,9 @@ aws_config.yml
 
 public/assets/*
 public/media/*
+public/physicsassets/videos/*.webm
+public/physicsassets/images/*.png
+public/physicsassets/json/*.json
 log/*
 db/data.yml*
 
