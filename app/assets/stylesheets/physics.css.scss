@@ -1,0 +1,229 @@
+// Doug Salvati
+// Honors Project
+// Fall 2017
+
+// General
+
+.physicstracker-controller {
+    body {
+        margin: 0;
+        font-family: sans-serif;
+        color: white;
+    }
+
+    a {
+        text-decoration: none;
+        color: darkblue;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    .center {
+        text-align: center;
+        display: block;
+        margin: auto;
+    }
+
+    .column {
+        float: left;
+        width: 50%;
+    }
+
+    .flash-error {
+        margin: 5%;
+        background-color: rgba(255,0,0,0.75);
+        padding: 10px;
+        color: white;
+        border-radius: 10px;
+    }
+
+    .yellow_button {
+        margin: auto;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        text-decoration: none;
+        color: white;
+        background-color: rgb(244, 158, 66);
+        padding: 10px;
+        border-radius: 5px;
+    }
+    .yellow_button:hover {
+        background-color: rgb(242, 130, 12);
+    }
+
+    .next {
+        background: Transparent;
+        border: none;
+        line-height: 200%;
+        font-size: 200%;
+        vertical-align: middle;
+        cursor: pointer;
+        color: rgba(0,0,0,0.75);
+        display: none;
+    }
+    .next:hover {
+        color: rgba(0,0,0,1);
+    }
+    .right-next {
+        display: none;
+        position: fixed;
+        right: 20px;
+        top: 50%;
+    }
+
+    #export_btns {
+        margin-bottom: 20px;
+    }
+
+    .download_btn {
+        cursor: pointer;
+        color: rgba(0,0,0,0.75);
+        margin-left: 20px;
+        margin-right: 20px;
+        :hover {
+            color: black;
+        }
+    }
+
+    // Table
+    .table-container {
+        max-height: 500px;
+        overflow: auto;
+        margin: 20px;
+        border: 1px solid white;
+    }
+            
+    .table-head-container {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    table {
+        border-collapse: collapse;
+        table-layout: fixed;
+        width: 100%;
+        td {
+            border: 1px solid #113;
+        padding: 10px;
+        text-align: left;
+        }
+    }
+
+    // Loading screen
+    #loading-screen {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 999;
+        background-color: rgba(0,0,0,0.5);
+        width: 100%;
+        height: 100%;
+    }
+
+    // Following code courtesy W3Schools
+    .loader {
+    position: absolute;
+    top: 45%;
+    left: 45%;
+    width: 10%;
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+    }
+
+    @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+    }
+
+    @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+    }
+
+    // Navigation bar
+    .navbar {
+        background-color: rgba(255,255,255,.2);
+        top: 0;
+        padding-top: 1%;
+        padding-bottom: 1%;
+        width: 100%;
+    }
+
+    .navbar > * {
+        display: inline;
+    }
+
+    #page_title {
+        margin-left: 10%;
+    }
+
+    .about {
+        position: absolute;
+        right: 10%;
+    }
+
+    // Object selection
+    #click-object > img {
+        cursor: crosshair;
+    }
+
+    #measure-length-img {
+        display: none;
+    }
+
+    #measure-length-canvas {
+        cursor: crosshair;
+    }
+
+    #measure-length {
+        display: none;
+    }
+
+    #submit-area {
+        display: none;
+    }
+
+    // Upload to iSENSE
+    #isense-form {
+        display: none;
+        position: fixed;
+        top: 25%;
+        right: 25%;
+        padding: 20px;
+        background-color: rgba(200,200,200,0.90);
+        border-radius: 5px;
+        color: black;
+        margin: 1%;
+        input {
+            padding: 2px;
+        }
+    }
+
+    // Tips
+    .tips {
+        display: inline-block;
+    }
+    .tips > img {
+        height: 120px;
+        background: #113;
+        border-radius: 5px;
+    }
+
+    #isense-custom {
+        display: none;
+    }
+
+    #ptlogo {
+        width: 50vw;
+    }
+
+}
