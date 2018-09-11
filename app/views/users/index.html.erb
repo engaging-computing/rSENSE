@@ -60,7 +60,7 @@
             <td><%= link_to u.name, user_path(u)%></td>
             <td><%= u.email? ? u.email : "" %></td>
             <td><%= u.created_at.strftime("%b %d, %Y")%></td>
-            <td><%= u.last_login.strftime("%b %d, %Y")%></td>
+            <td><%= u.current_sign_in_at.strftime("%b %d, %Y")%></td>
             <td>P: <%=u.projects.count%>
               | V: <%=u.visualizations.count%>
               | D: <%=u.data_sets.count%>

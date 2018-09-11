@@ -355,7 +355,7 @@ class UsersController < ApplicationController
   def user_params
     if current_user.try(:admin)
       params[:user].permit(:content, :email, :email_confirmation, :name, :password, :password_confirmation,
-                           :admin, :hidden, :bio, :last_login)
+                           :admin, :hidden, :bio, :current_sign_in_at)
     else
       params[:user].permit(:content, :email, :email_confirmation, :name, :password, :password_confirmation,
                            :hidden, :bio, :subscribed)
