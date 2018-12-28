@@ -6,7 +6,6 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXWiJ_kYL1WJlbjHgQYp4k-tt8Wew9lsA&libraries=visualization,geometry">
 </script>
 
-
 <% if can_edit?(@data_set) %>
 
   <div class="full_width_edit" style="font-size:2em;"><%= data_set_edit_helper 'title', can_edit?(@data_set), false, "/data_sets/#{@data_set.id}" %></div>
