@@ -30,7 +30,7 @@ $ ->
   if namespace.controller is 'visualizations' and
   namespace.action in ['displayVis', 'embedVis', 'show']
 
-    class window.Map extends BaseVis
+    class window.MapVis extends BaseVis
       constructor: (@canvas) ->
         super(@canvas)
 
@@ -58,7 +58,7 @@ $ ->
         # Validate fields exist
         if @validate_fields(true) is -4
           window.location = '/tutorials'
-          
+
         $('#compass').show()
 
         # Map needs this canvas visible to draw correctly
@@ -320,7 +320,7 @@ $ ->
             @gmap.setCenter(latlngbounds.getCenter())
           else
             @gmap.fitBounds(latlngbounds)
-            
+
         @drawControls()
 
         ctaLayer = new google.maps.KmlLayer({url: window.kml})
@@ -427,7 +427,7 @@ $ ->
           if @timeLines?
             @timeLines[i].setVisible((i in data.groupSelection) and
               Boolean(@configs.visibleLines))
-              
+
         @clusterer.repaint()
         super()
 
@@ -501,7 +501,7 @@ $ ->
 
         tools = HandlebarsTemplates[hbCtrl('body')](outctx)
         $('#vis-ctrls').append(tools)
-        
+
         # Set the correct options for period:
         $('#period-list').val(globals.configs.periodMode)
 
@@ -724,6 +724,6 @@ $ ->
         projectPixels: (latlng) ->
           @getProjection().fromLatLngToContainerPixel(latlng)
 
-      globals.map = new Map 'map-canvas'
+      globals.map = new MapVis 'map-canvas'
     else
       globals.map = new DisabledVis 'map-canvas'
