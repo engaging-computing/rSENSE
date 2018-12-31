@@ -11,12 +11,11 @@
   <li><a href="#numbers">Numbers</a></li>
   <li><a href="#text">Text</a></li>
   <li><a href="#time">Time</a></li>
-  <li><a href="#examples">Examples</a></li>
 </ol>
 
 <!-- category for the introduction -->
 <%= render 'category_header', name: 'intro', text: '2. Introduction' %>
-[in progress]
+Below you will find information about how to use functions in calculated fields within iSENSE.
 
 <!-- category for list of operators and their applications -->
 <%= render 'category_header', name: 'operators', text: '3. Operators' %>
@@ -434,7 +433,3 @@
 <%= render layout: 'func_description', locals: { signature: 'month_name(t: timestamp) -> text' } do %>
   Returns the name of the month in <code>t</code>.
 <% end %>
-
-<!-- category for examples of formulas -->
-<%= render 'category_header', name: 'examples', text: '11. Examples' %>
-[in progress]
