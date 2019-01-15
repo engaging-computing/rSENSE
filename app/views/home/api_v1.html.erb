@@ -6,7 +6,8 @@
     <img alt="[iSENSE]" src="https://circleci.com/gh/isenseDev/rSENSE/tree/master.svg?style=shield"/>
   </div>
 </div>
-<p>Client-side APIs available on <a href="https://github.com/isenseDev/iSENSE-API">Github</a> </p>
+<p>Client-side API examples are available on <a href="https://github.com/isenseDev/iSENSE-API">Github</a>.</p>
+<p><strong>Please note:</strong> All requests must use HTTPS. HTTP requests are no longer supported.</p>
 <p>Click on an API request to expand documentation.</p>
 <div class="row">
   <div class="col-md-12">
@@ -27,7 +28,7 @@
           </ul>
           <b>Example (Javascript)</b>
           <pre>
-    var urlProject = 'http://isenseproject.org/api/v1/projects/<b>(project id)</b>';
+    var urlProject = 'https://isenseproject.org/api/v1/projects/<b>(project id)</b>';
 
     var responseProject = $.ajax({ type: "GET",
                                     url: urlProject,
@@ -94,7 +95,7 @@
           </ul>
           <b>Example (Javascript)</b>
           <pre>
-    var urlProject = 'http://isenseproject.org/api/v1/projects';
+    var urlProject = 'https://isenseproject.org/api/v1/projects';
     var responseProject = $.ajax({ type: "GET",
                                     url: urlProject,
                                   async: false,
@@ -152,7 +153,7 @@
           </pre>
           <b>Example (Javascript)</b>
           <pre>
-    var apiUrl = 'http://isenseproject.org/api/v1/projects';
+    var apiUrl = 'https://isenseproject.org/api/v1/projects';
 
     var upload = {
         'email': '<b>(email)</b>',
@@ -223,7 +224,7 @@
           </pre>
           <b>Example (Javascript)</b>
           <pre>
-    var apiUrl = 'http://isenseproject.org/api/v1/projects/<b>(project id)</b>/add_key';
+    var apiUrl = 'https://isenseproject.org/api/v1/projects/<b>(project id)</b>/add_key';
 
     var upload = {
         'email' : '<b>(email)</b>',
@@ -278,7 +279,7 @@
           </pre>
           <b>Example (Javascript)</b>
           <pre>
-    var url = 'http://rsense-dev.cs.uml.edu/api/v1/projects/<b>(project id)</b>/key';
+    var url = 'http://isenseproject.org/api/v1/projects/<b>(project id)</b>/key';
     var response = $.ajax({ type: "GET",
                              url: url,
                            async: false,
@@ -343,7 +344,7 @@
           </pre>
           <b>Example (Javascript)</b>
           <pre>
-    var apiUrl = 'http://isenseproject.org/api/v1/fields';
+    var apiUrl = 'https://isenseproject.org/api/v1/fields';
 
     var upload = {
         'email' : '<b>(email)</b>',
@@ -401,7 +402,7 @@
           </ul>
           <b>Example (Javascript)</b>
           <pre>
-    var urlProject = 'http://isenseproject.org/api/v1/fields/<b>(field id)</b>';
+    var urlProject = 'https://isenseproject.org/api/v1/fields/<b>(field id)</b>';
 
     var responseProject = $.ajax({ type: "GET",
                                     url: urlProject,
@@ -456,7 +457,7 @@
           <b>Example (Javascript)</b>
           <pre>
 
-  var url = 'http://rsense-dev.cs.uml.edu/api/v1/data_sets/<b>(data set id)</b>';
+  var url = 'https://isenseproject.org/api/v1/data_sets/<b>(data set id)</b>';
   var response = $.ajax({ type: "GET",
                            url: url,
                          async: false,
@@ -527,7 +528,7 @@
           </pre>
           <b>Example (Javascript)</b>
           <pre>
-    var apiUrl = 'http://isenseproject.org/api/v1/projects/<b>(project id)</b>/jsonDataUpload';
+    var apiUrl = 'https://isenseproject.org/api/v1/projects/<b>(project id)</b>/jsonDataUpload';
 
     var upload = {
         'email' : '<b>(email)</b>',
@@ -599,7 +600,7 @@
           </pre>
           <b>Example (Javascript)</b>
           <pre>
-    var apiUrl = 'http://isenseproject.org/api/v1/projects/<b>(project id)</b>/jsonDataUpload';
+    var apiUrl = 'https://isenseproject.org/api/v1/projects/<b>(project id)</b>/jsonDataUpload';
 
     var upload = {
         'title' : '<b>(title)</b>',
@@ -669,7 +670,7 @@
           </pre>
           <b>Example (Javascript)</b>
           <pre>
-    var apiUrl = 'http://isenseproject.org/api/v1/data_sets/<b>(data set id)</b>/edit';
+    var apiUrl = 'https://isenseproject.org/api/v1/data_sets/<b>(data set id)</b>/edit';
 
     var upload = {
         'email' : '<b>(email)</b>',
@@ -738,7 +739,7 @@
           </pre>
           <b>Example (Javascript)</b>
           <pre>
-    var apiUrl = 'http://isenseproject.org/api/v1/data_sets/<b>(data set id)</b>/edit';
+    var apiUrl = 'https://isenseproject.org/api/v1/data_sets/<b>(data set id)</b>/edit';
 
     var upload = {
         'contribution_key' : '<b>(key)</b>',
@@ -806,7 +807,7 @@
           </pre>
           <b>Example (Javascript)</b>
           <pre>
-    var apiUrl = 'http://isenseproject.org/api/v1/data_sets/append';
+    var apiUrl = 'https://isenseproject.org/api/v1/data_sets/append';
 
     var upload = {
         'email' : '<b>(email)</b>',
@@ -876,7 +877,7 @@
           </pre>
           <b>Example (Javascript)</b>
           <pre>
-    var apiUrl = 'http://isenseproject.org/api/v1/data_sets/append';
+    var apiUrl = 'https://isenseproject.org/api/v1/data_sets/append';
 
     var upload = {
         'contribution_key' : '<b>(key)</b>',
@@ -945,7 +946,7 @@
           <pre>
   &lt;html>
     &lt;head>
-      &lt;script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">&lt;/script>
+      &lt;script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">&lt;/script>
         &lt;script type="text/javascript" src="example.js">&lt;/script>
     &lt;/head>
     &lt;body>
@@ -958,7 +959,7 @@
             <pre>
 // MEDIA OBJECT POST WITH USERNAME AND PASSWORD
 
-    var apiUrl = 'http://isenseproject.org/api/v1/media_objects';
+    var apiUrl = 'https://isenseproject.org/api/v1/media_objects';
     var fileSelect = document.getElementById('file-select');
     var files = fileSelect.files;
     var formData = new FormData();
@@ -1028,7 +1029,7 @@
           <pre>
   &lt;html>
     &lt;head>
-      &lt;script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">&lt;/script>
+      &lt;script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">&lt;/script>
         &lt;script type="text/javascript" src="example.js">&lt;/script>
     &lt;/head>
     &lt;body>
@@ -1041,7 +1042,7 @@
             <pre>
 // MEDIA OBJECT POST WITH USERNAME AND PASSWORD
 
-    var apiUrl = 'http://isenseproject.org/api/v1/media_objects';
+    var apiUrl = 'https://isenseproject.org/api/v1/media_objects';
     var fileSelect = document.getElementById('file-select');
     var files = fileSelect.files;
     var formData = new FormData();
@@ -1099,7 +1100,7 @@
           </ul>
           <b>Example (Javascript)</b>
           <pre>
-    var urlProject = 'http://isenseproject.org/api/v1/users/myInfo';
+    var urlProject = 'https://isenseproject.org/api/v1/users/myInfo';
 
     var responseProject = $.ajax({ type: "GET",
                                     url: urlProject,
