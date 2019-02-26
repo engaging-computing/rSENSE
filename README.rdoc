@@ -25,7 +25,7 @@ Please use the following issue template when reporting an issue on GitHub:
 
 General description: Give a clear and concise description of the issue. Please also include what you expected and what actually happened.
 
-live/dev/localhost: live is isenseproject.org, dev is rsense-dev.cs.uml.edu, and localhost is your local copy
+live/dev/localhost: live is isenseproject.org, dev is dev.isenseproject.org, and localhost is your local copy
 iSENSE Version: The version number is at the very bottom of the iSENSE homepage on live and dev. Note the version of your localcopy is “Development Version.”
 Logged in (Y or N): If you are logged into an account, please state Y; otherwise N.
 Admin (Y or N): If you are logged into an admin account, please state Y; otherwise N.
