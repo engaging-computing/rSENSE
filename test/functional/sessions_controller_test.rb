@@ -6,7 +6,7 @@ class SessionsControllerTest < ActionController::TestCase
   end
 
   test 'user has save permissions' do
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     get :permissions, { format: 'json' },  user_id: kate
     assert_response :success
     assert JSON.parse(response.body)['permissions'].include? 'save'
@@ -18,7 +18,7 @@ class SessionsControllerTest < ActionController::TestCase
   end
 
   test 'user has project permissions' do
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     get :permissions,
     {
       format: 'json',

@@ -54,7 +54,7 @@ class ProjectsControllerTest < ActionController::TestCase
   end
 
   test 'should create project' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     assert_difference('Project.count') do
       post :create, { project: { content: @project_one.content, title: @project_one.title, user_id: @project_one.user_id } },
          user_id: nixon
@@ -64,14 +64,14 @@ class ProjectsControllerTest < ActionController::TestCase
   end
 
   test 'shouldnt create project' do
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     post :create, { format: 'json', project: { title: '', user_id: kate } },
          user_id: kate
     assert_response :unprocessable_entity
   end
 
   test 'should create project (json)' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     assert_difference('Project.count') do
       post :create, { format: 'json', project: { content: @project_one.content, title: @project_one.title,
         user_id: @project_one.user_id } },  user_id: nixon
@@ -81,7 +81,7 @@ class ProjectsControllerTest < ActionController::TestCase
   end
 
   test 'should get edit' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     get :edit, { id: @project_one },  user_id: nixon
     assert_response :success
     # HTML5 Validation is being skipped until the validator is fixed
@@ -89,45 +89,45 @@ class ProjectsControllerTest < ActionController::TestCase
   end
 
   test 'should update project' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     put :update, { id: @project_one, project: { content: @project_one.content, title: @project_one.title,
       user_id: @project_one.user_id } },  user_id: nixon
     assert_redirected_to project_path(assigns(:project))
   end
 
   test 'should update project (json)' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     put :update, { format: 'json', id: @project_one, project: { content: @project_one.content, title: @project_one.title,
       user_id: @project_one.user_id } },  user_id: nixon
     assert_response :success
   end
 
   test 'should create project tag (json)' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     post :create_tag, { format: 'json', id: @project_one, name: 'science' },  user_id: nixon
     assert_response :success
   end
 
   test 'should remove project tag (json)' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     post :remove_tag, { format: 'json', id: @project_one, tagId: @tag },  user_id: nixon
     assert_response :success
   end
 
   test 'should hide project' do
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     put :update, { format: 'json', id: @project_one, project: { hidden: true } },  user_id: kate
     assert_response :success
     assert Project.find(@project_one.id).hidden?, 'Project got hidden'
   end
 
   test 'should destroy project' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     assert_difference('Project.count', -1) do
       delete :destroy, { id: @delete_me },  user_id: nixon
     end
 
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     assert_difference('Project.count', -1) do
       delete :destroy, { id: @delete_me_two }, user_id: kate
     end
@@ -141,19 +141,19 @@ class ProjectsControllerTest < ActionController::TestCase
 
   test 'shouldnt destroy project' do
     @num_projects = Project.count
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     delete :destroy, { format: 'json', id: @media_test }, user_id: kate
     assert_response :forbidden, "Kate shouldn't be able to delete this project"
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     delete :destroy, { format: 'json', id: @project_one }, user_id: kate
     assert_response :forbidden, "Kate shouldn't be able to delete this project."
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     delete :destroy, { format: 'json', id: @dessert }, user_id: nixon
     assert_response :forbidden, "Nixon shouldn't be able to delete this project."
   end
 
   test 'should destroy project (json)' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     assert_difference('Project.count', -1) do
       delete :destroy, { format: 'json', id: @delete_me_three },  user_id: nixon
     end
@@ -168,7 +168,7 @@ class ProjectsControllerTest < ActionController::TestCase
   test 'should like project' do
     before = Project.find(@project_one).likes.count
 
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     post :updateLikedStatus, { format: 'json', id: @project_one },  user_id: kate
     assert_response :success
     assert Project.find(@project_one).likes.count == before + 1, 'Like count should have increased by 1'
@@ -185,25 +185,25 @@ class ProjectsControllerTest < ActionController::TestCase
   end
 
   test 'should feature project (json)' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     put :update, { format: 'json', id: @project_three, project: { featured: 'true' } },  user_id: nixon
     assert_response :success
     assert Project.find(@project_three).featured == true, 'Nixon should have featured the project'
     sign_out('user')
 
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     put :update, { format: 'json', id: @project_three, project: { featured: 'false' } },  user_id: kate
     assert_response :ok
     assert Project.find(@project_three).featured == true, 'Kate should not have been able to unfeature the project.'
     sign_out('user')
 
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     put :update, { format: 'json', id: @project_three, project: { featured: 'false' } }, user_id: nixon
     assert Project.find(@project_three).featured == false, 'Nixon should have unfeatured the project.'
   end
 
   test 'should curate project (json)' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     put :update, { format: 'json', id: @project_three, project: { curated: 'true' } },  user_id: nixon
     assert_response :success
     project = Project.find(@project_three)
@@ -211,51 +211,51 @@ class ProjectsControllerTest < ActionController::TestCase
     assert project.lock == true, 'Curating should have locked the project'
     sign_out('user')
 
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     put :update, { format: 'json', id: @project_three, project: { curated: 'false' } },  user_id: kate
     assert_response :ok
     assert Project.find(@project_three).curated == true, 'Kate should not have been able to uncurated the project'
     sign_out('user')
 
-    crunch = sign_in('user', users(:crunch))
+    crunch = sign_in users(:crunch)
     put :update, { format: 'json', id: @project_three, project: { curated: 'false' } },  user_id: crunch
     assert_response :unprocessable_entity
     assert Project.find(@project_three).curated == true, 'Crunch should not have been able to uncurated the project'
     sign_out('user')
 
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     put :update, { format: 'json', id: @project_three, project: { curated: 'false' } },  user_id: nixon
     assert_response :success
     assert Project.find(@project_three).curated == false, 'Nixon should have been able to uncurated the project'
   end
 
   test 'should lock project (json)' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     put :update, { format: 'json', id: @project_three, project: { lock: 'true' } },  user_id: nixon
     assert_response :success, 'Nixon should have updated the project'
     assert Project.find(@project_three).lock == true, 'Nixon should have locked the project'
     sign_out('user')
 
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     put :update, { format: 'json', id: @project_three, project: { lock: 'false' } },  user_id: kate
     assert_response :success
     assert Project.find(@project_three).lock == false, 'Kate should have unlocked the project'
     sign_out('user')
 
-    crunch = sign_in('user', users(:crunch))
+    crunch = sign_in users(:crunch)
     put :update, { format: 'json', id: @project_three, project: { lock: 'true' } },  user_id: crunch
     assert_response :unprocessable_entity
     assert Project.find(@project_three).lock == false, 'Crunch should not have locked the project'
   end
 
   test 'should edit fields' do
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     put :edit_fields, { id: @project_one }, user_id: kate
     assert_response :success
   end
 
   test 'save fields' do
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     parameters = {}
     @dessert.fields.each do |field|
       parameters["#{field.id}_name"] = field.name
@@ -304,7 +304,7 @@ class ProjectsControllerTest < ActionController::TestCase
 
   test 'fields are destroyed along with project' do
     # Delete Project
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     assert_difference('Project.count', -1) do
       delete :destroy, { id: @delete_me_and_my_fields },  user_id: nixon
     end
