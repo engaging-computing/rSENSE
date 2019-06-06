@@ -2,7 +2,7 @@ require 'test_helper'
 
 class SubscriberEmailsControllerTest < ActionController::TestCase
   test 'send email to subscribers' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     # Trigger an email to be sent and make sure it got queued up
     assert_difference 'ActionMailer::Base.deliveries.size', +1 do
       post :create, { subscriber_email: { subject: 'ECG', message: 'asdfasd' } },  user_id: nixon

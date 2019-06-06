@@ -6,13 +6,13 @@ class FieldsControllerTest < ActionController::TestCase
   end
 
   test 'should show field' do
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     get :show, { id: @field },  user_id: kate
     assert_response :success
   end
 
   test 'should get fields as json' do
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     get :show, { format: 'json', id: @field },  user_id: kate
     assert_response :success
 
@@ -22,7 +22,7 @@ class FieldsControllerTest < ActionController::TestCase
   end
 
   test 'should create field' do
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     assert_difference('Field.count') do
       post :create, { format: 'json', field: { project_id: @field.project_id, field_type: @field.field_type,
         name: 'bacon', unit: @field.unit } },  user_id: kate
@@ -32,7 +32,7 @@ class FieldsControllerTest < ActionController::TestCase
   end
 
   test 'should create field without name' do
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     assert_difference('Field.count') do
       post :create, { format: 'json', field: { project_id: @field.project_id, field_type: @field.field_type } },  user_id: kate
     end
@@ -53,7 +53,7 @@ class FieldsControllerTest < ActionController::TestCase
   end
 
   test 'should not create field' do
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     assert_no_difference('Field.count') do
       post :create, { format: 'json', field: { project_id: @field.project_id } },  user_id: kate
     end
@@ -62,7 +62,7 @@ class FieldsControllerTest < ActionController::TestCase
   end
 
   test 'should update field' do
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     put :update, { id: @field, field: { project_id: @field.project_id, field_type: @field.field_type,
       name: 'pork rinds', unit: @field.unit } },  user_id: kate
     assert_equal flash[:notice], 'Field was successfully updated.'
@@ -70,7 +70,7 @@ class FieldsControllerTest < ActionController::TestCase
   end
 
   test 'should not update field' do
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     id = @field.project_id
     put :update, { id: @field, field: { project_id: nil } },  user_id: kate
     put :update, { format: 'json', id: @field, field: { project_id: nil } },  user_id: kate
@@ -78,7 +78,7 @@ class FieldsControllerTest < ActionController::TestCase
   end
 
   test 'should update field and return json' do
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     put :update, { format: 'json', id: @field, field: { project_id: @field.project_id,
       field_type: @field.field_type, name: 'doritos', unit: @field.unit } },
        user_id: kate
@@ -86,7 +86,7 @@ class FieldsControllerTest < ActionController::TestCase
   end
 
   test 'should destroy field' do
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     assert_difference('Field.count', -1) do
       delete :destroy, { id: @field },  user_id: kate
     end
@@ -95,19 +95,19 @@ class FieldsControllerTest < ActionController::TestCase
   end
 
   test 'should not destroy field' do
-    crunch = sign_in('user', users(:crunch))
+    crunch = sign_in users(:crunch)
     assert_no_difference('Field.count', -1) do
       delete :destroy, { id: @field },  user_id: crunch
     end
 
     assert_no_difference('Field.count', -1) do
-      crunch = sign_in('user', users(:crunch))
+      crunch = sign_in users(:crunch)
       delete :destroy, { format: 'json', id: @field },  user_id: crunch
     end
   end
 
   test 'should destroy field from api' do
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     assert_difference('Field.count', -1) do
       delete :destroy, { format: 'json', id: @field },  user_id: kate
     end
@@ -116,7 +116,7 @@ class FieldsControllerTest < ActionController::TestCase
   end
 
   test 'should add restrictions to text field' do
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     post :update, { format: 'json', id: @field.id, field: { restrictions: ['a', 'b', 'c'] } },
        user_id: kate
     assert_response :success

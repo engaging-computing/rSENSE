@@ -102,3 +102,9 @@ gem "omniauth-google-oauth2"
 
 # still necessary?
 gem 'coffeebeans'
+
+# Performance testing
+gem 'rails-perftest'
+
+# ruby code profiler
+gem 'ruby-prof'

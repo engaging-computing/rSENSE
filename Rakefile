@@ -4,6 +4,16 @@
 
 require File.expand_path('../config/application', __FILE__)
 
+# Temporary fix for last_comment deprecation
+# Probably has to do with rspec or rake version
+
+module LastCommentFix
+    def last_comment
+      last_description
+    end
+end
+Rake::Application.send :include, LastCommentFix
+
 Rsense::Application.load_tasks
 
 namespace :ckeditor do

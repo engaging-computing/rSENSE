@@ -5,13 +5,13 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   test 'should not get index as user' do
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     get :index, {},  user_id: kate
     assert_response :forbidden
   end
 
   test 'should get index as admin' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     get :index, {},  user_id: nixon
     assert_response :success
     assert_not_nil assigns(:users)
@@ -20,14 +20,14 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   test 'should get index paged' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     get :index, { format: 'json', per_page: 1 },  user_id: nixon
     assert_response :success
     assert JSON.parse(response.body).count == 1, 'Should only have got one user back'
   end
 
   test 'should get index sorted' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     get :index, { format: 'json', sort: 'ASC' },  user_id: nixon
     assert_response :success
     body = JSON.parse(response.body)
@@ -35,13 +35,13 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   test 'should get index searched' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     get :index, { format: 'json', search: 'kate', sort: 'ASC' },  user_id: nixon
     assert_response :success
   end
 
   test 'should show user' do
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     get :show, { id: users(:kate).id },  user_id: kate
     assert_response :success
     # HTML5 Validation is being skipped until the validator is fixed
@@ -49,7 +49,7 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   test 'should show user with contributions' do
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     get :show, { format: 'json',  id: users(:kate).id, recur: 'true' },  user_id: kate
     body = JSON.parse(response.body)
     assert body.key?('visualizations'), 'Recur should show visualizations'
@@ -60,25 +60,25 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   test 'should not show user (html)' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     get :show, { id: 'GreenGoblin' }, user_id: nixon
     assert_response :not_found
   end
 
   test 'should not show user (json)' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     get :show, { format: 'json', id: 'GreenGoblin' }, user_id: nixon
     assert_response :unprocessable_entity
   end
 
   test 'should update bio' do
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     put :update, {  id: users(:kate).id, user: { bio: 'Snackcakes are Delicious' } },  user_id: kate
     assert_redirected_to user_path(assigns(:user))
   end
 
   test 'should not update email without password' do
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     put :update, {  id: users(:kate).id, user: { email: 'fake@derp.com', email_confirmation: 'fake@derp.com' } },
        user_id: kate
     assert_redirected_to user_path(assigns(:user)) + '/edit'
@@ -86,7 +86,7 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   test 'user cannot delete themselves' do
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     assert_difference('User.count', 0) do
       delete :destroy, { id: users(:kate).id },  user_id: kate
     end
@@ -96,7 +96,7 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   test 'should destroy user' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     assert_difference('User.count', -1) do
       delete :destroy, { id: users(:kate).id },  user_id: nixon
     end
@@ -105,13 +105,13 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   test 'should get contributions' do
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     get :contributions, { id: users(:kate).id },  user_id: kate
     assert_response :success
   end
 
   test 'should get contributions with filters' do
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     get :contributions, {  id: users(:kate).id, filters: 'Liked Projects' },  user_id: kate
     assert_response :success
     get :contributions, {  id: users(:kate).id, filters: 'My Projects' },  user_id: kate
@@ -123,7 +123,7 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   test 'subscribe should send an email' do
-    doug = sign_in('user', users(:doug))
+    doug = sign_in users(:doug)
     id = users(:doug).id.to_s
     # Trigger an email to be sent and make sure it got queued up
     assert_difference 'ActionMailer::Base.deliveries.size', +1 do
