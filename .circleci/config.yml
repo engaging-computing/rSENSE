@@ -10,7 +10,7 @@ jobs:
     # When we update ruby version we can use a dedicated image https://hub.docker.com/r/circleci/ruby/tags/
     # For now we use a general Ubuntu image with rvm
     docker:
-    - image: circleci/ruby:2.3
+    - image: circleci/build-image:ubuntu-14.04-XXL-upstart-1189-5614f37
       command: /sbin/init
     steps:
     - checkout
