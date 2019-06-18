@@ -79,7 +79,7 @@ GEM
     addressable (2.3.6)
     ansi (1.4.3)
     arel (5.0.1.20140414130214)
-    ast (2.0.0)
+    ast (2.2.0)
     auto_html (1.6.4)
       redcarpet (~> 3.1)
       rinku (~> 1.5.0)
