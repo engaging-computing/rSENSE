@@ -23,7 +23,7 @@ jobs:
     - run: sudo apt-get install ruby-railties-4.0 bundler
     - run: sudo apt-get install qt5-default libqt5webkit5-dev gstreamer1.0-plugins-base gstreamer1.0-tools gstreamer1.0-x
     - run: yes | gem uninstall bundler
-    - run: gem install bundler -v 1.17
+    - run: gem install bundler -v 1.17.3
     - run: bundle install
     - run: bundle exec rake assets:precompile
     - run: echo -e "export RAILS_ENV=test\nexport RACK_ENV=test" >> $BASH_ENV
