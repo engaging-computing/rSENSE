@@ -36,7 +36,7 @@ jobs:
     # Test
     - run: rake
     # Run blackduck security scan after test
-    - run: bash <(curl -s https://copilot.blackducksoftware.com/ci/circle/scripts/upload)
+    - run: bash <(curl -s https://copilot.blackducksoftware.com/ci/circle2/scripts/upload)
     # Save test results
     - store_test_results:
         path: /tmp/circleci-test-results
