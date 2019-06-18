@@ -17,7 +17,7 @@ jobs:
     - run: mkdir -p $CIRCLE_ARTIFACTS $CIRCLE_TEST_REPORTS
     - run:
         working_directory: ~/engaging-computing/rSENSE
-        command: rm -f isenseDev/rSENSE/.rvmrc; echo 2.3.0 > isenseDev/rSENSE/.ruby-version; rvm use 2.3.0 --default
+        command: rm -f engaging-computing/rSENSE/.rvmrc; echo 2.3.0 > engaging-computing/rSENSE/.ruby-version; rvm use 2.3.0 --default
     # dependencies: pre:
     - run: sudo apt-get update; sudo apt-get install libreoffice libreoffice-calc unoconv
     - run: sudo apt-get install ruby-railties-4.0 bundler
