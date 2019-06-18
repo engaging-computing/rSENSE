@@ -43,7 +43,7 @@ class GithubInterface
       new_params['title'] = 'User Submitted Issue'
       new_params['body'] = b
 
-      base_url = 'https://api.github.com/repos/isenseDev/rSENSE/issues'
+      base_url = 'https://api.github.com/repos/engaging-computing/rSENSE/issues'
       token = '?access_token=' + params[:access_token]
       url = URI.parse(base_url + token)
 

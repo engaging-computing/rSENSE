@@ -1,7 +1,7 @@
 class TestingController < ApplicationController
   # GET /testing
   def index
-    github_response = HTTParty.get('https://api.github.com/repos/iSENSEDev/rSENSE/issues?labels=In+Testing', headers: { 'User-Agent' => 'rSENSE' }).response
+    github_response = HTTParty.get('https://api.github.com/repos/engaging-computing/rSENSE/issues?labels=In+Testing', headers: { 'User-Agent' => 'rSENSE' }).response
     json_issues = JSON.parse github_response.body
     user_agent = request.env['HTTP_USER_AGENT']
     @browser = Browser.new(ua: user_agent, accept_language: 'en-us')

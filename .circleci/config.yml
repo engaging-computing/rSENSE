@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/isenseDev/rSENSE
+    working_directory: ~/engaging-computing/rSENSE
     parallelism: 1
     shell: /bin/bash --login
     environment:
@@ -16,7 +16,7 @@ jobs:
     - checkout
     - run: mkdir -p $CIRCLE_ARTIFACTS $CIRCLE_TEST_REPORTS
     - run:
-        working_directory: ~/isenseDev/rSENSE
+        working_directory: ~/engaging-computing/rSENSE
         command: rm -f isenseDev/rSENSE/.rvmrc; echo 2.3.0 > isenseDev/rSENSE/.ruby-version; rvm use 2.3.0 --default
     # dependencies: pre:
     - run: sudo apt-get update; sudo apt-get install libreoffice libreoffice-calc unoconv
