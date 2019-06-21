@@ -38,8 +38,8 @@ group :development, :test do
 end
 
 # Jquery stuff
-gem 'better_datetimepicker', '~> 0.0.9', git: 'https://github.com/isenseDev/better-datetimepicker'
-gem 'better_colorpicker', '~> 0.1.2', git: 'https://github.com/isenseDev/better-colorpicker'
+gem 'better_datetimepicker', '~> 0.0.9', git: 'https://github.com/engaging-computing/better-datetimepicker'
+gem 'better_colorpicker', '~> 0.1.2', git: 'https://github.com/engaging-computing/better-colorpicker'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'jqgrid-jquery-rails', '~> 4.6.001'
@@ -76,7 +76,7 @@ gem 'remotipart'
 gem 'mini_magick'
 
 # Database serialization
-gem 'yaml_db', github: 'jetthoughts/yaml_db'
+gem 'yaml_db', git: 'https://github.com/jetthoughts/yaml_db'
 gem 'multi_json'
 
 gem 'roo'
@@ -94,7 +94,7 @@ gem 'recaptcha', git: 'https://github.com/ambethia/recaptcha'
 gem 'rack-cors', :require => 'rack/cors'
 
 # for formula fields
-gem 'beaker', '~> 1.3.0', git: 'https://github.com/isenseDev/beaker-lang'
+gem 'beaker', '~> 1.3.0', git: 'https://github.com/engaging-computing/beaker-lang'
 
 # User System
 gem 'devise'
