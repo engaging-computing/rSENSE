@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/isenseDev/rSENSE
+    working_directory: ~/engaging-computing/rSENSE
     parallelism: 1
     shell: /bin/bash --login
     environment:
@@ -16,14 +16,14 @@ jobs:
     - checkout
     - run: mkdir -p $CIRCLE_ARTIFACTS $CIRCLE_TEST_REPORTS
     - run:
-        working_directory: ~/isenseDev/rSENSE
-        command: rm -f isenseDev/rSENSE/.rvmrc; echo 2.1.1 > isenseDev/rSENSE/.ruby-version; rvm use 2.1.1 --default
+        working_directory: ~/engaging-computing/rSENSE
+        command: rm -f engaging-computing/rSENSE/.rvmrc; echo 2.3.0 > engaging-computing/rSENSE/.ruby-version; rvm use 2.3.0 --default
     # dependencies: pre:
     - run: sudo apt-get update; sudo apt-get install libreoffice libreoffice-calc unoconv
     - run: sudo apt-get install ruby-railties-4.0 bundler
     - run: sudo apt-get install qt5-default libqt5webkit5-dev gstreamer1.0-plugins-base gstreamer1.0-tools gstreamer1.0-x
     - run: yes | gem uninstall bundler
-    - run: gem install bundler
+    - run: gem install bundler -v 1.17.3
     - run: bundle install
     - run: bundle exec rake assets:precompile
     - run: echo -e "export RAILS_ENV=test\nexport RACK_ENV=test" >> $BASH_ENV
@@ -36,7 +36,7 @@ jobs:
     # Test
     - run: rake
     # Run blackduck security scan after test
-    - run: bash <(curl -s https://copilot.blackducksoftware.com/ci/circle/scripts/upload)
+    - run: bash <(curl -s https://copilot.blackducksoftware.com/ci/circle2/scripts/upload)
     # Save test results
     - store_test_results:
         path: /tmp/circleci-test-results

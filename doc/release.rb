@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 def make_changelog(new_major, new_minor, cur_major, cur_minor)
-  log_format = "--pretty=format:'<li><pre><a href=\"http://github.com/isenseDev/rSENSE/commit/%H\">%h</a>%x09%an%x09%ad%x09%s</pre></li>'"
+  log_format = "--pretty=format:'<li><pre><a href=\"http://github.com/engaging-computing/rSENSE/commit/%H\">%h</a>%x09%an%x09%ad%x09%s</pre></li>'"
   log = `cd rSENSE && git log v#{cur_major}.#{cur_minor}...v#{new_major}.#{new_minor} #{log_format} --reverse | grep -v Merge`
   log = "<h1> rSENSE Changelog: v#{cur_major}.#{cur_minor}...v#{new_major}.#{new_minor} </h1>" + log
   logname = "changelogs/v#{cur_major}.#{cur_minor}---v#{new_major}.#{new_minor}.html"
