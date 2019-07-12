@@ -46,6 +46,7 @@ gem 'jquery-ui-rails'
 gem 'jqgrid-jquery-rails', '~> 4.6.001'
 
 gem 'momentjs-rails'
+gem 'moment_timezone-rails'
 gem 'dropzonejs-rails'
 
 # To use ActiveModel has_secure_password
