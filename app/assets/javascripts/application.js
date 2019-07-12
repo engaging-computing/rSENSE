@@ -30,6 +30,7 @@
 //= require jquery.qrcode.min.js
 //= require jquery-ui/sortable
 //= require jquery.ui.touch-punch
+//= require moment.js
 //= require titlebar.js.coffee
 //= require bootstrap
 //= require bootstrap-switch
