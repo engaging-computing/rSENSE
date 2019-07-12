@@ -39,13 +39,16 @@ end
 
 # Jquery stuff
 # gem 'better_datetimepicker', '~> 0.0.9', git: 'https://github.com/engaging-computing/better-datetimepicker'
+gem 'bootstrap-datepicker-rails'
 gem 'better_colorpicker', '~> 0.1.2', git: 'https://github.com/engaging-computing/better-colorpicker'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'jqgrid-jquery-rails', '~> 4.6.001'
 
+# Moment gems for our timestamp needs
 gem 'momentjs-rails'
 gem 'moment_timezone-rails'
+
 gem 'dropzonejs-rails'
 
 # To use ActiveModel has_secure_password
