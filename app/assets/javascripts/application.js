@@ -51,7 +51,6 @@
 //= require numeric.min
 //= require oms
 //= require better_colorpicker
-//= require better_datetimepicker
 //= require visualizations/highvis/index
 //
 //= require summernote
