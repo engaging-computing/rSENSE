@@ -602,6 +602,9 @@ $ ->
             $('#ckbx-lbl-ckall-grouping')[0].MaterialCheckbox.uncheck()
           $('#ckbx-ckall-grouping').prop('indeterminate', indeterminate)
 
+        # minicolors settings
+        $('input[name="color-picker"]').minicolors()
+
         # Update the check all box
         updateCheckAll()
 
@@ -638,6 +641,7 @@ $ ->
 
           updateCheckAll()
           @delayedUpdate()
+
 
       ###
       Draws vis saving controls

@@ -6,9 +6,10 @@
   	</label>
   </div>
   {{#if picker}}
-    <input href="#" class="color-picker"
+    <a href="#" class="color-picker"
        data-color="{{picker.color}}" data-color-id="{{value}}">
       <img class="cpickr-icon" src="{{picker.icon}}">
     </a>
+    <input type="text" name="color-picker" value="{{picker.color}}">
   {{/if}}
 </div>
