@@ -573,35 +573,6 @@ $ ->
           calendarButtonMin = $('#x-min-cal')   # calendar button symbol
           formInputMin = $('#x-axis-min')       # textbox where the new axis min goes
 
-          # When you click the calendar button
-          # open the datetime picker and fix some font stuff
-          calendarButtonMin.click ->
-            dtPickerMin.open()
-            $('#dt-time-textbox').css("fontSize", "13px")
-
-          # Set some properties of the dtPicker
-          dtPickerMin = calendarButtonMin.datetimepicker
-            autoClose: false
-            keyPress: (e) ->
-              e.stopImmediatePropagation()
-              e.keyCode
-            onOpen: ->
-              formInputMin.focus()
-              formInputMin[0].value
-            onChange: (val) ->
-              formattedVal = val.format('M/D/YYYY h:mm:ss A')
-              formInputMin.val(formattedVal)
-            onKeys:
-              13: -> #enter
-                dtPickerMin.close()
-              27: -> #escape
-                dtPickerMin.close()
-            anchor: $('#x-min')
-            hPosition: ->
-              0
-            vPosition: ->
-              0
-
           # TODO: fix dtPicker so that it closes when you click outside of it
           # jQuery(document.body).on "click", ":not(#dt-picker, #dt-picker *)", (e) ->
           #   if !(e.target.id == 'x-min-cal'
@@ -616,36 +587,6 @@ $ ->
           # Set some variables
           calendarButtonMax = $('#x-max-cal')   # calendar button symbol
           formInputMax = $('#x-axis-max')       # textbox where the new axis max goes
-
-          # When you click the calendar button,
-          # open the datetime picker and fix some font stuff
-          calendarButtonMax.click ->
-            dtPickerMax.open()
-            $('#dt-time-textbox').css('cssText', 'font-size: 13px !important;')
-            $('#dt-picker option').css('cssText', 'font-size: 13px !important;')
-
-          # Set some properties of the dtPicker
-          dtPickerMax = calendarButtonMax.datetimepicker
-            autoClose: false
-            keyPress: (e) ->
-              e.stopImmediatePropagation()
-              e.keyCode
-            onOpen: ->
-              formInputMax.focus()
-              formInputMax[0].value
-            onChange: (val) ->
-              formattedVal = val.format('M/D/YYYY h:mm:ss A')
-              formInputMax.val(formattedVal)
-            onKeys:
-              13: -> #enter
-                dtPickerMax.close()
-              27: -> #escape
-                dtPickerMax.close()
-            anchor: $('#x-max')
-            hPosition: ->
-              0
-            vPosition: ->
-              0
 
           # TODO: fix dtPicker so that it closes when you click outside of it
           # jQuery(document.body).on "click", ":not(#dt-picker, #dt-picker *)", (e) ->
