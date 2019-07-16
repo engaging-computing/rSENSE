@@ -139,24 +139,13 @@ class Project < ActiveRecord::Base
   def to_hash(recurse = true)
     h = {
       id: id,
-      featuredMediaId: featured_media_id,
       name: name,
       url: UrlGenerator.new.project_url(self),
       path: UrlGenerator.new.project_path(self),
-      hidden: hidden,
-      featured: featured,
-      likeCount: likes.length,
-      content: content,
-      timeAgoInWords: time_ago_in_words(created_at),
       createdAt: created_at.strftime('%B %d, %Y'),
-      ownerName: owner.nil? ? nil : owner.name,
-      ownerUrl: owner.nil? ? nil : UrlGenerator.new.user_url(owner),
-      dataSetCount: data_sets.length,
-      dataSetIDs: data_sets.to_a.map(&:id),
       fieldCount: fields.length,
-      fields: fields.map { |o| o.to_hash false },
-      formulaFieldCount: formula_fields.length,
-      formulaFields: formula_fields.map { |o| o.to_hash false }
+      datapointCount: data_sets.count,
+
     }
 
     unless featured_media_id.nil?

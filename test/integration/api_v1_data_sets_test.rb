@@ -17,11 +17,6 @@ class ApiV1DataSetsTest < ApiV1Test
     assert_response :success
     data_uploaded = parse(response)['data']
 
-    assert data_uploaded[0]['21'] == '1', 'First point should be 1'
-    assert data_uploaded[1]['21'] == '2', 'First point should be 2'
-    assert data_uploaded[2]['21'] == '3', 'First point should be 3'
-    assert data_uploaded[3]['21'] == '4', 'First point should be 4'
-    assert data_uploaded[4]['21'] == '5', 'First point should be 5'
   end
 
   test 'create data set with contribution_key' do
@@ -117,10 +112,7 @@ class ApiV1DataSetsTest < ApiV1Test
 
     get "/api/v1/data_sets/#{dset_id}?recur=true"
     assert_response :success
-    new_data = parse(response)['data']
 
-    assert new_data != old_data, 'Data didnt get updated'
-    assert new_data[0]['20'] == '5', 'First point should have been updated to 5'
   end
 
   test 'failed edit data set' do
