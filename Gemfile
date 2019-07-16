@@ -39,6 +39,7 @@ end
 
 # Jquery stuff
 gem 'better_datetimepicker', '~> 0.0.9', git: 'https://github.com/engaging-computing/better-datetimepicker'
+gem 'jquery-minicolors-rails', '>= 2.2.6.1'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'jqgrid-jquery-rails', '~> 4.6.001'
