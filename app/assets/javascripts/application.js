@@ -52,6 +52,7 @@
 //= require markerclustererplus
 //= require numeric.min
 //= require oms
+//= require bootstrap-datepicker
 //= require better_colorpicker
 //= require visualizations/highvis/index
 //
