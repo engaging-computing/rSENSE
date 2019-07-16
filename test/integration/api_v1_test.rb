@@ -25,7 +25,6 @@ class ApiV1Test < IntegrationTest
   end
 
   def keys_match(x, expected_keys)
-    puts JSON.pretty_generate(JSON.parse(x.body))
     (JSON.parse(x.body).keys.map { |key| expected_keys.include? key }).uniq.length == 1
   end
 end
