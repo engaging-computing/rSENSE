@@ -603,7 +603,15 @@ $ ->
           $('#ckbx-ckall-grouping').prop('indeterminate', indeterminate)
 
         # minicolors settings
-        $('input[name="color-picker"]').minicolors()
+        $('input[name="color-picker"]').each (_, cpicker) =>
+          cid = $(cpicker).data('color-id')
+          obj = @
+          $(cpicker).minicolors (
+            change: (value, opacity) ->
+              globals.setColor(cid, value)
+              obj.delayedUpdate()
+              setTimeout (() => obj.start()), 1
+        )
 
         # Update the check all box
         updateCheckAll()

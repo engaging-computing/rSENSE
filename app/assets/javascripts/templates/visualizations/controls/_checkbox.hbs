@@ -4,12 +4,12 @@
   	  <input type="checkbox" id="ckbx-{{id}}" class="mdl-checkbox__input" name="{{name}}" value="{{value}}"/>
   	  <span class="mdl-checkbox__label">{{label}}</span>
   	</label>
+    {{#if picker}}
+      <a href="#" class="color-picker"
+         data-color="{{picker.color}}" data-color-id="{{value}}">
+        <img class="cpickr-icon" src="{{picker.icon}}">
+      </a>
+      <input type="text" name="color-picker" value="{{picker.color}}">
+    {{/if}}
   </div>
-  {{#if picker}}
-    <a href="#" class="color-picker"
-       data-color="{{picker.color}}" data-color-id="{{value}}">
-      <img class="cpickr-icon" src="{{picker.icon}}">
-    </a>
-    <input type="text" name="color-picker" value="{{picker.color}}">
-  {{/if}}
 </div>
