@@ -12,7 +12,7 @@ data.
 
 Install like any Ruby on Rails application.
 
-Tested with Ruby 2.1.0, Passenger, Apache, and PostgreSQL.
+Tested with Ruby 2.3.0, Passenger, Apache, and PostgreSQL.
 
 Depends on imagemagick and a "zip" archiver.
 
