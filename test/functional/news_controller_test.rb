@@ -36,7 +36,7 @@ class NewsControllerTest < ActionController::TestCase
   end
 
   test 'should create news' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     assert_difference('News.count') do
       post :create, { news: { title: 'News' } },  user_id: nixon
     end
@@ -45,7 +45,7 @@ class NewsControllerTest < ActionController::TestCase
   end
 
   test 'should create news (json)' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     assert_difference('News.count') do
       post :create, { news: { title: 'News' }, format: 'json' },  user_id: nixon
     end
@@ -54,7 +54,7 @@ class NewsControllerTest < ActionController::TestCase
   end
 
   test 'should not create news as non-admin (json)' do
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     assert_difference('News.count', 0) do
       post :create, { format: 'json' },  user_id: kate
     end
@@ -63,7 +63,7 @@ class NewsControllerTest < ActionController::TestCase
   end
 
   test 'should update news' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     put :update, { id: @news, news: { title: "It's raining" } },  user_id: nixon
 
     news = News.find @news.id
@@ -73,7 +73,7 @@ class NewsControllerTest < ActionController::TestCase
   end
 
   test 'should update news (json)' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     put :update, { format: 'json', id: @news, news: { title: "It's raining" } },  user_id: nixon
 
     news = News.find @news.id
@@ -83,7 +83,7 @@ class NewsControllerTest < ActionController::TestCase
   end
 
   test 'should destroy news' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     assert_difference('News.count', -1) do
       delete :destroy, { id: @news },  user_id: nixon
     end
@@ -91,7 +91,7 @@ class NewsControllerTest < ActionController::TestCase
   end
 
   test 'should destroy news (json)' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     assert_difference('News.count', -1) do
       delete :destroy, { format: 'json', id: @news },  user_id: nixon
     end

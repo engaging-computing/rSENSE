@@ -7,13 +7,13 @@ class MediaObjectsControllerTest < ActionController::TestCase
   end
 
   test 'should show media_object' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     get :show, { id: @media_object },  user_id: nixon
     assert_response :success
   end
 
   test 'should update media_object' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     put :update, { id: @media_object, media_object: { project_id: @media_object.project_id,
       media_type: @media_object.media_type, name: @media_object.name, data_set_id: @media_object.data_set_id,
       user_id: @media_object.user_id } },  user_id: nixon
@@ -21,7 +21,7 @@ class MediaObjectsControllerTest < ActionController::TestCase
   end
 
   test 'shouldnt update media_object' do
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     put :update, { format: 'json', id: @nixons_mo, media_object: { project_id: @nixons_mo.project_id,
       media_type: @nixons_mo.media_type, name: @nixons_mo.name, data_set_id: @nixons_mo.data_set_id,
       user_id: @nixons_mo.user_id } },  user_id: kate
@@ -29,7 +29,7 @@ class MediaObjectsControllerTest < ActionController::TestCase
   end
 
   test 'should upload media to user' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     assert_difference('MediaObject.count') do
       img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
       file = Rack::Test::UploadedFile.new(img_path, 'image/jpeg')
@@ -41,7 +41,7 @@ class MediaObjectsControllerTest < ActionController::TestCase
   end
 
   test 'should upload media to visualization' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     vis_id = visualizations(:media_test).id
 
     assert_difference('MediaObject.count') do
@@ -55,7 +55,7 @@ class MediaObjectsControllerTest < ActionController::TestCase
   end
 
   test 'should upload media to data_set' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     dset_id = visualizations(:media_test).id
 
     assert_difference('MediaObject.count') do
@@ -72,7 +72,7 @@ class MediaObjectsControllerTest < ActionController::TestCase
     tut_id = tutorials(:media_test).id
 
     assert_difference('MediaObject.count') do
-      nixon = sign_in('user', users(:nixon))
+      nixon = sign_in users(:nixon)
       img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
       file = Rack::Test::UploadedFile.new(img_path, 'image/jpeg')
       post :saveMedia, { keys: "tutorial/#{tut_id}", upload: file }, user_id: nixon
@@ -86,7 +86,7 @@ class MediaObjectsControllerTest < ActionController::TestCase
     news_id = news(:media_test).id
 
     assert_difference('MediaObject.count') do
-      nixon = sign_in('user', users(:nixon))
+      nixon = sign_in users(:nixon)
       img_path = Rails.root.join('test', 'CSVs', 'nerdboy.jpg')
       file = Rack::Test::UploadedFile.new(img_path, 'image/jpeg')
       post :saveMedia, { keys: "news/#{news_id}", upload: file }, user_id: nixon
@@ -97,7 +97,7 @@ class MediaObjectsControllerTest < ActionController::TestCase
   end
 
   test 'should destroy media_object' do
-    nixon = sign_in('user', users(:nixon))
+    nixon = sign_in users(:nixon)
     request.env['HTTP_REFERER'] = request.path
 
     assert_difference('MediaObject.count', -1) do
@@ -107,7 +107,7 @@ class MediaObjectsControllerTest < ActionController::TestCase
   end
 
   test 'shouldnt destroy media_object' do
-    kate = sign_in('user', users(:kate))
+    kate = sign_in users(:kate)
     delete :destroy, { format: 'json', id: @nixons_mo },  user_id: kate
     assert_response :forbidden, "Kate shouldn't be able to delete Nixon's Media Object"
   end

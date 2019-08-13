@@ -18,9 +18,9 @@ class CloneProjectTest < IntegrationTest
     visit '/'
     click_on('Login')
     fill_in 'user_email', with: 'nixon@whitehouse.gov'
-    fill_in 'user_password', with: '123456'
+    fill_in 'user_password', with: '12345678910'
     find(:css, '.mainContent').click_on('Log in')
 
-    assert page.has_content?('Invalid email or password.'), 'Did not fail to log in'
+    assert page.has_content?('Invalid Email or password.'), 'Did not fail to log in'
   end
 end

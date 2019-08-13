@@ -7,12 +7,12 @@ multiple visualization tools. The following tutorials explain how to create
 projects, contribute data to projects in the form of data sets, and visualize
 data.
 
-<b>Status:</b> {<img src="https://circleci.com/gh/isenseDev/rSENSE/tree/master.svg?style=shield" />}[https://circleci.com/gh/isenseDev/rSENSE] 
+<b>Status:</b> {<img src="https://circleci.com/gh/engaging-computing/rSENSE/tree/master.svg?style=shield" />}[https://circleci.com/gh/engaging-computing/rSENSE] 
 == Installing the iSense Site
 
 Install like any Ruby on Rails application.
 
-Tested with Ruby 2.1.0, Passenger, Apache, and PostgreSQL.
+Tested with Ruby 2.3.0, Passenger, Apache, and PostgreSQL.
 
 Depends on imagemagick and a "zip" archiver.
 
