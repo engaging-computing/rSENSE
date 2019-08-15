@@ -605,14 +605,46 @@ $ ->
         # minicolors settings
         $('input[name="color-picker"]').each (_, cpicker) =>
           cid = $(cpicker).data('color-id')
-          obj = @
+          timeline = this
           $(cpicker).minicolors (
+            changeDelay: 200
+            format: 'hex'
             change: (value, opacity) ->
-              globals.setColor(cid, value)
-              obj.delayedUpdate()
-              setTimeout (() => obj.start()), 1
-        )
+              globals.setColor(cid, color)
+              console.log($("#label-color-#{cid}"))
+              $("#label-color-#{cid}").css 'color', value
+              timeline.delayedUpdate()
+              setTimeout (() => timeline.start), 1
+          )
 
+          # 4 da referenz
+#        $('.color-picker').each (_, cpicker) =>
+#          cid = $(cpicker).data('color-id')
+#          a = $(cpicker).colorpicker
+#            outputType: 'hex'
+#            onOpen: () ->
+#              $("#label-color-#{cid}").parent().parent().css('background-color', '#EEE')
+#              globals.getColor(cid)
+#            onClose: () ->
+#              $("#label-color-#{cid}").parent().parent().css('background-color', '#FFF')
+#            onSubmit: (color) =>
+#              globals.setColor(cid, color)
+#              $("#label-color-#{cid}").css 'color', color
+#              @delayedUpdate()
+#              setTimeout (() => @start()), 1
+#            hPosition: (w, h) =>
+#              button = $(cpicker).children('img')
+#              buttonX = button.offset().left
+#              buttonW = button.width()
+#              buttonX - w + buttonW
+#            vPosition: (w, h) =>
+#              button = $(cpicker).children('img')
+#              buttonY = button.offset().top
+#              buttonH = button.height()
+#              buttonY + buttonH
+#
+#          $(cpicker).click ->
+#            a.open()
         # Update the check all box
         updateCheckAll()
 
