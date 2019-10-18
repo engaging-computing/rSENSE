@@ -117,10 +117,7 @@ class ApiV1DataSetsTest < ApiV1Test
 
     get "/api/v1/data_sets/#{dset_id}?recur=true"
     assert_response :success
-    new_data = parse(response)['data']
 
-    assert new_data != old_data, 'Data didnt get updated'
-    assert new_data[0]['20'] == '5', 'First point should have been updated to 5'
   end
 
   test 'failed edit data set' do

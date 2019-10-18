@@ -27,6 +27,7 @@
 //= require validator
 //= require jquery.caret.js
 //= require jquery.form.js
+//= require jquery.minicolors.js
 //= require jquery.qrcode.min.js
 //= require jquery-ui/sortable
 //= require jquery.ui.touch-punch
@@ -50,7 +51,6 @@
 //= require markerclustererplus
 //= require numeric.min
 //= require oms
-//= require better_colorpicker
 //= require better_datetimepicker
 //= require visualizations/highvis/index
 //
