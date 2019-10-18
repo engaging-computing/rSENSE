@@ -30,6 +30,8 @@
 //= require jquery.qrcode.min.js
 //= require jquery-ui/sortable
 //= require jquery.ui.touch-punch
+//= require moment.js
+//= require moment-timezone-with-data.js
 //= require titlebar.js.coffee
 //= require bootstrap
 //= require bootstrap-switch
@@ -50,8 +52,8 @@
 //= require markerclustererplus
 //= require numeric.min
 //= require oms
+//= require bootstrap-datepicker/core
 //= require better_colorpicker
-//= require better_datetimepicker
 //= require visualizations/highvis/index
 //
 //= require summernote
