@@ -39,7 +39,7 @@ module Api
               dataset.update_attributes(data: dataset.data.concat(newdata))
 
               respond_to do |format|
-                format.json { render json: newdata, status: :ok }
+                format.json { render json: dataset, status: :ok }
               end
             else
               respond_to do |format|
