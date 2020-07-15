@@ -22,8 +22,8 @@ jobs:
     - run: sudo apt-get update; sudo apt-get install libreoffice libreoffice-calc unoconv
     - run: sudo apt-get install ruby-railties-4.0 bundler
     - run: sudo apt-get install qt5-default libqt5webkit5-dev gstreamer1.0-plugins-base gstreamer1.0-tools gstreamer1.0-x
-    - run: yes | gem uninstall bundler
-    - run: gem install bundler -v 1.17.3
+    - run: sudo apt-get install xvfb
+    - run: gem install bundler
     - run: bundle install
     - run: bundle exec rake assets:precompile
     - run: echo -e "export RAILS_ENV=test\nexport RACK_ENV=test" >> $BASH_ENV
@@ -34,7 +34,7 @@ jobs:
     - run: RAILS_ENV=test bundle exec rake db:migrate --trace
     - run: bundle exec rake db:test:prepare
     # Test
-    - run: rake
+    - run: xvfb-run -a bundle exec rake
     # Run blackduck security scan after test
     - run: bash <(curl -s https://copilot.blackducksoftware.com/ci/circle2/scripts/upload)
     # Save test results
