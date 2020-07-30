@@ -27,8 +27,16 @@ class NewsTest < ActiveSupport::TestCase
 
   def base_asserts(obj, h)
     assert_equal obj.id, h[:id]
-    assert_equal obj.featured_media_id, h[:featuredMediaId]
-    assert_equal obj.title, h[:name]
+    if obj.featured_media_id
+      assert_equal obj.featured_media_id, h[:featuredMediaId]
+    else
+      assert_nil h[:featuredMediaId]
+    end
+    if obj.title
+      assert_equal obj.title, h[:name]
+    else
+      assert_nil h[:name]
+    end
     assert_equal obj.hidden, h[:hidden]
     assert_equal h[:timeAgoInWords], @year_diff
     assert_equal h[:createdAt], @year_text
