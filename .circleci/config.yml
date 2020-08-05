@@ -24,11 +24,14 @@ jobs:
     - run: sudo apt-get install qt5-default libqt5webkit5-dev gstreamer1.0-plugins-base gstreamer1.0-tools gstreamer1.0-x
     - run: sudo apt-get install xvfb
     - run: gem install bundler
-    - run: bundle install
+    - restore_cache:
+        key: v1-{{checksum "Gemfile.lock" }}
+    - run: bundle install --path vendor/bundle
+    - save_cache:
+        key: v1-{{checksum "Gemfile.lock" }}
+        paths: "vendor/bundle"
     - run: bundle exec rake assets:precompile
     - run: echo -e "export RAILS_ENV=test\nexport RACK_ENV=test" >> $BASH_ENV
-    - run: 'bundle check --path=vendor/bundle || bundle install --path=vendor/bundle
-        --jobs=4 --retry=3 '
     # database: override:
     - run: bundle exec rake db:preprep
     - run: RAILS_ENV=test bundle exec rake db:migrate --trace
