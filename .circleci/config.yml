@@ -37,6 +37,7 @@ jobs:
     - run: RAILS_ENV=test bundle exec rake db:migrate --trace
     - run: bundle exec rake db:test:prepare
     # Test
+    # Comment
     - run: xvfb-run -a bundle exec rake
     # Run blackduck security scan after test
     - run: bash <(curl -s https://copilot.blackducksoftware.com/ci/circle2/scripts/upload)
