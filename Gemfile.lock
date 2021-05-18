@@ -1,10 +1,4 @@
 GIT
-  remote: https://github.com/jetthoughts/yaml_db.git
-  revision: 5f73cbd14adee939adf08574ec3bf6e05ee55889
-  specs:
-    yaml_db (0.2.3)
-
-GIT
   remote: https://github.com/ambethia/recaptcha
   revision: 76c2f58ee906ed591662d552c6be383024af11d6
   specs:
@@ -46,6 +40,12 @@ GIT
       coffee-rails-source-maps
       rails (~> 4)
       sass
+
+GIT
+  remote: https://github.com/jetthoughts/yaml_db
+  revision: 5f73cbd14adee939adf08574ec3bf6e05ee55889
+  specs:
+    yaml_db (0.2.3)
 
 GEM
   remote: https://rubygems.org/
@@ -206,7 +206,7 @@ GEM
     mime-types-data (3.2019.0331)
     mini_magick (4.0.1)
     mini_mime (1.0.1)
-    mini_portile2 (2.4.0)
+    mini_portile2 (2.5.1)
     minitest (5.11.3)
     minitest-reporters (1.0.8)
       ansi
@@ -218,8 +218,9 @@ GEM
     multi_xml (0.5.5)
     multipart-post (2.0.0)
     netrc (0.11.0)
-    nokogiri (1.9.1)
-      mini_portile2 (~> 2.4.0)
+    nokogiri (1.11.4)
+      mini_portile2 (~> 2.5.0)
+      racc (~> 1.4)
     oauth2 (1.0.0)
       faraday (>= 0.8, < 0.10)
       jwt (~> 1.0)
@@ -243,6 +244,7 @@ GEM
     pg (0.17.1)
     powerpack (0.0.9)
     puma (3.7.1)
+    racc (1.5.2)
     rack (1.5.5)
     rack-cors (0.4.1)
     rack-test (0.6.3)
@@ -319,7 +321,6 @@ GEM
       multi_json (~> 1.0)
       simplecov-html (~> 0.8.0)
     simplecov-html (0.8.0)
-    slop (3.6.0)
     spreadsheet (1.0.0)
       ruby-ole (>= 1.0)
     sprockets (2.12.5)
