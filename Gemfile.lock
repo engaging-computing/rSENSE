@@ -1,10 +1,4 @@
 GIT
-  remote: https://github.com/jetthoughts/yaml_db.git
-  revision: 5f73cbd14adee939adf08574ec3bf6e05ee55889
-  specs:
-    yaml_db (0.2.3)
-
-GIT
   remote: https://github.com/ambethia/recaptcha
   revision: 76c2f58ee906ed591662d552c6be383024af11d6
   specs:
@@ -47,6 +41,12 @@ GIT
       rails (~> 4)
       sass
 
+GIT
+  remote: https://github.com/jetthoughts/yaml_db
+  revision: 5f73cbd14adee939adf08574ec3bf6e05ee55889
+  specs:
+    yaml_db (0.2.3)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -76,7 +76,8 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
-    addressable (2.3.6)
+    addressable (2.8.0)
+      public_suffix (>= 2.0.2, < 5.0)
     ansi (1.4.3)
     arel (5.0.1.20140414130214)
     ast (2.2.0)
@@ -242,6 +243,7 @@ GEM
       ast (~> 2.2)
     pg (0.17.1)
     powerpack (0.0.9)
+    public_suffix (4.0.6)
     puma (3.7.1)
     rack (1.5.5)
     rack-cors (0.4.1)
@@ -319,7 +321,6 @@ GEM
       multi_json (~> 1.0)
       simplecov-html (~> 0.8.0)
     simplecov-html (0.8.0)
-    slop (3.6.0)
     spreadsheet (1.0.0)
       ruby-ole (>= 1.0)
     sprockets (2.12.5)
