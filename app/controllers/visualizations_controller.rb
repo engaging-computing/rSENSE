@@ -19,13 +19,13 @@ class VisualizationsController < ApplicationController
     # Main List
     @params = params
 
-    if !params[:sort].nil?
+    if !params[:sort].nil? and ['created_at', 'updated_at'].include? params[:sort]
       sort = params[:sort]
     else
       sort = 'created_at'
     end
 
-    if !params[:order].nil?
+    if !params[:order].nil? and ['ASC', 'DESC'].include? params[:order]
       order = params[:order]
     else
       order = 'DESC'
