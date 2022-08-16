@@ -1,10 +1,4 @@
 GIT
-  remote: https://github.com/jetthoughts/yaml_db.git
-  revision: 5f73cbd14adee939adf08574ec3bf6e05ee55889
-  specs:
-    yaml_db (0.2.3)
-
-GIT
   remote: https://github.com/ambethia/recaptcha
   revision: 76c2f58ee906ed591662d552c6be383024af11d6
   specs:
@@ -46,6 +40,12 @@ GIT
       coffee-rails-source-maps
       rails (~> 4)
       sass
+
+GIT
+  remote: https://github.com/jetthoughts/yaml_db
+  revision: 5f73cbd14adee939adf08574ec3bf6e05ee55889
+  specs:
+    yaml_db (0.2.3)
 
 GEM
   remote: https://rubygems.org/
@@ -319,7 +319,6 @@ GEM
       multi_json (~> 1.0)
       simplecov-html (~> 0.8.0)
     simplecov-html (0.8.0)
-    slop (3.6.0)
     spreadsheet (1.0.0)
       ruby-ole (>= 1.0)
     sprockets (2.12.5)

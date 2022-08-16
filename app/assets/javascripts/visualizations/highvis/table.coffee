@@ -200,12 +200,15 @@ $ ->
           search: false
         @table.jqGrid('navGrid','#toolbar_bottom', params)
 
+        operands = { "eq": "=",  "ne": "!",  "lt": "<",  "le": "<=",  "gt": ">",  "ge": ">=", "bw": "^",  "bn": "!^",  "in": "=",  "ni": "!=",  "ew": "|",  "en": "!@",  "cn": "~",  "nc": "!~", "nu": "#",  "nn": "!#" }
+
         params =
           stringResult:    true
           searchOnEnter:   false
           searchOperators: true
           operandTitle:    'Select Search Operation'
           resetIcon:       '<i class="fa fa-times-circle"></i>'
+          operands:        operands
         @table.jqGrid('filterToolbar', params)
 
         # Set the time column formatters
@@ -229,7 +232,7 @@ $ ->
             # Restore the search filter type and operator symbol
             operator = $('#' + inputId).closest('tr').find('.soptclass')
             $(operator).attr('soper', column.op)
-            operands = { "eq": "==", "ne": "!",  "lt": "<",  "le": "<=", \
+            operands = { "eq": "=",  "ne": "!",  "lt": "<",  "le": "<=", \
                          "gt": ">",  "ge": ">=", "bw": "^",  "bn": "!^", \
                          "in": "=",  "ni": "!=", "ew": "|",  "en": "!@", \
                          "cn": "~",  "nc": "!~", "nu": "#",  "nn": "!#" }
