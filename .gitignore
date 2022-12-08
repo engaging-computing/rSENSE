@@ -7,6 +7,7 @@
 # Ignore bundler config
 /.bundle
 /.bundler
+vendor/bundle
 
 # Ignore the default SQLite database.
 /db/*.sqlite3
@@ -45,3 +46,5 @@ coffeelint.json
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+
+vendor/*

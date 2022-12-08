@@ -17,7 +17,7 @@ class ProjectsController < ApplicationController
       sort = 'updated_at'
     end
 
-    if !params[:order].nil?
+    if !params[:order].nil? and ['ASC', 'DESC'].include? params[:order]
       order = params[:order]
     else
       order = 'DESC'

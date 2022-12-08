@@ -24,7 +24,7 @@ class TutorialTest < ActiveSupport::TestCase
     assert_equal h[:id], @sample_id
     assert_equal h[:name], @sample_name
     assert_equal h[:category], @sample_category
-    assert_equal h[:youtubeUrl], @sample_url
+    assert_nil h[:youtubeUrl], @sample_url
     keys.each do |x|
       assert !h[x.to_sym].nil?
       assert !h[x.to_sym].empty?

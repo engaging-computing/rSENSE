@@ -25,7 +25,11 @@ class UserTest < ActiveSupport::TestCase
 
   # Passes if password_confirmation and password match
   test 'password_confirmation matches password' do
-    assert_equal @user.password, @user.password_confirmation,  'Password_confirmation does not match password.'
+    if @user.password
+      assert_equal @user.password, @user.password_confirmation, 'Password_confirmation does not match password.'
+    else
+      assert_nil @user.password_confirmation, 'Password_confirmation does not match password.'
+    end
   end
 
   # ---------------------------------------------------
