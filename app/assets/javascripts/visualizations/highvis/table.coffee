@@ -199,8 +199,25 @@ $ ->
           edit:   false
           search: false
         @table.jqGrid('navGrid','#toolbar_bottom', params)
-
-        operands = { "eq": "=",  "ne": "!",  "lt": "<",  "le": "<=",  "gt": ">",  "ge": ">=", "bw": "^",  "bn": "!^",  "in": "=",  "ni": "!=",  "ew": "|",  "en": "!@",  "cn": "~",  "nc": "!~", "nu": "#",  "nn": "!#" }
+        
+        operands = {
+          "eq": "=",
+          "ne": "!",
+          "lt": "<",
+          "le": "<=",
+          "gt": ">",
+          "ge": ">=",
+          "bw": "^",
+          "bn": "!^",
+          "in": "=",
+          "ni": "!=",
+          "ew": "|",
+          "en": "!@",
+          "cn": "~",
+          "nc": "!~",
+          "nu": "#",
+          "nn": "!#"
+        }
 
         params =
           stringResult:    true

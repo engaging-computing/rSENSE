@@ -23,7 +23,7 @@ jobs:
     - run: sudo apt-get install ruby-railties-4.0 bundler
     - run: sudo apt-get install qt5-default libqt5webkit5-dev gstreamer1.0-plugins-base gstreamer1.0-tools gstreamer1.0-x
     - run: sudo apt-get install xvfb
-    - run: gem install bundler
+    - run: gem install bundler -v 2.3.26
     - restore_cache:
         key: v1-{{checksum "Gemfile.lock" }}
     - run: bundle install --path vendor/bundle
@@ -38,11 +38,6 @@ jobs:
     - run: bundle exec rake db:test:prepare
     # Test
     - run: xvfb-run -a bundle exec rake
-    # Run blackduck security scan after test
-    - run: bash <(curl -s https://copilot.blackducksoftware.com/ci/circle2/scripts/upload)
-    # Save test results
-    - store_test_results:
-        path: /tmp/circleci-test-results
     # Save artifacts
     - store_artifacts:
         path: /tmp/circleci-artifacts
