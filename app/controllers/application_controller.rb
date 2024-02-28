@@ -42,12 +42,7 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    if !user_signed_in? && (params[:action] == 'create_issue_anon' || params[:action] == 'github_authorize')
-      redirect_to new_user_session_path
-      return
-    end
-
-    unless user_signed_in? or ['devise/sessions', 'devise/registrations', 'sessions'].include? params[:controller]
+    unless user_signed_in? or ['devise/sessions', 'sessions'].include? params[:controller]
       redirect_to '/users/sign_in', flash: { error: 'You are not currently logged in.' }
     end
   end
@@ -219,7 +214,6 @@ class ApplicationController < ActionController::Base
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up) { |u| u.permit(:name, :email, :password, :password_confirmation, :remember_me, :bio, :admin, :subscribed) }
     devise_parameter_sanitizer.permit(:sign_in) { |u| u.permit(:login, :name, :email, :password, :remember_me) }
     devise_parameter_sanitizer.permit(:account_update) { |u| u.permit(:name, :email, :password, :password_confirmation, :current_password, :bio, :admin, :subscribed) }
   end
