@@ -75,6 +75,8 @@
               <li class="navbtn"><%= link_to "Logout", destroy_user_session_path, method: :delete%></li>
             <% else %>
               <li class="navbtn"><%= link_to "Login", new_user_session_path, name:"Login" %></li>
+              <li class="divider"></li>
+              <li class="navbtn" title="Register now to start using iSENSE"><%= link_to "Register", new_user_registration_path %></li>
             <% end %>
           </ul>
         </div><!-- /.navbar-collapse -->

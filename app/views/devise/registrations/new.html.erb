@@ -1,0 +1,76 @@
+<%= devise_error_messages! %><br><br>
+
+<div class="row">
+  <div class="col-lg-6 col-lg-offset-3">
+    <div class="panel panel-default">
+      <div class="panel-body flex-center">
+        <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--google-sign-in"
+          href='/users/auth/google_oauth2'>
+          <img class="google-logo" src='/assets/btn_google_light_normal_ios.svg'/>
+          Sign in with Google
+        </a>
+      </div>
+    </div>
+    <div class="google-or-isense">
+      <div class="left-rule"></div>
+      <div class="or-label">or</div>
+      <div class="right-rule"></div>
+    </div>
+    <div class="panel panel-default">
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+        <div class="panel-heading">
+          <h3>Register for iSENSE</h3>
+        </div>
+        <div class="panel-body">
+          <div class="form-group">
+            <%= f.label :name %><br />
+            <%= f.text_field :name, autofocus: true, class: "form-control", placeholder: "Your name here." %>
+          </div>
+          
+          <div class="form-group">
+            <%= f.label :email %><br />
+            <%= f.email_field :email, autofocus: true, class: "form-control", placeholder: "Required, allows you to reset your password." %>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :password %>
+            <% if @minimum_password_length %>
+            <em>(<%= @minimum_password_length %> characters minimum)</em>
+            <% end %><br />
+            <%= f.password_field :password, autocomplete: "off", class: "form-control", placeholder: "Can contain any letters, number, and punctuation." %>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :password_confirmation %><br />
+            <%= f.password_field :password_confirmation, autocomplete: "off", class: "form-control", placeholder: "Retype your password."  %>
+          </div>
+
+          <hr>
+
+          <div class="form-group">
+            <%= f.label "Email Preference" %><br />
+            <%= f.check_box :subscribed %> I am willing to receive occasional emails from the iSENSE team about new features or announcements.
+          </div>
+
+          <div class="form-group">
+            <%if flash[:recaptcha_error] %>
+              <b class="recaptcha_error"><%= flash[:recaptcha_error] %></b>
+            <% end %>
+            <%= recaptcha_tags noscript: false %>
+          </div> 
+        </div>
+        <div class="panel-footer">
+          <div class="actions">
+            <%= f.submit("Create User", class: "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--blue") %>
+          <div class="pull-right"><a href="#" onclick="$('#privacy_policy').toggle()">Privacy Policy</a></div>
+          <div class="clear"></div>
+          </div>
+        </div>
+      <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row" id="privacy_policy" style="display:none">
+  <%= render :partial => "shared/privacy_policy"%>
+</div>
