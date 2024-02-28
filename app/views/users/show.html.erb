@@ -18,6 +18,7 @@
             <%= @user.email %>
           </span>
 
+          <p style="margin-top: 8px"><%= link_to "Change Email or Password", edit_user_registration_path(@user) %></p>
         <% end %>
 
         <% if current_user && (current_user.admin? or current_user.id == @user.id) %>

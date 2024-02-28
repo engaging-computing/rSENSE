@@ -151,8 +151,6 @@ module ApplicationHelper
       'Field Matching'
     elsif @namespace[:controller] == 'devise/sessions'
       'Sign in to iSENSE'
-    elsif @namespace[:controller] == 'devise/registrations'
-      'Register for iSENSE'
     else
       @namespace[:controller].capitalize.html_safe
     end
