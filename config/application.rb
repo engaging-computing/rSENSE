@@ -5,7 +5,6 @@ config.each do |key, value|
   ENV[key] = value
 end
 
-
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
