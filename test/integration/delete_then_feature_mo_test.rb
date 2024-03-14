@@ -50,7 +50,7 @@ class DeleteThenFeatureMoTest < IntegrationTest
     find(:css, 'button.btn-primary').click
 
     # actually save the visualization
-    find(:css, '#save-ctrls > .vis-ctrl-header').click
+    find('#save-ctrls > .vis-ctrl-header').click
     click_on 'Save Visualization'
     click_on 'Finish'
     assert page.has_content?('Visualization was successfully created.'),
