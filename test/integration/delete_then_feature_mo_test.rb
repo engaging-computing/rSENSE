@@ -33,5 +33,4 @@ class DeleteThenFeatureMoTest < IntegrationTest
     assert page.has_content?('That media object no longer exists.'),
       'Error should have been shown'
   end
-
 end
