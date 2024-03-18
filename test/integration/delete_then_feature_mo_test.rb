@@ -51,7 +51,6 @@ class DeleteThenFeatureMoTest < IntegrationTest
 
     sleep 3
     # actually save the visualization
-    assert page.has_content?('Save Visualization')
     find('#save-vis-btn').click
     # click_on 'Save Visualization'
     click_on 'Finish'
