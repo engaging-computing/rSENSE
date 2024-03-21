@@ -1,0 +1,4 @@
+# Add environment variables to this file in the below format
+VAR1: 'value1'
+VAR2: 'value2'
+VAR3: 'value3'

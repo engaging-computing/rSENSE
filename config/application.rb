@@ -1,3 +1,10 @@
+# Load environment variables from separate file
+require 'yaml'
+config = YAML.safe_load(File.read(File.expand_path('./environment-variables.yml', __dir__)))
+config.each do |key, value|
+  ENV[key] = value
+end
+
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
