@@ -23,7 +23,8 @@ production:
   encoding: utf8
   database: rsense_production
   pool: 5
-  username: ec2_user
-  password: <%= ENV['RDS_PASSWORD'] %>
+  username: <%= ENV['PG_USERNAME'] %>
+  password: <%= ENV['PG_PASSWORD'] %>
   port: 5432
-  host: <%= ENV['RDS_HOSTNAME'] %>
+  host: <%= ENV['PG_HOST'] %>
+
