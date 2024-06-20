@@ -105,68 +105,84 @@ class VisualizationsController < ApplicationController
     @visualization = Visualization.find(params[:id])
   end
 
-  # POST /visualizations
-  # POST /visualizations.json
-  def create
-    params[:visualization][:user_id] = current_user.id
+# POST /visualizations
+# POST /visualizations.json
+def create
+  params[:visualization][:user_id] = current_user.id
 
-    # Remove any piggybacking updates
-    if params[:visualization].try(:[], :tn_file_key)
-      params[:visualization].delete :tn_file_key
-    end
-    if params[:visualization].try(:[], :tn_src)
-      params[:visualization].delete :tn_src
-    end
+  # Remove any piggybacking updates
+  if params[:visualization].try(:[], :tn_file_key)
+    params[:visualization].delete :tn_file_key
+  end
+  if params[:visualization].try(:[], :tn_src)
+    params[:visualization].delete :tn_src
+  end
 
-    # Try to make a thumbnail
-    mo = nil
+  # Try to make a thumbnail
+  mo = nil
 
-    if params[:visualization].try(:[], :svg)
-      begin
-        mo = MediaObject.new
-        mo.media_type = 'image'
-        mo.name = 'image.png'
-        mo.file = 'image.png'
-        mo.user_id = current_user.id
-        mo.check_store!
+  if params[:visualization].try(:[], :svg)
+    begin
+      mo = MediaObject.new
+      mo.media_type = 'image'
+      mo.name = 'image.png'
+      mo.file = 'image.png'
+      mo.user_id = current_user.id
+      mo.check_store!
 
-        image = MiniMagick::Image.read(params[:visualization][:svg], '.svg')
-        image.format 'png'
-        image.resize '512x512'
+      # Generate a secure random file path for the SVG file
+      svg_file_path = "/tmp/#{SecureRandom.hex}.svg"
 
-        File.open(mo.file_name, 'wb') do |ff|
-          ff.write(image.to_blob)
-        end
-
-        mo.add_tn
-      rescue MiniMagick::Invalid => err
-        mo = nil
-        logger.info "Failed to create thumbnail (#{err})."
+      # Write the SVG data to the file with XML declaration
+      File.open(svg_file_path, 'wb') do |f|
+        f.write('<?xml version="1.0" encoding="UTF-8" standalone="no"?>' + "\n")
+        f.write(params[:visualization][:svg])
       end
 
-      params[:visualization].delete :svg
-    end
+      # Convert the SVG to PNG using rsvg-convert
+      png_data, stderr, status = Open3.capture3("rsvg-convert -f png #{svg_file_path}")
 
-    @visualization = Visualization.new(visualization_params)
-
-    respond_to do |format|
-      if @visualization.save
-        unless mo.nil?
-          mo.visualization_id = @visualization.id
-          mo.save!
-          @visualization.thumb_id = mo.id
-          @visualization.save!
-        end
-
-        flash[:notice] = 'Visualization was successfully created.'
-        format.html { redirect_to @visualization }
-        format.json { render json: @visualization.to_hash(false), status: :created }
+      if status.success?
+        logger.info "Conversion successful"
       else
-        format.html { render action: 'new' }
-        format.json { render json: @visualization.errors, status: :unprocessable_entity }
+        logger.error "Conversion failed: #{stderr}"
+        raise "SVG to PNG conversion failed"
       end
+
+      # Optionally, you can save the PNG data to a file if needed
+      File.open(mo.file_name, 'wb') do |ff|
+        ff.write(png_data)
+      end
+
+      mo.add_tn
+    rescue MiniMagick::Invalid => err
+      mo = nil
+      logger.info "Failed to create thumbnail (#{err})."
+    end
+
+    params[:visualization].delete :svg
+  end
+
+  @visualization = Visualization.new(visualization_params)
+
+  respond_to do |format|
+    if @visualization.save
+      unless mo.nil?
+        mo.visualization_id = @visualization.id
+        mo.save!
+        @visualization.thumb_id = mo.id
+        @visualization.save!
+      end
+
+      flash[:notice] = 'Visualization was successfully created.'
+      format.html { redirect_to @visualization }
+      format.json { render json: @visualization.to_hash(false), status: :created }
+    else
+      format.html { render action: 'new' }
+      format.json { render json: @visualization.errors, status: :unprocessable_entity }
     end
   end
+end
 
   # PUT /visualizations/1
   # PUT /visualizations/1.json
