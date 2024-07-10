@@ -108,6 +108,7 @@ class VisualizationsController < ApplicationController
 # POST /visualizations
 # POST /visualizations.json
 def create
+  require 'open3'
   params[:visualization][:user_id] = current_user.id
 
   # Remove any piggybacking updates
